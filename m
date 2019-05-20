@@ -1,124 +1,69 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: NVMEM address DT post processing [Was: Re: [PATCH net 0/3] add
- property "nvmem_macaddr_swap" to swap macaddr bytes order]
-Date: Mon, 20 May 2019 09:28:16 -0500
-Message-ID: <CAL_Jsq+Jdz5voO9LU6=Pk6Azsv-wB7=cFjv46FODnxgm+rA4Xw@mail.gmail.com>
-References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-3-git-send-email-fugang.duan@nxp.com> <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-1-git-send-email-fugang.duan@nxp.com> <20190510112822.GT81826@meh.true.cz>
- <20190510113155.mvpuhe4yzxdaanei@flea> <20190511144444.GU81826@meh.true.cz>
- <547abcff-103a-13b8-f42a-c0bd1d910bbc@linaro.org> <20190513090700.GW81826@meh.true.cz>
- <8cee0086-7459-24c7-82f9-d559527df6e6@linaro.org> <20190513111612.GA21475@meh.true.cz>
+Subject: Re: [PATCH v5 1/3] dt-bindings: i2c: extend existing opencore bindings.
+Date: Mon, 20 May 2019 09:36:48 -0500
+Message-ID: <CAL_Jsq+6uL+wqi=5cp1X9JdBfmLDzGz5UjwfqKCCESyhsemnhQ@mail.gmail.com>
+References: <1558361478-4381-1-git-send-email-sagar.kadam@sifive.com> <1558361478-4381-2-git-send-email-sagar.kadam@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190513111612.GA21475@meh.true.cz>
-Sender: netdev-owner@vger.kernel.org
-To: =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Andy Duan <fugang.duan@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1558361478-4381-2-git-send-email-sagar.kadam@sifive.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com, Andrew Lunn <andrew@lunn.ch>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2019 at 6:16 AM Petr =C5=A0tetiar <ynezz@true.cz> wrote:
+On Mon, May 20, 2019 at 9:12 AM Sagar Shrikant Kadam
+<sagar.kadam@sifive.com> wrote:
 >
-> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 11:06:48=
-]:
+> Add FU540-C000 specific device tree bindings to already
+> available i2-ocores file. This device is available on
+> HiFive Unleashed Rev A00 board. Move interrupt and interrupt
+> parents under optional property list as these can be optional.
 >
-> > On 13/05/2019 10:07, Petr =C5=A0tetiar wrote:
-> > > Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 09:2=
-5:55]:
-> > >
-> > > > My initial idea was to add compatible strings to the cell so that m=
-ost of
-> > > > the encoding information can be derived from it. For example if the=
- encoding
-> > > > representing in your example is pretty standard or vendor specific =
-we could
-> > > > just do with a simple compatible like below:
-> > >
-> > > that vendor/compatible list would be quite long[1], there are hundred=
-s of
-> >
-> > You are right just vendor list could be very long, but I was hoping tha=
-t the
-> > post-processing would fall in some categories which can be used in
-> > compatible string.
-> >
-> > Irrespective of which we need to have some sort of compatible string to
-> > enable nvmem core to know that there is some form of post processing to=
- be
-> > done on the cells!. Without which there is a danger of continuing to ad=
-ding
-> > new properties to the cell bindings which have no relation to each othe=
-r.
+> The FU540-C000 SoC from sifive, has an Opencore's I2C block
+> reimplementation.
 >
-> makes sense, so something like this would be acceptable?
+> The DT compatibility string for this IP is present in HDL and available at.
+> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/i2c/I2C.scala#L73
+>
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> index 17bef9a..b73960e 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> @@ -2,8 +2,11 @@ Device tree configuration for i2c-ocores
+>
+>  Required properties:
+>  - compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
+> +                    "sifive,fu540-c000-i2c" or "sifive,i2c0".
 
-No. Don't try to put a data processing language into DT.
+It's not an OR because both are required. Please reformat to 1 valid
+combination per line.
 
+> +                   for Opencore based I2C IP block reimplemented in
+> +                   FU540-C000 SoC.Please refer sifive-blocks-ip-versioning.txt
+> +                   for additional details.
+>  - reg             : bus address start and address range size of device
+> -- interrupts      : interrupt number
+>  - clocks          : handle to the controller clock; see the note below.
+>                      Mutually exclusive with opencores,ip-clock-frequency
+>  - opencores,ip-clock-frequency: frequency of the controller clock in Hz;
+> @@ -12,6 +15,8 @@ Required properties:
+>  - #size-cells     : should be <0>
 >
->  eth1_addr: eth-mac-addr@18a {
->      /* or rather linux,nvmem-post-process ? */
->      compatible =3D "openwrt,nvmem-post-process";
->      reg =3D <0x189 0x11>;
->      indices =3D < 0 2
->                  3 2
->                  6 2
->                  9 2
->                 12 2
->                 15 2>;
->      transform =3D "ascii";
->      increment =3D <1>;
->      increment-at =3D <5>;
->      result-swap;
->  };
->
->  &eth1 {
->      nvmem-cells =3D <&eth1_addr>;
->      nvmem-cell-names =3D "mac-address";
->  };
->
-> > > was very compeling as it would kill two birds with one stone (fix out=
-standing
-> > > MTD/NVMEM OF clash as well[2]),
-> >
-> > Changes to nvmem dt bindings have been already rejected, for this more
-> > discussion at: https://lore.kernel.org/patchwork/patch/936312/
->
-> I know, I've re-read this thread several times, but it's still unclear to=
- me,
-> how this should be approached in order to be accepted by you and by DT
-> maintainers as well.
->
-> Anyway, to sum it up, from your point of view, following is fine?
->
->  flash@0 {
->     partitions {
->         art: partition@ff0000 {
->             nvmem_dev: nvmem-cells {
->                 compatible =3D "nvmem-cells";
+>  Optional properties:
+> +- interrupt-parent: handle to interrupt controller.
 
-My suggestion would be to add a specific compatible here and that can
-provide a driver or hooks to read and transform the data.
+Drop this. interrupt-parent is implied.
 
-Rob
-
->                 eth1_addr: eth-mac-addr@189 {
->                     compatible =3D "openwrt,nvmem-post-process";
->                     reg =3D <0x189 0x6>;
->                     increment =3D <1>;
->                     increment-at =3D <5>;
->                     result-swap;
->                 };
->             };
->         };
->     };
->  };
+> +- interrupts      : interrupt number.
+>  - clock-frequency : frequency of bus clock in Hz; see the note below.
+>                      Defaults to 100 KHz when the property is not specified
+>  - reg-shift       : device register offsets are shifted by this value
+> --
+> 1.9.1
 >
->  &eth1 {
->     nvmem =3D <&nvmem_dev>;
->     nvmem-cells =3D <&eth1_addr>;
->     nvmem-cell-names =3D "mac-address";
->  };
->
-> -- ynezz
