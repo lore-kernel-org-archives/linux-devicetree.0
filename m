@@ -1,56 +1,114 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC v2 0/5] cpufreq support for the Raspberry Pi
-Date: Mon, 20 May 2019 16:21:53 +0530
-Message-ID: <20190520105153.ftlnjx7ocr2qkxhd@vireshk-i7>
-References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
+Date: Mon, 20 May 2019 12:59:31 +0200
+Message-ID: <20190520105931.5xa4j3hhxadtgxie@flea>
+References: <20190512082614.9045-1-tiny.windzz@gmail.com>
+ <20190512082614.9045-3-tiny.windzz@gmail.com>
+ <20190512221612.ubmknvim4utnqpl4@core.my.home>
+ <CAEExFWv5A5mhpV7afQT=AaYx2ko5QnfbM6HvfuTgT1Na=ssOcw@mail.gmail.com>
+ <20190516182936.h6xdzp3gtg4ikave@core.my.home>
+ <CAEExFWvDO3wJd6wp1hFudf3EGF0NixgKAwAd5-b1=VLF+7-jCw@mail.gmail.com>
+ <20190519142239.eolisexp5mrdyafz@core.my.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cs6fqv7etllvtecf"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190520104708.11980-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20190519142239.eolisexp5mrdyafz@core.my.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, mbrugger@suse.de, rjw@rjwysocki.net, sboyd@kernel.org, eric@anholt.net, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com, ssuloev@orpaltech.com, linux-clk@vger.kernel.org, mturquette@baylibre.com, linux-kernel@vger.kernel.org
+To: Frank Lee <tiny.windzz@gmail.com>, rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com, will.deacon@arm.com, David Miller <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan.Cameron@huawei.com, Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>, olof@lixom.net, bjorn.andersson@linaro.org, Jagan Teki <jagan@amarulasolutions.com>, marc.w.gonzalez@free.fr, stefan.wahren@i2se.com, enric.balletbo@collabora.com, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@v>
 List-Id: devicetree@vger.kernel.org
 
-On 20-05-19, 12:47, Nicolas Saenz Julienne wrote:
-> Hi all,
-> as some of you may recall I've been spending some time looking into
-> providing 'cpufreq' support for the Raspberry Pi platform[1]. I think
-> I'm close to something workable, so I'd love for you to comment on it.
-> 
-> There has been some design changes since the last version. Namely the
-> fact that I now make sure *only* the CPU frequency is updated. The
-> firmware API we use has two modes, with or without turbo. Enabling turbo
-> implies not only scaling the CPU clock but also the VPU and other
-> peripheral related clocks.  This is problematic as some of them are not
-> prepared for this kind frequency changes. I spent some time adapting the
-> peripheral drivers, but the result was disappointing as they poorly
-> support live frequency changes (which most other chips accept, think for
-> instance I2C and clock stretching) but also turned out hard to integrate
-> into the kernel. As we were planning to use 'clk_notifiers' which turns
-> out not to be such a good idea as it's prone to deadlocks and not
-> recommended by the clock maintainers[2]. It's also worth mentioning that
-> the foundation kernel doesn't support VPU frequency scaling either.
-> 
-> With this in mind, and as suggested by clock maintainers[2], I've
-> decided to integrate the firmware clock interface into the bcm2835 clock
-> driver. This, in my opinion, provides the least friction with the
-> firmware and lets us write very simple and portable higher level
-> drivers. As I did with the 'cpufreq' driver which simply queries the max
-> and min frequencies available, which are configurable in the firmware,
-> to then trigger the generic 'cpufreq-dt'.
-> 
-> In the future we could further integrate other firmware dependent clocks
-> into the main driver. For instance to be able to scale the VPU clock,
-> which should be operated through a 'devfreq' driver.
-> 
-> This was tested on a RPi3b+ and if the series is well received I'll test
-> it further on all platforms I own.
 
-Please always supply version history on what has changed from V1. And
-why do you keep sending it as RFC ? Just keep the default PATCH thing,
-the patches are in good shape I would say.
+--cs6fqv7etllvtecf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-viresh
+On Sun, May 19, 2019 at 04:22:39PM +0200, Ond=C5=99ej Jirman wrote:
+> On Sat, May 18, 2019 at 12:34:57AM +0800, Frank Lee wrote:
+> > HI,
+> >
+> > On Fri, May 17, 2019 at 2:29 AM Ond=C5=99ej Jirman <megous@megous.com> =
+wrote:
+> > >
+> > > Hi Yangtao,
+> > >
+> > > thank you for work on this driver.
+> > >
+> > > On Fri, May 17, 2019 at 02:06:53AM +0800, Frank Lee wrote:
+> > > > HI Ond=C5=99ej,
+> > > >
+> > > > On Mon, May 13, 2019 at 6:16 AM Ond=C5=99ej Jirman <megous@megous.c=
+om> wrote:
+> > > > > > +
+> > > > > > +/* Temp Unit: millidegree Celsius */
+> > > > > > +static int tsens_reg2temp(struct tsens_device *tmdev,
+> > > > > > +                           int reg)
+> > > > >
+> > > > > Please name all functions so that they are more clearly identifia=
+ble
+> > > > > in stack traces as belonging to this driver. For example:
+> > > > >
+> > > > >   sun8i_ths_reg2temp
+> > > > >
+> > > > > The same applies for all tsens_* functions below. tsens_* is too
+> > > > > generic.
+> > > >
+> > > > Done but no sun8i_ths_reg2temp.
+> > > >
+> > > > ths_reg2tem() should be a generic func.
+> > > > I think it should be suitable for all platforms=EF=BC=8C so no plat=
+form prefix.
+> > >
+> > > You've missed my point. The driver name is sun8i_thermal and if you g=
+et
+> > > and oops from the kernel you'll get a stack trace where there are jus=
+t function
+> > > names. If you use too generic function names, it will not be clear wh=
+ich
+> > > driver is oopsing.
+> > >
+> > >   - sun8i_ths_reg2temp will tell you much more clearly where to searc=
+h than
+> > >   - ths_reg2temp
+> > >
+> > > Of course you can always grep, but most thermal drivers are thermal s=
+ensor (ths)
+> > > drivers, and if multiple of them used this too-generic naming scheme =
+you'd
+> > > have hard time debugging.
+> > >
+> > > Look at other thermal drivers. They usually encode driver name in the=
+ function
+> > > names to help with identification (even if these are static driver-lo=
+cal
+> > > functions).
+> > >
+> >
+> > Can we change to sunxi_ths_ prefix?
+>
+> It should probably match the driver name, but yes, that's better.
+
+Not really. This driver will not support all the Allwinner devices, so
+sunxi is seriously misleading.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--cs6fqv7etllvtecf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOKIjwAKCRDj7w1vZxhR
+xTP8APwM6R/JGZlZh8LDRMjlyCgFBIRiGljCGv2QrzA5AEuMMQD+K7kvKFJY3y7e
+kwh8XD4UChjl2L6sIApfpG0X2XN63Qc=
+=BTfA
+-----END PGP SIGNATURE-----
+
+--cs6fqv7etllvtecf--
