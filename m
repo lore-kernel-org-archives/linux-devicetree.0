@@ -1,115 +1,218 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [v3 1/7] drm/mediatek: move mipi_dsi_host_register to probe
-Date: Mon, 20 May 2019 15:18:23 +0800
-Message-ID: <1558336703.7311.37.camel@mtksdaap41>
-References: <20190519092537.69053-1-jitao.shi@mediatek.com>
- <20190519092537.69053-2-jitao.shi@mediatek.com>
+From: masonccyang@mxic.com.tw
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
+ MFD bindings
+Date: Mon, 20 May 2019 15:23:57 +0800
+Message-ID: <OF5AF00898.3CE87C98-ON48258400.00259B16-48258400.0028A4F5@mxic.com.tw>
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw> <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com> <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw> <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell> <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw> <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw> <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com> <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw> <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com> <OFAD9AA573.86373
+ <44bc8f0a-cbdc-db4a-9a46-b8bae5cc37a2@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190519092537.69053-2-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, yingjoe.chen@mediatek.com, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Sean Paul <seanpaul@chromium>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <44bc8f0a-cbdc-db4a-9a46-b8bae5cc37a2@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Boris Brezillon <bbrezillon@kernel.org>, Mark Brown <broonie@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, Lee Jones <lee.jones@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, zhengxunli@mxic.com.tw, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEppdGFvOgoKT24gU3VuLCAyMDE5LTA1LTE5IGF0IDE3OjI1ICswODAwLCBKaXRhbyBTaGkg
-d3JvdGU6Cj4gRFNJIHBhbmVsIGRyaXZlciBuZWVkIGF0dGFjaCBmdW5jdGlvbiB3aGljaCBpcyBp
-bmN1bGRlIGluCj4gbWlwaV9kc2lfaG9zdF9vcHMuCj4gCj4gSWYgbWlwaV9kc2lfaG9zdF9yZWdp
-c3RlciBpcyBub3QgaW4gcHJvYmUsIGRzaSBwYW5lbCB3aWxsCj4gcHJvYmUgZmFpbCBvciBtb3Jl
-IGRlbGF5LgoKSW4gWzFdLCB5b3UgaGF2ZSBhZ3JlZWQgdGhpcyBwYXRjaCBqdXN0IGZvciBkZWxh
-eSBub3QgZm9yIHByb2JlIGZhaWwKUmVtb3ZlICdwcm9iZSBmYWlsJy5pbiBjb21taXQgbWVzc2Fn
-ZS4KClsxXQpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtbWVkaWF0
-ZWsvMjAxOS1NYXkvMDE5ODM2Lmh0bWwKCj4gCj4gU28gbW92ZSB0aGUgbWlwaV9kc2lfaG9zdF9y
-ZWdpc3RlciB0byBwcm9iZSBmcm9tIGJpbmQuCj4gCj4gU2lnbmVkLW9mZi1ieTogSml0YW8gU2hp
-IDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RzaS5jIHwgNTAgKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tCj4gIDEgZmls
-ZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspLCAyMCBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHNpLmMKPiBpbmRleCBiMDBlYjJkMmUwODYuLjZjNGFjMzdmOTgzZCAx
-MDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCj4gKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYwo+IEBAIC0xMDQ1LDEyICsxMDQ1LDYg
-QEAgc3RhdGljIGludCBtdGtfZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2
-aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4gIAkJcmV0dXJuIHJldDsKPiAgCX0KPiAgCj4gLQly
-ZXQgPSBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKCZkc2ktPmhvc3QpOwo+IC0JaWYgKHJldCA8IDAp
-IHsKPiAtCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byByZWdpc3RlciBEU0kgaG9zdDogJWRcbiIs
-IHJldCk7Cj4gLQkJZ290byBlcnJfZGRwX2NvbXBfdW5yZWdpc3RlcjsKPiAtCX0KPiAtCj4gIAly
-ZXQgPSBtdGtfZHNpX2NyZWF0ZV9jb25uX2VuYyhkcm0sIGRzaSk7Cj4gIAlpZiAocmV0KSB7Cj4g
-IAkJRFJNX0VSUk9SKCJFbmNvZGVyIGNyZWF0ZSBmYWlsZWQgd2l0aCAlZFxuIiwgcmV0KTsKPiBA
-QCAtMTA2MCw4ICsxMDU0LDYgQEAgc3RhdGljIGludCBtdGtfZHNpX2JpbmQoc3RydWN0IGRldmlj
-ZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4gIAlyZXR1cm4gMDsK
-PiAgCj4gIGVycl91bnJlZ2lzdGVyOgo+IC0JbWlwaV9kc2lfaG9zdF91bnJlZ2lzdGVyKCZkc2kt
-Pmhvc3QpOwo+IC1lcnJfZGRwX2NvbXBfdW5yZWdpc3RlcjoKPiAgCW10a19kZHBfY29tcF91bnJl
-Z2lzdGVyKGRybSwgJmRzaS0+ZGRwX2NvbXApOwo+ICAJcmV0dXJuIHJldDsKPiAgfQo+IEBAIC0x
-MDk3LDMxICsxMDg5LDM3IEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlICpwZGV2KQo+ICAKPiAgCWRzaS0+aG9zdC5vcHMgPSAmbXRrX2RzaV9vcHM7Cj4g
-IAlkc2ktPmhvc3QuZGV2ID0gZGV2Owo+ICsJZHNpLT5kZXYgPSBkZXY7CgpUaGlzIGlzIGZvciBk
-ZWJ1ZyBtZXNzYWdlLCBub3QgZm9yIHRoZSB0aW1pbmcgb2YKbWlwaV9kc2lfaG9zdF9yZWdpc3Rl
-cigpLCBzbyBtb3ZlIHRvIGFuIGluZGVwZW5kZW50IHBhdGNoLgoKUmVnYXJkcywKQ0sKCj4gKwly
-ZXQgPSBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKCZkc2ktPmhvc3QpOwo+ICsJaWYgKHJldCA8IDAp
-IHsKPiArCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byByZWdpc3RlciBEU0kgaG9zdDogJWRcbiIs
-IHJldCk7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiAgCj4gIAlyZXQgPSBkcm1fb2ZfZmluZF9w
-YW5lbF9vcl9icmlkZ2UoZGV2LT5vZl9ub2RlLCAwLCAwLAo+ICAJCQkJCSAgJmRzaS0+cGFuZWws
-ICZkc2ktPmJyaWRnZSk7Cj4gIAlpZiAocmV0KQo+IC0JCXJldHVybiByZXQ7Cj4gKwkJZ290byBl
-cnJfdW5yZWdpc3Rlcl9ob3N0Owo+ICAKPiAgCWRzaS0+ZW5naW5lX2NsayA9IGRldm1fY2xrX2dl
-dChkZXYsICJlbmdpbmUiKTsKPiAgCWlmIChJU19FUlIoZHNpLT5lbmdpbmVfY2xrKSkgewo+ICAJ
-CXJldCA9IFBUUl9FUlIoZHNpLT5lbmdpbmVfY2xrKTsKPiAgCQlkZXZfZXJyKGRldiwgIkZhaWxl
-ZCB0byBnZXQgZW5naW5lIGNsb2NrOiAlZFxuIiwgcmV0KTsKPiAtCQlyZXR1cm4gcmV0Owo+ICsJ
-CWdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKPiAgCX0KPiAgCj4gIAlkc2ktPmRpZ2l0YWxfY2xr
-ID0gZGV2bV9jbGtfZ2V0KGRldiwgImRpZ2l0YWwiKTsKPiAgCWlmIChJU19FUlIoZHNpLT5kaWdp
-dGFsX2NsaykpIHsKPiAgCQlyZXQgPSBQVFJfRVJSKGRzaS0+ZGlnaXRhbF9jbGspOwo+ICAJCWRl
-dl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBkaWdpdGFsIGNsb2NrOiAlZFxuIiwgcmV0KTsKPiAt
-CQlyZXR1cm4gcmV0Owo+ICsJCWdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKPiAgCX0KPiAgCj4g
-IAlkc2ktPmhzX2NsayA9IGRldm1fY2xrX2dldChkZXYsICJocyIpOwo+ICAJaWYgKElTX0VSUihk
-c2ktPmhzX2NsaykpIHsKPiAgCQlyZXQgPSBQVFJfRVJSKGRzaS0+aHNfY2xrKTsKPiAgCQlkZXZf
-ZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgaHMgY2xvY2s6ICVkXG4iLCByZXQpOwo+IC0JCXJldHVy
-biByZXQ7Cj4gKwkJZ290byBlcnJfdW5yZWdpc3Rlcl9ob3N0Owo+ICAJfQo+ICAKPiAgCXJlZ3Mg
-PSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOwo+IEBAIC0x
-MTI5LDMzICsxMTI3LDM1IEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlICpwZGV2KQo+ICAJaWYgKElTX0VSUihkc2ktPnJlZ3MpKSB7Cj4gIAkJcmV0ID0g
-UFRSX0VSUihkc2ktPnJlZ3MpOwo+ICAJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGlvcmVtYXAg
-bWVtb3J5OiAlZFxuIiwgcmV0KTsKPiAtCQlyZXR1cm4gcmV0Owo+ICsJCWdvdG8gZXJyX3VucmVn
-aXN0ZXJfaG9zdDsKPiAgCX0KPiAgCj4gIAlkc2ktPnBoeSA9IGRldm1fcGh5X2dldChkZXYsICJk
-cGh5Iik7Cj4gIAlpZiAoSVNfRVJSKGRzaS0+cGh5KSkgewo+ICAJCXJldCA9IFBUUl9FUlIoZHNp
-LT5waHkpOwo+ICAJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBNSVBJLURQSFk6ICVkXG4i
-LCByZXQpOwo+IC0JCXJldHVybiByZXQ7Cj4gKwkJZ290byBlcnJfdW5yZWdpc3Rlcl9ob3N0Owo+
-ICAJfQo+ICAKPiAgCWNvbXBfaWQgPSBtdGtfZGRwX2NvbXBfZ2V0X2lkKGRldi0+b2Zfbm9kZSwg
-TVRLX0RTSSk7Cj4gIAlpZiAoY29tcF9pZCA8IDApIHsKPiAgCQlkZXZfZXJyKGRldiwgIkZhaWxl
-ZCB0byBpZGVudGlmeSBieSBhbGlhczogJWRcbiIsIGNvbXBfaWQpOwo+IC0JCXJldHVybiBjb21w
-X2lkOwo+ICsJCXJldCA9IGNvbXBfaWQ7Cj4gKwkJZ290byBlcnJfdW5yZWdpc3Rlcl9ob3N0Owo+
-ICAJfQo+ICAKPiAgCXJldCA9IG10a19kZHBfY29tcF9pbml0KGRldiwgZGV2LT5vZl9ub2RlLCAm
-ZHNpLT5kZHBfY29tcCwgY29tcF9pZCwKPiAgCQkJCSZtdGtfZHNpX2Z1bmNzKTsKPiAgCWlmIChy
-ZXQpIHsKPiAgCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBpbml0aWFsaXplIGNvbXBvbmVudDog
-JWRcbiIsIHJldCk7Cj4gLQkJcmV0dXJuIHJldDsKPiArCQlnb3RvIGVycl91bnJlZ2lzdGVyX2hv
-c3Q7Cj4gIAl9Cj4gIAo+ICAJaXJxX251bSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCk7Cj4g
-IAlpZiAoaXJxX251bSA8IDApIHsKPiAtCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8g
-cmVxdWVzdCBkc2kgaXJxIHJlc291cmNlXG4iKTsKPiAtCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsK
-PiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZ2V0IGRzaSBpcnFfbnVtOiAlZFxu
-IiwgaXJxX251bSk7Cj4gKwkJcmV0ID0gaXJxX251bTsKPiArCQlnb3RvIGVycl91bnJlZ2lzdGVy
-X2hvc3Q7Cj4gIAl9Cj4gIAo+ICAJaXJxX3NldF9zdGF0dXNfZmxhZ3MoaXJxX251bSwgSVJRX1RZ
-UEVfTEVWRUxfTE9XKTsKPiBAQCAtMTE2MywxNCArMTE2MywyNCBAQCBzdGF0aWMgaW50IG10a19k
-c2lfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCQkJICAgICAgIElSUUZf
-VFJJR0dFUl9MT1csIGRldl9uYW1lKCZwZGV2LT5kZXYpLCBkc2kpOwo+ICAJaWYgKHJldCkgewo+
-ICAJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZXF1ZXN0IG1lZGlhdGVrIGRzaSBp
-cnFcbiIpOwo+IC0JCXJldHVybiAtRVBST0JFX0RFRkVSOwo+ICsJCWdvdG8gZXJyX3VucmVnaXN0
-ZXJfaG9zdDsKPiAgCX0KPiAgCj4gIAlpbml0X3dhaXRxdWV1ZV9oZWFkKCZkc2ktPmlycV93YWl0
-X3F1ZXVlKTsKPiAgCj4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBkc2kpOwo+ICAKPiAt
-CXJldHVybiBjb21wb25lbnRfYWRkKCZwZGV2LT5kZXYsICZtdGtfZHNpX2NvbXBvbmVudF9vcHMp
-Owo+ICsJcmV0ID0gY29tcG9uZW50X2FkZCgmcGRldi0+ZGV2LCAmbXRrX2RzaV9jb21wb25lbnRf
-b3BzKTsKPiArCWlmIChyZXQpIHsKPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8g
-YWRkIGNvbXBvbmVudDogJWRcbiIsIHJldCk7Cj4gKwkJZ290byBlcnJfdW5yZWdpc3Rlcl9ob3N0
-Owo+ICsJfQo+ICsKPiArCXJldHVybiAwOwo+ICsKPiArZXJyX3VucmVnaXN0ZXJfaG9zdDoKPiAr
-CW1pcGlfZHNpX2hvc3RfdW5yZWdpc3RlcigmZHNpLT5ob3N0KTsKPiArCXJldHVybiByZXQ7Cj4g
-IH0KPiAgCj4gIHN0YXRpYyBpbnQgbXRrX2RzaV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
-ZSAqcGRldikKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+
+Hi Sergei, 
+
+> >>> -------------------------------------------------------------->
+> >>>
+> >>> Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
+> >>> ---------------------------------------------------------
+> >>>
+> >>>   RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
+> >>>
+> >>>   Required properties:
+> >>>   - compatible: should be an SoC-specific compatible value, followed 
+
+> > by
+> >>>                   "renesas,rcar-gen3-rpc" as a fallback.
+> >>>                   supported SoC-specific values are:
+> >>>                   "renesas,r8a77995-rpc"  (R-Car D3)
+> >>>   - reg: should contain three register areas:
+> >>>           first for the base address of RPC-IF registers,
+> >>
+> >>    I'd drop "the base address" here.
+> > 
+> > okay.
+> > 
+> >>>           second for the direct mapping read mode and
+> >>>           third for the write buffer area.
+> >>>   - reg-names: should contain "regs", "dirmap" and "wbuf"
+> >>>   - clocks: should contain 1 entries for the module's clock
+> >>>   - clock-names: should contain "rpc"
+> >>
+> >>    I suspect we'd need the RPC/RPCD2 clocks mentioned as well (not 
+sure 
+> > yet)...
+> > 
+> > Need it ?
+> 
+>    You seem to call clk_get_rate() on the module clock, I doubt that's
+> correct topologically...
+
+I think it's correct but just like Geert mentioned that there is no any 
+patch
+in drivers/clk/renesas/r8a77995-cpg-mssr.c adding RPC-related clocks.
+
+
+I patched dt-bindings/clock/r8a77995-cpg-mssr.h for some simple testing
+
+-#define R8A77995_CLK_RPC               29
+-#define R8A77995_CLK_RPCD2             30
++#define R8A77995_CLK_RPC               31
++#define R8A77995_CLK_RPCD2             32
+
+by clk_prepare_enable() & clk_disable_unprepare() with CPG_MOD 917 
+on D3 draak board, it is working fine.
+
+
+> >>
+> >>>   - SPI mode:git
+> >>>
+> >>>           rpc: rpc-if@ee200000 {
+> >>
+> >>    The node names should be generic, based on the device class. And 
+in 
+> > this
+> >> case I'd like to use "spi@ee200000" as otherwise dtc keeps bitching 
+like 
+> > below:
+> > 
+> > okay, patch to
+> > 
+> > rpc_if: spi@<...>
+> 
+>    That, or just keep the node label.
+
+okay.
+
+
+> >>>   - HF mode:
+> >>>           rpc: rpc-if@ee200000 {
+> >>
+> >>    Again, spi@<...>.
+> > 
+> > what about rpc_if: hf@<...>
+> 
+>    Can't change the node name, as it's declared in the .dtsi files, not 
+*.dts
+> ones. And "spi" works for the HF case as well -- no complaints from dtc. 
+:-)
+
+okay,
+
+ 
+Patch DTS to
+===============================================================> 
++Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
++---------------------------------------------------------
++
++RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
++
++Required properties:
++- compatible: should be an SoC-specific compatible value, followed by
++                                "renesas,rcar-gen3-rpc" as a fallback.
++                                supported SoC-specific values are:
++                                "renesas,r8a77995-rpc"          (R-Car 
+D3)
++- reg: should contain three register areas:
++                first for RPC-IF registers,
++                second for the direct mapping read mode and
++                third for the write buffer area.
++- reg-names: should contain "regs", "dirmap" and "wbuf"
++- clocks: should contain 1 entries for the module's clock
++- clock-names: should contain "rpc"
++- power-domains: should contain system-controller(sysc) for 
+power-domain-cell
++- resets: should contain clock pulse generator(cpg) for reset-cell,
++                  power-domain-cell and clock-cell
++- #address-cells: should be 1
++- #size-cells: should be 0
++
++Example:
++- SPI mode:
++
++                rpc: spi@ee200000 {
++                                compatible = "renesas,r8a77995-rpc", 
+"renesas,rcar-gen3-rpc";
++                                reg = <0 0xee200000 0 0x200>, <0 
+0x08000000 0 0x4000000>,
++                                      <0 0xee208000 0 0x100>;
++                                reg-names = "regs", "dirmap", "wbuf";
++                                clocks = <&cpg CPG_MOD 917>;
++                                clock-names = "rpc";
++                                power-domains = <&sysc 
+R8A77995_PD_ALWAYS_ON>;
++                                resets = <&cpg 917>;
++                                #address-cells = <1>;
++                                #size-cells = <0>;
++
++                                flash@0 {
++                                                compatible = 
+"jedec,spi-nor";
++                                                reg = <0>;
++                                                spi-max-frequency = 
+<40000000>;
++                                                spi-tx-bus-width = <1>;
++                                                spi-rx-bus-width = <1>;
++                                };
++                };
++
++- HF mode:
++                rpc: spi@ee200000 {
++                                compatible = "renesas,r8a77995-rpc", 
+"renesas,rcar-gen3-rpc";
++                                reg = <0 0xee200000 0 0x200>, <0 
+0x08000000 0 0x4000000>,
++                                      <0 0xee208000 0 0x100>;
++                                reg-names = "regs", "dirmap", "wbuf";
++                                clocks = <&cpg CPG_MOD 917>;
++                                clock-names = "rpc";
++                                power-domains = <&sysc 
+R8A77995_PD_ALWAYS_ON>;
++                                resets = <&cpg 917>;
++                                #address-cells = <1>;
++                                #size-cells = <0>;
++
++                                flash@0 {
++                                                compatible = 
+"cypress,hyperflash", "cfi-flash";
++                                                reg = <0>;
++                                };
++                };
+===============================================================<
+
+thanks & best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
