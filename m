@@ -1,69 +1,66 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 1/3] dt-bindings: i2c: extend existing opencore bindings.
-Date: Mon, 20 May 2019 09:36:48 -0500
-Message-ID: <CAL_Jsq+6uL+wqi=5cp1X9JdBfmLDzGz5UjwfqKCCESyhsemnhQ@mail.gmail.com>
-References: <1558361478-4381-1-git-send-email-sagar.kadam@sifive.com> <1558361478-4381-2-git-send-email-sagar.kadam@sifive.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: watchdog: add Allwinner H6 watchdog
+Date: Mon, 20 May 2019 16:42:58 +0200
+Message-ID: <20190520144258.eauhvvwfxuhiczie@flea>
+References: <20190518152355.11134-1-peron.clem@gmail.com>
+ <20190518152355.11134-2-peron.clem@gmail.com>
+ <20190520073529.nxptfbibexrqyzfi@flea>
+ <CAJiuCcdrW7RcEKePCr1DaL-be8dA5oOjvHdxYkiu=h37z2e7tw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vpv227evtpkmkqyk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558361478-4381-2-git-send-email-sagar.kadam@sifive.com>
+Content-Disposition: inline
+In-Reply-To: <CAJiuCcdrW7RcEKePCr1DaL-be8dA5oOjvHdxYkiu=h37z2e7tw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com, Andrew Lunn <andrew@lunn.ch>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 9:12 AM Sagar Shrikant Kadam
-<sagar.kadam@sifive.com> wrote:
->
-> Add FU540-C000 specific device tree bindings to already
-> available i2-ocores file. This device is available on
-> HiFive Unleashed Rev A00 board. Move interrupt and interrupt
-> parents under optional property list as these can be optional.
->
-> The FU540-C000 SoC from sifive, has an Opencore's I2C block
-> reimplementation.
->
-> The DT compatibility string for this IP is present in HDL and available at.
-> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/i2c/I2C.scala#L73
->
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> index 17bef9a..b73960e 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> @@ -2,8 +2,11 @@ Device tree configuration for i2c-ocores
->
->  Required properties:
->  - compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
-> +                    "sifive,fu540-c000-i2c" or "sifive,i2c0".
 
-It's not an OR because both are required. Please reformat to 1 valid
-combination per line.
+--vpv227evtpkmkqyk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +                   for Opencore based I2C IP block reimplemented in
-> +                   FU540-C000 SoC.Please refer sifive-blocks-ip-versioning.txt
-> +                   for additional details.
->  - reg             : bus address start and address range size of device
-> -- interrupts      : interrupt number
->  - clocks          : handle to the controller clock; see the note below.
->                      Mutually exclusive with opencores,ip-clock-frequency
->  - opencores,ip-clock-frequency: frequency of the controller clock in Hz;
-> @@ -12,6 +15,8 @@ Required properties:
->  - #size-cells     : should be <0>
+On Mon, May 20, 2019 at 10:14:10AM +0200, Cl=E9ment P=E9ron wrote:
+> >
+> > > +     - "allwinner,sun4i-a10-wdt"
+> > > +     - "allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
+> > > +     - "allwinner,sun50i-h6-wdt","allwinner,sun50i-a64-wdt",
+> > > +       "allwinner,sun6i-a31-wdt"
+> >
+> > Is there a reason to keep the A64 compatible?
 >
->  Optional properties:
-> +- interrupt-parent: handle to interrupt controller.
+> Yes, A64 and H6 has the exact same memory mapping looking at the datashee=
+t.
+> So if there is an errata or a new feature for the A64, it should be
+> also compatible with the H6.
+> Which is not the case with A31 (WDT_KEY_FIELD is not preset)
 
-Drop this. interrupt-parent is implied.
+The thing is, if you use those three compatibles, then you're saying
+that it's ok for the OS to use first the H6 driver, then the A64
+driver, and then the A31 driver.
 
-> +- interrupts      : interrupt number.
->  - clock-frequency : frequency of bus clock in Hz; see the note below.
->                      Defaults to 100 KHz when the property is not specified
->  - reg-shift       : device register offsets are shifted by this value
-> --
-> 1.9.1
->
+If the A31 isn't compatible, then it shouldn't be listed there. And if
+it is, then you can skip the A64 compatible.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--vpv227evtpkmkqyk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOK88gAKCRDj7w1vZxhR
+xQlAAPsE6kzsQQMSHryqgwmd6OWp/s6AtN+TcU7ip7ukhfmmlgEA24/Tc3t6XRAH
+2cNOcp+yz6bb7jinJ2k9sXjsqBcyywo=
+=7TNO
+-----END PGP SIGNATURE-----
+
+--vpv227evtpkmkqyk--
