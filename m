@@ -1,30 +1,35 @@
-Return-Path: <SRS0=HApX=T4=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=hwgN=TU=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH 1/2] arm64: dts: renesas: r8a774c0-cat874: Add WLAN
+ support
+Date: Mon, 20 May 2019 12:13:14 +0000
+Message-ID: 
+ <OSBPR01MB2103EEC3D299D26015F50EC8B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1557997166-63351-1-git-send-email-biju.das@bp.renesas.com>
+ <1557997166-63351-2-git-send-email-biju.das@bp.renesas.com>
+ <20190520115313.koe4vjykiiun3tef@verge.net.au>
+In-Reply-To: <20190520115313.koe4vjykiiun3tef@verge.net.au>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1557997166-63351-1-git-send-email-biju.das@bp.renesas.com> <1557997166-63351-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1557997166-63351-2-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 28 May 2019 10:53:04 +0200
-Message-ID: <CAMuHMdUGxdfT2+X7fYXS7+Fv12J0V6UB-5NEv=o3qjG_udZhEw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a774c0-cat874: Add WLAN support
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, May 16, 2019 at 11:06 AM Biju Das <biju.das@bp.renesas.com> wrote:
-> This patch enables WLAN support for the CAT874 board.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a774c0-cat874: Add WLAN
+> support
+>=20
+> On Thu, May 16, 2019 at 09:59:25AM +0100, Biju Das wrote:
+> > This patch enables WLAN support for the CAT874 board.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+>=20
+> Thanks Biju,
+>=20
+> applied for v5.3 with the subject updated to:
+>=20
+> arm64: dts: renesas: cat874: Add WLAN
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks  Simon.
