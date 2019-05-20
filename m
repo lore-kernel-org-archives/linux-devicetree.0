@@ -1,29 +1,55 @@
 From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: [PATCH 0/2] ARC: [plat-hsdk]: GMAC DT Bindings Improvements
-Date: Mon, 20 May 2019 15:43:11 +0200
-Message-ID: <cover.1558359611.git.joabreu@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 1/2] ARC: [plat-hsdk]: Add missing multicast filter bins
+ number to GMAC node
+Date: Mon, 20 May 2019 15:43:12 +0200
+Message-ID: <efc8afc421f2461c2df4489c979545548782d857.1558359611.git.joabreu@synopsys.com>
+References: <cover.1558359611.git.joabreu@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1558359611.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1558359611.git.joabreu@synopsys.com>
+References: <cover.1558359611.git.joabreu@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Jose Abreu <Jose.Abreu@synopsys.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: Jose Abreu <Jose.Abreu@synopsys.com>, Mark Rutland <mark.rutland@arm.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Add two missing bindings.
+GMAC controller on HSDK boards supports 256 Hash Table size so we need to
+add the multicast filter bins property. This allows for the Hash filter
+to work properly using stmmac driver.
 
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Vineet Gupta <vgupta@synopsys.com>
 Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 Cc: Alexey Brodkin <abrodkin@synopsys.com>
+---
+ arch/arc/boot/dts/hsdk.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-Jose Abreu (2):
-  ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC
-    node
-  ARC: [plat-hsdk]: Add missing FIFO size entry in GMAC node
-
- arch/arc/boot/dts/hsdk.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 69bc1c9e8e50..b0f059377ab0 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -187,6 +187,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = <32>;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&gmacclk>;
+ 			clock-names = "stmmaceth";
+ 			phy-handle = <&phy0>;
 -- 
 2.7.4
