@@ -1,61 +1,90 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v4 2/3] Documentation: dt: binding: fsl: Add 'little-endian' and update Chassis define
-Date: Mon, 20 May 2019 17:52:37 +0800
-Message-ID: <20190520095238.29210-2-ran.wang_1@nxp.com>
-References: <20190520095238.29210-1-ran.wang_1@nxp.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 2/6] Revert "arm64: dts: renesas: r8a7796: Enable DMA for
+ SCIF2"
+Date: Mon, 20 May 2019 09:52:46 +0000
+Message-ID: <OSBPR01MB31742E56261058846C5CBF44D8060@OSBPR01MB3174.jpnprd01.prod.outlook.com>
+References: <20190504004258.23574-1-erosca@de.adit-jv.com>
+ <20190504004258.23574-3-erosca@de.adit-jv.com>
+ <CAMuHMdWnuvQvugqfMjE1R_QDvf-Pma8POb1x5YjRr97+M-=HHg@mail.gmail.com>
+ <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
+ <OSBPR01MB3174C93C0A49701EC72F9D82D8060@OSBPR01MB3174.jpnprd01.prod.outlook.com>
+ <CAMuHMdVR4idTqOiNWMi3GAS0D-V+SMsYSsukgEMYyz5zDcuPbw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520095238.29210-1-ran.wang_1@nxp.com>
+In-Reply-To: <CAMuHMdVR4idTqOiNWMi3GAS0D-V+SMsYSsukgEMYyz5zDcuPbw@mail.gmail.com>
+Content-Language: ja-JP
 Sender: linux-kernel-owner@vger.kernel.org
-To: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "REE erosca@DE.ADIT-JV.COM" <erosca@DE.ADIT-JV.COM>, Eugeniu Rosca <roscaeugeniu@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <Chris.Brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mic
 List-Id: devicetree@vger.kernel.org
 
-By default, QorIQ SoC's RCPM register block is Big Endian. But
-there are some exceptions, such as LS1088A and LS2088A, are Little
-Endian. So add this optional property to help identify them.
-
-Actually LS2021A and other Layerscapes won't totally follow Chassis
-2.1, so separate them from powerpc SoC.
-
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
-Change in v4:
-	- Adjust indectation of 'ls1021a, ls1012a, ls1043a, ls1046a'.
-
-Change in v3:
-	- None.
-
-Change in v2:
-	- None.
-
- Documentation/devicetree/bindings/soc/fsl/rcpm.txt |    8 +++++++-
- 1 files changed, 7 insertions(+), 1 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-index e284e4e..058154c 100644
---- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-@@ -20,6 +20,7 @@ Required properites:
- 	* "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
- 	* "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
- 	* "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
-+	* "fsl,qoriq-rcpm-2.1+": for chassis 2.1+ rcpm
- 
- All references to "1.0" and "2.0" refer to the QorIQ chassis version to
- which the chip complies.
-@@ -27,7 +28,12 @@ Chassis Version		Example Chips
- ---------------		-------------------------------
- 1.0				p4080, p5020, p5040, p2041, p3041
- 2.0				t4240, b4860, b4420
--2.1				t1040, ls1021
-+2.1				t1040,
-+2.1+				ls1021a, ls1012a, ls1043a, ls1046a
-+
-+Optional properties:
-+ - little-endian : RCPM register block is Little Endian. Without it RCPM
-+   will be Big Endian (default case).
- 
- Example:
- The RCPM node for T4240:
--- 
-1.7.1
+SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmVwbHkhDQoNCj4gRnJvbTogR2Vl
+cnQgVXl0dGVyaG9ldmVuLCBTZW50OiBNb25kYXksIE1heSAyMCwgMjAxOSA0OjM4IFBNDQo+IA0K
+PiBIaSBTaGltb2RhLXNhbiwNCj4gDQo+IFRoYW5rcyBmb3IgeW91ciBhbmFseXNpcyENCj4gDQo+
+IE9uIE1vbiwgTWF5IDIwLCAyMDE5IGF0IDQ6MTggQU0gWW9zaGloaXJvIFNoaW1vZGENCj4gPHlv
+c2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiA+IEZyb206IEV1Z2Vu
+aXUgUm9zY2EsIFNlbnQ6IFR1ZXNkYXksIE1heSA3LCAyMDE5IDQ6NDMgQU0NCj4gPiA8c25pcD4N
+Cj4gPiA+ID4gPiBbMF0gdjUuMC1yYzYgY29tbWl0IDk3ZjI2NzAyYmM5NWI1ICgiYXJtNjQ6IGR0
+czogcmVuZXNhczogcjhhNzc5NjogRW5hYmxlIERNQSBmb3IgU0NJRjIiKQ0KPiA+ID4gPiA+IFsx
+XSB2NC4xNC4xMDYgY29tbWl0IDcwM2RiNWQxYjE3NTlmICgiYXJtNjQ6IGR0czogcmVuZXNhczog
+cjhhNzc5NjogRW5hYmxlIERNQSBmb3IgU0NJRjIiKQ0KPiA+ID4gPiA+IFsyXSBzY2lmIChERUJV
+RykgYW5kIHJjYXItZG1hYyBsb2dzOg0KPiA+ID4gPiA+ICAgICBodHRwczovL2dpc3QuZ2l0aHVi
+LmNvbS9lcm9zY2EvMTMyY2NlNzZhNjE5NzI0YTllNGZhNjFkMWRiODhjNjYNCj4gPiA8c25pcD4N
+Cj4gPiA+IEVuYWJsaW5nIERFQlVHIGluIGRyaXZlcnMvZG1hL3NoL3JjYXItZG1hYy5jLCBJIGNh
+biBub3RpY2UgdGhhdCBvbmUgb2YNCj4gPiA+IHRoZSBzeW1wdG9tcyBpcyBhIE5VTEwgZHN0X2Fk
+ZHIgcmV2ZWFsZWQgYnk6DQo+ID4gPg0KPiA+ID4gcmNhci1kbWFjIGU3MzAwMDAwLmRtYS1jb250
+cm9sbGVyOiBjaGFuMDogcXVldWUgY2h1bmsgKF9fX19wdHJ2YWxfX19fKTogMEAweGZmZmY4MDA2
+MzllYjgwOTAgLT4gMHgwMDAwMDAwMDAwMDAwMDAwDQo+ID4gPg0KPiA+ID4gSW4gd29ya2luZyBz
+Y2VuYXJpb3MsIGRzdF9hZGRyIGlzIG5ldmVyIHplcm8uIERvZXMgaXQgZ2l2ZSBhbnkgaGludHM/
+DQo+ID4NCj4gPiBUaGFuayB5b3UgZm9yIHRoZSByZXBvcnQhIEl0J3MgdmVyeSBoZWxwZnVsIHRv
+IG1lLg0KPiA+IEkgdGhpbmsgd2Ugc2hvdWxkIGZpeCB0aGUgc2gtc2NpIGRyaXZlciBhdCBsZWFz
+dC4NCj4gPg0KPiA+IEFjY29yZGluZyB0byB0aGUgWzJdIGxvZyBhYm92ZSwNCj4gPg0KPiA+IFsg
+ICAgNC4zNzk3MTZdIHNoLXNjaSBlNmU4ODAwMC5zZXJpYWw6IHNjaV9kbWFfdHhfd29ya19mbjog
+ZmZmZjgwMDYzOWI1NTAwMDogMC4uLjAsIGNvb2tpZSAxMjYNCj4gPg0KPiA+IFRoaXMgIjAuLi4w
+IiBtZWFucyB0aGUgcy0+dHhfZG1hX2xlbiBvbiB0aGUgc2NpX2RtYV90eF93b3JrX2ZuIHdpbGwg
+YmUgemVyby4gQW5kLA0KPiANCj4gSG93IGNhbiB0aGlzIGhhcHBlbj8gc2NoZWR1bGVfd29yaygm
+cy0+d29ya190eCkgaXMgY2FsbGVkIG9ubHkgaWYNCj4gIXVhcnRfY2lyY19lbXB0eSgpLCBhbmQg
+d2hpbGUgaG9sZGluZyB0aGUgcG9ydCBsb2NrPyBTbyB0aGUgY2lyY3VsYXINCj4gYnVmZmVyIG11
+c3QgYmUgbWFkZSBlbXB0eSBpbiBiZXR3ZWVuIHRoZSBjYWxsIHRvIHNjaGVkdWxlX3dvcmsoKSBh
+bmQgdGhlDQo+IHdvcmsgZnVuY3Rpb24gc2NpX2RtYV90eF93b3JrX2ZuKCkgYmVpbmcgY2FsbGVk
+Lg0KPiANCj4gSSB0aGluayB0aGlzIGNhbiBoYXBwZW4gaWYgdWFydF9mbHVzaF9idWZmZXIoKSBp
+cyBjYWxsZWQgYXQgdGhlIHJpZ2h0DQo+IG1vbWVudD8NCg0KSSB0aGluayBzby4gQWNjb3JkaW5n
+IHRvIHRoZSBsb2cgWzJdLCB0aGUgeG1pdC0+aGVhZCBhbmQgdGFpbCBpcyBzZXQgdG8gemVyby4N
+Cg0KMjc4IFsgICAgNC4zMzEyMzRdIHNoLXNjaSBlNmU4ODAwMC5zZXJpYWw6IHNjaV9kbWFfdHhf
+d29ya19mbjogZmZmZjgwMDYzOWI1NTAwMDogOS4uLjUyLCBjb29raWUgMTI0IA0KMjc5IFsgICAg
+NC4zMzQ4ODVdIHNoLXNjaSBlNmU4ODAwMC5zZXJpYWw6IHNjaV9kbWFfdHhfY29tcGxldGUoMCkg
+DQoyODAgWyAgICA0LjMzOTk5Ml0gc2gtc2NpIGU2ZTg4MDAwLnNlcmlhbDogc2NpX2RtYV90eF93
+b3JrX2ZuOiBmZmZmODAwNjM5YjU1MDAwOiA1Mi4uLjEwMCwgY29va2llIDEyNSANCjI4MSBbICAg
+IDQuMzQzMzQwXSBzaC1zY2kgZTZlODgwMDAuc2VyaWFsOiBzY2lfZG1hX3R4X2NvbXBsZXRlKDAp
+IA0KMjgyIFsgICAgNC4zNzk3MTZdIHNoLXNjaSBlNmU4ODAwMC5zZXJpYWw6IHNjaV9kbWFfdHhf
+d29ya19mbjogZmZmZjgwMDYzOWI1NTAwMDogMC4uLjAsIGNvb2tpZSAxMjYgDQoNCj4gPiA+IHJj
+YXItZG1hYyBlNzMwMDAwMC5kbWEtY29udHJvbGxlcjogY2hhbjA6IHF1ZXVlIGNodW5rIChfX19f
+cHRydmFsX19fXyk6IDBAMHhmZmZmODAwNjM5ZWI4MDkwIC0+IDB4MDAwMDAwMDAwMDAwMDAwMA0K
+PiA+DQo+ID4gVGhpcyBtZWFucyB0aGUgY2h1bmstPmRzdF9hZGRyIGlzIG5vdCBzZXQgdG8gdGhl
+ICJkc3RfYWRkciIgZm9yIFNDSUYgYmVjYXVzZSB0aGUgbGVuIG9uIHJjYXJfZG1hY19jaGFuX3By
+ZXBfc2cgaXMgemVyby4NCj4gPiBTbywgSSdtIHRoaW5raW5nOg0KPiA+ICAtIHdlIGhhdmUgdG8g
+Zml4IHRoZSBzaF9zY2kgZHJpdmVyIHRvIGF2b2lkICJ0eF9kbWFfbGVuID0gMCIgdHJhbnNmZXJy
+aW5nLg0KPiANCj4gVGhhdCBzb3VuZHMgbGlrZSBqdXN0IGEgc2ltcGxlIGNoZWNrIGZvciAhcy0+
+dHhfZG1hX2xlbiBpbg0KPiBzY2lfZG1hX3R4X3dvcmtfZm4oKSwgdG8gcmV0dXJuIGVhcmx5LCBf
+YW5kXyByZXNldCBzLT5jb29raWVfdHggdG8NCj4gLUVJTlZBTC4NCj4gDQo+IEhvd2V2ZXIsIHVh
+cnRfZmx1c2hfYnVmZmVyKCkgbWF5IHN0aWxsIGJlIGNhbGxlZCBpbiBiZXR3ZWVuIHRoZSBjaGVj
+aw0KPiBhbmQgdGhlIGNhbGxzIHRvIGRtYWVuZ2luZV9wcmVwX3NsYXZlX3NpbmdsZSgpIC8NCj4g
+ZG1hX3N5bmNfc2luZ2xlX2Zvcl9kZXZpY2UoKSwgY2xlYXJpbmcgcy0+dHhfZG1hX2xlbiBhZ2Fp
+bi4NCj4gVW5sZXNzIHNvbWV0aGluZyBoYXMgY2hhbmdlZCByZWNlbnRseSwgdGhlc2UgdHdvIGNh
+bGxzIGNhbm5vdCBiZSBtb3ZlZA0KPiBpbnNpZGUgdGhlIHNwaW5sb2NrLXByb3RlY3RlZCBzZWN0
+aW9uPw0KDQpJIGFsc28gdGhpbmsgdGhlc2UgdHdvIGNhbGxzIChhbmQgZG1hZW5naW5lX3N1Ym1p
+dCgpIGFuZCBkbWFfYXN5bmNfaXNzdWVfcGVuZGluZygpKQ0Kc2hvdWxkIGJlIG1vdmVkIGluc2lk
+ZSB0aGUgc3BpbmxvY2stcHJvdGVjdGVkIHNlY3Rpb24gbGlrZSBzY2lfZG1hX3J4X2NvbXBsZXRl
+KCkuDQoNCkFsc28sIHNjaV9mbHVzaF9idWZmZXIoKSBzaG91bGQgaGF2ZSB0aGUgc3BpbmxvY2st
+cHJvdGVjdGVkIHNlY3Rpb24gYW5kDQpjaGVjayB0aGUgeG1pdCBhbmQgZG1hIHN0YXRlIHNvbWVo
+b3cuDQoNCj4gVXNpbmcgYSBjYWNoZWQgdmFsdWUgb2Ygcy0+dHhfZG1hX2xlbiBmb3IgdGhlIGRt
+YWVuZ2luZSBjYWxscyBtaWdodA0KPiB3b3JrLCB0aG91Z2guDQo+IA0KPiA+IGFuZA0KPiA+DQo+
+ID4gIC0gYWxzbyB3ZSBoYXZlIHRvIGZpeCB0aGUgcmNhci1kbWFjIGRyaXZlciB0byBhdm9pZCB0
+aGlzIGlzc3VlIGJlY2F1c2UgdGhlIERNQSBFbmdpbmUgQVBJDQo+ID4gICAgZ3VpZGUgZG9lc24n
+dCBwcmV2ZW50IHRoZSBsZW4gPSAwLg0KPiANCj4gSSBndWVzcyByZXR1cm5pbmcgYW4gZXJyb3Ig
+bWFrZXMgbW9zdCBzZW5zZT8NCj4gRWxzZSB3ZSBoYXZlIHRvIGZpeCBpdCBkZWVwZXIgaW50byB0
+aGUgZHJpdmVyLCB3aGVyZSBoYW5kbGluZyBiZWNvbWVzDQo+IG1vcmUgY29tcGxleC4NCg0KSSBz
+ZWUuIEkgdGhpbmsgc28uIChXZSBzaG91bGQgYXZvaWQgbW9yZSBjb21wbGV4LikNCg0KQmVzdCBy
+ZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0K
