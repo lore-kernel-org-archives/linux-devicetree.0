@@ -1,71 +1,48 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2 3/5] arm64: dts: meson: g12a: add mdio multiplexer
-Date: Mon, 20 May 2019 23:51:09 +0200
-Message-ID: <97cde329c44eade402deb517211a15fd70103f01.camel@baylibre.com>
-References: <20190520131401.11804-1-jbrunet@baylibre.com>
-         <20190520131401.11804-4-jbrunet@baylibre.com>
-         <CAFBinCA_XE86eqCMpEFc3xMZDH8J7wVQPRj7bFZyqDxQx-w-qw@mail.gmail.com>
-         <20190520190533.GF22024@lunn.ch>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v2 1/3] ARM: dts: rockchip: disable GPU 500 MHz OPP for veyron
+Date: Mon, 20 May 2019 15:00:49 -0700
+Message-ID: <20190520220051.54847-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520190533.GF22024@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, f.fainelli@gmail.com, hkallweit1@gmail.com
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-05-20 at 21:05 +0200, Andrew Lunn wrote:
-> > > +                               int_mdio: mdio@1 {
-> > > +                                       reg = <1>;
-> > > +                                       #address-cells = <1>;
-> > > +                                       #size-cells = <0>;
-> > > +
-> > > +                                       internal_ephy: ethernet_phy@8 {
-> > > +                                               compatible = "ethernet-phy-id0180.3301",
-> > > +                                                            "ethernet-phy-ieee802.3-c22";
-> > Based on your comment on v1 of this patch [0] the Ethernet PHY ID is
-> > defined by this "mdio-multiplexer" (write arbitrary value to a
-> > register then that's the PHY ID which will show up on the bus)
-> > I'm fine with explicitly listing the ID which the PHY driver binds to
-> > because I don't know a better way.
+The NPLL is the only safe way to generate 500 MHz for the GPU. The
+downstream Chrome OS 3.14 kernel ('official' kernel for veyron
+devices) re-purposes NPLL to HDMI and hence disables the OPP for
+the GPU (see https://crrev.com/c/1574579). Disable it here as well
+to keep in sync and avoid problems in case someone decides to
+re-purpose NPLL.
 
-... 
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Changes in v2:
+- patch added to the series
+---
+ arch/arm/boot/dts/rk3288-veyron.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> 
-> Does reading the ID registers give the correct ID, once you have poked
-> registers in the mdio-multiplexer? If so, you don't need this
-> compatible string.
-
-Hi Andrew,
-
-In 5.1 the mdio-mux set a wrong simply because I got it wrong. I pushed a
-fix for that, and maybe it has already hit mainline.
-
-As I pointed to Martin on v1, this situation just shows that this setting is
-weaker than the usual phy setup.
-
-I do understand why we don't want to put the PHY id in DT. If the PHY fitted on
-the board changes, we want to pick it up. This particular phy is embedded in
-SoC, we know it won't change for this SoC, whatever the mdio-mux sets.
-
-So yes it should (soon) work as usual, setting this id is not strictly
-necessary but it nicely reflect that this particular phy is integrated in
-the SoC and we know which driver to use. 
-
-So, if this is ok with you, I'd prefer to keep this particular id around.
-
-> 
-> If the read is giving the wrong ID, then yes, you do want this. But
-> then please add a comment in the DT blob. This is very unusual, so
-> should have some explanation why it is needed.
-
-Sure, can add a comment. I suggest to do it in follow-up. At least it keeps
-things aligned between the gxl, which has been like this for quite a while now,
-and g12a.
-
-
-> 
-> Thanks
-> 	Andrew
+diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+index 90c8312d01ff..ec10ce4fcf04 100644
+--- a/arch/arm/boot/dts/rk3288-veyron.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+@@ -174,6 +174,14 @@
+ 	temperature = <100000>;
+ };
+ 
++/*
++ * Remove 500 MHz since the only way to make 500 MHz is via the NPLL
++ * which might be used for HDMI.
++ */
++&gpu_opp_table {
++	/delete-node/ opp-500000000;
++};
++
+ &hdmi {
+ 	ddc-i2c-bus = <&i2c5>;
+ 	status = "okay";
+-- 
+2.21.0.1020.gf2820cf01a-goog
