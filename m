@@ -1,69 +1,48 @@
-Return-Path: <SRS0=HQKq=TD=pengutronix.de=mfe@kernel.org>
-Date: Fri, 3 May 2019 10:49:40 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v3 0/2] Microchip QT1050 support
-Message-ID: <20190503084940.w4dx7ojbbtmfo7bl@pengutronix.de>
-References: <20190415165655.13016-1-m.felsch@pengutronix.de>
- <20190425072328.s6ukzchxabdx2edm@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190425072328.s6ukzchxabdx2edm@pengutronix.de>
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, raphaelpereira@gmail.com, voice.shen@atmel.com, kernel@pengutronix.de, linux-input@vger.kernel.org
+Date: Mon, 20 May 2019 13:14:58 -0500
+References: <20190219002706.20077-1-festevam@gmail.com>
+	<20190423110336.GB23448@ulmo>
+	<CAOMZO5C4YKcUGJ9wDJHQE04278Cr6ujYnYwPs-yhCyKumbruqg@mail.gmail.com>
+	<20190520162212.GA22833@ulmo>
+In-Reply-To: <20190520162212.GA22833@ulmo>
+Message-ID: <CAL_JsqJtvyFS9owdnE=v0sK1d33gbnqORyQxdnq3Vrs35ZutLw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add vendor prefix for VXT Ltd
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Otavio Salvador <otavio.salvador@ossystems.com.br>, John Weber <john.weber@technexion.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Dmitry,
-
-can you have a look please?
-
-Regards,
-  Marco
-
-On 19-04-25 09:23, Marco Felsch wrote:
-> Hi Dmitry,
-> 
-> gentle ping.
-> 
-> On 19-04-15 18:56, Marco Felsch wrote:
-> > Hi,
-> > 
-> > this v3 contains all the comments made on my v2 [1].
-> > Each patch has it's own changelog so I omit it here.
-> > 
-> > I've tested it on a custom v5.0 kernel and rebased
-> > it on v5.1-rc5 without any issues.
-> > 
-> > [1] https://patchwork.kernel.org/cover/10659275/
-> > 
-> > Marco Felsch (2):
-> >   dt-bindings: input: add Microchip QT1050 bindings
-> >   Input: qt1050 - add Microchip AT42QT1050 support
-> > 
-> >  .../bindings/input/microchip,qt1050.txt       |  78 +++
-> >  drivers/input/keyboard/Kconfig                |  11 +
-> >  drivers/input/keyboard/Makefile               |   1 +
-> >  drivers/input/keyboard/qt1050.c               | 597 ++++++++++++++++++
-> >  4 files changed, 687 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/microchip,qt1050.txt
-> >  create mode 100644 drivers/input/keyboard/qt1050.c
-> > 
-> > -- 
-> > 2.20.1
-> > 
-> > 
-> > 
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+On Mon, May 20, 2019 at 11:22 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> On Mon, May 20, 2019 at 11:15:05AM -0300, Fabio Estevam wrote:
+> > On Tue, Apr 23, 2019 at 8:03 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+> > >
+> > > On Mon, Feb 18, 2019 at 09:27:04PM -0300, Fabio Estevam wrote:
+> > > > VXT Ltd is a manufacturer of projected capacitive touch panel
+> > > > and display solutions: http://www.vxt.com.tw/
+> > > >
+> > > > Reviewed-by: Otavio Salvador <otavio@ossystems.com.br>
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> > > > ---
+> > > > Changes since v1:
+> > > > - None
+> > > >
+> > > >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > >
+> > > Applied all three patches, thanks.
+> >
+> > I don't see any of these patches applied in linux-next nor 5.2-rc1.
+> >
+> > What is the issue here?
+>
+> The patch is in drm-misc-next and should show up in linux-next tomorrow.
+>
+> My understanding is that somebody needs to push drm-misc-next after each
+> -rc1 release before drm-misc-next feeds into linux-next. Chances of that
+> happening between -rc1 and the linux-next release the day after are
+> fairly small.
+>
+> Thierry
