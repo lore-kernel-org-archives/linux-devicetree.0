@@ -1,215 +1,38 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 2/3] arm64: dts: nxp: add ls1046a-frwy board support
-Date: Mon, 20 May 2019 10:53:21 +0800
-Message-ID: <20190520025319.GJ15856@dragon>
-References: <20190510130207.14330-1-pramod.kumar_1@nxp.com>
- <20190510130207.14330-3-pramod.kumar_1@nxp.com>
+From: "Y.b. Lu" <yangbo.lu@nxp.com>
+Subject: RE: [PATCH 1/3] enetc: add hardware timestamping support
+Date: Mon, 20 May 2019 02:55:28 +0000
+Message-ID: <VI1PR0401MB22373507628D6D133B8D5F2AF8060@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+References: <20190516100028.48256-1-yangbo.lu@nxp.com>
+ <20190516100028.48256-2-yangbo.lu@nxp.com>
+ <VI1PR04MB4880C3E6D24AB7A53887D9C9960A0@VI1PR04MB4880.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190510130207.14330-3-pramod.kumar_1@nxp.com>
+In-Reply-To: <VI1PR04MB4880C3E6D24AB7A53887D9C9960A0@VI1PR04MB4880.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pramod Kumar <pramod.kumar_1@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
+To: Claudiu Manoil <claudiu.manoil@nxp.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Richard Cochran <richardcochran@gmail.com>, David Miller <davem@davemloft.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 10, 2019 at 01:00:20PM +0000, Pramod Kumar wrote:
-> ls1046afrwy board is based on nxp ls1046a SoC.
-> Board support's 4GB ddr memory, i2c, microSD card,
-> serial console,qspi nor flash,ifc nand flash,qsgmii network interface,
-> usb 3.0 and serdes interface to support two x1gen3 pcie interface.
-> 
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  .../boot/dts/freescale/fsl-ls1046a-frwy.dts   | 156 ++++++++++++++++++
->  2 files changed, 157 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 13604e558dc1..84ff6995b41e 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-frwy.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-qds.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> new file mode 100644
-> index 000000000000..de0d19c02944
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-> + *
-> + * Copyright 2019 NXP.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "fsl-ls1046a.dtsi"
-> +
-> +/ {
-> +	model = "LS1046A FRWY Board";
-> +	compatible = "fsl,ls1046a-frwy", "fsl,ls1046a";
-> +
-> +	aliases {
-> +		serial0 = &duart0;
-> +		serial1 = &duart1;
-> +		serial2 = &duart2;
-> +		serial3 = &duart3;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	sb_3v3: regulator-sb3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "LT8642SEV-3.3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&duart0 {
-> +	status = "okay";
-> +};
-> +
-> +&duart1 {
-> +	status = "okay";
-> +};
-> +
-> +&duart2 {
-> +	status = "okay";
-> +};
-> +
-> +&duart3 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +
-> +	i2c-mux@77 {
-> +		compatible = "nxp,pca9546";
-> +		reg = <0x77>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		i2c-mux-never-disable;
-
-Undocumented property?
-
-> +
-> +		i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +
-> +			eeprom@52 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x52>;
-> +			};
-> +
-> +			eeprom@53 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x53>;
-> +			};
-> +
-> +			power-monitor@40 {
-
-Sort the nodes in unit-address.
-
-Shawn
-
-> +				compatible = "ti,ina220";
-> +				reg = <0x40>;
-> +				shunt-resistor = <1000>;
-> +			};
-> +
-> +			rtc@51 {
-> +				compatible = "nxp,pcf2129";
-> +				reg = <0x51>;
-> +			};
-> +
-> +			temperature-sensor@4c {
-> +				compatible = "nxp,sa56004";
-> +				reg = <0x4c>;
-> +				vcc-supply = <&sb_3v3>;
-> +			};
-> +
-> +		};
-> +	};
-> +};
-> +
-> +&ifc {
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	/* NAND Flash */
-> +	ranges = <0x0 0x0 0x0 0x7e800000 0x00010000>;
-> +	status = "okay";
-> +
-> +	nand@0,0 {
-> +		compatible = "fsl,ifc-nand";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0x0 0x0 0x10000>;
-> +	};
-> +
-> +};
-> +
-> +#include "fsl-ls1046-post.dtsi"
-> +
-> +&fman0 {
-> +	ethernet@e0000 {
-> +		phy-handle = <&qsgmii_phy4>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@e8000 {
-> +		phy-handle = <&qsgmii_phy2>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@ea000 {
-> +		phy-handle = <&qsgmii_phy1>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@f2000 {
-> +		phy-handle = <&qsgmii_phy3>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	mdio@fd000 {
-> +		qsgmii_phy1: ethernet-phy@1c {
-> +			reg = <0x1c>;
-> +		};
-> +
-> +		qsgmii_phy2: ethernet-phy@1d {
-> +			reg = <0x1d>;
-> +		};
-> +
-> +		qsgmii_phy3: ethernet-phy@1e {
-> +			reg = <0x1e>;
-> +		};
-> +
-> +		qsgmii_phy4: ethernet-phy@1f {
-> +			reg = <0x1f>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.17.1
-> 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDbGF1ZGl1IE1hbm9pbA0KPiBT
+ZW50OiBUaHVyc2RheSwgTWF5IDE2LCAyMDE5IDk6MzEgUE0NCj4gVG86IFkuYi4gTHUgPHlhbmdi
+by5sdUBueHAuY29tPjsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgUmljaGFyZCBDb2NocmFuDQo+
+IDxyaWNoYXJkY29jaHJhbkBnbWFpbC5jb20+OyBEYXZpZCBNaWxsZXIgPGRhdmVtQGRhdmVtbG9m
+dC5uZXQ+OyBTaGF3bg0KPiBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+OyBSb2IgSGVycmluZyA8
+cm9iaCtkdEBrZXJuZWwub3JnPg0KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIu
+a2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSRTogW1BBVENIIDEvM10gZW5ldGM6IGFkZCBoYXJkd2Fy
+ZSB0aW1lc3RhbXBpbmcgc3VwcG9ydA0KPiANCj4gPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+ID5Gcm9tOiBZLmIuIEx1DQo+IFsuLi5dDQo+ID5TdWJqZWN0OiBbUEFUQ0ggMS8zXSBlbmV0
+YzogYWRkIGhhcmR3YXJlIHRpbWVzdGFtcGluZyBzdXBwb3J0DQo+ID4NCj4gWy4uLl0NCj4gDQo+
+IEhpIFlhbmdibywNCj4gDQo+IFRoZXNlIGVuZXRjIHBhdGNoZXMgdGFyZ2V0aW5nIG5ldC1uZXh0
+IHdpbGwgaGF2ZSB0byBiZSByZWJhc2VkIG9uIHRoZSBsYXRlc3QNCj4gZW5ldGMgbmV0LmdpdCBj
+b21taXRzLCBvdGhlcndpc2UgdGhlcmUgd2lsbCBiZSBzb21lIG1lcmdlIGNvbmZsaWN0cyBmb3Ig
+ZW5ldGMuYw0KPiBhbmQgZW5ldGNfZXRodG9vbC5jLg0KPiBUaGFua3MsDQo+IENsYXVkaXUNCj4g
+DQo+IHNlZQ0KPiAyMmZiNDNmMzYwMDYgImVuZXRjOiBBZGQgbWlzc2luZyBsaW5rIHN0YXRlIGlu
+Zm8gZm9yIGV0aHRvb2wiDQo+IGY0YTBiZTg0ZDczZSAiZW5ldGM6IEZpeCBOVUxMIGRtYSBhZGRy
+ZXNzIHVubWFwIGZvciBUeCBCRCBleHRlbnNpb25zIg0KDQpbWS5iLiBMdV0gVGhhbmtzIENsYXVk
+aXUuIEkgc2hvdWxkIGhhdmUgbm90aWNlZCB0aGF0LiBMZXQgbWUgc2VuZCB2MiBhZnRlciBuZXQt
+bmV4dCBpcyBvcGVuLg0K
