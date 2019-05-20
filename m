@@ -1,55 +1,71 @@
-From: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Subject: Re: [PATCH 1/4] dt-bindings: iio: adc: mediatek: Add document for
- mt6765
-Date: Mon, 20 May 2019 14:47:24 +0800
-Message-ID: <1558334844.13182.7.camel@mtkswgap22>
-References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
-         <1557994247-16739-2-git-send-email-chun-hung.wu@mediatek.com>
-         <20190518113356.1cf99a31@archlinux>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH V2 3/3] soc: fsl: add RCPM driver
+Date: Mon, 20 May 2019 06:48:13 +0000
+Message-ID: <AM5PR0402MB2865EC5E1EF12C6C1D3C5566F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20190517033946.30763-1-ran.wang_1@nxp.com>
+ <20190517033946.30763-3-ran.wang_1@nxp.com> <20190519213844.GH31403@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190518113356.1cf99a31@archlinux>
+In-Reply-To: <20190519213844.GH31403@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, peter.wang@mediatek.com, kuohong.wang@mediatek.com, jg_poxu@mediatek.com
+To: Pavel Machek <pavel@denx.de>
+Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
+Hi Pavel,
 
-On Sat, 2019-05-18 at 11:33 +0100, Jonathan Cameron wrote:
-> On Thu, 16 May 2019 16:10:44 +0800
-> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
-> 
-> > Add compatible node for mt6765 auxadc
-> > 
-> > Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-> Applied, but in numeric order.  There was also another clashing patch
-> that caused some fuzz.
-No problem, thanks!
+On Monday, May 20, 2019 05:39, Pavel Machek wrote:
+>=20
+> Hi!
+>=20
+>=20
+> > +
+> > +struct rcpm {
+> > +	unsigned int wakeup_cells;
+> > +	void __iomem *ippdexpcr_base;
+> > +	bool	little_endian;
+> > +};
+>=20
+> Inconsistent whitespace
 
-regards,
-Chun-Hung
-> 
-> thanks,
-> 
-> Jonathan
-> 
-> > ---
-> >  Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-> > index 0df9bef..ab7efab 100644
-> > --- a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-> > +++ b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-> > @@ -15,6 +15,7 @@ Required properties:
-> >      - "mediatek,mt2712-auxadc": For MT2712 family of SoCs
-> >      - "mediatek,mt7622-auxadc": For MT7622 family of SoCs
-> >      - "mediatek,mt8173-auxadc": For MT8173 family of SoCs
-> > +    - "mediatek,mt6765-auxadc": For MT6765 family of SoCs
-> >    - reg: Address range of the AUXADC unit.
-> >    - clocks: Should contain a clock specifier for each entry in clock-names
-> >    - clock-names: Should contain "main".
-> 
+OK, will make them aligned.
+
+>=20
+> > +static int rcpm_pm_prepare(struct device *dev) {
+> > +	struct device_node *np =3D dev->of_node;
+> > +	struct wakeup_source *ws;
+> > +	struct rcpm *rcpm;
+> > +	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
+> > +	int i, ret;
+> > +
+> > +	rcpm =3D dev_get_drvdata(dev);
+> > +	if (!rcpm)
+> > +		return -EINVAL;
+> > +
+> > +	/* Begin with first registered wakeup source */
+> > +	ws =3D wakeup_source_get_next(NULL);
+> > +	while (ws) {
+>=20
+> while (ws =3D wakeup_source_get_next(NULL)) ?
+
+Actually, we only pass NULL to wakeup_source_get_next() at very first
+call to get 1st wakeup source. Then in the while loop, we will fetch
+next source but not 1st, that's different. I am afraid your suggestion
+is not quite correct.
+
+>=20
+> > +static int rcpm_probe(struct platform_device *pdev) {
+> > +	struct device	*dev =3D &pdev->dev;
+> > +	struct resource *r;
+> > +	struct rcpm		*rcpm;
+> > +	int ret;
+>=20
+> Whitespace.
+
+OK, will update, thanks for your review.
+
+Regards,
+Ran
