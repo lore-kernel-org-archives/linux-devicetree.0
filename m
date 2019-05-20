@@ -1,47 +1,191 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH] dt-bindings: backlight: lm3630a: correct schema
- validation
-Date: Mon, 20 May 2019 14:30:07 +0100
-Message-ID: <20190520133007.gymbonmq635gp73b@holly.lan>
-References: <20190520085846.22320-1-masneyb@onstation.org>
- <CAL_JsqLcycH5e=YT-4AQFo-8O0bosjU7oagCRS5CMTfQNBLrcg@mail.gmail.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v3 1/3] thermal: rockchip: fix up the tsadc pinctrl
+ setting error
+Date: Mon, 20 May 2019 15:38:32 +0200
+Message-ID: <CAFqH_53nbiwzQKctNa7MBzgCcsRFn1p8g31Xgvo3E9k6eA8AKw@mail.gmail.com>
+References: <1556618986-18923-1-git-send-email-zhangqing@rock-chips.com>
+ <1556618986-18923-2-git-send-email-zhangqing@rock-chips.com> <785392a0-282a-1e51-a4d6-a6d5ca478949@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLcycH5e=YT-4AQFo-8O0bosjU7oagCRS5CMTfQNBLrcg@mail.gmail.com>
+In-Reply-To: <785392a0-282a-1e51-a4d6-a6d5ca478949@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Brian Masney <masneyb@onstation.org>, Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Elaine Zhang <zhangqing@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, huangtao@rock-chips.com, Linux PM list <linux-pm@vger.kernel.org>, xxx@rock-chips.com, xf@rock-chips.com, linux-kernel <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Doug Anderson <dianders@chromium.org>, vicencb@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 08:14:03AM -0500, Rob Herring wrote:
-> On Mon, May 20, 2019 at 3:59 AM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > The '#address-cells' and '#size-cells' properties were not defined in
-> > the lm3630a bindings and would cause the following error when
-> > attempting to validate the examples against the schema:
-> >
-> > Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-> > '#address-cells', '#size-cells' do not match any of the regexes:
-> > '^led@[01]$', 'pinctrl-[0-9]+'
-> >
-> > Correct this by adding those two properties.
-> >
-> > While we're here, move the ti,linear-mapping-mode property to the
-> > led@[01] child nodes to correct the following validation error:
-> >
-> > Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-> > led@0: 'ti,linear-mapping-mode' does not match any of the regexes:
-> > 'pinctrl-[0-9]+'
-> >
-> > Fixes: 32fcb75c66a0 ("dt-bindings: backlight: Add lm3630a bindings")
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > Reported-by: Rob Herring <robh+dt@kernel.org>
-> > ---
-> >  .../leds/backlight/lm3630a-backlight.yaml     | 20 +++++++++++++------
-> >  1 file changed, 14 insertions(+), 6 deletions(-)
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Hi all,
 
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+As pointed by [1] and [2] this commit, that now is upstream, breaks
+veyron (rk3288) and kevin (rk3399) boards. The problem is especially
+critical for veyron boards because they don't boot anymore.
+
+I didn't look deep at the problem but I have some concerns about this
+patch, see below.
+
+[1] https://www.spinics.net/lists/linux-rockchip/msg24657.html
+[2] https://www.spinics.net/lists/linux-rockchip/msg24735.html
+
+Missatge de Daniel Lezcano <daniel.lezcano@linaro.org> del dia dt., 30
+d=E2=80=99abr. 2019 a les 15:39:
+>
+> On 30/04/2019 12:09, Elaine Zhang wrote:
+> > Explicitly use the pinctrl to set/unset the right mode
+> > instead of relying on the pinctrl init mode.
+> > And it requires setting the tshut polarity before select pinctrl.
+> >
+> > When the temperature sensor mode is set to 0, it will automatically
+> > reset the board via the Clock-Reset-Unit (CRU) if the over temperature
+> > threshold is reached. However, when the pinctrl initializes, it does a
+> > transition to "otp_out" which may lead the SoC restart all the time.
+> >
+> > "otp_out" IO may be connected to the RESET circuit on the hardware.
+> > If the IO is in the wrong state, it will trigger RESET.
+> > (similar to the effect of pressing the RESET button)
+> > which will cause the soc to restart all the time.
+> >
+> > Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+>
+> Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>
+>
+>
+> > ---
+> >  drivers/thermal/rockchip_thermal.c | 36 ++++++++++++++++++++++++++++++=
++++---
+> >  1 file changed, 33 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockc=
+hip_thermal.c
+> > index 9c7643d62ed7..6dc7fc516abf 100644
+> > --- a/drivers/thermal/rockchip_thermal.c
+> > +++ b/drivers/thermal/rockchip_thermal.c
+> > @@ -172,6 +172,9 @@ struct rockchip_thermal_data {
+> >       int tshut_temp;
+> >       enum tshut_mode tshut_mode;
+> >       enum tshut_polarity tshut_polarity;
+> > +     struct pinctrl *pinctrl;
+> > +     struct pinctrl_state *gpio_state;
+> > +     struct pinctrl_state *otp_state;
+> >  };
+> >
+> >  /**
+> > @@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform=
+_device *pdev)
+> >               return error;
+> >       }
+> >
+> > +     thermal->chip->control(thermal->regs, false);
+> > +
+
+That's the line that causes the hang. Commenting this makes the veyron
+boot again. Probably this needs to go after chip->initialize?
+
+> >       error =3D clk_prepare_enable(thermal->clk);
+> >       if (error) {
+> >               dev_err(&pdev->dev, "failed to enable converter clock: %d=
+\n",
+> > @@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platfor=
+m_device *pdev)
+> >       thermal->chip->initialize(thermal->grf, thermal->regs,
+> >                                 thermal->tshut_polarity);
+> >
+> > +     if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO) {
+> > +             thermal->pinctrl =3D devm_pinctrl_get(&pdev->dev);
+> > +             if (IS_ERR(thermal->pinctrl)) {
+> > +                     dev_err(&pdev->dev, "failed to find thermal pinct=
+rl\n");
+> > +                     return PTR_ERR(thermal->pinctrl);
+> > +             }
+> > +
+> > +             thermal->gpio_state =3D pinctrl_lookup_state(thermal->pin=
+ctrl,
+> > +                                                        "gpio");
+
+Shouldn't this mode be documented properly in the binding first?
+
+The binding [3] talks about init, default and sleep states but *not*
+gpio and otpout. The patch series looks incomplete to me or not using
+the proper names.
+
+[3] https://elixir.bootlin.com/linux/v5.2-rc1/source/Documentation/devicetr=
+ee/bindings/thermal/rockchip-thermal.txt
+
+> > +             if (IS_ERR_OR_NULL(thermal->gpio_state)) {
+> > +                     dev_err(&pdev->dev, "failed to find thermal gpio =
+state\n");
+> > +                     return -EINVAL;
+> > +             }
+> > +
+> > +             thermal->otp_state =3D pinctrl_lookup_state(thermal->pinc=
+trl,
+> > +                                                       "otpout");
+> > +             if (IS_ERR_OR_NULL(thermal->otp_state)) {
+> > +                     dev_err(&pdev->dev, "failed to find thermal otpou=
+t state\n");
+> > +                     return -EINVAL;
+> > +             }
+> > +
+
+Same here otpout is not a documented.
+
+As this change is now in mainline and is causing veyron to hang I'd
+suggest reverting this change for now. Even fixing the root cause
+(maybe the one I pointed above) after this patch we will have the
+thermal driver to fail because "gpio" and "otpout" states are not
+defined nor documented (a change on this will need some reviews and
+acks and time I guess).
+
+Cheers,
+ Enric
+
+> > +             pinctrl_select_state(thermal->pinctrl, thermal->otp_state=
+);
+> > +     }
+> > +
+> >       for (i =3D 0; i < thermal->chip->chn_num; i++) {
+> >               error =3D rockchip_thermal_register_sensor(pdev, thermal,
+> >                                               &thermal->sensors[i],
+> > @@ -1337,8 +1366,8 @@ static int __maybe_unused rockchip_thermal_suspen=
+d(struct device *dev)
+> >
+> >       clk_disable(thermal->pclk);
+> >       clk_disable(thermal->clk);
+> > -
+> > -     pinctrl_pm_select_sleep_state(dev);
+> > +     if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
+> > +             pinctrl_select_state(thermal->pinctrl, thermal->gpio_stat=
+e);
+> >
+> >       return 0;
+> >  }
+> > @@ -1383,7 +1412,8 @@ static int __maybe_unused rockchip_thermal_resume=
+(struct device *dev)
+> >       for (i =3D 0; i < thermal->chip->chn_num; i++)
+> >               rockchip_thermal_toggle_sensor(&thermal->sensors[i], true=
+);
+> >
+> > -     pinctrl_pm_select_default_state(dev);
+> > +     if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
+> > +             pinctrl_select_state(thermal->pinctrl, thermal->otp_state=
+);
+> >
+> >       return 0;
+> >  }
+> >
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
