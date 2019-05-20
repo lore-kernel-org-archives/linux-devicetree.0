@@ -1,182 +1,145 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 5/5] pinctrl: Add pinconf support for BM1880 SoC
-Date: Mon, 20 May 2019 14:01:01 +0530
-Message-ID: <20190520083101.10229-6-manivannan.sadhasivam@linaro.org>
-References: <20190520083101.10229-1-manivannan.sadhasivam@linaro.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v5 5/6] usb: roles: add USB Type-B GPIO connector driver
+Date: Mon, 20 May 2019 11:31:51 +0300
+Message-ID: <20190520083151.GD1887@kuha.fi.intel.com>
+References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1557823643-8616-6-git-send-email-chunfeng.yun@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520083101.10229-1-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1557823643-8616-6-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, linux-gpio@vger.kernel.org, alec.lin@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pinconf support for Bitmain BM1880 SoC. Pinconf support includes
-pin bias, slew rate and schmitt trigger. Drive strength support will
-be added later.
+On Tue, May 14, 2019 at 04:47:22PM +0800, Chunfeng Yun wrote:
+> +static int usb_conn_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *node = dev->of_node;
+> +	struct device_node *remote_node;
+> +	struct usb_conn_info *info;
+> +	int ret = 0;
+> +
+> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+> +	if (!info)
+> +		return -ENOMEM;
+> +
+> +	info->dev = dev;
+> +	info->id_gpiod = devm_gpiod_get_optional(dev, "id", GPIOD_IN);
+> +	if (IS_ERR(info->id_gpiod))
+> +		return PTR_ERR(info->id_gpiod);
+> +
+> +	info->vbus_gpiod = devm_gpiod_get_optional(dev, "vbus", GPIOD_IN);
+> +	if (IS_ERR(info->vbus_gpiod))
+> +		return PTR_ERR(info->vbus_gpiod);
+> +
+> +	if (!info->id_gpiod && !info->vbus_gpiod) {
+> +		dev_err(dev, "failed to get gpios\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (info->id_gpiod)
+> +		ret = gpiod_set_debounce(info->id_gpiod, USB_GPIO_DEB_US);
+> +	if (!ret && info->vbus_gpiod)
+> +		ret = gpiod_set_debounce(info->vbus_gpiod, USB_GPIO_DEB_US);
+> +	if (ret < 0)
+> +		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEB_MS);
+> +
+> +	INIT_DELAYED_WORK(&info->dw_det, usb_conn_detect_cable);
+> +
+> +	info->vbus = devm_regulator_get(dev, "vbus");
+> +	if (IS_ERR(info->vbus)) {
+> +		dev_err(dev, "failed to get vbus\n");
+> +		return PTR_ERR(info->vbus);
+> +	}
+> +
+> +	remote_node = of_graph_get_remote_node(node, -1, 0);
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pinctrl/pinctrl-bm1880.c | 134 +++++++++++++++++++++++++++++++
- 1 file changed, 134 insertions(+)
+This is really not ideal. In practice this code will only work if
+there is only one endpoint described for this device, or if the first
+endpoint is always the one we are looking for. There is no way to
+guarantee that.
 
-diff --git a/drivers/pinctrl/pinctrl-bm1880.c b/drivers/pinctrl/pinctrl-bm1880.c
-index bddb705ea142..1aaed46d5c30 100644
---- a/drivers/pinctrl/pinctrl-bm1880.c
-+++ b/drivers/pinctrl/pinctrl-bm1880.c
-@@ -4,6 +4,8 @@
-  *
-  * Copyright (c) 2019 Linaro Ltd.
-  * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ *
-+ * TODO: Drive strength support
-  */
- 
- #include <linux/io.h>
-@@ -872,6 +874,137 @@ static int bm1880_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
-+#define BM1880_PINCONF(pin, idx) ((!((pin + 1) & 1) << 4) + idx)
-+#define BM1880_PINCONF_PULLCTRL(pin)	BM1880_PINCONF(pin, 0)
-+#define BM1880_PINCONF_PULLUP(pin)	BM1880_PINCONF(pin, 1)
-+#define BM1880_PINCONF_PULLDOWN(pin)	BM1880_PINCONF(pin, 2)
-+#define BM1880_PINCONF_SCHMITT(pin)	BM1880_PINCONF(pin, 9)
-+#define BM1880_PINCONF_SLEW(pin)	BM1880_PINCONF(pin, 10)
-+
-+static int bm1880_pinconf_cfg_get(struct pinctrl_dev *pctldev,
-+				  unsigned int pin,
-+				  unsigned long *config)
-+{
-+	struct bm1880_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned int param = pinconf_to_config_param(*config);
-+	unsigned int arg = 0;
-+	u32 regval, offset, bit_offset;
-+
-+	offset = (pin >> 1) << 2;
-+	regval = readl_relaxed(pctrl->base + BM1880_REG_MUX + offset);
-+
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		bit_offset = BM1880_PINCONF_PULLUP(pin);
-+		arg = !!(regval & BIT(bit_offset));
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		bit_offset = BM1880_PINCONF_PULLDOWN(pin);
-+		arg = !!(regval & BIT(bit_offset));
-+		break;
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		bit_offset = BM1880_PINCONF_PULLCTRL(pin);
-+		arg = !!(regval & BIT(bit_offset));
-+		break;
-+	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-+		bit_offset = BM1880_PINCONF_SCHMITT(pin);
-+		arg = !!(regval & BIT(bit_offset));
-+		break;
-+	case PIN_CONFIG_SLEW_RATE:
-+		bit_offset = BM1880_PINCONF_SLEW(pin);
-+		arg = !!(regval & BIT(bit_offset));
-+		break;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+
-+	*config = pinconf_to_config_packed(param, arg);
-+
-+	return 0;
-+}
-+
-+static int bm1880_pinconf_cfg_set(struct pinctrl_dev *pctldev,
-+				  unsigned int pin,
-+				  unsigned long *configs,
-+				  unsigned int num_configs)
-+{
-+	struct bm1880_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	u32 regval, offset, bit_offset;
-+	int i;
-+
-+	offset = (pin >> 1) << 2;
-+	regval = readl_relaxed(pctrl->base + BM1880_REG_MUX + offset);
-+
-+	for (i = 0; i < num_configs; i++) {
-+		unsigned int param = pinconf_to_config_param(configs[i]);
-+		unsigned int arg = pinconf_to_config_argument(configs[i]);
-+
-+		switch (param) {
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+			bit_offset = BM1880_PINCONF_PULLUP(pin);
-+			regval |= BIT(bit_offset);
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			bit_offset = BM1880_PINCONF_PULLDOWN(pin);
-+			regval |= BIT(bit_offset);
-+			break;
-+		case PIN_CONFIG_BIAS_DISABLE:
-+			bit_offset = BM1880_PINCONF_PULLCTRL(pin);
-+			regval |= BIT(bit_offset);
-+			break;
-+		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-+			bit_offset = BM1880_PINCONF_SCHMITT(pin);
-+			if (arg)
-+				regval |= BIT(bit_offset);
-+			else
-+				regval &= ~BIT(bit_offset);
-+			break;
-+		case PIN_CONFIG_SLEW_RATE:
-+			bit_offset = BM1880_PINCONF_SLEW(pin);
-+			if (arg)
-+				regval |= BIT(bit_offset);
-+			else
-+				regval &= ~BIT(bit_offset);
-+			break;
-+		default:
-+			dev_warn(pctldev->dev,
-+				 "unsupported configuration parameter '%u'\n",
-+				 param);
-+			continue;
-+		}
-+
-+		writel_relaxed(regval, pctrl->base + BM1880_REG_MUX + offset);
-+	}
-+
-+	return 0;
-+}
-+
-+static int bm1880_pinconf_group_set(struct pinctrl_dev *pctldev,
-+				    unsigned int selector,
-+				    unsigned long *configs,
-+				    unsigned int  num_configs)
-+{
-+	int i, ret;
-+	struct bm1880_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const struct bm1880_pctrl_group *pgrp = &pctrl->groups[selector];
-+
-+	for (i = 0; i < pgrp->npins; i++) {
-+		ret = bm1880_pinconf_cfg_set(pctldev, pgrp->pins[i], configs,
-+					     num_configs);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinconf_ops bm1880_pinconf_ops = {
-+	.is_generic = true,
-+	.pin_config_get = bm1880_pinconf_cfg_get,
-+	.pin_config_set = bm1880_pinconf_cfg_set,
-+	.pin_config_group_set = bm1880_pinconf_group_set,
-+};
-+
- static const struct pinmux_ops bm1880_pinmux_ops = {
- 	.get_functions_count = bm1880_pmux_get_functions_count,
- 	.get_function_name = bm1880_pmux_get_function_name,
-@@ -885,6 +1018,7 @@ static struct pinctrl_desc bm1880_desc = {
- 	.npins = ARRAY_SIZE(bm1880_pins),
- 	.pctlops = &bm1880_pctrl_ops,
- 	.pmxops = &bm1880_pinmux_ops,
-+	.confops = &bm1880_pinconf_ops,
- 	.owner = THIS_MODULE,
- };
- 
+The code really has to walk through the entire graph, and identify the
+remote endpoint it's looking for (and for that we have the boolean
+device property).
+
+> +	if (!remote_node) {
+> +		dev_err(dev, "failed to get remote node\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	info->role_sw =
+> +		fwnode_usb_role_switch_get(of_fwnode_handle(remote_node));
+
+So fwnode_usb_role_switch_get() needs be the one that walks through
+the graph, not the drivers. Otherwise every driver will do the same
+exact steps (boilerplate). Here you need to be able to just pass the
+node of this device, not the remote endpoint:
+
+        info->role_sw = fwnode_usb_role_switch_get(dev_fwnode(&client->dev));
+
+But why do you need that function at all? Why wouldn't
+usb_role_switch_get() work?
+
+        info->role_sw = usb_role_switch_get(&client->dev);
+
+> +	of_node_put(remote_node);
+> +	if (IS_ERR(info->role_sw)) {
+> +		dev_err(dev, "failed to get role switch\n");
+> +		return PTR_ERR(info->role_sw);
+> +	}
+> +
+> +	if (info->id_gpiod) {
+> +		info->id_irq = gpiod_to_irq(info->id_gpiod);
+> +		if (info->id_irq < 0) {
+> +			dev_err(dev, "failed to get ID IRQ\n");
+> +			ret = info->id_irq;
+> +			goto put_role_sw;
+> +		}
+> +
+> +		ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
+> +						usb_conn_isr, USB_CONN_IRQF,
+> +						pdev->name, info);
+> +		if (ret < 0) {
+> +			dev_err(dev, "failed to request ID IRQ\n");
+> +			goto put_role_sw;
+> +		}
+> +	}
+> +
+> +	if (info->vbus_gpiod) {
+> +		info->vbus_irq = gpiod_to_irq(info->vbus_gpiod);
+> +		if (info->vbus_irq < 0) {
+> +			dev_err(dev, "failed to get VBUS IRQ\n");
+> +			ret = info->vbus_irq;
+> +			goto put_role_sw;
+> +		}
+> +
+> +		ret = devm_request_threaded_irq(dev, info->vbus_irq, NULL,
+> +						usb_conn_isr, USB_CONN_IRQF,
+> +						pdev->name, info);
+> +		if (ret < 0) {
+> +			dev_err(dev, "failed to request VBUS IRQ\n");
+> +			goto put_role_sw;
+> +		}
+> +	}
+> +
+> +	platform_set_drvdata(pdev, info);
+> +
+> +	/* Perform initial detection */
+> +	usb_conn_queue_dwork(info, 0);
+> +
+> +	return 0;
+> +
+> +put_role_sw:
+> +	usb_role_switch_put(info->role_sw);
+> +	return ret;
+> +}
+
+thanks,
+
 -- 
-2.17.1
+heikki
