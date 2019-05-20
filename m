@@ -1,29 +1,41 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 0/5] arm64: dts: meson: g12a: add ethernet support
-Date: Mon, 20 May 2019 11:50:27 -0700
-Message-ID: <7hd0kd7yfg.fsf@baylibre.com>
-References: <20190520131401.11804-1-jbrunet@baylibre.com> <7himu58195.fsf@baylibre.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 3/5] arm64: dts: meson: g12a: add mdio multiplexer
+Date: Mon, 20 May 2019 21:05:33 +0200
+Message-ID: <20190520190533.GF22024@lunn.ch>
+References: <20190520131401.11804-1-jbrunet@baylibre.com>
+ <20190520131401.11804-4-jbrunet@baylibre.com>
+ <CAFBinCA_XE86eqCMpEFc3xMZDH8J7wVQPRj7bFZyqDxQx-w-qw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7himu58195.fsf@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <CAFBinCA_XE86eqCMpEFc3xMZDH8J7wVQPRj7bFZyqDxQx-w-qw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, f.fainelli@gmail.com, hkallweit1@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
+> > +                               int_mdio: mdio@1 {
+> > +                                       reg = <1>;
+> > +                                       #address-cells = <1>;
+> > +                                       #size-cells = <0>;
+> > +
+> > +                                       internal_ephy: ethernet_phy@8 {
+> > +                                               compatible = "ethernet-phy-id0180.3301",
+> > +                                                            "ethernet-phy-ieee802.3-c22";
+> Based on your comment on v1 of this patch [0] the Ethernet PHY ID is
+> defined by this "mdio-multiplexer" (write arbitrary value to a
+> register then that's the PHY ID which will show up on the bus)
+> I'm fine with explicitly listing the ID which the PHY driver binds to
+> because I don't know a better way.
 
-> Jerome Brunet <jbrunet@baylibre.com> writes:
->
->> Add network support to the g12a SoC family
->>
->> This is series is based on 5.2-rc1 and the patches I already sent last
->> week. If this is not convient for you, please let me know, I'll rebase.
->
-> Could you apply this on top of the "consistently order nodes" patches
-> that are already in my v5.3/dt64 branch?
+Does reading the ID registers give the correct ID, once you have poked
+registers in the mdio-multiplexer? If so, you don't need this
+compatible string.
 
-Nevermind, I mis-read the above and thought it was on v5.2-rc1, but now
-see that it's on -rc1 + all your other series, so it's all good.
+If the read is giving the wrong ID, then yes, you do want this. But
+then please add a comment in the DT blob. This is very unusual, so
+should have some explanation why it is needed.
 
-Kevin
+Thanks
+	Andrew
