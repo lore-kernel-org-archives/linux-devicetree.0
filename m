@@ -1,75 +1,49 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 4/4] ARM: dts: sun6i: Add default address and size cells
- for SPI
-Date: Mon, 20 May 2019 16:50:36 +0200
-Message-ID: <622e3d2ece14e5b84a7975026bb1a981228ee3ab.1558363790.git-series.maxime.ripard@bootlin.com>
-References: <f53ee257855c6499fd783dc8665558f7670312f6.1558363790.git-series.maxime.ripard@bootlin.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v5 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC.
+Date: Mon, 20 May 2019 16:52:16 +0200
+Message-ID: <20190520145216.GD22024@lunn.ch>
+References: <1558361478-4381-1-git-send-email-sagar.kadam@sifive.com>
+ <1558361478-4381-4-git-send-email-sagar.kadam@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f53ee257855c6499fd783dc8665558f7670312f6.1558363790.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1558361478-4381-4-git-send-email-sagar.kadam@sifive.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, peter@korsgaard.com, palmer@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-i2c@vger.kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The SPI controller bindings require an address cell size of 1, and a size
-cell size of 0. Let's put it at the DTSI level to make sure that's properly
-enforced.
+On Mon, May 20, 2019 at 07:41:18PM +0530, Sagar Shrikant Kadam wrote:
+> The i2c-ocore driver already has a polling mode interface.But it needs
+> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
+> There is an erratum in FU540 chip that prevents interrupt driven i2c
+> transfers from working, and also the I2C controller's interrupt bit
+> cannot be cleared if set, due to this the existing i2c polling mode
+> interface added in mainline earlier doesn't work, and CPU stall's
+> infinitely, when-ever i2c transfer is initiated.
+> 
+> Ref:previous polling mode support in mainline
+> 
+> 	commit 69c8c0c0efa8 ("i2c: ocores: add polling interface")
+> 
+> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
+> FU540-COOO SoC.
+> 
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Much better, thanks.
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index c04efad81bbc..a57cbf33c12f 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -987,6 +987,8 @@
- 			dma-names = "rx", "tx";
- 			resets = <&ccu RST_AHB1_SPI0>;
- 			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 
- 		spi1: spi@1c69000 {
-@@ -999,6 +1001,8 @@
- 			dma-names = "rx", "tx";
- 			resets = <&ccu RST_AHB1_SPI1>;
- 			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 
- 		spi2: spi@1c6a000 {
-@@ -1011,6 +1015,8 @@
- 			dma-names = "rx", "tx";
- 			resets = <&ccu RST_AHB1_SPI2>;
- 			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 
- 		spi3: spi@1c6b000 {
-@@ -1023,6 +1029,8 @@
- 			dma-names = "rx", "tx";
- 			resets = <&ccu RST_AHB1_SPI3>;
- 			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 
- 		gic: interrupt-controller@1c81000 {
--- 
-git-series 0.9.1
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
