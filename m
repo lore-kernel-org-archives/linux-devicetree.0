@@ -1,61 +1,36 @@
-From: Sagar Kadam <sagar.kadam@sifive.com>
-Subject: Re: [PATCH v3 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC
-Date: Mon, 20 May 2019 09:50:21 +0530
-Message-ID: <CAARK3HkPuvsoVh=b2Kn43ubhME6vqpFLoboBM8OGOnb-d3FN8A@mail.gmail.com>
-References: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
- <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com> <20190516130720.GE14298@lunn.ch>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [EXT] Re: [PATCH 1/3] enetc: add hardware timestamping support
+Date: Sun, 19 May 2019 21:41:07 -0700
+Message-ID: <20190520044107.ugro6zb7vkveyjw5@localhost>
+References: <20190516100028.48256-1-yangbo.lu@nxp.com>
+ <20190516100028.48256-2-yangbo.lu@nxp.com>
+ <20190516143251.akbt3ns6ue2jrhl5@localhost>
+ <VI1PR0401MB2237FB387B3F5ABC70EE4285F8060@VI1PR0401MB2237.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516130720.GE14298@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <VI1PR0401MB2237FB387B3F5ABC70EE4285F8060@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+Sender: netdev-owner@vger.kernel.org
+To: "Y.b. Lu" <yangbo.lu@nxp.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, Claudiu Manoil <claudiu.manoil@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On Mon, May 20, 2019 at 03:20:23AM +0000, Y.b. Lu wrote:
+> > > +config FSL_ENETC_HW_TIMESTAMPING
+> > > +     bool "ENETC hardware timestamping support"
+> > > +     depends on FSL_ENETC || FSL_ENETC_VF
+> > > +     help
+> > > +       Enable hardware timestamping support on the Ethernet packets
+> > > +       using the SO_TIMESTAMPING API. Because the RX BD ring dynamic
+> > > +       allocation hasn't been supported and it's too expensive to use
+> > 
+> > s/it's/it is/
+> 
+> [Y.b. Lu] Will modify it. BTW, may I know what's the purpose of dropping single quote character? For searching, script checking, or something else?
 
-On Thu, May 16, 2019 at 6:37 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Thu, May 16, 2019 at 10:38:40AM +0530, Sagar Shrikant Kadam wrote:
-> > The i2c-ocore driver already has a polling mode interface.But it needs
-> > a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
-> > There is an erratum in FU540 chip that prevents interrupt driven i2c
-> > transfers from working, and also the I2C controller's interrupt bit
-> > cannot be cleared if set, due to this the existing i2c polling mode
-> > interface added in mainline earlier doesn't work, and CPU stall's
-> > infinitely, when-ever i2c transfer is initiated.
-> >
-> > Ref:previous polling mode support in mainline
-> >
-> >       commit 69c8c0c0efa8 ("i2c: ocores: add polling interface")
-> >
-> > The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
-> > FU540-COOO SoC.
-> >
-> > Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> > ---
-> >  drivers/i2c/busses/i2c-ocores.c | 34 ++++++++++++++++++++++++++++------
-> >  1 file changed, 28 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-> > index aee1d86..00ee45c 100644
-> > --- a/drivers/i2c/busses/i2c-ocores.c
-> > +++ b/drivers/i2c/busses/i2c-ocores.c
-> > @@ -27,6 +27,7 @@
-> >  #include <linux/jiffies.h>
-> >
-> >  #define OCORES_FLAG_POLL BIT(0)
-> > +#define OCORES_FLAG_BROKEN_IRQ BIT(2) /* Broken IRQ in HiFive Unleashed */
->
-> Hi Sigar
->
-> BIT(1). Don't leave a gap.
-
-I will remove the gap and update this in V4.
+Simply because "it's" is informal speech, but the Kconfig help is
+formal technical documentation.  (Or at least it should be!)
 
 Thanks,
-Sagar
->
->         Andrew
+Richard
