@@ -1,51 +1,71 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
-Date: Mon, 20 May 2019 16:23:20 -0500
-Message-ID: <CAL_JsqKAP85+KnQtq-xaOdX-BetB0pA7+LT8vd6w=Yz4VWnQJg@mail.gmail.com>
-References: <20190510194018.28206-1-robh@kernel.org> <20190520131846.tqx7h7sjyw6sgka5@flea>
- <CAL_JsqLbuuO9YHYwTXV5ZEGOjzZHgVsWD=TCYk4cYpm0v1zHkQ@mail.gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 3/5] arm64: dts: meson: g12a: add mdio multiplexer
+Date: Mon, 20 May 2019 23:51:09 +0200
+Message-ID: <97cde329c44eade402deb517211a15fd70103f01.camel@baylibre.com>
+References: <20190520131401.11804-1-jbrunet@baylibre.com>
+         <20190520131401.11804-4-jbrunet@baylibre.com>
+         <CAFBinCA_XE86eqCMpEFc3xMZDH8J7wVQPRj7bFZyqDxQx-w-qw@mail.gmail.com>
+         <20190520190533.GF22024@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLbuuO9YHYwTXV5ZEGOjzZHgVsWD=TCYk4cYpm0v1zHkQ@mail.gmail.com>
+In-Reply-To: <20190520190533.GF22024@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, f.fainelli@gmail.com, hkallweit1@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:35 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, May 20, 2019 at 8:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > Hi Rob,
-> >
-> > On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
-> > > Convert the vendor prefix registry to a schema. This will enable checking
-> > > that new vendor prefixes are added (in addition to the less than perfect
-> > > checkpatch.pl check) and will also check against adding other prefixes
-> > > which are not vendors.
-> > >
-> > > Converted vendor-prefixes.txt using the following sed script:
-> > >
-> > > sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
-> > >
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > As vendor prefix updates come in via multiple trees, I plan to merge
-> > > this before -rc1 to avoid cross tree conflicts.
-> >
-> > I just tried this with the 5.2-rc1 release, and this very
-> > significantly slows down the validation.
-> >
-> > With a dtbs_check run on (arm's) sunxi_defconfig, on my core-i5 with 4
-> > threads, I go from 1.30 minutes to more than 12.
->
-> Indeed. 6 min to 45 min for allmodconfig. However, it's only 5 min to
-> run checks with only this file. I'd expect a more linear hit. Maybe
-> we're exceeding some cache size and thrashing.
+On Mon, 2019-05-20 at 21:05 +0200, Andrew Lunn wrote:
+> > > +                               int_mdio: mdio@1 {
+> > > +                                       reg = <1>;
+> > > +                                       #address-cells = <1>;
+> > > +                                       #size-cells = <0>;
+> > > +
+> > > +                                       internal_ephy: ethernet_phy@8 {
+> > > +                                               compatible = "ethernet-phy-id0180.3301",
+> > > +                                                            "ethernet-phy-ieee802.3-c22";
+> > Based on your comment on v1 of this patch [0] the Ethernet PHY ID is
+> > defined by this "mdio-multiplexer" (write arbitrary value to a
+> > register then that's the PHY ID which will show up on the bus)
+> > I'm fine with explicitly listing the ID which the PHY driver binds to
+> > because I don't know a better way.
 
-Looks like the problem is a cache. The python regex cache. Changing
-re._MAXCACHE from 512 to 4096 fixes the problem. I can set this in the
-dtschema lib.
+... 
 
-Rob
+> 
+> Does reading the ID registers give the correct ID, once you have poked
+> registers in the mdio-multiplexer? If so, you don't need this
+> compatible string.
+
+Hi Andrew,
+
+In 5.1 the mdio-mux set a wrong simply because I got it wrong. I pushed a
+fix for that, and maybe it has already hit mainline.
+
+As I pointed to Martin on v1, this situation just shows that this setting is
+weaker than the usual phy setup.
+
+I do understand why we don't want to put the PHY id in DT. If the PHY fitted on
+the board changes, we want to pick it up. This particular phy is embedded in
+SoC, we know it won't change for this SoC, whatever the mdio-mux sets.
+
+So yes it should (soon) work as usual, setting this id is not strictly
+necessary but it nicely reflect that this particular phy is integrated in
+the SoC and we know which driver to use. 
+
+So, if this is ok with you, I'd prefer to keep this particular id around.
+
+> 
+> If the read is giving the wrong ID, then yes, you do want this. But
+> then please add a comment in the DT blob. This is very unusual, so
+> should have some explanation why it is needed.
+
+Sure, can add a comment. I suggest to do it in follow-up. At least it keeps
+things aligned between the gxl, which has been like this for quite a while now,
+and g12a.
+
+
+> 
+> Thanks
+> 	Andrew
