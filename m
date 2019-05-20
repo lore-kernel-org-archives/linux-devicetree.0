@@ -1,72 +1,47 @@
-From: Sagar Kadam <sagar.kadam@sifive.com>
-Subject: Re: [PATCH v4 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC
-Date: Mon, 20 May 2019 18:57:52 +0530
-Message-ID: <CAARK3HnZgiUOE3S7BOk9uC-MfmB4wO5zWFbuGGRFqKauYaX8yg@mail.gmail.com>
-References: <1558354817-12034-1-git-send-email-sagar.kadam@sifive.com>
- <1558354817-12034-4-git-send-email-sagar.kadam@sifive.com> <20190520124107.GA25785@lunn.ch>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH] dt-bindings: backlight: lm3630a: correct schema
+ validation
+Date: Mon, 20 May 2019 14:30:07 +0100
+Message-ID: <20190520133007.gymbonmq635gp73b@holly.lan>
+References: <20190520085846.22320-1-masneyb@onstation.org>
+ <CAL_JsqLcycH5e=YT-4AQFo-8O0bosjU7oagCRS5CMTfQNBLrcg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520124107.GA25785@lunn.ch>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLcycH5e=YT-4AQFo-8O0bosjU7oagCRS5CMTfQNBLrcg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Brian Masney <masneyb@onstation.org>, Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
-
-On Mon, May 20, 2019 at 6:11 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > @@ -406,7 +416,7 @@ static int ocores_xfer(struct i2c_adapter *adap,
-> >  {
-> >       struct ocores_i2c *i2c = i2c_get_adapdata(adap);
+On Mon, May 20, 2019 at 08:14:03AM -0500, Rob Herring wrote:
+> On Mon, May 20, 2019 at 3:59 AM Brian Masney <masneyb@onstation.org> wrote:
 > >
-> > -     if (i2c->flags & OCORES_FLAG_POLL)
-> > +     if ((i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ)))
-> >               return ocores_xfer_polling(adap, msgs, num);
-> >       return ocores_xfer_core(i2c, msgs, num, false);
-> >  }
->
-> You are not listening to what i said. All you need to know here is
-> that you must poll. It does not matter if the IRQ is broken or not.
->
-
-Apologies for my miss-understanding. I will rectify this and submit a v5.
-
-> >       irq = platform_get_irq(pdev, 0);
-> >       if (irq == -ENXIO) {
-> > -             i2c->flags |= OCORES_FLAG_POLL;
->
-> If there is no interrupt, you need to poll. So keep this line.
-
-Will retain this.
-
-> > +             /*
-> > +              * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
-> > +              * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
-> > +              * Else enable default polling mode interface for SIFIVE/OCORE
-> > +              * device types.
-> > +              */
-> > +             match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
-> > +             if (match && (long)match->data == TYPE_SIFIVE_REV0)
-> > +                     i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
->
-> If it is a OCORE, IRQ is broken, so OR in OCORES_FLAG_BROKEN_IRQ.
-
-Got it, as device type SIFIVE is based on OCORE's re-implementation,
-will OR in the broken IRQ flag and submit a v5.
-
+> > The '#address-cells' and '#size-cells' properties were not defined in
+> > the lm3630a bindings and would cause the following error when
+> > attempting to validate the examples against the schema:
 > >
-> > -     if (!(i2c->flags & OCORES_FLAG_POLL)) {
-> > +     if (!(i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ))) {
-> >               ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
-> >                                      pdev->name, i2c);
->
-> Here you just need to know if you are polling. Broken IRQ does not
-> matter.
->
->         Andrew
+> > Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+> > '#address-cells', '#size-cells' do not match any of the regexes:
+> > '^led@[01]$', 'pinctrl-[0-9]+'
+> >
+> > Correct this by adding those two properties.
+> >
+> > While we're here, move the ti,linear-mapping-mode property to the
+> > led@[01] child nodes to correct the following validation error:
+> >
+> > Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+> > led@0: 'ti,linear-mapping-mode' does not match any of the regexes:
+> > 'pinctrl-[0-9]+'
+> >
+> > Fixes: 32fcb75c66a0 ("dt-bindings: backlight: Add lm3630a bindings")
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > Reported-by: Rob Herring <robh+dt@kernel.org>
+> > ---
+> >  .../leds/backlight/lm3630a-backlight.yaml     | 20 +++++++++++++------
+> >  1 file changed, 14 insertions(+), 6 deletions(-)
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thanks & Regards,
-Sagar
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
