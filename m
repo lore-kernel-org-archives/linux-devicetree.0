@@ -1,25 +1,39 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 3/3] net: ethernet: add ag71xx driver
-Date: Mon, 20 May 2019 02:33:58 +0200
-Message-ID: <20190520003358.GB1695@lunn.ch>
-References: <20190519080304.5811-1-o.rempel@pengutronix.de>
- <20190519080304.5811-4-o.rempel@pengutronix.de>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH V2 1/3] PM: wakeup: Add routine to help fetch wakeup
+ source object.
+Date: Mon, 20 May 2019 02:15:50 +0000
+Message-ID: <AM5PR0402MB2865ED4DFB84BF2AE85EF0ABF1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20190517033946.30763-1-ran.wang_1@nxp.com>
+ <20190519213457.GG31403@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190519080304.5811-4-o.rempel@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>, info@freifunk-bad-gandersheim.net
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190519213457.GG31403@amd>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>
+Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> +config AG71XX
-> +	tristate "Atheros AR7XXX/AR9XXX built-in ethernet mac support"
-> +	depends on ATH79
-> +	select PHYLIB
-> +	select MDIO_BITBANG
+Hi Pavel,
 
-I don't see any need for MDIO_BITBANG.
+On Monday, May 20, 2019 05:35, Pavel Machek wrote:
+>=20
+> > --- a/include/linux/pm_wakeup.h
+>=20
+> > @@ -70,6 +71,7 @@ struct wakeup_source {
+> >  	unsigned long		wakeup_count;
+> >  	bool			active:1;
+> >  	bool			autosleep_enabled:1;
+> > +	struct device	*attached_dev;
+> >  };
+> >
+> >  #ifdef CONFIG_PM_SLEEP
+>=20
+> You might want to format this similary to the rest...
 
-  Andrew
+OK, will update, thanks.
+
+Regards,
+Ran
