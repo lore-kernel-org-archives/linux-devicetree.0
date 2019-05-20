@@ -1,99 +1,69 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH] powerpc: dts: Fix the bug that intx interrupt not work in P1010RDB-PB
-Date: Mon, 20 May 2019 13:53:08 +0800
-Message-ID: <20190520055308.43907-1-xiaowei.bao@nxp.com>
+From: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Subject: Re: [PATCH 3/4] iio: adc: mediatek: SET_LATE_SYSTEM_SLEEP_PM_OPS
+ support
+Date: Mon, 20 May 2019 14:03:25 +0800
+Message-ID: <1558332205.11080.6.camel@mtkswgap22>
+References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
+         <1557994247-16739-4-git-send-email-chun-hung.wu@mediatek.com>
+         <20190518113527.5210b0bf@archlinux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190518113527.5210b0bf@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, minghuan.lian@nxp.com, mingkai.hu@nxp.com, zhiqiang.hou@nxp.com, leoyang.li@nxp.com
-Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, peter.wang@mediatek.com, kuohong.wang@mediatek.com, jg_poxu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Due to the INTA is shared with the active-low PHY2 interrupt on P1010RDB-PA
-board, so configure P1010RDB-PA's INTA with polarity as active-low, the
-P1010RDB-PB board is used separately, so configure P1010RDB-PB's INTA with
-polarity as active-high.
-The INTX in P1010RDB-PB do not work because of the pcie@0 node fixup will be
-overwrited by p1010si-post.dtsi file, so we move the pcie@0 node fixup to
-p1010rdb-pb.dts and p1010rdb-pb_36b.dts.
+Hi Jonathan:
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
----
- arch/powerpc/boot/dts/fsl/p1010rdb-pb.dts     |   16 ++++++++++++++++
- arch/powerpc/boot/dts/fsl/p1010rdb-pb_36b.dts |   16 ++++++++++++++++
- arch/powerpc/boot/dts/fsl/p1010rdb.dtsi       |   16 ----------------
- 3 files changed, 32 insertions(+), 16 deletions(-)
+  Thanks for the prompt reply,
 
-diff --git a/arch/powerpc/boot/dts/fsl/p1010rdb-pb.dts b/arch/powerpc/boot/dts/fsl/p1010rdb-pb.dts
-index 37681fd..6d75e5f 100644
---- a/arch/powerpc/boot/dts/fsl/p1010rdb-pb.dts
-+++ b/arch/powerpc/boot/dts/fsl/p1010rdb-pb.dts
-@@ -33,3 +33,19 @@
- };
- 
- /include/ "p1010si-post.dtsi"
-+
-+&pci0 {
-+	pcie@0 {
-+		interrupt-map = <
-+			/* IDSEL 0x0 */
-+			/*
-+			 *irq[4:5] are active-high
-+			 *irq[6:7] are active-low
-+			 */
-+			0000 0x0 0x0 0x1 &mpic 0x4 0x2 0x0 0x0
-+			0000 0x0 0x0 0x2 &mpic 0x5 0x2 0x0 0x0
-+			0000 0x0 0x0 0x3 &mpic 0x6 0x1 0x0 0x0
-+			0000 0x0 0x0 0x4 &mpic 0x7 0x1 0x0 0x0
-+			>;
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/p1010rdb-pb_36b.dts b/arch/powerpc/boot/dts/fsl/p1010rdb-pb_36b.dts
-index 4cf255f..8359035 100644
---- a/arch/powerpc/boot/dts/fsl/p1010rdb-pb_36b.dts
-+++ b/arch/powerpc/boot/dts/fsl/p1010rdb-pb_36b.dts
-@@ -56,3 +56,19 @@
- };
- 
- /include/ "p1010si-post.dtsi"
-+
-+&pci0 {
-+	pcie@0 {
-+		interrupt-map = <
-+			/* IDSEL 0x0 */
-+			/*
-+			 *irq[4:5] are active-high
-+			 *irq[6:7] are active-low
-+			 */
-+			0000 0x0 0x0 0x1 &mpic 0x4 0x2 0x0 0x0
-+			0000 0x0 0x0 0x2 &mpic 0x5 0x2 0x0 0x0
-+			0000 0x0 0x0 0x3 &mpic 0x6 0x1 0x0 0x0
-+			0000 0x0 0x0 0x4 &mpic 0x7 0x1 0x0 0x0
-+			>;
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi b/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
-index 2ca9cee..ef49a7d 100644
---- a/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
-@@ -215,19 +215,3 @@
- 		phy-connection-type = "sgmii";
- 	};
- };
--
--&pci0 {
--	pcie@0 {
--		interrupt-map = <
--			/* IDSEL 0x0 */
--			/*
--			 *irq[4:5] are active-high
--			 *irq[6:7] are active-low
--			 */
--			0000 0x0 0x0 0x1 &mpic 0x4 0x2 0x0 0x0
--			0000 0x0 0x0 0x2 &mpic 0x5 0x2 0x0 0x0
--			0000 0x0 0x0 0x3 &mpic 0x6 0x1 0x0 0x0
--			0000 0x0 0x0 0x4 &mpic 0x7 0x1 0x0 0x0
--			>;
--	};
--};
--- 
-1.7.1
+On Sat, 2019-05-18 at 11:35 +0100, Jonathan Cameron wrote:
+> On Thu, 16 May 2019 16:10:46 +0800
+> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+> 
+> >   Move suspend/resume to late_suspend and
+> > early_resume to gurantee users can use auxadc
+> guarantee
+> 
+will fix it in next version.
+> > driver at suspend/resume stage.
+> No problem with the patch content, but we need a reason why they may
+> want to do so?
+Our thermal drivers uses auxadc at suspend/resume stage.
+In order to avoid auxadc suspended prior to thermal driver,
+we move auxadc to late_suspend and early_resume.
+
+Thanks,
+Chun-Hung
+> 
+> Thanks,
+> 
+> Jonathan
+> > 
+> > Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> > ---
+> >  drivers/iio/adc/mt6577_auxadc.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
+> > index e1bdcc0..58d7cb2 100644
+> > --- a/drivers/iio/adc/mt6577_auxadc.c
+> > +++ b/drivers/iio/adc/mt6577_auxadc.c
+> > @@ -326,9 +326,10 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
+> >  	return 0;
+> >  }
+> >  
+> > -static SIMPLE_DEV_PM_OPS(mt6577_auxadc_pm_ops,
+> > -			 mt6577_auxadc_suspend,
+> > -			 mt6577_auxadc_resume);
+> > +static const struct dev_pm_ops mt6577_auxadc_pm_ops = {
+> > +	SET_LATE_SYSTEM_SLEEP_PM_OPS(mt6577_auxadc_suspend,
+> > +				     mt6577_auxadc_resume)
+> > +};
+> >  
+> >  static const struct of_device_id mt6577_auxadc_of_match[] = {
+> >  	{ .compatible = "mediatek,mt2701-auxadc", .data = &mt8173_compat},
+> 
