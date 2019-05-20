@@ -1,69 +1,51 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Configure the GPU thermal zone
- for mickey
-Date: Mon, 20 May 2019 14:21:02 -0700
-Message-ID: <20190520212102.GH40515@google.com>
-References: <20190520170132.91571-1-mka@chromium.org>
- <20190520170132.91571-2-mka@chromium.org>
- <CAD=FV=Vr2thgHYTH_khqka27_SdGcSEShpSRp+u2E=O5eyxLMQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
+Date: Mon, 20 May 2019 16:23:20 -0500
+Message-ID: <CAL_JsqKAP85+KnQtq-xaOdX-BetB0pA7+LT8vd6w=Yz4VWnQJg@mail.gmail.com>
+References: <20190510194018.28206-1-robh@kernel.org> <20190520131846.tqx7h7sjyw6sgka5@flea>
+ <CAL_JsqLbuuO9YHYwTXV5ZEGOjzZHgVsWD=TCYk4cYpm0v1zHkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=Vr2thgHYTH_khqka27_SdGcSEShpSRp+u2E=O5eyxLMQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqLbuuO9YHYwTXV5ZEGOjzZHgVsWD=TCYk4cYpm0v1zHkQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 01:21:33PM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Mon, May 20, 2019 at 10:01 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+On Mon, May 20, 2019 at 11:35 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, May 20, 2019 at 8:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > >
-> > mickey crams a lot of hardware into a tiny package, which requires
-> > more aggressive thermal throttling than for devices with a larger
-> > footprint. Configure the GPU thermal zone to throttle the GPU
-> > progressively at temperatures >= 60°C. Heat dissipated by the
-> > CPUs also affects the GPU temperature, hence we cap the CPU
-> > frequency to 1.4 GHz for temperatures above 65°C. Further throttling
-> > of the CPUs may be performed by the CPU thermal zone.
+> > Hi Rob,
 > >
-> > The configuration matches that of the downstram Chrome OS 3.14
-> 
-> s/downstram/downstream
+> > On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
+> > > Convert the vendor prefix registry to a schema. This will enable checking
+> > > that new vendor prefixes are added (in addition to the less than perfect
+> > > checkpatch.pl check) and will also check against adding other prefixes
+> > > which are not vendors.
+> > >
+> > > Converted vendor-prefixes.txt using the following sed script:
+> > >
+> > > sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
+> > >
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > As vendor prefix updates come in via multiple trees, I plan to merge
+> > > this before -rc1 to avoid cross tree conflicts.
+> >
+> > I just tried this with the 5.2-rc1 release, and this very
+> > significantly slows down the validation.
+> >
+> > With a dtbs_check run on (arm's) sunxi_defconfig, on my core-i5 with 4
+> > threads, I go from 1.30 minutes to more than 12.
+>
+> Indeed. 6 min to 45 min for allmodconfig. However, it's only 5 min to
+> run checks with only this file. I'd expect a more linear hit. Maybe
+> we're exceeding some cache size and thrashing.
 
-ack
+Looks like the problem is a cache. The python regex cache. Changing
+re._MAXCACHE from 512 to 4096 fixes the problem. I can set this in the
+dtschema lib.
 
-> 
-> > +       cooling-maps {
-> > +               /* After 1st level throttle the GPU down to as low as 400 MHz */
-> > +               gpu_warmish_limit_gpu {
-> > +                       trip = <&gpu_alert_warmish>;
-> > +                       cooling-device = <&gpu THERMAL_NO_LIMIT 1>;
-> 
-> As per my comment in patch #1, you are probably ending up throttling
-> to 500 MHz, not 400 MHz.  Below will all have similar problems unless
-> we actually delete the 500 MHz operating point.
-
-Thanks for pointing that out. As per disussion on patch #1 we'll
-disable the 500 MHz OPP to stay in sync with downstream and avoid
-problems in case someone decides to re-purpose NPLL.
-
-> > +               };
-> > +
-> > +               /*
-> > +                * Slightly after we throttle the GPU, we'll also make sure that
-> > +                * the CPU can't go faster than 1.4 GHz.  Note that we won't
-> > +                * throttle the CPU lower than 1.4 GHz due to GPU heat--we'll
-> > +                * let the CPU do the rest itself.
-> > +                */
-> > +               gpu_warm_limit_cpu {
-> > +                       trip = <&gpu_alert_warm>;
-> > +                       cooling-device = <&cpu0 4 4>;
-> 
-> Shouldn't you list cpu1, cpu2, and cpu3 too?  That'd match what
-> upstream did elsewhere in this file?
-
-ack, should have noticed, I 'yelled' at others before for not doing this ...
+Rob
