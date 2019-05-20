@@ -1,116 +1,78 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: at91: Avoid colliding 'display' node and
- property names
-Date: Mon, 20 May 2019 16:58:30 +0200
-Message-ID: <20190520145830.GE3274@piout.net>
-References: <20190516225614.1458-1-robh@kernel.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 10/10] docs: fix broken documentation links
+Date: Mon, 20 May 2019 17:05:10 +0200
+Message-ID: <20190520150510.GA2606@kunai>
+References: <cover.1558362030.git.mchehab+samsung@kernel.org>
+ <4fd1182b4a41feb2447c7ccde4d7f0a6b3c92686.1558362030.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190516225614.1458-1-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <4fd1182b4a41feb2447c7ccde4d7f0a6b3c92686.1558362030.git.mchehab+samsung@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org, devel@acpica.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 16/05/2019 17:56:14-0500, Rob Herring wrote:
-> While properties and child nodes with the same name are valid DT, the
-> practice is not encouraged.
 
-I don't see anything mentioning that in the devicetree specification. I
-think this is something you should add if you don't want that to happen
-again.
+--6c2NcOVqGQ03X4Wi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Furthermore, the collision is problematic for
-> YAML encoded DT. Let's just avoid the issue and rename the nodes.
-> 
+On Mon, May 20, 2019 at 11:47:39AM -0300, Mauro Carvalho Chehab wrote:
+> Mostly due to x86 and acpi conversion, several documentation
+> links are still pointing to the old file. Fix them.
+>=20
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-Or maybe you should fix the tool ;)
+Thanks, didn't notice that.
 
-Do you plan to enforce it at some point? How close are you?
+>  Documentation/i2c/instantiating-devices          |  2 +-
 
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+=2E..
 
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> diff --git a/Documentation/i2c/instantiating-devices b/Documentation/i2c/=
+instantiating-devices
+> index 0d85ac1935b7..5a3e2f331e8c 100644
+> --- a/Documentation/i2c/instantiating-devices
+> +++ b/Documentation/i2c/instantiating-devices
+> @@ -85,7 +85,7 @@ Method 1c: Declare the I2C devices via ACPI
+>  -------------------------------------------
+> =20
+>  ACPI can also describe I2C devices. There is special documentation for t=
+his
+> -which is currently located at Documentation/acpi/enumeration.txt.
+> +which is currently located at Documentation/firmware-guide/acpi/enumerat=
+ion.rst.
+> =20
+> =20
+>  Method 2: Instantiate the devices explicitly
 
-> ---
->  arch/arm/boot/dts/at91sam9261ek.dts    | 2 +-
->  arch/arm/boot/dts/at91sam9263ek.dts    | 2 +-
->  arch/arm/boot/dts/at91sam9m10g45ek.dts | 2 +-
->  arch/arm/boot/dts/at91sam9rlek.dts     | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
-> index f681cd727010..02b116b48c3b 100644
-> --- a/arch/arm/boot/dts/at91sam9261ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9261ek.dts
-> @@ -49,7 +49,7 @@
->  			atmel,power-control-gpio = <&pioA 12 GPIO_ACTIVE_LOW>;
->  			status = "okay";
->  
-> -			display0: display {
-> +			display0: panel {
->  				bits-per-pixel = <16>;
->  				atmel,lcdcon-backlight;
->  				atmel,dmacon = <0x1>;
-> diff --git a/arch/arm/boot/dts/at91sam9263ek.dts b/arch/arm/boot/dts/at91sam9263ek.dts
-> index 13d415c22a69..924fe563f6fa 100644
-> --- a/arch/arm/boot/dts/at91sam9263ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9263ek.dts
-> @@ -111,7 +111,7 @@
->  			display = <&display0>;
->  			status = "okay";
->  
-> -			display0: display {
-> +			display0: panel {
->  				bits-per-pixel = <16>;
->  				atmel,lcdcon-backlight;
->  				atmel,dmacon = <0x1>;
-> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> index 46107c2f1ab9..5226e952a729 100644
-> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> @@ -236,7 +236,7 @@
->  			display = <&display0>;
->  			status = "okay";
->  
-> -			display0: display {
-> +			display0: panel {
->  				bits-per-pixel = <32>;
->  				atmel,lcdcon-backlight;
->  				atmel,dmacon = <0x1>;
-> diff --git a/arch/arm/boot/dts/at91sam9rlek.dts b/arch/arm/boot/dts/at91sam9rlek.dts
-> index 27d8a1f44233..a000a459f17b 100644
-> --- a/arch/arm/boot/dts/at91sam9rlek.dts
-> +++ b/arch/arm/boot/dts/at91sam9rlek.dts
-> @@ -37,7 +37,7 @@
->  			display = <&display0>;
->  			status = "okay";
->  
-> -			display0: display {
-> +			display0: panel {
->  				bits-per-pixel = <16>;
->  				atmel,lcdcon-backlight;
->  				atmel,dmacon = <0x1>;
-> -- 
-> 2.20.1
-> 
+For this I2C part:
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Reviewed-by: Wolfram Sang <wsa@the-dreams.de>
+
+
+--6c2NcOVqGQ03X4Wi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlziwiIACgkQFA3kzBSg
+Kbb/+hAArOEJ2RcuEqvOP7Ge80J7VxtEVTCR0sWRFg/7cpRGLnwf1qLSAUlfAJYj
+fUhZ9ANfeB4Y4ZltOPwJ34KNtZy/kYzYyoy/WgiNfJUrf+s7auOF+dMXRvBe8VyX
+v/pHpAMzTf8rtNkaESOahPExL1lgrI2dShZa3Mxofm2eb3Kam0OJRr6Cvj7mA/Rq
+PHq1QUlG+Y3hZdvAHjQ6GN6wr+pNnhqeSSAd3BZg5MZQpPRiaK+C4tPkqOD/TNwX
+9+iPJTMPhWsdei4UO1POHGCOclFatxkPOQm9JjsTD1h1lEJK7Afs1cTCd0crwpzW
+nQuj+MSjKTqcOwQ4hF1x6PwlbJm4Hq/+r6b50UsnQYai6pt7Khp9OISmYTxPQhgI
+8aXZbjsMB3k9ebYulULGdF0f3p/IPoqneTUf3yi5OxNbhJ8eyNcQ4l35MP9hEyYb
+H/9a/G4GXP7CLyCtKd53OtNeE1tTF4zGKIhe7v9OInHolA3gLx1R1rxiBeQB+XyA
+NO/4FdEIZ1QWAyl7m1aWBtYpar2uvFyEhZWG3sVhZYsA9dQNBfgzFSu60wus7hy4
+D9FxYijaEnHZvPivrTwfcp8ittAvsIrM3xANcOhWXEU6eC6w0KX15QiiyPQUbssL
+H3fPVUBxQlwicyY98Dvh7eJmnD1WEsMcDmDI5RqrAxhdD/bxbN0=
+=b4+p
+-----END PGP SIGNATURE-----
+
+--6c2NcOVqGQ03X4Wi--
