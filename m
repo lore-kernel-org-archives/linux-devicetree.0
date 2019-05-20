@@ -1,104 +1,39 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH] ARM: dts: at91: Avoid colliding 'display' node and
- property names
-Date: Mon, 20 May 2019 08:27:46 +0000
-Message-ID: <46c85a51-2f2c-3807-4301-dd544a7b5398@microchip.com>
-References: <20190516225614.1458-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190516225614.1458-1-robh@kernel.org>
-Content-Language: en-US
-Content-ID: <5E287A6DB015DD4E8F435428E1BCBAAB@namprd11.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh@kernel.org, alexandre.belloni@bootlin.com
-Cc: devicetree@vger.kernel.org, Ludovic.Desroches@microchip.com, linux-arm-kernel@lists.infradead.org
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/5] Add pinconf support for BM1880 SoC
+Date: Mon, 20 May 2019 14:00:56 +0530
+Message-ID: <20190520083101.10229-1-manivannan.sadhasivam@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, linux-gpio@vger.kernel.org, alec.lin@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17/05/2019 at 00:56, Rob Herring wrote:
-> While properties and child nodes with the same name are valid DT, the
-> practice is not encouraged. Furthermore, the collision is problematic for
-> YAML encoded DT. Let's just avoid the issue and rename the nodes.
-> 
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Hi Linus,
 
-Good for me:
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+This patchset adds pinconf support for Bitmain BM1880 SoC. In the previous
+patchset adding pinctrl support, I declared that the SoC doesn't support
+pinconf settings but further interaction with Bitmain engineers revealed
+that the SoC does support it and hence this patchset.
 
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->   arch/arm/boot/dts/at91sam9261ek.dts    | 2 +-
->   arch/arm/boot/dts/at91sam9263ek.dts    | 2 +-
->   arch/arm/boot/dts/at91sam9m10g45ek.dts | 2 +-
->   arch/arm/boot/dts/at91sam9rlek.dts     | 2 +-
->   4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
-> index f681cd727010..02b116b48c3b 100644
-> --- a/arch/arm/boot/dts/at91sam9261ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9261ek.dts
-> @@ -49,7 +49,7 @@
->   			atmel,power-control-gpio = <&pioA 12 GPIO_ACTIVE_LOW>;
->   			status = "okay";
->   
-> -			display0: display {
-> +			display0: panel {
->   				bits-per-pixel = <16>;
->   				atmel,lcdcon-backlight;
->   				atmel,dmacon = <0x1>;
-> diff --git a/arch/arm/boot/dts/at91sam9263ek.dts b/arch/arm/boot/dts/at91sam9263ek.dts
-> index 13d415c22a69..924fe563f6fa 100644
-> --- a/arch/arm/boot/dts/at91sam9263ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9263ek.dts
-> @@ -111,7 +111,7 @@
->   			display = <&display0>;
->   			status = "okay";
->   
-> -			display0: display {
-> +			display0: panel {
->   				bits-per-pixel = <16>;
->   				atmel,lcdcon-backlight;
->   				atmel,dmacon = <0x1>;
-> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> index 46107c2f1ab9..5226e952a729 100644
-> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> @@ -236,7 +236,7 @@
->   			display = <&display0>;
->   			status = "okay";
->   
-> -			display0: display {
-> +			display0: panel {
->   				bits-per-pixel = <32>;
->   				atmel,lcdcon-backlight;
->   				atmel,dmacon = <0x1>;
-> diff --git a/arch/arm/boot/dts/at91sam9rlek.dts b/arch/arm/boot/dts/at91sam9rlek.dts
-> index 27d8a1f44233..a000a459f17b 100644
-> --- a/arch/arm/boot/dts/at91sam9rlek.dts
-> +++ b/arch/arm/boot/dts/at91sam9rlek.dts
-> @@ -37,7 +37,7 @@
->   			display = <&display0>;
->   			status = "okay";
->   
-> -			display0: display {
-> +			display0: panel {
->   				bits-per-pixel = <16>;
->   				atmel,lcdcon-backlight;
->   				atmel,dmacon = <0x1>;
-> 
+Currently, there is no drive strength support added but it will come later.
+Also, the current driver has some code to set pinmux in dedicated PWM
+registers separately which is not needed, so I removed those and simplified
+the driver.
 
+Thanks,
+Mani
+
+Manivannan Sadhasivam (5):
+  dt-bindings: pinctrl: Modify pinctrl memory map
+  arm64: dts: bitmain: Modify pin controller memory map
+  pinctrl: Rework the pinmux handling for BM1880 SoC
+  dt-bindings: pinctrl: Document pinconf bindings for BM1880 SoC
+  pinctrl: Add pinconf support for BM1880 SoC
+
+ .../pinctrl/bitmain,bm1880-pinctrl.txt        |  23 +-
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi       |   4 +-
+ drivers/pinctrl/pinctrl-bm1880.c              | 455 +++++++++++-------
+ 3 files changed, 304 insertions(+), 178 deletions(-)
 
 -- 
-Nicolas Ferre
+2.17.1
