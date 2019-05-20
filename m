@@ -1,77 +1,90 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: watchdog: add Allwinner H6 watchdog
-Date: Mon, 20 May 2019 09:35:29 +0200
-Message-ID: <20190520073529.nxptfbibexrqyzfi@flea>
-References: <20190518152355.11134-1-peron.clem@gmail.com>
- <20190518152355.11134-2-peron.clem@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 6/8] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
+Date: Mon, 20 May 2019 15:31:59 +0800
+Message-ID: <20190520073157.GW15856@dragon>
+References: <20190514073529.29505-1-peter.chen@nxp.com>
+ <20190514073529.29505-7-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vfqfe4etmgwkzfrf"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190518152355.11134-2-peron.clem@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190514073529.29505-7-peter.chen@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <peter.chen@nxp.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---vfqfe4etmgwkzfrf
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, May 18, 2019 at 05:23:52PM +0200, Cl=E9ment P=E9ron wrote:
-> Allwinner H6 has a similar watchdog as the A64 which is already
-> a compatible of the A31.
->
-> This commit sort the lines and add the H6 compatible.
->
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+On Tue, May 14, 2019 at 07:38:21AM +0000, Peter Chen wrote:
+> Add imx7ulp USBOTG1 support.
+> 
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
 > ---
->  .../devicetree/bindings/watchdog/sunxi-wdt.txt         | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt b/D=
-ocumentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> index 46055254e8dd..f4810f8ad1c5 100644
-> --- a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> @@ -3,10 +3,12 @@ Allwinner SoCs Watchdog timer
->  Required properties:
->
->  - compatible : should be one of
-> -	"allwinner,sun4i-a10-wdt"
-> -	"allwinner,sun6i-a31-wdt"
-> -	"allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
-> -	"allwinner,suniv-f1c100s-wdt", "allwinner,sun4i-a10-wdt"
+>  arch/arm/boot/dts/imx7ulp.dtsi | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+> index fca6e50f37c8..60c9ea116d0a 100644
+> --- a/arch/arm/boot/dts/imx7ulp.dtsi
+> +++ b/arch/arm/boot/dts/imx7ulp.dtsi
+> @@ -30,6 +30,7 @@
+>  		serial1 = &lpuart5;
+>  		serial2 = &lpuart6;
+>  		serial3 = &lpuart7;
+> +		usbphy0 = &usbphy1;
+>  	};
+>  
+>  	cpus {
+> @@ -133,6 +134,36 @@
+>  			clock-names = "ipg", "per";
+>  		};
+>  
+> +		usbotg1: usb@40330000 {
+> +			compatible = "fsl,imx7ulp-usb", "fsl,imx6ul-usb",
+> +				"fsl,imx27-usb";
+> +			reg = <0x40330000 0x200>;
+> +			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&pcc2 IMX7ULP_CLK_USB0>;
+> +			phys = <&usbphy1>;
+> +			fsl,usbmisc = <&usbmisc1 0>;
+> +			ahb-burst-config = <0x0>;
+> +			tx-burst-size-dword = <0x8>;
+> +			rx-burst-size-dword = <0x8>;
+> +			status = "disabled";
+> +		};
+> +
+> +		usbmisc1: usbmisc@40330200 {
+> +			#index-cells = <1>;
 
-That sorting was kind of intentional
+Nit: we usually start with 'compatible', so can we move it behind?
 
-> +	- "allwinner,sun4i-a10-wdt"
-> +	- "allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
-> +	- "allwinner,sun50i-h6-wdt","allwinner,sun50i-a64-wdt",
-> +	  "allwinner,sun6i-a31-wdt"
+Shawn
 
-Is there a reason to keep the A64 compatible?
-
-Thanks,
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---vfqfe4etmgwkzfrf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOJYwQAKCRDj7w1vZxhR
-xXf6AP44cA+X4inPt5m68fMkXQhL5OKxaZuNzsYSfVYbEOvP8QEA4EEwKgv3Sny9
-0nDVY1voirnIU5xZoN2wii6g2sl5kgc=
-=tx0L
------END PGP SIGNATURE-----
-
---vfqfe4etmgwkzfrf--
+> +			compatible = "fsl,imx7ulp-usbmisc", "fsl,imx7d-usbmisc",
+> +				"fsl,imx6q-usbmisc";
+> +			reg = <0x40330200 0x200>;
+> +		};
+> +
+> +		usbphy1: usbphy@0x40350000 {
+> +			compatible = "fsl,imx7ulp-usbphy",
+> +				"fsl,imx6ul-usbphy", "fsl,imx23-usbphy";
+> +			reg = <0x40350000 0x1000>;
+> +			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&pcc2 IMX7ULP_CLK_USB_PHY>;
+> +			#phy-cells = <0>;
+> +		};
+> +
+>  		usdhc0: mmc@40370000 {
+>  			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
+>  			reg = <0x40370000 0x10000>;
+> -- 
+> 2.14.1
+> 
