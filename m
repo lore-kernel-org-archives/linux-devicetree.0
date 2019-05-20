@@ -1,8 +1,8 @@
 Return-Path: <shawnguo@kernel.org>
-Date: Mon, 20 May 2019 10:16:40 +0800
+Date: Mon, 20 May 2019 09:29:50 +0800
 From: Shawn Guo <shawnguo@kernel.org>
 Subject: Re: [PATCH 00/17] Add Support for Kontron SMARC-sAMX6i
-Message-ID: <20190520021639.GG15856@dragon>
+Message-ID: <20190520012948.GE15856@dragon>
 References: <20190509155834.22838-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -13,22 +13,6 @@ Cc: robh+dt@kernel.org, linux-imx@nxp.com, Stefan.Nickl@kontron.com, Gilles.Bulo
 List-ID: <devicetree@vger.kernel.org>
 
 On Thu, May 09, 2019 at 05:58:17PM +0200, Marco Felsch wrote:
-> Hi,
-> 
-> this series adds the Kontron SoM 'SMARC-sAMX6i' which is compatible to
-> the SMARC 1.1 standard [1]. Most of the muxing can be done within the
-> SoM dtsi since the standard defines a unique SoM hardware interface.
-> 
-> This series is based on Priit Laes initial commit [2] which adds the
-> initial support. I addressed the comments and changed the copyright
-> since there where a lot of fixes.
-> 
-> Testers are welcome :) since I used a custome baseboard which doesn't
-> use all of the interfaces.
-> 
-> [1] https://sget.org/standards/smarc
-> [2] https://lore.kernel.org/patchwork/patch/762261/
-> 
 > Marco Felsch (14):
 >   dt-bindings: add Kontron vendor prefix
 >   ARCH: arm: dts: imx6qdl-kontron-samx6i: add SMARC SDIO interface
@@ -54,21 +38,6 @@ On Thu, May 09, 2019 at 05:58:17PM +0200, Marco Felsch wrote:
 >   ARCH: arm: dts: imx6qdl-kontron-samx6i: Add iMX6-based Kontron
 >     SMARC-sAMX6i module
 
-Do we really need so many patches for adding a single board support, or
-can we squash some of them?
+'ARM: dts: ...' for prefix please.
 
 Shawn
-
-> 
->  .../devicetree/bindings/vendor-prefixes.txt   |   1 +
->  arch/arm/boot/dts/imx6dl-kontron-samx6i.dtsi  |  12 +
->  arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi   |  36 +
->  arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 812 ++++++++++++++++++
->  4 files changed, 861 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6dl-kontron-samx6i.dtsi
->  create mode 100644 arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi
->  create mode 100644 arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-> 
-> -- 
-> 2.20.1
-> 
