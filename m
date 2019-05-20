@@ -1,88 +1,106 @@
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH 1/2] power: supply: bq25890: Add support for setting bq25890 and bq25896's VINDPM
-Date: Mon, 20 May 2019 11:07:11 -0700
-Message-ID: <20190520180712.32405-2-angus@akkea.ca>
-References: <20190520180712.32405-1-angus@akkea.ca>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 1/7] dt-bindings: Add panel-timing subnode to simple-panel
+Date: Mon, 20 May 2019 11:35:43 -0700
+Message-ID: <CAD=FV=WKkfhS8q2Wnx6PfHyq8m6oGhu=RideOykdTQ4dJrwfUg@mail.gmail.com>
+References: <20190401171724.215780-1-dianders@chromium.org>
+ <20190401171724.215780-2-dianders@chromium.org> <20190408103240.GF6644@ulmo> <CAD=FV=UJXLeEDPRAHY5-f2D4qJ4rq0LmKUDf4MANrb5KOm_x=g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520180712.32405-1-angus@akkea.ca>
+In-Reply-To: <CAD=FV=UJXLeEDPRAHY5-f2D4qJ4rq0LmKUDf4MANrb5KOm_x=g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: angus.ainslie@puri.sm
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Eric Kuzmenko <eric.kuzmenko@puri.sm>, Angus Ainslie <angus@akkea.ca>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Eric Anholt <eric@anholt.net>, Jeffy Chen <jeffy.chen@rock-chips.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Kuzmenko <eric.kuzmenko@puri.sm>
+Thierry,
 
-The bq25890 has low voltage protection on VIN. Allow the register
-to be set from the device tree.
+On Mon, Apr 8, 2019 at 7:39 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Thierry,
+>
+> On Mon, Apr 8, 2019 at 3:32 AM Thierry Reding <thierry.reding@gmail.com> =
+wrote:
+> >
+> > On Mon, Apr 01, 2019 at 10:17:18AM -0700, Douglas Anderson wrote:
+> > > From: Sean Paul <seanpaul@chromium.org>
+> > >
+> > > This patch adds a new subnode to simple-panel allowing us to override
+> > > the typical timing expressed in the panel's display_timing.
+> > >
+> > > Changes in v2:
+> > >  - Split out the binding into a new patch (Rob)
+> > >  - display-timings is a new section (Rob)
+> > >  - Use the full display-timings subnode instead of picking the timing
+> > >    out (Rob/Thierry)
+> > > Changes in v3:
+> > >  - Go back to using the timing subnode directly, but rename to
+> > >    panel-timing (Rob)
+> > > Changes in v4:
+> > >  - Simplify desc. for when override should be used (Thierry/Laurent)
+> > >  - Removed Rob H review since it's been a year and wording changed
+> > > Changes in v5:
+> > >  - Removed bit about OS may ignore (Rob/Ezequiel)
+> > >
+> > > Cc: Doug Anderson <dianders@chromium.org>
+> > > Cc: Eric Anholt <eric@anholt.net>
+> > > Cc: Heiko Stuebner <heiko@sntech.de>
+> > > Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: St=C3=A9phane Marchesin <marcheu@chromium.org>
+> > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > Cc: dri-devel@lists.freedesktop.org
+> > > Cc: linux-rockchip@lists.infradead.org
+> > > Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > ---
+> > >
+> > >  .../bindings/display/panel/simple-panel.txt   | 22 +++++++++++++++++=
+++
+> > >  1 file changed, 22 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/panel/simple-p=
+anel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> > > index b2b872c710f2..93882268c0b9 100644
+> > > --- a/Documentation/devicetree/bindings/display/panel/simple-panel.tx=
+t
+> > > +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.tx=
+t
+> > > @@ -15,6 +15,16 @@ Optional properties:
+> > >    (hot plug detect) signal, but the signal isn't hooked up so we sho=
+uld
+> > >    hardcode the max delay from the panel spec when powering up the pa=
+nel.
+> > >
+> > > +panel-timing subnode
+> >
+> > Is there any reason why we need the panel- prefix? This is already part
+> > of a panel definition, so it's completely redundant. Why not just name
+> > the subnode "timing"?
+>
+> It was a really long time ago since this patch series was idle for a
+> while, but you previous had similar feedback in v3 but ended up OK
+> with it.  See:
+>
+> https://patchwork.kernel.org/patch/10207583/
+>
+> I believe the original node name came out of some back and forth
+> between Rob and Sean.  As far as I can tell, the context is back in
+> <https://patchwork.kernel.org/patch/10203483/>.  I think Rob wanted it
+> to follow other similar node names.
+>
+>
+> That all being said, if you feel strongly about it being called
+> "timing" and Rob's OK w/ that too then I'll re-spin the series.
 
-Signed-off-by: Eric Kuzmenko <eric.kuzmenko@puri.sm>
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- drivers/power/supply/bq25890_charger.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+With 5.2-rc1 out, maybe this series is ready to land?  If you'd like
+me to change things as per above I can.  ...but it feels like keeping
+the already-agreed-upon name might be easiest / best?  Presumably
+you'd land patches 1, 2, 4, and 5 and then Heiko could land the dts
+patches?
 
-diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index 66991e6f75d9..34fc89776994 100644
---- a/drivers/power/supply/bq25890_charger.c
-+++ b/drivers/power/supply/bq25890_charger.c
-@@ -75,6 +75,8 @@ struct bq25890_init_data {
- 	u8 boosti;	/* boost current limit		*/
- 	u8 boostf;	/* boost frequency		*/
- 	u8 ilim_en;	/* enable ILIM pin		*/
-+	u8 force_vindpm;/* force vinmin threshold	*/
-+	u8 vindpm;	/* vinmin threshold		*/
- 	u8 treg;	/* thermal regulation threshold */
- };
- 
-@@ -250,6 +252,7 @@ enum bq25890_table_ids {
- 	TBL_VREG,
- 	TBL_BOOSTV,
- 	TBL_SYSVMIN,
-+	TBL_VINDPM,
- 
- 	/* lookup tables */
- 	TBL_TREG,
-@@ -289,6 +292,7 @@ static const union {
- 	[TBL_VREG] =	{ .rt = {3840000, 4608000, 16000} },	 /* uV */
- 	[TBL_BOOSTV] =	{ .rt = {4550000, 5510000, 64000} },	 /* uV */
- 	[TBL_SYSVMIN] = { .rt = {3000000, 3700000, 100000} },	 /* uV */
-+	[TBL_VINDPM] =	{ .rt = {2600000, 15300000, 100000} },	 /* uV */
- 
- 	/* lookup tables */
- 	[TBL_TREG] =	{ .lt = {bq25890_treg_tbl, BQ25890_TREG_TBL_SIZE} },
-@@ -621,6 +625,8 @@ static int bq25890_hw_init(struct bq25890_device *bq)
- 		{F_BOOSTI,	 bq->init_data.boosti},
- 		{F_BOOSTF,	 bq->init_data.boostf},
- 		{F_EN_ILIM,	 bq->init_data.ilim_en},
-+		{F_FORCE_VINDPM, bq->init_data.force_vindpm},
-+		{F_VINDPM,	 bq->init_data.vindpm},
- 		{F_TREG,	 bq->init_data.treg}
- 	};
- 
-@@ -783,11 +789,14 @@ static int bq25890_fw_read_u32_props(struct bq25890_device *bq)
- 		{"ti,boost-max-current", false, TBL_BOOSTI, &init->boosti},
- 
- 		/* optional properties */
--		{"ti,thermal-regulation-threshold", true, TBL_TREG, &init->treg}
-+		{"ti,thermal-regulation-threshold",
-+			true, TBL_TREG, &init->treg},
-+		{"ti,vinmin-threshold", true, TBL_VINDPM, &init->vindpm}
- 	};
- 
- 	/* initialize data for optional properties */
- 	init->treg = 3; /* 120 degrees Celsius */
-+	init->vindpm = 0x12; /* 4.4V */
- 
- 	for (i = 0; i < ARRAY_SIZE(props); i++) {
- 		ret = device_property_read_u32(bq->dev, props[i].name,
-@@ -820,6 +829,8 @@ static int bq25890_fw_probe(struct bq25890_device *bq)
- 
- 	init->ilim_en = device_property_read_bool(bq->dev, "ti,use-ilim-pin");
- 	init->boostf = device_property_read_bool(bq->dev, "ti,boost-low-freq");
-+	init->force_vindpm =
-+		device_property_read_bool(bq->dev, "ti,use-vinmin-threshold");
- 
- 	return 0;
- }
--- 
-2.17.1
+Thanks!
+
+-Doug
