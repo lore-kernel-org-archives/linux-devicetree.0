@@ -1,84 +1,94 @@
-Return-Path: <SRS0=MLGG=TQ=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V3 1/8] phy: tegra: xusb: t210: add XUSB dual mode support
-Date: Thu, 16 May 2019 12:09:25 +0530
-Message-ID: <1557988772-15406-2-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1557988772-15406-1-git-send-email-nkristam@nvidia.com>
-References: <1557988772-15406-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=bR7J=TU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hamsrv800.servertools24.de ([213.238.32.28]:42125 "EHLO
+        hamsrv800.servertools24.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725601AbfETUWx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 May 2019 16:22:53 -0400
+Subject: Re: [PATCH v4 1/2] dt-bindings: leds: Add binding for spi-byte LED.
+References: <20190513193307.11591-1-oss@c-mauderer.de>
+ <20190519212501.GC31403@amd>
+ <1850ba07-2c0c-2624-4ff3-fd507e49439f@c-mauderer.de>
+ <99283573-2711-08b6-b95e-27732c175bb4@gmail.com>
+From: Christian Mauderer <oss@c-mauderer.de>
+Message-ID: <b2315969-eef3-ad08-7551-c25a54049b28@c-mauderer.de>
+Date: Mon, 20 May 2019 22:22:50 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+In-Reply-To: <99283573-2711-08b6-b95e-27732c175bb4@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Configure the port capabilities based on usb_dr_mode settings.
+Hello Jacek, Pavel, Rob, Dan and everyone who I might have missed,
 
-Based on work by JC Kuo <jckuo@nvidia.com>.
+thanks for the great feedback, the patience while reviewing my patches
+and for accepting it.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
- drivers/phy/tegra/xusb-tegra210.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+Although it needed a longer discussion than I expected (partially due to
+my rush creating new versions at the beginning) it was a quite positive
+experience and I'm quite ready to repeat it if some other opportunity
+arises.
 
-diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-index 05bee32..4beebcc 100644
---- a/drivers/phy/tegra/xusb-tegra210.c
-+++ b/drivers/phy/tegra/xusb-tegra210.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2014, NVIDIA CORPORATION.  All rights reserved.
-+ * Copyright (c) 2014-2019, NVIDIA CORPORATION.  All rights reserved.
-  * Copyright (C) 2015 Google, Inc.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-@@ -47,7 +47,10 @@
- #define XUSB_PADCTL_USB2_PAD_MUX_USB2_BIAS_PAD_XUSB 0x1
- 
- #define XUSB_PADCTL_USB2_PORT_CAP 0x008
-+#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(x) (0x0 << ((x) * 4))
- #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(x) (0x1 << ((x) * 4))
-+#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(x) (0x2 << ((x) * 4))
-+#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(x) (0x3 << ((x) * 4))
- #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(x) (0x3 << ((x) * 4))
- 
- #define XUSB_PADCTL_SS_PORT_MAP 0x014
-@@ -72,6 +75,7 @@
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(x) (0x084 + (x) * 0x40)
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT 7
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK 0x3
-+#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL 0x1
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18 (1 << 6)
- 
- #define XUSB_PADCTL_USB2_OTG_PADX_CTL0(x) (0x088 + (x) * 0x40)
-@@ -965,7 +969,14 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- 
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_PORT_CAP);
- 	value &= ~XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(index);
--	value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
-+	if (port->mode == USB_DR_MODE_UNKNOWN)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(index);
-+	else if (port->mode == USB_DR_MODE_PERIPHERAL)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(index);
-+	else if (port->mode == USB_DR_MODE_HOST)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
-+	else if (port->mode == USB_DR_MODE_OTG)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(index);
- 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_PORT_CAP);
- 
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-@@ -997,7 +1008,12 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- 			     XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
- 	value &= ~(XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK <<
- 		   XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT);
--	value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
-+	if (port->mode == USB_DR_MODE_HOST)
-+		value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
-+	else
-+		value |=
-+		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL <<
-+		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT;
- 	padctl_writel(padctl, value,
- 		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
- 
--- 
-2.7.4
+Best regards
+
+Christian
+
+On 20/05/2019 22:15, Jacek Anaszewski wrote:
+> Hi Christian,
+> 
+> On 5/20/19 7:19 PM, Christian Mauderer wrote:
+>> On 19/05/2019 23:25, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>> From: Christian Mauderer <oss@c-mauderer.de>
+>>>>
+>>>> This patch adds the binding documentation for a simple SPI based LED
+>>>> controller which use only one byte for setting the brightness.
+>>>>
+>>>> Signed-off-by: Christian Mauderer <oss@c-mauderer.de>
+>>>> ---
+>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/leds/leds-spi-byte.txt
+>>>> b/Documentation/devicetree/bindings/leds/leds-spi-byte.txt
+>>>> new file mode 100644
+>>>> index 000000000000..28b6b2d9091e
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/leds/leds-spi-byte.txt
+>>>> @@ -0,0 +1,44 @@
+>>>> +* Single Byte SPI LED Device Driver.
+>>>
+>>>> +The driver can be used for controllers with a very simple SPI
+>>>> protocol:
+>>>> +- one LED is controlled by a single byte on MOSI
+>>>> +- the value of the byte gives the brightness between two values
+>>>> (lowest to
+>>>> +� highest)
+>>>> +- no return value is necessary (no MISO signal)
+>>>
+>>> I'd expect this file to be named acb-spi-led.txt, or something, and
+>>> talk about that u-controller, not its device driver -- as devicetree
+>>> binding describes hardware, not driver.
+>>>
+>>> But you already have an ack from rob, so...
+>>> ����������������������������������� Pavel
+>>> �����������������������������������
+>>
+>> So basically it would have been better to move the description that I
+>> added to the c-file as "supported devices" in the device tree file?
+>>
+>> With both commits already acked: Rob and Pavel: Should I change that?
+>>
+>> If you both say yes, I would rename the file in the binding like
+>> suggested and move the detailed protocol description from the driver to
+>> the binding.
+> 
+> Let's not ramble on it. It is good as is.
+> 
+> Patch set applied to the for-next branch of linux-leds.git.
+> 
+> Thank you for your work.
+> 
