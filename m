@@ -1,85 +1,92 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 3/4] arm64: DTS: allwinner: a64: Enable audio on Teres-I
-Date: Mon, 20 May 2019 10:09:42 +0200
-Message-ID: <20190520080942.s27zv6yfv2zo5tc3@flea>
-References: <20190516154943.239E668B05@newverein.lst.de>
- <20190516155139.E6EE568C65@newverein.lst.de>
- <CAGb2v64xKk1r1iqSVm5pVvHVkyQ175MUFB7JPUkvQX9ecOZDDQ@mail.gmail.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT
+ nodes
+Date: Mon, 20 May 2019 08:12:06 +0000
+Message-ID: <AM5PR04MB329911C71C671C52925495B6F5060@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190515072747.39941-1-xiaowei.bao@nxp.com>
+ <20190515072747.39941-2-xiaowei.bao@nxp.com>
+ <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
+ <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1458908539=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGb2v64xKk1r1iqSVm5pVvHVkyQ175MUFB7JPUkvQX9ecOZDDQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Torsten Duwe <duwe@lst.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Kishon <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, gregkh <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Shawn Lin <shawn.lin@rock-chips.com>, linux-pci <linux-pci@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1458908539==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4whjn4knj7qddsth"
-Content-Disposition: inline
-
-
---4whjn4knj7qddsth
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, May 20, 2019 at 03:56:13PM +0800, Chen-Yu Tsai wrote:
-> On Thu, May 16, 2019 at 11:52 PM Torsten Duwe <duwe@lst.de> wrote:
-> >
-> > From: Harald Geyer <harald@ccbib.org>
-> >
-> > The TERES-I has internal speakers (left, right), internal microphone
-> > and a headset combo jack (headphones + mic), "CTIA" (android) pinout.
-> >
-> > The headphone and mic detect lines of the A64 are connected properly,
-> > but AFAIK currently unsupported by the driver.
-> >
-> > Signed-off-by: Harald Geyer <harald@ccbib.org>
-> > Signed-off-by: Torsten Duwe <duwe@suse.de>
->
-> Looks good to me.
->
-> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-
-Applied, thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---4whjn4knj7qddsth
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOJgxgAKCRDj7w1vZxhR
-xbSXAP926FlqO6XCiMyZJenTVBmpT/A0W2UCps/VqpRJuj0aagD/exOJs05ag5un
-BMT9ii0aqMgO8x6CqBc2f5EQ6uIRagg=
-=Md6e
------END PGP SIGNATURE-----
-
---4whjn4knj7qddsth--
-
---===============1458908539==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============1458908539==--
+SGkgQXJuZHTvvIwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEFybmQgQmVy
+Z21hbm4gPGFybmRAYXJuZGIuZGU+IA0KU2VudDogMjAxOeW5tDXmnIgxN+aXpSAxNjo1OQ0KVG86
+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IEJqb3JuIEhlbGdhYXMgPGJo
+ZWxnYWFzQGdvb2dsZS5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFy
+ayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2Vy
+bmVsLm9yZz47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgS2lzaG9uIDxraXNob25AdGku
+Y29tPjsgTG9yZW56byBQaWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+OyBncmVn
+a2ggPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFu
+QG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95
+LnphbmdAbnhwLmNvbT47IEthdGUgU3Rld2FydCA8a3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9y
+Zz47IFBoaWxpcHBlIE9tYnJlZGFubmUgPHBvbWJyZWRhbm5lQG5leGIuY29tPjsgU2hhd24gTGlu
+IDxzaGF3bi5saW5Acm9jay1jaGlwcy5jb20+OyBsaW51eC1wY2kgPGxpbnV4LXBjaUB2Z2VyLmtl
+cm5lbC5vcmc+OyBEVE1MIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5l
+bCBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBBUk0g
+PGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4cHBjLWRldiA8bGlu
+dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc+DQpTdWJqZWN0OiBSZTogW0VYVF0gUmU6IFtQQVRD
+SCAyLzNdIGFybTY0OiBkdHM6IGxzMTAyOGE6IEFkZCBQQ0llIGNvbnRyb2xsZXIgRFQgbm9kZXMN
+Cg0KQ2F1dGlvbjogRVhUIEVtYWlsDQoNCk9uIEZyaSwgTWF5IDE3LCAyMDE5IGF0IDU6MjEgQU0g
+WGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+IHdyb3RlOg0KPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiBP
+biBXZWQsIE1heSAxNSwgMjAxOSBhdCA5OjM2IEFNIFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0Bu
+eHAuY29tPiB3cm90ZToNCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
+YW9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
+ZnNsLWxzMTAyOGEuZHRzaSB8ICAgNTIgKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEg
+ZmlsZXMgY2hhbmdlZCwgNTIgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5k
+dHNpIA0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRz
+aQ0KPiA+IGluZGV4IGIwNDU4MTIuLjUwYjU3OWIgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02
+NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiBAQCAtMzk4LDYgKzM5
+OCw1OCBAQA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7
+DQo+ID4gICAgICAgICAgICAgICAgIH07DQo+ID4NCj4gPiArICAgICAgICAgICAgICAgcGNpZUAz
+NDAwMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxs
+czEwMjhhLXBjaWUiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDAwIDB4
+MDM0MDAwMDAgMHgwIDB4MDAxMDAwMDAgICAvKiBjb250cm9sbGVyIHJlZ2lzdGVycyAqLw0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDgwIDB4MDAwMDAwMDAgMHgwIDB4MDAw
+MDIwMDA+OyAvKiBjb25maWd1cmF0aW9uIHNwYWNlICovDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgcmVnLW5hbWVzID0gInJlZ3MiLCAiY29uZmlnIjsNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTA4IElSUV9UWVBFX0xFVkVMX0hJR0g+LCAv
+KiBQTUUgaW50ZXJydXB0ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDxHSUNfU1BJIDEwOSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsgLyogYWVyIGludGVycnVwdCAq
+Lw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyA9ICJwbWUiLCAi
+YWVyIjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwzPjsN
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwyPjsNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICBkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGRtYS1jb2hlcmVudDsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBu
+dW0tbGFuZXMgPSA8ND47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYnVzLXJhbmdlID0g
+PDB4MCAweGZmPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByYW5nZXMgPSA8MHg4MTAw
+MDAwMCAweDAgMHgwMDAwMDAwMCAweDgwIDB4MDAwMTAwMDAgMHgwIDB4MDAwMTAwMDAgICAvKiBk
+b3duc3RyZWFtIEkvTyAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAw
+eDgyMDAwMDAwIDB4MCAweDQwMDAwMDAwIDB4ODAgDQo+ID4gKyAweDQwMDAwMDAwIDB4MCAweDQw
+MDAwMDAwPjsgLyogbm9uLXByZWZldGNoYWJsZSBtZW1vcnkgKi8NCj4NCj4gQXJlIHlvdSBzdXJl
+IHRoZXJlIGlzIG5vIHN1cHBvcnQgZm9yIDY0LWJpdCBCQVJzIG9yIHByZWZldGNoYWJsZSBtZW1v
+cnk/DQo+IFtYaWFvd2VpIEJhb10gc29ycnkgZm9yIGxhdGUgcmVwbHksIFRob3VnaHQgdGhhdCBv
+dXIgTGF5ZXJzY2FwZSBwbGF0Zm9ybSBoYXMgbm90IGFkZGVkIHByZWZldGNoYWJsZSBtZW1vcnkg
+c3VwcG9ydCBpbiBEVFMsIHNvIHRoaXMgcGxhdGZvcm0gaGFzIG5vdCBiZWVuIGFkZGVkLCBJIHdp
+bGwgc3VibWl0IGEgc2VwYXJhdGUgcGF0Y2ggdG8gYWRkIHByZWZldGNoYWJsZSBtZW1vcnkgc3Vw
+cG9ydCBmb3IgYWxsIExheWVyc2NhcGUgcGxhdGZvcm1zLg0KDQpPaywgdGhhbmtzLg0KDQo+IE9m
+IGNvdXJzZSwgdGhlIHByZWZldGNoYWJsZSBQQ0lFIGRldmljZSBjYW4gd29yayBpbiBvdXIgYm9h
+cmRzLCANCj4gYmVjYXVzZSB0aGUgUkMgd2lsbCBhc3NpZ24gbm9uLXByZWZldGNoYWJsZSBtZW1v
+cnkgZm9yIHRoaXMgZGV2aWNlLiBXZSANCj4gcmVzZXJ2ZSAxRyBuby1wcmVmZXRjaGFibGUgbWVt
+b3J5IGZvciBQQ0lFIGRldmljZSwgaXQgaXMgZW5vdWdoIGZvciBnZW5lcmFsIGRldmljZXMuDQoN
+ClN1cmUsIG1hbnkgZGV2aWNlcyB3b3JrIGp1c3QgZmluZSwgdGhpcyBpcyBtb3N0bHkgYSBxdWVz
+dGlvbiBvZiBzdXBwb3J0aW5nIHRob3NlIGRldmljZXMgdGhhdCBkbyByZXF1aXJlIG11bHRpcGxl
+IGdpZ2FieXRlcywgb3IgdGhhdCBuZWVkIHByZWZldGNoYWJsZSBtZW1vcnkgc2VtYW50aWNzIHRv
+IGdldCB0aGUgZXhwZWN0ZWQgcGVyZm9ybWFuY2UuIEdQVXMgYXJlIHRoZSBvYnZpb3VzIGV4YW1w
+bGUsIGJ1dCBJIHRoaW5rIHRoZXJlIGFyZSBvdGhlcnMgKGluZmluaWJhbmQ/KS4NCltYaWFvd2Vp
+IEJhb10gc29ycnksIEkgZG9uJ3Qga25vdyBtdWNoIGFib3V0IGluZmluaWJhbmQgYW5kIEdQVSwg
+YXMgeW91IHNhaWQsIEkgdGhpbmsgbWFueSBkZXZpY2VzIHdvcmtzIGZpbmUgd2l0aCB0aGlzIERU
+UywgSSB3aWxsIGFkZCB0aGUgcHJlZmV0Y2hhYmxlIG1lbW9yeSBlbnRyeSBpbiBEVFMgZnV0dXJl
+IGFuZCBzdWJtaXQgYW5vdGhlciBwYXRjaC4NCg0KICAgICAgQXJuZA0K
