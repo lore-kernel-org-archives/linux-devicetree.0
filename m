@@ -1,68 +1,67 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND
- controller
-Date: Mon, 20 May 2019 14:23:33 +0200
-Message-ID: <20190520142333.390091d5@xps13>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
-        <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190512151820.4f2dd9da@xps13>
-        <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v4 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC
+Date: Mon, 20 May 2019 14:41:07 +0200
+Message-ID: <20190520124107.GA25785@lunn.ch>
+References: <1558354817-12034-1-git-send-email-sagar.kadam@sifive.com>
+ <1558354817-12034-4-git-send-email-sagar.kadam@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
-Sender: linux-kernel-owner@vger.kernel.org
-To: masonccyang@mxic.com.tw
-Cc: bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1558354817-12034-4-git-send-email-sagar.kadam@sifive.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, peter@korsgaard.com, palmer@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-i2c@vger.kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mason,
+> @@ -406,7 +416,7 @@ static int ocores_xfer(struct i2c_adapter *adap,
+>  {
+>  	struct ocores_i2c *i2c = i2c_get_adapdata(adap);
+>  
+> -	if (i2c->flags & OCORES_FLAG_POLL)
+> +	if ((i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ)))
+>  		return ocores_xfer_polling(adap, msgs, num);
+>  	return ocores_xfer_core(i2c, msgs, num, false);
+>  }
 
-masonccyang@mxic.com.tw wrote on Fri, 17 May 2019 17:30:21 +0800:
+You are not listening to what i said. All you need to know here is
+that you must poll. It does not matter if the IRQ is broken or not.
 
-> Hi Miquel,
-> 
-> > > +
-> > > +static void mxic_nand_select_chip(struct nand_chip *chip, int chipnr)  
-> > 
-> > _select_target() is preferred now  
-> 
-> Do you mean I implement mxic_nand_select_target() to control #CS ?
-> 
-> If so, I need to call mxic_nand_select_target( ) to control #CS ON
-> and then #CS OFF in _exec_op() due to nand_select_target()<in nand_base,c>
-> is still calling chip->legacy.select_chip ?
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq == -ENXIO) {
+> -		i2c->flags |= OCORES_FLAG_POLL;
 
-You must forget about the ->select_chip() callback. Now it should be
-handled directly from the controller driver. Please have a look at the
-commit pointed against the marvell_nand.c driver.
+If there is no interrupt, you need to poll. So keep this line.
 
-[...]
+> +		/*
+> +		 * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
+> +		 * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
+> +		 * Else enable default polling mode interface for SIFIVE/OCORE
+> +		 * device types.
+> +		 */
+> +		match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
+> +		if (match && (long)match->data == TYPE_SIFIVE_REV0)
+> +			i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
 
-> > > +   if (!mxic)
-> > > +      return -ENOMEM;
-> > > +
-> > > +   nand_chip = &mxic->nand;
-> > > +   mtd = nand_to_mtd(nand_chip);
-> > > +   mtd->dev.parent = pdev->dev.parent;
-> > > +   nand_chip->ecc.priv = NULL;
-> > > +   nand_set_flash_node(nand_chip, pdev->dev.parent->of_node);
-> > > +   nand_chip->priv = mxic;
-> > > +
-> > > +   mxic->mfd = mfd;
-> > > +
-> > > +   nand_chip->legacy.select_chip = mxic_nand_select_chip;  
-> > 
-> > Please don't implement legacy interfaces. You can check in
-> > marvell_nand.c how this is handled now:
-> > 
-> > b25251414f6e mtd: rawnand: marvell: Stop implementing ->select_chip()
-> >   
-> 
-> Does it mean chip->legacy.select_chip() will phase-out ?
+If it is a OCORE, IRQ is broken, so OR in OCORES_FLAG_BROKEN_IRQ.
 
-Yes it will.
+>  
+> -	if (!(i2c->flags & OCORES_FLAG_POLL)) {
+> +	if (!(i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ))) {
+>  		ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
+>  				       pdev->name, i2c);
 
-Thanks,
-Miquèl
+Here you just need to know if you are polling. Broken IRQ does not
+matter.
+
+	Andrew
