@@ -1,65 +1,72 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
-Date: Mon, 20 May 2019 15:18:46 +0200
-Message-ID: <20190520131846.tqx7h7sjyw6sgka5@flea>
-References: <20190510194018.28206-1-robh@kernel.org>
+From: Sagar Kadam <sagar.kadam@sifive.com>
+Subject: Re: [PATCH v4 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC
+Date: Mon, 20 May 2019 18:57:52 +0530
+Message-ID: <CAARK3HnZgiUOE3S7BOk9uC-MfmB4wO5zWFbuGGRFqKauYaX8yg@mail.gmail.com>
+References: <1558354817-12034-1-git-send-email-sagar.kadam@sifive.com>
+ <1558354817-12034-4-git-send-email-sagar.kadam@sifive.com> <20190520124107.GA25785@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="26jxfkzgkqsicu7x"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190510194018.28206-1-robh@kernel.org>
+In-Reply-To: <20190520124107.GA25785@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Andrew,
 
---26jxfkzgkqsicu7x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Rob,
-
-On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
-> Convert the vendor prefix registry to a schema. This will enable checking
-> that new vendor prefixes are added (in addition to the less than perfect
-> checkpatch.pl check) and will also check against adding other prefixes
-> which are not vendors.
+On Mon, May 20, 2019 at 6:11 PM Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> Converted vendor-prefixes.txt using the following sed script:
+> > @@ -406,7 +416,7 @@ static int ocores_xfer(struct i2c_adapter *adap,
+> >  {
+> >       struct ocores_i2c *i2c = i2c_get_adapdata(adap);
+> >
+> > -     if (i2c->flags & OCORES_FLAG_POLL)
+> > +     if ((i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ)))
+> >               return ocores_xfer_polling(adap, msgs, num);
+> >       return ocores_xfer_core(i2c, msgs, num, false);
+> >  }
 >
-> sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
+> You are not listening to what i said. All you need to know here is
+> that you must poll. It does not matter if the IRQ is broken or not.
 >
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> As vendor prefix updates come in via multiple trees, I plan to merge
-> this before -rc1 to avoid cross tree conflicts.
 
-I just tried this with the 5.2-rc1 release, and this very
-significantly slows down the validation.
+Apologies for my miss-understanding. I will rectify this and submit a v5.
 
-With a dtbs_check run on (arm's) sunxi_defconfig, on my core-i5 with 4
-threads, I go from 1.30 minutes to more than 12.
+> >       irq = platform_get_irq(pdev, 0);
+> >       if (irq == -ENXIO) {
+> > -             i2c->flags |= OCORES_FLAG_POLL;
+>
+> If there is no interrupt, you need to poll. So keep this line.
 
-Should we improve the dt-validate tool before merging this patch?
+Will retain this.
 
-Maxime
+> > +             /*
+> > +              * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
+> > +              * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
+> > +              * Else enable default polling mode interface for SIFIVE/OCORE
+> > +              * device types.
+> > +              */
+> > +             match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
+> > +             if (match && (long)match->data == TYPE_SIFIVE_REV0)
+> > +                     i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
+>
+> If it is a OCORE, IRQ is broken, so OR in OCORES_FLAG_BROKEN_IRQ.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Got it, as device type SIFIVE is based on OCORE's re-implementation,
+will OR in the broken IRQ flag and submit a v5.
 
---26jxfkzgkqsicu7x
-Content-Type: application/pgp-signature; name="signature.asc"
+> >
+> > -     if (!(i2c->flags & OCORES_FLAG_POLL)) {
+> > +     if (!(i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ))) {
+> >               ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
+> >                                      pdev->name, i2c);
+>
+> Here you just need to know if you are polling. Broken IRQ does not
+> matter.
+>
+>         Andrew
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOKpNgAKCRDj7w1vZxhR
-xaU/AP4sEcxQ75aEnI0xMbq88t3BZzAEW0xMBgZRESwC/0YwUwEA3Wu9L5Uir8PG
-cDc3z03Kswww+O1DXoE+XNDbc1gMHwc=
-=aMcg
------END PGP SIGNATURE-----
-
---26jxfkzgkqsicu7x--
+Thanks & Regards,
+Sagar
