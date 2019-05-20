@@ -1,49 +1,63 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v5 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC.
-Date: Mon, 20 May 2019 16:52:16 +0200
-Message-ID: <20190520145216.GD22024@lunn.ch>
-References: <1558361478-4381-1-git-send-email-sagar.kadam@sifive.com>
- <1558361478-4381-4-git-send-email-sagar.kadam@sifive.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 2/4] arm64: dts: allwinner: h6: add watchdog node
+Date: Mon, 20 May 2019 22:57:04 +0800
+Message-ID: <CAGb2v65P1tne+-FuJ-tLTRMaPdBPYd9eJS+rS5TXaAULNCLBZg@mail.gmail.com>
+References: <20190518152355.11134-1-peron.clem@gmail.com> <20190518152355.11134-3-peron.clem@gmail.com>
+ <20190520073652.itk452vrpnicta5v@flea> <CAJiuCceEL9xH45P6Gj99YTir_1tkyraf5HefDNfm9p+UtdLs8w@mail.gmail.com>
+ <20190520144404.zprbuqt3d7uuxgr2@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1558361478-4381-4-git-send-email-sagar.kadam@sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, peter@korsgaard.com, palmer@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-i2c@vger.kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190520144404.zprbuqt3d7uuxgr2@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 07:41:18PM +0530, Sagar Shrikant Kadam wrote:
-> The i2c-ocore driver already has a polling mode interface.But it needs
-> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
-> There is an erratum in FU540 chip that prevents interrupt driven i2c
-> transfers from working, and also the I2C controller's interrupt bit
-> cannot be cleared if set, due to this the existing i2c polling mode
-> interface added in mainline earlier doesn't work, and CPU stall's
-> infinitely, when-ever i2c transfer is initiated.
-> 
-> Ref:previous polling mode support in mainline
-> 
-> 	commit 69c8c0c0efa8 ("i2c: ocores: add polling interface")
-> 
-> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
-> FU540-COOO SoC.
-> 
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+On Mon, May 20, 2019 at 10:44 PM Maxime Ripard
+<maxime.ripard@bootlin.com> wrote:
+>
+> On Mon, May 20, 2019 at 10:21:40AM +0200, Clément Péron wrote:
+> > Hi,
+> >
+> > On Mon, 20 May 2019 at 09:36, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Sat, May 18, 2019 at 05:23:53PM +0200, Clément Péron wrote:
+> > > > Allwinner H6 has a watchog node which seems broken
+> > > > on some boards.
+> > > >
+> > > > Test has been performed on several boards.
+> > > >
+> > > > Chen-Yu Tsai boards:
+> > > > Pine H64 - H6448BA 7782 => OK
+> > > > OrangePi Lite 2 - H8068BA 61C2 => KO
+> > > >
+> > > > Martin Ayotte boards:
+> > > > Pine H64 - H8069BA 6892 => OK
+> > > > OrangePi 3 - HA047BA 69W2 => KO
+> > > > OrangePi One Plus - H7310BA 6842 => KO
+> > > > OrangePi Lite2 - H6448BA 6662 => KO
+> > > >
+> > > > Clément Péron board:
+> > > > Beelink GS1 - H7309BA 6842 => KO
+> > > >
+> > > > As it seems not fixable for now, declare the node
+> > > > but leave it disable with a comment.
+> > > >
+> > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> > >
+> > > If it doesn't work most boards, then why do we need to merge that
+> > > patch in the first place?
+> >
+> > My personnal opinion, is that having the IP declared and disabled with
+> > a comment saying "it's broken on some boards" in the device-tree is
+> > better than not having at all.
+> >
+> > This will explicit say "the IP exist but don't use it!".
+> > Maybe some people with a functionnal board would like to explicitly
+> > use it on their dts.
+>
+> Yeah, that makes sense. Chen-Yu, any opinion on the matter?
 
-Much better, thanks.
-
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+Works for me.
