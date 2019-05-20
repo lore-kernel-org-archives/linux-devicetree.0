@@ -1,55 +1,65 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 1/5] arm64: dts: meson: g12a: add ethernet mac controller
-Date: Mon, 20 May 2019 15:13:57 +0200
-Message-ID: <20190520131401.11804-2-jbrunet@baylibre.com>
-References: <20190520131401.11804-1-jbrunet@baylibre.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
+Date: Mon, 20 May 2019 15:18:46 +0200
+Message-ID: <20190520131846.tqx7h7sjyw6sgka5@flea>
+References: <20190510194018.28206-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="26jxfkzgkqsicu7x"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520131401.11804-1-jbrunet@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20190510194018.28206-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the synopsys ethernet mac controller embedded in the g12a SoC family.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+--26jxfkzgkqsicu7x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index fd24fd29f4ed..1d16cd2107ea 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -137,6 +137,27 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		ethmac: ethernet@ff3f0000 {
-+			compatible = "amlogic,meson-axg-dwmac",
-+				     "snps,dwmac-3.70a",
-+				     "snps,dwmac";
-+			reg = <0x0 0xff3f0000 0x0 0x10000
-+			       0x0 0xff634540 0x0 0x8>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			clocks = <&clkc CLKID_ETH>,
-+				 <&clkc CLKID_FCLK_DIV2>,
-+				 <&clkc CLKID_MPLL2>;
-+			clock-names = "stmmaceth", "clkin0", "clkin1";
-+			status = "disabled";
-+
-+			mdio0: mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "snps,dwmac-mdio";
-+			};
-+		};
-+
- 		apb: bus@ff600000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xff600000 0x0 0x200000>;
--- 
-2.20.1
+Hi Rob,
+
+On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
+> Convert the vendor prefix registry to a schema. This will enable checking
+> that new vendor prefixes are added (in addition to the less than perfect
+> checkpatch.pl check) and will also check against adding other prefixes
+> which are not vendors.
+>
+> Converted vendor-prefixes.txt using the following sed script:
+>
+> sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> As vendor prefix updates come in via multiple trees, I plan to merge
+> this before -rc1 to avoid cross tree conflicts.
+
+I just tried this with the 5.2-rc1 release, and this very
+significantly slows down the validation.
+
+With a dtbs_check run on (arm's) sunxi_defconfig, on my core-i5 with 4
+threads, I go from 1.30 minutes to more than 12.
+
+Should we improve the dt-validate tool before merging this patch?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--26jxfkzgkqsicu7x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOKpNgAKCRDj7w1vZxhR
+xaU/AP4sEcxQ75aEnI0xMbq88t3BZzAEW0xMBgZRESwC/0YwUwEA3Wu9L5Uir8PG
+cDc3z03Kswww+O1DXoE+XNDbc1gMHwc=
+=aMcg
+-----END PGP SIGNATURE-----
+
+--26jxfkzgkqsicu7x--
