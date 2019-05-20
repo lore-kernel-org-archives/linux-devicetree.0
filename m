@@ -1,26 +1,24 @@
-Return-Path: <robherring2@gmail.com>
-Date: Thu, 2 May 2019 16:07:29 -0500
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/7] dt-bindings: i2c: riic: document r7s9210 support
-Message-ID: <20190502210729.GA10850@bogus>
-References: <20190430132309.12473-1-chris.brandt@renesas.com>
- <20190430132309.12473-4-chris.brandt@renesas.com>
+Return-Path: <SRS0=+993=TU=verge.net.au=horms@kernel.org>
+Date: Mon, 20 May 2019 13:43:10 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 12/13] ARM: dts: r7s9210: Add USB Device support
+Message-ID: <20190520114309.j7gjuu2nkgbxire5@verge.net.au>
+References: <20190515152048.42363-1-chris.brandt@renesas.com>
+ <20190515152048.42363-13-chris.brandt@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430132309.12473-4-chris.brandt@renesas.com>
+In-Reply-To: <20190515152048.42363-13-chris.brandt@renesas.com>
 To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, 30 Apr 2019 08:23:05 -0500, Chris Brandt wrote:
-> Document support for the R7S9210 (RZ/A2) SoC. Also explicitly document
-> bindings for the R7S72100 (RZ/A1) SoC.
+On Wed, May 15, 2019 at 10:20:47AM -0500, Chris Brandt wrote:
+> Add USB Device support for RZ/A2.
 > 
 > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-riic.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks Chris,
+
+applied for inclusion in v5.3.
