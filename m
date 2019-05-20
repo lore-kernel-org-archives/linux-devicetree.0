@@ -1,8 +1,8 @@
 From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH 1/3] mfd: bd718x7: Remove hardcoded config for button press
- duration
-Date: Mon, 20 May 2019 08:55:56 +0000
-Message-ID: <ed27e04ba7486cce7860197bc8c76bcedafde398.1558341613.git.leonard.crestez@nxp.com>
+Subject: [PATCH 2/3] dt-bindings: mfd: Document short/long press duration for
+ bd718x7
+Date: Mon, 20 May 2019 08:55:57 +0000
+Message-ID: <6983773421a6d89b7c206a71684a95c83eef118b.1558341613.git.leonard.crestez@nxp.com>
 References: <cover.1558341613.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -10,7 +10,7 @@ Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.1558341613.git.leonard.crestez@nxp.com>
 Content-Language: en-US
-Content-ID: <11F0B0946517B24C9DC75E7EE8C1629A@eurprd04.prod.outlook.com>
+Content-ID: <75392B1B12119348BD5D51BAB52C4B5C@eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,55 +24,35 @@ To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee.jones@li
 Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Angus Ainslie <angus@akkea.ca>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The reset button on imx8mm-evk is tied to PWRON_B pin of bd71847 and the
-long press duration is set to zero from OTP. The linux driver overrides
-those values and breaks reset from button.
-
-Overwriting OTP or bootloader configuration with some hardcoded defaults
-is not desirable, keep already programmed values instead.
+These valeus can be overwritten at probe time.
 
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- drivers/mfd/rohm-bd718x7.c | 23 -----------------------
- 1 file changed, 23 deletions(-)
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt         | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
-index a29d529a96f4..cdbef83884f0 100644
---- a/drivers/mfd/rohm-bd718x7.c
-+++ b/drivers/mfd/rohm-bd718x7.c
-@@ -115,33 +115,10 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 	if (ret) {
- 		dev_err(&i2c->dev, "Failed to add irq_chip\n");
- 		return ret;
- 	}
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+index d5f68ac78d15..3649c1191432 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+@@ -36,10 +36,18 @@ switched power state to SNVS. If reset is done via READY state the power
+ outputs will be returned to HW control by OTP loading. Thus the reset
+ target state is set to READY by default. If SNVS state is used the boot
+ crucial regulators must have the regulator-always-on and regulator-boot-on
+ properties set in regulator node.
  
--	/* Configure short press to 10 milliseconds */
--	ret = regmap_update_bits(bd718xx->regmap,
--				 BD718XX_REG_PWRONCONFIG0,
--				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
--				 BD718XX_PWRBTN_SHORT_PRESS_10MS);
--	if (ret) {
--		dev_err(&i2c->dev,
--			"Failed to configure button short press timeout\n");
--		return ret;
--	}
--
--	/* Configure long press to 10 seconds */
--	ret = regmap_update_bits(bd718xx->regmap,
--				 BD718XX_REG_PWRONCONFIG1,
--				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
--				 BD718XX_PWRBTN_LONG_PRESS_10S);
--
--	if (ret) {
--		dev_err(&i2c->dev,
--			"Failed to configure button long press timeout\n");
--		return ret;
--	}
--
- 	ret = regmap_irq_get_virq(bd718xx->irq_data, BD718XX_INT_PWRBTN_S);
++- rohm,short-press-ms	: Short press duration in milliseconds
++- rohm,long-press-ms	: Long press duration in milliseconds
++
++Configure the "short press" and "long press" timers for the power button.
++Values are rounded to what hardware supports (500ms multiple for short and
++1000ms multiple for long). If these properties are not present the existing
++configuration (from bootloader or OTP) is not touched.
++
+ Example:
  
- 	if (ret < 0) {
- 		dev_err(&i2c->dev, "Failed to get the IRQ\n");
- 		return ret;
+ 	/* external oscillator node */
+ 	osc: oscillator {
+ 		compatible = "fixed-clock";
 -- 
 2.17.1
