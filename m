@@ -1,90 +1,106 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 2/6] Revert "arm64: dts: renesas: r8a7796: Enable DMA for
- SCIF2"
-Date: Mon, 20 May 2019 09:52:46 +0000
-Message-ID: <OSBPR01MB31742E56261058846C5CBF44D8060@OSBPR01MB3174.jpnprd01.prod.outlook.com>
-References: <20190504004258.23574-1-erosca@de.adit-jv.com>
- <20190504004258.23574-3-erosca@de.adit-jv.com>
- <CAMuHMdWnuvQvugqfMjE1R_QDvf-Pma8POb1x5YjRr97+M-=HHg@mail.gmail.com>
- <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
- <OSBPR01MB3174C93C0A49701EC72F9D82D8060@OSBPR01MB3174.jpnprd01.prod.outlook.com>
- <CAMuHMdVR4idTqOiNWMi3GAS0D-V+SMsYSsukgEMYyz5zDcuPbw@mail.gmail.com>
+From: Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
+Subject: Re: [RFC PATCH V1 1/6] dt-bindings: mt8183: Add binding for FD
+ shared memory
+Date: Mon, 20 May 2019 18:04:13 +0800
+Message-ID: <1558346653.3318.18.camel@mtksdccf07>
+References: <20190423104505.38778-1-Jerry-Ch.chen@mediatek.com>
+ <20190423104505.38778-2-Jerry-Ch.chen@mediatek.com>
+ <20190501224512.GA4287@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVR4idTqOiNWMi3GAS0D-V+SMsYSsukgEMYyz5zDcuPbw@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "REE erosca@DE.ADIT-JV.COM" <erosca@DE.ADIT-JV.COM>, Eugeniu Rosca <roscaeugeniu@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <Chris.Brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mic
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190501224512.GA4287@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <Sean.Cheng@mediatek.com>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <Rynn.Wu@mediatek.com>, Christie Yu =?UTF-8?Q?=28=E6=B8=B8=E9=9B=85=E6=83=A0=29?= <christie.yu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Holmes Chiou =?UTF-8?Q?=28=E9=82=B1=E6=8C=BA=29?= <holmes.chiou@mediatek.com>, "suleiman@chromium.org" <suleiman@chromium.org>, "shik@chromium.org" <shik@chromium.org>, "tfiga@chromium.org" <tfiga@chromium.org>, Jungo Lin =?UTF-8?Q?=28=E6=9E=97=E6=98=8E=E4=BF=8A=29?= <jungo.lin@mediatek.com>, Sj Huang =?UTF-8?Q?=28=E9=BB=83=E4=BF=A1=E7=92=8B=29?= <sj.huang@mediatek.com>, "yuzhao@chromium.org" <yuzhao@chromium.org>, hans.verkuil@cisco.
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmVwbHkhDQoNCj4gRnJvbTogR2Vl
-cnQgVXl0dGVyaG9ldmVuLCBTZW50OiBNb25kYXksIE1heSAyMCwgMjAxOSA0OjM4IFBNDQo+IA0K
-PiBIaSBTaGltb2RhLXNhbiwNCj4gDQo+IFRoYW5rcyBmb3IgeW91ciBhbmFseXNpcyENCj4gDQo+
-IE9uIE1vbiwgTWF5IDIwLCAyMDE5IGF0IDQ6MTggQU0gWW9zaGloaXJvIFNoaW1vZGENCj4gPHlv
-c2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiA+IEZyb206IEV1Z2Vu
-aXUgUm9zY2EsIFNlbnQ6IFR1ZXNkYXksIE1heSA3LCAyMDE5IDQ6NDMgQU0NCj4gPiA8c25pcD4N
-Cj4gPiA+ID4gPiBbMF0gdjUuMC1yYzYgY29tbWl0IDk3ZjI2NzAyYmM5NWI1ICgiYXJtNjQ6IGR0
-czogcmVuZXNhczogcjhhNzc5NjogRW5hYmxlIERNQSBmb3IgU0NJRjIiKQ0KPiA+ID4gPiA+IFsx
-XSB2NC4xNC4xMDYgY29tbWl0IDcwM2RiNWQxYjE3NTlmICgiYXJtNjQ6IGR0czogcmVuZXNhczog
-cjhhNzc5NjogRW5hYmxlIERNQSBmb3IgU0NJRjIiKQ0KPiA+ID4gPiA+IFsyXSBzY2lmIChERUJV
-RykgYW5kIHJjYXItZG1hYyBsb2dzOg0KPiA+ID4gPiA+ICAgICBodHRwczovL2dpc3QuZ2l0aHVi
-LmNvbS9lcm9zY2EvMTMyY2NlNzZhNjE5NzI0YTllNGZhNjFkMWRiODhjNjYNCj4gPiA8c25pcD4N
-Cj4gPiA+IEVuYWJsaW5nIERFQlVHIGluIGRyaXZlcnMvZG1hL3NoL3JjYXItZG1hYy5jLCBJIGNh
-biBub3RpY2UgdGhhdCBvbmUgb2YNCj4gPiA+IHRoZSBzeW1wdG9tcyBpcyBhIE5VTEwgZHN0X2Fk
-ZHIgcmV2ZWFsZWQgYnk6DQo+ID4gPg0KPiA+ID4gcmNhci1kbWFjIGU3MzAwMDAwLmRtYS1jb250
-cm9sbGVyOiBjaGFuMDogcXVldWUgY2h1bmsgKF9fX19wdHJ2YWxfX19fKTogMEAweGZmZmY4MDA2
-MzllYjgwOTAgLT4gMHgwMDAwMDAwMDAwMDAwMDAwDQo+ID4gPg0KPiA+ID4gSW4gd29ya2luZyBz
-Y2VuYXJpb3MsIGRzdF9hZGRyIGlzIG5ldmVyIHplcm8uIERvZXMgaXQgZ2l2ZSBhbnkgaGludHM/
-DQo+ID4NCj4gPiBUaGFuayB5b3UgZm9yIHRoZSByZXBvcnQhIEl0J3MgdmVyeSBoZWxwZnVsIHRv
-IG1lLg0KPiA+IEkgdGhpbmsgd2Ugc2hvdWxkIGZpeCB0aGUgc2gtc2NpIGRyaXZlciBhdCBsZWFz
-dC4NCj4gPg0KPiA+IEFjY29yZGluZyB0byB0aGUgWzJdIGxvZyBhYm92ZSwNCj4gPg0KPiA+IFsg
-ICAgNC4zNzk3MTZdIHNoLXNjaSBlNmU4ODAwMC5zZXJpYWw6IHNjaV9kbWFfdHhfd29ya19mbjog
-ZmZmZjgwMDYzOWI1NTAwMDogMC4uLjAsIGNvb2tpZSAxMjYNCj4gPg0KPiA+IFRoaXMgIjAuLi4w
-IiBtZWFucyB0aGUgcy0+dHhfZG1hX2xlbiBvbiB0aGUgc2NpX2RtYV90eF93b3JrX2ZuIHdpbGwg
-YmUgemVyby4gQW5kLA0KPiANCj4gSG93IGNhbiB0aGlzIGhhcHBlbj8gc2NoZWR1bGVfd29yaygm
-cy0+d29ya190eCkgaXMgY2FsbGVkIG9ubHkgaWYNCj4gIXVhcnRfY2lyY19lbXB0eSgpLCBhbmQg
-d2hpbGUgaG9sZGluZyB0aGUgcG9ydCBsb2NrPyBTbyB0aGUgY2lyY3VsYXINCj4gYnVmZmVyIG11
-c3QgYmUgbWFkZSBlbXB0eSBpbiBiZXR3ZWVuIHRoZSBjYWxsIHRvIHNjaGVkdWxlX3dvcmsoKSBh
-bmQgdGhlDQo+IHdvcmsgZnVuY3Rpb24gc2NpX2RtYV90eF93b3JrX2ZuKCkgYmVpbmcgY2FsbGVk
-Lg0KPiANCj4gSSB0aGluayB0aGlzIGNhbiBoYXBwZW4gaWYgdWFydF9mbHVzaF9idWZmZXIoKSBp
-cyBjYWxsZWQgYXQgdGhlIHJpZ2h0DQo+IG1vbWVudD8NCg0KSSB0aGluayBzby4gQWNjb3JkaW5n
-IHRvIHRoZSBsb2cgWzJdLCB0aGUgeG1pdC0+aGVhZCBhbmQgdGFpbCBpcyBzZXQgdG8gemVyby4N
-Cg0KMjc4IFsgICAgNC4zMzEyMzRdIHNoLXNjaSBlNmU4ODAwMC5zZXJpYWw6IHNjaV9kbWFfdHhf
-d29ya19mbjogZmZmZjgwMDYzOWI1NTAwMDogOS4uLjUyLCBjb29raWUgMTI0IA0KMjc5IFsgICAg
-NC4zMzQ4ODVdIHNoLXNjaSBlNmU4ODAwMC5zZXJpYWw6IHNjaV9kbWFfdHhfY29tcGxldGUoMCkg
-DQoyODAgWyAgICA0LjMzOTk5Ml0gc2gtc2NpIGU2ZTg4MDAwLnNlcmlhbDogc2NpX2RtYV90eF93
-b3JrX2ZuOiBmZmZmODAwNjM5YjU1MDAwOiA1Mi4uLjEwMCwgY29va2llIDEyNSANCjI4MSBbICAg
-IDQuMzQzMzQwXSBzaC1zY2kgZTZlODgwMDAuc2VyaWFsOiBzY2lfZG1hX3R4X2NvbXBsZXRlKDAp
-IA0KMjgyIFsgICAgNC4zNzk3MTZdIHNoLXNjaSBlNmU4ODAwMC5zZXJpYWw6IHNjaV9kbWFfdHhf
-d29ya19mbjogZmZmZjgwMDYzOWI1NTAwMDogMC4uLjAsIGNvb2tpZSAxMjYgDQoNCj4gPiA+IHJj
-YXItZG1hYyBlNzMwMDAwMC5kbWEtY29udHJvbGxlcjogY2hhbjA6IHF1ZXVlIGNodW5rIChfX19f
-cHRydmFsX19fXyk6IDBAMHhmZmZmODAwNjM5ZWI4MDkwIC0+IDB4MDAwMDAwMDAwMDAwMDAwMA0K
-PiA+DQo+ID4gVGhpcyBtZWFucyB0aGUgY2h1bmstPmRzdF9hZGRyIGlzIG5vdCBzZXQgdG8gdGhl
-ICJkc3RfYWRkciIgZm9yIFNDSUYgYmVjYXVzZSB0aGUgbGVuIG9uIHJjYXJfZG1hY19jaGFuX3By
-ZXBfc2cgaXMgemVyby4NCj4gPiBTbywgSSdtIHRoaW5raW5nOg0KPiA+ICAtIHdlIGhhdmUgdG8g
-Zml4IHRoZSBzaF9zY2kgZHJpdmVyIHRvIGF2b2lkICJ0eF9kbWFfbGVuID0gMCIgdHJhbnNmZXJy
-aW5nLg0KPiANCj4gVGhhdCBzb3VuZHMgbGlrZSBqdXN0IGEgc2ltcGxlIGNoZWNrIGZvciAhcy0+
-dHhfZG1hX2xlbiBpbg0KPiBzY2lfZG1hX3R4X3dvcmtfZm4oKSwgdG8gcmV0dXJuIGVhcmx5LCBf
-YW5kXyByZXNldCBzLT5jb29raWVfdHggdG8NCj4gLUVJTlZBTC4NCj4gDQo+IEhvd2V2ZXIsIHVh
-cnRfZmx1c2hfYnVmZmVyKCkgbWF5IHN0aWxsIGJlIGNhbGxlZCBpbiBiZXR3ZWVuIHRoZSBjaGVj
-aw0KPiBhbmQgdGhlIGNhbGxzIHRvIGRtYWVuZ2luZV9wcmVwX3NsYXZlX3NpbmdsZSgpIC8NCj4g
-ZG1hX3N5bmNfc2luZ2xlX2Zvcl9kZXZpY2UoKSwgY2xlYXJpbmcgcy0+dHhfZG1hX2xlbiBhZ2Fp
-bi4NCj4gVW5sZXNzIHNvbWV0aGluZyBoYXMgY2hhbmdlZCByZWNlbnRseSwgdGhlc2UgdHdvIGNh
-bGxzIGNhbm5vdCBiZSBtb3ZlZA0KPiBpbnNpZGUgdGhlIHNwaW5sb2NrLXByb3RlY3RlZCBzZWN0
-aW9uPw0KDQpJIGFsc28gdGhpbmsgdGhlc2UgdHdvIGNhbGxzIChhbmQgZG1hZW5naW5lX3N1Ym1p
-dCgpIGFuZCBkbWFfYXN5bmNfaXNzdWVfcGVuZGluZygpKQ0Kc2hvdWxkIGJlIG1vdmVkIGluc2lk
-ZSB0aGUgc3BpbmxvY2stcHJvdGVjdGVkIHNlY3Rpb24gbGlrZSBzY2lfZG1hX3J4X2NvbXBsZXRl
-KCkuDQoNCkFsc28sIHNjaV9mbHVzaF9idWZmZXIoKSBzaG91bGQgaGF2ZSB0aGUgc3BpbmxvY2st
-cHJvdGVjdGVkIHNlY3Rpb24gYW5kDQpjaGVjayB0aGUgeG1pdCBhbmQgZG1hIHN0YXRlIHNvbWVo
-b3cuDQoNCj4gVXNpbmcgYSBjYWNoZWQgdmFsdWUgb2Ygcy0+dHhfZG1hX2xlbiBmb3IgdGhlIGRt
-YWVuZ2luZSBjYWxscyBtaWdodA0KPiB3b3JrLCB0aG91Z2guDQo+IA0KPiA+IGFuZA0KPiA+DQo+
-ID4gIC0gYWxzbyB3ZSBoYXZlIHRvIGZpeCB0aGUgcmNhci1kbWFjIGRyaXZlciB0byBhdm9pZCB0
-aGlzIGlzc3VlIGJlY2F1c2UgdGhlIERNQSBFbmdpbmUgQVBJDQo+ID4gICAgZ3VpZGUgZG9lc24n
-dCBwcmV2ZW50IHRoZSBsZW4gPSAwLg0KPiANCj4gSSBndWVzcyByZXR1cm5pbmcgYW4gZXJyb3Ig
-bWFrZXMgbW9zdCBzZW5zZT8NCj4gRWxzZSB3ZSBoYXZlIHRvIGZpeCBpdCBkZWVwZXIgaW50byB0
-aGUgZHJpdmVyLCB3aGVyZSBoYW5kbGluZyBiZWNvbWVzDQo+IG1vcmUgY29tcGxleC4NCg0KSSBz
-ZWUuIEkgdGhpbmsgc28uIChXZSBzaG91bGQgYXZvaWQgbW9yZSBjb21wbGV4LikNCg0KQmVzdCBy
-ZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0K
+Hi Rob,
+
+Thank you for your comments.
+
+On Thu, 2019-05-02 at 06:45 +0800, Rob Herring wrote:
+> On Tue, Apr 23, 2019 at 06:45:00PM +0800, Jerry-ch Chen wrote:
+> > From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
+> > 
+> > This patch adds the binding for describing the shared memory
+> > used to exchange meta data between the co-processor and Face
+> > Detection (FD) unit of the camera system on Mediatek SoCs.
+> > 
+> > Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
+> > ---
+> >  .../mediatek,reserve-memory-fd_smem.txt       | 44 +++++++++++++++++++
+> >  1 file changed, 44 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
+> > new file mode 100644
+> > index 000000000000..52ae5071e238
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
+> > @@ -0,0 +1,44 @@
+> > +Mediatek FD Shared Memory binding
+> > +
+> > +This binding describes the shared memory, which serves the purpose of
+> > +describing the shared memory region used to exchange data between Face
+> > +Detection hardware (FD) and co-processor in Mediatek SoCs.
+> > +
+> > +The co-processor doesn't have the iommu so we need to use the physical
+> > +address to access the shared buffer in the firmware.
+> > +
+> > +The Face Detection hardware (FD) can access memory through mt8183 IOMMU so
+> > +it can use dma address to access the memory region.
+> > +(See iommu/mediatek,iommu.txt for the detailed description of Mediatek IOMMU)
+> > +
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: must be "mediatek,reserve-memory-fd_smem"
+> > +
+> > +- reg: required for static allocation (see reserved-memory.txt for
+> > +  the detailed usage)
+> > +
+> > +- alloc-range: required for dynamic allocation. The range must
+> > +  between 0x00000400 and 0x100000000 due to the co-processer's
+> > +  addressing limitation
+> > +
+> > +- size: required for dynamic allocation. The unit is bytes.
+> > +  for Face Detection Unit, you need 1 MB at least.
+> 
+> What's the most?
+> 
+
+For this part, we would like to revise as following:
+
+alloc-range: required for dynamic allocation. The range must between
+0x40000000 and 0x100000000 due to the co-processor's addressing
+limitation
+
+size: required for dynamic allocation. The unit is bytes.
+for Face Detection Unit, you need 518KB.
+
+> I don't think you really need reserved memory here if you don't need a 
+> fixed address. The size is not that big that a contiguous allocation 
+> shouldn't be a problem (though with IOMMU you don't even need that). 
+> 'dma-ranges' can be used to set the kernel's dma mask and ensure a 
+> range below 0x10000000.
+> 
+
+FD driver might be able to use the FD memory pool inside the scp
+reserved memory instead of declaring reserved memory here.
+would you have any suggestion if so?
+
+Sincerely,
+	Jerry
+
+
+> Rob
