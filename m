@@ -1,38 +1,55 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: Re: [PATCH 2/2] ARC: [plat-hsdk]: Add missing FIFO size entry in GMAC
- node
-Date: Mon, 20 May 2019 17:43:53 +0000
-Message-ID: <1558374231.3147.2.camel@synopsys.com>
-References: <cover.1558359611.git.joabreu@synopsys.com>
-         <cdd9b9c36ff1ac3a3b56dff4a90e9bfd89b48866.1558359611.git.joabreu@synopsys.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 0/5] arm64: dts: meson: g12a: add ethernet support
+Date: Mon, 20 May 2019 10:49:26 -0700
+Message-ID: <7himu58195.fsf@baylibre.com>
+References: <20190520131401.11804-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cdd9b9c36ff1ac3a3b56dff4a90e9bfd89b48866.1558359611.git.joabreu@synopsys.com>
-Content-Language: en-US
-Content-ID: <A7399C40F4EB674BB424CB89D4E99781@namprd12.prod.outlook.com>
+In-Reply-To: <20190520131401.11804-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jose Abreu <Jose.Abreu@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9zZSwNCg0KVGVzdGVkLWJ5OiBFdWdlbml5IFBhbHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBz
-eW5vcHN5cy5jb20+DQoNCg0KT24gTW9uLCAyMDE5LTA1LTIwIGF0IDE1OjQzICswMjAwLCBKb3Nl
-IEFicmV1IHdyb3RlOg0KPiBBZGQgdGhlIGJpbmRpbmcgZm9yIFJYL1RYIGZpZm8gc2l6ZSBvZiBH
-TUFDIG5vZGUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBKb3NlIEFicmV1IDxqb2FicmV1QHN5bm9w
-c3lzLmNvbT4NCj4gQ2M6IEpvYW8gUGludG8gPGpwaW50b0BzeW5vcHN5cy5jb20+DQo+IENjOiBS
-b2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPg0KPiBDYzogTWFyayBSdXRsYW5kIDxtYXJr
-LnJ1dGxhbmRAYXJtLmNvbT4NCj4gQ2M6IFZpbmVldCBHdXB0YSA8dmd1cHRhQHN5bm9wc3lzLmNv
-bT4NCj4gQ2M6IEV1Z2VuaXkgUGFsdHNldiA8RXVnZW5peS5QYWx0c2V2QHN5bm9wc3lzLmNvbT4N
-Cj4gQ2M6IEFsZXhleSBCcm9ka2luIDxhYnJvZGtpbkBzeW5vcHN5cy5jb20+DQo+IC0tLQ0KPiAg
-YXJjaC9hcmMvYm9vdC9kdHMvaHNkay5kdHMgfCAzICsrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDMg
-aW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJjL2Jvb3QvZHRzL2hzZGsu
-ZHRzIGIvYXJjaC9hcmMvYm9vdC9kdHMvaHNkay5kdHMNCj4gaW5kZXggYjBmMDU5Mzc3YWIwLi4z
-YmNkMWVkYzRkY2MgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJjL2Jvb3QvZHRzL2hzZGsuZHRzDQo+
-ICsrKyBiL2FyY2gvYXJjL2Jvb3QvZHRzL2hzZGsuZHRzDQo+IEBAIC0xOTYsNiArMTk2LDkgQEAN
-Cj4gIAkJCW1hYy1hZGRyZXNzID0gWzAwIDAwIDAwIDAwIDAwIDAwXTsgLyogRmlsbGVkIGluIGJ5
-IFUtQm9vdCAqLw0KPiAgCQkJZG1hLWNvaGVyZW50Ow0KPiAgDQo+ICsJCQl0eC1maWZvLWRlcHRo
-ID0gPDQwOTY+Ow0KPiArCQkJcngtZmlmby1kZXB0aCA9IDw0MDk2PjsNCj4gKw0KPiAgCQkJbWRp
-byB7DQo+ICAJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICAJCQkJI3NpemUtY2VsbHMgPSA8
-MD47DQotLSANCiBFdWdlbml5IFBhbHRzZXY=
+Jerome Brunet <jbrunet@baylibre.com> writes:
+
+> Add network support to the g12a SoC family
+>
+> This is series is based on 5.2-rc1 and the patches I already sent last
+> week. If this is not convient for you, please let me know, I'll rebase.
+
+Could you apply this on top of the "consistently order nodes" patches
+that are already in my v5.3/dt64 branch?
+
+More specifically, if you rebase this onto this commit[1], I'll be able
+to easily replace the v1 of this series that's already in v5.3/dt64.
+
+Kevin
+
+[1] 5b9533f6de2a arm64: dts: meson: u200: consistently order nodes
+
+> Also, you will need to get the clk tag "clk-meson-5.3-1-fixes" (to get
+> the update MPLL50M id) from clk-meson [0].
+>
+> Changes since v1: [1]
+>  * rebased on v5.2-rc1
+>  * s/eth_rmii_pins/eth_pins
+>  * fix MPLL50M typo
+>
+> [0]: git://github.com/BayLibre/clk-meson.git
+> [1]: https://lkml.kernel.org/r/20190510164940.13496-1-jbrunet@baylibre.com
+>
+> Jerome Brunet (5):
+>   arm64: dts: meson: g12a: add ethernet mac controller
+>   arm64: dts: meson: g12a: add ethernet pinctrl definitions
+>   arm64: dts: meson: g12a: add mdio multiplexer
+>   arm64: dts: meson: u200: add internal network
+>   arm64: dts: meson: sei510: add network support
+>
+>  .../boot/dts/amlogic/meson-g12a-sei510.dts    |  7 ++
+>  .../boot/dts/amlogic/meson-g12a-u200.dts      |  7 ++
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 90 +++++++++++++++++++
+>  3 files changed, 104 insertions(+)
+>
+> -- 
+> 2.20.1
