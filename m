@@ -1,59 +1,42 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 1/2] dt-bindings: mtd: brcmnand: Make nand-ecc-strength
- and nand-ecc-step-size optional
-Date: Mon, 20 May 2019 14:45:42 +0200
-Message-ID: <20190520144542.05d10e4b@xps13>
-References: <1558117914-35807-1-git-send-email-kdasu.kdev@gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 0/5] arm64: dts: meson: g12a: add ethernet support
+Date: Mon, 20 May 2019 15:13:56 +0200
+Message-ID: <20190520131401.11804-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558117914-35807-1-git-send-email-kdasu.kdev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kamal Dasu <kdasu.kdev@gmail.com>
-Cc: linux-mtd@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kamal,
+Add network support to the g12a SoC family
 
-Kamal Dasu <kdasu.kdev@gmail.com> wrote on Fri, 17 May 2019 14:29:54
--0400:
+This is series is based on 5.2-rc1 and the patches I already sent last
+week. If this is not convient for you, please let me know, I'll rebase.
 
-> nand-ecc-strength and nand-ecc-step-size can be made optional as
-> brcmanand driver can support using the nand_base driver detected
+Also, you will need to get the clk tag "clk-meson-5.3-1-fixes" (to get
+the update MPLL50M id) from clk-meson [0].
 
-      ^ typo                             raw NAND layer
+Changes since v1: [1]
+ * rebased on v5.2-rc1
+ * s/eth_rmii_pins/eth_pins
+ * fix MPLL50M typo
 
-> values.
-> 
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> ---
+[0]: git://github.com/BayLibre/clk-meson.git
+[1]: https://lkml.kernel.org/r/20190510164940.13496-1-jbrunet@baylibre.com
 
-With this addressed:
+Jerome Brunet (5):
+  arm64: dts: meson: g12a: add ethernet mac controller
+  arm64: dts: meson: g12a: add ethernet pinctrl definitions
+  arm64: dts: meson: g12a: add mdio multiplexer
+  arm64: dts: meson: u200: add internal network
+  arm64: dts: meson: sei510: add network support
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    |  7 ++
+ .../boot/dts/amlogic/meson-g12a-u200.dts      |  7 ++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 90 +++++++++++++++++++
+ 3 files changed, 104 insertions(+)
 
->  Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> index bcda1df..29feaba 100644
-> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> @@ -101,10 +101,10 @@ Required properties:
->                                number (e.g., 0, 1, 2, etc.)
->  - #address-cells            : see partition.txt
->  - #size-cells               : see partition.txt
-> -- nand-ecc-strength         : see nand.txt
-> -- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
->  
->  Optional properties:
-> +- nand-ecc-strength         : see nand.txt
-> +- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
->  - nand-on-flash-bbt         : boolean, to enable the on-flash BBT for this
->                                chip-select. See nand.txt
->  - brcm,nand-oob-sector-size : integer, to denote the spare area sector size
-
-
-Thanks,
-Miquèl
+-- 
+2.20.1
