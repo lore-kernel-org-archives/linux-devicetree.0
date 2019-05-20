@@ -1,94 +1,44 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v5 3/3] net: ethernet: add ag71xx driver
-Date: Mon, 20 May 2019 10:51:59 -0700 (PDT)
-Message-ID: <20190520.105159.1094490201484427551.davem@davemloft.net>
-References: <20190520070716.23668-1-o.rempel@pengutronix.de>
-        <20190520070716.23668-4-o.rempel@pengutronix.de>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v3 0/3] USB: dwc2: Allow wakeup from suspend; enable for rk3288-veyron
+Date: Mon, 20 May 2019 10:56:02 -0700
+Message-ID: <20190520175605.2405-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520070716.23668-4-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: o.rempel@pengutronix.de
-Cc: paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org, robh+dt@kernel.org, jcliburn@gmail.com, chris.snook@gmail.com, mark.rutland@arm.com, kernel@pengutronix.de, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, john@phrozen.org, nbd@nbd.name, netdev@vger.kernel.org, andrew@lunn.ch, gch981213@gmail.com, info@freifunk-bad-gandersheim.net
+To: Minas Harutyunyan <hminas@synopsys.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, heiko@sntech.de
+Cc: Alan Stern <stern@rowland.harvard.edu>, Artur Petrosyan <Arthur.Petrosyan@synopsys.com>, amstan@chromium.org, linux-rockchip@lists.infradead.org, William Wu <william.wu@rock-chips.com>, linux-usb@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Randy Li <ayaka@soulik.info>, zyw@rock-chips.com, mka@chromium.org, ryandcase@chromium.org, Amelie Delaunay <amelie.delaunay@st.com>, jwerner@chromium.org, Elaine Zhang <zhangqing@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Date: Mon, 20 May 2019 09:07:16 +0200
+This is a re-post of the last 3 patches of a series I posted earlier
+at:
+  https://lkml.kernel.org/r/20190418001356.124334-1-dianders@chromium.org
 
-> +struct ag71xx_buf {
-> +	union {
-> +		struct sk_buff *skb;
-> +		void *rx_buf;
-> +	};
-> +	union {
-> +		dma_addr_t dma_addr;
-> +		unsigned int len;
-> +	};
-> +};
+The first two patches were applied but the last three weren't because
+they didn't apply at the time.  They apply fine now so are ready to
+land.
 
-I find this double union very confusing.
+Patch #2 has a slight difference in v3 here to fix build robot
+reported error.
 
-When using unions you should make it strictly clear which members are used
-together, at what times, and in which situations.
+Changes in v3:
+- Fixed kbuild test robot error.
 
-Therefore, please use something like anonymous structures to group the
-members that are used together at the same time, something like:
+Changes in v2:
+- Rebased to mainline atop rk3288 remote wake quirk series.
+- rk3288-veyron dts patch new for v2.
 
-struct ag71xx_buf {
-	union {
-		struct {
-			struct sk_buff *skb;
-			dma_addr_t dma_addr;
-		} tx;
-		struct {
-			void *rx_buf;
-			unsigned int len;
-		} rx;
-};
+Douglas Anderson (3):
+  Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
+  USB: dwc2: Don't turn off the usbphy in suspend if wakeup is enabled
+  ARM: dts: rockchip: Allow wakeup from rk3288-veyron's dwc2 USB ports
 
-Or at the very least add a very big comment that explains the use of
-the union members.
+ .../devicetree/bindings/usb/dwc2.txt          |  3 +++
+ arch/arm/boot/dts/rk3288-veyron.dtsi          |  2 ++
+ drivers/usb/dwc2/core.h                       |  8 +++++++
+ drivers/usb/dwc2/hcd.c                        | 19 +++++++++++++++
+ drivers/usb/dwc2/platform.c                   | 23 ++++++++++++++++---
+ 5 files changed, 52 insertions(+), 3 deletions(-)
 
-> +static int ag71xx_mdio_mii_read(struct mii_bus *bus, int addr, int reg)
-> +{
-> +	struct ag71xx *ag = bus->priv;
-> +	struct net_device *ndev = ag->ndev;
-> +	int err, val;
-
-Reverse christmas tree here please.
-
-> +static int ag71xx_mdio_mii_write(struct mii_bus *bus, int addr, int reg,
-> +				 u16 val)
-> +{
-> +	struct ag71xx *ag = bus->priv;
-> +	struct net_device *ndev = ag->ndev;
-> +
-
-Likewise.
-
-> +static int ag71xx_mdio_probe(struct ag71xx *ag)
-> +{
-> +	static struct mii_bus *mii_bus;
-> +	struct device *dev = &ag->pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct net_device *ndev = ag->ndev;
-> +	int err;
-
-Likewise.
-
-> +static int ag71xx_tx_packets(struct ag71xx *ag, bool flush)
-> +{
-> +	struct ag71xx_ring *ring = &ag->tx_ring;
-> +	struct net_device *ndev = ag->ndev;
-> +	bool dma_stuck = false;
-> +	int ring_mask = BIT(ring->order) - 1;
-> +	int ring_size = BIT(ring->order);
-> +	int sent = 0;
-> +	int bytes_compl = 0;
-> +	int n = 0;
-
-Likewise.
-
-And so on, and so forth, for the rest of this file.
+-- 
+2.21.0.1020.gf2820cf01a-goog
