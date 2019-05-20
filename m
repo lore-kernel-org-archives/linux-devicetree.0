@@ -1,90 +1,59 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/6] Revert "arm64: dts: renesas: r8a7796: Enable DMA for SCIF2"
-Date: Mon, 20 May 2019 09:37:43 +0200
-Message-ID: <CAMuHMdVR4idTqOiNWMi3GAS0D-V+SMsYSsukgEMYyz5zDcuPbw@mail.gmail.com>
-References: <20190504004258.23574-1-erosca@de.adit-jv.com> <20190504004258.23574-3-erosca@de.adit-jv.com>
- <CAMuHMdWnuvQvugqfMjE1R_QDvf-Pma8POb1x5YjRr97+M-=HHg@mail.gmail.com>
- <20190506194233.GA32430@vmlxhi-102.adit-jv.com> <OSBPR01MB3174C93C0A49701EC72F9D82D8060@OSBPR01MB3174.jpnprd01.prod.outlook.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH v3 3/3] soc: fsl: add RCPM driver
+Date: Mon, 20 May 2019 07:39:29 +0000
+Message-ID: <AM5PR0402MB2865E57004468965FF2003A2F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20190520065816.32360-1-ran.wang_1@nxp.com>
+ <20190520065816.32360-3-ran.wang_1@nxp.com> <20190520072630.GA3674@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OSBPR01MB3174C93C0A49701EC72F9D82D8060@OSBPR01MB3174.jpnprd01.prod.outlook.com>
+In-Reply-To: <20190520072630.GA3674@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "REE erosca@DE.ADIT-JV.COM" <erosca@de.adit-jv.com>, Eugeniu Rosca <roscaeugeniu@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <Chris.Brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mic
+To: Pavel Machek <pavel@denx.de>
+Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+Hi Pavel,
 
-Thanks for your analysis!
-
-On Mon, May 20, 2019 at 4:18 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Eugeniu Rosca, Sent: Tuesday, May 7, 2019 4:43 AM
-> <snip>
-> > > > [0] v5.0-rc6 commit 97f26702bc95b5 ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
-> > > > [1] v4.14.106 commit 703db5d1b1759f ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
-> > > > [2] scif (DEBUG) and rcar-dmac logs:
-> > > >     https://gist.github.com/erosca/132cce76a619724a9e4fa61d1db88c66
-> <snip>
-> > Enabling DEBUG in drivers/dma/sh/rcar-dmac.c, I can notice that one of
-> > the symptoms is a NULL dst_addr revealed by:
+On Monday, May 20, 2019 15:27: Pavel Machek wrote:
+>=20
+> Hi!
+>=20
+> > The NXP's QorIQ Processors based on ARM Core have RCPM module (Run
+> > Control and Power Management), which performs all device-level tasks
+> > associated with power management such as wakeup source control.
 > >
-> > rcar-dmac e7300000.dma-controller: chan0: queue chunk (____ptrval____): 0@0xffff800639eb8090 -> 0x0000000000000000
+> > This driver depends on PM wakeup source framework which help to
+> > collect wake information.
 > >
-> > In working scenarios, dst_addr is never zero. Does it give any hints?
->
-> Thank you for the report! It's very helpful to me.
-> I think we should fix the sh-sci driver at least.
->
-> According to the [2] log above,
->
-> [    4.379716] sh-sci e6e88000.serial: sci_dma_tx_work_fn: ffff800639b55000: 0...0, cookie 126
->
-> This "0...0" means the s->tx_dma_len on the sci_dma_tx_work_fn will be zero. And,
+> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+>=20
+> > +// Copyright 2019 NXP
+> > +//
+> > +// Author: Ran Wang <ran.wang_1@nxp.com>,
+>=20
+> extra ,
 
-How can this happen? schedule_work(&s->work_tx) is called only if
-!uart_circ_empty(), and while holding the port lock? So the circular
-buffer must be made empty in between the call to schedule_work() and the
-work function sci_dma_tx_work_fn() being called.
+OK, will update.
 
-I think this can happen if uart_flush_buffer() is called at the right
-moment?
+> > +	rcpm =3D dev_get_drvdata(dev);
+> > +	if (!rcpm)
+> > +		return -EINVAL;
+> > +
+> > +	/* Begin with first registered wakeup source */
+> > +	ws =3D wakeup_source_get_next(NULL);
+> > +	while (ws) {
+>=20
+> while (ws =3D wakeup_source_get_next(NULL))
+>=20
+> ?
+I just answered this in v2 mail thread:=20
+"Actually, we only pass NULL to wakeup_source_get_next()
+at very first call to get 1st wakeup source. Then in the while
+loop, we will fetch next source but not 1st, that's different.
+I am afraid your suggestion is not quite correct."
 
-> > rcar-dmac e7300000.dma-controller: chan0: queue chunk (____ptrval____): 0@0xffff800639eb8090 -> 0x0000000000000000
->
-> This means the chunk->dst_addr is not set to the "dst_addr" for SCIF because the len on rcar_dmac_chan_prep_sg is zero.
-> So, I'm thinking:
->  - we have to fix the sh_sci driver to avoid "tx_dma_len = 0" transferring.
-
-That sounds like just a simple check for !s->tx_dma_len in
-sci_dma_tx_work_fn(), to return early, _and_ reset s->cookie_tx to
--EINVAL.
-
-However, uart_flush_buffer() may still be called in between the check
-and the calls to dmaengine_prep_slave_single() /
-dma_sync_single_for_device(), clearing s->tx_dma_len again.
-Unless something has changed recently, these two calls cannot be moved
-inside the spinlock-protected section?
-Using a cached value of s->tx_dma_len for the dmaengine calls might
-work, though.
-
-> and
->
->  - also we have to fix the rcar-dmac driver to avoid this issue because the DMA Engine API
->    guide doesn't prevent the len = 0.
-
-I guess returning an error makes most sense?
-Else we have to fix it deeper into the driver, where handling becomes
-more complex.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards
+Ran
