@@ -1,33 +1,28 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 09/10] dt: fix broken references to nand.txt
-Date: Mon, 20 May 2019 17:37:04 +0200
-Message-ID: <20190520173704.202cd65d@xps13>
-References: <cover.1558362030.git.mchehab+samsung@kernel.org>
-        <ce7602ba4d42e094a8b7fcf1dc2a01d25192a602.1558362030.git.mchehab+samsung@kernel.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v5 3/3] net: ethernet: add ag71xx driver
+Date: Mon, 20 May 2019 17:50:01 +0200
+Message-ID: <20190520155001.GE22024@lunn.ch>
+References: <20190520070716.23668-1-o.rempel@pengutronix.de>
+ <20190520070716.23668-4-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ce7602ba4d42e094a8b7fcf1dc2a01d25192a602.1558362030.git.mchehab+samsung@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Liang Yang <liang.yang@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Mans Rullgard <mans@mansr.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190520070716.23668-4-o.rempel@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>, info@freifunk-bad-gandersheim.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Mauro,
-
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote on Mon, 20 May
-2019 11:47:38 -0300:
-
-> The Documentation/devicetree/bindings/mtd/nand.txt were both renamed
-> and converted to YAML on a single patch, without updating references
-> to it. That caused several cross-references to break.
+On Mon, May 20, 2019 at 09:07:16AM +0200, Oleksij Rempel wrote:
+> Add support for Atheros/QCA AR7XXX/AR9XXX/QCA95XX built-in ethernet mac support
 > 
-> Fixes: 212e49693592 ("dt-bindings: mtd: Add YAML schemas for the generic NAND options")
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+For the MDIO and PHY parts:
 
-Thanks for fixing it,
-Miquèl
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+I've not looked at the rest.
+
+    Andrew
