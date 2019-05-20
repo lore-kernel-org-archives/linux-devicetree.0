@@ -1,71 +1,39 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH V2 2/2] dt-bindings: clock: imx-lpcg: add support to parse
- clocks from device tree
-Date: Mon, 20 May 2019 11:45:29 +0000
-Message-ID: <AM0PR04MB64342D68FBE19FFE3A5BC618EE060@AM0PR04MB6434.eurprd04.prod.outlook.com>
-References: <1556645270-20648-1-git-send-email-aisheng.dong@nxp.com>
- <1556645270-20648-3-git-send-email-aisheng.dong@nxp.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 2/2] dt-bindings: arm: renesas: Add HopeRun RZ/G2[M]
+ boards
+Date: Mon, 20 May 2019 13:48:37 +0200
+Message-ID: <20190520114837.47bslbglanvidthx@verge.net.au>
+References: <1558085189-22061-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1558085189-22061-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, "sboyd@kernel.org" <sboyd@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1558085189-22061-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-Id: devicetree@vger.kernel.org
 
-On 30.04.2019 20:35, Aisheng Dong wrote:
-> MX8QM and MX8QXP LPCG Clocks are mostly the same except they may reside
-> in different subsystems across CPUs and also vary a bit on the availability.
+On Fri, May 17, 2019 at 10:26:29AM +0100, Fabrizio Castro wrote:
+> This patch adds board HiHope RZ/G2M (the main board, powered by
+> the R8A774A1) and board HiHope RZ/G2 EX (the expansion board
+> that sits on top of the HiHope RZ/G2M). Both boards are made
+> by Jiangsu HopeRun Software Co., Ltd. (a.k.a. HopeRun).
 > 
-> Same as SCU clock, we want to move the clock definition into device tree
-> which can fully decouple the dependency of Clock ID definition from device
-> tree and make us be able to write a fully generic lpcg clock driver.
+> Useful links:
+> http://hihope.org/product/detail/rzg2
+> https://item.taobao.com/item.htm?spm=a2oq0.12575281.0.0.6bcf1debQpzkRS&ft=t&id=592177498472
+> http://www.hoperun.com/Cn/news/id/379
 > 
-> And we can also use the existence of clock nodes in device tree to address
-> the device and clock availability differences across different SoCs.
+> We already know that the HiHope RZ/G2 EX will also sit on the
+> HiHope RZ/G2N, even though the HiHope RZ/G2N doesn't exist just
+> yet.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
->   
->   Required properties:
-> +- compatible:		Should be one of:
-> +			  "fsl,imx8qxp-lpcg"
-> +			  "fsl,imx8qm-lpcg" followed by "fsl,imx8qxp-lpcg".
-> +- reg:			Address and length of the register set.
-> +- #clock-cells:		Should be 1. One LPCG supports multiple clocks.
-> +- clocks:		Input parent clocks phandle array for each clock.
-> +- bit-offset:		An integer array indicating the bit offset for each clock.
-> +- hw-autogate:		Boolean array indicating whether supports HW autogate for
-> +			each clock.
-> +- clock-output-names:	Shall be the corresponding names of the outputs.
-> +			NOTE this property must be specified in the same order
-> +			as the clock bit-offset and hw-autogate property.
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Splitting the LPCG areas is good but describing "bit-offset" and similar 
-inside devicetree seems excessively generic.
+Thanks Fabrizio,
 
-Perhaps we could have many smaller imx8qxp-lpcg-sdhc, imx8qxp-lpcg-enet 
-etc where the actual clks inside each node are still defined in driver code.
-
->   usdhc1: mmc@5b010000 {
-> @@ -44,8 +66,8 @@ usdhc1: mmc@5b010000 {
->   	interrupt-parent = <&gic>;
->   	interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
->   	reg = <0x5b010000 0x10000>;
-> -	clocks = <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_IPG_CLK>,
-> -		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_PER_CLK>,
-> -		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_HCLK>;
-> +	clocks = <&sdhc0_lpcg 1>,
-> +		 <&sdhc0_lpcg 0>,
-> +		 <&sdhc0_lpcg 2>;
-
-This is less readable, can't we keep symbolic constants?
+applied for inclusion in v5.3.
