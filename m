@@ -1,58 +1,46 @@
 From: Gerald BAEZA <gerald.baeza@st.com>
-Subject: [PATCH v2 2/5] dt-bindings: perf: stm32: ddrperfm support
-Date: Mon, 20 May 2019 15:27:16 +0000
-Message-ID: <1558366019-24214-3-git-send-email-gerald.baeza@st.com>
+Subject: [PATCH v2 4/5] ARM: configs: enable STM32_DDR_PMU
+Date: Mon, 20 May 2019 15:27:17 +0000
+Message-ID: <1558366019-24214-5-git-send-email-gerald.baeza@st.com>
 References: <1558366019-24214-1-git-send-email-gerald.baeza@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1558366019-24214-1-git-send-email-gerald.baeza@st.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: "will.deacon@arm.com" <will.deacon@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "corbet@lwn.net" <corbet@lwn.net>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "olof@lixom.net" <olof@lixom.net>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Gerald BAEZA <gerald.baeza@st.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gerald BAEZA <gerald.baeza@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1 SOC.
-
-This documentation indicates how to enable stm32-ddr-pmu driver on
-DDRPERFM peripheral, via the device tree.
+STM32_DDR_PMU enables the perf driver that
+controls the DDR Performance Monitor (DDRPERFM)
 
 Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
 ---
- .../devicetree/bindings/perf/stm32-ddr-pmu.txt       | 20 ++++++++++++++++=
-++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/stm32-ddr-pmu.tx=
-t
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt b/Doc=
-umentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
-new file mode 100644
-index 0000000..9d36209
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
-@@ -0,0 +1,20 @@
-+* STM32 DDR Performance Monitor (DDRPERFM)
-+
-+Required properties:
-+- compatible: must be "st,stm32-ddr-pmu".
-+- reg: physical address and length of the registers set.
-+- clocks: list of phandles and specifiers to all input clocks listed in
-+	  clock-names property.
-+- clock-names: "bus" corresponds to the DDRPERFM bus clock and "ddr" to
-+	       the DDR frequency.
-+- resets: phandle to the reset controller and DDRPERFM reset specifier
-+
-+Example:
-+	ddrperfm: perf@5a007000 {
-+		compatible =3D "st,stm32-ddr-pmu";
-+		reg =3D <0x5a007000 0x400>;
-+		clocks =3D <&rcc DDRPERFM>, <&rcc PLL2_R>;
-+		clock-names =3D "bus", "ddr";
-+		resets =3D <&rcc DDRPERFM_R>;
-+	};
-+
---=20
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 6b748f2..059b1b9 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -1009,6 +1009,7 @@ CONFIG_PHY_DM816X_USB=m
+ CONFIG_OMAP_USB2=y
+ CONFIG_TI_PIPE3=y
+ CONFIG_TWL4030_USB=m
++CONFIG_STM32_DDR_PMU=m
+ CONFIG_MESON_MX_EFUSE=m
+ CONFIG_ROCKCHIP_EFUSE=m
+ CONFIG_NVMEM_IMX_OCOTP=y
+-- 
 2.7.4
