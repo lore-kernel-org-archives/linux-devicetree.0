@@ -1,290 +1,171 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH] dt-bindings: iio: adc: add adi,ad7780.yaml binding
-Date: Mon, 20 May 2019 08:32:36 +0000
-Message-ID: <5d7ad2935d1e357f1c0885badc5ce3c351c8ed89.camel@analog.com>
-References: <9992a318aec777b9b7788bb40d976aa89e5963fe.1558219042.git.renatogeh@gmail.com>
- <20190519123208.26c864ce@archlinux>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [v2 2/5] drm/mediatek: CMDQ reg address of mt8173 is different
+ with mt2701
+Date: Mon, 20 May 2019 16:34:08 +0800
+Message-ID: <1558341248.7311.42.camel@mtksdaap41>
+References: <20190416060501.76276-1-jitao.shi@mediatek.com>
+         <20190416060501.76276-3-jitao.shi@mediatek.com>
+         <1557283144.31731.4.camel@mtksdaap41> <1558258406.367.2.camel@mszsdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20190519123208.26c864ce@archlinux>
-Content-Language: en-US
-Content-ID: <94BFAD9BDF5AC84E86370057D67D2A39@analog.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: "renatogeh@gmail.com" <renatogeh@gmail.com>, "jic23@kernel.org" <jic23@kernel.org>
-Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "Hennerich,
- Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Popa,
- Stefan Serban" <StefanSerban.Popa@analog.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1558258406.367.2.camel@mszsdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2019-05-19 at 12:32 +0100, Jonathan Cameron wrote:
-> [External]
-> 
-> 
-> On Sat, 18 May 2019 19:41:12 -0300
-> Renato Lui Geh <renatogeh@gmail.com> wrote:
-> 
-> > This patch adds a YAML binding for the Analog Devices AD7780/1 and
-> > AD7170/1 analog-to-digital converters.
+Hi, Jitao:
+
+On Sun, 2019-05-19 at 17:33 +0800, Jitao Shi wrote:
+> On Wed, 2019-05-08 at 10:39 +0800, CK Hu wrote:
+> > On Tue, 2019-04-16 at 14:04 +0800, Jitao Shi wrote:
+> > > Config the different CMDQ reg address in driver data.
+> > > 
+> > For MT8173, you change reg_cmd_off from 0x180 to 0x200, so this patch is
+> > a bug fix. You should add a 'Fixes' tag.
 > > 
-> > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-> 
-> One comment inline.  I'll also be needing an ack from Analog on this,
-> preferably Michael's.
-> 
-> Thanks,
-> 
-> Jonathan
-> > ---
-> >  .../bindings/iio/adc/adi,ad7780.txt           | 48 -----------
-> >  .../bindings/iio/adc/adi,ad7780.yaml          | 85 +++++++++++++++++++
-
-You should also update the MAINTAINERS file.
-Maybe in a following patch.
-It looks like there is not entry in there, so maybe you need to add a new
-one.
-
-Something like:
-
-
-ANALOG DEVICES INC AD7780 DRIVER
-M:      Michael Hennerich <Michael.Hennerich@analog.com>
-M:      Renato Lui Geh <renatogeh@gmail.com>
-L:      linux-iio@vger.kernel.org
-W:      http://ez.analog.com/community/linux-device-drivers
-S:      Supported
-F:      drivers/iio/adc/ad7780.c
-F:      Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-
-This should be after this block
-ANALOG DEVICES INC AD7768-1 DRIVER
-
-Note that I added you as a co-maintainer.
-If you want, you do not need to add that line.
-
-> >  2 files changed, 85 insertions(+), 48 deletions(-)
-> >  delete mode 100644
-> > Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> >  create mode 100644
-> > Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> > > ---
+> > >  drivers/gpu/drm/mediatek/mtk_dsi.c | 39 +++++++++++++++++++++++-------
+> > >  1 file changed, 30 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > index 6c4ac37f983d..573e6bec6d36 100644
+> > > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > @@ -131,7 +131,6 @@
+> > >  #define VM_CMD_EN			BIT(0)
+> > >  #define TS_VFP_EN			BIT(5)
+> > >  
+> > > -#define DSI_CMDQ0		0x180
+> > >  #define CONFIG				(0xff << 0)
+> > >  #define SHORT_PACKET			0
+> > >  #define LONG_PACKET			2
+> > > @@ -156,6 +155,10 @@
+> > >  
+> > >  struct phy;
+> > >  
+> > > +struct mtk_dsi_driver_data {
+> > > +	const u32 reg_cmdq_off;
+> > > +};
+> > > +
+> > >  struct mtk_dsi {
+> > >  	struct mtk_ddp_comp ddp_comp;
+> > >  	struct device *dev;
+> > > @@ -182,6 +185,7 @@ struct mtk_dsi {
+> > >  	bool enabled;
+> > >  	u32 irq_data;
+> > >  	wait_queue_head_t irq_wait_queue;
+> > > +	struct mtk_dsi_driver_data *driver_data;
+> > >  };
+> > >  
+> > >  static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
+> > > @@ -934,6 +938,7 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
+> > >  	const char *tx_buf = msg->tx_buf;
+> > >  	u8 config, cmdq_size, cmdq_off, type = msg->type;
+> > >  	u32 reg_val, cmdq_mask, i;
+> > > +	u32 reg_cmdq_off = dsi->driver_data->reg_cmdq_off;
+> > >  
+> > >  	if (MTK_DSI_HOST_IS_READ(type))
+> > >  		config = BTA;
+> > > @@ -953,9 +958,11 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
+> > >  	}
+> > >  
+> > >  	for (i = 0; i < msg->tx_len; i++)
+> > > -		writeb(tx_buf[i], dsi->regs + DSI_CMDQ0 + cmdq_off + i);
+> > > +		mtk_dsi_mask(dsi, (reg_cmdq_off + cmdq_off + i) & (~0x3U),
+> > > +			     (0xffUL << (((i + cmdq_off) & 3U) * 8U)),
+> > > +			     tx_buf[i] << (((i + cmdq_off) & 3U) * 8U));
 > > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> > b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> > deleted file mode 100644
-> > index 440e52555349..000000000000
-> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> > +++ /dev/null
-> > @@ -1,48 +0,0 @@
-> > -* Analog Devices AD7170/AD7171/AD7780/AD7781
-> > -
-> > -Data sheets:
-> > -
-> > -- AD7170:
-> > -     * 
-> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
-> > -- AD7171:
-> > -     * 
-> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
-> > -- AD7780:
-> > -     * 
-> > https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
-> > -- AD7781:
-> > -     * 
-> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
-> > -
-> > -Required properties:
-> > -
-> > -- compatible: should be one of
-> > -     * "adi,ad7170"
-> > -     * "adi,ad7171"
-> > -     * "adi,ad7780"
-> > -     * "adi,ad7781"
-> > -- reg: spi chip select number for the device
-> > -- vref-supply: the regulator supply for the ADC reference voltage
-> > -
-> > -Optional properties:
-> > -
-> > -- powerdown-gpios:  must be the device tree identifier of the PDRST
-> > pin. If
-> > -                 specified, it will be asserted during driver probe.
-> > As the
-> > -                 line is active high, it should be marked
-> > GPIO_ACTIVE_HIGH.
-> > -- adi,gain-gpios:   must be the device tree identifier of the GAIN
-> > pin. Only for
-> > -                 the ad778x chips. If specified, it will be asserted
-> > during
-> > -                 driver probe. As the line is active low, it should be
-> > marked
-> > -                 GPIO_ACTIVE_LOW.
-> > -- adi,filter-gpios: must be the device tree identifier of the FILTER
-> > pin. Only
-> > -                 for the ad778x chips. If specified, it will be
-> > asserted
-> > -                 during driver probe. As the line is active low, it
-> > should be
-> > -                 marked GPIO_ACTIVE_LOW.
-> > -
-> > -Example:
-> > -
-> > -adc@0 {
-> > -     compatible =  "adi,ad7780";
-> > -     reg =         <0>;
-> > -     vref-supply = <&vdd_supply>
-> > -
-> > -     powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
-> > -     adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
-> > -     adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> > b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> > new file mode 100644
-> > index 000000000000..931bc4f8ec04
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> > @@ -0,0 +1,85 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital
-> > converters
-> > +
-> > +maintainers:
-> > +  - Michael Hennerich <michael.hennerich@analog.com>
-> > +
-> > +description: |
-> > +  The ad7780 is a sigma-delta analog to digital converter. This driver
-> > provides
-> > +  reading voltage values and status bits from both the ad778x and
-> > ad717x series.
-> > +  Its interface also allows writing on the FILTER and GAIN GPIO pins
-> > on the
-> > +  ad778x.
-> > +
-> > +  Specifications on the converters can be found at:
-> > +    AD7170:
-> > +      
-> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
-> > +    AD7171:
-> > +      
-> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
-> > +    AD7780:
-> > +      
-> > https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
-> > +    AD7781:
-> > +      
-> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,ad7170
-> > +      - adi,ad7171
-> > +      - adi,ad7780
-> > +      - adi,ad7781
-> > +
-> > +  reg:
-> > +    description:
-> > +      Chip select number for the device
-
-No need to add a description.
-This is pretty standard.
-
-> > +    maxItems: 1
-> > +
-> > +  vref-supply:
-> > +    description:
-> > +      The regulator supply for the ADC reference voltage
-> > +    maxItems: 1
-> > +
-
-As I see in the driver, it's not vref-supply, it's avdd-supply.
-
-> > +  powerdown-gpios:
-> > +    description:
-> > +      Must be the device tree identifier of the PDRST pin. If
-> > +      specified, it will be asserted during driver probe. As the
-> > +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
-> > +    maxItems: 1
-> > +
-> > +  adi,gain-gpios:
-> > +    description:
-> > +      Must be the device tree identifier of the GAIN pin. Only for
-> > +      the ad778x chips. If specified, it will be asserted during
-> > +      driver probe. As the line is active low, it should be marked
-> > +      GPIO_ACTIVE_LOW.
-> > +    maxItems: 1
-> > +
-> > +  adi,filter-gpios:
-> > +    description:
-> > +      Must be the device tree identifier of the FILTER pin. Only
-> > +      for the ad778x chips. If specified, it will be asserted
-> > +      during driver probe. As the line is active low, it should be
-> > +      marked GPIO_ACTIVE_LOW.
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - vref-supply
+> > You say you would follow Nicolas' suggestion here.
+> > 
 > 
-> Is that actually true?  I'd imagine it'll use a stub regulator if
-> it isn't supplied.
+> If i replace mtk_dsi_mask with writeb, i can't get right value from
+> registers. I don't know why this.
 
-Hmm, I also think this can be omitted as required.
-devm_regulator_get() is used.
-devm_regulator_get_exclusive() would be needed to make this required.
+I remember that Shaoming has also meet some error about writeb(), but he
+finally fix this bug. You may get some hint from him. If we can not use
+writeb(), this modification should be two patches: one is changing
+DSI_CMDQ0 to reg_cmdq_off, another one is changing writeb() to
+mtk_dsi_mask().
+
+Regards,
+CK
 
 > 
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    adc@0 {
-
-The adc@0 block should be included in a spi block.
-
-So, something like
-
-spi0 {
-     adc@0 {
-            compatible =  "adi,ad7780";
-            reg =         <0>;
-            avdd-supply = <&vdd_supply>
-
-            powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
-            adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
-            adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-     };
-};
-
-I know this wasn't the case before, but it should be (from what I recall).
-
-> > +      compatible =  "adi,ad7780";
-> > +      reg = <0>;
-> > +      vref-supply = <&vdd_supply>;
-> > +
-> > +      powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
-> > +      adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
-> > +      adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
-
-Rest looks good.
-
-Thanks
-Alex
-
-> > +    };
+> > >  
+> > > -	mtk_dsi_mask(dsi, DSI_CMDQ0, cmdq_mask, reg_val);
+> > > +	mtk_dsi_mask(dsi, reg_cmdq_off, cmdq_mask, reg_val);
+> > >  	mtk_dsi_mask(dsi, DSI_CMDQ_SIZE, CMDQ_SIZE, cmdq_size);
+> > >  }
+> > >  
+> > > @@ -1074,10 +1081,27 @@ static const struct component_ops mtk_dsi_component_ops = {
+> > >  	.unbind = mtk_dsi_unbind,
+> > >  };
+> > >  
+> > > +static const struct mtk_dsi_driver_data mt8173_dsi_driver_data = {
+> > > +	.reg_cmdq_off = 0x200,
+> > > +};
+> > > +
+> > > +static const struct mtk_dsi_driver_data mt2701_dsi_driver_data = {
+> > > +	.reg_cmdq_off = 0x180,
+> > > +};
+> > > +
+> > > +static const struct of_device_id mtk_dsi_of_match[] = {
+> > > +	{ .compatible = "mediatek,mt2701-dsi",
+> > > +	  .data = &mt2701_dsi_driver_data },
+> > > +	{ .compatible = "mediatek,mt8173-dsi",
+> > > +	  .data = &mt8173_dsi_driver_data },
+> > > +	{ },
+> > > +};
+> > > +
+> > >  static int mtk_dsi_probe(struct platform_device *pdev)
+> > >  {
+> > >  	struct mtk_dsi *dsi;
+> > >  	struct device *dev = &pdev->dev;
+> > > +	const struct of_device_id *of_id;
+> > >  	struct resource *regs;
+> > >  	int irq_num;
+> > >  	int comp_id;
+> > > @@ -1101,6 +1125,9 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+> > >  	if (ret)
+> > >  		goto err_unregister_host;
+> > >  
+> > > +	of_id = of_match_device(mtk_dsi_of_match, &pdev->dev);
+> > > +	dsi->driver_data = of_id->data;
+> > 
+> > Maybe use of_device_get_match_data() is a more simple way. You could
+> > refer to [1].
+> > 
+> > [1]
+> > https://elixir.bootlin.com/linux/v5.1/source/drivers/gpu/drm/mediatek/mtk_disp_ovl.c#L300
+> > 
+> > Regards,
+> > CK
+> > 
+> 
+> I'll fix it next version.
+> 
+> > > +
+> > >  	dsi->engine_clk = devm_clk_get(dev, "engine");
+> > >  	if (IS_ERR(dsi->engine_clk)) {
+> > >  		ret = PTR_ERR(dsi->engine_clk);
+> > > @@ -1193,12 +1220,6 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > -static const struct of_device_id mtk_dsi_of_match[] = {
+> > > -	{ .compatible = "mediatek,mt2701-dsi" },
+> > > -	{ .compatible = "mediatek,mt8173-dsi" },
+> > > -	{ },
+> > > -};
+> > > -
+> > >  struct platform_driver mtk_dsi_driver = {
+> > >  	.probe = mtk_dsi_probe,
+> > >  	.remove = mtk_dsi_remove,
+> > 
+> > 
 > 
 > 
