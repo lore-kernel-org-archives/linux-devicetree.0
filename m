@@ -1,145 +1,290 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v5 5/6] usb: roles: add USB Type-B GPIO connector driver
-Date: Mon, 20 May 2019 11:31:51 +0300
-Message-ID: <20190520083151.GD1887@kuha.fi.intel.com>
-References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
- <1557823643-8616-6-git-send-email-chunfeng.yun@mediatek.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH] dt-bindings: iio: adc: add adi,ad7780.yaml binding
+Date: Mon, 20 May 2019 08:32:36 +0000
+Message-ID: <5d7ad2935d1e357f1c0885badc5ce3c351c8ed89.camel@analog.com>
+References: <9992a318aec777b9b7788bb40d976aa89e5963fe.1558219042.git.renatogeh@gmail.com>
+ <20190519123208.26c864ce@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1557823643-8616-6-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20190519123208.26c864ce@archlinux>
+Content-Language: en-US
+Content-ID: <94BFAD9BDF5AC84E86370057D67D2A39@analog.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: "renatogeh@gmail.com" <renatogeh@gmail.com>, "jic23@kernel.org" <jic23@kernel.org>
+Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "Hennerich,
+ Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Popa,
+ Stefan Serban" <StefanSerban.Popa@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 04:47:22PM +0800, Chunfeng Yun wrote:
-> +static int usb_conn_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct device_node *remote_node;
-> +	struct usb_conn_info *info;
-> +	int ret = 0;
-> +
-> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	info->dev = dev;
-> +	info->id_gpiod = devm_gpiod_get_optional(dev, "id", GPIOD_IN);
-> +	if (IS_ERR(info->id_gpiod))
-> +		return PTR_ERR(info->id_gpiod);
-> +
-> +	info->vbus_gpiod = devm_gpiod_get_optional(dev, "vbus", GPIOD_IN);
-> +	if (IS_ERR(info->vbus_gpiod))
-> +		return PTR_ERR(info->vbus_gpiod);
-> +
-> +	if (!info->id_gpiod && !info->vbus_gpiod) {
-> +		dev_err(dev, "failed to get gpios\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (info->id_gpiod)
-> +		ret = gpiod_set_debounce(info->id_gpiod, USB_GPIO_DEB_US);
-> +	if (!ret && info->vbus_gpiod)
-> +		ret = gpiod_set_debounce(info->vbus_gpiod, USB_GPIO_DEB_US);
-> +	if (ret < 0)
-> +		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEB_MS);
-> +
-> +	INIT_DELAYED_WORK(&info->dw_det, usb_conn_detect_cable);
-> +
-> +	info->vbus = devm_regulator_get(dev, "vbus");
-> +	if (IS_ERR(info->vbus)) {
-> +		dev_err(dev, "failed to get vbus\n");
-> +		return PTR_ERR(info->vbus);
-> +	}
-> +
-> +	remote_node = of_graph_get_remote_node(node, -1, 0);
+On Sun, 2019-05-19 at 12:32 +0100, Jonathan Cameron wrote:
+> [External]
+> 
+> 
+> On Sat, 18 May 2019 19:41:12 -0300
+> Renato Lui Geh <renatogeh@gmail.com> wrote:
+> 
+> > This patch adds a YAML binding for the Analog Devices AD7780/1 and
+> > AD7170/1 analog-to-digital converters.
+> > 
+> > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+> 
+> One comment inline.  I'll also be needing an ack from Analog on this,
+> preferably Michael's.
+> 
+> Thanks,
+> 
+> Jonathan
+> > ---
+> >  .../bindings/iio/adc/adi,ad7780.txt           | 48 -----------
+> >  .../bindings/iio/adc/adi,ad7780.yaml          | 85 +++++++++++++++++++
 
-This is really not ideal. In practice this code will only work if
-there is only one endpoint described for this device, or if the first
-endpoint is always the one we are looking for. There is no way to
-guarantee that.
+You should also update the MAINTAINERS file.
+Maybe in a following patch.
+It looks like there is not entry in there, so maybe you need to add a new
+one.
 
-The code really has to walk through the entire graph, and identify the
-remote endpoint it's looking for (and for that we have the boolean
-device property).
+Something like:
 
-> +	if (!remote_node) {
-> +		dev_err(dev, "failed to get remote node\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	info->role_sw =
-> +		fwnode_usb_role_switch_get(of_fwnode_handle(remote_node));
 
-So fwnode_usb_role_switch_get() needs be the one that walks through
-the graph, not the drivers. Otherwise every driver will do the same
-exact steps (boilerplate). Here you need to be able to just pass the
-node of this device, not the remote endpoint:
+ANALOG DEVICES INC AD7780 DRIVER
+M:      Michael Hennerich <Michael.Hennerich@analog.com>
+M:      Renato Lui Geh <renatogeh@gmail.com>
+L:      linux-iio@vger.kernel.org
+W:      http://ez.analog.com/community/linux-device-drivers
+S:      Supported
+F:      drivers/iio/adc/ad7780.c
+F:      Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
 
-        info->role_sw = fwnode_usb_role_switch_get(dev_fwnode(&client->dev));
+This should be after this block
+ANALOG DEVICES INC AD7768-1 DRIVER
 
-But why do you need that function at all? Why wouldn't
-usb_role_switch_get() work?
+Note that I added you as a co-maintainer.
+If you want, you do not need to add that line.
 
-        info->role_sw = usb_role_switch_get(&client->dev);
+> >  2 files changed, 85 insertions(+), 48 deletions(-)
+> >  delete mode 100644
+> > Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> >  create mode 100644
+> > Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> > b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> > deleted file mode 100644
+> > index 440e52555349..000000000000
+> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> > +++ /dev/null
+> > @@ -1,48 +0,0 @@
+> > -* Analog Devices AD7170/AD7171/AD7780/AD7781
+> > -
+> > -Data sheets:
+> > -
+> > -- AD7170:
+> > -     * 
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
+> > -- AD7171:
+> > -     * 
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
+> > -- AD7780:
+> > -     * 
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
+> > -- AD7781:
+> > -     * 
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
+> > -
+> > -Required properties:
+> > -
+> > -- compatible: should be one of
+> > -     * "adi,ad7170"
+> > -     * "adi,ad7171"
+> > -     * "adi,ad7780"
+> > -     * "adi,ad7781"
+> > -- reg: spi chip select number for the device
+> > -- vref-supply: the regulator supply for the ADC reference voltage
+> > -
+> > -Optional properties:
+> > -
+> > -- powerdown-gpios:  must be the device tree identifier of the PDRST
+> > pin. If
+> > -                 specified, it will be asserted during driver probe.
+> > As the
+> > -                 line is active high, it should be marked
+> > GPIO_ACTIVE_HIGH.
+> > -- adi,gain-gpios:   must be the device tree identifier of the GAIN
+> > pin. Only for
+> > -                 the ad778x chips. If specified, it will be asserted
+> > during
+> > -                 driver probe. As the line is active low, it should be
+> > marked
+> > -                 GPIO_ACTIVE_LOW.
+> > -- adi,filter-gpios: must be the device tree identifier of the FILTER
+> > pin. Only
+> > -                 for the ad778x chips. If specified, it will be
+> > asserted
+> > -                 during driver probe. As the line is active low, it
+> > should be
+> > -                 marked GPIO_ACTIVE_LOW.
+> > -
+> > -Example:
+> > -
+> > -adc@0 {
+> > -     compatible =  "adi,ad7780";
+> > -     reg =         <0>;
+> > -     vref-supply = <&vdd_supply>
+> > -
+> > -     powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
+> > -     adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
+> > -     adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> > b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> > new file mode 100644
+> > index 000000000000..931bc4f8ec04
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> > @@ -0,0 +1,85 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital
+> > converters
+> > +
+> > +maintainers:
+> > +  - Michael Hennerich <michael.hennerich@analog.com>
+> > +
+> > +description: |
+> > +  The ad7780 is a sigma-delta analog to digital converter. This driver
+> > provides
+> > +  reading voltage values and status bits from both the ad778x and
+> > ad717x series.
+> > +  Its interface also allows writing on the FILTER and GAIN GPIO pins
+> > on the
+> > +  ad778x.
+> > +
+> > +  Specifications on the converters can be found at:
+> > +    AD7170:
+> > +      
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
+> > +    AD7171:
+> > +      
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
+> > +    AD7780:
+> > +      
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
+> > +    AD7781:
+> > +      
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - adi,ad7170
+> > +      - adi,ad7171
+> > +      - adi,ad7780
+> > +      - adi,ad7781
+> > +
+> > +  reg:
+> > +    description:
+> > +      Chip select number for the device
 
-> +	of_node_put(remote_node);
-> +	if (IS_ERR(info->role_sw)) {
-> +		dev_err(dev, "failed to get role switch\n");
-> +		return PTR_ERR(info->role_sw);
-> +	}
-> +
-> +	if (info->id_gpiod) {
-> +		info->id_irq = gpiod_to_irq(info->id_gpiod);
-> +		if (info->id_irq < 0) {
-> +			dev_err(dev, "failed to get ID IRQ\n");
-> +			ret = info->id_irq;
-> +			goto put_role_sw;
-> +		}
-> +
-> +		ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
-> +						usb_conn_isr, USB_CONN_IRQF,
-> +						pdev->name, info);
-> +		if (ret < 0) {
-> +			dev_err(dev, "failed to request ID IRQ\n");
-> +			goto put_role_sw;
-> +		}
-> +	}
-> +
-> +	if (info->vbus_gpiod) {
-> +		info->vbus_irq = gpiod_to_irq(info->vbus_gpiod);
-> +		if (info->vbus_irq < 0) {
-> +			dev_err(dev, "failed to get VBUS IRQ\n");
-> +			ret = info->vbus_irq;
-> +			goto put_role_sw;
-> +		}
-> +
-> +		ret = devm_request_threaded_irq(dev, info->vbus_irq, NULL,
-> +						usb_conn_isr, USB_CONN_IRQF,
-> +						pdev->name, info);
-> +		if (ret < 0) {
-> +			dev_err(dev, "failed to request VBUS IRQ\n");
-> +			goto put_role_sw;
-> +		}
-> +	}
-> +
-> +	platform_set_drvdata(pdev, info);
-> +
-> +	/* Perform initial detection */
-> +	usb_conn_queue_dwork(info, 0);
-> +
-> +	return 0;
-> +
-> +put_role_sw:
-> +	usb_role_switch_put(info->role_sw);
-> +	return ret;
-> +}
+No need to add a description.
+This is pretty standard.
 
-thanks,
+> > +    maxItems: 1
+> > +
+> > +  vref-supply:
+> > +    description:
+> > +      The regulator supply for the ADC reference voltage
+> > +    maxItems: 1
+> > +
 
--- 
-heikki
+As I see in the driver, it's not vref-supply, it's avdd-supply.
+
+> > +  powerdown-gpios:
+> > +    description:
+> > +      Must be the device tree identifier of the PDRST pin. If
+> > +      specified, it will be asserted during driver probe. As the
+> > +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
+> > +    maxItems: 1
+> > +
+> > +  adi,gain-gpios:
+> > +    description:
+> > +      Must be the device tree identifier of the GAIN pin. Only for
+> > +      the ad778x chips. If specified, it will be asserted during
+> > +      driver probe. As the line is active low, it should be marked
+> > +      GPIO_ACTIVE_LOW.
+> > +    maxItems: 1
+> > +
+> > +  adi,filter-gpios:
+> > +    description:
+> > +      Must be the device tree identifier of the FILTER pin. Only
+> > +      for the ad778x chips. If specified, it will be asserted
+> > +      during driver probe. As the line is active low, it should be
+> > +      marked GPIO_ACTIVE_LOW.
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - vref-supply
+> 
+> Is that actually true?  I'd imagine it'll use a stub regulator if
+> it isn't supplied.
+
+Hmm, I also think this can be omitted as required.
+devm_regulator_get() is used.
+devm_regulator_get_exclusive() would be needed to make this required.
+
+> 
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    adc@0 {
+
+The adc@0 block should be included in a spi block.
+
+So, something like
+
+spi0 {
+     adc@0 {
+            compatible =  "adi,ad7780";
+            reg =         <0>;
+            avdd-supply = <&vdd_supply>
+
+            powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
+            adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
+            adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
+     };
+};
+
+I know this wasn't the case before, but it should be (from what I recall).
+
+> > +      compatible =  "adi,ad7780";
+> > +      reg = <0>;
+> > +      vref-supply = <&vdd_supply>;
+> > +
+> > +      powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+> > +      adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
+> > +      adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
+
+Rest looks good.
+
+Thanks
+Alex
+
+> > +    };
+> 
+> 
