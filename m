@@ -1,28 +1,51 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v5 3/3] net: ethernet: add ag71xx driver
-Date: Mon, 20 May 2019 17:50:01 +0200
-Message-ID: <20190520155001.GE22024@lunn.ch>
-References: <20190520070716.23668-1-o.rempel@pengutronix.de>
- <20190520070716.23668-4-o.rempel@pengutronix.de>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Device Tree nodes ending with -supply
+Date: Mon, 20 May 2019 17:51:27 +0200
+Message-ID: <20190520155127.cdc6dofoqckwsrrb@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190520070716.23668-4-o.rempel@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>, info@freifunk-bad-gandersheim.net
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 09:07:16AM +0200, Oleksij Rempel wrote:
-> Add support for Atheros/QCA AR7XXX/AR9XXX/QCA95XX built-in ethernet mac support
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Hi Rob,
 
-For the MDIO and PHY parts:
+I've noticed that you recently added support to validate the *-supply
+properties in the dt-schema tools.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+However, we have a family of PMIC that are exposing a bunch of power
+supplies (battery, AC, USB, etc) to know what is currently powering
+the board.
 
-I've not looked at the rest.
+All these various supplies are exposed as children nodes of the PMIC
+itself, and they are named *-power-supply. For an example, you can
+look at:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/axp209.dtsi#n56
 
-    Andrew
+Now, those are obviously not properties, and yet the current dt-schema
+schemas are trying to validate them.
+
+I'm not really sure how to fix that. Changing the node names seems
+like an obvious solution, but they seem to be what they should be. Can
+we reduce the scope of the validation to only match properties (ie
+arrays?) and not the nodes (objects?)
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
