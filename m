@@ -1,41 +1,37 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 3/5] arm64: dts: meson: g12a: add mdio multiplexer
-Date: Mon, 20 May 2019 21:05:33 +0200
-Message-ID: <20190520190533.GF22024@lunn.ch>
-References: <20190520131401.11804-1-jbrunet@baylibre.com>
- <20190520131401.11804-4-jbrunet@baylibre.com>
- <CAFBinCA_XE86eqCMpEFc3xMZDH8J7wVQPRj7bFZyqDxQx-w-qw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Kamal Dasu <kdasu.kdev@gmail.com>
+Subject: [PATCH v2 1/2] dt-bindings: mtd: brcmnand: Make nand-ecc-strength and nand-ecc-step-size optional
+Date: Mon, 20 May 2019 15:05:11 -0400
+Message-ID: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFBinCA_XE86eqCMpEFc3xMZDH8J7wVQPRj7bFZyqDxQx-w-qw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, f.fainelli@gmail.com, hkallweit1@gmail.com
+To: linux-mtd@lists.infradead.org
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > +                               int_mdio: mdio@1 {
-> > +                                       reg = <1>;
-> > +                                       #address-cells = <1>;
-> > +                                       #size-cells = <0>;
-> > +
-> > +                                       internal_ephy: ethernet_phy@8 {
-> > +                                               compatible = "ethernet-phy-id0180.3301",
-> > +                                                            "ethernet-phy-ieee802.3-c22";
-> Based on your comment on v1 of this patch [0] the Ethernet PHY ID is
-> defined by this "mdio-multiplexer" (write arbitrary value to a
-> register then that's the PHY ID which will show up on the bus)
-> I'm fine with explicitly listing the ID which the PHY driver binds to
-> because I don't know a better way.
+nand-ecc-strength and nand-ecc-step-size can be made optional as
+brcmnand driver can support using raw NAND layer detected values.
 
-Does reading the ID registers give the correct ID, once you have poked
-registers in the mdio-multiplexer? If so, you don't need this
-compatible string.
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-If the read is giving the wrong ID, then yes, you do want this. But
-then please add a comment in the DT blob. This is very unusual, so
-should have some explanation why it is needed.
-
-Thanks
-	Andrew
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index bcda1df..29feaba 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -101,10 +101,10 @@ Required properties:
+                               number (e.g., 0, 1, 2, etc.)
+ - #address-cells            : see partition.txt
+ - #size-cells               : see partition.txt
+-- nand-ecc-strength         : see nand.txt
+-- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
+ 
+ Optional properties:
++- nand-ecc-strength         : see nand.txt
++- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
+ - nand-on-flash-bbt         : boolean, to enable the on-flash BBT for this
+                               chip-select. See nand.txt
+ - brcm,nand-oob-sector-size : integer, to denote the spare area sector size
+-- 
+1.9.0.138.g2de3478
