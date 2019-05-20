@@ -1,78 +1,82 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH V2 3/3] soc: fsl: add RCPM driver
-Date: Mon, 20 May 2019 11:24:59 +0200
-Message-ID: <20190520092459.GC9748@amd>
-References: <20190517033946.30763-1-ran.wang_1@nxp.com>
- <20190517033946.30763-3-ran.wang_1@nxp.com>
- <20190519213844.GH31403@amd>
- <AM5PR0402MB2865EC5E1EF12C6C1D3C5566F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <20190520085647.GA9748@amd>
- <AM5PR0402MB2865F4574B19761848B001F9F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <20190520090748.GB9748@amd>
- <AM5PR0402MB2865E28B2E2296CB878ACEA2F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: Re: [PATCH v3 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+Date: Mon, 20 May 2019 09:32:15 +0000
+Message-ID: <VI1PR0402MB3519CE9CC1BD721708304D2987060@VI1PR0402MB3519.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0lnxQi9hkpPO77W3"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM5PR0402MB2865E28B2E2296CB878ACEA2F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Wang <ran.wang_1@nxp.com>
-Cc: Pavel Machek <pavel@denx.de>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
---0lnxQi9hkpPO77W3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > > > You are right, but the current code is "interesting". What about
-> > > >
-> > > >     ws =3D NULL;
-> > > >     while (ws =3D wakeup_source_get_next(NULL)) ...
-> > > >
-> > > > then?
-> > >
-> > > Did you mean:
-> > >      ws =3D NULL;
-> > >      while (ws =3D wakeup_source_get_next(ws)) ...
-> > >
-> > >    Yes, that will be the same to my original logic, do you recommend
-> > > to change to this? :)
-> >=20
-> > Yes please. It will be less confusing to the reader.
->=20
-> OK, if no other comment, I will work out v4, fix this and extra ','
-> =20
-> > Thanks (and sorry for cross-talk),
->=20
-> That's OK, thanks for your time.
-
-You can add
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
-to that version.
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---0lnxQi9hkpPO77W3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzicmsACgkQMOfwapXb+vI/kACfXfr5zSF0QsKLaIDUnn6ldYdL
-9rUAn1IvhOf/+HglBb9Ro5uZKDJsTOI+
-=fAL6
------END PGP SIGNATURE-----
-
---0lnxQi9hkpPO77W3--
+U29ycnkgZm9yIGRlbGF5ZWQgcmVzcG9uc2UgdG8geW91LCBteSBtYWlsIGNsaWVudCBkaWQgc29t
+ZXRoaW5nIHdyb25nLiA6KA0KDQo+IE9uIFdlZCwgMyBBcHIgMjAxOSwgSmFja3kgQmFpIHdyb3Rl
+Og0KPiANCj4gPiBGcm9tOiBCYWkgUGluZyA8cGluZy5iYWlAbnhwLmNvbT4NCj4gPg0KPiA+IFRo
+ZSBzeXN0ZW0gY291bnRlciAoc3lzX2N0cikgaXMgYSBwcm9ncmFtbWFibGUgc3lzdGVtIGNvdW50
+ZXIgd2hpY2gNCj4gPiBwcm92aWRlcyBhIHNoYXJlZCB0aW1lIGJhc2UgdG8gdGhlIENvcnRleCBB
+MTUsIEE3LCBBNTMgZXRjIGNvcmVzLg0KPiA+IEl0IGlzIGludGVuZGVkIGZvciB1c2UgaW4gYXBw
+bGljYXRpb25zIHdoZXJlIHRoZSBjb3VudGVyIGlzIGFsd2F5cw0KPiA+IHBvd2VyZWQgb24gYW5k
+IHN1cHBvcnRzIG11bHRpcGxlLCB1bnJlbGF0ZWQgY2xvY2tzLiBUaGUgc3lzX2N0cg0KPiA+IGhh
+cmR3YXJlDQo+ID4gc3VwcG9ydHM6DQo+ID4gIC0gNTYtYml0IGNvdW50ZXIgd2lkdGggKHJvbGwt
+b3ZlciB0aW1lIGdyZWF0ZXIgdGhhbiA0MCB5ZWFycykNCj4gPiAgLSBjb21wYXJlIGZyYW1lKDY0
+LWJpdCBjb21wYXJlIHZhbHVlKSBjb250YWlucyBwcm9ncmFtbWFibGUgaW50ZXJydXB0DQo+ID4g
+ICAgZ2VuZXJhdGlvbg0KPiANCj4gSSBob3BlIHRoYXQncyBhIDw9IGNvbXBhcmUgYW5kIG5vdCBh
+ID09IC4uLi4NCj4gDQoNClllcywgaXQgaXMgPD0gY29tcGFyZSwgd2hlbiB0aGUgZnJlZSBydW5u
+aW5nIGNvdW50ZXIgdmFsdWUgPj0gdGhlIGNvbXBhcmUgdmFsdWUsIHRoZW4gaW50ZXJydXB0IGlz
+IHRyaWdnZXJlZC4NCg0KPiA+ICtzdGF0aWMgdm9pZCBzeXNjdHJfdGltZXJfZW5hYmxlKGJvb2wg
+ZW5hYmxlKSB7DQo+ID4gKyAgICAgdTMyIHZhbDsNCj4gPiArDQo+ID4gKyAgICAgdmFsID0gcmVh
+ZGwoc3lzX2N0cl9iYXNlICsgQ01QQ1IpOw0KPiA+ICsgICAgIHZhbCAmPSB+U1lTX0NUUl9FTjsN
+Cj4gPiArICAgICBpZiAoZW5hYmxlKQ0KPiA+ICsgICAgICAgICAgICAgdmFsIHw9IFNZU19DVFJf
+RU47DQo+ID4gKw0KPiA+ICsgICAgIHdyaXRlbCh2YWwsIHN5c19jdHJfYmFzZSArIENNUENSKTsN
+Cj4gDQo+IFRoaXMgcmVhZCBpcyByZWFsbHkganVzdCBvdmVyaGVhZC4gV2h5IGFyZW4ndCB5b3Ug
+Y2FjaGluZyB0aGUgY29udHJvbCByZWdpc3Rlcg0KPiB2YWx1ZT8gSXQncyBub3QgYSBzZWxmIG1v
+ZGlmeWluZyByZWdpc3RlciBhbmQgSSBkb24ndCBzZWUgY29uY3VycmVuY3kgaGVyZQ0KPiBlaXRo
+ZXIuDQo+IA0KDQpUaGFua3MsIEkgd2lsbCB1c2UgYSBjYWNoZWQgdmFsdWUgZm9yIGl0Lg0KDQo+
+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIHN5c2N0cl9pcnFfYWNrbm93bGVkZ2Uodm9p
+ZCkgew0KPiA+ICsgICAgIC8qDQo+ID4gKyAgICAgICogY2xlYXIgdGhlIGVuYWJsZSBiaXQoRU4g
+PTApIHdpbGwgY2xlYXINCj4gPiArICAgICAgKiB0aGUgc3RhdHVzIGJpdChJU1RBVCA9IDApLCB0
+aGVuIHRoZSBpbnRlcnJ1cHQNCj4gPiArICAgICAgKiBzaWduYWwgd2lsbCBiZSBuZWdhdGVkKGFj
+a25vd2xlZGdlZCkuDQo+ID4gKyAgICAgICovDQo+ID4gKyAgICAgc3lzY3RyX3RpbWVyX2VuYWJs
+ZShmYWxzZSk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbmxpbmUgdTY0IHN5c2N0cl9y
+ZWFkX2NvdW50ZXIodm9pZCkgew0KPiA+ICsgICAgIHUzMiBjbnRfaGksIHRtcF9oaSwgY250X2xv
+Ow0KPiA+ICsNCj4gPiArICAgICBkbyB7DQo+ID4gKyAgICAgICAgICAgICBjbnRfaGkgPSByZWFk
+bF9yZWxheGVkKHN5c19jdHJfYmFzZSArIENOVENWX0hJKTsNCj4gPiArICAgICAgICAgICAgIGNu
+dF9sbyA9IHJlYWRsX3JlbGF4ZWQoc3lzX2N0cl9iYXNlICsgQ05UQ1ZfTE8pOw0KPiA+ICsgICAg
+ICAgICAgICAgdG1wX2hpID0gcmVhZGxfcmVsYXhlZChzeXNfY3RyX2Jhc2UgKyBDTlRDVl9ISSk7
+DQo+ID4gKyAgICAgfSB3aGlsZSAodG1wX2hpICE9IGNudF9oaSk7DQo+IA0KPiBXaGVuIHdpbGwg
+aGFyZHdhcmUgcGVvcGxlIGZpbmFsbHkgZ2V0IGl0PyBJcyBpdCBzbyBkYW1uZWQgaGFyZCB0byBt
+YWtlIHRoZQ0KPiByZWFkb3V0IGRvOg0KPiANCj4gICAgICAgICBsbyA9IHJlYWRfbG8oKSAgICAg
+ICAgICAtPiBpbnRlcm5hbGx5IGxhdGNoZXMgSEkgaW4gaGFyZHdhcmUNCj4gICAgICAgICBoaSA9
+IHJlYWRfaGkoKSAgICAgICAgICAtPiByZWFkcyB0aGUgbGF0Y2hlZCB2YWx1ZQ0KPiANCj4gSXQn
+cyBub3Qgcm9ja2V0IHNjaWVuY2UsIGJ1dCBpdCB3b3VsZCBzcGFyZSB0aGVzZSBob3JyaWJsZSBy
+ZWFkIGxvb3BzLiBCdXQgc3VyZSwNCj4gcGVyZm9ybWFuY2UgaGFwcGVucyBpbiB3aGl0ZXBhcGVy
+cyBhbmQgbWFya2V0aW5nIHNsaWRlcyAuLi4uDQo+IA0KDQpTYWRseSwgaGFyZHdhcmUgcGVvcGxl
+IGRvbid0IGltcGxlbWVudCBzdWNoIGludGVybmFsIGxhdGNoIGxvZ2ljLCBzbyB3ZSBuZWVkIHRv
+IHVzZSBzdWNoIHJlYWQgbG9vcC4NCg0KPiA+ICsNCj4gPiArICAgICByZXR1cm4gICgodTY0KSBj
+bnRfaGkgPDwgMzIpIHwgY250X2xvOyB9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHN5c2N0cl9z
+ZXRfbmV4dF9ldmVudCh1bnNpZ25lZCBsb25nIGRlbHRhLA0KPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2aWNlICpldnQpIHsNCj4gPiArICAg
+ICB1MzIgY21wX2hpLCBjbXBfbG87DQo+ID4gKyAgICAgdTY0IG5leHQ7DQo+ID4gKw0KPiA+ICsg
+ICAgIHN5c2N0cl90aW1lcl9lbmFibGUoZmFsc2UpOw0KPiA+ICsNCj4gPiArICAgICBuZXh0ID0g
+c3lzY3RyX3JlYWRfY291bnRlcigpOw0KPiA+ICsNCj4gPiArICAgICBuZXh0ICs9IGRlbHRhOw0K
+PiA+ICsNCj4gPiArICAgICBjbXBfaGkgPSAobmV4dCA+PiAzMikgJiAweDAwZmZmZmY7DQo+ID4g
+KyAgICAgY21wX2xvID0gbmV4dCAmIDB4ZmZmZmZmZmY7DQo+ID4gKw0KPiA+ICsgICAgIHdyaXRl
+bF9yZWxheGVkKGNtcF9oaSwgc3lzX2N0cl9iYXNlICsgQ01QQ1ZfSEkpOw0KPiA+ICsgICAgIHdy
+aXRlbF9yZWxheGVkKGNtcF9sbywgc3lzX2N0cl9iYXNlICsgQ01QQ1ZfTE8pOw0KPiANCj4gUGxl
+YXNlIGRvY3VtZW50IHRoYXQgdGhpcyBpcyBhIDw9IGNvbXBhcmF0b3IuIElmIHRoYXQncyBub3Qg
+dHJ1ZSB0aGVuIHRoaXMNCj4gZnVuY3Rpb24gaXMgYnJva2VuIGZvciBzbWFsbCBkZWx0YXMgYW5k
+IGRlbGF5cyBiZXR3ZWVuIHJlYWRfY291bnRlcigpIGFuZA0KPiBlbmFibGUuDQoNCkl0IGlzIDw9
+IGNvbXBhcmF0b3IsIHNvIGl0IGlzIHNhZmUuDQoNCj4gDQo+ID4gKw0KPiA+ICsgICAgIHN5c2N0
+cl90aW1lcl9lbmFibGUodHJ1ZSk7DQo+ID4gKw0KPiA+ICsgICAgIHJldHVybiAwOw0KPiA+ICt9
+DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHN5c2N0cl9zZXRfc3RhdGVfb25lc2hvdChzdHJ1Y3Qg
+Y2xvY2tfZXZlbnRfZGV2aWNlICpldnQpIHsNCj4gPiArICAgICBzeXNjdHJfdGltZXJfZW5hYmxl
+KHRydWUpOw0KPiANCj4gVGhhdCdzIHdyb25nLiBXaHkgZG8geW91IHdhbnQgdG8gZW5hYmxlIHRo
+ZSB0aW1lciBoZXJlPyBXaGVuIHRoZSBzdGF0ZSBpcw0KPiBzZXQgdG8gb25lIHNob3QgdGhlbiB0
+aGUgbmV4dCBvcGVyYXRpb24gaXMgc2V0X25leHRfZXZlbnQoKSBidXQgYmVmb3JlIHRoYXQNCj4g
+bm90aGluZyBzaG91bGQgZXZlciBjb21lIG91dCBvZiB0aGUgdGltZXIuDQo+IA0KDQpUaGFua3Ms
+IEkgd2lsbCByZW1vdmUgaXQgaW4gVjQuDQoNCkJSDQpKYWNreSBCYWkNCg0KPiBUaGFua3MsDQo+
+IA0KPiAgICAgICAgIHRnbHgNCg==
