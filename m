@@ -1,22 +1,55 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH RESEND 1/3] dt-bindings: clock: imx8mm: Add GPIO clocks
-Date: Mon, 20 May 2019 14:24:35 +0800
-Message-ID: <20190520062433.GO15856@dragon>
-References: <1557655926-12915-1-git-send-email-Anson.Huang@nxp.com>
+From: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Subject: Re: [PATCH 1/4] dt-bindings: iio: adc: mediatek: Add document for
+ mt6765
+Date: Mon, 20 May 2019 14:47:24 +0800
+Message-ID: <1558334844.13182.7.camel@mtkswgap22>
+References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
+         <1557994247-16739-2-git-send-email-chun-hung.wu@mediatek.com>
+         <20190518113356.1cf99a31@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1557655926-12915-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20190518113356.1cf99a31@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Jacky Bai <ping.bai@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, peter.wang@mediatek.com, kuohong.wang@mediatek.com, jg_poxu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 12, 2019 at 10:17:08AM +0000, Anson Huang wrote:
-> Add macro for the GPIO clocks of the i.MX8MM.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Hi Jonathan,
 
-Applied all, thanks.
+On Sat, 2019-05-18 at 11:33 +0100, Jonathan Cameron wrote:
+> On Thu, 16 May 2019 16:10:44 +0800
+> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+> 
+> > Add compatible node for mt6765 auxadc
+> > 
+> > Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> Applied, but in numeric order.  There was also another clashing patch
+> that caused some fuzz.
+No problem, thanks!
+
+regards,
+Chun-Hung
+> 
+> thanks,
+> 
+> Jonathan
+> 
+> > ---
+> >  Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> > index 0df9bef..ab7efab 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> > +++ b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> > @@ -15,6 +15,7 @@ Required properties:
+> >      - "mediatek,mt2712-auxadc": For MT2712 family of SoCs
+> >      - "mediatek,mt7622-auxadc": For MT7622 family of SoCs
+> >      - "mediatek,mt8173-auxadc": For MT8173 family of SoCs
+> > +    - "mediatek,mt6765-auxadc": For MT6765 family of SoCs
+> >    - reg: Address range of the AUXADC unit.
+> >    - clocks: Should contain a clock specifier for each entry in clock-names
+> >    - clock-names: Should contain "main".
+> 
