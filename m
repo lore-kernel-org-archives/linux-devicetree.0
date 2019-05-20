@@ -1,39 +1,57 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH V2 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-Date: Mon, 20 May 2019 02:15:50 +0000
-Message-ID: <AM5PR0402MB2865ED4DFB84BF2AE85EF0ABF1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190517033946.30763-1-ran.wang_1@nxp.com>
- <20190519213457.GG31403@amd>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 2/6] Revert "arm64: dts: renesas: r8a7796: Enable DMA for
+ SCIF2"
+Date: Mon, 20 May 2019 02:18:47 +0000
+Message-ID: <OSBPR01MB3174C93C0A49701EC72F9D82D8060@OSBPR01MB3174.jpnprd01.prod.outlook.com>
+References: <20190504004258.23574-1-erosca@de.adit-jv.com>
+ <20190504004258.23574-3-erosca@de.adit-jv.com>
+ <CAMuHMdWnuvQvugqfMjE1R_QDvf-Pma8POb1x5YjRr97+M-=HHg@mail.gmail.com>
+ <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190519213457.GG31403@amd>
-Content-Language: en-US
+In-Reply-To: <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
+Content-Language: ja-JP
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>
-Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+To: "REE erosca@DE.ADIT-JV.COM" <erosca@DE.ADIT-JV.COM>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Eugeniu Rosca <roscaeugeniu@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <Chris.Brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Rodin <mrodin@de.adit-jv.com>, REE erosca@DE.AD
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
-
-On Monday, May 20, 2019 05:35, Pavel Machek wrote:
->=20
-> > --- a/include/linux/pm_wakeup.h
->=20
-> > @@ -70,6 +71,7 @@ struct wakeup_source {
-> >  	unsigned long		wakeup_count;
-> >  	bool			active:1;
-> >  	bool			autosleep_enabled:1;
-> > +	struct device	*attached_dev;
-> >  };
-> >
-> >  #ifdef CONFIG_PM_SLEEP
->=20
-> You might want to format this similary to the rest...
-
-OK, will update, thanks.
-
-Regards,
-Ran
+SGkgRXVnZW5pdS1zYW4sIEdlZXJ0LXNhbiwNCg0KPiBGcm9tOiBFdWdlbml1IFJvc2NhLCBTZW50
+OiBUdWVzZGF5LCBNYXkgNywgMjAxOSA0OjQzIEFNDQo8c25pcD4NCj4gPiA+IFswXSB2NS4wLXJj
+NiBjb21taXQgOTdmMjY3MDJiYzk1YjUgKCJhcm02NDogZHRzOiByZW5lc2FzOiByOGE3Nzk2OiBF
+bmFibGUgRE1BIGZvciBTQ0lGMiIpDQo+ID4gPiBbMV0gdjQuMTQuMTA2IGNvbW1pdCA3MDNkYjVk
+MWIxNzU5ZiAoImFybTY0OiBkdHM6IHJlbmVzYXM6IHI4YTc3OTY6IEVuYWJsZSBETUEgZm9yIFND
+SUYyIikNCj4gPiA+IFsyXSBzY2lmIChERUJVRykgYW5kIHJjYXItZG1hYyBsb2dzOg0KPiA+ID4g
+ICAgIGh0dHBzOi8vZ2lzdC5naXRodWIuY29tL2Vyb3NjYS8xMzJjY2U3NmE2MTk3MjRhOWU0ZmE2
+MWQxZGI4OGM2Ng0KPHNuaXA+DQo+IEVuYWJsaW5nIERFQlVHIGluIGRyaXZlcnMvZG1hL3NoL3Jj
+YXItZG1hYy5jLCBJIGNhbiBub3RpY2UgdGhhdCBvbmUgb2YNCj4gdGhlIHN5bXB0b21zIGlzIGEg
+TlVMTCBkc3RfYWRkciByZXZlYWxlZCBieToNCj4gDQo+IHJjYXItZG1hYyBlNzMwMDAwMC5kbWEt
+Y29udHJvbGxlcjogY2hhbjA6IHF1ZXVlIGNodW5rIChfX19fcHRydmFsX19fXyk6IDBAMHhmZmZm
+ODAwNjM5ZWI4MDkwIC0+IDB4MDAwMDAwMDAwMDAwMDAwMA0KPiANCj4gSW4gd29ya2luZyBzY2Vu
+YXJpb3MsIGRzdF9hZGRyIGlzIG5ldmVyIHplcm8uIERvZXMgaXQgZ2l2ZSBhbnkgaGludHM/DQoN
+ClRoYW5rIHlvdSBmb3IgdGhlIHJlcG9ydCEgSXQncyB2ZXJ5IGhlbHBmdWwgdG8gbWUuDQpJIHRo
+aW5rIHdlIHNob3VsZCBmaXggdGhlIHNoLXNjaSBkcml2ZXIgYXQgbGVhc3QuDQoNCkFjY29yZGlu
+ZyB0byB0aGUgWzJdIGxvZyBhYm92ZSwNCg0KWyAgICA0LjM3OTcxNl0gc2gtc2NpIGU2ZTg4MDAw
+LnNlcmlhbDogc2NpX2RtYV90eF93b3JrX2ZuOiBmZmZmODAwNjM5YjU1MDAwOiAwLi4uMCwgY29v
+a2llIDEyNg0KDQpUaGlzICIwLi4uMCIgbWVhbnMgdGhlIHMtPnR4X2RtYV9sZW4gb24gdGhlIHNj
+aV9kbWFfdHhfd29ya19mbiB3aWxsIGJlIHplcm8uIEFuZCwNCg0KPiByY2FyLWRtYWMgZTczMDAw
+MDAuZG1hLWNvbnRyb2xsZXI6IGNoYW4wOiBxdWV1ZSBjaHVuayAoX19fX3B0cnZhbF9fX18pOiAw
+QDB4ZmZmZjgwMDYzOWViODA5MCAtPiAweDAwMDAwMDAwMDAwMDAwMDANCg0KVGhpcyBtZWFucyB0
+aGUgY2h1bmstPmRzdF9hZGRyIGlzIG5vdCBzZXQgdG8gdGhlICJkc3RfYWRkciIgZm9yIFNDSUYg
+YmVjYXVzZSB0aGUgbGVuIG9uIHJjYXJfZG1hY19jaGFuX3ByZXBfc2cgaXMgemVyby4NClNvLCBJ
+J20gdGhpbmtpbmc6DQogLSB3ZSBoYXZlIHRvIGZpeCB0aGUgc2hfc2NpIGRyaXZlciB0byBhdm9p
+ZCAidHhfZG1hX2xlbiA9IDAiIHRyYW5zZmVycmluZy4NCg0KYW5kIA0KDQogLSBhbHNvIHdlIGhh
+dmUgdG8gZml4IHRoZSByY2FyLWRtYWMgZHJpdmVyIHRvIGF2b2lkIHRoaXMgaXNzdWUgYmVjYXVz
+ZSB0aGUgRE1BIEVuZ2luZSBBUEkNCiAgIGd1aWRlIGRvZXNuJ3QgcHJldmVudCB0aGUgbGVuID0g
+MC4NCg0KRXVnZW5pdS1zYW4sIEdlZXJ0LXNhbiwgd2hhdCBkbyB5b3UgdGhpbms/DQoNCkJlc3Qg
+cmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4+DQo+ID4gVGhhbmtzIQ0KPiANCj4gTGlr
+ZXdpc2UhDQo+IA0KPiA+DQo+ID4gR3J7b2V0amUsZWV0aW5nfXMsDQo+ID4NCj4gPiAgICAgICAg
+ICAgICAgICAgICAgICAgICBHZWVydA0KPiA+DQo+ID4gLS0NCj4gPiBHZWVydCBVeXR0ZXJob2V2
+ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02
+OGsub3JnDQo+ID4NCj4gPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2Fs
+IHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+ID4gd2hlbiBJJ20gdGFsa2lu
+ZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlr
+ZSB0aGF0Lg0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9y
+dmFsZHMNCj4gDQo+IC0tDQo+IEJlc3QgUmVnYXJkcywNCj4gRXVnZW5pdS4NCg==
