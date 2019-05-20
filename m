@@ -1,24 +1,27 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH] clk: meson: fix MPLL 50M binding id typo
-Date: Mon, 20 May 2019 13:25:50 +0200
-Message-ID: <65ca1ca3ed47ec64403600e66a24fe888ba82533.camel@baylibre.com>
-References: <20190512205743.24131-1-jbrunet@baylibre.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 4/5] ARM: dts: r7s72100: Add IRQC device node
+Date: Mon, 20 May 2019 13:27:17 +0200
+Message-ID: <20190520112717.yqkbdhmkq57dixgs@verge.net.au>
+References: <20190502123220.3016-1-geert+renesas@glider.be>
+ <20190502123220.3016-5-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190512205743.24131-1-jbrunet@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20190502123220.3016-5-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2019-05-12 at 22:57 +0200, Jerome Brunet wrote:
-> MPLL_5OM (the capital letter o) should indeed be MPLL_50M (the number)
-> Fix this before it gets used.
+On Thu, May 02, 2019 at 02:32:19PM +0200, Geert Uytterhoeven wrote:
+> Enable support for the IRQC on RZ/A1H, which is a small front-end to the
+> GIC.  This allows to use up to 8 external interrupts with configurable
+> sense select.
 > 
-> Reported-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Fixes: 25db146aa726 ("dt-bindings: clk: meson: add g12a periph clock controller bindings")
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-applied to v5.3/fixes
+Thanks Geert,
+
+I have applied this for inclusion in v5.3
