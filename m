@@ -1,76 +1,22 @@
-From: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Subject: Re: [PATCH 4/4] iio: auxadc: mediatek: change to subsys_initcall
-Date: Mon, 20 May 2019 14:06:38 +0800
-Message-ID: <1558332398.11080.9.camel@mtkswgap22>
-References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
-         <1557994247-16739-5-git-send-email-chun-hung.wu@mediatek.com>
-         <20190518113643.53a42976@archlinux>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH RESEND 1/3] dt-bindings: clock: imx8mm: Add GPIO clocks
+Date: Mon, 20 May 2019 14:24:35 +0800
+Message-ID: <20190520062433.GO15856@dragon>
+References: <1557655926-12915-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190518113643.53a42976@archlinux>
+Content-Disposition: inline
+In-Reply-To: <1557655926-12915-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, peter.wang@mediatek.com, kuohong.wang@mediatek.com, jg_poxu@mediatek.com
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Jacky Bai <ping.bai@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
+On Sun, May 12, 2019 at 10:17:08AM +0000, Anson Huang wrote:
+> Add macro for the GPIO clocks of the i.MX8MM.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-On Sat, 2019-05-18 at 11:36 +0100, Jonathan Cameron wrote:
-> On Thu, 16 May 2019 16:10:47 +0800
-> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
-> 
-> >   Move auxadc platform_driver_register() from module_init
-> > to subsys_initcall because auxadc user drivers
-> > are all moudle drivers, need to gurantee
-> > auxadc driver ready before module_init.
-> > 
-> Is it not possible to make them use deferred handling to come
-> back later if this isn't yet available?
-> 
-> subsys_initcall often ends up being a more fragile approach.
-
-Agreed, I will ask auxadc driver users to add deferred handling
-instead of moving auxadc platform_driver_register() from module_init
-to subsys_initcall.
-
-Thanks,
-Chun-hung
-
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> > Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-> > ---
-> >  drivers/iio/adc/mt6577_auxadc.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
-> > index 58d7cb2..cb8e3dd 100644
-> > --- a/drivers/iio/adc/mt6577_auxadc.c
-> > +++ b/drivers/iio/adc/mt6577_auxadc.c
-> > @@ -350,7 +350,19 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
-> >  	.probe	= mt6577_auxadc_probe,
-> >  	.remove	= mt6577_auxadc_remove,
-> >  };
-> > -module_platform_driver(mt6577_auxadc_driver);
-> > +
-> > +static int __init mt6577_auxadc_init(void)
-> > +{
-> > +	return platform_driver_register(&mt6577_auxadc_driver);
-> > +}
-> > +
-> > +static void __exit mt6577_auxadc_exit(void)
-> > +{
-> > +	platform_driver_unregister(&mt6577_auxadc_driver);
-> > +}
-> > +
-> > +subsys_initcall(mt6577_auxadc_init);
-> > +module_exit(mt6577_auxadc_exit);
-> >  
-> >  MODULE_AUTHOR("Zhiyong Tao <zhiyong.tao@mediatek.com>");
-> >  MODULE_DESCRIPTION("MTK AUXADC Device Driver");
-> 
+Applied all, thanks.
