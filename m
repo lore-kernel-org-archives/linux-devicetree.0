@@ -1,54 +1,79 @@
 From: megous@megous.com
-Subject: [PATCH v2 1/3] dt-bindings: media: sun6i-csi: Add compatible string
- for A83T variant
-Date: Mon, 20 May 2019 17:06:35 +0200
-Message-ID: <20190520150637.23557-2-megous@megous.com>
-References: <20190520150637.23557-1-megous@megous.com>
+Subject: [PATCH v2 0/3] ARM: sun8i: a83t: Support Camera Sensor Interface controller
+Date: Mon, 20 May 2019 17:06:34 +0200
+Message-ID: <20190520150637.23557-1-megous@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190520150637.23557-1-megous@megous.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Chen-Yu Tsai <wens@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Ondrej Jirman <megous@megous.com>
 
-The A83T SoC has a camera sensor interface (known as CSI in Allwinner
-lingo), which is similar to the one found on the A64 and H3. The only
-difference seems to be that support of MIPI CSI through a connected
-MIPI CSI-2 bridge.
+This is a re-send of Chen-Yu's A83T CSI patch series with review tags
+applied and removed address/size cells from csi_in port. Already applied
+patches from v1  were dropped.
 
-Add a compatible string for this variant.
+The series is ready to be merged:
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/media/sun6i-csi.txt | 1 +
- 1 file changed, 1 insertion(+)
+  Patch 1 and 2 via sunxi tree
+  Patch 3 via media tree
 
-diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-index 0dd540bb03db..a2e3e56f0257 100644
---- a/Documentation/devicetree/bindings/media/sun6i-csi.txt
-+++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-@@ -6,6 +6,7 @@ Allwinner V3s SoC features a CSI module(CSI1) with parallel interface.
- Required properties:
-   - compatible: value must be one of:
-     * "allwinner,sun6i-a31-csi"
-+    * "allwinner,sun8i-a83t-csi"
-     * "allwinner,sun8i-h3-csi"
-     * "allwinner,sun8i-v3s-csi"
-     * "allwinner,sun50i-a64-csi"
+v2:
+- dropped address/size cells from csi_in port
+- added review tags
+
+Please take a look and merge.
+
+Thank you,
+	Ondrej
+
+--------------------------
+Original description:
+
+Hi everyone,
+
+This series adds support for the camera sensor interface controller
+found on the Allwinner A83T SoC. The controller is similar to the one
+found on  the H3, with the addition of a MIPI CSI-2 interface. However,
+this series only supports parallel and BT.656 interfaces, based on the
+existing driver.
+
+Patch 1 adds an undocumented clock parent of the CSI MCLK. This was
+found after finding the default value to sometimes work and sometimes
+not, and then comparing against BSP code.
+
+Patch 2 adds a compatible string for the A83T variant.
+
+Patch 3 adds support for the A83T variant to the existing sun6i-csi
+driver.
+
+Patch 4 adds a device node for the controller, as well as commonly
+used pin muxing options.
+
+Patch 5 adds a pin muxing option for I2C1 on the PE pins, used in
+conjunction with the CSI pins.
+
+Patch 6 provides an example usage of the CSI controller: the Bananapi M3
+with its camera module attached.
+
+Please have a look.
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (3):
+  dt-bindings: media: sun6i-csi: Add compatible string for A83T variant
+  media: sun6i: Support A83T variant
+  ARM: dts: sun8i: a83t: Add device node for CSI (Camera Sensor
+    Interface)
+
+ .../devicetree/bindings/media/sun6i-csi.txt   |  1 +
+ arch/arm/boot/dts/sun8i-a83t.dtsi             | 29 +++++++++++++++++++
+ .../platform/sunxi/sun6i-csi/sun6i_csi.c      |  1 +
+ 3 files changed, 31 insertions(+)
+
 -- 
 2.21.0
