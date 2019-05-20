@@ -1,40 +1,50 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: Add vendor prefix for VXT Ltd
-Date: Mon, 20 May 2019 11:15:05 -0300
-Message-ID: <CAOMZO5C4YKcUGJ9wDJHQE04278Cr6ujYnYwPs-yhCyKumbruqg@mail.gmail.com>
-References: <20190219002706.20077-1-festevam@gmail.com>
- <20190423110336.GB23448@ulmo>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device tree bindings for vibrator
+Date: Mon, 20 May 2019 07:21:49 -0700
+Message-ID: <20190520142149.D56DA214AE@mail.kernel.org>
+References: <20190516085018.2207-1-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190423110336.GB23448@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Otavio Salvador <otavio.salvador@ossystems.com.br>, DRI mailing list <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Sam Ravnborg <sam@ravnborg.org>, John Weber <john.weber@technexion.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190516085018.2207-1-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>, agross@kernel.org, david.brown@linaro.org
+Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMjMsIDIwMTkgYXQgODowMyBBTSBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5y
-ZWRpbmdAZ21haWwuY29tPiB3cm90ZToKPgo+IE9uIE1vbiwgRmViIDE4LCAyMDE5IGF0IDA5OjI3
-OjA0UE0gLTAzMDAsIEZhYmlvIEVzdGV2YW0gd3JvdGU6Cj4gPiBWWFQgTHRkIGlzIGEgbWFudWZh
-Y3R1cmVyIG9mIHByb2plY3RlZCBjYXBhY2l0aXZlIHRvdWNoIHBhbmVsCj4gPiBhbmQgZGlzcGxh
-eSBzb2x1dGlvbnM6IGh0dHA6Ly93d3cudnh0LmNvbS50dy8KPiA+Cj4gPiBSZXZpZXdlZC1ieTog
-T3RhdmlvIFNhbHZhZG9yIDxvdGF2aW9Ab3NzeXN0ZW1zLmNvbS5icj4KPiA+IFJldmlld2VkLWJ5
-OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+ID4gU2lnbmVkLW9mZi1ieTogRmFiaW8g
-RXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPgo+ID4gLS0tCj4gPiBDaGFuZ2VzIHNpbmNlIHYx
-Ogo+ID4gLSBOb25lCj4gPgo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92
-ZW5kb3ItcHJlZml4ZXMudHh0IHwgMSArCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
-KCspCj4KPiBBcHBsaWVkIGFsbCB0aHJlZSBwYXRjaGVzLCB0aGFua3MuCgpJIGRvbid0IHNlZSBh
-bnkgb2YgdGhlc2UgcGF0Y2hlcyBhcHBsaWVkIGluIGxpbnV4LW5leHQgbm9yIDUuMi1yYzEuCgpX
-aGF0IGlzIHRoZSBpc3N1ZSBoZXJlPwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWw=
+Quoting Brian Masney (2019-05-16 01:50:18)
+> @@ -306,6 +307,36 @@
+>                                 input-enable;
+>                         };
+>                 };
+> +
+> +               vibrator_pin: vibrator {
+> +                       pwm {
+> +                               pins =3D "gpio27";
+> +                               function =3D "gp1_clk";
+> +
+> +                               drive-strength =3D <6>;
+> +                               bias-disable;
+> +                       };
+> +
+> +                       enable {
+> +                               pins =3D "gpio60";
+> +                               function =3D "gpio";
+> +                       };
+> +               };
+> +       };
+> +
+> +       vibrator@fd8c3450 {
+> +               compatible =3D "qcom,msm8974-vibrator";
+> +               reg =3D <0xfd8c3450 0x400>;
+
+This is inside the multimedia clk controller. The resource reservation
+mechanism should be complaining loudly here. Is the driver writing
+directly into clk controller registers to adjust a duty cycle of the
+camera's general purpose clk?
+
+Can you add support for duty cycle to the qcom clk driver's RCGs and
+then write a generic clk duty cycle vibrator driver that adjusts the
+duty cycle of the clk? That would be better than reaching into the clk
+controller registers to do this.
