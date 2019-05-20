@@ -1,46 +1,72 @@
-Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V4 19/28] PCI: tegra: Change PRSNT_SENSE IRQ log to debug
-Date: Thu, 16 May 2019 11:22:58 +0530
-Message-ID: <20190516055307.25737-20-mmaddireddy@nvidia.com>
-In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=bR7J=TU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga11.intel.com ([192.55.52.93]:55079 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387513AbfETQIq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 May 2019 12:08:46 -0400
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [PATCH 2/3] ARM: dts: arria10: Add stmmac ptp_ref clock
+References: <20190515162058.32368-1-dalon.westergreen@linux.intel.com>
+ <20190515162058.32368-2-dalon.westergreen@linux.intel.com>
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <5de0520a-d29a-3994-5441-047060ad9aa9@linux.intel.com>
+Date: Mon, 20 May 2019 11:10:55 -0500
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+In-Reply-To: <20190515162058.32368-2-dalon.westergreen@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Dalon Westergreen <dalon.westergreen@linux.intel.com>, dinguyen@kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-PRSNT_MAP bit field is programmed to update the slot present status.
-PRSNT_SENSE IRQ is triggered when this bit field is programmed, which is
-not an error. Add a new if condition to trap PRSNT_SENSE code and print it
-with debug log level.
+On 5/15/19 11:20 AM, Dalon Westergreen wrote:
+> Add the default stmmac ptp_ref clock for arria10.  The stmmac
+> driver defaults the ptp_ref clock to the main stmmac clock
+> if the ptp_ref clock is not set in the devicetree.  This is inappropriate
+> for the arria10 device.  The default ptp_ref clock is peri_emac_ptp_clk.
+> 
+> Signed-off-by: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+> ---
+>   arch/arm/boot/dts/socfpga_arria10.dtsi | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+> index 0017bac7f96c..6591def7b225 100644
+> --- a/arch/arm/boot/dts/socfpga_arria10.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+> @@ -426,8 +426,8 @@
+>   			snps,perfect-filter-entries = <128>;
+>   			tx-fifo-depth = <4096>;
+>   			rx-fifo-depth = <16384>;
+> -			clocks = <&l4_mp_clk>;
+> -			clock-names = "stmmaceth";
+> +			clocks = <&l4_mp_clk>, <&peri_emac_ptp_clk>;
+> +			clock-names = "stmmaceth", "ptp_ref";
+>   			resets = <&rst EMAC0_RESET>;
+>   			reset-names = "stmmaceth";
+>   			snps,axi-config = <&socfpga_axi_setup>;
+> @@ -446,8 +446,8 @@
+>   			snps,perfect-filter-entries = <128>;
+>   			tx-fifo-depth = <4096>;
+>   			rx-fifo-depth = <16384>;
+> -			clocks = <&l4_mp_clk>;
+> -			clock-names = "stmmaceth";
+> +			clocks = <&l4_mp_clk>, <&peri_emac_ptp_clk>;
+> +			clock-names = "stmmaceth", "ptp_ref";
+>   			resets = <&rst EMAC1_RESET>;
+>   			reset-names = "stmmaceth";
+>   			snps,axi-config = <&socfpga_axi_setup>;
+> @@ -466,8 +466,8 @@
+>   			snps,perfect-filter-entries = <128>;
+>   			tx-fifo-depth = <4096>;
+>   			rx-fifo-depth = <16384>;
+> -			clocks = <&l4_mp_clk>;
+> -			clock-names = "stmmaceth";
+> +			clocks = <&l4_mp_clk>, <&peri_emac_ptp_clk>;
+> +			clock-names = "stmmaceth", "ptp_ref";
+>   			snps,axi-config = <&socfpga_axi_setup>;
+>   			status = "disabled";
+>   		};
+> 
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V4: No change
-
-V3: Correct typos in commit log
-
-V2: If-else to switch-case conversion patch is dropped, this patch is
-rebased to stay with if-else statements
-
- drivers/pci/controller/pci-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 0f02f54f8a61..ac57c5badd9b 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -864,7 +864,7 @@ static irqreturn_t tegra_pcie_isr(int irq, void *arg)
- 	 * do not pollute kernel log with master abort reports since they
- 	 * happen a lot during enumeration
- 	 */
--	if (code == AFI_INTR_MASTER_ABORT)
-+	if (code == AFI_INTR_MASTER_ABORT || code == AFI_INTR_PE_PRSNT_SENSE)
- 		dev_dbg(dev, "%s, signature: %08x\n", err_msg[code], signature);
- 	else
- 		dev_err(dev, "%s, signature: %08x\n", err_msg[code], signature);
--- 
-2.17.1
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
