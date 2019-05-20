@@ -1,75 +1,45 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH 9/9] arm64: dts: sprd: Add Spreadtrum SD host controller support
-Date: Mon, 20 May 2019 18:12:02 +0800
-Message-ID: <7fc6cd63966bda900b07ac9b2156e313a6f2ac17.1558346019.git.baolin.wang@linaro.org>
-References: <cover.1558346019.git.baolin.wang@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1558346019.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1558346019.git.baolin.wang@linaro.org>
-References: <cover.1558346019.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: adrian.hunter@intel.com, ulf.hansson@linaro.org, zhang.lyra@gmail.com, orsonzhai@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, olof@lixom.net
-Cc: baolin.wang@linaro.org, vincent.guittot@linaro.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 0/5] cpufreq: Add imx-cpufreq-dt driver for speed
+ grading
+Date: Mon, 20 May 2019 15:43:51 +0530
+Message-ID: <20190520101351.huda4rmpdzaegnj7@vireshk-i7>
+References: <cover.1557742902.git.leonard.crestez@nxp.com>
+ <20190514071322.avosfk4fzz2hzzx6@vireshk-i7>
+ <20190520071417.GU15856@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190520071417.GU15856@dragon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <anson.huang@nxp.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jacky Bai <ping.bai@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add one Spreadtrum SD host controller to support eMMC card for Spreadtrum
-SC9860 platform.
+On 20-05-19, 15:14, Shawn Guo wrote:
+> On Tue, May 14, 2019 at 12:43:22PM +0530, Viresh Kumar wrote:
+> > On 13-05-19, 11:01, Leonard Crestez wrote:
+> > > Right now in upstream imx8m cpufreq support just lists a common subset
+> > > of OPPs because the higher ones should only be attempted after checking
+> > > speed grading in fuses.
+> > > 
+> > > Driver reads from nvmem and calls dev_pm_opp_set_supported_hw before
+> > > registering cpufreq-dt.
+> > 
+> > Who will apply patches 3-5 ?
+> 
+> Me.  Will apply them after the first two get applied.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- arch/arm64/boot/dts/sprd/whale2.dtsi |   35 ++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Applied just now.
 
-diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
-index b5c5dce..86ec2b0 100644
---- a/arch/arm64/boot/dts/sprd/whale2.dtsi
-+++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
-@@ -168,6 +168,34 @@
- 				vdd-supply = <&vddusb33>;
- 				sprd,vdd-voltage = <3300000>;
- 			};
-+
-+			sdio3: sdio@50430000 {
-+				compatible  = "sprd,sdhci-r11";
-+				reg = <0 0x50430000 0 0x1000>;
-+				interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				clock-names = "sdio", "enable", "2x_enable";
-+				clocks = <&aon_prediv CLK_EMMC_2X>,
-+				       <&apahb_gate CLK_EMMC_EB>,
-+				       <&aon_gate CLK_EMMC_2X_EN>;
-+				assigned-clocks = <&aon_prediv CLK_EMMC_2X>;
-+				assigned-clock-parents = <&clk_l0_409m6>;
-+
-+				sprd,phy-delay-mmc-hs400 = <0x44 0x7f 0x2e 0x2e>;
-+				sprd,phy-delay-mmc-hs200 = <0x0 0x8c 0x8c 0x8c>;
-+				sprd,phy-delay-mmc-ddr52 = <0x3f 0x75 0x14 0x14>;
-+				sprd,phy-delay-mmc-hs400es = <0x3f 0x3f 0x2e 0x2e>;
-+				vmmc-supply = <&vddemmccore>;
-+				bus-width = <8>;
-+				non-removable;
-+				no-sdio;
-+				no-sd;
-+				cap-mmc-hw-reset;
-+				mmc-hs400-enhanced-strobe;
-+				mmc-hs400-1_8v;
-+				mmc-hs200-1_8v;
-+				mmc-ddr-1_8v;
-+			};
- 		};
- 
- 		aon {
-@@ -310,4 +338,11 @@
- 		clock-frequency = <100000000>;
- 		clock-output-names = "ext-rco-100m";
- 	};
-+
-+	clk_l0_409m6: clk_l0_409m6 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <409600000>;
-+		clock-output-names = "ext-409m6";
-+	};
- };
 -- 
-1.7.9.5
+viresh
