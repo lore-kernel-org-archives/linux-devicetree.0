@@ -1,53 +1,37 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
-Date: Mon, 20 May 2019 09:50:06 +0200
-Message-ID: <20190520075006.pwrsaytg57d44377@flea>
-References: <20190518154014.28998-1-jernej.skrabec@siol.net>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 3/4] arm64: DTS: allwinner: a64: Enable audio on Teres-I
+Date: Mon, 20 May 2019 15:56:13 +0800
+Message-ID: <CAGb2v64xKk1r1iqSVm5pVvHVkyQ175MUFB7JPUkvQX9ecOZDDQ@mail.gmail.com>
+References: <20190516154943.239E668B05@newverein.lst.de>
+ <20190516155139.E6EE568C65@newverein.lst.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ccv2ztaysqwm5bmp"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190518154014.28998-1-jernej.skrabec@siol.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190516155139.E6EE568C65@newverein.lst.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Torsten Duwe <duwe@lst.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-
---ccv2ztaysqwm5bmp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sat, May 18, 2019 at 05:40:14PM +0200, Jernej Skrabec wrote:
-> mmc1 node where wifi module is connected doesn't have properly defined
-> power supplies so wifi module is never powered up. Fix that by
-> specifying additional power supplies.
->
-> Additionally, this STB may have either Realtek or Broadcom based wifi
-> module. One based on Broadcom module also needs external clock to work
-> properly. Fix that by adding clock property to wifi_pwrseq node.
->
-> Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB")
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-
-Applied, thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ccv2ztaysqwm5bmp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOJcLgAKCRDj7w1vZxhR
-xektAP9SnxxVhsL3J9tjBeCsUfx6I7mOWHiMoulYMbgQCQtW1AD/VJuC+zZfSxgg
-QyXsTvQqjqBuraleNIOqwbIEAuz6ugI=
-=nQKm
------END PGP SIGNATURE-----
-
---ccv2ztaysqwm5bmp--
+T24gVGh1LCBNYXkgMTYsIDIwMTkgYXQgMTE6NTIgUE0gVG9yc3RlbiBEdXdlIDxkdXdlQGxzdC5k
+ZT4gd3JvdGU6Cj4KPiBGcm9tOiBIYXJhbGQgR2V5ZXIgPGhhcmFsZEBjY2JpYi5vcmc+Cj4KPiBU
+aGUgVEVSRVMtSSBoYXMgaW50ZXJuYWwgc3BlYWtlcnMgKGxlZnQsIHJpZ2h0KSwgaW50ZXJuYWwg
+bWljcm9waG9uZQo+IGFuZCBhIGhlYWRzZXQgY29tYm8gamFjayAoaGVhZHBob25lcyArIG1pYyks
+ICJDVElBIiAoYW5kcm9pZCkgcGlub3V0Lgo+Cj4gVGhlIGhlYWRwaG9uZSBhbmQgbWljIGRldGVj
+dCBsaW5lcyBvZiB0aGUgQTY0IGFyZSBjb25uZWN0ZWQgcHJvcGVybHksCj4gYnV0IEFGQUlLIGN1
+cnJlbnRseSB1bnN1cHBvcnRlZCBieSB0aGUgZHJpdmVyLgo+Cj4gU2lnbmVkLW9mZi1ieTogSGFy
+YWxkIEdleWVyIDxoYXJhbGRAY2NiaWIub3JnPgo+IFNpZ25lZC1vZmYtYnk6IFRvcnN0ZW4gRHV3
+ZSA8ZHV3ZUBzdXNlLmRlPgoKTG9va3MgZ29vZCB0byBtZS4KClJldmlld2VkLWJ5OiBDaGVuLVl1
+IFRzYWkgPHdlbnNAY3NpZS5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbA==
