@@ -1,96 +1,61 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH v2 0/3] ARM: sun8i: a83t: Support Camera Sensor Interface
- controller
-Date: Mon, 20 May 2019 17:10:03 +0200
-Message-ID: <20190520151003.uklhhak5clxi5zpf@core.my.home>
-References: <20190520150637.23557-1-megous@megous.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: watchdog: add Allwinner H6 watchdog
+Date: Mon, 20 May 2019 17:16:25 +0200
+Message-ID: <CAJiuCccUQ0grMo_RC4DN1AfzSPQq14KjUbNpFFvfQ+GBWDvG+w@mail.gmail.com>
+References: <20190518152355.11134-1-peron.clem@gmail.com> <20190518152355.11134-2-peron.clem@gmail.com>
+ <20190520073529.nxptfbibexrqyzfi@flea> <CAJiuCcdrW7RcEKePCr1DaL-be8dA5oOjvHdxYkiu=h37z2e7tw@mail.gmail.com>
+ <20190520144258.eauhvvwfxuhiczie@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190520150637.23557-1-megous@megous.com>
+In-Reply-To: <20190520144258.eauhvvwfxuhiczie@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 05:06:34PM +0200, verejna wrote:
-> From: Ondrej Jirman <megous@megous.com>
-> 
-> This is a re-send of Chen-Yu's A83T CSI patch series with review tags
-> applied and removed address/size cells from csi_in port. Already applied
-> patches from v1  were dropped.
-> 
-> The series is ready to be merged:
-> 
->   Patch 1 and 2 via sunxi tree
->   Patch 3 via media tree
+On Mon, 20 May 2019 at 16:43, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Mon, May 20, 2019 at 10:14:10AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > >
+> > > > +     - "allwinner,sun4i-a10-wdt"
+> > > > +     - "allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
+> > > > +     - "allwinner,sun50i-h6-wdt","allwinner,sun50i-a64-wdt",
+> > > > +       "allwinner,sun6i-a31-wdt"
+> > >
+> > > Is there a reason to keep the A64 compatible?
+> >
+> > Yes, A64 and H6 has the exact same memory mapping looking at the datash=
+eet.
+> > So if there is an errata or a new feature for the A64, it should be
+> > also compatible with the H6.
+> > Which is not the case with A31 (WDT_KEY_FIELD is not preset)
+>
+> The thing is, if you use those three compatibles, then you're saying
+> that it's ok for the OS to use first the H6 driver, then the A64
+> driver, and then the A31 driver.
+>
+> If the A31 isn't compatible, then it shouldn't be listed there. And if
+> it is, then you can skip the A64 compatible.
 
-Sorry, wrong numbers. 2 is for media tree, 3 is for sunxi, 1 is a dt-bindings
-patch, where I'm not sure.
+Hi Maxime,
 
-thanks,
-	Ondrej
+I'm just supposing that A31 is the version 1.0 of the IP, A64 is the
+version 1.1 and H6 is 1.2.
+And if an issue is found for A64 there is more chance that we will
+have to fix it also for H6.
+But bindings the driver with :
+"allwinner,sun50i-h6-wdt","allwinner,sun50i-a31-wdt" is also fine for
+me.
 
-> v2:
-> - dropped address/size cells from csi_in port
-> - added review tags
-> 
-> Please take a look and merge.
-> 
-> Thank you,
-> 	Ondrej
-> 
-> --------------------------
-> Original description:
-> 
-> Hi everyone,
-> 
-> This series adds support for the camera sensor interface controller
-> found on the Allwinner A83T SoC. The controller is similar to the one
-> found on  the H3, with the addition of a MIPI CSI-2 interface. However,
-> this series only supports parallel and BT.656 interfaces, based on the
-> existing driver.
-> 
-> Patch 1 adds an undocumented clock parent of the CSI MCLK. This was
-> found after finding the default value to sometimes work and sometimes
-> not, and then comparing against BSP code.
-> 
-> Patch 2 adds a compatible string for the A83T variant.
-> 
-> Patch 3 adds support for the A83T variant to the existing sun6i-csi
-> driver.
-> 
-> Patch 4 adds a device node for the controller, as well as commonly
-> used pin muxing options.
-> 
-> Patch 5 adds a pin muxing option for I2C1 on the PE pins, used in
-> conjunction with the CSI pins.
-> 
-> Patch 6 provides an example usage of the CSI controller: the Bananapi M3
-> with its camera module attached.
-> 
-> Please have a look.
-> 
-> Regards
-> ChenYu
-> 
-> Chen-Yu Tsai (3):
->   dt-bindings: media: sun6i-csi: Add compatible string for A83T variant
->   media: sun6i: Support A83T variant
->   ARM: dts: sun8i: a83t: Add device node for CSI (Camera Sensor
->     Interface)
-> 
->  .../devicetree/bindings/media/sun6i-csi.txt   |  1 +
->  arch/arm/boot/dts/sun8i-a83t.dtsi             | 29 +++++++++++++++++++
->  .../platform/sunxi/sun6i-csi/sun6i_csi.c      |  1 +
->  3 files changed, 31 insertions(+)
-> 
-> -- 
-> 2.21.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Regards,
+Clement
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
