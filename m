@@ -1,116 +1,49 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
-Date: Tue, 21 May 2019 12:58:39 +0300
-Message-ID: <20190521095839.GI1887@kuha.fi.intel.com>
-References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
- <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
- <20190517103736.GA1490@kuha.fi.intel.com>
- <20190517130511.GA1887@kuha.fi.intel.com>
- <1558319951.10179.352.camel@mhfsdcap03>
- <20190520080359.GC1887@kuha.fi.intel.com>
- <OSBPR01MB2103385D996762FA54F8E437B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
- <20190520083601.GE1887@kuha.fi.intel.com>
- <OSBPR01MB2103C4C8920C40E42BC1B2A9B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 0/4] Enable stm32mp1 camera support
+Date: Tue, 21 May 2019 12:03:55 +0200
+Message-ID: <6ba8698f-0c05-5293-4811-2f632bf1b047@st.com>
+References: <1551363945-19497-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <OSBPR01MB2103C4C8920C40E42BC1B2A9B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+In-Reply-To: <1551363945-19497-1-git-send-email-hugues.fruchet@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.i>
+To: Hugues Fruchet <hugues.fruchet@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 09:45:46AM +0000, Biju Das wrote:
-> 
-> 
-> Hi Heikki,
-> 
-> Thanks for the feedback.
-> 
-> > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
-> > node
-> > 
-> > On Mon, May 20, 2019 at 08:06:41AM +0000, Biju Das wrote:
-> > > Hi Heikki,
-> > >
-> > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
-> > > > usb_role_switch by node
-> > > >
-> > > > On Mon, May 20, 2019 at 10:39:11AM +0800, Chunfeng Yun wrote:
-> > > > > Hi,
-> > > > > On Fri, 2019-05-17 at 16:05 +0300, Heikki Krogerus wrote:
-> > > > > > Hi,
-> > > > > >
-> > > > > > On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki Krogerus wrote:
-> > > > > > > On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng Yun wrote:
-> > > > > > > > Add fwnode_usb_role_switch_get() to make easier to get
-> > > > > > > > usb_role_switch by fwnode which register it.
-> > > > > > > > It's useful when there is not device_connection registered
-> > > > > > > > between two drivers and only knows the fwnode which register
-> > > > > > > > usb_role_switch.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > > > > > > > Tested-by: Biju Das <biju.das@bp.renesas.com>
-> > > > > > >
-> > > > > > > Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > > > > >
-> > > > > > Hold on. I just noticed Rob's comment on patch 2/6, where he
-> > > > > > points out that you don't need to use device graph since the
-> > > > > > controller is the parent of the connector. Doesn't that mean you
-> > > > > > don't really need this API?
-> > > > > No, I still need it.
-> > > > > The change is about the way how to get fwnode; when use device
-> > > > > graph, get fwnode by of_graph_get_remote_node(); but now will get
-> > > > > fwnode by of_get_parent();
-> > > >
-> > > > OK, I get that, but I'm still not convinced about if something like
-> > > > this function is needed at all. I also have concerns regarding how
-> > > > you are using the function. I'll explain in comment to the patch 5/6 in this
-> > series...
-> > >
-> > > FYI, Currently  I am also using this api in my patch series.
-> > > https://patchwork.kernel.org/patch/10944637/
-> > 
-> > Yes, and I have the same question for you I jusb asked in comment I added
-> > to the patch 5/6 of this series. Why isn't usb_role_switch_get() enough?
-> 
-> Currently no issue. It will work with this api as well, since the port node is part of controller node.
-> For eg:-
-> https://patchwork.kernel.org/patch/10944627/
-> 
-> However if any one adds port node inside the connector node, then this api may won't work as expected.
-> Currently I get below error
-> 
-> [    2.299703] OF: graph: no port node found in /soc/i2c@e6500000/hd3ss3220@47
+Dear Hugues,
 
-We need to understand why is that happening?
-
-It looks like we have an issue somewhere in the code, and instead of
-fixing that, you are working around it. Let's not do that.
-
-> For eg:-
+On 2/28/19 3:25 PM, Hugues Fruchet wrote:
+> This patchset serie enables camera of stm32mp157c evaluation board.
+> To do so, both stm32mp157c DCMI camera interface driver and OV5640 camera
+> module driver are enabled in devicetree.
 > 
-> 	hd3ss3220@47 {
-> 		compatible = "ti,hd3ss3220";
-> 		...
-> 		....
-> 		usb_con: connector {
->                                      ....
->                                      ....
-> 			port {
-> 				hd3ss3220_ep: endpoint@0 {
-> 					reg = <0>;
-> 					remote-endpoint = <&usb3peri_role_switch>;
-> 				};
-> 			};
-> 		};
-> 	};
+> DCMI camera interface driver is enabled by default in multi_v7 configuration
+> but OV5640 driver remains to be selected at kernel configuration time.
 > 
-> Regards,
-> Biju
+> This patchset depends on STMicroelectronics Multi-Function eXpander
+> (STMFX) support [1].
+> 
+> [1] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1944108.html
+> 
+> Hugues Fruchet (4):
+>    ARM: dts: stm32: add 2v8 fixed regulator for stm32mp157c-ed1 board
+>    ARM: dts: stm32: add DCMI camera interface support on stm32mp157c
+>    ARM: dts: stm32: add DCMI pins to stm32mp157c
+>    ARM: dts: stm32: enable OV5640 camera on stm32mp157c-ev1 board
+> 
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 41 ++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts     |  8 +++++
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts     | 56 +++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32mp157c.dtsi        | 12 +++++++
+>   4 files changed, 117 insertions(+)
+> 
 
-thanks,
+Patch 2 to 4 applied on stm32-next. Patch 1 is no longer needed as 
+regulators are now provided by PMIC.
 
--- 
-heikki
+thanks
+Alex
