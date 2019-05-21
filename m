@@ -1,43 +1,96 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 1/5] dt-bindings: watchdog: add Allwinner H6 watchdog
-Date: Tue, 21 May 2019 18:03:26 +0200
-Message-ID: <20190521160330.28402-2-peron.clem@gmail.com>
-References: <20190521160330.28402-1-peron.clem@gmail.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [RFC/PATCH 0/4] Initial support for modular IOMMU drivers
+Date: Tue, 21 May 2019 17:07:18 +0100
+Message-ID: <2379c1cf-be1b-503f-7dbc-51110650e91f@arm.com>
+References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190521160330.28402-1-peron.clem@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Isaac J. Manjarres" <isaacm@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
+Cc: kernel-team@android.com, robin.murphy@arm.com, joro@8bytes.org, will.deacon@arm.com, lmark@codeaurora.org, robh+dt@kernel.org, bhelgaas@google.com, frowand.list@gmail.com, pratikp@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-QWxsd2lubmVyIEg2IGhhcyBhIHNpbWlsYXIgd2F0Y2hkb2cgYXMgdGhlIEE2NCB3aGljaCBpcyBh
-bHJlYWR5CmEgY29tcGF0aWJsZSBvZiB0aGUgQTMxLgoKVGhpcyBjb21taXQgYWRkIHRoZSBINiBj
-b21wYXRpYmxlLgoKU2lnbmVkLW9mZi1ieTogQ2zDqW1lbnQgUMOpcm9uIDxwZXJvbi5jbGVtQGdt
-YWlsLmNvbT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cv
-c3VueGktd2R0LnR4dCB8IDEgKwogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL3N1bnhp
-LXdkdC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvc3Vu
-eGktd2R0LnR4dAppbmRleCA0NjA1NTI1NGU4ZGQuLmU2NTE5OGQ4MmEyYiAxMDA2NDQKLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL3N1bnhpLXdkdC50eHQK
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL3N1bnhpLXdk
-dC50eHQKQEAgLTYsNiArNiw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAJImFsbHdpbm5lcixz
-dW40aS1hMTAtd2R0IgogCSJhbGx3aW5uZXIsc3VuNmktYTMxLXdkdCIKIAkiYWxsd2lubmVyLHN1
-bjUwaS1hNjQtd2R0IiwiYWxsd2lubmVyLHN1bjZpLWEzMS13ZHQiCisJImFsbHdpbm5lcixzdW41
-MGktaDYtd2R0IiwiYWxsd2lubmVyLHN1bjZpLWEzMS13ZHQiCiAJImFsbHdpbm5lcixzdW5pdi1m
-MWMxMDBzLXdkdCIsICJhbGx3aW5uZXIsc3VuNGktYTEwLXdkdCIKIC0gcmVnIDogU3BlY2lmaWVz
-IGJhc2UgcGh5c2ljYWwgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgcmVnaXN0ZXJzLgogCi0tIAoy
-LjE3LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+Hi Isaac,
+
+On 17/05/2019 19:47, Isaac J. Manjarres wrote:
+> This series adds initial support for being able to use the ARM
+> SMMU driver as a loadable kernel module. The series also adds
+> to the IOMMU framework, so that it can defer probing for devices
+> that depend on an IOMMU driver that may be a loadable module.
+> 
+> The primary reason behind these changes is that having the ARM
+> SMMU driver as a module allows for the same kernel image to be
+> used across different platforms. For example, if one platform
+> contains an IOMMU that implements one version of the ARM SMMU
+> specification, and another platform simply does not have an
+> IOMMU, the only way that these platforms can share the same
+> kernel image is if the ARM SMMU driver is compiled into the
+> kernel image.
+> 
+> This solution is not scalable, as it will lead to bloating the
+> kernel image with support for several future versions of the
+> SMMU specification to maintain a common kernel image that works
+> across all platforms. Having the ARM SMMU driver as a module allows
+> for a common kernel image to be supported across all platforms,
+> while yielding a smaller kernel image size, since the correct
+> SMMU driver can be loaded at runtime, if necessary.
+
+It can also be useful if IOMMU drivers want to rely on components that
+distros usually build as modules. I have that problem with virtio-iommu,
+where the whole virtio transport is usually modular.
+
+> Patchset Summary:
+> 
+> 1. Since the ARM SMMU driver depends on symbols being exported from
+> several subsystems, the first three patches are dedicated to exporting
+> the necessary symbols.
+> 
+> 2. Similar to how the pinctrl framework handles deferring probes,
+> the subsequent patch makes it so that the IOMMU framework will defer
+> probes indefinitely if there is a chance that the IOMMU driver that a
+> device is waiting for is a module. Otherwise, it upholds the current
+> behavior of stopping probe deferrals once all of the builtin drivers
+> have finished probing.
+> 
+> The ARM SMMU driver currently has support for the deprecated
+> "mmu-masters" binding, which relies on the notion of initcall
+> ordering for setting the bus ops to ensure that all SMMU devices
+> have been bound to the driver. This poses a problem with
+> making the driver a module, as there is no such notion with
+> loadable modules. Will support for this be completely deprecated?
+> If not, might it be useful to leverage the device tree ordering,
+> and assign a property to the last SMMU device, and set the bus ops
+> at that point? Or perhaps have some deferred timer based approach
+> to know when to set the bus ops? 
+
+Another problem is module unloading: if the user calls rmmod on an IOMMU
+module, we have to ensure that endpoints aren't performing DMA anymore.
+It could be solved by declaring consumers of an IOMMU with
+device_link_add(), so that device drivers are unbound before the IOMMU
+module is unloaded.
+
+Thanks,
+Jean
+
+> 
+> Thanks,
+> Isaac
+> 
+> Isaac J. Manjarres (4):
+>   of: Export of_phandle_iterator_args() to modules
+>   PCI: Export PCI ACS and DMA searching functions to modules
+>   iommu: Export core IOMMU functions to kernel modules
+>   iommu: Add probe deferral support for IOMMU kernel modules
+> 
+>  drivers/iommu/iommu-sysfs.c | 3 +++
+>  drivers/iommu/iommu.c       | 6 ++++++
+>  drivers/iommu/of_iommu.c    | 8 ++++++--
+>  drivers/of/base.c           | 1 +
+>  drivers/pci/pci.c           | 1 +
+>  drivers/pci/search.c        | 1 +
+>  6 files changed, 18 insertions(+), 2 deletions(-)
+> 
