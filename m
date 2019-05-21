@@ -1,131 +1,117 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_v2_4/7]_drivers/soc:_xdma:_Add_PCI_device_configura?=
- =?UTF-8?Q?tion_sysfs?=
-Date: Tue, 21 May 2019 12:52:17 +0930
-Message-ID: <e7592bb9-c455-4eca-9c42-2ab16d04a57f@www.fastmail.com>
-References: <1558383565-11821-1-git-send-email-eajames@linux.ibm.com>
- <1558383565-11821-5-git-send-email-eajames@linux.ibm.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v7 11/12] soc: mediatek: cmdq: add
+ cmdq_dev_get_client_reg function
+Date: Tue, 21 May 2019 11:30:25 +0800
+Message-ID: <1558409425.25526.13.camel@mtksdaap41>
+References: <20190521011108.40428-1-bibby.hsieh@mediatek.com>
+         <20190521011108.40428-12-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558383565-11821-5-git-send-email-eajames@linux.ibm.com>
+In-Reply-To: <20190521011108.40428-12-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>, linux-aspeed@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, Joel Stanley <joel@jms.id.au>
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Tue, 21 May 2019, at 05:51, Eddie James wrote:
-> The AST2500 has two PCI devices embedded. The XDMA engine can use either
-> device to perform DMA transfers. Users need the capability to choose
-> which device to use. This commit therefore adds two sysfs files that
-> toggle the AST2500 and XDMA engine between the two PCI devices.
+On Tue, 2019-05-21 at 09:11 +0800, Bibby Hsieh wrote:
+> GCE cannot know the register base address, this function
+> can help cmdq client to get the cmdq_client_reg structure.
 > 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 > ---
->  drivers/soc/aspeed/aspeed-xdma.c | 64 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 64 insertions(+)
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 25 +++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 18 ++++++++++++++++++
+>  2 files changed, 43 insertions(+)
 > 
-> diff --git a/drivers/soc/aspeed/aspeed-xdma.c 
-> b/drivers/soc/aspeed/aspeed-xdma.c
-> index 2162ca0..002b571 100644
-> --- a/drivers/soc/aspeed/aspeed-xdma.c
-> +++ b/drivers/soc/aspeed/aspeed-xdma.c
-> @@ -667,6 +667,64 @@ static void aspeed_xdma_free_vga_blks(struct 
-> aspeed_xdma *ctx)
->  	}
->  }
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 70ad4d806fac..815845bb5982 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -27,6 +27,31 @@ struct cmdq_instruction {
+>  	u8 op;
+>  };
 >  
-> +static int aspeed_xdma_change_pcie_conf(struct aspeed_xdma *ctx, u32 conf)
+> +struct cmdq_client_reg  *cmdq_dev_get_client_reg(struct device *dev, int idx)
 > +{
-> +	int rc;
+> +	struct cmdq_client_reg *client_reg;
+> +	struct of_phandle_args spec;
 > +
-> +	mutex_lock(&ctx->start_lock);
-> +	rc = wait_event_interruptible_timeout(ctx->wait,
-> +					      !test_bit(XDMA_IN_PRG,
-> +							&ctx->flags),
-> +					      msecs_to_jiffies(1000));
-> +	if (rc < 0) {
-> +		mutex_unlock(&ctx->start_lock);
-> +		return -EINTR;
+> +	client_reg  = devm_kzalloc(dev, sizeof(*client_reg), GFP_KERNEL);
+> +	if (!client_reg)
+> +		return NULL;
+> +
+> +	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
+> +				       "#subsys-cells", idx, &spec)) {
+> +		dev_err(dev, "can't parse gce-client-reg property (%d)", idx);
+
+I think you should call devm_kfree(client_reg) here because this
+function may not be called in client driver's probe function. But in
+another view point, I would like you to move the memory allocation out
+of this function. When client call cmdq_dev_get_client_reg() to get a
+pointer, it's easy that client does not free it because you does not
+provide free API, Some client may embed struct cmdq_client_reg with its
+client structure together,
+
+struct client {
+	struct cmdq_client_reg client_reg;
+};
+
+Because each client may have different memory allocation strategy, so I
+would like you to move memory allocation out of this function to let
+client driver have the flexibility.
+
+Regards,
+CK
+
+> +
+> +		return NULL;
 > +	}
 > +
-> +	/* previous op didn't complete, wake up waiters anyway */
-> +	if (!rc)
-> +		wake_up_interruptible_all(&ctx->wait);
+> +	client_reg->subsys = spec.args[0];
+> +	client_reg->offset = spec.args[1];
+> +	client_reg->size = spec.args[2];
+> +	of_node_put(spec.np);
 > +
-> +	reset_control_assert(ctx->reset);
-> +	msleep(10);
-> +
-> +	aspeed_scu_pcie_write(ctx, conf);
-> +	msleep(10);
-> +
-> +	reset_control_deassert(ctx->reset);
-> +	msleep(10);
-> +
-> +	aspeed_xdma_init_eng(ctx);
-> +
-> +	mutex_unlock(&ctx->start_lock);
-> +
-> +	return 0;
+> +	return client_reg;
 > +}
+> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
 > +
-> +static ssize_t aspeed_xdma_use_bmc(struct device *dev,
-> +				   struct device_attribute *attr,
-> +				   const char *buf, size_t count)
-> +{
-> +	int rc;
-> +	struct aspeed_xdma *ctx = dev_get_drvdata(dev);
-> +
-> +	rc = aspeed_xdma_change_pcie_conf(ctx, aspeed_xdma_bmc_pcie_conf);
-> +	return rc ?: count;
-> +}
-> +static DEVICE_ATTR(use_bmc, 0200, NULL, aspeed_xdma_use_bmc);
-> +
-> +static ssize_t aspeed_xdma_use_vga(struct device *dev,
-> +				   struct device_attribute *attr,
-> +				   const char *buf, size_t count)
-> +{
-> +	int rc;
-> +	struct aspeed_xdma *ctx = dev_get_drvdata(dev);
-> +
-> +	rc = aspeed_xdma_change_pcie_conf(ctx, aspeed_xdma_vga_pcie_conf);
-> +	return rc ?: count;
-> +}
-> +static DEVICE_ATTR(use_vga, 0200, NULL, aspeed_xdma_use_vga);
-> +
->  static int aspeed_xdma_probe(struct platform_device *pdev)
+>  static void cmdq_client_timeout(struct timer_list *t)
 >  {
->  	int irq;
-> @@ -745,6 +803,9 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
->  		return rc;
->  	}
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index a345870a6d10..d0dea3780f7a 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -15,6 +15,12 @@
 >  
-> +	device_create_file(dev, &dev_attr_use_bmc);
-> +	device_create_file(dev, &dev_attr_use_vga);
-
-Two attributes is a broken approach IMO. This gives the false representation of 4
-states (neither, vga, bmc, both) when really there are only two (vga and bmc). I
-think we should have one attribute that reacts to "vga" and "bmc" writes.
-
-Andrew
-
+>  struct cmdq_pkt;
+>  
+> +struct cmdq_client_reg {
+> +	u8 subsys;
+> +	u16 offset;
+> +	u16 size;
+> +};
 > +
->  	return 0;
->  }
+>  struct cmdq_client {
+>  	spinlock_t lock;
+>  	u32 pkt_cnt;
+> @@ -142,4 +148,16 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+>   */
+>  int cmdq_pkt_flush(struct cmdq_pkt *pkt);
 >  
-> @@ -752,6 +813,9 @@ static int aspeed_xdma_remove(struct platform_device *pdev)
->  {
->  	struct aspeed_xdma *ctx = platform_get_drvdata(pdev);
->  
-> +	device_remove_file(ctx->dev, &dev_attr_use_vga);
-> +	device_remove_file(ctx->dev, &dev_attr_use_bmc);
+> +/**
+> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device node of CMDQ client
+> + * @dev:	device of CMDQ mailbox client
+> + * @idx:	the index of desired reg
+> + *
+> + * Return: CMDQ client reg pointer
+> + *
+> + * Help CMDQ client pasing the cmdq client reg
+> + * from the device node of CMDQ client.
+> + */
+> +struct cmdq_client_reg  *cmdq_dev_get_client_reg(struct device *dev, int idx);
 > +
->  	misc_deregister(&ctx->misc);
->  
->  	aspeed_xdma_free_vga_blks(ctx);
-> -- 
-> 1.8.3.1
-> 
->
+>  #endif	/* __MTK_CMDQ_H__ */
