@@ -1,92 +1,136 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH v2 6/8] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
-Date: Tue, 21 May 2019 08:42:31 +0000
-Message-ID: <AM0PR04MB53140D914E608A9BA2CB30858B070@AM0PR04MB5314.eurprd04.prod.outlook.com>
-References: <20190514073529.29505-1-peter.chen@nxp.com>
- <20190514073529.29505-7-peter.chen@nxp.com> <20190520073157.GW15856@dragon>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCHv1 4/8] arm64: dts: qcom: msm8916: Use more generic idle
+ state names
+Date: Tue, 21 May 2019 10:50:47 +0200
+Message-ID: <20190521085047.GA22910@centauri>
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <2a0626da4d8d5a1018c351b24b63e5e0d7a45a10.1557486950.git.amit.kucheria@linaro.org>
+ <20190514161220.GC1824@centauri.ideon.se>
+ <CAP245DWgfQakjXSTU2AfhkLOjAue83A-X6Qb40DC1QQj01GogQ@mail.gmail.com>
+ <20190515130256.GA27174@centauri>
+ <CAP245DX+w3mPAQ5uJnkMkir9TSEH39qm7-gtS4N_O0SpOEZVkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190520073157.GW15856@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAP245DX+w3mPAQ5uJnkMkir9TSEH39qm7-gtS4N_O0SpOEZVkQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
- 
-> >  1 file changed, 31 insertions(+)
+On Tue, May 21, 2019 at 11:08:09AM +0530, Amit Kucheria wrote:
+> On Wed, May 15, 2019 at 6:33 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
 > >
-> > diff --git a/arch/arm/boot/dts/imx7ulp.dtsi
-> > b/arch/arm/boot/dts/imx7ulp.dtsi index fca6e50f37c8..60c9ea116d0a
-> > 100644
-> > --- a/arch/arm/boot/dts/imx7ulp.dtsi
-> > +++ b/arch/arm/boot/dts/imx7ulp.dtsi
-> > @@ -30,6 +30,7 @@
-> >  		serial1 = &lpuart5;
-> >  		serial2 = &lpuart6;
-> >  		serial3 = &lpuart7;
-> > +		usbphy0 = &usbphy1;
-> >  	};
+> > On Wed, May 15, 2019 at 03:43:19PM +0530, Amit Kucheria wrote:
+> > > On Tue, May 14, 2019 at 9:42 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+> > > >
+> > > > On Fri, May 10, 2019 at 04:59:42PM +0530, Amit Kucheria wrote:
+> > > > > Instead of using Qualcomm-specific terminology, use generic node names
+> > > > > for the idle states that are easier to understand. Move the description
+> > > > > into the "idle-state-name" property.
+> > > > >
+> > > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/qcom/msm8916.dtsi | 11 ++++++-----
+> > > > >  1 file changed, 6 insertions(+), 5 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> > > > > index ded1052e5693..400b609bb3fd 100644
+> > > > > --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> > > > > @@ -110,7 +110,7 @@
+> > > > >                       reg = <0x0>;
+> > > > >                       next-level-cache = <&L2_0>;
+> > > > >                       enable-method = "psci";
+> > > > > -                     cpu-idle-states = <&CPU_SPC>;
+> > > > > +                     cpu-idle-states = <&CPU_SLEEP_0>;
+> > > > >                       clocks = <&apcs>;
+> > > > >                       operating-points-v2 = <&cpu_opp_table>;
+> > > > >                       #cooling-cells = <2>;
+> > > > > @@ -122,7 +122,7 @@
+> > > > >                       reg = <0x1>;
+> > > > >                       next-level-cache = <&L2_0>;
+> > > > >                       enable-method = "psci";
+> > > > > -                     cpu-idle-states = <&CPU_SPC>;
+> > > > > +                     cpu-idle-states = <&CPU_SLEEP_0>;
+> > > > >                       clocks = <&apcs>;
+> > > > >                       operating-points-v2 = <&cpu_opp_table>;
+> > > > >                       #cooling-cells = <2>;
+> > > > > @@ -134,7 +134,7 @@
+> > > > >                       reg = <0x2>;
+> > > > >                       next-level-cache = <&L2_0>;
+> > > > >                       enable-method = "psci";
+> > > > > -                     cpu-idle-states = <&CPU_SPC>;
+> > > > > +                     cpu-idle-states = <&CPU_SLEEP_0>;
+> > > > >                       clocks = <&apcs>;
+> > > > >                       operating-points-v2 = <&cpu_opp_table>;
+> > > > >                       #cooling-cells = <2>;
+> > > > > @@ -146,7 +146,7 @@
+> > > > >                       reg = <0x3>;
+> > > > >                       next-level-cache = <&L2_0>;
+> > > > >                       enable-method = "psci";
+> > > > > -                     cpu-idle-states = <&CPU_SPC>;
+> > > > > +                     cpu-idle-states = <&CPU_SLEEP_0>;
+> > > > >                       clocks = <&apcs>;
+> > > > >                       operating-points-v2 = <&cpu_opp_table>;
+> > > > >                       #cooling-cells = <2>;
+> > > > > @@ -160,8 +160,9 @@
+> > > > >               idle-states {
+> > > > >                       entry-method="psci";
+> > > >
+> > > > Please add a space before and after "=".
+> > > >
+> > > > >
+> > > > > -                     CPU_SPC: spc {
+> > > > > +                     CPU_SLEEP_0: cpu-sleep-0 {
+> > > >
+> > > > While I like your idea of using power state names from
+> > > > Server Base System Architecture document (SBSA) where applicable,
+> > > > does each qcom power state have a matching state in SBSA?
+> > > >
+> > > > These are the qcom power states:
+> > > > https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/Documentation/devicetree/bindings/arm/msm/lpm-levels.txt?h=msm-4.4#n53
+> > > >
+> > > > Note that qcom defines:
+> > > > "wfi", "retention", "gdhs", "pc", "fpc"
+> > > > while SBSA simply defines "idle_standby" (aka wfi), "idle_retention", "sleep".
+> > > >
+> > > > Unless you know the equivalent name for each qcom power state
+> > > > (perhaps several qcom power states are really the same SBSA state?),
+> > > > I think that you should omit the renaming from this patch series.
+> > >
+> > > That is what SLEEP_0, SLEEP_1, SLEEP_2 could be used for.
 > >
-> >  	cpus {
-> > @@ -133,6 +134,36 @@
-> >  			clock-names = "ipg", "per";
-> >  		};
+> > Ok, sounds good to me.
 > >
-> > +		usbotg1: usb@40330000 {
-> > +			compatible = "fsl,imx7ulp-usb", "fsl,imx6ul-usb",
-> > +				"fsl,imx27-usb";
-> > +			reg = <0x40330000 0x200>;
-> > +			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> > +			clocks = <&pcc2 IMX7ULP_CLK_USB0>;
-> > +			phys = <&usbphy1>;
-> > +			fsl,usbmisc = <&usbmisc1 0>;
-> > +			ahb-burst-config = <0x0>;
-> > +			tx-burst-size-dword = <0x8>;
-> > +			rx-burst-size-dword = <0x8>;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		usbmisc1: usbmisc@40330200 {
-> > +			#index-cells = <1>;
+> > >
+> > > IOW, all these qcom definitions are nicely represented in the
+> > > state-name and we could simply stick to SLEEP_0, SLEEP_1 for the node
+> > > names. There is wide variability in the the names of the qcom idle
+> > > states across SoC families downstream, so I'd argue against using
+> > > those for the node names.
+> > >
+> > > Just for cpu states (non-wfi) I see the use of the following names
+> > > downstream across families. The C<num> seems to come from x86
+> > > world[1]:
+> > >
+> > >  - C4,   standalone power collapse (spc)
+> > >  - C4,   power collapse (fpc)
+> > >  - C2D, retention
+> > >  - C3,   power collapse (pc)
+> > >  - C4,   rail power collapse (rail-pc)
+> > >
+> > > [1] https://www.hardwaresecrets.com/everything-you-need-to-know-about-the-cpu-c-states-power-saving-modes/
+> >
+> > Indeed, there seems to be mixed names used, I've also seen "fpc-def".
+> >
+> > So, you have convinced me.
+> >
+> >
+> > Kind regards,
+> > Niklas
 > 
-> Nit: we usually start with 'compatible', so can we move it behind?
-> 
+> Can I take that as a Reviewed-by?
 
-Thanks, will change.
-
-Peter
-
-
-> Shawn
-> 
-> > +			compatible = "fsl,imx7ulp-usbmisc", "fsl,imx7d-usbmisc",
-> > +				"fsl,imx6q-usbmisc";
-> > +			reg = <0x40330200 0x200>;
-> > +		};
-> > +
-> > +		usbphy1: usbphy@0x40350000 {
-> > +			compatible = "fsl,imx7ulp-usbphy",
-> > +				"fsl,imx6ul-usbphy", "fsl,imx23-usbphy";
-> > +			reg = <0x40350000 0x1000>;
-> > +			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-> > +			clocks = <&pcc2 IMX7ULP_CLK_USB_PHY>;
-> > +			#phy-cells = <0>;
-> > +		};
-> > +
-> >  		usdhc0: mmc@40370000 {
-> >  			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
-> >  			reg = <0x40370000 0x10000>;
-> > --
-> > 2.14.1
-> >
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
