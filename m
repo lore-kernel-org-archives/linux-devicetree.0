@@ -1,65 +1,109 @@
-From: luca@z3ntu.xyz
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
-Date: Tue, 21 May 2019 08:43:45 +0200
-Message-ID: <9B2B83DF-2C91-4DDA-B707-664A792A8BCF@z3ntu.xyz>
-References: <20190518170929.24789-1-luca@z3ntu.xyz> <20190520110742.ykgxwaabzzwovgpl@flea>
+From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable CAN
+Date: Tue, 21 May 2019 08:47:02 +0200
+Message-ID: <CAOf5uwn8CtRs8cx0KC-bxNoRP4TiDrHi8F83QfjsZhueLDYFJg@mail.gmail.com>
+References: <20190418141658.10868-1-jagan@amarulasolutions.com> <20190418145641.q23tupopz2czjzc5@flea>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520110742.ykgxwaabzzwovgpl@flea>
+In-Reply-To: <20190418145641.q23tupopz2czjzc5@flea>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-amarula <linux-amarula@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On May 20, 2019 1:07:42 PM GMT+02:00, Maxime Ripard <maxime=2Eripard@bootli=
-n=2Ecom> wrote:
->Hi!
->
->On Sat, May 18, 2019 at 07:09:30PM +0200, Luca Weiss wrote:
->> Add a node describing the KEYADC on the A64=2E
->>
->> Signed-off-by: Luca Weiss <luca@z3ntu=2Exyz>
->> ---
->>  arch/arm64/boot/dts/allwinner/sun50i-a64=2Edtsi | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64=2Edtsi
->b/arch/arm64/boot/dts/allwinner/sun50i-a64=2Edtsi
->> index 7734f70e1057=2E=2Edc1bf8c1afb5 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64=2Edtsi
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64=2Edtsi
->> @@ -704,6 +704,13 @@
->>  			status =3D "disabled";
->>  		};
->>
->> +		lradc: lradc@1c21800 {
->> +			compatible =3D "allwinner,sun4i-a10-lradc-keys";
->> +			reg =3D <0x01c21800 0x100>;
->> +			interrupts =3D <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
->> +			status =3D "disabled";
->> +		};
->> +
->
->The controller is pretty different on the A64 compared to the A10=2E The
->A10 has two channels for example, while the A64 has only one=2E
->
->It looks like the one in the A83t though, so you can use that
->compatible instead=2E
->
->Maxime
->
->--
->Maxime Ripard, Bootlin
->Embedded Linux and Kernel engineering
->https://bootlin=2Ecom
+Hi Maxime
 
-Hi,
-Looking at the patch for the A83t, the only difference is that it uses a 3=
-/4 instead of a 2/3 voltage divider, nothing is changed with the channels=
-=2E But I'm also not sure which one (or a different one) is used from looki=
-ng at the "A64 User Manual"=2E
+On Thu, Apr 18, 2019 at 4:56 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Thu, Apr 18, 2019 at 07:46:58PM +0530, Jagan Teki wrote:
+> > Oceanic 5205 5inMFD has MCP2515 CAN device connected via SPI1.
+> >
+> > - via SPI1 bus
+> > - vdd supplied by 5V supply along with PL2 enable pin
+> > - xceiver supply same as vdd
+> > - can oscillator connected at 20MHz
+> > - PB2 gpio as interrupt pin
+> > - PD6 gpio as RX_BUF1_CAN0
+> > - PD7 gpio as RX_BUF0_CAN0
+> >
+> > Tested-by: Tamas Papp <tamas@osukl.com>
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  .../sun50i-a64-oceanic-5205-5inmfd.dts        | 43 +++++++++++++++++++
+> >  1 file changed, 43 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+> > index f0cd6587f619..22535a297f51 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+> > @@ -21,6 +21,24 @@
+> >       chosen {
+> >               stdout-path = "serial0:115200n8";
+> >       };
+> > +
+> > +     can_osc: can-osc {
+> > +             compatible = "fixed-clock";
+> > +             #clock-cells = <0>;
+> > +             clock-frequency = <20000000>;
+> > +     };
+> > +
+> > +     reg_can_v5v: reg-can-v5v {
+> > +             compatible = "regulator-fixed";
+> > +             regulator-name = "reg-can-v5v";
+> > +             regulator-min-microvolt = <5000000>;
+> > +             regulator-max-microvolt = <5000000>;
+> > +             regulator-boot-on;
+> > +             enable-active-high;
+> > +             gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* CAN_3V3_EN: PL2 */
+> > +             status = "okay";
+>
+> You don't need the status property here.
+>
 
-Thanks, Luca
+Correct, need to be dropped
+
+> > +     };
+> > +
+> >  };
+> >
+> >  &ehci0 {
+> > @@ -77,6 +95,31 @@
+> >       status = "okay";
+> >  };
+> >
+> > +&pio {
+> > +     can_pins: can-pins {
+> > +             pins = "PD6",                   /* RX_BUF1_CAN0 */
+> > +                    "PD7";                   /* RX_BUF0_CAN0 */
+> > +             function = "gpio_in";
+> > +     };
+> > +};
+>
+> That isn't needed. What are they used for, you're not tying them to
+> anything?
+
+Mux of their function is correct. They are connected in the schematics
+but not used right now.
+I can garantee that kernel wlll always configurred in the right way
+and if I want I can export in userspace
+for debug purpose
+
+Michael
+
+
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+
+
+--
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+| COO  -  Founder                                      Cruquiuskade 47 |
+| +31(0)851119172                                 Amsterdam 1018 AM NL |
+|                  [`as] http://www.amarulasolutions.com               |
