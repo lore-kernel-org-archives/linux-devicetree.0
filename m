@@ -1,294 +1,171 @@
-Return-Path: <SRS0=3WT1=TG=jmondi.org=jacopo@kernel.org>
-Date: Mon, 6 May 2019 15:36:33 +0200
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v6 07/13] media: tvp5150: add FORMAT_TRY support for
- get/set selection handlers
-Message-ID: <20190506133555.yrxaeg5lbswzcd3i@uno.localdomain>
-References: <20190415124413.18456-1-m.felsch@pengutronix.de>
- <20190415124413.18456-8-m.felsch@pengutronix.de>
+Return-Path: <SRS0=/pwa=TV=nxp.com=aisheng.dong@kernel.org>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 1/2] dt-bindings: firmware: imx-scu: new binding to
+ parse clocks from device tree
+Date: Tue, 21 May 2019 17:57:13 +0000
+Message-ID: 
+ <AM0PR04MB4211C4F27C9D1DEC29B1600E80070@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1556846821-8581-1-git-send-email-aisheng.dong@nxp.com>
+ <1556846821-8581-2-git-send-email-aisheng.dong@nxp.com>
+ <CAL_JsqLJ+Lc_3huQizy4BVFgVV94Yg8KsOOgXLv4dQU8H=WfWw@mail.gmail.com>
+ <AM0PR04MB4211B2F21350CAE370D7A93780360@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CAL_JsqLNRnYxUGyhpiL2OFxOT1wXZH2LG4XUH7qf14TpA5Dk=A@mail.gmail.com>
+ <AM0PR04MB421180CD45226B30082BDE4D80320@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <20190513180004.GA26344@bogus>
+In-Reply-To: <20190513180004.GA26344@bogus>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lqlwi3dao4omlvmz"
-Content-Disposition: inline
-In-Reply-To: <20190415124413.18456-8-m.felsch@pengutronix.de>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: Rob Herring <robh@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-
---lqlwi3dao4omlvmz
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Marco,
-
-On Mon, Apr 15, 2019 at 02:44:07PM +0200, Marco Felsch wrote:
-> Since commit 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
-> the 'which' field for set/get_selection must be FORMAT_ACTIVE. There is
-> no way to try different selections. The patch adds a helper function to
-> select the correct selection memory space (sub-device file handle or
-> driver state) which will be set/returned.
->
-> The TVP5150 AVID will be updated if the 'which' field is FORMAT_ACTIVE
-> and the requested selection rectangle differs from the already set one.
->
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
-> Changelog:
->
-> v5:
->  - handle stub for v4l2_subdev_get_try_crop() internal since commit
->    ("media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*")
->    isn't anymore part of this series.
->  - add error handling of __tvp5150_get_pad_crop()
-> v4:
->  - fix merge conflict due to rebase on top of media-tree/master
->  - __tvp5150_get_pad_crop(): cosmetic alignment fixes
->
->  drivers/media/i2c/tvp5150.c | 130 ++++++++++++++++++++++++++----------
->  1 file changed, 96 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-> index 4e3228b2ccbc..9331609425bf 100644
-> --- a/drivers/media/i2c/tvp5150.c
-> +++ b/drivers/media/i2c/tvp5150.c
-> @@ -19,6 +19,7 @@
->  #include <media/v4l2-ctrls.h>
->  #include <media/v4l2-fwnode.h>
->  #include <media/v4l2-mc.h>
-> +#include <media/v4l2-rect.h>
->
->  #include "tvp5150_reg.h"
->
-> @@ -997,20 +998,48 @@ static void tvp5150_set_default(v4l2_std_id std, struct v4l2_rect *crop)
->  		crop->height = TVP5150_V_MAX_OTHERS;
->  }
->
-> +static struct v4l2_rect *
-> +__tvp5150_get_pad_crop(struct tvp5150 *decoder,
-> +		       struct v4l2_subdev_pad_config *cfg, unsigned int pad,
-> +		       enum v4l2_subdev_format_whence which)
-> +{
-> +	switch (which) {
-> +	case V4L2_SUBDEV_FORMAT_TRY:
-> +#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
-> +		return v4l2_subdev_get_try_crop(&decoder->sd, cfg, pad);
-> +#else
-> +		return ERR_PTR(-ENOTTY);
-> +#endif
-> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
-> +		return &decoder->rect;
-> +	default:
-> +		return NULL;
-
-Do you need this default case? Can you return -EINVAL so that...
-
-> +	}
-> +}
-> +
->  static int tvp5150_fill_fmt(struct v4l2_subdev *sd,
->  			    struct v4l2_subdev_pad_config *cfg,
->  			    struct v4l2_subdev_format *format)
->  {
->  	struct v4l2_mbus_framefmt *f;
-> +	struct v4l2_rect *__crop;
->  	struct tvp5150 *decoder = to_tvp5150(sd);
->
->  	if (!format || (format->pad != TVP5150_PAD_VID_OUT))
->  		return -EINVAL;
->
->  	f = &format->format;
-> +	__crop = __tvp5150_get_pad_crop(decoder, cfg, format->pad,
-> +					format->which);
-> +	if (IS_ERR_OR_NULL(__crop)) {
-
-... here you just need to check if (IS_ERR()) and return it?
-
-> +		if (!__crop)
-> +			return -EINVAL;
-> +		else
-> +			return PTR_ERR(__crop);
-> +	}
->
-> -	f->width = decoder->rect.width;
-> -	f->height = decoder->rect.height / 2;
-> +	f->width = __crop->width;
-> +	f->height = __crop->height / 2;
->
->  	f->code = TVP5150_MBUS_FMT;
->  	f->field = TVP5150_FIELD;
-> @@ -1021,17 +1050,51 @@ static int tvp5150_fill_fmt(struct v4l2_subdev *sd,
->  	return 0;
->  }
->
-> +unsigned int tvp5150_get_hmax(struct v4l2_subdev *sd)
-> +{
-> +	struct tvp5150 *decoder = to_tvp5150(sd);
-> +	v4l2_std_id std;
-> +
-> +	/* Calculate height based on current standard */
-> +	if (decoder->norm == V4L2_STD_ALL)
-> +		std = tvp5150_read_std(sd);
-> +	else
-> +		std = decoder->norm;
-> +
-> +	return (std & V4L2_STD_525_60) ?
-> +		TVP5150_V_MAX_525_60 : TVP5150_V_MAX_OTHERS;
-> +}
-> +
-> +static inline void
-> +__tvp5150_set_selection(struct v4l2_subdev *sd, struct v4l2_rect rect)
-> +{
-> +	struct tvp5150 *decoder = to_tvp5150(sd);
-> +	unsigned int hmax = tvp5150_get_hmax(sd);
-> +
-> +	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_START, rect.top);
-> +	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_STOP,
-> +		     rect.top + rect.height - hmax);
-> +	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_MSB,
-> +		     rect.left >> TVP5150_CROP_SHIFT);
-> +	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_LSB,
-> +		     rect.left | (1 << TVP5150_CROP_SHIFT));
-> +	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_MSB,
-> +		     (rect.left + rect.width - TVP5150_MAX_CROP_LEFT) >>
-> +		     TVP5150_CROP_SHIFT);
-> +	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_LSB,
-> +		     rect.left + rect.width - TVP5150_MAX_CROP_LEFT);
-> +}
-> +
->  static int tvp5150_set_selection(struct v4l2_subdev *sd,
->  				 struct v4l2_subdev_pad_config *cfg,
->  				 struct v4l2_subdev_selection *sel)
->  {
->  	struct tvp5150 *decoder = to_tvp5150(sd);
->  	struct v4l2_rect rect = sel->r;
-> -	v4l2_std_id std;
-> -	int hmax;
-> +	struct v4l2_rect *__crop;
-> +	unsigned int hmax;
->
-> -	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
-> -	    sel->target != V4L2_SEL_TGT_CROP)
-> +	if (sel->target != V4L2_SEL_TGT_CROP)
->  		return -EINVAL;
->
->  	dev_dbg_lvl(sd->dev, 1, debug, "%s left=%d, top=%d, width=%d, height=%d\n",
-> @@ -1040,17 +1103,7 @@ static int tvp5150_set_selection(struct v4l2_subdev *sd,
->  	/* tvp5150 has some special limits */
->  	rect.left = clamp(rect.left, 0, TVP5150_MAX_CROP_LEFT);
->  	rect.top = clamp(rect.top, 0, TVP5150_MAX_CROP_TOP);
-> -
-> -	/* Calculate height based on current standard */
-> -	if (decoder->norm == V4L2_STD_ALL)
-> -		std = tvp5150_read_std(sd);
-> -	else
-> -		std = decoder->norm;
-> -
-> -	if (std & V4L2_STD_525_60)
-> -		hmax = TVP5150_V_MAX_525_60;
-> -	else
-> -		hmax = TVP5150_V_MAX_OTHERS;
-> +	hmax = tvp5150_get_hmax(sd);
->
->  	/*
->  	 * alignments:
-> @@ -1063,20 +1116,23 @@ static int tvp5150_set_selection(struct v4l2_subdev *sd,
->  			      hmax - TVP5150_MAX_CROP_TOP - rect.top,
->  			      hmax - rect.top, 0, 0);
->
-> -	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_START, rect.top);
-> -	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_STOP,
-> -		     rect.top + rect.height - hmax);
-> -	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_MSB,
-> -		     rect.left >> TVP5150_CROP_SHIFT);
-> -	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_LSB,
-> -		     rect.left | (1 << TVP5150_CROP_SHIFT));
-> -	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_MSB,
-> -		     (rect.left + rect.width - TVP5150_MAX_CROP_LEFT) >>
-> -		     TVP5150_CROP_SHIFT);
-> -	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_LSB,
-> -		     rect.left + rect.width - TVP5150_MAX_CROP_LEFT);
-> +	__crop = __tvp5150_get_pad_crop(decoder, cfg, sel->pad, sel->which);
-> +	if (IS_ERR_OR_NULL(__crop)) {
-> +		if (!__crop)
-> +			return -EINVAL;
-> +		else
-> +			return PTR_ERR(__crop);
-
-here too
-
-> +	}
-> +
-> +	/*
-> +	 * Update output image size if the selection (crop) rectangle size or
-> +	 * position has been modified.
-> +	 */
-> +	if (!v4l2_rect_equal(&rect, __crop))
-> +		if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE)
-
-Can this be a single condition?
-Or maybe you could check if the rects are equal and this is a TRY and
-return here.
-
-> +			__tvp5150_set_selection(sd, rect);
->
-> -	decoder->rect = rect;
-> +	*__crop = rect;
->
->  	return 0;
->  }
-> @@ -1086,11 +1142,9 @@ static int tvp5150_get_selection(struct v4l2_subdev *sd,
->  				 struct v4l2_subdev_selection *sel)
->  {
->  	struct tvp5150 *decoder = container_of(sd, struct tvp5150, sd);
-> +	struct v4l2_rect *__crop;
->  	v4l2_std_id std;
->
-> -	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE)
-> -		return -EINVAL;
-> -
->  	switch (sel->target) {
->  	case V4L2_SEL_TGT_CROP_BOUNDS:
->  		sel->r.left = 0;
-> @@ -1108,7 +1162,15 @@ static int tvp5150_get_selection(struct v4l2_subdev *sd,
->  			sel->r.height = TVP5150_V_MAX_OTHERS;
->  		return 0;
->  	case V4L2_SEL_TGT_CROP:
-> -		sel->r = decoder->rect;
-> +		__crop = __tvp5150_get_pad_crop(decoder, cfg, sel->pad,
-> +						sel->which);
-> +		if (IS_ERR_OR_NULL(__crop)) {
-> +			if (!__crop)
-> +				return -EINVAL;
-> +			else
-> +				return PTR_ERR(__crop);
-> +		}
-> +		sel->r = *__crop;
->  		return 0;
->  	default:
->  		return -EINVAL;
-> --
-> 2.20.1
->
-
---lqlwi3dao4omlvmz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAlzQOGEACgkQcjQGjxah
-Vjwczg/+LsOHw6lFHWUQLBgIBiGHfnLrgxNrJFvJYcgBxwte9iWhdOzhZEPSUXbz
-qTkzSyV7etvrrvWHRvAXjjQrhpLl/gv4FEtblZjDx+W3sqhURIvoM8nJCXAs6b9j
-5MpOcB8MTmOd10kZl9wt74duNWfV3cWhOg57x1AeSdaCkr2zDweEYJbnhPu/cJBQ
-NXpcf5gul77C4Ahc4ZFvQ2SKPta87vGVuNQpEUyTPdWTo67lQi327tn6KmhNnOeZ
-CUiYbGY+yqT3W+fTzRg5MRkxx0677SXu9VtezT3S+4d0RrIL+E0wVWBtaxbDFQAi
-BdJZMI0dKoYthkQrQCD91AmkxNpCe5qY8Tg8SFMiAR/OPR+U2Ac6kQOqn5V7Be1R
-KR/Z2Yge5vOuyDZi9YQ+C6O6gXqyc98+F0Q8Z6lUbdMN3L0C+aXEVy/insan/c1b
-QP+9gdSJSrgoir65QwK3aYovX9wst7LuAQWRGSH2b/fwsR4mJBt+S7XC6drSQ0xY
-Is5ZWbk+iXcb/wrl17uAKs8YxmaYjA5lGnGHmrSl3+DMC/Td5qDiIs1gJtanqfEx
-UrxNbLYhJv2ntJDkxEYC+MEkF/P0LFmC8RopQBcxX5ZGfxIB3s+1mjzGq/SrIVK5
-0dq03kgQ0YplyyqycEpZVZkbfW21bwgCa+R+gkq65VLUsI4ca0E=
-=7m8K
------END PGP SIGNATURE-----
-
---lqlwi3dao4omlvmz--
+SGkgUm9iLA0KDQpbLi4uXQ0KDQo+ID4gPiA+IEZvciBTQ1UgYmFzZWQgcGxhdGZvcm1zLCB0aGUg
+cmVzb3VyY2UgYXZhaWxhYmlsaXR5IChlLmcuDQo+ID4gPiA+IGRldmljZS9jbG9ja3MvcG93ZXIp
+IGFyZSBjb25maWd1cmFibGUgYnkgU0NVIGZpcm13YXJlIGFjY29yZGluZyB0bw0KPiA+ID4gPiB0
+aGUNCj4gPiA+IGRpZmZlcmVudCBTVyBleGVjdXRpb24gcGFydGl0aW9uIGNvbmZpZ3VyYXRpb24u
+DQo+ID4gPiA+IGUuZy4gQWNjb3JkaW5nIHRvIGN1c3RvbWVyJ3MgcmVxdWlyZW1lbnRzLCB3ZSBt
+YXkgYWxsb2NhdGUgc29tZQ0KPiA+ID4gPiByZXNvdXJjZXMgdG8gTTQgcGFydGl0aW9uIGxpa2Ug
+c29tZSBJMkMsIENBTiwgYXVkaW8gcmVzb3VyY2VzDQo+ID4gPiA+IHdoaWNoIGNhbid0IGJlDQo+
+ID4gPiBhY2Nlc3NlZCBieSBBIGNvcmUuDQo+ID4gPiA+IEFuZCB3ZSBtYXkgYWxsb2NhdGUgZXZl
+biBtb3JlIGZvciB2aXJ0dWFsIG1hY2hpbmVzIHJ1bm5pbmcgYXQNCj4gPiA+ID4gYW5vdGhlciBD
+UFUNCj4gPiA+IGNvcmUuDQo+ID4gPiA+IFRodXMsIGRlZmluaW5nIGFsbCB0aGUgY2xvY2sgc291
+cmNlcyAoZml4ZWQpIGluIGRldmljZSB0cmVlIGZvciBBDQo+ID4gPiA+IGNvcmUgc2VlbXMgdG8g
+YmUgYSBsaXR0bGUgYml0IG1lYW5pbmdsZXNzIGFuZCBpdCBhbHNvIGNhdXNlcyB1cw0KPiA+ID4g
+PiBoYXJkIHRvIGV4dGVuZCBmb3IgYQ0KPiA+ID4gbmV3IFNvQy4NCj4gPiA+DQo+ID4gPiBJJ20g
+bm90IHN1Z2dlc3RpbmcgdGhhdC4gSXQncyByZWFsbHkganVzdCByZS1hcnJhbmdpbmcgYWxsIHRo
+ZSBzYW1lDQo+ID4gPiBkYXRhIGZyb20gYSBidW5jaCBvZiBjaGlsZCBub2RlcyB0byBhIHNpbmds
+ZSBub2RlLiBHcmFudGVkLCBpdCBtYXkNCj4gPiA+IGJlIGVhc2llciB0byBhZGQvZGVsZXRlIG5v
+ZGVzIHRoYW4gYWRkL2RlbGV0ZSBlbGVtZW50cyBmcm9tIGFuIGFycmF5DQo+ID4gPiBvZiBwcm9w
+ZXJ0eSB2YWx1ZXMsIGJ1dCByZWFsbHkgdGhhdCdzIGp1c3QgYSB0b29saW5nIHByb2JsZW0NCj4g
+PiA+DQo+ID4NCj4gPiBPa2F5LCB1bmRlcnN0b29kLg0KPiA+IFNvIGl0IHNlZW1zIHdlIGNvdWxk
+IHN0aWxsIGhhdmUgYSBzZXBhcmF0ZSBjbG9jayBjb250cm9sbGVyIG5vZGUgZm9yDQo+ID4gZWFj
+aCBTUyBidXQgbWVyZ2UgYWxsIHRoZSBzYW1lIGRhdGEgb2YgY2hpbGQgbm9kZXMgZGF0YSBpbnRv
+IGl0Lg0KPiA+DQo+ID4gSG93ZXZlciwgd2Ugc3RpbGwgaGF2ZSBvbmUgY29uY2Vybi4NCj4gPiBU
+YWtpbmcgTVg4UVhQIERNQSBTUyBhcyBleGFtcGxlLCB3aXRoIG9uZSBub2RlIGRlc2NyaXB0aW9u
+LCBpdCBtYXkgYmUNCj4gPiBzb21ldGhpbmcgbGlrZSBiZWxvdzoNCj4gPiBkbWFfc2N1X2Nsazog
+ZG1hLXNjdS1jbG9jay1jb250cm9sbGVyIHsNCj4gPiAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNs
+LGlteDhxeHAtc2N1LXBkIiwgImZzbCxzY3UtY2xrIjsNCj4gPiAgICAgICAgICNjbG9jay1jZWxs
+cyA9IDwxPjsNCj4gPiAgICAgICAgIGNsb2NrLWluZGljZXMgPSA8SU1YX1NDVV9DTEtfSUQoSU1Y
+X1NDX1JfQURDXzAsDQo+IElNWF9TQ19QTV9DTEtfUEVSKT4sDQo+ID4gICAgICAgICAgICAgICAg
+ICAgICAgICAgPElNWF9TQ1VfQ0xLX0lEKElNWF9TQ19SX0NBTl8wLA0KPiBJTVhfU0NfUE1fQ0xL
+X1BFUik+LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIDxJTVhfU0NVX0NMS19JRChJTVhf
+U0NfUl9GVE1fMCwNCj4gSU1YX1NDX1BNX0NMS19QRVIpPiwNCj4gPiAgICAgICAgICAgICAgICAg
+ICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfRlRNXzEsDQo+IElNWF9TQ19QTV9DTEtf
+UEVSKT4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgPElNWF9TQ1VfQ0xLX0lEKElNWF9T
+Q19SX0kyQ18wLA0KPiBJTVhfU0NfUE1fQ0xLX1BFUik+LA0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgIDxJTVhfU0NVX0NMS19JRChJTVhfU0NfUl9JMkNfMSwNCj4gSU1YX1NDX1BNX0NMS19Q
+RVIpPiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1ND
+X1JfSTJDXzIsDQo+IElNWF9TQ19QTV9DTEtfUEVSKT4sDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgPElNWF9TQ1VfQ0xLX0lEKElNWF9TQ19SX0kyQ18zLA0KPiBJTVhfU0NfUE1fQ0xLX1BF
+Uik+LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIDxJTVhfU0NVX0NMS19JRChJTVhfU0Nf
+Ul9MQ0RfMCwNCj4gSU1YX1NDX1BNX0NMS19QRVIpPiwNCj4gPiAgICAgICAgICAgICAgICAgICAg
+ICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfTENEXzBfUFdNXzAsDQo+IElNWF9TQ19QTV9D
+TEtfUEVSKT4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgPElNWF9TQ1VfQ0xLX0lEKElN
+WF9TQ19SX1NQSV8wLA0KPiBJTVhfU0NfUE1fQ0xLX1BFUik+LA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIDxJTVhfU0NVX0NMS19JRChJTVhfU0NfUl9TUElfMSwNCj4gSU1YX1NDX1BNX0NM
+S19QRVIpPiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1Y
+X1NDX1JfU1BJXzIsDQo+IElNWF9TQ19QTV9DTEtfUEVSKT4sDQo+ID4gICAgICAgICAgICAgICAg
+ICAgICAgICAgPElNWF9TQ1VfQ0xLX0lEKElNWF9TQ19SX1NQSV8zLA0KPiBJTVhfU0NfUE1fQ0xL
+X1BFUik+LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIDxJTVhfU0NVX0NMS19JRChJTVhf
+U0NfUl9VQVJUXzAsDQo+IElNWF9TQ19QTV9DTEtfUEVSKT4sDQo+ID4gICAgICAgICAgICAgICAg
+ICAgICAgICAgPElNWF9TQ1VfQ0xLX0lEKElNWF9TQ19SX1VBUlRfMSwNCj4gSU1YX1NDX1BNX0NM
+S19QRVIpPiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1Y
+X1NDX1JfVUFSVF8yLA0KPiBJTVhfU0NfUE1fQ0xLX1BFUik+LA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIDxJTVhfU0NVX0NMS19JRChJTVhfU0NfUl9VQVJUXzMsDQo+IElNWF9TQ19QTV9D
+TEtfUEVSKT47DQo+ID4gICAgICAgICBjbG9jay1vdXRwdXQtbmFtZXMgPSAiYWRjMF9jbGsiLA0K
+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImNhbjBfY2xrIiwNCj4gPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICJmdG0wX2NsayIsDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAiZnRtMV9jbGsiLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ImkyYzBfY2xrIiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJpMmMxX2NsayIs
+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiaTJjMl9jbGsiLA0KPiA+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgImkyYzNfY2xrIiwNCj4gPiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICJsY2QwX2NsayIsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAibGNkMF9wd20wX2NsayIsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAic3Bp
+MF9jbGsiLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInNwaTFfY2xrIiwNCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJzcGkyX2NsayIsDQo+ID4gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAic3BpM19jbGsiLA0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgInVhcnQwX2NsayIsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAi
+dWFydDFfY2xrIiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ1YXJ0Ml9jbGsi
+LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInVhcnQzX2NsayI7DQo+ID4gICAg
+ICAgICBwb3dlci1kb21haW5zID0gPCZwZCBJTVhfU0NfUl9BRENfMD4sDQo+ID4gICAgICAgICAg
+ICAgICAgICAgICAgICAgPCZwZCBJTVhfU0NfUl9DQU5fMD4sDQo+ID4gICAgICAgICAgICAgICAg
+ICAgICAgICAgPCZwZCBJTVhfU0NfUl9GVE1fMD4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAg
+ICAgPCZwZCBJTVhfU0NfUl9GVE1fMT4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgPCZw
+ZCBJTVhfU0NfUl9JMkNfMD4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgPCZwZCBJTVhf
+U0NfUl9JMkNfMT4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgPCZwZCBJTVhfU0NfUl9J
+MkNfMj4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgPCZwZCBJTVhfU0NfUl9JMkNfMz4s
+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgPCZwZCBJTVhfU0NfUl9MQ0RfMD4sDQo+ID4g
+ICAgICAgICAgICAgICAgICAgICAgICAgPCZwZCBJTVhfU0NfUl9MQ0RfMF9QV01fMD4sDQo+ID4g
+ICAgICAgICAgICAgICAgICAgICAgICAgPCZwZCBJTVhfU0NfUl9TUElfMD4sDQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgPCZwZCBJTVhfU0NfUl9TUElfMT4sDQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgICAgPCZwZCBJTVhfU0NfUl9TUElfMj4sDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgPCZwZCBJTVhfU0NfUl9TUElfMz4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
+PCZwZCBJTVhfU0NfUl9VQVJUXzA+LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIDwmcGQg
+SU1YX1NDX1JfVUFSVF8xPiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICA8JnBkIElNWF9T
+Q19SX1VBUlRfMj4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgPCZwZCBJTVhfU0NfUl9V
+QVJUXzM+OyB9Ow0KPiA+DQo+ID4gRm9yIE1YOFFNLCBldmVuIGlmIHdlIGhhdmUgb25lIG1vcmUg
+VUFSVF80LCB0aGVuIHdlIHN0aWxsIGhhdmUgdG8NCj4gPiB3cml0ZSBhbGwgdGhlIHNhbWUgdGhp
+bmdzIGFnYWluIHdpdGggYW4gZXh0cmEgVUFSVF80LiBJdCBzZWVtcyBpdCdzIGENCj4gPiBiaXQg
+dmlvbGF0ZSBvdXIgZGVzaWduIHRoYXQgdXNpbmcgYSBzaGFyZWQgb25lIGFuZCBkbyBpbmNyZW1l
+bnRhbCBjaGFuZ2VzIGZvcg0KPiBuZXcgU29Dcy4NCj4gPiBEbyB5b3UgdGhpbmsgaWYgdGhpcyBp
+cyBhY2NlcHRhYmxlIHRvIHlvdT8NCj4gDQo+IFllcywgYXMgaXQgc2hvdWxkIGJlIGEgb25lIHRp
+bWUgdGhpbmcgdG8gZG8gcGVyIFNvQy4NCj4gDQoNCkkgZm91bmQgd2UgbWF5IHN0aWxsIGNhbid0
+IHVzZSB0aGlzIG5ldyB3YXkgYWZ0ZXIgZ2l2aW5nIGEgdHJ5Lg0KT25lIGtub3cgaXNzdWUgaXMg
+dGhhdCBpdCBjYW4ndCBzdXBwb3J0IGNsb2NrIHBhcmVudCBzZXR0aW5nIHdlbGwgd2l0aCB0aGlz
+IGJpbmRpbmcNCklmIG1lcmdlZCBhbGwgc3ViIGNsb2NrcyBpbnRvIGEgc2luZ2xlIG5vZGUuDQpI
+YXJkIHRvIGRlc2NyaWJlIHBhcmVudCBjbG9ja3MgZm9yIGVhY2ggY2xvY2sgd2l0aGluIHRoZSBz
+YW1lIGJpZyBhcnJheS4NCg0KRm9yIGV4YW1wbGUgaW4gTVg4IEFETUEgU1MsIHRoZXJlJ3JlIGFu
+b3RoZXIgTENEIFBMTCB3aGljaCBjYW4gYmUgb3B0aW9uYWwgcGFyZW50IGNsb2Nrcw0KdG8gb3Ro
+ZXJzIHBlcmlwaGVyYWxzLiANCklmIHdlIGxpc3QgdGhlbSBhbGwgaW4gdGhlIHNhbWUgYXJyYXks
+IHdlIGNhbid0IGRlc2NyaWJlIExDRCBiYXVkL3BpeGVsIGNsb2NrIHBhcmVudHMuDQpkbWFfc2N1
+X2NsazogZG1hLXNjdS1jbG9jay1jb250cm9sbGVyIHsNCiAgICAgICAgY29tcGF0aWJsZSA9ICJm
+c2wsaW14OHF4cC1zY3UtcGQiLCAiZnNsLHNjdS1jbGsiOw0KICAgICAgICAjY2xvY2stY2VsbHMg
+PSA8MT47DQogICAgICAgIGNsb2NrLWluZGljZXMgPSA8U0NfUl9FTENESUZfUExMIElNWF9TQ19Q
+TV9DTEtfUExMPiwNCiAgICAgICAgICAgICAgICAgICAgICAgIDxTQ19SX0xDRF8wIElNWF9TQ19Q
+TV9DTEtfUEVSPiwgICAgICAgICAvKiBsY2QgYmF1ZCAqLw0KICAgICAgICAgICAgICAgICAgICAg
+ICAgPFNDX1JfTENEXzAgSU1YX1NDX1BNX0NMS19TTFZfQlVTPiwgICAgIC8qIFBpeGVsIExpbmsg
+Ki8NCiAgICAgICAgICAgICAgICAgICAgICAgIC4uLg0KICAgICAgICBjbG9jay1vdXRwdXQtbmFt
+ZXMgPSAibGNkaWZfcGxsIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImxjZGlmX2Jh
+dWRfY2xrIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImxjZGlmX3BpeGVsX2NsayIs
+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC4uLg0KICAgICAgICBwb3dlci1kb21h
+aW5zID0gPCZwZCBJTVhfU0NfUl9MQ0RfMD4sDQogICAgICAgICAgICAgICAgICAgICAgICA8JnBk
+IElNWF9TQ19SX0xDRF8wPiwNCiAgICAgICAgICAgICAgICAgICAgICAgIDwmcGQgSU1YX1NDX1Jf
+TENEXzA+LA0KICAgICAgICAgICAgICAgICAgICAgICAgLi4uDQp9Ow0KDQpBbmQgb3RoZXIgcGVy
+aXBoZXJhbHMgbWlnaHQgaGF2ZSBkaWZmZXJlbnQgcGFyZW50cyB3aXRoaW4gdGhlIHNhbWUgYXJy
+YXkuDQoNClRoZSBvbGQgd2F5IGRvZXMgbm90IGhhdmUgdGhpcyBpc3N1ZSBiZWNhdXNlIGl0J3Mg
+Y2FwYWJsZSBvZiBjb25maWd1cmluZyBwYXJlbnRzDQpyZXNwZWN0aXZlbHkgZm9yIGVhY2ggc3Vi
+IGNsb2Nrcy4NCi8qIFNDVSBjbG9ja3MgKi8NCmRtYV9zY3VfY2xrOiBjbG9jay1jb250cm9sbGVy
+LXNjdS1kbWEgew0KICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCiAgICAgICAgI3NpemUt
+Y2VsbHMgPSA8MD47DQoNCiAgICAgICAgbGNkX3BsbDogY2xvY2stc2N1QDMyMyB7DQogICAgICAg
+ICAgICAgICAgcmVnID0gPDMyMz47DQogICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0gPDE+
+Ow0KICAgICAgICAgICAgICAgIGNsb2NrLWluZGljZXMgPSA8SU1YX1NDX1BNX0NMS19QTEw+Ow0K
+ICAgICAgICAgICAgICAgIGNsb2NrLW91dHB1dC1uYW1lcyA9ICJsY2RfcGxsIjsNCiAgICAgICAg
+ICAgICAgICBwb3dlci1kb21haW5zID0gPCZwZCBJTVhfU0NfUl9FTENESUZfUExMPjsNCiAgICAg
+ICAgfTsNCg0KICAgICAgICBsY2QwX2NsazogY2xvY2stc2N1QDE4NyB7DQogICAgICAgICAgICAg
+ICAgcmVnID0gPDE4Nz47DQogICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0gPDE+Ow0KICAg
+ICAgICAgICAgICAgIC8qIHBhcmVudCBjbG9ja3Mgc2hvdWxkIG1hdGNoIEhXIHByb2dyYW1pbmcg
+b3JkZXIgKi8NCiAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmR1bW15X2NsayAmZHVtbXlfY2xr
+ICZkdW1teV9jbGsgJmR1bW15X2NsayAmbGNkX3BsbD47DQogICAgICAgICAgICAgICAgY2xvY2st
+aW5kaWNlcyA9IDxJTVhfU0NfUE1fQ0xLX1BFUj47DQogICAgICAgICAgICAgICAgY2xvY2stb3V0
+cHV0LW5hbWVzID0gImxjZDBfY2xrIjsNCiAgICAgICAgICAgICAgICBwb3dlci1kb21haW5zID0g
+PCZwZCBJTVhfU0NfUl9MQ0RfMD47DQogICAgICAgIH07DQogICAgICAgIC4uLg0KfTsNCg0KSSBk
+b3VibGUgY2hlY2tlZCBvdGhlciBTUyBsaWtlIEF1ZGlvLCBEQywgTUlQSSwgUEkgd2hpY2ggaGF2
+ZSB0aGUgc2FtZSBpc3N1ZS4gDQpJIHJlYWxseSBkb24ndCBrbm93IGlmIHRoZXJlIHdpbGwgYmUg
+YSB3YXkgb3V0IGlmIHVzaW5nIHRoZSBvbmUgc2luZ2xlIG5vZGUgd2F5Lg0KQW5kIEknbSBhbHNv
+IGEgYml0IHdvcnJ5aW5nIHdoZXRoZXIgaXQgbWF5IGNhdXNlIG1vcmUgaXNzdWVzIGR1ZSB0byBp
+dHMNCmxvc2luZyBvZiB0aGUgZmxleGliaWxpdHkgYW5kIGNhdXNlcyBwb3RlbnRpYWwgaXNzdWVz
+Lg0KDQpEbyB5b3UgdGhpbmsgaWYgd2UgY2FuIHN0aWxsIGdvIGJhY2sgdG8gdGhlIG9sZCB3YXkg
+d2hpY2ggaXMgcHJvcG9zZWQNCkluIHRoaXMgcGF0Y2ggc2V0Pw0KQXMgaXQgY2FuIHBlcmZlY3Rs
+eSBtZWV0IG91ciByZXF1aXJlbWVudHMgYW5kIGFsc28gZWFzZSB0aGUgZHJpdmVyDQppbXBsZW1l
+bnRhdGlvbi4NCg0KSG9wZSB5b3UgY2FuIGhlbHAgc2hlZCBzb21lIGxpZ2h0cyBhcyB3ZSdyZSBw
+ZW5kaW5nIG9uIGl0IGZvciBhIGxvbmcgdGltZS4NCg0KUmVnYXJkcw0KRG9uZyBBaXNoZW5nDQoN
+Cj4gPiBCdXQgaWYgZGVzY3JpYmUgdGhlbSBwZXIgbm9kZXMsIHdlIGRvIG5vdCBoYXZlIHN1Y2gg
+aXNzdWUuDQo+ID4NCj4gPiBBbnl3YXksIHBsZWFzZSB0ZWxsIG1lIHlvdXIgY2hvaWNlLCB0aGVu
+IEkgd2lsbCBmb2xsb3cuDQo+ID4NCj4gPiBCVFcsIEkgZG9uJ3Qga25vdyBob3cgYSB0b29sIGNh
+biBhZGRyZXNzIHRoaXMgaXNzdWUuDQo+IA0KPiBJIG1lYW50IHlvdSBjb3VsZCB3cml0ZSBvbmUg
+dGhhdCB1bmRlcnN0YW5kcyB0aGUgYmluZGluZy4gSXQncyBhIGJpdCBtb3JlDQo+IGNvbXBsaWNh
+dGVkIGhhdmluZyB0byBwYXJzZSBhbmQgdXBkYXRlIHByb3BlcnRpZXMgY29tcGFyZWQgdG8gYWRk
+aW5nIG9yDQo+IHJlbW92aW5nIG5vZGVzLCBidXQgaXQgY2FuIHN0aWxsIGJlIGRvbmUuDQo+IA0K
+PiBSb2INCg==
