@@ -1,109 +1,74 @@
-From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable CAN
-Date: Tue, 21 May 2019 08:47:02 +0200
-Message-ID: <CAOf5uwn8CtRs8cx0KC-bxNoRP4TiDrHi8F83QfjsZhueLDYFJg@mail.gmail.com>
-References: <20190418141658.10868-1-jagan@amarulasolutions.com> <20190418145641.q23tupopz2czjzc5@flea>
+From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Subject: Re: [RFC PATCH v2 0/4] Input: mpr121-polled: Add polled driver for
+ MPR121
+Date: Tue, 21 May 2019 08:51:17 +0200
+Message-ID: <ef172b24-cd27-5bb0-d8b1-718f835d0647@ysoft.com>
+References: <1558098773-47416-1-git-send-email-michal.vokac@ysoft.com>
+ <20190521053705.GI183429@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190418145641.q23tupopz2czjzc5@flea>
+In-Reply-To: <20190521053705.GI183429@dtor-ws>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-amarula <linux-amarula@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime
+On 21. 05. 19 7:37, Dmitry Torokhov wrote:
+> Hi Michal,
+> 
+> On Fri, May 17, 2019 at 03:12:49PM +0200, Michal Vokáč wrote:
+>> Hi,
+>>
+>> I have to deal with a situation where we have a custom i.MX6 based
+>> platform in production that uses the MPR121 touchkey controller.
+>> Unfortunately the chip is connected using only the I2C interface.
+>> The interrupt line is not used. Back in 2015 (Linux v3.14), my
+>> colleague modded the existing mpr121_touchkey.c driver to use polling
+>> instead of interrupt.
+>>
+>> For quite some time yet I am in a process of updating the product from
+>> the ancient Freescale v3.14 kernel to the latest mainline and pushing
+>> any needed changes upstream. The DT files for our imx6dl-yapp4 platform
+>> already made it into v5.1-rc.
+>>
+>> I rebased and updated our mpr121 patch to the latest mainline.
+>> It is created as a separate driver, similarly to gpio_keys_polled.
+>>
+>> The I2C device is quite susceptible to ESD. An ESD test quite often
+>> causes reset of the chip or some register randomly changes its value.
+>> The [PATCH 3/4] adds a write-through register cache. With the cache
+>> this state can be detected and the device can be re-initialied.
+>>
+>> The main question is: Is there any chance that such a polled driver
+>> could be accepted? Is it correct to implement it as a separate driver
+>> or should it be done as an option in the existing driver? I can not
+>> really imagine how I would do that though..
+>>
+>> There are also certain worries that the MPR121 chip may no longer be
+>> available in nonspecifically distant future. In case of EOL I will need
+>> to add a polled driver for an other touchkey chip. May it be already
+>> in mainline or a completely new one.
+> 
+> I think that my addition of input_polled_dev was ultimately a wrong
+> thing to do. I am looking into enabling polling mode for regular input
+> devices as we then can enable polling mode in existing drivers.
 
-On Thu, Apr 18, 2019 at 4:56 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Thu, Apr 18, 2019 at 07:46:58PM +0530, Jagan Teki wrote:
-> > Oceanic 5205 5inMFD has MCP2515 CAN device connected via SPI1.
-> >
-> > - via SPI1 bus
-> > - vdd supplied by 5V supply along with PL2 enable pin
-> > - xceiver supply same as vdd
-> > - can oscillator connected at 20MHz
-> > - PB2 gpio as interrupt pin
-> > - PD6 gpio as RX_BUF1_CAN0
-> > - PD7 gpio as RX_BUF0_CAN0
-> >
-> > Tested-by: Tamas Papp <tamas@osukl.com>
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  .../sun50i-a64-oceanic-5205-5inmfd.dts        | 43 +++++++++++++++++++
-> >  1 file changed, 43 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-> > index f0cd6587f619..22535a297f51 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-> > @@ -21,6 +21,24 @@
-> >       chosen {
-> >               stdout-path = "serial0:115200n8";
-> >       };
-> > +
-> > +     can_osc: can-osc {
-> > +             compatible = "fixed-clock";
-> > +             #clock-cells = <0>;
-> > +             clock-frequency = <20000000>;
-> > +     };
-> > +
-> > +     reg_can_v5v: reg-can-v5v {
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "reg-can-v5v";
-> > +             regulator-min-microvolt = <5000000>;
-> > +             regulator-max-microvolt = <5000000>;
-> > +             regulator-boot-on;
-> > +             enable-active-high;
-> > +             gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* CAN_3V3_EN: PL2 */
-> > +             status = "okay";
->
-> You don't need the status property here.
->
+OK, that sounds good. Especially when one needs to switch from one chip
+to another that is already in tree, the need for a whole new polling
+driver is eliminated.
 
-Correct, need to be dropped
+I am still quite a novice in all kernel areas as I literally jump from
+one subsystem to another to fix issues related to our platform. Anyway,
+do you see any opportunity to help with that work?
 
-> > +     };
-> > +
-> >  };
-> >
-> >  &ehci0 {
-> > @@ -77,6 +95,31 @@
-> >       status = "okay";
-> >  };
-> >
-> > +&pio {
-> > +     can_pins: can-pins {
-> > +             pins = "PD6",                   /* RX_BUF1_CAN0 */
-> > +                    "PD7";                   /* RX_BUF0_CAN0 */
-> > +             function = "gpio_in";
-> > +     };
-> > +};
->
-> That isn't needed. What are they used for, you're not tying them to
-> anything?
+> As far as gpio-keys vs gpio-key-polled, I feel that the capabilities of
+> polling driver is sufficiently different from interrupt-driven one, so
+> we will likely keep them separate.
 
-Mux of their function is correct. They are connected in the schematics
-but not used right now.
-I can garantee that kernel wlll always configurred in the right way
-and if I want I can export in userspace
-for debug purpose
+OK, understand.
 
-Michael
-
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-
-
---
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
+Thank you,
+Michal
