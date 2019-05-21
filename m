@@ -1,60 +1,54 @@
-Return-Path: <SRS0=eaZt=TW=bp.renesas.com=biju.das@kernel.org>
+Return-Path: <SRS0=sZNX=TV=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
 Subject: RE: [PATCH v6 1/7] dt-bindings: usb: hd3ss3220 device tree binding
  document
-Date: Wed, 22 May 2019 10:59:46 +0000
+Date: Tue, 21 May 2019 09:42:47 +0000
 Message-ID: 
- <OSBPR01MB2103B7A7CF5F9CDDC40B9A2BB8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <OSBPR01MB21033FCDE1A5965435AC4841B8070@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 References: <1557922152-16449-1-git-send-email-biju.das@bp.renesas.com>
-	<1557922152-16449-2-git-send-email-biju.das@bp.renesas.com>
-	<OSAPR01MB30899C8C3E0F316FF37DAE3AD8070@OSAPR01MB3089.jpnprd01.prod.outlook.com>
- <877eaktf8i.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <877eaktf8i.wl-kuninori.morimoto.gx@renesas.com>
+ <1557922152-16449-2-git-send-email-biju.das@bp.renesas.com>
+ <c9b3ee90-9292-320c-4e22-8f989d829497@cogentembedded.com>
+In-Reply-To: <c9b3ee90-9292-320c-4e22-8f989d829497@cogentembedded.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-
-Hi Morimoto-San and Shimoda-San,
-
-Thanks for the feedback.
-
-> Subject: Re: [PATCH v6 1/7] dt-bindings: usb: hd3ss3220 device tree bindi=
-ng
-> document
->=20
->=20
-> Hi
->=20
-> > > +Required properties:
-> > > + - compatible: Must be "ti,hd3ss3220".
-> > > + - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
-> > > + - interrupts: <a b> where a is the interrupt number and b represent=
-s an
-> > > +   encoding of the sense and level information for the interrupt.
-> > > +
-> > > +Required sub-node:
-> > > + - connector : The "usb-c-connector" attached to the hd3ss3220
-> > > +chip. The
-> >
-> > s/connector :/connector:/
->=20
-> Maybe it is for alignment ?
-
-Yes, I need to fix the extra space.
-
-> > According to the connector/usb-connector.txt, should the connector
-> > node have ports, port@1 and an endpoint nodes like below?
->=20
-> "ports" is needed if it has multiple "port", otherwise, single port is al=
-lowed
-> from OF-graph point of view.
-
-OK. I will use single port on  the next patch series.
-
-Regards,
-Biju
+SGkgU2VyZ2VpLA0KDQpUaGFua3MgZm9yIHRoZSBmZWVkYmFjay4NCg0KPiBTdWJqZWN0OiBSZTog
+W1BBVENIIHY2IDEvN10gZHQtYmluZGluZ3M6IHVzYjogaGQzc3MzMjIwIGRldmljZSB0cmVlIGJp
+bmRpbmcNCj4gZG9jdW1lbnQNCj4gDQo+IEhlbGxvIQ0KPiANCj4gT24gMDUvMTUvMjAxOSAwMzow
+OSBQTSwgQmlqdSBEYXMgd3JvdGU6DQo+IA0KPiA+IEFkZCBkZXZpY2UgdHJlZSBiaW5kaW5nIGRv
+Y3VtZW50IGZvciBUSSBIRDNTUzMyMjAgVHlwZS1DIERSUCBwb3J0DQo+ID4gY29udHJvbGxlciBk
+cml2ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVu
+ZXNhcy5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
+DQo+ID4gLS0tDQo+ID4gVjUtLT5WNg0KPiA+ICAgKiBObyBjaGFuZ2UuDQo+ID4gVjQtLT5WNQ0K
+PiA+ICAgKiBObyBDaGFuZ2UuDQo+ID4gVjMtLT5WNA0KPiA+ICAgKiBObyBDaGFuZ2UuDQo+ID4g
+VjItLT5WMw0KPiA+ICAgKiBBZGRlZCBSb2IncyBSZXZpZXdlZCBieSB0YWcuDQo+ID4gVjEtLT5W
+Mg0KPiA+ICAgKiBBZGRlZCBjb25uZWN0b3Igbm9kZS4NCj4gPiAgICogdXBkYXRlZCB0aGUgZXhh
+bXBsZSB3aXRoIGNvbm5lY3RvciBub2RlLg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy91c2IvdGksaGQzc3MzMjIwLnR4dCAgICAgICB8IDM3DQo+ICsrKysrKysrKysrKysr
+KysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKykNCj4gPiAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vz
+Yi90aSxoZDNzczMyMjAudHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi90aSxoZDNzczMyMjAudHh0DQo+ID4gYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3RpLGhkM3NzMzIyMC50eHQNCj4gPiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjdmNDE0MDANCj4gPiAtLS0gL2Rldi9u
+dWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi90aSxo
+ZDNzczMyMjAudHh0DQo+ID4gQEAgLTAsMCArMSwzNyBAQA0KPiA+ICtUSSBIRDNTUzMyMjAgVHlw
+ZUMgRFJQIFBvcnQgQ29udHJvbGxlci4NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
+DQo+ID4gKyAtIGNvbXBhdGlibGU6IE11c3QgYmUgInRpLGhkM3NzMzIyMCIuDQo+ID4gKyAtIHJl
+ZzogSTJDIHNsYXZlIGFkZHJlc3MsIG11c3QgYmUgMHg0NyBvciAweDY3IGJhc2VkIG9uIEFERFIg
+cGluLg0KPiA+ICsgLSBpbnRlcnJ1cHRzOiA8YSBiPiB3aGVyZSBhIGlzIHRoZSBpbnRlcnJ1cHQg
+bnVtYmVyIGFuZCBiIHJlcHJlc2VudHMgYW4NCj4gPiArICAgZW5jb2Rpbmcgb2YgdGhlIHNlbnNl
+IGFuZCBsZXZlbCBpbmZvcm1hdGlvbiBmb3IgdGhlIGludGVycnVwdC4NCj4gDQo+ICAgIFRoaXMg
+ZGVwZW5kcyBvbiBhbiBpbnRlcnJ1cHQgY29udHJvbGxlciB1c2VkLiBJJ2QganVzdCBzYWlkICJh
+biBpbnRlcnJ1cHQNCj4gc3BlY2lmaWVyIiwgdy9vIGZ1cnRoZXIgZGV0YWlscy4NCg0KRmluZSAs
+IElmIGl0IGlzIG9rIGZvciBldmVyeW9uZS4gDQoNClJlZ2FyZHMsDQpCaWp1DQo+ID4gKw0KPiA+
+ICtSZXF1aXJlZCBzdWItbm9kZToNCj4gPiArIC0gY29ubmVjdG9yIDogVGhlICJ1c2ItYy1jb25u
+ZWN0b3IiIGF0dGFjaGVkIHRvIHRoZSBoZDNzczMyMjAgY2hpcC4gVGhlDQo+ID4gKyAgIGJpbmRp
+bmdzIG9mIHRoZSBjb25uZWN0b3Igbm9kZSBhcmUgc3BlY2lmaWVkIGluOg0KPiA+ICsNCj4gPiAr
+CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rv
+ci50eHQNCj4gPiArDQo+IFsuLi5dDQo+IA0KPiBNQlIsIFNlcmdlaQ0K
