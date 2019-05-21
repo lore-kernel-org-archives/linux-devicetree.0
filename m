@@ -1,16 +1,13 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH v2 3/3] mfd: bd718x7: Make power button press duration
- configurable
-Date: Tue, 21 May 2019 20:41:14 +0000
-Message-ID: <bada813d7c3818f86851e9a31b19a7251da441f5.1558471150.git.leonard.crestez@nxp.com>
-References: <cover.1558471150.git.leonard.crestez@nxp.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] dt-bindings: spi: spi-fsl-qspi: Add bindings of ls1088a
+ and ls1012a
+Date: Tue, 21 May 2019 22:04:36 +0100
+Message-ID: <20190521210436.GA1580@sirena.org.uk>
+References: <20190516104046.23830-1-kuldeep.singh@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0702380362882720021=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1558471150.git.leonard.crestez@nxp.com>
-Content-Language: en-US
-Content-ID: <16686B02C1EDC944B114614CB3353D50@eurprd04.prod.outlook.com>
+In-Reply-To: <20190516104046.23830-1-kuldeep.singh@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,90 +17,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Angus Ainslie <angus@akkea.ca>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Kuldeep Singh <kuldeep.singh@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Ashish Kumar <ashish.kumar@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow overwriting the values in BD718XX_REG_PWRONCONFIG0 and
-BD718XX_REG_PWRONCONFIG1 via devicetree. Read values in milliseconds and
-attempt to round them to something supported by the hardware.
 
-Keep existing values (from bootloader or OTP) if property is not
-present.
+--===============0702380362882720021==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+Content-Disposition: inline
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reviewed-By: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/mfd/rohm-bd718x7.c | 42 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
 
-diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
-index cdbef83884f0..c061c3f421fc 100644
---- a/drivers/mfd/rohm-bd718x7.c
-+++ b/drivers/mfd/rohm-bd718x7.c
-@@ -79,10 +79,48 @@ static const struct regmap_config bd718xx_regmap_config = {
- 	.volatile_table = &volatile_regs,
- 	.max_register = BD718XX_MAX_REGISTER - 1,
- 	.cache_type = REGCACHE_RBTREE,
- };
- 
-+static int bd718xx_init_press_duration(struct bd718xx *bd718xx)
-+{
-+	struct device* dev = bd718xx->dev;
-+	u32 short_press_ms, long_press_ms;
-+	u32 short_press_value, long_press_value;
-+	int ret;
-+
-+	ret = of_property_read_u32(dev->of_node, "rohm,short-press-ms",
-+				   &short_press_ms);
-+	if (!ret) {
-+		short_press_value = min(15u, (short_press_ms + 250) / 500);
-+		ret = regmap_update_bits(bd718xx->regmap,
-+					 BD718XX_REG_PWRONCONFIG0,
-+					 BD718XX_PWRBTN_PRESS_DURATION_MASK,
-+					 short_press_value);
-+		if (ret) {
-+			dev_err(dev, "Failed to init pwron short press\n");
-+			return ret;
-+		}
-+	}
-+
-+	ret = of_property_read_u32(dev->of_node, "rohm,long-press-ms",
-+				   &long_press_ms);
-+	if (!ret) {
-+		long_press_value = min(15u, (long_press_ms + 500) / 1000);
-+		ret = regmap_update_bits(bd718xx->regmap,
-+					 BD718XX_REG_PWRONCONFIG1,
-+					 BD718XX_PWRBTN_PRESS_DURATION_MASK,
-+					 long_press_value);
-+		if (ret) {
-+			dev_err(dev, "Failed to init pwron long press\n");
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 			    const struct i2c_device_id *id)
- {
- 	struct bd718xx *bd718xx;
- 	int ret;
-@@ -115,10 +153,14 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 	if (ret) {
- 		dev_err(&i2c->dev, "Failed to add irq_chip\n");
- 		return ret;
- 	}
- 
-+	ret = bd718xx_init_press_duration(bd718xx);
-+	if (ret)
-+		return ret;
-+
- 	ret = regmap_irq_get_virq(bd718xx->irq_data, BD718XX_INT_PWRBTN_S);
- 
- 	if (ret < 0) {
- 		dev_err(&i2c->dev, "Failed to get the IRQ\n");
- 		return ret;
--- 
-2.17.1
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, May 16, 2019 at 10:39:44AM +0000, Kuldeep Singh wrote:
+> Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
+> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+> ---
+
+This doesn't apply against current code, please check and resend.
+
+--qDbXVdCdHGoSgWSk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzkZ+MACgkQJNaLcl1U
+h9ConQf8DxUshxU2LvQL9Rur0EMgkGTiclmopbPNfSEPKCIyykDv0DB5Po34Lt91
+b2n4r4A2ohe4Huy8/tNniwrXPDqam8fuxSqE9HxYnFIiWkBcvR+fWYXxvHb/hASS
+ZMISJFt7Y2HCyqad0X6zB4Q5V8zvu/iukNCuMY3X4x/9fQVdUvbcpDEeDxFdAt3I
+ZQsQZ4CkP6JkRwlXNADuGgvWvnnH5XZSBonz/AuUSQuul59EnaxfB9NHTort0bu1
+6dI7IVOkGaf3gbxuPxOcSME/f0yUGQw9H180Ulf8w/r5O0MYer6F6exCQbHkWne/
+HVm6I+571Rqbr/Ob8J9BBVGT57TLAA==
+=be/b
+-----END PGP SIGNATURE-----
+
+--qDbXVdCdHGoSgWSk--
+
+
+--===============0702380362882720021==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0702380362882720021==--
