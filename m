@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v7 06/12] soc: mediatek: cmdq: clear the event in cmdq initial flow
-Date: Tue, 21 May 2019 09:11:02 +0800
-Message-ID: <20190521011108.40428-7-bibby.hsieh@mediatek.com>
+Subject: [PATCH v7 08/12] soc: mediatek: cmdq: change the type of input parameter
+Date: Tue, 21 May 2019 09:11:04 +0800
+Message-ID: <20190521011108.40428-9-bibby.hsieh@mediatek.com>
 References: <20190521011108.40428-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,77 +12,100 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-GCE hardware stored event information in own internal sysram,
-if the initial value in those sysram is not zero value
-it will cause a situation that gce can wait the event immediately
-after client ask gce to wait event but not really trigger the
-corresponding hardware.
-
-In order to make sure that the wait event function is
-exactly correct, we need to clear the sysram value in
-cmdq initial flow.
-
-Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
+According to the cmdq hardware design, the subsys is u8,
+the offset is u16 and the event id is u16.
+This patch changes the type of subsys, offset and event id
+to the correct type.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
- include/linux/mailbox/mtk-cmdq-mailbox.h | 2 ++
- include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 10 +++++-----
+ include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 6db1e2dd2dea..2c1b80d82c3a 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -20,6 +20,7 @@
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
- 
- #define CMDQ_CURR_IRQ_STATUS		0x10
-+#define CMDQ_SYNC_TOKEN_UPDATE		0x68
- #define CMDQ_THR_SLOT_CYCLES		0x30
- #define CMDQ_THR_BASE			0x100
- #define CMDQ_THR_SIZE			0x80
-@@ -103,8 +104,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
- 
- static void cmdq_init(struct cmdq *cmdq)
- {
-+	int i;
-+
- 	WARN_ON(clk_enable(cmdq->clock) < 0);
- 	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-+	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
-+		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
- 	clk_disable(cmdq->clock);
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index 082b8978651e..7aa0517ff2f3 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+ 	return 0;
  }
  
-diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-index ccb73422c2fa..911475da7a53 100644
---- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-+++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-@@ -19,6 +19,8 @@
- #define CMDQ_WFE_UPDATE			BIT(31)
- #define CMDQ_WFE_WAIT			BIT(15)
- #define CMDQ_WFE_WAIT_VALUE		0x1
-+/** cmdq event maximum */
-+#define CMDQ_MAX_EVENT			0x3ff
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+ {
+ 	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+ 		    (subsys << CMDQ_SUBSYS_SHIFT);
+@@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write);
  
- /*
-  * CMDQ_CODE_MASK:
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+-			u32 offset, u32 value, u32 mask)
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
++			u16 offset, u32 value, u32 mask)
+ {
+ 	u32 offset_mask = offset;
+ 	int err = 0;
+@@ -161,7 +161,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write_mask);
+ 
+-int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
++int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+ {
+ 	u32 arg_b;
+ 
+@@ -181,7 +181,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_wfe);
+ 
+-int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
++int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+ {
+ 	if (event >= CMDQ_MAX_EVENT)
+ 		return -EINVAL;
 diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 54ade13a9b15..4e8899972db4 100644
+index 39d813dde4b4..9618debb9ceb 100644
 --- a/include/linux/soc/mediatek/mtk-cmdq.h
 +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -13,9 +13,6 @@
+@@ -66,7 +66,7 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
  
- #define CMDQ_NO_TIMEOUT		0xffffffffu
+ /**
+  * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+@@ -78,8 +78,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+-			u32 offset, u32 value, u32 mask);
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
++			u16 offset, u32 value, u32 mask);
  
--/** cmdq event maximum */
--#define CMDQ_MAX_EVENT				0x3ff
--
- struct cmdq_pkt;
+ /**
+  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+@@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
++int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
  
- struct cmdq_client {
+ /**
+  * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
+@@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
++int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+ 
+ /**
+  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
 -- 
 2.18.0
