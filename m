@@ -1,48 +1,44 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v6 0/9] Introduce STMFX I2C Multi-Function eXpander
-Date: Tue, 21 May 2019 10:13:34 +0200
-Message-ID: <0a9bf716-addc-9342-09fe-06ff048ff7d7@st.com>
-References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V2] arm64: dts: imx8mq: Add gpio alias
+Date: Tue, 21 May 2019 08:15:26 +0000
+Message-ID: <1558426216-14026-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
 Content-Language: en-US
+Content-ID: <D5ADB57D0C704249AA60350BD0AD1730@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Amélie,
+Add i.MX8MQ GPIO alias for kernel GPIO driver usage.
 
-On 5/9/19 10:58 AM, Amelie Delaunay wrote:
-> This series adds support for STMicroelectronics Multi-Function eXpander
-> (STMFX), used on some STM32 discovery and evaluation boards.
-> 
-> STMFX is an STM32L152 slave controller whose firmware embeds the following
-> features:
-> - I/O expander (16 GPIOs + 8 extra if the other features are not enabled),
-> - resistive touchscreen controller,
-> - IDD measurement.
-> 
-> I2C stuff and chip initialization is based on an MFD parent driver, which
-> registers STMFX features MFD children.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- keep the list alphabetically sorted, no content change.
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-...
-
-> Amelie Delaunay (9):
->    dt-bindings: mfd: Add ST Multi-Function eXpander (STMFX) core bindings
->    mfd: Add ST Multi-Function eXpander (STMFX) core driver
->    dt-bindings: pinctrl: document the STMFX pinctrl bindings
->    pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
->    ARM: dts: stm32: add STMFX support on stm32746g-eval
->    ARM: dts: stm32: add joystick support on stm32746g-eval
->    ARM: dts: stm32: add orange and blue leds on stm32746g-eval
->    ARM: dts: stm32: add STMFX support on stm32mp157c-ev1
->    ARM: dts: stm32: add joystick support on stm32mp157c-ev1
-
-Device tree patches (5 to 9) applied on stm32-next.
-
-Thanks
-Alex
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8mq.dtsi
+index 437ea19..96ac929 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -19,6 +19,11 @@
+ 	#size-cells =3D <2>;
+=20
+ 	aliases {
++		gpio0 =3D &gpio1;
++		gpio1 =3D &gpio2;
++		gpio2 =3D &gpio3;
++		gpio3 =3D &gpio4;
++		gpio4 =3D &gpio5;
+ 		i2c0 =3D &i2c1;
+ 		i2c1 =3D &i2c2;
+ 		i2c2 =3D &i2c3;
+--=20
+2.7.4
