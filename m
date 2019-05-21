@@ -1,55 +1,89 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/7] drivers/soc: Add Aspeed XDMA Engine Driver
-Date: Tue, 21 May 2019 14:02:22 +0200
-Message-ID: <CAK8P3a2HSOsw33VhAk4Z8ARiYn4jG68Ec7fynKbrFWUNDo37Wg@mail.gmail.com>
-References: <1558383565-11821-1-git-send-email-eajames@linux.ibm.com> <1558383565-11821-3-git-send-email-eajames@linux.ibm.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH 3/5] usb: exynos: add support for getting PHYs from the
+ standard dt array
+Date: Tue, 21 May 2019 13:58:47 +0200
+Message-ID: <20190521115849.9882-4-m.szyprowski@samsung.com>
+References: <20190521115849.9882-1-m.szyprowski@samsung.com>
+        <CGME20190521120249eucas1p2e4a8fec922fa78783d7d3fed785f3e3b@eucas1p2.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558383565-11821-3-git-send-email-eajames@linux.ibm.com>
+In-reply-to: <20190521115849.9882-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>
-Cc: linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, =?UTF-8?q?M=C3=A5ns=20Rullg=C3=A5rd?= <mans@mansr.com>, Krzysztof Kozlowski <krzk@kernel.org>, Peter Chen <peter.chen@nxp.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:19 PM Eddie James <eajames@linux.ibm.com> wrote:
-> diff --git a/include/uapi/linux/aspeed-xdma.h b/include/uapi/linux/aspeed-xdma.h
-> new file mode 100644
-> index 0000000..2a4bd13
-> --- /dev/null
-> +++ b/include/uapi/linux/aspeed-xdma.h
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/* Copyright IBM Corp 2019 */
-> +
-> +#ifndef _UAPI_LINUX_ASPEED_XDMA_H_
-> +#define _UAPI_LINUX_ASPEED_XDMA_H_
-> +
-> +#include <linux/types.h>
-> +
-> +/*
-> + * aspeed_xdma_op
-> + *
-> + * upstream: boolean indicating the direction of the DMA operation; upstream
-> + *           means a transfer from the BMC to the host
-> + *
-> + * host_addr: the DMA address on the host side, typically configured by PCI
-> + *            subsystem
-> + *
-> + * len: the size of the transfer in bytes; it should be a multiple of 16 bytes
-> + */
-> +struct aspeed_xdma_op {
-> +       __u32 upstream;
-> +       __u64 host_addr;
-> +       __u32 len;
-> +};
-> +
-> +#endif /* _UAPI_LINUX_ASPEED_XDMA_H_ */
+Add the code for getting generic PHYs from standard device tree array
+from the main controller device node. This is a first step in resolving
+the conflict between Exynos EHCI/OHCI sub-nodes and generic USB device
+bindings. Later the sub-nodes currently used for assigning PHYs to root
+ports of the controller will be removed making a place for the generic
+USB device bindings nodes.
 
-If this is a user space interface, please remove the holes in the
-data structure.
+Suggested-by: Måns Rullgård <mans@mansr.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ drivers/usb/host/ehci-exynos.c | 14 +++++++++++++-
+ drivers/usb/host/ohci-exynos.c | 14 +++++++++++++-
+ 2 files changed, 26 insertions(+), 2 deletions(-)
 
-I don't see how this is actually used in this patch, maybe you meant
-the definition to be part of another patch?
-
-    Arnd
+diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
+index 3a29a1a8519c..2a551a807ec0 100644
+--- a/drivers/usb/host/ehci-exynos.c
++++ b/drivers/usb/host/ehci-exynos.c
+@@ -50,10 +50,22 @@ static int exynos_ehci_get_phy(struct device *dev,
+ {
+ 	struct device_node *child;
+ 	struct phy *phy;
+-	int phy_number;
++	int phy_number, num_phys;
+ 	int ret;
+ 
+ 	/* Get PHYs for the controller */
++	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
++					      "#phy-cells");
++	for (phy_number = 0; phy_number < num_phys; phy_number++) {
++		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
++		if (IS_ERR(phy))
++			return PTR_ERR(phy);
++		exynos_ehci->phy[phy_number] = phy;
++	}
++	if (num_phys)
++		return 0;
++
++	/* Get PHYs using legacy bindings */
+ 	for_each_available_child_of_node(dev->of_node, child) {
+ 		ret = of_property_read_u32(child, "reg", &phy_number);
+ 		if (ret) {
+diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
+index 905c6317e0c3..195ea5fa021e 100644
+--- a/drivers/usb/host/ohci-exynos.c
++++ b/drivers/usb/host/ohci-exynos.c
+@@ -39,10 +39,22 @@ static int exynos_ohci_get_phy(struct device *dev,
+ {
+ 	struct device_node *child;
+ 	struct phy *phy;
+-	int phy_number;
++	int phy_number, num_phys;
+ 	int ret;
+ 
+ 	/* Get PHYs for the controller */
++	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
++					      "#phy-cells");
++	for (phy_number = 0; phy_number < num_phys; phy_number++) {
++		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
++		if (IS_ERR(phy))
++			return PTR_ERR(phy);
++		exynos_ohci->phy[phy_number] = phy;
++	}
++	if (num_phys)
++		return 0;
++
++	/* Get PHYs using legacy bindings */
+ 	for_each_available_child_of_node(dev->of_node, child) {
+ 		ret = of_property_read_u32(child, "reg", &phy_number);
+ 		if (ret) {
+-- 
+2.17.1
