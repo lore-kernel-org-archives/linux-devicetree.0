@@ -1,47 +1,47 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2] arm64: dts: imx8qxp: Add gpio alias
-Date: Tue, 21 May 2019 08:17:02 +0000
-Message-ID: <1558426311-14082-1-git-send-email-Anson.Huang@nxp.com>
+Subject: RE: [PATCH] arm64: dts: imx8qxp: Add gpio alias
+Date: Tue, 21 May 2019 08:17:43 +0000
+Message-ID: <DB3PR0402MB391632602294707677060EF3F5070@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1557809536-749-1-git-send-email-Anson.Huang@nxp.com>
+ <20190521080900.GC15856@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190521080900.GC15856@dragon>
 Content-Language: en-US
-Content-ID: <A2CABE59647ECC4090163A08D8073540@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add i.MX8QXP GPIO alias for kernel GPIO driver usage.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- keep the list alphabetically sorted, no content change.
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index b17c22e..9f52da6 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -17,6 +17,14 @@
- 	#size-cells =3D <2>;
-=20
- 	aliases {
-+		gpio0 =3D &lsio_gpio0;
-+		gpio1 =3D &lsio_gpio1;
-+		gpio2 =3D &lsio_gpio2;
-+		gpio3 =3D &lsio_gpio3;
-+		gpio4 =3D &lsio_gpio4;
-+		gpio5 =3D &lsio_gpio5;
-+		gpio6 =3D &lsio_gpio6;
-+		gpio7 =3D &lsio_gpio7;
- 		mmc0 =3D &usdhc1;
- 		mmc1 =3D &usdhc2;
- 		mmc2 =3D &usdhc3;
---=20
-2.7.4
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIFttYWls
+dG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogVHVlc2RheSwgTWF5IDIxLCAyMDE5IDQ6
+MDkgUE0NCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogcm9i
+aCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgcy5oYXVlckBwZW5ndXRyb25p
+eC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207IEFpc2hl
+bmcgRG9uZw0KPiA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBEYW5pZWwgQmFsdXRhIDxkYW5pZWwu
+YmFsdXRhQG54cC5jb20+OyBQZW5nDQo+IEZhbiA8cGVuZy5mYW5AbnhwLmNvbT47IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgNCj4gPGxpbnV4
+LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBhcm02NDogZHRzOiBpbXg4cXhw
+OiBBZGQgZ3BpbyBhbGlhcw0KPiANCj4gT24gVHVlLCBNYXkgMTQsIDIwMTkgYXQgMDQ6NTc6MTdB
+TSArMDAwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gQWRkIGkuTVg4UVhQIEdQSU8gYWxpYXMg
+Zm9yIGtlcm5lbCBHUElPIGRyaXZlciB1c2FnZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFu
+c29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBhcmNoL2FybTY0
+L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kgfCA4ICsrKysrKysrDQo+ID4gIDEgZmls
+ZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kNCj4gPiBiL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiA+IGluZGV4IGIxN2MyMmUuLjkyMzcwNWUg
+MTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5k
+dHNpDQo+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNp
+DQo+ID4gQEAgLTIyLDYgKzIyLDE0IEBADQo+ID4gIAkJbW1jMiA9ICZ1c2RoYzM7DQo+ID4gIAkJ
+c2VyaWFsMCA9ICZhZG1hX2xwdWFydDA7DQo+ID4gIAkJbXUxID0gJmxzaW9fbXUxOw0KPiA+ICsJ
+CWdwaW8wID0gJmxzaW9fZ3BpbzA7DQo+IA0KPiBPa2F5LCBpdCdzIGFscmVhZHkgb3V0IG9mIGFs
+cGhhYmV0aWNhbCBvcmRlciwgYnV0IGxldCdzIG5vdCBtYWtlIGl0IHdvcnNlLg0KDQpTdXJlLCBq
+dXN0IHNlbnQgb3V0IFYyIHBhdGNoLCBwbGVhc2UgaGVscCByZXZpZXcsIHRoYW5rcy4NCg0KQW5z
+b24uDQoNCj4gDQo+IFNoYXduDQo+IA0KPiA+ICsJCWdwaW8xID0gJmxzaW9fZ3BpbzE7DQo+ID4g
+KwkJZ3BpbzIgPSAmbHNpb19ncGlvMjsNCj4gPiArCQlncGlvMyA9ICZsc2lvX2dwaW8zOw0KPiA+
+ICsJCWdwaW80ID0gJmxzaW9fZ3BpbzQ7DQo+ID4gKwkJZ3BpbzUgPSAmbHNpb19ncGlvNTsNCj4g
+PiArCQlncGlvNiA9ICZsc2lvX2dwaW82Ow0KPiA+ICsJCWdwaW83ID0gJmxzaW9fZ3Bpbzc7DQo+
+ID4gIAl9Ow0KPiA+DQo+ID4gIAljcHVzIHsNCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCg==
