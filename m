@@ -1,37 +1,92 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/2] ARM: dts: stm32: qspi update for stm32mp157c-ev1
-Date: Tue, 21 May 2019 10:41:46 +0200
-Message-ID: <4932a2fd-eca1-d802-812a-7246b3dd12ec@st.com>
-References: <1552057823-10876-1-git-send-email-ludovic.Barre@st.com>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH v2 6/8] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
+Date: Tue, 21 May 2019 08:42:31 +0000
+Message-ID: <AM0PR04MB53140D914E608A9BA2CB30858B070@AM0PR04MB5314.eurprd04.prod.outlook.com>
+References: <20190514073529.29505-1-peter.chen@nxp.com>
+ <20190514073529.29505-7-peter.chen@nxp.com> <20190520073157.GW15856@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552057823-10876-1-git-send-email-ludovic.Barre@st.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190520073157.GW15856@dragon>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ludovic
+ 
+> >  1 file changed, 31 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/imx7ulp.dtsi
+> > b/arch/arm/boot/dts/imx7ulp.dtsi index fca6e50f37c8..60c9ea116d0a
+> > 100644
+> > --- a/arch/arm/boot/dts/imx7ulp.dtsi
+> > +++ b/arch/arm/boot/dts/imx7ulp.dtsi
+> > @@ -30,6 +30,7 @@
+> >  		serial1 = &lpuart5;
+> >  		serial2 = &lpuart6;
+> >  		serial3 = &lpuart7;
+> > +		usbphy0 = &usbphy1;
+> >  	};
+> >
+> >  	cpus {
+> > @@ -133,6 +134,36 @@
+> >  			clock-names = "ipg", "per";
+> >  		};
+> >
+> > +		usbotg1: usb@40330000 {
+> > +			compatible = "fsl,imx7ulp-usb", "fsl,imx6ul-usb",
+> > +				"fsl,imx27-usb";
+> > +			reg = <0x40330000 0x200>;
+> > +			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&pcc2 IMX7ULP_CLK_USB0>;
+> > +			phys = <&usbphy1>;
+> > +			fsl,usbmisc = <&usbmisc1 0>;
+> > +			ahb-burst-config = <0x0>;
+> > +			tx-burst-size-dword = <0x8>;
+> > +			rx-burst-size-dword = <0x8>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		usbmisc1: usbmisc@40330200 {
+> > +			#index-cells = <1>;
+> 
+> Nit: we usually start with 'compatible', so can we move it behind?
+> 
 
-On 3/8/19 4:10 PM, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
-> 
-> This patch series add sleep pins configuration needed to suspend support
-> and add jedec compatible for 2 nor flash of stm32mp157c-ev1.
-> 
-> Ludovic Barre (2):
->    ARM: dts: stm32: add pinctrl sleep config for qspi on stm32mp157c-ev1
->    ARM: dts: stm32: add jedec compatible for nor flash on stm32mp157c-ev1
-> 
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 26 ++++++++++++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c-ev1.dts     |  5 ++++-
->   2 files changed, 30 insertions(+), 1 deletion(-)
-> 
+Thanks, will change.
 
-Series applied on stm32-next.
+Peter
 
-Regards
-Alex
+
+> Shawn
+> 
+> > +			compatible = "fsl,imx7ulp-usbmisc", "fsl,imx7d-usbmisc",
+> > +				"fsl,imx6q-usbmisc";
+> > +			reg = <0x40330200 0x200>;
+> > +		};
+> > +
+> > +		usbphy1: usbphy@0x40350000 {
+> > +			compatible = "fsl,imx7ulp-usbphy",
+> > +				"fsl,imx6ul-usbphy", "fsl,imx23-usbphy";
+> > +			reg = <0x40350000 0x1000>;
+> > +			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&pcc2 IMX7ULP_CLK_USB_PHY>;
+> > +			#phy-cells = <0>;
+> > +		};
+> > +
+> >  		usdhc0: mmc@40370000 {
+> >  			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
+> >  			reg = <0x40370000 0x10000>;
+> > --
+> > 2.14.1
+> >
