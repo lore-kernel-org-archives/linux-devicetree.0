@@ -1,343 +1,334 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v4 2/4] clk: at91: sckc: add support to specify registers
- bit offsets
-Date: Tue, 21 May 2019 12:49:06 +0200
-Message-ID: <20190521104906.GF3274@piout.net>
-References: <1558433454-27971-1-git-send-email-claudiu.beznea@microchip.com>
- <1558433454-27971-3-git-send-email-claudiu.beznea@microchip.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V7 09/15] dt-bindings: PCI: tegra: Add device tree
+ support for Tegra194
+Date: Tue, 21 May 2019 12:51:55 +0200
+Message-ID: <20190521105155.GI29166@ulmo>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-10-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="YrQNB5Deg1WGKZi3"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1558433454-27971-3-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <20190517123846.3708-10-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu.Beznea@microchip.com
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 21/05/2019 10:11:26+0000, Claudiu.Beznea@microchip.com wrote:
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
-> 
-> Different IPs uses different bit offsets in registers for the same
-> functionality, thus adapt the driver to support this.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
+--YrQNB5Deg1WGKZi3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 17, 2019 at 06:08:40PM +0530, Vidya Sagar wrote:
+> Add support for Tegra194 PCIe controllers. These controllers are based
+> on Synopsys DesignWare core IP.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  drivers/clk/at91/sckc.c | 93 ++++++++++++++++++++++++++++++++-----------------
->  1 file changed, 61 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
-> index 6c55a7a86f79..ab18b1da269f 100644
-> --- a/drivers/clk/at91/sckc.c
-> +++ b/drivers/clk/at91/sckc.c
-> @@ -23,14 +23,18 @@
->  				 SLOW_CLOCK_FREQ)
->  
->  #define	AT91_SCKC_CR			0x00
-> -#define		AT91_SCKC_RCEN		(1 << 0)
-> -#define		AT91_SCKC_OSC32EN	(1 << 1)
-> -#define		AT91_SCKC_OSC32BYP	(1 << 2)
-> -#define		AT91_SCKC_OSCSEL	(1 << 3)
+> Changes since [v6]:
+> * Changed description of the property "nvidia,bpmp".
+> * Removed property "nvidia,disable-aspm-states".
+>=20
+> Changes since [v5]:
+> * Removed 'max-link-speed' as it is going to be a common sub-system prope=
+rty
+> * Removed 'nvidia,init-link-speed' as there isn't much value addition
+> * Removed 'nvidia,wake-gpios' for now
+> * Addressed review comments from Thierry and Rob in general
+>=20
+> Changes since [v4]:
+> * None
+>=20
+> Changes since [v3]:
+> * None
+>=20
+> Changes since [v2]:
+> * Using only 'Cx' (x-being controller number) format to represent a contr=
+oller
+> * Changed to 'value: description' format where applicable
+> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
+> * Provided more documentation for 'nvidia,init-link-speed' property
+> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
+>=20
+> Changes since [v1]:
+> * Added documentation for 'power-domains' property
+> * Removed 'window1' and 'window2' properties
+> * Removed '_clk' and '_rst' from clock and reset names
+> * Dropped 'pcie' from phy-names
+> * Added entry for BPMP-FW handle
+> * Removed offsets for some of the registers and added them in code and wo=
+uld be pickedup based on
+>   controller ID
+> * Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an option=
+al
+> * Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with invert=
+ed operation
+> * Added more documentation for 'nvidia,update-fc-fixup' property
+> * Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
+> * Added '-us' to all properties that represent time in microseconds
+> * Moved P2U documentation to a separate file
+>=20
+>  .../bindings/pci/nvidia,tegra194-pcie.txt     | 158 ++++++++++++++++++
+>  1 file changed, 158 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194=
+-pcie.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.t=
+xt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> new file mode 100644
+> index 000000000000..0119f40bbd11
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> @@ -0,0 +1,158 @@
+> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
 > +
-> +struct clk_slow_bits {
-> +	u32 cr_rcen;
-> +	u32 cr_osc32en;
-> +	u32 cr_osc32byp;
-> +	u32 cr_oscsel;
-> +};
->  
->  struct clk_slow_osc {
->  	struct clk_hw hw;
->  	void __iomem *sckcr;
-> +	const struct clk_slow_bits *bits;
->  	unsigned long startup_usec;
->  };
->  
-> @@ -39,6 +43,7 @@ struct clk_slow_osc {
->  struct clk_sama5d4_slow_osc {
->  	struct clk_hw hw;
->  	void __iomem *sckcr;
-> +	const struct clk_slow_bits *bits;
->  	unsigned long startup_usec;
->  	bool prepared;
->  };
-> @@ -48,6 +53,7 @@ struct clk_sama5d4_slow_osc {
->  struct clk_slow_rc_osc {
->  	struct clk_hw hw;
->  	void __iomem *sckcr;
-> +	const struct clk_slow_bits *bits;
->  	unsigned long frequency;
->  	unsigned long accuracy;
->  	unsigned long startup_usec;
-> @@ -58,6 +64,7 @@ struct clk_slow_rc_osc {
->  struct clk_sam9x5_slow {
->  	struct clk_hw hw;
->  	void __iomem *sckcr;
-> +	const struct clk_slow_bits *bits;
->  	u8 parent;
->  };
->  
-> @@ -69,10 +76,10 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
->  	void __iomem *sckcr = osc->sckcr;
->  	u32 tmp = readl(sckcr);
->  
-> -	if (tmp & (AT91_SCKC_OSC32BYP | AT91_SCKC_OSC32EN))
-> +	if (tmp & (osc->bits->cr_osc32byp | osc->bits->cr_osc32en))
->  		return 0;
->  
-> -	writel(tmp | AT91_SCKC_OSC32EN, sckcr);
-> +	writel(tmp | osc->bits->cr_osc32en, sckcr);
->  
->  	usleep_range(osc->startup_usec, osc->startup_usec + 1);
->  
-> @@ -85,10 +92,10 @@ static void clk_slow_osc_unprepare(struct clk_hw *hw)
->  	void __iomem *sckcr = osc->sckcr;
->  	u32 tmp = readl(sckcr);
->  
-> -	if (tmp & AT91_SCKC_OSC32BYP)
-> +	if (tmp & osc->bits->cr_osc32byp)
->  		return;
->  
-> -	writel(tmp & ~AT91_SCKC_OSC32EN, sckcr);
-> +	writel(tmp & ~osc->bits->cr_osc32en, sckcr);
->  }
->  
->  static int clk_slow_osc_is_prepared(struct clk_hw *hw)
-> @@ -97,10 +104,10 @@ static int clk_slow_osc_is_prepared(struct clk_hw *hw)
->  	void __iomem *sckcr = osc->sckcr;
->  	u32 tmp = readl(sckcr);
->  
-> -	if (tmp & AT91_SCKC_OSC32BYP)
-> +	if (tmp & osc->bits->cr_osc32byp)
->  		return 1;
->  
-> -	return !!(tmp & AT91_SCKC_OSC32EN);
-> +	return !!(tmp & osc->bits->cr_osc32en);
->  }
->  
->  static const struct clk_ops slow_osc_ops = {
-> @@ -114,7 +121,8 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
->  			   const char *name,
->  			   const char *parent_name,
->  			   unsigned long startup,
-> -			   bool bypass)
-> +			   bool bypass,
-> +			   const struct clk_slow_bits *bits)
->  {
->  	struct clk_slow_osc *osc;
->  	struct clk_hw *hw;
-> @@ -137,10 +145,11 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
->  	osc->hw.init = &init;
->  	osc->sckcr = sckcr;
->  	osc->startup_usec = startup;
-> +	osc->bits = bits;
->  
->  	if (bypass)
-> -		writel((readl(sckcr) & ~AT91_SCKC_OSC32EN) | AT91_SCKC_OSC32BYP,
-> -		       sckcr);
-> +		writel((readl(sckcr) & ~osc->bits->cr_osc32en) |
-> +					osc->bits->cr_osc32byp, sckcr);
->  
->  	hw = &osc->hw;
->  	ret = clk_hw_register(NULL, &osc->hw);
-> @@ -173,7 +182,7 @@ static int clk_slow_rc_osc_prepare(struct clk_hw *hw)
->  	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
->  	void __iomem *sckcr = osc->sckcr;
->  
-> -	writel(readl(sckcr) | AT91_SCKC_RCEN, sckcr);
-> +	writel(readl(sckcr) | osc->bits->cr_rcen, sckcr);
->  
->  	usleep_range(osc->startup_usec, osc->startup_usec + 1);
->  
-> @@ -185,14 +194,14 @@ static void clk_slow_rc_osc_unprepare(struct clk_hw *hw)
->  	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
->  	void __iomem *sckcr = osc->sckcr;
->  
-> -	writel(readl(sckcr) & ~AT91_SCKC_RCEN, sckcr);
-> +	writel(readl(sckcr) & ~osc->bits->cr_rcen, sckcr);
->  }
->  
->  static int clk_slow_rc_osc_is_prepared(struct clk_hw *hw)
->  {
->  	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
->  
-> -	return !!(readl(osc->sckcr) & AT91_SCKC_RCEN);
-> +	return !!(readl(osc->sckcr) & osc->bits->cr_rcen);
->  }
->  
->  static const struct clk_ops slow_rc_osc_ops = {
-> @@ -208,7 +217,8 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
->  			      const char *name,
->  			      unsigned long frequency,
->  			      unsigned long accuracy,
-> -			      unsigned long startup)
-> +			      unsigned long startup,
-> +			      const struct clk_slow_bits *bits)
->  {
->  	struct clk_slow_rc_osc *osc;
->  	struct clk_hw *hw;
-> @@ -230,6 +240,7 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
->  
->  	osc->hw.init = &init;
->  	osc->sckcr = sckcr;
-> +	osc->bits = bits;
->  	osc->frequency = frequency;
->  	osc->accuracy = accuracy;
->  	osc->startup_usec = startup;
-> @@ -255,14 +266,14 @@ static int clk_sam9x5_slow_set_parent(struct clk_hw *hw, u8 index)
->  
->  	tmp = readl(sckcr);
->  
-> -	if ((!index && !(tmp & AT91_SCKC_OSCSEL)) ||
-> -	    (index && (tmp & AT91_SCKC_OSCSEL)))
-> +	if ((!index && !(tmp & slowck->bits->cr_oscsel)) ||
-> +	    (index && (tmp & slowck->bits->cr_oscsel)))
->  		return 0;
->  
->  	if (index)
-> -		tmp |= AT91_SCKC_OSCSEL;
-> +		tmp |= slowck->bits->cr_oscsel;
->  	else
-> -		tmp &= ~AT91_SCKC_OSCSEL;
-> +		tmp &= ~slowck->bits->cr_oscsel;
->  
->  	writel(tmp, sckcr);
->  
-> @@ -275,7 +286,7 @@ static u8 clk_sam9x5_slow_get_parent(struct clk_hw *hw)
->  {
->  	struct clk_sam9x5_slow *slowck = to_clk_sam9x5_slow(hw);
->  
-> -	return !!(readl(slowck->sckcr) & AT91_SCKC_OSCSEL);
-> +	return !!(readl(slowck->sckcr) & slowck->bits->cr_oscsel);
->  }
->  
->  static const struct clk_ops sam9x5_slow_ops = {
-> @@ -287,7 +298,8 @@ static struct clk_hw * __init
->  at91_clk_register_sam9x5_slow(void __iomem *sckcr,
->  			      const char *name,
->  			      const char **parent_names,
-> -			      int num_parents)
-> +			      int num_parents,
-> +			      const struct clk_slow_bits *bits)
->  {
->  	struct clk_sam9x5_slow *slowck;
->  	struct clk_hw *hw;
-> @@ -309,7 +321,8 @@ at91_clk_register_sam9x5_slow(void __iomem *sckcr,
->  
->  	slowck->hw.init = &init;
->  	slowck->sckcr = sckcr;
-> -	slowck->parent = !!(readl(sckcr) & AT91_SCKC_OSCSEL);
-> +	slowck->bits = bits;
-> +	slowck->parent = !!(readl(sckcr) & slowck->bits->cr_oscsel);
->  
->  	hw = &slowck->hw;
->  	ret = clk_hw_register(NULL, &slowck->hw);
-> @@ -322,7 +335,8 @@ at91_clk_register_sam9x5_slow(void __iomem *sckcr,
->  }
->  
->  static void __init at91sam9x5_sckc_register(struct device_node *np,
-> -					    unsigned int rc_osc_startup_us)
-> +					    unsigned int rc_osc_startup_us,
-> +					    const struct clk_slow_bits *bits)
->  {
->  	const char *parent_names[2] = { "slow_rc_osc", "slow_osc" };
->  	void __iomem *regbase = of_iomap(np, 0);
-> @@ -335,7 +349,8 @@ static void __init at91sam9x5_sckc_register(struct device_node *np,
->  		return;
->  
->  	hw = at91_clk_register_slow_rc_osc(regbase, parent_names[0], 32768,
-> -					   50000000, rc_osc_startup_us);
-> +					   50000000, rc_osc_startup_us,
-> +					   bits);
->  	if (IS_ERR(hw))
->  		return;
->  
-> @@ -358,11 +373,12 @@ static void __init at91sam9x5_sckc_register(struct device_node *np,
->  		return;
->  
->  	hw = at91_clk_register_slow_osc(regbase, parent_names[1], xtal_name,
-> -					1200000, bypass);
-> +					1200000, bypass, bits);
->  	if (IS_ERR(hw))
->  		return;
->  
-> -	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2);
-> +	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2,
-> +					   bits);
->  	if (IS_ERR(hw))
->  		return;
->  
-> @@ -373,16 +389,23 @@ static void __init at91sam9x5_sckc_register(struct device_node *np,
->  		of_clk_add_hw_provider(child, of_clk_hw_simple_get, hw);
->  }
->  
-> +static const struct clk_slow_bits at91sam9x5_bits = {
-> +	.cr_rcen = BIT(0),
-> +	.cr_osc32en = BIT(1),
-> +	.cr_osc32byp = BIT(2),
-> +	.cr_oscsel = BIT(3),
-> +};
+> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+> +and thus inherits all the common properties defined in designware-pcie.t=
+xt.
 > +
->  static void __init of_at91sam9x5_sckc_setup(struct device_node *np)
->  {
-> -	at91sam9x5_sckc_register(np, 75);
-> +	at91sam9x5_sckc_register(np, 75, &at91sam9x5_bits);
->  }
->  CLK_OF_DECLARE(at91sam9x5_clk_sckc, "atmel,at91sam9x5-sckc",
->  	       of_at91sam9x5_sckc_setup);
->  
->  static void __init of_sama5d3_sckc_setup(struct device_node *np)
->  {
-> -	at91sam9x5_sckc_register(np, 500);
-> +	at91sam9x5_sckc_register(np, 500, &at91sam9x5_bits);
->  }
->  CLK_OF_DECLARE(sama5d3_clk_sckc, "atmel,sama5d3-sckc",
->  	       of_sama5d3_sckc_setup);
-> @@ -398,7 +421,7 @@ static int clk_sama5d4_slow_osc_prepare(struct clk_hw *hw)
->  	 * Assume that if it has already been selected (for example by the
->  	 * bootloader), enough time has aready passed.
->  	 */
-> -	if ((readl(osc->sckcr) & AT91_SCKC_OSCSEL)) {
-> +	if ((readl(osc->sckcr) & osc->bits->cr_oscsel)) {
->  		osc->prepared = true;
->  		return 0;
->  	}
-> @@ -421,6 +444,10 @@ static const struct clk_ops sama5d4_slow_osc_ops = {
->  	.is_prepared = clk_sama5d4_slow_osc_is_prepared,
->  };
->  
-> +static const struct clk_slow_bits at91sama5d4_bits = {
-> +	.cr_oscsel = BIT(3),
-> +};
-> +
->  static void __init of_sama5d4_sckc_setup(struct device_node *np)
->  {
->  	void __iomem *regbase = of_iomap(np, 0);
-> @@ -455,6 +482,7 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
->  	osc->hw.init = &init;
->  	osc->sckcr = regbase;
->  	osc->startup_usec = 1200000;
-> +	osc->bits = &at91sama5d4_bits;
->  
->  	hw = &osc->hw;
->  	ret = clk_hw_register(NULL, &osc->hw);
-> @@ -463,7 +491,8 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
->  		return;
->  	}
->  
-> -	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2);
-> +	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2,
-> +					   &at91sama5d4_bits);
->  	if (IS_ERR(hw))
->  		return;
->  
-> -- 
-> 2.7.4
-> 
+> +Required properties:
+> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
+> +- device_type: Must be "pci"
+> +- power-domains: A phandle to the node that controls power to the respec=
+tive
+> +  PCIe controller and a specifier name for the PCIe controller. Followin=
+g are
+> +  the specifiers for the different PCIe controllers
+> +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C1
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C2
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C3
+> +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
+> +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
+> +  these specifiers are defined in
+> +  "include/dt-bindings/power/tegra194-powergate.h" file.
+> +- reg: A list of physical base address and length pairs for each set of
+> +  controller registers. Must contain an entry for each entry in the reg-=
+names
+> +  property.
+> +- reg-names: Must include the following entries:
+> +  "appl": Controller's application logic registers
+> +  "config": As per the definition in designware-pcie.txt
+> +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Ad=
+dress
+> +             Translation Unit) registers of the PCIe core are made avail=
+able
+> +             for SW access.
+> +  "dbi": The aperture where root port's own configuration registers are
+> +         available
+> +- interrupts: A list of interrupt outputs of the controller. Must contai=
+n an
+> +  entry for each entry in the interrupt-names property.
+> +- interrupt-names: Must include the following entries:
+> +  "intr": The Tegra interrupt that is asserted for controller interrupts
+> +  "msi": The Tegra interrupt that is asserted when an MSI is received
+> +- bus-range: Range of bus numbers associated with this controller
+> +- #address-cells: Address representation for root ports (must be 3)
+> +  - cell 0 specifies the bus and device numbers of the root port:
+> +    [23:16]: bus number
+> +    [15:11]: device number
+> +  - cell 1 denotes the upper 32 address bits and should be 0
+> +  - cell 2 contains the lower 32 address bits and is used to translate t=
+o the
+> +    CPU address space
+> +- #size-cells: Size representation for root ports (must be 2)
+> +- ranges: Describes the translation of addresses for root ports and stan=
+dard
+> +  PCI regions. The entries must be 7 cells each, where the first three c=
+ells
+> +  correspond to the address as described for the #address-cells property
+> +  above, the fourth and fifth cells are for the physical CPU address to
+> +  translate to and the sixth and seventh cells are as described for the
+> +  #size-cells property above.
+> +  - Entries setup the mapping for the standard I/O, memory and
+> +    prefetchable PCI regions. The first cell determines the type of regi=
+on
+> +    that is setup:
+> +    - 0x81000000: I/O memory region
+> +    - 0x82000000: non-prefetchable memory region
+> +    - 0xc2000000: prefetchable memory region
+> +  Please refer to the standard PCI bus binding document for a more detai=
+led
+> +  explanation.
+> +- #interrupt-cells: Size representation for interrupts (must be 1)
+> +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping propert=
+ies
+> +  Please refer to the standard PCI bus binding document for a more detai=
+led
+> +  explanation.
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +  See ../clocks/clock-bindings.txt for details.
+> +- clock-names: Must include the following entries:
+> +  - core
+> +- resets: Must contain an entry for each entry in reset-names.
+> +  See ../reset/reset.txt for details.
+> +- reset-names: Must include the following entries:
+> +  - core_apb
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Perhaps leave away the "core_" prefix here and simply call this "apb"?
+
+> +  - core
+> +- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
+> +- phy-names: Must include an entry for each active lane.
+> +  "p2u-N": where N ranges from 0 to one less than the total number of la=
+nes
+> +- nvidia,bpmp: Must contain a pair of phandle to BPMP controller node fo=
+llowed
+> +  by controller-id. Following are the controller ids for each controller.
+> +    0: C0
+> +    1: C1
+> +    2: C2
+> +    3: C3
+> +    4: C4
+> +    5: C5
+> +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
+> +
+> +Optional properties:
+> +- supports-clkreq: Refer to Documentation/devicetree/bindings/pci/pci.txt
+> +- nvidia,update-fc-fixup: This is a boolean property and needs to be pre=
+sent to
+> +    improve perf when a platform is designed in such a way that it satis=
+fies at
+
+This is a descriptive text, so it makes sense to spell out "performance"
+for better readability.
+
+> +    least one of the following conditions thereby enabling root port to
+> +    exchange optimum number of FC (Flow Control) credits with downstream=
+ devices
+> +    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and M=
+PS)
+> +    2. If C0/C1/C2/C3/C4/C5 operate at their respective max link widths =
+and
+> +       a) speed is Gen-2 and MPS is 256B
+> +       b) speed is >=3D Gen-3 with any MPS
+
+I'm not sure if I asked this before, but can we not determine that the
+configuration matches one of these conditions and select FC fixup mode
+at runtime in that case?
+
+> +- "nvidia,aspm-cmrt-us": Common Mode Restore time for proper operation o=
+f ASPM
+
+You can drop the quotes around the property names. Also, perhaps also
+capitalize "Time" since it's part of the acronym expansion for CMRT.
+
+> +   to be specified in microseconds
+> +- "nvidia,aspm-pwr-on-t-us": Power On time for proper operation of ASPM =
+to be
+> +   specified in microseconds
+> +- "nvidia,aspm-l0s-entrance-latency-us": ASPM L0s entrance latency to be
+> +   specified in microseconds
+> +
+> +Examples:
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Tegra194:
+> +--------
+> +
+> +SoC DTSI:
+
+The example below looks like it's got board specific bits in it, so
+perhaps just drop the "SoC DTSI:" caption.
+
+> +
+> +	pcie@14180000 {
+> +		compatible =3D "nvidia,tegra194-pcie", "snps,dw-pcie";
+> +		power-domains =3D <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
+> +		reg =3D <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)    =
+  */
+> +		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) =
+*/
+> +		       0x00 0x38040000 0x0 0x00040000>; /* iATU_DMA reg space (256K)  =
+*/
+> +		reg-names =3D "appl", "config", "atu_dma";
+> +
+> +		#address-cells =3D <3>;
+> +		#size-cells =3D <2>;
+> +		device_type =3D "pci";
+> +		num-lanes =3D <8>;
+> +		linux,pci-domain =3D <0>;
+> +
+> +		clocks =3D <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
+> +		clock-names =3D "core";
+> +
+> +		resets =3D <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
+> +			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
+> +		reset-names =3D "core_apb", "core";
+> +
+> +		interrupts =3D <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,	/* controller interru=
+pt */
+> +			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
+> +		interrupt-names =3D "intr", "msi";
+> +
+> +		#interrupt-cells =3D <1>;
+> +		interrupt-map-mask =3D <0 0 0 0>;
+> +		interrupt-map =3D <0 0 0 0 &gic 0 72 0x04>;
+
+Use the symbolic definitions GIC_SPI and IRQ_TYPE_LEVEL_HIGH here as
+well.
+
+> +
+> +		nvidia,bpmp =3D <&bpmp>;
+
+This should contain a controller ID according to the bindings.
+
+> +
+> +		supports-clkreq;
+> +		nvidia,disable-aspm-states =3D <0xf>;
+
+This is no longer documented above.
+
+> +		nvidia,controller-id =3D <0>;
+
+This is no longer documented above.
+
+> +		nvidia,aspm-cmrt-us =3D <60>;
+> +		nvidia,aspm-pwr-on-t-us =3D <20>;
+> +		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
+> +
+> +		bus-range =3D <0x0 0xff>;
+> +		ranges =3D <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000   =
+   /* downstream I/O (1MB) */
+> +			  0x82000000 0x0 0x38200000 0x0 0x38200000 0x0 0x01E00000      /* non=
+-prefetchable memory (30MB) */
+> +			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* pre=
+fetchable memory (16GB) */
+
+Perhaps align the individual cells to make this more readable?
+
+> +
+> +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
+> +
+> +		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
+> +		       <&p2u_hsio_5>;
+> +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3";
+> +	};
+
+Thanks,
+Thierry
+
+--YrQNB5Deg1WGKZi3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj2EgACgkQ3SOs138+
+s6F9Tg/8DULF5J6wf4eLdR6TpIhskN1tAT8nstaTXpMBEHmwMjcwaqwuaftOvwam
+/hNUDZL2yRsp5AmMcxgPVxQ7yxEIKDT37QLce+U636G79pcXQfPoRoqeuwq7QgcU
+dPGUkN+qI/E9XLojwtL/T6yO4ZSxaySuRmedsTdMqT5TcppXkULGqrWQtAMdv5T4
+J0uIayb9tuqcVVkYPLVeMnaCaaAiRsD6BBnPFBcDe+LE2W8EJeJBOdMbDNp0YdBN
+ut/qrVdhzz6nwE71ZzmJLZ8LPHJqX0+uZc8ohApqt4JtTMv3shnwGYIYhnOfo0wI
+hSe+oM2E1jiVokxl5hPqvLve+KZIMilHHDjhuSB+JMh25md/I9PoVB4XEd3WrEOw
+can1kZgM/SOK5SOxMFDAWuSLMkFJzeG78rlBvdhWVukW+TCk1moLkhCzeDvtcFRl
+0wEXGfC/tlQ0CLDMQYJJqYZSxBDSdVpGVXWplX1y2fyH4R4BqGY8cvtc1yLXG3F1
+W6yspptSYmYX1BsnSwKQpifyC/eAyuuzk7ux8pPfyKObiglX+XNjJR5VkaJ8jcZQ
+UzDRamMhNNnnGQNU4OTgnQccI1GqBZfSI1yUQVkSkouC7HVSYXDRGnIdHVc9eait
+1aMstvSz0U1Zld6Qpvys0LI8X+rms4cgJ+8leovTNo+hyBEscTY=
+=onc4
+-----END PGP SIGNATURE-----
+
+--YrQNB5Deg1WGKZi3--
