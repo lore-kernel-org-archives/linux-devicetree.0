@@ -1,44 +1,85 @@
-Return-Path: <SRS0=ucJs=TQ=outlook.com=leiwang_git@kernel.org>
-From: Lei Wang <leiwang_git@outlook.com>
-Subject: [PATCH v3 1/2] dt-bindings: edac: arm-dmc520.txt
-Date: Thu, 16 May 2019 02:35:47 +0000
-Message-ID: <CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=VdDr=TV=nvidia.com=mmaddireddy@kernel.org>
+Subject: Re: [PATCH V4 20/28] PCI: tegra: Use legacy IRQ for port service
+ drivers
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+ <20190516055307.25737-21-mmaddireddy@nvidia.com>
+ <20190520203731.GA54609@google.com>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <41397458-c97b-fb38-49ba-8f3bb9ec3ded@nvidia.com>
+Date: Tue, 21 May 2019 14:37:00 +0530
 MIME-Version: 1.0
-To: "bp@alien8.de" <bp@alien8.de>, "james.morse@arm.com" <james.morse@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "lewan@microsoft.com" <lewan@microsoft.com>, Lei Wang <leiwang_git@outlook.com>
+In-Reply-To: <20190520203731.GA54609@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-RnJvbTogTGVpIFdhbmcgPGxlaXdhbmdfZ2l0QG91dGxvb2suY29tPg0KDQpUaGlzIGlzIHRoZSBk
-ZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgbmV3IEVEQUMgZHJpdmVyIGRtYzUyMF9lZGFjLmMuDQoN
-ClNpZ25lZC1vZmYtYnk6IExlaSBXYW5nIDxsZWl3YW5nX2dpdEBvdXRsb29rLmNvbT4NCi0tLQ0K
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2VkYWMvYXJtLWRtYzUyMC50eHQgICAgICAgIHwgMjYg
-KysrKysrKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCsp
-DQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9l
-ZGFjL2FybS1kbWM1MjAudHh0DQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZWRhYy9hcm0tZG1jNTIwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9lZGFjL2FybS1kbWM1MjAudHh0DQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5k
-ZXggMDAwMDAwMC4uNzFlN2FhMw0KLS0tIC9kZXYvbnVsbA0KKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2VkYWMvYXJtLWRtYzUyMC50eHQNCkBAIC0wLDAgKzEsMjYgQEAN
-CisqIEFSTSBETUMtNTIwIEVEQUMgbm9kZQ0KKw0KK1JlcXVpcmVkIHByb3BlcnRpZXM6DQorLSBj
-b21wYXRpYmxlCQk6ICJicmNtLGRtYy01MjAiLCAiYXJtLGRtYy01MjAiLg0KKy0gcmVnCQkJOiBB
-ZGRyZXNzIHJhbmdlIG9mIHRoZSBETUMtNTIwIHJlZ2lzdGVycy4NCistIGludGVycnVwdHMJCTog
-RE1DLTUyMCBpbnRlcnJ1cHQgbnVtYmVycy4gVGhlIGV4YW1wbGUgYmVsb3cgc3BlY2lmaWVzDQor
-CQkJICB0d28gaW50ZXJydXB0IGxpbmVzIGZvciBkcmFtX2VjY19lcnJjX2ludCBhbmQNCisJCQkg
-IGRyYW1fZWNjX2VycmRfaW50Lg0KKy0gaW50ZXJydXB0LWNvbmZpZwk6IFRoaXMgaXMgYW4gYXJy
-YXkgb2YgaW50ZXJydXB0IG1hc2tzLiBGb3IgZWFjaCBvZiB0aGUNCisJCQkgIGFib3ZlIGludGVy
-cnVwdCBsaW5lLCBhZGQgb25lIGludGVycnVwdCBtYXNrIGVsZW1lbnQgdG8NCisJCQkgIGl0LiBU
-aGF0IGlzLCB0aGVyZSBpcyBhIDE6MSBtYXBwaW5nIGZyb20gZWFjaCBpbnRlcnJ1cHQNCisJCQkg
-IGxpbmUgdG8gYW4gaW50ZXJydXB0IG1hc2suIEFuIGludGVycnVwdCBtYXNrIGNhbiByZXByZXNl
-bnQNCisJCQkgIG11bHRpcGxlIGludGVycnVwdHMgYmVpbmcgZW5hYmxlZC4gUmVmZXIgdG8gaW50
-ZXJydXB0X2NvbnRyb2wNCisJCQkgIHJlZ2lzdGVyIGluIERNQy01MjAgVFJNIGZvciBpbnRlcnJ1
-cHQgbWFwcGluZy4gSW4gdGhlIGV4YW1wbGUNCisJCQkgIGJlbG93LCB0aGUgaW50ZXJydXB0IGNv
-bmZpZ3VyYXRpb24gZW5hYmxlcyBkcmFtX2VjY19lcnJjX2ludA0KKwkJCSAgYW5kIGRyYW1fZWNj
-X2VycmRfaW50LiBBbmQgZWFjaCBpbnRlcnJ1cHQgaXMgY29ubmVjdGVkIHRvDQorCQkJICBhIHNl
-cGFyYXRlIGludGVycnVwdCBsaW5lLg0KKw0KK0V4YW1wbGU6DQorDQorZG1jMDogZG1jQDIwMDAw
-MCB7DQorCWNvbXBhdGlibGUgPSAiYnJjbSxkbWMtNTIwIiwgImFybSxkbWMtNTIwIjsNCisJcmVn
-ID0gPDB4MjAwMDAwIDB4ODAwMDA+Ow0KKwlpbnRlcnJ1cHRzID0gPDB4MCAweDM0OSAweDQ+LCA8
-MHgwIDB4MzRCIDB4ND47DQorCWludGVycnVwdC1jb25maWcgPSA8MHg0PiwgPDB4OD47DQorfTsN
-Ci0tIA0KMi43LjQNCg0K
+
+
+On 21-May-19 2:07 AM, Bjorn Helgaas wrote:
+> On Thu, May 16, 2019 at 11:22:59AM +0530, Manikanta Maddireddy wrote:
+>> Tegra signals PCIe services like AER, PME, etc. over legacy IRQ line.
+>> By default, service drivers register interrupt routine over MSI IRQ line.
+>> Use pcie_pme_disable_msi() function to disable MSI for service drivers.
+> I think this device is not quite spec-compliant:
+>
+>   https://lore.kernel.org/linux-pci/20190520175729.GC49425@google.com/
+>
+> and you should work around this with a quirk that sets pdev->no_msi so
+> we don't use MSI for it at all.
+
+OK, I will update in next version. 
+
+Manikanta
+
+>
+>> PME and AER interrupts registered to MSI without this change,
+>> cat /proc/interrupts | grep -i pci
+>> 36: 21 0 0 0 0 0 GICv2 104 Level       PCIE
+>> 37: 35 0 0 0 0 0 GICv2 105 Level       Tegra PCIe MSI
+>> 76: 0  0 0 0 0 0 Tegra PCIe MSI 0 Edge PCIe PME, aerdrv, PCIe BW notif
+>>
+>> PME and AER interrupts registered to legacy IRQ with this change,
+>> cat /proc/interrupts | grep -i pci
+>> 36: 33 0 0 0 0 0 GICv2 104 Level      PCIE, PCIe PME, aerdrv, PCIe BW notif
+>> 37: 52 0 0 0 0 0 GICv2 105 Level      Tegra PCIe MSI
+>>
+>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>> V4: No change
+>>
+>> V3: Corrected typo in commit log
+>>
+>> V2: No change
+>>
+>>  drivers/pci/controller/pci-tegra.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+>> index ac57c5badd9b..0024bc42b400 100644
+>> --- a/drivers/pci/controller/pci-tegra.c
+>> +++ b/drivers/pci/controller/pci-tegra.c
+>> @@ -41,6 +41,7 @@
+>>  #include <soc/tegra/pmc.h>
+>>  
+>>  #include "../pci.h"
+>> +#include "../pcie/portdrv.h"
+>>  
+>>  #define INT_PCI_MSI_NR (8 * 32)
+>>  
+>> @@ -2725,6 +2726,9 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+>>  		goto put_resources;
+>>  	}
+>>  
+>> +	/* Switch to legacy IRQ for PCIe services like AER, PME*/
+>> +	pcie_pme_disable_msi();
+>> +
+>>  	pm_runtime_enable(pcie->dev);
+>>  	err = pm_runtime_get_sync(pcie->dev);
+>>  	if (err) {
+>> -- 
+>> 2.17.1
+>>
