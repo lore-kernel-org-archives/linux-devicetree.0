@@ -1,243 +1,71 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 2/2] ARM: dts: rockchip: Add pin names for rk3288-veyron-jerry
-Date: Tue, 21 May 2019 13:32:15 -0700
-Message-ID: <20190521203215.234898-2-dianders@chromium.org>
-References: <20190521203215.234898-1-dianders@chromium.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: arizona: Update device tree binding to support Madera CODECs" to the regulator tree
+Date: Tue, 21 May 2019 21:33:00 +0100 (BST)
+Message-ID: <20190521203300.1463A1126D17@debutante.sirena.org.uk>
+References: <20190521100439.27383-1-ckeepax@opensource.cirrus.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521203215.234898-1-dianders@chromium.org>
+In-Reply-To: <20190521100439.27383-1-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: briannorris@chromium.org, ryandcase@chromium.org, mka@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: broonie@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, patches@opensource.cirrus.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is like the same change for rk3288-veyron-minnie.  See that patch
-for more details.
+The patch
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+   regulator: arizona: Update device tree binding to support Madera CODECs
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 46f4050a6587ea3e59e6f47f06513c00689b9d40 Mon Sep 17 00:00:00 2001
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Date: Tue, 21 May 2019 11:04:37 +0100
+Subject: [PATCH] regulator: arizona: Update device tree binding to support
+ Madera CODECs
+
+The Arizona regulator drivers are now also used by the Cirrus Logic
+Madera audio CODECs, update the binding document to link to the primary
+binding document for these as well as the existing Arizona document.
+
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
+ .../devicetree/bindings/regulator/arizona-regulator.txt        | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- arch/arm/boot/dts/rk3288-veyron-jerry.dts | 207 ++++++++++++++++++++++
- 1 file changed, 207 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-index b1613af83d5d..164561f04c1d 100644
---- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-@@ -103,6 +103,213 @@
- 	pinctrl-0 = <&vcc50_hdmi_en>;
- };
+diff --git a/Documentation/devicetree/bindings/regulator/arizona-regulator.txt b/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+index 443564d7784f..69bf41949b01 100644
+--- a/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+@@ -5,7 +5,8 @@ of analogue I/O.
  
-+&gpio0 {
-+	gpio-line-names = "PMIC_SLEEP_AP",
-+			  "DDRIO_PWROFF",
-+			  "DDRIO_RETEN",
-+			  "TS3A227E_INT_L",
-+			  "PMIC_INT_L",
-+			  "PWR_KEY_L",
-+			  "AP_LID_INT_L",
-+			  "EC_IN_RW",
-+
-+			  "AC_PRESENT_AP",
-+			  /*
-+			   * RECOVERY_SW_L is Chrome OS ABI.  Schematics call
-+			   * it REC_MODE_L.
-+			   */
-+			  "RECOVERY_SW_L",
-+			  "OTP_OUT",
-+			  "HOST1_PWR_EN",
-+			  "USBOTG_PWREN_H",
-+			  "AP_WARM_RESET_H",
-+			  "nFAULT2",
-+			  "I2C0_SDA_PMIC",
-+
-+			  "I2C0_SCL_PMIC",
-+			  "SUSPEND_L",
-+			  "USB_INT";
-+};
-+
-+&gpio2 {
-+	gpio-line-names = "CONFIG0",
-+			  "CONFIG1",
-+			  "CONFIG2",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "CONFIG3",
-+
-+			  "",
-+			  "EMMC_RST_L",
-+			  "",
-+			  "",
-+			  "BL_PWR_EN",
-+			  "AVDD_1V8_DISP_EN";
-+};
-+
-+&gpio3 {
-+	gpio-line-names = "FLASH0_D0",
-+			  "FLASH0_D1",
-+			  "FLASH0_D2",
-+			  "FLASH0_D3",
-+			  "FLASH0_D4",
-+			  "FLASH0_D5",
-+			  "FLASH0_D6",
-+			  "FLASH0_D7",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "FLASH0_CS2/EMMC_CMD",
-+			  "",
-+			  "FLASH0_DQS/EMMC_CLKO";
-+};
-+
-+&gpio4 {
-+	gpio-line-names = "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "UART0_RXD",
-+			  "UART0_TXD",
-+			  "UART0_CTS",
-+			  "UART0_RTS",
-+			  "SDIO0_D0",
-+			  "SDIO0_D1",
-+			  "SDIO0_D2",
-+			  "SDIO0_D3",
-+
-+			  "SDIO0_CMD",
-+			  "SDIO0_CLK",
-+			  "BT_DEV_WAKE",
-+			  "",
-+			  "WIFI_ENABLE_H",
-+			  "BT_ENABLE_L",
-+			  "WIFI_HOST_WAKE",
-+			  "BT_HOST_WAKE";
-+};
-+
-+&gpio5 {
-+	gpio-line-names = "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "SPI0_CLK",
-+			  "SPI0_CS0",
-+			  "SPI0_TXD",
-+			  "SPI0_RXD",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "VCC50_HDMI_EN";
-+};
-+
-+&gpio6 {
-+	gpio-line-names = "I2S0_SCLK",
-+			  "I2S0_LRCK_RX",
-+			  "I2S0_LRCK_TX",
-+			  "I2S0_SDI",
-+			  "I2S0_SDO0",
-+			  "HP_DET_H",
-+			  "",
-+			  "INT_CODEC",
-+
-+			  "I2S0_CLK",
-+			  "I2C2_SDA",
-+			  "I2C2_SCL",
-+			  "MICDET",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "SDMMC_D0",
-+			  "SDMMC_D1",
-+			  "SDMMC_D2",
-+			  "SDMMC_D3",
-+			  "SDMMC_CLK",
-+			  "SDMMC_CMD";
-+};
-+
-+&gpio7 {
-+	gpio-line-names = "LCDC_BL",
-+			  "PWM_LOG",
-+			  "BL_EN",
-+			  "TRACKPAD_INT",
-+			  "TPM_INT_H",
-+			  "SDMMC_DET_L",
-+			  /*
-+			   * AP_FLASH_WP_L is Chrome OS ABI.  Schematics call
-+			   * it FW_WP_AP.
-+			   */
-+			  "AP_FLASH_WP_L",
-+			  "EC_INT",
-+
-+			  "CPU_NMI",
-+			  "DVSOK",
-+			  "",
-+			  "EDP_HPD",
-+			  "DVS1",
-+			  "nFAULT1",
-+			  "LCD_EN",
-+			  "DVS2",
-+
-+			  "VCC5V_GOOD_H",
-+			  "I2C4_SDA_TP",
-+			  "I2C4_SCL_TP",
-+			  "I2C5_SDA_HDMI",
-+			  "I2C5_SCL_HDMI",
-+			  "5V_DRV",
-+			  "UART2_RXD",
-+			  "UART2_TXD";
-+};
-+
-+&gpio8 {
-+	gpio-line-names = "RAM_ID0",
-+			  "RAM_ID1",
-+			  "RAM_ID2",
-+			  "RAM_ID3",
-+			  "I2C1_SDA_TPM",
-+			  "I2C1_SCL_TPM",
-+			  "SPI2_CLK",
-+			  "SPI2_CS0",
-+
-+			  "SPI2_RXD",
-+			  "SPI2_TXD";
-+};
-+
- &pinctrl {
- 	backlight {
- 		bl_pwr_en: bl_pwr_en {
+ This document lists regulator specific bindings, see the primary binding
+ document:
+-  ../mfd/arizona.txt
++  For Wolfson Microelectronic Arizona codecs: ../mfd/arizona.txt
++  For Cirrus Logic Madera codecs: ../mfd/madera.txt
+ 
+ Optional properties:
+   - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
 -- 
-2.21.0.1020.gf2820cf01a-goog
+2.20.1
