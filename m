@@ -1,81 +1,55 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V7 08/15] dt-bindings: Add PCIe supports-clkreq property
-Date: Tue, 21 May 2019 12:39:27 +0200
-Message-ID: <20190521103927.GH29166@ulmo>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-9-vidyas@nvidia.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v7 1/4] dt-bindings: soc: qcom: Add AOSS QMP binding
+Date: Tue, 21 May 2019 16:12:11 +0530
+Message-ID: <20190521104211.GF15118@vkoul-mobl>
+References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
+ <20190501043734.26706-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tT3UgwmDxwvOMqfu"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190517123846.3708-9-vidyas@nvidia.com>
+In-Reply-To: <20190501043734.26706-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---tT3UgwmDxwvOMqfu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 17, 2019 at 06:08:39PM +0530, Vidya Sagar wrote:
-> Some host controllers need to know the existence of clkreq signal routing=
- to
-> downstream devices to be able to advertise low power features like ASPM L1
-> substates. Without clkreq signal routing being present, enabling ASPM L1 =
-sub
-> states might lead to downstream devices falling off the bus. Hence a new =
-device
-> tree property 'supports-clkreq' is added to make such host controllers
-> aware of clkreq signal routing to downstream devices.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On 30-04-19, 21:37, Bjorn Andersson wrote:
+> Add binding for the QMP based side-channel communication mechanism to
+> the AOSS, which is used to control resources not exposed through the
+> RPMh interface.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
-> Changes since [v6]:
-> * None
->=20
-> Changes since [v5]:
-> * s/Documentation\/devicetree/dt-bindings/ in the subject
->=20
-> Changes since [v4]:
-> * None
->=20
-> Changes since [v3]:
-> * Rebased on top of linux-next top of the tree
->=20
-> Changes since [v2]:
-> * None
->=20
-> Changes since [v1]:
-> * This is a new patch in v2 series
->=20
->  Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> 
+> Changes since v6:
+> - Added #clock-cells
+> 
+>  .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 81 +++++++++++++++++++
+>  include/dt-bindings/power/qcom-aoss-qmp.h     | 14 ++++
+>  2 files changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+>  create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+> new file mode 100644
+> index 000000000000..14a45b3dc059
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+> @@ -0,0 +1,81 @@
+> +Qualcomm Always-On Subsystem side channel binding
+> +
+> +This binding describes the hardware component responsible for side channel
+> +requests to the always-on subsystem (AOSS), used for certain power management
+> +requests that is not handled by the standard RPMh interface. Each client in the
+> +SoC has it's own block of message RAM and IRQ for communication with the AOSS.
+> +The protocol used to communicate in the message RAM is known as Qualcomm
+> +Messagin Protocol (QMP)
 
-Reviewed-by: Thierry Reding <treding@nvidia.com>
+s/Messagin/Messaging?
 
---tT3UgwmDxwvOMqfu
-Content-Type: application/pgp-signature; name="signature.asc"
+Rest lgtm:
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj1V8ACgkQ3SOs138+
-s6GxMA/+NpI6ZwlnTMAsJ8ruKfvjYGpc3OE5nyJWsBE+w/rPCtvydx/UNDb4nMh8
-gdNQ08uHKoRG7fx7mW8u8nuExzY8euEy3GPdIDycVfEtIzu68wTOL0Fma9cjAOxe
-cc+QaowCdUqRpEgs6ofUrcOUfPAV821c/wJ3O77MjlO99apfproJWw4iupCmUsot
-b5M7jiptwqfi5OJklcQG2szxmbu23vBr1x+BuPDq6D+zF/K7LVuA1BSuMDywdvnc
-24PpnWha4OV8zo1Ql5mUr0+F3VO+QP/lQO2YWvXx/mHO/zVp3IzKKu8vmymJBUhm
-OC5EeWj1+OBVmO6NXG8K3INzzsR6T21AssIkfsdeavGHZh+JE54IHIJnwiAnq1nZ
-bWmwR1aD4sQ3f81ObETw2KYoiAbyCFo0pxAiiQKgHa/c5XGCk8XzCdxWWoTNMdZA
-lntfi3itDEl1X7BjArF/z5j2WRHu8lG6wBdV9PySN6bUlzkvxk4phTFMDPzgJKBW
-mC95CXIvTR6uLPfNchE7HuMd/ylsM/V/EbLUgmf2s3uiU+jMoDVs3o5Nvh5aQLHZ
-vLMH4hozBmHGvyENFaXeBSMuExVnx2vwWfDpCxr/8M/VYMQsqkCsKyINzAtLmCQ3
-lbzIKQRGlFmaPKwX7V39yTk1CPE5pkWYEM6Z9/cJXzEot37EH3g=
-=KEQ8
------END PGP SIGNATURE-----
-
---tT3UgwmDxwvOMqfu--
+-- 
+~Vinod
