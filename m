@@ -1,47 +1,31 @@
 From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 1/2] ARM: dts: rockchip: Add pin names for rk3288-veyron-minnie
-Date: Tue, 21 May 2019 13:32:14 -0700
-Message-ID: <20190521203215.234898-1-dianders@chromium.org>
+Subject: [PATCH 2/2] ARM: dts: rockchip: Add pin names for rk3288-veyron-jerry
+Date: Tue, 21 May 2019 13:32:15 -0700
+Message-ID: <20190521203215.234898-2-dianders@chromium.org>
+References: <20190521203215.234898-1-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190521203215.234898-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>
 Cc: briannorris@chromium.org, ryandcase@chromium.org, mka@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-We can now use the "gpio-line-names" property to provide the names for
-all the pins on a board.  Let's use this to provide the names for all
-the pins on rk3288-veyron-minnie.
-
-In general the names here come straight from the schematic.  That
-means even if the schematic name is weird / doesn't have consistent
-naming conventions / has typos I still haven't made any changes.
-
-The exception here is for two pins: the recovery switch and the write
-protect detection pin.  These two pins need to have standardized names
-since crossystem (a Chrome OS tool) uses these names to query the
-pins.  In downstream kernels crossystem used an out-of-tree driver to
-do this but it has now been moved to the gpiod API and needs the
-standardized names.
-
-It's expected that other rk3288-veyron boards will get similar patches
-shortly.
-
-NOTE: I have sorted the "gpio" section to be next to the "pinctrl"
-section since it seems to logically make the most sense there.
+This is like the same change for rk3288-veyron-minnie.  See that patch
+for more details.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- arch/arm/boot/dts/rk3288-veyron-minnie.dts | 212 +++++++++++++++++++++
- 1 file changed, 212 insertions(+)
+ arch/arm/boot/dts/rk3288-veyron-jerry.dts | 207 ++++++++++++++++++++++
+ 1 file changed, 207 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-index ce57881625ec..a65099b4aef1 100644
---- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-@@ -184,6 +184,218 @@
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+index b1613af83d5d..164561f04c1d 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+@@ -103,6 +103,213 @@
  	pinctrl-0 = <&vcc50_hdmi_en>;
  };
  
@@ -65,7 +49,7 @@ index ce57881625ec..a65099b4aef1 100644
 +			  "HOST1_PWR_EN",
 +			  "USBOTG_PWREN_H",
 +			  "AP_WARM_RESET_H",
-+			  "nFALUT2",
++			  "nFAULT2",
 +			  "I2C0_SDA_PMIC",
 +
 +			  "I2C0_SCL_PMIC",
@@ -83,17 +67,12 @@ index ce57881625ec..a65099b4aef1 100644
 +			  "",
 +			  "CONFIG3",
 +
-+			  "PROCHOT#",
++			  "",
 +			  "EMMC_RST_L",
 +			  "",
 +			  "",
 +			  "BL_PWR_EN",
-+			  "AVDD_1V8_DISP_EN",
-+			  "TOUCH_INT",
-+			  "TOUCH_RST",
-+
-+			  "I2C3_SCL_TP",
-+			  "I2C3_SDA_TP";
++			  "AVDD_1V8_DISP_EN";
 +};
 +
 +&gpio3 {
@@ -150,7 +129,7 @@ index ce57881625ec..a65099b4aef1 100644
 +
 +			  "SDIO0_CMD",
 +			  "SDIO0_CLK",
-+			  "dev_wake",
++			  "BT_DEV_WAKE",
 +			  "",
 +			  "WIFI_ENABLE_H",
 +			  "BT_ENABLE_L",
@@ -170,8 +149,8 @@ index ce57881625ec..a65099b4aef1 100644
 +
 +			  "",
 +			  "",
-+			  "Volum_Up#",
-+			  "Volum_Down#",
++			  "",
++			  "",
 +			  "SPI0_CLK",
 +			  "SPI0_CS0",
 +			  "SPI0_TXD",
@@ -225,11 +204,11 @@ index ce57881625ec..a65099b4aef1 100644
 +			  "EC_INT",
 +
 +			  "CPU_NMI",
-+			  "DVS_OK",
-+			  "SDMMC_WP",
++			  "DVSOK",
++			  "",
 +			  "EDP_HPD",
 +			  "DVS1",
-+			  "nFALUT1",
++			  "nFAULT1",
 +			  "LCD_EN",
 +			  "DVS2",
 +
