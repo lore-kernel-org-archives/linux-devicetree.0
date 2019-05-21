@@ -1,225 +1,131 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v7 09/12] soc: mediatek: cmdq: define the instruction
- struct
-Date: Tue, 21 May 2019 10:48:05 +0800
-Message-ID: <1558406885.25526.3.camel@mtksdaap41>
-References: <20190521011108.40428-1-bibby.hsieh@mediatek.com>
-         <20190521011108.40428-10-bibby.hsieh@mediatek.com>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: =?UTF-8?Q?Re:_[PATCH_v2_4/7]_drivers/soc:_xdma:_Add_PCI_device_configura?=
+ =?UTF-8?Q?tion_sysfs?=
+Date: Tue, 21 May 2019 12:52:17 +0930
+Message-ID: <e7592bb9-c455-4eca-9c42-2ab16d04a57f@www.fastmail.com>
+References: <1558383565-11821-1-git-send-email-eajames@linux.ibm.com>
+ <1558383565-11821-5-git-send-email-eajames@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521011108.40428-10-bibby.hsieh@mediatek.com>
+In-Reply-To: <1558383565-11821-5-git-send-email-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
+To: Eddie James <eajames@linux.ibm.com>, linux-aspeed@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
 
-On Tue, 2019-05-21 at 09:11 +0800, Bibby Hsieh wrote:
-> Define an instruction structure for gce driver to append command.
-> This structure can make the client's code more readability.
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
+On Tue, 21 May 2019, at 05:51, Eddie James wrote:
+> The AST2500 has two PCI devices embedded. The XDMA engine can use either
+> device to perform DMA transfers. Users need the capability to choose
+> which device to use. This commit therefore adds two sysfs files that
+> toggle the AST2500 and XDMA engine between the two PCI devices.
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 > ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c   | 103 +++++++++++++++--------
->  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
->  2 files changed, 72 insertions(+), 33 deletions(-)
+>  drivers/soc/aspeed/aspeed-xdma.c | 64 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
 > 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 7aa0517ff2f3..0886c4967ca4 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -9,12 +9,24 @@
->  #include <linux/mailbox_controller.h>
->  #include <linux/soc/mediatek/mtk-cmdq.h>
->  
-> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
->  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
->  #define CMDQ_EOC_IRQ_EN		BIT(0)
->  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
->  				<< 32 | CMDQ_EOC_IRQ_EN)
->  
-> +struct cmdq_instruction {
-> +	union {
-> +		u32 value;
-> +		u32 mask;
-> +	};
-> +	union {
-> +		u16 offset;
-> +		u16 event;
-> +	};
-> +	u8 subsys;
-> +	u8 op;
-> +};
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> @@ -110,10 +122,8 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
->  }
->  EXPORT_SYMBOL(cmdq_pkt_destroy);
->  
-> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
-> -				   u32 arg_a, u32 arg_b)
-> +static struct cmdq_instruction *cmdq_pkt_append_command(struct cmdq_pkt *pkt)
->  {
-> -	u64 *cmd_ptr;
->  
->  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
->  		/*
-> @@ -127,81 +137,108 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
->  		pkt->cmd_buf_size += CMDQ_INST_SIZE;
->  		WARN_ONCE(1, "%s: buffer size %u is too small !\n",
->  			__func__, (u32)pkt->buf_size);
-> -		return -ENOMEM;
-> +		return NULL;
+> diff --git a/drivers/soc/aspeed/aspeed-xdma.c 
+> b/drivers/soc/aspeed/aspeed-xdma.c
+> index 2162ca0..002b571 100644
+> --- a/drivers/soc/aspeed/aspeed-xdma.c
+> +++ b/drivers/soc/aspeed/aspeed-xdma.c
+> @@ -667,6 +667,64 @@ static void aspeed_xdma_free_vga_blks(struct 
+> aspeed_xdma *ctx)
 >  	}
-> -	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
-> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
-> +
->  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
->  
-> -	return 0;
-> +	return pkt->va_base + pkt->cmd_buf_size - CMDQ_INST_SIZE;
 >  }
 >  
->  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
->  {
-> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
-> -		    (subsys << CMDQ_SUBSYS_SHIFT);
-> +	struct cmdq_instruction *inst;
+> +static int aspeed_xdma_change_pcie_conf(struct aspeed_xdma *ctx, u32 conf)
+> +{
+> +	int rc;
 > +
-> +	inst = cmdq_pkt_append_command(pkt);
-> +	if (!inst)
-> +		return -ENOMEM;
+> +	mutex_lock(&ctx->start_lock);
+> +	rc = wait_event_interruptible_timeout(ctx->wait,
+> +					      !test_bit(XDMA_IN_PRG,
+> +							&ctx->flags),
+> +					      msecs_to_jiffies(1000));
+> +	if (rc < 0) {
+> +		mutex_unlock(&ctx->start_lock);
+> +		return -EINTR;
+> +	}
 > +
-> +	inst->op = CMDQ_CODE_WRITE;
-> +	inst->value = value;
-> +	inst->offset = offset;
-> +	inst->subsys = subsys;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
+> +	/* previous op didn't complete, wake up waiters anyway */
+> +	if (!rc)
+> +		wake_up_interruptible_all(&ctx->wait);
+> +
+> +	reset_control_assert(ctx->reset);
+> +	msleep(10);
+> +
+> +	aspeed_scu_pcie_write(ctx, conf);
+> +	msleep(10);
+> +
+> +	reset_control_deassert(ctx->reset);
+> +	msleep(10);
+> +
+> +	aspeed_xdma_init_eng(ctx);
+> +
+> +	mutex_unlock(&ctx->start_lock);
+> +
 > +	return 0;
->  }
->  EXPORT_SYMBOL(cmdq_pkt_write);
->  
->  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
->  			u16 offset, u32 value, u32 mask)
->  {
-> +	struct cmdq_instruction *inst;
->  	u32 offset_mask = offset;
-> -	int err = 0;
->  
->  	if (mask != 0xffffffff) {
-> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
-> +		inst = cmdq_pkt_append_command(pkt);
-> +		if (!inst)
-> +			return -ENOMEM;
+> +}
 > +
-> +		inst->op = CMDQ_CODE_MASK;
-> +		inst->mask = ~mask;
->  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+> +static ssize_t aspeed_xdma_use_bmc(struct device *dev,
+> +				   struct device_attribute *attr,
+> +				   const char *buf, size_t count)
+> +{
+> +	int rc;
+> +	struct aspeed_xdma *ctx = dev_get_drvdata(dev);
+> +
+> +	rc = aspeed_xdma_change_pcie_conf(ctx, aspeed_xdma_bmc_pcie_conf);
+> +	return rc ?: count;
+> +}
+> +static DEVICE_ATTR(use_bmc, 0200, NULL, aspeed_xdma_use_bmc);
+> +
+> +static ssize_t aspeed_xdma_use_vga(struct device *dev,
+> +				   struct device_attribute *attr,
+> +				   const char *buf, size_t count)
+> +{
+> +	int rc;
+> +	struct aspeed_xdma *ctx = dev_get_drvdata(dev);
+> +
+> +	rc = aspeed_xdma_change_pcie_conf(ctx, aspeed_xdma_vga_pcie_conf);
+> +	return rc ?: count;
+> +}
+> +static DEVICE_ATTR(use_vga, 0200, NULL, aspeed_xdma_use_vga);
+> +
+>  static int aspeed_xdma_probe(struct platform_device *pdev)
+>  {
+>  	int irq;
+> @@ -745,6 +803,9 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
+>  		return rc;
 >  	}
-> -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
 >  
-> -	return err;
-> +	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
+> +	device_create_file(dev, &dev_attr_use_bmc);
+> +	device_create_file(dev, &dev_attr_use_vga);
+
+Two attributes is a broken approach IMO. This gives the false representation of 4
+states (neither, vga, bmc, both) when really there are only two (vga and bmc). I
+think we should have one attribute that reacts to "vga" and "bmc" writes.
+
+Andrew
+
+> +
+>  	return 0;
 >  }
->  EXPORT_SYMBOL(cmdq_pkt_write_mask);
 >  
->  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+> @@ -752,6 +813,9 @@ static int aspeed_xdma_remove(struct platform_device *pdev)
 >  {
-> -	u32 arg_b;
-> +	struct cmdq_instruction *inst;
+>  	struct aspeed_xdma *ctx = platform_get_drvdata(pdev);
 >  
->  	if (event >= CMDQ_MAX_EVENT)
->  		return -EINVAL;
->  
-> -	/*
-> -	 * WFE arg_b
-> -	 * bit 0-11: wait value
-> -	 * bit 15: 1 - wait, 0 - no wait
-> -	 * bit 16-27: update value
-> -	 * bit 31: 1 - update, 0 - no update
-> -	 */
-> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
-> +	inst = cmdq_pkt_append_command(pkt);
-> +	if (!inst)
-> +		return -ENOMEM;
+> +	device_remove_file(ctx->dev, &dev_attr_use_vga);
+> +	device_remove_file(ctx->dev, &dev_attr_use_bmc);
 > +
-> +	inst->op = CMDQ_CODE_WFE;
-> +	inst->value = CMDQ_WFE_OPTION;
-> +	inst->event = event;
+>  	misc_deregister(&ctx->misc);
 >  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
-> +	return 0;
->  }
->  EXPORT_SYMBOL(cmdq_pkt_wfe);
->  
->  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
->  {
-> +	struct cmdq_instruction *inst;
-> +
->  	if (event >= CMDQ_MAX_EVENT)
->  		return -EINVAL;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
-> -				       CMDQ_WFE_UPDATE);
-> +	inst = cmdq_pkt_append_command(pkt);
-> +	if (!inst)
-> +		return -ENOMEM;
-> +
-> +	inst->op = CMDQ_CODE_WFE;
-> +	inst->value = CMDQ_WFE_UPDATE;
-> +	inst->event = event;
-> +
-> +	return 0;
->  }
->  EXPORT_SYMBOL(cmdq_pkt_clear_event);
->  
->  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
->  {
-> -	int err;
-> +	struct cmdq_instruction *inst;
-> +
-> +	inst = cmdq_pkt_append_command(pkt);
-> +	if (!inst)
-> +		return -ENOMEM;
->  
-> -	/* insert EOC and generate IRQ for each command iteration */
-> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
-> +	inst->op = CMDQ_CODE_EOC;
-> +	inst->value = CMDQ_EOC_IRQ_EN;
->  
-> -	/* JUMP to end */
-> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
-> +	inst = cmdq_pkt_append_command(pkt);
-> +	if (!inst)
-> +		return -ENOMEM;
-> +
-> +	inst->op = CMDQ_CODE_JUMP;
-> +	inst->value = CMDQ_JUMP_PASS;
->  
-> -	return err;
-> +	return 0;
->  }
->  
->  static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index 911475da7a53..c8adedefaf42 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -19,6 +19,8 @@
->  #define CMDQ_WFE_UPDATE			BIT(31)
->  #define CMDQ_WFE_WAIT			BIT(15)
->  #define CMDQ_WFE_WAIT_VALUE		0x1
-> +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
-> +					CMDQ_WFE_WAIT_VALUE)
->  /** cmdq event maximum */
->  #define CMDQ_MAX_EVENT			0x3ff
->  
+>  	aspeed_xdma_free_vga_blks(ctx);
+> -- 
+> 1.8.3.1
+> 
+>
