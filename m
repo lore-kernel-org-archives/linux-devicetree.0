@@ -1,100 +1,51 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH 2/3] regulator: qcom_spmi: Add support for PM8005
-Date: Tue, 21 May 2019 17:16:06 -0600
-Message-ID: <51caaee4-dfc9-5b5a-07c7-b1406c178ca3@codeaurora.org>
-References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
- <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
- <20190521185054.GD16633@sirena.org.uk>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
+Date: Tue, 21 May 2019 16:49:33 -0700
+Message-ID: <20190521234933.153953-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521185054.GD16633@sirena.org.uk>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: lgirdwood@gmail.com, agross@kernel.org, david.brown@linaro.org, bjorn.andersson@linaro.org, jcrouse@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: briannorris@chromium.org, ryandcase@chromium.org, mka@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/21/2019 12:50 PM, Mark Brown wrote:
-> On Tue, May 21, 2019 at 09:53:15AM -0700, Jeffrey Hugo wrote:
-> 
->> -	spmi_vreg_read(vreg, SPMI_COMMON_REG_VOLTAGE_RANGE, &range_sel, 1);
->> +	/* second common devices don't have VOLTAGE_RANGE register */
->> +	if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS2) {
->> +		spmi_vreg_read(vreg, SPMI_COMMON2_REG_VOLTAGE_LSB, &lsb, 1);
->> +		spmi_vreg_read(vreg, SPMI_COMMON2_REG_VOLTAGE_MSB, &msb, 1);
->> +
->> +		uV = (((int)msb << 8) | (int)lsb) * 1000;
-> 
-> This overlaps with some changes that Jorge (CCed) was sending for the
-> PMS405.  As I was saying to him rather than shoving special cases for
-> different regulator types into the ops (especially ones that don't have
-> any of the range stuff) it'd be better to just define separate ops for
-> the regulators that look quite different to the existing ones.
+This is similar to commit e6186820a745 ("arm64: dts: rockchip: Arch
+counter doesn't tick in system suspend").  Specifically on the rk3288
+it can be seen that the timer stops ticking in suspend if we end up
+running through the "osc_disable" path in rk3288_slp_mode_set().  In
+that path the 24 MHz clock will turn off and the timer stops.
 
-Sorry, I hadn't paid attention to that discussion.  Reviewing it now.
-> 
->> +static int spmi_regulator_common_list_voltage(struct regulator_dev *rdev,
->> +					      unsigned selector);
->> +
->> +static int spmi_regulator_common2_set_voltage(struct regulator_dev *rdev,
->> +					      unsigned selector)
-> 
-> Eeew, can we not have better names?
+To test this, I ran this on a Chrome OS filesystem:
+  before=$(date); \
+  suspend_stress_test -c1 --suspend_min=30 --suspend_max=31; \
+  echo ${before}; date
 
-I'm open to suggestions.  Apparently there are two register common 
-register schemes - the old one and the new one.  PMIC designs after some 
-random point in time are all the new register scheme per the 
-documentation I see.
+...and I found that unless I plug in a device that requests USB wakeup
+to be active that the two calls to "date" would show that fewer than
+30 seconds passed.
 
-As far as I an aware, the FT426 design is the first design to be added 
-to this driver to make use of the new scheme, but I expect more to be 
-supported in future, thus I'm reluctant to make these ft426 specific in 
-the name.
+NOTE: deep suspend (where the 24 MHz clock gets disabled) isn't
+supported yet on upstream Linux so this was tested on a downstream
+kernel.
 
-> 
->> +static unsigned int spmi_regulator_common2_get_mode(struct regulator_dev *rdev)
->> +{
->> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
->> +	u8 reg;
->> +
->> +	spmi_vreg_read(vreg, SPMI_COMMON2_REG_MODE, &reg, 1);
->> +
->> +	if (reg == SPMI_COMMON2_MODE_HPM_MASK)
->> +		return REGULATOR_MODE_NORMAL;
->> +
->> +	if (reg == SPMI_COMMON2_MODE_AUTO_MASK)
->> +		return REGULATOR_MODE_FAST;
->> +
->> +	return REGULATOR_MODE_IDLE;
->> +}
-> 
-> This looks like you want to write a switch statement.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-It follows the existing style in the driver, but sure I can make this a 
-switch.
+ arch/arm/boot/dts/rk3288.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
->> +spmi_regulator_common2_set_mode(struct regulator_dev *rdev, unsigned int mode)
->> +{
->> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
->> +	u8 mask = SPMI_COMMON2_MODE_MASK;
->> +	u8 val = SPMI_COMMON2_MODE_LPM_MASK;
->> +
->> +	if (mode == REGULATOR_MODE_NORMAL)
->> +		val = SPMI_COMMON2_MODE_HPM_MASK;
->> +	else if (mode == REGULATOR_MODE_FAST)
->> +		val = SPMI_COMMON2_MODE_AUTO_MASK;
-> 
-> This needs to be a switch statement, then it can have a default case to
-> catch errors too.
-> 
-
-
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 171231a0cd9b..1e5260b556b7 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -231,6 +231,7 @@
+ 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		clock-frequency = <24000000>;
++		arm,no-tick-in-suspend;
+ 	};
+ 
+ 	timer: timer@ff810000 {
 -- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.21.0.1020.gf2820cf01a-goog
