@@ -1,47 +1,20 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add gpio alias
-Date: Tue, 21 May 2019 16:06:48 +0800
-Message-ID: <20190521080647.GB15856@dragon>
-References: <1557804533-18194-1-git-send-email-Anson.Huang@nxp.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: Re: [PATCH v2 2/5] soc: amlogic: canvas: add support for Meson8,
+ Meson8b and Meson8m2
+Date: Tue, 21 May 2019 10:07:53 +0200
+Message-ID: <CAMO6naw0Fe9g4pTODFs8TfcWBWO8jdf2EOB2ZAhyebqmfMWg9w@mail.gmail.com>
+References: <20190520194353.24445-1-martin.blumenstingl@googlemail.com> <20190520194353.24445-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1557804533-18194-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20190520194353.24445-3-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 03:33:56AM +0000, Anson Huang wrote:
-> Add i.MX8MQ GPIO alias for kernel GPIO driver usage.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 6d635ba..df33672 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -30,6 +30,11 @@
->  		spi0 = &ecspi1;
->  		spi1 = &ecspi2;
->  		spi2 = &ecspi3;
-> +		gpio0 = &gpio1;
-
-Please keep the list alphabetically sorted.
-
-Shawn
-
-> +		gpio1 = &gpio2;
-> +		gpio2 = &gpio3;
-> +		gpio3 = &gpio4;
-> +		gpio4 = &gpio5;
->  	};
->  
->  	ckil: clock-ckil {
-> -- 
-> 2.7.4
-> 
+On Mon, May 20, 2019 at 9:44 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Maxime Jourdan <mjourdan@baylibre.com>
