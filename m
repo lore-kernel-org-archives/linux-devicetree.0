@@ -1,38 +1,25 @@
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH v4 2/3] fdt: add support for rng-seed
-Date: Tue, 21 May 2019 12:09:39 +0800
-Message-ID: <CAJMQK-iZRHO6HBkycPt0yz_vndmmmqFL0duHOcQ8EFSdhhFZcQ@mail.gmail.com>
-References: <20190519160446.320-1-hsinyi@chromium.org> <20190519160446.320-2-hsinyi@chromium.org>
- <CANMq1KB7sh=UXaM4sMm_THjZ_wV3Thgr6_ona-TJFqA2QQHALA@mail.gmail.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v3 04/14] dmaengine: imx-sdma: remove dupilicated
+ sdma_load_context
+Date: Tue, 21 May 2019 09:45:52 +0530
+Message-ID: <20190521041552.GD15118@vkoul-mobl>
+References: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
+ <1557249513-4903-5-git-send-email-yibin.gong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANMq1KB7sh=UXaM4sMm_THjZ_wV3Thgr6_ona-TJFqA2QQHALA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1557249513-4903-5-git-send-email-yibin.gong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Boichat <drinkcat@chromium.org>
-Cc: linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>
+To: Robin Gong <yibin.gong@nxp.com>
+Cc: "robh@kernel.org" <robh@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "plyatov@gmail.com" <plyatov@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 7:54 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+On 07-05-19, 09:16, Robin Gong wrote:
+> Since sdma_transfer_init() will do sdma_load_context before any
+> sdma transfer, no need once more in sdma_config_channel().
 
-> Alphabetical order.
-Original headers are not sorted, should I sort them here?
->
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
->
-> I'm a little bit concerned about this, as we really want the rng-seed
-> value to be wiped, and not kept in memory (even if it's hard to
-> access).
->
-> IIUC, fdt_delprop splices the device tree, so it'll override
-> "rng-seed" property with whatever device tree entries follow it.
-> However, if rng-seed is the last property (or if the entries that
-> follow are smaller than rng-seed), the seed will stay in memory (or
-> part of it).
->
-> fdt_nop_property in v2 would erase it for sure. I don't know if there
-> is a way to make sure that rng-seed is removed for good while still
-> deleting the property (maybe modify fdt_splice_ to do a memset(.., 0)
-> of the moved chunk?).
->
-So maybe we can use fdt_nop_property() back?
+-- 
+~Vinod
