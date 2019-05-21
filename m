@@ -1,40 +1,47 @@
-From: Kamal Dasu <kdasu.kdev@gmail.com>
-Subject: [PATCH v3 1/2] dt-bindings: mtd: brcmnand: Make nand-ecc-strength and nand-ecc-step-size optional
-Date: Tue, 21 May 2019 10:44:21 -0400
-Message-ID: <1558449865-36852-1-git-send-email-kdasu.kdev@gmail.com>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v4 1/6] dt-bindings: clock: Document external clocks for MSM8998 gcc
+Date: Tue, 21 May 2019 08:46:33 -0600
+Message-ID: <1558449993-20902-1-git-send-email-jhugo@codeaurora.org>
+References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org
+Cc: agross@kernel.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-nand-ecc-strength and nand-ecc-step-size can be made optional as
-brcmnand driver can support using raw NAND layer detected values.
+The global clock controller on MSM8998 can consume a number of external
+clocks.  Document them.
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/clock/qcom,gcc.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-index bcda1df..0d952af 100644
---- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-+++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-@@ -101,12 +101,12 @@ Required properties:
-                               number (e.g., 0, 1, 2, etc.)
- - #address-cells            : see partition.txt
- - #size-cells               : see partition.txt
--- nand-ecc-strength         : see nand.txt
--- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+index 8661c3c..7d45323 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+@@ -28,6 +28,16 @@ Required properties :
+ - #clock-cells : shall contain 1
+ - #reset-cells : shall contain 1
  
- Optional properties:
-+- nand-ecc-strength         : see nand-controller.yaml
-+- nand-ecc-step-size        : must be 512 or 1024. See nand-controller.yaml
- - nand-on-flash-bbt         : boolean, to enable the on-flash BBT for this
--                              chip-select. See nand.txt
-+                              chip-select. See nand-controller.yaml
- - brcm,nand-oob-sector-size : integer, to denote the spare area sector size
-                               expected for the ECC layout in use. This size, in
-                               addition to the strength and step-size,
++For MSM8998 only:
++	- clocks: a list of phandles and clock-specifier pairs,
++		  one for each entry in clock-names.
++	- clock-names: "xo" (required)
++		       "usb3_pipe" (optional)
++		       "ufs_rx_symbol0" (optional)
++		       "ufs_rx_symbol1" (optional)
++		       "ufs_tx_symbol0" (optional)
++		       "pcie0_pipe" (optional)
++
+ Optional properties :
+ - #power-domain-cells : shall contain 1
+ - Qualcomm TSENS (thermal sensor device) on some devices can
 -- 
-1.9.0.138.g2de3478
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
