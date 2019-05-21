@@ -1,78 +1,87 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v2 4/9] arm64: dts: qcom: msm8916: Use more generic idle state names
-Date: Tue, 21 May 2019 15:05:14 +0530
-Message-ID: <606afcaab57021faacdb47220b9d9d0f5a27f7b8.1558430617.git.amit.kucheria@linaro.org>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1558430617.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1558430617.git.amit.kucheria@linaro.org>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, niklas.cassel@linaro.org, marc.w.gonzalez@free.fr, sibis@codeaurora.org, daniel.lezcano@linaro.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: [PATCH] arm64: dts: fsl: ls1046: Modify the qspi flash frequency
+Date: Tue, 21 May 2019 09:40:09 +0000
+Message-ID: <20190521150336.8409-1-pankaj.bansal@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of using Qualcomm-specific terminology, use generic node names
-for the idle states that are easier to understand. Move the description
-into the "idle-state-name" property.
+The qspi flash in ls1046a based QDS and RDB boards can operate
+at 50MHz frequency.
+Therefore, update the maximum supported freq in their respective
+dts files.
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts | 4 ++--
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 5 +++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 82ea5b8b37a2..3a8c6c4fcf15 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -110,7 +110,7 @@
- 			reg = <0x0>;
- 			next-level-cache = <&L2_0>;
- 			enable-method = "psci";
--			cpu-idle-states = <&CPU_SPC>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			clocks = <&apcs>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>;
-@@ -122,7 +122,7 @@
- 			reg = <0x1>;
- 			next-level-cache = <&L2_0>;
- 			enable-method = "psci";
--			cpu-idle-states = <&CPU_SPC>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			clocks = <&apcs>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>;
-@@ -134,7 +134,7 @@
- 			reg = <0x2>;
- 			next-level-cache = <&L2_0>;
- 			enable-method = "psci";
--			cpu-idle-states = <&CPU_SPC>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			clocks = <&apcs>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>;
-@@ -146,7 +146,7 @@
- 			reg = <0x3>;
- 			next-level-cache = <&L2_0>;
- 			enable-method = "psci";
--			cpu-idle-states = <&CPU_SPC>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			clocks = <&apcs>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>;
-@@ -160,8 +160,9 @@
- 		idle-states {
- 			entry-method = "psci";
- 
--			CPU_SPC: spc {
-+			CPU_SLEEP_0: cpu-sleep-0 {
- 				compatible = "arm,idle-state";
-+				idle-state-name = "standalone-power-collapse";
- 				arm,psci-suspend-param = <0x40000002>;
- 				entry-latency-us = <130>;
- 				exit-latency-us = <150>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+index eec62c63dafe..e441dbfbfb81 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+@@ -3,7 +3,7 @@
+  * Device Tree Include file for Freescale Layerscape-1046A family SoC.
+  *
+  * Copyright 2016 Freescale Semiconductor, Inc.
+- * Copyright 2018 NXP
++ * Copyright 2018-2019 NXP
+  *
+  * Shaohui Xie <Shaohui.Xie@nxp.com>
+  */
+@@ -169,7 +169,7 @@
+ 		compatible = "spansion,m25p80";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		spi-max-frequency = <20000000>;
++		spi-max-frequency = <50000000>;
+ 		spi-rx-bus-width = <4>;
+ 		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+index 6a6514d0e5a9..6f5411d09bb9 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+@@ -3,6 +3,7 @@
+  * Device Tree Include file for Freescale Layerscape-1046A family SoC.
+  *
+  * Copyright 2016 Freescale Semiconductor, Inc.
++ * Copyright 2019 NXP
+  *
+  * Mingkai Hu <mingkai.hu@nxp.com>
+  */
+@@ -105,7 +106,7 @@
+ 		compatible = "spansion,m25p80";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		spi-max-frequency = <20000000>;
++		spi-max-frequency = <50000000>;
+ 		spi-rx-bus-width = <4>;
+ 		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+@@ -115,7 +116,7 @@
+ 		compatible = "spansion,m25p80";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		spi-max-frequency = <20000000>;
++		spi-max-frequency = <50000000>;
+ 		spi-rx-bus-width = <4>;
+ 		spi-tx-bus-width = <4>;
+ 		reg = <1>;
 -- 
 2.17.1
