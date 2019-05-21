@@ -1,60 +1,63 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 0/5] Allwinner H6 watchdog support
-Date: Tue, 21 May 2019 18:03:25 +0200
-Message-ID: <20190521160330.28402-1-peron.clem@gmail.com>
+Subject: [PATCH v4 2/5] arm64: dts: allwinner: h6: add watchdog node
+Date: Tue, 21 May 2019 18:03:27 +0200
+Message-ID: <20190521160330.28402-3-peron.clem@gmail.com>
+References: <20190521160330.28402-1-peron.clem@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190521160330.28402-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
 Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Allwinner H6 has a watchog node which seems broken
+on some boards.
 
-Allwinner H6 SoC has two watchdogs.
+Test has been performed on several boards.
 
-As we are not sure that both A64 and H6 are stricly identical, I have
-introduced the H6 bindings.
+Chen-Yu Tsai boards:
+Pine H64 - H6448BA 7782 => OK
+OrangePi Lite 2 - H8068BA 61C2 => KO
 
-After investigation it seems that on some boards the first watchdog doesn't
-make it properly reboot. Please see details in the commit log.
+Martin Ayotte boards:
+Pine H64 - H8069BA 6892 => OK
+OrangePi 3 - HA047BA 69W2 => KO
+OrangePi One Plus - H7310BA 6842 => KO
+OrangePi Lite2 - H6448BA 6662 => KO
 
-I think it's proper to add it with a comment anyway.
+Clément Péron board:
+Beelink GS1 - H7309BA 6842 => KO
 
-The r_watchdog is still available and usable on all the H6 boards.
+As it seems not fixable for now, declare the node
+but leave it disable with a comment.
 
-Thanks,
-Clément
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Changes since v3:
- - Remove A64 compatible
- - Introduce specific bindings for r-wdt
-
-Changes since v2:
- - Reintroduce H6 bindings
- - Add watchdog Maintainters / ML
- - Add Martin Ayotte test results
-
-Changes since v1:
- - Use A64 compatible instead of H6
- - Remove dt-bindings patch
- - Change watchdog status to disabled
- - Add r_watchdog node patch
- - Add enable sunxi watchdog patch
-
-Clément Péron (5):
-  dt-bindings: watchdog: add Allwinner H6 watchdog
-  arm64: dts: allwinner: h6: add watchdog node
-  dt-bindings: watchdog: add Allwinner H6 r_watchdog
-  arm64: dts: allwinner: h6: add r_watchog node
-  arm64: defconfig: enable sunxi watchdog
-
- .../devicetree/bindings/watchdog/sunxi-wdt.txt   |  2 ++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi     | 16 ++++++++++++++++
- arch/arm64/configs/defconfig                     |  1 +
- 3 files changed, 19 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 16c5c3d0fd81..13e70aebddbe 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -208,6 +208,15 @@
+ 			reg = <0x03006000 0x400>;
+ 		};
+ 
++		watchdog: watchdog@30090a0 {
++			compatible = "allwinner,sun50i-h6-wdt",
++				     "allwinner,sun6i-a31-wdt";
++			reg = <0x030090a0 0x20>;
++			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++			/* Broken on some H6 boards */
++			status = "disabled";
++		};
++
+ 		pio: pinctrl@300b000 {
+ 			compatible = "allwinner,sun50i-h6-pinctrl";
+ 			reg = <0x0300b000 0x400>;
 -- 
 2.17.1
