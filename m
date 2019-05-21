@@ -1,58 +1,64 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mtd: brcmnand: Make
- nand-ecc-strength and nand-ecc-step-size optional
-Date: Tue, 21 May 2019 11:32:14 +0200
-Message-ID: <20190521113214.35e1edd0@xps13>
-References: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
-        <5986da5d-2a61-b98d-9d44-d972a19ab732@kontron.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH v2 0/9] qcom: Add cpuidle to some platforms
+Date: Tue, 21 May 2019 15:05:10 +0530
+Message-ID: <cover.1558430617.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5986da5d-2a61-b98d-9d44-d972a19ab732@kontron.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc: Kamal Dasu <kdasu.kdev@gmail.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>, Richard Weinberger <richard@nod.at>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, niklas.cassel@linaro.org, marc.w.gonzalez@free.fr, sibis@codeaurora.org, daniel.lezcano@linaro.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Changes since v1:
+ - Reworded changes to the idle-state documentation on Sudeep's feedback.
+ - Renamed several idle-state node names to be homogeneous across qcom
+   platforms. We now use cpu_sleep_0_0 format for the node name while using
+   LITTLE_CPU_SLEEP_0 format for labels to help differentiate the different
+   states for different CPU types.
+ - Add a new patch to add capacity-dmips-mhz property for msm8996 to allow
+   topology code to find its true capacity.
+ - Add power-collapse state to msm8998 in additon to the retention state.
+ - Added acks
 
-Schrempf Frieder <frieder.schrempf@kontron.de> wrote on Tue, 21 May
-2019 09:31:04 +0000:
+MSM8998 changes are untested for v2 because I couldn't access the mtp I
+usually have access to. Hopefully Marc and Sibi can help with testing.
 
-> Hi Kamal,
-> 
-> On 20.05.19 21:05, Kamal Dasu wrote:
-> > nand-ecc-strength and nand-ecc-step-size can be made optional as
-> > brcmnand driver can support using raw NAND layer detected values.
-> > 
-> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> > ---
-> >   Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> > index bcda1df..29feaba 100644
-> > --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> > @@ -101,10 +101,10 @@ Required properties:
-> >                                 number (e.g., 0, 1, 2, etc.)
-> >   - #address-cells            : see partition.txt
-> >   - #size-cells               : see partition.txt
-> > -- nand-ecc-strength         : see nand.txt
-> > -- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
-> >   
-> >   Optional properties:
-> > +- nand-ecc-strength         : see nand.txt
-> > +- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
-> >   - nand-on-flash-bbt         : boolean, to enable the on-flash BBT for this
-> >                                 chip-select. See nand.txt
-> >   - brcm,nand-oob-sector-size : integer, to denote the spare area sector size  
-> 
-> I think you also need to change all references to nand.txt. This file 
-> was recently moved to nand-controller.yaml.
-> 
+Description
+-----------
+Fix up a few entry-method="psci" issues and then add cpuidle low power
+states for msm8996, msm8998, qcs404, sdm845. All these have been tested
+to only make sure that the C-states are entered from Linux point-of-view.
 
-Oops, completely forgot about that *again*. Thanks for pointing it
-Frieder!
+We will continue to add more states and make power measurements to tweak
+some of these numbers, but getting these merged will allow other people to
+use these platforms to work on cpuidle, eas and related topics.
 
-Miquèl
+
+Amit Kucheria (7):
+  arm64: dts: fsl: ls1028a: Fix entry-method property to reflect
+    documentation
+  Documentation: arm: Link idle-states binding to "enable-method"
+    property
+  arm64: dts: qcom: msm8916: Add entry-method property for the
+    idle-states node
+  arm64: dts: qcom: msm8916: Use more generic idle state names
+  arm64: dts: qcom: msm8996: Add PSCI cpuidle low power states
+  arm64: dts: qcom: msm8998: Add PSCI cpuidle low power states
+  arm64: dts: msm8996: Add proper capacity scaling for the cpus
+
+Niklas Cassel (1):
+  arm64: dts: qcom: qcs404: Add PSCI cpuidle low power states
+
+Raju P.L.S.S.S.N (1):
+  arm64: dts: qcom: sdm845: Add PSCI cpuidle low power states
+
+ .../devicetree/bindings/arm/idle-states.txt   | 13 +++-
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  2 +-
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         | 13 ++--
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         | 21 ++++++
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         | 50 ++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          | 18 +++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 69 +++++++++++++++++++
+ 7 files changed, 177 insertions(+), 9 deletions(-)
+
+-- 
+2.17.1
