@@ -1,47 +1,141 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 3/6] dt-bindings: gpu: add bus clock for Mali Midgard GPUs
-Date: Tue, 21 May 2019 18:10:59 +0200
-Message-ID: <20190521161102.29620-4-peron.clem@gmail.com>
-References: <20190521161102.29620-1-peron.clem@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 1/2] HID: quirks: Refactor ELAN 400 and 401 handling
+Date: Tue, 21 May 2019 09:43:24 -0700
+Message-ID: <20190521164324.GA2085@tuxbook-pro>
+References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
+ <20190423160605.9970-1-jeffrey.l.hugo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20190521161102.29620-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Steven Price <steven.price-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190423160605.9970-1-jeffrey.l.hugo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: dmitry.torokhov@gmail.com, jikos@kernel.org, benjamin.tissoires@redhat.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org, hdegoede@redhat.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLmlvPgoKU29tZSBTb0NzIGFkZHMgYSBi
-dXMgY2xvY2sgZ2F0ZSB0byB0aGUgTWFsaSBNaWRnYXJkIEdQVS4KCkFkZCB0aGUgYmluZGluZyBm
-b3IgdGhlIGJ1cyBjbG9jay4KClNpZ25lZC1vZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lA
-YW9zYy5pbz4KU2lnbmVkLW9mZi1ieTogQ2zDqW1lbnQgUMOpcm9uIDxwZXJvbi5jbGVtQGdtYWls
-LmNvbT4KUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dCB8
-IDYgKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2Fy
-ZC50eHQKaW5kZXggMWIxYTc0MTI5MTQxLi4yZThiYmNlMzU2OTUgMTAwNjQ0Ci0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC50eHQKKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJk
-LnR4dApAQCAtMzEsNiArMzEsMTIgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKIAogLSBjbG9ja3Mg
-OiBQaGFuZGxlIHRvIGNsb2NrIGZvciB0aGUgTWFsaSBNaWRnYXJkIGRldmljZS4KIAorLSBjbG9j
-ay1uYW1lcyA6IFNwZWNpZnkgdGhlIG5hbWVzIG9mIHRoZSBjbG9ja3Mgc3BlY2lmaWVkIGluIGNs
-b2NrcworICB3aGVuIG11bHRpcGxlIGNsb2NrcyBhcmUgcHJlc2VudC4KKyAgICAqIGNvcmU6IGNs
-b2NrIGRyaXZpbmcgdGhlIEdQVSBpdHNlbGYgKFdoZW4gb25seSBvbmUgY2xvY2sgaXMgcHJlc2Vu
-dCwKKyAgICAgIGFzc3VtZSBpdCdzIHRoaXMgY2xvY2suKQorICAgICogYnVzOiBidXMgY2xvY2sg
-Zm9yIHRoZSBHUFUKKwogLSBtYWxpLXN1cHBseSA6IFBoYW5kbGUgdG8gcmVndWxhdG9yIGZvciB0
-aGUgTWFsaSBkZXZpY2UuIFJlZmVyIHRvCiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9yZWd1bGF0b3IvcmVndWxhdG9yLnR4dCBmb3IgZGV0YWlscy4KIAotLSAKMi4xNy4xCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwppb21tdSBtYWls
-aW5nIGxpc3QKaW9tbXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmcKaHR0cHM6Ly9saXN0cy5s
-aW51eGZvdW5kYXRpb24ub3JnL21haWxtYW4vbGlzdGluZm8vaW9tbXU=
+On Tue 23 Apr 09:06 PDT 2019, Jeffrey Hugo wrote:
+
+> There needs to be coordination between hid-quirks and the elan_i2c driver
+> about which devices are handled by what drivers.  Currently, both use
+> whitelists, which results in valid devices being unhandled by default,
+> when they should not be rejected by hid-quirks.  This is quickly becoming
+> an issue.
+> 
+> Since elan_i2c has a maintained whitelist of what devices it will handle,
+> use that to implement a blacklist in hid-quirks so that only the devices
+> that need to be handled by elan_i2c get rejected by hid-quirks, and
+> everything else is handled by default.  The downside is the whitelist and
+> blacklist need to be kept in sync.
+> 
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Jiri, the two patches in this series doesn't have a build time
+dependency, so if you take this one through your tree I'll take 2/2
+through arm-soc.
+
+Regards,
+Bjorn
+
+> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  drivers/hid/hid-quirks.c            | 64 ++++++++++++++++++++++++-----
+>  drivers/input/mouse/elan_i2c_core.c |  4 ++
+>  2 files changed, 58 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+> index 77ffba48cc73..656485e08eb7 100644
+> --- a/drivers/hid/hid-quirks.c
+> +++ b/drivers/hid/hid-quirks.c
+> @@ -987,17 +987,61 @@ bool hid_ignore(struct hid_device *hdev)
+>  		break;
+>  	case USB_VENDOR_ID_ELAN:
+>  		/*
+> -		 * Many Elan devices have a product id of 0x0401 and are handled
+> -		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
+> -		 * is not (and cannot be) handled by that driver ->
+> -		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
+> +		 * Blacklist of everything that gets handled by the elan_i2c
+> +		 * input driver.  This should be kept in sync with the whitelist
+> +		 * that exists in that driver.  This avoids disabling valid
+> +		 * touchpads and other ELAN devices.
+>  		 */
+> -		if (hdev->product == 0x0401 &&
+> -		    strncmp(hdev->name, "ELAN0800", 8) != 0)
+> -			return true;
+> -		/* Same with product id 0x0400 */
+> -		if (hdev->product == 0x0400 &&
+> -		    strncmp(hdev->name, "QTEC0001", 8) != 0)
+> +		if ((hdev->product == 0x0401 || hdev->product == 0x0400) &&
+> +		   (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0100", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0600", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0601", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0602", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0603", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0604", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0605", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0606", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0607", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0608", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0609", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN060B", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN060C", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN060F", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0610", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0611", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0612", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0613", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0614", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0615", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0616", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0617", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0618", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0619", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN061A", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN061B", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN061C", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN061D", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN061E", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN061F", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0620", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0621", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0622", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0623", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0624", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0625", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0626", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0627", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0628", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0629", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN062A", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN062B", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN062C", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN062D", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0631", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN0632", 8) == 0 ||
+> +		    strncmp(hdev->name, "ELAN1000", 8) == 0 ||
+> +		    strncmp(hdev->name, "elan,ekth3000", 13) == 0))
+>  			return true;
+>  		break;
+>  	}
+> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+> index f9525d6f0bfe..3ded19528cd4 100644
+> --- a/drivers/input/mouse/elan_i2c_core.c
+> +++ b/drivers/input/mouse/elan_i2c_core.c
+> @@ -1332,6 +1332,10 @@ static const struct i2c_device_id elan_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, elan_id);
+>  
+> +/*
+> + * when these whtielists get updated, the corresponding blacklist in hid-quirks
+> + * needs to be updated to match.
+> + */
+>  #ifdef CONFIG_ACPI
+>  static const struct acpi_device_id elan_acpi_id[] = {
+>  	{ "ELAN0000", 0 },
+> -- 
+> 2.17.1
+> 
