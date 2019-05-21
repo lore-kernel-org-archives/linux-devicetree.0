@@ -1,76 +1,86 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: [PATCH] clk: mediatek: Remove MT8183 unused clock
-Date: Tue, 21 May 2019 11:40:01 +0800
-Message-ID: <20190521034001.53365-1-erin.lo@mediatek.com>
+From: Sagar Kadam <sagar.kadam@sifive.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: i2c: extend existing opencore bindings.
+Date: Tue, 21 May 2019 09:18:53 +0530
+Message-ID: <CAARK3HkkjOzubSQzHc5aMy8yyZaBwn6AuFJ-yMLdQDK6Vh7vdw@mail.gmail.com>
+References: <1558361478-4381-1-git-send-email-sagar.kadam@sifive.com>
+ <1558361478-4381-2-git-send-email-sagar.kadam@sifive.com> <CAL_Jsq+6uL+wqi=5cp1X9JdBfmLDzGz5UjwfqKCCESyhsemnhQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+6uL+wqi=5cp1X9JdBfmLDzGz5UjwfqKCCESyhsemnhQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Boichat <drinkcat@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, peter@korsgaard.com, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Remove MT8183 sspm clock
+Hi Rob,
 
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
----
-This clock should only be set in secure world.
----
- drivers/clk/mediatek/clk-mt8183.c | 19 -------------------
- 1 file changed, 19 deletions(-)
 
-diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
-index 9d8651033ae9..1aa5f4059251 100644
---- a/drivers/clk/mediatek/clk-mt8183.c
-+++ b/drivers/clk/mediatek/clk-mt8183.c
-@@ -395,14 +395,6 @@ static const char * const atb_parents[] = {
- 	"syspll_d5"
- };
- 
--static const char * const sspm_parents[] = {
--	"clk26m",
--	"univpll_d2_d4",
--	"syspll_d2_d2",
--	"univpll_d2_d2",
--	"syspll_d3"
--};
--
- static const char * const dpi0_parents[] = {
- 	"clk26m",
- 	"tvdpll_d2",
-@@ -606,9 +598,6 @@ static const struct mtk_mux top_muxes[] = {
- 	MUX_GATE_CLR_SET_UPD(CLK_TOP_MUX_ATB, "atb_sel",
- 		atb_parents, 0xa0,
- 		0xa4, 0xa8, 0, 2, 7, 0x004, 24),
--	MUX_GATE_CLR_SET_UPD(CLK_TOP_MUX_SSPM, "sspm_sel",
--		sspm_parents, 0xa0,
--		0xa4, 0xa8, 8, 3, 15, 0x004, 25),
- 	MUX_GATE_CLR_SET_UPD(CLK_TOP_MUX_DPI0, "dpi0_sel",
- 		dpi0_parents, 0xa0,
- 		0xa4, 0xa8, 16, 4, 23, 0x004, 26),
-@@ -947,12 +936,8 @@ static const struct mtk_gate infra_clks[] = {
- 		"fufs_sel", 13),
- 	GATE_INFRA2(CLK_INFRA_MD32_BCLK, "infra_md32_bclk",
- 		"axi_sel", 14),
--	GATE_INFRA2(CLK_INFRA_SSPM, "infra_sspm",
--		"sspm_sel", 15),
- 	GATE_INFRA2(CLK_INFRA_UNIPRO_MBIST, "infra_unipro_mbist",
- 		"axi_sel", 16),
--	GATE_INFRA2(CLK_INFRA_SSPM_BUS_HCLK, "infra_sspm_bus_hclk",
--		"axi_sel", 17),
- 	GATE_INFRA2(CLK_INFRA_I2C5, "infra_i2c5",
- 		"i2c_sel", 18),
- 	GATE_INFRA2(CLK_INFRA_I2C5_ARBITER, "infra_i2c5_arbiter",
-@@ -986,10 +971,6 @@ static const struct mtk_gate infra_clks[] = {
- 		"msdc50_0_sel", 1),
- 	GATE_INFRA3(CLK_INFRA_MSDC2_SELF, "infra_msdc2_self",
- 		"msdc50_0_sel", 2),
--	GATE_INFRA3(CLK_INFRA_SSPM_26M_SELF, "infra_sspm_26m_self",
--		"f_f26m_ck", 3),
--	GATE_INFRA3(CLK_INFRA_SSPM_32K_SELF, "infra_sspm_32k_self",
--		"f_f26m_ck", 4),
- 	GATE_INFRA3(CLK_INFRA_UFS_AXI, "infra_ufs_axi",
- 		"axi_sel", 5),
- 	GATE_INFRA3(CLK_INFRA_I2C6, "infra_i2c6",
--- 
-2.18.0
+On Mon, May 20, 2019 at 8:07 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Mon, May 20, 2019 at 9:12 AM Sagar Shrikant Kadam
+> <sagar.kadam@sifive.com> wrote:
+> >
+> > Add FU540-C000 specific device tree bindings to already
+> > available i2-ocores file. This device is available on
+> > HiFive Unleashed Rev A00 board. Move interrupt and interrupt
+> > parents under optional property list as these can be optional.
+> >
+> > The FU540-C000 SoC from sifive, has an Opencore's I2C block
+> > reimplementation.
+> >
+> > The DT compatibility string for this IP is present in HDL and available at.
+> > https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/i2c/I2C.scala#L73
+> >
+> > Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> > ---
+> >  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> > index 17bef9a..b73960e 100644
+> > --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> > +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> > @@ -2,8 +2,11 @@ Device tree configuration for i2c-ocores
+> >
+> >  Required properties:
+> >  - compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
+> > +                    "sifive,fu540-c000-i2c" or "sifive,i2c0".
+>
+> It's not an OR because both are required. Please reformat to 1 valid
+> combination per line.
+Yes, will rectify it in V6.
+
+> > +                   for Opencore based I2C IP block reimplemented in
+> > +                   FU540-C000 SoC.Please refer sifive-blocks-ip-versioning.txt
+> > +                   for additional details.
+> >  - reg             : bus address start and address range size of device
+> > -- interrupts      : interrupt number
+> >  - clocks          : handle to the controller clock; see the note below.
+> >                      Mutually exclusive with opencores,ip-clock-frequency
+> >  - opencores,ip-clock-frequency: frequency of the controller clock in Hz;
+> > @@ -12,6 +15,8 @@ Required properties:
+> >  - #size-cells     : should be <0>
+> >
+> >  Optional properties:
+> > +- interrupt-parent: handle to interrupt controller.
+>
+> Drop this. interrupt-parent is implied.
+>
+Sure, will exclude it in v6.
+
+> > +- interrupts      : interrupt number.
+> >  - clock-frequency : frequency of bus clock in Hz; see the note below.
+> >                      Defaults to 100 KHz when the property is not specified
+> >  - reg-shift       : device register offsets are shifted by this value
+> > --
+> > 1.9.1
+> >
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+Thanks,
+Sagar
