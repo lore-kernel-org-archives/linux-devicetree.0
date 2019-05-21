@@ -1,123 +1,74 @@
-From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH v5 5/6] drm: sun4i: Add support for enabling
- DDC I2C bus to sun8i_dw_hdmi glue
-Date: Tue, 21 May 2019 14:15:19 +0200
-Message-ID: <20190521121519.k343dgv3cgpewjl2@core.my.home>
-References: <20190520235009.16734-1-megous@megous.com>
- <20190520235009.16734-6-megous@megous.com>
- <20190521114611.ylmbo2oqeanveil4@flea>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+Date: Tue, 21 May 2019 14:20:15 +0200
+Message-ID: <bc03b0c8-52cf-58e1-e7b3-bb1f2345c05b@linaro.org>
+References: <20190521072355.12928-1-ping.bai@nxp.com>
+ <20190521072355.12928-2-ping.bai@nxp.com>
+ <5823cd07-312b-600c-1b78-dc5bff2a12eb@linaro.org>
+ <VI1PR0402MB3519B14C5AF93F246907F03A87070@VI1PR0402MB3519.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBWOXR7TQKGQEBFS2NIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190521114611.ylmbo2oqeanveil4@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <VI1PR0402MB3519B14C5AF93F246907F03A87070@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacky Bai <ping.bai@nxp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On Tue, May 21, 2019 at 01:46:11PM +0200, Maxime Ripard wrote:
-> Hi,
+On 21/05/2019 14:01, Jacky Bai wrote:
 > 
-> On Tue, May 21, 2019 at 01:50:08AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> >
-> > Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
-> > for the DDC bus to be usable.
-> >
-> > Add support for hdmi-connector node's optional ddc-en-gpios property to
-> > support this use case.
-> >
-> > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 55 +++++++++++++++++++++++++--
-> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  3 ++
-> >  2 files changed, 55 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> > index 39d8509d96a0..59b81ba02d96 100644
-> > --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> > +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> > @@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
-> >  	return crtcs;
-> >  }
-> >
-> > +static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
-> > +					     struct platform_device **pdev_out)
-> > +{
-> > +	struct platform_device *pdev;
-> > +	struct device_node *remote;
-> > +
-> > +	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
-> > +	if (!remote)
-> > +		return -ENODEV;
-> > +
-> > +	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-> > +		of_node_put(remote);
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	pdev = of_find_device_by_node(remote);
-> > +	of_node_put(remote);
-> > +	if (!pdev)
-> > +		return -ENODEV;
-> > +
-> > +	*pdev_out = pdev;
-> > +	return 0;
-> > +}
-> > +
-> >  static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
-> >  			      void *data)
-> >  {
-> > @@ -151,16 +175,29 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
-> >  		return PTR_ERR(hdmi->regulator);
-> >  	}
-> >
-> > +	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev);
-> > +	if (!ret) {
-> > +		hdmi->ddc_en = gpiod_get_optional(&hdmi->connector_pdev->dev,
-> > +						  "ddc-en", GPIOD_OUT_HIGH);
-> > +		if (IS_ERR(hdmi->ddc_en)) {
-> > +			platform_device_put(hdmi->connector_pdev);
-> > +			dev_err(dev, "Couldn't get ddc-en gpio\n");
-> > +			return PTR_ERR(hdmi->ddc_en);
-> > +		}
-> > +	}
-> > +
-> >  	ret = regulator_enable(hdmi->regulator);
-> >  	if (ret) {
-> >  		dev_err(dev, "Failed to enable regulator\n");
-> > -		return ret;
-> > +		goto err_unref_ddc_en;
-> >  	}
-> >
-> > +	gpiod_set_value(hdmi->ddc_en, 1);
-> > +
+>> -----Original Message-----
+>> From: Daniel Lezcano [mailto:daniel.lezcano@linaro.org]
+>> Sent: Tuesday, May 21, 2019 6:08 PM
+>> To: Jacky Bai <ping.bai@nxp.com>; tglx@linutronix.de; robh+dt@kernel.org;
+>> shawnguo@kernel.org; mark.rutland@arm.com; Aisheng Dong
+>> <aisheng.dong@nxp.com>
+>> Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; dl-linux-imx
+>> <linux-imx@nxp.com>
+>> Subject: Re: [PATCH v4 2/2] driver: clocksource: Add nxp system counter timer
+>> driver support
+>>
+>> On 21/05/2019 09:18, Jacky Bai wrote:
+>>> From: Bai Ping <ping.bai@nxp.com>
+>>>
+>>> The system counter (sys_ctr) is a programmable system counter which
+>>> provides a shared time base to the Cortex A15, A7, A53 etc cores.
+>>> It is intended for use in applications where the counter is always
+>>> powered on and supports multiple, unrelated clocks. The sys_ctr
+>>> hardware
+>>> supports:
+>>>  - 56-bit counter width (roll-over time greater than 40 years)
+>>
+>> The benefit of using more than 32bits on a 32bits system is not proven.
+>>
 > 
-> Do you really need this to be done all the time? I'm guessing you
-> would only need this when running .get_modes, right?
+> It is mainly used on 64bit ARMv8 system.
 
-I don't think it hurts anything. Enabled voltage shifting circuit doesn't
-draw any current, unless DDC is actually transmitting data. On most boards
-I'd imagine this circuit is always on anyway (Orange Pi 3 schematic even has
-an option to tie this signal to VCC-IO instead of GPIO).
+Oh, ok. Fair enough.
 
-Schematic: https://megous.com/dl/tmp/bfcdd32d655aaa76.png
-
-thank you and regards,
-	o.
-
-> Maxime
 > 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+>> The function to read and build the 56bits value can have a very significant
+>> impact on the performance of your platform.
+>>
+>> Using a 32bits counter can be enough if it does not wrap too fast.
+>>
+>> Can you consider a 32 bits counter ?
+> 
+> this counter is ARMv8 arch timer's counter source. As it also has timer function, so I choose it
+> to act as a broadcast timer for cpuidle. The timer interrupt can only be triggered when 'compare[55:0] <= counter[55:0]'.
+> So you mean that only use the lower 32bit to implement this timer? If so, I can change to use only the lower 32bit.
+
+IMO it is preferable but you decide (probably compare with how long it
+takes to wrap when 32bits).
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
