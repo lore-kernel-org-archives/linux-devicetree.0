@@ -1,49 +1,37 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/4] Enable stm32mp1 camera support
-Date: Tue, 21 May 2019 12:03:55 +0200
-Message-ID: <6ba8698f-0c05-5293-4811-2f632bf1b047@st.com>
-References: <1551363945-19497-1-git-send-email-hugues.fruchet@st.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: [PATCH 1/3] regulator: arizona: Update device tree binding to support Madera CODECs
+Date: Tue, 21 May 2019 11:04:37 +0100
+Message-ID: <20190521100439.27383-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551363945-19497-1-git-send-email-hugues.fruchet@st.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hugues Fruchet <hugues.fruchet@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+To: broonie@kernel.org
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Hugues,
+The Arizona regulator drivers are now also used by the Cirrus Logic
+Madera audio CODECs, update the binding document to link to the primary
+binding document for these as well as the existing Arizona document.
 
-On 2/28/19 3:25 PM, Hugues Fruchet wrote:
-> This patchset serie enables camera of stm32mp157c evaluation board.
-> To do so, both stm32mp157c DCMI camera interface driver and OV5640 camera
-> module driver are enabled in devicetree.
-> 
-> DCMI camera interface driver is enabled by default in multi_v7 configuration
-> but OV5640 driver remains to be selected at kernel configuration time.
-> 
-> This patchset depends on STMicroelectronics Multi-Function eXpander
-> (STMFX) support [1].
-> 
-> [1] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1944108.html
-> 
-> Hugues Fruchet (4):
->    ARM: dts: stm32: add 2v8 fixed regulator for stm32mp157c-ed1 board
->    ARM: dts: stm32: add DCMI camera interface support on stm32mp157c
->    ARM: dts: stm32: add DCMI pins to stm32mp157c
->    ARM: dts: stm32: enable OV5640 camera on stm32mp157c-ev1 board
-> 
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 41 ++++++++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts     |  8 +++++
->   arch/arm/boot/dts/stm32mp157c-ev1.dts     | 56 +++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c.dtsi        | 12 +++++++
->   4 files changed, 117 insertions(+)
-> 
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ Documentation/devicetree/bindings/regulator/arizona-regulator.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Patch 2 to 4 applied on stm32-next. Patch 1 is no longer needed as 
-regulators are now provided by PMIC.
-
-thanks
-Alex
+diff --git a/Documentation/devicetree/bindings/regulator/arizona-regulator.txt b/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+index 443564d7784fd..69bf41949b01f 100644
+--- a/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+@@ -5,7 +5,8 @@ of analogue I/O.
+ 
+ This document lists regulator specific bindings, see the primary binding
+ document:
+-  ../mfd/arizona.txt
++  For Wolfson Microelectronic Arizona codecs: ../mfd/arizona.txt
++  For Cirrus Logic Madera codecs: ../mfd/madera.txt
+ 
+ Optional properties:
+   - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
+-- 
+2.11.0
