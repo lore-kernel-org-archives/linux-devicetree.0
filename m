@@ -1,54 +1,69 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH v4 2/3] fdt: add support for rng-seed
-Date: Tue, 21 May 2019 20:42:48 +0800
-Message-ID: <CANMq1KA1YF6B=nFizS8nT4KREASaJuaztdBnh_t0V8i0Fb-e6A@mail.gmail.com>
-References: <20190519160446.320-1-hsinyi@chromium.org>
- <20190519160446.320-2-hsinyi@chromium.org>
- <CANMq1KB7sh=UXaM4sMm_THjZ_wV3Thgr6_ona-TJFqA2QQHALA@mail.gmail.com>
- <CAJMQK-iZRHO6HBkycPt0yz_vndmmmqFL0duHOcQ8EFSdhhFZcQ@mail.gmail.com>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH v4 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+Date: Tue, 21 May 2019 12:45:36 +0000
+Message-ID: <VI1PR0402MB3519E48F01380A3DE9FEC01487070@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+References: <20190521072355.12928-1-ping.bai@nxp.com>
+ <20190521072355.12928-2-ping.bai@nxp.com>
+ <5823cd07-312b-600c-1b78-dc5bff2a12eb@linaro.org>
+ <VI1PR0402MB3519B14C5AF93F246907F03A87070@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+ <bc03b0c8-52cf-58e1-e7b3-bb1f2345c05b@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAJMQK-iZRHO6HBkycPt0yz_vndmmmqFL0duHOcQ8EFSdhhFZcQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yu Zhao <yuzhao@google.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Stephen Boyd <swboyd@chromium.org>, Will Deacon <will.deacon@arm.com>, lkml <linux-kernel@vger.kernel.org>, Mike Rapoport <rppt@linux.ibm.com>, Jun Yao <yaojun8558363@gmail.com>, Miles Chen <miles.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Laura Abbott <labbott@redhat.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <bc03b0c8-52cf-58e1-e7b3-bb1f2345c05b@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2019 at 12:10 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> On Mon, May 20, 2019 at 7:54 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> > Alphabetical order.
-> Original headers are not sorted, should I sort them here?
-> >
->
-> >
-> > I'm a little bit concerned about this, as we really want the rng-seed
-> > value to be wiped, and not kept in memory (even if it's hard to
-> > access).
-> >
-> > IIUC, fdt_delprop splices the device tree, so it'll override
-> > "rng-seed" property with whatever device tree entries follow it.
-> > However, if rng-seed is the last property (or if the entries that
-> > follow are smaller than rng-seed), the seed will stay in memory (or
-> > part of it).
-> >
-> > fdt_nop_property in v2 would erase it for sure. I don't know if there
-> > is a way to make sure that rng-seed is removed for good while still
-> > deleting the property (maybe modify fdt_splice_ to do a memset(.., 0)
-> > of the moved chunk?).
-> >
-> So maybe we can use fdt_nop_property() back?
-
-Yes I prefer fdt_nop_property, if we don't want to modify delprop or
-splice. But it'd be good if others can chime in.
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFuaWVsIExlemNhbm8g
+W21haWx0bzpkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnXQ0KPiBTZW50OiBUdWVzZGF5LCBNYXkg
+MjEsIDIwMTkgODoyMCBQTQ0KPiBUbzogSmFja3kgQmFpIDxwaW5nLmJhaUBueHAuY29tPjsgdGds
+eEBsaW51dHJvbml4LmRlOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IHNoYXduZ3VvQGtlcm5lbC5v
+cmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBBaXNoZW5nIERvbmcNCj4gPGFpc2hlbmcuZG9uZ0Bu
+eHAuY29tPg0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteA0KPiA8bGludXgtaW14QG54cC5jb20+DQo+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMi8yXSBkcml2ZXI6IGNsb2Nrc291cmNlOiBBZGQgbnhwIHN5
+c3RlbSBjb3VudGVyIHRpbWVyDQo+IGRyaXZlciBzdXBwb3J0DQo+IA0KPiBPbiAyMS8wNS8yMDE5
+IDE0OjAxLCBKYWNreSBCYWkgd3JvdGU6DQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gPj4gRnJvbTogRGFuaWVsIExlemNhbm8gW21haWx0bzpkYW5pZWwubGV6Y2Fub0Bs
+aW5hcm8ub3JnXQ0KPiA+PiBTZW50OiBUdWVzZGF5LCBNYXkgMjEsIDIwMTkgNjowOCBQTQ0KPiA+
+PiBUbzogSmFja3kgQmFpIDxwaW5nLmJhaUBueHAuY29tPjsgdGdseEBsaW51dHJvbml4LmRlOw0K
+PiA+PiByb2JoK2R0QGtlcm5lbC5vcmc7IHNoYXduZ3VvQGtlcm5lbC5vcmc7IG1hcmsucnV0bGFu
+ZEBhcm0uY29tOw0KPiA+PiBBaXNoZW5nIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+
+PiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7DQo+ID4+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+ID4+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggdjQgMi8yXSBkcml2ZXI6IGNsb2Nrc291cmNlOiBBZGQgbnhwIHN5c3Rl
+bQ0KPiA+PiBjb3VudGVyIHRpbWVyIGRyaXZlciBzdXBwb3J0DQo+ID4+DQo+ID4+IE9uIDIxLzA1
+LzIwMTkgMDk6MTgsIEphY2t5IEJhaSB3cm90ZToNCj4gPj4+IEZyb206IEJhaSBQaW5nIDxwaW5n
+LmJhaUBueHAuY29tPg0KPiA+Pj4NCj4gPj4+IFRoZSBzeXN0ZW0gY291bnRlciAoc3lzX2N0cikg
+aXMgYSBwcm9ncmFtbWFibGUgc3lzdGVtIGNvdW50ZXIgd2hpY2gNCj4gPj4+IHByb3ZpZGVzIGEg
+c2hhcmVkIHRpbWUgYmFzZSB0byB0aGUgQ29ydGV4IEExNSwgQTcsIEE1MyBldGMgY29yZXMuDQo+
+ID4+PiBJdCBpcyBpbnRlbmRlZCBmb3IgdXNlIGluIGFwcGxpY2F0aW9ucyB3aGVyZSB0aGUgY291
+bnRlciBpcyBhbHdheXMNCj4gPj4+IHBvd2VyZWQgb24gYW5kIHN1cHBvcnRzIG11bHRpcGxlLCB1
+bnJlbGF0ZWQgY2xvY2tzLiBUaGUgc3lzX2N0cg0KPiA+Pj4gaGFyZHdhcmUNCj4gPj4+IHN1cHBv
+cnRzOg0KPiA+Pj4gIC0gNTYtYml0IGNvdW50ZXIgd2lkdGggKHJvbGwtb3ZlciB0aW1lIGdyZWF0
+ZXIgdGhhbiA0MCB5ZWFycykNCj4gPj4NCj4gPj4gVGhlIGJlbmVmaXQgb2YgdXNpbmcgbW9yZSB0
+aGFuIDMyYml0cyBvbiBhIDMyYml0cyBzeXN0ZW0gaXMgbm90IHByb3Zlbi4NCj4gPj4NCj4gPg0K
+PiA+IEl0IGlzIG1haW5seSB1c2VkIG9uIDY0Yml0IEFSTXY4IHN5c3RlbS4NCj4gDQo+IE9oLCBv
+ay4gRmFpciBlbm91Z2guDQo+IA0KPiA+DQo+ID4+IFRoZSBmdW5jdGlvbiB0byByZWFkIGFuZCBi
+dWlsZCB0aGUgNTZiaXRzIHZhbHVlIGNhbiBoYXZlIGEgdmVyeQ0KPiA+PiBzaWduaWZpY2FudCBp
+bXBhY3Qgb24gdGhlIHBlcmZvcm1hbmNlIG9mIHlvdXIgcGxhdGZvcm0uDQo+ID4+DQo+ID4+IFVz
+aW5nIGEgMzJiaXRzIGNvdW50ZXIgY2FuIGJlIGVub3VnaCBpZiBpdCBkb2VzIG5vdCB3cmFwIHRv
+byBmYXN0Lg0KPiA+Pg0KPiA+PiBDYW4geW91IGNvbnNpZGVyIGEgMzIgYml0cyBjb3VudGVyID8N
+Cj4gPg0KPiA+IHRoaXMgY291bnRlciBpcyBBUk12OCBhcmNoIHRpbWVyJ3MgY291bnRlciBzb3Vy
+Y2UuIEFzIGl0IGFsc28gaGFzDQo+ID4gdGltZXIgZnVuY3Rpb24sIHNvIEkgY2hvb3NlIGl0IHRv
+IGFjdCBhcyBhIGJyb2FkY2FzdCB0aW1lciBmb3IgY3B1aWRsZS4gVGhlDQo+IHRpbWVyIGludGVy
+cnVwdCBjYW4gb25seSBiZSB0cmlnZ2VyZWQgd2hlbiAnY29tcGFyZVs1NTowXSA8PSBjb3VudGVy
+WzU1OjBdJy4NCj4gPiBTbyB5b3UgbWVhbiB0aGF0IG9ubHkgdXNlIHRoZSBsb3dlciAzMmJpdCB0
+byBpbXBsZW1lbnQgdGhpcyB0aW1lcj8gSWYgc28sIEkNCj4gY2FuIGNoYW5nZSB0byB1c2Ugb25s
+eSB0aGUgbG93ZXIgMzJiaXQuDQo+IA0KPiBJTU8gaXQgaXMgcHJlZmVyYWJsZSBidXQgeW91IGRl
+Y2lkZSAocHJvYmFibHkgY29tcGFyZSB3aXRoIGhvdyBsb25nIGl0IHRha2VzDQo+IHRvIHdyYXAg
+d2hlbiAzMmJpdHMpLg0KPiANCg0KTm9ybWFsbHksIGl0IGlzIGRyaXZlbiBieSBmaXhlZCA4TUh6
+IGNsb2NrLiAzMmJpdCBoYXMgcmlzaywgd2hlbiB0aGUgbG93ZXIgMzJiaXQgd3JhcHBlZCwNCnRo
+ZW4gdGhlICdjb3VudGVyIHZhbHVlID49IGNvbXBhcmUgdmFsdWUnIGlzIHRydWUgaWYgb25seSB1
+c2UgMzJiaXQgZm9yIHRpbWVyLCB0aGVuIElSUSB3aWxsDQpQZW5kaW5nIGFsbCB0aGUgdGltZS4g
+SSB3aWxsIGtlZXAgdXNlIHRoZSB3aG9sZSA1NmJpdC4NCg0KPiANCj4gDQoNCg==
