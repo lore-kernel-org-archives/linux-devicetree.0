@@ -1,47 +1,105 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] arm64: dts: imx8qxp: Add gpio alias
-Date: Tue, 21 May 2019 08:17:43 +0000
-Message-ID: <DB3PR0402MB391632602294707677060EF3F5070@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1557809536-749-1-git-send-email-Anson.Huang@nxp.com>
- <20190521080900.GC15856@dragon>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: Device Tree nodes ending with -supply
+Date: Tue, 21 May 2019 10:19:05 +0200
+Message-ID: <20190521081905.hrxpob2llmtgdtj4@flea>
+References: <20190520155127.cdc6dofoqckwsrrb@flea>
+ <CAL_JsqJhBji40AnA=ND116N0+DkvzhX=Rt-wa=DX3Fd3uQRdAw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521080900.GC15856@dragon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: multipart/mixed; boundary="===============3453493537946951459=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJhBji40AnA=ND116N0+DkvzhX=Rt-wa=DX3Fd3uQRdAw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIFttYWls
-dG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogVHVlc2RheSwgTWF5IDIxLCAyMDE5IDQ6
-MDkgUE0NCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogcm9i
-aCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgcy5oYXVlckBwZW5ndXRyb25p
-eC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207IEFpc2hl
-bmcgRG9uZw0KPiA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBEYW5pZWwgQmFsdXRhIDxkYW5pZWwu
-YmFsdXRhQG54cC5jb20+OyBQZW5nDQo+IEZhbiA8cGVuZy5mYW5AbnhwLmNvbT47IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgNCj4gPGxpbnV4
-LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBhcm02NDogZHRzOiBpbXg4cXhw
-OiBBZGQgZ3BpbyBhbGlhcw0KPiANCj4gT24gVHVlLCBNYXkgMTQsIDIwMTkgYXQgMDQ6NTc6MTdB
-TSArMDAwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gQWRkIGkuTVg4UVhQIEdQSU8gYWxpYXMg
-Zm9yIGtlcm5lbCBHUElPIGRyaXZlciB1c2FnZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFu
-c29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBhcmNoL2FybTY0
-L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kgfCA4ICsrKysrKysrDQo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kNCj4gPiBiL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiA+IGluZGV4IGIxN2MyMmUuLjkyMzcwNWUg
-MTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5k
-dHNpDQo+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNp
-DQo+ID4gQEAgLTIyLDYgKzIyLDE0IEBADQo+ID4gIAkJbW1jMiA9ICZ1c2RoYzM7DQo+ID4gIAkJ
-c2VyaWFsMCA9ICZhZG1hX2xwdWFydDA7DQo+ID4gIAkJbXUxID0gJmxzaW9fbXUxOw0KPiA+ICsJ
-CWdwaW8wID0gJmxzaW9fZ3BpbzA7DQo+IA0KPiBPa2F5LCBpdCdzIGFscmVhZHkgb3V0IG9mIGFs
-cGhhYmV0aWNhbCBvcmRlciwgYnV0IGxldCdzIG5vdCBtYWtlIGl0IHdvcnNlLg0KDQpTdXJlLCBq
-dXN0IHNlbnQgb3V0IFYyIHBhdGNoLCBwbGVhc2UgaGVscCByZXZpZXcsIHRoYW5rcy4NCg0KQW5z
-b24uDQoNCj4gDQo+IFNoYXduDQo+IA0KPiA+ICsJCWdwaW8xID0gJmxzaW9fZ3BpbzE7DQo+ID4g
-KwkJZ3BpbzIgPSAmbHNpb19ncGlvMjsNCj4gPiArCQlncGlvMyA9ICZsc2lvX2dwaW8zOw0KPiA+
-ICsJCWdwaW80ID0gJmxzaW9fZ3BpbzQ7DQo+ID4gKwkJZ3BpbzUgPSAmbHNpb19ncGlvNTsNCj4g
-PiArCQlncGlvNiA9ICZsc2lvX2dwaW82Ow0KPiA+ICsJCWdwaW83ID0gJmxzaW9fZ3Bpbzc7DQo+
-ID4gIAl9Ow0KPiA+DQo+ID4gIAljcHVzIHsNCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCg==
+
+--===============3453493537946951459==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cq65ay2ooptglc76"
+Content-Disposition: inline
+
+
+--cq65ay2ooptglc76
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, May 20, 2019 at 02:46:11PM -0500, Rob Herring wrote:
+> On Mon, May 20, 2019 at 10:51 AM Maxime Ripard
+> <maxime.ripard@bootlin.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > I've noticed that you recently added support to validate the *-supply
+> > properties in the dt-schema tools.
+> >
+> > However, we have a family of PMIC that are exposing a bunch of power
+> > supplies (battery, AC, USB, etc) to know what is currently powering
+> > the board.
+> >
+> > All these various supplies are exposed as children nodes of the PMIC
+> > itself, and they are named *-power-supply. For an example, you can
+> > look at:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/axp209.dtsi#n56
+> >
+> > Now, those are obviously not properties, and yet the current dt-schema
+> > schemas are trying to validate them.
+> >
+> > I'm not really sure how to fix that. Changing the node names seems
+> > like an obvious solution, but they seem to be what they should be. Can
+> > we reduce the scope of the validation to only match properties (ie
+> > arrays?) and not the nodes (objects?)
+>
+> While I'd prefer to avoid that node name, I fixed it with the fancy
+> new if/then schema:
+>
+>   ".*-supply$":
+>     if:
+>       not: { type: object }
+>     then:
+>       $ref: "types.yaml#/definitions/phandle"
+>
+> I'll push it out shortly.
+
+Great, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--cq65ay2ooptglc76
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOO0eQAKCRDj7w1vZxhR
+xbWdAP9q2hlGIuZ0B/clAsr/IpvrVeYNlafIx72qJ/oQ2YzlKgD9H0Z8PN9oqzMf
+HNLygFFaTCGOeyQxtNv5wftT1fWTaAA=
+=Rowu
+-----END PGP SIGNATURE-----
+
+--cq65ay2ooptglc76--
+
+
+--===============3453493537946951459==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3453493537946951459==--
