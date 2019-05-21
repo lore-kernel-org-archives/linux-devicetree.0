@@ -1,32 +1,47 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 5/5] arm64: defconfig: ARM_IMX_CPUFREQ_DT=m
-Date: Tue, 21 May 2019 16:05:36 +0800
-Message-ID: <20190521080535.GA15856@dragon>
-References: <cover.1557742902.git.leonard.crestez@nxp.com>
- <675eb0dd54855126ea6f70804c84372d386878bb.1557742902.git.leonard.crestez@nxp.com>
+Subject: Re: [PATCH] arm64: dts: imx8mq: Add gpio alias
+Date: Tue, 21 May 2019 16:06:48 +0800
+Message-ID: <20190521080647.GB15856@dragon>
+References: <1557804533-18194-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <675eb0dd54855126ea6f70804c84372d386878bb.1557742902.git.leonard.crestez@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <anson.huang@nxp.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jacky Bai <ping.bai@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+In-Reply-To: <1557804533-18194-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2019 at 11:01:44AM +0000, Leonard Crestez wrote:
-> For imx8m we need a separate small driver to read "speed grading"
-> information from fuses and determine which OPPs are supported.
+On Tue, May 14, 2019 at 03:33:56AM +0000, Anson Huang wrote:
+> Add i.MX8MQ GPIO alias for kernel GPIO driver usage.
 > 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 6d635ba..df33672 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -30,6 +30,11 @@
+>  		spi0 = &ecspi1;
+>  		spi1 = &ecspi2;
+>  		spi2 = &ecspi3;
+> +		gpio0 = &gpio1;
 
-Applied, thanks.
+Please keep the list alphabetically sorted.
+
+Shawn
+
+> +		gpio1 = &gpio2;
+> +		gpio2 = &gpio3;
+> +		gpio3 = &gpio4;
+> +		gpio4 = &gpio5;
+>  	};
+>  
+>  	ckil: clock-ckil {
+> -- 
+> 2.7.4
+> 
