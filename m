@@ -1,87 +1,47 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8996: Stop using legacy clock names
-Date: Tue, 21 May 2019 11:25:44 +0200
-Message-ID: <20190521092544.GB22910@centauri>
-References: <20190503232442.1530-1-bjorn.andersson@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 2/6] net: stmmac: sun8i: force select
+ external PHY when no internal one
+Date: Tue, 21 May 2019 12:27:24 +0300
+Message-ID: <4e031eeb-2819-a97f-73bf-af84b04aa7b2@cogentembedded.com>
+References: <20190520235009.16734-1-megous@megous.com>
+ <20190520235009.16734-3-megous@megous.com>
+Reply-To: sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190503232442.1530-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBC6MFNV32EFRBBMJR7TQKGQEE6ROGCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190520235009.16734-3-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 03, 2019 at 04:24:42PM -0700, Bjorn Andersson wrote:
-> MDSS and its friends complain about the DTS is using legacy clock names,
-> update these to silence the warnings.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index a988edabe474..3d861f1d836c 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -1678,7 +1678,7 @@
->  			#interrupt-cells = <1>;
->  
->  			clocks = <&mmcc MDSS_AHB_CLK>;
-> -			clock-names = "iface_clk";
-> +			clock-names = "iface";
->  
->  			#address-cells = <1>;
->  			#size-cells = <1>;
-> @@ -1697,11 +1697,11 @@
->  					 <&mmcc MDSS_MDP_CLK>,
->  					 <&mmcc SMMU_MDP_AXI_CLK>,
->  					 <&mmcc MDSS_VSYNC_CLK>;
-> -				clock-names = "iface_clk",
-> -					      "bus_clk",
-> -					      "core_clk",
-> -					      "iommu_clk",
-> -					      "vsync_clk";
-> +				clock-names = "iface",
-> +					      "bus",
-> +					      "core",
-> +					      "iommu",
-> +					      "vsync";
->  
->  				iommus = <&mdp_smmu 0>;
->  
-> @@ -1736,11 +1736,11 @@
->  					 <&mmcc MDSS_HDMI_AHB_CLK>,
->  					 <&mmcc MDSS_EXTPCLK_CLK>;
->  				clock-names =
-> -					"mdp_core_clk",
-> -					"iface_clk",
-> -					"core_clk",
-> -					"alt_iface_clk",
-> -					"extp_clk";
-> +					"mdp_core",
-> +					"iface",
-> +					"core",
-> +					"alt_iface",
-> +					"extp";
->  
->  				phys = <&hdmi_phy>;
->  				phy-names = "hdmi_phy";
-> @@ -1777,8 +1777,8 @@
->  
->  				clocks = <&mmcc MDSS_AHB_CLK>,
->  					 <&gcc GCC_HDMI_CLKREF_CLK>;
-> -				clock-names = "iface_clk",
-> -					      "ref_clk";
-> +				clock-names = "iface",
-> +					      "ref";
->  			};
->  		};
->  	};
-> -- 
-> 2.18.0
-> 
+Hello!
 
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+On 21.05.2019 2:50, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+
+> From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> 
+> The PHY selection bit also exists on SoCs without an internal PHY; if it's
+> set to 1 (internal PHY, default value) then the MAC will not make use of
+> any PHY such SoCs.
+          ^ "on" or "with" missing?
+
+> This problem appears when adapting for H6, which has no real internal PHY
+> (the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
+> connected via RMII interface at GPIO bank A).
+> 
+> Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
+> to address the problem of a wrong default value.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+[...]
+
+MBR, Sergei
