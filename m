@@ -1,167 +1,169 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v4 2/2] driver: clocksource: Add nxp system counter timer
- driver support
-Date: Tue, 21 May 2019 12:01:47 +0000
-Message-ID: <VI1PR0402MB3519B14C5AF93F246907F03A87070@VI1PR0402MB3519.eurprd04.prod.outlook.com>
-References: <20190521072355.12928-1-ping.bai@nxp.com>
- <20190521072355.12928-2-ping.bai@nxp.com>
- <5823cd07-312b-600c-1b78-dc5bff2a12eb@linaro.org>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH 2/5] ARM: dts: exynos: Add array of generic PHYs to
+ EHCI/OHCI devices
+Date: Tue, 21 May 2019 13:58:46 +0200
+Message-ID: <20190521115849.9882-3-m.szyprowski@samsung.com>
+References: <20190521115849.9882-1-m.szyprowski@samsung.com>
+        <CGME20190521120205eucas1p27671f3b96e443da8b13bd10618a77636@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5823cd07-312b-600c-1b78-dc5bff2a12eb@linaro.org>
-Content-Language: en-US
+In-reply-to: <20190521115849.9882-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, =?UTF-8?q?M=C3=A5ns=20Rullg=C3=A5rd?= <mans@mansr.com>, Krzysztof Kozlowski <krzk@kernel.org>, Peter Chen <peter.chen@nxp.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IERhbmllbCBMZXpjYW5vIFtt
-YWlsdG86ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZ10NCj4gU2VudDogVHVlc2RheSwgTWF5IDIx
-LCAyMDE5IDY6MDggUE0NCj4gVG86IEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT47IHRnbHhA
-bGludXRyb25peC5kZTsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBzaGF3bmd1b0BrZXJuZWwub3Jn
-OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgQWlzaGVuZyBEb25nDQo+IDxhaXNoZW5nLmRvbmdAbnhw
-LmNvbT4NCj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgNCj4gPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJq
-ZWN0OiBSZTogW1BBVENIIHY0IDIvMl0gZHJpdmVyOiBjbG9ja3NvdXJjZTogQWRkIG54cCBzeXN0
-ZW0gY291bnRlciB0aW1lcg0KPiBkcml2ZXIgc3VwcG9ydA0KPiANCj4gT24gMjEvMDUvMjAxOSAw
-OToxOCwgSmFja3kgQmFpIHdyb3RlOg0KPiA+IEZyb206IEJhaSBQaW5nIDxwaW5nLmJhaUBueHAu
-Y29tPg0KPiA+DQo+ID4gVGhlIHN5c3RlbSBjb3VudGVyIChzeXNfY3RyKSBpcyBhIHByb2dyYW1t
-YWJsZSBzeXN0ZW0gY291bnRlciB3aGljaA0KPiA+IHByb3ZpZGVzIGEgc2hhcmVkIHRpbWUgYmFz
-ZSB0byB0aGUgQ29ydGV4IEExNSwgQTcsIEE1MyBldGMgY29yZXMuDQo+ID4gSXQgaXMgaW50ZW5k
-ZWQgZm9yIHVzZSBpbiBhcHBsaWNhdGlvbnMgd2hlcmUgdGhlIGNvdW50ZXIgaXMgYWx3YXlzDQo+
-ID4gcG93ZXJlZCBvbiBhbmQgc3VwcG9ydHMgbXVsdGlwbGUsIHVucmVsYXRlZCBjbG9ja3MuIFRo
-ZSBzeXNfY3RyDQo+ID4gaGFyZHdhcmUNCj4gPiBzdXBwb3J0czoNCj4gPiAgLSA1Ni1iaXQgY291
-bnRlciB3aWR0aCAocm9sbC1vdmVyIHRpbWUgZ3JlYXRlciB0aGFuIDQwIHllYXJzKQ0KPiANCj4g
-VGhlIGJlbmVmaXQgb2YgdXNpbmcgbW9yZSB0aGFuIDMyYml0cyBvbiBhIDMyYml0cyBzeXN0ZW0g
-aXMgbm90IHByb3Zlbi4NCj4gDQoNCkl0IGlzIG1haW5seSB1c2VkIG9uIDY0Yml0IEFSTXY4IHN5
-c3RlbS4NCg0KPiBUaGUgZnVuY3Rpb24gdG8gcmVhZCBhbmQgYnVpbGQgdGhlIDU2Yml0cyB2YWx1
-ZSBjYW4gaGF2ZSBhIHZlcnkgc2lnbmlmaWNhbnQNCj4gaW1wYWN0IG9uIHRoZSBwZXJmb3JtYW5j
-ZSBvZiB5b3VyIHBsYXRmb3JtLg0KPiANCj4gVXNpbmcgYSAzMmJpdHMgY291bnRlciBjYW4gYmUg
-ZW5vdWdoIGlmIGl0IGRvZXMgbm90IHdyYXAgdG9vIGZhc3QuDQo+IA0KPiBDYW4geW91IGNvbnNp
-ZGVyIGEgMzIgYml0cyBjb3VudGVyID8NCg0KdGhpcyBjb3VudGVyIGlzIEFSTXY4IGFyY2ggdGlt
-ZXIncyBjb3VudGVyIHNvdXJjZS4gQXMgaXQgYWxzbyBoYXMgdGltZXIgZnVuY3Rpb24sIHNvIEkg
-Y2hvb3NlIGl0DQp0byBhY3QgYXMgYSBicm9hZGNhc3QgdGltZXIgZm9yIGNwdWlkbGUuIFRoZSB0
-aW1lciBpbnRlcnJ1cHQgY2FuIG9ubHkgYmUgdHJpZ2dlcmVkIHdoZW4gJ2NvbXBhcmVbNTU6MF0g
-PD0gY291bnRlcls1NTowXScuDQpTbyB5b3UgbWVhbiB0aGF0IG9ubHkgdXNlIHRoZSBsb3dlciAz
-MmJpdCB0byBpbXBsZW1lbnQgdGhpcyB0aW1lcj8gSWYgc28sIEkgY2FuIGNoYW5nZSB0byB1c2Ug
-b25seSB0aGUgbG93ZXIgMzJiaXQuDQoNCj4gDQo+ID4gIC0gY29tcGFyZSBmcmFtZSg2NC1iaXQg
-Y29tcGFyZSB2YWx1ZSkgY29udGFpbnMgcHJvZ3JhbW1hYmxlIGludGVycnVwdA0KPiA+ICAgIGdl
-bmVyYXRpb24gd2hlbiBjb21wYXJlIHZhbHVlIDw9IGNvdW50ZXIgdmFsdWUuDQo+ID4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBCYWkgUGluZyA8cGluZy5iYWlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBj
-aGFuZ2UgdjEtPnYyOg0KPiA+ICAtIG5vIGNoYW5nZQ0KPiA+IGNoYW5nZSB2Mi0+djM6DQo+ID4g
-IC0gcmVtb3ZlIHRoZSBjbG9ja3NvdXJjZSwgd2Ugb25seSBuZWVkIHRvIHVzZSB0aGlzIG1vZHVs
-ZSBmb3IgdGltZXINCj4gcHVycG9zZSwNCj4gPiAgICBzbyByZWdpc3RlciBpdCBhcyBjbG9ja2V2
-ZW50IGlzIGVub3VnaC4NCj4gPiAgLSB1c2UgdGhlIHRpbWVyX29mX2luaXQgdG8gaW5pdCB0aGUg
-aXJxLCBjbG9jaywgZXRjLg0KPiA+ICAtIHJlbW92ZSBzb21lIHVubmVjZXNzYXJ5IGNvbW1lbnRz
-Lg0KPiA+IGNoYW5nZSB2My0+djQ6DQo+ID4gIC0gdXNlIGNhY2hlZCB2YWx1ZSBmb3IgQ01QQ1Is
-DQo+ID4gIC0gcmVtb3ZlIHVubmVjZXNzYXJ5IHRpbWVyIGVuYWJlIGZyb20gc2V0X3N0YXRlX29u
-ZXNob3QgZnVuY3Rpb24uDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZp
-ZyAgICAgICAgICAgIHwgICA3ICsrDQo+ID4gIGRyaXZlcnMvY2xvY2tzb3VyY2UvTWFrZWZpbGUg
-ICAgICAgICAgIHwgICAxICsNCj4gPiAgZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1pbXgtc3lz
-Y3RyLmMgfCAxNDYNCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDMgZmlsZXMg
-Y2hhbmdlZCwgMTU0IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvY2xvY2tzb3VyY2UvdGltZXItaW14LXN5c2N0ci5jDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9jbG9ja3NvdXJjZS9LY29uZmlnIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9LY29uZmln
-DQo+ID4gaW5kZXggNmJjYWE0ZTJlNzJjLi5lZTQ4NjIwYTQ1NjEgMTAwNjQ0DQo+ID4gLS0tIGEv
-ZHJpdmVycy9jbG9ja3NvdXJjZS9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9jbG9ja3NvdXJj
-ZS9LY29uZmlnDQo+ID4gQEAgLTYxNiw2ICs2MTYsMTMgQEAgY29uZmlnIENMS1NSQ19JTVhfVFBN
-DQo+ID4gIAkgIEVuYWJsZSB0aGlzIG9wdGlvbiB0byB1c2UgSU1YIFRpbWVyL1BXTSBNb2R1bGUg
-KFRQTSkgdGltZXIgYXMNCj4gPiAgCSAgY2xvY2tzb3VyY2UuDQo+ID4NCj4gPiArY29uZmlnIFRJ
-TUVSX0lNWF9TWVNfQ1RSDQo+ID4gKwlib29sICJpLk1YIHN5c3RlbSBjb3VudGVyIHRpbWVyIiBp
-ZiBDT01QSUxFX1RFU1QNCj4gPiArCWRlcGVuZHMgb24gQVJDSF9NWEMNCj4gDQo+IERvIHlvdSBy
-ZWFsbHkgbmVlZCB0aGlzIGRlcD8NCj4gDQoNCk5vdCByZWFsbHkgbmVjZXNzYXJ5LCBJIGNhbiBy
-ZW1vdmUgaXQuDQoNCj4gPiArCXNlbGVjdCBUSU1FUl9PRg0KPiA+ICsJaGVscA0KPiA+ICsJICBF
-bmFibGUgdGhpcyBvcHRpb24gdG8gdXNlIGkuTVggc3lzdGVtIGNvdW50ZXIgdGltZXIgZm9yIGNs
-b2NrZXZlbnQuDQo+ID4gKw0KPiA+ICBjb25maWcgQ0xLU1JDX1NUX0xQQw0KPiA+ICAJYm9vbCAi
-TG93IHBvd2VyIGNsb2Nrc291cmNlIGZvdW5kIGluIHRoZSBMUEMiIGlmIENPTVBJTEVfVEVTVA0K
-PiA+ICAJc2VsZWN0IFRJTUVSX09GIGlmIE9GDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xv
-Y2tzb3VyY2UvTWFrZWZpbGUNCj4gPiBiL2RyaXZlcnMvY2xvY2tzb3VyY2UvTWFrZWZpbGUgaW5k
-ZXggMjM2ODU4ZmE3ZmJmLi41ZmJhMzllODFhNDAgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9j
-bG9ja3NvdXJjZS9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMvY2xvY2tzb3VyY2UvTWFrZWZp
-bGUNCj4gPiBAQCAtNzQsNiArNzQsNyBAQCBvYmotJChDT05GSUdfQ0xLU1JDX01JUFNfR0lDKQkJ
-Kz0NCj4gbWlwcy1naWMtdGltZXIubw0KPiA+ICBvYmotJChDT05GSUdfQ0xLU1JDX1RBTkdPX1hU
-QUwpCQkrPSB0aW1lci10YW5nby14dGFsLm8NCj4gPiAgb2JqLSQoQ09ORklHX0NMS1NSQ19JTVhf
-R1BUKQkJKz0gdGltZXItaW14LWdwdC5vDQo+ID4gIG9iai0kKENPTkZJR19DTEtTUkNfSU1YX1RQ
-TSkJCSs9IHRpbWVyLWlteC10cG0ubw0KPiA+ICtvYmotJChDT05GSUdfVElNRVJfSU1YX1NZU19D
-VFIpCQkrPSB0aW1lci1pbXgtc3lzY3RyLm8NCj4gPiAgb2JqLSQoQ09ORklHX0FTTTkyNjBfVElN
-RVIpCQkrPSBhc205MjYwX3RpbWVyLm8NCj4gPiAgb2JqLSQoQ09ORklHX0g4MzAwX1RNUjgpCQkr
-PSBoODMwMF90aW1lcjgubw0KPiA+ICBvYmotJChDT05GSUdfSDgzMDBfVE1SMTYpCQkrPSBoODMw
-MF90aW1lcjE2Lm8NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1p
-bXgtc3lzY3RyLmMNCj4gPiBiL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItaW14LXN5c2N0ci5j
-DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLmQwNDI4
-ZDMxODlmOA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2Nsb2Nrc291cmNl
-L3RpbWVyLWlteC1zeXNjdHIuYw0KPiA+IEBAIC0wLDAgKzEsMTQ2IEBADQo+ID4gKy8vIFNQRFgt
-TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKw0KPiA+ICsvLw0KPiA+ICsvLyBDb3B5cmlnaHQg
-MjAxNy0yMDE5IE5YUA0KPiA+ICsNCj4gPiArI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPg0K
-PiA+ICsjaW5jbHVkZSA8bGludXgvY2xvY2tjaGlwcy5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgv
-b2ZfYWRkcmVzcy5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfaXJxLmg+DQo+ID4gKw0KPiA+
-ICsjaW5jbHVkZSAidGltZXItb2YuaCINCj4gPiArDQo+ID4gKyNkZWZpbmUgQ01QX09GRlNFVAkw
-eDEwMDAwDQo+ID4gKw0KPiA+ICsjZGVmaW5lIENOVENWX0xPCTB4OA0KPiA+ICsjZGVmaW5lIENO
-VENWX0hJCTB4Yw0KPiA+ICsjZGVmaW5lIENNUENWX0xPCShDTVBfT0ZGU0VUICsgMHgyMCkNCj4g
-PiArI2RlZmluZSBDTVBDVl9ISQkoQ01QX09GRlNFVCArIDB4MjQpDQo+ID4gKyNkZWZpbmUgQ01Q
-Q1IJCShDTVBfT0ZGU0VUICsgMHgyYykNCj4gPiArDQo+ID4gKyNkZWZpbmUgU1lTX0NUUl9FTgkJ
-MHgxDQo+ID4gKyNkZWZpbmUgU1lTX0NUUl9JUlFfTUFTSwkweDINCj4gPiArDQo+ID4gK3N0YXRp
-YyB2b2lkIF9faW9tZW0gKnN5c19jdHJfYmFzZTsNCj4gPiArc3RhdGljIHUzMiBjbXBjcjsNCj4g
-PiArDQo+ID4gK3N0YXRpYyB2b2lkIHN5c2N0cl90aW1lcl9lbmFibGUoYm9vbCBlbmFibGUpIHsN
-Cj4gPiArCWNtcGNyICY9IH5TWVNfQ1RSX0VOOw0KPiANCj4gRG8gdGhlIGNvbXB1dGF0aW9uIGFm
-dGVyIHJlYWRpbmcgdGhlIHZhbHVlIGluIHRoZSBpbml0IGZ1bmN0aW9uLi4uDQo+IA0KPiA+ICsJ
-aWYgKGVuYWJsZSkNCj4gPiArCQljbXBjciB8PSBTWVNfQ1RSX0VOOw0KPiANCj4gLi4uIHRoZW4N
-Cj4gDQo+IHdyaXRlbChlbmFibGUgPyBjbXBjciB8IFNZU19DVFJfRU4gOiBjbXBjciwgc3lzX2N0
-cl9iYXNlKTsNCj4gDQoNCk9rLCB0aGFuayB5b3UuDQoNCkJSDQpKYWNreSBCYWkNCg0KPiA+ICsJ
-d3JpdGVsKGNtcGNyLCBzeXNfY3RyX2Jhc2UgKyBDTVBDUik7IH0NCj4gPiArDQo+ID4gK3N0YXRp
-YyB2b2lkIHN5c2N0cl9pcnFfYWNrbm93bGVkZ2Uodm9pZCkgew0KPiA+ICsJLyoNCj4gPiArCSAq
-IGNsZWFyIHRoZSBlbmFibGUgYml0KEVOID0wKSB3aWxsIGNsZWFyDQo+ID4gKwkgKiB0aGUgc3Rh
-dHVzIGJpdChJU1RBVCA9IDApLCB0aGVuIHRoZSBpbnRlcnJ1cHQNCj4gPiArCSAqIHNpZ25hbCB3
-aWxsIGJlIG5lZ2F0ZWQoYWNrbm93bGVkZ2VkKS4NCj4gPiArCSAqLw0KPiA+ICsJc3lzY3RyX3Rp
-bWVyX2VuYWJsZShmYWxzZSk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbmxpbmUgdTY0
-IHN5c2N0cl9yZWFkX2NvdW50ZXIodm9pZCkgew0KPiA+ICsJdTMyIGNudF9oaSwgdG1wX2hpLCBj
-bnRfbG87DQo+ID4gKw0KPiA+ICsJZG8gew0KPiA+ICsJCWNudF9oaSA9IHJlYWRsX3JlbGF4ZWQo
-c3lzX2N0cl9iYXNlICsgQ05UQ1ZfSEkpOw0KPiA+ICsJCWNudF9sbyA9IHJlYWRsX3JlbGF4ZWQo
-c3lzX2N0cl9iYXNlICsgQ05UQ1ZfTE8pOw0KPiA+ICsJCXRtcF9oaSA9IHJlYWRsX3JlbGF4ZWQo
-c3lzX2N0cl9iYXNlICsgQ05UQ1ZfSEkpOw0KPiA+ICsJfSB3aGlsZSAodG1wX2hpICE9IGNudF9o
-aSk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuICAoKHU2NCkgY250X2hpIDw8IDMyKSB8IGNudF9sbzsg
-fQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBzeXNjdHJfc2V0X25leHRfZXZlbnQodW5zaWduZWQg
-bG9uZyBkZWx0YSwNCj4gPiArCQkJCSBzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2aWNlICpldnQpDQo+
-ID4gK3sNCj4gPiArCXUzMiBjbXBfaGksIGNtcF9sbzsNCj4gPiArCXU2NCBuZXh0Ow0KPiA+ICsN
-Cj4gPiArCXN5c2N0cl90aW1lcl9lbmFibGUoZmFsc2UpOw0KPiA+ICsNCj4gPiArCW5leHQgPSBz
-eXNjdHJfcmVhZF9jb3VudGVyKCk7DQo+ID4gKw0KPiA+ICsJbmV4dCArPSBkZWx0YTsNCj4gPiAr
-DQo+ID4gKwljbXBfaGkgPSAobmV4dCA+PiAzMikgJiAweDAwZmZmZmY7DQo+ID4gKwljbXBfbG8g
-PSBuZXh0ICYgMHhmZmZmZmZmZjsNCj4gPiArDQo+ID4gKwl3cml0ZWxfcmVsYXhlZChjbXBfaGks
-IHN5c19jdHJfYmFzZSArIENNUENWX0hJKTsNCj4gPiArCXdyaXRlbF9yZWxheGVkKGNtcF9sbywg
-c3lzX2N0cl9iYXNlICsgQ01QQ1ZfTE8pOw0KPiA+ICsNCj4gPiArCXN5c2N0cl90aW1lcl9lbmFi
-bGUodHJ1ZSk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0
-YXRpYyBpbnQgc3lzY3RyX3NldF9zdGF0ZV9vbmVzaG90KHN0cnVjdCBjbG9ja19ldmVudF9kZXZp
-Y2UgKmV2dCkgew0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBp
-bnQgc3lzY3RyX3NldF9zdGF0ZV9zaHV0ZG93bihzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2aWNlICpl
-dnQpDQo+ID4gK3sNCj4gPiArCXN5c2N0cl90aW1lcl9lbmFibGUoZmFsc2UpOw0KPiA+ICsNCj4g
-PiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaXJxcmV0dXJuX3Qgc3lz
-Y3RyX3RpbWVyX2ludGVycnVwdChpbnQgaXJxLCB2b2lkICpkZXZfaWQpIHsNCj4gPiArCXN0cnVj
-dCBjbG9ja19ldmVudF9kZXZpY2UgKmV2dCA9IGRldl9pZDsNCj4gPiArDQo+ID4gKwlzeXNjdHJf
-aXJxX2Fja25vd2xlZGdlKCk7DQo+ID4gKw0KPiA+ICsJZXZ0LT5ldmVudF9oYW5kbGVyKGV2dCk7
-DQo+ID4gKw0KPiA+ICsJcmV0dXJuIElSUV9IQU5ETEVEOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtz
-dGF0aWMgc3RydWN0IHRpbWVyX29mIHRvX3N5c2N0ciA9IHsNCj4gPiArCS5mbGFncyA9IFRJTUVS
-X09GX0lSUSB8IFRJTUVSX09GX0NMT0NLIHwgVElNRVJfT0ZfQkFTRSwNCj4gPiArCS5jbGtldnQg
-PSB7DQo+ID4gKwkJLm5hbWUJCQk9ICJpLk1YIHN5c3RlbSBjb3VudGVyIHRpbWVyIiwNCj4gPiAr
-CQkuZmVhdHVyZXMJCT0gQ0xPQ0tfRVZUX0ZFQVRfT05FU0hPVCB8DQo+IENMT0NLX0VWVF9GRUFU
-X0RZTklSUSwNCj4gPiArCQkuc2V0X3N0YXRlX29uZXNob3QJPSBzeXNjdHJfc2V0X3N0YXRlX29u
-ZXNob3QsDQo+ID4gKwkJLnNldF9uZXh0X2V2ZW50CQk9IHN5c2N0cl9zZXRfbmV4dF9ldmVudCwN
-Cj4gPiArCQkuc2V0X3N0YXRlX3NodXRkb3duCT0gc3lzY3RyX3NldF9zdGF0ZV9zaHV0ZG93biwN
-Cj4gPiArCQkucmF0aW5nCQkJPSAyMDAsDQo+ID4gKwl9LA0KPiA+ICsJLm9mX2lycSA9IHsNCj4g
-PiArCQkuaGFuZGxlcgkJPSBzeXNjdHJfdGltZXJfaW50ZXJydXB0LA0KPiA+ICsJCS5mbGFncwkJ
-CT0gSVJRRl9USU1FUiB8IElSUUZfSVJRUE9MTCwNCj4gPiArCX0sDQo+ID4gKwkub2ZfY2xrID0g
-ew0KPiA+ICsJCS5uYW1lID0gInBlciIsDQo+ID4gKwl9LA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAr
-c3RhdGljIHZvaWQgX19pbml0IHN5c2N0cl9jbG9ja2V2ZW50X2luaXQodm9pZCkgew0KPiA+ICsJ
-dG9fc3lzY3RyLmNsa2V2dC5jcHVtYXNrID0gY3B1bWFza19vZigwKTsNCj4gPiArDQo+ID4gKwlj
-bG9ja2V2ZW50c19jb25maWdfYW5kX3JlZ2lzdGVyKCZ0b19zeXNjdHIuY2xrZXZ0LA0KPiB0aW1l
-cl9vZl9yYXRlKCZ0b19zeXNjdHIpLA0KPiA+ICsJCQkJCTB4ZmYsIDB4N2ZmZmZmZmYpOw0KPiA+
-ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IF9faW5pdCBzeXNjdHJfdGltZXJfaW5pdChzdHJ1
-Y3QgZGV2aWNlX25vZGUgKm5wKSB7DQo+ID4gKwlpbnQgcmV0ID0gMDsNCj4gPiArDQo+ID4gKwly
-ZXQgPSB0aW1lcl9vZl9pbml0KG5wLCAmdG9fc3lzY3RyKTsNCj4gPiArCWlmIChyZXQpDQo+ID4g
-KwkJcmV0dXJuIHJldDsNCj4gPiArDQo+ID4gKwlzeXNfY3RyX2Jhc2UgPSB0aW1lcl9vZl9iYXNl
-KCZ0b19zeXNjdHIpOw0KPiA+ICsJY21wY3IgPSByZWFkbChzeXNfY3RyX2Jhc2UgKyBDTVBDUik7
-DQo+ID4gKw0KPiA+ICsJc3lzY3RyX2Nsb2NrZXZlbnRfaW5pdCgpOw0KPiA+ICsNCj4gPiArCXJl
-dHVybiAwOw0KPiA+ICt9DQo+ID4gK1RJTUVSX09GX0RFQ0xBUkUoc3lzY3RyX3RpbWVyLCAibnhw
-LHN5c2N0ci10aW1lciIsDQo+ID4gK3N5c2N0cl90aW1lcl9pbml0KTsNCj4gPg0KPiANCj4gDQo+
-IC0tDQo=
+Add a standard array of PHYs to Exynos EHCI/OHCI devices. This is a first
+step in resolving the conflict between Exynos EHCI/OHCI sub-nodes and
+generic USB device bindings. Later the sub-nodes currently used for
+assigning PHYs to root ports of the controller will be removed making
+a place for the generic USB device bindings nodes.
+
+Suggested-by: Måns Rullgård <mans@mansr.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos4.dtsi                  | 4 ++++
+ arch/arm/boot/dts/exynos4210-universal_c210.dts | 2 ++
+ arch/arm/boot/dts/exynos4412-itop-elite.dts     | 2 ++
+ arch/arm/boot/dts/exynos4412-odroidu3.dts       | 2 ++
+ arch/arm/boot/dts/exynos4412-odroidx.dts        | 2 ++
+ arch/arm/boot/dts/exynos4412-origen.dts         | 2 ++
+ arch/arm/boot/dts/exynos5250.dtsi               | 4 ++++
+ arch/arm/boot/dts/exynos54xx.dtsi               | 4 ++++
+ 8 files changed, 22 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 36ccf227434d..7b94fbd9ed6c 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -380,6 +380,8 @@
+ 			clocks = <&clock CLK_USB_HOST>;
+ 			clock-names = "usbhost";
+ 			status = "disabled";
++			phys = <&exynos_usbphy 1>, <&exynos_usbphy 2>, <&exynos_usbphy 3>;
++			phy-names = "host", "hsic0", "hsic1";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			port@0 {
+@@ -406,6 +408,8 @@
+ 			clocks = <&clock CLK_USB_HOST>;
+ 			clock-names = "usbhost";
+ 			status = "disabled";
++			phys = <&exynos_usbphy 1>;
++			phy-names = "host";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			port@0 {
+diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+index bf092e97e14f..dbd6b43dbe52 100644
+--- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
++++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+@@ -204,6 +204,8 @@
+ 
+ &ehci {
+ 	status = "okay";
++	phys = <&exynos_usbphy 1>;
++	phy-names = "host";
+ 	port@0 {
+ 		status = "okay";
+ 	};
+diff --git a/arch/arm/boot/dts/exynos4412-itop-elite.dts b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+index 0dedeba89b5f..1763b42c01cb 100644
+--- a/arch/arm/boot/dts/exynos4412-itop-elite.dts
++++ b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+@@ -146,6 +146,8 @@
+ 	/* In order to reset USB ethernet */
+ 	samsung,vbus-gpio = <&gpc0 1 GPIO_ACTIVE_HIGH>;
+ 
++	phys = <&exynos_usbphy 1>, <&exynos_usbphy 3>;
++	phy-names = "host", "hsic1";
+ 	port@0 {
+ 		status = "okay";
+ 	};
+diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+index 96d99887bceb..5bbaccffc9be 100644
+--- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
++++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+@@ -105,6 +105,8 @@
+ };
+ 
+ &ehci {
++	phys = <&exynos_usbphy 2>, <&exynos_usbphy 3>;
++	phy-names = "hsic0", "hsic1";
+ 	port@1 {
+ 		status = "okay";
+ 	};
+diff --git a/arch/arm/boot/dts/exynos4412-odroidx.dts b/arch/arm/boot/dts/exynos4412-odroidx.dts
+index a2251581f6b6..306dd9365a91 100644
+--- a/arch/arm/boot/dts/exynos4412-odroidx.dts
++++ b/arch/arm/boot/dts/exynos4412-odroidx.dts
+@@ -72,6 +72,8 @@
+ };
+ 
+ &ehci {
++	phys = <&exynos_usbphy 2>;
++	phy-names = "hsic0";
+ 	port@1 {
+ 		status = "okay";
+ 	};
+diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+index 698de4345d16..e609e2af22d1 100644
+--- a/arch/arm/boot/dts/exynos4412-origen.dts
++++ b/arch/arm/boot/dts/exynos4412-origen.dts
+@@ -88,6 +88,8 @@
+ &ehci {
+ 	samsung,vbus-gpio = <&gpx3 5 1>;
+ 	status = "okay";
++	phys = <&exynos_usbphy 2>, <&exynos_usbphy 3>;
++	phy-names = "hsic0", "hsic1";
+ 
+ 	port@1 {
+ 		status = "okay";
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index d5e0392b409e..2d23e99985e1 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -617,6 +617,8 @@
+ 
+ 			clocks = <&clock CLK_USB2>;
+ 			clock-names = "usbhost";
++			phys = <&usb2_phy_gen 1>;
++			phy-names = "host";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			port@0 {
+@@ -632,6 +634,8 @@
+ 
+ 			clocks = <&clock CLK_USB2>;
+ 			clock-names = "usbhost";
++			phys = <&usb2_phy_gen 1>;
++			phy-names = "host";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			port@0 {
+diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+index ae866bcc30c4..ab1642cf0428 100644
+--- a/arch/arm/boot/dts/exynos54xx.dtsi
++++ b/arch/arm/boot/dts/exynos54xx.dtsi
+@@ -180,6 +180,8 @@
+ 			compatible = "samsung,exynos4210-ehci";
+ 			reg = <0x12110000 0x100>;
+ 			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++			phys = <&usb2_phy 1>;
++			phy-names = "host";
+ 
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -193,6 +195,8 @@
+ 			compatible = "samsung,exynos4210-ohci";
+ 			reg = <0x12120000 0x100>;
+ 			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++			phys = <&usb2_phy 1>;
++			phy-names = "host";
+ 
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-- 
+2.17.1
