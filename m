@@ -1,14 +1,11 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC/PATCH 0/4] Initial support for modular IOMMU drivers
-Date: Tue, 21 May 2019 17:08:31 +0100
-Message-ID: <375bd035-23a5-15d0-0629-b11b32a5adfd@arm.com>
-References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 0/6] Allwinner H6 Mali GPU support
+Date: Tue, 21 May 2019 18:10:56 +0200
+Message-ID: <20190521161102.29620-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1558118857-16912-1-git-send-email-isaacm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-GB
 List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
 	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
@@ -18,102 +15,65 @@ List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
 	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
 Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "Isaac J. Manjarres" <isaacm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lmark-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Steven Price <steven.price-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/05/2019 19:47, Isaac J. Manjarres wrote:
-> This series adds initial support for being able to use the ARM
-> SMMU driver as a loadable kernel module. The series also adds
-> to the IOMMU framework, so that it can defer probing for devices
-> that depend on an IOMMU driver that may be a loadable module.
-> 
-> The primary reason behind these changes is that having the ARM
-> SMMU driver as a module allows for the same kernel image to be
-> used across different platforms. For example, if one platform
-> contains an IOMMU that implements one version of the ARM SMMU
-> specification, and another platform simply does not have an
-> IOMMU, the only way that these platforms can share the same
-> kernel image is if the ARM SMMU driver is compiled into the
-> kernel image.
-> 
-> This solution is not scalable, as it will lead to bloating the
-> kernel image with support for several future versions of the
-> SMMU specification to maintain a common kernel image that works
-> across all platforms.
-
-There are currently two versions of the SMMU spec: v2 (which forms a 
-superset of v1), and v3 which is the current architecture. Given how 
-closely I work with the SMMU architecture team, I'm particularly 
-interested to hear more about these "future versions"... :)
-
-> Having the ARM SMMU driver as a module allows
-> for a common kernel image to be supported across all platforms,
-> while yielding a smaller kernel image size, since the correct
-> SMMU driver can be loaded at runtime, if necessary.
-
-arm-smmu and arm-smmu-v3 aren't *all* that much bigger than any of the 
-other IOMMU drivers that are also present in a multiplatform build, and 
-already share quite a bit of common code, so while I can guess at what 
-you might really mean, it's a pretty weak argument as stated.
-
-> Patchset Summary:
-> 
-> 1. Since the ARM SMMU driver depends on symbols being exported from
-> several subsystems, the first three patches are dedicated to exporting
-> the necessary symbols.
-> 
-> 2. Similar to how the pinctrl framework handles deferring probes,
-> the subsequent patch makes it so that the IOMMU framework will defer
-> probes indefinitely if there is a chance that the IOMMU driver that a
-> device is waiting for is a module. Otherwise, it upholds the current
-> behavior of stopping probe deferrals once all of the builtin drivers
-> have finished probing.
-> 
-> The ARM SMMU driver currently has support for the deprecated
-> "mmu-masters" binding, which relies on the notion of initcall
-> ordering for setting the bus ops to ensure that all SMMU devices
-> have been bound to the driver. This poses a problem with
-> making the driver a module, as there is no such notion with
-> loadable modules. Will support for this be completely deprecated?
-> If not, might it be useful to leverage the device tree ordering,
-> and assign a property to the last SMMU device, and set the bus ops
-> at that point? Or perhaps have some deferred timer based approach
-> to know when to set the bus ops?
-
-Unfortunately, I believe the old binding is still deployed in production 
-firmwares which may well never get updated, and thus needs to remain 
-functional (I've already had one report of the default bypass behaviour 
-breaking it in 5.2 which I need to fix somehow...)
-
-Rather than just the trivial "export a bunch of symbols which won't 
-actually be needed yet", from the title I was hoping to see some patches 
-really making drivers modular and proposing solutions to those difficult 
-problems of making it work robustly. It's very easy to make it 'work' as 
-a proof-of-concept (locally I still have a patch dated 2016 based on the 
-original probe-deferral work), but those questions really want answering 
-to some degree before it's worth doing any of this in mainline.
-
-Robin.
-
-(now starting to wonder whether this might be my own fault for 
-mentioning it at LPC... :P)
-
-> 
-> Thanks,
-> Isaac
-> 
-> Isaac J. Manjarres (4):
->    of: Export of_phandle_iterator_args() to modules
->    PCI: Export PCI ACS and DMA searching functions to modules
->    iommu: Export core IOMMU functions to kernel modules
->    iommu: Add probe deferral support for IOMMU kernel modules
-> 
->   drivers/iommu/iommu-sysfs.c | 3 +++
->   drivers/iommu/iommu.c       | 6 ++++++
->   drivers/iommu/of_iommu.c    | 8 ++++++--
->   drivers/of/base.c           | 1 +
->   drivers/pci/pci.c           | 1 +
->   drivers/pci/search.c        | 1 +
->   6 files changed, 18 insertions(+), 2 deletions(-)
-> 
+SGksCgpUaGUgQWxsd2lubmVyIEg2IGhhcyBhIE1hbGktVDcyMCBNUDIgd2hpY2ggc2hvdWxkIGJl
+IHN1cHBvcnRlZCBieQp0aGUgbmV3IHBhbmZyb3N0IGRyaXZlci4gVGhpcyBzZXJpZXMgZml4IHR3
+byBpc3N1ZXMgYW5kIGludHJvZHVjZSB0aGUKZHQtYmluZGluZ3MgYnV0IGEgc2ltcGxlIGJlbmNo
+bWFyayBzaG93IHRoYXQgaXQncyBzdGlsbCBOT1QgV09SS0lORy4KCkknbSBwdXNoaW5nIGl0IGlu
+IGNhc2Ugc29tZW9uZSB3YW50IHRvIGNvbnRpbnVlIHRoZSB3b3JrLgoKVGhpcyBoYXMgYmVlbiB0
+ZXN0ZWQgd2l0aCBNZXNhM0QgMTkuMS4wLVJDMiBhbmQgYSBHUFUgYml0bmVzcyBwYXRjaFsxXS4K
+Ck9uZSBwYXRjaCBpcyBmcm9tIEljZW5vd3kgWmhlbmcgd2hlcmUgSSBjaGFuZ2VkIHRoZSBvcmRl
+ciBhcyByZXF1aXJlZApieSBSb2IgSGVycmluZ1syXS4KClRoYW5rcywKQ2xlbWVudAoKWzFdIGh0
+dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9rc3phcS9tZXNhL3RyZWUvcGFuZnJvc3RfNjRf
+MzIKWzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA2OTk4MjkvCgoKWyAg
+MzQ1LjIwNDgxM10gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IG1tdSBpcnEgc3RhdHVzPTEKWyAgMzQ1
+LjIwOTYxN10gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxlZCBQYWdlIGZhdWx0IGluIEFT
+MCBhdCBWQQoweDAwMDAwMDAwMDI0MDA0MDAKWyAgMzQ1LjIwOTYxN10gUmVhc29uOiBUT0RPClsg
+IDM0NS4yMDk2MTddIHJhdyBmYXVsdCBzdGF0dXM6IDB4ODAwMDAyQzEKWyAgMzQ1LjIwOTYxN10g
+ZGVjb2RlZCBmYXVsdCBzdGF0dXM6IFNMQVZFIEZBVUxUClsgIDM0NS4yMDk2MTddIGV4Y2VwdGlv
+biB0eXBlIDB4QzE6IFRSQU5TTEFUSU9OX0ZBVUxUX0xFVkVMMQpbICAzNDUuMjA5NjE3XSBhY2Nl
+c3MgdHlwZSAweDI6IFJFQUQKWyAgMzQ1LjIwOTYxN10gc291cmNlIGlkIDB4ODAwMApbICAzNDUu
+NzI5OTU3XSBwYW5mcm9zdCAxODAwMDAwLmdwdTogZ3B1IHNjaGVkIHRpbWVvdXQsIGpzPTAsCnN0
+YXR1cz0weDgsIGhlYWQ9MHgyNDAwNDAwLCB0YWlsPTB4MjQwMDQwMCwgc2NoZWRfam9iPTAwMDAw
+MDAwOWUyMDRkZTkKWyAgMzQ2LjA1NTg3Nl0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IG1tdSBpcnEg
+c3RhdHVzPTEKWyAgMzQ2LjA2MDY4MF0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxlZCBQ
+YWdlIGZhdWx0IGluIEFTMCBhdCBWQQoweDAwMDAwMDAwMDJDMDBBMDAKWyAgMzQ2LjA2MDY4MF0g
+UmVhc29uOiBUT0RPClsgIDM0Ni4wNjA2ODBdIHJhdyBmYXVsdCBzdGF0dXM6IDB4ODEwMDAyQzEK
+WyAgMzQ2LjA2MDY4MF0gZGVjb2RlZCBmYXVsdCBzdGF0dXM6IFNMQVZFIEZBVUxUClsgIDM0Ni4w
+NjA2ODBdIGV4Y2VwdGlvbiB0eXBlIDB4QzE6IFRSQU5TTEFUSU9OX0ZBVUxUX0xFVkVMMQpbICAz
+NDYuMDYwNjgwXSBhY2Nlc3MgdHlwZSAweDI6IFJFQUQKWyAgMzQ2LjA2MDY4MF0gc291cmNlIGlk
+IDB4ODEwMApbICAzNDYuNTYxOTU1XSBwYW5mcm9zdCAxODAwMDAwLmdwdTogZ3B1IHNjaGVkIHRp
+bWVvdXQsIGpzPTEsCnN0YXR1cz0weDgsIGhlYWQ9MHgyYzAwYTAwLCB0YWlsPTB4MmMwMGEwMCwg
+c2NoZWRfam9iPTAwMDAwMDAwYjU1YTlhODUKWyAgMzQ2LjU3MzkxM10gcGFuZnJvc3QgMTgwMDAw
+MC5ncHU6IG1tdSBpcnEgc3RhdHVzPTEKWyAgMzQ2LjU3ODcwN10gcGFuZnJvc3QgMTgwMDAwMC5n
+cHU6IFVuaGFuZGxlZCBQYWdlIGZhdWx0IGluIEFTMCBhdCBWQQoweDAwMDAwMDAwMDJDMDBCODAK
+CkNoYW5nZSBpbiB2NToKIC0gUmVtb3ZlIGZpeCBpbmRlbnQKCkNoYW5nZXMgaW4gdjQ6CiAtIEFk
+ZCBidXNfY2xvY2sgcHJvYmUKIC0gRml4IHNhbml0eSBjaGVjayBpbiBpby1wZ3RhYmxlCiAtIEFk
+ZCB2cmFtcC1kZWxheQogLSBNZXJnZSBhbGwgYm9hcmRzIGludG8gb25lIHBhdGNoCiAtIFJlbW92
+ZSB1cHN0cmVhbWVkIE5laWwgQS4gcGF0Y2gKCkNoYW5nZSBpbiB2MyAoVGhhbmtzIHRvIE1heGlt
+ZSBSaXBhcmQpOgogLSBSZWF1dGhvciBJY2Vub3d5IGZvciBoZXIgcGF0aAoKQ2hhbmdlcyBpbiB2
+MiAoVGhhbmtzIHRvIE1heGltZSBSaXBhcmQpOgogLSBEcm9wIEdQVSBPUFAgVGFibGUKIC0gQWRk
+IGNsb2NrcyBhbmQgY2xvY2stbmFtZXMgaW4gcmVxdWlyZWQKCkNsw6ltZW50IFDDqXJvbiAoNSk6
+CiAgZHJtOiBwYW5mcm9zdDogYWRkIG9wdGlvbmFsIGJ1c19jbG9jawogIGlvbW11OiBpby1wZ3Rh
+YmxlOiBmaXggc2FuaXR5IGNoZWNrIGZvciBub24gNDgtYml0IG1hbGkgaW9tbXUKICBkdC1iaW5k
+aW5nczogZ3B1OiBtYWxpLW1pZGdhcmQ6IEFkZCBINiBtYWxpIGdwdSBjb21wYXRpYmxlCiAgYXJt
+NjQ6IGR0czogYWxsd2lubmVyOiBBZGQgQVJNIE1hbGkgR1BVIG5vZGUgZm9yIEg2CiAgYXJtNjQ6
+IGR0czogYWxsd2lubmVyOiBBZGQgbWFsaSBHUFUgc3VwcGx5IGZvciBINiBib2FyZHMKCkljZW5v
+d3kgWmhlbmcgKDEpOgogIGR0LWJpbmRpbmdzOiBncHU6IGFkZCBidXMgY2xvY2sgZm9yIE1hbGkg
+TWlkZ2FyZCBHUFVzCgogLi4uL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dCAgICAg
+ICAgIHwgMTUgKysrKysrKysrKysrLQogLi4uL2R0cy9hbGx3aW5uZXIvc3VuNTBpLWg2LWJlZWxp
+bmstZ3MxLmR0cyAgIHwgIDYgKysrKysKIC4uLi9kdHMvYWxsd2lubmVyL3N1bjUwaS1oNi1vcmFu
+Z2VwaS0zLmR0cyAgICB8ICA2ICsrKysrCiAuLi4vZHRzL2FsbHdpbm5lci9zdW41MGktaDYtb3Jh
+bmdlcGkuZHRzaSAgICAgfCAgNiArKysrKwogLi4uL2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGkt
+aDYtcGluZS1oNjQuZHRzIHwgIDYgKysrKysKIGFyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVy
+L3N1bjUwaS1oNi5kdHNpICB8IDE0ICsrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmZy
+b3N0L3BhbmZyb3N0X2RldmljZS5jICAgIHwgMjIgKysrKysrKysrKysrKysrKysrKwogZHJpdmVy
+cy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X2RldmljZS5oICAgIHwgIDEgKwogZHJpdmVycy9p
+b21tdS9pby1wZ3RhYmxlLWFybS5jICAgICAgICAgICAgICAgIHwgIDIgKy0KIDkgZmlsZXMgY2hh
+bmdlZCwgNzYgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCi0tIAoyLjE3LjEKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11IG1haWxpbmcg
+bGlzdAppb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xpc3RzLmxpbnV4
+Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQ==
