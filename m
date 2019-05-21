@@ -1,54 +1,28 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: qcom_spmi: Document PM8005 regulators
-Date: Tue, 21 May 2019 10:26:39 -0700
-Message-ID: <20190521172639.GB2085@tuxbook-pro>
-References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
- <20190521165244.14321-1-jeffrey.l.hugo@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: arm: amlogic: add Odroid-N2 binding
+Date: Tue, 21 May 2019 19:26:37 +0200
+Message-ID: <CAFBinCCvoq0xkoCCiOqh7YHegZB4SJBjDMJTxEknDXogWiXUxw@mail.gmail.com>
+References: <20190521151952.2779-1-narmstrong@baylibre.com> <20190521151952.2779-3-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190521165244.14321-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20190521151952.2779-3-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org, jcrouse@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 21 May 09:52 PDT 2019, Jeffrey Hugo wrote:
-
-> Document the dt bindings for the PM8005 regulators which are usually used
-> for VDD of standalone blocks on a SoC like the GPU.
-> 
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+On Tue, May 21, 2019 at 5:19 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Add compatible for the Amlogic G12B (S922X) SoC based Odroid-N2 SBC
+> from HardKernel.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  .../devicetree/bindings/regulator/qcom,spmi-regulator.txt     | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> index 406f2e570c50..ba94bc2d407a 100644
-> --- a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> @@ -4,6 +4,7 @@ Qualcomm SPMI Regulators
->  	Usage: required
->  	Value type: <string>
->  	Definition: must be one of:
-> +			"qcom,pm8005-regulators"
->  			"qcom,pm8841-regulators"
->  			"qcom,pm8916-regulators"
->  			"qcom,pm8941-regulators"
-> @@ -120,6 +121,9 @@ The regulator node houses sub-nodes for each regulator within the device. Each
->  sub-node is identified using the node's name, with valid values listed for each
->  of the PMICs below.
->  
-> +pm8005:
-> +	s1, s2, s3, s4
-> +
->  pm8841:
->  	s1, s2, s3, s4, s5, s6, s7, s8
->  
-> -- 
-> 2.17.1
-> 
+> Rob, Martin,
+>
+> I converted the patch you acked in yaml, I kept the Reviewed-by,
+> is it ok for you ?
+yes, looks fine to me as well
