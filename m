@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v2 6/9] arm64: dts: qcom: msm8996: Add PSCI cpuidle low power states
-Date: Tue, 21 May 2019 15:05:16 +0530
-Message-ID: <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 5/9] arm64: dts: qcom: qcs404: Add PSCI cpuidle low power states
+Date: Tue, 21 May 2019 15:05:15 +0530
+Message-ID: <cddc5957a510eef61284656fd1d739d4112a2daa.1558430617.git.amit.kucheria@linaro.org>
 References: <cover.1558430617.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1558430617.git.amit.kucheria@linaro.org>
@@ -12,56 +12,58 @@ To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson
 Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Niklas Cassel <niklas.cassel@linaro.org>
+
 Add device bindings for cpuidle states for cpu devices.
 
-msm8996 features 4 cpus - 2 in each cluster. However, all cpus implement
-the same microarchitecture and the two clusters only differ in the
-maximum frequency attainable by the CPUs.
-
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+[rename the idle-states to more generic names and fixups]
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index c761269caf80..4f2fb7885f39 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -95,6 +95,7 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
- 			      compatible = "cache";
-@@ -107,6 +108,7 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x1>;
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index e8fd26633d57..0a9b29af64c2 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -30,6 +30,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x100>;
  			enable-method = "psci";
 +			cpu-idle-states = <&CPU_SLEEP_0>;
  			next-level-cache = <&L2_0>;
  		};
  
-@@ -115,6 +117,7 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x100>;
+@@ -38,6 +39,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x101>;
  			enable-method = "psci";
 +			cpu-idle-states = <&CPU_SLEEP_0>;
- 			next-level-cache = <&L2_1>;
- 			L2_1: l2-cache {
- 			      compatible = "cache";
-@@ -127,6 +130,7 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			next-level-cache = <&L2_1>;
+ 			next-level-cache = <&L2_0>;
  		};
  
-@@ -151,6 +155,19 @@
- 				};
- 			};
+@@ -46,6 +48,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x102>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			next-level-cache = <&L2_0>;
+ 		};
+ 
+@@ -54,6 +57,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x103>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			next-level-cache = <&L2_0>;
+ 		};
+ 
+@@ -61,6 +65,20 @@
+ 			compatible = "cache";
+ 			cache-level = <2>;
  		};
 +
 +		idle-states {
@@ -70,14 +72,15 @@ index c761269caf80..4f2fb7885f39 100644
 +			CPU_SLEEP_0: cpu-sleep-0 {
 +				compatible = "arm,idle-state";
 +				idle-state-name = "standalone-power-collapse";
-+				arm,psci-suspend-param = <0x00000004>;
-+				entry-latency-us = <40>;
-+				exit-latency-us = <80>;
-+				min-residency-us = <300>;
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <125>;
++				exit-latency-us = <180>;
++				min-residency-us = <595>;
++				local-timer-stop;
 +			};
 +		};
  	};
  
- 	thermal-zones {
+ 	firmware {
 -- 
 2.17.1
