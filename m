@@ -1,63 +1,56 @@
-Return-Path: <SRS0=WgTi=TG=renesas.com=prvs=40290ccc1f=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 01/10] phy: renesas: rcar-gen3-usb2: Add uses_usb_x1 option
-Date: Mon, 6 May 2019 18:46:22 -0500
-Message-ID: <20190506234631.113226-2-chris.brandt@renesas.com>
-In-Reply-To: <20190506234631.113226-1-chris.brandt@renesas.com>
-References: <20190506234631.113226-1-chris.brandt@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=9+SW=TV=linaro.org=masahisa.kojima@kernel.org>
+From: Masahisa Kojima <masahisa.kojima@linaro.org>
+Subject: [PATCH v5 0/3] spi: support for Socionext Synquacer platform
+Date: Tue, 21 May 2019 20:59:55 +0900
+Message-Id: <20190521115958.22504-1-masahisa.kojima@linaro.org>
+To: linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: broonie@kernel.org, geert@linux-m68k.org, tpiepho@impinj.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, ard.biesheuvel@linaro.org, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, okamoto.satoru@socionext.com, osaki.yoshitoyo@socionext.com, Masahisa Kojima <masahisa.kojima@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The RZ/A2 has optional dedicated 48MHz crystal inputs, which adds a new
-register setting when used.
+Hello,
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Support for Socionext's FIP controller intended for flash device interfacing.
+The controller can operate in 'direct' or 'command' mode. One mode directly
+talks and provide a read/write i/f to the flash device. Other works as plain
+SPI mode. This driver runs the controller as a SPI controller.
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 1322185a00a2..218b32e458cb 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -34,6 +34,7 @@
- #define USB2_VBCTRL		0x60c
- #define USB2_LINECTRL1		0x610
- #define USB2_ADPCTRL		0x630
-+#define USB2_PHYCLK_CTRL	0x644
- 
- /* INT_ENABLE */
- #define USB2_INT_ENABLE_UCOM_INTEN	BIT(3)
-@@ -110,6 +111,7 @@ struct rcar_gen3_chan {
- 	bool extcon_host;
- 	bool is_otg_channel;
- 	bool uses_otg_pins;
-+	bool uses_usb_x1;
- };
- 
- /*
-@@ -391,6 +393,9 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 	void __iomem *usb2_base = channel->base;
- 	u32 val;
- 
-+	if (channel->uses_usb_x1)
-+		writel(0x00000001, usb2_base + USB2_PHYCLK_CTRL);
-+
- 	/* Initialize USB2 part */
- 	val = readl(usb2_base + USB2_INT_ENABLE);
- 	val |= USB2_INT_ENABLE_UCOM_INTEN | rphy->int_enable_bits;
-@@ -630,6 +635,9 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (of_property_read_bool(dev->of_node, "renesas,uses_usb_x1"))
-+		channel->uses_usb_x1 = true;
-+
- 	/*
- 	 * devm_phy_create() will call pm_runtime_enable(&phy->dev);
- 	 * And then, phy-core will manage runtime pm for this device.
+I took over this driver update from Jassi.
+Although more than a year has passed from previous version,
+it would be great if you could review this patch series.
+
+Changes since v4:
+        # Supported interrupt based data handling instead of polling
+        # Added prefix "SYNQUACER_HSSPI_"
+        # Replaced data read/write access with readsx()/writesx()
+        # Updated clock source handling, explicitly specify "iHCLK" or "iPCKL"
+          and removed array of clk
+
+Changes since v3:
+        # Convert IS_ERR returned from devm_clk_get(iPCLK) to NULL, that way
+          we can call clk_xxx(IPCLK) without first checking for it being valid.
+
+Changes since v2:
+        # Made iHCLK clock property required in DT, and iPCLK an optional extra.
+        # Hardcode max number of slaves to 4, as specified in the manual.
+
+Changes since v1:
+        # Changed licence header to C++ style comment.
+        # Removed redundant lock and transfer_mode backup member.
+        # Fixed divisor to allow upto 254.
+
+Masahisa Kojima (3):
+  MAINTAINERS: Add entry for Synquacer SPI driver
+  dt-bindings: spi: Add DT bindings for Synquacer
+  spi: Add spi driver for Socionext Synquacer platform
+
+ .../devicetree/bindings/spi/spi-synquacer.txt      |  27 +
+ MAINTAINERS                                        |   8 +
+ drivers/spi/Kconfig                                |  11 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-synquacer.c                        | 731 +++++++++++++++++++++
+ 5 files changed, 778 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
+ create mode 100644 drivers/spi/spi-synquacer.c
+
 -- 
-2.16.1
+2.14.2
