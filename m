@@ -1,102 +1,72 @@
-From: Paul Thomas <pthomas8589@gmail.com>
-Subject: Re: [PATCH v4 3/3] arm64: zynqmp: DT: Add Xilinx AMS node
-Date: Tue, 21 May 2019 09:26:44 -0400
-Message-ID: <CAD56B7dw4kTRuXeKXyT6KbEP9E=B=KqpamL14d96LjGgAfrbGQ@mail.gmail.com>
-References: <1555943870-15353-1-git-send-email-manish.narani@xilinx.com> <1555943870-15353-4-git-send-email-manish.narani@xilinx.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH v2 00/10] Fix Elan I2C touchpads in latest generation from Lenovo
+Date: Tue, 21 May 2019 15:27:02 +0200
+Message-ID: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555943870-15353-4-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, Jisheng.Zhang@synaptics.com, olof@lixom.net, dinguyen@kernel.org, amit.kucheria@linaro.org, stefan.popa@analog.com, dmurphy@ti.com, marcus.folkesson@gmail.com, tmaimon77@gmail.com, ricardo@ribalda.com, xc-racer2@live.ca, contact@artur-rojek.eu, geert@linux-m68k.org, smohanad@codeaurora.org, charles-antoine.couret@essensium.com, stefan@agner.ch, max.krummenacher@toradex.com, lee.jones@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>, Aaron Ma <aaron.ma@canonical.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Manish,
+Hi,
 
-Thank you for posting this! It is very much needed in the mainline
-kernel, nice work.
+This is the v2 from https://lkml.org/lkml/2018/10/12/633
 
-On Mon, Apr 22, 2019 at 10:54 AM Manish Narani <manish.narani@xilinx.com> wrote:
->
-> The Xilinx AMS includes an ADC as well as on-chip sensors that can be
-> used to sample external and monitor on-die operating conditions, such as
-> temperature and supply voltage levels.
->
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> index 9aa6734..f776913 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> @@ -625,5 +625,31 @@
->                         reg = <0x0 0xfd4d0000 0x0 0x1000>;
->                         timeout-sec = <10>;
->                 };
-> +
-> +               xilinx_ams: ams@ffa50000 {
-> +                       compatible = "xlnx,zynqmp-ams";
-> +                       status = "disabled";
-> +                       interrupt-parent = <&gic>;
-> +                       interrupts = <0 56 4>;
-> +                       interrupt-names = "ams-irq";
-> +                       reg = <0x0 0xffa50000 0x0 0x800>;
-> +                       reg-names = "ams-base";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       #io-channel-cells = <1>;
-> +                       ranges = <0 0 0xffa50800 0x800>;
-> +
-> +                       ams_ps: ams-ps@0,0 {
-> +                               compatible = "xlnx,zynqmp-ams-ps";
-> +                               status = "disabled";
-> +                               reg = <0 0x400>;
-> +                       };
-> +
-> +                       ams_pl: ams-pl@1,0 {
-> +                               compatible = "xlnx,zynqmp-ams-pl";
-> +                               status = "disabled";
-> +                               reg = <0x400 0x400>;
-> +                       };
-> +               };
->         };
->  };
-> --
-> 2.1.1
->
-I tested this with an older 4.18 kernel, and with a slightly different
-devicetree (shown below) it seems to be working.
+So I initially thought it would be easy to integrate the suggested changes
+in the v1, but it turns our that the changes to have the touchscreen-width
+and height parameters were quite hard to do.
 
-        xilinx_ams: ams@ffa50000 {
-                compatible = "xlnx,zynqmp-ams";
-                status = "okay";
-                interrupt-parent = <&gic>;
-                interrupts = <0 56 4>;
-                interrupt-names = "ams-irq";
-                reg = <0x0 0xffa50000 0x0 0x800>;
-                reg-names = "ams-base";
+I finally postponed the issue by blacklisting the 2 laptops we knew were
+not working and tried to devote more time to understand both drivers more.
 
-                #address-cells = <2>;
-                #size-cells = <2>;
-                ranges;
+But it s the time where Lenovo is preparing the new models, and guess what,
+they suffer from the same symptoms.
 
-                ams_ps: ams_ps@ffa50800 {
-                        compatible = "xlnx,zynqmp-ams-ps";
-                        reg = <0x0 0xffa50800 0x0 0x400>;
-                };
+So I took a few time to work on this and finally got my head around the
+width and height problem. Once I got it, it was simple clear, but this also
+means we can not really rely on a device tree property for that.
 
-                ams_pl: ams_pl@ffa50c00 {
-                        compatible = "xlnx,zynqmp-ams-pl";
-                        reg = <0x0 0xffa50c00 0x0 0x400>;
-                };
+So in the elan* drivers, the "traces" are simply how many antennas there
+are on each axis. Which means that if a trace of 4 is reported in the
+events, it means it is simply seen by 4 antennas. So the computation of the
+width/height is the following: we take how many antennas there are, we
+subtract one to have the number of holes between the antennas, and we
+divide the number of unit we have in the axis by the value we just
+computed.
+This gives a rough 4mm on the P52, in both directions.
 
-Also I needed to have the clock defined "clocks = <&clk 70>;".
+And once you get that, you can just realize that the unit of the width and
+height are just the same than the X and Y coordinates, so we can apply the
+same resolution.
 
-For the temperatures I get in_temp0_raw, in_temp1_raw and in_temp2 do
-these correspond to channels 7,8 & 21 in the devicetree documentation?
+So, in the end, that means that elan_i2c needs the information, or it will
+not be able to convert the number of crossed antennas into a size, but this
+is something specific to this touchpad.
 
-thanks,
-Paul
+So here come, 7 months later the v2 on the subject.
+
+Cheers,
+Benjamin
+
+Benjamin Tissoires (10):
+  Input: elantech - query the min/max information beforehand too
+  Input: elantech - add helper function elantech_is_buttonpad()
+  Input: elantech - detect middle button based on firmware version
+  dt-bindings: add more optional properties for elan_i2c touchpads
+  Input: elan_i2c - do not query the info if they are provided
+  Input: elantech/SMBus - export all capabilities from the PS/2 node
+  Input: elan_i2c - handle physical middle button
+  Input: elan_i2c - export true width/height
+  Input: elan_i2c - correct the width/size base value
+  Input: elantech: remove P52 from SMBus blacklist
+
+ .../devicetree/bindings/input/elan_i2c.txt    |  11 +
+ drivers/input/mouse/elan_i2c_core.c           |  85 +++--
+ drivers/input/mouse/elantech.c                | 318 ++++++++++--------
+ drivers/input/mouse/elantech.h                |   8 +
+ 4 files changed, 251 insertions(+), 171 deletions(-)
+
+-- 
+2.21.0
