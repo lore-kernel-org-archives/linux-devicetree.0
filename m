@@ -1,117 +1,76 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v7 11/12] soc: mediatek: cmdq: add
- cmdq_dev_get_client_reg function
-Date: Tue, 21 May 2019 11:30:25 +0800
-Message-ID: <1558409425.25526.13.camel@mtksdaap41>
-References: <20190521011108.40428-1-bibby.hsieh@mediatek.com>
-         <20190521011108.40428-12-bibby.hsieh@mediatek.com>
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: [PATCH] clk: mediatek: Remove MT8183 unused clock
+Date: Tue, 21 May 2019 11:40:01 +0800
+Message-ID: <20190521034001.53365-1-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521011108.40428-12-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
+To: Nicolas Boichat <drinkcat@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-05-21 at 09:11 +0800, Bibby Hsieh wrote:
-> GCE cannot know the register base address, this function
-> can help cmdq client to get the cmdq_client_reg structure.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 25 +++++++++++++++++++++++++
->  include/linux/soc/mediatek/mtk-cmdq.h  | 18 ++++++++++++++++++
->  2 files changed, 43 insertions(+)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 70ad4d806fac..815845bb5982 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -27,6 +27,31 @@ struct cmdq_instruction {
->  	u8 op;
->  };
->  
-> +struct cmdq_client_reg  *cmdq_dev_get_client_reg(struct device *dev, int idx)
-> +{
-> +	struct cmdq_client_reg *client_reg;
-> +	struct of_phandle_args spec;
-> +
-> +	client_reg  = devm_kzalloc(dev, sizeof(*client_reg), GFP_KERNEL);
-> +	if (!client_reg)
-> +		return NULL;
-> +
-> +	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
-> +				       "#subsys-cells", idx, &spec)) {
-> +		dev_err(dev, "can't parse gce-client-reg property (%d)", idx);
+Remove MT8183 sspm clock
 
-I think you should call devm_kfree(client_reg) here because this
-function may not be called in client driver's probe function. But in
-another view point, I would like you to move the memory allocation out
-of this function. When client call cmdq_dev_get_client_reg() to get a
-pointer, it's easy that client does not free it because you does not
-provide free API, Some client may embed struct cmdq_client_reg with its
-client structure together,
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+---
+This clock should only be set in secure world.
+---
+ drivers/clk/mediatek/clk-mt8183.c | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
-struct client {
-	struct cmdq_client_reg client_reg;
-};
-
-Because each client may have different memory allocation strategy, so I
-would like you to move memory allocation out of this function to let
-client driver have the flexibility.
-
-Regards,
-CK
-
-> +
-> +		return NULL;
-> +	}
-> +
-> +	client_reg->subsys = spec.args[0];
-> +	client_reg->offset = spec.args[1];
-> +	client_reg->size = spec.args[2];
-> +	of_node_put(spec.np);
-> +
-> +	return client_reg;
-> +}
-> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index a345870a6d10..d0dea3780f7a 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -15,6 +15,12 @@
->  
->  struct cmdq_pkt;
->  
-> +struct cmdq_client_reg {
-> +	u8 subsys;
-> +	u16 offset;
-> +	u16 size;
-> +};
-> +
->  struct cmdq_client {
->  	spinlock_t lock;
->  	u32 pkt_cnt;
-> @@ -142,4 +148,16 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
->   */
->  int cmdq_pkt_flush(struct cmdq_pkt *pkt);
->  
-> +/**
-> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device node of CMDQ client
-> + * @dev:	device of CMDQ mailbox client
-> + * @idx:	the index of desired reg
-> + *
-> + * Return: CMDQ client reg pointer
-> + *
-> + * Help CMDQ client pasing the cmdq client reg
-> + * from the device node of CMDQ client.
-> + */
-> +struct cmdq_client_reg  *cmdq_dev_get_client_reg(struct device *dev, int idx);
-> +
->  #endif	/* __MTK_CMDQ_H__ */
+diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
+index 9d8651033ae9..1aa5f4059251 100644
+--- a/drivers/clk/mediatek/clk-mt8183.c
++++ b/drivers/clk/mediatek/clk-mt8183.c
+@@ -395,14 +395,6 @@ static const char * const atb_parents[] = {
+ 	"syspll_d5"
+ };
+ 
+-static const char * const sspm_parents[] = {
+-	"clk26m",
+-	"univpll_d2_d4",
+-	"syspll_d2_d2",
+-	"univpll_d2_d2",
+-	"syspll_d3"
+-};
+-
+ static const char * const dpi0_parents[] = {
+ 	"clk26m",
+ 	"tvdpll_d2",
+@@ -606,9 +598,6 @@ static const struct mtk_mux top_muxes[] = {
+ 	MUX_GATE_CLR_SET_UPD(CLK_TOP_MUX_ATB, "atb_sel",
+ 		atb_parents, 0xa0,
+ 		0xa4, 0xa8, 0, 2, 7, 0x004, 24),
+-	MUX_GATE_CLR_SET_UPD(CLK_TOP_MUX_SSPM, "sspm_sel",
+-		sspm_parents, 0xa0,
+-		0xa4, 0xa8, 8, 3, 15, 0x004, 25),
+ 	MUX_GATE_CLR_SET_UPD(CLK_TOP_MUX_DPI0, "dpi0_sel",
+ 		dpi0_parents, 0xa0,
+ 		0xa4, 0xa8, 16, 4, 23, 0x004, 26),
+@@ -947,12 +936,8 @@ static const struct mtk_gate infra_clks[] = {
+ 		"fufs_sel", 13),
+ 	GATE_INFRA2(CLK_INFRA_MD32_BCLK, "infra_md32_bclk",
+ 		"axi_sel", 14),
+-	GATE_INFRA2(CLK_INFRA_SSPM, "infra_sspm",
+-		"sspm_sel", 15),
+ 	GATE_INFRA2(CLK_INFRA_UNIPRO_MBIST, "infra_unipro_mbist",
+ 		"axi_sel", 16),
+-	GATE_INFRA2(CLK_INFRA_SSPM_BUS_HCLK, "infra_sspm_bus_hclk",
+-		"axi_sel", 17),
+ 	GATE_INFRA2(CLK_INFRA_I2C5, "infra_i2c5",
+ 		"i2c_sel", 18),
+ 	GATE_INFRA2(CLK_INFRA_I2C5_ARBITER, "infra_i2c5_arbiter",
+@@ -986,10 +971,6 @@ static const struct mtk_gate infra_clks[] = {
+ 		"msdc50_0_sel", 1),
+ 	GATE_INFRA3(CLK_INFRA_MSDC2_SELF, "infra_msdc2_self",
+ 		"msdc50_0_sel", 2),
+-	GATE_INFRA3(CLK_INFRA_SSPM_26M_SELF, "infra_sspm_26m_self",
+-		"f_f26m_ck", 3),
+-	GATE_INFRA3(CLK_INFRA_SSPM_32K_SELF, "infra_sspm_32k_self",
+-		"f_f26m_ck", 4),
+ 	GATE_INFRA3(CLK_INFRA_UFS_AXI, "infra_ufs_axi",
+ 		"axi_sel", 5),
+ 	GATE_INFRA3(CLK_INFRA_I2C6, "infra_i2c6",
+-- 
+2.18.0
