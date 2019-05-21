@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3 2/3] dt-bindings: arm: amlogic: add Odroid-N2 binding
-Date: Tue, 21 May 2019 17:19:51 +0200
-Message-ID: <20190521151952.2779-3-narmstrong@baylibre.com>
+Subject: [PATCH v3 1/3] dt-bindings: arm: amlogic: add G12B bindings
+Date: Tue, 21 May 2019 17:19:50 +0200
+Message-ID: <20190521151952.2779-2-narmstrong@baylibre.com>
 References: <20190521151952.2779-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,8 +12,8 @@ To: khilman@baylibre.com, devicetree@vger.kernel.org
 Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible for the Amlogic G12B (S922X) SoC based Odroid-N2 SBC
-from HardKernel.
+Add compatible for the Amlogic G12B SoC, sharing most of the
+features and architecture with the G12A SoC.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
@@ -25,21 +25,22 @@ I converted the patch you acked in yaml, I kept the Reviewed-by,
 is it ok for you ?
 
 Neil
- Documentation/devicetree/bindings/arm/amlogic.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-index 28115dd49f96..f75df4471c0a 100644
+index 6d5bb493db03..28115dd49f96 100644
 --- a/Documentation/devicetree/bindings/arm/amlogic.yaml
 +++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-@@ -139,6 +139,8 @@ properties:
+@@ -137,4 +137,8 @@ properties:
+               - amlogic,u200
+           - const: amlogic,g12a
  
-       - description: Boards with the Amlogic Meson G12B S922X SoC
-         items:
-+          - enum:
-+              - hardkernel,odroid-n2
-           - const: amlogic,g12b
- 
++      - description: Boards with the Amlogic Meson G12B S922X SoC
++        items:
++          - const: amlogic,g12b
++
  ...
 -- 
 2.21.0
