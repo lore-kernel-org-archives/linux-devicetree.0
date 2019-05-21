@@ -1,49 +1,58 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v6 5/6] arm64: dts: allwinner: Add ARM Mali GPU node for H6
-Date: Tue, 21 May 2019 18:11:01 +0200
-Message-ID: <20190521161102.29620-6-peron.clem@gmail.com>
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 1/6] drm: panfrost: add optional bus_clock
+Date: Tue, 21 May 2019 18:10:57 +0200
+Message-ID: <20190521161102.29620-2-peron.clem@gmail.com>
 References: <20190521161102.29620-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521161102.29620-1-peron.clem@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Neil Armstrong <narmstrong@baylibre.com>, Steven Price <steven.price@arm.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20190521161102.29620-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Steven Price <steven.price-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the mali gpu node to the H6 device-tree.
-
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 16c5c3d0fd81..6aad06095c40 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -157,6 +157,20 @@
- 			allwinner,sram = <&ve_sram 1>;
- 		};
- 
-+		gpu: gpu@1800000 {
-+			compatible = "allwinner,sun50i-h6-mali",
-+				     "arm,mali-t720";
-+			reg = <0x01800000 0x4000>;
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "job", "mmu", "gpu";
-+			clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
-+			clock-names = "core", "bus";
-+			resets = <&ccu RST_BUS_GPU>;
-+			status = "disabled";
-+		};
-+
- 		syscon: syscon@3000000 {
- 			compatible = "allwinner,sun50i-h6-system-control",
- 				     "allwinner,sun50i-a64-system-control";
--- 
-2.17.1
+QWxsd2lubmVyIEg2IGhhcyBhbiBBUk0gTWFsaS1UNzIwIE1QMiB3aGljaCByZXF1aXJlZCBhIGJ1
+c19jbG9jay4KCkFkZCBhbiBvcHRpb25hbCBidXNfY2xvY2sgYXQgdGhlIGluaXQgb2YgdGhlIHBh
+bmZyb3N0IGRyaXZlci4KClNpZ25lZC1vZmYtYnk6IENsw6ltZW50IFDDqXJvbiA8cGVyb24uY2xl
+bUBnbWFpbC5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X2Rldmlj
+ZS5jIHwgMjIgKysrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0
+L3BhbmZyb3N0X2RldmljZS5oIHwgIDEgKwogMiBmaWxlcyBjaGFuZ2VkLCAyMyBpbnNlcnRpb25z
+KCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X2Rldmlj
+ZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X2RldmljZS5jCmluZGV4IDNi
+MmJjZWQxYjAxNS4uY2NiOGViMmE1MThjIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFu
+ZnJvc3QvcGFuZnJvc3RfZGV2aWNlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3Bh
+bmZyb3N0X2RldmljZS5jCkBAIC01NSwxMSArNTUsMzMgQEAgc3RhdGljIGludCBwYW5mcm9zdF9j
+bGtfaW5pdChzdHJ1Y3QgcGFuZnJvc3RfZGV2aWNlICpwZmRldikKIAlpZiAoZXJyKQogCQlyZXR1
+cm4gZXJyOwogCisJcGZkZXYtPmJ1c19jbG9jayA9IGRldm1fY2xrX2dldF9vcHRpb25hbChwZmRl
+di0+ZGV2LCAiYnVzIik7CisJaWYgKElTX0VSUihwZmRldi0+YnVzX2Nsb2NrKSkgeworCQlkZXZf
+ZXJyKHBmZGV2LT5kZXYsICJnZXQgYnVzX2Nsb2NrIGZhaWxlZCAlbGRcbiIsCisJCQlQVFJfRVJS
+KHBmZGV2LT5idXNfY2xvY2spKTsKKwkJcmV0dXJuIFBUUl9FUlIocGZkZXYtPmJ1c19jbG9jayk7
+CisJfQorCisJaWYgKHBmZGV2LT5idXNfY2xvY2spIHsKKwkJcmF0ZSA9IGNsa19nZXRfcmF0ZShw
+ZmRldi0+YnVzX2Nsb2NrKTsKKwkJZGV2X2luZm8ocGZkZXYtPmRldiwgImJ1c19jbG9jayByYXRl
+ID0gJWx1XG4iLCByYXRlKTsKKworCQllcnIgPSBjbGtfcHJlcGFyZV9lbmFibGUocGZkZXYtPmJ1
+c19jbG9jayk7CisJCWlmIChlcnIpCisJCQlnb3RvIGRpc2FibGVfY2xvY2s7CisJfQorCiAJcmV0
+dXJuIDA7CisKK2Rpc2FibGVfY2xvY2s6CisJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHBmZGV2LT5j
+bG9jayk7CisKKwlyZXR1cm4gZXJyOwogfQogCiBzdGF0aWMgdm9pZCBwYW5mcm9zdF9jbGtfZmlu
+aShzdHJ1Y3QgcGFuZnJvc3RfZGV2aWNlICpwZmRldikKIHsKKwljbGtfZGlzYWJsZV91bnByZXBh
+cmUocGZkZXYtPmJ1c19jbG9jayk7CiAJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHBmZGV2LT5jbG9j
+ayk7CiB9CiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9k
+ZXZpY2UuaCBiL2RyaXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9kZXZpY2UuaAppbmRl
+eCA1NmY0NTJkZmI0OTAuLjgwNzRmMjIxMDM0YiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L3BhbmZyb3N0L3BhbmZyb3N0X2RldmljZS5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5mcm9z
+dC9wYW5mcm9zdF9kZXZpY2UuaApAQCAtNjYsNiArNjYsNyBAQCBzdHJ1Y3QgcGFuZnJvc3RfZGV2
+aWNlIHsKIAogCXZvaWQgX19pb21lbSAqaW9tZW07CiAJc3RydWN0IGNsayAqY2xvY2s7CisJc3Ry
+dWN0IGNsayAqYnVzX2Nsb2NrOwogCXN0cnVjdCByZWd1bGF0b3IgKnJlZ3VsYXRvcjsKIAlzdHJ1
+Y3QgcmVzZXRfY29udHJvbCAqcnN0YzsKIAotLSAKMi4xNy4xCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwppb21tdSBtYWlsaW5nIGxpc3QKaW9tbXVAbGlz
+dHMubGludXgtZm91bmRhdGlvbi5vcmcKaHR0cHM6Ly9saXN0cy5saW51eGZvdW5kYXRpb24ub3Jn
+L21haWxtYW4vbGlzdGluZm8vaW9tbXU=
