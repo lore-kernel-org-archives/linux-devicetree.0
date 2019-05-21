@@ -1,67 +1,100 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v4 4/4] clk: at91: sckc: add support for SAM9X60
-Date: Tue, 21 May 2019 10:11:33 +0000
-Message-ID: <1558433454-27971-5-git-send-email-claudiu.beznea@microchip.com>
-References: <1558433454-27971-1-git-send-email-claudiu.beznea@microchip.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 6/9] arm64: dts: qcom: msm8996: Add PSCI cpuidle low
+ power states
+Date: Tue, 21 May 2019 12:13:39 +0200
+Message-ID: <10d95552-0a0c-3e8a-62c3-80a307fed0c9@linaro.org>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558433454-27971-1-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
+To: Amit Kucheria <amit.kucheria@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, niklas.cassel@linaro.org, marc.w.gonzalez@free.fr, sibis@codeaurora.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQoNCkFk
-ZCBzdXBwb3J0IGZvciBTQU05WDYwJ3Mgc2xvdyBjbG9jay4NCg0KU2lnbmVkLW9mZi1ieTogQ2xh
-dWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQpBY2tlZC1ieTogQWxl
-eGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tPg0KLS0tDQogZHJp
-dmVycy9jbGsvYXQ5MS9zY2tjLmMgfCA3NCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDc0IGluc2VydGlvbnMoKykNCg0K
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2F0OTEvc2NrYy5jIGIvZHJpdmVycy9jbGsvYXQ5MS9z
-Y2tjLmMNCmluZGV4IGFiMThiMWRhMjY5Zi4uMWYwZjFjZDA2Mzg3IDEwMDY0NA0KLS0tIGEvZHJp
-dmVycy9jbGsvYXQ5MS9zY2tjLmMNCisrKyBiL2RyaXZlcnMvY2xrL2F0OTEvc2NrYy5jDQpAQCAt
-NDEwLDYgKzQxMCw4MCBAQCBzdGF0aWMgdm9pZCBfX2luaXQgb2Zfc2FtYTVkM19zY2tjX3NldHVw
-KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApDQogQ0xLX09GX0RFQ0xBUkUoc2FtYTVkM19jbGtfc2Nr
-YywgImF0bWVsLHNhbWE1ZDMtc2NrYyIsDQogCSAgICAgICBvZl9zYW1hNWQzX3Nja2Nfc2V0dXAp
-Ow0KIA0KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgY2xrX3Nsb3dfYml0cyBhdDkxc2FtOXg2MF9iaXRz
-ID0gew0KKwkuY3Jfb3NjMzJlbiA9IEJJVCgxKSwNCisJLmNyX29zYzMyYnlwID0gQklUKDIpLA0K
-KwkuY3Jfb3Njc2VsID0gQklUKDI0KSwNCit9Ow0KKw0KK3N0YXRpYyB2b2lkIF9faW5pdCBvZl9z
-YW05eDYwX3Nja2Nfc2V0dXAoc3RydWN0IGRldmljZV9ub2RlICpucCkNCit7DQorCXZvaWQgX19p
-b21lbSAqcmVnYmFzZSA9IG9mX2lvbWFwKG5wLCAwKTsNCisJc3RydWN0IGNsa19od19vbmVjZWxs
-X2RhdGEgKmNsa19kYXRhOw0KKwlzdHJ1Y3QgY2xrX2h3ICpzbG93X3JjLCAqc2xvd19vc2M7DQor
-CWNvbnN0IGNoYXIgKnh0YWxfbmFtZTsNCisJY29uc3QgY2hhciAqcGFyZW50X25hbWVzWzJdID0g
-eyAic2xvd19yY19vc2MiLCAic2xvd19vc2MiIH07DQorCWJvb2wgYnlwYXNzOw0KKwlpbnQgcmV0
-Ow0KKw0KKwlpZiAoIXJlZ2Jhc2UpDQorCQlyZXR1cm47DQorDQorCXNsb3dfcmMgPSBjbGtfaHdf
-cmVnaXN0ZXJfZml4ZWRfcmF0ZShOVUxMLCBwYXJlbnRfbmFtZXNbMF0sIE5VTEwsIDAsDQorCQkJ
-CQkgICAgIDMyNzY4KTsNCisJaWYgKElTX0VSUihzbG93X3JjKSkNCisJCXJldHVybjsNCisNCisJ
-eHRhbF9uYW1lID0gb2ZfY2xrX2dldF9wYXJlbnRfbmFtZShucCwgMCk7DQorCWlmICgheHRhbF9u
-YW1lKQ0KKwkJZ290byB1bnJlZ2lzdGVyX3Nsb3dfcmM7DQorDQorCWJ5cGFzcyA9IG9mX3Byb3Bl
-cnR5X3JlYWRfYm9vbChucCwgImF0bWVsLG9zYy1ieXBhc3MiKTsNCisJc2xvd19vc2MgPSBhdDkx
-X2Nsa19yZWdpc3Rlcl9zbG93X29zYyhyZWdiYXNlLCBwYXJlbnRfbmFtZXNbMV0sDQorCQkJCQkg
-ICAgICB4dGFsX25hbWUsIDUwMDAwMDAsIGJ5cGFzcywNCisJCQkJCSAgICAgICZhdDkxc2FtOXg2
-MF9iaXRzKTsNCisJaWYgKElTX0VSUihzbG93X29zYykpDQorCQlnb3RvIHVucmVnaXN0ZXJfc2xv
-d19yYzsNCisNCisJY2xrX2RhdGEgPSBremFsbG9jKHNpemVvZigqY2xrX2RhdGEpICsgKDIgKiBz
-aXplb2Yoc3RydWN0IGNsa19odyAqKSksDQorCQkJICAgR0ZQX0tFUk5FTCk7DQorCWlmICghY2xr
-X2RhdGEpDQorCQlnb3RvIHVucmVnaXN0ZXJfc2xvd19vc2M7DQorDQorCS8qIE1EX1NMQ0sgYW5k
-IFREX1NMQ0suICovDQorCWNsa19kYXRhLT5udW0gPSAyOw0KKwljbGtfZGF0YS0+aHdzWzBdID0g
-Y2xrX2h3X3JlZ2lzdGVyX2ZpeGVkX3JhdGUoTlVMTCwgIm1kX3NsY2siLA0KKwkJCQkJCSAgICAg
-IHBhcmVudF9uYW1lc1swXSwNCisJCQkJCQkgICAgICAwLCAzMjc2OCk7DQorCWlmIChJU19FUlIo
-Y2xrX2RhdGEtPmh3c1swXSkpDQorCQlnb3RvIGNsa19kYXRhX2ZyZWU7DQorDQorCWNsa19kYXRh
-LT5od3NbMV0gPSBhdDkxX2Nsa19yZWdpc3Rlcl9zYW05eDVfc2xvdyhyZWdiYXNlLCAidGRfc2xj
-ayIsDQorCQkJCQkJCSBwYXJlbnRfbmFtZXMsIDIsDQorCQkJCQkJCSAmYXQ5MXNhbTl4NjBfYml0
-cyk7DQorCWlmIChJU19FUlIoY2xrX2RhdGEtPmh3c1sxXSkpDQorCQlnb3RvIHVucmVnaXN0ZXJf
-bWRfc2xjazsNCisNCisJcmV0ID0gb2ZfY2xrX2FkZF9od19wcm92aWRlcihucCwgb2ZfY2xrX2h3
-X29uZWNlbGxfZ2V0LCBjbGtfZGF0YSk7DQorCWlmIChXQVJOX09OKHJldCkpDQorCQlnb3RvIHVu
-cmVnaXN0ZXJfdGRfc2xjazsNCisNCisJcmV0dXJuOw0KKw0KK3VucmVnaXN0ZXJfdGRfc2xjazoN
-CisJY2xrX2h3X3VucmVnaXN0ZXIoY2xrX2RhdGEtPmh3c1sxXSk7DQordW5yZWdpc3Rlcl9tZF9z
-bGNrOg0KKwljbGtfaHdfdW5yZWdpc3RlcihjbGtfZGF0YS0+aHdzWzBdKTsNCitjbGtfZGF0YV9m
-cmVlOg0KKwlrZnJlZShjbGtfZGF0YSk7DQordW5yZWdpc3Rlcl9zbG93X29zYzoNCisJY2xrX2h3
-X3VucmVnaXN0ZXIoc2xvd19vc2MpOw0KK3VucmVnaXN0ZXJfc2xvd19yYzoNCisJY2xrX2h3X3Vu
-cmVnaXN0ZXIoc2xvd19yYyk7DQorfQ0KK0NMS19PRl9ERUNMQVJFKHNhbTl4NjBfY2xrX3Nja2Ms
-ICJtaWNyb2NoaXAsc2FtOXg2MC1zY2tjIiwNCisJICAgICAgIG9mX3NhbTl4NjBfc2NrY19zZXR1
-cCk7DQorDQogc3RhdGljIGludCBjbGtfc2FtYTVkNF9zbG93X29zY19wcmVwYXJlKHN0cnVjdCBj
-bGtfaHcgKmh3KQ0KIHsNCiAJc3RydWN0IGNsa19zYW1hNWQ0X3Nsb3dfb3NjICpvc2MgPSB0b19j
-bGtfc2FtYTVkNF9zbG93X29zYyhodyk7DQotLSANCjIuNy40DQoNCg==
+On 21/05/2019 11:35, Amit Kucheria wrote:
+> Add device bindings for cpuidle states for cpu devices.
+> 
+> msm8996 features 4 cpus - 2 in each cluster. However, all cpus implement
+> the same microarchitecture and the two clusters only differ in the
+> maximum frequency attainable by the CPUs.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+
+
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index c761269caf80..4f2fb7885f39 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -95,6 +95,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+>  			      compatible = "cache";
+> @@ -107,6 +108,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x1>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_0>;
+>  		};
+>  
+> @@ -115,6 +117,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_1>;
+>  			L2_1: l2-cache {
+>  			      compatible = "cache";
+> @@ -127,6 +130,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x101>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_1>;
+>  		};
+>  
+> @@ -151,6 +155,19 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		idle-states {
+> +			entry-method = "psci";
+> +
+> +			CPU_SLEEP_0: cpu-sleep-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "standalone-power-collapse";
+> +				arm,psci-suspend-param = <0x00000004>;
+> +				entry-latency-us = <40>;
+> +				exit-latency-us = <80>;
+> +				min-residency-us = <300>;
+> +			};
+> +		};
+>  	};
+>  
+>  	thermal-zones {
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
