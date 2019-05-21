@@ -1,45 +1,58 @@
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mtd: brcmnand: Make nand-ecc-strength
- and nand-ecc-step-size optional
-Date: Tue, 21 May 2019 09:31:04 +0000
-Message-ID: <5986da5d-2a61-b98d-9d44-d972a19ab732@kontron.de>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: mtd: brcmnand: Make
+ nand-ecc-strength and nand-ecc-step-size optional
+Date: Tue, 21 May 2019 11:32:14 +0200
+Message-ID: <20190521113214.35e1edd0@xps13>
 References: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
+        <5986da5d-2a61-b98d-9d44-d972a19ab732@kontron.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
-Content-Language: en-US
-Content-ID: <B54EE96B077D034D931F5F0990D55015@snt-world.com>
+In-Reply-To: <5986da5d-2a61-b98d-9d44-d972a19ab732@kontron.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kamal Dasu <kdasu.kdev@gmail.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>, Richard Weinberger <richard@nod.at>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc: Kamal Dasu <kdasu.kdev@gmail.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>, Richard Weinberger <richard@nod.at>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2FtYWwsDQoNCk9uIDIwLjA1LjE5IDIxOjA1LCBLYW1hbCBEYXN1IHdyb3RlOg0KPiBuYW5k
-LWVjYy1zdHJlbmd0aCBhbmQgbmFuZC1lY2Mtc3RlcC1zaXplIGNhbiBiZSBtYWRlIG9wdGlvbmFs
-IGFzDQo+IGJyY21uYW5kIGRyaXZlciBjYW4gc3VwcG9ydCB1c2luZyByYXcgTkFORCBsYXllciBk
-ZXRlY3RlZCB2YWx1ZXMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBLYW1hbCBEYXN1IDxrZGFzdS5r
-ZGV2QGdtYWlsLmNvbT4NCj4gLS0tDQo+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL210ZC9icmNtLGJyY21uYW5kLnR4dCB8IDQgKystLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAy
-IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9icmNtLGJyY21uYW5kLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvYnJjbSxicmNtbmFuZC50eHQNCj4gaW5k
-ZXggYmNkYTFkZi4uMjlmZWFiYSAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL210ZC9icmNtLGJyY21uYW5kLnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2JyY20sYnJjbW5hbmQudHh0DQo+IEBAIC0xMDEsMTAg
-KzEwMSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIG51bWJlciAoZS5nLiwgMCwgMSwgMiwgZXRjLikNCj4gICAtICNhZGRyZXNzLWNl
-bGxzICAgICAgICAgICAgOiBzZWUgcGFydGl0aW9uLnR4dA0KPiAgIC0gI3NpemUtY2VsbHMgICAg
-ICAgICAgICAgICA6IHNlZSBwYXJ0aXRpb24udHh0DQo+IC0tIG5hbmQtZWNjLXN0cmVuZ3RoICAg
-ICAgICAgOiBzZWUgbmFuZC50eHQNCj4gLS0gbmFuZC1lY2Mtc3RlcC1zaXplICAgICAgICA6IG11
-c3QgYmUgNTEyIG9yIDEwMjQuIFNlZSBuYW5kLnR4dA0KPiAgIA0KPiAgIE9wdGlvbmFsIHByb3Bl
-cnRpZXM6DQo+ICstIG5hbmQtZWNjLXN0cmVuZ3RoICAgICAgICAgOiBzZWUgbmFuZC50eHQNCj4g
-Ky0gbmFuZC1lY2Mtc3RlcC1zaXplICAgICAgICA6IG11c3QgYmUgNTEyIG9yIDEwMjQuIFNlZSBu
-YW5kLnR4dA0KPiAgIC0gbmFuZC1vbi1mbGFzaC1iYnQgICAgICAgICA6IGJvb2xlYW4sIHRvIGVu
-YWJsZSB0aGUgb24tZmxhc2ggQkJUIGZvciB0aGlzDQo+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgY2hpcC1zZWxlY3QuIFNlZSBuYW5kLnR4dA0KPiAgIC0gYnJjbSxuYW5kLW9vYi1z
-ZWN0b3Itc2l6ZSA6IGludGVnZXIsIHRvIGRlbm90ZSB0aGUgc3BhcmUgYXJlYSBzZWN0b3Igc2l6
-ZQ0KDQpJIHRoaW5rIHlvdSBhbHNvIG5lZWQgdG8gY2hhbmdlIGFsbCByZWZlcmVuY2VzIHRvIG5h
-bmQudHh0LiBUaGlzIGZpbGUgDQp3YXMgcmVjZW50bHkgbW92ZWQgdG8gbmFuZC1jb250cm9sbGVy
-LnlhbWwuDQoNClJlZ2FyZHMsDQpGcmllZGVy
+
+Schrempf Frieder <frieder.schrempf@kontron.de> wrote on Tue, 21 May
+2019 09:31:04 +0000:
+
+> Hi Kamal,
+> 
+> On 20.05.19 21:05, Kamal Dasu wrote:
+> > nand-ecc-strength and nand-ecc-step-size can be made optional as
+> > brcmnand driver can support using raw NAND layer detected values.
+> > 
+> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> > ---
+> >   Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 4 ++--
+> >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> > index bcda1df..29feaba 100644
+> > --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> > @@ -101,10 +101,10 @@ Required properties:
+> >                                 number (e.g., 0, 1, 2, etc.)
+> >   - #address-cells            : see partition.txt
+> >   - #size-cells               : see partition.txt
+> > -- nand-ecc-strength         : see nand.txt
+> > -- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
+> >   
+> >   Optional properties:
+> > +- nand-ecc-strength         : see nand.txt
+> > +- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
+> >   - nand-on-flash-bbt         : boolean, to enable the on-flash BBT for this
+> >                                 chip-select. See nand.txt
+> >   - brcm,nand-oob-sector-size : integer, to denote the spare area sector size  
+> 
+> I think you also need to change all references to nand.txt. This file 
+> was recently moved to nand-controller.yaml.
+> 
+
+Oops, completely forgot about that *again*. Thanks for pointing it
+Frieder!
+
+Miquèl
