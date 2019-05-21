@@ -1,41 +1,37 @@
-From: Andreas Schwab <schwab@suse.de>
-Subject: Re: [PATCH v5 3/3] i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC.
-Date: Tue, 21 May 2019 10:33:48 +0200
-Message-ID: <mvm7eakjjf7.fsf@suse.de>
-References: <1558361478-4381-1-git-send-email-sagar.kadam@sifive.com>
-        <1558361478-4381-4-git-send-email-sagar.kadam@sifive.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 0/2] ARM: dts: stm32: qspi update for stm32mp157c-ev1
+Date: Tue, 21 May 2019 10:41:46 +0200
+Message-ID: <4932a2fd-eca1-d802-812a-7246b3dd12ec@st.com>
+References: <1552057823-10876-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558361478-4381-4-git-send-email-sagar.kadam@sifive.com> (Sagar
-        Shrikant Kadam's message of "Mon, 20 May 2019 19:41:18 +0530")
+In-Reply-To: <1552057823-10876-1-git-send-email-ludovic.Barre@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Mai 20 2019, Sagar Shrikant Kadam <sagar.kadam@sifive.com> wrote:
+Hi Ludovic
 
-> The i2c-ocore driver already has a polling mode interface.But it needs
-> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
-> There is an erratum in FU540 chip that prevents interrupt driven i2c
-> transfers from working, and also the I2C controller's interrupt bit
-> cannot be cleared if set, due to this the existing i2c polling mode
-> interface added in mainline earlier doesn't work, and CPU stall's
-> infinitely, when-ever i2c transfer is initiated.
->
-> Ref:previous polling mode support in mainline
->
-> 	commit 69c8c0c0efa8 ("i2c: ocores: add polling interface")
->
-> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
-> FU540-COOO SoC.
+On 3/8/19 4:10 PM, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+> 
+> This patch series add sleep pins configuration needed to suspend support
+> and add jedec compatible for 2 nor flash of stm32mp157c-ev1.
+> 
+> Ludovic Barre (2):
+>    ARM: dts: stm32: add pinctrl sleep config for qspi on stm32mp157c-ev1
+>    ARM: dts: stm32: add jedec compatible for nor flash on stm32mp157c-ev1
+> 
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 26 ++++++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts     |  5 ++++-
+>   2 files changed, 30 insertions(+), 1 deletion(-)
+> 
 
-After commit dd7dbf0eb090 this no longer fits.
+Series applied on stm32-next.
 
-Andreas.
-
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Regards
+Alex
