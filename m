@@ -1,89 +1,87 @@
-From: Chuanhua Han <chuanhua.han@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Date: Tue, 21 May 2019 13:00:29 +0000
-Message-ID: <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
-References: <20190509070657.18281-1-chuanhua.han@nxp.com>
- <20190517023728.GA15856@dragon>
- <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
+Date: Tue, 21 May 2019 15:09:55 +0200
+Message-ID: <20190521130955.3omqwpx3i7njsb3t@flea>
+References: <20190518170929.24789-1-luca@z3ntu.xyz>
+ <20190520110742.ykgxwaabzzwovgpl@flea>
+ <9B2B83DF-2C91-4DDA-B707-664A792A8BCF@z3ntu.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="o4dueejzfmmapbjw"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <9B2B83DF-2C91-4DDA-B707-664A792A8BCF@z3ntu.xyz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ying Zhang <ying.zhang22455@nxp.com>
+To: luca@z3ntu.xyz
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVvIExpDQo+IFNlbnQ6
-IDIwMTnE6jXUwjE4yNUgNjowMQ0KPiBUbzogQ2h1YW5odWEgSGFuIDxjaHVhbmh1YS5oYW5Abnhw
-LmNvbT47IFNoYXduIEd1bw0KPiA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gQ2M6IG1hcmsucnV0
-bGFuZEBhcm0uY29tOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBZ
-aW5nIFpoYW5nDQo+IDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtF
-WFRdIFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6IGZpeCB3YXRjaGRvZyBkZXZpY2Ug
-bm9kZQ0KPiANCj4gDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJv
-bTogQ2h1YW5odWEgSGFuDQo+ID4gU2VudDogRnJpZGF5LCBNYXkgMTcsIDIwMTkgMToxMSBBTQ0K
-PiA+IFRvOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+ID4gQ2M6IExlbyBMaSA8
-bGVveWFuZy5saUBueHAuY29tPjsgbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS0NCj4g
-PiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LQ0KPiA+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlpbmcgWmhhbmcgPHlpbmcuemhh
-bmcyMjQ1NUBueHAuY29tPg0KPiA+IFN1YmplY3Q6IFJFOiBbRVhUXSBSZTogW1BBVENIXSBhcm02
-NDogZHRzOiBsczEwMjhhOiBmaXggd2F0Y2hkb2cNCj4gPiBkZXZpY2Ugbm9kZQ0KPiA+DQo+ID4N
-Cj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFNoYXdu
-IEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gPiA+IFNlbnQ6IDIwMTnE6jXUwjE3yNUgMTA6
-MzgNCj4gPiA+IFRvOiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+ID4g
-Q2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+
-ID4gPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgWWluZyBa
-aGFuZyA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+DQo+ID4gPiBTdWJqZWN0OiBbRVhUXSBSZTog
-W1BBVENIXSBhcm02NDogZHRzOiBsczEwMjhhOiBmaXggd2F0Y2hkb2cgZGV2aWNlDQo+ID4gPiBu
-b2RlDQo+ID4gPg0KPiA+ID4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+ID4gPg0KPiA+ID4gT24gVGh1
-LCBNYXkgMDksIDIwMTkgYXQgMDM6MDY6NTdQTSArMDgwMCwgQ2h1YW5odWEgSGFuIHdyb3RlOg0K
-PiA+ID4gPiBsczEwMjhhIHBsYXRmb3JtIHVzZXMgc3A4MDUgd2F0Y2hkb2csIGFuZCB1c2UgMS8x
-NiBwbGF0Zm9ybSBjbG9jaw0KPiA+ID4gPiBhcyB0aW1lciBjbG9jaywgdGhpcyBwYXRjaCBmaXgg
-ZGV2aWNlIHRyZWUgbm9kZS4NCj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogWmhhbmcg
-WWluZy0yMjQ1NSA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+DQo+ID4gPiA+IFNpZ25lZC1vZmYt
-Ynk6IENodWFuaHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+
-ID4gPiAgLi4uL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpIHwgMTkN
-Cj4gPiA+ID4gKysrKysrKysrKysrLS0tLS0tLQ0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEy
-IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ID4g
-PiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+
-ID4gPiBpbmRleCBiMDQ1ODEyNDlmMGIuLjE1MTBiMTg1ODI0NiAxMDA2NDQNCj4gPiA+ID4gLS0t
-IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ID4g
-PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+
-ID4gPiA+IEBAIC0yODUsMTMgKzI4NSwxOCBAQA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAg
-ICAgI2ludGVycnVwdC1jZWxscyA9IDwyPjsNCj4gPiA+ID4gICAgICAgICAgICAgICB9Ow0KPiA+
-ID4gPg0KPiA+ID4gPiAtICAgICAgICAgICAgIHdkb2cwOiB3YXRjaGRvZ0AyM2MwMDAwIHsNCj4g
-PiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGxzMTAyOGEtd2R0
-IiwgImZzbCxpbXgyMS13ZHQiOw0KPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgcmVnID0g
-PDB4MCAweDIzYzAwMDAgMHgwIDB4MTAwMDA+Ow0KPiA+ID4gPiAtICAgICAgICAgICAgICAgICAg
-ICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDU5DQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+
-ID4gPiAtICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbG9ja2dlbiA0IDE+Ow0KPiA+
-ID4gPiAtICAgICAgICAgICAgICAgICAgICAgYmlnLWVuZGlhbjsNCj4gPiA+ID4gLSAgICAgICAg
-ICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gPiA+ICsgICAgICAgICAgICAg
-Y2x1c3RlcjFfY29yZTBfd2F0Y2hkb2c6IHdkdEBjMDAwMDAwIHsNCj4gPiA+DQo+ID4gPiBLZWVw
-ICd3YXRjaGRvZycgYXMgdGhlIG5vZGUgbmFtZSwNCj4gPiBUaGFua3MgZm9yIHlvdXIgcmVwbGF5
-DQo+ID4gRG8geW91IG1lYW4gcmVwbGFjZSB0aGUgoa53ZHShryB3aXRoIKGud2F0Y2hkb2ehrz8N
-Cj4gPiBhbmQga2VlcCBub2RlcyBzb3J0IGluIHVuaXQtYWRkcmVzcy4NCj4gPiBXaGF0IGRvZXMg
-dGhpcyBtZWFuPw0KPiANCj4gVGhhdCBtZWFucyBvcmRlciB0aGUgbm9kZXMgYnkgdGhlIGFkZHJl
-c3NlcyAoZS5nLiBjMDAwMDAwLCBjMDEwMDAwKQ0KVGhlIGN1cnJlbnQgb3JkZXIgaXMgY29ycmVj
-dKOoVGhlIGZpcnN0IGlzIGMwMDAwMDAsIHRoZW4gYzAwMDAwMKOpLg0KPiANCj4gPiA+DQo+ID4g
-PiBTaGF3bg0KPiA+ID4NCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
-PSAiYXJtLHNwODA1IiwgImFybSxwcmltZWNlbGwiOw0KPiA+ID4gPiArICAgICAgICAgICAgICAg
-ICAgICAgcmVnID0gPDB4MCAweGMwMDAwMDAgMHgwIDB4MTAwMD47DQo+ID4gPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNsb2NrZ2VuIDQgMTU+LCA8JmNsb2NrZ2VuIDQgMTU+
-Ow0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsi
-LCAid2RvZ19jbGsiOw0KPiA+ID4gPiArICAgICAgICAgICAgIH07DQo+ID4gPiA+ICsNCj4gPiA+
-ID4gKyAgICAgICAgICAgICBjbHVzdGVyMV9jb3JlMV93YXRjaGRvZzogd2R0QGMwMTAwMDAgew0K
-PiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sc3A4MDUiLCAi
-YXJtLHByaW1lY2VsbCI7DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgw
-IDB4YzAxMDAwMCAweDAgMHgxMDAwPjsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNs
-b2NrcyA9IDwmY2xvY2tnZW4gNCAxNT4sIDwmY2xvY2tnZW4gNCAxNT47DQo+ID4gPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJhcGJfcGNsayIsICJ3ZG9nX2NsayI7DQo+
-ID4gPiA+ICAgICAgICAgICAgICAgfTsNCj4gPiA+ID4NCj4gPiA+ID4gICAgICAgICAgICAgICBz
-YXRhOiBzYXRhQDMyMDAwMDAgew0KPiA+ID4gPiAtLQ0KPiA+ID4gPiAyLjE3LjENCj4gPiA+ID4N
-Cg==
+
+--o4dueejzfmmapbjw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, May 21, 2019 at 08:43:45AM +0200, luca@z3ntu.xyz wrote:
+> On May 20, 2019 1:07:42 PM GMT+02:00, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >On Sat, May 18, 2019 at 07:09:30PM +0200, Luca Weiss wrote:
+> >> Add a node describing the KEYADC on the A64.
+> >>
+> >> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> >> ---
+> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 +++++++
+> >>  1 file changed, 7 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> index 7734f70e1057..dc1bf8c1afb5 100644
+> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> @@ -704,6 +704,13 @@
+> >>  			status = "disabled";
+> >>  		};
+> >>
+> >> +		lradc: lradc@1c21800 {
+> >> +			compatible = "allwinner,sun4i-a10-lradc-keys";
+> >> +			reg = <0x01c21800 0x100>;
+> >> +			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+> >> +			status = "disabled";
+> >> +		};
+> >> +
+> >
+> >The controller is pretty different on the A64 compared to the A10. The
+> >A10 has two channels for example, while the A64 has only one.
+> >
+> >It looks like the one in the A83t though, so you can use that
+> >compatible instead.
+>
+> Looking at the patch for the A83t, the only difference is that it
+> uses a 3/4 instead of a 2/3 voltage divider, nothing is changed with
+> the channels.
+
+I guess you can reuse the A83t compatible here then, and a more
+specific a64 compatible in case we ever need to fix this.
+
+> But I'm also not sure which one (or a different one)
+> is used from looking at the "A64 User Manual".
+
+I'm sorry, what are you referring to with "one" in that sentence?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--o4dueejzfmmapbjw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOP4owAKCRDj7w1vZxhR
+xZkvAQCd5wzD/xjw3laO9nxjD2QxKl1qIHQW5BZeiCHbM1DA5wD/VtDKwN19wKfS
+efcYJj1jUOQM495DpaIysQG3XvYg3AA=
+=08Dd
+-----END PGP SIGNATURE-----
+
+--o4dueejzfmmapbjw--
