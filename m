@@ -1,89 +1,62 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V4 1/2] soc: imx: Add SCU SoC info driver support
-Date: Tue, 21 May 2019 14:42:58 +0000
-Message-ID: <DB3PR0402MB3916EED0DD292956887E839DF5070@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1558071840-841-1-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB6434643CA1A6807347DCAAF8EE070@AM0PR04MB6434.eurprd04.prod.outlook.com>
- <61fb2d82-67e7-ab2d-961e-78d018cf3272@free.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <61fb2d82-67e7-ab2d-961e-78d018cf3272@free.fr>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Gonzalez <marc.w.gonzalez@free.fr>, Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, DT <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v4 0/6] MSM8998 Multimedia Clock Controller
+Date: Tue, 21 May 2019 08:44:03 -0600
+Message-ID: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: david.brown@linaro.org
+Cc: agross@kernel.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Marc/Leonard
+The multimedia clock controller (mmcc) is the main clock controller for
+the multimedia subsystem and is required to enable things like display and
+camera.
 
-> -----Original Message-----
-> From: Marc Gonzalez [mailto:marc.w.gonzalez@free.fr]
-> Sent: Tuesday, May 21, 2019 8:34 PM
-> To: Leonard Crestez <leonard.crestez@nxp.com>; Anson Huang
-> <anson.huang@nxp.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>; Rob Herring
-> <robh+dt@kernel.org>; Linux ARM <linux-arm-kernel@lists.infradead.org>;
-> DT <devicetree@vger.kernel.org>
-> Subject: Re: [PATCH V4 1/2] soc: imx: Add SCU SoC info driver support
-> 
-> On 21/05/2019 13:56, Leonard Crestez wrote:
-> 
-> > On 5/17/2019 8:49 AM, Anson Huang wrote:
-> >
-> >> +	root = of_find_node_by_path("/");
-> >> +
-> >> +	np = of_find_compatible_node(NULL, NULL, "fsl,imx-scu");
-> >
-> > It's possibly not very important for root or FW communication nodes
-> > but you should probably of_node_put those back.
-> 
-> Isn't it better/simpler to use of_root?
-> 
-> extern struct device_node *of_root;
+v4:
+-fix makefile to use correct config item
+-pick up tags
+-fix ordering of clocks and clock-names in dt
+-drop MODULE_ALIAS
+-wait for xo in mmcc since that was found to be useful in some debug configs
 
-You are right, I will add below changes into V5, one change is to use extern of_root
-directly, the other is to add of_put_node() after "fsl,imx-scu" is found.
+v3:
+-Rebase onto linux-next to get the final version of the clk parent rewrite
+series
+-Moved the bindings header to the bindings patch per Rob
+-Made xo manditory for GCC to work around the lack of clk orphan probe defer
+to avoid the uart console glitch
 
-@@ -56,7 +56,6 @@ static int imx_scu_soc_probe(struct platform_device *pdev)
- {
-        struct soc_device_attribute *soc_dev_attr;
-        struct soc_device *soc_dev;
--       struct device_node *root;
-        u32 id, val;
-        int ret;
+v2:
+-Rebased on the "Rewrite clk parent handling" series and updated to the clk init
+mechanisms introduced there.
+-Marked XO clk as CLK_IGNORE_UNUSED to avoid the concern about the XO going away
+"incorrectly" during late init
+-Corrected the name of the XO clock to "xo"
+-Dropped the fake XO clock in GCC to prevent a namespace conflict
+-Fully enumerated the external clocks (DSI PLLs, etc) in the DT binding
+-Cleaned up the weird newlines in the added DT node
+-Added DT header file to msm8998 DT for future clients
 
-@@ -72,8 +71,7 @@ static int imx_scu_soc_probe(struct platform_device *pdev)
+Jeffrey Hugo (6):
+  dt-bindings: clock: Document external clocks for MSM8998 gcc
+  arm64: dts: msm8998: Add xo clock to gcc node
+  clk: qcom: smd: Add XO clock for MSM8998
+  dt-bindings: clock: Add support for the MSM8998 mmcc
+  clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
+  arm64: dts: qcom: msm8998: Add mmcc node
 
-        soc_dev_attr->family = "Freescale i.MX";
+ .../devicetree/bindings/clock/qcom,gcc.txt    |   10 +
+ .../devicetree/bindings/clock/qcom,mmcc.txt   |   21 +
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         |   16 +
+ drivers/clk/qcom/Kconfig                      |    9 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/clk-smd-rpm.c                |   24 +-
+ drivers/clk/qcom/gcc-msm8998.c                |   29 +-
+ drivers/clk/qcom/mmcc-msm8998.c               | 2915 +++++++++++++++++
+ include/dt-bindings/clock/qcom,mmcc-msm8998.h |  210 ++
+ 9 files changed, 3214 insertions(+), 21 deletions(-)
+ create mode 100644 drivers/clk/qcom/mmcc-msm8998.c
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
 
--       root = of_find_node_by_path("/");
--       ret = of_property_read_string(root,
-+       ret = of_property_read_string(of_root,
-                                      "model",
-                                      &soc_dev_attr->machine);
-        if (ret)
-@@ -132,6 +130,8 @@ static int __init imx_scu_soc_init(void)
-        if (!np)
-                return -ENODEV;
-
-+       of_node_put(np);
-+
-        ret = platform_driver_register(&imx_scu_soc_driver);
-        if (ret)
-                return ret;
-
-thanks,
-Anson
-
-> 
-> Regards.
+-- 
+2.17.1
