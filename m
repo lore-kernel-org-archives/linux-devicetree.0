@@ -1,53 +1,83 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: Pass binding directory to validation tools
-Date: Tue, 21 May 2019 17:34:21 -0500
-Message-ID: <20190521223421.10514-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, linux-kbuild@vger.kernel.org
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: [PATCH V3 net-next 0/6] Peer to Peer One-Step time stamping
+Date: Tue, 21 May 2019 15:47:17 -0700
+Message-ID: <20190521224723.6116-1-richardcochran@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-In order to have $ref's to schema files within the kernel, we need to
-pass the base path of bindings to the schema validation tools.
+This series adds support for PTP (IEEE 1588) P2P one-step time
+stamping along with a driver for a hardware device that supports this.
 
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/Makefile | 2 +-
- scripts/Makefile.lib                       | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+If the hardware supports p2p one-step, it subtracts the ingress time
+stamp value from the Pdelay_Request correction field.  The user space
+software stack then simply copies the correction field into the
+Pdelay_Response, and on transmission the hardware adds the egress time
+stamp into the correction field.
 
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index 63b139f9ae28..8a2774b5834b 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -5,7 +5,7 @@ DT_MK_SCHEMA ?= dt-mk-schema
- DT_MK_SCHEMA_FLAGS := $(if $(DT_SCHEMA_FILES), -u)
- 
- quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
--      cmd_chk_binding = $(DT_DOC_CHECKER) $< ; \
-+      cmd_chk_binding = $(DT_DOC_CHECKER) -u $(srctree)/$(src) $< ; \
-                         $(DT_EXTRACT_EX) $< > $@
- 
- $(obj)/%.example.dts: $(src)/%.yaml FORCE
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 1b412d4394ae..f1f38c8cdc74 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -298,7 +298,7 @@ DT_BINDING_DIR := Documentation/devicetree/bindings
- DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
- 
- quiet_cmd_dtb_check =	CHECK   $@
--      cmd_dtb_check =	$(DT_CHECKER) -p $(DT_TMP_SCHEMA) $@ ;
-+      cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@ ;
- 
- define rule_dtc_dt_yaml
- 	$(call cmd_and_fixdep,dtc,yaml)
+This new functionality extends CONFIG_NETWORK_PHY_TIMESTAMPING to
+cover MII snooping devices, but it still depends on phylib, just as
+that option does.  Expanding beyond phylib is not within the scope of
+the this series.
+
+User space support is available in the current linuxptp master branch.
+
+- Patch 1 adds the new option.
+- Patches 2-5 add support for MII time stamping in non-PHY devices.
+- Patch 6 adds a driver implementing the new option.
+
+Thanks,
+Richard
+
+Changed in v3:
+~~~~~~~~~~~~~~
+
+- Simplify the device tree binding and document the time stamping
+  phandle by itself.
+
+Changed in v2:
+~~~~~~~~~~~~~~
+
+- Per the v1 review, changed the modeling of MII time stamping
+  devices.  They are no longer a kind of mdio device.
+
+
+Richard Cochran (6):
+  net: Introduce peer to peer one step PTP time stamping.
+  net: Introduce a new MII time stamping interface.
+  net: Add a layer for non-PHY MII time stamping drivers.
+  dt-bindings: ptp: Introduce MII time stamping devices.
+  net: mdio: of: Register discovered MII time stampers.
+  ptp: Add a driver for InES time stamping IP core.
+
+ Documentation/devicetree/bindings/ptp/ptp-ines.txt |  35 +
+ .../devicetree/bindings/ptp/timestamper.txt        |  41 +
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c   |   1 +
+ drivers/net/phy/Makefile                           |   2 +
+ drivers/net/phy/dp83640.c                          |  47 +-
+ drivers/net/phy/mii_timestamper.c                  | 121 +++
+ drivers/net/phy/phy.c                              |   4 +-
+ drivers/net/phy/phy_device.c                       |   5 +
+ drivers/of/of_mdio.c                               |  24 +
+ drivers/ptp/Kconfig                                |  10 +
+ drivers/ptp/Makefile                               |   1 +
+ drivers/ptp/ptp_ines.c                             | 870 +++++++++++++++++++++
+ include/linux/mii_timestamper.h                    | 116 +++
+ include/linux/phy.h                                |  25 +-
+ include/uapi/linux/net_tstamp.h                    |   8 +
+ net/8021q/vlan_dev.c                               |   4 +-
+ net/Kconfig                                        |   7 +-
+ net/core/dev_ioctl.c                               |   1 +
+ net/core/ethtool.c                                 |   4 +-
+ net/core/timestamping.c                            |  20 +-
+ 20 files changed, 1289 insertions(+), 57 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ptp/ptp-ines.txt
+ create mode 100644 Documentation/devicetree/bindings/ptp/timestamper.txt
+ create mode 100644 drivers/net/phy/mii_timestamper.c
+ create mode 100644 drivers/ptp/ptp_ines.c
+ create mode 100644 include/linux/mii_timestamper.h
+
 -- 
-2.20.1
+2.11.0
