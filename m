@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v2 3/9] arm64: dts: qcom: msm8916: Add entry-method property for the idle-states node
-Date: Tue, 21 May 2019 15:05:13 +0530
-Message-ID: <0374669560d13bba30dfa33cd10a0ad8a65b604b.1558430617.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 6/9] arm64: dts: qcom: msm8996: Add PSCI cpuidle low power states
+Date: Tue, 21 May 2019 15:05:16 +0530
+Message-ID: <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
 References: <cover.1558430617.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1558430617.git.amit.kucheria@linaro.org>
@@ -12,32 +12,72 @@ To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson
 Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The idle-states binding documentation[1] mentions that the
-'entry-method' property is required on 64-bit platforms and must be set
-to "psci".
+Add device bindings for cpuidle states for cpu devices.
 
-[1] Documentation/devicetree/bindings/arm/idle-states.txt (see
-idle-states node)
+msm8996 features 4 cpus - 2 in each cluster. However, all cpus implement
+the same microarchitecture and the two clusters only differ in the
+maximum frequency attainable by the CPUs.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 0803ca8c02da..82ea5b8b37a2 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -158,6 +158,8 @@
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index c761269caf80..4f2fb7885f39 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -95,6 +95,7 @@
+ 			compatible = "qcom,kryo";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			next-level-cache = <&L2_0>;
+ 			L2_0: l2-cache {
+ 			      compatible = "cache";
+@@ -107,6 +108,7 @@
+ 			compatible = "qcom,kryo";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			next-level-cache = <&L2_0>;
  		};
  
- 		idle-states {
+@@ -115,6 +117,7 @@
+ 			compatible = "qcom,kryo";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			next-level-cache = <&L2_1>;
+ 			L2_1: l2-cache {
+ 			      compatible = "cache";
+@@ -127,6 +130,7 @@
+ 			compatible = "qcom,kryo";
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			next-level-cache = <&L2_1>;
+ 		};
+ 
+@@ -151,6 +155,19 @@
+ 				};
+ 			};
+ 		};
++
++		idle-states {
 +			entry-method = "psci";
 +
- 			CPU_SPC: spc {
- 				compatible = "arm,idle-state";
- 				arm,psci-suspend-param = <0x40000002>;
++			CPU_SLEEP_0: cpu-sleep-0 {
++				compatible = "arm,idle-state";
++				idle-state-name = "standalone-power-collapse";
++				arm,psci-suspend-param = <0x00000004>;
++				entry-latency-us = <40>;
++				exit-latency-us = <80>;
++				min-residency-us = <300>;
++			};
++		};
+ 	};
+ 
+ 	thermal-zones {
 -- 
 2.17.1
