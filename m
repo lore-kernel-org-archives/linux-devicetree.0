@@ -1,81 +1,35 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 9/9] arm64: dts: msm8996: Add proper capacity scaling
- for the cpus
-Date: Tue, 21 May 2019 12:14:29 +0200
-Message-ID: <6636af52-4f29-2869-7f9f-6d6277af6712@linaro.org>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <5224535a7ef5b257e3baa698991bf6deeefccc36.1558430617.git.amit.kucheria@linaro.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v1 0/2] enable display on stm32mp157c-dk1 board
+Date: Tue, 21 May 2019 12:22:04 +0200
+Message-ID: <5864f09f-4cd3-cadc-2210-4946142e582d@st.com>
+References: <1553863438-6720-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5224535a7ef5b257e3baa698991bf6deeefccc36.1558430617.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1553863438-6720-1-git-send-email-yannick.fertre@st.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, niklas.cassel@linaro.org, marc.w.gonzalez@free.fr, sibis@codeaurora.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Philippe Cornu <philippe.cornu@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21/05/2019 11:35, Amit Kucheria wrote:
-> msm8996 features 4 cpus - 2 in each cluster. However, all cpus implement
-> the same microarchitecture and the two clusters only differ in the
-> maximum frequency attainable by the CPUs.
-> 
-> Add capacity-dmips-mhz property to allow the topology code to determine
-> the actual capacity by taking into account the highest frequency for
-> each CPU.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-> ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 4f2fb7885f39..e0e8f30ce11a 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -96,6 +96,7 @@
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
-> +			capacity-dmips-mhz = <1024>;
->  			next-level-cache = <&L2_0>;
->  			L2_0: l2-cache {
->  			      compatible = "cache";
-> @@ -109,6 +110,7 @@
->  			reg = <0x0 0x1>;
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
-> +			capacity-dmips-mhz = <1024>;
->  			next-level-cache = <&L2_0>;
->  		};
->  
-> @@ -118,6 +120,7 @@
->  			reg = <0x0 0x100>;
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
-> +			capacity-dmips-mhz = <1024>;
->  			next-level-cache = <&L2_1>;
->  			L2_1: l2-cache {
->  			      compatible = "cache";
-> @@ -131,6 +134,7 @@
->  			reg = <0x0 0x101>;
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
-> +			capacity-dmips-mhz = <1024>;
->  			next-level-cache = <&L2_1>;
->  		};
->  
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+SGkgWWFubmljawoKT24gMy8yOS8xOSAxOjQzIFBNLCBZYW5uaWNrIEZlcnRyw6kgd3JvdGU6Cj4g
+RW5hYmxlIGRpc3BsYXkgb24gc3RtMzJtcDE1N2MtZGsxIGJvYXJkLiBJMmMgbm9kZSBtdXN0IGJl
+IGNyZWF0ZWQgZmlyc3QuCj4gCj4gWWFubmljayBGZXJ0csOpICgyKToKPiAgICBBUk06IGR0czog
+c3RtMzI6IEFkZCBJMkMgMSBhbmQgNCBjb25maWcgZm9yIHN0bTMybXAxNTdhLWRrMQo+ICAgIEFS
+TTogZHRzOiBzdG0zMjogZW5hYmxlIGRpc3BsYXkgb24gc3RtMzJtcDE1N2MtZGsxIGJvYXJkCj4g
+Cj4gICBhcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3YS1kazEuZHRzIHwgNzggKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgIDEgZmlsZSBjaGFuZ2VkLCA3OCBpbnNlcnRp
+b25zKCspCj4gCj4gLS0KPiAyLjcuNAo+IAoKU2VyaWVzIGFwcGxpZWQgb24gc3RtMzItbmV4dC4K
+ClJlZ2FyZHMKQWxleAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
