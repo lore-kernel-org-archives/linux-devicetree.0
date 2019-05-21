@@ -1,87 +1,102 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
-Date: Tue, 21 May 2019 15:09:55 +0200
-Message-ID: <20190521130955.3omqwpx3i7njsb3t@flea>
-References: <20190518170929.24789-1-luca@z3ntu.xyz>
- <20190520110742.ykgxwaabzzwovgpl@flea>
- <9B2B83DF-2C91-4DDA-B707-664A792A8BCF@z3ntu.xyz>
+From: Paul Thomas <pthomas8589@gmail.com>
+Subject: Re: [PATCH v4 3/3] arm64: zynqmp: DT: Add Xilinx AMS node
+Date: Tue, 21 May 2019 09:26:44 -0400
+Message-ID: <CAD56B7dw4kTRuXeKXyT6KbEP9E=B=KqpamL14d96LjGgAfrbGQ@mail.gmail.com>
+References: <1555943870-15353-1-git-send-email-manish.narani@xilinx.com> <1555943870-15353-4-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="o4dueejzfmmapbjw"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9B2B83DF-2C91-4DDA-B707-664A792A8BCF@z3ntu.xyz>
+In-Reply-To: <1555943870-15353-4-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: luca@z3ntu.xyz
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, Jisheng.Zhang@synaptics.com, olof@lixom.net, dinguyen@kernel.org, amit.kucheria@linaro.org, stefan.popa@analog.com, dmurphy@ti.com, marcus.folkesson@gmail.com, tmaimon77@gmail.com, ricardo@ribalda.com, xc-racer2@live.ca, contact@artur-rojek.eu, geert@linux-m68k.org, smohanad@codeaurora.org, charles-antoine.couret@essensium.com, stefan@agner.ch, max.krummenacher@toradex.com, lee.jones@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Manish,
 
---o4dueejzfmmapbjw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for posting this! It is very much needed in the mainline
+kernel, nice work.
 
-On Tue, May 21, 2019 at 08:43:45AM +0200, luca@z3ntu.xyz wrote:
-> On May 20, 2019 1:07:42 PM GMT+02:00, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >On Sat, May 18, 2019 at 07:09:30PM +0200, Luca Weiss wrote:
-> >> Add a node describing the KEYADC on the A64.
-> >>
-> >> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> >> ---
-> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 +++++++
-> >>  1 file changed, 7 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> index 7734f70e1057..dc1bf8c1afb5 100644
-> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> @@ -704,6 +704,13 @@
-> >>  			status = "disabled";
-> >>  		};
-> >>
-> >> +		lradc: lradc@1c21800 {
-> >> +			compatible = "allwinner,sun4i-a10-lradc-keys";
-> >> +			reg = <0x01c21800 0x100>;
-> >> +			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> >> +			status = "disabled";
-> >> +		};
-> >> +
-> >
-> >The controller is pretty different on the A64 compared to the A10. The
-> >A10 has two channels for example, while the A64 has only one.
-> >
-> >It looks like the one in the A83t though, so you can use that
-> >compatible instead.
+On Mon, Apr 22, 2019 at 10:54 AM Manish Narani <manish.narani@xilinx.com> wrote:
 >
-> Looking at the patch for the A83t, the only difference is that it
-> uses a 3/4 instead of a 2/3 voltage divider, nothing is changed with
-> the channels.
+> The Xilinx AMS includes an ADC as well as on-chip sensors that can be
+> used to sample external and monitor on-die operating conditions, such as
+> temperature and supply voltage levels.
+>
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> index 9aa6734..f776913 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> @@ -625,5 +625,31 @@
+>                         reg = <0x0 0xfd4d0000 0x0 0x1000>;
+>                         timeout-sec = <10>;
+>                 };
+> +
+> +               xilinx_ams: ams@ffa50000 {
+> +                       compatible = "xlnx,zynqmp-ams";
+> +                       status = "disabled";
+> +                       interrupt-parent = <&gic>;
+> +                       interrupts = <0 56 4>;
+> +                       interrupt-names = "ams-irq";
+> +                       reg = <0x0 0xffa50000 0x0 0x800>;
+> +                       reg-names = "ams-base";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       #io-channel-cells = <1>;
+> +                       ranges = <0 0 0xffa50800 0x800>;
+> +
+> +                       ams_ps: ams-ps@0,0 {
+> +                               compatible = "xlnx,zynqmp-ams-ps";
+> +                               status = "disabled";
+> +                               reg = <0 0x400>;
+> +                       };
+> +
+> +                       ams_pl: ams-pl@1,0 {
+> +                               compatible = "xlnx,zynqmp-ams-pl";
+> +                               status = "disabled";
+> +                               reg = <0x400 0x400>;
+> +                       };
+> +               };
+>         };
+>  };
+> --
+> 2.1.1
+>
+I tested this with an older 4.18 kernel, and with a slightly different
+devicetree (shown below) it seems to be working.
 
-I guess you can reuse the A83t compatible here then, and a more
-specific a64 compatible in case we ever need to fix this.
+        xilinx_ams: ams@ffa50000 {
+                compatible = "xlnx,zynqmp-ams";
+                status = "okay";
+                interrupt-parent = <&gic>;
+                interrupts = <0 56 4>;
+                interrupt-names = "ams-irq";
+                reg = <0x0 0xffa50000 0x0 0x800>;
+                reg-names = "ams-base";
 
-> But I'm also not sure which one (or a different one)
-> is used from looking at the "A64 User Manual".
+                #address-cells = <2>;
+                #size-cells = <2>;
+                ranges;
 
-I'm sorry, what are you referring to with "one" in that sentence?
+                ams_ps: ams_ps@ffa50800 {
+                        compatible = "xlnx,zynqmp-ams-ps";
+                        reg = <0x0 0xffa50800 0x0 0x400>;
+                };
 
-Maxime
+                ams_pl: ams_pl@ffa50c00 {
+                        compatible = "xlnx,zynqmp-ams-pl";
+                        reg = <0x0 0xffa50c00 0x0 0x400>;
+                };
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Also I needed to have the clock defined "clocks = <&clk 70>;".
 
---o4dueejzfmmapbjw
-Content-Type: application/pgp-signature; name="signature.asc"
+For the temperatures I get in_temp0_raw, in_temp1_raw and in_temp2 do
+these correspond to channels 7,8 & 21 in the devicetree documentation?
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOP4owAKCRDj7w1vZxhR
-xZkvAQCd5wzD/xjw3laO9nxjD2QxKl1qIHQW5BZeiCHbM1DA5wD/VtDKwN19wKfS
-efcYJj1jUOQM495DpaIysQG3XvYg3AA=
-=08Dd
------END PGP SIGNATURE-----
-
---o4dueejzfmmapbjw--
+thanks,
+Paul
