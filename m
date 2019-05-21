@@ -1,155 +1,260 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH 3/3] regulator: arizona-micsupp: Add support for Cirrus Logic Madera codecs
-Date: Tue, 21 May 2019 11:04:39 +0100
-Message-ID: <20190521100439.27383-3-ckeepax@opensource.cirrus.com>
-References: <20190521100439.27383-1-ckeepax@opensource.cirrus.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+Date: Tue, 21 May 2019 12:08:16 +0200
+Message-ID: <5823cd07-312b-600c-1b78-dc5bff2a12eb@linaro.org>
+References: <20190521072355.12928-1-ping.bai@nxp.com>
+ <20190521072355.12928-2-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521100439.27383-1-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20190521072355.12928-2-ping.bai@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jacky Bai <ping.bai@nxp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
+On 21/05/2019 09:18, Jacky Bai wrote:
+> From: Bai Ping <ping.bai@nxp.com>
+> 
+> The system counter (sys_ctr) is a programmable system counter
+> which provides a shared time base to the Cortex A15, A7, A53 etc cores.
+> It is intended for use in applications where the counter is always
+> powered on and supports multiple, unrelated clocks. The sys_ctr hardware
+> supports:
+>  - 56-bit counter width (roll-over time greater than 40 years)
 
-This adds a new driver identity "madera-micsupp" and probe function
-so that this driver can be used to control the micsupp regulator on
-Cirrus Logic Madera codecs.
+The benefit of using more than 32bits on a 32bits system is not proven.
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/regulator/Kconfig           |  7 ++--
- drivers/regulator/arizona-micsupp.c | 71 ++++++++++++++++++++++++++++++++++++-
- 2 files changed, 74 insertions(+), 4 deletions(-)
+The function to read and build the 56bits value can have a very
+significant impact on the performance of your platform.
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index d2db658840f47..53576c2df737b 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -143,11 +143,12 @@ config REGULATOR_ARIZONA_LDO1
- 	  and Wolfson Microelectronic Arizona codecs.
- 
- config REGULATOR_ARIZONA_MICSUPP
--	tristate "Wolfson Arizona class devices MICSUPP"
--	depends on MFD_ARIZONA
-+	tristate "Cirrus Madera and Wolfson Arizona class devices MICSUPP"
-+	depends on MFD_ARIZONA || MFD_MADERA
- 	depends on SND_SOC
- 	help
--	  Support for the MICSUPP regulators found on Wolfson Arizona class
-+	  Support for the MICSUPP regulators found on Cirrus Logic Madera codecs
-+	  and Wolfson Microelectronic Arizona codecs
- 	  devices.
- 
- config REGULATOR_AS3711
-diff --git a/drivers/regulator/arizona-micsupp.c b/drivers/regulator/arizona-micsupp.c
-index be0d46da51a14..de6802b85e9f9 100644
---- a/drivers/regulator/arizona-micsupp.c
-+++ b/drivers/regulator/arizona-micsupp.c
-@@ -25,6 +25,10 @@
- #include <linux/mfd/arizona/pdata.h>
- #include <linux/mfd/arizona/registers.h>
- 
-+#include <linux/mfd/madera/core.h>
-+#include <linux/mfd/madera/pdata.h>
-+#include <linux/mfd/madera/registers.h>
-+
- #include <linux/regulator/arizona-micsupp.h>
- 
- struct arizona_micsupp {
-@@ -200,6 +204,28 @@ static const struct regulator_init_data arizona_micsupp_ext_default = {
- 	.num_consumer_supplies = 1,
- };
- 
-+static const struct regulator_desc madera_micsupp = {
-+	.name = "MICVDD",
-+	.supply_name = "CPVDD1",
-+	.type = REGULATOR_VOLTAGE,
-+	.n_voltages = 40,
-+	.ops = &arizona_micsupp_ops,
-+
-+	.vsel_reg = MADERA_LDO2_CONTROL_1,
-+	.vsel_mask = MADERA_LDO2_VSEL_MASK,
-+	.enable_reg = MADERA_MIC_CHARGE_PUMP_1,
-+	.enable_mask = MADERA_CPMIC_ENA,
-+	.bypass_reg = MADERA_MIC_CHARGE_PUMP_1,
-+	.bypass_mask = MADERA_CPMIC_BYPASS,
-+
-+	.linear_ranges = arizona_micsupp_ext_ranges,
-+	.n_linear_ranges = ARRAY_SIZE(arizona_micsupp_ext_ranges),
-+
-+	.enable_time = 3000,
-+
-+	.owner = THIS_MODULE,
-+};
-+
- static int arizona_micsupp_of_get_pdata(struct arizona_micsupp_pdata *pdata,
- 					struct regulator_config *config,
- 					const struct regulator_desc *desc)
-@@ -316,6 +342,24 @@ static int arizona_micsupp_probe(struct platform_device *pdev)
- 					   &arizona->pdata.micvdd);
- }
- 
-+static int madera_micsupp_probe(struct platform_device *pdev)
-+{
-+	struct madera *madera = dev_get_drvdata(pdev->dev.parent);
-+	struct arizona_micsupp *micsupp;
-+
-+	micsupp = devm_kzalloc(&pdev->dev, sizeof(*micsupp), GFP_KERNEL);
-+	if (!micsupp)
-+		return -ENOMEM;
-+
-+	micsupp->regmap = madera->regmap;
-+	micsupp->dapm = &madera->dapm;
-+	micsupp->dev = madera->dev;
-+	micsupp->init_data = arizona_micsupp_ext_default;
-+
-+	return arizona_micsupp_common_init(pdev, micsupp, &madera_micsupp,
-+					   &madera->pdata.micvdd);
-+}
-+
- static struct platform_driver arizona_micsupp_driver = {
- 	.probe = arizona_micsupp_probe,
- 	.driver		= {
-@@ -323,10 +367,35 @@ static struct platform_driver arizona_micsupp_driver = {
- 	},
- };
- 
--module_platform_driver(arizona_micsupp_driver);
-+static struct platform_driver madera_micsupp_driver = {
-+	.probe = madera_micsupp_probe,
-+	.driver		= {
-+		.name	= "madera-micsupp",
-+	},
-+};
-+
-+static struct platform_driver * const arizona_micsupp_drivers[] = {
-+	&arizona_micsupp_driver,
-+	&madera_micsupp_driver,
-+};
-+
-+static int __init arizona_micsupp_init(void)
-+{
-+	return platform_register_drivers(arizona_micsupp_drivers,
-+					 ARRAY_SIZE(arizona_micsupp_drivers));
-+}
-+module_init(arizona_micsupp_init);
-+
-+static void __exit arizona_micsupp_exit(void)
-+{
-+	platform_unregister_drivers(arizona_micsupp_drivers,
-+				    ARRAY_SIZE(arizona_micsupp_drivers));
-+}
-+module_exit(arizona_micsupp_exit);
- 
- /* Module information */
- MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
- MODULE_DESCRIPTION("Arizona microphone supply driver");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:arizona-micsupp");
-+MODULE_ALIAS("platform:madera-micsupp");
+Using a 32bits counter can be enough if it does not wrap too fast.
+
+Can you consider a 32 bits counter ?
+
+>  - compare frame(64-bit compare value) contains programmable interrupt
+>    generation when compare value <= counter value.
+> 
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> ---
+> change v1->v2:
+>  - no change 
+> change v2->v3:
+>  - remove the clocksource, we only need to use this module for timer purpose,
+>    so register it as clockevent is enough.
+>  - use the timer_of_init to init the irq, clock, etc.
+>  - remove some unnecessary comments.
+> change v3->v4:
+>  - use cached value for CMPCR,
+>  - remove unnecessary timer enabe from set_state_oneshot function.
+> ---
+>  drivers/clocksource/Kconfig            |   7 ++
+>  drivers/clocksource/Makefile           |   1 +
+>  drivers/clocksource/timer-imx-sysctr.c | 146 +++++++++++++++++++++++++
+>  3 files changed, 154 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-imx-sysctr.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 6bcaa4e2e72c..ee48620a4561 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -616,6 +616,13 @@ config CLKSRC_IMX_TPM
+>  	  Enable this option to use IMX Timer/PWM Module (TPM) timer as
+>  	  clocksource.
+>  
+> +config TIMER_IMX_SYS_CTR
+> +	bool "i.MX system counter timer" if COMPILE_TEST
+> +	depends on ARCH_MXC
+
+Do you really need this dep?
+
+> +	select TIMER_OF
+> +	help
+> +	  Enable this option to use i.MX system counter timer for clockevent.
+> +
+>  config CLKSRC_ST_LPC
+>  	bool "Low power clocksource found in the LPC" if COMPILE_TEST
+>  	select TIMER_OF if OF
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 236858fa7fbf..5fba39e81a40 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -74,6 +74,7 @@ obj-$(CONFIG_CLKSRC_MIPS_GIC)		+= mips-gic-timer.o
+>  obj-$(CONFIG_CLKSRC_TANGO_XTAL)		+= timer-tango-xtal.o
+>  obj-$(CONFIG_CLKSRC_IMX_GPT)		+= timer-imx-gpt.o
+>  obj-$(CONFIG_CLKSRC_IMX_TPM)		+= timer-imx-tpm.o
+> +obj-$(CONFIG_TIMER_IMX_SYS_CTR)		+= timer-imx-sysctr.o
+>  obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
+>  obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
+>  obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
+> diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
+> new file mode 100644
+> index 000000000000..d0428d3189f8
+> --- /dev/null
+> +++ b/drivers/clocksource/timer-imx-sysctr.c
+> @@ -0,0 +1,146 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +//
+> +// Copyright 2017-2019 NXP
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +
+> +#include "timer-of.h"
+> +
+> +#define CMP_OFFSET	0x10000
+> +
+> +#define CNTCV_LO	0x8
+> +#define CNTCV_HI	0xc
+> +#define CMPCV_LO	(CMP_OFFSET + 0x20)
+> +#define CMPCV_HI	(CMP_OFFSET + 0x24)
+> +#define CMPCR		(CMP_OFFSET + 0x2c)
+> +
+> +#define SYS_CTR_EN		0x1
+> +#define SYS_CTR_IRQ_MASK	0x2
+> +
+> +static void __iomem *sys_ctr_base;
+> +static u32 cmpcr;
+> +
+> +static void sysctr_timer_enable(bool enable)
+> +{
+> +	cmpcr &= ~SYS_CTR_EN;
+
+Do the computation after reading the value in the init function...
+
+> +	if (enable)
+> +		cmpcr |= SYS_CTR_EN;
+
+... then
+
+writel(enable ? cmpcr | SYS_CTR_EN : cmpcr, sys_ctr_base);
+
+> +	writel(cmpcr, sys_ctr_base + CMPCR);
+> +}
+> +
+> +static void sysctr_irq_acknowledge(void)
+> +{
+> +	/*
+> +	 * clear the enable bit(EN =0) will clear
+> +	 * the status bit(ISTAT = 0), then the interrupt
+> +	 * signal will be negated(acknowledged).
+> +	 */
+> +	sysctr_timer_enable(false);
+> +}
+> +
+> +static inline u64 sysctr_read_counter(void)
+> +{
+> +	u32 cnt_hi, tmp_hi, cnt_lo;
+> +
+> +	do {
+> +		cnt_hi = readl_relaxed(sys_ctr_base + CNTCV_HI);
+> +		cnt_lo = readl_relaxed(sys_ctr_base + CNTCV_LO);
+> +		tmp_hi = readl_relaxed(sys_ctr_base + CNTCV_HI);
+> +	} while (tmp_hi != cnt_hi);
+> +
+> +	return  ((u64) cnt_hi << 32) | cnt_lo;
+> +}
+> +
+> +static int sysctr_set_next_event(unsigned long delta,
+> +				 struct clock_event_device *evt)
+> +{
+> +	u32 cmp_hi, cmp_lo;
+> +	u64 next;
+> +
+> +	sysctr_timer_enable(false);
+> +
+> +	next = sysctr_read_counter();
+> +
+> +	next += delta;
+> +
+> +	cmp_hi = (next >> 32) & 0x00fffff;
+> +	cmp_lo = next & 0xffffffff;
+> +
+> +	writel_relaxed(cmp_hi, sys_ctr_base + CMPCV_HI);
+> +	writel_relaxed(cmp_lo, sys_ctr_base + CMPCV_LO);
+> +
+> +	sysctr_timer_enable(true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sysctr_set_state_oneshot(struct clock_event_device *evt)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int sysctr_set_state_shutdown(struct clock_event_device *evt)
+> +{
+> +	sysctr_timer_enable(false);
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t sysctr_timer_interrupt(int irq, void *dev_id)
+> +{
+> +	struct clock_event_device *evt = dev_id;
+> +
+> +	sysctr_irq_acknowledge();
+> +
+> +	evt->event_handler(evt);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static struct timer_of to_sysctr = {
+> +	.flags = TIMER_OF_IRQ | TIMER_OF_CLOCK | TIMER_OF_BASE,
+> +	.clkevt = {
+> +		.name			= "i.MX system counter timer",
+> +		.features		= CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ,
+> +		.set_state_oneshot	= sysctr_set_state_oneshot,
+> +		.set_next_event		= sysctr_set_next_event,
+> +		.set_state_shutdown	= sysctr_set_state_shutdown,
+> +		.rating			= 200,
+> +	},
+> +	.of_irq = {
+> +		.handler		= sysctr_timer_interrupt,
+> +		.flags			= IRQF_TIMER | IRQF_IRQPOLL,
+> +	},
+> +	.of_clk = {
+> +		.name = "per",
+> +	},
+> +};
+> +
+> +static void __init sysctr_clockevent_init(void)
+> +{
+> +	to_sysctr.clkevt.cpumask = cpumask_of(0);
+> +
+> +	clockevents_config_and_register(&to_sysctr.clkevt, timer_of_rate(&to_sysctr),
+> +					0xff, 0x7fffffff);
+> +}
+> +
+> +static int __init sysctr_timer_init(struct device_node *np)
+> +{
+> +	int ret = 0;
+> +
+> +	ret = timer_of_init(np, &to_sysctr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	sys_ctr_base = timer_of_base(&to_sysctr);
+> +	cmpcr = readl(sys_ctr_base + CMPCR);
+> +
+> +	sysctr_clockevent_init();
+> +
+> +	return 0;
+> +}
+> +TIMER_OF_DECLARE(sysctr_timer, "nxp,sysctr-timer", sysctr_timer_init);
+> 
+
+
 -- 
-2.11.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
