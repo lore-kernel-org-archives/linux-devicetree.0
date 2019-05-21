@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 3/5] dt-bindings: watchdog: add Allwinner H6 r_watchdog
-Date: Tue, 21 May 2019 18:03:28 +0200
-Message-ID: <20190521160330.28402-4-peron.clem@gmail.com>
+Subject: [PATCH v4 4/5] arm64: dts: allwinner: h6: add r_watchog node
+Date: Tue, 21 May 2019 18:03:29 +0200
+Message-ID: <20190521160330.28402-5-peron.clem@gmail.com>
 References: <20190521160330.28402-1-peron.clem@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,27 +13,32 @@ To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net
 Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner H6 has a second watchdog on the r-blocks which is
-compatible with the A31.
+Allwinner H6 has a r_watchdog similar to A64.
 
-This commit add the H6 compatible for the r_watchdog.
+Declare it in the device-tree.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-index e65198d82a2b..c5bef3dd43d0 100644
---- a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-@@ -6,6 +6,7 @@ Required properties:
- 	"allwinner,sun4i-a10-wdt"
- 	"allwinner,sun6i-a31-wdt"
- 	"allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
-+	"allwinner,sun50i-h6-r-wdt","allwinner,sun6i-a31-wdt"
- 	"allwinner,sun50i-h6-wdt","allwinner,sun6i-a31-wdt"
- 	"allwinner,suniv-f1c100s-wdt", "allwinner,sun4i-a10-wdt"
- - reg : Specifies base physical address and size of the registers.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 13e70aebddbe..66897880c722 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -631,6 +631,13 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		r_watchdog: watchdog@7020400 {
++			compatible = "allwinner,sun50i-h6-r-wdt",
++				     "allwinner,sun6i-a31-wdt";
++			reg = <0x07020400 0x20>;
++			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		r_intc: interrupt-controller@7021000 {
+ 			compatible = "allwinner,sun50i-h6-r-intc",
+ 				     "allwinner,sun6i-a31-r-intc";
 -- 
 2.17.1
