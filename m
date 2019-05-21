@@ -1,38 +1,48 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: Re: [PATCH v3 11/14] dmaengine: imx-sdma: fix ecspi1 rx dma not
- work on i.mx8mm
-Date: Tue, 21 May 2019 10:42:50 +0530
-Message-ID: <20190521051250.GY15118@vkoul-mobl>
-References: <VI1PR04MB45436C98D70C16635CF3CFDE89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/2] Input: atmel_mxt_ts - add wakeup support
+Date: Mon, 20 May 2019 22:33:26 -0700
+Message-ID: <20190521053326.GH183429@dtor-ws>
+References: <20190517211741.8906-1-stefano.manni@gmail.com>
+ <20190517213016.GA93581@dtor-ws>
+ <6f94097bb9192424f92e055e8af8062b2ae3e19f.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <VI1PR04MB45436C98D70C16635CF3CFDE89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
+In-Reply-To: <6f94097bb9192424f92e055e8af8062b2ae3e19f.camel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: "robh@kernel.org" <robh@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "plyatov@gmail.com" <plyatov@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.
+To: stefano.manni@gmail.com
+Cc: nick@shmanahar.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 21-05-19, 04:58, Robin Gong wrote:
-> > -----Original Message-----
-> > From: Vinod Koul <vkoul@kernel.org>
-> > Sent: 2019年5月21日 12:18
+On Sat, May 18, 2019 at 06:55:10PM +0200, stefano.manni@gmail.com wrote:
+> Hi Dmitry,
+> 
+> On Fri, 2019-05-17 at 14:30 -0700, Dmitry Torokhov wrote:
+> > Hi Sefano,
 > > 
-> > On 07-05-19, 09:16, Robin Gong wrote:
-> > > Because the number of ecspi1 rx event on i.mx8mm is 0, the condition
-> > > check ignore such special case without dma channel enabled, which
-> > > caused
-> > > ecspi1 rx works failed. Actually, no need to check event_id0, checking
-> > > event_id1 is enough for DEV_2_DEV case because it's so lucky that
-> > > event_id1 never be 0.
+> > On Fri, May 17, 2019 at 11:17:40PM +0200, Stefano Manni wrote:
+> > > Add wakeup support to the maxtouch driver.
+> > > The device can wake up the system from suspend,
+> > > mark the IRQ as wakeup capable, so that device
+> > > irq is not disabled during system suspend.
 > > 
-> > Well is that by chance or design that event_id1 will be never 0?
+> > This should already be handled by I2C core, see lines after "if
+> > (client->flags & I2C_CLIENT_WAKE)" in drivers/i2c/i2c-core-base.c.
 > > 
-> That's by chance. DEV_2_DEV is just for Audio case and non-zero for event_id1 on current i.MX family.
+> > Unless there is dedicated wakeup interrupt we configure main
+> > interrupt
+> > as wake source.
+> > 
+> 
+> what's about the other drivers (e.g. ili210x.c) doing like this?
+> Shall they be purged?
 
-Then it wont be fgood to rely on chance :)
+They were likely done before I2C and driver core were enhanced to handle
+wakeup automatically. We might want to clean them up, as long as we
+verify that they keep working.
+
+Thanks.
 
 -- 
-~Vinod
+Dmitry
