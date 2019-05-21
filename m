@@ -1,43 +1,40 @@
-Return-Path: <SRS0=ikht=T6=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 1/2] ARM: dts: iwg20d-q7-common: Fix SDHI1 VccQ regularor
-Date: Thu, 30 May 2019 09:07:54 +0100
-Message-Id: <1559203675-19675-2-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1559203675-19675-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1559203675-19675-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=9+SW=TV=linaro.org=masahisa.kojima@kernel.org>
+From: Masahisa Kojima <masahisa.kojima@linaro.org>
+Subject: [PATCH v5 1/3] MAINTAINERS: Add entry for Synquacer SPI driver
+Date: Tue, 21 May 2019 20:59:56 +0900
+Message-Id: <20190521115958.22504-2-masahisa.kojima@linaro.org>
+In-Reply-To: <20190521115958.22504-1-masahisa.kojima@linaro.org>
+References: <20190521115958.22504-1-masahisa.kojima@linaro.org>
+To: linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: broonie@kernel.org, geert@linux-m68k.org, tpiepho@impinj.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, ard.biesheuvel@linaro.org, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, okamoto.satoru@socionext.com, osaki.yoshitoyo@socionext.com, Masahisa Kojima <masahisa.kojima@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The GPIO regulator is using descriptors since
-commit d6cd33ad7102 ("regulator: gpio: Convert to use descriptors")
-leading to calls into gpiolib now, which in turn consider
-gpio2 30 as active low due to the fact that the corresponding
-DT node is missing property enable-active-high, breaking
-the SDR50 functionality.
-This patch fixes the regulator DT definition, and that fixes
-SDR50.
+Add entry for the Synquacer spi driver and DT bindings.
 
-Fixes: 029efb3a03c5 ("ARM: dts: iwg20d-q7: Add SDHI1 support")
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 ---
- arch/arm/boot/dts/iwg20d-q7-common.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-index e2b1ab9..87be070 100644
---- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-+++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-@@ -87,7 +87,9 @@
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <3300000>;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0c55b0fedbe2..a4970349ef4c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14597,6 +14597,14 @@ S:	Maintained
+ F:	drivers/net/ethernet/socionext/netsec.c
+ F:	Documentation/devicetree/bindings/net/socionext-netsec.txt
  
--		gpios = <&gpio2 30 GPIO_ACTIVE_LOW>;
-+		enable-active-high;
++SOCIONEXT (SNI) Synquacer SPI DRIVER
++M:	Masahisa Kojima <masahisa.kojima@linaro.org>
++M:	Jassi Brar <jaswinder.singh@linaro.org>
++L:	linux-spi@vger.kernel.org
++S:	Maintained
++F:	drivers/spi/spi-synquacer.c
++F:	Documentation/devicetree/bindings/spi/spi-synquacer.txt
 +
-+		gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
- 		states = <3300000 1
- 			  1800000 0>;
+ SOLIDRUN CLEARFOG SUPPORT
+ M:	Russell King <linux@armlinux.org.uk>
+ S:	Maintained
 -- 
-2.7.4
+2.14.2
