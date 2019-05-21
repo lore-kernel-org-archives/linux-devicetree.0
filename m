@@ -1,22 +1,33 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: arizona-micsupp: Add support for Cirrus Logic Madera codecs" to the regulator tree
-Date: Tue, 21 May 2019 21:32:59 +0100 (BST)
-Message-ID: <20190521203259.937C91126D13@debutante.sirena.org.uk>
-References: <20190521100439.27383-3-ckeepax@opensource.cirrus.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521100439.27383-3-ckeepax@opensource.cirrus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: broonie@kernel.org, Charles Keepax <ckeepax@opensource.cirrus.com>, devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, patches@opensource.cirrus.com, robh+dt@kernel.org
+Subject: Applied "spi: sun4i: Add YAML schemas" to the spi tree
+Date: Tue, 21 May 2019 21:33:09 +0100 (BST)
+Message-ID: <20190521203309.34FE71126D16@debutante.sirena.org.uk>
+References: <b83d0e208072a4f7d017650bc10de8cbe7558a99.1558363790.git-series.maxime.ripard@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b83d0e208072a4f7d017650bc10de8cbe7558a99.1558363790.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: arizona-micsupp: Add support for Cirrus Logic Madera codecs
+   spi: sun4i: Add YAML schemas
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,149 +48,143 @@ to this mail.
 Thanks,
 Mark
 
->From 7bd7916dc8ab5b056f1b53e19021e476120481c0 Mon Sep 17 00:00:00 2001
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-Date: Tue, 21 May 2019 11:04:39 +0100
-Subject: [PATCH] regulator: arizona-micsupp: Add support for Cirrus Logic
- Madera codecs
+>From 3133f5c24305c31ef2805a7eb05fc18a664836d3 Mon Sep 17 00:00:00 2001
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Date: Mon, 20 May 2019 16:50:34 +0200
+Subject: [PATCH] spi: sun4i: Add YAML schemas
 
-This adds a new driver identity "madera-micsupp" and probe function
-so that this driver can be used to control the micsupp regulator on
-Cirrus Logic Madera codecs.
+Switch the DT binding to a YAML schema to enable the DT validation.
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/Kconfig           |  7 +--
- drivers/regulator/arizona-micsupp.c | 71 ++++++++++++++++++++++++++++-
- 2 files changed, 74 insertions(+), 4 deletions(-)
+ .../bindings/spi/allwinner,sun4i-a10-spi.yaml | 86 +++++++++++++++++++
+ .../devicetree/bindings/spi/spi-sun4i.txt     | 23 -----
+ 2 files changed, 86 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-sun4i.txt
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 5827aace014b..660f3a1717ba 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -143,11 +143,12 @@ config REGULATOR_ARIZONA_LDO1
- 	  and Wolfson Microelectronic Arizona codecs.
- 
- config REGULATOR_ARIZONA_MICSUPP
--	tristate "Wolfson Arizona class devices MICSUPP"
--	depends on MFD_ARIZONA
-+	tristate "Cirrus Madera and Wolfson Arizona class devices MICSUPP"
-+	depends on MFD_ARIZONA || MFD_MADERA
- 	depends on SND_SOC
- 	help
--	  Support for the MICSUPP regulators found on Wolfson Arizona class
-+	  Support for the MICSUPP regulators found on Cirrus Logic Madera codecs
-+	  and Wolfson Microelectronic Arizona codecs
- 	  devices.
- 
- config REGULATOR_AS3711
-diff --git a/drivers/regulator/arizona-micsupp.c b/drivers/regulator/arizona-micsupp.c
-index be0d46da51a1..de6802b85e9f 100644
---- a/drivers/regulator/arizona-micsupp.c
-+++ b/drivers/regulator/arizona-micsupp.c
-@@ -25,6 +25,10 @@
- #include <linux/mfd/arizona/pdata.h>
- #include <linux/mfd/arizona/registers.h>
- 
-+#include <linux/mfd/madera/core.h>
-+#include <linux/mfd/madera/pdata.h>
-+#include <linux/mfd/madera/registers.h>
+diff --git a/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml b/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml
+new file mode 100644
+index 000000000000..c374fd4923a6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/allwinner,sun4i-a10-spi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- #include <linux/regulator/arizona-micsupp.h>
- 
- struct arizona_micsupp {
-@@ -200,6 +204,28 @@ static const struct regulator_init_data arizona_micsupp_ext_default = {
- 	.num_consumer_supplies = 1,
- };
- 
-+static const struct regulator_desc madera_micsupp = {
-+	.name = "MICVDD",
-+	.supply_name = "CPVDD1",
-+	.type = REGULATOR_VOLTAGE,
-+	.n_voltages = 40,
-+	.ops = &arizona_micsupp_ops,
++title: Allwinner A10 SPI Controller Device Tree Bindings
 +
-+	.vsel_reg = MADERA_LDO2_CONTROL_1,
-+	.vsel_mask = MADERA_LDO2_VSEL_MASK,
-+	.enable_reg = MADERA_MIC_CHARGE_PUMP_1,
-+	.enable_mask = MADERA_CPMIC_ENA,
-+	.bypass_reg = MADERA_MIC_CHARGE_PUMP_1,
-+	.bypass_mask = MADERA_CPMIC_BYPASS,
++allOf:
++  - $ref: "spi-controller.yaml"
 +
-+	.linear_ranges = arizona_micsupp_ext_ranges,
-+	.n_linear_ranges = ARRAY_SIZE(arizona_micsupp_ext_ranges),
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
 +
-+	.enable_time = 3000,
++properties:
++  "#address-cells": true
++  "#size-cells": true
 +
-+	.owner = THIS_MODULE,
-+};
++  compatible:
++    const: allwinner,sun4i-a10-spi
 +
- static int arizona_micsupp_of_get_pdata(struct arizona_micsupp_pdata *pdata,
- 					struct regulator_config *config,
- 					const struct regulator_desc *desc)
-@@ -316,6 +342,24 @@ static int arizona_micsupp_probe(struct platform_device *pdev)
- 					   &arizona->pdata.micvdd);
- }
- 
-+static int madera_micsupp_probe(struct platform_device *pdev)
-+{
-+	struct madera *madera = dev_get_drvdata(pdev->dev.parent);
-+	struct arizona_micsupp *micsupp;
++  reg:
++    maxItems: 1
 +
-+	micsupp = devm_kzalloc(&pdev->dev, sizeof(*micsupp), GFP_KERNEL);
-+	if (!micsupp)
-+		return -ENOMEM;
++  interrupts:
++    maxItems: 1
 +
-+	micsupp->regmap = madera->regmap;
-+	micsupp->dapm = &madera->dapm;
-+	micsupp->dev = madera->dev;
-+	micsupp->init_data = arizona_micsupp_ext_default;
++  clocks:
++    items:
++      - description: Bus Clock
++      - description: Module Clock
 +
-+	return arizona_micsupp_common_init(pdev, micsupp, &madera_micsupp,
-+					   &madera->pdata.micvdd);
-+}
++  clock-names:
++    items:
++      - const: ahb
++      - const: mod
 +
- static struct platform_driver arizona_micsupp_driver = {
- 	.probe = arizona_micsupp_probe,
- 	.driver		= {
-@@ -323,10 +367,35 @@ static struct platform_driver arizona_micsupp_driver = {
- 	},
- };
- 
--module_platform_driver(arizona_micsupp_driver);
-+static struct platform_driver madera_micsupp_driver = {
-+	.probe = madera_micsupp_probe,
-+	.driver		= {
-+		.name	= "madera-micsupp",
-+	},
-+};
++  dmas:
++    items:
++      - description: RX DMA Channel
++      - description: TX DMA Channel
 +
-+static struct platform_driver * const arizona_micsupp_drivers[] = {
-+	&arizona_micsupp_driver,
-+	&madera_micsupp_driver,
-+};
++  dma-names:
++    items:
++      - const: rx
++      - const: tx
 +
-+static int __init arizona_micsupp_init(void)
-+{
-+	return platform_register_drivers(arizona_micsupp_drivers,
-+					 ARRAY_SIZE(arizona_micsupp_drivers));
-+}
-+module_init(arizona_micsupp_init);
++  num-cs: true
 +
-+static void __exit arizona_micsupp_exit(void)
-+{
-+	platform_unregister_drivers(arizona_micsupp_drivers,
-+				    ARRAY_SIZE(arizona_micsupp_drivers));
-+}
-+module_exit(arizona_micsupp_exit);
- 
- /* Module information */
- MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
- MODULE_DESCRIPTION("Arizona microphone supply driver");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:arizona-micsupp");
-+MODULE_ALIAS("platform:madera-micsupp");
++patternProperties:
++  "^.*@[0-9a-f]+":
++    properties:
++      reg:
++        items:
++          minimum: 0
++          maximum: 4
++
++      spi-rx-bus-width:
++        const: 1
++
++      spi-tx-bus-width:
++        const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    spi1: spi@1c06000 {
++        compatible = "allwinner,sun4i-a10-spi";
++        reg = <0x01c06000 0x1000>;
++        interrupts = <11>;
++        clocks = <&ahb_gates 21>, <&spi1_clk>;
++        clock-names = "ahb", "mod";
++        #address-cells = <1>;
++        #size-cells = <0>;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/spi/spi-sun4i.txt b/Documentation/devicetree/bindings/spi/spi-sun4i.txt
+deleted file mode 100644
+index c75d604a8290..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-sun4i.txt
++++ /dev/null
+@@ -1,23 +0,0 @@
+-Allwinner A10 SPI controller
+-
+-Required properties:
+-- compatible: Should be "allwinner,sun4-a10-spi".
+-- reg: Should contain register location and length.
+-- interrupts: Should contain interrupt.
+-- clocks: phandle to the clocks feeding the SPI controller. Two are
+-          needed:
+-  - "ahb": the gated AHB parent clock
+-  - "mod": the parent module clock
+-- clock-names: Must contain the clock names described just above
+-
+-Example:
+-
+-spi1: spi@1c06000 {
+-	compatible = "allwinner,sun4i-a10-spi";
+-	reg = <0x01c06000 0x1000>;
+-	interrupts = <11>;
+-	clocks = <&ahb_gates 21>, <&spi1_clk>;
+-	clock-names = "ahb", "mod";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-};
 -- 
 2.20.1
