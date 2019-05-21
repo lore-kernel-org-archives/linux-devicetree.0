@@ -1,53 +1,44 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mtd: brcmnand: Make
- nand-ecc-strength and nand-ecc-step-size optional
-Date: Tue, 21 May 2019 10:53:30 +0200
-Message-ID: <20190521105330.6d9444c0@xps13>
-References: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [Linux-stm32][PATCH 0/4] ARM: dts: stm32: add i2s and sai support
+ on stm32mp157c
+Date: Tue, 21 May 2019 10:53:40 +0200
+Message-ID: <79b6d8c7-5756-26eb-1e26-534890e712e1@st.com>
+References: <1556201440-5540-1-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kamal Dasu <kdasu.kdev@gmail.com>
-Cc: linux-mtd@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1556201440-5540-1-git-send-email-olivier.moysan@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olivier Moysan <olivier.moysan@st.com>, linux-stm32@st-md-mailman.stormreply.com, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kamal,
+Hi Olivier
 
-Kamal Dasu <kdasu.kdev@gmail.com> wrote on Mon, 20 May 2019 15:05:11
--0400:
-
-> nand-ecc-strength and nand-ecc-step-size can be made optional as
-> brcmnand driver can support using raw NAND layer detected values.
+On 4/25/19 4:10 PM, Olivier Moysan wrote:
+> This patchset adds support of STM32 SAI and I2S on stm32mp157c
 > 
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> ---
->  Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Olivier Moysan (4):
+>    ARM: dts: stm32: add sai support on stm32mp157c
+>    ARM: dts: stm32: add sai pins muxing on stm32mp157
+>    ARM: dts: stm32: add i2s support on stm32mp157c
+>    ARM: dts: stm32: add i2s pins muxing on stm32mp157
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> index bcda1df..29feaba 100644
-> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> @@ -101,10 +101,10 @@ Required properties:
->                                number (e.g., 0, 1, 2, etc.)
->  - #address-cells            : see partition.txt
->  - #size-cells               : see partition.txt
-> -- nand-ecc-strength         : see nand.txt
-> -- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
->  
->  Optional properties:
-> +- nand-ecc-strength         : see nand.txt
-> +- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
->  - nand-on-flash-bbt         : boolean, to enable the on-flash BBT for this
->                                chip-select. See nand.txt
->  - brcm,nand-oob-sector-size : integer, to denote the spare area sector size
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi |  92 +++++++++++++++++
+>   arch/arm/boot/dts/stm32mp157c.dtsi        | 158 ++++++++++++++++++++++++++++++
+>   2 files changed, 250 insertions(+)
+> 
 
+Series applied on stm32-next.
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-
-Thanks,
-Miquèl
+Regards
+Alex
