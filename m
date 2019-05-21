@@ -1,118 +1,97 @@
-From: Michael Nazzareno Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64-oceanic-5205-5inmfd:
- Enable CAN
-Date: Tue, 21 May 2019 13:08:09 +0200
-Message-ID: <CAOf5uwnhXjur=2NezCydaCxP5d33S+AwdD9WTDtp2EUJr4UTgg@mail.gmail.com>
-References: <20190418141658.10868-1-jagan@amarulasolutions.com>
- <20190418145641.q23tupopz2czjzc5@flea> <CAOf5uwn8CtRs8cx0KC-bxNoRP4TiDrHi8F83QfjsZhueLDYFJg@mail.gmail.com>
- <20190521081001.zjq3gnlvyuyexz6m@flea>
-Reply-To: michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v7 2/4] soc: qcom: Add AOSS QMP driver
+Date: Tue, 21 May 2019 16:40:58 +0530
+Message-ID: <20190521111058.GG15118@vkoul-mobl>
+References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
+ <20190501043734.26706-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCXK73FY3AFRBKFYR7TQKGQELTZX3UQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190521081001.zjq3gnlvyuyexz6m@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190501043734.26706-3-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <swboyd@chromium.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime
+On 30-04-19, 21:37, Bjorn Andersson wrote:
 
-On Tue, May 21, 2019 at 10:10 AM Maxime Ripard
-<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On Tue, May 21, 2019 at 08:47:02AM +0200, Michael Nazzareno Trimarchi wrote:
-> > > > +     };
-> > > > +
-> > > >  };
-> > > >
-> > > >  &ehci0 {
-> > > > @@ -77,6 +95,31 @@
-> > > >       status = "okay";
-> > > >  };
-> > > >
-> > > > +&pio {
-> > > > +     can_pins: can-pins {
-> > > > +             pins = "PD6",                   /* RX_BUF1_CAN0 */
-> > > > +                    "PD7";                   /* RX_BUF0_CAN0 */
-> > > > +             function = "gpio_in";
-> > > > +     };
-> > > > +};
-> > >
-> > > That isn't needed. What are they used for, you're not tying them to
-> > > anything?
-> >
-> > Mux of their function is correct. They are connected in the schematics
-> > but not used right now.
->
-> Then describe the whole thing or don't?
->
+> +#include <linux/clk-provider.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <dt-bindings/power/qcom-aoss-qmp.h>
 
-Ok
+I would have preferred this as first one, but this is fine too :)
 
-> And that's kind of missing my point. If that pin group isn't related
-> to any device, the pin muxing will not be changed. So that group, in
-> itself, has strictly no effect.
->
-> Moreover, you don't need a pin group in the first place to mux pins in
-> GPIOs, the GPIO API will make sure that is the case when you request
-> it.
+> +/* Linux-side offsets */
+> +#define QMP_DESC_MCORE_LINK_STATE	0x24
+> +#define QMP_DESC_MCORE_LINK_STATE_ACK	0x28
+> +#define QMP_DESC_MCORE_CH_STATE		0x2c
+> +#define QMP_DESC_MCORE_CH_STATE_ACK	0x30
+> +#define QMP_DESC_MCORE_MBOX_SIZE	0x34
+> +#define QMP_DESC_MCORE_MBOX_OFFSET	0x38
+> +
+> +#define QMP_STATE_UP	0x0000ffff
 
-This is correct on sunxi. Is this valid for sunxi or in general in all the SoC?
-Anyway make sense to have pins configured and place in the right
-state, just suppose if the
-booting stage is wrong or anything that make those pins in the wrong
-configuration
+I prefer using GENMASK(15, 0)
 
->
-> > I can garantee that kernel wlll always configurred in the right way
-> > and if I want I can export in userspace
-> > for debug purpose
+> +#define QMP_STATE_DOWN	0xffff0000
 
-Correct if you start to use it but if you want them right configured
-the right place
-is in the default state e/o initstate if this can be a problem of the hardware
+GENMASK(31, 16)?
 
-Default state: the state the pinctrl handle shall be put
- *      into as default, usually this means the pins are up and ready to
- *      be used by the device driver. This state is commonly used by
- *      hogs to configure muxing and pins at boot, and also as a state
- *      to go into when returning from sleep and idle in
- *      .pm_runtime_resume() or ordinary .resume() for example.
+> +/**
+> + * struct qmp - driver state for QMP implementation
+> + * @msgram: iomem referencing the message RAM used for communication
+> + * @dev: reference to QMP device
+> + * @mbox_client: mailbox client used to ring the doorbell on transmit
+> + * @mbox_chan: mailbox channel used to ring the doorbell on transmit
+> + * @offset: offset within @msgram where messages should be written
+> + * @size: maximum size of the messages to be transmitted
+> + * @event: wait_queue for synchronization with the IRQ
+> + * @tx_lock: provides syncrhonization between multiple callers of qmp_send()
 
-Now the pins are connected to the canbus as should be and they are
-configured and usually
-put in the right state.
+/s/syncrhonization/synchronization
 
-+               compatible = "microchip,mcp2515";
-+               reg = <0>;
-+               spi-max-frequency = <10000000>;
-+               pinctrl-names = "default";
-+               pinctrl-0 = <&can_pins>;
+> +int qmp_send(struct qmp *qmp, const void *data, size_t len)
+> +{
+> +	int ret;
+> +
+> +	if (WARN_ON(len + sizeof(u32) > qmp->size))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(len % sizeof(u32)))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&qmp->tx_lock);
+> +
+> +	/* The message RAM only implements 32-bit accesses */
+> +	__iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
+> +			 data, len / sizeof(u32));
+> +	writel(len, qmp->msgram + qmp->offset);
+> +	qmp_kick(qmp);
+> +
+> +	ret = wait_event_interruptible_timeout(qmp->event,
+> +					       qmp_message_empty(qmp), HZ);
+> +	if (!ret) {
+> +		dev_err(qmp->dev, "ucore did not ack channel\n");
+> +		ret = -ETIMEDOUT;
+> +
+> +		/* Clear message from buffer */
+> +		writel(0, qmp->msgram + qmp->offset);
+> +	} else {
+> +		ret = 0;
 
->
-> Yes, because the API does it, not your change
->
+Isn't this redundant?
 
-Do you prefer to drop the pinmux? or update the commit message
-
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-
-
+> +	}
+> +
+> +	mutex_unlock(&qmp->tx_lock);
+> +
+> +	return ret;
+> +}
 -- 
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
+~Vinod
