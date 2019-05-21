@@ -1,80 +1,63 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
-Date: Tue, 21 May 2019 16:50:47 +0200
-Message-ID: <20190521145047.dyfvrzxviqchmxp2@flea>
-References: <20190510194018.28206-1-robh@kernel.org>
- <20190520131846.tqx7h7sjyw6sgka5@flea>
- <CAL_JsqLbuuO9YHYwTXV5ZEGOjzZHgVsWD=TCYk4cYpm0v1zHkQ@mail.gmail.com>
- <CAL_JsqKAP85+KnQtq-xaOdX-BetB0pA7+LT8vd6w=Yz4VWnQJg@mail.gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v12 01/13] dt-bindings: ingenic: Add DT bindings for TCU clocks
+Date: Tue, 21 May 2019 16:51:29 +0200
+Message-ID: <20190521145141.9813-2-paul@crapouillou.net>
+References: <20190521145141.9813-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="chpalzxqydzs6tku"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKAP85+KnQtq-xaOdX-BetB0pA7+LT8vd6w=Yz4VWnQJg@mail.gmail.com>
+In-Reply-To: <20190521145141.9813-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+This header provides clock numbers for the ingenic,tcu
+DT binding.
 
---chpalzxqydzs6tku
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+---
 
-On Mon, May 20, 2019 at 04:23:20PM -0500, Rob Herring wrote:
-> On Mon, May 20, 2019 at 11:35 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, May 20, 2019 at 8:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
-> > > > Convert the vendor prefix registry to a schema. This will enable checking
-> > > > that new vendor prefixes are added (in addition to the less than perfect
-> > > > checkpatch.pl check) and will also check against adding other prefixes
-> > > > which are not vendors.
-> > > >
-> > > > Converted vendor-prefixes.txt using the following sed script:
-> > > >
-> > > > sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
-> > > >
-> > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > > ---
-> > > > As vendor prefix updates come in via multiple trees, I plan to merge
-> > > > this before -rc1 to avoid cross tree conflicts.
-> > >
-> > > I just tried this with the 5.2-rc1 release, and this very
-> > > significantly slows down the validation.
-> > >
-> > > With a dtbs_check run on (arm's) sunxi_defconfig, on my core-i5 with 4
-> > > threads, I go from 1.30 minutes to more than 12.
-> >
-> > Indeed. 6 min to 45 min for allmodconfig. However, it's only 5 min to
-> > run checks with only this file. I'd expect a more linear hit. Maybe
-> > we're exceeding some cache size and thrashing.
->
-> Looks like the problem is a cache. The python regex cache. Changing
-> re._MAXCACHE from 512 to 4096 fixes the problem. I can set this in the
-> dtschema lib.
+Notes:
+    v2: Use SPDX identifier for the license
+    
+    v3/v4: No change
+    
+    v5: s/JZ47*_/TCU_/ and dropped *_CLK_LAST defines
+    
+    v6-v12: No change
 
-Awesome, thanks!
-Maxime
+ include/dt-bindings/clock/ingenic,tcu.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 include/dt-bindings/clock/ingenic,tcu.h
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---chpalzxqydzs6tku
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOQQRwAKCRDj7w1vZxhR
-xdQuAP439mUERuocEuZCT95DT2OAX3WDau0S9oAgoQyBNYQh4gEAlvtU2tFlk5CI
-wEVaeMJC4qe2gEhqPEta9eBgwK33NQM=
-=JAGU
------END PGP SIGNATURE-----
-
---chpalzxqydzs6tku--
+diff --git a/include/dt-bindings/clock/ingenic,tcu.h b/include/dt-bindings/clock/ingenic,tcu.h
+new file mode 100644
+index 000000000000..d569650a7945
+--- /dev/null
++++ b/include/dt-bindings/clock/ingenic,tcu.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides clock numbers for the ingenic,tcu DT binding.
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_INGENIC_TCU_H__
++#define __DT_BINDINGS_CLOCK_INGENIC_TCU_H__
++
++#define TCU_CLK_TIMER0	0
++#define TCU_CLK_TIMER1	1
++#define TCU_CLK_TIMER2	2
++#define TCU_CLK_TIMER3	3
++#define TCU_CLK_TIMER4	4
++#define TCU_CLK_TIMER5	5
++#define TCU_CLK_TIMER6	6
++#define TCU_CLK_TIMER7	7
++#define TCU_CLK_WDT	8
++#define TCU_CLK_OST	9
++
++#endif /* __DT_BINDINGS_CLOCK_INGENIC_TCU_H__ */
+-- 
+2.21.0.593.g511ec345e18
