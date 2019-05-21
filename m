@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v6 2/6] iommu: io-pgtable: fix sanity check for non 48-bit mali iommu
-Date: Tue, 21 May 2019 18:10:58 +0200
-Message-ID: <20190521161102.29620-3-peron.clem@gmail.com>
+Subject: [PATCH v6 5/6] arm64: dts: allwinner: Add ARM Mali GPU node for H6
+Date: Tue, 21 May 2019 18:11:01 +0200
+Message-ID: <20190521161102.29620-6-peron.clem@gmail.com>
 References: <20190521161102.29620-1-peron.clem@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,29 +13,37 @@ To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herrin
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner H6 SoC has a Mali T720MP2 with a 33-bit iommu which
-trig the sanity check during the alloc of the pgtable.
+Add the mali gpu node to the H6 device-tree.
 
-Change the sanity check to allow non 48-bit configuration.
-
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/iommu/io-pgtable-arm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index 4e21efbc4459..74f2ce802e6f 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -1016,7 +1016,7 @@ arm_mali_lpae_alloc_pgtable(struct io_pgtable_cfg *cfg, void *cookie)
- {
- 	struct io_pgtable *iop;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 16c5c3d0fd81..6aad06095c40 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -157,6 +157,20 @@
+ 			allwinner,sram = <&ve_sram 1>;
+ 		};
  
--	if (cfg->ias != 48 || cfg->oas > 40)
-+	if (cfg->ias > 48 || cfg->oas > 40)
- 		return NULL;
- 
- 	cfg->pgsize_bitmap &= (SZ_4K | SZ_2M | SZ_1G);
++		gpu: gpu@1800000 {
++			compatible = "allwinner,sun50i-h6-mali",
++				     "arm,mali-t720";
++			reg = <0x01800000 0x4000>;
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "job", "mmu", "gpu";
++			clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
++			clock-names = "core", "bus";
++			resets = <&ccu RST_BUS_GPU>;
++			status = "disabled";
++		};
++
+ 		syscon: syscon@3000000 {
+ 			compatible = "allwinner,sun50i-h6-system-control",
+ 				     "allwinner,sun50i-a64-system-control";
 -- 
 2.17.1
