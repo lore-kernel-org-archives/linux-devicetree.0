@@ -1,235 +1,250 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: [PATCH v4 2/2] driver: clocksource: Add nxp system counter timer
- driver support
-Date: Tue, 21 May 2019 07:18:54 +0000
-Message-ID: <20190521072355.12928-2-ping.bai@nxp.com>
-References: <20190521072355.12928-1-ping.bai@nxp.com>
+From: Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH V3 2/2] irqchip/irq-csky-mpintc: Add triger type and priority
+Date: Tue, 21 May 2019 15:22:19 +0800
+Message-ID: <CAJF2gTQSnVKo_sXF8BSYUcKWOkXOkX3z96zCEBfa4iUPjN9UDA@mail.gmail.com>
+References: <1557741339-29331-1-git-send-email-guoren@kernel.org> <1557741339-29331-2-git-send-email-guoren@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521072355.12928-1-ping.bai@nxp.com>
-Content-Language: en-US
-Content-ID: <892B86C14B58CA4DACE95E6ACA9C71AE@eurprd04.prod.outlook.com>
+In-Reply-To: <1557741339-29331-2-git-send-email-guoren@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: marc.zyngier@arm.com, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jason@lakedaemon.net, tglx@linutronix.de, Ren Guo <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Bai Ping <ping.bai@nxp.com>
+Hi Marc,
+ping ... Any problem ?
 
-The system counter (sys_ctr) is a programmable system counter
-which provides a shared time base to the Cortex A15, A7, A53 etc cores.
-It is intended for use in applications where the counter is always
-powered on and supports multiple, unrelated clocks. The sys_ctr hardware
-supports:
- - 56-bit counter width (roll-over time greater than 40 years)
- - compare frame(64-bit compare value) contains programmable interrupt
-   generation when compare value <=3D counter value.
+Thx
+ Guo Ren
 
-Signed-off-by: Bai Ping <ping.bai@nxp.com>
----
-change v1->v2:
- - no change=20
-change v2->v3:
- - remove the clocksource, we only need to use this module for timer purpos=
-e,
-   so register it as clockevent is enough.
- - use the timer_of_init to init the irq, clock, etc.
- - remove some unnecessary comments.
-change v3->v4:
- - use cached value for CMPCR,
- - remove unnecessary timer enabe from set_state_oneshot function.
----
- drivers/clocksource/Kconfig            |   7 ++
- drivers/clocksource/Makefile           |   1 +
- drivers/clocksource/timer-imx-sysctr.c | 146 +++++++++++++++++++++++++
- 3 files changed, 154 insertions(+)
- create mode 100644 drivers/clocksource/timer-imx-sysctr.c
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 6bcaa4e2e72c..ee48620a4561 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -616,6 +616,13 @@ config CLKSRC_IMX_TPM
- 	  Enable this option to use IMX Timer/PWM Module (TPM) timer as
- 	  clocksource.
-=20
-+config TIMER_IMX_SYS_CTR
-+	bool "i.MX system counter timer" if COMPILE_TEST
-+	depends on ARCH_MXC
-+	select TIMER_OF
-+	help
-+	  Enable this option to use i.MX system counter timer for clockevent.
-+
- config CLKSRC_ST_LPC
- 	bool "Low power clocksource found in the LPC" if COMPILE_TEST
- 	select TIMER_OF if OF
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 236858fa7fbf..5fba39e81a40 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -74,6 +74,7 @@ obj-$(CONFIG_CLKSRC_MIPS_GIC)		+=3D mips-gic-timer.o
- obj-$(CONFIG_CLKSRC_TANGO_XTAL)		+=3D timer-tango-xtal.o
- obj-$(CONFIG_CLKSRC_IMX_GPT)		+=3D timer-imx-gpt.o
- obj-$(CONFIG_CLKSRC_IMX_TPM)		+=3D timer-imx-tpm.o
-+obj-$(CONFIG_TIMER_IMX_SYS_CTR)		+=3D timer-imx-sysctr.o
- obj-$(CONFIG_ASM9260_TIMER)		+=3D asm9260_timer.o
- obj-$(CONFIG_H8300_TMR8)		+=3D h8300_timer8.o
- obj-$(CONFIG_H8300_TMR16)		+=3D h8300_timer16.o
-diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/t=
-imer-imx-sysctr.c
-new file mode 100644
-index 000000000000..d0428d3189f8
---- /dev/null
-+++ b/drivers/clocksource/timer-imx-sysctr.c
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Copyright 2017-2019 NXP
-+
-+#include <linux/interrupt.h>
-+#include <linux/clockchips.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+#include "timer-of.h"
-+
-+#define CMP_OFFSET	0x10000
-+
-+#define CNTCV_LO	0x8
-+#define CNTCV_HI	0xc
-+#define CMPCV_LO	(CMP_OFFSET + 0x20)
-+#define CMPCV_HI	(CMP_OFFSET + 0x24)
-+#define CMPCR		(CMP_OFFSET + 0x2c)
-+
-+#define SYS_CTR_EN		0x1
-+#define SYS_CTR_IRQ_MASK	0x2
-+
-+static void __iomem *sys_ctr_base;
-+static u32 cmpcr;
-+
-+static void sysctr_timer_enable(bool enable)
-+{
-+	cmpcr &=3D ~SYS_CTR_EN;
-+	if (enable)
-+		cmpcr |=3D SYS_CTR_EN;
-+
-+	writel(cmpcr, sys_ctr_base + CMPCR);
-+}
-+
-+static void sysctr_irq_acknowledge(void)
-+{
-+	/*
-+	 * clear the enable bit(EN =3D0) will clear
-+	 * the status bit(ISTAT =3D 0), then the interrupt
-+	 * signal will be negated(acknowledged).
-+	 */
-+	sysctr_timer_enable(false);
-+}
-+
-+static inline u64 sysctr_read_counter(void)
-+{
-+	u32 cnt_hi, tmp_hi, cnt_lo;
-+
-+	do {
-+		cnt_hi =3D readl_relaxed(sys_ctr_base + CNTCV_HI);
-+		cnt_lo =3D readl_relaxed(sys_ctr_base + CNTCV_LO);
-+		tmp_hi =3D readl_relaxed(sys_ctr_base + CNTCV_HI);
-+	} while (tmp_hi !=3D cnt_hi);
-+
-+	return  ((u64) cnt_hi << 32) | cnt_lo;
-+}
-+
-+static int sysctr_set_next_event(unsigned long delta,
-+				 struct clock_event_device *evt)
-+{
-+	u32 cmp_hi, cmp_lo;
-+	u64 next;
-+
-+	sysctr_timer_enable(false);
-+
-+	next =3D sysctr_read_counter();
-+
-+	next +=3D delta;
-+
-+	cmp_hi =3D (next >> 32) & 0x00fffff;
-+	cmp_lo =3D next & 0xffffffff;
-+
-+	writel_relaxed(cmp_hi, sys_ctr_base + CMPCV_HI);
-+	writel_relaxed(cmp_lo, sys_ctr_base + CMPCV_LO);
-+
-+	sysctr_timer_enable(true);
-+
-+	return 0;
-+}
-+
-+static int sysctr_set_state_oneshot(struct clock_event_device *evt)
-+{
-+	return 0;
-+}
-+
-+static int sysctr_set_state_shutdown(struct clock_event_device *evt)
-+{
-+	sysctr_timer_enable(false);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t sysctr_timer_interrupt(int irq, void *dev_id)
-+{
-+	struct clock_event_device *evt =3D dev_id;
-+
-+	sysctr_irq_acknowledge();
-+
-+	evt->event_handler(evt);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct timer_of to_sysctr =3D {
-+	.flags =3D TIMER_OF_IRQ | TIMER_OF_CLOCK | TIMER_OF_BASE,
-+	.clkevt =3D {
-+		.name			=3D "i.MX system counter timer",
-+		.features		=3D CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ,
-+		.set_state_oneshot	=3D sysctr_set_state_oneshot,
-+		.set_next_event		=3D sysctr_set_next_event,
-+		.set_state_shutdown	=3D sysctr_set_state_shutdown,
-+		.rating			=3D 200,
-+	},
-+	.of_irq =3D {
-+		.handler		=3D sysctr_timer_interrupt,
-+		.flags			=3D IRQF_TIMER | IRQF_IRQPOLL,
-+	},
-+	.of_clk =3D {
-+		.name =3D "per",
-+	},
-+};
-+
-+static void __init sysctr_clockevent_init(void)
-+{
-+	to_sysctr.clkevt.cpumask =3D cpumask_of(0);
-+
-+	clockevents_config_and_register(&to_sysctr.clkevt, timer_of_rate(&to_sysc=
-tr),
-+					0xff, 0x7fffffff);
-+}
-+
-+static int __init sysctr_timer_init(struct device_node *np)
-+{
-+	int ret =3D 0;
-+
-+	ret =3D timer_of_init(np, &to_sysctr);
-+	if (ret)
-+		return ret;
-+
-+	sys_ctr_base =3D timer_of_base(&to_sysctr);
-+	cmpcr =3D readl(sys_ctr_base + CMPCR);
-+
-+	sysctr_clockevent_init();
-+
-+	return 0;
-+}
-+TIMER_OF_DECLARE(sysctr_timer, "nxp,sysctr-timer", sysctr_timer_init);
---=20
-2.21.0
+<guoren@kernel.org> =E4=BA=8E2019=E5=B9=B45=E6=9C=8813=E6=97=A5=E5=91=A8=E4=
+=B8=80 =E4=B8=8B=E5=8D=885:55=E5=86=99=E9=81=93=EF=BC=9A
+>
+> From: Guo Ren <ren_guo@c-sky.com>
+>
+> Support 4 triger types:
+>  - IRQ_TYPE_LEVEL_HIGH
+>  - IRQ_TYPE_LEVEL_LOW
+>  - IRQ_TYPE_EDGE_RISING
+>  - IRQ_TYPE_EDGE_FALLING
+>
+> Support 0-255 priority setting for each irq.
+>
+> All of above could be set in DeviceTree file and it still compatible
+> with the old DeviceTree format.
+>
+> Changes for V3:
+>  - Use IRQ_TYPE_LEVEL_HIGH as default instead of IRQ_TYPE_NONE
+>  - Remove unnecessary loop in csky_mpintc_handler
+>
+> Changes for V2:
+>  - Fixup this_cpu_read() preempted problem.
+>  - Optimize the coding style.
+>
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>  drivers/irqchip/irq-csky-mpintc.c | 113 ++++++++++++++++++++++++++++++++=
++++---
+>  1 file changed, 106 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky=
+-mpintc.c
+> index c67c961..5bc0868 100644
+> --- a/drivers/irqchip/irq-csky-mpintc.c
+> +++ b/drivers/irqchip/irq-csky-mpintc.c
+> @@ -17,6 +17,7 @@
+>  #include <asm/reg_ops.h>
+>
+>  static struct irq_domain *root_domain;
+> +
+>  static void __iomem *INTCG_base;
+>  static void __iomem *INTCL_base;
+>
+> @@ -29,11 +30,13 @@ static void __iomem *INTCL_base;
+>
+>  #define INTCG_ICTLR    0x0
+>  #define INTCG_CICFGR   0x100
+> +#define INTCG_CIPRTR   0x200
+>  #define INTCG_CIDSTR   0x1000
+>
+>  #define INTCL_PICTLR   0x0
+> +#define INTCL_CFGR     0x14
+> +#define INTCL_PRTR     0x20
+>  #define INTCL_SIGR     0x60
+> -#define INTCL_HPPIR    0x68
+>  #define INTCL_RDYIR    0x6c
+>  #define INTCL_SENR     0xa0
+>  #define INTCL_CENR     0xa4
+> @@ -41,21 +44,66 @@ static void __iomem *INTCL_base;
+>
+>  static DEFINE_PER_CPU(void __iomem *, intcl_reg);
+>
+> +static unsigned long *__trigger;
+> +static unsigned long *__priority;
+> +
+> +#define IRQ_OFFSET(irq) ((irq < COMM_IRQ_BASE) ? irq : (irq - COMM_IRQ_B=
+ASE))
+> +
+> +#define TRIG_BYTE_OFFSET(i)    ((((i) * 2) / 32) * 4)
+> +#define TRIG_BIT_OFFSET(i)      (((i) * 2) % 32)
+> +
+> +#define PRI_BYTE_OFFSET(i)     ((((i) * 8) / 32) * 4)
+> +#define PRI_BIT_OFFSET(i)       (((i) * 8) % 32)
+> +
+> +#define TRIG_VAL(trigger, irq) (trigger << TRIG_BIT_OFFSET(IRQ_OFFSET(ir=
+q)))
+> +#define TRIG_VAL_MSK(irq)          (~(3 << TRIG_BIT_OFFSET(IRQ_OFFSET(ir=
+q))))
+> +#define PRI_VAL(priority, irq) (priority << PRI_BIT_OFFSET(IRQ_OFFSET(ir=
+q)))
+> +#define PRI_VAL_MSK(irq)         (~(0xff << PRI_BIT_OFFSET(IRQ_OFFSET(ir=
+q))))
+> +
+> +#define TRIG_BASE(irq) \
+> +       (TRIG_BYTE_OFFSET(IRQ_OFFSET(irq)) + ((irq < COMM_IRQ_BASE) ? \
+> +       (this_cpu_read(intcl_reg) + INTCL_CFGR) : (INTCG_base + INTCG_CIC=
+FGR)))
+> +
+> +#define PRI_BASE(irq) \
+> +       (PRI_BYTE_OFFSET(IRQ_OFFSET(irq)) + ((irq < COMM_IRQ_BASE) ? \
+> +       (this_cpu_read(intcl_reg) + INTCL_PRTR) : (INTCG_base + INTCG_CIP=
+RTR)))
+> +
+> +static DEFINE_SPINLOCK(setup_lock);
+> +static void setup_trigger_priority(unsigned long irq, unsigned long trig=
+ger,
+> +                                  unsigned long priority)
+> +{
+> +       unsigned int tmp;
+> +
+> +       spin_lock(&setup_lock);
+> +
+> +       /* setup trigger */
+> +       tmp =3D readl_relaxed(TRIG_BASE(irq)) & TRIG_VAL_MSK(irq);
+> +
+> +       writel_relaxed(tmp | TRIG_VAL(trigger, irq), TRIG_BASE(irq));
+> +
+> +       /* setup priority */
+> +       tmp =3D readl_relaxed(PRI_BASE(irq)) & PRI_VAL_MSK(irq);
+> +
+> +       writel_relaxed(tmp | PRI_VAL(priority, irq), PRI_BASE(irq));
+> +
+> +       spin_unlock(&setup_lock);
+> +}
+> +
+>  static void csky_mpintc_handler(struct pt_regs *regs)
+>  {
+>         void __iomem *reg_base =3D this_cpu_read(intcl_reg);
+>
+> -       do {
+> -               handle_domain_irq(root_domain,
+> -                                 readl_relaxed(reg_base + INTCL_RDYIR),
+> -                                 regs);
+> -       } while (readl_relaxed(reg_base + INTCL_HPPIR) & BIT(31));
+> +       handle_domain_irq(root_domain,
+> +               readl_relaxed(reg_base + INTCL_RDYIR), regs);
+>  }
+>
+>  static void csky_mpintc_enable(struct irq_data *d)
+>  {
+>         void __iomem *reg_base =3D this_cpu_read(intcl_reg);
+>
+> +       setup_trigger_priority(d->hwirq, __trigger[d->hwirq],
+> +                                __priority[d->hwirq]);
+> +
+>         writel_relaxed(d->hwirq, reg_base + INTCL_SENR);
+>  }
+>
+> @@ -73,6 +121,28 @@ static void csky_mpintc_eoi(struct irq_data *d)
+>         writel_relaxed(d->hwirq, reg_base + INTCL_CACR);
+>  }
+>
+> +static int csky_mpintc_set_type(struct irq_data *d, unsigned int type)
+> +{
+> +       switch (type & IRQ_TYPE_SENSE_MASK) {
+> +       case IRQ_TYPE_LEVEL_HIGH:
+> +               __trigger[d->hwirq] =3D 0;
+> +               break;
+> +       case IRQ_TYPE_LEVEL_LOW:
+> +               __trigger[d->hwirq] =3D 1;
+> +               break;
+> +       case IRQ_TYPE_EDGE_RISING:
+> +               __trigger[d->hwirq] =3D 2;
+> +               break;
+> +       case IRQ_TYPE_EDGE_FALLING:
+> +               __trigger[d->hwirq] =3D 3;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  #ifdef CONFIG_SMP
+>  static int csky_irq_set_affinity(struct irq_data *d,
+>                                  const struct cpumask *mask_val,
+> @@ -105,6 +175,7 @@ static struct irq_chip csky_irq_chip =3D {
+>         .irq_eoi        =3D csky_mpintc_eoi,
+>         .irq_enable     =3D csky_mpintc_enable,
+>         .irq_disable    =3D csky_mpintc_disable,
+> +       .irq_set_type   =3D csky_mpintc_set_type,
+>  #ifdef CONFIG_SMP
+>         .irq_set_affinity =3D csky_irq_set_affinity,
+>  #endif
+> @@ -125,9 +196,29 @@ static int csky_irqdomain_map(struct irq_domain *d, =
+unsigned int irq,
+>         return 0;
+>  }
+>
+> +static int csky_irq_domain_xlate_cells(struct irq_domain *d,
+> +               struct device_node *ctrlr, const u32 *intspec,
+> +               unsigned int intsize, unsigned long *out_hwirq,
+> +               unsigned int *out_type)
+> +{
+> +       if (WARN_ON(intsize < 1))
+> +               return -EINVAL;
+> +
+> +       *out_hwirq =3D intspec[0];
+> +       if (intsize > 1)
+> +               *out_type =3D intspec[1] & IRQ_TYPE_SENSE_MASK;
+> +       else
+> +               *out_type =3D IRQ_TYPE_LEVEL_HIGH;
+> +
+> +       if (intsize > 2)
+> +               __priority[*out_hwirq] =3D intspec[2];
+> +
+> +       return 0;
+> +}
+> +
+>  static const struct irq_domain_ops csky_irqdomain_ops =3D {
+>         .map    =3D csky_irqdomain_map,
+> -       .xlate  =3D irq_domain_xlate_onecell,
+> +       .xlate  =3D csky_irq_domain_xlate_cells,
+>  };
+>
+>  #ifdef CONFIG_SMP
+> @@ -161,6 +252,14 @@ csky_mpintc_init(struct device_node *node, struct de=
+vice_node *parent)
+>         if (ret < 0)
+>                 nr_irq =3D INTC_IRQS;
+>
+> +       __priority =3D kcalloc(nr_irq, sizeof(unsigned long), GFP_KERNEL)=
+;
+> +       if (__priority =3D=3D NULL)
+> +               return -ENXIO;
+> +
+> +       __trigger  =3D kcalloc(nr_irq, sizeof(unsigned long), GFP_KERNEL)=
+;
+> +       if (__trigger =3D=3D NULL)
+> +               return -ENXIO;
+> +
+>         if (INTCG_base =3D=3D NULL) {
+>                 INTCG_base =3D ioremap(mfcr("cr<31, 14>"),
+>                                      INTCL_SIZE*nr_cpu_ids + INTCG_SIZE);
+> --
+> 2.7.4
+>
