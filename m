@@ -1,101 +1,264 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Date: Tue, 21 May 2019 20:14:53 +0000
-Message-ID: <AM6PR04MB58631458E6D851E4D83A77ED8F070@AM6PR04MB5863.eurprd04.prod.outlook.com>
-References: <20190509070657.18281-1-chuanhua.han@nxp.com>
- <20190517023728.GA15856@dragon>
- <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 1/2] ARM: dts: rockchip: Add pin names for rk3288-veyron-minnie
+Date: Tue, 21 May 2019 13:32:14 -0700
+Message-ID: <20190521203215.234898-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chuanhua Han <chuanhua.han@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ying Zhang <ying.zhang22455@nxp.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: briannorris@chromium.org, ryandcase@chromium.org, mka@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2h1YW5odWEgSGFuDQo+
-IFNlbnQ6IFR1ZXNkYXksIE1heSAyMSwgMjAxOSA4OjAwIEFNDQo+IFRvOiBMZW8gTGkgPGxlb3lh
-bmcubGlAbnhwLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gQ2M6IG1h
-cmsucnV0bGFuZEBhcm0uY29tOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOyBZaW5nIFpoYW5nDQo+IDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT4NCj4gU3ViamVjdDog
-UkU6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6IGZpeCB3YXRjaGRvZyBk
-ZXZpY2Ugbm9kZQ0KPiANCj4gDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-ID4gRnJvbTogTGVvIExpDQo+ID4gU2VudDogMjAxOcTqNdTCMTjI1SA2OjAxDQo+ID4gVG86IENo
-dWFuaHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5jb20+OyBTaGF3biBHdW8NCj4gPiA8c2hhd25n
-dW9Aa2VybmVsLm9yZz4NCj4gPiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgWWluZyBaaGFuZw0KPiA+IDx5aW5nLnpo
-YW5nMjI0NTVAbnhwLmNvbT4NCj4gPiBTdWJqZWN0OiBSRTogW0VYVF0gUmU6IFtQQVRDSF0gYXJt
-NjQ6IGR0czogbHMxMDI4YTogZml4IHdhdGNoZG9nDQo+ID4gZGV2aWNlIG5vZGUNCj4gPg0KPiA+
-DQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBDaHVh
-bmh1YSBIYW4NCj4gPiA+IFNlbnQ6IEZyaWRheSwgTWF5IDE3LCAyMDE5IDE6MTEgQU0NCj4gPiA+
-IFRvOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+ID4gPiBDYzogTGVvIExpIDxs
-ZW95YW5nLmxpQG54cC5jb20+OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLQ0KPiA+
-ID4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC0NCj4gPiA+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlpbmcgWmhhbmcgPHlpbmcu
-emhhbmcyMjQ1NUBueHAuY29tPg0KPiA+ID4gU3ViamVjdDogUkU6IFtFWFRdIFJlOiBbUEFUQ0hd
-IGFybTY0OiBkdHM6IGxzMTAyOGE6IGZpeCB3YXRjaGRvZw0KPiA+ID4gZGV2aWNlIG5vZGUNCj4g
-PiA+DQo+ID4gPg0KPiA+ID4NCj4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-PiA+ID4gRnJvbTogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KPiA+ID4gPiBTZW50
-OiAyMDE5xOo11MIxN8jVIDEwOjM4DQo+ID4gPiA+IFRvOiBDaHVhbmh1YSBIYW4gPGNodWFuaHVh
-LmhhbkBueHAuY29tPg0KPiA+ID4gPiBDYzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gPiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+ID4gbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgWWluZyBaaGFuZyA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+
-DQo+ID4gPiA+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6
-IGZpeCB3YXRjaGRvZw0KPiA+ID4gPiBkZXZpY2Ugbm9kZQ0KPiA+ID4gPg0KPiA+ID4gPiBDYXV0
-aW9uOiBFWFQgRW1haWwNCj4gPiA+ID4NCj4gPiA+ID4gT24gVGh1LCBNYXkgMDksIDIwMTkgYXQg
-MDM6MDY6NTdQTSArMDgwMCwgQ2h1YW5odWEgSGFuIHdyb3RlOg0KPiA+ID4gPiA+IGxzMTAyOGEg
-cGxhdGZvcm0gdXNlcyBzcDgwNSB3YXRjaGRvZywgYW5kIHVzZSAxLzE2IHBsYXRmb3JtDQo+ID4g
-PiA+ID4gY2xvY2sgYXMgdGltZXIgY2xvY2ssIHRoaXMgcGF0Y2ggZml4IGRldmljZSB0cmVlIG5v
-ZGUuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBaaGFuZyBZaW5nLTIyNDU1
-IDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT4NCj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBDaHVh
-bmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+
-ICAuLi4vYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgfCAxOQ0KPiA+
-ID4gPiA+ICsrKysrKysrKysrKy0tLS0tLS0NCj4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEy
-IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0K
-PiA+ID4gPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRz
-aQ0KPiA+ID4gPiA+IGluZGV4IGIwNDU4MTI0OWYwYi4uMTUxMGIxODU4MjQ2IDEwMDY0NA0KPiA+
-ID4gPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0
-c2kNCj4gPiA+ID4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMx
-MDI4YS5kdHNpDQo+ID4gPiA+ID4gQEAgLTI4NSwxMyArMjg1LDE4IEBADQo+ID4gPiA+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICNpbnRlcnJ1cHQtY2VsbHMgPSA8Mj47DQo+ID4gPiA+ID4gICAg
-ICAgICAgICAgICB9Ow0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gLSAgICAgICAgICAgICB3ZG9nMDog
-d2F0Y2hkb2dAMjNjMDAwMCB7DQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIGNvbXBh
-dGlibGUgPSAiZnNsLGxzMTAyOGEtd2R0IiwgImZzbCxpbXgyMS13ZHQiOw0KPiA+ID4gPiA+IC0g
-ICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4MjNjMDAwMCAweDAgMHgxMDAwMD47DQo+
-ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSA1OQ0K
-PiA+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAgICAg
-ICBjbG9ja3MgPSA8JmNsb2NrZ2VuIDQgMT47DQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAg
-ICAgIGJpZy1lbmRpYW47DQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9
-ICJkaXNhYmxlZCI7DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICBjbHVzdGVyMV9jb3JlMF93YXRj
-aGRvZzogd2R0QGMwMDAwMDAgew0KPiA+ID4gPg0KPiA+ID4gPiBLZWVwICd3YXRjaGRvZycgYXMg
-dGhlIG5vZGUgbmFtZSwNCj4gPiA+IFRoYW5rcyBmb3IgeW91ciByZXBsYXkNCj4gPiA+IERvIHlv
-dSBtZWFuIHJlcGxhY2UgdGhlIKGud2R0oa8gd2l0aCChrndhdGNoZG9noa8/DQo+ID4gPiBhbmQg
-a2VlcCBub2RlcyBzb3J0IGluIHVuaXQtYWRkcmVzcy4NCj4gPiA+IFdoYXQgZG9lcyB0aGlzIG1l
-YW4/DQo+ID4NCj4gPiBUaGF0IG1lYW5zIG9yZGVyIHRoZSBub2RlcyBieSB0aGUgYWRkcmVzc2Vz
-IChlLmcuIGMwMDAwMDAsIGMwMTAwMDApDQo+IFRoZSBjdXJyZW50IG9yZGVyIGlzIGNvcnJlY3Sj
-qFRoZSBmaXJzdCBpcyBjMDAwMDAwLCB0aGVuIGMwMDAwMDCjqS4NCg0KQnV0IHRoZXkgYXJlIGFk
-ZGVkIGFmdGVyIGdwaW9AMjMyMDAwMCBhbmQgYmVmb3JlIHNhdGFAMzIwMDAwMC4NCg0KPiA+DQo+
-ID4gPiA+DQo+ID4gPiA+IFNoYXduDQo+ID4gPiA+DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHNwODA1IiwgImFybSxwcmltZWNlbGwiOw0KPiA+ID4g
-PiA+ICsgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4YzAwMDAwMCAweDAgMHgxMDAw
-PjsNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbG9ja2dlbiA0
-IDE1PiwgPCZjbG9ja2dlbiA0IDE1PjsNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
-Y2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiLCAid2RvZ19jbGsiOw0KPiA+ID4gPiA+ICsgICAgICAg
-ICAgICAgfTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICBjbHVzdGVyMV9j
-b3JlMV93YXRjaGRvZzogd2R0QGMwMTAwMDAgew0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICBjb21wYXRpYmxlID0gImFybSxzcDgwNSIsICJhcm0scHJpbWVjZWxsIjsNCj4gPiA+ID4g
-PiArICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweGMwMTAwMDAgMHgwIDB4MTAwMD47
-DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAx
-NT4sIDwmY2xvY2tnZW4gNCAxNT47DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNs
-b2NrLW5hbWVzID0gImFwYl9wY2xrIiwgIndkb2dfY2xrIjsNCj4gPiA+ID4gPiAgICAgICAgICAg
-ICAgIH07DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiAgICAgICAgICAgICAgIHNhdGE6IHNhdGFAMzIw
-MDAwMCB7DQo+ID4gPiA+ID4gLS0NCj4gPiA+ID4gPiAyLjE3LjENCj4gPiA+ID4gPg0K
+We can now use the "gpio-line-names" property to provide the names for
+all the pins on a board.  Let's use this to provide the names for all
+the pins on rk3288-veyron-minnie.
+
+In general the names here come straight from the schematic.  That
+means even if the schematic name is weird / doesn't have consistent
+naming conventions / has typos I still haven't made any changes.
+
+The exception here is for two pins: the recovery switch and the write
+protect detection pin.  These two pins need to have standardized names
+since crossystem (a Chrome OS tool) uses these names to query the
+pins.  In downstream kernels crossystem used an out-of-tree driver to
+do this but it has now been moved to the gpiod API and needs the
+standardized names.
+
+It's expected that other rk3288-veyron boards will get similar patches
+shortly.
+
+NOTE: I have sorted the "gpio" section to be next to the "pinctrl"
+section since it seems to logically make the most sense there.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts | 212 +++++++++++++++++++++
+ 1 file changed, 212 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+index ce57881625ec..a65099b4aef1 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+@@ -184,6 +184,218 @@
+ 	pinctrl-0 = <&vcc50_hdmi_en>;
+ };
+ 
++&gpio0 {
++	gpio-line-names = "PMIC_SLEEP_AP",
++			  "DDRIO_PWROFF",
++			  "DDRIO_RETEN",
++			  "TS3A227E_INT_L",
++			  "PMIC_INT_L",
++			  "PWR_KEY_L",
++			  "AP_LID_INT_L",
++			  "EC_IN_RW",
++
++			  "AC_PRESENT_AP",
++			  /*
++			   * RECOVERY_SW_L is Chrome OS ABI.  Schematics call
++			   * it REC_MODE_L.
++			   */
++			  "RECOVERY_SW_L",
++			  "OTP_OUT",
++			  "HOST1_PWR_EN",
++			  "USBOTG_PWREN_H",
++			  "AP_WARM_RESET_H",
++			  "nFALUT2",
++			  "I2C0_SDA_PMIC",
++
++			  "I2C0_SCL_PMIC",
++			  "SUSPEND_L",
++			  "USB_INT";
++};
++
++&gpio2 {
++	gpio-line-names = "CONFIG0",
++			  "CONFIG1",
++			  "CONFIG2",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "CONFIG3",
++
++			  "PROCHOT#",
++			  "EMMC_RST_L",
++			  "",
++			  "",
++			  "BL_PWR_EN",
++			  "AVDD_1V8_DISP_EN",
++			  "TOUCH_INT",
++			  "TOUCH_RST",
++
++			  "I2C3_SCL_TP",
++			  "I2C3_SDA_TP";
++};
++
++&gpio3 {
++	gpio-line-names = "FLASH0_D0",
++			  "FLASH0_D1",
++			  "FLASH0_D2",
++			  "FLASH0_D3",
++			  "FLASH0_D4",
++			  "FLASH0_D5",
++			  "FLASH0_D6",
++			  "FLASH0_D7",
++
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++
++			  "FLASH0_CS2/EMMC_CMD",
++			  "",
++			  "FLASH0_DQS/EMMC_CLKO";
++};
++
++&gpio4 {
++	gpio-line-names = "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++
++			  "UART0_RXD",
++			  "UART0_TXD",
++			  "UART0_CTS",
++			  "UART0_RTS",
++			  "SDIO0_D0",
++			  "SDIO0_D1",
++			  "SDIO0_D2",
++			  "SDIO0_D3",
++
++			  "SDIO0_CMD",
++			  "SDIO0_CLK",
++			  "dev_wake",
++			  "",
++			  "WIFI_ENABLE_H",
++			  "BT_ENABLE_L",
++			  "WIFI_HOST_WAKE",
++			  "BT_HOST_WAKE";
++};
++
++&gpio5 {
++	gpio-line-names = "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++
++			  "",
++			  "",
++			  "Volum_Up#",
++			  "Volum_Down#",
++			  "SPI0_CLK",
++			  "SPI0_CS0",
++			  "SPI0_TXD",
++			  "SPI0_RXD",
++
++			  "",
++			  "",
++			  "",
++			  "VCC50_HDMI_EN";
++};
++
++&gpio6 {
++	gpio-line-names = "I2S0_SCLK",
++			  "I2S0_LRCK_RX",
++			  "I2S0_LRCK_TX",
++			  "I2S0_SDI",
++			  "I2S0_SDO0",
++			  "HP_DET_H",
++			  "",
++			  "INT_CODEC",
++
++			  "I2S0_CLK",
++			  "I2C2_SDA",
++			  "I2C2_SCL",
++			  "MICDET",
++			  "",
++			  "",
++			  "",
++			  "",
++
++			  "SDMMC_D0",
++			  "SDMMC_D1",
++			  "SDMMC_D2",
++			  "SDMMC_D3",
++			  "SDMMC_CLK",
++			  "SDMMC_CMD";
++};
++
++&gpio7 {
++	gpio-line-names = "LCDC_BL",
++			  "PWM_LOG",
++			  "BL_EN",
++			  "TRACKPAD_INT",
++			  "TPM_INT_H",
++			  "SDMMC_DET_L",
++			  /*
++			   * AP_FLASH_WP_L is Chrome OS ABI.  Schematics call
++			   * it FW_WP_AP.
++			   */
++			  "AP_FLASH_WP_L",
++			  "EC_INT",
++
++			  "CPU_NMI",
++			  "DVS_OK",
++			  "SDMMC_WP",
++			  "EDP_HPD",
++			  "DVS1",
++			  "nFALUT1",
++			  "LCD_EN",
++			  "DVS2",
++
++			  "VCC5V_GOOD_H",
++			  "I2C4_SDA_TP",
++			  "I2C4_SCL_TP",
++			  "I2C5_SDA_HDMI",
++			  "I2C5_SCL_HDMI",
++			  "5V_DRV",
++			  "UART2_RXD",
++			  "UART2_TXD";
++};
++
++&gpio8 {
++	gpio-line-names = "RAM_ID0",
++			  "RAM_ID1",
++			  "RAM_ID2",
++			  "RAM_ID3",
++			  "I2C1_SDA_TPM",
++			  "I2C1_SCL_TPM",
++			  "SPI2_CLK",
++			  "SPI2_CS0",
++
++			  "SPI2_RXD",
++			  "SPI2_TXD";
++};
++
+ &pinctrl {
+ 	backlight {
+ 		bl_pwr_en: bl_pwr_en {
+-- 
+2.21.0.1020.gf2820cf01a-goog
