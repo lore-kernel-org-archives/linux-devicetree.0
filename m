@@ -1,55 +1,116 @@
-From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH v5 2/6] net: stmmac: sun8i: force select
- external PHY when no internal one
-Date: Tue, 21 May 2019 11:56:31 +0200
-Message-ID: <20190521095631.v5n3qml5ujofufk4@core.my.home>
-References: <20190520235009.16734-1-megous@megous.com>
- <20190520235009.16734-3-megous@megous.com>
- <4e031eeb-2819-a97f-73bf-af84b04aa7b2@cogentembedded.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+Date: Tue, 21 May 2019 12:58:39 +0300
+Message-ID: <20190521095839.GI1887@kuha.fi.intel.com>
+References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
+ <20190517103736.GA1490@kuha.fi.intel.com>
+ <20190517130511.GA1887@kuha.fi.intel.com>
+ <1558319951.10179.352.camel@mhfsdcap03>
+ <20190520080359.GC1887@kuha.fi.intel.com>
+ <OSBPR01MB2103385D996762FA54F8E437B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <20190520083601.GE1887@kuha.fi.intel.com>
+ <OSBPR01MB2103C4C8920C40E42BC1B2A9B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBUEWR7TQKGQEFO55QGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4e031eeb-2819-a97f-73bf-af84b04aa7b2-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org
+In-Reply-To: <OSBPR01MB2103C4C8920C40E42BC1B2A9B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.i>
 List-Id: devicetree@vger.kernel.org
 
-Hello Sergei,
-
-On Tue, May 21, 2019 at 12:27:24PM +0300, Sergei Shtylyov wrote:
-> Hello!
+On Mon, May 20, 2019 at 09:45:46AM +0000, Biju Das wrote:
 > 
-> On 21.05.2019 2:50, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
 > 
-> > From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > 
-> > The PHY selection bit also exists on SoCs without an internal PHY; if it's
-> > set to 1 (internal PHY, default value) then the MAC will not make use of
-> > any PHY such SoCs.
->          ^ "on" or "with" missing?
-
-It's missing 'on'.
-
-thank you,
-	Ondrej
-
-> > This problem appears when adapting for H6, which has no real internal PHY
-> > (the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
-> > connected via RMII interface at GPIO bank A).
-> > 
-> > Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
-> > to address the problem of a wrong default value.
-> > 
-> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> [...]
+> Hi Heikki,
 > 
-> MBR, Sergei
+> Thanks for the feedback.
+> 
+> > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
+> > node
+> > 
+> > On Mon, May 20, 2019 at 08:06:41AM +0000, Biju Das wrote:
+> > > Hi Heikki,
+> > >
+> > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
+> > > > usb_role_switch by node
+> > > >
+> > > > On Mon, May 20, 2019 at 10:39:11AM +0800, Chunfeng Yun wrote:
+> > > > > Hi,
+> > > > > On Fri, 2019-05-17 at 16:05 +0300, Heikki Krogerus wrote:
+> > > > > > Hi,
+> > > > > >
+> > > > > > On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki Krogerus wrote:
+> > > > > > > On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng Yun wrote:
+> > > > > > > > Add fwnode_usb_role_switch_get() to make easier to get
+> > > > > > > > usb_role_switch by fwnode which register it.
+> > > > > > > > It's useful when there is not device_connection registered
+> > > > > > > > between two drivers and only knows the fwnode which register
+> > > > > > > > usb_role_switch.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > > > > > > Tested-by: Biju Das <biju.das@bp.renesas.com>
+> > > > > > >
+> > > > > > > Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > > > >
+> > > > > > Hold on. I just noticed Rob's comment on patch 2/6, where he
+> > > > > > points out that you don't need to use device graph since the
+> > > > > > controller is the parent of the connector. Doesn't that mean you
+> > > > > > don't really need this API?
+> > > > > No, I still need it.
+> > > > > The change is about the way how to get fwnode; when use device
+> > > > > graph, get fwnode by of_graph_get_remote_node(); but now will get
+> > > > > fwnode by of_get_parent();
+> > > >
+> > > > OK, I get that, but I'm still not convinced about if something like
+> > > > this function is needed at all. I also have concerns regarding how
+> > > > you are using the function. I'll explain in comment to the patch 5/6 in this
+> > series...
+> > >
+> > > FYI, Currently  I am also using this api in my patch series.
+> > > https://patchwork.kernel.org/patch/10944637/
+> > 
+> > Yes, and I have the same question for you I jusb asked in comment I added
+> > to the patch 5/6 of this series. Why isn't usb_role_switch_get() enough?
+> 
+> Currently no issue. It will work with this api as well, since the port node is part of controller node.
+> For eg:-
+> https://patchwork.kernel.org/patch/10944627/
+> 
+> However if any one adds port node inside the connector node, then this api may won't work as expected.
+> Currently I get below error
+> 
+> [    2.299703] OF: graph: no port node found in /soc/i2c@e6500000/hd3ss3220@47
+
+We need to understand why is that happening?
+
+It looks like we have an issue somewhere in the code, and instead of
+fixing that, you are working around it. Let's not do that.
+
+> For eg:-
+> 
+> 	hd3ss3220@47 {
+> 		compatible = "ti,hd3ss3220";
+> 		...
+> 		....
+> 		usb_con: connector {
+>                                      ....
+>                                      ....
+> 			port {
+> 				hd3ss3220_ep: endpoint@0 {
+> 					reg = <0>;
+> 					remote-endpoint = <&usb3peri_role_switch>;
+> 				};
+> 			};
+> 		};
+> 	};
+> 
+> Regards,
+> Biju
+
+thanks,
+
+-- 
+heikki
