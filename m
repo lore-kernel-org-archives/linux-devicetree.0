@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v2 2/9] Documentation: arm: Link idle-states binding to "enable-method" property
-Date: Tue, 21 May 2019 15:05:12 +0530
-Message-ID: <9dc4ce06143de48039e841c337fafa7cb9c8d7d2.1558430617.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 3/9] arm64: dts: qcom: msm8916: Add entry-method property for the idle-states node
+Date: Tue, 21 May 2019 15:05:13 +0530
+Message-ID: <0374669560d13bba30dfa33cd10a0ad8a65b604b.1558430617.git.amit.kucheria@linaro.org>
 References: <cover.1558430617.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1558430617.git.amit.kucheria@linaro.org>
@@ -12,45 +12,32 @@ To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson
 Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The "enable-method" property for cpu nodes needs to be "psci" for CPU
-idle management to be setup correctly.
+The idle-states binding documentation[1] mentions that the
+'entry-method' property is required on 64-bit platforms and must be set
+to "psci".
 
-Add a note to the binding documentation to this effect to make it
-obvious.
+[1] Documentation/devicetree/bindings/arm/idle-states.txt (see
+idle-states node)
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- .../devicetree/bindings/arm/idle-states.txt         | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
-index 45730ba60af5..3bdbe675b9e6 100644
---- a/Documentation/devicetree/bindings/arm/idle-states.txt
-+++ b/Documentation/devicetree/bindings/arm/idle-states.txt
-@@ -241,9 +241,13 @@ processor idle states, defined as device tree nodes, are listed.
- 			   - "psci"
- 			# On ARM 32-bit systems this property is optional
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 0803ca8c02da..82ea5b8b37a2 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -158,6 +158,8 @@
+ 		};
  
--The nodes describing the idle states (state) can only be defined within the
--idle-states node, any other configuration is considered invalid and therefore
--must be ignored.
-+This assumes that the "enable-method" property is set to "psci" in the cpu
-+node[6] that is responsible for setting up CPU idle management in the OS
-+implementation.
+ 		idle-states {
++			entry-method = "psci";
 +
-+The nodes describing the idle states (state) can only be defined
-+within the idle-states node, any other configuration is considered invalid
-+and therefore must be ignored.
- 
- ===========================================
- 4 - state node
-@@ -697,3 +701,6 @@ cpus {
- 
- [5] Devicetree Specification
-     https://www.devicetree.org/specifications/
-+
-+[6] ARM Linux Kernel documentation - Booting AArch64 Linux
-+    Documentation/arm64/booting.txt
+ 			CPU_SPC: spc {
+ 				compatible = "arm,idle-state";
+ 				arm,psci-suspend-param = <0x40000002>;
 -- 
 2.17.1
