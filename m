@@ -1,31 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: arm: amlogic: add Odroid-N2 binding
-Date: Tue, 21 May 2019 10:26:10 -0500
-Message-ID: <CAL_Jsq+am_5q5ApjEo7bVXWsqEaZH-1kbqGVS51-O+p1poFLsQ@mail.gmail.com>
-References: <20190521151952.2779-1-narmstrong@baylibre.com> <20190521151952.2779-3-narmstrong@baylibre.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/5] dt-bindings: Remove unused compatible strings
+Date: Tue, 21 May 2019 17:34:11 +0200
+Message-ID: <20190521153415.14703-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521151952.2779-3-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2019 at 10:19 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Add compatible for the Amlogic G12B (S922X) SoC based Odroid-N2 SBC
-> from HardKernel.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
-> Rob, Martin,
->
-> I converted the patch you acked in yaml, I kept the Reviewed-by,
-> is it ok for you ?
+Right now none of the Ingenic-based boards probe this driver from
+devicetree. This driver defined three compatible strings for the exact
+same behaviour. Before these strings are used, we can remove two of
+them.
 
-Yes, both look fine.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
+index 7d9d3f90641b..493bec80d59b 100644
+--- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
+@@ -2,10 +2,7 @@ Ingenic JZ47xx PWM Controller
+ =============================
+ 
+ Required properties:
+-- compatible: One of:
+-  * "ingenic,jz4740-pwm"
+-  * "ingenic,jz4770-pwm"
+-  * "ingenic,jz4780-pwm"
++- compatible: Should be "ingenic,jz4740-pwm"
+ - #pwm-cells: Should be 3. See pwm.txt in this directory for a description
+   of the cells format.
+ - clocks : phandle to the external clock.
+-- 
+2.21.0.593.g511ec345e18
