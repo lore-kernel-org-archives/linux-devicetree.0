@@ -1,154 +1,244 @@
-Return-Path: <SRS0=w+ph=TV=sirena.org.uk=broonie@kernel.org>
-Date: Tue, 21 May 2019 19:16:09 +0100
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 3/3] spi: Add spi driver for Socionext Synquacer
- platform
-Message-ID: <20190521181609.GB16633@sirena.org.uk>
-References: <20190521115958.22504-1-masahisa.kojima@linaro.org>
- <20190521115958.22504-4-masahisa.kojima@linaro.org>
+Return-Path: <SRS0=jvsB=TV=gmail.com=andy.shevchenko@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qcHopEYAB45HaUaB"
-Content-Disposition: inline
+References: <20190521115958.22504-1-masahisa.kojima@linaro.org> <20190521115958.22504-4-masahisa.kojima@linaro.org>
 In-Reply-To: <20190521115958.22504-4-masahisa.kojima@linaro.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 21 May 2019 19:38:00 +0300
+Message-ID: <CAHp75VdJLB6Tqu7z-o++44TfWnY3ghfSn=Kb=nAtxdFggOxBnw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] spi: Add spi driver for Socionext Synquacer platform
+Content-Type: text/plain; charset="UTF-8"
 To: Masahisa Kojima <masahisa.kojima@linaro.org>
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, geert@linux-m68k.org, tpiepho@impinj.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, ard.biesheuvel@linaro.org, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, okamoto.satoru@socionext.com, osaki.yoshitoyo@socionext.com
+Cc: linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Trent Piepho <tpiepho@impinj.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, okamoto.satoru@socionext.com, osaki.yoshitoyo@socionext.com
 List-ID: <devicetree@vger.kernel.org>
 
+On Tue, May 21, 2019 at 3:00 PM Masahisa Kojima
+<masahisa.kojima@linaro.org> wrote:
+>
+> This patch adds support for controller found on synquacer platforms.
 
---qcHopEYAB45HaUaB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, May 21, 2019 at 08:59:58PM +0900, Masahisa Kojima wrote:
-
-> +	switch (sspi->bpw) {
-> +	case 8:
-
-> +		{
-> +		u8 *buf =3D sspi->rx_buf;
+> +       case 8:
+> +               {
+> +               u8 *buf = sspi->rx_buf;
 > +
-> +		readsb(sspi->regs + SYNQUACER_HSSPI_REG_RX_FIFO, buf, len);
-> +		sspi->rx_buf =3D buf + len;
-> +		break;
-> +		}
+> +               readsb(sspi->regs + SYNQUACER_HSSPI_REG_RX_FIFO, buf, len);
+> +               sspi->rx_buf = buf + len;
+> +               break;
+> +               }
 
-Please indent these properly.
+Slightly better style
+case FOO: {
+  ...
+}
 
-> +	default:
-> +		{
-> +		u32 *buf =3D sspi->rx_buf;
-> +
-> +		readsl(sspi->regs + SYNQUACER_HSSPI_REG_RX_FIFO, buf, len);
-> +		sspi->rx_buf =3D buf + len;
-> +		break;
-> +		}
+> +       /* Full Duplex only on 1-bit wide bus */
+> +       if (xfer->rx_buf && xfer->tx_buf &&
+> +           (xfer->rx_nbits != 1 || xfer->tx_nbits != 1)) {
+> +               dev_err(sspi->dev,
+> +                       "RX and TX bus widths must match for Full-Duplex!\n");
 
-It'd be better to explicitly list the values this works for and return
-an error otherwise.
+The message is not telling full truth. Not only match, but also be equal 1.
 
-> +	if (sspi->rx_words) {
-> +		val =3D SYNQUACER_HSSPI_RXE_FIFO_MORE_THAN_THRESHOLD |
-> +		      SYNQUACER_HSSPI_RXE_SLAVE_RELEASED;
-> +		writel_relaxed(val, sspi->regs + SYNQUACER_HSSPI_REG_RXE);
-> +		status =3D wait_for_completion_timeout(&sspi->transfer_done,
-> +			msecs_to_jiffies(SYNQUACER_HSSPI_TRANSFER_TMOUT_MSEC));
-> +		writel_relaxed(0, sspi->regs + SYNQUACER_HSSPI_REG_RXE);
-> +	}
-> +
-> +	if (xfer->tx_buf) {
-> +		val =3D SYNQUACER_HSSPI_TXE_FIFO_EMPTY;
-> +		writel_relaxed(val, sspi->regs + SYNQUACER_HSSPI_REG_TXE);
-> +		status =3D wait_for_completion_timeout(&sspi->transfer_done,
-> +			msecs_to_jiffies(SYNQUACER_HSSPI_TRANSFER_TMOUT_MSEC));
-> +		writel_relaxed(0, sspi->regs + SYNQUACER_HSSPI_REG_TXE);
-> +	}
+> +               return -EINVAL;
+> +       }
 
-I guess the TX will complete before the RX usually so I'd kind of expect
-the waits to be in the other order?
-
-> +	if (status < 0) {
-> +		dev_err(sspi->dev, "failed to transfer\n");
-> +		return status;
-> +	}
-
-Printing the error code could be helpful for users.
-
-> +static void synquacer_spi_set_cs(struct spi_device *spi, bool enable)
+> +static int synquacer_spi_transfer_one(struct spi_master *master,
+> +                                     struct spi_device *spi,
+> +                                     struct spi_transfer *xfer)
 > +{
-> +	struct synquacer_spi *sspi =3D spi_master_get_devdata(spi->master);
-> +	u32 val;
+> +       struct synquacer_spi *sspi = spi_master_get_devdata(master);
+> +       int ret;
+> +       int status = 0;
+> +       unsigned int words;
+> +       u8 bpw;
+> +       u32 val;
 > +
-> +	val =3D readl_relaxed(sspi->regs + SYNQUACER_HSSPI_REG_DMSTART);
-> +	val &=3D ~(SYNQUACER_HSSPI_DMPSEL_CS_MASK <<
-> +		 SYNQUACER_HSSPI_DMPSEL_CS_SHIFT);
-> +	val |=3D spi->chip_select << SYNQUACER_HSSPI_DMPSEL_CS_SHIFT;
+> +       val = readl_relaxed(sspi->regs + SYNQUACER_HSSPI_REG_FIFOCFG);
+> +       val |= SYNQUACER_HSSPI_FIFOCFG_RX_FLUSH;
+> +       val |= SYNQUACER_HSSPI_FIFOCFG_TX_FLUSH;
+> +       writel_relaxed(val, sspi->regs + SYNQUACER_HSSPI_REG_FIFOCFG);
 > +
-> +	if (enable) {
-> +		val |=3D SYNQUACER_HSSPI_DMSTOP_STOP;
-> +		writel_relaxed(val, sspi->regs + SYNQUACER_HSSPI_REG_DMSTART);
-> +
-> +		if (sspi->rx_buf) {
-> +			u32 buf[SYNQUACER_HSSPI_FIFO_DEPTH];
-> +
-> +			sspi->rx_buf =3D buf;
-> +			sspi->rx_words =3D SYNQUACER_HSSPI_FIFO_DEPTH;
-> +			read_fifo(sspi);
-> +		}
+> +       /*
+> +        * See if we can transfer 4-bytes as 1 word
+> +        * to maximize the FIFO buffer effficiency
 
-This is doing things with the FIFO, that's completely inappropriate for
-a set_cs() operation.  The set_cs() operation should set the chip select
-and nothing else.
+Typo here, and period is missed.
 
-> +static irqreturn_t sq_spi_rx_handler(int irq, void *priv)
+> +        */
+
+> +       case 8:
+> +               words = xfer->len;
+> +               break;
+> +       case 16:
+> +               words = xfer->len / 2;
+> +               break;
+> +       default:
+> +               words = xfer->len / 4;
+> +               break;
+
+Hmm... Shouldn't be rather "less then or equal" comparisons?
+
+> +       unsigned int retries = 0xfffff;
+
+Hmm... better to use decimal value.
+
+> +       /* Disable module */
+> +       writel_relaxed(0, sspi->regs + SYNQUACER_HSSPI_REG_MCTRL);
+
+> +       while ((readl_relaxed(sspi->regs + SYNQUACER_HSSPI_REG_MCTRL) &
+> +               SYNQUACER_HSSPI_MCTRL_MES) && --retries)
+> +               cpu_relax();
+> +       if (!retries)
+> +               return -EBUSY;
+
+And here something like
+do {
+} while (--retries)
+
+would look slightly better due to understanding that we do at least
+one iteration.
+
+Also, can readx_poll_timeout be used here?
+
+> +static irqreturn_t sq_spi_tx_handler(int irq, void *priv)
 > +{
-> +	uint32_t val;
-> +	struct synquacer_spi *sspi =3D priv;
+> +       uint32_t val;
+> +       struct synquacer_spi *sspi = priv;
 > +
-> +	val =3D readl_relaxed(sspi->regs + SYNQUACER_HSSPI_REG_RXF);
-> +	if ((val & SYNQUACER_HSSPI_RXF_SLAVE_RELEASED) ||
-> +	    (val & SYNQUACER_HSSPI_RXF_FIFO_MORE_THAN_THRESHOLD))
-> +		read_fifo(sspi);
+> +       val = readl_relaxed(sspi->regs + SYNQUACER_HSSPI_REG_TXF);
 > +
-> +	if (sspi->rx_words =3D=3D 0) {
-> +		writel_relaxed(0, sspi->regs + SYNQUACER_HSSPI_REG_RXE);
-> +		complete(&sspi->transfer_done);
-> +	}
+> +       if (val & SYNQUACER_HSSPI_TXF_FIFO_EMPTY) {
+> +               if (sspi->tx_words == 0) {
+> +                       writel_relaxed(0, sspi->regs + SYNQUACER_HSSPI_REG_TXE);
+> +                       complete(&sspi->transfer_done);
+
+> +                       return 0;
+
+irqreturn_t type, please. We have corresponding defines.
+
+> +               }
+> +               write_fifo(sspi);
+> +       }
 > +
-> +	return 0;
+> +       return 0;
+
+Ditto.
+
 > +}
 
-0 is not a valid return from an interrupt handler, IRQ_HANDLED or
-IRQ_NONE.
+> +static int synquacer_spi_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct spi_master *master;
+> +       struct synquacer_spi *sspi;
+> +       struct resource *res;
+> +       int ret;
+> +       int rx_irq, tx_irq;
+> +
+> +       master = spi_alloc_master(&pdev->dev, sizeof(*sspi));
+> +       if (!master)
+> +               return -ENOMEM;
+> +
+> +       platform_set_drvdata(pdev, master);
+> +
+> +       sspi = spi_master_get_devdata(master);
+> +       sspi->dev = &pdev->dev;
+> +
 
-> +	ret =3D devm_request_irq(&pdev->dev, rx_irq, sq_spi_rx_handler,
-> +				0, "synquacer-spi-rx", sspi);
-> +	ret =3D devm_request_irq(&pdev->dev, tx_irq, sq_spi_tx_handler,
-> +				0, "synquacer-spi-tx", sspi);
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       sspi->regs = devm_ioremap_resource(sspi->dev, res);
 
-The code looked awfully like we depend on having interrupts? =20
+devm_platform_ioremap_resource()
 
-> +	master->mode_bits =3D SPI_CPOL | SPI_CPHA | SPI_TX_DUAL | SPI_RX_DUAL |
-> +			    SPI_TX_QUAD | SPI_RX_QUAD;
+> +       if (IS_ERR(sspi->regs)) {
+> +               ret = PTR_ERR(sspi->regs);
+> +               goto put_spi;
+> +       }
 
-I don't see any code in the driver that configures dual or quad mode
-support other than setting _PCC_SAFESYNC, I'm not clear how the driver
-supports these modes?
+> +       } else {
+> +               dev_err(&pdev->dev, "specified wrong clock source\n");
+> +               ret = -EINVAL;
+> +               goto put_spi;
+> +       }
 
---qcHopEYAB45HaUaB
-Content-Type: application/pgp-signature; name="signature.asc"
+Not an issue for ACPI.
 
------BEGIN PGP SIGNATURE-----
+> +       if (IS_ERR(sspi->clk)) {
+> +               dev_err(&pdev->dev, "clock not found\n");
+> +               ret = PTR_ERR(sspi->clk);
+> +               goto put_spi;
+> +       }
+> +
+> +       sspi->aces = of_property_read_bool(np, "socionext,set-aces");
+> +       sspi->rtm = of_property_read_bool(np, "socionext,use-rtm");
+> +
+> +       master->num_chipselect = SYNQUACER_HSSPI_NUM_CHIP_SELECT;
+> +
+> +       init_completion(&sspi->transfer_done);
+> +
+> +       rx_irq = platform_get_irq(pdev, 0);
+> +       if (rx_irq < 0)
+> +               dev_err(&pdev->dev, "get rx_irq failed\n");
+> +
+> +       tx_irq = platform_get_irq(pdev, 1);
+> +       if (tx_irq < 0)
+> +               dev_err(&pdev->dev, "get tx_irq failed\n");
+> +
+> +       ret = devm_request_irq(&pdev->dev, rx_irq, sq_spi_rx_handler,
+> +                               0, "synquacer-spi-rx", sspi);
+> +       ret = devm_request_irq(&pdev->dev, tx_irq, sq_spi_tx_handler,
+> +                               0, "synquacer-spi-tx", sspi);
+> +
+> +       ret = clk_prepare_enable(sspi->clk);
+> +       if (ret)
+> +               goto put_spi;
+> +
+> +       master->dev.of_node = np;
+> +       master->auto_runtime_pm = true;
+> +       master->bus_num = pdev->id;
+> +
+> +       master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_TX_DUAL | SPI_RX_DUAL |
+> +                           SPI_TX_QUAD | SPI_RX_QUAD;
+> +       master->bits_per_word_mask = SPI_BPW_MASK(32) | SPI_BPW_MASK(24) |
+> +                                    SPI_BPW_MASK(16) | SPI_BPW_MASK(8);
+> +
+> +       master->max_speed_hz = clk_get_rate(sspi->clk);
+> +       master->min_speed_hz = master->max_speed_hz / 254;
+> +
+> +       master->set_cs = synquacer_spi_set_cs;
+> +       master->transfer_one = synquacer_spi_transfer_one;
+> +
+> +       ret = synquacer_spi_enable(master);
+> +       if (ret)
+> +               goto fail_enable;
+> +
+> +       pm_runtime_set_active(sspi->dev);
+> +       pm_runtime_enable(sspi->dev);
+> +
+> +       ret = devm_spi_register_master(sspi->dev, master);
+> +       if (ret)
+> +               goto disable_pm;
+> +
+> +       return 0;
+> +
+> +disable_pm:
+> +       pm_runtime_disable(sspi->dev);
+> +fail_enable:
+> +       clk_disable_unprepare(sspi->clk);
+> +put_spi:
+> +       spi_master_put(master);
+> +
+> +       return ret;
+> +}
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzkQGgACgkQJNaLcl1U
-h9DBFgf/ZEJY1USHsPodtkdrIPFyI+tpdBqpdq1nNiRh/Z9QYJvumdtxpKGNXxAG
-m0vWwh3fdnW/W/1pilOmJgHiwp24KlhH31/SnLbbWR+svp+2wIHfbsfJMVTm1VwM
-EYyVW0ZRtsuwbrdblt9wml1hX510CiWeKPJNqRXtCcQ8xYzD9Q/qsDfDQJ7ReAVW
-eNft6Mhry1hBxORGnL15fO/1VLMHZoHysHnVDPiL4XYull++R0Lj3buayT6YKnRq
-p8bQUbujSLw/5Z6IgKCMJ5yXgF8PGOqlmsc/n8OUqA0OOzkQrbWTGDJBDDAgN6ft
-e678yeROZpZZmej8VRifwwLeDJc8xA==
-=zAHJ
------END PGP SIGNATURE-----
 
---qcHopEYAB45HaUaB--
+> +       if (!pm_runtime_suspended(dev))
+
+This is not enough to check.
+
+> +       if (!pm_runtime_suspended(dev)) {
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
