@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v2 9/9] arm64: dts: msm8996: Add proper capacity scaling for the cpus
-Date: Tue, 21 May 2019 15:05:19 +0530
-Message-ID: <5224535a7ef5b257e3baa698991bf6deeefccc36.1558430617.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 4/9] arm64: dts: qcom: msm8916: Use more generic idle state names
+Date: Tue, 21 May 2019 15:05:14 +0530
+Message-ID: <606afcaab57021faacdb47220b9d9d0f5a27f7b8.1558430617.git.amit.kucheria@linaro.org>
 References: <cover.1558430617.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1558430617.git.amit.kucheria@linaro.org>
@@ -12,55 +12,67 @@ To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson
 Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-msm8996 features 4 cpus - 2 in each cluster. However, all cpus implement
-the same microarchitecture and the two clusters only differ in the
-maximum frequency attainable by the CPUs.
-
-Add capacity-dmips-mhz property to allow the topology code to determine
-the actual capacity by taking into account the highest frequency for
-each CPU.
+Instead of using Qualcomm-specific terminology, use generic node names
+for the idle states that are easier to understand. Move the description
+into the "idle-state-name" property.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 4f2fb7885f39..e0e8f30ce11a 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -96,6 +96,7 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			capacity-dmips-mhz = <1024>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 82ea5b8b37a2..3a8c6c4fcf15 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -110,7 +110,7 @@
+ 			reg = <0x0>;
  			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
- 			      compatible = "cache";
-@@ -109,6 +110,7 @@
- 			reg = <0x0 0x1>;
  			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			capacity-dmips-mhz = <1024>;
+-			cpu-idle-states = <&CPU_SPC>;
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+@@ -122,7 +122,7 @@
+ 			reg = <0x1>;
  			next-level-cache = <&L2_0>;
- 		};
- 
-@@ -118,6 +120,7 @@
- 			reg = <0x0 0x100>;
  			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			capacity-dmips-mhz = <1024>;
- 			next-level-cache = <&L2_1>;
- 			L2_1: l2-cache {
- 			      compatible = "cache";
-@@ -131,6 +134,7 @@
- 			reg = <0x0 0x101>;
+-			cpu-idle-states = <&CPU_SPC>;
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+@@ -134,7 +134,7 @@
+ 			reg = <0x2>;
+ 			next-level-cache = <&L2_0>;
  			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			capacity-dmips-mhz = <1024>;
- 			next-level-cache = <&L2_1>;
- 		};
+-			cpu-idle-states = <&CPU_SPC>;
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+@@ -146,7 +146,7 @@
+ 			reg = <0x3>;
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+-			cpu-idle-states = <&CPU_SPC>;
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+@@ -160,8 +160,9 @@
+ 		idle-states {
+ 			entry-method = "psci";
  
+-			CPU_SPC: spc {
++			CPU_SLEEP_0: cpu-sleep-0 {
+ 				compatible = "arm,idle-state";
++				idle-state-name = "standalone-power-collapse";
+ 				arm,psci-suspend-param = <0x40000002>;
+ 				entry-latency-us = <130>;
+ 				exit-latency-us = <150>;
 -- 
 2.17.1
