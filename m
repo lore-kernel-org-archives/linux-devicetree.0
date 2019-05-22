@@ -1,37 +1,43 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: disable GPU 500 MHz OPP for veyron
-Date: Wed, 22 May 2019 11:13:45 -0700
-Message-ID: <CAD=FV=Ww5pYOdknESUC4S06FvPzZ03Z-tW098r2N+9tbHNx7Vw@mail.gmail.com>
-References: <20190520220051.54847-1-mka@chromium.org> <3108277.JP5bvJISVS@phil>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: [PATCH net-next v2 1/8] dt-bindings: phy: dp83867: Describe how
+ driver behaves w.r.t rgmii delay
+Date: Wed, 22 May 2019 18:43:19 +0000
+Message-ID: <20190522184255.16323-1-tpiepho@impinj.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3108277.JP5bvJISVS@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Matthias Kaehlcke <mka@chromium.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Trent Piepho <tpiepho@impinj.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, May 22, 2019 at 2:14 AM Heiko Stuebner <heiko@sntech.de> wrote:
->
-> Am Dienstag, 21. Mai 2019, 00:00:49 CEST schrieb Matthias Kaehlcke:
-> > The NPLL is the only safe way to generate 500 MHz for the GPU. The
-> > downstream Chrome OS 3.14 kernel ('official' kernel for veyron
-> > devices) re-purposes NPLL to HDMI and hence disables the OPP for
-> > the GPU (see https://crrev.com/c/1574579). Disable it here as well
-> > to keep in sync and avoid problems in case someone decides to
-> > re-purpose NPLL.
-> >
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->
-> I was actually expecting to just drop the 500MHz opp from all
-> of rk3288 ;-) .
->
-> To not have to respin, I just modified your patch accordingly,
-> see [0] and please holler if you disagree :-D .
-
-Seems fine to me, thanks!
-
--Doug
+QWRkIGEgbm90ZSB0byBtYWtlIGl0IG1vcmUgY2xlYXIgaG93IHRoZSBkcml2ZXIgYmVoYXZlcyB3
+aGVuICJyZ21paSIgdnMKInJnbWlpLWlkIiwgInJnbWlpLWlkcngiLCBvciAicmdtaWktaWR0eCIg
+aW50ZXJmYWNlIG1vZGVzIGFyZSBzZWxlY3RlZC4KCkNjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBr
+ZXJuZWwub3JnPgpDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4KU2lnbmVk
+LW9mZi1ieTogVHJlbnQgUGllcGhvIDx0cGllcGhvQGltcGluai5jb20+Ci0tLQoKTm90ZXM6CiAg
+ICBDaGFuZ2VzIGZyb20gdjE6CiAgICAgIENsYXJpZnkgYmVoYXZpb3IgbWF5IGNoYW5nZSB0byBl
+bmZvcmNlIG5vIGRlbGF5IGluICJyZ21paSIgbW9kZQoKIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9uZXQvdGksZHA4Mzg2Ny50eHQgfCA4ICsrKysrKysrCiAxIGZpbGUgY2hhbmdl
+ZCwgOCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL25ldC90aSxkcDgzODY3LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9uZXQvdGksZHA4Mzg2Ny50eHQKaW5kZXggOWVmOTMzOGFhZWUxLi45OWI4NjgxYmRl
+NDkgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvdGks
+ZHA4Mzg2Ny50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC90
+aSxkcDgzODY3LnR4dApAQCAtMTEsNiArMTEsMTQgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKIAkt
+IHRpLGZpZm8tZGVwdGggLSBUcmFuc21pdHQgRklGTyBkZXB0aC0gc2VlIGR0LWJpbmRpbmdzL25l
+dC90aS1kcDgzODY3LmgKIAkJZm9yIGFwcGxpY2FibGUgdmFsdWVzCiAKK05vdGU6IElmIHRoZSBp
+bnRlcmZhY2UgdHlwZSBpcyBQSFlfSU5URVJGQUNFX01PREVfUkdNSUkgdGhlIFRYL1JYIGNsb2Nr
+IGRlbGF5cworICAgICAgd2lsbCBiZSBsZWZ0IGF0IHRoZWlyIGRlZmF1bHQgdmFsdWVzLCBhcyBz
+ZXQgYnkgdGhlIFBIWSdzIHBpbiBzdHJhcHBpbmcuCisgICAgICBUaGUgZGVmYXVsdCBzdHJhcHBp
+bmcgd2lsbCB1c2UgYSBkZWxheSBvZiAyLjAwIG5zLiAgVGh1cworICAgICAgUEhZX0lOVEVSRkFD
+RV9NT0RFX1JHTUlJLCBieSBkZWZhdWx0LCBkb2VzIG5vdCBiZWhhdmUgYXMgUkdNSUkgd2l0aCBu
+bworICAgICAgaW50ZXJuYWwgZGVsYXksIGJ1dCBhcyBQSFlfSU5URVJGQUNFX01PREVfUkdNSUlf
+SUQuICBUaGUgZGV2aWNlIHRyZWUKKyAgICAgIHNob3VsZCB1c2UgInJnbWlpLWlkIiBpZiBpbnRl
+cm5hbCBkZWxheXMgYXJlIGRlc2lyZWQgYXMgdGhpcyBtYXkgYmUKKyAgICAgIGNoYW5nZWQgaW4g
+ZnV0dXJlIHRvIGNhdXNlICJyZ21paSIgbW9kZSB0byBkaXNhYmxlIGRlbGF5cy4KKwogT3B0aW9u
+YWwgcHJvcGVydHk6CiAJLSB0aSxtaW4tb3V0cHV0LWltcGVkYW5jZSAtIE1BQyBJbnRlcmZhY2Ug
+SW1wZWRhbmNlIGNvbnRyb2wgdG8gc2V0CiAJCQkJICAgIHRoZSBwcm9ncmFtbWFibGUgb3V0cHV0
+IGltcGVkYW5jZSB0bwotLSAKMi4xNC41Cgo=
