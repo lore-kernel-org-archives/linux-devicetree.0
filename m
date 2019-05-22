@@ -1,178 +1,69 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 8/9] arm64: dts: qcom: sdm845: Add PSCI cpuidle low
- power states
-Date: Tue, 21 May 2019 20:59:46 -0700
-Message-ID: <20190522035946.GO3137@builder>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <67d61032221b069082222347fb56effe17d4a7c3.1558430617.git.amit.kucheria@linaro.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
+Date: Tue, 21 May 2019 21:03:53 -0700
+Message-ID: <20190522040353.GP3137@builder>
+References: <20190114184255.258318-1-mka@chromium.org>
+ <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
+ <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
+ <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
+ <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <67d61032221b069082222347fb56effe17d4a7c3.1558430617.git.amit.kucheria@linaro.org>
+In-Reply-To: <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@kernel.org, niklas.cassel@linaro.org, marc.w.gonzalez@free.fr, sibis@codeaurora.org, daniel.lezcano@linaro.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, mkshah@codeaurora.org, devicetree@vger.kernel.org
+Cc: Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 21 May 02:35 PDT 2019, Amit Kucheria wrote:
+On Thu 16 May 04:54 PDT 2019, Amit Kucheria wrote:
 
-> From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+> (cc'ing Andy's correct email address)
 > 
-> Add device bindings for cpuidle states for cpu devices.
+> On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Amit Kucheria (2019-05-13 04:54:12)
+> > > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> > > >
+> > > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > > >
+> > > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
+> > > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
+> > > > > that describes this topology.
+> > > >
+> > > > This is partly true. There are two groups of gold and silver cores,
+> > > > but AFAICT they are in a single cluster, not two separate ones. SDM845
+> > > > is one of the early examples of ARM's Dynamiq architecture.
+> > > >
+> > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > >
+> > > > I noticed that this patch sneaked through for this merge window but
+> > > > perhaps we can whip up a quick fix for -rc2?
+> > > >
+> > >
+> > > And please find attached a patch to fix this up. Andy, since this
+> > > hasn't landed yet (can we still squash this into the original patch?),
+> > > I couldn't add a Fixes tag.
+> > >
+> >
+> > I had the same concern. Thanks for catching this. I suspect this must
+> > cause some problem for IPA given that it can't discern between the big
+> > and little "power clusters"?
 > 
-> Cc: <mkshah@codeaurora.org>
-> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-> [amit: rename the idle-states to more generic names and fixups]
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
+> Both EAS and IPA, I believe. It influences the scheduler's view of the
+> the topology.
+> 
+> > Either way,
+> >
+> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> 
+> Thanks.
+> 
+> Andy/Bjorn, can we squeeze this in for -rc2 as a bugfix?
+> 
 
-Applied
+Yes, I've picked this up among a few other fixes.
 
-Thanks,
+Regards,
 Bjorn
-
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 69 ++++++++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 5308f1671824..a0ae6bf033ee 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -119,6 +119,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1 &CLUSTER_SLEEP_0>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_0>;
-> @@ -136,6 +137,8 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x100>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1
-> +					   &CLUSTER_SLEEP_0>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_100>;
-> @@ -150,6 +153,8 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x200>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1
-> +					   &CLUSTER_SLEEP_0>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_200>;
-> @@ -164,6 +169,8 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x300>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1
-> +					   &CLUSTER_SLEEP_0>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_300>;
-> @@ -178,6 +185,8 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x400>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1
-> +					   &CLUSTER_SLEEP_0>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_400>;
-> @@ -192,6 +201,8 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x500>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1
-> +					   &CLUSTER_SLEEP_0>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_500>;
-> @@ -206,6 +217,8 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x600>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1
-> +					   &CLUSTER_SLEEP_0>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_600>;
-> @@ -220,6 +233,8 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x700>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1
-> +					   &CLUSTER_SLEEP_0>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_700>;
-> @@ -228,6 +243,60 @@
->  				next-level-cache = <&L3_0>;
->  			};
->  		};
-> +
-> +		idle-states {
-> +			entry-method = "psci";
-> +
-> +			LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "little-power-down";
-> +				arm,psci-suspend-param = <0x40000003>;
-> +				entry-latency-us = <350>;
-> +				exit-latency-us = <461>;
-> +				min-residency-us = <1890>;
-> +				local-timer-stop;
-> +			};
-> +
-> +			LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "little-rail-power-down";
-> +				arm,psci-suspend-param = <0x40000004>;
-> +				entry-latency-us = <360>;
-> +				exit-latency-us = <531>;
-> +				min-residency-us = <3934>;
-> +				local-timer-stop;
-> +			};
-> +
-> +			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "big-power-down";
-> +				arm,psci-suspend-param = <0x40000003>;
-> +				entry-latency-us = <264>;
-> +				exit-latency-us = <621>;
-> +				min-residency-us = <952>;
-> +				local-timer-stop;
-> +			};
-> +
-> +			BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "big-rail-power-down";
-> +				arm,psci-suspend-param = <0x40000004>;
-> +				entry-latency-us = <702>;
-> +				exit-latency-us = <1061>;
-> +				min-residency-us = <4488>;
-> +				local-timer-stop;
-> +			};
-> +
-> +			CLUSTER_SLEEP_0: cluster-sleep-0 {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "cluster-power-down";
-> +				arm,psci-suspend-param = <0x400000F4>;
-> +				entry-latency-us = <3263>;
-> +				exit-latency-us = <6562>;
-> +				min-residency-us = <9987>;
-> +				local-timer-stop;
-> +			};
-> +		};
->  	};
->  
->  	pmu {
-> -- 
-> 2.17.1
-> 
