@@ -1,151 +1,160 @@
-From: Mathieu Malaterre <malat@debian.org>
-Subject: Re: [PATCH v12 09/13] MIPS: jz4740: Add DTS nodes for the TCU drivers
-Date: Wed, 22 May 2019 11:21:00 +0200
-Message-ID: <CA+7wUsxe4DLmAGNnnXZ3UokguMJ0cOGtu=opQpuAPvN_SH4KUw@mail.gmail.com>
-References: <20190521145141.9813-1-paul@crapouillou.net> <20190521145141.9813-10-paul@crapouillou.net>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: RE: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
+ node
+Date: Wed, 22 May 2019 17:30:36 +0800
+Message-ID: <1558517436.10179.388.camel@mhfsdcap03>
+References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
+         <20190517103736.GA1490@kuha.fi.intel.com>
+         <20190517130511.GA1887@kuha.fi.intel.com>
+         <1558319951.10179.352.camel@mhfsdcap03>
+         <20190520080359.GC1887@kuha.fi.intel.com>
+         <OSBPR01MB2103385D996762FA54F8E437B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+         <20190520083601.GE1887@kuha.fi.intel.com>
+         <OSBPR01MB2103C4C8920C40E42BC1B2A9B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+         <20190521095839.GI1887@kuha.fi.intel.com>
+         <OSBPR01MB21032206146152983C8F4E8EB8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521145141.9813-10-paul@crapouillou.net>
+In-Reply-To: <OSBPR01MB21032206146152983C8F4E8EB8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-media>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2019 at 4:52 PM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Add DTS nodes for the JZ4780, JZ4770 and JZ4740 devicetree files.
->
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->
-> Notes:
->     v5: New patch
->
->     v6: Fix register lengths in watchdog/pwm nodes
->
->     v7: No change
->
->     v8: - Fix wrong start address for PWM node
->         - Add system timer and clocksource sub-nodes
->
->     v9: Drop timer and clocksource sub-nodes
->
->     v10-v11: No change
->
->     v12: Drop PWM/watchdog/OST sub-nodes, for now.
->
->  arch/mips/boot/dts/ingenic/jz4740.dtsi | 22 ++++++++++++++++++++++
->  arch/mips/boot/dts/ingenic/jz4770.dtsi | 21 +++++++++++++++++++++
->  arch/mips/boot/dts/ingenic/jz4780.dtsi | 21 +++++++++++++++++++++
->  3 files changed, 64 insertions(+)
->
-> diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> index 2beb78a62b7d..807d9702d4cf 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> @@ -53,6 +53,28 @@
->                 clock-names = "rtc";
->         };
->
-> +       tcu: timer@10002000 {
-> +               compatible = "ingenic,jz4740-tcu";
-> +               reg = <0x10002000 0x1000>;
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges = <0x0 0x10002000 0x1000>;
-> +
-> +               #clock-cells = <1>;
-> +
-> +               clocks = <&cgu JZ4740_CLK_RTC
-> +                         &cgu JZ4740_CLK_EXT
-> +                         &cgu JZ4740_CLK_PCLK
-> +                         &cgu JZ4740_CLK_TCU>;
-> +               clock-names = "rtc", "ext", "pclk", "tcu";
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <1>;
-> +
-> +               interrupt-parent = <&intc>;
-> +               interrupts = <23 22 21>;
-> +       };
-> +
->         rtc_dev: rtc@10003000 {
->                 compatible = "ingenic,jz4740-rtc";
->                 reg = <0x10003000 0x40>;
-> diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-> index 49ede6c14ff3..70932fd90902 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-> @@ -46,6 +46,27 @@
->                 #clock-cells = <1>;
->         };
->
-> +       tcu: timer@10002000 {
-> +               compatible = "ingenic,jz4770-tcu";
-> +               reg = <0x10002000 0x1000>;
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges = <0x0 0x10002000 0x1000>;
-> +
-> +               #clock-cells = <1>;
-> +
-> +               clocks = <&cgu JZ4770_CLK_RTC
-> +                         &cgu JZ4770_CLK_EXT
-> +                         &cgu JZ4770_CLK_PCLK>;
-> +               clock-names = "rtc", "ext", "pclk";
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <1>;
-> +
-> +               interrupt-parent = <&intc>;
-> +               interrupts = <27 26 25>;
-> +       };
-> +
->         pinctrl: pin-controller@10010000 {
->                 compatible = "ingenic,jz4770-pinctrl";
->                 reg = <0x10010000 0x600>;
-> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> index b03cdec56de9..495082ce7fc5 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> @@ -46,6 +46,27 @@
->                 #clock-cells = <1>;
->         };
->
-> +       tcu: timer@10002000 {
+Hi Biju,
+On Wed, 2019-05-22 at 08:05 +0000, Biju Das wrote:
+> Hi Heikki,
+> 
+> Thanks for the feedback.
+> 
+> > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
+> > node
+> > 
+> > On Mon, May 20, 2019 at 09:45:46AM +0000, Biju Das wrote:
+> > >
+> > >
+> > > Hi Heikki,
+> > >
+> > > Thanks for the feedback.
+> > >
+> > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
+> > > > usb_role_switch by node
+> > > >
+> > > > On Mon, May 20, 2019 at 08:06:41AM +0000, Biju Das wrote:
+> > > > > Hi Heikki,
+> > > > >
+> > > > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
+> > > > > > usb_role_switch by node
+> > > > > >
+> > > > > > On Mon, May 20, 2019 at 10:39:11AM +0800, Chunfeng Yun wrote:
+> > > > > > > Hi,
+> > > > > > > On Fri, 2019-05-17 at 16:05 +0300, Heikki Krogerus wrote:
+> > > > > > > > Hi,
+> > > > > > > >
+> > > > > > > > On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki Krogerus wrote:
+> > > > > > > > > On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng Yun
+> > wrote:
+> > > > > > > > > > Add fwnode_usb_role_switch_get() to make easier to get
+> > > > > > > > > > usb_role_switch by fwnode which register it.
+> > > > > > > > > > It's useful when there is not device_connection
+> > > > > > > > > > registered between two drivers and only knows the fwnode
+> > > > > > > > > > which register usb_role_switch.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > > > > > > > > Tested-by: Biju Das <biju.das@bp.renesas.com>
+> > > > > > > > >
+> > > > > > > > > Acked-by: Heikki Krogerus
+> > > > > > > > > <heikki.krogerus@linux.intel.com>
+> > > > > > > >
+> > > > > > > > Hold on. I just noticed Rob's comment on patch 2/6, where he
+> > > > > > > > points out that you don't need to use device graph since the
+> > > > > > > > controller is the parent of the connector. Doesn't that mean
+> > > > > > > > you don't really need this API?
+> > > > > > > No, I still need it.
+> > > > > > > The change is about the way how to get fwnode; when use device
+> > > > > > > graph, get fwnode by of_graph_get_remote_node(); but now will
+> > > > > > > get fwnode by of_get_parent();
+> > > > > >
+> > > > > > OK, I get that, but I'm still not convinced about if something
+> > > > > > like this function is needed at all. I also have concerns
+> > > > > > regarding how you are using the function. I'll explain in
+> > > > > > comment to the patch 5/6 in this
+> > > > series...
+> > > > >
+> > > > > FYI, Currently  I am also using this api in my patch series.
+> > > > > https://patchwork.kernel.org/patch/10944637/
+> > > >
+> > > > Yes, and I have the same question for you I jusb asked in comment I
+> > > > added to the patch 5/6 of this series. Why isn't usb_role_switch_get()
+> > enough?
+> > >
+> > > Currently no issue. It will work with this api as well, since the port node is
+> > part of controller node.
+> > > For eg:-
+> > > https://patchwork.kernel.org/patch/10944627/
+> > >
+> > > However if any one adds port node inside the connector node, then this
+> > api may won't work as expected.
+> > > Currently I get below error
+> > >
+> > > [    2.299703] OF: graph: no port node found in
+> > /soc/i2c@e6500000/hd3ss3220@47
+> > 
+> > We need to understand why is that happening?
+> > 
+> 
+> Form the stack trace  the parent node is "parent_node=hd3ss3220@47" , instead of the "connector" node.
+> That is the reason for the above error.
+> 
+> [    2.442429]  of_graph_get_next_endpoint.part.0+0x28/0x168
+> [    2.447889]  of_fwnode_graph_get_next_endpoint+0x5c/0xb0
+> [    2.453267]  fwnode_graph_get_next_endpoint+0x20/0x30
+> [    2.458374]  device_connection_find_match+0x74/0x1a0
+> [    2.463399]  usb_role_switch_get+0x20/0x28
+> [    2.467542]  hd3ss3220_probe+0xc4/0x218
+> 
+> The use case is
+> 
+> &i2c0 {
+> 	hd3ss3220@47 {                                                           
+>                  	compatible = "ti,hd3ss3220"; 
+>                                    
+>                  	usb_con: connector {                                             
+>                           		compatible = "usb-c-connector";                                                      
+>                          		port {                                                   
+>                                 		 hd3ss3220_ep: endpoint {                         
+>                                         			remote-endpoint = <&usb3_role_switch>;   
+>                                 		};                                               
+>                          		};                                                       
+>                 	 };                                                               
+> 	 }; 
+> };
+>    
+> &usb3_peri0 {                                                                    
+>          companion = <&xhci0>;                                                    
+>          usb-role-switch;                                                         
+>                                                                                   
+>          port {                                                                   
+>                 usb3_role_switch: endpoint {                                     
+>                         remote-endpoint = <&hd3ss3220_ep>;                       
+>                  };                                                               
+>          };                                                                       
+> };   
+> 
+> Q1) How do we modify the usb_role_switch_get() function to search 
+> Child(connector) and child's endpoint?
+How about firstly finding connector node in fwnode_graph_devcon_match(),
+then search each endpoint?
 
-With W=1, I see:
-
-../arch/mips/boot/dts/ingenic/jz4780.dtsi:64.22-83.4: Warning
-(unique_unit_address): /timer@10002000: duplicate unit-address (also
-used in node /watchdog@1000
-2000)
-
-
-> +               compatible = "ingenic,jz4770-tcu";
-> +               reg = <0x10002000 0x1000>;
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges = <0x0 0x10002000 0x1000>;
-> +
-> +               #clock-cells = <1>;
-> +
-> +               clocks = <&cgu JZ4780_CLK_RTCLK
-> +                         &cgu JZ4780_CLK_EXCLK
-> +                         &cgu JZ4780_CLK_PCLK>;
-> +               clock-names = "rtc", "ext", "pclk";
-> +
-> +               interrupt-controller;
-> +               #interrupt-cells = <1>;
-> +
-> +               interrupt-parent = <&intc>;
-> +               interrupts = <27 26 25>;
-> +       };
-> +
->         rtc_dev: rtc@10003000 {
->                 compatible = "ingenic,jz4780-rtc";
->                 reg = <0x10003000 0x4c>;
-> --
-> 2.21.0.593.g511ec345e18
->
+> 
+> > It looks like we have an issue somewhere in the code, and instead of fixing
+> > that, you are working around it. Let's not do that.
+> 
+> OK.
+> 
+> Regards,
+> Biju
+> 
