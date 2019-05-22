@@ -1,30 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 10/14] dma: imx-sdma: add i.mx6ul/6sx compatible name
-Date: Wed, 22 May 2019 08:51:28 -0500
-Message-ID: <20190522135128.GA24987@bogus>
-References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
- <1558548188-1155-11-git-send-email-yibin.gong@nxp.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt: bindings: mtd: replace references to nand.txt with nand-controller.yaml
+Date: Wed, 22 May 2019 08:55:53 -0500
+Message-ID: <CAL_JsqJ+zNQ3CeBh8K=oBiZZsiBQ8w1w=6vs8zOQeqUf_qhqcg@mail.gmail.com>
+References: <1558466890-45471-1-git-send-email-kdasu.kdev@gmail.com> <CAL_JsqKd53W1E33YdtJwagi4=7DrVQ5+N3rSY=Rxo5J0RiW46g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1558548188-1155-11-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <CAL_JsqKd53W1E33YdtJwagi4=7DrVQ5+N3rSY=Rxo5J0RiW46g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: "robh@kernel.org" <robh@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "plyatov@gmail.com" <plyatov@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel
+To: Kamal Dasu <kdasu.kdev@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: MTD Maling List <linux-mtd@lists.infradead.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liang Yang <liang.yang@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Neil Armstrong <narmstrong@baylibre.com>, Andy Gross <agross@ker>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 May 2019 10:00:38 +0000, Robin Gong wrote:
-> Add i.mx6ul and i.mx6sx compatible name in binding doc.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> ---
->  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+On Wed, May 22, 2019 at 8:19 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, May 21, 2019 at 2:28 PM Kamal Dasu <kdasu.kdev@gmail.com> wrote:
+> >
+> > nand-controller.yaml replaced nand.txt however the references to it were
+> > not updated. This change updates these references wherever it appears in
+> > bindings documentation.
+> >
+> > Fixes: 212e49693592 ("dt-bindings: mtd: Add YAML schemas for the generic NAND options")
+> >
+> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+>
+> Mauro already sent a similar patch.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Actually, Mauro's patch missed a bunch of cases that aren't full
+paths, so I'll take this one.
 
-If a tag was not added on purpose, please state why and what changed.
+Rob
