@@ -1,39 +1,27 @@
-Return-Path: <SRS0=qDds=TY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54209 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403864AbfEXOFa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 May 2019 10:05:30 -0400
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 03/10] media: hantro: print video device name in addition to device node
-Date: Fri, 24 May 2019 16:04:52 +0200
-Message-Id: <20190524140459.4002-4-p.zabel@pengutronix.de>
-In-Reply-To: <20190524140459.4002-1-p.zabel@pengutronix.de>
-References: <20190524140459.4002-1-p.zabel@pengutronix.de>
+Return-Path: <SRS0=RGXl=TW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.contraloria.gob.bo ([190.11.83.39]:51459 "HELO
+        mail.contraloria.gob.bo" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728406AbfEVLOy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 May 2019 07:14:54 -0400
+Received: from [192.99.195.49] (ip49.ip-192-99-195.net [192.99.195.49])
+        by mail.contraloria.gob.bo (Postfix) with ESMTPSA id 94CF8307D7D4
+        for <devicetree@vger.kernel.org>; Wed, 22 May 2019 04:22:47 -0400 (BOT)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: [No Subject]
+From: "Gardner, Tim" <usrtch@contraloria.gob.bo>
+Date: Wed, 22 May 2019 01:53:09 -0700
+Reply-To: adamlui32@aol.com
+Message-Id: <20190522082247.94CF8307D7D4@mail.contraloria.gob.bo>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/staging/media/hantro/hantro_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+We are now providing business & personal loans: 
+-Rate starting at: 2.05%. 
+-Flexible repayment: up to 30 years. 
+For more information and application, please reply. 
 
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index c1ed3a2eda3f..1d4d5ec8ab19 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -608,7 +608,8 @@ static int hantro_add_func(struct hantro_dev *vpu, unsigned int funcid)
- 		goto err_unreg_dev;
- 	}
- 
--	v4l2_info(&vpu->v4l2_dev, "registered as /dev/video%d\n", vfd->num);
-+	v4l2_info(&vpu->v4l2_dev, "registered %s as /dev/video%d\n", vfd->name,
-+		  vfd->num);
- 
- 	return 0;
- 
--- 
-2.20.1
+> To unsubscribe please reply with "unsubscribe" as subject. 
