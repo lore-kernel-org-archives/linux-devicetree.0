@@ -1,85 +1,59 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 2/2] net: phy: aquantia: add USXGMII support
-Date: Wed, 22 May 2019 22:58:51 +0200
-Message-ID: <20190522205851.GA15257@lunn.ch>
-References: <110a1e45-56a7-a646-7b63-f39fe3083c28@gmail.com>
- <2c68bdb1-9b53-ce0b-74d3-c7ea2d9e7ac0@gmail.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [RFC/PATCH 2/4] PCI: Export PCI ACS and DMA searching functions
+ to modules
+Date: Wed, 22 May 2019 16:00:38 -0500
+Message-ID: <20190522210038.GE79339@google.com>
+References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
+ <1558118857-16912-3-git-send-email-isaacm@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2c68bdb1-9b53-ce0b-74d3-c7ea2d9e7ac0@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Madalin-cristian Bucur <madalin.bucur@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1558118857-16912-3-git-send-email-isaacm@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Isaac J. Manjarres" <isaacm@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, frowand.list@gmail.com, joro@8bytes.org, robin.murphy@arm.com, will.deacon@arm.com, kernel-team@android.com, pratikp@codeaurora.org, lmark@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 22, 2019 at 09:58:32PM +0200, Heiner Kallweit wrote:
-> So far we didn't support mode USXGMII, and in order to not break the
-> two Freescale boards mode XGMII was accepted for the AQR107 family
-> even though it doesn't support XGMII. Add USXGMII support to the
-> Aquantia PHY driver and change the phy connection type for the two
-> boards.
+On Fri, May 17, 2019 at 11:47:35AM -0700, Isaac J. Manjarres wrote:
+> IOMMU drivers that can be compiled as modules may
+> want to use pci_for_each_dma_alias() and pci_request_acs(),
+> so export those functions.
 > 
-> As an additional note: Even though the handle is named aqr106
-> there seem to be LS1046A boards with an AQR107.
-> 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 2 +-
->  arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 2 +-
->  drivers/net/phy/aquantia_main.c                   | 6 +++++-
->  3 files changed, 7 insertions(+), 3 deletions(-)
+>  drivers/pci/pci.c    | 1 +
+>  drivers/pci/search.c | 1 +
+>  2 files changed, 2 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> index 4223a2352..c2ce1a611 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> @@ -139,7 +139,7 @@
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 766f577..3f354c1 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3124,6 +3124,7 @@ void pci_request_acs(void)
+>  {
+>  	pci_acs_enable = 1;
+>  }
+> +EXPORT_SYMBOL_GPL(pci_request_acs);
 >  
->  	ethernet@f0000 { /* 10GEC1 */
->  		phy-handle = <&aqr105_phy>;
-> -		phy-connection-type = "xgmii";
-> +		phy-connection-type = "usxgmii";
->  	};
+>  static const char *disable_acs_redir_param;
 >  
->  	mdio@fc000 {
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> index 6a6514d0e..f927a8a25 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> @@ -147,7 +147,7 @@
+> diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+> index 2b5f720..cf9ede9 100644
+> --- a/drivers/pci/search.c
+> +++ b/drivers/pci/search.c
+> @@ -111,6 +111,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
 >  
->  	ethernet@f0000 { /* 10GEC1 */
->  		phy-handle = <&aqr106_phy>;
-> -		phy-connection-type = "xgmii";
-> +		phy-connection-type = "usxgmii";
->  	};
+>  	return ret;
+>  }
+> +EXPORT_SYMBOL_GPL(pci_for_each_dma_alias);
 >  
->  	ethernet@f2000 { /* 10GEC2 */
-> diff --git a/drivers/net/phy/aquantia_main.c b/drivers/net/phy/aquantia_main.c
-> index 0fedd28fd..3f24c42a8 100644
-> @@ -487,7 +491,7 @@ static int aqr107_config_init(struct phy_device *phydev)
->  	/* Check that the PHY interface type is compatible */
->  	if (phydev->interface != PHY_INTERFACE_MODE_SGMII &&
->  	    phydev->interface != PHY_INTERFACE_MODE_2500BASEX &&
-> -	    phydev->interface != PHY_INTERFACE_MODE_XGMII &&
-> +	    phydev->interface != PHY_INTERFACE_MODE_USXGMII &&
->  	    phydev->interface != PHY_INTERFACE_MODE_10GKR)
->  		return -ENODEV;
-
-Hi Heiner
-
-Just to reiterate Florian's point. We need to be careful with device
-tree blobs. We should try not to break them, at least not for a few
-cycles.
-
-I would much prefer to see a
-
-WARN_ON(phydev->interface == PHY_INTERFACE_MODE_XGMII,
-        "Your devicetree is out of date, please update it");
-
-and accept XGMII for this cycle. These are development boards, so in
-theory users are developers, so should know how to update the DT.
-
-    Andrew
+>  static struct pci_bus *pci_do_find_bus(struct pci_bus *bus, unsigned char busnr)
+>  {
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
