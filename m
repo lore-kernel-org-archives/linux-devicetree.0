@@ -1,29 +1,151 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 2/3] ARM: dts: rockchip: Use the GPU to cool CPU thermal zone of veyron mickey
-Date: Wed, 22 May 2019 11:14:55 +0200
-Message-ID: <3939310.vedCpJl8Cg@phil>
-References: <20190520220051.54847-1-mka@chromium.org> <20190520220051.54847-2-mka@chromium.org>
+From: Mathieu Malaterre <malat@debian.org>
+Subject: Re: [PATCH v12 09/13] MIPS: jz4740: Add DTS nodes for the TCU drivers
+Date: Wed, 22 May 2019 11:21:00 +0200
+Message-ID: <CA+7wUsxe4DLmAGNnnXZ3UokguMJ0cOGtu=opQpuAPvN_SH4KUw@mail.gmail.com>
+References: <20190521145141.9813-1-paul@crapouillou.net> <20190521145141.9813-10-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520220051.54847-2-mka@chromium.org>
+In-Reply-To: <20190521145141.9813-10-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 21. Mai 2019, 00:00:50 CEST schrieb Matthias Kaehlcke:
-> On rk3288 the CPU and GPU temperatures are correlated. Limit the GPU
-> frequency on veyron mickey to 400 MHz for CPU temperatures >= 65°C
-> and to 300 MHz for CPU temperatures >= 85°C.
-> 
-> This matches the configuration of the downstream Chrome OS 3.14 kernel,
-> the 'official' kernel for mickey.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Tue, May 21, 2019 at 4:52 PM Paul Cercueil <paul@crapouillou.net> wrote:
+>
+> Add DTS nodes for the JZ4780, JZ4770 and JZ4740 devicetree files.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>
+> Notes:
+>     v5: New patch
+>
+>     v6: Fix register lengths in watchdog/pwm nodes
+>
+>     v7: No change
+>
+>     v8: - Fix wrong start address for PWM node
+>         - Add system timer and clocksource sub-nodes
+>
+>     v9: Drop timer and clocksource sub-nodes
+>
+>     v10-v11: No change
+>
+>     v12: Drop PWM/watchdog/OST sub-nodes, for now.
+>
+>  arch/mips/boot/dts/ingenic/jz4740.dtsi | 22 ++++++++++++++++++++++
+>  arch/mips/boot/dts/ingenic/jz4770.dtsi | 21 +++++++++++++++++++++
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 21 +++++++++++++++++++++
+>  3 files changed, 64 insertions(+)
+>
+> diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> index 2beb78a62b7d..807d9702d4cf 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> @@ -53,6 +53,28 @@
+>                 clock-names = "rtc";
+>         };
+>
+> +       tcu: timer@10002000 {
+> +               compatible = "ingenic,jz4740-tcu";
+> +               reg = <0x10002000 0x1000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0x0 0x10002000 0x1000>;
+> +
+> +               #clock-cells = <1>;
+> +
+> +               clocks = <&cgu JZ4740_CLK_RTC
+> +                         &cgu JZ4740_CLK_EXT
+> +                         &cgu JZ4740_CLK_PCLK
+> +                         &cgu JZ4740_CLK_TCU>;
+> +               clock-names = "rtc", "ext", "pclk", "tcu";
+> +
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <23 22 21>;
+> +       };
+> +
+>         rtc_dev: rtc@10003000 {
+>                 compatible = "ingenic,jz4740-rtc";
+>                 reg = <0x10003000 0x40>;
+> diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+> index 49ede6c14ff3..70932fd90902 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+> @@ -46,6 +46,27 @@
+>                 #clock-cells = <1>;
+>         };
+>
+> +       tcu: timer@10002000 {
+> +               compatible = "ingenic,jz4770-tcu";
+> +               reg = <0x10002000 0x1000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0x0 0x10002000 0x1000>;
+> +
+> +               #clock-cells = <1>;
+> +
+> +               clocks = <&cgu JZ4770_CLK_RTC
+> +                         &cgu JZ4770_CLK_EXT
+> +                         &cgu JZ4770_CLK_PCLK>;
+> +               clock-names = "rtc", "ext", "pclk";
+> +
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <27 26 25>;
+> +       };
+> +
+>         pinctrl: pin-controller@10010000 {
+>                 compatible = "ingenic,jz4770-pinctrl";
+>                 reg = <0x10010000 0x600>;
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> index b03cdec56de9..495082ce7fc5 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -46,6 +46,27 @@
+>                 #clock-cells = <1>;
+>         };
+>
+> +       tcu: timer@10002000 {
 
-applied patches 2+3 for 5.3
+With W=1, I see:
 
-Thanks
-Heiko
+../arch/mips/boot/dts/ingenic/jz4780.dtsi:64.22-83.4: Warning
+(unique_unit_address): /timer@10002000: duplicate unit-address (also
+used in node /watchdog@1000
+2000)
+
+
+> +               compatible = "ingenic,jz4770-tcu";
+> +               reg = <0x10002000 0x1000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0x0 0x10002000 0x1000>;
+> +
+> +               #clock-cells = <1>;
+> +
+> +               clocks = <&cgu JZ4780_CLK_RTCLK
+> +                         &cgu JZ4780_CLK_EXCLK
+> +                         &cgu JZ4780_CLK_PCLK>;
+> +               clock-names = "rtc", "ext", "pclk";
+> +
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <27 26 25>;
+> +       };
+> +
+>         rtc_dev: rtc@10003000 {
+>                 compatible = "ingenic,jz4780-rtc";
+>                 reg = <0x10003000 0x4c>;
+> --
+> 2.21.0.593.g511ec345e18
+>
