@@ -1,39 +1,30 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 1/3] thermal: rockchip: fix up the tsadc pinctrl setting error
-Date: Wed, 22 May 2019 14:34:58 +0200
-Message-ID: <1805430.MCm2xJzUXA@phil>
-References: <1556618986-18923-1-git-send-email-zhangqing@rock-chips.com> <2174314.1vfUlvne1O@phil> <f0581341-126a-5733-3c4b-8e6f67bfc32e@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] spi: dt-bindings: Convert Arm pl022 to json-schema
+Date: Wed, 22 May 2019 07:49:44 -0500
+Message-ID: <CAL_Jsq+JimAYW9GiPz6_hNJfnA+8bnN=kPDOEJFPyt+57bwriw@mail.gmail.com>
+References: <20190521212325.16639-1-robh@kernel.org> <20190522104226.nwcvx33akt6q576m@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f0581341-126a-5733-3c4b-8e6f67bfc32e@linaro.org>
+In-Reply-To: <20190522104226.nwcvx33akt6q576m@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Enric Balletbo Serra <eballetbo@gmail.com>, Elaine Zhang <zhangqing@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, huangtao@rock-chips.com, Linux PM list <linux-pm@vger.kernel.org>, xxx@rock-chips.com, xf@rock-chips.com, linux-kernel <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Doug Anderson <dianders@chromium.org>, vicencb@gmail.com
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-spi <linux-spi@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 22. Mai 2019, 14:30:16 CEST schrieb Daniel Lezcano:
-> On 22/05/2019 14:27, Heiko Stuebner wrote:
-> 
-> [ ... ]
-> 
-> >> As this change is now in mainline and is causing veyron to hang I'd
-> >> suggest reverting this change for now. Even fixing the root cause
-> >> (maybe the one I pointed above) after this patch we will have the
-> >> thermal driver to fail because "gpio" and "otpout" states are not
-> >> defined nor documented (a change on this will need some reviews and
-> >> acks and time I guess).
-> > 
-> > I definitly agree here. Handling + checking the binding change
-> > as well as needed fallback code is definitly not material for -rc-kernels
-> > so we should just revert for now and let Elaine fix the issues for 5.3.
-> > 
-> > Anyone volunteering for sending a revert-patch to Eduardo? :-)
-> 
-> I can't right now :/
+On Wed, May 22, 2019 at 5:42 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> Hi Rob,
+>
+> On Tue, May 21, 2019 at 04:23:24PM -0500, Rob Herring wrote:
+> > +allOf:
+> > +  - $ref: "spi-controller.yaml#"
+>
+> You're using a different construct on the spi-gpio binding you just
+> sent (/schemas/spi/spi-controller.yaml).
+>
+> Is that on purpose?
 
-ok, I'll do the revert patch then, so that we get this sorted.
+No. This one is correct (though both work).
 
-
-Heiko
+Rob
