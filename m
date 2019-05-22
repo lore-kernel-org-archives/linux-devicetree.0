@@ -1,73 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] checkpatch.pl: Update DT vendor prefix check
-Date: Wed, 22 May 2019 12:58:01 -0500
-Message-ID: <CAL_JsqLQ6jEU1JR05cxim6zwDM_acmA8z3CvcjhDAnZ276NDrQ@mail.gmail.com>
-References: <20190522151238.25176-1-robh@kernel.org> <2b4878de1404e71d3085ee4832a5abc3526f2cdf.camel@perches.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: disable GPU 500 MHz OPP for veyron
+Date: Wed, 22 May 2019 11:13:45 -0700
+Message-ID: <CAD=FV=Ww5pYOdknESUC4S06FvPzZ03Z-tW098r2N+9tbHNx7Vw@mail.gmail.com>
+References: <20190520220051.54847-1-mka@chromium.org> <3108277.JP5bvJISVS@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2b4878de1404e71d3085ee4832a5abc3526f2cdf.camel@perches.com>
+In-Reply-To: <3108277.JP5bvJISVS@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Matthias Kaehlcke <mka@chromium.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 22, 2019 at 12:16 PM Joe Perches <joe@perches.com> wrote:
->
-> On Wed, 2019-05-22 at 10:12 -0500, Rob Herring wrote:
-> > In commit 8122de54602e ("dt-bindings: Convert vendor prefixes to
-> > json-schema"), vendor-prefixes.txt has been converted to a DT schema.
-> > Update the checkpatch.pl DT check to extract vendor prefixes from the new
-> > vendor-prefixes.yaml file.
-> >
-> > Fixes: 8122de54602e ("dt-bindings: Convert vendor prefixes to json-schema")
-> > Cc: Joe Perches <joe@perches.com>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  scripts/checkpatch.pl | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > index bb28b178d929..073051a4471b 100755
-> > --- a/scripts/checkpatch.pl
-> > +++ b/scripts/checkpatch.pl
-> > @@ -3027,7 +3027,7 @@ sub process {
-> >                       my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
-> >
-> >                       my $dt_path = $root . "/Documentation/devicetree/bindings/";
-> > -                     my $vp_file = $dt_path . "vendor-prefixes.txt";
-> > +                     my $vp_file = $dt_path . "vendor-prefixes.yaml";
-> >
-> >                       foreach my $compat (@compats) {
-> >                               my $compat2 = $compat;
-> > @@ -3042,7 +3042,7 @@ sub process {
-> >
-> >                               next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
-> >                               my $vendor = $1;
-> > -                             `grep -Eq "^$vendor\\b" $vp_file`;
-> > +                             `grep -oE "\\"\\^[a-zA-Z0-9]+" $vp_file | grep -q "$vendor"`;
->
-> I think this does't work well as it loses the -
-> in various vendor prefixes:
->
->   "^active-semi,.*":
->   "^asahi-kasei,.*":
->   "^ebs-systart,.*":
->   "^inside-secure,.*":
->   "^multi-inno,.*":
->   "^netron-dy,.*":
->   "^si-en,.*":
->   "^si-linux,.*":
->   "^tbs-biometrics,.*":
->   "^u-blox,.*":
->   "^x-powers,.*":
+Hi,
 
-Ah, indeed.
-
-> Perhaps the grep should be something like: (untested)
+On Wed, May 22, 2019 at 2:14 AM Heiko Stuebner <heiko@sntech.de> wrote:
 >
->         `grep -Eq "\\"\\^\Q$vendor\E,\\.\\*\\":" $vp_file`;
+> Am Dienstag, 21. Mai 2019, 00:00:49 CEST schrieb Matthias Kaehlcke:
+> > The NPLL is the only safe way to generate 500 MHz for the GPU. The
+> > downstream Chrome OS 3.14 kernel ('official' kernel for veyron
+> > devices) re-purposes NPLL to HDMI and hence disables the OPP for
+> > the GPU (see https://crrev.com/c/1574579). Disable it here as well
+> > to keep in sync and avoid problems in case someone decides to
+> > re-purpose NPLL.
+> >
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+>
+> I was actually expecting to just drop the 500MHz opp from all
+> of rk3288 ;-) .
+>
+> To not have to respin, I just modified your patch accordingly,
+> see [0] and please holler if you disagree :-D .
 
-That works. Thanks.
+Seems fine to me, thanks!
 
-Rob
+-Doug
