@@ -1,36 +1,41 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v2 2/8] dt-bindings: phy: dp83867: Add
- documentation for disabling clock output
-Date: Wed, 22 May 2019 21:11:48 +0200
-Message-ID: <20190522191148.GH7281@lunn.ch>
-References: <20190522184255.16323-1-tpiepho@impinj.com>
- <20190522184255.16323-2-tpiepho@impinj.com>
+From: Loys Ollivier <lollivier@baylibre.com>
+Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from DT source data
+Date: Wed, 22 May 2019 21:18:33 +0200
+Message-ID: <868suyb8mu.fsf@baylibre.com>
+References: <20190411084304.5072-2-paul.walmsley@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190522184255.16323-2-tpiepho@impinj.com>
-Sender: netdev-owner@vger.kernel.org
-To: Trent Piepho <tpiepho@impinj.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190411084304.5072-2-paul.walmsley@sifive.com> (Paul Walmsley's
+        message of "Thu, 11 Apr 2019 01:42:59 -0700")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: linux-kernel@vger.kernel.org, Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 22, 2019 at 06:43:21PM +0000, Trent Piepho wrote:
-> The clock output is generally only used for testing and development and
-> not used to daisy-chain PHYs.  It's just a source of RF noise afterward.
-> 
-> Add a mux value for "off".  I've added it as another enumeration to the
-> output property.  In the actual PHY, the mux and the output enable are
-> independently controllable.  However, it doesn't seem useful to be able
-> to describe the mux setting when the output is disabled.
-> 
-> Document that PHY's default setting will be left as is if the property
-> is omitted.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Trent Piepho <tpiepho@impinj.com>
+On Thu 11 Apr 2019 at 01:42, Paul Walmsley <paul.walmsley@sifive.com> wrote:
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Similar to ARM64, add support for building DTB files from DT source
+> data for RISC-V boards.
+>
+> This patch starts with the infrastructure needed for SiFive boards.
+> Boards from other vendors would add support here in a similar form.
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
 
-    Andrew
+Tested-by: Loys Ollivier <lollivier@baylibre.com>
+
+Tested the whole patch series using FSBL+BBL.
+Did basic boot testing and uart validation.
+
+The actual testing process is quite cumbersome.
+One needs to rebuild the BBL to update the dtb loaded.
+
+Would you have an idea of the delta between bbl and u-boot ?
+I tried booting the same kernel + dtb with U-Boot but ran into
+errors related to plic.
+
+Loys
