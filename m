@@ -1,78 +1,176 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] regulator: qcom_spmi: Add support for PM8005
-Date: Wed, 22 May 2019 12:01:07 +0100
-Message-ID: <20190522110107.GB8582@sirena.org.uk>
-References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
- <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
- <20190521185054.GD16633@sirena.org.uk>
- <51caaee4-dfc9-5b5a-07c7-b1406c178ca3@codeaurora.org>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v12 09/13] MIPS: jz4740: Add DTS nodes for the TCU drivers
+Date: Wed, 22 May 2019 13:15:56 +0200
+Message-ID: <1558523756.3066.0@crapouillou.net>
+References: <20190521145141.9813-1-paul@crapouillou.net>
+        <20190521145141.9813-10-paul@crapouillou.net>
+        <CA+7wUsxe4DLmAGNnnXZ3UokguMJ0cOGtu=opQpuAPvN_SH4KUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51caaee4-dfc9-5b5a-07c7-b1406c178ca3@codeaurora.org>
+In-Reply-To: <CA+7wUsxe4DLmAGNnnXZ3UokguMJ0cOGtu=opQpuAPvN_SH4KUw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, lgirdwood@gmail.com, agross@kernel.org, david.brown@linaro.org, bjorn.andersson@linaro.org, jcrouse@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+To: Mathieu Malaterre <malat@debian.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
 
---ftEhullJWpWg/VHq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, May 21, 2019 at 05:16:06PM -0600, Jeffrey Hugo wrote:
-> On 5/21/2019 12:50 PM, Mark Brown wrote:
+On Wed, May 22, 2019 at 11:21 AM, Mathieu Malaterre <malat@debian.org> 
+wrote:
+> On Tue, May 21, 2019 at 4:52 PM Paul Cercueil <paul@crapouillou.net> 
+> wrote:
+>> 
+>>  Add DTS nodes for the JZ4780, JZ4770 and JZ4740 devicetree files.
+>> 
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>> 
+>>  Notes:
+>>      v5: New patch
+>> 
+>>      v6: Fix register lengths in watchdog/pwm nodes
+>> 
+>>      v7: No change
+>> 
+>>      v8: - Fix wrong start address for PWM node
+>>          - Add system timer and clocksource sub-nodes
+>> 
+>>      v9: Drop timer and clocksource sub-nodes
+>> 
+>>      v10-v11: No change
+>> 
+>>      v12: Drop PWM/watchdog/OST sub-nodes, for now.
+>> 
+>>   arch/mips/boot/dts/ingenic/jz4740.dtsi | 22 ++++++++++++++++++++++
+>>   arch/mips/boot/dts/ingenic/jz4770.dtsi | 21 +++++++++++++++++++++
+>>   arch/mips/boot/dts/ingenic/jz4780.dtsi | 21 +++++++++++++++++++++
+>>   3 files changed, 64 insertions(+)
+>> 
+>>  diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi 
+>> b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>  index 2beb78a62b7d..807d9702d4cf 100644
+>>  --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>  +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>  @@ -53,6 +53,28 @@
+>>                  clock-names = "rtc";
+>>          };
+>> 
+>>  +       tcu: timer@10002000 {
+>>  +               compatible = "ingenic,jz4740-tcu";
+>>  +               reg = <0x10002000 0x1000>;
+>>  +               #address-cells = <1>;
+>>  +               #size-cells = <1>;
+>>  +               ranges = <0x0 0x10002000 0x1000>;
+>>  +
+>>  +               #clock-cells = <1>;
+>>  +
+>>  +               clocks = <&cgu JZ4740_CLK_RTC
+>>  +                         &cgu JZ4740_CLK_EXT
+>>  +                         &cgu JZ4740_CLK_PCLK
+>>  +                         &cgu JZ4740_CLK_TCU>;
+>>  +               clock-names = "rtc", "ext", "pclk", "tcu";
+>>  +
+>>  +               interrupt-controller;
+>>  +               #interrupt-cells = <1>;
+>>  +
+>>  +               interrupt-parent = <&intc>;
+>>  +               interrupts = <23 22 21>;
+>>  +       };
+>>  +
+>>          rtc_dev: rtc@10003000 {
+>>                  compatible = "ingenic,jz4740-rtc";
+>>                  reg = <0x10003000 0x40>;
+>>  diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi 
+>> b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+>>  index 49ede6c14ff3..70932fd90902 100644
+>>  --- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
+>>  +++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+>>  @@ -46,6 +46,27 @@
+>>                  #clock-cells = <1>;
+>>          };
+>> 
+>>  +       tcu: timer@10002000 {
+>>  +               compatible = "ingenic,jz4770-tcu";
+>>  +               reg = <0x10002000 0x1000>;
+>>  +               #address-cells = <1>;
+>>  +               #size-cells = <1>;
+>>  +               ranges = <0x0 0x10002000 0x1000>;
+>>  +
+>>  +               #clock-cells = <1>;
+>>  +
+>>  +               clocks = <&cgu JZ4770_CLK_RTC
+>>  +                         &cgu JZ4770_CLK_EXT
+>>  +                         &cgu JZ4770_CLK_PCLK>;
+>>  +               clock-names = "rtc", "ext", "pclk";
+>>  +
+>>  +               interrupt-controller;
+>>  +               #interrupt-cells = <1>;
+>>  +
+>>  +               interrupt-parent = <&intc>;
+>>  +               interrupts = <27 26 25>;
+>>  +       };
+>>  +
+>>          pinctrl: pin-controller@10010000 {
+>>                  compatible = "ingenic,jz4770-pinctrl";
+>>                  reg = <0x10010000 0x600>;
+>>  diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi 
+>> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>  index b03cdec56de9..495082ce7fc5 100644
+>>  --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>  +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>  @@ -46,6 +46,27 @@
+>>                  #clock-cells = <1>;
+>>          };
+>> 
+>>  +       tcu: timer@10002000 {
+> 
+> With W=1, I see:
+> 
+> ../arch/mips/boot/dts/ingenic/jz4780.dtsi:64.22-83.4: Warning
+> (unique_unit_address): /timer@10002000: duplicate unit-address (also
+> used in node /watchdog@1000
+> 2000)
 
-> > > +static int spmi_regulator_common_list_voltage(struct regulator_dev *rdev,
-> > > +					      unsigned selector);
-> > > +
-> > > +static int spmi_regulator_common2_set_voltage(struct regulator_dev *rdev,
-> > > +					      unsigned selector)
+That didn't happen in V11 because there I was also migrating the
+watchdog and PWM drivers to children nodes of the TCU. It was more
+atomic, but it also was a 27-patches bomb touching a lot of
+subsystems that nobody was ever going to merge.
 
-> > Eeew, can we not have better names?
+Is the address conflict OK, knowing that the watchdog node will
+move out of the way as soon as this patchset is merged?
 
-> I'm open to suggestions.  Apparently there are two register common register
-> schemes - the old one and the new one.  PMIC designs after some random point
-> in time are all the new register scheme per the documentation I see.
+Should I add an extra patch to remove the watchdog node instead?
 
-> As far as I an aware, the FT426 design is the first design to be added to
-> this driver to make use of the new scheme, but I expect more to be supported
-> in future, thus I'm reluctant to make these ft426 specific in the name.
+(and yes, devicetree ABI will break, which is sort-of OK in this
+case - as on Ingenic boards the devicetree blobs are always
+compiled within the kernel, so I think we should make this
+much-needed change while we still can).
 
-If there's a completely new register map why are these even in the same
-driver?
 
-> > > +	if (reg == SPMI_COMMON2_MODE_HPM_MASK)
-> > > +		return REGULATOR_MODE_NORMAL;
-> > > +
-> > > +	if (reg == SPMI_COMMON2_MODE_AUTO_MASK)
-> > > +		return REGULATOR_MODE_FAST;
-> > > +
-> > > +	return REGULATOR_MODE_IDLE;
-> > > +}
-
-> > This looks like you want to write a switch statement.
-
-> It follows the existing style in the driver, but sure I can make this a
-> switch.
-
-Please fix the rest of the driver as well then.
-
---ftEhullJWpWg/VHq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzlK/IACgkQJNaLcl1U
-h9AXBAf+Mto6O8QugYdL/55lY+O0vvNOPBrb59BAFs7716IWtNgDrcYMV26RZQSH
-BzgdRdziDxkoGHoN5SW0+SMI4M3+P/z2H/27sIzWS9XVN1Sa2FWpY/YXuLbH2CZi
-X9ghBPTYAzoMuBUmYLFGtLIRdiO9010etKXNciGD2gFJfNNadNKO3J8hC3OqDgTZ
-bMxyC5g7MC3I9htRJ9yafXbbXHqahv65Ef6qJglqAab9l8lEYZUsinLDr0+RsDjA
-VK6zsNXyfMwkdUUWvLpzObIWE3LYAys1o/c62/nPfPdJp39K5ZVaN8oAKAQlcULk
-rvwI3qh/T/+DFRxCMIU+w/Hp9MLa5g==
-=jGLx
------END PGP SIGNATURE-----
-
---ftEhullJWpWg/VHq--
+>>  +               compatible = "ingenic,jz4770-tcu";
+>>  +               reg = <0x10002000 0x1000>;
+>>  +               #address-cells = <1>;
+>>  +               #size-cells = <1>;
+>>  +               ranges = <0x0 0x10002000 0x1000>;
+>>  +
+>>  +               #clock-cells = <1>;
+>>  +
+>>  +               clocks = <&cgu JZ4780_CLK_RTCLK
+>>  +                         &cgu JZ4780_CLK_EXCLK
+>>  +                         &cgu JZ4780_CLK_PCLK>;
+>>  +               clock-names = "rtc", "ext", "pclk";
+>>  +
+>>  +               interrupt-controller;
+>>  +               #interrupt-cells = <1>;
+>>  +
+>>  +               interrupt-parent = <&intc>;
+>>  +               interrupts = <27 26 25>;
+>>  +       };
+>>  +
+>>          rtc_dev: rtc@10003000 {
+>>                  compatible = "ingenic,jz4780-rtc";
+>>                  reg = <0x10003000 0x4c>;
+>>  --
+>>  2.21.0.593.g511ec345e18
+>> 
