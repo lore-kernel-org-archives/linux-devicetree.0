@@ -1,38 +1,42 @@
 From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v2 3/8] net: phy: dp83867: Add ability to
- disable output clock
-Date: Wed, 22 May 2019 20:51:08 +0200
-Message-ID: <20190522185108.GA7281@lunn.ch>
+Subject: Re: [PATCH net-next v2 4/8] net: phy: dp83867: Rework delay rgmii
+ delay handling
+Date: Wed, 22 May 2019 20:54:00 +0200
+Message-ID: <20190522185400.GB7281@lunn.ch>
 References: <20190522184255.16323-1-tpiepho@impinj.com>
- <20190522184255.16323-3-tpiepho@impinj.com>
+ <20190522184255.16323-4-tpiepho@impinj.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190522184255.16323-3-tpiepho@impinj.com>
+In-Reply-To: <20190522184255.16323-4-tpiepho@impinj.com>
 Sender: netdev-owner@vger.kernel.org
 To: Trent Piepho <tpiepho@impinj.com>
 Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 22, 2019 at 06:43:22PM +0000, Trent Piepho wrote:
-> Generally, the output clock pin is only used for testing and only serves
-> as a source of RF noise after this.  It could be used to daisy-chain
-> PHYs, but this is uncommon.  Since the PHY can disable the output, make
-> doing so an option.  I do this by adding another enumeration to the
-> allowed values of ti,clk-output-sel.
+On Wed, May 22, 2019 at 06:43:23PM +0000, Trent Piepho wrote:
+> The code was assuming the reset default of the delay control register
+> was to have delay disabled.  This is what the datasheet shows as the
+> register's initial value.  However, that's not actually true: the
+> default is controlled by the PHY's pin strapping.
 > 
-> The code was not using the value DP83867_CLK_O_SEL_REF_CLK as one might
-> expect: to select the REF_CLK as the output.  Rather it meant "keep
-> clock output setting as is", which, depending on PHY strapping, might
-> not be outputting REF_CLK.
+> If the interface mode is selected as RX or TX delay only, insure the
+> other direction's delay is disabled.
 > 
-> Change this so DP83867_CLK_O_SEL_REF_CLK means enable REF_CLK output.
-> Omitting the property will leave the setting as is (which was the
-> previous behavior in this case).
+> If the interface mode is just "rgmii", with neither TX or RX internal
+> delay, one might expect that the driver should disable both delays.  But
+> this is not what the driver does.  It leaves the setting at the PHY's
+> strapping's default.  And that default, for no pins with strapping
+> resistors, is to have delay enabled and 2.00 ns.
 > 
-> Out of range values were silently converted into
-> DP83867_CLK_O_SEL_REF_CLK.  Change this so they generate an error.
+> Rather than change this behavior, I've kept it the same and documented
+> it.  No delay will most likely not work and will break ethernet on any
+> board using "rgmii" mode.  If the board is strapped to have a delay and
+> is configured to use "rgmii" mode a warning is generated that "rgmii-id"
+> should have been used.
+> 
+> Also validate the delay values and fail if they are not in range.
 > 
 > Cc: Andrew Lunn <andrew@lunn.ch>
 > Cc: Florian Fainelli <f.fainelli@gmail.com>
