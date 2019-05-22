@@ -1,86 +1,125 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 0/5] Exynos EHCI/OHCI: resolve conflict with the generic
- USB device bindings
-Date: Wed, 22 May 2019 08:01:28 +0200
-Message-ID: <ff3f4b25-cbc0-4195-79b2-c00633f0c79c@samsung.com>
-References: <CGME20190521120015eucas1p1da2f3f32d6b8af8cb550463686fd4e12@eucas1p1.samsung.com>
-        <20190521115849.9882-1-m.szyprowski@samsung.com>
-        <yw1xk1ekszo9.fsf@mansr.com>
+From: Chuanhua Han <chuanhua.han@nxp.com>
+Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
+Date: Wed, 22 May 2019 06:26:19 +0000
+Message-ID: <AM6PR04MB435708872A4DBA92561C772597000@AM6PR04MB4357.eurprd04.prod.outlook.com>
+References: <20190509070657.18281-1-chuanhua.han@nxp.com>
+ <20190517023728.GA15856@dragon>
+ <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
+ <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
+ <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
+ <AM6PR04MB58631458E6D851E4D83A77ED8F070@AM6PR04MB5863.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <yw1xk1ekszo9.fsf@mansr.com>
+In-Reply-To: <AM6PR04MB58631458E6D851E4D83A77ED8F070@AM6PR04MB5863.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
-Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, Krzysztof Kozlowski <krzk@kernel.org>, Peter Chen <peter.chen@nxp.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>
+To: Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ying Zhang <ying.zhang22455@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Måns
-
-On 2019-05-21 15:30, Måns Rullgård wrote:
-> Marek Szyprowski <m.szyprowski@samsung.com> writes:
->> Dear All,
->>
->> Commit 69bec7259853 ("USB: core: let USB device know device node") added
->> support for attaching devicetree node for USB devices. Those nodes are
->> children of their USB host controller. However Exynos EHCI and OHCI
->> driver bindings already define child-nodes for each physical root hub
->> port and assigns respective PHY controller and parameters to them. This
->> leads to the conflict. A workaround for it has been merged as commit
->> 01d4071486fe ("usb: exynos: add workaround for the USB device bindings
->> conflict"), but it disabled support for USB device binding for Exynos
->> EHCI/OHCI controllers.
->>
->> This patchset tries to resolve this binding conflict by changing Exynos
->> EHCI/OHCI bindings: PHYs are moved from the sub-nodes to a standard array
->> under the 'phys' property. Such solution has been suggested by Måns
->> Rullgård in the following thread: https://lkml.org/lkml/2019/5/13/228
->>
->> To keep everything working during the transitional time, the changes has
->> been split into 2 steps. First step (patches 1-3) need to be merged before
->> the second one (patches 4-5). Patches from each step can be merged to
->> respective trees without any dependencies - the only requirement is that
->> second step has to be merged after merging all patches from the first one.
->>
->> This patchset has been tested on various Exynos4 boards with different
->> USB host controller configurations (Odroids family: X2, U3, XU3).
->>
->> Best regards
->> Marek Szyprowski
->> Samsung R&D Institute Poland
->>
->> Marek Szyprowski (5):
->>    dt-bindings: switch Exynos EHCI/OHCI bindings to use array of generic
->>      PHYs
->>    ARM: dts: exynos: Add array of generic PHYs to EHCI/OHCI devices
->>    usb: exynos: add support for getting PHYs from the standard dt array
->>    ARM: dts: exynos: Remove obsolete port sub-nodes from EHCI/OHCI
->>      devices
->>    usb: exynos: Remove support for legacy PHY bindings
-> You could retain compatibility with old devicetrees (which may be
-> useful) by using the "phys" property if it exists and falling back
-> on the old method if it doesn't.  Then you would get this sequence
-> of changes:
->
-> 1. Update binding definition.
-> 2. Support new binding in driver, with fallback to old.
-> 3. Switch dts files to new binding.
-
-This is exactly what I did in this patchset. Until Patch #5 is applied, 
-Exynos EHCI/OHCI drivers supports both ways of getting PHYs and is fully 
-compatible with existing DTBs. This last patch should be applied at 
-least one release later that the first 3 patches to keep everything 
-working during the -rcX time.
-
-Compatibility with so called old DTBs is not so important, because there 
-are no boards with Exynos4 and Exynos5 SoCs, which would not update DTB 
-together with the kernel zImage. There have been already some 
-significant compatibility breaks related to those SoCs during last years.
-
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVvIExpDQo+IFNlbnQ6
+IDIwMTnE6jXUwjIyyNUgNDoxNQ0KPiBUbzogQ2h1YW5odWEgSGFuIDxjaHVhbmh1YS5oYW5Abnhw
+LmNvbT47IFNoYXduIEd1bw0KPiA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gQ2M6IG1hcmsucnV0
+bGFuZEBhcm0uY29tOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBZ
+aW5nIFpoYW5nDQo+IDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtF
+WFRdIFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6IGZpeCB3YXRjaGRvZyBkZXZpY2Ug
+bm9kZQ0KPiANCj4gDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJv
+bTogQ2h1YW5odWEgSGFuDQo+ID4gU2VudDogVHVlc2RheSwgTWF5IDIxLCAyMDE5IDg6MDAgQU0N
+Cj4gPiBUbzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBTaGF3biBHdW8gPHNoYXduZ3Vv
+QGtlcm5lbC5vcmc+DQo+ID4gQ2M6IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlpbmcgWmhhbmcNCj4gPiA8eWluZy56aGFu
+ZzIyNDU1QG54cC5jb20+DQo+ID4gU3ViamVjdDogUkU6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0
+OiBkdHM6IGxzMTAyOGE6IGZpeCB3YXRjaGRvZw0KPiA+IGRldmljZSBub2RlDQo+ID4NCj4gPg0K
+PiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogTGVvIExp
+DQo+ID4gPiBTZW50OiAyMDE5xOo11MIxOMjVIDY6MDENCj4gPiA+IFRvOiBDaHVhbmh1YSBIYW4g
+PGNodWFuaHVhLmhhbkBueHAuY29tPjsgU2hhd24gR3VvDQo+ID4gPiA8c2hhd25ndW9Aa2VybmVs
+Lm9yZz4NCj4gPiA+IENjOiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlpbmcgWmhhbmcNCj4gPiA+IDx5aW5nLnpoYW5n
+MjI0NTVAbnhwLmNvbT4NCj4gPiA+IFN1YmplY3Q6IFJFOiBbRVhUXSBSZTogW1BBVENIXSBhcm02
+NDogZHRzOiBsczEwMjhhOiBmaXggd2F0Y2hkb2cNCj4gPiA+IGRldmljZSBub2RlDQo+ID4gPg0K
+PiA+ID4NCj4gPiA+DQo+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+
+IEZyb206IENodWFuaHVhIEhhbg0KPiA+ID4gPiBTZW50OiBGcmlkYXksIE1heSAxNywgMjAxOSAx
+OjExIEFNDQo+ID4gPiA+IFRvOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+ID4g
+PiA+IENjOiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IG1hcmsucnV0bGFuZEBhcm0uY29t
+OyBsaW51eC1hcm0tDQo+ID4gPiA+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+ID4gPiA+IGtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7IFlpbmcgWmhhbmcgPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiA+ID4gPiBTdWJqZWN0
+OiBSRTogW0VYVF0gUmU6IFtQQVRDSF0gYXJtNjQ6IGR0czogbHMxMDI4YTogZml4IHdhdGNoZG9n
+DQo+ID4gPiA+IGRldmljZSBub2RlDQo+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+
+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4gPiBGcm9tOiBTaGF3biBHdW8g
+PHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+ID4gPiA+ID4gU2VudDogMjAxOcTqNdTCMTfI1SAxMDoz
+OA0KPiA+ID4gPiA+IFRvOiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+
+ID4gPiA+IENjOiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IG1hcmsucnV0bGFuZEBhcm0u
+Y29tOw0KPiA+ID4gPiA+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4g
+PiA+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsgWWluZw0KPiA+ID4gPiA+IFpoYW5nIDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT4N
+Cj4gPiA+ID4gPiBTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIXSBhcm02NDogZHRzOiBsczEwMjhh
+OiBmaXggd2F0Y2hkb2cNCj4gPiA+ID4gPiBkZXZpY2Ugbm9kZQ0KPiA+ID4gPiA+DQo+ID4gPiA+
+ID4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiBUaHUsIE1heSAw
+OSwgMjAxOSBhdCAwMzowNjo1N1BNICswODAwLCBDaHVhbmh1YSBIYW4gd3JvdGU6DQo+ID4gPiA+
+ID4gPiBsczEwMjhhIHBsYXRmb3JtIHVzZXMgc3A4MDUgd2F0Y2hkb2csIGFuZCB1c2UgMS8xNiBw
+bGF0Zm9ybQ0KPiA+ID4gPiA+ID4gY2xvY2sgYXMgdGltZXIgY2xvY2ssIHRoaXMgcGF0Y2ggZml4
+IGRldmljZSB0cmVlIG5vZGUuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1i
+eTogWmhhbmcgWWluZy0yMjQ1NSA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+DQo+ID4gPiA+ID4g
+PiBTaWduZWQtb2ZmLWJ5OiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+
+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gPiAgLi4uL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9m
+c2wtbHMxMDI4YS5kdHNpIHwgMTkNCj4gPiA+ID4gPiA+ICsrKysrKysrKysrKy0tLS0tLS0NCj4g
+PiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMo
+LSkNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290
+L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ID4gPiA+ID4gYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ID4gPiA+ID4gPiBpbmRleCBi
+MDQ1ODEyNDlmMGIuLjE1MTBiMTg1ODI0NiAxMDA2NDQNCj4gPiA+ID4gPiA+IC0tLSBhL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiA+ID4gPiA+ICsr
+KyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiA+
+ID4gPiA+IEBAIC0yODUsMTMgKzI4NSwxOCBAQA0KPiA+ID4gPiA+ID4gICAgICAgICAgICAgICAg
+ICAgICAgICNpbnRlcnJ1cHQtY2VsbHMgPSA8Mj47DQo+ID4gPiA+ID4gPiAgICAgICAgICAgICAg
+IH07DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gLSAgICAgICAgICAgICB3ZG9nMDogd2F0Y2hk
+b2dAMjNjMDAwMCB7DQo+ID4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJs
+ZSA9ICJmc2wsbHMxMDI4YS13ZHQiLA0KPiAiZnNsLGlteDIxLXdkdCI7DQo+ID4gPiA+ID4gPiAt
+ICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweDIzYzAwMDAgMHgwIDB4MTAwMDA+Ow0K
+PiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSA1
+OQ0KPiA+ID4gSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gPiA+ID4gPiAtICAgICAgICAgICAg
+ICAgICAgICAgY2xvY2tzID0gPCZjbG9ja2dlbiA0IDE+Ow0KPiA+ID4gPiA+ID4gLSAgICAgICAg
+ICAgICAgICAgICAgIGJpZy1lbmRpYW47DQo+ID4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAg
+ICAgc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgY2x1c3Rl
+cjFfY29yZTBfd2F0Y2hkb2c6IHdkdEBjMDAwMDAwIHsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEtl
+ZXAgJ3dhdGNoZG9nJyBhcyB0aGUgbm9kZSBuYW1lLA0KPiA+ID4gPiBUaGFua3MgZm9yIHlvdXIg
+cmVwbGF5DQo+ID4gPiA+IERvIHlvdSBtZWFuIHJlcGxhY2UgdGhlIKGud2R0oa8gd2l0aCChrndh
+dGNoZG9noa8/DQo+ID4gPiA+IGFuZCBrZWVwIG5vZGVzIHNvcnQgaW4gdW5pdC1hZGRyZXNzLg0K
+PiA+ID4gPiBXaGF0IGRvZXMgdGhpcyBtZWFuPw0KPiA+ID4NCj4gPiA+IFRoYXQgbWVhbnMgb3Jk
+ZXIgdGhlIG5vZGVzIGJ5IHRoZSBhZGRyZXNzZXMgKGUuZy4gYzAwMDAwMCwgYzAxMDAwMCkNCj4g
+PiBUaGUgY3VycmVudCBvcmRlciBpcyBjb3JyZWN0o6hUaGUgZmlyc3QgaXMgYzAwMDAwMCwgdGhl
+biBjMDAwMDAwo6kuDQo+IA0KPiBCdXQgdGhleSBhcmUgYWRkZWQgYWZ0ZXIgZ3Bpb0AyMzIwMDAw
+IGFuZCBiZWZvcmUgc2F0YUAzMjAwMDAwLg0KSSBjaGFuZ2VkIGFuZCBtYWRlIHRoZSBzZWNvbmQg
+dmVyc2lvbiBvZiB0aGUgcGF0Y2gsIGJ1dCBJIGZvdW5kIHRoZSBmb2xsb3dpbmcgZXJyb3INCndo
+ZW4gSSBleGVjdXRlZCAuL3NjcmlwdHMvY2hlY2twYXRjaC5wbCB4eHgucGF0Y2ggdG8gY2hlY2sg
+dGhlIHBhdGNoOg0KDQpXQVJOSU5HOiBEVCBjb21wYXRpYmxlIHN0cmluZyB2ZW5kb3IgImFybSIg
+YXBwZWFycyB1bi1kb2N1bWVudGVkIC0tIGNoZWNrIC4vRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQNCiM0MzogRklMRTogYXJjaC9hcm02NC9ib290
+L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaTozNTE6DQorIGNvbXBhdGlibGUgPSAiYXJt
+LHNwODA1IiwgImFybSxwcmltZWNlbGwiOw0KDQpIb3dldmVyLCB0aGVyZSBpcyBubyB2ZW5kb3It
+cHJlZml4ZXMudHh0IGZpbGUgaW4gdGhlIC4vRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzLyBkaXJlY3RvcnksIG9ubHkgdmVuZG9yLXByZWZpeGVzLnlhbWwuDQpNb3Jlb3ZlciwgdGhl
+cmUgYXJlIKGuYXJtoa8gdmVuZG9ycyBpbiB2ZW5kb3ItcHJlZml4ZXMueWFtbC4gDQpSZXF1ZXN0
+IGhlbHCjrHRoYW5rcw0KPiANCj4gPiA+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBTaGF3bg0KPiA+
+ID4gPiA+DQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJh
+cm0sc3A4MDUiLCAiYXJtLHByaW1lY2VsbCI7DQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAg
+ICAgICAgcmVnID0gPDB4MCAweGMwMDAwMDAgMHgwIDB4MTAwMD47DQo+ID4gPiA+ID4gPiArICAg
+ICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbG9ja2dlbiA0IDE1PiwgPCZjbG9ja2dlbiA0
+DQo+IDE1PjsNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9
+ICJhcGJfcGNsayIsICJ3ZG9nX2NsayI7DQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgIH07DQo+
+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgIGNsdXN0ZXIxX2NvcmUxX3dh
+dGNoZG9nOiB3ZHRAYzAxMDAwMCB7DQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
+Y29tcGF0aWJsZSA9ICJhcm0sc3A4MDUiLCAiYXJtLHByaW1lY2VsbCI7DQo+ID4gPiA+ID4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweGMwMTAwMDAgMHgwIDB4MTAwMD47DQo+
+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbG9ja2dlbiA0IDE1
+PiwgPCZjbG9ja2dlbiA0DQo+IDE1PjsNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICBjbG9jay1uYW1lcyA9ICJhcGJfcGNsayIsICJ3ZG9nX2NsayI7DQo+ID4gPiA+ID4gPiAgICAg
+ICAgICAgICAgIH07DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gICAgICAgICAgICAgICBzYXRh
+OiBzYXRhQDMyMDAwMDAgew0KPiA+ID4gPiA+ID4gLS0NCj4gPiA+ID4gPiA+IDIuMTcuMQ0KPiA+
+ID4gPiA+ID4NCg==
