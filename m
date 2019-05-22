@@ -1,30 +1,28 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: add Allwinner H6 r_watchdog
-Date: Wed, 22 May 2019 12:32:43 +0200
-Message-ID: <20190522103243.mmrfato5p2mhtf4j@flea>
-References: <20190521160330.28402-1-peron.clem@gmail.com>
- <20190521160330.28402-4-peron.clem@gmail.com>
+Subject: Re: [PATCH] spi: dt-bindings: Convert Arm pl022 to json-schema
+Date: Wed, 22 May 2019 12:42:26 +0200
+Message-ID: <20190522104226.nwcvx33akt6q576m@flea>
+References: <20190521212325.16639-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190521160330.28402-4-peron.clem@gmail.com>
+In-Reply-To: <20190521212325.16639-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2019 at 06:03:28PM +0200, Clément Péron wrote:
-> Allwinner H6 has a second watchdog on the r-blocks which is
-> compatible with the A31.
->
-> This commit add the H6 compatible for the r_watchdog.
->
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Hi Rob,
 
-Unless you have some evidence that the two blocks are different, then
-you should just reuse the same one.
+On Tue, May 21, 2019 at 04:23:24PM -0500, Rob Herring wrote:
+> +allOf:
+> +  - $ref: "spi-controller.yaml#"
+
+You're using a different construct on the spi-gpio binding you just
+sent (/schemas/spi/spi-controller.yaml).
+
+Is that on purpose?
 
 Maxime
 
