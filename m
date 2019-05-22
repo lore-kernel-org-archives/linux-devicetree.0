@@ -1,178 +1,86 @@
-From: Long Cheng <long.cheng@mediatek.com>
-Subject: Re: [PATCH 4/4] serial: 8250-mtk: modify uart DMA rx
-Date: Wed, 22 May 2019 13:24:22 +0800
-Message-ID: <1558502662.14150.31.camel@mhfsdcap03>
-References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
-         <1556336193-15198-5-git-send-email-long.cheng@mediatek.com>
-         <CANMq1KDTyu48joV6uMksGBMz9EmjFH9SEpGAm93YCZ40jxgBpQ@mail.gmail.com>
-         <1558078602.14150.27.camel@mhfsdcap03>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 0/5] Exynos EHCI/OHCI: resolve conflict with the generic
+ USB device bindings
+Date: Wed, 22 May 2019 08:01:28 +0200
+Message-ID: <ff3f4b25-cbc0-4195-79b2-c00633f0c79c@samsung.com>
+References: <CGME20190521120015eucas1p1da2f3f32d6b8af8cb550463686fd4e12@eucas1p1.samsung.com>
+        <20190521115849.9882-1-m.szyprowski@samsung.com>
+        <yw1xk1ekszo9.fsf@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558078602.14150.27.camel@mhfsdcap03>
+In-Reply-To: <yw1xk1ekszo9.fsf@mansr.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Boichat <drinkcat@chromium.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yin>
+To: =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
+Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, Krzysztof Kozlowski <krzk@kernel.org>, Peter Chen <peter.chen@nxp.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-05-17 at 15:36 +0800, Long Cheng wrote:
-> On Wed, 2019-05-15 at 21:48 +0800, Nicolas Boichat wrote:
-> > On Sat, Apr 27, 2019 at 11:36 AM Long Cheng <long.cheng@mediatek.com> wrote:
-> > >
-> > > Modify uart rx and complete for DMA.
-> > 
-> > I don't know much about the DMA framework, but can you please explain
-> > why you are making the changes in this CL? I see that you are dropping
-> > dma_sync_single_for_device calls, for example, why?
-> > 
-> 
-> the rx buffer is create by 'dma_alloc_coherent'. in the function, the
-> buffer is uncache. We don't need to sync between CPU and DMA. So I
-> remove it.
-> 
-> > >
-> > > Signed-off-by: Long Cheng <long.cheng@mediatek.com>
-> > > ---
-> > >  drivers/tty/serial/8250/8250_mtk.c |   53 ++++++++++++++++--------------------
-> > >  1 file changed, 23 insertions(+), 30 deletions(-)
-> > >
-> > > diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> > > index c1fdbc0..04081a6 100644
-> > > --- a/drivers/tty/serial/8250/8250_mtk.c
-> > > +++ b/drivers/tty/serial/8250/8250_mtk.c
-> > > @@ -30,7 +30,6 @@
-> > >  #define MTK_UART_DMA_EN_TX     0x2
-> > >  #define MTK_UART_DMA_EN_RX     0x5
-> > >
-> > > -#define MTK_UART_TX_SIZE       UART_XMIT_SIZE
-> > >  #define MTK_UART_RX_SIZE       0x8000
-> > >  #define MTK_UART_TX_TRIGGER    1
-> > >  #define MTK_UART_RX_TRIGGER    MTK_UART_RX_SIZE
-> > > @@ -64,28 +63,30 @@ static void mtk8250_dma_rx_complete(void *param)
-> > >         struct mtk8250_data *data = up->port.private_data;
-> > >         struct tty_port *tty_port = &up->port.state->port;
-> > >         struct dma_tx_state state;
-> > > +       int copied, cnt, tmp;
-> > >         unsigned char *ptr;
-> > > -       int copied;
-> > >
-> > > -       dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
-> > > -                               dma->rx_size, DMA_FROM_DEVICE);
-> > > +       if (data->rx_status == DMA_RX_SHUTDOWN)
-> > > +               return;
-> > >
-> > >         dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> > > +       cnt = dma->rx_size - state.residue;
-> > > +       tmp = cnt;
-> > 
-> > I ponder, maybe we should rename cnt to left? (like, how many bytes
-> > are left to transfer, in total) Or maybe "total"
-> > Then maybe rename tmp to cnt.
-> > 
-> like better.
-> 
-> > >
-> > > -       if (data->rx_status == DMA_RX_SHUTDOWN)
-> > > -               return;
-> > > +       if ((data->rx_pos + cnt) > dma->rx_size)
-> > > +               tmp = dma->rx_size - data->rx_pos;
-> > 
-> > Maybe replace this and the line above:
-> > tmp = max_t(int, cnt, dma->rx_size - data->rx_pos);
-> > 
-> Yes. It's better.
-> 
+Hi Måns
 
-can't replace by 'max_t'. So I will keep original code.
+On 2019-05-21 15:30, Måns Rullgård wrote:
+> Marek Szyprowski <m.szyprowski@samsung.com> writes:
+>> Dear All,
+>>
+>> Commit 69bec7259853 ("USB: core: let USB device know device node") added
+>> support for attaching devicetree node for USB devices. Those nodes are
+>> children of their USB host controller. However Exynos EHCI and OHCI
+>> driver bindings already define child-nodes for each physical root hub
+>> port and assigns respective PHY controller and parameters to them. This
+>> leads to the conflict. A workaround for it has been merged as commit
+>> 01d4071486fe ("usb: exynos: add workaround for the USB device bindings
+>> conflict"), but it disabled support for USB device binding for Exynos
+>> EHCI/OHCI controllers.
+>>
+>> This patchset tries to resolve this binding conflict by changing Exynos
+>> EHCI/OHCI bindings: PHYs are moved from the sub-nodes to a standard array
+>> under the 'phys' property. Such solution has been suggested by Måns
+>> Rullgård in the following thread: https://lkml.org/lkml/2019/5/13/228
+>>
+>> To keep everything working during the transitional time, the changes has
+>> been split into 2 steps. First step (patches 1-3) need to be merged before
+>> the second one (patches 4-5). Patches from each step can be merged to
+>> respective trees without any dependencies - the only requirement is that
+>> second step has to be merged after merging all patches from the first one.
+>>
+>> This patchset has been tested on various Exynos4 boards with different
+>> USB host controller configurations (Odroids family: X2, U3, XU3).
+>>
+>> Best regards
+>> Marek Szyprowski
+>> Samsung R&D Institute Poland
+>>
+>> Marek Szyprowski (5):
+>>    dt-bindings: switch Exynos EHCI/OHCI bindings to use array of generic
+>>      PHYs
+>>    ARM: dts: exynos: Add array of generic PHYs to EHCI/OHCI devices
+>>    usb: exynos: add support for getting PHYs from the standard dt array
+>>    ARM: dts: exynos: Remove obsolete port sub-nodes from EHCI/OHCI
+>>      devices
+>>    usb: exynos: Remove support for legacy PHY bindings
+> You could retain compatibility with old devicetrees (which may be
+> useful) by using the "phys" property if it exists and falling back
+> on the old method if it doesn't.  Then you would get this sequence
+> of changes:
+>
+> 1. Update binding definition.
+> 2. Support new binding in driver, with fallback to old.
+> 3. Switch dts files to new binding.
 
-> > >
-> > > -       if ((data->rx_pos + state.residue) <= dma->rx_size) {
-> > > -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> > > -               copied = tty_insert_flip_string(tty_port, ptr, state.residue);
-> > > -       } else {
-> > > -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> > > -               copied = tty_insert_flip_string(tty_port, ptr,
-> > > -                                               dma->rx_size - data->rx_pos);
-> > > +       ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> > > +       copied = tty_insert_flip_string(tty_port, ptr, tmp);
-> > > +       data->rx_pos += tmp;
-> > > +
-> > > +       if (cnt > tmp) {
-> > >                 ptr = (unsigned char *)(dma->rx_buf);
-> > > -               copied += tty_insert_flip_string(tty_port, ptr,
-> > > -                               data->rx_pos + state.residue - dma->rx_size);
-> > > +               tmp = cnt - tmp;
-> > > +               copied += tty_insert_flip_string(tty_port, ptr, tmp);
-> > > +               data->rx_pos = tmp;
-> > >         }
-> > > +
-> > >         up->port.icount.rx += copied;
-> > >
-> > >         tty_flip_buffer_push(tty_port);
-> > > @@ -96,9 +97,7 @@ static void mtk8250_dma_rx_complete(void *param)
-> > >  static void mtk8250_rx_dma(struct uart_8250_port *up)
-> > >  {
-> > >         struct uart_8250_dma *dma = up->dma;
-> > > -       struct mtk8250_data *data = up->port.private_data;
-> > >         struct dma_async_tx_descriptor  *desc;
-> > > -       struct dma_tx_state      state;
-> > >
-> > >         desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
-> > >                                            dma->rx_size, DMA_DEV_TO_MEM,
-> > > @@ -113,12 +112,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
-> > >
-> > >         dma->rx_cookie = dmaengine_submit(desc);
-> > >
-> > > -       dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> > > -       data->rx_pos = state.residue;
-> > > -
-> > > -       dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
-> > > -                                  dma->rx_size, DMA_FROM_DEVICE);
-> > > -
-> > >         dma_async_issue_pending(dma->rxchan);
-> > >  }
-> > >
-> > > @@ -131,13 +124,13 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
-> > >         if (data->rx_status != DMA_RX_START)
-> > >                 return;
-> > >
-> > > -       dma->rxconf.direction           = DMA_DEV_TO_MEM;
-> > > -       dma->rxconf.src_addr_width      = dma->rx_size / 1024;
-> > > -       dma->rxconf.src_addr            = dma->rx_addr;
-> > > +       dma->rxconf.direction                           = DMA_DEV_TO_MEM;
-> > > +       dma->rxconf.src_port_window_size        = dma->rx_size;
-> > > +       dma->rxconf.src_addr                            = dma->rx_addr;
-> > >
-> > > -       dma->txconf.direction           = DMA_MEM_TO_DEV;
-> > > -       dma->txconf.dst_addr_width      = MTK_UART_TX_SIZE / 1024;
-> > > -       dma->txconf.dst_addr            = dma->tx_addr;
-> > > +       dma->txconf.direction                           = DMA_MEM_TO_DEV;
-> > > +       dma->txconf.dst_port_window_size        = UART_XMIT_SIZE;
-> > > +       dma->txconf.dst_addr                            = dma->tx_addr;
-> > >
-> > >         serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
-> > >                 UART_FCR_CLEAR_XMIT);
-> > > @@ -217,7 +210,7 @@ static void mtk8250_shutdown(struct uart_port *port)
-> > >          * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
-> > >          *
-> > >          * We need to recalcualte the quot register, as the claculation depends
-> > > -        * on the vaule in the highspeed register.
-> > > +        * on the value in the highspeed register.
-> > 
-> > Since you're doing some cosmetic changes here, you might as well fix
-> > recalcualte => recalculate and claculation => calculation on the line
-> > above.
-> > 
-> 
-> I see.
-> 
-> > But technically, this should belong in another patch...
-> > 
-> > >          *
-> > >          * Some baudrates are not supported by the chip, so we use the next
-> > >          * lower rate supported and update termios c_flag.
-> > > --
-> > > 1.7.9.5
-> > >
-> 
+This is exactly what I did in this patchset. Until Patch #5 is applied, 
+Exynos EHCI/OHCI drivers supports both ways of getting PHYs and is fully 
+compatible with existing DTBs. This last patch should be applied at 
+least one release later that the first 3 patches to keep everything 
+working during the -rcX time.
+
+Compatibility with so called old DTBs is not so important, because there 
+are no boards with Exynos4 and Exynos5 SoCs, which would not update DTB 
+together with the kernel zImage. There have been already some 
+significant compatibility breaks related to those SoCs during last years.
+
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
