@@ -1,176 +1,204 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v12 09/13] MIPS: jz4740: Add DTS nodes for the TCU drivers
-Date: Wed, 22 May 2019 13:15:56 +0200
-Message-ID: <1558523756.3066.0@crapouillou.net>
-References: <20190521145141.9813-1-paul@crapouillou.net>
-        <20190521145141.9813-10-paul@crapouillou.net>
-        <CA+7wUsxe4DLmAGNnnXZ3UokguMJ0cOGtu=opQpuAPvN_SH4KUw@mail.gmail.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [linux-sunxi] [PATCH 3/6] drm/sun4i: dsi: Add bridge support
+Date: Wed, 22 May 2019 17:31:10 +0530
+Message-ID: <CAMty3ZC=cLNbJAeDBGCyYrknB5LWriL-pisk7j=jXQ54bse7XQ@mail.gmail.com>
+References: <20190315130825.9005-1-jagan@amarulasolutions.com>
+ <20190315130825.9005-4-jagan@amarulasolutions.com> <c232d5620d6a3272a6064ce9ccdec5c86a3a7950.camel@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+7wUsxe4DLmAGNnnXZ3UokguMJ0cOGtu=opQpuAPvN_SH4KUw@mail.gmail.com>
+In-Reply-To: <c232d5620d6a3272a6064ce9ccdec5c86a3a7950.camel@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Malaterre <malat@debian.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula <linux-amarula@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Paul and Maxime,
 
+On Fri, Mar 15, 2019 at 7:03 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+>
+> Hi,
+>
+> On Fri, 2019-03-15 at 18:38 +0530, Jagan Teki wrote:
+> > Some display panels would come up with a non-DSI output which
+> > can have an option to connect DSI interface by means of bridge
+> > convertor.
+> >
+> > This DSI to non-DSI bridge convertor would require a bridge
+> > driver that would communicate the DSI controller for bridge
+> > functionalities.
+> >
+> > So, add support for bridge functionalities in Allwinner DSI
+> > controller.
+>
+> See a few comments below.
+>
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 65 +++++++++++++++++++-------
+> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  1 +
+> >  2 files changed, 49 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > index 0960b96b62cc..64d74313b842 100644
+> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > @@ -781,6 +781,9 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
+> >       if (!IS_ERR(dsi->panel))
+> >               drm_panel_prepare(dsi->panel);
+> >
+> > +     if (!IS_ERR(dsi->bridge))
+> > +             drm_bridge_pre_enable(dsi->bridge);
+> > +
+> >       /*
+> >        * FIXME: This should be moved after the switch to HS mode.
+> >        *
+> > @@ -796,6 +799,9 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
+> >       if (!IS_ERR(dsi->panel))
+> >               drm_panel_enable(dsi->panel);
+> >
+> > +     if (!IS_ERR(dsi->bridge))
+> > +             drm_bridge_enable(dsi->bridge);
+> > +
+> >       sun6i_dsi_start(dsi, DSI_START_HSC);
+> >
+> >       udelay(1000);
+> > @@ -812,6 +818,9 @@ static void sun6i_dsi_encoder_disable(struct drm_encoder *encoder)
+> >       if (!IS_ERR(dsi->panel)) {
+> >               drm_panel_disable(dsi->panel);
+> >               drm_panel_unprepare(dsi->panel);
+> > +     } else if (!IS_ERR(dsi->bridge)) {
+> > +             drm_bridge_disable(dsi->bridge);
+> > +             drm_bridge_post_disable(dsi->bridge);
+> >       }
+> >
+> >       phy_power_off(dsi->dphy);
+> > @@ -973,11 +982,16 @@ static int sun6i_dsi_attach(struct mipi_dsi_host *host,
+> >       struct sun6i_dsi *dsi = host_to_sun6i_dsi(host);
+> >
+> >       dsi->device = device;
+> > -     dsi->panel = of_drm_find_panel(device->dev.of_node);
+> > -     if (IS_ERR(dsi->panel))
+> > -             return PTR_ERR(dsi->panel);
+> >
+> > -     dev_info(host->dev, "Attached device %s\n", device->name);
+> > +     dsi->bridge = of_drm_find_bridge(device->dev.of_node);
+> > +     if (!dsi->bridge) {
+>
+> You are using IS_ERR to check that the bridge is alive in the changes
+> above, but switch to checking that it's non-NULL at this point.
+>
+> Are both guaranteed to be interchangeable?
+>
+> > +             dsi->panel = of_drm_find_panel(device->dev.of_node);
+> > +             if (IS_ERR(dsi->panel))
+> > +                     return PTR_ERR(dsi->panel);
+> > +     }
+>
+> You should probably use drm_of_find_panel_or_bridge instead of
+> duplicating the logic here.
 
-On Wed, May 22, 2019 at 11:21 AM, Mathieu Malaterre <malat@debian.org> 
-wrote:
-> On Tue, May 21, 2019 at 4:52 PM Paul Cercueil <paul@crapouillou.net> 
-> wrote:
->> 
->>  Add DTS nodes for the JZ4780, JZ4770 and JZ4740 devicetree files.
->> 
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->> 
->>  Notes:
->>      v5: New patch
->> 
->>      v6: Fix register lengths in watchdog/pwm nodes
->> 
->>      v7: No change
->> 
->>      v8: - Fix wrong start address for PWM node
->>          - Add system timer and clocksource sub-nodes
->> 
->>      v9: Drop timer and clocksource sub-nodes
->> 
->>      v10-v11: No change
->> 
->>      v12: Drop PWM/watchdog/OST sub-nodes, for now.
->> 
->>   arch/mips/boot/dts/ingenic/jz4740.dtsi | 22 ++++++++++++++++++++++
->>   arch/mips/boot/dts/ingenic/jz4770.dtsi | 21 +++++++++++++++++++++
->>   arch/mips/boot/dts/ingenic/jz4780.dtsi | 21 +++++++++++++++++++++
->>   3 files changed, 64 insertions(+)
->> 
->>  diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi 
->> b/arch/mips/boot/dts/ingenic/jz4740.dtsi
->>  index 2beb78a62b7d..807d9702d4cf 100644
->>  --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
->>  +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
->>  @@ -53,6 +53,28 @@
->>                  clock-names = "rtc";
->>          };
->> 
->>  +       tcu: timer@10002000 {
->>  +               compatible = "ingenic,jz4740-tcu";
->>  +               reg = <0x10002000 0x1000>;
->>  +               #address-cells = <1>;
->>  +               #size-cells = <1>;
->>  +               ranges = <0x0 0x10002000 0x1000>;
->>  +
->>  +               #clock-cells = <1>;
->>  +
->>  +               clocks = <&cgu JZ4740_CLK_RTC
->>  +                         &cgu JZ4740_CLK_EXT
->>  +                         &cgu JZ4740_CLK_PCLK
->>  +                         &cgu JZ4740_CLK_TCU>;
->>  +               clock-names = "rtc", "ext", "pclk", "tcu";
->>  +
->>  +               interrupt-controller;
->>  +               #interrupt-cells = <1>;
->>  +
->>  +               interrupt-parent = <&intc>;
->>  +               interrupts = <23 22 21>;
->>  +       };
->>  +
->>          rtc_dev: rtc@10003000 {
->>                  compatible = "ingenic,jz4740-rtc";
->>                  reg = <0x10003000 0x40>;
->>  diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi 
->> b/arch/mips/boot/dts/ingenic/jz4770.dtsi
->>  index 49ede6c14ff3..70932fd90902 100644
->>  --- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
->>  +++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
->>  @@ -46,6 +46,27 @@
->>                  #clock-cells = <1>;
->>          };
->> 
->>  +       tcu: timer@10002000 {
->>  +               compatible = "ingenic,jz4770-tcu";
->>  +               reg = <0x10002000 0x1000>;
->>  +               #address-cells = <1>;
->>  +               #size-cells = <1>;
->>  +               ranges = <0x0 0x10002000 0x1000>;
->>  +
->>  +               #clock-cells = <1>;
->>  +
->>  +               clocks = <&cgu JZ4770_CLK_RTC
->>  +                         &cgu JZ4770_CLK_EXT
->>  +                         &cgu JZ4770_CLK_PCLK>;
->>  +               clock-names = "rtc", "ext", "pclk";
->>  +
->>  +               interrupt-controller;
->>  +               #interrupt-cells = <1>;
->>  +
->>  +               interrupt-parent = <&intc>;
->>  +               interrupts = <27 26 25>;
->>  +       };
->>  +
->>          pinctrl: pin-controller@10010000 {
->>                  compatible = "ingenic,jz4770-pinctrl";
->>                  reg = <0x10010000 0x600>;
->>  diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi 
->> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
->>  index b03cdec56de9..495082ce7fc5 100644
->>  --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
->>  +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
->>  @@ -46,6 +46,27 @@
->>                  #clock-cells = <1>;
->>          };
->> 
->>  +       tcu: timer@10002000 {
-> 
-> With W=1, I see:
-> 
-> ../arch/mips/boot/dts/ingenic/jz4780.dtsi:64.22-83.4: Warning
-> (unique_unit_address): /timer@10002000: duplicate unit-address (also
-> used in node /watchdog@1000
-> 2000)
+True, In-fact I did try this API. but pipeline were unable to bound.
+Usually the panel and bridge were attached first and then the pipeline
+bound would start from front-end (in A33) But in my below cases I have
+seen only panel or bridge attached but no pipeline bound at all.
 
-That didn't happen in V11 because there I was also migrating the
-watchdog and PWM drivers to children nodes of the TCU. It was more
-atomic, but it also was a 27-patches bomb touching a lot of
-subsystems that nobody was ever going to merge.
+And I'm using drm_of_find_panel_or_bridge(host->dev->of_node, 1, 0,
+&dsi->panel, &dsi->bridge); in dsi attach API.
 
-Is the address conflict OK, knowing that the watchdog node will
-move out of the way as soon as this patchset is merged?
+Case-1, panel:
 
-Should I add an extra patch to remove the watchdog node instead?
+&dsi {
+    vcc-dsi-supply = <&reg_dcdc1>;        /* VCC3V3-DSI */
+    status = "okay";
 
-(and yes, devicetree ABI will break, which is sort-of OK in this
-case - as on Ingenic boards the devicetree blobs are always
-compiled within the kernel, so I think we should make this
-much-needed change while we still can).
+    ports {
+        dsi_out: port@1 {
+            reg = <1>;
 
+            dsi_out_panel: endpoint {
+                remote-endpoint = <&panel_out_dsi>;
+            };
+        };
+    };
 
->>  +               compatible = "ingenic,jz4770-tcu";
->>  +               reg = <0x10002000 0x1000>;
->>  +               #address-cells = <1>;
->>  +               #size-cells = <1>;
->>  +               ranges = <0x0 0x10002000 0x1000>;
->>  +
->>  +               #clock-cells = <1>;
->>  +
->>  +               clocks = <&cgu JZ4780_CLK_RTCLK
->>  +                         &cgu JZ4780_CLK_EXCLK
->>  +                         &cgu JZ4780_CLK_PCLK>;
->>  +               clock-names = "rtc", "ext", "pclk";
->>  +
->>  +               interrupt-controller;
->>  +               #interrupt-cells = <1>;
->>  +
->>  +               interrupt-parent = <&intc>;
->>  +               interrupts = <27 26 25>;
->>  +       };
->>  +
->>          rtc_dev: rtc@10003000 {
->>                  compatible = "ingenic,jz4780-rtc";
->>                  reg = <0x10003000 0x4c>;
->>  --
->>  2.21.0.593.g511ec345e18
->> 
+    panel@0 {
+        compatible = "bananapi,s070wv20-ct16-icn6211";
+        reg = <0>;
+        enable-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PB7 */
+        reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* LCD-RST: PL5 */
+        backlight = <&backlight>;
+
+        port {
+            panel_out_dsi: endpoint {
+                remote-endpoint = <&dsi_out_panel>;
+            };
+        };
+    };
+};
+
+Case-2, bridge:
+
+    panel {
+        compatible = "bananapi,s070wv20-ct16", "simple-panel";
+        enable-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PB7 */
+        backlight = <&backlight>;
+
+        port {
+
+            panel_out_bridge: endpoint {
+                remote-endpoint = <&bridge_out_panel>;
+            };
+        };
+    };
+
+&dsi {
+    vcc-dsi-supply = <&reg_dcdc1>;        /* VCC-DSI */
+    status = "okay";
+
+    ports {
+        dsi_out: port@1 {
+            reg = <1>;
+
+            dsi_out_bridge: endpoint {
+                remote-endpoint = <&bridge_out_dsi>;
+            };
+        };
+    };
+
+    bridge@0 {
+        reg = <0>;
+        compatible = "bananapi,icn6211", "chipone,icn6211";
+        reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* LCD-RST: PL5 */
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        ports {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            bridge_in: port@0 {
+                reg = <0>;
+
+                bridge_out_dsi: endpoint {
+                    remote-endpoint = <&dsi_out_bridge>;
+                };
+            };
+
+            bridge_out: port@1 {
+                reg = <1>;
+
+                bridge_out_panel: endpoint {
+                    remote-endpoint = <&panel_out_bridge>;
+                };
+            };
+        };
+    };
+};
+
+I think, I'm sure about the pipeline connections as per my
+understanding. but something loosely missed here or in the code.
+Please do let me know for any suggestions.
+
+Jagan.
