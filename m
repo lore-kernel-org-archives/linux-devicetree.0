@@ -1,30 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] spi: dt-bindings: Convert Arm pl022 to json-schema
-Date: Wed, 22 May 2019 07:49:44 -0500
-Message-ID: <CAL_Jsq+JimAYW9GiPz6_hNJfnA+8bnN=kPDOEJFPyt+57bwriw@mail.gmail.com>
-References: <20190521212325.16639-1-robh@kernel.org> <20190522104226.nwcvx33akt6q576m@flea>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/2] Add 96Boards Meerkat96 board support
+Date: Wed, 22 May 2019 18:45:48 +0530
+Message-ID: <20190522131550.9034-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190522104226.nwcvx33akt6q576m@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-spi <linux-spi@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, festevam@gmail.com
+Cc: kernel@pengutronix.de, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pbrobinson@gmail.com, yossi@novtech.com, nazik@novtech.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 22, 2019 at 5:42 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi Rob,
->
-> On Tue, May 21, 2019 at 04:23:24PM -0500, Rob Herring wrote:
-> > +allOf:
-> > +  - $ref: "spi-controller.yaml#"
->
-> You're using a different construct on the spi-gpio binding you just
-> sent (/schemas/spi/spi-controller.yaml).
->
-> Is that on purpose?
+Hello,
 
-No. This one is correct (though both work).
+This patchset adds board support for 96Boards Meerkat96 board from
+Novtech. This board is one of the Consumer Edition boards of the 96Boards
+family based on i.MX7D SoC. Following are the currently supported
+features of the board:
+ 
+* uSD
+* WiFi/BT
+* USB
+    
+More information about this board can be found in 96Boards product page:
+https://www.96boards.org/product/imx7-96/
 
-Rob
+Thanks,
+Mani
+
+Manivannan Sadhasivam (2):
+  dt-bindings: arm: Document 96Boards Meerkat96 devicetree binding
+  ARM: dts: Add support for 96Boards Meerkat96 board
+
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/imx7d-meerkat96.dts         | 396 ++++++++++++++++++
+ 3 files changed, 398 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx7d-meerkat96.dts
+
+-- 
+2.17.1
