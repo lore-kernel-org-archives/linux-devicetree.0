@@ -1,115 +1,49 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
-Date: Wed, 22 May 2019 21:41:46 +0200
-Message-ID: <CAJiuCcdPXdG1ZcWypJZy_d04c2obEuqFZXna-voMmbK6Au84CA@mail.gmail.com>
-References: <20190521161102.29620-1-peron.clem@gmail.com> <CAL_Jsq+86nNEBzjbf_GLWWrAN91jwU+JQ7zrEoFaT_dxUzVv4A@mail.gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v7 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC.
+Date: Wed, 22 May 2019 21:45:29 +0200
+Message-ID: <20190522194529.GJ7281@lunn.ch>
+References: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
+ <1558515574-11155-4-git-send-email-sagar.kadam@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+86nNEBzjbf_GLWWrAN91jwU+JQ7zrEoFaT_dxUzVv4A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Joerg Roedel <joro@8bytes.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Steven Price <steven.price@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Linux IOMMU <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1558515574-11155-4-git-send-email-sagar.kadam@sifive.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, peter@korsgaard.com, palmer@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-i2c@vger.kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, May 22, 2019 at 02:29:34PM +0530, Sagar Shrikant Kadam wrote:
+> The i2c-ocore driver already has a polling mode interface.But it needs
+> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
+> There is an erratum in FU540 chip that prevents interrupt driven i2c
+> transfers from working, and also the I2C controller's interrupt bit
+> cannot be cleared if set, due to this the existing i2c polling mode
+> interface added in mainline earlier doesn't work, and CPU stall's
+> infinitely, when-ever i2c transfer is initiated.
+> 
+> Ref:
+> 	commit dd7dbf0eb090 ("i2c: ocores: refactor setup for polling")
+> 
+> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
+> FU540-COOO SoC.
+> 
+> The polling function identifies a SiFive device based on the device node
+> and enables the workaround.
+> 
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 
-On Wed, 22 May 2019 at 21:27, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Tue, May 21, 2019 at 11:11 AM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmai=
-l.com> wrote:
-> >
-> > Hi,
-> >
-> > The Allwinner H6 has a Mali-T720 MP2 which should be supported by
-> > the new panfrost driver. This series fix two issues and introduce the
-> > dt-bindings but a simple benchmark show that it's still NOT WORKING.
-> >
-> > I'm pushing it in case someone want to continue the work.
-> >
-> > This has been tested with Mesa3D 19.1.0-RC2 and a GPU bitness patch[1].
-> >
-> > One patch is from Icenowy Zheng where I changed the order as required
-> > by Rob Herring[2].
-> >
-> > Thanks,
-> > Clement
-> >
-> > [1] https://gitlab.freedesktop.org/kszaq/mesa/tree/panfrost_64_32
-> > [2] https://patchwork.kernel.org/patch/10699829/
-> >
-> >
-> > [  345.204813] panfrost 1800000.gpu: mmu irq status=3D1
-> > [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-> > 0x0000000002400400
-> > [  345.209617] Reason: TODO
-> > [  345.209617] raw fault status: 0x800002C1
-> > [  345.209617] decoded fault status: SLAVE FAULT
-> > [  345.209617] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-> > [  345.209617] access type 0x2: READ
-> > [  345.209617] source id 0x8000
-> > [  345.729957] panfrost 1800000.gpu: gpu sched timeout, js=3D0,
-> > status=3D0x8, head=3D0x2400400, tail=3D0x2400400, sched_job=3D000000009=
-e204de9
-> > [  346.055876] panfrost 1800000.gpu: mmu irq status=3D1
-> > [  346.060680] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-> > 0x0000000002C00A00
-> > [  346.060680] Reason: TODO
-> > [  346.060680] raw fault status: 0x810002C1
-> > [  346.060680] decoded fault status: SLAVE FAULT
-> > [  346.060680] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-> > [  346.060680] access type 0x2: READ
-> > [  346.060680] source id 0x8100
-> > [  346.561955] panfrost 1800000.gpu: gpu sched timeout, js=3D1,
-> > status=3D0x8, head=3D0x2c00a00, tail=3D0x2c00a00, sched_job=3D00000000b=
-55a9a85
-> > [  346.573913] panfrost 1800000.gpu: mmu irq status=3D1
-> > [  346.578707] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-> > 0x0000000002C00B80
-> >
-> > Change in v5:
-> >  - Remove fix indent
-> >
-> > Changes in v4:
-> >  - Add bus_clock probe
-> >  - Fix sanity check in io-pgtable
-> >  - Add vramp-delay
-> >  - Merge all boards into one patch
-> >  - Remove upstreamed Neil A. patch
-> >
-> > Change in v3 (Thanks to Maxime Ripard):
-> >  - Reauthor Icenowy for her path
-> >
-> > Changes in v2 (Thanks to Maxime Ripard):
-> >  - Drop GPU OPP Table
-> >  - Add clocks and clock-names in required
-> >
-> > Cl=C3=A9ment P=C3=A9ron (5):
-> >   drm: panfrost: add optional bus_clock
-> >   iommu: io-pgtable: fix sanity check for non 48-bit mali iommu
-> >   dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
-> >   arm64: dts: allwinner: Add ARM Mali GPU node for H6
-> >   arm64: dts: allwinner: Add mali GPU supply for H6 boards
-> >
-> > Icenowy Zheng (1):
-> >   dt-bindings: gpu: add bus clock for Mali Midgard GPUs
->
-> I've applied patches 1 and 3 to drm-misc. I was going to do patch 4
-> too, but it doesn't apply.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Thanks,
-
-I have tried to applied on drm-misc/for-linux-next but it doesn't apply too=
-.
-It looks like commit d5ff1adb3809e2f74a3b57cea2e57c8e37d693c4 is
-missing on drm-misc ?
-https://github.com/torvalds/linux/commit/d5ff1adb3809e2f74a3b57cea2e57c8e37=
-d693c4#diff-c3172f5d421d492ff91d7bb44dd44917
-
-Cl=C3=A9ment
-
->
-> Patch 2 can go in via the iommu tree and the rest via the allwinner tree.
->
-> Rob
+    Andrew
