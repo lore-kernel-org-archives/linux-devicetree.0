@@ -1,52 +1,168 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: add Allwinner H6 r_watchdog
-Date: Wed, 22 May 2019 18:15:26 +0200
-Message-ID: <CAJiuCcdaZVLQyupEf8HPaUySakufXXAhzundo6VeyQaAyZ8Trw@mail.gmail.com>
-References: <20190521160330.28402-1-peron.clem@gmail.com> <20190521160330.28402-4-peron.clem@gmail.com>
- <20190522103243.mmrfato5p2mhtf4j@flea>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH 5/6] arm64: dts: ti: Add support for J721E Common Processor Board
+Date: Wed, 22 May 2019 11:19:20 -0500
+Message-ID: <20190522161921.20750-6-nm@ti.com>
+References: <20190522161921.20750-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190522103243.mmrfato5p2mhtf4j@flea>
+In-Reply-To: <20190522161921.20750-1-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Add Support for J721E Common Processor board support.
+The EVM architecture is as follows:
 
-On Wed, 22 May 2019 at 12:32, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
->
-> On Tue, May 21, 2019 at 06:03:28PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Allwinner H6 has a second watchdog on the r-blocks which is
-> > compatible with the A31.
-> >
-> > This commit add the H6 compatible for the r_watchdog.
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
->
-> Unless you have some evidence that the two blocks are different, then
-> you should just reuse the same one.
++------------------------------------------------------+
+|   +-------------------------------------------+      |
+|   |                                           |      |
+|   |        Add-on Card 1 Options              |      |
+|   |                                           |      |
+|   +-------------------------------------------+      |
+|                                                      |
+|                                                      |
+|                     +-------------------+            |
+|                     |                   |            |
+|                     |   SOM             |            |
+|  +--------------+   |                   |            |
+|  |              |   |                   |            |
+|  |  Add-on      |   +-------------------+            |
+|  |  Card 2      |                                    |    Power Supply
+|  |  Options     |                                    |    |
+|  |              |                                    |    |
+|  +--------------+                                    | <---
++------------------------------------------------------+
+                                Common Processor Board
 
-I have no evidence it's different nor identical, it's not documented
-in the user manual.
-I thought it would better to have separate bindings in case there is a
-difference.
-Than don't have and find later that we have to introduce one.
+Common Processor board is the baseboard that has most of the actual
+connectors, power supply etc. A SOM (System on Module) is plugged on
+to the common processor board and this contains the SoC, PMIC, DDR and
+basic high speed components necessary for functionality. Add-n card
+options add further functionality (such as additional Audio, Display,
+networking options).
 
-But as you prefer.
+Note:
+A) The minimum configuration required to boot up the board is System On
+   Module(SOM) + Common Processor Board.
+B) Since there is just a single SOM and Common Processor Board, we are
+   maintaining common processor board as the base dts and SOM as the dtsi
+   that we include. In the future as more SOM's appear, we should move
+   common processor board as a dtsi and include configurations as dts.
+C) All daughter cards beyond the basic boards shall be maintained as
+   overlays.
 
-Regards,
-Cl=C3=A9ment
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ arch/arm64/boot/dts/ti/Makefile               |  2 +
+ .../dts/ti/k3-j721e-common-proc-board.dts     | 50 +++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi   | 29 +++++++++++
+ 3 files changed, 81 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
 
-
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+index 63e619d0b5b8..b397945fdf73 100644
+--- a/arch/arm64/boot/dts/ti/Makefile
++++ b/arch/arm64/boot/dts/ti/Makefile
+@@ -7,3 +7,5 @@
+ #
+ 
+ dtb-$(CONFIG_ARCH_K3_AM6_SOC) += k3-am654-base-board.dtb
++
++dtb-$(CONFIG_ARCH_K3_J721E_SOC) += k3-j721e-common-proc-board.dtb
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+new file mode 100644
+index 000000000000..c680123f067c
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+@@ -0,0 +1,50 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++/dts-v1/;
++
++#include "k3-j721e-som-p0.dtsi"
++
++/ {
++	chosen {
++		stdout-path = "serial2:115200n8";
++		bootargs = "console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000";
++	};
++};
++
++&wkup_uart0 {
++	/* Wakeup UART is used by System firmware */
++	status = "disabled";
++};
++
++&main_uart3 {
++	/* UART not brought out */
++	status = "disabled";
++};
++
++&main_uart5 {
++	/* UART not brought out */
++	status = "disabled";
++};
++
++&main_uart6 {
++	/* UART not brought out */
++	status = "disabled";
++};
++
++&main_uart7 {
++	/* UART not brought out */
++	status = "disabled";
++};
++
++&main_uart8 {
++	/* UART not brought out */
++	status = "disabled";
++};
++
++&main_uart9 {
++	/* UART not brought out */
++	status = "disabled";
++};
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+new file mode 100644
+index 000000000000..1884fc70148f
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++/dts-v1/;
++
++#include "k3-j721e.dtsi"
++
++/ {
++	memory@80000000 {
++		device_type = "memory";
++		/* 4G RAM */
++		reg = <0x00000000 0x80000000 0x00000000 0x80000000>,
++		      <0x00000008 0x80000000 0x00000000 0x80000000>;
++	};
++
++	reserved_memory: reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		secure_ddr: optee@9e800000 {
++			reg = <0x00 0x9e800000 0x00 0x01800000>;
++			alignment = <0x1000>;
++			no-map;
++		};
++	};
++};
+-- 
+2.21.0.777.g83232e38648b
