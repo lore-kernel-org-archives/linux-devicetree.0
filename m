@@ -1,39 +1,41 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/3] dt-bindings: clk: meson: add g12b periph clock
- controller bindings
-Date: Wed, 22 May 2019 09:43:09 +0200
-Message-ID: <6354e9f9-6c0e-68d9-93e9-a92d874f452a@baylibre.com>
-References: <20190521150130.31684-1-narmstrong@baylibre.com>
- <20190521150130.31684-2-narmstrong@baylibre.com>
- <CAFBinCAwD7W1zQ2YZgecowZUEnoVpGXyGQnOKhB5T3OvOvvbkg@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 1/2] ARM: dts: rockchip: Add pin names for rk3288-veyron-minnie
+Date: Wed, 22 May 2019 10:01:39 +0200
+Message-ID: <1983983.hLAGMFZVp3@phil>
+References: <20190521203215.234898-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCAwD7W1zQ2YZgecowZUEnoVpGXyGQnOKhB5T3OvOvvbkg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190521203215.234898-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: jbrunet@baylibre.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: briannorris@chromium.org, ryandcase@chromium.org, mka@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/05/2019 19:30, Martin Blumenstingl wrote:
-> On Tue, May 21, 2019 at 5:02 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> Update the documentation to support clock driver for the Amlogic G12B SoC.
->>
->> G12B clock driver is very close, the main differences are :
->> - the clock tree is duplicated for the both clusters, and the
->>   SYS_PLL are swapped between the clusters
->> - G12A has additional clocks like for CSI an other components
-> I missed this in v1, it should be G12B?
-
-Yes, thanks for spotting this
-
+Am Dienstag, 21. Mai 2019, 22:32:14 CEST schrieb Douglas Anderson:
+> We can now use the "gpio-line-names" property to provide the names for
+> all the pins on a board.  Let's use this to provide the names for all
+> the pins on rk3288-veyron-minnie.
 > 
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
-> with above typo fixed (assuming it is one):
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> In general the names here come straight from the schematic.  That
+> means even if the schematic name is weird / doesn't have consistent
+> naming conventions / has typos I still haven't made any changes.
 > 
+> The exception here is for two pins: the recovery switch and the write
+> protect detection pin.  These two pins need to have standardized names
+> since crossystem (a Chrome OS tool) uses these names to query the
+> pins.  In downstream kernels crossystem used an out-of-tree driver to
+> do this but it has now been moved to the gpiod API and needs the
+> standardized names.
+> 
+> It's expected that other rk3288-veyron boards will get similar patches
+> shortly.
+> 
+> NOTE: I have sorted the "gpio" section to be next to the "pinctrl"
+> section since it seems to logically make the most sense there.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+applied both for 5.3 ... that is actually a pretty nifty feature for
+boards whose schematics cannot be published :-)
