@@ -1,63 +1,51 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH V3 net-next 6/6] ptp: Add a driver for InES time stamping
- IP core.
-Date: Wed, 22 May 2019 03:42:20 +0200
-Message-ID: <20190522014220.GB734@lunn.ch>
-References: <20190521224723.6116-7-richardcochran@gmail.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V3 RESEND 1/4] dt-bindings: fsl: scu: add ocotp binding
+Date: Wed, 22 May 2019 01:46:54 +0000
+Message-ID: <20190522020040.30283-1-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190521224723.6116-7-richardcochran@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: netdev@vger.kernel.org, David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Peng Fan <peng.fan@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Anson Huang <anson.huang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-> +static bool ines_match(struct sk_buff *skb, unsigned int ptp_class,
-> +		       struct ines_timestamp *ts);
-> +static int ines_rxfifo_read(struct ines_port *port);
-> +static u64 ines_rxts64(struct ines_port *port, unsigned int words);
-> +static bool ines_timestamp_expired(struct ines_timestamp *ts);
-> +static u64 ines_txts64(struct ines_port *port, unsigned int words);
-> +static void ines_txtstamp_work(struct work_struct *work);
-> +static bool is_sync_pdelay_resp(struct sk_buff *skb, int type);
-> +static u8 tag_to_msgtype(u8 tag);
-
-Hi Richard
-
-I don't know about the PTP subsystem, but in general, forward
-declarations are frowned upon, and it is generally requested to
-reorder the functions to remove them.
-
-> +static struct platform_driver ines_ptp_ctrl_driver = {
-> +	.probe  = ines_ptp_ctrl_probe,
-> +	.remove = ines_ptp_ctrl_remove,
-> +	.driver = {
-> +		.name = "ines_ptp_ctrl",
-> +		.of_match_table = of_match_ptr(ines_ptp_ctrl_of_match),
-> +	},
-> +};
-> +
-> +static int __init ines_ptp_init(void)
-> +{
-> +	return platform_driver_register(&ines_ptp_ctrl_driver);
-> +}
-> +
-> +static void __exit ines_ptp_cleanup(void)
-> +{
-> +	platform_driver_unregister(&ines_ptp_ctrl_driver);
-> +}
-
-include/linux/platform_device.h:
-
-/* module_platform_driver() - Helper macro for drivers that don't do
- * anything special in module init/exit.  This eliminates a lot of
- * boilerplate.  Each module may only use this macro once, and
- * calling it replaces module_init() and module_exit()
- */
-#define module_platform_driver(__platform_driver) \
-        module_driver(__platform_driver, platform_driver_register, \
-                        platform_driver_unregister)
-
-	Andrew
+TlhQIGkuTVg4UVhQIGlzIGFuIEFSTXY4IFNvQyB3aXRoIGEgQ29ydGV4LU00IGNvcmUgaW5zaWRl
+IGFzDQpzeXN0ZW0gY29udHJvbGxlcihTQ1UpLCB0aGUgb2NvdHAgY29udHJvbGxlciBpcyBiZWlu
+ZyBjb250cm9sbGVkDQpieSB0aGUgU0NVLCBzbyBMaW51eCBuZWVkIHVzZSBSUEMgdG8gU0NVIGZv
+ciBvY290cCBoYW5kbGluZy4gVGhpcw0KcGF0Y2ggYWRkcyBiaW5kaW5nIGRvYyBmb3IgaS5NWDgg
+U0NVIE9DT1RQIGRyaXZlci4NCg0KQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5j
+b20+DQpDYzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KQ2M6IFVsZiBIYW5zc29u
+IDx1bGYuaGFuc3NvbkBsaW5hcm8ub3JnPg0KQ2M6IFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVs
+Lm9yZz4NCkNjOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCkNjOiBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZw0KUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
+bC5vcmc+DQpSZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4N
+ClNpZ25lZC1vZmYtYnk6IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KLS0tDQoNClYzOg0K
+IEFkZCBSLWIgdGFnDQpWMjoNCiBNb3ZlIE9DT1RQIHRvIGVuZCwgYWRkIGV4YW1wbGUsIGFkZCAi
+c2N1Ig0KDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4
+dCAgfCAyMiArKysrKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDIyIGluc2Vy
+dGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCmluZGV4IDVkN2RiYWJiYjc4NC4uZjM3
+ODkyMjkwNmY2IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQpAQCAtMTMzLDYgKzEzMywxOCBA
+QCBSVEMgYmluZGluZ3MgYmFzZWQgb24gU0NVIE1lc3NhZ2UgUHJvdG9jb2wNCiBSZXF1aXJlZCBw
+cm9wZXJ0aWVzOg0KIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJmc2wsaW14OHF4cC1zYy1ydGMi
+Ow0KIA0KK09DT1RQIGJpbmRpbmdzIGJhc2VkIG9uIFNDVSBNZXNzYWdlIFByb3RvY29sDQorLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+DQorUmVxdWlyZWQgcHJvcGVydGllczoNCistIGNvbXBhdGlibGU6CQlTaG91bGQgYmUgImZzbCxp
+bXg4cXhwLXNjdS1vY290cCINCistICNhZGRyZXNzLWNlbGxzOglNdXN0IGJlIDEuIENvbnRhaW5z
+IGJ5dGUgaW5kZXgNCistICNzaXplLWNlbGxzOgkJTXVzdCBiZSAxLiBDb250YWlucyBieXRlIGxl
+bmd0aA0KKw0KK09wdGlvbmFsIENoaWxkIG5vZGVzOg0KKw0KKy0gRGF0YSBjZWxscyBvZiBvY290
+cDoNCisgIERldGFpbGVkIGJpbmRpbmdzIGFyZSBkZXNjcmliZWQgaW4gYmluZGluZ3MvbnZtZW0v
+bnZtZW0udHh0DQorDQogRXhhbXBsZSAoaW14OHF4cCk6DQogLS0tLS0tLS0tLS0tLQ0KIGFsaWFz
+ZXMgew0KQEAgLTE3Nyw2ICsxODksMTYgQEAgZmlybXdhcmUgew0KIAkJCS4uLg0KIAkJfTsNCiAN
+CisJCW9jb3RwOiBpbXg4cXgtb2NvdHAgew0KKwkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhxeHAt
+c2N1LW9jb3RwIjsNCisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCisJCQkjc2l6ZS1jZWxscyA9
+IDwxPjsNCisNCisJCQlmZWNfbWFjMDogbWFjQDJjNCB7DQorCQkJCXJlZyA9IDwweDJjNCA4PjsN
+CisJCQl9Ow0KKwkJfTsNCisNCiAJCXBkOiBpbXg4cXgtcGQgew0KIAkJCWNvbXBhdGlibGUgPSAi
+ZnNsLGlteDhxeHAtc2N1LXBkIiwgImZzbCxzY3UtcGQiOw0KIAkJCSNwb3dlci1kb21haW4tY2Vs
+bHMgPSA8MT47DQotLSANCjIuMTYuNA0KDQo=
