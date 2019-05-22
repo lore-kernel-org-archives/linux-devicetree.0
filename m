@@ -1,61 +1,44 @@
-From: Trent Piepho <tpiepho@impinj.com>
-Subject: [PATCH net-next v2 6/8] net: phy: dp83867: IO impedance is not
- dependent on RGMII delay
-Date: Wed, 22 May 2019 18:43:25 +0000
-Message-ID: <20190522184255.16323-6-tpiepho@impinj.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next v2 3/8] net: phy: dp83867: Add ability to
+ disable output clock
+Date: Wed, 22 May 2019 20:51:08 +0200
+Message-ID: <20190522185108.GA7281@lunn.ch>
 References: <20190522184255.16323-1-tpiepho@impinj.com>
+ <20190522184255.16323-3-tpiepho@impinj.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190522184255.16323-1-tpiepho@impinj.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190522184255.16323-3-tpiepho@impinj.com>
 Sender: netdev-owner@vger.kernel.org
-To: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Trent Piepho <tpiepho@impinj.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+To: Trent Piepho <tpiepho@impinj.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGRyaXZlciB3b3VsZCBvbmx5IHNldCB0aGUgSU8gaW1wZWRhbmNlIHZhbHVlIHdoZW4gUkdN
-SUkgaW50ZXJuYWwKZGVsYXlzIHdlcmUgZW5hYmxlZC4gIFRoZXJlIGlzIG5vIHJlYXNvbiBmb3Ig
-dGhpcy4gIE1vdmUgdGhlIElPCmltcGVkYW5jZSBibG9jayBvdXQgb2YgdGhlIFJHTUlJIGRlbGF5
-IGJsb2NrLgoKQ2M6IEFuZHJldyBMdW5uIDxhbmRyZXdAbHVubi5jaD4KQ2M6IEZsb3JpYW4gRmFp
-bmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPgpDYzogSGVpbmVyIEthbGx3ZWl0IDxoa2FsbHdl
-aXQxQGdtYWlsLmNvbT4KU2lnbmVkLW9mZi1ieTogVHJlbnQgUGllcGhvIDx0cGllcGhvQGltcGlu
-ai5jb20+Ci0tLQoKTm90ZXM6CiAgICBDaGFuZ2VzIGZyb20gdjE6CiAgICAgIFBhdGNoIGFkZGVk
-IGluIHYyLgoKIGRyaXZlcnMvbmV0L3BoeS9kcDgzODY3LmMgfCAxOSArKysrKysrKystLS0tLS0t
-LS0tCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkKCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL25ldC9waHkvZHA4Mzg2Ny5jIGIvZHJpdmVycy9uZXQvcGh5L2Rw
-ODM4NjcuYwppbmRleCA1OTA1MWIwZjViZTkuLjVlY2UxNTNhYTljMyAxMDA2NDQKLS0tIGEvZHJp
-dmVycy9uZXQvcGh5L2RwODM4NjcuYworKysgYi9kcml2ZXJzL25ldC9waHkvZHA4Mzg2Ny5jCkBA
-IC03NSw4ICs3NSw3IEBACiAjZGVmaW5lIERQODM4NjdfUkdNSUlfUlhfQ0xLX0RFTEFZX1NISUZU
-CTAKIAogLyogSU9fTVVYX0NGRyBiaXRzICovCi0jZGVmaW5lIERQODM4NjdfSU9fTVVYX0NGR19J
-T19JTVBFREFOQ0VfQ1RSTAkweDFmCi0KKyNkZWZpbmUgRFA4Mzg2N19JT19NVVhfQ0ZHX0lPX0lN
-UEVEQU5DRV9NQVNLCTB4MWYKICNkZWZpbmUgRFA4Mzg2N19JT19NVVhfQ0ZHX0lPX0lNUEVEQU5D
-RV9NQVgJMHgwCiAjZGVmaW5lIERQODM4NjdfSU9fTVVYX0NGR19JT19JTVBFREFOQ0VfTUlOCTB4
-MWYKICNkZWZpbmUgRFA4Mzg2N19JT19NVVhfQ0ZHX0NMS19PX0RJU0FCTEUJQklUKDYpCkBAIC0x
-NjIsOCArMTYxLDYgQEAgc3RhdGljIGludCBkcDgzODY3X29mX2luaXQoc3RydWN0IHBoeV9kZXZp
-Y2UgKnBoeWRldikKIAlpZiAoIW9mX25vZGUpCiAJCXJldHVybiAtRU5PREVWOwogCi0JZHA4Mzg2
-Ny0+aW9faW1wZWRhbmNlID0gLUVJTlZBTDsKLQogCS8qIE9wdGlvbmFsIGNvbmZpZ3VyYXRpb24g
-Ki8KIAlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihvZl9ub2RlLCAidGksY2xrLW91dHB1dC1z
-ZWwiLAogCQkJCSAgICZkcDgzODY3LT5jbGtfb3V0cHV0X3NlbCk7CkBAIC0xODUsNiArMTgyLDgg
-QEAgc3RhdGljIGludCBkcDgzODY3X29mX2luaXQoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldikK
-IAkJZHA4Mzg2Ny0+aW9faW1wZWRhbmNlID0gRFA4Mzg2N19JT19NVVhfQ0ZHX0lPX0lNUEVEQU5D
-RV9NQVg7CiAJZWxzZSBpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKG9mX25vZGUsICJ0aSxtaW4t
-b3V0cHV0LWltcGVkYW5jZSIpKQogCQlkcDgzODY3LT5pb19pbXBlZGFuY2UgPSBEUDgzODY3X0lP
-X01VWF9DRkdfSU9fSU1QRURBTkNFX01JTjsKKwllbHNlCisJCWRwODM4NjctPmlvX2ltcGVkYW5j
-ZSA9IC0xOyAvKiBsZWF2ZSBhdCBkZWZhdWx0ICovCiAKIAlkcDgzODY3LT5yeGN0cmxfc3RyYXBf
-cXVpcmsgPSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wob2Zfbm9kZSwKIAkJCQkJInRpLGRwODM4Njct
-cnhjdHJsLXN0cmFwLXF1aXJrIik7CkBAIC0zMzMsMTQgKzMzMiwxNCBAQCBzdGF0aWMgaW50IGRw
-ODM4NjdfY29uZmlnX2luaXQoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldikKIAogCQlwaHlfd3Jp
-dGVfbW1kKHBoeWRldiwgRFA4Mzg2N19ERVZBRERSLCBEUDgzODY3X1JHTUlJRENUTCwKIAkJCSAg
-ICAgIGRlbGF5KTsKLQotCQlpZiAoZHA4Mzg2Ny0+aW9faW1wZWRhbmNlID49IDApCi0JCQlwaHlf
-bW9kaWZ5X21tZChwaHlkZXYsIERQODM4NjdfREVWQUREUiwgRFA4Mzg2N19JT19NVVhfQ0ZHLAot
-CQkJCSAgICAgICBEUDgzODY3X0lPX01VWF9DRkdfSU9fSU1QRURBTkNFX0NUUkwsCi0JCQkJICAg
-ICAgIGRwODM4NjctPmlvX2ltcGVkYW5jZSAmCi0JCQkJICAgICAgIERQODM4NjdfSU9fTVVYX0NG
-R19JT19JTVBFREFOQ0VfQ1RSTCk7CiAJfQogCisJLyogSWYgc3BlY2lmaWVkLCBzZXQgaW8gaW1w
-ZWRhbmNlICovCisJaWYgKGRwODM4NjctPmlvX2ltcGVkYW5jZSA+PSAwKQorCQlwaHlfbW9kaWZ5
-X21tZChwaHlkZXYsIERQODM4NjdfREVWQUREUiwgRFA4Mzg2N19JT19NVVhfQ0ZHLAorCQkJICAg
-ICAgIERQODM4NjdfSU9fTVVYX0NGR19JT19JTVBFREFOQ0VfTUFTSywKKwkJCSAgICAgICBkcDgz
-ODY3LT5pb19pbXBlZGFuY2UpOworCiAJLyogRW5hYmxlIEludGVycnVwdCBvdXRwdXQgSU5UX09F
-IGluIENGRzMgcmVnaXN0ZXIgKi8KIAlpZiAocGh5X2ludGVycnVwdF9pc192YWxpZChwaHlkZXYp
-KSB7CiAJCXZhbCA9IHBoeV9yZWFkKHBoeWRldiwgRFA4Mzg2N19DRkczKTsKLS0gCjIuMTQuNQoK
+On Wed, May 22, 2019 at 06:43:22PM +0000, Trent Piepho wrote:
+> Generally, the output clock pin is only used for testing and only serves
+> as a source of RF noise after this.  It could be used to daisy-chain
+> PHYs, but this is uncommon.  Since the PHY can disable the output, make
+> doing so an option.  I do this by adding another enumeration to the
+> allowed values of ti,clk-output-sel.
+> 
+> The code was not using the value DP83867_CLK_O_SEL_REF_CLK as one might
+> expect: to select the REF_CLK as the output.  Rather it meant "keep
+> clock output setting as is", which, depending on PHY strapping, might
+> not be outputting REF_CLK.
+> 
+> Change this so DP83867_CLK_O_SEL_REF_CLK means enable REF_CLK output.
+> Omitting the property will leave the setting as is (which was the
+> previous behavior in this case).
+> 
+> Out of range values were silently converted into
+> DP83867_CLK_O_SEL_REF_CLK.  Change this so they generate an error.
+> 
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Heiner Kallweit <hkallweit1@gmail.com>
+> Signed-off-by: Trent Piepho <tpiepho@impinj.com>
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
