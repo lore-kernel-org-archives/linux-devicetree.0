@@ -1,32 +1,41 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt: bindings: mtd: replace references to nand.txt with nand-controller.yaml
-Date: Wed, 22 May 2019 08:55:53 -0500
-Message-ID: <CAL_JsqJ+zNQ3CeBh8K=oBiZZsiBQ8w1w=6vs8zOQeqUf_qhqcg@mail.gmail.com>
-References: <1558466890-45471-1-git-send-email-kdasu.kdev@gmail.com> <CAL_JsqKd53W1E33YdtJwagi4=7DrVQ5+N3rSY=Rxo5J0RiW46g@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: arm: Clean up CPU binding examples
+Date: Wed, 22 May 2019 08:57:16 -0500
+Message-ID: <20190522135716.GA4030@bogus>
+References: <50fbe259ee5951e32221af457737b7d970be9f32.1558456785.git.robin.murphy@arm.com>
+ <fe070f591d5e07042062b6b07a701feab324ee2c.1558456785.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKd53W1E33YdtJwagi4=7DrVQ5+N3rSY=Rxo5J0RiW46g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kamal Dasu <kdasu.kdev@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: MTD Maling List <linux-mtd@lists.infradead.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liang Yang <liang.yang@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Neil Armstrong <narmstrong@baylibre.com>, Andy Gross <agross@ker>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <fe070f591d5e07042062b6b07a701feab324ee2c.1558456785.git.robin.murphy@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 22, 2019 at 8:19 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Tue, May 21, 2019 at 2:28 PM Kamal Dasu <kdasu.kdev@gmail.com> wrote:
-> >
-> > nand-controller.yaml replaced nand.txt however the references to it were
-> > not updated. This change updates these references wherever it appears in
-> > bindings documentation.
-> >
-> > Fixes: 212e49693592 ("dt-bindings: mtd: Add YAML schemas for the generic NAND options")
-> >
-> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
->
-> Mauro already sent a similar patch.
+On Tue, 21 May 2019 17:44:27 +0100, Robin Murphy wrote:
+> Following commit 31af04cd60d3 ("arm64: dts: Remove inconsistent use of
+> 'arm,armv8' compatible string"), clean up these binding examples in case
+> anyone is tempted to copy them.
+> 
+> CC: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  Documentation/devicetree/bindings/arm/arm-boards     |  4 ++--
+>  .../devicetree/bindings/arm/cpu-capacity.txt         | 12 ++++++------
+>  2 files changed, 8 insertions(+), 8 deletions(-)
+> 
 
-Actually, Mauro's patch missed a bunch of cases that aren't full
-paths, so I'll take this one.
+Applied, thanks.
 
 Rob
