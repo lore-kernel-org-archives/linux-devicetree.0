@@ -1,41 +1,77 @@
-From: Loys Ollivier <lollivier@baylibre.com>
-Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from DT source data
-Date: Wed, 22 May 2019 21:18:33 +0200
-Message-ID: <868suyb8mu.fsf@baylibre.com>
-References: <20190411084304.5072-2-paul.walmsley@sifive.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
+Date: Wed, 22 May 2019 14:27:07 -0500
+Message-ID: <CAL_Jsq+86nNEBzjbf_GLWWrAN91jwU+JQ7zrEoFaT_dxUzVv4A@mail.gmail.com>
+References: <20190521161102.29620-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411084304.5072-2-paul.walmsley@sifive.com> (Paul Walmsley's
-        message of "Thu, 11 Apr 2019 01:42:59 -0700")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: linux-kernel@vger.kernel.org, Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20190521161102.29620-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Steven Price <steven.price-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 11 Apr 2019 at 01:42, Paul Walmsley <paul.walmsley@sifive.com> wrote:
-
-> Similar to ARM64, add support for building DTB files from DT source
-> data for RISC-V boards.
->
-> This patch starts with the infrastructure needed for SiFive boards.
-> Boards from other vendors would add support here in a similar form.
->
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-
-Tested-by: Loys Ollivier <lollivier@baylibre.com>
-
-Tested the whole patch series using FSBL+BBL.
-Did basic boot testing and uart validation.
-
-The actual testing process is quite cumbersome.
-One needs to rebuild the BBL to update the dtb loaded.
-
-Would you have an idea of the delta between bbl and u-boot ?
-I tried booting the same kernel + dtb with U-Boot but ran into
-errors related to plic.
-
-Loys
+T24gVHVlLCBNYXkgMjEsIDIwMTkgYXQgMTE6MTEgQU0gQ2zDqW1lbnQgUMOpcm9uIDxwZXJvbi5j
+bGVtQGdtYWlsLmNvbT4gd3JvdGU6Cj4KPiBIaSwKPgo+IFRoZSBBbGx3aW5uZXIgSDYgaGFzIGEg
+TWFsaS1UNzIwIE1QMiB3aGljaCBzaG91bGQgYmUgc3VwcG9ydGVkIGJ5Cj4gdGhlIG5ldyBwYW5m
+cm9zdCBkcml2ZXIuIFRoaXMgc2VyaWVzIGZpeCB0d28gaXNzdWVzIGFuZCBpbnRyb2R1Y2UgdGhl
+Cj4gZHQtYmluZGluZ3MgYnV0IGEgc2ltcGxlIGJlbmNobWFyayBzaG93IHRoYXQgaXQncyBzdGls
+bCBOT1QgV09SS0lORy4KPgo+IEknbSBwdXNoaW5nIGl0IGluIGNhc2Ugc29tZW9uZSB3YW50IHRv
+IGNvbnRpbnVlIHRoZSB3b3JrLgo+Cj4gVGhpcyBoYXMgYmVlbiB0ZXN0ZWQgd2l0aCBNZXNhM0Qg
+MTkuMS4wLVJDMiBhbmQgYSBHUFUgYml0bmVzcyBwYXRjaFsxXS4KPgo+IE9uZSBwYXRjaCBpcyBm
+cm9tIEljZW5vd3kgWmhlbmcgd2hlcmUgSSBjaGFuZ2VkIHRoZSBvcmRlciBhcyByZXF1aXJlZAo+
+IGJ5IFJvYiBIZXJyaW5nWzJdLgo+Cj4gVGhhbmtzLAo+IENsZW1lbnQKPgo+IFsxXSBodHRwczov
+L2dpdGxhYi5mcmVlZGVza3RvcC5vcmcva3N6YXEvbWVzYS90cmVlL3BhbmZyb3N0XzY0XzMyCj4g
+WzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA2OTk4MjkvCj4KPgo+IFsg
+IDM0NS4yMDQ4MTNdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBtbXUgaXJxIHN0YXR1cz0xCj4gWyAg
+MzQ1LjIwOTYxN10gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxlZCBQYWdlIGZhdWx0IGlu
+IEFTMCBhdCBWQQo+IDB4MDAwMDAwMDAwMjQwMDQwMAo+IFsgIDM0NS4yMDk2MTddIFJlYXNvbjog
+VE9ETwo+IFsgIDM0NS4yMDk2MTddIHJhdyBmYXVsdCBzdGF0dXM6IDB4ODAwMDAyQzEKPiBbICAz
+NDUuMjA5NjE3XSBkZWNvZGVkIGZhdWx0IHN0YXR1czogU0xBVkUgRkFVTFQKPiBbICAzNDUuMjA5
+NjE3XSBleGNlcHRpb24gdHlwZSAweEMxOiBUUkFOU0xBVElPTl9GQVVMVF9MRVZFTDEKPiBbICAz
+NDUuMjA5NjE3XSBhY2Nlc3MgdHlwZSAweDI6IFJFQUQKPiBbICAzNDUuMjA5NjE3XSBzb3VyY2Ug
+aWQgMHg4MDAwCj4gWyAgMzQ1LjcyOTk1N10gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IGdwdSBzY2hl
+ZCB0aW1lb3V0LCBqcz0wLAo+IHN0YXR1cz0weDgsIGhlYWQ9MHgyNDAwNDAwLCB0YWlsPTB4MjQw
+MDQwMCwgc2NoZWRfam9iPTAwMDAwMDAwOWUyMDRkZTkKPiBbICAzNDYuMDU1ODc2XSBwYW5mcm9z
+dCAxODAwMDAwLmdwdTogbW11IGlycSBzdGF0dXM9MQo+IFsgIDM0Ni4wNjA2ODBdIHBhbmZyb3N0
+IDE4MDAwMDAuZ3B1OiBVbmhhbmRsZWQgUGFnZSBmYXVsdCBpbiBBUzAgYXQgVkEKPiAweDAwMDAw
+MDAwMDJDMDBBMDAKPiBbICAzNDYuMDYwNjgwXSBSZWFzb246IFRPRE8KPiBbICAzNDYuMDYwNjgw
+XSByYXcgZmF1bHQgc3RhdHVzOiAweDgxMDAwMkMxCj4gWyAgMzQ2LjA2MDY4MF0gZGVjb2RlZCBm
+YXVsdCBzdGF0dXM6IFNMQVZFIEZBVUxUCj4gWyAgMzQ2LjA2MDY4MF0gZXhjZXB0aW9uIHR5cGUg
+MHhDMTogVFJBTlNMQVRJT05fRkFVTFRfTEVWRUwxCj4gWyAgMzQ2LjA2MDY4MF0gYWNjZXNzIHR5
+cGUgMHgyOiBSRUFECj4gWyAgMzQ2LjA2MDY4MF0gc291cmNlIGlkIDB4ODEwMAo+IFsgIDM0Ni41
+NjE5NTVdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBncHUgc2NoZWQgdGltZW91dCwganM9MSwKPiBz
+dGF0dXM9MHg4LCBoZWFkPTB4MmMwMGEwMCwgdGFpbD0weDJjMDBhMDAsIHNjaGVkX2pvYj0wMDAw
+MDAwMGI1NWE5YTg1Cj4gWyAgMzQ2LjU3MzkxM10gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IG1tdSBp
+cnEgc3RhdHVzPTEKPiBbICAzNDYuNTc4NzA3XSBwYW5mcm9zdCAxODAwMDAwLmdwdTogVW5oYW5k
+bGVkIFBhZ2UgZmF1bHQgaW4gQVMwIGF0IFZBCj4gMHgwMDAwMDAwMDAyQzAwQjgwCj4KPiBDaGFu
+Z2UgaW4gdjU6Cj4gIC0gUmVtb3ZlIGZpeCBpbmRlbnQKPgo+IENoYW5nZXMgaW4gdjQ6Cj4gIC0g
+QWRkIGJ1c19jbG9jayBwcm9iZQo+ICAtIEZpeCBzYW5pdHkgY2hlY2sgaW4gaW8tcGd0YWJsZQo+
+ICAtIEFkZCB2cmFtcC1kZWxheQo+ICAtIE1lcmdlIGFsbCBib2FyZHMgaW50byBvbmUgcGF0Y2gK
+PiAgLSBSZW1vdmUgdXBzdHJlYW1lZCBOZWlsIEEuIHBhdGNoCj4KPiBDaGFuZ2UgaW4gdjMgKFRo
+YW5rcyB0byBNYXhpbWUgUmlwYXJkKToKPiAgLSBSZWF1dGhvciBJY2Vub3d5IGZvciBoZXIgcGF0
+aAo+Cj4gQ2hhbmdlcyBpbiB2MiAoVGhhbmtzIHRvIE1heGltZSBSaXBhcmQpOgo+ICAtIERyb3Ag
+R1BVIE9QUCBUYWJsZQo+ICAtIEFkZCBjbG9ja3MgYW5kIGNsb2NrLW5hbWVzIGluIHJlcXVpcmVk
+Cj4KPiBDbMOpbWVudCBQw6lyb24gKDUpOgo+ICAgZHJtOiBwYW5mcm9zdDogYWRkIG9wdGlvbmFs
+IGJ1c19jbG9jawo+ICAgaW9tbXU6IGlvLXBndGFibGU6IGZpeCBzYW5pdHkgY2hlY2sgZm9yIG5v
+biA0OC1iaXQgbWFsaSBpb21tdQo+ICAgZHQtYmluZGluZ3M6IGdwdTogbWFsaS1taWRnYXJkOiBB
+ZGQgSDYgbWFsaSBncHUgY29tcGF0aWJsZQo+ICAgYXJtNjQ6IGR0czogYWxsd2lubmVyOiBBZGQg
+QVJNIE1hbGkgR1BVIG5vZGUgZm9yIEg2Cj4gICBhcm02NDogZHRzOiBhbGx3aW5uZXI6IEFkZCBt
+YWxpIEdQVSBzdXBwbHkgZm9yIEg2IGJvYXJkcwo+Cj4gSWNlbm93eSBaaGVuZyAoMSk6Cj4gICBk
+dC1iaW5kaW5nczogZ3B1OiBhZGQgYnVzIGNsb2NrIGZvciBNYWxpIE1pZGdhcmQgR1BVcwoKSSd2
+ZSBhcHBsaWVkIHBhdGNoZXMgMSBhbmQgMyB0byBkcm0tbWlzYy4gSSB3YXMgZ29pbmcgdG8gZG8g
+cGF0Y2ggNAp0b28sIGJ1dCBpdCBkb2Vzbid0IGFwcGx5LgoKUGF0Y2ggMiBjYW4gZ28gaW4gdmlh
+IHRoZSBpb21tdSB0cmVlIGFuZCB0aGUgcmVzdCB2aWEgdGhlIGFsbHdpbm5lciB0cmVlLgoKUm9i
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11IG1h
+aWxpbmcgbGlzdAppb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xpc3Rz
+LmxpbnV4Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQ==
