@@ -1,75 +1,93 @@
-From: raymond pang <raymondpangxd@gmail.com>
-Subject: Re: [PATCH v4 01/10] ata: libahci: Ensure the host interrupt status
- bits are cleared
-Date: Thu, 23 May 2019 03:11:39 +0000
-Message-ID: <CAHG4imNxsdzjzRpFWnL+PuznjdOU4hsp2E-g1bt4WVJeokfT3w@mail.gmail.com>
-References: <20190521143023.31810-1-miquel.raynal@bootlin.com>
- <20190521143023.31810-2-miquel.raynal@bootlin.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH net-next 2/2] net: phy: aquantia: add USXGMII support
+Date: Thu, 23 May 2019 06:08:42 +0200
+Message-ID: <8e34e321-fe1d-0dea-0d85-246876c43e14@gmail.com>
+References: <110a1e45-56a7-a646-7b63-f39fe3083c28@gmail.com>
+ <2c68bdb1-9b53-ce0b-74d3-c7ea2d9e7ac0@gmail.com>
+ <20190522205851.GA15257@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190521143023.31810-2-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190522205851.GA15257@lunn.ch>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Madalin-cristian Bucur <madalin.bucur@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
+On 22.05.2019 22:58, Andrew Lunn wrote:
+> On Wed, May 22, 2019 at 09:58:32PM +0200, Heiner Kallweit wrote:
+>> So far we didn't support mode USXGMII, and in order to not break the
+>> two Freescale boards mode XGMII was accepted for the AQR107 family
+>> even though it doesn't support XGMII. Add USXGMII support to the
+>> Aquantia PHY driver and change the phy connection type for the two
+>> boards.
+>>
+>> As an additional note: Even though the handle is named aqr106
+>> there seem to be LS1046A boards with an AQR107.
+>>
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> ---
+>>  arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 2 +-
+>>  arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 2 +-
+>>  drivers/net/phy/aquantia_main.c                   | 6 +++++-
+>>  3 files changed, 7 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+>> index 4223a2352..c2ce1a611 100644
+>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+>> @@ -139,7 +139,7 @@
+>>  
+>>  	ethernet@f0000 { /* 10GEC1 */
+>>  		phy-handle = <&aqr105_phy>;
+>> -		phy-connection-type = "xgmii";
+>> +		phy-connection-type = "usxgmii";
+>>  	};
+>>  
+>>  	mdio@fc000 {
+>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+>> index 6a6514d0e..f927a8a25 100644
+>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+>> @@ -147,7 +147,7 @@
+>>  
+>>  	ethernet@f0000 { /* 10GEC1 */
+>>  		phy-handle = <&aqr106_phy>;
+>> -		phy-connection-type = "xgmii";
+>> +		phy-connection-type = "usxgmii";
+>>  	};
+>>  
+>>  	ethernet@f2000 { /* 10GEC2 */
+>> diff --git a/drivers/net/phy/aquantia_main.c b/drivers/net/phy/aquantia_main.c
+>> index 0fedd28fd..3f24c42a8 100644
+>> @@ -487,7 +491,7 @@ static int aqr107_config_init(struct phy_device *phydev)
+>>  	/* Check that the PHY interface type is compatible */
+>>  	if (phydev->interface != PHY_INTERFACE_MODE_SGMII &&
+>>  	    phydev->interface != PHY_INTERFACE_MODE_2500BASEX &&
+>> -	    phydev->interface != PHY_INTERFACE_MODE_XGMII &&
+>> +	    phydev->interface != PHY_INTERFACE_MODE_USXGMII &&
+>>  	    phydev->interface != PHY_INTERFACE_MODE_10GKR)
+>>  		return -ENODEV;
+> 
+> Hi Heiner
+> 
+> Just to reiterate Florian's point. We need to be careful with device
+> tree blobs. We should try not to break them, at least not for a few
+> cycles.
+> 
+> I would much prefer to see a
+> 
+> WARN_ON(phydev->interface == PHY_INTERFACE_MODE_XGMII,
+>         "Your devicetree is out of date, please update it");
+> 
+> and accept XGMII for this cycle. These are development boards, so in
+> theory users are developers, so should know how to update the DT.
+> 
+I see your point. Then I'll just change phylib and will let the NXP
+guys change the board DTS.
 
-This patch adds clearing GHC.IS into hot path, could you explain how
-irq storm is generated? thanks
-According to AHCI Spec, HBA should not refer to GHC.IS to generate
-MSI when applying multiple MSIs.
-
-Best Regards,
-Raymond
-
-On Tue, May 21, 2019 at 2:31 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
-> ahci_multi_irqs_intr_hard() is going to be used as interrupt handler
-> to support SATA per-port interrupts. The current logic is to check and
-> clear the SATA port interrupt status register only. To avoid spurious
-> IRQs and interrupt storms, it will be needed to clear the port
-> interrupt bit in the host interrupt status register as well.
->
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/ata/libahci.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-> index 692782dddc0f..9db6f488db59 100644
-> --- a/drivers/ata/libahci.c
-> +++ b/drivers/ata/libahci.c
-> @@ -1912,7 +1912,10 @@ static void ahci_port_intr(struct ata_port *ap)
->  static irqreturn_t ahci_multi_irqs_intr_hard(int irq, void *dev_instance)
->  {
->         struct ata_port *ap = dev_instance;
-> +       struct ata_host *host = ap->host;
-> +       struct ahci_host_priv *hpriv = host->private_data;
->         void __iomem *port_mmio = ahci_port_base(ap);
-> +       void __iomem *mmio = hpriv->mmio;
->         u32 status;
->
->         VPRINTK("ENTER\n");
-> @@ -1924,6 +1927,8 @@ static irqreturn_t ahci_multi_irqs_intr_hard(int irq, void *dev_instance)
->         ahci_handle_port_interrupt(ap, port_mmio, status);
->         spin_unlock(ap->lock);
->
-> +       writel(BIT(ap->port_no), mmio + HOST_IRQ_STAT);
-> +
->         VPRINTK("EXIT\n");
->
->         return IRQ_HANDLED;
-> --
-> 2.19.1
->
+>     Andrew
+> 
+Heiner
