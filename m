@@ -1,132 +1,25 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH 6/6] arm64: dts: allwinner: a64: enable ANX6345 bridge on Teres-I
-Date: Thu, 23 May 2019 07:48:03 -0700
-Message-ID: <CA+E=qVdh-=C5zOYWYj95jLN51EaXFS6B+CQ101-f64q5QmgN3g@mail.gmail.com>
-References: <20190523065013.2719D68B05@newverein.lst.de> <20190523065404.BB60F68B20@newverein.lst.de>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 2/2] net: macb: Add support for SiFive FU540-C000
+Date: Thu, 23 May 2019 16:54:17 +0200
+Message-ID: <20190523145417.GD19369@lunn.ch>
+References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
+ <1558611952-13295-3-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190523065404.BB60F68B20@newverein.lst.de>
+Content-Disposition: inline
+In-Reply-To: <1558611952-13295-3-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Torsten Duwe <duwe@lst.de>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Yash Shah <yash.shah@sifive.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, paul.walmsley@sifive.com, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:54 PM Torsten Duwe <duwe@lst.de> wrote:
->
-> From: Icenowy Zheng <icenowy@aosc.io>
->
-> Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
-> the I2C controlling signals are connected to I2C0 bus. eDP output goes
-> to an Innolux N116BGE panel.
->
-> Enable it in the device tree.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts |   65 +++++++++++++++++--
->  1 file changed, 61 insertions(+), 4 deletions(-)
->
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> @@ -65,6 +65,21 @@
->                 };
->         };
->
-> +       panel: panel {
-> +               compatible ="innolux,n116bge", "simple-panel";
+> +static int fu540_macb_tx_set_rate(struct clk_hw *hw, unsigned long rate,
+> +				  unsigned long parent_rate)
+> +{
+> +	rate = fu540_macb_tx_round_rate(hw, rate, &parent_rate);
+> +	iowrite32(rate != 125000000, mgmt->reg);
 
-IIRC Rob wanted it to be edp-connector, not simple-panel. Also you
-need to introduce edp-connector binding.
+That looks odd. Writing the result of a comparison to a register?
 
-> +               status = "okay";
-> +               power-supply = <&reg_dcdc1>;
-> +               backlight = <&backlight>;
-> +
-> +               ports {
-> +                       panel_in: port {
-> +                               panel_in_edp: endpoint {
-> +                                       remote-endpoint = <&anx6345_out>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
->         reg_usb1_vbus: usb1-vbus {
->                 compatible = "regulator-fixed";
->                 regulator-name = "usb1-vbus";
-> @@ -81,20 +96,48 @@
->         };
->  };
->
-> +&de {
-> +       status = "okay";
-> +};
-> +
->  &ehci1 {
->         status = "okay";
->  };
->
->
-> -/* The ANX6345 eDP-bridge is on i2c0. There is no linux (mainline)
-> - * driver for this chip at the moment, the bootloader initializes it.
-> - * However it can be accessed with the i2c-dev driver from user space.
-> - */
->  &i2c0 {
->         clock-frequency = <100000>;
->         pinctrl-names = "default";
->         pinctrl-0 = <&i2c0_pins>;
->         status = "okay";
-> +
-> +       anx6345: anx6345@38 {
-> +               compatible = "analogix,anx6345";
-> +               reg = <0x38>;
-> +               reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-> +               dvdd25-supply = <&reg_dldo2>;
-> +               dvdd12-supply = <&reg_dldo3>;
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       port@0 {
-> +                               anx6345_in: endpoint {
-> +                                       remote-endpoint = <&tcon0_out_anx6345>;
-> +                               };
-> +                       };
-> +                       port@1 {
-> +                               anx6345_out: endpoint {
-> +                                       remote-endpoint = <&panel_in_edp>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&mixer0 {
-> +       status = "okay";
->  };
->
->  &mmc0 {
-> @@ -279,6 +322,20 @@
->         vcc-hdmi-supply = <&reg_dldo1>;
->  };
->
-> +&tcon0 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&lcd_rgb666_pins>;
-> +
-> +       status = "okay";
-> +};
-> +
-> +&tcon0_out {
-> +       tcon0_out_anx6345: endpoint@0 {
-> +               reg = <0>;
-> +               remote-endpoint = <&anx6345_in>;
-> +       };
-> +};
-> +
->  &uart0 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&uart0_pb_pins>;
+     Andrew
