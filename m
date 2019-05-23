@@ -1,32 +1,37 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: Re: [PATCH 5/6] dt-bindings: Add ANX6345 DP/eDP transmitter binding
-Date: Thu, 23 May 2019 14:30:41 +0200
-Message-ID: <20190523123041.GB15685@lst.de>
-References: <20190523065013.2719D68B05@newverein.lst.de> <20190523065400.BD9EB68B05@newverein.lst.de> <20190523090540.nhxrjpz3scx6jt23@flea>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v7 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC.
+Date: Thu, 23 May 2019 14:34:35 +0200
+Message-ID: <20190523123435.GA15531@lunn.ch>
+References: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
+ <1558515574-11155-4-git-send-email-sagar.kadam@sifive.com>
+ <20190522194529.GJ7281@lunn.ch>
+ <CAARK3HmMVibudG2CFLBoMSAqnraXyirTL6CXYo1T_XJEuGJy7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190523090540.nhxrjpz3scx6jt23@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAARK3HmMVibudG2CFLBoMSAqnraXyirTL6CXYo1T_XJEuGJy7Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Sagar Kadam <sagar.kadam@sifive.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, peter@korsgaard.com, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2019 at 11:05:40AM +0200, Maxime Ripard wrote:
-> > +Optional properties:
-> > +
-> > + - Video ports for RGB input and eDP output using the DT bindings
-> > +   defined in [1]
-> 
-> The output node can be optional, but the input one is probably going
-> to be needed all the time, since otherwise you won't be able to fill
-> the output port of the upstream device in the graph.
+> Thank you Andrew for reviewing the patch set.
+> Can you please let me know weather you or Peter will be pick up the patch
+> for v5.3 or they  should go in via some other tree?
 
-I guess so. A sibling product brief (anx9804)
-https://www.analogix.com/en/ttlconvertersbridges
-references it as
-| LVTTL to DisplayPort 1.2 _transmitter_
-so it will probably always be used on the output side.
+Hi Sagar
 
-	Torsten
+Wolfram Sang should pick the patchset up.
+
+	Andrew
