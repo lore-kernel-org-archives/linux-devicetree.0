@@ -1,73 +1,76 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V3 RESEND 3/4] defconfig: arm64: enable i.MX8 SCU octop
- driver
-Date: Thu, 23 May 2019 20:52:36 +0800
-Message-ID: <20190523125235.GV9261@dragon>
-References: <20190522020040.30283-1-peng.fan@nxp.com>
- <20190522020040.30283-3-peng.fan@nxp.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: add Allwinner H6 r_watchdog
+Date: Thu, 23 May 2019 14:57:16 +0200
+Message-ID: <20190523125716.g4euwplfsvw4vqzl@flea>
+References: <20190521160330.28402-1-peron.clem@gmail.com>
+ <20190521160330.28402-4-peron.clem@gmail.com>
+ <20190522103243.mmrfato5p2mhtf4j@flea>
+ <CAJiuCcdaZVLQyupEf8HPaUySakufXXAhzundo6VeyQaAyZ8Trw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wdtcxmlg6dhvhpqj"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190522020040.30283-3-peng.fan@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Maxime Ripard <maxime.ripard@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, dl-linux-imx <linux-imx@nxp.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.>
+In-Reply-To: <CAJiuCcdaZVLQyupEf8HPaUySakufXXAhzundo6VeyQaAyZ8Trw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 22, 2019 at 01:47:05AM +0000, Peng Fan wrote:
-> Build in CONFIG_NVMEM_IMX_OCOTP_SCU.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Shawn Guo <shawn.guo@linaro.org>
-> Cc: Andy Gross <andy.gross@linaro.org>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: Jagan Teki <jagan@amarulasolutions.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Leonard Crestez <leonard.crestez@nxp.com>
-> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Please do not use base64 encoding for patch posting.
+--wdtcxmlg6dhvhpqj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shawn
+On Wed, May 22, 2019 at 06:15:26PM +0200, Cl=E9ment P=E9ron wrote:
+> Hi Maxime,
+>
+> On Wed, 22 May 2019 at 12:32, Maxime Ripard <maxime.ripard@bootlin.com> w=
+rote:
+> >
+> > On Tue, May 21, 2019 at 06:03:28PM +0200, Cl=E9ment P=E9ron wrote:
+> > > Allwinner H6 has a second watchdog on the r-blocks which is
+> > > compatible with the A31.
+> > >
+> > > This commit add the H6 compatible for the r_watchdog.
+> > >
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> >
+> > Unless you have some evidence that the two blocks are different, then
+> > you should just reuse the same one.
+>
+> I have no evidence it's different nor identical, it's not documented
+> in the user manual.
+> I thought it would better to have separate bindings in case there is a
+> difference.
+> Than don't have and find later that we have to introduce one.
 
-> ---
-> 
-> V3:
->  No change
-> V2:
->  rename patch title, add review tag
-> 
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 979a95c915b6..32b85102b857 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -748,6 +748,7 @@ CONFIG_HISI_PMU=y
->  CONFIG_QCOM_L2_PMU=y
->  CONFIG_QCOM_L3_PMU=y
->  CONFIG_NVMEM_IMX_OCOTP=y
-> +CONFIG_NVMEM_IMX_OCOTP_SCU=y
->  CONFIG_QCOM_QFPROM=y
->  CONFIG_ROCKCHIP_EFUSE=y
->  CONFIG_UNIPHIER_EFUSE=y
-> -- 
-> 2.16.4
-> 
+It's a tradeoff. Pushing your logic to the limit, we would have a
+compatible for each controller embedded in an SoC.
+
+This would be unmaintainable, and slightly useless since that case is
+very unlikely.
+
+However, having differences between SoCs is quite common, hence why we
+have different compatibles for each SoC.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--wdtcxmlg6dhvhpqj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOaYrAAKCRDj7w1vZxhR
+xUPnAPsGJnjqxtkcj8BFHo1UbY6rBrhE114RafzPUtXuJD8o4QEAmWfFGwayxZZ0
+63T2ZEyt/CbXZE9fTnSFpRsi3BkzQA4=
+=Frvc
+-----END PGP SIGNATURE-----
+
+--wdtcxmlg6dhvhpqj--
