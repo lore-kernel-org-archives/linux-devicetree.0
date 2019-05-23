@@ -1,37 +1,38 @@
-From: Robin Gong <yibin.gong@nxp.com>
-Subject: RE:Re: [PATCH v4 00/14] add ecspi ERR009165 for i.mx6/7 soc family
-Date: Thu, 23 May 2019 02:18:10 +0000
-Message-ID: <VI1PR04MB45434A8AB7BC8B3DADBFCD5D89010@VI1PR04MB4543.eurprd04.prod.outlook.com>
+From: "Y.b. Lu" <yangbo.lu@nxp.com>
+Subject: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
+Date: Thu, 23 May 2019 02:33:24 +0000
+Message-ID: <20190523023451.2933-1-yangbo.lu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, "robh@kernel.org" <robh@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "plyatov@gmail.com" <plyatov@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>
-Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Richard Cochran <richardcochran@gmail.com>, David Miller <davem@davemloft.net>, Claudiu Manoil <claudiu.manoil@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMdWNhcyBTdGFjaCA8bC5zdGFj
-aEBwZW5ndXRyb25peC5kZT4NCj4gU2VudDogMjAxOeW5tDXmnIgyMuaXpSAxODoxMA0KPiBIaSBS
-b2JpbiwNCj4gDQo+IEFtIE1pdHR3b2NoLCBkZW4gMjIuMDUuMjAxOSwgMDk6NTkgKzAwMDAgc2No
-cmllYiBSb2JpbiBHb25nOg0KPiA+ICAgVGhlcmUgaXMgZWNzcGkgRVJSMDA5MTY1IG9uIGkubXg2
-Lzcgc29jIGZhbWlseSwgd2hpY2ggY2F1c2UgRklGTw0KPiA+IHRyYW5zZmVyIHRvIGJlIHNlbmQg
-dHdpY2UgaW4gRE1BIG1vZGUuIFBsZWFzZSBnZXQgbW9yZSBpbmZvcm1hdGlvbiBmcm9tOg0KPiA+
-IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRw
-cyUzQSUyRiUyRnd3dy4NCj4gDQo+IEkgaGF2ZW4ndCB0ZXN0ZWQgdGhpcyBzbyBhc2tpbmcgdGhl
-IG9idmlvdXMgcXVlc3Rpb246IHdoYXQgaGFwcGVucyB3aGVuIHRoaXMNCj4gc2VyaWVzIGlzIGFw
-cGxpZWQgd2l0aG91dCB0aGUgUkFNIHNjcmlwdCBiZWluZyBwcmVzZW50IG9uIHRoZSBzeXN0ZW0/
-IFdpbGwgaXQNCj4gcmVuZGVyIFNQSSB1bnVzYWJsZT8gSSBndWVzcyBzbyBzaW5jZSBpdCBjaGFu
-Z2VzIHRoZSBmbG93IGJldHdlZW4gdGhlIFNQSSBjb3JlDQo+IGFuZCBETUEgY29udHJvbGxlci4g
-Q2FuIHdlIHNvbWVob3cgZGV0ZWN0IHRoYXQgU0RNQSBpc24ndCB1c2luZyB0aGUgY29ycmVjdA0K
-PiBSQU0gc2NyaXB0IGFuZCBmYWxsIGJhY2sgdG8gUElPIG1vZGUgaW4gdGhlIFNQSSBkcml2ZXIg
-aW4gdGhhdCBjYXNlPw0KPiANCj4gQ3VycmVudGx5IHVzaW5nIHRoZSBSQU0gc2NyaXB0IGlzIG5v
-dCBhbiBvcHRpb24gaW4gYSBsb3Qgb2YgdXNlLWNhc2VzLCBhcyBpdCBzdGlsbA0KPiBicmVha3Mg
-c2VyaWFsIERNQSBzdXBwb3J0LiBUaGUgZml4IGZvciB0aGUgc2VyaWFsIGlzc3VlIHJlYWxseSBu
-ZWVkcyB0byBiZQ0KPiByZW1vdmUgdGhlIGJyb2tlbiBzZXJpYWwgc2NyaXB0IGZyb20gdGhlIFJB
-TSBmaXJtd2FyZSwgbm90IGNoYW5nZSB0aGUgc2VyaWFsDQo+IGRyaXZlciB0byBkZWFsIHdpdGgg
-dGhlIGJyb2tlbiBiZWhhdmlvciBpbnRyb2R1Y2VkIGJ5IHRoZSBSQU0gc2NyaXB0Lg0KT2theSwg
-SSdsbCB0cnkgdG8gbWVyZ2UgYW5vdGhlciBwYXRjaCB3aGljaCBmaXggVUFSVCBkcml2ZXIgZnVu
-Y3Rpb24gYnJva2VuIGlzc3VlIHdpdGggcmFtIHNjcmlwdCBzbyB0aGF0IG5vIGFueSBicm9rZW4g
-Zm9yIHRoaXMgcGF0Y2ggc2V0Lg0KPiANCj4gUmVnYXJkcywNCj4gTHVjYXMNCg==
+VGhpcyBwYXRjaC1zZXQgaXMgdG8gc3VwcG9ydCBoYXJkd2FyZSB0aW1lc3RhbXBpbmcgZm9yIEVO
+RVRDDQphbmQgYWxzbyB0byBhZGQgRU5FVEMgMTU4OCB0aW1lciBkZXZpY2UgdHJlZSBub2RlIGZv
+ciBsczEwMjhhLg0KDQpCZWNhdXNlIHRoZSBFTkVUQyBSWCBCRCByaW5nIGR5bmFtaWMgYWxsb2Nh
+dGlvbiBoYXMgbm90IGJlZW4NCnN1cHBvcnRlZCBhbmQgaXQgaXMgdG9vIGV4cGVuc2l2ZSB0byB1
+c2UgZXh0ZW5kZWQgUlggQkRzDQppZiB0aW1lc3RhbXBpbmcgaXMgbm90IHVzZWQsIGEgS2NvbmZp
+ZyBvcHRpb24gaXMgdXNlZCB0bw0KZW5hYmxlIGV4dGVuZGVkIFJYIEJEcyBpbiBvcmRlciB0byBz
+dXBwb3J0IGhhcmR3YXJlDQp0aW1lc3RhbXBpbmcuIFRoaXMgb3B0aW9uIHdpbGwgYmUgcmVtb3Zl
+ZCBvbmNlIFJYIEJEDQpyaW5nIGR5bmFtaWMgYWxsb2NhdGlvbiBpcyBpbXBsZW1lbnRlZC4NCg0K
+WWFuZ2JvIEx1ICg0KToNCiAgZW5ldGM6IGFkZCBoYXJkd2FyZSB0aW1lc3RhbXBpbmcgc3VwcG9y
+dA0KICBlbmV0YzogYWRkIGdldF90c19pbmZvIGludGVyZmFjZSBmb3IgZXRodG9vbA0KICBkdC1i
+aW5kaW5nOiBwdHBfcW9yaXE6IHN1cHBvcnQgRU5FVEMgUFRQIGNvbXBhdGlibGUNCiAgYXJtNjQ6
+IGR0czogZnNsOiBsczEwMjhhOiBhZGQgRU5FVEMgMTU4OCB0aW1lciBub2RlDQoNCiAuLi4vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wdHAvcHRwLXFvcmlxLnR4dCAgICAgfCAgIDEgKw0KIC4uLi9hcm02
+NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaSB8ICAgNiArDQogZHJpdmVycy9u
+ZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2VuZXRjL0tjb25maWcgIHwgIDEwICsrDQogZHJpdmVycy9u
+ZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2VuZXRjL2VuZXRjLmMgIHwgMTU4ICsrKysrKysrKysrKysr
+KysrLQ0KIGRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Yy5oICB8ICAx
+NSArLQ0KIC4uLi9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfZXRodG9vbC5jICB8ICAz
+MSArKysrDQogLi4uL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfaHcuaCAgIHwg
+IDEzICsrDQogLi4uL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfcGYuYyAgIHwg
+ICAxICsNCiAuLi4vbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19wdHAuYyAgfCAg
+IDUgKw0KIC4uLi9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2VuZXRjL2VuZXRjX3ZmLmMgICB8ICAg
+MSArDQogMTAgZmlsZXMgY2hhbmdlZCwgMjM1IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0p
+DQoNCi0tIA0KMi4xNy4xDQoNCg==
