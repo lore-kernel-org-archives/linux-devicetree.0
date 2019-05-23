@@ -1,133 +1,96 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCHv2] arm64: dts: ls1028a: add flexspi nodes
-Date: Thu, 23 May 2019 16:00:51 +0800
-Message-ID: <20190523080049.GI9261@dragon>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [EXT] Re: [PATCHv2] arm64: dts: ls1028a: add flexspi nodes
+Date: Thu, 23 May 2019 08:06:42 +0000
+Message-ID: <AM5PR04MB32997EA37551AFC88FCBE2C6F5010@AM5PR04MB3299.eurprd04.prod.outlook.com>
 References: <20190515110924.13726-1-xiaowei.bao@nxp.com>
+ <20190523080049.GI9261@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190515110924.13726-1-xiaowei.bao@nxp.com>
+In-Reply-To: <20190523080049.GI9261@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Shawn Guo <shawnguo@kernel.org>
 Cc: Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:09:25AM +0000, Xiaowei Bao wrote:
-> From: Xiaowei Bao <xiaowei.bao@nxp.com>
-> 
-> Add fspi node property for LS1028A SoC for FlexSPI driver.
-> Property added for the FlexSPI controller and for the connected
-> slave device for the LS1028ARDB and LS1028AQDS target.
-> This is having one SPI-NOR flash device, mt35xu02g connected at
-> CS0.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - modify the commit message and the dts format.
-> 
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |   15 +++++++++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   15 +++++++++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   12 ++++++++++++
->  3 files changed, 42 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> index 5bcd491..6e12806 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> @@ -158,6 +158,21 @@
->  	};
->  };
->  
-> +&fspi {
-
-Keep the labeling node sort alphabetically.  That said, &fspi should be
-added before &i2c0.
-
-> +	status = "okay";
-
-Please have newline between property and child node.
-
-> +	mt35xu02g: flash@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "spansion,m25p80";
-
-Please start properties with compatible.
-
-> +		m25p,fast-read;
-> +		spi-max-frequency = <20000000>;
-> +		reg = <0>;
-> +		/* The following setting enables 1-1-8 (CMD-ADDR-DATA) mode */
-> +		spi-rx-bus-width = <8>; /* 8 SPI Rx lines */
-> +		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
-> +	};
-> +};
-> +
->  &sai1 {
->  	status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> index 25d2370..5d39616 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> @@ -136,6 +136,21 @@
->  	};
->  };
->  
-> +&fspi {
-> +	status = "okay";
-> +	mt35xu02g: flash@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "spansion,m25p80";
-> +		m25p,fast-read;
-> +		spi-max-frequency = <20000000>;
-> +		reg = <0>;
-> +		/* The following setting enables 1-1-8 (CMD-ADDR-DATA) mode */
-> +		spi-rx-bus-width = <8>; /* 8 SPI Rx lines */
-> +		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
-> +	};
-> +};
-> +
->  &duart0 {
->  	status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index ba71a33..a27cd60 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -109,6 +109,18 @@
->  		};
->  	};
->  
-> +	fspi: spi@20c0000 {
-
-Are you sure you want to add this device node outside of 'soc' node?
-
-> +		compatible = "nxp,lx2160a-fspi", "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x0 0x20c0000 0x0 0x10000>,
-> +		    <0x0 0x20000000 0x0 0x10000000>;
-
-Fix the indentation to git it aligned with above '<'.
-
-> +		reg-names = "FSPI", "FSPI-memory";
-> +		interrupts = <0 25 0x4>; /* Level high type */
-
-interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-
-Shawn
-
-> +		clocks = <&clockgen 4 3>, <&clockgen 4 3>;
-> +		clock-names = "fspi_en", "fspi";
-> +	};
-> +
->  	soc: soc {
->  		compatible = "simple-bus";
->  		#address-cells = <2>;
-> -- 
-> 1.7.1
-> 
+SGkgU2hhd24sDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBTaGF3biBHdW8g
+PHNoYXduZ3VvQGtlcm5lbC5vcmc+IA0KU2VudDogMjAxOcTqNdTCMjPI1SAxNjowMQ0KVG86IFhp
+YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IExlbyBMaSA8bGVveWFuZy5saUBu
+eHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogW0VYVF0gUmU6IFtQQVRD
+SHYyXSBhcm02NDogZHRzOiBsczEwMjhhOiBhZGQgZmxleHNwaSBub2Rlcw0KDQpDYXV0aW9uOiBF
+WFQgRW1haWwNCg0KT24gV2VkLCBNYXkgMTUsIDIwMTkgYXQgMTE6MDk6MjVBTSArMDAwMCwgWGlh
+b3dlaSBCYW8gd3JvdGU6DQo+IEZyb206IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29t
+Pg0KPg0KPiBBZGQgZnNwaSBub2RlIHByb3BlcnR5IGZvciBMUzEwMjhBIFNvQyBmb3IgRmxleFNQ
+SSBkcml2ZXIuDQo+IFByb3BlcnR5IGFkZGVkIGZvciB0aGUgRmxleFNQSSBjb250cm9sbGVyIGFu
+ZCBmb3IgdGhlIGNvbm5lY3RlZCBzbGF2ZSANCj4gZGV2aWNlIGZvciB0aGUgTFMxMDI4QVJEQiBh
+bmQgTFMxMDI4QVFEUyB0YXJnZXQuDQo+IFRoaXMgaXMgaGF2aW5nIG9uZSBTUEktTk9SIGZsYXNo
+IGRldmljZSwgbXQzNXh1MDJnIGNvbm5lY3RlZCBhdCBDUzAuDQo+DQo+IFNpZ25lZC1vZmYtYnk6
+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiAtLS0NCj4gdjI6DQo+ICAtIG1v
+ZGlmeSB0aGUgY29tbWl0IG1lc3NhZ2UgYW5kIHRoZSBkdHMgZm9ybWF0Lg0KPg0KPiAgYXJjaC9h
+cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0cyB8ICAgMTUgKysrKysr
+KysrKysrKysrDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1y
+ZGIuZHRzIHwgICAxNSArKysrKysrKysrKysrKysNCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgICAgfCAgIDEyICsrKysrKysrKysrKw0KPiAgMyBmaWxl
+cyBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZmIC0t
+Z2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0cyAN
+Cj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+
+IGluZGV4IDViY2Q0OTEuLjZlMTI4MDYgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCj4gKysrIGIvYXJjaC9hcm02NC9ib290
+L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0cw0KPiBAQCAtMTU4LDYgKzE1OCwyMSBA
+QA0KPiAgICAgICB9Ow0KPiAgfTsNCj4NCj4gKyZmc3BpIHsNCg0KS2VlcCB0aGUgbGFiZWxpbmcg
+bm9kZSBzb3J0IGFscGhhYmV0aWNhbGx5LiAgVGhhdCBzYWlkLCAmZnNwaSBzaG91bGQgYmUgYWRk
+ZWQgYmVmb3JlICZpMmMwLg0KDQo+ICsgICAgIHN0YXR1cyA9ICJva2F5IjsNCg0KUGxlYXNlIGhh
+dmUgbmV3bGluZSBiZXR3ZWVuIHByb3BlcnR5IGFuZCBjaGlsZCBub2RlLg0KDQo+ICsgICAgIG10
+MzV4dTAyZzogZmxhc2hAMCB7DQo+ICsgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47
+DQo+ICsgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MT47DQo+ICsgICAgICAgICAgICAgY29t
+cGF0aWJsZSA9ICJzcGFuc2lvbixtMjVwODAiOw0KDQpQbGVhc2Ugc3RhcnQgcHJvcGVydGllcyB3
+aXRoIGNvbXBhdGlibGUuDQpbWGlhb3dlaSBCYW9dIEkgaGF2ZSBzdWJtaXQgdGhlIHYzIHBhdGNo
+IHRvIGZpeCB0aGlzIGlzc3VlLg0KDQo+ICsgICAgICAgICAgICAgbTI1cCxmYXN0LXJlYWQ7DQo+
+ICsgICAgICAgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8MjAwMDAwMDA+Ow0KPiArICAgICAg
+ICAgICAgIHJlZyA9IDwwPjsNCj4gKyAgICAgICAgICAgICAvKiBUaGUgZm9sbG93aW5nIHNldHRp
+bmcgZW5hYmxlcyAxLTEtOCAoQ01ELUFERFItREFUQSkgbW9kZSAqLw0KPiArICAgICAgICAgICAg
+IHNwaS1yeC1idXMtd2lkdGggPSA8OD47IC8qIDggU1BJIFJ4IGxpbmVzICovDQo+ICsgICAgICAg
+ICAgICAgc3BpLXR4LWJ1cy13aWR0aCA9IDwxPjsgLyogMSBTUEkgVHggbGluZSAqLw0KPiArICAg
+ICB9Ow0KPiArfTsNCj4gKw0KPiAgJnNhaTEgew0KPiAgICAgICBzdGF0dXMgPSAib2theSI7DQo+
+ICB9Ow0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
+MTAyOGEtcmRiLmR0cyANCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMx
+MDI4YS1yZGIuZHRzDQo+IGluZGV4IDI1ZDIzNzAuLjVkMzk2MTYgMTAwNjQ0DQo+IC0tLSBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5kdHMNCj4gKysrIGIv
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiBAQCAt
+MTM2LDYgKzEzNiwyMSBAQA0KPiAgICAgICB9Ow0KPiAgfTsNCj4NCj4gKyZmc3BpIHsNCj4gKyAg
+ICAgc3RhdHVzID0gIm9rYXkiOw0KPiArICAgICBtdDM1eHUwMmc6IGZsYXNoQDAgew0KPiArICAg
+ICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArICAgICAgICAgICAgICNzaXplLWNl
+bGxzID0gPDE+Ow0KPiArICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic3BhbnNpb24sbTI1cDgw
+IjsNCj4gKyAgICAgICAgICAgICBtMjVwLGZhc3QtcmVhZDsNCj4gKyAgICAgICAgICAgICBzcGkt
+bWF4LWZyZXF1ZW5jeSA9IDwyMDAwMDAwMD47DQo+ICsgICAgICAgICAgICAgcmVnID0gPDA+Ow0K
+PiArICAgICAgICAgICAgIC8qIFRoZSBmb2xsb3dpbmcgc2V0dGluZyBlbmFibGVzIDEtMS04IChD
+TUQtQUREUi1EQVRBKSBtb2RlICovDQo+ICsgICAgICAgICAgICAgc3BpLXJ4LWJ1cy13aWR0aCA9
+IDw4PjsgLyogOCBTUEkgUnggbGluZXMgKi8NCj4gKyAgICAgICAgICAgICBzcGktdHgtYnVzLXdp
+ZHRoID0gPDE+OyAvKiAxIFNQSSBUeCBsaW5lICovDQo+ICsgICAgIH07DQo+ICt9Ow0KPiArDQo+
+ICAmZHVhcnQwIHsNCj4gICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiAgfTsNCj4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgDQo+IGIv
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiBpbmRleCBi
+YTcxYTMzLi5hMjdjZDYwIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
+Y2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
+YWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gQEAgLTEwOSw2ICsxMDksMTggQEANCj4gICAgICAgICAg
+ICAgICB9Ow0KPiAgICAgICB9Ow0KPg0KPiArICAgICBmc3BpOiBzcGlAMjBjMDAwMCB7DQoNCkFy
+ZSB5b3Ugc3VyZSB5b3Ugd2FudCB0byBhZGQgdGhpcyBkZXZpY2Ugbm9kZSBvdXRzaWRlIG9mICdz
+b2MnIG5vZGU/DQoNCj4gKyAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm54cCxseDIxNjBhLWZz
+cGkiLCAic2ltcGxlLWJ1cyI7DQo+ICsgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47
+DQo+ICsgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ICsgICAgICAgICAgICAgcmVn
+ID0gPDB4MCAweDIwYzAwMDAgMHgwIDB4MTAwMDA+LA0KPiArICAgICAgICAgICAgICAgICA8MHgw
+IDB4MjAwMDAwMDAgMHgwIDB4MTAwMDAwMDA+Ow0KDQpGaXggdGhlIGluZGVudGF0aW9uIHRvIGdp
+dCBpdCBhbGlnbmVkIHdpdGggYWJvdmUgJzwnLg0KW1hpYW93ZWkgQmFvXSB0aGlzIGlzIGFsaWdu
+ZWQsIEkgZG9uJ3Qga25vdyB3aHkgaXQgaXMgbm90IGFsaWduZWQgaW4gZW1haWwuIFRoYW5rcy4N
+Cg0KPiArICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJGU1BJIiwgIkZTUEktbWVtb3J5IjsNCj4g
+KyAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgMjUgMHg0PjsgLyogTGV2ZWwgaGlnaCB0eXBl
+ICovDQoNCmludGVycnVwdHMgPSA8R0lDX1NQSSAyNSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCg0K
+U2hhd24NCg0KPiArICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAzPiwgPCZjbG9j
+a2dlbiA0IDM+Ow0KPiArICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImZzcGlfZW4iLCAiZnNw
+aSI7DQo+ICsgICAgIH07DQo+ICsNCj4gICAgICAgc29jOiBzb2Mgew0KPiAgICAgICAgICAgICAg
+IGNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7DQo+ICAgICAgICAgICAgICAgI2FkZHJlc3MtY2Vs
+bHMgPSA8Mj47DQo+IC0tDQo+IDEuNy4xDQo+DQo=
