@@ -1,25 +1,50 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 2/2] net: macb: Add support for SiFive FU540-C000
-Date: Thu, 23 May 2019 16:54:17 +0200
-Message-ID: <20190523145417.GD19369@lunn.ch>
-References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
- <1558611952-13295-3-git-send-email-yash.shah@sifive.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v2] checkpatch.pl: Update DT vendor prefix check
+Date: Thu, 23 May 2019 10:00:22 -0500
+Message-ID: <20190523150022.2747-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1558611952-13295-3-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, paul.walmsley@sifive.com, sachin.ghadi@sifive.com
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Joe Perches <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-> +static int fu540_macb_tx_set_rate(struct clk_hw *hw, unsigned long rate,
-> +				  unsigned long parent_rate)
-> +{
-> +	rate = fu540_macb_tx_round_rate(hw, rate, &parent_rate);
-> +	iowrite32(rate != 125000000, mgmt->reg);
+In commit 8122de54602e ("dt-bindings: Convert vendor prefixes to
+json-schema"), vendor-prefixes.txt has been converted to a DT schema.
+Update the checkpatch.pl DT check to extract vendor prefixes from the new
+vendor-prefixes.yaml file.
 
-That looks odd. Writing the result of a comparison to a register?
+Fixes: 8122de54602e ("dt-bindings: Convert vendor prefixes to json-schema")
+Cc: Joe Perches <joe@perches.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v2: Handle vendor prefixes with '-' using Joe's reworked grep
 
-     Andrew
+ scripts/checkpatch.pl | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index bb28b178d929..342c7c781ba5 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3027,7 +3027,7 @@ sub process {
+ 			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
+ 
+ 			my $dt_path = $root . "/Documentation/devicetree/bindings/";
+-			my $vp_file = $dt_path . "vendor-prefixes.txt";
++			my $vp_file = $dt_path . "vendor-prefixes.yaml";
+ 
+ 			foreach my $compat (@compats) {
+ 				my $compat2 = $compat;
+@@ -3042,7 +3042,7 @@ sub process {
+ 
+ 				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
+ 				my $vendor = $1;
+-				`grep -Eq "^$vendor\\b" $vp_file`;
++				`grep -Eq "\\"\\^\Q$vendor\E,\\.\\*\\":" $vp_file`;
+ 				if ( $? >> 8 ) {
+ 					WARN("UNDOCUMENTED_DT_STRING",
+ 					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vp_file\n" . $herecurr);
+-- 
+2.20.1
