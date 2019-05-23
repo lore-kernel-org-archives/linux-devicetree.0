@@ -1,78 +1,48 @@
-Return-Path: <SRS0=AIG0=TP=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v6 1/7] dt-bindings: usb: hd3ss3220 device tree binding document
-Date: Wed, 15 May 2019 13:09:06 +0100
-Message-Id: <1557922152-16449-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1557922152-16449-1-git-send-email-biju.das@bp.renesas.com>
-References: <1557922152-16449-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Biju Das <biju.das@bp.renesas.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=DL3G=TX=gmail.com=ardeleanalex@kernel.org>
+MIME-Version: 1.0
+References: <1557759185-167857-1-git-send-email-adam.michaelis@rockwellcollins.com>
+ <1557759185-167857-3-git-send-email-adam.michaelis@rockwellcollins.com>
+ <20190514182311.GA31516@bogus> <20190518100753.39b438cb@archlinux>
+In-Reply-To: <20190518100753.39b438cb@archlinux>
+From: Alexandru Ardelean <ardeleanalex@gmail.com>
+Date: Thu, 23 May 2019 15:16:51 +0300
+Message-ID: <CA+U=DspGJpVvo05HspwFVXvbdBiF1HUzYji0o3pWO4j_Wf7CHw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] dt-bindings: iio: ad7949: Add adi,reference-select
+Content-Type: text/plain; charset="UTF-8"
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Adam Michaelis <adam.michaelis@rockwellcollins.com>, linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, "Hennerich, Michael" <michael.hennerich@analog.com>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org, brandon.maier@rockwellcollins.com, clayton.shotwell@rockwellcollins.com, Alexandru Ardelean <alexandru.ardelean@analog.com>, Stefan Popa <stefan.popa@analog.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree binding document for TI HD3SS3220 Type-C DRP port
-controller driver.
+On Sat, May 18, 2019 at 12:08 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Tue, 14 May 2019 13:23:11 -0500
+> Rob Herring <robh@kernel.org> wrote:
+>
+> > On Mon, 13 May 2019 09:53:03 -0500, Adam Michaelis wrote:
+> > > Adding optional parameter to AD7949 to specify the source for the
+> > > reference voltage signal. Default value is maintained with option '3' to
+> > > match previous version of driver.
+> > >
+> > > Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+> > > ---
+> > >     V2:
+> > >     - Add some defines to reduce use of magic numbers.
+> > >     V3:
+> > >     - Re-think usage of device tree parameter to focus on the
+> > >     actual reference sources instead of the raw hardware
+> > >     configuration.
+> > > ---
+> > >  .../devicetree/bindings/iio/adc/ad7949.txt          | 21 +++++++++++++++++++--
+> > >  1 file changed, 19 insertions(+), 2 deletions(-)
+> > >
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> Looks fine to me as well. Analog review awaited before applying.
+> For reference
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-V5-->V6
-  * No change.
-V4-->V5
-  * No Change.
-V3-->V4
-  * No Change.
-V2-->V3
-  * Added Rob's Reviewed by tag.
-V1-->V2
-  * Added connector node.
-  * updated the example with connector node.
----
- .../devicetree/bindings/usb/ti,hd3ss3220.txt       | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+CC-ing my work email
 
-diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-new file mode 100644
-index 0000000..7f41400
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-@@ -0,0 +1,37 @@
-+TI HD3SS3220 TypeC DRP Port Controller.
-+
-+Required properties:
-+ - compatible: Must be "ti,hd3ss3220".
-+ - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
-+ - interrupts: <a b> where a is the interrupt number and b represents an
-+   encoding of the sense and level information for the interrupt.
-+
-+Required sub-node:
-+ - connector : The "usb-c-connector" attached to the hd3ss3220 chip. The
-+   bindings of the connector node are specified in:
-+
-+	Documentation/devicetree/bindings/connector/usb-connector.txt
-+
-+Example:
-+hd3ss3220@47 {
-+	compatible = "ti,hd3ss3220";
-+	reg = <0x47>;
-+	interrupt-parent = <&gpio6>;
-+	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+	usb_con: connector {
-+		compatible = "usb-c-connector";
-+		label = "USB-C";
-+		data-role = "dual";
-+	};
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		hd3ss3220_ep: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&usb3peri_role_switch>;
-+		};
-+	};
-+};
--- 
-2.7.4
+Acked-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+>
