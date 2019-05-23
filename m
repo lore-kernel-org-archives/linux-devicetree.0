@@ -1,84 +1,41 @@
-From: <dongchun.zhu@mediatek.com>
-Subject: [PATCH 3/3] media: dt-bindings: media: i2c: Add bindings for ov02a10
-Date: Thu, 23 May 2019 18:22:04 +0800
-Message-ID: <20190523102204.24112-4-dongchun.zhu@mediatek.com>
-References: <20190523102204.24112-1-dongchun.zhu@mediatek.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 6/8] dt-bindings: net: stmmac: Convert the binding to a
+ schemas
+Date: Thu, 23 May 2019 13:07:15 +0200
+Message-ID: <20190523110715.ckyzpec3quxr26cp@flea>
+References: <74d98cc3c744d53710c841381efd41cf5f15e656.1558605170.git-series.maxime.ripard@bootlin.com>
+ <ba1a5d8ad34a8c9ab99f504c04fbe65bde42081b.1558605170.git-series.maxime.ripard@bootlin.com>
+ <78EB27739596EE489E55E81C33FEC33A0B92B864@DE02WEMBXB.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190523102204.24112-1-dongchun.zhu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com, bingbu.cao@intel.com
-Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, menghui.lin@mediatek.com, shengnan.wang@mediatek.com, sj.huang@mediatek.com, linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com, louis.kuo@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B92B864@DE02WEMBXB.internal.synopsys.com>
+Sender: netdev-owner@vger.kernel.org
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+Hi!
 
-Add device tree binding documentation for the OV02A10 CMOS image sensor.
+On Thu, May 23, 2019 at 10:11:39AM +0000, Jose Abreu wrote:
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
+> Date: Thu, May 23, 2019 at 10:56:49
+>
+> > Switch the STMMAC / Synopsys DesignWare MAC controller binding to a YAML
+> > schema to enable the DT validation.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> How exactly can I see the final results of this ? Do you have any link ?
+> (I'm no expert in YAML at all).
 
-Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
----
- .../devicetree/bindings/media/i2c/ov02a10.txt      | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+You need some extra tooling, that you can find here:
+https://github.com/devicetree-org/dt-schema
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov02a10.txt b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-new file mode 100644
-index 0000000..fdc2904
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-@@ -0,0 +1,43 @@
-+* Omnivision OV02A10 MIPI CSI-2 sensor
-+
-+Required Properties:
-+- compatible: shall be "ovti,ov02a10"
-+- clocks: reference to the xvclk input clock
-+- clock-names: shall be "xvclk"
-+- avdd-supply: Analog voltage supply, 2.8 volts
-+- dovdd-supply: Digital I/O voltage supply, 1.8 volts
-+- dvdd-supply: Digital core voltage supply, 1.8 volts
-+- reset-gpios: Low active reset gpio
-+
-+The device node shall contain one 'port' child node with an
-+'endpoint' subnode for its digital output video port,
-+in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+The endpoint optional property 'data-lanes' shall be "<1>".
-+
-+Example:
-+&i2c4 {
-+	sensor_sub: sensor_sub {
-+		compatible = "ovti,ov02a10";
-+		reg = <0x3d>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&camera_pins_cam1_mclk_on>;
-+
-+		clocks = <&topckgen CLK_TOP_MUX_CAMTG2>,
-+			<&topckgen CLK_TOP_UNIVP_192M_D8>;
-+		clock-names = "xvclk", "freq_mux";
-+
-+		avdd-supply = <&mt6358_vcama1_reg>;
-+		dvdd-supply = <&mt6358_vcn18_reg>;
-+		dovdd-supply = <&mt6358_vcamio_reg>;
-+		pwdn-gpios = <&pio 107 1>;
-+		reset-gpios = <&pio 109 1>;
-+
-+		port@0 {
-+		   ov02a10_core: endpoint {
-+		       remote-endpoint = <&ov02a10_0>;
-+			   data-lanes = <1>;
-+		   };
-+		};
-+	};
-+};
--- 
-2.9.2
+You can then run make dtbs_check, and those YAML files will be used to
+validate that any devicetree using those properties are doing it
+properly. That implies having the right node names, properties, types,
+ranges of values when relevant, and so on.
+
+Maxime
