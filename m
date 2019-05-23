@@ -1,75 +1,77 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 2/2] input: keyboard: mtk-pmic-keys: add MT6392 support
-Date: Thu, 23 May 2019 15:55:36 -0700
-Message-ID: <20190523225536.GE176265@dtor-ws>
-References: <20190513142120.6527-1-fparent@baylibre.com>
- <20190513142120.6527-2-fparent@baylibre.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [RFT PATCH v4 3/5] cpu-topology: Move cpu topology code to common
+ code.
+Date: Thu, 23 May 2019 16:34:48 -0700
+Message-ID: <935ee66e-d303-5e0f-bbf9-20139ba79d77@wdc.com>
+References: <20190428002529.14229-1-atish.patra@wdc.com>
+ <20190428002529.14229-4-atish.patra@wdc.com>
+ <20190523093549.GA13560@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190513142120.6527-2-fparent@baylibre.com>
+In-Reply-To: <20190523093549.GA13560@e107155-lin>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Parent <fparent@baylibre.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2019 at 04:21:20PM +0200, Fabien Parent wrote:
-> Add support for MT6392 PMIC's keys.
+On 5/23/19 2:36 AM, Sudeep Holla wrote:
+> On Sat, Apr 27, 2019 at 05:25:27PM -0700, Atish Patra wrote:
+>> Both RISC-V & ARM64 are using cpu-map device tree to describe
+>> their cpu topology. It's better to move the relevant code to
+>> a common place instead of duplicate code.
+>>
+>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>> ---
+>>   arch/arm64/include/asm/topology.h |  23 ---
+>>   arch/arm64/kernel/topology.c      | 303 +-----------------------------
+>>   drivers/base/arch_topology.c      | 298 ++++++++++++++++++++++++++++-
+>>   drivers/base/topology.c           |   1 +
+>>   include/linux/arch_topology.h     |  28 +++
+>>   5 files changed, 330 insertions(+), 323 deletions(-)
+>>
+>> -void store_cpu_topology(unsigned int cpuid);
+> [...]
 > 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-
-Apparently this depends on not-yet merged MT6392 support in MFD, so
-please merge through MFD tree with the rest of it.
-
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-> ---
->  drivers/input/keyboard/mtk-pmic-keys.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
 > 
-> diff --git a/drivers/input/keyboard/mtk-pmic-keys.c b/drivers/input/keyboard/mtk-pmic-keys.c
-> index 8e6ebab05ab4..aaf68cbf7e5b 100644
-> --- a/drivers/input/keyboard/mtk-pmic-keys.c
-> +++ b/drivers/input/keyboard/mtk-pmic-keys.c
-> @@ -18,6 +18,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/kernel.h>
->  #include <linux/mfd/mt6323/registers.h>
-> +#include <linux/mfd/mt6392/registers.h>
->  #include <linux/mfd/mt6397/core.h>
->  #include <linux/mfd/mt6397/registers.h>
->  #include <linux/module.h>
-> @@ -83,6 +84,16 @@ static const struct mtk_pmic_regs mt6323_regs = {
->  	.pmic_rst_reg = MT6323_TOP_RST_MISC,
->  };
->  
-> +static const struct mtk_pmic_regs mt6392_regs = {
-> +	.keys_regs[MTK_PMIC_PWRKEY_INDEX] =
-> +		MTK_PMIC_KEYS_REGS(MT6392_CHRSTATUS,
-> +		0x2, MT6392_INT_MISC_CON, 0x10),
-> +	.keys_regs[MTK_PMIC_HOMEKEY_INDEX] =
-> +		MTK_PMIC_KEYS_REGS(MT6392_CHRSTATUS,
-> +		0x4, MT6392_INT_MISC_CON, 0x8),
-> +	.pmic_rst_reg = MT6392_TOP_RST_MISC,
-> +};
-> +
->  struct mtk_pmic_keys_info {
->  	struct mtk_pmic_keys *keys;
->  	const struct mtk_pmic_keys_regs *regs;
-> @@ -238,6 +249,9 @@ static const struct of_device_id of_mtk_pmic_keys_match_tbl[] = {
->  	}, {
->  		.compatible = "mediatek,mt6323-keys",
->  		.data = &mt6323_regs,
-> +	}, {
-> +		.compatible = "mediatek,mt6392-keys",
-> +		.data = &mt6392_regs,
->  	}, {
->  		/* sentinel */
->  	}
-> -- 
-> 2.20.1
+>> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+>> index edfcf8d982e4..2b0758c01cee 100644
+>> --- a/drivers/base/arch_topology.c
+>> +++ b/drivers/base/arch_topology.c
+>> @@ -6,8 +6,8 @@
+>>    * Written by: Juri Lelli, ARM Ltd.
+>>    */
+>>
+>> -#include <linux/acpi.h>
+>>   #include <linux/arch_topology.h>
+>> +#include <linux/acpi.h>
 > 
+> I assume this was to avoid compilation errors, when I rebased I got
+> conflict and I ordered them back alphabetically as before and hit the
+> compilation error.
+> 
+> The actual fix would be to include linux/arch_topology.h in linux/topology.h
+> as you are moving contents of asm/topology.h which it includes.
+> 
+> I did the change and get it tested by kbuild. See [1]
+> 
+
+Thanks for pointing that out. I think we can remove arch_topology.h 
+include in base/arch_topology.c and base/topology.c as they already 
+include sched/topology.h or linux/topology.h.
+
+I will send out v5 soon.
+
+> Regards,
+> Sudeep
+> 
+> [1] https://git.kernel.org/sudeep.holla/linux/h/cpu_topology
+> 
+
 
 -- 
-Dmitry
+Regards,
+Atish
