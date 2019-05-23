@@ -1,8 +1,8 @@
 From: Pavel Machek <pavel@ucw.cz>
 Subject: Re: [PATCH v13 2/4] arm64: dts: fsl: librem5: Add a device tree for
  the Librem5 devkit
-Date: Thu, 23 May 2019 21:19:26 +0200
-Message-ID: <20190523191926.GB3803@xo-6d-61-c0.localdomain>
+Date: Thu, 23 May 2019 21:19:22 +0200
+Message-ID: <20190523191922.GA3803@xo-6d-61-c0.localdomain>
 References: <20190520142330.3556-1-angus@akkea.ca>
  <20190520142330.3556-3-angus@akkea.ca>
 Mime-Version: 1.0
@@ -26,41 +26,29 @@ List-Id: devicetree@vger.kernel.org
 
 Hi!
 
-> - LEDs
-> - gyro
-> - magnetometer
+> This is for the development kit board for the Librem 5. The current level
+> of support yields a working console and is able to boot userspace from
+> the network or eMMC.
+> 
+> Additional subsystems that are active :
 
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_leds>;
+> - haptic motor
+
+Haptic motor is not a LED. It should be controlled by input subsystem.
+
+> +	pwmleds {
+> +		compatible = "pwm-leds";
 > +
-> +		led1 {
-> +			label = "LED 1";
+> +		haptic {
+> +			label = "librem5::haptic";
+> +			pwms = <&pwm2 0 200000>;
+> +			active-low;
+> +			max-brightness = <255>;
+> +			power-supply = <&reg_3v3_p>;
+> +		};
+> +	};
 
-So, what kind of LED do you have, and what color is it? label should probably be something like
-notify:green.
+You can take a look at N900, that has reasonable interface.
 
-> +	charger@6b { /* bq25896 */
-> +		compatible = "ti,bq25890";
-> +		reg = <0x6b>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_charger>;
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> +		ti,battery-regulation-voltage = <4192000>; /* 4.192V */
-> +		ti,charge-current = <1600000>; /* 1.6 A */
-
-No space before A, for consistency.
-
-> +		ti,termination-current = <66000>;  /* 66mA */
-> +		ti,precharge-current = <1300000>; /* 1.3A */
-
-I thought precharge is usually something low, because you are not yet sure of battery health...?
-
-> +		ti,minimum-sys-voltage = <2750000>; /* 2.75V */
-
-Are you sure? Normally systems shut down at 3.2V, 3V or so. Li-ion batteries don't
-really like to be discharged _this_ deep.
-
+Thanks,
 										Pavel
