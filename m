@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 4/4] arm64: defconfig: enable sunxi watchdog
-Date: Thu, 23 May 2019 17:10:50 +0200
-Message-ID: <20190523151050.27302-5-peron.clem@gmail.com>
+Subject: [PATCH v5 3/4] arm64: dts: allwinner: h6: add r_watchog node
+Date: Thu, 23 May 2019 17:10:49 +0200
+Message-ID: <20190523151050.27302-4-peron.clem@gmail.com>
 References: <20190523151050.27302-1-peron.clem@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,27 +13,32 @@ To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net
 Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The SUNXI_WATCHDOG option is required to make the
-watchdog available on Allwinner H6.
+Allwinner H6 has a r_watchdog similar to A64.
 
-Enable this option as a module.
+Declare it in the device-tree.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 4d583514258c..fc51dd4decb1 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -420,6 +420,7 @@ CONFIG_UNIPHIER_THERMAL=y
- CONFIG_WATCHDOG=y
- CONFIG_ARM_SP805_WATCHDOG=y
- CONFIG_S3C2410_WATCHDOG=y
-+CONFIG_SUNXI_WATCHDOG=m
- CONFIG_IMX2_WDT=y
- CONFIG_MESON_GXBB_WATCHDOG=m
- CONFIG_MESON_WATCHDOG=m
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 13e70aebddbe..b9a7dc8d2a40 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -631,6 +631,13 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		r_watchdog: watchdog@7020400 {
++			compatible = "allwinner,sun50i-h6-wdt",
++				     "allwinner,sun6i-a31-wdt";
++			reg = <0x07020400 0x20>;
++			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		r_intc: interrupt-controller@7021000 {
+ 			compatible = "allwinner,sun50i-h6-r-intc",
+ 				     "allwinner,sun6i-a31-r-intc";
 -- 
 2.20.1
