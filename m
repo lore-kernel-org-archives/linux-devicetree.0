@@ -1,51 +1,106 @@
-From: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
-Subject: Re: [PATCH] dt-bindings: arm: fix the document ID for SCMI protocol
- documentation
-Date: Thu, 23 May 2019 17:24:56 +0000
-Message-ID: <877eah84nr.fsf@epam.com>
-References: <20190523112312.24529-1-volodymyr_babchuk@epam.com>
- <20190523170938.GC4224@e107155-lin>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+Date: Thu, 23 May 2019 10:30:50 -0700
+Message-ID: <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
+References: <20190523060437.11059-1-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190523170938.GC4224@e107155-lin>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190523060437.11059-1-peng.fan@nxp.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "trivial@kernel.org" <trivial@kernel.org>, Rob Herring <robh+dt@kernel.org>, Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
-
 
 Hi,
 
-Sudeep Holla writes:
+On 5/22/19 10:50 PM, Peng Fan wrote:
+> This is a modified version from Andre Przywara's patch series
+> https://lore.kernel.org/patchwork/cover/812997/.
+> [1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+> use smc as mailbox, power/clk is included, but only part of clk has been
+> implemented to work with hardware, power domain only supports get name
+> for now.
+> 
+> The traditional Linux mailbox mechanism uses some kind of dedicated hardware
+> IP to signal a condition to some other processing unit, typically a dedicated
+> management processor.
+> This mailbox feature is used for instance by the SCMI protocol to signal a
+> request for some action to be taken by the management processor.
+> However some SoCs does not have a dedicated management core to provide
+> those services. In order to service TEE and to avoid linux shutdown
+> power and clock that used by TEE, need let firmware to handle power
+> and clock, the firmware here is ARM Trusted Firmware that could also
+> run SCMI service.
+> 
+> The existing SCMI implementation uses a rather flexible shared memory
+> region to communicate commands and their parameters, it still requires a
+> mailbox to actually trigger the action.
 
-> On Thu, May 23, 2019 at 11:23:35AM +0000, Volodymyr Babchuk wrote:
->> From: Volodymyr Babchuk <volodymyr_babchuk@epam.com
+We have had something similar done internally with a couple of minor
+differences:
 
-I accidentally deleted ending ">" symbol in the line above, so "git
-send-email" decided to move that line from headers to the message body.
+- a SGI is used to send SCMI notifications/delayed replies to support
+asynchronism (patches are in the works to actually add that to the Linux
+SCMI framework). There is no good support for SGI in the kernel right
+now so we hacked up something from the existing SMP code and adding the
+ability to register our own IPI handlers (SHAME!). Using a PPI should
+work and should allow for using request_irq() AFAICT.
 
->> arm,scmi.txt used the wrong document identifier. "ARM DUI 0922B" is
->> the "ARM Compute Subsystem SCP, Message Interface Protocols". What we
->> need is the ARM DEN 0056A - "ARM System Control and Management
->> Interface Platform Design Document".
->>
->
-> Indeed, it's most stupid copy-paste mistake. Thanks for fixing this.
-> Applied now.
-It happens all the time. I also did stupid mistake in my patch file. It
-is described above. Could you please ensure that this line will be not
-in the resulting commit message? Thank you.
+- the mailbox identifier is indicated as part of the SMC call such that
+we can have multiple SCMI mailboxes serving both standard protocols and
+non-standard (in the 0x80 and above) range, also they may have different
+throughput (in hindsight, these could simply be different channels)
+
+Your patch series looks both good and useful to me, I would just put a
+provision in the binding to support an optional interrupt such that
+asynchronism gets reasonably easy to plug in when it is available (and
+desirable).
+
+> 
+> This patch series provides a Linux mailbox compatible service which uses
+> smc calls to invoke firmware code, for instance taking care of SCMI requests.
+> The actual requests are still communicated using the standard SCMI way of
+> shared memory regions, but a dedicated mailbox hardware IP can be replaced via
+> this new driver.
+> 
+> This simple driver uses the architected SMC calling convention to trigger
+> firmware services, also allows for using "HVC" calls to call into hypervisors
+> or firmware layers running in the EL2 exception level.
+> 
+> Patch 1 contains the device tree binding documentation, patch 2 introduces
+> the actual mailbox driver.
+> 
+> Please note that this driver just provides a generic mailbox mechanism,
+> though this is synchronous and one-way only (triggered by the OS only,
+> without providing an asynchronous way of triggering request from the
+> firmware).
+> And while providing SCMI services was the reason for this exercise, this
+> driver is in no way bound to this use case, but can be used generically
+> where the OS wants to signal a mailbox condition to firmware or a
+> hypervisor.
+> Also the driver is in no way meant to replace any existing firmware
+> interface, but actually to complement existing interfaces.
+> 
+> [1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
+> 
+> Peng Fan (2):
+>   DT: mailbox: add binding doc for the ARM SMC mailbox
+>   mailbox: introduce ARM SMC based mailbox
+> 
+>  .../devicetree/bindings/mailbox/arm-smc.txt        |  96 +++++++++++++
+>  drivers/mailbox/Kconfig                            |   7 +
+>  drivers/mailbox/Makefile                           |   2 +
+>  drivers/mailbox/arm-smc-mailbox.c                  | 154 +++++++++++++++++++++
+>  include/linux/mailbox/arm-smc-mailbox.h            |  10 ++
+>  5 files changed, 269 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
+>  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+>  create mode 100644 include/linux/mailbox/arm-smc-mailbox.h
+> 
+
 
 -- 
-Best regards,Volodymyr Babchuk
+Florian
