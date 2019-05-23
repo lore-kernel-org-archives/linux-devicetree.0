@@ -1,195 +1,132 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/8] dt-bindings: net: Add a YAML schemas for the generic
- PHY options
-Date: Thu, 23 May 2019 09:44:51 -0500
-Message-ID: <CAL_JsqJvgUAmON5Vew-mnwkFjNuRkx_f7quiy_7Rv_55JpzOOA@mail.gmail.com>
-References: <74d98cc3c744d53710c841381efd41cf5f15e656.1558605170.git-series.maxime.ripard@bootlin.com>
- <aa5ec90854429c2d9e2c565604243e1b10cfd94b.1558605170.git-series.maxime.ripard@bootlin.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH 6/6] arm64: dts: allwinner: a64: enable ANX6345 bridge on Teres-I
+Date: Thu, 23 May 2019 07:48:03 -0700
+Message-ID: <CA+E=qVdh-=C5zOYWYj95jLN51EaXFS6B+CQ101-f64q5QmgN3g@mail.gmail.com>
+References: <20190523065013.2719D68B05@newverein.lst.de> <20190523065404.BB60F68B20@newverein.lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <aa5ec90854429c2d9e2c565604243e1b10cfd94b.1558605170.git-series.maxime.ripard@bootlin.com>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190523065404.BB60F68B20@newverein.lst.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Torsten Duwe <duwe@lst.de>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2019 at 4:57 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+On Wed, May 22, 2019 at 11:54 PM Torsten Duwe <duwe@lst.de> wrote:
 >
-> The networking PHYs have a number of available device tree properties that
-> can be used in their device tree node. Add a YAML schemas for those.
+> From: Icenowy Zheng <icenowy@aosc.io>
 >
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
+> the I2C controlling signals are connected to I2C0 bus. eDP output goes
+> to an Innolux N116BGE panel.
+>
+> Enable it in the device tree.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Torsten Duwe <duwe@suse.de>
 > ---
->  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 148 +++++++++-
->  Documentation/devicetree/bindings/net/phy.txt           |  80 +-----
->  2 files changed, 149 insertions(+), 79 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/ethernet-phy.yaml
+>  arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts |   65 +++++++++++++++++--
+>  1 file changed, 61 insertions(+), 4 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> new file mode 100644
-> index 000000000000..eb79ee6db977
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> @@ -0,0 +1,148 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Ethernet PHY Generic Binding
-> +
-> +maintainers:
-> +  - David S. Miller <davem@davemloft.net>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^ethernet-phy(@[a-f0-9])?$"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: ethernet-phy-ieee802.3-c22
-> +        description: PHYs that implement IEEE802.3 clause 22
-> +      - const: ethernet-phy-ieee802.3-c45
-> +        description: PHYs that implement IEEE802.3 clause 45
-> +      - pattern: "^ethernet-phy-id[a-f0-9]{4}\\.[a-f0-9]{4}$"
-> +        description:
-> +          The first group of digits is the 16 bit Phy Identifier 1
-> +          register, this is the chip vendor OUI bits 3:18. The
-> +          second group of digits is the Phy Identifier 2 register,
-> +          this is the chip vendor OUI bits 19:24, followed by 10
-> +          bits of a vendor specific ID.
-> +
-> +  reg:
-> +    maxItems: 1
-> +    minimum: 0
-> +    maximum: 31
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> @@ -65,6 +65,21 @@
+>                 };
+>         };
+>
+> +       panel: panel {
+> +               compatible ="innolux,n116bge", "simple-panel";
 
-min/max need to be under 'items'. I don't think these would ever be
-valid if the type is an array.
+IIRC Rob wanted it to be edp-connector, not simple-panel. Also you
+need to introduce edp-connector binding.
 
-I've modified the meta-schema to catch this.
-
-> +    description:
-> +      The ID number for the PHY.
+> +               status = "okay";
+> +               power-supply = <&reg_dcdc1>;
+> +               backlight = <&backlight>;
 > +
-> +  interrupts:
-> +    maxItems: 1
+> +               ports {
+> +                       panel_in: port {
+> +                               panel_in_edp: endpoint {
+> +                                       remote-endpoint = <&anx6345_out>;
+> +                               };
+> +                       };
+> +               };
+> +       };
 > +
-> +  max-speed:
-> +    enum:
-> +      - 10
-> +      - 100
-> +      - 1000
-> +    description:
-> +      Maximum PHY supported speed in Mbits / seconds.
+>         reg_usb1_vbus: usb1-vbus {
+>                 compatible = "regulator-fixed";
+>                 regulator-name = "usb1-vbus";
+> @@ -81,20 +96,48 @@
+>         };
+>  };
+>
+> +&de {
+> +       status = "okay";
+> +};
 > +
-> +  broken-turn-around:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description:
-> +      If set, indicates the PHY device does not correctly release
-> +      the turn around line low at the end of a MDIO transaction.
+>  &ehci1 {
+>         status = "okay";
+>  };
+>
+>
+> -/* The ANX6345 eDP-bridge is on i2c0. There is no linux (mainline)
+> - * driver for this chip at the moment, the bootloader initializes it.
+> - * However it can be accessed with the i2c-dev driver from user space.
+> - */
+>  &i2c0 {
+>         clock-frequency = <100000>;
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&i2c0_pins>;
+>         status = "okay";
 > +
-> +  enet-phy-lane-swap:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description:
-> +      If set, indicates the PHY will swap the TX/RX lanes to
-> +      compensate for the board being designed with the lanes
-> +      swapped.
+> +       anx6345: anx6345@38 {
+> +               compatible = "analogix,anx6345";
+> +               reg = <0x38>;
+> +               reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
+> +               dvdd25-supply = <&reg_dldo2>;
+> +               dvdd12-supply = <&reg_dldo3>;
 > +
-> +  eee-broken-100tx:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description:
-> +      Mark the corresponding energy efficient ethernet mode as
-> +      broken and request the ethernet to stop advertising it.
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
 > +
-> +  eee-broken-1000t:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description:
-> +      Mark the corresponding energy efficient ethernet mode as
-> +      broken and request the ethernet to stop advertising it.
+> +                       port@0 {
+> +                               anx6345_in: endpoint {
+> +                                       remote-endpoint = <&tcon0_out_anx6345>;
+> +                               };
+> +                       };
+> +                       port@1 {
+> +                               anx6345_out: endpoint {
+> +                                       remote-endpoint = <&panel_in_edp>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +};
 > +
-> +  eee-broken-10gt:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description:
-> +      Mark the corresponding energy efficient ethernet mode as
-> +      broken and request the ethernet to stop advertising it.
+> +&mixer0 {
+> +       status = "okay";
+>  };
+>
+>  &mmc0 {
+> @@ -279,6 +322,20 @@
+>         vcc-hdmi-supply = <&reg_dldo1>;
+>  };
+>
+> +&tcon0 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&lcd_rgb666_pins>;
 > +
-> +  eee-broken-1000kx:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description:
-> +      Mark the corresponding energy efficient ethernet mode as
-> +      broken and request the ethernet to stop advertising it.
+> +       status = "okay";
+> +};
 > +
-> +  eee-broken-10gkx4:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description:
-> +      Mark the corresponding energy efficient ethernet mode as
-> +      broken and request the ethernet to stop advertising it.
+> +&tcon0_out {
+> +       tcon0_out_anx6345: endpoint@0 {
+> +               reg = <0>;
+> +               remote-endpoint = <&anx6345_in>;
+> +       };
+> +};
 > +
-> +  eee-broken-10gkr:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description:
-> +      Mark the corresponding energy efficient ethernet mode as
-> +      broken and request the ethernet to stop advertising it.
-> +
-> +  phy-is-integrated:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description:
-> +      If set, indicates that the PHY is integrated into the same
-> +      physical package as the Ethernet MAC. If needed, muxers
-> +      should be configured to ensure the integrated PHY is
-> +      used. The absence of this property indicates the muxers
-> +      should be configured so that the external PHY is used.
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    const: phy
-> +
-> +  reset-gpios:
-> +    description:
-> +      The GPIO phandle and specifier for the PHY reset signal.
-
-maxItems: 1
-
-I have a meta-schema change to catch this, but It will require updates
-to some existing cases.
-
-
-> +
-> +  reset-assert-us:
-> +    description:
-> +      Delay after the reset was asserted in microseconds. If this
-> +      property is missing the delay will be skipped.
-> +
-> +  reset-deassert-us:
-> +    description:
-> +      Delay after the reset was deasserted in microseconds. If
-> +      this property is missing the delay will be skipped.
-> +
-> +required:
-> +  - reg
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    ethernet {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        ethernet-phy@0 {
-> +            compatible = "ethernet-phy-id0141.0e90", "ethernet-phy-ieee802.3-c22";
-> +            interrupt-parent = <&PIC>;
-> +            interrupts = <35 1>;
-> +            reg = <0>;
-> +
-> +            resets = <&rst 8>;
-> +            reset-names = "phy";
-> +            reset-gpios = <&gpio1 4 1>;
-> +            reset-assert-us = <1000>;
-> +            reset-deassert-us = <2000>;
-> +        };
-> +    };
+>  &uart0 {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&uart0_pb_pins>;
