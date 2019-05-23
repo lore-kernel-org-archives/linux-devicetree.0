@@ -1,14 +1,14 @@
 Return-Path: <SRS0=XkBP=TX=gmail.com=thierry.reding@kernel.org>
-Date: Thu, 23 May 2019 12:28:38 +0200
+Date: Thu, 23 May 2019 12:26:06 +0200
 From: Thierry Reding <thierry.reding@gmail.com>
 Subject: Re: [Patch V3 7/8] usb: gadget: Add UDC driver for tegra XUSB device
  mode controller
-Message-ID: <20190523102838.GG30331@ulmo>
+Message-ID: <20190523102606.GF30331@ulmo>
 References: <1557988772-15406-1-git-send-email-nkristam@nvidia.com>
  <1557988772-15406-8-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aYDVKSzuImP48n7V"
+	protocol="application/pgp-signature"; boundary="aPdhxNJGSeOG9wFI"
 Content-Disposition: inline
 In-Reply-To: <1557988772-15406-8-git-send-email-nkristam@nvidia.com>
 To: Nagarjuna Kristam <nkristam@nvidia.com>
@@ -16,7 +16,7 @@ Cc: balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com, mark.rut
 List-ID: <devicetree@vger.kernel.org>
 
 
---aYDVKSzuImP48n7V
+--aPdhxNJGSeOG9wFI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -37,38 +37,29 @@ On Thu, May 16, 2019 at 12:09:31PM +0530, Nagarjuna Kristam wrote:
 ++++++
 >  3 files changed, 3818 insertions(+)
 >  create mode 100644 drivers/usb/gadget/udc/tegra_xudc.c
-[...]
-> +MODULE_AUTHOR("Andrew Bresticker <abrestic@chromium.org>");
-> +MODULE_AUTHOR("Hui Fu");
 
-Andrew was credited in the commit message, but what about Hui Fu? From
-this line it sounds like she was also involved, so perhaps credit her in
-the same way in the commit message?
+Looks good to me, but please address Chunfeng's comments:
 
-It might also be useful to add yourself as author here to increase the
-chances of somebody finding you as contact person if there are any
-issues with this driver.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-Thierry
-
---aYDVKSzuImP48n7V
+--aPdhxNJGSeOG9wFI
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzmddYACgkQ3SOs138+
-s6FsdQ/7BUwiFERnDiHKMfSHMrfaZx9OxjFEhW6jEc0MwjLCcf8X/723012CZrCV
-awalz9xEuHLCG7rvSMcwScykePXXCHri0LXmlP98S4wUxEjX0A5F45uJJ0tsrKWK
-F08kmCaW0bGxkLbLhh+tTSKuJ1/jI8B3h7qusAbYY8+J6hOUBj1AHuY6+pul1PiF
-Y2oj62J6FeBWpE7llKFQS6eZUCG3zKZormAv34hG4WREktOsa/MLRgijYkFjIkKc
-xiKXKqJIHdj9qM273Uat/fbR/4db/Wb0Gh7vWXqJkn0CwgjE/f8JH7J31YGvs1R3
-tIkDErUg6NHbnlW0jMzU5bsq5PBe0MinRVkMLWsjBKjTpzW+H5LK89ueeM+l1eSH
-rHyGs8sCuvmPFmZQ5ZemOd+TI3YDTCwjp3LZ5sc3wcbhTir186Ku9rKsas/dKeTD
-TJ92qocJNNZpZby54TsIVU/yUE9kGvrT2IQmF7capV1PHLx4UHQeBG7NV6I3xAiz
-TABLNum30y8Y4Z454b6N7A0en9Di6snqdlS7o0bl7oZbRLFPxgeNMOO15IJjOG5R
-jDbUIG8IafQOZSgKmjw73RCaCF0fZ/zcLaHeYyKNzWJ6035y+uN8nRPL6mZbS1j2
-ElvKHi6t+1nH30usXxvU4ZW5/CO1dO4OXV/gxpCv5UUjPiKXrsg=
-=Kc9c
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzmdTwACgkQ3SOs138+
+s6HsmBAAs3zsZ3R7r94PXVAXdD0EvYx1TgGb0Xp/1R/e6nLD85CHeYOwwZ5OJnGH
+fmsVUPYAM9S1I3NocnOgMf/eBl5fUCNY8g5EOgfh55j7svLM0hX+yIv8omje8AA4
+e745dH6K369HN6bRf7JBrRQmg7P1gf7WUxDJbryUHWg+/aCgNCrVpOquswDczYFa
+ThfkYWO6XnfdMeszP5oVQGlguDhBFAzpIs2pEtXR2YGzF3IbM8WzR22vTJtybAif
+2HvvM7/lYsCgs3T21S2qEoHDz9i0MwQgFg9vT89iCgo2jsWL+V8Xq0cUPSEkHU40
+yx6tsMZ96gwLg6kG8agN1gdXyXEDmueszhRwYcWCZZAHu4XflbtiO0mAN1KSZxNh
+X4BeybKLkSUM/iqO1tDgtRU/46TZQKWNwO+bCUpMzntyfi76DbNdQH4Ltt49o3aH
+5PkPkG/oc/sfFQx5ikNII+urMhHJIxzAS9+sNRMptQCCrzg4RB/RGyQdyb7fk6Je
+pt0t4AM1HHGN1BdZ1ij1Q8m6cz6wyaZUjl1HKJFrZmaaFCkHchfGyvqJOSbH+iig
+gJEm6rk12boPc3PzGgL9JsKx4S6P0TUnfQ92c5+DyeA3BTnpC6duvGopVT/yMDZq
+BS7+1vbwYb+0XAtfEeEkPrnwG8k6MV0q0QYHHLZ+nE1HdR9APpc=
+=vI9Z
 -----END PGP SIGNATURE-----
 
---aYDVKSzuImP48n7V--
+--aPdhxNJGSeOG9wFI--
