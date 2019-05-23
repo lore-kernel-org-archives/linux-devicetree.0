@@ -1,64 +1,55 @@
-Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V4 20/28] PCI: tegra: Use legacy IRQ for port service drivers
-Date: Thu, 16 May 2019 11:22:59 +0530
-Message-ID: <20190516055307.25737-21-mmaddireddy@nvidia.com>
-In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=XkBP=TX=gmail.com=thierry.reding@kernel.org>
+Date: Thu, 23 May 2019 11:39:32 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [Patch V3 1/8] phy: tegra: xusb: t210: add XUSB dual mode support
+Message-ID: <20190523093932.GA30331@ulmo>
+References: <1557988772-15406-1-git-send-email-nkristam@nvidia.com>
+ <1557988772-15406-2-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
+Content-Disposition: inline
+In-Reply-To: <1557988772-15406-2-git-send-email-nkristam@nvidia.com>
+To: Nagarjuna Kristam <nkristam@nvidia.com>
+Cc: balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Tegra signals PCIe services like AER, PME, etc. over legacy IRQ line.
-By default, service drivers register interrupt routine over MSI IRQ line.
-Use pcie_pme_disable_msi() function to disable MSI for service drivers.
 
-PME and AER interrupts registered to MSI without this change,
-cat /proc/interrupts | grep -i pci
-36: 21 0 0 0 0 0 GICv2 104 Level       PCIE
-37: 35 0 0 0 0 0 GICv2 105 Level       Tegra PCIe MSI
-76: 0  0 0 0 0 0 Tegra PCIe MSI 0 Edge PCIe PME, aerdrv, PCIe BW notif
+--7JfCtLOvnd9MIVvH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-PME and AER interrupts registered to legacy IRQ with this change,
-cat /proc/interrupts | grep -i pci
-36: 33 0 0 0 0 0 GICv2 104 Level      PCIE, PCIe PME, aerdrv, PCIe BW notif
-37: 52 0 0 0 0 0 GICv2 105 Level      Tegra PCIe MSI
+On Thu, May 16, 2019 at 12:09:25PM +0530, Nagarjuna Kristam wrote:
+> Configure the port capabilities based on usb_dr_mode settings.
+>=20
+> Based on work by JC Kuo <jckuo@nvidia.com>.
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> ---
+>  drivers/phy/tegra/xusb-tegra210.c | 22 +++++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
----
-V4: No change
 
-V3: Corrected typo in commit log
+--7JfCtLOvnd9MIVvH
+Content-Type: application/pgp-signature; name="signature.asc"
 
-V2: No change
+-----BEGIN PGP SIGNATURE-----
 
- drivers/pci/controller/pci-tegra.c | 4 ++++
- 1 file changed, 4 insertions(+)
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzmakIACgkQ3SOs138+
+s6HqrBAAh1I9ZpDHggSxfIdrB2BJGE9ome+J+MrxPp7RJStGx/jG7N9ChEhBFkRw
+36c7vnIokb/5cN/wIxqUQordGrK5eNzYtVk9NEn00Qc+jNqp/pIlJ9TAf7xhDjIP
+ucVEQ4N31B0oEnT1siIbXsnWzbh4/apBUUUiEXY1DtgBntfizcUXrcsZwXy6+mIL
+Y2FDmknz2kGrIHzHIgsTh4qU3p3P2Rr5XUFAKURnZJK1YTu5bK05gI4mwuqnSy1S
+ZktoXTBV/FQHTyxy2UsK9M2UV8yLgfiIc9LoK5ZbouoIWHUnb5Lig5bkh4OwoEey
+5nGAPGGby+yPg9qEnAGF5oDn8LU/4mc1ISz1wqJ8vv3C/uLagyeSUr5EZDG4TC2L
+KZ0JjzWzLPHub9MuAgviacmSTuV0v1x14fgHXqURh5z+iW4MiGdmRbSy6PrQB7Fa
+O/5xephgkozime0SFGHCgDt7Y3cU4h9q4NCQL5JopV6amTytp3usmezUqWpXHGf6
++L6uNd8A0yE5h5diJ9usDouCZyo1p+yGAlj1DKNMC1WmbQFdPx3U6hDYc/7klvTa
+XV3/IKYGJTHhrtBHkLtCtBelKPajOHeZF4MUXBQ+C0dfd49LLXF986W61030ig9F
+8MPmcaE044JuYXXiaicjLHcLHAfuiDysOshEe3/EsZ5TPm/Sqtc=
+=CaMa
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index ac57c5badd9b..0024bc42b400 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -41,6 +41,7 @@
- #include <soc/tegra/pmc.h>
- 
- #include "../pci.h"
-+#include "../pcie/portdrv.h"
- 
- #define INT_PCI_MSI_NR (8 * 32)
- 
-@@ -2725,6 +2726,9 @@ static int tegra_pcie_probe(struct platform_device *pdev)
- 		goto put_resources;
- 	}
- 
-+	/* Switch to legacy IRQ for PCIe services like AER, PME*/
-+	pcie_pme_disable_msi();
-+
- 	pm_runtime_enable(pcie->dev);
- 	err = pm_runtime_get_sync(pcie->dev);
- 	if (err) {
--- 
-2.17.1
+--7JfCtLOvnd9MIVvH--
