@@ -1,79 +1,195 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] soc: qcom: apr: Don't use reg for domain id
-Date: Thu, 23 May 2019 07:45:08 -0700
-Message-ID: <20190523144508.GH2085@tuxbook-pro>
-References: <20190522015342.29501-1-bjorn.andersson@linaro.org>
- <e7046725-578d-8854-872b-a7837d0fc20a@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/8] dt-bindings: net: Add a YAML schemas for the generic
+ PHY options
+Date: Thu, 23 May 2019 09:44:51 -0500
+Message-ID: <CAL_JsqJvgUAmON5Vew-mnwkFjNuRkx_f7quiy_7Rv_55JpzOOA@mail.gmail.com>
+References: <74d98cc3c744d53710c841381efd41cf5f15e656.1558605170.git-series.maxime.ripard@bootlin.com>
+ <aa5ec90854429c2d9e2c565604243e1b10cfd94b.1558605170.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e7046725-578d-8854-872b-a7837d0fc20a@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <aa5ec90854429c2d9e2c565604243e1b10cfd94b.1558605170.git-series.maxime.ripard@bootlin.com>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 23 May 07:38 PDT 2019, Srinivas Kandagatla wrote:
+On Thu, May 23, 2019 at 4:57 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> The networking PHYs have a number of available device tree properties that
+> can be used in their device tree node. Add a YAML schemas for those.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 148 +++++++++-
+>  Documentation/devicetree/bindings/net/phy.txt           |  80 +-----
+>  2 files changed, 149 insertions(+), 79 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/ethernet-phy.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> new file mode 100644
+> index 000000000000..eb79ee6db977
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> @@ -0,0 +1,148 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Ethernet PHY Generic Binding
+> +
+> +maintainers:
+> +  - David S. Miller <davem@davemloft.net>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^ethernet-phy(@[a-f0-9])?$"
+> +
+> +  compatible:
+> +    oneOf:
+> +      - const: ethernet-phy-ieee802.3-c22
+> +        description: PHYs that implement IEEE802.3 clause 22
+> +      - const: ethernet-phy-ieee802.3-c45
+> +        description: PHYs that implement IEEE802.3 clause 45
+> +      - pattern: "^ethernet-phy-id[a-f0-9]{4}\\.[a-f0-9]{4}$"
+> +        description:
+> +          The first group of digits is the 16 bit Phy Identifier 1
+> +          register, this is the chip vendor OUI bits 3:18. The
+> +          second group of digits is the Phy Identifier 2 register,
+> +          this is the chip vendor OUI bits 19:24, followed by 10
+> +          bits of a vendor specific ID.
+> +
+> +  reg:
+> +    maxItems: 1
+> +    minimum: 0
+> +    maximum: 31
 
-> 
-> 
-> On 22/05/2019 02:53, Bjorn Andersson wrote:
-> > The reg property represents the address and size on the bus that a
-> > device lives, but for APR the parent is a rpmsg bus, which does not have
-> > numerical addresses. Simply defining #address/#size-cells to 1 and 0,
-> > respectively, to silence the compiler is not an appropriate solution.
-> > 
-> I agree.
-> 
-> > Replace the use of "reg" with an APR specific property.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> Can you also change the example too.
-> 
+min/max need to be under 'items'. I don't think these would ever be
+valid if the type is an array.
 
-Of course, sorry for missing that.
+I've modified the meta-schema to catch this.
 
-> other than that am okay with the change.
-> 
-> Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
+> +    description:
+> +      The ID number for the PHY.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  max-speed:
+> +    enum:
+> +      - 10
+> +      - 100
+> +      - 1000
+> +    description:
+> +      Maximum PHY supported speed in Mbits / seconds.
+> +
+> +  broken-turn-around:
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      If set, indicates the PHY device does not correctly release
+> +      the turn around line low at the end of a MDIO transaction.
+> +
+> +  enet-phy-lane-swap:
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      If set, indicates the PHY will swap the TX/RX lanes to
+> +      compensate for the board being designed with the lanes
+> +      swapped.
+> +
+> +  eee-broken-100tx:
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      Mark the corresponding energy efficient ethernet mode as
+> +      broken and request the ethernet to stop advertising it.
+> +
+> +  eee-broken-1000t:
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      Mark the corresponding energy efficient ethernet mode as
+> +      broken and request the ethernet to stop advertising it.
+> +
+> +  eee-broken-10gt:
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      Mark the corresponding energy efficient ethernet mode as
+> +      broken and request the ethernet to stop advertising it.
+> +
+> +  eee-broken-1000kx:
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      Mark the corresponding energy efficient ethernet mode as
+> +      broken and request the ethernet to stop advertising it.
+> +
+> +  eee-broken-10gkx4:
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      Mark the corresponding energy efficient ethernet mode as
+> +      broken and request the ethernet to stop advertising it.
+> +
+> +  eee-broken-10gkr:
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      Mark the corresponding energy efficient ethernet mode as
+> +      broken and request the ethernet to stop advertising it.
+> +
+> +  phy-is-integrated:
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      If set, indicates that the PHY is integrated into the same
+> +      physical package as the Ethernet MAC. If needed, muxers
+> +      should be configured to ensure the integrated PHY is
+> +      used. The absence of this property indicates the muxers
+> +      should be configured so that the external PHY is used.
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    const: phy
+> +
+> +  reset-gpios:
+> +    description:
+> +      The GPIO phandle and specifier for the PHY reset signal.
 
-Thanks,
-Bjorn
+maxItems: 1
 
-> --srini
-> > 
-> > The APR device was recently added to msm8996.dtsi, but this is still
-> > depending on working SMMU to provide functional audio support.
-> > 
-> >   Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 2 +-
-> >   drivers/soc/qcom/apr.c                                  | 2 +-
-> >   2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> > index bcc612cc7423..38d3c06abc41 100644
-> > --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> > @@ -9,7 +9,7 @@ used for audio/voice services on the QDSP.
-> >   	Value type: <stringlist>
-> >   	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
-> > -- reg
-> > +- qcom,apr-domain
-> >   	Usage: required
-> >   	Value type: <u32>
-> >   	Definition: Destination processor ID.
-> > diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
-> > index 74f8b9607daa..b83d71b2e0a4 100644
-> > --- a/drivers/soc/qcom/apr.c
-> > +++ b/drivers/soc/qcom/apr.c
-> > @@ -276,7 +276,7 @@ static int apr_probe(struct rpmsg_device *rpdev)
-> >   	if (!apr)
-> >   		return -ENOMEM;
-> > -	ret = of_property_read_u32(dev->of_node, "reg", &apr->dest_domain_id);
-> > +	ret = of_property_read_u32(dev->of_node, "qcom,apr-domain", &apr->dest_domain_id);
-> >   	if (ret) {
-> >   		dev_err(dev, "APR Domain ID not specified in DT\n");
-> >   		return ret;
-> > 
+I have a meta-schema change to catch this, but It will require updates
+to some existing cases.
+
+
+> +
+> +  reset-assert-us:
+> +    description:
+> +      Delay after the reset was asserted in microseconds. If this
+> +      property is missing the delay will be skipped.
+> +
+> +  reset-deassert-us:
+> +    description:
+> +      Delay after the reset was deasserted in microseconds. If
+> +      this property is missing the delay will be skipped.
+> +
+> +required:
+> +  - reg
+> +  - interrupts
+> +
+> +examples:
+> +  - |
+> +    ethernet {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        ethernet-phy@0 {
+> +            compatible = "ethernet-phy-id0141.0e90", "ethernet-phy-ieee802.3-c22";
+> +            interrupt-parent = <&PIC>;
+> +            interrupts = <35 1>;
+> +            reg = <0>;
+> +
+> +            resets = <&rst 8>;
+> +            reset-names = "phy";
+> +            reset-gpios = <&gpio1 4 1>;
+> +            reset-assert-us = <1000>;
+> +            reset-deassert-us = <2000>;
+> +        };
+> +    };
