@@ -1,53 +1,92 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH V3 RESEND 2/4] nvmem: imx: add i.MX8 nvmem driver
-Date: Thu, 23 May 2019 09:47:10 +0100
-Message-ID: <9d8ea55c-e9e7-82f5-45be-53bc86e59f69@linaro.org>
-References: <20190522020040.30283-1-peng.fan@nxp.com>
- <20190522020040.30283-2-peng.fan@nxp.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: ls1046a: Fast read m25p60
+Date: Thu, 23 May 2019 16:47:07 +0800
+Message-ID: <20190523084707.GN9261@dragon>
+References: <20190516114807.30817-1-kuldeep.singh@nxp.com>
+ <20190516114807.30817-2-kuldeep.singh@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190522020040.30283-2-peng.fan@nxp.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190516114807.30817-2-kuldeep.singh@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kuldeep Singh <kuldeep.singh@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, Ashish Kumar <ashish.kumar@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 22/05/2019 02:46, Peng Fan wrote:
-> This patch adds i.MX8 nvmem ocotp driver to access fuse via
-> RPC to i.MX8 system controller.
+On Thu, May 16, 2019 at 11:47:06AM +0000, Kuldeep Singh wrote:
+> QSPI support is added for kernel version greater than 5.0 and supports
+> quad mode defined by
+> TX-WIDTH = <4>, RX-WIDTH = <4>
 > 
-> Cc: Srinivas Kandagatla<srinivas.kandagatla@linaro.org>
-> Cc: Shawn Guo<shawnguo@kernel.org>
-> Cc: Sascha Hauer<s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team<kernel@pengutronix.de>
-> Cc: Fabio Estevam<festevam@gmail.com>
-> Cc: NXP Linux Team<linux-imx@nxp.com>
-> Cc:linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Peng Fan<peng.fan@nxp.com>
+> RDB/QDS has two 64MB flash from SPANSION(s25fs512s)
+> 
+> Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
+> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+
+Please do not send patch in message encoding with base64.  I do not
+apply it.
+
+Shawn
+
 > ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts | 3 ++-
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 6 ++++--
+>  2 files changed, 6 insertions(+), 3 deletions(-)
 > 
-> V3:
->   Use imx_sc_msg_misc_fuse_read for req/resp
->   Drop uneccessary check
->   Drop the unnecessary type conversion
->   Minor fixes according to v2 comments
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+> index eec62c63dafe..43a5ef6357d5 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+> @@ -166,9 +166,10 @@
+>  	status = "okay";
+>  
+>  	qflash0: flash@0 {
+> -		compatible = "spansion,m25p80";
+> +		compatible = "spansion,m25p80", "jedec,spi-nor";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> +		m25p,fast-read;
+>  		spi-max-frequency = <20000000>;
+>  		spi-rx-bus-width = <4>;
+>  		spi-tx-bus-width = <4>;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+> index 6a6514d0e5a9..85105a20fc04 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+> @@ -102,9 +102,10 @@
+>  	status = "okay";
+>  
+>  	qflash0: flash@0 {
+> -		compatible = "spansion,m25p80";
+> +		compatible = "spansion,m25p80", "jedec,spi-nor";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> +		m25p,fast-read;
+>  		spi-max-frequency = <20000000>;
+>  		spi-rx-bus-width = <4>;
+>  		spi-tx-bus-width = <4>;
+> @@ -112,9 +113,10 @@
+>  	};
+>  
+>  	qflash1: flash@1 {
+> -		compatible = "spansion,m25p80";
+> +		compatible = "spansion,m25p80", "jedec,spi-nor";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> +		m25p,fast-read;
+>  		spi-max-frequency = <20000000>;
+>  		spi-rx-bus-width = <4>;
+>  		spi-tx-bus-width = <4>;
+> -- 
+> 2.17.1
 > 
-> V2:
->   Add "scu" or "SCU", Add imx_sc_misc_otp_fuse_read, minor fixes
-> 
->   drivers/nvmem/Kconfig         |   7 ++
->   drivers/nvmem/Makefile        |   2 +
->   drivers/nvmem/imx-ocotp-scu.c | 161 ++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 170 insertions(+)
->   create mode 100644 drivers/nvmem/imx-ocotp-scu.c
-
-Applied 1/4 and 2/4 patches.
-defconfig and dts changes should go via arm-soc tree.
-
-Thanks,
-srini
