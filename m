@@ -1,54 +1,27 @@
-From: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: set TX PBL for rk3328-roc-cc gmac
-Date: Wed, 22 May 2019 20:00:27 -0400
-Message-ID: <8ded737d-1fd5-3609-ca2e-cfeba63b2d95@gmail.com>
-References: <20190417210059.26262-1-papadakospan@gmail.com>
- <8865b046-fb3a-4071-335c-66abb344d7f4@gmail.com>
- <1555915435.1262.1@gmail.com>
- <9a5c62b4-ea75-de4f-9b71-ffa42cb8eaac@gmail.com>
- <1555938803.1241.1@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next v2 1/8] dt-bindings: phy: dp83867: Describe
+ how driver behaves w.r.t rgmii delay
+Date: Wed, 22 May 2019 17:43:55 -0700 (PDT)
+Message-ID: <20190522.174355.632859363923464469.davem@davemloft.net>
+References: <20190522184255.16323-1-tpiepho@impinj.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1555938803.1241.1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190522184255.16323-1-tpiepho@impinj.com>
+Sender: netdev-owner@vger.kernel.org
+To: tpiepho@impinj.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
+From: Trent Piepho <tpiepho@impinj.com>
+Date: Wed, 22 May 2019 18:43:19 +0000
 
-
-On 4/22/2019 9:13 AM, Leonidas P. Papadakos wrote:
+> Add a note to make it more clear how the driver behaves when "rgmii" vs
+> "rgmii-id", "rgmii-idrx", or "rgmii-idtx" interface modes are selected.
 > 
-> Indeed, at least with that first patch users won't have a crappy 
-> experience by default (ssh lags and the like)
-> 
-> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Trent Piepho <tpiepho@impinj.com>
 
-I apologize for taking so long at this, but I wanted to make sure I had 
-it right.
-
-So far I've found a few things that seem to help, and would like y'all 
-to test them when you get the chance.
-
-Adding snps,aal (configures DMA for address alignment) appears to make a 
-massive improvement to stability, although the the snps,txpbl = <0x4> is 
-still necessary for this to work.
-
-Second, I added snps,rxpbl = <0x4> as well, which seems to help with my 
-RX issues a bit.
-The biggest improvement with these two settings is more stable transmit 
-and receive.
-Currently I'm getting about 800mbps on tx and 400 mbps on rx.
-
-Please test when you get the chance and provide feedback.
+Applied.
