@@ -1,29 +1,144 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: Re: [PATCH 3/6] drm/bridge: extract some Analogix I2C DP common
- code
-Date: Thu, 23 May 2019 13:52:24 +0200
-Message-ID: <20190523115224.GA15685@lst.de>
-References: <20190523065013.2719D68B05@newverein.lst.de> <20190523065352.8FD7668B05@newverein.lst.de> <CAGb2v66+1+goJfnY7nWTGN2fupqMUm5o+gkPdUW6nxcwQEDwog@mail.gmail.com> <20190523075035.GA5971@pendragon.ideasonboard.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v5 5/6] drm: sun4i: Add support for enabling DDC I2C bus
+ to sun8i_dw_hdmi glue
+Date: Thu, 23 May 2019 14:27:01 +0200
+Message-ID: <20190523122701.qeuthkrczdzngzod@flea>
+References: <20190520235009.16734-1-megous@megous.com>
+ <20190520235009.16734-6-megous@megous.com>
+ <20190521114611.ylmbo2oqeanveil4@flea>
+ <20190521121519.k343dgv3cgpewjl2@core.my.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xaediv5ol6nrlghm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190523075035.GA5971@pendragon.ideasonboard.com>
+In-Reply-To: <20190521121519.k343dgv3cgpewjl2@core.my.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2019 at 10:50:35AM +0300, Laurent Pinchart wrote:
-> On Thu, May 23, 2019 at 03:40:25PM +0800, Chen-Yu Tsai wrote:
-> > 
-> > If this was simple code movement, then the original copyright still applies.
-> > A different copyright notice should not be used. I suppose the same applies
-> > to the module author.
-> 
-> And likely to patch 2/6 too.
 
-Absolutely correct. Wdiff does not lie.
-Re-evaluating...
+--xaediv5ol6nrlghm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	Torsten
+On Tue, May 21, 2019 at 02:15:19PM +0200, Ond=C5=99ej Jirman wrote:
+> Hi Maxime,
+>
+> On Tue, May 21, 2019 at 01:46:11PM +0200, Maxime Ripard wrote:
+> > Hi,
+> >
+> > On Tue, May 21, 2019 at 01:50:08AM +0200, megous@megous.com wrote:
+> > > From: Ondrej Jirman <megous@megous.com>
+> > >
+> > > Orange Pi 3 board requires enabling a voltage shifting circuit via GP=
+IO
+> > > for the DDC bus to be usable.
+> > >
+> > > Add support for hdmi-connector node's optional ddc-en-gpios property =
+to
+> > > support this use case.
+> > >
+> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > > ---
+> > >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 55 +++++++++++++++++++++++++=
+--
+> > >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  3 ++
+> > >  2 files changed, 55 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/=
+sun4i/sun8i_dw_hdmi.c
+> > > index 39d8509d96a0..59b81ba02d96 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> > > @@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struc=
+t drm_device *drm,
+> > >  	return crtcs;
+> > >  }
+> > >
+> > > +static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
+> > > +					     struct platform_device **pdev_out)
+> > > +{
+> > > +	struct platform_device *pdev;
+> > > +	struct device_node *remote;
+> > > +
+> > > +	remote =3D of_graph_get_remote_node(dev->of_node, 1, -1);
+> > > +	if (!remote)
+> > > +		return -ENODEV;
+> > > +
+> > > +	if (!of_device_is_compatible(remote, "hdmi-connector")) {
+> > > +		of_node_put(remote);
+> > > +		return -ENODEV;
+> > > +	}
+> > > +
+> > > +	pdev =3D of_find_device_by_node(remote);
+> > > +	of_node_put(remote);
+> > > +	if (!pdev)
+> > > +		return -ENODEV;
+> > > +
+> > > +	*pdev_out =3D pdev;
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static int sun8i_dw_hdmi_bind(struct device *dev, struct device *mas=
+ter,
+> > >  			      void *data)
+> > >  {
+> > > @@ -151,16 +175,29 @@ static int sun8i_dw_hdmi_bind(struct device *de=
+v, struct device *master,
+> > >  		return PTR_ERR(hdmi->regulator);
+> > >  	}
+> > >
+> > > +	ret =3D sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pde=
+v);
+> > > +	if (!ret) {
+> > > +		hdmi->ddc_en =3D gpiod_get_optional(&hdmi->connector_pdev->dev,
+> > > +						  "ddc-en", GPIOD_OUT_HIGH);
+> > > +		if (IS_ERR(hdmi->ddc_en)) {
+> > > +			platform_device_put(hdmi->connector_pdev);
+> > > +			dev_err(dev, "Couldn't get ddc-en gpio\n");
+> > > +			return PTR_ERR(hdmi->ddc_en);
+> > > +		}
+> > > +	}
+> > > +
+> > >  	ret =3D regulator_enable(hdmi->regulator);
+> > >  	if (ret) {
+> > >  		dev_err(dev, "Failed to enable regulator\n");
+> > > -		return ret;
+> > > +		goto err_unref_ddc_en;
+> > >  	}
+> > >
+> > > +	gpiod_set_value(hdmi->ddc_en, 1);
+> > > +
+> >
+> > Do you really need this to be done all the time? I'm guessing you
+> > would only need this when running .get_modes, right?
+>
+> I don't think it hurts anything. Enabled voltage shifting circuit doesn't
+> draw any current, unless DDC is actually transmitting data. On most boards
+> I'd imagine this circuit is always on anyway (Orange Pi 3 schematic even =
+has
+> an option to tie this signal to VCC-IO instead of GPIO).
+
+Ok, it works for me then
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--xaediv5ol6nrlghm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOaRjgAKCRDj7w1vZxhR
+xXP8AQDJFrAb2tEeZAxbO0lR5xA3HSBZ1CG8XwnZfh/DVcz7IgD/d1nl6k3ae3tz
+jt35NpcG3EPiCyUUHN1/ZuAY6YBkHQc=
+=qe05
+-----END PGP SIGNATURE-----
+
+--xaediv5ol6nrlghm--
