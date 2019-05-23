@@ -1,69 +1,142 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: edac: arm-dmc520.txt
-Date: Thu, 23 May 2019 17:58:41 +0100
-Message-ID: <20190523165841.GD7523@lakrids.cambridge.arm.com>
-References: <CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v13 1/2] arm: dts: mt2712: add uart APDMA to device tree
+Date: Thu, 23 May 2019 19:04:16 +0200
+Message-ID: <434cbd9b-face-de45-0d17-4096ad81a7b9@gmail.com>
+References: <1558596909-14084-1-git-send-email-long.cheng@mediatek.com>
+ <1558596909-14084-2-git-send-email-long.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
+In-Reply-To: <1558596909-14084-2-git-send-email-long.cheng@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lei Wang <leiwang_git@outlook.com>
-Cc: "bp@alien8.de" <bp@alien8.de>, "james.morse@arm.com" <james.morse@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "lewan@microsoft.com" <lewan@microsoft.com>
+To: Long Cheng <long.cheng@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Nicolas Boichat <drinkcat@chromium.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Zhenbao Liu <zhenbao.liu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 16, 2019 at 02:35:47AM +0000, Lei Wang wrote:
-> From: Lei Wang <leiwang_git@outlook.com>
+
+
+On 23/05/2019 09:35, Long Cheng wrote:
+> 1. add uart APDMA controller device node
+> 2. add uart 0/1/2/3/4/5 DMA function
 > 
-> This is the device tree bindings for new EDAC driver dmc520_edac.c.
-> 
-> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
 > ---
->  .../devicetree/bindings/edac/arm-dmc520.txt        | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>  arch/arm64/boot/dts/mediatek/mt2712e.dtsi |   51 +++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-> new file mode 100644
-> index 0000000..71e7aa3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-> @@ -0,0 +1,26 @@
-> +* ARM DMC-520 EDAC node
+> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> index 43307ba..a7a7362 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> @@ -300,6 +300,9 @@
+>  		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
+>  		clocks = <&baud_clk>, <&sys_clk>;
+>  		clock-names = "baud", "bus";
+> +		dmas = <&apdma 10
+> +			&apdma 11>;
+> +		dma-names = "tx", "rx";
+>  		status = "disabled";
+>  	};
+>  
+> @@ -369,6 +372,39 @@
+>  			 (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_HIGH)>;
+>  	};
+>  
+> +	apdma: dma-controller@11000400 {
+> +		compatible = "mediatek,mt2712-uart-dma",
+> +			     "mediatek,mt6577-uart-dma";
+
+I was able to find a binding descpription but no actual driver.
+drivers/dma/mediatek only has hsdma and cqdma but no apdma driver.
+
+Seems there is something missing here.
+
+Regards,
+Matthias
+
+> +		reg = <0 0x11000400 0 0x80>,
+> +		      <0 0x11000480 0 0x80>,
+> +		      <0 0x11000500 0 0x80>,
+> +		      <0 0x11000580 0 0x80>,
+> +		      <0 0x11000600 0 0x80>,
+> +		      <0 0x11000680 0 0x80>,
+> +		      <0 0x11000700 0 0x80>,
+> +		      <0 0x11000780 0 0x80>,
+> +		      <0 0x11000800 0 0x80>,
+> +		      <0 0x11000880 0 0x80>,
+> +		      <0 0x11000900 0 0x80>,
+> +		      <0 0x11000980 0 0x80>;
+> +		interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 105 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 107 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 108 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 109 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 111 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 114 IRQ_TYPE_LEVEL_LOW>;
+> +		dma-requests = <12>;
+> +		clocks = <&pericfg CLK_PERI_AP_DMA>;
+> +		clock-names = "apdma";
+> +		#dma-cells = <1>;
+> +	};
 > +
-> +Required properties:
-> +- compatible		: "brcm,dmc-520", "arm,dmc-520".
-> +- reg			: Address range of the DMC-520 registers.
-> +- interrupts		: DMC-520 interrupt numbers. The example below specifies
-> +			  two interrupt lines for dram_ecc_errc_int and
-> +			  dram_ecc_errd_int.
-> +- interrupt-config	: This is an array of interrupt masks. For each of the
-> +			  above interrupt line, add one interrupt mask element to
-> +			  it. That is, there is a 1:1 mapping from each interrupt
-> +			  line to an interrupt mask. An interrupt mask can represent
-> +			  multiple interrupts being enabled. Refer to interrupt_control
-> +			  register in DMC-520 TRM for interrupt mapping. In the example
-> +			  below, the interrupt configuration enables dram_ecc_errc_int
-> +			  and dram_ecc_errd_int. And each interrupt is connected to
-> +			  a separate interrupt line.
-
-Generally we use interrupt-names to distinguish interrupts.
-
-Do you really have arbitary subsets of lines muxed together?
-
-Thanks,
-Mark.
-
-> +
-> +Example:
-> +
-> +dmc0: dmc@200000 {
-> +	compatible = "brcm,dmc-520", "arm,dmc-520";
-> +	reg = <0x200000 0x80000>;
-> +	interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
-> +	interrupt-config = <0x4>, <0x8>;
-> +};
-> -- 
-> 2.7.4
+>  	auxadc: adc@11001000 {
+>  		compatible = "mediatek,mt2712-auxadc";
+>  		reg = <0 0x11001000 0 0x1000>;
+> @@ -385,6 +421,9 @@
+>  		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+>  		clocks = <&baud_clk>, <&sys_clk>;
+>  		clock-names = "baud", "bus";
+> +		dmas = <&apdma 0
+> +			&apdma 1>;
+> +		dma-names = "tx", "rx";
+>  		status = "disabled";
+>  	};
+>  
+> @@ -395,6 +434,9 @@
+>  		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
+>  		clocks = <&baud_clk>, <&sys_clk>;
+>  		clock-names = "baud", "bus";
+> +		dmas = <&apdma 2
+> +			&apdma 3>;
+> +		dma-names = "tx", "rx";
+>  		status = "disabled";
+>  	};
+>  
+> @@ -405,6 +447,9 @@
+>  		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
+>  		clocks = <&baud_clk>, <&sys_clk>;
+>  		clock-names = "baud", "bus";
+> +		dmas = <&apdma 4
+> +			&apdma 5>;
+> +		dma-names = "tx", "rx";
+>  		status = "disabled";
+>  	};
+>  
+> @@ -415,6 +460,9 @@
+>  		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_LOW>;
+>  		clocks = <&baud_clk>, <&sys_clk>;
+>  		clock-names = "baud", "bus";
+> +		dmas = <&apdma 6
+> +			&apdma 7>;
+> +		dma-names = "tx", "rx";
+>  		status = "disabled";
+>  	};
+>  
+> @@ -629,6 +677,9 @@
+>  		interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
+>  		clocks = <&baud_clk>, <&sys_clk>;
+>  		clock-names = "baud", "bus";
+> +		dmas = <&apdma 8
+> +			&apdma 9>;
+> +		dma-names = "tx", "rx";
+>  		status = "disabled";
+>  	};
+>  
 > 
