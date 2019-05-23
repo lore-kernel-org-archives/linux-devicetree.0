@@ -1,184 +1,187 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Thu, 23 May 2019 10:40:06 +0200
-Message-ID: <20190523084006.GW21222@phenom.ffwll.local>
-References: <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
- <20190509214233.GA20877@mit.edu>
- <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com>
- <20190511173344.GA8507@mit.edu>
- <20190513144451.GQ17751@phenom.ffwll.local>
- <20190514060433.GA181462@google.com>
- <CAKMK7uHqtSF_sazJTbFL+xmQJRk4iwukCKZHoDHhsKkLXk=ECQ@mail.gmail.com>
- <20190514183618.GC109557@google.com>
- <20190515074141.GY17751@phenom.ffwll.local>
- <CAFd5g476Hc+6jL5sV=VJamXCbqGebwHqqN9N9RppQYMCoo052Q@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: ls1012a: Add QSPI support for ls1012a
+Date: Thu, 23 May 2019 16:43:42 +0800
+Message-ID: <20190523084340.GM9261@dragon>
+References: <20190516114807.30817-1-kuldeep.singh@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAFd5g476Hc+6jL5sV=VJamXCbqGebwHqqN9N9RppQYMCoo052Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Petr Mladek <pmladek@suse.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, Frank Rowand <frowand.list@gmail.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>, "Bird,
- Timothy" <Tim.Bird@sony.com>, linux-um@lists.infradead.org, Steven Rostedt <rostedt@goodmis.org>, Julia
+In-Reply-To: <20190516114807.30817-1-kuldeep.singh@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kuldeep Singh <kuldeep.singh@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, Ashish Kumar <ashish.kumar@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMjIsIDIwMTkgYXQgMDI6Mzg6NDhQTSAtMDcwMCwgQnJlbmRhbiBIaWdnaW5z
-IHdyb3RlOgo+ICtCam9ybiBIZWxnYWFzCj4gCj4gT24gV2VkLCBNYXkgMTUsIDIwMTkgYXQgMTI6
-NDEgQU0gRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPiB3cm90ZToKPiA+Cj4gPiBPbiBU
-dWUsIE1heSAxNCwgMjAxOSBhdCAxMTozNjoxOEFNIC0wNzAwLCBCcmVuZGFuIEhpZ2dpbnMgd3Jv
-dGU6Cj4gPiA+IE9uIFR1ZSwgTWF5IDE0LCAyMDE5IGF0IDAyOjA1OjA1UE0gKzAyMDAsIERhbmll
-bCBWZXR0ZXIgd3JvdGU6Cj4gPiA+ID4gT24gVHVlLCBNYXkgMTQsIDIwMTkgYXQgODowNCBBTSBC
-cmVuZGFuIEhpZ2dpbnMKPiA+ID4gPiA8YnJlbmRhbmhpZ2dpbnNAZ29vZ2xlLmNvbT4gd3JvdGU6
-Cj4gPiA+ID4gPgo+ID4gPiA+ID4gT24gTW9uLCBNYXkgMTMsIDIwMTkgYXQgMDQ6NDQ6NTFQTSAr
-MDIwMCwgRGFuaWVsIFZldHRlciB3cm90ZToKPiA+ID4gPiA+ID4gT24gU2F0LCBNYXkgMTEsIDIw
-MTkgYXQgMDE6MzM6NDRQTSAtMDQwMCwgVGhlb2RvcmUgVHMnbyB3cm90ZToKPiA+ID4gPiA+ID4g
-PiBPbiBGcmksIE1heSAxMCwgMjAxOSBhdCAwMjoxMjo0MFBNIC0wNzAwLCBGcmFuayBSb3dhbmQg
-d3JvdGU6Cj4gPiA+ID4gPiA+ID4gPiBIb3dldmVyLCB0aGUgcmVwbHkgaXMgaW5jb3JyZWN0LiAg
-S3NlbGZ0ZXN0IGluLWtlcm5lbCB0ZXN0cyAod2hpY2gKPiA+ID4gPiA+ID4gPiA+IGlzIHRoZSBj
-b250ZXh0IGhlcmUpIGNhbiBiZSBjb25maWd1cmVkIGFzIGJ1aWx0IGluIGluc3RlYWQgb2YgYXMK
-PiA+ID4gPiA+ID4gPiA+IGEgbW9kdWxlLCBhbmQgYnVpbHQgaW4gYSBVTUwga2VybmVsLiAgVGhl
-IFVNTCBrZXJuZWwgY2FuIGJvb3QsCj4gPiA+ID4gPiA+ID4gPiBydW5uaW5nIHRoZSBpbi1rZXJu
-ZWwgdGVzdHMgYmVmb3JlIFVNTCBhdHRlbXB0cyB0byBpbnZva2UgdGhlCj4gPiA+ID4gPiA+ID4g
-PiBpbml0IHByb2Nlc3MuCj4gPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gPiBVbSwgQ2l0YXRpb24g
-bmVlZGVkPwo+ID4gPiA+ID4gPiA+Cj4gPiA+ID4gPiA+ID4gSSBkb24ndCBzZWUgYW55IGV2aWRl
-bmNlIGZvciB0aGlzIGluIHRoZSBrc2VsZnRlc3QgZG9jdW1lbnRhdGlvbiwgbm9yCj4gPiA+ID4g
-PiA+ID4gZG8gSSBzZWUgYW55IGV2aWRlbmNlIG9mIHRoaXMgaW4gdGhlIGtzZWxmdGVzdCBNYWtl
-ZmlsZXMuCj4gPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gPiBUaGVyZSBleGlzdHMgdGVzdCBtb2R1
-bGVzIGluIHRoZSBrZXJuZWwgdGhhdCBydW4gYmVmb3JlIHRoZSBpbml0Cj4gPiA+ID4gPiA+ID4g
-c2NyaXB0cyBydW4gLS0tIGJ1dCB0aGF0J3Mgbm90IHN0cmljdGx5IHNwZWFraW5nIHBhcnQgb2Yg
-a3NlbGZ0ZXN0cywKPiA+ID4gPiA+ID4gPiBhbmQgZG8gbm90IGhhdmUgYW55IGtpbmQgb2YgaW5m
-cmFzdHJ1Y3R1cmUuICBBcyBub3RlZCwgdGhlCj4gPiA+ID4gPiA+ID4ga3NlbGZ0ZXN0c19oYXJu
-ZXNzIGhlYWRlciBmaWxlIGZ1bmRhbWVudGFsbHkgYXNzdW1lcyB0aGF0IHlvdSBhcmUKPiA+ID4g
-PiA+ID4gPiBydW5uaW5nIHRlc3QgY29kZSBpbiB1c2Vyc3BhY2UuCj4gPiA+ID4gPiA+Cj4gPiA+
-ID4gPiA+IFllYWggSSByZWFsbHkgbGlrZSB0aGUgIm5vIHVzZXJzcGFjZSByZXF1aXJlZCBhdCBh
-bGwiIGRlc2lnbiBvZiBrdW5pdCwKPiA+ID4gPiA+ID4gd2hpbGUgc3RpbGwgY29sbGVjdGluZyBy
-ZXN1bHRzIGluIGEgd2VsbC1kZWZpbmVkIHdheSAodW5sZXNzIHRoZSBjdXJyZW50Cj4gPiA+ID4g
-PiA+IHNlbGYtdGVzdCB0aGF0IGp1c3QgcnVuIHdoZW4geW91IGxvYWQgdGhlIG1vZHVsZSwgd2l0
-aCBtYXliZSBzb21lCj4gPiA+ID4gPiA+IGtzZWxmdGVzdCBhZC1ob2Mgd3JhcHBlciBhcm91bmQg
-dG8gY29sbGVjdCB0aGUgcmVzdWx0cykuCj4gPiA+ID4gPiA+Cj4gPiA+ID4gPiA+IFdoYXQgSSB3
-YW50IHRvIGRvIGxvbmctdGVybSBpcyB0byBydW4gdGhlc2Uga2VybmVsIHVuaXQgdGVzdHMgYXMg
-cGFydCBvZgo+ID4gPiA+ID4gPiB0aGUgYnVpbGQtdGVzdGluZywgbW9zdCBsaWtlbHkgaW4gZ2l0
-bGFiIChzb29uZXIgb3IgbGF0ZXIsIGZvciBkcm0uZ2l0Cj4gPiA+ID4gPgo+ID4gPiA+ID4gVG90
-YWxseSEgVGhpcyBpcyBwYXJ0IG9mIHRoZSByZWFzb24gSSBoYXZlIGJlZW4gaW5zaXN0aW5nIG9u
-IGEgbWluaW11bQo+ID4gPiA+ID4gb2YgVU1MIGNvbXBhdGliaWxpdHkgZm9yIGFsbCB1bml0IHRl
-c3RzLiBJZiB5b3UgY2FuIHN1ZmZpZW50bHkgY29uc3RyYWluCj4gPiA+ID4gPiB0aGUgZW52aXJv
-bm1lbnQgdGhhdCBpcyByZXF1aXJlZCBmb3IgdGVzdHMgdG8gcnVuIGluLCBpdCBtYWtlcyBpdCBt
-dWNoCj4gPiA+ID4gPiBlYXNpZXIgbm90IG9ubHkgZm9yIGEgaHVtYW4gdG8gcnVuIHlvdXIgdGVz
-dHMsIGJ1dCBpdCBhbHNvIG1ha2VzIGl0IGEKPiA+ID4gPiA+IGxvdCBlYXNpZXIgZm9yIGFuIGF1
-dG9tYXRlZCBzZXJ2aWNlIHRvIGJlIGFibGUgdG8gcnVuIHlvdXIgdGVzdHMuCj4gPiA+ID4gPgo+
-ID4gPiA+ID4gSSBhY3R1YWxseSBoYXZlIGEgcHJvdG90eXBlIHByZXN1Ym1pdCBhbHJlYWR5IHdv
-cmtpbmcgb24gbXkKPiA+ID4gPiA+ICJzdGFibGUvbm9uLXVwc3RyZWFtIiBicmFuY2guIFlvdSBj
-YW4gY2hlY2tvdXQgd2hhdCBwcmVzdWJtaXQgcmVzdWx0cwo+ID4gPiA+ID4gbG9vayBsaWtlIGhl
-cmVbMV1bMl0uCj4gPiA+ID4KPiA+ID4gPiB1ZyBnZXJyaXQgOi0pCj4gPiA+Cj4gPiA+IFllYWgs
-IHllYWgsIEkga25vdywgYnV0IGl0IGlzIGEgbG90IGVhc2llciBmb3IgbWUgdG8gZ2V0IGEgcHJv
-amVjdCBzZXQKPiA+ID4gdXAgaGVyZSB1c2luZyBHZXJyaXQsIHdoZW4gd2UgYWxyZWFkeSB1c2Ug
-dGhhdCBmb3IgYSBsb3Qgb2Ygb3RoZXIKPiA+ID4gcHJvamVjdHMuCj4gPiA+Cj4gPiA+IEFsc28s
-IEdlcnJpdCBoYXMgZ290dGVuIGEgbG90IGJldHRlciBvdmVyIHRoZSBsYXN0IHR3byB5ZWFycyBv
-ciBzby4gVHdvCj4gPiA+IHllYXJzIGFnbywgSSB3b3VsZG4ndCB0b3VjaCBpdCB3aXRoIGEgdGVu
-IGZvb3QgcG9sZS4gSXQncyBub3Qgc28gYmFkCj4gPiA+IGFueW1vcmUsIGF0IGxlYXN0IGlmIHlv
-dSBhcmUgdXNlZCB0byB1c2luZyBhIHdlYiBVSSB0byByZXZpZXcgY29kZS4KPiA+Cj4gPiBJIHdh
-cyBzb21ld2hhdCBqb2tpbmcsIEknbSBqdXN0IG5vdCB1c2VkIHRvIGdlcnJpdCAuLi4gQW5kIHNl
-ZW1zIHRvIGluZGVlZAo+ID4gYmUgYSBsb3QgbW9yZSBwb2xpc2hlZCB0aGFuIGxhc3QgdGltZSBJ
-IGxvb2tlZCBhdCBpdCBzZXJpb3VzbHkuCj4gCj4gSSBtZWFuLCBpdCBpcyBzdGlsbCBub3QgcGVy
-ZmVjdCwgYnV0IEkgdGhpbmsgaXQgaGFzIGZpbmFsbHkgZ290dGVuIHRvCj4gdGhlIHBvaW50IHdo
-ZXJlIEkgcHJlZmVyIGl0IG92ZXIgcmV2aWV3aW5nIGJ5IGVtYWlsIGZvciBoaWdoIGNvbnRleHQK
-PiBwYXRjaGVzIHdoZXJlIHlvdSBkb24ndCBleHBlY3QgYSBsb3Qgb2YgZGVlcCBkaXNjdXNzaW9u
-Lgo+IAo+IFN0aWxsIG5vdCBncmVhdCBmb3IgcGF0Y2hlcyB3aGVyZSB5b3Ugd2FudCB0byBoYXZl
-IGEgbG90IG9mIGRpc2N1c3Npb24uCj4gCj4gPiA+ID4gPiA+IG9ubHkgb2ZjKS4gU28gdGhhdCBw
-ZW9wbGUgZ2V0IHRoZWlyIHB1bGwgcmVxdWVzdHMgKGFuZCBwYXRjaCBzZXJpZXMsIHdlCj4gPiA+
-ID4gPiA+IGhhdmUgc29tZSBpZGVhcyB0byB0aWUgdGhpcyBpbnRvIHBhdGNod29yaykgYXV0b21h
-dGljYWxseSB0ZXN0ZWQgZm9yIHRoaXMKPiA+ID4gPiA+Cj4gPiA+ID4gPiBNaWdodCB0aGF0IGJl
-IFNub3dwYXRjaFszXT8gSSB0YWxrZWQgdG8gUnVzc2VsbCwgdGhlIGNyZWF0b3Igb2YgU25vd3Bh
-dGNoLAo+ID4gPiA+ID4gYW5kIGhlIHNlZW1lZCBwcmV0dHkgb3BlbiB0byBjb2xsYWJvcmF0aW9u
-Lgo+ID4gPiA+ID4KPiA+ID4gPiA+IEJlZm9yZSBJIGhlYXJkIGFib3V0IFNub3dwYXRjaCwgSSBo
-YWQgYW4gaW50ZXJuIHdyaXRlIGEgdHJhbnNsYXRpb24KPiA+ID4gPiA+IGxheWVyIHRoYXQgbWFk
-ZSBQcm93ICh0aGUgcHJlc3VibWl0IHNlcnZpY2UgdGhhdCBJIHVzZWQgaW4gdGhlIHByb3RvdHlw
-ZQo+ID4gPiA+ID4gYWJvdmUpIHdvcmsgd2l0aCBMS01MWzRdLgo+ID4gPiA+Cj4gPiA+ID4gVGhl
-cmUncyBhYm91dCAzLTQgZm9ya3MvY2xvbmVzIG9mIHBhdGNod29yay4gc25vd3BhdGNoIGlzIG9u
-ZSwgd2UgaGF2ZQo+ID4gPiA+IGEgZGlmZmVyZW50IG9uZSBvbiBmcmVlZGVza3RvcC5vcmcuIEl0
-J3MgYSBiaXQgYSBtZXNzIDotLwo+IAo+IEkgdGhpbmsgU25vd3BhdGNoIGlzIGFuIG96bGFicyBw
-cm9qZWN0OyBhdCBsZWFzdCB0aGUgbWFpbnRhaW5lciB3b3JrcyBhdCBJQk0uCj4gCj4gUGF0Y2h3
-b3JrIG9yaWdpbmFsbHkgd2FzIGEgb3psYWJzIHByb2plY3QsIHJpZ2h0PwoKU28gdGhlcmUncyB0
-d28gcGF0Y2h3b3JrcyAoc25vd3BhdGNoIG1ha2VzIHRoZSAzcmQpOiB0aGUgb25lIG9uCmZyZWVk
-ZXNrdG9wIGlzIGFub3RoZXIgZm9yay4KCj4gSGFzIGFueSBkaXNjdXNzaW9uIHRha2VuIHBsYWNl
-IHRyeWluZyB0byBjb25zb2xpZGF0ZSBzb21lIG9mIHRoZSBmb3Jrcz8KCll1cCwgYnV0IGRpZG4n
-dCBsZWFkIGFueXdoZXJlIHVuZm9ydHVuYXRlbHkgOi0vIEF0IGxlYXN0IGJldHdlZW4gcGF0Y2h3
-b3JrCmFuZCBwYXRjaHdvcmstZmRvLCBJIHRoaW5rIHNub3dwYXRjaCBoYXBwZW5lZCBpbiBwYXJh
-bGxlbCBhbmQgb25jZSBpdCB3YXMKZG9uZSBpdCdzIGtpbmRhIHRvbyBsYXRlLiBUaGUgdHJvdWJs
-ZSBpcyB0aGF0IHRoZXkgYWxsIGhhdmUgc2xpZ2h0bHkKZGlmZmVyZW50IFJFU1QgYXBpIGFuZCBm
-dW5jdGlvbmFsaXR5LCBzbyBmb3IgQ0kgaW50ZWdyYXRpb24geW91IGNhbid0IGp1c3QKc3dpdGNo
-IG9uZSBmb3IgdGhlIG90aGVyLgoKPiBQcmVzdWJtaXQgY2xlYXJseSBzZWVtcyBsaWtlIGEgZmVh
-dHVyZSB0aGF0IGEgbnVtYmVyIG9mIHBlb3BsZSB3YW50Lgo+IAo+ID4gPiBPaCwgSSBkaWRuJ3Qg
-cmVhbGl6ZSB0aGF0LiBJIGZvdW5kIHlvdXIgcGF0Y2h3b3JrIGluc3RhbmNlIGhlcmVbNV0sIGJ1
-dAo+ID4gPiBkbyB5b3UgaGF2ZSBhIHBsYWNlIHdoZXJlIEkgY2FuIHNlZSB0aGUgY2hhbmdlcyB5
-b3UgaGF2ZSBhZGRlZCB0bwo+ID4gPiBzdXBwb3J0IHByZXN1Ym1pdD8KPiA+Cj4gPiBPayBoZXJl
-J3MgYSBmZXcgbGlua3MuIEFzaWRlIGZyb20gdGhlIHVzdWFsIHBhdGNoIHZpZXcgd2UndmUgYWxz
-byBhZGRlZCBhCj4gPiBzZXJpZXMgdmlldzoKPiA+Cj4gPiBodHRwczovL3BhdGNod29yay5mcmVl
-ZGVza3RvcC5vcmcvcHJvamVjdC9pbnRlbC1nZngvc2VyaWVzLz9vcmRlcmluZz0tbGFzdF91cGRh
-dGVkCj4gPgo+ID4gVGhpcyB0aWVzIHRoZSBwYXRjaGVzICsgY292ZXIgbGV0dGVyIHRvZ2V0aGVy
-LCBhbmQgaXQgZXZlbiAodHJpZXMgdG8gYXQKPiA+IGxlYXN0KSB0cmFjayByZXZpc2lvbnMuIEhl
-cmUncyBhbiBleGFtcGxlIHdoaWNoIGlzIGN1cnJlbnRseSBhdCByZXZpc2lvbgo+ID4gOToKPiA+
-Cj4gPiBodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvc2VyaWVzLzU3MjMyLwo+IAo+
-IE9vb2gsIG5pY2UhIFRoYXQgbG9va3MgYXdlc29tZSEgTG9va3MgbGlrZSB5b3UgaGF2ZSBhIG51
-bWJlciBvZiBwcmVzdWJtaXRzIHRvby4KCldlIGhhdmUgYSBwcmV0dHkgYmlnIGZhcm0gb2YgbWFj
-aGluZXMgdGhhdCBtb3N0bHkganVzdCBjcnVuY2ggdGhyb3VnaApwcmVtZXJnZSBwYXRjaCBzZXJp
-ZXMuIHBvc3RtZXJnZSBpcyBtb3N0bHkganVzdCBmb3Igc3RhdGlzdGljcyAoc28gd2UgY2FuCmZp
-bmQgdGhlIHNwb3JhZGljIGZhaWx1cmVzIGFuZCBiZXR0ZXIgY2hhcmFjdGVyaXplIHRoZW0pLgoK
-PiA+IEJlbG93IHRoZSBwYXRjaCBsaXN0IGZvciBlYWNoIHJldmlzaW9uIHdlIGFsc28gaGF2ZSB0
-aGUgdGVzdCByZXN1bHQgbGlzdC4KPiA+IElmIHlvdSBjbGljayBvbiB0aGUgZ3JleSBiYXIgaXQn
-bGwgZXhwYW5kIHdpdGggdGhlIHN1bW1hcnkgZnJvbSBDSSwgdGhlCj4gPiAiU2VlIGZ1bGwgbG9n
-cyIgaXMgbGluayB0byB0aGUgZnVsbCByZXN1bHRzIGZyb20gb3VyIENJLiBUaGlzIGlzIGRyaXZl
-bgo+ID4gd2l0aCBzb21lIFJFU1QgYXBpIGZyb20gb3VyIGplbmtpbnMuCj4gPgo+ID4gUGF0Y2h3
-b3JrIGFsc28gc2VuZHMgb3V0IG1haWxzIGZvciB0aGVzZSByZXN1bHRzLgo+IAo+IE5pY2UhIFRo
-ZXJlIGFyZSBvYnZpb3VzbHkgYSBsb3Qgb2Ygb3RoZXIgYm90cyBvbiB2YXJpb3VzIGtlcm5lbAo+
-IG1haWxpbmcgbGlzdHMuIERvIHlvdSB0aGluayBwZW9wbGUgd291bGQgb2JqZWN0IHRvIHNlbmRp
-bmcgcHJlc3VibWl0Cj4gcmVzdWx0cyB0byB0aGUgbWFpbGluZyBsaXN0cyBieSBkZWZhdWx0Pwo+
-IAo+ID4gU291cmNlIGlzIG9uIGdpdGxhYjogaHR0cHM6Ly9naXRsYWIuZnJlZWRlc2t0b3Aub3Jn
-L3BhdGNod29yay1mZG8KPiAKPiBFcnIsIGxvb2tzIGxpa2UgeW91IGZvcmtlZCBmcm9tIHRoZSBv
-emxhYidzIHJlcG8gYSBnb29kIHdoaWxlIGFnby4KClllYWggc2VlIGFib3ZlLCBpdCdzIGEgYml0
-IGEgY29tcGxpY2F0ZWQgc3RvcnkuIEkgdGhpbmsgdGhlcmUncyBhIHRvdGFsIG9mCjMgcGF0Y2h3
-b3JrcyBub3cgOi0vCgo+IFN0aWxsLCB0aGlzIGFsbCBsb29rcyBncmVhdCEKCkNoZWVycywgRGFu
-aWVsCgo+IAo+ID4gPiA+ID4gSSBhbSBub3QgbWFycmllZCB0byBlaXRoZXIgYXBwcm9hY2gsIGJ1
-dCBJIHRoaW5rIGJldHdlZW4gdGhlIHR3byBvZgo+ID4gPiA+ID4gdGhlbSwgbW9zdCBvZiB0aGUg
-aW5pdGlhbCBsZWd3b3JrIGhhcyBiZWVuIGRvbmUgdG8gbWFrZSBwcmVzdWJtaXQgb24KPiA+ID4g
-PiA+IExLTUwgYSByZWFsaXR5Lgo+ID4gPiA+Cj4gPiA+ID4gV2UgZG8gaGF2ZSBwcmVzdWJtaXQg
-Q0kgd29ya2luZyBhbHJlYWR5IHdpdGggb3VyIGZyZWVkZXNrdG9wLm9yZwo+ID4gPiA+IHBhdGNo
-d29yay4gVGhlIG1pc3NpbmcgZ2x1ZSBpcyBqdXN0IHR5aW5nIHRoYXQgaW50byBnaXRsYWIgQ0kg
-c29tZWhvdwo+ID4gPiA+IChzaW5jZSB3ZSB3YW50IHRvIHVuaWZ5IGJ1aWxkIHRlc3RpbmcgbW9y
-ZSBhbmQgbWFrZSBpdCBlYXNpZXIgZm9yCj4gPiA+ID4gY29udHJpYnV0b3JzIHRvIGFkanVzdCB0
-aGluZ3MpLgo+ID4gPgo+ID4gPiBJIGNoZWNrZWQgb3V0IGEgY291cGxlIG9mIHlvdXIgcHJvamVj
-dHMgb24geW91ciBwYXRjaHdvcmsgaW5zdGFuY2U6IEFNRAo+ID4gPiBYLk9yZyBkcml2ZXJzLCBE
-UkkgZGV2ZWwsIGFuZCBXYXlsYW5kLiBJIHNhdyB0aGUgdGFiIHlvdSBhZGRlZCBmb3IKPiA+ID4g
-dGVzdHMsIGJ1dCBub25lIG9mIHRoZW0gYWN0dWFsbHkgaGFkIGFueSB0ZXN0IHJlc3VsdHMuIENh
-biB5b3UgcG9pbnQgbWUKPiA+ID4gYXQgb25lIHRoYXQgZG9lcz8KPiA+Cj4gPiBBdG0gd2UgdXNl
-IHRoZSBDSSBzdHVmZiBvbmx5IG9uIGludGVsLWdmeCwgd2l0aCB0aGUgb3VyIGdwdSBDSSBmYXJt
-LCBzZWUKPiA+IGxpbmtzIGFib3ZlLgo+ID4KPiA+IENoZWVycywgRGFuaWVsCj4gPgo+ID4gPgo+
-ID4gPiBDaGVlcnMhCj4gPiA+Cj4gPiA+IFs1XSBodHRwczovL3BhdGNod29yay5mcmVlZGVza3Rv
-cC5vcmcvCj4gPiA+Cj4gPiA+ID4gPiA+IHN1cGVyIGJhc2ljIHN0dWZmLgo+ID4gPiA+ID4KPiA+
-ID4gPiA+IEkgYW0gcmVhbGx5IGV4Y2l0ZWQgdG8gaGVhciBiYWNrIG9uIHdoYXQgeW91IHRoaW5r
-IQo+ID4gPiA+ID4KPiA+ID4gPiA+IENoZWVycyEKPiA+ID4gPiA+Cj4gPiA+ID4gPiBbMV0gaHR0
-cHM6Ly9rdW5pdC1yZXZpZXcuZ29vZ2xlc291cmNlLmNvbS9jL2xpbnV4LysvMTUwOS8xMCNtZXNz
-YWdlLTdiZmE0MGVmYjEzMmUxNWM4Mzg4NzU1YzI3MzgzNzU1OTkxMTQyNWMKPiA+ID4gPiA+IFsy
-XSBodHRwczovL2t1bml0LXJldmlldy5nb29nbGVzb3VyY2UuY29tL2MvbGludXgvKy8xNTA5LzEw
-I21lc3NhZ2UtYTY3ODQ0OTZlYWZmZjQ0MmFjOThmYjA2OGJmMWEwZjM2ZWU3MzUwOQo+ID4gPiA+
-ID4gWzNdIGh0dHBzOi8vZGV2ZWxvcGVyLmlibS5jb20vb3Blbi9wcm9qZWN0cy9zbm93cGF0Y2gv
-Cj4gPiA+ID4gPiBbNF0gaHR0cHM6Ly9rdW5pdC5nb29nbGVzb3VyY2UuY29tL3Byb3ctbGttbC8K
-PiA+ID4gPiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Cj4gPiA+ID4gPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gPiA+ID4gPiBkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCj4gPiA+ID4gPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo+IAo+IENoZWVycyEKCi0tIApEYW5pZWwgVmV0
-dGVyClNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5mZnds
-bC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Thu, May 16, 2019 at 11:47:04AM +0000, Kuldeep Singh wrote:
+> QSPI support is added for kernel version greater than 5.0 and supports
+> quad mode defined by
+> TX-WIDTH = <4>, RX-WIDTH = <4>
+> 
+> RDB/QDS has one 64MB flash from SPANSION(s25fs512s)
+> 
+> Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
+> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+> ---
+> Dependency on https://patchwork.ozlabs.org/patch/1100471/
+> Dependency on https://patchwork.ozlabs.org/patch/1100472/
+> 
+>  .../arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts | 15 +++++++++++++++
+>  .../arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts | 15 +++++++++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts | 15 +++++++++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts | 15 +++++++++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi    | 15 +++++++++++++++
+>  5 files changed, 75 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+> index f90c040fd5e8..8826278b37bf 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+> @@ -61,6 +61,21 @@
+>  	status = "okay";
+>  };
+>  
+> +&qspi {
+
+Please sort these labeling nodes alphabetically.  That said, &qspi
+should go after &i2c0.
+
+> +	status = "okay";
+> +
+> +	qflash0: flash@0 {
+> +		compatible = "spansion,m25p80", "jedec,spi-nor";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		m25p,fast-read;
+> +		spi-max-frequency = <20000000>;
+> +		spi-rx-bus-width = <4>;
+> +		spi-tx-bus-width = <4>;
+> +		reg = <0>;
+> +	};
+> +};
+> +
+>  &i2c0 {
+>  	status = "okay";
+>  
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+> index 8749634c55ee..0246e8c97628 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+> @@ -20,6 +20,21 @@
+>  	status = "okay";
+>  };
+>  
+> +&qspi {
+> +	status = "okay";
+> +
+> +	qflash0: flash@0 {
+> +		compatible = "spansion,m25p80", "jedec,spi-nor";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		m25p,fast-read;
+> +		spi-max-frequency = <20000000>;
+> +		spi-rx-bus-width = <4>;
+> +		spi-tx-bus-width = <4>;
+> +		reg = <0>;
+> +	};
+> +};
+> +
+>  &i2c0 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+> index 2fb1cb1f7d8f..c304fa20c1c9 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+> @@ -90,6 +90,21 @@
+>  	};
+>  };
+>  
+> +&qspi {
+> +	status = "okay";
+> +
+> +	qflash0: flash@0 {
+> +		compatible = "spansion,m25p80", "jedec,spi-nor";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		m25p,fast-read;
+> +		spi-max-frequency = <20000000>;
+> +		spi-rx-bus-width = <4>;
+> +		spi-tx-bus-width = <4>;
+> +		reg = <0>;
+> +	};
+> +};
+> +
+>  &duart0 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+> index 5edb1e137a52..6017e9cfe40a 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+> @@ -38,3 +38,18 @@
+>  &sata {
+>  	status = "okay";
+>  };
+> +
+> +&qspi {
+> +	status = "okay";
+> +
+> +	qflash0: flash@0  {
+> +		compatible = "spansion,m25p80", "jedec,spi-nor";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		m25p,fast-read;
+> +		spi-max-frequency = <20000000>;
+> +		spi-rx-bus-width = <4>;
+> +		spi-tx-bus-width = <4>;
+> +		reg = <0>;
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> index ec6257a5b251..268268c6a149 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> @@ -350,6 +350,21 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		qspi: spi@1550000 {
+
+Please sort node with unit-address in that address.  That said, it
+should go before esdhc@1560000.
+
+> +			compatible = "fsl,ls1021a-qspi", "fsl,ls1012a-qspi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x0 0x1550000 0x0 0x10000>,
+> +				<0x0 0x40000000 0x0 0x10000000>;
+> +			reg-names = "QuadSPI", "QuadSPI-memory";
+> +			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
+> +			clock-names = "qspi_en", "qspi";
+> +			clocks = <&clockgen 4 1>, <&clockgen 4 1>;
+> +			big-endian;
+> +			fsl,qspi-has-second-chip;
+
+Undocumented property?
+
+Shawn
+
+> +			status = "disabled";
+> +		};
+> +
+>  		duart0: serial@21c0500 {
+>  			compatible = "fsl,ns16550", "ns16550a";
+>  			reg = <0x00 0x21c0500 0x0 0x100>;
+> -- 
+> 2.17.1
+> 
