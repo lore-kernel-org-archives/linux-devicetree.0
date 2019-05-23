@@ -1,106 +1,101 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
-Date: Thu, 23 May 2019 10:30:50 -0700
-Message-ID: <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
-References: <20190523060437.11059-1-peng.fan@nxp.com>
+From: "Lei Wang (BSP)" <Wang.Lei@microsoft.com>
+Subject: RE: [PATCH v3 1/2] dt-bindings: edac: arm-dmc520.txt
+Date: Thu, 23 May 2019 17:51:49 +0000
+Message-ID: <BYAPR21MB1319BC4D079B918AB038A4D590010@BYAPR21MB1319.namprd21.prod.outlook.com>
+References: <CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
+ <20190523165841.GD7523@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190523060437.11059-1-peng.fan@nxp.com>
+In-Reply-To: <20190523165841.GD7523@lakrids.cambridge.arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Mark Rutland <mark.rutland@arm.com>, Lei Wang <leiwang_git@outlook.com>
+Cc: "bp@alien8.de" <bp@alien8.de>, "james.morse@arm.com" <james.morse@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Rui Zhao <ruizhao@microsoft.com>, Hang Li <hangl@microsoft.com>, Sasha Levin <Alexander.Levin@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+(+Rui/Hang/Sasha)
 
-On 5/22/19 10:50 PM, Peng Fan wrote:
-> This is a modified version from Andre Przywara's patch series
-> https://lore.kernel.org/patchwork/cover/812997/.
-> [1] is a draft implementation of i.MX8MM SCMI ATF implementation that
-> use smc as mailbox, power/clk is included, but only part of clk has been
-> implemented to work with hardware, power domain only supports get name
-> for now.
-> 
-> The traditional Linux mailbox mechanism uses some kind of dedicated hardware
-> IP to signal a condition to some other processing unit, typically a dedicated
-> management processor.
-> This mailbox feature is used for instance by the SCMI protocol to signal a
-> request for some action to be taken by the management processor.
-> However some SoCs does not have a dedicated management core to provide
-> those services. In order to service TEE and to avoid linux shutdown
-> power and clock that used by TEE, need let firmware to handle power
-> and clock, the firmware here is ARM Trusted Firmware that could also
-> run SCMI service.
-> 
-> The existing SCMI implementation uses a rather flexible shared memory
-> region to communicate commands and their parameters, it still requires a
-> mailbox to actually trigger the action.
+Hi Mark, please see inline with "[Lei]" tag. Thanks! -Lei
 
-We have had something similar done internally with a couple of minor
-differences:
+-----Original Message-----
+From: Mark Rutland <mark.rutland@arm.com>=20
+Sent: Thursday, May 23, 2019 9:59 AM
+To: Lei Wang <leiwang_git@outlook.com>
+Cc: bp@alien8.de; james.morse@arm.com; robh+dt@kernel.org; devicetree@vger.=
+kernel.org; linux-kernel@vger.kernel.org; linux-edac@vger.kernel.org; Lei W=
+ang (BSP) <Wang.Lei@microsoft.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: edac: arm-dmc520.txt
 
-- a SGI is used to send SCMI notifications/delayed replies to support
-asynchronism (patches are in the works to actually add that to the Linux
-SCMI framework). There is no good support for SGI in the kernel right
-now so we hacked up something from the existing SMP code and adding the
-ability to register our own IPI handlers (SHAME!). Using a PPI should
-work and should allow for using request_irq() AFAICT.
+On Thu, May 16, 2019 at 02:35:47AM +0000, Lei Wang wrote:
+> From: Lei Wang <leiwang_git@outlook.com>
+>=20
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+>=20
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> ---
+>  .../devicetree/bindings/edac/arm-dmc520.txt        | 26 ++++++++++++++++=
+++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Docu=
+mentation/devicetree/bindings/edac/arm-dmc520.txt
+> new file mode 100644
+> index 0000000..71e7aa3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> @@ -0,0 +1,26 @@
+> +* ARM DMC-520 EDAC node
+> +
+> +Required properties:
+> +- compatible		: "brcm,dmc-520", "arm,dmc-520".
+> +- reg			: Address range of the DMC-520 registers.
+> +- interrupts		: DMC-520 interrupt numbers. The example below specifies
+> +			  two interrupt lines for dram_ecc_errc_int and
+> +			  dram_ecc_errd_int.
+> +- interrupt-config	: This is an array of interrupt masks. For each of th=
+e
+> +			  above interrupt line, add one interrupt mask element to
+> +			  it. That is, there is a 1:1 mapping from each interrupt
+> +			  line to an interrupt mask. An interrupt mask can represent
+> +			  multiple interrupts being enabled. Refer to interrupt_control
+> +			  register in DMC-520 TRM for interrupt mapping. In the example
+> +			  below, the interrupt configuration enables dram_ecc_errc_int
+> +			  and dram_ecc_errd_int. And each interrupt is connected to
+> +			  a separate interrupt line.
 
-- the mailbox identifier is indicated as part of the SMC call such that
-we can have multiple SCMI mailboxes serving both standard protocols and
-non-standard (in the 0x80 and above) range, also they may have different
-throughput (in hindsight, these could simply be different channels)
+Generally we use interrupt-names to distinguish interrupts.
 
-Your patch series looks both good and useful to me, I would just put a
-provision in the binding to support an optional interrupt such that
-asynchronism gets reasonably easy to plug in when it is available (and
-desirable).
+Do you really have arbitary subsets of lines muxed together?
 
-> 
-> This patch series provides a Linux mailbox compatible service which uses
-> smc calls to invoke firmware code, for instance taking care of SCMI requests.
-> The actual requests are still communicated using the standard SCMI way of
-> shared memory regions, but a dedicated mailbox hardware IP can be replaced via
-> this new driver.
-> 
-> This simple driver uses the architected SMC calling convention to trigger
-> firmware services, also allows for using "HVC" calls to call into hypervisors
-> or firmware layers running in the EL2 exception level.
-> 
-> Patch 1 contains the device tree binding documentation, patch 2 introduces
-> the actual mailbox driver.
-> 
-> Please note that this driver just provides a generic mailbox mechanism,
-> though this is synchronous and one-way only (triggered by the OS only,
-> without providing an asynchronous way of triggering request from the
-> firmware).
-> And while providing SCMI services was the reason for this exercise, this
-> driver is in no way bound to this use case, but can be used generically
-> where the OS wants to signal a mailbox condition to firmware or a
-> hypervisor.
-> Also the driver is in no way meant to replace any existing firmware
-> interface, but actually to complement existing interfaces.
-> 
-> [1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
-> 
-> Peng Fan (2):
->   DT: mailbox: add binding doc for the ARM SMC mailbox
->   mailbox: introduce ARM SMC based mailbox
-> 
->  .../devicetree/bindings/mailbox/arm-smc.txt        |  96 +++++++++++++
->  drivers/mailbox/Kconfig                            |   7 +
->  drivers/mailbox/Makefile                           |   2 +
->  drivers/mailbox/arm-smc-mailbox.c                  | 154 +++++++++++++++++++++
->  include/linux/mailbox/arm-smc-mailbox.h            |  10 ++
->  5 files changed, 269 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
->  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
->  create mode 100644 include/linux/mailbox/arm-smc-mailbox.h
-> 
+-----------------------------------------------
+[Lei] Yes it is possible to mux multiple interrupt sources into one interru=
+pt line for dmc520. For example, in this particular brcm implementation,=20
 
+Line 841: source dram_ecc_errc_int
+Line 843: source dram_ecc_errd_int
+Line 839: source dram_ecc_errc_int and dram_ecc_errd_int
 
--- 
-Florian
+There are two possibilities for implementing ecc counts for ce/ue. And we c=
+hose to use the single source line. But it's possible to implement using th=
+e combined-source line too. This dt binding can support both by modifying t=
+he properties.
+-------------------------------------------------
+
+Thanks,
+Mark.
+
+> +
+> +Example:
+> +
+> +dmc0: dmc@200000 {
+> +	compatible =3D "brcm,dmc-520", "arm,dmc-520";
+> +	reg =3D <0x200000 0x80000>;
+> +	interrupts =3D <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
+> +	interrupt-config =3D <0x4>, <0x8>;
+> +};
+> --=20
+> 2.7.4
+>=20
