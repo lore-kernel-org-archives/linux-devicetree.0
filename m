@@ -1,94 +1,69 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v7 2/4] soc: qcom: Add AOSS QMP driver
-Date: Thu, 23 May 2019 09:38:13 -0700
-Message-ID: <CAD=FV=VVxKSp6e=j8YM8JBrhsF+T=0=8xDjd_817hphOMWHVFA@mail.gmail.com>
-References: <20190501043734.26706-1-bjorn.andersson@linaro.org> <20190501043734.26706-3-bjorn.andersson@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: edac: arm-dmc520.txt
+Date: Thu, 23 May 2019 17:58:41 +0100
+Message-ID: <20190523165841.GD7523@lakrids.cambridge.arm.com>
+References: <CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190501043734.26706-3-bjorn.andersson@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <swboyd@chromium.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Lei Wang <leiwang_git@outlook.com>
+Cc: "bp@alien8.de" <bp@alien8.de>, "james.morse@arm.com" <james.morse@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "lewan@microsoft.com" <lewan@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, Apr 30, 2019 at 9:38 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> +static int qmp_qdss_clk_prepare(struct clk_hw *hw)
-> +{
-> +       struct qmp *qmp = container_of(hw, struct qmp, qdss_clk);
-> +       char buf[QMP_MSG_LEN] = "{class: clock, res: qdss, val: 1}";
-
-nit: "static const" the buf?  No need to copy it to the stack each
-time.  In qmp_qdss_clk_unprepare() too.
-
-...your string is also now fixed at 34 bytes big (including the '\0').
-Do we still need to send exactly 96 bytes, or can we dumb this down to
-36?  We'll get a compile error if we overflow, right?  If this truly
-needs to be exactly 96 bytes maybe qmp_send()'s error checks should
-check for things being exactly 96 bytes instead of checking for > and
-% 4.
-
-
-> +static int qmp_qdss_clk_add(struct qmp *qmp)
-> +{
-> +       struct clk_init_data qdss_init = {
-> +               .ops = &qmp_qdss_clk_ops,
-> +               .name = "qdss",
-> +       };
-
-Can't qdss_init be "static const"?  That had the advantage of not
-needing to construct it on the stack and also of it having a longer
-lifetime.  It looks like clk_register() stores the "hw" pointer in its
-structure and the "hw" structure will have a pointer here.  While I
-can believe that it never looks at it again, it's nice if that pointer
-doesn't point somewhere on an old stack.
-
-I suppose we could go the other way and try to mark more stuff in this
-module as __init and __initdata, but even then at least the pointer
-won't be onto a stack.  ;-)
-
-
-> +       int ret;
+On Thu, May 16, 2019 at 02:35:47AM +0000, Lei Wang wrote:
+> From: Lei Wang <leiwang_git@outlook.com>
+> 
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+> 
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> ---
+>  .../devicetree/bindings/edac/arm-dmc520.txt        | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> new file mode 100644
+> index 0000000..71e7aa3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> @@ -0,0 +1,26 @@
+> +* ARM DMC-520 EDAC node
 > +
-> +       qmp->qdss_clk.init = &qdss_init;
-> +       ret = clk_hw_register(qmp->dev, &qmp->qdss_clk);
-> +       if (ret < 0) {
-> +               dev_err(qmp->dev, "failed to register qdss clock\n");
-> +               return ret;
-> +       }
+> +Required properties:
+> +- compatible		: "brcm,dmc-520", "arm,dmc-520".
+> +- reg			: Address range of the DMC-520 registers.
+> +- interrupts		: DMC-520 interrupt numbers. The example below specifies
+> +			  two interrupt lines for dram_ecc_errc_int and
+> +			  dram_ecc_errd_int.
+> +- interrupt-config	: This is an array of interrupt masks. For each of the
+> +			  above interrupt line, add one interrupt mask element to
+> +			  it. That is, there is a 1:1 mapping from each interrupt
+> +			  line to an interrupt mask. An interrupt mask can represent
+> +			  multiple interrupts being enabled. Refer to interrupt_control
+> +			  register in DMC-520 TRM for interrupt mapping. In the example
+> +			  below, the interrupt configuration enables dram_ecc_errc_int
+> +			  and dram_ecc_errd_int. And each interrupt is connected to
+> +			  a separate interrupt line.
+
+Generally we use interrupt-names to distinguish interrupts.
+
+Do you really have arbitary subsets of lines muxed together?
+
+Thanks,
+Mark.
+
 > +
-> +       return of_clk_add_hw_provider(qmp->dev->of_node, of_clk_hw_simple_get,
-> +                                     &qmp->qdss_clk);
-
-devm_clk_hw_register() and devm_of_clk_add_hw_provider()?  If you're
-worried about ordering you could always throw in
-devm_add_action_or_reset() to handle the qmp_pd_remove(), qmp_close()
-and mbox_free_channel().
-
-...with that you could fully get rid of qmp_remove() and also your
-setting of drvdata.
-
-
-> +static void qmp_pd_remove(struct qmp *qmp)
-> +{
-> +       struct genpd_onecell_data *data = &qmp->pd_data;
-> +       struct device *dev = qmp->dev;
-> +       int i;
+> +Example:
 > +
-> +       of_genpd_del_provider(dev->of_node);
-> +
-> +       for (i = 0; i < data->num_domains; i++)
-> +               pm_genpd_remove(data->domains[i]);
-
-Still feels like the above loop would be better as:
-  for (i = data->num_domains - 1; i >= 0; i--)
-
-
-(BTW: any way you could add me to the CC list for future patches so I
-notice them earlier?)
-
--Doug
+> +dmc0: dmc@200000 {
+> +	compatible = "brcm,dmc-520", "arm,dmc-520";
+> +	reg = <0x200000 0x80000>;
+> +	interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
+> +	interrupt-config = <0x4>, <0x8>;
+> +};
+> -- 
+> 2.7.4
+> 
