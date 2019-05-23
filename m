@@ -1,78 +1,183 @@
-From: masonccyang@mxic.com.tw
-Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
-Date: Thu, 23 May 2019 16:58:02 +0800
-Message-ID: <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190512151820.4f2dd9da@xps13> <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw> <20190520142333.390091d5@xps13>
+From: Schrempf Frieder <frieder.schrempf@kontron.de>
+Subject: Re: [PATCH] arm64: dts: ls1012a: Add QSPI support for ls1012a
+Date: Thu, 23 May 2019 09:01:00 +0000
+Message-ID: <d3605699-24ea-a071-93da-1c04c7e40f1b@kontron.de>
+References: <20190516114807.30817-1-kuldeep.singh@nxp.com>
+ <20190523084340.GM9261@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520142333.390091d5@xps13>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190523084340.GM9261@dragon>
+Content-Language: en-US
+Content-ID: <A79DD735F1818C4ABCA6F0E3CB9F53EC@snt-world.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, Ashish Kumar <ashish.kumar@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Miquel,
-
-> > 
-> > > > +
-> > > > +static void mxic_nand_select_chip(struct nand_chip *chip, int 
-chipnr) 
-> > > 
-> > > _select_target() is preferred now 
-> > 
-> > Do you mean I implement mxic_nand_select_target() to control #CS ?
-> > 
-> > If so, I need to call mxic_nand_select_target( ) to control #CS ON
-> > and then #CS OFF in _exec_op() due to nand_select_target()<in 
-nand_base,c>
-> > is still calling chip->legacy.select_chip ?
+On 23.05.19 10:43, Shawn Guo wrote:
+> On Thu, May 16, 2019 at 11:47:04AM +0000, Kuldeep Singh wrote:
+>> QSPI support is added for kernel version greater than 5.0 and supports
+>> quad mode defined by
+>> TX-WIDTH = <4>, RX-WIDTH = <4>
+>>
+>> RDB/QDS has one 64MB flash from SPANSION(s25fs512s)
+>>
+>> Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
+>> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+>> ---
+>> Dependency on https://patchwork.ozlabs.org/patch/1100471/
+>> Dependency on https://patchwork.ozlabs.org/patch/1100472/
+>>
+>>   .../arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts | 15 +++++++++++++++
+>>   .../arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts | 15 +++++++++++++++
+>>   arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts | 15 +++++++++++++++
+>>   arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts | 15 +++++++++++++++
+>>   arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi    | 15 +++++++++++++++
+>>   5 files changed, 75 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+>> index f90c040fd5e8..8826278b37bf 100644
+>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+>> @@ -61,6 +61,21 @@
+>>   	status = "okay";
+>>   };
+>>   
+>> +&qspi {
 > 
-> You must forget about the ->select_chip() callback. Now it should be
-> handled directly from the controller driver. Please have a look at the
-> commit pointed against the marvell_nand.c driver.
+> Please sort these labeling nodes alphabetically.  That said, &qspi
+> should go after &i2c0.
+> 
+>> +	status = "okay";
+>> +
+>> +	qflash0: flash@0 {
+>> +		compatible = "spansion,m25p80", "jedec,spi-nor";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		m25p,fast-read;
+>> +		spi-max-frequency = <20000000>;
+>> +		spi-rx-bus-width = <4>;
+>> +		spi-tx-bus-width = <4>;
+>> +		reg = <0>;
+>> +	};
+>> +};
+>> +
+>>   &i2c0 {
+>>   	status = "okay";
+>>   
+>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+>> index 8749634c55ee..0246e8c97628 100644
+>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+>> @@ -20,6 +20,21 @@
+>>   	status = "okay";
+>>   };
+>>   
+>> +&qspi {
+>> +	status = "okay";
+>> +
+>> +	qflash0: flash@0 {
+>> +		compatible = "spansion,m25p80", "jedec,spi-nor";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		m25p,fast-read;
+>> +		spi-max-frequency = <20000000>;
+>> +		spi-rx-bus-width = <4>;
+>> +		spi-tx-bus-width = <4>;
+>> +		reg = <0>;
+>> +	};
+>> +};
+>> +
+>>   &i2c0 {
+>>   	status = "okay";
+>>   };
+>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+>> index 2fb1cb1f7d8f..c304fa20c1c9 100644
+>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+>> @@ -90,6 +90,21 @@
+>>   	};
+>>   };
+>>   
+>> +&qspi {
+>> +	status = "okay";
+>> +
+>> +	qflash0: flash@0 {
+>> +		compatible = "spansion,m25p80", "jedec,spi-nor";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		m25p,fast-read;
+>> +		spi-max-frequency = <20000000>;
+>> +		spi-rx-bus-width = <4>;
+>> +		spi-tx-bus-width = <4>;
+>> +		reg = <0>;
+>> +	};
+>> +};
+>> +
+>>   &duart0 {
+>>   	status = "okay";
+>>   };
+>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+>> index 5edb1e137a52..6017e9cfe40a 100644
+>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+>> @@ -38,3 +38,18 @@
+>>   &sata {
+>>   	status = "okay";
+>>   };
+>> +
+>> +&qspi {
+>> +	status = "okay";
+>> +
+>> +	qflash0: flash@0  {
+>> +		compatible = "spansion,m25p80", "jedec,spi-nor";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		m25p,fast-read;
+>> +		spi-max-frequency = <20000000>;
+>> +		spi-rx-bus-width = <4>;
+>> +		spi-tx-bus-width = <4>;
+>> +		reg = <0>;
+>> +	};
+>> +};
+>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+>> index ec6257a5b251..268268c6a149 100644
+>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+>> @@ -350,6 +350,21 @@
+>>   			status = "disabled";
+>>   		};
+>>   
+>> +		qspi: spi@1550000 {
+> 
+> Please sort node with unit-address in that address.  That said, it
+> should go before esdhc@1560000.
+> 
+>> +			compatible = "fsl,ls1021a-qspi", "fsl,ls1012a-qspi";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x0 0x1550000 0x0 0x10000>,
+>> +				<0x0 0x40000000 0x0 0x10000000>;
+>> +			reg-names = "QuadSPI", "QuadSPI-memory";
+>> +			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clock-names = "qspi_en", "qspi";
+>> +			clocks = <&clockgen 4 1>, <&clockgen 4 1>;
+>> +			big-endian;
+>> +			fsl,qspi-has-second-chip;
+> 
+> Undocumented property?
 
-I have no Marvell NFC datasheet and have one question.
+Both properties, "fsl,qspi-has-second-chip" and "big-endian" are deprecated.
 
-In marvell_nand.c, there is no xxx_deselect_target() or 
-something like that doing #CS OFF.
-marvell_nfc_select_target() seems always to make one of chip or die
-#CS keep low.
-
-Is it right ?
-
-How to make all #CS keep high for NAND to enter 
-low-power standby mode if driver don't use "legacy.select_chip()" ?
-
-thanks & best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+See: 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=78df30808961cd32f0517c7469886386b0680852
