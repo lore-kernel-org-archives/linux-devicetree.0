@@ -1,11 +1,13 @@
 From: <dongchun.zhu@mediatek.com>
-Subject: [PATCH 0/3] media: suppport ov02a10 sensor driver
-Date: Thu, 23 May 2019 18:22:01 +0800
-Message-ID: <20190523102204.24112-1-dongchun.zhu@mediatek.com>
+Subject: [PATCH 2/3] media: i2c: ov02a10: Add CONFIG_VIDEO_OV02A10
+Date: Thu, 23 May 2019 18:22:03 +0800
+Message-ID: <20190523102204.24112-3-dongchun.zhu@mediatek.com>
+References: <20190523102204.24112-1-dongchun.zhu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190523102204.24112-1-dongchun.zhu@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,28 +23,35 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 
-Hello,
+Add CONFIG_VIDEO_OV02A10 to the Kconfig entry.
 
-This is the OV02A10 sensor driver, which would be used in camera features on CrOS application.
+Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+---
+ drivers/media/i2c/Kconfig | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-The driver is implemented wth V4L2 framework.
-1. Async registered as a V4L2 I2C sub-device.
-2. A media entity that can provide several source pads and sink pads to link with other device like Seninf, ISP one after another
-   to create a default overall camera topology, image frame or meta-data from sensor can flow through particular path to output
-   preview or capture image or 3A info.
-
-Dongchun Zhu (3):
-  media: i2c: ov02a10: Add ov02a10 camera sensor driver
-  media: i2c: ov02a10: Add CONFIG_VIDEO_OV02A10
-  media: dt-bindings: media: i2c: Add bindings for ov02a10
-
- .../devicetree/bindings/media/i2c/ov02a10.txt      |   43 +
- drivers/media/i2c/Kconfig                          |   12 +
- drivers/media/i2c/Makefile                         |    1 +
- drivers/media/i2c/ov02a10.c                        | 1067 ++++++++++++++++++++
- 4 files changed, 1123 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
- create mode 100644 drivers/media/i2c/ov02a10.c
-
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index 7793358..480aa42 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -615,6 +615,18 @@ config VIDEO_IMX355
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called imx355.
+ 
++config VIDEO_OV02A10
++	tristate "OmniVision OV02A10 sensor support"
++	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
++	depends on MEDIA_CAMERA_SUPPORT
++	select V4L2_FWNODE
++	help
++	  This is a Video4Linux2 sensor driver for the OmniVision
++	  OV02A10 camera.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called ov02a10.
++
+ config VIDEO_OV2640
+ 	tristate "OmniVision OV2640 sensor support"
+ 	depends on VIDEO_V4L2 && I2C
 -- 
 2.9.2
