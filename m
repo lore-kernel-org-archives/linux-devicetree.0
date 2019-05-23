@@ -1,44 +1,20 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH 1/5] ASoC: madera: Add DT bindings for
- Cirrus Logic Madera codecs
-Date: Thu, 23 May 2019 17:00:39 +0100
-Message-ID: <20190523160039.GA28362@ediswmail.ad.cirrus.com>
-References: <20190523154347.10442-1-ckeepax@opensource.cirrus.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 0/2] net: macb: Add support for SiFive FU540-C000
+Date: Thu, 23 May 2019 09:28:25 -0700 (PDT)
+Message-ID: <20190523.092825.2184612182055559835.davem@davemloft.net>
+References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20190523154347.10442-1-ckeepax@opensource.cirrus.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: broonie@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, lee.jones@linaro.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: yash.shah@sifive.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, paul.walmsley@sifive.com, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2019 at 04:43:43PM +0100, Charles Keepax wrote:
-> From: Richard Fitzgerald <rf@opensource.cirrus.com>
-> 
-> The Cirrus Logic Madera codecs are a family of related codecs with
-> extensive digital and analogue I/O, digital mixing and routing,
-> signal processing and programmable DSPs.
-> 
-> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
 
-Apologies it seems our email system has had some weird issue and
-most of the patches in this chain seem to have bounced somewhere
-internally.
+Please be consistent in your subsystem prefixes used in your Subject lines.
+You use "net: macb:" then "net/macb:"  Really, plain "macb: " is sufficient.
 
-I will resend once I have had the IT guys have a look.
-
-Thanks,
-Charles
+Thank you.
