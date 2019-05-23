@@ -1,58 +1,65 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [RESEND][PATCH] arm64: dts: lx2160a: Enable usb3-lpm-capable for
- usb3 node
-Date: Thu, 23 May 2019 15:43:01 +0800
-Message-ID: <20190523074300.GH9261@dragon>
-References: <20190515060434.33581-1-ran.wang_1@nxp.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 3/6] drm/bridge: extract some Analogix I2C DP common code
+Date: Thu, 23 May 2019 10:50:35 +0300
+Message-ID: <20190523075035.GA5971@pendragon.ideasonboard.com>
+References: <20190523065013.2719D68B05@newverein.lst.de>
+ <20190523065352.8FD7668B05@newverein.lst.de>
+ <CAGb2v66+1+goJfnY7nWTGN2fupqMUm5o+gkPdUW6nxcwQEDwog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190515060434.33581-1-ran.wang_1@nxp.com>
+In-Reply-To: <CAGb2v66+1+goJfnY7nWTGN2fupqMUm5o+gkPdUW6nxcwQEDwog@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Wang <ran.wang_1@nxp.com>
-Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Torsten Duwe <duwe@lst.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 15, 2019 at 02:04:34PM +0800, Ran Wang wrote:
-> Enable USB3 HW LPM feature for lx2160a and active patch for
-> snps erratum A-010131. It will disable U1/U2 temperary when
-> initiate U3 request.
+On Thu, May 23, 2019 at 03:40:25PM +0800, Chen-Yu Tsai wrote:
+> On Thu, May 23, 2019 at 2:54 PM Torsten Duwe <duwe@lst.de> wrote:
+> >
+> > From: Icenowy Zheng <icenowy@aosc.io>
+> >
+> > Some code can be shared within different DP bridges by Analogix.
+> >
+> > Extract them to a new module.
+> >
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > Signed-off-by: Torsten Duwe <duwe@suse.de>
+> > ---
+> >  drivers/gpu/drm/bridge/analogix/Kconfig            |   4 +
+> >  drivers/gpu/drm/bridge/analogix/Makefile           |   2 +
+> >  drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c | 146 +-----------------
+> >  .../gpu/drm/bridge/analogix/analogix-i2c-dptx.c    | 169 +++++++++++++++++++++
+> >  .../gpu/drm/bridge/analogix/analogix-i2c-dptx.h    |   2 +
+> >  5 files changed, 178 insertions(+), 145 deletions(-)
+> >  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c
+> >
 > 
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> ---
-> Depend on: https://lore.kernel.org/patchwork/patch/870134/
+> ...
+> 
+> >  static int anx78xx_set_hpd(struct anx78xx *anx78xx)
+> > diff --git a/drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c b/drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c
+> > new file mode 100644
+> > index 000000000000..9cb30962032e
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c
+> > @@ -0,0 +1,169 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright(c) 2017 Icenowy Zheng <icenowy@aosc.io>
+> > + *
+> > + * Based on analogix-anx78xx.c, which is:
+> > + *   Copyright(c) 2016, Analogix Semiconductor. All rights reserved.
+> 
+> If this was simple code movement, then the original copyright still applies.
+> A different copyright notice should not be used. I suppose the same applies
+> to the module author.
 
-Is the dependency accepted?
+And likely to patch 2/6 too.
 
-Shawn
+-- 
+Regards,
 
-> 
->  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi |    4 ++++
->  1 files changed, 4 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> index 125a8cc..0073df3 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> @@ -696,6 +696,8 @@
->  			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
->  			dr_mode = "host";
->  			snps,quirk-frame-length-adjustment = <0x20>;
-> +			usb3-lpm-capable;
-> +			snps,dis-u1u2-when-u3-quirk;
->  			snps,dis_rxdet_inp3_quirk;
->  			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
->  			status = "disabled";
-> @@ -707,6 +709,8 @@
->  			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
->  			dr_mode = "host";
->  			snps,quirk-frame-length-adjustment = <0x20>;
-> +			usb3-lpm-capable;
-> +			snps,dis-u1u2-when-u3-quirk;
->  			snps,dis_rxdet_inp3_quirk;
->  			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
->  			status = "disabled";
-> -- 
-> 1.7.1
-> 
+Laurent Pinchart
