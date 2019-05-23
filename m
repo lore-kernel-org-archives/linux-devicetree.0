@@ -1,183 +1,87 @@
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: Re: [PATCH] arm64: dts: ls1012a: Add QSPI support for ls1012a
-Date: Thu, 23 May 2019 09:01:00 +0000
-Message-ID: <d3605699-24ea-a071-93da-1c04c7e40f1b@kontron.de>
-References: <20190516114807.30817-1-kuldeep.singh@nxp.com>
- <20190523084340.GM9261@dragon>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 5/6] dt-bindings: Add ANX6345 DP/eDP transmitter binding
+Date: Thu, 23 May 2019 11:05:40 +0200
+Message-ID: <20190523090540.nhxrjpz3scx6jt23@flea>
+References: <20190523065013.2719D68B05@newverein.lst.de>
+ <20190523065400.BD9EB68B05@newverein.lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190523084340.GM9261@dragon>
-Content-Language: en-US
-Content-ID: <A79DD735F1818C4ABCA6F0E3CB9F53EC@snt-world.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, Ashish Kumar <ashish.kumar@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rseevv2olje4ipja"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190523065400.BD9EB68B05@newverein.lst.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Torsten Duwe <duwe@lst.de>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23.05.19 10:43, Shawn Guo wrote:
-> On Thu, May 16, 2019 at 11:47:04AM +0000, Kuldeep Singh wrote:
->> QSPI support is added for kernel version greater than 5.0 and supports
->> quad mode defined by
->> TX-WIDTH = <4>, RX-WIDTH = <4>
->>
->> RDB/QDS has one 64MB flash from SPANSION(s25fs512s)
->>
->> Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
->> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
->> ---
->> Dependency on https://patchwork.ozlabs.org/patch/1100471/
->> Dependency on https://patchwork.ozlabs.org/patch/1100472/
->>
->>   .../arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts | 15 +++++++++++++++
->>   .../arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts | 15 +++++++++++++++
->>   arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts | 15 +++++++++++++++
->>   arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts | 15 +++++++++++++++
->>   arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi    | 15 +++++++++++++++
->>   5 files changed, 75 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
->> index f90c040fd5e8..8826278b37bf 100644
->> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
->> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
->> @@ -61,6 +61,21 @@
->>   	status = "okay";
->>   };
->>   
->> +&qspi {
-> 
-> Please sort these labeling nodes alphabetically.  That said, &qspi
-> should go after &i2c0.
-> 
->> +	status = "okay";
->> +
->> +	qflash0: flash@0 {
->> +		compatible = "spansion,m25p80", "jedec,spi-nor";
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		m25p,fast-read;
->> +		spi-max-frequency = <20000000>;
->> +		spi-rx-bus-width = <4>;
->> +		spi-tx-bus-width = <4>;
->> +		reg = <0>;
->> +	};
->> +};
->> +
->>   &i2c0 {
->>   	status = "okay";
->>   
->> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
->> index 8749634c55ee..0246e8c97628 100644
->> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
->> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
->> @@ -20,6 +20,21 @@
->>   	status = "okay";
->>   };
->>   
->> +&qspi {
->> +	status = "okay";
->> +
->> +	qflash0: flash@0 {
->> +		compatible = "spansion,m25p80", "jedec,spi-nor";
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		m25p,fast-read;
->> +		spi-max-frequency = <20000000>;
->> +		spi-rx-bus-width = <4>;
->> +		spi-tx-bus-width = <4>;
->> +		reg = <0>;
->> +	};
->> +};
->> +
->>   &i2c0 {
->>   	status = "okay";
->>   };
->> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
->> index 2fb1cb1f7d8f..c304fa20c1c9 100644
->> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
->> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
->> @@ -90,6 +90,21 @@
->>   	};
->>   };
->>   
->> +&qspi {
->> +	status = "okay";
->> +
->> +	qflash0: flash@0 {
->> +		compatible = "spansion,m25p80", "jedec,spi-nor";
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		m25p,fast-read;
->> +		spi-max-frequency = <20000000>;
->> +		spi-rx-bus-width = <4>;
->> +		spi-tx-bus-width = <4>;
->> +		reg = <0>;
->> +	};
->> +};
->> +
->>   &duart0 {
->>   	status = "okay";
->>   };
->> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
->> index 5edb1e137a52..6017e9cfe40a 100644
->> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
->> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
->> @@ -38,3 +38,18 @@
->>   &sata {
->>   	status = "okay";
->>   };
->> +
->> +&qspi {
->> +	status = "okay";
->> +
->> +	qflash0: flash@0  {
->> +		compatible = "spansion,m25p80", "jedec,spi-nor";
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		m25p,fast-read;
->> +		spi-max-frequency = <20000000>;
->> +		spi-rx-bus-width = <4>;
->> +		spi-tx-bus-width = <4>;
->> +		reg = <0>;
->> +	};
->> +};
->> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
->> index ec6257a5b251..268268c6a149 100644
->> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
->> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
->> @@ -350,6 +350,21 @@
->>   			status = "disabled";
->>   		};
->>   
->> +		qspi: spi@1550000 {
-> 
-> Please sort node with unit-address in that address.  That said, it
-> should go before esdhc@1560000.
-> 
->> +			compatible = "fsl,ls1021a-qspi", "fsl,ls1012a-qspi";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <0x0 0x1550000 0x0 0x10000>,
->> +				<0x0 0x40000000 0x0 0x10000000>;
->> +			reg-names = "QuadSPI", "QuadSPI-memory";
->> +			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
->> +			clock-names = "qspi_en", "qspi";
->> +			clocks = <&clockgen 4 1>, <&clockgen 4 1>;
->> +			big-endian;
->> +			fsl,qspi-has-second-chip;
-> 
-> Undocumented property?
 
-Both properties, "fsl,qspi-has-second-chip" and "big-endian" are deprecated.
+--rseevv2olje4ipja
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-See: 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=78df30808961cd32f0517c7469886386b0680852
+On Thu, May 23, 2019 at 08:54:00AM +0200, Torsten Duwe wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
+>
+> The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
+> for portable devices.
+>
+> Add a binding document for it.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Torsten Duwe <duwe@suse.de>
+> ---
+>  .../bindings/display/bridge/anx6345.txt       | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.txt b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> new file mode 100644
+> index 000000000000..e79a11348d11
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> @@ -0,0 +1,56 @@
+> +Analogix ANX6345 eDP Transmitter
+> +--------------------------------
+> +
+> +The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
+> +portable devices.
+> +
+> +Required properties:
+> +
+> + - compatible		: "analogix,anx6345"
+> + - reg			: I2C address of the device
+> + - reset-gpios		: Which GPIO to use for reset
+> + - dvdd12-supply	: Regulator for 1.2V digital core power.
+> + - dvdd25-supply	: Regulator for 2.5V digital core power.
+> +
+> +Optional properties:
+> +
+> + - Video ports for RGB input and eDP output using the DT bindings
+> +   defined in [1]
+
+The output node can be optional, but the input one is probably going
+to be needed all the time, since otherwise you won't be able to fill
+the output port of the upstream device in the graph.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--rseevv2olje4ipja
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOZiZAAKCRDj7w1vZxhR
+xVuoAQD8Ba3TZQabw5gulT70AFWp+5Sbt6VGImJ5sGI0rt0q8gD+JlFZu4467xk+
+FfHXnIhv1o34YAkciYHqAXsdLkLl5A4=
+=PktN
+-----END PGP SIGNATURE-----
+
+--rseevv2olje4ipja--
