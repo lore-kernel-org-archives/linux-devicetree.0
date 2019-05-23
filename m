@@ -1,92 +1,69 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 2/2] dt-bindings: clock: imx-lpcg: add support to parse
- clocks from device tree
-Date: Thu, 23 May 2019 05:35:30 +0000
-Message-ID: <AM0PR04MB4211D5D802D1F216F73360E580010@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1556645270-20648-1-git-send-email-aisheng.dong@nxp.com>
- <1556645270-20648-3-git-send-email-aisheng.dong@nxp.com>
- <AM0PR04MB64342D68FBE19FFE3A5BC618EE060@AM0PR04MB6434.eurprd04.prod.outlook.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+Date: Thu, 23 May 2019 05:50:53 +0000
+Message-ID: <20190523060437.11059-1-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB64342D68FBE19FFE3A5BC618EE060@AM0PR04MB6434.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, "sboyd@kernel.org" <sboyd@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Peng Fan <peng.fan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-> From: Leonard Crestez
-> Sent: Monday, May 20, 2019 7:45 PM
-> 
-> On 30.04.2019 20:35, Aisheng Dong wrote:
-> > MX8QM and MX8QXP LPCG Clocks are mostly the same except they may
-> > reside in different subsystems across CPUs and also vary a bit on the
-> availability.
-> >
-> > Same as SCU clock, we want to move the clock definition into device
-> > tree which can fully decouple the dependency of Clock ID definition
-> > from device tree and make us be able to write a fully generic lpcg clock
-> driver.
-> >
-> > And we can also use the existence of clock nodes in device tree to
-> > address the device and clock availability differences across different SoCs.
-> >
-> > diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
-> > b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
-> >
-> >   Required properties:
-> > +- compatible:		Should be one of:
-> > +			  "fsl,imx8qxp-lpcg"
-> > +			  "fsl,imx8qm-lpcg" followed by "fsl,imx8qxp-lpcg".
-> > +- reg:			Address and length of the register set.
-> > +- #clock-cells:		Should be 1. One LPCG supports multiple clocks.
-> > +- clocks:		Input parent clocks phandle array for each clock.
-> > +- bit-offset:		An integer array indicating the bit offset for each clock.
-> > +- hw-autogate:		Boolean array indicating whether supports HW
-> autogate for
-> > +			each clock.
-> > +- clock-output-names:	Shall be the corresponding names of the outputs.
-> > +			NOTE this property must be specified in the same order
-> > +			as the clock bit-offset and hw-autogate property.
-> 
-> Splitting the LPCG areas is good but describing "bit-offset" and similar inside
-> devicetree seems excessively generic.
-> 
-> Perhaps we could have many smaller imx8qxp-lpcg-sdhc, imx8qxp-lpcg-enet
-> etc where the actual clks inside each node are still defined in driver code.
-> 
-
-If that way, we would have too many more compatible strings per clocks
-and we have to add more for new SoCs which I'd like to avoid.
-
-> >   usdhc1: mmc@5b010000 {
-> > @@ -44,8 +66,8 @@ usdhc1: mmc@5b010000 {
-> >   	interrupt-parent = <&gic>;
-> >   	interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
-> >   	reg = <0x5b010000 0x10000>;
-> > -	clocks = <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_IPG_CLK>,
-> > -		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_PER_CLK>,
-> > -		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_HCLK>;
-> > +	clocks = <&sdhc0_lpcg 1>,
-> > +		 <&sdhc0_lpcg 0>,
-> > +		 <&sdhc0_lpcg 2>;
-> 
-> This is less readable, can't we keep symbolic constants?
-
-I'm scared to define more macros for device clocks.
-It's usually a one time job and could be referenced easily by looking into
-the definition of sdhc0_lpcg in DT.
-So less readable may not be a real problem.
-
-Regards
-Dong Aisheng
+VGhpcyBpcyBhIG1vZGlmaWVkIHZlcnNpb24gZnJvbSBBbmRyZSBQcnp5d2FyYSdzIHBhdGNoIHNl
+cmllcwpodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvY292ZXIvODEyOTk3Ly4KWzFd
+IGlzIGEgZHJhZnQgaW1wbGVtZW50YXRpb24gb2YgaS5NWDhNTSBTQ01JIEFURiBpbXBsZW1lbnRh
+dGlvbiB0aGF0CnVzZSBzbWMgYXMgbWFpbGJveCwgcG93ZXIvY2xrIGlzIGluY2x1ZGVkLCBidXQg
+b25seSBwYXJ0IG9mIGNsayBoYXMgYmVlbgppbXBsZW1lbnRlZCB0byB3b3JrIHdpdGggaGFyZHdh
+cmUsIHBvd2VyIGRvbWFpbiBvbmx5IHN1cHBvcnRzIGdldCBuYW1lCmZvciBub3cuCgpUaGUgdHJh
+ZGl0aW9uYWwgTGludXggbWFpbGJveCBtZWNoYW5pc20gdXNlcyBzb21lIGtpbmQgb2YgZGVkaWNh
+dGVkIGhhcmR3YXJlCklQIHRvIHNpZ25hbCBhIGNvbmRpdGlvbiB0byBzb21lIG90aGVyIHByb2Nl
+c3NpbmcgdW5pdCwgdHlwaWNhbGx5IGEgZGVkaWNhdGVkCm1hbmFnZW1lbnQgcHJvY2Vzc29yLgpU
+aGlzIG1haWxib3ggZmVhdHVyZSBpcyB1c2VkIGZvciBpbnN0YW5jZSBieSB0aGUgU0NNSSBwcm90
+b2NvbCB0byBzaWduYWwgYQpyZXF1ZXN0IGZvciBzb21lIGFjdGlvbiB0byBiZSB0YWtlbiBieSB0
+aGUgbWFuYWdlbWVudCBwcm9jZXNzb3IuCkhvd2V2ZXIgc29tZSBTb0NzIGRvZXMgbm90IGhhdmUg
+YSBkZWRpY2F0ZWQgbWFuYWdlbWVudCBjb3JlIHRvIHByb3ZpZGUKdGhvc2Ugc2VydmljZXMuIElu
+IG9yZGVyIHRvIHNlcnZpY2UgVEVFIGFuZCB0byBhdm9pZCBsaW51eCBzaHV0ZG93bgpwb3dlciBh
+bmQgY2xvY2sgdGhhdCB1c2VkIGJ5IFRFRSwgbmVlZCBsZXQgZmlybXdhcmUgdG8gaGFuZGxlIHBv
+d2VyCmFuZCBjbG9jaywgdGhlIGZpcm13YXJlIGhlcmUgaXMgQVJNIFRydXN0ZWQgRmlybXdhcmUg
+dGhhdCBjb3VsZCBhbHNvCnJ1biBTQ01JIHNlcnZpY2UuCgpUaGUgZXhpc3RpbmcgU0NNSSBpbXBs
+ZW1lbnRhdGlvbiB1c2VzIGEgcmF0aGVyIGZsZXhpYmxlIHNoYXJlZCBtZW1vcnkKcmVnaW9uIHRv
+IGNvbW11bmljYXRlIGNvbW1hbmRzIGFuZCB0aGVpciBwYXJhbWV0ZXJzLCBpdCBzdGlsbCByZXF1
+aXJlcyBhCm1haWxib3ggdG8gYWN0dWFsbHkgdHJpZ2dlciB0aGUgYWN0aW9uLgoKVGhpcyBwYXRj
+aCBzZXJpZXMgcHJvdmlkZXMgYSBMaW51eCBtYWlsYm94IGNvbXBhdGlibGUgc2VydmljZSB3aGlj
+aCB1c2VzCnNtYyBjYWxscyB0byBpbnZva2UgZmlybXdhcmUgY29kZSwgZm9yIGluc3RhbmNlIHRh
+a2luZyBjYXJlIG9mIFNDTUkgcmVxdWVzdHMuClRoZSBhY3R1YWwgcmVxdWVzdHMgYXJlIHN0aWxs
+IGNvbW11bmljYXRlZCB1c2luZyB0aGUgc3RhbmRhcmQgU0NNSSB3YXkgb2YKc2hhcmVkIG1lbW9y
+eSByZWdpb25zLCBidXQgYSBkZWRpY2F0ZWQgbWFpbGJveCBoYXJkd2FyZSBJUCBjYW4gYmUgcmVw
+bGFjZWQgdmlhCnRoaXMgbmV3IGRyaXZlci4KClRoaXMgc2ltcGxlIGRyaXZlciB1c2VzIHRoZSBh
+cmNoaXRlY3RlZCBTTUMgY2FsbGluZyBjb252ZW50aW9uIHRvIHRyaWdnZXIKZmlybXdhcmUgc2Vy
+dmljZXMsIGFsc28gYWxsb3dzIGZvciB1c2luZyAiSFZDIiBjYWxscyB0byBjYWxsIGludG8gaHlw
+ZXJ2aXNvcnMKb3IgZmlybXdhcmUgbGF5ZXJzIHJ1bm5pbmcgaW4gdGhlIEVMMiBleGNlcHRpb24g
+bGV2ZWwuCgpQYXRjaCAxIGNvbnRhaW5zIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50
+YXRpb24sIHBhdGNoIDIgaW50cm9kdWNlcwp0aGUgYWN0dWFsIG1haWxib3ggZHJpdmVyLgoKUGxl
+YXNlIG5vdGUgdGhhdCB0aGlzIGRyaXZlciBqdXN0IHByb3ZpZGVzIGEgZ2VuZXJpYyBtYWlsYm94
+IG1lY2hhbmlzbSwKdGhvdWdoIHRoaXMgaXMgc3luY2hyb25vdXMgYW5kIG9uZS13YXkgb25seSAo
+dHJpZ2dlcmVkIGJ5IHRoZSBPUyBvbmx5LAp3aXRob3V0IHByb3ZpZGluZyBhbiBhc3luY2hyb25v
+dXMgd2F5IG9mIHRyaWdnZXJpbmcgcmVxdWVzdCBmcm9tIHRoZQpmaXJtd2FyZSkuCkFuZCB3aGls
+ZSBwcm92aWRpbmcgU0NNSSBzZXJ2aWNlcyB3YXMgdGhlIHJlYXNvbiBmb3IgdGhpcyBleGVyY2lz
+ZSwgdGhpcwpkcml2ZXIgaXMgaW4gbm8gd2F5IGJvdW5kIHRvIHRoaXMgdXNlIGNhc2UsIGJ1dCBj
+YW4gYmUgdXNlZCBnZW5lcmljYWxseQp3aGVyZSB0aGUgT1Mgd2FudHMgdG8gc2lnbmFsIGEgbWFp
+bGJveCBjb25kaXRpb24gdG8gZmlybXdhcmUgb3IgYQpoeXBlcnZpc29yLgpBbHNvIHRoZSBkcml2
+ZXIgaXMgaW4gbm8gd2F5IG1lYW50IHRvIHJlcGxhY2UgYW55IGV4aXN0aW5nIGZpcm13YXJlCmlu
+dGVyZmFjZSwgYnV0IGFjdHVhbGx5IHRvIGNvbXBsZW1lbnQgZXhpc3RpbmcgaW50ZXJmYWNlcy4K
+ClsxXSBodHRwczovL2dpdGh1Yi5jb20vTXJWYW4vYXJtLXRydXN0ZWQtZmlybXdhcmUvdHJlZS9z
+Y21pCgpQZW5nIEZhbiAoMik6CiAgRFQ6IG1haWxib3g6IGFkZCBiaW5kaW5nIGRvYyBmb3IgdGhl
+IEFSTSBTTUMgbWFpbGJveAogIG1haWxib3g6IGludHJvZHVjZSBBUk0gU01DIGJhc2VkIG1haWxi
+b3gKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94L2FybS1zbWMudHh0ICAgICAgICB8
+ICA5NiArKysrKysrKysrKysrCiBkcml2ZXJzL21haWxib3gvS2NvbmZpZyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgNyArCiBkcml2ZXJzL21haWxib3gvTWFrZWZpbGUgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAgMiArCiBkcml2ZXJzL21haWxib3gvYXJtLXNtYy1tYWlsYm94
+LmMgICAgICAgICAgICAgICAgICB8IDE1NCArKysrKysrKysrKysrKysrKysrKysKIGluY2x1ZGUv
+bGludXgvbWFpbGJveC9hcm0tc21jLW1haWxib3guaCAgICAgICAgICAgIHwgIDEwICsrCiA1IGZp
+bGVzIGNoYW5nZWQsIDI2OSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvYXJtLXNtYy50eHQKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL21haWxib3gvYXJtLXNtYy1tYWlsYm94LmMKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBpbmNsdWRlL2xpbnV4L21haWxib3gvYXJtLXNtYy1tYWlsYm94LmgKCi0tIAoyLjE2
+LjQKCg==
