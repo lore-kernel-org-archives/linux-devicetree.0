@@ -1,41 +1,52 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 3/3] arm64: dts: imx8mq: add clock for SNVS RTC node
-Date: Thu, 23 May 2019 09:02:44 +0800
-Message-ID: <20190523010243.GD16359@dragon>
-References: <1557882259-3353-1-git-send-email-Anson.Huang@nxp.com>
- <1557882259-3353-3-git-send-email-Anson.Huang@nxp.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 0/5] 32-bit Meson: add the canvas module
+Date: Wed, 22 May 2019 18:21:23 -0700
+Message-ID: <7h1s0q55kc.fsf@baylibre.com>
+References: <20190520194353.24445-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1557882259-3353-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20190520194353.24445-1-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vge>
+To: linux-amlogic@lists.infradead.org, mjourdan@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 15, 2019 at 01:09:36AM +0000, Anson Huang wrote:
-> i.MX8MQ has clock gate for SNVS module, add clock info to SNVS
-> RTC node for clock management.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-This one still has problem with encoding and thus cannot be applied.
-Here is what I get, and there is '=20' in the patch content.
+> This adds the canvas module on Meson8, Meson8b and Meson8m2. The canvas
+> IP is used by the video decoder hardware as well as the VPU (video
+> output) hardware.
+>
+> Neither the VPU nor the video decoder driver support the 32-bit SoCs
+> yet. However, we can still add the canvas module to have it available
+> once these drivers gain support for the older SoCs.
+>
+> I have tested this on my Meson8m2 board by hacking the VPU driver to
+> not re-initialize the VPU (and to use the configuration set by u-boot).
+> With that hack I could get some image out of the CVBS connector. No
+> changes to the canvas driver were required.
+>
+> Due to lack of hardware I could not test Meson8, but I'm following (as
+> always) what the Amlogic 3.10 vendor kernel uses.
+> Meson8b is also not tested because u-boot of my EC-100 doesn't have
+> video output enabled (so I couldn't use the same hack I used on my
+> Meson8m2 board).
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
-s/freescale/imx8mq.dtsi
-index e5f3133..b706de8 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -438,6 +438,8 @@
-                                        offset =3D <0x34>;
-                                        interrupts =3D <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-                                                <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+                                       clocks =3D <&clk IMX8MQ_CLK_SNVS_ROOT>;
-+                                       clock-names =3D "snvs-rtc";
-                                };
-                        };
-=20
---=20
-2.7.4
+Queued for v5.3...
+
+> Martin Blumenstingl (5):
+>   dt-bindings: soc: amlogic: canvas: document support for Meson8/8b/8m2
+>   soc: amlogic: canvas: add support for Meson8, Meson8b and Meson8m2
+
+these two in v5.3/drivers
+
+>   ARM: dts: meson8: add the canvas module
+>   ARM: dts: meson8m2: update the offset of the canvas module
+>   ARM: dts: meson8b: add the canvas module
+
+and these 3 in v5.3/dt.
+
+Thanks,
+
+Kevin
