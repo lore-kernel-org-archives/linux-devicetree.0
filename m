@@ -1,22 +1,51 @@
-From: Rui Zhao <ruizhao@microsoft.com>
-Subject: RE: [PATCH v3 2/2] EDAC: add EDAC driver for DMC520
-Date: Thu, 23 May 2019 17:20:36 +0000
-Message-ID: <CY4PR21MB0279BB0E40B86CEA485CF19AB3010@CY4PR21MB0279.namprd21.prod.outlook.com>
-References: <CY1PR0401MB1244FDD9E720C9D9C1F41FEE860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
- <b1e360bc-2329-3f8b-3c93-65380f62d6fd@arm.com>
+From: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+Subject: Re: [PATCH] dt-bindings: arm: fix the document ID for SCMI protocol
+ documentation
+Date: Thu, 23 May 2019 17:24:56 +0000
+Message-ID: <877eah84nr.fsf@epam.com>
+References: <20190523112312.24529-1-volodymyr_babchuk@epam.com>
+ <20190523170938.GC4224@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b1e360bc-2329-3f8b-3c93-65380f62d6fd@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190523170938.GC4224@e107155-lin>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>, Lei Wang <leiwang_git@outlook.com>
-Cc: "bp@alien8.de" <bp@alien8.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "Lei Wang (BSP)" <Wang.Lei@microsoft.com>, Rui Zhao <ruizhao@outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "trivial@kernel.org" <trivial@kernel.org>, Rob Herring <robh+dt@kernel.org>, Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFtZXMsDQoNCk9uIFRodXJzZGF5LCBNYXkgMjMsIDIwMTkgOTozMiBBTSwgSmFtZXMgTW9y
-c2Ugd3JvdGU6DQoNCj4gSG1tLCB5b3UncmUgbGlzdGluZyBzb21lb25lIGVsc2UgYXMgbWFpbnRh
-aW5lciBvZiB0aGlzIGRyaXZlci4NCj4gSSB0aGluayB3ZSdkIG5lZWQgdG8gc2VlIGFuIEFjayBm
-cm9tIFJ1aSBaaGFvLi4uDQoNCkkgY2FuIGNvbmZpcm0gdGhhdCBMZWkgaXMgYSBtYWludGFpbmVy
-IGZvciB0aGlzIGRyaXZlci4NCg0KVGhhbmtzLA0KUnVpDQoNCg==
+
+Hi,
+
+Sudeep Holla writes:
+
+> On Thu, May 23, 2019 at 11:23:35AM +0000, Volodymyr Babchuk wrote:
+>> From: Volodymyr Babchuk <volodymyr_babchuk@epam.com
+
+I accidentally deleted ending ">" symbol in the line above, so "git
+send-email" decided to move that line from headers to the message body.
+
+>> arm,scmi.txt used the wrong document identifier. "ARM DUI 0922B" is
+>> the "ARM Compute Subsystem SCP, Message Interface Protocols". What we
+>> need is the ARM DEN 0056A - "ARM System Control and Management
+>> Interface Platform Design Document".
+>>
+>
+> Indeed, it's most stupid copy-paste mistake. Thanks for fixing this.
+> Applied now.
+It happens all the time. I also did stupid mistake in my patch file. It
+is described above. Could you please ensure that this line will be not
+in the resulting commit message? Thank you.
+
+-- 
+Best regards,Volodymyr Babchuk
