@@ -1,68 +1,124 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] net/macb: bindings doc: add sifive fu540-c000 binding
-Date: Thu, 23 May 2019 15:50:27 -0500
-Message-ID: <CAL_Jsq+p5PnTDgxuh9_Aw1RvTk4aTYjKxyMq7DPczLzQVv8_ew@mail.gmail.com>
-References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
- <1558611952-13295-2-git-send-email-yash.shah@sifive.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable
+ CAN
+Date: Thu, 23 May 2019 22:54:50 +0200
+Message-ID: <20190523205450.bwccpvehpiugogbs@flea>
+References: <20190418141658.10868-1-jagan@amarulasolutions.com>
+ <20190418145641.q23tupopz2czjzc5@flea>
+ <CAOf5uwn8CtRs8cx0KC-bxNoRP4TiDrHi8F83QfjsZhueLDYFJg@mail.gmail.com>
+ <20190521081001.zjq3gnlvyuyexz6m@flea>
+ <CAOf5uwnhXjur=2NezCydaCxP5d33S+AwdD9WTDtp2EUJr4UTgg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1558611952-13295-2-git-send-email-yash.shah@sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, netdev <netdev@vger.kernel.org>, Palmer Dabbelt <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>, linux-riscv@lists.infradead.org, David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOf5uwnhXjur=2NezCydaCxP5d33S+AwdD9WTDtp2EUJr4UTgg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-amarula <linux-amarula@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2019 at 6:46 AM Yash Shah <yash.shah@sifive.com> wrote:
->
-> Add the compatibility string documentation for SiFive FU540-C0000
-> interface.
-> On the FU540, this driver also needs to read and write registers in a
-> management IP block that monitors or drives boundary signals for the
-> GEMGXL IP block that are not directly mapped to GEMGXL registers.
-> Therefore, add additional range to "reg" property for SiFive GEMGXL
-> management IP registers.
->
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  Documentation/devicetree/bindings/net/macb.txt | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-> index 9c5e944..91a2a66 100644
-> --- a/Documentation/devicetree/bindings/net/macb.txt
-> +++ b/Documentation/devicetree/bindings/net/macb.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  - compatible: Should be "cdns,[<chip>-]{macb|gem}"
->    Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
->    Use "cdns,at91sam9260-macb" for Atmel at91sam9 SoCs.
-> +  Use "cdns,fu540-macb" for SiFive FU540-C000 SoC.
+Hi Michael,
 
-This pattern that Atmel started isn't really correct. The vendor
-prefix here should be sifive. 'cdns' would be appropriate for a
-fallback.
-
->    Use "cdns,sam9x60-macb" for Microchip sam9x60 SoC.
->    Use "cdns,np4-macb" for NP4 SoC devices.
->    Use "cdns,at32ap7000-macb" for other 10/100 usage or use the generic form: "cdns,macb".
-> @@ -17,6 +18,8 @@ Required properties:
->    Use "cdns,zynqmp-gem" for Zynq Ultrascale+ MPSoC.
->    Or the generic form: "cdns,emac".
->  - reg: Address and length of the register set for the device
-> +       For "cdns,fu540-macb", second range is required to specify the
-> +       address and length of the registers for GEMGXL Management block.
->  - interrupts: Should contain macb interrupt
->  - phy-mode: See ethernet.txt file in the same directory.
->  - clock-names: Tuple listing input clock names.
-> --
-> 1.9.1
+On Tue, May 21, 2019 at 01:08:09PM +0200, Michael Nazzareno Trimarchi wrote:
+> On Tue, May 21, 2019 at 10:10 AM Maxime Ripard
+> <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Tue, May 21, 2019 at 08:47:02AM +0200, Michael Nazzareno Trimarchi wrote:
+> > > > > +     };
+> > > > > +
+> > > > >  };
+> > > > >
+> > > > >  &ehci0 {
+> > > > > @@ -77,6 +95,31 @@
+> > > > >       status = "okay";
+> > > > >  };
+> > > > >
+> > > > > +&pio {
+> > > > > +     can_pins: can-pins {
+> > > > > +             pins = "PD6",                   /* RX_BUF1_CAN0 */
+> > > > > +                    "PD7";                   /* RX_BUF0_CAN0 */
+> > > > > +             function = "gpio_in";
+> > > > > +     };
+> > > > > +};
+> > > >
+> > > > That isn't needed. What are they used for, you're not tying them to
+> > > > anything?
+> > >
+> > > Mux of their function is correct. They are connected in the schematics
+> > > but not used right now.
+> >
+> > Then describe the whole thing or don't?
+> >
 >
+> Ok
+>
+> > And that's kind of missing my point. If that pin group isn't related
+> > to any device, the pin muxing will not be changed. So that group, in
+> > itself, has strictly no effect.
+> >
+> > Moreover, you don't need a pin group in the first place to mux pins in
+> > GPIOs, the GPIO API will make sure that is the case when you request
+> > it.
+>
+> This is correct on sunxi. Is this valid for sunxi or in general in
+> all the SoC?
+
+IIRC, it happens on all the SoCs that have a shared GPIO/pinctrl
+driver.
+
+> Anyway make sense to have pins configured and place in the right
+> state, just suppose if the booting stage is wrong or anything that
+> make those pins in the wrong configuration
+
+It would be a bug in the pinctrl / GPIO code that would need to be
+fixed.
+
+> >
+> > > I can garantee that kernel wlll always configurred in the right way
+> > > and if I want I can export in userspace
+> > > for debug purpose
+>
+> Correct if you start to use it but if you want them right configured
+> the right place is in the default state e/o initstate if this can be
+> a problem of the hardware
+
+What problem do you have exactly?
+
+> Default state: the state the pinctrl handle shall be put
+>  *      into as default, usually this means the pins are up and ready to
+>  *      be used by the device driver. This state is commonly used by
+>  *      hogs to configure muxing and pins at boot, and also as a state
+>  *      to go into when returning from sleep and idle in
+>  *      .pm_runtime_resume() or ordinary .resume() for example.
+>
+> Now the pins are connected to the canbus as should be and they are
+> configured and usually put in the right state.
+
+As soon as you call gpio_get, the pins will be configured properly.
+
+And, pinctrl shouldn't allow that configuration (gpio_get + a pinctrl
+node for GPIOs) in our case. We do on most SoCs (all but the H6) for
+historical reasons, but this creates other bugs that we can't really
+fix right now. Still, we're slowly removing all of those pinctrl
+nodes, so it's not really to add new ones.
+
+> +               compatible = "microchip,mcp2515";
+> +               reg = <0>;
+> +               spi-max-frequency = <10000000>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&can_pins>;
+>
+> >
+> > Yes, because the API does it, not your change
+>
+> Do you prefer to drop the pinmux? or update the commit message
+
+Drop the pinctrl group
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
