@@ -1,56 +1,64 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v7 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC.
-Date: Thu, 23 May 2019 15:53:50 +0200
-Message-ID: <20190523135350.GA4985@kunai>
-References: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
- <1558515574-11155-4-git-send-email-sagar.kadam@sifive.com>
- <20190522194529.GJ7281@lunn.ch>
- <CAARK3HmMVibudG2CFLBoMSAqnraXyirTL6CXYo1T_XJEuGJy7Q@mail.gmail.com>
- <20190523123435.GA15531@lunn.ch>
- <CAARK3H=BPT3aGUGiQvov5aqFRNVTSeyqJ-bNGw6uEoU7c8iiJg@mail.gmail.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: add Allwinner H6 r_watchdog
+Date: Thu, 23 May 2019 16:02:28 +0200
+Message-ID: <CAJiuCcdE-RtiGpPKe-BMJpS-m=wOXy+30vS7iAvd6Ng7gaZWNg@mail.gmail.com>
+References: <20190521160330.28402-1-peron.clem@gmail.com> <20190521160330.28402-4-peron.clem@gmail.com>
+ <20190522103243.mmrfato5p2mhtf4j@flea> <CAJiuCcdaZVLQyupEf8HPaUySakufXXAhzundo6VeyQaAyZ8Trw@mail.gmail.com>
+ <20190523125716.g4euwplfsvw4vqzl@flea>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAARK3H=BPT3aGUGiQvov5aqFRNVTSeyqJ-bNGw6uEoU7c8iiJg@mail.gmail.com>
+In-Reply-To: <20190523125716.g4euwplfsvw4vqzl@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sagar Kadam <sagar.kadam@sifive.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 23 May 2019 at 14:57, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Wed, May 22, 2019 at 06:15:26PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi Maxime,
+> >
+> > On Wed, 22 May 2019 at 12:32, Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> > >
+> > > On Tue, May 21, 2019 at 06:03:28PM +0200, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > Allwinner H6 has a second watchdog on the r-blocks which is
+> > > > compatible with the A31.
+> > > >
+> > > > This commit add the H6 compatible for the r_watchdog.
+> > > >
+> > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > >
+> > > Unless you have some evidence that the two blocks are different, then
+> > > you should just reuse the same one.
+> >
+> > I have no evidence it's different nor identical, it's not documented
+> > in the user manual.
+> > I thought it would better to have separate bindings in case there is a
+> > difference.
+> > Than don't have and find later that we have to introduce one.
+>
+> It's a tradeoff. Pushing your logic to the limit, we would have a
+> compatible for each controller embedded in an SoC.
+>
+> This would be unmaintainable, and slightly useless since that case is
+> very unlikely.
+>
+> However, having differences between SoCs is quite common, hence why we
+> have different compatibles for each SoC.
+Yes, that make sense, I will send a new version soon,
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks for the review,
+Cl=C3=A9ment
 
-
-> Ok, Great. Do we need to write to him about this patchset?
-
-Nope. Hint: You can dig in the mail archives studying older patches to
-see how things work. I do this as well because things may work
-differently per subsystem.
-
-
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzmpeYACgkQFA3kzBSg
-KbZ50xAAimynxr0PJx8ptAPr43eEclJl1OQihcsB1bfsNnwPm0VKds2AQLP2dYHC
-BISTG9B+IPj/7E9E/1D8UnmP1KQU9sYaZUS7HFnx1sSowG3Uy0ppnfhEDphLb34q
-Upt3domZHzvBwz2uDM4dI0RCUtB0wM+bGDqYp0PA9XL82KUCLdDOD4mEkwb8GrYd
-HKbij71iHnHZymVM1ESn2hp0t9dYOGw8JnPE1SXk2CxjVRJrguLKMR9AMZjhS/eJ
-ASDTDStxqRl60v6HrMYgHZEfACZcx42627191pHOp+e12aftKm3jArMyN9oWMLZM
-W5tdlvcYHk9zWtBOm9ICQLoUENdzZE0/p4xPqjCvYlWJ8a+RPKdgAYq9jQ8u32qF
-VsABTkJV3wMV+LfQxPY9lZ/8VVtfAIzxsFcCb3Z8eRFxXqXm+snIZ36Cd5MCKMXq
-iVh/VNvVCfku76W6wcHH0wZwoBacDjkv+it4bR5zVoEOXpgXuw45rzzNroNssxQ9
-ITj5IcJh1xQ3CyqxoTCNqLHbznNgdN5cG6ZXVP5P3badfY134i1C7plwLSG4EhMr
-qE6pgVZxp/cCpvAKxfq6hbz8XqKmmRDT14ENK9h3uBK2n7nwlm4MhBXpFBzSbJM6
-qe2KzVv56JSG61v1tjAFjGgVb7lsGQzlNV+eNsMXeZzZBLbM4Mk=
-=171K
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
