@@ -1,33 +1,96 @@
-From: Andreas Schwab <schwab@suse.de>
-Subject: Re: [PATCH 0/2] net: macb: Add support for SiFive FU540-C000
-Date: Thu, 23 May 2019 14:49:16 +0200
-Message-ID: <mvmwoihfi9f.fsf@suse.de>
-References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: fsl: ls1046: Modify the qspi flash frequency
+Date: Thu, 23 May 2019 20:48:06 +0800
+Message-ID: <20190523124806.GU9261@dragon>
+References: <20190521150336.8409-1-pankaj.bansal@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558611952-13295-1-git-send-email-yash.shah@sifive.com> (Yash
-        Shah's message of "Thu, 23 May 2019 17:15:50 +0530")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, paul.walmsley@sifive.com, sachin.ghadi@sifive.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190521150336.8409-1-pankaj.bansal@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pankaj Bansal <pankaj.bansal@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mingkai Hu <mingkai.hu@nxp.com>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mai 23 2019, Yash Shah <yash.shah@sifive.com> wrote:
+On Tue, May 21, 2019 at 09:40:09AM +0000, Pankaj Bansal wrote:
+> The qspi flash in ls1046a based QDS and RDB boards can operate
+> at 50MHz frequency.
+> Therefore, update the maximum supported freq in their respective
+> dts files.
+> 
+> Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
 
-> On FU540, the management IP block is tightly coupled with the Cadence
-> MACB IP block. It manages many of the boundary signals from the MACB IP
-> This patchset controls the tx_clk input signal to the MACB IP. It
-> switches between the local TX clock (125MHz) and PHY TX clocks. This
-> is necessary to toggle between 1Gb and 100/10Mb speeds.
+Do not use base64 encoding for patch posting.
 
-Doesn't work for me:
+Shawn
 
-[  365.842801] macb: probe of 10090000.ethernet failed with error -17
-
-Andreas.
-
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts | 4 ++--
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 5 +++--
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+> index eec62c63dafe..e441dbfbfb81 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+> @@ -3,7 +3,7 @@
+>   * Device Tree Include file for Freescale Layerscape-1046A family SoC.
+>   *
+>   * Copyright 2016 Freescale Semiconductor, Inc.
+> - * Copyright 2018 NXP
+> + * Copyright 2018-2019 NXP
+>   *
+>   * Shaohui Xie <Shaohui.Xie@nxp.com>
+>   */
+> @@ -169,7 +169,7 @@
+>  		compatible = "spansion,m25p80";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> -		spi-max-frequency = <20000000>;
+> +		spi-max-frequency = <50000000>;
+>  		spi-rx-bus-width = <4>;
+>  		spi-tx-bus-width = <4>;
+>  		reg = <0>;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+> index 6a6514d0e5a9..6f5411d09bb9 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+> @@ -3,6 +3,7 @@
+>   * Device Tree Include file for Freescale Layerscape-1046A family SoC.
+>   *
+>   * Copyright 2016 Freescale Semiconductor, Inc.
+> + * Copyright 2019 NXP
+>   *
+>   * Mingkai Hu <mingkai.hu@nxp.com>
+>   */
+> @@ -105,7 +106,7 @@
+>  		compatible = "spansion,m25p80";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> -		spi-max-frequency = <20000000>;
+> +		spi-max-frequency = <50000000>;
+>  		spi-rx-bus-width = <4>;
+>  		spi-tx-bus-width = <4>;
+>  		reg = <0>;
+> @@ -115,7 +116,7 @@
+>  		compatible = "spansion,m25p80";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> -		spi-max-frequency = <20000000>;
+> +		spi-max-frequency = <50000000>;
+>  		spi-rx-bus-width = <4>;
+>  		spi-tx-bus-width = <4>;
+>  		reg = <1>;
+> -- 
+> 2.17.1
+> 
