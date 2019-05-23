@@ -1,50 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2] checkpatch.pl: Update DT vendor prefix check
-Date: Thu, 23 May 2019 10:00:22 -0500
-Message-ID: <20190523150022.2747-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2] soc: qcom: apr: Don't use reg for domain id
+Date: Thu, 23 May 2019 08:01:53 -0700
+Message-ID: <20190523150153.13136-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Joe Perches <joe@perches.com>
+To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In commit 8122de54602e ("dt-bindings: Convert vendor prefixes to
-json-schema"), vendor-prefixes.txt has been converted to a DT schema.
-Update the checkpatch.pl DT check to extract vendor prefixes from the new
-vendor-prefixes.yaml file.
+The reg property represents the address and size on the bus that a
+device lives, but for APR the parent is a rpmsg bus, which does not have
+numerical addresses. Simply defining #address/#size-cells to 1 and 0,
+respectively, to silence the compiler is not an appropriate solution.
 
-Fixes: 8122de54602e ("dt-bindings: Convert vendor prefixes to json-schema")
-Cc: Joe Perches <joe@perches.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Replace the use of "reg" with an APR specific property.
+
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-v2: Handle vendor prefixes with '-' using Joe's reworked grep
 
- scripts/checkpatch.pl | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Changes since v1:
+- Fixed example to match change
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index bb28b178d929..342c7c781ba5 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3027,7 +3027,7 @@ sub process {
- 			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
+ Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 6 +++---
+ drivers/soc/qcom/apr.c                                  | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+index bcc612cc7423..db501269f47b 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+@@ -9,7 +9,7 @@ used for audio/voice services on the QDSP.
+ 	Value type: <stringlist>
+ 	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
  
- 			my $dt_path = $root . "/Documentation/devicetree/bindings/";
--			my $vp_file = $dt_path . "vendor-prefixes.txt";
-+			my $vp_file = $dt_path . "vendor-prefixes.yaml";
+-- reg
++- qcom,apr-domain
+ 	Usage: required
+ 	Value type: <u32>
+ 	Definition: Destination processor ID.
+@@ -49,9 +49,9 @@ by the individual bindings for the specific service
+ The following example represents a QDSP based sound card on a MSM8996 device
+ which uses apr as communication between Apps and QDSP.
  
- 			foreach my $compat (@compats) {
- 				my $compat2 = $compat;
-@@ -3042,7 +3042,7 @@ sub process {
+-	apr@4 {
++	apr {
+ 		compatible = "qcom,apr-v2";
+-		reg = <APR_DOMAIN_ADSP>;
++		qcom,apr-domain = <APR_DOMAIN_ADSP>;
  
- 				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
- 				my $vendor = $1;
--				`grep -Eq "^$vendor\\b" $vp_file`;
-+				`grep -Eq "\\"\\^\Q$vendor\E,\\.\\*\\":" $vp_file`;
- 				if ( $? >> 8 ) {
- 					WARN("UNDOCUMENTED_DT_STRING",
- 					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vp_file\n" . $herecurr);
+ 		q6core@3 {
+ 			compatible = "qcom,q6core";
+diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
+index 74f8b9607daa..b83d71b2e0a4 100644
+--- a/drivers/soc/qcom/apr.c
++++ b/drivers/soc/qcom/apr.c
+@@ -276,7 +276,7 @@ static int apr_probe(struct rpmsg_device *rpdev)
+ 	if (!apr)
+ 		return -ENOMEM;
+ 
+-	ret = of_property_read_u32(dev->of_node, "reg", &apr->dest_domain_id);
++	ret = of_property_read_u32(dev->of_node, "qcom,apr-domain", &apr->dest_domain_id);
+ 	if (ret) {
+ 		dev_err(dev, "APR Domain ID not specified in DT\n");
+ 		return ret;
 -- 
-2.20.1
+2.18.0
