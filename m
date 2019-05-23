@@ -1,81 +1,87 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] drivers: regulator: qcom: add PMS405 SPMI regulator
-Date: Thu, 23 May 2019 14:16:41 +0100
-Message-ID: <20190523131641.GD17245@sirena.org.uk>
-References: <a3c281d5-d30e-294f-71ab-957decde2ba0@linaro.org>
- <20190502023316.GS14916@sirena.org.uk>
- <dd15d784-f2a1-78c6-3543-69bbcc1143c4@linaro.org>
- <20190503062626.GE14916@sirena.org.uk>
- <229823c4-f5d4-4821-ded1-cc046dd0bd20@linaro.org>
- <20190506043809.GL14916@sirena.org.uk>
- <a89763cb-5d50-0927-7912-6ccf38ae1d66@linaro.org>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v2 00/10] Fix Elan I2C touchpads in latest generation from Lenovo
+Date: Thu, 23 May 2019 15:25:19 +0200
+Message-ID: <CAO-hwJ+BzfWKKMKtM0Q3+qMfCm99kQeUfEdA97oz5bg_Jp_SyA@mail.gmail.com>
+References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6152281657868454929=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a89763cb-5d50-0927-7912-6ccf38ae1d66@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@linaro.org, linux-kernel@vger.kernel.org, khasim.mohammed@linaro.org, lgirdwood@gmail.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, niklas.cassel@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>, Aaron Ma <aaron.ma@canonical.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============6152281657868454929==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="IDYEmSnFhs3mNXr+"
-Content-Disposition: inline
+On Tue, May 21, 2019 at 3:27 PM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> Hi,
+>
+> This is the v2 from https://lkml.org/lkml/2018/10/12/633
+>
+> So I initially thought it would be easy to integrate the suggested changes
+> in the v1, but it turns our that the changes to have the touchscreen-width
+> and height parameters were quite hard to do.
+>
+> I finally postponed the issue by blacklisting the 2 laptops we knew were
+> not working and tried to devote more time to understand both drivers more.
+>
+> But it s the time where Lenovo is preparing the new models, and guess what,
+> they suffer from the same symptoms.
 
+I just received the confirmation from Lenovo that this series makes
+the new laptops working.
 
---IDYEmSnFhs3mNXr+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Cheers,
+Benjamin
 
-On Thu, May 23, 2019 at 10:35:46AM +0200, Jorge Ramirez wrote:
-
-> Would you accept if I wrote a separate driver specific to pms405 or do
-> you want me to integrate in qcom-spmi_regulator.c?
-
-> I am asking because none of the ops will use the common functions (I
-> wont be reusing much code from this qcom-spmi_regulator.c file)
-
-I don't really mind, if there's nothing really shared then making it a
-separate driver is probably best but it's not a strong opinion either
-way.
-
---IDYEmSnFhs3mNXr+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzmnTgACgkQJNaLcl1U
-h9CDcAf8DL+MyQPT/4yQxHXXQBs5IDMiS1xz5/mDyBccppntbLrOEa47PK9HkXBd
-1OOgkPuGEIYd74ad4Oue+CWFYQJhofrt4PSHoq0qfciBgho8cgZGRKI5twUI5P68
-lQP7WMcri9askjAXIzykFfbdNoSQVoCsWi2mONsSDJXQqZg5C8VAdH1wpJjBe27Z
-we9oiZ+JQi0NvANUAHq3IqEHk3q9EP2p1IpvMzLRJHIv96kmHD8IJXoF5eZC2Hs1
-QRv7RA+EgX1/mT2JhVE+FaFvDbb4Ur4oLU2u/387E5ImIQ+ltcADQq2KUbsbl4LN
-sJRpd1qX9AEPMdyAnm2K18I0slbCRg==
-=5f7d
------END PGP SIGNATURE-----
-
---IDYEmSnFhs3mNXr+--
-
-
---===============6152281657868454929==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6152281657868454929==--
+>
+> So I took a few time to work on this and finally got my head around the
+> width and height problem. Once I got it, it was simple clear, but this also
+> means we can not really rely on a device tree property for that.
+>
+> So in the elan* drivers, the "traces" are simply how many antennas there
+> are on each axis. Which means that if a trace of 4 is reported in the
+> events, it means it is simply seen by 4 antennas. So the computation of the
+> width/height is the following: we take how many antennas there are, we
+> subtract one to have the number of holes between the antennas, and we
+> divide the number of unit we have in the axis by the value we just
+> computed.
+> This gives a rough 4mm on the P52, in both directions.
+>
+> And once you get that, you can just realize that the unit of the width and
+> height are just the same than the X and Y coordinates, so we can apply the
+> same resolution.
+>
+> So, in the end, that means that elan_i2c needs the information, or it will
+> not be able to convert the number of crossed antennas into a size, but this
+> is something specific to this touchpad.
+>
+> So here come, 7 months later the v2 on the subject.
+>
+> Cheers,
+> Benjamin
+>
+> Benjamin Tissoires (10):
+>   Input: elantech - query the min/max information beforehand too
+>   Input: elantech - add helper function elantech_is_buttonpad()
+>   Input: elantech - detect middle button based on firmware version
+>   dt-bindings: add more optional properties for elan_i2c touchpads
+>   Input: elan_i2c - do not query the info if they are provided
+>   Input: elantech/SMBus - export all capabilities from the PS/2 node
+>   Input: elan_i2c - handle physical middle button
+>   Input: elan_i2c - export true width/height
+>   Input: elan_i2c - correct the width/size base value
+>   Input: elantech: remove P52 from SMBus blacklist
+>
+>  .../devicetree/bindings/input/elan_i2c.txt    |  11 +
+>  drivers/input/mouse/elan_i2c_core.c           |  85 +++--
+>  drivers/input/mouse/elantech.c                | 318 ++++++++++--------
+>  drivers/input/mouse/elantech.h                |   8 +
+>  4 files changed, 251 insertions(+), 171 deletions(-)
+>
+> --
+> 2.21.0
+>
