@@ -1,86 +1,99 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [RESEND PATCH v5 0/3] Add PM support to STM32 LP Timer drivers
-Date: Thu, 23 May 2019 11:09:33 +0200
-Message-ID: <CA+M3ks5O9YpZ-4f3x=bFn_LxJu+6i3pu7jsWv_93pe14y8V71w@mail.gmail.com>
-References: <1555580267-29299-1-git-send-email-fabrice.gasnier@st.com> <45e934af-d677-d7d4-09ea-3ed01872dab6@st.com>
+From: masonccyang@mxic.com.tw
+Subject: Re: [PATCH v13 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
+ controller bindings
+Date: Thu, 23 May 2019 17:16:03 +0800
+Message-ID: <OFB9416C97.8812436C-ON48258403.00329D12-48258403.0032E82E@mxic.com.tw>
+References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw> <1558423174-10748-4-git-send-email-masonccyang@mxic.com.tw> <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <45e934af-d677-d7d4-09ea-3ed01872dab6@st.com>
+In-Reply-To: <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Loic PALLARDY <loic.pallardy@st.com>, tduszyns@gmail.com, Mark Brown <broonie@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, u.kleine-koenig@pengutronix.de, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, miquel.raynal@bootlin.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le ven. 10 mai 2019 =C3=A0 09:51, Fabrice Gasnier <fabrice.gasnier@st.com> =
-a =C3=A9crit :
->
-> On 4/18/19 11:37 AM, Fabrice Gasnier wrote:
-> > This patch series adds power management support for STM32 LP Timer:
-> > - PWM driver
-> > - Document the pinctrl states for sleep mode
-> >
-> > It also adds device link between the PWM consumer and the PWM provider.
-> > This allows proper sequencing for suspend/resume (e.g. user will likely
-> > do a pwm_disable() before the PWM provider suspend executes), see [1].
-> >
-> > [1] https://lkml.org/lkml/2019/2/5/770
-> >
->
-> Hi Thierry,
->
-> Please let me know if you have some more comments on this series. It's
-> been under review since quite some time now.
->
 
-Hi Thierry,
+Hi Sergei,
 
-Does something is blocking on this series ?
-How can we progress on it ?
-
-Regards,
-Benjamin
-
-> Thanks in advance,
-> Best Regards,
-> Fabrice
->
+> On 05/21/2019 10:19 AM, Mason Yang wrote:
+> 
+> > Document the bindings used by the Renesas R-Car Gen3 RPC-IF 
+controller.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
 > > ---
-> > resend v5:
-> > - update collected acks
-> >
-> > Changes in v5:
-> > - improve a warning message, fix a style issue.
-> >
-> > Changes in v4:
-> > - improve error handling when adding the PWM consumer device link.
-> >
-> > Changes in v3:
-> > - Move the device_link_add() call to of_pwm_get() as discussed with Uwe=
-.
-> >
-> > Changes in v2:
-> > - Don't disable PWM channel in PWM provider: rather refuse to suspend
-> >   and report an error as suggested by Uwe and Thierry.
-> > - Add patch 3/3 to propose device link addition.
-> > - No updates for STM32 LP Timer IIO driver. Patches can be send separat=
-ely.
-> >
-> > Fabrice Gasnier (3):
-> >   dt-bindings: pwm-stm32-lp: document pinctrl sleep state
-> >   pwm: stm32-lp: Add power management support
-> >   pwm: core: add consumer device link
-> >
-> >  .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  9 ++--
-> >  drivers/pwm/core.c                                 | 50 ++++++++++++++=
-++++++--
-> >  drivers/pwm/pwm-stm32-lp.c                         | 25 +++++++++++
-> >  include/linux/pwm.h                                |  6 ++-
-> >  4 files changed, 82 insertions(+), 8 deletions(-)
-> >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> >  .../devicetree/bindings/mfd/renesas-rpc-if.txt     | 65 
+++++++++++++++++++++++
+> >  1 file changed, 65 insertions(+)
+> >  create mode 100644 
+Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt 
+b/
+> Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
+> > new file mode 100644
+> > index 0000000..20ec85b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
+> > @@ -0,0 +1,65 @@
+> > +Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
+> > +---------------------------------------------------------
+> > +
+> > +RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
+> > +
+> > +Required properties:
+> > +- compatible: should be an SoC-specific compatible value, followed by
+> > +      "renesas,rcar-gen3-rpc" as a fallback.
+> > +      supported SoC-specific values are:
+> > +      "renesas,r8a77995-rpc"   (R-Car D3)
+> > +- reg: should contain three register areas:
+> > +   first for RPC-IF registers,
+> > +   second for the direct mapping read mode and
+> > +   third for the write buffer area.
+> > +- reg-names: should contain "regs", "dirmap" and "wbuf"
+> > +- clocks: should contain 1 entries for the module's clock
+> > +- clock-names: should contain "rpc"
+> > +- power-domains: should contain system-controller(sysc) for 
+power-domain-cell
+> > +- resets: should contain clock pulse generator(cpg) for reset-cell,
+> > +     power-domain-cell and clock-cell
+> 
+>    That's just some nonsense, sorry...
+>    I suggest that you stop reposting your patches as I'm going to post
+> my version of this patchset RSN (based on your patches, of course) and 
+I'm
+> going to take care of fixing this file as well.
+
+okay, just let me know your patch then.
+
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
