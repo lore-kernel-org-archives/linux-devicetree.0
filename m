@@ -1,125 +1,128 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v7 2/4] soc: qcom: Add AOSS QMP driver
-Date: Thu, 23 May 2019 12:03:38 -0700
-Message-ID: <20190523190338.GT31438@minitux>
-References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
- <20190501043734.26706-3-bjorn.andersson@linaro.org>
- <CAD=FV=VVxKSp6e=j8YM8JBrhsF+T=0=8xDjd_817hphOMWHVFA@mail.gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 2/9] dt: bindings: Add multicolor class dt bindings documention
+Date: Thu, 23 May 2019 14:08:13 -0500
+Message-ID: <20190523190820.29375-3-dmurphy@ti.com>
+References: <20190523190820.29375-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=VVxKSp6e=j8YM8JBrhsF+T=0=8xDjd_817hphOMWHVFA@mail.gmail.com>
+In-Reply-To: <20190523190820.29375-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <swboyd@chromium.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 23 May 09:38 PDT 2019, Doug Anderson wrote:
+Add DT bindings for the LEDs multicolor class framework.
 
-> Hi,
-> 
-> On Tue, Apr 30, 2019 at 9:38 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > +static int qmp_qdss_clk_prepare(struct clk_hw *hw)
-> > +{
-> > +       struct qmp *qmp = container_of(hw, struct qmp, qdss_clk);
-> > +       char buf[QMP_MSG_LEN] = "{class: clock, res: qdss, val: 1}";
-> 
-> nit: "static const" the buf?  No need to copy it to the stack each
-> time.  In qmp_qdss_clk_unprepare() too.
-> 
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../bindings/leds/leds-class-multicolor.txt   | 97 +++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
 
-Thanks, that makes sense.
-
-> ...your string is also now fixed at 34 bytes big (including the '\0').
-> Do we still need to send exactly 96 bytes, or can we dumb this down to
-> 36?  We'll get a compile error if we overflow, right?  If this truly
-> needs to be exactly 96 bytes maybe qmp_send()'s error checks should
-> check for things being exactly 96 bytes instead of checking for > and
-> % 4.
-> 
-
-I double checked with my contacts and the only requirement here is that
-memory has to be word-accessed, so I'll figure out a sane way to write
-this.
-
-> 
-> > +static int qmp_qdss_clk_add(struct qmp *qmp)
-> > +{
-> > +       struct clk_init_data qdss_init = {
-> > +               .ops = &qmp_qdss_clk_ops,
-> > +               .name = "qdss",
-> > +       };
-> 
-> Can't qdss_init be "static const"?  That had the advantage of not
-> needing to construct it on the stack and also of it having a longer
-> lifetime.  It looks like clk_register() stores the "hw" pointer in its
-> structure and the "hw" structure will have a pointer here.  While I
-> can believe that it never looks at it again, it's nice if that pointer
-> doesn't point somewhere on an old stack.
-> 
-
-The purpose here was for clk_hw_register() to consume it and never look
-back, but I agree that it's a bit fragile. I'll review Stephen's
-proposed patch.
-
-> I suppose we could go the other way and try to mark more stuff in this
-> module as __init and __initdata, but even then at least the pointer
-> won't be onto a stack.  ;-)
-> 
-> 
-> > +       int ret;
-> > +
-> > +       qmp->qdss_clk.init = &qdss_init;
-> > +       ret = clk_hw_register(qmp->dev, &qmp->qdss_clk);
-> > +       if (ret < 0) {
-> > +               dev_err(qmp->dev, "failed to register qdss clock\n");
-> > +               return ret;
-> > +       }
-> > +
-> > +       return of_clk_add_hw_provider(qmp->dev->of_node, of_clk_hw_simple_get,
-> > +                                     &qmp->qdss_clk);
-> 
-> devm_clk_hw_register() and devm_of_clk_add_hw_provider()?  If you're
-> worried about ordering you could always throw in
-> devm_add_action_or_reset() to handle the qmp_pd_remove(), qmp_close()
-> and mbox_free_channel().
-> 
-> ...with that you could fully get rid of qmp_remove() and also your
-> setting of drvdata.
-> 
-
-Yeah, I was worried about qmp_close() before unregistering the clock.
-I'll take another look, will at least have to fix the error handling on
-of_clk_add_hw_provider()
-
-> 
-> > +static void qmp_pd_remove(struct qmp *qmp)
-> > +{
-> > +       struct genpd_onecell_data *data = &qmp->pd_data;
-> > +       struct device *dev = qmp->dev;
-> > +       int i;
-> > +
-> > +       of_genpd_del_provider(dev->of_node);
-> > +
-> > +       for (i = 0; i < data->num_domains; i++)
-> > +               pm_genpd_remove(data->domains[i]);
-> 
-> Still feels like the above loop would be better as:
->   for (i = data->num_domains - 1; i >= 0; i--)
-> 
-
-To me this carries a message that the removal order is significant,
-which I'm unable to convince myself that it is.
-
-> 
-> (BTW: any way you could add me to the CC list for future patches so I
-> notice them earlier?)
-> 
-
-Yes of course, thanks for your review.
-
-Regards,
-Bjorn
+diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+new file mode 100644
+index 000000000000..e2a2ce3279cb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+@@ -0,0 +1,97 @@
++* Multicolor LED properties
++
++Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
++can be grouped together and also provide a modeling mechanism so that the
++cluster LEDs can vary in hue and intensity to produce a wide range of colors.
++
++The nodes and properties defined in this document are unique to the multicolor
++LED class.  Common LED nodes and properties are inherited from the common.txt
++within this documentation directory.
++
++Required LED Child properties:
++	- color : For multicolor LED support this property should be defined as
++		  LED_COLOR_ID_MULTI and further definition can be found in
++		  include/linux/leds/common.h.
++
++led-controller@30 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "ti,lp5024";
++	reg = <0x29>;
++
++	multi-led@4 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <4>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++
++		led@12 {
++			reg = <12>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@13 {
++			reg = <13>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@14 {
++			reg = <14>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++	/* Only support RGB no model defined */
++	multi-led@1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <1>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_;
++
++
++		led@3 {
++			reg = <3>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@5 {
++			reg = <5>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++	multi-led@2 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++		reg = <2>;
++		ti,led-bank = <2 3 5>;
++
++		led@6 {
++			reg = <0x6>;
++			color = <LED_COLOR_ID_RED>;
++			led-sources = <6 9 15>;
++		};
++
++		led@7 {
++			reg = <0x7>;
++			color = <LED_COLOR_ID_GREEN>;
++			led-sources = <7 10 16>;
++		};
++
++		led@8 {
++			reg = <0x8>;
++			color = <LED_COLOR_ID_BLUE>;
++			led-sources = <8 11 17>;
++		};
++	};
++
++};
+-- 
+2.21.0.5.gaeb582a983
