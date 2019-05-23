@@ -1,29 +1,22 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 0/5] arm64: dts: meson: g12a: add ethernet support
-Date: Thu, 23 May 2019 10:20:17 -0700
-Message-ID: <7hzhnd2ilq.fsf@baylibre.com>
-References: <20190520131401.11804-1-jbrunet@baylibre.com>
+From: Rui Zhao <ruizhao@microsoft.com>
+Subject: RE: [PATCH v3 2/2] EDAC: add EDAC driver for DMC520
+Date: Thu, 23 May 2019 17:20:36 +0000
+Message-ID: <CY4PR21MB0279BB0E40B86CEA485CF19AB3010@CY4PR21MB0279.namprd21.prod.outlook.com>
+References: <CY1PR0401MB1244FDD9E720C9D9C1F41FEE860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
+ <b1e360bc-2329-3f8b-3c93-65380f62d6fd@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520131401.11804-1-jbrunet@baylibre.com>
+In-Reply-To: <b1e360bc-2329-3f8b-3c93-65380f62d6fd@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: James Morse <james.morse@arm.com>, Lei Wang <leiwang_git@outlook.com>
+Cc: "bp@alien8.de" <bp@alien8.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "Lei Wang (BSP)" <Wang.Lei@microsoft.com>, Rui Zhao <ruizhao@outlook.com>
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
-
-> Add network support to the g12a SoC family
->
-> This is series is based on 5.2-rc1 and the patches I already sent last
-> week. If this is not convient for you, please let me know, I'll rebase.
-
-Queued for v5.3.
-
-> Also, you will need to get the clk tag "clk-meson-5.3-1-fixes" (to get
-> the update MPLL50M id) from clk-meson [0].
-
-I merged this tag in to v5.3/dt64 before applying this series.  Thanks
-for explaining the dependencies.
-
-Kevin
+SGkgSmFtZXMsDQoNCk9uIFRodXJzZGF5LCBNYXkgMjMsIDIwMTkgOTozMiBBTSwgSmFtZXMgTW9y
+c2Ugd3JvdGU6DQoNCj4gSG1tLCB5b3UncmUgbGlzdGluZyBzb21lb25lIGVsc2UgYXMgbWFpbnRh
+aW5lciBvZiB0aGlzIGRyaXZlci4NCj4gSSB0aGluayB3ZSdkIG5lZWQgdG8gc2VlIGFuIEFjayBm
+cm9tIFJ1aSBaaGFvLi4uDQoNCkkgY2FuIGNvbmZpcm0gdGhhdCBMZWkgaXMgYSBtYWludGFpbmVy
+IGZvciB0aGlzIGRyaXZlci4NCg0KVGhhbmtzLA0KUnVpDQoNCg==
