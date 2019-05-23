@@ -1,37 +1,58 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v7 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC.
-Date: Thu, 23 May 2019 14:34:35 +0200
-Message-ID: <20190523123435.GA15531@lunn.ch>
-References: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
- <1558515574-11155-4-git-send-email-sagar.kadam@sifive.com>
- <20190522194529.GJ7281@lunn.ch>
- <CAARK3HmMVibudG2CFLBoMSAqnraXyirTL6CXYo1T_XJEuGJy7Q@mail.gmail.com>
+From: Torsten Duwe <duwe@lst.de>
+Subject: Re: [PATCH 4/6] drm/bridge: Add Analogix anx6345 support
+Date: Thu, 23 May 2019 14:45:08 +0200
+Message-ID: <20190523124508.GC15685@lst.de>
+References: <20190523065013.2719D68B05@newverein.lst.de> <20190523065356.0734568BFE@newverein.lst.de> <20190523075041.GC4745@pendragon.ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAARK3HmMVibudG2CFLBoMSAqnraXyirTL6CXYo1T_XJEuGJy7Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Sagar Kadam <sagar.kadam@sifive.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, peter@korsgaard.com, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org
+In-Reply-To: <20190523075041.GC4745@pendragon.ideasonboard.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Thank you Andrew for reviewing the patch set.
-> Can you please let me know weather you or Peter will be pick up the patch
-> for v5.3 or they  should go in via some other tree?
+On Thu, May 23, 2019 at 10:50:41AM +0300, Laurent Pinchart wrote:
+> Hi Torsten,
+> 
+> Thank you for the patch.
 
-Hi Sagar
+Thank you for the thorough review!
 
-Wolfram Sang should pick the patchset up.
+> On Thu, May 23, 2019 at 08:53:56AM +0200, Torsten Duwe wrote:
+> > +{
+> > +	struct anx6345 *anx6345 = connector_to_anx6345(connector);
+> > +	int err, num_modes = 0;
+> > +	bool power_off = false;
+> > +
+> > +	mutex_lock(&anx6345->lock);
+> > +
+> > +	if (!anx6345->edid) {
+> 
+> Could the chip be used with a hot-pluggable display, or is it guaranteed
+> that EDID will never change ?
 
-	Andrew
+The chip itself is capable of (e)DP hot-plugging, so the signals suggest.
+See the previous discussions about what to expect on the output side.
+Currently, the driver does not handle hot-plugging.
+
+> > +
+> > +	err = drm_of_find_panel_or_bridge(client->dev.of_node, 1, 0,
+> > +					  &anx6345->panel, NULL);
+> > +	if (err == -EPROBE_DEFER)
+> > +		return err;
+> > +
+> > +	if (err)
+> > +		DRM_DEBUG("No panel found\n");
+> 
+> Shouldn't this be fatal ?
+
+No, basically same as above. On the output side, there can be a panel,
+another bridge, or some eDP plug. If the DT didn't explicitly specify
+a panel or a bridge, we can still generate video output as soon as
+there is valid EDID data.
+
+Your other points went straight onto my TODO list.
+
+	Torsten
