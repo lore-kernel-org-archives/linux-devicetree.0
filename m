@@ -1,96 +1,61 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: fsl: ls1046: Modify the qspi flash frequency
-Date: Thu, 23 May 2019 20:48:06 +0800
-Message-ID: <20190523124806.GU9261@dragon>
-References: <20190521150336.8409-1-pankaj.bansal@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190521150336.8409-1-pankaj.bansal@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pankaj Bansal <pankaj.bansal@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mingkai Hu <mingkai.hu@nxp.com>, Leo Li <leoyang.li@nxp.com>
+From: richard.gong@linux.intel.com
+Subject: [PATCHv3 0/4] add Intel Stratix10 remote system update driver
+Date: Thu, 23 May 2019 08:03:26 -0500
+Message-ID: <1558616610-499-1-git-send-email-richard.gong@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sen.li@intel.com, richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2019 at 09:40:09AM +0000, Pankaj Bansal wrote:
-> The qspi flash in ls1046a based QDS and RDB boards can operate
-> at 50MHz frequency.
-> Therefore, update the maximum supported freq in their respective
-> dts files.
-> 
-> Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
+From: Richard Gong <richard.gong@intel.com>
 
-Do not use base64 encoding for patch posting.
+Since version 2 submission is too late for kernel 5.2, I submit version 3
+of Intel Stratix10 Remote System Update (RSU) drive for kernel 5.3.
 
-Shawn
+There is only one additional change in version 3 patch sets, which updates
+kernel version to 5.3 in sysfs interface document.
 
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts | 4 ++--
->  arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 5 +++--
->  2 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-> index eec62c63dafe..e441dbfbfb81 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-> @@ -3,7 +3,7 @@
->   * Device Tree Include file for Freescale Layerscape-1046A family SoC.
->   *
->   * Copyright 2016 Freescale Semiconductor, Inc.
-> - * Copyright 2018 NXP
-> + * Copyright 2018-2019 NXP
->   *
->   * Shaohui Xie <Shaohui.Xie@nxp.com>
->   */
-> @@ -169,7 +169,7 @@
->  		compatible = "spansion,m25p80";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
-> -		spi-max-frequency = <20000000>;
-> +		spi-max-frequency = <50000000>;
->  		spi-rx-bus-width = <4>;
->  		spi-tx-bus-width = <4>;
->  		reg = <0>;
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> index 6a6514d0e5a9..6f5411d09bb9 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> @@ -3,6 +3,7 @@
->   * Device Tree Include file for Freescale Layerscape-1046A family SoC.
->   *
->   * Copyright 2016 Freescale Semiconductor, Inc.
-> + * Copyright 2019 NXP
->   *
->   * Mingkai Hu <mingkai.hu@nxp.com>
->   */
-> @@ -105,7 +106,7 @@
->  		compatible = "spansion,m25p80";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
-> -		spi-max-frequency = <20000000>;
-> +		spi-max-frequency = <50000000>;
->  		spi-rx-bus-width = <4>;
->  		spi-tx-bus-width = <4>;
->  		reg = <0>;
-> @@ -115,7 +116,7 @@
->  		compatible = "spansion,m25p80";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
-> -		spi-max-frequency = <20000000>;
-> +		spi-max-frequency = <50000000>;
->  		spi-rx-bus-width = <4>;
->  		spi-tx-bus-width = <4>;
->  		reg = <1>;
-> -- 
-> 2.17.1
-> 
+Intel Stratix10 remote system update driver patches have been reviewed by
+Alan Tull and other colleagues at Intel.
+
+The Intel Stratix10 Remote System Update driver exposes interfaces
+access through the Intel Stratix10 Service Layer to user space via sysfs
+interface. The RSU interfaces report and control some of the optional RSU
+features on Intel Stratix 10 SoC.
+
+The RSU feature provides a way for customers to update the boot
+configuration of a Intel Stratix 10 SoC device with significantly reduced
+risk of corrupting the bitstream storage and bricking the system.
+
+v3: changed kernel version from 5.2 to 5.3 in RSU sysfs interface document
+v2: removed compatible = "intel,stratix10-rsu"
+    added intel stratix10 RSU device
+    changed to support RSU in handling watchdog timeout
+    s/attr_group/ATTRIBUTE_GROUPS, use devm_device_add_groups() and
+    devm_device_remove_groups()
+    added check the return value from rsu_send_msg()
+    removed RSU binding text file
+    other corrections/changes 
+
+Richard Gong (4):
+  firmware: stratix10-svc: extend svc to support RSU notify and WD
+    features
+  firmware: add Intel Stratix10 remote system update driver
+  firmware: rsu: document sysfs interface
+  MAINTAINERS: add maintainer for Intel Stratix10 FW drivers
+
+ .../testing/sysfs-devices-platform-stratix10-rsu   | 100 +++++
+ MAINTAINERS                                        |  11 +
+ drivers/firmware/Kconfig                           |  18 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/stratix10-rsu.c                   | 409 +++++++++++++++++++++
+ drivers/firmware/stratix10-svc.c                   |  74 +++-
+ include/linux/firmware/intel/stratix10-smc.h       |  48 ++-
+ .../linux/firmware/intel/stratix10-svc-client.h    |  12 +-
+ 8 files changed, 663 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
+ create mode 100644 drivers/firmware/stratix10-rsu.c
+
+-- 
+2.7.4
