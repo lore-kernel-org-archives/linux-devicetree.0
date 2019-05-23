@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 7/8] dt-bindings: net: sun7i-gmac: Convert the binding to a schemas
-Date: Thu, 23 May 2019 11:56:50 +0200
-Message-ID: <6f16585ffdc75af4e023c4d3ebba68feb65cc26e.1558605170.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 4/8] dt-bindings: net: sun4i-emac: Convert the binding to a schemas
+Date: Thu, 23 May 2019 11:56:47 +0200
+Message-ID: <7a886bbf96d9d546968f4cae289a67ef6212cb9e.1558605170.git-series.maxime.ripard@bootlin.com>
 References: <74d98cc3c744d53710c841381efd41cf5f15e656.1558605170.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,126 +12,102 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Switch our Allwinner A20 GMAC controller binding to a YAML schema to enable
-the DT validation. Since that controller is based on a Synopsys IP, let's
-add the validation to that schemas with a bunch of conditionals.
+Switch our Allwinner A10 EMAC controller binding to a YAML schema to enable
+the DT validation.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt | 27 ---------------------------
- Documentation/devicetree/bindings/net/snps,dwmac.yaml              | 45 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+), 27 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt
+ Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt      | 19 -------------------
+ 2 files changed, 55 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
 
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt
-deleted file mode 100644
-index 8b3f953656e3..000000000000
---- a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Allwinner GMAC ethernet controller
--
--This device is a platform glue layer for stmmac.
--Please see stmmac.txt for the other unchanged properties.
--
--Required properties:
-- - compatible:  Should be "allwinner,sun7i-a20-gmac"
-- - clocks: Should contain the GMAC main clock, and tx clock
--   The tx clock type should be "allwinner,sun7i-a20-gmac-clk"
-- - clock-names: Should contain the clock names "stmmaceth",
--   and "allwinner_gmac_tx"
--
--Optional properties:
--- phy-supply: phandle to a regulator if the PHY needs one
--
--Examples:
--
--	gmac: ethernet@1c50000 {
--		compatible = "allwinner,sun7i-a20-gmac";
--		reg = <0x01c50000 0x10000>,
--		      <0x01c20164 0x4>;
--		interrupts = <0 85 1>;
--		interrupt-names = "macirq";
--		clocks = <&ahb_gates 49>, <&gmac_tx>;
--		clock-names = "stmmaceth", "allwinner_gmac_tx";
--		phy-mode = "mii";
--	};
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index be3ada5121e1..d213c32ef153 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -14,6 +14,7 @@ maintainers:
- properties:
-   compatible:
-     oneOf:
-+      - const: allwinner,sun7i-a20-gmac
-       - const: snps,dwmac
-       - const: snps,dwmac-3.50a
-       - const: snps,dwmac-3.610
-@@ -232,6 +233,7 @@ allOf:
-       properties:
-         compatible:
-           enum:
-+            - allwinner,sun7i-a20-gmac
-             - snps,dwxgmac
-             - snps,dwxgmac-2.10
-             - st,spear600-gmac
-@@ -273,6 +275,37 @@ allOf:
-             Enables the TSO feature otherwise it will be managed by
-             MAC HW capability register. Only for GMAC4 and newer.
- 
-+  - if:
-+      properties:
-+        compatible:
-+          const: allwinner,sun7i-a20-gmac
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+new file mode 100644
+index 000000000000..b5d82d0a59d8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/allwinner,sun4i-a10-emac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 1
++title: Allwinner A10 EMAC Ethernet Controller Device Tree Bindings
 +
-+        interrupt-names:
-+          const: macirq
++allOf:
++  - $ref: "ethernet-controller.yaml#"
 +
-+        clocks:
-+          items:
-+            - description: GMAC main clock
-+            - description: TX clock
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
 +
-+        clock-names:
-+          items:
-+            - const: stmmaceth
-+            - const: allwinner_gmac_tx
++properties:
++  compatible:
++    const: allwinner,sun4i-a10-emac
 +
-+        phy-supply:
-+          description:
-+            PHY regulator
++  reg:
++    maxItems: 1
 +
-+      required:
-+        - clocks
-+        - clock-names
++  interrupts:
++    maxItems: 1
 +
- examples:
-   - |
-     stmmac_axi_setup: stmmac-axi-config {
-@@ -337,6 +370,18 @@ examples:
-         };
-     };
- 
++  clocks:
++    maxItems: 1
++
++  allwinner,sram:
++    description: Phandle to the device SRAM
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - phy
++  - allwinner,sram
++
++examples:
 +  - |
-+    gmac: ethernet@1c50000 {
-+        compatible = "allwinner,sun7i-a20-gmac";
-+        reg = <0x01c50000 0x10000>,
-+              <0x01c20164 0x4>;
-+        interrupts = <0 85 1>;
-+        interrupt-names = "macirq";
-+        clocks = <&ahb_gates 49>, <&gmac_tx>;
-+        clock-names = "stmmaceth", "allwinner_gmac_tx";
-+        phy-mode = "mii";
++    emac: ethernet@1c0b000 {
++        compatible = "allwinner,sun4i-a10-emac";
++        reg = <0x01c0b000 0x1000>;
++        interrupts = <55>;
++        clocks = <&ahb_gates 17>;
++        phy = <&phy0>;
 +    };
 +
- # FIXME: We should set it, but it would report all the generic
- # properties as additional properties.
- # additionalProperties: false
++# FIXME: We should set it, but it would report all the generic
++# properties as additional properties.
++# additionalProperties: false
++
++...
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
+deleted file mode 100644
+index e98118aef5f6..000000000000
+--- a/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-* Allwinner EMAC ethernet controller
+-
+-Required properties:
+-- compatible: should be "allwinner,sun4i-a10-emac" (Deprecated:
+-              "allwinner,sun4i-emac")
+-- reg: address and length of the register set for the device.
+-- interrupts: interrupt for the device
+-- phy: see ethernet.txt file in the same directory.
+-- clocks: A phandle to the reference clock for this device
+-
+-Example:
+-
+-emac: ethernet@1c0b000 {
+-       compatible = "allwinner,sun4i-a10-emac";
+-       reg = <0x01c0b000 0x1000>;
+-       interrupts = <55>;
+-       clocks = <&ahb_gates 17>;
+-       phy = <&phy0>;
+-};
 -- 
 git-series 0.9.1
