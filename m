@@ -1,237 +1,293 @@
-Return-Path: <SRS0=Xlkb=TX=analog.com=alexandru.Ardelean@kernel.org>
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH v3 2/5] iio: ad7949: Support internal Vref
-Date: Thu, 23 May 2019 12:51:26 +0000
-Message-ID: <3db30e68aa1407ab03a20c485bda6acf0a991b38.camel@analog.com>
-References: <1557759185-167857-1-git-send-email-adam.michaelis@rockwellcollins.com>
-	 <1557759185-167857-2-git-send-email-adam.michaelis@rockwellcollins.com>
-	 <CA+U=DsoQRQJoWrP3shnDyRVUxcgYCpeiQtusFHWqVAeWRmwarQ@mail.gmail.com>
-In-Reply-To: <CA+U=DsoQRQJoWrP3shnDyRVUxcgYCpeiQtusFHWqVAeWRmwarQ@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E4AD9547280C1B49AF942CF252AC4E55@analog.com>
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=DL3G=TX=gmail.com=ardeleanalex@kernel.org>
 MIME-Version: 1.0
-To: "ardeleanalex@gmail.com" <ardeleanalex@gmail.com>, "adam.michaelis@rockwellcollins.com" <adam.michaelis@rockwellcollins.com>
-Cc: "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "Popa, Stefan Serban  <StefanSerban.Popa@analog.com>, jic23@kernel.org" <jic23@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "charles-antoine.couret@essensium.com" <charles-antoine.couret@essensium.com>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "clayton.shotwell@rockwellcollins.com" <clayton.shotwell@rockwellcollins.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "brandon.maier@rockwellcollins.com" <brandon.maier@rockwellcollins.com>
+References: <1557759185-167857-1-git-send-email-adam.michaelis@rockwellcollins.com>
+ <1557759185-167857-2-git-send-email-adam.michaelis@rockwellcollins.com>
+In-Reply-To: <1557759185-167857-2-git-send-email-adam.michaelis@rockwellcollins.com>
+From: Alexandru Ardelean <ardeleanalex@gmail.com>
+Date: Thu, 23 May 2019 15:12:15 +0300
+Message-ID: <CA+U=DsoQRQJoWrP3shnDyRVUxcgYCpeiQtusFHWqVAeWRmwarQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] iio: ad7949: Support internal Vref
+Content-Type: text/plain; charset="UTF-8"
+To: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Cc: linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, "Hennerich, Michael" <michael.hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org, brandon.maier@rockwellcollins.com, clayton.shotwell@rockwellcollins.com, Alexandru Ardelean <alexandru.ardelean@analog.com>, Stefan Popa <stefan.popa@analog.com>
 List-ID: <devicetree@vger.kernel.org>
 
-T24gVGh1LCAyMDE5LTA1LTIzIGF0IDE1OjEyICswMzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3Jv
-dGU6DQo+IFtFeHRlcm5hbF0NCj4gDQo+IA0KPiBPbiBNb24sIE1heSAxMywgMjAxOSBhdCA3OjE2
-IFBNIEFkYW0gTWljaGFlbGlzDQo+IDxhZGFtLm1pY2hhZWxpc0Byb2Nrd2VsbGNvbGxpbnMuY29t
-PiB3cm90ZToNCj4gPiANCj4gPiBBZGRpbmcgY29uZmlndXJhYmxlICh2aWEgZGV2aWNlIHRyZWUp
-IG9wdGlvbnMgdG8gc2VsZWN0IG9uZSBvZiB0aGUgdHdvDQo+ID4gZXh0ZXJuYWwgcmVmZXJlbmNl
-IHZvbHRhZ2VzIChSRUZJTiBhcyBkZWZhdWx0LCBvcmlnaW5hbCBpbXBsZW1lbnRhdGlvbikNCj4g
-PiBvciBvbmUgb2YgdGhlIHR3byBpbnRlcm5hbCByZWZlcmVuY2Ugdm9sdGFnZXMgcHJvdmlkZWQg
-YnkgdGhlIEFENzk0OQ0KPiA+IHBhcnQgZmFtaWx5Lg0KPiA+IA0KPiANCg0KU28sIEkgbWFuYWdl
-ZCB0byBnbyB0aHJvdWdoIHRoZSBwYXRjaGVzLg0KDQpJJ2xsIHByb3Bvc2UgdG8gcmUtb3JnYW5p
-emUgdGhlIHBhdGNoZXMgaW50byBzbWFsbGVyIGdyb3Vwcy4NCg0KTGV0J3MgdGFrZSB0aGlzIHBh
-dGNoICsgdGhlIGRldmljZS10cmVlIHBhdGNoIChhc3NvY2lhdGVkIHdpdGggdGhpcykgaW50byBh
-bm90aGVyIHNlcmllcy4NCkFkZGluZyBzdXBwb3J0IGZvciBpbnRlcm5hbCBWcmVmIHNlZW1zIHBy
-ZXR0eSBzdHJhaWdodGZvcndhcmQgdG8gbWUuDQoNClRoZSBTUEkgY29tbXVuaWNhdGlvbiBwYXRj
-aGVzIHNlZW0gd2VpcmQgYW5kIHJlcXVpcmUgbW9yZSB0aG91Z2h0L2RpZ2dpbmcgb24gb3VyIHNp
-ZGUgYXMgd2VsbC4NCg0KSSdsbCB3YWl0IGZvciBTdGVmYW4gdG8gYWRkIGhpcyBpbnB1dCBhcyB3
-ZWxsLg0KDQpUaGFua3MNCkFsZXgNCg0KDQo+IEkgd291bGQgcnVuIGEgLi9zY3JpcHRzL2NoZWNr
-cGF0Y2gucGwgb24gdGhpcyBwYXRjaCAobWF5YmUgYWxzbyBvbiB0aGUgc2VyaWVzKS4NCj4gSSB3
-b3VsZCBvbmx5IGNvbXBsYWluIGFib3V0IHN0eWxlLXN0dWZmIChvbiB0aGlzIHBhdGNoKSwgYnV0
-IHRob3NlDQo+IHdvdWxkIGFsc28gZ2V0IHJlcG9ydGVkIGJ5IGNoZWNrcGF0Y2guDQo+IA0KPiA+
-IFNpZ25lZC1vZmYtYnk6IEFkYW0gTWljaGFlbGlzIDxhZGFtLm1pY2hhZWxpc0Byb2Nrd2VsbGNv
-bGxpbnMuY29tPg0KPiA+IC0tLQ0KPiA+ICAgICAgICAgVjI6DQo+ID4gICAgICAgICAtIEFkZCBz
-b21lIGRlZmluZXMgdG8gcmVkdWNlIHVzZSBvZiBtYWdpYyBudW1iZXJzLg0KPiA+ICAgICAgICAg
-VjM6DQo+ID4gICAgICAgICAtIEFkZCBiaXRmaWVsZC5oIG1hY3JvcyB0aHJvdWdob3V0Lg0KPiA+
-ICAgICAgICAgLSBSZS10aGluayB1c2FnZSBvZiBkZXZpY2UgdHJlZSBwYXJhbWV0ZXIgdG8gZm9j
-dXMgb24gdGhlDQo+ID4gICAgICAgICBhY3R1YWwgcmVmZXJlbmNlIHNvdXJjZXMgaW5zdGVhZCBv
-ZiB0aGUgcmF3IGhhcmR3YXJlDQo+ID4gICAgICAgICBjb25maWd1cmF0aW9uLg0KPiA+IC0tLQ0K
-PiA+ICBkcml2ZXJzL2lpby9hZGMvYWQ3OTQ5LmMgfCAxMzggKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKy0tLS0tLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDExMSBpbnNl
-cnRpb25zKCspLCAyNyBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9paW8vYWRjL2FkNzk0OS5jIGIvZHJpdmVycy9paW8vYWRjL2FkNzk0OS5jDQo+ID4gaW5kZXgg
-YzdmZTI3YWEyNTE5Li5iNjQ4YjFhYjk1NTkgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9paW8v
-YWRjL2FkNzk0OS5jDQo+ID4gKysrIGIvZHJpdmVycy9paW8vYWRjL2FkNzk0OS5jDQo+ID4gQEAg
-LTExLDEyICsxMSwyMyBAQA0KPiA+ICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gICNp
-bmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4
-L3NwaS9zcGkuaD4NCj4gPiAtDQo+ID4gLSNkZWZpbmUgQUQ3OTQ5X01BU0tfQ0hBTk5FTF9TRUwg
-ICAgICAgICAgICAgICAgR0VOTUFTSyg5LCA3KQ0KPiA+IC0jZGVmaW5lIEFENzk0OV9NQVNLX1RP
-VEFMICAgICAgICAgICAgICBHRU5NQVNLKDEzLCAwKQ0KPiA+IC0jZGVmaW5lIEFENzk0OV9PRkZT
-RVRfQ0hBTk5FTF9TRUwgICAgICA3DQo+ID4gLSNkZWZpbmUgQUQ3OTQ5X0NGR19SRUFEX0JBQ0sg
-ICAgICAgICAgIDB4MQ0KPiA+IC0jZGVmaW5lIEFENzk0OV9DRkdfUkVHX1NJWkVfQklUUyAgICAg
-ICAxNA0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2Jp
-dGZpZWxkLmg+DQo+ID4gKw0KPiA+ICsjZGVmaW5lIEFENzk0OV9DRkdfUkVHX1NJWkVfQklUUyAg
-ICAgICAgICAgMTQNCj4gPiArI2RlZmluZSBBRDc5NDlfQ0ZHX01BU0tfVE9UQUwgICAgICAgICAg
-ICAgIEdFTk1BU0soMTMsIDApDQo+ID4gKyNkZWZpbmUgQUQ3OTQ5X0NGR19BUFBMWSAgICAgICAg
-ICAgICAgICAgICBCSVQoMTMpDQo+ID4gKyNkZWZpbmUgQUQ3OTQ5X0NGR19DSEFOX0NGRyAgICAg
-ICAgICAgICAgICBHRU5NQVNLKDEyLCAxMCkNCj4gPiArI2RlZmluZSBBRDc5NDlfQ0ZHX0NIQU5f
-Q0ZHX1VOSVBPTEFSX0dORCAgIDB4Nw0KPiA+ICsjZGVmaW5lIEFENzk0OV9DRkdfQ0hBTl9TRUwg
-ICAgICAgICAgICAgICAgR0VOTUFTSyg5LCA3KQ0KPiA+ICsjZGVmaW5lIEFENzk0OV9DRkdfQlcg
-ICAgICAgICAgICAgICAgICAgICAgQklUKDYpDQo+ID4gKyNkZWZpbmUgQUQ3OTQ5X0NGR19CV19G
-VUxMICAgICAgICAgICAgICAgICAxDQo+ID4gKyNkZWZpbmUgQUQ3OTQ5X0NGR19SRUZfU0VMICAg
-ICAgICAgICAgICAgICBHRU5NQVNLKDUsIDMpDQo+ID4gKyNkZWZpbmUgQUQ3OTQ5X0NGR19TRVEg
-ICAgICAgICAgICAgICAgICAgICBHRU5NQVNLKDIsIDEpDQo+ID4gKyNkZWZpbmUgQUQ3OTQ5X0NG
-R19TRVFfRElTQUJMRUQgICAgICAgICAgICAweDANCj4gPiArI2RlZmluZSBBRDc5NDlfQ0ZHX1JF
-QURCQUNLICAgICAgICAgICAgICAgIEJJVCgwKQ0KPiA+ICsjZGVmaW5lIEFENzk0OV9DRkdfUkVB
-REJBQ0tfRU4gICAgICAgICAgICAgMA0KPiA+ICsjZGVmaW5lIEFENzk0OV9DRkdfUkVBREJBQ0tf
-RElTICAgICAgICAgICAgMQ0KPiA+IA0KPiA+ICBlbnVtIHsNCj4gPiAgICAgICAgIElEX0FENzk0
-OSA9IDAsDQo+ID4gQEAgLTI0LDYgKzM1LDE4IEBAIGVudW0gew0KPiA+ICAgICAgICAgSURfQUQ3
-Njg5LA0KPiA+ICB9Ow0KPiA+IA0KPiA+ICtlbnVtIGFkNzk0OV9yZWZfc2VsIHsNCj4gPiArICAg
-ICAgIEFENzk0OV9SRUZfMlY1ID0gMCwgLyogMi41ViBpbnRlcm5hbCByZWYgKyB0ZW1wIHNlbnNv
-ciAqLw0KPiA+ICsgICAgICAgQUQ3OTQ5X1JFRl80VjAsIC8qIDQuMDk2ViBpbnRlcm5hbCByZWYg
-KyB0ZW1wIHNlbnNvciAqLw0KPiA+ICsgICAgICAgQUQ3OTQ5X1JFRl9FWFRfVEVNUCwgLyogUkVG
-ICsgdGVtcCBzZW5zb3IgKi8NCj4gPiArICAgICAgIEFENzk0OV9SRUZfRVhUX1RFTVBfQlVGLCAv
-KiBSRUZJTiArIHRlbXAgc2Vuc29yICovDQo+ID4gKyAgICAgICBBRDc5NDlfUkVGX1JTUlZfNCwN
-Cj4gPiArICAgICAgIEFENzk0OV9SRUZfUlNSVl81LA0KPiA+ICsgICAgICAgQUQ3OTQ5X1JFRl9F
-WFQsIC8qIFJFRiwgbm8gdGVtcCAqLw0KPiA+ICsgICAgICAgQUQ3OTQ5X1JFRl9FWFRfQlVGLCAv
-KiBSRUZJTiwgbm8gdGVtcCAqLw0KPiA+ICsgICAgICAgQUQ3OTQ5X1JFRl9NQVgsDQo+ID4gK307
-DQo+ID4gKw0KPiA+ICBzdHJ1Y3QgYWQ3OTQ5X2FkY19zcGVjIHsNCj4gPiAgICAgICAgIHU4IG51
-bV9jaGFubmVsczsNCj4gPiAgICAgICAgIHU4IHJlc29sdXRpb247DQo+ID4gQEAgLTQxLDYgKzY0
-LDcgQEAgc3RydWN0IGFkNzk0OV9hZGNfc3BlYyB7DQo+ID4gICAqIEB2cmVmOiByZWd1bGF0b3Ig
-Z2VuZXJhdGluZyBWcmVmDQo+ID4gICAqIEBpaW9fZGV2OiByZWZlcmVuY2UgdG8gaWlvIHN0cnVj
-dHVyZQ0KPiA+ICAgKiBAc3BpOiByZWZlcmVuY2UgdG8gc3BpIHN0cnVjdHVyZQ0KPiA+ICsgKiBA
-cmVmX3NlbDogc2VsZWN0ZWQgcmVmZXJlbmNlIHZvbHRhZ2Ugc291cmNlDQo+ID4gICAqIEByZXNv
-bHV0aW9uOiByZXNvbHV0aW9uIG9mIHRoZSBjaGlwDQo+ID4gICAqIEBjZmc6IGNvcHkgb2YgdGhl
-IGNvbmZpZ3VyYXRpb24gcmVnaXN0ZXINCj4gPiAgICogQGN1cnJlbnRfY2hhbm5lbDogY3VycmVu
-dCBjaGFubmVsIGluIHVzZQ0KPiA+IEBAIC01MSw2ICs3NSw3IEBAIHN0cnVjdCBhZDc5NDlfYWRj
-X2NoaXAgew0KPiA+ICAgICAgICAgc3RydWN0IHJlZ3VsYXRvciAqdnJlZjsNCj4gPiAgICAgICAg
-IHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXY7DQo+ID4gICAgICAgICBzdHJ1Y3Qgc3BpX2Rldmlj
-ZSAqc3BpOw0KPiA+ICsgICAgICAgZW51bSBhZDc5NDlfcmVmX3NlbCByZWZfc2VsOw0KPiA+ICAg
-ICAgICAgdTggcmVzb2x1dGlvbjsNCj4gPiAgICAgICAgIHUxNiBjZmc7DQo+ID4gICAgICAgICB1
-bnNpZ25lZCBpbnQgY3VycmVudF9jaGFubmVsOw0KPiA+IEBAIC01OSw3ICs4NCw3IEBAIHN0cnVj
-dCBhZDc5NDlfYWRjX2NoaXAgew0KPiA+IA0KPiA+ICBzdGF0aWMgYm9vbCBhZDc5NDlfc3BpX2Nm
-Z19pc19yZWFkX2JhY2soc3RydWN0IGFkNzk0OV9hZGNfY2hpcCAqYWQ3OTQ5X2FkYykNCj4gPiAg
-ew0KPiA+IC0gICAgICAgaWYgKCEoYWQ3OTQ5X2FkYy0+Y2ZnICYgQUQ3OTQ5X0NGR19SRUFEX0JB
-Q0spKQ0KPiA+ICsgICAgICAgaWYgKCEoYWQ3OTQ5X2FkYy0+Y2ZnICYgQUQ3OTQ5X0NGR19SRUFE
-QkFDSykpDQo+ID4gICAgICAgICAgICAgICAgIHJldHVybiB0cnVlOw0KPiA+IA0KPiA+ICAgICAg
-ICAgcmV0dXJuIGZhbHNlOw0KPiA+IEBAIC05MSw3ICsxMTYsNyBAQCBzdGF0aWMgaW50IGFkNzk0
-OV9zcGlfd3JpdGVfY2ZnKHN0cnVjdCBhZDc5NDlfYWRjX2NoaXAgKmFkNzk0OV9hZGMsIHUxNiB2
-YWwsDQo+ID4gICAgICAgICB9Ow0KPiA+IA0KPiA+ICAgICAgICAgYWQ3OTQ5X2FkYy0+Y2ZnID0g
-KHZhbCAmIG1hc2spIHwgKGFkNzk0OV9hZGMtPmNmZyAmIH5tYXNrKTsNCj4gPiAtICAgICAgIGFk
-Nzk0OV9hZGMtPmJ1ZmZlciA9IGFkNzk0OV9hZGMtPmNmZyA8PCBzaGlmdDsNCj4gPiArICAgICAg
-IGFkNzk0OV9hZGMtPmJ1ZmZlciA9IChhZDc5NDlfYWRjLT5jZmcgJiBBRDc5NDlfQ0ZHX01BU0tf
-VE9UQUwpIDw8IHNoaWZ0Ow0KPiA+ICAgICAgICAgc3BpX21lc3NhZ2VfaW5pdF93aXRoX3RyYW5z
-ZmVycygmbXNnLCB0eCwgMSk7DQo+ID4gICAgICAgICByZXQgPSBzcGlfc3luYyhhZDc5NDlfYWRj
-LT5zcGksICZtc2cpOw0KPiA+IA0KPiA+IEBAIC0xMzYsOCArMTYxLDggQEAgc3RhdGljIGludCBh
-ZDc5NDlfc3BpX3JlYWRfY2hhbm5lbChzdHJ1Y3QgYWQ3OTQ5X2FkY19jaGlwICphZDc5NDlfYWRj
-LCBpbnQgKnZhbCwNCj4gPiAgICAgICAgIH07DQo+ID4gDQo+ID4gICAgICAgICByZXQgPSBhZDc5
-NDlfc3BpX3dyaXRlX2NmZyhhZDc5NDlfYWRjLA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgY2hhbm5lbCA8PCBBRDc5NDlfT0ZGU0VUX0NIQU5ORUxfU0VMLA0KPiA+IC0g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQUQ3OTQ5X01BU0tfQ0hBTk5FTF9TRUwp
-Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRklFTERfUFJFUChBRDc5
-NDlfQ0ZHX0NIQU5fU0VMLCBjaGFubmVsKSwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIEFENzk0OV9DRkdfQ0hBTl9TRUwpOw0KPiA+ICAgICAgICAgaWYgKHJldCkNCj4g
-PiAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gPiANCj4gPiBAQCAtMjA0LDExICsyMjks
-MjAgQEAgc3RhdGljIGludCBhZDc5NDlfc3BpX3JlYWRfcmF3KHN0cnVjdCBpaW9fZGV2ICppbmRp
-b19kZXYsDQo+ID4gICAgICAgICAgICAgICAgIHJldHVybiBJSU9fVkFMX0lOVDsNCj4gPiANCj4g
-PiAgICAgICAgIGNhc2UgSUlPX0NIQU5fSU5GT19TQ0FMRToNCj4gPiAtICAgICAgICAgICAgICAg
-cmV0ID0gcmVndWxhdG9yX2dldF92b2x0YWdlKGFkNzk0OV9hZGMtPnZyZWYpOw0KPiA+IC0gICAg
-ICAgICAgICAgICBpZiAocmV0IDwgMCkNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICByZXR1
-cm4gcmV0Ow0KPiA+ICsgICAgICAgICAgICAgICBpZiAoYWQ3OTQ5X2FkYy0+dnJlZikgew0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIHJldCA9IHJlZ3VsYXRvcl9nZXRfdm9sdGFnZShhZDc5
-NDlfYWRjLT52cmVmKTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBpZiAocmV0IDwgMCkN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKw0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICp2YWwgPSByZXQgLyA1MDAwOw0KPiA+ICsgICAg
-ICAgICAgICAgICB9IGVsc2UgaWYgKGFkNzk0OV9hZGMtPnJlZl9zZWwgPT0gQUQ3OTQ5X1JFRl8y
-VjUpIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAqdmFsID0gMjUwMDsNCj4gPiArICAg
-ICAgICAgICAgICAgfSBlbHNlIGlmIChhZDc5NDlfYWRjLT5yZWZfc2VsID09IEFENzk0OV9SRUZf
-NFYwKSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgKnZhbCA9IDQwOTY7DQo+ID4gKyAg
-ICAgICAgICAgICAgIH0gZWxzZSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJu
-IC1FSU5WQUw7DQo+ID4gKyAgICAgICAgICAgICAgIH0NCj4gPiANCj4gPiAtICAgICAgICAgICAg
-ICAgKnZhbCA9IHJldCAvIDUwMDA7DQo+ID4gICAgICAgICAgICAgICAgIHJldHVybiBJSU9fVkFM
-X0lOVDsNCj4gPiAgICAgICAgIH0NCj4gPiANCj4gPiBAQCAtMjI2LDcgKzI2MCw4IEBAIHN0YXRp
-YyBpbnQgYWQ3OTQ5X3NwaV9yZWdfYWNjZXNzKHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYsDQo+
-ID4gICAgICAgICAgICAgICAgICpyZWFkdmFsID0gYWQ3OTQ5X2FkYy0+Y2ZnOw0KPiA+ICAgICAg
-ICAgZWxzZQ0KPiA+ICAgICAgICAgICAgICAgICByZXQgPSBhZDc5NDlfc3BpX3dyaXRlX2NmZyhh
-ZDc5NDlfYWRjLA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIHdyaXRldmFsICYgQUQ3OTQ5
-X01BU0tfVE9UQUwsIEFENzk0OV9NQVNLX1RPVEFMKTsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICB3cml0ZXZhbCAmIEFENzk0OV9DRkdfTUFTS19UT1RBTCwNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICBBRDc5NDlfQ0ZHX01BU0tfVE9UQUwpOw0KPiA+IA0KPiA+ICAgICAgICAgcmV0
-dXJuIHJldDsNCj4gPiAgfQ0KPiA+IEBAIC0yNDAsMTAgKzI3NSwyNCBAQCBzdGF0aWMgaW50IGFk
-Nzk0OV9zcGlfaW5pdChzdHJ1Y3QgYWQ3OTQ5X2FkY19jaGlwICphZDc5NDlfYWRjKQ0KPiA+ICB7
-DQo+ID4gICAgICAgICBpbnQgcmV0Ow0KPiA+ICAgICAgICAgaW50IHZhbDsNCj4gPiArICAgICAg
-IHUxNiBhZGNfY29uZmlnID0gMDsNCj4gPiANCj4gPiAtICAgICAgIC8qIFNlcXVlbmNlciBkaXNh
-YmxlZCwgQ0ZHIHJlYWRiYWNrIGRpc2FibGVkLCBJTjAgYXMgZGVmYXVsdCBjaGFubmVsICovDQo+
-ID4gICAgICAgICBhZDc5NDlfYWRjLT5jdXJyZW50X2NoYW5uZWwgPSAwOw0KPiA+IC0gICAgICAg
-cmV0ID0gYWQ3OTQ5X3NwaV93cml0ZV9jZmcoYWQ3OTQ5X2FkYywgMHgzQzc5LCBBRDc5NDlfTUFT
-S19UT1RBTCk7DQo+ID4gKyAgICAgICBhZDc5NDlfYWRjLT5jZmcgPSAwOw0KPiA+ICsNCj4gPiAr
-ICAgICAgIGFkY19jb25maWcgfD0gRklFTERfUFJFUChBRDc5NDlfQ0ZHX0FQUExZLCAxKTsNCj4g
-PiArICAgICAgIGFkY19jb25maWcgfD0gRklFTERfUFJFUChBRDc5NDlfQ0ZHX0NIQU5fQ0ZHLA0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIEFENzk0OV9DRkdfQ0hBTl9DRkdfVU5JUE9MQVJf
-R05EKTsNCj4gPiArICAgICAgIGFkY19jb25maWcgfD0gRklFTERfUFJFUChBRDc5NDlfQ0ZHX0NI
-QU5fU0VMLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGFkNzk0OV9hZGMtPmN1cnJlbnRf
-Y2hhbm5lbCk7DQo+ID4gKyAgICAgICBhZGNfY29uZmlnIHw9IEZJRUxEX1BSRVAoQUQ3OTQ5X0NG
-R19CVywgQUQ3OTQ5X0NGR19CV19GVUxMKTsNCj4gPiArICAgICAgIGFkY19jb25maWcgfD0gRklF
-TERfUFJFUChBRDc5NDlfQ0ZHX1JFRl9TRUwsIGFkNzk0OV9hZGMtPnJlZl9zZWwpOw0KPiA+ICsg
-ICAgICAgYWRjX2NvbmZpZyB8PSBGSUVMRF9QUkVQKEFENzk0OV9DRkdfU0VRLCBBRDc5NDlfQ0ZH
-X1NFUV9ESVNBQkxFRCk7DQo+ID4gKyAgICAgICBhZGNfY29uZmlnIHw9IEZJRUxEX1BSRVAoQUQ3
-OTQ5X0NGR19SRUFEQkFDSywgQUQ3OTQ5X0NGR19SRUFEQkFDS19ESVMpOw0KPiA+ICsNCj4gPiAr
-ICAgICAgIHJldCA9IGFkNzk0OV9zcGlfd3JpdGVfY2ZnKGFkNzk0OV9hZGMsDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgYWRjX2NvbmZpZywNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICBBRDc5NDlfQ0ZHX01BU0tfVE9UQUwpOw0KPiA+IA0KPiA+ICAgICAgICAgLyoNCj4gPiAgICAg
-ICAgICAqIERvIGEgZHVtbXkgY29udmVyc2lvbiB0byBhcHBseSB0aGUgZmlyc3QgY29uZmlndXJh
-dGlvbiBzZXR0aW5nLg0KPiA+IEBAIC0yNjEsNiArMzEwLDcgQEAgc3RhdGljIGludCBhZDc5NDlf
-c3BpX3Byb2JlKHN0cnVjdCBzcGlfZGV2aWNlICpzcGkpDQo+ID4gICAgICAgICBzdHJ1Y3QgYWQ3
-OTQ5X2FkY19jaGlwICphZDc5NDlfYWRjOw0KPiA+ICAgICAgICAgc3RydWN0IGlpb19kZXYgKmlu
-ZGlvX2RldjsNCj4gPiAgICAgICAgIGludCByZXQ7DQo+ID4gKyAgICAgICB1MzIgdGVtcDsNCj4g
-PiANCj4gPiAgICAgICAgIGluZGlvX2RldiA9IGRldm1faWlvX2RldmljZV9hbGxvYyhkZXYsIHNp
-emVvZigqYWQ3OTQ5X2FkYykpOw0KPiA+ICAgICAgICAgaWYgKCFpbmRpb19kZXYpIHsNCj4gPiBA
-QCAtMjc5LDIxICszMjksNTMgQEAgc3RhdGljIGludCBhZDc5NDlfc3BpX3Byb2JlKHN0cnVjdCBz
-cGlfZGV2aWNlICpzcGkpDQo+ID4gICAgICAgICBhZDc5NDlfYWRjID0gaWlvX3ByaXYoaW5kaW9f
-ZGV2KTsNCj4gPiAgICAgICAgIGFkNzk0OV9hZGMtPmluZGlvX2RldiA9IGluZGlvX2RldjsNCj4g
-PiAgICAgICAgIGFkNzk0OV9hZGMtPnNwaSA9IHNwaTsNCj4gPiArICAgICAgIGFkNzk0OV9hZGMt
-PnZyZWYgPSBOVUxMOw0KPiA+IA0KPiA+ICAgICAgICAgc3BlYyA9ICZhZDc5NDlfYWRjX3NwZWNb
-c3BpX2dldF9kZXZpY2VfaWQoc3BpKS0+ZHJpdmVyX2RhdGFdOw0KPiA+ICAgICAgICAgaW5kaW9f
-ZGV2LT5udW1fY2hhbm5lbHMgPSBzcGVjLT5udW1fY2hhbm5lbHM7DQo+ID4gICAgICAgICBhZDc5
-NDlfYWRjLT5yZXNvbHV0aW9uID0gc3BlYy0+cmVzb2x1dGlvbjsNCj4gPiANCj4gPiAtICAgICAg
-IGFkNzk0OV9hZGMtPnZyZWYgPSBkZXZtX3JlZ3VsYXRvcl9nZXQoZGV2LCAidnJlZiIpOw0KPiA+
-IC0gICAgICAgaWYgKElTX0VSUihhZDc5NDlfYWRjLT52cmVmKSkgew0KPiA+IC0gICAgICAgICAg
-ICAgICBkZXZfZXJyKGRldiwgImZhaWwgdG8gcmVxdWVzdCByZWd1bGF0b3JcbiIpOw0KPiA+IC0g
-ICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihhZDc5NDlfYWRjLT52cmVmKTsNCj4gPiArICAg
-ICAgIHJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKGFkNzk0OV9hZGMtPmluZGlvX2Rldi0+ZGV2
-Lm9mX25vZGUsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgImFkaSxyZWZlcmVuY2Utc2Vs
-ZWN0IiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAmdGVtcCk7DQo+ID4gKyAgICAgICBp
-ZiAocmV0ID09IDApIHsNCj4gPiArICAgICAgICAgICAgICAgc3dpdGNoICh0ZW1wKSB7DQo+ID4g
-KyAgICAgICAgICAgICAgIGNhc2UgMDoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBhZDc5
-NDlfYWRjLT5yZWZfc2VsID0gQUQ3OTQ5X1JFRl8yVjU7DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgYnJlYWs7DQo+ID4gKyAgICAgICAgICAgICAgIGNhc2UgMToNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICBhZDc5NDlfYWRjLT5yZWZfc2VsID0gQUQ3OTQ5X1JFRl80VjA7DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4gKyAgICAgICAgICAgICAgIGNhc2Ug
-MjoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBhZDc5NDlfYWRjLT5yZWZfc2VsID0gQUQ3
-OTQ5X1JFRl9FWFQ7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4gKyAg
-ICAgICAgICAgICAgIGNhc2UgMzoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBhZDc5NDlf
-YWRjLT5yZWZfc2VsID0gQUQ3OTQ5X1JFRl9FWFRfQlVGOw0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIGJyZWFrOw0KPiA+ICsgICAgICAgICAgICAgICBkZWZhdWx0Og0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIGFkNzk0OV9hZGMtPnJlZl9zZWwgPSBBRDc5NDlfUkVGX0VYVF9CVUY7
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2X3dhcm4oZGV2LA0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgInVua25vd24gcmVmZXJlbmNlLXNlbGVjdCB2YWx1ZSwg
-dXNpbmcgUkVGSU4gZXh0ZXJuYWwgVnJlZiAoMykgYnkgZGVmYXVsdFxuIik7DQo+ID4gKyAgICAg
-ICAgICAgICAgIH0NCj4gPiArICAgICAgIH0gZWxzZSB7DQo+ID4gKyAgICAgICAgICAgICAgIGFk
-Nzk0OV9hZGMtPnJlZl9zZWwgPSBBRDc5NDlfUkVGX0VYVF9CVUY7DQo+ID4gKyAgICAgICAgICAg
-ICAgIGRldl93YXJuKGRldiwgInVzaW5nIGV4dGVybmFsIFZyZWYgYnkgZGVmYXVsdFxuIik7DQo+
-ID4gICAgICAgICB9DQo+ID4gDQo+ID4gLSAgICAgICByZXQgPSByZWd1bGF0b3JfZW5hYmxlKGFk
-Nzk0OV9hZGMtPnZyZWYpOw0KPiA+IC0gICAgICAgaWYgKHJldCA8IDApIHsNCj4gPiAtICAgICAg
-ICAgICAgICAgZGV2X2VycihkZXYsICJmYWlsIHRvIGVuYWJsZSByZWd1bGF0b3JcbiIpOw0KPiA+
-IC0gICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsgICAgICAgLyogQ2hlY2sgd2hldGhl
-ciB1c2luZyBleHRlcm5hbCBWcmVmICovDQo+ID4gKyAgICAgICBpZiAoKGFkNzk0OV9hZGMtPnJl
-Zl9zZWwgIT0gQUQ3OTQ5X1JFRl8yVjUpICYmDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-KGFkNzk0OV9hZGMtPnJlZl9zZWwgIT0gQUQ3OTQ5X1JFRl80VjApKSB7DQo+ID4gKyAgICAgICAg
-ICAgICAgIGFkNzk0OV9hZGMtPnZyZWYgPSBkZXZtX3JlZ3VsYXRvcl9nZXQoZGV2LCAidnJlZiIp
-Ow0KPiA+ICsgICAgICAgICAgICAgICBpZiAoSVNfRVJSKGFkNzk0OV9hZGMtPnZyZWYpKSB7DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJmYWlsIHRvIHJlcXVlc3Qg
-cmVndWxhdG9yXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VS
-UihhZDc5NDlfYWRjLT52cmVmKTsNCj4gPiArICAgICAgICAgICAgICAgfQ0KPiA+ICsNCj4gPiAr
-ICAgICAgICAgICAgICAgcmV0ID0gcmVndWxhdG9yX2VuYWJsZShhZDc5NDlfYWRjLT52cmVmKTsN
-Cj4gPiArICAgICAgICAgICAgICAgaWYgKHJldCA8IDApIHsNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICBkZXZfZXJyKGRldiwgImZhaWwgdG8gZW5hYmxlIHJlZ3VsYXRvclxuIik7DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gPiArICAgICAgICAgICAgICAg
-fQ0KPiA+ICAgICAgICAgfQ0KPiA+IA0KPiA+ICAgICAgICAgbXV0ZXhfaW5pdCgmYWQ3OTQ5X2Fk
-Yy0+bG9jayk7DQo+ID4gQEAgLTMxNCw3ICszOTYsOCBAQCBzdGF0aWMgaW50IGFkNzk0OV9zcGlf
-cHJvYmUoc3RydWN0IHNwaV9kZXZpY2UgKnNwaSkNCj4gPiANCj4gPiAgZXJyOg0KPiA+ICAgICAg
-ICAgbXV0ZXhfZGVzdHJveSgmYWQ3OTQ5X2FkYy0+bG9jayk7DQo+ID4gLSAgICAgICByZWd1bGF0
-b3JfZGlzYWJsZShhZDc5NDlfYWRjLT52cmVmKTsNCj4gPiArICAgICAgIGlmIChhZDc5NDlfYWRj
-LT52cmVmKQ0KPiA+ICsgICAgICAgICAgICAgICByZWd1bGF0b3JfZGlzYWJsZShhZDc5NDlfYWRj
-LT52cmVmKTsNCj4gPiANCj4gPiAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gIH0NCj4gPiBAQCAt
-MzI2LDcgKzQwOSw4IEBAIHN0YXRpYyBpbnQgYWQ3OTQ5X3NwaV9yZW1vdmUoc3RydWN0IHNwaV9k
-ZXZpY2UgKnNwaSkNCj4gPiANCj4gPiAgICAgICAgIGlpb19kZXZpY2VfdW5yZWdpc3RlcihpbmRp
-b19kZXYpOw0KPiA+ICAgICAgICAgbXV0ZXhfZGVzdHJveSgmYWQ3OTQ5X2FkYy0+bG9jayk7DQo+
-ID4gLSAgICAgICByZWd1bGF0b3JfZGlzYWJsZShhZDc5NDlfYWRjLT52cmVmKTsNCj4gPiArICAg
-ICAgIGlmIChhZDc5NDlfYWRjLT52cmVmKQ0KPiA+ICsgICAgICAgICAgICAgICByZWd1bGF0b3Jf
-ZGlzYWJsZShhZDc5NDlfYWRjLT52cmVmKTsNCj4gPiANCj4gPiAgICAgICAgIHJldHVybiAwOw0K
-PiA+ICB9DQo+ID4gLS0NCj4gPiAxLjkuMQ0KPiA+IA0K
+On Mon, May 13, 2019 at 7:16 PM Adam Michaelis
+<adam.michaelis@rockwellcollins.com> wrote:
+>
+> Adding configurable (via device tree) options to select one of the two
+> external reference voltages (REFIN as default, original implementation)
+> or one of the two internal reference voltages provided by the AD7949
+> part family.
+>
+
+I would run a ./scripts/checkpatch.pl on this patch (maybe also on the series).
+I would only complain about style-stuff (on this patch), but those
+would also get reported by checkpatch.
+
+> Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+> ---
+>         V2:
+>         - Add some defines to reduce use of magic numbers.
+>         V3:
+>         - Add bitfield.h macros throughout.
+>         - Re-think usage of device tree parameter to focus on the
+>         actual reference sources instead of the raw hardware
+>         configuration.
+> ---
+>  drivers/iio/adc/ad7949.c | 138 +++++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 111 insertions(+), 27 deletions(-)
+>
+> diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
+> index c7fe27aa2519..b648b1ab9559 100644
+> --- a/drivers/iio/adc/ad7949.c
+> +++ b/drivers/iio/adc/ad7949.c
+> @@ -11,12 +11,23 @@
+>  #include <linux/module.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/spi/spi.h>
+> -
+> -#define AD7949_MASK_CHANNEL_SEL                GENMASK(9, 7)
+> -#define AD7949_MASK_TOTAL              GENMASK(13, 0)
+> -#define AD7949_OFFSET_CHANNEL_SEL      7
+> -#define AD7949_CFG_READ_BACK           0x1
+> -#define AD7949_CFG_REG_SIZE_BITS       14
+> +#include <linux/of.h>
+> +#include <linux/bitfield.h>
+> +
+> +#define AD7949_CFG_REG_SIZE_BITS           14
+> +#define AD7949_CFG_MASK_TOTAL              GENMASK(13, 0)
+> +#define AD7949_CFG_APPLY                   BIT(13)
+> +#define AD7949_CFG_CHAN_CFG                GENMASK(12, 10)
+> +#define AD7949_CFG_CHAN_CFG_UNIPOLAR_GND   0x7
+> +#define AD7949_CFG_CHAN_SEL                GENMASK(9, 7)
+> +#define AD7949_CFG_BW                      BIT(6)
+> +#define AD7949_CFG_BW_FULL                 1
+> +#define AD7949_CFG_REF_SEL                 GENMASK(5, 3)
+> +#define AD7949_CFG_SEQ                     GENMASK(2, 1)
+> +#define AD7949_CFG_SEQ_DISABLED            0x0
+> +#define AD7949_CFG_READBACK                BIT(0)
+> +#define AD7949_CFG_READBACK_EN             0
+> +#define AD7949_CFG_READBACK_DIS            1
+>
+>  enum {
+>         ID_AD7949 = 0,
+> @@ -24,6 +35,18 @@ enum {
+>         ID_AD7689,
+>  };
+>
+> +enum ad7949_ref_sel {
+> +       AD7949_REF_2V5 = 0, /* 2.5V internal ref + temp sensor */
+> +       AD7949_REF_4V0, /* 4.096V internal ref + temp sensor */
+> +       AD7949_REF_EXT_TEMP, /* REF + temp sensor */
+> +       AD7949_REF_EXT_TEMP_BUF, /* REFIN + temp sensor */
+> +       AD7949_REF_RSRV_4,
+> +       AD7949_REF_RSRV_5,
+> +       AD7949_REF_EXT, /* REF, no temp */
+> +       AD7949_REF_EXT_BUF, /* REFIN, no temp */
+> +       AD7949_REF_MAX,
+> +};
+> +
+>  struct ad7949_adc_spec {
+>         u8 num_channels;
+>         u8 resolution;
+> @@ -41,6 +64,7 @@ struct ad7949_adc_spec {
+>   * @vref: regulator generating Vref
+>   * @iio_dev: reference to iio structure
+>   * @spi: reference to spi structure
+> + * @ref_sel: selected reference voltage source
+>   * @resolution: resolution of the chip
+>   * @cfg: copy of the configuration register
+>   * @current_channel: current channel in use
+> @@ -51,6 +75,7 @@ struct ad7949_adc_chip {
+>         struct regulator *vref;
+>         struct iio_dev *indio_dev;
+>         struct spi_device *spi;
+> +       enum ad7949_ref_sel ref_sel;
+>         u8 resolution;
+>         u16 cfg;
+>         unsigned int current_channel;
+> @@ -59,7 +84,7 @@ struct ad7949_adc_chip {
+>
+>  static bool ad7949_spi_cfg_is_read_back(struct ad7949_adc_chip *ad7949_adc)
+>  {
+> -       if (!(ad7949_adc->cfg & AD7949_CFG_READ_BACK))
+> +       if (!(ad7949_adc->cfg & AD7949_CFG_READBACK))
+>                 return true;
+>
+>         return false;
+> @@ -91,7 +116,7 @@ static int ad7949_spi_write_cfg(struct ad7949_adc_chip *ad7949_adc, u16 val,
+>         };
+>
+>         ad7949_adc->cfg = (val & mask) | (ad7949_adc->cfg & ~mask);
+> -       ad7949_adc->buffer = ad7949_adc->cfg << shift;
+> +       ad7949_adc->buffer = (ad7949_adc->cfg & AD7949_CFG_MASK_TOTAL) << shift;
+>         spi_message_init_with_transfers(&msg, tx, 1);
+>         ret = spi_sync(ad7949_adc->spi, &msg);
+>
+> @@ -136,8 +161,8 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
+>         };
+>
+>         ret = ad7949_spi_write_cfg(ad7949_adc,
+> -                                  channel << AD7949_OFFSET_CHANNEL_SEL,
+> -                                  AD7949_MASK_CHANNEL_SEL);
+> +                                  FIELD_PREP(AD7949_CFG_CHAN_SEL, channel),
+> +                                  AD7949_CFG_CHAN_SEL);
+>         if (ret)
+>                 return ret;
+>
+> @@ -204,11 +229,20 @@ static int ad7949_spi_read_raw(struct iio_dev *indio_dev,
+>                 return IIO_VAL_INT;
+>
+>         case IIO_CHAN_INFO_SCALE:
+> -               ret = regulator_get_voltage(ad7949_adc->vref);
+> -               if (ret < 0)
+> -                       return ret;
+> +               if (ad7949_adc->vref) {
+> +                       ret = regulator_get_voltage(ad7949_adc->vref);
+> +                       if (ret < 0)
+> +                               return ret;
+> +
+> +                       *val = ret / 5000;
+> +               } else if (ad7949_adc->ref_sel == AD7949_REF_2V5) {
+> +                       *val = 2500;
+> +               } else if (ad7949_adc->ref_sel == AD7949_REF_4V0) {
+> +                       *val = 4096;
+> +               } else {
+> +                       return -EINVAL;
+> +               }
+>
+> -               *val = ret / 5000;
+>                 return IIO_VAL_INT;
+>         }
+>
+> @@ -226,7 +260,8 @@ static int ad7949_spi_reg_access(struct iio_dev *indio_dev,
+>                 *readval = ad7949_adc->cfg;
+>         else
+>                 ret = ad7949_spi_write_cfg(ad7949_adc,
+> -                       writeval & AD7949_MASK_TOTAL, AD7949_MASK_TOTAL);
+> +                       writeval & AD7949_CFG_MASK_TOTAL,
+> +                       AD7949_CFG_MASK_TOTAL);
+>
+>         return ret;
+>  }
+> @@ -240,10 +275,24 @@ static int ad7949_spi_init(struct ad7949_adc_chip *ad7949_adc)
+>  {
+>         int ret;
+>         int val;
+> +       u16 adc_config = 0;
+>
+> -       /* Sequencer disabled, CFG readback disabled, IN0 as default channel */
+>         ad7949_adc->current_channel = 0;
+> -       ret = ad7949_spi_write_cfg(ad7949_adc, 0x3C79, AD7949_MASK_TOTAL);
+> +       ad7949_adc->cfg = 0;
+> +
+> +       adc_config |= FIELD_PREP(AD7949_CFG_APPLY, 1);
+> +       adc_config |= FIELD_PREP(AD7949_CFG_CHAN_CFG,
+> +                       AD7949_CFG_CHAN_CFG_UNIPOLAR_GND);
+> +       adc_config |= FIELD_PREP(AD7949_CFG_CHAN_SEL,
+> +                       ad7949_adc->current_channel);
+> +       adc_config |= FIELD_PREP(AD7949_CFG_BW, AD7949_CFG_BW_FULL);
+> +       adc_config |= FIELD_PREP(AD7949_CFG_REF_SEL, ad7949_adc->ref_sel);
+> +       adc_config |= FIELD_PREP(AD7949_CFG_SEQ, AD7949_CFG_SEQ_DISABLED);
+> +       adc_config |= FIELD_PREP(AD7949_CFG_READBACK, AD7949_CFG_READBACK_DIS);
+> +
+> +       ret = ad7949_spi_write_cfg(ad7949_adc,
+> +                       adc_config,
+> +                       AD7949_CFG_MASK_TOTAL);
+>
+>         /*
+>          * Do a dummy conversion to apply the first configuration setting.
+> @@ -261,6 +310,7 @@ static int ad7949_spi_probe(struct spi_device *spi)
+>         struct ad7949_adc_chip *ad7949_adc;
+>         struct iio_dev *indio_dev;
+>         int ret;
+> +       u32 temp;
+>
+>         indio_dev = devm_iio_device_alloc(dev, sizeof(*ad7949_adc));
+>         if (!indio_dev) {
+> @@ -279,21 +329,53 @@ static int ad7949_spi_probe(struct spi_device *spi)
+>         ad7949_adc = iio_priv(indio_dev);
+>         ad7949_adc->indio_dev = indio_dev;
+>         ad7949_adc->spi = spi;
+> +       ad7949_adc->vref = NULL;
+>
+>         spec = &ad7949_adc_spec[spi_get_device_id(spi)->driver_data];
+>         indio_dev->num_channels = spec->num_channels;
+>         ad7949_adc->resolution = spec->resolution;
+>
+> -       ad7949_adc->vref = devm_regulator_get(dev, "vref");
+> -       if (IS_ERR(ad7949_adc->vref)) {
+> -               dev_err(dev, "fail to request regulator\n");
+> -               return PTR_ERR(ad7949_adc->vref);
+> +       ret = of_property_read_u32(ad7949_adc->indio_dev->dev.of_node,
+> +                       "adi,reference-select",
+> +                       &temp);
+> +       if (ret == 0) {
+> +               switch (temp) {
+> +               case 0:
+> +                       ad7949_adc->ref_sel = AD7949_REF_2V5;
+> +                       break;
+> +               case 1:
+> +                       ad7949_adc->ref_sel = AD7949_REF_4V0;
+> +                       break;
+> +               case 2:
+> +                       ad7949_adc->ref_sel = AD7949_REF_EXT;
+> +                       break;
+> +               case 3:
+> +                       ad7949_adc->ref_sel = AD7949_REF_EXT_BUF;
+> +                       break;
+> +               default:
+> +                       ad7949_adc->ref_sel = AD7949_REF_EXT_BUF;
+> +                       dev_warn(dev,
+> +                               "unknown reference-select value, using REFIN external Vref (3) by default\n");
+> +               }
+> +       } else {
+> +               ad7949_adc->ref_sel = AD7949_REF_EXT_BUF;
+> +               dev_warn(dev, "using external Vref by default\n");
+>         }
+>
+> -       ret = regulator_enable(ad7949_adc->vref);
+> -       if (ret < 0) {
+> -               dev_err(dev, "fail to enable regulator\n");
+> -               return ret;
+> +       /* Check whether using external Vref */
+> +       if ((ad7949_adc->ref_sel != AD7949_REF_2V5) &&
+> +                       (ad7949_adc->ref_sel != AD7949_REF_4V0)) {
+> +               ad7949_adc->vref = devm_regulator_get(dev, "vref");
+> +               if (IS_ERR(ad7949_adc->vref)) {
+> +                       dev_err(dev, "fail to request regulator\n");
+> +                       return PTR_ERR(ad7949_adc->vref);
+> +               }
+> +
+> +               ret = regulator_enable(ad7949_adc->vref);
+> +               if (ret < 0) {
+> +                       dev_err(dev, "fail to enable regulator\n");
+> +                       return ret;
+> +               }
+>         }
+>
+>         mutex_init(&ad7949_adc->lock);
+> @@ -314,7 +396,8 @@ static int ad7949_spi_probe(struct spi_device *spi)
+>
+>  err:
+>         mutex_destroy(&ad7949_adc->lock);
+> -       regulator_disable(ad7949_adc->vref);
+> +       if (ad7949_adc->vref)
+> +               regulator_disable(ad7949_adc->vref);
+>
+>         return ret;
+>  }
+> @@ -326,7 +409,8 @@ static int ad7949_spi_remove(struct spi_device *spi)
+>
+>         iio_device_unregister(indio_dev);
+>         mutex_destroy(&ad7949_adc->lock);
+> -       regulator_disable(ad7949_adc->vref);
+> +       if (ad7949_adc->vref)
+> +               regulator_disable(ad7949_adc->vref);
+>
+>         return 0;
+>  }
+> --
+> 1.9.1
+>
