@@ -1,43 +1,37 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
-Date: Fri, 24 May 2019 13:38:17 +0200
-Message-ID: <CACRpkdZabT3_vjkv0PR+GLC0ZXWzpMxfwJU6O9Y+omKJ=6zCaA@mail.gmail.com>
-References: <20190514005033.15593-1-robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: arm-boards: Update pointer to ARM CPU
+ bindings
+Date: Fri, 24 May 2019 13:39:30 +0200
+Message-ID: <CACRpkdZbv+Xr4_1EZ=Zmry_3coGP+AaWgM8F8jaJmvH5vrFHTw@mail.gmail.com>
+References: <20190514085316.17883-1-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190514005033.15593-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, viresh kumar <viresh.kumar@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190514085316.17883-1-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 2:50 AM Rob Herring <robh@kernel.org> wrote:
+On Tue, May 14, 2019 at 10:53 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> Convert the Arm PL061 GPIO controller binding to json-schema format.
+> The ARM CPU DT bindings were converted from plain text to YAML, but not
+> all referrers were updated.
 >
-> As I'm the author for all but the gpio-ranges line, make the schema dual
-> GPL/BSD license.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Fixes: 672951cbd1b70a9e ("dt-bindings: arm: Convert cpu binding to json-schema")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Patch applied. As you know I am already a big fan of this scheme.
-
-> This warns on a few platforms missing clocks, interrupt-controller
-> and/or #interrupt-cells. We could not make those required, but really
-> they should be IMO. OTOH, it's platforms like Spear and Calxeda which
-> aren't too active, so I don't know that we want to fix them.
-
-What works for you works for me.
-
-We could add dummy fixed clocks in the DTS files if
-we wanted I suppose. The #interrupt-cells and interrupt-controller
-things we can just fix, but I wonder what the maintainers of these
-platforms are up to? Isn't Calxeda yours, and could Viresh fix
-up the SPEAr?
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
