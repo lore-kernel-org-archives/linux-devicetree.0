@@ -1,47 +1,41 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 2/2] net: macb: Add support for SiFive FU540-C000
-Date: Fri, 24 May 2019 15:48:47 +0200
-Message-ID: <20190524134847.GF2979@lunn.ch>
-References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
- <1558611952-13295-3-git-send-email-yash.shah@sifive.com>
- <20190523145417.GD19369@lunn.ch>
- <CAJ2_jOE0-zK1csRNeiAmag9kEbvOGhbvRa-5ESYif7e15gpRcQ@mail.gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on meson-g12a-x96-max
+Date: Fri, 24 May 2019 06:50:18 -0700
+Message-ID: <7hmujc0xnp.fsf@baylibre.com>
+References: <5ce78689.1c69fb81.58097.eacf@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ2_jOE0-zK1csRNeiAmag9kEbvOGhbvRa-5ESYif7e15gpRcQ@mail.gmail.com>
+In-Reply-To: <5ce78689.1c69fb81.58097.eacf@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, netdev@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, Sachin Ghadi <sachin.ghadi@sifive.com>, robh+dt@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, ynezz@true.cz, linux-riscv@lists.infradead.org, davem@davemloft.net
+To: "kernelci.org bot" <bot@kernelci.org>, tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com, mgalka@collabora.com, Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org, matthew.hart@linaro.org, enric.balletbo@collabora.com, Jerome Brunet <jbrunet@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2019 at 10:22:06AM +0530, Yash Shah wrote:
-> On Thu, May 23, 2019 at 8:24 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > +static int fu540_macb_tx_set_rate(struct clk_hw *hw, unsigned long rate,
-> > > +                               unsigned long parent_rate)
-> > > +{
-> > > +     rate = fu540_macb_tx_round_rate(hw, rate, &parent_rate);
-> > > +     iowrite32(rate != 125000000, mgmt->reg);
-> >
-> > That looks odd. Writing the result of a comparison to a register?
-> 
-> The idea was to write "1" to the register if the value of rate is
-> anything else than 125000000.
+"kernelci.org bot" <bot@kernelci.org> writes:
 
-I'm not a language lawyer. Is it guaranteed that an expression like
-this returns 1? Any value !0 is true, so maybe it actually returns 42?
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>
+> mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on meson-g12a-x96-max
+>
+> Summary:
+>   Start:      4dde821e4296 Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
+>   Details:    https://kernelci.org/boot/id/5ce72c6259b514ed817a3640
+>   Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.txt
+>   HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.html
+>   Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support controllers
 
-> To make it easier to read, I will change this to below:
->     - iowrite32(rate != 125000000, mgmt->reg);
->     + if (rate != 125000000)
->     +     iowrite32(1, mgmt->reg);
->     + else
->     +     iowrite32(0, mgmt->reg);
-> 
-> Hope that's fine. Thanks for your comment
+False alarm.
 
-Yes, that is good.
+This one is failing in one lab but passing in another:
+https://kernelci.org/boot/all/job/mainline/branch/master/kernel/v5.2-rc1-172-g4dde821e4296/
 
-     Andrew
+I'll look into what's the difference between labs.
+
+Kevin
