@@ -1,42 +1,79 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v11 2/2] phy: Add driver for mixel mipi dphy found on
- NXP's i.MX8 SoCs
-Date: Fri, 24 May 2019 09:23:30 -0300
-Message-ID: <CAOMZO5BaFYJxh1v46n2mdPyc+-jg6LgvoGR1rTE+yHZg_0Z8PA@mail.gmail.com>
-References: <cover.1557657814.git.agx@sigxcpu.org>
- <2000bc4564175abd7966207a5e9fbb9bb7d82059.1557657814.git.agx@sigxcpu.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
+Date: Fri, 24 May 2019 07:29:20 -0500
+Message-ID: <CAL_Jsq+evXqKKyXLFbE+9o8X5BA9NWmcjvZ9-Y1Y7-pwcu8nJg@mail.gmail.com>
+References: <20190509070657.18281-1-chuanhua.han@nxp.com> <20190517023728.GA15856@dragon>
+ <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
+ <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
+ <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
+ <AM6PR04MB58631458E6D851E4D83A77ED8F070@AM6PR04MB5863.eurprd04.prod.outlook.com>
+ <AM6PR04MB435708872A4DBA92561C772597000@AM6PR04MB4357.eurprd04.prod.outlook.com>
+ <AM6PR04MB5863FA1CE6D1E40F11B2E5008F000@AM6PR04MB5863.eurprd04.prod.outlook.com>
+ <AM6PR04MB4357072E079BDD8D1866595797020@AM6PR04MB4357.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2000bc4564175abd7966207a5e9fbb9bb7d82059.1557657814.git.agx@sigxcpu.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Li Jun <jun.li@nxp.com>, Sam Ravnborg <sam@ravnborg.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel <linux-kernel@vger.kernel.org>, Johan Hovold <johan@kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Abel Vesa <abel.vesa@nxp.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Robert Chiras <robert.chiras@nxp.com>, Thierry Reding <treding@nvidia.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM6PR04MB4357072E079BDD8D1866595797020@AM6PR04MB4357.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chuanhua Han <chuanhua.han@nxp.com>
+Cc: Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ying Zhang <ying.zhang22455@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2lzaG9uLAoKT24gU3VuLCBNYXkgMTIsIDIwMTkgYXQgNzo0OSBBTSBHdWlkbyBHw7xudGhl
-ciA8YWd4QHNpZ3hjcHUub3JnPiB3cm90ZToKPgo+IFRoaXMgYWRkcyBzdXBwb3J0IGZvciB0aGUg
-TWl4ZWwgRFBIWSBhcyBmb3VuZCBvbiBpLk1YOCBDUFVzIGJ1dCBzaW5jZQo+IHRoaXMgaXMgYW4g
-SVAgY29yZSBpdCB3aWxsIGxpa2VseSBiZSBmb3VuZCBvbiBvdGhlcnMgaW4gdGhlIGZ1dHVyZS4g
-U28KPiBpbnN0ZWFkIG9mIGFkZGluZyB0aGlzIHRvIHRoZSBud2wgaG9zdCBkcml2ZXIgbWFrZSBp
-dCBhIGdlbmVyaWMgUEhZCj4gZHJpdmVyLgo+Cj4gVGhlIGRyaXZlciBzdXBwb3J0cyB0aGUgaS5N
-WDhNUS4gU3VwcG9ydCBmb3IgaS5NWDhRTSBhbmQgaS5NWDhRWFAgY2FuIGJlCj4gYWRkZWQgb25j
-ZSB0aGUgbmVjZXNzYXJ5IHN5c3RlbSBjb250cm9sbGVyIGJpdHMgYXJlIGluIHZpYQo+IG1peGVs
-X2RwaHlfZGV2ZGF0YS4KPgo+IFNpZ25lZC1vZmYtYnk6IEd1aWRvIEfDvG50aGVyIDxhZ3hAc2ln
-eGNwdS5vcmc+Cj4gQ28tZGV2ZWxvcGVkLWJ5OiBSb2JlcnQgQ2hpcmFzIDxyb2JlcnQuY2hpcmFz
-QG54cC5jb20+Cj4gU2lnbmVkLW9mZi1ieTogUm9iZXJ0IENoaXJhcyA8cm9iZXJ0LmNoaXJhc0Bu
-eHAuY29tPgo+IFJldmlld2VkLWJ5OiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+
-Cj4gUmV2aWV3ZWQtYnk6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4KCldvdWxkIHlv
-dSBoYXZlIGFueSBjb21tZW50cyBvbiB0aGlzIHNlcmllcywgcGxlYXNlPwoKVGhhbmtzCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Fri, May 24, 2019 at 4:48 AM Chuanhua Han <chuanhua.han@nxp.com> wrote:
+>
+> Hi, Rob Herring
+>
+> > -----Original Message-----
+> > From: Leo Li
+> > Sent: 2019=E5=B9=B45=E6=9C=8822=E6=97=A5 14:50
+
+
+> > > > > > > > > -             wdog0: watchdog@23c0000 {
+> > > > > > > > > -                     compatible =3D "fsl,ls1028a-wdt",
+> > > > "fsl,imx21-wdt";
+> > > > > > > > > -                     reg =3D <0x0 0x23c0000 0x0 0x10000>=
+;
+> > > > > > > > > -                     interrupts =3D <GIC_SPI 59
+> > > > > > IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > > > > -                     clocks =3D <&clockgen 4 1>;
+> > > > > > > > > -                     big-endian;
+> > > > > > > > > -                     status =3D "disabled";
+> > > > > > > > > +             cluster1_core0_watchdog: wdt@c000000 {
+> > > > > > > >
+> > > > > > > > Keep 'watchdog' as the node name,
+> > > > > > > Thanks for your replay
+> > > > > > > Do you mean replace the =E2=80=98wdt=E2=80=99 with =E2=80=98w=
+atchdog=E2=80=99?
+> > > > > > > and keep nodes sort in unit-address.
+> > > > > > > What does this mean?
+> > > > > >
+> > > > > > That means order the nodes by the addresses (e.g. c000000,
+> > > > > > c010000)
+> > > > > The current order is correct=EF=BC=88The first is c000000, then c=
+000000=EF=BC=89.
+> > > >
+> > > > But they are added after gpio@2320000 and before sata@3200000.
+> > > I changed and made the second version of the patch, but I found the
+> > > following error when I executed ./scripts/checkpatch.pl xxx.patch to
+> > > check the patch:
+> > >
+> > > WARNING: DT compatible string vendor "arm" appears un-documented --
+> > > check ./Documentation/devicetree/bindings/vendor-prefixes.txt
+> > > #43: FILE: arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi:351:
+> > > + compatible =3D "arm,sp805", "arm,primecell";
+> > >
+> > > However, there is no vendor-prefixes.txt file in the
+> > > ./Documentation/devicetree/bindings/ directory, only vendor-
+> > > prefixes.yaml.
+> > > Moreover, there are =E2=80=98arm=E2=80=99 vendors in vendor-prefixes.=
+yaml.
+> >
+> > Added Rob Herring to the thread.
+> >
+> > > Request help=EF=BC=8Cthanks
+> How can I solve this patch check error? Ask for help, thank you!
+
+Ignore it. A fix to checkpatch.pl is pending.
+
+Rob
