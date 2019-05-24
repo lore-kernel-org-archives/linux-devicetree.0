@@ -1,55 +1,45 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] dt-bindings: arm: fix the document ID for SCMI protocol
- documentation
-Date: Fri, 24 May 2019 11:54:30 +0100
-Message-ID: <20190524105430.GB13121@e107155-lin>
-References: <20190523112312.24529-1-volodymyr_babchuk@epam.com>
- <20190523170938.GC4224@e107155-lin> <877eah84nr.fsf@epam.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/8] dt-bindings: net: Add a YAML schemas for the generic
+ PHY options
+Date: Fri, 24 May 2019 13:06:49 +0200
+Message-ID: <20190524110649.56o7g7xkgdb5loyk@flea>
+References: <74d98cc3c744d53710c841381efd41cf5f15e656.1558605170.git-series.maxime.ripard@bootlin.com>
+ <aa5ec90854429c2d9e2c565604243e1b10cfd94b.1558605170.git-series.maxime.ripard@bootlin.com>
+ <CAL_JsqJvgUAmON5Vew-mnwkFjNuRkx_f7quiy_7Rv_55JpzOOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <877eah84nr.fsf@epam.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "trivial@kernel.org" <trivial@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <CAL_JsqJvgUAmON5Vew-mnwkFjNuRkx_f7quiy_7Rv_55JpzOOA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2019 at 05:24:56PM +0000, Volodymyr Babchuk wrote:
-> 
-> Hi,
-> 
-> Sudeep Holla writes:
-> 
-> > On Thu, May 23, 2019 at 11:23:35AM +0000, Volodymyr Babchuk wrote:
-> >> From: Volodymyr Babchuk <volodymyr_babchuk@epam.com
-> 
-> I accidentally deleted ending ">" symbol in the line above, so "git
-> send-email" decided to move that line from headers to the message body.
-> 
-> >> arm,scmi.txt used the wrong document identifier. "ARM DUI 0922B" is
-> >> the "ARM Compute Subsystem SCP, Message Interface Protocols". What we
-> >> need is the ARM DEN 0056A - "ARM System Control and Management
-> >> Interface Platform Design Document".
-> >>
-> >
-> > Indeed, it's most stupid copy-paste mistake. Thanks for fixing this.
-> > Applied now.
-> It happens all the time. I also did stupid mistake in my patch file. It
-> is described above. Could you please ensure that this line will be not
-> in the resulting commit message? Thank you.
+Hi Rob,
 
-Ah OK, I didn't notice that, but the applied patch seems fine.
+On Thu, May 23, 2019 at 09:44:51AM -0500, Rob Herring wrote:
+> > +  reg:
+> > +    maxItems: 1
+> > +    minimum: 0
+> > +    maximum: 31
+>
+> min/max need to be under 'items'. I don't think these would ever be
+> valid if the type is an array.
+>
+> I've modified the meta-schema to catch this.
 
---
-Regards,
-Sudeep
+Have you pushed it already?
+
+Using:
+  reg:
+    maxItems: 1
+    items:
+      minimum: 0
+      maximum: 31
+
+is creating this error when running dtbs_check
+
+ethernet-phy.yaml: properties:reg: {'maxItems': 1, 'items': {'minimum': 0, 'maximum': 31}, 'description': 'The ID number for the PHY.'} is not valid under any of the given schemas
+
+Maxime
