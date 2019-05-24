@@ -1,27 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 5/5] pinctrl: Add pinconf support for BM1880 SoC
-Date: Fri, 24 May 2019 13:54:27 +0200
-Message-ID: <CACRpkda1a_WSP5rWGHDZPsbU=5mLN+2TPVF05mEHm17R2fM0aQ@mail.gmail.com>
-References: <20190520083101.10229-1-manivannan.sadhasivam@linaro.org> <20190520083101.10229-6-manivannan.sadhasivam@linaro.org>
+From: Torsten Duwe <duwe@lst.de>
+Subject: Re: [PATCH 6/6] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Date: Fri, 24 May 2019 14:13:59 +0200
+Message-ID: <20190524121359.GE15685@lst.de>
+References: <20190523065013.2719D68B05@newverein.lst.de> <20190523065404.BB60F68B20@newverein.lst.de> <CA+E=qVdh-=C5zOYWYj95jLN51EaXFS6B+CQ101-f64q5QmgN3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520083101.10229-6-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVdh-=C5zOYWYj95jLN51EaXFS6B+CQ101-f64q5QmgN3g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, haitao.suo@bitmain.com, darren.tsao@bitmain.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, alec.lin@bitmain.com
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:31 AM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Thu, May 23, 2019 at 07:48:03AM -0700, Vasily Khoruzhick wrote:
+> On Wed, May 22, 2019 at 11:54 PM Torsten Duwe <duwe@lst.de> wrote:
+> >
+> >
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > @@ -65,6 +65,21 @@
+> >                 };
+> >         };
+> >
+> > +       panel: panel {
+> > +               compatible ="innolux,n116bge", "simple-panel";
+> 
+> IIRC Rob wanted it to be edp-connector, not simple-panel. Also you
+> need to introduce edp-connector binding.
 
-> Add pinconf support for Bitmain BM1880 SoC. Pinconf support includes
-> pin bias, slew rate and schmitt trigger. Drive strength support will
-> be added later.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+This line is identically found in
+arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi and
+arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
 
-Patch applied.
+> > +               status = "okay";
+> > +               power-supply = <&reg_dcdc1>;
+> > +               backlight = <&backlight>;
+> > +
+> > +               ports {
+> > +                       panel_in: port {
+> > +                               panel_in_edp: endpoint {
+> > +                                       remote-endpoint = <&anx6345_out>;
+> > +                               };
+> > +                       };
+> > +               };
 
-Yours,
-Linus Walleij
+The whole node is the same as in rk3288-veyron-chromebook.dtsi; I only adapted
+the power-supply and remote-endpoint properties.
+
+Is there anything wrong with that?
+
+	Torsten
