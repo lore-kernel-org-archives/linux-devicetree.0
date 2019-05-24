@@ -1,54 +1,105 @@
-Return-Path: <SRS0=Wuwb=T4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.lunch4employee.eu ([80.211.219.151]:39828 "EHLO
-        mail.lunch4employee.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfE1IjB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 May 2019 04:39:01 -0400
-Received: by mail.lunch4employee.eu for <devicetree@vger.kernel.org>; Tue, 28 May 2019 08:30:21 GMT
-Message-ID: <20190528084500-0.1.n.uvo.0.xj0q22zl5n@lunch4employee.eu>
-Date: Tue, 28 May 2019 08:30:21 GMT
-From: "Radoslav Dobrev" <radoslav.dobrev@lunch4employee.eu>
-Subject: =?UTF-8?Q?=D0=9F=D1=80=D0=B8=D0=B4=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B8_=D0=B7=D0=B0_=D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0?=
+Return-Path: <dinguyen@kernel.org>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH 2/2] dmagengine: pl330: add code to get reset property
+Date: Thu, 23 May 2019 19:28:47 -0500
+Message-Id: <20190524002847.30961-2-dinguyen@kernel.org>
+In-Reply-To: <20190524002847.30961-1-dinguyen@kernel.org>
+References: <20190524002847.30961-1-dinguyen@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+To: dmaengine@vger.kernel.org
+Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, vkoul@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-=D0=97=D0=B4=D1=80=D0=B0=D0=B2=D0=B5=D0=B9=D1=82=D0=B5,
+The DMA controller on some SoCs can be held in reset, and thus requires
+the reset signal(s) to deasserted. Most SoCs will have just one reset
+signal, but there are others, i.e. Arria10/Stratix10 will have an
+additional reset signal, referred to as the OCP.
 
-=D0=97=D0=B0=D0=BF=D0=BE=D0=B7=D0=BD=D0=B0=D1=82=D0=B8 =D0=BB=D0=B8 =D1=81=
-=D1=82=D0=B5 =D1=81 =D0=BD=D0=B0=D0=B9-=D0=BD=D0=BE=D0=B2=D0=B0=D1=82=D0=B0=
- =D1=81=D0=BE=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B0 =D0=BF=D1=80=D0=B8=D0=B4=
-=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B0 =E2=80=93 =D0=B2=D0=B0=D1=83=D1=87=D0=
-=B5=D1=80=D0=B8 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0? =D0=90 =D0=BE=
-=D0=B1=D0=BC=D0=B8=D1=81=D0=BB=D1=8F=D0=BB=D0=B8 =D0=BB=D0=B8 =D1=81=D1=82=
-=D0=B5 =D0=B8=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0=D0=BD=D0=B5=D1=82=
-=D0=BE =D0=BD=D0=B0 =D1=82=D0=B0=D0=BA=D0=B8=D0=B2=D0=B0 =D0=B2=D0=B0=D1=83=
-=D1=87=D0=B5=D1=80=D0=B8, =D1=81 =D0=BF=D0=BE=D0=BC=D0=BE=D1=89=D1=82=D0=B0=
- =D0=BD=D0=B0 =D0=BA=D0=BE=D0=B8=D1=82=D0=BE =D0=92=D0=B0=D1=88=D0=B8=D1=8F=
-=D1=82 =D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB =D0=BC=D0=BE=D0=B6=
-=D0=B5 =D0=B4=D0=B0 =D0=BF=D0=B0=D0=B7=D0=B0=D1=80=D1=83=D0=B2=D0=B0 =D0=B2=
- =D1=80=D0=B0=D0=B7=D0=BB=D0=B8=D1=87=D0=BD=D0=B8 =D0=B2=D0=B5=D1=80=D0=B8=
-=D0=B3=D0=B8 =D1=85=D1=80=D0=B0=D0=BD=D0=B8=D1=82=D0=B5=D0=BB=D0=BD=D0=B8=
- =D0=BC=D0=B0=D0=B3=D0=B0=D0=B7=D0=B8=D0=BD=D0=B8 =D0=B8 =D0=B7=D0=B0=D0=B2=
-=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F?
+Add code to get the reset property from the device tree for deassert and
+assert.
 
-=D0=91=D0=B8=D1=85 =D0=BC=D0=BE=D0=B3=D1=8A=D0=BB =D0=B4=D0=B0 =D0=92=D0=B8=
- =D1=81=D0=B5 =D0=BE=D0=B1=D0=B0=D0=B4=D1=8F =D0=BF=D0=BE =D1=82=D0=B5=D0=
-=BB=D0=B5=D1=84=D0=BE=D0=BD=D0=B0 =D0=B8 =D0=B4=D0=B0 =D0=92=D0=B8 =D0=BF=
-=D1=80=D0=B5=D0=B4=D1=81=D1=82=D0=B0=D0=B2=D1=8F =D0=B2=D1=8A=D0=B7=D0=BC=
-=D0=BE=D0=B6=D0=BD=D0=BE=D1=81=D1=82=D0=B8=D1=82=D0=B5 =D0=BD=D0=B0 =D1=82=
-=D0=B5=D0=B7=D0=B8 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8 =E2=80=93 =D0=
-=BC=D0=BE=D0=BB=D1=8F =D0=BF=D0=BE=D1=81=D0=BE=D1=87=D0=B5=D1=82=D0=B5 =D0=
-=BA=D0=BE=D0=B3=D0=B0 =D1=89=D0=B5 =D0=92=D0=B8 =D0=B1=D1=8A=D0=B4=D0=B5 =
-=D1=83=D0=B4=D0=BE=D0=B1=D0=BD=D0=BE =D0=B4=D0=B0 =D1=80=D0=B0=D0=B7=D0=B3=
-=D0=BE=D0=B2=D0=B0=D1=80=D1=8F=D0=BC=D0=B5.
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+ drivers/dma/pl330.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-=D0=9F=D1=80=D0=B8=D1=8F=D1=82=D0=B5=D0=BD =D0=B4=D0=B5=D0=BD!
-
-
-=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
-=D0=B5=D0=B2
-Head of HR Benefit Team
-www.lunch4employee.eu
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 6e6837214210..6018c43e785d 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -29,6 +29,7 @@
+ #include <linux/err.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/bug.h>
++#include <linux/reset.h>
+ 
+ #include "dmaengine.h"
+ #define PL330_MAX_CHAN		8
+@@ -500,6 +501,9 @@ struct pl330_dmac {
+ 	unsigned int num_peripherals;
+ 	struct dma_pl330_chan *peripherals; /* keep at end */
+ 	int quirks;
++
++	struct reset_control	*rstc;
++	struct reset_control	*rstc_ocp;
+ };
+ 
+ static struct pl330_of_quirks {
+@@ -3028,6 +3032,30 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+ 
+ 	amba_set_drvdata(adev, pl330);
+ 
++	pl330->rstc = devm_reset_control_get_optional(&adev->dev, "dma");
++	if (IS_ERR(pl330->rstc)) {
++		dev_err(&adev->dev, "No reset controller specified.\n");
++		return PTR_ERR(pl330->rstc);
++	} else {
++		ret = reset_control_deassert(pl330->rstc);
++		if (ret) {
++			dev_err(&adev->dev, "Couldn't deassert the device from reset!\n");
++			return ret;
++		}
++	}
++
++	pl330->rstc_ocp = devm_reset_control_get_optional(&adev->dev, "dma-ocp");
++	if (IS_ERR(pl330->rstc_ocp)) {
++		dev_err(&adev->dev, "No reset controller specified.\n");
++		return PTR_ERR(pl330->rstc_ocp);
++	} else {
++		ret = reset_control_deassert(pl330->rstc_ocp);
++		if (ret) {
++			dev_err(&adev->dev, "Couldn't deassert the device from OCP reset!\n");
++			return ret;
++		}
++	}
++
+ 	for (i = 0; i < AMBA_NR_IRQS; i++) {
+ 		irq = adev->irq[i];
+ 		if (irq) {
+@@ -3168,6 +3196,11 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+ probe_err2:
+ 	pl330_del(pl330);
+ 
++	if (pl330->rstc_ocp)
++		reset_control_assert(pl330->rstc_ocp);
++
++	if (pl330->rstc)
++		reset_control_assert(pl330->rstc);
+ 	return ret;
+ }
+ 
+@@ -3206,6 +3239,11 @@ static int pl330_remove(struct amba_device *adev)
+ 
+ 	pl330_del(pl330);
+ 
++	if (pl330->rstc_ocp)
++		reset_control_assert(pl330->rstc_ocp);
++
++	if (pl330->rstc)
++		reset_control_assert(pl330->rstc);
+ 	return 0;
+ }
+ 
+-- 
+2.20.0
