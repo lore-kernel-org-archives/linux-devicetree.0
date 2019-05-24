@@ -1,12 +1,14 @@
 From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH v2 0/6] crypto - wire up Atmel SHA204A as RNG in DT and ACPI
- mode
-Date: Fri, 24 May 2019 18:26:45 +0200
-Message-ID: <20190524162651.28189-1-ard.biesheuvel@linaro.org>
+Subject: [PATCH v2 1/6] i2c: acpi: permit bus speed to be discovered after
+ enumeration
+Date: Fri, 24 May 2019 18:26:46 +0200
+Message-ID: <20190524162651.28189-2-ard.biesheuvel@linaro.org>
+References: <20190524162651.28189-1-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190524162651.28189-1-ard.biesheuvel@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,53 +22,44 @@ To: linux-crypto@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, Tudor Ambarus <tudor.ambarus@microchip.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Socionext SynQuacer based 96boards DeveloperBox platform does not
-incorporate a random number generator, but it does have a 96boards low
-speed connector which supports extension boards such as the Secure96,
-which has a TPM and some crypto accelerators, one of which incorporates
-a random number generator.
+Currently, the I2C ACPI enumeration code only permits the max bus rate
+to be discovered before enumerating the slaves on the bus. In some
+cases, drivers for slave devices may require this information, e.g.,
+some ATmel crypto drivers need to generate a so-called wake token
+of a fixed duration, regardless of the bus rate.
 
-This series implements support for the RNG part, which is one of several
-functions of the Atmel SHA204A I2C crypto accelerator, and wires it up so
-both DT and ACPI based boot methods can use the device.
+So tweak the code so i2c_acpi_lookup_speed() is able to obtain this
+information after enumeration as well.
 
-v2:
-- update DT binding patches so the SHA204A and ECC508A module bindings are
-  in trivial-devices.yaml.
-- add acks from Linus and Mika
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+---
+ drivers/i2c/i2c-core-acpi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Assuming Rob is ok now with the DT binding patches, can we please take
-this through the crypto tree?
-
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-
-Ard Biesheuvel (6):
-  i2c: acpi: permit bus speed to be discovered after enumeration
-  crypto: atmel-ecc: add support for ACPI probing on non-AT91 platforms
-  crypto: atmel-ecc: factor out code that can be shared
-  crypto: atmel-i2c: add support for SHA204A random number generator
-  dt-bindings: add Atmel SHA204A I2C crypto processor
-  dt-bindings: move Atmel ECC508A I2C crypto processor to
-    trivial-devices
-
- Documentation/devicetree/bindings/crypto/atmel-crypto.txt |  13 -
- Documentation/devicetree/bindings/trivial-devices.yaml    |   4 +
- drivers/crypto/Kconfig                                    |  19 +-
- drivers/crypto/Makefile                                   |   2 +
- drivers/crypto/atmel-ecc.c                                | 403 ++------------------
- drivers/crypto/atmel-ecc.h                                | 116 ------
- drivers/crypto/atmel-i2c.c                                | 364 ++++++++++++++++++
- drivers/crypto/atmel-i2c.h                                | 196 ++++++++++
- drivers/crypto/atmel-sha204a.c                            | 171 +++++++++
- drivers/i2c/i2c-core-acpi.c                               |   6 +-
- 10 files changed, 781 insertions(+), 513 deletions(-)
- delete mode 100644 drivers/crypto/atmel-ecc.h
- create mode 100644 drivers/crypto/atmel-i2c.c
- create mode 100644 drivers/crypto/atmel-i2c.h
- create mode 100644 drivers/crypto/atmel-sha204a.c
-
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index 272800692088..7240cc07abb4 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -115,8 +115,7 @@ static int i2c_acpi_do_lookup(struct acpi_device *adev,
+ 	struct list_head resource_list;
+ 	int ret;
+ 
+-	if (acpi_bus_get_status(adev) || !adev->status.present ||
+-	    acpi_device_enumerated(adev))
++	if (acpi_bus_get_status(adev) || !adev->status.present)
+ 		return -EINVAL;
+ 
+ 	if (acpi_match_device_ids(adev, i2c_acpi_ignored_device_ids) == 0)
+@@ -151,6 +150,9 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
+ 	lookup.info = info;
+ 	lookup.index = -1;
+ 
++	if (acpi_device_enumerated(adev))
++		return -EINVAL;
++
+ 	ret = i2c_acpi_do_lookup(adev, &lookup);
+ 	if (ret)
+ 		return ret;
 -- 
 2.20.1
