@@ -1,39 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 7/9] dt: bindings: lp50xx: Introduce the lp50xx family
- of RGB drivers
-Date: Fri, 24 May 2019 15:50:22 -0500
-Message-ID: <20190524205022.GA9518@bogus>
-References: <20190523190820.29375-1-dmurphy@ti.com>
- <20190523190820.29375-8-dmurphy@ti.com>
+Subject: Re: [PATCH V2] of: reserved-memory: ignore disabled memory-region
+ nodes
+Date: Fri, 24 May 2019 15:53:30 -0500
+Message-ID: <20190524205330.GA23430@bogus>
+References: <1558522031-549-1-git-send-email-puneets@nvidia.com>
+ <1558522031-549-2-git-send-email-puneets@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190523190820.29375-8-dmurphy@ti.com>
+In-Reply-To: <1558522031-549-2-git-send-email-puneets@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, pantelis.antoniou@konsulko.com, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, treding@nvidia.com, vdumpa@nvidia.com, snikam@nvidia.com, jonathanh@nvidia.com, Puneet Saxena <puneets@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 May 2019 14:08:18 -0500, Dan Murphy wrote:
-> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024 and
-> LP5018 RGB LED device driver.  The LP5036/30/24/18 can control RGB LEDs
-> individually or as part of a control bank group.  These devices have the ability
-> to adjust the mixing control for the RGB LEDs to obtain different colors
-> independent of the overall brightness of the LED grouping.
+On Wed, 22 May 2019 16:17:11 +0530, Puneet Saxena wrote:
+> From: Krishna Reddy <vdumpa@nvidia.com>
 > 
-> Datasheet:
-> http://www.ti.com/lit/ds/symlink/lp5024.pdf
-> http://www.ti.com/lit/ds/symlink/lp5036.pdf
+> Ignore disabled nodes in the memory-region 
+> nodes list and continue to initialize the rest 
+> of enabled nodes.
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Check if the "reserved-memory" node is available
+> and if it's not available, return 0 to ignore the 
+> "reserved-memory" node and continue parsing with 
+> next node in memory-region nodes list.
+> 
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> Signed-off-by: Puneet Saxena <puneets@nvidia.com>
 > ---
->  .../devicetree/bindings/leds/leds-lp50xx.txt  | 142 ++++++++++++++++++
->  1 file changed, 142 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+> v2:
+> * Fixed typo in commit message.
+> * Used "of_device_is_available" to check "reserved-memory"
+>   nodes are disabled/enabled.
+> 
+>  drivers/of/of_reserved_mem.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Applied, thanks.
 
-If a tag was not added on purpose, please state why and what changed.
+Rob
