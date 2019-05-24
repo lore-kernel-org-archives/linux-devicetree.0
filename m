@@ -1,46 +1,50 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH v3 8/8] Input: elantech: remove P52 and P72 from SMBus blacklist
-Date: Fri, 24 May 2019 15:50:46 +0200
-Message-ID: <20190524135046.17710-9-benjamin.tissoires@redhat.com>
-References: <20190524135046.17710-1-benjamin.tissoires@redhat.com>
+From: Guillaume Tucker <guillaume.tucker@collabora.com>
+Subject: Re: mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on
+ meson-g12a-x96-max
+Date: Fri, 24 May 2019 14:56:55 +0100
+Message-ID: <f01b812e-ee18-528b-1859-620dd8f0fb53@collabora.com>
+References: <5ce78689.1c69fb81.58097.eacf@mx.google.com>
+ <7hmujc0xnp.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190524135046.17710-1-benjamin.tissoires@redhat.com>
+In-Reply-To: <7hmujc0xnp.fsf@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>, Aaron Ma <aaron.ma@canonical.com>, Hans de Goede <hdegoede@redhat.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: tomeu.vizoso@collabora.com, mgalka@collabora.com, Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org, matthew.hart@linaro.org, enric.balletbo@collabora.com, Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Both now works correctly over SMBus. Let's use this driver so we can
-update all five fingers every 8ms.
+On 24/05/2019 14:50, Kevin Hilman wrote:
+> "kernelci.org bot" <bot@kernelci.org> writes:
+> 
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>> * This automated bisection report was sent to you on the basis  *
+>> * that you may be involved with the breaking commit it has      *
+>> * found.  No manual investigation has been done to verify it,   *
+>> * and the root cause of the problem may be somewhere else.      *
+>> * Hope this helps!                                              *
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>
+>> mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on meson-g12a-x96-max
+>>
+>> Summary:
+>>   Start:      4dde821e4296 Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
+>>   Details:    https://kernelci.org/boot/id/5ce72c6259b514ed817a3640
+>>   Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.txt
+>>   HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.html
+>>   Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support controllers
+> 
+> False alarm.
+> 
+> This one is failing in one lab but passing in another:
+> https://kernelci.org/boot/all/job/mainline/branch/master/kernel/v5.2-rc1-172-g4dde821e4296/
+> 
+> I'll look into what's the difference between labs.
 
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Thanks for clarifying this.  I guess we should fix the logic
+which detects regressions to discard cases where there is a
+conflict between results in different labs.
 
---
-
-changes in v3:
-- added the P72 too
-
-new in v2
----
- drivers/input/mouse/elantech.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index ca10fd97d9d5..ea1ee0f44a65 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -1779,10 +1779,6 @@ static const char * const i2c_blacklist_pnp_ids[] = {
- 	 * These are known to not be working properly as bits are missing
- 	 * in elan_i2c.
- 	 */
--	"LEN2131", /* ThinkPad P52 w/ NFC */
--	"LEN2132", /* ThinkPad P52 */
--	"LEN2133", /* ThinkPad P72 w/ NFC */
--	"LEN2134", /* ThinkPad P72 */
- 	NULL
- };
- 
--- 
-2.21.0
+Guillaume
