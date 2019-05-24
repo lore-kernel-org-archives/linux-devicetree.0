@@ -1,31 +1,25 @@
-From: Erwan Le Ray <erwan.leray@st.com>
-Subject: [PATCH 1/1] dt-bindings: stm32: serial: Add optional reset
-Date: Fri, 24 May 2019 17:30:38 +0200
-Message-ID: <1558711838-21174-1-git-send-email-erwan.leray@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Subject: [PATCH v3 0/2] clk: renesas: r9a06g032: Add clock domain support
+Date: Fri, 24 May 2019 16:31:42 +0100
+Message-ID: <1558711904-27278-1-git-send-email-gareth.williams.jx@renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Erwan Le Ray <erwan.leray@st.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Gareth Williams <gareth.williams.jx@renesas.com>, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-STM32 serial can be reset via reset controller.
-Add an optional reset property to stm32 usart bindings.
+There are several clocks on the r9ag032 which are currently not enabled
+in their drivers that can be delegated to clock domain system for power
+management. Therefore add support for clock domain functionality to the
+r9a06g032 clock driver after updating the relevant dt-bindings file.
 
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+Gareth Williams (2):
+  dt-bindings: clock: renesas,r9a06g032-sysctrl: Document power Domains
+  clk: renesas: r9a06g032: Add clock domain support
 
-diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-index 9d3efed..a6b1948 100644
---- a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-+++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-@@ -13,6 +13,7 @@ Required properties:
- - clocks: The input clock of the USART instance
- 
- Optional properties:
-+- resets: Must contain the phandle to the reset controller.
- - pinctrl: The reference on the pins configuration
- - st,hw-flow-ctrl: bool flag to enable hardware flow control.
- - rs485-rts-delay, rs485-rx-during-tx, rs485-rts-active-low,
+ .../bindings/clock/renesas,r9a06g032-sysctrl.txt   |   3 +
+ drivers/clk/renesas/r9a06g032-clocks.c             | 229 ++++++++++++++-------
+ 2 files changed, 163 insertions(+), 69 deletions(-)
+
 -- 
-1.9.1
+2.7.4
