@@ -1,157 +1,191 @@
-From: Chuanhua Han <chuanhua.han@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Date: Fri, 24 May 2019 09:48:52 +0000
-Message-ID: <AM6PR04MB4357072E079BDD8D1866595797020@AM6PR04MB4357.eurprd04.prod.outlook.com>
-References: <20190509070657.18281-1-chuanhua.han@nxp.com>
- <20190517023728.GA15856@dragon>
- <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB58631458E6D851E4D83A77ED8F070@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435708872A4DBA92561C772597000@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB5863FA1CE6D1E40F11B2E5008F000@AM6PR04MB5863.eurprd04.prod.outlook.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum rate for PLL_MIPI
+Date: Fri, 24 May 2019 15:37:42 +0530
+Message-ID: <CAMty3ZC3_+z1upH4Y08R1z=Uq1C=OpWETNrBO8nGRoHhuNrHSA@mail.gmail.com>
+References: <20190124195900.22620-1-jagan@amarulasolutions.com>
+ <20190124195900.22620-12-jagan@amarulasolutions.com> <20190125212433.ni2jg3wvpyjazlxf@flea>
+ <CAMty3ZAsH2iZ+JEqTE3D58aXfGuhMSg9YoO56ZhhOeE4c4yQHQ@mail.gmail.com>
+ <20190129151348.mh27btttsqcmeban@flea> <CAMty3ZAjAoti8Zu80c=OyCA+u-jtQnkidsKSNz_c2OaRswqc3w@mail.gmail.com>
+ <20190201143102.rcvrxstc365mezvx@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM6PR04MB5863FA1CE6D1E40F11B2E5008F000@AM6PR04MB5863.eurprd04.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <20190201143102.rcvrxstc365mezvx@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ying Zhang <ying.zhang22455@nxp.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula <linux-amarula@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJvYiBIZXJyaW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTog
-TGVvIExpDQo+IFNlbnQ6IDIwMTnE6jXUwjIyyNUgMTQ6NTANCj4gVG86IENodWFuaHVhIEhhbiA8
-Y2h1YW5odWEuaGFuQG54cC5jb20+OyBTaGF3biBHdW8NCj4gPHNoYXduZ3VvQGtlcm5lbC5vcmc+
-OyBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiBDYzogbWFyay5ydXRsYW5kQGFybS5j
-b207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlpbmcgWmhhbmcN
-Cj4gPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiBTdWJqZWN0OiBSRTogW0VYVF0gUmU6IFtQ
-QVRDSF0gYXJtNjQ6IGR0czogbHMxMDI4YTogZml4IHdhdGNoZG9nIGRldmljZSBub2RlDQo+IA0K
-PiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBDaHVhbmh1
-YSBIYW4NCj4gPiBTZW50OiBXZWRuZXNkYXksIE1heSAyMiwgMjAxOSAxOjI2IEFNDQo+ID4gVG86
-IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwu
-b3JnPg0KPiA+IENjOiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOw0KPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBZaW5nIFpoYW5nDQo+ID4gPHlpbmcuemhhbmcyMjQ1NUBu
-eHAuY29tPg0KPiA+IFN1YmplY3Q6IFJFOiBbRVhUXSBSZTogW1BBVENIXSBhcm02NDogZHRzOiBs
-czEwMjhhOiBmaXggd2F0Y2hkb2cNCj4gPiBkZXZpY2Ugbm9kZQ0KPiA+DQo+ID4NCj4gPg0KPiA+
-ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IExlbyBMaQ0KPiA+ID4g
-U2VudDogMjAxOcTqNdTCMjLI1SA0OjE1DQo+ID4gPiBUbzogQ2h1YW5odWEgSGFuIDxjaHVhbmh1
-YS5oYW5AbnhwLmNvbT47IFNoYXduIEd1bw0KPiA+ID4gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+
-ID4gPiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsNCj4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyBZaW5nIFpoYW5nDQo+ID4gPiA8eWluZy56aGFuZzIyNDU1QG54
-cC5jb20+DQo+ID4gPiBTdWJqZWN0OiBSRTogW0VYVF0gUmU6IFtQQVRDSF0gYXJtNjQ6IGR0czog
-bHMxMDI4YTogZml4IHdhdGNoZG9nDQo+ID4gPiBkZXZpY2Ugbm9kZQ0KPiA+ID4NCj4gPiA+DQo+
-ID4gPg0KPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiBGcm9tOiBD
-aHVhbmh1YSBIYW4NCj4gPiA+ID4gU2VudDogVHVlc2RheSwgTWF5IDIxLCAyMDE5IDg6MDAgQU0N
-Cj4gPiA+ID4gVG86IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPg0KPiA+ID4gPiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPiA+ID4gZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlpbmcNCj4gPiA+ID4g
-WmhhbmcgPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiA+ID4gPiBTdWJqZWN0OiBSRTogW0VY
-VF0gUmU6IFtQQVRDSF0gYXJtNjQ6IGR0czogbHMxMDI4YTogZml4IHdhdGNoZG9nDQo+ID4gPiA+
-IGRldmljZSBub2RlDQo+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+ID4gLS0tLS1P
-cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4gPiBGcm9tOiBMZW8gTGkNCj4gPiA+ID4gPiBT
-ZW50OiAyMDE5xOo11MIxOMjVIDY6MDENCj4gPiA+ID4gPiBUbzogQ2h1YW5odWEgSGFuIDxjaHVh
-bmh1YS5oYW5AbnhwLmNvbT47IFNoYXduIEd1bw0KPiA+ID4gPiA+IDxzaGF3bmd1b0BrZXJuZWwu
-b3JnPg0KPiA+ID4gPiA+IENjOiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBZaW5nDQo+ID4gPiA+ID4gWmhhbmcg
-PHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiA+ID4gPiA+IFN1YmplY3Q6IFJFOiBbRVhUXSBS
-ZTogW1BBVENIXSBhcm02NDogZHRzOiBsczEwMjhhOiBmaXggd2F0Y2hkb2cNCj4gPiA+ID4gPiBk
-ZXZpY2Ugbm9kZQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4gPiA+IEZyb206IENodWFuaHVhIEhh
-bg0KPiA+ID4gPiA+ID4gU2VudDogRnJpZGF5LCBNYXkgMTcsIDIwMTkgMToxMSBBTQ0KPiA+ID4g
-PiA+ID4gVG86IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gPiA+ID4gPiA+IENj
-OiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+
-ID4gPiA+ID4gbGludXgtYXJtLSBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPiA+ID4g
-PiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0ga2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsNCj4gPiA+ID4gPiA+IFlpbmcgWmhhbmcgPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0K
-PiA+ID4gPiA+ID4gU3ViamVjdDogUkU6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxz
-MTAyOGE6IGZpeA0KPiA+ID4gPiA+ID4gd2F0Y2hkb2cgZGV2aWNlIG5vZGUNCj4gPiA+ID4gPiA+
-DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gPiA+ID4gPiA+ID4gRnJvbTogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJu
-ZWwub3JnPg0KPiA+ID4gPiA+ID4gPiBTZW50OiAyMDE5xOo11MIxN8jVIDEwOjM4DQo+ID4gPiA+
-ID4gPiA+IFRvOiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+ID4gPiA+
-ID4gPiBDYzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBtYXJrLnJ1dGxhbmRAYXJtLmNv
-bTsNCj4gPiA+ID4gPiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0K
-PiA+ID4gPiA+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZzsNCj4gPiA+ID4gPiA+ID4gWWluZyBaaGFuZyA8eWluZy56aGFuZzIyNDU1
-QG54cC5jb20+DQo+ID4gPiA+ID4gPiA+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0
-OiBkdHM6IGxzMTAyOGE6IGZpeCB3YXRjaGRvZw0KPiA+ID4gPiA+ID4gPiBkZXZpY2Ugbm9kZQ0K
-PiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gPiA+ID4g
-PiA+ID4NCj4gPiA+ID4gPiA+ID4gT24gVGh1LCBNYXkgMDksIDIwMTkgYXQgMDM6MDY6NTdQTSAr
-MDgwMCwgQ2h1YW5odWEgSGFuIHdyb3RlOg0KPiA+ID4gPiA+ID4gPiA+IGxzMTAyOGEgcGxhdGZv
-cm0gdXNlcyBzcDgwNSB3YXRjaGRvZywgYW5kIHVzZSAxLzE2DQo+ID4gPiA+ID4gPiA+ID4gcGxh
-dGZvcm0gY2xvY2sgYXMgdGltZXIgY2xvY2ssIHRoaXMgcGF0Y2ggZml4IGRldmljZSB0cmVlIG5v
-ZGUuDQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBaaGFu
-ZyBZaW5nLTIyNDU1IDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT4NCj4gPiA+ID4gPiA+ID4gPiBT
-aWduZWQtb2ZmLWJ5OiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+ID4g
-PiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ID4gPiA+ICAuLi4vYXJtNjQvYm9vdC9kdHMvZnJlZXNj
-YWxlL2ZzbC1sczEwMjhhLmR0c2kgfCAxOQ0KPiA+ID4gPiA+ID4gPiA+ICsrKysrKysrKysrKy0t
-LS0tLS0NCj4gPiA+ID4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyks
-IDcgZGVsZXRpb25zKC0pDQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiBkaWZmIC0t
-Z2l0DQo+ID4gPiA+ID4gPiA+ID4gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
-bHMxMDI4YS5kdHNpDQo+ID4gPiA+ID4gPiA+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
-Y2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ID4gPiA+ID4gPiA+ID4gaW5kZXggYjA0NTgxMjQ5ZjBi
-Li4xNTEwYjE4NTgyNDYgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+ID4gLS0tIGEvYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ID4gPiA+ID4gPiA+ICsrKyBi
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiA+ID4g
-PiA+ID4gPiBAQCAtMjg1LDEzICsyODUsMTggQEANCj4gPiA+ID4gPiA+ID4gPiAgICAgICAgICAg
-ICAgICAgICAgICAgI2ludGVycnVwdC1jZWxscyA9IDwyPjsNCj4gPiA+ID4gPiA+ID4gPiAgICAg
-ICAgICAgICAgIH07DQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiAtICAgICAgICAg
-ICAgIHdkb2cwOiB3YXRjaGRvZ0AyM2MwMDAwIHsNCj4gPiA+ID4gPiA+ID4gPiAtICAgICAgICAg
-ICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS13ZHQiLA0KPiA+ID4gImZzbCxp
-bXgyMS13ZHQiOw0KPiA+ID4gPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAgICAgICByZWcgPSA8
-MHgwIDB4MjNjMDAwMCAweDAgMHgxMDAwMD47DQo+ID4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAg
-ICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSA1OQ0KPiA+ID4gPiA+IElSUV9UWVBFX0xF
-VkVMX0hJR0g+Ow0KPiA+ID4gPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAgICAgICBjbG9ja3Mg
-PSA8JmNsb2NrZ2VuIDQgMT47DQo+ID4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAg
-IGJpZy1lbmRpYW47DQo+ID4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIHN0YXR1
-cyA9ICJkaXNhYmxlZCI7DQo+ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICBjbHVzdGVyMV9j
-b3JlMF93YXRjaGRvZzogd2R0QGMwMDAwMDAgew0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-PiBLZWVwICd3YXRjaGRvZycgYXMgdGhlIG5vZGUgbmFtZSwNCj4gPiA+ID4gPiA+IFRoYW5rcyBm
-b3IgeW91ciByZXBsYXkNCj4gPiA+ID4gPiA+IERvIHlvdSBtZWFuIHJlcGxhY2UgdGhlIKGud2R0
-oa8gd2l0aCChrndhdGNoZG9noa8/DQo+ID4gPiA+ID4gPiBhbmQga2VlcCBub2RlcyBzb3J0IGlu
-IHVuaXQtYWRkcmVzcy4NCj4gPiA+ID4gPiA+IFdoYXQgZG9lcyB0aGlzIG1lYW4/DQo+ID4gPiA+
-ID4NCj4gPiA+ID4gPiBUaGF0IG1lYW5zIG9yZGVyIHRoZSBub2RlcyBieSB0aGUgYWRkcmVzc2Vz
-IChlLmcuIGMwMDAwMDAsDQo+ID4gPiA+ID4gYzAxMDAwMCkNCj4gPiA+ID4gVGhlIGN1cnJlbnQg
-b3JkZXIgaXMgY29ycmVjdKOoVGhlIGZpcnN0IGlzIGMwMDAwMDAsIHRoZW4gYzAwMDAwMKOpLg0K
-PiA+ID4NCj4gPiA+IEJ1dCB0aGV5IGFyZSBhZGRlZCBhZnRlciBncGlvQDIzMjAwMDAgYW5kIGJl
-Zm9yZSBzYXRhQDMyMDAwMDAuDQo+ID4gSSBjaGFuZ2VkIGFuZCBtYWRlIHRoZSBzZWNvbmQgdmVy
-c2lvbiBvZiB0aGUgcGF0Y2gsIGJ1dCBJIGZvdW5kIHRoZQ0KPiA+IGZvbGxvd2luZyBlcnJvciB3
-aGVuIEkgZXhlY3V0ZWQgLi9zY3JpcHRzL2NoZWNrcGF0Y2gucGwgeHh4LnBhdGNoIHRvDQo+ID4g
-Y2hlY2sgdGhlIHBhdGNoOg0KPiA+DQo+ID4gV0FSTklORzogRFQgY29tcGF0aWJsZSBzdHJpbmcg
-dmVuZG9yICJhcm0iIGFwcGVhcnMgdW4tZG9jdW1lbnRlZCAtLQ0KPiA+IGNoZWNrIC4vRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQNCj4gPiAjNDM6
-IEZJTEU6IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2k6MzUx
-Og0KPiA+ICsgY29tcGF0aWJsZSA9ICJhcm0sc3A4MDUiLCAiYXJtLHByaW1lY2VsbCI7DQo+ID4N
-Cj4gPiBIb3dldmVyLCB0aGVyZSBpcyBubyB2ZW5kb3ItcHJlZml4ZXMudHh0IGZpbGUgaW4gdGhl
-DQo+ID4gLi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvIGRpcmVjdG9yeSwgb25s
-eSB2ZW5kb3ItDQo+ID4gcHJlZml4ZXMueWFtbC4NCj4gPiBNb3Jlb3ZlciwgdGhlcmUgYXJlIKGu
-YXJtoa8gdmVuZG9ycyBpbiB2ZW5kb3ItcHJlZml4ZXMueWFtbC4NCj4gDQo+IEFkZGVkIFJvYiBI
-ZXJyaW5nIHRvIHRoZSB0aHJlYWQuDQo+IA0KPiA+IFJlcXVlc3QgaGVscKOsdGhhbmtzDQpIb3cg
-Y2FuIEkgc29sdmUgdGhpcyBwYXRjaCBjaGVjayBlcnJvcj8gQXNrIGZvciBoZWxwLCB0aGFuayB5
-b3UhDQo+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+IFNoYXdu
-DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNv
-bXBhdGlibGUgPSAiYXJtLHNwODA1IiwNCj4gImFybSxwcmltZWNlbGwiOw0KPiA+ID4gPiA+ID4g
-PiA+ICsgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4YzAwMDAwMCAweDAgMHgxMDAw
-PjsNCj4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbG9j
-a2dlbiA0IDE1PiwNCj4gPiA+ID4gPiA+ID4gPiArIDwmY2xvY2tnZW4NCj4gPiA+ID4gPiA+ID4g
-PiArIDQNCj4gPiA+IDE1PjsNCj4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
-Y2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiLCAid2RvZ19jbGsiOw0KPiA+ID4gPiA+ID4gPiA+ICsg
-ICAgICAgICAgICAgfTsNCj4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gKyAgICAg
-ICAgICAgICBjbHVzdGVyMV9jb3JlMV93YXRjaGRvZzogd2R0QGMwMTAwMDAgew0KPiA+ID4gPiA+
-ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFybSxzcDgwNSIsDQo+
-ICJhcm0scHJpbWVjZWxsIjsNCj4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
-cmVnID0gPDB4MCAweGMwMTAwMDAgMHgwIDB4MTAwMD47DQo+ID4gPiA+ID4gPiA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAxNT4sDQo+ID4gPiA+ID4gPiA+
-ID4gKyA8JmNsb2NrZ2VuDQo+ID4gPiA+ID4gPiA+ID4gKyA0DQo+ID4gPiAxNT47DQo+ID4gPiA+
-ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImFwYl9wY2xrIiwN
-Cj4gPiA+ID4gPiA+ID4gPiArICJ3ZG9nX2NsayI7DQo+ID4gPiA+ID4gPiA+ID4gICAgICAgICAg
-ICAgICB9Ow0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gICAgICAgICAgICAgICBz
-YXRhOiBzYXRhQDMyMDAwMDAgew0KPiA+ID4gPiA+ID4gPiA+IC0tDQo+ID4gPiA+ID4gPiA+ID4g
-Mi4xNy4xDQo+ID4gPiA+ID4gPiA+ID4NCg==
+On Fri, Feb 1, 2019 at 8:01 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Tue, Jan 29, 2019 at 11:01:31PM +0530, Jagan Teki wrote:
+> > On Tue, Jan 29, 2019 at 8:43 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Mon, Jan 28, 2019 at 03:06:10PM +0530, Jagan Teki wrote:
+> > > > On Sat, Jan 26, 2019 at 2:54 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > >
+> > > > > On Fri, Jan 25, 2019 at 01:28:49AM +0530, Jagan Teki wrote:
+> > > > > > Minimum PLL used for MIPI is 500MHz, as per manual, but
+> > > > > > lowering the min rate by 300MHz can result proper working
+> > > > > > nkms divider with the help of desired dclock rate from
+> > > > > > panel driver.
+> > > > > >
+> > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > Acked-by: Stephen Boyd <sboyd@kernel.org>
+> > > > >
+> > > > > Going 200MHz below the minimum doesn't seem really reasonable. What
+> > > > > is the issue that you are trying to fix here?
+> > > > >
+> > > > > It looks like it's picking bad dividers, but if that's the case, this
+> > > > > isn't the proper fix.
+> > > >
+> > > > As I stated in earlier patches, the whole idea is pick the desired
+> > > > dclk divider based dclk rate. So the dotclock, sun4i_dclk_round_rate
+> > > > is unable to get the proper dclk divider at the end, so it eventually
+> > > > picking up wrong divider value and fired vblank timeout.
+> > > >
+> > > > So, we come-up with optimal and working min_rate 300MHz in pll-mipi to
+> > > > get the desired clock something like below.
+> > > > [    2.415773] [drm] No driver support for vblank timestamp query.
+> > > > [    2.424116] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
+> > > > [    2.424172] ideal = 220000000, rounded = 0
+> > > > [    2.424176] ideal = 275000000, rounded = 0
+> > > > [    2.424194] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424197] ideal = 330000000, rounded = 330000000
+> > > > [    2.424201] sun4i_dclk_round_rate: div = 6 rate = 55000000
+> > > > [    2.424205] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
+> > > > [    2.424209] ideal = 220000000, rounded = 0
+> > > > [    2.424213] ideal = 275000000, rounded = 0
+> > > > [    2.424230] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424233] ideal = 330000000, rounded = 330000000
+> > > > [    2.424236] sun4i_dclk_round_rate: div = 6 rate = 55000000
+> > > > [    2.424253] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424270] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424278] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
+> > > > [    2.424281] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
+> > > > [    2.424306] ccu_nkm_set_rate: rate = 330000000, parent_rate = 297000000
+> > > > [    2.424309] ccu_nkm_set_rate: _nkm.n = 5
+> > > > [    2.424311] ccu_nkm_set_rate: _nkm.k = 2
+> > > > [    2.424313] ccu_nkm_set_rate: _nkm.m = 9
+> > > > [    2.424661] sun4i_dclk_set_rate div 6
+> > > > [    2.424668] sun4i_dclk_recalc_rate: val = 6, rate = 55000000
+> > > >
+> > > > But look like this wouldn't valid for all other dclock rates, say BPI
+> > > > panel has 30MHz clock that would failed with this logic.
+> > > >
+> > > > On the other side Allwinner BSP calculating dclk divider based on the
+> > > > SoC's. for A33 [1] it is fixed dclk divider of 4 and for A64 is is
+> > > > calculated based on the bpp/lanes.
+> > >
+> > > It looks like the A64 has the same divider of 4:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
+> > >
+> > > I think you're confusing it with the ratio between the pixel clock and
+> > > the dotclock, called dsi_div:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L198
+> >
+> > Ahh.. I thought this initially but as far as DSI clock computation is
+> > concern, the L12 tcon_div is local variable which is used for edge0
+> > computation in burst mode and not for the dsi clock computation. Since
+> > the BSP is unable to get the tcon_div during edge0 computation, they
+> > defined it locally I think.
+> >
+> > You can see the lcd_clk_config() code [2], where we can see DSI clock
+> > computation using dsi_div value.
+> >
+> > Here is dump after the in Line 792 which is after computation[3]
+> > [   10.800737] lcd_clk_config: dsi_div = 6, tcon_div = 4, lcd_div = 1
+> > [   10.800743] lcd_clk_config: lcd_dclk_freq = 55, dclk_rate = 55000000
+> > [   10.800749] lcd_clk_config: lcd_rate = 330000000, pll_rate = 330000000
+> >
+> > The above dump the lcd_rate 330MHz is computed with panel clock, 55MHz
+> > into dsi_div 6. So this can be our actual divider values dclk_min_div,
+> > dclk_max_div in sun4i_dclk_round_rate (from
+> > drivers/gpu/drm/sun4i/sun4i_dotclock.c)
+>
+> I wish it was in your commit log in the first place, instead of having
+> to exchange multiple mails over this.
+>
+> However, I don't think that's quite true, and it might be a bug in
+> Allwinner's implementation (or rather something quite confusing).
+>
+> You're right that the lcd_rate and pll_rate seem to be generated from
+> the pixel clock, and it indeed looks like the ratio between the pixel
+> clock and the TCON dotclock is defined through the number of bits per
+> lanes.
+>
+> However, in this case, dsi_rate is actually the same than lcd_rate,
+> since pll_rate is going to be divided by dsi_div:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L791
+>
+> Since lcd_div is 1, it also means that in this case, dsi_rate ==
+> dclk_rate.
+>
+> The DSI module clock however, is always set to 148.5 MHz. Indeed, if
+> we look at:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L804
+>
+> We can see that the rate in clk_info is used if it's different than
+> 0. This is filled by disp_al_lcd_get_clk_info, which, in the case of a
+> DSI panel, will hardcode it to 148.5 MHz:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L164
+>
+> So, the DSI clock is set to this here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L805
+>
+> The TCON *module* clock (the one in the clock controller) has been set
+> to lcd_rate (so the pixel clock times the number of bits per lane) here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L800
+>
+> And the PLL has been set to the same rate here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L794
+
+Let me explain, something more.
+
+According to bsp there are clk_info.tcon_div which I will explain below.
+clk_info.dsi_div which is dynamic and it depends on bpp/lanes, so it
+is 6 for 24bpp and 4 lanes devices.
+
+PLL rate here depends on dsi_div (not tcon_div)
+
+Code here
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L784
+
+is computing the actual set rate, which depends on dsi_rate.
+
+lcd_rate = dclk_rate * clk_info.dsi_div;
+dsi_rate = pll_rate / clk_info.dsi_div;
+
+Say if the dclk_rate 148MHz then the dsi_rate is 888MHz which set rate
+for above link you mentioned.
+
+Here are the evidence with some prints.
+
+https://gist.github.com/openedev/9bae2d87d2fcc06b999fe48c998b7043
+https://gist.github.com/openedev/700de2e3701b2bf3ad1aa0f0fa862c9a
+
+>
+> Let's take a step back now: that function we were looking at,
+> lcd_clk_config, is called by lcd_clk_enable, which is in turn called
+> by disp_lcd_enable here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L1328
+>
+> The next function being called is disp_al_lcd_cfg, and that function
+> will hardcode the TCON dotclock divider to 4, here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L240
+
+tcon_div from BSP point-of-view of there are two variants
+00) clk_info.tcon_div which is 4 and same is set the divider position
+in SUN4I_TCON0_DCLK_REG (like above link refer)
+01) tcon_div which is 4 and used for edge timings computation
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
+
+The real reason for 01) is again 4 is they set the divider to 4 in 00)
+which is technically wrong because the dividers which used during
+dotclock in above (dsi_div) should be used here as well. Since there
+is no dynamic way of doing this BSP hard-coding these values.
+
+Patches 5,6,7 on this series doing this
+https://patchwork.freedesktop.org/series/60847/
+
+Hope this explanation helps?
