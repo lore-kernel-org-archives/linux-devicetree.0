@@ -1,149 +1,91 @@
-Return-Path: <SRS0=qnfr=TQ=linaro.org=daniel.lezcano@kernel.org>
-Subject: Re: [PATCH V12 2/5] thermal: of-thermal: add API for getting sensor
- ID from DT
-References: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
- <1555384609-7030-2-git-send-email-Anson.Huang@nxp.com>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <d9c719c4-b5d1-580f-218e-0421126310e1@linaro.org>
-Date: Thu, 16 May 2019 11:38:58 +0200
+Return-Path: <SRS0=qDds=TY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51783 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404090AbfEXOFb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 May 2019 10:05:31 -0400
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 08/10] media: dt-bindings: Document i.MX8MQ and i.MX8MM VPU bindings
+Date: Fri, 24 May 2019 16:04:57 +0200
+Message-Id: <20190524140459.4002-9-p.zabel@pengutronix.de>
+In-Reply-To: <20190524140459.4002-1-p.zabel@pengutronix.de>
+References: <20190524140459.4002-1-p.zabel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <1555384609-7030-2-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "agross@kernel.org" <agross@kernel.org>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-On 16/04/2019 05:22, Anson Huang wrote:
-> On some platforms like i.MX8QXP, the thermal driver needs a
-> real HW sensor ID from DT thermal zone, the HW sensor ID is
-> used to get temperature from SCU firmware, and the virtual
-> sensor ID starting from 0 to N is NOT used at all, this patch
-> adds new API thermal_zone_of_get_sensor_id() to provide the
-> feature of getting sensor ID from DT thermal zone's node.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Add devicetree binding documentation for the Hantro G1/G2 VPU on i.MX8MQ
+and for the Hantro G1/G2/H1 VPU on i.MX8MM.
 
-Eduardo?
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ .../devicetree/bindings/media/imx8m-vpu.txt   | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/imx8m-vpu.txt
 
-What do you think about this patch?
-
-> ---
-> New patch.
-> ---
->  drivers/thermal/of-thermal.c | 53 ++++++++++++++++++++++++++++++++++----------
->  include/linux/thermal.h      | 10 +++++++++
->  2 files changed, 51 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-> index 2df059c..2e4320c 100644
-> --- a/drivers/thermal/of-thermal.c
-> +++ b/drivers/thermal/of-thermal.c
-> @@ -446,6 +446,46 @@ thermal_zone_of_add_sensor(struct device_node *zone,
->  }
->  
->  /**
-> + * thermal_zone_of_get_sensor_id - get sensor ID from a DT thermal zone
-> + * @tz_np: a valid thermal zone device node.
-> + * @sensor_specs: pointer to output arguments structure will be passed back.
-> + * @id: a sensor ID pointer will be passed back.
-> + *
-> + * This function will get sensor ID from a given thermal zone node, use
-> + * "thermal-sensors" as list name, and get sensor ID from first phandle's
-> + * argument.
-> + *
-> + * Return: 0 on success, proper error code otherwise.
-> + */
-> +
-> +int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
-> +				  struct of_phandle_args *sensor_specs,
-> +				  u32 *id)
-> +{
-> +	int ret;
-> +
-> +	ret = of_parse_phandle_with_args(tz_np,
-> +					 "thermal-sensors",
-> +					 "#thermal-sensor-cells",
-> +					 0,
-> +					 sensor_specs);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (sensor_specs->args_count >= 1) {
-> +		*id = sensor_specs->args[0];
-> +		WARN(sensor_specs->args_count > 1,
-> +		     "%pOFn: too many cells in sensor specifier %d\n",
-> +		     sensor_specs->np, sensor_specs->args_count);
-> +	} else {
-> +		*id = 0;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(thermal_zone_of_get_sensor_id);
-> +
-> +/**
->   * thermal_zone_of_sensor_register - registers a sensor to a DT thermal zone
->   * @dev: a valid struct device pointer of a sensor device. Must contain
->   *       a valid .of_node, for the sensor node.
-> @@ -500,21 +540,10 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
->  		int ret, id;
->  
->  		/* For now, thermal framework supports only 1 sensor per zone */
-> -		ret = of_parse_phandle_with_args(child, "thermal-sensors",
-> -						 "#thermal-sensor-cells",
-> -						 0, &sensor_specs);
-> +		ret = thermal_zone_of_get_sensor_id(child, &sensor_specs, &id);
->  		if (ret)
->  			continue;
->  
-> -		if (sensor_specs.args_count >= 1) {
-> -			id = sensor_specs.args[0];
-> -			WARN(sensor_specs.args_count > 1,
-> -			     "%pOFn: too many cells in sensor specifier %d\n",
-> -			     sensor_specs.np, sensor_specs.args_count);
-> -		} else {
-> -			id = 0;
-> -		}
-> -
->  		if (sensor_specs.np == sensor_np && id == sensor_id) {
->  			tzd = thermal_zone_of_add_sensor(child, sensor_np,
->  							 data, ops);
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index 5f4705f..970fb37 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -375,6 +375,9 @@ struct thermal_trip {
->  
->  /* Function declarations */
->  #ifdef CONFIG_THERMAL_OF
-> +int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
-> +				  struct of_phandle_args *sensor_specs,
-> +				  u32 *id);
->  struct thermal_zone_device *
->  thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
->  				const struct thermal_zone_of_device_ops *ops);
-> @@ -386,6 +389,13 @@ struct thermal_zone_device *devm_thermal_zone_of_sensor_register(
->  void devm_thermal_zone_of_sensor_unregister(struct device *dev,
->  					    struct thermal_zone_device *tz);
->  #else
-> +
-> +static int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
-> +					 struct of_phandle_args *sensor_specs,
-> +					 u32 *id)
-> +{
-> +	return -ENOENT;
-> +}
->  static inline struct thermal_zone_device *
->  thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
->  				const struct thermal_zone_of_device_ops *ops)
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/media/imx8m-vpu.txt b/Documentation/devicetree/bindings/media/imx8m-vpu.txt
+new file mode 100644
+index 000000000000..659bd28dd002
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/imx8m-vpu.txt
+@@ -0,0 +1,56 @@
++device-tree bindings for Hantro G1/G2/H1 VPU codecs implemented on i.MX8M SoCs
++
++Required properties:
++- compatible: value should be one of the following
++		"nxp,imx8mq-vpu",
++		"nxp,imx8mm-vpu";
++- regs: VPU core and control block register ranges
++- reg-names: should be
++		"g1", "g2", "ctrl" on i.MX8MQ,
++		"g1", "g2", "h1", "ctrl" on i.MX8MM.
++- interrupts: encoding and decoding interrupt specifiers
++- interrupt-names: should be
++		"g1", "g2" on i.MX8MQ,
++		"g1", "g2", "h1" on i.MX8MM.
++- clocks: phandle to VPU core clocks and bus clock
++- clock-names: should be
++		"g1", "g2", "bus" on i.MX8MQ,
++		"g1", "g2", "h1", "bus" on i.MX8MM.
++- power-domains: phandle to power domain node
++
++Examples:
++
++	vpu: vpu@38300000 {
++		compatible = "nxp,imx8mq-vpu";
++		reg = <0x38300000 0x10000>,
++		      <0x38310000 0x10000>,
++		      <0x38320000 0x10000>;
++		reg-names = "g1", "g2", "ctrl";
++		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "g1", "g2";
++		clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
++			 <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
++			 <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
++		clock-names = "g1", "g2", "bus";
++		power-domains = <&pgc_vpu>;
++	};
++
++	vpu: vpu@38300000 {
++		compatible = "nxp,imx8mm-vpu";
++		reg = <0x38300000 0x10000>,
++		      <0x38310000 0x10000>,
++		      <0x38320000 0x10000>;
++		      <0x38330000 0x10000>;
++		reg-names = "g1", "g2", "h1", "ctrl";
++		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++			     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "g1", "g2", "h1";
++		clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
++			 <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
++			 <&clk IMX8MQ_CLK_VPU_H1_ROOT>,
++			 <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
++		clock-names = "g1", "g2", "h1", "bus";
++		power-domains = <&pgc_vpu>;
++	};
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.20.1
