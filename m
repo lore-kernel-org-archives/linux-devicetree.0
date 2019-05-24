@@ -1,57 +1,129 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFT PATCH v5 3/5] cpu-topology: Move cpu topology code to
- common code.
-Date: Fri, 24 May 2019 09:57:40 +0100
-Message-ID: <20190524085720.GA13121@e107155-lin>
-References: <20190524000653.13005-1-atish.patra@wdc.com>
- <20190524000653.13005-4-atish.patra@wdc.com>
- <20190524081333.GA15566@kroah.com>
+From: =?utf-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
+Subject: RE: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
+Date: Fri, 24 May 2019 17:00:05 +0800
+Message-ID: <011a01d5120f$146265e0$3d2731a0$@emc.com.tw>
+References: <20190521132712.2818-1-benjamin.tissoires@redhat.com> <20190521132712.2818-10-benjamin.tissoires@redhat.com> <003d01d511de$9da229c0$d8e67d40$@emc.com.tw> <CAO-hwJLnjxVxdodqAkKdQpqjAPGV1QYnugM+9t_86xRD92WJ-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190524081333.GA15566@kroah.com>
+In-Reply-To: <CAO-hwJLnjxVxdodqAkKdQpqjAPGV1QYnugM+9t_86xRD92WJ-Q@mail.gmail.com>
+Content-Language: zh-tw
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>Will Deacon <w>
+To: 'Benjamin Tissoires' <benjamin.tissoires@redhat.com>
+Cc: 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Aaron Ma' <aaron.ma@canonical.com>, 'Hans de Goede' <hdegoede@redhat.com>, "'open list:HID CORE LAYER'" <linux-input@vger.kernel.org>, 'lkml' <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2019 at 10:13:33AM +0200, Greg Kroah-Hartman wrote:
-> On Thu, May 23, 2019 at 05:06:50PM -0700, Atish Patra wrote:
-> > Both RISC-V & ARM64 are using cpu-map device tree to describe
-> > their cpu topology. It's better to move the relevant code to
-> > a common place instead of duplicate code.
-> > 
-> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> > ---
-> >  arch/arm64/include/asm/topology.h |  23 ---
-> >  arch/arm64/kernel/topology.c      | 303 +-----------------------------
-> >  drivers/base/arch_topology.c      | 296 +++++++++++++++++++++++++++++
-> >  include/linux/arch_topology.h     |  28 +++
-> >  include/linux/topology.h          |   1 +
-> >  5 files changed, 329 insertions(+), 322 deletions(-)
->
-> What, now _I_ have to maintain drivers/base/arch_topology.c?  That's
-> nice for everyone else, but not me :(
->
-> Ugh.
->
-> Anyway, what are you wanting to happen to this series?  I think we need
-> some ARM people to sign off on it before I can take the whole thing,
-> right?
->
+Hi
 
-Greg, I am ready to take ownership. Juri the original author of this file
-agreed and I have been reviewing this file since Juri first wrote it.
-I am happy to submit a patch assuming maintainership for this file, was
-just waiting to hear from you when I asked explicitly you and Juri in
-last version of the patch when Will wanted someone from ARM to be reviewer
-of this file at-least. I am happy to take over as reviewer or maintainer
-which ever you prefer.
+-----Original Message-----
+From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com] 
+Sent: Friday, May 24, 2019 3:06 PM
+To: 廖崇榮
+Cc: Dmitry Torokhov; Rob Herring; Aaron Ma; Hans de Goede; open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
 
-Sorry if I was not so clear in my earlier mail.
+On Fri, May 24, 2019 at 5:13 AM 廖崇榮 <kt.liao@emc.com.tw> wrote:
+>
+> Hi Benjamin,
+>
+> Thanks so much for all you do for Elan touchpad.
+>
+> For the width_*, I have a question for it.
+> Our antenna sensors fully occupied the whole touchpad PCB.
+>
+> The Gap between 2 sensors are 7.5 mil (0.19mm).
+> That's why we did not minus one trace.
 
---
-Regards,
-Sudeep
+So, with the P52 I have:
+[  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
+[  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
+[  +0.000002] size:   (98,55) drivers/input/mouse/elan_i2c_core.c:430
+[  +0.000001] res:    (31,31) drivers/input/mouse/elan_i2c_core.c:431
+
+calculated size (max/res): 98 x 56 mm
+true size, as measured: 101 x 60 mm
+
+I list layout information of P52 touchpad as below.
+Physical size : 99 x 58 mm
+Active Area size : ~ 97 * 56 mm, (boarding is 1.008mm for each side)
+
+Sensor layout:
+X Pitch : 4.0286 mm
+Y Pitch : 4.0147 mm
+
+Which gives (without the minus 1):
+width_x = max_x / x_traces = 3045 / 24 = 126.875 -> 3.9885 mm width_y = max_y / y_traces = 1731 / 14 = 123.643 -> 4.0927 mm
+
+-> this gives a total size of the touchpad of: 96 x 57 mm (width_x *
+24, width_y * 14)
+
+With the minus 1:
+width_x = max_x / x_traces = 3045 / 23 = 132.391 -> 4.2707 mm width_y = max_y / y_traces = 1731 / 14 = 133.154 -> 4.2953 mm
+
+-> this gives a total size of the touchpad of: 102 x 60 mm (width_x *
+24, width_y * 14)
+and considering traces-1: 98 x 56 mm
+
+Removing 1 to the number of traces gave a squarer values in rows and columns, and this is what is done in the PS/2 driver.
+Also, going back to the size of the touchpad gives a better value when removing 1 on the *traces.
+So maybe when forwarding the properties we should remove one there in the PS/2 driver?
+
+Removing 1 trace may be better for some of previous touchpad. (depending on sensor pattern)
+mk_* indicate the number of trace which is touched, and it's not a precise value.
+I think the usability won't change too much whether removing one trace.
+PS/2 have supported plenty of touchpad. It's better to remain the same.
+
+Thanks
+KT
+
+Cheers,
+Benjamin
+
+>
+>
+> Thanks
+> KT
+> -----Original Message-----
+> From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
+> Sent: Tuesday, May 21, 2019 9:27 PM
+> To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
+> Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org; 
+> devicetree@vger.kernel.org; Benjamin Tissoires
+> Subject: [PATCH v2 09/10] Input: elan_i2c - correct the width/size 
+> base value
+>
+> *_traces are the number of antennas. width_* is thus the space between 
+> 2 antennas. Which means, we should subtract 1 to the number of 
+> antennas to divide the touchpad by the number of holes between each antenna.
+>
+> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>
+> --
+>
+> new in v2
+> ---
+>  drivers/input/mouse/elan_i2c_core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/input/mouse/elan_i2c_core.c
+> b/drivers/input/mouse/elan_i2c_core.c
+> index 6f4feedb7765..3375eaa9a72e 100644
+> --- a/drivers/input/mouse/elan_i2c_core.c
+> +++ b/drivers/input/mouse/elan_i2c_core.c
+> @@ -398,8 +398,8 @@ static int elan_query_device_parameters(struct
+> elan_tp_data *data)
+>                 if (error)
+>                         return error;
+>         }
+> -       data->width_x = data->max_x / x_traces;
+> -       data->width_y = data->max_y / y_traces;
+> +       data->width_x = data->max_x / (x_traces - 1);
+> +       data->width_y = data->max_y / (y_traces - 1);
+>
+>         if (device_property_read_u32(&client->dev,
+>                                      "touchscreen-x-mm", &x_mm) ||
+> --
+> 2.21.0
+>
