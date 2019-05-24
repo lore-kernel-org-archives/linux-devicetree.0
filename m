@@ -1,89 +1,69 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe ordering
-Date: Fri, 24 May 2019 08:04:41 -0500
-Message-ID: <CAL_JsqKiXEKECMZpZR3j+uRqnsec5f0vN301tagT687HRhu6Nw@mail.gmail.com>
-References: <20190524010117.225219-1-saravanak@google.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 6/6] arm64: dts: allwinner: a64: enable ANX6345 bridge on
+ Teres-I
+Date: Fri, 24 May 2019 15:06:23 +0200
+Message-ID: <20190524130623.dpkg5z5rdyc2bno4@flea>
+References: <20190523065013.2719D68B05@newverein.lst.de>
+ <20190523065404.BB60F68B20@newverein.lst.de>
+ <CA+E=qVdh-=C5zOYWYj95jLN51EaXFS6B+CQ101-f64q5QmgN3g@mail.gmail.com>
+ <20190524121359.GE15685@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fsxi6i2r62yvgbvk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190524010117.225219-1-saravanak@google.com>
+Content-Disposition: inline
+In-Reply-To: <20190524121359.GE15685@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+To: Torsten Duwe <duwe@lst.de>
+Cc: Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2019 at 8:01 PM Saravana Kannan <saravanak@google.com> wrote:
+
+--fsxi6i2r62yvgbvk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, May 24, 2019 at 02:13:59PM +0200, Torsten Duwe wrote:
+> On Thu, May 23, 2019 at 07:48:03AM -0700, Vasily Khoruzhick wrote:
+> > On Wed, May 22, 2019 at 11:54 PM Torsten Duwe <duwe@lst.de> wrote:
+> > >
+> > >
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > > @@ -65,6 +65,21 @@
+> > >                 };
+> > >         };
+> > >
+> > > +       panel: panel {
+> > > +               compatible ="innolux,n116bge", "simple-panel";
+> >
+> > IIRC Rob wanted it to be edp-connector, not simple-panel. Also you
+> > need to introduce edp-connector binding.
 >
-> Add a generic "depends-on" property that allows specifying mandatory
-> functional dependencies between devices. Add device-links after the
-> devices are created (but before they are probed) by looking at this
-> "depends-on" property.
+> This line is identically found in
+> arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi and
+> arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
 
-The DT already has dependency information. A node with 'clocks'
-property has its dependency right there. We should use that. We don't
-need to duplicate the information.
+That's not really an argument though. These are using rather old
+bindings, and realising that they are flawed and fixing these flaws is
+a natural process.
 
-> This property is used instead of existing DT properties that specify
-> phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
-> is because not all resources referred to by existing DT properties are
-> mandatory functional dependencies. Some devices/drivers might be able
-> to operate with reduced functionality when some of the resources
-> aren't available. For example, a device could operate in polling mode
-> if no IRQ is available, a device could skip doing power management if
-> clock or voltage control isn't available and they are left on, etc.
+Maxime
 
-Yeah, but none of these examples are typically what you'd want to
-happen. These cases are a property of the OS, not the DT. For example,
-until recently, If you added pinctrl bindings to your DT, the kernel
-would no longer boot because it would be looking for pinctrl driver.
-That's wrong because the DT should not be coupled to the OS like that.
-Adding this property will cause the same problem.
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-> So, adding mandatory functional dependency links between devices by
-> looking at referred phandles in DT properties won't work as it would
-> prevent probing devices that could be probed. By having an explicit
-> depends-on property, we can handle these cases correctly.
->
-> Having functional dependencies explicitly called out in DT and
-> automatically added before the devices are probed, provides the
-> following benefits:
->
-> - Optimizes device probe order and avoids the useless work of
->   attempting probes of devices that will not probe successfully
->   (because their suppliers aren't present or haven't probed yet).
->
->   For example, in a commonly available mobile SoC, registering just
->   one consumer device's driver at an initcall level earlier than the
->   supplier device's driver causes 11 failed probe attempts before the
->   consumer device probes successfully. This was with a kernel with all
->   the drivers statically compiled in. This problem gets a lot worse if
->   all the drivers are loaded as modules without direct symbol
->   dependencies.
+--fsxi6i2r62yvgbvk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Do you have data on how much time is spent. Past 'smarter probing'
-attempts have not shown a significant difference.
+-----BEGIN PGP SIGNATURE-----
 
-> - Supplier devices like clock providers, regulators providers, etc
->   need to keep the resources they provide active and at a particular
->   state(s) during boot up even if their current set of consumers don't
->   request the resource to be active. This is because the rest of the
->   consumers might not have probed yet and turning off the resource
->   before all the consumers have probed could lead to a hang or
->   undesired user experience.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOfsTwAKCRDj7w1vZxhR
+xRybAP9iKNkCqyhXQ6xIsRZgZ0sNXT+q0aHuuuRwgIKZaEJwkwEAqakTF1EIu2Pr
+7DcRHe8aaX/5zfuRYUOdKKZ/wNaOdQ0=
+=Mlxd
+-----END PGP SIGNATURE-----
 
-We already know generally what devices are dependencies because you
-just listed them. Why don't we make the kernel smarter by
-instantiating these core devices/drivers first instead of relying on
-initcall and link order.
-
->   Some frameworks (Eg: regulator) handle this today by turning off
->   "unused" resources at late_initcall_sync and hoping all the devices
->   have probed by then. This is not a valid assumption for systems with
->   loadable modules. Other frameworks (Eg: clock) just don't handle
->   this due to the lack of a clear signal for when they can turn off
->   resources. This leads to downstream hacks to handle cases like this
->   that can easily be solved in the upstream kernel.
-
-IMO, we should get rid of this auto disabling.
-
-Rob
+--fsxi6i2r62yvgbvk--
