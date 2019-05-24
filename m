@@ -1,8 +1,8 @@
 From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH v2 1/6] i2c: acpi: permit bus speed to be discovered after
- enumeration
-Date: Fri, 24 May 2019 18:26:46 +0200
-Message-ID: <20190524162651.28189-2-ard.biesheuvel@linaro.org>
+Subject: [PATCH v2 2/6] crypto: atmel-ecc: add support for ACPI probing on
+ non-AT91 platforms
+Date: Fri, 24 May 2019 18:26:47 +0200
+Message-ID: <20190524162651.28189-3-ard.biesheuvel@linaro.org>
 References: <20190524162651.28189-1-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,44 +22,60 @@ To: linux-crypto@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, Tudor Ambarus <tudor.ambarus@microchip.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, the I2C ACPI enumeration code only permits the max bus rate
-to be discovered before enumerating the slaves on the bus. In some
-cases, drivers for slave devices may require this information, e.g.,
-some ATmel crypto drivers need to generate a so-called wake token
-of a fixed duration, regardless of the bus rate.
+The Atmel/Microchip EC508A is a I2C device that could be wired into
+any platform, and is being used on the Linaro/96boards Secure96
+mezzanine adapter. This means it could be found on any platform, even
+on ones that use ACPI enumeration (via PRP0001 devices). So update the
+code to enable this use case.
 
-So tweak the code so i2c_acpi_lookup_speed() is able to obtain this
-information after enumeration as well.
+This involves tweaking the bus rate discovery code to take ACPI probing
+into account, which records the maximum bus rate as a property of the
+slave device. For the atmel-ecc code, this means that the effective bus
+rate should never exceed the maximum rate, unless we are dealing with
+buggy firmware. Nonetheless, let's just use the existing plumbing to
+discover the bus rate and keep the existing logic intact.
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- drivers/i2c/i2c-core-acpi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/crypto/Kconfig     |  1 -
+ drivers/crypto/atmel-ecc.c | 13 ++++++++-----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index 272800692088..7240cc07abb4 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -115,8 +115,7 @@ static int i2c_acpi_do_lookup(struct acpi_device *adev,
- 	struct list_head resource_list;
- 	int ret;
+diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+index 0af08081e305..97ec8107eeef 100644
+--- a/drivers/crypto/Kconfig
++++ b/drivers/crypto/Kconfig
+@@ -522,7 +522,6 @@ config CRYPTO_DEV_ATMEL_SHA
  
--	if (acpi_bus_get_status(adev) || !adev->status.present ||
--	    acpi_device_enumerated(adev))
-+	if (acpi_bus_get_status(adev) || !adev->status.present)
- 		return -EINVAL;
+ config CRYPTO_DEV_ATMEL_ECC
+ 	tristate "Support for Microchip / Atmel ECC hw accelerator"
+-	depends on ARCH_AT91 || COMPILE_TEST
+ 	depends on I2C
+ 	select CRYPTO_ECDH
+ 	select CRC16
+diff --git a/drivers/crypto/atmel-ecc.c b/drivers/crypto/atmel-ecc.c
+index ba00e4563ca0..5705348f540f 100644
+--- a/drivers/crypto/atmel-ecc.c
++++ b/drivers/crypto/atmel-ecc.c
+@@ -657,11 +657,14 @@ static int atmel_ecc_probe(struct i2c_client *client,
+ 		return -ENODEV;
+ 	}
  
- 	if (acpi_match_device_ids(adev, i2c_acpi_ignored_device_ids) == 0)
-@@ -151,6 +150,9 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
- 	lookup.info = info;
- 	lookup.index = -1;
+-	ret = of_property_read_u32(client->adapter->dev.of_node,
+-				   "clock-frequency", &bus_clk_rate);
+-	if (ret) {
+-		dev_err(dev, "of: failed to read clock-frequency property\n");
+-		return ret;
++	clk_rate = i2c_acpi_find_bus_speed(&client->adapter->dev);
++	if (!clk_rate) {
++		ret = device_property_read_u32(&client->adapter->dev,
++					       "clock-frequency", &bus_clk_rate);
++		if (ret) {
++			dev_err(dev, "failed to read clock-frequency property\n");
++			return ret;
++		}
+ 	}
  
-+	if (acpi_device_enumerated(adev))
-+		return -EINVAL;
-+
- 	ret = i2c_acpi_do_lookup(adev, &lookup);
- 	if (ret)
- 		return ret;
+ 	if (bus_clk_rate > 1000000L) {
 -- 
 2.20.1
