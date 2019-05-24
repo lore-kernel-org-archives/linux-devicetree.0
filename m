@@ -1,77 +1,126 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [RFT PATCH v4 3/5] cpu-topology: Move cpu topology code to common
- code.
-Date: Thu, 23 May 2019 16:34:48 -0700
-Message-ID: <935ee66e-d303-5e0f-bbf9-20139ba79d77@wdc.com>
-References: <20190428002529.14229-1-atish.patra@wdc.com>
- <20190428002529.14229-4-atish.patra@wdc.com>
- <20190523093549.GA13560@e107155-lin>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v4 1/3] amr64: map FDT as RW for early_init_dt_scan()
+Date: Thu, 23 May 2019 17:04:18 -0700
+Message-ID: <5ce73503.1c69fb81.5f889.1d84@mx.google.com>
+References: <20190519160446.320-1-hsinyi@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190523093549.GA13560@e107155-lin>
-Content-Language: en-US
+In-Reply-To: <20190519160446.320-1-hsinyi@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, Hsin-Yi Wang <hsinyi@chromium.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/23/19 2:36 AM, Sudeep Holla wrote:
-> On Sat, Apr 27, 2019 at 05:25:27PM -0700, Atish Patra wrote:
->> Both RISC-V & ARM64 are using cpu-map device tree to describe
->> their cpu topology. It's better to move the relevant code to
->> a common place instead of duplicate code.
->>
->> Signed-off-by: Atish Patra <atish.patra@wdc.com>
->> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>   arch/arm64/include/asm/topology.h |  23 ---
->>   arch/arm64/kernel/topology.c      | 303 +-----------------------------
->>   drivers/base/arch_topology.c      | 298 ++++++++++++++++++++++++++++-
->>   drivers/base/topology.c           |   1 +
->>   include/linux/arch_topology.h     |  28 +++
->>   5 files changed, 330 insertions(+), 323 deletions(-)
->>
->> -void store_cpu_topology(unsigned int cpuid);
-> [...]
-> 
-> 
->> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
->> index edfcf8d982e4..2b0758c01cee 100644
->> --- a/drivers/base/arch_topology.c
->> +++ b/drivers/base/arch_topology.c
->> @@ -6,8 +6,8 @@
->>    * Written by: Juri Lelli, ARM Ltd.
->>    */
->>
->> -#include <linux/acpi.h>
->>   #include <linux/arch_topology.h>
->> +#include <linux/acpi.h>
-> 
-> I assume this was to avoid compilation errors, when I rebased I got
-> conflict and I ordered them back alphabetically as before and hit the
-> compilation error.
-> 
-> The actual fix would be to include linux/arch_topology.h in linux/topology.h
-> as you are moving contents of asm/topology.h which it includes.
-> 
-> I did the change and get it tested by kbuild. See [1]
-> 
+Quoting Hsin-Yi Wang (2019-05-19 09:04:44)
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index a170c6369a68..29648e86f7e5 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -940,12 +940,12 @@ void *__init __fixmap_remap_fdt(phys_addr_t dt_phys=
+, int *size, pgprot_t prot)
+>         return dt_virt;
+>  }
+> =20
+> -void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
+> +void *__init fixmap_remap_fdt(phys_addr_t dt_phys, pgprot_t prot)
+>  {
+>         void *dt_virt;
+>         int size;
+> =20
+> -       dt_virt =3D __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
+> +       dt_virt =3D __fixmap_remap_fdt(dt_phys, &size, prot);
+>         if (!dt_virt)
+>                 return NULL;
+> =20
 
-Thanks for pointing that out. I think we can remove arch_topology.h 
-include in base/arch_topology.c and base/topology.c as they already 
-include sched/topology.h or linux/topology.h.
+Sorry, I'm still confused why we want to call memblock_reserve() again.
+Why not avoid it?
 
-I will send out v5 soon.
-
-> Regards,
-> Sudeep
-> 
-> [1] https://git.kernel.org/sudeep.holla/linux/h/cpu_topology
-> 
-
-
--- 
-Regards,
-Atish
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index 67ef25d037ea..d0d9de9da5c1 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -137,7 +137,7 @@ extern void init_mem_pgprot(void);
+ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+ 			       unsigned long virt, phys_addr_t size,
+ 			       pgprot_t prot, bool page_mappings_only);
+-extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
++extern void *__fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t p=
+rot);
+ extern void mark_linear_text_alias_ro(void);
+=20
+ #define INIT_MM_CONTEXT(name)	\
+diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
+index b09b6f75f759..0701c2cf1534 100644
+--- a/arch/arm64/kernel/kaslr.c
++++ b/arch/arm64/kernel/kaslr.c
+@@ -65,9 +65,6 @@ static __init const u8 *kaslr_get_cmdline(void *fdt)
+ 	return default_cmdline;
+ }
+=20
+-extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
+-				       pgprot_t prot);
+-
+ /*
+  * This routine will be executed with the kernel mapped at its default vir=
+tual
+  * address, and if it returns successfully, the kernel will be remapped, a=
+nd
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 413d566405d1..3e97354566ff 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -181,9 +181,13 @@ static void __init smp_build_mpidr_hash(void)
+=20
+ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ {
+-	void *dt_virt =3D fixmap_remap_fdt(dt_phys);
++	int size;
++	void *dt_virt =3D __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+ 	const char *name;
+=20
++	if (dt_virt)
++		memblock_reserve(dt_phys, size);
++
+ 	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
+ 		pr_crit("\n"
+ 			"Error: invalid device tree blob at physical address %pa (virtual addre=
+ss 0x%p)\n"
+@@ -195,6 +199,9 @@ static void __init setup_machine_fdt(phys_addr_t dt_phy=
+s)
+ 			cpu_relax();
+ 	}
+=20
++	/* Early fixups are done, map the FDT as read-only now */
++	__fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
++
+ 	name =3D of_flat_dt_get_machine_name();
+ 	if (!name)
+ 		return;
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index a170c6369a68..ddf6086cd9dd 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -940,19 +940,6 @@ void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, i=
+nt *size, pgprot_t prot)
+ 	return dt_virt;
+ }
+=20
+-void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
+-{
+-	void *dt_virt;
+-	int size;
+-
+-	dt_virt =3D __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
+-	if (!dt_virt)
+-		return NULL;
+-
+-	memblock_reserve(dt_phys, size);
+-	return dt_virt;
+-}
+-
+ int __init arch_ioremap_pud_supported(void)
+ {
+ 	/* only 4k granule supports level 1 block mappings */
