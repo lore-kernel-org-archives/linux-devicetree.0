@@ -1,38 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: display/panel: Add KOE tx14d24vm1bpa
- display description
-Date: Fri, 24 May 2019 16:56:54 -0500
-Message-ID: <20190524215654.GA16085@bogus>
-References: <20180412143715.6828-1-lukma@denx.de>
- <20190515160428.6114-1-lukma@denx.de>
+Subject: Re: [PATCH v4 1/3] amr64: map FDT as RW for early_init_dt_scan()
+Date: Fri, 24 May 2019 16:58:38 -0500
+Message-ID: <20190524215838.GA16271@bogus>
+References: <20190519160446.320-1-hsinyi@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190515160428.6114-1-lukma@denx.de>
+In-Reply-To: <20190519160446.320-1-hsinyi@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Lukasz Majewski <lukma@denx.de>
+To: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 15 May 2019 18:04:28 +0200, Lukasz Majewski wrote:
-> This commit adds documentation entry description for KOE's 5.7" display.
-> 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> 
-> ---
-> Previous discussion (and Rob's Reviewed-by) about this patch
-> https://patchwork.kernel.org/patch/10339595/
-> 
-> Changes for v4:
-> - Rebase on top of newest mainline
-> SHA1: 5ac94332248ee017964ba368cdda4ce647e3aba7
-> 
-> Changes for v3 :
-> - New patch
-> ---
->  .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-> 
+On Mon, May 20, 2019 at 12:04:44AM +0800, Hsin-Yi Wang wrote:
+> Currently in arm64, FDT is mapped to RO before it's passed to
+> early_init_dt_scan(). However, there might be some code that needs
+> to modify FDT during init. Map FDT to RW until unflatten DT.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+typo in the subject.
+
+Otherwise, this one seems fine to me.
+
+> 
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+> change log v2->v4:
+> * v3 abandoned
+> * add an arg pgprot_t to fixmap_remap_fdt()
+> ---
+>  arch/arm64/include/asm/mmu.h | 2 +-
+>  arch/arm64/kernel/setup.c    | 5 ++++-
+>  arch/arm64/mm/mmu.c          | 4 ++--
+>  3 files changed, 7 insertions(+), 4 deletions(-)
