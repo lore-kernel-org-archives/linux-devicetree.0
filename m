@@ -1,198 +1,66 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 1/3] thermal: rockchip: fix up the tsadc pinctrl setting error
-Date: Fri, 24 May 2019 08:45:12 +0200
-Message-ID: <23620031.GKuRlaLy8o@phil>
-References: <1556618986-18923-1-git-send-email-zhangqing@rock-chips.com> <2174314.1vfUlvne1O@phil> <a6780f8f-4144-f817-b4b8-c40f6aa5e806@rock-chips.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH V3 RESEND 3/4] defconfig: arm64: enable i.MX8 SCU octop
+ driver
+Date: Fri, 24 May 2019 06:48:18 +0000
+Message-ID: <AM0PR04MB4481AF7816B9E9D6F35290EF88020@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190522020040.30283-1-peng.fan@nxp.com>
+ <20190522020040.30283-3-peng.fan@nxp.com> <20190523125235.GV9261@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a6780f8f-4144-f817-b4b8-c40f6aa5e806@rock-chips.com>
+In-Reply-To: <20190523125235.GV9261@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "elaine.zhang" <zhangqing@rock-chips.com>
-Cc: Enric Balletbo Serra <eballetbo@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, huangtao@rock-chips.com, Linux PM list <linux-pm@vger.kernel.org>, xxx@rock-chips.com, xf@rock-chips.com, linux-kernel <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Doug Anderson <dianders@chromium.org>, vicencb@gmail.com
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Shawn Guo <shawn.guo@linaro.org>, Andy Gross <andy.gross@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Olof Johansson <olof@lixom.net>, Jagan Teki <jagan@amarulasolutions.com>, Bjorn
 List-Id: devicetree@vger.kernel.org
 
-Hi Elaine,
-
-Am Donnerstag, 23. Mai 2019, 03:34:37 CEST schrieb elaine.zhang:
-> hi, Heiko & Enric:
-> 
-> 在 2019/5/22 下午8:27, Heiko Stuebner 写道:
-> > Hi Enric,
-> >
-> > Am Montag, 20. Mai 2019, 15:38:32 CEST schrieb Enric Balletbo Serra:
-> >> Hi all,
-> >>
-> >> As pointed by [1] and [2] this commit, that now is upstream, breaks
-> >> veyron (rk3288) and kevin (rk3399) boards. The problem is especially
-> >> critical for veyron boards because they don't boot anymore.
-> >>
-> >> I didn't look deep at the problem but I have some concerns about this
-> >> patch, see below.
-> >>
-> >> [1] https://www.spinics.net/lists/linux-rockchip/msg24657.html
-> >> [2] https://www.spinics.net/lists/linux-rockchip/msg24735.html
-> >>
-> >> Missatge de Daniel Lezcano <daniel.lezcano@linaro.org> del dia dt., 30
-> >> d’abr. 2019 a les 15:39:
-> >>> On 30/04/2019 12:09, Elaine Zhang wrote:
-> >>>> Explicitly use the pinctrl to set/unset the right mode
-> >>>> instead of relying on the pinctrl init mode.
-> >>>> And it requires setting the tshut polarity before select pinctrl.
-> >>>>
-> >>>> When the temperature sensor mode is set to 0, it will automatically
-> >>>> reset the board via the Clock-Reset-Unit (CRU) if the over temperature
-> >>>> threshold is reached. However, when the pinctrl initializes, it does a
-> >>>> transition to "otp_out" which may lead the SoC restart all the time.
-> >>>>
-> >>>> "otp_out" IO may be connected to the RESET circuit on the hardware.
-> >>>> If the IO is in the wrong state, it will trigger RESET.
-> >>>> (similar to the effect of pressing the RESET button)
-> >>>> which will cause the soc to restart all the time.
-> >>>>
-> >>>> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> >>> Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> >>>
-> >>>
-> >>>
-> >>>> ---
-> >>>>   drivers/thermal/rockchip_thermal.c | 36 +++++++++++++++++++++++++++++++++---
-> >>>>   1 file changed, 33 insertions(+), 3 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-> >>>> index 9c7643d62ed7..6dc7fc516abf 100644
-> >>>> --- a/drivers/thermal/rockchip_thermal.c
-> >>>> +++ b/drivers/thermal/rockchip_thermal.c
-> >>>> @@ -172,6 +172,9 @@ struct rockchip_thermal_data {
-> >>>>        int tshut_temp;
-> >>>>        enum tshut_mode tshut_mode;
-> >>>>        enum tshut_polarity tshut_polarity;
-> >>>> +     struct pinctrl *pinctrl;
-> >>>> +     struct pinctrl_state *gpio_state;
-> >>>> +     struct pinctrl_state *otp_state;
-> >>>>   };
-> >>>>
-> >>>>   /**
-> >>>> @@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
-> >>>>                return error;
-> >>>>        }
-> >>>>
-> >>>> +     thermal->chip->control(thermal->regs, false);
-> >>>> +
-> >> That's the line that causes the hang. Commenting this makes the veyron
-> >> boot again. Probably this needs to go after chip->initialize?
-> > It needs to go after the clk_enable calls.
-> > At this point the tsadc may still be unclocked.
-> 
-> The clk is enable by default.
-
-Not necessarily. A driver needing a clock should not rely on it being
-magically on :-) . Especially rk3288 devices were affected by this ...
-see the number of people "complaining".
-
-As you need to have the pclk enabled to access the tsadc registers
-I'd suggest changing the control to something like
-
-clk_prepare_enable(pclk)
-->control(..., false)
-clk_prepare_enable(tsadc)
-
-So just swapping the clk-enable order (right now pclk only gets enabled
-later as second clock)
-
-> The reason for this modification:
-> 
-> The otp Pin polarity setting for tsadc must be set when tsadc is turned off.
-> 
-> The order:
-> 
-> Close the tsadc->Set the otp pin polarity ->Set the pinctrl->initialize 
-> the tsadc->Open the tsadc
-
-I'm still trying to understand why you need the additional pin-states
-though. I.e. you introduce an additional gpio and otpout state, but
-instead could just select the "init" state when needed?
-(when the tsadc gets disabled)
-
-Staying backwards compatible with existing devicetrees is really important
-and changing the pinctrl requirements makes tsadc probe fail on these.
-
-Heiko
-
-
-> 
-> 
-> As for the problem you mentioned, I guess: The default polarity of otp 
-> does not match the default state, that is, the otp is triggered by 
-> default, and then the reset circuit of the hardware takes effect and is 
-> restarted all the time.
-> Modification:
-> 1. For this hardware, otp pin default state is modified.
-> 2. The mode of using CRU is rockchip,hw-tshut-mode = <0> in DTS;
-> /* tshut mode 0:CRU 1:GPIO */
-> 
-> Recommended use method 2. You can try it.
-> 
-> >
-> >>>>        error = clk_prepare_enable(thermal->clk);
-> >>>>        if (error) {
-> >>>>                dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
-> >>>> @@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
-> >>>>        thermal->chip->initialize(thermal->grf, thermal->regs,
-> >>>>                                  thermal->tshut_polarity);
-> >>>>
-> >>>> +     if (thermal->tshut_mode == TSHUT_MODE_GPIO) {
-> >>>> +             thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
-> >>>> +             if (IS_ERR(thermal->pinctrl)) {
-> >>>> +                     dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
-> >>>> +                     return PTR_ERR(thermal->pinctrl);
-> >>>> +             }
-> >>>> +
-> >>>> +             thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
-> >>>> +                                                        "gpio");
-> >> Shouldn't this mode be documented properly in the binding first?
-> > More importantly, it should be _backwards-compatible_, aka work with
-> > old devicetrees without that property and not break thermal handling for
-> > them entirely.
-> If need  _backwards-compatible_,  It's can't return 
-> PTR_ERR(thermal->pinctrl) when get
-> 
-> devm_pinctrl_get failed.
-> 
-> >
-> >> The binding [3] talks about init, default and sleep states but *not*
-> >> gpio and otpout. The patch series looks incomplete to me or not using
-> >> the proper names.
-> >>
-> >> [3] https://elixir.bootlin.com/linux/v5.2-rc1/source/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> >>
-> >>>> +             if (IS_ERR_OR_NULL(thermal->gpio_state)) {
-> >>>> +                     dev_err(&pdev->dev, "failed to find thermal gpio state\n");
-> >>>> +                     return -EINVAL;
-> >>>> +             }
-> >>>> +
-> >>>> +             thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
-> >>>> +                                                       "otpout");
-> >>>> +             if (IS_ERR_OR_NULL(thermal->otp_state)) {
-> >>>> +                     dev_err(&pdev->dev, "failed to find thermal otpout state\n");
-> >>>> +                     return -EINVAL;
-> >>>> +             }
-> >>>> +
-> >> Same here otpout is not a documented.
-> >>
-> >> As this change is now in mainline and is causing veyron to hang I'd
-> >> suggest reverting this change for now. Even fixing the root cause
-> >> (maybe the one I pointed above) after this patch we will have the
-> >> thermal driver to fail because "gpio" and "otpout" states are not
-> >> defined nor documented (a change on this will need some reviews and
-> >> acks and time I guess).
-> > I definitly agree here. Handling + checking the binding change
-> > as well as needed fallback code is definitly not material for -rc-kernels
-> > so we should just revert for now and let Elaine fix the issues for 5.3.
-> >
-> > Anyone volunteering for sending a revert-patch to Eduardo? :-)
-> 
-> I agree to revert the patch,and I will correct it and push it later.
-> 
-> Do I need to commit the revert the patch now?@Heiko
+SGkgU2hhd24sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24g
+R3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogMjAxOcTqNdTCMjPI1SAy
+MDo1Mw0KPiBUbzogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+IENjOiBzcmluaXZhcy5r
+YW5kYWdhdGxhQGxpbmFyby5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gcy5oYXVlckBwZW5n
+dXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOyBkbC1saW51eC1pbXgNCj4gPGxpbnV4LWlt
+eEBueHAuY29tPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4g
+dmFuLmZyZWVuaXhAZ21haWwuY29tOyBDYXRhbGluIE1hcmluYXMgPGNhdGFsaW4ubWFyaW5hc0Bh
+cm0uY29tPjsgV2lsbA0KPiBEZWFjb24gPHdpbGwuZGVhY29uQGFybS5jb20+OyBTaGF3biBHdW8g
+PHNoYXduLmd1b0BsaW5hcm8ub3JnPjsgQW5keQ0KPiBHcm9zcyA8YW5keS5ncm9zc0BsaW5hcm8u
+b3JnPjsgTWF4aW1lIFJpcGFyZA0KPiA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT47IE9sb2Yg
+Sm9oYW5zc29uIDxvbG9mQGxpeG9tLm5ldD47IEphZ2FuIFRla2kNCj4gPGphZ2FuQGFtYXJ1bGFz
+b2x1dGlvbnMuY29tPjsgQmpvcm4gQW5kZXJzc29uDQo+IDxiam9ybi5hbmRlcnNzb25AbGluYXJv
+Lm9yZz47IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+Ow0KPiBNYXJj
+IEdvbnphbGV6IDxtYXJjLncuZ29uemFsZXpAZnJlZS5mcj47IEVucmljIEJhbGxldGJvIGkgU2Vy
+cmENCj4gPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggVjMgUkVTRU5EIDMvNF0gZGVmY29uZmlnOiBhcm02NDogZW5hYmxlIGkuTVg4IFNDVQ0KPiBv
+Y3RvcCBkcml2ZXINCj4gDQo+IE9uIFdlZCwgTWF5IDIyLCAyMDE5IGF0IDAxOjQ3OjA1QU0gKzAw
+MDAsIFBlbmcgRmFuIHdyb3RlOg0KPiA+IEJ1aWxkIGluIENPTkZJR19OVk1FTV9JTVhfT0NPVFBf
+U0NVLg0KPiA+DQo+ID4gQ2M6IENhdGFsaW4gTWFyaW5hcyA8Y2F0YWxpbi5tYXJpbmFzQGFybS5j
+b20+DQo+ID4gQ2M6IFdpbGwgRGVhY29uIDx3aWxsLmRlYWNvbkBhcm0uY29tPg0KPiA+IENjOiBT
+aGF3biBHdW8gPHNoYXduLmd1b0BsaW5hcm8ub3JnPg0KPiA+IENjOiBBbmR5IEdyb3NzIDxhbmR5
+Lmdyb3NzQGxpbmFyby5vcmc+DQo+ID4gQ2M6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRA
+Ym9vdGxpbi5jb20+DQo+ID4gQ2M6IE9sb2YgSm9oYW5zc29uIDxvbG9mQGxpeG9tLm5ldD4NCj4g
+PiBDYzogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+DQo+ID4gQ2M6IEJq
+b3JuIEFuZGVyc3NvbiA8Ympvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc+DQo+ID4gQ2M6IExlb25h
+cmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+DQo+ID4gQ2M6IE1hcmMgR29uemFs
+ZXogPG1hcmMudy5nb256YWxlekBmcmVlLmZyPg0KPiA+IENjOiBFbnJpYyBCYWxsZXRibyBpIFNl
+cnJhIDxlbnJpYy5iYWxsZXRib0Bjb2xsYWJvcmEuY29tPg0KPiA+IENjOiBsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPiBSZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxh
+aXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5m
+YW5AbnhwLmNvbT4NCj4gDQo+IFBsZWFzZSBkbyBub3QgdXNlIGJhc2U2NCBlbmNvZGluZyBmb3Ig
+cGF0Y2ggcG9zdGluZy4NCg0KU2luY2UgU3Jpbml2YXMgcGlja2VkIHVwIHBhdGNoIDEvNCBhbmQg
+Mi80LCBzbyBqdXN0IHJlc2VuZCB0aGUNCnBhdGNoIDMvNCBhbmQgcGF0Y2ggNC80Lg0KDQpodHRw
+czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwOTU5MTQ5Lw0KaHR0cHM6Ly9wYXRjaHdv
+cmsua2VybmVsLm9yZy9wYXRjaC8xMDk1OTE1MS8NCg0KVGhhbmtzLA0KUGVuZy4NCj4gDQo+IFNo
+YXduDQo+IA0KPiA+IC0tLQ0KPiA+DQo+ID4gVjM6DQo+ID4gIE5vIGNoYW5nZQ0KPiA+IFYyOg0K
+PiA+ICByZW5hbWUgcGF0Y2ggdGl0bGUsIGFkZCByZXZpZXcgdGFnDQo+ID4NCj4gPiAgYXJjaC9h
+cm02NC9jb25maWdzL2RlZmNvbmZpZyB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
+cnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29u
+ZmlnDQo+ID4gYi9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnIGluZGV4IDk3OWE5NWM5MTVi
+Ni4uMzJiODUxMDJiODU3DQo+IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvY29uZmlncy9k
+ZWZjb25maWcNCj4gPiArKysgYi9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnDQo+ID4gQEAg
+LTc0OCw2ICs3NDgsNyBAQCBDT05GSUdfSElTSV9QTVU9eQ0KPiA+ICBDT05GSUdfUUNPTV9MMl9Q
+TVU9eQ0KPiA+ICBDT05GSUdfUUNPTV9MM19QTVU9eQ0KPiA+ICBDT05GSUdfTlZNRU1fSU1YX09D
+T1RQPXkNCj4gPiArQ09ORklHX05WTUVNX0lNWF9PQ09UUF9TQ1U9eQ0KPiA+ICBDT05GSUdfUUNP
+TV9RRlBST009eQ0KPiA+ICBDT05GSUdfUk9DS0NISVBfRUZVU0U9eQ0KPiA+ICBDT05GSUdfVU5J
+UEhJRVJfRUZVU0U9eQ0KPiA+IC0tDQo+ID4gMi4xNi40DQo+ID4NCg==
