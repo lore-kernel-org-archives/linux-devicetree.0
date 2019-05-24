@@ -1,129 +1,243 @@
-From: =?utf-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
-Subject: RE: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
-Date: Fri, 24 May 2019 17:00:05 +0800
-Message-ID: <011a01d5120f$146265e0$3d2731a0$@emc.com.tw>
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com> <20190521132712.2818-10-benjamin.tissoires@redhat.com> <003d01d511de$9da229c0$d8e67d40$@emc.com.tw> <CAO-hwJLnjxVxdodqAkKdQpqjAPGV1QYnugM+9t_86xRD92WJ-Q@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 6/8] dt-bindings: net: stmmac: Convert the binding to a
+ schemas
+Date: Fri, 24 May 2019 11:05:29 +0200
+Message-ID: <20190524090529.bvjzapgy35pfcow5@flea>
+References: <74d98cc3c744d53710c841381efd41cf5f15e656.1558605170.git-series.maxime.ripard@bootlin.com>
+ <ba1a5d8ad34a8c9ab99f504c04fbe65bde42081b.1558605170.git-series.maxime.ripard@bootlin.com>
+ <CAL_JsqLrE31vWVhApGgr8JU56sDc1TWWm9HiH=Z-tn5C1GwXQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAO-hwJLnjxVxdodqAkKdQpqjAPGV1QYnugM+9t_86xRD92WJ-Q@mail.gmail.com>
-Content-Language: zh-tw
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Benjamin Tissoires' <benjamin.tissoires@redhat.com>
-Cc: 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Aaron Ma' <aaron.ma@canonical.com>, 'Hans de Goede' <hdegoede@redhat.com>, "'open list:HID CORE LAYER'" <linux-input@vger.kernel.org>, 'lkml' <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="feqnt36fgpyz3hlk"
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLrE31vWVhApGgr8JU56sDc1TWWm9HiH=Z-tn5C1GwXQA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
------Original Message-----
-From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com] 
-Sent: Friday, May 24, 2019 3:06 PM
-To: 廖崇榮
-Cc: Dmitry Torokhov; Rob Herring; Aaron Ma; Hans de Goede; open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
+--feqnt36fgpyz3hlk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, May 24, 2019 at 5:13 AM 廖崇榮 <kt.liao@emc.com.tw> wrote:
+Hi Rob,
+
+On Thu, May 23, 2019 at 10:33:05AM -0500, Rob Herring wrote:
+> On Thu, May 23, 2019 at 4:57 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > Switch the STMMAC / Synopsys DesignWare MAC controller binding to a YAML
+> > schema to enable the DT validation.
 >
-> Hi Benjamin,
+> You picked an easy one. ;)
+
+Yeah, that's what happens when you run out of trivial bindings, you
+end up with only the hard ones left to work on :)
+
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/snps,dwmac.yaml | 344 +++++++++++-
+> >  Documentation/devicetree/bindings/net/stmmac.txt      | 179 +------
+> >  2 files changed, 345 insertions(+), 178 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> > new file mode 100644
+> > index 000000000000..be3ada5121e1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> > @@ -0,0 +1,344 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/snps,dwmac.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Synopsys DesignWare MAC Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Alexandre Torgue <alexandre.torgue@st.com>
+> > +  - Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> > +  - Jose Abreu <joabreu@synopsys.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - const: snps,dwmac
+> > +      - const: snps,dwmac-3.50a
+> > +      - const: snps,dwmac-3.610
+> > +      - const: snps,dwmac-3.70a
+> > +      - const: snps,dwmac-3.710
+> > +      - const: snps,dwmac-4.00
+> > +      - const: snps,dwmac-4.10a
+> > +      - const: snps,dwxgmac
+> > +      - const: snps,dwxgmac-2.10
+> > +      - const: st,spear600-gmac
+> > +        description: Deprecated
 >
-> Thanks so much for all you do for Elan touchpad.
+> Like the other, just make this an enum.
+
+Ack.
+
+I did this initially because the sun8i-emac bindings also have
+multiple compatibles we can use, and thus I needed an items here, but
+since we will move them away in separate files, we can just use an
+enum (with a contains).
+
+> Though, what to do on deprecated things? If we expect dts files to be
+> updated, then we should remove or disallow in the schema (e.g. 'prop:
+> false' for properties).
+
+Oh, so that's what the false are here for. I wanted to send a PR to
+the meta-schemas because *-gpio was not working, and that binding uses
+one, but I guess that solves it.
+
+For the deprecation process, I haven't made up my mind yet. We could
+put in comment the deprecated properties and compatibles, but that has
+two significant drawbacks:
+
+  - for the compatibles, we wouldn't have the nodes with a deprecated
+    compatible validated, and thus we wouldn't even have a warning
+    that our compatible is deprecated in the first place. And any
+    property we might have not used properly will be ignored as well.
+
+  - for the other properties, it's still pretty hard to disable
+    additionalProperties, so any deprecated property wouldn't be
+    validated if they were in a comment, and we wouldn't have a
+    warning either if additionalProperties is true, because we
+    tolerate them.
+
+I guess we can workaround the first one with a custom select that has
+all the supported compatibles (including the deprecated ones), but
+only list the non-deprecated options in the compatible properties.
+
+I don't really see a solution for the second one.
+
+> The issue with updating dts files, is it may break old kernels with
+> new dtbs.
+
+While this is something that is mentionned by some people, and I can
+see how it's problematic to some, it's also something we never really
+committed to, so I'm fine with that.
+
+> > +  snps,axi-config:
+> > +    $ref: /schemas/types.yaml#definitions/phandle
+> > +    description:
+> > +      AXI BUS Mode parameters. Phandle to a node that can contain the
+> > +      following properties
+> > +        * snps,lpi_en, enable Low Power Interface
+> > +        * snps,xit_frm, unlock on WoL
+> > +        * snps,wr_osr_lmt, max write outstanding req. limit
+> > +        * snps,rd_osr_lmt, max read outstanding req. limit
+> > +        * snps,kbbe, do not cross 1KiB boundary.
+> > +        * snps,blen, this is a vector of supported burst length.
+> > +        * snps,fb, fixed-burst
+> > +        * snps,mb, mixed-burst
+> > +        * snps,rb, rebuild INCRx Burst
 >
-> For the width_*, I have a question for it.
-> Our antenna sensors fully occupied the whole touchpad PCB.
+> This obviously needs its own schema, but that can come latter.
+
+I haven't been able to describe a node that doesn't have any
+particular copmatible or node name, but we just need to follow a
+phandle.
+
+How could we do this?
+
+> > +  snps,reset-gpio:
+> > +    description:
+> > +      PHY Reset GPIO
 >
-> The Gap between 2 sensors are 7.5 mil (0.19mm).
-> That's why we did not minus one trace.
-
-So, with the P52 I have:
-[  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
-[  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
-[  +0.000002] size:   (98,55) drivers/input/mouse/elan_i2c_core.c:430
-[  +0.000001] res:    (31,31) drivers/input/mouse/elan_i2c_core.c:431
-
-calculated size (max/res): 98 x 56 mm
-true size, as measured: 101 x 60 mm
-
-I list layout information of P52 touchpad as below.
-Physical size : 99 x 58 mm
-Active Area size : ~ 97 * 56 mm, (boarding is 1.008mm for each side)
-
-Sensor layout:
-X Pitch : 4.0286 mm
-Y Pitch : 4.0147 mm
-
-Which gives (without the minus 1):
-width_x = max_x / x_traces = 3045 / 24 = 126.875 -> 3.9885 mm width_y = max_y / y_traces = 1731 / 14 = 123.643 -> 4.0927 mm
-
--> this gives a total size of the touchpad of: 96 x 57 mm (width_x *
-24, width_y * 14)
-
-With the minus 1:
-width_x = max_x / x_traces = 3045 / 23 = 132.391 -> 4.2707 mm width_y = max_y / y_traces = 1731 / 14 = 133.154 -> 4.2953 mm
-
--> this gives a total size of the touchpad of: 102 x 60 mm (width_x *
-24, width_y * 14)
-and considering traces-1: 98 x 56 mm
-
-Removing 1 to the number of traces gave a squarer values in rows and columns, and this is what is done in the PS/2 driver.
-Also, going back to the size of the touchpad gives a better value when removing 1 on the *traces.
-So maybe when forwarding the properties we should remove one there in the PS/2 driver?
-
-Removing 1 trace may be better for some of previous touchpad. (depending on sensor pattern)
-mk_* indicate the number of trace which is touched, and it's not a precise value.
-I think the usability won't change too much whether removing one trace.
-PS/2 have supported plenty of touchpad. It's better to remain the same.
-
-Thanks
-KT
-
-Cheers,
-Benjamin
-
+> maxItems: 1
 >
+> > +
+> > +  snps,reset-active-low:
+> > +    $ref: /schemas/types.yaml#definitions/flag
+> > +    description:
+> > +      Indicates that the PHY Reset is active low
 >
-> Thanks
-> KT
-> -----Original Message-----
-> From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
-> Sent: Tuesday, May 21, 2019 9:27 PM
-> To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
-> Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org; 
-> devicetree@vger.kernel.org; Benjamin Tissoires
-> Subject: [PATCH v2 09/10] Input: elan_i2c - correct the width/size 
-> base value
+> Would be nice to deprecate these 2 properties for just 'reset-gpios'.
+> Though really, this should be in the phy node as this is a phy reset.
+
+The PHYs already have such a property, so we should just deprecate
+them.
+
+> > +
+> > +  snps,reset-delay-us:
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#definitions/uint32-array
+> > +      - minItems: 3
+> > +        maxItems: 3
+> > +    description:
+> > +      Triplet of delays. The 1st cell is reset pre-delay in micro
+> > +      seconds. The 2nd cell is reset pulse in micro seconds. The 3rd
+> > +      cell is reset post-delay in micro seconds.
+
+And this one too I guess?
+
+> > +  snps,aal:
+> > +    $ref: /schemas/types.yaml#definitions/flag
+> > +    description:
+> > +      Use Address-Aligned Beats
+> > +
+> > +  snps,fixed-burst:
+> > +    $ref: /schemas/types.yaml#definitions/flag
+> > +    description:
+> > +      Program the DMA to use the fixed burst mode
+> > +
+> > +  snps,mixed-burst:
+> > +    $ref: /schemas/types.yaml#definitions/flag
+> > +    description:
+> > +      Program the DMA to use the mixed burst mode
+> > +
+> > +  snps,force_thresh_dma_mode:
+> > +    $ref: /schemas/types.yaml#definitions/flag
+> > +    description:
+> > +      Force DMA to use the threshold mode for both tx and rx
+> > +
+> > +  snps,force_sf_dma_mode:
+> > +    $ref: /schemas/types.yaml#definitions/flag
+> > +    description:
+> > +      Force DMA to use the Store and Forward mode for both tx and
+> > +      rx. This flag is ignored if force_thresh_dma_mode is set.
+> > +
+> > +  snps,en-tx-lpi-clockgating:
+> > +    $ref: /schemas/types.yaml#definitions/flag
+> > +    description:
+> > +      Enable gating of the MAC TX clock during TX low-power mode
+> > +
+> > +  snps,multicast-filter-bins:
+> > +    $ref: /schemas/types.yaml#definitions/uint32
+> > +    description:
+> > +      Number of multicast filter hash bins supported by this device
+> > +      instance
+> > +
+> > +  snps,perfect-filter-entries:
+> > +    $ref: /schemas/types.yaml#definitions/uint32
+> > +    description:
+> > +      Number of perfect filter entries supported by this device
+> > +      instance
+> > +
+> > +  snps,ps-speed:
+> > +    $ref: /schemas/types.yaml#definitions/uint32
+> > +    description:
+> > +      Port selection speed that can be passed to the core when PCS
+> > +      is supported. For example, this is used in case of SGMII and
+> > +      MAC2MAC connection.
+> > +
+> > +  mdio:
+> > +    type: object
+> > +    description:
+> > +      Creates and registers an MDIO bus.
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        const: snps,dwmac-mdio
 >
-> *_traces are the number of antennas. width_* is thus the space between 
-> 2 antennas. Which means, we should subtract 1 to the number of 
-> antennas to divide the touchpad by the number of holes between each antenna.
->
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->
-> --
->
-> new in v2
-> ---
->  drivers/input/mouse/elan_i2c_core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/input/mouse/elan_i2c_core.c
-> b/drivers/input/mouse/elan_i2c_core.c
-> index 6f4feedb7765..3375eaa9a72e 100644
-> --- a/drivers/input/mouse/elan_i2c_core.c
-> +++ b/drivers/input/mouse/elan_i2c_core.c
-> @@ -398,8 +398,8 @@ static int elan_query_device_parameters(struct
-> elan_tp_data *data)
->                 if (error)
->                         return error;
->         }
-> -       data->width_x = data->max_x / x_traces;
-> -       data->width_y = data->max_y / y_traces;
-> +       data->width_x = data->max_x / (x_traces - 1);
-> +       data->width_y = data->max_y / (y_traces - 1);
->
->         if (device_property_read_u32(&client->dev,
->                                      "touchscreen-x-mm", &x_mm) ||
-> --
-> 2.21.0
->
+> required?
+
+Yep, I'll add it.
+
+Thanks!
+Maxime
+--feqnt36fgpyz3hlk--
