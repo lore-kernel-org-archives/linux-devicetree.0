@@ -1,27 +1,25 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] dt-bindings: pinctrl: Convert stm32 pinctrl bindings
- to json-schema
-Date: Fri, 24 May 2019 13:41:09 +0200
-Message-ID: <CACRpkdazPrbzL-oo6rhfgDcLftjCE1hrgPQCMvtE2TOUUnorVg@mail.gmail.com>
-References: <1557503126-3025-1-git-send-email-alexandre.torgue@st.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: meson: add output support in pinconf
+Date: Fri, 24 May 2019 13:49:02 +0200
+Message-ID: <CACRpkdaKDXCbR9di6upx_iezGfajGbqw7Y3p+LZnwYWdJ5dJRA@mail.gmail.com>
+References: <20190516151339.25846-1-jbrunet@baylibre.com> <20190516151339.25846-2-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557503126-3025-1-git-send-email-alexandre.torgue@st.com>
+In-Reply-To: <20190516151339.25846-2-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 10, 2019 at 5:45 PM Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
+On Thu, May 16, 2019 at 5:13 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
 
-> Convert the STM32 pinctrl binding to DT schema format using json-schema.
+> add support for the pinconf DT property output-enable, output-disable,
+> output-low and output-high in the meson pinctrl driver.
 >
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
-What a feat. Well done!
-Patch applied with Rob's Review tag.
+Only standard properties so patch applied as obviously correct.
 
 Yours,
 Linus Walleij
