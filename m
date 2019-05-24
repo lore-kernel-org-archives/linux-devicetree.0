@@ -1,71 +1,40 @@
-From: =?big5?B?ufmxUrph?= <kt.liao@emc.com.tw>
-Subject: RE: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
-Date: Fri, 24 May 2019 11:13:10 +0800
-Message-ID: <003d01d511de$9da229c0$d8e67d40$@emc.com.tw>
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com> <20190521132712.2818-10-benjamin.tissoires@redhat.com>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH 0/2] net: macb: Add support for SiFive FU540-C000
+Date: Fri, 24 May 2019 10:09:58 +0530
+Message-ID: <CAJ2_jOEr5J7_-81MjUE63OSFKL-p9whEZ_FDBihojXP2wvadVg@mail.gmail.com>
+References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com> <mvmwoihfi9f.fsf@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="big5"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521132712.2818-10-benjamin.tissoires@redhat.com>
-Content-Language: zh-tw
+In-Reply-To: <mvmwoihfi9f.fsf@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Benjamin Tissoires' <benjamin.tissoires@redhat.com>, 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Aaron Ma' <aaron.ma@canonical.com>, 'Hans de Goede' <hdegoede@redhat.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Andreas Schwab <schwab@suse.de>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, Palmer Dabbelt <palmer@sifive.com>, aou@eecs.berkeley.edu, ynezz@true.cz, Paul Walmsley <paul.walmsley@sifive.com>, Sachin Ghadi <sachin.ghadi@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benjamin,
+Hi Andreas,
 
-Thanks so much for all you do for Elan touchpad.
+On Thu, May 23, 2019 at 6:19 PM Andreas Schwab <schwab@suse.de> wrote:
+>
+> On Mai 23 2019, Yash Shah <yash.shah@sifive.com> wrote:
+>
+> > On FU540, the management IP block is tightly coupled with the Cadence
+> > MACB IP block. It manages many of the boundary signals from the MACB IP
+> > This patchset controls the tx_clk input signal to the MACB IP. It
+> > switches between the local TX clock (125MHz) and PHY TX clocks. This
+> > is necessary to toggle between 1Gb and 100/10Mb speeds.
+>
+> Doesn't work for me:
+>
+> [  365.842801] macb: probe of 10090000.ethernet failed with error -17
+>
 
-For the width_*, I have a question for it.
-Our antenna sensors fully occupied the whole touchpad PCB.
+Make sure you have applied all the patches needed for testing found at
+dev/yashs/ethernet branch of:
+https://github.com/yashshah7/riscv-linux.git
 
-The Gap between 2 sensors are 7.5 mil (0.19mm).
-That's why we did not minus one trace.
+In addition to that, make sure in your kernel config GPIO_SIFIVE=y
+In v2 of this patch, I will add this select GPIO_SIFIVE config in the
+Cadence Kconfig file.
 
-
-Thanks
-KT
------Original Message-----
-From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com] 
-Sent: Tuesday, May 21, 2019 9:27 PM
-To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
-Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org;
-devicetree@vger.kernel.org; Benjamin Tissoires
-Subject: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base
-value
-
-*_traces are the number of antennas. width_* is thus the space between 2
-antennas. Which means, we should subtract 1 to the number of antennas to
-divide the touchpad by the number of holes between each antenna.
-
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-
---
-
-new in v2
----
- drivers/input/mouse/elan_i2c_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/input/mouse/elan_i2c_core.c
-b/drivers/input/mouse/elan_i2c_core.c
-index 6f4feedb7765..3375eaa9a72e 100644
---- a/drivers/input/mouse/elan_i2c_core.c
-+++ b/drivers/input/mouse/elan_i2c_core.c
-@@ -398,8 +398,8 @@ static int elan_query_device_parameters(struct
-elan_tp_data *data)
- 		if (error)
- 			return error;
- 	}
--	data->width_x = data->max_x / x_traces;
--	data->width_y = data->max_y / y_traces;
-+	data->width_x = data->max_x / (x_traces - 1);
-+	data->width_y = data->max_y / (y_traces - 1);
- 
- 	if (device_property_read_u32(&client->dev,
- 				     "touchscreen-x-mm", &x_mm) ||
---
-2.21.0
+- Yash
