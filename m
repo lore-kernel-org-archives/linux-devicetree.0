@@ -1,160 +1,126 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH 1/5] ASoC: madera: Add DT bindings for Cirrus
-	Logic Madera codecs
-Date: Fri, 24 May 2019 11:41:54 +0100
-Message-ID: <20190524104158.30731-1-ckeepax@opensource.cirrus.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [DO NOT MERGE] [PATCH v2 2/6] ARM: dts: sun8i: bananapi-m2m: Enable Bananapi S070WV20-CT16 DSI panel
+Date: Fri, 24 May 2019 16:12:52 +0530
+Message-ID: <20190524104252.20236-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: broonie@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, lee.jones@linaro.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
+This patch add support for Bananapi S070WV20-CT16 DSI panel to
+BPI-M2M board.
 
-The Cirrus Logic Madera codecs are a family of related codecs with
-extensive digital and analogue I/O, digital mixing and routing,
-signal processing and programmable DSPs.
+DSI panel connected via board DSI port with,
+- DCDC1 as VCC-DSI supply
+- PL5 gpio for lcd reset gpio pin
+- PB7 gpio for lcd enable gpio pin
+- PL4 gpio for backlight enable pin
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- Documentation/devicetree/bindings/sound/madera.txt | 67 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- include/dt-bindings/sound/madera.h                 | 29 ++++++++++
- 3 files changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/madera.txt
- create mode 100644 include/dt-bindings/sound/madera.h
+ arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts | 59 ++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/madera.txt b/Documentation/devicetree/bindings/sound/madera.txt
-new file mode 100644
-index 0000000000000..1114fcf1aa4c2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/madera.txt
-@@ -0,0 +1,67 @@
-+Cirrus Logic Madera class audio codecs
+diff --git a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+index e1c75f7fa3ca..762d4cfcff01 100644
+--- a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
++++ b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+@@ -44,6 +44,7 @@
+ #include "sun8i-a33.dtsi"
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "BananaPi M2 Magic";
+@@ -61,6 +62,14 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <1 2 4 8 16 32 64 128 255>;
++		default-brightness-level = <8>;
++		enable-gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PL4 */
++	};
 +
-+This describes audio configuration bindings for these codecs.
-+
-+See also the core bindings for the parent MFD driver:
-+See Documentation/devicetree/bindings/mfd/madera.txt
-+
-+and defines for values used in these bindings:
-+include/dt-bindings/sound/madera.h
-+
-+These properties are all contained in the parent MFD node.
-+
-+Optional properties:
-+  - cirrus,dmic-ref : Indicates how the MICBIAS pins have been externally
-+    connected to DMICs on each input, one cell per input.
-+    <IN1 IN2 IN3 ...>
-+    A value of 0 indicates MICVDD and is the default, other values depend on the
-+    codec:
-+    For CS47L35 one of the CS47L35_DMIC_REF_xxx values
-+    For all other codecs one of the MADERA_DMIC_REF_xxx values
-+    Also see the datasheet for a description of the INn_DMIC_SUP field.
-+
-+  - cirrus,inmode : A list of input mode settings for each input. A maximum of
-+    16 cells, with four cells per input in the order INnAL, INnAR INnBL INnBR.
-+    For non-muxed inputs the first two cells for that input set the mode for
-+    the left and right channel and the second two cells must be 0.
-+    For muxed inputs the first two cells for that input set the mode of the
-+    left and right A inputs and the second two cells set the mode of the left
-+    and right B inputs.
-+    Valid mode values are one of the MADERA_INMODE_xxx. If the array is shorter
-+    than the number of inputs the unspecified inputs default to
-+    MADERA_INMODE_DIFF.
-+
-+  - cirrus,out-mono : Mono bit for each output, must contain six cells if
-+    specified. A non-zero value indicates the corresponding output is mono.
-+
-+  - cirrus,max-channels-clocked : Maximum number of channels that I2S clocks
-+    will be generated for. Useful when clock master for systems where the I2S
-+    bus has multiple data lines.
-+    One cell for each AIF, use a value of zero for AIFs that should be handled
-+    normally.
-+
-+  - cirrus,pdm-fmt : PDM speaker data format, must contain 2 cells
-+    (OUT5 and OUT6). See the PDM_SPKn_FMT field in the datasheet for a
-+    description of this value.
-+    The second cell is ignored for codecs that do not have OUT6.
-+
-+  - cirrus,pdm-mute : PDM mute format, must contain 2 cells
-+    (OUT5 and OUT6). See the PDM_SPKn_CTRL_1 register in the datasheet for a
-+    description of this value.
-+    The second cell is ignored for codecs that do not have OUT6.
-+
-+Example:
-+
-+cs47l35@0 {
-+	compatible = "cirrus,cs47l35";
-+
-+	cirrus,dmic-ref = <0 0 CS47L35_DMIC_REF_MICBIAS1B 0>;
-+	cirrus,inmode = <
-+		MADERA_INMODE_DMIC MADERA_INMODE_DMIC /* IN1A digital */
-+		MADERA_INMODE_SE   MADERA_INMODE_SE   /* IN1B single-ended */
-+		MADERA_INMODE_DIFF MADERA_INMODE_DIFF /* IN2 differential */
-+		0 0 	/* not used on this codec */
-+	>;
-+	cirrus,out-mono = <0 0 0 0 0 0>;
-+	cirrus,max-channels-clocked = <2 0 0>;
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -122,6 +131,46 @@
+ 	status = "okay";
+ };
+ 
++&de {
++	status = "okay";
 +};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5cfbea4ce5750..642cb5610dd50 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3915,6 +3915,7 @@ W:	https://github.com/CirrusLogic/linux-drivers/wiki
- S:	Supported
- F:	Documentation/devicetree/bindings/mfd/madera.txt
- F:	Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt
-+F:	include/dt-bindings/sound/madera*
- F:	include/linux/irqchip/irq-madera*
- F:	include/linux/mfd/madera/*
- F:	drivers/gpio/gpio-madera*
-diff --git a/include/dt-bindings/sound/madera.h b/include/dt-bindings/sound/madera.h
-new file mode 100644
-index 0000000000000..9ff4eae5259b0
---- /dev/null
-+++ b/include/dt-bindings/sound/madera.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Device Tree defines for Madera codecs
-+ *
-+ * Copyright (C) 2016-2017 Cirrus Logic, Inc. and
-+ *                         Cirrus Logic International Semiconductor Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
 +
-+#ifndef DT_BINDINGS_SOUND_MADERA_H
-+#define DT_BINDINGS_SOUND_MADERA_H
++&dphy {
++	status = "okay";
++};
 +
-+#define MADERA_INMODE_DIFF		0
-+#define MADERA_INMODE_SE		1
-+#define MADERA_INMODE_DMIC		2
++&dsi {
++	vcc-dsi-supply = <&reg_dcdc1>;		/* VCC-DSI */
++	status = "okay";
 +
-+#define MADERA_DMIC_REF_MICVDD		0
-+#define MADERA_DMIC_REF_MICBIAS1	1
-+#define MADERA_DMIC_REF_MICBIAS2	2
-+#define MADERA_DMIC_REF_MICBIAS3	3
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+#define CS47L35_DMIC_REF_MICBIAS1B	1
-+#define CS47L35_DMIC_REF_MICBIAS2A	2
-+#define CS47L35_DMIC_REF_MICBIAS2B	3
++		dsi_out: port@0 {
++			reg = <0>;
 +
-+#endif
++			dsi_out_panel: endpoint {
++				remote-endpoint = <&panel_out_dsi>;
++			};
++		};
++	};
++
++	panel@0 {
++		compatible = "bananapi,s070wv20-ct16-icn6211";
++		reg = <0>;
++		enable-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PB7 */
++		reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* LCD-RST: PL5 */
++		backlight = <&backlight>;
++
++		port {
++			panel_out_dsi: endpoint {
++				remote-endpoint = <&dsi_out_panel>;
++			};
++		};
++	};
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -157,6 +206,12 @@
+ 	status = "okay";
+ };
+ 
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_pin>;
++	status = "okay";
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
+@@ -269,6 +324,10 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
-2.11.0
+2.18.0.321.gffc6fa0e3
