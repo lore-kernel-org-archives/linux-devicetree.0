@@ -1,14 +1,15 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/6] dt-bindings: add Atmel SHA204A I2C crypto processor
-Date: Fri, 24 May 2019 14:42:41 -0500
-Message-ID: <CAL_JsqJZwRkq7ciOw101wyHCq1gbWBCZ-PKyLZajgRg_wLG0Vg@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] dt-bindings: move Atmel ECC508A I2C crypto
+ processor to trivial-devices
+Date: Fri, 24 May 2019 14:43:01 -0500
+Message-ID: <CAL_Jsq+=p+YA9emmZMhbCA75NM1ZksAx6mZkP1Fsype3SpK=TA@mail.gmail.com>
 References: <20190524162651.28189-1-ard.biesheuvel@linaro.org>
- <20190524162651.28189-6-ard.biesheuvel@linaro.org>
+ <20190524162651.28189-7-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190524162651.28189-6-ard.biesheuvel@linaro.org>
+In-Reply-To: <20190524162651.28189-7-ard.biesheuvel@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,11 +26,14 @@ List-Id: devicetree@vger.kernel.org
 On Fri, May 24, 2019 at 11:27 AM Ard Biesheuvel
 <ard.biesheuvel@linaro.org> wrote:
 >
-> Add a compatible string for the Atmel SHA204A I2C crypto processor.
+> Move the binding for the discrete Atmel I2C Elliptic Curve h/w crypto
+> module to trivial-devices.yaml, as it doesn't belong in atmel-crypto
+> which describes unrelated on-SoC peripherals.
 >
 > Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 > ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/crypto/atmel-crypto.txt | 13 -------------
+>  Documentation/devicetree/bindings/trivial-devices.yaml    |  2 ++
+>  2 files changed, 2 insertions(+), 13 deletions(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
