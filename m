@@ -1,95 +1,54 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize
- probe ordering
-Date: Fri, 24 May 2019 07:52:17 +0200
-Message-ID: <20190524055217.GC31664@kroah.com>
-References: <20190524010117.225219-1-saravanak@google.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 3/3] arm64: dts: imx8mq: add clock for SNVS RTC node
+Date: Fri, 24 May 2019 05:52:21 +0000
+Message-ID: <DB3PR0402MB391655657A8BE5E812F01C8FF5020@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1557882259-3353-1-git-send-email-Anson.Huang@nxp.com>
+ <1557882259-3353-3-git-send-email-Anson.Huang@nxp.com>
+ <20190523010243.GD16359@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190524010117.225219-1-saravanak@google.com>
+In-Reply-To: <20190523010243.GD16359@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vge>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2019 at 06:01:11PM -0700, Saravana Kannan wrote:
-> Add a generic "depends-on" property that allows specifying mandatory
-> functional dependencies between devices. Add device-links after the
-> devices are created (but before they are probed) by looking at this
-> "depends-on" property.
-> 
-> This property is used instead of existing DT properties that specify
-> phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
-> is because not all resources referred to by existing DT properties are
-> mandatory functional dependencies. Some devices/drivers might be able
-> to operate with reduced functionality when some of the resources
-> aren't available. For example, a device could operate in polling mode
-> if no IRQ is available, a device could skip doing power management if
-> clock or voltage control isn't available and they are left on, etc.
-> 
-> So, adding mandatory functional dependency links between devices by
-> looking at referred phandles in DT properties won't work as it would
-> prevent probing devices that could be probed. By having an explicit
-> depends-on property, we can handle these cases correctly.
-> 
-> Having functional dependencies explicitly called out in DT and
-> automatically added before the devices are probed, provides the
-> following benefits:
-> 
-> - Optimizes device probe order and avoids the useless work of
->   attempting probes of devices that will not probe successfully
->   (because their suppliers aren't present or haven't probed yet).
-> 
->   For example, in a commonly available mobile SoC, registering just
->   one consumer device's driver at an initcall level earlier than the
->   supplier device's driver causes 11 failed probe attempts before the
->   consumer device probes successfully. This was with a kernel with all
->   the drivers statically compiled in. This problem gets a lot worse if
->   all the drivers are loaded as modules without direct symbol
->   dependencies.
-> 
-> - Supplier devices like clock providers, regulators providers, etc
->   need to keep the resources they provide active and at a particular
->   state(s) during boot up even if their current set of consumers don't
->   request the resource to be active. This is because the rest of the
->   consumers might not have probed yet and turning off the resource
->   before all the consumers have probed could lead to a hang or
->   undesired user experience.
-> 
->   Some frameworks (Eg: regulator) handle this today by turning off
->   "unused" resources at late_initcall_sync and hoping all the devices
->   have probed by then. This is not a valid assumption for systems with
->   loadable modules. Other frameworks (Eg: clock) just don't handle
->   this due to the lack of a clear signal for when they can turn off
->   resources. This leads to downstream hacks to handle cases like this
->   that can easily be solved in the upstream kernel.
-> 
->   By linking devices before they are probed, we give suppliers a clear
->   count of the number of dependent consumers. Once all of the
->   consumers are active, the suppliers can turn off the unused
->   resources without making assumptions about the number of consumers.
-> 
-> By default we just add device-links to track "driver presence" (probe
-> succeeded) of the supplier device. If any other functionality provided
-> by device-links are needed, it is left to the consumer/supplier
-> devices to change the link when they probe.
-
-Somewhere in this wall of text you need to say:
-	MAKES DEVICES BOOT FASTER!
-right?  :)
-
-So in short, this solves the issue of deferred probing with systems with
-loads of modules for platform devices and device tree, in that now you
-have a chance to probe devices in the correct order saving loads of busy
-loops.
-
-A good thing, I like this, very nice work, all of these are:
-	Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-but odds are I'll take this through my tree, so I'll add my s-o-b then.
-But only after the DT people agree on the new entry.
-
-thanks,
-
-greg k-h
+SGksIFNoYXduDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24g
+R3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogVGh1cnNkYXksIE1heSAy
+MywgMjAxOSA5OjAzIEFNDQo+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4N
+Cj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHMuaGF1ZXJA
+cGVuZ3V0cm9uaXguZGU7DQo+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwu
+Y29tOyBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsNCj4gc2JveWRAa2VybmVsLm9yZzsgbC5zdGFj
+aEBwZW5ndXRyb25peC5kZTsgQWJlbCBWZXNhDQo+IDxhYmVsLnZlc2FAbnhwLmNvbT47IGFuZHJl
+dy5zbWlybm92QGdtYWlsLmNvbTsgY2NhaW9uZUBiYXlsaWJyZS5jb207DQo+IGFuZ3VzQGFra2Vh
+LmNhOyBhZ3hAc2lneGNwdS5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
+cm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC0NCj4gY2xrQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51
+eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAzLzNdIGFybTY0OiBkdHM6IGlt
+eDhtcTogYWRkIGNsb2NrIGZvciBTTlZTIFJUQyBub2RlDQo+IA0KPiBPbiBXZWQsIE1heSAxNSwg
+MjAxOSBhdCAwMTowOTozNkFNICswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiBpLk1YOE1R
+IGhhcyBjbG9jayBnYXRlIGZvciBTTlZTIG1vZHVsZSwgYWRkIGNsb2NrIGluZm8gdG8gU05WUyBS
+VEMNCj4gPiBub2RlIGZvciBjbG9jayBtYW5hZ2VtZW50Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IA0KPiBUaGlzIG9uZSBzdGls
+bCBoYXMgcHJvYmxlbSB3aXRoIGVuY29kaW5nIGFuZCB0aHVzIGNhbm5vdCBiZSBhcHBsaWVkLg0K
+PiBIZXJlIGlzIHdoYXQgSSBnZXQsIGFuZCB0aGVyZSBpcyAnPTIwJyBpbiB0aGUgcGF0Y2ggY29u
+dGVudC4NCg0KV2Ugc3dpdGNoIHRvIGFub3RoZXIgc2VydmVyIHdoaWNoIGhhcyBubyBzdWNoIGlz
+c3VlLCBJIHJlc2VudCB0aGUgcGF0Y2gsDQpQbGVhc2UgcGljayB1cCB0aGlzIG9uZSwgc29ycnkg
+Zm9yIHRoZSBpbmNvbnZlbmllbmNlLg0KDQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
+dGNoLzEwOTU5MDk3Lw0KDQp0aGFua3MsDQpBbnNvbi4NCg0KPiANCj4gZGlmZiAtLWdpdCBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpDQo+IGIvYXJjaC9hcm02NC9i
+b290L2R0PSBzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaSBpbmRleCBlNWYzMTMzLi5iNzA2ZGU4DQo+
+IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRz
+aQ0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQ0KPiBA
+QCAtNDM4LDYgKzQzOCw4IEBADQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBvZmZzZXQgPTNEIDwweDM0PjsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGludGVycnVwdHMgPTNEIDxHSUNfU1BJIDE5IElSUV9UWVBFX0xFVkVMX0hJR0g+
+LA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lD
+X1NQSSAyMCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGNsb2NrcyA9M0QgPCZjbGsgSU1YOE1RX0NMS19TTlZTX1JPT1Q+Ow0K
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPTNE
+ICJzbnZzLXJ0YyI7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPTIwDQo+IC0tPTIwDQo+IDIuNy40DQoNCg==
