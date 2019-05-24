@@ -1,66 +1,108 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH V3 RESEND 3/4] defconfig: arm64: enable i.MX8 SCU octop
- driver
-Date: Fri, 24 May 2019 06:48:18 +0000
-Message-ID: <AM0PR04MB4481AF7816B9E9D6F35290EF88020@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190522020040.30283-1-peng.fan@nxp.com>
- <20190522020040.30283-3-peng.fan@nxp.com> <20190523125235.GV9261@dragon>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
+Date: Fri, 24 May 2019 09:05:37 +0200
+Message-ID: <CAO-hwJLnjxVxdodqAkKdQpqjAPGV1QYnugM+9t_86xRD92WJ-Q@mail.gmail.com>
+References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
+ <20190521132712.2818-10-benjamin.tissoires@redhat.com> <003d01d511de$9da229c0$d8e67d40$@emc.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190523125235.GV9261@dragon>
-Content-Language: en-US
+In-Reply-To: <003d01d511de$9da229c0$d8e67d40$@emc.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Shawn Guo <shawn.guo@linaro.org>, Andy Gross <andy.gross@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Olof Johansson <olof@lixom.net>, Jagan Teki <jagan@amarulasolutions.com>, Bjorn
+To: =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Aaron Ma <aaron.ma@canonical.com>, Hans de Goede <hdegoede@redhat.com>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2hhd24sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24g
-R3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogMjAxOcTqNdTCMjPI1SAy
-MDo1Mw0KPiBUbzogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+IENjOiBzcmluaXZhcy5r
-YW5kYWdhdGxhQGxpbmFyby5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gcy5oYXVlckBwZW5n
-dXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOyBkbC1saW51eC1pbXgNCj4gPGxpbnV4LWlt
-eEBueHAuY29tPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4g
-dmFuLmZyZWVuaXhAZ21haWwuY29tOyBDYXRhbGluIE1hcmluYXMgPGNhdGFsaW4ubWFyaW5hc0Bh
-cm0uY29tPjsgV2lsbA0KPiBEZWFjb24gPHdpbGwuZGVhY29uQGFybS5jb20+OyBTaGF3biBHdW8g
-PHNoYXduLmd1b0BsaW5hcm8ub3JnPjsgQW5keQ0KPiBHcm9zcyA8YW5keS5ncm9zc0BsaW5hcm8u
-b3JnPjsgTWF4aW1lIFJpcGFyZA0KPiA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT47IE9sb2Yg
-Sm9oYW5zc29uIDxvbG9mQGxpeG9tLm5ldD47IEphZ2FuIFRla2kNCj4gPGphZ2FuQGFtYXJ1bGFz
-b2x1dGlvbnMuY29tPjsgQmpvcm4gQW5kZXJzc29uDQo+IDxiam9ybi5hbmRlcnNzb25AbGluYXJv
-Lm9yZz47IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+Ow0KPiBNYXJj
-IEdvbnphbGV6IDxtYXJjLncuZ29uemFsZXpAZnJlZS5mcj47IEVucmljIEJhbGxldGJvIGkgU2Vy
-cmENCj4gPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggVjMgUkVTRU5EIDMvNF0gZGVmY29uZmlnOiBhcm02NDogZW5hYmxlIGkuTVg4IFNDVQ0KPiBv
-Y3RvcCBkcml2ZXINCj4gDQo+IE9uIFdlZCwgTWF5IDIyLCAyMDE5IGF0IDAxOjQ3OjA1QU0gKzAw
-MDAsIFBlbmcgRmFuIHdyb3RlOg0KPiA+IEJ1aWxkIGluIENPTkZJR19OVk1FTV9JTVhfT0NPVFBf
-U0NVLg0KPiA+DQo+ID4gQ2M6IENhdGFsaW4gTWFyaW5hcyA8Y2F0YWxpbi5tYXJpbmFzQGFybS5j
-b20+DQo+ID4gQ2M6IFdpbGwgRGVhY29uIDx3aWxsLmRlYWNvbkBhcm0uY29tPg0KPiA+IENjOiBT
-aGF3biBHdW8gPHNoYXduLmd1b0BsaW5hcm8ub3JnPg0KPiA+IENjOiBBbmR5IEdyb3NzIDxhbmR5
-Lmdyb3NzQGxpbmFyby5vcmc+DQo+ID4gQ2M6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRA
-Ym9vdGxpbi5jb20+DQo+ID4gQ2M6IE9sb2YgSm9oYW5zc29uIDxvbG9mQGxpeG9tLm5ldD4NCj4g
-PiBDYzogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+DQo+ID4gQ2M6IEJq
-b3JuIEFuZGVyc3NvbiA8Ympvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc+DQo+ID4gQ2M6IExlb25h
-cmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+DQo+ID4gQ2M6IE1hcmMgR29uemFs
-ZXogPG1hcmMudy5nb256YWxlekBmcmVlLmZyPg0KPiA+IENjOiBFbnJpYyBCYWxsZXRibyBpIFNl
-cnJhIDxlbnJpYy5iYWxsZXRib0Bjb2xsYWJvcmEuY29tPg0KPiA+IENjOiBsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPiBSZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxh
-aXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5m
-YW5AbnhwLmNvbT4NCj4gDQo+IFBsZWFzZSBkbyBub3QgdXNlIGJhc2U2NCBlbmNvZGluZyBmb3Ig
-cGF0Y2ggcG9zdGluZy4NCg0KU2luY2UgU3Jpbml2YXMgcGlja2VkIHVwIHBhdGNoIDEvNCBhbmQg
-Mi80LCBzbyBqdXN0IHJlc2VuZCB0aGUNCnBhdGNoIDMvNCBhbmQgcGF0Y2ggNC80Lg0KDQpodHRw
-czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwOTU5MTQ5Lw0KaHR0cHM6Ly9wYXRjaHdv
-cmsua2VybmVsLm9yZy9wYXRjaC8xMDk1OTE1MS8NCg0KVGhhbmtzLA0KUGVuZy4NCj4gDQo+IFNo
-YXduDQo+IA0KPiA+IC0tLQ0KPiA+DQo+ID4gVjM6DQo+ID4gIE5vIGNoYW5nZQ0KPiA+IFYyOg0K
-PiA+ICByZW5hbWUgcGF0Y2ggdGl0bGUsIGFkZCByZXZpZXcgdGFnDQo+ID4NCj4gPiAgYXJjaC9h
-cm02NC9jb25maWdzL2RlZmNvbmZpZyB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
-cnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29u
-ZmlnDQo+ID4gYi9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnIGluZGV4IDk3OWE5NWM5MTVi
-Ni4uMzJiODUxMDJiODU3DQo+IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvY29uZmlncy9k
-ZWZjb25maWcNCj4gPiArKysgYi9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnDQo+ID4gQEAg
-LTc0OCw2ICs3NDgsNyBAQCBDT05GSUdfSElTSV9QTVU9eQ0KPiA+ICBDT05GSUdfUUNPTV9MMl9Q
-TVU9eQ0KPiA+ICBDT05GSUdfUUNPTV9MM19QTVU9eQ0KPiA+ICBDT05GSUdfTlZNRU1fSU1YX09D
-T1RQPXkNCj4gPiArQ09ORklHX05WTUVNX0lNWF9PQ09UUF9TQ1U9eQ0KPiA+ICBDT05GSUdfUUNP
-TV9RRlBST009eQ0KPiA+ICBDT05GSUdfUk9DS0NISVBfRUZVU0U9eQ0KPiA+ICBDT05GSUdfVU5J
-UEhJRVJfRUZVU0U9eQ0KPiA+IC0tDQo+ID4gMi4xNi40DQo+ID4NCg==
+On Fri, May 24, 2019 at 5:13 AM 廖崇榮 <kt.liao@emc.com.tw> wrote:
+>
+> Hi Benjamin,
+>
+> Thanks so much for all you do for Elan touchpad.
+>
+> For the width_*, I have a question for it.
+> Our antenna sensors fully occupied the whole touchpad PCB.
+>
+> The Gap between 2 sensors are 7.5 mil (0.19mm).
+> That's why we did not minus one trace.
+
+So, with the P52 I have:
+[  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
+[  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
+[  +0.000002] size:   (98,55) drivers/input/mouse/elan_i2c_core.c:430
+[  +0.000001] res:    (31,31) drivers/input/mouse/elan_i2c_core.c:431
+
+calculated size (max/res): 98 x 56 mm
+true size, as measured: 101 x 60 mm
+
+Which gives (without the minus 1):
+width_x = max_x / x_traces = 3045 / 24 = 126.875 -> 3.9885 mm
+width_y = max_y / y_traces = 1731 / 14 = 123.643 -> 4.0927 mm
+
+-> this gives a total size of the touchpad of: 96 x 57 mm (width_x *
+24, width_y * 14)
+
+With the minus 1:
+width_x = max_x / x_traces = 3045 / 23 = 132.391 -> 4.2707 mm
+width_y = max_y / y_traces = 1731 / 14 = 133.154 -> 4.2953 mm
+
+-> this gives a total size of the touchpad of: 102 x 60 mm (width_x *
+24, width_y * 14)
+and considering traces-1: 98 x 56 mm
+
+Removing 1 to the number of traces gave a squarer values in rows and
+columns, and this is what is done in the PS/2 driver.
+Also, going back to the size of the touchpad gives a better value when
+removing 1 on the *traces.
+So maybe when forwarding the properties we should remove one there in
+the PS/2 driver?
+
+Cheers,
+Benjamin
+
+>
+>
+> Thanks
+> KT
+> -----Original Message-----
+> From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
+> Sent: Tuesday, May 21, 2019 9:27 PM
+> To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
+> Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; Benjamin Tissoires
+> Subject: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base
+> value
+>
+> *_traces are the number of antennas. width_* is thus the space between 2
+> antennas. Which means, we should subtract 1 to the number of antennas to
+> divide the touchpad by the number of holes between each antenna.
+>
+> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>
+> --
+>
+> new in v2
+> ---
+>  drivers/input/mouse/elan_i2c_core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/input/mouse/elan_i2c_core.c
+> b/drivers/input/mouse/elan_i2c_core.c
+> index 6f4feedb7765..3375eaa9a72e 100644
+> --- a/drivers/input/mouse/elan_i2c_core.c
+> +++ b/drivers/input/mouse/elan_i2c_core.c
+> @@ -398,8 +398,8 @@ static int elan_query_device_parameters(struct
+> elan_tp_data *data)
+>                 if (error)
+>                         return error;
+>         }
+> -       data->width_x = data->max_x / x_traces;
+> -       data->width_y = data->max_y / y_traces;
+> +       data->width_x = data->max_x / (x_traces - 1);
+> +       data->width_y = data->max_y / (y_traces - 1);
+>
+>         if (device_property_read_u32(&client->dev,
+>                                      "touchscreen-x-mm", &x_mm) ||
+> --
+> 2.21.0
+>
