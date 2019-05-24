@@ -1,63 +1,56 @@
-Return-Path: <SRS0=MGmW=T3=klsmartin.com=Leif.Middelschulte@kernel.org>
-From: Leif Middelschulte <leif.middelschulte@klsmartin.com>
-Subject: [PATCH 10/10] Input: stmpe-ts - implement tracking index
-Date: Mon, 27 May 2019 18:22:25 +0200
-Message-ID: <20190527162225.32136-1-leif.middelschulte@klsmartin.com>
-In-Reply-To: <20190527160736.30569-1-leif.middelschulte@klsmartin.com>
-References: <20190527160736.30569-1-leif.middelschulte@klsmartin.com>
+Return-Path: <SRS0=KaV4=TY=essensium.com=charles-antoine.couret@kernel.org>
+Subject: Re: [PATCH v2 3/6] iio: ad7949: Support configuration read-back
+References: <1556813672-49861-1-git-send-email-adam.michaelis@rockwellcollins.com>
+ <1556813672-49861-3-git-send-email-adam.michaelis@rockwellcollins.com>
+ <20190505154227.1735b1b2@archlinux>
+ <CALMrGWV6rtYQShtm7uBQygtdOpPW30mLnKMxb2Jk8pY68B6yyw@mail.gmail.com>
+From: Couret Charles-Antoine <charles-antoine.couret@essensium.com>
+Message-ID: <154f2b5c-91e1-41dc-e7c5-a5ec35ca1c05@essensium.com>
+Date: Fri, 24 May 2019 14:02:35 +0200
 MIME-Version: 1.0
+In-Reply-To: <CALMrGWV6rtYQShtm7uBQygtdOpPW30mLnKMxb2Jk8pY68B6yyw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-To: dmitry.torokhov@gmail.com, devicetree@vger.kernel.org
-Cc: linux-input@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Leif Middelschulte <leif.middelschulte@klsmartin.com>
+Content-Language: en-US
+To: Adam Michaelis <adam.michaelis@collins.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio@vger.kernel.org, lars@metafoo.de, michael.hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Brandon Maier <brandon.maier@rockwellcollins.com>, Clayton Shotwell <clayton.shotwell@rockwellcollins.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The tracking index specifies an minimum distance between
-two touchpoints so that the latter will be discarded, if
-the distance falls short of the configured value.
-Beware: When using the XYZ acquisition mode, an increase
-in pressure leads to a position report anyway.
+Le 07/05/2019 à 21:53, Adam Michaelis a écrit :
+> On Sun, May 5, 2019 at 9:42 AM Jonathan Cameron <jic23@kernel.org> wrote:
+>> On Thu,  2 May 2019 11:14:29 -0500
+>> Adam Michaelis <adam.michaelis@rockwellcollins.com> wrote:
+>>
+>>> Adds device tree parameter to set the configuration read-back bit
+>>> in the configuration register to tell the AD7949 to include the value of
+>>> the configuration register at the time the current sample was acquired
+>>> when reading from the part.
+>>>
+>>> Further work must be done to make read-back information available to
+>>> consumer.
+>> This needs some explanation of why it is useful at all. I'm certainly unclear
+>> on why it would be useful to configure this at boot time.
+>>
+>> Code looks fine.
+>>
+>> Jonathan
+>>
+> The configuration read-back feature is being maintained from the
+> original version of this driver. Before adding the device tree entry,
+> there was no way to change this setting other than debugfs raw access
+> to the SPI interface, and there is still no access to the returned
+> configuration data should the feature be enabled. I would be willing
+> to remove the feature altogether, but wanted to tread softly on
+> existing features.
 
-Signed-off-by: Leif Middelschulte <leif.middelschulte@klsmartin.com>
----
- drivers/input/touchscreen/stmpe-ts.c | 5 +++--
- include/linux/mfd/stmpe.h            | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
+Hi,
 
-diff --git a/drivers/input/touchscreen/stmpe-ts.c b/drivers/input/touchscreen/stmpe-ts.c
-index 1d114278e7e9..ec1bbc19562e 100644
---- a/drivers/input/touchscreen/stmpe-ts.c
-+++ b/drivers/input/touchscreen/stmpe-ts.c
-@@ -91,6 +91,7 @@ struct stmpe_touch {
- 	u8 fraction_z;
- 	u8 i_drive;
- 	u8 op_mod;
-+	u8 tracking_index;
- 	struct {
- 	struct {
- 		u16 x;
-@@ -332,8 +333,8 @@ static int stmpe_init_hw(struct stmpe_touch *ts)
- 		return ret;
- 	}
- 
--	tsc_ctrl = STMPE_OP_MODE(ts->op_mod);
--	tsc_ctrl_mask = STMPE_OP_MODE(0xff);
-+	tsc_ctrl = STMPE_TRACK(ts->tracking_index) | STMPE_OP_MODE(ts->op_mod);
-+	tsc_ctrl_mask = STMPE_TRACK(0xff) | STMPE_OP_MODE(0xff);
- 
- 	ret = stmpe_set_bits(stmpe, STMPE_REG_TSC_CTRL,
- 			tsc_ctrl_mask, tsc_ctrl);
-diff --git a/include/linux/mfd/stmpe.h b/include/linux/mfd/stmpe.h
-index 07f55aac9390..4e3217b0237a 100644
---- a/include/linux/mfd/stmpe.h
-+++ b/include/linux/mfd/stmpe.h
-@@ -16,6 +16,7 @@
- #define STMPE_ADC_FREQ(x)	(x & 0x3)
- #define STMPE_AVE_CTRL(x)	((x & 0x3) << 6)
- #define STMPE_DET_DELAY(x)	((x & 0x7) << 3)
-+#define STMPE_TRACK(x)	((x & 0x7) << 4)
- #define STMPE_SETTLING(x)	(x & 0x7)
- #define STMPE_FRACTION_Z(x)	(x & 0x7)
- #define STMPE_I_DRIVE(x)	(x & 0x1)
--- 
-2.21.0
+I added this feature for debug purpose but it is not used in our case 
+anymore because the driver and the device are working as expected.
+
+But maybe we can use it the check if the config is correctly applied? I 
+don't know, it is probably useless to keep this feature here.
+
+Regards,
+
+Charles-Antoine Couret
