@@ -1,59 +1,55 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] arm64: dts: meson: add dwmac-3.70a to ethmac compatible list
-Date: Fri, 24 May 2019 15:08:17 +0200
-Message-ID: <20190524130817.18920-1-jbrunet@baylibre.com>
+From: Teresa Remmet <t.remmet@phytec.de>
+Subject: [PATCH 0/7] AM335x Phytec boards update
+Date: Fri, 24 May 2019 15:19:56 +0200
+Message-ID: <1558704003-393769-1-git-send-email-t.remmet@phytec.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Daniel Schultz <d.schultz@phytec.de>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-After discussing with Amlogic, the Synopsys GMAC version used by
-the gx and axg family is the 3.70a. Set this is in DT
+Hello,
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
+this series adds basic support for phyCORE-AM335x EMMC and
+adds device tree for phyBOARD-REGOR AM335x. Also fixes issues
+like removing outdated eth phy delay settings and mmc cd active level.
 
- Hi,
+Teresa
 
- The same should be true for the meson8 families but I did not test
- it which is why only the patch only address the 64bits SoC families
+Daniel Schultz (1):
+  ARM: dts: am335x-phycore-som: Add emmc node
 
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 4 +++-
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+Teresa Remmet (6):
+  ARM: dts: am335x phytec boards: Fix cd-gpios active level
+  ARM: dts: am335x phytec boards: Remove regulator node
+  ARM: dts: am335x-phycore-som: Enable gpmc node in dts files
+  ARM: dts: am335x-pcm-953: Update user led names
+  ARM: dts: am335x-pcm-953: Remove eth phy delay
+  ARM: dts: Add support for phyBOARD-REGOR-AM335x
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 38169c85e91f..6219337033a0 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -171,7 +171,9 @@
- 		ranges;
- 
- 		ethmac: ethernet@ff3f0000 {
--			compatible = "amlogic,meson-axg-dwmac", "snps,dwmac";
-+			compatible = "amlogic,meson-axg-dwmac",
-+				     "snps,dwmac-3.70a",
-+				     "snps,dwmac";
- 			reg = <0x0 0xff3f0000 0x0 0x10000
- 			       0x0 0xff634540 0x0 0x8>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 6772709b9e19..74d03fc706be 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -486,7 +486,9 @@
- 		};
- 
- 		ethmac: ethernet@c9410000 {
--			compatible = "amlogic,meson-gx-dwmac", "amlogic,meson-gxbb-dwmac", "snps,dwmac";
-+			compatible = "amlogic,meson-gxbb-dwmac",
-+				     "snps,dwmac-3.70a",
-+				     "snps,dwmac";
- 			reg = <0x0 0xc9410000 0x0 0x10000
- 			       0x0 0xc8834540 0x0 0x4>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+ .../devicetree/bindings/arm/omap/omap.txt          |   3 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/am335x-pcm-953.dtsi              |  24 +--
+ arch/arm/boot/dts/am335x-phycore-rdk.dts           |   4 +
+ arch/arm/boot/dts/am335x-phycore-som.dtsi          |  47 +++--
+ arch/arm/boot/dts/am335x-regor-rdk.dts             |  24 +++
+ arch/arm/boot/dts/am335x-regor.dtsi                | 223 +++++++++++++++++++++
+ arch/arm/boot/dts/am335x-wega-rdk.dts              |   4 +
+ arch/arm/boot/dts/am335x-wega.dtsi                 |  18 +-
+ 9 files changed, 304 insertions(+), 44 deletions(-)
+ create mode 100644 arch/arm/boot/dts/am335x-regor-rdk.dts
+ create mode 100644 arch/arm/boot/dts/am335x-regor.dtsi
+
 -- 
-2.20.1
+2.7.4
