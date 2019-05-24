@@ -1,87 +1,58 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
-Date: Fri, 24 May 2019 11:37:29 +0200
-Message-ID: <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com> <20190521132712.2818-9-benjamin.tissoires@redhat.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [RFT PATCH v5 3/5] cpu-topology: Move cpu topology code to
+ common code.
+Date: Fri, 24 May 2019 10:38:41 +0100
+Message-ID: <20190524093754.GA3432@fuggles.cambridge.arm.com>
+References: <20190524000653.13005-1-atish.patra@wdc.com>
+ <20190524000653.13005-4-atish.patra@wdc.com>
+ <20190524081333.GA15566@kroah.com>
+ <20190524085720.GA13121@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521132712.2818-9-benjamin.tissoires@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20190524085720.GA13121@e107155-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>, Aaron Ma <aaron.ma@canonical.com>, Hans de Goede <hdegoede@redhat.com>
-Cc: "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tho
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> The width/height is actually in the same unit than X and Y. So we should
-> not tamper the data, but just set the proper resolution, so that userspace
-> can correctly detect which touch is a palm or a finger.
->
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->
-> --
->
-> new in v2
-> ---
->  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-> index 7ff044c6cd11..6f4feedb7765 100644
-> --- a/drivers/input/mouse/elan_i2c_core.c
-> +++ b/drivers/input/mouse/elan_i2c_core.c
-> @@ -45,7 +45,6 @@
->  #define DRIVER_NAME            "elan_i2c"
->  #define ELAN_VENDOR_ID         0x04f3
->  #define ETP_MAX_PRESSURE       255
-> -#define ETP_FWIDTH_REDUCE      90
->  #define ETP_FINGER_WIDTH       15
->  #define ETP_RETRY_COUNT                3
->
-> @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp_data *data,
->                         return;
->                 }
->
-> -               /*
-> -                * To avoid treating large finger as palm, let's reduce the
-> -                * width x and y per trace.
-> -                */
-> -               area_x = mk_x * (data->width_x - ETP_FWIDTH_REDUCE);
-> -               area_y = mk_y * (data->width_y - ETP_FWIDTH_REDUCE);
-> +               area_x = mk_x * data->width_x;
-> +               area_y = mk_y * data->width_y;
->
->                 major = max(area_x, area_y);
->                 minor = min(area_x, area_y);
-> @@ -1123,8 +1118,10 @@ static int elan_setup_input_device(struct elan_tp_data *data)
->                              ETP_MAX_PRESSURE, 0, 0);
->         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
->                              ETP_FINGER_WIDTH * max_width, 0, 0);
-> +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR, data->x_res);
->         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
->                              ETP_FINGER_WIDTH * min_width, 0, 0);
-> +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR, data->y_res);
+On Fri, May 24, 2019 at 09:57:40AM +0100, Sudeep Holla wrote:
+> On Fri, May 24, 2019 at 10:13:33AM +0200, Greg Kroah-Hartman wrote:
+> > On Thu, May 23, 2019 at 05:06:50PM -0700, Atish Patra wrote:
+> > > Both RISC-V & ARM64 are using cpu-map device tree to describe
+> > > their cpu topology. It's better to move the relevant code to
+> > > a common place instead of duplicate code.
+> > > 
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > ---
+> > >  arch/arm64/include/asm/topology.h |  23 ---
+> > >  arch/arm64/kernel/topology.c      | 303 +-----------------------------
+> > >  drivers/base/arch_topology.c      | 296 +++++++++++++++++++++++++++++
+> > >  include/linux/arch_topology.h     |  28 +++
+> > >  include/linux/topology.h          |   1 +
+> > >  5 files changed, 329 insertions(+), 322 deletions(-)
+> >
+> > What, now _I_ have to maintain drivers/base/arch_topology.c?  That's
+> > nice for everyone else, but not me :(
+> >
+> > Ugh.
+> >
+> > Anyway, what are you wanting to happen to this series?  I think we need
+> > some ARM people to sign off on it before I can take the whole thing,
+> > right?
+> >
+> 
+> Greg, I am ready to take ownership. Juri the original author of this file
+> agreed and I have been reviewing this file since Juri first wrote it.
+> I am happy to submit a patch assuming maintainership for this file, was
+> just waiting to hear from you when I asked explicitly you and Juri in
+> last version of the patch when Will wanted someone from ARM to be reviewer
+> of this file at-least. I am happy to take over as reviewer or maintainer
+> which ever you prefer.
 
-I had a chat with Peter on Wednesday, and he mentioned that this is
-dangerous as Major/Minor are max/min of the width and height. And
-given that we might have 2 different resolutions, we would need to do
-some computation in the kernel to ensure the data is correct with
-respect to the resolution.
+Yes, please just include this update to MAINTAINERS as part of the series.
+I'll ack it.
 
-TL;DR: I don't think we should export the resolution there :(
-
-KT, should I drop the patch entirely, or is there a strong argument
-for keeping the ETP_FWIDTH_REDUCE around?
-
-Cheers,
-Benjamin
-
-
->
->         data->input = input;
->
-> --
-> 2.21.0
->
+Will
