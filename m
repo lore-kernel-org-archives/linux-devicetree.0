@@ -1,133 +1,87 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
-Date: Fri, 24 May 2019 11:20:01 +0200
-Message-ID: <20190524092001.ztf3kntaj4uiswnv@flea>
-References: <20190518170929.24789-1-luca@z3ntu.xyz>
- <EF411F71-D257-41FC-9248-B0E3F686B6B9@z3ntu.xyz>
- <20190521142544.ma2xfu77bamk4hvc@flea>
- <4343071.IDWclfcoxo@g550jk>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
+Date: Fri, 24 May 2019 11:37:29 +0200
+Message-ID: <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
+References: <20190521132712.2818-1-benjamin.tissoires@redhat.com> <20190521132712.2818-9-benjamin.tissoires@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fjx5mpewtig2icgo"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4343071.IDWclfcoxo@g550jk>
+In-Reply-To: <20190521132712.2818-9-benjamin.tissoires@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Weiss <luca@z3ntu.xyz>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>, Aaron Ma <aaron.ma@canonical.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---fjx5mpewtig2icgo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, May 24, 2019 at 10:35:36AM +0200, Luca Weiss wrote:
-> On Dienstag, 21. Mai 2019 16:25:44 CEST Maxime Ripard wrote:
-> > On Tue, May 21, 2019 at 03:52:47PM +0200, luca@z3ntu.xyz wrote:
-> > > On May 21, 2019 3:09:55 PM GMT+02:00, Maxime Ripard
-> <maxime.ripard@bootlin.com> wrote:
-> > > >On Tue, May 21, 2019 at 08:43:45AM +0200, luca@z3ntu.xyz wrote:
-> > > >> On May 20, 2019 1:07:42 PM GMT+02:00, Maxime Ripard
-> > > >
-> > > ><maxime.ripard@bootlin.com> wrote:
-> > > >> >On Sat, May 18, 2019 at 07:09:30PM +0200, Luca Weiss wrote:
-> > > >> >> Add a node describing the KEYADC on the A64.
-> > > >> >>
-> > > >> >> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> > > >> >> ---
-> > > >> >>
-> > > >> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 +++++++
-> > > >> >>  1 file changed, 7 insertions(+)
-> > > >> >>
-> > > >> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > >> >
-> > > >> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > >> >
-> > > >> >> index 7734f70e1057..dc1bf8c1afb5 100644
-> > > >> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > >> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > >> >> @@ -704,6 +704,13 @@
-> > > >> >>
-> > > >> >>  			status = "disabled";
-> > > >> >>
-> > > >> >>  		};
-> > > >> >>
-> > > >> >> +		lradc: lradc@1c21800 {
-> > > >> >> +			compatible = "allwinner,sun4i-a10-lradc-
-> keys";
-> > > >> >> +			reg = <0x01c21800 0x100>;
-> > > >> >> +			interrupts = <GIC_SPI 30
-> IRQ_TYPE_LEVEL_HIGH>;
-> > > >> >> +			status = "disabled";
-> > > >> >> +		};
-> > > >> >> +
-> > > >> >
-> > > >> >The controller is pretty different on the A64 compared to the A10.
-> > > >
-> > > >The
-> > > >
-> > > >> >A10 has two channels for example, while the A64 has only one.
-> > > >> >
-> > > >> >It looks like the one in the A83t though, so you can use that
-> > > >> >compatible instead.
-> > > >>
-> > > >> Looking at the patch for the A83t, the only difference is that it
-> > > >> uses a 3/4 instead of a 2/3 voltage divider, nothing is changed with
-> > > >> the channels.
-> > > >
-> > > >I guess you can reuse the A83t compatible here then, and a more
-> > > >specific a64 compatible in case we ever need to fix this.
-> > > >
-> > > >> But I'm also not sure which one (or a different one)
-> > > >> is used from looking at the "A64 User Manual".
-> > > >
-> > > >I'm sorry, what are you referring to with "one" in that sentence?
-> > >
-> > > Sorry, I meant I didn't find anything in the A64 user manual whether
-> > > a 3/4 or a 2/3 voltage divider (or one with different values) is
-> > > used on the A64.
-> >
-> > Ok :)
-> >
-> > I guess you can just reuse the A83t compatible then, together with the
-> > A64's.
+On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
 >
-> I'd submit a v2 with these changes to v1 then:
->                 lradc: lradc@1c21800 {
-> -                       compatible = "allwinner,sun4i-a10-lradc-keys";
-> -                       reg = <0x01c21800 0x100>;
-> +                       compatible = "allwinner,sun50i-a64-lradc-keys",
-> +                                    "allwinner,sun8i-a83t-r-lradc";
-> +                       reg = <0x01c21800 0x400>;
->                         interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
->                         status = "disabled";
->                 };
-> Does that look okay?
-> The reg change is due to me not spotting the address being 0x01C2
-> 1800---0x01C2 1BFF, so the size should be 0x400 and not 0x100.
+> The width/height is actually in the same unit than X and Y. So we should
+> not tamper the data, but just set the proper resolution, so that userspace
+> can correctly detect which touch is a palm or a finger.
+>
+> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>
+> --
+>
+> new in v2
+> ---
+>  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+> index 7ff044c6cd11..6f4feedb7765 100644
+> --- a/drivers/input/mouse/elan_i2c_core.c
+> +++ b/drivers/input/mouse/elan_i2c_core.c
+> @@ -45,7 +45,6 @@
+>  #define DRIVER_NAME            "elan_i2c"
+>  #define ELAN_VENDOR_ID         0x04f3
+>  #define ETP_MAX_PRESSURE       255
+> -#define ETP_FWIDTH_REDUCE      90
+>  #define ETP_FINGER_WIDTH       15
+>  #define ETP_RETRY_COUNT                3
+>
+> @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp_data *data,
+>                         return;
+>                 }
+>
+> -               /*
+> -                * To avoid treating large finger as palm, let's reduce the
+> -                * width x and y per trace.
+> -                */
+> -               area_x = mk_x * (data->width_x - ETP_FWIDTH_REDUCE);
+> -               area_y = mk_y * (data->width_y - ETP_FWIDTH_REDUCE);
+> +               area_x = mk_x * data->width_x;
+> +               area_y = mk_y * data->width_y;
+>
+>                 major = max(area_x, area_y);
+>                 minor = min(area_x, area_y);
+> @@ -1123,8 +1118,10 @@ static int elan_setup_input_device(struct elan_tp_data *data)
+>                              ETP_MAX_PRESSURE, 0, 0);
+>         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
+>                              ETP_FINGER_WIDTH * max_width, 0, 0);
+> +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR, data->x_res);
+>         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
+>                              ETP_FINGER_WIDTH * min_width, 0, 0);
+> +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR, data->y_res);
 
-It would be great to drop the -keys from the compatible, and to
-document the bindings
+I had a chat with Peter on Wednesday, and he mentioned that this is
+dangerous as Major/Minor are max/min of the width and height. And
+given that we might have 2 different resolutions, we would need to do
+some computation in the kernel to ensure the data is correct with
+respect to the resolution.
 
-Looks good otherwise
+TL;DR: I don't think we should export the resolution there :(
 
-Maxime
+KT, should I drop the patch entirely, or is there a strong argument
+for keeping the ETP_FWIDTH_REDUCE around?
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Cheers,
+Benjamin
 
---fjx5mpewtig2icgo
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOe3QQAKCRDj7w1vZxhR
-xWfqAQDx49qWsSlXSPCIFr0j7LgzCl6/USKYCbeA7Gmm78/oGgEA7OyIV/rpYtNc
-ksrLp0izVlRyo3tYAqHBk8DXRXEeoAw=
-=xKwX
------END PGP SIGNATURE-----
-
---fjx5mpewtig2icgo--
+>
+>         data->input = input;
+>
+> --
+> 2.21.0
+>
