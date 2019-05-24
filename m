@@ -1,103 +1,264 @@
-Return-Path: <SRS0=Wuwb=T4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45527 "EHLO
+Return-Path: <SRS0=qDds=TY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34451 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbfE1RLX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 May 2019 13:11:23 -0400
-From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v8 2/5] media: dt-bindings: media: document allegro-dvt bindings
-Date: Tue, 28 May 2019 19:11:17 +0200
-Message-Id: <20190528171120.7076-3-m.tretter@pengutronix.de>
-In-Reply-To: <20190528171120.7076-1-m.tretter@pengutronix.de>
-References: <20190528171120.7076-1-m.tretter@pengutronix.de>
+        with ESMTP id S2404087AbfEXOFb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 May 2019 10:05:31 -0400
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 09/10] media: hantro: add initial i.MX8MQ support
+Date: Fri, 24 May 2019 16:04:58 +0200
+Message-Id: <20190524140459.4002-10-p.zabel@pengutronix.de>
+In-Reply-To: <20190524140459.4002-1-p.zabel@pengutronix.de>
+References: <20190524140459.4002-1-p.zabel@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, hverkuil@xs4all.nl, Michael Tretter <m.tretter@pengutronix.de>, Rob Herring <robh@kernel.org>
+To: linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Add device-tree bindings for the Allegro DVT video IP core found on the
-Xilinx ZynqMP EV family.
+For now this just enables MPEG-2 decoding on the Hantro G1 on i.MX8MQ.
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
-v7 -> v8:
-none
+ drivers/staging/media/hantro/Kconfig        |   8 +-
+ drivers/staging/media/hantro/Makefile       |   1 +
+ drivers/staging/media/hantro/hantro_drv.c   |   1 +
+ drivers/staging/media/hantro/hantro_hw.h    |   1 +
+ drivers/staging/media/hantro/imx8m_vpu_hw.c | 167 ++++++++++++++++++++
+ 5 files changed, 174 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/staging/media/hantro/imx8m_vpu_hw.c
 
-v6 -> v7:
-none
-
-v5 -> v6:
-none
-
-v4 -> v5:
-none
-
-v3 -> v4:
-none
-
-v2 -> v3:
-- rename node to video-codec
-- drop interrupt-names
-- fix compatible in example
-- add clocks to required properties
-
-v1 -> v2:
-none
----
- .../devicetree/bindings/media/allegro.txt     | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
-
-diff --git a/Documentation/devicetree/bindings/media/allegro.txt b/Documentation/devicetree/bindings/media/allegro.txt
+diff --git a/drivers/staging/media/hantro/Kconfig b/drivers/staging/media/hantro/Kconfig
+index ec6585db3abf..42b74a689ee4 100644
+--- a/drivers/staging/media/hantro/Kconfig
++++ b/drivers/staging/media/hantro/Kconfig
+@@ -1,6 +1,6 @@
+ config VIDEO_HANTRO
+ 	tristate "Hantro VPU driver"
+-	depends on ARCH_ROCKCHIP || COMPILE_TEST
++	depends on ARCH_MXC || ARCH_ROCKCHIP || COMPILE_TEST
+ 	depends on VIDEO_DEV && VIDEO_V4L2 && MEDIA_CONTROLLER
+ 	depends on MEDIA_CONTROLLER_REQUEST_API
+ 	select VIDEOBUF2_DMA_CONTIG
+@@ -8,8 +8,8 @@ config VIDEO_HANTRO
+ 	select V4L2_MEM2MEM_DEV
+ 	default n
+ 	help
+-	  Support for the Hantro IP based Video Processing Unit present on
+-	  Rockchip SoC, which accelerates video and image encoding and
+-	  decoding.
++	  Support for the Hantro IP based Video Processing Units present on
++	  Rockchip and NXP i.MX8M SoCs, which accelerate video and image
++	  encoding and decoding.
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called hantro-vpu.
+diff --git a/drivers/staging/media/hantro/Makefile b/drivers/staging/media/hantro/Makefile
+index 14f17a4e48cb..1dac16af451e 100644
+--- a/drivers/staging/media/hantro/Makefile
++++ b/drivers/staging/media/hantro/Makefile
+@@ -9,5 +9,6 @@ hantro-vpu-y += \
+ 		rk3399_vpu_hw.o \
+ 		rk3399_vpu_hw_jpeg_enc.o \
+ 		rk3399_vpu_hw_mpeg2_dec.o \
++		imx8m_vpu_hw.o \
+ 		hantro_jpeg.o \
+ 		hantro_mpeg2.o
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index b5aeaa7ff804..dc9c8ea7ff2d 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -420,6 +420,7 @@ static const struct v4l2_file_operations hantro_fops = {
+ static const struct of_device_id of_hantro_match[] = {
+ 	{ .compatible = "rockchip,rk3399-vpu", .data = &rk3399_vpu_variant, },
+ 	{ .compatible = "rockchip,rk3288-vpu", .data = &rk3288_vpu_variant, },
++	{ .compatible = "nxp,imx8mq-vpu", .data = &imx8mq_vpu_variant, },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, of_hantro_match);
+diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
+index 40424217d44f..3eb70b627ad5 100644
+--- a/drivers/staging/media/hantro/hantro_hw.h
++++ b/drivers/staging/media/hantro/hantro_hw.h
+@@ -80,6 +80,7 @@ enum hantro_enc_fmt {
+ 
+ extern const struct hantro_variant rk3399_vpu_variant;
+ extern const struct hantro_variant rk3288_vpu_variant;
++extern const struct hantro_variant imx8mq_vpu_variant;
+ 
+ void hantro_watchdog(struct work_struct *work);
+ void hantro_run(struct hantro_ctx *ctx);
+diff --git a/drivers/staging/media/hantro/imx8m_vpu_hw.c b/drivers/staging/media/hantro/imx8m_vpu_hw.c
 new file mode 100644
-index 000000000000..a92e2fbf26c9
+index 000000000000..2d62bf415cdc
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/allegro.txt
-@@ -0,0 +1,43 @@
-+Device-tree bindings for the Allegro DVT video IP codecs present in the Xilinx
-+ZynqMP SoC. The IP core may either be a H.264/H.265 encoder or H.264/H.265
-+decoder ip core.
++++ b/drivers/staging/media/hantro/imx8m_vpu_hw.c
+@@ -0,0 +1,167 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Hantro VPU codec driver
++ *
++ * Copyright (C) 2019 Pengutronix, Philipp Zabel <kernel@pengutronix.de>
++ */
 +
-+Each actual codec engines is controlled by a microcontroller (MCU). Host
-+software uses a provided mailbox interface to communicate with the MCU. The
-+MCU share an interrupt.
++#include <linux/clk.h>
++#include <linux/delay.h>
 +
-+Required properties:
-+  - compatible: value should be one of the following
-+    "allegro,al5e-1.1", "allegro,al5e": encoder IP core
-+    "allegro,al5d-1.1", "allegro,al5d": decoder IP core
-+  - reg: base and length of the memory mapped register region and base and
-+    length of the memory mapped sram
-+  - reg-names: must include "regs" and "sram"
-+  - interrupts: shared interrupt from the MCUs to the processing system
-+  - clocks: must contain an entry for each entry in clock-names
-+  - clock-names: must include "core_clk", "mcu_clk", "m_axi_core_aclk",
-+    "m_axi_mcu_aclk", "s_axi_lite_aclk"
++#include "hantro.h"
++#include "hantro_jpeg.h"
++#include "rk3288_vpu_regs.h"
 +
-+Example:
-+	al5e: video-codec@a0009000 {
-+		compatible = "allegro,al5e-1.1", "allegro,al5e";
-+		reg = <0 0xa0009000 0 0x1000>,
-+		      <0 0xa0000000 0 0x8000>;
-+		reg-names = "regs", "sram";
-+		interrupts = <0 96 4>;
-+		clocks = <&xlnx_vcu 0>, <&xlnx_vcu 1>,
-+			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
-+		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
-+			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
-+	};
-+	al5d: video-codec@a0029000 {
-+		compatible = "allegro,al5d-1.1", "allegro,al5d";
-+		reg = <0 0xa0029000 0 0x1000>,
-+		      <0 0xa0020000 0 0x8000>;
-+		reg-names = "regs", "sram";
-+		interrupts = <0 96 4>;
-+		clocks = <&xlnx_vcu 2>, <&xlnx_vcu 3>,
-+			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
-+		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
-+			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
-+	};
++#define CTRL_SOFT_RESET		0x00
++#define RESET_G1		BIT(1)
++#define RESET_G2		BIT(0)
++
++#define CTRL_CLOCK_ENABLE	0x04
++#define CLOCK_G1		BIT(1)
++#define CLOCK_G2		BIT(0)
++
++#define CTRL_G1_DEC_FUSE	0x08
++#define CTRL_G1_PP_FUSE		0x0c
++#define CTRL_G2_DEC_FUSE	0x10
++
++static void imx8m_soft_reset(struct hantro_dev *vpu, u32 reset_bits)
++{
++	u32 val;
++
++	/* Assert */
++	val = readl(vpu->ctrl_base + CTRL_SOFT_RESET);
++	val &= ~reset_bits;
++	writel(val, vpu->ctrl_base + CTRL_SOFT_RESET);
++
++	udelay(2);
++
++	/* Release */
++	val = readl(vpu->ctrl_base + CTRL_SOFT_RESET);
++	val |= reset_bits;
++	writel(val, vpu->ctrl_base + CTRL_SOFT_RESET);
++}
++
++static void imx8m_clk_enable(struct hantro_dev *vpu, u32 clock_bits)
++{
++	u32 val;
++
++	val = readl(vpu->ctrl_base + CTRL_CLOCK_ENABLE);
++	val |= clock_bits;
++	writel(val, vpu->ctrl_base + CTRL_CLOCK_ENABLE);
++}
++
++static int imx8mq_runtime_resume(struct hantro_dev *vpu)
++{
++	int ret;
++
++	ret = clk_bulk_prepare_enable(vpu->variant->num_clocks, vpu->clocks);
++	if (ret) {
++		dev_err(vpu->dev, "Failed to enable clocks\n");
++		return ret;
++	}
++
++	imx8m_soft_reset(vpu, RESET_G1 | RESET_G2);
++	imx8m_clk_enable(vpu, CLOCK_G1 | CLOCK_G2);
++
++	/* Set values of the fuse registers */
++	writel(0xffffffff, vpu->ctrl_base + CTRL_G1_DEC_FUSE);
++	writel(0xffffffff, vpu->ctrl_base + CTRL_G1_PP_FUSE);
++	writel(0xffffffff, vpu->ctrl_base + CTRL_G2_DEC_FUSE);
++
++	clk_bulk_disable_unprepare(vpu->variant->num_clocks, vpu->clocks);
++
++	return 0;
++}
++
++/*
++ * Supported formats.
++ */
++
++static const struct hantro_fmt imx8m_vpu_dec_fmts[] = {
++	{
++		.fourcc = V4L2_PIX_FMT_NV12,
++		.codec_mode = HANTRO_MODE_NONE,
++	},
++	{
++		.fourcc = V4L2_PIX_FMT_MPEG2_SLICE,
++		.codec_mode = HANTRO_MODE_MPEG2_DEC,
++		.max_depth = 2,
++		.frmsize = {
++			.min_width = 48,
++			.max_width = 1920,
++			.step_width = MPEG2_MB_DIM,
++			.min_height = 48,
++			.max_height = 1088,
++			.step_height = MPEG2_MB_DIM,
++		},
++	},
++};
++
++static irqreturn_t imx8m_vpu_g1_irq(int irq, void *dev_id)
++{
++	struct hantro_dev *vpu = dev_id;
++	enum vb2_buffer_state state;
++	u32 status;
++
++	status = vdpu_read(vpu, VDPU_REG_INTERRUPT);
++	state = (status & VDPU_REG_INTERRUPT_DEC_RDY_INT) ?
++		 VB2_BUF_STATE_DONE : VB2_BUF_STATE_ERROR;
++
++	vdpu_write(vpu, 0, VDPU_REG_INTERRUPT);
++	vdpu_write(vpu, VDPU_REG_CONFIG_DEC_CLK_GATE_E, VDPU_REG_CONFIG);
++
++	hantro_irq_done(vpu, 0, state);
++
++	return IRQ_HANDLED;
++}
++
++static int imx8mq_vpu_hw_init(struct hantro_dev *vpu)
++{
++	vpu->dec_base = vpu->base[0];
++	vpu->ctrl_base = vpu->base[vpu->variant->num_regs - 1];
++
++	return 0;
++}
++
++static void imx8m_vpu_g1_reset(struct hantro_ctx *ctx)
++{
++	struct hantro_dev *vpu = ctx->dev;
++
++	imx8m_soft_reset(vpu, RESET_G1);
++}
++
++/*
++ * Supported codec ops.
++ */
++
++static const struct hantro_codec_ops imx8mq_vpu_codec_ops[] = {
++	[HANTRO_MODE_MPEG2_DEC] = {
++		.run = hantro_g1_mpeg2_dec_run,
++		.reset = imx8m_vpu_g1_reset,
++		.init = hantro_mpeg2_dec_init,
++		.exit = hantro_mpeg2_dec_exit,
++	},
++};
++
++/*
++ * VPU variants.
++ */
++
++const struct hantro_variant imx8mq_vpu_variant = {
++	.dec_fmts = imx8m_vpu_dec_fmts,
++	.num_dec_fmts = ARRAY_SIZE(imx8m_vpu_dec_fmts),
++	.codec = HANTRO_MPEG2_DECODER,
++	.codec_ops = imx8mq_vpu_codec_ops,
++	.init = imx8mq_vpu_hw_init,
++	.runtime_resume = imx8mq_runtime_resume,
++	.irq_handlers = {
++		imx8m_vpu_g1_irq,
++		NULL /* TODO: imx8m_vpu_g2_irq */
++	},
++	.irq_names = { "g1", "g2" },
++	.num_irqs = 2,
++	.clk_names = { "g1", "g2", "bus" },
++	.num_clocks = 3,
++	.reg_names = { "g1", "g2", "ctrl" },
++	.num_regs = 3,
++};
 -- 
 2.20.1
