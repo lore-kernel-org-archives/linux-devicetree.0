@@ -1,41 +1,41 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on meson-g12a-x96-max
-Date: Fri, 24 May 2019 06:50:18 -0700
-Message-ID: <7hmujc0xnp.fsf@baylibre.com>
-References: <5ce78689.1c69fb81.58097.eacf@mx.google.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH v3 0/8] Fix Elan I2C touchpads in latest generation from Lenovo
+Date: Fri, 24 May 2019 15:50:38 +0200
+Message-ID: <20190524135046.17710-1-benjamin.tissoires@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5ce78689.1c69fb81.58097.eacf@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "kernelci.org bot" <bot@kernelci.org>, tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com, mgalka@collabora.com, Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org, matthew.hart@linaro.org, enric.balletbo@collabora.com, Jerome Brunet <jbrunet@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>, Aaron Ma <aaron.ma@canonical.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-"kernelci.org bot" <bot@kernelci.org> writes:
+Here comes the v3.
 
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->
-> mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on meson-g12a-x96-max
->
-> Summary:
->   Start:      4dde821e4296 Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
->   Details:    https://kernelci.org/boot/id/5ce72c6259b514ed817a3640
->   Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.txt
->   HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.html
->   Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support controllers
+Very few changes from v2:
+- dropped the last 2 patches where I tried to be smart, and it turns out
+  that it was not very a good idea
+- also removed the only other blacklisted model, as it has been tested with
+  the v2 and it is also now working properly
 
-False alarm.
+Cheers,
+Benjamin
 
-This one is failing in one lab but passing in another:
-https://kernelci.org/boot/all/job/mainline/branch/master/kernel/v5.2-rc1-172-g4dde821e4296/
+Benjamin Tissoires (8):
+  Input: elantech - query the min/max information beforehand too
+  Input: elantech - add helper function elantech_is_buttonpad()
+  Input: elantech - detect middle button based on firmware version
+  dt-bindings: add more optional properties for elan_i2c touchpads
+  Input: elan_i2c - do not query the info if they are provided
+  Input: elantech/SMBus - export all capabilities from the PS/2 node
+  Input: elan_i2c - handle physical middle button
+  Input: elantech: remove P52 and P72 from SMBus blacklist
 
-I'll look into what's the difference between labs.
+ .../devicetree/bindings/input/elan_i2c.txt    |  11 +
+ drivers/input/mouse/elan_i2c_core.c           |  72 +++-
+ drivers/input/mouse/elantech.c                | 320 ++++++++++--------
+ drivers/input/mouse/elantech.h                |   8 +
+ 4 files changed, 246 insertions(+), 165 deletions(-)
 
-Kevin
+-- 
+2.21.0
