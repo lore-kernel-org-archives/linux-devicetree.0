@@ -1,91 +1,137 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
-Date: Fri, 24 May 2019 18:25:30 +0100
-Message-ID: <61088426-43cd-338b-ca77-50c00fcb7c5e@arm.com>
-References: <20190521161102.29620-1-peron.clem@gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe
+ ordering
+Date: Fri, 24 May 2019 10:49:43 -0700
+Message-ID: <06b479e2-e8a0-b3e8-567c-7fa0f1c5bdf6@gmail.com>
+References: <20190524010117.225219-1-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20190521161102.29620-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Steven Price <steven.price-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190524010117.225219-1-saravanak@google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMjEvMDUvMjAxOSAxNzoxMCwgQ2zDqW1lbnQgUMOpcm9uIHdyb3RlOgo+IEhpLAo+IAo+IFRo
-ZSBBbGx3aW5uZXIgSDYgaGFzIGEgTWFsaS1UNzIwIE1QMiB3aGljaCBzaG91bGQgYmUgc3VwcG9y
-dGVkIGJ5Cj4gdGhlIG5ldyBwYW5mcm9zdCBkcml2ZXIuIFRoaXMgc2VyaWVzIGZpeCB0d28gaXNz
-dWVzIGFuZCBpbnRyb2R1Y2UgdGhlCj4gZHQtYmluZGluZ3MgYnV0IGEgc2ltcGxlIGJlbmNobWFy
-ayBzaG93IHRoYXQgaXQncyBzdGlsbCBOT1QgV09SS0lORy4KPiAKPiBJJ20gcHVzaGluZyBpdCBp
-biBjYXNlIHNvbWVvbmUgd2FudCB0byBjb250aW51ZSB0aGUgd29yay4KPiAKPiBUaGlzIGhhcyBi
-ZWVuIHRlc3RlZCB3aXRoIE1lc2EzRCAxOS4xLjAtUkMyIGFuZCBhIEdQVSBiaXRuZXNzIHBhdGNo
-WzFdLgo+IAo+IE9uZSBwYXRjaCBpcyBmcm9tIEljZW5vd3kgWmhlbmcgd2hlcmUgSSBjaGFuZ2Vk
-IHRoZSBvcmRlciBhcyByZXF1aXJlZAo+IGJ5IFJvYiBIZXJyaW5nWzJdLgo+IAo+IFRoYW5rcywK
-PiBDbGVtZW50Cj4gCj4gWzFdIGh0dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9rc3phcS9t
-ZXNhL3RyZWUvcGFuZnJvc3RfNjRfMzIKPiBbMl0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
-Zy9wYXRjaC8xMDY5OTgyOS8KPiAKPiAKPiBbICAzNDUuMjA0ODEzXSBwYW5mcm9zdCAxODAwMDAw
-LmdwdTogbW11IGlycSBzdGF0dXM9MQo+IFsgIDM0NS4yMDk2MTddIHBhbmZyb3N0IDE4MDAwMDAu
-Z3B1OiBVbmhhbmRsZWQgUGFnZSBmYXVsdCBpbiBBUzAgYXQgVkEKPiAweDAwMDAwMDAwMDI0MDA0
-MDAKPiBbICAzNDUuMjA5NjE3XSBSZWFzb246IFRPRE8KPiBbICAzNDUuMjA5NjE3XSByYXcgZmF1
-bHQgc3RhdHVzOiAweDgwMDAwMkMxCj4gWyAgMzQ1LjIwOTYxN10gZGVjb2RlZCBmYXVsdCBzdGF0
-dXM6IFNMQVZFIEZBVUxUCj4gWyAgMzQ1LjIwOTYxN10gZXhjZXB0aW9uIHR5cGUgMHhDMTogVFJB
-TlNMQVRJT05fRkFVTFRfTEVWRUwxCj4gWyAgMzQ1LjIwOTYxN10gYWNjZXNzIHR5cGUgMHgyOiBS
-RUFECj4gWyAgMzQ1LjIwOTYxN10gc291cmNlIGlkIDB4ODAwMAo+IFsgIDM0NS43Mjk5NTddIHBh
-bmZyb3N0IDE4MDAwMDAuZ3B1OiBncHUgc2NoZWQgdGltZW91dCwganM9MCwKPiBzdGF0dXM9MHg4
-LCBoZWFkPTB4MjQwMDQwMCwgdGFpbD0weDI0MDA0MDAsIHNjaGVkX2pvYj0wMDAwMDAwMDllMjA0
-ZGU5Cj4gWyAgMzQ2LjA1NTg3Nl0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IG1tdSBpcnEgc3RhdHVz
-PTEKPiBbICAzNDYuMDYwNjgwXSBwYW5mcm9zdCAxODAwMDAwLmdwdTogVW5oYW5kbGVkIFBhZ2Ug
-ZmF1bHQgaW4gQVMwIGF0IFZBCj4gMHgwMDAwMDAwMDAyQzAwQTAwCj4gWyAgMzQ2LjA2MDY4MF0g
-UmVhc29uOiBUT0RPCj4gWyAgMzQ2LjA2MDY4MF0gcmF3IGZhdWx0IHN0YXR1czogMHg4MTAwMDJD
-MQo+IFsgIDM0Ni4wNjA2ODBdIGRlY29kZWQgZmF1bHQgc3RhdHVzOiBTTEFWRSBGQVVMVAo+IFsg
-IDM0Ni4wNjA2ODBdIGV4Y2VwdGlvbiB0eXBlIDB4QzE6IFRSQU5TTEFUSU9OX0ZBVUxUX0xFVkVM
-MQo+IFsgIDM0Ni4wNjA2ODBdIGFjY2VzcyB0eXBlIDB4MjogUkVBRAo+IFsgIDM0Ni4wNjA2ODBd
-IHNvdXJjZSBpZCAweDgxMDAKPiBbICAzNDYuNTYxOTU1XSBwYW5mcm9zdCAxODAwMDAwLmdwdTog
-Z3B1IHNjaGVkIHRpbWVvdXQsIGpzPTEsCj4gc3RhdHVzPTB4OCwgaGVhZD0weDJjMDBhMDAsIHRh
-aWw9MHgyYzAwYTAwLCBzY2hlZF9qb2I9MDAwMDAwMDBiNTVhOWE4NQo+IFsgIDM0Ni41NzM5MTNd
-IHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBtbXUgaXJxIHN0YXR1cz0xCj4gWyAgMzQ2LjU3ODcwN10g
-cGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxlZCBQYWdlIGZhdWx0IGluIEFTMCBhdCBWQQo+
-IDB4MDAwMDAwMDAwMkMwMEI4MAoKRldJVyBJIHNlZW0gdG8gaGF2ZSByZXByb2R1Y2VkIHRoZSBz
-YW1lIGJlaGF2aW91ciBvbiBhIGRpZmZlcmVudCBUNzIwIApzZXR1cCwgc28gdGhpcyBtYXkgd2Vs
-bCBiZSBtb3JlIGFib3V0IHRoZSBHUFUgdGhhbiB0aGUgcGxhdGZvcm0uIFRoZXJlIApkb2Vzbid0
-IGxvb2sgdG8gYmUgYW55dGhpbmcgb2J2aW91c2x5IHdyb25nIHdpdGggdGhlIHBhZ2V0YWJsZXMs
-IGJ1dCBpZiAKSSBjYW4gZmluZCBzb21lIG1vcmUgZnJlZSB0aW1lIEkgbWF5IGhhdmUgYSBiaXQg
-bW9yZSBvZiBhIHBva2UgYXJvdW5kLgoKUm9iaW4uCgo+IAo+IENoYW5nZSBpbiB2NToKPiAgIC0g
-UmVtb3ZlIGZpeCBpbmRlbnQKPiAKPiBDaGFuZ2VzIGluIHY0Ogo+ICAgLSBBZGQgYnVzX2Nsb2Nr
-IHByb2JlCj4gICAtIEZpeCBzYW5pdHkgY2hlY2sgaW4gaW8tcGd0YWJsZQo+ICAgLSBBZGQgdnJh
-bXAtZGVsYXkKPiAgIC0gTWVyZ2UgYWxsIGJvYXJkcyBpbnRvIG9uZSBwYXRjaAo+ICAgLSBSZW1v
-dmUgdXBzdHJlYW1lZCBOZWlsIEEuIHBhdGNoCj4gCj4gQ2hhbmdlIGluIHYzIChUaGFua3MgdG8g
-TWF4aW1lIFJpcGFyZCk6Cj4gICAtIFJlYXV0aG9yIEljZW5vd3kgZm9yIGhlciBwYXRoCj4gCj4g
-Q2hhbmdlcyBpbiB2MiAoVGhhbmtzIHRvIE1heGltZSBSaXBhcmQpOgo+ICAgLSBEcm9wIEdQVSBP
-UFAgVGFibGUKPiAgIC0gQWRkIGNsb2NrcyBhbmQgY2xvY2stbmFtZXMgaW4gcmVxdWlyZWQKPiAK
-PiBDbMOpbWVudCBQw6lyb24gKDUpOgo+ICAgIGRybTogcGFuZnJvc3Q6IGFkZCBvcHRpb25hbCBi
-dXNfY2xvY2sKPiAgICBpb21tdTogaW8tcGd0YWJsZTogZml4IHNhbml0eSBjaGVjayBmb3Igbm9u
-IDQ4LWJpdCBtYWxpIGlvbW11Cj4gICAgZHQtYmluZGluZ3M6IGdwdTogbWFsaS1taWRnYXJkOiBB
-ZGQgSDYgbWFsaSBncHUgY29tcGF0aWJsZQo+ICAgIGFybTY0OiBkdHM6IGFsbHdpbm5lcjogQWRk
-IEFSTSBNYWxpIEdQVSBub2RlIGZvciBINgo+ICAgIGFybTY0OiBkdHM6IGFsbHdpbm5lcjogQWRk
-IG1hbGkgR1BVIHN1cHBseSBmb3IgSDYgYm9hcmRzCj4gCj4gSWNlbm93eSBaaGVuZyAoMSk6Cj4g
-ICAgZHQtYmluZGluZ3M6IGdwdTogYWRkIGJ1cyBjbG9jayBmb3IgTWFsaSBNaWRnYXJkIEdQVXMK
-PiAKPiAgIC4uLi9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC50eHQgICAgICAgICB8IDE1
-ICsrKysrKysrKysrKy0KPiAgIC4uLi9kdHMvYWxsd2lubmVyL3N1bjUwaS1oNi1iZWVsaW5rLWdz
-MS5kdHMgICB8ICA2ICsrKysrCj4gICAuLi4vZHRzL2FsbHdpbm5lci9zdW41MGktaDYtb3Jhbmdl
-cGktMy5kdHMgICAgfCAgNiArKysrKwo+ICAgLi4uL2R0cy9hbGx3aW5uZXIvc3VuNTBpLWg2LW9y
-YW5nZXBpLmR0c2kgICAgIHwgIDYgKysrKysKPiAgIC4uLi9ib290L2R0cy9hbGx3aW5uZXIvc3Vu
-NTBpLWg2LXBpbmUtaDY0LmR0cyB8ICA2ICsrKysrCj4gICBhcmNoL2FybTY0L2Jvb3QvZHRzL2Fs
-bHdpbm5lci9zdW41MGktaDYuZHRzaSAgfCAxNCArKysrKysrKysrKysKPiAgIGRyaXZlcnMvZ3B1
-L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9kZXZpY2UuYyAgICB8IDIyICsrKysrKysrKysrKysrKysr
-KysKPiAgIGRyaXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9kZXZpY2UuaCAgICB8ICAx
-ICsKPiAgIGRyaXZlcnMvaW9tbXUvaW8tcGd0YWJsZS1hcm0uYyAgICAgICAgICAgICAgICB8ICAy
-ICstCj4gICA5IGZpbGVzIGNoYW5nZWQsIDc2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
-Cj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11
-IG1haWxpbmcgbGlzdAppb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xp
-c3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQ==
+On 5/23/19 6:01 PM, Saravana Kannan wrote:
+> Add a generic "depends-on" property that allows specifying mandatory
+> functional dependencies between devices. Add device-links after the
+> devices are created (but before they are probed) by looking at this
+> "depends-on" property.
+> 
+> This property is used instead of existing DT properties that specify
+> phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
+> is because not all resources referred to by existing DT properties are
+> mandatory functional dependencies. Some devices/drivers might be able> to operate with reduced functionality when some of the resources
+> aren't available. For example, a device could operate in polling mode
+> if no IRQ is available, a device could skip doing power management if
+> clock or voltage control isn't available and they are left on, etc.
+> 
+> So, adding mandatory functional dependency links between devices by
+> looking at referred phandles in DT properties won't work as it would
+> prevent probing devices that could be probed. By having an explicit
+> depends-on property, we can handle these cases correctly.
+
+Trying to wrap my brain around the concept, this series seems to be
+adding the ability to declare that an apparent dependency (eg an IRQ
+specified by a phandle) is _not_ actually a dependency.
+
+The phandle already implies the dependency.  Creating a separate
+depends-on property provides a method of ignoring the implied
+dependencies.
+
+This is not just hardware description.  It is instead a combination
+of hardware functionality and driver functionality.  An example
+provided in the second paragraph of the email I am replying to
+suggests a device could operate in polling mode if no IRQ is
+available.  Using this example, the devicetree does not know
+whether the driver requires the IRQ (currently an implied
+dependency since the IRQ phandle exists).  My understanding
+of this example is that the device node would _not_ have a
+depends-on property for the IRQ phandle so the IRQ would be
+optional.  But this is an attribute of the driver, not the
+hardware.  This is also configuration, declaring whether the
+system is willing to accept polling mode instead of interrupt
+mode.
+
+Devicetree is not the proper place for driver description or
+for configuration.
+
+Another flaw with this method is that existing device trees
+will be broken after the kernel is modified, because existing
+device trees do not have the depends-on property.  This breaks
+the devicetree compatibility rules.
+
+
+> Having functional dependencies explicitly called out in DT and
+> automatically added before the devices are probed, provides the
+> following benefits:
+> 
+> - Optimizes device probe order and avoids the useless work of
+>   attempting probes of devices that will not probe successfully
+>   (because their suppliers aren't present or haven't probed yet).
+> 
+>   For example, in a commonly available mobile SoC, registering just
+>   one consumer device's driver at an initcall level earlier than the
+>   supplier device's driver causes 11 failed probe attempts before the
+>   consumer device probes successfully. This was with a kernel with all
+>   the drivers statically compiled in. This problem gets a lot worse if
+>   all the drivers are loaded as modules without direct symbol
+>   dependencies.
+> 
+> - Supplier devices like clock providers, regulators providers, etc
+>   need to keep the resources they provide active and at a particular
+>   state(s) during boot up even if their current set of consumers don't
+>   request the resource to be active. This is because the rest of the
+>   consumers might not have probed yet and turning off the resource
+>   before all the consumers have probed could lead to a hang or
+>   undesired user experience.
+> 
+>   Some frameworks (Eg: regulator) handle this today by turning off
+>   "unused" resources at late_initcall_sync and hoping all the devices
+>   have probed by then. This is not a valid assumption for systems with
+>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>   this due to the lack of a clear signal for when they can turn off
+>   resources. This leads to downstream hacks to handle cases like this
+>   that can easily be solved in the upstream kernel.
+> 
+>   By linking devices before they are probed, we give suppliers a clear
+
+By linking devices to suppliers before they are probed, we give suppliers a clear
+
+>   count of the number of dependent consumers. Once all of the
+>   consumers are active, the suppliers can turn off the unused
+>   resources without making assumptions about the number of consumers.
+> 
+> By default we just add device-links to track "driver presence" (probe
+> succeeded) of the supplier device. If any other functionality provided
+> by device-links are needed, it is left to the consumer/supplier
+> devices to change the link when they probe.
+>  
+> 
+> Saravana Kannan (5):
+>   of/platform: Speed up of_find_device_by_node()
+>   driver core: Add device links support for pending links to suppliers
+>   dt-bindings: Add depends-on property
+>   of/platform: Add functional dependency link from "depends-on" property
+>   driver core: Add sync_state driver/bus callback
+> 
+>  .../devicetree/bindings/depends-on.txt        |  26 +++++
+>  drivers/base/core.c                           | 106 ++++++++++++++++++
+>  drivers/of/platform.c                         |  75 ++++++++++++-
+>  include/linux/device.h                        |  24 ++++
+>  include/linux/of.h                            |   3 +
+>  5 files changed, 233 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
+> 
+
+The above issues make this specific implementation not acceptable.
+
+I like the analysis of the problem areas, and I like the concepts of
+trying to solve not only probe ordering, but also the problem of
+when to turn off resources that will not be needed.  But at the
+moment, I don't have a suggestion of a way to implement a solution.
+
+-Frank
