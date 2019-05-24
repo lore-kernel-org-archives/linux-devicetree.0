@@ -1,50 +1,40 @@
-From: Guillaume Tucker <guillaume.tucker@collabora.com>
-Subject: Re: mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on
- meson-g12a-x96-max
-Date: Fri, 24 May 2019 14:56:55 +0100
-Message-ID: <f01b812e-ee18-528b-1859-620dd8f0fb53@collabora.com>
-References: <5ce78689.1c69fb81.58097.eacf@mx.google.com>
- <7hmujc0xnp.fsf@baylibre.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/2] arm64: dts: meson: sei510: add sound card
+Date: Fri, 24 May 2019 16:03:16 +0200
+Message-ID: <20190524140318.17608-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7hmujc0xnp.fsf@baylibre.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>
-Cc: tomeu.vizoso@collabora.com, mgalka@collabora.com, Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org, matthew.hart@linaro.org, enric.balletbo@collabora.com, Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/05/2019 14:50, Kevin Hilman wrote:
-> "kernelci.org bot" <bot@kernelci.org> writes:
-> 
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->> * This automated bisection report was sent to you on the basis  *
->> * that you may be involved with the breaking commit it has      *
->> * found.  No manual investigation has been done to verify it,   *
->> * and the root cause of the problem may be somewhere else.      *
->> * Hope this helps!                                              *
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>
->> mainline/master boot bisection: v5.2-rc1-172-g4dde821e4296 on meson-g12a-x96-max
->>
->> Summary:
->>   Start:      4dde821e4296 Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
->>   Details:    https://kernelci.org/boot/id/5ce72c6259b514ed817a3640
->>   Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.txt
->>   HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-172-g4dde821e4296/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.html
->>   Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support controllers
-> 
-> False alarm.
-> 
-> This one is failing in one lab but passing in another:
-> https://kernelci.org/boot/all/job/mainline/branch/master/kernel/v5.2-rc1-172-g4dde821e4296/
-> 
-> I'll look into what's the difference between labs.
+This patchset adds the sound card of sei510 board.
 
-Thanks for clarifying this.  I guess we should fix the logic
-which detects regressions to discard cases where there is a
-conflict between results in different labs.
+Note #1:
+The patchset (build) depends on the tohdmitx ASoC patch [0] for the dt
+bindings of the tohdmitx glue. It also (run) depends on the mpll clock
+series [1] to get a correct clock sources.
 
-Guillaume
+Note #2:
+I would normaly prefer to use the HIFI pll dedicated to audio to provide
+the base rate for the 48kHz audio family. HIFI pll rate precision is a
+little bit better than the MPLL. However, the HIFI pll may sometimes,
+rarely, take a long time to report a lock. I'm still debugging this.
+In the mean time, let's use MPLL2 instead.
+
+[0]: e35f5ad6a965 ("ASoC: meson: add tohdmitx DT bindings")
+[1]: https://lkml.kernel.org/r/20190513123115.18145-1-jbrunet@baylibre.com
+
+Jerome Brunet (1):
+  arm64: dts: meson: sei510: add sound card
+
+Maxime Jourdan (1):
+  arm64: dts: meson: sei510: add max98357a DAC
+
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    | 207 ++++++++++++++++++
+ 1 file changed, 207 insertions(+)
+
+-- 
+2.20.1
