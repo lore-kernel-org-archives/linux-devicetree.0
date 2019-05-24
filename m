@@ -1,172 +1,76 @@
 From: Atish Patra <atish.patra@wdc.com>
-Subject: [RFT PATCH v5 1/5] Documentation: DT: arm: add support for sockets
- defining package boundaries
-Date: Thu, 23 May 2019 17:06:48 -0700
-Message-ID: <20190524000653.13005-2-atish.patra@wdc.com>
+Subject: [RFT PATCH v5 5/5] RISC-V: Parse cpu topology during boot.
+Date: Thu, 23 May 2019 17:06:52 -0700
+Message-ID: <20190524000653.13005-6-atish.patra@wdc.com>
 References: <20190524000653.13005-1-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190524000653.13005-1-atish.patra@wdc.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Will Deacon <will.deacon@arm.com>, Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, Morten Rasmussen <morten.rasmussen@arm.com>, Rob Herring <robh@kernel.org>, Anup Patel <anup@brainfault.org>, Ingo Molnar <mingo@kernel.org>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jeremy Linton <jeremy.linton@arm.com>, Otto Sabart <ottosabart@seberm.com>, Sudeep Holla <sudeep.holla@arm.com>, Andreas Schwab <schwab@suse.de>
+Cc: Atish Patra <atish.patra@wdc.com>, Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Thomas Gleixner <tglx@lin>
 List-Id: devicetree@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+Currently, there are no topology defined for RISC-V.
+Parse the cpu-map node from device tree and setup the
+cpu topology.
 
-The current ARM DT topology description provides the operating system
-with a topological view of the system that is based on leaf nodes
-representing either cores or threads (in an SMT system) and a
-hierarchical set of cluster nodes that creates a hierarchical topology
-view of how those cores and threads are grouped.
+CPU topology after applying the patch.
+$cat /sys/devices/system/cpu/cpu2/topology/core_siblings_list
+0-3
+$cat /sys/devices/system/cpu/cpu3/topology/core_siblings_list
+0-3
+$cat /sys/devices/system/cpu/cpu3/topology/physical_package_id
+0
+$cat /sys/devices/system/cpu/cpu3/topology/core_id
+3
 
-However this hierarchical representation of clusters does not allow to
-describe what topology level actually represents the physical package or
-the socket boundary, which is a key piece of information to be used by
-an operating system to optimize resource allocation and scheduling.
-
-Lets add a new "socket" node type in the cpu-map node to describe the
-same.
-
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- .../devicetree/bindings/arm/topology.txt      | 52 ++++++++++++++-----
- 1 file changed, 39 insertions(+), 13 deletions(-)
+ arch/riscv/Kconfig          | 1 +
+ arch/riscv/kernel/smpboot.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
-index b0d80c0fb265..3b8febb46dad 100644
---- a/Documentation/devicetree/bindings/arm/topology.txt
-+++ b/Documentation/devicetree/bindings/arm/topology.txt
-@@ -9,6 +9,7 @@ ARM topology binding description
- In an ARM system, the hierarchy of CPUs is defined through three entities that
- are used to describe the layout of physical CPUs in the system:
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index ee32c66e1af3..be319d902275 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -46,6 +46,7 @@ config RISCV
+ 	select PCI_MSI if PCI
+ 	select RISCV_TIMER
+ 	select GENERIC_IRQ_MULTI_HANDLER
++	select GENERIC_ARCH_TOPOLOGY if SMP
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_MMIOWB
+ 	select HAVE_EBPF_JIT if 64BIT
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index 7a0b62252524..54f89d5b19ba 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -16,6 +16,7 @@
+  * GNU General Public License for more details.
+  */
  
-+- socket
- - cluster
- - core
- - thread
-@@ -63,21 +64,23 @@ nodes are listed.
++#include <linux/arch_topology.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+@@ -43,6 +44,7 @@ static DECLARE_COMPLETION(cpu_running);
  
- 	The cpu-map node's child nodes can be:
+ void __init smp_prepare_boot_cpu(void)
+ {
++	init_cpu_topology();
+ }
  
--	- one or more cluster nodes
-+	- one or more cluster nodes or
-+	- one or more socket nodes in a multi-socket system
+ void __init smp_prepare_cpus(unsigned int max_cpus)
+@@ -146,6 +148,7 @@ asmlinkage void __init smp_callin(void)
  
- 	Any other configuration is considered invalid.
- 
--The cpu-map node can only contain three types of child nodes:
-+The cpu-map node can only contain 4 types of child nodes:
- 
-+- socket node
- - cluster node
- - core node
- - thread node
- 
- whose bindings are described in paragraph 3.
- 
--The nodes describing the CPU topology (cluster/core/thread) can only
--be defined within the cpu-map node and every core/thread in the system
--must be defined within the topology.  Any other configuration is
-+The nodes describing the CPU topology (socket/cluster/core/thread) can
-+only be defined within the cpu-map node and every core/thread in the
-+system must be defined within the topology.  Any other configuration is
- invalid and therefore must be ignored.
- 
- ===========================================
-@@ -85,26 +88,44 @@ invalid and therefore must be ignored.
- ===========================================
- 
- cpu-map child nodes must follow a naming convention where the node name
--must be "clusterN", "coreN", "threadN" depending on the node type (ie
--cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes which
--are siblings within a single common parent node must be given a unique and
-+must be "socketN", "clusterN", "coreN", "threadN" depending on the node type
-+(ie socket/cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes
-+which are siblings within a single common parent node must be given a unique and
- sequential N value, starting from 0).
- cpu-map child nodes which do not share a common parent node can have the same
- name (ie same number N as other cpu-map child nodes at different device tree
- levels) since name uniqueness will be guaranteed by the device tree hierarchy.
- 
- ===========================================
--3 - cluster/core/thread node bindings
-+3 - socket/cluster/core/thread node bindings
- ===========================================
- 
--Bindings for cluster/cpu/thread nodes are defined as follows:
-+Bindings for socket/cluster/cpu/thread nodes are defined as follows:
-+
-+- socket node
-+
-+	 Description: must be declared within a cpu-map node, one node
-+		      per physical socket in the system. A system can
-+		      contain single or multiple physical socket.
-+		      The association of sockets and NUMA nodes is beyond
-+		      the scope of this bindings, please refer [2] for
-+		      NUMA bindings.
-+
-+	This node is optional for a single socket system.
-+
-+	The socket node name must be "socketN" as described in 2.1 above.
-+	A socket node can not be a leaf node.
-+
-+	A socket node's child nodes must be one or more cluster nodes.
-+
-+	Any other configuration is considered invalid.
- 
- - cluster node
- 
- 	 Description: must be declared within a cpu-map node, one node
- 		      per cluster. A system can contain several layers of
--		      clustering and cluster nodes can be contained in parent
--		      cluster nodes.
-+		      clustering within a single physical socket and cluster
-+		      nodes can be contained in parent cluster nodes.
- 
- 	The cluster node name must be "clusterN" as described in 2.1 above.
- 	A cluster node can not be a leaf node.
-@@ -164,13 +185,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
- 4 - Example dts
- ===========================================
- 
--Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters):
-+Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters in a single
-+physical socket):
- 
- cpus {
- 	#size-cells = <0>;
- 	#address-cells = <2>;
- 
- 	cpu-map {
-+		socket0 {
- 			cluster0 {
- 				cluster0 {
- 					core0 {
-@@ -253,6 +276,7 @@ cpus {
- 				};
- 			};
- 		};
-+	};
- 
- 	CPU0: cpu@0 {
- 		device_type = "cpu";
-@@ -473,3 +497,5 @@ cpus {
- ===============================================================================
- [1] ARM Linux kernel documentation
-     Documentation/devicetree/bindings/arm/cpus.yaml
-+[2] Devicetree NUMA binding description
-+    Documentation/devicetree/bindings/numa.txt
+ 	trap_init();
+ 	notify_cpu_starting(smp_processor_id());
++	update_siblings_masks(smp_processor_id());
+ 	set_cpu_online(smp_processor_id(), 1);
+ 	/*
+ 	 * Remote TLB flushes are ignored while the CPU is offline, so emit
 -- 
 2.21.0
