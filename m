@@ -1,32 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 4/6] dt-bindings: display: hdmi-connector: Support DDC
- bus enable
-Date: Fri, 24 May 2019 16:55:49 -0500
-Message-ID: <20190524215549.GA13928@bogus>
-References: <20190520235009.16734-1-megous@megous.com>
- <20190520235009.16734-5-megous@megous.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: watchdog: add Allwinner H6 watchdog
+Date: Fri, 24 May 2019 16:55:58 -0500
+Message-ID: <20190524215558.GA14313@bogus>
+References: <20190523151050.27302-1-peron.clem@gmail.com>
+ <20190523151050.27302-2-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190520235009.16734-5-megous@megous.com>
+In-Reply-To: <20190523151050.27302-2-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 May 2019 01:50:07 +0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
+On Thu, 23 May 2019 17:10:47 +0200, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= wrote:
+> Allwinner H6 has a similar watchdog as the A64 which is already
+> a compatible of the A31.
 > 
-> Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
-> on-board voltage shifting logic for the DDC bus using a gpio to be able
-> to access DDC bus. Use ddc-en-gpios property on the hdmi-connector to
-> model this.
+> This commit add the H6 compatible.
 > 
-> Add binding documentation for optional ddc-en-gpios property.
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
 > ---
->  .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
+>  Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt | 1 +
 >  1 file changed, 1 insertion(+)
 > 
 
