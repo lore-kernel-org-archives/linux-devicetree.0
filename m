@@ -1,78 +1,87 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 1/3] dt-bindings: i2c: extend existing opencore
- bindings.
-Date: Fri, 24 May 2019 15:40:12 -0500
-Message-ID: <20190524204012.GA2580@bogus>
-References: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
- <1558515574-11155-2-git-send-email-sagar.kadam@sifive.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v14 1/3] arm64: dts: fsl: librem5: Add a device tree for
+ the Librem5 devkit
+Date: Fri, 24 May 2019 22:42:39 +0200
+Message-ID: <20190524204239.GA18646@amd>
+References: <20190524183257.16066-1-angus@akkea.ca>
+ <20190524183257.16066-2-angus@akkea.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1558515574-11155-2-git-send-email-sagar.kadam@sifive.com>
+In-Reply-To: <20190524183257.16066-2-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc: mark.rutland@arm.com, peter@korsgaard.com, andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Angus Ainslie <angus@akkea.ca>
+Cc: angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 22, 2019 at 02:29:32PM +0530, Sagar Shrikant Kadam wrote:
-> Reformatted compatibility strings to one valid combination on
-> each line.
-> Add FU540-C000 specific device tree bindings to already available
-> i2-ocores file. This device is available on
-> HiFive Unleashed Rev A00 board. Move interrupt under optional
-> property list as this can be optional.
-> 
-> The FU540-C000 SoC from sifive, has an Opencore's I2C block
-> reimplementation.
-> 
-> The DT compatibility string for this IP is present in HDL and available at.
-> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/i2c/I2C.scala#L73
-> 
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> index 17bef9a..db96951 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> @@ -1,9 +1,13 @@
->  Device tree configuration for i2c-ocores
->  
->  Required properties:
-> -- compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
-> +- compatible      : "opencores,i2c-ocores",
-> +                    "aeroflexgaisler,i2cmst",
-> +                    "sifive,fu540-c000-i2c","sifive,i2c0".
 
-space needed                                   ^
+--FL5UXtIhxfXey3p5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And drop the end of line commas and period.
+Hi!
 
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_gpio_leds>;
+> +
+> +		led1 {
+> +			label =3D "LED 1";
+> +			gpios =3D <&gpio1 13 GPIO_ACTIVE_HIGH>;
+> +			default-state =3D "off";
+> +		};
+> +	};
 
-> +                    For Opencore based I2C IP block reimplemented in
-> +                    FU540-C000 SoC.Please refer sifive-blocks-ip-versioning.txt
+I had comments about these...
 
-And here too.
+> +	vibrator {
+> +		compatible =3D "gpio-vibrator";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_haptic>;
+> +	        enable-gpios =3D <&gpio5 4 GPIO_ACTIVE_LOW>;
+> +		vcc-supply =3D <&reg_3v3_p>;
+> +	};
 
-And 'refer to'
+Thanks!
 
-> +                    for additional details.
->  - reg             : bus address start and address range size of device
-> -- interrupts      : interrupt number
->  - clocks          : handle to the controller clock; see the note below.
->                      Mutually exclusive with opencores,ip-clock-frequency
->  - opencores,ip-clock-frequency: frequency of the controller clock in Hz;
-> @@ -12,6 +16,7 @@ Required properties:
->  - #size-cells     : should be <0>
->  
->  Optional properties:
-> +- interrupts      : interrupt number.
->  - clock-frequency : frequency of bus clock in Hz; see the note below.
->                      Defaults to 100 KHz when the property is not specified
->  - reg-shift       : device register offsets are shifted by this value
-> -- 
-> 1.9.1
-> 
+> +	charger@6b { /* bq25896 */
+> +		compatible =3D "ti,bq25890";
+> +		reg =3D <0x6b>;
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_charger>;
+> +		interrupt-parent =3D <&gpio3>;
+> +		interrupts =3D <25 IRQ_TYPE_EDGE_FALLING>;
+> +		ti,battery-regulation-voltage =3D <4192000>; /* 4.192V */
+> +		ti,charge-current =3D <1600000>; /* 1.6 A */
+> +		ti,termination-current =3D <66000>;  /* 66mA */
+> +		ti,precharge-current =3D <1300000>; /* 1.3A */
+> +		ti,minimum-sys-voltage =3D <2750000>; /* 2.75V */
+> +		ti,boost-voltage =3D <5000000>; /* 5V */
+> +		ti,boost-max-current =3D <50000>; /* 50mA */
+> +	};
+
+And this. Did they get lost somewhere?
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--FL5UXtIhxfXey3p5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzoVz8ACgkQMOfwapXb+vIdgQCghne8A075NT7kuQmW7jP5hq3r
+KZUAoKXRSu20WmzRx4utr7RCAfCkzzmY
+=GIv0
+-----END PGP SIGNATURE-----
+
+--FL5UXtIhxfXey3p5--
