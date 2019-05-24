@@ -1,62 +1,161 @@
-From: Neal Liu <neal.liu@mediatek.com>
-Subject: Re: [PATCH 3/3] hwrng: add mt67xx-rng driver
-Date: Fri, 24 May 2019 15:42:34 +0800
-Message-ID: <1558683754.5671.4.camel@mtkswgap22>
-References: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com>
-         <1557287937-2410-4-git-send-email-neal.liu@mediatek.com>
-         <12193108.aNnqf5ydOJ@tauon.chronox.de>
-         <1557311737.11818.11.camel@mtkswgap22>
-         <20190509052649.xfkgb3qd7rhcgktj@gondor.apana.org.au>
-         <1557413686.23445.6.camel@mtkswgap22>
-         <20190510063915.kwqy3e5urs6j7ity@gondor.apana.org.au>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: Re: [PATCH 8/8] devfreq: mediatek: cci devfreq register opp
+ notification for SVS support
+Date: Fri, 24 May 2019 16:04:18 +0800
+Message-ID: <CAJMQK-hF3RT7wPRunE8q4uaEVaS1wkvmQO5t28Poz9ztiJ5Rmg@mail.gmail.com>
+References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com> <1557997725-12178-9-git-send-email-andrew-sh.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510063915.kwqy3e5urs6j7ity@gondor.apana.org.au>
+In-Reply-To: <1557997725-12178-9-git-send-email-andrew-sh.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, wsd_upstream <wsd_upstream@mediatek.com>, Stephan Mueller <smueller@chronox.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "mpm@selenic.com" <mpm@selenic.com>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= <Crystal.Guo@mediatek.com>, Neal Liu <neal.liu@mediatek.com>
+To: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, fan.chen@mediatek.com, linux-mediatek@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Herbert,
-	Could you kindly help to review our patches?
-	Thanks
-
-From	Neal Liu <>
-Subject	[PATCH 0/3] MT67XX random number generator support
-Date	Wed, 8 May 2019 11:58:54 +0800
-share
-These patch series introduce a generic rng driver for Trustzone
-based kernel driver which would like to communicate with ATF
-SIP services.
-
-Patch #1 initials SMC fid table for Mediatek SIP interfaces and
-adds HWRNG related SMC call.
-
-Patch #2..3 adds mt67xx-rng kernel driver for Trustzone based SoCs.
-For Mediatek SoCs on ARMv8 with TrustZone enabled, peripherals like
-entropy sources is not accessible from normal world (linux) and
-rather accessible from secure world (ATF/TEE) only. This driver aims
-to provide a generic interface to ATF rng service.
-
-Neal Liu (3):
-  soc: mediatek: add SMC fid table for SIP interface
-  dt-bindings: rng: update bindings for MT67xx SoCs
-  hwrng: add mt67xx-rng driver
-
- Documentation/devicetree/bindings/rng/mtk-rng.txt |   13 ++-
- drivers/char/hw_random/Kconfig                    |   16 ++++
- drivers/char/hw_random/Makefile                   |    1 +
- drivers/char/hw_random/mt67xx-rng.c               |  104
-+++++++++++++++++++++
- include/linux/soc/mediatek/mtk_sip_svc.h          |   55 +++++++++++
- 5 files changed, 186 insertions(+), 3 deletions(-)
- create mode 100644 drivers/char/hw_random/mt67xx-rng.c
- create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
-
--- 
-1.7.9.5
-
-Best Regards,
--Neal Liu
+On Thu, May 16, 2019 at 9:08 AM Andrew-sh.Cheng
+<andrew-sh.cheng@mediatek.com> wrote:
+>
+> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+>
+> SVS will change the voltage of opp item.
+> CCI devfreq need to react to change frequency.
+>
+> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+> ---
+>  drivers/devfreq/mt8183-cci-devfreq.c | 63 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>
+> diff --git a/drivers/devfreq/mt8183-cci-devfreq.c b/drivers/devfreq/mt8183-cci-devfreq.c
+> index 818a167c442f..250c963789f3 100644
+> --- a/drivers/devfreq/mt8183-cci-devfreq.c
+> +++ b/drivers/devfreq/mt8183-cci-devfreq.c
+> @@ -19,7 +19,10 @@ struct cci_devfreq {
+>         struct regulator *proc_reg;
+>         unsigned long proc_reg_uV;
+>         struct clk *cci_clk;
+> +       unsigned long freq;
+>         struct notifier_block nb;
+> +       struct notifier_block opp_nb;
+> +       int cci_min_freq;
+>  };
+>
+>  static int cci_devfreq_regulator_notifier(struct notifier_block *nb,
+> @@ -65,17 +68,62 @@ static int cci_devfreq_regulator_notifier(struct notifier_block *nb,
+>         return 0;
+>  }
+>
+> +static int ccidevfreq_opp_notifier(struct notifier_block *nb,
+> +unsigned long event, void *data)
+> +{
+> +       int ret;
+> +       struct dev_pm_opp *opp = data;
+> +       struct cci_devfreq *cci_df = container_of(nb, struct cci_devfreq,
+> +                                                 opp_nb);
+> +       unsigned long   freq, volt, cur_volt;
+> +
+> +       if (event == OPP_EVENT_ADJUST_VOLTAGE) {
+> +               freq = dev_pm_opp_get_freq(opp);
+> +               /* current opp item is changed */
+> +               if (freq == cci_df->freq) {
+> +                       volt = dev_pm_opp_get_voltage(opp);
+> +                       cur_volt = regulator_get_voltage(cci_df->proc_reg);
+> +
+> +                       if (volt > cur_volt) {
+> +                               /* need reduce freq */
+> +                               mutex_lock(&cci_df->devfreq->lock);
+> +                               ret = update_devfreq(cci_df->devfreq);
+> +                               if (ret)
+> +                                       pr_err("Fail to reduce cci frequency by opp notification: %d\n",
+This line is too long
+> +                                              ret);
+> +                               mutex_unlock(&cci_df->devfreq->lock);
+> +                       }
+> +               }
+> +
+> +               if (freq == cci_df->cci_min_freq) {
+> +                       volt = dev_pm_opp_get_voltage(opp);
+> +                       regulator_set_voltage(cci_df->proc_reg, volt, INT_MAX);
+> +               }
+> +       } else if (event == OPP_EVENT_DISABLE) {
+Is this case handled? If not, is this branch needed?
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +
+>  static int mtk_cci_governor_get_target(struct devfreq *devfreq,
+>                                        unsigned long *freq)
+>  {
+>         struct cci_devfreq *cci_df;
+>         struct dev_pm_opp *opp;
+> +       int ret;
+>
+>         cci_df = dev_get_drvdata(devfreq->dev.parent);
+>
+>         /* find available frequency */
+>         opp = dev_pm_opp_find_freq_ceil_by_volt(devfreq->dev.parent,
+>                                                 cci_df->proc_reg_uV);
+> +       ret = PTR_ERR_OR_ZERO(opp);
+> +       if (ret) {
+> +               pr_err("%s[%d], cannot find opp with voltage=%d: %d\n",
+> +                      __func__, __LINE__, cci_df->proc_reg_uV, ret);
+> +               return ret;
+> +       }
+>         *freq = dev_pm_opp_get_freq(opp);
+>
+>         return 0;
+> @@ -87,9 +135,11 @@ static int mtk_cci_governor_event_handler(struct devfreq *devfreq,
+>         int ret;
+>         struct cci_devfreq *cci_df;
+>         struct notifier_block *nb;
+> +       struct notifier_block *opp_nb;
+>
+>         cci_df = dev_get_drvdata(devfreq->dev.parent);
+>         nb = &cci_df->nb;
+> +       opp_nb = &cci_df->opp_nb;
+>
+>         switch (event) {
+>         case DEVFREQ_GOV_START:
+> @@ -100,6 +150,8 @@ static int mtk_cci_governor_event_handler(struct devfreq *devfreq,
+>                 if (ret)
+>                         pr_err("%s: failed to add governor: %d\n", __func__,
+>                                ret);
+> +               opp_nb->notifier_call = ccidevfreq_opp_notifier;
+> +               dev_pm_opp_register_notifier(devfreq->dev.parent, opp_nb);
+>                 break;
+>
+>         case DEVFREQ_GOV_STOP:
+> @@ -141,6 +193,8 @@ static int mtk_cci_devfreq_target(struct device *dev, unsigned long *freq,
+>                 return ret;
+>         }
+>
+> +       cci_df->freq = *freq;
+> +
+>         return 0;
+>  }
+>
+> @@ -152,6 +206,8 @@ static int mtk_cci_devfreq_probe(struct platform_device *pdev)
+>  {
+>         struct device *cci_dev = &pdev->dev;
+>         struct cci_devfreq *cci_df;
+> +       unsigned long freq, volt;
+> +       struct dev_pm_opp *opp;
+>         int ret;
+>
+>         cci_df = devm_kzalloc(cci_dev, sizeof(*cci_df), GFP_KERNEL);
+> @@ -181,6 +237,13 @@ static int mtk_cci_devfreq_probe(struct platform_device *pdev)
+>                 return ret;
+>         }
+>
+> +       /* set voltage lower bound */
+> +       freq = 1;
+> +       opp = dev_pm_opp_find_freq_ceil(cci_dev, &freq);
+> +       cci_df->cci_min_freq = dev_pm_opp_get_freq(opp);
+> +       volt = dev_pm_opp_get_voltage(opp);
+> +       dev_pm_opp_put(opp);
+> +
+>         platform_set_drvdata(pdev, cci_df);
+>
+>         cci_df->devfreq = devm_devfreq_add_device(cci_dev,
