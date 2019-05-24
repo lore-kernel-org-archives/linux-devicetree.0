@@ -1,29 +1,28 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
-Date: Fri, 24 May 2019 13:16:50 -0700 (PDT)
-Message-ID: <20190524.131650.1001639096871571503.davem@davemloft.net>
-References: <20190523023451.2933-1-yangbo.lu@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 1/4] dt-binding: Tegra194 pinctrl support
+Date: Fri, 24 May 2019 15:19:08 -0500
+Message-ID: <20190524201908.GA13368@bogus>
+References: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190523023451.2933-1-yangbo.lu@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yangbo.lu@nxp.com
-Cc: netdev@vger.kernel.org, richardcochran@gmail.com, claudiu.manoil@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org, alexandru.marginean@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Cc: linus.walleij@linaro.org, thierry.reding@gmail.com, jonathanh@nvidia.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, pdeschrijver@nvidia.com, josephl@nvidia.com, smangipudi@nvidia.com, ldewangan@nvidia.com, vidyas@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-From: "Y.b. Lu" <yangbo.lu@nxp.com>
-Date: Thu, 23 May 2019 02:33:24 +0000
-
-> This patch-set is to support hardware timestamping for ENETC
-> and also to add ENETC 1588 timer device tree node for ls1028a.
+On Thu, May 16, 2019 at 05:23:11PM +0530, Krishna Yarlagadda wrote:
+> Add binding doc for Tegra 194 pinctrl driver
 > 
-> Because the ENETC RX BD ring dynamic allocation has not been
-> supported and it is too expensive to use extended RX BDs
-> if timestamping is not used, a Kconfig option is used to
-> enable extended RX BDs in order to support hardware
-> timestamping. This option will be removed once RX BD
-> ring dynamic allocation is implemented.
+> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+> ---
+> Changes in V3:
+> remove optional fields not supported by pins published here
+> 
+>  .../bindings/pinctrl/nvidia,tegra194-pinmux.txt    | 107 +++++++++++++++++++++
+>  1 file changed, 107 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
 
-Series applied.
+Reviewed-by: Rob Herring <robh@kernel.org>
