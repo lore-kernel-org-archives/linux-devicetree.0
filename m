@@ -1,93 +1,91 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v3 2/8] memory: tegra20-emc: Drop setting EMC rate to max on probe
-Date: Fri, 24 May 2019 20:23:47 +0300
-Message-ID: <20190524172353.29087-3-digetx@gmail.com>
-References: <20190524172353.29087-1-digetx@gmail.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
+Date: Fri, 24 May 2019 18:25:30 +0100
+Message-ID: <61088426-43cd-338b-ca77-50c00fcb7c5e@arm.com>
+References: <20190521161102.29620-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190524172353.29087-1-digetx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20190521161102.29620-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Steven Price <steven.price-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The memory frequency scaling will be managed by tegra20-devfreq driver
-and PM QoS once all the prerequisite patches will get upstreamed.
-The parent clock is now managed by the clock driver and we also should
-assume that PLLM rate can't be changed on some devices (Galaxy Tab 10.1
-for example). Altogether there is no point in touching of clock's rate
-from the EMC driver.
-
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/memory/tegra/tegra20-emc.c | 45 ------------------------------
- 1 file changed, 45 deletions(-)
-
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index 9ee5bef49e47..55ac3863a354 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -424,41 +424,6 @@ static int emc_setup_hw(struct tegra_emc *emc)
- 	return 0;
- }
- 
--static int emc_init(struct tegra_emc *emc, unsigned long rate)
--{
--	int err;
--
--	err = clk_set_parent(emc->emc_mux, emc->backup_clk);
--	if (err) {
--		dev_err(emc->dev,
--			"failed to reparent to backup source: %d\n", err);
--		return err;
--	}
--
--	err = clk_set_rate(emc->pll_m, rate);
--	if (err) {
--		dev_err(emc->dev,
--			"failed to change pll_m rate: %d\n", err);
--		return err;
--	}
--
--	err = clk_set_parent(emc->emc_mux, emc->pll_m);
--	if (err) {
--		dev_err(emc->dev,
--			"failed to reparent to pll_m: %d\n", err);
--		return err;
--	}
--
--	err = clk_set_rate(emc->clk, rate);
--	if (err) {
--		dev_err(emc->dev,
--			"failed to change emc rate: %d\n", err);
--		return err;
--	}
--
--	return 0;
--}
--
- static int tegra_emc_probe(struct platform_device *pdev)
- {
- 	struct device_node *np;
-@@ -550,18 +515,8 @@ static int tegra_emc_probe(struct platform_device *pdev)
- 		goto put_backup;
- 	}
- 
--	/* set DRAM clock rate to maximum */
--	err = emc_init(emc, emc->timings[emc->num_timings - 1].rate);
--	if (err) {
--		dev_err(&pdev->dev, "failed to initialize EMC clock rate: %d\n",
--			err);
--		goto unreg_notifier;
--	}
--
- 	return 0;
- 
--unreg_notifier:
--	clk_notifier_unregister(emc->clk, &emc->clk_nb);
- put_backup:
- 	clk_put(emc->backup_clk);
- put_pll_m:
--- 
-2.21.0
+T24gMjEvMDUvMjAxOSAxNzoxMCwgQ2zDqW1lbnQgUMOpcm9uIHdyb3RlOgo+IEhpLAo+IAo+IFRo
+ZSBBbGx3aW5uZXIgSDYgaGFzIGEgTWFsaS1UNzIwIE1QMiB3aGljaCBzaG91bGQgYmUgc3VwcG9y
+dGVkIGJ5Cj4gdGhlIG5ldyBwYW5mcm9zdCBkcml2ZXIuIFRoaXMgc2VyaWVzIGZpeCB0d28gaXNz
+dWVzIGFuZCBpbnRyb2R1Y2UgdGhlCj4gZHQtYmluZGluZ3MgYnV0IGEgc2ltcGxlIGJlbmNobWFy
+ayBzaG93IHRoYXQgaXQncyBzdGlsbCBOT1QgV09SS0lORy4KPiAKPiBJJ20gcHVzaGluZyBpdCBp
+biBjYXNlIHNvbWVvbmUgd2FudCB0byBjb250aW51ZSB0aGUgd29yay4KPiAKPiBUaGlzIGhhcyBi
+ZWVuIHRlc3RlZCB3aXRoIE1lc2EzRCAxOS4xLjAtUkMyIGFuZCBhIEdQVSBiaXRuZXNzIHBhdGNo
+WzFdLgo+IAo+IE9uZSBwYXRjaCBpcyBmcm9tIEljZW5vd3kgWmhlbmcgd2hlcmUgSSBjaGFuZ2Vk
+IHRoZSBvcmRlciBhcyByZXF1aXJlZAo+IGJ5IFJvYiBIZXJyaW5nWzJdLgo+IAo+IFRoYW5rcywK
+PiBDbGVtZW50Cj4gCj4gWzFdIGh0dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9rc3phcS9t
+ZXNhL3RyZWUvcGFuZnJvc3RfNjRfMzIKPiBbMl0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
+Zy9wYXRjaC8xMDY5OTgyOS8KPiAKPiAKPiBbICAzNDUuMjA0ODEzXSBwYW5mcm9zdCAxODAwMDAw
+LmdwdTogbW11IGlycSBzdGF0dXM9MQo+IFsgIDM0NS4yMDk2MTddIHBhbmZyb3N0IDE4MDAwMDAu
+Z3B1OiBVbmhhbmRsZWQgUGFnZSBmYXVsdCBpbiBBUzAgYXQgVkEKPiAweDAwMDAwMDAwMDI0MDA0
+MDAKPiBbICAzNDUuMjA5NjE3XSBSZWFzb246IFRPRE8KPiBbICAzNDUuMjA5NjE3XSByYXcgZmF1
+bHQgc3RhdHVzOiAweDgwMDAwMkMxCj4gWyAgMzQ1LjIwOTYxN10gZGVjb2RlZCBmYXVsdCBzdGF0
+dXM6IFNMQVZFIEZBVUxUCj4gWyAgMzQ1LjIwOTYxN10gZXhjZXB0aW9uIHR5cGUgMHhDMTogVFJB
+TlNMQVRJT05fRkFVTFRfTEVWRUwxCj4gWyAgMzQ1LjIwOTYxN10gYWNjZXNzIHR5cGUgMHgyOiBS
+RUFECj4gWyAgMzQ1LjIwOTYxN10gc291cmNlIGlkIDB4ODAwMAo+IFsgIDM0NS43Mjk5NTddIHBh
+bmZyb3N0IDE4MDAwMDAuZ3B1OiBncHUgc2NoZWQgdGltZW91dCwganM9MCwKPiBzdGF0dXM9MHg4
+LCBoZWFkPTB4MjQwMDQwMCwgdGFpbD0weDI0MDA0MDAsIHNjaGVkX2pvYj0wMDAwMDAwMDllMjA0
+ZGU5Cj4gWyAgMzQ2LjA1NTg3Nl0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IG1tdSBpcnEgc3RhdHVz
+PTEKPiBbICAzNDYuMDYwNjgwXSBwYW5mcm9zdCAxODAwMDAwLmdwdTogVW5oYW5kbGVkIFBhZ2Ug
+ZmF1bHQgaW4gQVMwIGF0IFZBCj4gMHgwMDAwMDAwMDAyQzAwQTAwCj4gWyAgMzQ2LjA2MDY4MF0g
+UmVhc29uOiBUT0RPCj4gWyAgMzQ2LjA2MDY4MF0gcmF3IGZhdWx0IHN0YXR1czogMHg4MTAwMDJD
+MQo+IFsgIDM0Ni4wNjA2ODBdIGRlY29kZWQgZmF1bHQgc3RhdHVzOiBTTEFWRSBGQVVMVAo+IFsg
+IDM0Ni4wNjA2ODBdIGV4Y2VwdGlvbiB0eXBlIDB4QzE6IFRSQU5TTEFUSU9OX0ZBVUxUX0xFVkVM
+MQo+IFsgIDM0Ni4wNjA2ODBdIGFjY2VzcyB0eXBlIDB4MjogUkVBRAo+IFsgIDM0Ni4wNjA2ODBd
+IHNvdXJjZSBpZCAweDgxMDAKPiBbICAzNDYuNTYxOTU1XSBwYW5mcm9zdCAxODAwMDAwLmdwdTog
+Z3B1IHNjaGVkIHRpbWVvdXQsIGpzPTEsCj4gc3RhdHVzPTB4OCwgaGVhZD0weDJjMDBhMDAsIHRh
+aWw9MHgyYzAwYTAwLCBzY2hlZF9qb2I9MDAwMDAwMDBiNTVhOWE4NQo+IFsgIDM0Ni41NzM5MTNd
+IHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBtbXUgaXJxIHN0YXR1cz0xCj4gWyAgMzQ2LjU3ODcwN10g
+cGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxlZCBQYWdlIGZhdWx0IGluIEFTMCBhdCBWQQo+
+IDB4MDAwMDAwMDAwMkMwMEI4MAoKRldJVyBJIHNlZW0gdG8gaGF2ZSByZXByb2R1Y2VkIHRoZSBz
+YW1lIGJlaGF2aW91ciBvbiBhIGRpZmZlcmVudCBUNzIwIApzZXR1cCwgc28gdGhpcyBtYXkgd2Vs
+bCBiZSBtb3JlIGFib3V0IHRoZSBHUFUgdGhhbiB0aGUgcGxhdGZvcm0uIFRoZXJlIApkb2Vzbid0
+IGxvb2sgdG8gYmUgYW55dGhpbmcgb2J2aW91c2x5IHdyb25nIHdpdGggdGhlIHBhZ2V0YWJsZXMs
+IGJ1dCBpZiAKSSBjYW4gZmluZCBzb21lIG1vcmUgZnJlZSB0aW1lIEkgbWF5IGhhdmUgYSBiaXQg
+bW9yZSBvZiBhIHBva2UgYXJvdW5kLgoKUm9iaW4uCgo+IAo+IENoYW5nZSBpbiB2NToKPiAgIC0g
+UmVtb3ZlIGZpeCBpbmRlbnQKPiAKPiBDaGFuZ2VzIGluIHY0Ogo+ICAgLSBBZGQgYnVzX2Nsb2Nr
+IHByb2JlCj4gICAtIEZpeCBzYW5pdHkgY2hlY2sgaW4gaW8tcGd0YWJsZQo+ICAgLSBBZGQgdnJh
+bXAtZGVsYXkKPiAgIC0gTWVyZ2UgYWxsIGJvYXJkcyBpbnRvIG9uZSBwYXRjaAo+ICAgLSBSZW1v
+dmUgdXBzdHJlYW1lZCBOZWlsIEEuIHBhdGNoCj4gCj4gQ2hhbmdlIGluIHYzIChUaGFua3MgdG8g
+TWF4aW1lIFJpcGFyZCk6Cj4gICAtIFJlYXV0aG9yIEljZW5vd3kgZm9yIGhlciBwYXRoCj4gCj4g
+Q2hhbmdlcyBpbiB2MiAoVGhhbmtzIHRvIE1heGltZSBSaXBhcmQpOgo+ICAgLSBEcm9wIEdQVSBP
+UFAgVGFibGUKPiAgIC0gQWRkIGNsb2NrcyBhbmQgY2xvY2stbmFtZXMgaW4gcmVxdWlyZWQKPiAK
+PiBDbMOpbWVudCBQw6lyb24gKDUpOgo+ICAgIGRybTogcGFuZnJvc3Q6IGFkZCBvcHRpb25hbCBi
+dXNfY2xvY2sKPiAgICBpb21tdTogaW8tcGd0YWJsZTogZml4IHNhbml0eSBjaGVjayBmb3Igbm9u
+IDQ4LWJpdCBtYWxpIGlvbW11Cj4gICAgZHQtYmluZGluZ3M6IGdwdTogbWFsaS1taWRnYXJkOiBB
+ZGQgSDYgbWFsaSBncHUgY29tcGF0aWJsZQo+ICAgIGFybTY0OiBkdHM6IGFsbHdpbm5lcjogQWRk
+IEFSTSBNYWxpIEdQVSBub2RlIGZvciBINgo+ICAgIGFybTY0OiBkdHM6IGFsbHdpbm5lcjogQWRk
+IG1hbGkgR1BVIHN1cHBseSBmb3IgSDYgYm9hcmRzCj4gCj4gSWNlbm93eSBaaGVuZyAoMSk6Cj4g
+ICAgZHQtYmluZGluZ3M6IGdwdTogYWRkIGJ1cyBjbG9jayBmb3IgTWFsaSBNaWRnYXJkIEdQVXMK
+PiAKPiAgIC4uLi9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC50eHQgICAgICAgICB8IDE1
+ICsrKysrKysrKysrKy0KPiAgIC4uLi9kdHMvYWxsd2lubmVyL3N1bjUwaS1oNi1iZWVsaW5rLWdz
+MS5kdHMgICB8ICA2ICsrKysrCj4gICAuLi4vZHRzL2FsbHdpbm5lci9zdW41MGktaDYtb3Jhbmdl
+cGktMy5kdHMgICAgfCAgNiArKysrKwo+ICAgLi4uL2R0cy9hbGx3aW5uZXIvc3VuNTBpLWg2LW9y
+YW5nZXBpLmR0c2kgICAgIHwgIDYgKysrKysKPiAgIC4uLi9ib290L2R0cy9hbGx3aW5uZXIvc3Vu
+NTBpLWg2LXBpbmUtaDY0LmR0cyB8ICA2ICsrKysrCj4gICBhcmNoL2FybTY0L2Jvb3QvZHRzL2Fs
+bHdpbm5lci9zdW41MGktaDYuZHRzaSAgfCAxNCArKysrKysrKysrKysKPiAgIGRyaXZlcnMvZ3B1
+L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9kZXZpY2UuYyAgICB8IDIyICsrKysrKysrKysrKysrKysr
+KysKPiAgIGRyaXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9kZXZpY2UuaCAgICB8ICAx
+ICsKPiAgIGRyaXZlcnMvaW9tbXUvaW8tcGd0YWJsZS1hcm0uYyAgICAgICAgICAgICAgICB8ICAy
+ICstCj4gICA5IGZpbGVzIGNoYW5nZWQsIDc2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
+Cj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11
+IG1haWxpbmcgbGlzdAppb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xp
+c3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQ==
