@@ -1,72 +1,71 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] dt-bindings: thermal: Make cooling-maps
- property optional
-Date: Fri, 24 May 2019 03:21:24 +0000
-Message-ID: <VI1PR04MB4333A37E27148B4295C3E761F3020@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <20190515093647.47656-1-andy.tang@nxp.com>
- <20190524025017.GA4146@localhost.localdomain>
+From: =?big5?B?ufmxUrph?= <kt.liao@emc.com.tw>
+Subject: RE: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base value
+Date: Fri, 24 May 2019 11:13:10 +0800
+Message-ID: <003d01d511de$9da229c0$d8e67d40$@emc.com.tw>
+References: <20190521132712.2818-1-benjamin.tissoires@redhat.com> <20190521132712.2818-10-benjamin.tissoires@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain;
+        charset="big5"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190524025017.GA4146@localhost.localdomain>
-Content-Language: en-US
+In-Reply-To: <20190521132712.2818-10-benjamin.tissoires@redhat.com>
+Content-Language: zh-tw
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: "rui.zhang@intel.com" <rui.zhang@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: 'Benjamin Tissoires' <benjamin.tissoires@redhat.com>, 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Aaron Ma' <aaron.ma@canonical.com>, 'Hans de Goede' <hdegoede@redhat.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBFZHVhcmRvIFZhbGVudGluIDxl
-ZHViZXp2YWxAZ21haWwuY29tPg0KPiBTZW50OiAyMDE5xOo11MIyNMjVIDEwOjUwDQo+IFRvOiBB
-bmR5IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiBDYzogcnVpLnpoYW5nQGludGVsLmNvbTsg
-cm9iaCtkdEBrZXJuZWwub3JnOyBkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnOw0KPiBtYXJrLnJ1
-dGxhbmRAYXJtLmNvbTsgbGludXgtcG1Admdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBb
-RVhUXSBSZTogW1BBVENIXSBkdC1iaW5kaW5nczogdGhlcm1hbDogTWFrZSBjb29saW5nLW1hcHMg
-cHJvcGVydHkNCj4gb3B0aW9uYWwNCj4gDQo+IENhdXRpb246IEVYVCBFbWFpbA0KPiANCj4gT24g
-V2VkLCBNYXkgMTUsIDIwMTkgYXQgMDU6MzY6NDdQTSArMDgwMCwgWXVhbnRpYW4gVGFuZyB3cm90
-ZToNCj4gPiBUaGVyZSBtYXkgYmUgbm8gY29vbGluZyBkZXZpY2Ugb24gc3lzdGVtLCBvciB0aGVy
-ZSBhcmUgbm8gZW5vdWdoDQo+ID4gY29vbGluZyBkZXZpY2VzIGZvciBlYWNoIHRoZXJtYWwgem9u
-ZSBpbiBtdWx0aXBsZSB0aGVybWFsIHpvbmUgY2FzZXMNCj4gPiBzaW5jZSBjb29saW5nIGRldmlj
-ZXMgY2FuJ3QgYmUgc2hhcmVkLg0KPiA+IFNvIG1ha2UgdGhpcyBwcm9wZXJ0eSBvcHRpb25hbCB0
-byByZW1vdmUgc3VjaCBsaW1pdGF0aW9ucy4NCj4gDQo+IFllYWgsIEkgYW0gIG5vdCBzdXJlIHRo
-YXQgaXMgZW5vdWdoIHJlYXNvbiB0byBtYWtlIHRoaXMgcHJvcGVydHkgb3B0aW9uYWwuDQo+IExl
-dCBtZSBtYXliZSBhc2sgeW91IHdoeSBkbyB5b3UgY2FyZSBjcmVhdGluZyBhIHRoZXJtYWwgem9u
-ZSBpZiB5b3VyIGNvbnRyb2wNCj4gaGFzIG5vIGFjdGlvbnM/IE9yIHJhdGhlciwgd2h5IGJvdGhl
-cmluZyBzZXR0aW5nIHVwIGEgY29udHJvbCB0aGF0IGhhcyBubw0KPiBhY3R1YXRvcnM/DQpObyBj
-b29saW5nLWRldmljZSBtYXAgZG9lc24ndCBtZWFuIE5PIEFDVElPTlMuIFRoZXJlIGNvdWxkIGJl
-IGNyaXRpYyB0cmlwcyB0aGF0IHRyaWdnZXIgQ1BVIHJlc2V0IG9yIHNodXRkb3duLg0KVGhlIHJv
-b3QgY2F1c2UgZm9yIGl0IGhlcmUgaXM6IHRoZXJlIGlzIG5vIGVub3VnaCBjb29saW5nIGRldmlj
-ZSBmb3IgZWFjaCB6b25lIHdoZW4gbXVsdGlwbGUgem9uZSBleGlzdC4NCkZvciBleGFtcGxlLCBm
-b3Igb3VyIGxzMjA4OGEgcGxhdGZvcm0sIHRoZXJlIGFyZSA3IHRoZXJtYWwgem9uZXMsIGJ1dCB3
-ZSBoYXZlIG9ubHkgb25lIGNvb2xpbmcgZGV2aWNlIHdoaWNoIGlzIGNwdWZyZXEuDQpEdWUgdG8g
-dGhpcyBvcHRpb24gbGltaXRhdGlvbiwgbXVsdGlwbGUgem9uZXMgY2FuJ3QgYmUgc3VwcG9ydGVk
-Lg0KSSBiZWxpZXZlIG9uIG1vc3QgcGxhdGZvcm0sIHRoZXJlIGFyZSBvbmx5IHR3byB0eXBlIG9m
-IGNvb2xpbmcgZGV2aWNlcywgY3B1ZnJlcSBhbmQgZmFuLiBTbyBob3cgbWFueSBjb29saW5nIGRl
-dmljZXMgaXQgY291bGQgYmU/DQpTbyBtYWtpbmcgdGhlIHByb3BlcnR5IG9wdGlvbmFsIGlzIHJl
-YXNvbmFibGUuIFdlIGNhbiBhc3NpZ24gY29vbGluZyBkZXZpY2VzIHRvIGNlcnRhaW4gdGhlcm1h
-bCB6b25lcyBhbmQgbGVhdmUgdGhlIHRoZXJtYWwgem9uZSB3aXRoIG5vIGNvb2xpbmcgZGV2aWNl
-IHRha2luZyBkZWZhdWx0IGFjdGlvbnMuDQoNCkJSLA0KQW5keQ0KPiANCj4gPg0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IFl1YW50aWFuIFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+
-ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3RoZXJtYWwudHh0ICAgICAgICB8ICAg
-IDQgKystLQ0KPiA+ICAxIGZpbGVzIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlv
-bnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvdGhlcm1hbC90aGVybWFsLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3RoZXJtYWwvdGhlcm1hbC50eHQNCj4gPiBpbmRleCBjYTE0YmE5Li42OTRlODM0
-IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVy
-bWFsL3RoZXJtYWwudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3RoZXJtYWwvdGhlcm1hbC50eHQNCj4gPiBAQCAtMTQyLDExICsxNDIsMTEgQEAgUmVxdWly
-ZWQgcHJvcGVydGllczoNCj4gPiAgLSB0cmlwczogICAgICAgICAgICAgQSBzdWItbm9kZSB3aGlj
-aCBpcyBhIGNvbnRhaW5lciBvZiBvbmx5IHRyaXAgcG9pbnQNCj4gbm9kZXMNCj4gPiAgICBUeXBl
-OiBzdWItbm9kZSAgICAgcmVxdWlyZWQgdG8gZGVzY3JpYmUgdGhlIHRoZXJtYWwgem9uZS4NCj4g
-Pg0KPiA+ICsNCj4gPiArT3B0aW9uYWwgcHJvcGVydHk6DQo+ID4gIC0gY29vbGluZy1tYXBzOiAg
-ICAgICAgICAgICAgQSBzdWItbm9kZSB3aGljaCBpcyBhIGNvbnRhaW5lciBvZiBvbmx5DQo+IGNv
-b2xpbmcgZGV2aWNlDQo+ID4gICAgVHlwZTogc3ViLW5vZGUgICAgIG1hcCBub2RlcywgdXNlZCB0
-byBkZXNjcmliZSB0aGUgcmVsYXRpb24NCj4gYmV0d2VlbiB0cmlwcw0KPiA+ICAgICAgICAgICAg
-ICAgICAgICAgICBhbmQgY29vbGluZyBkZXZpY2VzLg0KPiA+IC0NCj4gPiAtT3B0aW9uYWwgcHJv
-cGVydHk6DQo+ID4gIC0gY29lZmZpY2llbnRzOiAgICAgICAgICAgICAgQW4gYXJyYXkgb2YgaW50
-ZWdlcnMgKG9uZSBzaWduZWQgY2VsbCkNCj4gY29udGFpbmluZw0KPiA+ICAgIFR5cGU6IGFycmF5
-ICAgICAgICAgICAgICAgIGNvZWZmaWNpZW50cyB0byBjb21wb3NlIGEgbGluZWFyIHJlbGF0aW9u
-DQo+IGJldHdlZW4NCj4gPiAgICBFbGVtIHNpemU6IG9uZSBjZWxsICAgICAgICB0aGUgc2Vuc29y
-cyBsaXN0ZWQgaW4gdGhlIHRoZXJtYWwtc2Vuc29ycw0KPiBwcm9wZXJ0eS4NCj4gPiAtLQ0KPiA+
-IDEuNy4xDQo+ID4NCg==
+Hi Benjamin,
+
+Thanks so much for all you do for Elan touchpad.
+
+For the width_*, I have a question for it.
+Our antenna sensors fully occupied the whole touchpad PCB.
+
+The Gap between 2 sensors are 7.5 mil (0.19mm).
+That's why we did not minus one trace.
+
+
+Thanks
+KT
+-----Original Message-----
+From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com] 
+Sent: Tuesday, May 21, 2019 9:27 PM
+To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
+Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org;
+devicetree@vger.kernel.org; Benjamin Tissoires
+Subject: [PATCH v2 09/10] Input: elan_i2c - correct the width/size base
+value
+
+*_traces are the number of antennas. width_* is thus the space between 2
+antennas. Which means, we should subtract 1 to the number of antennas to
+divide the touchpad by the number of holes between each antenna.
+
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+
+--
+
+new in v2
+---
+ drivers/input/mouse/elan_i2c_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/mouse/elan_i2c_core.c
+b/drivers/input/mouse/elan_i2c_core.c
+index 6f4feedb7765..3375eaa9a72e 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -398,8 +398,8 @@ static int elan_query_device_parameters(struct
+elan_tp_data *data)
+ 		if (error)
+ 			return error;
+ 	}
+-	data->width_x = data->max_x / x_traces;
+-	data->width_y = data->max_y / y_traces;
++	data->width_x = data->max_x / (x_traces - 1);
++	data->width_y = data->max_y / (y_traces - 1);
+ 
+ 	if (device_property_read_u32(&client->dev,
+ 				     "touchscreen-x-mm", &x_mm) ||
+--
+2.21.0
