@@ -1,37 +1,46 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH RESEND] arm64: dts: imx8mq: add clock for SNVS RTC node
-Date: Fri, 24 May 2019 13:44:06 +0800
-Message-ID: <20190524054406.3220-1-Anson.Huang@nxp.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v1 2/5] driver core: Add device links support for pending
+ links to suppliers
+Date: Fri, 24 May 2019 07:48:09 +0200
+Message-ID: <20190524054809.GA31664@kroah.com>
+References: <20190524010117.225219-1-saravanak@google.com>
+ <20190524010117.225219-3-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190524010117.225219-3-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Thu, May 23, 2019 at 06:01:13PM -0700, Saravana Kannan wrote:
+> When consumer devices are added, they might not have a supplier device
+> to link to despite needing mandatory resources/functionality from one
+> or more suppliers. Add a waiting_for_suppliers list to track such
+> consumers and add helper functions to manage the list.
+> 
+> Marking/unmarking a consumer device as waiting for suppliers is
+> generally expected to be done by the entity that's creating the
+> device.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/base/core.c    | 67 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/device.h |  5 ++++
+>  2 files changed, 72 insertions(+)
 
-i.MX8MQ has clock gate for SNVS module, add clock info to SNVS
-RTC node for clock management.
+This looks fine to me, I'll let the dt people argue if the new entry is
+valid or not :)
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Feel free to add:
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index df3e96b..3473195 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -433,6 +433,8 @@
- 					offset = <0x34>;
- 					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
- 						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+					clocks = <&clk IMX8MQ_CLK_SNVS_ROOT>;
-+					clock-names = "snvs-rtc";
- 				};
- 			};
- 
--- 
-2.7.4
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+to this if the dt people want to take it through their tree.  Or, I
+guess I should really take it through mine...
+
+thanks,
+
+greg k-h
