@@ -1,44 +1,201 @@
-From: "Y.b. Lu" <yangbo.lu@nxp.com>
-Subject: RE: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
-Date: Fri, 24 May 2019 02:20:13 +0000
-Message-ID: <VI1PR0401MB2237EC43DA992198CE3BA768F8020@VI1PR0401MB2237.eurprd04.prod.outlook.com>
-References: <20190523023451.2933-1-yangbo.lu@nxp.com>
- <20190523134832.xzupnwvhhlljtoyh@localhost>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v3 1/3] thermal: rockchip: fix up the tsadc pinctrl
+ setting error
+Date: Thu, 23 May 2019 19:23:33 -0700
+Message-ID: <20190524022331.GB1936@localhost.localdomain>
+References: <1556618986-18923-1-git-send-email-zhangqing@rock-chips.com>
+ <785392a0-282a-1e51-a4d6-a6d5ca478949@linaro.org>
+ <CAFqH_53nbiwzQKctNa7MBzgCcsRFn1p8g31Xgvo3E9k6eA8AKw@mail.gmail.com>
+ <2174314.1vfUlvne1O@phil>
+ <a6780f8f-4144-f817-b4b8-c40f6aa5e806@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190523134832.xzupnwvhhlljtoyh@localhost>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <a6780f8f-4144-f817-b4b8-c40f6aa5e806@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, Claudiu Manoil <claudiu.manoil@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "elaine.zhang" <zhangqing@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Enric Balletbo Serra <eballetbo@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, huangtao@rock-chips.com, Linux PM list <linux-pm@vger.kernel.org>, xxx@rock-chips.com, xf@rock-chips.com, linux-kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Doug Anderson <dianders@chromium.org>, vicencb@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Richard Cochran <richardcochran@gmail.com>
-> Sent: Thursday, May 23, 2019 9:49 PM
-> To: Y.b. Lu <yangbo.lu@nxp.com>
-> Cc: netdev@vger.kernel.org; David Miller <davem@davemloft.net>; Claudiu
-> Manoil <claudiu.manoil@nxp.com>; Shawn Guo <shawnguo@kernel.org>; Rob
-> Herring <robh+dt@kernel.org>; Alexandru Marginean
-> <alexandru.marginean@nxp.com>; devicetree@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH net-next v2, 0/4] ENETC: support hardware timestampin=
-g
->=20
-> On Thu, May 23, 2019 at 02:33:24AM +0000, Y.b. Lu wrote:
-> > This patch-set is to support hardware timestamping for ENETC and also
-> > to add ENETC 1588 timer device tree node for ls1028a.
->=20
-> Please, in the future, summarize the changes from the last series in the =
-cover
-> letter.  It helps the reviewers to focus.
+On Thu, May 23, 2019 at 09:34:37AM +0800, elaine.zhang wrote:
+> hi, Heiko & Enric:
+> 
+> 在 2019/5/22 下午8:27, Heiko Stuebner 写道:
+> >Hi Enric,
+> >
+> >Am Montag, 20. Mai 2019, 15:38:32 CEST schrieb Enric Balletbo Serra:
+> >>Hi all,
+> >>
+> >>As pointed by [1] and [2] this commit, that now is upstream, breaks
+> >>veyron (rk3288) and kevin (rk3399) boards. The problem is especially
+> >>critical for veyron boards because they don't boot anymore.
+> >>
+> >>I didn't look deep at the problem but I have some concerns about this
+> >>patch, see below.
+> >>
+> >>[1] https://www.spinics.net/lists/linux-rockchip/msg24657.html
+> >>[2] https://www.spinics.net/lists/linux-rockchip/msg24735.html
+> >>
+> >>Missatge de Daniel Lezcano <daniel.lezcano@linaro.org> del dia dt., 30
+> >>d’abr. 2019 a les 15:39:
+> >>>On 30/04/2019 12:09, Elaine Zhang wrote:
+> >>>>Explicitly use the pinctrl to set/unset the right mode
+> >>>>instead of relying on the pinctrl init mode.
+> >>>>And it requires setting the tshut polarity before select pinctrl.
+> >>>>
+> >>>>When the temperature sensor mode is set to 0, it will automatically
+> >>>>reset the board via the Clock-Reset-Unit (CRU) if the over temperature
+> >>>>threshold is reached. However, when the pinctrl initializes, it does a
+> >>>>transition to "otp_out" which may lead the SoC restart all the time.
+> >>>>
+> >>>>"otp_out" IO may be connected to the RESET circuit on the hardware.
+> >>>>If the IO is in the wrong state, it will trigger RESET.
+> >>>>(similar to the effect of pressing the RESET button)
+> >>>>which will cause the soc to restart all the time.
+> >>>>
+> >>>>Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> >>>Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >>>
+> >>>
+> >>>
+> >>>>---
+> >>>>  drivers/thermal/rockchip_thermal.c | 36 +++++++++++++++++++++++++++++++++---
+> >>>>  1 file changed, 33 insertions(+), 3 deletions(-)
+> >>>>
+> >>>>diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+> >>>>index 9c7643d62ed7..6dc7fc516abf 100644
+> >>>>--- a/drivers/thermal/rockchip_thermal.c
+> >>>>+++ b/drivers/thermal/rockchip_thermal.c
+> >>>>@@ -172,6 +172,9 @@ struct rockchip_thermal_data {
+> >>>>       int tshut_temp;
+> >>>>       enum tshut_mode tshut_mode;
+> >>>>       enum tshut_polarity tshut_polarity;
+> >>>>+     struct pinctrl *pinctrl;
+> >>>>+     struct pinctrl_state *gpio_state;
+> >>>>+     struct pinctrl_state *otp_state;
+> >>>>  };
+> >>>>
+> >>>>  /**
+> >>>>@@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+> >>>>               return error;
+> >>>>       }
+> >>>>
+> >>>>+     thermal->chip->control(thermal->regs, false);
+> >>>>+
+> >>That's the line that causes the hang. Commenting this makes the veyron
+> >>boot again. Probably this needs to go after chip->initialize?
+> >It needs to go after the clk_enable calls.
+> >At this point the tsadc may still be unclocked.
+> 
+> The clk is enable by default.
+> 
+> 
+> The reason for this modification:
+> 
+> The otp Pin polarity setting for tsadc must be set when tsadc is turned off.
+> 
+> The order:
+> 
+> Close the tsadc->Set the otp pin polarity ->Set the pinctrl->initialize the
+> tsadc->Open the tsadc
+> 
+> 
+> As for the problem you mentioned, I guess: The default polarity of otp does
+> not match the default state, that is, the otp is triggered by default, and
+> then the reset circuit of the hardware takes effect and is restarted all the
+> time.
+> Modification:
+> 1. For this hardware, otp pin default state is modified.
+> 2. The mode of using CRU is rockchip,hw-tshut-mode = <0> in DTS;
+> /* tshut mode 0:CRU 1:GPIO */
+> 
+> Recommended use method 2. You can try it.
+> 
+> >
+> >>>>       error = clk_prepare_enable(thermal->clk);
+> >>>>       if (error) {
+> >>>>               dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+> >>>>@@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+> >>>>       thermal->chip->initialize(thermal->grf, thermal->regs,
+> >>>>                                 thermal->tshut_polarity);
+> >>>>
+> >>>>+     if (thermal->tshut_mode == TSHUT_MODE_GPIO) {
+> >>>>+             thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
+> >>>>+             if (IS_ERR(thermal->pinctrl)) {
+> >>>>+                     dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
+> >>>>+                     return PTR_ERR(thermal->pinctrl);
+> >>>>+             }
+> >>>>+
+> >>>>+             thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
+> >>>>+                                                        "gpio");
+> >>Shouldn't this mode be documented properly in the binding first?
+> >More importantly, it should be _backwards-compatible_, aka work with
+> >old devicetrees without that property and not break thermal handling for
+> >them entirely.
+> If need  _backwards-compatible_,  It's can't return
+> PTR_ERR(thermal->pinctrl) when get
+> 
+> devm_pinctrl_get failed.
+> 
+> >
+> >>The binding [3] talks about init, default and sleep states but *not*
+> >>gpio and otpout. The patch series looks incomplete to me or not using
+> >>the proper names.
+> >>
+> >>[3] https://elixir.bootlin.com/linux/v5.2-rc1/source/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> >>
+> >>>>+             if (IS_ERR_OR_NULL(thermal->gpio_state)) {
+> >>>>+                     dev_err(&pdev->dev, "failed to find thermal gpio state\n");
+> >>>>+                     return -EINVAL;
+> >>>>+             }
+> >>>>+
+> >>>>+             thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
+> >>>>+                                                       "otpout");
+> >>>>+             if (IS_ERR_OR_NULL(thermal->otp_state)) {
+> >>>>+                     dev_err(&pdev->dev, "failed to find thermal otpout state\n");
+> >>>>+                     return -EINVAL;
+> >>>>+             }
+> >>>>+
+> >>Same here otpout is not a documented.
+> >>
+> >>As this change is now in mainline and is causing veyron to hang I'd
+> >>suggest reverting this change for now. Even fixing the root cause
+> >>(maybe the one I pointed above) after this patch we will have the
+> >>thermal driver to fail because "gpio" and "otpout" states are not
+> >>defined nor documented (a change on this will need some reviews and
+> >>acks and time I guess).
+> >I definitly agree here. Handling + checking the binding change
+> >as well as needed fallback code is definitly not material for -rc-kernels
+> >so we should just revert for now and let Elaine fix the issues for 5.3.
+> >
+> >Anyone volunteering for sending a revert-patch to Eduardo? :-)
+> 
+> I agree to revert the patch,and I will correct it and push it later.
 
-[Y.b. Lu] Sorry Richard. Will summarize all changes in cover letter in the =
-future, besides change notes on each patch.
-Thanks.
 
->=20
-> Thanks,
-> Richard
+Great! Collecting the revert that was already sent I will send out to
+coming rc so we clear the breakage.
+
+> 
+> Do I need to commit the revert the patch now?@Heiko
+> 
+
+
+Yeah, you should see it in the next rc after I send this to Linus.
+
+Meanwhile, it would be good if you good send another version of your
+patch that does not break the other boards.
+
+> >
+> >Heiko
+> >
+> >
+> >
+> >
+> >
+> >
+> >
+> 
+> 
