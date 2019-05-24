@@ -1,44 +1,44 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/8] dt-bindings: net: Add a YAML schemas for the generic
- PHY options
-Date: Fri, 24 May 2019 10:10:49 +0200
-Message-ID: <20190524081049.6obsqdeywmx4io4k@flea>
-References: <74d98cc3c744d53710c841381efd41cf5f15e656.1558605170.git-series.maxime.ripard@bootlin.com>
- <aa5ec90854429c2d9e2c565604243e1b10cfd94b.1558605170.git-series.maxime.ripard@bootlin.com>
- <e39b7a35-3235-6040-b3c1-648897fabc70@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFT PATCH v5 3/5] cpu-topology: Move cpu topology code to
+ common code.
+Date: Fri, 24 May 2019 10:13:33 +0200
+Message-ID: <20190524081333.GA15566@kroah.com>
+References: <20190524000653.13005-1-atish.patra@wdc.com>
+ <20190524000653.13005-4-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nhmqncggqckfikyo"
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e39b7a35-3235-6040-b3c1-648897fabc70@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>, netdev@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190524000653.13005-4-atish.patra@wdc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Atish Patra <atish.patra@wdc.com>
+Cc: linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Will
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 23, 2019 at 05:06:50PM -0700, Atish Patra wrote:
+> Both RISC-V & ARM64 are using cpu-map device tree to describe
+> their cpu topology. It's better to move the relevant code to
+> a common place instead of duplicate code.
+> 
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  arch/arm64/include/asm/topology.h |  23 ---
+>  arch/arm64/kernel/topology.c      | 303 +-----------------------------
+>  drivers/base/arch_topology.c      | 296 +++++++++++++++++++++++++++++
+>  include/linux/arch_topology.h     |  28 +++
+>  include/linux/topology.h          |   1 +
+>  5 files changed, 329 insertions(+), 322 deletions(-)
 
---nhmqncggqckfikyo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+What, now _I_ have to maintain drivers/base/arch_topology.c?  That's
+nice for everyone else, but not me :(
 
-Hi Florian,
+Ugh.
 
-On Thu, May 23, 2019 at 11:16:55AM -0700, Florian Fainelli wrote:
-> On 5/23/19 2:56 AM, Maxime Ripard wrote:
-> > The networking PHYs have a number of available device tree properties that
-> > can be used in their device tree node. Add a YAML schemas for those.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > ---
-> >  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 148 +++++++++-
-> >  Documentation/devicetree/bindings/net/phy.txt           |  80 +-----
-> >  2 files changed, 149 insertions(+), 79 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/net/ethernet-phy.yaml
->
-> Updating the PHY Library section of the MAINTAINERS file to include that
-> binding document (not sure why it was not there) would be nice.
+Anyway, what are you wanting to happen to this series?  I think we need
+some ARM people to sign off on it before I can take the whole thing,
+right?
 
-Sure, I'll do it, thanks!
-Maxime
---nhmqncggqckfikyo--
+thanks,
+
+greg k-h
