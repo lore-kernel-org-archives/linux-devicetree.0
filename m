@@ -1,114 +1,101 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v5 4/5] ARM: dts: da850-evm: enable cpufreq
-Date: Fri, 24 May 2019 18:58:04 +0200
-Message-ID: <CAMRc=Me9hwsLdpDVfs+cb_rqrWs=+bJOa9nEFY+xs_vs5LAXXA@mail.gmail.com>
-References: <20190417152701.23391-1-brgl@bgdev.pl> <20190417152701.23391-5-brgl@bgdev.pl>
- <CAHCN7xKVaYqd5LLvRx7i8ik+JnTFdpexZf2WXt0R2N1W1skOJA@mail.gmail.com> <CAMpxmJW9yWcQ8497OwOhMN8wj-Cmc3-UP7Rh-yoU_uDaQkVVSw@mail.gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v3 0/8] memory: tegra: Introduce Tegra30 EMC driver
+Date: Fri, 24 May 2019 20:23:45 +0300
+Message-ID: <20190524172353.29087-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJW9yWcQ8497OwOhMN8wj-Cmc3-UP7Rh-yoU_uDaQkVVSw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Adam Ford <aford173@gmail.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-wt., 23 kwi 2019 o 11:15 Bartosz Golaszewski
-<bgolaszewski@baylibre.com> napisa=C5=82(a):
->
-> =C5=9Br., 17 kwi 2019 o 19:09 Adam Ford <aford173@gmail.com> napisa=C5=82=
-(a):
-> >
-> > On Wed, Apr 17, 2019 at 10:27 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
-ote:
-> > >
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-> > > tps65070 pmic with configurable output voltage. By default da850-evm
-> > > boards support frequencies up to 375MHz so enable this operating
-> > > point.
-> >
-> > Have you done any testing with the LCD on any of the devices you have?
-> >
-> > I enabled the ondemand governor, and I got a bunch of splat from the
-> > LCD controller:
-> >
-> > tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
-> > differs from the calculated rate (54000000Hz)
-> > tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> > tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> > ... [ snip]
-> > tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
-> > differs from the calculated rate (54000000Hz)
-> > tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
-> > differs from the calculated rate (54000000Hz)
-> > tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> >
-> > It appears to go on forever.  I don't necessarily want to hold it up,
-> > but I don't know the clocking system well enough to know where to go
-> > investigate it.  I can certainly live without ondemand.  Using
-> > userspace as the default governor is fine for me for now.
-> >
-> > adam
->
-> Hi Adam,
->
-> I did test the tilcdc on da850-lcdk. The only message I'm getting
-> during transitions is a single:
->
-> tilcdc <name>: tilcdc_crtc_irq(<address>): FIFO underflow
->
-> but this is fairly normal - we also get this during modeset and it
-> doesn't affect the display.
->
-> The problem with the pixel clock may come from the bootloader - are
-> you using a recent version of u-boot?
->
-> Bart
->
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > Reviewed-by: Adam Ford <aford173@gmail.com>
-> > > ---
-> > >  arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da85=
-0-evm.dts
-> > > index f04bc3e15332..f94bb38fdad9 100644
-> > > --- a/arch/arm/boot/dts/da850-evm.dts
-> > > +++ b/arch/arm/boot/dts/da850-evm.dts
-> > > @@ -191,6 +191,19 @@
-> > >         };
-> > >  };
-> > >
-> > > +&cpu {
-> > > +       cpu-supply =3D <&vdcdc3_reg>;
-> > > +};
-> > > +
-> > > +/*
-> > > + * The standard da850-evm kits and SOM's are 375MHz so enable this o=
-perating
-> > > + * point by default. Higher frequencies must be enabled for custom b=
-oards with
-> > > + * other variants of the SoC.
-> > > + */
-> > > +&opp_375 {
-> > > +       status =3D "okay";
-> > > +};
-> > > +
-> > >  &sata {
-> > >         status =3D "okay";
-> > >  };
-> > > --
-> > > 2.21.0
-> > >
+Hello,
 
-Hi Adam,
+This series introduces driver for the External Memory Controller (EMC)
+found on Tegra30 chips, it controls the external DRAM on the board. The
+purpose of this driver is to program memory timing for external memory on
+the EMC clock rate change. The driver was tested using the ACTMON devfreq
+driver that performs memory frequency scaling based on memory-usage load.
 
-did you figure out the problem by chance? Are you OK with merging this seri=
-es?
+Changelog:
 
-Bart
+v3: - Addressed review comments that were made by Stephen Boyd to v2 by
+      adding explicit typing for the callback variable, by including
+      "clk-provider.h" directly in the code and by dropping __clk_lookup
+      usage where possible.
+
+      Added more patches into this series:
+
+        memory: tegra20-emc: Drop setting EMC rate to max on probe
+        memory: tegra20-emc: Adapt for clock driver changes
+        memory: tegra20-emc: Include io.h instead of iopoll.h
+        memory: tegra20-emc: Replace clk_get_sys with devm_clk_get
+
+      Initially I was going to include these patches into other patchset,
+      but changed my mind after rearranging things a tad. The "Adapt for
+      clock driver changes" patch is directly related to the clock changes
+      done in the first patch of this series, the rest are minor cleanups
+      that are fine to include here as well.
+
+      Added some more words to the commit message of "Add binding for NVIDIA
+      Tegra30 External Memory Controller" patch, clarifying why common DDR
+      timing device-tree form isn't suitable for Tegra30.
+
+      The Tegra30 EMC driver now explicitly selects the registers access
+      mode (EMC_DBG mux), not relying on the setting left from bootloader.
+
+v2: - Added support for changing MC clock diver configuration based on
+      Memory Controller (MC) configuration which is part of the memory
+      timing.
+
+    - Merged the "Add custom EMC clock implementation" patch into this
+      series because the "Introduce Tegra30 EMC driver" patch directly
+      depends on it. Please note that Tegra20 EMC driver will need to be
+      adapted for the clock changes as well, I'll send out the Tegra20
+      patches after this series will be applied because of some other
+      dependencies (devfreq) and because the temporary breakage won't
+      be critical (driver will just error out on probe).
+
+    - EMC driver now performs MC configuration validation by checking
+      that the number of MC / EMC timings matches and that the timings
+      rate is the same.
+
+    - EMC driver now supports timings that want to change the MC clock
+      configuration.
+
+    - Other minor prettifying changes of the code.
+
+Dmitry Osipenko (8):
+  clk: tegra20/30: Add custom EMC clock implementation
+  memory: tegra20-emc: Drop setting EMC rate to max on probe
+  memory: tegra20-emc: Adapt for clock driver changes
+  memory: tegra20-emc: Include io.h instead of iopoll.h
+  memory: tegra20-emc: Replace clk_get_sys with devm_clk_get
+  dt-bindings: memory: Add binding for NVIDIA Tegra30 External Memory
+    Controller
+  memory: tegra: Introduce Tegra30 EMC driver
+  ARM: dts: tegra30: Add External Memory Controller node
+
+ .../memory-controllers/nvidia,tegra30-emc.txt |  249 ++++
+ arch/arm/boot/dts/tegra30.dtsi                |   11 +
+ drivers/clk/tegra/Makefile                    |    2 +
+ drivers/clk/tegra/clk-tegra20-emc.c           |  299 +++++
+ drivers/clk/tegra/clk-tegra20.c               |   55 +-
+ drivers/clk/tegra/clk-tegra30.c               |   38 +-
+ drivers/clk/tegra/clk.h                       |    6 +
+ drivers/memory/tegra/Kconfig                  |   10 +
+ drivers/memory/tegra/Makefile                 |    1 +
+ drivers/memory/tegra/mc.c                     |    3 -
+ drivers/memory/tegra/mc.h                     |   30 +-
+ drivers/memory/tegra/tegra20-emc.c            |   94 +-
+ drivers/memory/tegra/tegra30-emc.c            | 1165 +++++++++++++++++
+ drivers/memory/tegra/tegra30.c                |   44 +
+ include/linux/clk/tegra.h                     |   14 +
+ 15 files changed, 1903 insertions(+), 118 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.txt
+ create mode 100644 drivers/clk/tegra/clk-tegra20-emc.c
+ create mode 100644 drivers/memory/tegra/tegra30-emc.c
+
+-- 
+2.21.0
