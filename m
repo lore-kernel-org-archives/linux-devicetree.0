@@ -1,56 +1,33 @@
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH v3 2/3] media: uapi: Add RGB bus formats for the
- GiantPlus GPM940B0 panel
-Date: Fri, 24 May 2019 09:54:48 -0300
-Message-ID: <20190524095448.5eeddc06@coco.lan>
-References: <20190422093722.4344-1-paul@crapouillou.net>
- <20190422093722.4344-2-paul@crapouillou.net>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH 3/3] hwrng: add mt67xx-rng driver
+Date: Fri, 24 May 2019 20:55:21 +0800
+Message-ID: <20190524125521.5nhulltihs5ivn6d@gondor.apana.org.au>
+References: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com>
+ <1557287937-2410-4-git-send-email-neal.liu@mediatek.com>
+ <12193108.aNnqf5ydOJ@tauon.chronox.de>
+ <1557311737.11818.11.camel@mtkswgap22>
+ <20190509052649.xfkgb3qd7rhcgktj@gondor.apana.org.au>
+ <1557413686.23445.6.camel@mtkswgap22>
+ <20190510063915.kwqy3e5urs6j7ity@gondor.apana.org.au>
+ <1558683754.5671.4.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190422093722.4344-2-paul@crapouillou.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, od@zcrc.me, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hans Verkuil <hansverk@cisco.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1558683754.5671.4.camel@mtkswgap22>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neal Liu <neal.liu@mediatek.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, wsd_upstream <wsd_upstream@mediatek.com>, Stephan Mueller <smueller@chronox.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "mpm@selenic.com" <mpm@selenic.com>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, Crystal Guo =?utf-8?B?KOmDreaZtik=?= <Crystal.Guo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-RW0gTW9uLCAyMiBBcHIgMjAxOSAxMTozNzoyMSArMDIwMApQYXVsIENlcmN1ZWlsIDxwYXVsQGNy
-YXBvdWlsbG91Lm5ldD4gZXNjcmV2ZXU6Cgo+IFRoZSBHaWFudFBsdXMgR1BNOTQwQjAgaXMgYSAy
-NC1iaXQgVEZUIHBhbmVsIHdoZXJlIHRoZSBSR0IgY29tcG9uZW50cwo+IGFyZSB0cmFuc2ZlcnJl
-ZCBzZXF1ZW50aWFsbHkgb24gYSA4LWJpdCBidXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogUGF1bCBD
-ZXJjdWVpbCA8cGF1bEBjcmFwb3VpbGxvdS5uZXQ+Cj4gLS0tCj4gCj4gTm90ZXM6Cj4gICAgIHYy
-OiBOZXcgcGF0Y2gKPiAgICAgCj4gICAgIHYzOiBObyBjaGFuZ2UKPiAKPiAgaW5jbHVkZS91YXBp
-L2xpbnV4L21lZGlhLWJ1cy1mb3JtYXQuaCB8IDQgKysrLQo+ICAxIGZpbGUgY2hhbmdlZCwgMyBp
-bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvdWFw
-aS9saW51eC9tZWRpYS1idXMtZm9ybWF0LmggYi9pbmNsdWRlL3VhcGkvbGludXgvbWVkaWEtYnVz
-LWZvcm1hdC5oCj4gaW5kZXggZDZhNWEzYmZlNmM0Li5mMzE3MjRkNmNkNDAgMTAwNjQ0Cj4gLS0t
-IGEvaW5jbHVkZS91YXBpL2xpbnV4L21lZGlhLWJ1cy1mb3JtYXQuaAo+ICsrKyBiL2luY2x1ZGUv
-dWFwaS9saW51eC9tZWRpYS1idXMtZm9ybWF0LmgKPiBAQCAtMzQsNyArMzQsNyBAQAo+ICAKPiAg
-I2RlZmluZSBNRURJQV9CVVNfRk1UX0ZJWEVECQkJMHgwMDAxCj4gIAo+IC0vKiBSR0IgLSBuZXh0
-IGlzCTB4MTAxYiAqLwo+ICsvKiBSR0IgLSBuZXh0IGlzCTB4MTAxZCAqLwo+ICAjZGVmaW5lIE1F
-RElBX0JVU19GTVRfUkdCNDQ0XzFYMTIJCTB4MTAxNgo+ICAjZGVmaW5lIE1FRElBX0JVU19GTVRf
-UkdCNDQ0XzJYOF9QQURISV9CRQkweDEwMDEKPiAgI2RlZmluZSBNRURJQV9CVVNfRk1UX1JHQjQ0
-NF8yWDhfUEFESElfTEUJMHgxMDAyCj4gQEAgLTU0LDYgKzU0LDggQEAKPiAgI2RlZmluZSBNRURJ
-QV9CVVNfRk1UX1JHQjg4OF8xWDI0CQkweDEwMGEKPiAgI2RlZmluZSBNRURJQV9CVVNfRk1UX1JH
-Qjg4OF8yWDEyX0JFCQkweDEwMGIKPiAgI2RlZmluZSBNRURJQV9CVVNfRk1UX1JHQjg4OF8yWDEy
-X0xFCQkweDEwMGMKPiArI2RlZmluZSBNRURJQV9CVVNfRk1UX1JHQjg4OF8zWDhfQkUJCTB4MTAx
-Ygo+ICsjZGVmaW5lIE1FRElBX0JVU19GTVRfUkdCODg4XzNYOF9MRQkJMHgxMDFjCj4gICNkZWZp
-bmUgTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVg3WDRfU1BXRwkJMHgxMDExCj4gICNkZWZpbmUgTUVE
-SUFfQlVTX0ZNVF9SR0I4ODhfMVg3WDRfSkVJREEJMHgxMDEyCj4gICNkZWZpbmUgTUVESUFfQlVT
-X0ZNVF9BUkdCODg4OF8xWDMyCQkweDEwMGQKCllvdSBzaG91bGQgYWxzbyBwYXRjaCB0aGUgZG9j
-dW1lbnRhdGlvbiB0ZXh0IGF0OgoKCURvY3VtZW50YXRpb24vbWVkaWEvdWFwaS92NGwvc3ViZGV2
-LWZvcm1hdHMucnN0CgpJbiBvcmRlciB0byBkZXNjcmliZSB0aGUgbmV3IGZvcm1hdHMgdGhhdCB3
-aWxsIGJlIGluY2x1ZGVkLgoKKGFsc28gcGF0Y2ggbmVlZHMgdG8gYmUgcmViYXNlZCwgYXMgaXQg
-Y29uZmxpY3RzIHRvIHNvbWUgb3RoZXIKbmV3IGZvcm1hdHMgYWRkZWQgdGhlcmUpCgpUaGFua3Ms
-Ck1hdXJvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Fri, May 24, 2019 at 03:42:34PM +0800, Neal Liu wrote:
+> Hi Herbert,
+> 	Could you kindly help to review our patches?
+
+You need acks for patches 1 and 2.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
