@@ -1,54 +1,58 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 3/3] arm64: dts: imx8mq: add clock for SNVS RTC node
-Date: Fri, 24 May 2019 05:52:21 +0000
-Message-ID: <DB3PR0402MB391655657A8BE5E812F01C8FF5020@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1557882259-3353-1-git-send-email-Anson.Huang@nxp.com>
- <1557882259-3353-3-git-send-email-Anson.Huang@nxp.com>
- <20190523010243.GD16359@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: peng.fan@nxp.com
+Subject: [PATCH V3 RESEND AGAIN 2/2] arm64: dts: imx: add i.MX8QXP ocotp support
+Date: Fri, 24 May 2019 14:39:13 +0800
+Message-ID: <20190524063913.44171-2-peng.fan@nxp.com>
+References: <20190524063913.44171-1-peng.fan@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190523010243.GD16359@dragon>
-Content-Language: en-US
+In-Reply-To: <20190524063913.44171-1-peng.fan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vge>
+To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com
+Cc: linux-imx@nxp.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, van.freenix@gmail.com, Peng Fan <peng.fan@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFNoYXduDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24g
-R3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogVGh1cnNkYXksIE1heSAy
-MywgMjAxOSA5OjAzIEFNDQo+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4N
-Cj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHMuaGF1ZXJA
-cGVuZ3V0cm9uaXguZGU7DQo+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwu
-Y29tOyBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsNCj4gc2JveWRAa2VybmVsLm9yZzsgbC5zdGFj
-aEBwZW5ndXRyb25peC5kZTsgQWJlbCBWZXNhDQo+IDxhYmVsLnZlc2FAbnhwLmNvbT47IGFuZHJl
-dy5zbWlybm92QGdtYWlsLmNvbTsgY2NhaW9uZUBiYXlsaWJyZS5jb207DQo+IGFuZ3VzQGFra2Vh
-LmNhOyBhZ3hAc2lneGNwdS5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
-cm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC0NCj4gY2xrQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51
-eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAzLzNdIGFybTY0OiBkdHM6IGlt
-eDhtcTogYWRkIGNsb2NrIGZvciBTTlZTIFJUQyBub2RlDQo+IA0KPiBPbiBXZWQsIE1heSAxNSwg
-MjAxOSBhdCAwMTowOTozNkFNICswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiBpLk1YOE1R
-IGhhcyBjbG9jayBnYXRlIGZvciBTTlZTIG1vZHVsZSwgYWRkIGNsb2NrIGluZm8gdG8gU05WUyBS
-VEMNCj4gPiBub2RlIGZvciBjbG9jayBtYW5hZ2VtZW50Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
-eTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IA0KPiBUaGlzIG9uZSBzdGls
-bCBoYXMgcHJvYmxlbSB3aXRoIGVuY29kaW5nIGFuZCB0aHVzIGNhbm5vdCBiZSBhcHBsaWVkLg0K
-PiBIZXJlIGlzIHdoYXQgSSBnZXQsIGFuZCB0aGVyZSBpcyAnPTIwJyBpbiB0aGUgcGF0Y2ggY29u
-dGVudC4NCg0KV2Ugc3dpdGNoIHRvIGFub3RoZXIgc2VydmVyIHdoaWNoIGhhcyBubyBzdWNoIGlz
-c3VlLCBJIHJlc2VudCB0aGUgcGF0Y2gsDQpQbGVhc2UgcGljayB1cCB0aGlzIG9uZSwgc29ycnkg
-Zm9yIHRoZSBpbmNvbnZlbmllbmNlLg0KDQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
-dGNoLzEwOTU5MDk3Lw0KDQp0aGFua3MsDQpBbnNvbi4NCg0KPiANCj4gZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpDQo+IGIvYXJjaC9hcm02NC9i
-b290L2R0PSBzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaSBpbmRleCBlNWYzMTMzLi5iNzA2ZGU4DQo+
-IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRz
-aQ0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQ0KPiBA
-QCAtNDM4LDYgKzQzOCw4IEBADQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBvZmZzZXQgPTNEIDwweDM0PjsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGludGVycnVwdHMgPTNEIDxHSUNfU1BJIDE5IElSUV9UWVBFX0xFVkVMX0hJR0g+
-LA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lD
-X1NQSSAyMCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIGNsb2NrcyA9M0QgPCZjbGsgSU1YOE1RX0NMS19TTlZTX1JPT1Q+Ow0K
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPTNE
-ICJzbnZzLXJ0YyI7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPTIwDQo+IC0tPTIwDQo+IDIuNy40DQoNCg==
+From: Peng Fan <peng.fan@nxp.com>
+
+Add i.MX8QXP ocotp node
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Anson Huang <anson.huang@nxp.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+
+V3:
+ Add R-b tag
+V2:
+ move address/size-cells below compatible, add "scu"
+
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index 0683ee2a48ae..725d341ee160 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -141,6 +141,12 @@
+ 			compatible = "fsl,imx8qxp-iomuxc";
+ 		};
+ 
++		ocotp: imx8qx-ocotp {
++			compatible = "fsl,imx8qxp-scu-ocotp";
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
++
+ 		pd: imx8qx-pd {
+ 			compatible = "fsl,imx8qxp-scu-pd";
+ 			#power-domain-cells = <1>;
+-- 
+2.16.4
