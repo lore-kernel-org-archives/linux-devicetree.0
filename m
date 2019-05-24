@@ -1,293 +1,93 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] arm64: dts: meson: sei510: add sound card
-Date: Fri, 24 May 2019 16:03:18 +0200
-Message-ID: <20190524140318.17608-3-jbrunet@baylibre.com>
-References: <20190524140318.17608-1-jbrunet@baylibre.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH V7 04/15] PCI: dwc: Move config space capability search
+ API
+Date: Fri, 24 May 2019 20:16:04 +0530
+Message-ID: <fcd437d6-1bf8-9247-9453-d7769f430cb7@nvidia.com>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-5-vidyas@nvidia.com> <20190521211757.GF57618@google.com>
+ <fd164d1f-cf99-fe81-c368-46e3a3742a59@nvidia.com>
+ <20190522140235.GB79339@google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190524140318.17608-1-jbrunet@baylibre.com>
+In-Reply-To: <20190522140235.GB79339@google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Enable the sound card on the sei510:
-* TDM interface A is connected to an external DAC and a speaker installed
-  on the device.
-* HDMI is expected to use TDM B. It can also use TDM A but will be
-  limited to 2 channels, as accepted by the external DAC.
-* 2 Built in PDM mics through the PDM interface.
-* Both TDM outputs may use HW loopback.
+On 5/22/2019 7:32 PM, Bjorn Helgaas wrote:
+> On Wed, May 22, 2019 at 02:26:08PM +0530, Vidya Sagar wrote:
+>> On 5/22/2019 2:47 AM, Bjorn Helgaas wrote:
+>>> On Fri, May 17, 2019 at 06:08:35PM +0530, Vidya Sagar wrote:
+>>>> Move PCIe config space capability search API to common DesignWare file
+>>>> as this can be used by both host and ep mode codes.
+> 
+>>>>    .../pci/controller/dwc/pcie-designware-ep.c   | 37 +----------------
+>>>>    drivers/pci/controller/dwc/pcie-designware.c  | 40 +++++++++++++++++++
+>>>>    drivers/pci/controller/dwc/pcie-designware.h  |  2 +
+>>>>    3 files changed, 44 insertions(+), 35 deletions(-)
+> 
+>>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>>>> @@ -14,6 +14,46 @@
+>>>>    #include "pcie-designware.h"
+>>>> +/*
+>>>> + * These APIs are different from standard pci_find_*capability() APIs in the
+>>>> + * sense that former can only be used post device enumeration as they require
+>>>> + * 'struct pci_dev *' pointer whereas these APIs require 'struct dw_pcie *'
+>>>> + * pointer and can be used before link up also.
+>>>
+>>> I think this comment is slightly misleading because it suggests the
+>>> reason we need these DW interfaces is because we're doing something
+>>> before a pci_dev pointer is available.
+>>>
+>>> But these DW interfaces are used on devices that will *never* have a
+>>> pci_dev pointer because they are not PCI devices.  They're used on
+>>> host controller devices, which have a PCIe link on the downstream
+>>> side, but the host controller driver operates them using their
+>>> upstream, non-PCI interfaces.  Logically, I think they would be
+>>> considered parts of Root Complexes, not Root Ports.
+>>>
+>>> There's actually no reason why that upstream interface should look
+>>> anything like PCI; it doesn't need to organize registers into
+>>> capability lists at all.  It might be convenient for the hardware to
+>>> do that and share things with a Root Port device, which *is* a PCI
+>>> device, but it's not required.
+>>>
+>>> It also really has nothing to do with whether the link is up.  This
+>>> code operates on hardware that is upstream from the link, so we can
+>>> reach it regardless of the link.
+>>
+>> I added this comment after receiving a review comment to justify why
+>> standard pci_find_*capability() APIs can't be used here. Hence added
+>> this.  I understand your comment that DW interface need not have to
+>> be a PCI device, but what is present in the hardware is effectively
+>> a root port implementation and post enumeration, we get a 'struct
+>> pci_dev' created for it, hence I thought it is fine to bring 'struct
+>> pci_dev' into picture.
+> 
+> This code operates on the host controller.  It configures the bridge
+> that leads *to* PCI devices.  Since that bridge is not a PCI device,
+> the PCI specs don't say anything about how to program it.
+> 
+> The fact that the host controller programming interface happens to
+> resemble the PCI programming interface is purely coincidental.
+> 
+>> Also, I agree that mention of 'link up' is unwarranted and could be
+>> reworded in a better way.
+>>
+>> Do you suggest to remove this comment altogether or reword it s/and
+>> can be used before link up also/and can be used before 'struct
+>> pci_dev' is available/ ?
+> 
+> Maybe something like this?
+> 
+>      These interfaces resemble the pci_find_*capability() interfaces,
+>      but these are for configuring host controllers, which are bridges
+>      *to* PCI devices but are not PCI devices themselves.
+Ok. Done.
 
-The internal DAC connected to audio jack will be added later on, when
-driver support is added.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../boot/dts/amlogic/meson-g12a-sei510.dts    | 202 +++++++++++++++++-
- 1 file changed, 201 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-index c6d032ed9a8b..9275df73c9f0 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-@@ -9,6 +9,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/meson-g12a-gpio.h>
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
- 
- / {
- 	compatible = "seirobotics,sei510", "amlogic,g12a";
-@@ -32,13 +33,22 @@
- 		ethernet0 = &ethmac;
- 	};
- 
--	mono_dac: audio-codec {
-+	mono_dac: audio-codec-0 {
- 		compatible = "maxim,max98357a";
- 		#sound-dai-cells = <0>;
- 		sound-name-prefix = "U16";
- 		sdmode-gpios = <&gpio GPIOX_8 GPIO_ACTIVE_HIGH>;
- 	};
- 
-+	dmics: audio-codec-1 {
-+		#sound-dai-cells = <0>;
-+		compatible = "dmic-codec";
-+		num-channels = <2>;
-+		wakeup-delay-ms = <50>;
-+		status = "okay";
-+		sound-name-prefix = "MIC";
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -135,6 +145,124 @@
- 			no-map;
- 		};
- 	};
-+
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "G12A-SEI510";
-+		audio-aux-devs = <&tdmout_a>, <&tdmout_b>,
-+				 <&tdmin_a>, <&tdmin_b>;
-+		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
-+				"TDMOUT_A IN 1", "FRDDR_B OUT 0",
-+				"TDMOUT_A IN 2", "FRDDR_C OUT 0",
-+				"TDM_A Playback", "TDMOUT_A OUT",
-+				"TDMOUT_B IN 0", "FRDDR_A OUT 1",
-+				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-+				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-+				"TDM_B Playback", "TDMOUT_B OUT",
-+				"TODDR_A IN 4", "PDM Capture",
-+				"TODDR_B IN 4", "PDM Capture",
-+				"TODDR_C IN 4", "PDM Capture",
-+				"TDMIN_A IN 0", "TDM_A Capture",
-+				"TDMIN_A IN 3", "TDM_A Loopback",
-+				"TDMIN_B IN 0", "TDM_A Capture",
-+				"TDMIN_B IN 3", "TDM_A Loopback",
-+				"TDMIN_A IN 1", "TDM_B Capture",
-+				"TDMIN_A IN 4", "TDM_B Loopback",
-+				"TDMIN_B IN 1", "TDM_B Capture",
-+				"TDMIN_B IN 4", "TDM_B Loopback",
-+				"TODDR_A IN 0", "TDMIN_A OUT",
-+				"TODDR_B IN 0", "TDMIN_A OUT",
-+				"TODDR_C IN 0", "TDMIN_A OUT",
-+				"TODDR_A IN 1", "TDMIN_B OUT",
-+				"TODDR_B IN 1", "TDMIN_B OUT",
-+				"TODDR_C IN 1", "TDMIN_B OUT";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		dai-link-3 {
-+			sound-dai = <&toddr_a>;
-+		};
-+
-+		dai-link-4 {
-+			sound-dai = <&toddr_b>;
-+		};
-+
-+		dai-link-5 {
-+			sound-dai = <&toddr_c>;
-+		};
-+
-+		/* internal speaker interface */
-+		dai-link-6 {
-+			sound-dai = <&tdmif_a>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&mono_dac>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_A>;
-+			};
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-7 {
-+			sound-dai = <&tdmif_b>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec@0 {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
-+			};
-+		};
-+
-+		/* internal digital mics */
-+		dai-link-8 {
-+			sound-dai = <&pdm>;
-+
-+			codec {
-+				sound-dai = <&dmics>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-9 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+};
-+
-+&arb {
-+	status = "okay";
- };
- 
- &cec_AO {
-@@ -151,6 +279,10 @@
- 	hdmi-phandle = <&hdmi_tx>;
- };
- 
-+&clkc_audio {
-+	status = "okay";
-+};
-+
- &cvbs_vdac_port {
- 	cvbs_vdac_out: endpoint {
- 		remote-endpoint = <&cvbs_connector_in>;
-@@ -163,6 +295,18 @@
- 	phy-mode = "rmii";
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
- &hdmi_tx {
- 	status = "okay";
- 	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
-@@ -181,6 +325,14 @@
- 	pinctrl-names = "default";
- };
- 
-+&pdm {
-+	pinctrl-0 = <&pdm_din0_z_pins>, <&pdm_din1_z_pins>,
-+		    <&pdm_din2_z_pins>, <&pdm_din3_z_pins>,
-+		    <&pdm_dclk_z_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
- &saradc {
- 	status = "okay";
- 	vref-supply = <&vddio_ao1v8>;
-@@ -223,6 +375,54 @@
- 	vqmmc-supply = <&emmc_1v8>;
- };
- 
-+&tdmif_a {
-+	pinctrl-0 = <&tdm_a_dout0_pins>, <&tdm_a_fs_pins>, <&tdm_a_sclk_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	assigned-clocks = <&clkc_audio AUD_CLKID_TDM_SCLK_PAD0>,
-+			  <&clkc_audio AUD_CLKID_TDM_LRCLK_PAD0>;
-+	assigned-clock-parents = <&clkc_audio AUD_CLKID_MST_A_SCLK>,
-+				 <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
-+	assigned-clock-rates = <0>, <0>;
-+};
-+
-+&tdmif_b {
-+	status = "okay";
-+};
-+
-+&tdmin_a {
-+	status = "okay";
-+};
-+
-+&tdmin_b {
-+	status = "okay";
-+};
-+
-+&tdmout_a {
-+	status = "okay";
-+};
-+
-+&tdmout_b {
-+	status = "okay";
-+};
-+
-+&toddr_a {
-+	status = "okay";
-+};
-+
-+&toddr_b {
-+	status = "okay";
-+};
-+
-+&toddr_c {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
-+
- &uart_A {
- 	status = "okay";
- 	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
--- 
-2.20.1
+> 
