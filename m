@@ -1,79 +1,235 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Date: Fri, 24 May 2019 07:29:20 -0500
-Message-ID: <CAL_Jsq+evXqKKyXLFbE+9o8X5BA9NWmcjvZ9-Y1Y7-pwcu8nJg@mail.gmail.com>
-References: <20190509070657.18281-1-chuanhua.han@nxp.com> <20190517023728.GA15856@dragon>
- <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB58631458E6D851E4D83A77ED8F070@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435708872A4DBA92561C772597000@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB5863FA1CE6D1E40F11B2E5008F000@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB4357072E079BDD8D1866595797020@AM6PR04MB4357.eurprd04.prod.outlook.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+Date: Fri, 24 May 2019 15:44:45 +0300
+Message-ID: <20190524124445.GP1887@kuha.fi.intel.com>
+References: <20190520080359.GC1887@kuha.fi.intel.com>
+ <OSBPR01MB2103385D996762FA54F8E437B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <20190520083601.GE1887@kuha.fi.intel.com>
+ <OSBPR01MB2103C4C8920C40E42BC1B2A9B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <20190521095839.GI1887@kuha.fi.intel.com>
+ <OSBPR01MB21032206146152983C8F4E8EB8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <1558517436.10179.388.camel@mhfsdcap03>
+ <OSBPR01MB21038F2B99EF74831A22727BB8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <20190522142640.GN1887@kuha.fi.intel.com>
+ <OSBPR01MB2103B669C24E9E261B4AFA73B8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM6PR04MB4357072E079BDD8D1866595797020@AM6PR04MB4357.eurprd04.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB2103B669C24E9E261B4AFA73B8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chuanhua Han <chuanhua.han@nxp.com>
-Cc: Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ying Zhang <ying.zhang22455@nxp.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.i>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2019 at 4:48 AM Chuanhua Han <chuanhua.han@nxp.com> wrote:
->
-> Hi, Rob Herring
->
-> > -----Original Message-----
-> > From: Leo Li
-> > Sent: 2019=E5=B9=B45=E6=9C=8822=E6=97=A5 14:50
-
-
-> > > > > > > > > -             wdog0: watchdog@23c0000 {
-> > > > > > > > > -                     compatible =3D "fsl,ls1028a-wdt",
-> > > > "fsl,imx21-wdt";
-> > > > > > > > > -                     reg =3D <0x0 0x23c0000 0x0 0x10000>=
-;
-> > > > > > > > > -                     interrupts =3D <GIC_SPI 59
-> > > > > > IRQ_TYPE_LEVEL_HIGH>;
-> > > > > > > > > -                     clocks =3D <&clockgen 4 1>;
-> > > > > > > > > -                     big-endian;
-> > > > > > > > > -                     status =3D "disabled";
-> > > > > > > > > +             cluster1_core0_watchdog: wdt@c000000 {
-> > > > > > > >
-> > > > > > > > Keep 'watchdog' as the node name,
-> > > > > > > Thanks for your replay
-> > > > > > > Do you mean replace the =E2=80=98wdt=E2=80=99 with =E2=80=98w=
-atchdog=E2=80=99?
-> > > > > > > and keep nodes sort in unit-address.
-> > > > > > > What does this mean?
-> > > > > >
-> > > > > > That means order the nodes by the addresses (e.g. c000000,
-> > > > > > c010000)
-> > > > > The current order is correct=EF=BC=88The first is c000000, then c=
-000000=EF=BC=89.
+On Wed, May 22, 2019 at 02:57:33PM +0000, Biju Das wrote:
+> Hi Heikki,
+> 
+> Thanks for the patch
+> 
+> > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
+> > node
+> > 
+> > On Wed, May 22, 2019 at 10:55:17AM +0000, Biju Das wrote:
+> > > Hi Chunfeng Yun,
+> > >
+> > > Thanks for the feedback.
+> > >
+> > > > Subject: RE: [PATCH v5 4/6] usb: roles: add API to get
+> > > > usb_role_switch by node
 > > > >
-> > > > But they are added after gpio@2320000 and before sata@3200000.
-> > > I changed and made the second version of the patch, but I found the
-> > > following error when I executed ./scripts/checkpatch.pl xxx.patch to
-> > > check the patch:
+> > > > Hi Biju,
+> > > > On Wed, 2019-05-22 at 08:05 +0000, Biju Das wrote:
+> > > > > Hi Heikki,
+> > > > >
+> > > > > Thanks for the feedback.
+> > > > >
+> > > > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
+> > > > > > usb_role_switch by node
+> > > > > >
+> > > > > > On Mon, May 20, 2019 at 09:45:46AM +0000, Biju Das wrote:
+> > > > > > >
+> > > > > > >
+> > > > > > > Hi Heikki,
+> > > > > > >
+> > > > > > > Thanks for the feedback.
+> > > > > > >
+> > > > > > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
+> > > > > > > > usb_role_switch by node
+> > > > > > > >
+> > > > > > > > On Mon, May 20, 2019 at 08:06:41AM +0000, Biju Das wrote:
+> > > > > > > > > Hi Heikki,
+> > > > > > > > >
+> > > > > > > > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
+> > > > > > > > > > usb_role_switch by node
+> > > > > > > > > >
+> > > > > > > > > > On Mon, May 20, 2019 at 10:39:11AM +0800, Chunfeng Yun
+> > wrote:
+> > > > > > > > > > > Hi,
+> > > > > > > > > > > On Fri, 2019-05-17 at 16:05 +0300, Heikki Krogerus wrote:
+> > > > > > > > > > > > Hi,
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki
+> > > > > > > > > > > > Krogerus
+> > > > wrote:
+> > > > > > > > > > > > > On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng
+> > > > > > > > > > > > > Yun
+> > > > > > wrote:
+> > > > > > > > > > > > > > Add fwnode_usb_role_switch_get() to make easier
+> > > > > > > > > > > > > > to get usb_role_switch by fwnode which register it.
+> > > > > > > > > > > > > > It's useful when there is not device_connection
+> > > > > > > > > > > > > > registered between two drivers and only knows
+> > > > > > > > > > > > > > the fwnode which register usb_role_switch.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Signed-off-by: Chunfeng Yun
+> > > > > > > > > > > > > > <chunfeng.yun@mediatek.com>
+> > > > > > > > > > > > > > Tested-by: Biju Das <biju.das@bp.renesas.com>
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Acked-by: Heikki Krogerus
+> > > > > > > > > > > > > <heikki.krogerus@linux.intel.com>
+> > > > > > > > > > > >
+> > > > > > > > > > > > Hold on. I just noticed Rob's comment on patch 2/6,
+> > > > > > > > > > > > where he points out that you don't need to use
+> > > > > > > > > > > > device graph since the controller is the parent of
+> > > > > > > > > > > > the connector. Doesn't that mean you don't really need
+> > this API?
+> > > > > > > > > > > No, I still need it.
+> > > > > > > > > > > The change is about the way how to get fwnode; when
+> > > > > > > > > > > use device graph, get fwnode by
+> > > > > > > > > > > of_graph_get_remote_node(); but now will get fwnode by
+> > > > > > > > > > > of_get_parent();
+> > > > > > > > > >
+> > > > > > > > > > OK, I get that, but I'm still not convinced about if
+> > > > > > > > > > something like this function is needed at all. I also
+> > > > > > > > > > have concerns regarding how you are using the function.
+> > > > > > > > > > I'll explain in comment to the patch 5/6 in this
+> > > > > > > > series...
+> > > > > > > > >
+> > > > > > > > > FYI, Currently  I am also using this api in my patch series.
+> > > > > > > > > https://patchwork.kernel.org/patch/10944637/
+> > > > > > > >
+> > > > > > > > Yes, and I have the same question for you I jusb asked in
+> > > > > > > > comment I added to the patch 5/6 of this series. Why isn't
+> > > > > > > > usb_role_switch_get()
+> > > > > > enough?
+> > > > > > >
+> > > > > > > Currently no issue. It will work with this api as well, since
+> > > > > > > the port node is
+> > > > > > part of controller node.
+> > > > > > > For eg:-
+> > > > > > > https://patchwork.kernel.org/patch/10944627/
+> > > > > > >
+> > > > > > > However if any one adds port node inside the connector node,
+> > > > > > > then this
+> > > > > > api may won't work as expected.
+> > > > > > > Currently I get below error
+> > > > > > >
+> > > > > > > [    2.299703] OF: graph: no port node found in
+> > > > > > /soc/i2c@e6500000/hd3ss3220@47
+> > > > > >
+> > > > > > We need to understand why is that happening?
+> > > > > >
+> > > > >
+> > > > > Form the stack trace  the parent node is
+> > > > > "parent_node=hd3ss3220@47" ,
+> > > > instead of the "connector" node.
+> > > > > That is the reason for the above error.
+> > > > >
+> > > > > [    2.442429]  of_graph_get_next_endpoint.part.0+0x28/0x168
+> > > > > [    2.447889]  of_fwnode_graph_get_next_endpoint+0x5c/0xb0
+> > > > > [    2.453267]  fwnode_graph_get_next_endpoint+0x20/0x30
+> > > > > [    2.458374]  device_connection_find_match+0x74/0x1a0
+> > > > > [    2.463399]  usb_role_switch_get+0x20/0x28
+> > > > > [    2.467542]  hd3ss3220_probe+0xc4/0x218
+> > > > >
+> > > > > The use case is
+> > > > >
+> > > > > &i2c0 {
+> > > > > 	hd3ss3220@47 {
+> > > > >                  	compatible = "ti,hd3ss3220";
+> > > > >
+> > > > >                  	usb_con: connector {
+> > > > >                           		compatible = "usb-c-connector";
+> > > > >                          		port {
+> > > > >                                 		 hd3ss3220_ep: endpoint {
+> > > > >                                         			remote-endpoint =
+> > > > <&usb3_role_switch>;
+> > > > >                                 		};
+> > > > >                          		};
+> > > > >                 	 };
+> > > > > 	 };
+> > > > > };
+> > > > >
+> > > > > &usb3_peri0 {
+> > > > >          companion = <&xhci0>;
+> > > > >          usb-role-switch;
+> > > > >
+> > > > >          port {
+> > > > >                 usb3_role_switch: endpoint {
+> > > > >                         remote-endpoint = <&hd3ss3220_ep>;
+> > > > >                  };
+> > > > >          };
+> > > > > };
+> > > > >
+> > > > > Q1) How do we modify the usb_role_switch_get() function to search
+> > > > > Child(connector) and child's endpoint?
+> > > > How about firstly finding connector node in
+> > > > fwnode_graph_devcon_match(), then search each endpoint?
 > > >
-> > > WARNING: DT compatible string vendor "arm" appears un-documented --
-> > > check ./Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > #43: FILE: arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi:351:
-> > > + compatible =3D "arm,sp805", "arm,primecell";
+> > >  I have done a quick prototyping with the changes you suggested and it
+> > works.
 > > >
-> > > However, there is no vendor-prefixes.txt file in the
-> > > ./Documentation/devicetree/bindings/ directory, only vendor-
-> > > prefixes.yaml.
-> > > Moreover, there are =E2=80=98arm=E2=80=99 vendors in vendor-prefixes.=
-yaml.
-> >
-> > Added Rob Herring to the thread.
-> >
-> > > Request help=EF=BC=8Cthanks
-> How can I solve this patch check error? Ask for help, thank you!
+> > > -       struct fwnode_handle *ep;
+> > > +       struct fwnode_handle *ep,*child,*tmp = fwnode;
+> > >
+> > > -       fwnode_graph_for_each_endpoint(fwnode, ep) {
+> > > +       child = fwnode_get_named_child_node(fwnode, "connector");
+> > > +       if (child)
+> > > +               tmp = child;
+> > > +
+> > > +       fwnode_graph_for_each_endpoint(tmp, ep) {
+> > >
+> > > Form the stack trace  the parent node is "parent_node= connector" .
+> > >
+> > > [    2.440922]  of_graph_get_next_endpoint.part.0+0x28/0x168
+> > > [    2.446381]  of_fwnode_graph_get_next_endpoint+0x5c/0xb0
+> > > [    2.451758]  fwnode_graph_get_next_endpoint+0x20/0x30
+> > > [    2.456866]  device_connection_find_match+0x84/0x1c0
+> > > [    2.461888]  usb_role_switch_get+0x20/0x28
+> > >
+> > > Heikki,
+> > > Are you ok  with the above changes?
+> > 
+> > Doesn't that mean that if we made fwnode_usb_role_switch_get() the way I
+> > proposed, there is no problem? You just find the "connector" child node in
+> > your driver, and pass that to fwnode_usb_role_switch_get():
+> 
+> Yes, That is correct.
+> 
+> >         struct fwnode_handle *connector;
+> >         ...
+> >         connector = device_get_named_child_node(&client->dev, "connector");
+> >         if (IS_ERR(connector))
+> >                 <do something>
+> > 
+> >         hd3ss3220->role_sw = fwnode_usb_role_switch_get(connector);
+> >         ...
+> > 
+> > The difference is that instead of just converting a device node of an usb role
+> > switch to the usb role switch, it works just like usb_role_switch_get(), just
+> > taking fwnode instead of device entry as parameter.
+> > 
+> > I prepared the patches implementing fwnode_usb_role_switch_get() the
+> > way I though it needs to work for my own tests. Please find the patches
+> > attached.
+> 
+> I have tested  this patches and conform it works. 
+> Do you plan to post this patches to ML? 
 
-Ignore it. A fix to checkpatch.pl is pending.
+Could make them part of this series?
 
-Rob
+
+thanks,
+
+-- 
+heikki
