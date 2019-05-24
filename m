@@ -1,48 +1,61 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/6] crypto: atmel-ecc: add support for ACPI probing on
- non-AT91 platforms
-Date: Fri, 24 May 2019 23:52:04 +0200
-Message-ID: <CACRpkdZsd+f6ajGKu71y13D7_6aEM_x6d4bJ0dLtGv7GmUYujg@mail.gmail.com>
-References: <20190524162651.28189-1-ard.biesheuvel@linaro.org>
- <20190524162651.28189-3-ard.biesheuvel@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 04/12] dt-binding: gce: add binding for gce event
+ property
+Date: Fri, 24 May 2019 16:54:07 -0500
+Message-ID: <20190524215407.GA7214@bogus>
+References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
+ <20190516090224.59070-5-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190524162651.28189-3-ard.biesheuvel@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Tudor Ambarus <tudor.ambarus@microchip.com>, linux-crypto@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190516090224.59070-5-bibby.hsieh@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, CK HU <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2019 at 6:27 PM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
+On Thu, May 16, 2019 at 05:02:16PM +0800, Bibby Hsieh wrote:
+> Client hardware would send event to GCE hardware,
+> mediatek,gce-event-names and mediatek,gce-events
 
-> The Atmel/Microchip EC508A is a I2C device that could be wired into
-> any platform, and is being used on the Linaro/96boards Secure96
-> mezzanine adapter. This means it could be found on any platform, even
-> on ones that use ACPI enumeration (via PRP0001 devices). So update the
-> code to enable this use case.
->
-> This involves tweaking the bus rate discovery code to take ACPI probing
-> into account, which records the maximum bus rate as a property of the
-> slave device. For the atmel-ecc code, this means that the effective bus
-> rate should never exceed the maximum rate, unless we are dealing with
-> buggy firmware. Nonetheless, let's just use the existing plumbing to
-> discover the bus rate and keep the existing logic intact.
->
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+We removed mediatek,gce-event-names?
 
-Looks good to me.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> can be used to present the event.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> index dceab63ccd06..265bb58da7bd 100644
+> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> @@ -35,6 +35,8 @@ Required properties for a client device:
+>  Optional properties for a client device:
+>  - mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
+>    to the register address.
+> +- mediatek,gce-events: u32, the event number defined in
+> +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
 
-Yours,
-Linus Walleij
+This and the example don't match. Is it an u32 or an array of u32? If 
+the latter, how many elements?
+
+>  
+>  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+>  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
+> @@ -57,8 +59,8 @@ Example for a client device:
+>  		compatible = "mediatek,mt8173-mmsys";
+>  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+>  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+> -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+> -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> +		mediatek,gce-events = <CMDQ_EVENT_MDP_RDMA0_SOF>,
+> +				      <CMDQ_EVENT_MDP_RSZ0_SOF>;
+>  		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
+>  					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
+>  		...
+> -- 
+> 2.18.0
+> 
