@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 2/5] dt-bindings: vendor: Fix simtek vendor compatible
-Date: Sat, 25 May 2019 15:41:37 +0200
-Message-ID: <20190525134140.6220-2-maxime.ripard@bootlin.com>
+Subject: [PATCH 5/5] ARM: dts: gr8-evb: Fix RTC vendor
+Date: Sat, 25 May 2019 15:41:40 +0200
+Message-ID: <20190525134140.6220-5-maxime.ripard@bootlin.com>
 References: <20190525134140.6220-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,29 +21,26 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In the text file, simtek didn't have any description and apparently this
-confused the conversion script. Fix the simtek entry and add a proper
-description.
+For some reason, the RTC vendor is reported to be phg, while the part is
+actually made by the much more known NXP. Fix that.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun5i-gr8-evb.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index ec53162e900d..3e8806b8e385 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -787,8 +787,8 @@ patternProperties:
-     description: Silergy Corp.
-   "^siliconmitus,.*":
-     description: Silicon Mitus, Inc.
--  "^simte,.*":
--    description: k
-+  "^simtek,.*":
-+    description: Cypress Semiconductor Corporation (Simtek Corporation)
-   "^sirf,.*":
-     description: SiRF Technology, Inc.
-   "^sis,.*":
+diff --git a/arch/arm/boot/dts/sun5i-gr8-evb.dts b/arch/arm/boot/dts/sun5i-gr8-evb.dts
+index d003b895a696..4c20d731a9c6 100644
+--- a/arch/arm/boot/dts/sun5i-gr8-evb.dts
++++ b/arch/arm/boot/dts/sun5i-gr8-evb.dts
+@@ -150,7 +150,7 @@
+ 	};
+ 
+ 	pcf8563: rtc@51 {
+-		compatible = "phg,pcf8563";
++		compatible = "nxp,pcf8563";
+ 		reg = <0x51>;
+ 	};
+ };
 -- 
 2.21.0
