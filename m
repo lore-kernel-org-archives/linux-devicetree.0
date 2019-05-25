@@ -1,641 +1,187 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] ARM: dts: rockchip: Add pin names for rk3288-veyron jaq, mickey, speedy
-Date: Fri, 24 May 2019 16:33:09 -0700
-Message-ID: <20190524233309.45420-1-dianders@chromium.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
+Date: Fri, 24 May 2019 17:12:35 -0700
+Message-ID: <b3a88f46-5c3b-0e33-e08f-e0d9b5df2864@gmail.com>
+References: <20190524010117.225219-1-saravanak@google.com>
+ <20190524010117.225219-2-saravanak@google.com>
+ <6f4ca588-106f-93d1-8579-9e8d32c8031d@gmail.com>
+ <CAGETcx9zgMs5ne3jPa+6xR+EHR=+QuF7XfRb1gpenh-3ZQwV+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGETcx9zgMs5ne3jPa+6xR+EHR=+QuF7XfRb1gpenh-3ZQwV+w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: briannorris@chromium.org, ryandcase@chromium.org, mka@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-This is like commit 0ca87bd5baa6 ("ARM: dts: rockchip: Add pin names
-for rk3288-veyron-jerry") and commit ca3516b32cd9 ("ARM: dts:
-rockchip: Add pin names for rk3288-veyron-minnie") but for 3 more
-veyron boards.
+On 5/24/19 11:21 AM, Saravana Kannan wrote:
+> On Fri, May 24, 2019 at 10:56 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> Hi Sarvana,
+>>
+>> I'm not reviewing patches 1-5 in any detail, given my reply to patch 0.
+>>
+>> But I had already skimmed through this patch before I received the
+>> email for patch 0, so I want to make one generic comment below,
+>> to give some feedback as you continue thinking through possible
+>> implementations to solve the underlying problems.
+> 
+> Appreciate the feedback Frank!
+> 
+>>
+>>
+>> On 5/23/19 6:01 PM, Saravana Kannan wrote:
+>>> Add a pointer from device tree node to the device created from it.
+>>> This allows us to find the device corresponding to a device tree node
+>>> without having to loop through all the platform devices.
+>>>
+>>> However, fallback to looping through the platform devices to handle
+>>> any devices that might set their own of_node.
+>>>
+>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+>>> ---
+>>>  drivers/of/platform.c | 20 +++++++++++++++++++-
+>>>  include/linux/of.h    |  3 +++
+>>>  2 files changed, 22 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>>> index 04ad312fd85b..1115a8d80a33 100644
+>>> --- a/drivers/of/platform.c
+>>> +++ b/drivers/of/platform.c
+>>> @@ -42,6 +42,8 @@ static int of_dev_node_match(struct device *dev, void *data)
+>>>       return dev->of_node == data;
+>>>  }
+>>>
+>>> +static DEFINE_SPINLOCK(of_dev_lock);
+>>> +
+>>>  /**
+>>>   * of_find_device_by_node - Find the platform_device associated with a node
+>>>   * @np: Pointer to device tree node
+>>> @@ -55,7 +57,18 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
+>>>  {
+>>>       struct device *dev;
+>>>
+>>> -     dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
+>>> +     /*
+>>> +      * Spinlock needed to make sure np->dev doesn't get freed between NULL
+>>> +      * check inside and kref count increment inside get_device(). This is
+>>> +      * achieved by grabbing the spinlock before setting np->dev = NULL in
+>>> +      * of_platform_device_destroy().
+>>> +      */
+>>> +     spin_lock(&of_dev_lock);
+>>> +     dev = get_device(np->dev);
+>>> +     spin_unlock(&of_dev_lock);
+>>> +     if (!dev)
+>>> +             dev = bus_find_device(&platform_bus_type, NULL, np,
+>>> +                                   of_dev_node_match);
+>>>       return dev ? to_platform_device(dev) : NULL;
+>>>  }
+>>>  EXPORT_SYMBOL(of_find_device_by_node);
+>>> @@ -196,6 +209,7 @@ static struct platform_device *of_platform_device_create_pdata(
+>>>               platform_device_put(dev);
+>>>               goto err_clear_flag;
+>>>       }
+>>> +     np->dev = &dev->dev;
+>>>
+>>>       return dev;
+>>>
+>>> @@ -556,6 +570,10 @@ int of_platform_device_destroy(struct device *dev, void *data)
+>>>       if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
+>>>               device_for_each_child(dev, NULL, of_platform_device_destroy);
+>>>
+>>> +     /* Spinlock is needed for of_find_device_by_node() to work */
+>>> +     spin_lock(&of_dev_lock);
+>>> +     dev->of_node->dev = NULL;
+>>> +     spin_unlock(&of_dev_lock);
+>>>       of_node_clear_flag(dev->of_node, OF_POPULATED);
+>>>       of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+>>>
+>>> diff --git a/include/linux/of.h b/include/linux/of.h
+>>> index 0cf857012f11..f2b4912cbca1 100644
+>>> --- a/include/linux/of.h
+>>> +++ b/include/linux/of.h
+>>> @@ -48,6 +48,8 @@ struct property {
+>>>  struct of_irq_controller;
+>>>  #endif
+>>>
+>>> +struct device;
+>>> +
+>>>  struct device_node {
+>>>       const char *name;
+>>>       phandle phandle;
+>>> @@ -68,6 +70,7 @@ struct device_node {
+>>>       unsigned int unique_id;
+>>>       struct of_irq_controller *irq_trans;
+>>>  #endif
+>>> +     struct device *dev;             /* Device created from this node */
+>>
+>> We have actively been working on shrinking the size of struct device_node,
+>> as part of reducing the devicetree memory usage.  As such, we need strong
+>> justification for adding anything to this struct.  For example, proof that
+>> there is a performance problem that can only be solved by increasing the
+>> memory usage.
+> 
+> I didn't mean for people to focus on the deferred probe optimization.
 
-A few notes:
-- While there is most certainly duplication between all the veyron
-  boards, it still feels like it is sane to just have each board have
-  a full list of its pin names.  The format of "gpio-line-names" does
-  not lend itself to one-off overriding and besides it seems sane to
-  more fully match schematic names.  Also note that the extra
-  duplication here is only in source code and is unlikely to ever
-  change (since these boards are shipped).  Duplication in the .dtb
-  files is unavoidable.
-- veyron-jaq and veyron-mighty are very closely related and so I have
-  shared a single list for them both with comments on how they are
-  different.  This is just a typo fix on one of the boards, a possible
-  missing signal on one of the boards (or perhaps I was never given
-  the most recent schematics?) and dealing with the fact that one of
-  the two boards has full sized SD.
+I was speaking specifically of the of_find_device_by_node() optimization.
+I did not chase any further back in the call chain to see how that would
+impact anything else.  My comments stand, whether this patch is meant
+to optimize deferred probe optimization or to optimize something else.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
 
- arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 207 +++++++++++++++++++++
- arch/arm/boot/dts/rk3288-veyron-mickey.dts | 151 +++++++++++++++
- arch/arm/boot/dts/rk3288-veyron-speedy.dts | 207 +++++++++++++++++++++
- 3 files changed, 565 insertions(+)
+> In reality that was just a added side benefit of this series. The main
+> problem to solve is that of suppliers having to know when all their
+> consumers are up and managing the resources actively, especially in a
+> system with loadable modules where we can't depend on the driver to
+> notify the supplier because the consumer driver module might not be
+> available or loaded until much later.
+> 
+> Having said that, I'm not saying we should go around and waste space
+> willy-nilly. But, isn't the memory usage going to increase based on
+> the number of DT nodes present in DT? I'd think as the number of DT
+> nodes increase it's more likely for those devices have more memory? So
+> at least in this specific case I think adding the field is justified.
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-index e248f55ee8d2..fcd119168cb6 100644
---- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-@@ -135,6 +135,213 @@
- 	pinctrl-0 = <&vcc50_hdmi_en>;
- };
- 
-+&gpio0 {
-+	gpio-line-names = "PMIC_SLEEP_AP",
-+			  "DDRIO_PWROFF",
-+			  "DDRIO_RETEN",
-+			  "TS3A227E_INT_L",
-+			  "PMIC_INT_L",
-+			  "PWR_KEY_L",
-+			  "AP_LID_INT_L",
-+			  "EC_IN_RW",
-+
-+			  "AC_PRESENT_AP",
-+			  /*
-+			   * RECOVERY_SW_L is Chrome OS ABI.  Schematics call
-+			   * it REC_MODE_L.
-+			   */
-+			  "RECOVERY_SW_L",
-+			  "OTP_OUT",
-+			  "HOST1_PWR_EN",
-+			  "USBOTG_PWREN_H",
-+			  "AP_WARM_RESET_H",
-+			  "nFALUT2",
-+			  "I2C0_SDA_PMIC",
-+
-+			  "I2C0_SCL_PMIC",
-+			  "SUSPEND_L",
-+			  "USB_INT";
-+};
-+
-+&gpio2 {
-+	gpio-line-names = "CONFIG0",
-+			  "CONFIG1",
-+			  "CONFIG2",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "CONFIG3",
-+
-+			  "",
-+			  "EMMC_RST_L",
-+			  "",
-+			  "",
-+			  "BL_PWR_EN",
-+			  "AVDD_1V8_DISP_EN";
-+};
-+
-+&gpio3 {
-+	gpio-line-names = "FLASH0_D0",
-+			  "FLASH0_D1",
-+			  "FLASH0_D2",
-+			  "FLASH0_D3",
-+			  "FLASH0_D4",
-+			  "FLASH0_D5",
-+			  "FLASH0_D6",
-+			  "FLASH0_D7",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "FLASH0_CS2/EMMC_CMD",
-+			  "",
-+			  "FLASH0_DQS/EMMC_CLKO";
-+};
-+
-+&gpio4 {
-+	gpio-line-names = "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "UART0_RXD",
-+			  "UART0_TXD",
-+			  "UART0_CTS",
-+			  "UART0_RTS",
-+			  "SDIO0_D0",
-+			  "SDIO0_D1",
-+			  "SDIO0_D2",
-+			  "SDIO0_D3",
-+
-+			  "SDIO0_CMD",
-+			  "SDIO0_CLK",
-+			  "BT_DEV_WAKE",	/* Maybe missing from mighty? */
-+			  "",
-+			  "WIFI_ENABLE_H",
-+			  "BT_ENABLE_L",
-+			  "WIFI_HOST_WAKE",
-+			  "BT_HOST_WAKE";
-+};
-+
-+&gpio5 {
-+	gpio-line-names = "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "SPI0_CLK",
-+			  "SPI0_CS0",
-+			  "SPI0_TXD",
-+			  "SPI0_RXD",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "VCC50_HDMI_EN";
-+};
-+
-+&gpio6 {
-+	gpio-line-names = "I2S0_SCLK",
-+			  "I2S0_LRCK_RX",
-+			  "I2S0_LRCK_TX",
-+			  "I2S0_SDI",
-+			  "I2S0_SDO0",
-+			  "HP_DET_H",
-+			  "ALS_INT",
-+			  "INT_CODEC",
-+
-+			  "I2S0_CLK",
-+			  "I2C2_SDA",
-+			  "I2C2_SCL",
-+			  "MICDET",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "SDMMC_D0",
-+			  "SDMMC_D1",
-+			  "SDMMC_D2",
-+			  "SDMMC_D3",
-+			  "SDMMC_CLK",
-+			  "SDMMC_CMD";
-+};
-+
-+&gpio7 {
-+	gpio-line-names = "LCDC_BL",
-+			  "PWM_LOG",
-+			  "BL_EN",
-+			  "TRACKPAD_INT",
-+			  "TPM_INT_H",
-+			  "SDMMC_DET_L",
-+			  /*
-+			   * AP_FLASH_WP_L is Chrome OS ABI.  Schematics call
-+			   * it FW_WP_AP.
-+			   */
-+			  "AP_FLASH_WP_L",
-+			  "EC_INT",
-+
-+			  "CPU_NMI",
-+			  "DVSOK",
-+			  "SDMMC_WP",		/* mighty only */
-+			  "EDP_HPD",
-+			  "DVS1",
-+			  "nFALUT1",		/* nFAULT1 on jaq */
-+			  "LCD_EN",
-+			  "DVS2",
-+
-+			  "VCC5V_GOOD_H",
-+			  "I2C4_SDA_TP",
-+			  "I2C4_SCL_TP",
-+			  "I2C5_SDA_HDMI",
-+			  "I2C5_SCL_HDMI",
-+			  "5V_DRV",
-+			  "UART2_RXD",
-+			  "UART2_TXD";
-+};
-+
-+&gpio8 {
-+	gpio-line-names = "RAM_ID0",
-+			  "RAM_ID1",
-+			  "RAM_ID2",
-+			  "RAM_ID3",
-+			  "I2C1_SDA_TPM",
-+			  "I2C1_SCL_TPM",
-+			  "SPI2_CLK",
-+			  "SPI2_CS0",
-+
-+			  "SPI2_RXD",
-+			  "SPI2_TXD";
-+};
-+
- &pinctrl {
- 	backlight {
- 		bl_pwr_en: bl_pwr_en {
-diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-index 945e80801292..aa352d40c991 100644
---- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-@@ -252,6 +252,157 @@
- 	};
- };
- 
-+&gpio0 {
-+	gpio-line-names = "PMIC_SLEEP_AP",
-+			  "",
-+			  "",
-+			  "",
-+			  "PMIC_INT_L",
-+			  "POWER_BUTTON_L",
-+			  "",
-+			  "",
-+
-+			  "",
-+			  /*
-+			   * RECOVERY_SW_L is Chrome OS ABI.  Schematics call
-+			   * it REC_MODE_L.
-+			   */
-+			  "RECOVERY_SW_L",
-+			  "OT_RESET",
-+			  "",
-+			  "",
-+			  "AP_WARM_RESET_H",
-+			  "",
-+			  "I2C0_SDA_PMIC",
-+
-+			  "I2C0_SCL_PMIC",
-+			  "",
-+			  "nFALUT";
-+};
-+
-+&gpio2 {
-+	gpio-line-names = "CONFIG0",
-+			  "CONFIG1",
-+			  "CONFIG2",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "CONFIG3",
-+
-+			  "",
-+			  "EMMC_RST_L";
-+};
-+
-+&gpio3 {
-+	gpio-line-names = "FLASH0_D0",
-+			  "FLASH0_D1",
-+			  "FLASH0_D2",
-+			  "FLASH0_D3",
-+			  "FLASH0_D4",
-+			  "FLASH0_D5",
-+			  "FLASH0_D6",
-+			  "FLASH0_D7",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "FLASH0_CS2/EMMC_CMD",
-+			  "",
-+			  "FLASH0_DQS/EMMC_CLKO";
-+};
-+
-+&gpio4 {
-+	gpio-line-names = "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "UART0_RXD",
-+			  "UART0_TXD",
-+			  "UART0_CTS_L",
-+			  "UART0_RTS_L",
-+			  "SDIO0_D0",
-+			  "SDIO0_D1",
-+			  "SDIO0_D2",
-+			  "SDIO0_D3",
-+
-+			  "SDIO0_CMD",
-+			  "SDIO0_CLK",
-+			  "BT_DEV_WAKE",
-+			  "",
-+			  "WIFI_ENABLE_H",
-+			  "BT_ENABLE_L",
-+			  "WIFI_HOST_WAKE",
-+			  "BT_HOST_WAKE";
-+};
-+
-+&gpio7 {
-+	gpio-line-names = "",
-+			  "PWM_LOG",
-+			  "",
-+			  "",
-+			  "TPM_INT_H",
-+			  "SDMMC_DET_L",
-+			  /*
-+			   * AP_FLASH_WP_L is Chrome OS ABI.  Schematics call
-+			   * it FW_WP_AP.
-+			   */
-+			  "AP_FLASH_WP_L",
-+			  "",
-+
-+			  "CPU_NMI",
-+			  "DVSOK",
-+			  "HDMI_WAKE",
-+			  "POWER_HDMI_ON",
-+			  "DVS1",
-+			  "",
-+			  "",
-+			  "DVS2",
-+
-+			  "HDMI_CEC",
-+			  "",
-+			  "",
-+			  "I2C5_SDA_HDMI",
-+			  "I2C5_SCL_HDMI",
-+			  "",
-+			  "UART2_RXD",
-+			  "UART2_TXD";
-+};
-+
-+&gpio8 {
-+	gpio-line-names = "RAM_ID0",
-+			  "RAM_ID1",
-+			  "RAM_ID2",
-+			  "RAM_ID3",
-+			  "I2C1_SDA_TPM",
-+			  "I2C1_SCL_TPM",
-+			  "SPI2_CLK",
-+			  "SPI2_CS0",
-+
-+			  "SPI2_RXD",
-+			  "SPI2_TXD";
-+};
-+
- &pinctrl {
- 	hdmi {
- 		power_hdmi_on: power-hdmi-on {
-diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-index 9a87017347ea..9b140db04456 100644
---- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-@@ -113,6 +113,213 @@
- 	pinctrl-0 = <&vcc50_hdmi_en>;
- };
- 
-+&gpio0 {
-+	gpio-line-names = "PMIC_SLEEP_AP",
-+			  "DDRIO_PWROFF",
-+			  "DDRIO_RETEN",
-+			  "TS3A227E_INT_L",
-+			  "PMIC_INT_L",
-+			  "PWR_KEY_L",
-+			  "AP_LID_INT_L",
-+			  "EC_IN_RW",
-+
-+			  "AC_PRESENT_AP",
-+			  /*
-+			   * RECOVERY_SW_L is Chrome OS ABI.  Schematics call
-+			   * it REC_MODE_L.
-+			   */
-+			  "RECOVERY_SW_L",
-+			  "OTP_OUT",
-+			  "HOST1_PWR_EN",
-+			  "USBOTG_PWREN_H",
-+			  "AP_WARM_RESET_H",
-+			  "nFALUT2",
-+			  "I2C0_SDA_PMIC",
-+
-+			  "I2C0_SCL_PMIC",
-+			  "SUSPEND_L",
-+			  "USB_INT";
-+};
-+
-+&gpio2 {
-+	gpio-line-names = "CONFIG0",
-+			  "CONFIG1",
-+			  "CONFIG2",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "CONFIG3",
-+
-+			  "PWRLIMIT#_CPU",
-+			  "EMMC_RST_L",
-+			  "",
-+			  "",
-+			  "BL_PWR_EN",
-+			  "AVDD_1V8_DISP_EN";
-+};
-+
-+&gpio3 {
-+	gpio-line-names = "FLASH0_D0",
-+			  "FLASH0_D1",
-+			  "FLASH0_D2",
-+			  "FLASH0_D3",
-+			  "FLASH0_D4",
-+			  "FLASH0_D5",
-+			  "FLASH0_D6",
-+			  "FLASH0_D7",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "FLASH0_CS2/EMMC_CMD",
-+			  "",
-+			  "FLASH0_DQS/EMMC_CLKO";
-+};
-+
-+&gpio4 {
-+	gpio-line-names = "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "UART0_RXD",
-+			  "UART0_TXD",
-+			  "UART0_CTS",
-+			  "UART0_RTS",
-+			  "SDIO0_D0",
-+			  "SDIO0_D1",
-+			  "SDIO0_D2",
-+			  "SDIO0_D3",
-+
-+			  "SDIO0_CMD",
-+			  "SDIO0_CLK",
-+			  "BT_DEV_WAKE",
-+			  "",
-+			  "WIFI_ENABLE_H",
-+			  "BT_ENABLE_L",
-+			  "WIFI_HOST_WAKE",
-+			  "BT_HOST_WAKE";
-+};
-+
-+&gpio5 {
-+	gpio-line-names = "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "SPI0_CLK",
-+			  "SPI0_CS0",
-+			  "SPI0_TXD",
-+			  "SPI0_RXD",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "VCC50_HDMI_EN";
-+};
-+
-+&gpio6 {
-+	gpio-line-names = "I2S0_SCLK",
-+			  "I2S0_LRCK_RX",
-+			  "I2S0_LRCK_TX",
-+			  "I2S0_SDI",
-+			  "I2S0_SDO0",
-+			  "HP_DET_H",
-+			  "ALS_INT",		/* not connected */
-+			  "INT_CODEC",
-+
-+			  "I2S0_CLK",
-+			  "I2C2_SDA",
-+			  "I2C2_SCL",
-+			  "MICDET",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "SDMMC_D0",
-+			  "SDMMC_D1",
-+			  "SDMMC_D2",
-+			  "SDMMC_D3",
-+			  "SDMMC_CLK",
-+			  "SDMMC_CMD";
-+};
-+
-+&gpio7 {
-+	gpio-line-names = "LCDC_BL",
-+			  "PWM_LOG",
-+			  "BL_EN",
-+			  "TRACKPAD_INT",
-+			  "TPM_INT_H",
-+			  "SDMMC_DET_L",
-+			  /*
-+			   * AP_FLASH_WP_L is Chrome OS ABI.  Schematics call
-+			   * it FW_WP_AP.
-+			   */
-+			  "AP_FLASH_WP_L",
-+			  "EC_INT",
-+
-+			  "CPU_NMI",
-+			  "DVS_OK",
-+			  "",
-+			  "EDP_HOTPLUG",
-+			  "DVS1",
-+			  "nFALUT1",
-+			  "LCD_EN",
-+			  "DVS2",
-+
-+			  "VCC5V_GOOD_H",
-+			  "I2C4_SDA_TP",
-+			  "I2C4_SCL_TP",
-+			  "I2C5_SDA_HDMI",
-+			  "I2C5_SCL_HDMI",
-+			  "5V_DRV",
-+			  "UART2_RXD",
-+			  "UART2_TXD";
-+};
-+
-+&gpio8 {
-+	gpio-line-names = "RAM_ID0",
-+			  "RAM_ID1",
-+			  "RAM_ID2",
-+			  "RAM_ID3",
-+			  "I2C1_SDA_TPM",
-+			  "I2C1_SCL_TPM",
-+			  "SPI2_CLK",
-+			  "SPI2_CS0",
-+
-+			  "SPI2_RXD",
-+			  "SPI2_TXD";
-+};
-+
- &pinctrl {
- 	backlight {
- 		bl_pwr_en: bl_pwr_en {
--- 
-2.22.0.rc1.257.g3120a18244-goog
+Struct device_node is the nodes of the in kernel devicetree data.  This
+patch adds a field to every single node of the devicetree.
+
+The patch series is also adding a new property, of varying size, to
+some nodes.  This also results in additional memory usage by
+devicetree. 
+
+Arguing that a more complex system is likely to have more memory is
+likely true, but beside the point.  Minimizing devicetree memory
+used on less complex systems is also one of our goals.
+
+
+> Also, right now the look up is O(n) complexity and if we are trying to
+> add device links to most of the devices, that whole process becomes
+> O(n^2). Having this field makes the look up a O(1) and the entire
+> linking process a O(n) process. I think the memory usage increase is
+> worth the efficiency improvement.
+
+Hand waving about O(n) and O(1) and O(n2) is not sufficient.  We require
+actual measurements that show O(n2) (when the existing algorithm is such)
+is a performance problem and that the proposed change to the algorithm
+results in a specific change in the performance.
+
+The devicetree maintainers have decided that memory use is important and
+to be minimized, and the burden of proof that performance is an issue
+lies on the submitter of a patch that improves performance at the cost
+of memory.
+
+Most devicetree boot time cpu overhead only affects the boot event.
+Added memory use persists for the entire booted lifetime of the system.
+
+That is not to say that we never increase memory use to improve boot
+performance.  We have done so when the measured performance issue and
+measured performance improvement justified the change.
+
+> 
+> And if people are still strongly against it, we could make this a config option.
+> 
+> -Saravana
+> 
