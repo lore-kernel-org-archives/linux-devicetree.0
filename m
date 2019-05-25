@@ -1,23 +1,166 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-Date: Sun, 26 May 2019 02:51:35 +0800
-Message-ID: <CAEExFWuaEW9iKnpUdmkHMzjSMS1ichYQGhtWqGibOe3FD5Mt3g@mail.gmail.com>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com> <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512221612.ubmknvim4utnqpl4@core.my.home> <CAEExFWv5A5mhpV7afQT=AaYx2ko5QnfbM6HvfuTgT1Na=ssOcw@mail.gmail.com>
- <20190516182936.h6xdzp3gtg4ikave@core.my.home> <CAEExFWvDO3wJd6wp1hFudf3EGF0NixgKAwAd5-b1=VLF+7-jCw@mail.gmail.com>
- <20190519142239.eolisexp5mrdyafz@core.my.home> <CAEExFWsc_YB8NORW4ULfuoicL=xr_oAdtHSaxz4ELv53qvCAsQ@mail.gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v12 03/13] dt-bindings: Add doc for the Ingenic TCU
+ drivers
+Date: Sat, 25 May 2019 21:13:16 +0200
+Message-ID: <1558811596.2016.1@crapouillou.net>
+References: <20190521145141.9813-1-paul@crapouillou.net>
+        <20190521145141.9813-4-paul@crapouillou.net> <20190524202103.GA15650@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEExFWsc_YB8NORW4ULfuoicL=xr_oAdtHSaxz4ELv53qvCAsQ@mail.gmail.com>
+In-Reply-To: <20190524202103.GA15650@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Lee <tiny.windzz@gmail.com>, rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com, will.deacon@arm.com, David Miller <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan.Cameron@huawei.com, Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>, olof@lixom.net, bjorn.andersson@linaro.org, Jagan Teki <jagan@amarulasolutions.com>, marc.w.gonzalez@free.fr, stefan.wahren@i2se.com, enric.balletbo@collabora.com, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
-HI,
 
-Following the discussion above, I made some changes.
-I think it's time to consider V3 and see what else needs to be modified.
 
-Thx,
-Yangtao
+Le ven. 24 mai 2019 =E0 22:21, Rob Herring <robh@kernel.org> a =E9crit :
+> On Tue, May 21, 2019 at 04:51:31PM +0200, Paul Cercueil wrote:
+>>  Add documentation about how to properly use the Ingenic TCU
+>>  (Timer/Counter Unit) drivers from devicetree.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v4: New patch in this series. Corresponds to V2 patches 3-4-5=20
+>> with
+>>       added content.
+>>=20
+>>      v5: - Edited PWM/watchdog DT bindings documentation to point to=20
+>> the new
+>>         document.
+>>       - Moved main document to
+>>         Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>       - Updated documentation to reflect the new devicetree bindings.
+>>=20
+>>      v6: - Removed PWM/watchdog documentation files as asked by=20
+>> upstream
+>>       - Removed doc about properties that should be implicit
+>>       - Removed doc about ingenic,timer-channel /
+>>         ingenic,clocksource-channel as they are gone
+>>       - Fix WDT clock name in the binding doc
+>>       - Fix lengths of register areas in watchdog/pwm nodes
+>>=20
+>>      v7: No change
+>>=20
+>>      v8: - Fix address of the PWM node
+>>       - Added doc about system timer and clocksource children nodes
+>>=20
+>>      v9: - Remove doc about system timer and clocksource children
+>>         nodes...
+>>      - Add doc about ingenic,pwm-channels-mask property
+>>=20
+>>      v10: No change
+>>=20
+>>      v11: Fix info about default value of ingenic,pwm-channels-mask
+>>=20
+>>      v12: Drop sub-nodes for now; they will be introduced in a=20
+>> follow-up
+>>      	 patchset.
+>=20
+> Why? I believe I acked them.
+
+The patchset was too big, and I've already been trying to get it=20
+upstream for
+more than one year now. So I cut it in half in hope that it'll be=20
+easier to
+upstream it that way.
+
+>>=20
+>>   .../devicetree/bindings/timer/ingenic,tcu.txt | 59=20
+>> +++++++++++++++++++
+>>   1 file changed, 59 insertions(+)
+>>   create mode 100644=20
+>> Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>=20
+>>  diff --git=20
+>> a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt=20
+>> b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>  new file mode 100644
+>>  index 000000000000..d101cd72c9b0
+>>  --- /dev/null
+>>  +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>  @@ -0,0 +1,59 @@
+>>  +Ingenic JZ47xx SoCs Timer/Counter Unit devicetree bindings
+>>  +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>  +
+>>  +For a description of the TCU hardware and drivers, have a look at
+>>  +Documentation/mips/ingenic-tcu.txt.
+>>  +
+>>  +Required properties:
+>>  +
+>>  +- compatible: Must be one of:
+>>  +  * "ingenic,jz4740-tcu"
+>>  +  * "ingenic,jz4725b-tcu"
+>>  +  * "ingenic,jz4770-tcu"
+>>  +- reg: Should be the offset/length value corresponding to the TCU=20
+>> registers
+>>  +- clocks: List of phandle & clock specifiers for clocks external=20
+>> to the TCU.
+>>  +  The "pclk", "rtc" and "ext" clocks should be provided. The "tcu"=20
+>> clock
+>>  +  should be provided if the SoC has it.
+>>  +- clock-names: List of name strings for the external clocks.
+>>  +- #clock-cells: Should be <1>;
+>>  +  Clock consumers specify this argument to identify a clock. The=20
+>> valid values
+>>  +  may be found in <dt-bindings/clock/ingenic,tcu.h>.
+>>  +- interrupt-controller : Identifies the node as an interrupt=20
+>> controller
+>>  +- #interrupt-cells : Specifies the number of cells needed to=20
+>> encode an
+>>  +  interrupt source. The value should be 1.
+>>  +- interrupt-parent : phandle of the interrupt controller.
+>=20
+> Drop this 'interrupt-parent' is implied and could be in a parent node.
+>=20
+>>  +- interrupts : Specifies the interrupt the controller is connected=20
+>> to.
+>>  +
+>>  +Optional properties:
+>>  +
+>>  +- ingenic,pwm-channels-mask: Bitmask of TCU channels reserved for=20
+>> PWM use.
+>>  +  Default value is 0xfc.
+>>  +
+>>  +
+>>  +Example
+>>  +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>  +
+>>  +#include <dt-bindings/clock/jz4770-cgu.h>
+>>  +
+>>  +/ {
+>>  +	tcu: timer@10002000 {
+>>  +		compatible =3D "ingenic,jz4770-tcu";
+>>  +		reg =3D <0x10002000 0x1000>;
+>>  +		#address-cells =3D <1>;
+>>  +		#size-cells =3D <1>;
+>>  +		ranges =3D <0x0 0x10002000 0x1000>;
+>>  +
+>>  +		#clock-cells =3D <1>;
+>>  +
+>>  +		clocks =3D <&cgu JZ4770_CLK_RTC
+>>  +			  &cgu JZ4770_CLK_EXT
+>>  +			  &cgu JZ4770_CLK_PCLK>;
+>>  +		clock-names =3D "rtc", "ext", "pclk";
+>>  +
+>>  +		interrupt-controller;
+>>  +		#interrupt-cells =3D <1>;
+>>  +
+>>  +		interrupt-parent =3D <&intc>;
+>>  +		interrupts =3D <27 26 25>;
+>>  +	};
+>>  +};
+>>  --
+>>  2.21.0.593.g511ec345e18
+>>=20
+
+=
