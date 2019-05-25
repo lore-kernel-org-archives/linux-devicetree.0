@@ -1,42 +1,40 @@
-Return-Path: <SRS0=L0hH=T5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55773 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfE2Jyj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 May 2019 05:54:39 -0400
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2 2/9] media: hantro: print video device name in addition to device node
-Date: Wed, 29 May 2019 11:54:17 +0200
-Message-Id: <20190529095424.23614-3-p.zabel@pengutronix.de>
-In-Reply-To: <20190529095424.23614-1-p.zabel@pengutronix.de>
-References: <20190529095424.23614-1-p.zabel@pengutronix.de>
+Return-Path: <SRS0=6tYr=TZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mout.gmx.net ([212.227.17.21]:35881 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726484AbfEYLHM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 May 2019 07:07:12 -0400
+Subject: Re: [PATCH] ARM: bcm283x: Enable DMA support for SPI controller
+References: <ab21b59ece7db065ee86f6f0c0a7623144db52b4.1557419583.git.lukas@wunner.de>
+From: Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <37bdc9e0-3f38-2ec4-4084-9cf46798589e@gmx.net>
+Date: Sat, 25 May 2019 13:06:42 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ab21b59ece7db065ee86f6f0c0a7623144db52b4.1557419583.git.lukas@wunner.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: Lukas Wunner <lukas@wunner.de>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Martin Sperl <kernel@martin.sperl.org>, Noralf Tronnes <noralf@tronnes.org>, linux-rpi-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-It can be helpful to know which video device was registered at which
-device node.
-
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/staging/media/hantro/hantro_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index f01d1ed10d4a..e4390aa5c213 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -606,7 +606,8 @@ static int hantro_add_func(struct hantro_dev *vpu, unsigned int funcid)
- 		goto err_unreg_dev;
- 	}
- 
--	v4l2_info(&vpu->v4l2_dev, "registered as /dev/video%d\n", vfd->num);
-+	v4l2_info(&vpu->v4l2_dev, "registered %s as /dev/video%d\n", vfd->name,
-+		  vfd->num);
- 
- 	return 0;
- 
--- 
-2.20.1
+Am 09.05.19 um 19:03 schrieb Lukas Wunner:
+> Without this, the driver for the BCM2835 SPI controller uses interrupt
+> mode instead of DMA mode, incurring a significant performance penalty.
+> The Foundation's device tree has had these attributes for years, but for
+> some reason they were never upstreamed.
+>
+> They were originally contributed by Noralf Tr=C3=B8nnes and Martin Sperl=
+:
+> https://github.com/raspberrypi/linux/commit/25f3e064afc8
+> https://github.com/raspberrypi/linux/commit/e0edb52b47e6
+>
+> The DREQ numbers 6 and 7 are documented in section 4.2.1.3 of:
+> https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.=
+pdf
+>
+> Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: Martin Sperl <kernel@martin.sperl.org>
+> Cc: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
+Applied to bcm2835-dt-next
