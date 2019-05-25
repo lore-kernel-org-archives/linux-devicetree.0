@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 5/7] dmaengine: sun6i: Add support for H6 DMA
-Date: Sat, 25 May 2019 18:38:17 +0200
-Message-ID: <20190525163819.21055-6-peron.clem@gmail.com>
+Subject: [PATCH v2 7/7] arm64: defconfig: enable Allwinner DMA drivers
+Date: Sat, 25 May 2019 18:38:19 +0200
+Message-ID: <20190525163819.21055-8-peron.clem@gmail.com>
 References: <20190525163819.21055-1-peron.clem@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,119 +10,29 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190525163819.21055-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Dan Williams <dan.j.williams@intel.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+Allwinner sun6i DMA drivers is used on A64 and H6 boards.
 
-H6 DMA has more than 32 supported DRQs, which means that configuration
-register is slightly rearranged. It also needs additional clock to be
-enabled.
+Enable it as a module.
 
-Add support for it.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/dma/sun6i-dma.c | 44 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 42 insertions(+), 2 deletions(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index f5cb5e89bf7b..8d44ddae926a 100644
---- a/drivers/dma/sun6i-dma.c
-+++ b/drivers/dma/sun6i-dma.c
-@@ -69,14 +69,19 @@
- 
- #define DMA_CHAN_CUR_CFG	0x0c
- #define DMA_CHAN_MAX_DRQ_A31		0x1f
-+#define DMA_CHAN_MAX_DRQ_H6		0x3f
- #define DMA_CHAN_CFG_SRC_DRQ_A31(x)	((x) & DMA_CHAN_MAX_DRQ_A31)
-+#define DMA_CHAN_CFG_SRC_DRQ_H6(x)	((x) & DMA_CHAN_MAX_DRQ_H6)
- #define DMA_CHAN_CFG_SRC_MODE_A31(x)	(((x) & 0x1) << 5)
-+#define DMA_CHAN_CFG_SRC_MODE_H6(x)	(((x) & 0x1) << 8)
- #define DMA_CHAN_CFG_SRC_BURST_A31(x)	(((x) & 0x3) << 7)
- #define DMA_CHAN_CFG_SRC_BURST_H3(x)	(((x) & 0x3) << 6)
- #define DMA_CHAN_CFG_SRC_WIDTH(x)	(((x) & 0x3) << 9)
- 
- #define DMA_CHAN_CFG_DST_DRQ_A31(x)	(DMA_CHAN_CFG_SRC_DRQ_A31(x) << 16)
-+#define DMA_CHAN_CFG_DST_DRQ_H6(x)	(DMA_CHAN_CFG_SRC_DRQ_H6(x) << 16)
- #define DMA_CHAN_CFG_DST_MODE_A31(x)	(DMA_CHAN_CFG_SRC_MODE_A31(x) << 16)
-+#define DMA_CHAN_CFG_DST_MODE_H6(x)	(DMA_CHAN_CFG_SRC_MODE_H6(x) << 16)
- #define DMA_CHAN_CFG_DST_BURST_A31(x)	(DMA_CHAN_CFG_SRC_BURST_A31(x) << 16)
- #define DMA_CHAN_CFG_DST_BURST_H3(x)	(DMA_CHAN_CFG_SRC_BURST_H3(x) << 16)
- #define DMA_CHAN_CFG_DST_WIDTH(x)	(DMA_CHAN_CFG_SRC_WIDTH(x) << 16)
-@@ -319,12 +324,24 @@ static void sun6i_set_drq_a31(u32 *p_cfg, s8 src_drq, s8 dst_drq)
- 		  DMA_CHAN_CFG_DST_DRQ_A31(dst_drq);
- }
- 
-+static void sun6i_set_drq_h6(u32 *p_cfg, s8 src_drq, s8 dst_drq)
-+{
-+	*p_cfg |= DMA_CHAN_CFG_SRC_DRQ_H6(src_drq) |
-+		  DMA_CHAN_CFG_DST_DRQ_H6(dst_drq);
-+}
-+
- static void sun6i_set_mode_a31(u32 *p_cfg, s8 src_mode, s8 dst_mode)
- {
- 	*p_cfg |= DMA_CHAN_CFG_SRC_MODE_A31(src_mode) |
- 		  DMA_CHAN_CFG_DST_MODE_A31(dst_mode);
- }
- 
-+static void sun6i_set_mode_h6(u32 *p_cfg, s8 src_mode, s8 dst_mode)
-+{
-+	*p_cfg |= DMA_CHAN_CFG_SRC_MODE_H6(src_mode) |
-+		  DMA_CHAN_CFG_DST_MODE_H6(dst_mode);
-+}
-+
- static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
- {
- 	struct sun6i_desc *txd = pchan->desc;
-@@ -1160,6 +1177,28 @@ static struct sun6i_dma_config sun50i_a64_dma_cfg = {
- 			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
- };
- 
-+/*
-+ * The H6 binding uses the number of dma channels from the
-+ * device tree node.
-+ */
-+static struct sun6i_dma_config sun50i_h6_dma_cfg = {
-+	.clock_autogate_enable = sun6i_enable_clock_autogate_h3,
-+	.set_burst_length = sun6i_set_burst_length_h3,
-+	.set_drq          = sun6i_set_drq_h6,
-+	.set_mode         = sun6i_set_mode_h6,
-+	.src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
-+	.dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
-+	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-+	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-+	.has_mbus_clk = true,
-+};
-+
- /*
-  * The V3s have only 8 physical channels, a maximum DRQ port id of 23,
-  * and a total of 24 usable source and destination endpoints.
-@@ -1190,6 +1229,7 @@ static const struct of_device_id sun6i_dma_match[] = {
- 	{ .compatible = "allwinner,sun8i-h3-dma", .data = &sun8i_h3_dma_cfg },
- 	{ .compatible = "allwinner,sun8i-v3s-dma", .data = &sun8i_v3s_dma_cfg },
- 	{ .compatible = "allwinner,sun50i-a64-dma", .data = &sun50i_a64_dma_cfg },
-+	{ .compatible = "allwinner,sun50i-h6-dma", .data = &sun50i_h6_dma_cfg },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, sun6i_dma_match);
-@@ -1288,8 +1328,8 @@ static int sun6i_dma_probe(struct platform_device *pdev)
- 	ret = of_property_read_u32(np, "dma-requests", &sdc->max_request);
- 	if (ret && !sdc->max_request) {
- 		dev_info(&pdev->dev, "Missing dma-requests, using %u.\n",
--			 DMA_CHAN_MAX_DRQ_A31);
--		sdc->max_request = DMA_CHAN_MAX_DRQ_A31;
-+			 DMA_CHAN_MAX_DRQ_H6);
-+		sdc->max_request = DMA_CHAN_MAX_DRQ_H6;
- 	}
- 
- 	/*
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 4d583514258c..b535f0f412cc 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -614,6 +614,7 @@ CONFIG_RTC_DRV_IMX_SC=m
+ CONFIG_RTC_DRV_XGENE=y
+ CONFIG_DMADEVICES=y
+ CONFIG_DMA_BCM2835=m
++CONFIG_DMA_SUN6I=m
+ CONFIG_K3_DMA=y
+ CONFIG_MV_XOR=y
+ CONFIG_MV_XOR_V2=y
 -- 
 2.20.1
