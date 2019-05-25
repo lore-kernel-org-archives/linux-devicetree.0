@@ -1,38 +1,39 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 07/10] dt-bindings: media: sunxi-ir: Add H6 compatible
-Date: Sat, 25 May 2019 20:09:20 +0200
-Message-ID: <20190525180923.6105-8-peron.clem@gmail.com>
+Subject: [PATCH 02/10] media: rc: sunxi: Add A31 compatible
+Date: Sat, 25 May 2019 20:09:15 +0200
+Message-ID: <20190525180923.6105-3-peron.clem@gmail.com>
 References: <20190525180923.6105-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190525180923.6105-1-peron.clem@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Cc: devicetree@vger.kernel.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There is some minor differences between A31 or A64 and H6 driver.
-
-But A31 IR driver is compatible with H6.
-
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- Documentation/devicetree/bindings/media/sunxi-ir.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-index da5aeba843de..dc959ce84528 100644
---- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
-+++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-@@ -6,6 +6,7 @@ Required properties:
- 	"allwinner,sun5i-a13-ir"
- 	"allwinner,sun6i-a31-ir"
- 	"allwinner,sun50i-a64-ir", "allwinner,sun6i-a31-ir"
-+	"allwinner,sun50i-h6-ir", "allwinner,sun6i-a31-ir"
- - clocks	    : list of clock specifiers, corresponding to
- 		      entries in clock-names property;
- - clock-names	    : should contain "apb" and "ir" entries;
--- 
-2.20.1
+QTMxIGhhdmUgYSBkaWZmZXJlbnQgbWVtb3J5IG1hcHBpbmcgc28gYWRkIHRoZSBjb21wYXRpYmxl
+CndlIHdpbGwgbmVlZCBpdCBsYXRlci4KClNpZ25lZC1vZmYtYnk6IENsw6ltZW50IFDDqXJvbiA8
+cGVyb24uY2xlbUBnbWFpbC5jb20+Ci0tLQogZHJpdmVycy9tZWRpYS9yYy9zdW54aS1jaXIuYyB8
+IDEgKwogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9tZWRpYS9yYy9zdW54aS1jaXIuYyBiL2RyaXZlcnMvbWVkaWEvcmMvc3VueGktY2lyLmMKaW5k
+ZXggMzA3ZTQ0NzE0ZWEwLi4yOWFjMzNiNjg1OTYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbWVkaWEv
+cmMvc3VueGktY2lyLmMKKysrIGIvZHJpdmVycy9tZWRpYS9yYy9zdW54aS1jaXIuYwpAQCAtMzE5
+LDYgKzMxOSw3IEBAIHN0YXRpYyBpbnQgc3VueGlfaXJfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9k
+ZXZpY2UgKnBkZXYpCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBzdW54aV9pcl9t
+YXRjaFtdID0gewogCXsgLmNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjRpLWExMC1pciIsIH0s
+CiAJeyAuY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuNWktYTEzLWlyIiwgfSwKKwl7IC5jb21w
+YXRpYmxlID0gImFsbHdpbm5lcixzdW42aS1hMzEtaXIiLCB9LAogCXt9LAogfTsKIE1PRFVMRV9E
+RVZJQ0VfVEFCTEUob2YsIHN1bnhpX2lyX21hdGNoKTsKLS0gCjIuMjAuMQoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
