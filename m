@@ -1,175 +1,309 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-Date: Sat, 25 May 2019 12:53:52 -0700
-Message-ID: <CA+E=qVeq4XcQXo1vw-kYJ5eo94sF+n75ZM2kdF7szxOzZEGafQ@mail.gmail.com>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com>
- <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512221612.ubmknvim4utnqpl4@core.my.home>
- <CAEExFWv5A5mhpV7afQT=AaYx2ko5QnfbM6HvfuTgT1Na=ssOcw@mail.gmail.com>
- <20190516182936.h6xdzp3gtg4ikave@core.my.home>
- <CAEExFWvDO3wJd6wp1hFudf3EGF0NixgKAwAd5-b1=VLF+7-jCw@mail.gmail.com>
- <20190519142239.eolisexp5mrdyafz@core.my.home>
- <CAEExFWsc_YB8NORW4ULfuoicL=xr_oAdtHSaxz4ELv53qvCAsQ@mail.gmail.com>
+From: Colin King <colin.king@canonical.com>
+Subject: [PATCH] dt-bindings: pinctrl: fix spelling mistakes in pinctl documentation
+Date: Sat, 25 May 2019 21:42:28 +0100
+Message-ID: <20190525204228.8546-1-colin.king@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAEExFWsc_YB8NORW4ULfuoicL=xr_oAdtHSaxz4ELv53qvCAsQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Lee <tiny.windzz@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, bjorn.andersson@linaro.org, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, paulmck@linux.ibm.com, Stefan Wahren <stefan.wahren@i2se.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Jagan Teki <jagan@amarulasolutions.com>, Andy Gross <andy.gross@linaro.org>, rui.zhang@intel.com, devicetree <devicetree@vger.kernel.org>, marc.w.gonzalez@free.fr, Eduardo Valentin <edubezval@gmail.com>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Jonathan.Cameron@huawei.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, enric.balletb
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBNYXkgMjUsIDIwMTkgYXQgMTE6NDggQU0gRnJhbmsgTGVlIDx0aW55LndpbmR6ekBn
-bWFpbC5jb20+IHdyb3RlOgo+Cj4gSEkgT25kxZllaiwKPgo+IE9uIFN1biwgTWF5IDE5LCAyMDE5
-IGF0IDEwOjIyIFBNIE9uZMWZZWogSmlybWFuIDxtZWdvdXNAbWVnb3VzLmNvbT4gd3JvdGU6Cj4g
-Pgo+ID4gSGVsbG8gWWFuZ3RhbywKPiA+Cj4gPiBPbiBTYXQsIE1heSAxOCwgMjAxOSBhdCAxMjoz
-NDo1N0FNICswODAwLCBGcmFuayBMZWUgd3JvdGU6Cj4gPiA+IEhJLAo+ID4gPgo+ID4gPiBPbiBG
-cmksIE1heSAxNywgMjAxOSBhdCAyOjI5IEFNIE9uZMWZZWogSmlybWFuIDxtZWdvdXNAbWVnb3Vz
-LmNvbT4gd3JvdGU6Cj4gPiA+ID4KPiA+ID4gPiBIaSBZYW5ndGFvLAo+ID4gPiA+Cj4gPiA+ID4g
-dGhhbmsgeW91IGZvciB3b3JrIG9uIHRoaXMgZHJpdmVyLgo+ID4gPiA+Cj4gPiA+ID4gT24gRnJp
-LCBNYXkgMTcsIDIwMTkgYXQgMDI6MDY6NTNBTSArMDgwMCwgRnJhbmsgTGVlIHdyb3RlOgo+ID4g
-PiA+ID4gSEkgT25kxZllaiwKPiA+ID4gPiA+Cj4gPiA+ID4gPiBPbiBNb24sIE1heSAxMywgMjAx
-OSBhdCA2OjE2IEFNIE9uZMWZZWogSmlybWFuIDxtZWdvdXNAbWVnb3VzLmNvbT4gd3JvdGU6Cj4g
-PiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiA+ICsvKiBUZW1wIFVuaXQ6IG1pbGxpZGVncmVlIENl
-bHNpdXMgKi8KPiA+ID4gPiA+ID4gPiArc3RhdGljIGludCB0c2Vuc19yZWcydGVtcChzdHJ1Y3Qg
-dHNlbnNfZGV2aWNlICp0bWRldiwKPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgaW50IHJlZykKPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gUGxlYXNlIG5hbWUgYWxsIGZ1
-bmN0aW9ucyBzbyB0aGF0IHRoZXkgYXJlIG1vcmUgY2xlYXJseSBpZGVudGlmaWFibGUKPiA+ID4g
-PiA+ID4gaW4gc3RhY2sgdHJhY2VzIGFzIGJlbG9uZ2luZyB0byB0aGlzIGRyaXZlci4gRm9yIGV4
-YW1wbGU6Cj4gPiA+ID4gPiA+Cj4gPiA+ID4gPiA+ICAgc3VuOGlfdGhzX3JlZzJ0ZW1wCj4gPiA+
-ID4gPiA+Cj4gPiA+ID4gPiA+IFRoZSBzYW1lIGFwcGxpZXMgZm9yIGFsbCB0c2Vuc18qIGZ1bmN0
-aW9ucyBiZWxvdy4gdHNlbnNfKiBpcyB0b28KPiA+ID4gPiA+ID4gZ2VuZXJpYy4KPiA+ID4gPiA+
-Cj4gPiA+ID4gPiBEb25lIGJ1dCBubyBzdW44aV90aHNfcmVnMnRlbXAuCj4gPiA+ID4gPgo+ID4g
-PiA+ID4gdGhzX3JlZzJ0ZW0oKSBzaG91bGQgYmUgYSBnZW5lcmljIGZ1bmMuCj4gPiA+ID4gPiBJ
-IHRoaW5rIGl0IHNob3VsZCBiZSBzdWl0YWJsZSBmb3IgYWxsIHBsYXRmb3Jtc++8jCBzbyBubyBw
-bGF0Zm9ybSBwcmVmaXguCj4gPiA+ID4KPiA+ID4gPiBZb3UndmUgbWlzc2VkIG15IHBvaW50LiBU
-aGUgZHJpdmVyIG5hbWUgaXMgc3VuOGlfdGhlcm1hbCBhbmQgaWYgeW91IGdldAo+ID4gPiA+IGFu
-ZCBvb3BzIGZyb20gdGhlIGtlcm5lbCB5b3UnbGwgZ2V0IGEgc3RhY2sgdHJhY2Ugd2hlcmUgdGhl
-cmUgYXJlIGp1c3QgZnVuY3Rpb24KPiA+ID4gPiBuYW1lcy4gSWYgeW91IHVzZSB0b28gZ2VuZXJp
-YyBmdW5jdGlvbiBuYW1lcywgaXQgd2lsbCBub3QgYmUgY2xlYXIgd2hpY2gKPiA+ID4gPiBkcml2
-ZXIgaXMgb29wc2luZy4KPiA+ID4gPgo+ID4gPiA+ICAgLSBzdW44aV90aHNfcmVnMnRlbXAgd2ls
-bCB0ZWxsIHlvdSBtdWNoIG1vcmUgY2xlYXJseSB3aGVyZSB0byBzZWFyY2ggdGhhbgo+ID4gPiA+
-ICAgLSB0aHNfcmVnMnRlbXAKPiA+ID4gPgo+ID4gPiA+IE9mIGNvdXJzZSB5b3UgY2FuIGFsd2F5
-cyBncmVwLCBidXQgbW9zdCB0aGVybWFsIGRyaXZlcnMgYXJlIHRoZXJtYWwgc2Vuc29yICh0aHMp
-Cj4gPiA+ID4gZHJpdmVycywgYW5kIGlmIG11bHRpcGxlIG9mIHRoZW0gdXNlZCB0aGlzIHRvby1n
-ZW5lcmljIG5hbWluZyBzY2hlbWUgeW91J2QKPiA+ID4gPiBoYXZlIGhhcmQgdGltZSBkZWJ1Z2dp
-bmcuCj4gPiA+ID4KPiA+ID4gPiBMb29rIGF0IG90aGVyIHRoZXJtYWwgZHJpdmVycy4gVGhleSB1
-c3VhbGx5IGVuY29kZSBkcml2ZXIgbmFtZSBpbiB0aGUgZnVuY3Rpb24KPiA+ID4gPiBuYW1lcyB0
-byBoZWxwIHdpdGggaWRlbnRpZmljYXRpb24gKGV2ZW4gaWYgdGhlc2UgYXJlIHN0YXRpYyBkcml2
-ZXItbG9jYWwKPiA+ID4gPiBmdW5jdGlvbnMpLgo+ID4gPiA+Cj4gPiA+Cj4gPiA+IENhbiB3ZSBj
-aGFuZ2UgdG8gc3VueGlfdGhzXyBwcmVmaXg/Cj4gPgo+ID4gSXQgc2hvdWxkIHByb2JhYmx5IG1h
-dGNoIHRoZSBkcml2ZXIgbmFtZSwgYnV0IHllcywgdGhhdCdzIGJldHRlci4KPiA+Cj4gPiA+ID4g
-PiA+ID4gK3N0YXRpYyBpbnQgdHNlbnNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikKPiA+ID4gPiA+ID4gPiArewo+ID4gPiA+ID4gPiA+ICsgICAgIHN0cnVjdCB0c2Vuc19kZXZp
-Y2UgKnRtZGV2Owo+ID4gPiA+ID4gPiA+ICsgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2
-LT5kZXY7Cj4gPiA+ID4gPiA+ID4gKyAgICAgaW50IHJldDsKPiA+ID4gPiA+ID4gPiArCj4gPiA+
-ID4gPiA+ID4gKyAgICAgdG1kZXYgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKnRtZGV2KSwg
-R0ZQX0tFUk5FTCk7Cj4gPiA+ID4gPiA+ID4gKyAgICAgaWYgKCF0bWRldikKPiA+ID4gPiA+ID4g
-PiArICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOwo+ID4gPiA+ID4gPiA+ICsKPiA+ID4gPiA+
-ID4gPiArICAgICB0bWRldi0+ZGV2ID0gZGV2Owo+ID4gPiA+ID4gPiA+ICsgICAgIHRtZGV2LT5j
-aGlwID0gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKCZwZGV2LT5kZXYpOwo+ID4gPiA+ID4gPiA+
-ICsgICAgIGlmICghdG1kZXYtPmNoaXApCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICByZXR1
-cm4gLUVJTlZBTDsKPiA+ID4gPiA+ID4gPiArCj4gPiA+ID4gPiA+ID4gKyAgICAgcmV0ID0gdHNl
-bnNfaW5pdCh0bWRldik7Cj4gPiA+ID4gPiA+ID4gKyAgICAgaWYgKHJldCkKPiA+ID4gPiA+ID4g
-PiArICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4gPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiA+
-ICsgICAgIHJldCA9IHRzZW5zX3JlZ2lzdGVyKHRtZGV2KTsKPiA+ID4gPiA+ID4gPiArICAgICBp
-ZiAocmV0KQo+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgcmV0dXJuIHJldDsKPiA+ID4gPiA+
-ID4KPiA+ID4gPiA+ID4gV2h5IHNwbGl0IHRoaXMgb3V0IG9mIHByb2JlIGludG8gc2VwYXJhdGUg
-ZnVuY3Rpb25zPwo+ID4gPiA+ID4gPgo+ID4gPiA+ID4gPiA+ICsgICAgIHJldCA9IHRtZGV2LT5j
-aGlwLT5lbmFibGUodG1kZXYpOwo+ID4gPiA+ID4gPiA+ICsgICAgIGlmIChyZXQpCj4gPiA+ID4g
-PiA+ID4gKyAgICAgICAgICAgICByZXR1cm4gcmV0Owo+ID4gPiA+ID4gPiA+ICsKPiA+ID4gPiA+
-ID4gPiArICAgICBwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCB0bWRldik7Cj4gPiA+ID4gPiA+
-ID4gKwo+ID4gPiA+ID4gPiA+ICsgICAgIHJldHVybiByZXQ7Cj4gPiA+ID4gPiA+ID4gK30KPiA+
-ID4gPiA+ID4gPiArCj4gPiA+ID4gPiA+ID4gK3N0YXRpYyBpbnQgdHNlbnNfcmVtb3ZlKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiA+ID4gPiA+ID4gK3sKPiA+ID4gPiA+ID4gPiAr
-ICAgICBzdHJ1Y3QgdHNlbnNfZGV2aWNlICp0bWRldiA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBk
-ZXYpOwo+ID4gPiA+ID4gPiA+ICsKPiA+ID4gPiA+ID4gPiArICAgICB0bWRldi0+Y2hpcC0+ZGlz
-YWJsZSh0bWRldik7Cj4gPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiA+ICsgICAgIHJldHVybiAw
-Owo+ID4gPiA+ID4gPiA+ICt9Cj4gPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiA+ICtzdGF0aWMg
-aW50IHN1bjUwaV90aGVybWFsX2VuYWJsZShzdHJ1Y3QgdHNlbnNfZGV2aWNlICp0bWRldikKPiA+
-ID4gPiA+ID4gPiArewo+ID4gPiA+ID4gPiA+ICsgICAgIGludCByZXQsIHZhbDsKPiA+ID4gPiA+
-ID4gPiArCj4gPiA+ID4gPiA+ID4gKyAgICAgcmV0ID0gcmVzZXRfY29udHJvbF9kZWFzc2VydCh0
-bWRldi0+cmVzZXQpOwo+ID4gPiA+ID4gPiA+ICsgICAgIGlmIChyZXQpCj4gPiA+ID4gPiA+ID4g
-KyAgICAgICAgICAgICByZXR1cm4gcmV0Owo+ID4gPiA+ID4gPiA+ICsKPiA+ID4gPiA+ID4gPiAr
-ICAgICByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUodG1kZXYtPmJ1c19jbGspOwo+ID4gPiA+ID4g
-PiA+ICsgICAgIGlmIChyZXQpCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICBnb3RvIGFzc2Vy
-dF9yZXNldDsKPiA+ID4gPiA+ID4gPiArCj4gPiA+ID4gPiA+ID4gKyAgICAgcmV0ID0gdHNlbnNf
-Y2FsaWJyYXRlKHRtZGV2KTsKPiA+ID4gPiA+ID4gPiArICAgICBpZiAocmV0KQo+ID4gPiA+ID4g
-PiA+ICsgICAgICAgICAgICAgcmV0dXJuIHJldDsKPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gSWYg
-dGhpcyBmYWlscyAoaXQgbWF5IGxpa2VseSBmYWlsIHdpdGggRVBST0JFX0RFRkVSKSB5b3UgYXJl
-IGxlYXZpbmcgcmVzZXQKPiA+ID4gPiA+ID4gZGVhc3NlcnRlZCwgYW5kIGNsb2NrIGVuYWJsZWQu
-Cj4gPiA+ID4gPiA+Cj4gPiA+ID4gPiA+IE92ZXJhbGwsIEkgdGhpbmssIHJlc2V0L2Nsb2NrIG1h
-bmFnZW1lbnQgYW5kIG52bWVtIHJlYWRpbmcgd2lsbCBiZSBjb21tb24KPiA+ID4gPiA+ID4gdG8g
-YWxsIHRoZSBIVyB2YXJpYW50cywgc28gaXQgZG9lc24ndCBtYWtlIG11Y2ggc2Vuc2Ugc3BsaXR0
-aW5nIGl0IG91dAo+ID4gPiA+ID4gPiBvZiBwcm9iZSBpbnRvIHNlcGFyYXRlIGZ1bmN0aW9ucywg
-YW5kIG1ha2VzIGl0IG1vcmUgZXJyb3IgcHJvbmUuCj4gPiA+ID4gPgo+ID4gPiA+ID4gT3VyIGxv
-bmctdGVybSBnb2FsIGlzIHRvIHN1cHBvcnQgYWxsIHBsYXRmb3Jtcy4KPiA+ID4gPiA+IEJhY2lj
-YWxsdCB0aGVyZSBpcyBhIGRpZmZlcmVuY3IgYmV0d2VlbiBlYWNoIGdlbmVyYXRpb24uCj4gPiA+
-ID4gPiBTbyBJIGZlZWwgaXQgbmVjZXNzYXJ5IHRvIGlzb2xhdGUgdGhlc2UgZGlmZmVyZW5jZXMu
-Cj4gPiA+ID4gPgo+ID4gPiA+ID4gTWF5YmU6Cj4gPiA+ID4gPiBBdCBzb21lIHBvaW50LCB3ZSBj
-YW4gZHJhdyBhIHBhcnQgb2YgdGhlIHB1YmxpYyBwYXJ0IGFuZCBwbGF0Zm9ybQo+ID4gPiA+ID4g
-ZGlmZmVyZW5jZSBpbnRvIGRpZmZlcmVudAo+ID4gPiA+ID4gZmlsZXMuIHNvbWV0aGluZyBsaWtl
-IHFjb20gdGhlcm1hbCBkcml2ZXIuCj4gPiA+ID4KPiA+ID4gPiBJIHVuZGVyc3RhbmQsIGJ1dCBJ
-IHdyb3RlIHRocyBkcml2ZXJzIGZvciBIMy9INS9BODNUIGFuZCBpdCBzbyBmYXIgaXQgbG9va3Mg
-bGlrZQo+ID4gPiA+IGFsbCBvZiB0aGVtIHdvdWxkIHNoYXJlIHRoZXNlIDMgY2FsbHMuCj4gPiA+
-ID4KPiA+ID4gPiBZb3UnbGwgYmUgZW5hYmxpbmcgY2xvY2svcmVzZXQgYW5kIGNhbGxpYnJhdGlu
-ZyBldmVyeXdoZXJlLiBTbyBwdXR0aW5nIHRoaXMgdG8KPiA+ID4gPiBwZXItU29DIGZ1bmN0aW9u
-IHNlZW1zIHByZW1hdHVyZS4KPiA+ID4KPiA+ID4gSW4gZmFjdCwgZW5hbGJlIGFuZCBkaXNhYmxl
-IGFyZSB0aGUgc3VzcGVuZCBhbmQgcmVzdW1lIGZ1bmN0aW9ucy4oUE0KPiA+ID4gY2FsbGJhY2sg
-d2lsbCBiZSBhZGRlZCBpbiB0aGUgZnV0dXJlKQo+ID4gPiBXaGVuIGV4aXRpbmcgZnJvbSBzMnJh
-bSwgdGhlIHJlZ2lzdGVyIHdpbGwgYmVjb21lIHRoZSBpbml0aWFsIHZhbHVlLgo+ID4gPiBXZSBu
-ZWVkIHRvIGRvIGFsbCB0aGUgd29yaywgZW5hYmxpbmcgcmVzZXQvY2xrICxjYWxpYnJhdGluZyBh
-bmQKPiA+ID4gaW5pdGlhbGl6aW5nIG90aGVyIHJlZy4KPiA+ID4KPiA+ID4gU28gSSB0aGluayBp
-dCBpcyBubyBuZWVkIHRvIHB1dCBlbmFibGluZyByZXNldC9jbGsgYW5kIGNhbGlicmF0aW5nIHRv
-Cj4gPiA+IHByb2JlIGZ1bmMsIGFuZCBJJ2QgbGlrZQo+ID4gPiB0byBrZWVwIGVuYWJsZSBhbmQg
-ZGlzYWJsZSBmdW5jLgo+ID4KPiA+IEkga25vdywgSSBkb24ndCB0aGluayBpdCBuZWVkcyB0byBi
-ZSBwZXItc29jLiBUaGVzZSBhY3Rpb25zIGFyZSBhbGwgc2hhcmVkIGJ5Cj4gPiBhbGwgU29Dcy4g
-TWF5YmUgd2l0aCBhbiBleGNlcHRpb24gdGhhdCBzb21lIFNvQ3MgbWF5IG5lZWQgb25lIG1vcmUg
-Y2xvY2ssIGJ1dAo+ID4gdGhhdCBjYW4gYmUgbWFkZSBvcHRpb25hbGx5LXJlcXVpcmVkIGJ5IHNv
-bWUgZmxhZyBpbiBzdHJ1Y3Qgc3VueGlfdGhlcm1hbF9jaGlwLgo+ID4KPiA+IE9ubHkgaGlnaGx5
-IFNvQyBzcGVjaWZpYyB0aGluZyBpcyBjb25maWd1cmluZyB0aGUgVEhTIHJlZ2lzdGVycyBmb3Ig
-c2FtcGxpbmcKPiA+IGZyZXF1ZW5jeS9hdmVyYWdpbmcvZW5hYmxpbmcgaW50ZXJydXB0cy4gVGhl
-IHJlc2V0L2Nsb2NrIGVuYWJsZSBpcyBnZW5lcmljLCBhbmQKPiA+IGFscmVhZHkgYWJzdHJhY3Rl
-ZCBieSB0aGUgY2xvY2svcmVzZXQgZnJhbWV3b3JrLgo+ID4KPiA+IFNvIHdoYXQgSSBzdWdnZXN0
-IGlzIGhhdmluZzoKPiA+Cj4gPiBzdW54aV90aHNfZW5hYmxlKCkKPiA+ICAgICAgICAgcmVzZXQg
-ZGVhc3NlcnQKPiA+ICAgICAgICAgYnVzIGNsb2NrIHByZXBhcmUgZW5hYmxlCj4gPiAgICAgICAg
-IG9wdGlvbmFsbHkgbW9kdWxlIGNsb2NrIHByZXBhcmUgZW5hYmxlIChpbiB0aGUgZnV0dXJlKQo+
-ID4gICAgICAgICBjYWxsIHBlci1zb2MgY2FsaWJyYXRpb24KPiA+ICAgICAgICAgY2FsbCBwZXIt
-c29jIHNldHVwIGNhbGxiYWNrCj4gPgo+ID4gc3VueGlfdGhzX2Rpc2FibGUoKQo+ID4gICAgICAg
-ICByZXNldCBhc3NlcnQKPiA+ICAgICAgICAgYnVzIGNsb2NrIHVucHJlcGFyZSBkaXNhYmxlCj4g
-PiAgICAgICAgIG9wdGlvbmFsbHkgbW9kdWxlIGNsb2NrIHVucHJlcGFyZSBkaXNhYmxlCj4gPgo+
-ID4gQW5kIGlmIHlvdSBjb3VsZCBtb3ZlIGRldm1fbnZtZW1fY2VsbF9nZXQgdG8gcHJvYmUgdGhh
-dCBzaG91bGQgbWFrZSBwZXItU29DCj4gPiBjYWxpYnJhdGlvbiBjYWxsYmFjayBhbHNvIGxlc3Mg
-cmVwZXRpdGl2ZSBhbmQgY291bGQgYXZvaWQgdW5kb2luZyB0aGUgZW5hYmxlCj4gPiBpbiBjYXNl
-IGl0IHJldHVybnMgRVBST0JFX0RFRkVSICh3aGljaCBpcyBwb3NzaWJsZSkuCj4gPgo+ID4gQWxs
-IHRoaXMgc2hvdWxkIG1ha2UgaXQgZWFzaWVyIHRvIHN1cHBvcnQgUE0gaW4gdGhlIGZ1dHVyZSBh
-bmQgYWRkIGxlc3MKPiA+IGN1bWJlcnNvbWUgdG8gYWRkIHN1cHBvcnQgZm9yIEE4M1QgYW5kIEgz
-L0g1Lgo+ID4KPiA+IEJUVywgd2hhdCBhcmUgeW91ciBwbGFucyBmb3IgbW9yZSBTb0Mgc3VwcG9y
-dD8gSSdkIGxpa2UgdG8gYWRkIHN1cHBvcnQgZm9yCj4gPiBBODNUIGFuZCBIMy9INSwgbWF5YmUg
-ZXZlbiBkdXJpbmcgdGhlIDUuMyBjeWNsZSBpZiB0aGlzIGRyaXZlciBoYXBwZW5zIHRvIGxhbmQK
-PiA+IGVhcmx5IGVub3VnaC4gSWYgeW91IGRvbid0IGhhdmUgYW55IHBsYW5zIEknbGwgdGFrZSBp
-dCBvbi4KPiA+Cj4KPiBJIHBsYW4gdG8gc3VwcG9ydCBoMyBhbmQgYTMzIGxhdGVyLgo+IENhbiB5
-b3Ugc3VwcG9ydCBvdGhlciBwbGF0Zm9ybXM/CgpJJ2xsIHdvcmsgb24gQTY0IG9uY2UgdGhpcyBk
-cml2ZXIgbGFuZHMuCgo+IENoZWVycywKPiBZYW5ndGFvCj4KPiA+IHRoYW5rIHlvdSBhbmQgcmVn
-YXJkcywKPiA+ICAgICAgICAgby4KPiA+Cj4gPiA+ID4KPiA+ID4gPiB0aGFuayB5b3UgYW5kIHJl
-Z2FyZHMsCj4gPiA+ID4gICAgICAgICBvLgo+ID4gPiA+Cj4gPiA+ID4gPiBSZWdhcmRzLAo+ID4g
-PiA+ID4gWWFuZ3Rhbwo+ID4gPgo+ID4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwo+ID4gPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAo+ID4g
-PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiA+ID4gaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCj4KPiBfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGxpbnV4LWFybS1r
-ZXJuZWwgbWFpbGluZyBsaXN0Cj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Cj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+From: Colin Ian King <colin.king@canonical.com>
+
+The spelling of configured is incorrect in the documentation. Fix it.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ .../devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt    | 6 +++---
+ .../devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt    | 6 +++---
+ .../devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt    | 6 +++---
+ .../devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt    | 6 +++---
+ .../devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt    | 6 +++---
+ .../devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt    | 6 +++---
+ .../devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt    | 6 +++---
+ .../devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt    | 6 +++---
+ .../devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt     | 6 +++---
+ .../devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt     | 6 +++---
+ .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt     | 6 +++---
+ 11 files changed, 33 insertions(+), 33 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
+index 68e93d5b7ede..c9782397ff14 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
+@@ -122,17 +122,17 @@ to specify in a pin configuration subnode:
+ - bias-disable:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as no pull.
++	Definition: The specified pins should be configured as no pull.
+ 
+ - bias-pull-down:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull down.
++	Definition: The specified pins should be configured as pull down.
+ 
+ - bias-pull-up:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull up.
++	Definition: The specified pins should be configured as pull up.
+ 
+ - output-high:
+ 	Usage: optional
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
+index 6dd72f8599e9..7b151894f5a0 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
+@@ -118,17 +118,17 @@ to specify in a pin configuration subnode:
+ - bias-disable:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as no pull.
++	Definition: The specified pins should be configured as no pull.
+ 
+ - bias-pull-down:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull down.
++	Definition: The specified pins should be configured as pull down.
+ 
+ - bias-pull-up:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull up.
++	Definition: The specified pins should be configured as pull up.
+ 
+ - output-high:
+ 	Usage: optional
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
+index 86ecdcfc4fb8..d46973968873 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
+@@ -97,17 +97,17 @@ to specify in a pin configuration subnode:
+ - bias-disable:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as no pull.
++	Definition: The specified pins should be configured as no pull.
+ 
+ - bias-pull-down:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull down.
++	Definition: The specified pins should be configured as pull down.
+ 
+ - bias-pull-up:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull up.
++	Definition: The specified pins should be configured as pull up.
+ 
+ - output-high:
+ 	Usage: optional
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
+index 195a7a0ef0cc..3354a63296d9 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
+@@ -130,17 +130,17 @@ to specify in a pin configuration subnode:
+ - bias-disable:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as no pull.
++	Definition: The specified pins should be configured as no pull.
+ 
+ - bias-pull-down:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull down.
++	Definition: The specified pins should be configured as pull down.
+ 
+ - bias-pull-up:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull up.
++	Definition: The specified pins should be configured as pull up.
+ 
+ - output-high:
+ 	Usage: optional
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
+index 5034eb6653c7..a7dd213c77c6 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
+@@ -124,17 +124,17 @@ to specify in a pin configuration subnode:
+ - bias-disable:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as no pull.
++	Definition: The specified pins should be configured as no pull.
+ 
+ - bias-pull-down:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull down.
++	Definition: The specified pins should be configured as pull down.
+ 
+ - bias-pull-up:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull up.
++	Definition: The specified pins should be configured as pull up.
+ 
+ - output-high:
+ 	Usage: optional
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
+index f15443f6e78e..da52df6273bc 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
+@@ -128,17 +128,17 @@ to specify in a pin configuration subnode:
+ - bias-disable:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as no pull.
++	Definition: The specified pins should be configured as no pull.
+ 
+ - bias-pull-down:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull down.
++	Definition: The specified pins should be configured as pull down.
+ 
+ - bias-pull-up:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull up.
++	Definition: The specified pins should be configured as pull up.
+ 
+ - output-high:
+ 	Usage: optional
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
+index fa97f609fe45..a56cb882830c 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
+@@ -149,17 +149,17 @@ to specify in a pin configuration subnode:
+ - bias-disable:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as no pull.
++	Definition: The specified pins should be configured as no pull.
+ 
+ - bias-pull-down:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull down.
++	Definition: The specified pins should be configured as pull down.
+ 
+ - bias-pull-up:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull up.
++	Definition: The specified pins should be configured as pull up.
+ 
+ - output-high:
+ 	Usage: optional
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
+index e70c79bbbc5b..00174f08ba1d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
+@@ -135,17 +135,17 @@ to specify in a pin configuration subnode:
+ - bias-disable:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as no pull.
++	Definition: The specified pins should be configured as no pull.
+ 
+ - bias-pull-down:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull down.
++	Definition: The specified pins should be configured as pull down.
+ 
+ - bias-pull-up:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull up.
++	Definition: The specified pins should be configured as pull up.
+ 
+ - output-high:
+ 	Usage: optional
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
+index 2b8f77762edc..a50e74684195 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
+@@ -150,17 +150,17 @@ to specify in a pin configuration subnode:
+ - bias-disable:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as no pull.
++	Definition: The specified pins should be configured as no pull.
+ 
+ - bias-pull-down:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull down.
++	Definition: The specified pins should be configured as pull down.
+ 
+ - bias-pull-up:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull up.
++	Definition: The specified pins should be configured as pull up.
+ 
+ - output-high:
+ 	Usage: optional
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt
+index 769ca83bb40d..be034d329e10 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt
+@@ -142,17 +142,17 @@ to specify in a pin configuration subnode:
+ - bias-disable:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as no pull.
++	Definition: The specified pins should be configured as no pull.
+ 
+ - bias-pull-down:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull down.
++	Definition: The specified pins should be configured as pull down.
+ 
+ - bias-pull-up:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull up.
++	Definition: The specified pins should be configured as pull up.
+ 
+ - output-high:
+ 	Usage: optional
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+index 665aadb5ea28..321bdb9be0d2 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+@@ -118,17 +118,17 @@ to specify in a pin configuration subnode:
+ - bias-disable:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as no pull.
++	Definition: The specified pins should be configured as no pull.
+ 
+ - bias-pull-down:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull down.
++	Definition: The specified pins should be configured as pull down.
+ 
+ - bias-pull-up:
+ 	Usage: optional
+ 	Value type: <none>
+-	Definition: The specified pins should be configued as pull up.
++	Definition: The specified pins should be configured as pull up.
+ 
+ - output-high:
+ 	Usage: optional
+-- 
+2.20.1
