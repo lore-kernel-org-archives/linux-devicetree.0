@@ -1,186 +1,209 @@
-From: "kernelci.org bot" <bot@kernelci.org>
-Subject: mainline/master boot bisection: v5.2-rc1-320-g86c2f5d65305 on
- meson-g12a-x96-max
-Date: Sat, 25 May 2019 02:46:41 -0700 (PDT)
-Message-ID: <5ce90f01.1c69fb81.25208.29b0@mx.google.com>
+From: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Subject: [PATCH V4 06/12] misc: xilinx_sdfec: Add ability to configure turbo
+Date: Sat, 25 May 2019 12:37:19 +0100
+Message-ID: <1558784245-108751-7-git-send-email-dragan.cvetic@xilinx.com>
+References: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com, mgalka@collabora.com, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org, matthew.hart@linaro.orgkhilman@baylibre.com, enric.balletbo@collabora.com, Jerome Brunet <jbrunet@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+mode
 
-mainline/master boot bisection: v5.2-rc1-320-g86c2f5d65305 on meson-g12a-x9=
-6-max
+Add the capability to configure and retrieve turbo mode
+via the ioctls XSDFEC_SET_TURBO and XSDFEC_GET_TURBO.
 
-Summary:
-  Start:      86c2f5d65305 Merge tag 'spdx-5.2-rc2-2' of git://git.kernel.o=
-rg/pub/scm/linux/kernel/git/gregkh/driver-core
-  Details:    https://kernelci.org/boot/id/5ce89c5d59b5142ea77a3629
-  Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-320-g8=
-6c2f5d65305/arm64/defconfig/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.txt
-  HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-320-g8=
-6c2f5d65305/arm64/defconfig/gcc-8/lab-baylibre/boot-meson-g12a-x96-max.html
-  Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support con=
-trollers
+Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+---
+ drivers/misc/xilinx_sdfec.c      | 61 ++++++++++++++++++++++++++++++++++
+ include/uapi/misc/xilinx_sdfec.h | 71 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 132 insertions(+)
 
-Checks:
-  revert:     PASS
-  verify:     PASS
-
-Parameters:
-  Tree:       mainline
-  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git
-  Branch:     master
-  Target:     meson-g12a-x96-max
-  CPU arch:   arm64
-  Lab:        lab-baylibre
-  Compiler:   gcc-8
-  Config:     defconfig
-  Test suite: boot
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit 11a7bea17c9e0a36daab934d83e15a760f402147
-Author: Jerome Brunet <jbrunet@baylibre.com>
-Date:   Mon Mar 18 10:58:45 2019 +0100
-
-    arm64: dts: meson: g12a: add pinctrl support controllers
-    =
-
-    Add the peripheral and always-on pinctrl controllers to the g12a soc.
-    =
-
-    Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-    Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-    Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/=
-dts/amlogic/meson-g12a.dtsi
-index abfa167751af..5e07e4ca3f4b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -104,6 +104,29 @@
- 				#address-cells =3D <2>;
- 				#size-cells =3D <2>;
- 				ranges =3D <0x0 0x0 0x0 0x34400 0x0 0x400>;
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index c19df6b..1f02109 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -103,6 +103,12 @@ static atomic_t xsdfec_ndevs = ATOMIC_INIT(0);
+ /* BYPASS Register */
+ #define XSDFEC_BYPASS_ADDR (0x3C)
+ 
++/* Turbo Code Register */
++#define XSDFEC_TURBO_ADDR (0x100)
++#define XSDFEC_TURBO_SCALE_MASK (0xFFF)
++#define XSDFEC_TURBO_SCALE_BIT_POS (8)
++#define XSDFEC_TURBO_SCALE_MAX (15)
 +
-+				periphs_pinctrl: pinctrl@40 {
-+					compatible =3D "amlogic,meson-g12a-periphs-pinctrl";
-+					#address-cells =3D <2>;
-+					#size-cells =3D <2>;
-+					ranges;
+ /**
+  * struct xsdfec_clks - For managing SD-FEC clocks
+  * @core_clk: Main processing clock for core
+@@ -217,6 +223,55 @@ static int xsdfec_dev_release(struct inode *iptr, struct file *fptr)
+ 	return 0;
+ }
+ 
++static int xsdfec_set_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
++{
++	struct xsdfec_turbo turbo;
++	int err;
++	u32 turbo_write;
 +
-+					gpio: bank@40 {
-+						reg =3D <0x0 0x40  0x0 0x4c>,
-+						      <0x0 0xe8  0x0 0x18>,
-+						      <0x0 0x120 0x0 0x18>,
-+						      <0x0 0x2c0 0x0 0x40>,
-+						      <0x0 0x340 0x0 0x1c>;
-+						reg-names =3D "gpio",
-+							    "pull",
-+							    "pull-enable",
-+							    "mux",
-+							    "ds";
-+						gpio-controller;
-+						#gpio-cells =3D <2>;
-+						gpio-ranges =3D <&periphs_pinctrl 0 0 86>;
-+					};
-+				};
- 			};
- =
-
- 			hiu: bus@3c000 {
-@@ -150,6 +173,25 @@
- 					clocks =3D <&xtal>, <&clkc CLKID_CLK81>;
- 					clock-names =3D "xtal", "mpeg-clk";
- 				};
++	err = copy_from_user(&turbo, arg, sizeof(turbo));
++	if (err)
++		return -EFAULT;
 +
-+				ao_pinctrl: pinctrl@14 {
-+					compatible =3D "amlogic,meson-g12a-aobus-pinctrl";
-+					#address-cells =3D <2>;
-+					#size-cells =3D <2>;
-+					ranges;
++	if (turbo.alg >= XSDFEC_TURBO_ALG_MAX)
++		return -EINVAL;
 +
-+					gpio_ao: bank@14 {
-+						reg =3D <0x0 0x14 0x0 0x8>,
-+						      <0x0 0x1c 0x0 0x8>,
-+						      <0x0 0x24 0x0 0x14>;
-+						reg-names =3D "mux",
-+							    "ds",
-+							    "gpio";
-+						gpio-controller;
-+						#gpio-cells =3D <2>;
-+						gpio-ranges =3D <&ao_pinctrl 0 0 15>;
-+					};
-+				};
- 			};
- =
-
- 			sec_AO: ao-secure@140 {
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [a455eda33faafcaac1effb31d682765b14ef868c] Merge branch 'linus' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal
-git bisect good a455eda33faafcaac1effb31d682765b14ef868c
-# bad: [86c2f5d653058798703549e1be39a819fcac0d5d] Merge tag 'spdx-5.2-rc2-2=
-' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
-git bisect bad 86c2f5d653058798703549e1be39a819fcac0d5d
-# bad: [8122de54602e30f0a73228ab6459a3654e652b92] dt-bindings: Convert vend=
-or prefixes to json-schema
-git bisect bad 8122de54602e30f0a73228ab6459a3654e652b92
-# bad: [b45da609a02460c6a34c395f03f891f1fb2a021a] Merge tag 'imx-bindings-5=
-.2' of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into ar=
-m/dt
-git bisect bad b45da609a02460c6a34c395f03f891f1fb2a021a
-# bad: [a41332dd5e2ac56b0b6eb0959d8828bfe0d6a4ad] Merge tag 'socfpga_dts_up=
-dates_for_v5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/l=
-inux into arm/dt
-git bisect bad a41332dd5e2ac56b0b6eb0959d8828bfe0d6a4ad
-# bad: [bbf7499dc033831ae91125a88a062910cdc62cf2] Merge tag 'aspeed-5.2-dev=
-icetree' of git://git.kernel.org/pub/scm/linux/kernel/git/joel/aspeed into =
-arm/dt
-git bisect bad bbf7499dc033831ae91125a88a062910cdc62cf2
-# bad: [f6f9683c5aedff214433fa130e67a79f08a47fdb] Merge tag 'v5.2-rockchip-=
-dts32-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockc=
-hip into arm/dt
-git bisect bad f6f9683c5aedff214433fa130e67a79f08a47fdb
-# bad: [e2cffeb398f4830b004774444809ee256b9bc653] arm64: dts: meson-g12a: A=
-dd CMA reserved memory
-git bisect bad e2cffeb398f4830b004774444809ee256b9bc653
-# bad: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: meson: g12a: =
-add pinctrl support controllers
-git bisect bad 11a7bea17c9e0a36daab934d83e15a760f402147
-# good: [7e09092aee006b21d830b99f8498b5640b8711f6] arm64: dts: meson-gxl-s9=
-05d-phicomm-n1: add status LED
-git bisect good 7e09092aee006b21d830b99f8498b5640b8711f6
-# good: [965c827ac37e71f76d3ac55c75ac08909f2a4eed] arm64: dts: meson: g12a:=
- add efuse
-git bisect good 965c827ac37e71f76d3ac55c75ac08909f2a4eed
-# good: [b019f4a4199f865b054262ff78f606ca70f7b981] arm64: dts: meson: g12a:=
- Add AO Clock + Reset Controller support
-git bisect good b019f4a4199f865b054262ff78f606ca70f7b981
-# first bad commit: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: =
-meson: g12a: add pinctrl support controllers
----------------------------------------------------------------------------=
-----
++	if (turbo.scale > XSDFEC_TURBO_SCALE_MAX)
++		return -EINVAL;
++
++	/* Check to see what device tree says about the FEC codes */
++	if (xsdfec->config.code == XSDFEC_LDPC_CODE)
++		return -EIO;
++
++	turbo_write = ((turbo.scale & XSDFEC_TURBO_SCALE_MASK)
++		       << XSDFEC_TURBO_SCALE_BIT_POS) |
++		      turbo.alg;
++	xsdfec_regwrite(xsdfec, XSDFEC_TURBO_ADDR, turbo_write);
++	return err;
++}
++
++static int xsdfec_get_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
++{
++	u32 reg_value;
++	struct xsdfec_turbo turbo_params;
++	int err;
++
++	if (xsdfec->config.code == XSDFEC_LDPC_CODE)
++		return -EIO;
++
++	reg_value = xsdfec_regread(xsdfec, XSDFEC_TURBO_ADDR);
++
++	turbo_params.scale = (reg_value & XSDFEC_TURBO_SCALE_MASK) >>
++			     XSDFEC_TURBO_SCALE_BIT_POS;
++	turbo_params.alg = reg_value & 0x1;
++
++	err = copy_to_user(arg, &turbo_params, sizeof(turbo_params));
++	if (err)
++		err = -EFAULT;
++
++	return err;
++}
++
+ static u32
+ xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
+ {
+@@ -302,6 +357,12 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 	}
+ 
+ 	switch (cmd) {
++	case XSDFEC_SET_TURBO:
++		rval = xsdfec_set_turbo(xsdfec, arg);
++		break;
++	case XSDFEC_GET_TURBO:
++		rval = xsdfec_get_turbo(xsdfec, arg);
++		break;
+ 	default:
+ 		/* Should not get here */
+ 		dev_warn(xsdfec->dev, "Undefined SDFEC IOCTL");
+diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
+index 15647ef..756d788 100644
+--- a/include/uapi/misc/xilinx_sdfec.h
++++ b/include/uapi/misc/xilinx_sdfec.h
+@@ -41,6 +41,22 @@ enum xsdfec_order {
+ };
+ 
+ /**
++ * enum xsdfec_turbo_alg - Turbo Algorithm Type.
++ * @XSDFEC_MAX_SCALE: Max Log-Map algorithm with extrinsic scaling. When
++ *		      scaling is set to this is equivalent to the Max Log-Map
++ *		      algorithm.
++ * @XSDFEC_MAX_STAR: Log-Map algorithm.
++ * @XSDFEC_TURBO_ALG_MAX: Used to indicate out of bound Turbo algorithms.
++ *
++ * This enum specifies which Turbo Decode algorithm is in use.
++ */
++enum xsdfec_turbo_alg {
++	XSDFEC_MAX_SCALE = 0,
++	XSDFEC_MAX_STAR,
++	XSDFEC_TURBO_ALG_MAX,
++};
++
++/**
+  * enum xsdfec_state - State.
+  * @XSDFEC_INIT: Driver is initialized.
+  * @XSDFEC_STARTED: Driver is started.
+@@ -98,6 +114,33 @@ enum xsdfec_axis_word_include {
+ };
+ 
+ /**
++ * struct xsdfec_turbo - User data for Turbo codes.
++ * @alg: Specifies which Turbo decode algorithm to use
++ * @scale: Specifies the extrinsic scaling to apply when the Max Scale algorithm
++ *	   has been selected
++ *
++ * Turbo code structure to communicate parameters to XSDFEC driver.
++ */
++struct xsdfec_turbo {
++	enum xsdfec_turbo_alg alg;
++	__u8 scale;
++};
++
++/**
++ * struct xsdfec_status - Status of SD-FEC core.
++ * @fec_id: ID of SD-FEC instance. ID is limited to the number of active
++ *          SD-FEC's in the FPGA and is related to the driver instance
++ *          Minor number.
++ * @state: State of the SD-FEC core
++ * @activity: Describes if the SD-FEC instance is Active
++ */
++struct xsdfec_status {
++	__s32 fec_id;
++	enum xsdfec_state state;
++	__s8 activity;
++};
++
++/**
+  * struct xsdfec_irq - Enabling or Disabling Interrupts.
+  * @enable_isr: If true enables the ISR
+  * @enable_ecc_isr: If true enables the ECC ISR
+@@ -139,4 +182,32 @@ struct xsdfec_config {
+  * XSDFEC IOCTL List
+  */
+ #define XSDFEC_MAGIC 'f'
++/**
++ * DOC: XSDFEC_SET_TURBO
++ * @Parameters
++ *
++ * @struct xsdfec_turbo *
++ *	Pointer to the &struct xsdfec_turbo that contains the Turbo decode
++ *	settings for the SD-FEC core
++ *
++ * @Description
++ *
++ * ioctl that sets the SD-FEC Turbo parameter values
++ *
++ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ */
++#define XSDFEC_SET_TURBO _IOW(XSDFEC_MAGIC, 4, struct xsdfec_turbo)
++/**
++ * DOC: XSDFEC_GET_TURBO
++ * @Parameters
++ *
++ * @struct xsdfec_turbo *
++ *	Pointer to the &struct xsdfec_turbo that contains the current Turbo
++ *	decode settings of the SD-FEC Block
++ *
++ * @Description
++ *
++ * ioctl that returns SD-FEC turbo param values
++ */
++#define XSDFEC_GET_TURBO _IOR(XSDFEC_MAGIC, 7, struct xsdfec_turbo)
+ #endif /* __XILINX_SDFEC_H__ */
+-- 
+2.7.4
