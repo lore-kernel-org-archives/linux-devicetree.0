@@ -1,65 +1,37 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 03/10] ARM: dts: sunxi: prefer A31 instead of A13 for ir
-Date: Sat, 25 May 2019 20:09:16 +0200
-Message-ID: <20190525180923.6105-4-peron.clem@gmail.com>
-References: <20190525180923.6105-1-peron.clem@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190525180923.6105-1-peron.clem@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH v3 0/3] add thermal driver for h6
+Date: Sat, 25 May 2019 14:13:26 -0400
+Message-ID: <20190525181329.18657-1-tiny.windzz@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-U2luY2UgQTMxIG1lbW9yeSBtYXBwaW5nIG9mIHRoZSBJUiBkcml2ZXIgaGFzIGNoYW5nZWQuCgpQ
-cmVmZXIgdGhlIEEzMSBiaW5kaW5ncyBpbnN0ZWFkIG9mIEExMy4KClNpZ25lZC1vZmYtYnk6IENs
-w6ltZW50IFDDqXJvbiA8cGVyb24uY2xlbUBnbWFpbC5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9k
-dHMvc3VuNmktYTMxLmR0c2kgICB8IDIgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3Qu
-ZHRzaSAgfCAyICstCiBhcmNoL2FybS9ib290L2R0cy9zdW45aS1hODAuZHRzaSAgIHwgMiArLQog
-YXJjaC9hcm0vYm9vdC9kdHMvc3VueGktaDMtaDUuZHRzaSB8IDIgKy0KIDQgZmlsZXMgY2hhbmdl
-ZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL3N1bjZpLWEzMS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuNmktYTMxLmR0
-c2kKaW5kZXggYzA0ZWZhZDgxYmJjLi4xMTA2MjJiMzA3OTYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL3N1bjZpLWEzMS5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjZpLWEz
-MS5kdHNpCkBAIC0xMzUxLDcgKzEzNTEsNyBAQAogCQl9OwogCiAJCWlyOiBpckAxZjAyMDAwIHsK
-LQkJCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjVpLWExMy1pciI7CisJCQljb21wYXRpYmxl
-ID0gImFsbHdpbm5lcixzdW42aS1hMzEtaXIiOwogCQkJY2xvY2tzID0gPCZhcGIwX2dhdGVzIDE+
-LCA8JmlyX2Nsaz47CiAJCQljbG9jay1uYW1lcyA9ICJhcGIiLCAiaXIiOwogCQkJcmVzZXRzID0g
-PCZhcGIwX3JzdCAxPjsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3Qu
-ZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QuZHRzaQppbmRleCAzOTJiMGNhYmJm
-MGQuLjhkNjAzZjMzMDlmMiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgz
-dC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QuZHRzaQpAQCAtMTA2Nyw3
-ICsxMDY3LDcgQEAKIAogCQlyX2NpcjogaXJAMWYwMjAwMCB7CiAJCQljb21wYXRpYmxlID0gImFs
-bHdpbm5lcixzdW44aS1hODN0LWlyIiwKLQkJCQkiYWxsd2lubmVyLHN1bjVpLWExMy1pciI7CisJ
-CQkJImFsbHdpbm5lcixzdW42aS1hMzEtaXIiOwogCQkJY2xvY2tzID0gPCZyX2NjdSBDTEtfQVBC
-MF9JUj4sIDwmcl9jY3UgQ0xLX0lSPjsKIAkJCWNsb2NrLW5hbWVzID0gImFwYiIsICJpciI7CiAJ
-CQlyZXNldHMgPSA8JnJfY2N1IFJTVF9BUEIwX0lSPjsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL3N1bjlpLWE4MC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOWktYTgwLmR0c2kK
-aW5kZXggMGMxZWVjOTAwMGUzLi4zMTBjZDk3MmVlNWIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL3N1bjlpLWE4MC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjlpLWE4MC5k
-dHNpCkBAIC0xMTY3LDcgKzExNjcsNyBAQAogCQl9OwogCiAJCXJfaXI6IGlyQDgwMDIwMDAgewot
-CQkJY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuNWktYTEzLWlyIjsKKwkJCWNvbXBhdGlibGUg
-PSAiYWxsd2lubmVyLHN1bjZpLWEzMS1pciI7CiAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMzcg
-SVJRX1RZUEVfTEVWRUxfSElHSD47CiAJCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwogCQkJ
-cGluY3RybC0wID0gPCZyX2lyX3BpbnM+OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-c3VueGktaDMtaDUuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bnhpLWgzLWg1LmR0c2kKaW5k
-ZXggODQ5NzdkNGViOTdhLi5mMGY1YmEzNDljMWIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3N1bnhpLWgzLWg1LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VueGktaDMtaDUu
-ZHRzaQpAQCAtODIyLDcgKzgyMiw3IEBACiAJCX07CiAKIAkJaXI6IGlyQDFmMDIwMDAgewotCQkJ
-Y29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuNWktYTEzLWlyIjsKKwkJCWNvbXBhdGlibGUgPSAi
-YWxsd2lubmVyLHN1bjZpLWEzMS1pciI7CiAJCQljbG9ja3MgPSA8JnJfY2N1IENMS19BUEIwX0lS
-PiwgPCZyX2NjdSBDTEtfSVI+OwogCQkJY2xvY2stbmFtZXMgPSAiYXBiIiwgImlyIjsKIAkJCXJl
-c2V0cyA9IDwmcl9jY3UgUlNUX0FQQjBfSVI+OwotLSAKMi4yMC4xCgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+This patchset add support for H6 thermal sensor.
+
+BWY, do a cleanup in thermal makfile.
+
+Yangtao Li (3):
+  thermal: sun8i: add thermal driver for h6
+  dt-bindings: thermal: add binding document for h6 thermal controller
+  thermal: fix indentation in makefile
+
+ .../bindings/thermal/sun8i-thermal.yaml       |  71 +++
+ MAINTAINERS                                   |   7 +
+ drivers/thermal/Kconfig                       |  14 +
+ drivers/thermal/Makefile                      |   9 +-
+ drivers/thermal/sun8i_thermal.c               | 437 ++++++++++++++++++
+ 5 files changed, 534 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+ create mode 100644 drivers/thermal/sun8i_thermal.c
+
+---
+v3:
+-Add a sun8i prefix to some function
+-Remove disable callback and rename enable to init
+-Remove clock enable, calibration from init callback
+-Convert driver to interrupt based
+-Convert doc to yaml file
+---
+2.17.0
