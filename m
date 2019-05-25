@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 01/10] dt-bindings: media: A31 compatible
-Date: Sat, 25 May 2019 20:09:14 +0200
-Message-ID: <20190525180923.6105-2-peron.clem@gmail.com>
+Subject: [PATCH 08/10] arm64: dts: allwiner: h6: Add IR receiver node
+Date: Sat, 25 May 2019 20:09:21 +0200
+Message-ID: <20190525180923.6105-9-peron.clem@gmail.com>
 References: <20190525180923.6105-1-peron.clem@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,30 +13,44 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Since Allwiner A31 all the SoC have a differente memory mapping.
+Allwiner H6 IR is similar to A31 and can use same driver.
 
-Introduce this bindings to make a difference since this generation.
+Add support for it.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- Documentation/devicetree/bindings/media/sunxi-ir.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-index 278098987edb..53e88ebb53fe 100644
---- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
-+++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-@@ -1,7 +1,10 @@
- Device-Tree bindings for SUNXI IR controller found in sunXi SoC family
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 16c5c3d0fd81..649cbdfe452e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -647,6 +647,25 @@
+ 				pins = "PL0", "PL1";
+ 				function = "s_i2c";
+ 			};
++
++			r_ir_rx_pin: r-ir-rx-pin {
++				pins = "PL9";
++				function = "s_cir_rx";
++			};
++		};
++
++		r_ir: ir@7040000 {
++				compatible = "allwinner,sun50i-h6-ir",
++					     "allwinner,sun6i-a31-ir";
++				reg = <0x07040000 0x400>;
++				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&r_ccu CLK_R_APB1_IR>,
++					 <&r_ccu CLK_IR>;
++				clock-names = "apb", "ir";
++				resets = <&r_ccu RST_R_APB1_IR>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&r_ir_rx_pin>;
++				status = "disabled";
+ 		};
  
- Required properties:
--- compatible	    : "allwinner,sun4i-a10-ir" or "allwinner,sun5i-a13-ir"
-+- compatible	    :
-+	"allwinner,sun4i-a10-ir"
-+	"allwinner,sun5i-a13-ir"
-+	"allwinner,sun6i-a31-ir"
- - clocks	    : list of clock specifiers, corresponding to
- 		      entries in clock-names property;
- - clock-names	    : should contain "apb" and "ir" entries;
+ 		r_i2c: i2c@7081400 {
 -- 
 2.20.1
