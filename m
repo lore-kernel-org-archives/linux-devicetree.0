@@ -1,7 +1,8 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 02/10] media: rc: sunxi: Add A31 compatible
-Date: Mon, 27 May 2019 00:25:28 +0200
-Message-ID: <20190526222536.10917-3-peron.clem@gmail.com>
+Subject: [PATCH v2 03/10] ARM: dts: sunxi: prefer A31 instead of
+ A13 for ir
+Date: Mon, 27 May 2019 00:25:29 +0200
+Message-ID: <20190526222536.10917-4-peron.clem@gmail.com>
 References: <20190526222536.10917-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
@@ -20,27 +21,74 @@ To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob
 Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwiner A31 has a different memory mapping so add the compatible
-we will need it later.
+Since A31, memory mapping of the IR driver has changed.
+
+Prefer the A31 bindings instead of A13.
 
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/media/rc/sunxi-cir.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sun6i-a31.dtsi   | 2 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi  | 2 +-
+ arch/arm/boot/dts/sun9i-a80.dtsi   | 2 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-index 307e44714ea0..29ac33b68596 100644
---- a/drivers/media/rc/sunxi-cir.c
-+++ b/drivers/media/rc/sunxi-cir.c
-@@ -319,6 +319,7 @@ static int sunxi_ir_remove(struct platform_device *pdev=
-)
- static const struct of_device_id sunxi_ir_match[] =3D {
- 	{ .compatible =3D "allwinner,sun4i-a10-ir", },
- 	{ .compatible =3D "allwinner,sun5i-a13-ir", },
-+	{ .compatible =3D "allwinner,sun6i-a31-ir", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, sunxi_ir_match);
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31=
+.dtsi
+index c04efad81bbc..110622b30796 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -1351,7 +1351,7 @@
+ 		};
+=20
+ 		ir: ir@1f02000 {
+-			compatible =3D "allwinner,sun5i-a13-ir";
++			compatible =3D "allwinner,sun6i-a31-ir";
+ 			clocks =3D <&apb0_gates 1>, <&ir_clk>;
+ 			clock-names =3D "apb", "ir";
+ 			resets =3D <&apb0_rst 1>;
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a8=
+3t.dtsi
+index 392b0cabbf0d..8d603f3309f2 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -1067,7 +1067,7 @@
+=20
+ 		r_cir: ir@1f02000 {
+ 			compatible =3D "allwinner,sun8i-a83t-ir",
+-				"allwinner,sun5i-a13-ir";
++				"allwinner,sun6i-a31-ir";
+ 			clocks =3D <&r_ccu CLK_APB0_IR>, <&r_ccu CLK_IR>;
+ 			clock-names =3D "apb", "ir";
+ 			resets =3D <&r_ccu RST_APB0_IR>;
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80=
+.dtsi
+index 0c1eec9000e3..310cd972ee5b 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -1167,7 +1167,7 @@
+ 		};
+=20
+ 		r_ir: ir@8002000 {
+-			compatible =3D "allwinner,sun5i-a13-ir";
++			compatible =3D "allwinner,sun6i-a31-ir";
+ 			interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			pinctrl-names =3D "default";
+ 			pinctrl-0 =3D <&r_ir_pins>;
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h=
+3-h5.dtsi
+index 84977d4eb97a..f0f5ba349c1b 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -822,7 +822,7 @@
+ 		};
+=20
+ 		ir: ir@1f02000 {
+-			compatible =3D "allwinner,sun5i-a13-ir";
++			compatible =3D "allwinner,sun6i-a31-ir";
+ 			clocks =3D <&r_ccu CLK_APB0_IR>, <&r_ccu CLK_IR>;
+ 			clock-names =3D "apb", "ir";
+ 			resets =3D <&r_ccu RST_APB0_IR>;
 --=20
 2.20.1
 
@@ -50,5 +98,5 @@ linux-sunxi" group.
 To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190526222536.10917-3-peron.clem%40gmail.com.
+/linux-sunxi/20190526222536.10917-4-peron.clem%40gmail.com.
 For more options, visit https://groups.google.com/d/optout.
