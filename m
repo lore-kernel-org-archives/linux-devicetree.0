@@ -1,14 +1,13 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 09/10] arm64: dts: allwinner: h6: Enable IR
- on H6 boards
-Date: Mon, 27 May 2019 00:25:35 +0200
-Message-ID: <20190526222536.10917-10-peron.clem@gmail.com>
+Subject: [PATCH v2 10/10] arm64: defconfig: enable IR SUNXI option
+Date: Mon, 27 May 2019 00:25:36 +0200
+Message-ID: <20190526222536.10917-11-peron.clem@gmail.com>
 References: <20190526222536.10917-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBB4VEVTTQKGQEVXXD66Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBB45EVTTQKGQEZGRWSGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190526222536.10917-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,65 +20,26 @@ To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob
 Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Beelink GS1, OrangePi H6 boards and Pine H64 have an IR receiver.
-
-Enable it in their device-tree.
+Enable CONFIG_IR_SUNXI option for ARM64, so that Allwinner A64/H6 SoCs
+can use their IR receiver controller.
 
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi   | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts    | 4 ++++
- 3 files changed, 12 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch=
-/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index 0dc33c90dd60..680dc29cb089 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -232,6 +232,10 @@
- 	};
- };
-=20
-+&r_ir {
-+	status =3D "okay";
-+};
-+
- &r_pio {
- 	/*
- 	 * PL0 and PL1 are used for PMIC I2C
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/a=
-rm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index 62e27948a3fa..ec9b6a578e3f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -189,6 +189,10 @@
- 	};
- };
-=20
-+&r_ir {
-+	status =3D "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_ph_pins>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/ar=
-m64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 4802902e128f..ae12ee4fcc77 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -247,6 +247,10 @@
- 	};
- };
-=20
-+&r_ir {
-+	status =3D "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_ph_pins>;
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 4d583514258c..5128029100d2 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -460,6 +460,7 @@ CONFIG_RC_CORE=3Dm
+ CONFIG_RC_DECODERS=3Dy
+ CONFIG_RC_DEVICES=3Dy
+ CONFIG_IR_MESON=3Dm
++CONFIG_IR_SUNXI=3Dm
+ CONFIG_MEDIA_SUPPORT=3Dm
+ CONFIG_MEDIA_CAMERA_SUPPORT=3Dy
+ CONFIG_MEDIA_ANALOG_TV_SUPPORT=3Dy
 --=20
 2.20.1
 
@@ -89,5 +49,5 @@ linux-sunxi" group.
 To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190526222536.10917-10-peron.clem%40gmail.com.
+/linux-sunxi/20190526222536.10917-11-peron.clem%40gmail.com.
 For more options, visit https://groups.google.com/d/optout.
