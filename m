@@ -1,34 +1,82 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v6 0/3] MIPS: ath79: add ag71xx support
-Date: Sun, 26 May 2019 13:23:35 -0700 (PDT)
-Message-ID: <20190526.132335.1937144810229440950.davem@davemloft.net>
-References: <20190524111224.24819-1-o.rempel@pengutronix.de>
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 00/10] Allwinner A64/H6 IR support
+Date: Mon, 27 May 2019 00:25:26 +0200
+Message-ID: <20190526222536.10917-1-peron.clem@gmail.com>
+Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190524111224.24819-1-o.rempel@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: o.rempel@pengutronix.de
-Cc: paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org, robh+dt@kernel.org, jcliburn@gmail.com, chris.snook@gmail.com, mark.rutland@arm.com, kernel@pengutronix.de, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, john@phrozen.org, nbd@nbd.name, netdev@vger.kernel.org, andrew@lunn.ch, gch981213@gmail.com, info@freifunk-bad-gandersheim.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCELXIX7UICBB2FEVTTQKGQEU6SK3LI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Date: Fri, 24 May 2019 13:12:21 +0200
+Hi,
 
- ...
-> This patch series provide ethernet support for many Atheros/QCA
-> MIPS based SoCs.
-> 
-> I reworked ag71xx driver which was previously maintained within OpenWRT
-> repository. So far, following changes was made to make upstreaming
-> easier:
-> - everything what can be some how used in user space was removed. Most
->   of it was debug functionality.
-> - most of deficetree bindings was removed. Not every thing made sense
->   and most of it is SoC specific, so it is possible to detect it by
->   compatible.
-> - mac and mdio parts are merged in to one driver. It makes easier to
->   maintaine SoC specific quirks.
+A64 IR support series[1] pointed out that an A31 bindings should be
+introduced.
 
-Series applied, thanks.
+This series introduce the A31 compatible bindings, then switch it on
+the already existing board.
+
+Finally introduce A64 and H6 support.
+
+Regards,
+Cl=C3=A9ment
+
+[1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
+
+Changes since v1:
+ - Document reset lines as required since A31
+ - Explain the memory mapping difference in commit log
+ - Fix misspelling "Allwiner" to "Allwinner"
+
+Cl=C3=A9ment P=C3=A9ron (8):
+  dt-bindings: media: sunxi-ir: add A31 compatible
+  media: rc: sunxi: Add A31 compatible
+  ARM: dts: sunxi: prefer A31 instead of A13 for ir
+  dt-bindings: media: sunxi-ir: Add A64 compatible
+  dt-bindings: media: sunxi-ir: Add H6 compatible
+  arm64: dts: allwinner: h6: Add IR receiver node
+  arm64: dts: allwinner: h6: Enable IR on H6 boards
+  arm64: defconfig: enable IR SUNXI option
+
+Igors Makejevs (1):
+  arm64: dts: allwinner: a64: Add IR node
+
+Jernej Skrabec (1):
+  arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
+
+ .../devicetree/bindings/media/sunxi-ir.txt    | 11 +++++++++--
+ arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
+ arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++++++++++++++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++++
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  4 ++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 +++++++++++++++++++
+ arch/arm64/configs/defconfig                  |  1 +
+ drivers/media/rc/sunxi-cir.c                  |  1 +
+ 13 files changed, 68 insertions(+), 6 deletions(-)
+
+--=20
+2.20.1
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190526222536.10917-1-peron.clem%40gmail.com.
+For more options, visit https://groups.google.com/d/optout.
