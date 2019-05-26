@@ -1,13 +1,15 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 00/10] Allwinner A64/H6 IR support
-Date: Mon, 27 May 2019 00:25:26 +0200
-Message-ID: <20190526222536.10917-1-peron.clem@gmail.com>
+Subject: [PATCH v2 01/10] dt-bindings: media: sunxi-ir: add A31 compatible
+Date: Mon, 27 May 2019 00:25:27 +0200
+Message-ID: <20190526222536.10917-2-peron.clem@gmail.com>
+References: <20190526222536.10917-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBB2FEVTTQKGQEU6SK3LI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBB2NEVTTQKGQE2MOUSSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190526222536.10917-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,57 +20,59 @@ To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob
 Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Allwinner A31 has introduced a new memory mapping and a
+reset line.
 
-A64 IR support series[1] pointed out that an A31 bindings should be
-introduced.
+The difference in memory mapping are :
 
-This series introduce the A31 compatible bindings, then switch it on
-the already existing board.
+- In the configure register there is a new sample bit
+  and Allwinner has introduced the active threshold feature.
 
-Finally introduce A64 and H6 support.
+- In the status register a new STAT bit is present.
 
-Regards,
-Cl=C3=A9ment
+Note: CGPO and DRQ_EN bits are removed on A31 but present on A13
+and on new SoCs like A64/H6.
+This is actually not an issue as these bits are togglable and new
+SoCs have a dedicated bindings.
 
-[1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
+Introduce this bindings to make a difference since this generation.
+And declare the reset line required since A31.
 
-Changes since v1:
- - Document reset lines as required since A31
- - Explain the memory mapping difference in commit log
- - Fix misspelling "Allwiner" to "Allwinner"
+Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/media/sunxi-ir.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Cl=C3=A9ment P=C3=A9ron (8):
-  dt-bindings: media: sunxi-ir: add A31 compatible
-  media: rc: sunxi: Add A31 compatible
-  ARM: dts: sunxi: prefer A31 instead of A13 for ir
-  dt-bindings: media: sunxi-ir: Add A64 compatible
-  dt-bindings: media: sunxi-ir: Add H6 compatible
-  arm64: dts: allwinner: h6: Add IR receiver node
-  arm64: dts: allwinner: h6: Enable IR on H6 boards
-  arm64: defconfig: enable IR SUNXI option
-
-Igors Makejevs (1):
-  arm64: dts: allwinner: a64: Add IR node
-
-Jernej Skrabec (1):
-  arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
-
- .../devicetree/bindings/media/sunxi-ir.txt    | 11 +++++++++--
- arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
- arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
- arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
- arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
- .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++++++++++++++++
- .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++++
- .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  4 ++++
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 +++++++++++++++++++
- arch/arm64/configs/defconfig                  |  1 +
- drivers/media/rc/sunxi-cir.c                  |  1 +
- 13 files changed, 68 insertions(+), 6 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Documen=
+tation/devicetree/bindings/media/sunxi-ir.txt
+index 278098987edb..2e59a32a7e33 100644
+--- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
++++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
+@@ -1,16 +1,21 @@
+ Device-Tree bindings for SUNXI IR controller found in sunXi SoC family
+=20
+ Required properties:
+-- compatible	    : "allwinner,sun4i-a10-ir" or "allwinner,sun5i-a13-ir"
++- compatible	    :
++	"allwinner,sun4i-a10-ir"
++	"allwinner,sun5i-a13-ir"
++	"allwinner,sun6i-a31-ir"
+ - clocks	    : list of clock specifiers, corresponding to
+ 		      entries in clock-names property;
+ - clock-names	    : should contain "apb" and "ir" entries;
+ - interrupts	    : should contain IR IRQ number;
+ - reg		    : should contain IO map address for IR.
+=20
++Required properties since A31:
++- resets	    : phandle + reset specifier pair
++
+ Optional properties:
+ - linux,rc-map-name: see rc.txt file in the same directory.
+-- resets : phandle + reset specifier pair
+ - clock-frequency  : IR Receiver clock frequency, in Hertz. Defaults to 8 =
+MHz
+ 		     if missing.
+=20
 --=20
 2.20.1
 
@@ -78,5 +82,5 @@ linux-sunxi" group.
 To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190526222536.10917-1-peron.clem%40gmail.com.
+/linux-sunxi/20190526222536.10917-2-peron.clem%40gmail.com.
 For more options, visit https://groups.google.com/d/optout.
