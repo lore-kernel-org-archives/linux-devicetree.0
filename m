@@ -1,36 +1,203 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] dt-bindings: vendor: Add a bunch of vendors
-Date: Sun, 26 May 2019 11:06:00 -0500
-Message-ID: <20190526160600.GA1399@bogus>
-References: <20190525134140.6220-1-maxime.ripard@bootlin.com>
- <20190525134140.6220-3-maxime.ripard@bootlin.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml binding
+Date: Sun, 26 May 2019 17:39:11 +0100
+Message-ID: <20190526173911.57ae3d11@archlinux>
+References: <cover.1558746978.git.renatogeh@gmail.com>
+ <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190525134140.6220-3-maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Renato Lui Geh <renatogeh@gmail.com>
+Cc: mark.rutland@arm.com, devel@driverdev.osuosl.org, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, robh+dt@kernel.org, stefan.popa@analog.com, knaack.h@gmx.de, alexandru.Ardelean@analog.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 25 May 2019 15:41:38 +0200, Maxime Ripard wrote:
-> Add all the missing vendors used in Allwinner DTS.
+On Fri, 24 May 2019 22:26:30 -0300
+Renato Lui Geh <renatogeh@gmail.com> wrote:
+
+> This patch adds a YAML binding for the Analog Devices AD7780/1 and
+> AD7170/1 analog-to-digital converters.
 > 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+Looks good to me, but I'm still finding my feet with these so will
+leave it for a few days for others to have time to comment.
+
+Michael, looking for a quick reply from you to say if you are happy
+being explicitly listed as maintainer for this one, or if you'd
+rather land it on someone else.  Same applies for patch 2.
+
+Renato, if I seem to have forgotten this in a week or so, feel
+free to give me a poke. I've been known to loose patches entirely!
+
+Thanks,
+
+Jonathan
 > ---
->  .../devicetree/bindings/vendor-prefixes.yaml  | 58 +++++++++++++++++++
->  1 file changed, 58 insertions(+)
+> Changes in v2:
+>  - vref-supply to avdd-supply
+>  - remove avdd-supply from required list
+>  - include adc block in an spi block
 > 
-
-Applied, thanks.
-
-Rob
+>  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
+>  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
+>  2 files changed, 87 insertions(+), 48 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> deleted file mode 100644
+> index 440e52555349..000000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> +++ /dev/null
+> @@ -1,48 +0,0 @@
+> -* Analog Devices AD7170/AD7171/AD7780/AD7781
+> -
+> -Data sheets:
+> -
+> -- AD7170:
+> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
+> -- AD7171:
+> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
+> -- AD7780:
+> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
+> -- AD7781:
+> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
+> -
+> -Required properties:
+> -
+> -- compatible: should be one of
+> -	* "adi,ad7170"
+> -	* "adi,ad7171"
+> -	* "adi,ad7780"
+> -	* "adi,ad7781"
+> -- reg: spi chip select number for the device
+> -- vref-supply: the regulator supply for the ADC reference voltage
+> -
+> -Optional properties:
+> -
+> -- powerdown-gpios:  must be the device tree identifier of the PDRST pin. If
+> -		    specified, it will be asserted during driver probe. As the
+> -		    line is active high, it should be marked GPIO_ACTIVE_HIGH.
+> -- adi,gain-gpios:   must be the device tree identifier of the GAIN pin. Only for
+> -		    the ad778x chips. If specified, it will be asserted during
+> -		    driver probe. As the line is active low, it should be marked
+> -		    GPIO_ACTIVE_LOW.
+> -- adi,filter-gpios: must be the device tree identifier of the FILTER pin. Only
+> -		    for the ad778x chips. If specified, it will be asserted
+> -		    during driver probe. As the line is active low, it should be
+> -		    marked GPIO_ACTIVE_LOW.
+> -
+> -Example:
+> -
+> -adc@0 {
+> -	compatible =  "adi,ad7780";
+> -	reg =	      <0>;
+> -	vref-supply = <&vdd_supply>
+> -
+> -	powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
+> -	adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
+> -	adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> new file mode 100644
+> index 000000000000..d1109416963c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> @@ -0,0 +1,87 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital converters
+> +
+> +maintainers:
+> +  - Michael Hennerich <michael.hennerich@analog.com>
+> +
+> +description: |
+> +  The ad7780 is a sigma-delta analog to digital converter. This driver provides
+> +  reading voltage values and status bits from both the ad778x and ad717x series.
+> +  Its interface also allows writing on the FILTER and GAIN GPIO pins on the
+> +  ad778x.
+> +
+> +  Specifications on the converters can be found at:
+> +    AD7170:
+> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
+> +    AD7171:
+> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
+> +    AD7780:
+> +      https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
+> +    AD7781:
+> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7170
+> +      - adi,ad7171
+> +      - adi,ad7780
+> +      - adi,ad7781
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  avdd-supply:
+> +    description:
+> +      The regulator supply for the ADC reference voltage.
+> +    maxItems: 1
+> +
+> +  powerdown-gpios:
+> +    description:
+> +      Must be the device tree identifier of the PDRST pin. If
+> +      specified, it will be asserted during driver probe. As the
+> +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
+> +    maxItems: 1
+> +
+> +  adi,gain-gpios:
+> +    description:
+> +      Must be the device tree identifier of the GAIN pin. Only for
+> +      the ad778x chips. If specified, it will be asserted during
+> +      driver probe. As the line is active low, it should be marked
+> +      GPIO_ACTIVE_LOW.
+> +    maxItems: 1
+> +
+> +  adi,filter-gpios:
+> +    description:
+> +      Must be the device tree identifier of the FILTER pin. Only
+> +      for the ad778x chips. If specified, it will be asserted
+> +      during driver probe. As the line is active low, it should be
+> +      marked GPIO_ACTIVE_LOW.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        adc@0 {
+> +            compatible = "adi,ad7780";
+> +            reg = <0>;
+> +
+> +            avdd-supply      = <&vdd_supply>;
+> +            powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+> +            adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
+> +            adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
+> +        };
+> +    };
