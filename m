@@ -1,139 +1,74 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: thermal: add binding document for h6
- thermal controller
-Date: Mon, 27 May 2019 14:16:24 +0200
-Message-ID: <20190527121624.5qwrrzc4whrddbbe@flea>
-References: <20190525181329.18657-1-tiny.windzz@gmail.com>
- <20190525181329.18657-3-tiny.windzz@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5l3rwiguuszwblyx"
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 0/2] irqchip/renesas: Add RZ/A1 IRQC support
+Date: Mon, 27 May 2019 14:17:09 +0200
+Message-ID: <20190527121711.5138-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190525181329.18657-3-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
+	Hi all,
 
---5l3rwiguuszwblyx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Unlike on most other Renesas SoCs, the GPIO controller blocks on RZ/A1
+and RZ/A2 SoCs lack interrupt functionality.  While the GPIOs can be
+routed to the GIC as pin interrupts, this is of limited use, as the
+PL390 or GIC-400 supports rising edge and high-level interrupts only.
 
-Hi,
+Fortunately RZ/A1 and RZ/A2 SoCs contain a small front-end for the GIC,
+allowing to use up to 8 external interrupts, with configurable sense
+select.  This patch series adds DT bindings and a driver for this
+front-end.
 
-Thanks for working on this!
+Changes compared to v3:
+  - Add Reviewed-by,
+  - Split off drivers/soc/renesas and DTS changes.
 
-On Sat, May 25, 2019 at 02:13:28PM -0400, Yangtao Li wrote:
-> This patch adds binding document for allwinner h6 thermal controller.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  .../bindings/thermal/sun8i-thermal.yaml       | 71 +++++++++++++++++++
->
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
->
-> diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> new file mode 100644
-> index 000000000000..54cf1277870e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Yangtao Li <tiny.windzz@gmail.com>
-> +
-> +description: |-
-> +  This describes the device tree binding for the Allwinner thermal
-> +  controller which measures the on-SoC temperatures.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - allwinner,sun50i-h6-ths
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: ths bus clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bus
+Changes compared to v2:
+  - Add Tested-by,
+  - Use standard interrupt-map instead of custom renesas,gic-spi-base.
+    I'm still a bit puzzled by the confusing semantics (double meaning)
+    of child and parent unit addresses in interrupt-map.
 
-You don't need the items here, you can just do:
+Changes compared to v1:
+  - Add Reviewed-by,
+  - Replace gic_spi_base in OF match data by renesas,gic-spi-base in DT,
+  - Document RZ/A2M,
+  - Use u16 for register values,
+  - Use relaxed I/O accessors,
+  - Use "rza1-irqc" as irq_chip class name,
+  - Enable driver on RZ/A2M.
 
-clocks:
-  maxItems: 1
-  description:
-    Bus clock
+This has been tested using the input switches on the Renesas RSK+RZA1
+development board, with evtest and s2ram wake-up.  I have verified
+proper operation of low-level and rising/falling sense select, too.
+Chris Brandt has tested this driver on RZ/A2M.
 
-clock-names:
-  const: bus
+Thanks for applying!
 
-> +  "#thermal-sensor-cells":
-> +    enum: [ 0, 1 ]
+Geert Uytterhoeven (2):
+  dt-bindings: interrupt-controller: Add Renesas RZ/A1 Interrupt
+    Controller
+  irqchip: Add Renesas RZ/A1 Interrupt Controller driver
 
-You should document when you would need one or the other.
+ .../renesas,rza1-irqc.txt                     |  43 +++
+ drivers/irqchip/Kconfig                       |   4 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-renesas-rza1.c            | 283 ++++++++++++++++++
+ 4 files changed, 331 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+ create mode 100644 drivers/irqchip/irq-renesas-rza1.c
 
-My guess is that you did it that way to deal with the A33? If so, we
-can just request the cell size to be 1 for now, and then expand it to
-an enum later on when we'll support the A33.
+-- 
+2.17.1
 
-> +  nvmem-cells:
-> +    items:
-> +      - description: ths calibrate data
-> +
-> +  nvmem-cell-names:
-> +    items:
-> +      - const: calib
+Gr{oetje,eeting}s,
 
-Same remark than for the clocks
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - reset
-> +  - clocks
-> +  - clock-names
-
-I guess you'd need #thermal-sensor-cells too?
-
-Maxime
+						Geert
 
 --
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---5l3rwiguuszwblyx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOvVGAAKCRDj7w1vZxhR
-xYJvAQDS6LCy+f//B51XcJuEuSglOnKVFXxiNHV/4yLfVTR9lQD+Ory2sL/zzJ11
-NK/Cfa5T1w6p+sdl9MDDkpaVkRt9GQ8=
-=mlQq
------END PGP SIGNATURE-----
-
---5l3rwiguuszwblyx--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
