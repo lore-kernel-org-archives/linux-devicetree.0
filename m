@@ -1,7 +1,7 @@
 From: Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v3 5/5] power: supply: max17040: Send uevent in SOC and status change
-Date: Sun, 26 May 2019 23:22:58 -0300
-Message-ID: <20190527022258.32748-6-matheus@castello.eng.br>
+Subject: [PATCH v3 1/5] power: supply: max17040: Add IRQ handler for low SOC alert
+Date: Sun, 26 May 2019 23:22:54 -0300
+Message-ID: <20190527022258.32748-2-matheus@castello.eng.br>
 References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
  <20190527022258.32748-1-matheus@castello.eng.br>
 Mime-Version: 1.0
@@ -13,57 +13,133 @@ To: sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
 Cc: mark.rutland@arm.com, cw00.choi@samsung.com, b.zolnierkie@samsung.com, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matheus Castello <matheus@castello.eng.br>
 List-Id: devicetree@vger.kernel.org
 
-Notify core through power_supply_changed() in case of changes in state
-of charge and power supply status. This is useful for user-space to
-efficiently update current battery level.
+According datasheet max17040 has a pin for alert host for low SOC.
+This pin can be used as external interrupt, so we need to check for
+interrupts assigned for device and handle it.
+
+In handler we are checking and storing fuel gauge registers values
+and send an uevent to notificate user space, so user space can decide
+save work or turn off since the alert demonstrate that the battery may
+no have the power to keep the system turned on for much longer.
 
 Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 ---
- drivers/power/supply/max17040_battery.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/power/supply/max17040_battery.c | 65 +++++++++++++++++++++++--
+ 1 file changed, 60 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 61e6fcfea8a1..34278845cfe5 100644
+index 91cafc7bed30..b7433e9ca7c2 100644
 --- a/drivers/power/supply/max17040_battery.c
 +++ b/drivers/power/supply/max17040_battery.c
-@@ -176,6 +176,9 @@ static void max17040_get_online(struct i2c_client *client)
- static void max17040_get_status(struct i2c_client *client)
- {
- 	struct max17040_chip *chip = i2c_get_clientdata(client);
-+	int last_status;
-+
-+	last_status = chip->status;
-
- 	if (!chip->pdata || !chip->pdata->charger_online
- 			|| !chip->pdata->charger_enable) {
-@@ -194,6 +197,9 @@ static void max17040_get_status(struct i2c_client *client)
-
- 	if (chip->soc > MAX17040_BATTERY_FULL)
+@@ -13,6 +13,7 @@
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+ #include <linux/delay.h>
++#include <linux/interrupt.h>
+ #include <linux/power_supply.h>
+ #include <linux/max17040_battery.h>
+ #include <linux/slab.h>
+@@ -160,21 +161,40 @@ static void max17040_get_status(struct i2c_client *client)
  		chip->status = POWER_SUPPLY_STATUS_FULL;
-+
-+	if (last_status != chip->status)
-+		power_supply_changed(chip->battery);
  }
 
- static void max17040_get_of_data(struct max17040_chip *chip)
-@@ -217,10 +223,18 @@ static void max17040_check_changes(struct i2c_client *client)
++static void max17040_check_changes(struct i2c_client *client)
++{
++	max17040_get_vcell(client);
++	max17040_get_soc(client);
++	max17040_get_online(client);
++	max17040_get_status(client);
++}
++
  static void max17040_work(struct work_struct *work)
  {
  	struct max17040_chip *chip;
-+	int last_soc;
 
  	chip = container_of(work, struct max17040_chip, work.work);
-+
-+	/* store SOC for check change */
-+	last_soc = chip->soc;
- 	max17040_check_changes(chip->client);
+-
+-	max17040_get_vcell(chip->client);
+-	max17040_get_soc(chip->client);
+-	max17040_get_online(chip->client);
+-	max17040_get_status(chip->client);
++	max17040_check_changes(chip->client);
 
-+	/* check changes and send uevent */
-+	if (chip->soc >= 0 && last_soc != chip->soc)
-+		power_supply_changed(chip->battery);
-+
  	queue_delayed_work(system_power_efficient_wq, &chip->work,
  			   MAX17040_DELAY);
  }
+
++static irqreturn_t max17040_thread_handler(int id, void *dev)
++{
++	struct max17040_chip *chip = dev;
++	struct i2c_client *client = chip->client;
++
++	dev_warn(&client->dev, "IRQ: Alert battery low level");
++	/* read registers */
++	max17040_check_changes(chip->client);
++
++	/* send uevent */
++	power_supply_changed(chip->battery);
++
++	return IRQ_HANDLED;
++}
++
+ static enum power_supply_property max17040_battery_props[] = {
+ 	POWER_SUPPLY_PROP_STATUS,
+ 	POWER_SUPPLY_PROP_ONLINE,
+@@ -220,6 +240,25 @@ static int max17040_probe(struct i2c_client *client,
+ 	max17040_reset(client);
+ 	max17040_get_version(client);
+
++	/* check interrupt */
++	if (client->irq) {
++		int ret;
++		unsigned int flags;
++
++		dev_info(&client->dev, "IRQ: enabled\n");
++		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
++		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
++						max17040_thread_handler, flags,
++						chip->battery->desc->name,
++						chip);
++
++		if (ret) {
++			client->irq = 0;
++			dev_warn(&client->dev,
++				"Failed to get IRQ err %d\n", ret);
++		}
++	}
++
+ 	INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
+@@ -244,6 +283,14 @@ static int max17040_suspend(struct device *dev)
+ 	struct max17040_chip *chip = i2c_get_clientdata(client);
+
+ 	cancel_delayed_work(&chip->work);
++
++	if (client->irq) {
++		if (device_may_wakeup(dev))
++			enable_irq_wake(client->irq);
++		else
++			disable_irq_wake(client->irq);
++	}
++
+ 	return 0;
+ }
+
+@@ -254,6 +301,14 @@ static int max17040_resume(struct device *dev)
+
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
++
++	if (client->irq) {
++		if (device_may_wakeup(dev))
++			disable_irq_wake(client->irq);
++		else
++			enable_irq_wake(client->irq);
++	}
++
+ 	return 0;
+ }
+
 --
 2.20.1
