@@ -1,87 +1,214 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
-Date: Mon, 27 May 2019 06:29:11 +0000
-Message-ID: <AM0PR04MB4481665E2C99DEE66CCB2CA8881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190523060437.11059-1-peng.fan@nxp.com>
- <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
- <20190524175658.GA5045@e107155-lin>
- <d0800650-b79b-4698-3a3e-60e83c85f2d1@arm.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v1 4/6] dmaengine: fsl-edma: add i.mx7ulp edma2 version
+ support
+Date: Mon, 27 May 2019 12:04:31 +0530
+Message-ID: <20190527063431.GC15118@vkoul-mobl>
+References: <1557512248-8440-1-git-send-email-yibin.gong@nxp.com>
+ <1557512248-8440-5-git-send-email-yibin.gong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d0800650-b79b-4698-3a3e-60e83c85f2d1@arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1557512248-8440-5-git-send-email-yibin.gong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?QW5kcsOpIFByenl3YXJh?= <andre.przywara@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Robin Gong <yibin.gong@nxp.com>
+Cc: "robh@kernel.org" <robh@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmUsDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwLzJdIG1haWxib3g6IGFybTogaW50
-cm9kdWNlIHNtYyB0cmlnZ2VyZWQgbWFpbGJveA0KPiANCj4gT24gMjQvMDUvMjAxOSAxODo1Niwg
-U3VkZWVwIEhvbGxhIHdyb3RlOg0KPiA+IE9uIFRodSwgTWF5IDIzLCAyMDE5IGF0IDEwOjMwOjUw
-QU0gLTA3MDAsIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6DQo+IA0KPiBIaSwNCj4gDQo+ID4+IE9u
-IDUvMjIvMTkgMTA6NTAgUE0sIFBlbmcgRmFuIHdyb3RlOg0KPiA+Pj4gVGhpcyBpcyBhIG1vZGlm
-aWVkIHZlcnNpb24gZnJvbSBBbmRyZSBQcnp5d2FyYSdzIHBhdGNoIHNlcmllcw0KPiA+Pj4NCj4g
-aHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBz
-JTNBJTJGJTJGbG9yZS5rZQ0KPiBybmVsLm9yZyUyRnBhdGNod29yayUyRmNvdmVyJTJGODEyOTk3
-JTJGJmFtcDtkYXRhPTAyJTdDMDElN0NwZQ0KPiBuZy5mYW4lNDBueHAuY29tJTdDMDJlZTk0ODcz
-NzBjNGViOTE1ODAwOGQ2ZTIzNjNjYTAlN0M2ODZlYTFkMw0KPiBiYzJiNGM2ZmE5MmNkOTljNWMz
-MDE2MzUlN0MwJTdDMCU3QzYzNjk0NTExOTk1OTUzNDU3NiZhbXA7c2RhDQo+IHRhPVU4RnpYM0ZY
-MlBvRVpoUnVSTWhGYmthQW5iM2NxalpzYjklMkZUZHQ4T2Z1WSUzRCZhbXA7cmVzZXJ2ZQ0KPiBk
-PTAuDQo+ID4+PiBbMV0gaXMgYSBkcmFmdCBpbXBsZW1lbnRhdGlvbiBvZiBpLk1YOE1NIFNDTUkg
-QVRGIGltcGxlbWVudGF0aW9uDQo+ID4+PiB0aGF0IHVzZSBzbWMgYXMgbWFpbGJveCwgcG93ZXIv
-Y2xrIGlzIGluY2x1ZGVkLCBidXQgb25seSBwYXJ0IG9mIGNsaw0KPiA+Pj4gaGFzIGJlZW4gaW1w
-bGVtZW50ZWQgdG8gd29yayB3aXRoIGhhcmR3YXJlLCBwb3dlciBkb21haW4gb25seQ0KPiA+Pj4g
-c3VwcG9ydHMgZ2V0IG5hbWUgZm9yIG5vdy4NCj4gPj4+DQo+ID4+PiBUaGUgdHJhZGl0aW9uYWwg
-TGludXggbWFpbGJveCBtZWNoYW5pc20gdXNlcyBzb21lIGtpbmQgb2YgZGVkaWNhdGVkDQo+ID4+
-PiBoYXJkd2FyZSBJUCB0byBzaWduYWwgYSBjb25kaXRpb24gdG8gc29tZSBvdGhlciBwcm9jZXNz
-aW5nIHVuaXQsDQo+ID4+PiB0eXBpY2FsbHkgYSBkZWRpY2F0ZWQgbWFuYWdlbWVudCBwcm9jZXNz
-b3IuDQo+ID4+PiBUaGlzIG1haWxib3ggZmVhdHVyZSBpcyB1c2VkIGZvciBpbnN0YW5jZSBieSB0
-aGUgU0NNSSBwcm90b2NvbCB0bw0KPiA+Pj4gc2lnbmFsIGEgcmVxdWVzdCBmb3Igc29tZSBhY3Rp
-b24gdG8gYmUgdGFrZW4gYnkgdGhlIG1hbmFnZW1lbnQNCj4gcHJvY2Vzc29yLg0KPiA+Pj4gSG93
-ZXZlciBzb21lIFNvQ3MgZG9lcyBub3QgaGF2ZSBhIGRlZGljYXRlZCBtYW5hZ2VtZW50IGNvcmUg
-dG8NCj4gPj4+IHByb3ZpZGUgdGhvc2Ugc2VydmljZXMuIEluIG9yZGVyIHRvIHNlcnZpY2UgVEVF
-IGFuZCB0byBhdm9pZCBsaW51eA0KPiA+Pj4gc2h1dGRvd24gcG93ZXIgYW5kIGNsb2NrIHRoYXQg
-dXNlZCBieSBURUUsIG5lZWQgbGV0IGZpcm13YXJlIHRvDQo+ID4+PiBoYW5kbGUgcG93ZXIgYW5k
-IGNsb2NrLCB0aGUgZmlybXdhcmUgaGVyZSBpcyBBUk0gVHJ1c3RlZCBGaXJtd2FyZQ0KPiA+Pj4g
-dGhhdCBjb3VsZCBhbHNvIHJ1biBTQ01JIHNlcnZpY2UuDQo+ID4+Pg0KPiA+Pj4gVGhlIGV4aXN0
-aW5nIFNDTUkgaW1wbGVtZW50YXRpb24gdXNlcyBhIHJhdGhlciBmbGV4aWJsZSBzaGFyZWQNCj4g
-Pj4+IG1lbW9yeSByZWdpb24gdG8gY29tbXVuaWNhdGUgY29tbWFuZHMgYW5kIHRoZWlyIHBhcmFt
-ZXRlcnMsIGl0IHN0aWxsDQo+ID4+PiByZXF1aXJlcyBhIG1haWxib3ggdG8gYWN0dWFsbHkgdHJp
-Z2dlciB0aGUgYWN0aW9uLg0KPiA+Pg0KPiA+PiBXZSBoYXZlIGhhZCBzb21ldGhpbmcgc2ltaWxh
-ciBkb25lIGludGVybmFsbHkgd2l0aCBhIGNvdXBsZSBvZiBtaW5vcg0KPiA+PiBkaWZmZXJlbmNl
-czoNCj4gPj4NCj4gPj4gLSBhIFNHSSBpcyB1c2VkIHRvIHNlbmQgU0NNSSBub3RpZmljYXRpb25z
-L2RlbGF5ZWQgcmVwbGllcyB0byBzdXBwb3J0DQo+ID4+IGFzeW5jaHJvbmlzbSAocGF0Y2hlcyBh
-cmUgaW4gdGhlIHdvcmtzIHRvIGFjdHVhbGx5IGFkZCB0aGF0IHRvIHRoZQ0KPiA+PiBMaW51eCBT
-Q01JIGZyYW1ld29yaykuIFRoZXJlIGlzIG5vIGdvb2Qgc3VwcG9ydCBmb3IgU0dJIGluIHRoZSBr
-ZXJuZWwNCj4gPj4gcmlnaHQgbm93IHNvIHdlIGhhY2tlZCB1cCBzb21ldGhpbmcgZnJvbSB0aGUg
-ZXhpc3RpbmcgU01QIGNvZGUgYW5kDQo+ID4+IGFkZGluZyB0aGUgYWJpbGl0eSB0byByZWdpc3Rl
-ciBvdXIgb3duIElQSSBoYW5kbGVycyAoU0hBTUUhKS4gVXNpbmcgYQ0KPiA+PiBQUEkgc2hvdWxk
-IHdvcmsgYW5kIHNob3VsZCBhbGxvdyBmb3IgdXNpbmcgcmVxdWVzdF9pcnEoKSBBRkFJQ1QuDQo+
-ID4+DQo+ID4NCj4gPiBXZSBoYXZlIGJlZW4gdGhpbmtpbmcgdGhpcyBzaW5jZSB3ZSB3ZXJlIGFz
-a2VkIGlmIFNNQyBjYW4gYmUgdHJhbnNwb3J0Lg0KPiA+IEdlbmVyYWxseSBvdXQgb2YgMTYgU0dJ
-cywgOCBhcmUgcmVzZXJ2ZWQgZm9yIHNlY3VyZSBzaWRlIGFuZA0KPiA+IG5vbi1zZWN1cmUgaGFz
-IDguIE9mIHRoZXNlIDgsIElJVUMgNyBpcyBhbHJlYWR5IGJlaW5nIHVzZWQgYnkga2VybmVsLg0K
-PiA+IFNvIHVubGVzcyB3ZSBtYW5hZ2UgdG8gZ2V0IHRoZSBsYXN0IG9uZSByZXNlcnZlZCBleGNs
-dXNpdmUgdG8gU0NNSSwgaXQNCj4gPiBtYWtlcyBpdCBkaWZmaWN1bHQgdG8gYWRkIFNHSSBzdXBw
-b3J0IGluIFNDTUkuDQo+ID4NCj4gPiBXZSBoYXZlIGJlZW4gdGVsbGluZyBwYXJ0bmVycy92ZW5k
-b3JzIGFib3V0IHRoaXMgbGltaXRhdGlvbiBpZiB0aGV5DQo+ID4gdXNlIFNNQyBhcyB0cmFuc3Bv
-cnQgYW5kIG5lZWQgdG8gaGF2ZSBkZWRpY2F0ZWQgaC93IGludGVycnVwdCBmb3IgdGhlDQo+ID4g
-bm90aWZpY2F0aW9ucy4NCj4gPg0KPiA+IEFub3RoZXIgaXNzdWUgY291bGQgYmUgd2l0aCB2aXJ0
-dWFsaXNhdGlvbih1c2luZyBIVkMpIGFuZCBFTCBoYW5kbGluZw0KPiA+IHNvIGNhbGxlZCBTQ01J
-IFNHSS4gV2UgbmVlZCB0byB0aGluayBhYm91dCB0aG9zZSB0b28uIEkgd2lsbCB0cnkgdG8NCj4g
-PiBnZXQgbW9yZSBpbmZvIG9uIHRoaXMgYW5kIGNvbWUgYmFjayBvbiB0aGlzLg0KPiANCj4gSSB0
-aGluayByZWdhcmRsZXNzIG9mIHRoZSAqY3VycmVudCogZmVhc2liaWxpdHkgb2YgdXNpbmcgU0dJ
-cyBpbiAqTGludXgqIHdlDQo+IHNob3VsZCBhdCBsZWFzdCBzcGVjaWZ5IGFuICJpbnRlcnJ1cHRz
-IiBwcm9wZXJ0eSBpbiB0aGUgYmluZGluZywgdG8gYWxsb3cgZm9yDQo+IGZ1dHVyZSB1c2FnZS4g
-V2UgbWlnaHQgY29weSB0aGUgcG11djMgd2F5IFsxXSBvZiBhbGxvd2luZyB0byBzcGVjaWZ5DQo+
-IG11bHRpcGxlIFNQSSBpbnRlcnJ1cHRzIGFzIHdlbGwsIHRvIGdpdmUgbW9yZSBmbGV4aWJpbGl0
-eS4NCg0KVGhpcyBuZWVkcyB0byBnbyB3aXRoIGFuIG9wdGlvbmFsIHByb3BlcnR5LCBhZ3JlZT8N
-ClRoYXQgbWVhbnMgc21jIG1haWxib3ggbmVlZHMgdG8gc3VwcG9ydCBzeW5jaHJvbm91cyBhbmQg
-YXN5bmNocm9ub3VzDQpjb21tdW5pY2F0aW9uLiBJJ2xsIHRyeSB0byBhZGQgdGhhdCBhbmQgd3Jp
-dGUgc29tZSBwb3JvdHlwZSBjb2RlIHRvDQp2ZXJpZnkuDQoNClRoYW5rcywNClBlbmcuDQoNCj4g
-QWZ0ZXIgYWxsIGFuIGltcGxlbWVudGF0aW9uIGNvdWxkIG9mZmxvYWQgdGhlIGFzeW5jaHJvbm91
-cyBub3RpZmljYXRpb24gdG8gYQ0KPiBzZXBhcmF0ZSBjb3JlLCBhbmQgdGhhdCBjb3VsZCB1c2Ug
-U1BJcywgZm9yIGluc3RhbmNlLg0KPiANCj4gQ2hlZXJzLA0KPiBBbmRyZS4NCj4gDQo+IFsxXSBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3BtdS55YW1sOjQ1DQo=
+On 10-05-19, 10:14, Robin Gong wrote:
+>   Add edma2 for i.mx7ulp by version v3, since v2 has already
+> been used by mcf-edma.
+> The big changes based on v1 are belows:
+>   1. only one dmamux.
+>   2. another clock dma_clk except dmamux clk.
+>   3. 16 independent interrupts instead of only one interrupt for
+> all channels.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  drivers/dma/fsl-edma-common.c | 18 ++++++++++-
+>  drivers/dma/fsl-edma-common.h |  3 ++
+>  drivers/dma/fsl-edma.c        | 69 ++++++++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 88 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+> index bb24251..64e822e 100644
+> --- a/drivers/dma/fsl-edma-common.c
+> +++ b/drivers/dma/fsl-edma-common.c
+> @@ -90,6 +90,19 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+>  	iowrite8(val8, addr + off);
+>  }
+>  
+> +void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+> +		     u32 off, u32 slot, bool enable)
+> +{
+> +	u32 val;
+> +
+> +	if (enable)
+> +		val = EDMAMUX_CHCFG_ENBL << 24 | slot;
+> +	else
+> +		val = EDMAMUX_CHCFG_DIS;
+> +
+> +	iowrite32(val, addr + off * 4);
+> +}
+> +
+>  void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+>  			unsigned int slot, bool enable)
+>  {
+> @@ -102,7 +115,10 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+>  	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
+>  	slot = EDMAMUX_CHCFG_SOURCE(slot);
+>  
+> -	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
+> +	if (fsl_chan->edma->version == v3)
+> +		mux_configure32(fsl_chan, muxaddr, ch_off, slot, enable);
+> +	else
+> +		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
+>  }
+>  EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
+>  
+> diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+> index 21a9cfd..2b0cc8e 100644
+> --- a/drivers/dma/fsl-edma-common.h
+> +++ b/drivers/dma/fsl-edma-common.h
+> @@ -124,6 +124,7 @@ struct fsl_edma_chan {
+>  	dma_addr_t			dma_dev_addr;
+>  	u32				dma_dev_size;
+>  	enum dma_data_direction		dma_dir;
+> +	char				chan_name[16];
+>  };
+>  
+>  struct fsl_edma_desc {
+> @@ -138,6 +139,7 @@ struct fsl_edma_desc {
+>  enum edma_version {
+>  	v1, /* 32ch, Vybrid, mpc57x, etc */
+>  	v2, /* 64ch Coldfire */
+> +	v3, /* 32ch, i.mx7ulp */
+>  };
+>  
+>  struct fsl_edma_engine {
+> @@ -145,6 +147,7 @@ struct fsl_edma_engine {
+>  	void __iomem		*membase;
+>  	void __iomem		*muxbase[DMAMUX_NR];
+>  	struct clk		*muxclk[DMAMUX_NR];
+> +	struct clk		*dmaclk;
+>  	u32			dmamux_nr;
+>  	struct mutex		fsl_edma_mutex;
+>  	u32			n_chans;
+> diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
+> index 7b65ef4..1568070 100644
+> --- a/drivers/dma/fsl-edma.c
+> +++ b/drivers/dma/fsl-edma.c
+> @@ -165,6 +165,51 @@ fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma
+>  	return 0;
+>  }
+>  
+> +static int
+> +fsl_edma2_irq_init(struct platform_device *pdev,
+> +		   struct fsl_edma_engine *fsl_edma)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int i, ret, irq;
+> +	int count = 0;
+> +
+> +	count = of_irq_count(np);
+> +	dev_info(&pdev->dev, "%s Found %d interrupts\r\n", __func__, count);
+> +	if (count <= 2) {
+> +		dev_err(&pdev->dev, "Interrupts in DTS not correct.\n");
+> +		return -EINVAL;
+> +	}
+> +	/*
+> +	 * 16 channel independent interrupts + 1 error interrupt on i.mx7ulp.
+> +	 * 2 channel share one interrupt, for example, ch0/ch16, ch1/ch17...
+> +	 * For now, just simply request irq without IRQF_SHARED flag, since 16
+> +	 * channels are enough on i.mx7ulp whose M4 domain own some peripherals.
+> +	 */
+> +	for (i = 0; i < count; i++) {
+> +		irq = platform_get_irq(pdev, i);
+> +		if (irq < 0)
+> +			return -ENXIO;
+> +
+> +		sprintf(fsl_edma->chans[i].chan_name, "eDMA2-CH%02d", i);
+> +
+> +		/* The last IRQ is for eDMA err */
+> +		if (i == count - 1)
+> +			ret = devm_request_irq(&pdev->dev, irq,
+> +						fsl_edma_err_handler,
+> +						0, "eDMA2-ERR", fsl_edma);
+> +		else
+> +
+> +			ret = devm_request_irq(&pdev->dev, irq,
+> +						fsl_edma_tx_handler, 0,
+> +						fsl_edma->chans[i].chan_name,
+> +						fsl_edma);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void fsl_edma_irq_exit(
+>  		struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
+>  {
+> @@ -218,6 +263,23 @@ static int fsl_edma_probe(struct platform_device *pdev)
+>  	fsl_edma_setup_regs(fsl_edma);
+>  	regs = &fsl_edma->regs;
+>  
+> +	if (of_device_is_compatible(np, "fsl,imx7ulp-edma")) {
+> +		fsl_edma->dmamux_nr = 1;
+> +		fsl_edma->version = v3;
+
+well this is not really scalable, we will keep adding versions and
+compatible and expanding this check. So it would make sense to create a
+driver data table which can be set for compatible and we use those
+values and avoid these runtime checks for compatible.
+
+Btw the binding documentation should precede the code usage, so this
+patch should come after that
+
+
+> +
+> +		fsl_edma->dmaclk = devm_clk_get(&pdev->dev, "dma");
+> +		if (IS_ERR(fsl_edma->dmaclk)) {
+> +			dev_err(&pdev->dev, "Missing DMA block clock.\n");
+> +			return PTR_ERR(fsl_edma->dmaclk);
+> +		}
+> +
+> +		ret = clk_prepare_enable(fsl_edma->dmaclk);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "DMA clk block failed.\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	for (i = 0; i < fsl_edma->dmamux_nr; i++) {
+>  		char clkname[32];
+>  
+> @@ -264,7 +326,11 @@ static int fsl_edma_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	edma_writel(fsl_edma, ~0, regs->intl);
+> -	ret = fsl_edma_irq_init(pdev, fsl_edma);
+> +
+> +	if (fsl_edma->version == v3)
+> +		ret = fsl_edma2_irq_init(pdev, fsl_edma);
+> +	else
+> +		ret = fsl_edma_irq_init(pdev, fsl_edma);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -385,6 +451,7 @@ static const struct dev_pm_ops fsl_edma_pm_ops = {
+>  
+>  static const struct of_device_id fsl_edma_dt_ids[] = {
+>  	{ .compatible = "fsl,vf610-edma", },
+> +	{ .compatible = "fsl,imx7ulp-edma", },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
+> -- 
+> 2.7.4
+> 
+
+-- 
+~Vinod
