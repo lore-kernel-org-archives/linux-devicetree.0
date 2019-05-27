@@ -1,7 +1,8 @@
 From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v3 1/8] doc: dt-binding: mxs-usb-phy: add compatible for 7ulp
-Date: Mon, 27 May 2019 11:06:09 +0800
-Message-ID: <20190527030616.44397-2-peter.chen@nxp.com>
+Subject: [PATCH v3 3/8] doc: dt-binding: ci-hdrc-usb2: add compatible string
+ for imx7ulp
+Date: Mon, 27 May 2019 11:06:11 +0800
+Message-ID: <20190527030616.44397-4-peter.chen@nxp.com>
 References: <20190527030616.44397-1-peter.chen@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,25 +22,25 @@ To: balbi@kernel.org, shawnguo@kernel.org
 Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, chunfeng.yun@mediatek.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add compatible for 7ulp USB PHY.
+Add compatible string for imx7ulp.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Peter Chen <peter.chen@nxp.com>
 ---
- Documentation/devicetree/bindings/phy/mxs-usb-phy.txt | 1 +
+ Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-index 6ac98b3b5f57..32da8d17759a 100644
---- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-@@ -7,6 +7,7 @@ Required properties:
- 	* "fsl,imx6sl-usbphy" for imx6sl
- 	* "fsl,vf610-usbphy" for Vybrid vf610
- 	* "fsl,imx6sx-usbphy" for imx6sx
-+	* "fsl,imx7ulp-usbphy" for imx7ulp
-   "fsl,imx23-usbphy" is still a fallback for other strings
- - reg: Should contain registers location and length
- - interrupts: Should contain phy interrupt
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index a254386a91ad..cfc9f40ab641 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -10,6 +10,7 @@ Required properties:
+ 	"fsl,imx6sx-usb"
+ 	"fsl,imx6ul-usb"
+ 	"fsl,imx7d-usb"
++	"fsl,imx7ulp-usb"
+ 	"lsi,zevio-usb"
+ 	"qcom,ci-hdrc"
+ 	"chipidea,usb2"
 -- 
 2.14.1
