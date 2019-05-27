@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [RESEND PATCH v5 2/5] ARM: dts: da850-lego-ev3: enable cpufreq
-Date: Mon, 27 May 2019 10:22:56 +0200
-Message-ID: <20190527082259.29237-3-brgl@bgdev.pl>
+Subject: [RESEND PATCH v5 5/5] ARM: davinci_all_defconfig: Enable CPUFREQ_DT
+Date: Mon, 27 May 2019 10:22:59 +0200
+Message-ID: <20190527082259.29237-6-brgl@bgdev.pl>
 References: <20190527082259.29237-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,62 +14,26 @@ List-Id: devicetree@vger.kernel.org
 
 From: David Lechner <david@lechnology.com>
 
-Add a fixed regulator for the LEGO EV3 board along with board-specific
-CPU configuration.
+This sets CONFIG_CPUFREQ_DT=m in davinci_all_defconfig. This is used for
+frequency scaling on device tree boards.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/boot/dts/da850-lego-ev3.dts | 30 ++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/arm/configs/davinci_all_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
-index 66fcadf0ba91..553717f84483 100644
---- a/arch/arm/boot/dts/da850-lego-ev3.dts
-+++ b/arch/arm/boot/dts/da850-lego-ev3.dts
-@@ -125,6 +125,15 @@
- 		amp-supply = <&amp>;
- 	};
- 
-+	cvdd: regulator0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "cvdd";
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	/*
- 	 * This is a 5V current limiting regulator that is shared by USB,
- 	 * the sensor (input) ports, the motor (output) ports and the A/DC.
-@@ -204,6 +213,27 @@
- 	clock-frequency = <24000000>;
- };
- 
-+&cpu {
-+	cpu-supply = <&cvdd>;
-+};
-+
-+/* since we have a fixed regulator, we can't run at these points */
-+&opp_100 {
-+	status = "disabled";
-+};
-+
-+&opp_200 {
-+	status = "disabled";
-+};
-+
-+/*
-+ * The SoC is actually the 456MHz version, but because of the fixed regulator
-+ * This is the fastest we can go.
-+ */
-+&opp_375 {
-+	status = "okay";
-+};
-+
- &pmx_core {
- 	status = "okay";
- 
+diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
+index 4a8cad4d3707..9a32a8c0f873 100644
+--- a/arch/arm/configs/davinci_all_defconfig
++++ b/arch/arm/configs/davinci_all_defconfig
+@@ -45,6 +45,7 @@ CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
+ CONFIG_CPU_FREQ_GOV_PERFORMANCE=m
+ CONFIG_CPU_FREQ_GOV_POWERSAVE=m
+ CONFIG_CPU_FREQ_GOV_ONDEMAND=m
++CONFIG_CPUFREQ_DT=m
+ CONFIG_CPU_IDLE=y
+ CONFIG_NET=y
+ CONFIG_PACKET=y
 -- 
 2.21.0
