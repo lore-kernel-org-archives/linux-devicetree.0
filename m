@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 10/10] ARM: dts: r40: Change the RTC compatible
-Date: Mon, 27 May 2019 14:00:42 +0200
-Message-ID: <834199999676fdb119f3aa1966eb1b1d1391f347.1558958381.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 08/10] ARM: dts: sun6i: Add external crystals accuracy
+Date: Mon, 27 May 2019 14:00:40 +0200
+Message-ID: <0b46e2c493cdab00ceef6e35dfef0cc869f14fa3.1558958381.git-series.maxime.ripard@bootlin.com>
 References: <290402405a34506997fd2fab2c4c1486dbe6b7e5.1558958381.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,36 +21,33 @@ To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutlan
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Unlike what's being reported in the device tree so far, the RTC in the R40
-is quite different from the H3. Indeed it doesn't have the internal
-oscillator output, and it has only a single interrupt. Let's add a
-compatible for it.
+The A31 datasheet mandates oscillators accuracy to be within 50ppm. Let's
+add that accuracy to their device tree nodes.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index bb856e53b806..96fe39f27f24 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -318,13 +318,12 @@
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 8832650cdc8d..f564ba9a9c2d 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -216,6 +216,7 @@
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <24000000>;
++			clock-accuracy = <50000>;
+ 			clock-output-names = "osc24M";
  		};
  
- 		rtc: rtc@1c20400 {
--			compatible = "allwinner,sun8i-r40-rtc",
--				     "allwinner,sun8i-h3-rtc";
-+			#clock-cells = <1>;
-+			compatible = "allwinner,sun8i-r40-rtc";
- 			reg = <0x01c20400 0x400>;
- 			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
--			clock-output-names = "osc32k", "osc32k-out";
- 			clocks = <&osc32k>;
--			#clock-cells = <1>;
-+			clock-output-names = "osc32k", "osc32k-out";
+@@ -223,6 +224,7 @@
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <32768>;
++			clock-accuracy = <50000>;
+ 			clock-output-names = "ext_osc32k";
  		};
  
- 		pio: pinctrl@1c20800 {
 -- 
 git-series 0.9.1
