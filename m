@@ -1,32 +1,70 @@
-Return-Path: <SRS0=RGXl=TW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:4453 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfEVFfq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 May 2019 01:35:46 -0400
-From: Puneet Saxena <puneets@nvidia.com>
-Subject: [PATCH] ignore disabled memory-region nodes
-Date: Wed, 22 May 2019 11:05:52 +0530
-Message-ID: <1558503353-13179-1-git-send-email-puneets@nvidia.com>
+Return-Path: <SRS0=p+Zs=T3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.lunchkarty.eu ([80.211.141.150]:43892 "EHLO lunchkarty.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbfE0IKm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 May 2019 04:10:42 -0400
+Received: by mail.lunchkarty.eu for <devicetree@vger.kernel.org>; Mon, 27 May 2019 08:03:01 GMT
+Message-ID: <20190527091500-0.1.1i.2h2l.0.ponuddsmqq@lunchkarty.eu>
+Date: Mon, 27 May 2019 08:03:01 GMT
+From: "Radoslav Dobrev" <radoslav.dobrev@lunchkarty.eu>
+Subject: =?UTF-8?Q?=D0=9F=D1=80=D0=B8=D0=B4=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B8_=D0=B7=D0=B0_=D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0?=
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
-To: pantelis.antoniou@konsulko.com, frowand.list@gmail.com, devicetree@vger.kernel.org
-Cc: treding@nvidia.com, vdumpa@nvidia.com, snikam@nvidia.com, Puneet Saxena <puneets@nvidia.com>
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-While parsing "memory-region" node lists if a node
-is "disabled", parsing halts. Therefore the nodes whoes
-"status" is "okay" or "ok" are not parsed.
+=D0=97=D0=B4=D1=80=D0=B0=D0=B2=D0=B5=D0=B9=D1=82=D0=B5,
 
-The change ignore disabled nodes in the memory-region
-nodes list and continues to initialize the rest of
-enabled nodes.
+=D0=9A=D0=B0=D1=82=D0=BE =D1=81=D0=B2=D0=B5=D1=82=D0=BE=D0=B2=D0=B5=D0=BD=
+ =D0=BB=D0=B8=D0=B4=D0=B5=D1=80 =D0=B8 =D0=B2=D0=B5=D1=87=D0=B5 =D0=BD=D0=
+=B0=D0=BB=D0=BE=D0=B6=D0=B8=D0=BB =D1=81=D0=B5 =D0=B5=D0=BA=D1=81=D0=BF=D0=
+=B5=D1=80=D1=82 =D0=BF=D0=BE =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8 =D0=
+=B7=D0=B0 =D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0, =D0=BF=D0=
+=BE=D0=B4=D0=B3=D0=BE=D1=82=D0=B2=D0=B8=D1=85=D0=BC=D0=B5 =D0=B7=D0=B0 =D0=
+=92=D0=B0=D1=81 =D1=81=D0=BF=D0=B5=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B0 =D0=
+=BC=D0=BE=D1=82=D0=B8=D0=B2=D0=B0=D1=86=D0=B8=D0=BE=D0=BD=D0=BD=D0=B0 =D0=
+=BF=D1=80=D0=BE=D0=B3=D1=80=D0=B0=D0=BC=D0=B0 =D0=BF=D0=BE=D0=B4 =D1=84=D0=
+=BE=D1=80=D0=BC=D0=B0=D1=82=D0=B0 =D0=BD=D0=B0 =D1=84=D0=B8=D0=BD=D0=B0=D0=
+=BD=D1=81=D0=B8=D1=80=D0=B0=D0=BD=D0=B5 =D0=BD=D0=B0 =D1=85=D1=80=D0=B0=D0=
+=BD=D0=B0 =D0=B7=D0=B0 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=D0=
+=B8=D1=82=D0=B5.
 
-Krishna Reddy (1):
-  of: resered-memory: ignore disabled memory-region nodes
+=D0=92=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8=D1=82=D0=B5 =D0=B7=D0=B0 =D1=85=
+=D1=80=D0=B0=D0=BD=D0=B0 =D1=81=D0=B0 =D0=BC=D0=BE=D0=B4=D0=B5=D1=80=D0=B5=
+=D0=BD, =D0=B5=D1=84=D0=B5=D0=BA=D1=82=D0=B8=D0=B2=D0=B5=D0=BD =D0=B8 =D1=
+=80=D0=B5=D0=BD=D1=82=D0=B0=D0=B1=D0=B8=D0=BB=D0=B5=D0=BD =D0=BD=D0=B0=D1=
+=87=D0=B8=D0=BD =D0=B7=D0=B0 =D0=B8=D0=B7=D0=B3=D1=80=D0=B0=D0=B6=D0=B4=D0=
+=B0=D0=BD=D0=B5 =D0=BD=D0=B0 =D0=BB=D0=BE=D1=8F=D0=BB=D0=BD=D0=BE=D1=81=D1=
+=82 =D0=BD=D0=B0 =D0=92=D0=B0=D1=88=D0=B8=D1=8F =D0=BF=D0=B5=D1=80=D1=81=D0=
+=BE=D0=BD=D0=B0=D0=BB. =D0=92=D0=B8=D0=B5, =D0=BA=D0=B0=D1=82=D0=BE =D1=80=
+=D0=B0=D0=B1=D0=BE=D1=82=D0=BE=D0=B4=D0=B0=D1=82=D0=B5=D0=BB, =D0=BF=D0=B5=
+=D1=87=D0=B5=D0=BB=D0=B8=D1=82=D0=B5 =D0=BC=D0=BE=D1=82=D0=B8=D0=B2=D0=B8=
+=D1=80=D0=B0=D0=BD =D0=B7=D0=B0 =D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=B0 =D0=B5=
+=D0=BA=D0=B8=D0=BF, =D0=B0 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=
+=D0=B8=D1=82=D0=B5 =D0=92=D0=B8 =D0=BF=D0=BE=D0=BB=D1=83=D1=87=D0=B0=D0=B2=
+=D0=B0=D1=82 =D1=87=D1=80=D0=B5=D0=B7 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=
+=D0=B8=D1=82=D0=B5 =D0=B4=D0=BE=D1=81=D1=82=D1=8A=D0=BF =D0=B4=D0=BE =D0=B8=
+=D0=B7=D0=B1=D1=80=D0=B0=D0=BD=D0=B8 =D0=BE=D1=82 =D1=82=D1=8F=D1=85 =D0=B2=
+=D0=B5=D1=80=D0=B8=D0=B3=D0=B8 =D1=85=D1=80=D0=B0=D0=BD=D0=B8=D1=82=D0=B5=
+=D0=BB=D0=BD=D0=B8 =D0=BC=D0=B0=D0=B3=D0=B0=D0=B7=D0=B8=D0=BD=D0=B8 =D0=B8=
+ =D0=B7=D0=B0=D0=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F =D0=B7=D0=B0 =D1=85=
+=D1=80=D0=B0=D0=BD=D0=B5=D0=BD=D0=B5 =D0=BD=D0=B0=D0=B2=D1=81=D1=8F=D0=BA=
+=D1=8A=D0=B4=D0=B5 =D0=B8 =D0=BF=D0=BE =D0=B2=D1=81=D1=8F=D0=BA=D0=BE =D0=
+=B2=D1=80=D0=B5=D0=BC=D0=B5.
 
- drivers/of/of_reserved_mem.c | 5 +++++
- 1 file changed, 5 insertions(+)
+=D0=A9=D0=B5 =D1=81=D0=B5 =D1=80=D0=B0=D0=B4=D0=B2=D0=B0=D0=BC =D0=B4=D0=B0=
+ =D0=92=D0=B8 =D1=80=D0=B0=D0=B7=D0=BA=D0=B0=D0=B6=D0=B0 =D0=B7=D0=B0 =D0=
+=B2=D1=8A=D0=B7=D0=BC=D0=BE=D0=B6=D0=BD=D0=BE=D1=81=D1=82=D0=B8=D1=82=D0=B5=
+ =D0=BD=D0=B0 =D1=82=D0=B5=D0=B7=D0=B8 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=
+=D0=B8. =D0=9C=D0=BE=D0=BB=D1=8F =D1=83=D0=B2=D0=B5=D0=B4=D0=BE=D0=BC=D0=B5=
+=D1=82=D0=B5 =D0=BC=D0=B5, =D0=B0=D0=BA=D0=BE =D0=B6=D0=B5=D0=BB=D0=B0=D0=
+=B5=D1=82=D0=B5 =D0=B4=D0=B0 =D0=BF=D0=BE=D0=B3=D0=BE=D0=B2=D0=BE=D1=80=D0=
+=B8=D0=BC.
 
--- 
-2.7.4
+
+=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
+=D0=B5=D0=B2
+Head of HR Benefit Team
+www.lunchkarty.eu
