@@ -1,58 +1,62 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v2 02/10] media: rc: sunxi: Add A31 compatible
-Date: Mon, 27 May 2019 10:20:05 +0200
-Message-ID: <CAJiuCcfknVV5V4sMrfizz_K92BeTQsRYekmQQpWFP_-jhPPaQA@mail.gmail.com>
-References: <20190526222536.10917-1-peron.clem@gmail.com> <20190526222536.10917-3-peron.clem@gmail.com>
- <20190527074700.rvhqua44ixudt52z@flea>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [RESEND PATCH v5 0/5] ARM: da850: enable cpufreq in DT mode
+Date: Mon, 27 May 2019 10:22:54 +0200
+Message-ID: <20190527082259.29237-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190527074700.rvhqua44ixudt52z@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On Mon, 27 May 2019 at 09:47, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
->
-> Hi,
->
-> On Mon, May 27, 2019 at 12:25:28AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Allwiner A31 has a different memory mapping so add the compatible
-> > we will need it later.
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  drivers/media/rc/sunxi-cir.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.=
-c
-> > index 307e44714ea0..29ac33b68596 100644
-> > --- a/drivers/media/rc/sunxi-cir.c
-> > +++ b/drivers/media/rc/sunxi-cir.c
-> > @@ -319,6 +319,7 @@ static int sunxi_ir_remove(struct platform_device *=
-pdev)
-> >  static const struct of_device_id sunxi_ir_match[] =3D {
-> >       { .compatible =3D "allwinner,sun4i-a10-ir", },
-> >       { .compatible =3D "allwinner,sun5i-a13-ir", },
-> > +     { .compatible =3D "allwinner,sun6i-a31-ir", },
->
-> We should also move from reset_get_optional to the non optional
-> variant for the A31, and ignore it otherwise.
+Note: resending rebased on top of v5.2-rc2
 
-Should this be done in this series ?
-Thanks,
-Cl=C3=A9ment
+===
 
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+This series adds cpufreq-dt operating points for da850 boards supported
+with device tree (da850-lcdk, da850-lego-ev3, da850-evm).
+
+Last patch enables CPUFREQ_DT in davinci_all_defconfig.
+
+v1 -> v2:
+- use the VDCDC3_1.2V regulator as cpu-supply on da850-evm
+
+v2 -> v3:
+- drop patch 1, as the revision tag is in fact correctly passed to the kernel
+  by u-boot
+- only enable the 375 operating point for da850-evm as this is the standard
+  frequency for this board
+
+v3 -> v4:
+- split the first patch into three separate changesets: one adding the
+  operating points to the main dtsi and two enabling cpufreq on da850-lego-ev3
+  and da850-lcdk
+- remove the operating point not mentioned in the datasheet (415 MHz)
+- fix commit message in patch 4/5
+
+v4 -> v5:
+- only enable a single OPP for da850-lcdk due to the problem with the OHCI
+  controller becoming unresponsive after cpufreq transitions
+- fix the name of the pmic on da850-evm
+
+Bartosz Golaszewski (1):
+  ARM: dts: da850-evm: enable cpufreq
+
+David Lechner (4):
+  ARM: dts: da850: add cpu node and operating points to DT
+  ARM: dts: da850-lego-ev3: enable cpufreq
+  ARM: dts: da850-lcdk: enable cpufreq
+  ARM: davinci_all_defconfig: Enable CPUFREQ_DT
+
+ arch/arm/boot/dts/da850-evm.dts        | 13 +++++++
+ arch/arm/boot/dts/da850-lcdk.dts       | 36 +++++++++++++++++++
+ arch/arm/boot/dts/da850-lego-ev3.dts   | 30 ++++++++++++++++
+ arch/arm/boot/dts/da850.dtsi           | 50 ++++++++++++++++++++++++++
+ arch/arm/configs/davinci_all_defconfig |  1 +
+ 5 files changed, 130 insertions(+)
+
+-- 
+2.21.0
