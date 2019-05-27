@@ -1,94 +1,56 @@
-From: Mathieu Malaterre <malat@debian.org>
-Subject: Re: Ingenic Timer/Counter Unit (TCU) patchset v12
-Date: Mon, 27 May 2019 13:39:18 +0200
-Message-ID: <CA+7wUszagtyMV3oMxAi4VqpDeFcBY5ohXZ3PrXe-X5JV21bjBw@mail.gmail.com>
-References: <20190521145141.9813-1-paul@crapouillou.net>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH 0/2] net: macb: Add support for SiFive FU540-C000
+Date: Mon, 27 May 2019 17:22:27 +0530
+Message-ID: <CAJ2_jOH344oH=mvo1n9RJDPjT4ArMNBaogqy0dLCOwCcY7Fwuw@mail.gmail.com>
+References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
+ <mvmwoihfi9f.fsf@suse.de>
+ <CAJ2_jOEr5J7_-81MjUE63OSFKL-p9whEZ_FDBihojXP2wvadVg@mail.gmail.com>
+ <mvm36l0fhm3.fsf@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521145141.9813-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <mvm36l0fhm3.fsf@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Andreas Schwab <schwab@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, netdev <netdev@vger.kernel.org>, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Sachin Ghadi <sachin.ghadi@sifive.com>, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>, linux-riscv@lists.infradead.org, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2019 at 4:51 PM Paul Cercueil <paul@crapouillou.net> wrote:
+On Mon, May 27, 2019 at 1:34 PM Andreas Schwab <schwab@suse.de> wrote:
 >
-> Hi,
+> On Mai 24 2019, Yash Shah <yash.shah@sifive.com> wrote:
 >
-> Here's the V12 of my patchset to add support for the Timer/Counter Unit
-> (TCU) present on the JZ47xx SoCs from Ingenic.
+> > Hi Andreas,
+> >
+> > On Thu, May 23, 2019 at 6:19 PM Andreas Schwab <schwab@suse.de> wrote:
+> >>
+> >> On Mai 23 2019, Yash Shah <yash.shah@sifive.com> wrote:
+> >>
+> >> > On FU540, the management IP block is tightly coupled with the Cadence
+> >> > MACB IP block. It manages many of the boundary signals from the MACB IP
+> >> > This patchset controls the tx_clk input signal to the MACB IP. It
+> >> > switches between the local TX clock (125MHz) and PHY TX clocks. This
+> >> > is necessary to toggle between 1Gb and 100/10Mb speeds.
+> >>
+> >> Doesn't work for me:
+> >>
+> >> [  365.842801] macb: probe of 10090000.ethernet failed with error -17
+> >>
+> >
+> > Make sure you have applied all the patches needed for testing found at
+> > dev/yashs/ethernet branch of:
 >
-> This patchset is much shorter at only 13 patches vs. 27 patches in V11;
-> the remaining patches will be sent in parallel (if applicable) or as a
-> follow-up patchset once this one is merged.
->
-> In V11 the clocksource maintainers weren't happy with the size of the
-> ingenic-timer driver, which included clocks and irqchip setup code.
-> On the other hand, devicetree maintainers wanted one single node for
-> the TCU hardware since it's effectively just one hardware block.
->
-> In this patchset the functionality is cut in four different drivers:
-> a MFD one to provide the regmap, probe the children and which provides
-> several API functions; a clocks driver; a irqchip driver; a clocksource
-> driver. All these drivers work with the same regmap, have the same
-> compatible strings, and will probe _with the same devicetree node_.
+> Nope, try reloading the module.
 
-For the series:
+Yes, I could see the error on reloading the module.
+Thanks for the catch. I will fix this in the next version of this patch.
 
-Tested-by: Mathieu Malaterre <malat@debian.org>
-
-System: MIPS Creator CI20
-
-For reference, here is my local patch:
-
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index 1bfac58da5df..e7b7da32f278 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/jz4780-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
- #include <dt-bindings/dma/jz4780-dma.h>
-
- / {
-@@ -80,6 +81,15 @@
-
-                interrupt-parent = <&intc>;
-                interrupts = <27 26 25>;
-+
-+               watchdog: watchdog@0 {
-+                       compatible = "ingenic,jz4780-watchdog";
-+                       reg = <0x0 0xc>;
-+
-+                       clocks = <&tcu TCU_CLK_WDT>;
-+                       clock-names = "wdt";
-+               };
-+
-        };
-
-        rtc_dev: rtc@10003000 {
-@@ -287,14 +297,6 @@
-                status = "disabled";
-        };
-
--       watchdog: watchdog@10002000 {
--               compatible = "ingenic,jz4780-watchdog";
--               reg = <0x10002000 0x10>;
--
--               clocks = <&cgu JZ4780_CLK_RTCLK>;
--               clock-names = "rtc";
--       };
--
-        nemc: nemc@13410000 {
-                compatible = "ingenic,jz4780-nemc";
-                reg = <0x13410000 0x10000>;
-
-
-
-> Regards,
-> -Paul
->
->
+- Yash
