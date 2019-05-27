@@ -1,49 +1,38 @@
-Return-Path: <SRS0=HSAE=TV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay11.mail.gandi.net ([217.70.178.231]:59341 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfEUNES (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 May 2019 09:04:18 -0400
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 1/4] clk: mvebu: armada-37xx-periph: add PCIe gated clock
-Date: Tue, 21 May 2019 15:03:54 +0200
-Message-Id: <20190521130357.20803-2-miquel.raynal@bootlin.com>
-In-Reply-To: <20190521130357.20803-1-miquel.raynal@bootlin.com>
-References: <20190521130357.20803-1-miquel.raynal@bootlin.com>
+Return-Path: <SRS0=MGmW=T3=klsmartin.com=Leif.Middelschulte@kernel.org>
+From: Leif Middelschulte <leif.middelschulte@klsmartin.com>
+Subject: [PATCH 00/10] input: touchscreen: stmpe: ext. features
+Date: Mon, 27 May 2019 18:07:26 +0200
+Message-ID: <20190527160736.30569-1-leif.middelschulte@klsmartin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain
+To: dmitry.torokhov@gmail.com, devicetree@vger.kernel.org
+Cc: linux-input@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Leif Middelschulte <leif.middelschulte@klsmartin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The PCIe clock is a gated clock which has the same source as GbE0
-(both IPs share a set of registers). This source clock is called
-'gbe_core' in the driver.
+This set of patches implements various features suppported by the STMPE811
+touchscreen controller. It integrates certain properties to facilitate the
+operation/integration with kernel provided interfaces/properties and userland
+libraries, such as libinput.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/clk/mvebu/armada-37xx-periph.c | 2 ++
- 1 file changed, 2 insertions(+)
+Based on Linus' v5.2-rc2
 
-diff --git a/drivers/clk/mvebu/armada-37xx-periph.c b/drivers/clk/mvebu/armada-37xx-periph.c
-index 4c20093a42fb..1e18c5a875bd 100644
---- a/drivers/clk/mvebu/armada-37xx-periph.c
-+++ b/drivers/clk/mvebu/armada-37xx-periph.c
-@@ -304,6 +304,7 @@ PERIPH_CLK_GATE_DIV(gbe_bm, 12, DIV_SEL1, 0, clk_table1);
- PERIPH_CLK_FULL_DD(sdio, 11, 14, DIV_SEL0, DIV_SEL0, 3, 6);
- PERIPH_CLK_FULL_DD(usb32_usb2_sys, 16, 16, DIV_SEL0, DIV_SEL0, 9, 12);
- PERIPH_CLK_FULL_DD(usb32_ss_sys, 17, 18, DIV_SEL0, DIV_SEL0, 15, 18);
-+static PERIPH_GATE(pcie, 14);
- 
- static struct clk_periph_data data_sb[] = {
- 	REF_CLK_MUX_DD(gbe_50),
-@@ -319,6 +320,7 @@ static struct clk_periph_data data_sb[] = {
- 	REF_CLK_FULL_DD(sdio),
- 	REF_CLK_FULL_DD(usb32_usb2_sys),
- 	REF_CLK_FULL_DD(usb32_ss_sys),
-+	REF_CLK_GATE(pcie, "gbe_core"),
- 	{ },
- };
- 
+Leif Middelschulte (10):
+  dt-bindings: input: touchscreen: stmpe: add touch window configuration
+  Input: stmpe-ts - implement touch window configuration support
+  dt-bindings: input: touchscreen: stmpe: add resolution support
+  Input: stmpe-ts - implement resolution support
+  dt-bindings: input: touchscreen: stmpe: add XY mode
+  Input: stmpe-ts - implement XY acquisition mode
+  dt-bindings: input: touchscreen: stmpe: add axes inversion and swap
+  Input: stmpe-ts - axes inversion and swapping
+  dt-bindings: input: touchscreen: stmpe: add tracking index
+  Input: stmpe-ts - implement tracking index
+
+ .../bindings/input/touchscreen/stmpe.txt      |  35 ++++
+ drivers/input/touchscreen/stmpe-ts.c          | 161 ++++++++++++++++--
+ include/linux/mfd/stmpe.h                     |   1 +
+ 3 files changed, 185 insertions(+), 12 deletions(-)
+
 -- 
-2.19.1
+2.21.0
