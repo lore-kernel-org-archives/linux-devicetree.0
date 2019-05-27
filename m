@@ -1,100 +1,138 @@
-From: =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
-Subject: RE: [PATCH v2 08/10] Input: elan_i2c - export true width/height
-Date: Mon, 27 May 2019 11:55:01 +0800
-Message-ID: <00f901d5143f$f5ea8420$e1bf8c60$@emc.com.tw>
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com> <20190521132712.2818-9-benjamin.tissoires@redhat.com> <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: [PATCH v5 1/3] arm64: map FDT as RW for early_init_dt_scan()
+Date: Mon, 27 May 2019 12:33:34 +0800
+Message-ID: <20190527043336.112854-1-hsinyi@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
-Content-Language: zh-tw
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Benjamin Tissoires' <benjamin.tissoires@redhat.com>, 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Aaron Ma' <aaron.ma@canonical.com>, 'Hans de Goede' <hdegoede@redhat.com>
-Cc: "'open list:HID CORE LAYER'" <linux-input@vger.kernel.org>, 'lkml' <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, Yu Zhao <yuzhao@google.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Stephen Boyd <swboyd@chromium.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>, Jun Yao <yaojun8558363@gmail.com>, Miles Chen <miles.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, James Morse <james.morse@arm.com>, Hsin-Yi Wang <hsinyi@chromium.org>, Andrew Murray <andrew.murray@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Laura Abbott <labbott@redhat.com>, Frank Rowand <frowand.list@gmail.com>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Currently in arm64, FDT is mapped to RO before it's passed to
+early_init_dt_scan(). However, there might be some codes
+(eg. commit "fdt: add support for rng-seed") that need to modify FDT
+during init. Map FDT to RO after early fixups are done.
 
------Original Message-----
-From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com] 
-Sent: Friday, May 24, 2019 5:37 PM
-To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
-Cc: open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+change log v4->v5:
+* move memblock_reserve() out from fixmap_remap_fdt()
+* fix subject and commit message
+---
+ arch/arm64/include/asm/mmu.h |  2 +-
+ arch/arm64/kernel/kaslr.c    |  5 +----
+ arch/arm64/kernel/setup.c    |  9 ++++++++-
+ arch/arm64/mm/mmu.c          | 15 +--------------
+ 4 files changed, 11 insertions(+), 20 deletions(-)
 
-On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
->
-> The width/height is actually in the same unit than X and Y. So we 
-> should not tamper the data, but just set the proper resolution, so 
-> that userspace can correctly detect which touch is a palm or a finger.
->
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->
-> --
->
-> new in v2
-> ---
->  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/input/mouse/elan_i2c_core.c 
-> b/drivers/input/mouse/elan_i2c_core.c
-> index 7ff044c6cd11..6f4feedb7765 100644
-> --- a/drivers/input/mouse/elan_i2c_core.c
-> +++ b/drivers/input/mouse/elan_i2c_core.c
-> @@ -45,7 +45,6 @@
->  #define DRIVER_NAME            "elan_i2c"
->  #define ELAN_VENDOR_ID         0x04f3
->  #define ETP_MAX_PRESSURE       255
-> -#define ETP_FWIDTH_REDUCE      90
->  #define ETP_FINGER_WIDTH       15
->  #define ETP_RETRY_COUNT                3
->
-> @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp_data *data,
->                         return;
->                 }
->
-> -               /*
-> -                * To avoid treating large finger as palm, let's reduce the
-> -                * width x and y per trace.
-> -                */
-> -               area_x = mk_x * (data->width_x - ETP_FWIDTH_REDUCE);
-> -               area_y = mk_y * (data->width_y - ETP_FWIDTH_REDUCE);
-> +               area_x = mk_x * data->width_x;
-> +               area_y = mk_y * data->width_y;
->
->                 major = max(area_x, area_y);
->                 minor = min(area_x, area_y); @@ -1123,8 +1118,10 @@ 
-> static int elan_setup_input_device(struct elan_tp_data *data)
->                              ETP_MAX_PRESSURE, 0, 0);
->         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
->                              ETP_FINGER_WIDTH * max_width, 0, 0);
-> +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR, data->x_res);
->         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
->                              ETP_FINGER_WIDTH * min_width, 0, 0);
-> +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR, data->y_res);
-
-I had a chat with Peter on Wednesday, and he mentioned that this is dangerous as Major/Minor are max/min of the width and height. And given that we might have 2 different resolutions, we would need to do some computation in the kernel to ensure the data is correct with respect to the resolution.
-
-TL;DR: I don't think we should export the resolution there :(
-
-KT, should I drop the patch entirely, or is there a strong argument for keeping the ETP_FWIDTH_REDUCE around?
-I suggest you apply the patch, I have no idea why ETP_FWIDTH_REDUCE existed. 
-Our FW team know nothing about ETP_FWIDTH_REDUCE ether.
-
-The only side effect will happen on Chromebook because such computation have stayed in ChromeOS' kernel for four years.
-Chrome's finger/palm threshold may be different from other Linux distribution.
-We will discuss it with Google once the patch picked by chrome and cause something wrong.
-
-Cheers,
-Benjamin
-
-
->
->         data->input = input;
->
-> --
-> 2.21.0
->
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index 67ef25d037ea..27f6f17aae36 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -137,7 +137,7 @@ extern void init_mem_pgprot(void);
+ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+ 			       unsigned long virt, phys_addr_t size,
+ 			       pgprot_t prot, bool page_mappings_only);
+-extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
++extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
+ extern void mark_linear_text_alias_ro(void);
+ 
+ #define INIT_MM_CONTEXT(name)	\
+diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
+index 06941c1fe418..92bb53460401 100644
+--- a/arch/arm64/kernel/kaslr.c
++++ b/arch/arm64/kernel/kaslr.c
+@@ -65,9 +65,6 @@ static __init const u8 *kaslr_get_cmdline(void *fdt)
+ 	return default_cmdline;
+ }
+ 
+-extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
+-				       pgprot_t prot);
+-
+ /*
+  * This routine will be executed with the kernel mapped at its default virtual
+  * address, and if it returns successfully, the kernel will be remapped, and
+@@ -96,7 +93,7 @@ u64 __init kaslr_early_init(u64 dt_phys)
+ 	 * attempt at mapping the FDT in setup_machine()
+ 	 */
+ 	early_fixmap_init();
+-	fdt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
++	fdt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+ 	if (!fdt)
+ 		return 0;
+ 
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 413d566405d1..6a7050319b5b 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -181,9 +181,13 @@ static void __init smp_build_mpidr_hash(void)
+ 
+ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ {
+-	void *dt_virt = fixmap_remap_fdt(dt_phys);
++	int size;
++	void *dt_virt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+ 	const char *name;
+ 
++	if (dt_virt)
++		memblock_reserve(dt_phys, size);
++
+ 	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
+ 		pr_crit("\n"
+ 			"Error: invalid device tree blob at physical address %pa (virtual address 0x%p)\n"
+@@ -195,6 +199,9 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ 			cpu_relax();
+ 	}
+ 
++	/* Early fixups are done, map the FDT as read-only now */
++	fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
++
+ 	name = of_flat_dt_get_machine_name();
+ 	if (!name)
+ 		return;
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index a1bfc4413982..be835c379b7e 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -887,7 +887,7 @@ void __set_fixmap(enum fixed_addresses idx,
+ 	}
+ }
+ 
+-void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
++void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+ {
+ 	const u64 dt_virt_base = __fix_to_virt(FIX_FDT);
+ 	int offset;
+@@ -940,19 +940,6 @@ void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+ 	return dt_virt;
+ }
+ 
+-void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
+-{
+-	void *dt_virt;
+-	int size;
+-
+-	dt_virt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
+-	if (!dt_virt)
+-		return NULL;
+-
+-	memblock_reserve(dt_phys, size);
+-	return dt_virt;
+-}
+-
+ int __init arch_ioremap_pud_supported(void)
+ {
+ 	/*
+-- 
+2.20.1
