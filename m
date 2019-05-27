@@ -1,82 +1,28 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 3/7] ASoC: sun4i-spdif: Add TX fifo bit flush quirks
-Date: Mon, 27 May 2019 14:28:57 +0200
-Message-ID: <20190527122857.lphlgr7dc5z4f5o3@flea>
-References: <20190525162323.20216-1-peron.clem@gmail.com>
- <20190525162323.20216-4-peron.clem@gmail.com>
- <20190526182410.soqb6bne6w66d5j6@flea>
- <CAJiuCce8UNbA+Ljkbw92ZJu3Ni6N9ciFKGsLtBYJ0_J8E1Gi2g@mail.gmail.com>
+From: Pramod Kumar <pramod.kumar_1@nxp.com>
+Subject: [PATCH v3 0/3] arm64: dts: nxp: add ls1046a frwy board support
+Date: Mon, 27 May 2019 12:32:03 +0000
+Message-ID: <20190527123404.30858-1-pramod.kumar_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5fgdhizk55u3fsr6"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJiuCce8UNbA+Ljkbw92ZJu3Ni6N9ciFKGsLtBYJ0_J8E1Gi2g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Jagan Teki <jagan@amarulasolutions.com>, Linux-ALSA <alsa-devel@alsa-project.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---5fgdhizk55u3fsr6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, May 26, 2019 at 09:00:30PM +0200, Cl=E9ment P=E9ron wrote:
-> Hi Maxime,
->
-> On Sun, 26 May 2019 at 20:24, Maxime Ripard <maxime.ripard@bootlin.com> w=
-rote:
-> >
-> > On Sat, May 25, 2019 at 06:23:19PM +0200, Cl=E9ment P=E9ron wrote:
-> > > Allwinner H6 has a different bit to flush the TX FIFO.
-> > >
-> > > Add a quirks to prepare introduction of H6 SoC.
-> > >
-> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > > ---
-> > >  sound/soc/sunxi/sun4i-spdif.c | 11 ++++++++++-
-> > >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/sound/soc/sunxi/sun4i-spdif.c b/sound/soc/sunxi/sun4i-sp=
-dif.c
-> > > index b6c66a62e915..8317bbee0712 100644
-> > > --- a/sound/soc/sunxi/sun4i-spdif.c
-> > > +++ b/sound/soc/sunxi/sun4i-spdif.c
-> > > @@ -166,10 +166,12 @@
-> > >   *
-> > >   * @reg_dac_tx_data: TX FIFO offset for DMA config.
-> > >   * @has_reset: SoC needs reset deasserted.
-> > > + * @reg_fctl_ftx: TX FIFO flush bitmask.
-> >
-> > It's a bit weird to use the same prefix for a register offset
-> > (reg_dac_tx_data) and a value (reg_fctl_ftx).
->
-> I just look at sun4i-codec and they use a regmap, But I think it's a
-> bit overkill no?
-
-For a single value, yeah
-
-> What do you think about val_fctl_ftx ?
-
-Looks good, thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---5fgdhizk55u3fsr6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOvYCQAKCRDj7w1vZxhR
-xWpYAQDonSAGR8IIIJfCwN6P7pyQ5D2rskJl7lfFfD4Mo5WZ8QD/aAaog6/za5ta
-r3GfRL559CHukEIi7he29P416ycIjw0=
-=3d9d
------END PGP SIGNATURE-----
-
---5fgdhizk55u3fsr6--
+Q2hhbmdlcyBmb3IgdjM6DQotIFJlbW92ZSB1bmRvY3VtZW50ZWQgcHJvcGVydCBpMmMtbXV4LW5l
+dmVyLWRpc2FibGUNCi0gU29ydCBub2RlcyBhdCBpMmMgbXV4IGluIHVuaXQtYWRkcmVzcw0KLSBS
+ZW1vdmUgVW5uZWNlc3NhcnkgbmV3bGluZQ0KDQpDaGFuZ2VzIGZvciB2MjoNCi0gTW9kaWZpZWQg
+Y29taXQgbWVzc2FnZQ0KLSBBZGQgZHRzIGVudHJ5IGZvciBxc3BpIG5vciBmbGFzaA0KDQpQcmFt
+b2QgS3VtYXIgKDMpOg0KICBkdC1iaW5kaW5nczogYXJtOiBueHA6IEFkZCBkZXZpY2UgdHJlZSBi
+aW5kaW5nIGZvciBsczEwNDZhLWZyd3kgYm9hcmQNCiAgYXJtNjQ6IGR0czogbnhwOiBhZGQgbHMx
+MDQ2YS1mcnd5IGJvYXJkIHN1cHBvcnQNCiAgYXJtNjQ6IGR0czogZnJ3eS1sczEwNDZhOiBhZGQg
+c3VwcG9ydCBmb3IgbWljcm9uIG5vciBmbGFzaA0KDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+YXJtL2ZzbC55YW1sICAgICAgICAgIHwgICAxICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
+Y2FsZS9NYWtlZmlsZSAgICAgICAgfCAgIDEgKw0KIC4uLi9ib290L2R0cy9mcmVlc2NhbGUvZnNs
+LWxzMTA0NmEtZnJ3eS5kdHMgICB8IDE3MiArKysrKysrKysrKysrKysrKysNCiAzIGZpbGVzIGNo
+YW5nZWQsIDE3NCBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQv
+Ym9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLWZyd3kuZHRzDQoNCi0tIA0KMi4xNy4xDQoN
+Cg==
