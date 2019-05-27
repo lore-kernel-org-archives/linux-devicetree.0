@@ -1,47 +1,25 @@
-From: Neal Liu <neal.liu@mediatek.com>
-Subject: [PATCH v2 0/3] MediaTek Security random number generator support
-Date: Mon, 27 May 2019 16:38:43 +0800
-Message-ID: <1558946326-13630-1-git-send-email-neal.liu@mediatek.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 10/10] docs: fix broken documentation links
+Date: Mon, 27 May 2019 10:43:39 +0200
+Message-ID: <CAJZ5v0iiSo=yoyZTt6ddf5fBRGy1wSvzmA-ZaHH33nivkSp22Q@mail.gmail.com>
+References: <cover.1558362030.git.mchehab+samsung@kernel.org> <4fd1182b4a41feb2447c7ccde4d7f0a6b3c92686.1558362030.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4fd1182b4a41feb2447c7ccde4d7f0a6b3c92686.1558362030.git.mchehab+samsung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>
-Cc: Neal Liu <neal.liu@mediatek.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com, Crystal Guo <Crystal.Guo@mediatek.com>
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, the arch/x86 maintainers <x86@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "open list:EDAC-CORE" <linux-edac@vger.kernel.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, xen-devel@lists.xenproject.org, Platform Driver <pl>
 List-Id: devicetree@vger.kernel.org
 
-These patch series introduce a generic rng driver for Trustzone
-based kernel driver which would like to communicate with ATF
-SIP services.
+On Mon, May 20, 2019 at 4:48 PM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+>
+> Mostly due to x86 and acpi conversion, several documentation
+> links are still pointing to the old file. Fix them.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-Patch #1 initials SMC fid table for MediaTek SIP interfaces and
-adds HWRNG related SMC call.
+For the ACPI part:
 
-Patch #2..3 adds mtk-sec-rng kernel driver for Trustzone based SoCs.
-For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
-entropy sources is not accessible from normal world (linux) and
-rather accessible from secure world (ATF/TEE) only. This driver aims
-to provide a generic interface to ATF rng service.
-
-
-changes since v2:
-- rename mt67xx-rng to mtk-sec-rng since all MediaTek ARMv8 SoCs
-can reuse this driver.
-- refine coding style and unnecessary check.
-
-Neal Liu (3):
-  soc: mediatek: add SMC fid table for SIP interface
-  dt-bindings: rng: update bindings for MediaTek ARMv8 SoCs
-  hwrng: add mtk-sec-rng driver
-
- .../devicetree/bindings/rng/mtk-rng.txt       | 13 ++-
- drivers/char/hw_random/Kconfig                | 16 +++
- drivers/char/hw_random/Makefile               |  1 +
- drivers/char/hw_random/mtk-sec-rng.c          | 97 +++++++++++++++++++
- include/linux/soc/mediatek/mtk_sip_svc.h      | 51 ++++++++++
- 5 files changed, 175 insertions(+), 3 deletions(-)
- create mode 100644 drivers/char/hw_random/mtk-sec-rng.c
- create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
-
--- 
-2.18.0
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
