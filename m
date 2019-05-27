@@ -1,86 +1,53 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH v2 00/10] Allwinner A64/H6 IR support
-Date: Mon, 27 May 2019 15:48:05 +0200
-Message-ID: <20190527134805.j7t4ffstrnhdml47@core.my.home>
-References: <20190526222536.10917-1-peron.clem@gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v8 1/6] drm/bridge: sii902x: add input_bus_flags
+Date: Mon, 27 May 2019 16:47:52 +0300
+Message-ID: <deb02a1fd508c514472a4e660092f301e6681361.1558964241.git.jsarha@ti.com>
+References: <cover.1558964241.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190526222536.10917-1-peron.clem@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1558964241.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Clément,
-
-On Mon, May 27, 2019 at 12:25:26AM +0200, Clément Péron wrote:
-> Hi,
-> 
-> A64 IR support series[1] pointed out that an A31 bindings should be
-> introduced.
-> 
-> This series introduce the A31 compatible bindings, then switch it on
-> the already existing board.
-> 
-> Finally introduce A64 and H6 support.
-
-Does H6 support actually work? I don't see any driver changes and last time
-I tried with the exact same bindings, I got RCU stalls shortly after boot.
-
-Enabling/disabling ir node was enough to trigger/stop the RCU stalls on H6.
-
-regards,
-	o.
-
-> Regards,
-> Clément
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
-> 
-> Changes since v1:
->  - Document reset lines as required since A31
->  - Explain the memory mapping difference in commit log
->  - Fix misspelling "Allwiner" to "Allwinner"
-> 
-> Clément Péron (8):
->   dt-bindings: media: sunxi-ir: add A31 compatible
->   media: rc: sunxi: Add A31 compatible
->   ARM: dts: sunxi: prefer A31 instead of A13 for ir
->   dt-bindings: media: sunxi-ir: Add A64 compatible
->   dt-bindings: media: sunxi-ir: Add H6 compatible
->   arm64: dts: allwinner: h6: Add IR receiver node
->   arm64: dts: allwinner: h6: Enable IR on H6 boards
->   arm64: defconfig: enable IR SUNXI option
-> 
-> Igors Makejevs (1):
->   arm64: dts: allwinner: a64: Add IR node
-> 
-> Jernej Skrabec (1):
->   arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
-> 
->  .../devicetree/bindings/media/sunxi-ir.txt    | 11 +++++++++--
->  arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
->  arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
->  arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
->  .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 ++++
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++++++++++++++++
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++++
->  .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  4 ++++
->  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  4 ++++
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 +++++++++++++++++++
->  arch/arm64/configs/defconfig                  |  1 +
->  drivers/media/rc/sunxi-cir.c                  |  1 +
->  13 files changed, 68 insertions(+), 6 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+RnJvbTogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KClRoZSBkcml2ZXIg
+YWx3YXlzIHNldHMgSW5wdXRCdXNGbXQ6RURHRSB0byAwIChmYWxsaW5nIGVkZ2UpLgoKQWRkIGRy
+bV9icmlkZ2VfdGltaW5ncydzIGlucHV0X2J1c19mbGFncyB0byByZWZsZWN0IHRoYXQgdGhlIGJy
+aWRnZQpzYW1wbGVzIG9uIGZhbGxpbmcgZWRnZXMuCgpTaWduZWQtb2ZmLWJ5OiBUb21pIFZhbGtl
+aW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgpTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxq
+c2FyaGFAdGkuY29tPgpSZXZpZXdlZC1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5n
+LmNvbT4KUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRl
+YXNvbmJvYXJkLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYyB8IDcg
+KysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9z
+aWk5MDJ4LmMKaW5kZXggY2RiOGRmZGIyZGZmLi4wZDNkNzMwYjk3ZmYgMTAwNjQ0Ci0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlk
+Z2Uvc2lpOTAyeC5jCkBAIC00NjEsNiArNDYxLDEyIEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9pMmNf
+YnlwYXNzX2Rlc2VsZWN0KHN0cnVjdCBpMmNfbXV4X2NvcmUgKm11eCwgdTMyIGNoYW5faWQpCiAJ
+cmV0dXJuIDA7CiB9CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2JyaWRnZV90aW1pbmdzIGRl
+ZmF1bHRfc2lpOTAyeF90aW1pbmdzID0geworCS5pbnB1dF9idXNfZmxhZ3MgPSBEUk1fQlVTX0ZM
+QUdfUElYREFUQV9TQU1QTEVfTkVHRURHRQorCQkgfCBEUk1fQlVTX0ZMQUdfU1lOQ19TQU1QTEVf
+TkVHRURHRQorCQkgfCBEUk1fQlVTX0ZMQUdfREVfSElHSCwKK307CisKIHN0YXRpYyBpbnQgc2lp
+OTAyeF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAogCQkJIGNvbnN0IHN0cnVjdCBp
+MmNfZGV2aWNlX2lkICppZCkKIHsKQEAgLTUzMSw2ICs1MzcsNyBAQCBzdGF0aWMgaW50IHNpaTkw
+MnhfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwKIAogCXNpaTkwMngtPmJyaWRnZS5m
+dW5jcyA9ICZzaWk5MDJ4X2JyaWRnZV9mdW5jczsKIAlzaWk5MDJ4LT5icmlkZ2Uub2Zfbm9kZSA9
+IGRldi0+b2Zfbm9kZTsKKwlzaWk5MDJ4LT5icmlkZ2UudGltaW5ncyA9ICZkZWZhdWx0X3NpaTkw
+MnhfdGltaW5nczsKIAlkcm1fYnJpZGdlX2FkZCgmc2lpOTAyeC0+YnJpZGdlKTsKIAogCWkyY19z
+ZXRfY2xpZW50ZGF0YShjbGllbnQsIHNpaTkwMngpOwotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlu
+bGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2lu
+ZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
