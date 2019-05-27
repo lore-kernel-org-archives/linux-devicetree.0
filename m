@@ -1,38 +1,76 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
-Date: Mon, 27 May 2019 02:06:44 +0000
-Message-ID: <AM0PR04MB4481E92EFFD69301432C9D23881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190523060437.11059-1-peng.fan@nxp.com>
- <CABb+yY0r-njq2OGVP9xAh=-wgib5zk8XbS-vdY1jtz2R=rT4Nw@mail.gmail.com>
+From: Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v3 4/5] power: supply: max17040: Clear ALRT bit when the SOC are above threshold
+Date: Sun, 26 May 2019 23:22:57 -0300
+Message-ID: <20190527022258.32748-5-matheus@castello.eng.br>
+References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
+ <20190527022258.32748-1-matheus@castello.eng.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY0r-njq2OGVP9xAh=-wgib5zk8XbS-vdY1jtz2R=rT4Nw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190527022258.32748-1-matheus@castello.eng.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>
+To: sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, cw00.choi@samsung.com, b.zolnierkie@samsung.com, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matheus Castello <matheus@castello.eng.br>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFzc2ksDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwLzJdIG1haWxib3g6IGFybTogaW50
-cm9kdWNlIHNtYyB0cmlnZ2VyZWQgbWFpbGJveA0KPiANCj4gT24gVGh1LCBNYXkgMjMsIDIwMTkg
-YXQgMTI6NTAgQU0gUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+IHdyb3RlOg0KPiA+DQo+ID4g
-VGhpcyBpcyBhIG1vZGlmaWVkIHZlcnNpb24gZnJvbSBBbmRyZSBQcnp5d2FyYSdzIHBhdGNoIHNl
-cmllcw0KPiA+DQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5j
-b20vP3VybD1odHRwcyUzQSUyRiUyRmxvcmUua2UNCj4gcm5lbC5vcmclMkZwYXRjaHdvcmslMkZj
-b3ZlciUyRjgxMjk5NyUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdDcGUNCj4gbmcuZmFuJTQwbnhwLmNv
-bSU3QzQwYmIxNjMyZjk5MjQ4ZjI0ZTEzMDhkNmUyNDY3YzhiJTdDNjg2ZWExZDNiDQo+IGMyYjRj
-NmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzElN0M2MzY5NDUxODk3MDU2MjA3OTYmYW1wO3NkYXQN
-Cj4gYT12Nm1MeURLTE84TmFCTWxYNlhsT0N0T3MyQzQxVHVPRzl5RkRZJTJGN3E4blUlM0QmYW1w
-O3Jlc2VyDQo+IHZlZD0wLg0KPiA+DQo+IENhbiB5b3UgcGxlYXNlIHNwZWNpZnkgZXhhY3QgbW9k
-aWZpY2F0aW9ucyBvbiB0b3Agb2YgQW5kcmUncyBsYXN0IHN1Ym1pc3Npb24/DQo+IEFzIGluICJD
-aGFuZ2VzIHNpbmNlIHYxOiAuLi4uIg0KDQpTaW5jZSBBbmRyZSdzIGxhc3QgdjIgdmVyc2lvbiB3
-YXMgc2VudCBpbiAyMDE3LCBJIHRob3VnaHQgbm8gbmVlZCB0byBhZGQgdGhhdC4NClRoZSBjaGFu
-Z2VzIGFyZSBtb3N0bHkuDQpJbnRyb2R1Y2UgYXJtLG51bS1jaGFucw0KSW50cm9kdWNlIGFybV9z
-bWNjY19tYm94X2NtZA0KdHhkb25lX3BvbGwgYW5kIHR4ZG9uZV9pcnEgYXJlIGJvdGggc2V0IHRv
-IGZhbHNlDQphcm0sZnVuYy1pZHMgYXJlIGtlcHQsIGJ1dCBhcyBhbiBvcHRpb25hbCBwcm9wZXJ0
-eS4NClJld29yZHMgU0NQSSB0byBTQ01JLCBiZWNhdXNlIEkgYW0gdHJ5aW5nIFNDTUkgb3ZlciBT
-TUMsIG5vdCBTQ1BJLg0KDQpJJ2xsIGFkZCB0aGUgY2hhbmdlcyBpbmZvcm1hdGlvbiBhZnRlciBJ
-IGNvbGxlY3QgbW9yZSBjb21tZW50cyBpbiB0aGlzIHBhdGNoc2V0Lg0KDQpUaGFua3MsDQpQZW5n
-Lg0KPiANCj4gVGhhbmtzLg0K
+In order to not generate duplicate interrupts we clear the ALRT bit when
+the SOC is in a state that shows that the battery is charged above the set
+threshold for the SOC low level alert.
+
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+---
+ drivers/power/supply/max17040_battery.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+index 2f4851608cfe..61e6fcfea8a1 100644
+--- a/drivers/power/supply/max17040_battery.c
++++ b/drivers/power/supply/max17040_battery.c
+@@ -48,6 +48,7 @@ struct max17040_chip {
+ 	int status;
+ 	/* Low alert threshold from 32% to 1% of the State of Charge */
+ 	u32 low_soc_alert_threshold;
++	int alert_bit;
+ };
+
+ static int max17040_get_property(struct power_supply *psy,
+@@ -107,6 +108,7 @@ static void max17040_reset(struct i2c_client *client)
+ static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
+ 	u32 level)
+ {
++	struct max17040_chip *chip = i2c_get_clientdata(client);
+ 	int ret;
+ 	u16 data;
+
+@@ -118,6 +120,7 @@ static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
+ 		data &= MAX17040_ATHD_MASK;
+ 		data |= level;
+ 		max17040_write_reg(client, MAX17040_RCOMP, data);
++		chip->alert_bit = 0;
+ 		ret = 0;
+ 	} else {
+ 		ret = -EINVAL;
+@@ -144,6 +147,11 @@ static void max17040_get_soc(struct i2c_client *client)
+ 	soc = max17040_read_reg(client, MAX17040_SOC);
+
+ 	chip->soc = (soc >> 8);
++
++	/* check SOC level to clear ALRT bit */
++	if (chip->soc > chip->low_soc_alert_threshold && chip->alert_bit)
++		max17040_set_low_soc_threshold_alert(client,
++			chip->low_soc_alert_threshold);
+ }
+
+ static void max17040_get_version(struct i2c_client *client)
+@@ -229,6 +237,9 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
+ 	/* send uevent */
+ 	power_supply_changed(chip->battery);
+
++	/* ALRT bit is seted */
++	chip->alert_bit = 1;
++
+ 	return IRQ_HANDLED;
+ }
+
+--
+2.20.1
