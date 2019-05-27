@@ -1,8 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 02/10] dt-bindings: rtc: Add YAML schemas for the generic RTC
- bindings
-Date: Mon, 27 May 2019 14:00:34 +0200
-Message-ID: <3220382f2eb8ba3cda1388882b2f4b53f75414e6.1558958381.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 04/10] dt-bindings: rtc: Convert Allwinner A31 RTC to a schema
+Date: Mon, 27 May 2019 14:00:36 +0200
+Message-ID: <e345cb06e54ce80db07e96c2cf2ef51794130585.1558958381.git-series.maxime.ripard@bootlin.com>
 References: <290402405a34506997fd2fab2c4c1486dbe6b7e5.1558958381.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,110 +21,189 @@ To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutlan
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The real time clocks have a bunch of generic properties that are needed in
-a device tree. Add a YAML schemas for those.
+The newer Allwinner SoCs have an embedded RTC supported in Linux, with a
+matching Device Tree binding.
+
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/rtc/rtc.txt  | 34 +-------------
- Documentation/devicetree/bindings/rtc/rtc.yaml | 50 +++++++++++++++++++-
- 2 files changed, 51 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc.yaml
+ Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml | 112 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ Documentation/devicetree/bindings/rtc/sun6i-rtc.txt                |  46 +------------------------------
+ 2 files changed, 112 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
-index 234bd2af1830..b8d36fce5e2d 100644
---- a/Documentation/devicetree/bindings/rtc/rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-@@ -1,33 +1 @@
--Generic device tree bindings for Real Time Clock devices
--========================================================
--
--This document describes generic bindings which can be used to describe Real Time
--Clock devices in a device tree.
--
--Required properties
---------------------
--
--- compatible : name of RTC device following generic names recommended practice.
--
--For other required properties e.g. to describe register sets,
--clocks, etc. check the binding documentation of the specific driver.
--
--Optional properties
---------------------
--
--- start-year : if provided, the default hardware range supported by the RTC is
--               shifted so the first usable year is the specified one.
--
--The following properties may not be supported by all drivers. However, if a
--driver wants to support one of the below features, it should adapt the bindings
--below.
--- trickle-resistor-ohms :   Selected resistor for trickle charger. Should be given
--                            if trickle charger should be enabled
--- trickle-diode-disable :   Do not use internal trickle charger diode Should be
--                            given if internal trickle charger diode should be
--                            disabled
--- wakeup-source :           Enables wake up of host system on alarm
--- quartz-load-femtofarads : The capacitive load of the quartz(x-tal),
--                            expressed in femto Farad (fF).
--                            The default value shall be listed (if optional),
--                            and likewise all valid values.
-+This file has been moved to rtc.yaml.
-diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
+diff --git a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
 new file mode 100644
-index 000000000000..ee237b2ed66a
+index 000000000000..942ddfc1689d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
-@@ -0,0 +1,50 @@
++++ b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+@@ -0,0 +1,112 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/rtc/rtc.yaml#
++$id: http://devicetree.org/schemas/rtc/allwinner,sun6i-a31-rtc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: RTC Generic Binding
++title: Allwinner A31 RTC Device Tree Bindings
 +
 +maintainers:
-+  - Alexandre Belloni <alexandre.belloni@bootlin.com>
-+
-+description: |
-+  This document describes generic bindings which can be used to
-+  describe Real Time Clock devices in a device tree.
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
 +
 +properties:
-+  $nodename:
-+    pattern: "^rtc(@.*|-[0-9a-f])*$"
++  "#clock-cells":
++    const: 1
 +
-+  quartz-load-femtofarads:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      The capacitive load of the quartz(x-tal), expressed in femto
-+      Farad (fF). The default value shall be listed (if optional),
-+      and likewise all valid values.
++  compatible:
++    oneOf:
++      - const: allwinner,sun6i-a31-rtc
++      - const: allwinner,sun8i-a23-rtc
++      - const: allwinner,sun8i-h3-rtc
++      - const: allwinner,sun8i-v3-rtc
++      - const: allwinner,sun50i-h5-rtc
++      - items:
++          - const: allwinner,sun50i-a64-rtc
++          - const: allwinner,sun8i-h3-rtc
 +
-+  start-year:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      If provided, the default hardware range supported by the RTC is
-+      shifted so the first usable year is the specified one.
++  reg:
++    maxItems: 1
 +
-+  trickle-diode-disable:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      Do not use internal trickle charger diode. Should be given if
-+      internal trickle charger diode should be disabled.
++  interrupts:
++    items:
++      - description: RTC Alarm 0
++      - description: RTC Alarm 1
 +
-+  trickle-resistor-ohms:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Selected resistor for trickle charger. Should be given
-+      if trickle charger should be enabled.
++  clocks:
++    maxItems: 1
 +
-+  wakeup-source:
-+    $ref: /schemas/types.yaml#/definitions/flag
++  clock-output-names:
++    minItems: 1
++    maxItems: 3
 +    description:
-+      Enables wake up of host system on alarm.
++      The RTC provides up to three clocks
++        - the Low Frequency Oscillator or LOSC, at index 0,
++        - the Low Frequency Oscillator External output (X32KFOUT in
++          the datasheet), at index 1,
++        - the Internal Oscillator, at index 2.
++
++allOf:
++  - $ref: "rtc.yaml#"
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: allwinner,sun6i-a31-rtc
++
++    then:
++      properties:
++        clock-output-names:
++          minItems: 1
++          maxItems: 1
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - allwinner,sun8i-a23-rtc
++              - allwinner,sun8i-v3-rtc
++
++    then:
++      properties:
++        clock-output-names:
++          minItems: 2
++          maxItems: 2
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - allwinner,sun8i-h3-rtc
++              - allwinner,sun50i-h5-rtc
++
++    then:
++      properties:
++        clock-output-names:
++          minItems: 3
++          maxItems: 3
++
++required:
++  - "#clock-cells"
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-output-names
++
++additionalProperties: false
++
++examples:
++  - |
++    rtc: rtc@1f00000 {
++        compatible = "allwinner,sun6i-a31-rtc";
++        reg = <0x01f00000 0x400>;
++        interrupts = <0 40 4>, <0 41 4>;
++        clock-output-names = "osc32k";
++        clocks = <&ext_osc32k>;
++        #clock-cells = <1>;
++    };
 +
 +...
+diff --git a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt b/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+deleted file mode 100644
+index 6b732c41392b..000000000000
+--- a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
++++ /dev/null
+@@ -1,46 +0,0 @@
+-* sun6i Real Time Clock
+-
+-RTC controller for the Allwinner A31
+-
+-Required properties:
+-- compatible	: Should be one of the following combinations:
+-		    - "allwinner,sun6i-a31-rtc"
+-		    - "allwinner,sun8i-a23-rtc"
+-		    - "allwinner,sun8i-h3-rtc"
+-		    - "allwinner,sun8i-r40-rtc", "allwinner,sun8i-h3-rtc"
+-		    - "allwinner,sun8i-v3-rtc"
+-		    - "allwinner,sun50i-a64-rtc", "allwinner,sun8i-h3-rtc"
+-		    - "allwinner,sun50i-h5-rtc"
+-
+-		  Where there are two or more compatible strings, this
+-		  denotes the hardware covered by the most specific one
+-		  is backward-compatible with the latter ones, and the
+-		  implementation for the latter ones can be used, albeit
+-		  with reduced functionality.
+-
+-- reg		: physical base address of the controller and length of
+-		  memory mapped region.
+-- interrupts	: IRQ lines for the RTC alarm 0 and alarm 1, in that order.
+-
+-Required properties for new device trees
+-- clocks	: phandle to the 32kHz external oscillator
+-- clock-output-names : names of up to three clock outputs. See below.
+-- #clock-cells  : must be equal to 1.
+-
+-The RTC provides the following clocks at the given indices:
+-- 0: LOSC
+-- 1: LOSC external output, known as X32KFOUT in the datasheet.
+-     This clock is not available on the A31 and is deprecated for old
+-     device trees still using the "allwinner,sun6i-a31-rtc" compatible.
+-- 2: InternalOSC, or internal RC oscillator (A64/H3/H5 only)
+-
+-Example:
+-
+-rtc: rtc@1f00000 {
+-	compatible = "allwinner,sun6i-a31-rtc";
+-	reg = <0x01f00000 0x400>;
+-	interrupts = <0 40 4>, <0 41 4>;
+-	clock-output-names = "osc32k";
+-	clocks = <&ext_osc32k>;
+-	#clock-cells = <1>;
+-};
 -- 
 git-series 0.9.1
