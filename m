@@ -1,247 +1,87 @@
-From: "Hennerich, Michael" <Michael.Hennerich@analog.com>
-Subject: RE: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml binding
-Date: Mon, 27 May 2019 06:29:12 +0000
-Message-ID: <BN3PR0301MB0897E42E948C8067DABFF9858E1D0@BN3PR0301MB0897.namprd03.prod.outlook.com>
-References: <cover.1558746978.git.renatogeh@gmail.com>
-        <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
- <20190526173911.57ae3d11@archlinux>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+Date: Mon, 27 May 2019 06:29:11 +0000
+Message-ID: <AM0PR04MB4481665E2C99DEE66CCB2CA8881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190523060437.11059-1-peng.fan@nxp.com>
+ <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
+ <20190524175658.GA5045@e107155-lin>
+ <d0800650-b79b-4698-3a3e-60e83c85f2d1@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190526173911.57ae3d11@archlinux>
+In-Reply-To: <d0800650-b79b-4698-3a3e-60e83c85f2d1@arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Renato Lui Geh <renatogeh@gmail.com>
-Cc: "lars@metafoo.de" <lars@metafoo.de>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>, "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: =?utf-8?B?QW5kcsOpIFByenl3YXJh?= <andre.przywara@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Jonathan Cameron [mailto:jic23@kernel.org]
-> Sent: Sonntag, 26. Mai 2019 18:39
-> To: Renato Lui Geh <renatogeh@gmail.com>
-> Cc: lars@metafoo.de; Hennerich, Michael <Michael.Hennerich@analog.com>; k=
-naack.h@gmx.de; pmeerw@pmeerw.net;
-> gregkh@linuxfoundation.org; Popa, Stefan Serban <StefanSerban.Popa@analog=
-.com>; Ardelean, Alexandru
-> <alexandru.Ardelean@analog.com>; robh+dt@kernel.org; mark.rutland@arm.com=
-; linux-iio@vger.kernel.org;
-> devel@driverdev.osuosl.org; linux-kernel@vger.kernel.org; kernel-usp@goog=
-legroups.com; devicetree@vger.kernel.org
-> Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml bi=
-nding
->=20
-> On Fri, 24 May 2019 22:26:30 -0300
-> Renato Lui Geh <renatogeh@gmail.com> wrote:
->=20
-> > This patch adds a YAML binding for the Analog Devices AD7780/1 and
-> > AD7170/1 analog-to-digital converters.
-> >
-> > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-> Looks good to me, but I'm still finding my feet with these so will
-> leave it for a few days for others to have time to comment.
->=20
-> Michael, looking for a quick reply from you to say if you are happy
-> being explicitly listed as maintainer for this one, or if you'd
-> rather land it on someone else.  Same applies for patch 2.
-
-Hi Jonathan,
-
-Listing me as an maintainer is ok.
-
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-
-
->=20
-> Renato, if I seem to have forgotten this in a week or so, feel
-> free to give me a poke. I've been known to loose patches entirely!
->=20
-> Thanks,
->=20
-> Jonathan
-> > ---
-> > Changes in v2:
-> >  - vref-supply to avdd-supply
-> >  - remove avdd-supply from required list
-> >  - include adc block in an spi block
-> >
-> >  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
-> >  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
-> >  2 files changed, 87 insertions(+), 48 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad778=
-0.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad778=
-0.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b=
-/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> > deleted file mode 100644
-> > index 440e52555349..000000000000
-> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> > +++ /dev/null
-> > @@ -1,48 +0,0 @@
-> > -* Analog Devices AD7170/AD7171/AD7780/AD7781
-> > -
-> > -Data sheets:
-> > -
-> > -- AD7170:
-> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
-eets/AD7170.pdf
-> > -- AD7171:
-> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
-eets/AD7171.pdf
-> > -- AD7780:
-> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
-eets/ad7780.pdf
-> > -- AD7781:
-> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
-eets/AD7781.pdf
-> > -
-> > -Required properties:
-> > -
-> > -- compatible: should be one of
-> > -     * "adi,ad7170"
-> > -     * "adi,ad7171"
-> > -     * "adi,ad7780"
-> > -     * "adi,ad7781"
-> > -- reg: spi chip select number for the device
-> > -- vref-supply: the regulator supply for the ADC reference voltage
-> > -
-> > -Optional properties:
-> > -
-> > -- powerdown-gpios:  must be the device tree identifier of the PDRST pi=
-n. If
-> > -                 specified, it will be asserted during driver probe. A=
-s the
-> > -                 line is active high, it should be marked GPIO_ACTIVE_=
-HIGH.
-> > -- adi,gain-gpios:   must be the device tree identifier of the GAIN pin=
-. Only for
-> > -                 the ad778x chips. If specified, it will be asserted d=
-uring
-> > -                 driver probe. As the line is active low, it should be=
- marked
-> > -                 GPIO_ACTIVE_LOW.
-> > -- adi,filter-gpios: must be the device tree identifier of the FILTER p=
-in. Only
-> > -                 for the ad778x chips. If specified, it will be assert=
-ed
-> > -                 during driver probe. As the line is active low, it sh=
-ould be
-> > -                 marked GPIO_ACTIVE_LOW.
-> > -
-> > -Example:
-> > -
-> > -adc@0 {
-> > -     compatible =3D  "adi,ad7780";
-> > -     reg =3D         <0>;
-> > -     vref-supply =3D <&vdd_supply>
-> > -
-> > -     powerdown-gpios  =3D <&gpio 12 GPIO_ACTIVE_HIGH>;
-> > -     adi,gain-gpios   =3D <&gpio  5 GPIO_ACTIVE_LOW>;
-> > -     adi,filter-gpios =3D <&gpio 15 GPIO_ACTIVE_LOW>;
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml =
-b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> > new file mode 100644
-> > index 000000000000..d1109416963c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> > @@ -0,0 +1,87 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital co=
-nverters
-> > +
-> > +maintainers:
-> > +  - Michael Hennerich <michael.hennerich@analog.com>
-> > +
-> > +description: |
-> > +  The ad7780 is a sigma-delta analog to digital converter. This driver=
- provides
-> > +  reading voltage values and status bits from both the ad778x and ad71=
-7x series.
-> > +  Its interface also allows writing on the FILTER and GAIN GPIO pins o=
-n the
-> > +  ad778x.
-> > +
-> > +  Specifications on the converters can be found at:
-> > +    AD7170:
-> > +      https://www.analog.com/media/en/technical-documentation/data-she=
-ets/AD7170.pdf
-> > +    AD7171:
-> > +      https://www.analog.com/media/en/technical-documentation/data-she=
-ets/AD7171.pdf
-> > +    AD7780:
-> > +      https://www.analog.com/media/en/technical-documentation/data-she=
-ets/ad7780.pdf
-> > +    AD7781:
-> > +      https://www.analog.com/media/en/technical-documentation/data-she=
-ets/AD7781.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,ad7170
-> > +      - adi,ad7171
-> > +      - adi,ad7780
-> > +      - adi,ad7781
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  avdd-supply:
-> > +    description:
-> > +      The regulator supply for the ADC reference voltage.
-> > +    maxItems: 1
-> > +
-> > +  powerdown-gpios:
-> > +    description:
-> > +      Must be the device tree identifier of the PDRST pin. If
-> > +      specified, it will be asserted during driver probe. As the
-> > +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
-> > +    maxItems: 1
-> > +
-> > +  adi,gain-gpios:
-> > +    description:
-> > +      Must be the device tree identifier of the GAIN pin. Only for
-> > +      the ad778x chips. If specified, it will be asserted during
-> > +      driver probe. As the line is active low, it should be marked
-> > +      GPIO_ACTIVE_LOW.
-> > +    maxItems: 1
-> > +
-> > +  adi,filter-gpios:
-> > +    description:
-> > +      Must be the device tree identifier of the FILTER pin. Only
-> > +      for the ad778x chips. If specified, it will be asserted
-> > +      during driver probe. As the line is active low, it should be
-> > +      marked GPIO_ACTIVE_LOW.
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    spi0 {
-> > +        #address-cells =3D <1>;
-> > +        #size-cells =3D <0>;
-> > +
-> > +        adc@0 {
-> > +            compatible =3D "adi,ad7780";
-> > +            reg =3D <0>;
-> > +
-> > +            avdd-supply      =3D <&vdd_supply>;
-> > +            powerdown-gpios  =3D <&gpio0 12 GPIO_ACTIVE_HIGH>;
-> > +            adi,gain-gpios   =3D <&gpio1  5 GPIO_ACTIVE_LOW>;
-> > +            adi,filter-gpios =3D <&gpio2 15 GPIO_ACTIVE_LOW>;
-> > +        };
-> > +    };
+SGkgQW5kcmUsDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwLzJdIG1haWxib3g6IGFybTogaW50
+cm9kdWNlIHNtYyB0cmlnZ2VyZWQgbWFpbGJveA0KPiANCj4gT24gMjQvMDUvMjAxOSAxODo1Niwg
+U3VkZWVwIEhvbGxhIHdyb3RlOg0KPiA+IE9uIFRodSwgTWF5IDIzLCAyMDE5IGF0IDEwOjMwOjUw
+QU0gLTA3MDAsIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6DQo+IA0KPiBIaSwNCj4gDQo+ID4+IE9u
+IDUvMjIvMTkgMTA6NTAgUE0sIFBlbmcgRmFuIHdyb3RlOg0KPiA+Pj4gVGhpcyBpcyBhIG1vZGlm
+aWVkIHZlcnNpb24gZnJvbSBBbmRyZSBQcnp5d2FyYSdzIHBhdGNoIHNlcmllcw0KPiA+Pj4NCj4g
+aHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBz
+JTNBJTJGJTJGbG9yZS5rZQ0KPiBybmVsLm9yZyUyRnBhdGNod29yayUyRmNvdmVyJTJGODEyOTk3
+JTJGJmFtcDtkYXRhPTAyJTdDMDElN0NwZQ0KPiBuZy5mYW4lNDBueHAuY29tJTdDMDJlZTk0ODcz
+NzBjNGViOTE1ODAwOGQ2ZTIzNjNjYTAlN0M2ODZlYTFkMw0KPiBiYzJiNGM2ZmE5MmNkOTljNWMz
+MDE2MzUlN0MwJTdDMCU3QzYzNjk0NTExOTk1OTUzNDU3NiZhbXA7c2RhDQo+IHRhPVU4RnpYM0ZY
+MlBvRVpoUnVSTWhGYmthQW5iM2NxalpzYjklMkZUZHQ4T2Z1WSUzRCZhbXA7cmVzZXJ2ZQ0KPiBk
+PTAuDQo+ID4+PiBbMV0gaXMgYSBkcmFmdCBpbXBsZW1lbnRhdGlvbiBvZiBpLk1YOE1NIFNDTUkg
+QVRGIGltcGxlbWVudGF0aW9uDQo+ID4+PiB0aGF0IHVzZSBzbWMgYXMgbWFpbGJveCwgcG93ZXIv
+Y2xrIGlzIGluY2x1ZGVkLCBidXQgb25seSBwYXJ0IG9mIGNsaw0KPiA+Pj4gaGFzIGJlZW4gaW1w
+bGVtZW50ZWQgdG8gd29yayB3aXRoIGhhcmR3YXJlLCBwb3dlciBkb21haW4gb25seQ0KPiA+Pj4g
+c3VwcG9ydHMgZ2V0IG5hbWUgZm9yIG5vdy4NCj4gPj4+DQo+ID4+PiBUaGUgdHJhZGl0aW9uYWwg
+TGludXggbWFpbGJveCBtZWNoYW5pc20gdXNlcyBzb21lIGtpbmQgb2YgZGVkaWNhdGVkDQo+ID4+
+PiBoYXJkd2FyZSBJUCB0byBzaWduYWwgYSBjb25kaXRpb24gdG8gc29tZSBvdGhlciBwcm9jZXNz
+aW5nIHVuaXQsDQo+ID4+PiB0eXBpY2FsbHkgYSBkZWRpY2F0ZWQgbWFuYWdlbWVudCBwcm9jZXNz
+b3IuDQo+ID4+PiBUaGlzIG1haWxib3ggZmVhdHVyZSBpcyB1c2VkIGZvciBpbnN0YW5jZSBieSB0
+aGUgU0NNSSBwcm90b2NvbCB0bw0KPiA+Pj4gc2lnbmFsIGEgcmVxdWVzdCBmb3Igc29tZSBhY3Rp
+b24gdG8gYmUgdGFrZW4gYnkgdGhlIG1hbmFnZW1lbnQNCj4gcHJvY2Vzc29yLg0KPiA+Pj4gSG93
+ZXZlciBzb21lIFNvQ3MgZG9lcyBub3QgaGF2ZSBhIGRlZGljYXRlZCBtYW5hZ2VtZW50IGNvcmUg
+dG8NCj4gPj4+IHByb3ZpZGUgdGhvc2Ugc2VydmljZXMuIEluIG9yZGVyIHRvIHNlcnZpY2UgVEVF
+IGFuZCB0byBhdm9pZCBsaW51eA0KPiA+Pj4gc2h1dGRvd24gcG93ZXIgYW5kIGNsb2NrIHRoYXQg
+dXNlZCBieSBURUUsIG5lZWQgbGV0IGZpcm13YXJlIHRvDQo+ID4+PiBoYW5kbGUgcG93ZXIgYW5k
+IGNsb2NrLCB0aGUgZmlybXdhcmUgaGVyZSBpcyBBUk0gVHJ1c3RlZCBGaXJtd2FyZQ0KPiA+Pj4g
+dGhhdCBjb3VsZCBhbHNvIHJ1biBTQ01JIHNlcnZpY2UuDQo+ID4+Pg0KPiA+Pj4gVGhlIGV4aXN0
+aW5nIFNDTUkgaW1wbGVtZW50YXRpb24gdXNlcyBhIHJhdGhlciBmbGV4aWJsZSBzaGFyZWQNCj4g
+Pj4+IG1lbW9yeSByZWdpb24gdG8gY29tbXVuaWNhdGUgY29tbWFuZHMgYW5kIHRoZWlyIHBhcmFt
+ZXRlcnMsIGl0IHN0aWxsDQo+ID4+PiByZXF1aXJlcyBhIG1haWxib3ggdG8gYWN0dWFsbHkgdHJp
+Z2dlciB0aGUgYWN0aW9uLg0KPiA+Pg0KPiA+PiBXZSBoYXZlIGhhZCBzb21ldGhpbmcgc2ltaWxh
+ciBkb25lIGludGVybmFsbHkgd2l0aCBhIGNvdXBsZSBvZiBtaW5vcg0KPiA+PiBkaWZmZXJlbmNl
+czoNCj4gPj4NCj4gPj4gLSBhIFNHSSBpcyB1c2VkIHRvIHNlbmQgU0NNSSBub3RpZmljYXRpb25z
+L2RlbGF5ZWQgcmVwbGllcyB0byBzdXBwb3J0DQo+ID4+IGFzeW5jaHJvbmlzbSAocGF0Y2hlcyBh
+cmUgaW4gdGhlIHdvcmtzIHRvIGFjdHVhbGx5IGFkZCB0aGF0IHRvIHRoZQ0KPiA+PiBMaW51eCBT
+Q01JIGZyYW1ld29yaykuIFRoZXJlIGlzIG5vIGdvb2Qgc3VwcG9ydCBmb3IgU0dJIGluIHRoZSBr
+ZXJuZWwNCj4gPj4gcmlnaHQgbm93IHNvIHdlIGhhY2tlZCB1cCBzb21ldGhpbmcgZnJvbSB0aGUg
+ZXhpc3RpbmcgU01QIGNvZGUgYW5kDQo+ID4+IGFkZGluZyB0aGUgYWJpbGl0eSB0byByZWdpc3Rl
+ciBvdXIgb3duIElQSSBoYW5kbGVycyAoU0hBTUUhKS4gVXNpbmcgYQ0KPiA+PiBQUEkgc2hvdWxk
+IHdvcmsgYW5kIHNob3VsZCBhbGxvdyBmb3IgdXNpbmcgcmVxdWVzdF9pcnEoKSBBRkFJQ1QuDQo+
+ID4+DQo+ID4NCj4gPiBXZSBoYXZlIGJlZW4gdGhpbmtpbmcgdGhpcyBzaW5jZSB3ZSB3ZXJlIGFz
+a2VkIGlmIFNNQyBjYW4gYmUgdHJhbnNwb3J0Lg0KPiA+IEdlbmVyYWxseSBvdXQgb2YgMTYgU0dJ
+cywgOCBhcmUgcmVzZXJ2ZWQgZm9yIHNlY3VyZSBzaWRlIGFuZA0KPiA+IG5vbi1zZWN1cmUgaGFz
+IDguIE9mIHRoZXNlIDgsIElJVUMgNyBpcyBhbHJlYWR5IGJlaW5nIHVzZWQgYnkga2VybmVsLg0K
+PiA+IFNvIHVubGVzcyB3ZSBtYW5hZ2UgdG8gZ2V0IHRoZSBsYXN0IG9uZSByZXNlcnZlZCBleGNs
+dXNpdmUgdG8gU0NNSSwgaXQNCj4gPiBtYWtlcyBpdCBkaWZmaWN1bHQgdG8gYWRkIFNHSSBzdXBw
+b3J0IGluIFNDTUkuDQo+ID4NCj4gPiBXZSBoYXZlIGJlZW4gdGVsbGluZyBwYXJ0bmVycy92ZW5k
+b3JzIGFib3V0IHRoaXMgbGltaXRhdGlvbiBpZiB0aGV5DQo+ID4gdXNlIFNNQyBhcyB0cmFuc3Bv
+cnQgYW5kIG5lZWQgdG8gaGF2ZSBkZWRpY2F0ZWQgaC93IGludGVycnVwdCBmb3IgdGhlDQo+ID4g
+bm90aWZpY2F0aW9ucy4NCj4gPg0KPiA+IEFub3RoZXIgaXNzdWUgY291bGQgYmUgd2l0aCB2aXJ0
+dWFsaXNhdGlvbih1c2luZyBIVkMpIGFuZCBFTCBoYW5kbGluZw0KPiA+IHNvIGNhbGxlZCBTQ01J
+IFNHSS4gV2UgbmVlZCB0byB0aGluayBhYm91dCB0aG9zZSB0b28uIEkgd2lsbCB0cnkgdG8NCj4g
+PiBnZXQgbW9yZSBpbmZvIG9uIHRoaXMgYW5kIGNvbWUgYmFjayBvbiB0aGlzLg0KPiANCj4gSSB0
+aGluayByZWdhcmRsZXNzIG9mIHRoZSAqY3VycmVudCogZmVhc2liaWxpdHkgb2YgdXNpbmcgU0dJ
+cyBpbiAqTGludXgqIHdlDQo+IHNob3VsZCBhdCBsZWFzdCBzcGVjaWZ5IGFuICJpbnRlcnJ1cHRz
+IiBwcm9wZXJ0eSBpbiB0aGUgYmluZGluZywgdG8gYWxsb3cgZm9yDQo+IGZ1dHVyZSB1c2FnZS4g
+V2UgbWlnaHQgY29weSB0aGUgcG11djMgd2F5IFsxXSBvZiBhbGxvd2luZyB0byBzcGVjaWZ5DQo+
+IG11bHRpcGxlIFNQSSBpbnRlcnJ1cHRzIGFzIHdlbGwsIHRvIGdpdmUgbW9yZSBmbGV4aWJpbGl0
+eS4NCg0KVGhpcyBuZWVkcyB0byBnbyB3aXRoIGFuIG9wdGlvbmFsIHByb3BlcnR5LCBhZ3JlZT8N
+ClRoYXQgbWVhbnMgc21jIG1haWxib3ggbmVlZHMgdG8gc3VwcG9ydCBzeW5jaHJvbm91cyBhbmQg
+YXN5bmNocm9ub3VzDQpjb21tdW5pY2F0aW9uLiBJJ2xsIHRyeSB0byBhZGQgdGhhdCBhbmQgd3Jp
+dGUgc29tZSBwb3JvdHlwZSBjb2RlIHRvDQp2ZXJpZnkuDQoNClRoYW5rcywNClBlbmcuDQoNCj4g
+QWZ0ZXIgYWxsIGFuIGltcGxlbWVudGF0aW9uIGNvdWxkIG9mZmxvYWQgdGhlIGFzeW5jaHJvbm91
+cyBub3RpZmljYXRpb24gdG8gYQ0KPiBzZXBhcmF0ZSBjb3JlLCBhbmQgdGhhdCBjb3VsZCB1c2Ug
+U1BJcywgZm9yIGluc3RhbmNlLg0KPiANCj4gQ2hlZXJzLA0KPiBBbmRyZS4NCj4gDQo+IFsxXSBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3BtdS55YW1sOjQ1DQo=
