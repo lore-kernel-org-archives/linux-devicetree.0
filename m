@@ -1,145 +1,62 @@
-From: Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v3 1/5] power: supply: max17040: Add IRQ handler for low SOC alert
-Date: Sun, 26 May 2019 23:22:54 -0300
-Message-ID: <20190527022258.32748-2-matheus@castello.eng.br>
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH v3 0/8] Add imx7ulp USBOTG1 support
+Date: Mon, 27 May 2019 11:06:08 +0800
+Message-ID: <20190527030616.44397-1-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190527022258.32748-1-matheus@castello.eng.br>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, cw00.choi@samsung.com, b.zolnierkie@samsung.com, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matheus Castello <matheus@castello.eng.br>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: balbi@kernel.org, shawnguo@kernel.org
+Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, chunfeng.yun@mediatek.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-According datasheet max17040 has a pin for alert host for low SOC.
-This pin can be used as external interrupt, so we need to check for
-interrupts assigned for device and handle it.
+Changes for v3:
+- Using readl_poll_timeout to replace private function. [Patch 2/8]
+- Add more commit log for new flag CI_HDRC_PMQOS. [Patch 5/8]
+- Move 'compatible' at the beginning of propeties. [Patch 6/8]
 
-In handler we are checking and storing fuel gauge registers values
-and send an uevent to notificate user space, so user space can decide
-save work or turn off since the alert demonstrate that the battery may
-no have the power to keep the system turned on for much longer.
+Changes for v2:
+- Use common 'phys' property [Patch 6/8]
+- Add the last patch that "fsl,usbphy" phandle is not mandatory now
+[Patch 8/8]
+- Add Reviewed-by from Rob.
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- drivers/power/supply/max17040_battery.c | 65 +++++++++++++++++++++++--
- 1 file changed, 60 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 91cafc7bed30..b7433e9ca7c2 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -13,6 +13,7 @@
- #include <linux/err.h>
- #include <linux/i2c.h>
- #include <linux/delay.h>
-+#include <linux/interrupt.h>
- #include <linux/power_supply.h>
- #include <linux/max17040_battery.h>
- #include <linux/slab.h>
-@@ -160,21 +161,40 @@ static void max17040_get_status(struct i2c_client *client)
- 		chip->status = POWER_SUPPLY_STATUS_FULL;
- }
+There is a dual-role USB controller at imx7ulp, we add support for it
+in this patch set, and the dual-role function is tested at imx7ulp-evk
+board.
 
-+static void max17040_check_changes(struct i2c_client *client)
-+{
-+	max17040_get_vcell(client);
-+	max17040_get_soc(client);
-+	max17040_get_online(client);
-+	max17040_get_status(client);
-+}
-+
- static void max17040_work(struct work_struct *work)
- {
- 	struct max17040_chip *chip;
+Thanks.
 
- 	chip = container_of(work, struct max17040_chip, work.work);
--
--	max17040_get_vcell(chip->client);
--	max17040_get_soc(chip->client);
--	max17040_get_online(chip->client);
--	max17040_get_status(chip->client);
-+	max17040_check_changes(chip->client);
+Peter Chen (8):
+  doc: dt-binding: mxs-usb-phy: add compatible for 7ulp
+  usb: phy: phy-mxs-usb: add imx7ulp support
+  doc: dt-binding: ci-hdrc-usb2: add compatible string for imx7ulp
+  doc: dt-binding: usbmisc-imx: add compatible string for imx7ulp
+  usb: chipidea: imx: add imx7ulp support
+  ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
+  ARM: dts: imx7ulp-evk: enable USBOTG1 support
+  usb: chipidea: imx: "fsl,usbphy" phandle is not mandatory now
 
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
- }
+ .../devicetree/bindings/phy/mxs-usb-phy.txt        |  1 +
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  1 +
+ .../devicetree/bindings/usb/usbmisc-imx.txt        |  1 +
+ arch/arm/boot/dts/imx7ulp-evk.dts                  | 35 +++++++++++
+ arch/arm/boot/dts/imx7ulp.dtsi                     | 31 ++++++++++
+ drivers/usb/chipidea/ci_hdrc_imx.c                 | 33 ++++++++++-
+ drivers/usb/chipidea/usbmisc_imx.c                 |  4 ++
+ drivers/usb/phy/phy-mxs-usb.c                      | 67 +++++++++++++++++++++-
+ include/linux/usb/chipidea.h                       |  1 +
+ 9 files changed, 170 insertions(+), 4 deletions(-)
 
-+static irqreturn_t max17040_thread_handler(int id, void *dev)
-+{
-+	struct max17040_chip *chip = dev;
-+	struct i2c_client *client = chip->client;
-+
-+	dev_warn(&client->dev, "IRQ: Alert battery low level");
-+	/* read registers */
-+	max17040_check_changes(chip->client);
-+
-+	/* send uevent */
-+	power_supply_changed(chip->battery);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static enum power_supply_property max17040_battery_props[] = {
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_ONLINE,
-@@ -220,6 +240,25 @@ static int max17040_probe(struct i2c_client *client,
- 	max17040_reset(client);
- 	max17040_get_version(client);
-
-+	/* check interrupt */
-+	if (client->irq) {
-+		int ret;
-+		unsigned int flags;
-+
-+		dev_info(&client->dev, "IRQ: enabled\n");
-+		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
-+		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-+						max17040_thread_handler, flags,
-+						chip->battery->desc->name,
-+						chip);
-+
-+		if (ret) {
-+			client->irq = 0;
-+			dev_warn(&client->dev,
-+				"Failed to get IRQ err %d\n", ret);
-+		}
-+	}
-+
- 	INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
-@@ -244,6 +283,14 @@ static int max17040_suspend(struct device *dev)
- 	struct max17040_chip *chip = i2c_get_clientdata(client);
-
- 	cancel_delayed_work(&chip->work);
-+
-+	if (client->irq) {
-+		if (device_may_wakeup(dev))
-+			enable_irq_wake(client->irq);
-+		else
-+			disable_irq_wake(client->irq);
-+	}
-+
- 	return 0;
- }
-
-@@ -254,6 +301,14 @@ static int max17040_resume(struct device *dev)
-
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
-+
-+	if (client->irq) {
-+		if (device_may_wakeup(dev))
-+			disable_irq_wake(client->irq);
-+		else
-+			enable_irq_wake(client->irq);
-+	}
-+
- 	return 0;
- }
-
---
-2.20.1
+-- 
+2.14.1
