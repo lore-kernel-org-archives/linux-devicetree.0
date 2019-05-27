@@ -1,112 +1,94 @@
-From: Alexander Filippov <a.filippov@yadro.com>
-Subject: [PATCH] ARM: dts: aspeed: g4: add video engine support
-Date: Mon, 27 May 2019 14:27:53 +0300
-Message-ID: <20190527112753.1681-1-a.filippov@yadro.com>
+From: Mathieu Malaterre <malat@debian.org>
+Subject: Re: Ingenic Timer/Counter Unit (TCU) patchset v12
+Date: Mon, 27 May 2019 13:39:18 +0200
+Message-ID: <CA+7wUszagtyMV3oMxAi4VqpDeFcBY5ohXZ3PrXe-X5JV21bjBw@mail.gmail.com>
+References: <20190521145141.9813-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190521145141.9813-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-aspeed@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Alexander Filippov <a.filippov@yadro.com>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
-Add a node to describe the video engine and VGA scratch registers on
-AST2400.
+On Tue, May 21, 2019 at 4:51 PM Paul Cercueil <paul@crapouillou.net> wrote:
+>
+> Hi,
+>
+> Here's the V12 of my patchset to add support for the Timer/Counter Unit
+> (TCU) present on the JZ47xx SoCs from Ingenic.
+>
+> This patchset is much shorter at only 13 patches vs. 27 patches in V11;
+> the remaining patches will be sent in parallel (if applicable) or as a
+> follow-up patchset once this one is merged.
+>
+> In V11 the clocksource maintainers weren't happy with the size of the
+> ingenic-timer driver, which included clocks and irqchip setup code.
+> On the other hand, devicetree maintainers wanted one single node for
+> the TCU hardware since it's effectively just one hardware block.
+>
+> In this patchset the functionality is cut in four different drivers:
+> a MFD one to provide the regmap, probe the children and which provides
+> several API functions; a clocks driver; a irqchip driver; a clocksource
+> driver. All these drivers work with the same regmap, have the same
+> compatible strings, and will probe _with the same devicetree node_.
 
-These changes were copied from aspeed-g5.dtsi
+For the series:
 
-Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
----
- arch/arm/boot/dts/aspeed-g4.dtsi | 62 ++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+Tested-by: Mathieu Malaterre <malat@debian.org>
 
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index 6011692df15a..adc1804918df 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -168,6 +168,10 @@
- 					compatible = "aspeed,g4-pinctrl";
- 				};
- 
-+				vga_scratch: scratch {
-+					compatible = "aspeed,bmc-misc";
-+				};
+System: MIPS Creator CI20
+
+For reference, here is my local patch:
+
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index 1bfac58da5df..e7b7da32f278 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <dt-bindings/clock/jz4780-cgu.h>
++#include <dt-bindings/clock/ingenic,tcu.h>
+ #include <dt-bindings/dma/jz4780-dma.h>
+
+ / {
+@@ -80,6 +81,15 @@
+
+                interrupt-parent = <&intc>;
+                interrupts = <27 26 25>;
 +
- 				p2a: p2a-control {
- 					compatible = "aspeed,ast2400-p2a-ctrl";
- 					status = "disabled";
-@@ -195,6 +199,16 @@
- 				reg = <0x1e720000 0x8000>;	// 32K
- 			};
- 
-+			video: video@1e700000 {
-+				compatible = "aspeed,ast2400-video-engine";
-+				reg = <0x1e700000 0x1000>;
-+				clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
-+					 <&syscon ASPEED_CLK_GATE_ECLK>;
-+				clock-names = "vclk", "eclk";
-+				interrupts = <7>;
-+				status = "disabled";
-+			};
++               watchdog: watchdog@0 {
++                       compatible = "ingenic,jz4780-watchdog";
++                       reg = <0x0 0xc>;
 +
- 			gpio: gpio@1e780000 {
- 				#gpio-cells = <2>;
- 				gpio-controller;
-@@ -1408,6 +1422,54 @@
- 	};
- };
- 
-+&vga_scratch {
-+	dac_mux {
-+		offset = <0x2c>;
-+		bit-mask = <0x3>;
-+		bit-shift = <16>;
-+	};
-+	vga0 {
-+		offset = <0x50>;
-+		bit-mask = <0xffffffff>;
-+		bit-shift = <0>;
-+	};
-+	vga1 {
-+		offset = <0x54>;
-+		bit-mask = <0xffffffff>;
-+		bit-shift = <0>;
-+	};
-+	vga2 {
-+		offset = <0x58>;
-+		bit-mask = <0xffffffff>;
-+		bit-shift = <0>;
-+	};
-+	vga3 {
-+		offset = <0x5c>;
-+		bit-mask = <0xffffffff>;
-+		bit-shift = <0>;
-+	};
-+	vga4 {
-+		offset = <0x60>;
-+		bit-mask = <0xffffffff>;
-+		bit-shift = <0>;
-+	};
-+	vga5 {
-+		offset = <0x64>;
-+		bit-mask = <0xffffffff>;
-+		bit-shift = <0>;
-+	};
-+	vga6 {
-+		offset = <0x68>;
-+		bit-mask = <0xffffffff>;
-+		bit-shift = <0>;
-+	};
-+	vga7 {
-+		offset = <0x6c>;
-+		bit-mask = <0xffffffff>;
-+		bit-shift = <0>;
-+	};
-+};
++                       clocks = <&tcu TCU_CLK_WDT>;
++                       clock-names = "wdt";
++               };
 +
- &sio_regs {
- 	sio_2b {
- 		offset = <0xf0>;
--- 
-2.20.1
+        };
+
+        rtc_dev: rtc@10003000 {
+@@ -287,14 +297,6 @@
+                status = "disabled";
+        };
+
+-       watchdog: watchdog@10002000 {
+-               compatible = "ingenic,jz4780-watchdog";
+-               reg = <0x10002000 0x10>;
+-
+-               clocks = <&cgu JZ4780_CLK_RTCLK>;
+-               clock-names = "rtc";
+-       };
+-
+        nemc: nemc@13410000 {
+                compatible = "ingenic,jz4780-nemc";
+                reg = <0x13410000 0x10000>;
+
+
+
+> Regards,
+> -Paul
+>
+>
