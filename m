@@ -1,90 +1,76 @@
-From: Pramod Kumar <pramod.kumar_1@nxp.com>
-Subject: [PATCH v3 2/3] arm64: dts: nxp: add ls1046a-frwy board support
-Date: Mon, 27 May 2019 12:32:12 +0000
-Message-ID: <20190527123404.30858-3-pramod.kumar_1@nxp.com>
-References: <20190527123404.30858-1-pramod.kumar_1@nxp.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND
+ controller
+Date: Mon, 27 May 2019 14:42:50 +0200
+Message-ID: <20190527144250.71908bd9@xps13>
+References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
+        <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
+        <20190512151820.4f2dd9da@xps13>
+        <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
+        <20190520142333.390091d5@xps13>
+        <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190527123404.30858-1-pramod.kumar_1@nxp.com>
-Content-Language: en-US
+In-Reply-To: <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
+To: masonccyang@mxic.com.tw
+Cc: bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-bHMxMDQ2YWZyd3kgYm9hcmQgaXMgYmFzZWQgb24gbnhwIGxzMTA0NmEgU29DLg0KQm9hcmQgc3Vw
-cG9ydCdzIDRHQiBkZHIgbWVtb3J5LCBpMmMsIG1pY3JvU0QgY2FyZCwNCnNlcmlhbCBjb25zb2xl
-LHFzcGkgbm9yIGZsYXNoLGlmYyBuYW5kIGZsYXNoLHFzZ21paSBuZXR3b3JrIGludGVyZmFjZSwN
-CnVzYiAzLjAgYW5kIHNlcmRlcyBpbnRlcmZhY2UgdG8gc3VwcG9ydCB0d28geDFnZW4zIHBjaWUg
-aW50ZXJmYWNlLg0KDQpTaWduZWQtb2ZmLWJ5OiBWYWJoYXYgU2hhcm1hIDx2YWJoYXYuc2hhcm1h
-QG54cC5jb20+DQpTaWduZWQtb2ZmLWJ5OiBQcmFtb2QgS3VtYXIgPHByYW1vZC5rdW1hcl8xQG54
-cC5jb20+DQotLS0NCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9NYWtlZmlsZSAgICAg
-ICAgfCAgIDEgKw0KIC4uLi9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtZnJ3eS5kdHMg
-ICB8IDE1NiArKysrKysrKysrKysrKysrKysNCiAyIGZpbGVzIGNoYW5nZWQsIDE1NyBpbnNlcnRp
-b25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
-L2ZzbC1sczEwNDZhLWZyd3kuZHRzDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2ZyZWVzY2FsZS9NYWtlZmlsZSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL01ha2Vm
-aWxlDQppbmRleCAwYmQxMjJmNjA1NDkuLjEyMTE1MzFmNDE3YyAxMDA2NDQNCi0tLSBhL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL01ha2VmaWxlDQorKysgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9NYWtlZmlsZQ0KQEAgLTgsNiArOCw3IEBAIGR0Yi0kKENPTkZJR19BUkNI
-X0xBWUVSU0NBUEUpICs9IGZzbC1sczEwMjhhLXFkcy5kdGINCiBkdGItJChDT05GSUdfQVJDSF9M
-QVlFUlNDQVBFKSArPSBmc2wtbHMxMDI4YS1yZGIuZHRiDQogZHRiLSQoQ09ORklHX0FSQ0hfTEFZ
-RVJTQ0FQRSkgKz0gZnNsLWxzMTA0M2EtcWRzLmR0Yg0KIGR0Yi0kKENPTkZJR19BUkNIX0xBWUVS
-U0NBUEUpICs9IGZzbC1sczEwNDNhLXJkYi5kdGINCitkdGItJChDT05GSUdfQVJDSF9MQVlFUlND
-QVBFKSArPSBmc2wtbHMxMDQ2YS1mcnd5LmR0Yg0KIGR0Yi0kKENPTkZJR19BUkNIX0xBWUVSU0NB
-UEUpICs9IGZzbC1sczEwNDZhLXFkcy5kdGINCiBkdGItJChDT05GSUdfQVJDSF9MQVlFUlNDQVBF
-KSArPSBmc2wtbHMxMDQ2YS1yZGIuZHRiDQogZHRiLSQoQ09ORklHX0FSQ0hfTEFZRVJTQ0FQRSkg
-Kz0gZnNsLWxzMTA4OGEtcWRzLmR0Yg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-ZnJlZXNjYWxlL2ZzbC1sczEwNDZhLWZyd3kuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTA0NmEtZnJ3eS5kdHMNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAw
-MDAwMDAwMDAwMDAuLmNkYTQ5OTg4ZDhiOA0KLS0tIC9kZXYvbnVsbA0KKysrIGIvYXJjaC9hcm02
-NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtZnJ3eS5kdHMNCkBAIC0wLDAgKzEsMTU2
-IEBADQorLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wKyBPUiBNSVQpDQorLyoN
-CisgKiBEZXZpY2UgVHJlZSBJbmNsdWRlIGZpbGUgZm9yIEZyZWVzY2FsZSBMYXllcnNjYXBlLTEw
-NDZBIGZhbWlseSBTb0MuDQorICoNCisgKiBDb3B5cmlnaHQgMjAxOSBOWFAuDQorICoNCisgKi8N
-CisNCisvZHRzLXYxLzsNCisNCisjaW5jbHVkZSAiZnNsLWxzMTA0NmEuZHRzaSINCisNCisvIHsN
-CisJbW9kZWwgPSAiTFMxMDQ2QSBGUldZIEJvYXJkIjsNCisJY29tcGF0aWJsZSA9ICJmc2wsbHMx
-MDQ2YS1mcnd5IiwgImZzbCxsczEwNDZhIjsNCisNCisJYWxpYXNlcyB7DQorCQlzZXJpYWwwID0g
-JmR1YXJ0MDsNCisJCXNlcmlhbDEgPSAmZHVhcnQxOw0KKwkJc2VyaWFsMiA9ICZkdWFydDI7DQor
-CQlzZXJpYWwzID0gJmR1YXJ0MzsNCisJfTsNCisNCisJY2hvc2VuIHsNCisJCXN0ZG91dC1wYXRo
-ID0gInNlcmlhbDA6MTE1MjAwbjgiOw0KKwl9Ow0KKw0KKwlzYl8zdjM6IHJlZ3VsYXRvci1zYjN2
-MyB7DQorCQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7DQorCQlyZWd1bGF0b3ItbmFt
-ZSA9ICJMVDg2NDJTRVYtMy4zViI7DQorCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwzMzAw
-MDAwPjsNCisJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+Ow0KKwkJcmVndWxh
-dG9yLWJvb3Qtb247DQorCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KKwl9Ow0KK307DQorDQorJmR1
-YXJ0MCB7DQorCXN0YXR1cyA9ICJva2F5IjsNCit9Ow0KKw0KKyZkdWFydDEgew0KKwlzdGF0dXMg
-PSAib2theSI7DQorfTsNCisNCismZHVhcnQyIHsNCisJc3RhdHVzID0gIm9rYXkiOw0KK307DQor
-DQorJmR1YXJ0MyB7DQorCXN0YXR1cyA9ICJva2F5IjsNCit9Ow0KKw0KKyZpMmMwIHsNCisJc3Rh
-dHVzID0gIm9rYXkiOw0KKw0KKwlpMmMtbXV4QDc3IHsNCisJCWNvbXBhdGlibGUgPSAibnhwLHBj
-YTk1NDYiOw0KKwkJcmVnID0gPDB4Nzc+Ow0KKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQorCQkj
-c2l6ZS1jZWxscyA9IDwwPjsNCisNCisJCWkyY0AwIHsNCisJCQkjYWRkcmVzcy1jZWxscyA9IDwx
-PjsNCisJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCisJCQlyZWcgPSA8MD47DQorDQorCQkJcG93ZXIt
-bW9uaXRvckA0MCB7DQorCQkJCWNvbXBhdGlibGUgPSAidGksaW5hMjIwIjsNCisJCQkJcmVnID0g
-PDB4NDA+Ow0KKwkJCQlzaHVudC1yZXNpc3RvciA9IDwxMDAwPjsNCisJCQl9Ow0KKw0KKw0KKwkJ
-CXRlbXBlcmF0dXJlLXNlbnNvckA0YyB7DQorCQkJCWNvbXBhdGlibGUgPSAibnhwLHNhNTYwMDQi
-Ow0KKwkJCQlyZWcgPSA8MHg0Yz47DQorCQkJCXZjYy1zdXBwbHkgPSA8JnNiXzN2Mz47DQorCQkJ
-fTsNCisNCisJCQlydGNANTEgew0KKwkJCQljb21wYXRpYmxlID0gIm54cCxwY2YyMTI5IjsNCisJ
-CQkJcmVnID0gPDB4NTE+Ow0KKwkJCX07DQorDQorCQkJZWVwcm9tQDUyIHsNCisJCQkJY29tcGF0
-aWJsZSA9ICJhdG1lbCwyNGM1MTIiOw0KKwkJCQlyZWcgPSA8MHg1Mj47DQorCQkJfTsNCisNCisJ
-CQllZXByb21ANTMgew0KKwkJCQljb21wYXRpYmxlID0gImF0bWVsLDI0YzUxMiI7DQorCQkJCXJl
-ZyA9IDwweDUzPjsNCisJCQl9Ow0KKw0KKwkJfTsNCisJfTsNCit9Ow0KKw0KKyZpZmMgew0KKwkj
-YWRkcmVzcy1jZWxscyA9IDwyPjsNCisJI3NpemUtY2VsbHMgPSA8MT47DQorCS8qIE5BTkQgRmxh
-c2ggKi8NCisJcmFuZ2VzID0gPDB4MCAweDAgMHgwIDB4N2U4MDAwMDAgMHgwMDAxMDAwMD47DQor
-CXN0YXR1cyA9ICJva2F5IjsNCisNCisJbmFuZEAwLDAgew0KKwkJY29tcGF0aWJsZSA9ICJmc2ws
-aWZjLW5hbmQiOw0KKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQorCQkjc2l6ZS1jZWxscyA9IDwx
-PjsNCisJCXJlZyA9IDwweDAgMHgwIDB4MTAwMDA+Ow0KKwl9Ow0KKw0KK307DQorDQorI2luY2x1
-ZGUgImZzbC1sczEwNDYtcG9zdC5kdHNpIg0KKw0KKyZmbWFuMCB7DQorCWV0aGVybmV0QGUwMDAw
-IHsNCisJCXBoeS1oYW5kbGUgPSA8JnFzZ21paV9waHk0PjsNCisJCXBoeS1jb25uZWN0aW9uLXR5
-cGUgPSAicXNnbWlpIjsNCisJfTsNCisNCisJZXRoZXJuZXRAZTgwMDAgew0KKwkJcGh5LWhhbmRs
-ZSA9IDwmcXNnbWlpX3BoeTI+Ow0KKwkJcGh5LWNvbm5lY3Rpb24tdHlwZSA9ICJxc2dtaWkiOw0K
-Kwl9Ow0KKw0KKwlldGhlcm5ldEBlYTAwMCB7DQorCQlwaHktaGFuZGxlID0gPCZxc2dtaWlfcGh5
-MT47DQorCQlwaHktY29ubmVjdGlvbi10eXBlID0gInFzZ21paSI7DQorCX07DQorDQorCWV0aGVy
-bmV0QGYyMDAwIHsNCisJCXBoeS1oYW5kbGUgPSA8JnFzZ21paV9waHkzPjsNCisJCXBoeS1jb25u
-ZWN0aW9uLXR5cGUgPSAicXNnbWlpIjsNCisJfTsNCisNCisJbWRpb0BmZDAwMCB7DQorCQlxc2dt
-aWlfcGh5MTogZXRoZXJuZXQtcGh5QDFjIHsNCisJCQlyZWcgPSA8MHgxYz47DQorCQl9Ow0KKw0K
-KwkJcXNnbWlpX3BoeTI6IGV0aGVybmV0LXBoeUAxZCB7DQorCQkJcmVnID0gPDB4MWQ+Ow0KKwkJ
-fTsNCisNCisJCXFzZ21paV9waHkzOiBldGhlcm5ldC1waHlAMWUgew0KKwkJCXJlZyA9IDwweDFl
-PjsNCisJCX07DQorDQorCQlxc2dtaWlfcGh5NDogZXRoZXJuZXQtcGh5QDFmIHsNCisJCQlyZWcg
-PSA8MHgxZj47DQorCQl9Ow0KKwl9Ow0KK307DQotLSANCjIuMTcuMQ0KDQo=
+Hi Mason,
+
+masonccyang@mxic.com.tw wrote on Thu, 23 May 2019 16:58:02 +0800:
+
+> Hi Miquel,
+> 
+> > >   
+> > > > > +
+> > > > > +static void mxic_nand_select_chip(struct nand_chip *chip, int   
+> chipnr) 
+> > > > 
+> > > > _select_target() is preferred now   
+> > > 
+> > > Do you mean I implement mxic_nand_select_target() to control #CS ?
+> > > 
+> > > If so, I need to call mxic_nand_select_target( ) to control #CS ON
+> > > and then #CS OFF in _exec_op() due to nand_select_target()<in   
+> nand_base,c>  
+> > > is still calling chip->legacy.select_chip ?  
+> > 
+> > You must forget about the ->select_chip() callback. Now it should be
+> > handled directly from the controller driver. Please have a look at the
+> > commit pointed against the marvell_nand.c driver.  
+> 
+> I have no Marvell NFC datasheet and have one question.
+> 
+> In marvell_nand.c, there is no xxx_deselect_target() or 
+> something like that doing #CS OFF.
+> marvell_nfc_select_target() seems always to make one of chip or die
+> #CS keep low.
+> 
+> Is it right ?
+
+Yes, AFAIR there is no "de-assert" mechanism in this controller.
+
+> 
+> How to make all #CS keep high for NAND to enter 
+> low-power standby mode if driver don't use "legacy.select_chip()" ?
+
+See commit 02b4a52604a4 ("mtd: rawnand: Make ->select_chip() optional
+when ->exec_op() is implemented") which states:
+
+        "When [->select_chip() is] not implemented, the core is assuming
+	the CS line is automatically asserted/deasserted by the driver
+	->exec_op() implementation."
+
+Of course, the above is right only when the controller driver supports
+the ->exec_op() interface. 
+
+So if you think it is not too time consuming and worth the trouble to
+assert/deassert the CS at each operation, you may do it in your driver.
+
+
+Thanks,
+Miquèl
