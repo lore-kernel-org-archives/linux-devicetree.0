@@ -1,62 +1,61 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: [PATCH v11 6/6] arm64: dts: mt8183: add efuse and Mediatek Chip id node to read
-Date: Mon, 27 May 2019 17:04:47 +0800
-Message-ID: <1558947887-31084-7-git-send-email-erin.lo@mediatek.com>
-References: <1558947887-31084-1-git-send-email-erin.lo@mediatek.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v2 6/7] dmaengine: fsl-edma: add i.mx7ulp edma2 version
+ support
+Date: Mon, 27 May 2019 11:05:53 +0200
+Message-ID: <20190527090553.lek7tm3lyst3bhrd@pengutronix.de>
+References: <20190527085118.40423-1-yibin.gong@nxp.com>
+ <20190527085118.40423-7-yibin.gong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558947887-31084-1-git-send-email-erin.lo@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20190527085118.40423-7-yibin.gong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, erin.lo@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, Michael Mei <michael.mei@mediatek.com>
+To: yibin.gong@nxp.com
+Cc: robh@kernel.org, shawnguo@kernel.org, festevam@gmail.com, mark.rutland@arm.com, vkoul@kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Michael Mei <michael.mei@mediatek.com>
+On Mon, May 27, 2019 at 04:51:17PM +0800, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
+> 
+> +static const struct of_device_id fsl_edma_dt_ids[] = {
+> +	{ .compatible = "fsl,vf610-edma", .data = (void *)v1 },
+> +	{ .compatible = "fsl,imx7ulp-edma", .data = (void *)v3 },
+> +	{ /* sentinel */ }
 
-support for reading chip ID and efuse
+Please put a struct type behind the .data pointer so that you can
+configure...
 
-Signed-off-by: Michael Mei <michael.mei@mediatek.com>
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
----
-This patch is based on this patch:
-https://patchwork.kernel.org/patch/10953029/
----
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+> +};
+> +MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
+> +
+> @@ -218,6 +272,22 @@ static int fsl_edma_probe(struct platform_device *pdev)
+>  	fsl_edma_setup_regs(fsl_edma);
+>  	regs = &fsl_edma->regs;
+>  
+> +	if (fsl_edma->version == v3) {
+> +		fsl_edma->dmamux_nr = 1;
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 2e3063f..c2749c4 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -156,6 +156,15 @@
- 		compatible = "simple-bus";
- 		ranges;
- 
-+		soc_data: soc_data@8000000 {
-+			compatible = "mediatek,mt8183-efuse",
-+				     "mediatek,efuse";
-+			reg = <0 0x08000000 0 0x0010>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			status = "disabled";
-+		};
-+
- 		gic: interrupt-controller@c000000 {
- 			compatible = "arm,gic-v3";
- 			#interrupt-cells = <4>;
-@@ -369,6 +378,12 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		efuse: efuse@11f10000 {
-+			compatible = "mediatek,mt8183-efuse",
-+				     "mediatek,efuse";
-+			reg = <0 0x11f10000 0 0x1000>;
-+		};
-+
- 		mfgcfg: syscon@13000000 {
- 			compatible = "mediatek,mt8183-mfgcfg", "syscon";
- 			reg = <0 0x13000000 0 0x1000>;
+...things like this...
+
+> @@ -264,7 +334,11 @@ static int fsl_edma_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	edma_writel(fsl_edma, ~0, regs->intl);
+> -	ret = fsl_edma_irq_init(pdev, fsl_edma);
+> +
+> +	if (fsl_edma->version == v3)
+> +		ret = fsl_edma2_irq_init(pdev, fsl_edma);
+> +	else
+> +		ret = fsl_edma_irq_init(pdev, fsl_edma);
+
+...and this one in that struct rather than littering the code more and
+more with such version tests.
+
+Sascha
+
 -- 
-1.8.1.1.dirty
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
