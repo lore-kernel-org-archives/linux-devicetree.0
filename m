@@ -1,82 +1,53 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: Add temperature sensor node
-Date: Mon, 27 May 2019 08:27:26 +0000
-Message-ID: <VI1PR04MB4333A3E635CFDBD860D3061DF31D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <20190524012151.31840-1-andy.tang@nxp.com>
- <CADRPPNRYwq0NABXobC1jQrT3QMxxm+e6zvoNwoZ-fu6NU9qDMA@mail.gmail.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH 2/5] ASoC: madera: Add common support for
+ Cirrus Logic Madera codecs
+Date: Mon, 27 May 2019 09:32:38 +0100
+Message-ID: <20190527083238.GD28362@ediswmail.ad.cirrus.com>
+References: <20190524104158.30731-1-ckeepax@opensource.cirrus.com>
+ <20190524104158.30731-2-ckeepax@opensource.cirrus.com>
+ <20190524145603.GE2456@sirena.org.uk>
+ <2f4ab4ff-5b1e-8ef5-3ef7-8dfe413b4b95@opensource.cirrus.com>
+ <ae5eee88-0b79-1e58-5812-9e46e5bf3b75@opensource.cirrus.com>
+ <20190526121846.GG2456@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CADRPPNRYwq0NABXobC1jQrT3QMxxm+e6zvoNwoZ-fu6NU9qDMA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Li <leoyang.li@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN
- FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20190526121846.GG2456@sirena.org.uk>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.cirrus.com, lgirdwood@gmail.com, Richard Fitzgerald <rf@opensource.cirrus.com>, robh+dt@kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGVvLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExpIFlhbmcg
-PGxlb3lhbmcubGlAbnhwLmNvbT4NCj4gU2VudDogMjAxOeW5tDXmnIgyNeaXpSA2OjMyDQo+IFRv
-OiBBbmR5IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxzaGF3bmd1
-b0BrZXJuZWwub3JnPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47DQo+IE1hcmsg
-UnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVND
-QUxFDQo+IElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc+Ow0KPiBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVE
-IERFVklDRSBUUkVFIEJJTkRJTkdTDQo+IDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IGxr
-bWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBb
-UEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6IEFkZCB0ZW1wZXJhdHVyZSBzZW5zb3INCj4gbm9k
-ZQ0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiBUaHUsIE1heSAyMywgMjAxOSBh
-dCA4OjMwIFBNIFl1YW50aWFuIFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4g
-Pg0KPiA+IEFkZCBueHAgc2E1NjAwNCBjaGlwIG5vZGUgZm9yIHRlbXBlcmF0dXJlIG1vbml0b3Iu
-DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZdWFudGlhbiBUYW5nIDxhbmR5LnRhbmdAbnhwLmNv
-bT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAy
-OGEtcWRzLmR0cyB8IDUgKysrKysNCj4gPiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9m
-c2wtbHMxMDI4YS1yZGIuZHRzIHwgNSArKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDEwIGlu
-c2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+ID4gaW5kZXggYjM1OTA2OGQ5NjA1Li4zMWZk
-NjI2ZGQzNDQgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-ZnNsLWxzMTAyOGEtcWRzLmR0cw0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
-YWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCj4gPiBAQCAtMTMxLDYgKzEzMSwxMSBAQA0KPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhdG1lbCwyNGM1MTIi
-Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4NTc+Ow0KPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIHRlbXBANGMgew0KPiANCj4gVGhlIHJlY29tbWVuZGVkIG5hbWUgZm9yIHRlbXBlcmF0
-dXJlIHNlbm9yIGluIGR0cyBzcGVjIGlzDQo+IHRlbXBlcmF0dXJlLXNlbnNvci4NCkkgZGlkbid0
-IGZpbmQgdGhlIHNwZWMgZm9yIHRoaXMgcmVjb21tZW5kYXRpb24uIENvdWxkIHlvdSBwbGVhc2Ug
-cHJvdmlkZSB0aGUgbGluaz8NCkkgbGlrZSB0byB1cGRhdGUgaXQgdG8gdGVtcC1zZW5zb3IgdGhv
-dWdoLg0KDQo+IA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJs
-ZSA9ICJueHAsc2E1NjAwNCI7DQo+IA0KPiBUaGUgYmluZGluZyBzYXlzIHRoZSBmb2xsb3dpbmcg
-cHJvcGVydHkgaXMgcmVxdWlyZWQuICBJZiBpdCBpcyBub3QgdGhlIGNhc2UsDQo+IHByb2JhYmx5
-IHdlIHNob3VsZCB1cGRhdGUgdGhlIGJpbmRpbmcuDQo+IC0gdmNjLXN1cHBseTogdmNjIHJlZ3Vs
-YXRvciBmb3IgdGhlIHN1cHBseSB2b2x0YWdlLg0KSSB3aWxsIGFkZCB0aGUgdmNjLXN1cHBseSB0
-byBjb21wbHkgdGhpcyByZXF1aXJlbWVudC4NCg0KVGhhbmtzLA0KQW5keQ0KPiANCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDRjPjsNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICB9Ow0KPiA+ICAgICAgICAgICAgICAgICB9Ow0KPiA+DQo+ID4gICAgICAg
-ICAgICAgICAgIGkyY0A1IHsNCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiA+IGluZGV4IGY5YzI3MmZiMDczOC4uMDEy
-YjNmODY5NmI3IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
-L2ZzbC1sczEwMjhhLXJkYi5kdHMNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
-Y2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzDQo+ID4gQEAgLTExOSw2ICsxMTksMTEgQEANCj4gPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibnhwLHBjZjIxMjki
-Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4NTE+Ow0KPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIHRlbXBANGMgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29t
-cGF0aWJsZSA9ICJueHAsc2E1NjAwNCI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICByZWcgPSA8MHg0Yz47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiAg
-ICAgICAgICAgICAgICAgfTsNCj4gPiAgICAgICAgIH07DQo+ID4gIH07DQo+ID4gLS0NCj4gPiAy
-LjE3LjENCj4gPg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-bGludXgtYXJtLWtlcm5lbAo=
+On Sun, May 26, 2019 at 01:18:46PM +0100, Mark Brown wrote:
+> On Fri, May 24, 2019 at 04:24:10PM +0100, Richard Fitzgerald wrote:
+> > On 24/05/19 16:21, Richard Fitzgerald wrote:
+> > > On 24/05/19 15:56, Mark Brown wrote:
+> > > > This will delay both before and after every power up and power down.
+> > > > Are you sure that makes sense?
+> 
+> > > I think that's correct but we can re-check with hardware people.
+> > > It's not just a delay, it needs to ensure there are always a
+> > > certain number of SYSCLK cycles in the hardware to avoid leaving
+> > > certain state machines in limbo.
+> 
+> That sounds like you might want both _POST_PMU and _POST_PMD but do you
+> really need the _PREs as well?
+
+Yeah the requirement from the hardware guys was that we needed a
+guard band between changing the SYSCLK state and other things
+happening. So it has to happen both before and after the state of
+SYSCLK changes. It is certainly far from ideal but it is what it
+is.
+
+Thanks,
+Charles
