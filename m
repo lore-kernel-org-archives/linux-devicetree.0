@@ -1,67 +1,32 @@
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH 7/8] cpufreq: mediatek: add opp notification for SVS support
-Date: Mon, 27 May 2019 15:02:32 +0800
-Message-ID: <CAJMQK-j+J4_j7zwKEzAwUBzzPvZ2Q=G_jw=RsW6ZJM6YjVrVfw@mail.gmail.com>
-References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com> <1557997725-12178-8-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Robin Gong <yibin.gong@nxp.com>
+Subject: Re: [PATCH v1 4/6] dmaengine: fsl-edma: add i.mx7ulp edma2 version
+ support
+Date: Mon, 27 May 2019 07:31:01 +0000
+Message-ID: <1558971291.19282.3.camel@nxp.com>
+References: <1557512248-8440-1-git-send-email-yibin.gong@nxp.com>
+         <1557512248-8440-5-git-send-email-yibin.gong@nxp.com>
+         <20190527063431.GC15118@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557997725-12178-8-git-send-email-andrew-sh.cheng@mediatek.com>
+In-Reply-To: <20190527063431.GC15118@vkoul-mobl>
+Content-Language: en-US
+Content-ID: <25F6E151E044984DB1AEB174A2075C0B@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, fan.chen@mediatek.com, linux-mediatek@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: "vkoul@kernel.org" <vkoul@kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 16, 2019 at 9:08 AM Andrew-sh.Cheng
-<andrew-sh.cheng@mediatek.com> wrote:
->         bool need_voltage_tracking;
-> +       struct mutex lock; /* avoid notify and policy race condition */
-> +       struct notifier_block opp_nb;
-> +       int opp_cpu;
-> +       unsigned long opp_freq;
->  };
->
->  static LIST_HEAD(dvfs_info_list);
-> @@ -239,6 +243,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
->         vproc = dev_pm_opp_get_voltage(opp);
->         dev_pm_opp_put(opp);
->
-> +       mutex_lock(&info->lock);
-
-Should init mutex, otherwise it'll get lockdep warning:
-[    0.587055] Call trace:
-[    0.587069]  dump_backtrace+0x0/0x168
-[    0.587077]  show_stack+0x20/0x2c
-[    0.587086]  dump_stack+0xe4/0x134
-[    0.587095]  register_lock_class+0x3e8/0x4b0
-[    0.587103]  __lock_acquire+0xac/0x14e8
-[    0.587110]  lock_acquire+0x1d0/0x208
-[    0.587118]  __mutex_lock_common+0xc0/0xb40
-[    0.587126]  mutex_lock_nested+0x40/0x50
-[    0.587135]  mtk_cpufreq_set_target+0xcc/0x2a8
-[    0.587143]  __cpufreq_driver_target+0x438/0x4d8
-[    0.587150]  cpufreq_online+0x5b4/0x6e0
-[    0.587156]  cpufreq_add_dev+0x4c/0x84
-[    0.587164]  subsys_interface_register+0xb8/0x10c
-[    0.587171]  cpufreq_register_driver+0x11c/0x1c0
-[    0.587178]  mtk_cpufreq_probe+0x378/0x4b8
-[    0.587185]  platform_drv_probe+0x80/0xb0
-[    0.587192]  really_probe+0x114/0x28c
-[    0.587198]  driver_probe_device+0x64/0xfc
-[    0.587205]  __device_attach_driver+0xb8/0xd0
-[    0.587211]  bus_for_each_drv+0x88/0xd0
-[    0.587218]  __device_attach+0xb0/0x134
-[    0.587224]  device_initial_probe+0x20/0x2c
-[    0.587230]  bus_probe_device+0x34/0x94
-[    0.587238]  device_add+0x520/0x5b4
-[    0.587245]  platform_device_add+0x17c/0x208
-[    0.587252]  platform_device_register_full+0xc0/0x100
-[    0.587261]  mtk_cpufreq_driver_init+0x8c/0xdc
-[    0.587268]  do_one_initcall+0x1c0/0x3e0
-[    0.587276]  do_initcall_level+0x1f4/0x224
-[    0.587282]  do_basic_setup+0x34/0x4c
-[    0.587288]  kernel_init_freeable+0x10c/0x194
-[    0.587295]  kernel_init+0x14/0x100
-[    0.587302]  ret_from_fork+0x10/0x18
-[    0.587510] cpufreq: cpufreq_online: CPU4: Unlisted initial
-frequency changed to: 1248000 KHz
+T24gMjAxOS0wNS0yNyBhdCAwNjozNCArMDAwMCwgVmlub2QgS291bCB3cm90ZToNCj4gT24gMTAt
+MDUtMTksIDEwOjE0LCBSb2JpbiBHb25nIHdyb3RlOg0KPiA+IA0KPiA+IMKgDQo+ID4gKwlpZiAo
+b2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUobnAsICJmc2wsaW14N3VscC1lZG1hIikpIHsNCj4gPiAr
+CQlmc2xfZWRtYS0+ZG1hbXV4X25yID0gMTsNCj4gPiArCQlmc2xfZWRtYS0+dmVyc2lvbiA9IHYz
+Ow0KPiB3ZWxsIHRoaXMgaXMgbm90IHJlYWxseSBzY2FsYWJsZSwgd2Ugd2lsbCBrZWVwIGFkZGlu
+ZyB2ZXJzaW9ucyBhbmQNCj4gY29tcGF0aWJsZSBhbmQgZXhwYW5kaW5nIHRoaXMgY2hlY2suIFNv
+IGl0IHdvdWxkIG1ha2Ugc2Vuc2UgdG8gY3JlYXRlDQo+IGENCj4gZHJpdmVyIGRhdGEgdGFibGUg
+d2hpY2ggY2FuIGJlIHNldCBmb3IgY29tcGF0aWJsZSBhbmQgd2UgdXNlIHRob3NlDQo+IHZhbHVl
+cyBhbmQgYXZvaWQgdGhlc2UgcnVudGltZSBjaGVja3MgZm9yIGNvbXBhdGlibGUuDQo+IA0KPiBC
+dHcgdGhlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBzaG91bGQgcHJlY2VkZSB0aGUgY29kZSB1c2Fn
+ZSwgc28gdGhpcw0KPiBwYXRjaCBzaG91bGQgY29tZSBhZnRlciB0aGF0DQo+IA0KT2theSwgd2ls
+bCB1cGRhdGUgaW4gdjIu
