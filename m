@@ -1,40 +1,53 @@
-Return-Path: <SRS0=MGmW=T3=klsmartin.com=Leif.Middelschulte@kernel.org>
-From: Leif Middelschulte <leif.middelschulte@klsmartin.com>
-Subject: [PATCH 07/10] dt-bindings: input: touchscreen: stmpe: add axes inversion and swap
-Date: Mon, 27 May 2019 18:19:35 +0200
-Message-ID: <20190527161938.31871-3-leif.middelschulte@klsmartin.com>
-In-Reply-To: <20190527161938.31871-1-leif.middelschulte@klsmartin.com>
-References: <20190527160736.30569-1-leif.middelschulte@klsmartin.com>
- <20190527161938.31871-1-leif.middelschulte@klsmartin.com>
+Return-Path: <SRS0=1AIr=T3=gmail.com=festevam@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-To: dmitry.torokhov@gmail.com, devicetree@vger.kernel.org
-Cc: linux-input@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Leif Middelschulte <leif.middelschulte@klsmartin.com>
+References: <20190504144027.31920-1-festevam@gmail.com> <20190504144027.31920-6-festevam@gmail.com>
+In-Reply-To: <20190504144027.31920-6-festevam@gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Mon, 27 May 2019 17:18:44 -0300
+Message-ID: <CAOMZO5AZBQuD8Tdhbf+r4C6M7zZy9VevVQoyb8o4KJY4EkO9WA@mail.gmail.com>
+Subject: Re: [PATCH 1/8] media: dt-bindings: imx7-csi: Document a single CSI clock
+Content-Type: text/plain; charset="UTF-8"
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Rui Miguel Silva <rui.silva@linaro.org>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, linux-media <linux-media@vger.kernel.org>, =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>, Otavio Salvador <otavio@ossystems.com.br>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, hverkuil-cisco@xs4all.nl
 List-ID: <devicetree@vger.kernel.org>
 
-This driver too supports coordinate inversion on X,Y axes and
-axes swapping via the common properties defined in touchscreen.txt
+Hi Rob,
 
-Signed-off-by: Leif Middelschulte <leif.middelschulte@klsmartin.com>
----
- Documentation/devicetree/bindings/input/touchscreen/stmpe.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+On Sat, May 4, 2019 at 11:40 AM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> As per the i.MX7D Reference Manual only the MCLK is used for
+> the CSI block, so only document this single clock.
+>
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/media/imx7-csi.txt | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/media/imx7-csi.txt b/Documentation/devicetree/bindings/media/imx7-csi.txt
+> index 3c07bc676bc3..443aef07356e 100644
+> --- a/Documentation/devicetree/bindings/media/imx7-csi.txt
+> +++ b/Documentation/devicetree/bindings/media/imx7-csi.txt
+> @@ -14,8 +14,7 @@ Required properties:
+>  - interrupts    : should contain CSI interrupt;
+>  - clocks        : list of clock specifiers, see
+>          Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
+> -- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
+> -                 entries in the clock property;
+> +- clock-names   : must contain "mclk";
+>
+>  The device node shall contain one 'port' child node with one child 'endpoint'
+>  node, according to the bindings defined in:
+> @@ -32,10 +31,8 @@ example:
+>                          compatible = "fsl,imx7-csi";
+>                          reg = <0x30710000 0x10000>;
+>                          interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> -                        clocks = <&clks IMX7D_CLK_DUMMY>,
+> -                                        <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
+> -                                        <&clks IMX7D_CLK_DUMMY>;
+> -                        clock-names = "axi", "mclk", "dcic";
+> +                        clocks = <&clks IMX7D_CSI_MCLK_ROOT_CLK>;
+> +                        clock-names = "mclk";
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-index aee1abf06ddb..09d2d4f288cc 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-@@ -42,6 +42,10 @@ Optional properties:
- 				The given window also affects the value range (limits) set
- 				within the input subsystem which, in turn, affects
- 				the input resolution calculation on both axes.
-+- touchscreen-inverted-x: X axis is inverted (boolean)
-+- touchscreen-inverted-y: Y axis is inverted (boolean)
-+- touchscreen-swapped-x-y: X and Y axis are swapped (boolean)
-+				Swapping is done after inverting the axis
- - touchscreen-x-mm	: horizontal length in mm of the touchscreen. It affects
- 				the input resolution calculation on the horizontal axis.
- - touchscreen-y-mm	: vertical length in mm of the touchscreen. It affects
--- 
-2.21.0
+Any comments, please?
+
+Thanks
