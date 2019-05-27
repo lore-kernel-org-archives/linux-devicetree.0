@@ -1,8 +1,7 @@
 From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v3 4/8] doc: dt-binding: usbmisc-imx: add compatible string
- for imx7ulp
-Date: Mon, 27 May 2019 11:06:12 +0800
-Message-ID: <20190527030616.44397-5-peter.chen@nxp.com>
+Subject: [PATCH v3 6/8] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
+Date: Mon, 27 May 2019 11:06:14 +0800
+Message-ID: <20190527030616.44397-7-peter.chen@nxp.com>
 References: <20190527030616.44397-1-peter.chen@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,25 +21,61 @@ To: balbi@kernel.org, shawnguo@kernel.org
 Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, chunfeng.yun@mediatek.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add compatible string for imx7ulp
+Add imx7ulp USBOTG1 support.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Peter Chen <peter.chen@nxp.com>
 ---
- Documentation/devicetree/bindings/usb/usbmisc-imx.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx7ulp.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/usbmisc-imx.txt b/Documentation/devicetree/bindings/usb/usbmisc-imx.txt
-index a85a631ec434..b353b9816487 100644
---- a/Documentation/devicetree/bindings/usb/usbmisc-imx.txt
-+++ b/Documentation/devicetree/bindings/usb/usbmisc-imx.txt
-@@ -7,6 +7,7 @@ Required properties:
- 	"fsl,vf610-usbmisc" for Vybrid vf610
- 	"fsl,imx6sx-usbmisc" for imx6sx
- 	"fsl,imx7d-usbmisc" for imx7d
-+	"fsl,imx7ulp-usbmisc" for imx7ulp
- - reg: Should contain registers location and length
+diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+index fca6e50f37c8..37b058119505 100644
+--- a/arch/arm/boot/dts/imx7ulp.dtsi
++++ b/arch/arm/boot/dts/imx7ulp.dtsi
+@@ -30,6 +30,7 @@
+ 		serial1 = &lpuart5;
+ 		serial2 = &lpuart6;
+ 		serial3 = &lpuart7;
++		usbphy0 = &usbphy1;
+ 	};
  
- Examples:
+ 	cpus {
+@@ -133,6 +134,36 @@
+ 			clock-names = "ipg", "per";
+ 		};
+ 
++		usbotg1: usb@40330000 {
++			compatible = "fsl,imx7ulp-usb", "fsl,imx6ul-usb",
++				"fsl,imx27-usb";
++			reg = <0x40330000 0x200>;
++			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&pcc2 IMX7ULP_CLK_USB0>;
++			phys = <&usbphy1>;
++			fsl,usbmisc = <&usbmisc1 0>;
++			ahb-burst-config = <0x0>;
++			tx-burst-size-dword = <0x8>;
++			rx-burst-size-dword = <0x8>;
++			status = "disabled";
++		};
++
++		usbmisc1: usbmisc@40330200 {
++			compatible = "fsl,imx7ulp-usbmisc", "fsl,imx7d-usbmisc",
++				"fsl,imx6q-usbmisc";
++			#index-cells = <1>;
++			reg = <0x40330200 0x200>;
++		};
++
++		usbphy1: usbphy@0x40350000 {
++			compatible = "fsl,imx7ulp-usbphy",
++				"fsl,imx6ul-usbphy", "fsl,imx23-usbphy";
++			reg = <0x40350000 0x1000>;
++			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&pcc2 IMX7ULP_CLK_USB_PHY>;
++			#phy-cells = <0>;
++		};
++
+ 		usdhc0: mmc@40370000 {
+ 			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
+ 			reg = <0x40370000 0x10000>;
 -- 
 2.14.1
