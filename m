@@ -1,44 +1,53 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
-Date: Mon, 27 May 2019 11:15:32 -0400
-Message-ID: <20190527111345-mutt-send-email-mst@kernel.org>
-References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
- <20190512123022-mutt-send-email-mst@kernel.org>
- <20190527092604.GB21613@8bytes.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 01/10] dt-bindings: rtc: Move trivial RTC over to trivial
+ devices
+Date: Mon, 27 May 2019 18:06:57 +0200
+Message-ID: <20190527160657.GN3274@piout.net>
+References: <290402405a34506997fd2fab2c4c1486dbe6b7e5.1558958381.git-series.maxime.ripard@bootlin.com>
+ <20190527120626.GM3274@piout.net>
+ <20190527121832.lui2n6vhlemlqy2z@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <virtio-dev-return-5754-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190527092604.GB21613@8bytes.org>
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com, tnowicki@caviumnetworks.com, kevin.tian@intel.com, marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, bharat.bhushan@nxp.com
+In-Reply-To: <20190527121832.lui2n6vhlemlqy2z@flea>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 27, 2019 at 11:26:04AM +0200, Joerg Roedel wrote:
-> On Sun, May 12, 2019 at 12:31:59PM -0400, Michael S. Tsirkin wrote:
-> > OK this has been in next for a while.
-> > 
-> > Last time IOMMU maintainers objected. Are objections
-> > still in force?
-> > 
-> > If not could we get acks please?
+On 27/05/2019 14:18:32+0200, Maxime Ripard wrote:
+> Hi Alex,
 > 
-> No objections against the code, I only hesitated because the Spec was
-> not yet official.
+> On Mon, May 27, 2019 at 02:06:26PM +0200, Alexandre Belloni wrote:
+> > On 27/05/2019 14:00:33+0200, Maxime Ripard wrote:
+> > > The RTC generic bindings has a bunch of devices that have a pretty simple
+> > > binding, with just compatible, reg and optional interrupts properties.
+> > >
+> >
+> > This is not true, they all also support the star-year property, this is
+> > why they are not in the trivial-devices file anymore.
 > 
-> So for the code:
+> Ok, I misunderstood the binding then.
 > 
-> 	Acked-by: Joerg Roedel <jroedel@suse.de>
+> Should we create a separate file for the trivial RTC, on the model of
+> the trivial-devices but supporting all the RTC properties?
+> 
 
-Last spec patch had a bunch of comments not yet addressed.
-But I do not remember whether comments are just about wording
-or about the host/guest interface as well.
-Jean-Philippe could you remind me please?
+I would say that this is the way forward. Note that all the RTCs support
+start-year but you will have to check for the other properties.
+
 
 -- 
-MST
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
