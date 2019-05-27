@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 09/10] ARM: dts: sun8i: v3s: Fix the RTC node
-Date: Mon, 27 May 2019 14:00:41 +0200
-Message-ID: <632517d48479da8da8f665ed511c24757b6d488e.1558958381.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 05/10] dt-bindings: rtc: sun6i: Add the R40 RTC compatible
+Date: Mon, 27 May 2019 14:00:37 +0200
+Message-ID: <8be02c659fe4191dbf1d3c8dcb1ded8ff92e2dda.1558958381.git-series.maxime.ripard@bootlin.com>
 References: <290402405a34506997fd2fab2c4c1486dbe6b7e5.1558958381.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,71 +21,70 @@ To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutlan
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-For some reason, while the v3s has a dedicated compatible in the RTC
-binding, the one actually used was the A31's. However, it turns out that
-the controller is pretty different (which justified the compatible).
+The R40 has a pretty different RTC compared to the other SoCs we've
+encountered so far, the most important difference being that it now has
+only a single interrupt, compared to the previous SoCs having two.
 
-Let's use the proper compatible, and use the proper binding description as
-well.
+Let's add a compatible for that.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- arch/arm/boot/dts/sun8i-v3s.dtsi | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
-index df72b1719c34..d7aef128acb3 100644
---- a/arch/arm/boot/dts/sun8i-v3s.dtsi
-+++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
-@@ -84,6 +84,7 @@
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <24000000>;
-+			clock-accuracy = <50000>;
- 			clock-output-names = "osc24M";
- 		};
+diff --git a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+index 942ddfc1689d..924622f39c44 100644
+--- a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
++++ b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+@@ -19,6 +19,7 @@ properties:
+       - const: allwinner,sun6i-a31-rtc
+       - const: allwinner,sun8i-a23-rtc
+       - const: allwinner,sun8i-h3-rtc
++      - const: allwinner,sun8i-r40-rtc
+       - const: allwinner,sun8i-v3-rtc
+       - const: allwinner,sun50i-h5-rtc
+       - items:
+@@ -29,6 +30,8 @@ properties:
+     maxItems: 1
  
-@@ -91,7 +92,8 @@
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <32768>;
--			clock-output-names = "osc32k";
-+			clock-accuracy = <50000>;
-+			clock-output-names = "ext-osc32k";
- 		};
- 	};
+   interrupts:
++    minItems: 1
++    maxItems: 2
+     items:
+       - description: RTC Alarm 0
+       - description: RTC Alarm 1
+@@ -66,6 +69,7 @@ allOf:
+           contains:
+             enum:
+               - allwinner,sun8i-a23-rtc
++              - allwinner,sun8i-r40-rtc
+               - allwinner,sun8i-v3-rtc
  
-@@ -264,17 +266,20 @@
- 		ccu: clock@1c20000 {
- 			compatible = "allwinner,sun8i-v3s-ccu";
- 			reg = <0x01c20000 0x400>;
--			clocks = <&osc24M>, <&osc32k>;
-+			clocks = <&osc24M>, <&rtc 0>;
- 			clock-names = "hosc", "losc";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 		};
+     then:
+@@ -88,6 +92,24 @@ allOf:
+           minItems: 3
+           maxItems: 3
  
- 		rtc: rtc@1c20400 {
--			compatible = "allwinner,sun6i-a31-rtc";
-+			#clock-cells = <1>;
-+			compatible = "allwinner,sun8i-v3-rtc";
- 			reg = <0x01c20400 0x54>;
- 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc32k>;
-+			clock-output-names = "osc32k", "osc32k-out";
- 		};
- 
- 		pio: pinctrl@1c20800 {
-@@ -282,7 +287,7 @@
- 			reg = <0x01c20800 0x400>;
- 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
-+			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&rtc 0>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: allwinner,sun8i-r40-rtc
++
++    then:
++      properties:
++        interrupts:
++          minItems: 1
++          maxItems: 1
++
++    else:
++      properties:
++        interrupts:
++          minItems: 2
++          maxItems: 2
++
+ required:
+   - "#clock-cells"
+   - compatible
 -- 
 git-series 0.9.1
