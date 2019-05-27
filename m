@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v3 5/8] usb: chipidea: imx: add imx7ulp support
-Date: Mon, 27 May 2019 11:06:13 +0800
-Message-ID: <20190527030616.44397-6-peter.chen@nxp.com>
+Subject: [PATCH v3 7/8] ARM: dts: imx7ulp-evk: enable USBOTG1 support
+Date: Mon, 27 May 2019 11:06:15 +0800
+Message-ID: <20190527030616.44397-8-peter.chen@nxp.com>
 References: <20190527030616.44397-1-peter.chen@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,152 +21,73 @@ To: balbi@kernel.org, shawnguo@kernel.org
 Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, chunfeng.yun@mediatek.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In this commit, we add CI_HDRC_PMQOS to avoid system entering idle,
-at imx7ulp, if the system enters idle, the DMA will stop, so the USB
-transfer can't work at this case.
+Enable USBOTG1 support for evk board, it is dual-role function
+port.
 
 Signed-off-by: Peter Chen <peter.chen@nxp.com>
 ---
- drivers/usb/chipidea/ci_hdrc_imx.c | 28 +++++++++++++++++++++++++++-
- drivers/usb/chipidea/usbmisc_imx.c |  4 ++++
- include/linux/usb/chipidea.h       |  1 +
- 3 files changed, 32 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7ulp-evk.dts | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
-index ceec8d5985d4..a76708501236 100644
---- a/drivers/usb/chipidea/ci_hdrc_imx.c
-+++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-@@ -13,6 +13,7 @@
- #include <linux/usb/of.h>
- #include <linux/clk.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/pm_qos.h>
+diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-evk.dts
+index a09026a6d22e..c8a56a2ae9a5 100644
+--- a/arch/arm/boot/dts/imx7ulp-evk.dts
++++ b/arch/arm/boot/dts/imx7ulp-evk.dts
+@@ -22,6 +22,17 @@
+ 		reg = <0x60000000 0x40000000>;
+ 	};
  
- #include "ci.h"
- #include "ci_hdrc_imx.h"
-@@ -63,6 +64,11 @@ static const struct ci_hdrc_imx_platform_flag imx7d_usb_data = {
- 	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM,
++	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_usbotg1_vbus>;
++		regulator-name = "usb_otg1_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio_ptc 0 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
+ 	reg_vsd_3v3: regulator-vsd-3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "VSD_3V3";
+@@ -40,6 +51,17 @@
+ 	status = "okay";
  };
  
-+static const struct ci_hdrc_imx_platform_flag imx7ulp_usb_data = {
-+	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM |
-+		CI_HDRC_PMQOS,
++&usbotg1 {
++	vbus-supply = <&reg_usb_otg1_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg1_id>;
++	srp-disable;
++	hnp-disable;
++	adp-disable;
++	over-current-active-low;
++	status = "okay";
 +};
 +
- static const struct of_device_id ci_hdrc_imx_dt_ids[] = {
- 	{ .compatible = "fsl,imx23-usb", .data = &imx23_usb_data},
- 	{ .compatible = "fsl,imx28-usb", .data = &imx28_usb_data},
-@@ -72,6 +78,7 @@ static const struct of_device_id ci_hdrc_imx_dt_ids[] = {
- 	{ .compatible = "fsl,imx6sx-usb", .data = &imx6sx_usb_data},
- 	{ .compatible = "fsl,imx6ul-usb", .data = &imx6ul_usb_data},
- 	{ .compatible = "fsl,imx7d-usb", .data = &imx7d_usb_data},
-+	{ .compatible = "fsl,imx7ulp-usb", .data = &imx7ulp_usb_data},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, ci_hdrc_imx_dt_ids);
-@@ -93,6 +100,8 @@ struct ci_hdrc_imx_data {
- 	struct clk *clk_ahb;
- 	struct clk *clk_per;
- 	/* --------------------------------- */
-+	struct pm_qos_request pm_qos_req;
-+	const struct ci_hdrc_imx_platform_flag *plat_data;
- };
+ &usdhc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc0>;
+@@ -57,6 +79,19 @@
+ 		bias-pull-up;
+ 	};
  
- /* Common functions shared by usbmisc drivers */
-@@ -309,6 +318,8 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 
-+	data->plat_data = imx_platform_flag;
-+	pdata.flags |= imx_platform_flag->flags;
- 	platform_set_drvdata(pdev, data);
- 	data->usbmisc_data = usbmisc_get_init_data(dev);
- 	if (IS_ERR(data->usbmisc_data))
-@@ -369,6 +380,11 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 			}
- 		}
- 	}
++	pinctrl_usbotg1_vbus: otg1vbusgrp {
++		fsl,pins = <
++			IMX7ULP_PAD_PTC0__PTC0		0x20000
++		>;
++	};
 +
-+	if (pdata.flags & CI_HDRC_PMQOS)
-+		pm_qos_add_request(&data->pm_qos_req,
-+			PM_QOS_CPU_DMA_LATENCY, 0);
++	pinctrl_usbotg1_id: otg1idgrp {
++		fsl,pins = <
++			IMX7ULP_PAD_PTC13__USB0_ID	0x10003
++			IMX7ULP_PAD_PTC16__USB1_OC2	0x10003
++		>;
++	};
 +
- 	ret = imx_get_clks(dev);
- 	if (ret)
- 		goto disable_hsic_regulator;
-@@ -396,7 +412,6 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 		usb_phy_init(pdata.usb_phy);
- 	}
- 
--	pdata.flags |= imx_platform_flag->flags;
- 	if (pdata.flags & CI_HDRC_SUPPORTS_RUNTIME_PM)
- 		data->supports_runtime_pm = true;
- 
-@@ -439,6 +454,8 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- disable_hsic_regulator:
- 	if (data->hsic_pad_regulator)
- 		ret = regulator_disable(data->hsic_pad_regulator);
-+	if (pdata.flags & CI_HDRC_PMQOS)
-+		pm_qos_remove_request(&data->pm_qos_req);
- 	return ret;
- }
- 
-@@ -455,6 +472,8 @@ static int ci_hdrc_imx_remove(struct platform_device *pdev)
- 	if (data->override_phy_control)
- 		usb_phy_shutdown(data->phy);
- 	imx_disable_unprepare_clks(&pdev->dev);
-+	if (data->plat_data->flags & CI_HDRC_PMQOS)
-+		pm_qos_remove_request(&data->pm_qos_req);
- 	if (data->hsic_pad_regulator)
- 		regulator_disable(data->hsic_pad_regulator);
- 
-@@ -480,6 +499,9 @@ static int __maybe_unused imx_controller_suspend(struct device *dev)
- 	}
- 
- 	imx_disable_unprepare_clks(dev);
-+	if (data->plat_data->flags & CI_HDRC_PMQOS)
-+		pm_qos_remove_request(&data->pm_qos_req);
-+
- 	data->in_lpm = true;
- 
- 	return 0;
-@@ -497,6 +519,10 @@ static int __maybe_unused imx_controller_resume(struct device *dev)
- 		return 0;
- 	}
- 
-+	if (data->plat_data->flags & CI_HDRC_PMQOS)
-+		pm_qos_add_request(&data->pm_qos_req,
-+			PM_QOS_CPU_DMA_LATENCY, 0);
-+
- 	ret = imx_prepare_enable_clks(dev);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-index d8b67e150b12..b7a5727d0c8a 100644
---- a/drivers/usb/chipidea/usbmisc_imx.c
-+++ b/drivers/usb/chipidea/usbmisc_imx.c
-@@ -763,6 +763,10 @@ static const struct of_device_id usbmisc_imx_dt_ids[] = {
- 		.compatible = "fsl,imx7d-usbmisc",
- 		.data = &imx7d_usbmisc_ops,
- 	},
-+	{
-+		.compatible = "fsl,imx7ulp-usbmisc",
-+		.data = &imx7d_usbmisc_ops,
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, usbmisc_imx_dt_ids);
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 911e05af671e..edd89b7c8f18 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -61,6 +61,7 @@ struct ci_hdrc_platform_data {
- #define CI_HDRC_OVERRIDE_PHY_CONTROL	BIT(12) /* Glue layer manages phy */
- #define CI_HDRC_REQUIRES_ALIGNED_DMA	BIT(13)
- #define CI_HDRC_IMX_IS_HSIC		BIT(14)
-+#define CI_HDRC_PMQOS			BIT(15)
- 	enum usb_dr_mode	dr_mode;
- #define CI_HDRC_CONTROLLER_RESET_EVENT		0
- #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
+ 	pinctrl_usdhc0: usdhc0grp {
+ 		fsl,pins = <
+ 			IMX7ULP_PAD_PTD1__SDHC0_CMD	0x43
 -- 
 2.14.1
