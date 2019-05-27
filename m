@@ -1,8 +1,8 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v6 6/6] arm64: dts: allwinner: orange-pi-3:
- Enable HDMI output
-Date: Mon, 27 May 2019 18:22:37 +0200
-Message-ID: <20190527162237.18495-7-megous@megous.com>
+Subject: [PATCH v6 4/6] dt-bindings: display: hdmi-connector:
+ Support DDC bus enable
+Date: Mon, 27 May 2019 18:22:35 +0200
+Message-ID: <20190527162237.18495-5-megous@megous.com>
 References: <20190527162237.18495-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -21,65 +21,29 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables the DDC
-I2C bus voltage shifter. Before EDID can be read, we need to pull PH2 high.
-This is realized by the ddc-en-gpios property.
+Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
+on-board voltage shifting logic for the DDC bus using a gpio to be able
+to access DDC bus. Use ddc-en-gpios property on the hdmi-connector to
+model this.
+
+Add binding documentation for optional ddc-en-gpios property.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 2c6807b74ff6..01bb1bafe284 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -22,6 +22,18 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+index 508aee461e0d..aeb07c4bd703 100644
+--- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
++++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+@@ -9,6 +9,7 @@ Optional properties:
+ - label: a symbolic name for the connector
+ - hpd-gpios: HPD GPIO number
+ - ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
++- ddc-en-gpios: signal to enable DDC bus
  
-+	connector {
-+		compatible = "hdmi-connector";
-+		ddc-en-gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -72,6 +84,10 @@
- 	cpu-supply = <&reg_dcdca>;
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -91,6 +107,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
+ Required nodes:
+ - Video port for HDMI input
 -- 
 2.21.0
