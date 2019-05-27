@@ -1,53 +1,44 @@
-Return-Path: <SRS0=hyxw=T4=pengutronix.de=mtr@kernel.org>
-From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v8 1/5] videobuf2-v4l2: set last_buffer_dequeued in dqbuf
-Date: Tue, 28 May 2019 19:11:16 +0200
-Message-Id: <20190528171120.7076-2-m.tretter@pengutronix.de>
-In-Reply-To: <20190528171120.7076-1-m.tretter@pengutronix.de>
-References: <20190528171120.7076-1-m.tretter@pengutronix.de>
+Return-Path: <SRS0=MGmW=T3=klsmartin.com=Leif.Middelschulte@kernel.org>
+From: Leif Middelschulte <leif.middelschulte@klsmartin.com>
+Subject: [PATCH 08/10] Input: stmpe-ts - axes inversion and swapping
+Date: Mon, 27 May 2019 18:19:36 +0200
+Message-ID: <20190527161938.31871-4-leif.middelschulte@klsmartin.com>
+In-Reply-To: <20190527161938.31871-1-leif.middelschulte@klsmartin.com>
+References: <20190527160736.30569-1-leif.middelschulte@klsmartin.com>
+ <20190527161938.31871-1-leif.middelschulte@klsmartin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, hverkuil@xs4all.nl, Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Content-Type: text/plain
+To: dmitry.torokhov@gmail.com, devicetree@vger.kernel.org
+Cc: linux-input@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Leif Middelschulte <leif.middelschulte@klsmartin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+This implements inversion and swapping of the reported X and Y input
+values, configurable via the corresponding devicetree properties binding.
 
-last_buffer_dequeued was set to true in __fill_v4l2_buffer, but this
-is called for qbuf as well. Move it to vb2_dqbuf.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Leif Middelschulte <leif.middelschulte@klsmartin.com>
 ---
- drivers/media/common/videobuf2/videobuf2-v4l2.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/input/touchscreen/stmpe-ts.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-index fb9ac7696fc6..40d76eb4c2fe 100644
---- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-+++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-@@ -563,11 +563,6 @@ static void __fill_v4l2_buffer(struct vb2_buffer *vb, void *pb)
- 		b->flags |= V4L2_BUF_FLAG_REQUEST_FD;
- 		b->request_fd = vbuf->request_fd;
+diff --git a/drivers/input/touchscreen/stmpe-ts.c b/drivers/input/touchscreen/stmpe-ts.c
+index 152aac8b3ab7..1d114278e7e9 100644
+--- a/drivers/input/touchscreen/stmpe-ts.c
++++ b/drivers/input/touchscreen/stmpe-ts.c
+@@ -217,8 +217,12 @@ static irqreturn_t stmpe_ts_handler(int irq, void *data)
+ 		goto _skip_input_events;
  	}
--
--	if (!q->is_output &&
--		b->flags & V4L2_BUF_FLAG_DONE &&
--		b->flags & V4L2_BUF_FLAG_LAST)
--		q->last_buffer_dequeued = true;
- }
  
- /*
-@@ -786,6 +781,11 @@ int vb2_dqbuf(struct vb2_queue *q, struct v4l2_buffer *b, bool nonblocking)
- 
- 	ret = vb2_core_dqbuf(q, NULL, b, nonblocking);
- 
-+	if (!q->is_output &&
-+	    b->flags & V4L2_BUF_FLAG_DONE &&
-+	    b->flags & V4L2_BUF_FLAG_LAST)
-+		q->last_buffer_dequeued = true;
+-	input_report_abs(ts->idev, ABS_X, x);
+-	input_report_abs(ts->idev, ABS_Y, y);
++	if (ts->props.invert_x)
++		x -= ts->min.x;
++	if (ts->props.invert_y)
++		y -= ts->min.y;
 +
- 	/*
- 	 *  After calling the VIDIOC_DQBUF V4L2_BUF_FLAG_DONE must be
- 	 *  cleared.
++	touchscreen_report_pos(ts->idev, &ts->props, x, y, false);
+ 	if (report_pressure)
+ 		input_report_abs(ts->idev, ABS_PRESSURE, z);
+ 	input_report_key(ts->idev, BTN_TOUCH, 1);
 -- 
-2.20.1
+2.21.0
