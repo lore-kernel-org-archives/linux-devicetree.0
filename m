@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 03/10] dt-bindings: rtc: Convert Allwinner A10 RTC to a schema
-Date: Mon, 27 May 2019 14:00:35 +0200
-Message-ID: <bd3004d8e2d52c96abbc6cc9ca51b8fea510446a.1558958381.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 07/10] ARM: dts: sun6i: Fix RTC node
+Date: Mon, 27 May 2019 14:00:39 +0200
+Message-ID: <9b447096c79c8660970013068457c05cb03f9027.1558958381.git-series.maxime.ripard@bootlin.com>
 References: <290402405a34506997fd2fab2c4c1486dbe6b7e5.1558958381.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,91 +21,85 @@ To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutlan
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The older Allwinner SoCs have an embedded RTC supported in Linux, with a
-matching Device Tree binding.
-
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
+The RTC node doesn't match what is described in the binding for historical
+reasons. Let's add the proper description.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml | 43 +++++++++++++++++++++++++++++++++++++++++++
- Documentation/devicetree/bindings/rtc/sunxi-rtc.txt                | 17 -----------------
- 2 files changed, 43 insertions(+), 17 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
- delete mode 100644 Documentation/devicetree/bindings/rtc/sunxi-rtc.txt
+ arch/arm/boot/dts/sun6i-a31.dtsi | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml b/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
-new file mode 100644
-index 000000000000..46d69c32b89b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rtc/allwinner,sun4i-a10-rtc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 RTC Device Tree Bindings
-+
-+allOf:
-+  - $ref: "rtc.yaml#"
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-rtc
-+      - allwinner,sun7i-a20-rtc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    rtc: rtc@1c20d00 {
-+        compatible = "allwinner,sun4i-a10-rtc";
-+        reg = <0x01c20d00 0x20>;
-+        interrupts = <24>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/rtc/sunxi-rtc.txt b/Documentation/devicetree/bindings/rtc/sunxi-rtc.txt
-deleted file mode 100644
-index 4a8d79c1cf08..000000000000
---- a/Documentation/devicetree/bindings/rtc/sunxi-rtc.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--* sun4i/sun7i Real Time Clock
--
--RTC controller for the Allwinner A10/A20
--
--Required properties:
--- compatible : Should be "allwinner,sun4i-a10-rtc" or "allwinner,sun7i-a20-rtc"
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- interrupts: IRQ line for the RTC.
--
--Example:
--
--rtc: rtc@1c20d00 {
--	compatible = "allwinner,sun4i-a10-rtc";
--	reg = <0x01c20d00 0x20>;
--	interrupts = <24>;
--};
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index c04efad81bbc..8832650cdc8d 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -223,7 +223,7 @@
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <32768>;
+-			clock-output-names = "osc32k";
++			clock-output-names = "ext_osc32k";
+ 		};
+ 
+ 		/*
+@@ -588,7 +588,7 @@
+ 		ccu: clock@1c20000 {
+ 			compatible = "allwinner,sun6i-a31-ccu";
+ 			reg = <0x01c20000 0x400>;
+-			clocks = <&osc24M>, <&osc32k>;
++			clocks = <&osc24M>, <&rtc 0>;
+ 			clock-names = "hosc", "losc";
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+@@ -601,7 +601,7 @@
+ 				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_APB1_PIO>, <&osc24M>, <&osc32k>;
++			clocks = <&ccu CLK_APB1_PIO>, <&osc24M>, <&rtc 0>;
+ 			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			interrupt-controller;
+@@ -1279,10 +1279,13 @@
+ 		};
+ 
+ 		rtc: rtc@1f00000 {
++			#clock-cells = <1>;
+ 			compatible = "allwinner,sun6i-a31-rtc";
+ 			reg = <0x01f00000 0x54>;
+ 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&osc32k>;
++			clock-output-names = "osc32k";
+ 		};
+ 
+ 		nmi_intc: interrupt-controller@1f00c00 {
+@@ -1300,7 +1303,7 @@
+ 			ar100: ar100_clk {
+ 				compatible = "allwinner,sun6i-a31-ar100-clk";
+ 				#clock-cells = <0>;
+-				clocks = <&osc32k>, <&osc24M>,
++				clocks = <&rtc 0>, <&osc24M>,
+ 					 <&ccu CLK_PLL_PERIPH>,
+ 					 <&ccu CLK_PLL_PERIPH>;
+ 				clock-output-names = "ar100";
+@@ -1335,7 +1338,7 @@
+ 			ir_clk: ir_clk {
+ 				#clock-cells = <0>;
+ 				compatible = "allwinner,sun4i-a10-mod0-clk";
+-				clocks = <&osc32k>, <&osc24M>;
++				clocks = <&rtc 0>, <&osc24M>;
+ 				clock-output-names = "ir";
+ 			};
+ 
+@@ -1365,7 +1368,7 @@
+ 			reg = <0x01f02c00 0x400>;
+ 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&apb0_gates 0>, <&osc24M>, <&osc32k>;
++			clocks = <&apb0_gates 0>, <&osc24M>, <&rtc 0>;
+ 			clock-names = "apb", "hosc", "losc";
+ 			resets = <&apb0_rst 0>;
+ 			gpio-controller;
 -- 
 git-series 0.9.1
