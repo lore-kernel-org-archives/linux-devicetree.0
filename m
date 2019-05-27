@@ -1,106 +1,62 @@
 From: yibin.gong@nxp.com
-Subject: [PATCH v2 1/7] dmaengine: fsl-edma: add dmamux_nr for next version
-Date: Mon, 27 May 2019 16:51:12 +0800
-Message-ID: <20190527085118.40423-2-yibin.gong@nxp.com>
+Subject: [PATCH v2 7/7] ARM: dts: imx7ulp: add edma device node
+Date: Mon, 27 May 2019 16:51:18 +0800
+Message-ID: <20190527085118.40423-8-yibin.gong@nxp.com>
 References: <20190527085118.40423-1-yibin.gong@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190527085118.40423-1-yibin.gong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, mark.rutland@arm.com, vkoul@kernel.org, dan.j.williams@intel.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-Next version of edma such as edmav2 on i.mx7ulp has only one dmamux.
-Add dmamux_nr instead of static macro define 'DMAMUX_NR'. No any
-function change here.
+Add edma device node in dts.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- drivers/dma/fsl-edma-common.h |  1 +
- drivers/dma/fsl-edma.c        | 11 ++++++-----
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/imx7ulp.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-index c53f76e..21a9cfd 100644
---- a/drivers/dma/fsl-edma-common.h
-+++ b/drivers/dma/fsl-edma-common.h
-@@ -145,6 +145,7 @@ struct fsl_edma_engine {
- 	void __iomem		*membase;
- 	void __iomem		*muxbase[DMAMUX_NR];
- 	struct clk		*muxclk[DMAMUX_NR];
-+	u32			dmamux_nr;
- 	struct mutex		fsl_edma_mutex;
- 	u32			n_chans;
- 	int			txirq;
-diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
-index d641ef8..7b65ef4 100644
---- a/drivers/dma/fsl-edma.c
-+++ b/drivers/dma/fsl-edma.c
-@@ -96,7 +96,7 @@ static struct dma_chan *fsl_edma_xlate(struct of_phandle_args *dma_spec,
- 	struct fsl_edma_engine *fsl_edma = ofdma->of_dma_data;
- 	struct dma_chan *chan, *_chan;
- 	struct fsl_edma_chan *fsl_chan;
--	unsigned long chans_per_mux = fsl_edma->n_chans / DMAMUX_NR;
-+	unsigned long chans_per_mux = fsl_edma->n_chans / fsl_edma->dmamux_nr;
+diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+index d6b7110..b4f7adf 100644
+--- a/arch/arm/boot/dts/imx7ulp.dtsi
++++ b/arch/arm/boot/dts/imx7ulp.dtsi
+@@ -100,6 +100,34 @@
+ 		reg = <0x40000000 0x800000>;
+ 		ranges;
  
- 	if (dma_spec->args_count != 2)
- 		return NULL;
-@@ -206,6 +206,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	fsl_edma->version = v1;
-+	fsl_edma->dmamux_nr = DMAMUX_NR;
- 	fsl_edma->n_chans = chans;
- 	mutex_init(&fsl_edma->fsl_edma_mutex);
- 
-@@ -217,7 +218,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
- 	fsl_edma_setup_regs(fsl_edma);
- 	regs = &fsl_edma->regs;
- 
--	for (i = 0; i < DMAMUX_NR; i++) {
-+	for (i = 0; i < fsl_edma->dmamux_nr; i++) {
- 		char clkname[32];
- 
- 		res = platform_get_resource(pdev, IORESOURCE_MEM, 1 + i);
-@@ -295,7 +296,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
- 	if (ret) {
- 		dev_err(&pdev->dev,
- 			"Can't register Freescale eDMA engine. (%d)\n", ret);
--		fsl_disable_clocks(fsl_edma, DMAMUX_NR);
-+		fsl_disable_clocks(fsl_edma, fsl_edma->dmamux_nr);
- 		return ret;
- 	}
- 
-@@ -304,7 +305,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev,
- 			"Can't register Freescale eDMA of_dma. (%d)\n", ret);
- 		dma_async_device_unregister(&fsl_edma->dma_dev);
--		fsl_disable_clocks(fsl_edma, DMAMUX_NR);
-+		fsl_disable_clocks(fsl_edma, fsl_edma->dmamux_nr);
- 		return ret;
- 	}
- 
-@@ -323,7 +324,7 @@ static int fsl_edma_remove(struct platform_device *pdev)
- 	fsl_edma_cleanup_vchan(&fsl_edma->dma_dev);
- 	of_dma_controller_free(np);
- 	dma_async_device_unregister(&fsl_edma->dma_dev);
--	fsl_disable_clocks(fsl_edma, DMAMUX_NR);
-+	fsl_disable_clocks(fsl_edma, fsl_edma->dmamux_nr);
- 
- 	return 0;
- }
++		edma1: dma-controller@40080000 {
++			#dma-cells = <2>;
++			compatible = "fsl,imx7ulp-edma";
++			reg = <0x40080000 0x2000>,
++				<0x40210000 0x1000>;
++			dma-channels = <32>;
++			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "dma", "dmamux0";
++			clocks = <&pcc2 IMX7ULP_CLK_DMA1>,
++				 <&pcc2 IMX7ULP_CLK_DMA_MUX1>;
++		};
++
+ 		lpuart4: serial@402d0000 {
+ 			compatible = "fsl,imx7ulp-lpuart";
+ 			reg = <0x402d0000 0x1000>;
 -- 
 2.7.4
