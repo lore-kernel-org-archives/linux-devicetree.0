@@ -1,193 +1,52 @@
-Return-Path: <SRS0=kpDl=TC=gmail.com=jonas.gorski@kernel.org>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Subject: [PATCH 3/3] MIPS: BMIPS: add clock controller nodes
-Date: Thu,  2 May 2019 14:26:57 +0200
-Message-Id: <20190502122657.15577-4-jonas.gorski@gmail.com>
-In-Reply-To: <20190502122657.15577-1-jonas.gorski@gmail.com>
-References: <20190502122657.15577-1-jonas.gorski@gmail.com>
-To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Kevin Cernekee <cernekee@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>
+Return-Path: <SRS0=MGmW=T3=klsmartin.com=Leif.Middelschulte@kernel.org>
+From: Leif Middelschulte <leif.middelschulte@klsmartin.com>
+Subject: [PATCH 01/10] dt-bindings: input: touchscreen: stmpe: add touch window configuration
+Date: Mon, 27 May 2019 18:07:27 +0200
+Message-ID: <20190527160736.30569-2-leif.middelschulte@klsmartin.com>
+In-Reply-To: <20190527160736.30569-1-leif.middelschulte@klsmartin.com>
+References: <20190527160736.30569-1-leif.middelschulte@klsmartin.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+To: dmitry.torokhov@gmail.com, devicetree@vger.kernel.org
+Cc: linux-input@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Leif Middelschulte <leif.middelschulte@klsmartin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Now that we have a driver for the clock controller, add nodes to allow
-devices to make use of it.
+The STMPE811 is able to only monitor a subwindow of the
+entire screen. Touches outside of this window are neglected.
+This change adds the corresponding documentation.
 
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Signed-off-by: Leif Middelschulte <leif.middelschulte@klsmartin.com>
 ---
- arch/mips/boot/dts/brcm/bcm3368.dtsi  | 12 +++++++++---
- arch/mips/boot/dts/brcm/bcm63268.dtsi | 12 +++++++++---
- arch/mips/boot/dts/brcm/bcm6328.dtsi  |  6 ++++++
- arch/mips/boot/dts/brcm/bcm6358.dtsi  | 12 +++++++++---
- arch/mips/boot/dts/brcm/bcm6362.dtsi  | 12 +++++++++---
- arch/mips/boot/dts/brcm/bcm6368.dtsi  | 12 +++++++++---
- 6 files changed, 51 insertions(+), 15 deletions(-)
+ .../devicetree/bindings/input/touchscreen/stmpe.txt      | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/mips/boot/dts/brcm/bcm3368.dtsi b/arch/mips/boot/dts/brcm/bcm3368.dtsi
-index 7a3e5c8943ca..69cbef472377 100644
---- a/arch/mips/boot/dts/brcm/bcm3368.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm3368.dtsi
-@@ -51,16 +51,22 @@
- 		compatible = "simple-bus";
- 		ranges;
- 
--		periph_cntl: syscon@fff8c000 {
-+		clkctl: clock-controller@fff8c004 {
-+			compatible = "brcm,bcm3368-clocks";
-+			reg = <0xfff8c004 0x4>;
-+			#clock-cells = <1>;
-+		};
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+index c549924603d2..04962e2e1ad0 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+@@ -33,6 +33,13 @@ Optional properties:
+ - st,i-drive		: current limit value of the touchscreen drivers
+ 				0 -> 20 mA (typical 35mA max)
+ 				1 -> 50 mA (typical 80 mA max)
++- st,window-tracking	: An u12 array that allows to pre-set a sub-window in the touchscreen.
++				Any touch position that is outside the sub-window is discarded
++				(top-right x, top-right y, bottom-left x, bottom-left y).
++				The given window also affects the value range (limits) set
++				within the input subsystem which, in turn, affects
++				the input resolution calculation on both axes.
 +
-+		periph_cntl: syscon@fff8c008 {
- 			compatible = "syscon";
--			reg = <0xfff8c000 0xc>;
-+			reg = <0xfff8c000 0x4>;
- 			native-endian;
- 		};
  
- 		reboot: syscon-reboot@fff8c008 {
- 			compatible = "syscon-reboot";
- 			regmap = <&periph_cntl>;
--			offset = <0x8>;
-+			offset = <0x0>;
- 			mask = <0x1>;
- 		};
- 
-diff --git a/arch/mips/boot/dts/brcm/bcm63268.dtsi b/arch/mips/boot/dts/brcm/bcm63268.dtsi
-index 58790b173bb2..beec24145af7 100644
---- a/arch/mips/boot/dts/brcm/bcm63268.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm63268.dtsi
-@@ -51,16 +51,22 @@
- 		compatible = "simple-bus";
- 		ranges;
- 
--		periph_cntl: syscon@10000000 {
-+		clkctl: clock-controller@10000004 {
-+			compatible = "brcm,bcm63268-clocks";
-+			reg = <0x10000004 0x4>;
-+			#clock-cells = <1>;
-+		};
-+
-+		periph_cntl: syscon@10000008 {
- 			compatible = "syscon";
--			reg = <0x10000000 0x14>;
-+			reg = <0x10000000 0xc>;
- 			native-endian;
- 		};
- 
- 		reboot: syscon-reboot@10000008 {
- 			compatible = "syscon-reboot";
- 			regmap = <&periph_cntl>;
--			offset = <0x8>;
-+			offset = <0x0>;
- 			mask = <0x1>;
- 		};
- 
-diff --git a/arch/mips/boot/dts/brcm/bcm6328.dtsi b/arch/mips/boot/dts/brcm/bcm6328.dtsi
-index bf6716aa425a..af860d06def6 100644
---- a/arch/mips/boot/dts/brcm/bcm6328.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6328.dtsi
-@@ -51,6 +51,12 @@
- 		compatible = "simple-bus";
- 		ranges;
- 
-+		clkctl: clock-controller@10000004 {
-+			compatible = "brcm,bcm6328-clocks";
-+			reg = <0x10000004 0x4>;
-+			#clock-cells = <1>;
-+		};
-+
- 		periph_intc: interrupt-controller@10000020 {
- 			compatible = "brcm,bcm6345-l1-intc";
- 			reg = <0x10000020 0x10>,
-diff --git a/arch/mips/boot/dts/brcm/bcm6358.dtsi b/arch/mips/boot/dts/brcm/bcm6358.dtsi
-index 26ddae5a4247..f21176cac038 100644
---- a/arch/mips/boot/dts/brcm/bcm6358.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6358.dtsi
-@@ -51,16 +51,22 @@
- 		compatible = "simple-bus";
- 		ranges;
- 
--		periph_cntl: syscon@fffe0000 {
-+		clkctl: clock-controller@fffe0004 {
-+			compatible = "brcm,bcm6358-clocks";
-+			reg = <0xfffe0004 0x4>;
-+			#clock-cells = <1>;
-+		};
-+
-+		periph_cntl: syscon@fffe0008 {
- 			compatible = "syscon";
--			reg = <0xfffe0000 0xc>;
-+			reg = <0xfffe0000 0x4>;
- 			native-endian;
- 		};
- 
- 		reboot: syscon-reboot@fffe0008 {
- 			compatible = "syscon-reboot";
- 			regmap = <&periph_cntl>;
--			offset = <0x8>;
-+			offset = <0x0>;
- 			mask = <0x1>;
- 		};
- 
-diff --git a/arch/mips/boot/dts/brcm/bcm6362.dtsi b/arch/mips/boot/dts/brcm/bcm6362.dtsi
-index c387793525dd..8ae6981735b8 100644
---- a/arch/mips/boot/dts/brcm/bcm6362.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6362.dtsi
-@@ -51,16 +51,22 @@
- 		compatible = "simple-bus";
- 		ranges;
- 
--		periph_cntl: syscon@10000000 {
-+		clkctl: clock-controller@10000004 {
-+			compatible = "brcm,bcm6362-clocks";
-+			reg = <0x10000004 0x4>;
-+			#clock-cells = <1>;
-+		};
-+
-+		periph_cntl: syscon@10000008 {
- 			compatible = "syscon";
--			reg = <0x10000000 0x14>;
-+			reg = <0x10000000 0xc>;
- 			native-endian;
- 		};
- 
- 		reboot: syscon-reboot@10000008 {
- 			compatible = "syscon-reboot";
- 			regmap = <&periph_cntl>;
--			offset = <0x8>;
-+			offset = <0x0>;
- 			mask = <0x1>;
- 		};
- 
-diff --git a/arch/mips/boot/dts/brcm/bcm6368.dtsi b/arch/mips/boot/dts/brcm/bcm6368.dtsi
-index e116a385525f..449c167dd892 100644
---- a/arch/mips/boot/dts/brcm/bcm6368.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6368.dtsi
-@@ -51,16 +51,22 @@
- 		compatible = "simple-bus";
- 		ranges;
- 
--		periph_cntl: syscon@10000000 {
-+		clkctl: clock-controller@10000004 {
-+			compatible = "brcm,bcm6368-clocks";
-+			reg = <0x10000004 0x4>;
-+			#clock-cells = <1>;
-+		};
-+
-+		periph_cntl: syscon@100000008 {
- 			compatible = "syscon";
--			reg = <0x10000000 0x14>;
-+			reg = <0x10000000 0xc>;
- 			native-endian;
- 		};
- 
- 		reboot: syscon-reboot@10000008 {
- 			compatible = "syscon-reboot";
- 			regmap = <&periph_cntl>;
--			offset = <0x8>;
-+			offset = <0x0>;
- 			mask = <0x1>;
- 		};
- 
+ Optional properties common with MFD (deprecated):
+  - st,sample-time	: ADC conversion time in number of clock.
+@@ -101,6 +108,8 @@ stmpe811@41 {
+ 		 * current limit value
+ 		 */
+ 		st,i-drive = <1>;
++		/* enable entire window */
++		st,window-tracking = /bits/ 16 <4095 4095 0 0>;
+ 	};
+ 	stmpe_adc {
+ 		compatible = "st,stmpe-adc";
 -- 
-2.13.2
+2.21.0
