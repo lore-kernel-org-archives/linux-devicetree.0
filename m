@@ -1,7 +1,7 @@
 From: yibin.gong@nxp.com
-Subject: [PATCH v2 7/7] ARM: dts: imx7ulp: add edma device node
-Date: Mon, 27 May 2019 16:51:18 +0800
-Message-ID: <20190527085118.40423-8-yibin.gong@nxp.com>
+Subject: [PATCH v2 4/7] dmaengine: fsl-edma-common: version check for v2 instead
+Date: Mon, 27 May 2019 16:51:15 +0800
+Message-ID: <20190527085118.40423-5-yibin.gong@nxp.com>
 References: <20190527085118.40423-1-yibin.gong@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190527085118.40423-1-yibin.gong@nxp.com>
@@ -12,51 +12,64 @@ List-Id: devicetree@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-Add edma device node in dts.
+The next v3 i.mx7ulp edma is based on v1, so change version
+check logic for v2 instead.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- arch/arm/boot/dts/imx7ulp.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/dma/fsl-edma-common.c | 40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index d6b7110..b4f7adf 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -100,6 +100,34 @@
- 		reg = <0x40000000 0x800000>;
- 		ranges;
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index bb24251..45d70d3 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -657,26 +657,26 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
+ 	edma->regs.erql = edma->membase + EDMA_ERQ;
+ 	edma->regs.eeil = edma->membase + EDMA_EEI;
  
-+		edma1: dma-controller@40080000 {
-+			#dma-cells = <2>;
-+			compatible = "fsl,imx7ulp-edma";
-+			reg = <0x40080000 0x2000>,
-+				<0x40210000 0x1000>;
-+			dma-channels = <32>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "dma", "dmamux0";
-+			clocks = <&pcc2 IMX7ULP_CLK_DMA1>,
-+				 <&pcc2 IMX7ULP_CLK_DMA_MUX1>;
-+		};
-+
- 		lpuart4: serial@402d0000 {
- 			compatible = "fsl,imx7ulp-lpuart";
- 			reg = <0x402d0000 0x1000>;
+-	edma->regs.serq = edma->membase + ((edma->version == v1) ?
+-			EDMA_SERQ : EDMA64_SERQ);
+-	edma->regs.cerq = edma->membase + ((edma->version == v1) ?
+-			EDMA_CERQ : EDMA64_CERQ);
+-	edma->regs.seei = edma->membase + ((edma->version == v1) ?
+-			EDMA_SEEI : EDMA64_SEEI);
+-	edma->regs.ceei = edma->membase + ((edma->version == v1) ?
+-			EDMA_CEEI : EDMA64_CEEI);
+-	edma->regs.cint = edma->membase + ((edma->version == v1) ?
+-			EDMA_CINT : EDMA64_CINT);
+-	edma->regs.cerr = edma->membase + ((edma->version == v1) ?
+-			EDMA_CERR : EDMA64_CERR);
+-	edma->regs.ssrt = edma->membase + ((edma->version == v1) ?
+-			EDMA_SSRT : EDMA64_SSRT);
+-	edma->regs.cdne = edma->membase + ((edma->version == v1) ?
+-			EDMA_CDNE : EDMA64_CDNE);
+-	edma->regs.intl = edma->membase + ((edma->version == v1) ?
+-			EDMA_INTR : EDMA64_INTL);
+-	edma->regs.errl = edma->membase + ((edma->version == v1) ?
+-			EDMA_ERR : EDMA64_ERRL);
++	edma->regs.serq = edma->membase + ((edma->version == v2) ?
++			EDMA64_SERQ : EDMA_SERQ);
++	edma->regs.cerq = edma->membase + ((edma->version == v2) ?
++			EDMA64_CERQ : EDMA_CERQ);
++	edma->regs.seei = edma->membase + ((edma->version == v2) ?
++			EDMA64_SEEI : EDMA_SEEI);
++	edma->regs.ceei = edma->membase + ((edma->version == v2) ?
++			EDMA64_CEEI : EDMA_CEEI);
++	edma->regs.cint = edma->membase + ((edma->version == v2) ?
++			EDMA64_CINT : EDMA_CINT);
++	edma->regs.cerr = edma->membase + ((edma->version == v2) ?
++			EDMA64_CERR : EDMA_CERR);
++	edma->regs.ssrt = edma->membase + ((edma->version == v2) ?
++			EDMA64_SSRT : EDMA_SSRT);
++	edma->regs.cdne = edma->membase + ((edma->version == v2) ?
++			EDMA64_CDNE : EDMA_CDNE);
++	edma->regs.intl = edma->membase + ((edma->version == v2) ?
++			EDMA64_INTL : EDMA_INTR);
++	edma->regs.errl = edma->membase + ((edma->version == v2) ?
++			EDMA64_ERRL : EDMA_ERR);
+ 
+ 	if (edma->version == v2) {
+ 		edma->regs.erqh = edma->membase + EDMA64_ERQH;
 -- 
 2.7.4
