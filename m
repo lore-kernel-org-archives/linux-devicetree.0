@@ -1,28 +1,32 @@
 From: Pramod Kumar <pramod.kumar_1@nxp.com>
-Subject: [PATCH v3 0/3] arm64: dts: nxp: add ls1046a frwy board support
-Date: Mon, 27 May 2019 12:32:03 +0000
-Message-ID: <20190527123404.30858-1-pramod.kumar_1@nxp.com>
+Subject: [PATCH v3 1/3] dt-bindings: arm: nxp: Add device tree binding for
+ ls1046a-frwy board
+Date: Mon, 27 May 2019 12:32:09 +0000
+Message-ID: <20190527123404.30858-2-pramod.kumar_1@nxp.com>
+References: <20190527123404.30858-1-pramod.kumar_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190527123404.30858-1-pramod.kumar_1@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Q2hhbmdlcyBmb3IgdjM6DQotIFJlbW92ZSB1bmRvY3VtZW50ZWQgcHJvcGVydCBpMmMtbXV4LW5l
-dmVyLWRpc2FibGUNCi0gU29ydCBub2RlcyBhdCBpMmMgbXV4IGluIHVuaXQtYWRkcmVzcw0KLSBS
-ZW1vdmUgVW5uZWNlc3NhcnkgbmV3bGluZQ0KDQpDaGFuZ2VzIGZvciB2MjoNCi0gTW9kaWZpZWQg
-Y29taXQgbWVzc2FnZQ0KLSBBZGQgZHRzIGVudHJ5IGZvciBxc3BpIG5vciBmbGFzaA0KDQpQcmFt
-b2QgS3VtYXIgKDMpOg0KICBkdC1iaW5kaW5nczogYXJtOiBueHA6IEFkZCBkZXZpY2UgdHJlZSBi
-aW5kaW5nIGZvciBsczEwNDZhLWZyd3kgYm9hcmQNCiAgYXJtNjQ6IGR0czogbnhwOiBhZGQgbHMx
-MDQ2YS1mcnd5IGJvYXJkIHN1cHBvcnQNCiAgYXJtNjQ6IGR0czogZnJ3eS1sczEwNDZhOiBhZGQg
-c3VwcG9ydCBmb3IgbWljcm9uIG5vciBmbGFzaA0KDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-YXJtL2ZzbC55YW1sICAgICAgICAgIHwgICAxICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
-Y2FsZS9NYWtlZmlsZSAgICAgICAgfCAgIDEgKw0KIC4uLi9ib290L2R0cy9mcmVlc2NhbGUvZnNs
-LWxzMTA0NmEtZnJ3eS5kdHMgICB8IDE3MiArKysrKysrKysrKysrKysrKysNCiAzIGZpbGVzIGNo
-YW5nZWQsIDE3NCBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQv
-Ym9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLWZyd3kuZHRzDQoNCi0tIA0KMi4xNy4xDQoN
-Cg==
+QWRkICJmc2wsbHMxMDQ2YS1mcnd5IiBiaW5kaW5ncyBmb3IgbHMxMDQ2YWZyd3kgYm9hcmQgYmFz
+ZWQgb24gbHMxMDQ2YSBTb0MNCg0KU2lnbmVkLW9mZi1ieTogVmFiaGF2IFNoYXJtYSA8dmFiaGF2
+LnNoYXJtYUBueHAuY29tPg0KU2lnbmVkLW9mZi1ieTogUHJhbW9kIEt1bWFyIDxwcmFtb2Qua3Vt
+YXJfMUBueHAuY29tPg0KUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
+DQotLS0NCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sIHwg
+MSArDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wueWFtbA0KaW5kZXggNDA3MTM4ZWJjMGQwLi4w
+OWZmMTk5OWNlOTYgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvYXJtL2ZzbC55YW1sDQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+YXJtL2ZzbC55YW1sDQpAQCAtMjQxLDYgKzI0MSw3IEBAIHByb3BlcnRpZXM6DQogICAgICAgICAg
+IC0gZW51bToNCiAgICAgICAgICAgICAgIC0gZnNsLGxzMTA0NmEtcWRzDQogICAgICAgICAgICAg
+ICAtIGZzbCxsczEwNDZhLXJkYg0KKyAgICAgICAgICAgICAgLSBmc2wsbHMxMDQ2YS1mcnd5DQog
+ICAgICAgICAgIC0gY29uc3Q6IGZzbCxsczEwNDZhDQogDQogICAgICAgLSBkZXNjcmlwdGlvbjog
+TFMxMDg4QSBiYXNlZCBCb2FyZHMNCi0tIA0KMi4xNy4xDQoNCg==
