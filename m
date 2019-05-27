@@ -1,7 +1,7 @@
 From: yibin.gong@nxp.com
-Subject: [PATCH v2 3/7] dmaengine: fsl-edma-common: move dmamux register to another single function
-Date: Mon, 27 May 2019 16:51:14 +0800
-Message-ID: <20190527085118.40423-4-yibin.gong@nxp.com>
+Subject: [PATCH v2 5/7] dt-bindings: dma: fsl-edma: add new i.mx7ulp-edma
+Date: Mon, 27 May 2019 16:51:16 +0800
+Message-ID: <20190527085118.40423-6-yibin.gong@nxp.com>
 References: <20190527085118.40423-1-yibin.gong@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190527085118.40423-1-yibin.gong@nxp.com>
@@ -12,49 +12,95 @@ List-Id: devicetree@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-Prepare for edmav2 on i.mx7ulp whose dmamux register is 32bit. No function
-impacted.
+More channel interrupts, one more clock, and only one
+dmamux on i.mx7ulp-edma.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- drivers/dma/fsl-edma-common.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/dma/fsl-edma.txt | 44 +++++++++++++++++++---
+ 1 file changed, 39 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index c9a17fc..bb24251 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -77,6 +77,19 @@ void fsl_edma_disable_request(struct fsl_edma_chan *fsl_chan)
- }
- EXPORT_SYMBOL_GPL(fsl_edma_disable_request);
+diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documentation/devicetree/bindings/dma/fsl-edma.txt
+index 97e213e..29dd3cc 100644
+--- a/Documentation/devicetree/bindings/dma/fsl-edma.txt
++++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
+@@ -9,15 +9,16 @@ group, DMAMUX0 or DMAMUX1, but not both.
+ Required properties:
+ - compatible :
+ 	- "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
++	- "fsl,imx7ulp-edma" for eDMA2 used similar to that on i.mx7ulp
+ - reg : Specifies base physical address(s) and size of the eDMA registers.
+ 	The 1st region is eDMA control register's address and size.
+ 	The 2nd and the 3rd regions are programmable channel multiplexing
+ 	control register's address and size.
+ - interrupts : A list of interrupt-specifiers, one for each entry in
+-	interrupt-names.
+-- interrupt-names : Should contain:
+-	"edma-tx" - the transmission interrupt
+-	"edma-err" - the error interrupt
++	interrupt-names on vf610 similar SoC. But for i.mx7ulp per channel
++	per transmission interrupt, total 16 channel interrupt and 1
++	error interrupt(located in the last), no interrupt-names list on
++	i.mx7ulp for clean on dts.
+ - #dma-cells : Must be <2>.
+ 	The 1st cell specifies the DMAMUX(0 for DMAMUX0 and 1 for DMAMUX1).
+ 	Specific request source can only be multiplexed by specific channels
+@@ -28,6 +29,7 @@ Required properties:
+ - clock-names : A list of channel group clock names. Should contain:
+ 	"dmamux0" - clock name of mux0 group
+ 	"dmamux1" - clock name of mux1 group
++	Note: No dmamux0 on i.mx7ulp, but another 'dma' clk added on i.mx7ulp.
+ - clocks : A list of phandle and clock-specifier pairs, one for each entry in
+ 	clock-names.
  
-+static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
-+			   u32 off, u32 slot, bool enable)
-+{
-+	u8 val8;
-+
-+	if (enable)
-+		val8 = EDMAMUX_CHCFG_ENBL | slot;
-+	else
-+		val8 = EDMAMUX_CHCFG_DIS;
-+
-+	iowrite8(val8, addr + off);
-+}
-+
- void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 			unsigned int slot, bool enable)
- {
-@@ -89,10 +102,7 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
- 	slot = EDMAMUX_CHCFG_SOURCE(slot);
+@@ -35,6 +37,10 @@ Optional properties:
+ - big-endian: If present registers and hardware scatter/gather descriptors
+ 	of the eDMA are implemented in big endian mode, otherwise in little
+ 	mode.
++- interrupt-names : Should contain the below on vf610 similar SoC but not used
++	on i.mx7ulp similar SoC:
++	"edma-tx" - the transmission interrupt
++	"edma-err" - the error interrupt
  
--	if (enable)
--		iowrite8(EDMAMUX_CHCFG_ENBL | slot, muxaddr + ch_off);
--	else
--		iowrite8(EDMAMUX_CHCFG_DIS, muxaddr + ch_off);
-+	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
- }
- EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
  
+ Examples:
+@@ -52,8 +58,36 @@ edma0: dma-controller@40018000 {
+ 	clock-names = "dmamux0", "dmamux1";
+ 	clocks = <&clks VF610_CLK_DMAMUX0>,
+ 		<&clks VF610_CLK_DMAMUX1>;
+-};
++}; /* vf610 */
+ 
++edma1: dma-controller@40080000 {
++	#dma-cells = <2>;
++	compatible = "fsl,imx7ulp-edma";
++	reg = <0x40080000 0x2000>,
++		<0x40210000 0x1000>;
++	dma-channels = <32>;
++	interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
++		     /* last is eDMA2-ERR interrupt */
++		     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++	clock-names = "dma", "dmamux0";
++	clocks = <&pcc2 IMX7ULP_CLK_DMA1>,
++		 <&pcc2 IMX7ULP_CLK_DMA_MUX1>;
++}; /* i.mx7ulp */
+ 
+ * DMA clients
+ DMA client drivers that uses the DMA function must use the format described
 -- 
 2.7.4
