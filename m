@@ -1,105 +1,247 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
-Date: Mon, 27 May 2019 06:18:30 +0000
-Message-ID: <AM0PR04MB4481A7076D94A55BD48F8ACC881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190523060437.11059-1-peng.fan@nxp.com>
- <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
- <20190524175658.GA5045@e107155-lin>
+From: "Hennerich, Michael" <Michael.Hennerich@analog.com>
+Subject: RE: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml binding
+Date: Mon, 27 May 2019 06:29:12 +0000
+Message-ID: <BN3PR0301MB0897E42E948C8067DABFF9858E1D0@BN3PR0301MB0897.namprd03.prod.outlook.com>
+References: <cover.1558746978.git.renatogeh@gmail.com>
+        <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
+ <20190526173911.57ae3d11@archlinux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190524175658.GA5045@e107155-lin>
+In-Reply-To: <20190526173911.57ae3d11@archlinux>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Jonathan Cameron <jic23@kernel.org>, Renato Lui Geh <renatogeh@gmail.com>
+Cc: "lars@metafoo.de" <lars@metafoo.de>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>, "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
 
-> Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+
+> -----Original Message-----
+> From: Jonathan Cameron [mailto:jic23@kernel.org]
+> Sent: Sonntag, 26. Mai 2019 18:39
+> To: Renato Lui Geh <renatogeh@gmail.com>
+> Cc: lars@metafoo.de; Hennerich, Michael <Michael.Hennerich@analog.com>; k=
+naack.h@gmx.de; pmeerw@pmeerw.net;
+> gregkh@linuxfoundation.org; Popa, Stefan Serban <StefanSerban.Popa@analog=
+.com>; Ardelean, Alexandru
+> <alexandru.Ardelean@analog.com>; robh+dt@kernel.org; mark.rutland@arm.com=
+; linux-iio@vger.kernel.org;
+> devel@driverdev.osuosl.org; linux-kernel@vger.kernel.org; kernel-usp@goog=
+legroups.com; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml bi=
+nding
 >=20
-> On Thu, May 23, 2019 at 10:30:50AM -0700, Florian Fainelli wrote:
-> > Hi,
+> On Fri, 24 May 2019 22:26:30 -0300
+> Renato Lui Geh <renatogeh@gmail.com> wrote:
+>=20
+> > This patch adds a YAML binding for the Analog Devices AD7780/1 and
+> > AD7170/1 analog-to-digital converters.
 > >
-> > On 5/22/19 10:50 PM, Peng Fan wrote:
-> > > This is a modified version from Andre Przywara's patch series
-> > >
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-ke
-> rnel.org%2Fpatchwork%2Fcover%2F812997%2F&amp;data=3D02%7C01%7Cpe
-> ng.fan%40nxp.com%7Cfa2ba15f479b49eb219f08d6e0713ea3%7C686ea1d3b
-> c2b4c6fa92cd99c5c301635%7C0%7C0%7C636943174355592142&amp;sdat
-> a=3DY94rnxDEoMm9nyRyjJrYBqRduc5XkvvQhno7zfIQ%2B04%3D&amp;reserve
-> d=3D0.
-> > > [1] is a draft implementation of i.MX8MM SCMI ATF implementation
-> > > that use smc as mailbox, power/clk is included, but only part of clk
-> > > has been implemented to work with hardware, power domain only
-> > > supports get name for now.
-> > >
-> > > The traditional Linux mailbox mechanism uses some kind of dedicated
-> > > hardware IP to signal a condition to some other processing unit,
-> > > typically a dedicated management processor.
-> > > This mailbox feature is used for instance by the SCMI protocol to
-> > > signal a request for some action to be taken by the management
-> processor.
-> > > However some SoCs does not have a dedicated management core to
-> > > provide those services. In order to service TEE and to avoid linux
-> > > shutdown power and clock that used by TEE, need let firmware to
-> > > handle power and clock, the firmware here is ARM Trusted Firmware
-> > > that could also run SCMI service.
-> > >
-> > > The existing SCMI implementation uses a rather flexible shared
-> > > memory region to communicate commands and their parameters, it still
-> > > requires a mailbox to actually trigger the action.
+> > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+> Looks good to me, but I'm still finding my feet with these so will
+> leave it for a few days for others to have time to comment.
+>=20
+> Michael, looking for a quick reply from you to say if you are happy
+> being explicitly listed as maintainer for this one, or if you'd
+> rather land it on someone else.  Same applies for patch 2.
+
+Hi Jonathan,
+
+Listing me as an maintainer is ok.
+
+Acked-by: Michael Hennerich <michael.hennerich@analog.com>
+
+
+>=20
+> Renato, if I seem to have forgotten this in a week or so, feel
+> free to give me a poke. I've been known to loose patches entirely!
+>=20
+> Thanks,
+>=20
+> Jonathan
+> > ---
+> > Changes in v2:
+> >  - vref-supply to avdd-supply
+> >  - remove avdd-supply from required list
+> >  - include adc block in an spi block
 > >
-> > We have had something similar done internally with a couple of minor
-> > differences:
+> >  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
+> >  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
+> >  2 files changed, 87 insertions(+), 48 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad778=
+0.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad778=
+0.yaml
 > >
-> > - a SGI is used to send SCMI notifications/delayed replies to support
-> > asynchronism (patches are in the works to actually add that to the
-> > Linux SCMI framework). There is no good support for SGI in the kernel
-> > right now so we hacked up something from the existing SMP code and
-> > adding the ability to register our own IPI handlers (SHAME!). Using a
-> > PPI should work and should allow for using request_irq() AFAICT.
-> >
->=20
-> We have been thinking this since we were asked if SMC can be transport.
-> Generally out of 16 SGIs, 8 are reserved for secure side and non-secure h=
-as 8.
-> Of these 8, IIUC 7 is already being used by kernel. So unless we manage t=
-o get
-> the last one reserved exclusive to SCMI, it makes it difficult to add SGI=
- support
-> in SCMI.
->=20
-> We have been telling partners/vendors about this limitation if they use S=
-MC
-> as transport and need to have dedicated h/w interrupt for the notificatio=
-ns.
-
-This is an option, and we could add optional property.
-
->=20
-> Another issue could be with virtualisation(using HVC) and EL handling so =
-called
-> SCMI SGI. We need to think about those too.=20
-
-Using dedicated HW for virtualization that support vcpu scheduling might be
-not a good choice, do you mean this? Dedicated pin vcpu to pcpu should be f=
-ine,
-just like jailhouse hypervisor.
-
-I will try to get more info on this
-> and come back on this.
-
-Looking forward.
-
-Thanks,
-Peng.
-
->=20
-> --
-> Regards,
-> Sudeep
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b=
+/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> > deleted file mode 100644
+> > index 440e52555349..000000000000
+> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> > +++ /dev/null
+> > @@ -1,48 +0,0 @@
+> > -* Analog Devices AD7170/AD7171/AD7780/AD7781
+> > -
+> > -Data sheets:
+> > -
+> > -- AD7170:
+> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
+eets/AD7170.pdf
+> > -- AD7171:
+> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
+eets/AD7171.pdf
+> > -- AD7780:
+> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
+eets/ad7780.pdf
+> > -- AD7781:
+> > -     * https://www.analog.com/media/en/technical-documentation/data-sh=
+eets/AD7781.pdf
+> > -
+> > -Required properties:
+> > -
+> > -- compatible: should be one of
+> > -     * "adi,ad7170"
+> > -     * "adi,ad7171"
+> > -     * "adi,ad7780"
+> > -     * "adi,ad7781"
+> > -- reg: spi chip select number for the device
+> > -- vref-supply: the regulator supply for the ADC reference voltage
+> > -
+> > -Optional properties:
+> > -
+> > -- powerdown-gpios:  must be the device tree identifier of the PDRST pi=
+n. If
+> > -                 specified, it will be asserted during driver probe. A=
+s the
+> > -                 line is active high, it should be marked GPIO_ACTIVE_=
+HIGH.
+> > -- adi,gain-gpios:   must be the device tree identifier of the GAIN pin=
+. Only for
+> > -                 the ad778x chips. If specified, it will be asserted d=
+uring
+> > -                 driver probe. As the line is active low, it should be=
+ marked
+> > -                 GPIO_ACTIVE_LOW.
+> > -- adi,filter-gpios: must be the device tree identifier of the FILTER p=
+in. Only
+> > -                 for the ad778x chips. If specified, it will be assert=
+ed
+> > -                 during driver probe. As the line is active low, it sh=
+ould be
+> > -                 marked GPIO_ACTIVE_LOW.
+> > -
+> > -Example:
+> > -
+> > -adc@0 {
+> > -     compatible =3D  "adi,ad7780";
+> > -     reg =3D         <0>;
+> > -     vref-supply =3D <&vdd_supply>
+> > -
+> > -     powerdown-gpios  =3D <&gpio 12 GPIO_ACTIVE_HIGH>;
+> > -     adi,gain-gpios   =3D <&gpio  5 GPIO_ACTIVE_LOW>;
+> > -     adi,filter-gpios =3D <&gpio 15 GPIO_ACTIVE_LOW>;
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml =
+b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> > new file mode 100644
+> > index 000000000000..d1109416963c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> > @@ -0,0 +1,87 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital co=
+nverters
+> > +
+> > +maintainers:
+> > +  - Michael Hennerich <michael.hennerich@analog.com>
+> > +
+> > +description: |
+> > +  The ad7780 is a sigma-delta analog to digital converter. This driver=
+ provides
+> > +  reading voltage values and status bits from both the ad778x and ad71=
+7x series.
+> > +  Its interface also allows writing on the FILTER and GAIN GPIO pins o=
+n the
+> > +  ad778x.
+> > +
+> > +  Specifications on the converters can be found at:
+> > +    AD7170:
+> > +      https://www.analog.com/media/en/technical-documentation/data-she=
+ets/AD7170.pdf
+> > +    AD7171:
+> > +      https://www.analog.com/media/en/technical-documentation/data-she=
+ets/AD7171.pdf
+> > +    AD7780:
+> > +      https://www.analog.com/media/en/technical-documentation/data-she=
+ets/ad7780.pdf
+> > +    AD7781:
+> > +      https://www.analog.com/media/en/technical-documentation/data-she=
+ets/AD7781.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - adi,ad7170
+> > +      - adi,ad7171
+> > +      - adi,ad7780
+> > +      - adi,ad7781
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  avdd-supply:
+> > +    description:
+> > +      The regulator supply for the ADC reference voltage.
+> > +    maxItems: 1
+> > +
+> > +  powerdown-gpios:
+> > +    description:
+> > +      Must be the device tree identifier of the PDRST pin. If
+> > +      specified, it will be asserted during driver probe. As the
+> > +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
+> > +    maxItems: 1
+> > +
+> > +  adi,gain-gpios:
+> > +    description:
+> > +      Must be the device tree identifier of the GAIN pin. Only for
+> > +      the ad778x chips. If specified, it will be asserted during
+> > +      driver probe. As the line is active low, it should be marked
+> > +      GPIO_ACTIVE_LOW.
+> > +    maxItems: 1
+> > +
+> > +  adi,filter-gpios:
+> > +    description:
+> > +      Must be the device tree identifier of the FILTER pin. Only
+> > +      for the ad778x chips. If specified, it will be asserted
+> > +      during driver probe. As the line is active low, it should be
+> > +      marked GPIO_ACTIVE_LOW.
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    spi0 {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        adc@0 {
+> > +            compatible =3D "adi,ad7780";
+> > +            reg =3D <0>;
+> > +
+> > +            avdd-supply      =3D <&vdd_supply>;
+> > +            powerdown-gpios  =3D <&gpio0 12 GPIO_ACTIVE_HIGH>;
+> > +            adi,gain-gpios   =3D <&gpio1  5 GPIO_ACTIVE_LOW>;
+> > +            adi,filter-gpios =3D <&gpio2 15 GPIO_ACTIVE_LOW>;
+> > +        };
+> > +    };
