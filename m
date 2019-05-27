@@ -1,115 +1,105 @@
-From: Pankaj Bansal <pankaj.bansal@nxp.com>
-Subject: RE: [PATCH] arm64: dts: fsl: ls1046: Modify the qspi flash frequency
-Date: Mon, 27 May 2019 06:12:28 +0000
-Message-ID: <VI1PR0401MB24966C5BB07836D5FA00BC12F11D0@VI1PR0401MB2496.eurprd04.prod.outlook.com>
-References: <20190521150336.8409-1-pankaj.bansal@nxp.com>
- <20190523124806.GU9261@dragon>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+Date: Mon, 27 May 2019 06:18:30 +0000
+Message-ID: <AM0PR04MB4481A7076D94A55BD48F8ACC881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190523060437.11059-1-peng.fan@nxp.com>
+ <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
+ <20190524175658.GA5045@e107155-lin>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190523124806.GU9261@dragon>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190524175658.GA5045@e107155-lin>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mingkai Hu <mingkai.hu@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-HI Shawn,
+Hi Sudeep,
 
-> -----Original Message-----
-> From: Shawn Guo <shawnguo@kernel.org>
-> Sent: Thursday, 23 May, 2019 06:18 PM
-> To: Pankaj Bansal <pankaj.bansal@nxp.com>
-> Cc: Leo Li <leoyang.li@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Rajesh
-> Bhagat <rajesh.bhagat@nxp.com>; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org
-> Subject: Re: [PATCH] arm64: dts: fsl: ls1046: Modify the qspi flash frequency
-> 
-> On Tue, May 21, 2019 at 09:40:09AM +0000, Pankaj Bansal wrote:
-> > The qspi flash in ls1046a based QDS and RDB boards can operate at
-> > 50MHz frequency.
-> > Therefore, update the maximum supported freq in their respective dts
-> > files.
+> Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+>=20
+> On Thu, May 23, 2019 at 10:30:50AM -0700, Florian Fainelli wrote:
+> > Hi,
 > >
-> > Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
-> 
-> Do not use base64 encoding for patch posting.
+> > On 5/22/19 10:50 PM, Peng Fan wrote:
+> > > This is a modified version from Andre Przywara's patch series
+> > >
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
+ke
+> rnel.org%2Fpatchwork%2Fcover%2F812997%2F&amp;data=3D02%7C01%7Cpe
+> ng.fan%40nxp.com%7Cfa2ba15f479b49eb219f08d6e0713ea3%7C686ea1d3b
+> c2b4c6fa92cd99c5c301635%7C0%7C0%7C636943174355592142&amp;sdat
+> a=3DY94rnxDEoMm9nyRyjJrYBqRduc5XkvvQhno7zfIQ%2B04%3D&amp;reserve
+> d=3D0.
+> > > [1] is a draft implementation of i.MX8MM SCMI ATF implementation
+> > > that use smc as mailbox, power/clk is included, but only part of clk
+> > > has been implemented to work with hardware, power domain only
+> > > supports get name for now.
+> > >
+> > > The traditional Linux mailbox mechanism uses some kind of dedicated
+> > > hardware IP to signal a condition to some other processing unit,
+> > > typically a dedicated management processor.
+> > > This mailbox feature is used for instance by the SCMI protocol to
+> > > signal a request for some action to be taken by the management
+> processor.
+> > > However some SoCs does not have a dedicated management core to
+> > > provide those services. In order to service TEE and to avoid linux
+> > > shutdown power and clock that used by TEE, need let firmware to
+> > > handle power and clock, the firmware here is ARM Trusted Firmware
+> > > that could also run SCMI service.
+> > >
+> > > The existing SCMI implementation uses a rather flexible shared
+> > > memory region to communicate commands and their parameters, it still
+> > > requires a mailbox to actually trigger the action.
+> >
+> > We have had something similar done internally with a couple of minor
+> > differences:
+> >
+> > - a SGI is used to send SCMI notifications/delayed replies to support
+> > asynchronism (patches are in the works to actually add that to the
+> > Linux SCMI framework). There is no good support for SGI in the kernel
+> > right now so we hacked up something from the existing SMP code and
+> > adding the ability to register our own IPI handlers (SHAME!). Using a
+> > PPI should work and should allow for using request_irq() AFAICT.
+> >
+>=20
+> We have been thinking this since we were asked if SMC can be transport.
+> Generally out of 16 SGIs, 8 are reserved for secure side and non-secure h=
+as 8.
+> Of these 8, IIUC 7 is already being used by kernel. So unless we manage t=
+o get
+> the last one reserved exclusive to SCMI, it makes it difficult to add SGI=
+ support
+> in SCMI.
+>=20
+> We have been telling partners/vendors about this limitation if they use S=
+MC
+> as transport and need to have dedicated h/w interrupt for the notificatio=
+ns.
 
-I did not understand this comment? Do you want me to change something in patch?
-I had run checkpatch script on the patch before sending and it did not report any waning or error.
-Can this patch not be merged in current tree ?
+This is an option, and we could add optional property.
 
-> 
-> Shawn
-> 
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts | 4 ++--
-> > arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 5 +++--
-> >  2 files changed, 5 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-> > b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-> > index eec62c63dafe..e441dbfbfb81 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-> > @@ -3,7 +3,7 @@
-> >   * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-> >   *
-> >   * Copyright 2016 Freescale Semiconductor, Inc.
-> > - * Copyright 2018 NXP
-> > + * Copyright 2018-2019 NXP
-> >   *
-> >   * Shaohui Xie <Shaohui.Xie@nxp.com>
-> >   */
-> > @@ -169,7 +169,7 @@
-> >  		compatible = "spansion,m25p80";
-> >  		#address-cells = <1>;
-> >  		#size-cells = <1>;
-> > -		spi-max-frequency = <20000000>;
-> > +		spi-max-frequency = <50000000>;
-> >  		spi-rx-bus-width = <4>;
-> >  		spi-tx-bus-width = <4>;
-> >  		reg = <0>;
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> > b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> > index 6a6514d0e5a9..6f5411d09bb9 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> > @@ -3,6 +3,7 @@
-> >   * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-> >   *
-> >   * Copyright 2016 Freescale Semiconductor, Inc.
-> > + * Copyright 2019 NXP
-> >   *
-> >   * Mingkai Hu <mingkai.hu@nxp.com>
-> >   */
-> > @@ -105,7 +106,7 @@
-> >  		compatible = "spansion,m25p80";
-> >  		#address-cells = <1>;
-> >  		#size-cells = <1>;
-> > -		spi-max-frequency = <20000000>;
-> > +		spi-max-frequency = <50000000>;
-> >  		spi-rx-bus-width = <4>;
-> >  		spi-tx-bus-width = <4>;
-> >  		reg = <0>;
-> > @@ -115,7 +116,7 @@
-> >  		compatible = "spansion,m25p80";
-> >  		#address-cells = <1>;
-> >  		#size-cells = <1>;
-> > -		spi-max-frequency = <20000000>;
-> > +		spi-max-frequency = <50000000>;
-> >  		spi-rx-bus-width = <4>;
-> >  		spi-tx-bus-width = <4>;
-> >  		reg = <1>;
-> > --
-> > 2.17.1
-> >
+>=20
+> Another issue could be with virtualisation(using HVC) and EL handling so =
+called
+> SCMI SGI. We need to think about those too.=20
+
+Using dedicated HW for virtualization that support vcpu scheduling might be
+not a good choice, do you mean this? Dedicated pin vcpu to pcpu should be f=
+ine,
+just like jailhouse hypervisor.
+
+I will try to get more info on this
+> and come back on this.
+
+Looking forward.
+
+Thanks,
+Peng.
+
+>=20
+> --
+> Regards,
+> Sudeep
