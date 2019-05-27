@@ -1,53 +1,82 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [RESEND PATCH v5 4/5] ARM: dts: da850-evm: enable cpufreq
-Date: Mon, 27 May 2019 10:22:58 +0200
-Message-ID: <20190527082259.29237-5-brgl@bgdev.pl>
-References: <20190527082259.29237-1-brgl@bgdev.pl>
+From: Andy Tang <andy.tang@nxp.com>
+Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: Add temperature sensor node
+Date: Mon, 27 May 2019 08:27:26 +0000
+Message-ID: <VI1PR04MB4333A3E635CFDBD860D3061DF31D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+References: <20190524012151.31840-1-andy.tang@nxp.com>
+ <CADRPPNRYwq0NABXobC1jQrT3QMxxm+e6zvoNwoZ-fu6NU9qDMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190527082259.29237-1-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CADRPPNRYwq0NABXobC1jQrT3QMxxm+e6zvoNwoZ-fu6NU9qDMA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leo Li <leoyang.li@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN
+ FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM
+ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-tps65070 pmic with configurable output voltage. By default da850-evm
-boards support frequencies up to 375MHz so enable this operating
-point.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Adam Ford <aford173@gmail.com>
----
- arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index f04bc3e15332..f94bb38fdad9 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -191,6 +191,19 @@
- 	};
- };
- 
-+&cpu {
-+	cpu-supply = <&vdcdc3_reg>;
-+};
-+
-+/*
-+ * The standard da850-evm kits and SOM's are 375MHz so enable this operating
-+ * point by default. Higher frequencies must be enabled for custom boards with
-+ * other variants of the SoC.
-+ */
-+&opp_375 {
-+	status = "okay";
-+};
-+
- &sata {
- 	status = "okay";
- };
--- 
-2.21.0
+SGkgTGVvLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExpIFlhbmcg
+PGxlb3lhbmcubGlAbnhwLmNvbT4NCj4gU2VudDogMjAxOeW5tDXmnIgyNeaXpSA2OjMyDQo+IFRv
+OiBBbmR5IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxzaGF3bmd1
+b0BrZXJuZWwub3JnPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47DQo+IE1hcmsg
+UnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVND
+QUxFDQo+IElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmc+Ow0KPiBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVE
+IERFVklDRSBUUkVFIEJJTkRJTkdTDQo+IDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IGxr
+bWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBb
+UEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6IEFkZCB0ZW1wZXJhdHVyZSBzZW5zb3INCj4gbm9k
+ZQ0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiBUaHUsIE1heSAyMywgMjAxOSBh
+dCA4OjMwIFBNIFl1YW50aWFuIFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4g
+Pg0KPiA+IEFkZCBueHAgc2E1NjAwNCBjaGlwIG5vZGUgZm9yIHRlbXBlcmF0dXJlIG1vbml0b3Iu
+DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZdWFudGlhbiBUYW5nIDxhbmR5LnRhbmdAbnhwLmNv
+bT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAy
+OGEtcWRzLmR0cyB8IDUgKysrKysNCj4gPiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9m
+c2wtbHMxMDI4YS1yZGIuZHRzIHwgNSArKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDEwIGlu
+c2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+ID4gaW5kZXggYjM1OTA2OGQ5NjA1Li4zMWZk
+NjI2ZGQzNDQgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
+ZnNsLWxzMTAyOGEtcWRzLmR0cw0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
+YWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCj4gPiBAQCAtMTMxLDYgKzEzMSwxMSBAQA0KPiA+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhdG1lbCwyNGM1MTIi
+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4NTc+Ow0KPiA+
+ICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIHRlbXBANGMgew0KPiANCj4gVGhlIHJlY29tbWVuZGVkIG5hbWUgZm9yIHRlbXBlcmF0
+dXJlIHNlbm9yIGluIGR0cyBzcGVjIGlzDQo+IHRlbXBlcmF0dXJlLXNlbnNvci4NCkkgZGlkbid0
+IGZpbmQgdGhlIHNwZWMgZm9yIHRoaXMgcmVjb21tZW5kYXRpb24uIENvdWxkIHlvdSBwbGVhc2Ug
+cHJvdmlkZSB0aGUgbGluaz8NCkkgbGlrZSB0byB1cGRhdGUgaXQgdG8gdGVtcC1zZW5zb3IgdGhv
+dWdoLg0KDQo+IA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJs
+ZSA9ICJueHAsc2E1NjAwNCI7DQo+IA0KPiBUaGUgYmluZGluZyBzYXlzIHRoZSBmb2xsb3dpbmcg
+cHJvcGVydHkgaXMgcmVxdWlyZWQuICBJZiBpdCBpcyBub3QgdGhlIGNhc2UsDQo+IHByb2JhYmx5
+IHdlIHNob3VsZCB1cGRhdGUgdGhlIGJpbmRpbmcuDQo+IC0gdmNjLXN1cHBseTogdmNjIHJlZ3Vs
+YXRvciBmb3IgdGhlIHN1cHBseSB2b2x0YWdlLg0KSSB3aWxsIGFkZCB0aGUgdmNjLXN1cHBseSB0
+byBjb21wbHkgdGhpcyByZXF1aXJlbWVudC4NCg0KVGhhbmtzLA0KQW5keQ0KPiANCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDRjPjsNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICB9Ow0KPiA+ICAgICAgICAgICAgICAgICB9Ow0KPiA+DQo+ID4gICAgICAg
+ICAgICAgICAgIGkyY0A1IHsNCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiA+IGluZGV4IGY5YzI3MmZiMDczOC4uMDEy
+YjNmODY5NmI3IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
+L2ZzbC1sczEwMjhhLXJkYi5kdHMNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
+Y2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzDQo+ID4gQEAgLTExOSw2ICsxMTksMTEgQEANCj4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibnhwLHBjZjIxMjki
+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4NTE+Ow0KPiA+
+ICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIHRlbXBANGMgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29t
+cGF0aWJsZSA9ICJueHAsc2E1NjAwNCI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICByZWcgPSA8MHg0Yz47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiAg
+ICAgICAgICAgICAgICAgfTsNCj4gPiAgICAgICAgIH07DQo+ID4gIH07DQo+ID4gLS0NCj4gPiAy
+LjE3LjENCj4gPg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtYXJtLWtlcm5lbAo=
