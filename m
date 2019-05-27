@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 05/10] dt-bindings: rtc: sun6i: Add the R40 RTC compatible
-Date: Mon, 27 May 2019 14:00:37 +0200
-Message-ID: <8be02c659fe4191dbf1d3c8dcb1ded8ff92e2dda.1558958381.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 10/10] ARM: dts: r40: Change the RTC compatible
+Date: Mon, 27 May 2019 14:00:42 +0200
+Message-ID: <834199999676fdb119f3aa1966eb1b1d1391f347.1558958381.git-series.maxime.ripard@bootlin.com>
 References: <290402405a34506997fd2fab2c4c1486dbe6b7e5.1558958381.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,70 +21,36 @@ To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutlan
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The R40 has a pretty different RTC compared to the other SoCs we've
-encountered so far, the most important difference being that it now has
-only a single interrupt, compared to the previous SoCs having two.
-
-Let's add a compatible for that.
+Unlike what's being reported in the device tree so far, the RTC in the R40
+is quite different from the H3. Indeed it doesn't have the internal
+oscillator output, and it has only a single interrupt. Let's add a
+compatible for it.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm/boot/dts/sun8i-r40.dtsi | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
-index 942ddfc1689d..924622f39c44 100644
---- a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
-+++ b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
-@@ -19,6 +19,7 @@ properties:
-       - const: allwinner,sun6i-a31-rtc
-       - const: allwinner,sun8i-a23-rtc
-       - const: allwinner,sun8i-h3-rtc
-+      - const: allwinner,sun8i-r40-rtc
-       - const: allwinner,sun8i-v3-rtc
-       - const: allwinner,sun50i-h5-rtc
-       - items:
-@@ -29,6 +30,8 @@ properties:
-     maxItems: 1
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index bb856e53b806..96fe39f27f24 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -318,13 +318,12 @@
+ 		};
  
-   interrupts:
-+    minItems: 1
-+    maxItems: 2
-     items:
-       - description: RTC Alarm 0
-       - description: RTC Alarm 1
-@@ -66,6 +69,7 @@ allOf:
-           contains:
-             enum:
-               - allwinner,sun8i-a23-rtc
-+              - allwinner,sun8i-r40-rtc
-               - allwinner,sun8i-v3-rtc
+ 		rtc: rtc@1c20400 {
+-			compatible = "allwinner,sun8i-r40-rtc",
+-				     "allwinner,sun8i-h3-rtc";
++			#clock-cells = <1>;
++			compatible = "allwinner,sun8i-r40-rtc";
+ 			reg = <0x01c20400 0x400>;
+ 			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+-			clock-output-names = "osc32k", "osc32k-out";
+ 			clocks = <&osc32k>;
+-			#clock-cells = <1>;
++			clock-output-names = "osc32k", "osc32k-out";
+ 		};
  
-     then:
-@@ -88,6 +92,24 @@ allOf:
-           minItems: 3
-           maxItems: 3
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun8i-r40-rtc
-+
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 1
-+          maxItems: 1
-+
-+    else:
-+      properties:
-+        interrupts:
-+          minItems: 2
-+          maxItems: 2
-+
- required:
-   - "#clock-cells"
-   - compatible
+ 		pio: pinctrl@1c20800 {
 -- 
 git-series 0.9.1
