@@ -1,75 +1,92 @@
-From: yibin.gong@nxp.com
-Subject: [PATCH v2 4/7] dmaengine: fsl-edma-common: version check for v2 instead
-Date: Mon, 27 May 2019 16:51:15 +0800
-Message-ID: <20190527085118.40423-5-yibin.gong@nxp.com>
-References: <20190527085118.40423-1-yibin.gong@nxp.com>
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: [PATCH v11 0/6] Add basic node support for Mediatek MT8183 SoC
+Date: Mon, 27 May 2019 17:04:41 +0800
+Message-ID: <1558947887-31084-1-git-send-email-erin.lo@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190527085118.40423-1-yibin.gong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, mark.rutland@arm.com, vkoul@kernel.org, dan.j.williams@intel.com
-Cc: linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, erin.lo@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+MT8183 is a SoC based on 64bit ARMv8 architecture.
+It contains 4 CA53 and 4 CA73 cores.
+MT8183 share many HW IP with MT65xx series.
+This patchset was tested on MT8183 evaluation board and use correct clock to shell.
 
-The next v3 i.mx7ulp edma is based on v1, so change version
-check logic for v2 instead.
+Based on v5.2-rc1
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
- drivers/dma/fsl-edma-common.c | 40 ++++++++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+Change in v11:
+New add spi node, efuse node, pinctrl node, auxadc node, and capacity-dmips-mhz field
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index bb24251..45d70d3 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -657,26 +657,26 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
- 	edma->regs.erql = edma->membase + EDMA_ERQ;
- 	edma->regs.eeil = edma->membase + EDMA_EEI;
- 
--	edma->regs.serq = edma->membase + ((edma->version == v1) ?
--			EDMA_SERQ : EDMA64_SERQ);
--	edma->regs.cerq = edma->membase + ((edma->version == v1) ?
--			EDMA_CERQ : EDMA64_CERQ);
--	edma->regs.seei = edma->membase + ((edma->version == v1) ?
--			EDMA_SEEI : EDMA64_SEEI);
--	edma->regs.ceei = edma->membase + ((edma->version == v1) ?
--			EDMA_CEEI : EDMA64_CEEI);
--	edma->regs.cint = edma->membase + ((edma->version == v1) ?
--			EDMA_CINT : EDMA64_CINT);
--	edma->regs.cerr = edma->membase + ((edma->version == v1) ?
--			EDMA_CERR : EDMA64_CERR);
--	edma->regs.ssrt = edma->membase + ((edma->version == v1) ?
--			EDMA_SSRT : EDMA64_SSRT);
--	edma->regs.cdne = edma->membase + ((edma->version == v1) ?
--			EDMA_CDNE : EDMA64_CDNE);
--	edma->regs.intl = edma->membase + ((edma->version == v1) ?
--			EDMA_INTR : EDMA64_INTL);
--	edma->regs.errl = edma->membase + ((edma->version == v1) ?
--			EDMA_ERR : EDMA64_ERRL);
-+	edma->regs.serq = edma->membase + ((edma->version == v2) ?
-+			EDMA64_SERQ : EDMA_SERQ);
-+	edma->regs.cerq = edma->membase + ((edma->version == v2) ?
-+			EDMA64_CERQ : EDMA_CERQ);
-+	edma->regs.seei = edma->membase + ((edma->version == v2) ?
-+			EDMA64_SEEI : EDMA_SEEI);
-+	edma->regs.ceei = edma->membase + ((edma->version == v2) ?
-+			EDMA64_CEEI : EDMA_CEEI);
-+	edma->regs.cint = edma->membase + ((edma->version == v2) ?
-+			EDMA64_CINT : EDMA_CINT);
-+	edma->regs.cerr = edma->membase + ((edma->version == v2) ?
-+			EDMA64_CERR : EDMA_CERR);
-+	edma->regs.ssrt = edma->membase + ((edma->version == v2) ?
-+			EDMA64_SSRT : EDMA_SSRT);
-+	edma->regs.cdne = edma->membase + ((edma->version == v2) ?
-+			EDMA64_CDNE : EDMA_CDNE);
-+	edma->regs.intl = edma->membase + ((edma->version == v2) ?
-+			EDMA64_INTL : EDMA_INTR);
-+	edma->regs.errl = edma->membase + ((edma->version == v2) ?
-+			EDMA64_ERRL : EDMA_ERR);
- 
- 	if (edma->version == v2) {
- 		edma->regs.erqh = edma->membase + EDMA64_ERQH;
--- 
-2.7.4
+Change in v10:
+Add the L2 cache node to prevent warning on unable to detect cache
+hierarchy.
+
+Change in v9:
+Remove pio node since binding is not documented yet
+
+Change in v8:
+1. Fix interrupt-parent of pio node
+2. Remove pinfunc.h and spi node patches
+
+Change in v7:
+1. Place all the MMIO peripherals under one or more simple-bus nodes
+2. Make the pinfunc.h and spi node into seperate patch
+3. Modify SPIs pamerater from 4 back to 3
+   and remove patch "support 4 interrupt parameters for sysirq"
+4. Rename intpol-controller to interrupt-controller
+5. Rename pinctrl@1000b000 to pinctrl@10005000
+
+Change in v6:
+1. Remove power and iommu nodes
+2. Fix dtb build warning
+3. Fix pinctrl binding doc
+4. Fix '_' in node names
+
+Change in v5:
+1. Collect all device tree nodes to the last patch
+2. Add PMU
+3. Add Signed-off-by
+4. Remove clock driver code and binding doc
+5. Add pinctrl, iommu, spi, and pwrap nodes
+
+Change in v4:
+1. Correct syntax error in dtsi
+2. Add MT8183 clock support
+
+Change in v3:
+1. Fill out GICC, GICH, GICV regions
+2. Update Copyright to 2018
+
+Change in v2:
+1. Split dt-bindings into different patches
+2. Correct bindings for supported SoCs (mtk-uart.txt)
+
+Ben Ho (1):
+  arm64: dts: Add Mediatek SoC MT8183 and evaluation board dts and
+    Makefile
+
+Erin Lo (1):
+  arm64: dts: mt8183: add spi node
+
+Hsin-Yi, Wang (1):
+  arm64: dts: mt8183: add capacity-dmips-mhz
+
+Michael Mei (1):
+  arm64: dts: mt8183: add efuse and Mediatek Chip id node to read
+
+Zhiyong Tao (2):
+  arm64: dts: mt8183: add pinctrl device node
+  arm64: dts: mt8183: Add auxadc device node
+
+ arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 140 ++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 447 ++++++++++++++++++++
+ 3 files changed, 588 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
+
+--
+1.8.1.1.dirty
