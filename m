@@ -1,14 +1,11 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v6 2/6] net: stmmac: sun8i: force select
- external PHY when no internal one
-Date: Mon, 27 May 2019 18:22:33 +0200
-Message-ID: <20190527162237.18495-3-megous@megous.com>
-References: <20190527162237.18495-1-megous@megous.com>
+Subject: [PATCH v6 0/6] Add support for Orange Pi 3
+Date: Mon, 27 May 2019 18:22:31 +0200
+Message-ID: <20190527162237.18495-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBUM5WDTQKGQEUI2LUAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20190527162237.18495-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBUE5WDTQKGQEGG364PY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -16,43 +13,93 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-The PHY selection bit also exists on SoCs without an internal PHY; if it's
-set to 1 (internal PHY, default value) then the MAC will not make use of
-any PHY such SoCs.
+This series implements support for Xunlong Orange Pi 3 board.
 
-This problem appears when adapting for H6, which has no real internal PHY
-(the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
-connected via RMII interface at GPIO bank A).
+Unfortunately, this board needs some small driver patches, so I have
+split the boards DT patch into chunks that require patches for drivers
+in various subsystems.
 
-Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
-to address the problem of a wrong default value.
+Suggested merging plan/dependencies:
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 5 +++++
- 1 file changed, 5 insertions(+)
+- stmmac patches are needed for ethernet support (patches 1-3)
+  - these should be ready now
+- HDMI support (patches 4-6)
+  - should be ready
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index 3258dec84d55..0484c289f328 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -907,6 +907,11 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 		 * address. No need to mask it again.
- 		 */
- 		reg |= 1 << H3_EPHY_ADDR_SHIFT;
-+	} else {
-+		/* For SoCs without internal PHY the PHY selection bit should be
-+		 * set to 0 (external PHY).
-+		 */
-+		reg &= ~H3_EPHY_SELECT;
- 	}
- 
- 	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
+Changes in v2:
+- added dt-bindings documentation for the board's compatible string
+  (suggested by Clement)
+- addressed checkpatch warnings and code formatting issues (on Maxime's
+  suggestions)
+- stmmac: dropped useless parenthesis, reworded description of the patch
+  (suggested by Sergei)
+- drop useles dev_info() about the selected io bias voltage
+- docummented io voltage bias selection variant macros
+- wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
+  because wifi depends on H6 RTC support that's not merged yet (suggested
+  by Clement)
+- added missing signed-of-bys
+- changed &usb2otg dr_mode to otg, and added a note about VBUS
+- improved wording of HDMI driver's DDC power supply patch
+
+Changes in v3:
+- dropped already applied patches
+- changed pinctrl I/O bias selection constants to enum and renamed
+- added /omit-if-no-ref/ to mmc1_pins
+- made mmc1_pins default pinconf for mmc1 in H6 dtsi
+- move ddc-supply to HDMI connector node, updated patch descriptions,
+  changed dt-bindings docs
+
+Changes in v4:
+- fix checkpatch warnings/style issues
+- use enum in struct sunxi_desc_function for io_bias_cfg_variant
+- collected acked-by's
+- fix compile error in drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c:156
+  caused by missing conversion from has_io_bias_cfg struct member
+  (I've kept the acked-by, because it's a trivial change, but feel free
+  to object.) (reported by Martin A. on github)
+  I did not have A80 pinctrl enabled for some reason, so I did not catch
+  this sooner.
+- dropped brcm firmware patch (was already applied)
+- dropped the wifi dts patch (will re-send after H6 RTC gets merged,
+  along with bluetooth support, in a separate series)
+
+Changes in v5:
+- dropped already applied patches (pinctrl patches, mmc1 pinconf patch)
+- rename GMAC-3V3 -> GMAC-3V to match the schematic (Jagan)
+- changed hdmi-connector's ddc-supply property to ddc-en-gpios
+  (Rob Herring)
+
+Changes in v6:
+- added dt-bindings reviewed-by tag
+- fix wording in stmmac commit (as suggested by Sergei)
+
+Please take a look.
+
+thank you and regards,
+  Ondrej Jirman
+
+Icenowy Zheng (2):
+  net: stmmac: sun8i: add support for Allwinner H6 EMAC
+  net: stmmac: sun8i: force select external PHY when no internal one
+
+Ondrej Jirman (4):
+  arm64: dts: allwinner: orange-pi-3: Enable ethernet
+  dt-bindings: display: hdmi-connector: Support DDC bus enable
+  drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
+  arm64: dts: allwinner: orange-pi-3: Enable HDMI output
+
+ .../display/connector/hdmi-connector.txt      |  1 +
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 70 +++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         | 55 ++++++++++++++-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  3 +
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 21 ++++++
+ 5 files changed, 147 insertions(+), 3 deletions(-)
+
 -- 
 2.21.0
