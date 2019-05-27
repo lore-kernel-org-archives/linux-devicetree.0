@@ -1,251 +1,158 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 01/10] dt-bindings: rtc: Move trivial RTC over to trivial
- devices
-Date: Mon, 27 May 2019 14:06:26 +0200
-Message-ID: <20190527120626.GM3274@piout.net>
-References: <290402405a34506997fd2fab2c4c1486dbe6b7e5.1558958381.git-series.maxime.ripard@bootlin.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH] dt-bindings: display: Convert Allwinner DSI to a schema
+Date: Mon, 27 May 2019 14:09:10 +0200
+Message-ID: <20190527120910.18964-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <290402405a34506997fd2fab2c4c1486dbe6b7e5.1558958381.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <seanpaul@chromium.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/05/2019 14:00:33+0200, Maxime Ripard wrote:
-> The RTC generic bindings has a bunch of devices that have a pretty simple
-> binding, with just compatible, reg and optional interrupts properties.
-> =
-
-
-This is not true, they all also support the star-year property, this is
-why they are not in the trivial-devices file anymore.
-
-> This is exactly what the trivial devices YAML schema has been created for,
-> so let's move those devices there.
-> =
-
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/rtc/rtc.txt          | 39 +--------
->  Documentation/devicetree/bindings/trivial-devices.yaml | 54 +++++++++++-
->  2 files changed, 54 insertions(+), 39 deletions(-)
-> =
-
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentatio=
-n/devicetree/bindings/rtc/rtc.txt
-> index a97fc6a9a75e..234bd2af1830 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-> @@ -31,42 +31,3 @@ below.
->                              expressed in femto Farad (fF).
->                              The default value shall be listed (if option=
-al),
->                              and likewise all valid values.
-> -
-> -Trivial RTCs
-> -------------
-> -
-> -This is a list of trivial RTC devices that have simple device tree
-> -bindings, consisting only of a compatible field, an address and
-> -possibly an interrupt line.
-> -
-> -
-> -Compatible		Vendor / Chip
-> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D		=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -abracon,abb5zes3	AB-RTCMC-32.768kHz-B5ZE-S3: Real Time Clock/Calendar Mo=
-dule with I2C Interface
-> -abracon,abeoz9		AB-RTCMC-32.768kHz-EOZ9: Real Time Clock/Calendar Module=
- with I2C Interface
-> -dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Char=
-ger and Reset Input/Output
-> -dallas,ds1672		Dallas DS1672 Real-time Clock
-> -dallas,ds3232		Extremely Accurate I=B2C RTC with Integrated Crystal and =
-SRAM
-> -epson,rx8010		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
-> -epson,rx8571		I2C-BUS INTERFACE REAL TIME CLOCK MODULE with Battery Back=
-ed RAM
-> -epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
-> -emmicro,em3027		EM Microelectronic EM3027 Real-time Clock
-> -isil,isl1208		Intersil ISL1208 Low Power RTC with Battery Backed SRAM
-> -isil,isl1218		Intersil ISL1218 Low Power RTC with Battery Backed SRAM
-> -isil,isl12022		Intersil ISL12022 Real-time Clock
-> -microcrystal,rv3028	Real Time Clock Module with I2C-Bus
-> -microcrystal,rv3029	Real Time Clock Module with I2C-Bus
-> -microcrystal,rv8523	Real Time Clock
-> -nxp,pcf2127		Real-time clock
-> -nxp,pcf2129		Real-time clock
-> -nxp,pcf8563		Real-time clock/calendar
-> -pericom,pt7c4338	Real-time Clock Module
-> -ricoh,r2025sd		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> -ricoh,r2221tl		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> -ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> -ricoh,rs5c372b		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> -ricoh,rv5c386		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> -ricoh,rv5c387a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> -sii,s35390a		2-wire CMOS real-time clock
-> -whwave,sd3078		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> -xircom,x1205		Xircom X1205 I2C RTC
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Doc=
-umentation/devicetree/bindings/trivial-devices.yaml
-> index 747fd3f689dc..96035c5970d8 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> @@ -26,6 +26,10 @@ properties:
->    compatible:
->      items:
->        - enum:
-> +            # AB-RTCMC-32.768kHz-B5ZE-S3: Real Time Clock/Calendar Modul=
-e with I2C Interface
-> +          - abracon,abb5zes3
-> +            # AB-RTCMC-32.768kHz-EOZ9: Real Time Clock/Calendar Module w=
-ith I2C Interface
-> +          - abracon,abeoz9
->              # SMBus/I2C Digital Temperature Sensor in 6-Pin SOT with SMB=
-us Alert and Over Temperature Pin
->            - ad,ad7414
->              # ADM9240:  Complete System Hardware Monitor for uProcessor-=
-Based Systems
-> @@ -56,12 +60,18 @@ properties:
->            - capella,cm32181
->              # CM3232: Ambient Light Sensor
->            - capella,cm3232
-> +            # I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charg=
-er and Reset Input/Output
-> +          - dallas,ds1374
->              # High-Precision Digital Thermometer
->            - dallas,ds1631
-> +            # Dallas DS1672 Real-time Clock
-> +          - dallas,ds1672
->              # Total-Elapsed-Time Recorder with Alarm
->            - dallas,ds1682
->              # Tiny Digital Thermometer and Thermostat
->            - dallas,ds1775
-> +            # Extremely Accurate I=B2C RTC with Integrated Crystal and S=
-RAM
-> +          - dallas,ds3232
->              # CPU Supervisor with Nonvolatile Memory and Programmable I/O
->            - dallas,ds4510
->              # Digital Thermometer and Thermostat
-> @@ -80,6 +90,12 @@ properties:
->            - domintech,dmard09
->              # DMARD10: 3-axis Accelerometer
->            - domintech,dmard10
-> +            # I2C-BUS INTERFACE REAL TIME CLOCK MODULE
-> +          - epson,rx8010
-> +            # I2C-BUS INTERFACE REAL TIME CLOCK MODULE with Battery Back=
-ed RAM
-> +          - epson,rx8571
-> +            # I2C-BUS INTERFACE REAL TIME CLOCK MODULE
-> +          - epson,rx8581
->              # MMA7660FC: 3-Axis Orientation/Motion Detection Sensor
->            - fsl,mma7660
->              # MMA8450Q: Xtrinsic Low-power, 3-axis Xtrinsic Accelerometer
-> @@ -100,6 +116,12 @@ properties:
->            - infineon,slb9645tt
->              # Infineon TLV493D-A1B6 I2C 3D Magnetic Sensor
->            - infineon,tlv493d-a1b6
-> +            # Intersil ISL1208 Low Power RTC with Battery Backed SRAM
-> +          - isil,isl1208
-> +            # Intersil ISL1218 Low Power RTC with Battery Backed SRAM
-> +          - isil,isl1218
-> +            # Intersil ISL12022 Real-time Clock
-> +          - isil,isl12022
->              # Intersil ISL29028 Ambient Light and Proximity Sensor
->            - isil,isl29028
->              # Intersil ISL29030 Ambient Light and Proximity Sensor
-> @@ -274,6 +296,12 @@ properties:
->            - microchip,tc654
->              # PWM Fan Speed Controller With Fan Fault Detection
->            - microchip,tc655
-> +            # Real Time Clock Module with I2C-Bus
-> +          - microcrystal,rv3028
-> +            # Real Time Clock Module with I2C-Bus
-> +          - microcrystal,rv3029
-> +            # Real Time Clock
-> +          - microcrystal,rv8523
->              # MiraMEMS DA226 2-axis 14-bit digital accelerometer
->            - miramems,da226
->              # MiraMEMS DA280 3-axis 14-bit digital accelerometer
-> @@ -300,18 +328,40 @@ properties:
->            - nxp,pca9556
->              # 8-bit I2C-bus and SMBus I/O port with reset
->            - nxp,pca9557
-> +            # Real-time clock
-> +          - nxp,pcf2127
-> +            # Real-time clock
-> +          - nxp,pcf2129
-> +            # Real-time clock/calendar
-> +          - nxp,pcf8563
->              # OKI ML86V7667 video decoder
->            - oki,ml86v7667
->              # OV5642: Color CMOS QSXGA (5-megapixel) Image Sensor with O=
-mniBSI and Embedded TrueFocus
->            - ovti,ov5642
-> +            # Real-time Clock Module
-> +          - pericom,pt7c4338
->              # 48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s) Switch
->            - plx,pex8648
->              # Pulsedlight LIDAR range-finding sensor
->            - pulsedlight,lidar-lite-v2
-> +            # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> +          - ricoh,r2025sd
-> +            # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> +          - ricoh,r2221tl
-> +            # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> +          - ricoh,rs5c372a
-> +            # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> +          - ricoh,rs5c372b
-> +            # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> +          - ricoh,rv5c386
-> +            # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> +          - ricoh,rv5c387a
->              # S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
->            - samsung,24ad0xd1
->              # SGX Sensortech VZ89X Sensors
->            - sgx,vz89x
-> +            # 2-wire CMOS real-time clock
-> +          - sii,s35390a
->              # Relative Humidity and Temperature Sensors
->            - silabs,si7020
->              # Skyworks SKY81452: Six-Channel White LED Driver with Touch=
- Panel Bias Supply
-> @@ -336,10 +386,14 @@ properties:
->            - ti,tmp103
->              # Digital Temperature Sensor
->            - ti,tmp275
-> +            # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> +          - whwave,sd3078
->              # Winbond/Nuvoton H/W Monitor
->            - winbond,w83793
->              # i2c trusted platform module (TPM)
->            - winbond,wpct301
-> +            # Xircom X1205 I2C RTC
-> +          - xircom,x1205
->  =
-
->  required:
->    - compatible
-> =
-
-> base-commit: 89d8c504132e4c247707ac92d4bf6bb6607461dd
-> -- =
-
-> git-series 0.9.1
-
--- =
-
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+VGhlIEFsbHdpbm5lciBTb0NzIGhhdmUgYSBNSVBJLURTSSBhbmQgTUlQSS1ELVBIWSBjb250cm9s
+bGVycyBzdXBwb3J0ZWQgaW4KTGludXgsIHdpdGggYSBtYXRjaGluZyBEZXZpY2UgVHJlZSBiaW5k
+aW5nLgoKTm93IHRoYXQgd2UgaGF2ZSB0aGUgRFQgdmFsaWRhdGlvbiBpbiBwbGFjZSwgbGV0J3Mg
+Y29udmVydCB0aGUgZGV2aWNlIHRyZWUKYmluZGluZ3MgZm9yIHRoYXQgY29udHJvbGxlciBvdmVy
+IHRvIGEgWUFNTCBzY2hlbWFzLgoKU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1l
+LnJpcGFyZEBib290bGluLmNvbT4KLS0tCiAuLi4vZGlzcGxheS9hbGx3aW5uZXIsc3VuNmktYTMx
+LW1pcGktZHNpLnlhbWwgfCAxMDAgKysrKysrKysrKysrKysrKysrCiAuLi4vYmluZGluZ3MvZGlz
+cGxheS9zdW54aS9zdW42aS1kc2kudHh0ICAgICAgfCAgOTMgLS0tLS0tLS0tLS0tLS0tLQogLi4u
+L3BoeS9hbGx3aW5uZXIsc3VuNmktYTMxLW1pcGktZHBoeS55YW1sICAgIHwgIDU3ICsrKysrKysr
+KysKIDMgZmlsZXMgY2hhbmdlZCwgMTU3IGluc2VydGlvbnMoKyksIDkzIGRlbGV0aW9ucygtKQog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2FsbHdpbm5lcixzdW42aS1hMzEtbWlwaS1kc2kueWFtbAogZGVsZXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N1bnhpL3N1bjZpLWRz
+aS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGh5L2FsbHdpbm5lcixzdW42aS1hMzEtbWlwaS1kcGh5LnlhbWwKCmRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbGx3aW5uZXIsc3VuNmkt
+YTMxLW1pcGktZHNpLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9hbGx3aW5uZXIsc3VuNmktYTMxLW1pcGktZHNpLnlhbWwKbmV3IGZpbGUgbW9kZSAxMDA2
+NDQKaW5kZXggMDAwMDAwMDAwMDAwLi40Nzk1MGZjZWQyOGQKLS0tIC9kZXYvbnVsbAorKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbGx3aW5uZXIsc3VuNmkt
+YTMxLW1pcGktZHNpLnlhbWwKQEAgLTAsMCArMSwxMDAgQEAKKyMgU1BEWC1MaWNlbnNlLUlkZW50
+aWZpZXI6IEdQTC0yLjAKKyVZQU1MIDEuMgorLS0tCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9y
+Zy9zY2hlbWFzL2Rpc3BsYXkvYWxsd2lubmVyLHN1bjZpLWEzMS1taXBpLWRzaS55YW1sIworJHNj
+aGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjCisKK3Rp
+dGxlOiBBbGx3aW5uZXIgQTMxIE1JUEktRFNJIENvbnRyb2xsZXIgRGV2aWNlIFRyZWUgQmluZGlu
+Z3MKKworbWFpbnRhaW5lcnM6CisgIC0gQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgorICAt
+IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+CisKK3Byb3BlcnRpZXM6
+CisgICIjYWRkcmVzcy1jZWxscyI6IHRydWUKKyAgIiNzaXplLWNlbGxzIjogdHJ1ZQorCisgIGNv
+bXBhdGlibGU6CisgICAgY29uc3Q6IGFsbHdpbm5lcixzdW42aS1hMzEtbWlwaS1kc2kKKworICBy
+ZWc6CisgICAgbWF4SXRlbXM6IDEKKworICBpbnRlcnJ1cHRzOgorICAgIG1heEl0ZW1zOiAxCisK
+KyAgY2xvY2tzOgorICAgIGl0ZW1zOgorICAgICAgLSBkZXNjcmlwdGlvbjogQnVzIENsb2NrCisg
+ICAgICAtIGRlc2NyaXB0aW9uOiBNb2R1bGUgQ2xvY2sKKworICBjbG9jay1uYW1lczoKKyAgICBp
+dGVtczoKKyAgICAgIC0gY29uc3Q6IGJ1cworICAgICAgLSBjb25zdDogbW9kCisKKyAgcmVzZXRz
+OgorICAgIG1heEl0ZW1zOiAxCisKKyAgcGh5czoKKyAgICBtYXhJdGVtczogMQorCisgIHBoeS1u
+YW1lczoKKyAgICBjb25zdDogZHBoeQorCisgIHBvcnQ6CisgICAgdHlwZTogb2JqZWN0CisgICAg
+ZGVzY3JpcHRpb246CisgICAgICBBIHBvcnQgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmluaXRpb25z
+IGFzIGRlZmluZWQgaW4KKyAgICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+ZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dC4gVGhhdAorICAgICAgcG9ydCBzaG91bGQgYmUgdGhl
+IGlucHV0IGVuZHBvaW50LCB1c3VhbGx5IGNvbWluZyBmcm9tIHRoZQorICAgICAgYXNzb2NpYXRl
+ZCBUQ09OLgorCitwYXR0ZXJuUHJvcGVydGllczoKKyAgIl5wYW5lbEBbMC05XSskIjogdHJ1ZQor
+CityZXF1aXJlZDoKKyAgLSAiI2FkZHJlc3MtY2VsbHMiCisgIC0gIiNzaXplLWNlbGxzIgorICAt
+IGNvbXBhdGlibGUKKyAgLSByZWcKKyAgLSBpbnRlcnJ1cHRzCisgIC0gY2xvY2tzCisgIC0gY2xv
+Y2stbmFtZXMKKyAgLSBwaHlzCisgIC0gcGh5LW5hbWVzCisgIC0gcmVzZXRzCisgIC0gcG9ydAor
+CithZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UKKworZXhhbXBsZXM6CisgIC0gfAorICAgIGRz
+aTA6IGRzaUAxY2EwMDAwIHsKKyAgICAgICAgY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuNmkt
+YTMxLW1pcGktZHNpIjsKKyAgICAgICAgcmVnID0gPDB4MDFjYTAwMDAgMHgxMDAwPjsKKyAgICAg
+ICAgaW50ZXJydXB0cyA9IDwwIDg5IDQ+OworICAgICAgICBjbG9ja3MgPSA8JmNjdSAyMz4sIDwm
+Y2N1IDk2PjsKKyAgICAgICAgY2xvY2stbmFtZXMgPSAiYnVzIiwgIm1vZCI7CisgICAgICAgIHJl
+c2V0cyA9IDwmY2N1IDQ+OworICAgICAgICBwaHlzID0gPCZkcGh5MD47CisgICAgICAgIHBoeS1u
+YW1lcyA9ICJkcGh5IjsKKyAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47CisgICAgICAgICNz
+aXplLWNlbGxzID0gPDA+OworCisgICAgICAgIHBhbmVsQDAgeworICAgICAgICAgICAgICAgIGNv
+bXBhdGlibGUgPSAiYmFuYW5hcGksbGhyMDUwaDQxIiwgImlsaXRlayxpbGk5ODgxYyI7CisgICAg
+ICAgICAgICAgICAgcmVnID0gPDA+OworICAgICAgICAgICAgICAgIHBvd2VyLWdwaW9zID0gPCZw
+aW8gMSA3IDA+OyAvKiBQQjA3ICovCisgICAgICAgICAgICAgICAgcmVzZXQtZ3Bpb3MgPSA8JnJf
+cGlvIDAgNSAxPjsgLyogUEwwNSAqLworICAgICAgICAgICAgICAgIGJhY2tsaWdodCA9IDwmcHdt
+X2JsPjsKKyAgICAgICAgfTsKKworICAgICAgICBwb3J0IHsKKyAgICAgICAgICAgIGRzaTBfaW5f
+dGNvbjA6IGVuZHBvaW50IHsKKyAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JnRj
+b24wX291dF9kc2kwPjsKKyAgICAgICAgICAgIH07CisgICAgICAgIH07CisgICAgfTsKKworLi4u
+CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9z
+dW54aS9zdW42aS1kc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvc3VueGkvc3VuNmktZHNpLnR4dApkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQKaW5kZXgg
+NmE2Y2Y1ZGUwOGIwLi4wMDAwMDAwMDAwMDAKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuNmktZHNpLnR4dAorKysgL2Rldi9udWxsCkBAIC0x
+LDkzICswLDAgQEAKLUFsbHdpbm5lciBBMzEgRFNJIEVuY29kZXIKLT09PT09PT09PT09PT09PT09
+PT09PT09PT0KLQotVGhlIERTSSBwaXBlbGluZSBjb25zaXN0cyBvZiB0d28gc2VwYXJhdGUgYmxv
+Y2tzOiB0aGUgRFNJIGNvbnRyb2xsZXIKLWl0c2VsZiwgYW5kIGl0cyBhc3NvY2lhdGVkIEQtUEhZ
+LgotCi1EU0kgRW5jb2RlcgotLS0tLS0tLS0tLS0KLQotVGhlIERTSSBFbmNvZGVyIGdlbmVyYXRl
+cyB0aGUgRFNJIHNpZ25hbCBmcm9tIHRoZSBUQ09OJ3MuCi0KLVJlcXVpcmVkIHByb3BlcnRpZXM6
+Ci0gIC0gY29tcGF0aWJsZTogdmFsdWUgbXVzdCBiZSBvbmUgb2Y6Ci0gICAgKiBhbGx3aW5uZXIs
+c3VuNmktYTMxLW1pcGktZHNpCi0gIC0gcmVnOiBiYXNlIGFkZHJlc3MgYW5kIHNpemUgb2YgbWVt
+b3J5LW1hcHBlZCByZWdpb24KLSAgLSBpbnRlcnJ1cHRzOiBpbnRlcnJ1cHQgYXNzb2NpYXRlZCB0
+byB0aGlzIElQCi0gIC0gY2xvY2tzOiBwaGFuZGxlcyB0byB0aGUgY2xvY2tzIGZlZWRpbmcgdGhl
+IERTSSBlbmNvZGVyCi0gICAgKiBidXM6IHRoZSBEU0kgaW50ZXJmYWNlIGNsb2NrCi0gICAgKiBt
+b2Q6IHRoZSBEU0kgbW9kdWxlIGNsb2NrCi0gIC0gY2xvY2stbmFtZXM6IHRoZSBjbG9jayBuYW1l
+cyBtZW50aW9uZWQgYWJvdmUKLSAgLSBwaHlzOiBwaGFuZGxlIHRvIHRoZSBELVBIWQotICAtIHBo
+eS1uYW1lczogbXVzdCBiZSAiZHBoeSIKLSAgLSByZXNldHM6IHBoYW5kbGUgdG8gdGhlIHJlc2V0
+IGNvbnRyb2xsZXIgZHJpdmluZyB0aGUgZW5jb2RlcgotCi0gIC0gcG9ydHM6IEEgcG9ydHMgbm9k
+ZSB3aXRoIGVuZHBvaW50IGRlZmluaXRpb25zIGFzIGRlZmluZWQgaW4KLSAgICBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuIFRoZQot
+ICAgIGZpcnN0IHBvcnQgc2hvdWxkIGJlIHRoZSBpbnB1dCBlbmRwb2ludCwgdXN1YWxseSBjb21p
+bmcgZnJvbSB0aGUKLSAgICBhc3NvY2lhdGVkIFRDT04uCi0KLUFueSBNSVBJLURTSSBkZXZpY2Ug
+YXR0YWNoZWQgdG8gdGhpcyBzaG91bGQgYmUgZGVzY3JpYmVkIGFjY29yZGluZyB0bwotdGhlIGJp
+bmRpbmdzIGRlZmluZWQgaW4gLi4vbWlwaS1kc2ktYnVzLnR4dAotCi1ELVBIWQotLS0tLS0KLQot
+UmVxdWlyZWQgcHJvcGVydGllczoKLSAgLSBjb21wYXRpYmxlOiB2YWx1ZSBtdXN0IGJlIG9uZSBv
+ZjoKLSAgICAqIGFsbHdpbm5lcixzdW42aS1hMzEtbWlwaS1kcGh5Ci0gIC0gcmVnOiBiYXNlIGFk
+ZHJlc3MgYW5kIHNpemUgb2YgbWVtb3J5LW1hcHBlZCByZWdpb24KLSAgLSBjbG9ja3M6IHBoYW5k
+bGVzIHRvIHRoZSBjbG9ja3MgZmVlZGluZyB0aGUgRFNJIGVuY29kZXIKLSAgICAqIGJ1czogdGhl
+IERTSSBpbnRlcmZhY2UgY2xvY2sKLSAgICAqIG1vZDogdGhlIERTSSBtb2R1bGUgY2xvY2sKLSAg
+LSBjbG9jay1uYW1lczogdGhlIGNsb2NrIG5hbWVzIG1lbnRpb25lZCBhYm92ZQotICAtIHJlc2V0
+czogcGhhbmRsZSB0byB0aGUgcmVzZXQgY29udHJvbGxlciBkcml2aW5nIHRoZSBlbmNvZGVyCi0K
+LUV4YW1wbGU6Ci0KLWRzaTA6IGRzaUAxY2EwMDAwIHsKLQljb21wYXRpYmxlID0gImFsbHdpbm5l
+cixzdW42aS1hMzEtbWlwaS1kc2kiOwotCXJlZyA9IDwweDAxY2EwMDAwIDB4MTAwMD47Ci0JaW50
+ZXJydXB0cyA9IDxHSUNfU1BJIDg5IElSUV9UWVBFX0xFVkVMX0hJR0g+OwotCWNsb2NrcyA9IDwm
+Y2N1IENMS19CVVNfTUlQSV9EU0k+LAotCQkgPCZjY3UgQ0xLX0RTSV9TQ0xLPjsKLQljbG9jay1u
+YW1lcyA9ICJidXMiLCAibW9kIjsKLQlyZXNldHMgPSA8JmNjdSBSU1RfQlVTX01JUElfRFNJPjsK
+LQlwaHlzID0gPCZkcGh5MD47Ci0JcGh5LW5hbWVzID0gImRwaHkiOwotCSNhZGRyZXNzLWNlbGxz
+ID0gPDE+OwotCSNzaXplLWNlbGxzID0gPDA+OwotCi0JcGFuZWxAMCB7Ci0JCWNvbXBhdGlibGUg
+PSAiYmFuYW5hcGksbGhyMDUwaDQxIiwgImlsaXRlayxpbGk5ODgxYyI7Ci0JCXJlZyA9IDwwPjsK
+LQkJcG93ZXItZ3Bpb3MgPSA8JnBpbyAxIDcgR1BJT19BQ1RJVkVfSElHSD47IC8qIFBCMDcgKi8K
+LQkJcmVzZXQtZ3Bpb3MgPSA8JnJfcGlvIDAgNSBHUElPX0FDVElWRV9MT1c+OyAvKiBQTDA1ICov
+Ci0JCWJhY2tsaWdodCA9IDwmcHdtX2JsPjsKLQl9OwotCi0JcG9ydHMgewotCQkjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsKLQkJI3NpemUtY2VsbHMgPSA8MD47Ci0KLQkJcG9ydEAwIHsKLQkJCSNhZGRy
+ZXNzLWNlbGxzID0gPDE+OwotCQkJI3NpemUtY2VsbHMgPSA8MD47Ci0JCQlyZWcgPSA8MD47Ci0K
+LQkJCWRzaTBfaW5fdGNvbjA6IGVuZHBvaW50IHsKLQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRj
+b24wX291dF9kc2kwPjsKLQkJCX07Ci0JCX07Ci0JfTsKLX07Ci0KLWRwaHkwOiBkLXBoeUAxY2Ex
+MDAwIHsKLQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW42aS1hMzEtbWlwaS1kcGh5IjsKLQly
+ZWcgPSA8MHgwMWNhMTAwMCAweDEwMDA+OwotCWNsb2NrcyA9IDwmY2N1IENMS19CVVNfTUlQSV9E
+U0k+LAotCQkgPCZjY3UgQ0xLX0RTSV9EUEhZPjsKLQljbG9jay1uYW1lcyA9ICJidXMiLCAibW9k
+IjsKLQlyZXNldHMgPSA8JmNjdSBSU1RfQlVTX01JUElfRFNJPjsKLQkjcGh5LWNlbGxzID0gPDA+
+OwotfTsKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkv
+YWxsd2lubmVyLHN1bjZpLWEzMS1taXBpLWRwaHkueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9waHkvYWxsd2lubmVyLHN1bjZpLWEzMS1taXBpLWRwaHkueWFtbApuZXcg
+ZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjI1MGY5ZDVhYWJkZgotLS0gL2Rl
+di9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvYWxsd2lu
+bmVyLHN1bjZpLWEzMS1taXBpLWRwaHkueWFtbApAQCAtMCwwICsxLDU3IEBACisjIFNQRFgtTGlj
+ZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCislWUFNTCAxLjIKKy0tLQorJGlkOiBodHRwOi8vZGV2
+aWNldHJlZS5vcmcvc2NoZW1hcy9kaXNwbGF5L2FsbHdpbm5lcixzdW42aS1hMzEtbWlwaS1kcGh5
+LnlhbWwjCiskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUu
+eWFtbCMKKwordGl0bGU6IEFsbHdpbm5lciBBMzEgTUlQSSBELVBIWSBDb250cm9sbGVyIERldmlj
+ZSBUcmVlIEJpbmRpbmdzCisKK21haW50YWluZXJzOgorICAtIENoZW4tWXUgVHNhaSA8d2Vuc0Bj
+c2llLm9yZz4KKyAgLSBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPgor
+Citwcm9wZXJ0aWVzOgorICAiI3BoeS1jZWxscyI6CisgICAgY29uc3Q6IDAKKworICBjb21wYXRp
+YmxlOgorICAgIGNvbnN0OiBhbGx3aW5uZXIsc3VuNmktYTMxLW1pcGktZHBoeQorCisgIHJlZzoK
+KyAgICBtYXhJdGVtczogMQorCisgIGNsb2NrczoKKyAgICBpdGVtczoKKyAgICAgIC0gZGVzY3Jp
+cHRpb246IEJ1cyBDbG9jaworICAgICAgLSBkZXNjcmlwdGlvbjogTW9kdWxlIENsb2NrCisKKyAg
+Y2xvY2stbmFtZXM6CisgICAgaXRlbXM6CisgICAgICAtIGNvbnN0OiBidXMKKyAgICAgIC0gY29u
+c3Q6IG1vZAorCisgIHJlc2V0czoKKyAgICBtYXhJdGVtczogMQorCityZXF1aXJlZDoKKyAgLSAi
+I3BoeS1jZWxscyIKKyAgLSBjb21wYXRpYmxlCisgIC0gcmVnCisgIC0gY2xvY2tzCisgIC0gY2xv
+Y2stbmFtZXMKKyAgLSByZXNldHMKKworYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlCisKK2V4
+YW1wbGVzOgorICAtIHwKKyAgICBkcGh5MDogZC1waHlAMWNhMTAwMCB7CisgICAgICAgIGNvbXBh
+dGlibGUgPSAiYWxsd2lubmVyLHN1bjZpLWEzMS1taXBpLWRwaHkiOworICAgICAgICByZWcgPSA8
+MHgwMWNhMTAwMCAweDEwMDA+OworICAgICAgICBjbG9ja3MgPSA8JmNjdSAyMz4sIDwmY2N1IDk3
+PjsKKyAgICAgICAgY2xvY2stbmFtZXMgPSAiYnVzIiwgIm1vZCI7CisgICAgICAgIHJlc2V0cyA9
+IDwmY2N1IDQ+OworICAgICAgICAjcGh5LWNlbGxzID0gPDA+OworICAgIH07CisKKy4uLgotLSAK
+Mi4yMS4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
