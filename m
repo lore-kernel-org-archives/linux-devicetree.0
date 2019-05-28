@@ -1,95 +1,61 @@
-Return-Path: <SRS0=hyxw=T4=pengutronix.de=mtr@kernel.org>
-From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v7 2/5] media: dt-bindings: media: document allegro-dvt bindings
-Date: Tue, 28 May 2019 15:09:17 +0200
-Message-Id: <20190528130920.4450-3-m.tretter@pengutronix.de>
-In-Reply-To: <20190528130920.4450-1-m.tretter@pengutronix.de>
-References: <20190528130920.4450-1-m.tretter@pengutronix.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl, Michael Tretter <m.tretter@pengutronix.de>, Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=ExU1=T4=linaro.org=masahisa.kojima@kernel.org>
+From: Masahisa Kojima <masahisa.kojima@linaro.org>
+Subject: [PATCH v6 0/3] spi: support for Socionext Synquacer platform
+Date: Tue, 28 May 2019 18:27:10 +0900
+Message-Id: <20190528092713.10516-1-masahisa.kojima@linaro.org>
+To: linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: broonie@kernel.org, geert@linux-m68k.org, tpiepho@impinj.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, ard.biesheuvel@linaro.org, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, okamoto.satoru@socionext.com, osaki.yoshitoyo@socionext.com, Masahisa Kojima <masahisa.kojima@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device-tree bindings for the Allegro DVT video IP core found on the
-Xilinx ZynqMP EV family.
+Hello,
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v6 -> v7:
-none
+ Support for Socionext's FIP controller intended for flash device interfacing.
+The controller can operate in 'direct' or 'command' mode. One mode directly
+talks and provide a read/write i/f to the flash device. Other works as plain
+SPI mode. This driver runs the controller as a SPI controller.
 
-v5 -> v6:
-none
+Changes since v5:
+        # Supported ACPI probing and added ACPI device table(SCX0004)
+        # Removed DT dependencies
+        # Removed to call _relaxed variants to access the registers
+        # Updated irq name to use dev_name()
+        # Updated return value for irq handlers
+        # Explicitly listed the supported bits_per_word
+        # Removed FIFO handling from a set_cs() operation
 
-v4 -> v5:
-none
+Changes since v4:
+        # Supported interrupt based data handling instead of polling
+        # Added prefix "SYNQUACER_HSSPI_"
+        # Replaced data read/write access with readsx()/writesx()
+        # Updated clock source handling, explicitly specify "iHCLK" or "iPCKL"
+          and removed array of clk
 
-v3 -> v4:
-none
+Changes since v3:
+        # Convert IS_ERR returned from devm_clk_get(iPCLK) to NULL, that way
+          we can call clk_xxx(IPCLK) without first checking for it being valid.
 
-v2 -> v3:
-- rename node to video-codec
-- drop interrupt-names
-- fix compatible in example
-- add clocks to required properties
+Changes since v2:
+        # Made iHCLK clock property required in DT, and iPCLK an optional extra.
+        # Hardcode max number of slaves to 4, as specified in the manual.
 
-v1 -> v2:
-none
----
- .../devicetree/bindings/media/allegro.txt     | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
+Changes since v1:
+        # Changed licence header to C++ style comment.
+        # Removed redundant lock and transfer_mode backup member.
+        # Fixed divisor to allow upto 254.
 
-diff --git a/Documentation/devicetree/bindings/media/allegro.txt b/Documentation/devicetree/bindings/media/allegro.txt
-new file mode 100644
-index 000000000000..a92e2fbf26c9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/allegro.txt
-@@ -0,0 +1,43 @@
-+Device-tree bindings for the Allegro DVT video IP codecs present in the Xilinx
-+ZynqMP SoC. The IP core may either be a H.264/H.265 encoder or H.264/H.265
-+decoder ip core.
-+
-+Each actual codec engines is controlled by a microcontroller (MCU). Host
-+software uses a provided mailbox interface to communicate with the MCU. The
-+MCU share an interrupt.
-+
-+Required properties:
-+  - compatible: value should be one of the following
-+    "allegro,al5e-1.1", "allegro,al5e": encoder IP core
-+    "allegro,al5d-1.1", "allegro,al5d": decoder IP core
-+  - reg: base and length of the memory mapped register region and base and
-+    length of the memory mapped sram
-+  - reg-names: must include "regs" and "sram"
-+  - interrupts: shared interrupt from the MCUs to the processing system
-+  - clocks: must contain an entry for each entry in clock-names
-+  - clock-names: must include "core_clk", "mcu_clk", "m_axi_core_aclk",
-+    "m_axi_mcu_aclk", "s_axi_lite_aclk"
-+
-+Example:
-+	al5e: video-codec@a0009000 {
-+		compatible = "allegro,al5e-1.1", "allegro,al5e";
-+		reg = <0 0xa0009000 0 0x1000>,
-+		      <0 0xa0000000 0 0x8000>;
-+		reg-names = "regs", "sram";
-+		interrupts = <0 96 4>;
-+		clocks = <&xlnx_vcu 0>, <&xlnx_vcu 1>,
-+			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
-+		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
-+			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
-+	};
-+	al5d: video-codec@a0029000 {
-+		compatible = "allegro,al5d-1.1", "allegro,al5d";
-+		reg = <0 0xa0029000 0 0x1000>,
-+		      <0 0xa0020000 0 0x8000>;
-+		reg-names = "regs", "sram";
-+		interrupts = <0 96 4>;
-+		clocks = <&xlnx_vcu 2>, <&xlnx_vcu 3>,
-+			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
-+		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
-+			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
-+	};
+Masahisa Kojima (3):
+  MAINTAINERS: Add entry for Synquacer SPI driver
+  dt-bindings: spi: Add DT bindings for Synquacer
+  spi: Add spi driver for Socionext Synquacer platform
+
+ .../devicetree/bindings/spi/spi-synquacer.txt      |  27 +
+ MAINTAINERS                                        |   8 +
+ drivers/spi/Kconfig                                |  11 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-synquacer.c                        | 826 +++++++++++++++++++++
+ 5 files changed, 873 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
+ create mode 100644 drivers/spi/spi-synquacer.c
+
 -- 
-2.20.1
+2.14.2
