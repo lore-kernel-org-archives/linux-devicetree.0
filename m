@@ -1,88 +1,92 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v3 2/2] dt-bindings: iio: frequency: Add docs for ADF4371 PLL
-Date: Tue, 28 May 2019 13:56:08 +0300
-Message-ID: <1559040968-13832-1-git-send-email-stefan.popa@analog.com>
+From: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Subject: Re: [PATCH 3/4] iio: adc: mediatek: SET_LATE_SYSTEM_SLEEP_PM_OPS
+ support
+Date: Tue, 28 May 2019 18:59:56 +0800
+Message-ID: <1559041196.12867.3.camel@mtkswgap22>
+References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
+         <1557994247-16739-4-git-send-email-chun-hung.wu@mediatek.com>
+         <20190518113527.5210b0bf@archlinux> <1558332205.11080.6.camel@mtkswgap22>
+         <7838dcae-8a69-0297-718b-a061b14a456d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7838dcae-8a69-0297-718b-a061b14a456d@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+To: Matthias Brugger <matthias.bgg@gmail.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, peter.wang@mediatek.com, kuohong.wang@mediatek.com, jg_poxu@mediatek.com, stanley.chu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Document support for Analog Devices ADF4371 SPI Wideband Synthesizer.
+Hi Matthias:
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes in v2:
-	- Nothing changed.
-Changes in v3:
-	- Nothing changed.
+  Thanks for your suggestion, I think device_links is a good way to
+make dependency of module's suspend/resume order.
 
- .../devicetree/bindings/iio/frequency/adf4371.yaml | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+Hi Jonathan:
 
-diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-new file mode 100644
-index 0000000..d7adf074
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/frequency/adf4371.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADF4371 Wideband Synthesizer
-+
-+maintainers:
-+  - Popa Stefan <stefan.popa@analog.com>
-+
-+description: |
-+  Analog Devices ADF4371 SPI Wideband Synthesizer
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adf4371
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      Definition of the external clock (see clock/clock-bindings.txt)
-+    maxItems: 1
-+
-+  clock-names:
-+    description:
-+      Must be "clkin"
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        frequency@0 {
-+                compatible = "adi,adf4371";
-+                reg = <0>;
-+                spi-max-frequency = <1000000>;
-+                clocks = <&adf4371_clkin>;
-+                clock-names = "clkin";
-+        };
-+    };
-+...
--- 
-2.7.4
+  Is it ok to keep using late_suspend and early_resume, or do you think
+it's better to use device_links?
+
+Thanks,
+Chun-Hung
+On Wed, 2019-05-22 at 18:28 +0200, Matthias Brugger wrote:
+> 
+> On 20/05/2019 08:03, Chun-Hung Wu wrote:
+> > Hi Jonathan:
+> > 
+> >   Thanks for the prompt reply,
+> > 
+> > On Sat, 2019-05-18 at 11:35 +0100, Jonathan Cameron wrote:
+> >> On Thu, 16 May 2019 16:10:46 +0800
+> >> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+> >>
+> >>>   Move suspend/resume to late_suspend and
+> >>> early_resume to gurantee users can use auxadc
+> >> guarantee
+> >>
+> > will fix it in next version.
+> >>> driver at suspend/resume stage.
+> >> No problem with the patch content, but we need a reason why they may
+> >> want to do so?
+> > Our thermal drivers uses auxadc at suspend/resume stage.
+> > In order to avoid auxadc suspended prior to thermal driver,
+> > we move auxadc to late_suspend and early_resume.
+> > 
+> 
+> That sounds like a user of device_links [1] to me.
+> 
+> [1] https://www.kernel.org/doc/html/latest/driver-api/device_link.html
+> 
+> > Thanks,
+> > Chun-Hung
+> >>
+> >> Thanks,
+> >>
+> >> Jonathan
+> >>>
+> >>> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> >>> ---
+> >>>  drivers/iio/adc/mt6577_auxadc.c | 7 ++++---
+> >>>  1 file changed, 4 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
+> >>> index e1bdcc0..58d7cb2 100644
+> >>> --- a/drivers/iio/adc/mt6577_auxadc.c
+> >>> +++ b/drivers/iio/adc/mt6577_auxadc.c
+> >>> @@ -326,9 +326,10 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
+> >>>  	return 0;
+> >>>  }
+> >>>  
+> >>> -static SIMPLE_DEV_PM_OPS(mt6577_auxadc_pm_ops,
+> >>> -			 mt6577_auxadc_suspend,
+> >>> -			 mt6577_auxadc_resume);
+> >>> +static const struct dev_pm_ops mt6577_auxadc_pm_ops = {
+> >>> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(mt6577_auxadc_suspend,
+> >>> +				     mt6577_auxadc_resume)
+> >>> +};
+> >>>  
+> >>>  static const struct of_device_id mt6577_auxadc_of_match[] = {
+> >>>  	{ .compatible = "mediatek,mt2701-auxadc", .data = &mt8173_compat},
+> >>
+> > 
+> > 
