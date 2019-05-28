@@ -1,68 +1,84 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 07/13] bus: ti-sysc: Handle swsup idle mode quirks
-Date: Mon, 27 May 2019 23:24:08 -0700
-Message-ID: <20190528062414.27192-8-tony@atomide.com>
-References: <20190528062414.27192-1-tony@atomide.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 3/5] dt-bindings: vendor: Add a bunch of vendors
+Date: Tue, 28 May 2019 08:34:01 +0200
+Message-ID: <20190528063401.7uikujzahuq4wlxm@flea>
+References: <20190525134140.6220-1-maxime.ripard@bootlin.com>
+ <20190525134140.6220-3-maxime.ripard@bootlin.com>
+ <20190526160600.GA1399@bogus>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190528062414.27192-1-tony@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0818224829885053206=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190526160600.GA1399@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Some modules have idlemodes wired, but not completely functional. We have
-quirks for SWSUP_SIDLE and SWSUP_SIDLE_ACT to manage interconnect target
-modules without hardware support, but we've been only using them so far
-in legacy mode. Let's add support for SWSUP quirks in non-legacy mode too.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/bus/ti-sysc.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+--===============0818224829885053206==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mqpnwsn2vk4qeuus"
+Content-Disposition: inline
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -872,10 +872,15 @@ static int sysc_enable_module(struct device *dev)
- 	if (!idlemodes || regbits->sidle_shift < 0)
- 		goto set_midle;
- 
--	best_mode = fls(ddata->cfg.sidlemodes) - 1;
--	if (best_mode > SYSC_IDLE_MASK) {
--		dev_err(dev, "%s: invalid sidlemode\n", __func__);
--		return -EINVAL;
-+	if (ddata->cfg.quirks & (SYSC_QUIRK_SWSUP_SIDLE |
-+				 SYSC_QUIRK_SWSUP_SIDLE_ACT)) {
-+		best_mode = SYSC_IDLE_NO;
-+	} else {
-+		best_mode = fls(ddata->cfg.sidlemodes) - 1;
-+		if (best_mode > SYSC_IDLE_MASK) {
-+			dev_err(dev, "%s: invalid sidlemode\n", __func__);
-+			return -EINVAL;
-+		}
- 	}
- 
- 	reg &= ~(SYSC_IDLE_MASK << regbits->sidle_shift);
-@@ -959,10 +964,14 @@ static int sysc_disable_module(struct device *dev)
- 	if (!idlemodes || regbits->sidle_shift < 0)
- 		return 0;
- 
--	ret = sysc_best_idle_mode(idlemodes, &best_mode);
--	if (ret) {
--		dev_err(dev, "%s: invalid sidlemode\n", __func__);
--		return ret;
-+	if (ddata->cfg.quirks & SYSC_QUIRK_SWSUP_SIDLE) {
-+		best_mode = SYSC_IDLE_FORCE;
-+	} else {
-+		ret = sysc_best_idle_mode(idlemodes, &best_mode);
-+		if (ret) {
-+			dev_err(dev, "%s: invalid sidlemode\n", __func__);
-+			return ret;
-+		}
- 	}
- 
- 	reg &= ~(SYSC_IDLE_MASK << regbits->sidle_shift);
--- 
-2.21.0
+
+--mqpnwsn2vk4qeuus
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Rob,
+
+On Sun, May 26, 2019 at 11:06:00AM -0500, Rob Herring wrote:
+> On Sat, 25 May 2019 15:41:38 +0200, Maxime Ripard wrote:
+> > Add all the missing vendors used in Allwinner DTS.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > ---
+> >  .../devicetree/bindings/vendor-prefixes.yaml  | 58 +++++++++++++++++++
+> >  1 file changed, 58 insertions(+)
+> >
+>
+> Applied, thanks.
+
+While the other patches are in your tree now, this one looks missing.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--mqpnwsn2vk4qeuus
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOzWWQAKCRDj7w1vZxhR
+xQLAAQD6nKGIFIcd43Os6xkOABzRfXLk5hNDNjqwz6+qzA55YAD+Ln1mULNMU9lR
+UWa0T77cSkTVD8BBjCxcUZM5jWxy0gk=
+=Zkd0
+-----END PGP SIGNATURE-----
+
+--mqpnwsn2vk4qeuus--
+
+
+--===============0818224829885053206==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0818224829885053206==--
