@@ -1,37 +1,79 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v3 00/10] R-Car DU: LVDS dual-link mode support
-Date: Tue, 28 May 2019 18:46:41 +0200
-Message-ID: <20190528164641.GC9610@ravnborg.org>
-References: <20190528141234.15425-1-laurent.pinchart+renesas@ideasonboard.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190528141234.15425-1-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, dri-devel@lists.freedesktop.org
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 1/3] dt-bindings: clock: Document gpucc for msm8998
+Date: Tue, 28 May 2019 09:47:40 -0700
+Message-ID: <20190528164740.38593-1-jeffrey.l.hugo@gmail.com>
+References: <20190528164616.38517-1-jeffrey.l.hugo@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190528164616.38517-1-jeffrey.l.hugo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: agross@kernel.org, david.brown@linaro.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, jcrouse@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudC4KCk5pY2Ugc2VyaWVzIHdpdGggc21hbGwgYW5kIHdlbGwgZGVzY3JpYmVkIHBh
-dGNoZXMuCgo+IE9uIFR1ZSwgTWF5IDI4LCAyMDE5IGF0IDA1OjEyOjI0UE0gKzAzMDAsIExhdXJl
-bnQgUGluY2hhcnQgd3JvdGU6Cj4+IEhlbGxvIGV2ZXJ5Ym9keSwKPj4gCj4+IFRoaXMgcGF0Y2gg
-c2VyaWVzIGltcGxlbWVudHMgc3VwcG9ydCBmb3IgTFZEUyBkdWFsLWxpbmsgbW9kZSBpbiB0aGUK
-Pj4gUi1DYXIgRFUgYW5kIFItQ2FyIExWRFMgZW5jb2RlciBkcml2ZXJzLCBhbmQgd2VsbCBhcyBp
-biB0aGUgdGhjNjNsdmQxMDI0Cj4+IExWRFMgZGVjb2RlciBkcml2ZXIuCgpQYXRjaGVzIGxvb2tz
-IGdvb2QuCldpdGggbXkgZmV3IGNvbW1lbnRzIGFkZHJlc3NlZDoKQWNrZWQtYnk6IFNhbSBSYXZu
-Ym9yZyA8c2FtQHJhdm5ib3JnLm9yZz4KCihEbyBub3QgZmVlbCB0b28gY29uZmlkZW50IGluIGFs
-bCB0aGUgc3R1ZmYsIHItYiBzZWVtcyB0byBnaXZlIG1lIHRvbwptdWNoIGNyZWRpdCBmb3Igc3Bl
-bmRpbmcgbGVzcyB0aGFuIGhhbGYgYW4gaG91ciByZWFkaW5nIHRoZSBwYXRjaGVzKS4KCglTYW0K
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+The GPU for msm8998 has its own clock controller.  Document it.
+
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ .../devicetree/bindings/clock/qcom,gpucc.txt  |  4 ++-
+ .../dt-bindings/clock/qcom,gpucc-msm8998.h    | 29 +++++++++++++++++++
+ 2 files changed, 32 insertions(+), 1 deletion(-)
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-msm8998.h
+
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.txt b/Documentation/devicetree/bindings/clock/qcom,gpucc.txt
+index 4e5215ef1acd..269afe8a757e 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gpucc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.txt
+@@ -2,13 +2,15 @@ Qualcomm Graphics Clock & Reset Controller Binding
+ --------------------------------------------------
+ 
+ Required properties :
+-- compatible : shall contain "qcom,sdm845-gpucc"
++- compatible : shall contain "qcom,sdm845-gpucc" or "qcom,msm8998-gpucc"
+ - reg : shall contain base register location and length
+ - #clock-cells : from common clock binding, shall contain 1
+ - #reset-cells : from common reset binding, shall contain 1
+ - #power-domain-cells : from generic power domain binding, shall contain 1
+ - clocks : shall contain the XO clock
++	   shall contain the gpll0 out main clock (msm8998)
+ - clock-names : shall be "xo"
++		shall be "gpll0" (msm8998)
+ 
+ Example:
+ 	gpucc: clock-controller@5090000 {
+diff --git a/include/dt-bindings/clock/qcom,gpucc-msm8998.h b/include/dt-bindings/clock/qcom,gpucc-msm8998.h
+new file mode 100644
+index 000000000000..2623570ee974
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,gpucc-msm8998.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2019, Jeffrey Hugo
++ */
++
++#ifndef _DT_BINDINGS_CLK_MSM_GPUCC_8998_H
++#define _DT_BINDINGS_CLK_MSM_GPUCC_8998_H
++
++#define GPUPLL0						0
++#define GPUPLL0_OUT_EVEN				1
++#define RBCPR_CLK_SRC					2
++#define GFX3D_CLK_SRC					3
++#define RBBMTIMER_CLK_SRC				4
++#define GFX3D_ISENSE_CLK_SRC				5
++#define RBCPR_CLK					6
++#define GFX3D_CLK					7
++#define RBBMTIMER_CLK					8
++#define GFX3D_ISENSE_CLK				9
++#define GPUCC_CXO_CLK					10
++
++#define GPU_CX_BCR					0
++#define RBCPR_BCR					1
++#define GPU_GX_BCR					2
++#define GPU_ISENSE_BCR					3
++
++#define GPU_CX_GDSC					1
++#define GPU_GX_GDSC					2
++
++#endif
+-- 
+2.17.1
