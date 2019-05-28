@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 06/11] rtc: sun6i: Add R40 compatible
-Date: Tue, 28 May 2019 22:30:36 +0200
-Message-ID: <8f5e4f8c504bebc9572e33cbaa1a8a3c045cf21d.1559075389.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v2 09/11] ARM: dts: sun8i: v3s: Fix the RTC node
+Date: Tue, 28 May 2019 22:30:39 +0200
+Message-ID: <6051e00cea17a8575dc400c448dc8fc212c94492.1559075389.git-series.maxime.ripard@bootlin.com>
 References: <434446bc5541d7dfe5823874355c7db8c7e213fa.1559075389.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,26 +21,68 @@ To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutlan
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The R40 has a quite different RTC, with only a single interrupt line, but
-two clock outputs. Let's add a compatible.
+For some reason, while the v3s has a dedicated compatible in the RTC
+binding, the one actually used was the A31's. However, it turns out that
+the controller is pretty different (which justified the compatible).
+
+Let's use the proper compatible, and use the proper binding description as
+well.
 
 Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- drivers/rtc/rtc-sun6i.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-index 11f56de52179..9fab8ed856f4 100644
---- a/drivers/rtc/rtc-sun6i.c
-+++ b/drivers/rtc/rtc-sun6i.c
-@@ -681,6 +681,7 @@ static const struct of_device_id sun6i_rtc_dt_ids[] = {
- 	{ .compatible = "allwinner,sun6i-a31-rtc" },
- 	{ .compatible = "allwinner,sun8i-a23-rtc" },
- 	{ .compatible = "allwinner,sun8i-h3-rtc" },
-+	{ .compatible = "allwinner,sun8i-r40-rtc" },
- 	{ .compatible = "allwinner,sun8i-v3-rtc" },
- 	{ .compatible = "allwinner,sun50i-h5-rtc" },
- 	{ /* sentinel */ },
+---
+
+Changes from v1:
+  - Split that patch into two
+---
+ arch/arm/boot/dts/sun8i-v3s.dtsi | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
+index df72b1719c34..6ba9377458b3 100644
+--- a/arch/arm/boot/dts/sun8i-v3s.dtsi
++++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
+@@ -91,7 +91,7 @@
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <32768>;
+-			clock-output-names = "osc32k";
++			clock-output-names = "ext-osc32k";
+ 		};
+ 	};
+ 
+@@ -264,17 +264,20 @@
+ 		ccu: clock@1c20000 {
+ 			compatible = "allwinner,sun8i-v3s-ccu";
+ 			reg = <0x01c20000 0x400>;
+-			clocks = <&osc24M>, <&osc32k>;
++			clocks = <&osc24M>, <&rtc 0>;
+ 			clock-names = "hosc", "losc";
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 		};
+ 
+ 		rtc: rtc@1c20400 {
+-			compatible = "allwinner,sun6i-a31-rtc";
++			#clock-cells = <1>;
++			compatible = "allwinner,sun8i-v3-rtc";
+ 			reg = <0x01c20400 0x54>;
+ 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&osc32k>;
++			clock-output-names = "osc32k", "osc32k-out";
+ 		};
+ 
+ 		pio: pinctrl@1c20800 {
+@@ -282,7 +285,7 @@
+ 			reg = <0x01c20800 0x400>;
+ 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
++			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&rtc 0>;
+ 			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			#gpio-cells = <3>;
 -- 
 git-series 0.9.1
