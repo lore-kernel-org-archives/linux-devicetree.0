@@ -1,58 +1,84 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: clock: renesas,r9a06g032-sysctrl:
- Document power Domains
-Date: Tue, 28 May 2019 09:28:55 +0200
-Message-ID: <CAMuHMdV2jmY2u1-Z6cRR1OQcfW8U0HM_ac-xn1gO9nPf41iD+A@mail.gmail.com>
-References: <1558711904-27278-1-git-send-email-gareth.williams.jx@renesas.com> <1558711904-27278-2-git-send-email-gareth.williams.jx@renesas.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCHv2 00/13] ti-sysc driver changes to drop custom hwmods
+ property
+Date: Tue, 28 May 2019 13:32:00 +0530
+Message-ID: <0ba540b0-ad04-ee56-5874-69921eb4f374@ti.com>
+References: <20190528062414.27192-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558711904-27278-2-git-send-email-gareth.williams.jx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gareth Williams <gareth.williams.jx@renesas.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190528062414.27192-1-tony@atomide.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
+Cc: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>, Suman Anna <s-anna@ti.com>, Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gareth,
-
-On Fri, May 24, 2019 at 5:32 PM Gareth Williams
-<gareth.williams.jx@renesas.com> wrote:
-> The driver is gaining power domain support, so add the new property
-> to the DT binding and update the examples.
->
-> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-
-Thanks for your patch!
-
-> --- a/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
-@@ -40,4 +42,5 @@ Examples
->                 reg-io-width = <4>;
->                 clocks = <&sysctrl R9A06G032_CLK_UART0>;
->                 clock-names = "baudclk";
-> +               power-domains = <&sysctrl>;
-
-This is an interesting example: according to the driver,
-R9A06G032_CLK_UART0, is not clock used for power management?
-
-Oh, the real uart0 node in arch/arm/boot/dts/r9a06g032.dtsi uses
-
-    clocks = <&sysctrl R9A06G032_CLK_UART0>, <&sysctrl R9A06G032_HCLK_UART0>;
-    clock-names = "baudclk", "apb_pclk";
-
-That does make sense...
-
-With the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+On 28/05/19 11:54 AM, Tony Lindgren wrote:
+> Hi all,
+> 
+> Here are changes to improve ti-sysc driver to the point where we can
+> finally drop the custom hwmods property for most cases. This series
+> drops hwmods property only for omap4 UART and MMC as those can be
+> tested with core retention idle.
+> 
+> I'll be posting more patches for dropping hwmods properties as they
+> get tested.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+Added missing dra71/76 patches on linux-next which get them to boot.
+
+Tested for boot on dra71/76.
+Tested for DS0 on AM43/33.
+Tested for RTC+DDR mode on am43.
+
+For the series:
+
+Tested-by: Keerthy <j-keerthy@ti.com>
+
+> 
+> Regards,
+> 
+> Tony
+> 
+> Changes since v1:
+> 
+> - Repost the series against v5.2-rc1 as the first patch in the series
+>    got accidentally left out for patch "bus: ti-sysc: Add support for
+>    missing clockdomain handling"
+> 
+> 
+> Tony Lindgren (13):
+>    bus: ti-sysc: Add support for missing clockdomain handling
+>    bus: ti-sysc: Support 16-bit writes too
+>    bus: ti-sysc: Make OCP reset work for sysstatus and sysconfig reset
+>      bits
+>    bus: ti-sysc: Allow QUIRK_LEGACY_IDLE even if legacy_mode is not set
+>    bus: ti-sysc: Enable interconnect target module autoidle bit on enable
+>    bus: ti-sysc: Handle clockactivity for enable and disable
+>    bus: ti-sysc: Handle swsup idle mode quirks
+>    bus: ti-sysc: Set ENAWAKEUP if available
+>    bus: ti-sysc: Add support for disabling module without legacy mode
+>    bus: ti-sysc: Do rstctrl reset handling in two phases
+>    bus: ti-sysc: Detect uarts also on omap34xx
+>    ARM: dts: Drop legacy custom hwmods property for omap4 uart
+>    ARM: dts: Drop legacy custom hwmods property for omap4 mmc
+> 
+>   arch/arm/boot/dts/omap4-l4.dtsi       |   9 -
+>   arch/arm/mach-omap2/omap_hwmod.c      |  39 +---
+>   arch/arm/mach-omap2/pdata-quirks.c    |  60 +++++
+>   drivers/bus/ti-sysc.c                 | 309 ++++++++++++++++++++------
+>   include/linux/platform_data/ti-sysc.h |   9 +
+>   5 files changed, 314 insertions(+), 112 deletions(-)
+> 
