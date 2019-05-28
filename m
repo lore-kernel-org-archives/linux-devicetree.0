@@ -1,47 +1,91 @@
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v2] arm64: dts: fsl: imx8mq: add the snvs power key node
-Date: Tue, 28 May 2019 09:11:01 -0700
-Message-ID: <20190528161101.28919-1-angus@akkea.ca>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: angus.ainslie@puri.sm
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Carlo Caione <ccaione@baylibre.com>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 00/12] Allwinner A64/H6 IR support
+Date: Tue, 28 May 2019 18:14:28 +0200
+Message-ID: <20190528161440.27172-1-peron.clem@gmail.com>
+Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCELXIX7UICBB754WXTQKGQEXFDDFSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a node for the snvs power key, "disabled" by default.
+Hi,
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+A64 IR support series[1] pointed out that an A31 bindings should be
+introduced.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 45d10d8efd14..85008dc6e663 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/power/imx8mq-power.h>
- #include <dt-bindings/reset/imx8mq-reset.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include "dt-bindings/input/input.h"
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/thermal.h>
- #include "imx8mq-pinfunc.h"
-@@ -463,6 +464,15 @@
- 					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
- 						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
- 				};
-+
-+				snvs_pwrkey: snvs-powerkey {
-+					compatible = "fsl,sec-v4.0-pwrkey";
-+					regmap = <&snvs>;
-+					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+					linux,keycode = <KEY_POWER>;
-+					wakeup-source;
-+					status = "disabled";
-+				};
- 			};
- 
- 			clk: clock-controller@30380000 {
--- 
-2.17.1
+This series introduce the A31 compatible bindings, then switch it on
+the already existing board.
+
+Finally introduce A64 and H6 support.
+
+I didn't enable the IR on other H6 boards as Ondrej reported an issue
+on his board[2].
+
+Regards,
+Cl=C3=A9ment
+
+[1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
+[2] https://lkml.org/lkml/2019/5/27/321
+
+Changes since v2:
+ - Disable IR for other H6 boards
+ - Split DTS patch for H3/H5
+ - Introduce IR quirks
+
+Changes since v1:
+ - Document reset lines as required since A31
+ - Explain the memory mapping difference in commit log
+ - Fix misspelling "Allwiner" to "Allwinner"
+
+Cl=C3=A9ment P=C3=A9ron (10):
+  dt-bindings: media: sunxi-ir: add A31 compatible
+  media: rc: Introduce sunxi_ir_quirks
+  media: rc: sunxi: Add A31 compatible
+  ARM: dts: sunxi: Prefer A31 bindings for IR
+  ARM: dts: sunxi: Prefer A31 bindings for IR
+  dt-bindings: media: sunxi-ir: Add A64 compatible
+  dt-bindings: media: sunxi-ir: Add H6 compatible
+  arm64: dts: allwinner: h6: Add IR receiver node
+  arm64: dts: allwinner: h6: Enable IR on Beelink GS1
+  arm64: defconfig: enable IR SUNXI option
+
+Igors Makejevs (1):
+  arm64: dts: allwinner: a64: Add IR node
+
+Jernej Skrabec (1):
+  arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
+
+ .../devicetree/bindings/media/sunxi-ir.txt    | 11 ++-
+ arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
+ arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 ++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 +++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 +++++
+ arch/arm64/configs/defconfig                  |  1 +
+ drivers/media/rc/sunxi-cir.c                  | 70 +++++++++++++++----
+ 11 files changed, 115 insertions(+), 20 deletions(-)
+
+--=20
+2.20.1
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190528161440.27172-1-peron.clem%40gmail.com.
+For more options, visit https://groups.google.com/d/optout.
