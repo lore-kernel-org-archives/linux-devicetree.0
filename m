@@ -1,63 +1,52 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Extend drm_bus_flags? [Was: [PATCH v3 2/3] drm: Add bus flag for
- Sharp-specific signals]
-Date: Mon, 27 May 2019 22:29:32 +0200
-Message-ID: <20190527202932.GA28319@ravnborg.org>
-References: <20190425231854.24479-1-paul@crapouillou.net>
- <20190425231854.24479-2-paul@crapouillou.net>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
+Date: Mon, 27 May 2019 19:45:34 -0500
+Message-ID: <522728b0-147b-3708-fea1-88a895491e05@ti.com>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-2-dmurphy@ti.com> <20190527103355.GA5287@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190425231854.24479-2-paul@crapouillou.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190527103355.GA5287@amd>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: jacek.anaszewski@gmail.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgYWxsLgoKUGxlYXNlIHNlZSBtYWlsIGJlbG93IC0gaXMgaXQgT0sgdG8gZXh0ZW5kIGRybV9i
-dXNfZmxhZ3MgdG8KcmVwcmVzZW50ICJTSEFSUCBzaWduYWxzIj8KClBhdWwgKGFuZCBJKSBjb3Vs
-ZCBub3QgZmluZCBhbnkgYmV0dGVyIHdheSB0byBsZXQgdGhlIHBhbmVsIHRlbGwgdGhlCmRpc3Bs
-YXkgZHJpdmVyIHRoYXQgaXQgcmVxdWlyZXMgdGhlIHNwZWNpYWwgU0hBUlAgc2lnbmFscy4KClRo
-aXMgaGFzIGJlZW4gcGVuZGluZyBhbG1vc3QgYSBtb250aCBub3cgYW5kIGl0IHdvdWxkIG9ubHkg
-YmUgZmFpcgp0byBlaXRoZXIgYWNjZXB0IHRoZSBzb2x1dGlvbiBvciB0byBnaXZlIFBhdWwgZ3Vp
-ZGlhbmNlIGhvdyB0byBtb3ZlCmZvcndhcmQuCgpUaGVyZSBpcyBhIGRpc3BsYXkgZHJpdmVyIHRo
-YXQgYXdhaXRzIHRoZSByZXNpbHV0aW9ucyBvZiB0aGlzIGlzc3VlLgoKCVNhbQoKT24gRnJpLCBB
-cHIgMjYsIDIwMTkgYXQgMDE6MTg6NTNBTSArMDIwMCwgUGF1bCBDZXJjdWVpbCB3cm90ZToKPiBB
-ZGQgdGhlIERSTV9CVVNfRkxBR19TSEFSUF9TSUdOQUxTIHRvIHRoZSBkcm1fYnVzX2ZsYWdzIGVu
-dW0uCj4gCj4gVGhpcyBmbGFncyBjYW4gYmUgdXNlZCB3aGVuIHRoZSBkaXNwbGF5IG11c3QgYmUg
-ZHJpdmVuIHdpdGggdGhlCj4gU2hhcnAtc3BlY2lmaWMgc2lnbmFscyBTUEwsIENMUywgUkVWLCBQ
-Uy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQYXVsIENlcmN1ZWlsIDxwYXVsQGNyYXBvdWlsbG91Lm5l
-dD4KPiAtLS0KPiAKPiBOb3RlczoKPiAgICAgdjM6IE5ldyBwYXRjaAo+IAo+ICBpbmNsdWRlL2Ry
-bS9kcm1fY29ubmVjdG9yLmggfCAzICsrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25z
-KCspCj4gCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2RybV9jb25uZWN0b3IuaCBiL2luY2x1
-ZGUvZHJtL2RybV9jb25uZWN0b3IuaAo+IGluZGV4IDAyYTEzMTIwMmFkZC4uYWM3ZDU4ZmQxZTAz
-IDEwMDY0NAo+IC0tLSBhL2luY2x1ZGUvZHJtL2RybV9jb25uZWN0b3IuaAo+ICsrKyBiL2luY2x1
-ZGUvZHJtL2RybV9jb25uZWN0b3IuaAo+IEBAIC0zMjMsNiArMzIzLDggQEAgZW51bSBkcm1fcGFu
-ZWxfb3JpZW50YXRpb24gewo+ICAgKgkJCQkJZWRnZSBvZiB0aGUgcGl4ZWwgY2xvY2sKPiAgICog
-QERSTV9CVVNfRkxBR19TWU5DX1NBTVBMRV9ORUdFREdFOglTeW5jIHNpZ25hbHMgYXJlIHNhbXBs
-ZWQgb24gdGhlIGZhbGxpbmcKPiAgICoJCQkJCWVkZ2Ugb2YgdGhlIHBpeGVsIGNsb2NrCj4gKyAq
-IEBEUk1fQlVTX0ZMQUdfU0hBUlBfU0lHTkFMUzoJCVNldCBpZiB0aGUgU2hhcnAtc3BlY2lmaWMg
-c2lnbmFscwo+ICsgKgkJCQkJKFNQTCwgQ0xTLCBQUywgUkVWKSBtdXN0IGJlIHVzZWQKPiAgICov
-Cj4gIGVudW0gZHJtX2J1c19mbGFncyB7Cj4gIAlEUk1fQlVTX0ZMQUdfREVfTE9XID0gQklUKDAp
-LAo+IEBAIC0zNDEsNiArMzQzLDcgQEAgZW51bSBkcm1fYnVzX2ZsYWdzIHsKPiAgCURSTV9CVVNf
-RkxBR19TWU5DX0RSSVZFX05FR0VER0UgPSBEUk1fQlVTX0ZMQUdfU1lOQ19ORUdFREdFLAo+ICAJ
-RFJNX0JVU19GTEFHX1NZTkNfU0FNUExFX1BPU0VER0UgPSBEUk1fQlVTX0ZMQUdfU1lOQ19ORUdF
-REdFLAo+ICAJRFJNX0JVU19GTEFHX1NZTkNfU0FNUExFX05FR0VER0UgPSBEUk1fQlVTX0ZMQUdf
-U1lOQ19QT1NFREdFLAo+ICsJRFJNX0JVU19GTEFHX1NIQVJQX1NJR05BTFMgPSBCSVQoOCksCj4g
-IH07Cj4gIAo+ICAvKioKPiAtLSAKPiAyLjIxLjAuNTkzLmc1MTFlYzM0NWUxOAo+IAo+IF9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbApfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Pavel
+
+On 5/27/19 5:33 AM, Pavel Machek wrote:
+> On Thu 2019-05-23 14:08:12, Dan Murphy wrote:
+>> Add a documentation of LED Multicolor LED class specific
+>> sysfs attributes.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../ABI/testing/sysfs-class-led-multicolor    | 57 +++++++++++++++++++
+>>   1 file changed, 57 insertions(+)
+>>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> new file mode 100644
+>> index 000000000000..2f102ede258b
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> @@ -0,0 +1,57 @@
+>> +What:		/sys/class/leds/<led>/colors/sync_enable
+>> +Date:		April 2019
+> I believe I suggested more reasonable interface. Why not use that?
+>
+
+Can you please provide the reference to your interface?
+
+These patchsets have been around for a while (Decemeber 2018) and I 
+cannot seem to find the reference to your suggestion.
+
+The suggestion may have been mired in the brightness model discussions.
+
+So I don't want to over look what you suggested as it may be more 
+reasonable then what I have implemented.
+
+Dan
