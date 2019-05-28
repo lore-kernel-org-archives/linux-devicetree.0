@@ -1,61 +1,79 @@
-Return-Path: <SRS0=ExU1=T4=linaro.org=masahisa.kojima@kernel.org>
-From: Masahisa Kojima <masahisa.kojima@linaro.org>
-Subject: [PATCH v6 0/3] spi: support for Socionext Synquacer platform
-Date: Tue, 28 May 2019 18:27:10 +0900
-Message-Id: <20190528092713.10516-1-masahisa.kojima@linaro.org>
-To: linux-spi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: broonie@kernel.org, geert@linux-m68k.org, tpiepho@impinj.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, ard.biesheuvel@linaro.org, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, okamoto.satoru@socionext.com, osaki.yoshitoyo@socionext.com, Masahisa Kojima <masahisa.kojima@linaro.org>
+Return-Path: <SRS0=RTvA=T4=xs4all.nl=hverkuil@kernel.org>
+Subject: Re: [PATCH v7 0/5] Add ZynqMP VCU/Allegro DVT H.264 encoder driver
+References: <20190528130920.4450-1-m.tretter@pengutronix.de>
+ <d0f49d4e-d060-1324-5348-eec0f4336601@xs4all.nl>
+ <20190528170016.68252586@litschi.hi.pengutronix.de>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <39768904-8e99-93b6-8fcc-1c6ef97e5852@xs4all.nl>
+Date: Tue, 28 May 2019 17:40:33 +0200
+MIME-Version: 1.0
+In-Reply-To: <20190528170016.68252586@litschi.hi.pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Michael Tretter <m.tretter@pengutronix.de>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hello,
+On 5/28/19 5:00 PM, Michael Tretter wrote:
+> On Tue, 28 May 2019 15:54:58 +0200, Hans Verkuil wrote:
+>> Hi Michael,
+>>
+>> On 5/28/19 3:09 PM, Michael Tretter wrote:
+>>> This is v7 of the Allegro DVT H.264 encoder driver found in the EV
+>>> family of the Xilinx ZynqMP platform.
+>>>
+>>> I moved the driver back to staging, because the v4l2 stateful encoder spec is
+>>> not finished, yet. Once the spec is finished, this driver shall be tested
+>>> against the final v4l2-compliance and moved to mainline again.
+>>>
+>>> Further, I converted the allegro vendor prefix to the new json format in
+>>> vendor-prefixes.yaml.
+>>>
+>>> The observed occasional failures in v4l2-compliance in v6 of this series
+>>> turned out to be caused by a race condition with v4l2_m2m_poll(). I will send
+>>> patches to fix this issue as a separate series.  
+>>
+>> I'm getting these smatch warnings:
+>>
+>> drivers/staging/media/allegro-dvt/allegro-core.c:1849:36: warning: constant 0xffffffff00000000 is so big it is unsigned long
+> 
+> The constant is used to calculate an offset, which is used by the
+> hardware as offset for addresses in mailbox messages. The hardware
+> expects a 64 bit value, but the driver calculates the value using a
+> dma_addr_t, which is fine for 64 bit systems (e.g. ZynqMP), but is a
+> problem on 32 bit systems.
+> 
+> I am currently working on improving the handling of frame addresses and
+> make it fit for using the PL-RAM (in the FPGA) instead of the normal
+> system RAM (PS-RAM). I would fix the warning with that patch set, if
+> it is OK.
 
- Support for Socionext's FIP controller intended for flash device interfacing.
-The controller can operate in 'direct' or 'command' mode. One mode directly
-talks and provide a read/write i/f to the flash device. Other works as plain
-SPI mode. This driver runs the controller as a SPI controller.
+Sorry, no. I don't want new drivers creating new warnings. It's OK to
+do a quick workaround and fix it properly later, though.
 
-Changes since v5:
-        # Supported ACPI probing and added ACPI device table(SCX0004)
-        # Removed DT dependencies
-        # Removed to call _relaxed variants to access the registers
-        # Updated irq name to use dev_name()
-        # Updated return value for irq handlers
-        # Explicitly listed the supported bits_per_word
-        # Removed FIFO handling from a set_cs() operation
+Regards,
 
-Changes since v4:
-        # Supported interrupt based data handling instead of polling
-        # Added prefix "SYNQUACER_HSSPI_"
-        # Replaced data read/write access with readsx()/writesx()
-        # Updated clock source handling, explicitly specify "iHCLK" or "iPCKL"
-          and removed array of clk
+	Hans
 
-Changes since v3:
-        # Convert IS_ERR returned from devm_clk_get(iPCLK) to NULL, that way
-          we can call clk_xxx(IPCLK) without first checking for it being valid.
-
-Changes since v2:
-        # Made iHCLK clock property required in DT, and iPCLK an optional extra.
-        # Hardcode max number of slaves to 4, as specified in the manual.
-
-Changes since v1:
-        # Changed licence header to C++ style comment.
-        # Removed redundant lock and transfer_mode backup member.
-        # Fixed divisor to allow upto 254.
-
-Masahisa Kojima (3):
-  MAINTAINERS: Add entry for Synquacer SPI driver
-  dt-bindings: spi: Add DT bindings for Synquacer
-  spi: Add spi driver for Socionext Synquacer platform
-
- .../devicetree/bindings/spi/spi-synquacer.txt      |  27 +
- MAINTAINERS                                        |   8 +
- drivers/spi/Kconfig                                |  11 +
- drivers/spi/Makefile                               |   1 +
- drivers/spi/spi-synquacer.c                        | 826 +++++++++++++++++++++
- 5 files changed, 873 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
- create mode 100644 drivers/spi/spi-synquacer.c
-
--- 
-2.14.2
+> 
+>> drivers/staging/media/allegro-dvt/nal-h264.c:751: warning: Function parameter or member 'dev' not described in 'nal_h264_write_sps'
+>> drivers/staging/media/allegro-dvt/nal-h264.c:792: warning: Function parameter or member 'dev' not described in 'nal_h264_read_sps'
+>> drivers/staging/media/allegro-dvt/nal-h264.c:842: warning: Function parameter or member 'dev' not described in 'nal_h264_write_pps'
+>> drivers/staging/media/allegro-dvt/nal-h264.c:884: warning: Function parameter or member 'dev' not described in 'nal_h264_read_pps'
+>> drivers/staging/media/allegro-dvt/nal-h264.c:926: warning: Function parameter or member 'dev' not described in 'nal_h264_write_filler'
+>> drivers/staging/media/allegro-dvt/nal-h264.c:969: warning: Function parameter or member 'dev' not described in 'nal_h264_read_filler'
+> 
+> I didn't describe the "struct device *dev" parameter, because it really
+> doesn't add any value.
+> 
+> Michael
+> 
+>>
+>> Can you take a look? The nal-h264.c warnings look trivial to fix, the
+>> allegro-core.c warnings looks more interesting.
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
