@@ -1,57 +1,54 @@
-Return-Path: <SRS0=ExU1=T4=linaro.org=masahisa.kojima@kernel.org>
-From: Masahisa Kojima <masahisa.kojima@linaro.org>
-Subject: [PATCH v6 2/3] dt-bindings: spi: Add DT bindings for Synquacer
-Date: Tue, 28 May 2019 18:27:12 +0900
-Message-Id: <20190528092713.10516-3-masahisa.kojima@linaro.org>
-In-Reply-To: <20190528092713.10516-1-masahisa.kojima@linaro.org>
-References: <20190528092713.10516-1-masahisa.kojima@linaro.org>
-To: linux-spi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: broonie@kernel.org, geert@linux-m68k.org, tpiepho@impinj.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, ard.biesheuvel@linaro.org, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, okamoto.satoru@socionext.com, osaki.yoshitoyo@socionext.com, Masahisa Kojima <masahisa.kojima@linaro.org>
+Return-Path: <SRS0=Wuwb=T4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.lunch4employee.eu ([80.211.219.151]:39828 "EHLO
+        mail.lunch4employee.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfE1IjB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 May 2019 04:39:01 -0400
+Received: by mail.lunch4employee.eu for <devicetree@vger.kernel.org>; Tue, 28 May 2019 08:30:21 GMT
+Message-ID: <20190528084500-0.1.n.uvo.0.xj0q22zl5n@lunch4employee.eu>
+Date: Tue, 28 May 2019 08:30:21 GMT
+From: "Radoslav Dobrev" <radoslav.dobrev@lunch4employee.eu>
+Subject: =?UTF-8?Q?=D0=9F=D1=80=D0=B8=D0=B4=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B8_=D0=B7=D0=B0_=D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds documentation for Device-Tree bindings for the
-Socionext Synquacer spi driver.
+=D0=97=D0=B4=D1=80=D0=B0=D0=B2=D0=B5=D0=B9=D1=82=D0=B5,
 
-Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/spi/spi-synquacer.txt      | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
+=D0=97=D0=B0=D0=BF=D0=BE=D0=B7=D0=BD=D0=B0=D1=82=D0=B8 =D0=BB=D0=B8 =D1=81=
+=D1=82=D0=B5 =D1=81 =D0=BD=D0=B0=D0=B9-=D0=BD=D0=BE=D0=B2=D0=B0=D1=82=D0=B0=
+ =D1=81=D0=BE=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B0 =D0=BF=D1=80=D0=B8=D0=B4=
+=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B0 =E2=80=93 =D0=B2=D0=B0=D1=83=D1=87=D0=
+=B5=D1=80=D0=B8 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0? =D0=90 =D0=BE=
+=D0=B1=D0=BC=D0=B8=D1=81=D0=BB=D1=8F=D0=BB=D0=B8 =D0=BB=D0=B8 =D1=81=D1=82=
+=D0=B5 =D0=B8=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0=D0=BD=D0=B5=D1=82=
+=D0=BE =D0=BD=D0=B0 =D1=82=D0=B0=D0=BA=D0=B8=D0=B2=D0=B0 =D0=B2=D0=B0=D1=83=
+=D1=87=D0=B5=D1=80=D0=B8, =D1=81 =D0=BF=D0=BE=D0=BC=D0=BE=D1=89=D1=82=D0=B0=
+ =D0=BD=D0=B0 =D0=BA=D0=BE=D0=B8=D1=82=D0=BE =D0=92=D0=B0=D1=88=D0=B8=D1=8F=
+=D1=82 =D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB =D0=BC=D0=BE=D0=B6=
+=D0=B5 =D0=B4=D0=B0 =D0=BF=D0=B0=D0=B7=D0=B0=D1=80=D1=83=D0=B2=D0=B0 =D0=B2=
+ =D1=80=D0=B0=D0=B7=D0=BB=D0=B8=D1=87=D0=BD=D0=B8 =D0=B2=D0=B5=D1=80=D0=B8=
+=D0=B3=D0=B8 =D1=85=D1=80=D0=B0=D0=BD=D0=B8=D1=82=D0=B5=D0=BB=D0=BD=D0=B8=
+ =D0=BC=D0=B0=D0=B3=D0=B0=D0=B7=D0=B8=D0=BD=D0=B8 =D0=B8 =D0=B7=D0=B0=D0=B2=
+=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F?
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-synquacer.txt b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
-new file mode 100644
-index 000000000000..291dfa692d0a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
-@@ -0,0 +1,27 @@
-+* Socionext Synquacer HS-SPI bindings
-+
-+Required Properties:
-+- compatible: should be "socionext,synquacer-spi"
-+- reg: physical base address of the controller and length of memory mapped
-+       region.
-+- interrupts: should contain the "spi_rx", "spi_tx" and "spi_fault" interrupts.
-+- clocks: core clock iHCLK. Optional rate clock iPCLK (default is iHCLK)
-+- clock-names: Shall be "iHCLK" and "iPCLK" respectively
-+
-+Optional Properties:
-+- socionext,use-rtm: boolean, if required to use "retimed clock" for RX
-+- socionext,set-aces: boolean, if same active clock edges field to be set.
-+
-+Example:
-+
-+	spi0: spi@ff110000 {
-+		compatible = "socionext,synquacer-spi";
-+		reg = <0xff110000 0x1000>;
-+		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clk_hsspi>;
-+		clock-names = "iHCLK";
-+		socionext,use-rtm;
-+		socionext,set-aces;
-+	};
--- 
-2.14.2
+=D0=91=D0=B8=D1=85 =D0=BC=D0=BE=D0=B3=D1=8A=D0=BB =D0=B4=D0=B0 =D0=92=D0=B8=
+ =D1=81=D0=B5 =D0=BE=D0=B1=D0=B0=D0=B4=D1=8F =D0=BF=D0=BE =D1=82=D0=B5=D0=
+=BB=D0=B5=D1=84=D0=BE=D0=BD=D0=B0 =D0=B8 =D0=B4=D0=B0 =D0=92=D0=B8 =D0=BF=
+=D1=80=D0=B5=D0=B4=D1=81=D1=82=D0=B0=D0=B2=D1=8F =D0=B2=D1=8A=D0=B7=D0=BC=
+=D0=BE=D0=B6=D0=BD=D0=BE=D1=81=D1=82=D0=B8=D1=82=D0=B5 =D0=BD=D0=B0 =D1=82=
+=D0=B5=D0=B7=D0=B8 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8 =E2=80=93 =D0=
+=BC=D0=BE=D0=BB=D1=8F =D0=BF=D0=BE=D1=81=D0=BE=D1=87=D0=B5=D1=82=D0=B5 =D0=
+=BA=D0=BE=D0=B3=D0=B0 =D1=89=D0=B5 =D0=92=D0=B8 =D0=B1=D1=8A=D0=B4=D0=B5 =
+=D1=83=D0=B4=D0=BE=D0=B1=D0=BD=D0=BE =D0=B4=D0=B0 =D1=80=D0=B0=D0=B7=D0=B3=
+=D0=BE=D0=B2=D0=B0=D1=80=D1=8F=D0=BC=D0=B5.
+
+=D0=9F=D1=80=D0=B8=D1=8F=D1=82=D0=B5=D0=BD =D0=B4=D0=B5=D0=BD!
+
+
+=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
+=D0=B5=D0=B2
+Head of HR Benefit Team
+www.lunch4employee.eu
