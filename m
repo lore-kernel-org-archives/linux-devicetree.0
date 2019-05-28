@@ -1,90 +1,103 @@
-Return-Path: <SRS0=AIG0=TP=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v6 7/7] arm64: dts: renesas: r8a774c0-cat874: Enable usb role switch support
-Date: Wed, 15 May 2019 13:09:12 +0100
-Message-Id: <1557922152-16449-8-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1557922152-16449-1-git-send-email-biju.das@bp.renesas.com>
-References: <1557922152-16449-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=Wuwb=T4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45527 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbfE1RLX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 May 2019 13:11:23 -0400
+From: Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH v8 2/5] media: dt-bindings: media: document allegro-dvt bindings
+Date: Tue, 28 May 2019 19:11:17 +0200
+Message-Id: <20190528171120.7076-3-m.tretter@pengutronix.de>
+In-Reply-To: <20190528171120.7076-1-m.tretter@pengutronix.de>
+References: <20190528171120.7076-1-m.tretter@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, hverkuil@xs4all.nl, Michael Tretter <m.tretter@pengutronix.de>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables TI HD3SS3220 device and support usb role switch
-for the CAT 874 platform.
+Add device-tree bindings for the Allegro DVT video IP core found on the
+Xilinx ZynqMP EV family.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-V5-->V6
-  * No change
-V4-->V5
-  * No change
-V3-->V4
-  * No change
-V2-->V3
-  * Used "renesas,usb-role-switch" instead of generic "usb-role-switch"
-    property
-V1-->V2
-  * New patch
----
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 39 +++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+v7 -> v8:
+none
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index b9ae7db..124ed58 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -85,6 +85,34 @@
- 	clock-frequency = <48000000>;
- };
- 
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <100000>;
+v6 -> v7:
+none
+
+v5 -> v6:
+none
+
+v4 -> v5:
+none
+
+v3 -> v4:
+none
+
+v2 -> v3:
+- rename node to video-codec
+- drop interrupt-names
+- fix compatible in example
+- add clocks to required properties
+
+v1 -> v2:
+none
+---
+ .../devicetree/bindings/media/allegro.txt     | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
+
+diff --git a/Documentation/devicetree/bindings/media/allegro.txt b/Documentation/devicetree/bindings/media/allegro.txt
+new file mode 100644
+index 000000000000..a92e2fbf26c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/allegro.txt
+@@ -0,0 +1,43 @@
++Device-tree bindings for the Allegro DVT video IP codecs present in the Xilinx
++ZynqMP SoC. The IP core may either be a H.264/H.265 encoder or H.264/H.265
++decoder ip core.
 +
-+	hd3ss3220@47 {
-+		compatible = "ti,hd3ss3220";
-+		reg = <0x47>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++Each actual codec engines is controlled by a microcontroller (MCU). Host
++software uses a provided mailbox interface to communicate with the MCU. The
++MCU share an interrupt.
 +
-+		usb_con: connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+		};
++Required properties:
++  - compatible: value should be one of the following
++    "allegro,al5e-1.1", "allegro,al5e": encoder IP core
++    "allegro,al5d-1.1", "allegro,al5d": decoder IP core
++  - reg: base and length of the memory mapped register region and base and
++    length of the memory mapped sram
++  - reg-names: must include "regs" and "sram"
++  - interrupts: shared interrupt from the MCUs to the processing system
++  - clocks: must contain an entry for each entry in clock-names
++  - clock-names: must include "core_clk", "mcu_clk", "m_axi_core_aclk",
++    "m_axi_mcu_aclk", "s_axi_lite_aclk"
 +
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			hd3ss3220_ep: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&usb3peri_role_switch>;
-+			};
-+		};
++Example:
++	al5e: video-codec@a0009000 {
++		compatible = "allegro,al5e-1.1", "allegro,al5e";
++		reg = <0 0xa0009000 0 0x1000>,
++		      <0 0xa0000000 0 0x8000>;
++		reg-names = "regs", "sram";
++		interrupts = <0 96 4>;
++		clocks = <&xlnx_vcu 0>, <&xlnx_vcu 1>,
++			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
++		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
++			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
 +	};
-+};
-+
- &i2c1 {
- 	pinctrl-0 = <&i2c1_pins>;
- 	pinctrl-names = "default";
-@@ -175,6 +203,17 @@
- &usb3_peri0 {
- 	companion = <&xhci0>;
- 	status = "okay";
-+	usb-role-switch;
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usb3peri_role_switch: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&hd3ss3220_ep>;
-+		};
++	al5d: video-codec@a0029000 {
++		compatible = "allegro,al5d-1.1", "allegro,al5d";
++		reg = <0 0xa0029000 0 0x1000>,
++		      <0 0xa0020000 0 0x8000>;
++		reg-names = "regs", "sram";
++		interrupts = <0 96 4>;
++		clocks = <&xlnx_vcu 2>, <&xlnx_vcu 3>,
++			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
++		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
++			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
 +	};
- };
- 
- &xhci0 {
 -- 
-2.7.4
+2.20.1
