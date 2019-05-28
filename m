@@ -1,40 +1,62 @@
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v15 3/3] dt-bindings: arm: fsl: Add the imx8mq boards
-Date: Tue, 28 May 2019 05:57:47 -0700
-Message-ID: <20190528125747.1047-4-angus@akkea.ca>
-References: <20190528125747.1047-1-angus@akkea.ca>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [linux-sunxi] [RESEND PATCH] ARM: dts: sun7i: olimex-lime2:
+ Enable ac and power supplies
+Date: Tue, 28 May 2019 14:58:57 +0200
+Message-ID: <2b671c1f0734177a6283407f753403473b70f5bc.camel@bootlin.com>
+References: <20190528063544.17408-1-plaes@plaes.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190528125747.1047-1-angus@akkea.ca>
+In-Reply-To: <20190528063544.17408-1-plaes@plaes.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: angus.ainslie@puri.sm
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Carlo Caione <ccaione@baylibre.com>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: plaes@plaes.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Add an entry for imx8mq based boards
+Hi,
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Tue, 2019-05-28 at 09:35 +0300, Priit Laes wrote:
+> Lime2 has battery connector so enable these supplies.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 407138ebc0d0..41364b127200 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -177,6 +177,13 @@ properties:
-               - fsl,imx8mm-evk            # i.MX8MM EVK Board
-           - const: fsl,imx8mm
- 
-+      - description: i.MX8MQ based Boards
-+        items:
-+          - enum:
-+              - fsl,imx8mq-evk            # i.MX8MQ EVK Board
-+              - purism,librem5-devkit     # Purism Librem5 devkit
-+          - const: fsl,imx8mq
-+
-       - description: i.MX8QXP based Boards
-         items:
-           - enum:
+Out of curiosity, what is reported to userspace when no battery is
+attached?
+
+Looks good otherwise:
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+
+Cheers,
+
+Paul
+
+> Signed-off-by: Priit Laes <plaes@plaes.org>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> index 9c8eecf4337a..9001b5527615 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> @@ -206,6 +206,14 @@
+>  
+>  #include "axp209.dtsi"
+>  
+> +&ac_power_supply {
+> +	status = "okay";
+> +};
+> +
+> +&battery_power_supply {
+> +	status = "okay";
+> +};
+> +
+>  &reg_dcdc2 {
+>  	regulator-always-on;
+>  	regulator-min-microvolt = <1000000>;
+> -- 
+> 2.11.0
+> 
 -- 
-2.17.1
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
