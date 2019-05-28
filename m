@@ -1,72 +1,113 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
-Date: Tue, 28 May 2019 17:20:25 +0200
-Message-ID: <BA6E7BE4-E87A-4B0A-A027-BEA7A9ACA670@goldelico.com>
-References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com> <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, dri-devel@lists.freedesktop.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: [PATCH 1/6] device property: Add new array helper
+Date: Tue, 28 May 2019 16:43:07 +0100
+Message-ID: <20190528154312.14435-1-ckeepax@opensource.cirrus.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: broonie@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, rafael@kernel.org, gregkh@linuxfoundation.org, lgirdwood@gmail.com, robh+dt@kernel.org, patches@opensource.cirrus.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+It is fairly common to want to read an integer array property
+that is composed of an unknown number of fixed size integer
+groups. For example, say each group consists of three values
+which correspond to the settings for one input on the device
+and the driver supports several chips with different numbers
+of inputs.
 
-> Am 28.05.2019 um 17:09 schrieb Adam Ford <aford173@gmail.com>:
-> 
-> On Tue, May 28, 2019 at 4:11 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->> 
->> Hi,
->> 
->> On 10/05/2019 22:42, Adam Ford wrote:
->>> Currently the source code is compiled using hard-coded values
->>> from CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.  This patch allows this
->>> clock divider value to be moved to the device tree and be changed
->>> without having to recompile the kernel.
->>> 
->>> Signed-off-by: Adam Ford <aford173@gmail.com>
->> 
->> I understand why you want to do this, but I'm not sure it's a good idea.
->> It's really something the driver should figure out, and if we add it to
->> the DT, it effectively becomes an ABI.
->> 
->> That said... I'm not sure how good of a job the driver could ever do, as
->> it can't know the future scaling needs of the userspace at the time it
->> is configuring the clock. And so, I'm not nacking this patch, but I
->> don't feel very good about this patch...
->> 
->> The setting also affects all outputs (exluding venc), which may not be
->> what the user wants. Then again, I think this setting is really only
->> needed on OMAP2 & 3, which have only a single output. But that's the
->> same with the current kconfig option, of course.
->> 
->> So, the current CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK is an ugly hack, in my
->> opinion, and moving it to DT makes it a worse hack =). But I don't have
->> any good suggestions either.
-> 
-> As it stands the Logic PD OMAP35 and AM37/DM37 boards (SOM-LV and
-> Torpedo) require this to be hard coded to 4 or it hangs during start.
-> This is the case for all versions 4.2+.  I haven't tested it with
-> older stuff.  Tony has a DM3730 Torpedo kit and reported the hanging
-> issue to me. I told him to set that value to 4 to make it not hang.
-> He asked that I move it to the DT to avoid custom kernels.  I agree
-> it's a hack, but if it's create a customized defconfig file for 4
-> boards or modify the device tree, it seems like the device tree
-> approach is less intrusive.
+Add a new helper function to provide this functionality, it
+differs for the existing helpers in that it allows reading a
+smaller number of values than the full array size and checks
+that the number of values read is a multiple of the group size.
 
-Well, if this boards needs a factor 4 to be defined, it is IMHO
-100 % correct to describe this in the DTS and nowhere else. Like
-minimum and maximum voltage of a regulator which is also very board
-specific.
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ drivers/base/property.c  | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/property.h |  2 ++
+ 2 files changed, 50 insertions(+)
 
-Unless it can be figured out automatically. If it turns out later
-that it can, I would assume the drivers can simply ignore the hint
-in the DTS?
-
-Just my 2cts without knowing details and having tested anything
-on our DM37 boards.
-
-BR,
-Nikolaus
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 348b37e64944c..656d21e01a648 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -133,6 +133,54 @@ int device_property_read_u32_array(struct device *dev, const char *propname,
+ EXPORT_SYMBOL_GPL(device_property_read_u32_array);
+ 
+ /**
++ * device_property_read_u32_2darray - return a 2d u32 array property of a device
++ * @dev: Device to get the property of
++ * @propname: Name of the property
++ * @val: The values are stored here or %NULL to return the number of values
++ * @nval: Size of the @val array
++ * @multiple: Number of entries in each block of data
++ *
++ * Function reads an array of u32 properties split up into fixed size
++ * sub-groups, with @propname from the device firmware description and
++ * stores them to @val if found.
++ *
++ * Return: Number of values read
++ *	   %0 if the property was not found,
++ *	   %-EINVAL if given arguments are not valid,
++ *	   %-ENODATA if the property does not have a value,
++ *	   %-EPROTO if the property is not an array of numbers,
++ *	   %-EOVERFLOW if the size of the property is not as expected.
++ *	   %-ENXIO if no suitable firmware interface is present.
++ */
++int device_property_read_u32_2darray(struct device *dev, const char *propname,
++				     u32 *val, size_t nval, int multiple)
++{
++	int n, ret;
++
++	n = device_property_read_u32_array(dev, propname, NULL, 0);
++	if (n == -EINVAL) {
++		return 0;	/* missing, ignore */
++	} else if (n < 0) {
++		dev_warn(dev, "%s malformed (%d)\n", propname, n);
++		return n;
++	} else if ((n % multiple) != 0) {
++		dev_warn(dev, "%s not a multiple of %d entries\n",
++			 propname, multiple);
++		return -EOVERFLOW;
++	}
++
++	if (n > nval)
++		n = nval;
++
++	ret = device_property_read_u32_array(dev, propname, val, n);
++	if (ret < 0)
++		return ret;
++	else
++		return n;
++}
++EXPORT_SYMBOL_GPL(device_property_read_u32_2darray);
++
++/**
+  * device_property_read_u64_array - return a u64 array property of a device
+  * @dev: Device to get the property of
+  * @propname: Name of the property
+diff --git a/include/linux/property.h b/include/linux/property.h
+index a29369c89e6ef..854867f0d139f 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -43,6 +43,8 @@ int device_property_read_u16_array(struct device *dev, const char *propname,
+ 				   u16 *val, size_t nval);
+ int device_property_read_u32_array(struct device *dev, const char *propname,
+ 				   u32 *val, size_t nval);
++int device_property_read_u32_2darray(struct device *dev, const char *propname,
++				   u32 *val, size_t nval, int multiple);
+ int device_property_read_u64_array(struct device *dev, const char *propname,
+ 				   u64 *val, size_t nval);
+ int device_property_read_string_array(struct device *dev, const char *propname,
+-- 
+2.11.0
