@@ -1,93 +1,68 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH] arm64: dts: marvell: armada-7040-db: Add USB current
- regulators
-Date: Tue, 28 May 2019 11:03:10 +0200
-Message-ID: <20190528090310.31774-1-miquel.raynal@bootlin.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/7] ASoC: sun4i-spdif: Add TX fifo bit
+ flush quirks
+Date: Tue, 28 May 2019 11:12:59 +0200
+Message-ID: <20190528091259.qrzegazyilviuy2n@flea>
+References: <20190527200627.8635-1-peron.clem@gmail.com>
+ <20190527200627.8635-4-peron.clem@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zi3crwvz5dqqoqhp"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBH7XWPTQKGQESJPNI6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190527200627.8635-4-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Armada 7040-db USB ports deliver 500mA by default while they
-could deliver up to 900mA (usually, for USB3 devices).
 
-The board embeds a GPIO controlled regulator on each port which can be
-configured to deliver each amount of current.
+--zi3crwvz5dqqoqhp
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Add a vin-supply property to the USB3 Vbus nodes for this purpose. The
-regulator will be automatically 'enabled', ie. set to limit at 900mA
-instead of 500mA.
+On Mon, May 27, 2019 at 10:06:23PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Allwinner H6 has a different bit to flush the TX FIFO.
+>
+> Add a quirks to prepare introduction of H6 SoC.
+>
+> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Suggested-by: Alex Leibovich <alexl@marvell.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- .../arm64/boot/dts/marvell/armada-7040-db.dts | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-index d20d84ce7ca8..f34ee87a0f56 100644
---- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-@@ -28,6 +28,32 @@
- 		ethernet2 = &cp0_eth2;
- 	};
- 
-+	cp0_exp_usb3_0_current_regulator: gpio-regulator {
-+		compatible = "regulator-gpio";
-+		regulator-name = "cp0-usb3-0-current-regulator";
-+		regulator-type = "current";
-+		regulator-min-microamp = <500000>;
-+		regulator-max-microamp = <900000>;
-+		gpios = <&expander0 4 GPIO_ACTIVE_HIGH>;
-+		states = <500000 0x0
-+			  900000 0x1>;
-+		enable-active-high;
-+		gpios-states = <0>;
-+	};
-+
-+	cp0_exp_usb3_1_current_regulator: gpio-regulator {
-+		compatible = "regulator-gpio";
-+		regulator-name = "cp0-usb3-1-current-regulator";
-+		regulator-type = "current";
-+		regulator-min-microamp = <500000>;
-+		regulator-max-microamp = <900000>;
-+		gpios = <&expander0 5 GPIO_ACTIVE_HIGH>;
-+		states = <500000 0x0
-+			  900000 0x1>;
-+		enable-active-high;
-+		gpios-states = <0>;
-+	};
-+
- 	cp0_reg_usb3_0_vbus: cp0-usb3-0-vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb3h0-vbus";
-@@ -35,6 +61,7 @@
- 		regulator-max-microvolt = <5000000>;
- 		enable-active-high;
- 		gpio = <&expander0 0 GPIO_ACTIVE_HIGH>;
-+		vin-supply = <&cp0_exp_usb3_0_current_regulator>;
- 	};
- 
- 	cp0_reg_usb3_1_vbus: cp0-usb3-1-vbus {
-@@ -44,6 +71,7 @@
- 		regulator-max-microvolt = <5000000>;
- 		enable-active-high;
- 		gpio = <&expander0 1 GPIO_ACTIVE_HIGH>;
-+		vin-supply = <&cp0_exp_usb3_1_current_regulator>;
- 	};
- 
- 	cp0_usb3_0_phy: cp0-usb3-0-phy {
--- 
-2.19.1
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190528091259.qrzegazyilviuy2n%40flea.
+For more options, visit https://groups.google.com/d/optout.
+
+--zi3crwvz5dqqoqhp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOz7mwAKCRDj7w1vZxhR
+xYHnAQCF0T/LyvPDLxyjIVgapteJRIIteH2cyprro9XfsXCZKAEA/Jy3TK1gXH37
+KQ0w0ZON8xPR32fd/FxWTsrhVYDGswU=
+=xOqB
+-----END PGP SIGNATURE-----
+
+--zi3crwvz5dqqoqhp--
