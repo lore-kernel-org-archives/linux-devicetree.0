@@ -1,55 +1,149 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v3 04/10] dt-bindings: display: renesas: lvds: Add renesas,
- companion property
-Date: Tue, 28 May 2019 17:12:28 +0300
-Message-ID: <20190528141234.15425-5-laurent.pinchart+renesas@ideasonboard.com>
-References: <20190528141234.15425-1-laurent.pinchart+renesas@ideasonboard.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "dt-bindings: sound: sun4i-i2s: Document that the RX channel
+ can be missing" to the asoc tree
+Date: Tue, 28 May 2019 16:06:55 +0100 (BST)
+Message-ID: <20190528150655.D09C7440046@finisterre.sirena.org.uk>
+References: <9b280f9ce894e4e2ea7259db505cbe1a3e00120e.1558702660.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190528141234.15425-1-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <9b280f9ce894e4e2ea7259db505cbe1a3e00120e.1558702660.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGEgbmV3IG9wdGlvbmFsIHJlbmVzYXMsY29tcGFuaW9uIHByb3BlcnR5IHRvIHBvaW50IHRv
-IHRoZSBjb21wYW5pb24KTFZEUyBlbmNvZGVyLiBUaGlzIGlzIHVzZWQgdG8gc3VwcG9ydCBkdWFs
-LWxpbmsgb3BlcmF0aW9uIHdoZXJlIHRoZSBtYWluCkxWRFMgZW5jb2RlciBzcGxpdHMgZXZlbi1u
-dW1iZXJlZCBhbmQgb2RkLW51bWJlcmVkIHBpeGVscyBiZXR3ZWVuIHRoZQp0d28gTFZEUyBlbmNv
-ZGVycy4KClRoZSBuZXcgcHJvcGVydHkgZG9lc24ndCBjb250cm9sIHRoZSBtb2RlIG9mIG9wZXJh
-dGlvbiwgaXQgb25seQpkZXNjcmliZXMgdGhlIHJlbGF0aW9uc2hpcCBiZXR3ZWVuIHRoZSBtYXN0
-ZXIgYW5kIGNvbXBhbmlvbiBMVkRTCmVuY29kZXJzLgoKU2lnbmVkLW9mZi1ieTogTGF1cmVudCBQ
-aW5jaGFydCA8bGF1cmVudC5waW5jaGFydCtyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+ClJldmll
-d2VkLWJ5OiBKYWNvcG8gTW9uZGkgPGphY29wb0BqbW9uZGkub3JnPgpUZXN0ZWQtYnk6IEphY29w
-byBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KLS0tCkNoYW5nZXMgc2luY2UgdjI6
-CgotIENsYXJpZnkgd2hlbiB0aGUgY29tcGFuaW9uIHByb3BlcnR5IGlzIHJlcXVpcmVkIG9yIG5v
-dCBhbGxvd2VkCgpDaGFuZ2VzIHNpbmNlIHYxOgoKLSBGaXhlZCB0eXBvCi0tLQogLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dCAgICB8IDcgKysr
-KysrKwogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Jl
-bmVzYXMsbHZkcy50eHQKaW5kZXggOTAwYTg4NGFkOWY1Li4yZDI0YmQ4Y2JlYzUgMTAwNjQ0Ci0t
-LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5l
-c2FzLGx2ZHMudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0CkBAIC00NSw2ICs0NSwxMyBAQCBPRiBncmFwaCBi
-aW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dy
-YXBoLnR4dC4KIAogRWFjaCBwb3J0IHNoYWxsIGhhdmUgYSBzaW5nbGUgZW5kcG9pbnQuCiAKK09w
-dGlvbmFsIHByb3BlcnRpZXM6CisKKy0gcmVuZXNhcyxjb21wYW5pb24gOiBwaGFuZGxlIHRvIHRo
-ZSBjb21wYW5pb24gTFZEUyBlbmNvZGVyLiBUaGlzIHByb3BlcnR5IGlzCisgIG1hbmRhdG9yeSBm
-b3IgdGhlIGZpcnN0IExWRFMgZW5jb2RlciBvbiBEMyBhbmQgRTMgU29DcywgYW5kIHNoYWxsIHBv
-aW50IHRvCisgIHRoZSBzZWNvbmQgZW5jb2RlciB0byBiZSB1c2VkIGFzIGEgY29tcGFuaW9uIGlu
-IGR1YWwtbGluayBtb2RlLiBJdCBzaGFsbCBub3QKKyAgYmUgc2V0IGZvciBhbnkgb3RoZXIgTFZE
-UyBlbmNvZGVyLgorCiAKIEV4YW1wbGU6CiAKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+The patch
+
+   dt-bindings: sound: sun4i-i2s: Document that the RX channel can be missing
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From eb5b12843b067d685a8d7a191b928b07934b2d02 Mon Sep 17 00:00:00 2001
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Date: Fri, 24 May 2019 14:57:59 +0200
+Subject: [PATCH] dt-bindings: sound: sun4i-i2s: Document that the RX channel
+ can be missing
+
+The A83t and compatibles controllers don't have any reception capabilities
+on some instances of the controllers, even though it was never documented
+as such in the binding before.
+
+Therefore, on those controllers, we don't have the option to set an RX DMA
+channel.
+
+This was already done in the DTSI, but the binding itself was never
+updated. Let's add a special case in the schemas.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../sound/allwinner,sun4i-a10-i2s.yaml        | 52 +++++++++++++++----
+ 1 file changed, 42 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
+index 85b2d6d84055..eb3992138eec 100644
+--- a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
++++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
+@@ -41,19 +41,11 @@ properties:
+       - const: apb
+       - const: mod
+ 
+-  dmas:
+-    items:
+-      - description: RX DMA Channel
+-      - description: TX DMA Channel
+-
+-  dma-names:
+-    items:
+-      - const: rx
+-      - const: tx
+-
+   # Even though it only applies to subschemas under the conditionals,
+   # not listing them here will trigger a warning because of the
+   # additionalsProperties set to false.
++  dmas: true
++  dma-names: true
+   resets:
+     maxItems: 1
+ 
+@@ -72,6 +64,46 @@ allOf:
+       required:
+         - resets
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: allwinner,sun8i-a83t-i2s
++
++    then:
++      properties:
++        dmas:
++          minItems: 1
++          maxItems: 2
++          items:
++            - description: RX DMA Channel
++            - description: TX DMA Channel
++          description:
++            Some controllers cannot receive but can only transmit
++            data. In such a case, the RX DMA channel is to be omitted.
++
++        dma-names:
++          oneOf:
++            - items:
++                - const: rx
++                - const: tx
++            - const: tx
++          description:
++            Some controllers cannot receive but can only transmit
++            data. In such a case, the RX name is to be omitted.
++
++    else:
++      properties:
++        dmas:
++          items:
++            - description: RX DMA Channel
++            - description: TX DMA Channel
++
++        dma-names:
++          items:
++            - const: rx
++            - const: tx
++
+ required:
+   - "#sound-dai-cells"
+   - compatible
+-- 
+2.20.1
