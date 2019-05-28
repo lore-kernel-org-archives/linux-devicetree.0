@@ -1,113 +1,55 @@
-From: Chen-Yu Tsai <wens@kernel.org>
-Subject: Re: [PATCH v2 0/3] ARM: sun8i: a83t: Support Camera Sensor Interface controller
-Date: Tue, 28 May 2019 21:03:06 +0800
-Message-ID: <CAGb2v64NDYo-yOvUQDpqzRB_A3NUgF3dXJeYbz_57uwB7mXwqQ@mail.gmail.com>
-References: <20190520150637.23557-1-megous@megous.com> <20190520151003.uklhhak5clxi5zpf@core.my.home>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH 0/3] Add mclk0 clock source for SAI
+Date: Tue, 28 May 2019 13:20:46 +0000
+Message-ID: <20190528132034.3908-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520151003.uklhhak5clxi5zpf@core.my.home>
+Content-Language: en-US
+Content-ID: <27ECECFB133A6741B1718F4D42309625@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, Ondrej Jirman <megous@megous.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Chen-Yu Tsai <wens@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "timur@kernel.org" <timur@kernel.org>, "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "tiwai@suse.com" <tiwai@suse.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:10 PM Ond=C5=99ej Jirman <megous@megous.com> wro=
-te:
->
-> On Mon, May 20, 2019 at 05:06:34PM +0200, verejna wrote:
-> > From: Ondrej Jirman <megous@megous.com>
-> >
-> > This is a re-send of Chen-Yu's A83T CSI patch series with review tags
-> > applied and removed address/size cells from csi_in port. Already applie=
-d
-> > patches from v1  were dropped.
-> >
-> > The series is ready to be merged:
-> >
-> >   Patch 1 and 2 via sunxi tree
-> >   Patch 3 via media tree
->
-> Sorry, wrong numbers. 2 is for media tree, 3 is for sunxi, 1 is a dt-bind=
-ings
-> patch, where I'm not sure.
+This patch series brings together patches [1] and [2] which
+introduce mclk0 clock source via DT.
 
-Bindings typically go with the driver.
+mclk0..3 are the four clock sources options
+of SAI's clock MUX.=20
 
-Sakari, this series is and has been ready for some time since before the me=
-rge
-window. Could you please merge patches 1 and 2.
+mclk0 option selects:
+ - Bus Clock on i.MX8
+ - MCLK1 on i.MX6/7
+
+Finally we also update the DT binding information for SAI clocks.
+
+In [1] and [2] Nicolin had a very good point on the fact that
+mclk0 might not be needed in the DT. Anyhow, there are two reasons
+for which I think mlck0 should be added to DT:
+
+1) SAI clock source select MUX is really part of the hardware
+2) flexibility! We let DT tell us which is the option for MUX
+option 0.
 
 
-Thanks
-ChenYu
+[1] lkml.org/lkml/2019/4/20/141
+[2] lkml.org/lkml/2019/4/20/56
 
+Daniel Baluta (2):
+  dt-bindings: sound: Clarify the usage of clocks in SAI
+  ASoC: fsl_sai: Read SAI clock source 0 from DT
 
->
-> thanks,
->         Ondrej
->
-> > v2:
-> > - dropped address/size cells from csi_in port
-> > - added review tags
-> >
-> > Please take a look and merge.
-> >
-> > Thank you,
-> >       Ondrej
-> >
-> > --------------------------
-> > Original description:
-> >
-> > Hi everyone,
-> >
-> > This series adds support for the camera sensor interface controller
-> > found on the Allwinner A83T SoC. The controller is similar to the one
-> > found on  the H3, with the addition of a MIPI CSI-2 interface. However,
-> > this series only supports parallel and BT.656 interfaces, based on the
-> > existing driver.
-> >
-> > Patch 1 adds an undocumented clock parent of the CSI MCLK. This was
-> > found after finding the default value to sometimes work and sometimes
-> > not, and then comparing against BSP code.
-> >
-> > Patch 2 adds a compatible string for the A83T variant.
-> >
-> > Patch 3 adds support for the A83T variant to the existing sun6i-csi
-> > driver.
-> >
-> > Patch 4 adds a device node for the controller, as well as commonly
-> > used pin muxing options.
-> >
-> > Patch 5 adds a pin muxing option for I2C1 on the PE pins, used in
-> > conjunction with the CSI pins.
-> >
-> > Patch 6 provides an example usage of the CSI controller: the Bananapi M=
-3
-> > with its camera module attached.
-> >
-> > Please have a look.
-> >
-> > Regards
-> > ChenYu
-> >
-> > Chen-Yu Tsai (3):
-> >   dt-bindings: media: sun6i-csi: Add compatible string for A83T variant
-> >   media: sun6i: Support A83T variant
-> >   ARM: dts: sun8i: a83t: Add device node for CSI (Camera Sensor
-> >     Interface)
-> >
-> >  .../devicetree/bindings/media/sun6i-csi.txt   |  1 +
-> >  arch/arm/boot/dts/sun8i-a83t.dtsi             | 29 +++++++++++++++++++
-> >  .../platform/sunxi/sun6i-csi/sun6i_csi.c      |  1 +
-> >  3 files changed, 31 insertions(+)
-> >
-> > --
-> > 2.21.0
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Shengjiu Wang (1):
+  ARM: dts: imx: Add mclk0 clock for SAI
+
+ Documentation/devicetree/bindings/sound/fsl-sai.txt | 5 +++--
+ arch/arm/boot/dts/imx6sx.dtsi                       | 6 ++++--
+ arch/arm/boot/dts/imx6ul.dtsi                       | 9 ++++++---
+ arch/arm/boot/dts/imx7s.dtsi                        | 9 ++++++---
+ sound/soc/fsl/fsl_sai.c                             | 3 +--
+ 5 files changed, 20 insertions(+), 12 deletions(-)
+
+--=20
+2.17.1
