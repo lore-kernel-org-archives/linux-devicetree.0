@@ -1,64 +1,131 @@
-Return-Path: <SRS0=ZBEu=TQ=bp.renesas.com=biju.das@kernel.org>
+Return-Path: <SRS0=aK1c=T4=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: r8a774c0-cat874: Add BT support
-Date: Thu, 16 May 2019 09:59:26 +0100
-Message-Id: <1557997166-63351-3-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1557997166-63351-1-git-send-email-biju.das@bp.renesas.com>
-References: <1557997166-63351-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v6 2/7] dt-bindings: usb: renesas_usb3: Document usb role
+ switch support
+Date: Tue, 28 May 2019 07:25:58 +0000
+Message-ID: 
+ <OSBPR01MB2103674E30AFECD6878367F9B81E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1557922152-16449-1-git-send-email-biju.das@bp.renesas.com>
+ <1557922152-16449-3-git-send-email-biju.das@bp.renesas.com>
+ <OSAPR01MB308934C379A9759841E58043D8070@OSAPR01MB3089.jpnprd01.prod.outlook.com>
+In-Reply-To: 
+ <OSAPR01MB308934C379A9759841E58043D8070@OSAPR01MB3089.jpnprd01.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables BT support for the CAT874 board.
+HI Shimoda-San,
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Thanks for the feedback.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index 72cccfc..fdca695 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -16,6 +16,7 @@
- 
- 	aliases {
- 		serial0 = &scif2;
-+		serial1 = &hscif2;
- 	};
- 
- 	chosen {
-@@ -154,6 +155,19 @@
- 	clock-frequency = <48000000>;
- };
- 
-+&hscif2 {
-+	pinctrl-0 = <&hscif2_pins>;
-+	pinctrl-names = "default";
-+
-+	uart-has-rtscts;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "ti,wl1837-st";
-+		enable-gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
- 	clock-frequency = <100000>;
-@@ -237,6 +251,11 @@
- 		function = "i2c1";
- 	};
- 
-+	hscif2_pins: hscif2 {
-+		groups = "hscif2_data_a", "hscif2_ctrl_a";
-+		function = "hscif2";
-+	};
-+
- 	scif2_pins: scif2 {
- 		groups = "scif2_data_a";
- 		function = "scif2";
--- 
-2.7.4
+> Subject: RE: [PATCH v6 2/7] dt-bindings: usb: renesas_usb3: Document usb
+> role switch support
+>=20
+> Hi Biju-san,
+>=20
+> Thank you for the patch!
+>=20
+> > From: Biju Das, Sent: Wednesday, May 15, 2019 9:09 PM
+> >
+> > Update the DT bindings documentation to support usb role switch for
+> > USB Type-C connector using USB role switch class framework.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> >  V5-->V6
+> >   * Updated description
+> >   * Added usb-role-switch-property
+> >  V4-->V5
+> >   * No Change
+> >  V3-->V4
+> >   * No Change
+> >  V2-->V3
+> >   * Added optional renesas,usb-role-switch property.
+> >  V1-->V2
+> >   * Added usb-role-switch-property
+> >   * Updated the example with usb-role-switch property.
+> > ---
+> >  .../devicetree/bindings/usb/renesas_usb3.txt       | 26
+> ++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> > b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> > index 35039e7..ea6c63c 100644
+> > --- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> > +++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> > @@ -22,6 +22,11 @@ Required properties:
+> >  Optional properties:
+> >    - phys: phandle + phy specifier pair
+> >    - phy-names: must be "usb"
+> > +  - usb-role-switch: support role switch. see usb/generic.txt
+> > +
+> > +Sub-nodes:
+> > +The port would be added as a subnode if the "usb-role-switch" property=
+ is
+> used.
+> > +	see graph.txt
+>=20
+> I think we should describe which type of a subnode is needed.
+> I made an example below. This is based on the usb-connector.txt.
+> ---
+> Sub-nodes:
+> - any connector to the data bus of this controller should be modeled usin=
+g
+> the OF graph
+> bindings specified in bindings/graph.txt
+
+OK to me. I will add the following  at the end.  ", if the "usb-role-switch=
+" property is
+used."
+> ---
+>=20
+> >  Example of R-Car H3 ES1.x:
+> >  	usb3_peri0: usb@ee020000 {
+> > @@ -39,3 +44,24 @@ Example of R-Car H3 ES1.x:
+> >  		interrupts =3D <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+> >  		clocks =3D <&cpg CPG_MOD 327>;
+> >  	};
+> > +
+> > +Example of RZ/G2E:
+> > +	usb3_peri0: usb@ee020000 {
+> > +		compatible =3D "renesas,r8a774c0-usb3-peri",
+> > +			     "renesas,rcar-gen3-usb3-peri";
+> > +		reg =3D <0 0xee020000 0 0x400>;
+> > +		interrupts =3D <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks =3D <&cpg CPG_MOD 328>;
+> > +		companion =3D <&xhci0>;
+> > +		usb-role-switch;
+> > +
+> > +		port {
+> > +			#address-cells =3D <1>;
+> > +			#size-cells =3D <0>;
+> > +
+> > +			usb3peri_role_switch: endpoint@0 {
+> > +				reg =3D <0>;
+>=20
+> I'm not sure, but I don't think this endpoint@0 and reg =3D <0> are neede=
+d.
+> In other words, can we use have following node?
+> 			usb3peri_role_switch: endpoint {
+> 				remote-endpoint =3D <&hd3ss3220_ep>;
+> 			};
+
+OK . Will update  the example with
+
+        port {                                                             =
+     =20
+                usb3_role_switch: endpoint {                               =
+     =20
+                        remote-endpoint =3D <&hd3ss3220_ep>;               =
+       =20
+                 };                                                        =
+      =20
+         };
+
+Regards,
+Biju
