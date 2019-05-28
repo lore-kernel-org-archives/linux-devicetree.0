@@ -1,43 +1,26 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 1/6] device property: Add new array helper
-Date: Tue, 28 May 2019 19:01:38 +0200
-Message-ID: <CAJZ5v0h28OAiT7KP=TLu069hNvYjCLoFndS+zx7_iE+jKfOF2w@mail.gmail.com>
-References: <20190528154312.14435-1-ckeepax@opensource.cirrus.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: Re: [PATCH v3] ARC: [plat-hsdk]: Add support of Vivante GPU
+Date: Tue, 28 May 2019 10:08:34 -0700
+Message-ID: <bfe55e41-961f-9824-e613-d3f38301680a@synopsys.com>
+References: <20190521175439.15723-1-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190528154312.14435-1-ckeepax@opensource.cirrus.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <alsa-devel@alsa-project.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com, Lee Jones <lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190521175439.15723-1-Eugeniy.Paltsev@synopsys.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, linux-snps-arc@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 28, 2019 at 5:43 PM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
->
-> It is fairly common to want to read an integer array property
-> that is composed of an unknown number of fixed size integer
-> groups. For example, say each group consists of three values
-> which correspond to the settings for one input on the device
-> and the driver supports several chips with different numbers
-> of inputs.
->
-> Add a new helper function to provide this functionality, it
-> differs for the existing helpers in that it allows reading a
-> smaller number of values than the full array size and checks
-> that the number of values read is a multiple of the group size.
+On 5/21/19 10:54 AM, Eugeniy Paltsev wrote:
+> HSDK board has built-in Vivante GPU IP which works perfectly fine
+> with Etnaviv driver, so let's use it.
+> 
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-As a rule, you need also CC all of the device property framework
-changes to linux-acpi@vger.kernel.org, so please resend the series
-with that taken into account.
+Added to for-curr.
 
-Thanks!
+Thx,
+-Vineet
