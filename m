@@ -1,92 +1,52 @@
-From: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Subject: Re: [PATCH 3/4] iio: adc: mediatek: SET_LATE_SYSTEM_SLEEP_PM_OPS
- support
-Date: Tue, 28 May 2019 18:59:56 +0800
-Message-ID: <1559041196.12867.3.camel@mtkswgap22>
-References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
-         <1557994247-16739-4-git-send-email-chun-hung.wu@mediatek.com>
-         <20190518113527.5210b0bf@archlinux> <1558332205.11080.6.camel@mtkswgap22>
-         <7838dcae-8a69-0297-718b-a061b14a456d@gmail.com>
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH 01/12] bus: ti-sysc: Support 16-bit writes too
+Date: Tue, 28 May 2019 11:06:26 +0000
+Message-ID: <5e9a31dfdfd843469c51106fce9ea353@AcuMS.aculab.com>
+References: <20190527121348.45251-1-tony@atomide.com>
+ <20190527121348.45251-2-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7838dcae-8a69-0297-718b-a061b14a456d@gmail.com>
+In-Reply-To: <20190527121348.45251-2-tony@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, peter.wang@mediatek.com, kuohong.wang@mediatek.com, jg_poxu@mediatek.com, stanley.chu@mediatek.com
+To: 'Tony Lindgren' <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Cc: Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias:
-
-  Thanks for your suggestion, I think device_links is a good way to
-make dependency of module's suspend/resume order.
-
-Hi Jonathan:
-
-  Is it ok to keep using late_suspend and early_resume, or do you think
-it's better to use device_links?
-
-Thanks,
-Chun-Hung
-On Wed, 2019-05-22 at 18:28 +0200, Matthias Brugger wrote:
+From: Tony Lindgren
+> Sent: 27 May 2019 13:14
+> We need to also support 16-bit writes for i2c in addition to the reads
+> when we start configuring the sysconfig register for reset and idle modes.
 > 
-> On 20/05/2019 08:03, Chun-Hung Wu wrote:
-> > Hi Jonathan:
-> > 
-> >   Thanks for the prompt reply,
-> > 
-> > On Sat, 2019-05-18 at 11:35 +0100, Jonathan Cameron wrote:
-> >> On Thu, 16 May 2019 16:10:46 +0800
-> >> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
-> >>
-> >>>   Move suspend/resume to late_suspend and
-> >>> early_resume to gurantee users can use auxadc
-> >> guarantee
-> >>
-> > will fix it in next version.
-> >>> driver at suspend/resume stage.
-> >> No problem with the patch content, but we need a reason why they may
-> >> want to do so?
-> > Our thermal drivers uses auxadc at suspend/resume stage.
-> > In order to avoid auxadc suspended prior to thermal driver,
-> > we move auxadc to late_suspend and early_resume.
-> > 
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  drivers/bus/ti-sysc.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> That sounds like a user of device_links [1] to me.
+> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+> --- a/drivers/bus/ti-sysc.c
+> +++ b/drivers/bus/ti-sysc.c
+> @@ -100,6 +100,13 @@ static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
 > 
-> [1] https://www.kernel.org/doc/html/latest/driver-api/device_link.html
-> 
-> > Thanks,
-> > Chun-Hung
-> >>
-> >> Thanks,
-> >>
-> >> Jonathan
-> >>>
-> >>> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-> >>> ---
-> >>>  drivers/iio/adc/mt6577_auxadc.c | 7 ++++---
-> >>>  1 file changed, 4 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
-> >>> index e1bdcc0..58d7cb2 100644
-> >>> --- a/drivers/iio/adc/mt6577_auxadc.c
-> >>> +++ b/drivers/iio/adc/mt6577_auxadc.c
-> >>> @@ -326,9 +326,10 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
-> >>>  	return 0;
-> >>>  }
-> >>>  
-> >>> -static SIMPLE_DEV_PM_OPS(mt6577_auxadc_pm_ops,
-> >>> -			 mt6577_auxadc_suspend,
-> >>> -			 mt6577_auxadc_resume);
-> >>> +static const struct dev_pm_ops mt6577_auxadc_pm_ops = {
-> >>> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(mt6577_auxadc_suspend,
-> >>> +				     mt6577_auxadc_resume)
-> >>> +};
-> >>>  
-> >>>  static const struct of_device_id mt6577_auxadc_of_match[] = {
-> >>>  	{ .compatible = "mediatek,mt2701-auxadc", .data = &mt8173_compat},
-> >>
-> > 
-> > 
+>  static void sysc_write(struct sysc *ddata, int offset, u32 value)
+>  {
+> +	if (ddata->cfg.quirks & SYSC_QUIRK_16BIT) {
+> +		writew_relaxed(value & 0xffff, ddata->module_va + offset);
+> +		writew_relaxed(value >> 16, ddata->module_va + offset + 4);
+
+Should that be + 2 ???
+
+> +
+> +		return;
+> +	}
+> +
+>  	writel_relaxed(value, ddata->module_va + offset);
+>  }
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
