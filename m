@@ -1,25 +1,50 @@
-Return-Path: <SRS0=Bz/z=T7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-io1-f48.google.com ([209.85.166.48]:42382 "EHLO
-        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfEaDuJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 May 2019 23:50:09 -0400
-Received: by mail-io1-f48.google.com with SMTP id g16so7011779iom.9
-        for <devicetree@vger.kernel.org>; Thu, 30 May 2019 20:50:08 -0700 (PDT)
-From: Alex Elder <elder@linaro.org>
-Subject: Oops
-Message-ID: <202177bf-f52b-e314-04d4-5665aa8961cb@linaro.org>
-Date: Thu, 30 May 2019 22:50:06 -0500
+Return-Path: <SRS0=hyxw=T4=pengutronix.de=mtr@kernel.org>
+From: Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH v8 3/5] media: dt-bindings: media: Add vendor prefix for allegro
+Date: Tue, 28 May 2019 19:11:18 +0200
+Message-Id: <20190528171120.7076-4-m.tretter@pengutronix.de>
+In-Reply-To: <20190528171120.7076-1-m.tretter@pengutronix.de>
+References: <20190528171120.7076-1-m.tretter@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: DTML <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, hverkuil@xs4all.nl, Michael Tretter <m.tretter@pengutronix.de>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-If you just received a patch from me you should ignore it.
-It was intended as a test run...  I'm about to send out my
-series (test looked good).
+Add vendor prefix for Allegro DVT, a provider of H.264/AVC, H.265/HEVC,
+AVS2, VP9 and AV1 compliance test suites and H.264/AVC, H.265/HEVC, and
+VP9 encoder, codec and decoder hardware (RTL) IPs.
 
-					-Alex
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v7 -> v8:
+none
+
+v6 -> v7:
+- convert to json format for vendor-prefixes.yaml
+
+v5 -> v6:
+none
+
+v5:
+- new patch
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 33a65a45e319..7da11464991a 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -49,6 +49,8 @@ patternProperties:
+     description: Aeroflex Gaisler AB
+   "^al,.*":
+     description: Annapurna Labs
++  "^allegro,.*"
++    description: Allegro DVT
+   "^allo,.*":
+     description: Allo.com
+   "^allwinner,.*":
+-- 
+2.20.1
