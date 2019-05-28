@@ -1,58 +1,43 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v3 04/10] dt-bindings: display: renesas: lvds: Add
- renesas, companion property
-Date: Tue, 28 May 2019 18:59:00 +0200
-Message-ID: <20190528165900.GA10262@ravnborg.org>
-References: <20190528141234.15425-1-laurent.pinchart+renesas@ideasonboard.com>
- <20190528141234.15425-5-laurent.pinchart+renesas@ideasonboard.com>
- <20190528163730.GA9610@ravnborg.org>
- <20190528164916.GA17874@pendragon.ideasonboard.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 1/6] device property: Add new array helper
+Date: Tue, 28 May 2019 19:01:38 +0200
+Message-ID: <CAJZ5v0h28OAiT7KP=TLu069hNvYjCLoFndS+zx7_iE+jKfOF2w@mail.gmail.com>
+References: <20190528154312.14435-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190528164916.GA17874@pendragon.ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190528154312.14435-1-ckeepax@opensource.cirrus.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <alsa-devel@alsa-project.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudC4KCj4gPiA+ICAKPiA+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPiA+ICsK
-PiA+ID4gKy0gcmVuZXNhcyxjb21wYW5pb24gOiBwaGFuZGxlIHRvIHRoZSBjb21wYW5pb24gTFZE
-UyBlbmNvZGVyLiBUaGlzIHByb3BlcnR5IGlzCj4gPiA+ICsgIG1hbmRhdG9yeSBmb3IgdGhlIGZp
-cnN0IExWRFMgZW5jb2RlciBvbiBEMyBhbmQgRTMgU29DcywgYW5kIHNoYWxsIHBvaW50IHRvCj4g
-PiA+ICsgIHRoZSBzZWNvbmQgZW5jb2RlciB0byBiZSB1c2VkIGFzIGEgY29tcGFuaW9uIGluIGR1
-YWwtbGluayBtb2RlLiBJdCBzaGFsbCBub3QKPiA+ID4gKyAgYmUgc2V0IGZvciBhbnkgb3RoZXIg
-TFZEUyBlbmNvZGVyLgo+ID4gCj4gPiBJZiB0aGUgRDMgYW5kIEUzIHNvY3MgZG8gbm90IG1hbmRh
-dGUgdGhlIHVzZSBvZiBkdWFsLWxpbmssIHRoZW4gd2hhdCB0bwo+ID4gZG8gaW4gdGhlIERUPyBC
-ZWNhdXNlIGFjY29yZGluZyB0byB0aGUgYWJvdmUgdGhpcyBwcm9wZXJ0eSBtdXN0IGJlCj4gPiBz
-cGVjaWZpZWQgZm9yIEQzIGFuZCBFMyBTT0Mncy4KPiAKPiBUaGlzIHByb3BlcnR5IGRvZXNuJ3Qg
-ZW5hYmxlIGR1YWwtbGluayBtb2RlLCBpdCBvbmx5IHNwZWNpZmllcyB0aGUKPiBjb21wYW5pb24g
-TFZEUyBlbmNvZGVyIHVzZWQgZm9yIGR1YWwtbGluayBtb2RlLCB3aGVuIGVuYWJsZWQgKHRocm91
-Z2gKPiBjb21tdW5pY2F0aW9uIGJldHdlZW4gdGhlIExWRFMgZW5jb2RlciBhbmQgdGhlIExWRFMg
-cmVjZWl2ZXIgYXQKPiBydW50aW1lKS4KPiAKPiBKYWNvcG8gaGFkIGEgc2ltaWxhciBjb21tZW50
-IHNvIEkgc3VwcG9zZSB0aGlzIGlzbid0IGNsZWFyLiBIb3cgd291bGQKPiB5b3Ugd29yZCBpdCB0
-byBtYWtlIGl0IGNsZWFyID8KTGV0IG1lIHRyeToKCgotIHJlbmVzYXMsY29tcGFuaW9uIDogcGhh
-bmRsZSB0byB0aGUgY29tcGFuaW9uIExWRFMgZW5jb2Rlci4gVGhpcyBwcm9wZXJ0eSBpcwogIG1h
-bmRhdG9yeSBmb3IgdGhlIGZpcnN0IExWRFMgZW5jb2RlciBvbiBEMyBhbmQgRTMgU29DcyB3aGVu
-IGR1YWwtbGluayBtb2RlCiAgaXMgc3VwcG9ydGVkLgogIFRoZSBwcm9wZXJ0eSBzaGFsbCBwb250
-IHRvIHRoZSBwaGFuZGxlIG9mIHRoZSBzZWNvbmQgZW5jb2RlciB0byBiZSB1c2VkIGFzIGEKICBj
-b21wYW5pb24gaW4gZHVhbC1saW5rIG1vZGUuIEl0IHNoYWxsIG5vdCBiZSBzZXQgZm9yIGFueSBv
-dGhlciBMVkRTIGVuY29kZXIuCgpUaGUgbWFpbiBkaWZmZXJlbmNlIGlzICJ3aGVuIGR1YWwtbGlu
-ayBtb2RlIGlzIHN1cHBvcnRlZCIuCkFzIHBlciBteSB1bmRlcnN0YW5kaW5nIHRoaXMgcHJvcGVy
-dHkgaXMgb25seSByZWxldmFudCB3aGVuIHRoZSBhY3R1YWwKSFcgc3VwcG9ydHMgLyB1c2VzIGR1
-YWwtbGluayBtb2RlLgpTbyBmb3IgYSBib2FyZCB0aGF0IGRvIG5vdCBldmVuIHdpcmUgdXAgZHVh
-bC1saW5rLCB0aGVuIHNldHRpbmcgdGhlCnByb3BlcnR5IHdvdWxkIGJlIGNvbmZ1c2luZy4KCkkg
-aG9wZSB0aGlzIGJldHRlciBkZXNjcmliZXMgbXkgdW5kZXJzdGFuZGluZy4KCglTYW0KX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On Tue, May 28, 2019 at 5:43 PM Charles Keepax
+<ckeepax@opensource.cirrus.com> wrote:
+>
+> It is fairly common to want to read an integer array property
+> that is composed of an unknown number of fixed size integer
+> groups. For example, say each group consists of three values
+> which correspond to the settings for one input on the device
+> and the driver supports several chips with different numbers
+> of inputs.
+>
+> Add a new helper function to provide this functionality, it
+> differs for the existing helpers in that it allows reading a
+> smaller number of values than the full array size and checks
+> that the number of values read is a multiple of the group size.
+
+As a rule, you need also CC all of the device property framework
+changes to linux-acpi@vger.kernel.org, so please resend the series
+with that taken into account.
+
+Thanks!
