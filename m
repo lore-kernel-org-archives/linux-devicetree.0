@@ -1,65 +1,51 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
-Date: Tue, 28 May 2019 06:34:47 -0500
-Message-ID: <34dbfab0-0dd4-cf9a-ed86-a74363981077@ti.com>
-References: <20190523190820.29375-1-dmurphy@ti.com>
- <20190523190820.29375-2-dmurphy@ti.com> <20190527103355.GA5287@amd>
- <522728b0-147b-3708-fea1-88a895491e05@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Subject: [PATCH v4 0/2] clk: renesas: r9a06g032: Add clock domain support
+Date: Tue, 28 May 2019 12:54:25 +0100
+Message-ID: <1559044467-2639-1-git-send-email-gareth.williams.jx@renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <522728b0-147b-3708-fea1-88a895491e05@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: jacek.anaszewski@gmail.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Gareth Williams <gareth.williams.jx@renesas.com>, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Pavel
+There are several clocks on the r9a06g032 which are currently not enabled
+in their drivers that can be delegated to clock domain system for power
+management. Therefore add support for clock domain functionality to the
+r9a06g032 clock driver after updating the relevant dt-bindings file.
 
-On 5/27/19 7:45 PM, Dan Murphy wrote:
-> Pavel
->
-> On 5/27/19 5:33 AM, Pavel Machek wrote:
->> On Thu 2019-05-23 14:08:12, Dan Murphy wrote:
->>> Add a documentation of LED Multicolor LED class specific
->>> sysfs attributes.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>   .../ABI/testing/sysfs-class-led-multicolor    | 57 
->>> +++++++++++++++++++
->>>   1 file changed, 57 insertions(+)
->>>   create mode 100644 
->>> Documentation/ABI/testing/sysfs-class-led-multicolor
->>>
->>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor 
->>> b/Documentation/ABI/testing/sysfs-class-led-multicolor
->>> new file mode 100644
->>> index 000000000000..2f102ede258b
->>> --- /dev/null
->>> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
->>> @@ -0,0 +1,57 @@
->>> +What:        /sys/class/leds/<led>/colors/sync_enable
->>> +Date:        April 2019
->> I believe I suggested more reasonable interface. Why not use that?
->>
->
-> Can you please provide the reference to your interface?
->
-I think I found the suggestion [0].  Assuming that was the suggestion it 
-violates the kernel 1 value/file and there was agreement that this 
-interface had value. In testing the interface, it made sense to be able 
-to setup a color after writing each color brightness file and then 
-syncing the color LEDs with the new brightness levels.  It also provides 
-flexibility to be able to set a single LED color without writing sync.  
-The decision to do either or should really be a user space decision.   
-If I have referenced the wrong thread please let me know which thread 
-you are referring to.
+v4:
+ - Removed unneeded initialisation of "error" in 
+   create_add_module_clock.
+ - Moved declaration of "index" to the start of r9a06g032_attach_dev.
+ - Moved of_node_put(clkspec.np) call to after create_add_module_clock
+   call in r9a06g032_attach_dev.
+ - Added missing HCLK to UART0 example to show the clock added
+   to the driver.
+v3:
+ - "managed" flag integrated into existing bit field.
+ - Removed unneeded initialisation inside D_MODULE.
+ - Removed the use of unneeded r9a06g032_clk_domain variable.
+ - Removed error message prints that cannot occur.
+ - Removed __init and __initconst from attach function and
+   r9a06g032_clocks[].
+ - Reordered r9a06g032_add_clk_domain call to after 
+   devm_add_action_or_reset during probe.
+ - Added clock type check when retrieving clocks from device tree.
+ - Reordered of_node_put call to before error check in
+   create_add_module_clock.
+ - changed r9a06g032_detach_dev to a static function.
+ - Added new #power-domain-cells property to the required properties.
+ - Added "#power-domain-cells" and "power-domains" lines to examples.
+v2:
+ - Rebased onto kernel/git/geert/renesas-drivers.git
 
-[0] https://lore.kernel.org/patchwork/patch/1057044/
+Gareth Williams (2):
+  dt-bindings: clock: renesas,r9a06g032-sysctrl: Document power Domains
+  clk: renesas: r9a06g032: Add clock domain support
 
-<snip>
+ .../bindings/clock/renesas,r9a06g032-sysctrl.txt   |   7 +-
+ drivers/clk/renesas/r9a06g032-clocks.c             | 230 ++++++++++++++-------
+ 2 files changed, 166 insertions(+), 71 deletions(-)
 
-Dan
+-- 
+2.7.4
