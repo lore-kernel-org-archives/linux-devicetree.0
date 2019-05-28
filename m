@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 09/11] ARM: dts: sun8i: v3s: Fix the RTC node
-Date: Tue, 28 May 2019 22:30:39 +0200
-Message-ID: <6051e00cea17a8575dc400c448dc8fc212c94492.1559075389.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v2 11/11] ARM: dts: sun8i: r40: Change the RTC compatible
+Date: Tue, 28 May 2019 22:30:41 +0200
+Message-ID: <f123c02a0458a4a90234f636b85a2ef048075794.1559075389.git-series.maxime.ripard@bootlin.com>
 References: <434446bc5541d7dfe5823874355c7db8c7e213fa.1559075389.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,68 +21,30 @@ To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutlan
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-For some reason, while the v3s has a dedicated compatible in the RTC
-binding, the one actually used was the A31's. However, it turns out that
-the controller is pretty different (which justified the compatible).
-
-Let's use the proper compatible, and use the proper binding description as
-well.
+Unlike what's being reported in the device tree so far, the RTC in the R40
+is quite different from the H3. Indeed it doesn't have the internal
+oscillator output, and it has only a single interrupt. Let's add a
+compatible for it.
 
 Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
 ---
+ arch/arm/boot/dts/sun8i-r40.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Changes from v1:
-  - Split that patch into two
----
- arch/arm/boot/dts/sun8i-v3s.dtsi | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
-index df72b1719c34..6ba9377458b3 100644
---- a/arch/arm/boot/dts/sun8i-v3s.dtsi
-+++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
-@@ -91,7 +91,7 @@
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <32768>;
--			clock-output-names = "osc32k";
-+			clock-output-names = "ext-osc32k";
- 		};
- 	};
- 
-@@ -264,17 +264,20 @@
- 		ccu: clock@1c20000 {
- 			compatible = "allwinner,sun8i-v3s-ccu";
- 			reg = <0x01c20000 0x400>;
--			clocks = <&osc24M>, <&osc32k>;
-+			clocks = <&osc24M>, <&rtc 0>;
- 			clock-names = "hosc", "losc";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index bb856e53b806..6007d0cc252d 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -318,8 +318,7 @@
  		};
  
  		rtc: rtc@1c20400 {
--			compatible = "allwinner,sun6i-a31-rtc";
-+			#clock-cells = <1>;
-+			compatible = "allwinner,sun8i-v3-rtc";
- 			reg = <0x01c20400 0x54>;
- 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc32k>;
-+			clock-output-names = "osc32k", "osc32k-out";
- 		};
- 
- 		pio: pinctrl@1c20800 {
-@@ -282,7 +285,7 @@
- 			reg = <0x01c20800 0x400>;
- 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
-+			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&rtc 0>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
+-			compatible = "allwinner,sun8i-r40-rtc",
+-				     "allwinner,sun8i-h3-rtc";
++			compatible = "allwinner,sun8i-r40-rtc";
+ 			reg = <0x01c20400 0x400>;
+ 			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-output-names = "osc32k", "osc32k-out";
 -- 
 git-series 0.9.1
