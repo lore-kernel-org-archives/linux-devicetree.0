@@ -1,12 +1,14 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 01/11] dt-bindings: rtc: Add YAML schemas for the generic
- RTC bindings
-Date: Tue, 28 May 2019 22:30:31 +0200
-Message-ID: <434446bc5541d7dfe5823874355c7db8c7e213fa.1559075389.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v2 03/11] dt-bindings: rtc: Convert Allwinner A10 RTC to a
+ schema
+Date: Tue, 28 May 2019 22:30:33 +0200
+Message-ID: <c9598ec7e668303e62c5e533f98096ca22d847aa.1559075389.git-series.maxime.ripard@bootlin.com>
+References: <434446bc5541d7dfe5823874355c7db8c7e213fa.1559075389.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <434446bc5541d7dfe5823874355c7db8c7e213fa.1559075389.git-series.maxime.ripard@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,115 +22,92 @@ To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutlan
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The real time clocks have a bunch of generic properties that are needed in
-a device tree. Add a YAML schemas for those.
+The older Allwinner SoCs have an embedded RTC supported in Linux, with a
+matching Device Tree binding.
 
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
+
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/rtc/rtc.txt  | 34 +-------------
- Documentation/devicetree/bindings/rtc/rtc.yaml | 50 +++++++++++++++++++-
- 2 files changed, 51 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc.yaml
+ Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml | 43 +++++++++++++++++++++++++++++++++++++++++++
+ Documentation/devicetree/bindings/rtc/sunxi-rtc.txt                | 17 -----------------
+ 2 files changed, 43 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/rtc/sunxi-rtc.txt
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
-index a97fc6a9a75e..4d6f81dccc68 100644
---- a/Documentation/devicetree/bindings/rtc/rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-@@ -1,36 +1,4 @@
--Generic device tree bindings for Real Time Clock devices
--========================================================
--
--This document describes generic bindings which can be used to describe Real Time
--Clock devices in a device tree.
--
--Required properties
---------------------
--
--- compatible : name of RTC device following generic names recommended practice.
--
--For other required properties e.g. to describe register sets,
--clocks, etc. check the binding documentation of the specific driver.
--
--Optional properties
---------------------
--
--- start-year : if provided, the default hardware range supported by the RTC is
--               shifted so the first usable year is the specified one.
--
--The following properties may not be supported by all drivers. However, if a
--driver wants to support one of the below features, it should adapt the bindings
--below.
--- trickle-resistor-ohms :   Selected resistor for trickle charger. Should be given
--                            if trickle charger should be enabled
--- trickle-diode-disable :   Do not use internal trickle charger diode Should be
--                            given if internal trickle charger diode should be
--                            disabled
--- wakeup-source :           Enables wake up of host system on alarm
--- quartz-load-femtofarads : The capacitive load of the quartz(x-tal),
--                            expressed in femto Farad (fF).
--                            The default value shall be listed (if optional),
--                            and likewise all valid values.
-+This file has been moved to rtc.yaml.
- 
- Trivial RTCs
- ------------
-diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
+diff --git a/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml b/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
 new file mode 100644
-index 000000000000..ee237b2ed66a
+index 000000000000..46d69c32b89b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
-@@ -0,0 +1,50 @@
++++ b/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
+@@ -0,0 +1,43 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/rtc/rtc.yaml#
++$id: http://devicetree.org/schemas/rtc/allwinner,sun4i-a10-rtc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: RTC Generic Binding
++title: Allwinner A10 RTC Device Tree Bindings
++
++allOf:
++  - $ref: "rtc.yaml#"
 +
 +maintainers:
-+  - Alexandre Belloni <alexandre.belloni@bootlin.com>
-+
-+description: |
-+  This document describes generic bindings which can be used to
-+  describe Real Time Clock devices in a device tree.
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
 +
 +properties:
-+  $nodename:
-+    pattern: "^rtc(@.*|-[0-9a-f])*$"
++  compatible:
++    enum:
++      - allwinner,sun4i-a10-rtc
++      - allwinner,sun7i-a20-rtc
 +
-+  quartz-load-femtofarads:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      The capacitive load of the quartz(x-tal), expressed in femto
-+      Farad (fF). The default value shall be listed (if optional),
-+      and likewise all valid values.
++  reg:
++    maxItems: 1
 +
-+  start-year:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      If provided, the default hardware range supported by the RTC is
-+      shifted so the first usable year is the specified one.
++  interrupts:
++    maxItems: 1
 +
-+  trickle-diode-disable:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      Do not use internal trickle charger diode. Should be given if
-+      internal trickle charger diode should be disabled.
++required:
++  - compatible
++  - reg
++  - interrupts
 +
-+  trickle-resistor-ohms:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Selected resistor for trickle charger. Should be given
-+      if trickle charger should be enabled.
++additionalProperties: false
 +
-+  wakeup-source:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      Enables wake up of host system on alarm.
++examples:
++  - |
++    rtc: rtc@1c20d00 {
++        compatible = "allwinner,sun4i-a10-rtc";
++        reg = <0x01c20d00 0x20>;
++        interrupts = <24>;
++    };
 +
 +...
-
-base-commit: 531b0a360899269bd99a38ba9852a8ba46852bcd
+diff --git a/Documentation/devicetree/bindings/rtc/sunxi-rtc.txt b/Documentation/devicetree/bindings/rtc/sunxi-rtc.txt
+deleted file mode 100644
+index 4a8d79c1cf08..000000000000
+--- a/Documentation/devicetree/bindings/rtc/sunxi-rtc.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-* sun4i/sun7i Real Time Clock
+-
+-RTC controller for the Allwinner A10/A20
+-
+-Required properties:
+-- compatible : Should be "allwinner,sun4i-a10-rtc" or "allwinner,sun7i-a20-rtc"
+-- reg: physical base address of the controller and length of memory mapped
+-  region.
+-- interrupts: IRQ line for the RTC.
+-
+-Example:
+-
+-rtc: rtc@1c20d00 {
+-	compatible = "allwinner,sun4i-a10-rtc";
+-	reg = <0x01c20d00 0x20>;
+-	interrupts = <24>;
+-};
 -- 
 git-series 0.9.1
