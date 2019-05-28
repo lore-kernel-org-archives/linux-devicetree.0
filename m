@@ -1,59 +1,162 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
-Date: Tue, 28 May 2019 20:29:34 +0200
-Message-ID: <c947d07c-2a8d-b9a8-b2ac-6c249ac54bca@gmail.com>
-References: <20190523190820.29375-1-dmurphy@ti.com>
- <20190523190820.29375-2-dmurphy@ti.com>
- <f01ac400-efda-80a8-4d63-1e2add5e054a@gmail.com>
- <185abdd6-100c-0a71-2da9-8f556d8ea701@ti.com>
- <333167d0-4615-2fbe-e933-cbca623998ef@gmail.com>
- <e54d9d29-5daa-fd3a-a5a9-ebd2450882ee@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Akash Gajjar <akash@openedev.com>
+Subject: [PATCH] arm64: dts: rockchip: add WiFi+BT support on ROCK Pi4 board
+Date: Wed, 29 May 2019 00:16:58 +0530
+Message-ID: <20190528184705.5240-1-akash@openedev.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e54d9d29-5daa-fd3a-a5a9-ebd2450882ee@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+To: heiko@sntech.de
+Cc: Akash Gajjar <akash@openedev.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/28/19 8:19 PM, Dan Murphy wrote:
-> Jacek
-> 
-> On 5/28/19 12:44 PM, Jacek Anaszewski wrote:
->> Dan,
->>
->> On 5/28/19 7:32 PM, Dan Murphy wrote:
->>> Jacek
->>>
->>> On 5/27/19 3:00 PM, Jacek Anaszewski wrote:
->>>> Hi Dan,
->>>>
->>>> Thank you for the update.
->>>>
->>>> One thing is missing here - we need to document how legacy brightness
->>>> levels map to the sub-LED color levels, i.e. what you do in
->>>> multicolor_set_brightness().
->>>
->>>
->>> Ok so i will need to document the algorithm that is used to determine 
->>> the color LED brightness.
->>
->> Right, and please send just an update of that single patch.
->>
-> 
-> So you are asking for v4 with only this patch updated.
+Rock Pi 4 has a on board AP6256 WiFi/BT Module. enable wifi and bluetooth
+support on Rock Pi 4 board.
 
-Not exactly - I am asking for v4 of this patch. We don't need
-to spam the lists with the rest of unaltered patches from the series.
+Signed-off-by: Akash Gajjar <akash@openedev.com>
+---
+ .../boot/dts/rockchip/rk3399-rock-pi-4.dts    | 97 +++++++++++++++++++
+ 1 file changed, 97 insertions(+)
 
-The interface seems to be the most vital part of this patch set,
-and it is possible that it will undergo at least slight modifications.
-
-We will move to discussing the code once we achieve a total consensus.
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+index e030627159c6..55e74f4d5cd0 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+@@ -25,6 +25,15 @@
+ 		#clock-cells = <0>;
+ 	};
+ 
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		clocks = <&rk808 1>;
++		clock-names = "ext_clock";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_enable_h>;
++		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
++	};
++
+ 	vcc12v_dcin: dc-12v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc12v_dcin";
+@@ -451,12 +460,46 @@
+ };
+ 
+ &pinctrl {
++	bt {
++		bt_enable_h: bt-enable-h {
++			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		bt_host_wake_l: bt-host-wake-l {
++			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		bt_wake_l: bt-wake-l {
++			rockchip,pins = <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	pcie {
+ 		pcie_pwr_en: pcie-pwr-en {
+ 			rockchip,pins = <2 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+ 
++	sdio0 {
++		sdio0_bus4: sdio0-bus4 {
++			rockchip,pins =
++				<2 20 RK_FUNC_1 &pcfg_pull_up_20ma>,
++				<2 21 RK_FUNC_1 &pcfg_pull_up_20ma>,
++				<2 22 RK_FUNC_1 &pcfg_pull_up_20ma>,
++				<2 23 RK_FUNC_1 &pcfg_pull_up_20ma>;
++		};
++
++		sdio0_cmd: sdio0-cmd {
++			rockchip,pins =
++				<2 24 RK_FUNC_1 &pcfg_pull_up_20ma>;
++		};
++
++		sdio0_clk: sdio0-clk {
++			rockchip,pins =
++				<2 25 RK_FUNC_1 &pcfg_pull_none_20ma>;
++		};
++	};
++
+ 	pmic {
+ 		pmic_int_l: pmic-int-l {
+ 			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
+@@ -482,6 +525,17 @@
+ 			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
++
++	wifi {
++		wifi_enable_h: wifi-enable-h {
++			rockchip,pins =
++				<0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		wifi_host_wake_l: wifi-host-wake-l {
++			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
+ };
+ 
+ &pwm2 {
+@@ -494,6 +548,32 @@
+ 	vref-supply = <&vcc_1v8>;
+ };
+ 
++&sdio0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	bus-width = <4>;
++	clock-frequency = <50000000>;
++	cap-sdio-irq;
++	cap-sd-highspeed;
++	keep-power-in-suspend;
++	mmc-pwrseq = <&sdio_pwrseq>;
++	non-removable;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
++	sd-uhs-sdr104;
++	status = "okay";
++
++	brcmf: wifi@1 {
++		compatible = "brcm,bcm4329-fmac";
++		reg = <1>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
++		interrupt-names = "host-wake";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_host_wake_l>;
++	};
++};
++
+ &sdmmc {
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+@@ -557,6 +637,23 @@
+ 	};
+ };
+ 
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
++	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&rk808 1>;
++		clock-names = "ext_clock";
++		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
++		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
++		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
++	};
++};
++
+ &uart2 {
+ 	status = "okay";
+ };
 -- 
-Best regards,
-Jacek Anaszewski
+2.17.1
