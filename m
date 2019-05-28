@@ -1,142 +1,39 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: [PATCH V2 04/12] clk: tegra: add support for peripheral clock suspend and resume
-Date: Tue, 28 May 2019 16:08:48 -0700
-Message-ID: <1559084936-4610-5-git-send-email-skomatineni@nvidia.com>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCHv4 2/4] firmware: add Intel Stratix10 remote system update
+ driver
+Date: Tue, 28 May 2019 16:15:57 -0700
+Message-ID: <20190528231557.GA28886@kroah.com>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: richard.gong@linux.intel.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sen.li@intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch implements peripheral clock context save and restore
-to support system suspend and resume operation.
+On Tue, May 28, 2019 at 03:20:31PM -0500, richard.gong@linux.intel.com wrote:
+> From: Richard Gong <richard.gong@intel.com>
+> 
+> The Intel Remote System Update (RSU) driver exposes interfaces access
+> through the Intel Service Layer to user space via sysfs interface.
+> The RSU interfaces report and control some of the optional RSU features
+> on Intel Stratix 10 SoC.
+> 
+> The RSU feature provides a way for customers to update the boot
+> configuration of a Intel Stratix 10 SoC device with significantly reduced
+> risk of corrupting the bitstream storage and bricking the system.
+> 
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
+> Reviewed-by: Alan Tull <atull@kernel.org>
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/clk/tegra/clk.c | 74 ++++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/clk/tegra/clk.h |  3 ++
- 2 files changed, 76 insertions(+), 1 deletion(-)
+Is Alan reviewing all of these new versions before you post them
+publicly?  If so, great, if not, don't add tags to new versions when you
+change things around...
 
-diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-index 6f2862eddad7..08b788766564 100644
---- a/drivers/clk/tegra/clk.c
-+++ b/drivers/clk/tegra/clk.c
-@@ -81,6 +81,10 @@ static struct clk **clks;
- static int clk_num;
- static struct clk_onecell_data clk_data;
- 
-+#ifdef CONFIG_PM_SLEEP
-+static u32 *periph_ctx;
-+#endif
-+
- /* Handlers for SoC-specific reset lines */
- static int (*special_reset_assert)(unsigned long);
- static int (*special_reset_deassert)(unsigned long);
-@@ -210,6 +214,65 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
- 	}
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+void tegra_clk_periph_suspend(void __iomem *clk_base)
-+{
-+	int i, idx;
-+
-+	idx = 0;
-+	for (i = 0; i < periph_banks; i++, idx++)
-+		periph_ctx[idx] =
-+			readl_relaxed(clk_base + periph_regs[i].rst_reg);
-+
-+	for (i = 0; i < periph_banks; i++, idx++)
-+		periph_ctx[idx] =
-+			readl_relaxed(clk_base + periph_regs[i].enb_reg);
-+}
-+
-+void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *clk_base)
-+{
-+	int i;
-+
-+	WARN_ON(count != periph_banks);
-+
-+	for (i = 0; i < count; i++)
-+		writel_relaxed(clks_on[i], clk_base + periph_regs[i].enb_reg);
-+}
-+
-+void tegra_clk_periph_resume(void __iomem *clk_base)
-+{
-+	int i, idx;
-+
-+	idx = 0;
-+	for (i = 0; i < periph_banks; i++, idx++)
-+		writel_relaxed(periph_ctx[idx],
-+			       clk_base + periph_regs[i].rst_reg);
-+
-+	/* ensure all resets have propagated */
-+	fence_udelay(2, clk_base);
-+	tegra_read_chipid();
-+
-+	for (i = 0; i < periph_banks; i++, idx++)
-+		writel_relaxed(periph_ctx[idx],
-+			       clk_base + periph_regs[i].enb_reg);
-+
-+	/* ensure all enables have propagated */
-+	fence_udelay(2, clk_base);
-+	tegra_read_chipid();
-+}
-+
-+static int tegra_clk_suspend_ctx_init(int banks)
-+{
-+	int err = 0;
-+
-+	periph_ctx = kzalloc(2 * banks * sizeof(*periph_ctx), GFP_KERNEL);
-+	if (!periph_ctx)
-+		err = -ENOMEM;
-+
-+	return err;
-+}
-+#endif
-+
- struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
- {
- 	clk_base = regs;
-@@ -226,11 +289,20 @@ struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
- 	periph_banks = banks;
- 
- 	clks = kcalloc(num, sizeof(struct clk *), GFP_KERNEL);
--	if (!clks)
-+	if (!clks) {
- 		kfree(periph_clk_enb_refcnt);
-+		return NULL;
-+	}
- 
- 	clk_num = num;
- 
-+#ifdef CONFIG_PM_SLEEP
-+	if (tegra_clk_suspend_ctx_init(banks)) {
-+		kfree(periph_clk_enb_refcnt);
-+		kfree(clks);
-+		return NULL;
-+	}
-+#endif
- 	return clks;
- }
- 
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index e4d124cc5657..ab238b2c3125 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -848,6 +848,9 @@ void tegra_clk_pll_out_resume(struct clk *clk, unsigned long rate);
- void tegra_clk_plle_tegra210_resume(struct clk *c);
- void tegra_clk_sync_state_pll(struct clk *c);
- void tegra_clk_sync_state_pll_out(struct clk *clk);
-+void tegra_clk_periph_suspend(void __iomem *clk_base);
-+void tegra_clk_periph_resume(void __iomem *clk_base);
-+void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *clk_base);
- #endif
- 
- 
--- 
-2.7.4
+thanks,
+
+greg k-h
