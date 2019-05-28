@@ -1,88 +1,44 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: mmc: Add YAML schemas for the
- generic MMC options
-Date: Tue, 28 May 2019 19:26:49 +0200
-Message-ID: <20190528172649.6mkdkscnu5d2rybi@flea>
-References: <c6b8789d71ce1970be77387c066a262dca0a0dec.1558340089.git-series.maxime.ripard@bootlin.com>
- <CAPDyKFrs6f4_Xr=ATay_wDYNPa+-jdZvP4XSB55B-EFMAETN1Q@mail.gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
+Date: Tue, 28 May 2019 12:32:21 -0500
+Message-ID: <185abdd6-100c-0a71-2da9-8f556d8ea701@ti.com>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-2-dmurphy@ti.com>
+ <f01ac400-efda-80a8-4d63-1e2add5e054a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFrs6f4_Xr=ATay_wDYNPa+-jdZvP4XSB55B-EFMAETN1Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f01ac400-efda-80a8-4d63-1e2add5e054a@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, pavel@ucw.cz, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Jacek
 
-On Tue, May 28, 2019 at 10:40:16AM +0200, Ulf Hansson wrote:
-> > +patternProperties:
-> > +  "^.*@[0-9]+$":
-> > +    properties:
-> > +      reg:
-> > +        items:
-> > +          - minimum: 0
-> > +            maximum: 7
-> > +            description:
-> > +              Must contain the SDIO function number of the function this
-> > +              subnode describes. A value of 0 denotes the memory SD
-> > +              function, values from 1 to 7 denote the SDIO functions.
-> > +
-> > +      broken-hpi:
-> > +        $ref: /schemas/types.yaml#/definitions/flag
-> > +        description:
-> > +          Use this to indicate that the mmc-card has a broken hpi
-> > +          implementation, and that hpi should not be used.
-> > +
-> > +    required:
-> > +      - reg
-> > +
+On 5/27/19 3:00 PM, Jacek Anaszewski wrote:
+> Hi Dan,
 >
-> [...]
+> Thank you for the update.
 >
-> > -Use of Function subnodes
-> > -------------------------
-> > -
-> > -On embedded systems the cards connected to a host may need additional
-> > -properties. These can be specified in subnodes to the host controller node.
-> > -The subnodes are identified by the standard 'reg' property.
-> > -Which information exactly can be specified depends on the bindings for the
-> > -SDIO function driver for the subnode, as specified by the compatible string.
-> > -
-> > -Required host node properties when using function subnodes:
-> > -- #address-cells: should be one. The cell is the slot id.
-> > -- #size-cells: should be zero.
-> > -
-> > -Required function subnode properties:
-> > -- reg: Must contain the SDIO function number of the function this subnode
-> > -       describes. A value of 0 denotes the memory SD function, values from
-> > -       1 to 7 denote the SDIO functions.
-> > -
-> > -Optional function subnode properties:
-> > -- compatible: name of SDIO function following generic names recommended practice
-> > -
+> One thing is missing here - we need to document how legacy brightness
+> levels map to the sub-LED color levels, i.e. what you do in
+> multicolor_set_brightness().
+
+
+Ok so i will need to document the algorithm that is used to determine 
+the color LED brightness.
+
+
+Dan
+
 >
-> I think most of the information of how we use sub(child) nodes
-> disappeared in this conversion - or at least gets harder to
-> understand. Could we perhaps keep some of this?
+> Best regards,
+> Jacek Anaszewski
+>
 
-Sure, what would you like to keep in particular?
+<snip>
 
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>
