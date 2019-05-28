@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 5/7] ARM: dts: BCM63xx: Fix DTC W=1 warnings
-Date: Tue, 28 May 2019 16:01:32 -0700
-Message-ID: <20190528230134.27007-6-f.fainelli@gmail.com>
+Subject: [PATCH 7/7] ARM: dts: NSP: Fix the bulk of W=1 DTC warnings
+Date: Tue, 28 May 2019 16:01:34 -0700
+Message-ID: <20190528230134.27007-8-f.fainelli@gmail.com>
 References: <20190528230134.27007-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190528230134.27007-1-f.fainelli@gmail.com>
@@ -17,63 +17,161 @@ Fix the bulk of the unit_address_vs_reg warnings and unnecessary
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/boot/dts/bcm63138.dtsi    | 9 +++------
- arch/arm/boot/dts/bcm963138dvt.dts | 2 +-
- 2 files changed, 4 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/bcm-nsp.dtsi     | 9 +++------
+ arch/arm/boot/dts/bcm958522er.dts  | 2 +-
+ arch/arm/boot/dts/bcm958525er.dts  | 2 +-
+ arch/arm/boot/dts/bcm958525xmc.dts | 2 +-
+ arch/arm/boot/dts/bcm958622hr.dts  | 2 +-
+ arch/arm/boot/dts/bcm958623hr.dts  | 2 +-
+ arch/arm/boot/dts/bcm958625hr.dts  | 2 +-
+ arch/arm/boot/dts/bcm958625k.dts   | 2 +-
+ arch/arm/boot/dts/bcm988312hr.dts  | 2 +-
+ 9 files changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
-index e6a41e1b27fd..9c0325cf9e22 100644
---- a/arch/arm/boot/dts/bcm63138.dtsi
-+++ b/arch/arm/boot/dts/bcm63138.dtsi
-@@ -41,9 +41,6 @@
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index 6925b30c2253..da6d70f09ef1 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -77,7 +77,7 @@
+ 		interrupt-affinity = <&cpu0>, <&cpu1>;
  	};
  
- 	clocks {
--		#address-cells = <1>;
--		#size-cells = <0>;
+-	mpcore {
++	mpcore@19000000 {
+ 		compatible = "simple-bus";
+ 		ranges = <0x00000000 0x19000000 0x00023000>;
+ 		#address-cells = <1>;
+@@ -122,7 +122,7 @@
+ 			      <0x20100 0x100>;
+ 		};
+ 
+-		L2: l2-cache {
++		L2: l2-cache@22000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0x22000 0x1000>;
+ 			cache-unified;
+@@ -166,7 +166,7 @@
+ 		};
+ 	};
+ 
+-	axi {
++	axi@18000000 {
+ 		compatible = "simple-bus";
+ 		ranges = <0x00000000 0x18000000 0x0011c40c>;
+ 		#address-cells = <1>;
+@@ -415,9 +415,6 @@
+ 					  "imp_sleep_timer_p5",
+ 					  "imp_sleep_timer_p7",
+ 					  "imp_sleep_timer_p8";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
 -
- 		/* UBUS peripheral clock */
- 		periph_clk: periph_clk {
- 			#clock-cells = <0>;
-@@ -94,7 +91,7 @@
- 			reg = <0x1e000 0x100>;
- 		};
+ 			status = "disabled";
  
--		gic: interrupt-controller@1e100 {
-+		gic: interrupt-controller@1f000 {
- 			compatible = "arm,cortex-a9-gic";
- 			reg = <0x1f000 0x1000
- 				0x1e100 0x100>;
-@@ -125,7 +122,7 @@
- 						  IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
--		armpll: armpll {
-+		armpll: armpll@20000 {
- 			#clock-cells = <0>;
- 			compatible = "brcm,bcm63138-armpll";
- 			clocks = <&periph_clk>;
-@@ -144,7 +141,7 @@
- 			#reset-cells = <2>;
- 		};
- 
--		ahci: sata@8000 {
-+		ahci: sata@a000 {
- 			compatible = "brcm,bcm63138-ahci", "brcm,sata3-ahci";
- 			reg-names = "ahci", "top-ctrl";
- 			reg = <0xa000 0x9ac>, <0x8040 0x24>;
-diff --git a/arch/arm/boot/dts/bcm963138dvt.dts b/arch/arm/boot/dts/bcm963138dvt.dts
-index 8dca97eeaf57..43a5f78acd5e 100644
---- a/arch/arm/boot/dts/bcm963138dvt.dts
-+++ b/arch/arm/boot/dts/bcm963138dvt.dts
-@@ -16,7 +16,7 @@
- 		stdout-path = &serial0;
+ 			/* ports are defined in board DTS */
+diff --git a/arch/arm/boot/dts/bcm958522er.dts b/arch/arm/boot/dts/bcm958522er.dts
+index 21479b4ce823..8c388eb8a08f 100644
+--- a/arch/arm/boot/dts/bcm958522er.dts
++++ b/arch/arm/boot/dts/bcm958522er.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
  
 -	memory {
-+	memory@0 {
- 		reg = <0x0 0x08000000>;
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958525er.dts b/arch/arm/boot/dts/bcm958525er.dts
+index cda3d790965b..c339771bb22e 100644
+--- a/arch/arm/boot/dts/bcm958525er.dts
++++ b/arch/arm/boot/dts/bcm958525er.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
  
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958525xmc.dts b/arch/arm/boot/dts/bcm958525xmc.dts
+index f86649812b59..1c72ec8288de 100644
+--- a/arch/arm/boot/dts/bcm958525xmc.dts
++++ b/arch/arm/boot/dts/bcm958525xmc.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x40000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958622hr.dts b/arch/arm/boot/dts/bcm958622hr.dts
+index df60602b054d..96a021cebd97 100644
+--- a/arch/arm/boot/dts/bcm958622hr.dts
++++ b/arch/arm/boot/dts/bcm958622hr.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
+index 3893e7af343a..b2c7f21d471e 100644
+--- a/arch/arm/boot/dts/bcm958623hr.dts
++++ b/arch/arm/boot/dts/bcm958623hr.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+index cf226b02141f..a2c9de35ddfb 100644
+--- a/arch/arm/boot/dts/bcm958625hr.dts
++++ b/arch/arm/boot/dts/bcm958625hr.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x20000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
+index 10b3d512bb33..3fcca12d83c2 100644
+--- a/arch/arm/boot/dts/bcm958625k.dts
++++ b/arch/arm/boot/dts/bcm958625k.dts
+@@ -42,7 +42,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm988312hr.dts b/arch/arm/boot/dts/bcm988312hr.dts
+index e39db14d805e..edd0f630e025 100644
+--- a/arch/arm/boot/dts/bcm988312hr.dts
++++ b/arch/arm/boot/dts/bcm988312hr.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
 -- 
 2.17.1
