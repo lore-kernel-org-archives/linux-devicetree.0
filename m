@@ -1,8 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 03/11] dt-bindings: rtc: Convert Allwinner A10 RTC to a
- schema
-Date: Tue, 28 May 2019 22:30:33 +0200
-Message-ID: <c9598ec7e668303e62c5e533f98096ca22d847aa.1559075389.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v2 05/11] dt-bindings: rtc: sun6i: Add the R40 RTC compatible
+Date: Tue, 28 May 2019 22:30:35 +0200
+Message-ID: <543acf9aa96a6ef384fe99913335532e9730547e.1559075389.git-series.maxime.ripard@bootlin.com>
 References: <434446bc5541d7dfe5823874355c7db8c7e213fa.1559075389.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,92 +21,74 @@ To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutlan
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The older Allwinner SoCs have an embedded RTC supported in Linux, with a
-matching Device Tree binding.
+The R40 has a pretty different RTC compared to the other SoCs we've
+encountered so far, the most important difference being that it now has
+only a single interrupt, compared to the previous SoCs having two.
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
+Let's add a compatible for that.
 
 Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml | 43 +++++++++++++++++++++++++++++++++++++++++++
- Documentation/devicetree/bindings/rtc/sunxi-rtc.txt                | 17 -----------------
- 2 files changed, 43 insertions(+), 17 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
- delete mode 100644 Documentation/devicetree/bindings/rtc/sunxi-rtc.txt
+ Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml b/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
-new file mode 100644
-index 000000000000..46d69c32b89b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rtc/allwinner,sun4i-a10-rtc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+index f154bbba6a69..924622f39c44 100644
+--- a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
++++ b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+@@ -19,9 +19,7 @@ properties:
+       - const: allwinner,sun6i-a31-rtc
+       - const: allwinner,sun8i-a23-rtc
+       - const: allwinner,sun8i-h3-rtc
+-      - items:
+-          - const: allwinner,sun8i-r40-rtc
+-          - const: allwinner,sun8i-h3-rtc
++      - const: allwinner,sun8i-r40-rtc
+       - const: allwinner,sun8i-v3-rtc
+       - const: allwinner,sun50i-h5-rtc
+       - items:
+@@ -32,6 +30,8 @@ properties:
+     maxItems: 1
+ 
+   interrupts:
++    minItems: 1
++    maxItems: 2
+     items:
+       - description: RTC Alarm 0
+       - description: RTC Alarm 1
+@@ -69,6 +69,7 @@ allOf:
+           contains:
+             enum:
+               - allwinner,sun8i-a23-rtc
++              - allwinner,sun8i-r40-rtc
+               - allwinner,sun8i-v3-rtc
+ 
+     then:
+@@ -91,6 +92,24 @@ allOf:
+           minItems: 3
+           maxItems: 3
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: allwinner,sun8i-r40-rtc
 +
-+title: Allwinner A10 RTC Device Tree Bindings
++    then:
++      properties:
++        interrupts:
++          minItems: 1
++          maxItems: 1
 +
-+allOf:
-+  - $ref: "rtc.yaml#"
++    else:
++      properties:
++        interrupts:
++          minItems: 2
++          maxItems: 2
 +
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-rtc
-+      - allwinner,sun7i-a20-rtc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    rtc: rtc@1c20d00 {
-+        compatible = "allwinner,sun4i-a10-rtc";
-+        reg = <0x01c20d00 0x20>;
-+        interrupts = <24>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/rtc/sunxi-rtc.txt b/Documentation/devicetree/bindings/rtc/sunxi-rtc.txt
-deleted file mode 100644
-index 4a8d79c1cf08..000000000000
---- a/Documentation/devicetree/bindings/rtc/sunxi-rtc.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--* sun4i/sun7i Real Time Clock
--
--RTC controller for the Allwinner A10/A20
--
--Required properties:
--- compatible : Should be "allwinner,sun4i-a10-rtc" or "allwinner,sun7i-a20-rtc"
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- interrupts: IRQ line for the RTC.
--
--Example:
--
--rtc: rtc@1c20d00 {
--	compatible = "allwinner,sun4i-a10-rtc";
--	reg = <0x01c20d00 0x20>;
--	interrupts = <24>;
--};
+ required:
+   - "#clock-cells"
+   - compatible
 -- 
 git-series 0.9.1
