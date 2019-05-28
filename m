@@ -1,51 +1,63 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 7/9] dt: bindings: lp50xx: Introduce the lp50xx family
- of RGB drivers
-Date: Mon, 27 May 2019 19:47:36 -0500
-Message-ID: <fd075387-8b54-ed48-f480-bd673df88ac3@ti.com>
-References: <20190523190820.29375-1-dmurphy@ti.com>
- <20190523190820.29375-8-dmurphy@ti.com> <20190524205022.GA9518@bogus>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH 00/12] ti-sysc driver changes to drop custom hwmods
+ property
+Date: Tue, 28 May 2019 06:28:11 +0530
+Message-ID: <380809b1-7152-faa5-9f43-2243fb4dad19@ti.com>
+References: <20190527121348.45251-1-tony@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190524205022.GA9518@bogus>
+In-Reply-To: <20190527121348.45251-1-tony@atomide.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
+Cc: Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nishanth Menon <nm@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Rob
 
-On 5/24/19 3:50 PM, Rob Herring wrote:
-> On Thu, 23 May 2019 14:08:18 -0500, Dan Murphy wrote:
->> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024 and
->> LP5018 RGB LED device driver.  The LP5036/30/24/18 can control RGB LEDs
->> individually or as part of a control bank group.  These devices have the ability
->> to adjust the mixing control for the RGB LEDs to obtain different colors
->> independent of the overall brightness of the LED grouping.
->>
->> Datasheet:
->> http://www.ti.com/lit/ds/symlink/lp5024.pdf
->> http://www.ti.com/lit/ds/symlink/lp5036.pdf
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../devicetree/bindings/leds/leds-lp50xx.txt  | 142 ++++++++++++++++++
->>   1 file changed, 142 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
->>
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->
-> If a tag was not added on purpose, please state why and what changed.
 
-I usually provide the tags but in my cover letter I did indicate that 
-these patchsets have changed pretty dramatically so I did not feel right 
-about pulling in anyones tags.
+On 27/05/19 5:43 PM, Tony Lindgren wrote:
+> Hi all,
+> 
+> Here are changes to improve ti-sysc driver to the point where we can
+> finally drop the custom hwmods property for most cases. This series
+> drops hwmods property only for omap4 UART and MMC as those can be
+> tested with core retention idle.
+> 
+> I'll be posting more patches for dropping hwmods properties as they
+> get tested.
 
-Adding your reviewed by on a binding that changed did not seem right to me.
+Tony,
 
-Dan
+What is the base of this series? It does not apply cleanly neither on 
+linux-next nor on top of 5.2->rc1. If there are dependencies do you have 
+a branch?
+
+- Keerthy
+> 
+> Regards,
+> 
+> Tony
+> 
+> 
+> Tony Lindgren (12):
+>    bus: ti-sysc: Support 16-bit writes too
+>    bus: ti-sysc: Make OCP reset work for sysstatus and sysconfig reset
+>      bits
+>    bus: ti-sysc: Allow QUIRK_LEGACY_IDLE even if legacy_mode is not set
+>    bus: ti-sysc: Enable interconnect target module autoidle bit on enable
+>    bus: ti-sysc: Handle clockactivity for enable and disable
+>    bus: ti-sysc: Handle swsup idle mode quirks
+>    bus: ti-sysc: Set ENAWAKEUP if available
+>    bus: ti-sysc: Add support for disabling module without legacy mode
+>    bus: ti-sysc: Do rstctrl reset handling in two phases
+>    bus: ti-sysc: Detect uarts also on omap34xx
+>    ARM: dts: Drop legacy custom hwmods property for omap4 uart
+>    ARM: dts: Drop legacy custom hwmods property for omap4 mmc
+> 
+>   arch/arm/boot/dts/omap4-l4.dtsi       |   9 --
+>   drivers/bus/ti-sysc.c                 | 182 ++++++++++++++++++++------
+>   include/linux/platform_data/ti-sysc.h |   1 +
+>   3 files changed, 140 insertions(+), 52 deletions(-)
+> 
