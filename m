@@ -1,162 +1,47 @@
-From: Akash Gajjar <akash@openedev.com>
-Subject: [PATCH] arm64: dts: rockchip: add WiFi+BT support on ROCK Pi4 board
-Date: Wed, 29 May 2019 00:16:58 +0530
-Message-ID: <20190528184705.5240-1-akash@openedev.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH RESEND 2/5] ARM: dts: imx7d-sdb: Assign corresponding
+ power supply for LDOs
+Date: Tue, 28 May 2019 19:24:04 +0000
+Message-ID: <VI1PR04MB5055647612FAC2FE6FBE139FEE1E0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+References: <1557654739-12564-1-git-send-email-Anson.Huang@nxp.com>
+ <1557654739-12564-2-git-send-email-Anson.Huang@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: Akash Gajjar <akash@openedev.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Rock Pi 4 has a on board AP6256 WiFi/BT Module. enable wifi and bluetooth
-support on Rock Pi 4 board.
-
-Signed-off-by: Akash Gajjar <akash@openedev.com>
----
- .../boot/dts/rockchip/rk3399-rock-pi-4.dts    | 97 +++++++++++++++++++
- 1 file changed, 97 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-index e030627159c6..55e74f4d5cd0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-@@ -25,6 +25,15 @@
- 		#clock-cells = <0>;
- 	};
- 
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rk808 1>;
-+		clock-names = "ext_clock";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_enable_h>;
-+		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
-+	};
-+
- 	vcc12v_dcin: dc-12v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc12v_dcin";
-@@ -451,12 +460,46 @@
- };
- 
- &pinctrl {
-+	bt {
-+		bt_enable_h: bt-enable-h {
-+			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		bt_host_wake_l: bt-host-wake-l {
-+			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		bt_wake_l: bt-wake-l {
-+			rockchip,pins = <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	pcie {
- 		pcie_pwr_en: pcie-pwr-en {
- 			rockchip,pins = <2 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
- 
-+	sdio0 {
-+		sdio0_bus4: sdio0-bus4 {
-+			rockchip,pins =
-+				<2 20 RK_FUNC_1 &pcfg_pull_up_20ma>,
-+				<2 21 RK_FUNC_1 &pcfg_pull_up_20ma>,
-+				<2 22 RK_FUNC_1 &pcfg_pull_up_20ma>,
-+				<2 23 RK_FUNC_1 &pcfg_pull_up_20ma>;
-+		};
-+
-+		sdio0_cmd: sdio0-cmd {
-+			rockchip,pins =
-+				<2 24 RK_FUNC_1 &pcfg_pull_up_20ma>;
-+		};
-+
-+		sdio0_clk: sdio0-clk {
-+			rockchip,pins =
-+				<2 25 RK_FUNC_1 &pcfg_pull_none_20ma>;
-+		};
-+	};
-+
- 	pmic {
- 		pmic_int_l: pmic-int-l {
- 			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-@@ -482,6 +525,17 @@
- 			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
-+
-+	wifi {
-+		wifi_enable_h: wifi-enable-h {
-+			rockchip,pins =
-+				<0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		wifi_host_wake_l: wifi-host-wake-l {
-+			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
- };
- 
- &pwm2 {
-@@ -494,6 +548,32 @@
- 	vref-supply = <&vcc_1v8>;
- };
- 
-+&sdio0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	bus-width = <4>;
-+	clock-frequency = <50000000>;
-+	cap-sdio-irq;
-+	cap-sd-highspeed;
-+	keep-power-in-suspend;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	non-removable;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-+	sd-uhs-sdr104;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		compatible = "brcm,bcm4329-fmac";
-+		reg = <1>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
-+		interrupt-names = "host-wake";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_host_wake_l>;
-+	};
-+};
-+
- &sdmmc {
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
-@@ -557,6 +637,23 @@
- 	};
- };
- 
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		clocks = <&rk808 1>;
-+		clock-names = "ext_clock";
-+		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
-+		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
-+	};
-+};
-+
- &uart2 {
- 	status = "okay";
- };
--- 
-2.17.1
+On 12.05.2019 12:57, Anson Huang wrote:=0A=
+> On i.MX7D SDB board, sw2 supplies 1p0d/1p2 LDO, this patch assigns=0A=
+> corresponding power supply for 1p0d/1p2 LDO to avoid confusion by=0A=
+> below log:=0A=
+> =0A=
+> vdd1p0d: supplied by regulator-dummy=0A=
+> vdd1p2: supplied by regulator-dummy=0A=
+> =0A=
+> With this patch, the power supply is more accurate:=0A=
+> =0A=
+> vdd1p0d: supplied by SW2=0A=
+> vdd1p2: supplied by SW2=0A=
+> =0A=
+> diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sd=
+b.dts=0A=
+>=0A=
+> +&reg_1p0d {=0A=
+> +	vin-supply =3D <&sw2_reg>;=0A=
+> +};=0A=
+> +=0A=
+> +&reg_1p2 {=0A=
+> +	vin-supply =3D <&sw2_reg>;=0A=
+> +};=0A=
+=0A=
+It's not clear why but this patch breaks imx7d-sdb boot. Checked two =0A=
+boards: in a board farm and on my desk.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
