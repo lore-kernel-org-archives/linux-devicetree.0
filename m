@@ -1,38 +1,54 @@
-From: Priit Laes <plaes@plaes.org>
-Subject: [RESEND PATCH] ARM: dts: sun7i: olimex-lime2: Enable ac and power supplies
-Date: Tue, 28 May 2019 09:35:44 +0300
-Message-ID: <20190528063544.17408-1-plaes@plaes.org>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: [PATCHv6 0/6] PCI: refactor Mobiveil driver and add PCIe Gen4 driver
+ for NXP Layerscape SoCs
+Date: Tue, 28 May 2019 06:49:56 +0000
+Message-ID: <20190528065129.8769-1-Zhiqiang.Hou@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Content-ID: <F58DBE0F145D784D9B14E2DF418B7DB6@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: linux-sunxi@googlegroups.com, Priit Laes <plaes@plaes.org>
+To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.>
+Cc: Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Lime2 has battery connector so enable these supplies.
-
-Signed-off-by: Priit Laes <plaes@plaes.org>
----
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-index 9c8eecf4337a..9001b5527615 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-@@ -206,6 +206,14 @@
- 
- #include "axp209.dtsi"
- 
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
-+&battery_power_supply {
-+	status = "okay";
-+};
-+
- &reg_dcdc2 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <1000000>;
--- 
-2.11.0
+RnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCg0KVGhpcyBwYXRjaCBz
+ZXQgaXMgYWltIHRvIHJlZmFjdG9yIHRoZSBNb2JpdmVpbCBkcml2ZXIgYW5kIGFkZA0KUENJZSBz
+dXBwb3J0IGZvciBOWFAgTGF5ZXJzY2FwZSBzZXJpZXMgU29DcyBpbnRlZ3JhdGVkIE1vYml2ZWls
+J3MNClBDSWUgR2VuNCBjb250cm9sbGVyLg0KDQpUaGlzIHBhdGNoIHNldCBkZXBlbmRzIG9uOg0K
+aHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3Byb2plY3QvbGludXgtcGNpL2xpc3QvP3Nlcmll
+cz0xMDIzNzgNCg0KSG91IFpoaXFpYW5nICg2KToNCiAgUENJOiBtb2JpdmVpbDogUmVmYWN0b3Ig
+TW9iaXZlaWwgUENJZSBIb3N0IEJyaWRnZSBJUCBkcml2ZXINCiAgUENJOiBtb2JpdmVpbDogTWFr
+ZSBtb2JpdmVpbF9ob3N0X2luaXQoKSBjYW4gYmUgdXNlZCB0byByZS1pbml0IGhvc3QNCiAgZHQt
+YmluZGluZ3M6IFBDSTogQWRkIE5YUCBMYXllcnNjYXBlIFNvQ3MgUENJZSBHZW40IGNvbnRyb2xs
+ZXINCiAgUENJOiBtb2JpdmVpbDogQWRkIFBDSWUgR2VuNCBSQyBkcml2ZXIgZm9yIE5YUCBMYXll
+cnNjYXBlIFNvQ3MNCiAgYXJtNjQ6IGR0czogbHgyMTYwYTogQWRkIFBDSWUgY29udHJvbGxlciBE
+VCBub2Rlcw0KICBhcm02NDogZGVmY29uZmlnOiBFbmFibGUgQ09ORklHX1BDSUVfTEFZRVJTQ0FQ
+RV9HRU40DQoNCiAuLi4vYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpZS1nZW40LnR4dCAgICAg
+fCAgNTIgKysNCiBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgMTAgKy0NCiAuLi4vYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1seDIxNjBhLmR0c2kg
+fCAxNjMgKysrKysNCiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnICAgICAgICAgICAgICAg
+ICAgfCAgIDEgKw0KIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvS2NvbmZpZyAgICAgICAgICAgICAg
+ICB8ICAxMSArLQ0KIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvTWFrZWZpbGUgICAgICAgICAgICAg
+ICB8ICAgMiArLQ0KIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvS2NvbmZpZyAgICAg
+ICB8ICAzNCArDQogZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9NYWtlZmlsZSAgICAg
+IHwgICA1ICsNCiAuLi4vbW9iaXZlaWwvcGNpZS1sYXllcnNjYXBlLWdlbjQuYyAgICAgICAgICAg
+fCAyNTUgKysrKysrKysNCiAuLi4vcGNpZS1tb2JpdmVpbC1ob3N0LmN9ICAgICAgICAgICAgICAg
+ICAgICAgfCA2MDggKysrLS0tLS0tLS0tLS0tLS0tDQogLi4uL2NvbnRyb2xsZXIvbW9iaXZlaWwv
+cGNpZS1tb2JpdmVpbC1wbGF0LmMgIHwgIDU5ICsrDQogLi4uL3BjaS9jb250cm9sbGVyL21vYml2
+ZWlsL3BjaWUtbW9iaXZlaWwuYyAgIHwgMjQ4ICsrKysrKysNCiAuLi4vcGNpL2NvbnRyb2xsZXIv
+bW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5oICAgfCAyMjUgKysrKysrKw0KIDEzIGZpbGVzIGNoYW5n
+ZWQsIDExNjAgaW5zZXJ0aW9ucygrKSwgNTEzIGRlbGV0aW9ucygtKQ0KIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNp
+ZS1nZW40LnR4dA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21v
+Yml2ZWlsL0tjb25maWcNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9tb2JpdmVpbC9NYWtlZmlsZQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9jb250
+cm9sbGVyL21vYml2ZWlsL3BjaWUtbGF5ZXJzY2FwZS1nZW40LmMNCiByZW5hbWUgZHJpdmVycy9w
+Y2kvY29udHJvbGxlci97cGNpZS1tb2JpdmVpbC5jID0+IG1vYml2ZWlsL3BjaWUtbW9iaXZlaWwt
+aG9zdC5jfSAoNTElKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9jb250cm9sbGVy
+L21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtcGxhdC5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5jDQogY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5oDQoN
+Ci0tIA0KMi4xNy4xDQoNCg==
