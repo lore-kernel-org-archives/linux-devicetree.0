@@ -1,89 +1,95 @@
-Return-Path: <SRS0=H4Fw=T7=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v7 0/7] Add USB3.0 and TI HD3SS3220 driver support
-Date: Fri, 31 May 2019 10:59:53 +0100
-Message-Id: <1559296800-5610-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=hyxw=T4=pengutronix.de=mtr@kernel.org>
+From: Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH v7 2/5] media: dt-bindings: media: document allegro-dvt bindings
+Date: Tue, 28 May 2019 15:09:17 +0200
+Message-Id: <20190528130920.4450-3-m.tretter@pengutronix.de>
+In-Reply-To: <20190528130920.4450-1-m.tretter@pengutronix.de>
+References: <20190528130920.4450-1-m.tretter@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl, Michael Tretter <m.tretter@pengutronix.de>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds USB 3.0 support for the CAT874 platform, including a
-new driver for the TI HD3SS3220 USB Type-C DRP port controller.
+Add device-tree bindings for the Allegro DVT video IP core found on the
+Xilinx ZynqMP EV family.
 
-This patch series supports:
-1) Host hotplug operation
-2) Device hot plug operation
-3) USB type-C data_role switch
-   (Tested with 2 RZ/G2E boards connected with a Type-C cable)
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v6 -> v7:
+none
 
-This patchset is based on linux_next next-20190531 branch.
-V6-->V7
-  * Rebased on the below patch series
-    (https://patchwork.kernel.org/project/linux-usb/list/?series=124223)
-  * Updted the hd3ss3220 binding documentation
-    -> Removed Rob's reviewed by tag, since there is a rework.
-    -> Incorporated Sergie and Shimoda-San's review comment.
-     (https://patchwork.kernel.org/patch/10944629/)
-  * Rebased hd3ss3220 driver based on the new API
-    --> Removed Heikki's review comment, since there is a rework
-    (https://patchwork.kernel.org/patch/10942499/)
-  * Incorporated shimoda-san's review comments for renesas usb3 binding
-    (https://patchwork.kernel.org/patch/10944631/)
-  * Incorporated shimoda-san's review comments for renesas usb3 driver
-    (https://patchwork.kernel.org/patch/10944643/)
-V5-->V6
-  * Updated bindings patch by using usb-role-switch property
-  * Used graph api's to get role switch supported by the usb-c-connector
-V4-->V5
-  * Incorporated Heikki's review comment.
-    (https://patchwork.kernel.org/patch/10902531/)
-  * Patch 1 is a dependency patch to make the compilation successful.
-    (https://patchwork.kernel.org/patch/10909971/)
-  * Patch 2 is also dependency patch to make the compilation successful.
-    Rebased on top of Patch1 and fixed Heikki's review comments
-    (https://patchwork.kernel.org/patch/10882555/)
-  * Incorporated Shimoda-San's review comment.
-    (https://patchwork.kernel.org/patch/10902535/)
-V3-->V4
-  * Incorporated Chunfeng Yun's review comment
-    (https://patchwork.kernel.org/project/linux-usb/list/?submitter=133171)
-  * Used fwnode API's to get roleswitch handle
+v5 -> v6:
+none
 
-V2-->V3
-  * Used the new API to usb_role_switch by node to find the remote endpoint
-    (https://patchwork.kernel.org/patch/10882555/)
-  * Added renesas,usb-role-switch property
-  * Incorporated shimoda-san's review comment
-    (https://patchwork.kernel.org/patch/10852507/)
+v4 -> v5:
+none
 
-V1-->V2
-  * Use USB role class instead of extcon to receive connect and disconnect
-    events and also for the dual role switch.
-  * Dropped patch 6
-  * Squashed patch 8 and patch 9
-  * https://patchwork.kernel.org/cover/10840641/
+v3 -> v4:
+none
 
+v2 -> v3:
+- rename node to video-codec
+- drop interrupt-names
+- fix compatible in example
+- add clocks to required properties
 
-Biju Das (7):
-  dt-bindings: usb: hd3ss3220 device tree binding document
-  dt-bindings: usb: renesas_usb3: Document usb role switch support
-  usb: typec: driver for TI HD3SS3220 USB Type-C DRP port controller
-  usb: gadget: udc: renesas_usb3: Enhance role switch support
-  arm64: defconfig: enable TYPEC_HD3SS3220 config option
-  arm64: dts: renesas: cat874: Enable USB3.0 host/peripheral device node
-  arm64: dts: renesas: cat874: Enable usb role switch support
+v1 -> v2:
+none
+---
+ .../devicetree/bindings/media/allegro.txt     | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
 
- .../devicetree/bindings/usb/renesas_usb3.txt       |  23 ++
- .../devicetree/bindings/usb/ti,hd3ss3220.txt       |  38 +++
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts    |  49 ++++
- arch/arm64/configs/defconfig                       |   2 +
- drivers/usb/gadget/udc/renesas_usb3.c              |  91 +++++++-
- drivers/usb/typec/Kconfig                          |  10 +
- drivers/usb/typec/Makefile                         |   1 +
- drivers/usb/typec/hd3ss3220.c                      | 259 +++++++++++++++++++++
- 8 files changed, 466 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
- create mode 100644 drivers/usb/typec/hd3ss3220.c
-
+diff --git a/Documentation/devicetree/bindings/media/allegro.txt b/Documentation/devicetree/bindings/media/allegro.txt
+new file mode 100644
+index 000000000000..a92e2fbf26c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/allegro.txt
+@@ -0,0 +1,43 @@
++Device-tree bindings for the Allegro DVT video IP codecs present in the Xilinx
++ZynqMP SoC. The IP core may either be a H.264/H.265 encoder or H.264/H.265
++decoder ip core.
++
++Each actual codec engines is controlled by a microcontroller (MCU). Host
++software uses a provided mailbox interface to communicate with the MCU. The
++MCU share an interrupt.
++
++Required properties:
++  - compatible: value should be one of the following
++    "allegro,al5e-1.1", "allegro,al5e": encoder IP core
++    "allegro,al5d-1.1", "allegro,al5d": decoder IP core
++  - reg: base and length of the memory mapped register region and base and
++    length of the memory mapped sram
++  - reg-names: must include "regs" and "sram"
++  - interrupts: shared interrupt from the MCUs to the processing system
++  - clocks: must contain an entry for each entry in clock-names
++  - clock-names: must include "core_clk", "mcu_clk", "m_axi_core_aclk",
++    "m_axi_mcu_aclk", "s_axi_lite_aclk"
++
++Example:
++	al5e: video-codec@a0009000 {
++		compatible = "allegro,al5e-1.1", "allegro,al5e";
++		reg = <0 0xa0009000 0 0x1000>,
++		      <0 0xa0000000 0 0x8000>;
++		reg-names = "regs", "sram";
++		interrupts = <0 96 4>;
++		clocks = <&xlnx_vcu 0>, <&xlnx_vcu 1>,
++			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
++		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
++			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
++	};
++	al5d: video-codec@a0029000 {
++		compatible = "allegro,al5d-1.1", "allegro,al5d";
++		reg = <0 0xa0029000 0 0x1000>,
++		      <0 0xa0020000 0 0x8000>;
++		reg-names = "regs", "sram";
++		interrupts = <0 96 4>;
++		clocks = <&xlnx_vcu 2>, <&xlnx_vcu 3>,
++			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
++		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
++			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
++	};
 -- 
-2.7.4
+2.20.1
