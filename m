@@ -1,53 +1,116 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator
- support
-Date: Tue, 28 May 2019 14:27:55 +0100
-Message-ID: <20190528132755.GK2456@sirena.org.uk>
-References: <20190516043218.8222-1-j-keerthy@ti.com>
- <20190516043218.8222-4-j-keerthy@ti.com>
- <20190522153528.GG8582@sirena.org.uk>
- <1712197d-7d43-38a8-efde-11b99537eae9@ti.com>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [RESEND PATCH] ARM: dts: sun7i: olimex-lime2:
+ Enable ac and power supplies
+Date: Tue, 28 May 2019 13:43:42 +0000
+Message-ID: <20190528134342.25fep6kpmrr4p7vw@plaes.org>
+References: <20190528063544.17408-1-plaes@plaes.org>
+ <2b671c1f0734177a6283407f753403473b70f5bc.camel@bootlin.com>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Qo8f1a4rgWw9S/zY"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDB4J47M7YERBEHWWTTQKGQEIRIUOGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1712197d-7d43-38a8-efde-11b99537eae9@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com
+In-Reply-To: <2b671c1f0734177a6283407f753403473b70f5bc.camel-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 28, 2019 at 02:58:57PM +0200, Paul Kocialkowski wrote:
+> Hi,
+> 
+> On Tue, 2019-05-28 at 09:35 +0300, Priit Laes wrote:
+> > Lime2 has battery connector so enable these supplies.
+> 
+> Out of curiosity, what is reported to userspace when no battery is
+> attached?
 
---Qo8f1a4rgWw9S/zY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Data from /sys/class/power_supply/axp20x-battery:
 
-On Tue, May 28, 2019 at 03:23:41PM +0530, Keerthy wrote:
-> On 22/05/19 9:05 PM, Mark Brown wrote:
-> > On Thu, May 16, 2019 at 10:02:18AM +0530, Keerthy wrote:
+[snip]
+$ for i in $(ls -1); do echo "cat $i"; cat $i; done
 
-> > Acked-by: Mark Brown <broonie@kernel.org>
+cat capacity
+100
+cat constant_charge_current
+1200000
+cat constant_charge_current_max
+1200000
+cat current_now
+0
+cat health
+Good
+cat online
+0
+cat present
+0
+cat status
+Not charging
+cat type
+Battery
+cat uevent
+POWER_SUPPLY_NAME=axp20x-battery
+POWER_SUPPLY_PRESENT=0
+POWER_SUPPLY_ONLINE=0
+POWER_SUPPLY_STATUS=Not charging
+POWEROSUPPLY_VOLTAGE_NOW=0
+POWER_SUPPLY_CURRENT_NOW=0
+POWER_SUPPLY_CON/TANT_CHARGE_CURRENT=1200000
+POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=1200000
+POWER_SUPPLY_HEALTH=Good
+POWER_SUPPLY_VOLTAGE_MAXODESIGN=4200000
+POWEROSUPPLY_VOLTAGE_MIN_DESIGN=2900000
+POWER_SUPPLY_CAPACITY=100
+cat voltage_max_design
+4200000
+cat voltage_min_design
+2900000
+cat voltage_now
+0
+[/snip]
 
-> This patch will come via the mfd branch?
-
-I'd expect so, IIRC it had a build dependency on the earlier patches in
-the series so if that doesn't happen I'll need to merge the relevant MFD
-commits.
-
---Qo8f1a4rgWw9S/zY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlztN1oACgkQJNaLcl1U
-h9C2aQf+K2lJtpmwLAD/ngSjYbhqPveAgOfRyzbKExRgY1UGxOjnCEmz0RopEc9H
-MDAIkTPSzZm1UHJfNWw4VogZMCSBFipIb3uqrCdpFWWe8E7b1CYgMNUHM55OWOl8
-iVdMV0mC5bCMDTfBOBfvh5TTJLVwMECyA7uKJnoSfhTLj72NXSdw9D7fIbBg6f79
-fCflkIu16x4HNljMdLfgP5InnoVtONnd++RakYnE9npierZTvrkXfUCEX8Bo91Dd
-we7V9kel0jIcyW+Br90IB/g5Brvi+CMhPhff5enXfj+i09vm1GiBHYsvHnE/YmCA
-rCGqDaSqWVPPAQ2cxojb8TYnJhpzPQ==
-=i2ZR
------END PGP SIGNATURE-----
-
---Qo8f1a4rgWw9S/zY--
+> Looks good otherwise:
+> Reviewed-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> 
+> Cheers,
+> 
+> Paul
+> 
+> > Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> > index 9c8eecf4337a..9001b5527615 100644
+> > --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> > +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> > @@ -206,6 +206,14 @@
+> >  
+> >  #include "axp209.dtsi"
+> >  
+> > +&ac_power_supply {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&battery_power_supply {
+> > +	status = "okay";
+> > +};
+> > +
+> >  &reg_dcdc2 {
+> >  	regulator-always-on;
+> >  	regulator-min-microvolt = <1000000>;
+> > -- 
+> > 2.11.0
+> > 
+> -- 
+> Paul Kocialkowski, Bootlin
+> Embedded Linux and kernel engineering
+> https://bootlin.com
+> 
