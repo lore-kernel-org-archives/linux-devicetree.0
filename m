@@ -1,64 +1,30 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v3 04/10] dt-bindings: display: renesas: lvds: Add
- renesas, companion property
-Date: Tue, 28 May 2019 18:37:30 +0200
-Message-ID: <20190528163730.GA9610@ravnborg.org>
-References: <20190528141234.15425-1-laurent.pinchart+renesas@ideasonboard.com>
- <20190528141234.15425-5-laurent.pinchart+renesas@ideasonboard.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190528141234.15425-5-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 0/3] MSM8998 GPUCC Support
+Date: Tue, 28 May 2019 09:46:16 -0700
+Message-ID: <20190528164616.38517-1-jeffrey.l.hugo@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: agross@kernel.org, david.brown@linaro.org, bjorn.andersson@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, marc.w.gonzalez@free.fr, jcrouse@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudC4KClJlYWRpbmcgdGhyb3VnaCB0aGlzIG5pY2Ugc2VyaWVzLgoKT24gVHVlLCBN
-YXkgMjgsIDIwMTkgYXQgMDU6MTI6MjhQTSArMDMwMCwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToK
-PiBBZGQgYSBuZXcgb3B0aW9uYWwgcmVuZXNhcyxjb21wYW5pb24gcHJvcGVydHkgdG8gcG9pbnQg
-dG8gdGhlIGNvbXBhbmlvbgo+IExWRFMgZW5jb2Rlci4gVGhpcyBpcyB1c2VkIHRvIHN1cHBvcnQg
-ZHVhbC1saW5rIG9wZXJhdGlvbiB3aGVyZSB0aGUgbWFpbgo+IExWRFMgZW5jb2RlciBzcGxpdHMg
-ZXZlbi1udW1iZXJlZCBhbmQgb2RkLW51bWJlcmVkIHBpeGVscyBiZXR3ZWVuIHRoZQo+IHR3byBM
-VkRTIGVuY29kZXJzLgo+IAo+IFRoZSBuZXcgcHJvcGVydHkgZG9lc24ndCBjb250cm9sIHRoZSBt
-b2RlIG9mIG9wZXJhdGlvbiwgaXQgb25seQo+IGRlc2NyaWJlcyB0aGUgcmVsYXRpb25zaGlwIGJl
-dHdlZW4gdGhlIG1hc3RlciBhbmQgY29tcGFuaW9uIExWRFMKPiBlbmNvZGVycy4KPiAKPiBTaWdu
-ZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRl
-YXNvbmJvYXJkLmNvbT4KPiBSZXZpZXdlZC1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG9Aam1vbmRp
-Lm9yZz4KPiBUZXN0ZWQtYnk6IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9y
-Zz4KPiAtLS0KPiBDaGFuZ2VzIHNpbmNlIHYyOgo+IAo+IC0gQ2xhcmlmeSB3aGVuIHRoZSBjb21w
-YW5pb24gcHJvcGVydHkgaXMgcmVxdWlyZWQgb3Igbm90IGFsbG93ZWQKPiAKPiBDaGFuZ2VzIHNp
-bmNlIHYxOgo+IAo+IC0gRml4ZWQgdHlwbwo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0ICAgIHwgNyArKysrKysrCj4gIDEgZmls
-ZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxs
-dmRzLnR4dAo+IGluZGV4IDkwMGE4ODRhZDlmNS4uMmQyNGJkOGNiZWM1IDEwMDY0NAo+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2Fz
-LGx2ZHMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKPiBAQCAtNDUsNiArNDUsMTMgQEAgT0YgZ3JhcGgg
-YmluZGluZ3Mgc3BlY2lmaWVkIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
-cmFwaC50eHQuCj4gIAo+ICBFYWNoIHBvcnQgc2hhbGwgaGF2ZSBhIHNpbmdsZSBlbmRwb2ludC4K
-PiAgCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKwo+ICstIHJlbmVzYXMsY29tcGFuaW9uIDog
-cGhhbmRsZSB0byB0aGUgY29tcGFuaW9uIExWRFMgZW5jb2Rlci4gVGhpcyBwcm9wZXJ0eSBpcwo+
-ICsgIG1hbmRhdG9yeSBmb3IgdGhlIGZpcnN0IExWRFMgZW5jb2RlciBvbiBEMyBhbmQgRTMgU29D
-cywgYW5kIHNoYWxsIHBvaW50IHRvCj4gKyAgdGhlIHNlY29uZCBlbmNvZGVyIHRvIGJlIHVzZWQg
-YXMgYSBjb21wYW5pb24gaW4gZHVhbC1saW5rIG1vZGUuIEl0IHNoYWxsIG5vdAo+ICsgIGJlIHNl
-dCBmb3IgYW55IG90aGVyIExWRFMgZW5jb2Rlci4KCklmIHRoZSBEMyBhbmQgRTMgc29jcyBkbyBu
-b3QgbWFuZGF0ZSB0aGUgdXNlIG9mIGR1YWwtbGluaywgdGhlbiB3aGF0IHRvCmRvIGluIHRoZSBE
-VD8gQmVjYXVzZSBhY2NvcmRpbmcgdG8gdGhlIGFib3ZlIHRoaXMgcHJvcGVydHkgbXVzdCBiZQpz
-cGVjaWZpZWQgZm9yIEQzIGFuZCBFMyBTT0Mncy4KCj4gKwo+ICAKPiAgRXhhbXBsZToKCkFsd2F5
-cyBnb29kIHdpdGggZXhhbXBsZXMsIG1heWJlIGl0IGNvbWVzIGxhdGVyLgoKCVNhbQpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+The Adreno GPU on MSM8998 has its own clock controller, which is a
+dependency for bringing up the GPU.  This series gets the gpucc all in
+place as another step on the road to getting the GPU enabled.
+
+Jeffrey Hugo (3):
+  dt-bindings: clock: Document gpucc for msm8998
+  clk: qcom: Add MSM8998 GPU Clock Controller (GPUCC) driver
+  arm64: dts: qcom: msm8998: Add gpucc node
+
+ .../devicetree/bindings/clock/qcom,gpucc.txt  |   4 +-
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         |  15 +
+ drivers/clk/qcom/Kconfig                      |   8 +
+ drivers/clk/qcom/Makefile                     |   1 +
+ drivers/clk/qcom/gpucc-msm8998.c              | 364 ++++++++++++++++++
+ .../dt-bindings/clock/qcom,gpucc-msm8998.h    |  29 ++
+ 6 files changed, 420 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/qcom/gpucc-msm8998.c
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-msm8998.h
+
+-- 
+2.17.1
