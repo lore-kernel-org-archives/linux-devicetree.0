@@ -1,38 +1,58 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
-Date: Tue, 28 May 2019 10:10:43 +0300
-Message-ID: <CAEnQRZD98TKduVLshGrBANRB6NT7Se6CXD0cgd5XRYa6grAo4Q@mail.gmail.com>
-References: <20190515144210.25596-1-daniel.baluta@nxp.com> <20190515144210.25596-3-daniel.baluta@nxp.com>
- <CAOMZO5A6Gv5k3up0AtKrhQPyMLMe_8SXift68KEP2J+j8D_cJg@mail.gmail.com> <CAOMZO5BTqwnun6d7G1vcHUu_Rs+xfvgxTzamWnBPy76W7eeF_A@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: clock: renesas,r9a06g032-sysctrl:
+ Document power Domains
+Date: Tue, 28 May 2019 09:28:55 +0200
+Message-ID: <CAMuHMdV2jmY2u1-Z6cRR1OQcfW8U0HM_ac-xn1gO9nPf41iD+A@mail.gmail.com>
+References: <1558711904-27278-1-git-send-email-gareth.williams.jx@renesas.com> <1558711904-27278-2-git-send-email-gareth.williams.jx@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5BTqwnun6d7G1vcHUu_Rs+xfvgxTzamWnBPy76W7eeF_A@mail.gmail.com>
+In-Reply-To: <1558711904-27278-2-git-send-email-gareth.williams.jx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>
+To: Gareth Williams <gareth.williams.jx@renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:33 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> On Thu, May 16, 2019 at 3:35 PM Fabio Estevam <festevam@gmail.com> wrote:
-> >
-> > On Wed, May 15, 2019 at 11:42 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
-> >
-> > > +               simple-audio-card,codec {
-> > > +                       sound-dai = <&wm8524>;
-> > > +                       clocks = <&clk IMX8MM_CLK_SAI3_ROOT>;
-> >
-> > IMX8MM_CLK_SAI3_ROOT is the internal clock that drives the SAI3
-> > interface, not an external clock that feeds the codec.
-> >
-> > It seems you should remove this 'clocks' entry.
->
-> Just checked the schematics and the SAI3_MCLK pin clocks the codec, so
-> the representation is correct:
->
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Hi Gareth,
 
-Shawn,
+On Fri, May 24, 2019 at 5:32 PM Gareth Williams
+<gareth.williams.jx@renesas.com> wrote:
+> The driver is gaining power domain support, so add the new property
+> to the DT binding and update the examples.
+>
+> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
 
-Can you have a look?
+Thanks for your patch!
+
+> --- a/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+> +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+@@ -40,4 +42,5 @@ Examples
+>                 reg-io-width = <4>;
+>                 clocks = <&sysctrl R9A06G032_CLK_UART0>;
+>                 clock-names = "baudclk";
+> +               power-domains = <&sysctrl>;
+
+This is an interesting example: according to the driver,
+R9A06G032_CLK_UART0, is not clock used for power management?
+
+Oh, the real uart0 node in arch/arm/boot/dts/r9a06g032.dtsi uses
+
+    clocks = <&sysctrl R9A06G032_CLK_UART0>, <&sysctrl R9A06G032_HCLK_UART0>;
+    clock-names = "baudclk", "apb_pclk";
+
+That does make sense...
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
