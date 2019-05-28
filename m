@@ -1,73 +1,160 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 24/25] drm/mediatek: respect page offset for PRIME
- mmap calls
-Date: Tue, 28 May 2019 13:35:59 +0800
-Message-ID: <1559021759.15879.2.camel@mtksdaap41>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1553667561-25447-25-git-send-email-yongqiang.niu@mediatek.com>
-         <1555403634.11519.11.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Anson.Huang@nxp.com
+Subject: [PATCH RESEND V13 2/5] thermal: of-thermal: add API for getting sensor ID from DT
+Date: Tue, 28 May 2019 14:06:18 +0800
+Message-ID: <20190528060621.47342-2-Anson.Huang@nxp.com>
+References: <20190528060621.47342-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555403634.11519.11.camel@mtksdaap41>
+In-Reply-To: <20190528060621.47342-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yongqiang.niu@mediatek.com
-Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com, airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, aisheng.dong@nxp.com, ulf.hansson@linaro.org, peng.fan@nxp.com, daniel.baluta@nxp.com, maxime.ripard@bootlin.com, olof@lixom.net, jagan@amarulasolutions.com, horms+renesas@verge.net.au, leonard.crestez@nxp.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, enric.balletbo@collabora.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi, Yongqiang:
+From: Anson Huang <Anson.Huang@nxp.com>
 
-On Tue, 2019-04-16 at 16:33 +0800, CK Hu wrote:
-> Hi, Yongqiang:
-> 
-> On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
-> > From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> > 
-> > Respect page offset for PRIME mmap calls
-> 
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+On some platforms like i.MX8QXP, the thermal driver needs a
+real HW sensor ID from DT thermal zone, the HW sensor ID is
+used to get temperature from SCU firmware, and the virtual
+sensor ID starting from 0 to N is NOT used at all, this patch
+adds new API thermal_zone_of_get_sensor_id() to provide the
+feature of getting sensor ID from DT thermal zone's node.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V12:
+	- adjust the second parameter of thermal_zone_of_get_sensor_id() API, then caller no need
+	  to pass the of_phandle_args structure and put the sensor_specs.np manually, also putting
+	  the sensor node device check inside this API to make it easy for usage;
+---
+ drivers/thermal/of-thermal.c | 66 +++++++++++++++++++++++++++++++++-----------
+ include/linux/thermal.h      | 10 +++++++
+ 2 files changed, 60 insertions(+), 16 deletions(-)
 
-This patch looks independent, so I've applied it to
-mediatek-drm-fixes-5.2 [1], thanks.
-
-[1]
-https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-fixes-5.2
-
-Regards,
-CK
-
-> 
-> > 
-> > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> > ---
-> >  drivers/gpu/drm/mediatek/mtk_drm_gem.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.c b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-> > index c230237..524e494 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-> > @@ -144,7 +144,6 @@ static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj,
-> >  	 * VM_PFNMAP flag that was set by drm_gem_mmap_obj()/drm_gem_mmap().
-> >  	 */
-> >  	vma->vm_flags &= ~VM_PFNMAP;
-> > -	vma->vm_pgoff = 0;
-> >  
-> >  	ret = dma_mmap_attrs(priv->dma_dev, vma, mtk_gem->cookie,
-> >  			     mtk_gem->dma_addr, obj->size, mtk_gem->dma_attrs);
-> > @@ -183,6 +182,12 @@ int mtk_drm_gem_mmap(struct file *filp, struct vm_area_struct *vma)
-> >  
-> >  	obj = vma->vm_private_data;
-> >  
-> > +	/*
-> > +	 * Set vm_pgoff (used as a fake buffer offset by DRM) to 0 and map the
-> > +	 * whole buffer from the start.
-> > +	 */
-> > +	vma->vm_pgoff = 0;
-> > +
-> >  	return mtk_drm_gem_object_mmap(obj, vma);
-> >  }
-> >  
-> 
+diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+index dc5093b..a53792b 100644
+--- a/drivers/thermal/of-thermal.c
++++ b/drivers/thermal/of-thermal.c
+@@ -449,6 +449,54 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+ }
+ 
+ /**
++ * thermal_zone_of_get_sensor_id - get sensor ID from a DT thermal zone
++ * @tz_np: a valid thermal zone device node.
++ * @sensor_np: a sensor node of a valid sensor device.
++ * @id: a sensor ID pointer will be passed back.
++ *
++ * This function will get sensor ID from a given thermal zone node, use
++ * "thermal-sensors" as list name, and get sensor ID from first phandle's
++ * argument.
++ *
++ * Return: 0 on success, proper error code otherwise.
++ */
++
++int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
++				  struct device_node *sensor_np,
++				  u32 *id)
++{
++	struct of_phandle_args sensor_specs;
++	int ret;
++
++	ret = of_parse_phandle_with_args(tz_np,
++					 "thermal-sensors",
++					 "#thermal-sensor-cells",
++					 0,
++					 &sensor_specs);
++	if (ret)
++		return ret;
++
++	if (sensor_specs.np != sensor_np) {
++		of_node_put(sensor_specs.np);
++		return -ENODEV;
++	}
++
++	if (sensor_specs.args_count >= 1) {
++		*id = sensor_specs.args[0];
++		WARN(sensor_specs.args_count > 1,
++		     "%pOFn: too many cells in sensor specifier %d\n",
++		     sensor_specs.np, sensor_specs.args_count);
++	} else {
++		*id = 0;
++	}
++
++	of_node_put(sensor_specs.np);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(thermal_zone_of_get_sensor_id);
++
++/**
+  * thermal_zone_of_sensor_register - registers a sensor to a DT thermal zone
+  * @dev: a valid struct device pointer of a sensor device. Must contain
+  *       a valid .of_node, for the sensor node.
+@@ -499,36 +547,22 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+ 	sensor_np = of_node_get(dev->of_node);
+ 
+ 	for_each_available_child_of_node(np, child) {
+-		struct of_phandle_args sensor_specs;
+ 		int ret, id;
+ 
+ 		/* For now, thermal framework supports only 1 sensor per zone */
+-		ret = of_parse_phandle_with_args(child, "thermal-sensors",
+-						 "#thermal-sensor-cells",
+-						 0, &sensor_specs);
++		ret = thermal_zone_of_get_sensor_id(child, sensor_np, &id);
+ 		if (ret)
+ 			continue;
+ 
+-		if (sensor_specs.args_count >= 1) {
+-			id = sensor_specs.args[0];
+-			WARN(sensor_specs.args_count > 1,
+-			     "%pOFn: too many cells in sensor specifier %d\n",
+-			     sensor_specs.np, sensor_specs.args_count);
+-		} else {
+-			id = 0;
+-		}
+-
+-		if (sensor_specs.np == sensor_np && id == sensor_id) {
++		if (id == sensor_id) {
+ 			tzd = thermal_zone_of_add_sensor(child, sensor_np,
+ 							 data, ops);
+ 			if (!IS_ERR(tzd))
+ 				tzd->ops->set_mode(tzd, THERMAL_DEVICE_ENABLED);
+ 
+-			of_node_put(sensor_specs.np);
+ 			of_node_put(child);
+ 			goto exit;
+ 		}
+-		of_node_put(sensor_specs.np);
+ 	}
+ exit:
+ 	of_node_put(sensor_np);
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index 15a4ca5..5edffe6 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -375,6 +375,9 @@ struct thermal_trip {
+ 
+ /* Function declarations */
+ #ifdef CONFIG_THERMAL_OF
++int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
++				  struct device_node *sensor_np,
++				  u32 *id);
+ struct thermal_zone_device *
+ thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
+ 				const struct thermal_zone_of_device_ops *ops);
+@@ -386,6 +389,13 @@ struct thermal_zone_device *devm_thermal_zone_of_sensor_register(
+ void devm_thermal_zone_of_sensor_unregister(struct device *dev,
+ 					    struct thermal_zone_device *tz);
+ #else
++
++static int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
++					 struct device_node *sensor_np,
++					 u32 *id)
++{
++	return -ENOENT;
++}
+ static inline struct thermal_zone_device *
+ thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
+ 				const struct thermal_zone_of_device_ops *ops)
+-- 
+2.7.4
