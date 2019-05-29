@@ -1,14 +1,19 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
-Date: Wed, 29 May 2019 11:48:29 +0000
-Message-ID: <AM0PR04MB44810069F874677C6A2DE795881F0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190520032020.7920-1-peng.fan@nxp.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v4 01/10] ata: libahci: Ensure the host interrupt status
+ bits are cleared
+Date: Wed, 29 May 2019 14:13:56 +0200
+Message-ID: <20190529141356.1d9f03f3@xps13>
+References: <20190521143023.31810-1-miquel.raynal@bootlin.com>
+ <20190521143023.31810-2-miquel.raynal@bootlin.com>
+ <CAHG4imNxsdzjzRpFWnL+PuznjdOU4hsp2E-g1bt4WVJeokfT3w@mail.gmail.com>
+ <53ce8c5b-46fc-c969-5168-18e4bcc62cde@arm.com>
+ <20190529120833.29334c70@xps13>
+ <409ea2c5-c31a-fb6a-22c6-98b45e767809@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190520032020.7920-1-peng.fan@nxp.com>
-Content-Language: en-US
+In-Reply-To: <409ea2c5-c31a-fb6a-22c6-98b45e767809@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,81 +23,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peng Fan <peng.fan@nxp.com>, "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, raymond pang <raymondpangxd@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Baruch Siach <baruch@tkos.co.il>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Srinivas
-
-> Subject: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
-
-Do you have any comments about this patch?
-
-Thanks,
-Peng.
-
-> 
-> Introduce fusable-node property for i.MX OCOTP driver.
-> The property will only be used by Firmware(eg. U-Boot) to runtime disable the
-> nodes.
-> 
-> Take i.MX6ULL for example, there are several parts that only have limited
-> modules enabled controlled by OCOTP fuse. It is not flexible to provide several
-> dts for the serval parts, instead we could provide one device tree and let
-> Firmware to runtime disable the device tree nodes for those modules that are
-> disable(fused).
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
-> 
-> Currently NXP vendor use U-Boot to set status to disabled for devices that
-> could not function,
-> https://source.codeaurora.org/external/imx/uboot-imx/tree/arch/arm/mach
-> -imx/mx6/module_fuse.c?h=imx_v2018.03_4.14.98_2.0.0_ga#n149
-> But this approach is will not work if kernel dts node path changed.
-> 
-> There are two approaches to resolve:
-> 
-> 1. This patch is to add a fusable-node property, and Firmware will parse
->    the property and read fuse to decide whether to disable or keeep enable
->    the nodes.
-> 
-> 2. There is another approach is that add nvmem-cells for all nodes that
->    could be disabled(fused). Then in each linux driver to use nvmem
->    api to detect fused or not, or in linux driver common code to check
->    device functionable or not with nvmem API.
-> 
-> 
-> To make it easy to work, we choose [1] here. Please advise whether it is
-> acceptable, because the property is not used by linux driver in approach [1].
-> Or you prefer [2] or please advise if any better solution.
-> 
-> Thanks.
-> 
->  Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-> b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-> index 7a999a135e56..e9a998588dbd 100644
-> --- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-> +++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-> @@ -21,6 +21,8 @@ Required properties:
-> 
->  Optional properties:
->  - read-only: disable write access
-> +- fusable-node: array of phandles with reg base and bit offset, this
-> +		property is used by Firmware to runtime disable nodes.
-> 
->  Optional Child nodes:
-> 
-> @@ -42,4 +44,7 @@ Example:
->  		tempmon_temp_grade: temp-grade@20 {
->  			reg = <0x20 4>;
->  		};
-> +
-> +		fusable-node = <&usdhc1 0x10 4
-> +				&usdhc2 0x10 5>;
->  	};
-> --
-> 2.16.4
+SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIFdl
+ZCwgMjkgTWF5IDIwMTkgMTE6Mzc6NTgKKzAxMDA6Cgo+IE9uIDI5LzA1LzIwMTkgMTE6MDgsIE1p
+cXVlbCBSYXluYWwgd3JvdGU6Cj4gPiBIaSBNYXJjICYgUmF5bW9uZCwKPiA+IAo+ID4gTWFyYyBa
+eW5naWVyIDxtYXJjLnp5bmdpZXJAYXJtLmNvbT4gd3JvdGUgb24gVGh1LCAyMyBNYXkgMjAxOSAx
+MDoyNjowMQo+ID4gKzAxMDA6Cj4gPiAgIAo+ID4+IE9uIDIzLzA1LzIwMTkgMDQ6MTEsIHJheW1v
+bmQgcGFuZyB3cm90ZTogIAo+ID4+PiBIaSBNaXF1ZWwsCj4gPj4+Cj4gPj4+IFRoaXMgcGF0Y2gg
+YWRkcyBjbGVhcmluZyBHSEMuSVMgaW50byBob3QgcGF0aCwgY291bGQgeW91IGV4cGxhaW4gaG93
+Cj4gPj4+IGlycSBzdG9ybSBpcyBnZW5lcmF0ZWQ/IHRoYW5rcwo+ID4+PiBBY2NvcmRpbmcgdG8g
+QUhDSSBTcGVjLCBIQkEgc2hvdWxkIG5vdCByZWZlciB0byBHSEMuSVMgdG8gZ2VuZXJhdGUKPiA+
+Pj4gTVNJIHdoZW4gYXBwbHlpbmcgbXVsdGlwbGUgTVNJcy4gICAgCj4gPj4KPiA+PiBXZWxsIHNw
+b3R0ZWQuCj4gPj4KPiA+PiBJIGhhdmUgdGhlIHVnbHkgZmVlbGluZyB0aGF0IHRoaXMgaXMgYmVj
+YXVzZSB0aGUgTWFydmVsbCBBSENJCj4gPj4gaW1wbGVtZW50YXRpb24gaXMgbm90IHVzaW5nIE1T
+SXMgYXQgYWxsLCBidXQgaW5zdGVhZCBhIHBhaXIgb2Ygd2lyZWQKPiA+PiBpbnRlcnJ1cHRzICh3
+aGljaCBhcmUgbGV2ZWwgdHJpZ2dlcmVkIGluc3RlYWQgb2YgZWRnZSwgaGVuY2UgdGhlCj4gPj4g
+c2NyZWFtaW5nIGludGVycnVwdHMpLgo+ID4+Cj4gPj4gVGhlIGNoYW5nZXMgaW4gdGhlIGZvbGxv
+d2luZyBwYXRjaGVzIGFidXNlIHRoZSByZXN0IG9mIHRoZSBkcml2ZXIgYnkKPiA+PiBwcmV0ZW5k
+aW5nIHRoaXMgaXMgYSBhIG11bHRpLU1TSSBzZXR1cCwgd2hpbGUgaXQgY2xlYXJseSBkb2Vzbid0
+IG1hdGNoCj4gPj4gdGhlIGV4cGVjdGF0aW9uIG9mIHRoZSBBSENJIHNwZWMgZm9yIE1TSXMuCj4g
+Pj4KPiA+PiBJdCBsb29rcyBsaWtlIHRoaXMgc2hvdWxkbid0IGJlIGltcG9zZWQgb24gb3RoZXIg
+dW5zdXNwZWN0aW5nCj4gPj4gaW1wbGVtZW50YXRpb25zIHdoaWNoIGNvcnJlY3RseSB1c2UgZWRn
+ZS10cmlnZ2VyZWQgTVNJcyBhbmQgZG8gbm90Cj4gPj4gcmVxdWlyZSBzdWNoIGFuIE1NSU8gYWNj
+ZXNzLiAgCj4gPiAKPiA+IEkgdW5kZXJzdGFuZCB5b3VyIGNvbmNlcm4sIGxldCBtZSBhZGQgYSBB
+SENJX0hGTEFHX0xFVkVMX01TSSBpbgo+ID4gaHByaXYtPmZsYWdzIHdoaWNoIHdpbGwgYmUgdXNl
+ZCBieSB0aGUgbXZlYnVfYWhjaS5jIGRyaXZlciB0byByZXF1ZXN0Cj4gPiBmb3IgdGhpcyBNTUlP
+IGFjY2Vzcy4gVGhpcyB3YXksIHRoZSBob3QgcGF0aCByZW1haW5zIHRoZSBzYW1lLiAgCj4gCj4g
+SSdtIG5vdCBjb252aW5jZWQgdGhhdCdzIGEgZ29vZCBpZGVhLCBpZiBvbmx5IGJlY2F1c2UgZnJv
+bSB0aGUgUG9WIG9mCj4gdGhlIEFIQ0kgZGV2aWNlIGl0c2VsZiwgdGhlc2UgYXJlIG5vdCBNU0lz
+IGF0IGFsbCwgYnV0IHdpcmVkIGludGVycnVwdHMuCj4gVGhlIGZhY3QgdGhhdCB0aGVyZSBpcyBz
+b21lIGdsdWUgbG9naWMgaW4gdGhlIG1pZGRsZSB0aGF0IHR1cm5zIGl0IGludG8KPiBhIG1lc3Nh
+Z2UgKGFuZCB0aGVuIGJhY2sgaW50byBhIHdpcmUpIGlzIGEgcmVncmV0dGFibGUgaW1wbGVtZW50
+YXRpb24KPiBkZXRhaWwuCj4gCj4gSSdkIHJhdGhlciB5b3Ugc3RpY2sgdG8gdGhlIG5vcm1hbCBp
+bnRlcnJ1cHQgaGFuZGxlciwgb3IgcHJvdmlkZSB5b3VyCj4gb3duLCB3aGljaCB3b3VsZCBzb2x2
+ZSBtb3N0IHByb2JsZW1zLgoKVW5sZXNzIEkgZG9uJ3QgdW5kZXJzdGFuZCB5b3VyIHByb3Bvc2Fs
+LCAic3RpY2sgdG8gdGhlIG5vcm1hbCBpbnRlcnJ1cHQKaGFuZGxlciIgaXMgbm90IHBvc3NpYmxl
+IGFzIEkgbmVlZCB0aGlzIHJlZ2lzdGVyIHdyaXRlIHRvIGhhcHBlbiBhdAp0aGlzIHRpbWUsIG5v
+dCBhdCBhbnkgb3RoZXIgbW9tZW50LgoKSG93ZXZlciwgb24gdGhlIHBvc3NpYmlsaXR5IG9mIGhh
+dmluZyBhIHNlcGFyYXRlIGludGVycnVwdCBoYW5kbGVyLCBJCm1heSB1c2UgdGhlIG5ldyBBSENJ
+X0hGQUxHX0xFVkVMX01TSSBmbGFnIHRvIGNoYW5nZSB0aGUKZGV2bV9yZXF1ZXN0X2lycSBjYWxs
+IGhlcmUgWzFdIGFuZCB1c2UgbXkgb3duIGF0IHRoaXMgbW9tZW50LiBUaGUKaGFuZGxlciB3aWxs
+IGJlIGluIGxpYmFoY2kuYyB0aG91Z2guCgpXb3VsZCB0aGlzIGJlIGEgYmV0dGVyIGFwcHJvYWNo
+PwoKClRoYW5rcywKTWlxdcOobAoKWzFdIGh0dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xpbnV4
+L3Y1LjItcmMyL3NvdXJjZS9kcml2ZXJzL2F0YS9saWJhaGNpLmMjTDI1NTcKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
