@@ -1,80 +1,33 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 5/5] power: supply: max17040: Send uevent in SOC and
- status change
-Date: Wed, 29 May 2019 17:00:06 +0200
-Message-ID: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-6-matheus@castello.eng.br>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
+Date: Wed, 29 May 2019 17:09:22 +0200
+Message-ID: <CAAObsKD8bij1ANLqX6y11Y6mDEXiymNjrDkmHmvGWiFLKWu_FA@mail.gmail.com>
+References: <20190521161102.29620-1-peron.clem@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190527022258.32748-6-matheus@castello.eng.br>
+In-Reply-To: <20190521161102.29620-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matheus Castello <matheus@castello.eng.br>
-Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Neil Armstrong <narmstrong@baylibre.com>, Steven Price <steven.price@arm.com>, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 May 2019 at 04:23, Matheus Castello <matheus@castello.eng.br> wrote:
+On Tue, 21 May 2019 at 18:11, Clément Péron <peron.clem@gmail.com> wrote:
 >
-> Notify core through power_supply_changed() in case of changes in state
-> of charge and power supply status. This is useful for user-space to
-> efficiently update current battery level.
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  drivers/power/supply/max17040_battery.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-> index 61e6fcfea8a1..34278845cfe5 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -176,6 +176,9 @@ static void max17040_get_online(struct i2c_client *client)
->  static void max17040_get_status(struct i2c_client *client)
->  {
->         struct max17040_chip *chip = i2c_get_clientdata(client);
-> +       int last_status;
-> +
-> +       last_status = chip->status;
->
->         if (!chip->pdata || !chip->pdata->charger_online
->                         || !chip->pdata->charger_enable) {
-> @@ -194,6 +197,9 @@ static void max17040_get_status(struct i2c_client *client)
->
->         if (chip->soc > MAX17040_BATTERY_FULL)
->                 chip->status = POWER_SUPPLY_STATUS_FULL;
-> +
-> +       if (last_status != chip->status)
-> +               power_supply_changed(chip->battery);
+[snip]
+> [  345.204813] panfrost 1800000.gpu: mmu irq status=1
+> [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+> 0x0000000002400400
 
-Why splitting it from max17040_work()? It seems logical to check soc
-and status at the same time.
+>From what I can see here, 0x0000000002400400 points to the first byte
+of the first submitted job descriptor.
 
-Best regards,
-Krzysztof
+So mapping buffers for the GPU doesn't seem to be working at all on
+64-bit T-760.
 
->  }
->
->  static void max17040_get_of_data(struct max17040_chip *chip)
-> @@ -217,10 +223,18 @@ static void max17040_check_changes(struct i2c_client *client)
->  static void max17040_work(struct work_struct *work)
->  {
->         struct max17040_chip *chip;
-> +       int last_soc;
->
->         chip = container_of(work, struct max17040_chip, work.work);
-> +
-> +       /* store SOC for check change */
-> +       last_soc = chip->soc;
->         max17040_check_changes(chip->client);
->
-> +       /* check changes and send uevent */
-> +       if (chip->soc >= 0 && last_soc != chip->soc)
-> +               power_supply_changed(chip->battery);
-> +
->         queue_delayed_work(system_power_efficient_wq, &chip->work,
->                            MAX17040_DELAY);
->  }
-> --
-> 2.20.1
->
+Steven, Robin, do you have any idea of why this could be?
+
+Thanks,
+
+Tomeu
