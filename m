@@ -1,52 +1,31 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v8 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC.
-Date: Wed, 29 May 2019 17:53:46 +0200
-Message-ID: <20190529155346.GA18059@lunn.ch>
-References: <1559104047-13920-1-git-send-email-sagar.kadam@sifive.com>
- <1559104047-13920-4-git-send-email-sagar.kadam@sifive.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 0/3] Qualcomm QCS404 PCIe support
+Date: Wed, 29 May 2019 17:31:55 +0100
+Message-ID: <20190529163155.GA24655@redmoon>
+References: <20190529005710.23950-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1559104047-13920-4-git-send-email-sagar.kadam@sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, peter@korsgaard.com, palmer@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-i2c@vger.kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
+In-Reply-To: <20190529005710.23950-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 29, 2019 at 09:57:27AM +0530, Sagar Shrikant Kadam wrote:
-> The i2c-ocore driver already has a polling mode interface.But it needs
-> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
-> There is an erratum in FU540 chip that prevents interrupt driven i2c
-> transfers from working, and also the I2C controller's interrupt bit
-> cannot be cleared if set, due to this the existing i2c polling mode
-> interface added in mainline earlier doesn't work, and CPU stall's
-> infinitely, when-ever i2c transfer is initiated.
+On Tue, May 28, 2019 at 05:57:07PM -0700, Bjorn Andersson wrote:
+> This series adds support for the PCIe controller in the Qualcomm QCS404
+> platform.
 > 
-> Ref:
-> 	commit dd7dbf0eb090 ("i2c: ocores: refactor setup for polling")
+> Bjorn Andersson (3):
+>   PCI: qcom: Use clk_bulk API for 2.4.0 controllers
+>   dt-bindings: PCI: qcom: Add QCS404 to the binding
+>   PCI: qcom: Add QCS404 PCIe controller support
 > 
-> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
-> FU540-COOO SoC.
-> 
-> The polling function identifies a SiFive device based on the device node
-> and enables the workaround.
-> 
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+>  .../devicetree/bindings/pci/qcom,pcie.txt     |  25 +++-
+>  drivers/pci/controller/dwc/pcie-qcom.c        | 113 ++++++++----------
+>  2 files changed, 75 insertions(+), 63 deletions(-)
 
-Hi Sagar
+Applied to pci/qcom for v5.3, thanks.
 
-When you repost, you are supposed to add any reviewed-by, or acked-by
-tags you received.
-
-     Andrew
+Lorenzo
