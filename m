@@ -1,7 +1,7 @@
 From: Atish Patra <atish.patra@wdc.com>
-Subject: [PATCH v6 1/7] Documentation: DT: arm: add support for sockets defining package boundaries
-Date: Wed, 29 May 2019 14:13:34 -0700
-Message-ID: <20190529211340.17087-2-atish.patra@wdc.com>
+Subject: [PATCH v6 2/7] dt-binding: cpu-topology: Move cpu-map to a common binding.
+Date: Wed, 29 May 2019 14:13:35 -0700
+Message-ID: <20190529211340.17087-3-atish.patra@wdc.com>
 References: <20190529211340.17087-1-atish.patra@wdc.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,154 +9,162 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190529211340.17087-1-atish.patra@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Atish Patra <atish.patra@wdc.com>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Peter Zijlstra (Intel)
+Cc: Atish Patra <atish.patra@wdc.com>, Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Peter Zijlstra
 List-Id: devicetree@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+cpu-map binding can be used to described cpu topology for both
+RISC-V & ARM. It makes more sense to move the binding to document
+to a common place.
 
-The current ARM DT topology description provides the operating system
-with a topological view of the system that is based on leaf nodes
-representing either cores or threads (in an SMT system) and a
-hierarchical set of cluster nodes that creates a hierarchical topology
-view of how those cores and threads are grouped.
+The relevant discussion can be found here.
+https://lkml.org/lkml/2018/11/6/19
 
-However this hierarchical representation of clusters does not allow to
-describe what topology level actually represents the physical package or
-the socket boundary, which is a key piece of information to be used by
-an operating system to optimize resource allocation and scheduling.
-
-Lets add a new "socket" node type in the cpu-map node to describe the
-same.
-
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/topology.txt      | 52 ++++++++++++++-----
- 1 file changed, 39 insertions(+), 13 deletions(-)
+ .../topology.txt => cpu/cpu-topology.txt}     | 82 +++++++++++++++----
+ 1 file changed, 66 insertions(+), 16 deletions(-)
+ rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (86%)
 
-diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
-index b0d80c0fb265..3b8febb46dad 100644
+diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+similarity index 86%
+rename from Documentation/devicetree/bindings/arm/topology.txt
+rename to Documentation/devicetree/bindings/cpu/cpu-topology.txt
+index 3b8febb46dad..069addccab14 100644
 --- a/Documentation/devicetree/bindings/arm/topology.txt
-+++ b/Documentation/devicetree/bindings/arm/topology.txt
-@@ -9,6 +9,7 @@ ARM topology binding description
- In an ARM system, the hierarchy of CPUs is defined through three entities that
++++ b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+@@ -1,12 +1,12 @@
+ ===========================================
+-ARM topology binding description
++CPU topology binding description
+ ===========================================
+ 
+ ===========================================
+ 1 - Introduction
+ ===========================================
+ 
+-In an ARM system, the hierarchy of CPUs is defined through three entities that
++In a SMP system, the hierarchy of CPUs is defined through three entities that
  are used to describe the layout of physical CPUs in the system:
  
-+- socket
- - cluster
+ - socket
+@@ -14,9 +14,6 @@ are used to describe the layout of physical CPUs in the system:
  - core
  - thread
-@@ -63,21 +64,23 @@ nodes are listed.
  
- 	The cpu-map node's child nodes can be:
+-The cpu nodes (bindings defined in [1]) represent the devices that
+-correspond to physical CPUs and are to be mapped to the hierarchy levels.
+-
+ The bottom hierarchy level sits at core or thread level depending on whether
+ symmetric multi-threading (SMT) is supported or not.
  
--	- one or more cluster nodes
-+	- one or more cluster nodes or
-+	- one or more socket nodes in a multi-socket system
+@@ -25,33 +22,31 @@ threads existing in the system and map to the hierarchy level "thread" above.
+ In systems where SMT is not supported "cpu" nodes represent all cores present
+ in the system and map to the hierarchy level "core" above.
  
- 	Any other configuration is considered invalid.
+-ARM topology bindings allow one to associate cpu nodes with hierarchical groups
++CPU topology bindings allow one to associate cpu nodes with hierarchical groups
+ corresponding to the system hierarchy; syntactically they are defined as device
+ tree nodes.
  
--The cpu-map node can only contain three types of child nodes:
-+The cpu-map node can only contain 4 types of child nodes:
+-The remainder of this document provides the topology bindings for ARM, based
+-on the Devicetree Specification, available from:
++Currently, only ARM/RISC-V intend to use this cpu topology binding but it may be
++used for any other architecture as well.
  
-+- socket node
- - cluster node
- - core node
- - thread node
+-https://www.devicetree.org/specifications/
++The cpu nodes, as per bindings defined in [4], represent the devices that
++correspond to physical CPUs and are to be mapped to the hierarchy levels.
  
- whose bindings are described in paragraph 3.
- 
--The nodes describing the CPU topology (cluster/core/thread) can only
--be defined within the cpu-map node and every core/thread in the system
--must be defined within the topology.  Any other configuration is
-+The nodes describing the CPU topology (socket/cluster/core/thread) can
-+only be defined within the cpu-map node and every core/thread in the
-+system must be defined within the topology.  Any other configuration is
- invalid and therefore must be ignored.
- 
- ===========================================
-@@ -85,26 +88,44 @@ invalid and therefore must be ignored.
- ===========================================
- 
- cpu-map child nodes must follow a naming convention where the node name
--must be "clusterN", "coreN", "threadN" depending on the node type (ie
--cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes which
--are siblings within a single common parent node must be given a unique and
-+must be "socketN", "clusterN", "coreN", "threadN" depending on the node type
-+(ie socket/cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes
-+which are siblings within a single common parent node must be given a unique and
- sequential N value, starting from 0).
- cpu-map child nodes which do not share a common parent node can have the same
- name (ie same number N as other cpu-map child nodes at different device tree
- levels) since name uniqueness will be guaranteed by the device tree hierarchy.
+-If not stated otherwise, whenever a reference to a cpu node phandle is made its
+-value must point to a cpu node compliant with the cpu node bindings as
+-documented in [1].
+ A topology description containing phandles to cpu nodes that are not compliant
+-with bindings standardized in [1] is therefore considered invalid.
++with bindings standardized in [4] is therefore considered invalid.
  
  ===========================================
--3 - cluster/core/thread node bindings
-+3 - socket/cluster/core/thread node bindings
+ 2 - cpu-map node
  ===========================================
  
--Bindings for cluster/cpu/thread nodes are defined as follows:
-+Bindings for socket/cluster/cpu/thread nodes are defined as follows:
+-The ARM CPU topology is defined within the cpu-map node, which is a direct
++The ARM/RISC-V CPU topology is defined within the cpu-map node, which is a direct
+ child of the cpus node and provides a container where the actual topology
+ nodes are listed.
+ 
+ - cpu-map node
+ 
+-	Usage: Optional - On ARM SMP systems provide CPUs topology to the OS.
+-			  ARM uniprocessor systems do not require a topology
++	Usage: Optional - On SMP systems provide CPUs topology to the OS.
++			  Uniprocessor systems do not require a topology
+ 			  description and therefore should not define a
+ 			  cpu-map node.
+ 
+@@ -494,8 +489,63 @@ cpus {
+ 	};
+ };
+ 
++Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
 +
-+- socket node
++{
++	#address-cells = <2>;
++	#size-cells = <2>;
++	compatible = "sifive,fu540g", "sifive,fu500";
++	model = "sifive,hifive-unleashed-a00";
 +
-+	 Description: must be declared within a cpu-map node, one node
-+		      per physical socket in the system. A system can
-+		      contain single or multiple physical socket.
-+		      The association of sockets and NUMA nodes is beyond
-+		      the scope of this bindings, please refer [2] for
-+		      NUMA bindings.
++	...
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&CPU1>;
++				};
++				core1 {
++					cpu = <&CPU2>;
++				};
++				core2 {
++					cpu0 = <&CPU2>;
++				};
++				core3 {
++					cpu0 = <&CPU3>;
++				};
++			};
++		};
 +
-+	This node is optional for a single socket system.
++		CPU1: cpu@1 {
++			device_type = "cpu";
++			compatible = "sifive,rocket0", "riscv";
++			reg = <0x1>;
++		}
 +
-+	The socket node name must be "socketN" as described in 2.1 above.
-+	A socket node can not be a leaf node.
-+
-+	A socket node's child nodes must be one or more cluster nodes.
-+
-+	Any other configuration is considered invalid.
- 
- - cluster node
- 
- 	 Description: must be declared within a cpu-map node, one node
- 		      per cluster. A system can contain several layers of
--		      clustering and cluster nodes can be contained in parent
--		      cluster nodes.
-+		      clustering within a single physical socket and cluster
-+		      nodes can be contained in parent cluster nodes.
- 
- 	The cluster node name must be "clusterN" as described in 2.1 above.
- 	A cluster node can not be a leaf node.
-@@ -164,13 +185,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
- 4 - Example dts
- ===========================================
- 
--Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters):
-+Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters in a single
-+physical socket):
- 
- cpus {
- 	#size-cells = <0>;
- 	#address-cells = <2>;
- 
- 	cpu-map {
-+		socket0 {
- 			cluster0 {
- 				cluster0 {
- 					core0 {
-@@ -253,6 +276,7 @@ cpus {
- 				};
- 			};
- 		};
-+	};
- 
- 	CPU0: cpu@0 {
- 		device_type = "cpu";
-@@ -473,3 +497,5 @@ cpus {
++		CPU2: cpu@2 {
++			device_type = "cpu";
++			compatible = "sifive,rocket0", "riscv";
++			reg = <0x2>;
++		}
++		CPU3: cpu@3 {
++			device_type = "cpu";
++			compatible = "sifive,rocket0", "riscv";
++			reg = <0x3>;
++		}
++		CPU4: cpu@4 {
++			device_type = "cpu";
++			compatible = "sifive,rocket0", "riscv";
++			reg = <0x4>;
++		}
++	}
++};
  ===============================================================================
  [1] ARM Linux kernel documentation
      Documentation/devicetree/bindings/arm/cpus.yaml
-+[2] Devicetree NUMA binding description
-+    Documentation/devicetree/bindings/numa.txt
+ [2] Devicetree NUMA binding description
+     Documentation/devicetree/bindings/numa.txt
++[3] RISC-V Linux kernel documentation
++    Documentation/devicetree/bindings/riscv/cpus.txt
++[4] https://www.devicetree.org/specifications/
 -- 
 2.21.0
