@@ -1,133 +1,63 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v2 1/1] arm64: dts: rockchip: add core dtsi file for RK3399Pro SoCs
-Date: Wed, 29 May 2019 10:06:50 +0200
-Message-ID: <5655934.Q7EnKghNLn@diego>
-References: <20190528044850.23703-1-jay.xu@rock-chips.com> <20190529074752.19388-1-jay.xu@rock-chips.com>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: [PATCH V4 0/8] Add EMC scaling support for Tegra210
+Date: Wed, 29 May 2019 16:21:31 +0800
+Message-ID: <20190529082139.5581-1-josephl@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190529074752.19388-1-jay.xu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jianqun Xu <jay.xu@rock-chips.com>
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, zhangzj@rock-chips.com, manivannan.sadhasivam@linaro.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jay,
+This series introduces the EMC clock scaling support for Tegra210. The
+new version has a significant change, which drops the EMC table bindings
+and replaces by memory region node of EMC table.
 
-Am Mittwoch, 29. Mai 2019, 09:47:52 CEST schrieb Jianqun Xu:
-> This patch adds core dtsi file for Rockchip RK3399Pro SoCs,
-> include rk3399.dtsi. Also enable these nodes:
-> - pcie/pcie_phy
-> - sdhci/sdio/emmc/sdmmc
-> 
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> ---
-> changes since v1:
-> - remove dfi and dmc
-> 
->  arch/arm64/boot/dts/rockchip/rk3399pro.dtsi | 74 +++++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
-> new file mode 100644
-> index 000000000000..b6d433ffa67d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
-> @@ -0,0 +1,74 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +// Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.
-> +
-> +#include "rk3399.dtsi"
-> +
-> +/ {
-> +	compatible = "rockchip,rk3399pro";
-> +
-> +	xin32k: xin32k {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <32768>;
-> +		clock-output-names = "xin32k";
-> +		#clock-cells = <0>;
-> +	};
+And most of the comments in V1 have been addressed.
+Thanks.
 
-Just to clarify, is the x32k clock really part of the soc itself?
-Like on older SoCs it was always supplied from the pmic
-or a separate rtc chip.
+v4:
+* make sure the behavior is compatible with the case if the kernel uses
+  the older DTB which doesn't have EMC node.
+* remove the EMC clock statistic data in EMC debug fs.
 
+Joseph Lo (8):
+  dt-bindings: memory: tegra: Add external memory controller binding for
+    Tegra210
+  clk: tegra: Add PLLP_UD and PLLMB_UD for Tegra210
+  clk: tegra: Export functions for EMC clock scaling
+  memory: tegra: Add Tegra210 EMC clock driver
+  memory: tegra: Add EMC scaling support code for Tegra210
+  memory: tegra: Add EMC scaling sequence code for Tegra210
+  clk: tegra: Remove the old emc_mux clock for Tegra210
+  arm64: tegra: Add external memory controller node for Tegra210
 
-> +};
-> +
-> +&emmc_phy {
-> +	status = "okay";
-> +};
+ .../nvidia,tegra210-emc.txt                   |   55 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi      |   33 +
+ drivers/clk/tegra/clk-tegra210.c              |   89 +-
+ drivers/memory/tegra/Kconfig                  |   10 +
+ drivers/memory/tegra/Makefile                 |    1 +
+ drivers/memory/tegra/tegra210-emc-cc-r21021.c | 1953 ++++++++++++++++
+ drivers/memory/tegra/tegra210-emc.c           | 2041 +++++++++++++++++
+ drivers/memory/tegra/tegra210-emc.h           | 1031 +++++++++
+ include/dt-bindings/clock/tegra210-car.h      |    4 +-
+ include/linux/clk/tegra.h                     |    5 +
+ include/soc/tegra/emc.h                       |    2 +
+ 11 files changed, 5207 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.txt
+ create mode 100644 drivers/memory/tegra/tegra210-emc-cc-r21021.c
+ create mode 100644 drivers/memory/tegra/tegra210-emc.c
+ create mode 100644 drivers/memory/tegra/tegra210-emc.h
 
-Is the emmc used inside the soc? As otherwise emmc / mmc controller
-settings would be more a part of the actual board using the soc.
-
-
-> +&pcie_phy {
-> +	status = "okay";
-> +};
-> +
-> +&pcie0 {
-> +	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
-> +	num-lanes = <4>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_clkreqn_cpm>;
-> +	status = "okay";
-> +};
-
-This is probably needed as it needs to talk the rk1808
-part over pcie, so it's really internal to the soc.
-
-
-> +
-> +&sdhci {
-> +	bus-width = <8>;
-> +	mmc-hs400-1_8v;
-> +	supports-emmc;
-> +	non-removable;
-> +	keep-power-in-suspend;
-> +	mmc-hs400-enhanced-strobe;
-> +	status = "okay";
-> +};
-
-Same comment as for emmc_phy above
-
-> +&sdio0 {
-> +	clock-frequency = <150000000>;
-> +	clock-freq-min-max = <200000 150000000>;
-> +	supports-sdio;
-> +	bus-width = <4>;
-> +	disable-wp;
-> +	cap-sd-highspeed;
-> +	cap-sdio-irq;
-> +	keep-power-in-suspend;
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +	non-removable;
-> +	num-slots = <1>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-> +	sd-uhs-sdr104;
-> +	status = "okay";
-> +};
-
-Same comment as for emmc_phy above
-
-> +&sdmmc {
-> +	clock-frequency = <150000000>;
-> +	clock-freq-min-max = <400000 150000000>;
-> +	supports-sd;
-> +	bus-width = <4>;
-> +	cap-mmc-highspeed;
-> +	cap-sd-highspeed;
-> +	disable-wp;
-> +	num-slots = <1>;
-> +	vqmmc-supply = <&vccio_sd>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
-> +	status = "okay";
-> +};
-
-Same comment as for emmc_phy above
+-- 
+2.21.0
