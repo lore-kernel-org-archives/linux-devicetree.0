@@ -1,120 +1,59 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [DO NOT MERGE] [PATCH v9 9/9] arm64: dts: allwinner: oceanic-5205-5inmfd: Enable Microtech MTF050FHDI-03 panel
-Date: Wed, 29 May 2019 16:26:15 +0530
-Message-ID: <20190529105615.14027-10-jagan@amarulasolutions.com>
-References: <20190529105615.14027-1-jagan@amarulasolutions.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 3/3] ARM: dts: sun8i: a83t: Add device node for CSI
+ (Camera Sensor Interface)
+Date: Wed, 29 May 2019 13:12:36 +0200
+Message-ID: <20190529111236.gnk4bics5xrfxyql@flea>
+References: <20190520150637.23557-1-megous@megous.com>
+ <20190520150637.23557-4-megous@megous.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zlv4nldcdeunkux4"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190529105615.14027-1-jagan@amarulasolutions.com>
+Content-Disposition: inline
+In-Reply-To: <20190520150637.23557-4-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Michael Trimarchi <michael@amarulasolutions.com>, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com, Sergey Suloev <ssuloev@orpaltech.com>, Ryan Pannell <ryan@osukl.com>, bshah@mykolab.com, Jagan Teki <jagan@amarulasolutions.com>
+To: megous@megous.com
+Cc: Chen-Yu Tsai <wens@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Microtech MTF050FHDI-03 is 1080x1920, 4-lane MIPI DSI LCD panel which
-has inbuilt NT35596 IC chip.
 
-DSI panel connected to board via 39-pin FPC port with,
-- DLDO1 as VCC-DSI supply
-- DLDO2 as DVDD supply
-- DC1SW as AVDD supply
-- DC1SW as AVEE supply
-- PD24 gpio for reset pin
-- PH10 gpio for backlight enable pin
+--zlv4nldcdeunkux4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Tested-by: Tamas Papp <tamas@osukl.com>
-Signed-off-by: Ryan Pannell <ryan@osukl.com>
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- .../sun50i-a64-oceanic-5205-5inmfd.dts        | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
+On Mon, May 20, 2019 at 05:06:37PM +0200, megous@megous.com wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> The A83T SoC has a camera sensor interface (known as CSI in Allwinner
+> lingo), which is similar to the one found on the A64 and H3. The only
+> difference seems to be that support of MIPI CSI through a connected
+> MIPI CSI-2 bridge.
+>
+> Add a device node for it, and pinctrl nodes for the commonly used MCLK
+> and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
+> the pinctrl nodes to keep the device tree blob size down if they are
+> unused.
+>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-index a4ddc0b9664c..ab9ee10ba6a2 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- 
- #include "sun50i-a64-sopine.dtsi"
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "Oceanic 5205 5inMFD";
-@@ -22,6 +23,15 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <412 512>;
-+		num-interpolated-steps = <100>;
-+		default-brightness-level = <100>;
-+		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PH10 */
-+	};
-+
- 	can_osc: can-osc {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
-@@ -40,6 +50,29 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
-+&dphy {
-+	status = "okay";
-+};
-+
-+&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;		/* VCC-DSI */
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "microtech,mtf050fhdi-03", "novatek,nt35596";
-+		reg = <0>;
-+		dvdd-supply = <&reg_dldo2>;			/* VCC-MIPI */
-+		avdd-supply = <&reg_dc1sw>;			/* AVDD_5V0 */
-+		avee-supply = <&reg_dc1sw>;			/* AVEE_5V */
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>;	/* LCD-RST: PD24 */
-+		backlight = <&backlight>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -81,10 +114,26 @@
- 	status = "okay";
- };
- 
-+&r_pwm {
-+	status = "okay";
-+};
-+
- &reg_dc1sw {
- 	regulator-name = "vcc-phy";
- };
- 
-+&reg_dldo1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-dsi";
-+};
-+
-+&reg_dldo2 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-mipi";
-+};
-+
- &reg_ldo_io0 {
- 	regulator-min-microvolt = <2800000>;
- 	regulator-max-microvolt = <2800000>;
--- 
-2.18.0.321.gffc6fa0e3
+Applied, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--zlv4nldcdeunkux4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXO5pJAAKCRDj7w1vZxhR
+xfugAP9uM3nhnPYa61YOa1J7hJC/ogaqkG64ngXh7+5a0atLJgEAiFczeAYSxJpM
+w49Kak6GmlRewxlL2aBTHVZryI9C5gA=
+=G/QN
+-----END PGP SIGNATURE-----
+
+--zlv4nldcdeunkux4--
