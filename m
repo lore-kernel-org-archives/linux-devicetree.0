@@ -1,84 +1,90 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v6 05/10] usb: roles: Introduce stubs for the exiting functions in role.h.
-Date: Wed, 29 May 2019 15:43:43 +0800
-Message-ID: <1559115828-19146-6-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v6 03/10] dt-bindings: usb: add binding for Type-B GPIO
+ connector driver
+Date: Wed, 29 May 2019 15:43:41 +0800
+Message-ID: <1559115828-19146-4-git-send-email-chunfeng.yun@mediatek.com>
 References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Yu Chen <chenyu56@huawei.com>, John Stultz <john.stultz@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Badhri Jagan Sridharan <badhri@google.com>, Linus Walleij <linus.walleij@linaro.org>, linux-usb@vger.kernel.org, Yu Chen <chenyu56@huawei.com>, linux-kernel@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>, Matthias Brugger <matthias.bgg@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-mediatek@lists.infradead.org, Min Guo <min.guo@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Yu Chen <chenyu56@huawei.com>
+It's used to support dual role switch via GPIO when use Type-B
+receptacle, typically the USB ID pin is connected to an input
+GPIO pin
 
-This patch adds stubs for the exiting functions while
-CONFIG_USB_ROLE_SWITCH does not enabled.
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-v6:
-  merge this patch [1] into this series to add new API
+v6 changes:
+ 1. remove status and port nodes in example
+ 2. make vbus-supply as optional property
 
-	[1] https://patchwork.kernel.org/patch/10909971/
+v5 changes:
+ 1. treat type-B connector as child device of USB controller's, but not
+    as a separate virtual device, suggested by Rob
+ 2. put connector's port node under connector node, suggested by Rob
+
+v4 no changes
+
+v3 changes:
+ 1. treat type-B connector as a virtual device, but not child device of
+    USB controller's
+
+v2 changes:
+  1. new patch to make binding clear suggested by Hans
 ---
- include/linux/usb/role.h | 30 ++++++++++++++++++++++++++++++
+ .../bindings/usb/typeb-conn-gpio.txt          | 30 +++++++++++++++++++
  1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
 
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-index c05ffa6abda9..da2b9641b877 100644
---- a/include/linux/usb/role.h
-+++ b/include/linux/usb/role.h
-@@ -42,6 +42,8 @@ struct usb_role_switch_desc {
- 	bool allow_userspace_control;
- };
- 
+diff --git a/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+new file mode 100644
+index 000000000000..5be443a16c6b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+@@ -0,0 +1,30 @@
++USB Type-B GPIO Connector
 +
-+#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
- int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
- enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
- struct usb_role_switch *usb_role_switch_get(struct device *dev);
-@@ -51,5 +53,33 @@ struct usb_role_switch *
- usb_role_switch_register(struct device *parent,
- 			 const struct usb_role_switch_desc *desc);
- void usb_role_switch_unregister(struct usb_role_switch *sw);
-+#else
-+static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
-+		enum usb_role role)
-+{
-+	return 0;
-+}
++This is typically used to switch dual role mode from the USB ID pin connected
++to an input GPIO pin.
 +
-+static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
-+{
-+	return USB_ROLE_NONE;
-+}
++Required properties:
++- compatible : should include "linux,typeb-conn-gpio" and "usb-b-connector".
++- id-gpios, vbus-gpios : input gpios, either one of them must be present,
++	and both can be present as well.
++	see connector/usb-connector.txt
 +
-+static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
++Optional properties:
++- vbus-supply : can be present if needed when supports dual role mode.
++	see connector/usb-connector.txt
 +
-+static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
++- Sub-nodes:
++	- port : can be present.
++		see graph.txt
 +
-+static inline struct usb_role_switch *
-+usb_role_switch_register(struct device *parent,
-+			 const struct usb_role_switch_desc *desc)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
++Example:
 +
-+static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
-+#endif
- 
- #endif /* __LINUX_USB_ROLE_H */
++&mtu3 {
++	connector {
++		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
++		label = "micro-USB";
++		type = "micro";
++		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
++		vbus-supply = <&usb_p0_vbus>;
++	};
++};
 -- 
 2.21.0
