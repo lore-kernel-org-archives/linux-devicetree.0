@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [DO NOT MERGE] [PATCH v9 7/9] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI panel
-Date: Wed, 29 May 2019 16:26:13 +0530
-Message-ID: <20190529105615.14027-8-jagan@amarulasolutions.com>
+Subject: [DO NOT MERGE] [PATCH v9 8/9] arm64: dts: allwinner: a64-pine64-lts: Enable Feiyang FY07024DI26A30-D DSI panel
+Date: Wed, 29 May 2019 16:26:14 +0530
+Message-ID: <20190529105615.14027-9-jagan@amarulasolutions.com>
 References: <20190529105615.14027-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,49 +12,50 @@ To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, 
 Cc: Michael Trimarchi <michael@amarulasolutions.com>, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com, Sergey Suloev <ssuloev@orpaltech.com>, Ryan Pannell <ryan@osukl.com>, bshah@mykolab.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add support for Bananapi S070WV20-CT16 DSI panel to
-BPI-M64 board.
+Feiyang FY07024DI26A30-D MIPI_DSI panel is desiged to attach with
+DSI connector on pine64 boards, enable the same for pine64 LTS.
 
 DSI panel connected via board DSI port with,
 - DLDO1 as VCC-DSI supply
-- DCDC1 as VDD supply
-- PD7 gpio for lcd enable pin
-- PD6 gpio for lcd reset pin
-- PD5 gpio for backlight enable pin
+- DC1SW as AVDD supply
+- DLDO2 as DVDD supply
+- PD24 gpio for reset pin
+- PH10 gpio for backlight enable pin
 
+Tested-by: Merlijn Wajer <merlijn@wizzup.org>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 +++++++++++++++++++
+ .../allwinner/sun50i-a64-sopine-baseboard.dts | 31 +++++++++++++++++++
  1 file changed, 31 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index c2a6b73b17cf..166b9761ca83 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -45,6 +45,7 @@
- #include "sun50i-a64.dtsi"
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+index e6fb9683f213..51b0cf71c3d4 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+@@ -46,6 +46,7 @@
+ /dts-v1/;
  
- #include <dt-bindings/gpio/gpio.h>
+ #include "sun50i-a64-sopine.dtsi"
 +#include <dt-bindings/pwm/pwm.h>
  
  / {
- 	model = "BananaPi-M64";
-@@ -56,6 +57,14 @@
- 		serial1 = &uart1;
+ 	model = "SoPine with baseboard";
+@@ -61,6 +62,14 @@
+ 		stdout-path = "serial0:115200n8";
  	};
  
 +	backlight: backlight {
 +		compatible = "pwm-backlight";
 +		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
 +		brightness-levels = <1 2 4 8 16 32 64 128 255>;
-+		default-brightness-level = <2>;
-+		enable-gpios = <&pio 3 5 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PD5 */
++		default-brightness-level = <8>;
++		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PH10 */
 +	};
 +
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -116,6 +125,24 @@
+ 	hdmi-connector {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+@@ -104,6 +113,24 @@
  	status = "okay";
  };
  
@@ -63,15 +64,15 @@ index c2a6b73b17cf..166b9761ca83 100644
 +};
 +
 +&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;		/* VCC3V3-DSI */
++	vcc-dsi-supply = <&reg_dldo1>;		/* VCC-DSI */
 +	status = "okay";
 +
 +	panel@0 {
-+		compatible = "bananapi,s070wv20-ct16-icn6211";
++		compatible = "feiyang,fy07024di26a30d";
 +		reg = <0>;
-+		enable-gpios = <&pio 3 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PD7 */
-+		reset-gpios = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD6 */
-+		vdd-supply = <&reg_dcdc1>;
++		avdd-supply = <&reg_dc1sw>;	/* VCC-LCD */
++		dvdd-supply = <&reg_dldo2>;	/* VCC-MIPI */
++		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
 +		backlight = <&backlight>;
 +	};
 +};
@@ -79,16 +80,16 @@ index c2a6b73b17cf..166b9761ca83 100644
  &ehci0 {
  	status = "okay";
  };
-@@ -206,6 +233,10 @@
- 	status = "okay";
+@@ -184,6 +211,10 @@
+ 	vcc-hdmi-supply = <&reg_dldo1>;
  };
  
 +&r_pwm {
 +	status = "okay";
 +};
 +
- &r_rsb {
- 	status = "okay";
- 
+ &sound {
+ 	simple-audio-card,aux-devs = <&codec_analog>;
+ 	simple-audio-card,widgets = "Microphone", "Microphone Jack",
 -- 
 2.18.0.321.gffc6fa0e3
