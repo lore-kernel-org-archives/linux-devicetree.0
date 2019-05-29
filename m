@@ -1,197 +1,69 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
-Date: Wed, 29 May 2019 10:12:19 +0000
-Message-ID: <AM5PR0402MB2865AB6C2A50851B7EA4E653F11F0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20171115060459.45375-1-ran.wang_1@nxp.com>
- <87ineb9b5v.fsf@linux.intel.com>
- <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com>
- <87shdfet90.fsf@linux.intel.com>
- <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <87k1eaanjw.fsf@linux.intel.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device
+ tree bindings for vibrator
+Date: Wed, 29 May 2019 06:12:31 -0400
+Message-ID: <20190529101231.GA14540@basecamp>
+References: <20190516085018.2207-1-masneyb@onstation.org>
+ <20190520142149.D56DA214AE@mail.kernel.org>
+ <CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87k1eaanjw.fsf@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-HI Felipe,
-
-On Tuesday, May 28, 2019 18:20, Felipe Balbi wrote:
->=20
-> Hi,
->=20
-> Ran Wang <ran.wang_1@nxp.com> writes:
->=20
-> > Hi Felipe,
+On Wed, May 29, 2019 at 11:13:15AM +0200, Linus Walleij wrote:
+> On Mon, May 20, 2019 at 4:21 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> 
+> > > +       vibrator@fd8c3450 {
+> > > +               compatible = "qcom,msm8974-vibrator";
+> > > +               reg = <0xfd8c3450 0x400>;
 > >
-> >     Sorry for the late reply:
+> > This is inside the multimedia clk controller. The resource reservation
+> > mechanism should be complaining loudly here. Is the driver writing
+> > directly into clk controller registers to adjust a duty cycle of the
+> > camera's general purpose clk?
 > >
-> > On Wednesday, November 15, 2017 18:23, Felipe Balbi wrote:
->=20
-> that's 1.5 year ago. I really don't remember the details of this conversa=
-tion
->=20
-> >> Ran Wang <ran.wang_1@nxp.com> writes:
-> >> >> Ran Wang <ran.wang_1@nxp.com> writes:
-> >> >> > Add support for USB3 snooping by asserting bits in register
-> >> >> > DWC3_GSBUSCFG0 for data and descriptor.
-> >> >>
-> >> >> we know *how* to enable a feature :-) It's always the same, you
-> >> >> fiddle with some registers and it works. What you failed to tell us=
- is:
-> >> >>
-> >> >> a) WHY do you need this?
+> > Can you add support for duty cycle to the qcom clk driver's RCGs and
+> > then write a generic clk duty cycle vibrator driver that adjusts the
+> > duty cycle of the clk? That would be better than reaching into the clk
+> > controller registers to do this.
+> 
+> There is something ontological about this.
+> 
+> A clock with variable duty cycle, isn't that by definition a PWM?
+> I don't suppose it is normal for qcom clocks to be able to control
+> their duty cycle, but rather default to 50/50 as we could expect?
+> 
+> I would rather say that maybe the qcom drivers/clk/qcom/* file
+> should be exporting a PWM from the linux side of things
+> rather than a clock for this thingie, and adding #pwm-cells
+> in the DT node for the clock controller, making it possible
+> to obtain PWMs right out of it, if it is a single device node for
+> the whole thing.
+> 
+> Analogous to how we have GPIOs that are ortogonally interrupt
+> providers I don't see any big problem in a clock controller
+> being clock and PWM provider at the same time.
+> 
+> There is code in drivers/clk/clk-pwm to use a pwm as a clock
+> but that is kind of the reverse use case, if we implement PWMs
+> directly in a clock controller driver then these can be turned into
+> clocks using clk-pwm.c should it be needed, right?
+> 
+> Part of me start to question whether clk and pwm should even
+> be separate subsystems :/ they seem to solve an overlapping
+> problem space.
 
-I think I have answered this as blow: to fix issue we found.
+My first revision of this vibrator driver used the Linux PWM framework
+due to the variable duty cycle:
 
-> >> >> b) WHY do we need another DT property for this?
+https://lore.kernel.org/lkml/20180926235112.25710-1-masneyb@onstation.org/
 
-I agreed with your suggestion of using ' snps,cache-type =3D <foobar "cache=
-able">, ...'
+I used the pwm-vibra driver on the input side.
 
-> >> >> c) WHAT does this mean for PCI devices?
-
-According to DWC3 data book, I think this (PCI) mean to the case of 'master=
- bus type =3D Native'
-The data book describes this feature as 'system bus DMA option for the mast=
-er bus,
-which may be configured as AHB, AXI, or Native.' On Table 6-5, it says when=
- MBUS_TYPE
-is Native, the definition of 4 transfer types control bits [3-0] is 'Same a=
-s AXI'.
-
-However, as to the code implementation to be generic to both PCI and AXI,
-I admit I don't have a perfect solution so far, only 2 proposals with conce=
-rns:
-
-a. Create another module driver like dwc3-exynos.c (arch/arm/boot/dts/wxyno=
-s54xx.dtsi)
-    to contain above programming code. However, it will touch the same reg =
-range of DWC3
-    I think this is not good.
-
-b. Add #ifdef CONFIG_ARCH_LAYERSCAPE in drivers/usb/dwc3/core.c to constrai=
-n hacking code
-   can only take effect for Layerscape (AXI case). I know it look ugly.
-
-Do you have any better advice on this (besides changed power on default val=
-ue from HW perspective)?
-
-> >> >
-> >> > So far I cannot have the answer for you, will get you back after
-> >> > some discussion with my colleagues.
-> >>
-> >> IOW, you have no idea why you need this, right? We're not patching
-> >> things for the sake of patching things. We need to understand what
-> >> these changes mean to the HW before we send out a patch publicly.
-> >>
-> >> Remember that the moment a patch like this is accepted, it has the
-> >> potential of changing behavior for *ALL* users.
-> >>
-> >> >> > +	}
-> >> >> > +
-> >> >> > +	dwc3_writel(dwc->regs, DWC3_GSBUSCFG0, cfg);
-> >> >>
-> >> >> this will *always* read and write GSBUSCFG0 even for those
-> >> >> platforms which don't need to change anything on this register.
-> >> >> You should just bail out early if !dwc->dma_coherent
-
-Yes, noted.
-
-> >> >>
-> >> >> Also, I think dma_coherent is likely not the best name for this pro=
-perty.
-
-OK
-
-> >> >>
-> >> >> Another question is: Why wasn't this setup properly during
-> >> >> coreConsultant instantiation of the RTL? Do you have devices on
-> >> >> the market already that need this or is this some early FPGA model
-> >> >> or test-only
-> >> ASIC?
-
-Several Layerscape platforms like LS1043ARDB, LS1046ARDB, etc. are already =
-on
-the market and have this issue. So I have to work out a SW patch to fix the=
-m.
-
-> >> >
-> >> > Yes, you are right. Actually I thought that all dwc3 IP  will have
-> >> > this register, and it can be controlled by DTS property.
-> >>
-> >> they all *have* the register, however, it's sort of expected that RTL
-> >> engineer will setup good defaults when instantiating the RTL using SNP=
-S'
-> >> coreConsultant tool.
-> >>
-> >> Does your platform work without this patch?
-> >
-> > On Layerscape SoC (such as LS1088A, LS1046A, LS1043A) When I add 'dma-
-> coherent'
-> > to USB nodes without this patch, dwc3 will fail on device enumeration a=
-s
-> below:
-> > [    3.610620] xhci-hcd xhci-hcd.2.auto: WARNING: Host System Error
-> > [    3.630609] usb usb2-port1: couldn't allocate usb_device
->=20
-> Right, and same as before: are these devices in the market or are you dea=
-ling
-> with pre-silicon prototypes?
-
-Already in the market, need SW fix.
-
-> >> >> >  /* Global Debug Queue/FIFO Space Available Register */
-> >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
-> >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
-> >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
-> >> >> >   * 	3	- Reserved
-> >> >> >   * @imod_interval: set the interrupt moderation interval in 250n=
-s
-> >> >> >   *                 increments or 0 to disable.
-> >> >> > + * @dma_coherent: set if enable dma-coherent.
-> >> >>
-> >> >> you're not enabling dma coherency, you're enabling cache snooping.
-> >> >> And this property should describe that. Also, keep in mind that
-> >> >> different devices may want different cache types for each of those
-> >> >> fields, so your property would have to be a lot more complex. Somet=
-hing
-> like:
-> >> >>
-> >> >> 	snps,cache-type =3D <foobar "cacheable">, <baz "cacheable">, ...
-> >> >>
-> >> >> Then driver would have to parse this properly to setup GSBUSCFG0.
-> >
-> > According to the DesignWare Cores SuperSpeed USB 3.0 Controller
-> > Databook (v2.60a), it has described Type Bit Assignments for all suppor=
-ted
-> master bus type:
-> > AHB, AXI3, AXI4 and Native. I found the bit definition are different am=
-ong
-> them.
-> > So, for the example you gave above, feel a little bit confused.
-> > Did you mean:
-> >     snps,cache-type =3D <DATA_RD  "write allocate">, <DESC_RD
-> > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read allocate">
->=20
-> yeah, something like that.
->=20
-> >> > Got it, learn a lot, need more time to digest and test, thanks for
-> >> > your patiently explanation.
-> >>
-> >> no problem, please figure out the answers to my previous questions,
-> >> without which I can't accept your patch.
->=20
-> ^^^
->=20
-> I still don't have all the answers
-
-If I still missed any question, please let me know, thanks for your time.
-
-Regards,
-Ran
+Brian
