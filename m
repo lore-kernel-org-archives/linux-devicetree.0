@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [DO NOT MERGE] [PATCH v9 8/9] arm64: dts: allwinner: a64-pine64-lts: Enable Feiyang FY07024DI26A30-D DSI panel
-Date: Wed, 29 May 2019 16:26:14 +0530
-Message-ID: <20190529105615.14027-9-jagan@amarulasolutions.com>
+Subject: [DO NOT MERGE] [PATCH v9 9/9] arm64: dts: allwinner: oceanic-5205-5inmfd: Enable Microtech MTF050FHDI-03 panel
+Date: Wed, 29 May 2019 16:26:15 +0530
+Message-ID: <20190529105615.14027-10-jagan@amarulasolutions.com>
 References: <20190529105615.14027-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,53 +12,61 @@ To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, 
 Cc: Michael Trimarchi <michael@amarulasolutions.com>, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com, Sergey Suloev <ssuloev@orpaltech.com>, Ryan Pannell <ryan@osukl.com>, bshah@mykolab.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Feiyang FY07024DI26A30-D MIPI_DSI panel is desiged to attach with
-DSI connector on pine64 boards, enable the same for pine64 LTS.
+Microtech MTF050FHDI-03 is 1080x1920, 4-lane MIPI DSI LCD panel which
+has inbuilt NT35596 IC chip.
 
-DSI panel connected via board DSI port with,
+DSI panel connected to board via 39-pin FPC port with,
 - DLDO1 as VCC-DSI supply
-- DC1SW as AVDD supply
 - DLDO2 as DVDD supply
+- DC1SW as AVDD supply
+- DC1SW as AVEE supply
 - PD24 gpio for reset pin
 - PH10 gpio for backlight enable pin
 
-Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+Tested-by: Tamas Papp <tamas@osukl.com>
+Signed-off-by: Ryan Pannell <ryan@osukl.com>
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- .../allwinner/sun50i-a64-sopine-baseboard.dts | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ .../sun50i-a64-oceanic-5205-5inmfd.dts        | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index e6fb9683f213..51b0cf71c3d4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -46,6 +46,7 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+index a4ddc0b9664c..ab9ee10ba6a2 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+@@ -8,6 +8,7 @@
  /dts-v1/;
  
  #include "sun50i-a64-sopine.dtsi"
 +#include <dt-bindings/pwm/pwm.h>
  
  / {
- 	model = "SoPine with baseboard";
-@@ -61,6 +62,14 @@
+ 	model = "Oceanic 5205 5inMFD";
+@@ -22,6 +23,15 @@
  		stdout-path = "serial0:115200n8";
  	};
  
 +	backlight: backlight {
 +		compatible = "pwm-backlight";
 +		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <1 2 4 8 16 32 64 128 255>;
-+		default-brightness-level = <8>;
++		brightness-levels = <412 512>;
++		num-interpolated-steps = <100>;
++		default-brightness-level = <100>;
 +		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PH10 */
 +	};
 +
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -104,6 +113,24 @@
- 	status = "okay";
+ 	can_osc: can-osc {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -40,6 +50,29 @@
+ 	};
  };
  
++&de {
++	status = "okay";
++};
++
 +&dphy {
 +	status = "okay";
 +};
@@ -68,11 +76,12 @@ index e6fb9683f213..51b0cf71c3d4 100644
 +	status = "okay";
 +
 +	panel@0 {
-+		compatible = "feiyang,fy07024di26a30d";
++		compatible = "microtech,mtf050fhdi-03", "novatek,nt35596";
 +		reg = <0>;
-+		avdd-supply = <&reg_dc1sw>;	/* VCC-LCD */
-+		dvdd-supply = <&reg_dldo2>;	/* VCC-MIPI */
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
++		dvdd-supply = <&reg_dldo2>;			/* VCC-MIPI */
++		avdd-supply = <&reg_dc1sw>;			/* AVDD_5V0 */
++		avee-supply = <&reg_dc1sw>;			/* AVEE_5V */
++		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>;	/* LCD-RST: PD24 */
 +		backlight = <&backlight>;
 +	};
 +};
@@ -80,16 +89,32 @@ index e6fb9683f213..51b0cf71c3d4 100644
  &ehci0 {
  	status = "okay";
  };
-@@ -184,6 +211,10 @@
- 	vcc-hdmi-supply = <&reg_dldo1>;
+@@ -81,10 +114,26 @@
+ 	status = "okay";
  };
  
 +&r_pwm {
 +	status = "okay";
 +};
 +
- &sound {
- 	simple-audio-card,aux-devs = <&codec_analog>;
- 	simple-audio-card,widgets = "Microphone", "Microphone Jack",
+ &reg_dc1sw {
+ 	regulator-name = "vcc-phy";
+ };
+ 
++&reg_dldo1 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-dsi";
++};
++
++&reg_dldo2 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-mipi";
++};
++
+ &reg_ldo_io0 {
+ 	regulator-min-microvolt = <2800000>;
+ 	regulator-max-microvolt = <2800000>;
 -- 
 2.18.0.321.gffc6fa0e3
