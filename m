@@ -1,75 +1,59 @@
-From: yibin.gong@nxp.com
-Subject: [PATCH v3 4/8] dmaengine: fsl-edma-common: version check for v2 instead
-Date: Wed, 29 May 2019 17:08:44 +0800
-Message-ID: <20190529090848.34350-5-yibin.gong@nxp.com>
-References: <20190529090848.34350-1-yibin.gong@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device
+ tree bindings for vibrator
+Date: Wed, 29 May 2019 11:13:15 +0200
+Message-ID: <CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com>
+References: <20190516085018.2207-1-masneyb@onstation.org> <20190520142149.D56DA214AE@mail.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190529090848.34350-1-yibin.gong@nxp.com>
+In-Reply-To: <20190520142149.D56DA214AE@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, mark.rutland@arm.com, vkoul@kernel.org, dan.j.williams@intel.com
-Cc: linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Brian Masney <masneyb@onstation.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+On Mon, May 20, 2019 at 4:21 PM Stephen Boyd <sboyd@kernel.org> wrote:
 
-The next v3 i.mx7ulp edma is based on v1, so change version
-check logic for v2 instead.
+> > +       vibrator@fd8c3450 {
+> > +               compatible = "qcom,msm8974-vibrator";
+> > +               reg = <0xfd8c3450 0x400>;
+>
+> This is inside the multimedia clk controller. The resource reservation
+> mechanism should be complaining loudly here. Is the driver writing
+> directly into clk controller registers to adjust a duty cycle of the
+> camera's general purpose clk?
+>
+> Can you add support for duty cycle to the qcom clk driver's RCGs and
+> then write a generic clk duty cycle vibrator driver that adjusts the
+> duty cycle of the clk? That would be better than reaching into the clk
+> controller registers to do this.
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
- drivers/dma/fsl-edma-common.c | 40 ++++++++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+There is something ontological about this.
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index bb24251..45d70d3 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -657,26 +657,26 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
- 	edma->regs.erql = edma->membase + EDMA_ERQ;
- 	edma->regs.eeil = edma->membase + EDMA_EEI;
- 
--	edma->regs.serq = edma->membase + ((edma->version == v1) ?
--			EDMA_SERQ : EDMA64_SERQ);
--	edma->regs.cerq = edma->membase + ((edma->version == v1) ?
--			EDMA_CERQ : EDMA64_CERQ);
--	edma->regs.seei = edma->membase + ((edma->version == v1) ?
--			EDMA_SEEI : EDMA64_SEEI);
--	edma->regs.ceei = edma->membase + ((edma->version == v1) ?
--			EDMA_CEEI : EDMA64_CEEI);
--	edma->regs.cint = edma->membase + ((edma->version == v1) ?
--			EDMA_CINT : EDMA64_CINT);
--	edma->regs.cerr = edma->membase + ((edma->version == v1) ?
--			EDMA_CERR : EDMA64_CERR);
--	edma->regs.ssrt = edma->membase + ((edma->version == v1) ?
--			EDMA_SSRT : EDMA64_SSRT);
--	edma->regs.cdne = edma->membase + ((edma->version == v1) ?
--			EDMA_CDNE : EDMA64_CDNE);
--	edma->regs.intl = edma->membase + ((edma->version == v1) ?
--			EDMA_INTR : EDMA64_INTL);
--	edma->regs.errl = edma->membase + ((edma->version == v1) ?
--			EDMA_ERR : EDMA64_ERRL);
-+	edma->regs.serq = edma->membase + ((edma->version == v2) ?
-+			EDMA64_SERQ : EDMA_SERQ);
-+	edma->regs.cerq = edma->membase + ((edma->version == v2) ?
-+			EDMA64_CERQ : EDMA_CERQ);
-+	edma->regs.seei = edma->membase + ((edma->version == v2) ?
-+			EDMA64_SEEI : EDMA_SEEI);
-+	edma->regs.ceei = edma->membase + ((edma->version == v2) ?
-+			EDMA64_CEEI : EDMA_CEEI);
-+	edma->regs.cint = edma->membase + ((edma->version == v2) ?
-+			EDMA64_CINT : EDMA_CINT);
-+	edma->regs.cerr = edma->membase + ((edma->version == v2) ?
-+			EDMA64_CERR : EDMA_CERR);
-+	edma->regs.ssrt = edma->membase + ((edma->version == v2) ?
-+			EDMA64_SSRT : EDMA_SSRT);
-+	edma->regs.cdne = edma->membase + ((edma->version == v2) ?
-+			EDMA64_CDNE : EDMA_CDNE);
-+	edma->regs.intl = edma->membase + ((edma->version == v2) ?
-+			EDMA64_INTL : EDMA_INTR);
-+	edma->regs.errl = edma->membase + ((edma->version == v2) ?
-+			EDMA64_ERRL : EDMA_ERR);
- 
- 	if (edma->version == v2) {
- 		edma->regs.erqh = edma->membase + EDMA64_ERQH;
--- 
-2.7.4
+A clock with variable duty cycle, isn't that by definition a PWM?
+I don't suppose it is normal for qcom clocks to be able to control
+their duty cycle, but rather default to 50/50 as we could expect?
+
+I would rather say that maybe the qcom drivers/clk/qcom/* file
+should be exporting a PWM from the linux side of things
+rather than a clock for this thingie, and adding #pwm-cells
+in the DT node for the clock controller, making it possible
+to obtain PWMs right out of it, if it is a single device node for
+the whole thing.
+
+Analogous to how we have GPIOs that are ortogonally interrupt
+providers I don't see any big problem in a clock controller
+being clock and PWM provider at the same time.
+
+There is code in drivers/clk/clk-pwm to use a pwm as a clock
+but that is kind of the reverse use case, if we implement PWMs
+directly in a clock controller driver then these can be turned into
+clocks using clk-pwm.c should it be needed, right?
+
+Part of me start to question whether clk and pwm should even
+be separate subsystems :/ they seem to solve an overlapping
+problem space.
+
+Yours,
+Linus Walleij
