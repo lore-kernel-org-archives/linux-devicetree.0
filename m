@@ -1,129 +1,197 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v4 08/10] ata: ahci: mvebu: Add support for A8k legacy
- DT bindings
-Date: Wed, 29 May 2019 12:10:33 +0200
-Message-ID: <20190529121033.04748037@xps13>
-References: <20190521143023.31810-1-miquel.raynal@bootlin.com>
- <20190521143023.31810-9-miquel.raynal@bootlin.com>
- <04cd3174-6857-4552-293d-5f25caa189a7@arm.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
+Date: Wed, 29 May 2019 10:12:19 +0000
+Message-ID: <AM5PR0402MB2865AB6C2A50851B7EA4E653F11F0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20171115060459.45375-1-ran.wang_1@nxp.com>
+ <87ineb9b5v.fsf@linux.intel.com>
+ <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com>
+ <87shdfet90.fsf@linux.intel.com>
+ <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <87k1eaanjw.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <04cd3174-6857-4552-293d-5f25caa189a7@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87k1eaanjw.fsf@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIFR1
-ZSwgMjEgTWF5IDIwMTkgMTY6NDY6MDEKKzAxMDA6Cgo+IE9uIDIxLzA1LzIwMTkgMTU6MzAsIE1p
-cXVlbCBSYXluYWwgd3JvdGU6Cj4gPiBUaGUgQ1AxMTAgU0FUQSB1bml0IGhhcyAyIHBvcnRzLCBh
-bmQgYSBkZWRpY2F0ZWQgSUNVIGVudHJ5IHBlcgo+ID4gcG9ydC4gSW4gdGhlIHBhc3QsIHRoZSBB
-SENJIFNBVEEgZHJpdmVyIG9ubHkgc3VwcG9ydGVkIG9uZSBpbnRlcnJ1cHQKPiA+IHBlciBTQVRB
-IHVuaXQuIFRvIHNvbHZlIHRoaXMgY29uZmxpY3QsIHRoZSAyIFNBVEEgd2lyZWQgaW50ZXJydXB0
-cyBpbgo+ID4gdGhlIFNvdXRoLUJyaWRnZSBnb3QgY29uZmlndXJlZCBhcyAxIEdJQyBpbnRlcnJ1
-cHQgaW4gdGhlCj4gPiBOb3J0aC1CcmlkZ2UsIHJlZ2FyZGxlc3Mgb2YgdGhlIG51bWJlciBvZiBT
-QVRBIHBvcnRzIGFjdHVhbGx5Cj4gPiBlbmFibGVkL2luIHVzZSwgYW5kIHRoZSBEVCBiaW5kaW5n
-cyBvbmx5IHJlZmVyZW5jZWQgdGhlIGludGVycnVwdCBvZgo+ID4gb25lIHBvcnQuCj4gPiAKPiA+
-IFNpbmNlIHRoZW4sIHRoaXMgbGltaXRhdGlvbiBoYXMgYmVlbiBhZGRyZXNzZWQgYW5kIHRoaXMg
-cGF0Y2ggZW5zdXJlcwo+ID4gYmFja3dhcmQgY29tcGF0aWJpbGl0eSB3aXRoIG9sZCBEVHMgbm90
-IGRlc2NyaWJpbmcgU0FUQSBwb3J0cwo+ID4gY29ycmVjdGx5IGRpcmVjdGx5IGZyb20gdGhlIEFI
-Q0kgTVZFQlUgZHJpdmVyLiBUaGlzIHdheSwgd2Ugd2lsbCBiZQo+ID4gYWJsZSB0byBkcm9wIHRo
-ZSBoYWNrIGZyb20gdGhlIElDVSBkcml2ZXIuIElPVywgd2hlbiB0aGUgQThrCj4gPiBjb21wYXRp
-YmxlIHN0cmluZyBpcyB1c2VkIGFuZCB0aGVyZSBpcyBubyBzdWItbm9kZXMgaW4gdGhlIERULCB3
-ZQo+ID4gZmFrZSB0aGUgY3JlYXRpb24gYW5kIG1hcHBpbmcgb2YgdGhlIHNlY29uZCAobWlzc2lu
-ZykgaW50ZXJydXB0Lgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1
-ZWwucmF5bmFsQGJvb3RsaW4uY29tPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9hdGEvYWhjaV9tdmVi
-dS5jICAgICAgIHwgMjkgKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0KPiA+ICBkcml2ZXJz
-L2F0YS9saWJhaGNpX3BsYXRmb3JtLmMgfCAgMyArKysKPiA+ICBpbmNsdWRlL2xpbnV4L2FoY2lf
-cGxhdGZvcm0uaCAgfCAgMSArCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCsp
-LCAxIGRlbGV0aW9uKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2F0YS9haGNpX212
-ZWJ1LmMgYi9kcml2ZXJzL2F0YS9haGNpX212ZWJ1LmMKPiA+IGluZGV4IDg2NzFhYTgxNzlmYS4u
-OGM5ODFiOGQ2ZTRkIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9hdGEvYWhjaV9tdmVidS5jCj4g
-PiArKysgYi9kcml2ZXJzL2F0YS9haGNpX212ZWJ1LmMKPiA+IEBAIC0xNiw2ICsxNiw3IEBACj4g
-PiAgI2luY2x1ZGUgPGxpbnV4L21idXMuaD4KPiA+ICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+
-Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9v
-Zl9pcnEuaD4KPiA+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4gPiAgI2lu
-Y2x1ZGUgImFoY2kuaCIKPiA+ICAKPiA+IEBAIC0yOCw5ICsyOSwxMyBAQAo+ID4gICNkZWZpbmUg
-QUhDSV9XSU5ET1dfQkFTRSh3aW4pCSgweDY0ICsgKCh3aW4pIDw8IDQpKQo+ID4gICNkZWZpbmUg
-QUhDSV9XSU5ET1dfU0laRSh3aW4pCSgweDY4ICsgKCh3aW4pIDw8IDQpKQo+ID4gIAo+ID4gKyNk
-ZWZpbmUgSUNVX1NBVEEwX0lDVV9JRCAxMDkKPiA+ICsjZGVmaW5lIElDVV9TQVRBMV9JQ1VfSUQg
-MTA3Cj4gPiArCj4gPiAgc3RydWN0IGFoY2lfbXZlYnVfcGxhdF9kYXRhIHsKPiA+ICAJaW50ICgq
-cGxhdF9jb25maWcpKHN0cnVjdCBhaGNpX2hvc3RfcHJpdiAqaHByaXYsIHN0cnVjdCBkZXZpY2Ug
-KmRldik7Cj4gPiAgCXVuc2lnbmVkIGludCBob3N0X2ZsYWdzOwo+ID4gKwl1bnNpZ25lZCBpbnQg
-cmVzb3VyY2VfZmxhZ3M7Cj4gPiAgfTsKPiA+ICAKPiA+ICBzdGF0aWMgdm9pZCBhaGNpX212ZWJ1
-X21idXNfY29uZmlnKHN0cnVjdCBhaGNpX2hvc3RfcHJpdiAqaHByaXYsCj4gPiBAQCAtMTAxLDYg
-KzEwNiwyNyBAQCBzdGF0aWMgaW50IGFoY2lfbXZlYnVfYXJtYWRhXzM3MDBfY29uZmlnKHN0cnVj
-dCBhaGNpX2hvc3RfcHJpdiAqaHByaXYsCj4gPiAgc3RhdGljIGludCBhaGNpX212ZWJ1X2FybWFk
-YV84a19jb25maWcoc3RydWN0IGFoY2lfaG9zdF9wcml2ICpocHJpdiwKPiA+ICAJCQkJICAgICAg
-IHN0cnVjdCBkZXZpY2UgKmRldikKPiA+ICB7Cj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAg
-PSBvZl9pcnFfZmluZF9wYXJlbnQoZGV2LT5vZl9ub2RlKTsKPiA+ICsJc3RydWN0IGlycV9kYXRh
-ICppcnFkID0gaXJxX2dldF9pcnFfZGF0YShocHJpdi0+aXJxc1swXSk7Cj4gPiArCWludCBob3N0
-X2lycSA9IGlycWQgPyBpcnFkX3RvX2h3aXJxKGlycWQpIDogMDsKPiA+ICsJaW50IG1pc3Npbmdf
-aXJxID0gKGhvc3RfaXJxID09IElDVV9TQVRBMV9JQ1VfSUQpID8KPiA+ICsJCUlDVV9TQVRBMF9J
-Q1VfSUQgOiBJQ1VfU0FUQTFfSUNVX0lEOwo+ID4gKwlzdHJ1Y3QgaXJxX2Z3c3BlYyBmd3NwZWMg
-PSB7Cj4gPiArCQkuZndub2RlID0gb2Zfbm9kZV90b19md25vZGUobnApLAo+ID4gKwkJLnBhcmFt
-X2NvdW50ID0gMiwKPiA+ICsJCS5wYXJhbSA9IHttaXNzaW5nX2lycSwgSVJRX1RZUEVfTEVWRUxf
-SElHSH0sCj4gPiArCX07Cj4gPiArCj4gPiArCWlmIChvZl9nZXRfY2hpbGRfY291bnQoZGV2LT5v
-Zl9ub2RlKSkKPiA+ICsJCXJldHVybiAwOwo+ID4gKwo+ID4gKwlocHJpdi0+aXJxc1sxXSA9IGly
-cV9jcmVhdGVfZndzcGVjX21hcHBpbmcoJmZ3c3BlYyk7Cj4gPiArCWlmIChocHJpdi0+aXJxc1sx
-XSkgewo+ID4gKwkJaHByaXYtPmZsYWdzIHw9IEFIQ0lfSEZMQUdfTVVMVElfTVNJOwo+ID4gKwkJ
-aHByaXYtPmdldF9pcnFfdmVjdG9yID0gYWhjaV9nZXRfcGVyX3BvcnRfaXJxX3ZlY3RvcjsKPiA+
-ICsJCWhwcml2LT5tYXNrX3BvcnRfbWFwID0gR0VOTUFTSygxLCAwKTsKPiA+ICsJfQo+ID4gKwo+
-ID4gIAlyZXR1cm4gMDsKPiA+ICB9Cj4gPiAgCj4gPiBAQCAtMjAwLDcgKzIyNiw3IEBAIHN0YXRp
-YyBpbnQgYWhjaV9tdmVidV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4g
-IAlpZiAoIXBkYXRhKQo+ID4gIAkJcmV0dXJuIC1FSU5WQUw7Cj4gPiAgCj4gPiAtCWhwcml2ID0g
-YWhjaV9wbGF0Zm9ybV9nZXRfcmVzb3VyY2VzKHBkZXYsIDApOwo+ID4gKwlocHJpdiA9IGFoY2lf
-cGxhdGZvcm1fZ2V0X3Jlc291cmNlcyhwZGV2LCBwZGF0YS0+cmVzb3VyY2VfZmxhZ3MpOyAgCj4g
-Cj4gVGhpcyBzZWVtcyB0byBiZSB0aGUgb25seSB1c2Ugb2YgcmVzb3VyY2VfZmxhZ3MgaW4gdGhl
-IHdob2xlIHNlcmllcy4gV2h5Cj4gY2FuJ3QgeW91IGp1c3QgcGFzcyBBSENJX1BMQVRGT1JNX0E4
-S19RVUlSSyBhcyBhIHBhcmFtZXRlciBhbmQgbm90Cj4gYWxsb2NhdGUgYW4gZXh0cmEgZmllbGQg
-aW4gdGhlIHBsYXRmb3JtIGRhdGEgc3RydWN0dXJlPwoKQmVjYXVzZSB0aGlzIGRyaXZlciBzdXBw
-b3J0cyAzIGRpZmZlcmVudCBjb21wYXRpYmxlcyBhbmQgdGhlIGE4awpjb21wYXRpYmxlIGlzIHRo
-ZSBvbmx5IG9uZSBuZWVkaW5nIHRoaXMgZmxhZy4gQW5vdGhlciBzb2x1dGlvbiB3b3VsZApiZSB0
-byBkZWNsYXJlIG9uIHRoZSBzdGFjayBhICdyZXNvdXJjZV9mbGFncycgdmFyaWFibGUgYW5kIHNl
-dCBpdCB0bwpBSENJX1BMQVRGT1JNX0E4S19RVUlSSyBvbmx5IHdoZW4gdXNpbmcgdGhlIHJpZ2h0
-IGNvbXBhdGlibGUuIEkKc3VwcG9zZSBpbiB0aGlzIGNhc2UsIHVzaW5nIGFuIGVudHJ5IG9mIGEg
-cGxhdGZvcm0gZGF0YSBzdHJ1Y3R1cmUgaXMKdGhlIHdheSB0byBnbyAoY2xlYW5lciwgbW9yZSBy
-ZWFkYWJsZSwgYXQgdGhlIGNvc3Qgb2YgYW4gZXh0cmEgNApieXRlcykuIFVubGVzcyB5b3UgaW5z
-aXN0IG9uIHRoaXMgcG9pbnQgSSB3aWxsIGtlZXAgdGhpcyBvcmdhbml6YXRpb24uCgo+IAo+ID4g
-IAlpZiAoSVNfRVJSKGhwcml2KSkKPiA+ICAJCXJldHVybiBQVFJfRVJSKGhwcml2KTsKPiA+ICAK
-PiA+IEBAIC0yNDAsNiArMjY2LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBhaGNpX212ZWJ1X3Bs
-YXRfZGF0YSBhaGNpX212ZWJ1X2FybWFkYV8zNzAwX3BsYXRfZGF0YSA9IHsKPiA+ICAKPiA+ICBz
-dGF0aWMgY29uc3Qgc3RydWN0IGFoY2lfbXZlYnVfcGxhdF9kYXRhIGFoY2lfbXZlYnVfYXJtYWRh
-XzhrX3BsYXRfZGF0YSA9IHsKPiA+ICAJLnBsYXRfY29uZmlnID0gYWhjaV9tdmVidV9hcm1hZGFf
-OGtfY29uZmlnLAo+ID4gKwkucmVzb3VyY2VfZmxhZ3MgPSBBSENJX1BMQVRGT1JNX0E4S19RVUlS
-SywKPiA+ICB9Owo+ID4gIAo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGFo
-Y2lfbXZlYnVfb2ZfbWF0Y2hbXSA9IHsKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2F0YS9saWJh
-aGNpX3BsYXRmb3JtLmMgYi9kcml2ZXJzL2F0YS9saWJhaGNpX3BsYXRmb3JtLmMKPiA+IGluZGV4
-IDM0N2ZmMTRhZWRkMi4uNjIwZTVmMjdmZGQ3IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9hdGEv
-bGliYWhjaV9wbGF0Zm9ybS5jCj4gPiArKysgYi9kcml2ZXJzL2F0YS9saWJhaGNpX3BsYXRmb3Jt
-LmMKPiA+IEBAIC00ODQsNiArNDg0LDkgQEAgc3RydWN0IGFoY2lfaG9zdF9wcml2ICphaGNpX3Bs
-YXRmb3JtX2dldF9yZXNvdXJjZXMoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiA+ICAJ
-aWYgKCFjaGlsZF9ub2RlcykKPiA+ICAJCWhwcml2LT5ucG9ydHMgPSAxOwo+ID4gIAo+ID4gKwlp
-ZiAoIWNoaWxkX25vZGVzICYmIGZsYWdzICYgQUhDSV9QTEFURk9STV9BOEtfUVVJUkspICAKPiAK
-PiBDb25zaWRlciB1c2luZyBicmFjZXMgYXJvdW5kIHRoZSBiaXR3aXNlIG9wZXJhdG9ycy4KClN1
-cmUhCgo+IAo+ID4gKwkJaHByaXYtPm5wb3J0cyA9IDI7Cj4gPiArCj4gPiAgCWhwcml2LT5waHlz
-ID0gZGV2bV9rY2FsbG9jKGRldiwgaHByaXYtPm5wb3J0cywgc2l6ZW9mKCpocHJpdi0+cGh5cyks
-IEdGUF9LRVJORUwpOwo+ID4gIAlpZiAoIWhwcml2LT5waHlzKSB7Cj4gPiAgCQlyYyA9IC1FTk9N
-RU07Cj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9haGNpX3BsYXRmb3JtLmggYi9pbmNs
-dWRlL2xpbnV4L2FoY2lfcGxhdGZvcm0uaAo+ID4gaW5kZXggZWFlZGNhNWZlNmZjLi41NzQ2NWJh
-NmJiMTUgMTAwNjQ0Cj4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L2FoY2lfcGxhdGZvcm0uaAo+ID4g
-KysrIGIvaW5jbHVkZS9saW51eC9haGNpX3BsYXRmb3JtLmgKPiA+IEBAIC00NCw1ICs0NCw2IEBA
-IGludCBhaGNpX3BsYXRmb3JtX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KTsKPiA+ICBpbnQg
-YWhjaV9wbGF0Zm9ybV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KTsKPiA+ICAKPiA+ICAjZGVm
-aW5lIEFIQ0lfUExBVEZPUk1fR0VUX1JFU0VUUwkweDAxCj4gPiArI2RlZmluZSBBSENJX1BMQVRG
-T1JNX0E4S19RVUlSSwkJMHgwMgo+ID4gIAo+ID4gICNlbmRpZiAvKiBfQUhDSV9QTEFURk9STV9I
-ICovCj4gPiAgIAo+IAo+IFRoYW5rcywKPiAKPiAJTS4KCgpUaGFua3MsCk1pcXXDqGwKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+HI Felipe,
+
+On Tuesday, May 28, 2019 18:20, Felipe Balbi wrote:
+>=20
+> Hi,
+>=20
+> Ran Wang <ran.wang_1@nxp.com> writes:
+>=20
+> > Hi Felipe,
+> >
+> >     Sorry for the late reply:
+> >
+> > On Wednesday, November 15, 2017 18:23, Felipe Balbi wrote:
+>=20
+> that's 1.5 year ago. I really don't remember the details of this conversa=
+tion
+>=20
+> >> Ran Wang <ran.wang_1@nxp.com> writes:
+> >> >> Ran Wang <ran.wang_1@nxp.com> writes:
+> >> >> > Add support for USB3 snooping by asserting bits in register
+> >> >> > DWC3_GSBUSCFG0 for data and descriptor.
+> >> >>
+> >> >> we know *how* to enable a feature :-) It's always the same, you
+> >> >> fiddle with some registers and it works. What you failed to tell us=
+ is:
+> >> >>
+> >> >> a) WHY do you need this?
+
+I think I have answered this as blow: to fix issue we found.
+
+> >> >> b) WHY do we need another DT property for this?
+
+I agreed with your suggestion of using ' snps,cache-type =3D <foobar "cache=
+able">, ...'
+
+> >> >> c) WHAT does this mean for PCI devices?
+
+According to DWC3 data book, I think this (PCI) mean to the case of 'master=
+ bus type =3D Native'
+The data book describes this feature as 'system bus DMA option for the mast=
+er bus,
+which may be configured as AHB, AXI, or Native.' On Table 6-5, it says when=
+ MBUS_TYPE
+is Native, the definition of 4 transfer types control bits [3-0] is 'Same a=
+s AXI'.
+
+However, as to the code implementation to be generic to both PCI and AXI,
+I admit I don't have a perfect solution so far, only 2 proposals with conce=
+rns:
+
+a. Create another module driver like dwc3-exynos.c (arch/arm/boot/dts/wxyno=
+s54xx.dtsi)
+    to contain above programming code. However, it will touch the same reg =
+range of DWC3
+    I think this is not good.
+
+b. Add #ifdef CONFIG_ARCH_LAYERSCAPE in drivers/usb/dwc3/core.c to constrai=
+n hacking code
+   can only take effect for Layerscape (AXI case). I know it look ugly.
+
+Do you have any better advice on this (besides changed power on default val=
+ue from HW perspective)?
+
+> >> >
+> >> > So far I cannot have the answer for you, will get you back after
+> >> > some discussion with my colleagues.
+> >>
+> >> IOW, you have no idea why you need this, right? We're not patching
+> >> things for the sake of patching things. We need to understand what
+> >> these changes mean to the HW before we send out a patch publicly.
+> >>
+> >> Remember that the moment a patch like this is accepted, it has the
+> >> potential of changing behavior for *ALL* users.
+> >>
+> >> >> > +	}
+> >> >> > +
+> >> >> > +	dwc3_writel(dwc->regs, DWC3_GSBUSCFG0, cfg);
+> >> >>
+> >> >> this will *always* read and write GSBUSCFG0 even for those
+> >> >> platforms which don't need to change anything on this register.
+> >> >> You should just bail out early if !dwc->dma_coherent
+
+Yes, noted.
+
+> >> >>
+> >> >> Also, I think dma_coherent is likely not the best name for this pro=
+perty.
+
+OK
+
+> >> >>
+> >> >> Another question is: Why wasn't this setup properly during
+> >> >> coreConsultant instantiation of the RTL? Do you have devices on
+> >> >> the market already that need this or is this some early FPGA model
+> >> >> or test-only
+> >> ASIC?
+
+Several Layerscape platforms like LS1043ARDB, LS1046ARDB, etc. are already =
+on
+the market and have this issue. So I have to work out a SW patch to fix the=
+m.
+
+> >> >
+> >> > Yes, you are right. Actually I thought that all dwc3 IP  will have
+> >> > this register, and it can be controlled by DTS property.
+> >>
+> >> they all *have* the register, however, it's sort of expected that RTL
+> >> engineer will setup good defaults when instantiating the RTL using SNP=
+S'
+> >> coreConsultant tool.
+> >>
+> >> Does your platform work without this patch?
+> >
+> > On Layerscape SoC (such as LS1088A, LS1046A, LS1043A) When I add 'dma-
+> coherent'
+> > to USB nodes without this patch, dwc3 will fail on device enumeration a=
+s
+> below:
+> > [    3.610620] xhci-hcd xhci-hcd.2.auto: WARNING: Host System Error
+> > [    3.630609] usb usb2-port1: couldn't allocate usb_device
+>=20
+> Right, and same as before: are these devices in the market or are you dea=
+ling
+> with pre-silicon prototypes?
+
+Already in the market, need SW fix.
+
+> >> >> >  /* Global Debug Queue/FIFO Space Available Register */
+> >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
+> >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
+> >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
+> >> >> >   * 	3	- Reserved
+> >> >> >   * @imod_interval: set the interrupt moderation interval in 250n=
+s
+> >> >> >   *                 increments or 0 to disable.
+> >> >> > + * @dma_coherent: set if enable dma-coherent.
+> >> >>
+> >> >> you're not enabling dma coherency, you're enabling cache snooping.
+> >> >> And this property should describe that. Also, keep in mind that
+> >> >> different devices may want different cache types for each of those
+> >> >> fields, so your property would have to be a lot more complex. Somet=
+hing
+> like:
+> >> >>
+> >> >> 	snps,cache-type =3D <foobar "cacheable">, <baz "cacheable">, ...
+> >> >>
+> >> >> Then driver would have to parse this properly to setup GSBUSCFG0.
+> >
+> > According to the DesignWare Cores SuperSpeed USB 3.0 Controller
+> > Databook (v2.60a), it has described Type Bit Assignments for all suppor=
+ted
+> master bus type:
+> > AHB, AXI3, AXI4 and Native. I found the bit definition are different am=
+ong
+> them.
+> > So, for the example you gave above, feel a little bit confused.
+> > Did you mean:
+> >     snps,cache-type =3D <DATA_RD  "write allocate">, <DESC_RD
+> > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read allocate">
+>=20
+> yeah, something like that.
+>=20
+> >> > Got it, learn a lot, need more time to digest and test, thanks for
+> >> > your patiently explanation.
+> >>
+> >> no problem, please figure out the answers to my previous questions,
+> >> without which I can't accept your patch.
+>=20
+> ^^^
+>=20
+> I still don't have all the answers
+
+If I still missed any question, please let me know, thanks for your time.
+
+Regards,
+Ran
