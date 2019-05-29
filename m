@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v6 08/10] usb: roles: get usb-role-switch from parent
-Date: Wed, 29 May 2019 15:43:46 +0800
-Message-ID: <1559115828-19146-9-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v6 02/10] dt-bindings: connector: add optional properties for Type-B
+Date: Wed, 29 May 2019 15:43:40 +0800
+Message-ID: <1559115828-19146-3-git-send-email-chunfeng.yun@mediatek.com>
 References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,69 +12,53 @@ To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation
 Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Yu Chen <chenyu56@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-when the USB host controller is the parent of the connector,
-usually type-B, sometimes don't need the graph, so we should
-check whether it's parent registers usb-role-switch or not
-firstly, and get it if exists.
+Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+usb-b-connector
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-v6:
-  new patch
----
- drivers/usb/roles/class.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+v6 no changes
 
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index aab795b54c7f..1f6af0ef3954 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -114,6 +114,19 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
- 	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
- }
+v5 changes:
+ 1. add reviewed by Rob
+
+v4 no changes
+
+v3 changes:
+ 1. add GPIO direction, and use fixed-regulator for GPIO controlled
+    VBUS regulator suggested by Rob;
+
+v2 changes:
+ 1. describe more clear for vbus-gpios and vbus-supply suggested by Hans
+---
+ .../bindings/connector/usb-connector.txt           | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+index cef556d4e5ee..d357987181ee 100644
+--- a/Documentation/devicetree/bindings/connector/usb-connector.txt
++++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+@@ -17,6 +17,20 @@ Optional properties:
+ - self-powered: Set this property if the usb device that has its own power
+   source.
  
-+static struct usb_role_switch *
-+usb_role_switch_is_parent(struct fwnode_handle *fwnode)
-+{
-+	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
-+	struct device *dev;
++Optional properties for usb-b-connector:
++- id-gpios: an input gpio for USB ID pin.
++- vbus-gpios: an input gpio for USB VBUS pin, used to detect presence of
++  VBUS 5V.
++  see gpio/gpio.txt.
++- vbus-supply: a phandle to the regulator for USB VBUS if needed when host
++  mode or dual role mode is supported.
++  Particularly, if use an output GPIO to control a VBUS regulator, should
++  model it as a regulator.
++  see regulator/fixed-regulator.yaml
++- pinctrl-names : a pinctrl state named "default" is optional
++- pinctrl-0 : pin control group
++  see pinctrl/pinctrl-bindings.txt
 +
-+	if (!parent || !fwnode_property_present(parent, "usb-role-switch"))
-+		return NULL;
-+
-+	dev = class_find_device(role_class, NULL, parent, switch_fwnode_match);
-+	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
-+}
-+
- /**
-  * usb_role_switch_get - Find USB role switch linked with the caller
-  * @dev: The caller device
-@@ -125,8 +138,10 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
- {
- 	struct usb_role_switch *sw;
- 
--	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
--					  usb_role_switch_match);
-+	sw = usb_role_switch_is_parent(dev_fwnode(dev));
-+	if (!sw)
-+		sw = device_connection_find_match(dev, "usb-role-switch", NULL,
-+						  usb_role_switch_match);
- 
- 	if (!IS_ERR_OR_NULL(sw))
- 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-@@ -146,8 +161,10 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
- {
- 	struct usb_role_switch *sw;
- 
--	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
--					  usb_role_switch_match);
-+	sw = usb_role_switch_is_parent(fwnode);
-+	if (!sw)
-+		sw = fwnode_connection_find_match(fwnode, "usb-role-switch",
-+						  NULL, usb_role_switch_match);
- 	if (!IS_ERR_OR_NULL(sw))
- 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
- 
+ Optional properties for usb-c-connector:
+ - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+   connector has power support.
 -- 
 2.21.0
