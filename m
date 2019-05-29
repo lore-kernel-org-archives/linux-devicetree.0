@@ -1,50 +1,105 @@
-Return-Path: <SRS0=hyxw=T4=pengutronix.de=mtr@kernel.org>
-From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v8 3/5] media: dt-bindings: media: Add vendor prefix for allegro
-Date: Tue, 28 May 2019 19:11:18 +0200
-Message-Id: <20190528171120.7076-4-m.tretter@pengutronix.de>
-In-Reply-To: <20190528171120.7076-1-m.tretter@pengutronix.de>
-References: <20190528171120.7076-1-m.tretter@pengutronix.de>
+Return-Path: <SRS0=L0hH=T5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40497 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfE2Jyi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 May 2019 05:54:38 -0400
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v2 0/9] Rename Rockchip VPU driver to Hantro, add initial i.MX8M support
+Date: Wed, 29 May 2019 11:54:15 +0200
+Message-Id: <20190529095424.23614-1-p.zabel@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, hverkuil@xs4all.nl, Michael Tretter <m.tretter@pengutronix.de>, Rob Herring <robh@kernel.org>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Add vendor prefix for Allegro DVT, a provider of H.264/AVC, H.265/HEVC,
-AVS2, VP9 and AV1 compliance test suites and H.264/AVC, H.265/HEVC, and
-VP9 encoder, codec and decoder hardware (RTL) IPs.
+There are several other SoCs that contain Hantro IP based VPUs, such as
+NXP i.MX8MQ (Hantro G1 and G2) and i.MX8MM (Hantro G1, G2, and H1). To
+maximize code sharing, add initial support for these SoCs to the
+Rockchip VPU driver, after renaming it to Hantro VPU.
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v7 -> v8:
-none
+This series is based on the br-v5.3g tag, commit e568d2cc1ef6
+("rockchip/vpu: Add support for MPEG-2 decoding on RK3288") with
+https://patchwork.linuxtv.org/patch/56402/ ("rockchip/vpu: Add support
+for MPEG-2 decoding on RK3328") applied on top. It supports MPEG-2
+decoding on i.MX8MQ. MPEG-2 decoding and JPEG encoding on i.MX8MM may
+or may not work, I don't have the hardware to test.
 
-v6 -> v7:
-- convert to json format for vendor-prefixes.yaml
+Changes since v1:
+ - Rebased onto "[PATCH v6] Add MPEG-2 decoding to Rockchip VPU" series,
+   dropped deprecated patch [1].
 
-v5 -> v6:
-none
+[1] https://patchwork.linuxtv.org/patch/56278/
 
-v5:
-- new patch
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+regards
+Philipp
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 33a65a45e319..7da11464991a 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -49,6 +49,8 @@ patternProperties:
-     description: Aeroflex Gaisler AB
-   "^al,.*":
-     description: Annapurna Labs
-+  "^allegro,.*"
-+    description: Allegro DVT
-   "^allo,.*":
-     description: Allo.com
-   "^allwinner,.*":
+Philipp Zabel (9):
+  rockchip/vpu: rename from rockchip to hantro
+  media: hantro: print video device name in addition to device node
+  media: hantro: add PM runtime resume callback
+  media: hantro: make irq names configurable
+  media: hantro: add support for named register ranges
+  media: hantro: add support for separate control block
+  media: dt-bindings: Document i.MX8MQ and i.MX8MM VPU bindings
+  media: hantro: add initial i.MX8MQ support
+  media: hantro: add initial i.MX8MM support (untested)
+
+ .../devicetree/bindings/media/imx8m-vpu.txt   |  56 +++
+ MAINTAINERS                                   |   4 +-
+ drivers/staging/media/Kconfig                 |   2 +-
+ drivers/staging/media/Makefile                |   2 +-
+ drivers/staging/media/hantro/Kconfig          |  15 +
+ drivers/staging/media/hantro/Makefile         |  14 +
+ .../media/{rockchip/vpu => hantro}/TODO       |   0
+ .../vpu/rockchip_vpu.h => hantro/hantro.h}    | 158 +++++----
+ .../hantro_drv.c}                             | 325 +++++++++---------
+ .../hantro_g1_mpeg2_dec.c}                    |  55 ++-
+ .../hantro_h1_jpeg_enc.c}                     |  44 +--
+ drivers/staging/media/hantro/hantro_hw.h      | 104 ++++++
+ .../hantro_jpeg.c}                            |  18 +-
+ drivers/staging/media/hantro/hantro_jpeg.h    |  13 +
+ .../hantro_mpeg2.c}                           |  14 +-
+ .../hantro_v4l2.c}                            | 234 ++++++-------
+ .../hantro_v4l2.h}                            |  16 +-
+ drivers/staging/media/hantro/imx8m_vpu_hw.c   | 301 ++++++++++++++++
+ .../{rockchip/vpu => hantro}/rk3288_vpu_hw.c  |  69 ++--
+ .../vpu => hantro}/rk3288_vpu_regs.h          |   2 +-
+ .../{rockchip/vpu => hantro}/rk3399_vpu_hw.c  |  73 ++--
+ .../vpu => hantro}/rk3399_vpu_hw_jpeg_enc.c   |  32 +-
+ .../vpu => hantro}/rk3399_vpu_hw_mpeg2_dec.c  |  37 +-
+ .../vpu => hantro}/rk3399_vpu_regs.h          |   2 +-
+ drivers/staging/media/rockchip/vpu/Kconfig    |  14 -
+ drivers/staging/media/rockchip/vpu/Makefile   |  14 -
+ .../media/rockchip/vpu/rockchip_vpu_hw.h      | 103 ------
+ .../media/rockchip/vpu/rockchip_vpu_jpeg.h    |  14 -
+ 28 files changed, 1057 insertions(+), 678 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/imx8m-vpu.txt
+ create mode 100644 drivers/staging/media/hantro/Kconfig
+ create mode 100644 drivers/staging/media/hantro/Makefile
+ rename drivers/staging/media/{rockchip/vpu => hantro}/TODO (100%)
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu.h => hantro/hantro.h} (66%)
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_drv.c => hantro/hantro_drv.c} (70%)
+ rename drivers/staging/media/{rockchip/vpu/rk3288_vpu_hw_mpeg2_dec.c => hantro/hantro_g1_mpeg2_dec.c} (87%)
+ rename drivers/staging/media/{rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c => hantro/hantro_h1_jpeg_enc.c} (76%)
+ create mode 100644 drivers/staging/media/hantro/hantro_hw.h
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_jpeg.c => hantro/hantro_jpeg.c} (95%)
+ create mode 100644 drivers/staging/media/hantro/hantro_jpeg.h
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_mpeg2.c => hantro/hantro_mpeg2.c} (79%)
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_v4l2.c => hantro/hantro_v4l2.c} (69%)
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_v4l2.h => hantro/hantro_v4l2.h} (53%)
+ create mode 100644 drivers/staging/media/hantro/imx8m_vpu_hw.c
+ rename drivers/staging/media/{rockchip/vpu => hantro}/rk3288_vpu_hw.c (66%)
+ rename drivers/staging/media/{rockchip/vpu => hantro}/rk3288_vpu_regs.h (99%)
+ rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_hw.c (67%)
+ rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_hw_jpeg_enc.c (86%)
+ rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_hw_mpeg2_dec.c (92%)
+ rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_regs.h (99%)
+ delete mode 100644 drivers/staging/media/rockchip/vpu/Kconfig
+ delete mode 100644 drivers/staging/media/rockchip/vpu/Makefile
+ delete mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_hw.h
+ delete mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h
+
 -- 
 2.20.1
