@@ -1,42 +1,39 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 2/6] arm64: dts: k3-am6: Add mux-controller DT node required for muxing SERDES
-Date: Wed, 29 May 2019 14:48:08 +0530
-Message-ID: <20190529091812.20764-3-kishon@ti.com>
-References: <20190529091812.20764-1-kishon@ti.com>
+Subject: [PATCH 0/6] AM654: Add PCIe and SERDES DT nodes
+Date: Wed, 29 May 2019 14:48:06 +0530
+Message-ID: <20190529091812.20764-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190529091812.20764-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add mux-controller DT node as a child node of scm_conf. This is
-required for muxing SERDES between USB, PCIe and ICSS2 SGMII.
+Patch series adds PCIe and SERDES DT nodes to k3-am65.dtsi and keeps
+them disabled in k3-am654-base-board.dts since there are no PCIe
+slots in the base board.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+PCIe slots are actually present in add on boards. Once overlay support
+is merged, I'll add overlay DTS files to enable PCIe.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 81e97d7adcc9..99d2402455d1 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -233,6 +233,13 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges = <0x0 0x0 0x00100000 0x1c000>;
-+
-+		serdes_mux: mux-controller {
-+			compatible = "mmio-mux";
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x4080 0x3>, /* SERDES0 lane select */
-+					<0x4090 0x3>; /* SERDES1 lane select */
-+		};
- 	};
- 
- 	dwc3_0: dwc3@4000000 {
+All the driver patches and binding documentation patches for PCIe and
+SERDES are already merged.
+
+Kishon Vijay Abraham I (6):
+  arm64: dts: k3-am6: Add "socionext,synquacer-pre-its" property to
+    gic_its
+  arm64: dts: k3-am6: Add mux-controller DT node required for muxing
+    SERDES
+  arm64: dts: k3-am6: Add SERDES DT node
+  arm64: dts: k3-am6: Add PCIe Root Complex DT node
+  arm64: dts: k3-am6: Add PCIe Endpoint DT node
+  arm64: dts: ti: am654-base-board: Disable SERDES and PCIe
+
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 128 ++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am65.dtsi           |   1 +
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts |  24 ++++
+ 3 files changed, 153 insertions(+)
+
 -- 
 2.17.1
