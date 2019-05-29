@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v6 04/10] dt-bindings: usb: mtu3: add properties about USB Role Switch
-Date: Wed, 29 May 2019 15:43:42 +0800
-Message-ID: <1559115828-19146-5-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v6 08/10] usb: roles: get usb-role-switch from parent
+Date: Wed, 29 May 2019 15:43:46 +0800
+Message-ID: <1559115828-19146-9-git-send-email-chunfeng.yun@mediatek.com>
 References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,67 +12,69 @@ To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation
 Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Yu Chen <chenyu56@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Now the USB Role Switch is supported, so add properties about it,
-and modify some description related.
+when the USB host controller is the parent of the connector,
+usually type-B, sometimes don't need the graph, so we should
+check whether it's parent registers usb-role-switch or not
+firstly, and get it if exists.
 
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-v4 no changes
-
-v5 changes:
- 1. modify decription about extcon and vbus-supply properties
- 2. make this patch depend on [1]
-
- [1]: [v3] dt-binding: usb: add usb-role-switch property
-      https://patchwork.kernel.org/patch/10934835/
-
-v4 no changes
-v3 no changes
-
-v2 changes:
-  1. fix typo
-  2. refer new binding about connector property
+v6:
+  new patch
 ---
- .../devicetree/bindings/usb/mediatek,mtu3.txt          | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/usb/roles/class.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-index 3382b5cb471d..3a8300205cdb 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-@@ -28,8 +28,13 @@ Optional properties:
- 	parent's address space
-  - extcon : external connector for vbus and idpin changes detection, needed
- 	when supports dual-role mode.
-+	it's considered valid for compatibility reasons, not allowed for
-+	new bindings, and use "usb-role-switch" property instead.
-  - vbus-supply : reference to the VBUS regulator, needed when supports
- 	dual-role mode.
-+	it's considered valid for compatibility reasons, not allowed for
-+	new bindings, and put into a usb-connector node.
-+	see connector/usb-connector.txt.
-  - pinctrl-names : a pinctrl state named "default" is optional, and need be
- 	defined if auto drd switch is enabled, that means the property dr_mode
- 	is set as "otg", and meanwhile the property "mediatek,enable-manual-drd"
-@@ -39,6 +44,8 @@ Optional properties:
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index aab795b54c7f..1f6af0ef3954 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -114,6 +114,19 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
+ 	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+ }
  
-  - maximum-speed : valid arguments are "super-speed", "high-speed" and
- 	"full-speed"; refer to usb/generic.txt
-+ - usb-role-switch : use USB Role Switch to support dual-role switch, but
-+	not extcon; see usb/generic.txt.
-  - enable-manual-drd : supports manual dual-role switch via debugfs; usually
- 	used when receptacle is TYPE-A and also wants to support dual-role
- 	mode.
-@@ -61,6 +68,9 @@ The xhci should be added as subnode to mtu3 as shown in the following example
- if host mode is enabled. The DT binding details of xhci can be found in:
- Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
- 
-+The port would be added as subnode if use "usb-role-switch" property.
-+	see graph.txt
++static struct usb_role_switch *
++usb_role_switch_is_parent(struct fwnode_handle *fwnode)
++{
++	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
++	struct device *dev;
 +
- Example:
- ssusb: usb@11271000 {
- 	compatible = "mediatek,mt8173-mtu3";
++	if (!parent || !fwnode_property_present(parent, "usb-role-switch"))
++		return NULL;
++
++	dev = class_find_device(role_class, NULL, parent, switch_fwnode_match);
++	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
++}
++
+ /**
+  * usb_role_switch_get - Find USB role switch linked with the caller
+  * @dev: The caller device
+@@ -125,8 +138,10 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ {
+ 	struct usb_role_switch *sw;
+ 
+-	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
+-					  usb_role_switch_match);
++	sw = usb_role_switch_is_parent(dev_fwnode(dev));
++	if (!sw)
++		sw = device_connection_find_match(dev, "usb-role-switch", NULL,
++						  usb_role_switch_match);
+ 
+ 	if (!IS_ERR_OR_NULL(sw))
+ 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+@@ -146,8 +161,10 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+ {
+ 	struct usb_role_switch *sw;
+ 
+-	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
+-					  usb_role_switch_match);
++	sw = usb_role_switch_is_parent(fwnode);
++	if (!sw)
++		sw = fwnode_connection_find_match(fwnode, "usb-role-switch",
++						  NULL, usb_role_switch_match);
+ 	if (!IS_ERR_OR_NULL(sw))
+ 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+ 
 -- 
 2.21.0
