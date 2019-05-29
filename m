@@ -1,106 +1,56 @@
-From: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Subject: [PATCH v8 3/3] i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC.
-Date: Wed, 29 May 2019 09:57:27 +0530
-Message-ID: <1559104047-13920-4-git-send-email-sagar.kadam@sifive.com>
-References: <1559104047-13920-1-git-send-email-sagar.kadam@sifive.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH RESEND 2/5] ARM: dts: imx7d-sdb: Assign corresponding
+ power supply for LDOs
+Date: Wed, 29 May 2019 05:17:47 +0000
+Message-ID: <DB3PR0402MB391628E1B6D27C9AC5B02DB8F51F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1557654739-12564-1-git-send-email-Anson.Huang@nxp.com>
+ <1557654739-12564-2-git-send-email-Anson.Huang@nxp.com>
+ <VI1PR04MB5055647612FAC2FE6FBE139FEE1E0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559104047-13920-1-git-send-email-sagar.kadam@sifive.com>
+In-Reply-To: <VI1PR04MB5055647612FAC2FE6FBE139FEE1E0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com, sagar.kadam@sifive.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The i2c-ocore driver already has a polling mode interface.But it needs
-a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
-There is an erratum in FU540 chip that prevents interrupt driven i2c
-transfers from working, and also the I2C controller's interrupt bit
-cannot be cleared if set, due to this the existing i2c polling mode
-interface added in mainline earlier doesn't work, and CPU stall's
-infinitely, when-ever i2c transfer is initiated.
-
-Ref:
-	commit dd7dbf0eb090 ("i2c: ocores: refactor setup for polling")
-
-The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
-FU540-COOO SoC.
-
-The polling function identifies a SiFive device based on the device node
-and enables the workaround.
-
-Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
----
- drivers/i2c/busses/i2c-ocores.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index b334fa2..4117f1a 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -35,6 +35,7 @@ struct ocores_i2c {
- 	int iobase;
- 	u32 reg_shift;
- 	u32 reg_io_width;
-+	unsigned long flags;
- 	wait_queue_head_t wait;
- 	struct i2c_adapter adap;
- 	struct i2c_msg *msg;
-@@ -84,6 +85,8 @@ struct ocores_i2c {
- #define TYPE_GRLIB		1
- #define TYPE_SIFIVE_REV0	2
- 
-+#define OCORES_FLAG_BROKEN_IRQ BIT(1) /* Broken IRQ for FU540-C000 SoC */
-+
- static void oc_setreg_8(struct ocores_i2c *i2c, int reg, u8 value)
- {
- 	iowrite8(value, i2c->base + (reg << i2c->reg_shift));
-@@ -236,9 +239,12 @@ static irqreturn_t ocores_isr(int irq, void *dev_id)
- 	struct ocores_i2c *i2c = dev_id;
- 	u8 stat = oc_getreg(i2c, OCI2C_STATUS);
- 
--	if (!(stat & OCI2C_STAT_IF))
-+	if (i2c->flags & OCORES_FLAG_BROKEN_IRQ) {
-+		if ((stat & OCI2C_STAT_IF) && !(stat & OCI2C_STAT_BUSY))
-+			return IRQ_NONE;
-+	} else if (!(stat & OCI2C_STAT_IF)) {
- 		return IRQ_NONE;
--
-+	}
- 	ocores_process(i2c, stat);
- 
- 	return IRQ_HANDLED;
-@@ -353,6 +359,11 @@ static void ocores_process_polling(struct ocores_i2c *i2c)
- 		ret = ocores_isr(-1, i2c);
- 		if (ret == IRQ_NONE)
- 			break; /* all messages have been transferred */
-+		else {
-+			if (i2c->flags & OCORES_FLAG_BROKEN_IRQ)
-+				if (i2c->state == STATE_DONE)
-+					break;
-+		}
- 	}
- }
- 
-@@ -595,6 +606,7 @@ static int ocores_i2c_probe(struct platform_device *pdev)
- {
- 	struct ocores_i2c *i2c;
- 	struct ocores_i2c_platform_data *pdata;
-+	const struct of_device_id *match;
- 	struct resource *res;
- 	int irq;
- 	int ret;
-@@ -677,6 +689,14 @@ static int ocores_i2c_probe(struct platform_device *pdev)
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq == -ENXIO) {
- 		ocores_algorithm.master_xfer = ocores_xfer_polling;
-+
-+		/*
-+		 * Set in OCORES_FLAG_BROKEN_IRQ to enable workaround for
-+		 * FU540-C000 SoC in polling mode.
-+		 */
-+		match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
-+		if (match && (long)match->data == TYPE_SIFIVE_REV0)
-+			i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
- 	} else {
- 		if (irq < 0)
- 			return irq;
--- 
-1.9.1
+SGksIExlb25hcmQNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMZW9u
+YXJkIENyZXN0ZXoNCj4gU2VudDogV2VkbmVzZGF5LCBNYXkgMjksIDIwMTkgMzoyNCBBTQ0KPiBU
+bzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiByb2JoK2R0QGtlcm5l
+bC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhh
+dWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWls
+LmNvbTsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxp
+bnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggUkVTRU5E
+IDIvNV0gQVJNOiBkdHM6IGlteDdkLXNkYjogQXNzaWduIGNvcnJlc3BvbmRpbmcNCj4gcG93ZXIg
+c3VwcGx5IGZvciBMRE9zDQo+IA0KPiBPbiAxMi4wNS4yMDE5IDEyOjU3LCBBbnNvbiBIdWFuZyB3
+cm90ZToNCj4gPiBPbiBpLk1YN0QgU0RCIGJvYXJkLCBzdzIgc3VwcGxpZXMgMXAwZC8xcDIgTERP
+LCB0aGlzIHBhdGNoIGFzc2lnbnMNCj4gPiBjb3JyZXNwb25kaW5nIHBvd2VyIHN1cHBseSBmb3Ig
+MXAwZC8xcDIgTERPIHRvIGF2b2lkIGNvbmZ1c2lvbiBieQ0KPiA+IGJlbG93IGxvZzoNCj4gPg0K
+PiA+IHZkZDFwMGQ6IHN1cHBsaWVkIGJ5IHJlZ3VsYXRvci1kdW1teQ0KPiA+IHZkZDFwMjogc3Vw
+cGxpZWQgYnkgcmVndWxhdG9yLWR1bW15DQo+ID4NCj4gPiBXaXRoIHRoaXMgcGF0Y2gsIHRoZSBw
+b3dlciBzdXBwbHkgaXMgbW9yZSBhY2N1cmF0ZToNCj4gPg0KPiA+IHZkZDFwMGQ6IHN1cHBsaWVk
+IGJ5IFNXMg0KPiA+IHZkZDFwMjogc3VwcGxpZWQgYnkgU1cyDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2Qtc2RiLmR0cw0KPiA+IGIvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14N2Qtc2RiLmR0cw0KPiA+DQo+ID4gKyZyZWdfMXAwZCB7DQo+ID4gKwl2aW4tc3VwcGx5
+ID0gPCZzdzJfcmVnPjsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZyZWdfMXAyIHsNCj4gPiArCXZp
+bi1zdXBwbHkgPSA8JnN3Ml9yZWc+Ow0KPiA+ICt9Ow0KPiANCj4gSXQncyBub3QgY2xlYXIgd2h5
+IGJ1dCB0aGlzIHBhdGNoIGJyZWFrcyBpbXg3ZC1zZGIgYm9vdC4gQ2hlY2tlZCB0d28NCj4gYm9h
+cmRzOiBpbiBhIGJvYXJkIGZhcm0gYW5kIG9uIG15IGRlc2suDQoNClRoYW5rcyBmb3IgcmVwb3J0
+aW5nIHRoaXMgaXNzdWUsIEkgY2FuIHJlcHJvZHVjZSBpdCBub3csIGEgcXVpY2sgZGVidWcgc2hv
+d3MNCnRoYXQgd2l0aCB0aGlzIHBhdGNoLCB3aGVuIHNldHRpbmcgcmVnXzFwMGQncyB2b2x0YWdl
+IHRvIDEuMFYsIHRoZSBTVzIncyB2b2x0YWdlDQp3aWxsIGJlIGNoYW5nZWQgdG8gMS41ViwgdGhl
+IGV4cGVjdGVkIHZvbHRhZ2Ugc2hvdWxkIGJlIDEuOFYsIHNvIDEuNVYgY2F1c2UgYm9hcmQNCnJl
+c2V0LiBCZWxvdyBwYXRjaCBjYW4gZml4IHRoaXMgaXNzdWUsIGJ1dCBJIGFtIHN0aWxsIGNoZWNr
+aW5nIGlmIHRoaXMgaXMgdGhlIGJlc3QgZml4LCBvbmNlDQpJIGZpZ3VyZSBvdXQsIEkgd2lsbCBz
+ZW5kIG91dCBhIGZpeCBwYXRjaCBmb3IgcmV2aWV3Og0KDQorKysgYi9hcmNoL2FybS9ib290L2R0
+cy9pbXg3ZC1zZGIuZHRzDQpAQCAtMjY3LDYgKzI2Nyw3IEBADQogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE4NTAwMDA+Ow0KICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItYm9vdC1vbjsNCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLWFsd2F5cy1vbjsNCisgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1heC1zdGVwLW1pY3Jvdm9sdCA9IDwyNTAwMD47
+DQogICAgICAgICAgICAgICAgICAgICAgICB9Ow0KDQpUaGFua3MsDQpBbnNvbg0KDQo+IA0KPiAt
+LQ0KPiBSZWdhcmRzLA0KPiBMZW9uYXJkDQo=
