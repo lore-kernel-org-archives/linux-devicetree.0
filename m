@@ -1,20 +1,15 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 01/10] ata: libahci: Ensure the host interrupt status
- bits are cleared
-Date: Wed, 29 May 2019 14:33:39 +0100
-Message-ID: <f619298a-cb51-b86e-9542-55b9e45bf803@arm.com>
-References: <20190521143023.31810-1-miquel.raynal@bootlin.com>
- <20190521143023.31810-2-miquel.raynal@bootlin.com>
- <CAHG4imNxsdzjzRpFWnL+PuznjdOU4hsp2E-g1bt4WVJeokfT3w@mail.gmail.com>
- <53ce8c5b-46fc-c969-5168-18e4bcc62cde@arm.com>
- <20190529120833.29334c70@xps13>
- <409ea2c5-c31a-fb6a-22c6-98b45e767809@arm.com>
- <20190529141356.1d9f03f3@xps13>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V4 5/8] memory: tegra: Add EMC scaling support code for
+ Tegra210
+Date: Wed, 29 May 2019 16:37:20 +0300
+Message-ID: <5bd95d0b-e1a5-e717-4d5a-b9ef5d5fa4a5@gmail.com>
+References: <20190529082139.5581-1-josephl@nvidia.com>
+ <20190529082139.5581-6-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190529141356.1d9f03f3@xps13>
+In-Reply-To: <20190529082139.5581-6-josephl@nvidia.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -25,79 +20,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, raymond pang <raymondpangxd@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Baruch Siach <baruch@tkos.co.il>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/05/2019 13:13, Miquel Raynal wrote:
-> Hi Marc,
-> 
-> Marc Zyngier <marc.zyngier@arm.com> wrote on Wed, 29 May 2019 11:37:58
-> +0100:
-> 
->> On 29/05/2019 11:08, Miquel Raynal wrote:
->>> Hi Marc & Raymond,
->>>
->>> Marc Zyngier <marc.zyngier@arm.com> wrote on Thu, 23 May 2019 10:26:01
->>> +0100:
->>>   
->>>> On 23/05/2019 04:11, raymond pang wrote:  
->>>>> Hi Miquel,
->>>>>
->>>>> This patch adds clearing GHC.IS into hot path, could you explain how
->>>>> irq storm is generated? thanks
->>>>> According to AHCI Spec, HBA should not refer to GHC.IS to generate
->>>>> MSI when applying multiple MSIs.    
->>>>
->>>> Well spotted.
->>>>
->>>> I have the ugly feeling that this is because the Marvell AHCI
->>>> implementation is not using MSIs at all, but instead a pair of wired
->>>> interrupts (which are level triggered instead of edge, hence the
->>>> screaming interrupts).
->>>>
->>>> The changes in the following patches abuse the rest of the driver by
->>>> pretending this is a a multi-MSI setup, while it clearly doesn't match
->>>> the expectation of the AHCI spec for MSIs.
->>>>
->>>> It looks like this shouldn't be imposed on other unsuspecting
->>>> implementations which correctly use edge-triggered MSIs and do not
->>>> require such an MMIO access.  
->>>
->>> I understand your concern, let me add a AHCI_HFLAG_LEVEL_MSI in
->>> hpriv->flags which will be used by the mvebu_ahci.c driver to request
->>> for this MMIO access. This way, the hot path remains the same.  
->>
->> I'm not convinced that's a good idea, if only because from the PoV of
->> the AHCI device itself, these are not MSIs at all, but wired interrupts.
->> The fact that there is some glue logic in the middle that turns it into
->> a message (and then back into a wire) is a regrettable implementation
->> detail.
->>
->> I'd rather you stick to the normal interrupt handler, or provide your
->> own, which would solve most problems.
-> 
-> Unless I don't understand your proposal, "stick to the normal interrupt
-> handler" is not possible as I need this register write to happen at
-> this time, not at any other moment.
-> 
-> However, on the possibility of having a separate interrupt handler, I
-> may use the new AHCI_HFALG_LEVEL_MSI flag to change the
-> devm_request_irq call here [1] and use my own at this moment. The
-> handler will be in libahci.c though.
-> 
-> Would this be a better approach?
-
-Again, level-triggered MSIs are not a property of the AHCI block. If
-anything, that's a property of the ICU block. Please do not conflate the
-two.
-
-What you have here is a set of wired interrupts, one per port. I'd
-suggest you implement it a separate interrupt handler keyed on a
-particular flag if you cannot detect this case by other means.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+MjkuMDUuMjAxOSAxMToyMSwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gVGhpcyBwYXRjaCBhZGRz
+IHRoZSByZXF1aXJlZCBBUElzIGFuZCB2YXJpYWJsZXMgZm9yIHRoZSBFTUMgc2NhbGluZwo+IHNl
+cXVlbmNlIGNvZGUgb24gVGVncmEyMTAuCj4gCj4gQmFzZWQgb24gdGhlIHdvcmsgb2YgUGV0ZXIg
+RGUgU2NocmlqdmVyIDxwZGVzY2hyaWp2ZXJAbnZpZGlhLmNvbT4uCj4gCj4gU2lnbmVkLW9mZi1i
+eTogSm9zZXBoIExvIDxqb3NlcGhsQG52aWRpYS5jb20+Cj4gLS0tCj4gdjQ6Cj4gLSBmaXggdGhl
+IEFQSSB3aXRoIGdlbmVyaWMgbmFtaW5nCj4gLSB1c2UgJ3UxNicgaW4gJ3N0cnVjdCBlbWNfdGFi
+bGVfcmVnaXN0ZXJfb2Zmc2V0Jwo+IC0tLQoKW3NuaXBdCgo+ICt2b2lkIGVtY193cml0ZWwoc3Ry
+dWN0IHRlZ3JhX2VtYyAqZW1jLCB1MzIgdmFsLCB1bnNpZ25lZCBsb25nIG9mZnNldCkKPiArewo+
+ICsJd3JpdGVsX3JlbGF4ZWQodmFsLCBlbWMtPmVtY19iYXNlW1JFR19FTUNdICsgb2Zmc2V0KTsK
+PiArfQo+ICsKPiAgdTMyIGVtY19yZWFkbChzdHJ1Y3QgdGVncmFfZW1jICplbWMsIHVuc2lnbmVk
+IGxvbmcgb2Zmc2V0KQo+ICB7Cj4gIAlyZXR1cm4gcmVhZGxfcmVsYXhlZChlbWMtPmVtY19iYXNl
+W1JFR19FTUNdICsgb2Zmc2V0KTsKPiAgfQo+ICAKPiArdTMyIGVtYzFfcmVhZGwoc3RydWN0IHRl
+Z3JhX2VtYyAqZW1jLCB1bnNpZ25lZCBsb25nIG9mZnNldCkKPiArewo+ICsJcmV0dXJuIHJlYWRs
+X3JlbGF4ZWQoZW1jLT5lbWNfYmFzZVtSRUdfRU1DMV0gKyBvZmZzZXQpOwo+ICt9CgpQbGVhc2Ug
+bWFrZSBhbGwgdGhlIGdsb2JhbCBvbmUtbGluZSBmdW5jdGlvbnMgc3RhdGljIGFuZCBpbmxpbmVk
+LCB0aGVuCm1vdmUgdGhlbSBvdXQgaW50byB0aGUgaGVhZGVyLiBUaGlzIHdpbGwgYWxsb3cgY29t
+cGlsZXIgdG8gb3B0aW1pemUgY29kZQpiZXR0ZXIgYW5kIGFsc28gd2lsbCBoaWRlIHRoZXNlIGdl
+bmVyaWMtbG9va2luZyBnbG9iYWwgc3ltYm9sIG5hbWVzIGZyb20KdW5yZWxhdGVkIHBhcnRpZXMg
+aW4gdGhlIG11bHRpcGxhdGZvcm0ga2VybmVsIGJ1aWxkLgoKLS0gCkRtaXRyeQoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
