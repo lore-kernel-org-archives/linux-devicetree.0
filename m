@@ -1,100 +1,171 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V4 7/8] clk: tegra: Remove the old emc_mux clock for
- Tegra210
-Date: Wed, 29 May 2019 15:49:20 +0300
-Message-ID: <6651442d-d501-9363-ff95-988e1a4a3982@gmail.com>
-References: <20190529082139.5581-1-josephl@nvidia.com>
- <20190529082139.5581-8-josephl@nvidia.com>
+From: =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
+Subject: RE: [PATCH v2 08/10] Input: elan_i2c - export true width/height
+Date: Wed, 29 May 2019 20:55:59 +0800
+Message-ID: <010301d5161d$dd201e70$97605b50$@emc.com.tw>
+References: <20190521132712.2818-1-benjamin.tissoires@redhat.com> <20190521132712.2818-9-benjamin.tissoires@redhat.com> <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com> <00f901d5143f$f5ea8420$e1bf8c60$@emc.com.tw> <20190528012101.GA193221@dtor-ws> <CA+jURcsWe=fZ-catnCaH=A85vAhrv1w1E5nSwpJvBAwgCTNYfw@mail.gmail.com> <CAOOzhkq+vD034Q2FKB2ryR7Q9nY=iQjdrREuihkZTaVcg+E_Xg@mail.gmail.com> <CAO-hwJ+9tnmvD-K3_Ksesdvag1aNbLB7eJxb9ZKb7kM24unqQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190529082139.5581-8-josephl@nvidia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAO-hwJ+9tnmvD-K3_Ksesdvag1aNbLB7eJxb9ZKb7kM24unqQQ@mail.gmail.com>
+Content-Language: zh-tw
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Benjamin Tissoires' <benjamin.tissoires@redhat.com>, 'Sean O'Brien' <seobrien@chromium.org>, 'Peter Hutterer' <peter.hutterer@who-t.net>
+Cc: 'Harry Cutts' <hcutts@chromium.org>, 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Aaron Ma' <aaron.ma@canonical.com>, 'Hans de Goede' <hdegoede@redhat.com>, "'open list:HID CORE LAYER'" <linux-input@vger.kernel.org>, 'lkml' <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-MjkuMDUuMjAxOSAxMToyMSwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gUmVtb3ZlIHRoZSBvbGQg
-ZW1jX211eCBjbG9jayBhbmQgZG9uJ3QgdXNlIHRoZSBjb21tb24gRU1DIGNsb2NrCj4gZGVmaW5p
-dGlvbi4gVGhpcyB3aWxsIGJlIHJlcGxhY2VkIGJ5IGEgbmV3IGNsb2NrIGRlZmluZWQgaW4gdGhl
-Cj4gRU1DIGRyaXZlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKb3NlcGggTG8gPGpvc2VwaGxAbnZp
-ZGlhLmNvbT4KPiAtLS0KPiB2NDoKPiAtIG1ha2Ugc3VyZSB0aGUgYmVoYXZpb3IgaXMgY29tcGF0
-aWJsZSB3aXRoIGNhc2UgaWYgdGhlIGtlcm5lbCBzdGlsbAo+ICAgdXNlcyB0aGUgb2xkZXIgRFRC
-IHdoaWNoIGRvZXNuJ3QgaGF2ZSBFTUMgbm9kZS4gQW5kIHRoZSBNQyBhbmQgRU1DCj4gICBjbG9j
-ayBjYW4gc3RpbGwgYmUgcmVnaXN0ZXJlZCBzdWNjZXNzdWZsbHkuCj4gdjM6Cj4gLSBzcGxpdCB0
-byAzIHBhdGNoZXMgZnJvbSB0aGUgcHJldmlvdXMgdmVyc2lvbgo+IC0tLQo+ICBkcml2ZXJzL2Ns
-ay90ZWdyYS9jbGstdGVncmEyMTAuYyB8IDQyICsrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0t
-LS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyNyBpbnNlcnRpb25zKCspLCAxNSBkZWxldGlvbnMoLSkK
-PiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvdGVncmEvY2xrLXRlZ3JhMjEwLmMgYi9kcml2
-ZXJzL2Nsay90ZWdyYS9jbGstdGVncmEyMTAuYwo+IGluZGV4IDFkNTIzNTQ4MjBjYS4uOGIyMDll
-OGI1ZWFmIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvY2xrL3RlZ3JhL2Nsay10ZWdyYTIxMC5jCj4g
-KysrIGIvZHJpdmVycy9jbGsvdGVncmEvY2xrLXRlZ3JhMjEwLmMKPiBAQCAtMjgsNiArMjgsNyBA
-QAo+ICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcmVzZXQvdGVncmEyMTAtY2FyLmg+Cj4gICNpbmNs
-dWRlIDxsaW51eC9pb3BvbGwuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L3NpemVzLmg+Cj4gKyNpbmNs
-dWRlIDxzb2MvdGVncmEvZW1jLmg+Cj4gICNpbmNsdWRlIDxzb2MvdGVncmEvcG1jLmg+Cj4gIAo+
-ICAjaW5jbHVkZSAiY2xrLmgiCj4gQEAgLTMyNCwxMiArMzI1LDYgQEAgc3RhdGljIHVuc2lnbmVk
-IGxvbmcgdGVncmEyMTBfaW5wdXRfZnJlcVtdID0gewo+ICAJWzhdID0gMTIwMDAwMDAsCj4gIH07
-Cj4gIAo+IC1zdGF0aWMgY29uc3QgY2hhciAqbXV4X3BsbG1jcF9jbGttW10gPSB7Cj4gLQkicGxs
-X20iLCAicGxsX2MiLCAicGxsX3AiLCAiY2xrX20iLCAicGxsX21fdWQiLCAicGxsX21iIiwgInBs
-bF9tYiIsCj4gLQkicGxsX3AiLAo+IC19Owo+IC0jZGVmaW5lIG11eF9wbGxtY3BfY2xrbV9pZHgg
-TlVMTAo+IC0KPiAgI2RlZmluZSBQTExfRU5BQkxFCQkJKDEgPDwgMzApCj4gIAo+ICAjZGVmaW5l
-IFBMTENYX01JU0MxX0lERFEJCSgxIDw8IDI3KQo+IEBAIC0yMzQ2LDcgKzIzNDEsNiBAQCBzdGF0
-aWMgc3RydWN0IHRlZ3JhX2NsayB0ZWdyYTIxMF9jbGtzW3RlZ3JhX2Nsa19tYXhdIF9faW5pdGRh
-dGEgPSB7Cj4gIAlbdGVncmFfY2xrX2kyYzJdID0geyAuZHRfaWQgPSBURUdSQTIxMF9DTEtfSTJD
-MiwgLnByZXNlbnQgPSB0cnVlIH0sCj4gIAlbdGVncmFfY2xrX3VhcnRjXzhdID0geyAuZHRfaWQg
-PSBURUdSQTIxMF9DTEtfVUFSVEMsIC5wcmVzZW50ID0gdHJ1ZSB9LAo+ICAJW3RlZ3JhX2Nsa19t
-aXBpX2NhbF0gPSB7IC5kdF9pZCA9IFRFR1JBMjEwX0NMS19NSVBJX0NBTCwgLnByZXNlbnQgPSB0
-cnVlIH0sCj4gLQlbdGVncmFfY2xrX2VtY10gPSB7IC5kdF9pZCA9IFRFR1JBMjEwX0NMS19FTUMs
-IC5wcmVzZW50ID0gdHJ1ZSB9LAo+ICAJW3RlZ3JhX2Nsa191c2IyXSA9IHsgLmR0X2lkID0gVEVH
-UkEyMTBfQ0xLX1VTQjIsIC5wcmVzZW50ID0gdHJ1ZSB9LAo+ICAJW3RlZ3JhX2Nsa19ic2V2XSA9
-IHsgLmR0X2lkID0gVEVHUkEyMTBfQ0xLX0JTRVYsIC5wcmVzZW50ID0gdHJ1ZSB9LAo+ICAJW3Rl
-Z3JhX2Nsa191YXJ0ZF84XSA9IHsgLmR0X2lkID0gVEVHUkEyMTBfQ0xLX1VBUlRELCAucHJlc2Vu
-dCA9IHRydWUgfSwKPiBAQCAtMjk1Nyw2ICsyOTUxLDI3IEBAIHN0YXRpYyBpbnQgdGVncmEyMTBf
-aW5pdF9wbGx1KHZvaWQpCj4gIAlyZXR1cm4gMDsKPiAgfQo+ICAKPiArc3RhdGljIGNvbnN0IHN0
-cnVjdCBjbGtfZGl2X3RhYmxlIG1jX2Rpdl90YWJsZV90ZWdyYTIxMFtdID0gewo+ICsJeyAudmFs
-ID0gMCwgLmRpdiA9IDIgfSwKPiArCXsgLnZhbCA9IDEsIC5kaXYgPSA0IH0sCj4gKwl7IC52YWwg
-PSAyLCAuZGl2ID0gMSB9LAo+ICsJeyAudmFsID0gMywgLmRpdiA9IDIgfSwKPiArCXsgLnZhbCA9
-IDAsIC5kaXYgPSAwIH0sCj4gK307Cj4gKwo+ICtzdGF0aWMgdm9pZCB0ZWdyYTIxMF9jbGtfcmVn
-aXN0ZXJfbWMoY29uc3QgY2hhciAqbmFtZSwKPiArCQkJCSAgICAgY29uc3QgY2hhciAqcGFyZW50
-X25hbWUpCj4gK3sKPiArCXN0cnVjdCBjbGsgKmNsazsKPiArCj4gKwljbGsgPSBjbGtfcmVnaXN0
-ZXJfZGl2aWRlcl90YWJsZShOVUxMLCBuYW1lLCBwYXJlbnRfbmFtZSwKPiArCQkJCQkgQ0xLX0lT
-X0NSSVRJQ0FMLAo+ICsJCQkJCSBjbGtfYmFzZSArIENMS19TT1VSQ0VfRU1DLAo+ICsJCQkJCSAx
-NSwgMiwgQ0xLX0RJVklERVJfUkVBRF9PTkxZLAo+ICsJCQkJCSBtY19kaXZfdGFibGVfdGVncmEy
-MTAsICZlbWNfbG9jayk7CgpUaGlzIGRvZXNuJ3QgbG9vayByaWdodCwgeW91J3JlIG1peGluZyB1
-cCB0aGUgTUMgZGl2aWRlciB3aXRoIHRoZSBFTUMKZGl2aWRlciBoZXJlLiBUaGUgTUMgY2xvY2sg
-aXMgYWx3YXlzIHNvdXJjZWQgZnJvbSBFTUMgYW5kIHRoZXJlIGlzIG9ubHkKb25lIGJpdCBmb3Ig
-dGhlIE1DIGRpdmlkZXIsIHRoZSBiaXQgMTYgTUNfRU1DX1NBTUVfRlJFUS4KCldoZW4gRU1DIGNs
-b2NrIGlzIGRpdmlkZWQgZG93biBieSAyIChiaXQgMTUgRU1DX0NMS19ESVYyX0VOKSwgdGhlbiB0
-aGUKY2xrLWZyYW1ld29yayB3aWxsIHRha2UgY2FyZSBvZiBpdCBieSBjYWxjdWxhdGluZyB0aGUg
-TUMgcmF0ZSBiYXNlZCBvbgp0aGUgYWN0dWFsIHBhcmVudCBFTUMgcmF0ZS4KCj4gKwljbGtzW1RF
-R1JBMjEwX0NMS19NQ10gPSBjbGs7Cj4gK30KPiArCj4gIHN0YXRpYyBjb25zdCBjaGFyICogY29u
-c3Qgc29yMV9vdXRfcGFyZW50c1tdID0gewo+ICAJLyoKPiAgCSAqIEJpdCAwIG9mIHRoZSBtdXgg
-c2VsZWN0cyBzb3IxX3BhZF9jbGtvdXQsIGlycmVzcGVjdGl2ZSBvZiBiaXQgMSwgc28KPiBAQCAt
-MzA0MCwxNSArMzA1NSwxMiBAQCBzdGF0aWMgX19pbml0IHZvaWQgdGVncmEyMTBfcGVyaXBoX2Ns
-a19pbml0KHZvaWQgX19pb21lbSAqY2xrX2Jhc2UsCj4gIAkJCUNMS19TT1VSQ0VfTEEsIDApOwo+
-ICAJY2xrc1tURUdSQTIxMF9DTEtfTEFdID0gY2xrOwo+ICAKPiAtCS8qIGVtYyBtdXggKi8KPiAt
-CWNsayA9IGNsa19yZWdpc3Rlcl9tdXgoTlVMTCwgImVtY19tdXgiLCBtdXhfcGxsbWNwX2Nsa20s
-Cj4gLQkJCSAgICAgICBBUlJBWV9TSVpFKG11eF9wbGxtY3BfY2xrbSksIDAsCj4gLQkJCSAgICAg
-ICBjbGtfYmFzZSArIENMS19TT1VSQ0VfRU1DLAo+IC0JCQkgICAgICAgMjksIDMsIDAsICZlbWNf
-bG9jayk7Cj4gKwkvKiBlbWMgKi8KPiArCWNsayA9IHRlZ3JhMjEwX2Nsa19yZWdpc3Rlcl9lbWMo
-KTsKPiArCWNsa3NbVEVHUkEyMTBfQ0xLX0VNQ10gPSBjbGs7Cj4gIAo+IC0JY2xrID0gdGVncmFf
-Y2xrX3JlZ2lzdGVyX21jKCJtYyIsICJlbWNfbXV4IiwgY2xrX2Jhc2UgKyBDTEtfU09VUkNFX0VN
-QywKPiAtCQkJCSAgICAmZW1jX2xvY2spOwo+IC0JY2xrc1tURUdSQTIxMF9DTEtfTUNdID0gY2xr
-Owo+ICsJLyogbWMgKi8KPiArCXRlZ3JhMjEwX2Nsa19yZWdpc3Rlcl9tYygibWMiLCAiZW1jIik7
-Cj4gIAo+ICAJLyogY21sMCAqLwo+ICAJY2xrID0gY2xrX3JlZ2lzdGVyX2dhdGUoTlVMTCwgImNt
-bDAiLCAicGxsX2UiLCAwLCBjbGtfYmFzZSArIFBMTEVfQVVYLAo+IAoKWW91IHNob3VsZCBsZWF2
-ZSB0aGUgY29tbW9uIHRlZ3JhX2Nsa19yZWdpc3Rlcl9tYygpIHVzYWdlIGFzLWlzIGFuZCBvbmx5
-CnMvZW1jX211eC9lbWMvIGluIHRoZSBhcmd1bWVudC4KCi0tIApEbWl0cnkKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+
+-----Original Message-----
+From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com] 
+Sent: Wednesday, May 29, 2019 3:17 PM
+To: Sean O'Brien; Peter Hutterer
+Cc: Harry Cutts; Dmitry Torokhov; 廖崇榮; Rob Herring; Aaron Ma; Hans de Goede; open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
+
+On Wed, May 29, 2019 at 2:12 AM Sean O'Brien <seobrien@chromium.org> wrote:
+>
+> We do still use a maxed out major axis as a signal for a palm in the 
+> touchscreen logic, but I'm not too concerned because if that axis is 
+> maxed out, the contact should probably be treated as a palm anyway...
+>
+> I'm more concerned with this affecting our gesture detection for 
+> touchpad. It looks like this change would cause all contacts to 
+> reported as some percentage bigger than they are currently. Can you 
+> give me an idea of how big that percentage is?
+
+On the P52, I currently have:
+[  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
+[  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
+
+-> with the computation done in the kernel:
+width_ratio: 126
+height_ratio: 123
+
+For my average finger, the reported traces are between 4 and 6:
+With the ETP_FWIDTH_REDUCE:
+Major between 144 to 216
+Minor between 132 to 198
+
+Without:
+Major between 504 to 756
+Minor between 492 to 738
+
+So a rough augmentation of 350%
+
+For the Synaptics devices (over SMBus), they send the raw value of the traces, so you will get a major/minor between 2 to 5. Max on these axes is 15, so we should get the same percentage of value comparing to the range.
+
+Elan's vendor report contains such information, which indicate how many trace are touched by finger/palm
+		mk_x = (finger_data[3] & 0x0f); 
+		mk_y = (finger_data[3] >> 4);
+Do we need to use mk_* for major/minor for keeping it consistent with other vendor?
+But this modification will impact Chromebook's usability and Chrome test suite.
+
+
+
+Which is why libinput has a database of which device reports which pressure/major/minor ranges as otherwise the values are just impossible to understand.
+
+Cheers,
+Benjamin
+
+
+
+>
+> On Tue, May 28, 2019 at 11:13 AM Harry Cutts <hcutts@chromium.org> wrote:
+> >
+> > On Mon, 27 May 2019 at 18:21, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+> > >
+> > > Hi Benjamin, KT,
+> > >
+> > > On Mon, May 27, 2019 at 11:55:01AM +0800, 廖崇榮 wrote:
+> > > > Hi
+> > > >
+> > > > -----Original Message-----
+> > > > From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
+> > > > Sent: Friday, May 24, 2019 5:37 PM
+> > > > To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de 
+> > > > Goede
+> > > > Cc: open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
+> > > > Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true 
+> > > > width/height
+> > > >
+> > > > On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
+> > > > >
+> > > > > The width/height is actually in the same unit than X and Y. So 
+> > > > > we should not tamper the data, but just set the proper 
+> > > > > resolution, so that userspace can correctly detect which touch is a palm or a finger.
+> > > > >
+> > > > > Signed-off-by: Benjamin Tissoires 
+> > > > > <benjamin.tissoires@redhat.com>
+> > > > >
+> > > > > --
+> > > > >
+> > > > > new in v2
+> > > > > ---
+> > > > >  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
+> > > > >  1 file changed, 4 insertions(+), 7 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/input/mouse/elan_i2c_core.c
+> > > > > b/drivers/input/mouse/elan_i2c_core.c
+> > > > > index 7ff044c6cd11..6f4feedb7765 100644
+> > > > > --- a/drivers/input/mouse/elan_i2c_core.c
+> > > > > +++ b/drivers/input/mouse/elan_i2c_core.c
+> > > > > @@ -45,7 +45,6 @@
+> > > > >  #define DRIVER_NAME            "elan_i2c"
+> > > > >  #define ELAN_VENDOR_ID         0x04f3
+> > > > >  #define ETP_MAX_PRESSURE       255
+> > > > > -#define ETP_FWIDTH_REDUCE      90
+> > > > >  #define ETP_FINGER_WIDTH       15
+> > > > >  #define ETP_RETRY_COUNT                3
+> > > > >
+> > > > > @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp_data *data,
+> > > > >                         return;
+> > > > >                 }
+> > > > >
+> > > > > -               /*
+> > > > > -                * To avoid treating large finger as palm, let's reduce the
+> > > > > -                * width x and y per trace.
+> > > > > -                */
+> > > > > -               area_x = mk_x * (data->width_x - ETP_FWIDTH_REDUCE);
+> > > > > -               area_y = mk_y * (data->width_y - ETP_FWIDTH_REDUCE);
+> > > > > +               area_x = mk_x * data->width_x;
+> > > > > +               area_y = mk_y * data->width_y;
+> > > > >
+> > > > >                 major = max(area_x, area_y);
+> > > > >                 minor = min(area_x, area_y); @@ -1123,8 
+> > > > > +1118,10 @@ static int elan_setup_input_device(struct elan_tp_data *data)
+> > > > >                              ETP_MAX_PRESSURE, 0, 0);
+> > > > >         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
+> > > > >                              ETP_FINGER_WIDTH * max_width, 0, 
+> > > > > 0);
+> > > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR, 
+> > > > > + data->x_res);
+> > > > >         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
+> > > > >                              ETP_FINGER_WIDTH * min_width, 0, 
+> > > > > 0);
+> > > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR, 
+> > > > > + data->y_res);
+> > > >
+> > > > I had a chat with Peter on Wednesday, and he mentioned that this is dangerous as Major/Minor are max/min of the width and height. And given that we might have 2 different resolutions, we would need to do some computation in the kernel to ensure the data is correct with respect to the resolution.
+> > > >
+> > > > TL;DR: I don't think we should export the resolution there :(
+> > > >
+> > > > KT, should I drop the patch entirely, or is there a strong argument for keeping the ETP_FWIDTH_REDUCE around?
+> > > > I suggest you apply the patch, I have no idea why ETP_FWIDTH_REDUCE existed.
+> > > > Our FW team know nothing about ETP_FWIDTH_REDUCE ether.
+> > > >
+> > > > The only side effect will happen on Chromebook because such computation have stayed in ChromeOS' kernel for four years.
+> > > > Chrome's finger/palm threshold may be different from other Linux distribution.
+> > > > We will discuss it with Google once the patch picked by chrome and cause something wrong.
+> > >
+> > > Chrome has logic that contact with maximum major/minor is treated 
+> > > as a palm, so here the driver (which originally came from Chrome 
+> > > OS) artificially reduces the contact size to ensure that palm 
+> > > rejection logic does not trigger.
+> > >
+> > > I'm adding Harry to confirm whether we are still using this logic 
+> > > and to see if we can adjust it to be something else.
+> >
+> > I'm not very familiar with our touchpad code, so adding Sean 
+> > O'Brien, who is.
