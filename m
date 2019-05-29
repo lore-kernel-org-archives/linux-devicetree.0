@@ -1,92 +1,50 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH V2 3/5] mmc: mmci: fix clear of busy detect status
-Date: Wed, 29 May 2019 11:20:42 +0200
-Message-ID: <a6a74431-50a6-6298-b77d-9d27a77fd6cc@st.com>
-References: <1556264798-18540-1-git-send-email-ludovic.Barre@st.com>
- <1556264798-18540-4-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFrxp3Y3AudNvkkSRaph2Fe-A-F6Cs0jfy9RUja76GYeiA@mail.gmail.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH 1/6] device property: Add new array helper
+Date: Wed, 29 May 2019 10:48:14 +0100
+Message-ID: <20190529094814.GH28362@ediswmail.ad.cirrus.com>
+References: <20190528154312.14435-1-ckeepax@opensource.cirrus.com>
+ <CAJZ5v0h28OAiT7KP=TLu069hNvYjCLoFndS+zx7_iE+jKfOF2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrxp3Y3AudNvkkSRaph2Fe-A-F6Cs0jfy9RUja76GYeiA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0h28OAiT7KP=TLu069hNvYjCLoFndS+zx7_iE+jKfOF2w@mail.gmail.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <alsa-devel@alsa-project.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-hi Ulf
+On Tue, May 28, 2019 at 07:01:38PM +0200, Rafael J. Wysocki wrote:
+> On Tue, May 28, 2019 at 5:43 PM Charles Keepax
+> <ckeepax@opensource.cirrus.com> wrote:
+> >
+> > It is fairly common to want to read an integer array property
+> > that is composed of an unknown number of fixed size integer
+> > groups. For example, say each group consists of three values
+> > which correspond to the settings for one input on the device
+> > and the driver supports several chips with different numbers
+> > of inputs.
+> >
+> > Add a new helper function to provide this functionality, it
+> > differs for the existing helpers in that it allows reading a
+> > smaller number of values than the full array size and checks
+> > that the number of values read is a multiple of the group size.
+> 
+> As a rule, you need also CC all of the device property framework
+> changes to linux-acpi@vger.kernel.org, so please resend the series
+> with that taken into account.
+> 
 
-On 5/27/19 8:17 PM, Ulf Hansson wrote:
-> On Fri, 26 Apr 2019 at 09:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> The "busy_detect_flag" is used to read/clear busy value of
->> mmci status. The "busy_detect_mask" is used to manage busy irq of
->> mmci mask.
->> For sdmmc variant, the 2 properties have not the same offset.
->> To clear the busyd0 status bit, we must add busy detect flag,
->> the mmci mask is not enough.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> 
-> Ludovic, again, apologies for the delay.
-> 
->> ---
->>   drivers/mmc/host/mmci.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index a040f54..3cd52e8 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -1517,7 +1517,8 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>                   * to make sure that both start and end interrupts are always
->>                   * cleared one after the other.
->>                   */
->> -               status &= readl(host->base + MMCIMASK0);
->> +               status &= readl(host->base + MMCIMASK0) |
->> +                       host->variant->busy_detect_flag;
-> 
-> I think this is not entirely correct, because it would mean we check
-> for busy even if we haven't unmasked the busy IRQ via the
-> variant->busy_detect_mask.
+Sorry will resend with them included.
 
-if the variant is busy_detect false:
-  => no problem because the busy_detect_flag or busy_detect_mask is not
-     defined.
-
-if variant is busy_detect true:
-the busy handle is split in 3 steps (see mmci_cmd_irq):
-step 1: detection of busy line => unmasked the busy irq end
-step 2: in busy wait => ignore cmd irq while current busy flag is
-enabled.
-step 3: end of busy => clear and mask busy irq
-
-To detect the first step (see mmci_cmd_irq: which unmasks the busy irq)
-we need to know the current busy state. Actually, the status register is
-re-read in mmci_cmd_irq, why not used the status read in mmci_irq and in
-parameter ?
-
-Regards,
-Ludo
-
-> 
-> I suggest to store a new bool in the host (call it
-> "busy_detect_unmasked" or whatever makes sense to you), to track
-> whether we have unmasked the busy IRQ or not. Then take this flag into
-> account, before ORing the value of host->variant->busy_detect_flag,
-> according to above.
-> 
->>                  if (host->variant->busy_detect)
->>                          writel(status & ~host->variant->busy_detect_mask,
->>                                 host->base + MMCICLEAR);
->> --
->> 2.7.4
->>
-> 
-> Kind regards
-> Uffe
-> 
+Thanks,
+Charles
