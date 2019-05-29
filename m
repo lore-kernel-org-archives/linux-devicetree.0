@@ -1,32 +1,50 @@
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: Re: [PATCH net-next v2 2/2] net: mscc: ocelot: Hardware ofload for
- tc flower filter
-Date: Wed, 29 May 2019 15:18:44 -0700
-Message-ID: <20190529151802.19aa82a2@cakuba.netronome.com>
-References: <1559125580-6375-1-git-send-email-horatiu.vultur@microchip.com>
- <1559125580-6375-3-git-send-email-horatiu.vultur@microchip.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: imx: Add mclk0 clock for SAI
+Date: Wed, 29 May 2019 15:57:48 -0700
+Message-ID: <20190529225742.GA17556@Asurada-Nvidia.nvidia.com>
+References: <20190528132034.3908-1-daniel.baluta@nxp.com>
+ <20190528132034.3908-2-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559125580-6375-3-git-send-email-horatiu.vultur@microchip.com>
+Content-Disposition: inline
+In-Reply-To: <20190528132034.3908-2-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "timur@kernel.org" <timur@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "tiwai@suse.com" <tiwai@suse.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa->
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 May 2019 12:26:20 +0200, Horatiu Vultur wrote:
-> +static int ocelot_flower_replace(struct tc_cls_flower_offload *f,
-> +				 struct ocelot_port_block *port_block)
-> +{
-> +	struct ocelot_ace_rule *rule;
-> +	int ret;
-> +
-> +	if (port_block->port->tc.block_shared)
-> +		return -EOPNOTSUPP;
+On Tue, May 28, 2019 at 01:21:00PM +0000, Daniel Baluta wrote:
+> From: Shengjiu Wang <shengjiu.wang@nxp.com>
+> 
+> Audio MCLK source option is selected with a 4:1 MUX
+> controller using MCLK Select bits in SAI xCR2 register.
+> 
+> On imx6/7 mclk0 and mclk1 always point to the same clock
+> source. Anyhow, this is no longer true for imx8.
+> 
+> For this reason, we need to add mclk0 and handle it
+> in a generic way in SAI driver.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx6sx.dtsi | 6 ++++--
+>  arch/arm/boot/dts/imx6ul.dtsi | 9 ++++++---
+>  arch/arm/boot/dts/imx7s.dtsi  | 9 ++++++---
 
-FWIW since you only support TRAP and DROP actions here (AFAICT) you
-should actually be okay with shared blocks.  The problems with shared
-blocks start when the action is stateful (like act_police), because we
-can't share that state between devices.  But for most actions which just
-maintain statistics, it's fine to allow shared blocks.  HTH
+These are dtsi/dts files that have SAI missing mclk0:
+arch/arm/boot/dts/imx6ul.dtsi
+arch/arm/boot/dts/imx6sx.dtsi
+arch/arm/boot/dts/ls1021a.dtsi
+arch/arm/boot/dts/imx7s.dtsi
+arch/arm/boot/dts/vfxxx.dtsi
+arch/arm64/boot/dts/freescale/imx8mq.dtsi
+arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+
+Would it be possible for you to update the others also?
+
+Thanks
+Nicolin
