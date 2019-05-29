@@ -1,191 +1,148 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
-Date: Wed, 29 May 2019 15:16:55 +0200
-Message-ID: <CAO-hwJKFSFqupf10Dgmd-sLOSD2T0oymd-CwLLtAJ2QeE7DzZQ@mail.gmail.com>
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
- <20190521132712.2818-9-benjamin.tissoires@redhat.com> <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
- <00f901d5143f$f5ea8420$e1bf8c60$@emc.com.tw> <20190528012101.GA193221@dtor-ws>
- <CA+jURcsWe=fZ-catnCaH=A85vAhrv1w1E5nSwpJvBAwgCTNYfw@mail.gmail.com>
- <CAOOzhkq+vD034Q2FKB2ryR7Q9nY=iQjdrREuihkZTaVcg+E_Xg@mail.gmail.com>
- <CAO-hwJ+9tnmvD-K3_Ksesdvag1aNbLB7eJxb9ZKb7kM24unqQQ@mail.gmail.com> <010301d5161d$dd201e70$97605b50$@emc.com.tw>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V4 4/8] memory: tegra: Add Tegra210 EMC clock driver
+Date: Wed, 29 May 2019 16:26:12 +0300
+Message-ID: <403181d4-100b-679e-b1d8-c052c6d1f3ac@gmail.com>
+References: <20190529082139.5581-1-josephl@nvidia.com>
+ <20190529082139.5581-5-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <010301d5161d$dd201e70$97605b50$@emc.com.tw>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
-Cc: Sean O'Brien <seobrien@chromium.org>, Peter Hutterer <peter.hutterer@who-t.net>, Harry Cutts <hcutts@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Aaron Ma <aaron.ma@canonical.com>, Hans de Goede <hdegoede@redhat.com>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190529082139.5581-5-josephl@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 29, 2019 at 2:56 PM 廖崇榮 <kt.liao@emc.com.tw> wrote:
->
->
->
-> -----Original Message-----
-> From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
-> Sent: Wednesday, May 29, 2019 3:17 PM
-> To: Sean O'Brien; Peter Hutterer
-> Cc: Harry Cutts; Dmitry Torokhov; 廖崇榮; Rob Herring; Aaron Ma; Hans de Goede; open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-> Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
->
-> On Wed, May 29, 2019 at 2:12 AM Sean O'Brien <seobrien@chromium.org> wrote:
-> >
-> > We do still use a maxed out major axis as a signal for a palm in the
-> > touchscreen logic, but I'm not too concerned because if that axis is
-> > maxed out, the contact should probably be treated as a palm anyway...
-> >
-> > I'm more concerned with this affecting our gesture detection for
-> > touchpad. It looks like this change would cause all contacts to
-> > reported as some percentage bigger than they are currently. Can you
-> > give me an idea of how big that percentage is?
->
-> On the P52, I currently have:
-> [  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
-> [  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
->
-> -> with the computation done in the kernel:
-> width_ratio: 126
-> height_ratio: 123
->
-> For my average finger, the reported traces are between 4 and 6:
-> With the ETP_FWIDTH_REDUCE:
-> Major between 144 to 216
-> Minor between 132 to 198
->
-> Without:
-> Major between 504 to 756
-> Minor between 492 to 738
->
-> So a rough augmentation of 350%
->
-> For the Synaptics devices (over SMBus), they send the raw value of the traces, so you will get a major/minor between 2 to 5. Max on these axes is 15, so we should get the same percentage of value comparing to the range.
->
-> Elan's vendor report contains such information, which indicate how many trace are touched by finger/palm
->                 mk_x = (finger_data[3] & 0x0f);
->                 mk_y = (finger_data[3] >> 4);
-> Do we need to use mk_* for major/minor for keeping it consistent with other vendor?
-
-IMO, no. It is better to send something closer to an actual unit
-instead of 12,5th of mm.
-However, the problem here is that major/minor can be swapped depending
-on how the finger is placed (horizontally or vertically), so
-unfortunately, if the axes and resolutions are not the same, then we
-are screwed, this would just be a value without unit.
-
-> But this modification will impact Chromebook's usability and Chrome test suite.
-
-Yeah, there is no point breaking things just for the fun of it.
-
-Cheers,
-Benjamin
-
->
->
->
-> Which is why libinput has a database of which device reports which pressure/major/minor ranges as otherwise the values are just impossible to understand.
->
-> Cheers,
-> Benjamin
->
->
->
-> >
-> > On Tue, May 28, 2019 at 11:13 AM Harry Cutts <hcutts@chromium.org> wrote:
-> > >
-> > > On Mon, 27 May 2019 at 18:21, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> > > >
-> > > > Hi Benjamin, KT,
-> > > >
-> > > > On Mon, May 27, 2019 at 11:55:01AM +0800, 廖崇榮 wrote:
-> > > > > Hi
-> > > > >
-> > > > > -----Original Message-----
-> > > > > From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
-> > > > > Sent: Friday, May 24, 2019 5:37 PM
-> > > > > To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de
-> > > > > Goede
-> > > > > Cc: open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-> > > > > Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true
-> > > > > width/height
-> > > > >
-> > > > > On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
-> > > > > >
-> > > > > > The width/height is actually in the same unit than X and Y. So
-> > > > > > we should not tamper the data, but just set the proper
-> > > > > > resolution, so that userspace can correctly detect which touch is a palm or a finger.
-> > > > > >
-> > > > > > Signed-off-by: Benjamin Tissoires
-> > > > > > <benjamin.tissoires@redhat.com>
-> > > > > >
-> > > > > > --
-> > > > > >
-> > > > > > new in v2
-> > > > > > ---
-> > > > > >  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
-> > > > > >  1 file changed, 4 insertions(+), 7 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/input/mouse/elan_i2c_core.c
-> > > > > > b/drivers/input/mouse/elan_i2c_core.c
-> > > > > > index 7ff044c6cd11..6f4feedb7765 100644
-> > > > > > --- a/drivers/input/mouse/elan_i2c_core.c
-> > > > > > +++ b/drivers/input/mouse/elan_i2c_core.c
-> > > > > > @@ -45,7 +45,6 @@
-> > > > > >  #define DRIVER_NAME            "elan_i2c"
-> > > > > >  #define ELAN_VENDOR_ID         0x04f3
-> > > > > >  #define ETP_MAX_PRESSURE       255
-> > > > > > -#define ETP_FWIDTH_REDUCE      90
-> > > > > >  #define ETP_FINGER_WIDTH       15
-> > > > > >  #define ETP_RETRY_COUNT                3
-> > > > > >
-> > > > > > @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp_data *data,
-> > > > > >                         return;
-> > > > > >                 }
-> > > > > >
-> > > > > > -               /*
-> > > > > > -                * To avoid treating large finger as palm, let's reduce the
-> > > > > > -                * width x and y per trace.
-> > > > > > -                */
-> > > > > > -               area_x = mk_x * (data->width_x - ETP_FWIDTH_REDUCE);
-> > > > > > -               area_y = mk_y * (data->width_y - ETP_FWIDTH_REDUCE);
-> > > > > > +               area_x = mk_x * data->width_x;
-> > > > > > +               area_y = mk_y * data->width_y;
-> > > > > >
-> > > > > >                 major = max(area_x, area_y);
-> > > > > >                 minor = min(area_x, area_y); @@ -1123,8
-> > > > > > +1118,10 @@ static int elan_setup_input_device(struct elan_tp_data *data)
-> > > > > >                              ETP_MAX_PRESSURE, 0, 0);
-> > > > > >         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
-> > > > > >                              ETP_FINGER_WIDTH * max_width, 0,
-> > > > > > 0);
-> > > > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR,
-> > > > > > + data->x_res);
-> > > > > >         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
-> > > > > >                              ETP_FINGER_WIDTH * min_width, 0,
-> > > > > > 0);
-> > > > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR,
-> > > > > > + data->y_res);
-> > > > >
-> > > > > I had a chat with Peter on Wednesday, and he mentioned that this is dangerous as Major/Minor are max/min of the width and height. And given that we might have 2 different resolutions, we would need to do some computation in the kernel to ensure the data is correct with respect to the resolution.
-> > > > >
-> > > > > TL;DR: I don't think we should export the resolution there :(
-> > > > >
-> > > > > KT, should I drop the patch entirely, or is there a strong argument for keeping the ETP_FWIDTH_REDUCE around?
-> > > > > I suggest you apply the patch, I have no idea why ETP_FWIDTH_REDUCE existed.
-> > > > > Our FW team know nothing about ETP_FWIDTH_REDUCE ether.
-> > > > >
-> > > > > The only side effect will happen on Chromebook because such computation have stayed in ChromeOS' kernel for four years.
-> > > > > Chrome's finger/palm threshold may be different from other Linux distribution.
-> > > > > We will discuss it with Google once the patch picked by chrome and cause something wrong.
-> > > >
-> > > > Chrome has logic that contact with maximum major/minor is treated
-> > > > as a palm, so here the driver (which originally came from Chrome
-> > > > OS) artificially reduces the contact size to ensure that palm
-> > > > rejection logic does not trigger.
-> > > >
-> > > > I'm adding Harry to confirm whether we are still using this logic
-> > > > and to see if we can adjust it to be something else.
-> > >
-> > > I'm not very familiar with our touchpad code, so adding Sean
-> > > O'Brien, who is.
->
+MjkuMDUuMjAxOSAxMToyMSwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gVGhpcyBpcyB0aGUgaW5p
+dGlhbCBwYXRjaCBmb3IgVGVncmEyMTAgRU1DIGNsb2NrIGRyaXZlciwgd2hpY2ggZG9lc24ndAo+
+IGluY2x1ZGUgdGhlIHN1cHBvcnQgY29kZSBhbmQgZGV0YWlsIHNlcXVlbmNlIGZvciBjbG9jayBz
+Y2FsaW5nIHlldC4KPiAKPiBUaGUgZHJpdmVyIGlzIGRlc2lnbmVkIHRvIHN1cHBvcnQgTFBERFI0
+IFNEUkFNLiBCZWNhdXNlIG9mIHRoZSBMUEREUjQKPiBkZXZpY2VzIG5lZWQgdG8gZG8gaW5pdGlh
+bCB0aW1lIHRyYWluaW5nIGJlZm9yZSBpdCBjYW4gYmUgdXNlZCwgdGhlCj4gZmlybXdhcmUgd2ls
+bCBoZWxwIHRvIGRvIHRoYXQgYXQgZWFybHkgYm9vdCBzdGFnZS4gVGhlbiwgdGhlIHRyYWluZWQK
+PiB0YWJsZSBvZiB0aGUgcmF0ZXMgd2Ugc3VwcG9ydCB3aWxsIHBhc3MgdG8gdGhlIGtlcm5lbCB2
+aWEgRFQuIFNvIHRoZQo+IGRyaXZlciBjYW4gZ2V0IHRoZSB0cmFpbmVkIHRhYmxlIGZvciBjbG9j
+ayBzY2FsaW5nIHN1cHBvcnQuCj4gCj4gRm9yIHRoZSBoaWdoZXIgcmF0ZSBzdXBwb3J0IChhYm92
+ZSA4MDBNSHopLCB0aGUgcGVyaW9kaWMgdHJhaW5pbmcgaXMKPiBuZWVkZWQgZm9yIHRoZSB0aW1p
+bmcgY29tcGVuc2F0aW9uLiBTbyBiYXNpY2FsbHksIHR3byBtZXRob2RvbG9naWVzIGZvcgo+IGNs
+b2NrIHNjYWxpbmcgYXJlIHN1cHBvcnRlZCwgb25lIGlzIGZvbGxvd2luZyB0aGUgY2xvY2sgY2hh
+bmdpbmcKPiBzZXF1ZW5jZSB0byB1cGRhdGUgdGhlIEVNQyB0YWJsZSB0byBFTUMgcmVnaXN0ZXJz
+IGFuZCBhbm90aGVyIGlzIGlmIHRoZQo+IHJhdGUgbmVlZHMgcGVyaW9kaWMgdHJhaW5pbmcsIHRo
+ZW4gd2Ugd2lsbCBzdGFydCBhIHRpbWVyIHRvIGRvIHRoYXQKPiBwZXJpb2RpY2FsbHkgdW50aWwg
+aXQgc2NhbGVzIHRvIHRoZSBsb3dlciByYXRlLgo+IAo+IEJhc2VkIG9uIHRoZSB3b3JrIG9mIFBl
+dGVyIERlIFNjaHJpanZlciA8cGRlc2NocmlqdmVyQG52aWRpYS5jb20+Lgo+IAo+IFNpZ25lZC1v
+ZmYtYnk6IEpvc2VwaCBMbyA8am9zZXBobEBudmlkaWEuY29tPgo+IC0tLQo+IHY0Ogo+IC0gcmVt
+b3ZlIHRoZSBzdGF0aXN0aWMgZGF0YSBpbiBkZWJ1Z2ZzCj4gLSBhZGQgdGVncmEyMTBfY2xrX3Jl
+Z2lzdGVyX2VtYyBBUEkgdG8gbWFrZSBpdCBjb21wYXRpYmxlIHdpdGggdGhlIGNhc2UKPiAgIGlm
+IHRoZSBrZXJuZWwgc3RpbGwgdXNlcyB0aGUgb2xkZXIgRFRCIHdoaWNoIGRvZXNuJ3QgaGF2ZSBF
+TUMgbm9kZS4KPiAgIEFuZCB0aGUgTUMgYW5kIEVNQyBjbG9jayBjYW4gc3RpbGwgYmUgcmVnaXN0
+ZXJlZCBzdWNjZXNzZnVsbHkuCj4gdjM6Cj4gLSBhZGRyZXNzIGFsbW9zdCBhbGwgdGhlIGNvbW1l
+bnRzIGZyb20gdGhlIHByZXZpb3VzIHZlcnNpb24KPiAtIHJlbW92ZSB0aGUgRFQgcGFyc2VyIG9m
+IEVNQyB0YWJsZQo+IC0gVGhlIEVNQyB0YWJsZSBpcyBwYXNzaW5nIGFzIGEgYmluYXJ5IGJsb2Ig
+bm93Lgo+IC0tLQo+ICBkcml2ZXJzL21lbW9yeS90ZWdyYS9LY29uZmlnICAgICAgICB8ICAxMCAr
+Cj4gIGRyaXZlcnMvbWVtb3J5L3RlZ3JhL01ha2VmaWxlICAgICAgIHwgICAxICsKPiAgZHJpdmVy
+cy9tZW1vcnkvdGVncmEvdGVncmEyMTAtZW1jLmMgfCA2NzEgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKwo+ICBkcml2ZXJzL21lbW9yeS90ZWdyYS90ZWdyYTIxMC1lbWMuaCB8IDE1NiArKysr
+KysrCj4gIGluY2x1ZGUvc29jL3RlZ3JhL2VtYy5oICAgICAgICAgICAgIHwgICAyICsKPiAgNSBm
+aWxlcyBjaGFuZ2VkLCA4NDAgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9tZW1vcnkvdGVncmEvdGVncmEyMTAtZW1jLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvbWVtb3J5L3RlZ3JhL3RlZ3JhMjEwLWVtYy5oCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvbWVtb3J5L3RlZ3JhL0tjb25maWcgYi9kcml2ZXJzL21lbW9yeS90ZWdyYS9LY29uZmlnCj4g
+aW5kZXggNDY4MDEyNGRkY2FiLi45ZDA1MWJjZGJlZTMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9t
+ZW1vcnkvdGVncmEvS2NvbmZpZwo+ICsrKyBiL2RyaXZlcnMvbWVtb3J5L3RlZ3JhL0tjb25maWcK
+PiBAQCAtMjYsMyArMjYsMTMgQEAgY29uZmlnIFRFR1JBMTI0X0VNQwo+ICAJICBUZWdyYTEyNCBj
+aGlwcy4gVGhlIEVNQyBjb250cm9scyB0aGUgZXh0ZXJuYWwgRFJBTSBvbiB0aGUgYm9hcmQuCj4g
+IAkgIFRoaXMgZHJpdmVyIGlzIHJlcXVpcmVkIHRvIGNoYW5nZSBtZW1vcnkgdGltaW5ncyAvIGNs
+b2NrIHJhdGUgZm9yCj4gIAkgIGV4dGVybmFsIG1lbW9yeS4KPiArCj4gK2NvbmZpZyBURUdSQTIx
+MF9FTUMKPiArCWJvb2wgIk5WSURJQSBUZWdyYTIxMCBFeHRlcm5hbCBNZW1vcnkgQ29udHJvbGxl
+ciBkcml2ZXIiCj4gKwlkZWZhdWx0IHkKClRoaXMgaXMgbm90IGVub3VnaCBzaW5jZSB5b3UncmUg
+bGVhdmluZyBwb3NzaWJpbGl0eSB0byBkaXNhYmxlCmNvbXBpbGF0aW9uIG9mIHRoZSBkcml2ZXIs
+IGJ1dCB0aGUgY29tcGlsYXRpb24gd2lsbCBmYWlsIGJlY2F1c2Ugb2YgdGhlCnVucmVzb2x2ZWQg
+c3ltYm9sICh0ZWdyYTIxMF9jbGtfcmVnaXN0ZXJfZW1jKS4KCj4gKwlkZXBlbmRzIG9uIFRFR1JB
+X01DICYmIEFSQ0hfVEVHUkFfMjEwX1NPQwo+ICsJaGVscAo+ICsJICBUaGlzIGRyaXZlciBpcyBm
+b3IgdGhlIEV4dGVybmFsIE1lbW9yeSBDb250cm9sbGVyIChFTUMpIGZvdW5kIG9uCj4gKwkgIFRl
+Z3JhMjEwIGNoaXBzLiBUaGUgRU1DIGNvbnRyb2xzIHRoZSBleHRlcm5hbCBEUkFNIG9uIHRoZSBi
+b2FyZC4KPiArCSAgVGhpcyBkcml2ZXIgaXMgcmVxdWlyZWQgdG8gY2hhbmdlIG1lbW9yeSB0aW1p
+bmdzIC8gY2xvY2sgcmF0ZSBmb3IKPiArCSAgZXh0ZXJuYWwgbWVtb3J5LgoKRWl0aGVyIFRFR1JB
+MjEwX0VNQyBLY29uZmlnIG9wdGlvbiBzaGFsbCBiZSBhbHdheXMgZm9yY2Utc2VsZWN0ZWQgZm9y
+ClQyMTAgb3IgeW91IHNob3VsZCBtb3ZlIGFsbCB0aGUgY2xrLXJlbGF0ZWQgY29kZSBpbnRvIGRy
+aXZlcnMvY2xrL3RlZ3JhLy4KCkNvdWxkIHlvdSBwbGVhc2UgZ2l2ZSBhIHJhdGlvbmFsZSBmb3Ig
+aGF2aW5nIEVNQyBjbG9jayBjb2RlIHdpdGhpbiB0aGUKRU1DIGRyaXZlcj8KCltzbmlwXQoKPiAr
+c3RhdGljIGludCB0ZWdyYTIxMF9lbWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
+dikKPiArewo+ICsJaW50IGk7Cj4gKwl1bnNpZ25lZCBsb25nIHRhYmxlX3JhdGU7Cj4gKwl1bnNp
+Z25lZCBsb25nIGN1cnJlbnRfcmF0ZTsKPiArCXN0cnVjdCBjbGsgKmVtY19jbGs7Cj4gKwlzdHJ1
+Y3QgZGV2aWNlX25vZGUgKm5wOwo+ICsJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqbWM7Cj4gKwlz
+dHJ1Y3QgcmVzb3VyY2UgcmVzOwo+ICsJc3RydWN0IHRlZ3JhX2VtYyAqZW1jOwo+ICsJdm9pZCAq
+dGFibGVfYWRkcjsKPiArCj4gKwllbWNfY2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJl
+bWMiKTsKPiArCWlmIChJU19FUlIoZW1jX2NsaykpCj4gKwkJcmV0dXJuIFBUUl9FUlIoZW1jX2Ns
+ayk7CgpQbGVhc2UgYWRkIG5ld2xpbmUgaW4gYSBzdWNoIHBsYWNlcyBpbiB0aGUgY29kZSB0byBt
+YWtlIGl0IG1vcmUgcmVhZGFibGUuCgo+ICsJZW1jID0gY2xrX2h3X3RvX2VtYyhfX2Nsa19nZXRf
+aHcoZW1jX2NsaykpOwo+ICsKPiArCW5wID0gb2ZfcGFyc2VfcGhhbmRsZShwZGV2LT5kZXYub2Zf
+bm9kZSwgIm52aWRpYSxtZW1vcnktY29udHJvbGxlciIsIDApOwo+ICsJaWYgKCFucCkgewo+ICsJ
+CWRldl9lcnIoJnBkZXYtPmRldiwgImNvdWxkIG5vdCBnZXQgbWVtb3J5IGNvbnRyb2xsZXJcbiIp
+Owo+ICsJCXJldHVybiAtRU5PRU5UOwo+ICsJfQo+ICsKPiArCW1jID0gb2ZfZmluZF9kZXZpY2Vf
+Ynlfbm9kZShucCk7Cj4gKwlvZl9ub2RlX3B1dChucCk7Cj4gKwlpZiAoIW1jKQo+ICsJCXJldHVy
+biAtRU5PRU5UOwo+ICsKPiArCWVtYy0+bWMgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShtYyk7Cj4g
+KwlpZiAoIWVtYy0+bWMpCj4gKwkJcmV0dXJuIC1FUFJPQkVfREVGRVI7Cj4gKwo+ICsJZW1jLT5l
+bWNfYmFzZVtSRUdfRU1DXSA9IGRldm1fcGxhdGZvcm1faW9yZW1hcF9yZXNvdXJjZShwZGV2LCAw
+KTsKPiArCWVtYy0+ZW1jX2Jhc2VbUkVHX0VNQzBdID0gZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jl
+c291cmNlKHBkZXYsIDEpOwo+ICsJZW1jLT5lbWNfYmFzZVtSRUdfRU1DMV0gPSBkZXZtX3BsYXRm
+b3JtX2lvcmVtYXBfcmVzb3VyY2UocGRldiwgMik7Cj4gKwo+ICsJZm9yIChpID0gMDsgaSA8IFRF
+R1JBX0VNQ19TUkNfQ09VTlQ7IGkrKykgewo+ICsJCWlmICghSVNfRVJSKGVtY19zcmNbaV0pKQo+
+ICsJCQljbGtfcHV0KGVtY19zcmNbaV0pOwo+ICsKPiArCQllbWNfc3JjW2ldID0gZGV2bV9jbGtf
+Z2V0KCZwZGV2LT5kZXYsIGVtY19zcmNfbmFtZXNbaV0pOwo+ICsJCWlmIChJU19FUlIoZW1jX3Ny
+Y1tpXSkpIHsKPiArCQkJZGV2X2VycigmcGRldi0+ZGV2LCAiQ2FuIG5vdCBmaW5kIEVNQyBzb3Vy
+Y2UgY2xvY2tcbiIpOwo+ICsJCQlyZXR1cm4gLUVOT0RBVEE7Cj4gKwkJfQo+ICsJfQo+ICsKPiAr
+CW5wID0gb2ZfcGFyc2VfcGhhbmRsZShwZGV2LT5kZXYub2Zfbm9kZSwgIm1lbW9yeS1yZWdpb24i
+LCAwKTsKPiArCWlmICghbnApIHsKPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJjb3VsZCBub3Qg
+ZmluZCBFTUMgdGFibGVcbiIpOwo+ICsJCXJldHVybiAtRU5PREFUQTsKPiArCX0KPiArCj4gKwlp
+ZiAoIW9mX2RldmljZV9pc19jb21wYXRpYmxlKG5wLCAibnZpZGlhLHRlZ3JhMjEwLWVtYy10YWJs
+ZSIpIHx8Cj4gKwkgICAgIW9mX2RldmljZV9pc19hdmFpbGFibGUobnApKSB7Cj4gKwkJZGV2X2Vy
+cigmcGRldi0+ZGV2LCAiRU1DIHRhYmxlIGlzIGludmFsaWRcbiIpOwo+ICsJCXJldHVybiAtRU5P
+REFUQTsKPiArCX0KPiArCj4gKwlvZl9hZGRyZXNzX3RvX3Jlc291cmNlKG5wLCAwLCAmcmVzKTsK
+PiArCXRhYmxlX2FkZHIgPSBtZW1yZW1hcChyZXMuc3RhcnQsIHJlc291cmNlX3NpemUoJnJlcyks
+IE1FTVJFTUFQX1dCKTsKPiArCW9mX25vZGVfcHV0KG5wKTsKPiArCWlmICghdGFibGVfYWRkcikg
+ewo+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImNvdWxkIG5vdCBtYXAgRU1DIHRhYmxlXG4iKTsK
+PiArCQlyZXR1cm4gLUVOT01FTTsKPiArCX0KPiArCWVtYy0+ZW1jX3RhYmxlID0gKHN0cnVjdCBl
+bWNfdGFibGUgKil0YWJsZV9hZGRyOwoKVGhlcmUgaXMgbm8gbmVlZCB0byBjYXN0IGEgdm9pZC4g
+UGxlYXNlIG1ha2Ugc3VyZSB0aGF0IHlvdSBkb24ndCBoYXZlCmFueSBub24tdXBzdHJlYW0gcGF0
+Y2hlcyBhcHBsaWVkIHRoYXQgYXJlIGNoYW5naW5nIGNvbXBpbGVyIGZsYWdzLCBhbHNvCm1ha2Ug
+c3VyZSB0aGF0IHlvdSdyZSB1c2luZyBwcm9wZXIgY29tcGlsZXIgKEdDQykgaWYgeW91J3JlIGdl
+dHRpbmcgYQp3YXJuaW5nIGhlcmUuCgo+ICsKPiArCWZvciAoaSA9IDA7IGkgPCBURUdSQV9FTUNf
+TUFYX0ZSRVFTOyBpKyspCj4gKwkJaWYgKGVtYy0+ZW1jX3RhYmxlW2ldLnJldiAhPSAwKQo+ICsJ
+CQllbWMtPmVtY190YWJsZV9zaXplKys7Cj4gKwkJZWxzZQo+ICsJCQlicmVhazsKPiArCj4gKwkv
+KiBjaGVjayB0aGUgc3VwcG9ydGVkIHNlcXVlbmNlICovCj4gKwl3aGlsZSAoc2VxLT50YWJsZV9y
+ZXYpIHsKPiArCQlpZiAoc2VxLT50YWJsZV9yZXYgPT0gZW1jLT5lbWNfdGFibGVbMF0ucmV2KQo+
+ICsJCQlicmVhazsKPiArCQlzZXErKzsKPiArCX0KPiArCWlmICghc2VxLT5zZXRfY2xvY2spIHsK
+PiArCQlzZXEgPSBOVUxMOwo+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgIkludmFsaWQgRU1DIHNl
+cXVlbmNlIGZvciB0YWJsZSBSZXYuICVkXG4iLAo+ICsJCQllbWMtPmVtY190YWJsZVswXS5yZXYp
+Owo+ICsJCXJldHVybiAtRU5PREFUQTsKPiArCX0KPiArCj4gKwllbWNfY2xrX3NlbCA9IGRldm1f
+a2NhbGxvYygmcGRldi0+ZGV2LAo+ICsJCQkJICAgZW1jLT5lbWNfdGFibGVfc2l6ZSwKPiArCQkJ
+CSAgIHNpemVvZihzdHJ1Y3QgZW1jX3NlbCksCj4gKwkJCQkgICBHRlBfS0VSTkVMKTsKPiArCj4g
+KwkvKiBjYWxjdWxhdGUgdGhlIHJhdGUgZnJvbSBzb3VyY2UgY2xvY2sgKi8KPiArCWN1cnJlbnRf
+cmF0ZSA9IGVtY19nZXRfc3JjX2Nsa19yYXRlKCkgLyAxMDAwOwo+ICsKPiArCS8qIHZhbGlkYXRl
+IHRoZSB0YWJsZSAqLwo+ICsJZm9yIChpID0gMDsgaSA8IGVtYy0+ZW1jX3RhYmxlX3NpemU7IGkr
+Kykgewo+ICsJCXRhYmxlX3JhdGUgPSBlbWMtPmVtY190YWJsZVtpXS5yYXRlOwo+ICsJCWlmICgh
+dGFibGVfcmF0ZSkKPiArCQkJY29udGludWU7Cj4gKwo+ICsJCWlmIChpICYmICgodGFibGVfcmF0
+ZSA8PSBlbWMtPmVtY190YWJsZVtpLTFdLnJhdGUpIHx8Cj4gKwkJICAgKGVtYy0+ZW1jX3RhYmxl
+W2ldLm1pbl92b2x0IDwKPiArCQkgICAgZW1jLT5lbWNfdGFibGVbaS0xXS5taW5fdm9sdCkpKQo+
+ICsJCQljb250aW51ZTsKPiArCj4gKwkJaWYgKGVtYy0+ZW1jX3RhYmxlW2ldLnJldiAhPSBlbWMt
+PmVtY190YWJsZVswXS5yZXYpCj4gKwkJCWNvbnRpbnVlOwo+ICsKPiArCQlpZiAoZmluZF9tYXRj
+aGluZ19pbnB1dCgmZW1jLT5lbWNfdGFibGVbaV0sICZlbWNfY2xrX3NlbFtpXSkpCj4gKwkJCWNv
+bnRpbnVlOwo+ICsKPiArCQlpZiAodGFibGVfcmF0ZSA9PSBjdXJyZW50X3JhdGUpCj4gKwkJCWVt
+Yy0+Y3VycmVudF90aW1pbmcgPSAmZW1jLT5lbWNfdGFibGVbaV07Cj4gKwl9CgpJJ20gc3VnZ2Vz
+dGluZyB0byBmYWN0b3Igb3V0IGFsbCB0aGUgdmFsaWRhdGlvbnMgaW50byBhIHNlcGFyYXRlCmZ1
+bmN0aW9uIGZvciBjbGFyaXR5LgoKLS0gCkRtaXRyeQoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
