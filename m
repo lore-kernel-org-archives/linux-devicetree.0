@@ -1,59 +1,52 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 3/3] ARM: dts: sun8i: a83t: Add device node for CSI
- (Camera Sensor Interface)
-Date: Wed, 29 May 2019 13:12:36 +0200
-Message-ID: <20190529111236.gnk4bics5xrfxyql@flea>
-References: <20190520150637.23557-1-megous@megous.com>
- <20190520150637.23557-4-megous@megous.com>
+From: Marek Vasut <marex@denx.de>
+Subject: [PATCH] dt-bindings: display: Add ETM0700G0DH6 compatible string
+Date: Wed, 29 May 2019 12:25:40 +0200
+Message-ID: <20190529102540.4608-1-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zlv4nldcdeunkux4"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190520150637.23557-4-megous@megous.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: megous@megous.com
-Cc: Chen-Yu Tsai <wens@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Marek Vasut <marex@denx.de>, Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Jan Tuerk <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---zlv4nldcdeunkux4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, May 20, 2019 at 05:06:37PM +0200, megous@megous.com wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> The A83T SoC has a camera sensor interface (known as CSI in Allwinner
-> lingo), which is similar to the one found on the A64 and H3. The only
-> difference seems to be that support of MIPI CSI through a connected
-> MIPI CSI-2 bridge.
->
-> Add a device node for it, and pinctrl nodes for the commonly used MCLK
-> and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
-> the pinctrl nodes to keep the device tree blob size down if they are
-> unused.
->
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-
-Applied, thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---zlv4nldcdeunkux4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXO5pJAAKCRDj7w1vZxhR
-xfugAP9uM3nhnPYa61YOa1J7hJC/ogaqkG64ngXh7+5a0atLJgEAiFczeAYSxJpM
-w49Kak6GmlRewxlL2aBTHVZryI9C5gA=
-=G/QN
------END PGP SIGNATURE-----
-
---zlv4nldcdeunkux4--
+VGhlIEVUTTA3MDBHMERINiBpcyBjdXJyZW50bHkgZG9jdW1lbnRlZCBhcyB1c2luZyBlZHQsZXRt
+MDcwMDgwZGg2CmNvbXBhdGlibGUgc3RyaW5nLCBob3dldmVyIHRoZSBMaW51eCBrZXJuZWwgZHJp
+dmVyIGFzIHdlbGwgYXMgYQpjb3VwbGUgb2YgRFRzIHVzZSBlZHQsZXRtMDcwMGcwZGg2IGNvbXBh
+dGlibGUgc3RyaW5nLiBBZGQgaXQgaW50bwp0aGUgZG9jdW1lbnRhdGlvbi4KClNpZ25lZC1vZmYt
+Ynk6IE1hcmVrIFZhc3V0IDxtYXJleEBkZW54LmRlPgpDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRA
+a2VybmVsLm9yZz4KQ2M6IEphbiBUdWVyayA8amFuLnR1ZXJrQGVtdHJpb24uY29tPgpDYzogVGhp
+ZXJyeSBSZWRpbmcgPHRyZWRpbmdAbnZpZGlhLmNvbT4KQ2M6IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnClRvOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCi0tLQogLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9lZHQsZXQtc2VyaWVzLnR4dCAgICAgICAgIHwg
+MiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+ZWR0LGV0LXNlcmllcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9lZHQsZXQtc2VyaWVzLnR4dAppbmRleCBiZTg2ODQzMjdlZTQuLmI3YWMxYzcy
+NWY5NyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvZWR0LGV0LXNlcmllcy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZWR0LGV0LXNlcmllcy50eHQKQEAgLTQwLDcgKzQwLDcg
+QEAgc2ltcGxlLXBhbmVsLnR4dAogfCBJZGVudGlmaWVyICAgICAgfCBjb21wYXRiaWxlICAgICAg
+ICAgIHwgZGVzY3JpcHRpb24gICAgICAgICAgICAgICAgICAgICAgICAgfAogKz09PT09PT09PT09
+PT09PT09Kz09PT09PT09PT09PT09PT09PT09PSs9PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09KwogfCBFVE0wNzAwRzBESDYgICAgfCBlZHQsZXRtMDcwMDgwZGg2ICAgIHwgV1ZH
+QSBURlQgRGlzcGxheSB3aXRoIGNhcGFjaXRpdmUgICAgfAotfCAgICAgICAgICAgICAgICAgfCAg
+ICAgICAgICAgICAgICAgICAgIHwgVG91Y2hzY3JlZW4gICAgICAgICAgICAgICAgICAgICAgICAg
+fAorfCAgICAgICAgICAgICAgICAgfCBlZHQsZXRtMDcwMGcwZGg2ICAgIHwgVG91Y2hzY3JlZW4g
+ICAgICAgICAgICAgICAgICAgICAgICAgfAogKy0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0t
+LS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKwogfCBFVE0w
+NzAwRzBCREg2ICAgfCBlZHQsZXRtMDcwMDgwYmRoNiAgIHwgU2FtZSBhcyBFVE0wNzAwRzBESDYg
+YnV0IHdpdGggICAgICAgfAogfCAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAg
+IHwgaW52ZXJ0ZWQgcGl4ZWwgY2xvY2suICAgICAgICAgICAgICAgfAotLSAKMi4yMC4xCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
