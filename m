@@ -1,49 +1,107 @@
-From: Richard Gong <richard.gong@linux.intel.com>
-Subject: Re: [PATCHv4 3/4] firmware: rsu: document sysfs interface
-Date: Wed, 29 May 2019 10:33:27 -0500
-Message-ID: <273db79b-97bb-f40c-3dee-fe48633c3edd@linux.intel.com>
-References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
- <1559074833-1325-4-git-send-email-richard.gong@linux.intel.com>
- <20190528231908.GB28886@kroah.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V2 02/12] pinctrl: tegra: add suspend and resume support
+Date: Wed, 29 May 2019 18:29:52 +0300
+Message-ID: <6273a790-d4b7-c501-3fec-d9816288b139@gmail.com>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190528231908.GB28886@kroah.com>
+In-Reply-To: <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sen.li@intel.com, Richard Gong <richard.gong@intel.com>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Greg,
-
-On 5/28/19 6:19 PM, Greg KH wrote:
-> On Tue, May 28, 2019 at 03:20:32PM -0500, richard.gong@linux.intel.com wrote:
->> +What:		/sys/devices/.../stratix10-rsu.0/driver/fail_image
->> +Date:		May 2019
->> +KernelVersion:	5.3
->> +Contact:	Richard Gong <richard.gong@intel.com>
->> +Description:
->> +		(RO) the version number of RSU firmware.
+29.05.2019 2:08, Sowjanya Komatineni пишет:
+> This patch adds suspend and resume support for Tegra pinctrl driver
+> and registers them to syscore so the pinmux settings are restored
+> before the devices resume.
 > 
-> "fail_image" is the version number?  That doesn't match up with what the
-> code says :(
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/pinctrl/tegra/pinctrl-tegra.c    | 68 +++++++++++++++++++++++++++++++-
+>  drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
+>  drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
+>  7 files changed, 75 insertions(+), 1 deletion(-)
 > 
-> What happened to the version sysfs file?
-> 
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> index a5008c066bac..bdc47e62c457 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> @@ -28,11 +28,18 @@
+>  #include <linux/pinctrl/pinmux.h>
+>  #include <linux/pinctrl/pinconf.h>
+>  #include <linux/slab.h>
+> +#include <linux/syscore_ops.h>
+>  
+>  #include "../core.h"
+>  #include "../pinctrl-utils.h"
+>  #include "pinctrl-tegra.h"
+>  
+> +#define EMMC2_PAD_CFGPADCTRL_0			0x1c8
+> +#define EMMC4_PAD_CFGPADCTRL_0			0x1e0
+> +#define EMMC_DPD_PARKING			(0x1fff << 14)
+> +
+> +static struct tegra_pmx *pmx;
+> +
+>  static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+>  {
+>  	return readl(pmx->regs[bank] + reg);
+> @@ -629,6 +636,50 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>  	}
+>  }
+>  
+> +static int __maybe_unused tegra_pinctrl_suspend(void)
+> +{
+> +	u32 *backup_regs = pmx->backup_regs;
+> +	u32 *regs;
+> +	int i, j;
+> +
+> +	for (i = 0; i < pmx->nbanks; i++) {
+> +		regs = pmx->regs[i];
+> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+> +			*backup_regs++ = readl(regs++);
+> +	}
+> +
+> +	return pinctrl_force_sleep(pmx->pctl);
+> +}
+> +
+> +static void __maybe_unused tegra_pinctrl_resume(void)
+> +{
+> +	u32 *backup_regs = pmx->backup_regs;
+> +	u32 *regs;
+> +	u32 val;
+> +	int i, j;
+> +
+> +	for (i = 0; i < pmx->nbanks; i++) {
+> +		regs = pmx->regs[i];
+> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+> +			writel(*backup_regs++, regs++);
+> +	}
+> +
+> +	if (pmx->soc->has_park_padcfg) {
+> +		val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
+> +		val &= ~EMMC_DPD_PARKING;
+> +		pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
+> +
+> +		val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
+> +		val &= ~EMMC_DPD_PARKING;
+> +		pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
+> +	}
+> +}
+>
 
-Sorry, my typo.
+But the CFGPADCTRL registers are already programmed by restoring the
+backup_regs and hence the relevant EMMC's are already unparked. Hence
+why do you need to force-unpark both of the EMMC's? What if EMMC is
+unpopulated on a board, why do you need to unpark it then?
 
-It should be /sys/devices/.../stratix10-rsu.0/driver/version, (RO) the 
-version number of RSU firmware.
-
-I will correct that in the next submission.
-
-> thanks,
-> 
-> greg k-h
-> 
-Regards,
-Richard
+-- 
+Dmitry
