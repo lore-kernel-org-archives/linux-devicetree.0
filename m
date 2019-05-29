@@ -1,116 +1,171 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe ordering
-Date: Wed, 29 May 2019 13:02:43 -0700
-Message-ID: <CAGETcx-xWt50zb0JQrDRpqxL8i-PAV4j4_rPLFrJantuyxAxnw@mail.gmail.com>
-References: <20190524010117.225219-1-saravanak@google.com> <CAGETcx8MY7Xhc4YjCcO9TH6X9Sse4Mg2Wi6vjau5T6d4C-itFQ@mail.gmail.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH V2 02/12] pinctrl: tegra: add suspend and resume support
+Date: Wed, 29 May 2019 13:11:08 -0700
+Message-ID: <0f087659-cdde-9f89-55a2-d399ee539431@nvidia.com>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
+ <6273a790-d4b7-c501-3fec-d9816288b139@gmail.com>
+ <d9d54f05-b0bf-6e65-9308-45e94454301e@nvidia.com>
+ <11fe4d9a-6d8e-bc4f-b764-a849571fb6b0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGETcx8MY7Xhc4YjCcO9TH6X9Sse4Mg2Wi6vjau5T6d4C-itFQ@mail.gmail.com>
+In-Reply-To: <11fe4d9a-6d8e-bc4f-b764-a849571fb6b0@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
+To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sending again because email client somehow reverted to HTML.
-Frank, Rob, Mark,
 
-Gentle reminder. I've replied to your emails spread across the
-different patches in the series. Hoping they address your questions
-and concerns. Please let me know what you think.
+On 5/29/19 12:32 PM, Dmitry Osipenko wrote:
+> 29.05.2019 21:14, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 5/29/19 8:29 AM, Dmitry Osipenko wrote:
+>>> 29.05.2019 2:08, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> This patch adds suspend and resume support for Tegra pinctrl driver
+>>>> and registers them to syscore so the pinmux settings are restored
+>>>> before the devices resume.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.c=C2=A0=C2=A0=C2=A0 | 68
+>>>> +++++++++++++++++++++++++++++++-
+>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.h=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 3 ++
+>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra114.c |=C2=A0 1 +
+>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra124.c |=C2=A0 1 +
+>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra20.c=C2=A0 |=C2=A0 1 +
+>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra210.c |=C2=A0 1 +
+>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra30.c=C2=A0 |=C2=A0 1 +
+>>>>  =C2=A0 7 files changed, 75 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>> index a5008c066bac..bdc47e62c457 100644
+>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>> @@ -28,11 +28,18 @@
+>>>>  =C2=A0 #include <linux/pinctrl/pinmux.h>
+>>>>  =C2=A0 #include <linux/pinctrl/pinconf.h>
+>>>>  =C2=A0 #include <linux/slab.h>
+>>>> +#include <linux/syscore_ops.h>
+>>>>  =C2=A0 =C2=A0 #include "../core.h"
+>>>>  =C2=A0 #include "../pinctrl-utils.h"
+>>>>  =C2=A0 #include "pinctrl-tegra.h"
+>>>>  =C2=A0 +#define EMMC2_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1c8
+>>>> +#define EMMC4_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1e0
+>>>> +#define EMMC_DPD_PARKING=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 (0x1fff << 14)
+>>>> +
+>>>> +static struct tegra_pmx *pmx;
+>>>> +
+>>>>  =C2=A0 static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u=
+32 reg)
+>>>>  =C2=A0 {
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return readl(pmx->regs[bank] + reg);
+>>>> @@ -629,6 +636,50 @@ static void
+>>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>  =C2=A0 }
+>>>>  =C2=A0 +static int __maybe_unused tegra_pinctrl_suspend(void)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 u32 *backup_regs =3D pmx->backup_regs;
+>>>> +=C2=A0=C2=A0=C2=A0 u32 *regs;
+>>>> +=C2=A0=C2=A0=C2=A0 int i, j;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmx->nbanks; i++) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs =3D pmx->regs[i];
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (j =3D 0; j < pmx->reg=
+_bank_size[i] / 4; j++)
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *b=
+ackup_regs++ =3D readl(regs++);
+>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 return pinctrl_force_sleep(pmx->pctl);
+>>>> +}
+>>>> +
+>>>> +static void __maybe_unused tegra_pinctrl_resume(void)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 u32 *backup_regs =3D pmx->backup_regs;
+>>>> +=C2=A0=C2=A0=C2=A0 u32 *regs;
+>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>>> +=C2=A0=C2=A0=C2=A0 int i, j;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmx->nbanks; i++) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs =3D pmx->regs[i];
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (j =3D 0; j < pmx->reg=
+_bank_size[i] / 4; j++)
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wr=
+itel(*backup_regs++, regs++);
+>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 if (pmx->soc->has_park_padcfg) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0, =
+EMMC2_PAD_CFGPADCTRL_0);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKING=
+;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, EM=
+MC2_PAD_CFGPADCTRL_0);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0, =
+EMMC4_PAD_CFGPADCTRL_0);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKING=
+;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, EM=
+MC4_PAD_CFGPADCTRL_0);
+>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>> +}
+>>>>
+>>> But the CFGPADCTRL registers are already programmed by restoring the
+>>> backup_regs and hence the relevant EMMC's are already unparked. Hence
+>>> why do you need to force-unpark both of the EMMC's? What if EMMC is
+>>> unpopulated on a board, why do you need to unpark it then?
+>> PARK bit for EMMC2/EMMC4 (EMMC2_PAD_CFGPADCTRL and EMMC4_PAD_CFGPADCTRL)
+>> are not part of pinmux.
+>>
+>> They are part of CFGPADCTRL register so pinctrl driver pingroup doesn't
+>> include these registers.
+> I'm looking at the tegra210_groups and it clearly has these both
+> registers as a part of pinctrl setup because the rest of the bits
+> configure drive of the pads.
+>
+>  From pinctrl-tegra210.c:
+>
+> #define DRV_PINGROUP_REG_A		0x8d4	/* bank 0 */
+>
+> DRV_PINGROUP(sdmmc2, 0xa9c, 2,  6,  8,  6,  28, 2,  30, 2),
+> DRV_PINGROUP(sdmmc4, 0xab4, 2,  6,  8,  6,  28, 2,  30, 2),
+>
+> ...
+>
+> 0xa9c - 0x8d4 =3D 0x1c8
+> 0xab4 - 0x8d4 =3D 0x1e0
+>
+> Hence the PARK bits are already getting unset by restoring the
+> backup_regs because the CFGPADCTRL registers are a part of the "bank 0"
+> registers.
+>
+> Am I still missing something?
 
-Thanks,
-Saravana
+DRV_PINGROUP parked_bit is -1 and will not be programmed so store and=20
+restore will not take care of it.
 
+Also EMMC PADCFG is the only padcfg register which has parked bit and=20
+for other IO pads its part of pinmux
 
-On Wed, May 29, 2019 at 1:00 PM Saravana Kannan <saravanak@google.com> wrote:
+>> backup_regs doesn't take care of this and need to handled separately for
+>> Tegra210.
+>>
+>>
+>> During resume we have to clear PARK bit for the pads on Tegra210 and
+>> this is not related to presence/absence of eMMC on the board.
+> Okay, thank you for the clarification.
 >
-> Frank, Rob, Mark,
->
-> Gentle reminder. I've replied to your emails spread across the different patches in the series. Hoping they address your questions and concerns. Please let me know what you think.
->
-> Thanks,
-> Saravana
->
-> On Thu, May 23, 2019 at 6:01 PM Saravana Kannan <saravanak@google.com> wrote:
->>
->> Add a generic "depends-on" property that allows specifying mandatory
->> functional dependencies between devices. Add device-links after the
->> devices are created (but before they are probed) by looking at this
->> "depends-on" property.
->>
->> This property is used instead of existing DT properties that specify
->> phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
->> is because not all resources referred to by existing DT properties are
->> mandatory functional dependencies. Some devices/drivers might be able
->> to operate with reduced functionality when some of the resources
->> aren't available. For example, a device could operate in polling mode
->> if no IRQ is available, a device could skip doing power management if
->> clock or voltage control isn't available and they are left on, etc.
->>
->> So, adding mandatory functional dependency links between devices by
->> looking at referred phandles in DT properties won't work as it would
->> prevent probing devices that could be probed. By having an explicit
->> depends-on property, we can handle these cases correctly.
->>
->> Having functional dependencies explicitly called out in DT and
->> automatically added before the devices are probed, provides the
->> following benefits:
->>
->> - Optimizes device probe order and avoids the useless work of
->>   attempting probes of devices that will not probe successfully
->>   (because their suppliers aren't present or haven't probed yet).
->>
->>   For example, in a commonly available mobile SoC, registering just
->>   one consumer device's driver at an initcall level earlier than the
->>   supplier device's driver causes 11 failed probe attempts before the
->>   consumer device probes successfully. This was with a kernel with all
->>   the drivers statically compiled in. This problem gets a lot worse if
->>   all the drivers are loaded as modules without direct symbol
->>   dependencies.
->>
->> - Supplier devices like clock providers, regulators providers, etc
->>   need to keep the resources they provide active and at a particular
->>   state(s) during boot up even if their current set of consumers don't
->>   request the resource to be active. This is because the rest of the
->>   consumers might not have probed yet and turning off the resource
->>   before all the consumers have probed could lead to a hang or
->>   undesired user experience.
->>
->>   Some frameworks (Eg: regulator) handle this today by turning off
->>   "unused" resources at late_initcall_sync and hoping all the devices
->>   have probed by then. This is not a valid assumption for systems with
->>   loadable modules. Other frameworks (Eg: clock) just don't handle
->>   this due to the lack of a clear signal for when they can turn off
->>   resources. This leads to downstream hacks to handle cases like this
->>   that can easily be solved in the upstream kernel.
->>
->>   By linking devices before they are probed, we give suppliers a clear
->>   count of the number of dependent consumers. Once all of the
->>   consumers are active, the suppliers can turn off the unused
->>   resources without making assumptions about the number of consumers.
->>
->> By default we just add device-links to track "driver presence" (probe
->> succeeded) of the supplier device. If any other functionality provided
->> by device-links are needed, it is left to the consumer/supplier
->> devices to change the link when they probe.
->>
->>
->> Saravana Kannan (5):
->>   of/platform: Speed up of_find_device_by_node()
->>   driver core: Add device links support for pending links to suppliers
->>   dt-bindings: Add depends-on property
->>   of/platform: Add functional dependency link from "depends-on" property
->>   driver core: Add sync_state driver/bus callback
->>
->>  .../devicetree/bindings/depends-on.txt        |  26 +++++
->>  drivers/base/core.c                           | 106 ++++++++++++++++++
->>  drivers/of/platform.c                         |  75 ++++++++++++-
->>  include/linux/device.h                        |  24 ++++
->>  include/linux/of.h                            |   3 +
->>  5 files changed, 233 insertions(+), 1 deletion(-)
->>  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
->>
->> --
->> 2.22.0.rc1.257.g3120a18244-goog
->>
+>> PAD is parked during LP0 entry to have it in DPD mode and it stays in
+>> DPD till its cleared by SW on resume.
+> Yes, this is documented in the public TRM. My main point is that it
+> looks like the PARK bits are unneedlessly getting unset twice in your
+> code (and it still looks like that to me).
