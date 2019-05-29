@@ -1,7 +1,7 @@
 From: yibin.gong@nxp.com
-Subject: [PATCH v3 3/8] dmaengine: fsl-edma-common: move dmamux register to another single function
-Date: Wed, 29 May 2019 17:08:43 +0800
-Message-ID: <20190529090848.34350-4-yibin.gong@nxp.com>
+Subject: [PATCH v3 1/8] dmaengine: fsl-edma: add dmamux_nr for next version
+Date: Wed, 29 May 2019 17:08:41 +0800
+Message-ID: <20190529090848.34350-2-yibin.gong@nxp.com>
 References: <20190529090848.34350-1-yibin.gong@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190529090848.34350-1-yibin.gong@nxp.com>
@@ -12,49 +12,84 @@ List-Id: devicetree@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-Prepare for edmav2 on i.mx7ulp whose dmamux register is 32bit. No function
-impacted.
+Next version of edma such as edmav2 on i.mx7ulp has only one dmamux.
+Add dmamux_nr instead of static macro define 'DMAMUX_NR'. No any
+function change here.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- drivers/dma/fsl-edma-common.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/dma/fsl-edma-common.h |  1 +
+ drivers/dma/fsl-edma.c        | 11 ++++++-----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index c9a17fc..bb24251 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -77,6 +77,19 @@ void fsl_edma_disable_request(struct fsl_edma_chan *fsl_chan)
+diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+index c53f76e..21a9cfd 100644
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -145,6 +145,7 @@ struct fsl_edma_engine {
+ 	void __iomem		*membase;
+ 	void __iomem		*muxbase[DMAMUX_NR];
+ 	struct clk		*muxclk[DMAMUX_NR];
++	u32			dmamux_nr;
+ 	struct mutex		fsl_edma_mutex;
+ 	u32			n_chans;
+ 	int			txirq;
+diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
+index d641ef8..7b65ef4 100644
+--- a/drivers/dma/fsl-edma.c
++++ b/drivers/dma/fsl-edma.c
+@@ -96,7 +96,7 @@ static struct dma_chan *fsl_edma_xlate(struct of_phandle_args *dma_spec,
+ 	struct fsl_edma_engine *fsl_edma = ofdma->of_dma_data;
+ 	struct dma_chan *chan, *_chan;
+ 	struct fsl_edma_chan *fsl_chan;
+-	unsigned long chans_per_mux = fsl_edma->n_chans / DMAMUX_NR;
++	unsigned long chans_per_mux = fsl_edma->n_chans / fsl_edma->dmamux_nr;
+ 
+ 	if (dma_spec->args_count != 2)
+ 		return NULL;
+@@ -206,6 +206,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	fsl_edma->version = v1;
++	fsl_edma->dmamux_nr = DMAMUX_NR;
+ 	fsl_edma->n_chans = chans;
+ 	mutex_init(&fsl_edma->fsl_edma_mutex);
+ 
+@@ -217,7 +218,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 	fsl_edma_setup_regs(fsl_edma);
+ 	regs = &fsl_edma->regs;
+ 
+-	for (i = 0; i < DMAMUX_NR; i++) {
++	for (i = 0; i < fsl_edma->dmamux_nr; i++) {
+ 		char clkname[32];
+ 
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, 1 + i);
+@@ -295,7 +296,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 	if (ret) {
+ 		dev_err(&pdev->dev,
+ 			"Can't register Freescale eDMA engine. (%d)\n", ret);
+-		fsl_disable_clocks(fsl_edma, DMAMUX_NR);
++		fsl_disable_clocks(fsl_edma, fsl_edma->dmamux_nr);
+ 		return ret;
+ 	}
+ 
+@@ -304,7 +305,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev,
+ 			"Can't register Freescale eDMA of_dma. (%d)\n", ret);
+ 		dma_async_device_unregister(&fsl_edma->dma_dev);
+-		fsl_disable_clocks(fsl_edma, DMAMUX_NR);
++		fsl_disable_clocks(fsl_edma, fsl_edma->dmamux_nr);
+ 		return ret;
+ 	}
+ 
+@@ -323,7 +324,7 @@ static int fsl_edma_remove(struct platform_device *pdev)
+ 	fsl_edma_cleanup_vchan(&fsl_edma->dma_dev);
+ 	of_dma_controller_free(np);
+ 	dma_async_device_unregister(&fsl_edma->dma_dev);
+-	fsl_disable_clocks(fsl_edma, DMAMUX_NR);
++	fsl_disable_clocks(fsl_edma, fsl_edma->dmamux_nr);
+ 
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(fsl_edma_disable_request);
- 
-+static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
-+			   u32 off, u32 slot, bool enable)
-+{
-+	u8 val8;
-+
-+	if (enable)
-+		val8 = EDMAMUX_CHCFG_ENBL | slot;
-+	else
-+		val8 = EDMAMUX_CHCFG_DIS;
-+
-+	iowrite8(val8, addr + off);
-+}
-+
- void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 			unsigned int slot, bool enable)
- {
-@@ -89,10 +102,7 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
- 	slot = EDMAMUX_CHCFG_SOURCE(slot);
- 
--	if (enable)
--		iowrite8(EDMAMUX_CHCFG_ENBL | slot, muxaddr + ch_off);
--	else
--		iowrite8(EDMAMUX_CHCFG_DIS, muxaddr + ch_off);
-+	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
- }
- EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
- 
 -- 
 2.7.4
