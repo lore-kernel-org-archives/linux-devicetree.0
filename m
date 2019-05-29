@@ -1,36 +1,59 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH] ARM: dts: imx7d-sdb: Make SW2's voltage fixed
-Date: Wed, 29 May 2019 10:25:10 +0000
-Message-ID: <VI1PR04MB505512BC507108ABC7620F4AEE1F0@VI1PR04MB5055.eurprd04.prod.outlook.com>
-References: <20190529065056.27516-1-Anson.Huang@nxp.com>
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net-next v2 0/2] Add hw offload of TC flower on MSCC Ocelot
+Date: Wed, 29 May 2019 12:26:18 +0200
+Message-ID: <1559125580-6375-1-git-send-email-horatiu.vultur@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+Cc: Horatiu Vultur <horatiu.vultur@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 29.05.2019 09:49, Anson.Huang@nxp.com wrote:=0A=
-> From: Anson Huang <Anson.Huang@nxp.com>=0A=
-> =0A=
-> On i.MX7D SDB board, SW2 supplies a lot of peripheral devices,=0A=
-> its voltage should be fixed at 1.8V. The commit 43967d9b5a7c=0A=
-> ("ARM: dts: imx7d-sdb: Assign corresponding power supply for LDOs")=0A=
-> assigns SW2 as the supplier of vdd1p0d, and when its comsumers=0A=
-> pcie-phy/mipi-phy try to set the vdd1p0d to 1.0V, regulator core=0A=
-> will also set SW2 to its best(min) voltage to 1.5V, and it will=0A=
-> lead to board reset.=0A=
-> =0A=
-> This patch makes SW2's voltage fixed at 1.8V to avoid this issue.=0A=
-> =0A=
-> Fixes: 43967d9b5a7c ("ARM: dts: imx7d-sdb: Assign corresponding power sup=
-ply for LDOs")=0A=
-> Reported-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>=0A=
-=0A=
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
-=0A=
-Other boards don't seem to be affected by the original series.=0A=
+This patch series enables hardware offload for flower filter used in
+traffic controller on MSCC Ocelot board.
+
+The patch series is based on:
+commit 1896ae827534 ("net: mscc: ocelot: Implement port policers via tc
+command")
+
+v1->v2 changes:
+ - when declaring variables use reverse christmas tree
+
+CC: Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Ralf Baechle <ralf@linux-mips.org>
+CC: Paul Burton <paul.burton@mips.com>
+CC: James Hogan <jhogan@kernel.org>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: linux-mips@vger.kernel.org
+CC: devicetree@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: netdev@vger.kernel.org
+
+Horatiu Vultur (2):
+  net: mscc: ocelot: Add support for tcam
+  net: mscc: ocelot: Hardware ofload for tc flower filter
+
+ arch/mips/boot/dts/mscc/ocelot.dtsi       |   5 +-
+ drivers/net/ethernet/mscc/Makefile        |   2 +-
+ drivers/net/ethernet/mscc/ocelot.c        |  13 +
+ drivers/net/ethernet/mscc/ocelot.h        |   8 +
+ drivers/net/ethernet/mscc/ocelot_ace.c    | 777 ++++++++++++++++++++++++++++++
+ drivers/net/ethernet/mscc/ocelot_ace.h    | 232 +++++++++
+ drivers/net/ethernet/mscc/ocelot_board.c  |   1 +
+ drivers/net/ethernet/mscc/ocelot_flower.c | 360 ++++++++++++++
+ drivers/net/ethernet/mscc/ocelot_regs.c   |  11 +
+ drivers/net/ethernet/mscc/ocelot_s2.h     |  64 +++
+ drivers/net/ethernet/mscc/ocelot_tc.c     |  16 +-
+ drivers/net/ethernet/mscc/ocelot_vcap.h   | 403 ++++++++++++++++
+ 12 files changed, 1883 insertions(+), 9 deletions(-)
+ create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.c
+ create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.h
+ create mode 100644 drivers/net/ethernet/mscc/ocelot_flower.c
+ create mode 100644 drivers/net/ethernet/mscc/ocelot_s2.h
+ create mode 100644 drivers/net/ethernet/mscc/ocelot_vcap.h
+
+-- 
+2.7.4
