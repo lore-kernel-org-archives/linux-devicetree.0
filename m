@@ -1,95 +1,45 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFT PATCH v5 3/5] cpu-topology: Move cpu topology code to
- common code.
-Date: Wed, 29 May 2019 11:48:01 +0100
-Message-ID: <20190529104801.GA13155@e107155-lin>
-References: <20190524000653.13005-1-atish.patra@wdc.com>
- <20190524000653.13005-4-atish.patra@wdc.com>
+From: Jonas Karlman <jonas@kwiboo.se>
+Subject: [PATCH] media: dt-bindings: rockchip: Document RK3328 VPU binding
+Date: Wed, 29 May 2019 10:54:27 +0000
+Message-ID: <VI1PR03MB4206A833FF54A3235571896CAC1F0@VI1PR03MB4206.eurprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190524000653.13005-4-atish.patra@wdc.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+To: Ezequiel Garcia <ezequiel@collabora.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Jonas Karlman <jonas@kwiboo.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2019 at 05:06:50PM -0700, Atish Patra wrote:
-> Both RISC-V & ARM64 are using cpu-map device tree to describe
-> their cpu topology. It's better to move the relevant code to
-> a common place instead of duplicate code.
->
-
-I couldn't test this on any ARM64 server platforms, tested on Juno
-and other embedded platforms.
-
-Tested-by: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
->  arch/arm64/include/asm/topology.h |  23 ---
->  arch/arm64/kernel/topology.c      | 303 +-----------------------------
->  drivers/base/arch_topology.c      | 296 +++++++++++++++++++++++++++++
->  include/linux/arch_topology.h     |  28 +++
->  include/linux/topology.h          |   1 +
->  5 files changed, 329 insertions(+), 322 deletions(-)
->
-
-[...]
-
-> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> index 0825c4a856e3..6b95c91e7d67 100644
-> --- a/arch/arm64/kernel/topology.c
-> +++ b/arch/arm64/kernel/topology.c
->
-
-[...]
-
-> -static int __init parse_cluster(struct device_node *cluster, int depth)
-> -{
-> -	char name[10];
-> -	bool leaf = true;
-> -	bool has_cores = false;
-> -	struct device_node *c;
-> -	static int package_id __initdata;
-> -	int core_id = 0;
-
-[Ultra minor nit]: you seem to have reordered the above declaration when
-you moved, just noticed as it showed up when comparing.
-
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index 1739d7e1952a..20a960131bee 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-
-[...]
-
-> +
-> +static int __init parse_cluster(struct device_node *cluster, int depth)
-> +{
-> +	char name[10];
-> +	bool leaf = true;
-> +	bool has_cores = false;
-> +	int core_id = 0;
-> +	static int package_id __initdata;
-> +	struct device_node *c;
-> +	int i, ret;
-> +
-
-[...]
-
-> +#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
-> +void update_siblings_masks(unsigned int cpu);
-> +#endif
-> +void remove_cpu_topology(unsigned int cpuid);
-> +
-
-Another thing(not a block and we can do it once this is merged) is to
-remove these #ifdefs
-
---
-Regards,
-Sudeep
+VXBkYXRlIGRldmljZXRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciBSb2NrY2hpcCBWUFUg
+b24gUkszMzI4Lg0KDQpTaWduZWQtb2ZmLWJ5OiBKb25hcyBLYXJsbWFuIDxqb25hc0Brd2lib28u
+c2U+DQotLS0NCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9yb2NrY2hpcC12cHUudHh0
+IHwgMTggKysrKysrKysrKysrKysrKy0tDQogMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMo
+KyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbWVkaWEvcm9ja2NoaXAtdnB1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tZWRpYS9yb2NrY2hpcC12cHUudHh0DQppbmRleCAzNWRjNDY0YWQ3Yzgu
+LjMzOTI1MmQ5YzUxNSAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9tZWRpYS9yb2NrY2hpcC12cHUudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbWVkaWEvcm9ja2NoaXAtdnB1LnR4dA0KQEAgLTEsMTQgKzEsMTcgQEANCiBk
+ZXZpY2UtdHJlZSBiaW5kaW5ncyBmb3Igcm9ja2NoaXAgVlBVIGNvZGVjDQogDQogUm9ja2NoaXAg
+KFZpZGVvIFByb2Nlc3NpbmcgVW5pdCkgcHJlc2VudCBpbiB2YXJpb3VzIFJvY2tjaGlwIHBsYXRm
+b3JtcywNCi1zdWNoIGFzIFJLMzI4OCBhbmQgUkszMzk5Lg0KK3N1Y2ggYXMgUkszMjg4LCBSSzMz
+MjggYW5kIFJLMzM5OS4NCiANCiBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIC0gY29tcGF0aWJsZTog
+dmFsdWUgc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nDQogCQkicm9ja2NoaXAscmszMjg4
+LXZwdSI7DQorCQkicm9ja2NoaXAscmszMzI4LXZwdSI7DQogCQkicm9ja2NoaXAscmszMzk5LXZw
+dSI7DQogLSBpbnRlcnJ1cHRzOiBlbmNvZGluZyBhbmQgZGVjb2RpbmcgaW50ZXJydXB0IHNwZWNp
+ZmllcnMNCi0tIGludGVycnVwdC1uYW1lczogc2hvdWxkIGJlICJ2ZXB1IiBhbmQgInZkcHUiDQor
+LSBpbnRlcnJ1cHQtbmFtZXM6IHNob3VsZCBiZQ0KKwkJInZlcHUiLCAidmRwdSIgb24gUkszMjg4
+IGFuZCBSSzMzOTksDQorCQkidmRwdSIgb24gUkszMzI4Lg0KIC0gY2xvY2tzOiBwaGFuZGxlIHRv
+IFZQVSBhY2xrLCBoY2xrIGNsb2Nrcw0KIC0gY2xvY2stbmFtZXM6IHNob3VsZCBiZSAiYWNsayIg
+YW5kICJoY2xrIg0KIC0gcG93ZXItZG9tYWluczogcGhhbmRsZSB0byBwb3dlciBkb21haW4gbm9k
+ZQ0KQEAgLTI3LDMgKzMwLDE0IEBAIFNvQy1zcGVjaWZpYyBEVCBlbnRyeToNCiAJCXBvd2VyLWRv
+bWFpbnMgPSA8JnBvd2VyIFJLMzI4OF9QRF9WSURFTz47DQogCQlpb21tdXMgPSA8JnZwdV9tbXU+
+Ow0KIAl9Ow0KKw0KKwl2cHU6IHZpZGVvLWNvZGVjQGZmMzUwMDAwIHsNCisJCWNvbXBhdGlibGUg
+PSAicm9ja2NoaXAscmszMzI4LXZwdSI7DQorCQlyZWcgPSA8MHgwIDB4ZmYzNTAwMDAgMHgwIDB4
+ODAwPjsNCisJCWludGVycnVwdHMgPSA8R0lDX1NQSSA5IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0K
+KwkJaW50ZXJydXB0LW5hbWVzID0gInZkcHUiOw0KKwkJY2xvY2tzID0gPCZjcnUgQUNMS19WUFU+
+LCA8JmNydSBIQ0xLX1ZQVT47DQorCQljbG9jay1uYW1lcyA9ICJhY2xrIiwgImhjbGsiOw0KKwkJ
+cG93ZXItZG9tYWlucyA9IDwmcG93ZXIgUkszMzI4X1BEX1ZQVT47DQorCQlpb21tdXMgPSA8JnZw
+dV9tbXU+Ow0KKwl9Ow0KLS0gDQoyLjE3LjENCg0K
