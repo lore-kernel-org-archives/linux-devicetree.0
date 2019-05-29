@@ -1,187 +1,269 @@
-Return-Path: <SRS0=i5OF=T5=rock-chips.com=jay.xu@kernel.org>
-Date: Thu, 30 May 2019 07:55:50 +0800
-From: "jay.xu@rock-chips.com" <jay.xu@rock-chips.com>
-Subject: Re: Re: [PATCH v2 1/1] arm64: dts: rockchip: add core dtsi file for RK3399Pro SoCs
-References: <20190528044850.23703-1-jay.xu@rock-chips.com>,
-	<20190529074752.19388-1-jay.xu@rock-chips.com>,
-	<5655934.Q7EnKghNLn@diego>
-Mime-Version: 1.0
-Message-ID: <2019053007555014785438@rock-chips.com>
-Content-Type: multipart/alternative;
-	boundary="----=_001_NextPart827721063133_=----"
-To: =?utf-8?B?SGVpa29TdMO8Ym5lcg==?= <heiko@sntech.de>
-Cc: "mark.rutland" <mark.rutland@arm.com>, robh+dt <robh+dt@kernel.org>, zhangzj <zhangzj@rock-chips.com>, "manivannan.sadhasivam" <manivannan.sadhasivam@linaro.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Return-Path: <SRS0=/Rmg=T5=linaro.org=manivannan.sadhasivam@kernel.org>
+MIME-Version: 1.0
+References: <20190528044850.23703-1-jay.xu@rock-chips.com> <20190529074752.19388-1-jay.xu@rock-chips.com>
+In-Reply-To: <20190529074752.19388-1-jay.xu@rock-chips.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Wed, 29 May 2019 17:57:26 +0530
+Message-ID: <CAOZjjh=30Wo1QZ3FrNzj7MMLd8c5h2XYbo7v5=e=j7RwGKsePg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] arm64: dts: rockchip: add core dtsi file for
+ RK3399Pro SoCs
+Content-Type: multipart/alternative; boundary="0000000000004d03ab058a05e858"
+To: Jianqun Xu <jay.xu@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, robh+dt@kernel.org, zhangzj@rock-chips.com, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
+--0000000000004d03ab058a05e858
+Content-Type: text/plain; charset="UTF-8"
 
-------=_001_NextPart827721063133_=----
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+Hi,
 
-SGksIEhlaWtvDQoNCkZyb206IEhlaWtvU3TDvGJuZXINCkRhdGU6IDIwMTktMDUtMjkgMTY6MDYN
-ClRvOiBKaWFucXVuIFh1DQpDQzogbWFyay5ydXRsYW5kOyByb2JoK2R0OyB6aGFuZ3pqOyBtYW5p
-dmFubmFuLnNhZGhhc2l2YW07IGxpbnV4LXJvY2tjaGlwOyBsaW51eC1hcm0ta2VybmVsOyBsaW51
-eC1rZXJuZWw7IGRldmljZXRyZWUNClN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8xXSBhcm02NDog
-ZHRzOiByb2NrY2hpcDogYWRkIGNvcmUgZHRzaSBmaWxlIGZvciBSSzMzOTlQcm8gU29Dcw0KSGkg
-SmF5LA0KIA0KQW0gTWl0dHdvY2gsIDI5LiBNYWkgMjAxOSwgMDk6NDc6NTIgQ0VTVCBzY2hyaWVi
-IEppYW5xdW4gWHU6DQo+IFRoaXMgcGF0Y2ggYWRkcyBjb3JlIGR0c2kgZmlsZSBmb3IgUm9ja2No
-aXAgUkszMzk5UHJvIFNvQ3MsDQo+IGluY2x1ZGUgcmszMzk5LmR0c2kuIEFsc28gZW5hYmxlIHRo
-ZXNlIG5vZGVzOg0KPiAtIHBjaWUvcGNpZV9waHkNCj4gLSBzZGhjaS9zZGlvL2VtbWMvc2RtbWMN
-Cj4gDQo+IFNpZ25lZC1vZmYtYnk6IEppYW5xdW4gWHUgPGpheS54dUByb2NrLWNoaXBzLmNvbT4N
-Cj4gLS0tDQo+IGNoYW5nZXMgc2luY2UgdjE6DQo+IC0gcmVtb3ZlIGRmaSBhbmQgZG1jDQo+IA0K
-PiAgYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTlwcm8uZHRzaSB8IDc0ICsrKysr
-KysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDc0IGluc2VydGlvbnMoKykNCj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OXBy
-by5kdHNpDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9y
-azMzOTlwcm8uZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5cHJvLmR0
-c2kNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi5iNmQ0MzNm
-ZmE2N2QNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tj
-aGlwL3JrMzM5OXByby5kdHNpDQo+IEBAIC0wLDAgKzEsNzQgQEANCj4gKy8vIFNQRFgtTGljZW5z
-ZS1JZGVudGlmaWVyOiAoR1BMLTIuMCsgT1IgTUlUKQ0KPiArLy8gQ29weXJpZ2h0IChjKSAyMDE5
-IEZ1emhvdSBSb2NrY2hpcCBFbGVjdHJvbmljcyBDby4sIEx0ZC4NCj4gKw0KPiArI2luY2x1ZGUg
-InJrMzM5OS5kdHNpIg0KPiArDQo+ICsvIHsNCj4gKyBjb21wYXRpYmxlID0gInJvY2tjaGlwLHJr
-MzM5OXBybyI7DQo+ICsNCj4gKyB4aW4zMms6IHhpbjMyayB7DQo+ICsgY29tcGF0aWJsZSA9ICJm
-aXhlZC1jbG9jayI7DQo+ICsgY2xvY2stZnJlcXVlbmN5ID0gPDMyNzY4PjsNCj4gKyBjbG9jay1v
-dXRwdXQtbmFtZXMgPSAieGluMzJrIjsNCj4gKyAjY2xvY2stY2VsbHMgPSA8MD47DQo+ICsgfTsN
-CiANCkp1c3QgdG8gY2xhcmlmeSwgaXMgdGhlIHgzMmsgY2xvY2sgcmVhbGx5IHBhcnQgb2YgdGhl
-IHNvYyBpdHNlbGY/DQpMaWtlIG9uIG9sZGVyIFNvQ3MgaXQgd2FzIGFsd2F5cyBzdXBwbGllZCBm
-cm9tIHRoZSBwbWljDQpvciBhIHNlcGFyYXRlIHJ0YyBjaGlwLg0KIA0KVGhlIDMySyBpcyBub3Qg
-cGFydCBvZiByazMzOTlwcm8sIGl0J3MgZnJvbSBwbWljLg0KIA0KPiArfTsNCj4gKw0KPiArJmVt
-bWNfcGh5IHsNCj4gKyBzdGF0dXMgPSAib2theSI7DQo+ICt9Ow0KIA0KSXMgdGhlIGVtbWMgdXNl
-ZCBpbnNpZGUgdGhlIHNvYz8gQXMgb3RoZXJ3aXNlIGVtbWMgLyBtbWMgY29udHJvbGxlcg0Kc2V0
-dGluZ3Mgd291bGQgYmUgbW9yZSBhIHBhcnQgb2YgdGhlIGFjdHVhbCBib2FyZCB1c2luZyB0aGUg
-c29jLg0KIA0Kb2theSwgaXQgc2hvdWxkIGJlIGEgcGFydCBvZiB0aGUgYWN0dWFsIGJvYXJkIHVz
-aW5nIHRoZSBzb2MsIHRoYW5rIHlvdQ0KIA0KPiArJnBjaWVfcGh5IHsNCj4gKyBzdGF0dXMgPSAi
-b2theSI7DQo+ICt9Ow0KPiArDQo+ICsmcGNpZTAgew0KPiArIGVwLWdwaW9zID0gPCZncGlvMCBS
-S19QQjQgR1BJT19BQ1RJVkVfSElHSD47DQo+ICsgbnVtLWxhbmVzID0gPDQ+Ow0KPiArIHBpbmN0
-cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ICsgcGluY3RybC0wID0gPCZwY2llX2Nsa3JlcW5fY3Bt
-PjsNCj4gKyBzdGF0dXMgPSAib2theSI7DQo+ICt9Ow0KIA0KVGhpcyBpcyBwcm9iYWJseSBuZWVk
-ZWQgYXMgaXQgbmVlZHMgdG8gdGFsayB0aGUgcmsxODA4DQpwYXJ0IG92ZXIgcGNpZSwgc28gaXQn
-cyByZWFsbHkgaW50ZXJuYWwgdG8gdGhlIHNvYy4NCiANClllcywgeW91IGFyZSByaWdodA0KIA0K
-PiArDQo+ICsmc2RoY2kgew0KPiArIGJ1cy13aWR0aCA9IDw4PjsNCj4gKyBtbWMtaHM0MDAtMV84
-djsNCj4gKyBzdXBwb3J0cy1lbW1jOw0KPiArIG5vbi1yZW1vdmFibGU7DQo+ICsga2VlcC1wb3dl
-ci1pbi1zdXNwZW5kOw0KPiArIG1tYy1oczQwMC1lbmhhbmNlZC1zdHJvYmU7DQo+ICsgc3RhdHVz
-ID0gIm9rYXkiOw0KPiArfTsNCiANClNhbWUgY29tbWVudCBhcyBmb3IgZW1tY19waHkgYWJvdmUN
-Cg0Kb2theSwgSSB3aWxsIGFkZCBjb21tZW50IGhlcmUgaW4gbmV4dCB2ZXJzaW9uDQogDQo+ICsm
-c2RpbzAgew0KPiArIGNsb2NrLWZyZXF1ZW5jeSA9IDwxNTAwMDAwMDA+Ow0KPiArIGNsb2NrLWZy
-ZXEtbWluLW1heCA9IDwyMDAwMDAgMTUwMDAwMDAwPjsNCj4gKyBzdXBwb3J0cy1zZGlvOw0KPiAr
-IGJ1cy13aWR0aCA9IDw0PjsNCj4gKyBkaXNhYmxlLXdwOw0KPiArIGNhcC1zZC1oaWdoc3BlZWQ7
-DQo+ICsgY2FwLXNkaW8taXJxOw0KPiArIGtlZXAtcG93ZXItaW4tc3VzcGVuZDsNCj4gKyBtbWMt
-cHdyc2VxID0gPCZzZGlvX3B3cnNlcT47DQo+ICsgbm9uLXJlbW92YWJsZTsNCj4gKyBudW0tc2xv
-dHMgPSA8MT47DQo+ICsgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gKyBwaW5jdHJsLTAg
-PSA8JnNkaW8wX2J1czQgJnNkaW8wX2NtZCAmc2RpbzBfY2xrPjsNCj4gKyBzZC11aHMtc2RyMTA0
-Ow0KPiArIHN0YXR1cyA9ICJva2F5IjsNCj4gK307DQogDQpTYW1lIGNvbW1lbnQgYXMgZm9yIGVt
-bWNfcGh5IGFib3ZlDQpva2F5DQogDQo+ICsmc2RtbWMgew0KPiArIGNsb2NrLWZyZXF1ZW5jeSA9
-IDwxNTAwMDAwMDA+Ow0KPiArIGNsb2NrLWZyZXEtbWluLW1heCA9IDw0MDAwMDAgMTUwMDAwMDAw
-PjsNCj4gKyBzdXBwb3J0cy1zZDsNCj4gKyBidXMtd2lkdGggPSA8ND47DQo+ICsgY2FwLW1tYy1o
-aWdoc3BlZWQ7DQo+ICsgY2FwLXNkLWhpZ2hzcGVlZDsNCj4gKyBkaXNhYmxlLXdwOw0KPiArIG51
-bS1zbG90cyA9IDwxPjsNCj4gKyB2cW1tYy1zdXBwbHkgPSA8JnZjY2lvX3NkPjsNCj4gKyBwaW5j
-dHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiArIHBpbmN0cmwtMCA9IDwmc2RtbWNfY2xrICZzZG1t
-Y19jbWQgJnNkbW1jX2NkICZzZG1tY19idXM0PjsNCj4gKyBzdGF0dXMgPSAib2theSI7DQo+ICt9
-Ow0KIA0KU2FtZSBjb21tZW50IGFzIGZvciBlbW1jX3BoeSBhYm92ZQ0Kb2theQ0KIA0KIA0KIA0K
-IA0K
+Thanks for the patch.
 
-------=_001_NextPart827721063133_=----
-Content-Type: text/html;
-	charset="utf-8"
+On top of Heiko's review:
+
+On Wed, 29 May, 2019, 1:18 PM Jianqun Xu, <jay.xu@rock-chips.com> wrote:
+
+> This patch adds core dtsi file for Rockchip RK3399Pro SoCs,
+> include rk3399.dtsi. Also enable these nodes:
+> - pcie/pcie_phy
+> - sdhci/sdio/emmc/sdmmc
+>
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> ---
+> changes since v1:
+> - remove dfi and dmc
+>
+>  arch/arm64/boot/dts/rockchip/rk3399pro.dtsi | 74 +++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> new file mode 100644
+> index 000000000000..b6d433ffa67d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +// Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.
+> +
+> +#include "rk3399.dtsi"
+> +
+> +/ {
+> +       compatible = "rockchip,rk3399pro";
+> +
+> +       xin32k: xin32k {
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <32768>;
+> +               clock-output-names = "xin32k";
+> +               #clock-cells = <0>;
+> +       };
+> +};
+> +
+> +&emmc_phy {
+> +       status = "okay";
+> +};
+> +
+> +&pcie_phy {
+> +       status = "okay";
+> +};
+> +
+> +&pcie0 {
+> +       ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
+> +       num-lanes = <4>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pcie_clkreqn_cpm>;
+> +       status = "okay";
+> +};
+>
+
+So, this is for the NPU inside the soc? If yes, then probably only pcie
+nodes should be present in rk3399pro.dtsi and others should be in
+respective board dts.
+
+Thanks,
+Mani
+
+> +
+> +&sdhci {
+> +       bus-width = <8>;
+> +       mmc-hs400-1_8v;
+> +       supports-emmc;
+> +       non-removable;
+> +       keep-power-in-suspend;
+> +       mmc-hs400-enhanced-strobe;
+> +       status = "okay";
+> +};
+> +
+> +&sdio0 {
+> +       clock-frequency = <150000000>;
+> +       clock-freq-min-max = <200000 150000000>;
+> +       supports-sdio;
+> +       bus-width = <4>;
+> +       disable-wp;
+> +       cap-sd-highspeed;
+> +       cap-sdio-irq;
+> +       keep-power-in-suspend;
+> +       mmc-pwrseq = <&sdio_pwrseq>;
+> +       non-removable;
+> +       num-slots = <1>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
+> +       sd-uhs-sdr104;
+> +       status = "okay";
+> +};
+> +
+> +&sdmmc {
+> +       clock-frequency = <150000000>;
+> +       clock-freq-min-max = <400000 150000000>;
+> +       supports-sd;
+> +       bus-width = <4>;
+> +       cap-mmc-highspeed;
+> +       cap-sd-highspeed;
+> +       disable-wp;
+> +       num-slots = <1>;
+> +       vqmmc-supply = <&vccio_sd>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
+> +       status = "okay";
+> +};
+> --
+> 2.17.1
+>
+>
+>
+>
+
+--0000000000004d03ab058a05e858
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charse=
-t=3Dutf-8"><style>body { line-height: 1.5; }blockquote { margin-top: 0px; =
-margin-bottom: 0px; margin-left: 0.5em; }body { font-size: 10.5pt; font-fa=
-mily: =E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91; color: rgb(0, 0, 0); line-heig=
-ht: 1.5; }</style></head><body>=0A<div>Hi, Heiko</div><div><br></div><bloc=
-kquote style=3D"margin-Top: 0px; margin-Bottom: 0px; margin-Left: 0.5em"><=
-div style=3D"border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm =
-0cm 0cm"><div style=3D"PADDING-RIGHT: 8px; PADDING-LEFT: 8px; FONT-SIZE: 1=
-2px;FONT-FAMILY:tahoma;COLOR:#000000; BACKGROUND: #efefef; PADDING-BOTTOM:=
- 8px; PADDING-TOP: 8px"><div><b>From:</b>&nbsp;<a href=3D"mailto:heiko@snt=
-ech.de">HeikoSt=C3=BCbner</a></div><div><b>Date:</b>&nbsp;2019-05-29&nbsp;=
-16:06</div><div><b>To:</b>&nbsp;<a href=3D"mailto:jay.xu@rock-chips.com">J=
-ianqun Xu</a></div><div><b>CC:</b>&nbsp;<a href=3D"mailto:mark.rutland@arm=
-.com">mark.rutland</a>; <a href=3D"mailto:robh+dt@kernel.org">robh+dt</a>;=
- <a href=3D"mailto:zhangzj@rock-chips.com">zhangzj</a>; <a href=3D"mailto:=
-manivannan.sadhasivam@linaro.org">manivannan.sadhasivam</a>; <a href=3D"ma=
-ilto:linux-rockchip@lists.infradead.org">linux-rockchip</a>; <a href=3D"ma=
-ilto:linux-arm-kernel@lists.infradead.org">linux-arm-kernel</a>; <a href=
-=3D"mailto:linux-kernel@vger.kernel.org">linux-kernel</a>; <a href=3D"mail=
-to:devicetree@vger.kernel.org">devicetree</a></div><div><b>Subject:</b>&nb=
-sp;Re: [PATCH v2 1/1] arm64: dts: rockchip: add core dtsi file for RK3399P=
-ro SoCs</div></div></div><div><div>Hi Jay,</div>=0A<div>&nbsp;</div>=0A<di=
-v>Am Mittwoch, 29. Mai 2019, 09:47:52 CEST schrieb Jianqun Xu:</div>=0A<di=
-v>&gt; This patch adds core dtsi file for Rockchip RK3399Pro SoCs,</div>=
-=0A<div>&gt; include rk3399.dtsi. Also enable these nodes:</div>=0A<div>&g=
-t; - pcie/pcie_phy</div>=0A<div>&gt; - sdhci/sdio/emmc/sdmmc</div>=0A<div>=
-&gt; </div>=0A<div>&gt; Signed-off-by: Jianqun Xu &lt;jay.xu@rock-chips.co=
-m&gt;</div>=0A<div>&gt; ---</div>=0A<div>&gt; changes since v1:</div>=0A<d=
-iv>&gt; - remove dfi and dmc</div>=0A<div>&gt; </div>=0A<div>&gt;&nbsp; ar=
-ch/arm64/boot/dts/rockchip/rk3399pro.dtsi | 74 +++++++++++++++++++++</div>=
-=0A<div>&gt;&nbsp; 1 file changed, 74 insertions(+)</div>=0A<div>&gt;&nbsp=
-; create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro.dtsi</div>=0A<=
-div>&gt; </div>=0A<div>&gt; diff --git a/arch/arm64/boot/dts/rockchip/rk33=
-99pro.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi</div>=0A<div>&gt;=
- new file mode 100644</div>=0A<div>&gt; index 000000000000..b6d433ffa67d</=
-div>=0A<div>&gt; --- /dev/null</div>=0A<div>&gt; +++ b/arch/arm64/boot/dts=
-/rockchip/rk3399pro.dtsi</div>=0A<div>&gt; @@ -0,0 +1,74 @@</div>=0A<div>&=
-gt; +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)</div>=0A<div>&gt; +// C=
-opyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.</div>=0A<div>&gt; =
-+</div>=0A<div>&gt; +#include "rk3399.dtsi"</div>=0A<div>&gt; +</div>=0A<d=
-iv>&gt; +/ {</div>=0A<div>&gt; +	compatible =3D "rockchip,rk3399pro";</div=
->=0A<div>&gt; +</div>=0A<div>&gt; +	xin32k: xin32k {</div>=0A<div>&gt; +		=
-compatible =3D "fixed-clock";</div>=0A<div>&gt; +		clock-frequency =3D &lt=
-;32768&gt;;</div>=0A<div>&gt; +		clock-output-names =3D "xin32k";</div>=0A=
-<div>&gt; +		#clock-cells =3D &lt;0&gt;;</div>=0A<div>&gt; +	};</div>=0A<d=
-iv>&nbsp;</div>=0A<div>Just to clarify, is the x32k clock really part of t=
-he soc itself?</div>=0A<div>Like on older SoCs it was always supplied from=
- the pmic</div>=0A<div>or a separate rtc chip.</div>=0A<div>&nbsp;</div><d=
-iv>The 32K is not part of rk3399pro, it's from pmic.</div>=0A<div>&nbsp;</=
-div>=0A<div>&gt; +};</div>=0A<div>&gt; +</div>=0A<div>&gt; +&amp;emmc_phy =
-{</div>=0A<div>&gt; +	status =3D "okay";</div>=0A<div>&gt; +};</div>=0A<di=
-v>&nbsp;</div>=0A<div>Is the emmc used inside the soc? As otherwise emmc /=
- mmc controller</div>=0A<div>settings would be more a part of the actual b=
-oard using the soc.</div>=0A<div>&nbsp;</div><div>okay, it should be&nbsp;=
-<span style=3D"font-size: 10.5pt; line-height: 1.5; background-color: tran=
-sparent;">a part of the actual board using the soc, thank you</span></div>=
-=0A<div>&nbsp;</div>=0A<div>&gt; +&amp;pcie_phy {</div>=0A<div>&gt; +	stat=
-us =3D "okay";</div>=0A<div>&gt; +};</div>=0A<div>&gt; +</div>=0A<div>&gt;=
- +&amp;pcie0 {</div>=0A<div>&gt; +	ep-gpios =3D &lt;&amp;gpio0 RK_PB4 GPIO=
-_ACTIVE_HIGH&gt;;</div>=0A<div>&gt; +	num-lanes =3D &lt;4&gt;;</div>=0A<di=
-v>&gt; +	pinctrl-names =3D "default";</div>=0A<div>&gt; +	pinctrl-0 =3D &l=
-t;&amp;pcie_clkreqn_cpm&gt;;</div>=0A<div>&gt; +	status =3D "okay";</div>=
-=0A<div>&gt; +};</div>=0A<div>&nbsp;</div>=0A<div>This is probably needed =
-as it needs to talk the rk1808</div>=0A<div>part over pcie, so it's really=
- internal to the soc.</div>=0A<div>&nbsp;</div><div>Yes, you are right</di=
-v>=0A<div>&nbsp;</div>=0A<div>&gt; +</div>=0A<div>&gt; +&amp;sdhci {</div>=
-=0A<div>&gt; +	bus-width =3D &lt;8&gt;;</div>=0A<div>&gt; +	mmc-hs400-1_8v=
-;</div>=0A<div>&gt; +	supports-emmc;</div>=0A<div>&gt; +	non-removable;</d=
-iv>=0A<div>&gt; +	keep-power-in-suspend;</div>=0A<div>&gt; +	mmc-hs400-enh=
-anced-strobe;</div>=0A<div>&gt; +	status =3D "okay";</div>=0A<div>&gt; +};=
-</div>=0A<div>&nbsp;</div>=0A<div>Same comment as for emmc_phy above</div>=
-<div><br></div><div>okay, I will add comment here in next version</div>=0A=
-<div>&nbsp;</div>=0A<div>&gt; +&amp;sdio0 {</div>=0A<div>&gt; +	clock-freq=
-uency =3D &lt;150000000&gt;;</div>=0A<div>&gt; +	clock-freq-min-max =3D &l=
-t;200000 150000000&gt;;</div>=0A<div>&gt; +	supports-sdio;</div>=0A<div>&g=
-t; +	bus-width =3D &lt;4&gt;;</div>=0A<div>&gt; +	disable-wp;</div>=0A<div=
->&gt; +	cap-sd-highspeed;</div>=0A<div>&gt; +	cap-sdio-irq;</div>=0A<div>&=
-gt; +	keep-power-in-suspend;</div>=0A<div>&gt; +	mmc-pwrseq =3D &lt;&amp;s=
-dio_pwrseq&gt;;</div>=0A<div>&gt; +	non-removable;</div>=0A<div>&gt; +	num=
--slots =3D &lt;1&gt;;</div>=0A<div>&gt; +	pinctrl-names =3D "default";</di=
-v>=0A<div>&gt; +	pinctrl-0 =3D &lt;&amp;sdio0_bus4 &amp;sdio0_cmd &amp;sdi=
-o0_clk&gt;;</div>=0A<div>&gt; +	sd-uhs-sdr104;</div>=0A<div>&gt; +	status =
-=3D "okay";</div>=0A<div>&gt; +};</div>=0A<div>&nbsp;</div>=0A<div>Same co=
-mment as for emmc_phy above</div><div>okay</div>=0A<div>&nbsp;</div>=0A<di=
-v>&gt; +&amp;sdmmc {</div>=0A<div>&gt; +	clock-frequency =3D &lt;150000000=
-&gt;;</div>=0A<div>&gt; +	clock-freq-min-max =3D &lt;400000 150000000&gt;;=
-</div>=0A<div>&gt; +	supports-sd;</div>=0A<div>&gt; +	bus-width =3D &lt;4&=
-gt;;</div>=0A<div>&gt; +	cap-mmc-highspeed;</div>=0A<div>&gt; +	cap-sd-hig=
-hspeed;</div>=0A<div>&gt; +	disable-wp;</div>=0A<div>&gt; +	num-slots =3D =
-&lt;1&gt;;</div>=0A<div>&gt; +	vqmmc-supply =3D &lt;&amp;vccio_sd&gt;;</di=
-v>=0A<div>&gt; +	pinctrl-names =3D "default";</div>=0A<div>&gt; +	pinctrl-=
-0 =3D &lt;&amp;sdmmc_clk &amp;sdmmc_cmd &amp;sdmmc_cd &amp;sdmmc_bus4&gt;;=
-</div>=0A<div>&gt; +	status =3D "okay";</div>=0A<div>&gt; +};</div>=0A<div=
->&nbsp;</div>=0A<div>Same comment as for emmc_phy above</div><div>okay</di=
-v>=0A<div>&nbsp;</div>=0A<div>&nbsp;</div>=0A<div>&nbsp;</div>=0A<div>&nbs=
-p;</div>=0A</div></blockquote>=0A</body></html>
-------=_001_NextPart827721063133_=------
+<div dir=3D"auto"><div>Hi,=C2=A0</div><div dir=3D"auto"><br></div><div dir=
+=3D"auto">Thanks for the patch.=C2=A0</div><div dir=3D"auto"><br></div><div=
+ dir=3D"auto">On top of Heiko&#39;s review:<br><br><div class=3D"gmail_quot=
+e" dir=3D"auto"><div dir=3D"ltr" class=3D"gmail_attr">On Wed, 29 May, 2019,=
+ 1:18 PM Jianqun Xu, &lt;<a href=3D"mailto:jay.xu@rock-chips.com">jay.xu@ro=
+ck-chips.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" styl=
+e=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">This pa=
+tch adds core dtsi file for Rockchip RK3399Pro SoCs,<br>
+include rk3399.dtsi. Also enable these nodes:<br>
+- pcie/pcie_phy<br>
+- sdhci/sdio/emmc/sdmmc<br>
+<br>
+Signed-off-by: Jianqun Xu &lt;<a href=3D"mailto:jay.xu@rock-chips.com" targ=
+et=3D"_blank" rel=3D"noreferrer">jay.xu@rock-chips.com</a>&gt;<br>
+---<br>
+changes since v1:<br>
+- remove dfi and dmc<br>
+<br>
+=C2=A0arch/arm64/boot/dts/rockchip/rk3399pro.dtsi | 74 ++++++++++++++++++++=
++<br>
+=C2=A01 file changed, 74 insertions(+)<br>
+=C2=A0create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro.dtsi<br>
+<br>
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi b/arch/arm64/boot/=
+dts/rockchip/rk3399pro.dtsi<br>
+new file mode 100644<br>
+index 000000000000..b6d433ffa67d<br>
+--- /dev/null<br>
++++ b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi<br>
+@@ -0,0 +1,74 @@<br>
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)<br>
++// Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.<br>
++<br>
++#include &quot;rk3399.dtsi&quot;<br>
++<br>
++/ {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;rockchip,rk3399pro&quot;;<=
+br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0xin32k: xin32k {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quo=
+t;fixed-clock&quot;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0clock-frequency =3D=
+ &lt;32768&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0clock-output-names =
+=3D &quot;xin32k&quot;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#clock-cells =3D &l=
+t;0&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
++};<br>
++<br>
++&amp;emmc_phy {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
++};<br>
++<br>
++&amp;pcie_phy {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
++};<br>
++<br>
++&amp;pcie0 {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ep-gpios =3D &lt;&amp;gpio0 RK_PB4 GPIO_ACTIVE_=
+HIGH&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0num-lanes =3D &lt;4&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-names =3D &quot;default&quot;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-0 =3D &lt;&amp;pcie_clkreqn_cpm&gt;;<br=
+>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
++};<br></blockquote></div></div><div dir=3D"auto"><br></div><div dir=3D"aut=
+o">So, this is for the NPU inside the soc? If yes, then probably only pcie =
+nodes should be present in rk3399pro.dtsi and others should be in respectiv=
+e board dts.=C2=A0</div><div dir=3D"auto"><br></div><div dir=3D"auto">Thank=
+s,=C2=A0</div><div dir=3D"auto">Mani</div><div dir=3D"auto"><div class=3D"g=
+mail_quote" dir=3D"auto"><blockquote class=3D"gmail_quote" style=3D"margin:=
+0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
++<br>
++&amp;sdhci {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0bus-width =3D &lt;8&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0mmc-hs400-1_8v;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0supports-emmc;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0non-removable;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0keep-power-in-suspend;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0mmc-hs400-enhanced-strobe;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
++};<br>
++<br>
++&amp;sdio0 {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0clock-frequency =3D &lt;150000000&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0clock-freq-min-max =3D &lt;200000 150000000&gt;=
+;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0supports-sdio;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0bus-width =3D &lt;4&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0disable-wp;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0cap-sd-highspeed;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0cap-sdio-irq;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0keep-power-in-suspend;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0mmc-pwrseq =3D &lt;&amp;sdio_pwrseq&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0non-removable;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0num-slots =3D &lt;1&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-names =3D &quot;default&quot;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-0 =3D &lt;&amp;sdio0_bus4 &amp;sdio0_cm=
+d &amp;sdio0_clk&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0sd-uhs-sdr104;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
++};<br>
++<br>
++&amp;sdmmc {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0clock-frequency =3D &lt;150000000&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0clock-freq-min-max =3D &lt;400000 150000000&gt;=
+;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0supports-sd;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0bus-width =3D &lt;4&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0cap-mmc-highspeed;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0cap-sd-highspeed;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0disable-wp;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0num-slots =3D &lt;1&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0vqmmc-supply =3D &lt;&amp;vccio_sd&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-names =3D &quot;default&quot;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-0 =3D &lt;&amp;sdmmc_clk &amp;sdmmc_cmd=
+ &amp;sdmmc_cd &amp;sdmmc_bus4&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
++};<br>
+-- <br>
+2.17.1<br>
+<br>
+<br>
+<br>
+</blockquote></div></div></div>
+
+--0000000000004d03ab058a05e858--
