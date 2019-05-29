@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v9 6/9] arm64: dts: allwinner: a64-amarula-relic: Add Techstar TS8550B MIPI-DSI panel
-Date: Wed, 29 May 2019 16:26:12 +0530
-Message-ID: <20190529105615.14027-7-jagan@amarulasolutions.com>
+Subject: [DO NOT MERGE] [PATCH v9 7/9] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI panel
+Date: Wed, 29 May 2019 16:26:13 +0530
+Message-ID: <20190529105615.14027-8-jagan@amarulasolutions.com>
 References: <20190529105615.14027-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,70 +12,66 @@ To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, 
 Cc: Michael Trimarchi <michael@amarulasolutions.com>, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com, Sergey Suloev <ssuloev@orpaltech.com>, Ryan Pannell <ryan@osukl.com>, bshah@mykolab.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Amarula A64-Relic board by default bound with Techstar TS8550B
-MIPI-DSI panel, add support for it.
+This patch add support for Bananapi S070WV20-CT16 DSI panel to
+BPI-M64 board.
 
 DSI panel connected via board DSI port with,
 - DLDO1 as VCC-DSI supply
-- DLDO2 as VCC supply
-- DLDO2 as IOVCC supply
-- PD24 gpio for reset pin
-- PD23 gpio for backlight enable pin
+- DCDC1 as VDD supply
+- PD7 gpio for lcd enable pin
+- PD6 gpio for lcd reset pin
+- PD5 gpio for backlight enable pin
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- .../allwinner/sun50i-a64-amarula-relic.dts    | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index 5634245d11db..5109c3258a2f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -9,6 +9,7 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+index c2a6b73b17cf..166b9761ca83 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+@@ -45,6 +45,7 @@
  #include "sun50i-a64.dtsi"
  
  #include <dt-bindings/gpio/gpio.h>
 +#include <dt-bindings/pwm/pwm.h>
  
  / {
- 	model = "Amarula A64-Relic";
-@@ -18,6 +19,14 @@
- 		serial0 = &uart0;
+ 	model = "BananaPi-M64";
+@@ -56,6 +57,14 @@
+ 		serial1 = &uart1;
  	};
  
 +	backlight: backlight {
 +		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
++		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
 +		brightness-levels = <1 2 4 8 16 32 64 128 255>;
 +		default-brightness-level = <2>;
-+		enable-gpios = <&pio 3 23 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PD23 */
++		enable-gpios = <&pio 3 5 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PD5 */
 +	};
 +
  	chosen {
  		stdout-path = "serial0:115200n8";
  	};
-@@ -80,6 +89,28 @@
- 	};
+@@ -116,6 +125,24 @@
+ 	status = "okay";
  };
  
-+&de {
-+	status = "okay";
-+};
-+
 +&dphy {
 +	status = "okay";
 +};
 +
 +&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;		/* VCC-DSI */
++	vcc-dsi-supply = <&reg_dldo1>;		/* VCC3V3-DSI */
 +	status = "okay";
 +
 +	panel@0 {
-+		compatible = "techstar,ts8550b", "sitronix,st7701";
++		compatible = "bananapi,s070wv20-ct16-icn6211";
 +		reg = <0>;
-+		VCC-supply = <&reg_dldo2>;	/* VCC-MIPI */
-+		IOVCC-supply = <&reg_dldo2>;	/* VCC-MIPI */
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
++		enable-gpios = <&pio 3 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PD7 */
++		reset-gpios = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD6 */
++		vdd-supply = <&reg_dcdc1>;
 +		backlight = <&backlight>;
 +	};
 +};
@@ -83,11 +79,11 @@ index 5634245d11db..5109c3258a2f 100644
  &ehci0 {
  	status = "okay";
  };
-@@ -151,6 +182,10 @@
+@@ -206,6 +233,10 @@
  	status = "okay";
  };
  
-+&pwm {
++&r_pwm {
 +	status = "okay";
 +};
 +
