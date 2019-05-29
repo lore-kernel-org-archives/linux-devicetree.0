@@ -1,129 +1,441 @@
-Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 12/29] PCI: tegra: Enable PCIe xclk clock clamping
-Date: Mon, 13 May 2019 23:37:27 +0530
-Message-ID: <20190513180744.16493-13-mmaddireddy@nvidia.com>
-In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
-References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=hIoA=T5=mediatek.com=chunfeng.yun@kernel.org>
+Message-ID: <1559117216.8487.22.camel@mhfsdcap03>
+Subject: Re: [Patch V3 7/8] usb: gadget: Add UDC driver for tegra XUSB
+ device mode controller
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Date: Wed, 29 May 2019 16:06:56 +0800
+In-Reply-To: <1836c342-3fc8-7988-c7d4-943619e22df9@nvidia.com>
+References: <1557988772-15406-1-git-send-email-nkristam@nvidia.com>
+	 <1557988772-15406-8-git-send-email-nkristam@nvidia.com>
+	 <1557997694.10179.343.camel@mhfsdcap03>
+	 <1836c342-3fc8-7988-c7d4-943619e22df9@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+To: Nagarjuna Kristam <nkristam@nvidia.com>
+Cc: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Enable xclk clock clamping when entering L1. Clamp threshold will
-determine the time spent waiting for clock module to turn on xclk after
-signaling it. Default threshold value in Tegra124 and Tegra210 is not
-enough to turn on xclk clock. Increase the clamp threshold to meet the
-clock module timing in Tegra124 and Tegra210. Default threshold value is
-enough in Tegra20, Tegra30 and Tegra186.
+Hi,  Nagarjuna,
+On Fri, 2019-05-24 at 12:20 +0530, Nagarjuna Kristam wrote:
+> 
+> On 16-05-2019 14:38, Chunfeng Yun wrote:
+> > On Thu, 2019-05-16 at 12:09 +0530, Nagarjuna Kristam wrote:
+> >> This patch adds UDC driver for tegra XUSB 3.0 device mode controller.
+> >> XUSB device mode controller supports SS, HS and FS modes
+> >>
+> >> Based on work by:
+> >>   Mark Kuo <mkuo@nvidia.com>
+> >>   Andrew Bresticker <abrestic@chromium.org>
+> >>
+> >> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> >> ---
+> >>  drivers/usb/gadget/udc/Kconfig      |   10 +
+> >>  drivers/usb/gadget/udc/Makefile     |    1 +
+> >>  drivers/usb/gadget/udc/tegra_xudc.c | 3807 +++++++++++++++++++++++++++++++++++
+> >>  3 files changed, 3818 insertions(+)
+> >>  create mode 100644 drivers/usb/gadget/udc/tegra_xudc.c
+> >>
+> >> diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
+> >> index ef0259a..b35856c 100644
+> >> --- a/drivers/usb/gadget/udc/Kconfig
+> >> +++ b/drivers/usb/gadget/udc/Kconfig
+> >> @@ -440,6 +440,16 @@ config USB_GADGET_XILINX
+> >>  	  dynamically linked module called "udc-xilinx" and force all
+> >>  	  gadget drivers to also be dynamically linked.
+> >>  
+> >> +config USB_TEGRA_XUDC
+> >> +	tristate "NVIDIA Tegra Superspeed USB 3.0 Device Controller"
+> >> +	depends on ARCH_TEGRA
+> >> +	help
+> >> +	 Enables NVIDIA Tegra USB 3.0 device mode controller driver.
+> >> +
+> >> +	 Say "y" to link the driver statically, or "m" to build a
+> >> +	 dynamically linked module called "tegra_xudc" and force all
+> >> +	 gadget drivers to also be dynamically linked.
+> >> +
+> >>  source "drivers/usb/gadget/udc/aspeed-vhub/Kconfig"
+> >>  
+[...]
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V3: No change
+> >> +static int tegra_xudc_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct tegra_xudc *xudc;
+> >> +	struct resource *res;
+> >> +	unsigned int i;
+> >> +	int err;
+> >> +
+> >> +	xudc = devm_kzalloc(&pdev->dev, sizeof(*xudc), GFP_ATOMIC);
+> >> +	if (!xudc)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	xudc->dev = &pdev->dev;
+> >> +	platform_set_drvdata(pdev, xudc);
+> >> +
+> >> +	xudc->soc = of_device_get_match_data(&pdev->dev);
+> >> +	if (!xudc->soc)
+> >> +		return -ENODEV;
+> >> +
+> >> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >> +	xudc->base = devm_ioremap_resource(&pdev->dev, res);
+> >> +	if (IS_ERR(xudc->base))
+> >> +		return PTR_ERR(xudc->base);
+> >> +	xudc->phys_base = res->start;
+> >> +
+> >> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> >> +	xudc->fpci = devm_ioremap_resource(&pdev->dev, res);
+> >> +	if (IS_ERR(xudc->fpci))
+> >> +		return PTR_ERR(xudc->fpci);
+> >> +
+> >> +	if (xudc->soc->has_ipfs) {
+> >> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> >> +		xudc->ipfs = devm_ioremap_resource(&pdev->dev, res);
+> >> +		if (IS_ERR(xudc->ipfs))
+> >> +			return PTR_ERR(xudc->ipfs);
+> >> +	}
+> > providing register names will make more clear
+> 
+> will migrate to platform_get_resource_by_name
+> 
+> >> +
+> >> +	xudc->irq = platform_get_irq(pdev, 0);
+> >> +	if (xudc->irq < 0) {
+> >> +		dev_err(xudc->dev, "failed to get IRQ: %d\n",
+> >> +				xudc->irq);
+> >> +		return xudc->irq;
+> >> +	}
+> >> +
+> >> +	err = devm_request_irq(&pdev->dev, xudc->irq, tegra_xudc_irq, 0,
+> >> +			       dev_name(&pdev->dev), xudc);
+> >> +	if (err < 0) {
+> >> +		dev_err(xudc->dev, "failed to claim IRQ#%u: %d\n", xudc->irq,
+> >> +			err);
+> >> +		return err;
+> >> +	}
+> >> +
+> >> +	xudc->clks = devm_kcalloc(&pdev->dev, xudc->soc->num_clks,
+> >> +				      sizeof(*xudc->clks), GFP_KERNEL);
+> >> +	if (!xudc->clks)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	for (i = 0; i < xudc->soc->num_clks; i++)
+> >> +		xudc->clks[i].id = xudc->soc->clock_names[i];
+> >> +
+> >> +	err = devm_clk_bulk_get(&pdev->dev, xudc->soc->num_clks,
+> >> +				      xudc->clks);
+> >> +	if (err) {
+> >> +		dev_err(xudc->dev, "failed to request clks %d\n", err);
+> >> +		return err;
+> >> +	}
+> >> +
+> >> +	xudc->supplies = devm_kcalloc(&pdev->dev, xudc->soc->num_supplies,
+> >> +				      sizeof(*xudc->supplies), GFP_KERNEL);
+> >> +	if (!xudc->supplies)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	for (i = 0; i < xudc->soc->num_supplies; i++)
+> >> +		xudc->supplies[i].supply = xudc->soc->supply_names[i];
+> >> +
+> >> +	err = devm_regulator_bulk_get(&pdev->dev, xudc->soc->num_supplies,
+> >> +				      xudc->supplies);
+> >> +	if (err) {
+> >> +		dev_err(xudc->dev, "failed to request regulators %d\n", err);
+> >> +		return err;
+> >> +	}
+> >> +
+> >> +	xudc->padctl = tegra_xusb_padctl_get(&pdev->dev);
+> >> +	if (IS_ERR(xudc->padctl))
+> >> +		return PTR_ERR(xudc->padctl);
+> >> +
+> >> +	err = regulator_bulk_enable(xudc->soc->num_supplies, xudc->supplies);
+> >> +	if (err) {
+> >> +		dev_err(xudc->dev, "failed to enable regulators %d\n", err);
+> >> +		goto put_padctl;
+> >> +	}
+> >> +
+> >> +	xudc->usb3_phy = devm_phy_optional_get(&pdev->dev, "usb3");
+> >> +	if (IS_ERR(xudc->usb3_phy)) {
+> >> +		err = PTR_ERR(xudc->usb3_phy);
+> >> +		dev_err(xudc->dev, "failed to get usb3 phy: %d\n", err);
+> >> +		goto disable_regulator;
+> >> +	}
+> >> +
+> >> +	xudc->utmi_phy = devm_phy_optional_get(&pdev->dev, "usb2");
+> >> +	if (IS_ERR(xudc->utmi_phy)) {
+> >> +		err = PTR_ERR(xudc->utmi_phy);
+> >> +		dev_err(xudc->dev, "failed to get usb2 phy: %d\n", err);
+> >> +		goto disable_regulator;
+> >> +	}
+> >> +
+> >> +	xudc->data_role_extcon = extcon_get_edev_by_phandle(&pdev->dev, 0);
+> > extcon seems not allowed for new USB driver anymore, use usb-connector
+> > instead.
+> > Try to look into drivers/usb/roles, maybe you also need use USB role
+> > switch. Hope it's helpful to you.
+> > 
+> Purpose of using extcon is to get hot plug interrupts.
+> Going through usb-connector dt-document doesnot provide fucntionlity of
+> generating a hot-plug interrupts of its own.
+> based on documentation for usb-sw-role driver in drivers/usb/roles is needed
+> when a mux switch is used. It is not needeed for current driver.
+> 
+> Please share your inputs, if purpose of generating hot-plug interrupts can be met
+> using usb-connector, with out any additional driver.
+Sorry for the late reply.
 
-V2: Took care of typos in commit log and coding style comments.
+I introduce a new driver using usb-connector, and try to replace the
+function of extcon-usb-gpio.c, but still under review, you can try it.
 
- drivers/pci/controller/pci-tegra.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+[v6,09/10] usb: roles: add USB Type-B GPIO connector driver
+https://patchwork.kernel.org/patch/10966361/
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index d3da03a10e04..96cd75821872 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -219,8 +219,14 @@
- #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
- 
- #define RP_PRIV_MISC	0x00000fe0
--#define  RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT (0xe << 0)
--#define  RP_PRIV_MISC_PRSNT_MAP_EP_ABSNT (0xf << 0)
-+#define  RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT		(0xe << 0)
-+#define  RP_PRIV_MISC_PRSNT_MAP_EP_ABSNT		(0xf << 0)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD_MASK	(0x7f << 16)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD		(0xf << 16)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_ENABLE		(1 << 23)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD_MASK	(0x7f << 24)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD		(0xf << 24)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_ENABLE		(1 << 31)
- 
- #define RP_LINK_CONTROL_STATUS			0x00000090
- #define  RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE	0x20000000
-@@ -298,6 +304,7 @@ struct tegra_pcie_soc {
- 	bool has_gen2;
- 	bool force_pca_enable;
- 	bool program_uphy;
-+	bool update_clamp_threshold;
- 	struct {
- 		struct {
- 			u32 rp_ectl_2_r1;
-@@ -529,6 +536,7 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
- 
- static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- {
-+	const struct tegra_pcie_soc *soc = port->pcie->soc;
- 	u32 value;
- 
- 	/* Enable AER capability */
-@@ -549,6 +557,19 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- 	value = readl(port->base + RP_VEND_XP_BIST);
- 	value |= RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE;
- 	writel(value, port->base + RP_VEND_XP_BIST);
-+
-+	value = readl(port->base + RP_PRIV_MISC);
-+	value |= RP_PRIV_MISC_CTLR_CLK_CLAMP_ENABLE;
-+	value |= RP_PRIV_MISC_TMS_CLK_CLAMP_ENABLE;
-+
-+	if (soc->update_clamp_threshold) {
-+		value &= ~(RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD_MASK |
-+				RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD_MASK);
-+		value |= RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD |
-+			RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD;
-+	}
-+
-+	writel(value, port->base + RP_PRIV_MISC);
- }
- 
- static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
-@@ -2334,6 +2355,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.has_gen2 = false,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2358,6 +2380,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.has_gen2 = false,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2375,6 +2398,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = true,
- 	.ectl.enable = false,
- };
- 
-@@ -2392,6 +2416,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = true,
- 	.program_uphy = true,
-+	.update_clamp_threshold = true,
- 	.ectl = {
- 		.regs = {
- 			.rp_ectl_2_r1 = 0x0000000f,
-@@ -2428,6 +2453,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = false,
- 	.program_uphy = false,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
--- 
-2.17.1
+If you have any good idea, please let me know, thanks a lot
+
+> 
+> -Nagarjuna
+> >> +	if (IS_ERR(xudc->data_role_extcon)) {
+> >> +		err = PTR_ERR(xudc->data_role_extcon);
+> >> +		dev_err(xudc->dev, "extcon_get_edev_by_phandle failed %d\n",
+> >> +				err);
+> >> +		goto disable_regulator;
+> >> +	}
+> >> +
+> >> +	err = tegra_xudc_powerdomain_init(xudc);
+> >> +	if (err)
+> >> +		goto put_powerdomains;
+> >> +
+> >> +	err = tegra_xudc_phy_init(xudc);
+> >> +	if (err)
+> >> +		goto put_powerdomains;
+> >> +
+> >> +	err = tegra_xudc_alloc_event_ring(xudc);
+> >> +	if (err)
+> >> +		goto disable_phy;
+> >> +
+> >> +	err = tegra_xudc_alloc_eps(xudc);
+> >> +	if (err)
+> >> +		goto free_event_ring;
+> >> +
+> >> +	spin_lock_init(&xudc->lock);
+> >> +
+> >> +	init_completion(&xudc->disconnect_complete);
+> >> +
+> >> +	INIT_WORK(&xudc->data_role_work, tegra_xudc_data_role_work);
+> >> +
+> >> +	xudc->data_role_nb.notifier_call = tegra_xudc_data_role_notifier;
+> >> +
+> >> +	extcon_register_notifier(xudc->data_role_extcon, EXTCON_USB,
+> >> +				 &xudc->data_role_nb);
+> >> +
+> >> +	INIT_DELAYED_WORK(&xudc->plc_reset_work, tegra_xudc_plc_reset_work);
+> >> +
+> >> +	INIT_DELAYED_WORK(&xudc->port_reset_war_work,
+> >> +				tegra_xudc_port_reset_war_work);
+> >> +
+> >> +	pm_runtime_enable(&pdev->dev);
+> >> +
+> >> +	xudc->gadget.ops = &tegra_xudc_gadget_ops;
+> >> +	xudc->gadget.ep0 = &xudc->ep[0].usb_ep;
+> >> +	xudc->gadget.name = "tegra-xudc";
+> >> +	xudc->gadget.max_speed = USB_SPEED_SUPER;
+> >> +
+> >> +	err = usb_add_gadget_udc(&pdev->dev, &xudc->gadget);
+> >> +	if (err) {
+> >> +		dev_err(&pdev->dev, "failed to add USB gadget: %d\n", err);
+> >> +		goto free_eps;
+> >> +	}
+> >> +
+> >> +	tegra_xudc_update_data_role(xudc);
+> >> +
+> >> +	return 0;
+> >> +
+> >> +free_eps:
+> >> +	tegra_xudc_free_eps(xudc);
+> >> +free_event_ring:
+> >> +	tegra_xudc_free_event_ring(xudc);
+> >> +disable_phy:
+> >> +	tegra_xudc_phy_exit(xudc);
+> >> +put_powerdomains:
+> >> +	tegra_xudc_powerdomain_remove(xudc);
+> >> +disable_regulator:
+> >> +	regulator_bulk_disable(xudc->soc->num_supplies, xudc->supplies);
+> >> +put_padctl:
+> >> +	tegra_xusb_padctl_put(xudc->padctl);
+> >> +
+> >> +	return err;
+> >> +}
+> >> +
+> >> +static int tegra_xudc_remove(struct platform_device *pdev)
+> >> +{
+> >> +	struct tegra_xudc *xudc = platform_get_drvdata(pdev);
+> >> +
+> >> +	pm_runtime_get_sync(xudc->dev);
+> >> +
+> >> +	cancel_delayed_work(&xudc->plc_reset_work);
+> >> +	if (xudc->data_role_extcon) {
+> >> +		extcon_unregister_notifier(xudc->data_role_extcon, EXTCON_USB,
+> >> +				&xudc->data_role_nb);
+> >> +		cancel_work_sync(&xudc->data_role_work);
+> >> +	}
+> >> +
+> >> +	usb_del_gadget_udc(&xudc->gadget);
+> >> +
+> >> +	tegra_xudc_free_eps(xudc);
+> >> +	tegra_xudc_free_event_ring(xudc);
+> >> +
+> >> +	tegra_xudc_powerdomain_remove(xudc);
+> >> +
+> >> +	regulator_bulk_disable(xudc->soc->num_supplies, xudc->supplies);
+> >> +
+> >> +	phy_power_off(xudc->utmi_phy);
+> >> +	phy_power_off(xudc->usb3_phy);
+> >> +
+> >> +	tegra_xudc_phy_exit(xudc);
+> >> +
+> >> +	pm_runtime_disable(xudc->dev);
+> >> +	pm_runtime_put(xudc->dev);
+> >> +
+> >> +	tegra_xusb_padctl_put(xudc->padctl);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int __maybe_unused tegra_xudc_powergate(struct tegra_xudc *xudc)
+> >> +{
+> >> +	unsigned long flags;
+> >> +
+> >> +	dev_dbg(xudc->dev, "entering ELPG\n");
+> >> +
+> >> +	spin_lock_irqsave(&xudc->lock, flags);
+> >> +
+> >> +	xudc->powergated = true;
+> >> +	xudc->saved_regs.ctrl = xudc_readl(xudc, CTRL);
+> >> +	xudc->saved_regs.portpm = xudc_readl(xudc, PORTPM);
+> >> +	xudc_writel(xudc, 0, CTRL);
+> >> +
+> >> +	spin_unlock_irqrestore(&xudc->lock, flags);
+> >> +
+> >> +	clk_bulk_disable_unprepare(xudc->soc->num_clks, xudc->clks);
+> >> +
+> >> +	regulator_bulk_disable(xudc->soc->num_supplies, xudc->supplies);
+> >> +
+> >> +	dev_dbg(xudc->dev, "entering ELPG done\n");
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int __maybe_unused tegra_xudc_unpowergate(struct tegra_xudc *xudc)
+> >> +{
+> >> +	unsigned long flags;
+> >> +	int err;
+> >> +
+> >> +	dev_dbg(xudc->dev, "exiting ELPG\n");
+> >> +
+> >> +	err = regulator_bulk_enable(xudc->soc->num_supplies,
+> >> +			xudc->supplies);
+> >> +	if (err < 0)
+> >> +		return err;
+> >> +
+> >> +	err = clk_bulk_prepare_enable(xudc->soc->num_clks, xudc->clks);
+> >> +	if (err < 0)
+> >> +		return err;
+> >> +
+> >> +	tegra_xudc_fpci_ipfs_init(xudc);
+> >> +
+> >> +	tegra_xudc_device_params_init(xudc);
+> >> +
+> >> +	tegra_xudc_init_event_ring(xudc);
+> >> +
+> >> +	tegra_xudc_init_eps(xudc);
+> >> +
+> >> +	xudc_writel(xudc, xudc->saved_regs.portpm, PORTPM);
+> >> +	xudc_writel(xudc, xudc->saved_regs.ctrl, CTRL);
+> >> +
+> >> +	spin_lock_irqsave(&xudc->lock, flags);
+> >> +	xudc->powergated = false;
+> >> +	spin_unlock_irqrestore(&xudc->lock, flags);
+> >> +
+> >> +	dev_dbg(xudc->dev, "exiting ELPG done\n");
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int __maybe_unused tegra_xudc_suspend(struct device *dev)
+> >> +{
+> >> +	struct tegra_xudc *xudc = dev_get_drvdata(dev);
+> >> +	unsigned long flags;
+> >> +
+> >> +	spin_lock_irqsave(&xudc->lock, flags);
+> >> +	xudc->suspended = true;
+> >> +	spin_unlock_irqrestore(&xudc->lock, flags);
+> >> +
+> >> +	if (xudc->data_role_extcon)
+> >> +		flush_work(&xudc->data_role_work);
+> >> +
+> >> +	/* Forcibly disconnect before powergating. */
+> >> +	tegra_xudc_device_mode_off(xudc);
+> >> +
+> >> +	if (!pm_runtime_status_suspended(dev))
+> >> +		tegra_xudc_powergate(xudc);
+> >> +
+> >> +	pm_runtime_disable(dev);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int __maybe_unused tegra_xudc_resume(struct device *dev)
+> >> +{
+> >> +	struct tegra_xudc *xudc = dev_get_drvdata(dev);
+> >> +	unsigned long flags;
+> >> +	int err;
+> >> +
+> >> +	err = tegra_xudc_unpowergate(xudc);
+> >> +	if (err < 0)
+> >> +		return err;
+> >> +
+> >> +	spin_lock_irqsave(&xudc->lock, flags);
+> >> +	xudc->suspended = false;
+> >> +	spin_unlock_irqrestore(&xudc->lock, flags);
+> >> +
+> >> +	tegra_xudc_update_data_role(xudc);
+> >> +
+> >> +	pm_runtime_enable(dev);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int __maybe_unused tegra_xudc_runtime_suspend(struct device *dev)
+> >> +{
+> >> +	struct tegra_xudc *xudc = dev_get_drvdata(dev);
+> >> +
+> >> +	return tegra_xudc_powergate(xudc);
+> >> +}
+> >> +
+> >> +static int __maybe_unused tegra_xudc_runtime_resume(struct device *dev)
+> >> +{
+> >> +	struct tegra_xudc *xudc = dev_get_drvdata(dev);
+> >> +
+> >> +	return tegra_xudc_unpowergate(xudc);
+> >> +}
+> >> +
+> >> +static const struct dev_pm_ops tegra_xudc_pm_ops = {
+> >> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_xudc_suspend, tegra_xudc_resume)
+> >> +	SET_RUNTIME_PM_OPS(tegra_xudc_runtime_suspend,
+> >> +			   tegra_xudc_runtime_resume, NULL)
+> >> +};
+> >> +
+> >> +static struct platform_driver tegra_xudc_driver = {
+> >> +	.probe = tegra_xudc_probe,
+> >> +	.remove = tegra_xudc_remove,
+> >> +	.driver = {
+> >> +		.name = "tegra-xudc",
+> >> +		.pm = &tegra_xudc_pm_ops,
+> >> +		.of_match_table = tegra_xudc_of_match,
+> >> +	},
+> >> +};
+> >> +module_platform_driver(tegra_xudc_driver);
+> >> +
+> >> +MODULE_DESCRIPTION("NVIDIA Tegra XUSB Device Controller");
+> >> +MODULE_AUTHOR("Andrew Bresticker <abrestic@chromium.org>");
+> >> +MODULE_AUTHOR("Hui Fu");
+> >> +MODULE_LICENSE("GPL v2");
+> > 
+> > 
