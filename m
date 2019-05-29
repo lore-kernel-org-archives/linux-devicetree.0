@@ -1,172 +1,159 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH RESEND V13 2/5] thermal: of-thermal: add API for getting
- sensor ID from DT
-Date: Tue, 28 May 2019 20:02:27 -0700
-Message-ID: <20190529030225.GA2662@localhost.localdomain>
-References: <20190528060621.47342-1-Anson.Huang@nxp.com>
- <20190528060621.47342-2-Anson.Huang@nxp.com>
+From: masonccyang@mxic.com.tw
+Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
+Date: Wed, 29 May 2019 11:12:08 +0800
+Message-ID: <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw>
+References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
+        <20190512151820.4f2dd9da@xps13> <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
+        <20190520142333.390091d5@xps13> <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw> <20190527144250.71908bd9@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190528060621.47342-2-Anson.Huang@nxp.com>
+In-Reply-To: <20190527144250.71908bd9@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, rui.zhang@intel.com, daniel.lezcano@linaro.org, aisheng.dong@nxp.com, ulf.hansson@linaro.org, peng.fan@nxp.com, daniel.baluta@nxp.com, maxime.ripard@bootlin.com, olof@lixom.net, jagan@amarulasolutions.com, horms+renesas@verge.net.au, leonard.crestez@nxp.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, enric.balletbo@collabora.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Linux-imx@nxp.com
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 28, 2019 at 02:06:18PM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> On some platforms like i.MX8QXP, the thermal driver needs a
-> real HW sensor ID from DT thermal zone, the HW sensor ID is
-> used to get temperature from SCU firmware, and the virtual
-> sensor ID starting from 0 to N is NOT used at all, this patch
-> adds new API thermal_zone_of_get_sensor_id() to provide the
-> feature of getting sensor ID from DT thermal zone's node.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V12:
-> 	- adjust the second parameter of thermal_zone_of_get_sensor_id() API, then caller no need
-> 	  to pass the of_phandle_args structure and put the sensor_specs.np manually, also putting
-> 	  the sensor node device check inside this API to make it easy for usage;
 
-What happened to using nxp,resource-id property in your driver?
-Why do we need this as an API in of-thermal? What other drivers may
-benefit of this?
+Hi Miquel,
 
-Regardless, this patch needs to document the new API under
-Documentation/
-
-> ---
->  drivers/thermal/of-thermal.c | 66 +++++++++++++++++++++++++++++++++-----------
->  include/linux/thermal.h      | 10 +++++++
->  2 files changed, 60 insertions(+), 16 deletions(-)
+> > > > > > +static void mxic_nand_select_chip(struct nand_chip *chip, int 
+ 
+> > chipnr) 
+> > > > > 
+> > > > > _select_target() is preferred now 
+> > > > 
+> > > > Do you mean I implement mxic_nand_select_target() to control #CS ?
+> > > > 
+> > > > If so, I need to call mxic_nand_select_target( ) to control #CS ON
+> > > > and then #CS OFF in _exec_op() due to nand_select_target()<in 
+> > nand_base,c> 
+> > > > is still calling chip->legacy.select_chip ? 
+> > > 
+> > > You must forget about the ->select_chip() callback. Now it should be
+> > > handled directly from the controller driver. Please have a look at 
+the
+> > > commit pointed against the marvell_nand.c driver. 
+> > 
+> > I have no Marvell NFC datasheet and have one question.
+> > 
+> > In marvell_nand.c, there is no xxx_deselect_target() or 
+> > something like that doing #CS OFF.
+> > marvell_nfc_select_target() seems always to make one of chip or die
+> > #CS keep low.
+> > 
+> > Is it right ?
 > 
-> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-> index dc5093b..a53792b 100644
-> --- a/drivers/thermal/of-thermal.c
-> +++ b/drivers/thermal/of-thermal.c
-> @@ -449,6 +449,54 @@ thermal_zone_of_add_sensor(struct device_node *zone,
->  }
->  
->  /**
-> + * thermal_zone_of_get_sensor_id - get sensor ID from a DT thermal zone
-> + * @tz_np: a valid thermal zone device node.
-> + * @sensor_np: a sensor node of a valid sensor device.
-> + * @id: a sensor ID pointer will be passed back.
-> + *
-> + * This function will get sensor ID from a given thermal zone node, use
-> + * "thermal-sensors" as list name, and get sensor ID from first phandle's
-> + * argument.
-> + *
-> + * Return: 0 on success, proper error code otherwise.
-> + */
-> +
-> +int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
-> +				  struct device_node *sensor_np,
-> +				  u32 *id)
-> +{
-> +	struct of_phandle_args sensor_specs;
-> +	int ret;
-> +
-> +	ret = of_parse_phandle_with_args(tz_np,
-> +					 "thermal-sensors",
-> +					 "#thermal-sensor-cells",
-> +					 0,
-> +					 &sensor_specs);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (sensor_specs.np != sensor_np) {
-> +		of_node_put(sensor_specs.np);
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (sensor_specs.args_count >= 1) {
-> +		*id = sensor_specs.args[0];
-> +		WARN(sensor_specs.args_count > 1,
-> +		     "%pOFn: too many cells in sensor specifier %d\n",
-> +		     sensor_specs.np, sensor_specs.args_count);
-> +	} else {
-> +		*id = 0;
-> +	}
-> +
-> +	of_node_put(sensor_specs.np);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(thermal_zone_of_get_sensor_id);
-> +
-> +/**
->   * thermal_zone_of_sensor_register - registers a sensor to a DT thermal zone
->   * @dev: a valid struct device pointer of a sensor device. Must contain
->   *       a valid .of_node, for the sensor node.
-> @@ -499,36 +547,22 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
->  	sensor_np = of_node_get(dev->of_node);
->  
->  	for_each_available_child_of_node(np, child) {
-> -		struct of_phandle_args sensor_specs;
->  		int ret, id;
->  
->  		/* For now, thermal framework supports only 1 sensor per zone */
-> -		ret = of_parse_phandle_with_args(child, "thermal-sensors",
-> -						 "#thermal-sensor-cells",
-> -						 0, &sensor_specs);
-> +		ret = thermal_zone_of_get_sensor_id(child, sensor_np, &id);
->  		if (ret)
->  			continue;
->  
-> -		if (sensor_specs.args_count >= 1) {
-> -			id = sensor_specs.args[0];
-> -			WARN(sensor_specs.args_count > 1,
-> -			     "%pOFn: too many cells in sensor specifier %d\n",
-> -			     sensor_specs.np, sensor_specs.args_count);
-> -		} else {
-> -			id = 0;
-> -		}
-> -
-> -		if (sensor_specs.np == sensor_np && id == sensor_id) {
-> +		if (id == sensor_id) {
->  			tzd = thermal_zone_of_add_sensor(child, sensor_np,
->  							 data, ops);
->  			if (!IS_ERR(tzd))
->  				tzd->ops->set_mode(tzd, THERMAL_DEVICE_ENABLED);
->  
-> -			of_node_put(sensor_specs.np);
->  			of_node_put(child);
->  			goto exit;
->  		}
-> -		of_node_put(sensor_specs.np);
->  	}
->  exit:
->  	of_node_put(sensor_np);
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index 15a4ca5..5edffe6 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -375,6 +375,9 @@ struct thermal_trip {
->  
->  /* Function declarations */
->  #ifdef CONFIG_THERMAL_OF
-> +int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
-> +				  struct device_node *sensor_np,
-> +				  u32 *id);
->  struct thermal_zone_device *
->  thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
->  				const struct thermal_zone_of_device_ops *ops);
-> @@ -386,6 +389,13 @@ struct thermal_zone_device *devm_thermal_zone_of_sensor_register(
->  void devm_thermal_zone_of_sensor_unregister(struct device *dev,
->  					    struct thermal_zone_device *tz);
->  #else
-> +
-> +static int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
-> +					 struct device_node *sensor_np,
-> +					 u32 *id)
-> +{
-> +	return -ENOENT;
-> +}
->  static inline struct thermal_zone_device *
->  thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
->  				const struct thermal_zone_of_device_ops *ops)
+> Yes, AFAIR there is no "de-assert" mechanism in this controller.
+> 
+> > 
+> > How to make all #CS keep high for NAND to enter 
+> > low-power standby mode if driver don't use "legacy.select_chip()" ?
+> 
+> See commit 02b4a52604a4 ("mtd: rawnand: Make ->select_chip() optional
+> when ->exec_op() is implemented") which states:
+> 
+>         "When [->select_chip() is] not implemented, the core is assuming
+>    the CS line is automatically asserted/deasserted by the driver
+>    ->exec_op() implementation."
+> 
+> Of course, the above is right only when the controller driver supports
+> the ->exec_op() interface. 
+
+Currently, it seems that we will get the incorrect data and error
+operation due to CS in error toggling if CS line is controlled in 
+->exec_op().
+i.e,. 
+
+1) In nand_onfi_detect() to call nand_exec_op() twice by 
+nand_read_param_page_op() and annd_read_data_op()
+
+2) In nand_write_page_xxx to call nand_exec_op() many times by
+nand_prog_page_begin_op(), nand_write_data_op() and 
+nand_prog_page_end_op().
+
+
+Should we consider to add a CS line controller in struct nand_controller
+i.e,.
+
+struct nand_controller {
+         struct mutex lock;
+         const struct nand_controller_ops *ops;
++          void (*select_chip)(struct nand_chip *chip, int cs);
+};
+
+to replace legacy.select_chip() ?
+
+
+To patch in nand_select_target() and nand_deselect_target()
+
+void nand_select_target(struct nand_chip *chip, unsigned int cs)
+{
+        /*
+         * cs should always lie between 0 and chip->numchips, when that's 
+not
+         * the case it's a bug and the caller should be fixed.
+         */
+        if (WARN_ON(cs > chip->numchips))
+                return;
+
+        chip->cur_cs = cs;
+
++       if (chip->controller->select_chip)
++               chip->controller->select_chip(chip, cs);
++
+        if (chip->legacy.select_chip)
+                chip->legacy.select_chip(chip, cs);
+}
+
+void nand_deselect_target(struct nand_chip *chip)
+{
++       if (chip->controller->select_chip)
++               chip->controller->select_chip(chip, -1);
++
+        if (chip->legacy.select_chip)
+                chip->legacy.select_chip(chip, -1);
+
+        chip->cur_cs = -1;
+}
+
+
+> 
+> So if you think it is not too time consuming and worth the trouble to
+> assert/deassert the CS at each operation, you may do it in your driver.
+> 
+> 
+> Thanks,
+> Miquèl
+
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
