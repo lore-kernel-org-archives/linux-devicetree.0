@@ -1,100 +1,76 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V2 3/5] mmc: mmci: fix clear of busy detect status
-Date: Wed, 29 May 2019 12:36:50 +0200
-Message-ID: <CAPDyKFqzNy3hDzovSxb6pd37u7SxWqYoJeu9+tf_qDF7gs0euA@mail.gmail.com>
-References: <1556264798-18540-1-git-send-email-ludovic.Barre@st.com>
- <1556264798-18540-4-git-send-email-ludovic.Barre@st.com> <CAPDyKFrxp3Y3AudNvkkSRaph2Fe-A-F6Cs0jfy9RUja76GYeiA@mail.gmail.com>
- <a6a74431-50a6-6298-b77d-9d27a77fd6cc@st.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v4 01/10] ata: libahci: Ensure the host interrupt status
+ bits are cleared
+Date: Wed, 29 May 2019 11:37:58 +0100
+Message-ID: <409ea2c5-c31a-fb6a-22c6-98b45e767809@arm.com>
+References: <20190521143023.31810-1-miquel.raynal@bootlin.com>
+ <20190521143023.31810-2-miquel.raynal@bootlin.com>
+ <CAHG4imNxsdzjzRpFWnL+PuznjdOU4hsp2E-g1bt4WVJeokfT3w@mail.gmail.com>
+ <53ce8c5b-46fc-c969-5168-18e4bcc62cde@arm.com>
+ <20190529120833.29334c70@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a6a74431-50a6-6298-b77d-9d27a77fd6cc@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic BARRE <ludovic.barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190529120833.29334c70@xps13>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, raymond pang <raymondpangxd@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Baruch Siach <baruch@tkos.co.il>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 May 2019 at 11:20, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
-> hi Ulf
->
-> On 5/27/19 8:17 PM, Ulf Hansson wrote:
-> > On Fri, 26 Apr 2019 at 09:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
-> >>
-> >> From: Ludovic Barre <ludovic.barre@st.com>
-> >>
-> >> The "busy_detect_flag" is used to read/clear busy value of
-> >> mmci status. The "busy_detect_mask" is used to manage busy irq of
-> >> mmci mask.
-> >> For sdmmc variant, the 2 properties have not the same offset.
-> >> To clear the busyd0 status bit, we must add busy detect flag,
-> >> the mmci mask is not enough.
-> >>
-> >> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> >
-> > Ludovic, again, apologies for the delay.
-> >
-> >> ---
-> >>   drivers/mmc/host/mmci.c | 3 ++-
-> >>   1 file changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> >> index a040f54..3cd52e8 100644
-> >> --- a/drivers/mmc/host/mmci.c
-> >> +++ b/drivers/mmc/host/mmci.c
-> >> @@ -1517,7 +1517,8 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
-> >>                   * to make sure that both start and end interrupts are always
-> >>                   * cleared one after the other.
-> >>                   */
-> >> -               status &= readl(host->base + MMCIMASK0);
-> >> +               status &= readl(host->base + MMCIMASK0) |
-> >> +                       host->variant->busy_detect_flag;
-> >
-> > I think this is not entirely correct, because it would mean we check
-> > for busy even if we haven't unmasked the busy IRQ via the
-> > variant->busy_detect_mask.
->
-> if the variant is busy_detect false:
->   => no problem because the busy_detect_flag or busy_detect_mask is not
->      defined.
+On 29/05/2019 11:08, Miquel Raynal wrote:
+> Hi Marc & Raymond,
+> 
+> Marc Zyngier <marc.zyngier@arm.com> wrote on Thu, 23 May 2019 10:26:01
+> +0100:
+> 
+>> On 23/05/2019 04:11, raymond pang wrote:
+>>> Hi Miquel,
+>>>
+>>> This patch adds clearing GHC.IS into hot path, could you explain how
+>>> irq storm is generated? thanks
+>>> According to AHCI Spec, HBA should not refer to GHC.IS to generate
+>>> MSI when applying multiple MSIs.  
+>>
+>> Well spotted.
+>>
+>> I have the ugly feeling that this is because the Marvell AHCI
+>> implementation is not using MSIs at all, but instead a pair of wired
+>> interrupts (which are level triggered instead of edge, hence the
+>> screaming interrupts).
+>>
+>> The changes in the following patches abuse the rest of the driver by
+>> pretending this is a a multi-MSI setup, while it clearly doesn't match
+>> the expectation of the AHCI spec for MSIs.
+>>
+>> It looks like this shouldn't be imposed on other unsuspecting
+>> implementations which correctly use edge-triggered MSIs and do not
+>> require such an MMIO access.
+> 
+> I understand your concern, let me add a AHCI_HFLAG_LEVEL_MSI in
+> hpriv->flags which will be used by the mvebu_ahci.c driver to request
+> for this MMIO access. This way, the hot path remains the same.
 
-Right.
+I'm not convinced that's a good idea, if only because from the PoV of
+the AHCI device itself, these are not MSIs at all, but wired interrupts.
+The fact that there is some glue logic in the middle that turns it into
+a message (and then back into a wire) is a regrettable implementation
+detail.
 
->
-> if variant is busy_detect true:
-> the busy handle is split in 3 steps (see mmci_cmd_irq):
-> step 1: detection of busy line => unmasked the busy irq end
-> step 2: in busy wait => ignore cmd irq while current busy flag is
-> enabled.
-> step 3: end of busy => clear and mask busy irq
->
-> To detect the first step (see mmci_cmd_irq: which unmasks the busy irq)
-> we need to know the current busy state. Actually, the status register is
-> re-read in mmci_cmd_irq, why not used the status read in mmci_irq and in
-> parameter ?
+I'd rather you stick to the normal interrupt handler, or provide your
+own, which would solve most problems.
 
-Right, I see your point.
+Thanks,
 
-On the other hand, that re-read of the status registers should really
-not be needed. Maybe it's a leftover from my initial version of the
-code, but in any case we should remove that.
-
->
-> Regards,
-> Ludo
->
-> >
-> > I suggest to store a new bool in the host (call it
-> > "busy_detect_unmasked" or whatever makes sense to you), to track
-> > whether we have unmasked the busy IRQ or not. Then take this flag into
-> > account, before ORing the value of host->variant->busy_detect_flag,
-> > according to above.
-> >
-> >>                  if (host->variant->busy_detect)
-> >>                          writel(status & ~host->variant->busy_detect_mask,
-> >>                                 host->base + MMCICLEAR);
-> >> --
-> >> 2.7.4
-
-Kind regards
-Uffe
+	M.
+-- 
+Jazz is not dead. It just smells funny...
