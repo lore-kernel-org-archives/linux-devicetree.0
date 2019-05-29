@@ -1,115 +1,43 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: [PATCH] arm64: dts: mt8183: Enable CPU idle-states
-Date: Wed, 29 May 2019 16:25:03 +0800
-Message-ID: <1559118303-31875-1-git-send-email-jamesjj.liao@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Chuanhua Han <chuanhua.han@nxp.com>
+Subject: [PATCH 1/3] gpio: mpc8xxx: Enable port input and interrupt
+Date: Wed, 29 May 2019 16:32:52 +0800
+Message-ID: <20190529083254.39581-1-chuanhua.han@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, James Liao <jamesjj.liao@mediatek.com>
+To: shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chuanhua Han <chuanhua.han@nxp.com>, Zhang Ying-22455 <ying.zhang22455@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable mcdi-cpu and mcdi-cluster on MT8183 CPUs.
+The GPIO Input Buffer Enable register is used to control the input
+enable of each individual GPIO port. When an individual GPIO port's
+direction is set to input (GPIO_GPDIR[DRn=0]), the associated
+input enable must be set (GPIOxGPIE[IEn]=1) to propagate the port
+value to the GPIO Data Register.
 
-Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+This patch enable port input and interrupt.
+
+Signed-off-by: Zhang Ying-22455 <ying.zhang22455@nxp.com>
+Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
 ---
-This patch bases on v5.1-rc1 and [1], adds idle-states for MT8183 CPUs.
+ drivers/gpio/gpio-mpc8xxx.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-[1] https://patchwork.kernel.org/patch/10962375/
-
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 08274bf..ef4b054 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -56,6 +56,7 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x000>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER>;
- 		};
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index c8673a5d9412..555e0e7957d9 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -373,9 +373,10 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	if (!mpc8xxx_gc->irq)
+ 		return 0;
  
- 		cpu1: cpu@1 {
-@@ -63,6 +64,7 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x001>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER>;
- 		};
+-	/* ack and mask all irqs */
++	/* ack and enable irqs */
+ 	gc->write_reg(mpc8xxx_gc->regs + GPIO_IER, 0xffffffff);
+-	gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0);
++	gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0xffffffff);
++	gc->write_reg(mpc8xxx_gc->regs + GPIO_ICR2, 0xffffffff);
  
- 		cpu2: cpu@2 {
-@@ -70,6 +72,7 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x002>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -77,6 +80,7 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x003>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER>;
- 		};
- 
- 		cpu4: cpu@100 {
-@@ -84,6 +88,7 @@
- 			compatible = "arm,cortex-a73";
- 			reg = <0x100>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER>;
- 		};
- 
- 		cpu5: cpu@101 {
-@@ -91,6 +96,7 @@
- 			compatible = "arm,cortex-a73";
- 			reg = <0x101>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER>;
- 		};
- 
- 		cpu6: cpu@102 {
-@@ -98,6 +104,7 @@
- 			compatible = "arm,cortex-a73";
- 			reg = <0x102>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER>;
- 		};
- 
- 		cpu7: cpu@103 {
-@@ -105,6 +112,29 @@
- 			compatible = "arm,cortex-a73";
- 			reg = <0x103>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER>;
-+		};
-+
-+		idle-states {
-+			entry-method = "arm,psci";
-+
-+			MCDI_CPU: mcdi-cpu {
-+				compatible = "arm,idle-state";
-+				local-timer-stop;
-+				arm,psci-suspend-param = <0x00010001>;
-+				entry-latency-us = <200>;
-+				exit-latency-us = <200>;
-+				min-residency-us = <800>;
-+			};
-+
-+			MCDI_CLUSTER: mcdi-cluster {
-+				compatible = "arm,idle-state";
-+				local-timer-stop;
-+				arm,psci-suspend-param = <0x01010001>;
-+				entry-latency-us = <250>;
-+				exit-latency-us = <400>;
-+				min-residency-us = <1300>;
-+			};
- 		};
- 	};
- 
+ 	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+ 					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
 -- 
-1.9.1
+2.17.1
