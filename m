@@ -1,7 +1,7 @@
 From: yibin.gong@nxp.com
-Subject: [PATCH v3 6/8] dt-bindings: dma: fsl-edma: add new i.mx7ulp-edma
-Date: Wed, 29 May 2019 17:08:46 +0800
-Message-ID: <20190529090848.34350-7-yibin.gong@nxp.com>
+Subject: [PATCH v3 4/8] dmaengine: fsl-edma-common: version check for v2 instead
+Date: Wed, 29 May 2019 17:08:44 +0800
+Message-ID: <20190529090848.34350-5-yibin.gong@nxp.com>
 References: <20190529090848.34350-1-yibin.gong@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190529090848.34350-1-yibin.gong@nxp.com>
@@ -12,95 +12,64 @@ List-Id: devicetree@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-More channel interrupts, one more clock, and only one
-dmamux on i.mx7ulp-edma.
+The next v3 i.mx7ulp edma is based on v1, so change version
+check logic for v2 instead.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- Documentation/devicetree/bindings/dma/fsl-edma.txt | 44 +++++++++++++++++++---
- 1 file changed, 39 insertions(+), 5 deletions(-)
+ drivers/dma/fsl-edma-common.c | 40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-index 97e213e..29dd3cc 100644
---- a/Documentation/devicetree/bindings/dma/fsl-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-@@ -9,15 +9,16 @@ group, DMAMUX0 or DMAMUX1, but not both.
- Required properties:
- - compatible :
- 	- "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
-+	- "fsl,imx7ulp-edma" for eDMA2 used similar to that on i.mx7ulp
- - reg : Specifies base physical address(s) and size of the eDMA registers.
- 	The 1st region is eDMA control register's address and size.
- 	The 2nd and the 3rd regions are programmable channel multiplexing
- 	control register's address and size.
- - interrupts : A list of interrupt-specifiers, one for each entry in
--	interrupt-names.
--- interrupt-names : Should contain:
--	"edma-tx" - the transmission interrupt
--	"edma-err" - the error interrupt
-+	interrupt-names on vf610 similar SoC. But for i.mx7ulp per channel
-+	per transmission interrupt, total 16 channel interrupt and 1
-+	error interrupt(located in the last), no interrupt-names list on
-+	i.mx7ulp for clean on dts.
- - #dma-cells : Must be <2>.
- 	The 1st cell specifies the DMAMUX(0 for DMAMUX0 and 1 for DMAMUX1).
- 	Specific request source can only be multiplexed by specific channels
-@@ -28,6 +29,7 @@ Required properties:
- - clock-names : A list of channel group clock names. Should contain:
- 	"dmamux0" - clock name of mux0 group
- 	"dmamux1" - clock name of mux1 group
-+	Note: No dmamux0 on i.mx7ulp, but another 'dma' clk added on i.mx7ulp.
- - clocks : A list of phandle and clock-specifier pairs, one for each entry in
- 	clock-names.
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index bb24251..45d70d3 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -657,26 +657,26 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
+ 	edma->regs.erql = edma->membase + EDMA_ERQ;
+ 	edma->regs.eeil = edma->membase + EDMA_EEI;
  
-@@ -35,6 +37,10 @@ Optional properties:
- - big-endian: If present registers and hardware scatter/gather descriptors
- 	of the eDMA are implemented in big endian mode, otherwise in little
- 	mode.
-+- interrupt-names : Should contain the below on vf610 similar SoC but not used
-+	on i.mx7ulp similar SoC:
-+	"edma-tx" - the transmission interrupt
-+	"edma-err" - the error interrupt
+-	edma->regs.serq = edma->membase + ((edma->version == v1) ?
+-			EDMA_SERQ : EDMA64_SERQ);
+-	edma->regs.cerq = edma->membase + ((edma->version == v1) ?
+-			EDMA_CERQ : EDMA64_CERQ);
+-	edma->regs.seei = edma->membase + ((edma->version == v1) ?
+-			EDMA_SEEI : EDMA64_SEEI);
+-	edma->regs.ceei = edma->membase + ((edma->version == v1) ?
+-			EDMA_CEEI : EDMA64_CEEI);
+-	edma->regs.cint = edma->membase + ((edma->version == v1) ?
+-			EDMA_CINT : EDMA64_CINT);
+-	edma->regs.cerr = edma->membase + ((edma->version == v1) ?
+-			EDMA_CERR : EDMA64_CERR);
+-	edma->regs.ssrt = edma->membase + ((edma->version == v1) ?
+-			EDMA_SSRT : EDMA64_SSRT);
+-	edma->regs.cdne = edma->membase + ((edma->version == v1) ?
+-			EDMA_CDNE : EDMA64_CDNE);
+-	edma->regs.intl = edma->membase + ((edma->version == v1) ?
+-			EDMA_INTR : EDMA64_INTL);
+-	edma->regs.errl = edma->membase + ((edma->version == v1) ?
+-			EDMA_ERR : EDMA64_ERRL);
++	edma->regs.serq = edma->membase + ((edma->version == v2) ?
++			EDMA64_SERQ : EDMA_SERQ);
++	edma->regs.cerq = edma->membase + ((edma->version == v2) ?
++			EDMA64_CERQ : EDMA_CERQ);
++	edma->regs.seei = edma->membase + ((edma->version == v2) ?
++			EDMA64_SEEI : EDMA_SEEI);
++	edma->regs.ceei = edma->membase + ((edma->version == v2) ?
++			EDMA64_CEEI : EDMA_CEEI);
++	edma->regs.cint = edma->membase + ((edma->version == v2) ?
++			EDMA64_CINT : EDMA_CINT);
++	edma->regs.cerr = edma->membase + ((edma->version == v2) ?
++			EDMA64_CERR : EDMA_CERR);
++	edma->regs.ssrt = edma->membase + ((edma->version == v2) ?
++			EDMA64_SSRT : EDMA_SSRT);
++	edma->regs.cdne = edma->membase + ((edma->version == v2) ?
++			EDMA64_CDNE : EDMA_CDNE);
++	edma->regs.intl = edma->membase + ((edma->version == v2) ?
++			EDMA64_INTL : EDMA_INTR);
++	edma->regs.errl = edma->membase + ((edma->version == v2) ?
++			EDMA64_ERRL : EDMA_ERR);
  
- 
- Examples:
-@@ -52,8 +58,36 @@ edma0: dma-controller@40018000 {
- 	clock-names = "dmamux0", "dmamux1";
- 	clocks = <&clks VF610_CLK_DMAMUX0>,
- 		<&clks VF610_CLK_DMAMUX1>;
--};
-+}; /* vf610 */
- 
-+edma1: dma-controller@40080000 {
-+	#dma-cells = <2>;
-+	compatible = "fsl,imx7ulp-edma";
-+	reg = <0x40080000 0x2000>,
-+		<0x40210000 0x1000>;
-+	dma-channels = <32>;
-+	interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+		     /* last is eDMA2-ERR interrupt */
-+		     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+	clock-names = "dma", "dmamux0";
-+	clocks = <&pcc2 IMX7ULP_CLK_DMA1>,
-+		 <&pcc2 IMX7ULP_CLK_DMA_MUX1>;
-+}; /* i.mx7ulp */
- 
- * DMA clients
- DMA client drivers that uses the DMA function must use the format described
+ 	if (edma->version == v2) {
+ 		edma->regs.erqh = edma->membase + EDMA64_ERQH;
 -- 
 2.7.4
