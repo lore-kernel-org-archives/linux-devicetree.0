@@ -1,147 +1,123 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH RESEND V13 2/5] thermal: of-thermal: add API for getting
- sensor ID from DT
-Date: Wed, 29 May 2019 03:36:37 +0000
-Message-ID: <DB3PR0402MB3916A099D7DE4F89D3F50CB3F51F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190528060621.47342-1-Anson.Huang@nxp.com>
- <20190528060621.47342-2-Anson.Huang@nxp.com>
- <20190529030225.GA2662@localhost.localdomain>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC PATCH V1 6/6] platform: mtk-isp: Add Mediatek DIP driver
+Date: Wed, 29 May 2019 12:38:11 +0900
+Message-ID: <CAAFQd5BbrfhjGbKaUi4p6fJJNOKvkZb4_47gw-W8n5fEmaf5XQ@mail.gmail.com>
+References: <20190417104511.21514-1-frederic.chen@mediatek.com>
+ <20190417104511.21514-7-frederic.chen@mediatek.com>
+ <20190509094846.GA65444@google.com>
+ <1558466055.15388.342.camel@mtksdccf07> <20190522102514.GA218991@chromium.org>
+ <1558619189.7995.27.camel@mtksdccf07>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190529030225.GA2662@localhost.localdomain>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "olof@lixom.net" <olof@lixom.net>, "jagan@amarulasolutions.com" <jagan@amarul>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1558619189.7995.27.camel@mtksdccf07>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Shik Chen <shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?SG9sbWVzIENoaW91ICjpgrHmjLop?= <holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= <christie.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, list-Y9sIeH5OGRo@public.gmane.org:IOMM
 List-Id: devicetree@vger.kernel.org
 
-SGksIEVkdWFyZG8NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBFZHVh
-cmRvIFZhbGVudGluIDxlZHViZXp2YWxAZ21haWwuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIE1h
-eSAyOSwgMjAxOSAxMTowMiBBTQ0KPiBUbzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5j
-b20+DQo+IENjOiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3
-bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0
-cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207
-IHdpbGwuZGVhY29uQGFybS5jb207IHJ1aS56aGFuZ0BpbnRlbC5jb207DQo+IGRhbmllbC5sZXpj
-YW5vQGxpbmFyby5vcmc7IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+Ow0KPiB1
-bGYuaGFuc3NvbkBsaW5hcm8ub3JnOyBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT47IERhbmll
-bCBCYWx1dGENCj4gPGRhbmllbC5iYWx1dGFAbnhwLmNvbT47IG1heGltZS5yaXBhcmRAYm9vdGxp
-bi5jb207IG9sb2ZAbGl4b20ubmV0Ow0KPiBqYWdhbkBhbWFydWxhc29sdXRpb25zLmNvbTsgaG9y
-bXMrcmVuZXNhc0B2ZXJnZS5uZXQuYXU7IExlb25hcmQgQ3Jlc3Rleg0KPiA8bGVvbmFyZC5jcmVz
-dGV6QG54cC5jb20+OyBiam9ybi5hbmRlcnNzb25AbGluYXJvLm9yZzsNCj4gZGluZ3V5ZW5Aa2Vy
-bmVsLm9yZzsgZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbTsNCj4gZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4g
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZzsgZGwt
-bGludXgtaW14IDxsaW51eC0NCj4gaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
-UkVTRU5EIFYxMyAyLzVdIHRoZXJtYWw6IG9mLXRoZXJtYWw6IGFkZCBBUEkgZm9yIGdldHRpbmcN
-Cj4gc2Vuc29yIElEIGZyb20gRFQNCj4gDQo+IE9uIFR1ZSwgTWF5IDI4LCAyMDE5IGF0IDAyOjA2
-OjE4UE0gKzA4MDAsIEFuc29uLkh1YW5nQG54cC5jb20gd3JvdGU6DQo+ID4gRnJvbTogQW5zb24g
-SHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4NCj4gPiBPbiBzb21lIHBsYXRmb3JtcyBs
-aWtlIGkuTVg4UVhQLCB0aGUgdGhlcm1hbCBkcml2ZXIgbmVlZHMgYSByZWFsIEhXDQo+ID4gc2Vu
-c29yIElEIGZyb20gRFQgdGhlcm1hbCB6b25lLCB0aGUgSFcgc2Vuc29yIElEIGlzIHVzZWQgdG8g
-Z2V0DQo+ID4gdGVtcGVyYXR1cmUgZnJvbSBTQ1UgZmlybXdhcmUsIGFuZCB0aGUgdmlydHVhbCBz
-ZW5zb3IgSUQgc3RhcnRpbmcgZnJvbQ0KPiA+IDAgdG8gTiBpcyBOT1QgdXNlZCBhdCBhbGwsIHRo
-aXMgcGF0Y2ggYWRkcyBuZXcgQVBJDQo+ID4gdGhlcm1hbF96b25lX29mX2dldF9zZW5zb3JfaWQo
-KSB0byBwcm92aWRlIHRoZSBmZWF0dXJlIG9mIGdldHRpbmcNCj4gPiBzZW5zb3IgSUQgZnJvbSBE
-VCB0aGVybWFsIHpvbmUncyBub2RlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVh
-bmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBzaW5jZSBWMTI6
-DQo+ID4gCS0gYWRqdXN0IHRoZSBzZWNvbmQgcGFyYW1ldGVyIG9mIHRoZXJtYWxfem9uZV9vZl9n
-ZXRfc2Vuc29yX2lkKCkgQVBJLA0KPiB0aGVuIGNhbGxlciBubyBuZWVkDQo+ID4gCSAgdG8gcGFz
-cyB0aGUgb2ZfcGhhbmRsZV9hcmdzIHN0cnVjdHVyZSBhbmQgcHV0IHRoZSBzZW5zb3Jfc3BlY3Mu
-bnANCj4gbWFudWFsbHksIGFsc28gcHV0dGluZw0KPiA+IAkgIHRoZSBzZW5zb3Igbm9kZSBkZXZp
-Y2UgY2hlY2sgaW5zaWRlIHRoaXMgQVBJIHRvIG1ha2UgaXQgZWFzeSBmb3INCj4gPiB1c2FnZTsN
-Cj4gDQo+IFdoYXQgaGFwcGVuZWQgdG8gdXNpbmcgbnhwLHJlc291cmNlLWlkIHByb3BlcnR5IGlu
-IHlvdXIgZHJpdmVyPw0KPiBXaHkgZG8gd2UgbmVlZCB0aGlzIGFzIGFuIEFQSSBpbiBvZi10aGVy
-bWFsPyBXaGF0IG90aGVyIGRyaXZlcnMgbWF5IGJlbmVmaXQNCj4gb2YgdGhpcz8NCj4gDQo+IFJl
-Z2FyZGxlc3MsIHRoaXMgcGF0Y2ggbmVlZHMgdG8gZG9jdW1lbnQgdGhlIG5ldyBBUEkgdW5kZXIg
-RG9jdW1lbnRhdGlvbi8NCg0KQXMgUm9iIGhhcyBkaWZmZXJlbnQgb3BpbmlvbiBhYm91dCB0aGlz
-IHByb3BlcnR5LCBoZSB0aG91Z2h0IGl0IGlzIHVubmVjZXNzYXJ5LCBzZWUgYmVsb3cNCmRpc2N1
-c3Npb24gbWFpbCwgdGhhdCBpcyB3aHkgSSBuZWVkIHRvIGFkZCBBUEkgdG8gZ2V0IHRoZSByZXNv
-dXJjZSBJRCBmcm9tIHBoYW5kbGUgYXJndW1lbnQuDQpJIGFtIHRvdGFsbHkgY29uZnVzZWQgbm93
-LCB3aGljaCBhcHByb2FjaCBzaG91bGQgd2UgYWRvcHQ/DQoNCmh0dHBzOi8vcGF0Y2h3b3JrLmtl
-cm5lbC5vcmcvcGF0Y2gvMTA4MzEzOTcvDQoNClRoYW5rcywNCkFuc29uDQoNCj4gDQo+ID4gLS0t
-DQo+ID4gIGRyaXZlcnMvdGhlcm1hbC9vZi10aGVybWFsLmMgfCA2NiArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKystLS0NCj4gLS0tLS0tLS0NCj4gPiAgaW5jbHVkZS9saW51eC90aGVy
-bWFsLmggICAgICB8IDEwICsrKysrKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA2MCBpbnNlcnRp
-b25zKCspLCAxNiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Ro
-ZXJtYWwvb2YtdGhlcm1hbC5jDQo+ID4gYi9kcml2ZXJzL3RoZXJtYWwvb2YtdGhlcm1hbC5jIGlu
-ZGV4IGRjNTA5M2IuLmE1Mzc5MmIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy90aGVybWFsL29m
-LXRoZXJtYWwuYw0KPiA+ICsrKyBiL2RyaXZlcnMvdGhlcm1hbC9vZi10aGVybWFsLmMNCj4gPiBA
-QCAtNDQ5LDYgKzQ0OSw1NCBAQCB0aGVybWFsX3pvbmVfb2ZfYWRkX3NlbnNvcihzdHJ1Y3QgZGV2
-aWNlX25vZGUNCj4gPiAqem9uZSwgIH0NCj4gPg0KPiA+ICAvKioNCj4gPiArICogdGhlcm1hbF96
-b25lX29mX2dldF9zZW5zb3JfaWQgLSBnZXQgc2Vuc29yIElEIGZyb20gYSBEVCB0aGVybWFsDQo+
-ID4gKyB6b25lDQo+ID4gKyAqIEB0el9ucDogYSB2YWxpZCB0aGVybWFsIHpvbmUgZGV2aWNlIG5v
-ZGUuDQo+ID4gKyAqIEBzZW5zb3JfbnA6IGEgc2Vuc29yIG5vZGUgb2YgYSB2YWxpZCBzZW5zb3Ig
-ZGV2aWNlLg0KPiA+ICsgKiBAaWQ6IGEgc2Vuc29yIElEIHBvaW50ZXIgd2lsbCBiZSBwYXNzZWQg
-YmFjay4NCj4gPiArICoNCj4gPiArICogVGhpcyBmdW5jdGlvbiB3aWxsIGdldCBzZW5zb3IgSUQg
-ZnJvbSBhIGdpdmVuIHRoZXJtYWwgem9uZSBub2RlLA0KPiA+ICsgdXNlDQo+ID4gKyAqICJ0aGVy
-bWFsLXNlbnNvcnMiIGFzIGxpc3QgbmFtZSwgYW5kIGdldCBzZW5zb3IgSUQgZnJvbSBmaXJzdA0K
-PiA+ICsgcGhhbmRsZSdzDQo+ID4gKyAqIGFyZ3VtZW50Lg0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1
-cm46IDAgb24gc3VjY2VzcywgcHJvcGVyIGVycm9yIGNvZGUgb3RoZXJ3aXNlLg0KPiA+ICsgKi8N
-Cj4gPiArDQo+ID4gK2ludCB0aGVybWFsX3pvbmVfb2ZfZ2V0X3NlbnNvcl9pZChzdHJ1Y3QgZGV2
-aWNlX25vZGUgKnR6X25wLA0KPiA+ICsJCQkJICBzdHJ1Y3QgZGV2aWNlX25vZGUgKnNlbnNvcl9u
-cCwNCj4gPiArCQkJCSAgdTMyICppZCkNCj4gPiArew0KPiA+ICsJc3RydWN0IG9mX3BoYW5kbGVf
-YXJncyBzZW5zb3Jfc3BlY3M7DQo+ID4gKwlpbnQgcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IG9m
-X3BhcnNlX3BoYW5kbGVfd2l0aF9hcmdzKHR6X25wLA0KPiA+ICsJCQkJCSAidGhlcm1hbC1zZW5z
-b3JzIiwNCj4gPiArCQkJCQkgIiN0aGVybWFsLXNlbnNvci1jZWxscyIsDQo+ID4gKwkJCQkJIDAs
-DQo+ID4gKwkJCQkJICZzZW5zb3Jfc3BlY3MpOw0KPiA+ICsJaWYgKHJldCkNCj4gPiArCQlyZXR1
-cm4gcmV0Ow0KPiA+ICsNCj4gPiArCWlmIChzZW5zb3Jfc3BlY3MubnAgIT0gc2Vuc29yX25wKSB7
-DQo+ID4gKwkJb2Zfbm9kZV9wdXQoc2Vuc29yX3NwZWNzLm5wKTsNCj4gPiArCQlyZXR1cm4gLUVO
-T0RFVjsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlpZiAoc2Vuc29yX3NwZWNzLmFyZ3NfY291bnQg
-Pj0gMSkgew0KPiA+ICsJCSppZCA9IHNlbnNvcl9zcGVjcy5hcmdzWzBdOw0KPiA+ICsJCVdBUk4o
-c2Vuc29yX3NwZWNzLmFyZ3NfY291bnQgPiAxLA0KPiA+ICsJCSAgICAgIiVwT0ZuOiB0b28gbWFu
-eSBjZWxscyBpbiBzZW5zb3Igc3BlY2lmaWVyICVkXG4iLA0KPiA+ICsJCSAgICAgc2Vuc29yX3Nw
-ZWNzLm5wLCBzZW5zb3Jfc3BlY3MuYXJnc19jb3VudCk7DQo+ID4gKwl9IGVsc2Ugew0KPiA+ICsJ
-CSppZCA9IDA7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJb2Zfbm9kZV9wdXQoc2Vuc29yX3NwZWNz
-Lm5wKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICtFWFBPUlRfU1lNQk9M
-X0dQTCh0aGVybWFsX3pvbmVfb2ZfZ2V0X3NlbnNvcl9pZCk7DQo+ID4gKw0KPiA+ICsvKioNCj4g
-PiAgICogdGhlcm1hbF96b25lX29mX3NlbnNvcl9yZWdpc3RlciAtIHJlZ2lzdGVycyBhIHNlbnNv
-ciB0byBhIERUIHRoZXJtYWwgem9uZQ0KPiA+ICAgKiBAZGV2OiBhIHZhbGlkIHN0cnVjdCBkZXZp
-Y2UgcG9pbnRlciBvZiBhIHNlbnNvciBkZXZpY2UuIE11c3QgY29udGFpbg0KPiA+ICAgKiAgICAg
-ICBhIHZhbGlkIC5vZl9ub2RlLCBmb3IgdGhlIHNlbnNvciBub2RlLg0KPiA+IEBAIC00OTksMzYg
-KzU0NywyMiBAQCB0aGVybWFsX3pvbmVfb2Zfc2Vuc29yX3JlZ2lzdGVyKHN0cnVjdCBkZXZpY2UN
-Cj4gKmRldiwgaW50IHNlbnNvcl9pZCwgdm9pZCAqZGF0YSwNCj4gPiAgCXNlbnNvcl9ucCA9IG9m
-X25vZGVfZ2V0KGRldi0+b2Zfbm9kZSk7DQo+ID4NCj4gPiAgCWZvcl9lYWNoX2F2YWlsYWJsZV9j
-aGlsZF9vZl9ub2RlKG5wLCBjaGlsZCkgew0KPiA+IC0JCXN0cnVjdCBvZl9waGFuZGxlX2FyZ3Mg
-c2Vuc29yX3NwZWNzOw0KPiA+ICAJCWludCByZXQsIGlkOw0KPiA+DQo+ID4gIAkJLyogRm9yIG5v
-dywgdGhlcm1hbCBmcmFtZXdvcmsgc3VwcG9ydHMgb25seSAxIHNlbnNvciBwZXINCj4gem9uZSAq
-Lw0KPiA+IC0JCXJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9hcmdzKGNoaWxkLCAidGhlcm1h
-bC1zZW5zb3JzIiwNCj4gPiAtCQkJCQkJICIjdGhlcm1hbC1zZW5zb3ItY2VsbHMiLA0KPiA+IC0J
-CQkJCQkgMCwgJnNlbnNvcl9zcGVjcyk7DQo+ID4gKwkJcmV0ID0gdGhlcm1hbF96b25lX29mX2dl
-dF9zZW5zb3JfaWQoY2hpbGQsIHNlbnNvcl9ucCwgJmlkKTsNCj4gPiAgCQlpZiAocmV0KQ0KPiA+
-ICAJCQljb250aW51ZTsNCj4gPg0KPiA+IC0JCWlmIChzZW5zb3Jfc3BlY3MuYXJnc19jb3VudCA+
-PSAxKSB7DQo+ID4gLQkJCWlkID0gc2Vuc29yX3NwZWNzLmFyZ3NbMF07DQo+ID4gLQkJCVdBUk4o
-c2Vuc29yX3NwZWNzLmFyZ3NfY291bnQgPiAxLA0KPiA+IC0JCQkgICAgICIlcE9GbjogdG9vIG1h
-bnkgY2VsbHMgaW4gc2Vuc29yIHNwZWNpZmllciAlZFxuIiwNCj4gPiAtCQkJICAgICBzZW5zb3Jf
-c3BlY3MubnAsIHNlbnNvcl9zcGVjcy5hcmdzX2NvdW50KTsNCj4gPiAtCQl9IGVsc2Ugew0KPiA+
-IC0JCQlpZCA9IDA7DQo+ID4gLQkJfQ0KPiA+IC0NCj4gPiAtCQlpZiAoc2Vuc29yX3NwZWNzLm5w
-ID09IHNlbnNvcl9ucCAmJiBpZCA9PSBzZW5zb3JfaWQpIHsNCj4gPiArCQlpZiAoaWQgPT0gc2Vu
-c29yX2lkKSB7DQo+ID4gIAkJCXR6ZCA9IHRoZXJtYWxfem9uZV9vZl9hZGRfc2Vuc29yKGNoaWxk
-LCBzZW5zb3JfbnAsDQo+ID4gIAkJCQkJCQkgZGF0YSwgb3BzKTsNCj4gPiAgCQkJaWYgKCFJU19F
-UlIodHpkKSkNCj4gPiAgCQkJCXR6ZC0+b3BzLT5zZXRfbW9kZSh0emQsDQo+IFRIRVJNQUxfREVW
-SUNFX0VOQUJMRUQpOw0KPiA+DQo+ID4gLQkJCW9mX25vZGVfcHV0KHNlbnNvcl9zcGVjcy5ucCk7
-DQo+ID4gIAkJCW9mX25vZGVfcHV0KGNoaWxkKTsNCj4gPiAgCQkJZ290byBleGl0Ow0KPiA+ICAJ
-CX0NCj4gPiAtCQlvZl9ub2RlX3B1dChzZW5zb3Jfc3BlY3MubnApOw0KPiA+ICAJfQ0KPiA+ICBl
-eGl0Og0KPiA+ICAJb2Zfbm9kZV9wdXQoc2Vuc29yX25wKTsNCj4gPiBkaWZmIC0tZ2l0IGEvaW5j
-bHVkZS9saW51eC90aGVybWFsLmggYi9pbmNsdWRlL2xpbnV4L3RoZXJtYWwuaCBpbmRleA0KPiA+
-IDE1YTRjYTUuLjVlZGZmZTYgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC90aGVybWFs
-LmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3RoZXJtYWwuaA0KPiA+IEBAIC0zNzUsNiArMzc1
-LDkgQEAgc3RydWN0IHRoZXJtYWxfdHJpcCB7DQo+ID4NCj4gPiAgLyogRnVuY3Rpb24gZGVjbGFy
-YXRpb25zICovDQo+ID4gICNpZmRlZiBDT05GSUdfVEhFUk1BTF9PRg0KPiA+ICtpbnQgdGhlcm1h
-bF96b25lX29mX2dldF9zZW5zb3JfaWQoc3RydWN0IGRldmljZV9ub2RlICp0el9ucCwNCj4gPiAr
-CQkJCSAgc3RydWN0IGRldmljZV9ub2RlICpzZW5zb3JfbnAsDQo+ID4gKwkJCQkgIHUzMiAqaWQp
-Ow0KPiA+ICBzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqDQo+ID4gIHRoZXJtYWxfem9uZV9v
-Zl9zZW5zb3JfcmVnaXN0ZXIoc3RydWN0IGRldmljZSAqZGV2LCBpbnQgaWQsIHZvaWQgKmRhdGEs
-DQo+ID4gIAkJCQljb25zdCBzdHJ1Y3QgdGhlcm1hbF96b25lX29mX2RldmljZV9vcHMNCj4gKm9w
-cyk7IEBAIC0zODYsNiArMzg5LDEzDQo+ID4gQEAgc3RydWN0IHRoZXJtYWxfem9uZV9kZXZpY2Ug
-KmRldm1fdGhlcm1hbF96b25lX29mX3NlbnNvcl9yZWdpc3RlcigNCj4gPiAgdm9pZCBkZXZtX3Ro
-ZXJtYWxfem9uZV9vZl9zZW5zb3JfdW5yZWdpc3RlcihzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+ID4g
-IAkJCQkJICAgIHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNlICp0eik7DQo+ICNlbHNlDQo+ID4g
-Kw0KPiA+ICtzdGF0aWMgaW50IHRoZXJtYWxfem9uZV9vZl9nZXRfc2Vuc29yX2lkKHN0cnVjdCBk
-ZXZpY2Vfbm9kZSAqdHpfbnAsDQo+ID4gKwkJCQkJIHN0cnVjdCBkZXZpY2Vfbm9kZSAqc2Vuc29y
-X25wLA0KPiA+ICsJCQkJCSB1MzIgKmlkKQ0KPiA+ICt7DQo+ID4gKwlyZXR1cm4gLUVOT0VOVDsN
-Cj4gPiArfQ0KPiA+ICBzdGF0aWMgaW5saW5lIHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNlICoN
-Cj4gPiB0aGVybWFsX3pvbmVfb2Zfc2Vuc29yX3JlZ2lzdGVyKHN0cnVjdCBkZXZpY2UgKmRldiwg
-aW50IGlkLCB2b2lkICpkYXRhLA0KPiA+ICAJCQkJY29uc3Qgc3RydWN0IHRoZXJtYWxfem9uZV9v
-Zl9kZXZpY2Vfb3BzDQo+ICpvcHMpDQo=
+On Thu, May 23, 2019 at 10:46 PM Frederic Chen
+<frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>
+> Dear Tomasz,
+>
+> Thank you for your comments.
+>
+>
+> On Wed, 2019-05-22 at 19:25 +0900, Tomasz Figa wrote:
+> > Hi Frederic,
+> >
+> > On Wed, May 22, 2019 at 03:14:15AM +0800, Frederic Chen wrote:
+> > > Dear Tomasz,
+> > >
+> > > I appreciate your comment. It is very helpful for us.
+> > >
+> >
+> > You're welcome. Thanks for replying to all the comments. I'll skip those
+> > resolved in my reply to keep the message shorter.
+> >
+> > >
+> > > On Thu, 2019-05-09 at 18:48 +0900, Tomasz Figa wrote:
+> > > > Hi Frederic,
+> > > >
+> > > > On Wed, Apr 17, 2019 at 7:45 PM Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+[snip]
+> > > > Also a general note - a work can be queued only once. This means that
+> > > > current code races when two dip_works are attempted to be queued very
+> > > > quickly one after another (or even at the same time from different threads).
+> > > >
+> > > > I can think of two potential options for fixing this:
+> > > >
+> > > > 1) Loop in the work function until there is nothing to queue to the hardware
+> > > >    anymore - but this needs tricky synchronization, because there is still
+> > > >    short time at the end of the work function when a new dip_work could be
+> > > >    added.
+> > > >
+> > > > 2) Change this to a kthread that just keeps running in a loop waiting for
+> > > >    some available dip_work to show up and then sending it to the firmware.
+> > > >    This should be simpler, as the kthread shouldn't have a chance to miss
+> > > >    any dip_work queued.
+> > > >
+> > > > I'm personally in favor of option 2, as it should simplify the
+> > > > synchronization.
+> > > >
+> > >
+> > > I would like to re-design this part with a kthread in the next patch.
+> >
+> > Actually I missed another option. We could have 1 work_struct for 1
+> > request and then we could keep using a workqueue. Perhaps that could be
+> > simpler than a kthread.
+> >
+> > Actually, similar approach could be used for the dip_runner_func.
+> > Instead of having a kthread looping, we could just have another
+> > workqueue and 1 dip_runner_work per 1 request. Then we wouldn't need to
+> > do the waiting loop ourselves anymore.
+> >
+> > Does it make sense?
+>
+> Yes, it make sense. Let me summarize the modification about the flow.
+>
+> First, we will have two work_struct in mtk_dip_request.
+>
+> struct mtk_dip_request {
+>         struct media_request request;
+>         //...
+>         /* Prepare DIP part hardware configurtion */
+>         struct mtk_dip_hw_submit_work submit_work;
+>         /* Replace dip_running thread jobs*/
+>         struct mtk_dip_hw_composing_work composing_work;
+>         /* Only for composing error handling */
+>         struct mtk_dip_hw_mdpcb_timeout_work timeout_work;
+> };
+>
+> Second, the overall flow of handling each request is :
+>
+> 1. mtk_dip_hw_enqueue calls queue_work() to put submit_work into its
+>    workqueue
+> 2. submit_work sends IMG_IPI_FRAME command to SCP to prepare DIP
+>    hardware configuration
+> 3. dip_scp_handler receives the IMG_IPI_FRAME result from SCP
+> 4. dip_scp_handler calls queue_work() to put composing_work (instead
+>    of original dip_running thread jobs) into its workqueue
+> 5. composing_work calls dip_mdp_cmdq_send() to finish the mdp part tasks
+> 6. dip_mdp_cb_func() trigged by MDP driver calls vb2_buffer_done to
+>    return the buffer (no workqueue required here)
+>
+
+Sounds good to me, but actually then simply making the workqueues
+freezable doesn't solve the suspend/resume problem, because the work
+functions wouldn't wait for the firmware/hardware completion anymore.
+That's also okay, but in this case we need to add some code to suspend
+to wait for any pending operations to complete.
+
+Best regards,
+Tomasz
