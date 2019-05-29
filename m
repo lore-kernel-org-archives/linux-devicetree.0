@@ -1,126 +1,69 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [RFT PATCH v5 3/5] cpu-topology: Move cpu topology code to common
- code.
-Date: Wed, 29 May 2019 10:24:44 -0700
-Message-ID: <b291e1da-47a7-32b9-ab36-90f65b2a961a@wdc.com>
-References: <20190524000653.13005-1-atish.patra@wdc.com>
- <20190524000653.13005-4-atish.patra@wdc.com>
- <20190529104801.GA13155@e107155-lin>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
+Date: Wed, 29 May 2019 18:38:29 +0100
+Message-ID: <4ff02295-6c34-791b-49f4-6558a92ad7a3@arm.com>
+References: <20190521161102.29620-1-peron.clem@gmail.com>
+ <CAAObsKD8bij1ANLqX6y11Y6mDEXiymNjrDkmHmvGWiFLKWu_FA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190529104801.GA13155@e107155-lin>
-Content-Language: en-US
+In-Reply-To: <CAAObsKD8bij1ANLqX6y11Y6mDEXiymNjrDkmHmvGWiFLKWu_FA@mail.gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh>
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Will Deacon <will.deacon@arm.com>, Joerg Roedel <joro@8bytes.org>, Neil Armstrong <narmstrong@baylibre.com>, Steven Price <steven.price@arm.com>, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/29/19 3:48 AM, Sudeep Holla wrote:
-> On Thu, May 23, 2019 at 05:06:50PM -0700, Atish Patra wrote:
->> Both RISC-V & ARM64 are using cpu-map device tree to describe
->> their cpu topology. It's better to move the relevant code to
->> a common place instead of duplicate code.
+On 29/05/2019 16:09, Tomeu Vizoso wrote:
+> On Tue, 21 May 2019 at 18:11, Clément Péron <peron.clem@gmail.com> wrote:
 >>
+> [snip]
+>> [  345.204813] panfrost 1800000.gpu: mmu irq status=1
+>> [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+>> 0x0000000002400400
 > 
-> I couldn't test this on any ARM64 server platforms, tested on Juno
-> and other embedded platforms.
+>  From what I can see here, 0x0000000002400400 points to the first byte
+> of the first submitted job descriptor.
 > 
+> So mapping buffers for the GPU doesn't seem to be working at all on
+> 64-bit T-760.
+> 
+> Steven, Robin, do you have any idea of why this could be?
 
-Jeff had tested earlier patch series on ARM64 server platform.
-Since then, the series has changed. Even though, I don't expect it break 
-ARM64, if it can be verified again that would be great.
+I tried rolling back to the old panfrost/nondrm shim, and it works fine 
+with kbase, and I also found that T-820 falls over in the exact same 
+manner, so the fact that it seemed to be common to the smaller 33-bit 
+designs rather than anything to do with the other 
+job_descriptor_size/v4/v5 complication turned out to be telling.
 
-@Jeff: Can you give it a shot if you have some time ?
+[ as an aside, are 64-bit jobs actually known not to work on v4 GPUs, or 
+is it just that nobody's yet observed a 64-bit blob driving one? ]
 
-> Tested-by: Sudeep Holla <sudeep.holla@arm.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> 
+Long story short, it appears that 'Mali LPAE' is also lacking the start 
+level notion of VMSA, and expects a full 4-level table even for <40 bits 
+when level 0 effectively redundant. Thus walking the 3-level table that 
+io-pgtable comes back with ends up going wildly wrong. The hack below 
+seems to do the job for me; if Clément can confirm (on T-720 you'll 
+still need the userspace hack to force 32-bit jobs as well) then I think 
+I'll cook up a proper refactoring of the allocator to put things right.
 
-Thanks!
-
->> Signed-off-by: Atish Patra <atish.patra@wdc.com>
->> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>   arch/arm64/include/asm/topology.h |  23 ---
->>   arch/arm64/kernel/topology.c      | 303 +-----------------------------
->>   drivers/base/arch_topology.c      | 296 +++++++++++++++++++++++++++++
->>   include/linux/arch_topology.h     |  28 +++
->>   include/linux/topology.h          |   1 +
->>   5 files changed, 329 insertions(+), 322 deletions(-)
->>
-> 
-> [...]
-> 
->> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
->> index 0825c4a856e3..6b95c91e7d67 100644
->> --- a/arch/arm64/kernel/topology.c
->> +++ b/arch/arm64/kernel/topology.c
->>
-> 
-> [...]
-> 
->> -static int __init parse_cluster(struct device_node *cluster, int depth)
->> -{
->> -	char name[10];
->> -	bool leaf = true;
->> -	bool has_cores = false;
->> -	struct device_node *c;
->> -	static int package_id __initdata;
->> -	int core_id = 0;
-> 
-> [Ultra minor nit]: you seem to have reordered the above declaration when
-> you moved, just noticed as it showed up when comparing.
-> 
-
-Arrgh. Sorry!
-
-I think I was trying to fix a checkpatch or something and forgot to 
-revert. I will update it.
-
->> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
->> index 1739d7e1952a..20a960131bee 100644
->> --- a/drivers/base/arch_topology.c
->> +++ b/drivers/base/arch_topology.c
-> 
-> [...]
-> 
->> +
->> +static int __init parse_cluster(struct device_node *cluster, int depth)
->> +{
->> +	char name[10];
->> +	bool leaf = true;
->> +	bool has_cores = false;
->> +	int core_id = 0;
->> +	static int package_id __initdata;
->> +	struct device_node *c;
->> +	int i, ret;
->> +
-> 
-> [...]
-> 
->> +#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
->> +void update_siblings_masks(unsigned int cpu);
->> +#endif
->> +void remove_cpu_topology(unsigned int cpuid);
->> +
-> 
-> Another thing(not a block and we can do it once this is merged) is to
-> remove these #ifdefs
-> 
-
-This #ifdef is removed in patch 4.
-
-But we should remove the other ones around init_cpu_topology, 
-parse_dt_topology and friends in a follow up patch once this is merged.
-
-> --
-> Regards,
-> Sudeep
-> 
+Robin.
 
 
--- 
-Regards,
-Atish
+----->8-----
+diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+index 546968d8a349..f29da6e8dc08 100644
+--- a/drivers/iommu/io-pgtable-arm.c
++++ b/drivers/iommu/io-pgtable-arm.c
+@@ -1023,12 +1023,14 @@ arm_mali_lpae_alloc_pgtable(struct 
+io_pgtable_cfg *cfg, void *cookie)
+  	iop = arm_64_lpae_alloc_pgtable_s1(cfg, cookie);
+  	if (iop) {
+  		u64 mair, ttbr;
++		struct arm_lpae_io_pgtable *data = io_pgtable_ops_to_data(&iop->ops);
+
++		data->levels = 4;
+  		/* Copy values as union fields overlap */
+  		mair = cfg->arm_lpae_s1_cfg.mair[0];
+  		ttbr = cfg->arm_lpae_s1_cfg.ttbr[0];
