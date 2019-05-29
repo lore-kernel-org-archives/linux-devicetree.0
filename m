@@ -1,33 +1,49 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFT PATCH v5 4/5] arm: Use common cpu_topology structure and
- functions.
-Date: Wed, 29 May 2019 16:10:23 +0100
-Message-ID: <20190529151023.GB13155@e107155-lin>
-References: <20190524000653.13005-1-atish.patra@wdc.com>
- <20190524000653.13005-5-atish.patra@wdc.com>
+From: Richard Gong <richard.gong@linux.intel.com>
+Subject: Re: [PATCHv4 3/4] firmware: rsu: document sysfs interface
+Date: Wed, 29 May 2019 10:33:27 -0500
+Message-ID: <273db79b-97bb-f40c-3dee-fe48633c3edd@linux.intel.com>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-4-git-send-email-richard.gong@linux.intel.com>
+ <20190528231908.GB28886@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190524000653.13005-5-atish.patra@wdc.com>
+In-Reply-To: <20190528231908.GB28886@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will.deacon@arm.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sen.li@intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2019 at 05:06:51PM -0700, Atish Patra wrote:
-> Currently, ARM32 and ARM64 uses different data structures to represent
-> their cpu topologies. Since, we are moving the ARM64 topology to common
-> code to be used by other architectures, we can reuse that for ARM32 as
-> well.
+
+Hi Greg,
+
+On 5/28/19 6:19 PM, Greg KH wrote:
+> On Tue, May 28, 2019 at 03:20:32PM -0500, richard.gong@linux.intel.com wrote:
+>> +What:		/sys/devices/.../stratix10-rsu.0/driver/fail_image
+>> +Date:		May 2019
+>> +KernelVersion:	5.3
+>> +Contact:	Richard Gong <richard.gong@intel.com>
+>> +Description:
+>> +		(RO) the version number of RSU firmware.
 > 
-> Take this opprtunity to remove the redundant functions from ARM32 and
-> reuse the common code instead.
+> "fail_image" is the version number?  That doesn't match up with what the
+> code says :(
+> 
+> What happened to the version sysfs file?
 > 
 
-Tested-by: Sudeep Holla <sudeep.holla@arm.com> (on TC2)
-Reviewed-by : Sudeep Holla <sudeep.holla@arm.com>
+Sorry, my typo.
 
---
+It should be /sys/devices/.../stratix10-rsu.0/driver/version, (RO) the 
+version number of RSU firmware.
+
+I will correct that in the next submission.
+
+> thanks,
+> 
+> greg k-h
+> 
 Regards,
-Sudeep
+Richard
