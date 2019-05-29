@@ -1,43 +1,119 @@
-Return-Path: <SRS0=ikht=T6=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 2/2] ARM: dts: iwg23s-sbc: Fix SDHI2 VccQ regulator
-Date: Thu, 30 May 2019 09:07:55 +0100
-Message-Id: <1559203675-19675-3-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1559203675-19675-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1559203675-19675-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=L0hH=T5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36567 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfE2MYv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 May 2019 08:24:51 -0400
+Message-ID: <1559132686.3651.8.camel@pengutronix.de>
+Subject: Re: [PATCH v2 4/9] media: hantro: make irq names configurable
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Date: Wed, 29 May 2019 14:24:46 +0200
+In-Reply-To: <20190529133456.0096a6a4@collabora.com>
+References: <20190529095424.23614-1-p.zabel@pengutronix.de>
+         <20190529095424.23614-5-p.zabel@pengutronix.de>
+         <20190529133456.0096a6a4@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-The GPIO regulator is using descriptors since
-commit d6cd33ad7102 ("regulator: gpio: Convert to use descriptors")
-leading to calls into gpiolib now, which in turn consider
-gpio2 24 as active low due to the fact that the corresponding
-DT node is missing property enable-active-high, breaking
-the SDR50 functionality.
-This patch fixes the regulator DT definition, and that fixes
-SDR50.
+Hi Boris,
 
-Fixes: 9eb36b945b5c ("ARM: dts: iwg23s-sbc: Add uSD and eMMC support")
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On Wed, 2019-05-29 at 13:34 +0200, Boris Brezillon wrote:
+> On Wed, 29 May 2019 11:54:19 +0200
+> Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> 
+> > The i.MX8MQ bindings will use different IRQ names ("g1" instead of
+> > "vdpu", and "g2"), so make them configurable. This also allows to
+> > register more than two IRQs, which will be required for i.MX8MM support
+> > later (it will add "h1" instead of "vepu").
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> > Changes since v1 [1]:
+> >  - Rebased onto "[PATCH v6] Add MPEG-2 decoding to Rockchip VPU" series.
+> > 
+> > [1] https://patchwork.linuxtv.org/patch/56285/
+> > ---
+> >  drivers/staging/media/hantro/hantro.h        | 11 ++++---
+> >  drivers/staging/media/hantro/hantro_drv.c    | 31 +++++++-------------
+> >  drivers/staging/media/hantro/rk3288_vpu_hw.c |  5 ++--
+> >  drivers/staging/media/hantro/rk3399_vpu_hw.c |  9 ++++--
+> >  4 files changed, 26 insertions(+), 30 deletions(-)
+> > 
+> > diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
+> > index 296b9ffad547..6b90fe48bcdf 100644
+> > --- a/drivers/staging/media/hantro/hantro.h
+> > +++ b/drivers/staging/media/hantro/hantro.h
+> > @@ -26,6 +26,7 @@
+> >  #include "hantro_hw.h"
+> >  
+> >  #define HANTRO_MAX_CLOCKS		4
+> > +#define HANTRO_MAX_IRQS			3
+> >  
+> >  #define MPEG2_MB_DIM			16
+> >  #define MPEG2_MB_WIDTH(w)		DIV_ROUND_UP(w, MPEG2_MB_DIM)
+> > @@ -57,8 +58,9 @@ struct hantro_codec_ops;
+> >   * @codec_ops:			Codec ops.
+> >   * @init:			Initialize hardware.
+> >   * @runtime_resume:		reenable hardware after power gating
+> > - * @vepu_irq:			encoder interrupt handler
+> > - * @vdpu_irq:			decoder interrupt handler
+> > + * @irq_handlers:		interrupt handlers, same order as irq names
+> > + * @irq_names:			array of irq names
+> > + * @num_irqs:			number of irqs in the arrays
+> >   * @clk_names:			array of clock names
+> >   * @num_clocks:			number of clocks in the array
+> >   */
+> > @@ -73,8 +75,9 @@ struct hantro_variant {
+> >  	const struct hantro_codec_ops *codec_ops;
+> >  	int (*init)(struct hantro_dev *vpu);
+> >  	int (*runtime_resume)(struct hantro_dev *vpu);
+> > -	irqreturn_t (*vepu_irq)(int irq, void *priv);
+> > -	irqreturn_t (*vdpu_irq)(int irq, void *priv);
+> > +	irqreturn_t (*irq_handlers[HANTRO_MAX_IRQS])(int irq, void *priv);
+> > +	const char *irq_names[HANTRO_MAX_IRQS];
+> 
+> Can we have a struct instead of an array for all handlers and another
+> array for irq names:
+> 
+> 	struct {
+> 		const char *name;
+> 		irqreturn_t (*handler)(int irq, void *priv);
+> 	} irqs[HANTRO_MAX_IRQS];
+> 
+> > +	int num_irqs;
+> 
+> Or we could have the struct defined outside of hantro_variant and get
+> rid of HANTRO_MAX_IRQS (I find it annoying to have to update the MAX
+> value every time a new variant needs more than what was previously
+> defined as MAX):
+> 
+> struct hantro_irq {
+> 	const char *name;
+> 	irqreturn_t (*handler)(int irq, void *priv);
+> };
+> 
+> struct hantro_variant {
+> 	...
+> 	unsigned int num_irqs;
+> 	const struct hantro_irq *irqs;
+> };
+> 
+> static const struct hantro_irq xxxx_irqs[] = {
+> 	{ ... },
+> 	{ ... },
+> 
+> };
+> 
+> static const struct hantro_variant xxxx_variant = {
+> 	.num_irqs = ARRAY_SIZE(xxxx_irqs),
+> 	.irqs = xxxx_irqs,
+> };
 
-diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-index af78e77..a199ded 100644
---- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-+++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-@@ -63,7 +63,9 @@
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <3300000>;
- 
--		gpios = <&gpio2 24 GPIO_ACTIVE_LOW>;
-+		enable-active-high;
-+
-+		gpios = <&gpio2 24 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
- 		states = <3300000 1
- 			  1800000 0>;
--- 
-2.7.4
+Thank you, that looks better. I'll change this for v3.
+
+regards
+Philipp
