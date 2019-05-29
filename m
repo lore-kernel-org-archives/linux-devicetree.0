@@ -1,74 +1,90 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 2/5] dt-bindings: power: supply: Max17040: Add low
- level SOC alert threshold
-Date: Wed, 29 May 2019 16:40:15 +0200
-Message-ID: <CAJKOXPcigVQEzR3xQMcc9hcSXn0VVCvNR+U2F0the62orR98qw@mail.gmail.com>
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-3-matheus@castello.eng.br>
+From: Richard Gong <richard.gong@linux.intel.com>
+Subject: Re: [PATCHv4 2/4] firmware: add Intel Stratix10 remote system update
+ driver
+Date: Wed, 29 May 2019 09:55:32 -0500
+Message-ID: <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+ <20190528232224.GA29225@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190527022258.32748-3-matheus@castello.eng.br>
+In-Reply-To: <20190528232224.GA29225@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matheus Castello <matheus@castello.eng.br>
-Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sen.li@intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 May 2019 at 04:45, Matheus Castello <matheus@castello.eng.br> wrote:
->
-> For configure low level state of charge threshold alert signaled from
-> max17040 we add "maxim,alert-low-soc-level" property.
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  .../power/supply/max17040_battery.txt         | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> new file mode 100644
-> index 000000000000..a13e8d50ff7b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> @@ -0,0 +1,28 @@
-> +max17040_battery
-> +~~~~~~~~~~~~~~~~
-> +
-> +Required properties :
-> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
-> +
-> +Optional properties :
-> +- maxim,alert-low-soc-level :  The alert threshold that sets the state of
-> +                               charge level (%) where an interrupt is
-> +                               generated. Can be configured from 1 up to 32
-> +                               (%). If skipped the power up default value of
-> +                               4 (%) will be used.
-> +- interrupts :                         Interrupt line see Documentation/devicetree/
-> +                               bindings/interrupt-controller/interrupts.txt
 
-Based on driver's behavior, I understand that these two properties
-come in pair so maxim,alert-low-soc-level (or its default value) will
-be used if and only if interrupts property is present. Maybe mention
-this? In general looks fine to me:
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Hi Greg,
 
-Best regards,
-Krzysztof
+On 5/28/19 6:22 PM, Greg KH wrote:
+> On Tue, May 28, 2019 at 03:20:31PM -0500, richard.gong@linux.intel.com wrote:
+>> +/**
+>> + * rsu_send_msg() - send a message to Intel service layer
+>> + * @priv: pointer to rsu private data
+>> + * @command: RSU status or update command
+>> + * @arg: the request argument, the bitstream address or notify status
+>> + * @callback: function pointer for the callback (status or update)
+>> + *
+>> + * Start an Intel service layer transaction to perform the SMC call that
+>> + * is necessary to get RSU boot log or set the address of bitstream to
+>> + * boot after reboot.
+>> + *
+>> + * Returns 0 on success or -ETIMEDOUT on error.
+>> + */
+>> +static int rsu_send_msg(struct stratix10_rsu_priv *priv,
+>> +			enum stratix10_svc_command_code command,
+>> +	unsigned long arg,
+>> +	void (*callback)(struct stratix10_svc_client *client,
+>> +			 struct stratix10_svc_cb_data *data))
+>> +{
+>> +	struct stratix10_svc_client_msg msg;
+>> +	int ret;
+>> +
+>> +	mutex_lock(&priv->lock);
+>> +	reinit_completion(&priv->completion);
+>> +	priv->client.receive_cb = callback;
+>> +
+>> +	msg.command = command;
+>> +	if (arg)
+>> +		msg.arg[0] = arg;
+>> +
+>> +	ret = stratix10_svc_send(priv->chan, &msg);
+> 
+> meta-question, can you send messages that are on the stack and not in
+> DMA-able memory?  Or should this be a dynamicly created variable so you
+> know it can work properly with DMA?
+> 
+> And how big is that structure, will it mess with stack sizes?
+> 
 
-> +- wakeup-source :              This device has wakeup capabilities. Use this
-> +                               property to use alert low SOC level interrupt
-> +                               as wake up source.
-> +
-> +Example:
-> +
-> +       battery-fuel-gauge@36 {
-> +               compatible = "maxim,max17040";
-> +               reg = <0x36>;
-> +               maxim,alert-low-soc-level = <10>;
-> +               interrupt-parent = <&gpio7>;
-> +               interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> +               wakeup-source;
-> +       };
-> --
-> 2.20.1
->
+stratix10_svc_send() is a function from Intel Stratix10 service layer 
+driver, which is used by service clients (RSU and FPGA manager drivers 
+as now) to add a message to the service layer driver's queue for being 
+sent to the secure world via SMC call.
+
+It is not DMA related, we send messages via FIFO API.
+
+The size of FIFO is sizeof(struct stratix10_svc_data) * 
+SVC_NUM_DATA_IN_FIFO, SVC_NUM_DATA_IN_FIFO is defined as 32.
+
+fifo_size = sizeof(struct stratix10_svc_data) * 	SVC_NUM_DATA_IN_FIFO;
+ret = kfifo_alloc(&controller->svc_fifo, fifo_size, GFP_KERNEL);
+if (ret) {
+	dev_err(dev, "failed to allocate FIFO\n");
+         return ret;
+}
+spin_lock_init(&controller->svc_fifo_lock);
+
+It will not mess with stack sizes.
+
+> thanks,
+> 
+> greg k-h
+> 
+
+Regards,
+Richard
