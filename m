@@ -1,96 +1,83 @@
-Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V4 02/28] PCI: tegra: Handle failure cases in tegra_pcie_power_on()
-Date: Thu, 16 May 2019 11:22:41 +0530
-Message-ID: <20190516055307.25737-3-mmaddireddy@nvidia.com>
-In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=L0hH=T5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52062 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfE2LSS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 May 2019 07:18:18 -0400
+Date: Wed, 29 May 2019 13:18:14 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v2 3/9] media: hantro: add PM runtime resume callback
+Message-ID: <20190529131814.6d8d14cc@collabora.com>
+In-Reply-To: <20190529095424.23614-4-p.zabel@pengutronix.de>
+References: <20190529095424.23614-1-p.zabel@pengutronix.de>
+        <20190529095424.23614-4-p.zabel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Unroll the PCIe power on sequence if any one of the steps fail in
-tegra_pcie_power_on().
+On Wed, 29 May 2019 11:54:18 +0200
+Philipp Zabel <p.zabel@pengutronix.de> wrote:
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V4: No change
+> It seems that on i.MX8MQ the power domain controller does not propagate
+> resets to the VPU cores on resume. Add a callback to allow implementing
+> manual reset of the VPU cores after ungating the power domain.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-V3: No change
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
-V2: New patch to handle error cleanup in tegra_pcie_power_on().
-
- drivers/pci/controller/pci-tegra.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index f4f53d092e00..8235d937951b 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -1052,7 +1052,7 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 		err = clk_prepare_enable(pcie->pex_clk);
- 		if (err) {
- 			dev_err(dev, "failed to enable PEX clock: %d\n", err);
--			return err;
-+			goto regulator_disable;
- 		}
- 		reset_control_deassert(pcie->pex_rst);
- 	} else {
-@@ -1061,7 +1061,7 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 							pcie->pex_rst);
- 		if (err) {
- 			dev_err(dev, "powerup sequence failed: %d\n", err);
--			return err;
-+			goto regulator_disable;
- 		}
- 	}
- 
-@@ -1070,24 +1070,40 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 	err = clk_prepare_enable(pcie->afi_clk);
- 	if (err < 0) {
- 		dev_err(dev, "failed to enable AFI clock: %d\n", err);
--		return err;
-+		goto powergate;
- 	}
- 
- 	if (soc->has_cml_clk) {
- 		err = clk_prepare_enable(pcie->cml_clk);
- 		if (err < 0) {
- 			dev_err(dev, "failed to enable CML clock: %d\n", err);
--			return err;
-+			goto disable_afi_clk;
- 		}
- 	}
- 
- 	err = clk_prepare_enable(pcie->pll_e);
- 	if (err < 0) {
- 		dev_err(dev, "failed to enable PLLE clock: %d\n", err);
--		return err;
-+		goto disable_cml_clk;
- 	}
- 
- 	return 0;
-+
-+disable_cml_clk:
-+	if (soc->has_cml_clk)
-+		clk_disable_unprepare(pcie->cml_clk);
-+disable_afi_clk:
-+	clk_disable_unprepare(pcie->afi_clk);
-+powergate:
-+	reset_control_assert(pcie->afi_rst);
-+	reset_control_assert(pcie->pex_rst);
-+	clk_disable_unprepare(pcie->pex_clk);
-+	if (!dev->pm_domain)
-+		tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
-+regulator_disable:
-+	regulator_bulk_disable(pcie->num_supplies, pcie->supplies);
-+
-+	return err;
- }
- 
- static int tegra_pcie_clocks_get(struct tegra_pcie *pcie)
--- 
-2.17.1
+> ---
+>  drivers/staging/media/hantro/hantro.h     |  2 ++
+>  drivers/staging/media/hantro/hantro_drv.c | 13 +++++++++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
+> index 14e685428203..296b9ffad547 100644
+> --- a/drivers/staging/media/hantro/hantro.h
+> +++ b/drivers/staging/media/hantro/hantro.h
+> @@ -56,6 +56,7 @@ struct hantro_codec_ops;
+>   * @codec:			Supported codecs
+>   * @codec_ops:			Codec ops.
+>   * @init:			Initialize hardware.
+> + * @runtime_resume:		reenable hardware after power gating
+>   * @vepu_irq:			encoder interrupt handler
+>   * @vdpu_irq:			decoder interrupt handler
+>   * @clk_names:			array of clock names
+> @@ -71,6 +72,7 @@ struct hantro_variant {
+>  	unsigned int codec;
+>  	const struct hantro_codec_ops *codec_ops;
+>  	int (*init)(struct hantro_dev *vpu);
+> +	int (*runtime_resume)(struct hantro_dev *vpu);
+>  	irqreturn_t (*vepu_irq)(int irq, void *priv);
+>  	irqreturn_t (*vdpu_irq)(int irq, void *priv);
+>  	const char *clk_names[HANTRO_MAX_CLOCKS];
+> diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+> index e4390aa5c213..fb5f140dbaae 100644
+> --- a/drivers/staging/media/hantro/hantro_drv.c
+> +++ b/drivers/staging/media/hantro/hantro_drv.c
+> @@ -831,9 +831,22 @@ static int hantro_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_PM
+> +static int hantro_runtime_resume(struct device *dev)
+> +{
+> +	struct hantro_dev *vpu = dev_get_drvdata(dev);
+> +
+> +	if (vpu->variant->runtime_resume)
+> +		return vpu->variant->runtime_resume(vpu);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static const struct dev_pm_ops hantro_pm_ops = {
+>  	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>  				pm_runtime_force_resume)
+> +	SET_RUNTIME_PM_OPS(NULL, hantro_runtime_resume, NULL)
+>  };
+>  
+>  static struct platform_driver hantro_driver = {
