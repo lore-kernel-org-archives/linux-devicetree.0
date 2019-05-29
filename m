@@ -1,212 +1,57 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V2 02/12] pinctrl: tegra: add suspend and resume support
-Date: Wed, 29 May 2019 14:07:59 -0700
-Message-ID: <412be5a5-8f82-95ce-72ef-623602cb7c81@nvidia.com>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
- <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
- <6273a790-d4b7-c501-3fec-d9816288b139@gmail.com>
- <d9d54f05-b0bf-6e65-9308-45e94454301e@nvidia.com>
- <11fe4d9a-6d8e-bc4f-b764-a849571fb6b0@gmail.com>
- <0f087659-cdde-9f89-55a2-d399ee539431@nvidia.com>
- <34480b14-48da-2745-086d-6a8900c5a049@gmail.com>
- <fc1f3c56-ab6b-478e-75d8-797d8e3bf21f@nvidia.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH] arm64: dts: ti: k3-am65: Add MSMC RAM ranges in interconnect
+ node
+Date: Wed, 29 May 2019 16:13:44 -0500
+Message-ID: <20190529211344.18014-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fc1f3c56-ab6b-478e-75d8-797d8e3bf21f@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Roger Quadros <rogerq@ti.com>
 
-On 5/29/19 1:56 PM, Sowjanya Komatineni wrote:
->
-> On 5/29/19 1:47 PM, Dmitry Osipenko wrote:
->> 29.05.2019 23:11, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 5/29/19 12:32 PM, Dmitry Osipenko wrote:
->>>> 29.05.2019 21:14, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 5/29/19 8:29 AM, Dmitry Osipenko wrote:
->>>>>> 29.05.2019 2:08, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>> This patch adds suspend and resume support for Tegra pinctrl driver
->>>>>>> and registers them to syscore so the pinmux settings are restored
->>>>>>> before the devices resume.
->>>>>>>
->>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>> ---
->>>>>>> =C2=A0=C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.c=C2=A0=C2=
-=A0=C2=A0 | 68
->>>>>>> +++++++++++++++++++++++++++++++-
->>>>>>> =C2=A0=C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.h=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 3 ++
->>>>>>> =C2=A0=C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra114.c |=C2=A0=
- 1 +
->>>>>>> =C2=A0=C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra124.c |=C2=A0=
- 1 +
->>>>>>> =C2=A0=C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra20.c=C2=A0 |=
-=C2=A0 1 +
->>>>>>> =C2=A0=C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra210.c |=C2=A0=
- 1 +
->>>>>>> =C2=A0=C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra30.c=C2=A0 |=
-=C2=A0 1 +
->>>>>>> =C2=A0=C2=A0=C2=A0 7 files changed, 75 insertions(+), 1 deletion(-)
->>>>>>>
->>>>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>> index a5008c066bac..bdc47e62c457 100644
->>>>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>> @@ -28,11 +28,18 @@
->>>>>>> =C2=A0=C2=A0=C2=A0 #include <linux/pinctrl/pinmux.h>
->>>>>>> =C2=A0=C2=A0=C2=A0 #include <linux/pinctrl/pinconf.h>
->>>>>>> =C2=A0=C2=A0=C2=A0 #include <linux/slab.h>
->>>>>>> +#include <linux/syscore_ops.h>
->>>>>>> =C2=A0=C2=A0=C2=A0 =C2=A0 #include "../core.h"
->>>>>>> =C2=A0=C2=A0=C2=A0 #include "../pinctrl-utils.h"
->>>>>>> =C2=A0=C2=A0=C2=A0 #include "pinctrl-tegra.h"
->>>>>>> =C2=A0=C2=A0=C2=A0 +#define EMMC2_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1c8
->>>>>>> +#define EMMC4_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1e0
->>>>>>> +#define EMMC_DPD_PARKING=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 (0x1fff << 14)
->>>>>>> +
->>>>>>> +static struct tegra_pmx *pmx;
->>>>>>> +
->>>>>>> =C2=A0=C2=A0=C2=A0 static inline u32 pmx_readl(struct tegra_pmx *pm=
-x, u32 bank,=20
->>>>>>> u32
->>>>>>> reg)
->>>>>>> =C2=A0=C2=A0=C2=A0 {
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return readl(pmx->regs[b=
-ank] + reg);
->>>>>>> @@ -629,6 +636,50 @@ static void
->>>>>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>> =C2=A0=C2=A0=C2=A0 }
->>>>>>> =C2=A0=C2=A0=C2=A0 +static int __maybe_unused tegra_pinctrl_suspend=
-(void)
->>>>>>> +{
->>>>>>> +=C2=A0=C2=A0=C2=A0 u32 *backup_regs =3D pmx->backup_regs;
->>>>>>> +=C2=A0=C2=A0=C2=A0 u32 *regs;
->>>>>>> +=C2=A0=C2=A0=C2=A0 int i, j;
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmx->nbanks; i++) {
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs =3D pmx->regs[i];
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (j =3D 0; j < pmx->=
-reg_bank_size[i] / 4; j++)
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- *backup_regs++ =3D readl(regs++);
->>>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0 return pinctrl_force_sleep(pmx->pctl);
->>>>>>> +}
->>>>>>> +
->>>>>>> +static void __maybe_unused tegra_pinctrl_resume(void)
->>>>>>> +{
->>>>>>> +=C2=A0=C2=A0=C2=A0 u32 *backup_regs =3D pmx->backup_regs;
->>>>>>> +=C2=A0=C2=A0=C2=A0 u32 *regs;
->>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
->>>>>>> +=C2=A0=C2=A0=C2=A0 int i, j;
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmx->nbanks; i++) {
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs =3D pmx->regs[i];
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (j =3D 0; j < pmx->=
-reg_bank_size[i] / 4; j++)
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- writel(*backup_regs++, regs++);
->>>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0 if (pmx->soc->has_park_padcfg) {
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, =
-0, EMMC2_PAD_CFGPADCTRL_0);
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARK=
-ING;
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0,=
- EMMC2_PAD_CFGPADCTRL_0);
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, =
-0, EMMC4_PAD_CFGPADCTRL_0);
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARK=
-ING;
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0,=
- EMMC4_PAD_CFGPADCTRL_0);
->>>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>>> +}
->>>>>>>
->>>>>> But the CFGPADCTRL registers are already programmed by restoring the
->>>>>> backup_regs and hence the relevant EMMC's are already unparked.=20
->>>>>> Hence
->>>>>> why do you need to force-unpark both of the EMMC's? What if EMMC is
->>>>>> unpopulated on a board, why do you need to unpark it then?
->>>>> PARK bit for EMMC2/EMMC4 (EMMC2_PAD_CFGPADCTRL and=20
->>>>> EMMC4_PAD_CFGPADCTRL)
->>>>> are not part of pinmux.
->>>>>
->>>>> They are part of CFGPADCTRL register so pinctrl driver pingroup=20
->>>>> doesn't
->>>>> include these registers.
->>>> I'm looking at the tegra210_groups and it clearly has these both
->>>> registers as a part of pinctrl setup because the rest of the bits
->>>> configure drive of the pads.
->>>>
->>>> =C2=A0=C2=A0From pinctrl-tegra210.c:
->>>>
->>>> #define DRV_PINGROUP_REG_A=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=
-x8d4=C2=A0=C2=A0=C2=A0 /* bank 0 */
->>>>
->>>> DRV_PINGROUP(sdmmc2, 0xa9c, 2,=C2=A0 6,=C2=A0 8,=C2=A0 6,=C2=A0 28, 2,=
-=C2=A0 30, 2),
->>>> DRV_PINGROUP(sdmmc4, 0xab4, 2,=C2=A0 6,=C2=A0 8,=C2=A0 6,=C2=A0 28, 2,=
-=C2=A0 30, 2),
->>>>
->>>> ...
->>>>
->>>> 0xa9c - 0x8d4 =3D 0x1c8
->>>> 0xab4 - 0x8d4 =3D 0x1e0
->>>>
->>>> Hence the PARK bits are already getting unset by restoring the
->>>> backup_regs because the CFGPADCTRL registers are a part of the=20
->>>> "bank 0"
->>>> registers.
->>>>
->>>> Am I still missing something?
->>> DRV_PINGROUP parked_bit is -1 and will not be programmed so store and
->>> restore will not take care of it.
->>>
->>> Also EMMC PADCFG is the only padcfg register which has parked bit and
->>> for other IO pads its part of pinmux
->> You're storing raw values of all of the PINCTRL registers and then
->> restoring the raw values (if I'm not misreading that part on the patch),
->> it's absolutely meaningless that DRV_PINGROUP doesn't define the PARK=20
->> bits.
->>
->> In a result, the backup_regs array contains raw CFGPADCTRL value with
->> the PARK bits being unset on store, that value is written out on the
->> restore as-is and hence the PARK bits are getting unset as well.
->>
->> And why DRV_PINGROUP misses PARK bits for the EMMC's? Looks like a
->> driver's drawback that need to be addressed.
->
-> Parked bits from padcfg are available only for couple of EMMC registers.
->
-> default PARK bits are set so stored value contains park bit set. on=20
-> resume, after restoring park bit is cleared.
->
-> on subsequence DPD entry, stored value contains park bit 0 and HW=20
-> clamps park bit to logic 1 during DPD entry and cleared again on resume.
->
->
-Other IOs park bit in pinmux gets cleared thru=20
-tegra_pinctrl_clear_parked_bits on probe and during suspend register=20
-values saved contains park bit =3D 0 which is same when restored on DPD=20
-resume.
+Add the MSCM RAM address space to the ranges property of the cbass_main
+interconnect node so that the addresses can be translated properly.
 
-clearing park bit during resume for EMMC pads is same as clearing it=20
-during probe which is then saved during suspend and restored on resume=20
-similar to pinmux registers.
+This fixes the probe failure in the sram driver for the MSMC RAM node.
 
-So for more readability, probably can clear parked bit for EMMC during=20
-pinctrl_clear_parked_bits instead of on resume.
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+
+The following error message is seen without this:
+[    0.480261] sram interconnect@100000:sram@70000000: found no memory resource
+[    0.487497] sram: probe of interconnect@100000:sram@70000000 failed with error -22
+
+regards
+Suman
+
+ arch/arm64/boot/dts/ti/k3-am65.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+index 50f4be2047a9..68b3f954f1d1 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+@@ -68,6 +68,7 @@
+ 			 <0x00 0x00900000 0x00 0x00900000 0x00 0x00012000>, /* serdes */
+ 			 <0x00 0x01000000 0x00 0x01000000 0x00 0x0af02400>, /* Most peripherals */
+ 			 <0x00 0x30800000 0x00 0x30800000 0x00 0x0bc00000>, /* MAIN NAVSS */
++			 <0x00 0x70000000 0x00 0x70000000 0x00 0x00200000>, /* MSMC SRAM */
+ 			 /* MCUSS Range */
+ 			 <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>,
+ 			 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>,
+-- 
+2.21.0
