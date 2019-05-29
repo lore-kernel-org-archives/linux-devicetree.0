@@ -1,143 +1,52 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: Add GPU operating points for H6
-Date: Wed, 29 May 2019 17:42:12 +0200
-Message-ID: <CAAObsKCWJmx-TKyiHFvUaDtGOpz8SXNOBFK3AbmUWW7KprD2Rw@mail.gmail.com>
-References: <20190521161102.29620-1-peron.clem@gmail.com> <20190529153255.40038-1-tomeu.vizoso@collabora.com>
- <CAJiuCccFG1SATp7QuSOi11MmbjmgX0ZHsTv=4zuXqXMG+=-7Dw@mail.gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v8 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC.
+Date: Wed, 29 May 2019 17:53:46 +0200
+Message-ID: <20190529155346.GA18059@lunn.ch>
+References: <1559104047-13920-1-git-send-email-sagar.kadam@sifive.com>
+ <1559104047-13920-4-git-send-email-sagar.kadam@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJiuCccFG1SATp7QuSOi11MmbjmgX0ZHsTv=4zuXqXMG+=-7Dw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1559104047-13920-4-git-send-email-sagar.kadam@sifive.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, peter@korsgaard.com, palmer@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-i2c@vger.kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 May 2019 at 17:37, Clément Péron <peron.clem@gmail.com> wrote:
->
-> Hi Tomeu,
->
-> On Wed, 29 May 2019 at 17:33, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
-> >
-> > The GPU driver needs them to change the clock frequency and regulator
-> > voltage depending on the load.
->
-> As requested by Maxime, I have dropped these OPP table as It's taken
-> from vendor and untested with Panfrost.
->
-> https://lore.kernel.org/patchwork/patch/1060374/
+On Wed, May 29, 2019 at 09:57:27AM +0530, Sagar Shrikant Kadam wrote:
+> The i2c-ocore driver already has a polling mode interface.But it needs
+> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
+> There is an erratum in FU540 chip that prevents interrupt driven i2c
+> transfers from working, and also the I2C controller's interrupt bit
+> cannot be cleared if set, due to this the existing i2c polling mode
+> interface added in mainline earlier doesn't work, and CPU stall's
+> infinitely, when-ever i2c transfer is initiated.
+> 
+> Ref:
+> 	commit dd7dbf0eb090 ("i2c: ocores: refactor setup for polling")
+> 
+> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
+> FU540-COOO SoC.
+> 
+> The polling function identifies a SiFive device based on the device node
+> and enables the workaround.
+> 
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 
-Ok, guess this series should wait then until we can run Panfrost on it
-and check how DVFS is working.
+Hi Sagar
 
-Thanks,
+When you repost, you are supposed to add any reviewed-by, or acked-by
+tags you received.
 
-Tomeu
-
-> Regards,
-> Clément
->
-> >
-> > Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> > Cc: Clément Péron <peron.clem@gmail.com>
-> >
-> > ---
-> >
-> > Feel free to pick up this patch if you are going to keep pushing this
-> > series forward.
-> >
-> > Thanks,
-> >
-> > Tomeu
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 66 ++++++++++++++++++++
-> >  1 file changed, 66 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > index 6aad06095c40..decf7b56e2df 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -157,6 +157,71 @@
-> >                         allwinner,sram = <&ve_sram 1>;
-> >                 };
-> >
-> > +               gpu_opp_table: opp-table2 {
-> > +                       compatible = "operating-points-v2";
-> > +
-> > +                       opp00 {
-> > +                               opp-hz = /bits/ 64 <756000000>;
-> > +                               opp-microvolt = <1040000>;
-> > +                       };
-> > +                       opp01 {
-> > +                               opp-hz = /bits/ 64 <624000000>;
-> > +                               opp-microvolt = <950000>;
-> > +                       };
-> > +                       opp02 {
-> > +                               opp-hz = /bits/ 64 <576000000>;
-> > +                               opp-microvolt = <930000>;
-> > +                       };
-> > +                       opp03 {
-> > +                               opp-hz = /bits/ 64 <540000000>;
-> > +                               opp-microvolt = <910000>;
-> > +                       };
-> > +                       opp04 {
-> > +                               opp-hz = /bits/ 64 <504000000>;
-> > +                               opp-microvolt = <890000>;
-> > +                       };
-> > +                       opp05 {
-> > +                               opp-hz = /bits/ 64 <456000000>;
-> > +                               opp-microvolt = <870000>;
-> > +                       };
-> > +                       opp06 {
-> > +                               opp-hz = /bits/ 64 <432000000>;
-> > +                               opp-microvolt = <860000>;
-> > +                       };
-> > +                       opp07 {
-> > +                               opp-hz = /bits/ 64 <420000000>;
-> > +                               opp-microvolt = <850000>;
-> > +                       };
-> > +                       opp08 {
-> > +                               opp-hz = /bits/ 64 <408000000>;
-> > +                               opp-microvolt = <840000>;
-> > +                       };
-> > +                       opp09 {
-> > +                               opp-hz = /bits/ 64 <384000000>;
-> > +                               opp-microvolt = <830000>;
-> > +                       };
-> > +                       opp10 {
-> > +                               opp-hz = /bits/ 64 <360000000>;
-> > +                               opp-microvolt = <820000>;
-> > +                       };
-> > +                       opp11 {
-> > +                               opp-hz = /bits/ 64 <336000000>;
-> > +                               opp-microvolt = <810000>;
-> > +                       };
-> > +                       opp12 {
-> > +                               opp-hz = /bits/ 64 <312000000>;
-> > +                               opp-microvolt = <810000>;
-> > +                       };
-> > +                       opp13 {
-> > +                               opp-hz = /bits/ 64 <264000000>;
-> > +                               opp-microvolt = <810000>;
-> > +                       };
-> > +                       opp14 {
-> > +                               opp-hz = /bits/ 64 <216000000>;
-> > +                               opp-microvolt = <810000>;
-> > +                       };
-> > +               };
-> > +
-> >                 gpu: gpu@1800000 {
-> >                         compatible = "allwinner,sun50i-h6-mali",
-> >                                      "arm,mali-t720";
-> > @@ -168,6 +233,7 @@
-> >                         clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
-> >                         clock-names = "core", "bus";
-> >                         resets = <&ccu RST_BUS_GPU>;
-> > +                       operating-points-v2 = <&gpu_opp_table>;
-> >                         status = "disabled";
-> >                 };
-> >
-> > --
-> > 2.20.1
-> >
+     Andrew
