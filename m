@@ -1,83 +1,53 @@
-Return-Path: <SRS0=d+eE=TJ=renesas.com=prvs=4032988503=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 15/15] ARM: dts: rza2mevb: Add USB host support
-Date: Thu, 9 May 2019 15:11:42 -0500
-Message-ID: <20190509201142.10543-16-chris.brandt@renesas.com>
-In-Reply-To: <20190509201142.10543-1-chris.brandt@renesas.com>
-References: <20190509201142.10543-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=L0hH=T5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34869 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfE2Jv4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 May 2019 05:51:56 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d126so1297966pfd.2
+        for <devicetree@vger.kernel.org>; Wed, 29 May 2019 02:51:56 -0700 (PDT)
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: [PATCH] schemas: add rng-seed node schema
+Date: Wed, 29 May 2019 17:50:52 +0800
+Message-Id: <20190529095052.182257-1-hsinyi@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Enable USB Host support for both the Type-C connector on the CPU board
-and the Type-A plug on the sub board.
+This is based on kernel patch "fdt: add support for rng-seed".
 
-Both boards are also capable of USB Device operation as well after the
-appropriate Device Tree modifications.
-
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
-v2:
- * added blank line between nodes
- * removed 'r7s9210-' from patch title
- * removed 'renesas,uses_usb_x1' property
----
- arch/arm/boot/dts/r7s9210-rza2mevb.dts | 37 ++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ schemas/chosen.yaml | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-index 7da409170db5..c0a4484a0bde 100644
---- a/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-+++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-@@ -107,6 +107,18 @@
- 		pinmux = <RZA2_PINMUX(PORT5, 4, 3)>,	/* SD1_CD */
- 			 <RZA2_PINMUX(PORT5, 5, 3)>;	/* SD1_WP */
- 	};
+diff --git a/schemas/chosen.yaml b/schemas/chosen.yaml
+index a768215..a35fea8 100644
+--- a/schemas/chosen.yaml
++++ b/schemas/chosen.yaml
+@@ -51,6 +51,21 @@ properties:
+       the Linux EFI stub (which will populate the property itself, using
+       EFI_RNG_PROTOCOL).
+
++  rng-seed:
++    allOf:
++      - $ref: types.yaml#definitions/uint8-array
++    description:
++      This property served as an entropy to add device randomness. It is parsed
++      as a byte array, e.g.
 +
-+	usb0_pins: usb0 {
-+		pinmux = <RZA2_PINMUX(PORT5, 2, 3)>,	/* VBUSIN0 */
-+			 <RZA2_PINMUX(PORTC, 6, 1)>,	/* VBUSEN0 */
-+			 <RZA2_PINMUX(PORTC, 7, 1)>;	/* OVRCUR0 */
-+	};
++      /{
++             chosen {
++                     rng-seed = <0x31 0x95 0x1b 0x3c 0xc9 0xfa 0xb3 ...>;
++             };
++      };
 +
-+	usb1_pins: usb1 {
-+		pinmux = <RZA2_PINMUX(PORTC, 0, 1)>,	/* VBUSIN1 */
-+			 <RZA2_PINMUX(PORTC, 5, 1)>,	/* VBUSEN1 */
-+			 <RZA2_PINMUX(PORT7, 5, 5)>;	/* OVRCUR1 */
-+	};
- };
- 
- /* High resolution System tick timers */
-@@ -161,3 +173,28 @@
- 	bus-width = <4>;
- 	status = "okay";
- };
++      This random value should be provided by bootloader.
 +
-+/* USB-0 as Host */
-+/* NOTE: Requires JP3 to be fitted */
-+&usb2_phy0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_pins>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+/* USB-1 as Host */
-+&usb2_phy1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb1_pins>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
+   linux,booted-from-kexec:
+     type: boolean
+     description:
 -- 
-2.16.1
+2.22.0.rc1.257.g3120a18244-goog
