@@ -1,267 +1,617 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH v2 00/10] Allwinner A64/H6 IR support
-Date: Wed, 29 May 2019 09:19:45 +0200
-Message-ID: <20190529071945.mrbgurcvl2jvpm5r@flea>
-References: <20190526222536.10917-1-peron.clem@gmail.com>
- <20190527134805.j7t4ffstrnhdml47@core.my.home>
- <CAJiuCcdnQa0TArduT4yBbUyd+dOaM0cQ1JcRUQLXLR6s_5e8sA@mail.gmail.com>
- <20190527163117.hpealt6cttqzqdxz@core.my.home>
- <20190527172337.5qxh5qeqnul55gsb@core.my.home>
- <CAJiuCccnRCqez2uG-pU8XY4Z=5S8rDwFB3rgsBovPHY1Uxyazw@mail.gmail.com>
- <20190527193016.yxngu5grsqnctx3z@core.my.home>
- <20190527195330.pugb7ypvnyv32fug@core.my.home>
- <CAJiuCccpnEqw_tGXST+WtGmZLbE+=wN1Hn9HKrk1+4WsW-abiA@mail.gmail.com>
- <20190528180447.zlrdfmn73fntnf4n@core.my.home>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v3 1/2] dt-bindings: mmc: Add YAML schemas for the generic MMC
+ options
+Date: Wed, 29 May 2019 09:23:43 +0200
+Message-ID: <fab0ec653b4e059cdb1206f65bfca051c8b0a7de.1559114458.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="o7ly3ahra6ipavvh"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGHFXDTQKGQEVEY2XRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190528180447.zlrdfmn73fntnf4n-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+The MMC controllers have a bunch of generic options that are needed in a
+device tree. Add a YAML schemas for those.
 
---o7ly3ahra6ipavvh
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-On Tue, May 28, 2019 at 08:04:47PM +0200, Ond=C5=99ej Jirman wrote:
-> Hello Cl=C3=A9ment,
->
-> On Tue, May 28, 2019 at 06:21:19PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi Ond=C5=99ej,
-> >
-> > On Mon, 27 May 2019 at 21:53, 'Ond=C5=99ej Jirman' via linux-sunxi
-> > <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org> wrote:
-> > >
-> > > Hi Cl=C3=A9ment,
-> > >
-> > > On Mon, May 27, 2019 at 09:30:16PM +0200, verejna wrote:
-> > > > Hi Cl=C3=A9ment,
-> > > >
-> > > > On Mon, May 27, 2019 at 08:49:59PM +0200, Cl=C3=A9ment P=C3=A9ron w=
-rote:
-> > > > > Hi Ondrej,
-> > > > >
-> > > > > >
-> > > > > > I'm testing on Orange Pi 3.
-> > > > > >
-> > > > > > With your patches, I get kernel lockup after ~1 minute of use (=
-ssh stops
-> > > > > > responding/serial console stops responding). I don't have RC co=
-ntroller to test
-> > > > > > the CIR. But just enabling the CIR causes kernel to hang shortl=
-y after boot.
-> > > > > >
-> > > > > > I tried booting multiple times. Other results:
-> > > > > >
-> > > > > > boot 2:
-> > > > > >
-> > > > > > - ssh hangs even before connecting (ethernet crashes/is reset)
-> > > > > >
-> > > > > > INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > > > > rcu:    0-....: (1 GPs behind) idle=3D64a/0/0x3 softirq=3D4091/=
-4091 fqs=3D2437
-> > > > > > dwmac-sun8i 5020000.ethernet eth0: Reset adapter.
-> > > > > > rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks: {=
- 0-... } 5696 jiffies s: 81 root: 0x1/.
-> > > > > > rcu: blocking rcu_node structures:
-> > > > > >  rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > > > > rcu:    0-....: (1 GPs behind) idle=3D64a/0/0x3 softirq=3D4091/=
-4091 fqs=3D9714
-> > > > > > rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks: {=
- 0-... } 21568 jiffies s: 81 root: 0x1/.
-> > > > > > rcu: blocking rcu_node structures:
-> > > > > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > > > > rcu:    0-....: (1 GPs behind) idle=3D64a/0/0x3 softirq=3D4091/=
-4091 fqs=3D17203
-> > > > > >
-> > > > > > above messages appear regularly.
-> > > > > >
-> > > > > > boot 3:
-> > > > > >
-> > > > > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > > > > rcu:    0-....: (9 GPs behind) idle=3D992/0/0x3 softirq=3D6123/=
-6123 fqs=3D2600
-> > > > > >
-> > > > > >
-> > > > > > Sometimes serial console keeps working. Sometimes it locks up t=
-oo (but not
-> > > > > > frequently). Storage locks up always (any program that was not =
-run before
-> > > > > > the crash can't be started and lock up the kernel hard, program=
-s that
-> > > > > > were executed prior, can be run again).
-> > > > > >
-> > > > > >
-> > > > > > Exactly the same kernel build on H5 seems to work (or at least =
-I was not able to
-> > > > > > trigger the crash). So this seems to be limited to H6 for now.
-> > > > > >
-> > > > > > I suspect that the crash occurs sooner if I vary the light (tur=
-n on/off the table
-> > > > > > lamp light).
-> > > > > >
-> > > > > > Without your patches, everything works fine on H6, and I never =
-see
-> > > > > > crashes/lockups.
-> > > > > >
-> > > > > > I tired physically covering the IR receiver, and that helps pre=
-venting the
-> > > > > > crash. As soon as I uncover it, the crash happens again in 1s o=
-r so:
-> > > > > >
-> > > > > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > > > > rcu:    0-....: (1 GPs behind) idle=3D4ea/0/0x3 softirq=3D4483/=
-4484 fqs=3D2444
-> > > > > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> > > > > > rcu:    0-....: (1 GPs behind) idle=3D4ea/0/0x3 softirq=3D4483/=
-4484 fqs=3D9777
-> > > > > >
-> > > > > > This time I got the hung task and reboot: (probably not directl=
-y related)
-> > > > > >
-> > > > > > INFO: task find:560 blocked for more than 120 seconds.
-> > > > > >       Not tainted 5.2.0-rc2+ #7
-> > > > > > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables thi=
-s message.
-> > > > > > find            D    0   560    551 0x00000000
-> > > > > > Call trace:
-> > > > > >  __switch_to+0x6c/0x90
-> > > > > >  __schedule+0x1f4/0x578
-> > > > > >  schedule+0x28/0xa8
-> > > > > >  io_schedule+0x18/0x38
-> > > > > >  __lock_page+0x12c/0x208
-> > > > > >  pagecache_get_page+0x238/0x2e8
-> > > > > >  __get_node_page+0x6c/0x310
-> > > > > >  f2fs_get_node_page+0x14/0x20
-> > > > > >  f2fs_iget+0x70/0xc60
-> > > > > >  f2fs_lookup+0xcc/0x218
-> > > > > >  __lookup_slow+0x78/0x160
-> > > > > >  lookup_slow+0x3c/0x60
-> > > > > >  walk_component+0x1e4/0x2e0
-> > > > > >  path_lookupat.isra.13+0x5c/0x1e0
-> > > > > >  filename_lookup.part.23+0x6c/0xe8
-> > > > > >  user_path_at_empty+0x4c/0x60
-> > > > > >  vfs_statx+0x78/0xd8
-> > > > > >  __se_sys_newfstatat+0x24/0x48
-> > > > > >  __arm64_sys_newfstatat+0x18/0x20
-> > > > > >  el0_svc_handler+0x9c/0x170
-> > > > > >  el0_svc+0x8/0xc
-> > > > > > Kernel panic - not syncing: hung_task: blocked tasks
-> > > > > > CPU: 1 PID: 34 Comm: khungtaskd Not tainted 5.2.0-rc2+ #7
-> > > > > > Hardware name: OrangePi 3 (DT)
-> > > > > > Call trace:
-> > > > > >  dump_backtrace+0x0/0xf8
-> > > > > >  show_stack+0x14/0x20
-> > > > > >  dump_stack+0xa8/0xcc
-> > > > > >  panic+0x124/0x2dc
-> > > > > >  proc_dohung_task_timeout_secs+0x0/0x40
-> > > > > >  kthread+0x120/0x128
-> > > > > >  ret_from_fork+0x10/0x18
-> > > > > > SMP: stopping secondary CPUs
-> > > > > > Kernel Offset: disabled
-> > > > > > CPU features: 0x0002,20002000
-> > > > > > Memory Limit: none
-> > > > > > Rebooting in 3 seconds..
-> > > > > >
-> > > > > >
-> > > > > > Meanwhile H5 based board now runs for 15 minutes without issues=
-.
-> > > > > >
-> > > > > > So to sum up:
-> > > > > >
-> > > > > > - these crashes are definitely H6 IR related
-> > > > > >   - the same kernel, on H5 works
-> > > > > >   - covering the sensor prevents the crashes on H6
-> > > > > >
-> > > > > > So we should probably hold on with the series, until this is fi=
-gured out.
-> > > > >
-> > > > > Thanks for testing, but I think it's more hardware related.
-> > > > > It seems that your IR is flooded or misconfigured for your board.
-> > > > > Could you add a simple print in the "sunxi_ir_irq"
-> > > >
-> > > > Yes, I get flood of IRQs with status =3D 0x30. (after I turn on the=
- lamp,
-> > > > but it persists even after I turn it off and cover the IR sensor).
-> > >
-> > > Interestingly, status also contains RAC, and it's 0 in this case. So =
-the
-> > > interrupt if firing with "No available data in RX FIFO" repeatedly. R=
-egardless
-> > > of input.
-> > >
-> > > So there's something else up.
-> >
-> > Really weird indeed...
-> >
-> > I have pushed a new version, where I didn't enabled the support for
-> > others H6 board and the cover letter include a link to this thread.
-> >
-> > It would be great if other sunxi users could test this series, to
-> > check if this issue in present in other OPi3 / Pine H64.
->
-> I don't know if this is enough. I'd rather prefer if the driver has a way
-> of detecting this situation and shutting the module down, at the very lea=
-st,
-> instead of taking down the entire system with IRQ flood.
->
-> It may be detectable by checking RAC =3D=3D 0 when RX FIFO available inte=
-rrupt
-> flag is set.
->
-> Otherwise, this will eventually be forgotten (cover letters are not even =
-stored
-> in git), and someone will fall into the trap again, after enabling r_ir o=
-n
-> their board, and end up chasing their tail for a day. I've initially only=
- found
-> this is IR driver issue after a long unpleasant debugging session, chasin=
-g other
-> more obvious ideas (as when this happens there's absolutely nothing in th=
-e log
-> indicating this is IR issue).
+---
 
-Returning IRQ_NONE in the handler will disable the interrupt line
-after 100,000 (I think?) occurences. That might be a good workaround,
-but we definitely want to have a comment there :)
+Changes from v2:
+  - Add a note to mention where the description has moved
+  - Add Rob's Reviewed-by
 
-Maxime
+Changes from v1:
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+  - Added back the cd-inverted and wp-inverted note
+  - Removed the dependency of cd-inverted and wp-inverted on cd-gpios and
+    wp-gpios
+  - Fixed typo in the title
+  - Fixed default in the bus-width property
+  - Fixed typo in the wp-inverted property
+  - Removed redundant type on cd-debounce-delay-ms
+  - Switched the dsr maximum to hex instead of decimal notation
+---
+ Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 374 +++++++-
+ Documentation/devicetree/bindings/mmc/mmc.txt             | 178 +---
+ 2 files changed, 375 insertions(+), 177 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/mmc-controller.yaml
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190529071945.mrbgurcvl2jvpm5r%40flea.
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+new file mode 100644
+index 000000000000..080754e0ef35
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+@@ -0,0 +1,374 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mmc/mmc-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MMC Controller Generic Binding
++
++maintainers:
++  - Ulf Hansson <ulf.hansson@linaro.org>
++
++description: |
++  These properties are common to multiple MMC host controllers. Any host
++  that requires the respective functionality should implement them using
++  these definitions.
++
++properties:
++  $nodename:
++    pattern: "^mmc(@.*)?$"
++
++  "#address-cells":
++    const: 1
++    description: |
++      The cell is the slot ID if a function subnode is used.
++
++  "#size-cells":
++    const: 0
++
++  # Card Detection.
++  # If none of these properties are supplied, the host native card
++  # detect will be used. Only one of them should be provided.
++
++  broken-cd:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      There is no card detection available; polling must be used.
++
++  cd-gpios:
++    description:
++      The card detection will be done using the GPIO provided.
++
++  non-removable:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Non-removable slot (like eMMC); assume always present.
++
++  # *NOTE* on CD and WP polarity. To use common for all SD/MMC host
++  # controllers line polarity properties, we have to fix the meaning
++  # of the "normal" and "inverted" line levels. We choose to follow
++  # the SDHCI standard, which specifies both those lines as "active
++  # low." Therefore, using the "cd-inverted" property means, that the
++  # CD line is active high, i.e. it is high, when a card is
++  # inserted. Similar logic applies to the "wp-inverted" property.
++  #
++  # CD and WP lines can be implemented on the hardware in one of two
++  # ways: as GPIOs, specified in cd-gpios and wp-gpios properties, or
++  # as dedicated pins. Polarity of dedicated pins can be specified,
++  # using *-inverted properties. GPIO polarity can also be specified
++  # using the GPIO_ACTIVE_LOW flag. This creates an ambiguity in the
++  # latter case. We choose to use the XOR logic for GPIO CD and WP
++  # lines.  This means, the two properties are "superimposed," for
++  # example leaving the GPIO_ACTIVE_LOW flag clear and specifying the
++  # respective *-inverted property property results in a
++  # double-inversion and actually means the "normal" line polarity is
++  # in effect.
++  wp-inverted:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      The Write Protect line polarity is inverted.
++
++  cd-inverted:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      The CD line polarity is inverted.
++
++  # Other properties
++
++  bus-width:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [1, 4, 8]
++        default: 1
++    description:
++      Number of data lines.
++
++  max-frequency:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 400000
++      - maximum: 200000000
++    description:
++      Maximum operating frequency of the bus.
++
++  disable-wp:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      When set, no physical write-protect line is present. This
++      property should only be specified when the controller has a
++      dedicated write-protect detection logic. If a GPIO is always
++      used for the write-protect detection. If a GPIO is always used
++      for the write-protect detection logic, it is sufficient to not
++      specify the wp-gpios property in the absence of a write-protect
++      line.
++
++  wp-gpios:
++    description:
++      GPIO to use for the write-protect detection.
++
++  cd-debounce-delay-ms:
++    description:
++      Set delay time before detecting card after card insert
++      interrupt.
++
++  no-1-8-v:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      When specified, denotes that 1.8V card voltage is not supported
++      on this system, even if the controller claims it.
++
++  cap-sd-highspeed:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      SD high-speed timing is supported.
++
++  cap-mmc-highspeed:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      MMC high-speed timing is supported.
++
++  sd-uhs-sdr12:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      SD UHS SDR12 speed is supported.
++
++  sd-uhs-sdr25:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      SD UHS SDR25 speed is supported.
++
++  sd-uhs-sdr50:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      SD UHS SDR50 speed is supported.
++
++  sd-uhs-sdr104:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      SD UHS SDR104 speed is supported.
++
++  sd-uhs-ddr50:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      SD UHS DDR50 speed is supported.
++
++  cap-power-off-card:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Powering off the card is safe.
++
++  cap-mmc-hw-reset:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      eMMC hardware reset is supported
++
++  cap-sdio-irq:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      enable SDIO IRQ signalling on this interface
++
++  full-pwr-cycle:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Full power cycle of the card is supported.
++
++  mmc-ddr-1_2v:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      eMMC high-speed DDR mode (1.2V I/O) is supported.
++
++  mmc-ddr-1_8v:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      eMMC high-speed DDR mode (1.8V I/O) is supported.
++
++  mmc-ddr-3_3v:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      eMMC high-speed DDR mode (3.3V I/O) is supported.
++
++  mmc-hs200-1_2v:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      eMMC HS200 mode (1.2V I/O) is supported.
++
++  mmc-hs200-1_8v:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      eMMC HS200 mode (1.8V I/O) is supported.
++
++  mmc-hs400-1_2v:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      eMMC HS400 mode (1.2V I/O) is supported.
++
++  mmc-hs400-1_8v:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      eMMC HS400 mode (1.8V I/O) is supported.
++
++  mmc-hs400-enhanced-strobe:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      eMMC HS400 enhanced strobe mode is supported
++
++  dsr:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 0xffff
++    description:
++      Value the card Driver Stage Register (DSR) should be programmed
++      with.
++
++  no-sdio:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Controller is limited to send SDIO commands during
++      initialization.
++
++  no-sd:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Controller is limited to send SD commands during initialization.
++
++  no-mmc:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Controller is limited to send MMC commands during
++      initialization.
++
++  fixed-emmc-driver-type:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 4
++    description:
++      For non-removable eMMC, enforce this driver type. The value is
++      the driver type as specified in the eMMC specification (table
++      206 in spec version 5.1)
++
++  post-power-on-delay-ms:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - default: 10
++    description:
++      It was invented for MMC pwrseq-simple which could be referred to
++      mmc-pwrseq-simple.txt. But now it\'s reused as a tunable delay
++      waiting for I/O signalling and card power supply to be stable,
++      regardless of whether pwrseq-simple is used. Default to 10ms if
++      no available.
++
++  supports-cqe:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      The presence of this property indicates that the corresponding
++      MMC host controller supports HW command queue feature.
++
++  disable-cqe-dcmd:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      The presence of this property indicates that the MMC
++      controller\'s command queue engine (CQE) does not support direct
++      commands (DCMDs).
++
++  keep-power-in-suspend:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      SDIO only. Preserves card power during a suspend/resume cycle.
++
++  # Deprecated: enable-sdio-wakeup
++  wakeup-source:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      SDIO only. Enables wake up of host system on SDIO IRQ assertion.
++
++  vmmc-supply:
++    description:
++      Supply for the card power
++
++  vqmmc-supply:
++    description:
++      Supply for the bus IO line power
++
++  mmc-pwrseq:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      System-on-Chip designs may specify a specific MMC power
++      sequence. To successfully detect an (e)MMC/SD/SDIO card, that
++      power sequence must be maintained while initializing the card.
++
++patternProperties:
++  "^.*@[0-9]+$":
++    type: object
++    description: |
++      On embedded systems the cards connected to a host may need
++      additional properties. These can be specified in subnodes to the
++      host controller node. The subnodes are identified by the
++      standard \'reg\' property. Which information exactly can be
++      specified depends on the bindings for the SDIO function driver
++      for the subnode, as specified by the compatible string.
++
++    properties:
++      compatible:
++        description: |
++          Name of SDIO function following generic names recommended
++          practice
++
++      reg:
++        items:
++          - minimum: 0
++            maximum: 7
++            description:
++              Must contain the SDIO function number of the function this
++              subnode describes. A value of 0 denotes the memory SD
++              function, values from 1 to 7 denote the SDIO functions.
++
++      broken-hpi:
++        $ref: /schemas/types.yaml#/definitions/flag
++        description:
++          Use this to indicate that the mmc-card has a broken hpi
++          implementation, and that hpi should not be used.
++
++    required:
++      - reg
++
++dependencies:
++  cd-debounce-delay-ms: [ cd-gpios ]
++  fixed-emmc-driver-type: [ non-removable ]
++
++examples:
++  - |
++    sdhci@ab000000 {
++        compatible = "sdhci";
++        reg = <0xab000000 0x200>;
++        interrupts = <23>;
++        bus-width = <4>;
++        cd-gpios = <&gpio 69 0>;
++        cd-inverted;
++        wp-gpios = <&gpio 70 0>;
++        max-frequency = <50000000>;
++        keep-power-in-suspend;
++        wakeup-source;
++        mmc-pwrseq = <&sdhci0_pwrseq>;
++    };
++
++  - |
++    mmc3: mmc@1c12000 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&mmc3_pins_a>;
++        vmmc-supply = <&reg_vmmc3>;
++        bus-width = <4>;
++        non-removable;
++        mmc-pwrseq = <&sdhci0_pwrseq>;
++
++        brcmf: bcrmf@1 {
++            reg = <1>;
++            compatible = "brcm,bcm43xx-fmac";
++            interrupt-parent = <&pio>;
++            interrupts = <10 8>;
++            interrupt-names = "host-wake";
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index c269dbe384fe..bf9d7d3febf1 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -1,177 +1 @@
+-These properties are common to multiple MMC host controllers. Any host
+-that requires the respective functionality should implement them using
+-these definitions.
+-
+-Interpreted by the OF core:
+-- reg: Registers location and length.
+-- interrupts: Interrupts used by the MMC controller.
+-
+-Card detection:
+-If no property below is supplied, host native card detect is used.
+-Only one of the properties in this section should be supplied:
+-  - broken-cd: There is no card detection available; polling must be used.
+-  - cd-gpios: Specify GPIOs for card detection, see gpio binding
+-  - non-removable: non-removable slot (like eMMC); assume always present.
+-
+-Optional properties:
+-- bus-width: Number of data lines, can be <1>, <4>, or <8>.  The default
+-  will be <1> if the property is absent.
+-- wp-gpios: Specify GPIOs for write protection, see gpio binding
+-- cd-inverted: when present, polarity on the CD line is inverted. See the note
+-  below for the case, when a GPIO is used for the CD line
+-- cd-debounce-delay-ms: Set delay time before detecting card after card insert interrupt.
+-  It's only valid when cd-gpios is present.
+-- wp-inverted: when present, polarity on the WP line is inverted. See the note
+-  below for the case, when a GPIO is used for the WP line
+-- disable-wp: When set no physical WP line is present. This property should
+-  only be specified when the controller has a dedicated write-protect
+-  detection logic. If a GPIO is always used for the write-protect detection
+-  logic it is sufficient to not specify wp-gpios property in the absence of a WP
+-  line.
+-- max-frequency: maximum operating clock frequency
+-- no-1-8-v: when present, denotes that 1.8v card voltage is not supported on
+-  this system, even if the controller claims it is.
+-- cap-sd-highspeed: SD high-speed timing is supported
+-- cap-mmc-highspeed: MMC high-speed timing is supported
+-- sd-uhs-sdr12: SD UHS SDR12 speed is supported
+-- sd-uhs-sdr25: SD UHS SDR25 speed is supported
+-- sd-uhs-sdr50: SD UHS SDR50 speed is supported
+-- sd-uhs-sdr104: SD UHS SDR104 speed is supported
+-- sd-uhs-ddr50: SD UHS DDR50 speed is supported
+-- cap-power-off-card: powering off the card is safe
+-- cap-mmc-hw-reset: eMMC hardware reset is supported
+-- cap-sdio-irq: enable SDIO IRQ signalling on this interface
+-- full-pwr-cycle: full power cycle of the card is supported
+-- mmc-ddr-3_3v: eMMC high-speed DDR mode(3.3V I/O) is supported
+-- mmc-ddr-1_8v: eMMC high-speed DDR mode(1.8V I/O) is supported
+-- mmc-ddr-1_2v: eMMC high-speed DDR mode(1.2V I/O) is supported
+-- mmc-hs200-1_8v: eMMC HS200 mode(1.8V I/O) is supported
+-- mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
+-- mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
+-- mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
+-- mmc-hs400-enhanced-strobe: eMMC HS400 enhanced strobe mode is supported
+-- dsr: Value the card's (optional) Driver Stage Register (DSR) should be
+-  programmed with. Valid range: [0 .. 0xffff].
+-- no-sdio: controller is limited to send sdio cmd during initialization
+-- no-sd: controller is limited to send sd cmd during initialization
+-- no-mmc: controller is limited to send mmc cmd during initialization
+-- fixed-emmc-driver-type: for non-removable eMMC, enforce this driver type.
+-  The value <n> is the driver type as specified in the eMMC specification
+-  (table 206 in spec version 5.1).
+-- post-power-on-delay-ms : It was invented for MMC pwrseq-simple which could
+-  be referred to mmc-pwrseq-simple.txt. But now it's reused as a tunable delay
+-  waiting for I/O signalling and card power supply to be stable, regardless of
+-  whether pwrseq-simple is used. Default to 10ms if no available.
+-- supports-cqe : The presence of this property indicates that the corresponding
+-  MMC host controller supports HW command queue feature.
+-- disable-cqe-dcmd: This property indicates that the MMC controller's command
+-  queue engine (CQE) does not support direct commands (DCMDs).
+-
+-*NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+-polarity properties, we have to fix the meaning of the "normal" and "inverted"
+-line levels. We choose to follow the SDHCI standard, which specifies both those
+-lines as "active low." Therefore, using the "cd-inverted" property means, that
+-the CD line is active high, i.e. it is high, when a card is inserted. Similar
+-logic applies to the "wp-inverted" property.
+-
+-CD and WP lines can be implemented on the hardware in one of two ways: as GPIOs,
+-specified in cd-gpios and wp-gpios properties, or as dedicated pins. Polarity of
+-dedicated pins can be specified, using *-inverted properties. GPIO polarity can
+-also be specified using the GPIO_ACTIVE_LOW flag. This creates an ambiguity
+-in the latter case. We choose to use the XOR logic for GPIO CD and WP lines.
+-This means, the two properties are "superimposed," for example leaving the
+-GPIO_ACTIVE_LOW flag clear and specifying the respective *-inverted property
+-property results in a double-inversion and actually means the "normal" line
+-polarity is in effect.
+-
+-Optional SDIO properties:
+-- keep-power-in-suspend: Preserves card power during a suspend/resume cycle
+-- wakeup-source: Enables wake up of host system on SDIO IRQ assertion
+-		 (Legacy property supported: "enable-sdio-wakeup")
+-
+-MMC power
+----------
+-
+-Controllers may implement power control from both the connected cards and
+-the IO signaling (for example to change to high-speed 1.8V signalling). If
+-the system supports this, then the following two properties should point
+-to valid regulator nodes:
+-
+-- vqmmc-supply: supply node for IO line power
+-- vmmc-supply: supply node for card's power
+-
+-
+-MMC power sequences:
+---------------------
+-
+-System on chip designs may specify a specific MMC power sequence. To
+-successfully detect an (e)MMC/SD/SDIO card, that power sequence must be
+-maintained while initializing the card.
+-
+-Optional property:
+-- mmc-pwrseq: phandle to the MMC power sequence node. See "mmc-pwrseq-*"
+-	for documentation of MMC power sequence bindings.
+-
+-
+-Use of Function subnodes
+-------------------------
+-
+-On embedded systems the cards connected to a host may need additional
+-properties. These can be specified in subnodes to the host controller node.
+-The subnodes are identified by the standard 'reg' property.
+-Which information exactly can be specified depends on the bindings for the
+-SDIO function driver for the subnode, as specified by the compatible string.
+-
+-Required host node properties when using function subnodes:
+-- #address-cells: should be one. The cell is the slot id.
+-- #size-cells: should be zero.
+-
+-Required function subnode properties:
+-- reg: Must contain the SDIO function number of the function this subnode
+-       describes. A value of 0 denotes the memory SD function, values from
+-       1 to 7 denote the SDIO functions.
+-
+-Optional function subnode properties:
+-- compatible: name of SDIO function following generic names recommended practice
+-
+-
+-Examples
+---------
+-
+-Basic example:
+-
+-sdhci@ab000000 {
+-	compatible = "sdhci";
+-	reg = <0xab000000 0x200>;
+-	interrupts = <23>;
+-	bus-width = <4>;
+-	cd-gpios = <&gpio 69 0>;
+-	cd-inverted;
+-	wp-gpios = <&gpio 70 0>;
+-	max-frequency = <50000000>;
+-	keep-power-in-suspend;
+-	wakeup-source;
+-	mmc-pwrseq = <&sdhci0_pwrseq>
+-}
+-
+-Example with sdio function subnode:
+-
+-mmc3: mmc@1c12000 {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc3_pins_a>;
+-	vmmc-supply = <&reg_vmmc3>;
+-	bus-width = <4>;
+-	non-removable;
+-	mmc-pwrseq = <&sdhci0_pwrseq>
+-
+-	brcmf: bcrmf@1 {
+-		reg = <1>;
+-		compatible = "brcm,bcm43xx-fmac";
+-		interrupt-parent = <&pio>;
+-		interrupts = <10 8>; /* PH10 / EINT10 */
+-		interrupt-names = "host-wake";
+-	};
+-};
++This file has moved to mmc-controller.yaml.
 
---o7ly3ahra6ipavvh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXO4ykQAKCRDj7w1vZxhR
-xb1NAQDNa15Jo+iKDcJUUbYL1BxtfxSwU8hyju1duEPWEdh9IgEAhopDq0liLqdG
-T92UnkB3/xmbiRXIsrutMI+zxSNBvgU=
-=MPUW
------END PGP SIGNATURE-----
-
---o7ly3ahra6ipavvh--
+base-commit: 9a15d2e3fd03e38a6ee7d7bc34d28bb7340f05f2
+-- 
+git-series 0.9.1
