@@ -1,89 +1,191 @@
-Return-Path: <SRS0=MLGG=TQ=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V3 0/8] Tegra XUSB gadget driver support 
-Date: Thu, 16 May 2019 12:09:24 +0530
-Message-ID: <1557988772-15406-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=L0hH=T5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53060 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfE2Nqn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 May 2019 09:46:43 -0400
+Date: Wed, 29 May 2019 15:46:38 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v2 5/9] media: hantro: add support for named register
+ ranges
+Message-ID: <20190529154638.0ebd7c56@collabora.com>
+In-Reply-To: <1559136052.3651.9.camel@pengutronix.de>
+References: <20190529095424.23614-1-p.zabel@pengutronix.de>
+        <20190529095424.23614-6-p.zabel@pengutronix.de>
+        <20190529134645.65f8feb4@collabora.com>
+        <1559136052.3651.9.camel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Sender: devicetree-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-This is the third verion of series "Tegra XUSB gadget driver support"
+On Wed, 29 May 2019 15:20:52 +0200
+Philipp Zabel <p.zabel@pengutronix.de> wrote:
 
-Patches 1-3 are phy driver changes to add support for device
-mode.
-Patches 4-7 are changes related to XUSB device mode
-controller driver.
-Patch 8 is to enable XUDC driver in defconfig
+> Hi Boris,
+> 
+> thank you for the review.
+> 
+> On Wed, 2019-05-29 at 13:46 +0200, Boris Brezillon wrote:
+> > On Wed, 29 May 2019 11:54:20 +0200
+> > Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> >   
+> > > Add support for multiple register ranges with SoC specific names.
+> > > 
+> > > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > > ---
+> > >  drivers/staging/media/hantro/hantro.h     |  7 ++++++-
+> > >  drivers/staging/media/hantro/hantro_drv.c | 25 +++++++++++++++++------
+> > >  2 files changed, 25 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
+> > > index 6b90fe48bcdf..b796867808d5 100644
+> > > --- a/drivers/staging/media/hantro/hantro.h
+> > > +++ b/drivers/staging/media/hantro/hantro.h
+> > > @@ -27,6 +27,7 @@
+> > >  
+> > >  #define HANTRO_MAX_CLOCKS		4
+> > >  #define HANTRO_MAX_IRQS			3
+> > > +#define HANTRO_MAX_REG_RANGES		4
+> > >  
+> > >  #define MPEG2_MB_DIM			16
+> > >  #define MPEG2_MB_WIDTH(w)		DIV_ROUND_UP(w, MPEG2_MB_DIM)
+> > > @@ -63,6 +64,8 @@ struct hantro_codec_ops;
+> > >   * @num_irqs:			number of irqs in the arrays
+> > >   * @clk_names:			array of clock names
+> > >   * @num_clocks:			number of clocks in the array
+> > > + * @reg_names:			array of register range names
+> > > + * @num_regs:			number of register range names in the array
+> > >   */
+> > >  struct hantro_variant {
+> > >  	unsigned int enc_offset;
+> > > @@ -80,6 +83,8 @@ struct hantro_variant {
+> > >  	int num_irqs;
+> > >  	const char *clk_names[HANTRO_MAX_CLOCKS];
+> > >  	int num_clocks;
+> > > +	const char *reg_names[HANTRO_MAX_REG_RANGES];
+> > > +	int num_regs;  
+> 
+> Do you suggest
+> 	const char * const *reg_names;
+> ...
 
-Test Steps(USB 2.0):
-- Enable "USB Gadget precomposed configurations" in defconfig
-- Build, flash and boot Jetson TX1
-- Connect Jetson TX1 and Ubuntu device using USB A to Micro B
-  cable
-- After boot on Jetson TX1 terminal usb0 network device should be
-  enumerated
-- Assign static ip to usb0 on Jetson TX1 and corresponding net
-  device on ubuntu
-- Run ping test and transfer test(used scp) to check data transfer
-  communication
+Yes.
 
-SS mode is verified by enabling Type A port as peripheral
+> 
+> > >  };
+> > >  
+> > >  /**
+> > > @@ -170,7 +175,7 @@ struct hantro_dev {
+> > >  	struct platform_device *pdev;
+> > >  	struct device *dev;
+> > >  	struct clk_bulk_data clocks[HANTRO_MAX_CLOCKS];
+> > > -	void __iomem *base;
+> > > +	void __iomem *base[HANTRO_MAX_REG_RANGES];  
+> > 
+> > Same comment as for the irq stuff.  
+> 
+> ... and
+> 	void __iomem **base;
+> to get rid of HANTRO_MAX_REG_RANGES?
 
----
-V3:
-* Rebased patch 1 to top of tree.
-* Fixed bug in patch 2, where xudc interrupts dont get generated if USB host
-  mode fails to probe. Moved fake port detection logic to generic xusb.c. fake
-  usb port data is updated based on soc flag need_fake_usb3_port.
-* Added extra lines whereever necessary to make code more readable in patch 3
-  and 7.
-* dt binding doc is corrected for typos and extcon references. Also added
-  details for clocks and removed xusb_ references to clock and power-domain
-  names and accordingly patch 5 is updated.
-* removed avdd-pll-utmip-supply in patch 6, as its now part of padctl driver.
-* Patch 8 has no changes.
----
-V2:
-* Patches 1-3 are new patches in this series, which splits unified features
-  patch to speprated features and removes need of port-fake entry in DT.
-* Patch 4 is re-arragend dt-bindings patch which incorporates previous
-  patch comments to sort DT entries alphabetically, addresses name changes
-  and PM domain details added.
-* Patch 5-6 are re-arranged DT patches with major changes - sort entries
-  alphabetically, and adds clock names.
-* Patch 7 is UDC driver tegra XUSB device mode controller with major
-  changes - remove un-used module params, lockinng for device_mode flag,
-  moving un-needed info logs to debug level, making changes feature flag
-  dependent rather than SOC based macros and other error handling in probe.
-* Patch 8 has no changes.
+This one would have to be dynamically allocated, but yes.
 
-Nagarjuna Kristam (8):
-  phy: tegra: xusb: t210: add XUSB dual mode support
-  phy: tegra: xusb: t210: add usb3 port fake support
-  phy: tegra: xusb: t210: add vbus override support
-  dt-bindings: usb: Add  NVIDIA Tegra XUSB device mode controller
-    binding
-  arm64: tegra: Add xudc node for Tegra210
-  arm64: tegra: Enable xudc on Jetson TX1
-  usb: gadget: Add UDC driver for tegra XUSB device mode controller
-  arm64: defconfig: Enable tegra XUDC driver
+> 
+> Would you like to see the same for clk_names?
 
- .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  |  101 +
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   14 +
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   19 +
- arch/arm64/configs/defconfig                       |    1 +
- drivers/phy/tegra/xusb-tegra210.c                  |  137 +-
- drivers/phy/tegra/xusb.c                           |   91 +
- drivers/phy/tegra/xusb.h                           |    4 +
- drivers/usb/gadget/udc/Kconfig                     |   10 +
- drivers/usb/gadget/udc/Makefile                    |    1 +
- drivers/usb/gadget/udc/tegra_xudc.c                | 3807 ++++++++++++++++++++
- include/linux/phy/tegra/xusb.h                     |    6 +-
- 11 files changed, 4186 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
- create mode 100644 drivers/usb/gadget/udc/tegra_xudc.c
+It'd be better, indeed.
 
--- 
-2.7.4
+> 
+> > >  	void __iomem *enc_base;
+> > >  	void __iomem *dec_base;
+> > >  
+> > > diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+> > > index f677b40bcd2d..bd02b27258e3 100644
+> > > --- a/drivers/staging/media/hantro/hantro_drv.c
+> > > +++ b/drivers/staging/media/hantro/hantro_drv.c
+> > > @@ -692,12 +692,25 @@ static int hantro_probe(struct platform_device *pdev)
+> > >  	if (ret)
+> > >  		return ret;
+> > >  
+> > > -	res = platform_get_resource(vpu->pdev, IORESOURCE_MEM, 0);
+> > > -	vpu->base = devm_ioremap_resource(vpu->dev, res);
+> > > -	if (IS_ERR(vpu->base))
+> > > -		return PTR_ERR(vpu->base);
+> > > -	vpu->enc_base = vpu->base + vpu->variant->enc_offset;
+> > > -	vpu->dec_base = vpu->base + vpu->variant->dec_offset;
+> > > +	if (vpu->variant->num_regs) {
+> > > +		for (i = 0; i < vpu->variant->num_regs; i++) {
+> > > +			const char *reg_name = vpu->variant->reg_names[i];
+> > > +
+> > > +			res = platform_get_resource_byname(vpu->pdev,
+> > > +							   IORESOURCE_MEM,
+> > > +							   reg_name);
+> > > +			vpu->base[i] = devm_ioremap_resource(vpu->dev, res);
+> > > +			if (IS_ERR(vpu->base[i]))
+> > > +				return PTR_ERR(vpu->base[i]);
+> > > +		}
+> > > +	} else {
+> > > +		res = platform_get_resource(vpu->pdev, IORESOURCE_MEM, 0);
+> > > +		vpu->base[0] = devm_ioremap_resource(vpu->dev, res);
+> > > +		if (IS_ERR(vpu->base[0]))
+> > > +			return PTR_ERR(vpu->base[0]);
+> > > +		vpu->enc_base = vpu->base[0] + vpu->variant->enc_offset;
+> > > +		vpu->dec_base = vpu->base[0] + vpu->variant->dec_offset;  
+> > 
+> > I see ->dec_based is assigned in ->hw_init() in patch 8, so maybe it's
+> > better to have the same workflow for rk variants: assign
+> > vpu->{dec,enc}_base in ->hw_init()   
+> 
+> I didn't want to change this around too much, as dec_base is just needed
+> for the vdpu_read/write functions, and I expect we'll have to somehow
+> replace these anyway when adding G2 support.
+
+If G1 and G2 blocks are completely independent I think they should be
+represented as separate instances, and we can then re-use the same
+accessors. Am I missing something?
+
+> Adding yet another set of register accessors for g1_read/write vs
+> g2_read/write isn't very convenient. Maybe it woudl be better to call
+> the register accessors with the base as a parameter instead of
+> hantro_dev.
+
+Looks like the reg base is actually per functionality (decoder or
+encoder) not per device. Maybe we should stop passing hantro_dev
+directly and instead expose hantro_func objects that would have a
+pointer to the underlying hantro_dev plus extra attributes like a base
+address for regs, ....
+
+That might help cope with the single-instance+multi-func vs
+single-instance-single-func difference we have between rk and imx
+integration, and we would also have a single set of read/write
+accessors.
+
+> 
+> Also the kerneldoc comment says .init() should "initialize hardware".
+> Should that be changed to "variant specific initialization" if the
+> enc/dec_base are set there?
+> 
+> > and set ->num_regs to 1 (plus a
+> > fallback to platform_get_resource() instead of
+> > platform_get_resource_byname() when ->reg_names[0] == NULL).  
+> 
+> I suppose we could do that, but
+> 
+> 	static const char * const rk3288_regs[] = {
+> 		NULL
+> 	}
+> 
+> 	const struct hantro_variant rk3288_vpu_variant = {
+> 		.reg_n
+> ames = rk3288_regs,
+> 		.num_regs = ARRAY_SIZE(rk3288_regs)
+> 	};
+> 
+> would look a bit strange if we were to get rid of
+> HANTRO_MAX_REG_RANGES...
+
+You're right, we can probably stay with num_regs = 0 for the unnamed
+mem-resource case.
