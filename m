@@ -1,134 +1,96 @@
 From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 00/22] Some documentation fixes
-Date: Wed, 29 May 2019 20:23:31 -0300
-Message-ID: <cover.1559171394.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 03/22] dt: fix broken references to nand.txt
+Date: Wed, 29 May 2019 20:23:34 -0300
+Message-ID: <21356cd8ffb906c77e83220e842d0443a5666aa0.1559171394.git.mchehab+samsung@kernel.org>
+References: <cover.1559171394.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1559171394.git.mchehab+samsung@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: alsa-devel@alsa-project.org, kvm@vger.kernel.org, linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, keyrings@vger.kernel.org, linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org, linux-kselftest@vger.kernel.org, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, devel@driverdev.osuosl.org, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, linux-acpi@vger.kernel.org, xen-devel@lists.xenproject.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, bpf@vger.kernel.org, devel@acpica.org, patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, netdev@vger.kernel.org, linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mans Rullgard <mans@mansr.com>, Vignesh Raghavendra <vigneshr@ti.com>, Jonathan Corbet <corbet@lwn.net>, Richard Weinberger <richard@nod.at>, Marc Gonzalez <marc.w.gonzalez@free.fr>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, Marek Vasut <marek.vasut@gmail.com>, Liang Yang <liang.yang@amlogic.com>, linux-mtd@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-amlogic@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Rml4IHNldmVyYWwgd2FybmluZ3MgYW5kIGJyb2tlbiBsaW5rcy4KClRoaXMgc2VyaWVzIHdhcyBn
-ZW5lcmF0ZWQgYWdhaW5zdCBsaW51eC1uZXh0LCBidXQgd2FzIHJlYmFzZWQgdG8gYmUgYXBwbGll
-ZCBhdApkb2NzLW5leHQuIEl0IHNob3VsZCBhcHBseSBjbGVhbmx5IG9uIGVpdGhlciB0cmVlLgoK
-VGhlcmUncyBhIGdpdCB0cmVlIHdpdGggYWxsIG9mIHRoZW0gYXBwbGllZCBvbiB0aGUgdG9wIG9m
-IGRvY3MvZG9jcy1uZXh0CmF0OgoKaHR0cHM6Ly9naXQubGludXh0di5vcmcvbWNoZWhhYi9leHBl
-cmltZW50YWwuZ2l0L2xvZy8/aD1maXhfZG9jX2xpbmtzX3YyCgoKTWF1cm8gQ2FydmFsaG8gQ2hl
-aGFiICgyMSk6CiAgQUJJOiBzeXNmcy1kZXZpY2VzLXN5c3RlbS1jcHU6IHBvaW50IHRvIHRoZSBy
-aWdodCBkb2NzCiAgaXNkbjogbUlTRE46IHJlbW92ZSBhIGJvZ3VzIHJlZmVyZW5jZSB0byBhIG5v
-bi1leGlzdGluZyBkb2MKICBkdDogZml4IGJyb2tlbiByZWZlcmVuY2VzIHRvIG5hbmQudHh0CiAg
-ZG9jczogemhfQ046IGdldCByaWQgb2YgYmFzaWNfcHJvZmlsaW5nLnR4dAogIGRvYzogaXRfSVQ6
-IGZpeCByZWZlcmVuY2UgdG8gbWFnaWMtbnVtYmVyLnJzdAogIGRvY3M6IG1tOiBudW1hcGVyZi5y
-c3Q6IGdldCByaWQgb2YgYSBidWlsZCB3YXJuaW5nCiAgZG9jczogYnBmOiBnZXQgcmlkIG9mIHR3
-byB3YXJuaW5ncwogIGRvY3M6IG1hcmsgb3JwaGFuIGRvY3VtZW50cyBhcyBzdWNoCiAgZG9jczog
-YW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdCBnZXQgcmlkIG9mIHdhcm5pbmdzCiAgZ3B1OiBhbWRn
-cHU6IGZpeCBicm9rZW4gYW1kZ3B1X2RtYV9idWYuYyByZWZlcmVuY2VzCiAgZ3B1OiBpOTE1LnJz
-dDogRml4IHJlZmVyZW5jZXMgdG8gcmVuYW1lZCBmaWxlcwogIGRvY3M6IHpoX0NOOiBhdm9pZCBk
-dXBsaWNhdGUgY2l0YXRpb24gcmVmZXJlbmNlcwogIGRvY3M6IHZtOiBobW0ucnN0OiBmaXggc29t
-ZSB3YXJuaW5ncwogIGRvY3M6IGl0OiBsaWNlbnNlLXJ1bGVzLnJzdDogZ2V0IHJpZCBvZiB3YXJu
-aW5ncwogIGRvY3M6IGdwaW86IGRyaXZlci5yc3Q6IGZpeCBhIGJhZCB0YWcKICBkb2NzOiBzb3Vu
-ZHdpcmU6IGxvY2tpbmc6IGZpeCB0YWdzIGZvciBhIGNvZGUtYmxvY2sKICBkb2NzOiBzZWN1cml0
-eTogdHJ1c3RlZC1lbmNyeXB0ZWQucnN0OiBmaXggY29kZS1ibG9jayB0YWcKICBkb2NzOiBzZWN1
-cml0eTogY29yZS5yc3Q6IEZpeCBzZXZlcmFsIHdhcm5pbmdzCiAgZG9jczogbmV0OiBkcGlvLWRy
-aXZlci5yc3Q6IGZpeCB0d28gY29kZWJsb2NrIHdhcm5pbmdzCiAgZG9jczogbmV0OiBzamExMTA1
-LnJzdDogZml4IHRhYmxlIGZvcm1hdAogIGRvY3M6IGZpeCBicm9rZW4gZG9jdW1lbnRhdGlvbiBs
-aW5rcwoKT3R0byBTYWJhcnQgKDEpOgogIG1mZDogbWFkZXJhOiBGaXggYmFkIHJlZmVyZW5jZSB0
-byBwaW5jdHJsLnR4dCBmaWxlCgogLi4uL0FCSS90ZXN0aW5nL3N5c2ZzLWRldmljZXMtc3lzdGVt
-LWNwdSAgICAgIHwgIDMgKy0KIERvY3VtZW50YXRpb24vYWNjZWxlcmF0b3JzL29jeGwucnN0ICAg
-ICAgICAgICB8ICAyICsKIERvY3VtZW50YXRpb24vYWNwaS9kc2QvbGVkcy50eHQgICAgICAgICAg
-ICAgICB8ICAyICstCiAuLi4vYWRtaW4tZ3VpZGUva2VybmVsLXBhcmFtZXRlcnMucnN0ICAgICAg
-ICAgfCAgNiArLQogLi4uL2FkbWluLWd1aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLnR4dCAgICAgICAg
-IHwgMTYgKystLS0KIERvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUvbW0vbnVtYXBlcmYucnN0ICAg
-ICB8ICA1ICstCiBEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL3Jhcy5yc3QgICAgICAgICAgICAg
-fCAgMiArLQogRG9jdW1lbnRhdGlvbi9hcm0vc3RtMzIvb3ZlcnZpZXcucnN0ICAgICAgICAgIHwg
-IDIgKwogLi4uL2FybS9zdG0zMi9zdG0zMmY0Mjktb3ZlcnZpZXcucnN0ICAgICAgICAgIHwgIDIg
-KwogLi4uL2FybS9zdG0zMi9zdG0zMmY3NDYtb3ZlcnZpZXcucnN0ICAgICAgICAgIHwgIDIgKwog
-Li4uL2FybS9zdG0zMi9zdG0zMmY3Njktb3ZlcnZpZXcucnN0ICAgICAgICAgIHwgIDIgKwogLi4u
-L2FybS9zdG0zMi9zdG0zMmg3NDMtb3ZlcnZpZXcucnN0ICAgICAgICAgIHwgIDIgKwogLi4uL2Fy
-bS9zdG0zMi9zdG0zMm1wMTU3LW92ZXJ2aWV3LnJzdCAgICAgICAgIHwgIDIgKwogRG9jdW1lbnRh
-dGlvbi9icGYvYnRmLnJzdCAgICAgICAgICAgICAgICAgICAgIHwgIDIgKwogLi4uL2JpbmRpbmdz
-L210ZC9hbWxvZ2ljLG1lc29uLW5hbmQudHh0ICAgICAgIHwgIDIgKy0KIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL210ZC9ncG1jLW5hbmQudHh0ICAgICB8ICAyICstCiAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tdGQvbWFydmVsbC1uYW5kLnR4dCAgfCAgMiArLQogLi4uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbXRkL3RhbmdvLW5hbmQudHh0ICAgIHwgIDIgKy0KIC4uLi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL25ldC9mc2wtZW5ldGMudHh0ICAgICB8ICA3ICstCiAuLi4vYmluZGluZ3MvcGNpL2FtbG9n
-aWMsbWVzb24tcGNpZS50eHQgICAgICAgfCAgMiArLQogLi4uL3JlZ3VsYXRvci9xY29tLHJwbWgt
-cmVndWxhdG9yLnR4dCAgICAgICAgIHwgIDIgKy0KIC4uLi9kZXZpY2V0cmVlL2Jvb3Rpbmctd2l0
-aG91dC1vZi50eHQgICAgICAgICB8ICAyICstCiBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvZ3Bp
-by9ib2FyZC5yc3QgICAgICAgfCAgMiArLQogRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2dwaW8v
-Y29uc3VtZXIucnN0ICAgIHwgIDIgKy0KIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9ncGlvL2Ry
-aXZlci5yc3QgICAgICB8ICAyICstCiAuLi4vZHJpdmVyLWFwaS9zb3VuZHdpcmUvbG9ja2luZy5y
-c3QgICAgICAgICAgfCAgNCArLQogLi4uL2Zpcm13YXJlLWd1aWRlL2FjcGkvZW51bWVyYXRpb24u
-cnN0ICAgICAgIHwgIDIgKy0KIC4uLi9maXJtd2FyZS1ndWlkZS9hY3BpL21ldGhvZC10cmFjaW5n
-LnJzdCAgICB8ICAyICstCiBEb2N1bWVudGF0aW9uL2dwdS9hbWRncHUucnN0ICAgICAgICAgICAg
-ICAgICAgfCAgNCArLQogRG9jdW1lbnRhdGlvbi9ncHUvaTkxNS5yc3QgICAgICAgICAgICAgICAg
-ICAgIHwgIDYgKy0KIERvY3VtZW50YXRpb24vZ3B1L21zbS1jcmFzaC1kdW1wLnJzdCAgICAgICAg
-ICB8ICAyICsKIERvY3VtZW50YXRpb24vaTJjL2luc3RhbnRpYXRpbmctZGV2aWNlcyAgICAgICB8
-ICAyICstCiBEb2N1bWVudGF0aW9uL2ludGVyY29ubmVjdC9pbnRlcmNvbm5lY3QucnN0ICAgfCAg
-MiArCiBEb2N1bWVudGF0aW9uL2xhcHRvcHMvbGctbGFwdG9wLnJzdCAgICAgICAgICAgfCAgMiAr
-CiAuLi4vZnJlZXNjYWxlL2RwYWEyL2RwaW8tZHJpdmVyLnJzdCAgICAgICAgICAgfCAgNCArLQog
-RG9jdW1lbnRhdGlvbi9uZXR3b3JraW5nL2RzYS9zamExMTA1LnJzdCAgICAgIHwgIDYgKy0KIERv
-Y3VtZW50YXRpb24vcG93ZXJwYy9pc2EtdmVyc2lvbnMucnN0ICAgICAgICB8ICAyICsKIERvY3Vt
-ZW50YXRpb24vc2VjdXJpdHkva2V5cy9jb3JlLnJzdCAgICAgICAgICB8IDE2ICsrKy0tCiAuLi4v
-c2VjdXJpdHkva2V5cy90cnVzdGVkLWVuY3J5cHRlZC5yc3QgICAgICAgfCAgNCArLQogRG9jdW1l
-bnRhdGlvbi9zeXNjdGwva2VybmVsLnR4dCAgICAgICAgICAgICAgIHwgIDQgKy0KIC4uLi90cmFu
-c2xhdGlvbnMvaXRfSVQvcHJvY2Vzcy9ob3d0by5yc3QgICAgICB8ICAyICstCiAuLi4vaXRfSVQv
-cHJvY2Vzcy9saWNlbnNlLXJ1bGVzLnJzdCAgICAgICAgICAgfCAyOCArKysrLS0tLQogLi4uL2l0
-X0lUL3Byb2Nlc3MvbWFnaWMtbnVtYmVyLnJzdCAgICAgICAgICAgIHwgIDIgKy0KIC4uLi9pdF9J
-VC9wcm9jZXNzL3N0YWJsZS1rZXJuZWwtcnVsZXMucnN0ICAgICB8ICA0ICstCiAuLi4vdHJhbnNs
-YXRpb25zL3poX0NOL2Jhc2ljX3Byb2ZpbGluZy50eHQgICAgfCA3MSAtLS0tLS0tLS0tLS0tLS0t
-LS0tCiAuLi4vdHJhbnNsYXRpb25zL3poX0NOL3Byb2Nlc3MvNC5Db2RpbmcucnN0ICAgfCAgMiAr
-LQogLi4uL3poX0NOL3Byb2Nlc3MvbWFuYWdlbWVudC1zdHlsZS5yc3QgICAgICAgIHwgIDQgKy0K
-IC4uLi96aF9DTi9wcm9jZXNzL3Byb2dyYW1taW5nLWxhbmd1YWdlLnJzdCAgICB8IDI4ICsrKyst
-LS0tCiAuLi4vdmlydHVhbC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdCAgICAgfCAgNSAr
-KwogRG9jdW1lbnRhdGlvbi92aXJ0dWFsL2t2bS92Y3B1LXJlcXVlc3RzLnJzdCAgIHwgIDIgKwog
-RG9jdW1lbnRhdGlvbi92bS9obW0ucnN0ICAgICAgICAgICAgICAgICAgICAgIHwgIDkgKystCiBE
-b2N1bWVudGF0aW9uL3g4Ni94ODZfNjQvNWxldmVsLXBhZ2luZy5yc3QgICAgfCAgMiArLQogRG9j
-dW1lbnRhdGlvbi94ODYveDg2XzY0L2Jvb3Qtb3B0aW9ucy5yc3QgICAgIHwgIDQgKy0KIC4uLi94
-ODYveDg2XzY0L2Zha2UtbnVtYS1mb3ItY3B1c2V0cy5yc3QgICAgICB8ICAyICstCiBNQUlOVEFJ
-TkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNiArLQogYXJjaC9hcm0v
-S2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KIGFyY2gvYXJtNjQv
-a2VybmVsL2tleGVjX2ltYWdlLmMgICAgICAgICAgICAgICB8ICAyICstCiBhcmNoL3Bvd2VycGMv
-S2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogYXJjaC94ODYvS2NvbmZp
-ZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTYgKystLS0KIGFyY2gveDg2L0tjb25m
-aWcuZGVidWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCiBhcmNoL3g4Ni9ib290L2hl
-YWRlci5TICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogYXJjaC94ODYvZW50cnkvZW50
-cnlfNjQuUyAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KIGFyY2gveDg2L2luY2x1ZGUvYXNt
-L2Jvb3RwYXJhbV91dGlscy5oICAgICAgICB8ICAyICstCiBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9w
-YWdlXzY0X3R5cGVzLmggICAgICAgICAgfCAgMiArLQogYXJjaC94ODYvaW5jbHVkZS9hc20vcGd0
-YWJsZV82NF90eXBlcy5oICAgICAgIHwgIDIgKy0KIGFyY2gveDg2L2tlcm5lbC9jcHUvbWljcm9j
-b2RlL2FtZC5jICAgICAgICAgICB8ICAyICstCiBhcmNoL3g4Ni9rZXJuZWwva2V4ZWMtYnppbWFn
-ZTY0LmMgICAgICAgICAgICAgfCAgMiArLQogYXJjaC94ODYva2VybmVsL3BjaS1kbWEuYyAgICAg
-ICAgICAgICAgICAgICAgIHwgIDIgKy0KIGFyY2gveDg2L21tL3RsYi5jICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAyICstCiBhcmNoL3g4Ni9wbGF0Zm9ybS9wdmgvZW5saWdodGVuLmMg
-ICAgICAgICAgICAgfCAgMiArLQogZHJpdmVycy9hY3BpL0tjb25maWcgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgMTAgKy0tCiBkcml2ZXJzL2lzZG4vbUlTRE4vZHNwX2NvcmUuYyAgICAgICAg
-ICAgICAgICAgfCAgMiAtCiBkcml2ZXJzL25ldC9ldGhlcm5ldC9mYXJhZGF5L2Z0Z21hYzEwMC5j
-ICAgICAgfCAgMiArLQogLi4uL2ZpZWxkYnVzL0RvY3VtZW50YXRpb24vZmllbGRidXNfZGV2LnR4
-dCAgIHwgIDQgKy0KIGRyaXZlcnMvdmhvc3Qvdmhvc3QuYyAgICAgICAgICAgICAgICAgICAgICAg
-ICB8ICAyICstCiBpbmNsdWRlL2FjcGkvYWNwaV9kcml2ZXJzLmggICAgICAgICAgICAgICAgICAg
-fCAgMiArLQogaW5jbHVkZS9saW51eC9mc19jb250ZXh0LmggICAgICAgICAgICAgICAgICAgIHwg
-IDIgKy0KIGluY2x1ZGUvbGludXgvbHNtX2hvb2tzLmggICAgICAgICAgICAgICAgICAgICB8ICAy
-ICstCiBpbmNsdWRlL2xpbnV4L21mZC9tYWRlcmEvcGRhdGEuaCAgICAgICAgICAgICAgfCAgMyAr
-LQogbW0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0K
-IHNlY3VyaXR5L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCiB0
-b29scy9pbmNsdWRlL2xpbnV4L2Vyci5oICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogLi4u
-L0RvY3VtZW50YXRpb24vc3RhY2stdmFsaWRhdGlvbi50eHQgICAgICAgIHwgIDQgKy0KIHRvb2xz
-L3Rlc3Rpbmcvc2VsZnRlc3RzL3g4Ni9wcm90ZWN0aW9uX2tleXMuYyB8ICAyICstCiA4NCBmaWxl
-cyBjaGFuZ2VkLCAxODMgaW5zZXJ0aW9ucygrKSwgMjEyIGRlbGV0aW9ucygtKQogZGVsZXRlIG1v
-ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vdHJhbnNsYXRpb25zL3poX0NOL2Jhc2ljX3Byb2ZpbGlu
-Zy50eHQKCi0tIAoyLjIxLjAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWw=
+The Documentation/devicetree/bindings/mtd/nand.txt were both renamed
+and converted to YAML on a single patch, without updating references
+to it. That caused several cross-references to break.
+
+Fixes: 212e49693592 ("dt-bindings: mtd: Add YAML schemas for the generic NAND options")
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt | 2 +-
+ Documentation/devicetree/bindings/mtd/gpmc-nand.txt          | 2 +-
+ Documentation/devicetree/bindings/mtd/marvell-nand.txt       | 2 +-
+ Documentation/devicetree/bindings/mtd/tango-nand.txt         | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+index 3983c11e062c..5794ab1147c1 100644
+--- a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+@@ -24,7 +24,7 @@ Optional children nodes:
+ Children nodes represent the available nand chips.
+ 
+ Other properties:
+-see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
++see Documentation/devicetree/bindings/mtd/nand-controller.yaml for generic bindings.
+ 
+ Example demonstrate on AXG SoC:
+ 
+diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+index c059ab74ed88..44919d48d241 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+@@ -8,7 +8,7 @@ explained in a separate documents - please refer to
+ Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
+ 
+ For NAND specific properties such as ECC modes or bus width, please refer to
+-Documentation/devicetree/bindings/mtd/nand.txt
++Documentation/devicetree/bindings/mtd/nand-controller.yaml
+ 
+ 
+ Required properties:
+diff --git a/Documentation/devicetree/bindings/mtd/marvell-nand.txt b/Documentation/devicetree/bindings/mtd/marvell-nand.txt
+index e0c790706b9b..7eeef1e1ed30 100644
+--- a/Documentation/devicetree/bindings/mtd/marvell-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/marvell-nand.txt
+@@ -58,7 +58,7 @@ Optional properties:
+   Step sizes are not completely random for all and follow certain
+   patterns described in AN-379, "Marvell SoC NFC ECC".
+ 
+-See Documentation/devicetree/bindings/mtd/nand.txt for more details on
++See Documentation/devicetree/bindings/mtd/nand-controller.yaml for more details on
+ generic bindings.
+ 
+ 
+diff --git a/Documentation/devicetree/bindings/mtd/tango-nand.txt b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+index cd1bf2ac9055..91c8420241af 100644
+--- a/Documentation/devicetree/bindings/mtd/tango-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+@@ -11,7 +11,7 @@ Required properties:
+ - #size-cells: <0>
+ 
+ Children nodes represent the available NAND chips.
+-See Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
++See Documentation/devicetree/bindings/mtd/nand-controller.yaml for generic bindings.
+ 
+ Example:
+ 
+-- 
+2.21.0
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
