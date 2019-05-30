@@ -1,49 +1,50 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 1/8] arm64: dts: mt8183: add thermal zone node
-Date: Thu, 30 May 2019 09:08:25 -0700
-Message-ID: <20190530160825.GM40515@google.com>
-References: <1557494826-6044-1-git-send-email-michael.kao@mediatek.com>
- <1557494826-6044-2-git-send-email-michael.kao@mediatek.com>
- <CAJMQK-giJTeERnqjxoSMjF-JXxW9SPmeARWf3f9ZyRgBsYN5fg@mail.gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V4 5/8] memory: tegra: Add EMC scaling support code for
+ Tegra210
+Date: Thu, 30 May 2019 19:14:13 +0300
+Message-ID: <1e197124-57f5-285b-1624-bba2f3d31386@gmail.com>
+References: <20190529082139.5581-1-josephl@nvidia.com>
+ <20190529082139.5581-6-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJMQK-giJTeERnqjxoSMjF-JXxW9SPmeARWf3f9ZyRgBsYN5fg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: "michael.kao" <michael.kao@mediatek.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190529082139.5581-6-josephl@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 30, 2019 at 02:27:28PM +0800, Hsin-Yi Wang wrote:
-> On Fri, May 10, 2019 at 9:27 PM michael.kao <michael.kao@mediatek.com> wrote:
-> 
-> > +
-> > +                       tzts1: tzts1 {
-> > +                               polling-delay-passive = <0>;
-> > +                               polling-delay = <0>;
-> > +                               thermal-sensors = <&thermal 1>;
-> > +                               sustainable-power = <0>;
-> > +                               trips {};
-> > +                               cooling-maps {};
-> > +                       };
-> > +
-> Is 0 a valid initial sustainable-power setting? Since we'll still get
-> warning[1] about this, though it might not be harmful.
-> 
-> If 0 is a valid setting, maybe we should consider showing the warning
-> of not setting this property in [2]?
-> 
-> [1] https://elixir.bootlin.com/linux/latest/source/drivers/thermal/power_allocator.c#L570
-> [2] https://elixir.bootlin.com/linux/latest/source/drivers/thermal/of-thermal.c#L1049
-
-IIUC a value of 0 is pointless, the thermal framework will still use
-an estimated value:
-
-https://elixir.bootlin.com/linux/v5.1.5/source/drivers/thermal/power_allocator.c#L203
-
-As commented on v1 (https://patchwork.kernel.org/patch/10926519/#22620905)
-the value of the property may depend on the thermal characteristics of
-the device, there is not one correct value per SoC/core. If it is
-specified at SoC level device makers should be aware that they might
-have to override it for 'optimal' behavior on their device.
+MjkuMDUuMjAxOSAxMToyMSwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gVGhpcyBwYXRjaCBhZGRz
+IHRoZSByZXF1aXJlZCBBUElzIGFuZCB2YXJpYWJsZXMgZm9yIHRoZSBFTUMgc2NhbGluZwo+IHNl
+cXVlbmNlIGNvZGUgb24gVGVncmEyMTAuCj4gCj4gQmFzZWQgb24gdGhlIHdvcmsgb2YgUGV0ZXIg
+RGUgU2NocmlqdmVyIDxwZGVzY2hyaWp2ZXJAbnZpZGlhLmNvbT4uCj4gCj4gU2lnbmVkLW9mZi1i
+eTogSm9zZXBoIExvIDxqb3NlcGhsQG52aWRpYS5jb20+Cj4gLS0tCj4gdjQ6Cj4gLSBmaXggdGhl
+IEFQSSB3aXRoIGdlbmVyaWMgbmFtaW5nCj4gLSB1c2UgJ3UxNicgaW4gJ3N0cnVjdCBlbWNfdGFi
+bGVfcmVnaXN0ZXJfb2Zmc2V0Jwo+IC0tLQoKPiAgCj4gK2V4dGVybiBjb25zdCBzdHJ1Y3QgZW1j
+X3RhYmxlX3JlZ2lzdGVyX29mZnNldCByZWdfb2ZmOwo+ICtleHRlcm4gdW5zaWduZWQgbG9uZyBk
+cmFtX292ZXJfdGVtcF9zdGF0ZTsKClBsZWFzZSBhdm9pZCBnbG9iYWwgdmFyaWFibGVzIHdoZXJl
+IHRoZXkgYXJlIG5vdCByZWFsbHkgbmVlZGVkLgoKQWRkIHJlZ19vZmYgcG9pbnRlciB0byB0ZWdy
+YV9lbWMuCgpSZW1vdmUgZHJhbV9vdmVyX3RlbXBfc3RhdGUgdmFyaWFibGUgZW50aXJlbHkgYW5k
+IHJlcGxhY2UgaXQgd2l0aApURUdSQV9EUkFNX09WRVJfVEVNUF9OT05FIGluIHRoZSBjb2RlIHNp
+bmNlIG5vdGhpbmcgY2hhbmdlcyB0aGUgdmFyaWFibGUuCgpBZ2FpbiwgcHJlcGVuZCBhbGwgZ2xv
+YmFsIHN5bWJvbHMgd2l0aCB0ZWdyYTIxMF8uCgpBbHRlcm5hdGl2ZWx5IHlvdSBjb3VsZCBzaW1w
+bHkgaW5jbHVkZSB0ZWdyYTIxMC1lbWMtY2MtcjIxMDIxLmMgaW50bwp0ZWdyYTIxMC1lbWMuYywg
+SSBkb24ndCBzZWUgYW55dGhpbmcgd3Jvbmcgd2l0aCB0aGF0IHZhcmlhbnQuCgoJI2luY2x1ZGUg
+InRlZ3JhMjEwLWVtYy1jYy1yMjEwMjEuYyIKCk9yIHlvdSBjb3VsZCBzcXVhc2ggaXQgYWxsIGlu
+dG8gYSBzaW5nbGUgc291cmNlIGZpbGUgaWYgdmFyaWFudHMgb3RoZXIKdGhhbiAicjIxMDIxIiBh
+cmUgbm90IHBsYW5uZWQgdG8gYmUgc3VwcG9ydGVkLiBUaGlzIHdpbGwgaGVscCB0byByZWR1Y2UK
+bWVzc2luZXNzIG9mIHRoZSBjb2RlIGFuZCB3aWxsIGFsbG93IGNvbXBpbGVyIHRvIGJldHRlciBv
+cHRpbWl6ZSBpdCBhbGwuCgotLSAKRG1pdHJ5CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
