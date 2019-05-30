@@ -1,53 +1,47 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] of/fdt: pass early_init_dt_reserve_memory_arch() with bool type nomap
-Date: Thu, 30 May 2019 19:39:27 +0900
-Message-ID: <20190530103927.20952-1-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] ARM: dts: vexpress: set the right partition type for NOR
+ flash
+Date: Thu, 30 May 2019 12:45:52 +0200
+Message-ID: <CACRpkdZi3GPjkzyPAXBx2Ffc7DbgLfVhxpBW2q+iMWV5Rfz_4g@mail.gmail.com>
+References: <20190530091156.11693-1-sudeep.holla@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190530091156.11693-1-sudeep.holla@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The third argument 'nomap' of early_init_dt_reserve_memory_arch() is
-bool. It is preferred to pass it with a bool type parameter.
+On Thu, May 30, 2019 at 11:12 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+> We should set up the partitions in the right way so we will find out
+> what is in the flash.
+>
+> The ARM Firmware Suite now has its own compatible and proper device
+> tree bindings to trigger discovery of the flash contents, and Linux
+> supports handling the new type of AFS partitions.
+>
+> Based on commit 7f8e78ca90e2 ("arm64: dts: juno: set the right partition
+> type for NOR flash")
+>
+> Cc: Liviu Dudau <liviu.dudau@arm.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
- drivers/of/fdt.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index de893c9616a1..b165e8b3a347 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -551,7 +551,8 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
- 	phys_addr_t base, size;
- 	int len;
- 	const __be32 *prop;
--	int nomap, first = 1;
-+	int first = 1;
-+	bool nomap;
- 
- 	prop = of_get_flat_dt_prop(node, "reg", &len);
- 	if (!prop)
-@@ -666,7 +667,7 @@ void __init early_init_fdt_scan_reserved_mem(void)
- 		fdt_get_mem_rsv(initial_boot_params, n, &base, &size);
- 		if (!size)
- 			break;
--		early_init_dt_reserve_memory_arch(base, size, 0);
-+		early_init_dt_reserve_memory_arch(base, size, false);
- 	}
- 
- 	of_scan_flat_dt(__fdt_scan_reserved_mem, NULL);
-@@ -684,7 +685,7 @@ void __init early_init_fdt_reserve_self(void)
- 	/* Reserve the dtb region */
- 	early_init_dt_reserve_memory_arch(__pa(initial_boot_params),
- 					  fdt_totalsize(initial_boot_params),
--					  0);
-+					  false);
- }
- 
- /**
--- 
-2.17.1
+Thanks for fixing this!
+
+Yours,
+Linus Walleij
