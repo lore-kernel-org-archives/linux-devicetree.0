@@ -1,7 +1,7 @@
 From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 3/4] drm/msm/dsi: Add old timings quirk for 10nm phy
-Date: Thu, 30 May 2019 09:00:49 -0700
-Message-ID: <20190530160049.2875-1-jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 4/4] drm/msm/dsi: Add support for MSM8998 DSI controller
+Date: Thu, 30 May 2019 09:00:59 -0700
+Message-ID: <20190530160059.2929-1-jeffrey.l.hugo@gmail.com>
 References: <20190530155909.2718-1-jeffrey.l.hugo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190530155909.2718-1-jeffrey.l.hugo@gmail.com>
@@ -10,73 +10,65 @@ To: robdclark@gmail.com, sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, sibis@codeaurora.org, chandanu@codeaurora.org, abhinavk@codeaurora.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The v3.0.0 10nm phy has two different implementations between MSM8998 and
-SDM845, which require different timings calculations.  Unfortunately, the
-hardware designers did not choose to revise the version to account for this
-delta so implement a quirk instead.
+The DSI controller on the MSM8998 SoC is a 6G v2.0.0 controller which is
+very similar to the v2.0.1 of SDM845.
 
 Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 ---
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.h      |  4 ++++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c | 12 +++++++++---
- 2 files changed, 13 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
+ 2 files changed, 22 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-index 7161beb23b03..3c51df1aa2ee 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-@@ -21,6 +21,9 @@
- #define dsi_phy_read(offset) msm_readl((offset))
- #define dsi_phy_write(offset, data) msm_writel((data), (offset))
- 
-+/* v3.0.0 10nm implementation that requires the old timings settings */
-+#define V3_0_0_10NM_OLD_TIMINGS_QUIRK	BIT(0)
-+
- struct msm_dsi_phy_ops {
- 	int (*init) (struct msm_dsi_phy *phy);
- 	int (*enable)(struct msm_dsi_phy *phy, int src_pll_id,
-@@ -41,6 +44,7 @@ struct msm_dsi_phy_cfg {
- 	bool src_pll_truthtable[DSI_MAX][DSI_MAX];
- 	const resource_size_t io_start[DSI_MAX];
- 	const int num_dsi_phy;
-+	const int quirks;
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+index dcdfb1bb54f9..7dd17b59c69d 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+@@ -118,6 +118,25 @@ static const struct msm_dsi_config msm8996_dsi_cfg = {
+ 	.num_dsi = 2,
  };
  
- extern const struct msm_dsi_phy_cfg dsi_phy_28nm_hpm_cfgs;
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
-index b1e7dbc69fa6..eb28937f4b34 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
-@@ -42,6 +42,9 @@ static void dsi_phy_hw_v3_0_lane_settings(struct msm_dsi_phy *phy)
- 	u8 tx_dctrl[] = { 0x00, 0x00, 0x00, 0x04, 0x01 };
- 	void __iomem *lane_base = phy->lane_base;
- 
-+	if (phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK)
-+		tx_dctrl[3] = 0x02;
++static const char * const dsi_msm8998_bus_clk_names[] = {
++	"iface", "bus", "core",
++};
 +
- 	/* Strength ctrl settings */
- 	for (i = 0; i < 5; i++) {
- 		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_LPTX_STR_CTRL(i),
-@@ -74,9 +77,11 @@ static void dsi_phy_hw_v3_0_lane_settings(struct msm_dsi_phy *phy)
- 			      tx_dctrl[i]);
- 	}
- 
--	/* Toggle BIT 0 to release freeze I/0 */
--	dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x05);
--	dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x04);
-+	if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
-+		/* Toggle BIT 0 to release freeze I/0 */
-+		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x05);
-+		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x04);
-+	}
- }
- 
- static int dsi_10nm_phy_enable(struct msm_dsi_phy *phy, int src_pll_id,
-@@ -238,4 +243,5 @@ const struct msm_dsi_phy_cfg dsi_phy_10nm_8998_cfgs = {
- 	},
- 	.io_start = { 0xc994400, 0xc996400 },
- 	.num_dsi_phy = 2,
-+	.quirks = V3_0_0_10NM_OLD_TIMINGS_QUIRK,
++static const struct msm_dsi_config msm8998_dsi_cfg = {
++	.io_offset = DSI_6G_REG_SHIFT,
++	.reg_cfg = {
++		.num = 2,
++		.regs = {
++			{"vdd", 367000, 16 },	/* 0.9 V */
++			{"vdda", 62800, 2 },	/* 1.2 V */
++		},
++	},
++	.bus_clk_names = dsi_msm8998_bus_clk_names,
++	.num_bus_clks = ARRAY_SIZE(dsi_msm8998_bus_clk_names),
++	.io_start = { 0xc994000, 0xc996000 },
++	.num_dsi = 2,
++};
++
+ static const char * const dsi_sdm845_bus_clk_names[] = {
+ 	"iface", "bus",
  };
+@@ -186,6 +205,8 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+ 		&msm8916_dsi_cfg, &msm_dsi_6g_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V1_4_1,
+ 		&msm8996_dsi_cfg, &msm_dsi_6g_host_ops},
++	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_0,
++		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
+ 		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ };
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+index 16c507911110..4f63b57b19dc 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+@@ -25,6 +25,7 @@
+ #define MSM_DSI_6G_VER_MINOR_V1_3	0x10030000
+ #define MSM_DSI_6G_VER_MINOR_V1_3_1	0x10030001
+ #define MSM_DSI_6G_VER_MINOR_V1_4_1	0x10040001
++#define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
+ #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
+ 
+ #define MSM_DSI_V2_VER_MINOR_8064	0x0
 -- 
 2.17.1
