@@ -1,83 +1,69 @@
-From: Sagar Kadam <sagar.kadam@sifive.com>
-Subject: Re: [PATCH v8 1/3] dt-bindings: i2c: extend existing opencore
- bindings.
-Date: Thu, 30 May 2019 09:27:31 +0530
-Message-ID: <CAARK3Hm0F+6qAh5LYbqnfn5LeDyptyBy+_DZxAxxFg5bhe8Uxg@mail.gmail.com>
-References: <1559104047-13920-1-git-send-email-sagar.kadam@sifive.com>
- <1559104047-13920-2-git-send-email-sagar.kadam@sifive.com>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: =?UTF-8?Q?Re:_[PATCH_v3_1/8]_dt-bindings:_soc:_Add_Aspeed_XDMA_engine_bi?=
+ =?UTF-8?Q?nding_documentation?=
+Date: Thu, 30 May 2019 15:00:25 +0930
+Message-ID: <58b74556-cbf0-4da2-9392-4c4ac40ad760@www.fastmail.com>
+References: <1559153408-31190-1-git-send-email-eajames@linux.ibm.com>
+ <1559153408-31190-2-git-send-email-eajames@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1559104047-13920-2-git-send-email-sagar.kadam@sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com, Andrew Lunn <andrew@lunn.ch>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Sagar Kadam <sagar.kadam@sifive.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559153408-31190-2-git-send-email-eajames@linux.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie James <eajames@linux.ibm.com>, linux-aspeed@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
 
-Please let me know if this patch is as per your requirements/comments
-you mentioned earlier.
 
-Thanks & Regards,
-Sagar Kadam
-On Wed, May 29, 2019 at 9:57 AM Sagar Shrikant Kadam
-<sagar.kadam@sifive.com> wrote:
->
-> Reformatted compatibility strings to one valid combination on
-> each line.
-> Add FU540-C000 specific device tree bindings to already available
-> i2-ocores file. This device is available on
-> HiFive Unleashed Rev A00 board. Move interrupt under optional
-> property list as this can be optional.
->
-> The FU540-C000 SoC from sifive, has an Opencore's I2C block
-> reimplementation.
->
-> The DT compatibility string for this IP is present in HDL and available at.
-> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/i2c/I2C.scala#L73
->
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+On Thu, 30 May 2019, at 03:40, Eddie James wrote:
+> Document the bindings.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> index 17bef9a..6b25a80 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> @@ -1,9 +1,13 @@
->  Device tree configuration for i2c-ocores
->
->  Required properties:
-> -- compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
-> +- compatible      : "opencores,i2c-ocores"
-> +                    "aeroflexgaisler,i2cmst"
-> +                    "sifive,fu540-c000-i2c", "sifive,i2c0"
-> +                    For Opencore based I2C IP block reimplemented in
-> +                    FU540-C000 SoC. Please refer to sifive-blocks-ip-versioning.txt
-> +                    for additional details.
->  - reg             : bus address start and address range size of device
-> -- interrupts      : interrupt number
->  - clocks          : handle to the controller clock; see the note below.
->                      Mutually exclusive with opencores,ip-clock-frequency
->  - opencores,ip-clock-frequency: frequency of the controller clock in Hz;
-> @@ -12,6 +16,7 @@ Required properties:
->  - #size-cells     : should be <0>
->
->  Optional properties:
-> +- interrupts      : interrupt number.
->  - clock-frequency : frequency of bus clock in Hz; see the note below.
->                      Defaults to 100 KHz when the property is not specified
->  - reg-shift       : device register offsets are shifted by this value
-> --
-> 1.9.1
+>  .../devicetree/bindings/soc/aspeed/xdma.txt        | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt 
+> b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+> new file mode 100644
+> index 0000000..85e82ea
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+> @@ -0,0 +1,23 @@
+> +* Device tree bindings for the Aspeed XDMA Engine
+> +
+> +The XDMA Engine embedded in the AST2500 SOC can perform automatic DMA
+> +operations over PCI between the AST2500 (acting as a BMC) and a host 
+> processor.
+> +
+> +Required properties:
+> +
+> + - compatible		"aspeed,ast2500-xdma"
+> + - reg			contains the offset and length of the memory region
+> +			assigned to the XDMA registers
+> + - resets		reset specifier for the syscon reset associated with
+> +			the XDMA engine
+> + - interrupts		the interrupt associated with the XDMA engine on this
+> +			platform
+
+The indentation is quite distracting. If you rev the series can you fix it?
+
+Otherwise,
+
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+> +
+> +Example:
+> +
+> +    xdma@1e6e7000 {
+> +        compatible = "aspeed,ast2500-xdma";
+> +        reg = <0x1e6e7000 0x100>;
+> +        resets = <&syscon ASPEED_RESET_XDMA>;
+> +        interrupts = <6>;
+> +    };
+> -- 
+> 1.8.3.1
+> 
 >
