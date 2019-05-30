@@ -1,45 +1,63 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2] ARM: dts: aspeed: Add YADRO VESNIN BMC
-Date: Thu, 30 May 2019 18:53:12 +0200
-Message-ID: <20190530165312.GH18059@lunn.ch>
-References: <20190530143933.25414-1-a.filippov@yadro.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: [PATCH v8 0/7] Add virtio-iommu driver
+Date: Thu, 30 May 2019 18:09:22 +0100
+Message-ID: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190530143933.25414-1-a.filippov@yadro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Filippov <a.filippov@yadro.com>
-Cc: linux-aspeed@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <virtio-dev-return-5757-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
+Sender: <virtio-dev@lists.oasis-open.org>
+List-Post: <mailto:virtio-dev@lists.oasis-open.org>
+List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
+List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
+List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+To: joro@8bytes.org, mst@redhat.com
+Cc: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, Lorenzo.Pieralisi@arm.com, robin.murphy@arm.com, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com, tnowicki@caviumnetworks.com, kevin.tian@intel.com, bauerman@linux.ibm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 30, 2019 at 05:39:33PM +0300, Alexander Filippov wrote:
-> VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
-> by YADRO.
-> 
-> Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
-> ---
->  arch/arm/boot/dts/Makefile                  |   1 +
->  arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 234 ++++++++++++++++++++
->  2 files changed, 235 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 834cce80d1b8..811e9312cf22 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1259,6 +1259,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
->  	aspeed-bmc-microsoft-olympus.dtb \
->  	aspeed-bmc-opp-lanyang.dtb \
->  	aspeed-bmc-opp-palmetto.dtb \
-> +	aspeed-bmc-opp-vesnin.dtb \
->  	aspeed-bmc-opp-romulus.dtb \
->  	aspeed-bmc-opp-swift.dtb \
->  	aspeed-bmc-opp-witherspoon.dtb \
+Implement the virtio-iommu driver, following specification v0.12 [1].
+Since last version [2] we've worked on improving the specification,
+which resulted in the following changes to the interface:
+* Remove the EXEC flag.
+* Add feature bit for the MMIO flag.
+* Change domain_bits to domain_range.
 
-Hi Alexander
+Given that there were small changes to patch 5/7, I removed the review
+and test tags. Please find the code at [3].
 
-These appear to be in alphabetic order, so it should be added before
-witherspoon.
+[1] Virtio-iommu specification v0.12, sources and pdf
+    git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.12
+    http://jpbrucker.net/virtio-iommu/spec/v0.12/virtio-iommu-v0.12.pdf
+    http://jpbrucker.net/virtio-iommu/spec/diffs/virtio-iommu-dev-diff-v0.11-v0.12.pdf
 
-	Andrew
+[2] [PATCH v7 0/7] Add virtio-iommu driver
+    https://lore.kernel.org/linux-pci/0ba215f5-e856-bf31-8dd9-a85710714a7a@arm.com/T/
+
+[3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.12
+    git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.12
+
+Jean-Philippe Brucker (7):
+  dt-bindings: virtio-mmio: Add IOMMU description
+  dt-bindings: virtio: Add virtio-pci-iommu node
+  of: Allow the iommu-map property to omit untranslated devices
+  PCI: OF: Initialize dev->fwnode appropriately
+  iommu: Add virtio-iommu driver
+  iommu/virtio: Add probe request
+  iommu/virtio: Add event queue
+
+ .../devicetree/bindings/virtio/iommu.txt      |   66 +
+ .../devicetree/bindings/virtio/mmio.txt       |   30 +
+ MAINTAINERS                                   |    7 +
+ drivers/iommu/Kconfig                         |   11 +
+ drivers/iommu/Makefile                        |    1 +
+ drivers/iommu/virtio-iommu.c                  | 1176 +++++++++++++++++
+ drivers/of/base.c                             |   10 +-
+ drivers/pci/of.c                              |    6 +
+ include/uapi/linux/virtio_ids.h               |    1 +
+ include/uapi/linux/virtio_iommu.h             |  165 +++
+ 10 files changed, 1470 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
+ create mode 100644 drivers/iommu/virtio-iommu.c
+ create mode 100644 include/uapi/linux/virtio_iommu.h
+
+-- 
+2.21.0
