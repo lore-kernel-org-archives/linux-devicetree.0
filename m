@@ -1,101 +1,53 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
-Date: Thu, 30 May 2019 02:17:50 +0000
-Message-ID: <AM5PR0402MB28650ECE851C840990816C1CF1180@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20171115060459.45375-1-ran.wang_1@nxp.com>
- <87ineb9b5v.fsf@linux.intel.com>
- <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com>
- <87shdfet90.fsf@linux.intel.com>
- <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <87k1eaanjw.fsf@linux.intel.com>
- <AM5PR0402MB2865AB6C2A50851B7EA4E653F11F0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <874l5dr21m.fsf@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <874l5dr21m.fsf@linux.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH 2/2] net: macb: Add support for SiFive FU540-C000
+Date: Wed, 29 May 2019 19:42:32 -0700 (PDT)
+Message-ID: <mhng-c7fba225-8035-4808-bdd6-bc05da5d2674@palmer-si-x1e>
+References: <20190524134847.GF2979@lunn.ch>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190524134847.GF2979@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: andrew@lunn.ch
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, Sachin Ghadi <sachin.ghadi@sifive.com>, yash.shah@sifive.com, robh+dt@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, ynezz@true.cz, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
-
-On Wednesday, May 29, 2019 18:25, Felipe Balbi wrote:
->=20
-> Hi,
->=20
-> Ran Wang <ran.wang_1@nxp.com> writes:
-> >> >> >> c) WHAT does this mean for PCI devices?
-> >
-> > According to DWC3 data book, I think this (PCI) mean to the case of 'ma=
-ster
-> bus type =3D Native'
-> > The data book describes this feature as 'system bus DMA option for the
-> > master bus, which may be configured as AHB, AXI, or Native.' On Table
-> > 6-5, it says when MBUS_TYPE is Native, the definition of 4 transfer typ=
-es
-> control bits [3-0] is 'Same as AXI'.
-> >
-> > However, as to the code implementation to be generic to both PCI and
-> > AXI, I admit I don't have a perfect solution so far, only 2 proposals w=
-ith
-> concerns:
-> >
-> > a. Create another module driver like dwc3-exynos.c
-> (arch/arm/boot/dts/wxynos54xx.dtsi)
-> >     to contain above programming code. However, it will touch the same =
-reg
-> range of DWC3
-> >     I think this is not good.
->=20
-> I'd prefer avoiding another glue :-)
-
-Got it.
-=20
-> > b. Add #ifdef CONFIG_ARCH_LAYERSCAPE in drivers/usb/dwc3/core.c to
-> constrain hacking code
-> >    can only take effect for Layerscape (AXI case). I know it look ugly.
-> >
-> > Do you have any better advice on this (besides changed power on default
-> value from HW perspective)?
->=20
-> Maybe we don't need to care, actually. Since this property will only be n=
-eeded
-> for RTL instantiation that didn't configure these defaults properly durin=
-g
-> coreConsultant.
-
-Ok, I think I could add information in bindings to highlight this setting m=
-ight
-be RTL instantiation (SoC) relevant to prevent misusing.
-
-> >> >> >> Another question is: Why wasn't this setup properly during
-> >> >> >> coreConsultant instantiation of the RTL? Do you have devices on
-> >> >> >> the market already that need this or is this some early FPGA
-> >> >> >> model or test-only
-> >> >> ASIC?
-> >
-> > Several Layerscape platforms like LS1043ARDB, LS1046ARDB, etc. are
-> > already on the market and have this issue. So I have to work out a SW p=
-atch to
-> fix them.
->=20
-> Thank you, now I'm certain that this is not some temporary solution :-)
->=20
-> Thanks for going through this again. Please refresh the patch so we can t=
-ry to
-> get it merged.
-
-Sure, as I know all LS1043A and LS1046A relevant platforms have added 'dma-=
-coherent'
-to DTS node of 'soc' in mainline, which means without this fix USB function=
- will down
-definitely, I will go through all update requirement we've discussed and wo=
-rk out
-next version patch. Thank you.
-
-Regards,
-Ran=20
+T24gRnJpLCAyNCBNYXkgMjAxOSAwNjo0ODo0NyBQRFQgKC0wNzAwKSwgYW5kcmV3QGx1bm4uY2gg
+d3JvdGU6Cj4gT24gRnJpLCBNYXkgMjQsIDIwMTkgYXQgMTA6MjI6MDZBTSArMDUzMCwgWWFzaCBT
+aGFoIHdyb3RlOgo+PiBPbiBUaHUsIE1heSAyMywgMjAxOSBhdCA4OjI0IFBNIEFuZHJldyBMdW5u
+IDxhbmRyZXdAbHVubi5jaD4gd3JvdGU6Cj4+ID4KPj4gPiA+ICtzdGF0aWMgaW50IGZ1NTQwX21h
+Y2JfdHhfc2V0X3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVuc2lnbmVkIGxvbmcgcmF0ZSwKPj4g
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBwYXJlbnRf
+cmF0ZSkKPj4gPiA+ICt7Cj4+ID4gPiArICAgICByYXRlID0gZnU1NDBfbWFjYl90eF9yb3VuZF9y
+YXRlKGh3LCByYXRlLCAmcGFyZW50X3JhdGUpOwo+PiA+ID4gKyAgICAgaW93cml0ZTMyKHJhdGUg
+IT0gMTI1MDAwMDAwLCBtZ210LT5yZWcpOwo+PiA+Cj4+ID4gVGhhdCBsb29rcyBvZGQuIFdyaXRp
+bmcgdGhlIHJlc3VsdCBvZiBhIGNvbXBhcmlzb24gdG8gYSByZWdpc3Rlcj8KPj4KPj4gVGhlIGlk
+ZWEgd2FzIHRvIHdyaXRlICIxIiB0byB0aGUgcmVnaXN0ZXIgaWYgdGhlIHZhbHVlIG9mIHJhdGUg
+aXMKPj4gYW55dGhpbmcgZWxzZSB0aGFuIDEyNTAwMDAwMC4KPgo+IEknbSBub3QgYSBsYW5ndWFn
+ZSBsYXd5ZXIuIElzIGl0IGd1YXJhbnRlZWQgdGhhdCBhbiBleHByZXNzaW9uIGxpa2UKPiB0aGlz
+IHJldHVybnMgMT8gQW55IHZhbHVlICEwIGlzIHRydWUsIHNvIG1heWJlIGl0IGFjdHVhbGx5IHJl
+dHVybnMgNDI/CgpGcm9tIFN0YWNrIE92ZXJmbG93OiBodHRwczovL3N0YWNrb3ZlcmZsb3cuY29t
+L3F1ZXN0aW9ucy8xODA5NzkyMi9yZXR1cm4tdmFsdWUtb2Ytb3BlcmF0b3ItaW4tYwoKIkMxMShJ
+U08vSUVDIDk4OTk6MjAxeCkgwqc2LjUuOCBSZWxhdGlvbmFsIG9wZXJhdG9ycwoKRWFjaCBvZiB0
+aGUgb3BlcmF0b3JzIDwgKGxlc3MgdGhhbiksID4gKGdyZWF0ZXIgdGhhbiksIDw9IChsZXNzIHRo
+YW4gb3IgZXF1YWwKdG8pLCBhbmQgPj0gKGdyZWF0ZXIgdGhhbiBvciBlcXVhbCB0bykgc2hhbGwg
+eWllbGQgMSBpZiB0aGUgc3BlY2lmaWVkIHJlbGF0aW9uCmlzIHRydWUgYW5kIDAgaWYgaXQgaXMg
+ZmFsc2UuIFRoZSByZXN1bHQgaGFzIHR5cGUgaW50LiIKCj4+IFRvIG1ha2UgaXQgZWFzaWVyIHRv
+IHJlYWQsIEkgd2lsbCBjaGFuZ2UgdGhpcyB0byBiZWxvdzoKPj4gICAgIC0gaW93cml0ZTMyKHJh
+dGUgIT0gMTI1MDAwMDAwLCBtZ210LT5yZWcpOwo+PiAgICAgKyBpZiAocmF0ZSAhPSAxMjUwMDAw
+MDApCj4+ICAgICArICAgICBpb3dyaXRlMzIoMSwgbWdtdC0+cmVnKTsKPj4gICAgICsgZWxzZQo+
+PiAgICAgKyAgICAgaW93cml0ZTMyKDAsIG1nbXQtPnJlZyk7Cj4+Cj4+IEhvcGUgdGhhdCdzIGZp
+bmUuIFRoYW5rcyBmb3IgeW91ciBjb21tZW50Cj4KPiBZZXMsIHRoYXQgaXMgZ29vZC4KPgo+ICAg
+ICAgQW5kcmV3CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpsaW51eC1yaXNjdiBtYWlsaW5nIGxpc3QKbGludXgtcmlzY3ZAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJpc2N2
+Cg==
