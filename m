@@ -1,8 +1,7 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH] arm: dts: vexpress-v2p-ca15_a7: disable NOR flash node by
- default
-Date: Thu, 30 May 2019 10:11:39 +0100
-Message-ID: <20190530091139.11643-1-sudeep.holla@arm.com>
+Subject: [PATCH] ARM: dts: vexpress: set the right partition type for NOR flash
+Date: Thu, 30 May 2019 10:11:56 +0100
+Message-ID: <20190530091156.11693-1-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -20,62 +19,52 @@ To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Accessing the NOR flash memory from the kernel will disrupt CPU sleep/
-idles states and CPU hotplugging. We need to disable this DT node by
-default. Setups that want to access the flash can modify this entry to
-enable the flash again but also ensuring to disable CPU idle states and
-CPU hotplug.
+We should set up the partitions in the right way so we will find out
+what is in the flash.
 
-The platform firmware assumes the flash is always in read mode while
-Linux kernel driver leaves NOR flash in "read id" mode after
-initialization. If it gets used actively, it can be in some other state.
+The ARM Firmware Suite now has its own compatible and proper device
+tree bindings to trigger discovery of the flash contents, and Linux
+supports handling the new type of AFS partitions.
 
-So far we had not seen this issue as the NOR flash drivers in kernel
-were not enabled by default. However it was enable in multi_v7 config by
-Commit 5f068190cc10 ("ARM: multi_v7_defconfig: Enable support for CFI NOR FLASH")
-
-So, let's mark the NOR flash disabled so that the platform can boot
-again. This based on:
-Commit 980bbff018f6 ("ARM64: juno: disable NOR flash node by default")
+Based on commit 7f8e78ca90e2 ("arm64: dts: juno: set the right partition
+type for NOR flash")
 
 Cc: Liviu Dudau <liviu.dudau@arm.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- arch/arm/boot/dts/vexpress-v2m-rs1.dtsi    | 2 +-
- arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts | 9 +++++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 3 +++
+ arch/arm/boot/dts/vexpress-v2m.dtsi     | 3 +++
+ 2 files changed, 6 insertions(+)
 
 diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-index d3963e9eaf48..1b5bc536c547 100644
+index 1b5bc536c547..d6a1fc269241 100644
 --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
 +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -30,7 +30,7 @@
- 			#interrupt-cells = <1>;
- 			ranges;
- 
--			flash@0,00000000 {
-+			nor_flash: flash@0,00000000 {
- 				compatible = "arm,vexpress-flash", "cfi-flash";
+@@ -35,6 +35,9 @@
  				reg = <0 0x00000000 0x04000000>,
  				      <4 0x00000000 0x04000000>;
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-index 164c904c9992..1de0a658adf1 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-@@ -680,3 +680,12 @@
- 				<0 3 &gic 0 39 4>;
- 	};
- };
-+
-+&nor_flash {
-+	/*
-+	 * Unfortunately, accessing the flash disturbs the CPU idle states
-+	 * (suspend) and CPU hotplug of this platform. For this reason, flash
-+	 * hardware access is disabled by default on this platform alone.
-+	 */
-+	status = "disabled";
-+};
+ 				bank-width = <4>;
++				partitions {
++					compatible = "arm,arm-firmware-suite";
++				};
+ 			};
+ 
+ 			psram@1,00000000 {
+diff --git a/arch/arm/boot/dts/vexpress-v2m.dtsi b/arch/arm/boot/dts/vexpress-v2m.dtsi
+index 798c97aff7fa..8e57e15307e2 100644
+--- a/arch/arm/boot/dts/vexpress-v2m.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m.dtsi
+@@ -35,6 +35,9 @@
+ 				reg = <0 0x00000000 0x04000000>,
+ 				      <1 0x00000000 0x04000000>;
+ 				bank-width = <4>;
++				partitions {
++					compatible = "arm,arm-firmware-suite";
++				};
+ 			};
+ 
+ 			psram@2,00000000 {
 -- 
 2.17.1
