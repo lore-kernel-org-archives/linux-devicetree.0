@@ -1,63 +1,277 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH 1/3] mfd: madera: Update DT bindings to add additional CODECs
-Date: Thu, 30 May 2019 15:39:51 +0100
-Message-ID: <20190530143953.25799-1-ckeepax@opensource.cirrus.com>
+From: Alexander Filippov <a.filippov@yadro.com>
+Subject: [PATCH v2] ARM: dts: aspeed: Add YADRO VESNIN BMC
+Date: Thu, 30 May 2019 17:39:33 +0300
+Message-ID: <20190530143933.25414-1-a.filippov@yadro.com>
 Mime-Version: 1.0
 Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+To: linux-aspeed@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexander Filippov <a.filippov@yadro.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
+VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
+by YADRO.
 
-This adds the cs47l15, cs42l92, cs47l92 and cs47l93 to the list of
-compatible strings and updates some properties that need to note
-the new CODECs.
-
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
 ---
- Documentation/devicetree/bindings/mfd/madera.txt | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 234 ++++++++++++++++++++
+ 2 files changed, 235 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
 
-diff --git a/Documentation/devicetree/bindings/mfd/madera.txt b/Documentation/devicetree/bindings/mfd/madera.txt
-index db3266088386a..cad0f28005027 100644
---- a/Documentation/devicetree/bindings/mfd/madera.txt
-+++ b/Documentation/devicetree/bindings/mfd/madera.txt
-@@ -11,10 +11,14 @@ bindings/sound/madera.txt
- Required properties:
- 
-   - compatible : One of the following chip-specific strings:
-+        "cirrus,cs47l15"
-         "cirrus,cs47l35"
-         "cirrus,cs47l85"
-         "cirrus,cs47l90"
-         "cirrus,cs47l91"
-+        "cirrus,cs42l92"
-+        "cirrus,cs47l92"
-+        "cirrus,cs47l93"
-         "cirrus,wm1840"
- 
-   - reg : I2C slave address when connected using I2C, chip select number when
-@@ -22,7 +26,7 @@ Required properties:
- 
-   - DCVDD-supply : Power supply for the device as defined in
-     bindings/regulator/regulator.txt
--    Mandatory on CS47L35, CS47L90, CS47L91
-+    Mandatory on CS47L15, CS47L35, CS47L90, CS47L91, CS42L92, CS47L92, CS47L93
-     Optional on CS47L85, WM1840
- 
-   - AVDD-supply, DBVDD1-supply, DBVDD2-supply, CPVDD1-supply, CPVDD2-supply :
-@@ -35,7 +39,7 @@ Required properties:
-     (CS47L85, WM1840)
- 
-   - SPKVDD-supply : Power supply for the device
--    (CS47L35)
-+    (CS47L15, CS47L35)
- 
-   - interrupt-controller : Indicates that this device is an interrupt controller
- 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 834cce80d1b8..811e9312cf22 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1259,6 +1259,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-microsoft-olympus.dtb \
+ 	aspeed-bmc-opp-lanyang.dtb \
+ 	aspeed-bmc-opp-palmetto.dtb \
++	aspeed-bmc-opp-vesnin.dtb \
+ 	aspeed-bmc-opp-romulus.dtb \
+ 	aspeed-bmc-opp-swift.dtb \
+ 	aspeed-bmc-opp-witherspoon.dtb \
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+new file mode 100644
+index 000000000000..20f07f5bb4f4
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+@@ -0,0 +1,234 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright 2019 YADRO
++/dts-v1/;
++
++#include "aspeed-g4.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "Vesnin BMC";
++	compatible = "yadro,vesnin-bmc", "aspeed,ast2400";
++
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=ttyS4,115200 earlyprintk";
++	};
++
++	memory {
++		reg = <0x40000000 0x20000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		vga_memory: framebuffer@5f000000 {
++			no-map;
++			reg = <0x5f000000 0x01000000>; /* 16MB */
++		};
++		flash_memory: region@5c000000 {
++			no-map;
++			reg = <0x5c000000 0x02000000>; /* 32M */
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		heartbeat {
++			gpios = <&gpio ASPEED_GPIO(R, 4) GPIO_ACTIVE_LOW>;
++		};
++		power_red {
++			gpios = <&gpio ASPEED_GPIO(N, 1) GPIO_ACTIVE_LOW>;
++		};
++
++		id_blue {
++			gpios = <&gpio ASPEED_GPIO(O, 0) GPIO_ACTIVE_LOW>;
++		};
++
++		alarm_red {
++			gpios = <&gpio ASPEED_GPIO(N, 6) GPIO_ACTIVE_LOW>;
++		};
++
++		alarm_yel {
++			gpios = <&gpio ASPEED_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		button_checkstop {
++			label = "checkstop";
++			linux,code = <74>;
++			gpios = <&gpio ASPEED_GPIO(P, 5) GPIO_ACTIVE_LOW>;
++		};
++
++		button_identify {
++			label = "identify";
++			linux,code = <152>;
++			gpios = <&gpio ASPEED_GPIO(O, 7) GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++        label = "bmc";
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&spi {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi1debug_default>;
++
++	flash@0 {
++		status = "okay";
++		label = "pnor";
++		m25p,fast-read;
++	};
++};
++
++&mac0 {
++	status = "okay";
++
++	use-ncsi;
++	no-hw-checksum;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++};
++
++
++&uart5 {
++	status = "okay";
++};
++
++&lpc_ctrl {
++	status = "okay";
++	memory-region = <&flash_memory>;
++	flash = <&spi>;
++};
++
++&ibt {
++	status = "okay";
++};
++
++&lpc_host {
++    sio_regs: regs {
++        compatible = "aspeed,bmc-misc";
++    };
++};
++
++&mbox {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd2_default &pinctrl_rxd2_default>;
++};
++
++&i2c0 {
++	status = "okay";
++
++	eeprom@50 {
++		compatible = "atmel,24c256";
++		reg = <0x50>;
++		pagesize = <64>;
++	};
++};
++
++&i2c1 {
++	status = "okay";
++
++	tmp75@49 {
++		compatible = "ti,tmp75";
++		reg = <0x49>;
++	};
++};
++
++&i2c2 {
++	status = "okay";
++};
++
++&i2c3 {
++	status = "okay";
++};
++
++&i2c4 {
++	status = "okay";
++
++	occ-hwmon@50 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x50>;
++	};
++};
++
++&i2c5 {
++	status = "okay";
++
++	occ-hwmon@51 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x51>;
++	};
++};
++
++&i2c6 {
++	status = "okay";
++
++	w83795g@2f {
++		compatible = "nuvoton,w83795g";
++		reg = <0x2f>;
++	};
++};
++
++&i2c7 {
++	status = "okay";
++
++	occ-hwmon@56 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x56>;
++	};
++};
++
++&i2c9 {
++	status = "okay";
++};
++
++&i2c10 {
++	status = "okay";
++};
++
++&i2c11 {
++	status = "okay";
++
++	occ-hwmon@57 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x57>;
++	};
++};
++
++&i2c12 {
++	status = "okay";
++
++	rtc@68 {
++		compatible = "maxim,ds3231";
++		reg = <0x68>;
++	};
++};
++
++&i2c13 {
++	status = "okay";
++};
++
++&vuart {
++	status = "okay";
++};
 -- 
-2.11.0
+2.20.1
