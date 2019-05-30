@@ -1,41 +1,84 @@
-From: <hhhawa@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Date: Thu, 30 May 2019 15:52:00 +0300
-Message-ID: <0ebfe8d7-3e0c-e0be-abd5-5e10b7d4b6aa@amazon.com>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <20190530115732.GB14088@kroah.com>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH v3 00/12] Allwinner A64/H6 IR support
+Date: Thu, 30 May 2019 13:55:06 +0100
+Message-ID: <20190530125506.xnnk7tvruxnhqh6a@gofer.mess.org>
+References: <20190528161440.27172-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190530115732.GB14088@kroah.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190528161440.27172-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, linux-edac@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 5/30/19 2:57 PM, Greg KH wrote:
-> On Thu, May 30, 2019 at 01:15:29PM +0300, Hanna Hawa wrote:
->> +static void al_a57_edac_cpumerrsr(void *arg)
->> +{
->> +	struct edac_device_ctl_info *edac_dev =
->> +		(struct edac_device_ctl_info *)arg;
-> No need for casting anything here, just assign it.  Doesn't checkpatch
-> catch this type of thing these days?  You did run it, right?
+On Tue, May 28, 2019 at 06:14:28PM +0200, Clément Péron wrote:
+> Hi,
+> 
+> A64 IR support series[1] pointed out that an A31 bindings should be
+> introduced.
+> 
+> This series introduce the A31 compatible bindings, then switch it on
+> the already existing board.
+> 
+> Finally introduce A64 and H6 support.
+> 
+> I didn't enable the IR on other H6 boards as Ondrej reported an issue
+> on his board[2].
 
-I did, but checkpatch didn't catch this. I'll fix in next patch-set.
+For the whole series:
 
-Thanks for your review.
+Acked-by: Sean Young <sean@mess.org>
 
-
-Hanna
-
->
-> Please fix that up everywhere you do this in the driver.
->
->
-> thanks,
->
-> greg k-h
+> 
+> Regards,
+> Clément
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
+> [2] https://lkml.org/lkml/2019/5/27/321
+> 
+> Changes since v2:
+>  - Disable IR for other H6 boards
+>  - Split DTS patch for H3/H5
+>  - Introduce IR quirks
+> 
+> Changes since v1:
+>  - Document reset lines as required since A31
+>  - Explain the memory mapping difference in commit log
+>  - Fix misspelling "Allwiner" to "Allwinner"
+> 
+> Clément Péron (10):
+>   dt-bindings: media: sunxi-ir: add A31 compatible
+>   media: rc: Introduce sunxi_ir_quirks
+>   media: rc: sunxi: Add A31 compatible
+>   ARM: dts: sunxi: Prefer A31 bindings for IR
+>   ARM: dts: sunxi: Prefer A31 bindings for IR
+>   dt-bindings: media: sunxi-ir: Add A64 compatible
+>   dt-bindings: media: sunxi-ir: Add H6 compatible
+>   arm64: dts: allwinner: h6: Add IR receiver node
+>   arm64: dts: allwinner: h6: Enable IR on Beelink GS1
+>   arm64: defconfig: enable IR SUNXI option
+> 
+> Igors Makejevs (1):
+>   arm64: dts: allwinner: a64: Add IR node
+> 
+> Jernej Skrabec (1):
+>   arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
+> 
+>  .../devicetree/bindings/media/sunxi-ir.txt    | 11 ++-
+>  arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
+>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
+>  arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
+>  .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 ++
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 +++++
+>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 +++++
+>  arch/arm64/configs/defconfig                  |  1 +
+>  drivers/media/rc/sunxi-cir.c                  | 70 +++++++++++++++----
+>  11 files changed, 115 insertions(+), 20 deletions(-)
+> 
+> -- 
+> 2.20.1
