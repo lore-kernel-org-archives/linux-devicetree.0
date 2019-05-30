@@ -1,16 +1,15 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V4 6/8] memory: tegra: Add EMC scaling sequence code for
- Tegra210
-Date: Thu, 30 May 2019 16:16:26 +0300
-Message-ID: <3929cca9-5277-a88d-5270-c6c2a9c5c2a0@gmail.com>
-References: <20190529082139.5581-1-josephl@nvidia.com>
- <20190529082139.5581-7-josephl@nvidia.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v2 0/6] crypto - wire up Atmel SHA204A as RNG in DT and
+ ACPI mode
+Date: Thu, 30 May 2019 21:44:05 +0800
+Message-ID: <20190530134404.kpxdpkxbzyxhpbxo@gondor.apana.org.au>
+References: <20190524162651.28189-1-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190529082139.5581-7-josephl@nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190524162651.28189-1-ard.biesheuvel@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,48 +19,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: devicetree@vger.kernel.org, Tudor Ambarus <tudor.ambarus@microchip.com>, Linus Walleij <linus.walleij@linaro.org>, linux-crypto@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-MjkuMDUuMjAxOSAxMToyMSwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gVGhpcyBwYXRjaCBpbmNs
-dWRlcyB0aGUgc2VxdWVuY2UgZm9yIGNsb2NrIHR1bmluZyBhbmQgdGhlIGR5bmFtaWMKPiB0cmFp
-bmluZyBtZWNoYW5pc20gZm9yIHRoZSBjbG9jayBhYm92ZSA4MDBNSHouCj4gCj4gQW5kIGhpc3Rv
-cmljYWxseSB0aGVyZSBoYXZlIGJlZW4gZGlmZmVyZW50IHNlcXVlbmNlcyB0byBjaGFuZ2UgdGhl
-IEVNQwo+IGNsb2NrLiBUaGUgc2VxdWVuY2UgdG8gYmUgdXNlZCBpcyBzcGVjaWZpZWQgaW4gdGhl
-IEVNQyB0YWJsZS4KPiBIb3dldmVyLCBmb3IgdGhlIGN1cnJlbnRseSBzdXBwb3J0ZWQgdXBzdHJl
-YW1pbmcgcGxhdGZvcm0sIG9ubHkgdGhlIG1vc3QKPiByZWNlbnQgc2VxdWVuY2UgaXMgdXNlZC4g
-U28gb25seSBzdXBwb3J0IHRoYXQgaW4gdGhpcyBwYXRjaC4KPiAKPiBCYXNlZCBvbiB0aGUgd29y
-ayBvZiBQZXRlciBEZSBTY2hyaWp2ZXIgPHBkZXNjaHJpanZlckBudmlkaWEuY29tPi4KPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBKb3NlcGggTG8gPGpvc2VwaGxAbnZpZGlhLmNvbT4KPiAtLS0KPiB2NDoK
-PiAtIG5vIGNoYW5nZQo+IC0tLQo+ICBkcml2ZXJzL21lbW9yeS90ZWdyYS9NYWtlZmlsZSAgICAg
-ICAgICAgICAgICAgfCAgICAyICstCj4gIGRyaXZlcnMvbWVtb3J5L3RlZ3JhL3RlZ3JhMjEwLWVt
-Yy1jYy1yMjEwMjEuYyB8IDE5NTMgKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9tZW1vcnkv
-dGVncmEvdGVncmEyMTAtZW1jLmMgICAgICAgICAgIHwgICAgNSArCj4gIGRyaXZlcnMvbWVtb3J5
-L3RlZ3JhL3RlZ3JhMjEwLWVtYy5oICAgICAgICAgICB8ICAxNTcgKysKPiAgNCBmaWxlcyBjaGFu
-Z2VkLCAyMTE2IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvbWVtb3J5L3RlZ3JhL3RlZ3JhMjEwLWVtYy1jYy1yMjEwMjEuYwo+IAo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL21lbW9yeS90ZWdyYS9NYWtlZmlsZSBiL2RyaXZlcnMvbWVtb3J5
-L3RlZ3JhL01ha2VmaWxlCj4gaW5kZXggZjc4YmJiN2NkMTZmLi5kZWYwODdmMTNhMDkgMTAwNjQ0
-Cj4gLS0tIGEvZHJpdmVycy9tZW1vcnkvdGVncmEvTWFrZWZpbGUKPiArKysgYi9kcml2ZXJzL21l
-bW9yeS90ZWdyYS9NYWtlZmlsZQo+IEBAIC0xMiw1ICsxMiw1IEBAIG9iai0kKENPTkZJR19URUdS
-QV9NQykgKz0gdGVncmEtbWMubwo+ICAKPiAgb2JqLSQoQ09ORklHX1RFR1JBMjBfRU1DKSAgKz0g
-dGVncmEyMC1lbWMubwo+ICBvYmotJChDT05GSUdfVEVHUkExMjRfRU1DKSArPSB0ZWdyYTEyNC1l
-bWMubwo+IC1vYmotJChDT05GSUdfVEVHUkEyMTBfRU1DKSArPSB0ZWdyYTIxMC1lbWMubwo+ICtv
-YmotJChDT05GSUdfVEVHUkEyMTBfRU1DKSArPSB0ZWdyYTIxMC1lbWMubyB0ZWdyYTIxMC1lbWMt
-Y2MtcjIxMDIxLm8KPiAgb2JqLSQoQ09ORklHX0FSQ0hfVEVHUkFfMTg2X1NPQykgKz0gdGVncmEx
-ODYubwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lbW9yeS90ZWdyYS90ZWdyYTIxMC1lbWMtY2Mt
-cjIxMDIxLmMgYi9kcml2ZXJzL21lbW9yeS90ZWdyYS90ZWdyYTIxMC1lbWMtY2MtcjIxMDIxLmMK
-PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uZWM1ZTFkYjcxODk2
-Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL2RyaXZlcnMvbWVtb3J5L3RlZ3JhL3RlZ3JhMjEwLWVt
-Yy1jYy1yMjEwMjEuYwo+IEBAIC0wLDAgKzEsMTk1MyBAQAo+ICsvLyBTUERYLUxpY2Vuc2UtSWRl
-bnRpZmllcjogR1BMLTIuMAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTQtMjAxOSwgTlZJ
-RElBIENPUlBPUkFUSU9OLiAgQWxsIHJpZ2h0cyByZXNlcnZlZC4KPiArICovCj4gKwo+ICsjaW5j
-bHVkZSA8bGludXgva2VybmVsLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9pby5oPgo+ICsjaW5jbHVk
-ZSA8bGludXgvY2xrLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgo+ICsjaW5jbHVkZSA8
-bGludXgvb2YuaD4KPiArI2luY2x1ZGUgPHNvYy90ZWdyYS9tYy5oPgoKTWlub3Igbml0OiBwbGVh
-c2Uga2VlcCBhbGwgdGhlIGluY2x1ZGVzIHNvcnRlZCBpbiBhbHBoYWJldCBvcmRlci4KCi0tIApE
-bWl0cnkKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+On Fri, May 24, 2019 at 06:26:45PM +0200, Ard Biesheuvel wrote:
+> The Socionext SynQuacer based 96boards DeveloperBox platform does not
+> incorporate a random number generator, but it does have a 96boards low
+> speed connector which supports extension boards such as the Secure96,
+> which has a TPM and some crypto accelerators, one of which incorporates
+> a random number generator.
+> 
+> This series implements support for the RNG part, which is one of several
+> functions of the Atmel SHA204A I2C crypto accelerator, and wires it up so
+> both DT and ACPI based boot methods can use the device.
+> 
+> v2:
+> - update DT binding patches so the SHA204A and ECC508A module bindings are
+>   in trivial-devices.yaml.
+> - add acks from Linus and Mika
+> 
+> Assuming Rob is ok now with the DT binding patches, can we please take
+> this through the crypto tree?
+> 
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> 
+> Ard Biesheuvel (6):
+>   i2c: acpi: permit bus speed to be discovered after enumeration
+>   crypto: atmel-ecc: add support for ACPI probing on non-AT91 platforms
+>   crypto: atmel-ecc: factor out code that can be shared
+>   crypto: atmel-i2c: add support for SHA204A random number generator
+>   dt-bindings: add Atmel SHA204A I2C crypto processor
+>   dt-bindings: move Atmel ECC508A I2C crypto processor to
+>     trivial-devices
+> 
+>  Documentation/devicetree/bindings/crypto/atmel-crypto.txt |  13 -
+>  Documentation/devicetree/bindings/trivial-devices.yaml    |   4 +
+>  drivers/crypto/Kconfig                                    |  19 +-
+>  drivers/crypto/Makefile                                   |   2 +
+>  drivers/crypto/atmel-ecc.c                                | 403 ++------------------
+>  drivers/crypto/atmel-ecc.h                                | 116 ------
+>  drivers/crypto/atmel-i2c.c                                | 364 ++++++++++++++++++
+>  drivers/crypto/atmel-i2c.h                                | 196 ++++++++++
+>  drivers/crypto/atmel-sha204a.c                            | 171 +++++++++
+>  drivers/i2c/i2c-core-acpi.c                               |   6 +-
+>  10 files changed, 781 insertions(+), 513 deletions(-)
+>  delete mode 100644 drivers/crypto/atmel-ecc.h
+>  create mode 100644 drivers/crypto/atmel-i2c.c
+>  create mode 100644 drivers/crypto/atmel-i2c.h
+>  create mode 100644 drivers/crypto/atmel-sha204a.c
+
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
