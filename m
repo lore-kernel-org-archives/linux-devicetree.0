@@ -1,79 +1,36 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v2 0/6] crypto - wire up Atmel SHA204A as RNG in DT and
- ACPI mode
-Date: Thu, 30 May 2019 21:44:05 +0800
-Message-ID: <20190530134404.kpxdpkxbzyxhpbxo@gondor.apana.org.au>
-References: <20190524162651.28189-1-ard.biesheuvel@linaro.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] dt-bindings: display: Convert Allwinner DSI to a schema
+Date: Thu, 30 May 2019 21:48:02 +0800
+Message-ID: <CAGb2v66uhrm20BwmODkPZjSM6Ek+xEg23w2Cs49ikW3WcU1Lqg@mail.gmail.com>
+References: <20190527120910.18964-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190524162651.28189-1-ard.biesheuvel@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: devicetree@vger.kernel.org, Tudor Ambarus <tudor.ambarus@microchip.com>, Linus Walleij <linus.walleij@linaro.org>, linux-crypto@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190527120910.18964-1-maxime.ripard@bootlin.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2019 at 06:26:45PM +0200, Ard Biesheuvel wrote:
-> The Socionext SynQuacer based 96boards DeveloperBox platform does not
-> incorporate a random number generator, but it does have a 96boards low
-> speed connector which supports extension boards such as the Secure96,
-> which has a TPM and some crypto accelerators, one of which incorporates
-> a random number generator.
-> 
-> This series implements support for the RNG part, which is one of several
-> functions of the Atmel SHA204A I2C crypto accelerator, and wires it up so
-> both DT and ACPI based boot methods can use the device.
-> 
-> v2:
-> - update DT binding patches so the SHA204A and ECC508A module bindings are
->   in trivial-devices.yaml.
-> - add acks from Linus and Mika
-> 
-> Assuming Rob is ok now with the DT binding patches, can we please take
-> this through the crypto tree?
-> 
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> 
-> Ard Biesheuvel (6):
->   i2c: acpi: permit bus speed to be discovered after enumeration
->   crypto: atmel-ecc: add support for ACPI probing on non-AT91 platforms
->   crypto: atmel-ecc: factor out code that can be shared
->   crypto: atmel-i2c: add support for SHA204A random number generator
->   dt-bindings: add Atmel SHA204A I2C crypto processor
->   dt-bindings: move Atmel ECC508A I2C crypto processor to
->     trivial-devices
-> 
->  Documentation/devicetree/bindings/crypto/atmel-crypto.txt |  13 -
->  Documentation/devicetree/bindings/trivial-devices.yaml    |   4 +
->  drivers/crypto/Kconfig                                    |  19 +-
->  drivers/crypto/Makefile                                   |   2 +
->  drivers/crypto/atmel-ecc.c                                | 403 ++------------------
->  drivers/crypto/atmel-ecc.h                                | 116 ------
->  drivers/crypto/atmel-i2c.c                                | 364 ++++++++++++++++++
->  drivers/crypto/atmel-i2c.h                                | 196 ++++++++++
->  drivers/crypto/atmel-sha204a.c                            | 171 +++++++++
->  drivers/i2c/i2c-core-acpi.c                               |   6 +-
->  10 files changed, 781 insertions(+), 513 deletions(-)
->  delete mode 100644 drivers/crypto/atmel-ecc.h
->  create mode 100644 drivers/crypto/atmel-i2c.c
->  create mode 100644 drivers/crypto/atmel-i2c.h
->  create mode 100644 drivers/crypto/atmel-sha204a.c
-
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+T24gTW9uLCBNYXkgMjcsIDIwMTkgYXQgODowOSBQTSBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
+YXJkQGJvb3RsaW4uY29tPiB3cm90ZToKPgo+IFRoZSBBbGx3aW5uZXIgU29DcyBoYXZlIGEgTUlQ
+SS1EU0kgYW5kIE1JUEktRC1QSFkgY29udHJvbGxlcnMgc3VwcG9ydGVkIGluCj4gTGludXgsIHdp
+dGggYSBtYXRjaGluZyBEZXZpY2UgVHJlZSBiaW5kaW5nLgo+Cj4gTm93IHRoYXQgd2UgaGF2ZSB0
+aGUgRFQgdmFsaWRhdGlvbiBpbiBwbGFjZSwgbGV0J3MgY29udmVydCB0aGUgZGV2aWNlIHRyZWUK
+PiBiaW5kaW5ncyBmb3IgdGhhdCBjb250cm9sbGVyIG92ZXIgdG8gYSBZQU1MIHNjaGVtYXMuCj4K
+PiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29t
+PgoKTG9va3MgZ29vZCB0byBtZS4gSG93ZXZlciBub3Qgc3VyZSB3aHkgeW91IHJlcGxhY2VkIHRo
+ZSBjbG9jayBpbmRleCBtYWNyb3MKd2l0aCByYXcgbnVtYmVycy4KClJldmlld2VkLWJ5OiBDaGVu
+LVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbA==
