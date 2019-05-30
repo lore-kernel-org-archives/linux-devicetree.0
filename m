@@ -1,70 +1,48 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH] ARM: dts: vexpress: set the right partition type for NOR flash
-Date: Thu, 30 May 2019 10:11:56 +0100
-Message-ID: <20190530091156.11693-1-sudeep.holla@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
+From: Takao Orito <orito.takao@socionext.com>
+Subject: [PATCH v2 0/2] mmc: sdhci-milbeaut: add Milbeaut SD driver
+Date: Thu, 30 May 2019 18:20:52 +0900
+Message-ID: <1559208052-385-1-git-send-email-orito.takao@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com, orito.takao@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-We should set up the partitions in the right way so we will find out
-what is in the flash.
+The following patches add driver for SD Host controller on
+Socionext's Milbeaut M10V platforms.
 
-The ARM Firmware Suite now has its own compatible and proper device
-tree bindings to trigger discovery of the flash contents, and Linux
-supports handling the new type of AFS partitions.
+SD Host controller on Milbeaut consists of two controller parts.
+One is core controller F_SDH30, this is similar to sdhci-fujitsu
+controller.
+Another is bridge controller. This bridge controller is not compatible
+with sdhci-fujitsu controller. This is special for Milbeaut series.
 
-Based on commit 7f8e78ca90e2 ("arm64: dts: juno: set the right partition
-type for NOR flash")
+It has the several parts,
+ - reset control
+ - clock enable / select for SDR50/25/12
+ - hold control of DATA/CMD line
+ - select characteristics for WP/CD/LED line
+ - Re-tuning control for mode3
+ - Capability setting
+   Timeout Clock / Base Clock / Timer Count for Re-Tuning /
+   Debounce period
+These requires special procedures at reset or clock enable/change or
+ further tuning of clock.
 
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 3 +++
- arch/arm/boot/dts/vexpress-v2m.dtsi     | 3 +++
- 2 files changed, 6 insertions(+)
+Takao Orito (2):
+  dt-bindings: mmc: add DT bindings for Milbeaut SD controller
+  mmc: sdhci-milbeaut: add Milbeaut SD controller driver
 
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-index 1b5bc536c547..d6a1fc269241 100644
---- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-+++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -35,6 +35,9 @@
- 				reg = <0 0x00000000 0x04000000>,
- 				      <4 0x00000000 0x04000000>;
- 				bank-width = <4>;
-+				partitions {
-+					compatible = "arm,arm-firmware-suite";
-+				};
- 			};
- 
- 			psram@1,00000000 {
-diff --git a/arch/arm/boot/dts/vexpress-v2m.dtsi b/arch/arm/boot/dts/vexpress-v2m.dtsi
-index 798c97aff7fa..8e57e15307e2 100644
---- a/arch/arm/boot/dts/vexpress-v2m.dtsi
-+++ b/arch/arm/boot/dts/vexpress-v2m.dtsi
-@@ -35,6 +35,9 @@
- 				reg = <0 0x00000000 0x04000000>,
- 				      <1 0x00000000 0x04000000>;
- 				bank-width = <4>;
-+				partitions {
-+					compatible = "arm,arm-firmware-suite";
-+				};
- 			};
- 
- 			psram@2,00000000 {
+ .../devicetree/bindings/mmc/sdhci-milbeaut.txt     |  32 ++
+ drivers/mmc/host/Kconfig                           |  11 +
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/sdhci-milbeaut.c                  | 362 +++++++++++++++++++++
+ drivers/mmc/host/sdhci_f_sdh30.c                   |  26 +-
+ drivers/mmc/host/sdhci_f_sdh30.h                   |  32 ++
+ 6 files changed, 439 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+ create mode 100644 drivers/mmc/host/sdhci-milbeaut.c
+ create mode 100644 drivers/mmc/host/sdhci_f_sdh30.h
+
 -- 
-2.17.1
+1.9.1
