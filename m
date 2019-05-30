@@ -1,92 +1,67 @@
-From: Morten Rasmussen <morten.rasmussen@arm.com>
-Subject: Re: [PATCH v6 1/7] Documentation: DT: arm: add support for sockets
- defining package boundaries
-Date: Thu, 30 May 2019 14:12:41 +0100
-Message-ID: <20190530131241.GB10919@e105550-lin.cambridge.arm.com>
-References: <20190529211340.17087-1-atish.patra@wdc.com>
- <20190529211340.17087-2-atish.patra@wdc.com>
- <49f41e62-5354-a674-d95f-5f63851a0ca6@ti.com>
- <20190530115103.GA10919@e105550-lin.cambridge.arm.com>
- <70639181-09d1-4644-f062-b19e06db7471@ti.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V4 6/8] memory: tegra: Add EMC scaling sequence code for
+ Tegra210
+Date: Thu, 30 May 2019 16:16:26 +0300
+Message-ID: <3929cca9-5277-a88d-5270-c6c2a9c5c2a0@gmail.com>
+References: <20190529082139.5581-1-josephl@nvidia.com>
+ <20190529082139.5581-7-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <70639181-09d1-4644-f062-b19e06db7471@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Palmer Dabbelt <palmer@sifive.com>, Will Deacon <will.deacon@arm.com>, Atish Patra <atish.patra@wdc.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-riscv@lists.infradead.org, Ingo Molnar <mingo@kernel.org>, Rob Herring <robh@kernel.org>, Anup Patel <anup@brainfault.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190529082139.5581-7-josephl@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 30, 2019 at 08:56:03AM -0400, Andrew F. Davis wrote:
-> On 5/30/19 7:51 AM, Morten Rasmussen wrote:
-> >On Wed, May 29, 2019 at 07:39:17PM -0400, Andrew F. Davis wrote:
-> >>On 5/29/19 5:13 PM, Atish Patra wrote:
-> >>>From: Sudeep Holla <sudeep.holla@arm.com>
-> >>>
-> >>>The current ARM DT topology description provides the operating system
-> >>>with a topological view of the system that is based on leaf nodes
-> >>>representing either cores or threads (in an SMT system) and a
-> >>>hierarchical set of cluster nodes that creates a hierarchical topology
-> >>>view of how those cores and threads are grouped.
-> >>>
-> >>>However this hierarchical representation of clusters does not allow to
-> >>>describe what topology level actually represents the physical package or
-> >>>the socket boundary, which is a key piece of information to be used by
-> >>>an operating system to optimize resource allocation and scheduling.
-> >>>
-> >>
-> >>Are physical package descriptions really needed? What does "socket" imply
-> >>that a higher layer "cluster" node grouping does not? It doesn't imply a
-> >>different NUMA distance and the definition of "socket" is already not well
-> >>defined, is a dual chiplet processor not just a fancy dual "socket" or are
-> >>dual "sockets" on a server board "slotket" card, will we need new names for
-> >>those too..
-> >
-> >Socket (or package) just implies what you suggest, a grouping of CPUs
-> >based on the physical socket (or package). Some resources might be
-> >associated with packages and more importantly socket information is
-> >exposed to user-space. At the moment clusters are being exposed to
-> >user-space as sockets which is less than ideal for some topologies.
-> >
-> 
-> I see the benefit of reporting the physical layout and packaging information
-> to user-space for tracking reasons, but from software perspective this
-> doesn't matter, and the resource partitioning should be described elsewhere
-> (NUMA nodes being the go to example).
-
-That would make defining a NUMA node mandatory even for non-NUMA
-systems?
-
-> >At the moment user-space is only told about hw threads, cores, and
-> >sockets. In the very near future it is going to be told about dies too
-> >(look for Len Brown's multi-die patch set).
-> >
-> 
-> Seems my hypothetical case is already in the works :(
-
-Indeed. IIUC, the reasoning behind it is related to actual multi-die
-x86 packages and some rapl stuff being per-die or per-core.
-
-> 
-> >I don't see how we can provide correct information to user-space based
-> >on the current information in DT. I'm not convinced it was a good idea
-> >to expose this information to user-space to begin with but that is
-> >another discussion.
-> >
-> 
-> Fair enough, it's a little late now to un-expose this info to userspace so
-> we should at least present it correctly. My worry was this getting out of
-> hand with layering, for instance what happens when we need to add die nodes
-> in-between cluster and socket?
-
-If we want the die mask to be correct for arm/arm64/riscv we need die
-information from somewhere. I'm not in favour of adding more topology
-layers to the user-space visible topology description, but others might
-have a valid reason and if it is exposed I would prefer if we try to
-expose the right information.
-
-Btw, for packages, we already have that information in ACPI/PPTT so it
-would be nice if we could have that for DT based systems too.
-
-Morten
+MjkuMDUuMjAxOSAxMToyMSwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gVGhpcyBwYXRjaCBpbmNs
+dWRlcyB0aGUgc2VxdWVuY2UgZm9yIGNsb2NrIHR1bmluZyBhbmQgdGhlIGR5bmFtaWMKPiB0cmFp
+bmluZyBtZWNoYW5pc20gZm9yIHRoZSBjbG9jayBhYm92ZSA4MDBNSHouCj4gCj4gQW5kIGhpc3Rv
+cmljYWxseSB0aGVyZSBoYXZlIGJlZW4gZGlmZmVyZW50IHNlcXVlbmNlcyB0byBjaGFuZ2UgdGhl
+IEVNQwo+IGNsb2NrLiBUaGUgc2VxdWVuY2UgdG8gYmUgdXNlZCBpcyBzcGVjaWZpZWQgaW4gdGhl
+IEVNQyB0YWJsZS4KPiBIb3dldmVyLCBmb3IgdGhlIGN1cnJlbnRseSBzdXBwb3J0ZWQgdXBzdHJl
+YW1pbmcgcGxhdGZvcm0sIG9ubHkgdGhlIG1vc3QKPiByZWNlbnQgc2VxdWVuY2UgaXMgdXNlZC4g
+U28gb25seSBzdXBwb3J0IHRoYXQgaW4gdGhpcyBwYXRjaC4KPiAKPiBCYXNlZCBvbiB0aGUgd29y
+ayBvZiBQZXRlciBEZSBTY2hyaWp2ZXIgPHBkZXNjaHJpanZlckBudmlkaWEuY29tPi4KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBKb3NlcGggTG8gPGpvc2VwaGxAbnZpZGlhLmNvbT4KPiAtLS0KPiB2NDoK
+PiAtIG5vIGNoYW5nZQo+IC0tLQo+ICBkcml2ZXJzL21lbW9yeS90ZWdyYS9NYWtlZmlsZSAgICAg
+ICAgICAgICAgICAgfCAgICAyICstCj4gIGRyaXZlcnMvbWVtb3J5L3RlZ3JhL3RlZ3JhMjEwLWVt
+Yy1jYy1yMjEwMjEuYyB8IDE5NTMgKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9tZW1vcnkv
+dGVncmEvdGVncmEyMTAtZW1jLmMgICAgICAgICAgIHwgICAgNSArCj4gIGRyaXZlcnMvbWVtb3J5
+L3RlZ3JhL3RlZ3JhMjEwLWVtYy5oICAgICAgICAgICB8ICAxNTcgKysKPiAgNCBmaWxlcyBjaGFu
+Z2VkLCAyMTE2IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvbWVtb3J5L3RlZ3JhL3RlZ3JhMjEwLWVtYy1jYy1yMjEwMjEuYwo+IAo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL21lbW9yeS90ZWdyYS9NYWtlZmlsZSBiL2RyaXZlcnMvbWVtb3J5
+L3RlZ3JhL01ha2VmaWxlCj4gaW5kZXggZjc4YmJiN2NkMTZmLi5kZWYwODdmMTNhMDkgMTAwNjQ0
+Cj4gLS0tIGEvZHJpdmVycy9tZW1vcnkvdGVncmEvTWFrZWZpbGUKPiArKysgYi9kcml2ZXJzL21l
+bW9yeS90ZWdyYS9NYWtlZmlsZQo+IEBAIC0xMiw1ICsxMiw1IEBAIG9iai0kKENPTkZJR19URUdS
+QV9NQykgKz0gdGVncmEtbWMubwo+ICAKPiAgb2JqLSQoQ09ORklHX1RFR1JBMjBfRU1DKSAgKz0g
+dGVncmEyMC1lbWMubwo+ICBvYmotJChDT05GSUdfVEVHUkExMjRfRU1DKSArPSB0ZWdyYTEyNC1l
+bWMubwo+IC1vYmotJChDT05GSUdfVEVHUkEyMTBfRU1DKSArPSB0ZWdyYTIxMC1lbWMubwo+ICtv
+YmotJChDT05GSUdfVEVHUkEyMTBfRU1DKSArPSB0ZWdyYTIxMC1lbWMubyB0ZWdyYTIxMC1lbWMt
+Y2MtcjIxMDIxLm8KPiAgb2JqLSQoQ09ORklHX0FSQ0hfVEVHUkFfMTg2X1NPQykgKz0gdGVncmEx
+ODYubwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lbW9yeS90ZWdyYS90ZWdyYTIxMC1lbWMtY2Mt
+cjIxMDIxLmMgYi9kcml2ZXJzL21lbW9yeS90ZWdyYS90ZWdyYTIxMC1lbWMtY2MtcjIxMDIxLmMK
+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uZWM1ZTFkYjcxODk2
+Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL2RyaXZlcnMvbWVtb3J5L3RlZ3JhL3RlZ3JhMjEwLWVt
+Yy1jYy1yMjEwMjEuYwo+IEBAIC0wLDAgKzEsMTk1MyBAQAo+ICsvLyBTUERYLUxpY2Vuc2UtSWRl
+bnRpZmllcjogR1BMLTIuMAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTQtMjAxOSwgTlZJ
+RElBIENPUlBPUkFUSU9OLiAgQWxsIHJpZ2h0cyByZXNlcnZlZC4KPiArICovCj4gKwo+ICsjaW5j
+bHVkZSA8bGludXgva2VybmVsLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9pby5oPgo+ICsjaW5jbHVk
+ZSA8bGludXgvY2xrLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgo+ICsjaW5jbHVkZSA8
+bGludXgvb2YuaD4KPiArI2luY2x1ZGUgPHNvYy90ZWdyYS9tYy5oPgoKTWlub3Igbml0OiBwbGVh
+c2Uga2VlcCBhbGwgdGhlIGluY2x1ZGVzIHNvcnRlZCBpbiBhbHBoYWJldCBvcmRlci4KCi0tIApE
+bWl0cnkKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
