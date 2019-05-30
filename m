@@ -1,7 +1,7 @@
 From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 2/4] drm/msm/dsi: Add support for MSM8998 10nm dsi phy
-Date: Thu, 30 May 2019 09:00:39 -0700
-Message-ID: <20190530160039.2824-1-jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 3/4] drm/msm/dsi: Add old timings quirk for 10nm phy
+Date: Thu, 30 May 2019 09:00:49 -0700
+Message-ID: <20190530160049.2875-1-jeffrey.l.hugo@gmail.com>
 References: <20190530155909.2718-1-jeffrey.l.hugo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190530155909.2718-1-jeffrey.l.hugo@gmail.com>
@@ -10,66 +10,73 @@ To: robdclark@gmail.com, sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, sibis@codeaurora.org, chandanu@codeaurora.org, abhinavk@codeaurora.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The MSM8998 dsi phy is 10nm v3.0.0 like SDM845, however there appear to
-be minor differences such as the address space location.
+The v3.0.0 10nm phy has two different implementations between MSM8998 and
+SDM845, which require different timings calculations.  Unfortunately, the
+hardware designers did not choose to revise the version to account for this
+delta so implement a quirk instead.
 
 Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 ---
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c      |  2 ++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.h      |  1 +
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c | 18 ++++++++++++++++++
- 3 files changed, 21 insertions(+)
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.h      |  4 ++++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c | 12 +++++++++---
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-index 1760483b247e..fda73749fcc0 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-@@ -507,6 +507,8 @@ static const struct of_device_id dsi_phy_dt_match[] = {
- #ifdef CONFIG_DRM_MSM_DSI_10NM_PHY
- 	{ .compatible = "qcom,dsi-phy-10nm",
- 	  .data = &dsi_phy_10nm_cfgs },
-+	{ .compatible = "qcom,dsi-phy-10nm-8998",
-+	  .data = &dsi_phy_10nm_8998_cfgs },
- #endif
- 	{}
- };
 diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-index a24ab80994a3..7161beb23b03 100644
+index 7161beb23b03..3c51df1aa2ee 100644
 --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
 +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-@@ -49,6 +49,7 @@ extern const struct msm_dsi_phy_cfg dsi_phy_20nm_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_28nm_8960_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_14nm_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_10nm_cfgs;
-+extern const struct msm_dsi_phy_cfg dsi_phy_10nm_8998_cfgs;
+@@ -21,6 +21,9 @@
+ #define dsi_phy_read(offset) msm_readl((offset))
+ #define dsi_phy_write(offset, data) msm_writel((data), (offset))
  
- struct msm_dsi_dphy_timing {
- 	u32 clk_pre;
++/* v3.0.0 10nm implementation that requires the old timings settings */
++#define V3_0_0_10NM_OLD_TIMINGS_QUIRK	BIT(0)
++
+ struct msm_dsi_phy_ops {
+ 	int (*init) (struct msm_dsi_phy *phy);
+ 	int (*enable)(struct msm_dsi_phy *phy, int src_pll_id,
+@@ -41,6 +44,7 @@ struct msm_dsi_phy_cfg {
+ 	bool src_pll_truthtable[DSI_MAX][DSI_MAX];
+ 	const resource_size_t io_start[DSI_MAX];
+ 	const int num_dsi_phy;
++	const int quirks;
+ };
+ 
+ extern const struct msm_dsi_phy_cfg dsi_phy_28nm_hpm_cfgs;
 diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
-index 44959e79ce28..b1e7dbc69fa6 100644
+index b1e7dbc69fa6..eb28937f4b34 100644
 --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
 +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
-@@ -221,3 +221,21 @@ const struct msm_dsi_phy_cfg dsi_phy_10nm_cfgs = {
- 	.io_start = { 0xae94400, 0xae96400 },
- 	.num_dsi_phy = 2,
- };
+@@ -42,6 +42,9 @@ static void dsi_phy_hw_v3_0_lane_settings(struct msm_dsi_phy *phy)
+ 	u8 tx_dctrl[] = { 0x00, 0x00, 0x00, 0x04, 0x01 };
+ 	void __iomem *lane_base = phy->lane_base;
+ 
++	if (phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK)
++		tx_dctrl[3] = 0x02;
 +
-+const struct msm_dsi_phy_cfg dsi_phy_10nm_8998_cfgs = {
-+	.type = MSM_DSI_PHY_10NM,
-+	.src_pll_truthtable = { {false, false}, {true, false} },
-+	.reg_cfg = {
-+		.num = 1,
-+		.regs = {
-+			{"vdds", 36000, 32},
-+		},
-+	},
-+	.ops = {
-+		.enable = dsi_10nm_phy_enable,
-+		.disable = dsi_10nm_phy_disable,
-+		.init = dsi_10nm_phy_init,
-+	},
-+	.io_start = { 0xc994400, 0xc996400 },
-+	.num_dsi_phy = 2,
-+};
+ 	/* Strength ctrl settings */
+ 	for (i = 0; i < 5; i++) {
+ 		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_LPTX_STR_CTRL(i),
+@@ -74,9 +77,11 @@ static void dsi_phy_hw_v3_0_lane_settings(struct msm_dsi_phy *phy)
+ 			      tx_dctrl[i]);
+ 	}
+ 
+-	/* Toggle BIT 0 to release freeze I/0 */
+-	dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x05);
+-	dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x04);
++	if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
++		/* Toggle BIT 0 to release freeze I/0 */
++		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x05);
++		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x04);
++	}
+ }
+ 
+ static int dsi_10nm_phy_enable(struct msm_dsi_phy *phy, int src_pll_id,
+@@ -238,4 +243,5 @@ const struct msm_dsi_phy_cfg dsi_phy_10nm_8998_cfgs = {
+ 	},
+ 	.io_start = { 0xc994400, 0xc996400 },
+ 	.num_dsi_phy = 2,
++	.quirks = V3_0_0_10NM_OLD_TIMINGS_QUIRK,
+ };
 -- 
 2.17.1
