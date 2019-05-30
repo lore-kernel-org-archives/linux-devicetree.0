@@ -1,129 +1,45 @@
-From: Long Cheng <long.cheng@mediatek.com>
-Subject: Re: [PATCH 2/2] serial: 8250-mtk: modify uart DMA rx
-Date: Thu, 30 May 2019 17:34:16 +0800
-Message-ID: <1559208856.14150.35.camel@mhfsdcap03>
-References: <1558596909-14084-1-git-send-email-long.cheng@mediatek.com>
-         <1558596909-14084-3-git-send-email-long.cheng@mediatek.com>
+From: Alexander Filippov <a.filippov@yadro.com>
+Subject: [PATCH v2] ARM: dts: aspeed: g4: add video engine support
+Date: Thu, 30 May 2019 12:35:44 +0300
+Message-ID: <20190530093544.12215-1-a.filippov@yadro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558596909-14084-3-git-send-email-long.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@media>
+To: linux-aspeed@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Alexander Filippov <a.filippov@yadro.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-05-23 at 15:35 +0800, Long Cheng wrote:
+Add a node to describe the video engine on AST2400.
 
+These changes were copied from aspeed-g5.dtsi
 
-Hi Greg,
+Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+---
+ arch/arm/boot/dts/aspeed-g4.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Just a gentle ping!
-
-thanks.
-
-> Modify uart rx and complete for DMA
-> 
-> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
-> ---
->  drivers/tty/serial/8250/8250_mtk.c |   49 +++++++++++++++---------------------
->  1 file changed, 20 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> index 417c7c8..f470ded 100644
-> --- a/drivers/tty/serial/8250/8250_mtk.c
-> +++ b/drivers/tty/serial/8250/8250_mtk.c
-> @@ -47,7 +47,6 @@
->  #define MTK_UART_DMA_EN_RX	0x5
->  
->  #define MTK_UART_ESCAPE_CHAR	0x77	/* Escape char added under sw fc */
-> -#define MTK_UART_TX_SIZE	UART_XMIT_SIZE
->  #define MTK_UART_RX_SIZE	0x8000
->  #define MTK_UART_TX_TRIGGER	1
->  #define MTK_UART_RX_TRIGGER	MTK_UART_RX_SIZE
-> @@ -89,28 +88,30 @@ static void mtk8250_dma_rx_complete(void *param)
->  	struct mtk8250_data *data = up->port.private_data;
->  	struct tty_port *tty_port = &up->port.state->port;
->  	struct dma_tx_state state;
-> +	int copied, total, cnt;
->  	unsigned char *ptr;
-> -	int copied;
->  
-> -	dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
-> -				dma->rx_size, DMA_FROM_DEVICE);
-> +	if (data->rx_status == DMA_RX_SHUTDOWN)
-> +		return;
->  
->  	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> +	total = dma->rx_size - state.residue;
-> +	cnt = total;
->  
-> -	if (data->rx_status == DMA_RX_SHUTDOWN)
-> -		return;
-> +	if ((data->rx_pos + cnt) > dma->rx_size)
-> +		cnt = dma->rx_size - data->rx_pos;
->  
-> -	if ((data->rx_pos + state.residue) <= dma->rx_size) {
-> -		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> -		copied = tty_insert_flip_string(tty_port, ptr, state.residue);
-> -	} else {
-> -		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> -		copied = tty_insert_flip_string(tty_port, ptr,
-> -						dma->rx_size - data->rx_pos);
-> +	ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> +	copied = tty_insert_flip_string(tty_port, ptr, cnt);
-> +	data->rx_pos += cnt;
-> +
-> +	if (total > cnt) {
->  		ptr = (unsigned char *)(dma->rx_buf);
-> -		copied += tty_insert_flip_string(tty_port, ptr,
-> -				data->rx_pos + state.residue - dma->rx_size);
-> +		cnt = total - cnt;
-> +		copied += tty_insert_flip_string(tty_port, ptr, cnt);
-> +		data->rx_pos = cnt;
->  	}
-> +
->  	up->port.icount.rx += copied;
->  
->  	tty_flip_buffer_push(tty_port);
-> @@ -121,9 +122,7 @@ static void mtk8250_dma_rx_complete(void *param)
->  static void mtk8250_rx_dma(struct uart_8250_port *up)
->  {
->  	struct uart_8250_dma *dma = up->dma;
-> -	struct mtk8250_data *data = up->port.private_data;
->  	struct dma_async_tx_descriptor	*desc;
-> -	struct dma_tx_state	 state;
->  
->  	desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
->  					   dma->rx_size, DMA_DEV_TO_MEM,
-> @@ -138,12 +137,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
->  
->  	dma->rx_cookie = dmaengine_submit(desc);
->  
-> -	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> -	data->rx_pos = state.residue;
-> -
-> -	dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
-> -				   dma->rx_size, DMA_FROM_DEVICE);
-> -
->  	dma_async_issue_pending(dma->rxchan);
->  }
->  
-> @@ -156,13 +149,11 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
->  	if (data->rx_status != DMA_RX_START)
->  		return;
->  
-> -	dma->rxconf.direction		= DMA_DEV_TO_MEM;
-> -	dma->rxconf.src_addr_width	= dma->rx_size / 1024;
-> -	dma->rxconf.src_addr		= dma->rx_addr;
-> +	dma->rxconf.src_port_window_size	= dma->rx_size;
-> +	dma->rxconf.src_addr				= dma->rx_addr;
->  
-> -	dma->txconf.direction		= DMA_MEM_TO_DEV;
-> -	dma->txconf.dst_addr_width	= MTK_UART_TX_SIZE / 1024;
-> -	dma->txconf.dst_addr		= dma->tx_addr;
-> +	dma->txconf.dst_port_window_size	= UART_XMIT_SIZE;
-> +	dma->txconf.dst_addr				= dma->tx_addr;
->  
->  	serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
->  		UART_FCR_CLEAR_XMIT);
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index 6011692df15a..5a9e3f684359 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -195,6 +195,16 @@
+ 				reg = <0x1e720000 0x8000>;	// 32K
+ 			};
+ 
++			video: video@1e700000 {
++				compatible = "aspeed,ast2400-video-engine";
++				reg = <0x1e700000 0x1000>;
++				clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
++					 <&syscon ASPEED_CLK_GATE_ECLK>;
++				clock-names = "vclk", "eclk";
++				interrupts = <7>;
++				status = "disabled";
++			};
++
+ 			gpio: gpio@1e780000 {
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+-- 
+2.20.1
