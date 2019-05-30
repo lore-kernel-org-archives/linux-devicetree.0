@@ -1,69 +1,38 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH] arm64: dts: rockchip: Add missing PCIe pwr amd rst configuration
-Date: Thu, 30 May 2019 12:58:37 +0000
-Message-ID: <20190530125837.730-1-linux.amoon@gmail.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Date: Thu, 30 May 2019 06:04:00 -0700
+Message-ID: <8bc749161a8b8640ebdf78d693111d5350514638.camel@perches.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+         <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+         <20190530115732.GB14088@kroah.com>
+         <0ebfe8d7-3e0c-e0be-abd5-5e10b7d4b6aa@amazon.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0ebfe8d7-3e0c-e0be-abd5-5e10b7d4b6aa@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Ezequiel Garcia <ezequiel@collabora.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Jagan Teki <jagan@amarulasolutions.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: hhhawa@amazon.com, Greg KH <gregkh@linuxfoundation.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, linux-edac@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add missing PCIe gpio and pinctrl for power (#PCIE_PWR)
-also add PCIe gpio and pinctrl for reset (#PCIE_PERST_L).
+On Thu, 2019-05-30 at 15:52 +0300, hhhawa@amazon.com wrote:
+> On 5/30/19 2:57 PM, Greg KH wrote:
+> > On Thu, May 30, 2019 at 01:15:29PM +0300, Hanna Hawa wrote:
+> > > +static void al_a57_edac_cpumerrsr(void *arg)
+> > > +{
+> > > +	struct edac_device_ctl_info *edac_dev =
+> > > +		(struct edac_device_ctl_info *)arg;
+> > No need for casting anything here, just assign it.  Doesn't checkpatch
+> > catch this type of thing these days?  You did run it, right?
+> 
+> I did, but checkpatch didn't catch this. I'll fix in next patch-set.
+> 
+> Thanks for your review.
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Tested on Rock960 Model A
----
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+checkpatch is brainless about the types of variables/arguments.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-index c7d48d41e184..f5bef6b0fe89 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-@@ -55,9 +55,10 @@
- 
- 	vcc3v3_pcie: vcc3v3-pcie-regulator {
- 		compatible = "regulator-fixed";
-+		gpio = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&pcie_drv>;
-+		pinctrl-0 = <&pcie_drv &pcie_pwr>;
- 		regulator-boot-on;
- 		regulator-name = "vcc3v3_pcie";
- 		regulator-min-microvolt = <3300000>;
-@@ -381,9 +382,10 @@
- };
- 
- &pcie0 {
-+	ep-gpio = <&gpio2 RK_PD4 GPIO_ACTIVE_HIGH>;
- 	num-lanes = <4>;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pcie_clkreqn_cpm>;
-+	pinctrl-0 = <&pcie_clkreqn_cpm &pcie_perst_l>;
- 	vpcie3v3-supply = <&vcc3v3_pcie>;
- 	status = "okay";
- };
-@@ -408,6 +410,16 @@
- 		};
- 	};
- 
-+	pcie {
-+		pcie_pwr: pcie-pwr {
-+			rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		pcie_perst_l:pcie-perst-l {
-+			rockchip,pins = <2 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	sdmmc {
- 		sdmmc_bus1: sdmmc-bus1 {
- 			rockchip,pins =
--- 
-2.21.0
+coccinelle is another very useful tool so you could also run
+scripts/coccicheck on your sources.
+
+see: Documentation/dev-tools/coccinelle.rst
