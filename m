@@ -1,68 +1,112 @@
-Return-Path: <SRS0=cOqY=T6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:51854 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726743AbfE3G4E (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 May 2019 02:56:04 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] clk: ti: clkctrl: Fix returning uninitialized data
-Date: Wed, 29 May 2019 23:55:57 -0700
-Message-Id: <20190530065557.42741-1-tony@atomide.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Return-Path: <SRS0=7JyS=T6=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 1/3] arm64: dts: renesas: Add HiHope RZ/G2M main board support
+Date: Thu, 30 May 2019 15:57:44 +0100
+Message-Id: <1559228266-16724-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1559228266-16724-1-git-send-email-biju.das@bp.renesas.com>
+References: <1559228266-16724-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, xu_shunji@hoperun.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-If we do a clk_get() for a clock that does not exists, we have
-_ti_omap4_clkctrl_xlate() return uninitialized data if no match
-is found. This can be seen in some cases with SLAB_DEBUG enabled:
+Basic support for the HiHope RZ/G2M main board:
+  - Memory,
+  - Main crystal,
+  - Serial console
 
-Unable to handle kernel paging request at virtual address 5a5a5a5a
-...
-clk_hw_create_clk.part.33
-sysc_notifier_call
-notifier_call_chain
-blocking_notifier_call_chain
-device_add
+This patch also includes a dtsi common to both HiHope RZ/G2M
+and RZ/G2N main boards.
 
-Let's fix this by setting a found flag only when we find a match.
-
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 ---
- drivers/clk/ti/clkctrl.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/renesas/Makefile               |  1 +
+ arch/arm64/boot/dts/renesas/hihope-common.dtsi     | 33 ++++++++++++++++++++++
+ .../boot/dts/renesas/r8a774a1-hihope-rzg2m.dts     | 26 +++++++++++++++++
+ 3 files changed, 60 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/hihope-common.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dts
 
-diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
---- a/drivers/clk/ti/clkctrl.c
-+++ b/drivers/clk/ti/clkctrl.c
-@@ -229,6 +229,7 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
- {
- 	struct omap_clkctrl_provider *provider = data;
- 	struct omap_clkctrl_clk *entry;
-+	bool found = false;
- 
- 	if (clkspec->args_count != 2)
- 		return ERR_PTR(-EINVAL);
-@@ -238,11 +239,13 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
- 
- 	list_for_each_entry(entry, &provider->clocks, node) {
- 		if (entry->reg_offset == clkspec->args[0] &&
--		    entry->bit_offset == clkspec->args[1])
-+		    entry->bit_offset == clkspec->args[1]) {
-+			found = true;
- 			break;
-+		}
- 	}
- 
--	if (!entry)
-+	if (!found)
- 		return ERR_PTR(-EINVAL);
- 
- 	return entry->clk;
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 6cde526..aa33074 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
++dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
+ dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-h3ulcb-kf.dtb
+diff --git a/arch/arm64/boot/dts/renesas/hihope-common.dtsi b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+new file mode 100644
+index 0000000..5baf532
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the HiHope RZ/G2[MN] main board common parts
++ *
++ * Copyright (C) 2019 Renesas Electronics Corp.
++ */
++
++/ {
++	aliases {
++		serial0 = &scif2;
++	};
++
++	chosen {
++		bootargs = "ignore_loglevel";
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&extal_clk {
++	clock-frequency = <16666666>;
++};
++
++&extalr_clk {
++	clock-frequency = <32768>;
++};
++
++&scif2 {
++	status = "okay";
++};
++
++&scif_clk {
++	clock-frequency = <14745600>;
++};
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dts b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dts
+new file mode 100644
+index 0000000..93ca973
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dts
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the HiHope RZ/G2M main board
++ *
++ * Copyright (C) 2019 Renesas Electronics Corp.
++ */
++
++/dts-v1/;
++#include "r8a774a1.dtsi"
++#include "hihope-common.dtsi"
++
++/ {
++	model = "HopeRun HiHope RZ/G2M main board based on r8a774a1";
++	compatible = "hoperun,hihope-rzg2m", "renesas,r8a774a1";
++
++	memory@48000000 {
++		device_type = "memory";
++		/* first 128MB is reserved for secure area. */
++		reg = <0x0 0x48000000 0x0 0x78000000>;
++	};
++
++	memory@600000000 {
++		device_type = "memory";
++		reg = <0x6 0x00000000 0x0 0x80000000>;
++	};
++};
 -- 
-2.21.0
+2.7.4
