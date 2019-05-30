@@ -1,38 +1,31 @@
 From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v2 2/2] net: mscc: ocelot: Hardware ofload for
- tc flower filter
-Date: Thu, 30 May 2019 12:52:26 -0700 (PDT)
-Message-ID: <20190530.125226.748439790590538564.davem@davemloft.net>
-References: <1559125580-6375-1-git-send-email-horatiu.vultur@microchip.com>
-        <1559125580-6375-3-git-send-email-horatiu.vultur@microchip.com>
-        <20190529151802.19aa82a2@cakuba.netronome.com>
+Subject: Re: [PATCH V4 net-next 0/6] Peer to Peer One-Step time stamping
+Date: Thu, 30 May 2019 12:58:33 -0700 (PDT)
+Message-ID: <20190530.125833.1049383711116106790.davem@davemloft.net>
+References: <cover.1559109076.git.richardcochran@gmail.com>
+        <20190530.115507.1344606945620280103.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190529151802.19aa82a2@cakuba.netronome.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jakub.kicinski@netronome.com
-Cc: horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190530.115507.1344606945620280103.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: richardcochran@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, jacob.e.keller@intel.com, mark.rutland@arm.com, mlichvar@redhat.com, robh+dt@kernel.org, willemb@google.com
 List-Id: devicetree@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
-Date: Wed, 29 May 2019 15:18:44 -0700
-
-> On Wed, 29 May 2019 12:26:20 +0200, Horatiu Vultur wrote:
->> +static int ocelot_flower_replace(struct tc_cls_flower_offload *f,
->> +				 struct ocelot_port_block *port_block)
->> +{
->> +	struct ocelot_ace_rule *rule;
->> +	int ret;
->> +
->> +	if (port_block->port->tc.block_shared)
->> +		return -EOPNOTSUPP;
-> 
-> FWIW since you only support TRAP and DROP actions here (AFAICT) you
-> should actually be okay with shared blocks.  The problems with shared
-> blocks start when the action is stateful (like act_police), because we
-> can't share that state between devices.  But for most actions which just
-> maintain statistics, it's fine to allow shared blocks.  HTH
-
-Please update to remove this test Horatiu, thanks.
+RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogVGh1LCAzMCBN
+YXkgMjAxOSAxMTo1NTowNyAtMDcwMCAoUERUKQ0KDQo+IFNlcmllcyBhcHBsaWVkLCB0aGFua3Mg
+UmljaGFyZC4NCg0KSSBoYWQgdG8gcmV2ZXJ0LCB0aGlzIGRvZXNuJ3QgYnVpbGQuDQoNCmRyaXZl
+cnMvcHRwL3B0cF9pbmVzLmM6IEluIGZ1bmN0aW9uIKFpbmVzX3R4dHN0YW1wojoNCmRyaXZlcnMv
+cHRwL3B0cF9pbmVzLmM6Njc0OjM6IHdhcm5pbmc6IKFvbGRfc2tioiBtYXkgYmUgdXNlZCB1bmlu
+aXRpYWxpemVkIGluIHRoaXMgZnVuY3Rpb24gWy1XbWF5YmUtdW5pbml0aWFsaXplZF0NCiAgIGtm
+cmVlX3NrYihvbGRfc2tiKTsNCiAgIF5+fn5+fn5+fn5+fn5+fn5+fg0KZHJpdmVycy9uZXQvbWFj
+dmxhbi5jOiBJbiBmdW5jdGlvbiChbWFjdmxhbl9ldGh0b29sX2dldF90c19pbmZvojoNCmRyaXZl
+cnMvbmV0L21hY3ZsYW4uYzoxMDU5OjQyOiBlcnJvcjogoXN0cnVjdCBwaHlfZHJpdmVyoiBoYXMg
+bm8gbWVtYmVyIG5hbWVkIKF0c19pbmZvog0KICBpZiAocGh5ZGV2ICYmIHBoeWRldi0+ZHJ2ICYm
+IHBoeWRldi0+ZHJ2LT50c19pbmZvKSB7DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBefg0KZHJpdmVycy9uZXQvbWFjdmxhbi5jOjEwNjA6MjI6IGVycm9yOiChc3Ry
+dWN0IHBoeV9kcml2ZXKiIGhhcyBubyBtZW1iZXIgbmFtZWQgoXRzX2luZm+iDQogICAgcmV0dXJu
+IHBoeWRldi0+ZHJ2LT50c19pbmZvKHBoeWRldiwgaW5mbyk7DQogICAgICAgICAgICAgICAgICAg
+ICAgXn4NCg==
