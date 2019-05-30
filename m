@@ -1,51 +1,36 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCH V4 5/8] memory: tegra: Add EMC scaling support code for
- Tegra210
-Date: Thu, 30 May 2019 10:45:51 +0800
-Message-ID: <f59d78aa-aa70-574f-a8b6-1364861f8319@nvidia.com>
-References: <20190529082139.5581-1-josephl@nvidia.com>
- <20190529082139.5581-6-josephl@nvidia.com>
- <5bd95d0b-e1a5-e717-4d5a-b9ef5d5fa4a5@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5bd95d0b-e1a5-e717-4d5a-b9ef5d5fa4a5@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Anson.Huang@nxp.com
+Subject: [PATCH 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MN by default
+Date: Thu, 30 May 2019 11:05:46 +0800
+Message-ID: <20190530030546.9224-3-Anson.Huang@nxp.com>
+References: <20190530030546.9224-1-Anson.Huang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190530030546.9224-1-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org, stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, catalin.marinas@arm.com, will.deacon@arm.com, maxime.ripard@bootlin.com, olof@lixom.net, horms+renesas@verge.net.au, jagan@amarulasolutions.com, leonard.crestez@nxp.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, enric.balletbo@collabora.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-T24gNS8yOS8xOSA5OjM3IFBNLCBEbWl0cnkgT3NpcGVua28gd3JvdGU6Cj4gMjkuMDUuMjAxOSAx
-MToyMSwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgcmVxdWly
-ZWQgQVBJcyBhbmQgdmFyaWFibGVzIGZvciB0aGUgRU1DIHNjYWxpbmcKPj4gc2VxdWVuY2UgY29k
-ZSBvbiBUZWdyYTIxMC4KPj4KPj4gQmFzZWQgb24gdGhlIHdvcmsgb2YgUGV0ZXIgRGUgU2Nocmlq
-dmVyIDxwZGVzY2hyaWp2ZXJAbnZpZGlhLmNvbT4uCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEpvc2Vw
-aCBMbyA8am9zZXBobEBudmlkaWEuY29tPgo+PiAtLS0KPj4gdjQ6Cj4+IC0gZml4IHRoZSBBUEkg
-d2l0aCBnZW5lcmljIG5hbWluZwo+PiAtIHVzZSAndTE2JyBpbiAnc3RydWN0IGVtY190YWJsZV9y
-ZWdpc3Rlcl9vZmZzZXQnCj4+IC0tLQo+IAo+IFtzbmlwXQo+IAo+PiArdm9pZCBlbWNfd3JpdGVs
-KHN0cnVjdCB0ZWdyYV9lbWMgKmVtYywgdTMyIHZhbCwgdW5zaWduZWQgbG9uZyBvZmZzZXQpCj4+
-ICt7Cj4+ICsJd3JpdGVsX3JlbGF4ZWQodmFsLCBlbWMtPmVtY19iYXNlW1JFR19FTUNdICsgb2Zm
-c2V0KTsKPj4gK30KPj4gKwo+PiAgIHUzMiBlbWNfcmVhZGwoc3RydWN0IHRlZ3JhX2VtYyAqZW1j
-LCB1bnNpZ25lZCBsb25nIG9mZnNldCkKPj4gICB7Cj4+ICAgCXJldHVybiByZWFkbF9yZWxheGVk
-KGVtYy0+ZW1jX2Jhc2VbUkVHX0VNQ10gKyBvZmZzZXQpOwo+PiAgIH0KPj4gICAKPj4gK3UzMiBl
-bWMxX3JlYWRsKHN0cnVjdCB0ZWdyYV9lbWMgKmVtYywgdW5zaWduZWQgbG9uZyBvZmZzZXQpCj4+
-ICt7Cj4+ICsJcmV0dXJuIHJlYWRsX3JlbGF4ZWQoZW1jLT5lbWNfYmFzZVtSRUdfRU1DMV0gKyBv
-ZmZzZXQpOwo+PiArfQo+IAo+IFBsZWFzZSBtYWtlIGFsbCB0aGUgZ2xvYmFsIG9uZS1saW5lIGZ1
-bmN0aW9ucyBzdGF0aWMgYW5kIGlubGluZWQsIHRoZW4KPiBtb3ZlIHRoZW0gb3V0IGludG8gdGhl
-IGhlYWRlci4gVGhpcyB3aWxsIGFsbG93IGNvbXBpbGVyIHRvIG9wdGltaXplIGNvZGUKPiBiZXR0
-ZXIgYW5kIGFsc28gd2lsbCBoaWRlIHRoZXNlIGdlbmVyaWMtbG9va2luZyBnbG9iYWwgc3ltYm9s
-IG5hbWVzIGZyb20KPiB1bnJlbGF0ZWQgcGFydGllcyBpbiB0aGUgbXVsdGlwbGF0Zm9ybSBrZXJu
-ZWwgYnVpbGQuCgpPa2F5LCB3aWxsIGRvLgoKVGhhbmtzLApKb3NlcGgKCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+From: Anson Huang <Anson.Huang@nxp.com>
+
+Enable CONFIG_PINCTRL_IMX8MN by default to support i.MX8MN
+pinctrl driver.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 7c7b6b5..8d4f25c 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -373,6 +373,7 @@ CONFIG_SPI_SUN6I=y
+ CONFIG_SPMI=y
+ CONFIG_PINCTRL_SINGLE=y
+ CONFIG_PINCTRL_MAX77620=y
++CONFIG_PINCTRL_IMX8MN=y
+ CONFIG_PINCTRL_IMX8MM=y
+ CONFIG_PINCTRL_IMX8MQ=y
+ CONFIG_PINCTRL_IMX8QXP=y
+-- 
+2.7.4
