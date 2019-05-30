@@ -1,260 +1,134 @@
-Return-Path: <SRS0=Bz/z=T7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42997 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbfEaIzc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 May 2019 04:55:32 -0400
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v3 09/10] media: hantro: add initial i.MX8MM support (untested)
-Date: Fri, 31 May 2019 10:55:22 +0200
-Message-Id: <20190531085523.10892-10-p.zabel@pengutronix.de>
-In-Reply-To: <20190531085523.10892-1-p.zabel@pengutronix.de>
-References: <20190531085523.10892-1-p.zabel@pengutronix.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-Path: <SRS0=7JyS=T6=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 3/3] arm64: dts: renesas: Add HiHope RZ/G2M sub board support
+Date: Thu, 30 May 2019 15:57:46 +0100
+Message-Id: <1559228266-16724-4-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1559228266-16724-1-git-send-email-biju.das@bp.renesas.com>
+References: <1559228266-16724-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, xu_shunji@hoperun.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This should enable MPEG-2 decoding on the Hantro G1 and JPEG encoding on
-the Hantro H1 on i.MX8MM.
+The HiHope RZ/G2M sub board sits below the HiHope RZ/G2M main board.
+This patch also adds ethernet support along with a dtsi common to
+both HiHope RZ/G2M and RZ/G2N sub boards.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Changes since v2 [1]:
- - Adapted to changes in patches 4 and 5
-
-[1] https://patchwork.linuxtv.org/patch/56425/
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 ---
- drivers/staging/media/hantro/hantro_drv.c   |   1 +
- drivers/staging/media/hantro/hantro_hw.h    |   1 +
- drivers/staging/media/hantro/imx8m_vpu_hw.c | 137 ++++++++++++++++++++
- 3 files changed, 139 insertions(+)
+ arch/arm64/boot/dts/renesas/Makefile               |  1 +
+ arch/arm64/boot/dts/renesas/hihope-common.dtsi     |  2 +
+ arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi    | 55 ++++++++++++++++++++++
+ .../boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts  | 15 ++++++
+ 4 files changed, 73 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts
 
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index bf88e594d440..ef2b29d50100 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -419,6 +419,7 @@ static const struct of_device_id of_hantro_match[] = {
- 	{ .compatible = "rockchip,rk3328-vpu", .data = &rk3328_vpu_variant, },
- 	{ .compatible = "rockchip,rk3288-vpu", .data = &rk3288_vpu_variant, },
- 	{ .compatible = "nxp,imx8mq-vpu", .data = &imx8mq_vpu_variant, },
-+	{ .compatible = "nxp,imx8mm-vpu", .data = &imx8mm_vpu_variant, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, of_hantro_match);
-diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
-index fd6ad017a1cf..1c69669dba54 100644
---- a/drivers/staging/media/hantro/hantro_hw.h
-+++ b/drivers/staging/media/hantro/hantro_hw.h
-@@ -82,6 +82,7 @@ extern const struct hantro_variant rk3399_vpu_variant;
- extern const struct hantro_variant rk3328_vpu_variant;
- extern const struct hantro_variant rk3288_vpu_variant;
- extern const struct hantro_variant imx8mq_vpu_variant;
-+extern const struct hantro_variant imx8mm_vpu_variant;
- 
- void hantro_watchdog(struct work_struct *work);
- void hantro_run(struct hantro_ctx *ctx);
-diff --git a/drivers/staging/media/hantro/imx8m_vpu_hw.c b/drivers/staging/media/hantro/imx8m_vpu_hw.c
-index 3da5cbd1eab1..fbe84c5f5619 100644
---- a/drivers/staging/media/hantro/imx8m_vpu_hw.c
-+++ b/drivers/staging/media/hantro/imx8m_vpu_hw.c
-@@ -15,14 +15,17 @@
- #define CTRL_SOFT_RESET		0x00
- #define RESET_G1		BIT(1)
- #define RESET_G2		BIT(0)
-+#define RESET_H1		BIT(2)
- 
- #define CTRL_CLOCK_ENABLE	0x04
- #define CLOCK_G1		BIT(1)
- #define CLOCK_G2		BIT(0)
-+#define CLOCK_H1		BIT(2)
- 
- #define CTRL_G1_DEC_FUSE	0x08
- #define CTRL_G1_PP_FUSE		0x0c
- #define CTRL_G2_DEC_FUSE	0x10
-+#define CTRL_H1_ENC_FUSE	0x14
- 
- static void imx8m_soft_reset(struct hantro_dev *vpu, u32 reset_bits)
- {
-@@ -73,6 +76,30 @@ static int imx8mq_runtime_resume(struct hantro_dev *vpu)
- 	return 0;
- }
- 
-+static int imx8mm_runtime_resume(struct hantro_dev *vpu)
-+{
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(vpu->variant->num_clocks, vpu->clocks);
-+	if (ret) {
-+		dev_err(vpu->dev, "Failed to enable clocks\n");
-+		return ret;
-+	}
-+
-+	imx8m_soft_reset(vpu, RESET_G1 | RESET_G2 | RESET_H1);
-+	imx8m_clk_enable(vpu, CLOCK_G1 | CLOCK_G2 | RESET_H1);
-+
-+	/* Set values of the fuse registers */
-+	writel(0xffffffff, vpu->ctrl_base + CTRL_G1_DEC_FUSE);
-+	writel(0xffffffff, vpu->ctrl_base + CTRL_G1_PP_FUSE);
-+	writel(0xffffffff, vpu->ctrl_base + CTRL_G2_DEC_FUSE);
-+	writel(0xffffffff, vpu->ctrl_base + CTRL_H1_ENC_FUSE);
-+
-+	clk_bulk_disable_unprepare(vpu->variant->num_clocks, vpu->clocks);
-+
-+	return 0;
-+}
-+
- /*
-  * Supported formats.
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index aa33074..42b74c2 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
++dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
+ dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-h3ulcb-kf.dtb
+diff --git a/arch/arm64/boot/dts/renesas/hihope-common.dtsi b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+index de206b7..4cc924d 100644
+--- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
++++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+@@ -5,6 +5,8 @@
+  * Copyright (C) 2019 Renesas Electronics Corp.
   */
-@@ -97,6 +124,43 @@ static const struct hantro_fmt imx8m_vpu_dec_fmts[] = {
- 	},
- };
  
-+static const struct hantro_fmt imx8mm_vpu_enc_fmts[] = {
-+	{
-+		.fourcc = V4L2_PIX_FMT_YUV420M,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = RK3288_VPU_ENC_FMT_YUV420P,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV12M,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = RK3288_VPU_ENC_FMT_YUV420SP,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_YUYV,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = RK3288_VPU_ENC_FMT_YUYV422,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_UYVY,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = RK3288_VPU_ENC_FMT_UYVY422,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_JPEG,
-+		.codec_mode = HANTRO_MODE_JPEG_ENC,
-+		.max_depth = 2,
-+		.header_size = JPEG_HEADER_SIZE,
-+		.frmsize = {
-+			.min_width = 96,
-+			.max_width = 8192,
-+			.step_width = JPEG_MB_DIM,
-+			.min_height = 32,
-+			.max_height = 8192,
-+			.step_height = JPEG_MB_DIM,
-+		},
-+	},
++#include <dt-bindings/gpio/gpio.h>
++
+ / {
+ 	aliases {
+ 		serial0 = &scif2;
+diff --git a/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
+new file mode 100644
+index 0000000..b1e45944
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
+@@ -0,0 +1,55 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the RZ/G2[MN] HiHope sub board common parts
++ *
++ * Copyright (C) 2019 Renesas Electronics Corp.
++ */
++
++/ {
++	aliases {
++		ethernet0 = &avb;
++	};
++
++	chosen {
++		bootargs = "ignore_loglevel rw root=/dev/nfs ip=on";
++	};
 +};
 +
- static irqreturn_t imx8m_vpu_g1_irq(int irq, void *dev_id)
- {
- 	struct hantro_dev *vpu = dev_id;
-@@ -115,6 +179,25 @@ static irqreturn_t imx8m_vpu_g1_irq(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+static irqreturn_t imx8mm_vpu_h1_irq(int irq, void *dev_id)
-+{
-+	struct hantro_dev *vpu = dev_id;
-+	enum vb2_buffer_state state;
-+	u32 status, bytesused;
++&avb {
++	pinctrl-0 = <&avb_pins>;
++	pinctrl-names = "default";
++	phy-handle = <&phy0>;
++	phy-mode = "rgmii-txid";
++	status = "okay";
 +
-+	status = vepu_read(vpu, VEPU_REG_INTERRUPT);
-+	bytesused = vepu_read(vpu, VEPU_REG_STR_BUF_LIMIT) / 8;
-+	state = (status & VEPU_REG_INTERRUPT_FRAME_RDY) ?
-+		 VB2_BUF_STATE_DONE : VB2_BUF_STATE_ERROR;
-+
-+	vepu_write(vpu, 0, VEPU_REG_INTERRUPT);
-+	vepu_write(vpu, 0, VEPU_REG_AXI_CTRL);
-+
-+	hantro_irq_done(vpu, bytesused, state);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int imx8mq_vpu_hw_init(struct hantro_dev *vpu)
- {
- 	vpu->dec_base = vpu->bases[0];
-@@ -123,6 +206,15 @@ static int imx8mq_vpu_hw_init(struct hantro_dev *vpu)
- 	return 0;
- }
- 
-+static int imx8mm_vpu_hw_init(struct hantro_dev *vpu)
-+{
-+	vpu->dec_base = vpu->bases[0];
-+	vpu->enc_base = vpu->bases[2];
-+	vpu->ctrl_base = vpu->bases[vpu->variant->num_regs - 1];
-+
-+	return 0;
-+}
-+
- static void imx8m_vpu_g1_reset(struct hantro_ctx *ctx)
- {
- 	struct hantro_dev *vpu = ctx->dev;
-@@ -130,6 +222,13 @@ static void imx8m_vpu_g1_reset(struct hantro_ctx *ctx)
- 	imx8m_soft_reset(vpu, RESET_G1);
- }
- 
-+static void imx8mm_vpu_h1_reset(struct hantro_ctx *ctx)
-+{
-+	struct hantro_dev *vpu = ctx->dev;
-+
-+	imx8m_soft_reset(vpu, RESET_H1);
-+}
-+
- /*
-  * Supported codec ops.
-  */
-@@ -143,6 +242,21 @@ static const struct hantro_codec_ops imx8mq_vpu_codec_ops[] = {
- 	},
- };
- 
-+static const struct hantro_codec_ops imx8mm_vpu_codec_ops[] = {
-+	[HANTRO_MODE_MPEG2_DEC] = {
-+		.run = hantro_g1_mpeg2_dec_run,
-+		.reset = imx8m_vpu_g1_reset,
-+		.init = hantro_mpeg2_dec_init,
-+		.exit = hantro_mpeg2_dec_exit,
-+	},
-+	[HANTRO_MODE_JPEG_ENC] = {
-+		.run = hantro_h1_jpeg_enc_run,
-+		.reset = imx8mm_vpu_h1_reset,
-+		.init = hantro_jpeg_enc_init,
-+		.exit = hantro_jpeg_enc_exit,
-+	},
++	phy0: ethernet-phy@0 {
++		rxc-skew-ps = <1500>;
++		reg = <0>;
++		interrupt-parent = <&gpio2>;
++		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
++		reset-gpios = <&gpio2 10 GPIO_ACTIVE_LOW>;
++	};
 +};
 +
- /*
-  * VPU variants.
-  */
-@@ -169,3 +283,26 @@ const struct hantro_variant imx8mq_vpu_variant = {
- 	.reg_names = imx8mq_reg_names,
- 	.num_regs = ARRAY_SIZE(imx8mq_reg_names)
- };
++&pfc {
++	pinctrl-0 = <&scif_clk_pins>;
++	pinctrl-names = "default";
 +
-+static const struct hantro_irq imx8mm_irqs[] = {
-+	{ "g1", imx8m_vpu_g1_irq },
-+	{ "g2", NULL /* TODO: imx8m_vpu_g2_irq */ },
-+	{ "h1", imx8mm_vpu_h1_irq },
++	avb_pins: avb {
++		mux {
++			groups = "avb_link", "avb_mdio", "avb_mii";
++			function = "avb";
++		};
++
++		pins_mdio {
++			groups = "avb_mdio";
++			drive-strength = <24>;
++		};
++
++		pins_mii_tx {
++			pins = "PIN_AVB_TX_CTL", "PIN_AVB_TXC", "PIN_AVB_TD0",
++			       "PIN_AVB_TD1", "PIN_AVB_TD2", "PIN_AVB_TD3";
++			drive-strength = <12>;
++		};
++	};
 +};
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts
+new file mode 100644
+index 0000000..6e33a3b
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the HiHope RZ/G2M sub board
++ *
++ * Copyright (C) 2019 Renesas Electronics Corp.
++ */
 +
-+static const char * const imx8mm_reg_names[] = { "g1", "g2", "h1", "ctrl" };
++#include "r8a774a1-hihope-rzg2m.dts"
++#include "hihope-rzg2-ex.dtsi"
 +
-+const struct hantro_variant imx8mm_vpu_variant = {
-+	.dec_fmts = imx8m_vpu_dec_fmts,
-+	.num_dec_fmts = ARRAY_SIZE(imx8m_vpu_dec_fmts),
-+	.codec = HANTRO_MPEG2_DECODER,
-+	.codec_ops = imx8mm_vpu_codec_ops,
-+	.init = imx8mm_vpu_hw_init,
-+	.runtime_resume = imx8mm_runtime_resume,
-+	.irqs = imx8mm_irqs,
-+	.num_irqs = ARRAY_SIZE(imx8mm_irqs),
-+	.clk_names = { "g1", "g2", "h1", "bus" },
-+	.num_clocks = 4,
-+	.reg_names = imx8mm_reg_names,
-+	.num_regs = ARRAY_SIZE(imx8mm_reg_names)
++/ {
++	model = "HopeRun HiHope RZ/G2M with sub board";
++	compatible = "hoperun,hihope-rzg2-ex", "hoperun,hihope-rzg2m",
++		     "renesas,r8a774a1";
 +};
 -- 
-2.20.1
+2.7.4
