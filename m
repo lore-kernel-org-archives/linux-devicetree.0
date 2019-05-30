@@ -1,40 +1,35 @@
-From: Jeffrey Hugo <jeffrey.l.hugo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/4] MSM8998 DSI support
-Date: Thu, 30 May 2019 08:59:09 -0700
-Message-ID: <20190530155909.2718-1-jeffrey.l.hugo@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.w.gonzalez-GANU6spQydw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jeffrey Hugo <jeffrey.l.hugo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sibis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 1/4] dt-bindings: msm/dsi: Add 10nm phy for msm8998 compatible
+Date: Thu, 30 May 2019 09:00:23 -0700
+Message-ID: <20190530160023.2773-1-jeffrey.l.hugo@gmail.com>
+References: <20190530155909.2718-1-jeffrey.l.hugo@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190530155909.2718-1-jeffrey.l.hugo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robdclark@gmail.com, sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: sibis@codeaurora.org, chandanu@codeaurora.org, abhinavk@codeaurora.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-RW5hYmxpbmcgRFNJIHN1cHBvcnQgZm9yIHRoZSBNU004OTk4IFNvQyBpcyBhbm90aGVyIHN0ZXAg
-dG8gZ2V0dGluZyBlbmQKdG8gZW5kIGRpc3BsYXkgZ29pbmcuICBUaGlzIHdpbGwgYWxsb3cgdGhl
-IFNvQyB0byBkcml2ZSBwYW5lbHMgdGhhdCBhcmUKaW50ZWdyYWRlZCBvbiB0aGUgZGV2aWNlIChp
-ZSBub3QgYSBIRE1JIHBvcnQpLCBidXQgd29uJ3QgZG8gbXVjaCB1bnRpbAp3ZSBoYXZlIHRoZSBk
-aXNwbGF5IHByb2Nlc3NvciBmZWVkaW5nIHRoZSBEU0kgYmxvY2tzIHdpdGggbGluZXMgdG8Kc2Nh
-bm91dC4KCkplZmZyZXkgSHVnbyAoNCk6CiAgZHQtYmluZGluZ3M6IG1zbS9kc2k6IEFkZCAxMG5t
-IHBoeSBmb3IgbXNtODk5OCBjb21wYXRpYmxlCiAgZHJtL21zbS9kc2k6IEFkZCBzdXBwb3J0IGZv
-ciBNU004OTk4IDEwbm0gZHNpIHBoeQogIGRybS9tc20vZHNpOiBBZGQgb2xkIHRpbWluZ3MgcXVp
-cmsgZm9yIDEwbm0gcGh5CiAgZHJtL21zbS9kc2k6IEFkZCBzdXBwb3J0IGZvciBNU004OTk4IERT
-SSBjb250cm9sbGVyCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4
-dCAgIHwgIDEgKwogZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNpX2NmZy5jICAgICAgICAgICAg
-IHwgMjEgKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNpX2NmZy5oICAg
-ICAgICAgICAgIHwgIDEgKwogZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGh5L2RzaV9waHkuYyAg
-ICAgICAgIHwgIDIgKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BoeS9kc2lfcGh5LmggICAg
-ICAgICB8ICA1ICsrKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BoeS9kc2lfcGh5XzEwbm0u
-YyAgICB8IDMwICsrKysrKysrKysrKysrKysrLS0KIDYgZmlsZXMgY2hhbmdlZCwgNTcgaW5zZXJ0
-aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCi0tIAoyLjE3LjEKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRy
-ZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubw==
+The DSI phy on MSM8998 is a 10nm design like SDM845, however it has some
+slightly different quirks which need to be handled by drivers.  Provide
+a separate compatible to assist in handling the specifics.
+
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ Documentation/devicetree/bindings/display/msm/dsi.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+index 9ae946942720..af95586c898f 100644
+--- a/Documentation/devicetree/bindings/display/msm/dsi.txt
++++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+@@ -88,6 +88,7 @@ Required properties:
+   * "qcom,dsi-phy-28nm-8960"
+   * "qcom,dsi-phy-14nm"
+   * "qcom,dsi-phy-10nm"
++  * "qcom,dsi-phy-10nm-8998"
+ - reg: Physical base address and length of the registers of PLL, PHY. Some
+   revisions require the PHY regulator base address, whereas others require the
+   PHY lane base address. See below for each PHY revision.
+-- 
+2.17.1
