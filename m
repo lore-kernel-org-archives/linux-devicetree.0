@@ -1,84 +1,39 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] dt-bindings: display: Convert Allwinner DSI to a schema
-Date: Thu, 30 May 2019 20:53:48 +0200
-Message-ID: <20190530185347.aql4znrk5msk2q6o@flea>
-References: <20190527120910.18964-1-maxime.ripard@bootlin.com>
- <CAGb2v66uhrm20BwmODkPZjSM6Ek+xEg23w2Cs49ikW3WcU1Lqg@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH V4 net-next 0/6] Peer to Peer One-Step time stamping
+Date: Thu, 30 May 2019 11:55:07 -0700 (PDT)
+Message-ID: <20190530.115507.1344606945620280103.davem@davemloft.net>
+References: <cover.1559109076.git.richardcochran@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0238169710=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGb2v66uhrm20BwmODkPZjSM6Ek+xEg23w2Cs49ikW3WcU1Lqg@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <cover.1559109076.git.richardcochran@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: richardcochran@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, jacob.e.keller@intel.com, mark.rutland@arm.com, mlichvar@redhat.com, robh+dt@kernel.org, willemb@google.com
 List-Id: devicetree@vger.kernel.org
 
+From: Richard Cochran <richardcochran@gmail.com>
+Date: Tue, 28 May 2019 22:58:01 -0700
 
---===============0238169710==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="n26wko6czjrwlbek"
-Content-Disposition: inline
+> This series adds support for PTP (IEEE 1588) P2P one-step time
+> stamping along with a driver for a hardware device that supports this.
+> 
+> If the hardware supports p2p one-step, it subtracts the ingress time
+> stamp value from the Pdelay_Request correction field.  The user space
+> software stack then simply copies the correction field into the
+> Pdelay_Response, and on transmission the hardware adds the egress time
+> stamp into the correction field.
+> 
+> This new functionality extends CONFIG_NETWORK_PHY_TIMESTAMPING to
+> cover MII snooping devices, but it still depends on phylib, just as
+> that option does.  Expanding beyond phylib is not within the scope of
+> the this series.
+> 
+> User space support is available in the current linuxptp master branch.
+> 
+> - Patch 1 adds the new option.
+> - Patches 2-5 add support for MII time stamping in non-PHY devices.
+> - Patch 6 adds a driver implementing the new option.
 
-
---n26wko6czjrwlbek
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Thu, May 30, 2019 at 09:48:02PM +0800, Chen-Yu Tsai wrote:
-> On Mon, May 27, 2019 at 8:09 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > The Allwinner SoCs have a MIPI-DSI and MIPI-D-PHY controllers supported in
-> > Linux, with a matching Device Tree binding.
-> >
-> > Now that we have the DT validation in place, let's convert the device tree
-> > bindings for that controller over to a YAML schemas.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> Looks good to me. However not sure why you replaced the clock index macros
-> with raw numbers.
-
-The examples are compiled now, and unfortunately we can't use the
-defines at this point.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---n26wko6czjrwlbek
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPAmuwAKCRDj7w1vZxhR
-xTrkAP9aecEKOK5bHZC70YnbsnYn/b1tZ+7DzzXoqX/FQEYF5AEAylRFy9rknaOQ
-uAzr1PQPqbqIGy8rVpSH/ibPa/zelgY=
-=yRoQ
------END PGP SIGNATURE-----
-
---n26wko6czjrwlbek--
-
---===============0238169710==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0238169710==--
+Series applied, thanks Richard.
