@@ -1,38 +1,82 @@
-Return-Path: <SRS0=7JyS=T6=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 0/3] Add basic HiHope RZ/G2M board support
-Date: Thu, 30 May 2019 15:57:43 +0100
-Message-Id: <1559228266-16724-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, xu_shunji@hoperun.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=cOqY=T6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.myocard.eu ([80.211.34.180]:47978 "EHLO mail.myocard.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725913AbfE3JKd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 May 2019 05:10:33 -0400
+Received: by mail.myocard.eu for <devicetree@vger.kernel.org>; Thu, 30 May 2019 09:10:17 GMT
+Message-ID: <20190530095953-0.1.d.7o2.0.e1kfdyeuar@myocard.eu>
+Date: Thu, 30 May 2019 09:10:17 GMT
+From: "Radoslav Dobrev" <radoslav.dobrev@myocard.eu>
+Subject: =?UTF-8?Q?=D0=92=D0=B5=D0=BB=D0=B8=D0=BA=D0=B4=D0=B5=D0=BD=D1=81=D0=BA=D0=B8_=D0=B1=D0=BE=D0=BD=D1=83=D1=81=D0=B8?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The HiHope RZ/G2M board from HopeRun consists of main board
-(HopeRun HiHope RZ/G2M main board) and sub board(HopeRun 
-HiHope RZ/G2M sub board). The HiHope RZ/G2M sub board sits
-below the HiHope RZ/G2M main board.
+=D0=A3=D0=B2=D0=B0=D0=B6=D0=B0=D0=B5=D0=BC=D0=B8 =D0=93=D0=BE=D1=81=D0=BF=
+=D0=BE=D0=B4=D0=B8=D0=BD=D0=B5/=D0=93=D0=BE=D1=81=D0=BF=D0=BE=D0=B6=D0=BE=
+,
 
-This series adds the device trees to describe the HW configuration
-of the HiHope RZ/G2M, with some basic support.
+=D0=A1=D1=8A=D0=B2=D1=80=D0=B5=D0=BC=D0=B5=D0=BD=D0=BD=D0=B0=D1=82=D0=B0 =
+=D1=81=D0=BE=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B0 =D0=BF=D1=80=D0=B8=D0=B4=
+=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B0 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=
+=D0=B8 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0, =D0=BA=D0=BE=D0=B8=D1=
+=82=D0=BE =D0=BC=D0=BE=D0=B3=D0=B0=D1=82 =D0=B4=D0=B0 =D0=B1=D1=8A=D0=B4=D0=
+=B0=D1=82 =D0=B8=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0=D0=BD=D0=B8 =D0=
+=B2 =D1=88=D0=B8=D1=80=D0=BE=D0=BA=D0=B0 =D1=82=D1=8A=D1=80=D0=B3=D0=BE=D0=
+=B2=D1=81=D0=BA=D0=B0 =D0=BC=D1=80=D0=B5=D0=B6=D0=B0 =D0=BE=D1=82 =D1=81=D1=
+=83=D0=BF=D0=B5=D1=80=D0=BC=D0=B0=D1=80=D0=BA=D0=B5=D1=82=D0=B8 =D0=B8 =D0=
+=B7=D0=B0=D0=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F =D0=B7=D0=B0 =D1=85=D1=
+=80=D0=B0=D0=BD=D0=B5=D0=BD=D0=B5 =D0=B2 =D1=81=D1=82=D1=80=D0=B0=D0=BD=D0=
+=B0=D1=82=D0=B0, =D0=B5 =D0=B8=D0=BD=D1=81=D1=82=D1=80=D1=83=D0=BC=D0=B5=D0=
+=BD=D1=82, =D0=BA=D0=BE=D0=B9=D1=82=D0=BE =D0=B5=D1=84=D0=B5=D0=BA=D1=82=D0=
+=B8=D0=B2=D0=BD=D0=BE =D0=BF=D0=BE=D0=B2=D0=B8=D1=88=D0=B0=D0=B2=D0=B0 =D0=
+=B5=D1=84=D0=B8=D0=BA=D0=B0=D1=81=D0=BD=D0=BE=D1=81=D1=82=D1=82=D0=B0 =D0=
+=BD=D0=B0 =D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0.
 
-This patch series based on linux-next next-20190528.
+=D0=A2=D0=BE=D0=B2=D0=B0 =D1=81=D0=B5 =D0=BF=D0=BE=D1=82=D0=B2=D1=8A=D1=80=
+=D0=B6=D0=B4=D0=B0=D0=B2=D0=B0 =D0=B8 =D0=BE=D1=82 =D0=BF=D1=80=D0=BE=D1=83=
+=D1=87=D0=B2=D0=B0=D0=BD=D0=B5=D1=82=D0=BE =D0=BD=D0=B0 =D0=A1=D0=B2=D0=B5=
+=D1=82=D0=BE=D0=B2=D0=BD=D0=B0=D1=82=D0=B0 =D0=B7=D0=B4=D1=80=D0=B0=D0=B2=
+=D0=BD=D0=B0 =D0=BE=D1=80=D0=B3=D0=B0=D0=BD=D0=B8=D0=B7=D0=B0=D1=86=D0=B8=
+=D1=8F (=D0=A1=D0=97=D0=9E), =D0=BA=D0=BE=D0=B5=D1=82=D0=BE =D0=BF=D0=BE=D0=
+=BA=D0=B0=D0=B7=D0=B2=D0=B0, =D1=87=D0=B5 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=
+=82=D0=B5=D0=BB, =D0=BA=D0=BE=D0=B9=D1=82=D0=BE =D0=BF=D0=BE=D0=BB=D1=83=D1=
+=87=D0=B0=D0=B2=D0=B0 =D0=B4=D0=BE=D0=BF=D0=BB=D0=B0=D1=89=D0=B0=D0=BD=D0=
+=B5 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0, =D0=B5 =D0=BF=D0=BE-=D0=B5=
+=D1=84=D0=B5=D0=BA=D1=82=D0=B8=D0=B2=D0=B5=D0=BD =D1=81 20%, =D0=B0  =D0=BE=
+=D1=82=D1=81=D1=8A=D1=81=D1=82=D0=B2=D0=B8=D1=8F=D1=82=D0=B0 =D0=BC=D1=83=
+ =D0=BD=D0=B0=D0=BC=D0=B0=D0=BB=D1=8F=D0=B2=D0=B0=D1=82 =D1=81 27%.
 
-Biju Das (3):
-  arm64: dts: renesas: Add HiHope RZ/G2M main board support
-  arm64: dts: renesas: hihope-common: Add pincontrol support to
-    scif2/scif clock
-  arm64: dts: renesas: Add HiHope RZ/G2M sub board support
+=D0=98=D0=B7=D0=B1=D0=BE=D1=80=D1=8A=D1=82 =D0=BD=D0=B0 =D0=BD=D0=B0=D1=88=
+=D0=B8=D1=82=D0=B5 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8 =D0=B7=D0=B0=
+ =D1=85=D1=80=D0=B0=D0=BD=D0=B0 =D0=BA=D0=B0=D1=82=D0=BE =D1=84=D0=BE=D1=80=
+=D0=BC=D0=B0 =D0=BD=D0=B0 =D1=81=D0=BE=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B0=
+ =D0=BF=D1=80=D0=B8=D0=B4=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B0 =D0=B5 =D1=80=
+=D0=B0=D0=B2=D0=BD=D0=BE=D0=B7=D0=BD=D0=B0=D1=87=D0=BD=D0=BE =D0=BD=D0=B5=
+ =D1=81=D0=B0=D0=BC=D0=BE =D0=BD=D0=B0 =D0=BF=D1=80=D0=BE=D0=B4=D1=83=D0=BA=
+=D1=82=D0=B8=D0=B2=D0=B5=D0=BD =D0=B8 =D0=BC=D0=BE=D1=82=D0=B8=D0=B2=D0=B8=
+=D1=80=D0=B0=D0=BD =D0=B5=D0=BA=D0=B8=D0=BF =D0=B7=D0=B0 =D1=80=D0=B0=D0=B1=
+=D0=BE=D1=82=D0=BE=D0=B4=D0=B0=D1=82=D0=B5=D0=BB=D1=8F, =D0=BD=D0=BE =D0=B8=
+ =D1=84=D0=B8=D0=BD=D0=B0=D0=BD=D1=81=D0=BE=D0=B2=D0=BE =D0=BE=D0=B1=D0=BB=
+=D0=B5=D0=BA=D1=87=D0=B5=D0=BD=D0=B8=D0=B5 - =D1=81=D1=82=D0=BE=D0=B9=D0=BD=
+=D0=BE=D1=81=D1=82=D1=82=D0=B0 =D0=BD=D0=B0 =D0=B8=D0=B7=D1=80=D0=B0=D0=B7=
+=D1=85=D0=BE=D0=B4=D0=B2=D0=B0=D0=BD=D0=B8=D1=82=D0=B5 =D1=81=D1=80=D0=B5=
+=D0=B4=D1=81=D1=82=D0=B2=D0=B0 =D0=BD=D0=B5 =D1=81=D0=B5 =D0=BE=D0=B1=D0=BB=
+=D0=B0=D0=B3=D0=B0 =D1=81 =D0=B4=D0=B0=D0=BD=D1=8A=D0=BA.
 
- arch/arm64/boot/dts/renesas/Makefile               |  2 +
- arch/arm64/boot/dts/renesas/hihope-common.dtsi     | 53 +++++++++++++++++++++
- arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi    | 55 ++++++++++++++++++++++
- .../boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts  | 15 ++++++
- .../boot/dts/renesas/r8a774a1-hihope-rzg2m.dts     | 26 ++++++++++
- 5 files changed, 151 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/hihope-common.dtsi
- create mode 100644 arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dts
+=D0=96=D0=B5=D0=BB=D0=B0=D0=B5=D1=82=D0=B5 =D0=BB=D0=B8 =D0=B4=D0=B0 =D0=92=
+=D0=B8 =D0=BF=D1=80=D0=B5=D0=B4=D0=BE=D1=81=D1=82=D0=B0=D0=B2=D1=8F =D0=BF=
+=D0=BE=D0=B2=D0=B5=D1=87=D0=B5 =D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=
+=D1=86=D0=B8=D1=8F =D0=BE=D1=82=D0=BD=D0=BE=D1=81=D0=BD=D0=BE =D0=B2=D0=B0=
+=D1=83=D1=87=D0=B5=D1=80=D0=B8=D1=82=D0=B5 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=
+=D0=BD=D0=B0 =D0=B7=D0=B0 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=
+=D0=B8?
 
--- 
-2.7.4
+
+=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
+=D0=B5=D0=B2
+Head of HR Benefit Team
+www.myocard.eu
