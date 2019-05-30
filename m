@@ -1,61 +1,51 @@
-Return-Path: <SRS0=hkqx=TG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:48062 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbfEFVJF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 May 2019 17:09:05 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] clk: ti: clkctrl: Fix clkdm_clk handling
-Date: Mon,  6 May 2019 14:08:54 -0700
-Message-Id: <20190506210854.24300-1-tony@atomide.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org
+Return-Path: <SRS0=7JyS=T6=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 2/3] arm64: dts: renesas: hihope-common: Add pincontrol support to scif2/scif clock
+Date: Thu, 30 May 2019 15:57:45 +0100
+Message-Id: <1559228266-16724-3-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1559228266-16724-1-git-send-email-biju.das@bp.renesas.com>
+References: <1559228266-16724-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, xu_shunji@hoperun.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-We need to always call clkdm_clk_enable() and clkdm_clk_disable() even
-the clkctrl clock(s) enabled for the domain do not have any gate register
-bits. Otherwise clockdomains may never get enabled except when devices get
-probed with the legacy "ti,hwmods" devicetree property.
+This patch adds pincontrol support to scif2/scif clock.
 
-Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 ---
- drivers/clk/ti/clkctrl.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/renesas/hihope-common.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
---- a/drivers/clk/ti/clkctrl.c
-+++ b/drivers/clk/ti/clkctrl.c
-@@ -137,9 +137,6 @@ static int _omap4_clkctrl_clk_enable(struct clk_hw *hw)
- 	int ret;
- 	union omap4_timeout timeout = { 0 };
+diff --git a/arch/arm64/boot/dts/renesas/hihope-common.dtsi b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+index 5baf532..de206b7 100644
+--- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
++++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+@@ -24,7 +24,25 @@
+ 	clock-frequency = <32768>;
+ };
  
--	if (!clk->enable_bit)
--		return 0;
--
- 	if (clk->clkdm) {
- 		ret = ti_clk_ll_ops->clkdm_clk_enable(clk->clkdm, hw->clk);
- 		if (ret) {
-@@ -151,6 +148,9 @@ static int _omap4_clkctrl_clk_enable(struct clk_hw *hw)
- 		}
- 	}
- 
-+	if (!clk->enable_bit)
-+		return 0;
++&pfc {
++	pinctrl-0 = <&scif_clk_pins>;
++	pinctrl-names = "default";
 +
- 	val = ti_clk_ll_ops->clk_readl(&clk->enable_reg);
- 
- 	val &= ~OMAP4_MODULEMODE_MASK;
-@@ -179,7 +179,7 @@ static void _omap4_clkctrl_clk_disable(struct clk_hw *hw)
- 	union omap4_timeout timeout = { 0 };
- 
- 	if (!clk->enable_bit)
--		return;
-+		goto exit;
- 
- 	val = ti_clk_ll_ops->clk_readl(&clk->enable_reg);
++	scif2_pins: scif2 {
++		groups = "scif2_data_a";
++		function = "scif2";
++	};
++
++	scif_clk_pins: scif_clk {
++		groups = "scif_clk_a";
++		function = "scif_clk";
++	};
++};
++
+ &scif2 {
++	pinctrl-0 = <&scif2_pins>;
++	pinctrl-names = "default";
++
+ 	status = "okay";
+ };
  
 -- 
-2.21.0
+2.7.4
