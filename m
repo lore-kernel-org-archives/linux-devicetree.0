@@ -1,56 +1,159 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V4 5/8] memory: tegra: Add EMC scaling support code for
- Tegra210
-Date: Thu, 30 May 2019 14:20:18 +0300
-Message-ID: <1838333d-bf58-1e06-7e4c-a64753075053@gmail.com>
-References: <20190529082139.5581-1-josephl@nvidia.com>
- <20190529082139.5581-6-josephl@nvidia.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+Date: Thu, 30 May 2019 12:23:29 +0100
+Message-ID: <20190530122329.235d13c7@donnerap.cambridge.arm.com>
+References: <20190523060437.11059-1-peng.fan@nxp.com>
+        <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
+        <AM0PR04MB4481C44F9B5EFCDD076EF728881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190529082139.5581-6-josephl@nvidia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM0PR04MB4481C44F9B5EFCDD076EF728881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-MjkuMDUuMjAxOSAxMToyMSwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gVGhpcyBwYXRjaCBhZGRz
-IHRoZSByZXF1aXJlZCBBUElzIGFuZCB2YXJpYWJsZXMgZm9yIHRoZSBFTUMgc2NhbGluZwo+IHNl
-cXVlbmNlIGNvZGUgb24gVGVncmEyMTAuCj4gCj4gQmFzZWQgb24gdGhlIHdvcmsgb2YgUGV0ZXIg
-RGUgU2NocmlqdmVyIDxwZGVzY2hyaWp2ZXJAbnZpZGlhLmNvbT4uCj4gCj4gU2lnbmVkLW9mZi1i
-eTogSm9zZXBoIExvIDxqb3NlcGhsQG52aWRpYS5jb20+Cj4gLS0tCj4gdjQ6Cj4gLSBmaXggdGhl
-IEFQSSB3aXRoIGdlbmVyaWMgbmFtaW5nCgo+ICtleHRlcm4gY29uc3Qgc3RydWN0IGVtY190YWJs
-ZV9yZWdpc3Rlcl9vZmZzZXQgcmVnX29mZjsKPiArZXh0ZXJuIHVuc2lnbmVkIGxvbmcgZHJhbV9v
-dmVyX3RlbXBfc3RhdGU7Cj4gKwo+ICt2b2lkIGNjZmlmb193cml0ZWwoc3RydWN0IHRlZ3JhX2Vt
-YyAqZW1jLCB1MzIgdmFsLCB1bnNpZ25lZCBsb25nIGFkZHIsCj4gKwkJICAgdTMyIGRlbGF5KTsK
-PiArdTMyIGRpdl9vMyh1MzIgYSwgdTMyIGIpOwo+ICt2b2lkIGVtY193cml0ZWwoc3RydWN0IHRl
-Z3JhX2VtYyAqZW1jLCB1MzIgdmFsLCB1bnNpZ25lZCBsb25nIG9mZnNldCk7Cj4gK3UzMiAgZW1j
-X3JlYWRsKHN0cnVjdCB0ZWdyYV9lbWMgKmVtYywgdW5zaWduZWQgbG9uZyBvZmZzZXQpOwo+ICt2
-b2lkIGVtY193cml0ZWxfcGVyX2NoKHN0cnVjdCB0ZWdyYV9lbWMgKmVtYywgdTMyIHZhbCwgaW50
-IHR5cGUsCj4gKwkJICAgICAgIHVuc2lnbmVkIGxvbmcgb2Zmc2V0KTsKPiArdTMyICBlbWMxX3Jl
-YWRsKHN0cnVjdCB0ZWdyYV9lbWMgKmVtYywgdW5zaWduZWQgbG9uZyBvZmZzZXQpOwo+ICsKPiAr
-dm9pZCBlbWNfZG9fY2xvY2tfY2hhbmdlKHN0cnVjdCB0ZWdyYV9lbWMgKmVtYywgdTMyIGNsa3Ny
-Yyk7Cj4gK3ZvaWQgZW1jX3NldF9zaGFkb3dfYnlwYXNzKHN0cnVjdCB0ZWdyYV9lbWMgKmVtYywg
-aW50IHNldCk7Cj4gK3ZvaWQgZW1jX3RpbWluZ191cGRhdGUoc3RydWN0IHRlZ3JhX2VtYyAqZW1j
-LCBpbnQgZHVhbF9jaGFuKTsKPiArdTMyIGVtY19nZXRfZGxsX3N0YXRlKHN0cnVjdCBlbWNfdGFi
-bGUgKm5leHRfdGltaW5nKTsKPiArc3RydWN0IGVtY190YWJsZSAqZW1jX2dldF90aW1pbmdfZnJv
-bV9mcmVxKHN0cnVjdCB0ZWdyYV9lbWMgKmVtYywKPiArCQkJCQkgICB1bnNpZ25lZCBsb25nIHJh
-dGUpOwo+ICt2b2lkIGVtY19zZXRfb3Zlcl90ZW1wX3RpbWluZyhzdHJ1Y3QgdGVncmFfZW1jICpl
-bWMsIHN0cnVjdCBlbWNfdGFibGUgKnRpbWluZywKPiArCQkJICAgICAgdW5zaWduZWQgbG9uZyBz
-dGF0ZSk7Cj4gK2ludCBlbWNfd2FpdF9mb3JfdXBkYXRlKHN0cnVjdCB0ZWdyYV9lbWMgKmVtYywg
-dTMyIHN0YXR1c19yZWcsIHUzMiBiaXRfbWFzaywKPiArCQkJYm9vbCB1cGRhdGVkX3N0YXRlLCBp
-bnQgY2hhbik7CgpJdCB3b3VsZG4ndCBodXJ0IHRvIHByZXBlbmQgdGhlc2UgYWxsIHdpdGggInRl
-Z3JhMjEwXyIuCgotLSAKRG1pdHJ5CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Mon, 27 May 2019 05:19:41 +0000
+Peng Fan <peng.fan@nxp.com> wrote:
+
+Hi,
+
+> > Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+> > 
+> > Hi,
+> > 
+> > On 5/22/19 10:50 PM, Peng Fan wrote:  
+> > > This is a modified version from Andre Przywara's patch series
+> > >  
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.ke
+> > rnel.org%2Fpatchwork%2Fcover%2F812997%2F&amp;data=02%7C01%7Cpe
+> > ng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1d3b
+> > c2b4c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdat
+> > a=BbS5ZQtzMANSwaKRDJ62NKrPrAyaED1%2BvymQaT6Qr8E%3D&amp;rese
+> > rved=0.  
+> > > [1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+> > > use smc as mailbox, power/clk is included, but only part of clk has
+> > > been implemented to work with hardware, power domain only supports get
+> > > name for now.
+> > >
+> > > The traditional Linux mailbox mechanism uses some kind of dedicated
+> > > hardware IP to signal a condition to some other processing unit,
+> > > typically a dedicated management processor.
+> > > This mailbox feature is used for instance by the SCMI protocol to
+> > > signal a request for some action to be taken by the management processor.
+> > > However some SoCs does not have a dedicated management core to  
+> > provide  
+> > > those services. In order to service TEE and to avoid linux shutdown
+> > > power and clock that used by TEE, need let firmware to handle power
+> > > and clock, the firmware here is ARM Trusted Firmware that could also
+> > > run SCMI service.
+> > >
+> > > The existing SCMI implementation uses a rather flexible shared memory
+> > > region to communicate commands and their parameters, it still requires
+> > > a mailbox to actually trigger the action.  
+> > 
+> > We have had something similar done internally with a couple of minor
+> > differences:
+> > 
+> > - a SGI is used to send SCMI notifications/delayed replies to support
+> > asynchronism (patches are in the works to actually add that to the Linux SCMI
+> > framework). There is no good support for SGI in the kernel right now so we
+> > hacked up something from the existing SMP code and adding the ability to
+> > register our own IPI handlers (SHAME!). Using a PPI should work and should
+> > allow for using request_irq() AFAICT.  
+> 
+> So you are also implementing a firmware inside ATF for SCMI usecase, right?
+> 
+> Introducing SGI in ATF to notify Linux will introduce complexity, there is
+> no good framework inside ATF for SCMI, and I use synchronization call for
+> simplicity for now.
+
+I think we don't disagree, but just to clarify on one thing:
+
+I think we should avoid tying this driver to specific protocol or software on the other end, be it ATF or SCMI. After all it's just a mailbox driver, meant to signal some event (and parameters) to some external entity. Yes, SCMI (or SCPI back then) was the reason to push for this, but it should be independent from that. I am not even sure we should mention it too much in the documentation.
+
+So whether the receiving end is ATF or something else it irrelevant, I think. For instance we have had discussions in Xen to provide guests some virtualised device management support, and using an HVC mailbox seems like a neat solution. This could be using the SCMI (or SCPI) protocol, but that's not a requirement. In this case the Xen hypervisor would be the one to pick up the mailbox trigger, probably forwarding the request to something else (Dom0 in this case).
+Also having a generic SMC mailbox could avoid having the actual hardware mailbox drivers in the kernel, so EL3 firmware could forward the request to an external management processor, and Linux would just work, without the need to describe the actual hardware mailbox device in some firmware tables. This might help ACPI on those devices.
+
+Cheers,
+Andre.
+
+> > 
+> > - the mailbox identifier is indicated as part of the SMC call such that we can
+> > have multiple SCMI mailboxes serving both standard protocols and
+> > non-standard (in the 0x80 and above) range, also they may have different
+> > throughput (in hindsight, these could simply be different channels)
+> > 
+> > Your patch series looks both good and useful to me, I would just put a
+> > provision in the binding to support an optional interrupt such that
+> > asynchronism gets reasonably easy to plug in when it is available (and
+> > desirable).  
+> 
+> Ok. Let me think about and add that in new version patch.
+> 
+> Thanks,
+> Peng.
+> 
+> >   
+> > >
+> > > This patch series provides a Linux mailbox compatible service which
+> > > uses smc calls to invoke firmware code, for instance taking care of SCMI  
+> > requests.  
+> > > The actual requests are still communicated using the standard SCMI way
+> > > of shared memory regions, but a dedicated mailbox hardware IP can be
+> > > replaced via this new driver.
+> > >
+> > > This simple driver uses the architected SMC calling convention to
+> > > trigger firmware services, also allows for using "HVC" calls to call
+> > > into hypervisors or firmware layers running in the EL2 exception level.
+> > >
+> > > Patch 1 contains the device tree binding documentation, patch 2
+> > > introduces the actual mailbox driver.
+> > >
+> > > Please note that this driver just provides a generic mailbox
+> > > mechanism, though this is synchronous and one-way only (triggered by
+> > > the OS only, without providing an asynchronous way of triggering
+> > > request from the firmware).
+> > > And while providing SCMI services was the reason for this exercise,
+> > > this driver is in no way bound to this use case, but can be used
+> > > generically where the OS wants to signal a mailbox condition to
+> > > firmware or a hypervisor.
+> > > Also the driver is in no way meant to replace any existing firmware
+> > > interface, but actually to complement existing interfaces.
+> > >
+> > > [1]
+> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgith
+> > >  
+> > ub.com%2FMrVan%2Farm-trusted-firmware%2Ftree%2Fscmi&amp;data=02
+> > %7C01%7  
+> > >  
+> > Cpeng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1
+> > d3bc2b4  
+> > >  
+> > c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdata=kN
+> > 9bEFFcsZA  
+> > > 1ePeNLLfHmONpVaG6O5ajVQvKMuaBXyk%3D&amp;reserved=0
+> > >
+> > > Peng Fan (2):
+> > >   DT: mailbox: add binding doc for the ARM SMC mailbox
+> > >   mailbox: introduce ARM SMC based mailbox
+> > >
+> > >  .../devicetree/bindings/mailbox/arm-smc.txt        |  96  
+> > +++++++++++++  
+> > >  drivers/mailbox/Kconfig                            |   7 +
+> > >  drivers/mailbox/Makefile                           |   2 +
+> > >  drivers/mailbox/arm-smc-mailbox.c                  | 154  
+> > +++++++++++++++++++++  
+> > >  include/linux/mailbox/arm-smc-mailbox.h            |  10 ++
+> > >  5 files changed, 269 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create mode
+> > > 100644 include/linux/mailbox/arm-smc-mailbox.h
+> > >  
+> > 
+> > 
+> > --
+> > Florian  
