@@ -1,31 +1,44 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH V4 net-next 0/6] Peer to Peer One-Step time stamping
-Date: Thu, 30 May 2019 12:58:33 -0700 (PDT)
-Message-ID: <20190530.125833.1049383711116106790.davem@davemloft.net>
-References: <cover.1559109076.git.richardcochran@gmail.com>
-        <20190530.115507.1344606945620280103.davem@davemloft.net>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2] ARM: dts: aspeed: Add YADRO VESNIN BMC
+Date: Thu, 30 May 2019 22:36:53 +0200
+Message-ID: <20190530203653.GD1561@lunn.ch>
+References: <20190530143933.25414-1-a.filippov@yadro.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190530.115507.1344606945620280103.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: richardcochran@gmail.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, jacob.e.keller@intel.com, mark.rutland@arm.com, mlichvar@redhat.com, robh+dt@kernel.org, willemb@google.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190530143933.25414-1-a.filippov@yadro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Filippov <a.filippov@yadro.com>
+Cc: linux-aspeed@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogVGh1LCAzMCBN
-YXkgMjAxOSAxMTo1NTowNyAtMDcwMCAoUERUKQ0KDQo+IFNlcmllcyBhcHBsaWVkLCB0aGFua3Mg
-UmljaGFyZC4NCg0KSSBoYWQgdG8gcmV2ZXJ0LCB0aGlzIGRvZXNuJ3QgYnVpbGQuDQoNCmRyaXZl
-cnMvcHRwL3B0cF9pbmVzLmM6IEluIGZ1bmN0aW9uIKFpbmVzX3R4dHN0YW1wojoNCmRyaXZlcnMv
-cHRwL3B0cF9pbmVzLmM6Njc0OjM6IHdhcm5pbmc6IKFvbGRfc2tioiBtYXkgYmUgdXNlZCB1bmlu
-aXRpYWxpemVkIGluIHRoaXMgZnVuY3Rpb24gWy1XbWF5YmUtdW5pbml0aWFsaXplZF0NCiAgIGtm
-cmVlX3NrYihvbGRfc2tiKTsNCiAgIF5+fn5+fn5+fn5+fn5+fn5+fg0KZHJpdmVycy9uZXQvbWFj
-dmxhbi5jOiBJbiBmdW5jdGlvbiChbWFjdmxhbl9ldGh0b29sX2dldF90c19pbmZvojoNCmRyaXZl
-cnMvbmV0L21hY3ZsYW4uYzoxMDU5OjQyOiBlcnJvcjogoXN0cnVjdCBwaHlfZHJpdmVyoiBoYXMg
-bm8gbWVtYmVyIG5hbWVkIKF0c19pbmZvog0KICBpZiAocGh5ZGV2ICYmIHBoeWRldi0+ZHJ2ICYm
-IHBoeWRldi0+ZHJ2LT50c19pbmZvKSB7DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBefg0KZHJpdmVycy9uZXQvbWFjdmxhbi5jOjEwNjA6MjI6IGVycm9yOiChc3Ry
-dWN0IHBoeV9kcml2ZXKiIGhhcyBubyBtZW1iZXIgbmFtZWQgoXRzX2luZm+iDQogICAgcmV0dXJu
-IHBoeWRldi0+ZHJ2LT50c19pbmZvKHBoeWRldiwgaW5mbyk7DQogICAgICAgICAgICAgICAgICAg
-ICAgXn4NCg==
+On Thu, May 30, 2019 at 05:39:33PM +0300, Alexander Filippov wrote:
+> VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
+> by YADRO.
+> 
+> Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+> ---
+>  arch/arm/boot/dts/Makefile                  |   1 +
+>  arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 234 ++++++++++++++++++++
+>  2 files changed, 235 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 834cce80d1b8..811e9312cf22 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1259,6 +1259,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+>  	aspeed-bmc-microsoft-olympus.dtb \
+>  	aspeed-bmc-opp-lanyang.dtb \
+>  	aspeed-bmc-opp-palmetto.dtb \
+> +	aspeed-bmc-opp-vesnin.dtb \
+>  	aspeed-bmc-opp-romulus.dtb \
+>  	aspeed-bmc-opp-swift.dtb \
+>  	aspeed-bmc-opp-witherspoon.dtb \
+
+Hi Alexander
+
+Still not correctly sorted.
+
+      Andrew
