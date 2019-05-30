@@ -1,45 +1,63 @@
-From: "Alexander A. Filippov" <a.filippov@yadro.com>
-Subject: Re: [PATCH] ARM: dts: aspeed: Add YADRO VESNIN BMC
-Date: Thu, 30 May 2019 17:31:10 +0300
-Message-ID: <20190530143110.GA24059@bbwork.lan>
-References: <20190530093948.12479-1-a.filippov@yadro.com>
- <CACPK8XfG7j4Z2bqX9CFxUeUrpx708Uqbh-5ts9W5SnDfDw-xYA@mail.gmail.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: [PATCH 1/3] mfd: madera: Update DT bindings to add additional CODECs
+Date: Thu, 30 May 2019 15:39:51 +0100
+Message-ID: <20190530143953.25799-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACPK8XfG7j4Z2bqX9CFxUeUrpx708Uqbh-5ts9W5SnDfDw-xYA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Alexander Filippov <a.filippov@yadro.com>, linux-aspeed@lists.ozlabs.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+To: lee.jones@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 30, 2019 at 02:16:59PM +0000, Joel Stanley wrote:
-> On Thu, 30 May 2019 at 09:40, Alexander Filippov <a.filippov@yadro.com> wrote:
-> > @@ -0,0 +1,262 @@
-> 
-> Can we get a SDPX license string at the top of the file? Something like this:
-> 
-> // SPDX-License-Identifier: GPL-2.0+
-> // Copyright 2019 <copyright holder>
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
 
-Sure, on my way.
+This adds the cs47l15, cs42l92, cs47l92 and cs47l93 to the list of
+compatible strings and updates some properties that need to note
+the new CODECs.
 
-> 
-> > +/dts-v1/;
-> > +
-> > +#include "aspeed-g4.dtsi"
-> > +#include <dt-bindings/gpio/aspeed-gpio.h>
-> > +
-> 
-> > +&i2c3 {
-> > +       status = "okay";
-> > +       cpr2021@59 {
-> > +               #address-cells = <1>;
-> > +               #size-cells = <0>;
-> > +               compatible = "general,cpr2021", "general,pmbus";
-> 
-> Do you have a driver for this one you plan on submitting?
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ Documentation/devicetree/bindings/mfd/madera.txt | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Yes, we plan but not right now. I remove it now and it will be added when the
-driver will be ready.
+diff --git a/Documentation/devicetree/bindings/mfd/madera.txt b/Documentation/devicetree/bindings/mfd/madera.txt
+index db3266088386a..cad0f28005027 100644
+--- a/Documentation/devicetree/bindings/mfd/madera.txt
++++ b/Documentation/devicetree/bindings/mfd/madera.txt
+@@ -11,10 +11,14 @@ bindings/sound/madera.txt
+ Required properties:
+ 
+   - compatible : One of the following chip-specific strings:
++        "cirrus,cs47l15"
+         "cirrus,cs47l35"
+         "cirrus,cs47l85"
+         "cirrus,cs47l90"
+         "cirrus,cs47l91"
++        "cirrus,cs42l92"
++        "cirrus,cs47l92"
++        "cirrus,cs47l93"
+         "cirrus,wm1840"
+ 
+   - reg : I2C slave address when connected using I2C, chip select number when
+@@ -22,7 +26,7 @@ Required properties:
+ 
+   - DCVDD-supply : Power supply for the device as defined in
+     bindings/regulator/regulator.txt
+-    Mandatory on CS47L35, CS47L90, CS47L91
++    Mandatory on CS47L15, CS47L35, CS47L90, CS47L91, CS42L92, CS47L92, CS47L93
+     Optional on CS47L85, WM1840
+ 
+   - AVDD-supply, DBVDD1-supply, DBVDD2-supply, CPVDD1-supply, CPVDD2-supply :
+@@ -35,7 +39,7 @@ Required properties:
+     (CS47L85, WM1840)
+ 
+   - SPKVDD-supply : Power supply for the device
+-    (CS47L35)
++    (CS47L15, CS47L35)
+ 
+   - interrupt-controller : Indicates that this device is an interrupt controller
+ 
+-- 
+2.11.0
