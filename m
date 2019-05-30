@@ -1,76 +1,40 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] PCI: altera-msi: Allow building as module
-Date: Thu, 30 May 2019 16:08:41 +0100
-Message-ID: <20190530150841.GC13993@redmoon>
-References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
- <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
+From: Jeffrey Hugo <jeffrey.l.hugo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/4] MSM8998 DSI support
+Date: Thu, 30 May 2019 08:59:09 -0700
+Message-ID: <20190530155909.2718-1-jeffrey.l.hugo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ley Foon Tan <ley.foon.tan@intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, lftan.linux@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.w.gonzalez-GANU6spQydw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jeffrey Hugo <jeffrey.l.hugo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sibis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 12:57:15PM +0800, Ley Foon Tan wrote:
-> Altera MSI IP is a soft IP and is only available after
-> FPGA image is programmed.
-> 
-> Make driver modulable to support use case FPGA image is programmed
-> after kernel is booted. User proram FPGA image in kernel then only load
-> MSI driver module.
-> 
-> Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
-> ---
->  drivers/pci/controller/Kconfig           |  2 +-
->  drivers/pci/controller/pcie-altera-msi.c | 10 ++++++++++
->  2 files changed, 11 insertions(+), 1 deletion(-)
-
-Applied to pci/altera for v5.3, thanks.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 4b550f9cdd56..920546cb84e2 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -181,7 +181,7 @@ config PCIE_ALTERA
->  	  FPGA.
->  
->  config PCIE_ALTERA_MSI
-> -	bool "Altera PCIe MSI feature"
-> +	tristate "Altera PCIe MSI feature"
->  	depends on PCIE_ALTERA
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	help
-> diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-> index 025ef7d9a046..16d938920ca5 100644
-> --- a/drivers/pci/controller/pcie-altera-msi.c
-> +++ b/drivers/pci/controller/pcie-altera-msi.c
-> @@ -10,6 +10,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/init.h>
-> +#include <linux/module.h>
->  #include <linux/msi.h>
->  #include <linux/of_address.h>
->  #include <linux/of_irq.h>
-> @@ -288,4 +289,13 @@ static int __init altera_msi_init(void)
->  {
->  	return platform_driver_register(&altera_msi_driver);
->  }
-> +
-> +static void __exit altera_msi_exit(void)
-> +{
-> +	platform_driver_unregister(&altera_msi_driver);
-> +}
-> +
->  subsys_initcall(altera_msi_init);
-> +MODULE_DEVICE_TABLE(of, altera_msi_of_match);
-> +module_exit(altera_msi_exit);
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.19.0
-> 
+RW5hYmxpbmcgRFNJIHN1cHBvcnQgZm9yIHRoZSBNU004OTk4IFNvQyBpcyBhbm90aGVyIHN0ZXAg
+dG8gZ2V0dGluZyBlbmQKdG8gZW5kIGRpc3BsYXkgZ29pbmcuICBUaGlzIHdpbGwgYWxsb3cgdGhl
+IFNvQyB0byBkcml2ZSBwYW5lbHMgdGhhdCBhcmUKaW50ZWdyYWRlZCBvbiB0aGUgZGV2aWNlIChp
+ZSBub3QgYSBIRE1JIHBvcnQpLCBidXQgd29uJ3QgZG8gbXVjaCB1bnRpbAp3ZSBoYXZlIHRoZSBk
+aXNwbGF5IHByb2Nlc3NvciBmZWVkaW5nIHRoZSBEU0kgYmxvY2tzIHdpdGggbGluZXMgdG8Kc2Nh
+bm91dC4KCkplZmZyZXkgSHVnbyAoNCk6CiAgZHQtYmluZGluZ3M6IG1zbS9kc2k6IEFkZCAxMG5t
+IHBoeSBmb3IgbXNtODk5OCBjb21wYXRpYmxlCiAgZHJtL21zbS9kc2k6IEFkZCBzdXBwb3J0IGZv
+ciBNU004OTk4IDEwbm0gZHNpIHBoeQogIGRybS9tc20vZHNpOiBBZGQgb2xkIHRpbWluZ3MgcXVp
+cmsgZm9yIDEwbm0gcGh5CiAgZHJtL21zbS9kc2k6IEFkZCBzdXBwb3J0IGZvciBNU004OTk4IERT
+SSBjb250cm9sbGVyCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4
+dCAgIHwgIDEgKwogZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNpX2NmZy5jICAgICAgICAgICAg
+IHwgMjEgKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNpX2NmZy5oICAg
+ICAgICAgICAgIHwgIDEgKwogZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGh5L2RzaV9waHkuYyAg
+ICAgICAgIHwgIDIgKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BoeS9kc2lfcGh5LmggICAg
+ICAgICB8ICA1ICsrKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BoeS9kc2lfcGh5XzEwbm0u
+YyAgICB8IDMwICsrKysrKysrKysrKysrKysrLS0KIDYgZmlsZXMgY2hhbmdlZCwgNTcgaW5zZXJ0
+aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCi0tIAoyLjE3LjEKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRy
+ZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubw==
