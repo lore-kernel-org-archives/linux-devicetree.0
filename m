@@ -1,248 +1,191 @@
-From: Ryan Case <ryandcase@chromium.org>
-Subject: Re: [v3 6/7] drm/mediatek: change the dsi phytiming calculate method
-Date: Thu, 30 May 2019 13:45:23 -0700
-Message-ID: <CACjz--m7X13XShZ4ST+54jF_K6=Cfzj1DNBduyVdVsVd2dpULw@mail.gmail.com>
-References: <20190519092537.69053-1-jitao.shi@mediatek.com> <20190519092537.69053-7-jitao.shi@mediatek.com>
+From: Jeremy Linton <jeremy.linton@arm.com>
+Subject: Re: [PATCH v6 2/7] dt-binding: cpu-topology: Move cpu-map to a common
+ binding.
+Date: Thu, 30 May 2019 15:55:09 -0500
+Message-ID: <0515d803-0da5-dcbe-3d3e-bb786b320d8b@arm.com>
+References: <20190529211340.17087-1-atish.patra@wdc.com>
+ <20190529211340.17087-3-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190519092537.69053-7-jitao.shi@mediatek.com>
+In-Reply-To: <20190529211340.17087-3-atish.patra@wdc.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com, ck.hu@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Inki Dae <inki.dae@samsung.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com
+To: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>Rob
 List-Id: devicetree@vger.kernel.org
 
-Hi Jitao,
+Hi,
 
-On Sun, May 19, 2019 at 2:27 AM Jitao Shi <jitao.shi@mediatek.com> wrote:
->
-> Change the method of frame rate calc which can get more accurate
-> frame rate.
->
-> data rate = pixel_clock * bit_per_pixel / lanes
-> Adjust hfp_wc to adapt the additional phy_data
->
-> if MIPI_DSI_MODE_VIDEO_BURST
->         hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12 - 6;
-> else
->         hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12;
->
-> Note:
-> //(2: 1 for sync, 1 for phy idle)
-> data_phy_cycles = T_hs_exit + T_lpx + T_hs_prepare + T_hs_zero + 2;
->
-> bpp: bit per pixel
->
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+On 5/29/19 4:13 PM, Atish Patra wrote:
+> cpu-map binding can be used to described cpu topology for both
+> RISC-V & ARM. It makes more sense to move the binding to document
+> to a common place.
+> 
+> The relevant discussion can be found here.
+> https://lkml.org/lkml/2018/11/6/19
+> 
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 119 +++++++++++++++++++++--------
->  1 file changed, 86 insertions(+), 33 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index 1165ff944889..3f51b2000c68 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -158,6 +158,25 @@
->         (type == MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM) || \
->         (type == MIPI_DSI_DCS_READ))
->
-> +struct mtk_phy_timing {
-> +       u32 lpx;
-> +       u32 da_hs_prepare;
-> +       u32 da_hs_zero;
-> +       u32 da_hs_trail;
+>   .../topology.txt => cpu/cpu-topology.txt}     | 82 +++++++++++++++----
+>   1 file changed, 66 insertions(+), 16 deletions(-)
+>   rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (86%)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+> similarity index 86%
+> rename from Documentation/devicetree/bindings/arm/topology.txt
+> rename to Documentation/devicetree/bindings/cpu/cpu-topology.txt
+> index 3b8febb46dad..069addccab14 100644
+> --- a/Documentation/devicetree/bindings/arm/topology.txt
+> +++ b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+> @@ -1,12 +1,12 @@
+>   ===========================================
+> -ARM topology binding description
+> +CPU topology binding description
+>   ===========================================
+>   
+>   ===========================================
+>   1 - Introduction
+>   ===========================================
+>   
+> -In an ARM system, the hierarchy of CPUs is defined through three entities that
+> +In a SMP system, the hierarchy of CPUs is defined through three entities that
+>   are used to describe the layout of physical CPUs in the system:
+>   
+>   - socket
+> @@ -14,9 +14,6 @@ are used to describe the layout of physical CPUs in the system:
+>   - core
+>   - thread
+>   
+> -The cpu nodes (bindings defined in [1]) represent the devices that
+> -correspond to physical CPUs and are to be mapped to the hierarchy levels.
+> -
+>   The bottom hierarchy level sits at core or thread level depending on whether
+>   symmetric multi-threading (SMT) is supported or not.
+>   
+> @@ -25,33 +22,31 @@ threads existing in the system and map to the hierarchy level "thread" above.
+>   In systems where SMT is not supported "cpu" nodes represent all cores present
+>   in the system and map to the hierarchy level "core" above.
+>   
+> -ARM topology bindings allow one to associate cpu nodes with hierarchical groups
+> +CPU topology bindings allow one to associate cpu nodes with hierarchical groups
+>   corresponding to the system hierarchy; syntactically they are defined as device
+>   tree nodes.
+>   
+> -The remainder of this document provides the topology bindings for ARM, based
+> -on the Devicetree Specification, available from:
+> +Currently, only ARM/RISC-V intend to use this cpu topology binding but it may be
+> +used for any other architecture as well.
+>   
+> -https://www.devicetree.org/specifications/
+> +The cpu nodes, as per bindings defined in [4], represent the devices that
+> +correspond to physical CPUs and are to be mapped to the hierarchy levels.
+>   
+> -If not stated otherwise, whenever a reference to a cpu node phandle is made its
+> -value must point to a cpu node compliant with the cpu node bindings as
+> -documented in [1].
+>   A topology description containing phandles to cpu nodes that are not compliant
+> -with bindings standardized in [1] is therefore considered invalid.
+> +with bindings standardized in [4] is therefore considered invalid.
+>   
+>   ===========================================
+>   2 - cpu-map node
+>   ===========================================
+>   
+> -The ARM CPU topology is defined within the cpu-map node, which is a direct
+> +The ARM/RISC-V CPU topology is defined within the cpu-map node, which is a direct
+>   child of the cpus node and provides a container where the actual topology
+>   nodes are listed.
+>   
+>   - cpu-map node
+>   
+> -	Usage: Optional - On ARM SMP systems provide CPUs topology to the OS.
+> -			  ARM uniprocessor systems do not require a topology
+> +	Usage: Optional - On SMP systems provide CPUs topology to the OS.
+> +			  Uniprocessor systems do not require a topology
+>   			  description and therefore should not define a
+>   			  cpu-map node.
+>   
+> @@ -494,8 +489,63 @@ cpus {
+>   	};
+>   };
+>   
+> +Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
 > +
-> +       u32 ta_go;
-> +       u32 ta_sure;
-> +       u32 ta_get;
-> +       u32 da_hs_exit;
+> +{
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +	compatible = "sifive,fu540g", "sifive,fu500";
+> +	model = "sifive,hifive-unleashed-a00";
 > +
-> +       u32 clk_hs_zero;
-> +       u32 clk_hs_trail;
+> +	...
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&CPU1>;
+> +				};
+> +				core1 {
+> +					cpu = <&CPU2>;
+> +				};
+> +				core2 {
+> +					cpu0 = <&CPU2>;
+> +				};
+> +				core3 {
+> +					cpu0 = <&CPU3>;
+> +				};
+> +			};
+> +		};
+
+
+<nit picking>
+
+While socket is optional, its probably a good idea to include the node 
+in the example even if the result is the same. That is because at least 
+on arm64 the DT clusters=sockets decision had performance implications 
+for larger systems.
+
+Assuring the socket information is correct is helpful by itself to avoid 
+having to explain why a single socket machine is displaying some other 
+value in lscpu.
+
+
+
 > +
-> +       u32 clk_hs_prepare;
-> +       u32 clk_hs_post;
-> +       u32 clk_hs_exit;
+> +		CPU1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "sifive,rocket0", "riscv";
+> +			reg = <0x1>;
+> +		}
+> +
+> +		CPU2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "sifive,rocket0", "riscv";
+> +			reg = <0x2>;
+> +		}
+> +		CPU3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "sifive,rocket0", "riscv";
+> +			reg = <0x3>;
+> +		}
+> +		CPU4: cpu@4 {
+> +			device_type = "cpu";
+> +			compatible = "sifive,rocket0", "riscv";
+> +			reg = <0x4>;
+> +		}
+> +	}
 > +};
-> +
->  struct phy;
->
->  struct mtk_dsi_driver_data {
-> @@ -182,12 +201,13 @@ struct mtk_dsi {
->         struct clk *digital_clk;
->         struct clk *hs_clk;
->
-> -       u32 data_rate;
-> +       u64 data_rate;
->
->         unsigned long mode_flags;
->         enum mipi_dsi_pixel_format format;
->         unsigned int lanes;
->         struct videomode vm;
-> +       struct mtk_phy_timing phy_timing;
->         int refcount;
->         bool enabled;
->         u32 irq_data;
-> @@ -221,17 +241,39 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
->  {
->         u32 timcon0, timcon1, timcon2, timcon3;
->         u32 ui, cycle_time;
-> +       struct mtk_phy_timing *timing = &dsi->phy_timing;
-> +
-> +       ui = 1000000000 / dsi->data_rate;
-> +       cycle_time = 8000000000 / dsi->data_rate;
-> +
-> +       timing->lpx = NS_TO_CYCLE(60, cycle_time);
-> +       timing->da_hs_prepare = NS_TO_CYCLE((40 + 5 * ui), cycle_time);
-> +       timing->da_hs_zero = NS_TO_CYCLE((110 + 6 * ui), cycle_time);
-> +       timing->da_hs_trail = NS_TO_CYCLE(((0x4 * ui) + 80), cycle_time);
-> +
-> +       if (timing->da_hs_zero > timing->da_hs_prepare)
-> +               timing->da_hs_zero -= timing->da_hs_prepare;
-
-I don't follow why the above comparison and subtraction is necessary
-when the values are being explicitly set immediately prior and it
-seems to introduce a bug. Leftover from an early revision?
-
-It looks like you've tuned the values such that hs_prepare+hs_zero are
-just above the minimum requirements for that sum, however due to this
-comparison and subtraction we wind up with a value of
-hs_prepare+hs_zero-hs_prepare and fall below spec. Either boosting the
-initial value set for hs_zero or removing the comparison makes display
-happy again. Since I don't see any reason for the compare and subtract
-I'd just drop that.
-
-> +
-> +       timing->ta_go = 4 * timing->lpx;
-> +       timing->ta_sure = 3 * timing->lpx / 2;
-> +       timing->ta_get = 5 * timing->lpx;
-> +       timing->da_hs_exit = 2 * timing->lpx;
-> +
-> +       timing->clk_hs_zero = NS_TO_CYCLE(0x150, cycle_time);
-> +       timing->clk_hs_trail = NS_TO_CYCLE(0x64, cycle_time) + 0xa;
->
-> -       ui = 1000 / dsi->data_rate + 0x01;
-> -       cycle_time = 8000 / dsi->data_rate + 0x01;
-> +       timing->clk_hs_prepare = NS_TO_CYCLE(0x40, cycle_time);
-> +       timing->clk_hs_post = NS_TO_CYCLE(80 + 52 * ui, cycle_time);
-> +       timing->clk_hs_exit = 2 * timing->lpx;
-
-There is a lot of alternating between hex and decimal values in this
-function which makes it a little hard to follow. Would be nice to
-stick to one or the other.
-
->
-> -       timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
-> -       timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
-> -                 T_HS_EXIT << 24;
-> -       timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
-> -                 (NS_TO_CYCLE(0x150, cycle_time) << 16);
-> -       timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
-> -                 NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
-> +       timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
-> +                 timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
-> +       timcon1 = timing->ta_go | timing->ta_sure << 8 |
-> +                 timing->ta_get << 16 | timing->da_hs_exit << 24;
-> +       timcon2 = 1 << 8 | timing->clk_hs_zero << 16 |
-> +                 timing->clk_hs_trail << 24;
-> +       timcon3 = timing->clk_hs_prepare | timing->clk_hs_post << 8 |
-> +                 timing->clk_hs_exit << 16;
->
->         writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
->         writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
-> @@ -418,7 +460,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->         u32 horizontal_sync_active_byte;
->         u32 horizontal_backporch_byte;
->         u32 horizontal_frontporch_byte;
-> -       u32 dsi_tmp_buf_bpp;
-> +       u32 dsi_tmp_buf_bpp, data_phy_cycles;
-> +       struct mtk_phy_timing *timing = &dsi->phy_timing;
->
->         struct videomode *vm = &dsi->vm;
->
-> @@ -433,7 +476,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->         writel(vm->vactive, dsi->regs + DSI_VACT_NL);
->
->         if (dsi->driver_data->has_size_ctl)
-> -               writel(vm->vactive << 16 | vm->hactive, dsi->regs + DSI_SIZE_CON);
-> +               writel(vm->vactive << 16 | vm->hactive,
-> +                      dsi->regs + DSI_SIZE_CON);
->
->         horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
->
-> @@ -444,7 +488,34 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->                 horizontal_backporch_byte = ((vm->hback_porch + vm->hsync_len) *
->                         dsi_tmp_buf_bpp - 10);
->
-> -       horizontal_frontporch_byte = (vm->hfront_porch * dsi_tmp_buf_bpp - 12);
-> +       data_phy_cycles = timing->lpx + timing->da_hs_prepare +
-> +                                 timing->da_hs_zero + timing->da_hs_exit + 2;
-> +
-> +       if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-> +               if (vm->hfront_porch * dsi_tmp_buf_bpp >
-> +                   data_phy_cycles * dsi->lanes + 18) {
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp -
-> +                                                    data_phy_cycles *
-> +                                                    dsi->lanes - 18;
-> +               } else {
-> +                       DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp;
-> +               }
-> +       } else {
-> +               if (vm->hfront_porch * dsi_tmp_buf_bpp >
-> +                   data_phy_cycles * dsi->lanes + 12) {
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp -
-> +                                                    data_phy_cycles *
-> +                                                    dsi->lanes - 12;
-> +               } else {
-> +                       DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp;
-> +               }
-> +       }
->
->         writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
->         writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
-> @@ -544,8 +615,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
->  {
->         struct device *dev = dsi->dev;
->         int ret;
-> -       u64 pixel_clock, total_bits;
-> -       u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
-> +       u32 bit_per_pixel;
->
->         if (++dsi->refcount != 1)
->                 return 0;
-> @@ -564,24 +634,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
->                 break;
->         }
->
-> -       /**
-> -        * htotal_time = htotal * byte_per_pixel / num_lanes
-> -        * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
-> -        * mipi_ratio = (htotal_time + overhead_time) / htotal_time
-> -        * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
-> -        */
-> -       pixel_clock = dsi->vm.pixelclock;
-> -       htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
-> -                       dsi->vm.hsync_len;
-> -       htotal_bits = htotal * bit_per_pixel;
-> -
-> -       overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
-> -                       T_HS_EXIT;
-> -       overhead_bits = overhead_cycles * dsi->lanes * 8;
-> -       total_bits = htotal_bits + overhead_bits;
-> -
-> -       dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
-> -                                         htotal * dsi->lanes);
-> +       dsi->data_rate = dsi->vm.pixelclock * bit_per_pixel / dsi->lanes;
->
->         ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
->         if (ret < 0) {
-
-
-With the earlier fix feel free to add to the next revision
-Tested-by: Ryan Case <ryandcase@chromium.org>
+>   ===============================================================================
+>   [1] ARM Linux kernel documentation
+>       Documentation/devicetree/bindings/arm/cpus.yaml
+>   [2] Devicetree NUMA binding description
+>       Documentation/devicetree/bindings/numa.txt
+> +[3] RISC-V Linux kernel documentation
+> +    Documentation/devicetree/bindings/riscv/cpus.txt
+> +[4] https://www.devicetree.org/specifications/
+> 
