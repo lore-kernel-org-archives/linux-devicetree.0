@@ -1,129 +1,51 @@
-From: Jeremy Linton <jeremy.linton@arm.com>
-Subject: Re: [PATCH v6 0/7] Unify CPU topology across ARM & RISC-V
-Date: Thu, 30 May 2019 16:12:18 -0500
-Message-ID: <1b61e699-79c7-bbfd-c7ed-d51d321ae7ef@arm.com>
-References: <20190529211340.17087-1-atish.patra@wdc.com>
+From: Kamal Dasu <kdasu.kdev@gmail.com>
+Subject: [PATCH 3/3] dt: bindings: mtd: brcmand: Add brcmnand,
+ brcmnand-v7.3 support
+Date: Thu, 30 May 2019 17:20:37 -0400
+Message-ID: <1559251257-12383-3-git-send-email-kdasu.kdev@gmail.com>
+References: <1559251257-12383-1-git-send-email-kdasu.kdev@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190529211340.17087-1-atish.patra@wdc.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
-Cc: Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1559251257-12383-1-git-send-email-kdasu.kdev@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Added brcm,brcmnand-v7.3 as possible compatible string to support
+brcmnand controller v7.3.
 
-On 5/29/19 4:13 PM, Atish Patra wrote:
-> The cpu-map DT entry in ARM can describe the CPU topology in much better
-> way compared to other existing approaches. RISC-V can easily adopt this
-> binding to represent its own CPU topology. Thus, both cpu-map DT
-> binding and topology parsing code can be moved to a common location so
-> that RISC-V or any other architecture can leverage that.
-> 
-> The relevant discussion regarding unifying cpu topology can be found in
-> [1].
-> 
-> arch_topology seems to be a perfect place to move the common code. I
-> have not introduced any significant functional changes in the moved code.
-> The only downside in this approach is that the capacity code will be
-> executed for RISC-V as well. But, it will exit immediately after not
-> able to find the appropriate DT node. If the overhead is considered too
-> much, we can always compile out capacity related functions under a
-> different config for the architectures that do not support them.
-> 
-> There was an opportunity to unify topology data structure for ARM32 done
-> by patch 3/4. But, I refrained from making any other changes as I am not
-> very well versed with original intention for some functions that
-> are present in arch_topology.c. I hope this patch series can be served
-> as a baseline for such changes in the future.
-> 
-> The patches have been tested for RISC-V and compile tested for ARM64,
-> ARM32 & x86.
->
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-I applied these to 5.2rc2, along with my PPTT/MT change and verified the 
-system & scheduler topology/etc on DAWN and ThunderX2 using ACPI on 
-arm64. They appear to be working correctly.
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index 0b7c373..ad4cd30 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -28,6 +28,7 @@ Required properties:
+                          brcm,brcmnand-v7.0
+                          brcm,brcmnand-v7.1
+                          brcm,brcmnand-v7.2
++                         brcm,brcmnand-v7.3
+                          brcm,brcmnand
+ - reg              : the register start and length for NAND register region.
+                      (optional) Flash DMA register range (if present)
+-- 
+1.9.0.138.g2de3478
 
-so for the series,
-Tested-by: Jeremy Linton <jeremy.linton@arm.com>
 
-The code itself looks fine to me as well:
-
-Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
-
-Thanks!
-
-> The socket change[2] is also now part of this series.
-> 
-> [1] https://lkml.org/lkml/2018/11/6/19
-> [2] https://lkml.org/lkml/2018/11/7/918
-> 
-> QEMU changes for RISC-V topology are available at
-> 
-> https://github.com/atishp04/qemu/tree/riscv_topology_dt
-> 
-> HiFive Unleashed DT with topology node is available here.
-> https://github.com/atishp04/opensbi/tree/HiFive_unleashed_topology
-> 
-> It can be verified with OpenSBI with following additional compile time
-> option.
-> 
-> FW_PAYLOAD_FDT="unleashed_topology.dtb"
-> 
-> Changes from v5->v6
-> 1. Added two more patches from Sudeep about maintainership of arch_topology.c
->     and Kconfig update.
-> 2. Added Tested-by & Reviewed-by
-> 3. Fixed a nit (reordering of variables)
-> 
-> Changes from v4-v5
-> 1. Removed the arch_topology.h header inclusion from topology.c and arch_topology.c
-> file. Added it in linux/topology.h.
-> 2. core_id is set to -1 upon reset. Otherwise, ARM topology store function does not
-> work.
-> 
-> Changes from v3->v4
-> 1. Get rid of ARM32 specific information in topology structure.
-> 2. Remove redundant functions from ARM32 and use common code instead.
-> 
-> Changes from v2->v3
-> 1. Cover letter update with experiment DT for topology changes.
-> 2. Added the patch for [2].
-> 
-> Changes from v1->v2
-> 1. ARM32 can now use the common code as well.
-> 
-> Atish Patra (4):
-> dt-binding: cpu-topology: Move cpu-map to a common binding.
-> cpu-topology: Move cpu topology code to common code.
-> arm: Use common cpu_topology structure and functions.
-> RISC-V: Parse cpu topology during boot.
-> 
-> Sudeep Holla (3):
-> Documentation: DT: arm: add support for sockets defining package
-> boundaries
-> base: arch_topology: update Kconfig help description
-> MAINTAINERS: Add an entry for generic architecture topology
-> 
-> .../topology.txt => cpu/cpu-topology.txt}     | 134 ++++++--
-> MAINTAINERS                                   |   7 +
-> arch/arm/include/asm/topology.h               |  20 --
-> arch/arm/kernel/topology.c                    |  60 +---
-> arch/arm64/include/asm/topology.h             |  23 --
-> arch/arm64/kernel/topology.c                  | 303 +-----------------
-> arch/riscv/Kconfig                            |   1 +
-> arch/riscv/kernel/smpboot.c                   |   3 +
-> drivers/base/Kconfig                          |   2 +-
-> drivers/base/arch_topology.c                  | 298 +++++++++++++++++
-> include/linux/arch_topology.h                 |  26 ++
-> include/linux/topology.h                      |   1 +
-> 12 files changed, 452 insertions(+), 426 deletions(-)
-> rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (66%)
-> 
-> --
-> 2.21.0
-> 
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
