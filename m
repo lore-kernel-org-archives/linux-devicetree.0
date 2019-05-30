@@ -1,83 +1,87 @@
-Return-Path: <SRS0=ZBEu=TQ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 1/2] arm64: dts: renesas: r8a774c0-cat874: Add WLAN support
-Date: Thu, 16 May 2019 09:59:25 +0100
-Message-Id: <1557997166-63351-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1557997166-63351-1-git-send-email-biju.das@bp.renesas.com>
-References: <1557997166-63351-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=1FkI=T6=cogentembedded.com=sergei.shtylyov@kernel.org>
+Subject: [PATCH RFC 1/2] dt-bindings: mfd: document Renesas RPC-IF bindings
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+References: <ad503d6e-4739-9744-64b4-fd13f44ea6fe@cogentembedded.com>
+Message-ID: <ef926f7b-fb0e-19f3-1ab4-f8a0763a0a3b@cogentembedded.com>
+Date: Thu, 30 May 2019 23:01:52 +0300
+MIME-Version: 1.0
+In-Reply-To: <ad503d6e-4739-9744-64b4-fd13f44ea6fe@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: Mason Yang <masonccyang@mxic.com.tw>, linux-spi@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables WLAN support for the CAT874 board.
+Renesas Reduced Pin Count Interface (RPC-IF) allows a SPI flash or
+HyperFlash connected to the SoC to be accessed via the external address
+space read mode or the manual mode.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Document the device tree bindings for the Renesas RPC-IF found in the R-Car
+gen3 SoCs.
+
+Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
+
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
 ---
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 38 +++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ Documentation/devicetree/bindings/mfd/rpc-if.txt |   52 +++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index b7183f1..72cccfc 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -104,6 +104,17 @@
- 			  1800000 0>;
- 	};
- 
-+	wlan_en_reg: fixedregulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wlan-en-regulator";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		startup-delay-us = <70000>;
+Index: mfd/Documentation/devicetree/bindings/mfd/rpc-if.txt
+===================================================================
+--- /dev/null
++++ mfd/Documentation/devicetree/bindings/mfd/rpc-if.txt
+@@ -0,0 +1,52 @@
++Renesas Reduced Pin Count Interface (RPC-IF)
++--------------------------------------------
 +
-+		gpio = <&gpio2 25 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
++Renesas RPC-IF allows a SPI flash or HyperFlash connected to the SoC to
++be accessed via the external address space read mode or the manual mode.
++
++Required properties:
++- compatible: should be an SoC-specific compatible value, followed by
++		"renesas,rcar-gen3-rpcif" as a fallback.
++		supported SoC-specific values are:
++		"renesas,r8a77980-rpcif" (R-Car V3H),
++		"renesas,r8a77995-rpcif" (R-Car D3).
++- reg: should list 3 register areas:
++	1st for the RPC-IF registers,
++	2nd for the direct mapping read mode,
++	3rd for the write buffer area.
++- reg-names: should contain "regs", "dirmap", and "wbuf".
++- clocks: should contain the clock phandle/specifier pair for the module clock.
++- power-domains: should contain the power domain phandle/specifier pair.
++- resets: should contain the reset controller phandle/specifier pair.
++- #address-cells: should be 1.
++- #size-cells: should be 0.
++
++The flash chip itself should be represented by a subnode of the RPC-IF node.
++The flash interface is selected based on the "compatible" property of this
++subnode:
++- if it contains "jedec,spi-nor", then SPI is used;
++- if it contains "cfi-flash", then HyperFlash is used.
++
++Example:
++
++	rpc: spi@ee200000 {
++		compatible = "renesas,r8a77995-rpcif",
++			     "renesas,rcar-gen3-rpcif";
++		reg = <0 0xee200000 0 0x200>,
++		      <0 0x08000000 0 0x4000000>,
++		      <0 0xee208000 0 0x100>;
++		reg-names = "regs", "dirmap", "wbuf";
++		clocks = <&cpg CPG_MOD 917>;
++		power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++		resets = <&cpg 917>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		flash@0 {
++			compatible = "jedec,spi-nor";
++			reg = <0>;
++			spi-max-frequency = <40000000>;
++			spi-tx-bus-width = <1>;
++			spi-rx-bus-width = <1>;
++		};
 +	};
-+
- 	x13_clk: x13 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
-@@ -243,6 +254,12 @@
- 		power-source = <1800>;
- 	};
- 
-+	sdhi3_pins: sd3 {
-+		groups = "sdhi3_data4", "sdhi3_ctrl";
-+		function = "sdhi3";
-+		power-source = <1800>;
-+	};
-+
- 	sound_pins: sound {
- 		groups = "ssi01239_ctrl", "ssi0_data";
- 		function = "ssi";
-@@ -300,6 +317,27 @@
- 	status = "okay";
- };
- 
-+&sdhi3 {
-+	status = "okay";
-+	pinctrl-0 = <&sdhi3_pins>;
-+	pinctrl-names = "default";
-+
-+	vmmc-supply = <&wlan_en_reg>;
-+	bus-width = <4>;
-+	non-removable;
-+	cap-power-off-card;
-+	keep-power-in-suspend;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1837";
-+		reg = <2>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+};
-+
- &usb2_phy0 {
- 	renesas,no-otg-pins;
- 	status = "okay";
--- 
-2.7.4
