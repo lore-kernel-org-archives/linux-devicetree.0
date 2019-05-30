@@ -1,23 +1,11 @@
-From: Chuanhua Han <chuanhua.han@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Date: Thu, 30 May 2019 03:09:30 +0000
-Message-ID: <AM6PR04MB43573B91F0D575EB293B490597180@AM6PR04MB4357.eurprd04.prod.outlook.com>
-References: <20190509070657.18281-1-chuanhua.han@nxp.com>
- <20190517023728.GA15856@dragon>
- <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB58631458E6D851E4D83A77ED8F070@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435708872A4DBA92561C772597000@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB5863FA1CE6D1E40F11B2E5008F000@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB4357072E079BDD8D1866595797020@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <CAL_Jsq+evXqKKyXLFbE+9o8X5BA9NWmcjvZ9-Y1Y7-pwcu8nJg@mail.gmail.com>
+From: Anson.Huang@nxp.com
+Subject: [PATCH] dt-bindings: imx: Correct pinfunc head file path for i.MX8MM
+Date: Thu, 30 May 2019 11:13:57 +0800
+Message-ID: <20190530031357.17484-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+evXqKKyXLFbE+9o8X5BA9NWmcjvZ9-Y1Y7-pwcu8nJg@mail.gmail.com>
-Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -27,61 +15,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ying Zhang <ying.zhang22455@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org, stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOeW5tDXmnIgyNOaXpSAyMDoyOQ0KPiBUbzogQ2h1
-YW5odWEgSGFuIDxjaHVhbmh1YS5oYW5AbnhwLmNvbT4NCj4gQ2M6IExlbyBMaSA8bGVveWFuZy5s
-aUBueHAuY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsNCj4gbWFyay5ydXRs
-YW5kQGFybS5jb207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlp
-bmcgWmhhbmcNCj4gPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW0VY
-VF0gUmU6IFtQQVRDSF0gYXJtNjQ6IGR0czogbHMxMDI4YTogZml4IHdhdGNoZG9nIGRldmljZSBu
-b2RlDQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IE9uIEZyaSwgTWF5IDI0LCAyMDE5
-IGF0IDQ6NDggQU0gQ2h1YW5odWEgSGFuIDxjaHVhbmh1YS5oYW5AbnhwLmNvbT4NCj4gd3JvdGU6
-DQo+ID4NCj4gPiBIaSwgUm9iIEhlcnJpbmcNCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCj4gPiA+IEZyb206IExlbyBMaQ0KPiA+ID4gU2VudDogMjAxOeW5tDXmnIgyMuaX
-pSAxNDo1MA0KPiANCj4gDQo+ID4gPiA+ID4gPiA+ID4gPiA+IC0gICAgICAgICAgICAgd2RvZzA6
-IHdhdGNoZG9nQDIzYzAwMDAgew0KPiA+ID4gPiA+ID4gPiA+ID4gPiAtICAgICAgICAgICAgICAg
-ICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS13ZHQiLA0KPiA+ID4gPiA+ICJmc2wsaW14
-MjEtd2R0IjsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIHJlZyA9
-IDwweDAgMHgyM2MwMDAwIDB4MCAweDEwMDAwPjsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gLSAgICAg
-ICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSA1OQ0KPiA+ID4gPiA+ID4gPiBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAg
-ICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAxPjsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gLSAg
-ICAgICAgICAgICAgICAgICAgIGJpZy1lbmRpYW47DQo+ID4gPiA+ID4gPiA+ID4gPiA+IC0gICAg
-ICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ID4gPiA+ID4gPiA+ID4g
-PiArICAgICAgICAgICAgIGNsdXN0ZXIxX2NvcmUwX3dhdGNoZG9nOiB3ZHRAYzAwMDAwMCB7DQo+
-ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gS2VlcCAnd2F0Y2hkb2cnIGFzIHRo
-ZSBub2RlIG5hbWUsDQo+ID4gPiA+ID4gPiA+ID4gVGhhbmtzIGZvciB5b3VyIHJlcGxheQ0KPiA+
-ID4gPiA+ID4gPiA+IERvIHlvdSBtZWFuIHJlcGxhY2UgdGhlIOKAmHdkdOKAmSB3aXRoIOKAmHdh
-dGNoZG9n4oCZPw0KPiA+ID4gPiA+ID4gPiA+IGFuZCBrZWVwIG5vZGVzIHNvcnQgaW4gdW5pdC1h
-ZGRyZXNzLg0KPiA+ID4gPiA+ID4gPiA+IFdoYXQgZG9lcyB0aGlzIG1lYW4/DQo+ID4gPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gPiA+IFRoYXQgbWVhbnMgb3JkZXIgdGhlIG5vZGVzIGJ5IHRoZSBhZGRy
-ZXNzZXMgKGUuZy4gYzAwMDAwMCwNCj4gPiA+ID4gPiA+ID4gYzAxMDAwMCkNCj4gPiA+ID4gPiA+
-IFRoZSBjdXJyZW50IG9yZGVyIGlzIGNvcnJlY3TvvIhUaGUgZmlyc3QgaXMgYzAwMDAwMCwgdGhl
-biBjMDAwMDAw77yJLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gQnV0IHRoZXkgYXJlIGFkZGVkIGFm
-dGVyIGdwaW9AMjMyMDAwMCBhbmQgYmVmb3JlIHNhdGFAMzIwMDAwMC4NCj4gPiA+ID4gSSBjaGFu
-Z2VkIGFuZCBtYWRlIHRoZSBzZWNvbmQgdmVyc2lvbiBvZiB0aGUgcGF0Y2gsIGJ1dCBJIGZvdW5k
-DQo+ID4gPiA+IHRoZSBmb2xsb3dpbmcgZXJyb3Igd2hlbiBJIGV4ZWN1dGVkIC4vc2NyaXB0cy9j
-aGVja3BhdGNoLnBsDQo+ID4gPiA+IHh4eC5wYXRjaCB0byBjaGVjayB0aGUgcGF0Y2g6DQo+ID4g
-PiA+DQo+ID4gPiA+IFdBUk5JTkc6IERUIGNvbXBhdGlibGUgc3RyaW5nIHZlbmRvciAiYXJtIiBh
-cHBlYXJzIHVuLWRvY3VtZW50ZWQNCj4gPiA+ID4gLS0gY2hlY2sgLi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dA0KPiA+ID4gPiAjNDM6IEZJTEU6
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2k6MzUxOg0KPiA+
-ID4gPiArIGNvbXBhdGlibGUgPSAiYXJtLHNwODA1IiwgImFybSxwcmltZWNlbGwiOw0KPiA+ID4g
-Pg0KPiA+ID4gPiBIb3dldmVyLCB0aGVyZSBpcyBubyB2ZW5kb3ItcHJlZml4ZXMudHh0IGZpbGUg
-aW4gdGhlDQo+ID4gPiA+IC4vRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzLyBkaXJl
-Y3RvcnksIG9ubHkgdmVuZG9yLQ0KPiA+ID4gPiBwcmVmaXhlcy55YW1sLg0KPiA+ID4gPiBNb3Jl
-b3ZlciwgdGhlcmUgYXJlIOKAmGFybeKAmSB2ZW5kb3JzIGluIHZlbmRvci1wcmVmaXhlcy55YW1s
-Lg0KPiA+ID4NCj4gPiA+IEFkZGVkIFJvYiBIZXJyaW5nIHRvIHRoZSB0aHJlYWQuDQo+ID4gPg0K
-PiA+ID4gPiBSZXF1ZXN0IGhlbHDvvIx0aGFua3MNCj4gPiBIb3cgY2FuIEkgc29sdmUgdGhpcyBw
-YXRjaCBjaGVjayBlcnJvcj8gQXNrIGZvciBoZWxwLCB0aGFuayB5b3UhDQo+IA0KPiBJZ25vcmUg
-aXQuIEEgZml4IHRvIGNoZWNrcGF0Y2gucGwgaXMgcGVuZGluZy4NCk9LLCB0aGUgc2Vjb25kIHZl
-cnNpb24gaGFzIGJlZW4gc2VudC4gQ2hlY2tpbmcgd2l0aCBjaGVja3BhdGNoLnBsIGlzIG5vIHBy
-b2JsZW0uDQo+IA0KPiBSb2INCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+From: Anson Huang <Anson.Huang@nxp.com>
+
+The i.MX8MM pinfunc head file is located in DT folder, correct it.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+index 524a16f..e4e01c0 100644
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+@@ -12,7 +12,7 @@ Required properties in sub-nodes:
+ - fsl,pins: each entry consists of 6 integers and represents the mux and config
+   setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+   input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+-  <dt-bindings/pinctrl/imx8mm-pinfunc.h>. The last integer CONFIG is
++  <arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>. The last integer CONFIG is
+   the pad setting value like pull-up on this pin.  Please refer to i.MX8M Mini
+   Reference Manual for detailed CONFIG settings.
+ 
+-- 
+2.7.4
