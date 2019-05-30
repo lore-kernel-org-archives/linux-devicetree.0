@@ -1,74 +1,49 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 4/4] drm/msm/dsi: Add support for MSM8998 DSI controller
-Date: Thu, 30 May 2019 09:00:59 -0700
-Message-ID: <20190530160059.2929-1-jeffrey.l.hugo@gmail.com>
-References: <20190530155909.2718-1-jeffrey.l.hugo@gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v2 1/8] arm64: dts: mt8183: add thermal zone node
+Date: Thu, 30 May 2019 09:08:25 -0700
+Message-ID: <20190530160825.GM40515@google.com>
+References: <1557494826-6044-1-git-send-email-michael.kao@mediatek.com>
+ <1557494826-6044-2-git-send-email-michael.kao@mediatek.com>
+ <CAJMQK-giJTeERnqjxoSMjF-JXxW9SPmeARWf3f9ZyRgBsYN5fg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190530155909.2718-1-jeffrey.l.hugo@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAJMQK-giJTeERnqjxoSMjF-JXxW9SPmeARWf3f9ZyRgBsYN5fg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robdclark@gmail.com, sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, sibis@codeaurora.org, chandanu@codeaurora.org, abhinavk@codeaurora.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: "michael.kao" <michael.kao@mediatek.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The DSI controller on the MSM8998 SoC is a 6G v2.0.0 controller which is
-very similar to the v2.0.1 of SDM845.
+On Thu, May 30, 2019 at 02:27:28PM +0800, Hsin-Yi Wang wrote:
+> On Fri, May 10, 2019 at 9:27 PM michael.kao <michael.kao@mediatek.com> wrote:
+> 
+> > +
+> > +                       tzts1: tzts1 {
+> > +                               polling-delay-passive = <0>;
+> > +                               polling-delay = <0>;
+> > +                               thermal-sensors = <&thermal 1>;
+> > +                               sustainable-power = <0>;
+> > +                               trips {};
+> > +                               cooling-maps {};
+> > +                       };
+> > +
+> Is 0 a valid initial sustainable-power setting? Since we'll still get
+> warning[1] about this, though it might not be harmful.
+> 
+> If 0 is a valid setting, maybe we should consider showing the warning
+> of not setting this property in [2]?
+> 
+> [1] https://elixir.bootlin.com/linux/latest/source/drivers/thermal/power_allocator.c#L570
+> [2] https://elixir.bootlin.com/linux/latest/source/drivers/thermal/of-thermal.c#L1049
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
- drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
- 2 files changed, 22 insertions(+)
+IIUC a value of 0 is pointless, the thermal framework will still use
+an estimated value:
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-index dcdfb1bb54f9..7dd17b59c69d 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-@@ -118,6 +118,25 @@ static const struct msm_dsi_config msm8996_dsi_cfg = {
- 	.num_dsi = 2,
- };
- 
-+static const char * const dsi_msm8998_bus_clk_names[] = {
-+	"iface", "bus", "core",
-+};
-+
-+static const struct msm_dsi_config msm8998_dsi_cfg = {
-+	.io_offset = DSI_6G_REG_SHIFT,
-+	.reg_cfg = {
-+		.num = 2,
-+		.regs = {
-+			{"vdd", 367000, 16 },	/* 0.9 V */
-+			{"vdda", 62800, 2 },	/* 1.2 V */
-+		},
-+	},
-+	.bus_clk_names = dsi_msm8998_bus_clk_names,
-+	.num_bus_clks = ARRAY_SIZE(dsi_msm8998_bus_clk_names),
-+	.io_start = { 0xc994000, 0xc996000 },
-+	.num_dsi = 2,
-+};
-+
- static const char * const dsi_sdm845_bus_clk_names[] = {
- 	"iface", "bus",
- };
-@@ -186,6 +205,8 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
- 		&msm8916_dsi_cfg, &msm_dsi_6g_host_ops},
- 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V1_4_1,
- 		&msm8996_dsi_cfg, &msm_dsi_6g_host_ops},
-+	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_0,
-+		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
- 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
- 		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
- };
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-index 16c507911110..4f63b57b19dc 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-+++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-@@ -25,6 +25,7 @@
- #define MSM_DSI_6G_VER_MINOR_V1_3	0x10030000
- #define MSM_DSI_6G_VER_MINOR_V1_3_1	0x10030001
- #define MSM_DSI_6G_VER_MINOR_V1_4_1	0x10040001
-+#define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
- #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
- 
- #define MSM_DSI_V2_VER_MINOR_8064	0x0
--- 
-2.17.1
+https://elixir.bootlin.com/linux/v5.1.5/source/drivers/thermal/power_allocator.c#L203
+
+As commented on v1 (https://patchwork.kernel.org/patch/10926519/#22620905)
+the value of the property may depend on the thermal characteristics of
+the device, there is not one correct value per SoC/core. If it is
+specified at SoC level device makers should be aware that they might
+have to override it for 'optimal' behavior on their device.
