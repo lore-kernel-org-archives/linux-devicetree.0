@@ -1,91 +1,120 @@
-From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH v3 10/12] arm64: dts: allwinner: h6: Add IR
- receiver node
-Date: Thu, 30 May 2019 16:55:50 +0200
-Message-ID: <20190530145550.amalnxmx7kpokykv@core.my.home>
-References: <20190528161440.27172-1-peron.clem@gmail.com>
- <20190528161440.27172-11-peron.clem@gmail.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] PCI: altera: Allow building as module
+Date: Thu, 30 May 2019 16:07:51 +0100
+Message-ID: <20190530150751.GB13993@redmoon>
+References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+ <CAFiDJ5-4vquVtrqpjgk8D6yhng3RFHN6dF4Kh_PGYe_doZtvqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB665X7TQKGQEJ7R5F3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190528161440.27172-11-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAFiDJ5-4vquVtrqpjgk8D6yhng3RFHN6dF4Kh_PGYe_doZtvqw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ley Foon Tan <lftan.linux@gmail.com>
+Cc: Ley Foon Tan <ley.foon.tan@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Cl=C3=A9ment,
+On Tue, May 14, 2019 at 01:35:05PM +0800, Ley Foon Tan wrote:
+> On Wed, Apr 24, 2019 at 12:57 PM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
+> >
+> > Altera PCIe Rootport IP is a soft IP and is only available after
+> > FPGA image is programmed.
+> >
+> > Make driver modulable to support use case FPGA image is programmed
+> > after kernel is booted. User proram FPGA image in kernel then only load
+> > PCIe driver module.
+> >
+> > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> > ---
+> >  drivers/pci/controller/Kconfig       |  2 +-
+> >  drivers/pci/controller/pcie-altera.c | 28 ++++++++++++++++++++++++++--
+> >  2 files changed, 27 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> > index 6012f3059acd..4b550f9cdd56 100644
+> > --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -174,7 +174,7 @@ config PCIE_IPROC_MSI
+> >           PCIe controller
+> >
+> >  config PCIE_ALTERA
+> > -       bool "Altera PCIe controller"
+> > +       tristate "Altera PCIe controller"
+> >         depends on ARM || NIOS2 || ARM64 || COMPILE_TEST
+> >         help
+> >           Say Y here if you want to enable PCIe controller support on Altera
+> > diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> > index 27edcebd1726..6c86bc69ace8 100644
+> > --- a/drivers/pci/controller/pcie-altera.c
+> > +++ b/drivers/pci/controller/pcie-altera.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/interrupt.h>
+> >  #include <linux/irqchip/chained_irq.h>
+> >  #include <linux/init.h>
+> > +#include <linux/module.h>
+> >  #include <linux/of_address.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/of_irq.h>
+> > @@ -705,6 +706,13 @@ static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
+> >         return 0;
+> >  }
+> >
+> > +static int altera_pcie_irq_teardown(struct altera_pcie *pcie)
+> > +{
+> > +       irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> > +       irq_domain_remove(pcie->irq_domain);
+> > +       irq_dispose_mapping(pcie->irq);
+> > +}
+> > +
+> >  static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+> >  {
+> >         struct device *dev = &pcie->pdev->dev;
+> > @@ -798,6 +806,7 @@ static int altera_pcie_probe(struct platform_device *pdev)
+> >
+> >         pcie = pci_host_bridge_priv(bridge);
+> >         pcie->pdev = pdev;
+> > +       platform_set_drvdata(pdev, pcie);
+> >
+> >         match = of_match_device(altera_pcie_of_match, &pdev->dev);
+> >         if (!match)
+> > @@ -855,13 +864,28 @@ static int altera_pcie_probe(struct platform_device *pdev)
+> >         return ret;
+> >  }
+> >
+> > +static int altera_pcie_remove(struct platform_device *pdev)
+> > +{
+> > +       struct altera_pcie *pcie = platform_get_drvdata(pdev);
+> > +       struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> > +
+> > +       pci_stop_root_bus(bridge->bus);
+> > +       pci_remove_root_bus(bridge->bus);
+> > +       pci_free_resource_list(&pcie->resources);
+> > +       altera_pcie_irq_teardown(pcie);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  static struct platform_driver altera_pcie_driver = {
+> >         .probe          = altera_pcie_probe,
+> > +       .remove         = altera_pcie_remove,
+> >         .driver = {
+> >                 .name   = "altera-pcie",
+> >                 .of_match_table = altera_pcie_of_match,
+> > -               .suppress_bind_attrs = true,
+> >         },
+> >  };
+> >
+> > -builtin_platform_driver(altera_pcie_driver);
+> > +MODULE_DEVICE_TABLE(of, altera_pcie_of_match);
+> > +module_platform_driver(altera_pcie_driver);
+> > +MODULE_LICENSE("GPL v2");
+> > --
+> > 2.19.0
+> >
+> Hi
+> 
+> Any comment for this patch?
 
-On Tue, May 28, 2019 at 06:14:38PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> Allwinner H6 IR is similar to A31 and can use same driver.
->=20
-> Add support for it.
->=20
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
-ot/dts/allwinner/sun50i-h6.dtsi
-> index 16c5c3d0fd81..649cbdfe452e 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -647,6 +647,25 @@
->  				pins =3D "PL0", "PL1";
->  				function =3D "s_i2c";
->  			};
-> +
-> +			r_ir_rx_pin: r-ir-rx-pin {
-> +				pins =3D "PL9";
-> +				function =3D "s_cir_rx";
-> +			};
-> +		};
-> +
-> +		r_ir: ir@7040000 {
-> +				compatible =3D "allwinner,sun50i-h6-ir",
-> +					     "allwinner,sun6i-a31-ir";
-> +				reg =3D <0x07040000 0x400>;
-> +				interrupts =3D <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks =3D <&r_ccu CLK_R_APB1_IR>,
-> +					 <&r_ccu CLK_IR>;
-> +				clock-names =3D "apb", "ir";
-> +				resets =3D <&r_ccu RST_R_APB1_IR>;
-> +				pinctrl-names =3D "default";
-> +				pinctrl-0 =3D <&r_ir_rx_pin>;
-> +				status =3D "disabled";
->  		};
+Applied to pci/altera for v5.3, thanks.
 
-Please make a comment here, that this is known broken on some boards and ma=
-y
-result IRQ flood if enabled. Otherwise noone will know.
-
-thanks,
-	o.
-
->  		r_i2c: i2c@7081400 {
-> --=20
-> 2.20.1
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190530145550.amalnxmx7kpokykv%40core.my.home.
-For more options, visit https://groups.google.com/d/optout.
+Lorenzo
