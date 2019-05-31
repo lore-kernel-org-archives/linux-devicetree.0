@@ -1,108 +1,52 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: [PATCH V5 net-next 5/6] net: mdio: of: Register discovered MII time stampers.
-Date: Thu, 30 May 2019 22:56:25 -0700
-Message-ID: <a375c2b73288184fe86155707ba150daaf946943.1559281985.git.richardcochran@gmail.com>
-References: <cover.1559281985.git.richardcochran@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <cover.1559281985.git.richardcochran@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+From: "Alexander A. Filippov" <a.filippov@yadro.com>
+Subject: Re: [PATCH v2] ARM: dts: aspeed: Add YADRO VESNIN BMC
+Date: Fri, 31 May 2019 09:07:31 +0300
+Message-ID: <20190531060731.GA22597@bbwork.lan>
+References: <20190530143933.25414-1-a.filippov@yadro.com>
+ <20190530203653.GD1561@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190530203653.GD1561@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Alexander Filippov <a.filippov@yadro.com>, linux-aspeed@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-When parsing a PHY node, register its time stamper, if any, and attach
-the instance to the PHY device.
+On Thu, May 30, 2019 at 10:36:53PM +0200, Andrew Lunn wrote:
+> On Thu, May 30, 2019 at 05:39:33PM +0300, Alexander Filippov wrote:
+> > VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
+> > by YADRO.
+> > 
+> > Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+> > ---
+> >  arch/arm/boot/dts/Makefile                  |   1 +
+> >  arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 234 ++++++++++++++++++++
+> >  2 files changed, 235 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 834cce80d1b8..811e9312cf22 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -1259,6 +1259,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+> >  	aspeed-bmc-microsoft-olympus.dtb \
+> >  	aspeed-bmc-opp-lanyang.dtb \
+> >  	aspeed-bmc-opp-palmetto.dtb \
+> > +	aspeed-bmc-opp-vesnin.dtb \
+> >  	aspeed-bmc-opp-romulus.dtb \
+> >  	aspeed-bmc-opp-swift.dtb \
+> >  	aspeed-bmc-opp-witherspoon.dtb \
+> 
+> Hi Alexander
 
-Signed-off-by: Richard Cochran <richardcochran@gmail.com>
----
- drivers/net/phy/phy_device.c |  3 +++
- drivers/of/of_mdio.c         | 30 +++++++++++++++++++++++++++++-
- 2 files changed, 32 insertions(+), 1 deletion(-)
+Hi Andrew,
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 055087654b2c..aa06ef33df79 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -877,6 +877,9 @@ EXPORT_SYMBOL(phy_device_register);
-  */
- void phy_device_remove(struct phy_device *phydev)
- {
-+	if (phydev->mii_ts)
-+		unregister_mii_timestamper(phydev->mii_ts);
-+
- 	device_del(&phydev->mdio.dev);
- 
- 	/* Assert the reset signal */
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index fcf25e32b1ed..98f2516ec3ba 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -43,14 +43,37 @@ static int of_get_phy_id(struct device_node *device, u32 *phy_id)
- 	return -EINVAL;
- }
- 
-+struct mii_timestamper *of_find_mii_timestamper(struct device_node *node)
-+{
-+	struct of_phandle_args arg;
-+	int err;
-+
-+	err = of_parse_phandle_with_fixed_args(node, "timestamper", 1, 0, &arg);
-+
-+	if (err == -ENOENT)
-+		return NULL;
-+	else if (err)
-+		return ERR_PTR(err);
-+
-+	if (arg.args_count != 1)
-+		return ERR_PTR(-EINVAL);
-+
-+	return register_mii_timestamper(arg.np, arg.args[0]);
-+}
-+
- static int of_mdiobus_register_phy(struct mii_bus *mdio,
- 				    struct device_node *child, u32 addr)
- {
-+	struct mii_timestamper *mii_ts;
- 	struct phy_device *phy;
- 	bool is_c45;
- 	int rc;
- 	u32 phy_id;
- 
-+	mii_ts = of_find_mii_timestamper(child);
-+	if (IS_ERR(mii_ts))
-+		return PTR_ERR(mii_ts);
-+
- 	is_c45 = of_device_is_compatible(child,
- 					 "ethernet-phy-ieee802.3-c45");
- 
-@@ -58,11 +81,14 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
- 		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
- 	else
- 		phy = get_phy_device(mdio, addr, is_c45);
--	if (IS_ERR(phy))
-+	if (IS_ERR(phy)) {
-+		unregister_mii_timestamper(mii_ts);
- 		return PTR_ERR(phy);
-+	}
- 
- 	rc = of_irq_get(child, 0);
- 	if (rc == -EPROBE_DEFER) {
-+		unregister_mii_timestamper(mii_ts);
- 		phy_device_free(phy);
- 		return rc;
- 	}
-@@ -91,10 +117,12 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
- 	 * register it */
- 	rc = phy_device_register(phy);
- 	if (rc) {
-+		unregister_mii_timestamper(mii_ts);
- 		phy_device_free(phy);
- 		of_node_put(child);
- 		return rc;
- 	}
-+	phy->mii_ts = mii_ts;
- 
- 	dev_dbg(&mdio->dev, "registered phy %pOFn at address %i\n",
- 		child, addr);
--- 
-2.11.0
+> 
+> Still not correctly sorted.
+> 
+
+Thanks, I've fixed it in V3
+
+>       Andrew
