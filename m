@@ -1,118 +1,34 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
-Date: Fri, 31 May 2019 14:47:24 +0100
-Message-ID: <dc3872a4-8cd9-462b-9f73-0d69a810d985@arm.com>
-References: <20190521161102.29620-1-peron.clem@gmail.com>
- <CAAObsKD8bij1ANLqX6y11Y6mDEXiymNjrDkmHmvGWiFLKWu_FA@mail.gmail.com>
- <4ff02295-6c34-791b-49f4-6558a92ad7a3@arm.com>
- <CAAObsKBt1tPw9RKGi_Xey=1zy9Tu3N+A=1te2R8=NuJ5tDBqVg@mail.gmail.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
+Date: Fri, 31 May 2019 15:49:55 +0200
+Message-ID: <20190531134955.GA28755@vmlxhi-102.adit-jv.com>
+References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
+ <CAMuHMdVfDd_1gHnX=WvkHnF33fG2sWy7F5bTh-DghoKSt-vLCA@mail.gmail.com>
+ <20190531093702.4pdbamghomqdhhuq@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKBt1tPw9RKGi_Xey=1zy9Tu3N+A=1te2R8=NuJ5tDBqVg@mail.gmail.com>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <20190531093702.4pdbamghomqdhhuq@verge.net.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Steven Price <steven.price@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tobias Franzen <tfranzen@de.adit-jv.com>, Biju Das <biju.das@bp.renesas.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Eugeniu Rosca <roscaeugeniu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31/05/2019 13:04, Tomeu Vizoso wrote:
-> On Wed, 29 May 2019 at 19:38, Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 29/05/2019 16:09, Tomeu Vizoso wrote:
->>> On Tue, 21 May 2019 at 18:11, Clément Péron <peron.clem@gmail.com> wrote:
->>>>
->>> [snip]
->>>> [  345.204813] panfrost 1800000.gpu: mmu irq status=1
->>>> [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
->>>> 0x0000000002400400
->>>
->>>   From what I can see here, 0x0000000002400400 points to the first byte
->>> of the first submitted job descriptor.
->>>
->>> So mapping buffers for the GPU doesn't seem to be working at all on
->>> 64-bit T-760.
->>>
->>> Steven, Robin, do you have any idea of why this could be?
->>
->> I tried rolling back to the old panfrost/nondrm shim, and it works fine
->> with kbase, and I also found that T-820 falls over in the exact same
->> manner, so the fact that it seemed to be common to the smaller 33-bit
->> designs rather than anything to do with the other
->> job_descriptor_size/v4/v5 complication turned out to be telling.
+Hi Simon,
+
+On Fri, May 31, 2019 at 11:37:02AM +0200, Simon Horman wrote:
+> Hi Spyridon,
 > 
-> Is this complication something you can explain? I don't know what v4
-> and v5 are meant here.
-
-I was alluding to BASE_HW_FEATURE_V4, which I believe refers to the 
-Midgard architecture version - the older versions implemented by T6xx 
-and T720 seem to be collectively treated as "v4", while T760 and T8xx 
-would effectively be "v5".
-
->> [ as an aside, are 64-bit jobs actually known not to work on v4 GPUs, or
->> is it just that nobody's yet observed a 64-bit blob driving one? ]
+> please respond to Geert's review below and
+> if appropriate provide an incremental patch.
 > 
-> I'm looking right now at getting Panfrost working on T720 with 64-bit
-> descriptors, with the ultimate goal of making Panfrost
-> 64-bit-descriptor only so we can have a single build of Mesa in
-> distros.
-
-Cool, I'll keep an eye out, and hope that it might be enough for T620 on 
-Juno, too :)
-
->> Long story short, it appears that 'Mali LPAE' is also lacking the start
->> level notion of VMSA, and expects a full 4-level table even for <40 bits
->> when level 0 effectively redundant. Thus walking the 3-level table that
->> io-pgtable comes back with ends up going wildly wrong. The hack below
->> seems to do the job for me; if Clément can confirm (on T-720 you'll
->> still need the userspace hack to force 32-bit jobs as well) then I think
->> I'll cook up a proper refactoring of the allocator to put things right.
+> Thanks in advance,
+> Simon
 > 
-> Mmaps seem to work with this patch, thanks.
-> 
-> The main complication I'm facing right now seems to be that the SFBD
-> descriptor on T720 seems to be different from the one we already had
-> (tested on T6xx?).
 
-OK - with the 32-bit hack pointed to up-thread, a quick kmscube test 
-gave me the impression that T720 works fine, but on closer inspection 
-some parts of glmark2 do seem to go a bit wonky (although I suspect at 
-least some of it is just down to the FPGA setup being both very slow and 
-lacking in memory bandwidth), and the "nv12-1img" mode of kmscube turns 
-out to render in some delightfully wrong colours.
+Spyridon is on vacation, so I will handle the open points.
 
-I'll try to get a 'proper' version of the io-pgtable patch posted soon.
-
-Thanks,
-Robin.
-
-> 
-> Cheers,
-> 
-> Tomeu
-> 
->> Robin.
->>
->>
->> ----->8-----
->> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
->> index 546968d8a349..f29da6e8dc08 100644
->> --- a/drivers/iommu/io-pgtable-arm.c
->> +++ b/drivers/iommu/io-pgtable-arm.c
->> @@ -1023,12 +1023,14 @@ arm_mali_lpae_alloc_pgtable(struct
->> io_pgtable_cfg *cfg, void *cookie)
->>          iop = arm_64_lpae_alloc_pgtable_s1(cfg, cookie);
->>          if (iop) {
->>                  u64 mair, ttbr;
->> +               struct arm_lpae_io_pgtable *data = io_pgtable_ops_to_data(&iop->ops);
->>
->> +               data->levels = 4;
->>                  /* Copy values as union fields overlap */
->>                  mair = cfg->arm_lpae_s1_cfg.mair[0];
->>                  ttbr = cfg->arm_lpae_s1_cfg.ttbr[0];
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+-- 
+Best Regards,
+Eugeniu.
