@@ -1,34 +1,62 @@
-From: York Sun <york.sun@nxp.com>
-Subject: Re: [EXT] Re: [Patch v9] driver/clk/clk-si5338: Add common clock
- framework driver for si5338
-Date: Fri, 31 May 2019 16:47:24 +0000
-Message-ID: <AM0PR04MB3971799F379795FE812D6D529A190@AM0PR04MB3971.eurprd04.prod.outlook.com>
-References: <1472247978-29312-1-git-send-email-york.sun@nxp.com>
- <96cb1e730ea5afd651d4c79f20f365df5fe8a29b.camel@upb.ro>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of/fdt: pass early_init_dt_reserve_memory_arch() with
+ bool type nomap
+Date: Fri, 31 May 2019 10:03:08 -0700
+Message-ID: <8ebc80b7-edab-c72a-9a6f-aab00318bd20@gmail.com>
+References: <20190530103927.20952-1-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190530103927.20952-1-yamada.masahiro@socionext.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Radu Nicolae Pirea <radu_nicolae.pirea@upb.ro>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: Mike Turquette <mturquette@baylibre.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Andrey Filippov <andrey@elphel.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/31/19 7:06 AM, Radu Nicolae Pirea wrote:=0A=
-> Caution: EXT Email=0A=
-> =0A=
-> Hi,=0A=
-> =0A=
-> @York I want to continue the work on this driver and I want to upstream=
-=0A=
-> it. Are you OK with this?=0A=
-> =0A=
-> I saw later improvement suggestions related to the bindings and I will=0A=
-> make the changes.=0A=
-=0A=
-Radu,=0A=
-=0A=
-You are welcome to improve this driver.=0A=
-=0A=
-York=0A=
+On 5/30/19 3:39 AM, Masahiro Yamada wrote:
+> The third argument 'nomap' of early_init_dt_reserve_memory_arch() is
+> bool. It is preferred to pass it with a bool type parameter.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  drivers/of/fdt.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index de893c9616a1..b165e8b3a347 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -551,7 +551,8 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
+>  	phys_addr_t base, size;
+>  	int len;
+>  	const __be32 *prop;
+> -	int nomap, first = 1;
+> +	int first = 1;
+> +	bool nomap;
+>  
+>  	prop = of_get_flat_dt_prop(node, "reg", &len);
+>  	if (!prop)
+> @@ -666,7 +667,7 @@ void __init early_init_fdt_scan_reserved_mem(void)
+>  		fdt_get_mem_rsv(initial_boot_params, n, &base, &size);
+>  		if (!size)
+>  			break;
+> -		early_init_dt_reserve_memory_arch(base, size, 0);
+> +		early_init_dt_reserve_memory_arch(base, size, false);
+>  	}
+>  
+>  	of_scan_flat_dt(__fdt_scan_reserved_mem, NULL);
+> @@ -684,7 +685,7 @@ void __init early_init_fdt_reserve_self(void)
+>  	/* Reserve the dtb region */
+>  	early_init_dt_reserve_memory_arch(__pa(initial_boot_params),
+>  					  fdt_totalsize(initial_boot_params),
+> -					  0);
+> +					  false);
+>  }
+>  
+>  /**
+> 
+
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
