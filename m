@@ -1,114 +1,277 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: Add missing PCIe pwr amd rst
- configuration
-Date: Fri, 31 May 2019 11:38:34 +0530
-Message-ID: <20190531060834.GA23771@Mani-XPS-13-9360>
-References: <20190530125837.730-1-linux.amoon@gmail.com>
- <20190531040222.GB9641@Mani-XPS-13-9360>
- <CANAwSgQ13PizDuNEVF5JMM=byt-HELCmZFhLAa3RS6kvxmXuhw@mail.gmail.com>
+From: Alexander Filippov <a.filippov@yadro.com>
+Subject: [PATCH v3] ARM: dts: aspeed: Add YADRO VESNIN BMC
+Date: Fri, 31 May 2019 09:12:07 +0300
+Message-ID: <20190531061207.23079-1-a.filippov@yadro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANAwSgQ13PizDuNEVF5JMM=byt-HELCmZFhLAa3RS6kvxmXuhw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Ezequiel Garcia <ezequiel@collabora.com>, Jagan Teki <jagan@amarulasolutions.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+To: linux-aspeed@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Alexander Filippov <a.filippov@yadro.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 31, 2019 at 10:27:22AM +0530, Anand Moon wrote:
-> Hi Manivannan,
-> 
-> On Fri, 31 May 2019 at 09:32, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, May 30, 2019 at 12:58:37PM +0000, Anand Moon wrote:
-> > > This patch add missing PCIe gpio and pinctrl for power (#PCIE_PWR)
-> > > also add PCIe gpio and pinctrl for reset (#PCIE_PERST_L).
-> > >
-> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > > ---
-> > > Tested on Rock960 Model A
-> > > ---
-> > >  arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 16 ++++++++++++++--
-> > >  1 file changed, 14 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > > index c7d48d41e184..f5bef6b0fe89 100644
-> > > --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > > +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > > @@ -55,9 +55,10 @@
-> > >
-> > >       vcc3v3_pcie: vcc3v3-pcie-regulator {
-> > >               compatible = "regulator-fixed";
-> > > +             gpio = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
-> > >               enable-active-high;
-> > >               pinctrl-names = "default";
-> > > -             pinctrl-0 = <&pcie_drv>;
-> > > +             pinctrl-0 = <&pcie_drv &pcie_pwr>;
-> > >               regulator-boot-on;
-> > >               regulator-name = "vcc3v3_pcie";
-> > >               regulator-min-microvolt = <3300000>;
-> > > @@ -381,9 +382,10 @@
-> > >  };
-> > >
-> > >  &pcie0 {
-> > > +     ep-gpio = <&gpio2 RK_PD4 GPIO_ACTIVE_HIGH>;
-> > >       num-lanes = <4>;
-> > >       pinctrl-names = "default";
-> > > -     pinctrl-0 = <&pcie_clkreqn_cpm>;
-> > > +     pinctrl-0 = <&pcie_clkreqn_cpm &pcie_perst_l>;
-> > >       vpcie3v3-supply = <&vcc3v3_pcie>;
-> > >       status = "okay";
-> > >  };
-> > > @@ -408,6 +410,16 @@
-> > >               };
-> > >       };
-> > >
-> > > +     pcie {
-> > > +             pcie_pwr: pcie-pwr {
-> > > +                     rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-> > > +             };
-> > > +
-> > > +             pcie_perst_l:pcie-perst-l {
-> > > +                     rockchip,pins = <2 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
-> > > +             };
-> >
-> > Which schematics did you refer? According to Rock960 v2.1 schematics [1], below
-> > is the pin mapping for PCI-E PWR and PERST:
-> >
-> > PCIE_PERST - GPIO2_A2
-> > PCIE_PWR - GPIO2_A5
-> >
-> 
-> Opps, I have referred the wrong schematics *RK3399_Rock960_V1.0.pdf*
-> may be old version.
-> Thanks for pointing out the correct schematics.
-> 
-> > Above mapping holds true for Rock960 version 1.1, 1.2 and 1.3. Also,
-> > rk3399-rock960.dtsi is common for both Rock960 and Ficus boards, so the board
-> > specific parts should go to rk3399-rock960.dts and rk3399-ficus.dts.
-> >
-> > Thanks,
-> > Mani
-> 
-> I have ROCK960-V 1.2 (Model A) for testing so. I will be sending patch
-> v2 the relevant
-> node update in rk3399-rock960.dts and rk3399-ficus.dts if below common
-> for both the boards.
+VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
+by YADRO.
 
-Both boards are different in terms of pin mapping!
+Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+---
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 234 ++++++++++++++++++++
+ 2 files changed, 235 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
 
--Mani
-
-> 
-> PCIE_PERST - GPIO2_A2
-> PCIE_PWR - GPIO2_A5
-> 
-> >
-> > [1] https://dl.vamrs.com/products/rock960/docs/hw/rock960_sch_v12_20180314.pdf
-> 
-> Best Regards
-> -Anand
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 834cce80d1b8..09a851a4705c 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1261,6 +1261,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-opp-palmetto.dtb \
+ 	aspeed-bmc-opp-romulus.dtb \
+ 	aspeed-bmc-opp-swift.dtb \
++	aspeed-bmc-opp-vesnin.dtb \
+ 	aspeed-bmc-opp-witherspoon.dtb \
+ 	aspeed-bmc-opp-zaius.dtb \
+ 	aspeed-bmc-portwell-neptune.dtb \
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+new file mode 100644
+index 000000000000..20f07f5bb4f4
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+@@ -0,0 +1,234 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright 2019 YADRO
++/dts-v1/;
++
++#include "aspeed-g4.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "Vesnin BMC";
++	compatible = "yadro,vesnin-bmc", "aspeed,ast2400";
++
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=ttyS4,115200 earlyprintk";
++	};
++
++	memory {
++		reg = <0x40000000 0x20000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		vga_memory: framebuffer@5f000000 {
++			no-map;
++			reg = <0x5f000000 0x01000000>; /* 16MB */
++		};
++		flash_memory: region@5c000000 {
++			no-map;
++			reg = <0x5c000000 0x02000000>; /* 32M */
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		heartbeat {
++			gpios = <&gpio ASPEED_GPIO(R, 4) GPIO_ACTIVE_LOW>;
++		};
++		power_red {
++			gpios = <&gpio ASPEED_GPIO(N, 1) GPIO_ACTIVE_LOW>;
++		};
++
++		id_blue {
++			gpios = <&gpio ASPEED_GPIO(O, 0) GPIO_ACTIVE_LOW>;
++		};
++
++		alarm_red {
++			gpios = <&gpio ASPEED_GPIO(N, 6) GPIO_ACTIVE_LOW>;
++		};
++
++		alarm_yel {
++			gpios = <&gpio ASPEED_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		button_checkstop {
++			label = "checkstop";
++			linux,code = <74>;
++			gpios = <&gpio ASPEED_GPIO(P, 5) GPIO_ACTIVE_LOW>;
++		};
++
++		button_identify {
++			label = "identify";
++			linux,code = <152>;
++			gpios = <&gpio ASPEED_GPIO(O, 7) GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++        label = "bmc";
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&spi {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi1debug_default>;
++
++	flash@0 {
++		status = "okay";
++		label = "pnor";
++		m25p,fast-read;
++	};
++};
++
++&mac0 {
++	status = "okay";
++
++	use-ncsi;
++	no-hw-checksum;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++};
++
++
++&uart5 {
++	status = "okay";
++};
++
++&lpc_ctrl {
++	status = "okay";
++	memory-region = <&flash_memory>;
++	flash = <&spi>;
++};
++
++&ibt {
++	status = "okay";
++};
++
++&lpc_host {
++    sio_regs: regs {
++        compatible = "aspeed,bmc-misc";
++    };
++};
++
++&mbox {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd2_default &pinctrl_rxd2_default>;
++};
++
++&i2c0 {
++	status = "okay";
++
++	eeprom@50 {
++		compatible = "atmel,24c256";
++		reg = <0x50>;
++		pagesize = <64>;
++	};
++};
++
++&i2c1 {
++	status = "okay";
++
++	tmp75@49 {
++		compatible = "ti,tmp75";
++		reg = <0x49>;
++	};
++};
++
++&i2c2 {
++	status = "okay";
++};
++
++&i2c3 {
++	status = "okay";
++};
++
++&i2c4 {
++	status = "okay";
++
++	occ-hwmon@50 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x50>;
++	};
++};
++
++&i2c5 {
++	status = "okay";
++
++	occ-hwmon@51 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x51>;
++	};
++};
++
++&i2c6 {
++	status = "okay";
++
++	w83795g@2f {
++		compatible = "nuvoton,w83795g";
++		reg = <0x2f>;
++	};
++};
++
++&i2c7 {
++	status = "okay";
++
++	occ-hwmon@56 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x56>;
++	};
++};
++
++&i2c9 {
++	status = "okay";
++};
++
++&i2c10 {
++	status = "okay";
++};
++
++&i2c11 {
++	status = "okay";
++
++	occ-hwmon@57 {
++		compatible = "ibm,p8-occ-hwmon";
++		reg = <0x57>;
++	};
++};
++
++&i2c12 {
++	status = "okay";
++
++	rtc@68 {
++		compatible = "maxim,ds3231";
++		reg = <0x68>;
++	};
++};
++
++&i2c13 {
++	status = "okay";
++};
++
++&vuart {
++	status = "okay";
++};
+-- 
+2.20.1
