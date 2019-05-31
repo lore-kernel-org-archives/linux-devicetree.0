@@ -1,75 +1,35 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH] arm64: dts: ti: k3-j721e-main: Add Main NavSS Interrupt
- controller node
-Date: Thu, 30 May 2019 19:48:48 -0500
-Message-ID: <20190531004848.32061-1-s-anna@ti.com>
+From: "Herrenschmidt, Benjamin" <benh@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Date: Fri, 31 May 2019 01:15:33 +0000
+Message-ID: <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+         <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+         <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+Content-Language: en-US
+Content-ID: <B3A23C2C906B5342B0BC7E950DEA5E92@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "james.morse@arm.com" <james.morse@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "bp@alien8.de" <bp@alien8.de>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "Hanoch, Uri" <hanochu@amazon.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the Interrupt controller node for the Interrupt Router present within
-the Main NavSS module. This Interrupt Router can route 192 interrupts to
-the GIC_SPI in 3 sets of 64 interrupts each. Note that the last set is
-reserved for the host ID A72_3 for hypervisor usecases, so the node is
-added only with 2 sets for the Linux kernel context (host id A72_2). This
-is specified through the ti,sci-rm-range-girq property.
-
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
-Hi Tero,
-
-This patch depends on the J721E series [1] from Nishanth. Patch tested
-using additional patches exercising Mailbox IP.
-
-regards
-Suman
-
-[1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=121189
-
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index d42912044a5d..36c51ff9a898 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -50,6 +50,24 @@
- 		#iommu-cells = <1>;
- 	};
- 
-+	cbass_main_navss: interconnect0 {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		main_navss_intr: interrupt-controller1 {
-+			compatible = "ti,sci-intr";
-+			ti,intr-trigger-type = <4>;
-+			interrupt-controller;
-+			interrupt-parent = <&gic500>;
-+			#interrupt-cells = <2>;
-+			ti,sci = <&dmsc>;
-+			ti,sci-dst-id = <14>;
-+			ti,sci-rm-range-girq = <0>, <2>;
-+		};
-+	};
-+
- 	secure_proxy_main: mailbox@32c00000 {
- 		compatible = "ti,am654-secure-proxy";
- 		#mbox-cells = <1>;
--- 
-2.21.0
+T24gVGh1LCAyMDE5LTA1LTMwIGF0IDExOjE5IC0wNzAwLCBCb3JpcyBQZXRrb3Ygd3JvdGU6DQo+
+IE9uIE1heSAzMCwgMjAxOSAzOjE1OjI5IEFNIFBEVCwgSGFubmEgSGF3YSA8aGhoYXdhQGFtYXpv
+bi5jb20+IHdyb3RlOg0KPiA+IEFkZCBzdXBwb3J0IGZvciBlcnJvciBkZXRlY3Rpb24gYW5kIGNv
+cnJlY3Rpb24gZm9yIEFtYXpvbidzDQo+ID4gQW5uYXB1cm5hDQo+ID4gTGFicyBTb0NzIGZvciBM
+MS9MMiBjYWNoZXMuDQo+IA0KPiANCj4gU28gdGhpcyBzaG91bGQgYmUgYSBkcml2ZXIgZm9yIHRo
+ZSB3aG9sZSBhbm5hcHVybmEgcGxhdGZvcm0gYW5kIG5vdA0KPiBvbmx5IGFib3V0IHRoZSBSQVMg
+ZnVuY3Rpb25hbGl0eSBpbiBhbiBJUCBsaWtlIHRoZSBjYWNoZXMuIFNlZSBvdGhlcg0KPiBBUk0g
+RURBQyBkcml2ZXJzIGluIGRyaXZlcnMvZWRhYy8gZm9yIGFuIGV4YW1wbGUuDQoNClRoaXMgaXNu
+J3QgdGVycmlibHkgaGVscGZ1bCwgdGhlcmUncyBub3RoaW5nIHRlbGxpbmcgYW55Ym9keSB3aGlj
+aCBvZg0KdGhvc2UgZmlsZXMgY29ycmVzcG9uZHMgdG8gYW4gQVJNIFNvQyA6LSkNCg0KVGhhdCBz
+YWlkIC4uLg0KDQpZb3UgcmVhbGx5IHdhbnQgYSBzaW5nbGUgRURBQyBkcml2ZXIgdGhhdCBjb250
+YWlucyBhbGwgdGhlIHN0dWZmIGZvcg0KdGhlIGNhY2hlcywgdGhlIG1lbW9yeSBjb250cm9sbGVy
+LCBldGMuLi4gPw0KDQpUaGUgaWRlYSBoZXJlIHdhcyB0byBzZXBhcmF0ZSB0aGUgY29yZSBMMS9M
+MiBFREFDIGZyb20gdGhlIG1lbW9yeQ0KY29udHJvbGxlciBFREFDIEkgdGhpbmsgLi4uIFJvYmVu
+LCBIYW5uYSwgY2FuIHlvdSBkZXNjcmliZSB0aGUgbG9uZyBydW4NCnN0cmF0ZWd5IGhlcmUgPw0K
+DQpDaGVlcnMsDQpCZW4uDQoNCg==
