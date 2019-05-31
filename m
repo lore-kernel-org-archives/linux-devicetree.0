@@ -1,42 +1,28 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH V5 net-next 5/6] net: mdio: of: Register discovered MII
- time stampers.
-Date: Sat, 1 Jun 2019 01:24:00 +0800
-Message-ID: <201906010128.tXc0Y24Z%lkp@intel.com>
-References: <a375c2b73288184fe86155707ba150daaf946943.1559281985.git.richardcochran@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH V4 net-next 0/6] Peer to Peer One-Step time stamping
+Date: Fri, 31 May 2019 10:57:21 -0700 (PDT)
+Message-ID: <20190531.105721.740773292135946256.davem@davemloft.net>
+References: <20190530.115507.1344606945620280103.davem@davemloft.net>
+        <20190530.125833.1049383711116106790.davem@davemloft.net>
+        <20190531055132.7qrjuqgtw6qw4mgh@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
 Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a375c2b73288184fe86155707ba150daaf946943.1559281985.git.richardcochran@gmail.com>
+In-Reply-To: <20190531055132.7qrjuqgtw6qw4mgh@localhost>
 Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: kbuild-all@01.org, netdev@vger.kernel.org, David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+To: richardcochran@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, jacob.e.keller@intel.com, mark.rutland@arm.com, mlichvar@redhat.com, robh+dt@kernel.org, willemb@google.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
-
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on net-next/master]
-
-url:    https://github.com/0day-ci/linux/commits/Richard-Cochran/Peer-to-Peer-One-Step-time-stamping/20190531-200348
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/of/of_mdio.c:46:24: sparse: sparse: symbol 'of_find_mii_timestamper' was not declared. Should it be static?
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+RnJvbTogUmljaGFyZCBDb2NocmFuIDxyaWNoYXJkY29jaHJhbkBnbWFpbC5jb20+DQpEYXRlOiBU
+aHUsIDMwIE1heSAyMDE5IDIyOjUxOjMyIC0wNzAwDQoNCj4gQW55aG93LCBJIHJlYmFzZWQgdjUg
+b2YgbXkgc2VyaWVzIHRvIGxhdGVzdCBuZXQtbmV4dCwgYW5kIEknbSBnZXR0aW5nDQo+IGEgbG90
+IG9mIHRoZXNlOg0KPiANCj4gSW4gZmlsZSBpbmNsdWRlZCBmcm9tIG5ldC9pcHY2L2FmX2luZXQ2
+LmM6NDU6MDoNCj4gLi9pbmNsdWRlL2xpbnV4L25ldGZpbHRlcl9pcHY2Lmg6IEluIGZ1bmN0aW9u
+IKFuZl9pcHY2X2JyX2RlZnJhZ6I6DQo+IC4vaW5jbHVkZS9saW51eC9uZXRmaWx0ZXJfaXB2Ni5o
+OjExMDo5OiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rpb24goW5mX2N0X2Zy
+YWc2X2dhdGhlcqI7IGRpZCB5b3UgbWVhbiChbmZfY3RfYXR0YWNooj8gWy1XZXJyb3I9aW1wbGlj
+aXQtZnVuY3Rpb24tZGVjbGFyYXRpb25dDQo+ICAgcmV0dXJuIG5mX2N0X2ZyYWc2X2dhdGhlcihu
+ZXQsIHNrYiwgdXNlcik7DQo+ICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fg0KPiAgICAgICAg
+ICBuZl9jdF9hdHRhY2gNCg0KVGhpcyBzaG91bGQgYmUgZml4ZWQgbm93Lg0K
