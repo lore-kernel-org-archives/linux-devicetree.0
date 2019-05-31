@@ -1,91 +1,89 @@
-Return-Path: <SRS0=L0hH=T5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35129 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbfE2Jyj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 May 2019 05:54:39 -0400
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2 7/9] media: dt-bindings: Document i.MX8MQ and i.MX8MM VPU bindings
-Date: Wed, 29 May 2019 11:54:22 +0200
-Message-Id: <20190529095424.23614-8-p.zabel@pengutronix.de>
-In-Reply-To: <20190529095424.23614-1-p.zabel@pengutronix.de>
-References: <20190529095424.23614-1-p.zabel@pengutronix.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-Path: <SRS0=H4Fw=T7=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v7 0/7] Add USB3.0 and TI HD3SS3220 driver support
+Date: Fri, 31 May 2019 10:59:53 +0100
+Message-Id: <1559296800-5610-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add devicetree binding documentation for the Hantro G1/G2 VPU on i.MX8MQ
-and for the Hantro G1/G2/H1 VPU on i.MX8MM.
+This series adds USB 3.0 support for the CAT874 platform, including a
+new driver for the TI HD3SS3220 USB Type-C DRP port controller.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- .../devicetree/bindings/media/imx8m-vpu.txt   | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/imx8m-vpu.txt
+This patch series supports:
+1) Host hotplug operation
+2) Device hot plug operation
+3) USB type-C data_role switch
+   (Tested with 2 RZ/G2E boards connected with a Type-C cable)
 
-diff --git a/Documentation/devicetree/bindings/media/imx8m-vpu.txt b/Documentation/devicetree/bindings/media/imx8m-vpu.txt
-new file mode 100644
-index 000000000000..659bd28dd002
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/imx8m-vpu.txt
-@@ -0,0 +1,56 @@
-+device-tree bindings for Hantro G1/G2/H1 VPU codecs implemented on i.MX8M SoCs
-+
-+Required properties:
-+- compatible: value should be one of the following
-+		"nxp,imx8mq-vpu",
-+		"nxp,imx8mm-vpu";
-+- regs: VPU core and control block register ranges
-+- reg-names: should be
-+		"g1", "g2", "ctrl" on i.MX8MQ,
-+		"g1", "g2", "h1", "ctrl" on i.MX8MM.
-+- interrupts: encoding and decoding interrupt specifiers
-+- interrupt-names: should be
-+		"g1", "g2" on i.MX8MQ,
-+		"g1", "g2", "h1" on i.MX8MM.
-+- clocks: phandle to VPU core clocks and bus clock
-+- clock-names: should be
-+		"g1", "g2", "bus" on i.MX8MQ,
-+		"g1", "g2", "h1", "bus" on i.MX8MM.
-+- power-domains: phandle to power domain node
-+
-+Examples:
-+
-+	vpu: vpu@38300000 {
-+		compatible = "nxp,imx8mq-vpu";
-+		reg = <0x38300000 0x10000>,
-+		      <0x38310000 0x10000>,
-+		      <0x38320000 0x10000>;
-+		reg-names = "g1", "g2", "ctrl";
-+		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "g1", "g2";
-+		clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
-+			 <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
-+			 <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
-+		clock-names = "g1", "g2", "bus";
-+		power-domains = <&pgc_vpu>;
-+	};
-+
-+	vpu: vpu@38300000 {
-+		compatible = "nxp,imx8mm-vpu";
-+		reg = <0x38300000 0x10000>,
-+		      <0x38310000 0x10000>,
-+		      <0x38320000 0x10000>;
-+		      <0x38330000 0x10000>;
-+		reg-names = "g1", "g2", "h1", "ctrl";
-+		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "g1", "g2", "h1";
-+		clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
-+			 <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
-+			 <&clk IMX8MQ_CLK_VPU_H1_ROOT>,
-+			 <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
-+		clock-names = "g1", "g2", "h1", "bus";
-+		power-domains = <&pgc_vpu>;
-+	};
+This patchset is based on linux_next next-20190531 branch.
+V6-->V7
+  * Rebased on the below patch series
+    (https://patchwork.kernel.org/project/linux-usb/list/?series=124223)
+  * Updted the hd3ss3220 binding documentation
+    -> Removed Rob's reviewed by tag, since there is a rework.
+    -> Incorporated Sergie and Shimoda-San's review comment.
+     (https://patchwork.kernel.org/patch/10944629/)
+  * Rebased hd3ss3220 driver based on the new API
+    --> Removed Heikki's review comment, since there is a rework
+    (https://patchwork.kernel.org/patch/10942499/)
+  * Incorporated shimoda-san's review comments for renesas usb3 binding
+    (https://patchwork.kernel.org/patch/10944631/)
+  * Incorporated shimoda-san's review comments for renesas usb3 driver
+    (https://patchwork.kernel.org/patch/10944643/)
+V5-->V6
+  * Updated bindings patch by using usb-role-switch property
+  * Used graph api's to get role switch supported by the usb-c-connector
+V4-->V5
+  * Incorporated Heikki's review comment.
+    (https://patchwork.kernel.org/patch/10902531/)
+  * Patch 1 is a dependency patch to make the compilation successful.
+    (https://patchwork.kernel.org/patch/10909971/)
+  * Patch 2 is also dependency patch to make the compilation successful.
+    Rebased on top of Patch1 and fixed Heikki's review comments
+    (https://patchwork.kernel.org/patch/10882555/)
+  * Incorporated Shimoda-San's review comment.
+    (https://patchwork.kernel.org/patch/10902535/)
+V3-->V4
+  * Incorporated Chunfeng Yun's review comment
+    (https://patchwork.kernel.org/project/linux-usb/list/?submitter=133171)
+  * Used fwnode API's to get roleswitch handle
+
+V2-->V3
+  * Used the new API to usb_role_switch by node to find the remote endpoint
+    (https://patchwork.kernel.org/patch/10882555/)
+  * Added renesas,usb-role-switch property
+  * Incorporated shimoda-san's review comment
+    (https://patchwork.kernel.org/patch/10852507/)
+
+V1-->V2
+  * Use USB role class instead of extcon to receive connect and disconnect
+    events and also for the dual role switch.
+  * Dropped patch 6
+  * Squashed patch 8 and patch 9
+  * https://patchwork.kernel.org/cover/10840641/
+
+
+Biju Das (7):
+  dt-bindings: usb: hd3ss3220 device tree binding document
+  dt-bindings: usb: renesas_usb3: Document usb role switch support
+  usb: typec: driver for TI HD3SS3220 USB Type-C DRP port controller
+  usb: gadget: udc: renesas_usb3: Enhance role switch support
+  arm64: defconfig: enable TYPEC_HD3SS3220 config option
+  arm64: dts: renesas: cat874: Enable USB3.0 host/peripheral device node
+  arm64: dts: renesas: cat874: Enable usb role switch support
+
+ .../devicetree/bindings/usb/renesas_usb3.txt       |  23 ++
+ .../devicetree/bindings/usb/ti,hd3ss3220.txt       |  38 +++
+ arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts    |  49 ++++
+ arch/arm64/configs/defconfig                       |   2 +
+ drivers/usb/gadget/udc/renesas_usb3.c              |  91 +++++++-
+ drivers/usb/typec/Kconfig                          |  10 +
+ drivers/usb/typec/Makefile                         |   1 +
+ drivers/usb/typec/hd3ss3220.c                      | 259 +++++++++++++++++++++
+ 8 files changed, 466 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+ create mode 100644 drivers/usb/typec/hd3ss3220.c
+
 -- 
-2.20.1
+2.7.4
