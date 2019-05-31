@@ -1,41 +1,38 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Date: Fri, 31 May 2019 07:14:00 +0200
-Message-ID: <20190531051400.GA2275@cz.tnic>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
- <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH V4 net-next 0/6] Peer to Peer One-Step time stamping
+Date: Thu, 30 May 2019 22:51:32 -0700
+Message-ID: <20190531055132.7qrjuqgtw6qw4mgh@localhost>
+References: <cover.1559109076.git.richardcochran@gmail.com>
+ <20190530.115507.1344606945620280103.davem@davemloft.net>
+ <20190530.125833.1049383711116106790.davem@davemloft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Herrenschmidt, Benjamin" <benh@amazon.com>, "james.morse@arm.com" <james.morse@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "Hanoch, Uri" <hanochu@amazon.com>
+In-Reply-To: <20190530.125833.1049383711116106790.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, jacob.e.keller@intel.com, mark.rutland@arm.com, mlichvar@redhat.com, robh+dt@kernel.org, willemb@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 31, 2019 at 01:15:33AM +0000, Herrenschmidt, Benjamin wrote:
-> This isn't terribly helpful, there's nothing telling anybody which of
-> those files corresponds to an ARM SoC :-)
+On Thu, May 30, 2019 at 12:58:33PM -0700, David Miller wrote:
+> I had to revert, this doesn't build.
 
-drivers/edac/altera_edac.c is one example.
+Sorry I missed macvlan, and thanks for the 'uninitialized' warning.
+It was a real latent bug.  I wonder why my linaro 7.4 gcc didn't flag
+that...
 
-Also, James and I have a small writeup on how an arm driver should look
-like, we just need to polish it up and post it.
+Anyhow, I rebased v5 of my series to latest net-next, and I'm getting
+a lot of these:
 
-James?
+In file included from net/ipv6/af_inet6.c:45:0:
+./include/linux/netfilter_ipv6.h: In function ‘nf_ipv6_br_defrag’:
+./include/linux/netfilter_ipv6.h:110:9: error: implicit declaration of function ‘nf_ct_frag6_gather’; did you mean ‘nf_ct_attach’? [-Werror=implicit-function-declaration]
+  return nf_ct_frag6_gather(net, skb, user);
+         ^~~~~~~~~~~~~~~~~~
+         nf_ct_attach
 
-> That said ...
-> 
-> You really want a single EDAC driver that contains all the stuff for
-> the caches, the memory controller, etc... ?
 
-Yap.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply. Srsly.
+Thanks,
+Richard
