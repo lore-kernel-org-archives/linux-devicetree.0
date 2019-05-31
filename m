@@ -1,48 +1,66 @@
-Return-Path: <SRS0=YSTV=TE=gmail.com=festevam@kernel.org>
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 1/8] media: dt-bindings: imx7-csi: Document a single CSI clock
-Date: Sat,  4 May 2019 11:40:25 -0300
-Message-Id: <20190504144027.31920-6-festevam@gmail.com>
-In-Reply-To: <20190504144027.31920-1-festevam@gmail.com>
-References: <20190504144027.31920-1-festevam@gmail.com>
-To: hverkuil-cisco@xs4all.nl
-Cc: rui.silva@linaro.org, slongerbeam@gmail.com, p.zabel@pengutronix.de, linux-media@vger.kernel.org, sebastien.szymanski@armadeus.com, otavio@ossystems.com.br, robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
+Return-Path: <SRS0=H4Fw=T7=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v7 6/7] arm64: dts: renesas: cat874: Enable USB3.0 host/peripheral device node
+Date: Fri, 31 May 2019 10:59:59 +0100
+Message-Id: <1559296800-5610-7-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1559296800-5610-1-git-send-email-biju.das@bp.renesas.com>
+References: <1559296800-5610-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-As per the i.MX7D Reference Manual only the MCLK is used for
-the CSI block, so only document this single clock.
+This patch enables USB3.0 host/peripheral device node for the cat874
+board.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/media/imx7-csi.txt | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+V6-->V7
+  * No Change
+V5-->V6
+  * No change
+V4-->V5
+  * No change
+V3-->V4
+  * No change
+V2-->V3
+  * No change
+V1-->V2
+  * No change
+---
+ arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/imx7-csi.txt b/Documentation/devicetree/bindings/media/imx7-csi.txt
-index 3c07bc676bc3..443aef07356e 100644
---- a/Documentation/devicetree/bindings/media/imx7-csi.txt
-+++ b/Documentation/devicetree/bindings/media/imx7-csi.txt
-@@ -14,8 +14,7 @@ Required properties:
- - interrupts    : should contain CSI interrupt;
- - clocks        : list of clock specifiers, see
-         Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
--- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
--                 entries in the clock property;
-+- clock-names   : must contain "mclk";
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+index ad254b0..fbeece1 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+@@ -288,6 +288,11 @@
+ 		groups = "audio_clkout1_a";
+ 		function = "audio_clk";
+ 	};
++
++	usb30_pins: usb30 {
++		groups = "usb30", "usb30_id";
++		function = "usb30";
++	};
+ };
  
- The device node shall contain one 'port' child node with one child 'endpoint'
- node, according to the bindings defined in:
-@@ -32,10 +31,8 @@ example:
-                         compatible = "fsl,imx7-csi";
-                         reg = <0x30710000 0x10000>;
-                         interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
--                        clocks = <&clks IMX7D_CLK_DUMMY>,
--                                        <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
--                                        <&clks IMX7D_CLK_DUMMY>;
--                        clock-names = "axi", "mclk", "dcic";
-+                        clocks = <&clks IMX7D_CSI_MCLK_ROOT_CLK>;
-+                        clock-names = "mclk";
- 
-                         port {
-                                 csi_from_csi_mux: endpoint {
+ &rcar_sound {
+@@ -361,3 +366,15 @@
+ 	renesas,no-otg-pins;
+ 	status = "okay";
+ };
++
++&usb3_peri0 {
++	companion = <&xhci0>;
++	status = "okay";
++};
++
++&xhci0 {
++	pinctrl-0 = <&usb30_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
 -- 
-2.17.1
+2.7.4
