@@ -1,219 +1,40 @@
 From: Alex Elder <elder@linaro.org>
-Subject: [PATCH v2 02/17] dt-bindings: soc: qcom: add IPA bindings
-Date: Thu, 30 May 2019 22:53:33 -0500
-Message-ID: <20190531035348.7194-3-elder@linaro.org>
+Subject: [PATCH v2 15/17] MAINTAINERS: add entry for the Qualcomm IPA driver
+Date: Thu, 30 May 2019 22:53:46 -0500
+Message-ID: <20190531035348.7194-16-elder@linaro.org>
 References: <20190531035348.7194-1-elder@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190531035348.7194-1-elder@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: syadagir@codeaurora.org, ejcaruso@google.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, subashab@codeaurora.org, linux-soc@vger.kernel.org, abhishek.esse@gmail.com, cpratapa@codeaurora.org, benchan@google.com
+Sender: linux-kernel-owner@vger.kernel.org
+To: davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org
+Cc: evgreen@chromium.org, benchan@google.com, ejcaruso@google.com, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the binding definitions for the "qcom,ipa" device tree node.
+Add an entry in the MAINTAINERS file for the Qualcomm IPA driver
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- .../devicetree/bindings/net/qcom,ipa.yaml     | 180 ++++++++++++++++++
- 1 file changed, 180 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.yaml
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-new file mode 100644
-index 000000000000..0037fc278a61
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-@@ -0,0 +1,180 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/qcom,ipa.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 429c6c624861..a2dece647641 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12872,6 +12872,12 @@ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+ S:	Supported
+ F:	sound/soc/qcom/
+ 
++QCOM IPA DRIVER
++M:	Alex Elder <elder@kernel.org>
++L:	netdev@vger.kernel.org
++S:	Supported
++F:	drivers/net/ipa/
 +
-+title: Qualcomm IP Accelerator (IPA)
-+
-+maintainers:
-+  - Alex Elder <elder@kernel.org>
-+
-+description:
-+  This binding describes the Qualcomm IPA.  The IPA is capable of offloading
-+  certain network processing tasks (e.g. filtering, routing, and NAT) from
-+  the main processor.
-+
-+  The IPA sits between multiple independent "execution environments,"
-+  including the Application Processor (AP) and the modem.  The IPA presents
-+  a Generic Software Interface (GSI) to each execution environment.
-+  The GSI is an integral part of the IPA, but it is logically isolated
-+  and has a distinct interrupt and a separately-defined address space.
-+
-+  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.
-+
-+  - |
-+    --------             ---------
-+    |      |             |       |
-+    |  AP  +<---.   .----+ Modem |
-+    |      +--. |   | .->+       |
-+    |      |  | |   | |  |       |
-+    --------  | |   | |  ---------
-+              v |   v |
-+            --+-+---+-+--
-+            |    GSI    |
-+            |-----------|
-+            |           |
-+            |    IPA    |
-+            |           |
-+            -------------
-+
-+properties:
-+  compatible:
-+      const: "qcom,sdm845-ipa"
-+
-+  reg:
-+    items:
-+      - description: IPA registers
-+      - description: IPA shared memory
-+      - description: GSI registers
-+
-+  reg-names:
-+    items:
-+      - const: ipa-reg
-+      - const: ipa-shared
-+      - const: gsi
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+      const: core
-+
-+  interrupts:
-+    items:
-+      - description: IPA interrupt (hardware IRQ)
-+      - description: GSI interrupt (hardware IRQ)
-+      - description: Modem clock query interrupt (smp2p interrupt)
-+      - description: Modem setup ready interrupt (smp2p interrupt)
-+
-+  interrupt-names:
-+    items:
-+      - const: ipa
-+      - const: gsi
-+      - const: ipa-clock-query
-+      - const: ipa-setup-ready
-+
-+  interconnects:
-+    items:
-+      - description: Interconnect path between IPA and main memory
-+      - description: Interconnect path between IPA and internal memory
-+      - description: Interconnect path between IPA and the AP subsystem
-+
-+  interconnect-names:
-+    items:
-+      - const: memory
-+      - const: imem
-+      - const: config
-+
-+  qcom,smem-states:
-+    description: State bits used in by the AP to signal the modem.
-+    items:
-+    - description: Whether the "ipa-clock-enabled" state bit is valid
-+    - description: Whether the IPA clock is enabled (if valid)
-+
-+  qcom,smem-state-names:
-+    description: The names of the state bits used for SMP2P output
-+    items:
-+      - const: ipa-clock-enabled-valid
-+      - const: ipa-clock-enabled
-+
-+  modem-init:
-+    type: boolean
-+    description:
-+      If present, it indicates that the modem is responsible for
-+      performing early IPA initialization, including loading and
-+      validating firwmare used by the GSI.
-+
-+  memory-region:
-+    maxItems: 1
-+    description:
-+      If present, a phandle for a reserved memory area that holds
-+      the firmware passed to Trust Zone for authentication.  Required
-+      when Trust Zone (not the modem) performs early initialization.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - interrupts
-+  - interconnects
-+  - qcom,smem-states
-+
-+oneOf:
-+  - required:
-+    - modem-init
-+  - required:
-+    - memory-region
-+
-+examples:
-+  - |
-+        smp2p-mpss {
-+                compatible = "qcom,smp2p";
-+                ipa_smp2p_out: ipa-ap-to-modem {
-+                        qcom,entry-name = "ipa";
-+                        #qcom,smem-state-cells = <1>;
-+                };
-+
-+                ipa_smp2p_in: ipa-modem-to-ap {
-+                        qcom,entry-name = "ipa";
-+                        interrupt-controller;
-+                        #interrupt-cells = <2>;
-+                };
-+        };
-+        ipa@1e40000 {
-+                compatible = "qcom,sdm845-ipa";
-+
-+                modem-init;
-+
-+                reg = <0 0x1e40000 0 0x7000>,
-+                        <0 0x1e47000 0 0x2000>,
-+                        <0 0x1e04000 0 0x2c000>;
-+                reg-names = "ipa-reg",
-+                                "ipa-shared";
-+                                "gsi";
-+
-+                interrupts-extended = <&intc 0 311 IRQ_TYPE_EDGE_RISING>,
-+                                        <&intc 0 432 IRQ_TYPE_LEVEL_HIGH>,
-+                                        <&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+                                        <&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
-+                interrupt-names = "ipa",
-+                                        "gsi",
-+                                        "ipa-clock-query",
-+                                        "ipa-setup-ready";
-+
-+                clocks = <&rpmhcc RPMH_IPA_CLK>;
-+                clock-names = "core";
-+
-+                interconnects =
-+                        <&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_EBI1>,
-+                        <&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_IMEM>,
-+                        <&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_IPA_CFG>;
-+                interconnect-names = "memory",
-+                                        "imem",
-+                                        "config";
-+
-+                qcom,smem-states = <&ipa_smp2p_out 0>,
-+                                        <&ipa_smp2p_out 1>;
-+                qcom,smem-state-names = "ipa-clock-enabled-valid",
-+                                        "ipa-clock-enabled";
-+        };
+ QEMU MACHINE EMULATOR AND VIRTUALIZER SUPPORT
+ M:	Gabriel Somlo <somlo@cmu.edu>
+ M:	"Michael S. Tsirkin" <mst@redhat.com>
 -- 
 2.20.1
