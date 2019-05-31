@@ -1,77 +1,71 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 2/5] clocksource/drivers/timer-microchip-pit64b: add
- Microchip PIT64B support
-Date: Fri, 31 May 2019 12:41:30 +0200
-Message-ID: <7267f37b-4f80-97e3-7a8e-bc1a9a28b995@linaro.org>
-References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
- <1552580772-8499-3-git-send-email-claudiu.beznea@microchip.com>
- <a738fce5-1108-34d7-d255-dfcb86f51c56@linaro.org>
- <20190408121141.GK7480@piout.net>
- <88ab46de-c3b6-6dd2-3fa2-f2d0075e969f@microchip.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device
+ tree bindings for vibrator
+Date: Fri, 31 May 2019 12:51:38 +0200
+Message-ID: <CACRpkdY-TcF7rizbPz=UcHrFvDgPJD68vbovNdcWP-aBYppp=g@mail.gmail.com>
+References: <20190516085018.2207-1-masneyb@onstation.org> <20190520142149.D56DA214AE@mail.kernel.org>
+ <CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com> <20190529101231.GA14540@basecamp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <88ab46de-c3b6-6dd2-3fa2-f2d0075e969f@microchip.com>
-Content-Language: en-US
+In-Reply-To: <20190529101231.GA14540@basecamp>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu.Beznea@microchip.com, alexandre.belloni@bootlin.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd.bergmann@linaro.org>
+To: Brian Masney <masneyb@onstation.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 29, 2019 at 12:12 PM Brian Masney <masneyb@onstation.org> wrote:
 
-Hi Claudiu,
+> My first revision of this vibrator driver used the Linux PWM framework
+> due to the variable duty cycle:
 
+So what I perceive if I get the thread right is that actually a lot of
+qcom clocks (all with the M/N/D counter set-up) have variable duty
+cycle. Very few consumers use that feature.
 
-On 30/05/2019 09:46, Claudiu.Beznea@microchip.com wrote:
-> Hi Daniel,
-> 
-> Taking into account the discussion on this tread and the fact that we have
-> no answer from Rob on this topic (I'm talking about [1]), what do you think
-> it would be best for this driver to be accepted the soonest? Would it be OK
-> for you to mimic the approach done by:
-> 
-> drivers/clocksource/timer-integrator-ap.c
-> 
-> with the following bindings in DT:
-> 
-> aliases {
-> 	arm,timer-primary = &timer2;
-> 	arm,timer-secondary = &timer1;
-> };
-> 
-> also in PIT64B driver?
-> 
-> Or do you think re-spinning the Alexandre's patches at [2] (which seems to
-> me like the generic way to do it) would be better?
+It would be a bit much to ask that they all be implemented as PWMs
+and then cast into clocks for the 50/50 dutycycle case, I get that.
 
-This hardware / OS connection problem is getting really annoying for
-everyone and this pattern is repeating itself since several years. It is
-time we fix it properly.
+What about simply doing both?
 
-The first solution looks hackish from my POV. The second approach looks
-nicer and generic as you say. So I would vote for [2] but with the
-flagging approach proposed by Mark [3].
+Export the same clocks from the clk and pwm frameworks and be
+happy. Of course with some mutex inside the driver so that it can't
+be used from both ends at the same time.
 
-I added Arnd in Cc in order to have its opinion.
+Further Thierry comments
+https://lore.kernel.org/lkml/20181012114749.GC31561@ulmo/
 
-[3]
-https://lore.kernel.org/lkml/20171215113242.skmh5nzr7wqdmvnw@lakrids.cambridge.arm.com/
+> The device itself doesn't seem to be a
+> generic PWM in the way that the PWM framework
+> expects it.
 
-> [1]
-> https://lore.kernel.org/lkml/20190408151155.20279-1-alexandre.belloni@bootlin.com/#t
-> [2]
-> https://lore.kernel.org/lkml/20171213185313.20017-1-alexandre.belloni@free-electrons.com/
-> 
+I don't see why.  I just look at this function from the original
+patch series:
 
++static int msm_vibra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
++ int duty_ns, int period_ns)
++{
++ struct msm_vibra_pwm *msm_pwm = to_msm_vibra_pwm(chip);
++ int d_reg_val;
++
++ d_reg_val = 127 - (((duty_ns / 1000) * 126) / (period_ns / 1000));
++
++ msm_vibra_pwm_write(msm_pwm, REG_CFG_RCGR,
++    (2 << 12) | /* dual edge mode */
++    (0 << 8) |  /* cxo */
++    (7 << 0));
++ msm_vibra_pwm_write(msm_pwm, REG_M, 1);
++ msm_vibra_pwm_write(msm_pwm, REG_N, 128);
++ msm_vibra_pwm_write(msm_pwm, REG_D, d_reg_val);
++ msm_vibra_pwm_write(msm_pwm, REG_CMD_RCGR, 1);
++ msm_vibra_pwm_write(msm_pwm, REG_CBCR, 1);
++
++ return 0;
++}
 
+How is this NOT a a generic PWM in the way that the PWM
+framework expects it? It configures the period and duty cycle on
+a square wave, that is what a generic PWM is in my book.
 
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Yours,
+Linus Walleij
