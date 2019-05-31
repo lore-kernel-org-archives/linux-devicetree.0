@@ -1,72 +1,89 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 2/3] arm64: dts: freescale: Add i.MX8MN dtsi support
-Date: Fri, 31 May 2019 12:13:02 +0000
-Message-ID: <DB3PR0402MB3916139B49D9EF7E44E33911F5190@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190530094706.865-1-Anson.Huang@nxp.com>
- <20190530094706.865-2-Anson.Huang@nxp.com>
- <CAOMZO5D1B1tKs8eu_a8hXs193+TukHAYHiCEyk5g63p1S-cnbg@mail.gmail.com>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
+Date: Fri, 31 May 2019 07:13:01 -0500
+Message-ID: <CAHCN7xLNCuqDyvOvtQef+CnRCMit2U2XTDP+=XKkjfmrnVv4kg@mail.gmail.com>
+References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com> <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5D1B1tKs8eu_a8hXs193+TukHAYHiCEyk5g63p1S-cnbg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bruno Thomsen <bruno.thomsen@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Leo Li <leoyang.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Pankaj Bansal <pankaj.bansal@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, dri-devel@lists.freedesktop.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8g
-RXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPg0KPiBTZW50OiBGcmlkYXksIE1heSAzMSwgMjAx
-OSA3OjQwIFBNDQo+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6
-IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsu
-cnV0bGFuZEBhcm0uY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hh
-DQo+IEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPjsgU2FzY2hhIEhhdWVyIDxrZXJuZWxA
-cGVuZ3V0cm9uaXguZGU+Ow0KPiBBbmRyZXkgU21pcm5vdiA8YW5kcmV3LnNtaXJub3ZAZ21haWwu
-Y29tPjsgTWFuaXZhbm5hbiBTYWRoYXNpdmFtDQo+IDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGlu
-YXJvLm9yZz47IEJydW5vIFRob21zZW4NCj4gPGJydW5vLnRob21zZW5AZ21haWwuY29tPjsgQWlz
-aGVuZyBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47DQo+IEphY2t5IEJhaSA8cGluZy5iYWlA
-bnhwLmNvbT47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgTHVjYXMgU3RhY2gNCj4gPGwu
-c3RhY2hAcGVuZ3V0cm9uaXguZGU+OyBQYW5rYWogQmFuc2FsIDxwYW5rYWouYmFuc2FsQG54cC5j
-b20+Ow0KPiBCaGFza2FyIFVwYWRoYXlhIDxiaGFza2FyLnVwYWRoYXlhQG54cC5jb20+OyBQcmFt
-b2QgS3VtYXINCj4gPHByYW1vZC5rdW1hcl8xQG54cC5jb20+OyBWYWJoYXYgU2hhcm1hIDx2YWJo
-YXYuc2hhcm1hQG54cC5jb20+Ow0KPiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBu
-eHAuY29tPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUNCj4gQU5EIEZMQVRURU5FRCBERVZJQ0Ug
-VFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBsaW51eC1rZXJu
-ZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJF
-RVNDQUxFDQo+IElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc+OyBkbC0NCj4gbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4N
-Cj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzNdIGFybTY0OiBkdHM6IGZyZWVzY2FsZTogQWRkIGku
-TVg4TU4gZHRzaSBzdXBwb3J0DQo+IA0KPiBPbiBUaHUsIE1heSAzMCwgMjAxOSBhdCA2OjQ1IEFN
-IDxBbnNvbi5IdWFuZ0BueHAuY29tPiB3cm90ZToNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgZ3BpbzE6IGdwaW9AMzAyMDAwMDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsaW14OG1uLWdwaW8iLCAiZnNsLGlteDM1LWdwaW8i
-Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MzAyMDAwMDAg
-MHgxMDAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRz
-ID0gPEdJQ19TUEkgNjQgSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEdJQ19TUEkgNjUNCj4gPiArIElSUV9UWVBF
-X0xFVkVMX0hJR0g+Ow0KPiANCj4gTm8gR1BJTyBjbG9ja3MgZW50cmllcz8NCg0KSnVzdCBub3Rp
-Y2VkIHRoaXMsIHRoZSBpbnRlcm5hbCBicmluZy11cCBicmFuY2gncyBjbG9jayBkcml2ZXIgZG9l
-cyBOT1QgaGF2ZSBpdCwNCkkgd2lsbCBhZGQgdGhlbSBpbiBWMiwgdGhhbmtzIGZvciBwb2ludGlu
-ZyBvdXQgdGhpcy4gDQoNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgdXNicGh5bm9w
-MTogdXNicGh5bm9wMSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gInVzYi1ub3AteGNlaXYiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgY2xvY2tzID0gPCZjbGsgSU1YOE1OX0NMS19VU0JfUEhZX1JFRj47DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBhc3NpZ25lZC1jbG9ja3MgPSA8JmNsayBJTVg4TU5f
-Q0xLX1VTQl9QSFlfUkVGPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFz
-c2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8JmNsaw0KPiBJTVg4TU5fU1lTX1BMTDFfMTAwTT47DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJtYWluX2Ns
-ayI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gDQo+ICB1c2JwaHlub3AxIGRv
-ZXMgbm90IGhhdmUgYW55IHJlZ2lzdGVycyBhc3NvY2lhdGVkLCBzbyBpdCBzaG91bGQgYmUgcGxh
-Y2VkDQo+IG91dHNpZGUgdGhlIHNvYy4NCj4gDQo+IEJ1aWxkaW5nIHdpdGggVz0xIHNob3VsZCB3
-YXJuIHlvdSBhYm91dCB0aGF0Lg0KPiANCg0KT0ssIEkgd2lsbCBtb3ZlIHRoZW0gdG8gb3V0c2lk
-ZSBvZiBzb2MuDQoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB1c2JwaHlub3AyOiB1c2Jw
-aHlub3AyIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
-PSAidXNiLW5vcC14Y2VpdiI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBj
-bG9ja3MgPSA8JmNsayBJTVg4TU5fQ0xLX1VTQl9QSFlfUkVGPjsNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIGFzc2lnbmVkLWNsb2NrcyA9IDwmY2xrIElNWDhNTl9DTEtfVVNC
-X1BIWV9SRUY+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXNzaWduZWQt
-Y2xvY2stcGFyZW50cyA9IDwmY2xrDQo+IElNWDhNTl9TWVNfUExMMV8xMDBNPjsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gIm1haW5fY2xrIjsNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsNCj4gDQo+IERpdHRvDQoNCk9LLCBJ
-IHdpbGwgbW92ZSB0aGVtIHRvIG91dHNpZGUgb2Ygc29jLg0KDQpUaGFua3MsDQpBbnNvbi4NCg0K
+On Tue, May 28, 2019 at 10:53 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>
+> Hi,
+>
+> On 28/05/2019 18:09, Adam Ford wrote:
+> > On Tue, May 28, 2019 at 4:11 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> >>
+> >> Hi,
+> >>
+> >> On 10/05/2019 22:42, Adam Ford wrote:
+> >>> Currently the source code is compiled using hard-coded values
+> >>> from CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.  This patch allows this
+> >>> clock divider value to be moved to the device tree and be changed
+> >>> without having to recompile the kernel.
+> >>>
+> >>> Signed-off-by: Adam Ford <aford173@gmail.com>
+> >>
+> >> I understand why you want to do this, but I'm not sure it's a good idea.
+> >> It's really something the driver should figure out, and if we add it to
+> >> the DT, it effectively becomes an ABI.
+> >>
+> >> That said... I'm not sure how good of a job the driver could ever do, as
+> >> it can't know the future scaling needs of the userspace at the time it
+> >> is configuring the clock. And so, I'm not nacking this patch, but I
+> >> don't feel very good about this patch...
+> >>
+> >> The setting also affects all outputs (exluding venc), which may not be
+> >> what the user wants. Then again, I think this setting is really only
+> >> needed on OMAP2 & 3, which have only a single output. But that's the
+> >> same with the current kconfig option, of course.
+> >>
+> >> So, the current CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK is an ugly hack, in my
+> >> opinion, and moving it to DT makes it a worse hack =). But I don't have
+> >> any good suggestions either.
+> >
+> > As it stands the Logic PD OMAP35 and AM37/DM37 boards (SOM-LV and
+> > Torpedo) require this to be hard coded to 4 or it hangs during start.
+> > This is the case for all versions 4.2+.  I haven't tested it with
+> > older stuff.  Tony has a DM3730 Torpedo kit and reported the hanging
+> > issue to me. I told him to set that value to 4 to make it not hang.
+> > He asked that I move it to the DT to avoid custom kernels.  I agree
+> > it's a hack, but if it's create a customized defconfig file for 4
+> > boards or modify the device tree, it seems like the device tree
+> > approach is less intrusive.
+>
+> Ok, well, I think that's a separate thing from its intended use. The
+> point of the kconfig option is to ensure that the fclk/pclk ratio stays
+> under a certain number to allow enough scaling range. It should never
+> affect a basic non-scaling use case, unless you set it to a too high
+> value, which prevents finding any pclk.
+>
+> Has anyone debugged why the hang is happening?
+
+I tried debugging this years ago, and I was told to use the
+CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.
+>
+> If we can't fix the bug itself, rather than adding a DT option, we could
+> change add a min_fck_per_pck field (as you do), keep the kconfig option,
+> and set the min_fck_per_pck based on the kconfig option, _or_ in case of
+> those affected SoCs, set the min_fck_per_pck even without the kconfig
+> option.
+
+I am just curious if anyone else sees this.  If nobody is using this
+hack, I wonder how much of the impact it will be.  I'm trying trying
+to get my board to boot without hanging without creating a custom
+defconfig.
+
+adam
+>
+>   Tomi
+>
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
