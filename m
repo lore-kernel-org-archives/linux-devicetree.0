@@ -1,60 +1,47 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: Re: [PATCH v8 2/7] dt-bindings: virtio: Add
- virtio-pci-iommu node
-Date: Fri, 31 May 2019 12:13:47 +0100
-Message-ID: <c3cd5dba-123d-e808-98b1-731ac2d4b950@arm.com>
-References: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
- <20190530170929.19366-3-jean-philippe.brucker@arm.com>
- <20190530133523-mutt-send-email-mst@kernel.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: freescale: Add i.MX8MN dtsi support
+Date: Fri, 31 May 2019 08:39:49 -0300
+Message-ID: <CAOMZO5D1B1tKs8eu_a8hXs193+TukHAYHiCEyk5g63p1S-cnbg@mail.gmail.com>
+References: <20190530094706.865-1-Anson.Huang@nxp.com> <20190530094706.865-2-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <virtio-dev-return-5766-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-In-Reply-To: <20190530133523-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: "joro@8bytes.org" <joro@8bytes.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "virtio-dev@lists.oasis-open.org" <virtio-dev@lists.oasis-open.org>, "jasowang@redhat.com" <jasowang@redhat.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>, "eric.auger@redhat.com" <eric.auger@redhat.com>, "tnowicki@caviumnetworks.com" <tnowicki@caviumnetworks.com>, kevin.tian@intel.c
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190530094706.865-2-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yongcai Huang <Anson.Huang@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bruno Thomsen <bruno.thomsen@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, Ping Bai <ping.bai@nxp.com>, Li Yang <leoyang.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, pankaj.bansal@nxp.com, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-ke>
 List-Id: devicetree@vger.kernel.org
 
-On 30/05/2019 18:45, Michael S. Tsirkin wrote:
-> On Thu, May 30, 2019 at 06:09:24PM +0100, Jean-Philippe Brucker wrote:
->> Some systems implement virtio-iommu as a PCI endpoint. The operating
->> system needs to discover the relationship between IOMMU and masters long
->> before the PCI endpoint gets probed. Add a PCI child node to describe the
->> virtio-iommu device.
->>
->> The virtio-pci-iommu is conceptually split between a PCI programming
->> interface and a translation component on the parent bus. The latter
->> doesn't have a node in the device tree. The virtio-pci-iommu node
->> describes both, by linking the PCI endpoint to "iommus" property of DMA
->> master nodes and to "iommu-map" properties of bus nodes.
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Eric Auger <eric.auger@redhat.com>
->> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> 
-> So this is just an example right?
-> We are not defining any new properties or anything like that.
+On Thu, May 30, 2019 at 6:45 AM <Anson.Huang@nxp.com> wrote:
 
-Yes it's just an example. The properties already exist but it's good to
-describe how to put them together for this particular case, because
-there isn't a precedent describing the topology for an IOMMU that
-appears on the PCI bus.
+> +                       gpio1: gpio@30200000 {
+> +                               compatible = "fsl,imx8mn-gpio", "fsl,imx35-gpio";
+> +                               reg = <0x30200000 0x10000>;
+> +                               interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
+> +                                            <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
 
-> I think down the road for non dt platforms we want to put this
-> info in the config space of the device. I do not think ACPI
-> is the best option for this since not all systems have it.
-> But that can wait.
+No GPIO clocks entries?
 
-There is the probe order problem - PCI needs this info before starting
-to probe devices on the bus. Maybe we could store the info in a separate
-memory region, that is referenced on the command-line and that the guest
-can read early.
+> +                       usbphynop1: usbphynop1 {
+> +                               compatible = "usb-nop-xceiv";
+> +                               clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
+> +                               assigned-clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
+> +                               assigned-clock-parents = <&clk IMX8MN_SYS_PLL1_100M>;
+> +                               clock-names = "main_clk";
+> +                       };
 
-Thanks,
-Jean
+ usbphynop1 does not have any registers associated, so it should be
+placed outside the soc.
+
+Building with W=1 should warn you about that.
+
+> +                       usbphynop2: usbphynop2 {
+> +                               compatible = "usb-nop-xceiv";
+> +                               clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
+> +                               assigned-clocks = <&clk IMX8MN_CLK_USB_PHY_REF>;
+> +                               assigned-clock-parents = <&clk IMX8MN_SYS_PLL1_100M>;
+> +                               clock-names = "main_clk";
+> +                       };
+> +
+
+Ditto
