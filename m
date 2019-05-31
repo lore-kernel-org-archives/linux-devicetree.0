@@ -1,78 +1,25 @@
 Return-Path: <SRS0=Bz/z=T7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54061 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfEaIza (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 May 2019 04:55:30 -0400
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v3 03/10] media: hantro: add PM runtime resume callback
-Date: Fri, 31 May 2019 10:55:16 +0200
-Message-Id: <20190531085523.10892-4-p.zabel@pengutronix.de>
-In-Reply-To: <20190531085523.10892-1-p.zabel@pengutronix.de>
-References: <20190531085523.10892-1-p.zabel@pengutronix.de>
+Received: from mail-io1-f48.google.com ([209.85.166.48]:42382 "EHLO
+        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfEaDuJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 May 2019 23:50:09 -0400
+Received: by mail-io1-f48.google.com with SMTP id g16so7011779iom.9
+        for <devicetree@vger.kernel.org>; Thu, 30 May 2019 20:50:08 -0700 (PDT)
+From: Alex Elder <elder@linaro.org>
+Subject: Oops
+Message-ID: <202177bf-f52b-e314-04d4-5665aa8961cb@linaro.org>
+Date: Thu, 30 May 2019 22:50:06 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: DTML <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-It seems that on i.MX8MQ the power domain controller does not propagate
-resets to the VPU cores on resume. Add a callback to allow implementing
-manual reset of the VPU cores after ungating the power domain.
+If you just received a patch from me you should ignore it.
+It was intended as a test run...  I'm about to send out my
+series (test looked good).
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
----
- drivers/staging/media/hantro/hantro.h     |  2 ++
- drivers/staging/media/hantro/hantro_drv.c | 13 +++++++++++++
- 2 files changed, 15 insertions(+)
-
-diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
-index 14e685428203..296b9ffad547 100644
---- a/drivers/staging/media/hantro/hantro.h
-+++ b/drivers/staging/media/hantro/hantro.h
-@@ -56,6 +56,7 @@ struct hantro_codec_ops;
-  * @codec:			Supported codecs
-  * @codec_ops:			Codec ops.
-  * @init:			Initialize hardware.
-+ * @runtime_resume:		reenable hardware after power gating
-  * @vepu_irq:			encoder interrupt handler
-  * @vdpu_irq:			decoder interrupt handler
-  * @clk_names:			array of clock names
-@@ -71,6 +72,7 @@ struct hantro_variant {
- 	unsigned int codec;
- 	const struct hantro_codec_ops *codec_ops;
- 	int (*init)(struct hantro_dev *vpu);
-+	int (*runtime_resume)(struct hantro_dev *vpu);
- 	irqreturn_t (*vepu_irq)(int irq, void *priv);
- 	irqreturn_t (*vdpu_irq)(int irq, void *priv);
- 	const char *clk_names[HANTRO_MAX_CLOCKS];
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index e4390aa5c213..fb5f140dbaae 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -831,9 +831,22 @@ static int hantro_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM
-+static int hantro_runtime_resume(struct device *dev)
-+{
-+	struct hantro_dev *vpu = dev_get_drvdata(dev);
-+
-+	if (vpu->variant->runtime_resume)
-+		return vpu->variant->runtime_resume(vpu);
-+
-+	return 0;
-+}
-+#endif
-+
- static const struct dev_pm_ops hantro_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
- 				pm_runtime_force_resume)
-+	SET_RUNTIME_PM_OPS(NULL, hantro_runtime_resume, NULL)
- };
- 
- static struct platform_driver hantro_driver = {
--- 
-2.20.1
+					-Alex
