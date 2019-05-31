@@ -1,298 +1,187 @@
-From: Eduardo Valentin <eduval@amazon.com>
-Subject: Re: [PATCH v3 3/8] drivers/soc: xdma: Add user interface
-Date: Thu, 30 May 2019 20:51:47 -0700
-Message-ID: <20190531035147.GI17772@u40b0340c692b58f6553c.ant.amazon.com>
-References: <1559153408-31190-1-git-send-email-eajames@linux.ibm.com>
- <1559153408-31190-4-git-send-email-eajames@linux.ibm.com>
+From: Alex Elder <elder@linaro.org>
+Subject: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Thu, 30 May 2019 22:53:31 -0500
+Message-ID: <20190531035348.7194-1-elder@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1559153408-31190-4-git-send-email-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>
-Cc: linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au
+To: davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org
+Cc: evgreen@chromium.org, benchan@google.com, ejcaruso@google.com, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 29, 2019 at 01:10:03PM -0500, Eddie James wrote:
-> This commits adds a miscdevice to provide a user interface to the XDMA
-> engine. The interface provides the write operation to start DMA
-> operations. The DMA parameters are passed as the data to the write call.
-> The actual data to transfer is NOT passed through write. Note that both
-> directions of DMA operation are accomplished through the write command;
-> BMC to host and host to BMC.
-> 
-> The XDMA engine is restricted to only accessing the reserved memory
-> space on the AST2500, typically used by the VGA. For this reason, the
-> VGA memory space is pooled and allocated with genalloc. Users calling
-> mmap allocate pages from this pool for their usage. The space allocated
-> by a client will be the space used in the DMA operation. For an
-> "upstream" (BMC to host) operation, the data in the client's area will
-> be transferred to the host. For a "downstream" (host to BMC) operation,
-> the host data will be placed in the client's memory area.
-> 
-> Poll is also provided in order to determine when the DMA operation is
-> complete for non-blocking IO.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
->  drivers/soc/aspeed/aspeed-xdma.c | 201 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 201 insertions(+)
-> 
-> diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
-> index 3dc0ce4..39f6545 100644
-> --- a/drivers/soc/aspeed/aspeed-xdma.c
-> +++ b/drivers/soc/aspeed/aspeed-xdma.c
-> @@ -129,6 +129,8 @@ struct aspeed_xdma {
->  
->  	unsigned long flags;
->  	unsigned int cmd_idx;
-> +	struct mutex list_lock;
-> +	struct mutex start_lock;
->  	wait_queue_head_t wait;
->  	struct aspeed_xdma_client *current_client;
->  
-> @@ -140,6 +142,8 @@ struct aspeed_xdma {
->  	dma_addr_t cmdq_vga_phys;
->  	void *cmdq_vga_virt;
->  	struct gen_pool *vga_pool;
-> +
-> +	struct miscdevice misc;
->  };
->  
->  struct aspeed_xdma_client {
-> @@ -331,6 +335,183 @@ static irqreturn_t aspeed_xdma_irq(int irq, void *arg)
->  	return IRQ_HANDLED;
->  }
->  
-> +static ssize_t aspeed_xdma_write(struct file *file, const char __user *buf,
-> +				 size_t len, loff_t *offset)
-> +{
-> +	int rc;
-> +	struct aspeed_xdma_op op;
-> +	struct aspeed_xdma_client *client = file->private_data;
-> +	struct aspeed_xdma *ctx = client->ctx;
-> +	u32 offs = client->phys ? (client->phys - ctx->vga_phys) :
-> +		XDMA_CMDQ_SIZE;
-> +
-> +	if (len != sizeof(struct aspeed_xdma_op))
-> +		return -EINVAL;
-> +
-> +	rc = copy_from_user(&op, buf, len);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (op.len > (ctx->vga_size - offs) || op.len < XDMA_BYTE_ALIGN)
-> +		return -EINVAL;
-> +
-> +	if (file->f_flags & O_NONBLOCK) {
-> +		if (!mutex_trylock(&ctx->start_lock))
-> +			return -EAGAIN;
-> +
-> +		if (test_bit(XDMA_IN_PRG, &ctx->flags)) {
-> +			mutex_unlock(&ctx->start_lock);
-> +			return -EAGAIN;
-> +		}
-> +	} else {
-> +		mutex_lock(&ctx->start_lock);
-> +
-> +		rc = wait_event_interruptible(ctx->wait,
-> +					      !test_bit(XDMA_IN_PRG,
-> +							&ctx->flags));
-> +		if (rc) {
-> +			mutex_unlock(&ctx->start_lock);
-> +			return -EINTR;
-> +		}
-> +	}
-> +
-> +	ctx->current_client = client;
-> +	set_bit(XDMA_IN_PRG, &client->flags);
-> +
-> +	aspeed_xdma_start(ctx, &op, ctx->vga_phys + offs);
-> +
-> +	mutex_unlock(&ctx->start_lock);
-> +
-> +	if (!(file->f_flags & O_NONBLOCK)) {
-> +		rc = wait_event_interruptible(ctx->wait,
-> +					      !test_bit(XDMA_IN_PRG,
-> +							&ctx->flags));
-> +		if (rc)
-> +			return -EINTR;
-> +	}
-> +
-> +	return len;
-> +}
-> +
-> +static __poll_t aspeed_xdma_poll(struct file *file,
-> +				 struct poll_table_struct *wait)
-> +{
-> +	__poll_t mask = 0;
-> +	__poll_t req = poll_requested_events(wait);
-> +	struct aspeed_xdma_client *client = file->private_data;
-> +	struct aspeed_xdma *ctx = client->ctx;
-> +
-> +	if (req & (EPOLLIN | EPOLLRDNORM)) {
-> +		if (test_bit(XDMA_IN_PRG, &client->flags))
-> +			poll_wait(file, &ctx->wait, wait);
-> +
-> +		if (!test_bit(XDMA_IN_PRG, &client->flags))
-> +			mask |= EPOLLIN | EPOLLRDNORM;
-> +	}
-> +
-> +	if (req & (EPOLLOUT | EPOLLWRNORM)) {
-> +		if (test_bit(XDMA_IN_PRG, &ctx->flags))
-> +			poll_wait(file, &ctx->wait, wait);
-> +
-> +		if (!test_bit(XDMA_IN_PRG, &ctx->flags))
-> +			mask |= EPOLLOUT | EPOLLWRNORM;
-> +	}
-> +
-> +	return mask;
-> +}
-> +
-> +static void aspeed_xdma_vma_close(struct vm_area_struct *vma)
-> +{
-> +	struct aspeed_xdma_client *client = vma->vm_private_data;
-> +
-> +	gen_pool_free(client->ctx->vga_pool, (unsigned long)client->virt,
-> +		      client->size);
-> +
-> +	client->virt = NULL;
-> +	client->phys = 0;
-> +	client->size = 0;
-> +}
-> +
-> +static const struct vm_operations_struct aspeed_xdma_vm_ops = {
-> +	.close =	aspeed_xdma_vma_close,
-> +};
-> +
-> +static int aspeed_xdma_mmap(struct file *file, struct vm_area_struct *vma)
-> +{
-> +	int rc;
-> +	struct aspeed_xdma_client *client = file->private_data;
-> +	struct aspeed_xdma *ctx = client->ctx;
-> +
-> +	/* restrict file to one mapping */
-> +	if (client->size)
-> +		return -ENOMEM;
-> +
-> +	client->size = vma->vm_end - vma->vm_start;
-> +	client->virt = gen_pool_dma_alloc(ctx->vga_pool, client->size,
-> +					  &client->phys);
-> +	if (!client->virt) {
-> +		client->phys = 0;
-> +		client->size = 0;
-> +		return -ENOMEM;
-> +	}
-> +
-> +	vma->vm_pgoff = (client->phys - ctx->vga_phys) >> PAGE_SHIFT;
-> +	vma->vm_ops = &aspeed_xdma_vm_ops;
-> +	vma->vm_private_data = client;
-> +
-> +	rc = dma_mmap_coherent(ctx->dev, vma, ctx->vga_virt, ctx->vga_dma,
-> +			       ctx->vga_size);
-> +	if (rc) {
-> +		gen_pool_free(ctx->vga_pool, (unsigned long)client->virt,
-> +			      client->size);
-> +
-> +		client->virt = NULL;
-> +		client->phys = 0;
-> +		client->size = 0;
-> +		return rc;
-> +	}
-> +
-> +	dev_dbg(ctx->dev, "mmap: v[%08lx] to p[%08x], s[%08x]\n",
-> +		vma->vm_start, (u32)client->phys, client->size);
-> +
-> +	return 0;
-> +}
-> +
-> +static int aspeed_xdma_open(struct inode *inode, struct file *file)
-> +{
-> +	struct miscdevice *misc = file->private_data;
-> +	struct aspeed_xdma *ctx = container_of(misc, struct aspeed_xdma, misc);
-> +	struct aspeed_xdma_client *client = kzalloc(sizeof(*client),
-> +						    GFP_KERNEL);
-> +
-> +	if (!client)
-> +		return -ENOMEM;
-> +
-> +	client->ctx = ctx;
-> +	file->private_data = client;
-> +	return 0;
-> +}
-> +
-> +static int aspeed_xdma_release(struct inode *inode, struct file *file)
-> +{
-> +	struct aspeed_xdma_client *client = file->private_data;
-> +
-> +	if (client->ctx->current_client == client)
-> +		client->ctx->current_client = NULL;
-> +
-> +	kfree(client);
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations aspeed_xdma_fops = {
-> +	.owner			= THIS_MODULE,
-> +	.write			= aspeed_xdma_write,
-> +	.poll			= aspeed_xdma_poll,
-> +	.mmap			= aspeed_xdma_mmap,
-> +	.open			= aspeed_xdma_open,
-> +	.release		= aspeed_xdma_release,
-> +};
-> +
->  static int aspeed_xdma_init_mem(struct aspeed_xdma *ctx)
->  {
->  	int rc;
-> @@ -431,6 +612,8 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
->  	ctx->dev = dev;
->  	platform_set_drvdata(pdev, ctx);
->  	init_waitqueue_head(&ctx->wait);
-> +	mutex_init(&ctx->list_lock);
-> +	mutex_init(&ctx->start_lock);
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	ctx->base = devm_ioremap_resource(dev, res);
-> @@ -482,6 +665,23 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
->  
->  	aspeed_xdma_init_eng(ctx);
->  
-> +	ctx->misc.minor = MISC_DYNAMIC_MINOR;
-> +	ctx->misc.fops = &aspeed_xdma_fops;
-> +	ctx->misc.name = "xdma";
+This series presents the driver for the Qualcomm IP Accelerator (IPA).
 
-tiny bit here, should this be named more specific ? something like "aspeed_xdma" ?
+This is version 2 of the series.  This version has addressed almost
+all of the feedback received in the first version:
+  https://lore.kernel.org/lkml/20190512012508.10608-1-elder@linaro.org/
+More detail is included in the individual patches, but here is a
+high-level summary of what's changed since then:
+  - Two spinlocks have been removed.
+      - The code for enabling and disabling endpoint interrupts has
+        been simplified considerably, and the spinlock is no longer
+	required
+      - A spinlock used when updating ring buffer pointers is no
+        longer needed.  Integers indexing the ring are used instead
+	(and they don't even have to be atomic).
+  - One spinlock remains to protect list updates, but it is always
+    acquired using spin_lock_bh() (no more irqsave).
+  - Information about the queueing and completion of messages is now
+    supplied to the network stack in batches rather than one at a
+    time.
+  - I/O completion handling has been simplified, with the IRQ
+    handler now consisting mainly of disabling the interrupt and
+    calling napi_schedule().
+  - Some comments have been updated and improved througout.
 
-> +	ctx->misc.parent = dev;
-> +	rc = misc_register(&ctx->misc);
-> +	if (rc) {
-> +		dev_err(dev, "Unable to register xdma miscdevice.\n");
-> +
-> +		gen_pool_free(ctx->vga_pool, (unsigned long)ctx->cmdq_vga_virt,
-> +			      XDMA_CMDQ_SIZE);
-> +		dma_free_coherent(dev, ctx->vga_size, ctx->vga_virt,
-> +				  ctx->vga_dma);
-> +		dma_release_declared_memory(dev);
-> +		reset_control_assert(ctx->reset);
-> +		return rc;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -489,6 +689,7 @@ static int aspeed_xdma_remove(struct platform_device *pdev)
->  {
->  	struct aspeed_xdma *ctx = platform_get_drvdata(pdev);
->  
-> +	misc_deregister(&ctx->misc);
->  	gen_pool_free(ctx->vga_pool, (unsigned long)ctx->cmdq_vga_virt,
->  		      XDMA_CMDQ_SIZE);
->  	dma_free_coherent(ctx->dev, ctx->vga_size, ctx->vga_virt,
-> -- 
-> 1.8.3.1
-> 
+What follows is the introduction supplied with v1 of the series.
+
+-----
+
+The IPA is a component present in some Qualcomm SoCs that allows
+network functions such as aggregation, filtering, routing, and NAT
+to be performed without active involvement of the main application
+processor (AP).
+
+Initially, these advanced features are disabled; the IPA driver
+simply provides a network interface that makes the modem's LTE
+network available to the AP.  In addition, only support for the
+IPA found in the Qualcomm SDM845 SoC is provided.
+
+This code is derived from a driver developed internally by Qualcomm.
+A version of the original source can be seen here:
+  https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree
+in the "drivers/platform/msm/ipa" directory.  Many were involved in
+developing this, but the following individuals deserve explicit
+acknowledgement for their substantial contributions:
+
+    Abhishek Choubey
+    Ady Abraham
+    Chaitanya Pratapa
+    David Arinzon
+    Ghanim Fodi
+    Gidon Studinski
+    Ravi Gummadidala
+    Shihuan Liu
+    Skylar Chang
+
+A version of this code was posted in November 2018 as an RFC.
+  https://lore.kernel.org/lkml/20181107003250.5832-1-elder@linaro.org/
+All feedback received was addressed.  The code has undergone
+considerable further rework since that time, and most of the
+"future work" described then has now been completed.
+
+This code is available in buildable form here, based on kernel
+v5.2-rc1:
+  remote: ssh://git@git.linaro.org/people/alex.elder/linux.git
+  branch: ipa-v2_kernel-v5.2-rc2
+    75adf2ac1266 arm64: defconfig: enable build of IPA code
+
+The branch depends on a commit now found in in net-next.  It has
+been cherry-picked, and (in this branch) has this commit ID:
+  13c627b5a078 net: qualcomm: rmnet: Move common struct definitions to include
+by 
+
+					-Alex
+
+Alex Elder (17):
+  bitfield.h: add FIELD_MAX() and field_max()
+  dt-bindings: soc: qcom: add IPA bindings
+  soc: qcom: ipa: main code
+  soc: qcom: ipa: configuration data
+  soc: qcom: ipa: clocking, interrupts, and memory
+  soc: qcom: ipa: GSI headers
+  soc: qcom: ipa: the generic software interface
+  soc: qcom: ipa: GSI transactions
+  soc: qcom: ipa: IPA interface to GSI
+  soc: qcom: ipa: IPA endpoints
+  soc: qcom: ipa: immediate commands
+  soc: qcom: ipa: IPA network device and microcontroller
+  soc: qcom: ipa: AP/modem communications
+  soc: qcom: ipa: support build of IPA code
+  MAINTAINERS: add entry for the Qualcomm IPA driver
+  arm64: dts: sdm845: add IPA information
+  arm64: defconfig: enable build of IPA code
+
+ .../devicetree/bindings/net/qcom,ipa.yaml     |  180 ++
+ MAINTAINERS                                   |    6 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   51 +
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/net/Kconfig                           |    2 +
+ drivers/net/Makefile                          |    1 +
+ drivers/net/ipa/Kconfig                       |   16 +
+ drivers/net/ipa/Makefile                      |    7 +
+ drivers/net/ipa/gsi.c                         | 1635 +++++++++++++++++
+ drivers/net/ipa/gsi.h                         |  246 +++
+ drivers/net/ipa/gsi_private.h                 |  148 ++
+ drivers/net/ipa/gsi_reg.h                     |  376 ++++
+ drivers/net/ipa/gsi_trans.c                   |  624 +++++++
+ drivers/net/ipa/gsi_trans.h                   |  116 ++
+ drivers/net/ipa/ipa.h                         |  131 ++
+ drivers/net/ipa/ipa_clock.c                   |  297 +++
+ drivers/net/ipa/ipa_clock.h                   |   52 +
+ drivers/net/ipa/ipa_cmd.c                     |  377 ++++
+ drivers/net/ipa/ipa_cmd.h                     |  116 ++
+ drivers/net/ipa/ipa_data-sdm845.c             |  245 +++
+ drivers/net/ipa/ipa_data.h                    |  267 +++
+ drivers/net/ipa/ipa_endpoint.c                | 1283 +++++++++++++
+ drivers/net/ipa/ipa_endpoint.h                |   97 +
+ drivers/net/ipa/ipa_gsi.c                     |   48 +
+ drivers/net/ipa/ipa_gsi.h                     |   49 +
+ drivers/net/ipa/ipa_interrupt.c               |  279 +++
+ drivers/net/ipa/ipa_interrupt.h               |   53 +
+ drivers/net/ipa/ipa_main.c                    |  921 ++++++++++
+ drivers/net/ipa/ipa_mem.c                     |  234 +++
+ drivers/net/ipa/ipa_mem.h                     |   83 +
+ drivers/net/ipa/ipa_netdev.c                  |  251 +++
+ drivers/net/ipa/ipa_netdev.h                  |   24 +
+ drivers/net/ipa/ipa_qmi.c                     |  402 ++++
+ drivers/net/ipa/ipa_qmi.h                     |   35 +
+ drivers/net/ipa/ipa_qmi_msg.c                 |  583 ++++++
+ drivers/net/ipa/ipa_qmi_msg.h                 |  238 +++
+ drivers/net/ipa/ipa_reg.h                     |  279 +++
+ drivers/net/ipa/ipa_smp2p.c                   |  304 +++
+ drivers/net/ipa/ipa_smp2p.h                   |   47 +
+ drivers/net/ipa/ipa_uc.c                      |  208 +++
+ drivers/net/ipa/ipa_uc.h                      |   32 +
+ include/linux/bitfield.h                      |   14 +
+ 42 files changed, 10358 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.yaml
+ create mode 100644 drivers/net/ipa/Kconfig
+ create mode 100644 drivers/net/ipa/Makefile
+ create mode 100644 drivers/net/ipa/gsi.c
+ create mode 100644 drivers/net/ipa/gsi.h
+ create mode 100644 drivers/net/ipa/gsi_private.h
+ create mode 100644 drivers/net/ipa/gsi_reg.h
+ create mode 100644 drivers/net/ipa/gsi_trans.c
+ create mode 100644 drivers/net/ipa/gsi_trans.h
+ create mode 100644 drivers/net/ipa/ipa.h
+ create mode 100644 drivers/net/ipa/ipa_clock.c
+ create mode 100644 drivers/net/ipa/ipa_clock.h
+ create mode 100644 drivers/net/ipa/ipa_cmd.c
+ create mode 100644 drivers/net/ipa/ipa_cmd.h
+ create mode 100644 drivers/net/ipa/ipa_data-sdm845.c
+ create mode 100644 drivers/net/ipa/ipa_data.h
+ create mode 100644 drivers/net/ipa/ipa_endpoint.c
+ create mode 100644 drivers/net/ipa/ipa_endpoint.h
+ create mode 100644 drivers/net/ipa/ipa_gsi.c
+ create mode 100644 drivers/net/ipa/ipa_gsi.h
+ create mode 100644 drivers/net/ipa/ipa_interrupt.c
+ create mode 100644 drivers/net/ipa/ipa_interrupt.h
+ create mode 100644 drivers/net/ipa/ipa_main.c
+ create mode 100644 drivers/net/ipa/ipa_mem.c
+ create mode 100644 drivers/net/ipa/ipa_mem.h
+ create mode 100644 drivers/net/ipa/ipa_netdev.c
+ create mode 100644 drivers/net/ipa/ipa_netdev.h
+ create mode 100644 drivers/net/ipa/ipa_qmi.c
+ create mode 100644 drivers/net/ipa/ipa_qmi.h
+ create mode 100644 drivers/net/ipa/ipa_qmi_msg.c
+ create mode 100644 drivers/net/ipa/ipa_qmi_msg.h
+ create mode 100644 drivers/net/ipa/ipa_reg.h
+ create mode 100644 drivers/net/ipa/ipa_smp2p.c
+ create mode 100644 drivers/net/ipa/ipa_smp2p.h
+ create mode 100644 drivers/net/ipa/ipa_uc.c
+ create mode 100644 drivers/net/ipa/ipa_uc.h
 
 -- 
-All the best,
-Eduardo Valentin
+2.20.1
