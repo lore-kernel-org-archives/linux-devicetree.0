@@ -1,75 +1,40 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Fri, 31 May 2019 16:33:06 -0700
-Message-ID: <20190531233306.GB25597@minitux>
-References: <20190531035348.7194-1-elder@linaro.org>
- <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
- <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
- <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
- <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: John Stultz <john.stultz@linaro.org>
+Subject: [RFC][PATCH 1/2] dt-bindings: power: reset: qcom: Add qcom,pm8998-pon compatability line
+Date: Fri, 31 May 2019 23:47:33 +0000
+Message-ID: <20190531234734.102842-1-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Elder <elder@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Dan Williams <dcbw@redhat.com>, David Miller <davem@davemloft.net>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, evgreen@chromium.org, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Pundir <amit.pundir@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 31 May 13:47 PDT 2019, Alex Elder wrote:
+Update bindings to support for qcom,pm8998-pon which uses gen2 pon
 
-> On 5/31/19 2:19 PM, Arnd Bergmann wrote:
-> > On Fri, May 31, 2019 at 6:36 PM Alex Elder <elder@linaro.org> wrote:
-> >> On 5/31/19 9:58 AM, Dan Williams wrote:
-> >>> On Thu, 2019-05-30 at 22:53 -0500, Alex Elder wrote:
-> >>>
-> >>> My question from the Nov 2018 IPA rmnet driver still stands; how does
-> >>> this relate to net/ethernet/qualcomm/rmnet/ if at all? And if this is
-> >>> really just a netdev talking to the IPA itself and unrelated to
-> >>> net/ethernet/qualcomm/rmnet, let's call it "ipa%d" and stop cargo-
-> >>> culting rmnet around just because it happens to be a net driver for a
-> >>> QC SoC.
-> >>
-> >> First, the relationship between the IPA driver and the rmnet driver
-> >> is that the IPA driver is assumed to sit between the rmnet driver
-> >> and the hardware.
-> > 
-> > Does this mean that IPA can only be used to back rmnet, and rmnet
-> > can only be used on top of IPA, or can or both of them be combined
-> > with another driver to talk to instead?
-> 
-> No it does not mean that.
-> 
-> As I understand it, one reason for the rmnet layer was to abstract
-> the back end, which would allow using a modem, or using something
-> else (a LAN?), without exposing certain details of the hardware.
-> (Perhaps to support multiplexing, etc. without duplicating that
-> logic in two "back-end" drivers?)
-> 
-> To be perfectly honest, at first I thought having IPA use rmnet
-> was a cargo cult thing like Dan suggested, because I didn't see
-> the benefit.  I now see why one would use that pass-through layer
-> to handle the QMAP features.
-> 
-> But back to your question.  The other thing is that I see no
-> reason the IPA couldn't present a "normal" (non QMAP) interface
-> for a modem.  It's something I'd really like to be able to do,
-> but I can't do it without having the modem firmware change its
-> configuration for these endpoints.  My access to the people who
-> implement the modem firmware has been very limited (something
-> I hope to improve), and unless and until I can get corresponding
-> changes on the modem side to implement connections that don't
-> use QMAP, I can't implement such a thing.
-> 
+Cc: Andy Gross <agross@kernel.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Amit Pundir <amit.pundir@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ Documentation/devicetree/bindings/power/reset/qcom,pon.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-But any such changes would either be years into the future or for
-specific devices and as such not applicable to any/most of devices on
-the market now or in the coming years.
-
-
-But as Arnd points out, if the software split between IPA and rmnet is
-suboptimal your are encouraged to fix that.
-
-Regards,
-Bjorn
+diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+index 5705f575862d..0c0dc3a1e693 100644
+--- a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
++++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+@@ -9,6 +9,7 @@ Required Properties:
+ -compatible: Must be one of:
+ 	"qcom,pm8916-pon"
+ 	"qcom,pms405-pon"
++	"qcom,pm8998-pon"
+ 
+ -reg: Specifies the physical address of the pon register
+ 
+-- 
+2.17.1
