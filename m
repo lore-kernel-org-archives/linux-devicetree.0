@@ -1,65 +1,128 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 0/4] Add Avenger96 board support
-Date: Fri, 31 May 2019 12:08:45 +0530
-Message-ID: <20190531063849.26142-1-manivannan.sadhasivam@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v3 1/4] ARM: dts: stm32mp157: Add missing pinctrl definitions
+Date: Fri, 31 May 2019 12:08:46 +0530
+Message-ID: <20190531063849.26142-2-manivannan.sadhasivam@linaro.org>
+References: <20190531063849.26142-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190531063849.26142-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, robh+dt@kernel.org
 Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loic.pallardy@st.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add missing pinctrl definitions for STM32MP157 MPU.
 
-This patchset adds Avenger96 board support. This board is one of the
-Consumer Edition boards of the 96Boards family from Arrow Electronics
-featuring STM32MP157A MPU and has the following features:
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 75 +++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-SoC: STM32MP157AAC
-PMIC: STPMIC1A
-RAM: 1024 Mbyte @ 533MHz
-Storage: eMMC v4.51: 8 Gbyte
-         microSD Socket: UHS-1 v3.01
-Ethernet Port: 10/100/1000 Mbit/s, IEEE 802.3 Compliant
-Wireless: WiFi 5 GHz & 2.4GHz IEEE 802.11a/b/g/n/ac
-          Bluetooth®v4.2 (BR/EDR/BLE)
-USB: 2x Type A (USB 2.0) Host and 1x Micro B (USB 2.0) OTG
-Display: HDMI: WXGA (1366x768)@ 60 fps, HDMI 1.4
-LED: 4x User LED, 1x WiFi LED, 1x BT LED
-
-More information about this board can be found in 96Boards website:
-https://www.96boards.org/product/avenger96/
-
-Thanks,
-Mani
-
-Changes in v3:
-
-* Converted STM32 platform bindings to DT schema
-
-Changes in v2:
-
-As per Alex's review:
-
-* Fixed I2C2 pinctrl node
-* Sorted the avenger96 dtb in alphabetical order
-* Added device-type property to memory node
-
-Manivannan Sadhasivam (4):
-  ARM: dts: stm32mp157: Add missing pinctrl definitions
-  dt-bindings: arm: stm32: Convert STM32 SoC bindings to DT schema
-  dt-bindings: arm: stm32: Document Avenger96 devicetree binding
-  ARM: dts: Add Avenger96 devicetree support based on STM32MP157A
-
- .../devicetree/bindings/arm/stm32/stm32.yaml  |  31 ++
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi     |  75 ++++
- arch/arm/boot/dts/stm32mp157a-avenger96.dts   | 321 ++++++++++++++++++
- 4 files changed, 428 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/stm32/stm32.yaml
- create mode 100644 arch/arm/boot/dts/stm32mp157a-avenger96.dts
-
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index 85c417d9983b..5efae4b4b37f 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -241,6 +241,23 @@
+ 				};
+ 			};
+ 
++			i2c1_pins_b: i2c1-2 {
++				pins {
++					pinmux = <STM32_PINMUX('F', 14, AF5)>, /* I2C1_SCL */
++						 <STM32_PINMUX('F', 15, AF5)>; /* I2C1_SDA */
++					bias-disable;
++					drive-open-drain;
++					slew-rate = <0>;
++				};
++			};
++
++			i2c1_pins_sleep_b: i2c1-3 {
++				pins {
++					pinmux = <STM32_PINMUX('F', 14, ANALOG)>, /* I2C1_SCL */
++						 <STM32_PINMUX('F', 15, ANALOG)>; /* I2C1_SDA */
++				};
++			};
++
+ 			i2c2_pins_a: i2c2-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('H', 4, AF4)>, /* I2C2_SCL */
+@@ -258,6 +275,21 @@
+ 				};
+ 			};
+ 
++			i2c2_pins_b1: i2c2-2 {
++				pins {
++					pinmux = <STM32_PINMUX('H', 5, AF4)>; /* I2C2_SDA */
++					bias-disable;
++					drive-open-drain;
++					slew-rate = <0>;
++				};
++			};
++
++			i2c2_pins_sleep_b1: i2c2-3 {
++				pins {
++					pinmux = <STM32_PINMUX('H', 5, ANALOG)>; /* I2C2_SDA */
++				};
++			};
++
+ 			i2c5_pins_a: i2c5-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 11, AF4)>, /* I2C5_SCL */
+@@ -599,6 +631,34 @@
+ 					bias-disable;
+ 				};
+ 			};
++
++			uart4_pins_b: uart4-1 {
++				pins1 {
++					pinmux = <STM32_PINMUX('D', 1, AF8)>; /* UART4_TX */
++					bias-disable;
++					drive-push-pull;
++					slew-rate = <0>;
++				};
++				pins2 {
++					pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
++					bias-disable;
++				};
++			};
++
++			uart7_pins_a: uart7-0 {
++				pins1 {
++					pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
++					bias-disable;
++					drive-push-pull;
++					slew-rate = <0>;
++				};
++				pins2 {
++					pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART4_RX */
++						 <STM32_PINMUX('E', 10, AF7)>, /* UART4_CTS */
++						 <STM32_PINMUX('E', 9, AF7)>; /* UART4_RTS */
++					bias-disable;
++				};
++			};
+ 		};
+ 
+ 		pinctrl_z: pin-controller-z@54004000 {
+@@ -623,6 +683,21 @@
+ 				gpio-ranges = <&pinctrl_z 0 400 8>;
+ 			};
+ 
++			i2c2_pins_b2: i2c2-0 {
++				pins {
++					pinmux = <STM32_PINMUX('Z', 0, AF3)>; /* I2C2_SCL */
++					bias-disable;
++					drive-open-drain;
++					slew-rate = <0>;
++				};
++			};
++
++			i2c2_pins_sleep_b2: i2c2-1 {
++				pins {
++					pinmux = <STM32_PINMUX('Z', 0, ANALOG)>; /* I2C2_SCL */
++				};
++			};
++
+ 			i2c4_pins_a: i2c4-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('Z', 4, AF6)>, /* I2C4_SCL */
 -- 
 2.17.1
