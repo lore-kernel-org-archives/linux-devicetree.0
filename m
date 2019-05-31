@@ -1,43 +1,83 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] dt-bindings: display: Convert Allwinner DSI to a schema
-Date: Fri, 31 May 2019 11:03:39 +0800
-Message-ID: <CAGb2v66apz30Jy1BjU==s1a5Vwcr6GJsaswNqORSZc8fFKmzWQ@mail.gmail.com>
-References: <20190527120910.18964-1-maxime.ripard@bootlin.com>
- <CAGb2v66uhrm20BwmODkPZjSM6Ek+xEg23w2Cs49ikW3WcU1Lqg@mail.gmail.com>
- <20190530185347.aql4znrk5msk2q6o@flea>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v3 1/1] arm64: dts: rockchip: add core dtsi file for
+ RK3399Pro SoCs
+Date: Fri, 31 May 2019 08:54:02 +0530
+Message-ID: <20190531032402.GA9641@Mani-XPS-13-9360>
+References: <20190529074752.19388-1-jay.xu@rock-chips.com>
+ <20190530000848.28106-1-jay.xu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190530185347.aql4znrk5msk2q6o@flea>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190530000848.28106-1-jay.xu@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jianqun Xu <jay.xu@rock-chips.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, linux-kernel@vger.kernel.org, zhangzj@rock-chips.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXkgMzEsIDIwMTkgYXQgMjo1NCBBTSBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
-YXJkQGJvb3RsaW4uY29tPiB3cm90ZToKPgo+IEhpLAo+Cj4gT24gVGh1LCBNYXkgMzAsIDIwMTkg
-YXQgMDk6NDg6MDJQTSArMDgwMCwgQ2hlbi1ZdSBUc2FpIHdyb3RlOgo+ID4gT24gTW9uLCBNYXkg
-MjcsIDIwMTkgYXQgODowOSBQTSBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4u
-Y29tPiB3cm90ZToKPiA+ID4KPiA+ID4gVGhlIEFsbHdpbm5lciBTb0NzIGhhdmUgYSBNSVBJLURT
-SSBhbmQgTUlQSS1ELVBIWSBjb250cm9sbGVycyBzdXBwb3J0ZWQgaW4KPiA+ID4gTGludXgsIHdp
-dGggYSBtYXRjaGluZyBEZXZpY2UgVHJlZSBiaW5kaW5nLgo+ID4gPgo+ID4gPiBOb3cgdGhhdCB3
-ZSBoYXZlIHRoZSBEVCB2YWxpZGF0aW9uIGluIHBsYWNlLCBsZXQncyBjb252ZXJ0IHRoZSBkZXZp
-Y2UgdHJlZQo+ID4gPiBiaW5kaW5ncyBmb3IgdGhhdCBjb250cm9sbGVyIG92ZXIgdG8gYSBZQU1M
-IHNjaGVtYXMuCj4gPiA+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGlt
-ZS5yaXBhcmRAYm9vdGxpbi5jb20+Cj4gPgo+ID4gTG9va3MgZ29vZCB0byBtZS4gSG93ZXZlciBu
-b3Qgc3VyZSB3aHkgeW91IHJlcGxhY2VkIHRoZSBjbG9jayBpbmRleCBtYWNyb3MKPiA+IHdpdGgg
-cmF3IG51bWJlcnMuCj4KPiBUaGUgZXhhbXBsZXMgYXJlIGNvbXBpbGVkIG5vdywgYW5kIHVuZm9y
-dHVuYXRlbHkgd2UgY2FuJ3QgdXNlIHRoZQo+IGRlZmluZXMgYXQgdGhpcyBwb2ludC4KClRoYXQg
-d2FzIHdoYXQgSSBzdXNwZWN0ZWQuIFRoYW5rcy4KTXkgUmV2aWV3ZWQtYnkgc3RpbGwgc3RhbmRz
-LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Thu, May 30, 2019 at 08:08:48AM +0800, Jianqun Xu wrote:
+> This patch adds core dtsi file for Rockchip RK3399Pro SoCs,
+> include rk3399.dtsi. Also enable pciei0/pcie_phy for AP to
+> talk to NPU part inside SoC.
+> 
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> ---
+> changes since v2:
+> - only enable pcie0 and pcie_phy nodes, thanks for Heiko and manivannan
+> 
+> changes since v1:
+> - remove dfi and dmc
+> 
+>  arch/arm64/boot/dts/rockchip/rk3399pro.dtsi | 22 +++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> new file mode 100644
+> index 000000000000..bb5ebf6608b9
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +// Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.
+> +
+> +#include "rk3399.dtsi"
+> +
+> +/ {
+> +	compatible = "rockchip,rk3399pro";
+> +};
+> +
+> +/* Default to enabled since AP talk to NPU part over pcie */
+> +&pcie_phy {
+> +	status = "okay";
+> +};
+> +
+> +/* Default to enabled since AP talk to NPU part over pcie */
+> +&pcie0 {
+> +	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
+> +	num-lanes = <4>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie_clkreqn_cpm>;
+
+No pinctrl config for ep-gpio? Other than that, it looks good to me.
+
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thanks,
+Mani
+> +	status = "okay";
+> +};
+> -- 
+> 2.17.1
+> 
+> 
+> 
