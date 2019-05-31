@@ -1,35 +1,29 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v9 0/9] drm/sun4i: Allwinner A64 MIPI-DSI support
-Date: Fri, 31 May 2019 12:55:52 +0530
-Message-ID: <CAMty3ZCfc=xh1cZrM0PST-=QNT8qFRLkjWb4B=7YtLitXo6MGw@mail.gmail.com>
-References: <20190529105615.14027-1-jagan@amarulasolutions.com> <20190531065806.fl4y2kex427qtysz@flea>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 1/2] arm64: dts: imx8mm: Add SAI nodes
+Date: Fri, 31 May 2019 15:27:28 +0800
+Message-ID: <20190531072727.GB23453@dragon>
+References: <20190515144210.25596-1-daniel.baluta@nxp.com>
+ <20190515144210.25596-2-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190531065806.fl4y2kex427qtysz@flea>
+Content-Disposition: inline
+In-Reply-To: <20190515144210.25596-2-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula <linux-amarula@amarulasolutions.com>, Sergey Suloev <ssuloev@orpaltech.com>, Ryan Pannell <ryan@osukl.com>, Bhushan Shah <bshah@mykolab.com>
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 31, 2019 at 12:28 PM Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
->
-> Hi,
->
-> On Wed, May 29, 2019 at 04:26:06PM +0530, Jagan Teki wrote:
-> > This is v9 version for Allwinner A64 MIPI-DSI support
-> > and here is the previous version set[1].
-> >
-> > This depends on dsi host controller fixes which were
-> > supported in this series[2].
-> >
-> > All these changes are tested in Allwinner A64 with
-> > 2, 4 lanes devices and whose pixel clocks are 27.5 MHz,
-> > 30MHz, 55MHz and 147MHz.
->
-> I wanted to apply this, but it wouldn't apply, can you send it without
-> dependencies?
+On Wed, May 15, 2019 at 02:42:28PM +0000, Daniel Baluta wrote:
+> i.MX8MM has 5 SAI instances with the following base
+> addresses according to RM.
+> 
+> SAI1 base address: 3001_0000h
+> SAI2 base address: 3002_0000h
+> SAI3 base address: 3003_0000h
+> SAI5 base address: 3005_0000h
+> SAI6 base address: 3006_0000h
+> 
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-I can do that no problem, but [2] has dsi and dclk divider fixes that
-would require A64 MIPI-DSI to work.
+Applied, thanks.
