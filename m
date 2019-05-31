@@ -1,85 +1,61 @@
-Return-Path: <SRS0=H4Fw=T7=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v7 7/7] arm64: dts: renesas: cat874: Enable usb role switch support
-Date: Fri, 31 May 2019 11:00:00 +0100
-Message-Id: <1559296800-5610-8-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1559296800-5610-1-git-send-email-biju.das@bp.renesas.com>
-References: <1559296800-5610-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=Bz/z=T7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41434 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfEaMFz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 May 2019 08:05:55 -0400
+Subject: Re: [PATCH] ARM: dts: Drop bogus CLKSEL for timer12 on dra7
+References: <20190530065635.42811-1-tony@atomide.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <89884096-cda4-ea67-6776-4fb25abc65e3@ti.com>
+Date: Fri, 31 May 2019 15:05:50 +0300
+MIME-Version: 1.0
+In-Reply-To: <20190530065635.42811-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
+Cc: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables TI HD3SS3220 device and support usb role switch
-for the CAT 874 platform.
+On 30/05/2019 09:56, Tony Lindgren wrote:
+> There is no CLKSEL for timer12 on dra6 unlike for timer1. This
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V6-->V7
-  * Updated as per the binding.
-V5-->V6
-  * No change
-V4-->V5
-  * No change
-V3-->V4
-  * No change
-V2-->V3
-  * Used "renesas,usb-role-switch" instead of generic "usb-role-switch"
-    property
-V1-->V2
-  * New patch
----
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 32 +++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+dra7
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index fbeece1..46a77ee 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -172,6 +172,31 @@
- 	status = "okay";
- 	clock-frequency = <100000>;
- 
-+	hd3ss3220@47 {
-+		compatible = "ti,hd3ss3220";
-+		reg = <0x47>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+		connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					reg = <1>;
-+					hd3ss3220_ep: endpoint {
-+						remote-endpoint = <&usb3_role_switch>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
- 	tda19988: tda19988@70 {
- 		compatible = "nxp,tda998x";
- 		reg = <0x70>;
-@@ -370,6 +395,13 @@
- &usb3_peri0 {
- 	companion = <&xhci0>;
- 	status = "okay";
-+	usb-role-switch;
-+
-+	port {
-+		usb3_role_switch: endpoint {
-+			remote-endpoint = <&hd3ss3220_ep>;
-+		};
-+	};
- };
- 
- &xhci0 {
+> causes issues on booting the device that Tomi noticed if
+> DEBUG_SLAB is enabled and the clkctrl clock does not properly
+> handle non-existing clock. Let's drop the bogus CLKSEL clock,
+> the clkctrl clock handling gets fixed separately.
+> 
+> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Fixes: 4ed0dfe3cf39 ("ARM: dts: dra7: Move l4 child devices to probe them with ti-sysc")
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>   arch/arm/boot/dts/dra7-l4.dtsi | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+> --- a/arch/arm/boot/dts/dra7-l4.dtsi
+> +++ b/arch/arm/boot/dts/dra7-l4.dtsi
+> @@ -4450,8 +4450,6 @@
+>   			timer12: timer@0 {
+>   				compatible = "ti,omap5430-timer";
+>   				reg = <0x0 0x80>;
+> -				clocks = <&wkupaon_clkctrl DRA7_WKUPAON_TIMER12_CLKCTRL 24>;
+> -				clock-names = "fck";
+>   				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+>   				ti,timer-alwon;
+>   				ti,timer-secure;
+> 
+
+Tested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+
+  Tomi
+
 -- 
-2.7.4
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
