@@ -1,72 +1,82 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH V4 net-next 2/6] net: Introduce a new MII time stamping
- interface.
-Date: Sat, 1 Jun 2019 02:23:22 +0800
-Message-ID: <201906010245.pVc1Wt27%lkp@intel.com>
-References: <cc892ec1dfe16c3e5feb26e756cb20405a386948.1559109077.git.richardcochran@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cc892ec1dfe16c3e5feb26e756cb20405a386948.1559109077.git.richardcochran@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: kbuild-all@01.org, netdev@vger.kernel.org, David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+From: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Subject: [PATCH REPOST v8 0/3] Extend dt bindings to support I2C on sifive devices and a fix broken IRQ in polling mode.
+Date: Sat,  1 Jun 2019 00:00:20 +0530
+Message-ID: <1559327423-13001-1-git-send-email-sagar.kadam@sifive.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com, sagar.kadam@sifive.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
+The patch is based on mainline v5.2-rc1 and extends DT-bindings for Opencore based I2C IP block reimplemented
+in FU540 SoC, available on HiFive unleashed board (Rev A00), and also provides a workaround for broken IRQ
+which affects the already available I2C polling mode interface in mainline, for FU540-C000 chipsets.
 
-I love your patch! Perhaps something to improve:
+The polling mode workaround patch fixes the CPU stall issue, when-ever i2c transfer are initiated.
 
-[auto build test WARNING on net-next/master]
+This workaround checks if it's a FU540 chipset based on device tree information, and check's for open
+core's IF(interrupt flag) and BUSY flags to break from the polling loop upon completion of transfer.
 
-url:    https://github.com/0day-ci/linux/commits/Richard-Cochran/Peer-to-Peer-One-Step-time-stamping/20190531-213601
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+To test the patch, a PMOD-AD2 sensor is connected to HiFive Unleashed board over J1 connector, and
+appropriate device node is added into board specific device tree as per the information provided in
+dt-bindings in Documentation/devicetree/bindings/i2c/i2c-ocores.txt.
+Without this workaround, the CPU stall's infinitely.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Busybox i2c utilities used to verify workaround : i2cdetect, i2cdump, i2cset, i2cget
 
 
-sparse warnings: (new ones prefixed by >>)
+Patch History:
+V7<->V8:
+-Incorporated review comments for cosmetic changes like: space, comma and period(.)
 
-   drivers/net/macvlan.c:1059:49: sparse: sparse: no member 'ts_info' in struct phy_driver
-   drivers/net/macvlan.c:1060:36: sparse: sparse: no member 'ts_info' in struct phy_driver
->> drivers/net/macvlan.c:1059:49: sparse: sparse: unknown expression (8 46)
+V6<->V7:
+-Rectified space and tab issue in dt bindings strings.
+-Implemented workaround based on i2c->flags, as per review comment on v6.
 
-vim +1059 drivers/net/macvlan.c
+V5<->V6:
+-Incorporated suggestions on v5 patch as follows:
+-Reformatted compatibility strings in dt doc with one valid combination on each line.
+-Removed interrupt-parents from optional property list. 
+-With rebase to v5.2-rc1, the v5 variant of polling workaround PATCH becomes in-compatible.
+ Till kernel v5.1 the polling mode was enabled based on i2c->flags, wherease in kernel v5.2-rc1 polling mode is set as
+ master transfer algorithim at probe time itself, and i2c->flags checks are removed.
+-Modified v5 to check for SiFive device type in polling function and include the workaround/fix for broken IRQ.
 
-9edb8bb6 Stephen Hemminger 2008-10-29  1051  
-254c0a2b Hangbin Liu       2019-03-20  1052  static int macvlan_ethtool_get_ts_info(struct net_device *dev,
-254c0a2b Hangbin Liu       2019-03-20  1053  				       struct ethtool_ts_info *info)
-254c0a2b Hangbin Liu       2019-03-20  1054  {
-254c0a2b Hangbin Liu       2019-03-20  1055  	struct net_device *real_dev = macvlan_dev_real_dev(dev);
-254c0a2b Hangbin Liu       2019-03-20  1056  	const struct ethtool_ops *ops = real_dev->ethtool_ops;
-254c0a2b Hangbin Liu       2019-03-20  1057  	struct phy_device *phydev = real_dev->phydev;
-254c0a2b Hangbin Liu       2019-03-20  1058  
-254c0a2b Hangbin Liu       2019-03-20 @1059  	if (phydev && phydev->drv && phydev->drv->ts_info) {
-254c0a2b Hangbin Liu       2019-03-20  1060  		 return phydev->drv->ts_info(phydev, info);
-254c0a2b Hangbin Liu       2019-03-20  1061  	} else if (ops->get_ts_info) {
-254c0a2b Hangbin Liu       2019-03-20  1062  		return ops->get_ts_info(real_dev, info);
-254c0a2b Hangbin Liu       2019-03-20  1063  	} else {
-254c0a2b Hangbin Liu       2019-03-20  1064  		info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
-254c0a2b Hangbin Liu       2019-03-20  1065  			SOF_TIMESTAMPING_SOFTWARE;
-254c0a2b Hangbin Liu       2019-03-20  1066  		info->phc_index = -1;
-254c0a2b Hangbin Liu       2019-03-20  1067  	}
-254c0a2b Hangbin Liu       2019-03-20  1068  
-254c0a2b Hangbin Liu       2019-03-20  1069  	return 0;
-254c0a2b Hangbin Liu       2019-03-20  1070  }
-254c0a2b Hangbin Liu       2019-03-20  1071  
+v4<->V5:
+-Removed un-necessary checks of OCORES_FLAG_BROKEN_IRQ.
 
-:::::: The code at line 1059 was first introduced by commit
-:::::: 254c0a2bfedb9e1baf38bd82ca86494d4bc1e0cb macvlan: pass get_ts_info and SIOC[SG]HWTSTAMP ioctl to real device
+V3<->V4:
+-Incorporated suggestions on v3 patch as follows:
+-OCORES_FLAG_BROKEN_IRQ BIT position rectified.
+-Updated BORKEN_IRQ flag checks such that if sifive device (Fu540-C000) is identified,then use polling mode as IRQ is broken.
 
-:::::: TO: Hangbin Liu <liuhangbin@gmail.com>
-:::::: CC: David S. Miller <davem@davemloft.net>
+V2<->V3:
+-Incorporated review comments on v2 patch as follows:
+-Rectified compatibility string sequence with the most specific one at the first (dt bindings). 
+-Moved interrupts and interrupt-parent under optional property list (dt-bindings).
+-Updated reference to sifive-blocks-ip-versioning.txt and URL to IP repository used (dt-bindings).
+-Removed example for i2c0 device node from binding doc (dt-bindings).
+-Included sifive,i2c0 device under compatibility table in i2c-ocores driver (i2c-ocores).
+-Updated polling mode hooks for SoC specific fix to handle broken IRQ (i2c-ocores).
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+V1<->V2:
+-Incorporate review comments from Andrew
+-Extend dt bindings into i2c-ocores.txt instead of adding new file
+-Rename SIFIVE_FLAG_POLL to OCORES_FLAG_BROKEN_IRQ
+
+V1:
+-Update dt bindings for sifive i2c devices
+-Fix broken IRQ affecting i2c polling mode interface.
+
+
+Sagar Shrikant Kadam (3):
+  dt-bindings: i2c: extend existing opencore bindings.
+  i2c-ocores: sifive: add support for i2c device on FU540-c000 SoC.
+  i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC.
+
+ .../devicetree/bindings/i2c/i2c-ocores.txt         |  9 ++++--
+ drivers/i2c/busses/i2c-ocores.c                    | 33 ++++++++++++++++++++--
+ 2 files changed, 38 insertions(+), 4 deletions(-)
+
+-- 
+1.9.1
