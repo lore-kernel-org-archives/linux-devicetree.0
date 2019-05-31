@@ -1,139 +1,75 @@
-Return-Path: <SRS0=KlDB=TR=nxp.com=daniel.baluta@kernel.org>
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH 1/5] clk: add imx8 clk defines
-Date: Fri, 17 May 2019 19:24:07 +0000
-Message-ID: 
- <VI1PR0402MB3357B692AD1121EADC2198F7F90B0@VI1PR0402MB3357.eurprd04.prod.outlook.com>
-References: 
- <20190517071813.26674-1-oliver.graute@gmail.com>,<AM0PR04MB4211706D24BBF3F9FB6CAF28800B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-In-Reply-To: 
- <AM0PR04MB4211706D24BBF3F9FB6CAF28800B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_VI1PR0402MB3357B692AD1121EADC2198F7F90B0VI1PR0402MB3357_"
-MIME-Version: 1.0
-To: Aisheng Dong <aisheng.dong@nxp.com>, Oliver Graute <oliver.graute@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Oliver Graute <oliver.graute@kococonnector.com>
+Return-Path: <SRS0=H4Fw=T7=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v7 2/7] dt-bindings: usb: renesas_usb3: Document usb role switch support
+Date: Fri, 31 May 2019 10:59:55 +0100
+Message-Id: <1559296800-5610-3-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1559296800-5610-1-git-send-email-biju.das@bp.renesas.com>
+References: <1559296800-5610-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Biju Das <biju.das@bp.renesas.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---_000_VI1PR0402MB3357B692AD1121EADC2198F7F90B0VI1PR0402MB3357_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Update the DT bindings documentation to support usb role switch
+for USB Type-C connector using USB role switch class framework.
 
-Thanks Oliver for your contribution. I think since Aisheng already sent
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+ V6-->V7
+  * Incorporated shimoda-san's review comments.
+    (https://patchwork.kernel.org/patch/10944631/)
+ V5-->V6
+  * Updated description
+  * Added usb-role-switch-property
+ V4-->V5
+  * No Change
+ V3-->V4
+  * No Change
+ V2-->V3
+  * Added optional renesas,usb-role-switch property.
+ V1-->V2
+  * Added usb-role-switch-property
+  * Updated the example with usb-role-switch property.
+---
+ .../devicetree/bindings/usb/renesas_usb3.txt       | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-this series maybe you can help with the review?
-
-
-Aisheng,
-
-
-In think would be better to RESEND the entire series just to revive the thr=
-ead.
-
-
-thanks,
-
-Daniel.
-
-________________________________
-From: Aisheng Dong
-Sent: Friday, May 17, 2019 2:29:59 PM
-To: Oliver Graute; linux-arm-kernel@lists.infradead.org; devicetree@vger.ke=
-rnel.org
-Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; s.hauer@=
-pengutronix.de; kernel@pengutronix.de; festevam@gmail.com; dl-linux-imx; l.=
-stach@pengutronix.de; Oliver Graute
-Subject: RE: [PATCH 1/5] clk: add imx8 clk defines
-
-Hi Oliver,
-
-> From: Oliver Graute [mailto:oliver.graute@gmail.com]
-> Sent: Friday, May 17, 2019 3:18 PM
->
-> From: Oliver Graute <oliver.graute@kococonnector.com>
->
-> added header defines for imx8qm clock
->
-> Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
-
-It seems you missed this one.
-[00/14] arm64: dts: imx8: architecture improvement and adding imx8qm suppor=
-t
-https://patchwork.kernel.org/cover/10824537/
-
-Regards
-Dong Aisheng
-
---_000_VI1PR0402MB3357B692AD1121EADC2198F7F90B0VI1PR0402MB3357_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<style type=3D"text/css" style=3D"display:none;"><!-- P {margin-top:0;margi=
-n-bottom:0;} --></style>
-</head>
-<body dir=3D"ltr">
-<div id=3D"divtagdefaultwrapper" style=3D"font-size:12pt;color:#000000;font=
--family:Calibri,Helvetica,sans-serif;" dir=3D"ltr">
-<p style=3D"margin-top:0;margin-bottom:0">Thanks Oliver for your contributi=
-on. I think since Aisheng already sent</p>
-<p style=3D"margin-top:0;margin-bottom:0">this series maybe you can help wi=
-th the review?</p>
-<p style=3D"margin-top:0;margin-bottom:0"><br>
-</p>
-<p style=3D"margin-top:0;margin-bottom:0">Aisheng,</p>
-<p style=3D"margin-top:0;margin-bottom:0"><br>
-</p>
-<p style=3D"margin-top:0;margin-bottom:0">In think would be better to RESEN=
-D the entire series just to revive the thread.</p>
-<p style=3D"margin-top:0;margin-bottom:0"><br>
-</p>
-<p style=3D"margin-top:0;margin-bottom:0">thanks,</p>
-<p style=3D"margin-top:0;margin-bottom:0">Daniel.<br>
-</p>
-</div>
-<hr style=3D"display:inline-block;width:98%" tabindex=3D"-1">
-<div id=3D"divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" st=
-yle=3D"font-size:11pt" color=3D"#000000"><b>From:</b> Aisheng Dong<br>
-<b>Sent:</b> Friday, May 17, 2019 2:29:59 PM<br>
-<b>To:</b> Oliver Graute; linux-arm-kernel@lists.infradead.org; devicetree@=
-vger.kernel.org<br>
-<b>Cc:</b> robh&#43;dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.or=
-g; s.hauer@pengutronix.de; kernel@pengutronix.de; festevam@gmail.com; dl-li=
-nux-imx; l.stach@pengutronix.de; Oliver Graute<br>
-<b>Subject:</b> RE: [PATCH 1/5] clk: add imx8 clk defines</font>
-<div>&nbsp;</div>
-</div>
-<div class=3D"BodyFragment"><font size=3D"2"><span style=3D"font-size:11pt;=
-">
-<div class=3D"PlainText">Hi Oliver,<br>
-<br>
-&gt; From: Oliver Graute [<a href=3D"mailto:oliver.graute@gmail.com">mailto=
-:oliver.graute@gmail.com</a>]<br>
-&gt; Sent: Friday, May 17, 2019 3:18 PM<br>
-&gt; <br>
-&gt; From: Oliver Graute &lt;oliver.graute@kococonnector.com&gt;<br>
-&gt; <br>
-&gt; added header defines for imx8qm clock<br>
-&gt; <br>
-&gt; Signed-off-by: Oliver Graute &lt;oliver.graute@kococonnector.com&gt;<b=
-r>
-<br>
-It seems you missed this one.<br>
-[00/14] arm64: dts: imx8: architecture improvement and adding imx8qm suppor=
-t<br>
-<a href=3D"https://patchwork.kernel.org/cover/10824537/">https://patchwork.=
-kernel.org/cover/10824537/</a><br>
-<br>
-Regards<br>
-Dong Aisheng<br>
-</div>
-</span></font></div>
-</body>
-</html>
-
---_000_VI1PR0402MB3357B692AD1121EADC2198F7F90B0VI1PR0402MB3357_--
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+index 35039e7..5eecfbc 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+@@ -22,6 +22,12 @@ Required properties:
+ Optional properties:
+   - phys: phandle + phy specifier pair
+   - phy-names: must be "usb"
++  - usb-role-switch: support role switch. see usb/generic.txt
++
++Sub-nodes:
++- any connector to the data bus of this controller should be modelled using the
++  OF graph bindings specified in bindings/graph.txt, if the "usb-role-switch"
++  property is used.
+ 
+ Example of R-Car H3 ES1.x:
+ 	usb3_peri0: usb@ee020000 {
+@@ -39,3 +45,20 @@ Example of R-Car H3 ES1.x:
+ 		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cpg CPG_MOD 327>;
+ 	};
++
++Example of RZ/G2E:
++	usb3_peri0: usb@ee020000 {
++		compatible = "renesas,r8a774c0-usb3-peri",
++			     "renesas,rcar-gen3-usb3-peri";
++		reg = <0 0xee020000 0 0x400>;
++		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg CPG_MOD 328>;
++		companion = <&xhci0>;
++		usb-role-switch;
++
++		port {
++			usb3_role_switch: endpoint {
++				remote-endpoint = <&hd3ss3220_ep>;
++			};
++		};
++	};
+-- 
+2.7.4
