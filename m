@@ -1,54 +1,84 @@
 From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [PATCH v9 5/7] dt-bindings: Add binding for cros-ec-rpmsg.
-Date: Fri, 31 May 2019 15:38:46 +0800
-Message-ID: <20190531073848.155444-6-pihsun@chromium.org>
+Subject: [PATCH v9 7/7] arm64: dts: mt8183: add scp node
+Date: Fri, 31 May 2019 15:38:48 +0800
+Message-ID: <20190531073848.155444-8-pihsun@chromium.org>
 References: <20190531073848.155444-1-pihsun@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190531073848.155444-1-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Guenter Roeck <groeck@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Pi-Hsun Shih <pihsun@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a DT binding documentation for ChromeOS EC driver over rpmsg.
+From: Eddie Huang <eddie.huang@mediatek.com>
 
+Add scp node to mt8183 and mt8183-evb
+
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Acked-by: Rob Herring <robh@kernel.org>
-
 ---
-Changes from v8, v7, v6:
- - No change.
-
-Changes from v5:
+Changes from v8:
  - New patch.
 ---
- Documentation/devicetree/bindings/mfd/cros-ec.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 18 ++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
+ 2 files changed, 30 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-index 6245c9b1a68b..4860eabd0f72 100644
---- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-@@ -3,7 +3,7 @@ ChromeOS Embedded Controller
- Google's ChromeOS EC is a Cortex-M device which talks to the AP and
- implements various function such as keyboard and battery charging.
- 
--The EC can be connect through various means (I2C, SPI, LPC) and the
-+The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
- compatible string used depends on the interface. Each connection method has
- its own driver which connects to the top level interface-agnostic EC driver.
- Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
-@@ -17,6 +17,9 @@ Required properties (SPI):
- - compatible: "google,cros-ec-spi"
- - reg: SPI chip select
- 
-+Required properties (RPMSG):
-+- compatible: "google,cros-ec-rpmsg"
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+index d8e555cbb5d3..8dd74d7aefdb 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+@@ -24,6 +24,24 @@
+ 	chosen {
+ 		stdout-path = "serial0:921600n8";
+ 	};
 +
- Optional properties (SPI):
- - google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
-   time to wake up from sleep before they can receive SPI transfers at a high
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		reserve-memory-vpu_share {
++			compatible = "mediatek,reserve-memory-vpu_share";
++			no-map;
++			size = <0 0x01400000>; /* 20 MB share mem size */
++			alignment = <0 0x1000000>;
++			alloc-ranges = <0 0x50000000 0 0x10000000>;
++		};
++		scp_mem_reserved: scp_mem_region {
++			compatible = "shared-dma-pool";
++			reg = <0 0x50000000 0 0x2900000>;
++			no-map;
++		};
++	};
+ };
+ 
+ &auxadc {
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index c2749c4631bc..133146b52904 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -254,6 +254,18 @@
+ 			clock-names = "spi", "wrap";
+ 		};
+ 
++		scp: scp@10500000 {
++			compatible = "mediatek,mt8183-scp";
++			reg = <0 0x10500000 0 0x80000>,
++			      <0 0x105c0000 0 0x5000>;
++			reg-names = "sram", "cfg";
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_SCPSYS>;
++			clock-names = "main";
++			memory-region = <&scp_mem_reserved>;
++			status = "disabled";
++		};
++
+ 		auxadc: auxadc@11001000 {
+ 			compatible = "mediatek,mt8183-auxadc",
+ 				     "mediatek,mt8173-auxadc";
 -- 
 2.22.0.rc1.257.g3120a18244-goog
