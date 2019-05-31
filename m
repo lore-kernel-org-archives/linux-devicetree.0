@@ -1,43 +1,78 @@
-Return-Path: <SRS0=FqIr=TN=pengutronix.de=mtr@kernel.org>
-From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v6 3/5] media: dt-bindings: media: Add vendor prefix for allegro
-Date: Mon, 13 May 2019 19:21:29 +0200
-Message-Id: <20190513172131.15048-4-m.tretter@pengutronix.de>
-In-Reply-To: <20190513172131.15048-1-m.tretter@pengutronix.de>
-References: <20190513172131.15048-1-m.tretter@pengutronix.de>
+Return-Path: <SRS0=Bz/z=T7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54061 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbfEaIza (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 May 2019 04:55:30 -0400
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v3 03/10] media: hantro: add PM runtime resume callback
+Date: Fri, 31 May 2019 10:55:16 +0200
+Message-Id: <20190531085523.10892-4-p.zabel@pengutronix.de>
+In-Reply-To: <20190531085523.10892-1-p.zabel@pengutronix.de>
+References: <20190531085523.10892-1-p.zabel@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl, Michael Tretter <m.tretter@pengutronix.de>, Rob Herring <robh@kernel.org>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Add vendor prefix for Allegro DVT, a provider of H.264/AVC, H.265/HEVC,
-AVS2, VP9 and AV1 compliance test suites and H.264/AVC, H.265/HEVC, and
-VP9 encoder, codec and decoder hardware (RTL) IPs.
+It seems that on i.MX8MQ the power domain controller does not propagate
+resets to the VPU cores on resume. Add a callback to allow implementing
+manual reset of the VPU cores after ungating the power domain.
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 ---
-v5 -> v6:
-none
+ drivers/staging/media/hantro/hantro.h     |  2 ++
+ drivers/staging/media/hantro/hantro_drv.c | 13 +++++++++++++
+ 2 files changed, 15 insertions(+)
 
-v5:
-- new patch
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 8162b0eb4b50..78a849b25f64 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -16,6 +16,7 @@ adi	Analog Devices, Inc.
- advantech	Advantech Corporation
- aeroflexgaisler	Aeroflex Gaisler AB
- al	Annapurna Labs
-+allegro	Allegro DVT
- allo	Allo.com
- allwinner	Allwinner Technology Co., Ltd.
- alphascale	AlphaScale Integrated Circuits Systems, Inc.
+diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
+index 14e685428203..296b9ffad547 100644
+--- a/drivers/staging/media/hantro/hantro.h
++++ b/drivers/staging/media/hantro/hantro.h
+@@ -56,6 +56,7 @@ struct hantro_codec_ops;
+  * @codec:			Supported codecs
+  * @codec_ops:			Codec ops.
+  * @init:			Initialize hardware.
++ * @runtime_resume:		reenable hardware after power gating
+  * @vepu_irq:			encoder interrupt handler
+  * @vdpu_irq:			decoder interrupt handler
+  * @clk_names:			array of clock names
+@@ -71,6 +72,7 @@ struct hantro_variant {
+ 	unsigned int codec;
+ 	const struct hantro_codec_ops *codec_ops;
+ 	int (*init)(struct hantro_dev *vpu);
++	int (*runtime_resume)(struct hantro_dev *vpu);
+ 	irqreturn_t (*vepu_irq)(int irq, void *priv);
+ 	irqreturn_t (*vdpu_irq)(int irq, void *priv);
+ 	const char *clk_names[HANTRO_MAX_CLOCKS];
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index e4390aa5c213..fb5f140dbaae 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -831,9 +831,22 @@ static int hantro_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM
++static int hantro_runtime_resume(struct device *dev)
++{
++	struct hantro_dev *vpu = dev_get_drvdata(dev);
++
++	if (vpu->variant->runtime_resume)
++		return vpu->variant->runtime_resume(vpu);
++
++	return 0;
++}
++#endif
++
+ static const struct dev_pm_ops hantro_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+ 				pm_runtime_force_resume)
++	SET_RUNTIME_PM_OPS(NULL, hantro_runtime_resume, NULL)
+ };
+ 
+ static struct platform_driver hantro_driver = {
 -- 
 2.20.1
