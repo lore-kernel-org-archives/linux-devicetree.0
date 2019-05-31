@@ -1,37 +1,73 @@
-From: Alex Elder <elder@linaro.org>
-Subject: Re: [PATCH v2 03/17] soc: qcom: ipa: main code
-Date: Fri, 31 May 2019 17:25:54 -0500
-Message-ID: <8295f702-2c3f-1fa3-0a4e-ebb51d5b03ee@linaro.org>
-References: <20190531035348.7194-1-elder@linaro.org>
- <20190531035348.7194-4-elder@linaro.org>
- <20190531.145005.798440469894507477.davem@davemloft.net>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe
+ ordering
+Date: Fri, 31 May 2019 16:27:10 -0700
+Message-ID: <bddb15c9-0195-13ca-e829-0a511595c84e@codeaurora.org>
+References: <20190524010117.225219-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190531.145005.798440469894507477.davem@davemloft.net>
+In-Reply-To: <20190524010117.225219-1-saravanak@google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org, evgreen@chromium.org, benchan@google.com, ejcaruso@google.com, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-On 5/31/19 4:50 PM, David Miller wrote:
-> From: Alex Elder <elder@linaro.org>
-> Date: Thu, 30 May 2019 22:53:34 -0500
-> 
->> +	void *route_virt;
->  ...
->> +	void *filter_virt;
->  ...
-> 
-> If these are arrays of u64's, please declare them as "u64 *" instead of
-> the opaque "void *".
+Hello Saravana,
 
-Good idea.  I hadn't paid attention to that.  These tables are
-arrays of 64-bit addresses so it's better to represent them that
-way.
+On 5/23/19 6:01 PM, Saravana Kannan wrote:
+...
+> Having functional dependencies explicitly called out in DT and
+> automatically added before the devices are probed, provides the
+> following benefits:
+...
+> - Supplier devices like clock providers, regulators providers, etc
+>   need to keep the resources they provide active and at a particular
+>   state(s) during boot up even if their current set of consumers don't
+>   request the resource to be active. This is because the rest of the
+>   consumers might not have probed yet and turning off the resource
+>   before all the consumers have probed could lead to a hang or
+>   undesired user experience.
+This benefit provided by the sync_state() callback function introduced in
+this series gives us a mechanism to solve a specific problem encountered
+on Qualcomm Technologies, Inc. (QTI) boards when booting with drivers
+compiled as modules.  QTI boards have a regulator that powers the PHYs for
+display, camera, USB, UFS, and PCIe.  When these boards boot up, the boot
+loader enables this regulator along with other resources in order to
+display a splash screen image.  The regulator must remain enabled until
+the Linux display driver has probed and made a request with the regulator
+framework to keep the regulator enabled.  If the regulator is disabled
+prematurely, then the screen image is corrupted and the display hardware
+enters a bad state.
 
-Thanks.
+We have observed that when the camera driver probes before the display
+driver, it performs this sequence: regulator_enable(), camera register IO,
+regulator_disable().  Since it is the first consumer of the shared
+regulator, the regulator is physically disabled (even though display
+hardware still requires it to be enabled).  We have solved this problem
+when compiling drivers statically with a downstream regulator
+proxy-consumer driver.  This proxy-consumer is able to make an enable
+request for the shared regulator before any other consumer.  It then
+removes its request at late_initcall_sync.
 
-					-Alex
+Unfortunately, when drivers are compiled as modules instead of compiled
+statically into the kernel image, late_initcall_sync is not a meaningful
+marker of driver probe completion.  This means that our existing proxy
+voting system will not work when drivers are compiled as modules.  The
+sync_state() callback resolves this issue by providing a notification that
+is guaranteed to arrive only after all consumers of the shared regulator
+have probed.
+
+QTI boards have other cases of shared resources such as bus bandwidth
+which must remain at least at a level set by boot loaders in order to
+properly support hardware blocks that are enabled before the Linux kernel
+starts booting.
+
+Take care,
+David
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
