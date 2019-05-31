@@ -1,108 +1,249 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 3/3] media: dt-bindings: media: i2c: Add bindings for
- ov02a10
-Date: Fri, 31 May 2019 19:16:58 +0300
-Message-ID: <20190531161658.2y2amfngbhfbllj7@valkosipuli.retiisi.org.uk>
-References: <20190523102204.24112-1-dongchun.zhu@mediatek.com>
- <20190523102204.24112-4-dongchun.zhu@mediatek.com>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Fri, 31 May 2019 11:36:48 -0500
+Message-ID: <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
+References: <20190531035348.7194-1-elder@linaro.org>
+ <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190523102204.24112-4-dongchun.zhu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dongchun.zhu@mediatek.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, menghui.lin@mediatek.com, shengnan.wang@mediatek.com, louis.kuo@mediatek.com, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Dan Williams <dcbw@redhat.com>, davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org
+Cc: evgreen@chromium.org, benchan@google.com, ejcaruso@google.com, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dongchun,
-
-Thanks for the patch.
-
-On Thu, May 23, 2019 at 06:22:04PM +0800, dongchun.zhu@mediatek.com wrote:
-> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+On 5/31/19 9:58 AM, Dan Williams wrote:
+> On Thu, 2019-05-30 at 22:53 -0500, Alex Elder wrote:
+>> This series presents the driver for the Qualcomm IP Accelerator
+>> (IPA).
+>>
+>> This is version 2 of the series.  This version has addressed almost
+>> all of the feedback received in the first version:
+>>   
+>> https://lore.kernel.org/lkml/20190512012508.10608-1-elder@linaro.org/
+>> More detail is included in the individual patches, but here is a
+>> high-level summary of what's changed since then:
+>>   - Two spinlocks have been removed.
+>>       - The code for enabling and disabling endpoint interrupts has
+>>         been simplified considerably, and the spinlock is no longer
+>> 	required
+>>       - A spinlock used when updating ring buffer pointers is no
+>>         longer needed.  Integers indexing the ring are used instead
+>> 	(and they don't even have to be atomic).
+>>   - One spinlock remains to protect list updates, but it is always
+>>     acquired using spin_lock_bh() (no more irqsave).
+>>   - Information about the queueing and completion of messages is now
+>>     supplied to the network stack in batches rather than one at a
+>>     time.
+>>   - I/O completion handling has been simplified, with the IRQ
+>>     handler now consisting mainly of disabling the interrupt and
+>>     calling napi_schedule().
+>>   - Some comments have been updated and improved througout.
+>>
+>> What follows is the introduction supplied with v1 of the series.
+>>
+>> -----
+>>
+>> The IPA is a component present in some Qualcomm SoCs that allows
+>> network functions such as aggregation, filtering, routing, and NAT
+>> to be performed without active involvement of the main application
+>> processor (AP).
+>>
+>> Initially, these advanced features are disabled; the IPA driver
+>> simply provides a network interface that makes the modem's LTE
+>> network available to the AP.  In addition, only support for the
+>> IPA found in the Qualcomm SDM845 SoC is provided.
 > 
-> Add device tree binding documentation for the OV02A10 CMOS image sensor.
+> My question from the Nov 2018 IPA rmnet driver still stands; how does
+> this relate to net/ethernet/qualcomm/rmnet/ if at all? And if this is
+> really just a netdev talking to the IPA itself and unrelated to
+> net/ethernet/qualcomm/rmnet, let's call it "ipa%d" and stop cargo-
+> culting rmnet around just because it happens to be a net driver for a
+> QC SoC.
+
+First, the relationship between the IPA driver and the rmnet driver
+is that the IPA driver is assumed to sit between the rmnet driver
+and the hardware.
+
+Currently the modem is assumed to use QMAP protocol.  This means
+each packet is prefixed by a (struct rmnet_map_header) structure
+that allows the IPA connection to be multiplexed for several logical
+connections.  The rmnet driver parses such messages and implements
+the multiplexed network interfaces.
+
+QMAP protocol can also be used for aggregating many small packets
+into a larger message.  The rmnet driver implements de-aggregation
+of such messages (and could probably aggregate them for TX as well).
+
+Finally, the IPA can support checksum offload, and the rmnet
+driver handles providing a prepended header (for TX) and
+interpreting the appended trailer (for RX) if these features
+are enabled.
+
+So basically, the purpose of the rmnet driver is to handle QMAP
+protocol connections, and right now that's what the modem
+provides.
+
+> Is the firmware that the driver loads already in linux-firmware or
+> going to be there soon?
+
+It is not right now, and I have no information on when it can be
+available.  The AP *can* load the firmware but right now we rely
+on the modem doing it (until we can make the firmware available).
+
+> How does the driver support multiple PDNs (eg PDP or EPS contexts) that
+> are enabled through the control plane via QMI messages? I couldn't
+> quite find that out.
+
+To be honest, I don't know the answer to this.  All of my work
+has been on this transport driver and I believe these things
+are handled by user space.  But I really don't know details.
+
+					-Alex
+
+> Thanks,
+> Dan
 > 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> ---
->  .../devicetree/bindings/media/i2c/ov02a10.txt      | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+>> This code is derived from a driver developed internally by Qualcomm.
+>> A version of the original source can be seen here:
+>>   https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree
+>> in the "drivers/platform/msm/ipa" directory.  Many were involved in
+>> developing this, but the following individuals deserve explicit
+>> acknowledgement for their substantial contributions:
+>>
+>>     Abhishek Choubey
+>>     Ady Abraham
+>>     Chaitanya Pratapa
+>>     David Arinzon
+>>     Ghanim Fodi
+>>     Gidon Studinski
+>>     Ravi Gummadidala
+>>     Shihuan Liu
+>>     Skylar Chang
+>>
+>> A version of this code was posted in November 2018 as an RFC.
+>>   
+>> https://lore.kernel.org/lkml/20181107003250.5832-1-elder@linaro.org/
+>> All feedback received was addressed.  The code has undergone
+>> considerable further rework since that time, and most of the
+>> "future work" described then has now been completed.
+>>
+>> This code is available in buildable form here, based on kernel
+>> v5.2-rc1:
+>>   remote: ssh://git@git.linaro.org/people/alex.elder/linux.git
+>>   branch: ipa-v2_kernel-v5.2-rc2
+>>     75adf2ac1266 arm64: defconfig: enable build of IPA code
+>>
+>> The branch depends on a commit now found in in net-next.  It has
+>> been cherry-picked, and (in this branch) has this commit ID:
+>>   13c627b5a078 net: qualcomm: rmnet: Move common struct definitions
+>> to include
+>> by 
+>>
+>> 					-Alex
+>>
+>> Alex Elder (17):
+>>   bitfield.h: add FIELD_MAX() and field_max()
+>>   dt-bindings: soc: qcom: add IPA bindings
+>>   soc: qcom: ipa: main code
+>>   soc: qcom: ipa: configuration data
+>>   soc: qcom: ipa: clocking, interrupts, and memory
+>>   soc: qcom: ipa: GSI headers
+>>   soc: qcom: ipa: the generic software interface
+>>   soc: qcom: ipa: GSI transactions
+>>   soc: qcom: ipa: IPA interface to GSI
+>>   soc: qcom: ipa: IPA endpoints
+>>   soc: qcom: ipa: immediate commands
+>>   soc: qcom: ipa: IPA network device and microcontroller
+>>   soc: qcom: ipa: AP/modem communications
+>>   soc: qcom: ipa: support build of IPA code
+>>   MAINTAINERS: add entry for the Qualcomm IPA driver
+>>   arm64: dts: sdm845: add IPA information
+>>   arm64: defconfig: enable build of IPA code
+>>
+>>  .../devicetree/bindings/net/qcom,ipa.yaml     |  180 ++
+>>  MAINTAINERS                                   |    6 +
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi          |   51 +
+>>  arch/arm64/configs/defconfig                  |    1 +
+>>  drivers/net/Kconfig                           |    2 +
+>>  drivers/net/Makefile                          |    1 +
+>>  drivers/net/ipa/Kconfig                       |   16 +
+>>  drivers/net/ipa/Makefile                      |    7 +
+>>  drivers/net/ipa/gsi.c                         | 1635
+>> +++++++++++++++++
+>>  drivers/net/ipa/gsi.h                         |  246 +++
+>>  drivers/net/ipa/gsi_private.h                 |  148 ++
+>>  drivers/net/ipa/gsi_reg.h                     |  376 ++++
+>>  drivers/net/ipa/gsi_trans.c                   |  624 +++++++
+>>  drivers/net/ipa/gsi_trans.h                   |  116 ++
+>>  drivers/net/ipa/ipa.h                         |  131 ++
+>>  drivers/net/ipa/ipa_clock.c                   |  297 +++
+>>  drivers/net/ipa/ipa_clock.h                   |   52 +
+>>  drivers/net/ipa/ipa_cmd.c                     |  377 ++++
+>>  drivers/net/ipa/ipa_cmd.h                     |  116 ++
+>>  drivers/net/ipa/ipa_data-sdm845.c             |  245 +++
+>>  drivers/net/ipa/ipa_data.h                    |  267 +++
+>>  drivers/net/ipa/ipa_endpoint.c                | 1283 +++++++++++++
+>>  drivers/net/ipa/ipa_endpoint.h                |   97 +
+>>  drivers/net/ipa/ipa_gsi.c                     |   48 +
+>>  drivers/net/ipa/ipa_gsi.h                     |   49 +
+>>  drivers/net/ipa/ipa_interrupt.c               |  279 +++
+>>  drivers/net/ipa/ipa_interrupt.h               |   53 +
+>>  drivers/net/ipa/ipa_main.c                    |  921 ++++++++++
+>>  drivers/net/ipa/ipa_mem.c                     |  234 +++
+>>  drivers/net/ipa/ipa_mem.h                     |   83 +
+>>  drivers/net/ipa/ipa_netdev.c                  |  251 +++
+>>  drivers/net/ipa/ipa_netdev.h                  |   24 +
+>>  drivers/net/ipa/ipa_qmi.c                     |  402 ++++
+>>  drivers/net/ipa/ipa_qmi.h                     |   35 +
+>>  drivers/net/ipa/ipa_qmi_msg.c                 |  583 ++++++
+>>  drivers/net/ipa/ipa_qmi_msg.h                 |  238 +++
+>>  drivers/net/ipa/ipa_reg.h                     |  279 +++
+>>  drivers/net/ipa/ipa_smp2p.c                   |  304 +++
+>>  drivers/net/ipa/ipa_smp2p.h                   |   47 +
+>>  drivers/net/ipa/ipa_uc.c                      |  208 +++
+>>  drivers/net/ipa/ipa_uc.h                      |   32 +
+>>  include/linux/bitfield.h                      |   14 +
+>>  42 files changed, 10358 insertions(+)
+>>  create mode 100644
+>> Documentation/devicetree/bindings/net/qcom,ipa.yaml
+>>  create mode 100644 drivers/net/ipa/Kconfig
+>>  create mode 100644 drivers/net/ipa/Makefile
+>>  create mode 100644 drivers/net/ipa/gsi.c
+>>  create mode 100644 drivers/net/ipa/gsi.h
+>>  create mode 100644 drivers/net/ipa/gsi_private.h
+>>  create mode 100644 drivers/net/ipa/gsi_reg.h
+>>  create mode 100644 drivers/net/ipa/gsi_trans.c
+>>  create mode 100644 drivers/net/ipa/gsi_trans.h
+>>  create mode 100644 drivers/net/ipa/ipa.h
+>>  create mode 100644 drivers/net/ipa/ipa_clock.c
+>>  create mode 100644 drivers/net/ipa/ipa_clock.h
+>>  create mode 100644 drivers/net/ipa/ipa_cmd.c
+>>  create mode 100644 drivers/net/ipa/ipa_cmd.h
+>>  create mode 100644 drivers/net/ipa/ipa_data-sdm845.c
+>>  create mode 100644 drivers/net/ipa/ipa_data.h
+>>  create mode 100644 drivers/net/ipa/ipa_endpoint.c
+>>  create mode 100644 drivers/net/ipa/ipa_endpoint.h
+>>  create mode 100644 drivers/net/ipa/ipa_gsi.c
+>>  create mode 100644 drivers/net/ipa/ipa_gsi.h
+>>  create mode 100644 drivers/net/ipa/ipa_interrupt.c
+>>  create mode 100644 drivers/net/ipa/ipa_interrupt.h
+>>  create mode 100644 drivers/net/ipa/ipa_main.c
+>>  create mode 100644 drivers/net/ipa/ipa_mem.c
+>>  create mode 100644 drivers/net/ipa/ipa_mem.h
+>>  create mode 100644 drivers/net/ipa/ipa_netdev.c
+>>  create mode 100644 drivers/net/ipa/ipa_netdev.h
+>>  create mode 100644 drivers/net/ipa/ipa_qmi.c
+>>  create mode 100644 drivers/net/ipa/ipa_qmi.h
+>>  create mode 100644 drivers/net/ipa/ipa_qmi_msg.c
+>>  create mode 100644 drivers/net/ipa/ipa_qmi_msg.h
+>>  create mode 100644 drivers/net/ipa/ipa_reg.h
+>>  create mode 100644 drivers/net/ipa/ipa_smp2p.c
+>>  create mode 100644 drivers/net/ipa/ipa_smp2p.h
+>>  create mode 100644 drivers/net/ipa/ipa_uc.c
+>>  create mode 100644 drivers/net/ipa/ipa_uc.h
+>>
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov02a10.txt b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-> new file mode 100644
-> index 0000000..fdc2904
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-> @@ -0,0 +1,43 @@
-> +* Omnivision OV02A10 MIPI CSI-2 sensor
-> +
-> +Required Properties:
-> +- compatible: shall be "ovti,ov02a10"
-> +- clocks: reference to the xvclk input clock
-> +- clock-names: shall be "xvclk"
-> +- avdd-supply: Analog voltage supply, 2.8 volts
-> +- dovdd-supply: Digital I/O voltage supply, 1.8 volts
-> +- dvdd-supply: Digital core voltage supply, 1.8 volts
-> +- reset-gpios: Low active reset gpio
-> +
-> +The device node shall contain one 'port' child node with an
-> +'endpoint' subnode for its digital output video port,
-> +in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +The endpoint optional property 'data-lanes' shall be "<1>".
-
-If the sensor only supports a single lane configuration (one lane), you can
-omit that property altogether. Is that the only possible configuration for
-the sensor?
-
-Please also wrap the text at 80 characters, not 65 or so.
-
-> +
-> +Example:
-> +&i2c4 {
-> +	sensor_sub: sensor_sub {
-
-camera-sensor@3d {
-
-> +		compatible = "ovti,ov02a10";
-> +		reg = <0x3d>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&camera_pins_cam1_mclk_on>;
-> +
-> +		clocks = <&topckgen CLK_TOP_MUX_CAMTG2>,
-> +			<&topckgen CLK_TOP_UNIVP_192M_D8>;
-> +		clock-names = "xvclk", "freq_mux";
-> +
-> +		avdd-supply = <&mt6358_vcama1_reg>;
-> +		dvdd-supply = <&mt6358_vcn18_reg>;
-> +		dovdd-supply = <&mt6358_vcamio_reg>;
-> +		pwdn-gpios = <&pio 107 1>;
-> +		reset-gpios = <&pio 109 1>;
-> +
-> +		port@0 {
-> +		   ov02a10_core: endpoint {
-> +		       remote-endpoint = <&ov02a10_0>;
-> +			   data-lanes = <1>;
-> +		   };
-
-Tabs for indentation, please.
-
-> +		};
-> +	};
-> +};
-
--- 
-Kind regards,
-
-Sakari Ailus
