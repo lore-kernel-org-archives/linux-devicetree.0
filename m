@@ -1,89 +1,131 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
-Date: Fri, 31 May 2019 07:13:01 -0500
-Message-ID: <CAHCN7xLNCuqDyvOvtQef+CnRCMit2U2XTDP+=XKkjfmrnVv4kg@mail.gmail.com>
-References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com> <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: Re: [PATCH v3 10/12] arm64: dts: allwinner: h6: Add
+ IR receiver node
+Date: Fri, 31 May 2019 14:46:30 +0200
+Message-ID: <20190531124630.q2guo54kjfzr7rkn@core.my.home>
+References: <20190528161440.27172-1-peron.clem@gmail.com>
+ <20190528161440.27172-11-peron.clem@gmail.com>
+ <20190530145550.amalnxmx7kpokykv@core.my.home>
+ <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, dri-devel@lists.freedesktop.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBKGEYTTQKGQEGIQRCRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 28, 2019 at 10:53 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->
-> Hi,
->
-> On 28/05/2019 18:09, Adam Ford wrote:
-> > On Tue, May 28, 2019 at 4:11 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On 10/05/2019 22:42, Adam Ford wrote:
-> >>> Currently the source code is compiled using hard-coded values
-> >>> from CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.  This patch allows this
-> >>> clock divider value to be moved to the device tree and be changed
-> >>> without having to recompile the kernel.
-> >>>
-> >>> Signed-off-by: Adam Ford <aford173@gmail.com>
-> >>
-> >> I understand why you want to do this, but I'm not sure it's a good idea.
-> >> It's really something the driver should figure out, and if we add it to
-> >> the DT, it effectively becomes an ABI.
-> >>
-> >> That said... I'm not sure how good of a job the driver could ever do, as
-> >> it can't know the future scaling needs of the userspace at the time it
-> >> is configuring the clock. And so, I'm not nacking this patch, but I
-> >> don't feel very good about this patch...
-> >>
-> >> The setting also affects all outputs (exluding venc), which may not be
-> >> what the user wants. Then again, I think this setting is really only
-> >> needed on OMAP2 & 3, which have only a single output. But that's the
-> >> same with the current kconfig option, of course.
-> >>
-> >> So, the current CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK is an ugly hack, in my
-> >> opinion, and moving it to DT makes it a worse hack =). But I don't have
-> >> any good suggestions either.
+Hello Cl=C3=A9ment,
+
+On Fri, May 31, 2019 at 12:25:32AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Hi Ondrej,
+>=20
+> On Thu, 30 May 2019 at 16:55, Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrot=
+e:
 > >
-> > As it stands the Logic PD OMAP35 and AM37/DM37 boards (SOM-LV and
-> > Torpedo) require this to be hard coded to 4 or it hangs during start.
-> > This is the case for all versions 4.2+.  I haven't tested it with
-> > older stuff.  Tony has a DM3730 Torpedo kit and reported the hanging
-> > issue to me. I told him to set that value to 4 to make it not hang.
-> > He asked that I move it to the DT to avoid custom kernels.  I agree
-> > it's a hack, but if it's create a customized defconfig file for 4
-> > boards or modify the device tree, it seems like the device tree
-> > approach is less intrusive.
->
-> Ok, well, I think that's a separate thing from its intended use. The
-> point of the kconfig option is to ensure that the fclk/pclk ratio stays
-> under a certain number to allow enough scaling range. It should never
-> affect a basic non-scaling use case, unless you set it to a too high
-> value, which prevents finding any pclk.
->
-> Has anyone debugged why the hang is happening?
+> > Hello Cl=C3=A9ment,
+> >
+> > On Tue, May 28, 2019 at 06:14:38PM +0200, Cl=C3=A9ment P=C3=A9ron wrote=
+:
+> > > Allwinner H6 IR is similar to A31 and can use same driver.
+> > >
+> > > Add support for it.
+> > >
+> > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 ++++++++++++++++++=
++
+> > >  1 file changed, 19 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm6=
+4/boot/dts/allwinner/sun50i-h6.dtsi
+> > > index 16c5c3d0fd81..649cbdfe452e 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > @@ -647,6 +647,25 @@
+> > >                               pins =3D "PL0", "PL1";
+> > >                               function =3D "s_i2c";
+> > >                       };
+> > > +
+> > > +                     r_ir_rx_pin: r-ir-rx-pin {
+> > > +                             pins =3D "PL9";
+> > > +                             function =3D "s_cir_rx";
+> > > +                     };
+> > > +             };
+> > > +
+> > > +             r_ir: ir@7040000 {
+> > > +                             compatible =3D "allwinner,sun50i-h6-ir"=
+,
+> > > +                                          "allwinner,sun6i-a31-ir";
+> > > +                             reg =3D <0x07040000 0x400>;
+> > > +                             interrupts =3D <GIC_SPI 109 IRQ_TYPE_LE=
+VEL_HIGH>;
+> > > +                             clocks =3D <&r_ccu CLK_R_APB1_IR>,
+> > > +                                      <&r_ccu CLK_IR>;
+> > > +                             clock-names =3D "apb", "ir";
+> > > +                             resets =3D <&r_ccu RST_R_APB1_IR>;
+> > > +                             pinctrl-names =3D "default";
+> > > +                             pinctrl-0 =3D <&r_ir_rx_pin>;
+> > > +                             status =3D "disabled";
+> > >               };
+> >
+> > Please make a comment here, that this is known broken on some boards an=
+d may
+> > result IRQ flood if enabled. Otherwise noone will know.
+>=20
+> I'm planning to send a v4 next week with the IRQ_NONE return as Maxime
+> suggested it.
+> https://github.com/clementperon/linux/tree/h6_ir_v4
+>=20
+> But maybe we could also use the bit 5 of the IRQ status.
 
-I tried debugging this years ago, and I was told to use the
-CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.
->
-> If we can't fix the bug itself, rather than adding a DT option, we could
-> change add a min_fck_per_pck field (as you do), keep the kconfig option,
-> and set the min_fck_per_pck based on the kconfig option, _or_ in case of
-> those affected SoCs, set the min_fck_per_pck even without the kconfig
-> option.
+Thanks, that's nice, but that will not make the HW work. That will just dis=
+able
+it. The comment is still necessary.
 
-I am just curious if anyone else sees this.  If nobody is using this
-hack, I wonder how much of the impact it will be.  I'm trying trying
-to get my board to boot without hanging without creating a custom
-defconfig.
+thank you,
+	o.
 
-adam
->
->   Tomi
->
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> Regards, Clement
+>=20
+> >
+> > thanks,
+> >         o.
+> >
+> > >               r_i2c: i2c@7081400 {
+> > > --
+> > > 2.20.1
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>=20
+> --=20
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> To view this discussion on the web, visit https://groups.google.com/d/msg=
+id/linux-sunxi/CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw%40mail.g=
+mail.com.
+> For more options, visit https://groups.google.com/d/optout.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190531124630.q2guo54kjfzr7rkn%40core.my.home.
+For more options, visit https://groups.google.com/d/optout.
