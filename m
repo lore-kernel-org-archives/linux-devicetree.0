@@ -1,38 +1,97 @@
 From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH V4 net-next 0/6] Peer to Peer One-Step time stamping
-Date: Thu, 30 May 2019 22:51:32 -0700
-Message-ID: <20190531055132.7qrjuqgtw6qw4mgh@localhost>
-References: <cover.1559109076.git.richardcochran@gmail.com>
- <20190530.115507.1344606945620280103.davem@davemloft.net>
- <20190530.125833.1049383711116106790.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH V5 net-next 0/6] Peer to Peer One-Step time stamping
+Date: Thu, 30 May 2019 22:56:20 -0700
+Message-ID: <cover.1559281985.git.richardcochran@gmail.com>
 Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190530.125833.1049383711116106790.davem@davemloft.net>
 Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, jacob.e.keller@intel.com, mark.rutland@arm.com, mlichvar@redhat.com, robh+dt@kernel.org, willemb@google.com
+To: netdev@vger.kernel.org
+Cc: David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 30, 2019 at 12:58:33PM -0700, David Miller wrote:
-> I had to revert, this doesn't build.
+This series adds support for PTP (IEEE 1588) P2P one-step time
+stamping along with a driver for a hardware device that supports this.
 
-Sorry I missed macvlan, and thanks for the 'uninitialized' warning.
-It was a real latent bug.  I wonder why my linaro 7.4 gcc didn't flag
-that...
+If the hardware supports p2p one-step, it subtracts the ingress time
+stamp value from the Pdelay_Request correction field.  The user space
+software stack then simply copies the correction field into the
+Pdelay_Response, and on transmission the hardware adds the egress time
+stamp into the correction field.
 
-Anyhow, I rebased v5 of my series to latest net-next, and I'm getting
-a lot of these:
+This new functionality extends CONFIG_NETWORK_PHY_TIMESTAMPING to
+cover MII snooping devices, but it still depends on phylib, just as
+that option does.  Expanding beyond phylib is not within the scope of
+the this series.
 
-In file included from net/ipv6/af_inet6.c:45:0:
-./include/linux/netfilter_ipv6.h: In function ‘nf_ipv6_br_defrag’:
-./include/linux/netfilter_ipv6.h:110:9: error: implicit declaration of function ‘nf_ct_frag6_gather’; did you mean ‘nf_ct_attach’? [-Werror=implicit-function-declaration]
-  return nf_ct_frag6_gather(net, skb, user);
-         ^~~~~~~~~~~~~~~~~~
-         nf_ct_attach
+User space support is available in the current linuxptp master branch.
 
+- Patch 1 adds the new option.
+- Patches 2-5 add support for MII time stamping in non-PHY devices.
+- Patch 6 adds a driver implementing the new option.
 
 Thanks,
 Richard
+
+Changed in v5:
+~~~~~~~~~~~~~~
+
+- Fixed build failure in macvlan.
+- Fixed latent bug with its gcc warning in the driver.
+
+Changed in v4:
+~~~~~~~~~~~~~~
+
+- Correct error paths and PTR_ERR return values in the framework.
+- Expanded KernelDoc comments WRT PHY locking.
+- Pick up Andrew's review tag.
+
+Changed in v3:
+~~~~~~~~~~~~~~
+
+- Simplify the device tree binding and document the time stamping
+  phandle by itself.
+
+Changed in v2:
+~~~~~~~~~~~~~~
+
+- Per the v1 review, changed the modeling of MII time stamping
+  devices.  They are no longer a kind of mdio device.
+
+
+Richard Cochran (6):
+  net: Introduce peer to peer one step PTP time stamping.
+  net: Introduce a new MII time stamping interface.
+  net: Add a layer for non-PHY MII time stamping drivers.
+  dt-bindings: ptp: Introduce MII time stamping devices.
+  net: mdio: of: Register discovered MII time stampers.
+  ptp: Add a driver for InES time stamping IP core.
+
+ Documentation/devicetree/bindings/ptp/ptp-ines.txt |  35 +
+ .../devicetree/bindings/ptp/timestamper.txt        |  41 +
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c   |   1 +
+ drivers/net/macvlan.c                              |   4 +-
+ drivers/net/phy/Makefile                           |   2 +
+ drivers/net/phy/dp83640.c                          |  47 +-
+ drivers/net/phy/mii_timestamper.c                  | 121 +++
+ drivers/net/phy/phy.c                              |   4 +-
+ drivers/net/phy/phy_device.c                       |   5 +
+ drivers/of/of_mdio.c                               |  30 +-
+ drivers/ptp/Kconfig                                |  10 +
+ drivers/ptp/Makefile                               |   1 +
+ drivers/ptp/ptp_ines.c                             | 859 +++++++++++++++++++++
+ include/linux/mii_timestamper.h                    | 120 +++
+ include/linux/phy.h                                |  25 +-
+ include/uapi/linux/net_tstamp.h                    |   8 +
+ net/8021q/vlan_dev.c                               |   4 +-
+ net/Kconfig                                        |   7 +-
+ net/core/dev_ioctl.c                               |   1 +
+ net/core/ethtool.c                                 |   4 +-
+ net/core/timestamping.c                            |  20 +-
+ 21 files changed, 1289 insertions(+), 60 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ptp/ptp-ines.txt
+ create mode 100644 Documentation/devicetree/bindings/ptp/timestamper.txt
+ create mode 100644 drivers/net/phy/mii_timestamper.c
+ create mode 100644 drivers/ptp/ptp_ines.c
+ create mode 100644 include/linux/mii_timestamper.h
+
+-- 
+2.11.0
