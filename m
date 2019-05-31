@@ -1,216 +1,124 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
-Date: Fri, 31 May 2019 01:39:45 +0000
-Message-ID: <AM0PR04MB4481C97696C68ECF5E6D4A7988190@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190523060437.11059-1-peng.fan@nxp.com>
-        <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
-        <AM0PR04MB4481C44F9B5EFCDD076EF728881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20190530122329.235d13c7@donnerap.cambridge.arm.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH] drm/mediatek: add dsi module reset driver
+Date: Fri, 31 May 2019 09:50:52 +0800
+Message-ID: <1559267452.9102.0.camel@mtksdaap41>
+References: <20190519111513.73919-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190530122329.235d13c7@donnerap.cambridge.arm.com>
-Content-Language: en-US
+In-Reply-To: <20190519111513.73919-1-jitao.shi@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-media
 List-Id: devicetree@vger.kernel.org
 
+Hi, Jitao:
 
->=20
-> > > Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered
-> > > mailbox
-> > >
-> > > Hi,
-> > >
-> > > On 5/22/19 10:50 PM, Peng Fan wrote:
-> > > > This is a modified version from Andre Przywara's patch series
-> > > >
-> > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fl=
-o
-> > > re.ke
-> rnel.org%2Fpatchwork%2Fcover%2F812997%2F&amp;data=3D02%7C01%7Cpe
-> > >
-> ng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1d3b
-> > >
-> c2b4c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdat
-> > >
-> a=3DBbS5ZQtzMANSwaKRDJ62NKrPrAyaED1%2BvymQaT6Qr8E%3D&amp;rese
-> > > rved=3D0.
-> > > > [1] is a draft implementation of i.MX8MM SCMI ATF implementation
-> > > > that use smc as mailbox, power/clk is included, but only part of
-> > > > clk has been implemented to work with hardware, power domain only
-> > > > supports get name for now.
-> > > >
-> > > > The traditional Linux mailbox mechanism uses some kind of
-> > > > dedicated hardware IP to signal a condition to some other
-> > > > processing unit, typically a dedicated management processor.
-> > > > This mailbox feature is used for instance by the SCMI protocol to
-> > > > signal a request for some action to be taken by the management
-> processor.
-> > > > However some SoCs does not have a dedicated management core to
-> > > provide
-> > > > those services. In order to service TEE and to avoid linux
-> > > > shutdown power and clock that used by TEE, need let firmware to
-> > > > handle power and clock, the firmware here is ARM Trusted Firmware
-> > > > that could also run SCMI service.
-> > > >
-> > > > The existing SCMI implementation uses a rather flexible shared
-> > > > memory region to communicate commands and their parameters, it
-> > > > still requires a mailbox to actually trigger the action.
-> > >
-> > > We have had something similar done internally with a couple of minor
-> > > differences:
-> > >
-> > > - a SGI is used to send SCMI notifications/delayed replies to
-> > > support asynchronism (patches are in the works to actually add that
-> > > to the Linux SCMI framework). There is no good support for SGI in
-> > > the kernel right now so we hacked up something from the existing SMP
-> > > code and adding the ability to register our own IPI handlers
-> > > (SHAME!). Using a PPI should work and should allow for using request_=
-irq()
-> AFAICT.
-> >
-> > So you are also implementing a firmware inside ATF for SCMI usecase, ri=
-ght?
-> >
-> > Introducing SGI in ATF to notify Linux will introduce complexity,
-> > there is no good framework inside ATF for SCMI, and I use
-> > synchronization call for simplicity for now.
->=20
-> I think we don't disagree, but just to clarify on one thing:
->=20
-> I think we should avoid tying this driver to specific protocol or softwar=
-e on the
-> other end, be it ATF or SCMI. After all it's just a mailbox driver, meant=
- to signal
-> some event (and parameters) to some external entity. Yes, SCMI (or SCPI b=
-ack
-> then) was the reason to push for this, but it should be independent from =
-that.
+On Sun, 2019-05-19 at 19:15 +0800, Jitao Shi wrote:
+> Reset dsi HW to default when power on. Prevent the setting differet
+> between bootloader and kernel.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 35 ++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index b00eb2d2e086..39ccb34a7c7f 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -21,10 +21,12 @@
+>  #include <linux/component.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/irq.h>
+> +#include <linux/mfd/syscon.h>
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+>  #include <video/mipi_display.h>
+>  #include <video/videomode.h>
+>  
+> @@ -146,6 +148,8 @@
+>  #define T_HS_EXIT	7
+>  #define T_HS_ZERO	10
+>  
+> +#define MMSYS_SW_RST_DSI_B BIT(25)
+> +
+>  #define NS_TO_CYCLE(n, c)    ((n) / (c) + (((n) % (c)) ? 1 : 0))
+>  
+>  #define MTK_DSI_HOST_IS_READ(type) \
+> @@ -165,6 +169,8 @@ struct mtk_dsi {
+>  	struct drm_panel *panel;
+>  	struct drm_bridge *bridge;
+>  	struct phy *phy;
+> +	struct regmap *mmsys_sw_rst_b;
+> +	u32 sw_rst_b;
+>  
+>  	void __iomem *regs;
+>  
+> @@ -238,6 +244,16 @@ static void mtk_dsi_disable(struct mtk_dsi *dsi)
+>  	mtk_dsi_mask(dsi, DSI_CON_CTRL, DSI_EN, 0);
+>  }
+>  
+> +static void mtk_dsi_reset_all(struct mtk_dsi *dsi)
+> +{
+> +	regmap_update_bits(dsi->mmsys_sw_rst_b, dsi->sw_rst_b,
+> +			   MMSYS_SW_RST_DSI_B, ~MMSYS_SW_RST_DSI_B);
+> +	usleep_range(1000, 1100);
+> +
+> +	regmap_update_bits(dsi->mmsys_sw_rst_b, dsi->sw_rst_b,
+> +			   MMSYS_SW_RST_DSI_B, MMSYS_SW_RST_DSI_B);
+> +}
+> +
+>  static void mtk_dsi_reset_engine(struct mtk_dsi *dsi)
+>  {
+>  	mtk_dsi_mask(dsi, DSI_CON_CTRL, DSI_RESET, DSI_RESET);
+> @@ -831,6 +847,8 @@ static int mtk_dsi_create_conn_enc(struct drm_device *drm, struct mtk_dsi *dsi)
+>  			goto err_encoder_cleanup;
+>  	}
+>  
+> +	mtk_dsi_reset_all(dsi);
+> +
+>  	return 0;
+>  
+>  err_encoder_cleanup:
+> @@ -1087,6 +1105,7 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>  	struct mtk_dsi *dsi;
+>  	struct device *dev = &pdev->dev;
+>  	struct resource *regs;
+> +	struct regmap *regmap;
+>  	int irq_num;
+>  	int comp_id;
+>  	int ret;
+> @@ -1139,6 +1158,22 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	regmap = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +						 "mediatek,syscon-dsi");
 
-Thanks, I agree.
+Where is the binding document for "mediatek,syscon-dsi"?
 
-> I am not even sure we should mention it too much in the documentation.
+Regards,
+CK
 
-I think we need a usecase here, so it should be fine.
-
->=20
-> So whether the receiving end is ATF or something else it irrelevant, I th=
-ink. For
-> instance we have had discussions in Xen to provide guests some virtualise=
-d
-> device management support, and using an HVC mailbox seems like a neat
-> solution. This could be using the SCMI (or SCPI) protocol, but that's not=
- a
-> requirement. In this case the Xen hypervisor would be the one to pick up =
-the
-> mailbox trigger, probably forwarding the request to something else (Dom0 =
-in
-> this case).
-
-I do not get the point "forwarding the request", DomU HVC will trap to Xen,
-so how to forward to Dom0?
-
-Thanks,
-Peng.
-
-> Also having a generic SMC mailbox could avoid having the actual hardware
-> mailbox drivers in the kernel, so EL3 firmware could forward the request =
-to an
-> external management processor, and Linux would just work, without the nee=
-d
-> to describe the actual hardware mailbox device in some firmware tables. T=
-his
-> might help ACPI on those devices.
->=20
-> Cheers,
-> Andre.
->=20
-> > >
-> > > - the mailbox identifier is indicated as part of the SMC call such
-> > > that we can have multiple SCMI mailboxes serving both standard
-> > > protocols and non-standard (in the 0x80 and above) range, also they
-> > > may have different throughput (in hindsight, these could simply be
-> > > different channels)
-> > >
-> > > Your patch series looks both good and useful to me, I would just put
-> > > a provision in the binding to support an optional interrupt such
-> > > that asynchronism gets reasonably easy to plug in when it is
-> > > available (and desirable).
-> >
-> > Ok. Let me think about and add that in new version patch.
-> >
-> > Thanks,
-> > Peng.
-> >
-> > >
-> > > >
-> > > > This patch series provides a Linux mailbox compatible service
-> > > > which uses smc calls to invoke firmware code, for instance taking
-> > > > care of SCMI
-> > > requests.
-> > > > The actual requests are still communicated using the standard SCMI
-> > > > way of shared memory regions, but a dedicated mailbox hardware IP
-> > > > can be replaced via this new driver.
-> > > >
-> > > > This simple driver uses the architected SMC calling convention to
-> > > > trigger firmware services, also allows for using "HVC" calls to
-> > > > call into hypervisors or firmware layers running in the EL2 excepti=
-on
-> level.
-> > > >
-> > > > Patch 1 contains the device tree binding documentation, patch 2
-> > > > introduces the actual mailbox driver.
-> > > >
-> > > > Please note that this driver just provides a generic mailbox
-> > > > mechanism, though this is synchronous and one-way only (triggered
-> > > > by the OS only, without providing an asynchronous way of
-> > > > triggering request from the firmware).
-> > > > And while providing SCMI services was the reason for this
-> > > > exercise, this driver is in no way bound to this use case, but can
-> > > > be used generically where the OS wants to signal a mailbox
-> > > > condition to firmware or a hypervisor.
-> > > > Also the driver is in no way meant to replace any existing
-> > > > firmware interface, but actually to complement existing interfaces.
-> > > >
-> > > > [1]
-> > > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
-F
-> > > > gith
-> > > >
-> > >
-> ub.com%2FMrVan%2Farm-trusted-firmware%2Ftree%2Fscmi&amp;data=3D02
-> > > %7C01%7
-> > > >
-> > >
-> Cpeng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1
-> > > d3bc2b4
-> > > >
-> > >
-> c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdata=3DkN
-> > > 9bEFFcsZA
-> > > > 1ePeNLLfHmONpVaG6O5ajVQvKMuaBXyk%3D&amp;reserved=3D0
-> > > >
-> > > > Peng Fan (2):
-> > > >   DT: mailbox: add binding doc for the ARM SMC mailbox
-> > > >   mailbox: introduce ARM SMC based mailbox
-> > > >
-> > > >  .../devicetree/bindings/mailbox/arm-smc.txt        |  96
-> > > +++++++++++++
-> > > >  drivers/mailbox/Kconfig                            |   7 +
-> > > >  drivers/mailbox/Makefile                           |   2 +
-> > > >  drivers/mailbox/arm-smc-mailbox.c                  | 154
-> > > +++++++++++++++++++++
-> > > >  include/linux/mailbox/arm-smc-mailbox.h            |  10 ++
-> > > >  5 files changed, 269 insertions(+)  create mode 100644
-> > > > Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create
-> mode
-> > > > 100644 include/linux/mailbox/arm-smc-mailbox.h
-> > > >
-> > >
-> > >
-> > > --
-> > > Florian
+> +	ret = of_property_read_u32_index(dev->of_node, "mediatek,syscon-dsi", 1,
+> +					 &dsi->sw_rst_b);
+> +
+> +	if (IS_ERR(regmap))
+> +		ret = PTR_ERR(regmap);
+> +
+> +	if (ret) {
+> +		ret = PTR_ERR(regmap);
+> +		dev_err(dev, "Failed to get mmsys registers: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	dsi->mmsys_sw_rst_b = regmap;
+> +
+>  	comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DSI);
+>  	if (comp_id < 0) {
+>  		dev_err(dev, "Failed to identify by alias: %d\n", comp_id);
