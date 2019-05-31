@@ -1,140 +1,88 @@
 From: Alex Elder <elder@linaro.org>
-Subject: [PATCH v2 09/17] soc: qcom: ipa: IPA interface to GSI
-Date: Thu, 30 May 2019 22:53:40 -0500
-Message-ID: <20190531035348.7194-10-elder@linaro.org>
+Subject: [PATCH v2 14/17] soc: qcom: ipa: support build of IPA code
+Date: Thu, 30 May 2019 22:53:45 -0500
+Message-ID: <20190531035348.7194-15-elder@linaro.org>
 References: <20190531035348.7194-1-elder@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190531035348.7194-1-elder@linaro.org>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org
 Cc: evgreen@chromium.org, benchan@google.com, ejcaruso@google.com, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch provides interface functions supplied by the IPA layer
-that are called from the GSI layer.  One function is called when a
-GSI transaction has completed.  The others allow the GSI layer to
-inform the IPA layer when the hardware has been told it has new TREs
-to execute, and when the hardware has indicated transactions have
-completed.
+Add build and Kconfig support for the Qualcomm IPA driver.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_gsi.c | 48 ++++++++++++++++++++++++++++++++++++++
- drivers/net/ipa/ipa_gsi.h | 49 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 97 insertions(+)
- create mode 100644 drivers/net/ipa/ipa_gsi.c
- create mode 100644 drivers/net/ipa/ipa_gsi.h
+ drivers/net/Kconfig      |  2 ++
+ drivers/net/Makefile     |  1 +
+ drivers/net/ipa/Kconfig  | 16 ++++++++++++++++
+ drivers/net/ipa/Makefile |  7 +++++++
+ 4 files changed, 26 insertions(+)
+ create mode 100644 drivers/net/ipa/Kconfig
+ create mode 100644 drivers/net/ipa/Makefile
 
-diff --git a/drivers/net/ipa/ipa_gsi.c b/drivers/net/ipa/ipa_gsi.c
+diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+index 48e209e55843..d87fe174eb9f 100644
+--- a/drivers/net/Kconfig
++++ b/drivers/net/Kconfig
+@@ -388,6 +388,8 @@ source "drivers/net/fddi/Kconfig"
+ 
+ source "drivers/net/hippi/Kconfig"
+ 
++source "drivers/net/ipa/Kconfig"
++
+ config NET_SB1000
+ 	tristate "General Instruments Surfboard 1000"
+ 	depends on PNP
+diff --git a/drivers/net/Makefile b/drivers/net/Makefile
+index 0d3ba056cda3..ff8918fe09b0 100644
+--- a/drivers/net/Makefile
++++ b/drivers/net/Makefile
+@@ -45,6 +45,7 @@ obj-$(CONFIG_ETHERNET) += ethernet/
+ obj-$(CONFIG_FDDI) += fddi/
+ obj-$(CONFIG_HIPPI) += hippi/
+ obj-$(CONFIG_HAMRADIO) += hamradio/
++obj-$(CONFIG_IPA) += ipa/
+ obj-$(CONFIG_PLIP) += plip/
+ obj-$(CONFIG_PPP) += ppp/
+ obj-$(CONFIG_PPP_ASYNC) += ppp/
+diff --git a/drivers/net/ipa/Kconfig b/drivers/net/ipa/Kconfig
 new file mode 100644
-index 000000000000..7f8d74688c1e
+index 000000000000..b1e3f7405992
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_gsi.c
-@@ -0,0 +1,48 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/drivers/net/ipa/Kconfig
+@@ -0,0 +1,16 @@
++config IPA
++	tristate "Qualcomm IPA support"
++	depends on NET
++	select QCOM_QMI_HELPERS
++	select QCOM_MDT_LOADER
++	default n
++	help
++	  Choose Y here to include support for the Qualcomm IP Accelerator
++	  (IPA), a hardware block present in some Qualcomm SoCs.  The IPA
++	  is a programmable protocol processor that is capable of generic
++	  hardware handling of IP packets, including routing, filtering,
++	  and NAT.  Currently the IPA driver supports only basic transport
++	  of network traffic between the AP and modem, on the Qualcomm
++	  SDM845 SoC.
 +
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019 Linaro Ltd.
-+ */
-+
-+#include <linux/types.h>
-+
-+#include "gsi_trans.h"
-+#include "ipa.h"
-+#include "ipa_endpoint.h"
-+
-+void ipa_gsi_trans_complete(struct gsi_trans *trans)
-+{
-+	struct ipa *ipa = container_of(trans->gsi, struct ipa, gsi);
-+	struct ipa_endpoint *endpoint;
-+
-+	endpoint = ipa->endpoint_map[trans->channel_id];
-+	if (endpoint == ipa->command_endpoint)
-+		return;		/* Nothing to do for commands */
-+
-+	if (endpoint->toward_ipa)
-+		ipa_endpoint_skb_tx_complete(trans);
-+	else
-+		ipa_endpoint_rx_complete(trans);
-+}
-+
-+void ipa_gsi_channel_tx_queued(struct gsi *gsi, u32 channel_id, u32 count,
-+			       u32 byte_count)
-+{
-+	struct ipa *ipa = container_of(gsi, struct ipa, gsi);
-+	struct ipa_endpoint *endpoint;
-+
-+	endpoint = ipa->endpoint_map[channel_id];
-+	if (endpoint->netdev)
-+		netdev_sent_queue(endpoint->netdev, byte_count);
-+}
-+
-+void ipa_gsi_channel_tx_completed(struct gsi *gsi, u32 channel_id, u32 count,
-+				  u32 byte_count)
-+{
-+	struct ipa *ipa = container_of(gsi, struct ipa, gsi);
-+	struct ipa_endpoint *endpoint;
-+
-+	endpoint = ipa->endpoint_map[channel_id];
-+	if (endpoint->netdev)
-+		netdev_completed_queue(endpoint->netdev, count, byte_count);
-+}
-diff --git a/drivers/net/ipa/ipa_gsi.h b/drivers/net/ipa/ipa_gsi.h
++	  If unsure, say N.
+diff --git a/drivers/net/ipa/Makefile b/drivers/net/ipa/Makefile
 new file mode 100644
-index 000000000000..72adb520da40
+index 000000000000..a43039c09a25
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_gsi.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/drivers/net/ipa/Makefile
+@@ -0,0 +1,7 @@
++obj-$(CONFIG_IPA)	+=	ipa.o
 +
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019 Linaro Ltd.
-+ */
-+#ifndef _IPA_GSI_TRANS_H_
-+#define _IPA_GSI_TRANS_H_
-+
-+#include <linux/types.h>
-+
-+struct gsi_trans;
-+
-+/**
-+ * ipa_gsi_trans_complete() - GSI transaction completion callback
-+ * @gsi:	GSI pointer
-+ * @trans:	Transaction that has completed
-+ *
-+ * This called from the GSI layer to notify the IPA layer that a
-+ * transaction has completed.
-+ */
-+void ipa_gsi_trans_complete(struct gsi_trans *trans);
-+
-+/**
-+ * ipa_gsi_channel_tx_queued() - GSI queued to hardware notification
-+ * @gsi:	GSI pointer
-+ * @channel_id:	Channel number
-+ * @count:	Number of transactions queued
-+ * @byte_count:	Number of bytes to transfer represented by transactions
-+ *
-+ * This called from the GSI layer to notify the IPA layer that some
-+ * number of transactions have been queued to hardware for execution.
-+ */
-+void ipa_gsi_channel_tx_queued(struct gsi *gsi, u32 channel_id, u32 count,
-+			       u32 byte_count);
-+/**
-+ * ipa_gsi_trans_complete() - GSI transaction completion callback
-+ipa_gsi_channel_tx_completed()
-+ * @gsi:	GSI pointer
-+ * @channel_id:	Channel number
-+ * @count:	Number of transactions completed since last report
-+ * @byte_count:	Number of bytes transferred represented by transactions
-+ *
-+ * This called from the GSI layer to notify the IPA layer that the hardware
-+ * has reported the completion of some number of transactions.
-+ */
-+void ipa_gsi_channel_tx_completed(struct gsi *gsi, u32 channel_id, u32 count,
-+				  u32 byte_count);
-+
-+#endif /* _IPA_GSI_TRANS_H_ */
++ipa-y			:=	ipa_main.o ipa_clock.o ipa_mem.o \
++				ipa_interrupt.o gsi.o gsi_trans.o \
++				ipa_gsi.o ipa_smp2p.o ipa_uc.o \
++				ipa_endpoint.o ipa_cmd.o ipa_netdev.o \
++				ipa_qmi.o ipa_qmi_msg.o ipa_data-sdm845.o
 -- 
 2.20.1
