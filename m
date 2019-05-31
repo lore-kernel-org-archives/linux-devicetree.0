@@ -1,93 +1,72 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
-Date: Fri, 31 May 2019 14:04:50 +0200
-Message-ID: <CAAObsKBt1tPw9RKGi_Xey=1zy9Tu3N+A=1te2R8=NuJ5tDBqVg@mail.gmail.com>
-References: <20190521161102.29620-1-peron.clem@gmail.com> <CAAObsKD8bij1ANLqX6y11Y6mDEXiymNjrDkmHmvGWiFLKWu_FA@mail.gmail.com>
- <4ff02295-6c34-791b-49f4-6558a92ad7a3@arm.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 2/3] arm64: dts: freescale: Add i.MX8MN dtsi support
+Date: Fri, 31 May 2019 12:13:02 +0000
+Message-ID: <DB3PR0402MB3916139B49D9EF7E44E33911F5190@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190530094706.865-1-Anson.Huang@nxp.com>
+ <20190530094706.865-2-Anson.Huang@nxp.com>
+ <CAOMZO5D1B1tKs8eu_a8hXs193+TukHAYHiCEyk5g63p1S-cnbg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4ff02295-6c34-791b-49f4-6558a92ad7a3@arm.com>
+In-Reply-To: <CAOMZO5D1B1tKs8eu_a8hXs193+TukHAYHiCEyk5g63p1S-cnbg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Steven Price <steven.price@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bruno Thomsen <bruno.thomsen@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Leo Li <leoyang.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Pankaj Bansal <pankaj.bansal@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 May 2019 at 19:38, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 29/05/2019 16:09, Tomeu Vizoso wrote:
-> > On Tue, 21 May 2019 at 18:11, Clément Péron <peron.clem@gmail.com> wrote:
-> >>
-> > [snip]
-> >> [  345.204813] panfrost 1800000.gpu: mmu irq status=1
-> >> [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-> >> 0x0000000002400400
-> >
-> >  From what I can see here, 0x0000000002400400 points to the first byte
-> > of the first submitted job descriptor.
-> >
-> > So mapping buffers for the GPU doesn't seem to be working at all on
-> > 64-bit T-760.
-> >
-> > Steven, Robin, do you have any idea of why this could be?
->
-> I tried rolling back to the old panfrost/nondrm shim, and it works fine
-> with kbase, and I also found that T-820 falls over in the exact same
-> manner, so the fact that it seemed to be common to the smaller 33-bit
-> designs rather than anything to do with the other
-> job_descriptor_size/v4/v5 complication turned out to be telling.
-
-Is this complication something you can explain? I don't know what v4
-and v5 are meant here.
-
-> [ as an aside, are 64-bit jobs actually known not to work on v4 GPUs, or
-> is it just that nobody's yet observed a 64-bit blob driving one? ]
-
-I'm looking right now at getting Panfrost working on T720 with 64-bit
-descriptors, with the ultimate goal of making Panfrost
-64-bit-descriptor only so we can have a single build of Mesa in
-distros.
-
-> Long story short, it appears that 'Mali LPAE' is also lacking the start
-> level notion of VMSA, and expects a full 4-level table even for <40 bits
-> when level 0 effectively redundant. Thus walking the 3-level table that
-> io-pgtable comes back with ends up going wildly wrong. The hack below
-> seems to do the job for me; if Clément can confirm (on T-720 you'll
-> still need the userspace hack to force 32-bit jobs as well) then I think
-> I'll cook up a proper refactoring of the allocator to put things right.
-
-Mmaps seem to work with this patch, thanks.
-
-The main complication I'm facing right now seems to be that the SFBD
-descriptor on T720 seems to be different from the one we already had
-(tested on T6xx?).
-
-Cheers,
-
-Tomeu
-
-> Robin.
->
->
-> ----->8-----
-> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-> index 546968d8a349..f29da6e8dc08 100644
-> --- a/drivers/iommu/io-pgtable-arm.c
-> +++ b/drivers/iommu/io-pgtable-arm.c
-> @@ -1023,12 +1023,14 @@ arm_mali_lpae_alloc_pgtable(struct
-> io_pgtable_cfg *cfg, void *cookie)
->         iop = arm_64_lpae_alloc_pgtable_s1(cfg, cookie);
->         if (iop) {
->                 u64 mair, ttbr;
-> +               struct arm_lpae_io_pgtable *data = io_pgtable_ops_to_data(&iop->ops);
->
-> +               data->levels = 4;
->                 /* Copy values as union fields overlap */
->                 mair = cfg->arm_lpae_s1_cfg.mair[0];
->                 ttbr = cfg->arm_lpae_s1_cfg.ttbr[0];
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+SGksIEZhYmlvDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8g
+RXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPg0KPiBTZW50OiBGcmlkYXksIE1heSAzMSwgMjAx
+OSA3OjQwIFBNDQo+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6
+IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsu
+cnV0bGFuZEBhcm0uY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hh
+DQo+IEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPjsgU2FzY2hhIEhhdWVyIDxrZXJuZWxA
+cGVuZ3V0cm9uaXguZGU+Ow0KPiBBbmRyZXkgU21pcm5vdiA8YW5kcmV3LnNtaXJub3ZAZ21haWwu
+Y29tPjsgTWFuaXZhbm5hbiBTYWRoYXNpdmFtDQo+IDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGlu
+YXJvLm9yZz47IEJydW5vIFRob21zZW4NCj4gPGJydW5vLnRob21zZW5AZ21haWwuY29tPjsgQWlz
+aGVuZyBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47DQo+IEphY2t5IEJhaSA8cGluZy5iYWlA
+bnhwLmNvbT47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgTHVjYXMgU3RhY2gNCj4gPGwu
+c3RhY2hAcGVuZ3V0cm9uaXguZGU+OyBQYW5rYWogQmFuc2FsIDxwYW5rYWouYmFuc2FsQG54cC5j
+b20+Ow0KPiBCaGFza2FyIFVwYWRoYXlhIDxiaGFza2FyLnVwYWRoYXlhQG54cC5jb20+OyBQcmFt
+b2QgS3VtYXINCj4gPHByYW1vZC5rdW1hcl8xQG54cC5jb20+OyBWYWJoYXYgU2hhcm1hIDx2YWJo
+YXYuc2hhcm1hQG54cC5jb20+Ow0KPiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBu
+eHAuY29tPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUNCj4gQU5EIEZMQVRURU5FRCBERVZJQ0Ug
+VFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBsaW51eC1rZXJu
+ZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJF
+RVNDQUxFDQo+IElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmc+OyBkbC0NCj4gbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4N
+Cj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzNdIGFybTY0OiBkdHM6IGZyZWVzY2FsZTogQWRkIGku
+TVg4TU4gZHRzaSBzdXBwb3J0DQo+IA0KPiBPbiBUaHUsIE1heSAzMCwgMjAxOSBhdCA2OjQ1IEFN
+IDxBbnNvbi5IdWFuZ0BueHAuY29tPiB3cm90ZToNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgZ3BpbzE6IGdwaW9AMzAyMDAwMDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsaW14OG1uLWdwaW8iLCAiZnNsLGlteDM1LWdwaW8i
+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MzAyMDAwMDAg
+MHgxMDAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRz
+ID0gPEdJQ19TUEkgNjQgSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEdJQ19TUEkgNjUNCj4gPiArIElSUV9UWVBF
+X0xFVkVMX0hJR0g+Ow0KPiANCj4gTm8gR1BJTyBjbG9ja3MgZW50cmllcz8NCg0KSnVzdCBub3Rp
+Y2VkIHRoaXMsIHRoZSBpbnRlcm5hbCBicmluZy11cCBicmFuY2gncyBjbG9jayBkcml2ZXIgZG9l
+cyBOT1QgaGF2ZSBpdCwNCkkgd2lsbCBhZGQgdGhlbSBpbiBWMiwgdGhhbmtzIGZvciBwb2ludGlu
+ZyBvdXQgdGhpcy4gDQoNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgdXNicGh5bm9w
+MTogdXNicGh5bm9wMSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21w
+YXRpYmxlID0gInVzYi1ub3AteGNlaXYiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgY2xvY2tzID0gPCZjbGsgSU1YOE1OX0NMS19VU0JfUEhZX1JFRj47DQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBhc3NpZ25lZC1jbG9ja3MgPSA8JmNsayBJTVg4TU5f
+Q0xLX1VTQl9QSFlfUkVGPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFz
+c2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8JmNsaw0KPiBJTVg4TU5fU1lTX1BMTDFfMTAwTT47DQo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJtYWluX2Ns
+ayI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gDQo+ICB1c2JwaHlub3AxIGRv
+ZXMgbm90IGhhdmUgYW55IHJlZ2lzdGVycyBhc3NvY2lhdGVkLCBzbyBpdCBzaG91bGQgYmUgcGxh
+Y2VkDQo+IG91dHNpZGUgdGhlIHNvYy4NCj4gDQo+IEJ1aWxkaW5nIHdpdGggVz0xIHNob3VsZCB3
+YXJuIHlvdSBhYm91dCB0aGF0Lg0KPiANCg0KT0ssIEkgd2lsbCBtb3ZlIHRoZW0gdG8gb3V0c2lk
+ZSBvZiBzb2MuDQoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB1c2JwaHlub3AyOiB1c2Jw
+aHlub3AyIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
+PSAidXNiLW5vcC14Y2VpdiI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBj
+bG9ja3MgPSA8JmNsayBJTVg4TU5fQ0xLX1VTQl9QSFlfUkVGPjsNCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGFzc2lnbmVkLWNsb2NrcyA9IDwmY2xrIElNWDhNTl9DTEtfVVNC
+X1BIWV9SRUY+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXNzaWduZWQt
+Y2xvY2stcGFyZW50cyA9IDwmY2xrDQo+IElNWDhNTl9TWVNfUExMMV8xMDBNPjsNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gIm1haW5fY2xrIjsNCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsNCj4gDQo+IERpdHRvDQoNCk9LLCBJ
+IHdpbGwgbW92ZSB0aGVtIHRvIG91dHNpZGUgb2Ygc29jLg0KDQpUaGFua3MsDQpBbnNvbi4NCg0K
