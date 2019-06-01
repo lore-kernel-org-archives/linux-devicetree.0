@@ -1,110 +1,129 @@
-From: Peter Robinson <pbrobinson@gmail.com>
-Subject: [PATCH 2/3] ARM: dts: imx6sx-udoo-neo: enable i2c-2 and i2c-4 for
- onboard sensors
-Date: Sat,  1 Jun 2019 08:07:17 +0100
-Message-ID: <20190601070718.26971-3-pbrobinson@gmail.com>
-References: <20190601070718.26971-1-pbrobinson@gmail.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH V2 10/12] gpio: tegra: implement wake event support for
+ Tegra210 and prior GPIO
+Date: Sat, 1 Jun 2019 01:28:44 -0700
+Message-ID: <9f9633e0-5f45-d2ba-9758-d2a85a41ede9@nvidia.com>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-11-git-send-email-skomatineni@nvidia.com>
+ <20190529140318.GB17679@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190601070718.26971-1-pbrobinson@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Peter Robinson <pbrobinson@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190529140318.GB17679@ulmo>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The i2c2 bus has a external plug which enables the easy connection of external
-"bricks" with sensors of various kinds, while i2c4 on the Extended/Full boards
-has a pair of on board motion sensors, accelerometer and magnetometer on one chip
-and gyroscope on another so it makes sense to enable these i2c buses for use.
-Tested on UDOO Neo Full.
 
-Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+On 5/29/19 7:03 AM, Thierry Reding wrote:
+> On Tue, May 28, 2019 at 04:08:54PM -0700, Sowjanya Komatineni wrote:
+>> The GPIO controller doesn't have any controls to enable the system to
+>> wake up from low power states based on activity on GPIO pins. An extra
+>> hardware block that is part of the power management controller (PMC)
+>> contains these controls. In order for the GPIO controller to be able
+>> to cooperate with the PMC, obtain a reference to the PMC's IRQ domain
+>> and make it a parent to the GPIO controller's IRQ domain. This way the
+>> PMC gets an opportunity to program the additional registers required
+>> to enable wakeup sources on suspend.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/gpio/gpio-tegra.c | 116 +++++++++++++++++++++++++++++++++++++++++++---
+>>   1 file changed, 110 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+>> index 6d9b6906b9d0..5190129668d3 100644
+>> --- a/drivers/gpio/gpio-tegra.c
+>> +++ b/drivers/gpio/gpio-tegra.c
+>> @@ -32,6 +32,8 @@
+>>   #include <linux/pinctrl/consumer.h>
+>>   #include <linux/pm.h>
+>>   
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>>   #define GPIO_BANK(x)		((x) >> 5)
+>>   #define GPIO_PORT(x)		(((x) >> 3) & 0x3)
+>>   #define GPIO_BIT(x)		((x) & 0x7)
+>> @@ -275,8 +277,22 @@ static int tegra_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+>>   static int tegra_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
+>>   {
+>>   	struct tegra_gpio_info *tgi = gpiochip_get_data(chip);
+>> +	struct irq_domain *domain = tgi->irq_domain;
+>> +
+>> +	if (!gpiochip_irqchip_irq_valid(chip, offset))
+>> +		return -ENXIO;
+>> +
+>> +	if (irq_domain_is_hierarchy(domain)) {
+>> +		struct irq_fwspec spec;
+>> +
+>> +		spec.fwnode = domain->fwnode;
+>> +		spec.param_count = 2;
+>> +		spec.param[0] = offset;
+>> +		spec.param[1] = IRQ_TYPE_NONE;
+>> +		return irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, &spec);
+> This looks like it was copied from the equivalent Tegra186 patch. I have
+> since then changed the implementation, based on feedback by Linus, to
+> not call irq_domain_alloc_irqs() here and instead call
+> irq_create_fwspec_mapping(). This has the advantage of not requiring the
+> irq_domain_alloc_irqs() function to be exported. It ends up calling that
+> function internally, but as discussed with Linus it's also a nicer way
+> to create these mappings.
+>
+existing gpio-tegra driver maps hwirq to virtual interrupt number using 
+irq_create_mapping during gpio probe
 
---
-v2: move i2c-4 core to imx6sx-udoo-neo.dtsi and just enable it on specific boards
----
- .../arm/boot/dts/imx6sx-udoo-neo-extended.dts |  4 +++
- arch/arm/boot/dts/imx6sx-udoo-neo-full.dts    |  4 +++
- arch/arm/boot/dts/imx6sx-udoo-neo.dtsi        | 26 +++++++++++++++++++
- 3 files changed, 34 insertions(+)
+and irq_create_fwspec_mapping() will always return virq number as virq 
+number exists already and irq_domain_alloc_irqs doesn't happen.
 
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-index c6005cd284be..04a9f8780b8c 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-@@ -16,3 +16,7 @@
- 		reg = <0x80000000 0x40000000>;
- 	};
- };
-+
-+&i2c4 { /* Onboard Motion sensors */
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-index ad8b8a663a70..3cc6b0231ff6 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-@@ -31,3 +31,7 @@
- 		};
- 	};
- };
-+
-+&i2c4 { /* Onboard Motion sensors */
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-index 386707c1bfe0..26373e3f3afd 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-@@ -188,6 +188,20 @@
- 	};
- };
- 
-+&i2c2 { /* Brick snap in sensors connector */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+};
-+
-+&i2c4 { /* Onboard Motion sensors */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c4>;
-+	clock-frequency = <100000>;
-+	status = "disabled";
-+};
-+
- &iomuxc {
- 	pinctrl_bt_reg: btreggrp {
- 		fsl,pins =
-@@ -219,6 +233,18 @@
- 			<MX6SX_PAD_GPIO1_IO01__I2C1_SDA		0x4001b8b1>;
- 	};
- 
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins =
-+			<MX6SX_PAD_GPIO1_IO03__I2C2_SDA		0x4001b8b1>,
-+			<MX6SX_PAD_GPIO1_IO02__I2C2_SCL		0x4001b8b1>;
-+	};
-+
-+	pinctrl_i2c4: i2c4grp {
-+		fsl,pins =
-+			<MX6SX_PAD_USB_H_DATA__I2C4_SDA		0x4001b8b1>,
-+			<MX6SX_PAD_USB_H_STROBE__I2C4_SCL	0x4001b8b1>;
-+	};
-+
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins =
- 			<MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1>,
--- 
-2.21.0
+So I was using irq_domain_alloc_irqs().
+
+
+>> +	}
+>>   
+>> -	return irq_find_mapping(tgi->irq_domain, offset);
+>> +	return irq_find_mapping(domain, offset);
+>>   }
+>>   
+>>   static void tegra_gpio_irq_ack(struct irq_data *d)
+>> @@ -365,7 +381,10 @@ static int tegra_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>>   	else if (type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
+>>   		irq_set_handler_locked(d, handle_edge_irq);
+>>   
+>> -	return 0;
+>> +	if (d->parent_data)
+>> +		return irq_chip_set_type_parent(d, type);
+>> +	else
+>> +		return 0;
+> There's no need for this final else. Just make it a regular "return 0;"
+> at the end of the function, without the extra else branch.
+>
+>>   }
+>>   
+>>   static void tegra_gpio_irq_shutdown(struct irq_data *d)
+>> @@ -503,6 +522,7 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
+>>   	struct tegra_gpio_bank *bank = irq_data_get_irq_chip_data(d);
+>>   	unsigned int gpio = d->hwirq;
+>>   	u32 port, bit, mask;
+>> +	int ret;
+>>   
+>>   	port = GPIO_PORT(gpio);
+>>   	bit = GPIO_BIT(gpio);
+>> @@ -513,7 +533,14 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
+>>   	else
+>>   		bank->wake_enb[port] &= ~mask;
+>>   
+>> -	return irq_set_irq_wake(bank->irq, enable);
+>> +	ret = irq_set_irq_wake(bank->irq, enable);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	if (d->parent_data)
+>> +		return irq_chip_set_wake_parent(d, enable);
+>> +	else
+>> +		return 0;
+> Same here.
+>
+> Thierry
