@@ -1,91 +1,168 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v8 2/4] soc: qcom: Add AOSS QMP driver
-Date: Fri, 31 May 2019 17:31:14 -0700
-Message-ID: <CAD=FV=VDtMgEeFsG9NxzsY1tEcCOTDShMe50J=5wNWQ095uejw@mail.gmail.com>
-References: <20190531030057.18328-1-bjorn.andersson@linaro.org>
- <20190531030057.18328-3-bjorn.andersson@linaro.org> <CAD=FV=V=_ozPiTvT-Fnrc1a+qfHYi3ynNn8cbw9ibqfKk7Am_w@mail.gmail.com>
- <20190601000917.GE25597@minitux>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v2 0/5] Introduce OPP bandwidth bindings
+Date: Fri, 31 May 2019 19:12:28 -0700
+Message-ID: <20190601021228.210574-1-saravanak@google.com>
+References: <20190423132823.7915-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190601000917.GE25597@minitux>
+In-Reply-To: <20190423132823.7915-1-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: georgi.djakov@linaro.org
+Cc: amit.kucheria@linaro.org, bjorn.andersson@linaro.org, daidavid1@codeaurora.org, devicetree@vger.kernel.org, evgreen@chromium.org, jcrouse@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, nm@ti.com, rjw@rjwysocki.net, robh+dt@kernel.org, sboyd@kernel.org, seansw@qti.qualcomm.com, sibis@codeaurora.org, vincent.guittot@linaro.org, vireshk@kernel.org, saravanak@google.com, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+I'll have to Nack this series because it's making a couple of wrong assumptions
+about bandwidth voting.
 
-On Fri, May 31, 2019 at 5:09 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Fri 31 May 15:24 PDT 2019, Doug Anderson wrote:
->
-> > Hi,
-> >
-> > On Thu, May 30, 2019 at 8:01 PM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> > >
-> > > +/**
-> > > + * qmp_send() - send a message to the AOSS
-> > > + * @qmp: qmp context
-> > > + * @data: message to be sent
-> > > + * @len: length of the message
-> > > + *
-> > > + * Transmit @data to AOSS and wait for the AOSS to acknowledge the message.
-> > > + * @len must be a multiple of 4 and not longer than the mailbox size. Access is
-> > > + * synchronized by this implementation.
-> > > + *
-> > > + * Return: 0 on success, negative errno on failure
-> > > + */
-> > > +static int qmp_send(struct qmp *qmp, const void *data, size_t len)
-> > > +{
-> > > +       int ret;
-> > > +
-> > > +       if (WARN_ON(len + sizeof(u32) > qmp->size))
-> > > +               return -EINVAL;
-> > > +
-> > > +       if (WARN_ON(len % sizeof(u32)))
-> > > +               return -EINVAL;
-> > > +
-> > > +       mutex_lock(&qmp->tx_lock);
-> > > +
-> > > +       /* The message RAM only implements 32-bit accesses */
-> > > +       __iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
-> > > +                        data, len / sizeof(u32));
-> > > +       writel(len, qmp->msgram + qmp->offset);
-> > > +       qmp_kick(qmp);
-> > > +
-> > > +       ret = wait_event_interruptible_timeout(qmp->event,
-> > > +                                              qmp_message_empty(qmp), HZ);
-> > > +       if (!ret) {
-> > > +               dev_err(qmp->dev, "ucore did not ack channel\n");
-> > > +               ret = -ETIMEDOUT;
-> > > +
-> > > +               /* Clear message from buffer */
-> > > +               writel(0, qmp->msgram + qmp->offset);
-> > > +       } else {
-> > > +               ret = 0;
-> > > +       }
-> >
-> > Just like Vinod said in in v7, the "ret = 0" is redundant.
-> >
->
-> If the condition passed to wait_event_interruptible_timeout() evaluates
-> true the remote side has consumed the message and ret will be 1. We end
-> up in the else block (i.e. not timeout) and we want the function to
-> return 0, so we set ret to 0.
->
-> Please let me know if I'm reading this wrong.
+Firstly, it's mixing up OPP to bandwidth mapping (Eg: CPU freq to CPU<->DDR
+bandwidth mapping) with the bandwidth levels that are actually supported by an
+interconnect path (Eg: CPU<->DDR bandwidth levels). For example, CPU0 might
+decide to vote for a max of 10 GB/s because it's a little CPU and never needs
+anything higher than 10 GB/s even at CPU0's max frequency. But that has no
+bearing on bandwidth level available between CPU<->DDR.
 
-Ah, it's me that's confused.  I missed the "!" on ret.  Maybe it'd be
-less confusing if you did:
+There needs to be a separate BW OPP table describing the bandwith levels
+available for the CPU<->DDR path and then a separate mapping between CPU OPP to
+CPU<->DDR BW OPP. That way, the mapping decision (policy or voltage based
+config decision) doesn't affect the description of what the hardware really is
+capable of.
 
-time_left = wait_event_interruptible_timeout(...)
-if (!time_left)
+Put another way, if someone comes around and decides the CPU0's max freq should
+ask for 15 GB/s because some shared voltage rail would already be pushed to a
+voltage sufficient to support 15 GB/s, then it shouldn't change the HW
+description of what bandwidth levels are available between CPU<->DDR. If the
+CPU<->DDR path supports 20 GB/s, it always does independent of the CPU OPP
+table mapping.
 
-Even though you _can_ use "ret", it's less confusing to use a
-different variable since (often) ret is an error code.
+By splitting out the available bandwidth levels of the CPU<->DDR path into a
+separate BW OPP table, we avoid these kinds of issues.
 
-Speaking of which: do you actually handle the case where you get an
-interrupt?  Should the above just be wait_event_timeout()?
+Also, one could easily imagine using a bandwidth counter or some other means of
+BW measurement hardware to vote for bandwidth between CPU<->DDR and CPU<->L3.
+That entity should be able to know/learn all the available bandwidth levels in
+the CPU<->DDR path without forcing bandwidth levels to be listed in CPU OPP
+table. And if it's measuring bandwidth at a point common for all CPUs, what CPU
+OPP table is it even supposed to look at to learn all the available bandwidth
+levels. It just doesn't make sense.
+
+It's also easy to envision having multiple policies or devfreq governors voting
+for an interconnect path. The mapping you are talking about in this series is
+just an input for one of them (the cpufreq-map governor I sent out a while
+ago).
+
+Secondly, when it comes to bandwidth OPP tables, the peak bandwidth should be
+the key/first element (similar to how frequency is now). Long explanation
+follows.
+
+All the sensible frequency combinations of all the hardware interconnects
+between the master and slave port (Eg: GPU -> MMNOC -> BIMC -> DDR) determine
+the peak bandwidth levels available in that interconnect path.
+
+If multiple devices (GPU, CPU, etc) vote for different peak bandwidths for an
+interconnect (say BIMC), the interconnect provider picks the max peak bandwidth
+amongst all the requests and then picks the lowest interconnect frequency that
+can support the max peak bandwidth. 
+
+So the devices (GPU, CPU, etc), actually have some control on what interconnect
+frequencies are picked by asking for a specific peak bandwidth -- so there's
+actually a notion of useful levels.
+
+Average bandwidth is an additive property -- so if CPU and GPU ask for 5 GB/s
+and 3 GB/s respectively for an interconnect, the interconnect provider adds
+them up and configures the interconnect for 8 GB/s. So if GPU asks for 5 GB/s
+average bandwidth, it has no idea what frequency the interconnect will actually
+get configured to. So, average bandwidth really doesn't provide a sense of
+levels to pick from for a given interconnect path.
+
+So peak bandwidth is a much better pick than average bandwidth for being a key
+to the bandwidth OPP table.
+
+So what I think we need is:
+* Bandwidth OPP support in the kernel
+* Bandwidth OPP DT binding to describe the bandwidth levels available for
+  different interconnect paths.
+* A new "interconnect-opp" property that can point to different BW OPP
+  tables for each of the interconnect paths listed under interconnects
+  property.
+
+Then for mapping from device OPP to interconnect path bandwidth OPPs, you
+just used the existing required-opps binding to link an entry in GPU OPP to
+an entry in GPU<->DDR bandwidth OPP table. That way the hardware is
+actually described correctly and the mapping is kept separate.
+
+So, in the end, it'll look something like this in DT.
+
+gpu_cache_opp_table: gpu_cache_opp_table {
+	compatible = "operating-points-v2";
+
+	gpu_cache_3000: opp-3000 {
+		opp-peak-mbps = <3000>;
+		avg-mbps = <1000>;
+	};
+	gpu_cache_6000: opp-6000 {
+		opp-peak-mbps = <6000>;
+		avg-mbps = <2000>;
+	};
+	gpu_cache_9000: opp-9000 {
+		opp-peak-mbps = <9000>;
+		avg-mbps = <9000>;
+	};
+};
+
+gpu_ddr_opp_table: gpu_ddr_opp_table {
+	compatible = "operating-points-v2";
+
+	gpu_ddr_1525: opp-1525 {
+		opp-peak-mbps = <1525>;
+		avg-mbps = <452>;
+	};
+	gpu_ddr_3051: opp-3051 {
+		opp-peak-mbps = <3051>;
+		avg-mbps = <915>;
+	};
+	gpu_ddr_7500: opp-7500 {
+		opp-peak-mbps = <7500>;
+		avg-mbps = <3000>;
+	};
+};
+
+gpu_opp_table: gpu_opp_table {
+	compatible = "operating-points-v2";
+	opp-shared;
+
+	opp-200000000 {
+		opp-hz = /bits/ 64 <200000000>;
+		required-opps = <&gpu_cache_3000>, <&gpu_ddr_1525>;
+	};
+	opp-400000000 {
+		opp-hz = /bits/ 64 <400000000>;
+		required-opps = <&gpu_cache_6000>, <&gpu_ddr_3051>;
+	};
+};
+
+gpu@7864000 {
+	...
+	operating-points-v2 = <&gpu_opp_table>;
+	interconnects = <&mmnoc MASTER_GPU_1 &bimc SLAVE_SYSTEL_CACHE>,
+			<&mmnoc MASTER_GPU_1 &bimc SLAVE_DDR>;
+	interconnect-names = "gpu-cache", "gpu-mem";
+	interconnect-opps = <&gpu_cache_bw_opp>, <&gpu_ddr_bw_opp>
+};
+
+It's very clear what the HW supports vs what the mapping chooses to use. It's
+also very clearer what the mapping is doing because it actually points to
+entries in appropriately names OPP tables. There's no confusion on what mapping
+corresponds to what interconnect paths -- which is why this doesn't need a
+comment to clarify the intent here whereas in this patch series, the mappings
+needed comments on which interconnect they are referring to.
+
+Sorry about the long email and jumping in out of nowhere. The need for
+something like this has been in my mind for a long time and my situation has
+also changed where I can be more active upstream compared to before.
+
+Thanks and have a nice weekend.
+
+-Saravana
+
+-- 
