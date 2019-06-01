@@ -1,76 +1,98 @@
 From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 00/10] net: ethernet: ti: netcp: update and enable cpts support
-Date: Sat, 1 Jun 2019 13:45:24 +0300
-Message-ID: <20190601104534.25790-1-grygorii.strashko@ti.com>
+Subject: [PATCH net-next 01/10] dt-bindings: doc: net: keystone-netcp: document cpts
+Date: Sat, 1 Jun 2019 13:45:25 +0300
+Message-ID: <20190601104534.25790-2-grygorii.strashko@ti.com>
+References: <20190601104534.25790-1-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190601104534.25790-1-grygorii.strashko@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: "David S. Miller" <davem@davemloft.net>, Santosh Shilimkar <ssantosh@kernel.org>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>
 Cc: Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
 The Keystone 2 66AK2HK/E/L 1G Ethernet Switch Subsystems contains The
 Common Platform Time Sync (CPTS) module which is in general compatible with
 CPTS module found on TI AM3/4/5 SoCs. So, the basic support for
-Keystone 2 CPTS is available by default, but not documented and has never been
-enabled inconfig files.
-
+Keystone 2 CPTS is available by default, but not documented.
 The Keystone 2 CPTS module supports also some additional features like time
 sync reference (RFTCLK) clock selection through CPTS_RFTCLK_SEL register
-(offset: x08) in CPTS module, which can modelled as multiplexer clock
-(this was discussed some time ago [1]).
+(offset: x08) in CPTS module, which is modelled as multiplexer clock.
 
-This series adds missed binding documentation for Keystone 2 66AK2HK/E/L
-CPTS module and enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs with possiblity
-to select CPTS reference clock.
+This patch adds missed binding documentation for Keystone 2 66AK2HK/E/L
+CPTS module.
 
-Patch 1: adds the CPTS binding documentation. CPTS bindings are defined in the
-way that allows CPTS properties to be grouped under "cpts" sub-node.
-It also defines "cpts-refclk-mux" clock for CPTS RFTCLK selection.
-Patches 2-3: implement CPTS properties grouping under "cpts" sub-node with
-backward compatibility support.
-Patch 4: adds support for time sync reference (RFTCLK) clock selection from DT
-by adding support for "cpts-refclk-mux" multiplexer clock.
-Patches 5-9: DT CPTS nodes update for TI Keystone 2 66AK2HK/E/L SoCs.
-Patch 10: enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ .../bindings/net/keystone-netcp.txt           | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-I grouped all patches in one series for better illustration of the changes,
-but in general Pateches 1-4 are netdev matarieal (first) and other patches
-are platform specific.
-
-Series can be found at:
- git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
-branch:
- net-next-k2e-cpts-refclk
-
-[1] https://www.spinics.net/lists/netdev/msg408931.html
-
-Grygorii Strashko (10):
-  dt-bindings: doc: net: keystone-netcp: document cpts
-  net: ethernet: ti: cpts: use devm_get_clk_from_child
-  net: ethernet: ti: netcp_ethss: add support for child cpts node
-  net: ethernet: ti: cpts: add support for ext rftclk selection
-  ARM: dts: keystone-clocks: add input fixed clocks
-  ARM: dts: k2e-clocks: add input ext. fixed clocks tsipclka/b
-  ARM: dts: k2e-netcp: add cpts refclk_mux node
-  ARM: dts: k2hk-netcp: add cpts refclk_mux node
-  ARM: dts: k2l-netcp: add cpts refclk_mux node
-  ARM: configs: keystone: enable cpts
-
- .../bindings/net/keystone-netcp.txt           | 44 ++++++++++
- arch/arm/boot/dts/keystone-clocks.dtsi        | 27 ++++++
- arch/arm/boot/dts/keystone-k2e-clocks.dtsi    | 20 +++++
- arch/arm/boot/dts/keystone-k2e-netcp.dtsi     | 21 ++++-
- arch/arm/boot/dts/keystone-k2hk-netcp.dtsi    | 20 ++++-
- arch/arm/boot/dts/keystone-k2l-netcp.dtsi     | 20 ++++-
- arch/arm/configs/keystone_defconfig           |  1 +
- drivers/net/ethernet/ti/cpts.c                | 88 ++++++++++++++++++-
- drivers/net/ethernet/ti/cpts.h                |  2 +-
- drivers/net/ethernet/ti/netcp_ethss.c         |  9 +-
- 10 files changed, 240 insertions(+), 12 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/net/keystone-netcp.txt b/Documentation/devicetree/bindings/net/keystone-netcp.txt
+index 6262c2f293b0..24f11e042f8d 100644
+--- a/Documentation/devicetree/bindings/net/keystone-netcp.txt
++++ b/Documentation/devicetree/bindings/net/keystone-netcp.txt
+@@ -104,6 +104,23 @@ Required properties:
+ 			- 10Gb mac<->mac forced mode : 11
+ ----phy-handle:	phandle to PHY device
+ 
++- cpts:		sub-node time synchronization (CPTS) submodule configuration
++-- clocks:	CPTS reference clock. Should point on cpts-refclk-mux clock.
++-- clock-names: should be "cpts"
++-- cpts-refclk-mux: multiplexer clock definition sub-node for CPTS reference (RFTCLK) clock
++--- #clock-cells: should be 0
++--- clocks:	list of CPTS reference (RFTCLK) clock's parents as defined in Data manual
++--- ti,mux-tbl: array of multiplexer indexes as defined in Data manual
++--- assigned-clocks: should point on cpts-refclk-mux clock
++--- assigned-clock-parents: should point on required RFTCLK clock parent to be selected
++-- cpts_clock_mult: (optional) Numerator to convert input clock ticks
++		into nanoseconds
++-- cpts_clock_shift: (optional) Denominator to convert input clock ticks into
++		nanoseconds.
++		Mult and shift will be calculated basing on CPTS
++		rftclk frequency if both cpts_clock_shift and
++		cpts_clock_mult properties are not provided.
++
+ Optional properties:
+ - enable-ale:	NetCP driver keeps the address learning feature in the ethernet
+ 		switch module disabled. This attribute is to enable the address
+@@ -168,6 +185,23 @@ netcp: netcp@2000000 {
+ 			tx-queue = <648>;
+ 			tx-channel = <8>;
+ 
++			cpts {
++				clocks = <&cpts_refclk_mux>;
++				clock-names = "cpts";
++
++				cpts_refclk_mux: cpts-refclk-mux {
++					#clock-cells = <0>;
++					clocks = <&chipclk12>, <&chipclk13>,
++						 <&timi0>, <&timi1>,
++						 <&tsipclka>, <&tsrefclk>,
++						 <&tsipclkb>;
++					ti,mux-tbl = <0x0>, <0x1>, <0x2>,
++						<0x3>, <0x4>, <0x8>, <0xC>;
++					assigned-clocks = <&cpts_refclk_mux>;
++					assigned-clock-parents = <&chipclk12>;
++				};
++			};
++
+ 			interfaces {
+ 				gbe0: interface-0 {
+ 					slave-port = <0>;
+@@ -219,3 +253,13 @@ netcp: netcp@2000000 {
+ 		};
+ 	};
+ };
++
++CPTS board configuration - select external CPTS RFTCLK:
++
++&tsrefclk{
++	clock-frequency = <500000000>;
++};
++
++&cpts_refclk_mux {
++	assigned-clock-parents = <&tsrefclk>;
++};
 -- 
 2.17.1
