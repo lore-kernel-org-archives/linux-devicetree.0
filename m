@@ -1,61 +1,43 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 54/56] ARM: dts: exynos: Always enable necessary APIO_1V8 and ABB_1V8 regulators on Arndale Octa
-Date: Sat,  1 Jun 2019 09:25:58 -0400
-Message-ID: <20190601132600.27427-54-sashal@kernel.org>
-References: <20190601132600.27427-1-sashal@kernel.org>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: How to inject fwnode/oftree/acpi data by platform driver ?
+Date: Sat, 1 Jun 2019 16:14:09 +0200
+Message-ID: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Hi folks,
 
-[ Upstream commit 5ab99cf7d5e96e3b727c30e7a8524c976bd3723d ]
 
-The PVDD_APIO_1V8 (LDO2) and PVDD_ABB_1V8 (LDO8) regulators were turned
-off by Linux kernel as unused.  However they supply critical parts of
-SoC so they should be always on:
+I'm looking for a way to inject fwnode data from a platform driver,
+in order to initialize generic drivers w/ board specific configuration.
+The idea is getting rid of passing driver specific pdata structs
+(which, IIRC, seem to be deprecated).
 
-1. PVDD_APIO_1V8 supplies SYS pins (gpx[0-3], PSHOLD), HDMI level shift,
-   RTC, VDD1_12 (DRAM internal 1.8 V logic), pull-up for PMIC interrupt
-   lines, TTL/UARTR level shift, reset pins and SW-TACT1 button.
-   It also supplies unused blocks like VDDQ_SRAM (for SROM controller) and
-   VDDQ_GPIO (gpm7, gpy7).
-   The LDO2 cannot be turned off (S2MPS11 keeps it on anyway) so
-   marking it "always-on" only reflects its real status.
+An example usecase is the APUv2/3 board, which have things like gpios
+wired to buttons and LEDs. The board can only be detected via DMI
+string, no way to probe the platform devices - have to be initialized
+explicitly (that's how I'm already doing it now).
 
-2. PVDD_ABB_1V8 supplies Adaptive Body Bias Generator for ARM cores,
-   memory and Mali (G3D).
+The nicest way, IMHO, would be if I could just write some piece of DTS
+and some fancy magic all the rest under the hood. Such thing doesn't
+seem to exist yet. Does it make sense to implement that ? How could
+we do it ?
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/exynos5420-arndale-octa.dts | 2 ++
- 1 file changed, 2 insertions(+)
+Which other options do we have ?
 
-diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-index 4ecef6981d5c4..b54c0b8a5b346 100644
---- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-+++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-@@ -97,6 +97,7 @@
- 				regulator-name = "PVDD_APIO_1V8";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 			};
- 
- 			ldo3_reg: LDO3 {
-@@ -135,6 +136,7 @@
- 				regulator-name = "PVDD_ABB_1V8";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 			};
- 
- 			ldo9_reg: LDO9 {
+Or should we just leave everything as it is and stick w/ pdata structs ?
+
+
+thx
+--mtx
+
 -- 
-2.20.1
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
