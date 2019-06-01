@@ -1,43 +1,28 @@
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: How to inject fwnode/oftree/acpi data by platform driver ?
-Date: Sat, 1 Jun 2019 16:14:09 +0200
-Message-ID: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V3 1/4] dt-binding: Tegra194 pinctrl support
+Date: Sat, 1 Jun 2019 19:21:30 +0200
+Message-ID: <CACRpkdYMx9obZV70EsieU_3eVVxqu9jVFpCO3Fk4t-2PUya97Q@mail.gmail.com>
+References: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-tegra@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Joseph Lo <josephl@nvidia.com>, Suresh Mangipudi <smangipudi@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, vidyas@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-Hi folks,
+On Thu, May 16, 2019 at 1:53 PM Krishna Yarlagadda
+<kyarlagadda@nvidia.com> wrote:
 
+> Add binding doc for Tegra 194 pinctrl driver
+>
+> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+> ---
+> Changes in V3:
+> remove optional fields not supported by pins published here
 
-I'm looking for a way to inject fwnode data from a platform driver,
-in order to initialize generic drivers w/ board specific configuration.
-The idea is getting rid of passing driver specific pdata structs
-(which, IIRC, seem to be deprecated).
+Patch applied with the tags.
 
-An example usecase is the APUv2/3 board, which have things like gpios
-wired to buttons and LEDs. The board can only be detected via DMI
-string, no way to probe the platform devices - have to be initialized
-explicitly (that's how I'm already doing it now).
-
-The nicest way, IMHO, would be if I could just write some piece of DTS
-and some fancy magic all the rest under the hood. Such thing doesn't
-seem to exist yet. Does it make sense to implement that ? How could
-we do it ?
-
-Which other options do we have ?
-
-Or should we just leave everything as it is and stick w/ pdata structs ?
-
-
-thx
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Yours,
+Linus Walleij
