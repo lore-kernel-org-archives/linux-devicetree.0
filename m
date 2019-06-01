@@ -1,69 +1,65 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 09/10] ARM: dts: k2l-netcp: add cpts refclk_mux node
-Date: Sat, 1 Jun 2019 13:45:33 +0300
-Message-ID: <20190601104534.25790-10-grygorii.strashko@ti.com>
-References: <20190601104534.25790-1-grygorii.strashko@ti.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 35/56] ARM: dts: imx6sx: Specify IMX6SX_CLK_IPG as
+ "ahb" clock to SDMA
+Date: Sat,  1 Jun 2019 09:25:39 -0400
+Message-ID: <20190601132600.27427-35-sashal@kernel.org>
+References: <20190601132600.27427-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190601104534.25790-1-grygorii.strashko@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Santosh Shilimkar <ssantosh@kernel.org>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, Angus Ainslie <angus@akkea.ca>, linux-arm-kernel@lists.infradead.org, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-KeyStone 66AK2L 1G Ethernet Switch Subsystems, can control an external
-multiplexer that selects one of up to 32 clocks for time sync reference
-(RFTCLK) clock. This feature can be configured through CPTS_RFTCLK_SEL
-register (offset: x08) in CPTS module and modelled as multiplexer clock.
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-Hence, add cpts-refclk-mux clock node which allows to mux one of SYSCLK2,
-SYSCLK3, TIMI0, TIMI1, TSREFCLK clocks as CPTS
-reference clock [1] and group all CPTS properties under "cpts" subnode.
+[ Upstream commit cc839d0f8c284fcb7591780b568f13415bbb737c ]
 
-[1] http://www.ti.com/lit/gpn/66ak2l06
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
+clock to determine if it needs to configure the IP block as operating
+at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
+clocks as IMX6SL_CLK_SDMA results in driver incorrectly thinking that
+ratio is 1:1 which results in broken SDMA funtionality. Fix the code
+to specify IMX6SL_CLK_AHB as "ahb" clock for SDMA, to avoid detecting
+incorrect clock ratio.
+
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/keystone-k2l-netcp.dtsi | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6sl.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
-index a2e47bad3307..c1f982604145 100644
---- a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
-@@ -134,8 +134,8 @@ netcp: netcp@26000000 {
- 	/* NetCP address range */
- 	ranges = <0 0x26000000 0x1000000>;
- 
--	clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
--	clock-names = "pa_clk", "ethss_clk", "cpts";
-+	clocks = <&clkpa>, <&clkcpgmac>;
-+	clock-names = "pa_clk", "ethss_clk";
- 	dma-coherent;
- 
- 	ti,navigator-dmas = <&dma_gbe 0>,
-@@ -155,6 +155,22 @@ netcp: netcp@26000000 {
- 			tx-queue = <896>;
- 			tx-channel = "nettx";
- 
-+			cpts {
-+				clocks = <&cpts_refclk_mux>;
-+				clock-names = "cpts";
-+
-+				cpts_refclk_mux: cpts-refclk-mux {
-+					#clock-cells = <0>;
-+					clocks = <&chipclk12>, <&chipclk13>,
-+						 <&timi0>, <&timi1>,
-+						 <&tsrefclk>;
-+					ti,mux-tbl = <0x0>, <0x1>, <0x2>,
-+						<0x3>, <0x8>;
-+					assigned-clocks = <&cpts_refclk_mux>;
-+					assigned-clock-parents = <&chipclk12>;
-+				};
-+			};
-+
- 			interfaces {
- 				gbe0: interface-0 {
- 					slave-port = <0>;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index d8ba99f1d87ba..ac820dfef9774 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -657,7 +657,7 @@
+ 				reg = <0x020ec000 0x4000>;
+ 				interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SL_CLK_SDMA>,
+-					 <&clks IMX6SL_CLK_SDMA>;
++					 <&clks IMX6SL_CLK_AHB>;
+ 				clock-names = "ipg", "ahb";
+ 				#dma-cells = <3>;
+ 				/* imx6sl reuses imx6q sdma firmware */
 -- 
-2.17.1
+2.20.1
