@@ -1,128 +1,45 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Add missing configuration pwr
- amd rst for PCIe
-Date: Sat, 1 Jun 2019 15:21:06 +0530
-Message-ID: <20190601095106.GA2213@Mani-XPS-13-9360>
-References: <20190531201913.1122-1-linux.amoon@gmail.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [v4 1/3] dt-bindings: display: mediatek: update dsi supported chips
+Date: Sat, 1 Jun 2019 17:52:33 +0800
+Message-ID: <20190601095235.9194-2-jitao.shi@mediatek.com>
+References: <20190601095235.9194-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190531201913.1122-1-linux.amoon@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Ezequiel Garcia <ezequiel@collabora.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Vicente Bergas <vicencb@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190601095235.9194-1-jitao.shi@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, May 31, 2019 at 08:19:13PM +0000, Anand Moon wrote:
-> This patch add missing PCIe gpio pin (#PCIE_PWR) for vcc3v3_pcie power
-> regulator node also add missing reset pinctrl (#PCIE_PERST_L) for PCIe node.
-> 
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> using schematics: thanks for suggested by Manivannan
-> [1] https://dl.vamrs.com/products/rock960/docs/hw/rock960_sch_v12_20180314.pdf
-> 
-> Changes from prevoius patch:
-> [2] https://patchwork.kernel.org/patch/10968695/
-> 
-> Fix the suject and commit message and corrected the PWR and PERST configuration
-> as per shematics and dts nodes.
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399-ficus.dts    | 7 +++++++
->  arch/arm64/boot/dts/rockchip/rk3399-rock960.dts  | 7 +++++++
->  arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 3 +--
->  3 files changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-> index 6b059bd7a04f..94e2a59bc1c7 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-> @@ -89,6 +89,8 @@
->  
->  &pcie0 {
->  	ep-gpios = <&gpio4 RK_PD4 GPIO_ACTIVE_HIGH>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_clkreqn_cpm &pcie_perst_l>;
-
-Looks like ep-gpio is wrong here :/ I probably referred old schematics
-at that time. Correct pin mapping is,
-
-ep-gpios = <&gpio2 RK_PD4 GPIO_ACTIVE_HIGH>;
-
-And this should be fixed in a separate patch with "Fixes" tag!
-
->  };
->  
->  &pinctrl {
-> @@ -104,6 +106,11 @@
->  			rockchip,pins =
->  				<1 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
->  			};
-> +
-> +		pcie_perst_l: pcie-perst-l {
-> +			rockchip,pins =
-> +				<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
->  	};
->  
->  	usb2 {
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-> index 12285c51cceb..665fe09c7c74 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-> @@ -64,6 +64,8 @@
->  
->  &pcie0 {
->  	ep-gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_clkreqn_cpm &pcie_perst_l>;
->  };
->  
->  &pinctrl {
-> @@ -104,6 +106,11 @@
->  			rockchip,pins =
->  				<2 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
->  			};
-> +
-> +		pcie_perst_l: pcie-perst-l {
-> +			rockchip,pins =
-> +				<2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
->  	};
->  
->  	usb2 {
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> index c7d48d41e184..3df0cd67b4b2 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> @@ -55,6 +55,7 @@
->  
->  	vcc3v3_pcie: vcc3v3-pcie-regulator {
->  		compatible = "regulator-fixed";
-> +		gpio = <&gpio2 RK_PA5 GPIO_ACTIVE_HIGH>;
-
-Actually the PWR pin mapping is defined in a separate node for both Rock960
-and Ficus in respective dts. So defining it here would be wrong as the PWR
-pin mapping is different for both boards.
-
-Thanks,
-Mani
-
->  		enable-active-high;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&pcie_drv>;
-> @@ -382,8 +383,6 @@
->  
->  &pcie0 {
->  	num-lanes = <4>;
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pcie_clkreqn_cpm>;
->  	vpcie3v3-supply = <&vcc3v3_pcie>;
->  	status = "okay";
->  };
-> -- 
-> 2.21.0
-> 
+VXBkYXRlIGRldmljZSB0cmVlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIGRzaSBmb3IK
+TWVkaWF0ZWsgTVQ4MTgzIFNvQ3MuCgpTaWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNo
+aUBtZWRpYXRlay5jb20+CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgot
+LS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21l
+ZGlhdGVrLGRzaS50eHQgfCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEg
+ZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dAppbmRleCBm
+YWRmMzI3YzdjZGYuLmJiM2RjZDJkODU3MSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dAorKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRl
+ayxkc2kudHh0CkBAIC0yNiw3ICsyNiw3IEBAIFRoZSBNSVBJIFRYIGNvbmZpZ3VyYXRpb24gbW9k
+dWxlIGNvbnRyb2xzIHRoZSBNSVBJIEQtUEhZLgogCiBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogLSBj
+b21wYXRpYmxlOiAibWVkaWF0ZWssPGNoaXA+LW1pcGktdHgiCi0gIHRoZSBzdXBwb3J0ZWQgY2hp
+cHMgYXJlIG10MjcwMSBhbmQgbXQ4MTczLgorICB0aGUgc3VwcG9ydGVkIGNoaXBzIGFyZSBtdDI3
+MDEsIG10ODE3MyBhbmQgbXQ4MTgzLgogLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQg
+bGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzCiAtIGNsb2NrczogUExMIHJlZmVy
+ZW5jZSBjbG9jawogLSBjbG9jay1vdXRwdXQtbmFtZXM6IG5hbWUgb2YgdGhlIG91dHB1dCBjbG9j
+ayBsaW5lIHRvIHRoZSBEU0kgZW5jb2RlcgotLSAKMi4xMi41CgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
