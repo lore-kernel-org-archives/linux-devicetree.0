@@ -1,39 +1,34 @@
-Return-Path: <SRS0=5yH4=UC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:44991 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726137AbfFCMkT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Jun 2019 08:40:19 -0400
-Subject: Re: [PATCH v3 10/10] media: hantro: allow arbitrary number of clocks
-References: <20190531085523.10892-1-p.zabel@pengutronix.de>
- <20190531085523.10892-11-p.zabel@pengutronix.de>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <124462a9-7f09-52b6-04cf-baea9dd2b382@xs4all.nl>
-Date: Mon, 3 Jun 2019 14:40:13 +0200
-MIME-Version: 1.0
+Return-Path: <SRS0=DAy5=UA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46368 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfFAJX6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Jun 2019 05:23:58 -0400
+Date: Sat, 1 Jun 2019 11:23:53 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v3 10/10] media: hantro: allow arbitrary number of
+ clocks
+Message-ID: <20190601112353.132c7f23@collabora.com>
 In-Reply-To: <20190531085523.10892-11-p.zabel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+References: <20190531085523.10892-1-p.zabel@pengutronix.de>
+        <20190531085523.10892-11-p.zabel@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-On 5/31/19 10:55 AM, Philipp Zabel wrote:
+On Fri, 31 May 2019 10:55:23 +0200
+Philipp Zabel <p.zabel@pengutronix.de> wrote:
+
 > Dynamically allocate clocks and move clock names out of struct
 > hantro_variant. This lifts the four clock limit and allows to use
 > ARRAY_SIZE() to fill .num_clocks to reduce the risk of mismatches.
 > 
 > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Can you move this patch right after patch 6/10? It makes sense there, and
-it also makes it easier to merge this series without the i.MX8 bits.
-
-More comments about that in my reply to patch 8/10.
-
-Regards,
-
-	Hans
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
 > ---
 > New in v3.
@@ -193,4 +188,3 @@ Regards,
 > +	.clk_names = rk3399_clk_names,
 > +	.num_clocks = ARRAY_SIZE(rk3399_clk_names),
 >  };
-> 
