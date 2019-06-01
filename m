@@ -1,7 +1,8 @@
 From: Peter Robinson <pbrobinson@gmail.com>
-Subject: [PATCH 3/3] ARM: dts: imx6sx-udoo-neo: add bluetooth config to uart3
-Date: Sat,  1 Jun 2019 08:07:18 +0100
-Message-ID: <20190601070718.26971-4-pbrobinson@gmail.com>
+Subject: [PATCH 2/3] ARM: dts: imx6sx-udoo-neo: enable i2c-2 and i2c-4 for
+ onboard sensors
+Date: Sat,  1 Jun 2019 08:07:17 +0100
+Message-ID: <20190601070718.26971-3-pbrobinson@gmail.com>
 References: <20190601070718.26971-1-pbrobinson@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,84 +22,89 @@ To: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Ha
 Cc: Peter Robinson <pbrobinson@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This updates the WL1831 bluetooth to use the serial serdev driver
-interface.
+The i2c2 bus has a external plug which enables the easy connection of external
+"bricks" with sensors of various kinds, while i2c4 on the Extended/Full boards
+has a pair of on board motion sensors, accelerometer and magnetometer on one chip
+and gyroscope on another so it makes sense to enable these i2c buses for use.
+Tested on UDOO Neo Full.
 
 Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+
+--
+v2: move i2c-4 core to imx6sx-udoo-neo.dtsi and just enable it on specific boards
 ---
- .../arm/boot/dts/imx6sx-udoo-neo-extended.dts |  4 ++++
- arch/arm/boot/dts/imx6sx-udoo-neo-full.dts    |  4 ++++
- arch/arm/boot/dts/imx6sx-udoo-neo.dtsi        | 24 ++++++++-----------
- 3 files changed, 18 insertions(+), 14 deletions(-)
+ .../arm/boot/dts/imx6sx-udoo-neo-extended.dts |  4 +++
+ arch/arm/boot/dts/imx6sx-udoo-neo-full.dts    |  4 +++
+ arch/arm/boot/dts/imx6sx-udoo-neo.dtsi        | 26 +++++++++++++++++++
+ 3 files changed, 34 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-index 04a9f8780b8c..5c50d44eb8d8 100644
+index c6005cd284be..04a9f8780b8c 100644
 --- a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
 +++ b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-@@ -20,3 +20,7 @@
- &i2c4 { /* Onboard Motion sensors */
- 	status = "okay";
+@@ -16,3 +16,7 @@
+ 		reg = <0x80000000 0x40000000>;
+ 	};
  };
 +
-+&uart3 { /* Bluetooth */
++&i2c4 { /* Onboard Motion sensors */
 +	status = "okay";
 +};
 diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-index 3cc6b0231ff6..ba051a755177 100644
+index ad8b8a663a70..3cc6b0231ff6 100644
 --- a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
 +++ b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-@@ -35,3 +35,7 @@
- &i2c4 { /* Onboard Motion sensors */
- 	status = "okay";
+@@ -31,3 +31,7 @@
+ 		};
+ 	};
  };
 +
-+&uart3 { /* Bluetooth */
++&i2c4 { /* Onboard Motion sensors */
 +	status = "okay";
 +};
 diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-index 26373e3f3afd..f35c3af43780 100644
+index 386707c1bfe0..26373e3f3afd 100644
 --- a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
 +++ b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-@@ -70,18 +70,6 @@
- 		startup-delay-us = <70000>;
- 		enable-active-high;
+@@ -188,6 +188,20 @@
  	};
--
--	reg_bt: regulator-bt {
--		compatible = "regulator-fixed";
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_bt_reg>;
--		enable-active-high;
--		gpio = <&gpio2 17 GPIO_ACTIVE_HIGH>;
--		regulator-name = "bt_reg";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--		regulator-always-on;
--	};
  };
  
- &fec1 {
-@@ -343,11 +331,19 @@
- 	status = "disabled";
- };
- 
--&uart3 { /* Bluetooth */
-+&uart3 { /* Bluetooth - only on Extended/Full versions */
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart3>;
- 	uart-has-rtscts;
--	status = "okay";
-+	status = "disabled";
++&i2c2 { /* Brick snap in sensors connector */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	clock-frequency = <100000>;
++	status = "okay";
++};
 +
-+	bluetooth {
-+		compatible = "ti,wl1831-st";
-+		enable-gpios = <&gpio2 17 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_bt_reg>;
-+		max-speed = <921600>;
-+	};
- };
++&i2c4 { /* Onboard Motion sensors */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c4>;
++	clock-frequency = <100000>;
++	status = "disabled";
++};
++
+ &iomuxc {
+ 	pinctrl_bt_reg: btreggrp {
+ 		fsl,pins =
+@@ -219,6 +233,18 @@
+ 			<MX6SX_PAD_GPIO1_IO01__I2C1_SDA		0x4001b8b1>;
+ 	};
  
- /* Arduino serial */
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins =
++			<MX6SX_PAD_GPIO1_IO03__I2C2_SDA		0x4001b8b1>,
++			<MX6SX_PAD_GPIO1_IO02__I2C2_SCL		0x4001b8b1>;
++	};
++
++	pinctrl_i2c4: i2c4grp {
++		fsl,pins =
++			<MX6SX_PAD_USB_H_DATA__I2C4_SDA		0x4001b8b1>,
++			<MX6SX_PAD_USB_H_STROBE__I2C4_SCL	0x4001b8b1>;
++	};
++
+ 	pinctrl_uart1: uart1grp {
+ 		fsl,pins =
+ 			<MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1>,
 -- 
 2.21.0
