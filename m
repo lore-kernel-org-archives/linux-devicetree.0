@@ -1,8 +1,8 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 35/56] ARM: dts: imx6sx: Specify IMX6SX_CLK_IPG as
- "ahb" clock to SDMA
-Date: Sat,  1 Jun 2019 09:25:39 -0400
-Message-ID: <20190601132600.27427-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 36/56] ARM: dts: imx6sx: Specify IMX6SX_CLK_IPG as
+ "ipg" clock to SDMA
+Date: Sat,  1 Jun 2019 09:25:40 -0400
+Message-ID: <20190601132600.27427-36-sashal@kernel.org>
 References: <20190601132600.27427-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,14 +24,14 @@ List-Id: devicetree@vger.kernel.org
 
 From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit cc839d0f8c284fcb7591780b568f13415bbb737c ]
+[ Upstream commit 8979117765c19edc3b01cc0ef853537bf93eea4b ]
 
 Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
 clock to determine if it needs to configure the IP block as operating
 at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
-clocks as IMX6SL_CLK_SDMA results in driver incorrectly thinking that
+clocks as IMX6SX_CLK_SDMA results in driver incorrectly thinking that
 ratio is 1:1 which results in broken SDMA funtionality. Fix the code
-to specify IMX6SL_CLK_AHB as "ahb" clock for SDMA, to avoid detecting
+to specify IMX6SX_CLK_IPG as "ipg" clock for SDMA, to avoid detecting
 incorrect clock ratio.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
@@ -45,21 +45,21 @@ Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6sl.dtsi | 2 +-
+ arch/arm/boot/dts/imx6sx.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index d8ba99f1d87ba..ac820dfef9774 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -657,7 +657,7 @@
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 6963dff815dc8..5783eb8541ed9 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -732,7 +732,7 @@
+ 				compatible = "fsl,imx6sx-sdma", "fsl,imx6q-sdma";
  				reg = <0x020ec000 0x4000>;
- 				interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SL_CLK_SDMA>,
--					 <&clks IMX6SL_CLK_SDMA>;
-+					 <&clks IMX6SL_CLK_AHB>;
+ 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX6SX_CLK_SDMA>,
++				clocks = <&clks IMX6SX_CLK_IPG>,
+ 					 <&clks IMX6SX_CLK_SDMA>;
  				clock-names = "ipg", "ahb";
  				#dma-cells = <3>;
- 				/* imx6sl reuses imx6q sdma firmware */
 -- 
 2.20.1
