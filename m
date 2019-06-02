@@ -1,29 +1,42 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v3 0/2] Add hw offload of TC flower on MSCC
- Ocelot
-Date: Sun, 02 Jun 2019 13:50:10 -0700 (PDT)
-Message-ID: <20190602.135010.1382762534390460032.davem@davemloft.net>
-References: <1559287017-32397-1-git-send-email-horatiu.vultur@microchip.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v1 0/4] NVIDIA Tegra Video Decoder driver improvements
+Date: Mon,  3 Jun 2019 00:37:05 +0300
+Message-ID: <20190602213712.26857-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559287017-32397-1-git-send-email-horatiu.vultur@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: horatiu.vultur@microchip.com
-Cc: alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-Date: Fri, 31 May 2019 09:16:55 +0200
+Hello,
 
-> This patch series enables hardware offload for flower filter used in
-> traffic controller on MSCC Ocelot board.
-> 
-> v2->v3 changes:
->  - remove the check for shared blocks
-> 
-> v1->v2 changes:
->  - when declaring variables use reverse christmas tree
+This series cleans up some of minor shortcomings that are caused by
+checkpatch recommendations that are not very applicable for the driver.
+Then IOMMU support is added to the driver and now it can handle sparse
+memory buffers that GPU hands to VDE in a default kernel configuration
+on Tegra30+.
 
-Series applied, thanks.
+Dmitry Osipenko (4):
+  staging: media: tegra-vde: Remove BIT() macro from UAPI header
+  staging: media: tegra-vde: Manually pack UAPI structures
+  staging: media: tegra-vde: Add IOMMU support
+  staging: media: tegra-vde: Defer dmabuf's unmapping
+
+ drivers/staging/media/tegra-vde/Kconfig       |   1 +
+ drivers/staging/media/tegra-vde/Makefile      |   1 +
+ .../staging/media/tegra-vde/dmabuf-cache.c    | 223 ++++++++++++++++++
+ drivers/staging/media/tegra-vde/iommu.c       | 146 ++++++++++++
+ drivers/staging/media/tegra-vde/trace.h       |   1 +
+ drivers/staging/media/tegra-vde/uapi.h        |  48 ++--
+ .../media/tegra-vde/{tegra-vde.c => vde.c}    | 212 ++++++-----------
+ drivers/staging/media/tegra-vde/vde.h         | 105 +++++++++
+ 8 files changed, 574 insertions(+), 163 deletions(-)
+ create mode 100644 drivers/staging/media/tegra-vde/dmabuf-cache.c
+ create mode 100644 drivers/staging/media/tegra-vde/iommu.c
+ rename drivers/staging/media/tegra-vde/{tegra-vde.c => vde.c} (88%)
+ create mode 100644 drivers/staging/media/tegra-vde/vde.h
+
+-- 
+2.21.0
