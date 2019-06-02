@@ -1,134 +1,220 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Add missing configuration pwr
- amd rst for PCIe
-Date: Sun, 2 Jun 2019 10:05:06 +0530
-Message-ID: <CANAwSgQXrp5+UOdBEjq9PvBHw9KmgxpkVsENc05MoBMDBOoczg@mail.gmail.com>
-References: <20190531201913.1122-1-linux.amoon@gmail.com> <20190601095106.GA2213@Mani-XPS-13-9360>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH 3/5] dt-bindings: riscv: convert cpu binding to json-schema
+Date: Sun,  2 Jun 2019 01:01:24 -0700
+Message-ID: <20190602080126.31075-4-paul.walmsley@sifive.com>
+References: <20190602080126.31075-1-paul.walmsley@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190601095106.GA2213@Mani-XPS-13-9360>
+In-Reply-To: <20190602080126.31075-1-paul.walmsley@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Ezequiel Garcia <ezequiel@collabora.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Vicente Bergas <vicencb@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: Paul Walmsley <paul@pwsan.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Manivannan,
+At Rob's request, we're starting to migrate our DT binding
+documentation to json-schema YAML format.  Start by converting our cpu
+binding documentation.  While doing so, document more properties and
+nodes.  This includes adding binding documentation support for the E51
+and U54 CPU cores ("harts") that are present on this SoC.  These cores
+are described in:
 
-Thanks for your review comment.
+    https://static.dev.sifive.com/FU540-C000-v1.0.pdf
 
-On Sat, 1 Jun 2019 at 15:21, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> Hi,
->
-> On Fri, May 31, 2019 at 08:19:13PM +0000, Anand Moon wrote:
-> > This patch add missing PCIe gpio pin (#PCIE_PWR) for vcc3v3_pcie power
-> > regulator node also add missing reset pinctrl (#PCIE_PERST_L) for PCIe node.
-> >
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > using schematics: thanks for suggested by Manivannan
-> > [1] https://dl.vamrs.com/products/rock960/docs/hw/rock960_sch_v12_20180314.pdf
-> >
-> > Changes from prevoius patch:
-> > [2] https://patchwork.kernel.org/patch/10968695/
-> >
-> > Fix the suject and commit message and corrected the PWR and PERST configuration
-> > as per shematics and dts nodes.
-> > ---
-> >  arch/arm64/boot/dts/rockchip/rk3399-ficus.dts    | 7 +++++++
-> >  arch/arm64/boot/dts/rockchip/rk3399-rock960.dts  | 7 +++++++
-> >  arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 3 +--
-> >  3 files changed, 15 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-> > index 6b059bd7a04f..94e2a59bc1c7 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-> > @@ -89,6 +89,8 @@
-> >
-> >  &pcie0 {
-> >       ep-gpios = <&gpio4 RK_PD4 GPIO_ACTIVE_HIGH>;
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pcie_clkreqn_cpm &pcie_perst_l>;
->
-> Looks like ep-gpio is wrong here :/ I probably referred old schematics
-> at that time. Correct pin mapping is,
->
-> ep-gpios = <&gpio2 RK_PD4 GPIO_ACTIVE_HIGH>;
->
-> And this should be fixed in a separate patch with "Fixes" tag!
->
+This cpus.yaml file is intended to be a starting point and to
+evolve over time.  It passes dt-doc-validate as of the yaml-bindings
+commit 4c79d42e9216.
 
-Ok I will changes per the above. I have also check this with the
-u-boot changes .
+This patch was originally based on the ARM json-schema binding
+documentation as added by commit 672951cbd1b7 ("dt-bindings: arm: Convert
+cpu binding to json-schema").
 
-> >  };
-> >
-> >  &pinctrl {
-> > @@ -104,6 +106,11 @@
-> >                       rockchip,pins =
-> >                               <1 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
-> >                       };
-> > +
-> > +             pcie_perst_l: pcie-perst-l {
-> > +                     rockchip,pins =
-> > +                             <4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
-> > +             };
-> >       };
-> >
-> >       usb2 {
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-> > index 12285c51cceb..665fe09c7c74 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-> > @@ -64,6 +64,8 @@
-> >
-> >  &pcie0 {
-> >       ep-gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pcie_clkreqn_cpm &pcie_perst_l>;
-> >  };
-> >
-> >  &pinctrl {
-> > @@ -104,6 +106,11 @@
-> >                       rockchip,pins =
-> >                               <2 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
-> >                       };
-> > +
-> > +             pcie_perst_l: pcie-perst-l {
-> > +                     rockchip,pins =
-> > +                             <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-> > +             };
-> >       };
-> >
-> >       usb2 {
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > index c7d48d41e184..3df0cd67b4b2 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > @@ -55,6 +55,7 @@
-> >
-> >       vcc3v3_pcie: vcc3v3-pcie-regulator {
-> >               compatible = "regulator-fixed";
-> > +             gpio = <&gpio2 RK_PA5 GPIO_ACTIVE_HIGH>;
->
-> Actually the PWR pin mapping is defined in a separate node for both Rock960
-> and Ficus in respective dts. So defining it here would be wrong as the PWR
-> pin mapping is different for both boards.
->
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Paul Walmsley <paul@pwsan.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+---
+ .../devicetree/bindings/riscv/cpus.yaml       | 168 ++++++++++++++++++
+ 1 file changed, 168 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/riscv/cpus.yaml
 
-Ok Thanks, so I will move the PWR pin nodes the respective dts files.
-
-                  PCIE_PERST     PCIE_PWR
-Rock960     GPIO2_A2          GPIO2_A5
-Ficus          GPIO2_D4          GPIO1_D0   /* reference u-boot */
-
-Pls confirm this is correct.
-
-Best Regards
--Anand
-
-> Thanks,
-> Mani
+diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+new file mode 100644
+index 000000000000..6e8d55d9d4e1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+@@ -0,0 +1,168 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/riscv/cpus.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: RISC-V bindings for 'cpus' DT nodes
++
++maintainers:
++  - Paul Walmsley <paul.walmsley@sifive.com>
++  - Palmer Dabbelt <palmer@sifive.com>
++
++allOf:
++  - $ref: /schemas/cpus.yaml#
++
++properties:
++  $nodename:
++    const: cpus
++    description: Container of cpu nodes
++
++  '#address-cells':
++    const: 1
++    description: |
++      A single unsigned 32-bit integer uniquely identifies each RISC-V
++      hart in a system.  (See the "reg" node under the "cpu" node,
++      below).
++
++  '#size-cells':
++    const: 0
++
++patternProperties:
++  '^cpu@[0-9a-f]+$':
++    properties:
++      compatible:
++        type: array
++        items:
++          - enum:
++              - sifive,rocket0
++              - sifive,e5
++              - sifive,e51
++              - sifive,u54-mc
++              - sifive,u54
++              - sifive,u5
++          - const: riscv
++        description:
++          Identifies that the hart uses the RISC-V instruction set
++          and identifies the type of the hart.
++
++      mmu-type:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/string"
++          - enum:
++              - riscv,sv32
++              - riscv,sv39
++              - riscv,sv48
++        description:
++          Identifies the MMU address translation mode used on this
++          hart.  These values originate from the RISC-V Privileged
++          Specification document, available from
++          https://riscv.org/specifications/
++
++      riscv,isa:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/string"
++          - enum:
++              - rv64imac
++              - rv64imafdc
++        description:
++          Identifies the specific RISC-V instruction set architecture
++          supported by the hart.  These are documented in the RISC-V
++          User-Level ISA document, available from
++          https://riscv.org/specifications/
++
++      timebase-frequency:
++        type: integer
++        minimum: 1
++        description:
++          Specifies the clock frequency of the system timer in Hz.
++          This value is common to all harts on a single system image.
++
++      interrupt-controller:
++        type: object
++        description: Describes the CPU's local interrupt controller
++
++        properties:
++          '#interrupt-cells':
++            const: 1
++
++          compatible:
++            const: riscv,cpu-intc
++
++          interrupt-controller: true
++
++        required:
++          - '#interrupt-cells'
++          - compatible
++          - interrupt-controller
++
++    required:
++      - riscv,isa
++      - timebase-frequency
++      - interrupt-controller
++
++examples:
++  - |
++    // Example 1: SiFive Freedom U540G Development Kit
++    cpus {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        timebase-frequency = <1000000>;
++        cpu@0 {
++                clock-frequency = <0>;
++                compatible = "sifive,rocket0", "riscv";
++                device_type = "cpu";
++                i-cache-block-size = <64>;
++                i-cache-sets = <128>;
++                i-cache-size = <16384>;
++                reg = <0>;
++                riscv,isa = "rv64imac";
++                cpu_intc0: interrupt-controller {
++                        #interrupt-cells = <1>;
++                        compatible = "riscv,cpu-intc";
++                        interrupt-controller;
++                };
++        };
++        cpu@1 {
++                clock-frequency = <0>;
++                compatible = "sifive,rocket0", "riscv";
++                d-cache-block-size = <64>;
++                d-cache-sets = <64>;
++                d-cache-size = <32768>;
++                d-tlb-sets = <1>;
++                d-tlb-size = <32>;
++                device_type = "cpu";
++                i-cache-block-size = <64>;
++                i-cache-sets = <64>;
++                i-cache-size = <32768>;
++                i-tlb-sets = <1>;
++                i-tlb-size = <32>;
++                mmu-type = "riscv,sv39";
++                reg = <1>;
++                riscv,isa = "rv64imafdc";
++                tlb-split;
++                cpu_intc1: interrupt-controller {
++                        #interrupt-cells = <1>;
++                        compatible = "riscv,cpu-intc";
++                        interrupt-controller;
++                };
++        };
++    };
++
++  - |
++    // Example 2: Spike ISA Simulator with 1 Hart
++    cpus {
++            cpu@0 {
++                    device_type = "cpu";
++                    reg = <0>;
++                    compatible = "riscv";
++                    riscv,isa = "rv64imafdc";
++                    mmu-type = "riscv,sv48";
++                    interrupt-controller {
++                            #interrupt-cells = <1>;
++                            interrupt-controller;
++                            compatible = "riscv,cpu-intc";
++                    };
++            };
++    };
++...
+-- 
+2.20.1
