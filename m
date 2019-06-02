@@ -1,8 +1,8 @@
 From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH 2/5] dt-bindings: riscv: sifive: add YAML documentation for
- the SiFive FU540
-Date: Sun,  2 Jun 2019 01:01:23 -0700
-Message-ID: <20190602080126.31075-3-paul.walmsley@sifive.com>
+Subject: [PATCH 5/5] riscv: dts: add initial board data for the SiFive HiFive
+ Unleashed
+Date: Sun,  2 Jun 2019 01:01:26 -0700
+Message-ID: <20190602080126.31075-6-paul.walmsley@sifive.com>
 References: <20190602080126.31075-1-paul.walmsley@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,15 +22,14 @@ To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add YAML DT binding documentation for the SiFive FU540 SoC.  This
-SoC is documented at:
+Add initial board data for the SiFive HiFive Unleashed A00.
 
-    https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+Currently the data populated in this DT file describes the board
+DRAM configuration and the external clock sources that supply the
+PRCI.
 
-Passes dt-doc-validate, as of yaml-bindings commit 4c79d42e9216.
-
-This second version incorporates review feedback from Rob Herring
-<robh@kernel.org>.
+This third version incorporates changes based on more comments from
+Rob Herring <robh+dt@kernel.org>.
 
 Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Paul Walmsley <paul@pwsan.com>
@@ -42,61 +41,92 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-riscv@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- .../devicetree/bindings/riscv/sifive.yaml     | 25 +++++++++++++++++++
- MAINTAINERS                                   |  9 +++++++
- 2 files changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/riscv/sifive.yaml
+ arch/riscv/boot/dts/sifive/Makefile           |  2 +
+ .../boot/dts/sifive/hifive-unleashed-a00.dts  | 67 +++++++++++++++++++
+ 2 files changed, 69 insertions(+)
+ create mode 100644 arch/riscv/boot/dts/sifive/Makefile
+ create mode 100644 arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
 
-diff --git a/Documentation/devicetree/bindings/riscv/sifive.yaml b/Documentation/devicetree/bindings/riscv/sifive.yaml
+diff --git a/arch/riscv/boot/dts/sifive/Makefile b/arch/riscv/boot/dts/sifive/Makefile
 new file mode 100644
-index 000000000000..ce7ca191789e
+index 000000000000..baaeef9efdcb
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/riscv/sifive.yaml
-@@ -0,0 +1,25 @@
++++ b/arch/riscv/boot/dts/sifive/Makefile
+@@ -0,0 +1,2 @@
 +# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/riscv/sifive.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++dtb-y += hifive-unleashed-a00.dtb
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+new file mode 100644
+index 000000000000..1de4ea1577d5
+--- /dev/null
++++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/* Copyright (c) 2018-2019 SiFive, Inc */
 +
-+title: SiFive SoC-based boards
++/dts-v1/;
 +
-+maintainers:
-+  - Paul Walmsley <paul.walmsley@sifive.com>
-+  - Palmer Dabbelt <palmer@sifive.com>
++#include "fu540-c000.dtsi"
 +
-+description:
-+  SiFive SoC-based boards
++/* Clock frequency (in Hz) of the PCB crystal for rtcclk */
++#define RTCCLK_FREQ		1000000
 +
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    items:
-+      - enum:
-+          - sifive,freedom-unleashed-a00
-+      - const: sifive,fu540-c000
-+      - const: sifive,fu540
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5cfbea4ce575..8a64051cf5fc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14322,6 +14322,15 @@ S:	Supported
- K:	sifive
- N:	sifive
- 
-+SIFIVE FU540 SYSTEM-ON-CHIP
-+M:	Paul Walmsley <paul.walmsley@sifive.com>
-+M:	Palmer Dabbelt <palmer@sifive.com>
-+L:	linux-riscv@lists.infradead.org
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pjw/sifive.git
-+S:	Supported
-+K:	fu540
-+N:	fu540
++/ {
++	#address-cells = <2>;
++	#size-cells = <2>;
++	model = "SiFive HiFive Unleashed A00";
++	compatible = "sifive,hifive-unleashed-a00", "sifive,fu540-c000";
 +
- SILEAD TOUCHSCREEN DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
- L:	linux-input@vger.kernel.org
++	chosen {
++	};
++
++	cpus {
++		timebase-frequency = <RTCCLK_FREQ>;
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x0 0x80000000 0x2 0x00000000>;
++	};
++
++	soc {
++	};
++
++	hfclk: hfclk {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <33333333>;
++		clock-output-names = "hfclk";
++	};
++
++	rtcclk: rtcclk {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <RTCCLK_FREQ>;
++		clock-output-names = "rtcclk";
++	};
++};
++
++&qspi0 {
++	flash@0 {
++		compatible = "issi,is25wp256", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++		m25p,fast-read;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
++	};
++};
++
++&qspi2 {
++	status = "okay";
++	mmc@0 {
++		compatible = "mmc-spi-slot";
++		reg = <0>;
++		spi-max-frequency = <20000000>;
++		voltage-ranges = <3300 3300>;
++		disable-wp;
++	};
++};
 -- 
 2.20.1
