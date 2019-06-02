@@ -1,35 +1,29 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH net-next 00/10] net: ethernet: ti: netcp: update and
- enable cpts support
-Date: Sun, 2 Jun 2019 12:52:49 -0700
-Message-ID: <20190602195129.hjx5qyzqxyirdkx7@localhost>
-References: <20190601104534.25790-1-grygorii.strashko@ti.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next v3 0/2] Add hw offload of TC flower on MSCC
+ Ocelot
+Date: Sun, 02 Jun 2019 13:50:10 -0700 (PDT)
+Message-ID: <20190602.135010.1382762534390460032.davem@davemloft.net>
+References: <1559287017-32397-1-git-send-email-horatiu.vultur@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190601104534.25790-1-grygorii.strashko@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559287017-32397-1-git-send-email-horatiu.vultur@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: horatiu.vultur@microchip.com
+Cc: alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 01, 2019 at 01:45:24PM +0300, Grygorii Strashko wrote:
-> The Keystone 2 66AK2HK/E/L 1G Ethernet Switch Subsystems contains The
-> Common Platform Time Sync (CPTS) module which is in general compatible with
-> CPTS module found on TI AM3/4/5 SoCs. So, the basic support for
-> Keystone 2 CPTS is available by default, but not documented and has never been
-> enabled inconfig files.
-> 
-> The Keystone 2 CPTS module supports also some additional features like time
-> sync reference (RFTCLK) clock selection through CPTS_RFTCLK_SEL register
-> (offset: x08) in CPTS module, which can modelled as multiplexer clock
-> (this was discussed some time ago [1]).
-> 
-> This series adds missed binding documentation for Keystone 2 66AK2HK/E/L
-> CPTS module and enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs with possiblity
-> to select CPTS reference clock.
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+Date: Fri, 31 May 2019 09:16:55 +0200
 
-For the series:
+> This patch series enables hardware offload for flower filter used in
+> traffic controller on MSCC Ocelot board.
+> 
+> v2->v3 changes:
+>  - remove the check for shared blocks
+> 
+> v1->v2 changes:
+>  - when declaring variables use reverse christmas tree
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Series applied, thanks.
