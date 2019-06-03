@@ -1,104 +1,143 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
-Date: Mon, 3 Jun 2019 06:20:57 -0700
-Message-ID: <CAF6AEGuGGAThqs9ztTNyGnMyhFc9wbtn=N8A4qqQxcN_PAxsEw@mail.gmail.com>
-References: <20181201165348.24140-1-robdclark@gmail.com>
- <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
- <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
- <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
- <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
- <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
- <401f9948-14bd-27a2-34c1-fb429cae966d@arm.com>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Mon, 3 Jun 2019 08:32:22 -0500
+Message-ID: <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org>
+References: <20190531035348.7194-1-elder@linaro.org>
+ <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+ <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
+ <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+ <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+ <20190531233306.GB25597@minitux>
+ <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
+ <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <401f9948-14bd-27a2-34c1-fb429cae966d-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dan Williams <dcbw@redhat.com>, David Miller <davem@davemloft.net>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, evgreen@chromium.org, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdW4gMywgMjAxOSBhdCA0OjE0IEFNIFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5
-QGFybS5jb20+IHdyb3RlOgo+Cj4gT24gMDMvMDYvMjAxOSAxMTo0NywgUm9iIENsYXJrIHdyb3Rl
-Ogo+ID4gT24gU3VuLCBKdW4gMiwgMjAxOSBhdCAxMToyNSBQTSBUb21hc3ogRmlnYSA8dGZpZ2FA
-Y2hyb21pdW0ub3JnPiB3cm90ZToKPiA+Pgo+ID4+IE9uIE1vbiwgSnVuIDMsIDIwMTkgYXQgNDo0
-MCBBTSBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+IHdyb3RlOgo+ID4+Pgo+ID4+PiBT
-bywgYW5vdGhlciBjYXNlIEkndmUgY29tZSBhY3Jvc3MsIG9uIHRoZSBkaXNwbGF5IHNpZGUuLiBJ
-J20gd29ya2luZwo+ID4+PiBvbiBoYW5kbGluZyB0aGUgY2FzZSB3aGVyZSBib290bG9hZGVyIGVu
-YWJsZXMgZGlzcGxheSAoYW5kIHRha2VzIGlvbW11Cj4gPj4+IG91dCBvZiByZXNldCkuLiBhcyBz
-b29uIGFzIERNQSBkb21haW4gZ2V0cyBhdHRhY2hlZCB3ZSBnZXQgaW9tbXUKPiA+Pj4gZmF1bHRz
-LCBiZWNhdXNlIGJvb3Rsb2FkZXIgaGFzIGFscmVhZHkgY29uZmlndXJlZCBkaXNwbGF5IGZvciBz
-Y2Fub3V0Lgo+ID4+PiBVbmZvcnR1bmF0ZWx5IHRoaXMgYWxsIGhhcHBlbnMgYmVmb3JlIGFjdHVh
-bCBkcml2ZXIgaXMgcHJvYmVkIGFuZCBoYXMKPiA+Pj4gYSBjaGFuY2UgdG8gaW50ZXJ2ZW5lLgo+
-ID4+Pgo+ID4+PiBJdCdzIHJhdGhlciB1bmZvcnR1bmF0ZSB0aGF0IHdlIHRyaWVkIHRvIGJlIGNs
-ZXZlciByYXRoZXIgdGhhbiBqdXN0Cj4gPj4+IG1ha2luZyBkcml2ZXJzIGNhbGwgc29tZSBmdW5j
-dGlvbiB0byBvcHQtaW4gdG8gdGhlIGhvb2t1cCBvZiBkbWEgaW9tbXUKPiA+Pj4gb3BzIDotKAo+
-ID4+Cj4gPj4gSSB0aGluayBpdCBzdGlsbCB3b3JrcyBmb3IgdGhlIDkwJSBvZiBjYXNlcyBhbmQg
-aWYgMTAlIG5lZWRzIHNvbWUKPiA+PiBleHBsaWNpdCB3b3JrIGluIHRoZSBkcml2ZXJzLCB0aGF0
-J3MgYmV0dGVyIHRoYW4gcmVxdWlyaW5nIDEwMCUgb2YgdGhlCj4gPj4gZHJpdmVycyB0byBkbyB0
-aGluZ3MgbWFudWFsbHkuCj4KPiBSaWdodCwgaXQncyBub3QgYWJvdXQgImJlaW5nIGNsZXZlciIs
-IGl0J3MgYWJvdXQgbm90IGFkZGluZyBvcHQtaW4gY29kZQo+IHRvIHRoZSBodW5kcmVkcyBhbmQg
-aHVuZHJlZHMgYW5kIGh1bmRyZWRzIG9mIGRyaXZlcnMgd2hpY2ggKm1pZ2h0KiBldmVyCj4gZmlu
-ZCB0aGVtc2VsdmVzIHVzZWQgb24gYSBzeXN0ZW0gd2hlcmUgdGhleSB3b3VsZCBuZWVkIHRoZSBJ
-T01NVSdzIGhlbHAKPiBmb3IgRE1BLgoKV2VsbCwgSSBtZWFuLCBhdCBvbmUgcG9pbnQgd2UgZGlk
-bid0IGRvIHRoZSBhdXRvbWF0aWMgaW9tbXUgaG9va3VwLCB3ZQpjb3VsZCBoYXZlIGp1c3Qgc3R1
-Y2sgd2l0aCB0aGF0IGFuZCBhZGRlZCBhIGhlbHBlciBzbyBkcml2ZXJzIGNvdWxkCnJlcXVlc3Qg
-dGhlIGhvb2t1cC4gIFRoaW5ncyB3b3VsZG4ndCBoYXZlIGJlZW4gYW55IG1vcmUgYnJva2VuIHRo
-YW4KYmVmb3JlLCBhbmQgd2hlbiBwZW9wbGUgYnJpbmcgdXAgc3lzdGVtcyB3aGVyZSBpb21tdSBp
-cyByZXF1aXJlZCwgdGhleQpjb3VsZCBoYXZlIGFkZGVkIHRoZSBuZWNlc3NhcnkgZG1hX2lvbW11
-X2NvbmZpZ3VyZSgpIGNhbGwuICBCdXQgdGhhdAppcyB3YXRlciB1bmRlciB0aGUgYnJpZGdlIG5v
-dy4KCj4gPj4gQWRkaW5nIE1hcmVrIHdobyBoYWQgdGhlIHNhbWUgcHJvYmxlbSBvbiBFeHlub3Mu
-Cj4gPgo+ID4gSSBkbyB3b25kZXIgaG93IG1hbnkgZHJpdmVycyBuZWVkIHRvIGlvbW11X21hcCBp
-biB0aGVpciAtPnByb2JlKCk/Cj4gPiBJJ20gdGhpbmtpbmcgbW92aW5nIHRoZSBhdXRvLWhvb2t1
-cCB0byBhZnRlciBhIHN1Y2Nlc3NmdWwgcHJvYmUoKSwKPiA+IHdpdGggc29tZSBmdW5jdGlvbiBh
-IGRyaXZlciBjb3VsZCBjYWxsIGlmIHRoZXkgbmVlZCBtYXBwaW5nIGluIHByb2JlLAo+ID4gbWln
-aHQgYmUgYSB3YXkgdG8gZXZlbnR1YWxseSBnZXQgcmlkIG9mIHRoZSBibGFja2xpc3QuICBCdXQg
-SSd2ZSBubwo+ID4gaWRlYSBob3cgdG8gZmluZCB0aGUgc3Vic2V0IG9mIGRyaXZlcnMgdGhhdCB3
-b3VsZCBiZSBicm9rZW4gd2l0aG91dCBhCj4gPiBkbWFfc2V0dXBfaW9tbXVfc3R1ZmYoKSBjYWxs
-IGluIHRoZWlyIHByb2JlLgo+Cj4gV291bGRuJ3QgaGVscCBtdWNoLiBUaGF0IHBhcnRpY3VsYXIg
-aXNzdWUgaXMgbm90aGluZyB0byBkbyB3aXRoIERNQSBvcHMKPiByZWFsbHksIGl0J3MgYWJvdXQg
-SU9NTVUgaW5pdGlhbGlzYXRpb24uIE9uIHNvbWV0aGluZyBsaWtlIFNNTVV2MyB0aGVyZQo+IGlz
-IGxpdGVyYWxseSBubyB3YXkgdG8gdHVybiB0aGUgdGhpbmcgb24gd2l0aG91dCBibG9ja2luZyB1
-bmtub3duCj4gdHJhZmZpYyAtIGl0ICpoYXMqIHRvIGhhdmUgc3RyZWFtIHRhYmxlIGVudHJpZXMg
-cHJvZ3JhbW1lZCBiZWZvcmUgaXQgY2FuCj4gZXZlbiBhbGxvdyBzdHVmZiB0byBieXBhc3MuCgpm
-d2l3LCBvbiB0aGVzZSBzZG04NTAgbGFwdG9wcyAoYW5kIEkgdGhpbmsgc2RtODQ1IGJvYXJkcyBs
-aWtlIG10cCBhbmQKZGI4NDVjKSB0aGUgU01NVSAodjIpIGlzIHRha2VuIG91dCBvZiBieXBhc3Mg
-YnkgdGhlIGJvb3Rsb2FkZXIuICBCam9ybgpoYXMgc29tZSBwYXRjaGVzIGZvciBhcm0tc21tdSB0
-byByZWFkLWJhY2sgdGhlIHN0YXRlIGF0IGJvb3QuCgooQWx0aG91Z2ggb2xkZXIgZGV2aWNlcyB3
-ZXJlIGJvb3Rpbmcgd2l0aCBkaXNwbGF5IGVuYWJsZWQgYnV0IFNNTVUgaW4gYnlwYXNzLikKCj4g
-VGhlIGFuc3dlciBpcyBlaXRoZXIgdG8gZWl0aGVyIHBheSBhdHRlbnRpb24gdG8gdGhlICJRdWll
-c2NlIGFsbCBETUEKPiBjYXBhYmxlIGRldmljZXMiIHBhcnQgb2YgdGhlIGJvb3QgcHJvdG9jb2wg
-KHdoaWNoIGhhcyBiZWVuIHRoZXJlIHNpbmNlCj4gcHJldHR5IG11Y2ggZm9yZXZlciksIG9yIHRv
-IGNvbWUgdXAgd2l0aCBzb21lIHJvYnVzdCB3YXkgb2YKPiBjb21tdW5pY2F0aW5nICJsaXZlIiBi
-b290LXRpbWUgbWFwcGluZ3MgdG8gSU9NTVUgZHJpdmVycyBzbyB0aGF0IHRoZXkKPiBjYW4gcHJv
-Z3JhbSB0aGVtc2VsdmVzIGFwcHJvcHJpYXRlbHkgZHVyaW5nIHByb2JlLgoKVW5mb3J0dW5hdGVs
-eSBkaXNwbGF5IGxpdCB1cCBieSBib290bG9hZGVyIGlzIGJhc2ljYWxseSB1YmlxdWl0b3VzLgpF
-dmVyeSBzaW5nbGUgYW5kcm9pZCBwaG9uZSBkb2VzIGl0LiAgQWxsIG9mIHRoZSB3aW5kb3dzLWFy
-bSBsYXB0b3BzIGRvCml0LiAgQmFzaWNhbGx5IDk5LjklIG9mIHRoaW5ncyB0aGF0IGhhdmUgYSBk
-aXNwbGF5IGRvIGl0LiAgSXQncyBhCnRvdWdoIHByb2JsZW0gdG8gc29sdmUgaW52b2x2aW5nIGNs
-a3MsIGdkc2MsIHJlZ3VsYXRvcnMsIGV0YywgaW4KYWRkaXRpb24gdG8gdGhlIGRpc3BsYXkgZHJp
-dmVyLi4gYW5kIHNhZGx5IG5vdyBzbW11LiAgQW5kIGRldmljZXMKd2hlcmUgd2UgY2FuIG1ha2Ug
-Y2hhbmdlcyB0byBhbmQgdXBkYXRlIHRoZSBmaXJtd2FyZSBhcmUgcmF0aGVyIHJhcmUuClNvIHRo
-ZXJlIGlzIHJlYWxseSBubyBvcHRpb24gdG8gaWdub3JlIHRoaXMgcHJvYmxlbS4KCkkgZ3Vlc3Mg
-aWYgd2UgaGFkIHNvbWUgZWFybHktcXVpcmtzIG1lY2hhbmlzbSBsaWtlIHg4NiBkb2VzLCB3ZSBj
-b3VsZAptYXNoIHRoZSBkaXNwbGF5IG9mZiBlYXJseSBpbiBib290LiAgVGhhdCB3b3VsZCBiZSBh
-biBlYXN5IHNvbHV0aW9uLgpBbHRob3VnaCBJJ2QgcHJlZmVyIGEgcHJvcGVyIHNvbHV0aW9uIHNv
-IHRoYXQgYW5kcm9pZCBwaG9uZXMgYXJlbid0CmNhcnJ5aW5nIGFyb3VuZCBlbm9ybW91cyBzdGFj
-a3Mgb2YgaGFjayBwYXRjaGVzIHRvIGFjaGlldmUgYSBzbW9vdGgKZmxpY2tlci1mcmVlIGJvb3Qu
-CgpJIHN1cHBvc2UgYXJtLXNtbXUgY291bGQgcmVhbGl6ZSB0aGF0IHRoZSBjb250ZXh0IGJhbmsg
-aXMgYWxyZWFkeQp0YWtlbiBvdXQgb2YgYnlwYXNzLi4gIGFsdGhvdWdoIEknbSBub3QgZW50aXJl
-bHkgc3VyZSBpZiB3ZSBjYW4gYXNzdW1lCnRoYXQgdGhlIENQVSB3b3VsZCBiZSBhYmxlIHRvIHJl
-YWQgYmFjayB0aGUgcGFnZXRhYmxlIHNldHVwIGJ5IHRoZQpib290bG9hZGVyLiAgTWF5YmUgVml2
-ZWsgaGFzIGFuIGlkZWEgYWJvdXQgdGhhdD8KCkJSLAotUgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVu
-b0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
+On 6/3/19 5:04 AM, Arnd Bergmann wrote:
+> On Sat, Jun 1, 2019 at 1:59 AM Subash Abhinov Kasiviswanathan
+> <subashab@codeaurora.org> wrote:
+>> On 2019-05-31 17:33, Bjorn Andersson wrote:
+>>> On Fri 31 May 13:47 PDT 2019, Alex Elder wrote:
+>>>> On 5/31/19 2:19 PM, Arnd Bergmann wrote:
+>>> But any such changes would either be years into the future or for
+>>> specific devices and as such not applicable to any/most of devices on
+>>> the market now or in the coming years.
+>>>
+>>>
+>>> But as Arnd points out, if the software split between IPA and rmnet is
+>>> suboptimal your are encouraged to fix that.
+>>
+>> The split rmnet design was chosen because we could place rmnet
+>> over any transport - IPA, PCIe (https://lkml.org/lkml/2018/4/26/1159)
+>> or USB.
+>>
+>> rmnet registers a rx handler, so the rmnet packet processing itself
+>> happens in the same softirq when packets are queued to network stack
+>> by IPA.
+> 
+> I've read up on the implementation some more, and concluded that
+> it's mostly a regular protocol wrapper, doing IP over QMAP. There
+> is nothing wrong with the basic concept I think, and as you describe
+> this is an abstraction to keep the common bits in one place, and
+> have them configured consistently.
+> 
+> A few observations on more details here:
+> 
+> - What I'm worried about most here is the flow control handling on the
+>   transmit side. The IPA driver now uses the modern BQL method to
+>   control how much data gets submitted to the hardware at any time.
+>   The rmnet driver also uses flow control using the
+>   rmnet_map_command() function, that blocks tx on the higher
+>   level device when the remote side asks us to.
+>   I fear that doing flow control for a single physical device on two
+>   separate netdev instances is counterproductive and confuses
+>   both sides.
+
+I understand what you're saying here, and instinctively I think
+you're right.
+
+But BQL manages the *local* interface's ability to get rid of
+packets, whereas the QMAP flow control is initiated by the other
+end of the connection (the modem in this case).
+
+With multiplexing, it's possible that one of several logical
+devices on the modem side has exhausted a resource and must
+ask the source of the data on the host side to suspend the
+flow.  Meanwhile the other logical devices sharing the physical
+link might be fine, and should not be delayed by the first one. 
+
+It is the multiplexing itself that confuses the BQL algorithm.
+The abstraction obscures the *real* rates at which individual
+logical connections are able to transmit data.
+
+Even if the multiple logical interfaces implemented BQL, they
+would not get the feedback they need directly from the IPA
+driver, because transmitting over the physical interface might
+succeed even if the logical interface on the modem side can't
+handle more data.  So I think the flow control commands may be
+necessary, given multiplexing.
+
+The rmnet driver could use BQL, and could return NETDEV_TX_BUSY
+for a logical interface when its TX flow has been stopped by a
+QMAP command.  That way the feedback for BQL on the logical
+interfaces would be provided in the right place.
+
+I have no good intuition about the interaction between
+two layered BQL managed queues though.
+
+> - I was a little confused by the location of the rmnet driver in
+>   drivers/net/ethernet/... More conventionally, I think as a protocol
+>   handler it should go into net/qmap/, with the ipa driver going
+>   into drivers/net/qmap/ipa/, similar to what we have fo ethernet,
+>   wireless, ppp, appletalk, etc.
+> 
+> - The rx_handler uses gro_cells, which as I understand is meant
+>   for generic tunnelling setups and takes another loop through
+>   NAPI to aggregate data from multiple queues, but in case of
+>   IPA's single-queue receive calling gro directly would be simpler
+>   and more efficient.
+
+I have been planning to investigate some of the generic GRO
+stuff for IPA but was going to wait on that until the basic
+code was upstream.
+
+> - I'm still not sure I understand the purpose of the layering with
+>   using an rx_handler as opposed to just using
+>   EXPORT_SYMBOL(rmnet_rx_handler) and calling that from
+>   the hardware driver directly.
+
+I think that's a good idea.
+
+>   From the overall design and the rmnet Kconfig description, it
+>   appears as though the intention as that rmnet could be a
+>   generic wrapper on top of any device, but from the
+>   implementation it seems that IPA is not actually usable that
+>   way and would always go through IPA.
+
+As far as I know *nothing* upstream currently uses rmnet; the
+IPA driver will be the first, but as Bjorn said others seem to
+be on the way.  I'm not sure what you mean by "IPA is not
+usable that way."  Currently the IPA driver assumes a fixed
+configuration, and that configuration assumes the use of QMAP,
+and therefore assumes the rmnet driver is layered above it.
+That doesn't preclude rmnet from using a different back end.
+
+And I'll also mention that although QMAP *can* do multiplexed
+connections over a single physical link, the IPA code I posted
+currently supports only one logical interface.
+
+					-Alex
+
+
+> 
+>         Arnd
+> 
+ 
