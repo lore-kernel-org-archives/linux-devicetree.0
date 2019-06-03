@@ -1,54 +1,33 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 2/3] media: uapi: Add RGB bus format for the GiantPlus GPM940B0 panel
-Date: Mon,  3 Jun 2019 17:35:10 +0200
-Message-ID: <20190603153511.24384-2-paul@crapouillou.net>
-References: <20190603153511.24384-1-paul@crapouillou.net>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v8 2/4] soc: qcom: Add AOSS QMP driver
+Date: Mon, 3 Jun 2019 21:04:40 +0530
+Message-ID: <20190603153440.GT15118@vkoul-mobl>
+References: <20190531030057.18328-1-bjorn.andersson@linaro.org>
+ <20190531030057.18328-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190603153511.24384-1-paul@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <20190531030057.18328-3-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Hans Verkuil <hansverk@cisco.com>
-Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@chromium.org>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB components
-are transferred sequentially on a 8-bit bus.
+On 30-05-19, 20:00, Bjorn Andersson wrote:
+> The Always On Subsystem (AOSS) Qualcomm Messaging Protocol (QMP) driver
+> is used to communicate with the AOSS for certain side-channel requests,
+> that are not available through the RPMh interface.
+> 
+> The communication is a very simple synchronous mechanism of messages
+> being written in message RAM and a doorbell in the AOSS is rung. As the
+> AOSS has processed the message length is cleared and an interrupt is
+> fired by the AOSS as acknowledgment.
+> 
+> The driver exposes the QDSS clock as a clock and the low-power state
+> associated with the remoteprocs in the system as a set of power-domains.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Notes:
-    v2: New patch
-    
-    v3: No change
-    
-    v4: Add only MEDIA_BUS_FMT_RGB888_3X8, as we don't have to care about
-        endianness
-
- include/uapi/linux/media-bus-format.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/include/uapi/linux/media-bus-format.h b/include/uapi/linux/media-bus-format.h
-index 2a6b253cfb05..16c1fa2d89a4 100644
---- a/include/uapi/linux/media-bus-format.h
-+++ b/include/uapi/linux/media-bus-format.h
-@@ -34,7 +34,7 @@
- 
- #define MEDIA_BUS_FMT_FIXED			0x0001
- 
--/* RGB - next is	0x101c */
-+/* RGB - next is	0x101d */
- #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
- #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
- #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
-@@ -55,6 +55,7 @@
- #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
- #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
- #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
-+#define MEDIA_BUS_FMT_RGB888_3X8		0x101c
- #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
- #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
- #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
 -- 
-2.21.0.593.g511ec345e18
+~Vinod
