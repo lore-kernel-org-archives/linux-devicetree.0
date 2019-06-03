@@ -1,78 +1,38 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v13 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF controller bindings
-Date: Mon, 3 Jun 2019 14:04:28 +0100
-Message-ID: <20190603130428.GX4797@dell>
-References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw>
- <1558423174-10748-4-git-send-email-masonccyang@mxic.com.tw>
- <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 07/10] usb: roles: Add fwnode_usb_role_switch_get()
+ function
+Date: Mon, 3 Jun 2019 15:19:01 +0200
+Message-ID: <20190603131901.GB10397@kroah.com>
+References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1559115828-19146-8-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
+In-Reply-To: <1559115828-19146-8-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>, miquel.raynal@bootlin.com
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Yu Chen <chenyu56@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 May 2019, Sergei Shtylyov wrote:
-
-> On 05/21/2019 10:19 AM, Mason Yang wrote:
+On Wed, May 29, 2019 at 03:43:45PM +0800, Chunfeng Yun wrote:
+> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 > 
-> > Document the bindings used by the Renesas R-Car Gen3 RPC-IF controller.
-> > 
-> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > ---
-> >  .../devicetree/bindings/mfd/renesas-rpc-if.txt     | 65 ++++++++++++++++++++++
-> >  1 file changed, 65 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt b/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
-> > new file mode 100644
-> > index 0000000..20ec85b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
-> > @@ -0,0 +1,65 @@
-> > +Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
-> > +---------------------------------------------------------
-> > +
-> > +RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
-> > +
-> > +Required properties:
-> > +- compatible: should be an SoC-specific compatible value, followed by
-> > +		"renesas,rcar-gen3-rpc" as a fallback.
-> > +		supported SoC-specific values are:
-> > +		"renesas,r8a77995-rpc"	(R-Car D3)
-> > +- reg: should contain three register areas:
-> > +	first for RPC-IF registers,
-> > +	second for the direct mapping read mode and
-> > +	third for the write buffer area.
-> > +- reg-names: should contain "regs", "dirmap" and "wbuf"
-> > +- clocks: should contain 1 entries for the module's clock
-> > +- clock-names: should contain "rpc"
-> > +- power-domains: should contain system-controller(sysc) for power-domain-cell
-> > +- resets: should contain clock pulse generator(cpg) for reset-cell,
-> > +	  power-domain-cell and clock-cell
+> The fwnode_usb_role_switch_get() function is exactly the
+> same as usb_role_switch_get(), except that it takes struct
+> fwnode_handle as parameter instead of struct device.
 > 
->    That's just some nonsense, sorry...
->    I suggest that you stop reposting your patches as I'm going to post
-> my version of this patchset RSN (based on your patches, of course) and I'm
-> going to take care of fixing this file as well.
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+> v6:
+>   new patch
 
-Why is this necessary?
+If you are forwarding on a patch from someone else, like this, you need
+to put your signed-off-by line on it as well.
 
-Why not just provide some constructive feedback instead?
+Please fix that up, and add the tested-by one, when you resend this
+series.
 
-> > +- #address-cells: should be 1
-> > +- #size-cells: should be 0
-> [...]
-> 
-> MBR, Sergei
+thanks,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+greg k-h
