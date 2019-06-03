@@ -1,59 +1,82 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH v3 1/2] dt-bindings: clock: renesas,r9a06g032-sysctrl:
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: clock: renesas,r9a06g032-sysctrl:
  Document power Domains
-Date: Mon, 3 Jun 2019 08:29:01 +0000
-Message-ID: <TY1PR01MB1769FB150E0258A8AC76CDB5F5140@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+Date: Mon, 3 Jun 2019 10:39:08 +0200
+Message-ID: <CAMuHMdXiBz6L83sBHXOg=zc0zo4ff37SbLOZc5NwgiTLVG-nTw@mail.gmail.com>
 References: <1558711904-27278-1-git-send-email-gareth.williams.jx@renesas.com>
  <1558711904-27278-2-git-send-email-gareth.williams.jx@renesas.com>
- <CAMuHMdV2jmY2u1-Z6cRR1OQcfW8U0HM_ac-xn1gO9nPf41iD+A@mail.gmail.com>
+ <CAMuHMdV2jmY2u1-Z6cRR1OQcfW8U0HM_ac-xn1gO9nPf41iD+A@mail.gmail.com> <TY1PR01MB1769FB150E0258A8AC76CDB5F5140@TY1PR01MB1769.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdV2jmY2u1-Z6cRR1OQcfW8U0HM_ac-xn1gO9nPf41iD+A@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <TY1PR01MB1769FB150E0258A8AC76CDB5F5140@TY1PR01MB1769.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Gareth Williams <gareth.williams.jx@renesas.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Gareth Williams <gareth.williams.jx@renesas.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIDI4IE1heSAyMDE5IDA4OjI5IEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90
-ZToNCj4gT24gRnJpLCBNYXkgMjQsIDIwMTkgYXQgNTozMiBQTSBHYXJldGggV2lsbGlhbXMgd3Jv
-dGU6DQo+ID4gVGhlIGRyaXZlciBpcyBnYWluaW5nIHBvd2VyIGRvbWFpbiBzdXBwb3J0LCBzbyBh
-ZGQgdGhlIG5ldyBwcm9wZXJ0eSB0bw0KPiA+IHRoZSBEVCBiaW5kaW5nIGFuZCB1cGRhdGUgdGhl
-IGV4YW1wbGVzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogR2FyZXRoIFdpbGxpYW1zIDxnYXJl
-dGgud2lsbGlhbXMuanhAcmVuZXNhcy5jb20+DQo+IA0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2gh
-DQo+IA0KPiA+IC0tLQ0KPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Ns
-b2NrL3JlbmVzYXMscjlhMDZnMDMyLXN5c2N0cmwudHgNCj4gPiB0DQo+ID4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3JlbmVzYXMscjlhMDZnMDMyLQ0KPiBz
-eXNjdHINCj4gPiArKysgbC50eHQNCj4gQEAgLTQwLDQgKzQyLDUgQEAgRXhhbXBsZXMNCj4gPiAg
-ICAgICAgICAgICAgICAgcmVnLWlvLXdpZHRoID0gPDQ+Ow0KPiA+ICAgICAgICAgICAgICAgICBj
-bG9ja3MgPSA8JnN5c2N0cmwgUjlBMDZHMDMyX0NMS19VQVJUMD47DQo+ID4gICAgICAgICAgICAg
-ICAgIGNsb2NrLW5hbWVzID0gImJhdWRjbGsiOw0KPiA+ICsgICAgICAgICAgICAgICBwb3dlci1k
-b21haW5zID0gPCZzeXNjdHJsPjsNCj4gDQo+IFRoaXMgaXMgYW4gaW50ZXJlc3RpbmcgZXhhbXBs
-ZTogYWNjb3JkaW5nIHRvIHRoZSBkcml2ZXIsDQo+IFI5QTA2RzAzMl9DTEtfVUFSVDAsIGlzIG5v
-dCBjbG9jayB1c2VkIGZvciBwb3dlciBtYW5hZ2VtZW50Pw0KPiANCj4gT2gsIHRoZSByZWFsIHVh
-cnQwIG5vZGUgaW4gYXJjaC9hcm0vYm9vdC9kdHMvcjlhMDZnMDMyLmR0c2kgdXNlcw0KPiANCj4g
-ICAgIGNsb2NrcyA9IDwmc3lzY3RybCBSOUEwNkcwMzJfQ0xLX1VBUlQwPiwgPCZzeXNjdHJsDQo+
-IFI5QTA2RzAzMl9IQ0xLX1VBUlQwPjsNCj4gICAgIGNsb2NrLW5hbWVzID0gImJhdWRjbGsiLCAi
-YXBiX3BjbGsiOw0KPiANCj4gVGhhdCBkb2VzIG1ha2Ugc2Vuc2UuLi4NCk5vdGUgdGhhdCB0aGUg
-U3lub3BzeXMgRFcgdWFydCBkcml2ZXIgYWxyZWFkeSBnZXRzIHRoZSAiYXBiX3BjbGsiIGNsb2Nr
-LCBzbw0Kd2UgZG9u4oCZdCBhY3R1YWxseSBuZWVkIHRvIHVzZSBjbG9jayBkb21haW5zIHRvIGVu
-YWJsZSB0aGlzIGNsb2NrLg0KDQpUaGlzIGlzIGFsc28gdHJ1ZSBmb3IgbWFueSBvZiB0aGUgcGVy
-aXBoZXJhbCBkcml2ZXJzIHVzZWQgb24gcnpuMSAoU3lub3BzeXMNCmdwaW8gY29udHJvbGxlciwg
-aTJjIGNvbnRyb2xsZXIsIGdtYWMsIGRtYWMsIEFyYXNhbiBzZGlvIGNvbnRyb2xsZXIpLiBUaGUN
-CmNvbW1pdCB0byBhZGQgdGhpcyBjbG9jayB0byB0aGUgaTJjIGNvbnRyb2xsZXIgZHJpdmVyIGlz
-IG15IGZhdWx0LCBhcyBJIHdhcw0KZm9sbG93aW5nIHRoZSBwYXR0ZXJuIG9mIHRoZSBvdGhlcnMu
-DQoNCk9mIHRoZSBmZXcgZHJpdmVycyB0aGF0IGRvbid0IGFscmVhZHkgZ2V0IHRoZSBoY2xrL3Bj
-bGsgdXNlZCB0byBhY2Nlc3MgdGhlDQpwZXJpcGhlcmFscyBpcyB0aGUgU3lub3BzeXMgc3BpIGNv
-bnRyb2xsZXIgKHRob3VnaCB0aGF0IGN1cnJlbnRseSBkb2VzbuKAmXQNCnN1cHBvcnQgcnVudGlt
-ZSBQTSkgYW5kIHRoZSBVU0IgSG9zdCBjb250cm9sbGVyLg0KDQpCUg0KUGhpbA0KIA0KPiBXaXRo
-IHRoZSBhYm92ZSBmaXhlZDoNCj4gUmV2aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2Vl
-cnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+IA0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAg
-ICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+IA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVy
-aG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51
-eC0NCj4gbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNo
-bmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFs
-a2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcg
-bGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRv
-cnZhbGRzDQo=
+Hi Phil,
+
+On Mon, Jun 3, 2019 at 10:29 AM Phil Edworthy <phil.edworthy@renesas.com> wrote:
+> On 28 May 2019 08:29 Geert Uytterhoeven wrote:
+> > On Fri, May 24, 2019 at 5:32 PM Gareth Williams wrote:
+> > > The driver is gaining power domain support, so add the new property to
+> > > the DT binding and update the examples.
+> > >
+> > > Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+
+> > > ---
+> > > a/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+> > > +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+> > @@ -40,4 +42,5 @@ Examples
+> > >                 reg-io-width = <4>;
+> > >                 clocks = <&sysctrl R9A06G032_CLK_UART0>;
+> > >                 clock-names = "baudclk";
+> > > +               power-domains = <&sysctrl>;
+> >
+> > This is an interesting example: according to the driver,
+> > R9A06G032_CLK_UART0, is not clock used for power management?
+> >
+> > Oh, the real uart0 node in arch/arm/boot/dts/r9a06g032.dtsi uses
+> >
+> >     clocks = <&sysctrl R9A06G032_CLK_UART0>, <&sysctrl
+> > R9A06G032_HCLK_UART0>;
+> >     clock-names = "baudclk", "apb_pclk";
+> >
+> > That does make sense...
+> Note that the Synopsys DW uart driver already gets the "apb_pclk" clock, so
+> we don’t actually need to use clock domains to enable this clock.
+
+That is not necessarily a problem:
+  1) DT describes hardware, not software policy,
+  2) It doesn't hurt to enable a clock twice.
+
+There are still some R-Car drivers that manage clocks themselves, but
+we're slowly migrating away from that, where possible. If the driver
+is e.g. shared with a platform without clock domains, we obviously cannot
+do that.
+
+So you can take out that code again, that's up to you.
+
+> This is also true for many of the peripheral drivers used on rzn1 (Synopsys
+> gpio controller, i2c controller, gmac, dmac, Arasan sdio controller). The
+> commit to add this clock to the i2c controller driver is my fault, as I was
+> following the pattern of the others.
+>
+> Of the few drivers that don't already get the hclk/pclk used to access the
+> peripherals is the Synopsys spi controller (though that currently doesn’t
+> support runtime PM) and the USB Host controller.
+
+Good, so the latter will start working magically, I assume? ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
