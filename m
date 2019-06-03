@@ -1,128 +1,76 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-Date: Mon, 3 Jun 2019 09:32:42 -0700
-Message-ID: <866db682-785a-e0a6-b394-bb65c7a694c6@gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
+ mailbox
+Date: Mon, 3 Jun 2019 17:56:51 +0100
+Message-ID: <20190603165651.GA12196@e107155-lin>
 References: <20190603083005.4304-1-peng.fan@nxp.com>
- <20190603083005.4304-3-peng.fan@nxp.com>
+ <20190603083005.4304-2-peng.fan@nxp.com>
+ <ae4c79f0-4aec-250e-e312-20aba5554665@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190603083005.4304-3-peng.fan@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <ae4c79f0-4aec-250e-e312-20aba5554665@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: peng.fan@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com, sudeep.holla@arm.com
-Cc: kernel@pengutronix.de, linux-imx@nxp.com, shawnguo@kernel.org, festevam@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andre.przywara@arm.com, van.freenix@gmail.com
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: peng.fan@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com, shawnguo@kernel.org, festevam@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andre.przywara@arm.com, van.freenix@gmail.com, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> This mailbox driver implements a mailbox which signals transmitted data
-> via an ARM smc (secure monitor call) instruction. The mailbox receiver
-> is implemented in firmware and can synchronously return data when it
-> returns execution to the non-secure world again.
-> An asynchronous receive path is not implemented.
-> This allows the usage of a mailbox to trigger firmware actions on SoCs
-> which either don't have a separate management processor or on which such
-> a core is not available. A user of this mailbox could be the SCP
-> interface.
-> 
-> Modified from Andre Przywara's v2 patch
-> https://lore.kernel.org/patchwork/patch/812999/
-> 
-> Cc: Andre Przywara <andre.przywara@arm.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
+On Mon, Jun 03, 2019 at 09:22:16AM -0700, Florian Fainelli wrote:
+> On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > The ARM SMC mailbox binding describes a firmware interface to trigger
+> > actions in software layers running in the EL2 or EL3 exception levels.
+> > The term "ARM" here relates to the SMC instruction as part of the ARM
+> > instruction set, not as a standard endorsed by ARM Ltd.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >
+> > V2:
+> > Introduce interrupts as a property.
+> >
+> > V1:
+> > arm,func-ids is still kept as an optional property, because there is no
+> > defined SMC funciton id passed from SCMI. So in my test, I still use
+> > arm,func-ids for ARM SIP service.
+> >
+> >  .../devicetree/bindings/mailbox/arm-smc.txt        | 101 +++++++++++++++++++++
+> >  1 file changed, 101 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > new file mode 100644
+> > index 000000000000..401887118c09
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > @@ -0,0 +1,101 @@
 
-[snip]
+[...]
 
-+#define ARM_SMC_MBOX_USB_IRQ	BIT(1)
+> > +Optional properties:
+> > +- arm,func-ids		An array of 32-bit values specifying the function
+> > +			IDs used by each mailbox channel. Those function IDs
+> > +			follow the ARM SMC calling convention standard [1].
+> > +			There is one identifier per channel and the number
+> > +			of supported channels is determined by the length
+> > +			of this array.
+> > +- interrupts		SPI interrupts may be listed for notification,
+> > +			each channel should use a dedicated interrupt
+> > +			line.
+>
+> I would not go about defining a specific kind of interrupt, since SPI is
+> a GIC terminology, this firmware interface could be used in premise with
+> any parent interrupt controller, for which the concept of a SPI/PPI/SGI
+> may not be relevant.
+>
 
-That flag appears unused.
+While I agree the binding document may not contain specifics, I still
+don't see how to use SGI with this. Also note it's generally reserved
+for OS future use(IPC) and using this for other than IPC may be bit
+challenging IMO. It opens up lots of questions.
 
-> +static int arm_smc_mbox_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct mbox_controller *mbox;
-> +	struct arm_smc_chan_data *chan_data;
-> +	const char *method;
-> +	bool use_hvc = false;
-> +	int ret, irq_count, i;
-> +	u32 val;
-> +
-> +	if (!of_property_read_u32(dev->of_node, "arm,num-chans", &val)) {
-> +		if (val < 1 || val > INT_MAX) {
-> +			dev_err(dev, "invalid arm,num-chans value %u of %pOFn\n", val, pdev->dev.of_node);
-> +			return -EINVAL;
-> +		}
-> +	}
-
-Should not the upper bound check be done against UINT_MAX since val is
-an unsigned int?
-
-> +
-> +	irq_count = platform_irq_count(pdev);
-> +	if (irq_count == -EPROBE_DEFER)
-> +		return irq_count;
-> +
-> +	if (irq_count && irq_count != val) {
-> +		dev_err(dev, "Interrupts not match num-chans\n");
-
-Interrupts property does not match \"arm,num-chans\" would be more correct.
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!of_property_read_string(dev->of_node, "method", &method)) {
-> +		if (!strcmp("hvc", method)) {
-> +			use_hvc = true;
-> +		} else if (!strcmp("smc", method)) {
-> +			use_hvc = false;
-> +		} else {
-> +			dev_warn(dev, "invalid \"method\" property: %s\n",
-> +				 method);
-> +
-> +			return -EINVAL;
-> +		}
-
-Having at least one method specified does not seem to be checked later
-on in the code, so if I omitted to specify that property, we would still
-register the mailbox and default to use "smc" since the
-ARM_SMC_MBOX_USE_HVC flag would not be set, would not we want to make
-sure that we do have in fact a valid method specified given the binding
-documents that property as mandatory?
-
-[snip]
-
-> +	mbox->txdone_poll = false;
-> +	mbox->txdone_irq = false;
-> +	mbox->ops = &arm_smc_mbox_chan_ops;
-> +	mbox->dev = dev;
-> +
-> +	ret = mbox_controller_register(mbox);
-> +	if (ret)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, mbox);
-
-I would move this above mbox_controller_register() that way there is no
-room for race conditions in case another part of the driver expects to
-have pdev->dev.drvdata set before the mbox controller is registered.
-Since you use devm_* functions for everything, you may even remove that
-call.
-
-[snip]
-
-> +#ifndef _LINUX_ARM_SMC_MAILBOX_H_
-> +#define _LINUX_ARM_SMC_MAILBOX_H_
-> +
-> +struct arm_smccc_mbox_cmd {
-> +	unsigned long a0, a1, a2, a3, a4, a5, a6, a7;
-> +};
-
-Do you expect this to be used by other in-kernel users? If so, it might
-be good to document how a0 can have a special meaning and be used as a
-substitute for the function_id?
--- 
-Florian
+--
+Regards,
+Sudeep
