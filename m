@@ -1,34 +1,56 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [RFC/PATCH 4/5] arm64: Add support for arch_memremap_ro()
-Date: Mon, 3 Jun 2019 16:56:13 +0100
-Message-ID: <20190603155612.GC63283@arrakis.emea.arm.com>
-References: <20190517164746.110786-1-swboyd@chromium.org>
- <20190517164746.110786-5-swboyd@chromium.org>
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: Re: [PATCH v2 0/5] Introduce OPP bandwidth bindings
+Date: Mon, 3 Jun 2019 09:56:35 -0600
+Message-ID: <20190603155634.GA10741@jcrouse1-lnx.qualcomm.com>
+References: <20190423132823.7915-1-georgi.djakov@linaro.org>
+ <20190601021228.210574-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190517164746.110786-5-swboyd@chromium.org>
+In-Reply-To: <20190601021228.210574-1-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Dan Williams <dan.j.williams@intel.com>
+To: Saravana Kannan <saravanak@google.com>
+Cc: georgi.djakov@linaro.org, amit.kucheria@linaro.org, bjorn.andersson@linaro.org, daidavid1@codeaurora.org, devicetree@vger.kernel.org, evgreen@chromium.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, nm@ti.com, rjw@rjwysocki.net, robh+dt@kernel.org, sboyd@kernel.org, seansw@qti.qualcomm.com, sibis@codeaurora.org, vincent.guittot@linaro.org, vireshk@kernel.org, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2019 at 09:47:45AM -0700, Stephen Boyd wrote:
-> Pass in PAGE_KERNEL_RO to the underlying IO mapping mechanism to get a
-> read-only mapping for the MEMREMAP_RO type of memory mappings that
-> memremap() supports.
+On Fri, May 31, 2019 at 07:12:28PM -0700, Saravana Kannan wrote:
+> I'll have to Nack this series because it's making a couple of wrong assumptions
+> about bandwidth voting.
 > 
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Firstly, it's mixing up OPP to bandwidth mapping (Eg: CPU freq to CPU<->DDR
+> bandwidth mapping) with the bandwidth levels that are actually supported by an
+> interconnect path (Eg: CPU<->DDR bandwidth levels). For example, CPU0 might
+> decide to vote for a max of 10 GB/s because it's a little CPU and never needs
+> anything higher than 10 GB/s even at CPU0's max frequency. But that has no
+> bearing on bandwidth level available between CPU<->DDR.
 
-Not sure what the plans are with this series but if you need an ack for
-arm64:
+I'm going to just quote this part of the email to avoid forcing people to
+scroll too much.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+I agree that there is an enormous universe of new and innovative things that can
+be done for bandwidth voting. I would love to have smart governors and expansive
+connections between different components that are all aware of each other. I
+don't think that anybody is discounting that these things are possible.
+
+But as it stands today, as a leaf driver developer my primary concern is that I
+need to vote something for the GPU->DDR path. Right now I'm voting the maximum
+because that is the bare minimum we need to get working GPU.
+
+Then the next incremental baby step is to allow us to select a minimum
+vote based on a GPU frequency level to allow for some sort of very coarse power
+savings. It isn't perfect, but better than cranking everything to 11. This is
+why we need the OPP bandwidth bindings to allow us to make the association and
+tune down the vote. I fully agree that this isn't the optimal solution but
+it is the only knob we have right now.
+
+And after that we should go nuts. I'll gladly put the OPP bindings in the
+rear-view mirror and turn over all bandwidth to a governor or two or three.
+I'll be happy to have nothing to do with it again. But until then we need
+a solution for the leaf drivers that lets us provide some modicum of power
+control.
+
+Jordan
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
