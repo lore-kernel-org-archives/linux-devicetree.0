@@ -1,23 +1,40 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: mtd: brcmnand: Make nand-ecc-strength and nand-ecc-step-size optional
-Date: Mon,  3 Jun 2019 10:02:51 +0200
-Message-ID: <20190603080251.27710-1-miquel.raynal@bootlin.com>
-References: <1558449865-36852-1-git-send-email-kdasu.kdev@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: clock: renesas,r9a06g032-sysctrl:
+ Document power Domains
+Date: Mon, 3 Jun 2019 10:03:02 +0200
+Message-ID: <CAMuHMdXM7j_tCWR-9FZc8DOARmdXqfd88+a=TYHwKZEmMuHCrg@mail.gmail.com>
+References: <1559044467-2639-1-git-send-email-gareth.williams.jx@renesas.com> <1559044467-2639-2-git-send-email-gareth.williams.jx@renesas.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558449865-36852-1-git-send-email-kdasu.kdev@gmail.com>
+In-Reply-To: <1559044467-2639-2-git-send-email-gareth.williams.jx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kamal Dasu <kdasu.kdev@gmail.com>, linux-mtd@lists.infradead.org
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: Gareth Williams <gareth.williams.jx@renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-05-21 at 14:44:21 UTC, Kamal Dasu wrote:
-> nand-ecc-strength and nand-ecc-step-size can be made optional as
-> brcmnand driver can support using raw NAND layer detected values.
-> 
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+On Tue, May 28, 2019 at 1:55 PM Gareth Williams
+<gareth.williams.jx@renesas.com> wrote:
+> The driver is gaining power domain support, so add the new property
+> to the DT binding and update the examples.
+>
+> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v4:
+>  - Added missing HCLK to UART0 example to show the clock added
+>    to the driver.
+>  - Added Geert's Reviewed-by line.
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
+Thanks for the update, will queue in clock-renesas-for-v5.3.
 
-Miquel
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
