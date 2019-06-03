@@ -1,213 +1,109 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
-Date: Mon, 3 Jun 2019 18:24:42 +0100
-Message-ID: <20190603182442.4183959b@donnerap.cambridge.arm.com>
-References: <20190523060437.11059-1-peng.fan@nxp.com>
-        <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
-        <AM0PR04MB4481C44F9B5EFCDD076EF728881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-        <20190530122329.235d13c7@donnerap.cambridge.arm.com>
-        <AM0PR04MB4481C97696C68ECF5E6D4A7988190@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
+Date: Mon, 3 Jun 2019 19:27:51 +0200
+Message-ID: <CAJiuCcchRZZ-Wwy3_fo_aq=GuCaCW8RHS8nBtB2br4n5Qtu-MA@mail.gmail.com>
+References: <20190521161102.29620-1-peron.clem@gmail.com> <CAL_Jsq+86nNEBzjbf_GLWWrAN91jwU+JQ7zrEoFaT_dxUzVv4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM0PR04MB4481C97696C68ECF5E6D4A7988190@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <CAL_Jsq+86nNEBzjbf_GLWWrAN91jwU+JQ7zrEoFaT_dxUzVv4A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Julien Grall <julien.grall@arm.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Joerg Roedel <joro@8bytes.org>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Steven Price <steven.price@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Linux IOMMU <iommu@lists.linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 31 May 2019 01:39:45 +0000
-Peng Fan <peng.fan@nxp.com> wrote:
+Hi Maxime, Joerg,
 
-Hi,
+On Wed, 22 May 2019 at 21:27, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, May 21, 2019 at 11:11 AM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmai=
+l.com> wrote:
+> >
+> > Hi,
+> >
+> > The Allwinner H6 has a Mali-T720 MP2 which should be supported by
+> > the new panfrost driver. This series fix two issues and introduce the
+> > dt-bindings but a simple benchmark show that it's still NOT WORKING.
+> >
+> > I'm pushing it in case someone want to continue the work.
+> >
+> > This has been tested with Mesa3D 19.1.0-RC2 and a GPU bitness patch[1].
+> >
+> > One patch is from Icenowy Zheng where I changed the order as required
+> > by Rob Herring[2].
+> >
+> > Thanks,
+> > Clement
+> >
+> > [1] https://gitlab.freedesktop.org/kszaq/mesa/tree/panfrost_64_32
+> > [2] https://patchwork.kernel.org/patch/10699829/
+> >
+> >
+> > [  345.204813] panfrost 1800000.gpu: mmu irq status=3D1
+> > [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+> > 0x0000000002400400
+> > [  345.209617] Reason: TODO
+> > [  345.209617] raw fault status: 0x800002C1
+> > [  345.209617] decoded fault status: SLAVE FAULT
+> > [  345.209617] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
+> > [  345.209617] access type 0x2: READ
+> > [  345.209617] source id 0x8000
+> > [  345.729957] panfrost 1800000.gpu: gpu sched timeout, js=3D0,
+> > status=3D0x8, head=3D0x2400400, tail=3D0x2400400, sched_job=3D000000009=
+e204de9
+> > [  346.055876] panfrost 1800000.gpu: mmu irq status=3D1
+> > [  346.060680] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+> > 0x0000000002C00A00
+> > [  346.060680] Reason: TODO
+> > [  346.060680] raw fault status: 0x810002C1
+> > [  346.060680] decoded fault status: SLAVE FAULT
+> > [  346.060680] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
+> > [  346.060680] access type 0x2: READ
+> > [  346.060680] source id 0x8100
+> > [  346.561955] panfrost 1800000.gpu: gpu sched timeout, js=3D1,
+> > status=3D0x8, head=3D0x2c00a00, tail=3D0x2c00a00, sched_job=3D00000000b=
+55a9a85
+> > [  346.573913] panfrost 1800000.gpu: mmu irq status=3D1
+> > [  346.578707] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+> > 0x0000000002C00B80
+> >
+> > Change in v5:
+> >  - Remove fix indent
+> >
+> > Changes in v4:
+> >  - Add bus_clock probe
+> >  - Fix sanity check in io-pgtable
+> >  - Add vramp-delay
+> >  - Merge all boards into one patch
+> >  - Remove upstreamed Neil A. patch
+> >
+> > Change in v3 (Thanks to Maxime Ripard):
+> >  - Reauthor Icenowy for her path
+> >
+> > Changes in v2 (Thanks to Maxime Ripard):
+> >  - Drop GPU OPP Table
+> >  - Add clocks and clock-names in required
+> >
+> > Cl=C3=A9ment P=C3=A9ron (5):
+> >   drm: panfrost: add optional bus_clock
+> >   iommu: io-pgtable: fix sanity check for non 48-bit mali iommu
+> >   dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
+> >   arm64: dts: allwinner: Add ARM Mali GPU node for H6
+> >   arm64: dts: allwinner: Add mali GPU supply for H6 boards
+> >
+> > Icenowy Zheng (1):
+> >   dt-bindings: gpu: add bus clock for Mali Midgard GPUs
+>
+> I've applied patches 1 and 3 to drm-misc. I was going to do patch 4
+> too, but it doesn't apply.
+>
+> Patch 2 can go in via the iommu tree and the rest via the allwinner tree.
 
-(CC:ing Julien for Xen)
+Is this OK for you to pick up this series?
 
-> > > > Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered
-> > > > mailbox
-> > > >
-> > > > Hi,
-> > > >
-> > > > On 5/22/19 10:50 PM, Peng Fan wrote:  
-> > > > > This is a modified version from Andre Przywara's patch series
-> > > > >  
-> > > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flo
-> > > > re.ke  
-> > rnel.org%2Fpatchwork%2Fcover%2F812997%2F&amp;data=02%7C01%7Cpe  
-> > > >  
-> > ng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1d3b  
-> > > >  
-> > c2b4c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdat  
-> > > >  
-> > a=BbS5ZQtzMANSwaKRDJ62NKrPrAyaED1%2BvymQaT6Qr8E%3D&amp;rese  
-> > > > rved=0.  
-> > > > > [1] is a draft implementation of i.MX8MM SCMI ATF implementation
-> > > > > that use smc as mailbox, power/clk is included, but only part of
-> > > > > clk has been implemented to work with hardware, power domain only
-> > > > > supports get name for now.
-> > > > >
-> > > > > The traditional Linux mailbox mechanism uses some kind of
-> > > > > dedicated hardware IP to signal a condition to some other
-> > > > > processing unit, typically a dedicated management processor.
-> > > > > This mailbox feature is used for instance by the SCMI protocol to
-> > > > > signal a request for some action to be taken by the management  
-> > processor.  
-> > > > > However some SoCs does not have a dedicated management core to  
-> > > > provide  
-> > > > > those services. In order to service TEE and to avoid linux
-> > > > > shutdown power and clock that used by TEE, need let firmware to
-> > > > > handle power and clock, the firmware here is ARM Trusted Firmware
-> > > > > that could also run SCMI service.
-> > > > >
-> > > > > The existing SCMI implementation uses a rather flexible shared
-> > > > > memory region to communicate commands and their parameters, it
-> > > > > still requires a mailbox to actually trigger the action.  
-> > > >
-> > > > We have had something similar done internally with a couple of minor
-> > > > differences:
-> > > >
-> > > > - a SGI is used to send SCMI notifications/delayed replies to
-> > > > support asynchronism (patches are in the works to actually add that
-> > > > to the Linux SCMI framework). There is no good support for SGI in
-> > > > the kernel right now so we hacked up something from the existing SMP
-> > > > code and adding the ability to register our own IPI handlers
-> > > > (SHAME!). Using a PPI should work and should allow for using request_irq()  
-> > AFAICT.  
-> > >
-> > > So you are also implementing a firmware inside ATF for SCMI usecase, right?
-> > >
-> > > Introducing SGI in ATF to notify Linux will introduce complexity,
-> > > there is no good framework inside ATF for SCMI, and I use
-> > > synchronization call for simplicity for now.  
-> > 
-> > I think we don't disagree, but just to clarify on one thing:
-> > 
-> > I think we should avoid tying this driver to specific protocol or software on the
-> > other end, be it ATF or SCMI. After all it's just a mailbox driver, meant to signal
-> > some event (and parameters) to some external entity. Yes, SCMI (or SCPI back
-> > then) was the reason to push for this, but it should be independent from that.  
-> 
-> Thanks, I agree.
-> 
-> > I am not even sure we should mention it too much in the documentation.  
-> 
-> I think we need a usecase here, so it should be fine.
-> 
-> > 
-> > So whether the receiving end is ATF or something else it irrelevant, I think. For
-> > instance we have had discussions in Xen to provide guests some virtualised
-> > device management support, and using an HVC mailbox seems like a neat
-> > solution. This could be using the SCMI (or SCPI) protocol, but that's not a
-> > requirement. In this case the Xen hypervisor would be the one to pick up the
-> > mailbox trigger, probably forwarding the request to something else (Dom0 in
-> > this case).  
-> 
-> I do not get the point "forwarding the request", DomU HVC will trap to Xen,
-> so how to forward to Dom0?
+Thanks,
+Cl=C3=A9ment
 
-I don't think there is something easily available in Xen/ARM at the moment, but we could either use something like an event channel, or utilise some planned extension to allow Dom0 to register on MMIO traps.
-My point was that most likely Dom0 would be in control of the resources handled by the interface (clocks, regulators), so Xen wouldn't know how to deal with those requests.
-
-Cheers,
-Andre.
-
-
-> 
-> Thanks,
-> Peng.
-> 
-> > Also having a generic SMC mailbox could avoid having the actual hardware
-> > mailbox drivers in the kernel, so EL3 firmware could forward the request to an
-> > external management processor, and Linux would just work, without the need
-> > to describe the actual hardware mailbox device in some firmware tables. This
-> > might help ACPI on those devices.
-> > 
-> > Cheers,
-> > Andre.
-> >   
-> > > >
-> > > > - the mailbox identifier is indicated as part of the SMC call such
-> > > > that we can have multiple SCMI mailboxes serving both standard
-> > > > protocols and non-standard (in the 0x80 and above) range, also they
-> > > > may have different throughput (in hindsight, these could simply be
-> > > > different channels)
-> > > >
-> > > > Your patch series looks both good and useful to me, I would just put
-> > > > a provision in the binding to support an optional interrupt such
-> > > > that asynchronism gets reasonably easy to plug in when it is
-> > > > available (and desirable).  
-> > >
-> > > Ok. Let me think about and add that in new version patch.
-> > >
-> > > Thanks,
-> > > Peng.
-> > >  
-> > > >  
-> > > > >
-> > > > > This patch series provides a Linux mailbox compatible service
-> > > > > which uses smc calls to invoke firmware code, for instance taking
-> > > > > care of SCMI  
-> > > > requests.  
-> > > > > The actual requests are still communicated using the standard SCMI
-> > > > > way of shared memory regions, but a dedicated mailbox hardware IP
-> > > > > can be replaced via this new driver.
-> > > > >
-> > > > > This simple driver uses the architected SMC calling convention to
-> > > > > trigger firmware services, also allows for using "HVC" calls to
-> > > > > call into hypervisors or firmware layers running in the EL2 exception  
-> > level.  
-> > > > >
-> > > > > Patch 1 contains the device tree binding documentation, patch 2
-> > > > > introduces the actual mailbox driver.
-> > > > >
-> > > > > Please note that this driver just provides a generic mailbox
-> > > > > mechanism, though this is synchronous and one-way only (triggered
-> > > > > by the OS only, without providing an asynchronous way of
-> > > > > triggering request from the firmware).
-> > > > > And while providing SCMI services was the reason for this
-> > > > > exercise, this driver is in no way bound to this use case, but can
-> > > > > be used generically where the OS wants to signal a mailbox
-> > > > > condition to firmware or a hypervisor.
-> > > > > Also the driver is in no way meant to replace any existing
-> > > > > firmware interface, but actually to complement existing interfaces.
-> > > > >
-> > > > > [1]
-> > > > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2F
-> > > > > gith
-> > > > >  
-> > > >  
-> > ub.com%2FMrVan%2Farm-trusted-firmware%2Ftree%2Fscmi&amp;data=02  
-> > > > %7C01%7  
-> > > > >  
-> > > >  
-> > Cpeng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1  
-> > > > d3bc2b4  
-> > > > >  
-> > > >  
-> > c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdata=kN  
-> > > > 9bEFFcsZA  
-> > > > > 1ePeNLLfHmONpVaG6O5ajVQvKMuaBXyk%3D&amp;reserved=0
-> > > > >
-> > > > > Peng Fan (2):
-> > > > >   DT: mailbox: add binding doc for the ARM SMC mailbox
-> > > > >   mailbox: introduce ARM SMC based mailbox
-> > > > >
-> > > > >  .../devicetree/bindings/mailbox/arm-smc.txt        |  96  
-> > > > +++++++++++++  
-> > > > >  drivers/mailbox/Kconfig                            |   7 +
-> > > > >  drivers/mailbox/Makefile                           |   2 +
-> > > > >  drivers/mailbox/arm-smc-mailbox.c                  | 154  
-> > > > +++++++++++++++++++++  
-> > > > >  include/linux/mailbox/arm-smc-mailbox.h            |  10 ++
-> > > > >  5 files changed, 269 insertions(+)  create mode 100644
-> > > > > Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create  
-> > mode  
-> > > > > 100644 include/linux/mailbox/arm-smc-mailbox.h
-> > > > >  
-> > > >
-> > > >
-> > > > --
-> > > > Florian  
-> 
+>
+> Rob
