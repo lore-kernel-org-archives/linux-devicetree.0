@@ -1,31 +1,32 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] arm64: dts: meson: add dwmac-3.70a to ethmac compatible list
-Date: Mon, 03 Jun 2019 15:09:27 -0700
-Message-ID: <7h4l56jp7s.fsf@baylibre.com>
-References: <20190524130817.18920-1-jbrunet@baylibre.com> <CAFBinCCKA-15sFwyXpoxmqw5b4=6j1t-fdrHM7CoAojqN+ZGzQ@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next 04/10] net: ethernet: ti: cpts: add support
+ for rftclk selection
+Date: Mon, 03 Jun 2019 15:13:29 -0700 (PDT)
+Message-ID: <20190603.151329.1880364693299986138.davem@davemloft.net>
+References: <20190601104534.25790-1-grygorii.strashko@ti.com>
+        <20190601104534.25790-5-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCCKA-15sFwyXpoxmqw5b4=6j1t-fdrHM7CoAojqN+ZGzQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190601104534.25790-5-grygorii.strashko@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: grygorii.strashko@ti.com
+Cc: ssantosh@kernel.org, richardcochran@gmail.com, robh+dt@kernel.org, nsekhar@ti.com, m-karicheri2@ti.com, w-kwok2@ti.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Date: Sat, 1 Jun 2019 13:45:28 +0300
 
-> Hi Jerome,
->
-> On Fri, May 24, 2019 at 3:08 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->>
->> After discussing with Amlogic, the Synopsys GMAC version used by
->> the gx and axg family is the 3.70a. Set this is in DT
->>
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> +static int cpts_of_mux_clk_setup(struct cpts *cpts, struct device_node *node)
+> +{
+> +	unsigned int num_parents;
+> +	const char **parent_names;
+> +	struct device_node *refclk_np;
+> +	struct clk_hw *clk_hw;
+> +	u32 *mux_table;
+> +	int ret = -EINVAL;
 
-Queued for v5.3, w/Martin's tag,
+Reverse christmas tree please.
 
-Thanks,
-
-Kevin
+Thank you.
