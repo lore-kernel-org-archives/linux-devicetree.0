@@ -1,606 +1,530 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
-Date: Mon, 3 Jun 2019 15:39:18 +0200
-Message-ID: <20190603133918.GD30132@ulmo>
-References: <20181201165348.24140-1-robdclark@gmail.com>
- <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
- <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
- <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
- <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
- <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
- <401f9948-14bd-27a2-34c1-fb429cae966d@arm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 2/2] mmc: sdhci-milbeaut: add Milbeaut SD controller driver
+Date: Mon, 3 Jun 2019 15:48:34 +0200
+Message-ID: <CAPDyKFqeTxqv6W=t_SRgnBnqzjLEpbyW1LR_UkoGC2YfoKJs1A@mail.gmail.com>
+References: <1559208158-468-1-git-send-email-orito.takao@socionext.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1252751307=="
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <401f9948-14bd-27a2-34c1-fb429cae966d-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559208158-468-1-git-send-email-orito.takao@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Takao Orito <orito.takao@socionext.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jaswinder Singh <jaswinder.singh@linaro.org>, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com
 List-Id: devicetree@vger.kernel.org
 
++ Adrian
 
---===============1252751307==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Q8BnQc91gJZX4vDc"
-Content-Disposition: inline
+On Thu, 30 May 2019 at 11:20, Takao Orito <orito.takao@socionext.com> wrote:
+>
+> SD Host controller on Milbeaut consists of two controller parts.
+> One is core controller F_SDH30, this is similar to sdhci-fujitsu
+> controller.
+> Another is bridge controller.
+> This bridge controller is not compatible with sdhci-fujitsu controller.
+> This is special for Milbeaut series. This has some functions.
+> For example, reset control, clock enable/select for SDR50/25/12, set
+> property of SD physical pins, retuning control, set capabilityies.
+>
+> This bridge controller requires special procedures at reset or clock
+> enablement or change for further tuning of clock.
+>
+> Signed-off-by: Takao Orito <orito.takao@socionext.com>
 
+This looks good to me, however I have looped in Adrian who maintains
+SDHCI drivers, to allow him to provide some input.
 
---Q8BnQc91gJZX4vDc
-Content-Type: multipart/mixed; boundary="hxkXGo8AKqTJ+9QI"
-Content-Disposition: inline
-
-
---hxkXGo8AKqTJ+9QI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 03, 2019 at 12:14:27PM +0100, Robin Murphy wrote:
-> On 03/06/2019 11:47, Rob Clark wrote:
-> > On Sun, Jun 2, 2019 at 11:25 PM Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> > >=20
-> > > On Mon, Jun 3, 2019 at 4:40 AM Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > >=20
-> > > > On Fri, May 10, 2019 at 7:35 AM Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
-te:
-> > > > >=20
-> > > > > On Tue, Dec 4, 2018 at 2:29 PM Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> w=
-rote:
-> > > > > >=20
-> > > > > > On Sat, Dec 1, 2018 at 10:54 AM Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
- wrote:
-> > > > > > >=20
-> > > > > > > This solves a problem we see with drm/msm, caused by getting
-> > > > > > > iommu_dma_ops while we attach our own domain and manage it di=
-rectly at
-> > > > > > > the iommu API level:
-> > > > > > >=20
-> > > > > > >    [0000000000000038] user address but active_mm is swapper
-> > > > > > >    Internal error: Oops: 96000005 [#1] PREEMPT SMP
-> > > > > > >    Modules linked in:
-> > > > > > >    CPU: 7 PID: 70 Comm: kworker/7:1 Tainted: G        W      =
-   4.19.3 #90
-> > > > > > >    Hardware name: xxx (DT)
-> > > > > > >    Workqueue: events deferred_probe_work_func
-> > > > > > >    pstate: 80c00009 (Nzcv daif +PAN +UAO)
-> > > > > > >    pc : iommu_dma_map_sg+0x7c/0x2c8
-> > > > > > >    lr : iommu_dma_map_sg+0x40/0x2c8
-> > > > > > >    sp : ffffff80095eb4f0
-> > > > > > >    x29: ffffff80095eb4f0 x28: 0000000000000000
-> > > > > > >    x27: ffffffc0f9431578 x26: 0000000000000000
-> > > > > > >    x25: 00000000ffffffff x24: 0000000000000003
-> > > > > > >    x23: 0000000000000001 x22: ffffffc0fa9ac010
-> > > > > > >    x21: 0000000000000000 x20: ffffffc0fab40980
-> > > > > > >    x19: ffffffc0fab40980 x18: 0000000000000003
-> > > > > > >    x17: 00000000000001c4 x16: 0000000000000007
-> > > > > > >    x15: 000000000000000e x14: ffffffffffffffff
-> > > > > > >    x13: ffff000000000000 x12: 0000000000000028
-> > > > > > >    x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
-> > > > > > >    x9 : 0000000000000000 x8 : ffffffc0fab409a0
-> > > > > > >    x7 : 0000000000000000 x6 : 0000000000000002
-> > > > > > >    x5 : 0000000100000000 x4 : 0000000000000000
-> > > > > > >    x3 : 0000000000000001 x2 : 0000000000000002
-> > > > > > >    x1 : ffffffc0f9431578 x0 : 0000000000000000
-> > > > > > >    Process kworker/7:1 (pid: 70, stack limit =3D 0x0000000017=
-d08ffb)
-> > > > > > >    Call trace:
-> > > > > > >     iommu_dma_map_sg+0x7c/0x2c8
-> > > > > > >     __iommu_map_sg_attrs+0x70/0x84
-> > > > > > >     get_pages+0x170/0x1e8
-> > > > > > >     msm_gem_get_iova+0x8c/0x128
-> > > > > > >     _msm_gem_kernel_new+0x6c/0xc8
-> > > > > > >     msm_gem_kernel_new+0x4c/0x58
-> > > > > > >     dsi_tx_buf_alloc_6g+0x4c/0x8c
-> > > > > > >     msm_dsi_host_modeset_init+0xc8/0x108
-> > > > > > >     msm_dsi_modeset_init+0x54/0x18c
-> > > > > > >     _dpu_kms_drm_obj_init+0x430/0x474
-> > > > > > >     dpu_kms_hw_init+0x5f8/0x6b4
-> > > > > > >     msm_drm_bind+0x360/0x6c8
-> > > > > > >     try_to_bring_up_master.part.7+0x28/0x70
-> > > > > > >     component_master_add_with_match+0xe8/0x124
-> > > > > > >     msm_pdev_probe+0x294/0x2b4
-> > > > > > >     platform_drv_probe+0x58/0xa4
-> > > > > > >     really_probe+0x150/0x294
-> > > > > > >     driver_probe_device+0xac/0xe8
-> > > > > > >     __device_attach_driver+0xa4/0xb4
-> > > > > > >     bus_for_each_drv+0x98/0xc8
-> > > > > > >     __device_attach+0xac/0x12c
-> > > > > > >     device_initial_probe+0x24/0x30
-> > > > > > >     bus_probe_device+0x38/0x98
-> > > > > > >     deferred_probe_work_func+0x78/0xa4
-> > > > > > >     process_one_work+0x24c/0x3dc
-> > > > > > >     worker_thread+0x280/0x360
-> > > > > > >     kthread+0x134/0x13c
-> > > > > > >     ret_from_fork+0x10/0x18
-> > > > > > >    Code: d2800004 91000725 6b17039f 5400048a (f9401f40)
-> > > > > > >    ---[ end trace f22dda57f3648e2c ]---
-> > > > > > >    Kernel panic - not syncing: Fatal exception
-> > > > > > >    SMP: stopping secondary CPUs
-> > > > > > >    Kernel Offset: disabled
-> > > > > > >    CPU features: 0x0,22802a18
-> > > > > > >    Memory Limit: none
-> > > > > > >=20
-> > > > > > > The problem is that when drm/msm does it's own iommu_attach_d=
-evice(),
-> > > > > > > now the domain returned by iommu_get_domain_for_dev() is drm/=
-msm's
-> > > > > > > domain, and it doesn't have domain->iova_cookie.
-> > > > > > >=20
-> > > > > > > We kind of avoided this problem prior to sdm845/dpu because t=
-he iommu
-> > > > > > > was attached to the mdp node in dt, which is a child of the t=
-oplevel
-> > > > > > > mdss node (which corresponds to the dev passed in dma_map_sg(=
-)).  But
-> > > > > > > with sdm845, now the iommu is attached at the mdss level so w=
-e hit the
-> > > > > > > iommu_dma_ops in dma_map_sg().
-> > > > > > >=20
-> > > > > > > But auto allocating/attaching a domain before the driver is p=
-robed was
-> > > > > > > already a blocking problem for enabling per-context pagetable=
-s for the
-> > > > > > > GPU.  This problem is also now solved with this patch.
-> > > > > > >=20
-> > > > > > > Fixes: 97890ba9289c dma-mapping: detect and configure IOMMU i=
-n of_dma_configure
-> > > > > > > Tested-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > > > > > > Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > > > > ---
-> > > > > > > This is an alternative/replacement for [1].  What it lacks in=
- elegance
-> > > > > > > it makes up for in practicality ;-)
-> > > > > > >=20
-> > > > > > > [1] https://patchwork.freedesktop.org/patch/264930/
-> > > > > > >=20
-> > > > > > >   drivers/of/device.c | 22 ++++++++++++++++++++++
-> > > > > > >   1 file changed, 22 insertions(+)
-> > > > > > >=20
-> > > > > > > diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > > > > > > index 5957cd4fa262..15ffee00fb22 100644
-> > > > > > > --- a/drivers/of/device.c
-> > > > > > > +++ b/drivers/of/device.c
-> > > > > > > @@ -72,6 +72,14 @@ int of_device_add(struct platform_device *=
-ofdev)
-> > > > > > >          return device_add(&ofdev->dev);
-> > > > > > >   }
-> > > > > > >=20
-> > > > > > > +static const struct of_device_id iommu_blacklist[] =3D {
-> > > > > > > +       { .compatible =3D "qcom,mdp4" },
-> > > > > > > +       { .compatible =3D "qcom,mdss" },
-> > > > > > > +       { .compatible =3D "qcom,sdm845-mdss" },
-> > > > > > > +       { .compatible =3D "qcom,adreno" },
-> > > > > > > +       {}
-> > > > > > > +};
-> > > > > >=20
-> > > > > > Not completely clear to whether this is still needed or not, bu=
-t this
-> > > > > > really won't scale. Why can't the driver for these devices over=
-ride
-> > > > > > whatever has been setup by default?
-> > > > > >=20
-> > > > >=20
-> > > > > fwiw, at the moment it is not needed, but it will become needed a=
-gain
-> > > > > to implement per-context pagetables (although I suppose for this =
-we
-> > > > > only need to blacklist qcom,adreno and not also the display nodes=
-).
-> > > >=20
-> > > > So, another case I've come across, on the display side.. I'm working
-> > > > on handling the case where bootloader enables display (and takes io=
-mmu
-> > > > out of reset).. as soon as DMA domain gets attached we get iommu
-> > > > faults, because bootloader has already configured display for scano=
-ut.
-> > > > Unfortunately this all happens before actual driver is probed and h=
-as
-> > > > a chance to intervene.
-> > > >=20
-> > > > It's rather unfortunate that we tried to be clever rather than just
-> > > > making drivers call some function to opt-in to the hookup of dma io=
-mmu
-> > > > ops :-(
-> > >=20
-> > > I think it still works for the 90% of cases and if 10% needs some
-> > > explicit work in the drivers, that's better than requiring 100% of the
-> > > drivers to do things manually.
->=20
-> Right, it's not about "being clever", it's about not adding opt-in code to
-> the hundreds and hundreds and hundreds of drivers which *might* ever find
-> themselves used on a system where they would need the IOMMU's help for DM=
-A.
->=20
-> > > Adding Marek who had the same problem on Exynos.
-> >=20
-> > I do wonder how many drivers need to iommu_map in their ->probe()?
-> > I'm thinking moving the auto-hookup to after a successful probe(),
-> > with some function a driver could call if they need mapping in probe,
-> > might be a way to eventually get rid of the blacklist.  But I've no
-> > idea how to find the subset of drivers that would be broken without a
-> > dma_setup_iommu_stuff() call in their probe.
->=20
-> Wouldn't help much. That particular issue is nothing to do with DMA ops
-> really, it's about IOMMU initialisation. On something like SMMUv3 there is
-> literally no way to turn the thing on without blocking unknown traffic - =
-it
-> *has* to have stream table entries programmed before it can even allow st=
-uff
-> to bypass.
->=20
-> The answer is either to either pay attention to the "Quiesce all DMA capa=
-ble
-> devices" part of the boot protocol (which has been there since pretty much
-> forever), or to come up with some robust way of communicating "live"
-> boot-time mappings to IOMMU drivers so that they can program themselves
-> appropriately during probe.
-
-I ran into a similar issue not too long ago and I've been working on
-what I think is a correct fix for this problem. Unfortunately I went
-down the rabbit hole of trying to get all of the pieces in the
-bootloader merged before posting the kernel patches, and that's been
-taking a long time. Let me chime in here in the hope that it will be
-helpful to others.
-
-The problem that I ran into was pretty much the same thing that Rob
-encountered. We have some platforms that will initialize display over
-HDMI in an early bootloader to show a splash screen. During boot we
-would usually take over display hardware by just resetting it and then
-programming it from scratch. Ultimately we want to do seamless handover
-so that the kernel can take over the splash and replace it by the
-console when that's ready. But I'm getting ahead of myself.
-
-One of the things I've been trying to do is replace direct IOMMU API
-usage in the Tegra DRM driver by using DMA API only, which we need in
-order to fix some corner cases we ran into (I've now forgotten most of
-the details and I realize that my commit messages aren't all that
-helpful...).
-
-Anyway, when I started using the DMA API I was running into a massive
-amount of IOMMU faults starting at early boot. It took me a while to
-realize that this was because now the IOMMU was enabled before the
-driver had a chance to set up the IOMMU domain. I think the only way
-that we were getting around that was because we used to have a custom
-IOMMU driver on older Tegra device and don't expose DMA API compatible
-IOMMU domains. With newer Tegras using the ARM SMMU we don't really have
-that option anymore.
-
-So the root cause of this is that the bootloader initialized the display
-controller to scan out from a physical address (the bootloader does not
-set up the SMMU) and when the kernel attaches the display controller to
-the SMMU during early boot, the display controller ends up trying to
-fetch those physical addresses through the SMMU where no mapping for
-those addresses exists, hence causing these faults.
-
-The solution that I came up with is to use the reserved-memory bindings
-along with memory-region references in the display controller nodes. I
-have a patch for the Tegra SMMU driver that implements support for
-parsing this data (the IOMMU framework has infrastructure to do this, so
-I take it that this has come up before) and setting up 1:1 mappings
-right before the SMMU is enabled for a device. This works rather well in
-my testing. I've been using hard-coded values because the bootloader
-does not properly put the reserved memory regions into the DT. I've been
-trying to add that as a side-project, but it turned into a bit of a can
-of worms.
-
-These are all standard bindings, so I think we could implement something
-similar in the ARM SMMU driver. In fact, I was going to do that once I
-had sorted this all out for Tegra SMMU, but I'd be happy if anyone can
-beat me to it.
-
-I've attached the patch for Tegra SMMU here. I think pretty much the
-same thing could be implement for any other drivers since this is based
-on standard bindings. Perhaps there could even be helpers. Actually it
-looks like one such helpers already exists:
-
-	iommu_dma_get_resv_regions()
-
-I think the generic code looking up the standard memory-region property
-could be added to that to expose this functionality more broadly.
-
-One thing to note is that I have this workaround in the Tegra SMMU
-driver to bind the IOMMU domain to a specific instance during this early
-direct mappings business. But I think that may no longer be necessary
-since there seems to have been some work in this area lately.
-Specifically I'm looking at 7423e01741dd6a5f1255f589145313f0fb1c8cbe,
-which may help. I can investigate, but let me post the patch first to
-keep the discussion going.
-
-Here's a short extract of how I'm using this in device tree:
-
---- >8 ---
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts b/arch/arm6=
-4/boot/dts/nvidia/tegra210-p2371-2180.dts
-index 5a57396b5948..82c4e0c88740 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-@@ -8,6 +8,16 @@
-        model =3D "NVIDIA Jetson TX1 Developer Kit";
-        compatible =3D "nvidia,p2371-2180", "nvidia,tegra210";
-
-+       reserved-memory {
-+               #address-cells =3D <2>;
-+               #size-cells =3D <2>;
-+               ranges;
-+
-+               framebuffer: framebuffer@92c9f000 {
-+                       reg =3D <0 0x92c9f000 0 0x00800000>;
-+               };
-+       };
-+
-        pcie@1003000 {
-                status =3D "okay";
-
-@@ -35,6 +45,14 @@
-        };
-
-        host1x@50000000 {
-+               dc@54200000 {
-+                       memory-region =3D <&framebuffer>;
-+               };
-+
-+               dc@54240000 {
-+                       memory-region =3D <&framebuffer>;
-+               };
-+
-                dsi@54300000 {
-                        status =3D "okay";
-
---- >8 ---
-
-Note that these entries should all be generated at runtime by the
-bootloader once it has allocated the framebuffer. That's the can of
-worms I've been talking about.
-
-Attached is the SMMU driver patch.
-
-Hope that helps,
-Thierry
-
---hxkXGo8AKqTJ+9QI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline; filename="0001-iommu-tegra-smmu-Add-support-for-reserved-regions.patch"
-Content-Transfer-Encoding: quoted-printable
-
-=46rom 1c7c4fcc5364e48fc5390ac17dd7e4ca347a6eb4 Mon Sep 17 00:00:00 2001
-=46rom: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Date: Fri, 15 Feb 2019 15:16:44 +0100
-Subject: [PATCH] iommu/tegra-smmu: Add support for reserved regions
-
-The Tegra DRM driver currently uses the IOMMU API explicitly. This means
-that it has fine-grained control over when exactly the translation
-through the IOMMU is enabled. This currently happens after the driver
-probes, so the driver is in a DMA quiesced state when the IOMMU
-translation is enabled.
-
-During the transition of the Tegra DRM driver to use the DMA API instead
-of the IOMMU API explicitly, it was observed that on certain platforms
-the display controllers were still actively fetching from memory. When a
-DMA IOMMU domain is created as part of the DMA/IOMMU API setup during
-boot, the IOMMU translation for the display controllers can be enabled a
-significant amount of time before the driver has had a chance to reset
-the hardware into a sane state. This causes the SMMU to detect faults on
-the addresses that the display controller is trying to fetch.
-
-To avoid this, and as a byproduct paving the way for seamless transition
-of display from the bootloader to the kernel, add support for reserved
-regions in the Tegra SMMU driver. This is implemented using the standard
-reserved memory device tree bindings, which let us describe regions of
-memory which the kernel is forbidden from using for regular allocations.
-The Tegra SMMU driver will parse the nodes associated with each device
-via the "memory-region" property and return reserved regions that the
-IOMMU core will then create direct mappings for prior to attaching the
-IOMMU domains to the devices. This ensures that a 1:1 mapping is in
-place when IOMMU translation starts and prevents the SMMU from detecting
-any faults.
-
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/iommu/tegra-smmu.c | 115 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 115 insertions(+)
-
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 8e49869812b0..b96444be325d 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -12,6 +12,7 @@
- #include <linux/iommu.h>
- #include <linux/kernel.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-@@ -545,6 +546,38 @@ static void tegra_smmu_set_pde(struct tegra_smmu_as *a=
-s, unsigned long iova,
- 	struct tegra_smmu *smmu =3D as->smmu;
- 	u32 *pd =3D page_address(as->pd);
- 	unsigned long offset =3D pd_index * sizeof(*pd);
-+	bool unmap =3D false;
-+
-+	/*
-+	 * XXX Move this outside of this function. Perhaps add a struct
-+	 * iommu_domain parameter to ->{get,put}_resv_regions() so that
-+	 * the mapping can be done there.
-+	 *
-+	 * The problem here is that as->smmu is only known once we attach
-+	 * the domain to a device (because then we look up the right SMMU
-+	 * instance via the dev->archdata.iommu pointer). When the direct
-+	 * mappings are created for reserved regions, the domain has not
-+	 * been attached to a device yet, so we don't know. We currently
-+	 * fix that up in ->apply_resv_regions() because that is the first
-+	 * time where we have access to a struct device that will be used
-+	 * with the IOMMU domain. However, that's asymmetric and doesn't
-+	 * take care of the page directory mapping either, so we need to
-+	 * come up with something better.
-+	 */
-+	if (as->pd_dma =3D=3D 0) {
-+		as->pd_dma =3D dma_map_page(smmu->dev, as->pd, 0, SMMU_SIZE_PD,
-+					  DMA_TO_DEVICE);
-+		if (dma_mapping_error(smmu->dev, as->pd_dma))
-+			return;
-+
-+		if (!smmu_dma_addr_valid(smmu, as->pd_dma)) {
-+			dma_unmap_page(smmu->dev, as->pd_dma, SMMU_SIZE_PD,
-+				       DMA_TO_DEVICE);
-+			return;
-+		}
-+
-+		unmap =3D true;
-+	}
-=20
- 	/* Set the page directory entry first */
- 	pd[pd_index] =3D value;
-@@ -557,6 +590,12 @@ static void tegra_smmu_set_pde(struct tegra_smmu_as *a=
-s, unsigned long iova,
- 	smmu_flush_ptc(smmu, as->pd_dma, offset);
- 	smmu_flush_tlb_section(smmu, as->id, iova);
- 	smmu_flush(smmu);
-+
-+	if (unmap) {
-+		dma_unmap_page(smmu->dev, as->pd_dma, SMMU_SIZE_PD,
-+			       DMA_TO_DEVICE);
-+		as->pd_dma =3D 0;
-+	}
- }
-=20
- static u32 *tegra_smmu_pte_offset(struct page *pt_page, unsigned long iova)
-@@ -897,6 +936,79 @@ static struct iommu_group *tegra_smmu_device_group(str=
-uct device *dev)
- 	return group;
- }
-=20
-+static void tegra_smmu_get_resv_regions(struct device *dev, struct list_he=
-ad *list)
-+{
-+	struct of_phandle_iterator it;
-+	int err;
-+
-+	if (!dev->of_node)
-+		return;
-+
-+	of_for_each_phandle(&it, err, dev->of_node, "memory-region", NULL, 0) {
-+		struct iommu_resv_region *region;
-+		struct resource res;
-+
-+		err =3D of_address_to_resource(it.node, 0, &res);
-+		if (err < 0) {
-+			dev_err(dev, "failed to parse memory region %pOFn: %d\n",
-+				it.node, err);
-+			continue;
-+		}
-+
-+		region =3D iommu_alloc_resv_region(res.start, resource_size(&res),
-+						 IOMMU_READ | IOMMU_WRITE,
-+						 IOMMU_RESV_DIRECT);
-+		if (!region)
-+			return;
-+
-+		dev_dbg(dev, "reserved region %pR\n", &res);
-+		list_add_tail(&region->list, list);
-+	}
-+}
-+
-+static void tegra_smmu_put_resv_regions(struct device *dev,
-+					struct list_head *list)
-+{
-+	struct iommu_resv_region *entry, *next;
-+
-+	list_for_each_entry_safe(entry, next, list, list)
-+		kfree(entry);
-+}
-+
-+static void tegra_smmu_apply_resv_region(struct device *dev,
-+					 struct iommu_domain *domain,
-+					 struct iommu_resv_region *region)
-+{
-+	struct tegra_smmu *smmu =3D dev->archdata.iommu;
-+	struct tegra_smmu_as *as =3D to_smmu_as(domain);
-+
-+	/*
-+	 * ->attach_dev() may not have been called yet at this point, so the
-+	 * address space may not have been associated with an SMMU instance.
-+	 * Set up the association here to make sure subsequent code can rely
-+	 * on the SMMU instance being known.
-+	 *
-+	 * Also make sure that the SMMU instance doesn't conflict if an SMMU
-+	 * has been associated with the address space already. This can happen
-+	 * if a domain is shared between multiple devices.
-+	 *
-+	 * Note that this is purely theoretic because there are no known SoCs
-+	 * with multiple instances of this SMMU.
-+	 *
-+	 * XXX Deal with this elsewhere. One possibility would be to pass the
-+	 * struct iommu_domain that we're operating on to ->get_resv_regions()
-+	 * and ->put_resv_regions() so that the connection between it and the
-+	 * struct device (in order to find the SMMU instance) can already be
-+	 * established at that time. This would be nicely symmetric because a
-+	 * ->put_resv_regions() could undo that again so that ->attach_dev()
-+	 * could start from a clean slate.
-+	 */
-+	if (as->smmu && as->smmu !=3D smmu)
-+		WARN(1, "conflicting SMMU instances\n");
-+
-+	as->smmu =3D smmu;
-+}
-+
- static int tegra_smmu_of_xlate(struct device *dev,
- 			       struct of_phandle_args *args)
- {
-@@ -917,6 +1029,9 @@ static const struct iommu_ops tegra_smmu_ops =3D {
- 	.map =3D tegra_smmu_map,
- 	.unmap =3D tegra_smmu_unmap,
- 	.iova_to_phys =3D tegra_smmu_iova_to_phys,
-+	.get_resv_regions =3D tegra_smmu_get_resv_regions,
-+	.put_resv_regions =3D tegra_smmu_put_resv_regions,
-+	.apply_resv_region =3D tegra_smmu_apply_resv_region,
- 	.of_xlate =3D tegra_smmu_of_xlate,
- 	.pgsize_bitmap =3D SZ_4K,
- };
---=20
-2.21.0
+Kind regards
+Uffe
 
 
---hxkXGo8AKqTJ+9QI--
-
---Q8BnQc91gJZX4vDc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz1IwMACgkQ3SOs138+
-s6HFAxAAql1Hfx2rdOwJAHx+apg2RhwhIJKOmmY3L0aKIey/sRpxFCchGxjNi18u
-xOUEBOYIrVmQgS/qholbxGbyUCupHyJF/1dWXjMKBn8dsw8jDbrHsm7Ew/Hp1jzL
-cpC1LRcm3oBNvAvbMW8VyhYZv9FFp5BsJFgybPnQ8xULbiciA+CxG/LOWtlxy1sx
-CneuLLDauioU2y8Gekx1kRJWYXQ1lHk+iwnS/aRgMCw7LTNnG/Ntzwh5QHwZe9qd
-6YtVbATgxhA6keurY55ZCeLfBPl0k3+/uRqzQ02oGFn8FrWLPFaKo1sFxEoupNVN
-EOkPDLXxuae0dBQaaz4fp+R0Vla7eQ1YXSl1fVxdgXUYgQxBjmFnABJ9rwJjju54
-mTN0bNSKkxKJLDNMJ0i5rOnyexLt31jOTHuILKkGALoMVi9GZ/0SFqRZfa9M97nI
-rejh/m5JK1ucIoeYqMPhK3MUEJ81aCV0cO7dYF1KXSU//cUO2qG+oOSaWvwbJihL
-ON8IkcULv43TnOrjQmnUFSLuceOD0RgmSJZl8C6PecCLA6n4JNUvocHJyIKw4Bna
-0NmDAin7yvgOjyUHki+A2Tfn+JaUfSgkiVl+Jego+jYCj0fp8iIxQWpbqYohp8lp
-sNmKb4QB0tw66yhPIe/OD8QPEA/n9XUZizuBUh1e+GrU8V1MqWU=
-=mlFr
------END PGP SIGNATURE-----
-
---Q8BnQc91gJZX4vDc--
-
---===============1252751307==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5v
-IG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5v
-
---===============1252751307==--
+> ---
+>  drivers/mmc/host/Kconfig          |  11 ++
+>  drivers/mmc/host/Makefile         |   1 +
+>  drivers/mmc/host/sdhci-milbeaut.c | 362 ++++++++++++++++++++++++++++++++++++++
+>  drivers/mmc/host/sdhci_f_sdh30.c  |  26 +--
+>  drivers/mmc/host/sdhci_f_sdh30.h  |  32 ++++
+>  5 files changed, 407 insertions(+), 25 deletions(-)
+>  create mode 100644 drivers/mmc/host/sdhci-milbeaut.c
+>  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.h
+>
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 28fcd8f..9b39111 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -353,6 +353,17 @@ config MMC_SDHCI_F_SDH30
+>
+>           If unsure, say N.
+>
+> +config MMC_SDHCI_MILBEAUT
+> +       tristate "SDHCI support for Socionext Milbeaut Serieas using F_SDH30"
+> +       depends on MMC_SDHCI_PLTFM
+> +       depends on OF
+> +       help
+> +         This selects the Secure Digital Host Controller Interface (SDHCI)
+> +         Needed by Milbeaut SoC for MMC / SD / SDIO support.
+> +         If you have a controller with this interface, say Y or M here.
+> +
+> +         If unsure, say N.
+> +
+>  config MMC_SDHCI_IPROC
+>         tristate "SDHCI support for the BCM2835 & iProc SD/MMC Controller"
+>         depends on ARCH_BCM2835 || ARCH_BCM_IPROC || COMPILE_TEST
+> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> index 7357871..db98e8a 100644
+> --- a/drivers/mmc/host/Makefile
+> +++ b/drivers/mmc/host/Makefile
+> @@ -21,6 +21,7 @@ obj-$(CONFIG_MMC_SDHCI_PXAV2) += sdhci-pxav2.o
+>  obj-$(CONFIG_MMC_SDHCI_S3C)    += sdhci-s3c.o
+>  obj-$(CONFIG_MMC_SDHCI_SIRF)           += sdhci-sirf.o
+>  obj-$(CONFIG_MMC_SDHCI_F_SDH30)        += sdhci_f_sdh30.o
+> +obj-$(CONFIG_MMC_SDHCI_MILBEAUT)       += sdhci-milbeaut.o
+>  obj-$(CONFIG_MMC_SDHCI_SPEAR)  += sdhci-spear.o
+>  obj-$(CONFIG_MMC_SDHCI_AM654)  += sdhci_am654.o
+>  obj-$(CONFIG_MMC_WBSD)         += wbsd.o
+> diff --git a/drivers/mmc/host/sdhci-milbeaut.c b/drivers/mmc/host/sdhci-milbeaut.c
+> new file mode 100644
+> index 0000000..a1aa21b
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci-milbeaut.c
+> @@ -0,0 +1,362 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2013 - 2015 Fujitsu Semiconductor, Ltd
+> + *              Vincent Yang <vincent.yang@tw.fujitsu.com>
+> + * Copyright (C) 2015 Linaro Ltd  Andy Green <andy.green@linaro.org>
+> + * Copyright (C) 2019 Socionext Inc.
+> + *              Takao Orito <orito.takao@socionext.com>
+> + */
+> +
+> +#include <linux/bits.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/property.h>
+> +
+> +#include "sdhci-pltfm.h"
+> +#include "sdhci_f_sdh30.h"
+> +
+> +/* milbeaut bridge controller register */
+> +#define MLB_SOFT_RESET         0x0200
+> +#define  MLB_SOFT_RESET_RSTX           BIT(0)
+> +
+> +#define MLB_WP_CD_LED_SET      0x0210
+> +#define  MLB_WP_CD_LED_SET_LED_INV  BIT(2)
+> +
+> +#define MLB_CR_SET                     0x0220
+> +#define  MLB_CR_SET_CR_TOCLKUNIT       BIT(24)
+> +#define  MLB_CR_SET_CR_TOCLKFREQ_SFT   (16)
+> +#define  MLB_CR_SET_CR_TOCLKFREQ_MASK  (0x3F << MLB_CR_SET_CR_TOCLKFREQ_SFT)
+> +#define  MLB_CR_SET_CR_BCLKFREQ_SFT    (8)
+> +#define  MLB_CR_SET_CR_BCLKFREQ_MASK   (0xFF << MLB_CR_SET_CR_BCLKFREQ_SFT)
+> +#define  MLB_CR_SET_CR_RTUNTIMER_SFT   (4)
+> +#define  MLB_CR_SET_CR_RTUNTIMER_MASK  (0xF << MLB_CR_SET_CR_RTUNTIMER_SFT)
+> +
+> +#define MLB_SD_TOCLK_I_DIV  16
+> +#define MLB_TOCLKFREQ_UNIT_THRES    16000000
+> +#define MLB_CAL_TOCLKFREQ_MHZ(rate) (rate / MLB_SD_TOCLK_I_DIV / 1000000)
+> +#define MLB_CAL_TOCLKFREQ_KHZ(rate) (rate / MLB_SD_TOCLK_I_DIV / 1000)
+> +#define MLB_TOCLKFREQ_MAX   63
+> +#define MLB_TOCLKFREQ_MIN    1
+> +
+> +#define MLB_SD_BCLK_I_DIV   4
+> +#define MLB_CAL_BCLKFREQ(rate)  (rate / MLB_SD_BCLK_I_DIV / 1000000)
+> +#define MLB_BCLKFREQ_MAX        255
+> +#define MLB_BCLKFREQ_MIN          1
+> +
+> +#define MLB_CDR_SET                    0x0230
+> +#define MLB_CDR_SET_CLK2POW16  3
+> +
+> +struct f_sdhost_priv {
+> +       struct clk *clk_iface;
+> +       struct clk *clk;
+> +       struct device *dev;
+> +       bool enable_cmd_dat_delay;
+> +};
+> +
+> +static void sdhci_milbeaut_soft_voltage_switch(struct sdhci_host *host)
+> +{
+> +       u32 ctrl = 0;
+> +
+> +       usleep_range(2500, 3000);
+> +       ctrl = sdhci_readl(host, F_SDH30_IO_CONTROL2);
+> +       ctrl |= F_SDH30_CRES_O_DN;
+> +       sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
+> +       ctrl |= F_SDH30_MSEL_O_1_8;
+> +       sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
+> +
+> +       ctrl &= ~F_SDH30_CRES_O_DN;
+> +       sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
+> +       usleep_range(2500, 3000);
+> +
+> +       ctrl = sdhci_readl(host, F_SDH30_TUNING_SETTING);
+> +       ctrl |= F_SDH30_CMD_CHK_DIS;
+> +       sdhci_writel(host, ctrl, F_SDH30_TUNING_SETTING);
+> +}
+> +
+> +static unsigned int sdhci_milbeaut_get_min_clock(struct sdhci_host *host)
+> +{
+> +       return F_SDH30_MIN_CLOCK;
+> +}
+> +
+> +static void sdhci_milbeaut_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +       u16 clk;
+> +       u32 ctl;
+> +       ktime_t timeout;
+> +
+> +       clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +       clk = (clk & ~SDHCI_CLOCK_CARD_EN) | SDHCI_CLOCK_INT_EN;
+> +       sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +
+> +       sdhci_reset(host, mask);
+> +
+> +       clk |= SDHCI_CLOCK_CARD_EN;
+> +       sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +
+> +       timeout = ktime_add_ms(ktime_get(), 10);
+> +       while (1) {
+> +               bool timedout = ktime_after(ktime_get(), timeout);
+> +
+> +               clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +               if (clk & SDHCI_CLOCK_INT_STABLE)
+> +                       break;
+> +               if (timedout) {
+> +                       pr_err("%s: Internal clock never stabilised.\n",
+> +                               mmc_hostname(host->mmc));
+> +                       sdhci_dumpregs(host);
+> +                       return;
+> +               }
+> +               udelay(10);
+> +       }
+> +
+> +       if (priv->enable_cmd_dat_delay) {
+> +               ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
+> +               ctl |= F_SDH30_CMD_DAT_DELAY;
+> +               sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
+> +       }
+> +}
+> +
+> +static void sdhci_milbeaut_set_power(struct sdhci_host *host,
+> +                       unsigned char mode, unsigned short vdd)
+> +{
+> +       if (!IS_ERR(host->mmc->supply.vmmc)) {
+> +               struct mmc_host *mmc = host->mmc;
+> +
+> +               mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
+> +       }
+> +       sdhci_set_power_noreg(host, mode, vdd);
+> +}
+> +
+> +static const struct sdhci_ops sdhci_milbeaut_ops = {
+> +       .voltage_switch = sdhci_milbeaut_soft_voltage_switch,
+> +       .get_min_clock = sdhci_milbeaut_get_min_clock,
+> +       .reset = sdhci_milbeaut_reset,
+> +       .set_clock = sdhci_set_clock,
+> +       .set_bus_width = sdhci_set_bus_width,
+> +       .set_uhs_signaling = sdhci_set_uhs_signaling,
+> +       .set_power = sdhci_milbeaut_set_power,
+> +};
+> +
+> +static void sdhci_milbeaut_bridge_reset(struct sdhci_host *host,
+> +                                               int reset_flag)
+> +{
+> +       if (reset_flag)
+> +               sdhci_writel(host, 0, MLB_SOFT_RESET);
+> +       else
+> +               sdhci_writel(host, MLB_SOFT_RESET_RSTX, MLB_SOFT_RESET);
+> +}
+> +
+> +static void sdhci_milbeaut_bridge_init(struct sdhci_host *host,
+> +                                               int rate)
+> +{
+> +       u32 val, clk;
+> +
+> +       /* IO_SDIO_CR_SET should be set while reset */
+> +       val = sdhci_readl(host, MLB_CR_SET);
+> +       val &= ~(MLB_CR_SET_CR_TOCLKFREQ_MASK | MLB_CR_SET_CR_TOCLKUNIT |
+> +                       MLB_CR_SET_CR_BCLKFREQ_MASK);
+> +       if (rate >= MLB_TOCLKFREQ_UNIT_THRES) {
+> +               clk = MLB_CAL_TOCLKFREQ_MHZ(rate);
+> +               clk = min_t(u32, MLB_TOCLKFREQ_MAX, clk);
+> +               val |= MLB_CR_SET_CR_TOCLKUNIT |
+> +                       (clk << MLB_CR_SET_CR_TOCLKFREQ_SFT);
+> +       } else {
+> +               clk = MLB_CAL_TOCLKFREQ_KHZ(rate);
+> +               clk = min_t(u32, MLB_TOCLKFREQ_MAX, clk);
+> +               clk = max_t(u32, MLB_TOCLKFREQ_MIN, clk);
+> +               val |= clk << MLB_CR_SET_CR_TOCLKFREQ_SFT;
+> +       }
+> +
+> +       clk = MLB_CAL_BCLKFREQ(rate);
+> +       clk = min_t(u32, MLB_BCLKFREQ_MAX, clk);
+> +       clk = max_t(u32, MLB_BCLKFREQ_MIN, clk);
+> +       val |=  clk << MLB_CR_SET_CR_BCLKFREQ_SFT;
+> +       val &= ~MLB_CR_SET_CR_RTUNTIMER_MASK;
+> +       sdhci_writel(host, val, MLB_CR_SET);
+> +
+> +       sdhci_writel(host, MLB_CDR_SET_CLK2POW16, MLB_CDR_SET);
+> +
+> +       sdhci_writel(host, MLB_WP_CD_LED_SET_LED_INV, MLB_WP_CD_LED_SET);
+> +}
+> +
+> +static void sdhci_milbeaut_vendor_init(struct sdhci_host *host)
+> +{
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +       u32 ctl;
+> +
+> +       ctl = sdhci_readl(host, F_SDH30_IO_CONTROL2);
+> +       ctl |= F_SDH30_CRES_O_DN;
+> +       sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
+> +       ctl &= ~F_SDH30_MSEL_O_1_8;
+> +       sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
+> +       ctl &= ~F_SDH30_CRES_O_DN;
+> +       sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
+> +
+> +       ctl = sdhci_readw(host, F_SDH30_AHB_CONFIG);
+> +       ctl |= F_SDH30_SIN | F_SDH30_AHB_INCR_16 | F_SDH30_AHB_INCR_8 |
+> +              F_SDH30_AHB_INCR_4;
+> +       ctl &= ~(F_SDH30_AHB_BIGED | F_SDH30_BUSLOCK_EN);
+> +       sdhci_writew(host, ctl, F_SDH30_AHB_CONFIG);
+> +
+> +       if (priv->enable_cmd_dat_delay) {
+> +               ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
+> +               ctl |= F_SDH30_CMD_DAT_DELAY;
+> +               sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
+> +       }
+> +}
+> +
+> +static const struct of_device_id mlb_dt_ids[] = {
+> +       {
+> +               .compatible = "socionext,milbeaut-m10v-sdhci-3.0",
+> +       },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mlb_dt_ids);
+> +
+> +static void sdhci_milbeaut_init(struct sdhci_host *host)
+> +{
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +       int rate = clk_get_rate(priv->clk);
+> +       u16 ctl;
+> +
+> +       sdhci_milbeaut_bridge_reset(host, 0);
+> +
+> +       ctl = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +       ctl &= ~(SDHCI_CLOCK_CARD_EN | SDHCI_CLOCK_INT_EN);
+> +       sdhci_writew(host, ctl, SDHCI_CLOCK_CONTROL);
+> +
+> +       sdhci_milbeaut_bridge_reset(host, 1);
+> +
+> +       sdhci_milbeaut_bridge_init(host, rate);
+> +       sdhci_milbeaut_bridge_reset(host, 0);
+> +
+> +       sdhci_milbeaut_vendor_init(host);
+> +}
+> +
+> +static int sdhci_milbeaut_probe(struct platform_device *pdev)
+> +{
+> +       struct sdhci_host *host;
+> +       struct device *dev = &pdev->dev;
+> +       struct resource *res;
+> +       int irq, ret = 0;
+> +       struct f_sdhost_priv *priv;
+> +
+> +       irq = platform_get_irq(pdev, 0);
+> +       if (irq < 0) {
+> +               dev_err(dev, "%s: no irq specified\n", __func__);
+> +               return irq;
+> +       }
+> +
+> +       host = sdhci_alloc_host(dev, sizeof(struct f_sdhost_priv));
+> +       if (IS_ERR(host))
+> +               return PTR_ERR(host);
+> +
+> +       priv = sdhci_priv(host);
+> +       priv->dev = dev;
+> +
+> +       host->quirks = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
+> +                          SDHCI_QUIRK_INVERTED_WRITE_PROTECT |
+> +                          SDHCI_QUIRK_CLOCK_BEFORE_RESET |
+> +                          SDHCI_QUIRK_DELAY_AFTER_POWER;
+> +       host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
+> +                       SDHCI_QUIRK2_TUNING_WORK_AROUND |
+> +                       SDHCI_QUIRK2_PRESET_VALUE_BROKEN;
+> +
+> +       priv->enable_cmd_dat_delay = device_property_read_bool(dev,
+> +                                               "fujitsu,cmd-dat-delay-select");
+> +
+> +       ret = mmc_of_parse(host->mmc);
+> +       if (ret)
+> +               goto err;
+> +
+> +       platform_set_drvdata(pdev, host);
+> +
+> +       host->hw_name = "f_sdh30";
+> +       host->ops = &sdhci_milbeaut_ops;
+> +       host->irq = irq;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       host->ioaddr = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(host->ioaddr)) {
+> +               ret = PTR_ERR(host->ioaddr);
+> +               goto err;
+> +       }
+> +
+> +       if (dev_of_node(dev)) {
+> +               sdhci_get_of_property(pdev);
+> +
+> +               priv->clk_iface = devm_clk_get(&pdev->dev, "iface");
+> +               if (IS_ERR(priv->clk_iface)) {
+> +                       ret = PTR_ERR(priv->clk_iface);
+> +                       goto err;
+> +               }
+> +
+> +               ret = clk_prepare_enable(priv->clk_iface);
+> +               if (ret)
+> +                       goto err;
+> +
+> +               priv->clk = devm_clk_get(&pdev->dev, "core");
+> +               if (IS_ERR(priv->clk)) {
+> +                       ret = PTR_ERR(priv->clk);
+> +                       goto err_clk;
+> +               }
+> +
+> +               ret = clk_prepare_enable(priv->clk);
+> +               if (ret)
+> +                       goto err_clk;
+> +       }
+> +
+> +       sdhci_milbeaut_init(host);
+> +
+> +       ret = sdhci_add_host(host);
+> +       if (ret)
+> +               goto err_add_host;
+> +
+> +       return 0;
+> +
+> +err_add_host:
+> +       clk_disable_unprepare(priv->clk);
+> +err_clk:
+> +       clk_disable_unprepare(priv->clk_iface);
+> +err:
+> +       sdhci_free_host(host);
+> +       return ret;
+> +}
+> +
+> +static int sdhci_milbeaut_remove(struct platform_device *pdev)
+> +{
+> +       struct sdhci_host *host = platform_get_drvdata(pdev);
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +
+> +       sdhci_remove_host(host, readl(host->ioaddr + SDHCI_INT_STATUS) ==
+> +                         0xffffffff);
+> +
+> +       clk_disable_unprepare(priv->clk_iface);
+> +       clk_disable_unprepare(priv->clk);
+> +
+> +       sdhci_free_host(host);
+> +       platform_set_drvdata(pdev, NULL);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver sdhci_milbeaut_driver = {
+> +       .driver = {
+> +               .name = "sdhci-milbeaut",
+> +               .of_match_table = of_match_ptr(mlb_dt_ids),
+> +       },
+> +       .probe  = sdhci_milbeaut_probe,
+> +       .remove = sdhci_milbeaut_remove,
+> +};
+> +
+> +module_platform_driver(sdhci_milbeaut_driver);
+> +
+> +MODULE_DESCRIPTION("MILBEAUT SD Card Controller driver");
+> +MODULE_AUTHOR("Takao Orito <orito.takao@socionext.com>");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:sdhci-milbeaut");
+> diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
+> index 485f759..ca4c99a 100644
+> --- a/drivers/mmc/host/sdhci_f_sdh30.c
+> +++ b/drivers/mmc/host/sdhci_f_sdh30.c
+> @@ -19,31 +19,7 @@
+>  #include <linux/clk.h>
+>
+>  #include "sdhci-pltfm.h"
+> -
+> -/* F_SDH30 extended Controller registers */
+> -#define F_SDH30_AHB_CONFIG             0x100
+> -#define  F_SDH30_AHB_BIGED             0x00000040
+> -#define  F_SDH30_BUSLOCK_DMA           0x00000020
+> -#define  F_SDH30_BUSLOCK_EN            0x00000010
+> -#define  F_SDH30_SIN                   0x00000008
+> -#define  F_SDH30_AHB_INCR_16           0x00000004
+> -#define  F_SDH30_AHB_INCR_8            0x00000002
+> -#define  F_SDH30_AHB_INCR_4            0x00000001
+> -
+> -#define F_SDH30_TUNING_SETTING         0x108
+> -#define  F_SDH30_CMD_CHK_DIS           0x00010000
+> -
+> -#define F_SDH30_IO_CONTROL2            0x114
+> -#define  F_SDH30_CRES_O_DN             0x00080000
+> -#define  F_SDH30_MSEL_O_1_8            0x00040000
+> -
+> -#define F_SDH30_ESD_CONTROL            0x124
+> -#define  F_SDH30_EMMC_RST              0x00000002
+> -#define  F_SDH30_EMMC_HS200            0x01000000
+> -
+> -#define F_SDH30_CMD_DAT_DELAY          0x200
+> -
+> -#define F_SDH30_MIN_CLOCK              400000
+> +#include "sdhci_f_sdh30.h"
+>
+>  struct f_sdhost_priv {
+>         struct clk *clk_iface;
+> diff --git a/drivers/mmc/host/sdhci_f_sdh30.h b/drivers/mmc/host/sdhci_f_sdh30.h
+> new file mode 100644
+> index 0000000..fc1ad28
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci_f_sdh30.h
+> @@ -0,0 +1,32 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2013 - 2015 Fujitsu Semiconductor, Ltd
+> + *              Vincent Yang <vincent.yang@tw.fujitsu.com>
+> + * Copyright (C) 2015 Linaro Ltd  Andy Green <andy.green@linaro.org>
+> + * Copyright (C) 2019 Socionext Inc.
+> + *
+> + */
+> +
+> +/* F_SDH30 extended Controller registers */
+> +#define F_SDH30_AHB_CONFIG      0x100
+> +#define  F_SDH30_AHB_BIGED      BIT(6)
+> +#define  F_SDH30_BUSLOCK_DMA    BIT(5)
+> +#define  F_SDH30_BUSLOCK_EN     BIT(4)
+> +#define  F_SDH30_SIN            BIT(3)
+> +#define  F_SDH30_AHB_INCR_16    BIT(2)
+> +#define  F_SDH30_AHB_INCR_8     BIT(1)
+> +#define  F_SDH30_AHB_INCR_4     BIT(0)
+> +
+> +#define F_SDH30_TUNING_SETTING  0x108
+> +#define  F_SDH30_CMD_CHK_DIS    BIT(16)
+> +
+> +#define F_SDH30_IO_CONTROL2     0x114
+> +#define  F_SDH30_CRES_O_DN      BIT(19)
+> +#define  F_SDH30_MSEL_O_1_8     BIT(18)
+> +
+> +#define F_SDH30_ESD_CONTROL     0x124
+> +#define         F_SDH30_EMMC_RST               BIT(1)
+> +#define  F_SDH30_CMD_DAT_DELAY BIT(9)
+> +#define         F_SDH30_EMMC_HS200             BIT(24)
+> +
+> +#define F_SDH30_MIN_CLOCK              400000
+> --
+> 1.9.1
+>
+>
