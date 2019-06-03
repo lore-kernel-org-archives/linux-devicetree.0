@@ -1,32 +1,41 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next 04/10] net: ethernet: ti: cpts: add support
- for rftclk selection
-Date: Mon, 03 Jun 2019 15:13:29 -0700 (PDT)
-Message-ID: <20190603.151329.1880364693299986138.davem@davemloft.net>
-References: <20190601104534.25790-1-grygorii.strashko@ti.com>
-        <20190601104534.25790-5-grygorii.strashko@ti.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190601104534.25790-5-grygorii.strashko@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: grygorii.strashko@ti.com
-Cc: ssantosh@kernel.org, richardcochran@gmail.com, robh+dt@kernel.org, nsekhar@ti.com, m-karicheri2@ti.com, w-kwok2@ti.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 1/3 v2] dt-bindings: power: reset: qcom: Add qcom,pm8998-pon compatability line
+Date: Mon,  3 Jun 2019 22:23:17 +0000
+Message-ID: <20190603222319.62842-1-john.stultz@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Pundir <amit.pundir@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Date: Sat, 1 Jun 2019 13:45:28 +0300
+Update bindings to support for qcom,pm8998-pon which uses gen2 pon
 
-> +static int cpts_of_mux_clk_setup(struct cpts *cpts, struct device_node *node)
-> +{
-> +	unsigned int num_parents;
-> +	const char **parent_names;
-> +	struct device_node *refclk_np;
-> +	struct clk_hw *clk_hw;
-> +	u32 *mux_table;
-> +	int ret = -EINVAL;
+Cc: Andy Gross <agross@kernel.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Amit Pundir <amit.pundir@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ Documentation/devicetree/bindings/power/reset/qcom,pon.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Reverse christmas tree please.
-
-Thank you.
+diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+index 5705f575862df..0c0dc3a1e693e 100644
+--- a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
++++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+@@ -9,6 +9,7 @@ Required Properties:
+ -compatible: Must be one of:
+ 	"qcom,pm8916-pon"
+ 	"qcom,pms405-pon"
++	"qcom,pm8998-pon"
+ 
+ -reg: Specifies the physical address of the pon register
+ 
+-- 
+2.17.1
