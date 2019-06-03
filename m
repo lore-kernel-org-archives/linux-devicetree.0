@@ -1,16 +1,16 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/3] mfd: bd718x7: Remove hardcoded config for button
- press duration
-Date: Mon, 3 Jun 2019 13:51:02 +0100
-Message-ID: <20190603125102.GQ4797@dell>
+Subject: Re: [PATCH v2 2/3] dt-bindings: mfd: Document short/long press
+ duration for bd718x7
+Date: Mon, 3 Jun 2019 13:51:13 +0100
+Message-ID: <20190603125112.GR4797@dell>
 References: <cover.1558471150.git.leonard.crestez@nxp.com>
- <3afb20a0e4b14588d9fc6af7bd86920127feeba2.1558471150.git.leonard.crestez@nxp.com>
+ <ec750ff0021c942b3c477e1cc7dc35f957600c96.1558471150.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <3afb20a0e4b14588d9fc6af7bd86920127feeba2.1558471150.git.leonard.crestez@nxp.com>
+In-Reply-To: <ec750ff0021c942b3c477e1cc7dc35f957600c96.1558471150.git.leonard.crestez@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,20 +24,15 @@ To: Leonard Crestez <leonard.crestez@nxp.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Angus Ainslie <angus@akkea.ca>, Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMSBNYXkgMjAxOSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgoKPiBUaGUgcmVzZXQg
-YnV0dG9uIG9uIGlteDhtbS1ldmsgaXMgdGllZCB0byBQV1JPTl9CIHBpbiBvZiBiZDcxODQ3IGFu
-ZCB0aGUKPiBsb25nIHByZXNzIGR1cmF0aW9uIGlzIHNldCB0byB6ZXJvIGZyb20gT1RQLiBUaGUg
-bGludXggZHJpdmVyIG92ZXJyaWRlcwo+IHRob3NlIHZhbHVlcyBhbmQgYnJlYWtzIHJlc2V0IGZy
-b20gYnV0dG9uLgo+IAo+IE92ZXJ3cml0aW5nIE9UUCBvciBib290bG9hZGVyIGNvbmZpZ3VyYXRp
-b24gd2l0aCBzb21lIGhhcmRjb2RlZCBkZWZhdWx0cwo+IGlzIG5vdCBkZXNpcmFibGUsIGtlZXAg
-YWxyZWFkeSBwcm9ncmFtbWVkIHZhbHVlcyBpbnN0ZWFkLgo+IAo+IFNpZ25lZC1vZmYtYnk6IExl
-b25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+Cj4gQWNrZWQtQnk6IE1hdHRp
-IFZhaXR0aW5lbiA8bWF0dGkudmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPgo+IC0tLQo+ICBk
-cml2ZXJzL21mZC9yb2htLWJkNzE4eDcuYyB8IDIzIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4g
-IDEgZmlsZSBjaGFuZ2VkLCAyMyBkZWxldGlvbnMoLSkKCkFwcGxpZWQsIHRoYW5rcy4KCi0tIApM
-ZWUgSm9uZXMgW+adjueQvOaWr10KTGluYXJvIFNlcnZpY2VzIFRlY2huaWNhbCBMZWFkCkxpbmFy
-by5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJv
-OiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+T24gVHVlLCAyMSBNYXkgMjAxOSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgoKPiBUaGVzZSB2YWx1
+ZXMgY2FuIGJlIG92ZXJ3cml0dGVuIGF0IHByb2JlIHRpbWUuCj4gCj4gU2lnbmVkLW9mZi1ieTog
+TGVvbmFyZCBDcmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT4KPiBBY2tlZC1CeTogTWF0
+dGkgVmFpdHRpbmVuIDxtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+Cj4gLS0tCj4g
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4MzctcG1pYy50eHQgICAgICAg
+ICB8IDggKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKQoKQXBwbGll
+ZCwgdGhhbmtzLgoKLS0gCkxlZSBKb25lcyBb5p2O55C85pavXQpMaW5hcm8gU2VydmljZXMgVGVj
+aG5pY2FsIExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBT
+b0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
