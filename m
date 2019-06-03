@@ -1,95 +1,101 @@
-From: Neal Liu <neal.liu@mediatek.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: rng: update bindings for MediaTek
- ARMv8 SoCs
-Date: Mon, 3 Jun 2019 10:27:07 +0800
-Message-ID: <1559528827.6663.8.camel@mtkswgap22>
-References: <1558946326-13630-1-git-send-email-neal.liu@mediatek.com>
- <1558946326-13630-3-git-send-email-neal.liu@mediatek.com>
- <CAGp9LzrQegBb9Oe-=jfkwOrsYY=eN3BSF=DWnu+aSBAhQ5bexA@mail.gmail.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
+Date: Mon, 3 Jun 2019 02:33:15 +0000
+Message-ID: <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20171115060459.45375-1-ran.wang_1@nxp.com>
+ <87ineb9b5v.fsf@linux.intel.com>
+ <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com>
+ <87shdfet90.fsf@linux.intel.com>
+ <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <87k1eaanjw.fsf@linux.intel.com>
+ <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGp9LzrQegBb9Oe-=jfkwOrsYY=eN3BSF=DWnu+aSBAhQ5bexA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sean Wang <sean.wang@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, wsd_upstream@mediatek.com, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC
- support" <linux-mediatek@lists.infradead.org>, linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>, Matthias Brugger <matthias.bgg@gmail.com>, Crystal Guo <Crystal.Guo@mediatek.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
+Hi Felipe,
 
-
-On Thu, 2019-05-30 at 15:56 -0700, Sean Wang wrote:
-> Hi, Neal
-> 
-> On Mon, May 27, 2019 at 1:39 AM Neal Liu <neal.liu@mediatek.com> wrote:
+On Thursday, May 30, 2019 17:09, Ran Wang wrote:
+>=20
+> <snip>
+> > >> >> >  /* Global Debug Queue/FIFO Space Available Register */
+> > >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
+> > >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
+> > >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
+> > >> >> >   * 	3	- Reserved
+> > >> >> >   * @imod_interval: set the interrupt moderation interval in 25=
+0ns
+> > >> >> >   *                 increments or 0 to disable.
+> > >> >> > + * @dma_coherent: set if enable dma-coherent.
+> > >> >>
+> > >> >> you're not enabling dma coherency, you're enabling cache snooping=
+.
+> > >> >> And this property should describe that. Also, keep in mind that
+> > >> >> different devices may want different cache types for each of
+> > >> >> those fields, so your property would have to be a lot more
+> > >> >> complex. Something
+> > like:
+> > >> >>
+> > >> >> 	snps,cache-type =3D <foobar "cacheable">, <baz "cacheable">, ...
+> > >> >>
+> > >> >> Then driver would have to parse this properly to setup GSBUSCFG0.
+> > >
+> > > According to the DesignWare Cores SuperSpeed USB 3.0 Controller
+> > > Databook (v2.60a), it has described Type Bit Assignments for all
+> > > supported
+> > master bus type:
+> > > AHB, AXI3, AXI4 and Native. I found the bit definition are different
+> > > among
+> > them.
+> > > So, for the example you gave above, feel a little bit confused.
+> > > Did you mean:
+> > >     snps,cache-type =3D <DATA_RD  "write allocate">, <DESC_RD
+> > > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read allocate">
 > >
-> > Document the binding used by the MediaTek ARMv8 SoCs random
-> > number generator with TrustZone enabled.
-> >
-> > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > ---
-> >  Documentation/devicetree/bindings/rng/mtk-rng.txt |   13 ++++++++++---
-> >  1 file changed, 10 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/rng/mtk-rng.txt b/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> > index 2bc89f1..1fb9b1d 100644
-> > --- a/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> > +++ b/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> > @@ -3,9 +3,12 @@ found in MediaTek SoC family
-> >
-> >  Required properties:
-> >  - compatible       : Should be
-> > -                       "mediatek,mt7622-rng",  "mediatek,mt7623-rng" : for MT7622
-> > -                       "mediatek,mt7629-rng",  "mediatek,mt7623-rng" : for MT7629
-> > -                       "mediatek,mt7623-rng" : for MT7623
-> > +                       "mediatek,mt7622-rng", "mediatek,mt7623-rng" for MT7622
-> > +                       "mediatek,mt7629-rng", "mediatek,mt7623-rng" for MT7629
-> > +                       "mediatek,mt7623-rng" for MT7623
-> 
-> No make any change for those lines not belong to the series
+> > yeah, something like that.
+>=20
+> I think DATA_RD  should be a macro, right? So, where I can put its define=
+?
+> Create a dwc3.h in include/dt-bindings/usb/ ?
 
-There are some unused spaces and symbols. We try to align coding style
-with other bindings.
+Could you please give me some advice here? I'd like to prepare next version=
+ patch after
+getting this settled.
 
-> 
-> > +                       "mediatek,mtk-sec-rng" for MediaTek ARMv8 SoCs
-> 
-> I thought "mediatek,mtk-sec-rng" is only for those MediaTek ARMv8 SoCs
-> with security RNG
+> Another question about this remain open is: DWC3 data book's Table 6-5 Ca=
+che
+> Type Bit Assignments show that bits definition will differ per MBUS_TYPEs=
+ as
+> below:
+> ----------------------------------------------------------------
+>  MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
+>  ----------------------------------------------------------------
+>  AHB      |Cacheable     |Bufferable   |Privilegge |Data
+>  AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
+>  AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
+>  AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
+>  Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
+>  ----------------------------------------------------------------
+>  Note: The AHB, AXI3, AXI4, and PCIe busses use different names for certa=
+in
+>  signals, which have the same meaning:
+>    Bufferable =3D Posted
+>    Cacheable =3D Modifiable =3D Snoop (negation of No Snoop)
+>=20
+> For Layerscape SoCs, MBUS_TYPE is AXI3. So I am not sure how to use
+> snps,cache-type =3D <DATA_RD  "write allocate">, to cover all MBUS_TYPE?
+> (you can notice that AHB and AXI3's cacheable are on different bit) Or I =
+just need
+> to handle AXI3 case?
 
-Yes, sure. It's better to describe with "MediaTek ARMv8 SoCs with
-security RNG". 
+Also on this open. Thank you in advance.
 
-> 
-> > +
-> > +Optional properties:
-> >  - clocks           : list of clock specifiers, corresponding to
-> >                       entries in clock-names property;
-> >  - clock-names      : Should contain "rng" entries;
-> > @@ -19,3 +22,7 @@ rng: rng@1020f000 {
-> >         clocks = <&infracfg CLK_INFRA_TRNG>;
-> >         clock-names = "rng";
-> >  };
-> 
-> For those MediaTek ARMv8 SoCs with security RNG
-
-Are you suggesting we create a new binding file with security RNG?
-
-> 
-> > +
-> > +hwrng: hwrng {
-> > +       compatible = "mediatek,mtk-sec-rng";
-> > +};
-> > --
-> > 1.7.9.5
-> >
+Regards,
+Ran
