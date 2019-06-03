@@ -1,73 +1,50 @@
-From: Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH] arm64: dts: rockchip: fix isp iommu clocks and power domain
-Date: Mon,  3 Jun 2019 11:22:15 -0300
-Message-ID: <20190603142214.24686-1-helen.koike@collabora.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH resend 0/2] Marvell A7k/A8k thermal throttling
+Date: Mon, 03 Jun 2019 16:26:50 +0200
+Message-ID: <87sgsqkamt.fsf@FE-laptop>
+References: <20190521142504.31558-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: kernel@collabora.com, ezequiel@collabora.com, laurent.pinchart@ideasonboard.com, manivannan.sadhasivam@linaro.org, Helen Koike <helen.koike@collabora.com>, linux-arm-kernel@lists.infradead.org, Vicente Bergas <vicencb@gmail.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Rob Herring <robh+dt@kernel.org>, Tony Xie <tony.xie@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190521142504.31558-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-isp iommu requires wrapper variants of the clocks.
-noc variants are always on and using the wrapper variants will activate
-{A,H}CLK_ISP{0,1} due to the hierarchy.
-
-Also add the respective power domain.
-
-Refer:
- RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
- RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
-
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-
----
-Hello,
-
-I tested this using the isp patch set (which is not upstream
-yet). Without this patch, streaming from the isp stalls.
-
-I'm also enabling the power domain and removing the disable status,
-please let me know if this should be done in a separated patch.
-
-Thanks
-Helen
-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 196ac9b78076..89594a7276f4 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1706,11 +1706,11 @@
- 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
- 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp0_mmu";
--		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
-+		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP0>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
- 	};
- 
- 	isp1_mmu: iommu@ff924000 {
-@@ -1718,11 +1718,11 @@
- 		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
- 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp1_mmu";
--		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
-+		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP1>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
- 	};
- 
- 	hdmi_sound: hdmi-sound {
--- 
-2.20.1
+TWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4gd3JpdGVzOgoKPiBIZWxs
+bywKPgo+IFRoaXMgc2VyaWVzIHdvcmtzIG9uIHRvcCBvZiBHcmVnb3J5J3Mgc2VyaWVzIGFkZGlu
+ZyBib3RoIENQVWZyZXEgKGFscmVhZHkKPiBtZXJnZWQpIGFuZCBhIHN1aXRhYmxlIEFQODA2IGNs
+b2NrIGRyaXZlci4gVGhlc2UgdHdvIHBhdGNoZXMgY2FuIGZseQo+IGFzLWlzIGFuZCBkbyBub3Qg
+ZGVwZW5kIG9uIEdyZWdvcnkncyB3b3JrIHRvIGFwcGx5IGFuZCBzaG91bGQgcHJvYmFibHkKPiBt
+ZXJnZWQgaW5kZXBlbmRlbnRseS4KPgo+IFdpdGggaGlzIHBhdGNoZXMsIGFsbCB0aGUgcGllY2Vz
+IHdoZXJlIGF2YWlsYWJsZSB0byBlbmFibGUgdGhlcm1hbAo+IHRocm90dGxpbmcgb24gdGhlIEFQ
+ODA2IGVtYmVkZGVkIGluIE1hcnZlbGwgQXJtYWRhIDdrLzhrIFNvQ3MuIFRoaXMgaXMKPiBqdXN0
+IHRoZSBnbHVlIHRvIG1ha2UgaXQgYWN0dWFsbHkgd29yay4KPgo+IFBhdGNoIDEgY2hhbmdlcyB0
+aGUgY29yZSBudW1iZXJpbmcgaW4gdGhlIHRoZXJtYWwtem9uZSBub2RlIHRvIGJlIGluCj4gc3lu
+YyB3aXRoIHRoZSBDUFUgbnVtYmVyaW5nIGluIHRoZSBEVCAoZnJvbSAwIHRvIDMgaW5zdGVhZCBv
+ZiBmcm9tIDEKPiB0byA0KS4gUGF0Y2ggMiBhZGRzIHRyaXAgcG9pbnRzIGFuZCBjb29saW5nIG1h
+cHMgdG8gYWN0dWFsbHkgZW5hYmxlCj4gdGhlIGZlYXR1cmUuCj4KPiBUZXN0ZWQgd2l0aCBhbiBB
+cm1hZGEgN2sgREIuCj4KPiBUaGFua3MsCj4gTWlxdcOobAo+Cj4gTWlxdWVsIFJheW5hbCAoMik6
+Cj4gICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBDaGFuZ2UgY29yZSBudW1iZXJpbmcgaW4gQVA4MDYg
+dGhlcm1hbC1ub2RlCj4gICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBFbmFibGUgQVA4MDYgdGhlcm1h
+bCB0aHJvdHRsaW5nIHdpdGggQ1BVZnJlcQoKQm90aCBwYWN0aGVzIGFwcGxpZWQgb24gbXZlYnUv
+ZHQ2NAoKVGhhbmtzLAoKR3JlZ29yeQoKPgo+ICAuLi4vYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEt
+YXA4MDYtZHVhbC5kdHNpICAgfCAgIDIgKwo+ICAuLi4vYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEt
+YXA4MDYtcXVhZC5kdHNpICAgfCAgIDUgKwo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwv
+YXJtYWRhLWFwODA2LmR0c2kgfCAxMTAgKysrKysrKysrKysrKysrLS0tCj4gIDMgZmlsZXMgY2hh
+bmdlZCwgMTAzIGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQo+Cj4gLS0gCj4gMi4xOS4x
+Cj4KCi0tIApHcmVnb3J5IENsZW1lbnQsIEJvb3RsaW4KRW1iZWRkZWQgTGludXggYW5kIEtlcm5l
+bCBlbmdpbmVlcmluZwpodHRwOi8vYm9vdGxpbi5jb20KCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
