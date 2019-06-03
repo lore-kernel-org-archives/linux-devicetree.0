@@ -1,87 +1,213 @@
 From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
- mailbox
-Date: Mon, 3 Jun 2019 18:18:56 +0100
-Message-ID: <20190603181856.34996aaa@donnerap.cambridge.arm.com>
-References: <20190603083005.4304-1-peng.fan@nxp.com>
-        <20190603083005.4304-2-peng.fan@nxp.com>
-        <ae4c79f0-4aec-250e-e312-20aba5554665@gmail.com>
-        <20190603165651.GA12196@e107155-lin>
+Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+Date: Mon, 3 Jun 2019 18:24:42 +0100
+Message-ID: <20190603182442.4183959b@donnerap.cambridge.arm.com>
+References: <20190523060437.11059-1-peng.fan@nxp.com>
+        <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
+        <AM0PR04MB4481C44F9B5EFCDD076EF728881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        <20190530122329.235d13c7@donnerap.cambridge.arm.com>
+        <AM0PR04MB4481C97696C68ECF5E6D4A7988190@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190603165651.GA12196@e107155-lin>
+In-Reply-To: <AM0PR04MB4481C97696C68ECF5E6D4A7988190@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, peng.fan@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com, shawnguo@kernel.org, festevam@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, van.freenix@gmail.com
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Julien Grall <julien.grall@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 3 Jun 2019 17:56:51 +0100
-Sudeep Holla <sudeep.holla@arm.com> wrote:
+On Fri, 31 May 2019 01:39:45 +0000
+Peng Fan <peng.fan@nxp.com> wrote:
 
 Hi,
 
-> On Mon, Jun 03, 2019 at 09:22:16AM -0700, Florian Fainelli wrote:
-> > On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:  
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > The ARM SMC mailbox binding describes a firmware interface to trigger
-> > > actions in software layers running in the EL2 or EL3 exception levels.
-> > > The term "ARM" here relates to the SMC instruction as part of the ARM
-> > > instruction set, not as a standard endorsed by ARM Ltd.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >
-> > > V2:
-> > > Introduce interrupts as a property.
-> > >
-> > > V1:
-> > > arm,func-ids is still kept as an optional property, because there is no
-> > > defined SMC funciton id passed from SCMI. So in my test, I still use
-> > > arm,func-ids for ARM SIP service.
-> > >
-> > >  .../devicetree/bindings/mailbox/arm-smc.txt        | 101 +++++++++++++++++++++
-> > >  1 file changed, 101 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > new file mode 100644
-> > > index 000000000000..401887118c09
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > @@ -0,0 +1,101 @@  
-> 
-> [...]
-> 
-> > > +Optional properties:
-> > > +- arm,func-ids		An array of 32-bit values specifying the function
-> > > +			IDs used by each mailbox channel. Those function IDs
-> > > +			follow the ARM SMC calling convention standard [1].
-> > > +			There is one identifier per channel and the number
-> > > +			of supported channels is determined by the length
-> > > +			of this array.
-> > > +- interrupts		SPI interrupts may be listed for notification,
-> > > +			each channel should use a dedicated interrupt
-> > > +			line.  
-> >
-> > I would not go about defining a specific kind of interrupt, since SPI is
-> > a GIC terminology, this firmware interface could be used in premise with
-> > any parent interrupt controller, for which the concept of a SPI/PPI/SGI
-> > may not be relevant.
-> >  
-> 
-> While I agree the binding document may not contain specifics, I still
-> don't see how to use SGI with this. Also note it's generally reserved
-> for OS future use(IPC) and using this for other than IPC may be bit
-> challenging IMO. It opens up lots of questions.
+(CC:ing Julien for Xen)
 
-Well, a PPI might be possible to use, although it's somewhat dodgy to hijack the GIC's (re-)distributor from EL3 to write to GICD_ISPENDR<n>. Need to ask Marc about his feelings towards this. But it's definitely possible from a hypervisor to inject arbitrary interrupts into a guest.
+> > > > Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered
+> > > > mailbox
+> > > >
+> > > > Hi,
+> > > >
+> > > > On 5/22/19 10:50 PM, Peng Fan wrote:  
+> > > > > This is a modified version from Andre Przywara's patch series
+> > > > >  
+> > > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flo
+> > > > re.ke  
+> > rnel.org%2Fpatchwork%2Fcover%2F812997%2F&amp;data=02%7C01%7Cpe  
+> > > >  
+> > ng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1d3b  
+> > > >  
+> > c2b4c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdat  
+> > > >  
+> > a=BbS5ZQtzMANSwaKRDJ62NKrPrAyaED1%2BvymQaT6Qr8E%3D&amp;rese  
+> > > > rved=0.  
+> > > > > [1] is a draft implementation of i.MX8MM SCMI ATF implementation
+> > > > > that use smc as mailbox, power/clk is included, but only part of
+> > > > > clk has been implemented to work with hardware, power domain only
+> > > > > supports get name for now.
+> > > > >
+> > > > > The traditional Linux mailbox mechanism uses some kind of
+> > > > > dedicated hardware IP to signal a condition to some other
+> > > > > processing unit, typically a dedicated management processor.
+> > > > > This mailbox feature is used for instance by the SCMI protocol to
+> > > > > signal a request for some action to be taken by the management  
+> > processor.  
+> > > > > However some SoCs does not have a dedicated management core to  
+> > > > provide  
+> > > > > those services. In order to service TEE and to avoid linux
+> > > > > shutdown power and clock that used by TEE, need let firmware to
+> > > > > handle power and clock, the firmware here is ARM Trusted Firmware
+> > > > > that could also run SCMI service.
+> > > > >
+> > > > > The existing SCMI implementation uses a rather flexible shared
+> > > > > memory region to communicate commands and their parameters, it
+> > > > > still requires a mailbox to actually trigger the action.  
+> > > >
+> > > > We have had something similar done internally with a couple of minor
+> > > > differences:
+> > > >
+> > > > - a SGI is used to send SCMI notifications/delayed replies to
+> > > > support asynchronism (patches are in the works to actually add that
+> > > > to the Linux SCMI framework). There is no good support for SGI in
+> > > > the kernel right now so we hacked up something from the existing SMP
+> > > > code and adding the ability to register our own IPI handlers
+> > > > (SHAME!). Using a PPI should work and should allow for using request_irq()  
+> > AFAICT.  
+> > >
+> > > So you are also implementing a firmware inside ATF for SCMI usecase, right?
+> > >
+> > > Introducing SGI in ATF to notify Linux will introduce complexity,
+> > > there is no good framework inside ATF for SCMI, and I use
+> > > synchronization call for simplicity for now.  
+> > 
+> > I think we don't disagree, but just to clarify on one thing:
+> > 
+> > I think we should avoid tying this driver to specific protocol or software on the
+> > other end, be it ATF or SCMI. After all it's just a mailbox driver, meant to signal
+> > some event (and parameters) to some external entity. Yes, SCMI (or SCPI back
+> > then) was the reason to push for this, but it should be independent from that.  
+> 
+> Thanks, I agree.
+> 
+> > I am not even sure we should mention it too much in the documentation.  
+> 
+> I think we need a usecase here, so it should be fine.
+> 
+> > 
+> > So whether the receiving end is ATF or something else it irrelevant, I think. For
+> > instance we have had discussions in Xen to provide guests some virtualised
+> > device management support, and using an HVC mailbox seems like a neat
+> > solution. This could be using the SCMI (or SCPI) protocol, but that's not a
+> > requirement. In this case the Xen hypervisor would be the one to pick up the
+> > mailbox trigger, probably forwarding the request to something else (Dom0 in
+> > this case).  
+> 
+> I do not get the point "forwarding the request", DomU HVC will trap to Xen,
+> so how to forward to Dom0?
 
-But more importantly: is there any actual reason this needs to be a GIC interrupt? If I understand the code correctly, this could just be any interrupt, including one of an interrupt combiner or a GPIO chip. So why not just use the standard wording of: "exactly one interrupt specifier for each channel"?
-
-By the way: Shouldn't new bindings use the YAML format instead?
+I don't think there is something easily available in Xen/ARM at the moment, but we could either use something like an event channel, or utilise some planned extension to allow Dom0 to register on MMIO traps.
+My point was that most likely Dom0 would be in control of the resources handled by the interface (clocks, regulators), so Xen wouldn't know how to deal with those requests.
 
 Cheers,
 Andre.
+
+
+> 
+> Thanks,
+> Peng.
+> 
+> > Also having a generic SMC mailbox could avoid having the actual hardware
+> > mailbox drivers in the kernel, so EL3 firmware could forward the request to an
+> > external management processor, and Linux would just work, without the need
+> > to describe the actual hardware mailbox device in some firmware tables. This
+> > might help ACPI on those devices.
+> > 
+> > Cheers,
+> > Andre.
+> >   
+> > > >
+> > > > - the mailbox identifier is indicated as part of the SMC call such
+> > > > that we can have multiple SCMI mailboxes serving both standard
+> > > > protocols and non-standard (in the 0x80 and above) range, also they
+> > > > may have different throughput (in hindsight, these could simply be
+> > > > different channels)
+> > > >
+> > > > Your patch series looks both good and useful to me, I would just put
+> > > > a provision in the binding to support an optional interrupt such
+> > > > that asynchronism gets reasonably easy to plug in when it is
+> > > > available (and desirable).  
+> > >
+> > > Ok. Let me think about and add that in new version patch.
+> > >
+> > > Thanks,
+> > > Peng.
+> > >  
+> > > >  
+> > > > >
+> > > > > This patch series provides a Linux mailbox compatible service
+> > > > > which uses smc calls to invoke firmware code, for instance taking
+> > > > > care of SCMI  
+> > > > requests.  
+> > > > > The actual requests are still communicated using the standard SCMI
+> > > > > way of shared memory regions, but a dedicated mailbox hardware IP
+> > > > > can be replaced via this new driver.
+> > > > >
+> > > > > This simple driver uses the architected SMC calling convention to
+> > > > > trigger firmware services, also allows for using "HVC" calls to
+> > > > > call into hypervisors or firmware layers running in the EL2 exception  
+> > level.  
+> > > > >
+> > > > > Patch 1 contains the device tree binding documentation, patch 2
+> > > > > introduces the actual mailbox driver.
+> > > > >
+> > > > > Please note that this driver just provides a generic mailbox
+> > > > > mechanism, though this is synchronous and one-way only (triggered
+> > > > > by the OS only, without providing an asynchronous way of
+> > > > > triggering request from the firmware).
+> > > > > And while providing SCMI services was the reason for this
+> > > > > exercise, this driver is in no way bound to this use case, but can
+> > > > > be used generically where the OS wants to signal a mailbox
+> > > > > condition to firmware or a hypervisor.
+> > > > > Also the driver is in no way meant to replace any existing
+> > > > > firmware interface, but actually to complement existing interfaces.
+> > > > >
+> > > > > [1]
+> > > > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2F
+> > > > > gith
+> > > > >  
+> > > >  
+> > ub.com%2FMrVan%2Farm-trusted-firmware%2Ftree%2Fscmi&amp;data=02  
+> > > > %7C01%7  
+> > > > >  
+> > > >  
+> > Cpeng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1  
+> > > > d3bc2b4  
+> > > > >  
+> > > >  
+> > c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdata=kN  
+> > > > 9bEFFcsZA  
+> > > > > 1ePeNLLfHmONpVaG6O5ajVQvKMuaBXyk%3D&amp;reserved=0
+> > > > >
+> > > > > Peng Fan (2):
+> > > > >   DT: mailbox: add binding doc for the ARM SMC mailbox
+> > > > >   mailbox: introduce ARM SMC based mailbox
+> > > > >
+> > > > >  .../devicetree/bindings/mailbox/arm-smc.txt        |  96  
+> > > > +++++++++++++  
+> > > > >  drivers/mailbox/Kconfig                            |   7 +
+> > > > >  drivers/mailbox/Makefile                           |   2 +
+> > > > >  drivers/mailbox/arm-smc-mailbox.c                  | 154  
+> > > > +++++++++++++++++++++  
+> > > > >  include/linux/mailbox/arm-smc-mailbox.h            |  10 ++
+> > > > >  5 files changed, 269 insertions(+)  create mode 100644
+> > > > > Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > > > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create  
+> > mode  
+> > > > > 100644 include/linux/mailbox/arm-smc-mailbox.h
+> > > > >  
+> > > >
+> > > >
+> > > > --
+> > > > Florian  
+> 
