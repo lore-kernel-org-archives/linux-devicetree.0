@@ -1,20 +1,20 @@
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Subject: Re: [PATCH] arm64: dts: rockchip: fix isp iommu clocks and power
  domain
-Date: Mon, 03 Jun 2019 11:44:43 -0300
-Message-ID: <435028daafebcf23425dd5b9338dc3126fac8b89.camel@collabora.com>
+Date: Mon, 3 Jun 2019 20:18:38 +0530
+Message-ID: <20190603144838.GA27534@mani>
 References: <20190603142214.24686-1-helen.koike@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20190603142214.24686-1-helen.koike@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Helen Koike <helen.koike@collabora.com>, linux-rockchip@lists.infradead.org
-Cc: kernel@collabora.com, laurent.pinchart@ideasonboard.com, manivannan.sadhasivam@linaro.org, linux-arm-kernel@lists.infradead.org, Vicente Bergas <vicencb@gmail.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Rob Herring <robh+dt@kernel.org>, Tony Xie <tony.xie@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
+To: Helen Koike <helen.koike@collabora.com>
+Cc: linux-rockchip@lists.infradead.org, kernel@collabora.com, ezequiel@collabora.com, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, Vicente Bergas <vicencb@gmail.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Rob Herring <robh+dt@kernel.org>, Tony Xie <tony.xie@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-06-03 at 11:22 -0300, Helen Koike wrote:
+On Mon, Jun 03, 2019 at 11:22:15AM -0300, Helen Koike wrote:
 > isp iommu requires wrapper variants of the clocks.
 > noc variants are always on and using the wrapper variants will activate
 > {A,H}CLK_ISP{0,1} due to the hierarchy.
@@ -26,6 +26,14 @@ On Mon, 2019-06-03 at 11:22 -0300, Helen Koike wrote:
 >  RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
 > 
 > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+
+Tested on Rock960 with ISP patches.
+
+Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thanks,
+Mani
+
 > 
 > ---
 > Hello,
@@ -36,13 +44,6 @@ On Mon, 2019-06-03 at 11:22 -0300, Helen Koike wrote:
 > I'm also enabling the power domain and removing the disable status,
 > please let me know if this should be done in a separated patch.
 > 
-
-I think you might want to put the comments about enabling power domain
-and removing disable status on the commit log. It's useful information :-)
-
-Thanks,
-Eze
-
 > Thanks
 > Helen
 > 
@@ -81,3 +82,6 @@ Eze
 >  	};
 >  
 >  	hdmi_sound: hdmi-sound {
+> -- 
+> 2.20.1
+> 
