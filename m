@@ -1,58 +1,114 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
-Date: Mon, 3 Jun 2019 08:48:51 -0600
-Message-ID: <20190603144851.GD23227@jcrouse1-lnx.qualcomm.com>
-References: <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
- <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
- <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
- <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
- <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
- <401f9948-14bd-27a2-34c1-fb429cae966d@arm.com>
- <CAF6AEGuGGAThqs9ztTNyGnMyhFc9wbtn=N8A4qqQxcN_PAxsEw@mail.gmail.com>
- <20190603135408.GE30132@ulmo>
- <CAF6AEGtrfqYBNyjpHsUy1Tj-FJZ0MybvAJdHQsqb5kqih2BY3A@mail.gmail.com>
- <20190603144016.GG30132@ulmo>
+From: Dan Williams <dcbw@redhat.com>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Mon, 03 Jun 2019 09:50:24 -0500
+Message-ID: <99b9a24b229975689fb4686915190200606e8afc.camel@redhat.com>
+References: <20190531035348.7194-1-elder@linaro.org>
+         <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+         <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
+         <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+         <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+         <20190531233306.GB25597@minitux>
+         <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190603144016.GG30132@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, evgreen@chromium.org, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiBJdCBzaG91bGRuJ3QgYmUgYSBwcm9ibGVtIHRvIGhvb2sgc29tZXRoaW5nIGVsc2UgdXAgdG8g
-dGhlIElPTU1VCj4gc3Vic3lzdGVtLiBIb3BlZnVsbHkgaXQncyBzb21ldGhpbmcgdGhhdCBwZW9w
-bGUgYXJlIGdvaW5nIHRvIHN0YW5kYXJkaXplCj4gb24uCj4gCj4gPiAzKSBUaGUgYXV0b21hdGlj
-IGF0dGFjaCBvZiBETUEgZG9tYWluIGlzIGFsc28gY2F1c2luZyBhIGRpZmZlcmVudAo+ID4gICAg
-cHJvYmxlbSBmb3IgdXMgb24gdGhlIEdQVSBzaWRlLCBwcmV2ZW50aW5nIHVzIGZyb20gc3VwcG9y
-dGluZyBwZXItCj4gPiAgICBjb250ZXh0IHBhZ2V0YWJsZXMgKHNpbmNlIHdlIGVuZCB1cCB3aXRo
-IGEgZGlzYWdyZWVtZW50IGFib3V0Cj4gPiAgICB3aGljaCBjb250ZXh0IGJhbmsgaXMgdXNlZCBi
-ZXR3ZWVuIGFybS1zbW11IGFuZCB0aGUgZmlybXdhcmUpLgo+IAo+IEknbSBub3Qgc3VyZSBJIHVu
-ZGVyc3RhbmQgdGhpcyBpc3N1ZS4gSXMgdGhlIGNvbnRleHQgYmFuayBoYXJkLWNvZGVkIGluCj4g
-dGhlIGZpcm13YXJlIHNvbWVob3c/IE9yIGlzIGl0IHBvc3NpYmxlIHRvIHJld3JpdGUgd2hpY2gg
-b25lIGlzIGdvaW5nIHRvCj4gYmUgdXNlZCBhdCBydW50aW1lPyBEbyB5b3Ugc3dpdGNoIG91dCB0
-aGUgYWN0dWFsIHBhZ2UgdGFibGVzIHJhdGhlciB0aGFuCj4gdGhlIElPTU1VIGRvbWFpbnMgZm9y
-IGNvbnRleHQgc3dpdGNoaW5nPwogCldlIGhhdmUgYSByYXRoZXIgbG9uZyBoaXN0b3J5IG9uIHRo
-aXMgYnV0IHRoZSB0bDtkciBpcyB0aGF0IHRoZSBHUFUgbWljcm9jb2RlCnN3aXRjaGVzIHRoZSBw
-YWdldGFibGVzIGJ5IHJld3JpdGluZyBUVEJSMCBvbiB0aGUgZmx5IChzaW5jZSB0aGlzIGlzCmFy
-bS1zbW11LXYyIHdlIGhhdmUgbm8gYmV0dGVyIG9wdGlvbikgYW5kIHllcywgdW5mb3J0dW5hdGVs
-eSBpdCBpcyBoYXJkIGNvZGVkCnRvIHVzZSBjb250ZXh0IGJhbmsgMC4gWzFdIGlzIHRoZSBjdXJy
-ZW50IHBhdGNoc2V0IHRvIHN1cHBvcnQgYWxsIHRoaXMsCmluY2x1ZGluZyBteSBvd24gdGFrZSBv
-biBhdm9pZGluZyB0aGUgZG1hLWRvbWFpbiAoYWxsIHRoZSBjb29sIGtpZHMgaGF2ZSBvbmUpLgoK
-Sm9yZGFuCgpbMV0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy81NzQ0
-MS8KCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIg
-b2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFBy
-b2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJl
-ZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5v
+On Fri, 2019-05-31 at 17:59 -0600, Subash Abhinov Kasiviswanathan
+wrote:
+> On 2019-05-31 17:33, Bjorn Andersson wrote:
+> > On Fri 31 May 13:47 PDT 2019, Alex Elder wrote:
+> > 
+> > > On 5/31/19 2:19 PM, Arnd Bergmann wrote:
+> > > > On Fri, May 31, 2019 at 6:36 PM Alex Elder <elder@linaro.org>
+> > > > wrote:
+> > > > > On 5/31/19 9:58 AM, Dan Williams wrote:
+> > > > > > On Thu, 2019-05-30 at 22:53 -0500, Alex Elder wrote:
+> > > > > > 
+> > > > > > My question from the Nov 2018 IPA rmnet driver still
+> > > > > > stands; how does
+> > > > > > this relate to net/ethernet/qualcomm/rmnet/ if at all? And
+> > > > > > if this is
+> > > > > > really just a netdev talking to the IPA itself and
+> > > > > > unrelated to
+> > > > > > net/ethernet/qualcomm/rmnet, let's call it "ipa%d" and stop
+> > > > > > cargo-
+> > > > > > culting rmnet around just because it happens to be a net
+> > > > > > driver for a
+> > > > > > QC SoC.
+> > > > > 
+> > > > > First, the relationship between the IPA driver and the rmnet
+> > > > > driver
+> > > > > is that the IPA driver is assumed to sit between the rmnet
+> > > > > driver
+> > > > > and the hardware.
+> > > > 
+> > > > Does this mean that IPA can only be used to back rmnet, and
+> > > > rmnet
+> > > > can only be used on top of IPA, or can or both of them be
+> > > > combined
+> > > > with another driver to talk to instead?
+> > > 
+> > > No it does not mean that.
+> > > 
+> > > As I understand it, one reason for the rmnet layer was to
+> > > abstract
+> > > the back end, which would allow using a modem, or using something
+> > > else (a LAN?), without exposing certain details of the hardware.
+> > > (Perhaps to support multiplexing, etc. without duplicating that
+> > > logic in two "back-end" drivers?)
+> > > 
+> > > To be perfectly honest, at first I thought having IPA use rmnet
+> > > was a cargo cult thing like Dan suggested, because I didn't see
+> > > the benefit.  I now see why one would use that pass-through layer
+> > > to handle the QMAP features.
+> > > 
+> > > But back to your question.  The other thing is that I see no
+> > > reason the IPA couldn't present a "normal" (non QMAP) interface
+> > > for a modem.  It's something I'd really like to be able to do,
+> > > but I can't do it without having the modem firmware change its
+> > > configuration for these endpoints.  My access to the people who
+> > > implement the modem firmware has been very limited (something
+> > > I hope to improve), and unless and until I can get corresponding
+> > > changes on the modem side to implement connections that don't
+> > > use QMAP, I can't implement such a thing.
+> > > 
+> > 
+> > But any such changes would either be years into the future or for
+> > specific devices and as such not applicable to any/most of devices
+> > on
+> > the market now or in the coming years.
+> > 
+> > 
+> > But as Arnd points out, if the software split between IPA and rmnet
+> > is
+> > suboptimal your are encouraged to fix that.
+> > 
+> > Regards,
+> > Bjorn
+> 
+> The split rmnet design was chosen because we could place rmnet
+> over any transport - IPA, PCIe (https://lkml.org/lkml/2018/4/26/1159)
+> or USB.
+
+Yeah, that's what I was looking for clarification on :) Clearly since
+rmnet can have many transports it should be able to be used by
+different HW drivers, be that qmi_wwan, IPA, and maybe even
+rmnet_smd.c?
+
+> rmnet registers a rx handler, so the rmnet packet processing itself
+> happens in the same softirq when packets are queued to network stack
+> by IPA.
+
+This directly relates to the discussion about a WWAN subsystem that
+Johannes Berg started a couple weeks ago. IPA appears to create a
+netdev of its own. Is that netdev usable immediately, or does one need
+to create an rmnet device on top to access the default PDN?
+
+Thanks,
+Dan
