@@ -1,49 +1,78 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 1/3] dt-bindings: display: Add GiantPlus GPM940B0 panel documentation
-Date: Mon,  3 Jun 2019 17:35:09 +0200
-Message-ID: <20190603153511.24384-1-paul@crapouillou.net>
+Subject: [PATCH v4 3/3] drm/panel: simple: Add GiantPlus GPM940B0 panel support
+Date: Mon,  3 Jun 2019 17:35:11 +0200
+Message-ID: <20190603153511.24384-3-paul@crapouillou.net>
+References: <20190603153511.24384-1-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190603153511.24384-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Hans Verkuil <hansverk@cisco.com>
-Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-The GPM940B0 is a 3.0" 320x240 24-bit TFT LCD panel.
+The GiantPlus GPM940B0 is a simple 3.0" 320x240 24-bit TFT panel.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
 
 Notes:
-    v2: New patch
+    v2: Change bus format to MEDIA_BUS_FMT_RGB888_3X8_BE
     
-    v3: Add Rob's ack
+    v3: No change
     
-    v4: No change
+    v4: Change bus format to MEDIA_BUS_FMT_RGB888_3X8
 
- .../bindings/display/panel/giantplus,gpm940b0.txt    | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
+ drivers/gpu/drm/panel/panel-simple.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt b/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
-new file mode 100644
-index 000000000000..3dab52f92c26
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
-@@ -0,0 +1,12 @@
-+GiantPlus 3.0" (320x240 pixels) 24-bit TFT LCD panel
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 5a93c4edf1e4..eec9a9efcc73 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1335,6 +1335,31 @@ static const struct panel_desc giantplus_gpg482739qs5 = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+ };
+ 
++static const struct display_timing giantplus_gpm940b0_timing = {
++	.pixelclock = { 13500000, 27000000, 27500000 },
++	.hactive = { 320, 320, 320 },
++	.hfront_porch = { 14, 686, 718 },
++	.hback_porch = { 50, 70, 255 },
++	.hsync_len = { 1, 1, 1 },
++	.vactive = { 240, 240, 240 },
++	.vfront_porch = { 1, 1, 179 },
++	.vback_porch = { 1, 21, 31 },
++	.vsync_len = { 1, 1, 6 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW,
++};
 +
-+Required properties:
-+- compatible: should be "giantplus,gpm940b0"
-+- power-supply: as specified in the base binding
++static const struct panel_desc giantplus_gpm940b0 = {
++	.timings = &giantplus_gpm940b0_timing,
++	.num_timings = 1,
++	.bpc = 8,
++	.size = {
++		.width = 60,
++		.height = 45,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_3X8,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_NEGEDGE,
++};
 +
-+Optional properties:
-+- backlight: as specified in the base binding
-+- enable-gpios: as specified in the base binding
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
+ static const struct display_timing hannstar_hsd070pww1_timing = {
+ 	.pixelclock = { 64300000, 71100000, 82000000 },
+ 	.hactive = { 1280, 1280, 1280 },
+@@ -2882,6 +2907,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "giantplus,gpg482739qs5",
+ 		.data = &giantplus_gpg482739qs5
++	}, {
++		.compatible = "giantplus,gpm940b0",
++		.data = &giantplus_gpm940b0,
+ 	}, {
+ 		.compatible = "hannstar,hsd070pww1",
+ 		.data = &hannstar_hsd070pww1,
 -- 
 2.21.0.593.g511ec345e18
