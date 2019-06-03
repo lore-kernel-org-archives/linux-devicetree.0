@@ -1,139 +1,78 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 8/9] mmc: sdhci-sprd: Add PHY DLL delay configuration
-Date: Mon, 3 Jun 2019 16:01:58 +0300
-Message-ID: <6b539c8b-c2fd-6c37-d645-ef714c0e29c9@intel.com>
-References: <cover.1558346019.git.baolin.wang@linaro.org>
- <aafceaeb2fc7e9d103d1d7a19cdae97759dd1500.1558346019.git.baolin.wang@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v13 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF controller bindings
+Date: Mon, 3 Jun 2019 14:04:28 +0100
+Message-ID: <20190603130428.GX4797@dell>
+References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw>
+ <1558423174-10748-4-git-send-email-masonccyang@mxic.com.tw>
+ <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <aafceaeb2fc7e9d103d1d7a19cdae97759dd1500.1558346019.git.baolin.wang@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>, ulf.hansson@linaro.org, zhang.lyra@gmail.com, orsonzhai@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, olof@lixom.net
-Cc: vincent.guittot@linaro.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>, miquel.raynal@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On 20/05/19 1:12 PM, Baolin Wang wrote:
-> Set the PHY DLL delay for each timing mode, which is used to sample the clock
-> accurately and make the clock more stable.
+On Wed, 22 May 2019, Sergei Shtylyov wrote:
+
+> On 05/21/2019 10:19 AM, Mason Yang wrote:
 > 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-
-One comment, nevertheless:
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci-sprd.c |   51 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
+> > Document the bindings used by the Renesas R-Car Gen3 RPC-IF controller.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+> >  .../devicetree/bindings/mfd/renesas-rpc-if.txt     | 65 ++++++++++++++++++++++
+> >  1 file changed, 65 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt b/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
+> > new file mode 100644
+> > index 0000000..20ec85b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
+> > @@ -0,0 +1,65 @@
+> > +Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
+> > +---------------------------------------------------------
+> > +
+> > +RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
+> > +
+> > +Required properties:
+> > +- compatible: should be an SoC-specific compatible value, followed by
+> > +		"renesas,rcar-gen3-rpc" as a fallback.
+> > +		supported SoC-specific values are:
+> > +		"renesas,r8a77995-rpc"	(R-Car D3)
+> > +- reg: should contain three register areas:
+> > +	first for RPC-IF registers,
+> > +	second for the direct mapping read mode and
+> > +	third for the write buffer area.
+> > +- reg-names: should contain "regs", "dirmap" and "wbuf"
+> > +- clocks: should contain 1 entries for the module's clock
+> > +- clock-names: should contain "rpc"
+> > +- power-domains: should contain system-controller(sysc) for power-domain-cell
+> > +- resets: should contain clock pulse generator(cpg) for reset-cell,
+> > +	  power-domain-cell and clock-cell
 > 
-> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-> index e6eda13..911a09b 100644
-> --- a/drivers/mmc/host/sdhci-sprd.c
-> +++ b/drivers/mmc/host/sdhci-sprd.c
-> @@ -29,6 +29,8 @@
->  #define  SDHCI_SPRD_DLL_INIT_COUNT	0xc00
->  #define  SDHCI_SPRD_DLL_PHASE_INTERNAL	0x3
->  
-> +#define SDHCI_SPRD_REG_32_DLL_DLY	0x204
-> +
->  #define SDHCI_SPRD_REG_32_DLL_DLY_OFFSET	0x208
->  #define  SDHCIBSPRD_IT_WR_DLY_INV		BIT(5)
->  #define  SDHCI_SPRD_BIT_CMD_DLY_INV		BIT(13)
-> @@ -72,6 +74,24 @@ struct sdhci_sprd_host {
->  	struct clk *clk_2x_enable;
->  	u32 base_rate;
->  	int flags; /* backup of host attribute */
-> +	u32 phy_delay[MMC_TIMING_MMC_HS400 + 2];
-> +};
-> +
-> +struct sdhci_sprd_phy_cfg {
-> +	const char *property;
-> +	u8 timing;
-> +};
-> +
-> +static const struct sdhci_sprd_phy_cfg sdhci_sprd_phy_cfgs[] = {
-> +	{ "sprd,phy-delay-legacy", MMC_TIMING_LEGACY, },
-> +	{ "sprd,phy-delay-sd-highspeed", MMC_TIMING_MMC_HS, },
+>    That's just some nonsense, sorry...
+>    I suggest that you stop reposting your patches as I'm going to post
+> my version of this patchset RSN (based on your patches, of course) and I'm
+> going to take care of fixing this file as well.
 
-Did you mean MMC_TIMING_SD_HS
+Why is this necessary?
 
-> +	{ "sprd,phy-delay-sd-uhs-sdr50", MMC_TIMING_UHS_SDR50, },
-> +	{ "sprd,phy-delay-sd-uhs-sdr104", MMC_TIMING_UHS_SDR104, },
-> +	{ "sprd,phy-delay-mmc-highspeed", MMC_TIMING_MMC_HS, },
-> +	{ "sprd,phy-delay-mmc-ddr52", MMC_TIMING_MMC_DDR52, },
-> +	{ "sprd,phy-delay-mmc-hs200", MMC_TIMING_MMC_HS200, },
-> +	{ "sprd,phy-delay-mmc-hs400", MMC_TIMING_MMC_HS400, },
-> +	{ "sprd,phy-delay-mmc-hs400es", MMC_TIMING_MMC_HS400 + 1, },
->  };
->  
->  #define TO_SPRD_HOST(host) sdhci_pltfm_priv(sdhci_priv(host))
-> @@ -276,6 +296,9 @@ static unsigned int sdhci_sprd_get_min_clock(struct sdhci_host *host)
->  static void sdhci_sprd_set_uhs_signaling(struct sdhci_host *host,
->  					 unsigned int timing)
->  {
-> +	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
-> +	struct mmc_host *mmc = host->mmc;
-> +	u32 *p = sprd_host->phy_delay;
->  	u16 ctrl_2;
->  
->  	if (timing == host->timing)
-> @@ -314,6 +337,9 @@ static void sdhci_sprd_set_uhs_signaling(struct sdhci_host *host,
->  	}
->  
->  	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
-> +
-> +	if (!mmc->ios.enhanced_strobe)
-> +		sdhci_writel(host, p[timing], SDHCI_SPRD_REG_32_DLL_DLY);
->  }
->  
->  static void sdhci_sprd_hw_reset(struct sdhci_host *host)
-> @@ -381,6 +407,8 @@ static void sdhci_sprd_hs400_enhanced_strobe(struct mmc_host *mmc,
->  					     struct mmc_ios *ios)
->  {
->  	struct sdhci_host *host = mmc_priv(mmc);
-> +	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
-> +	u32 *p = sprd_host->phy_delay;
->  	u16 ctrl_2;
->  
->  	if (!ios->enhanced_strobe)
-> @@ -395,6 +423,28 @@ static void sdhci_sprd_hs400_enhanced_strobe(struct mmc_host *mmc,
->  	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
->  
->  	sdhci_sprd_sd_clk_on(host);
-> +
-> +	/* Set the PHY DLL delay value for HS400 enhanced strobe mode */
-> +	sdhci_writel(host, p[MMC_TIMING_MMC_HS400 + 1],
-> +		     SDHCI_SPRD_REG_32_DLL_DLY);
-> +}
-> +
-> +static void sdhci_sprd_phy_param_parse(struct sdhci_sprd_host *sprd_host,
-> +				       struct device_node *np)
-> +{
-> +	u32 *p = sprd_host->phy_delay;
-> +	int ret, i, index;
-> +	u32 val[4];
-> +
-> +	for (i = 0; i < ARRAY_SIZE(sdhci_sprd_phy_cfgs); i++) {
-> +		ret = of_property_read_u32_array(np,
-> +				sdhci_sprd_phy_cfgs[i].property, val, 4);
-> +		if (ret)
-> +			continue;
-> +
-> +		index = sdhci_sprd_phy_cfgs[i].timing;
-> +		p[index] = val[0] | (val[1] << 8) | (val[2] << 16) | (val[3] << 24);
-> +	}
->  }
->  
->  static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
-> @@ -428,6 +478,7 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
->  		goto pltfm_free;
->  
->  	sprd_host = TO_SPRD_HOST(host);
-> +	sdhci_sprd_phy_param_parse(sprd_host, pdev->dev.of_node);
->  
->  	clk = devm_clk_get(&pdev->dev, "sdio");
->  	if (IS_ERR(clk)) {
+Why not just provide some constructive feedback instead?
+
+> > +- #address-cells: should be 1
+> > +- #size-cells: should be 0
+> [...]
 > 
+> MBR, Sergei
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
