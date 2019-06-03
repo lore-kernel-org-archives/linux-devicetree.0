@@ -1,91 +1,137 @@
-From: Hongwei Zhang <hongweiz@ami.com>
-Subject: [PATCH linux dev-5.1 v1] ARM: dts: aspeed: Add SGPM pinmux
-Date: Mon, 3 Jun 2019 18:43:09 -0400
-Message-ID: <1559601789-27121-1-git-send-email-hongweiz@ami.com>
+From: Richard Gong <richard.gong@linux.intel.com>
+Subject: Re: A potential broken at platform driver?
+Date: Mon, 3 Jun 2019 18:08:37 -0500
+Message-ID: <b3dd022b-b585-3dfb-5fe6-9c9f5498bc77@linux.intel.com>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+ <20190528232224.GA29225@kroah.com>
+ <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
+ <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
+ <20190603180255.GA18054@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>, Linus Walleij <linus.walleij@linaro.org>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Hongwei Zhang <hongweiz@ami.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190603180255.GA18054@kroah.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sen.li@intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add SGPM pinmux to ast2500-pinctrl function and group, to prepare for
-supporting SGPIO in AST2500 SoC.
+Hi Greg,
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
----
- Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 2 +-
- arch/arm/boot/dts/aspeed-g5.dtsi                             | 5 +++++
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c                   | 4 ++++
- 3 files changed, 10 insertions(+), 1 deletion(-)
+On 6/3/19 1:02 PM, Greg KH wrote:
+> On Mon, Jun 03, 2019 at 10:57:18AM -0500, Richard Gong wrote:
+>>
+>> Hi Greg,
+>>
+>> Following your suggestion, I replaced devm_device_add_groups() with .group =
+>> rus_groups in my version #4 submission. But I found out that RSU driver
+>> outputs the garbage data if I use .group = rsu_groups.
+> 
+> What is "garbage"?
+I mean incorrect status info.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-index 3b7266c..8f1c5c4 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-@@ -84,7 +84,7 @@ NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4 NDTR1 NDTR2 NDTR3 NDTR4 NRI1 NRI2
- NRI3 NRI4 NRTS1 NRTS2 NRTS3 NRTS4 OSCCLK PEWAKE PNOR PWM0 PWM1 PWM2 PWM3 PWM4
- PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 RXD1 RXD2 RXD3 RXD4 SALT1 SALT10
- SALT11 SALT12 SALT13 SALT14 SALT2 SALT3 SALT4 SALT5 SALT6 SALT7 SALT8 SALT9
--SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO SIOPWREQ
-+SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPM SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO SIOPWREQ
- SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1CS1 SPI1DEBUG SPI1PASSTHRU SPI2CK SPI2CS0
- SPI2CS1 SPI2MISO SPI2MOSI TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2
- TXD3 TXD4 UART6 USB11BHID USB2AD USB2AH USB2BD USB2BH USBCKI VGABIOSROM VGAHS
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 383510d..d10c3ea 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -1394,6 +1394,11 @@
- 		groups = "SDA2";
- 	};
- 
-+	pinctrl_sgpm_default: sgpm_default {
-+		function = "SGPM";
-+		groups = "SGPM";
-+	};
-+
- 	pinctrl_sgps1_default: sgps1_default {
- 		function = "SGPS1";
- 		groups = "SGPS1";
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-index 187abd7..0c89647 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-@@ -577,6 +577,8 @@ SS_PIN_DECL(N3, GPIOJ2, SGPMO);
- SIG_EXPR_LIST_DECL_SINGLE(SGPMI, SGPM, SIG_DESC_SET(SCU84, 11));
- SS_PIN_DECL(N4, GPIOJ3, SGPMI);
- 
-+FUNC_GROUP_DECL(SGPM, R2, L2, N3, N4);
-+
- #define N5 76
- SIG_EXPR_LIST_DECL_SINGLE(VGAHS, VGAHS, SIG_DESC_SET(SCU84, 12));
- SIG_EXPR_LIST_DECL_SINGLE(DASHN5, DASHN5, SIG_DESC_SET(SCU94, 8));
-@@ -2127,6 +2129,7 @@ static const struct aspeed_pin_group aspeed_g5_groups[] = {
- 	ASPEED_PINCTRL_GROUP(SD2),
- 	ASPEED_PINCTRL_GROUP(SDA1),
- 	ASPEED_PINCTRL_GROUP(SDA2),
-+	ASPEED_PINCTRL_GROUP(SGPM),
- 	ASPEED_PINCTRL_GROUP(SGPS1),
- 	ASPEED_PINCTRL_GROUP(SGPS2),
- 	ASPEED_PINCTRL_GROUP(SIOONCTRL),
-@@ -2296,6 +2299,7 @@ static const struct aspeed_pin_function aspeed_g5_functions[] = {
- 	ASPEED_PINCTRL_FUNC(SD2),
- 	ASPEED_PINCTRL_FUNC(SDA1),
- 	ASPEED_PINCTRL_FUNC(SDA2),
-+	ASPEED_PINCTRL_FUNC(SGPM),
- 	ASPEED_PINCTRL_FUNC(SGPS1),
- 	ASPEED_PINCTRL_FUNC(SGPS2),
- 	ASPEED_PINCTRL_FUNC(SIOONCTRL),
--- 
-2.7.4
+> 
+>> To make RSU driver work properly, I have to revert the change at version #4
+>> and use devm_device_add_groups() again. Sorry, I didn't catch this problem
+>> early.
+>>
+>> I did some debug & below are captured log, you can see priv pointer get
+>> messed at current_image_show(). I am not sure if something related to
+>> platform driver work properly. I attach my debug patch in this mail.
+>>
+>> 1. Using .groups = rsu_groups,
+>>
+>> [    1.191115] *** rsu_status_callback:
+>> [    1.194782] res->a1=2000000
+>> [    1.197588] res->a1=0
+>> [    1.199865] res->a2=0
+>> [    1.202150] res->a3=0
+>> [    1.204433] priv=0xffff80007aa28e80
+>> [    1.207933] version=0, state=0, current_image=2000000, fail_image=0,
+>> error_location=0, error_details=0
+>> [    1.217249] *** stratix10_rsu_probe: priv=0xffff80007aa28e80
+>> root@stratix10:/sys/bus/platform/drivers/stratix10-rsu# cat current_image
+>> [   38.849341] *** current_image_show: priv=0xffff80007aa28d00
+>> ... output garbage data
+>> priv pointer got changed
+> 
+> I don't understand this, sorry.  Are you sure you are actually using the
+> correct pointer to your device?
+> 
+I think so.
+
+The dev pointer at current_image_show() should points to RSU device, but 
+it seems point to driver_private if I use .group = rsU_groups. As a 
+result I can't get the priv pointer properly at current_image_show().
+
+[    1.190993] *** rsu_status_callback:
+[    1.194669] dev=0xffff80007b409410
+[    1.198083] priv=0xffff80007a4d4e80
+[    1.201582] version=0, state=0, current_image=0x2000000, 
+fail_image=0x0, error_location=0x0, error_details=0
+[    1.211416] *** stratix10_rsu_probe: priv=0xffff80007a4d4e80
+[    1.217063] *** stratix10_rsu_probe: dev=0xffff80007b409410
+
+root@stratix10:/sys/bus/platform/drivers/stratix10-rsu# cat current_image
+[   72.101277] *** current_image_show: dev=stratix10_rsu_driver
+[   72.136205] *** current_image_show: priv=0xffff80007a4d4d00
+
+If I use devm_device_add_groups(), the dev pointer does point to RSU device,
+
+[    1.191456] *** rsu_status_callback:
+[    1.195124] priv=0xffff80007a429280
+[    1.198615] version=0, state=0, current_image=0x2000000, 
+fail_image=0x0, error_location=0x0, error_details=0
+[    1.208458] *** stratix10_rsu_probe: priv=0xffff80007a429280
+[    1.214105] *** stratix10_rsu_probe: dev=0xffff80007b409410
+
+root@stratix10:/sys/devices/platform/stratix10-rsu.0# cat current_image
+[   31.484131] *** current_image_show: dev=0xffff80007b409410
+[   31.489651] *** current_image_show: priv=0xffff80007a429280
+
+
+>> @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
+>>   	.remove = stratix10_rsu_remove,
+>>   	.driver = {
+>>   		.name = "stratix10-rsu",
+>> -		.groups = rsu_groups,
+>> +//		.groups = rsu_groups,
+> 
+> Are you sure this is the correct pointer?  I think that might be
+> pointing to the driver's attributes, not the device's attributes.
+> 
+> If platform drivers do not have a way to register groups properly, then
+> that really needs to be fixed, as trying to register it by yourself as
+> you are doing, is ripe for racing with userspace.
+> 
+I agree we shouldn't call devm_device_add_groups() directly.
+
+RSU status is only updated after power on or reboot, RSU driver get 
+status info at probe() & save them to the private pointer priv via 
+platform_set_drvdata().
+
+static struct platform_driver stratix10_rsu_driver = {
+         .probe = stratix10_rsu_probe,
+         .remove = stratix10_rsu_remove,
+         .driver = {
+                 .name = "stratix10-rsu",
+                 .groups = rsu_groups,
+         },
+};
+
+The problem is that I don't have a way to properly retrieve the priv 
+pointer at xx_show() functions. Global variable is a work around, but I 
+don't think it is a good approach.
+
+Any suggestion?
+
+Regards,
+Richard
+
+> thanks,
+> 
+> greg k-h
+> 
