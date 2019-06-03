@@ -1,156 +1,73 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
-Date: Mon, 3 Jun 2019 07:20:14 -0700
-Message-ID: <CAF6AEGtrfqYBNyjpHsUy1Tj-FJZ0MybvAJdHQsqb5kqih2BY3A@mail.gmail.com>
-References: <20181201165348.24140-1-robdclark@gmail.com>
- <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
- <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
- <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
- <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
- <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
- <401f9948-14bd-27a2-34c1-fb429cae966d@arm.com>
- <CAF6AEGuGGAThqs9ztTNyGnMyhFc9wbtn=N8A4qqQxcN_PAxsEw@mail.gmail.com>
- <20190603135408.GE30132@ulmo>
+From: Helen Koike <helen.koike@collabora.com>
+Subject: [PATCH] arm64: dts: rockchip: fix isp iommu clocks and power domain
+Date: Mon,  3 Jun 2019 11:22:15 -0300
+Message-ID: <20190603142214.24686-1-helen.koike@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20190603135408.GE30132@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: kernel@collabora.com, ezequiel@collabora.com, laurent.pinchart@ideasonboard.com, manivannan.sadhasivam@linaro.org, Helen Koike <helen.koike@collabora.com>, linux-arm-kernel@lists.infradead.org, Vicente Bergas <vicencb@gmail.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Rob Herring <robh+dt@kernel.org>, Tony Xie <tony.xie@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdW4gMywgMjAxOSBhdCA2OjU0IEFNIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJl
-ZGluZ0BnbWFpbC5jb20+IHdyb3RlOgo+Cj4gT24gTW9uLCBKdW4gMDMsIDIwMTkgYXQgMDY6MjA6
-NTdBTSAtMDcwMCwgUm9iIENsYXJrIHdyb3RlOgo+ID4gT24gTW9uLCBKdW4gMywgMjAxOSBhdCA0
-OjE0IEFNIFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+IHdyb3RlOgo+ID4gPgo+
-ID4gPiBPbiAwMy8wNi8yMDE5IDExOjQ3LCBSb2IgQ2xhcmsgd3JvdGU6Cj4gPiA+ID4gT24gU3Vu
-LCBKdW4gMiwgMjAxOSBhdCAxMToyNSBQTSBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0ub3Jn
-PiB3cm90ZToKPiA+ID4gPj4KPiA+ID4gPj4gT24gTW9uLCBKdW4gMywgMjAxOSBhdCA0OjQwIEFN
-IFJvYiBDbGFyayA8cm9iZGNsYXJrQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPiA+ID4+Pgo+ID4gPiA+
-Pj4gU28sIGFub3RoZXIgY2FzZSBJJ3ZlIGNvbWUgYWNyb3NzLCBvbiB0aGUgZGlzcGxheSBzaWRl
-Li4gSSdtIHdvcmtpbmcKPiA+ID4gPj4+IG9uIGhhbmRsaW5nIHRoZSBjYXNlIHdoZXJlIGJvb3Rs
-b2FkZXIgZW5hYmxlcyBkaXNwbGF5IChhbmQgdGFrZXMgaW9tbXUKPiA+ID4gPj4+IG91dCBvZiBy
-ZXNldCkuLiBhcyBzb29uIGFzIERNQSBkb21haW4gZ2V0cyBhdHRhY2hlZCB3ZSBnZXQgaW9tbXUK
-PiA+ID4gPj4+IGZhdWx0cywgYmVjYXVzZSBib290bG9hZGVyIGhhcyBhbHJlYWR5IGNvbmZpZ3Vy
-ZWQgZGlzcGxheSBmb3Igc2Nhbm91dC4KPiA+ID4gPj4+IFVuZm9ydHVuYXRlbHkgdGhpcyBhbGwg
-aGFwcGVucyBiZWZvcmUgYWN0dWFsIGRyaXZlciBpcyBwcm9iZWQgYW5kIGhhcwo+ID4gPiA+Pj4g
-YSBjaGFuY2UgdG8gaW50ZXJ2ZW5lLgo+ID4gPiA+Pj4KPiA+ID4gPj4+IEl0J3MgcmF0aGVyIHVu
-Zm9ydHVuYXRlIHRoYXQgd2UgdHJpZWQgdG8gYmUgY2xldmVyIHJhdGhlciB0aGFuIGp1c3QKPiA+
-ID4gPj4+IG1ha2luZyBkcml2ZXJzIGNhbGwgc29tZSBmdW5jdGlvbiB0byBvcHQtaW4gdG8gdGhl
-IGhvb2t1cCBvZiBkbWEgaW9tbXUKPiA+ID4gPj4+IG9wcyA6LSgKPiA+ID4gPj4KPiA+ID4gPj4g
-SSB0aGluayBpdCBzdGlsbCB3b3JrcyBmb3IgdGhlIDkwJSBvZiBjYXNlcyBhbmQgaWYgMTAlIG5l
-ZWRzIHNvbWUKPiA+ID4gPj4gZXhwbGljaXQgd29yayBpbiB0aGUgZHJpdmVycywgdGhhdCdzIGJl
-dHRlciB0aGFuIHJlcXVpcmluZyAxMDAlIG9mIHRoZQo+ID4gPiA+PiBkcml2ZXJzIHRvIGRvIHRo
-aW5ncyBtYW51YWxseS4KPiA+ID4KPiA+ID4gUmlnaHQsIGl0J3Mgbm90IGFib3V0ICJiZWluZyBj
-bGV2ZXIiLCBpdCdzIGFib3V0IG5vdCBhZGRpbmcgb3B0LWluIGNvZGUKPiA+ID4gdG8gdGhlIGh1
-bmRyZWRzIGFuZCBodW5kcmVkcyBhbmQgaHVuZHJlZHMgb2YgZHJpdmVycyB3aGljaCAqbWlnaHQq
-IGV2ZXIKPiA+ID4gZmluZCB0aGVtc2VsdmVzIHVzZWQgb24gYSBzeXN0ZW0gd2hlcmUgdGhleSB3
-b3VsZCBuZWVkIHRoZSBJT01NVSdzIGhlbHAKPiA+ID4gZm9yIERNQS4KPiA+Cj4gPiBXZWxsLCBJ
-IG1lYW4sIGF0IG9uZSBwb2ludCB3ZSBkaWRuJ3QgZG8gdGhlIGF1dG9tYXRpYyBpb21tdSBob29r
-dXAsIHdlCj4gPiBjb3VsZCBoYXZlIGp1c3Qgc3R1Y2sgd2l0aCB0aGF0IGFuZCBhZGRlZCBhIGhl
-bHBlciBzbyBkcml2ZXJzIGNvdWxkCj4gPiByZXF1ZXN0IHRoZSBob29rdXAuICBUaGluZ3Mgd291
-bGRuJ3QgaGF2ZSBiZWVuIGFueSBtb3JlIGJyb2tlbiB0aGFuCj4gPiBiZWZvcmUsIGFuZCB3aGVu
-IHBlb3BsZSBicmluZyB1cCBzeXN0ZW1zIHdoZXJlIGlvbW11IGlzIHJlcXVpcmVkLCB0aGV5Cj4g
-PiBjb3VsZCBoYXZlIGFkZGVkIHRoZSBuZWNlc3NhcnkgZG1hX2lvbW11X2NvbmZpZ3VyZSgpIGNh
-bGwuICBCdXQgdGhhdAo+ID4gaXMgd2F0ZXIgdW5kZXIgdGhlIGJyaWRnZSBub3cuCj4gPgo+ID4g
-PiA+PiBBZGRpbmcgTWFyZWsgd2hvIGhhZCB0aGUgc2FtZSBwcm9ibGVtIG9uIEV4eW5vcy4KPiA+
-ID4gPgo+ID4gPiA+IEkgZG8gd29uZGVyIGhvdyBtYW55IGRyaXZlcnMgbmVlZCB0byBpb21tdV9t
-YXAgaW4gdGhlaXIgLT5wcm9iZSgpPwo+ID4gPiA+IEknbSB0aGlua2luZyBtb3ZpbmcgdGhlIGF1
-dG8taG9va3VwIHRvIGFmdGVyIGEgc3VjY2Vzc2Z1bCBwcm9iZSgpLAo+ID4gPiA+IHdpdGggc29t
-ZSBmdW5jdGlvbiBhIGRyaXZlciBjb3VsZCBjYWxsIGlmIHRoZXkgbmVlZCBtYXBwaW5nIGluIHBy
-b2JlLAo+ID4gPiA+IG1pZ2h0IGJlIGEgd2F5IHRvIGV2ZW50dWFsbHkgZ2V0IHJpZCBvZiB0aGUg
-YmxhY2tsaXN0LiAgQnV0IEkndmUgbm8KPiA+ID4gPiBpZGVhIGhvdyB0byBmaW5kIHRoZSBzdWJz
-ZXQgb2YgZHJpdmVycyB0aGF0IHdvdWxkIGJlIGJyb2tlbiB3aXRob3V0IGEKPiA+ID4gPiBkbWFf
-c2V0dXBfaW9tbXVfc3R1ZmYoKSBjYWxsIGluIHRoZWlyIHByb2JlLgo+ID4gPgo+ID4gPiBXb3Vs
-ZG4ndCBoZWxwIG11Y2guIFRoYXQgcGFydGljdWxhciBpc3N1ZSBpcyBub3RoaW5nIHRvIGRvIHdp
-dGggRE1BIG9wcwo+ID4gPiByZWFsbHksIGl0J3MgYWJvdXQgSU9NTVUgaW5pdGlhbGlzYXRpb24u
-IE9uIHNvbWV0aGluZyBsaWtlIFNNTVV2MyB0aGVyZQo+ID4gPiBpcyBsaXRlcmFsbHkgbm8gd2F5
-IHRvIHR1cm4gdGhlIHRoaW5nIG9uIHdpdGhvdXQgYmxvY2tpbmcgdW5rbm93bgo+ID4gPiB0cmFm
-ZmljIC0gaXQgKmhhcyogdG8gaGF2ZSBzdHJlYW0gdGFibGUgZW50cmllcyBwcm9ncmFtbWVkIGJl
-Zm9yZSBpdCBjYW4KPiA+ID4gZXZlbiBhbGxvdyBzdHVmZiB0byBieXBhc3MuCj4gPgo+ID4gZndp
-dywgb24gdGhlc2Ugc2RtODUwIGxhcHRvcHMgKGFuZCBJIHRoaW5rIHNkbTg0NSBib2FyZHMgbGlr
-ZSBtdHAgYW5kCj4gPiBkYjg0NWMpIHRoZSBTTU1VICh2MikgaXMgdGFrZW4gb3V0IG9mIGJ5cGFz
-cyBieSB0aGUgYm9vdGxvYWRlci4gIEJqb3JuCj4gPiBoYXMgc29tZSBwYXRjaGVzIGZvciBhcm0t
-c21tdSB0byByZWFkLWJhY2sgdGhlIHN0YXRlIGF0IGJvb3QuCj4gPgo+ID4gKEFsdGhvdWdoIG9s
-ZGVyIGRldmljZXMgd2VyZSBib290aW5nIHdpdGggZGlzcGxheSBlbmFibGVkIGJ1dCBTTU1VIGlu
-IGJ5cGFzcy4pCj4gPgo+ID4gPiBUaGUgYW5zd2VyIGlzIGVpdGhlciB0byBlaXRoZXIgcGF5IGF0
-dGVudGlvbiB0byB0aGUgIlF1aWVzY2UgYWxsIERNQQo+ID4gPiBjYXBhYmxlIGRldmljZXMiIHBh
-cnQgb2YgdGhlIGJvb3QgcHJvdG9jb2wgKHdoaWNoIGhhcyBiZWVuIHRoZXJlIHNpbmNlCj4gPiA+
-IHByZXR0eSBtdWNoIGZvcmV2ZXIpLCBvciB0byBjb21lIHVwIHdpdGggc29tZSByb2J1c3Qgd2F5
-IG9mCj4gPiA+IGNvbW11bmljYXRpbmcgImxpdmUiIGJvb3QtdGltZSBtYXBwaW5ncyB0byBJT01N
-VSBkcml2ZXJzIHNvIHRoYXQgdGhleQo+ID4gPiBjYW4gcHJvZ3JhbSB0aGVtc2VsdmVzIGFwcHJv
-cHJpYXRlbHkgZHVyaW5nIHByb2JlLgo+ID4KPiA+IFVuZm9ydHVuYXRlbHkgZGlzcGxheSBsaXQg
-dXAgYnkgYm9vdGxvYWRlciBpcyBiYXNpY2FsbHkgdWJpcXVpdG91cy4KPiA+IEV2ZXJ5IHNpbmds
-ZSBhbmRyb2lkIHBob25lIGRvZXMgaXQuICBBbGwgb2YgdGhlIHdpbmRvd3MtYXJtIGxhcHRvcHMg
-ZG8KPiA+IGl0LiAgQmFzaWNhbGx5IDk5LjklIG9mIHRoaW5ncyB0aGF0IGhhdmUgYSBkaXNwbGF5
-IGRvIGl0LiAgSXQncyBhCj4gPiB0b3VnaCBwcm9ibGVtIHRvIHNvbHZlIGludm9sdmluZyBjbGtz
-LCBnZHNjLCByZWd1bGF0b3JzLCBldGMsIGluCj4gPiBhZGRpdGlvbiB0byB0aGUgZGlzcGxheSBk
-cml2ZXIuLiBhbmQgc2FkbHkgbm93IHNtbXUuICBBbmQgZGV2aWNlcwo+ID4gd2hlcmUgd2UgY2Fu
-IG1ha2UgY2hhbmdlcyB0byBhbmQgdXBkYXRlIHRoZSBmaXJtd2FyZSBhcmUgcmF0aGVyIHJhcmUu
-Cj4gPiBTbyB0aGVyZSBpcyByZWFsbHkgbm8gb3B0aW9uIHRvIGlnbm9yZSB0aGlzIHByb2JsZW0u
-Cj4KPiBJIHRoaW5rIHRoaXMgaXMgZ29pbmcgdG8gcmVxdWlyZSBhdCBsZWFzdCBzb21lIGRlZ3Jl
-ZSBvZiBjb29wZXJhdGlvbgo+IGZyb20gdGhlIGJvb3Rsb2FkZXIuIFNlZSBteSBvdGhlciB0aHJl
-YWQgb24gdGhhdC4gVW5mb3J0dW5hdGVseSBJIHRoaW5rCj4gdGhpcyBpcyBhbiBhcmVhIHdoZXJl
-IGV2ZXJ5b25lIGhhcyBraW5kIG9mIGJlZW4gZG9pbmcgdGhlaXIgb3duIHRoaW5nCj4gZXZlbiBp
-ZiBzdGFuZGFyZCBiaW5kaW5ncyBmb3IgdGhpcyBoYXZlIGJlZW4gYXJvdW5kIGZvciBxdWl0ZSBh
-IHdoaWxlCj4gKGFjdHVhbGx5IDUgeWVhcnMgYnkgbm93KS4gSSBzdXNwZWN0IHRoYXQgbW9zdCBi
-b290bG9hZGVycyB0aGF0IHJ1bgo+IHRvZGF5IGFyZSBub3QgdGhhdCBvbGQsIGJ1dCBhcyBhbHdh
-eXMgZG93bnN0cmVhbSBkb2Vzbid0IGZvbGxvdyBjbG9zZWx5Cj4gd2hlcmUgdXBzdHJlYW0gaXMg
-Z3VpZGluZy4KPgo+ID4gSSBndWVzcyBpZiB3ZSBoYWQgc29tZSBlYXJseS1xdWlya3MgbWVjaGFu
-aXNtIGxpa2UgeDg2IGRvZXMsIHdlIGNvdWxkCj4gPiBtYXNoIHRoZSBkaXNwbGF5IG9mZiBlYXJs
-eSBpbiBib290LiAgVGhhdCB3b3VsZCBiZSBhbiBlYXN5IHNvbHV0aW9uLgo+ID4gQWx0aG91Z2gg
-SSdkIHByZWZlciBhIHByb3BlciBzb2x1dGlvbiBzbyB0aGF0IGFuZHJvaWQgcGhvbmVzIGFyZW4n
-dAo+ID4gY2FycnlpbmcgYXJvdW5kIGVub3Jtb3VzIHN0YWNrcyBvZiBoYWNrIHBhdGNoZXMgdG8g
-YWNoaWV2ZSBhIHNtb290aAo+ID4gZmxpY2tlci1mcmVlIGJvb3QuCj4KPiBUaGUgcHJvcGVyIHNv
-bHV0aW9uLCBJIHRoaW5rLCBpcyBmb3IgYm9vdGxvYWRlciBhbmQga2VybmVsIHRvIHdvcmsKPiB0
-b2dldGhlci4gVW5mb3J0dW5hdGVseSB0aGF0IG1lYW5zIHdlJ2xsIGp1c3QgaGF2ZSB0byBiaXRl
-IHRoZSBidWxsZXQKPiBhbmQgZ2V0IHRoaW5ncyBmaXhlZCBhY3Jvc3MgdGhlIHN0YWNrLiBJIHRo
-aW5rIHRoaXMgaXMganVzdCB0aGUgbGF0ZXN0Cj4gbWFuaWZlc3RhdGlvbiBvZiB0aGUgY2F0Y2gt
-dXAgdGhhdCB1cHN0cmVhbSBoYXMgYmVlbiBwbGF5aW5nLiBPbmx5IG5vdwo+IHRoYXQgd2UncmUg
-c3RhcnRpbmcgdG8gZW5hYmxlIGFsbCBvZiB0aGVzZSBmZWF0dXJlcyB1cHN0cmVhbSBhcmUgd2UK
-PiBydW5uaW5nIGludG8gaW50ZXJvcGVyYWJpbGl0eSBpc3N1ZXMuCj4KPiBJZiB1cHN0cmVhbSBo
-YWQgYmVlbiBmdXJ0aGVyIGFsb25nIHdlIHdvdWxkJ3ZlIGNhdWdodCB0aGVzZSBpc3N1ZXMgd2F5
-Cj4gYWhlYWQgb2YgdGltZSBhbmQgY291bGQndmUgaW5mbHVlbmNlZCB0aGUgZGVzaWducyBvZiBi
-b290bG9hZGVyIG11Y2gKPiBlYXJsaWVyLiBOb3csIHVubGVzcyB3ZSBnZXQgYWxsIHRoZSB2ZW5k
-b3JzIHRvIGdvIGJhY2sgYW5kIG1vZGlmeSA1IHllYXIKPiBvbGQgY29kZSB0aGF0J3MgZ29pbmcg
-dG8gYmUgZGlmZmljdWx0Lgo+Cj4gSG93ZXZlciwgSSB0aGluayBSb2JpbiBoYXMgYSBwb2ludCBo
-ZXJlOiBpdCdzIGNsZWFybHkgZG9jdW1lbnRlZCBpbiB0aGUKPiBib290IHByb3RvY29sLCBzbyB0
-ZWNobmljYWxseSBib290bG9hZGVycyBhcmUgYnVnZ3kgYW5kIHdlIGNhbid0IGFsd2F5cwo+IGdv
-IGFuZCBmaXggdGhpbmdzIHNvIHRoYXQgYnVnZ3kgYm9vdGxvYWRlcnMgY29udGludWUgdG8gd29y
-ay4gVGhlcmUncwo+IG5vdCBhIHdob2xlIGxvdCBvZiBpbmNlbnRpdmUgZm9yIGFueW9uZSB0byBm
-aXggdGhlIGJvb3Rsb2FkZXJzIGlmIHdlCj4ga2VlcCBkb2luZyB0aGF0LCBleT8KPgoKQSBjb3Vw
-bGUgbm90ZXM6CgoxKSBUaGUgb2RkcyBvZiBnZXR0aW5nIG5ldyBib290bG9hZGVycyBmb3IgNXly
-IG9sZCBwaG9uZXMgaXMgYmFzaWNhbGx5CiAgIG5vbmUuLiBhbmQgdGhleSBhcmUgdHlwaWNhbGx5
-IHNpZ25lZCBzbyB3ZSBjb3VsZG4ndCBqdXN0IHdyaXRlIG91cgogICBvd24gZXZlbiBpZiB3ZSB3
-YW50ZWQgdG8uCgoyKSBUaGUgd2luZG93cyBhcm0gbGFwdG9wcyBzaGlwcGluZyBhY3R1YWxseSBo
-YXZlICJyZWFsIiBVRUZJK0FDUEkuLgogICBmb3Igbm93IHdlJ3ZlIGJlZW4gdXNpbmcgZGV2aWNl
-LXRyZWUgdG8gZ2V0IGxpbnV4IGJvb3Rpbmcgb24gdGhlbS4KICAgQnV0IEkgdGhpbmsgd2UgYXJl
-IGdvaW5nIHRvIG5lZWQgdG8gc2hpZnQgdG8gQUNQSSBldmVudHVhbGx5Li4gc28KICAgYSBkdCBz
-cGVjaWZpYyBzb2x1dGlvbiBpc24ndCBzdXBlciBoZWxwZnVsLgoKICAgQnV0IHdlIGRvIGhhdmUg
-RUZJIEdPUCB0byBnZXQgdGhlIGFkZHJlc3Mgb2YgdGhlIGJvb3QgZnJhbWVidWZmZXIsCiAgIGFu
-ZCBJIGJlbGlldmUgdGhlcmUgaXMgYSByZXNlcnZlZCBtZW1vcnkgcmVnaW9uIHNldHVwIGZvciBp
-dC4KICAgTm90IHN1cmUgaG93IHRvIGNvbm5lY3QgdGhhdCB0byB0aGUgaW9tbXUgc3Vic3lzLgoK
-MykgVGhlIGF1dG9tYXRpYyBhdHRhY2ggb2YgRE1BIGRvbWFpbiBpcyBhbHNvIGNhdXNpbmcgYSBk
-aWZmZXJlbnQKICAgcHJvYmxlbSBmb3IgdXMgb24gdGhlIEdQVSBzaWRlLCBwcmV2ZW50aW5nIHVz
-IGZyb20gc3VwcG9ydGluZyBwZXItCiAgIGNvbnRleHQgcGFnZXRhYmxlcyAoc2luY2Ugd2UgZW5k
-IHVwIHdpdGggYSBkaXNhZ3JlZW1lbnQgYWJvdXQKICAgd2hpY2ggY29udGV4dCBiYW5rIGlzIHVz
-ZWQgYmV0d2VlbiBhcm0tc21tdSBhbmQgdGhlIGZpcm13YXJlKS4KCkknbSBraW5kYSBnbGFkIHRo
-YXQgeDg2IGZvbGtzIHdlcmUgbW9yZSBwcmFnbWF0aWMgYWJvdXQgZ2V0dGluZyBsaW51eAp0byB3
-b3JrIG9uIGFjdHVhbCBoYXJkd2FyZSwgbm90IGp1c3QgcmVzdHJpY3RpbmcgdGhpbmdzIHRvIGh3
-IHRoYXQKbG9va2VkIHRoZSB3YXkgdGhleSB3YW50ZWQgaXQgdG9vLi4gYXQgc29tZSBwb2ludCBp
-biBhcmNoL2FybTY0IHdlIGFyZQpnb2luZyB0byBoYXZlIHRvIGRlY2lkZSB0aGF0IHJlYWxpdHkg
-aXMgYSB0aGluZy4gIElnbm9yaW5nIHRoYXQgaXMKb25seSBnb2luZyB0byBmb3JjZSB1c2VycyBh
-bmQgZGlzdHJvcyB0byBkb3duc3RyZWFtIGtlcm5lbHMuCgpCUiwKLVIKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApG
-cmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5v
+isp iommu requires wrapper variants of the clocks.
+noc variants are always on and using the wrapper variants will activate
+{A,H}CLK_ISP{0,1} due to the hierarchy.
+
+Also add the respective power domain.
+
+Refer:
+ RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
+ RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
+
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+
+---
+Hello,
+
+I tested this using the isp patch set (which is not upstream
+yet). Without this patch, streaming from the isp stalls.
+
+I'm also enabling the power domain and removing the disable status,
+please let me know if this should be done in a separated patch.
+
+Thanks
+Helen
+
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 196ac9b78076..89594a7276f4 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1706,11 +1706,11 @@
+ 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
+ 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		interrupt-names = "isp0_mmu";
+-		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
++		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
+ 		clock-names = "aclk", "iface";
+ 		#iommu-cells = <0>;
++		power-domains = <&power RK3399_PD_ISP0>;
+ 		rockchip,disable-mmu-reset;
+-		status = "disabled";
+ 	};
+ 
+ 	isp1_mmu: iommu@ff924000 {
+@@ -1718,11 +1718,11 @@
+ 		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
+ 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		interrupt-names = "isp1_mmu";
+-		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
++		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
+ 		clock-names = "aclk", "iface";
+ 		#iommu-cells = <0>;
++		power-domains = <&power RK3399_PD_ISP1>;
+ 		rockchip,disable-mmu-reset;
+-		status = "disabled";
+ 	};
+ 
+ 	hdmi_sound: hdmi-sound {
+-- 
+2.20.1
