@@ -1,219 +1,170 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
-Date: Mon, 3 Jun 2019 16:42:53 +0530
-Message-ID: <CAFp+6iGexVjbak8RQhEQNPp5cV8PK2ubTNNCMyaFPqdTGAbJ0A@mail.gmail.com>
-References: <20181201165348.24140-1-robdclark@gmail.com> <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
+Date: Mon, 3 Jun 2019 12:14:27 +0100
+Message-ID: <401f9948-14bd-27a2-34c1-fb429cae966d@arm.com>
+References: <20181201165348.24140-1-robdclark@gmail.com>
+ <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
  <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
  <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
  <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
- <4864dc3e-6e04-43e5-32c8-2cf5a0705fe5@codeaurora.org> <CAF6AEGuFyk1DJWUcQTnW=xsEUhYTYJccjzHJFxvipK4M8UdrUA@mail.gmail.com>
+ <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAF6AEGuFyk1DJWUcQTnW=xsEUhYTYJccjzHJFxvipK4M8UdrUA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>
-Cc: freedreno <freedreno@lists.freedesktop.org>, Archit Taneja <architt@codeaurora.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Doug Anderson <dianders@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Daniel Vetter <daniel@ffwll.ch>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 4:14 PM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Mon, Jun 3, 2019 at 12:57 AM Vivek Gautam
-> <vivek.gautam@codeaurora.org> wrote:
-> >
-> >
-> >
-> > On 6/3/2019 11:50 AM, Tomasz Figa wrote:
-> > > On Mon, Jun 3, 2019 at 4:40 AM Rob Clark <robdclark@gmail.com> wrote:
-> > >> On Fri, May 10, 2019 at 7:35 AM Rob Clark <robdclark@gmail.com> wrote:
-> > >>> On Tue, Dec 4, 2018 at 2:29 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > >>>> On Sat, Dec 1, 2018 at 10:54 AM Rob Clark <robdclark@gmail.com> wrote:
-> > >>>>> This solves a problem we see with drm/msm, caused by getting
-> > >>>>> iommu_dma_ops while we attach our own domain and manage it directly at
-> > >>>>> the iommu API level:
-> > >>>>>
-> > >>>>>    [0000000000000038] user address but active_mm is swapper
-> > >>>>>    Internal error: Oops: 96000005 [#1] PREEMPT SMP
-> > >>>>>    Modules linked in:
-> > >>>>>    CPU: 7 PID: 70 Comm: kworker/7:1 Tainted: G        W         4.19.3 #90
-> > >>>>>    Hardware name: xxx (DT)
-> > >>>>>    Workqueue: events deferred_probe_work_func
-> > >>>>>    pstate: 80c00009 (Nzcv daif +PAN +UAO)
-> > >>>>>    pc : iommu_dma_map_sg+0x7c/0x2c8
-> > >>>>>    lr : iommu_dma_map_sg+0x40/0x2c8
-> > >>>>>    sp : ffffff80095eb4f0
-> > >>>>>    x29: ffffff80095eb4f0 x28: 0000000000000000
-> > >>>>>    x27: ffffffc0f9431578 x26: 0000000000000000
-> > >>>>>    x25: 00000000ffffffff x24: 0000000000000003
-> > >>>>>    x23: 0000000000000001 x22: ffffffc0fa9ac010
-> > >>>>>    x21: 0000000000000000 x20: ffffffc0fab40980
-> > >>>>>    x19: ffffffc0fab40980 x18: 0000000000000003
-> > >>>>>    x17: 00000000000001c4 x16: 0000000000000007
-> > >>>>>    x15: 000000000000000e x14: ffffffffffffffff
-> > >>>>>    x13: ffff000000000000 x12: 0000000000000028
-> > >>>>>    x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
-> > >>>>>    x9 : 0000000000000000 x8 : ffffffc0fab409a0
-> > >>>>>    x7 : 0000000000000000 x6 : 0000000000000002
-> > >>>>>    x5 : 0000000100000000 x4 : 0000000000000000
-> > >>>>>    x3 : 0000000000000001 x2 : 0000000000000002
-> > >>>>>    x1 : ffffffc0f9431578 x0 : 0000000000000000
-> > >>>>>    Process kworker/7:1 (pid: 70, stack limit = 0x0000000017d08ffb)
-> > >>>>>    Call trace:
-> > >>>>>     iommu_dma_map_sg+0x7c/0x2c8
-> > >>>>>     __iommu_map_sg_attrs+0x70/0x84
-> > >>>>>     get_pages+0x170/0x1e8
-> > >>>>>     msm_gem_get_iova+0x8c/0x128
-> > >>>>>     _msm_gem_kernel_new+0x6c/0xc8
-> > >>>>>     msm_gem_kernel_new+0x4c/0x58
-> > >>>>>     dsi_tx_buf_alloc_6g+0x4c/0x8c
-> > >>>>>     msm_dsi_host_modeset_init+0xc8/0x108
-> > >>>>>     msm_dsi_modeset_init+0x54/0x18c
-> > >>>>>     _dpu_kms_drm_obj_init+0x430/0x474
-> > >>>>>     dpu_kms_hw_init+0x5f8/0x6b4
-> > >>>>>     msm_drm_bind+0x360/0x6c8
-> > >>>>>     try_to_bring_up_master.part.7+0x28/0x70
-> > >>>>>     component_master_add_with_match+0xe8/0x124
-> > >>>>>     msm_pdev_probe+0x294/0x2b4
-> > >>>>>     platform_drv_probe+0x58/0xa4
-> > >>>>>     really_probe+0x150/0x294
-> > >>>>>     driver_probe_device+0xac/0xe8
-> > >>>>>     __device_attach_driver+0xa4/0xb4
-> > >>>>>     bus_for_each_drv+0x98/0xc8
-> > >>>>>     __device_attach+0xac/0x12c
-> > >>>>>     device_initial_probe+0x24/0x30
-> > >>>>>     bus_probe_device+0x38/0x98
-> > >>>>>     deferred_probe_work_func+0x78/0xa4
-> > >>>>>     process_one_work+0x24c/0x3dc
-> > >>>>>     worker_thread+0x280/0x360
-> > >>>>>     kthread+0x134/0x13c
-> > >>>>>     ret_from_fork+0x10/0x18
-> > >>>>>    Code: d2800004 91000725 6b17039f 5400048a (f9401f40)
-> > >>>>>    ---[ end trace f22dda57f3648e2c ]---
-> > >>>>>    Kernel panic - not syncing: Fatal exception
-> > >>>>>    SMP: stopping secondary CPUs
-> > >>>>>    Kernel Offset: disabled
-> > >>>>>    CPU features: 0x0,22802a18
-> > >>>>>    Memory Limit: none
-> > >>>>>
-> > >>>>> The problem is that when drm/msm does it's own iommu_attach_device(),
-> > >>>>> now the domain returned by iommu_get_domain_for_dev() is drm/msm's
-> > >>>>> domain, and it doesn't have domain->iova_cookie.
-> > >>>>>
-> > >>>>> We kind of avoided this problem prior to sdm845/dpu because the iommu
-> > >>>>> was attached to the mdp node in dt, which is a child of the toplevel
-> > >>>>> mdss node (which corresponds to the dev passed in dma_map_sg()).  But
-> > >>>>> with sdm845, now the iommu is attached at the mdss level so we hit the
-> > >>>>> iommu_dma_ops in dma_map_sg().
-> > >>>>>
-> > >>>>> But auto allocating/attaching a domain before the driver is probed was
-> > >>>>> already a blocking problem for enabling per-context pagetables for the
-> > >>>>> GPU.  This problem is also now solved with this patch.
-> > >>>>>
-> > >>>>> Fixes: 97890ba9289c dma-mapping: detect and configure IOMMU in of_dma_configure
-> > >>>>> Tested-by: Douglas Anderson <dianders@chromium.org>
-> > >>>>> Signed-off-by: Rob Clark <robdclark@gmail.com>
-> > >>>>> ---
-> > >>>>> This is an alternative/replacement for [1].  What it lacks in elegance
-> > >>>>> it makes up for in practicality ;-)
-> > >>>>>
-> > >>>>> [1] https://patchwork.freedesktop.org/patch/264930/
-> > >>>>>
-> > >>>>>   drivers/of/device.c | 22 ++++++++++++++++++++++
-> > >>>>>   1 file changed, 22 insertions(+)
-> > >>>>>
-> > >>>>> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > >>>>> index 5957cd4fa262..15ffee00fb22 100644
-> > >>>>> --- a/drivers/of/device.c
-> > >>>>> +++ b/drivers/of/device.c
-> > >>>>> @@ -72,6 +72,14 @@ int of_device_add(struct platform_device *ofdev)
-> > >>>>>          return device_add(&ofdev->dev);
-> > >>>>>   }
-> > >>>>>
-> > >>>>> +static const struct of_device_id iommu_blacklist[] = {
-> > >>>>> +       { .compatible = "qcom,mdp4" },
-> > >>>>> +       { .compatible = "qcom,mdss" },
-> > >>>>> +       { .compatible = "qcom,sdm845-mdss" },
-> > >>>>> +       { .compatible = "qcom,adreno" },
-> > >>>>> +       {}
-> > >>>>> +};
-> > >>>> Not completely clear to whether this is still needed or not, but this
-> > >>>> really won't scale. Why can't the driver for these devices override
-> > >>>> whatever has been setup by default?
-> > >>>>
-> > >>> fwiw, at the moment it is not needed, but it will become needed again
-> > >>> to implement per-context pagetables (although I suppose for this we
-> > >>> only need to blacklist qcom,adreno and not also the display nodes).
-> > >> So, another case I've come across, on the display side.. I'm working
-> > >> on handling the case where bootloader enables display (and takes iommu
-> > >> out of reset).. as soon as DMA domain gets attached we get iommu
-> > >> faults, because bootloader has already configured display for scanout.
-> > >> Unfortunately this all happens before actual driver is probed and has
-> > >> a chance to intervene.
-> >
-> > Things are bad for MTP sdm845 too where the bootloader sets up iommu to
-> > display splash screen, and when the kernel resets the iommu, the mappings go
-> > for a toss resulting in fatal faults.
-> > Bjorn was working on something recently to address this. Adding him to
-> > the thread.
-> >
->
-> yeah, I was hitting it on the yoga c630 laptop, but it is the identical problem.
->
-> We'd worked around it so far with a hack in arm-smmu to temporarily
-> ioremap the display controller block and disable INTF1, which is
-> *defn* not a good solution ;-)
-
-Right, but this doesn't always work for MTP. I believe Bjorn has something
-more inline with downstream.
-
-Regards
->
-> BR,
-> -R
->
-> >
-> > Best regards
-> > Vivek
-> >
-> > >> It's rather unfortunate that we tried to be clever rather than just
-> > >> making drivers call some function to opt-in to the hookup of dma iommu
-> > >> ops :-(
-> > > I think it still works for the 90% of cases and if 10% needs some
-> > > explicit work in the drivers, that's better than requiring 100% of the
-> > > drivers to do things manually.
-> > >
-> > > Adding Marek who had the same problem on Exynos.
-> > >
-> > > Best regards,
-> > > Tomasz
-> > >
-> > >> BR,
-> > >> -R
-> > >>
-> > >>> The reason is that in the current state the core code creates the
-> > >>> first domain before the driver has a chance to intervene and tell it
-> > >>> not to.  And this results that driver ends up using a different
-> > >>> context bank on the iommu than what the firmware expects.
-> > >>>
-> > >>> I guess the alternative is to put some property in DT.. but that
-> > >>> doesn't really feel right.  I guess there aren't really many (or any?)
-> > >>> other drivers that have this specific problem, so I don't really
-> > >>> expect it to be a scaling problem.
-> > >>>
-> > >>> Yeah, it's a bit ugly, but I'll take a small ugly working hack, over
-> > >>> elegant but non-working any day ;-)... but if someone has a better
-> > >>> idea then I'm all ears.
-> > >>>
-> > >>> BR,
-> > >>> -R
-> >
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+T24gMDMvMDYvMjAxOSAxMTo0NywgUm9iIENsYXJrIHdyb3RlOgo+IE9uIFN1biwgSnVuIDIsIDIw
+MTkgYXQgMTE6MjUgUE0gVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9yZz4gd3JvdGU6Cj4+
+Cj4+IE9uIE1vbiwgSnVuIDMsIDIwMTkgYXQgNDo0MCBBTSBSb2IgQ2xhcmsgPHJvYmRjbGFya0Bn
+bWFpbC5jb20+IHdyb3RlOgo+Pj4KPj4+IE9uIEZyaSwgTWF5IDEwLCAyMDE5IGF0IDc6MzUgQU0g
+Um9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cm90ZToKPj4+Pgo+Pj4+IE9uIFR1ZSwg
+RGVjIDQsIDIwMTggYXQgMjoyOSBQTSBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPiB3
+cm90ZToKPj4+Pj4KPj4+Pj4gT24gU2F0LCBEZWMgMSwgMjAxOCBhdCAxMDo1NCBBTSBSb2IgQ2xh
+cmsgPHJvYmRjbGFya0BnbWFpbC5jb20+IHdyb3RlOgo+Pj4+Pj4KPj4+Pj4+IFRoaXMgc29sdmVz
+IGEgcHJvYmxlbSB3ZSBzZWUgd2l0aCBkcm0vbXNtLCBjYXVzZWQgYnkgZ2V0dGluZwo+Pj4+Pj4g
+aW9tbXVfZG1hX29wcyB3aGlsZSB3ZSBhdHRhY2ggb3VyIG93biBkb21haW4gYW5kIG1hbmFnZSBp
+dCBkaXJlY3RseSBhdAo+Pj4+Pj4gdGhlIGlvbW11IEFQSSBsZXZlbDoKPj4+Pj4+Cj4+Pj4+PiAg
+ICBbMDAwMDAwMDAwMDAwMDAzOF0gdXNlciBhZGRyZXNzIGJ1dCBhY3RpdmVfbW0gaXMgc3dhcHBl
+cgo+Pj4+Pj4gICAgSW50ZXJuYWwgZXJyb3I6IE9vcHM6IDk2MDAwMDA1IFsjMV0gUFJFRU1QVCBT
+TVAKPj4+Pj4+ICAgIE1vZHVsZXMgbGlua2VkIGluOgo+Pj4+Pj4gICAgQ1BVOiA3IFBJRDogNzAg
+Q29tbToga3dvcmtlci83OjEgVGFpbnRlZDogRyAgICAgICAgVyAgICAgICAgIDQuMTkuMyAjOTAK
+Pj4+Pj4+ICAgIEhhcmR3YXJlIG5hbWU6IHh4eCAoRFQpCj4+Pj4+PiAgICBXb3JrcXVldWU6IGV2
+ZW50cyBkZWZlcnJlZF9wcm9iZV93b3JrX2Z1bmMKPj4+Pj4+ICAgIHBzdGF0ZTogODBjMDAwMDkg
+KE56Y3YgZGFpZiArUEFOICtVQU8pCj4+Pj4+PiAgICBwYyA6IGlvbW11X2RtYV9tYXBfc2crMHg3
+Yy8weDJjOAo+Pj4+Pj4gICAgbHIgOiBpb21tdV9kbWFfbWFwX3NnKzB4NDAvMHgyYzgKPj4+Pj4+
+ICAgIHNwIDogZmZmZmZmODAwOTVlYjRmMAo+Pj4+Pj4gICAgeDI5OiBmZmZmZmY4MDA5NWViNGYw
+IHgyODogMDAwMDAwMDAwMDAwMDAwMAo+Pj4+Pj4gICAgeDI3OiBmZmZmZmZjMGY5NDMxNTc4IHgy
+NjogMDAwMDAwMDAwMDAwMDAwMAo+Pj4+Pj4gICAgeDI1OiAwMDAwMDAwMGZmZmZmZmZmIHgyNDog
+MDAwMDAwMDAwMDAwMDAwMwo+Pj4+Pj4gICAgeDIzOiAwMDAwMDAwMDAwMDAwMDAxIHgyMjogZmZm
+ZmZmYzBmYTlhYzAxMAo+Pj4+Pj4gICAgeDIxOiAwMDAwMDAwMDAwMDAwMDAwIHgyMDogZmZmZmZm
+YzBmYWI0MDk4MAo+Pj4+Pj4gICAgeDE5OiBmZmZmZmZjMGZhYjQwOTgwIHgxODogMDAwMDAwMDAw
+MDAwMDAwMwo+Pj4+Pj4gICAgeDE3OiAwMDAwMDAwMDAwMDAwMWM0IHgxNjogMDAwMDAwMDAwMDAw
+MDAwNwo+Pj4+Pj4gICAgeDE1OiAwMDAwMDAwMDAwMDAwMDBlIHgxNDogZmZmZmZmZmZmZmZmZmZm
+Zgo+Pj4+Pj4gICAgeDEzOiBmZmZmMDAwMDAwMDAwMDAwIHgxMjogMDAwMDAwMDAwMDAwMDAyOAo+
+Pj4+Pj4gICAgeDExOiAwMTAxMDEwMTAxMDEwMTAxIHgxMDogN2Y3ZjdmN2Y3ZjdmN2Y3Zgo+Pj4+
+Pj4gICAgeDkgOiAwMDAwMDAwMDAwMDAwMDAwIHg4IDogZmZmZmZmYzBmYWI0MDlhMAo+Pj4+Pj4g
+ICAgeDcgOiAwMDAwMDAwMDAwMDAwMDAwIHg2IDogMDAwMDAwMDAwMDAwMDAwMgo+Pj4+Pj4gICAg
+eDUgOiAwMDAwMDAwMTAwMDAwMDAwIHg0IDogMDAwMDAwMDAwMDAwMDAwMAo+Pj4+Pj4gICAgeDMg
+OiAwMDAwMDAwMDAwMDAwMDAxIHgyIDogMDAwMDAwMDAwMDAwMDAwMgo+Pj4+Pj4gICAgeDEgOiBm
+ZmZmZmZjMGY5NDMxNTc4IHgwIDogMDAwMDAwMDAwMDAwMDAwMAo+Pj4+Pj4gICAgUHJvY2VzcyBr
+d29ya2VyLzc6MSAocGlkOiA3MCwgc3RhY2sgbGltaXQgPSAweDAwMDAwMDAwMTdkMDhmZmIpCj4+
+Pj4+PiAgICBDYWxsIHRyYWNlOgo+Pj4+Pj4gICAgIGlvbW11X2RtYV9tYXBfc2crMHg3Yy8weDJj
+OAo+Pj4+Pj4gICAgIF9faW9tbXVfbWFwX3NnX2F0dHJzKzB4NzAvMHg4NAo+Pj4+Pj4gICAgIGdl
+dF9wYWdlcysweDE3MC8weDFlOAo+Pj4+Pj4gICAgIG1zbV9nZW1fZ2V0X2lvdmErMHg4Yy8weDEy
+OAo+Pj4+Pj4gICAgIF9tc21fZ2VtX2tlcm5lbF9uZXcrMHg2Yy8weGM4Cj4+Pj4+PiAgICAgbXNt
+X2dlbV9rZXJuZWxfbmV3KzB4NGMvMHg1OAo+Pj4+Pj4gICAgIGRzaV90eF9idWZfYWxsb2NfNmcr
+MHg0Yy8weDhjCj4+Pj4+PiAgICAgbXNtX2RzaV9ob3N0X21vZGVzZXRfaW5pdCsweGM4LzB4MTA4
+Cj4+Pj4+PiAgICAgbXNtX2RzaV9tb2Rlc2V0X2luaXQrMHg1NC8weDE4Ywo+Pj4+Pj4gICAgIF9k
+cHVfa21zX2RybV9vYmpfaW5pdCsweDQzMC8weDQ3NAo+Pj4+Pj4gICAgIGRwdV9rbXNfaHdfaW5p
+dCsweDVmOC8weDZiNAo+Pj4+Pj4gICAgIG1zbV9kcm1fYmluZCsweDM2MC8weDZjOAo+Pj4+Pj4g
+ICAgIHRyeV90b19icmluZ191cF9tYXN0ZXIucGFydC43KzB4MjgvMHg3MAo+Pj4+Pj4gICAgIGNv
+bXBvbmVudF9tYXN0ZXJfYWRkX3dpdGhfbWF0Y2grMHhlOC8weDEyNAo+Pj4+Pj4gICAgIG1zbV9w
+ZGV2X3Byb2JlKzB4Mjk0LzB4MmI0Cj4+Pj4+PiAgICAgcGxhdGZvcm1fZHJ2X3Byb2JlKzB4NTgv
+MHhhNAo+Pj4+Pj4gICAgIHJlYWxseV9wcm9iZSsweDE1MC8weDI5NAo+Pj4+Pj4gICAgIGRyaXZl
+cl9wcm9iZV9kZXZpY2UrMHhhYy8weGU4Cj4+Pj4+PiAgICAgX19kZXZpY2VfYXR0YWNoX2RyaXZl
+cisweGE0LzB4YjQKPj4+Pj4+ICAgICBidXNfZm9yX2VhY2hfZHJ2KzB4OTgvMHhjOAo+Pj4+Pj4g
+ICAgIF9fZGV2aWNlX2F0dGFjaCsweGFjLzB4MTJjCj4+Pj4+PiAgICAgZGV2aWNlX2luaXRpYWxf
+cHJvYmUrMHgyNC8weDMwCj4+Pj4+PiAgICAgYnVzX3Byb2JlX2RldmljZSsweDM4LzB4OTgKPj4+
+Pj4+ICAgICBkZWZlcnJlZF9wcm9iZV93b3JrX2Z1bmMrMHg3OC8weGE0Cj4+Pj4+PiAgICAgcHJv
+Y2Vzc19vbmVfd29yaysweDI0Yy8weDNkYwo+Pj4+Pj4gICAgIHdvcmtlcl90aHJlYWQrMHgyODAv
+MHgzNjAKPj4+Pj4+ICAgICBrdGhyZWFkKzB4MTM0LzB4MTNjCj4+Pj4+PiAgICAgcmV0X2Zyb21f
+Zm9yaysweDEwLzB4MTgKPj4+Pj4+ICAgIENvZGU6IGQyODAwMDA0IDkxMDAwNzI1IDZiMTcwMzlm
+IDU0MDAwNDhhIChmOTQwMWY0MCkKPj4+Pj4+ICAgIC0tLVsgZW5kIHRyYWNlIGYyMmRkYTU3ZjM2
+NDhlMmMgXS0tLQo+Pj4+Pj4gICAgS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IEZhdGFsIGV4
+Y2VwdGlvbgo+Pj4+Pj4gICAgU01QOiBzdG9wcGluZyBzZWNvbmRhcnkgQ1BVcwo+Pj4+Pj4gICAg
+S2VybmVsIE9mZnNldDogZGlzYWJsZWQKPj4+Pj4+ICAgIENQVSBmZWF0dXJlczogMHgwLDIyODAy
+YTE4Cj4+Pj4+PiAgICBNZW1vcnkgTGltaXQ6IG5vbmUKPj4+Pj4+Cj4+Pj4+PiBUaGUgcHJvYmxl
+bSBpcyB0aGF0IHdoZW4gZHJtL21zbSBkb2VzIGl0J3Mgb3duIGlvbW11X2F0dGFjaF9kZXZpY2Uo
+KSwKPj4+Pj4+IG5vdyB0aGUgZG9tYWluIHJldHVybmVkIGJ5IGlvbW11X2dldF9kb21haW5fZm9y
+X2RldigpIGlzIGRybS9tc20ncwo+Pj4+Pj4gZG9tYWluLCBhbmQgaXQgZG9lc24ndCBoYXZlIGRv
+bWFpbi0+aW92YV9jb29raWUuCj4+Pj4+Pgo+Pj4+Pj4gV2Uga2luZCBvZiBhdm9pZGVkIHRoaXMg
+cHJvYmxlbSBwcmlvciB0byBzZG04NDUvZHB1IGJlY2F1c2UgdGhlIGlvbW11Cj4+Pj4+PiB3YXMg
+YXR0YWNoZWQgdG8gdGhlIG1kcCBub2RlIGluIGR0LCB3aGljaCBpcyBhIGNoaWxkIG9mIHRoZSB0
+b3BsZXZlbAo+Pj4+Pj4gbWRzcyBub2RlICh3aGljaCBjb3JyZXNwb25kcyB0byB0aGUgZGV2IHBh
+c3NlZCBpbiBkbWFfbWFwX3NnKCkpLiAgQnV0Cj4+Pj4+PiB3aXRoIHNkbTg0NSwgbm93IHRoZSBp
+b21tdSBpcyBhdHRhY2hlZCBhdCB0aGUgbWRzcyBsZXZlbCBzbyB3ZSBoaXQgdGhlCj4+Pj4+PiBp
+b21tdV9kbWFfb3BzIGluIGRtYV9tYXBfc2coKS4KPj4+Pj4+Cj4+Pj4+PiBCdXQgYXV0byBhbGxv
+Y2F0aW5nL2F0dGFjaGluZyBhIGRvbWFpbiBiZWZvcmUgdGhlIGRyaXZlciBpcyBwcm9iZWQgd2Fz
+Cj4+Pj4+PiBhbHJlYWR5IGEgYmxvY2tpbmcgcHJvYmxlbSBmb3IgZW5hYmxpbmcgcGVyLWNvbnRl
+eHQgcGFnZXRhYmxlcyBmb3IgdGhlCj4+Pj4+PiBHUFUuICBUaGlzIHByb2JsZW0gaXMgYWxzbyBu
+b3cgc29sdmVkIHdpdGggdGhpcyBwYXRjaC4KPj4+Pj4+Cj4+Pj4+PiBGaXhlczogOTc4OTBiYTky
+ODljIGRtYS1tYXBwaW5nOiBkZXRlY3QgYW5kIGNvbmZpZ3VyZSBJT01NVSBpbiBvZl9kbWFfY29u
+ZmlndXJlCj4+Pj4+PiBUZXN0ZWQtYnk6IERvdWdsYXMgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9t
+aXVtLm9yZz4KPj4+Pj4+IFNpZ25lZC1vZmYtYnk6IFJvYiBDbGFyayA8cm9iZGNsYXJrQGdtYWls
+LmNvbT4KPj4+Pj4+IC0tLQo+Pj4+Pj4gVGhpcyBpcyBhbiBhbHRlcm5hdGl2ZS9yZXBsYWNlbWVu
+dCBmb3IgWzFdLiAgV2hhdCBpdCBsYWNrcyBpbiBlbGVnYW5jZQo+Pj4+Pj4gaXQgbWFrZXMgdXAg
+Zm9yIGluIHByYWN0aWNhbGl0eSA7LSkKPj4+Pj4+Cj4+Pj4+PiBbMV0gaHR0cHM6Ly9wYXRjaHdv
+cmsuZnJlZWRlc2t0b3Aub3JnL3BhdGNoLzI2NDkzMC8KPj4+Pj4+Cj4+Pj4+PiAgIGRyaXZlcnMv
+b2YvZGV2aWNlLmMgfCAyMiArKysrKysrKysrKysrKysrKysrKysrCj4+Pj4+PiAgIDEgZmlsZSBj
+aGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspCj4+Pj4+Pgo+Pj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvb2YvZGV2aWNlLmMgYi9kcml2ZXJzL29mL2RldmljZS5jCj4+Pj4+PiBpbmRleCA1OTU3Y2Q0
+ZmEyNjIuLjE1ZmZlZTAwZmIyMiAxMDA2NDQKPj4+Pj4+IC0tLSBhL2RyaXZlcnMvb2YvZGV2aWNl
+LmMKPj4+Pj4+ICsrKyBiL2RyaXZlcnMvb2YvZGV2aWNlLmMKPj4+Pj4+IEBAIC03Miw2ICs3Miwx
+NCBAQCBpbnQgb2ZfZGV2aWNlX2FkZChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpvZmRldikKPj4+
+Pj4+ICAgICAgICAgIHJldHVybiBkZXZpY2VfYWRkKCZvZmRldi0+ZGV2KTsKPj4+Pj4+ICAgfQo+
+Pj4+Pj4KPj4+Pj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBpb21tdV9ibGFj
+a2xpc3RbXSA9IHsKPj4+Pj4+ICsgICAgICAgeyAuY29tcGF0aWJsZSA9ICJxY29tLG1kcDQiIH0s
+Cj4+Pj4+PiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAicWNvbSxtZHNzIiB9LAo+Pj4+Pj4gKyAg
+ICAgICB7IC5jb21wYXRpYmxlID0gInFjb20sc2RtODQ1LW1kc3MiIH0sCj4+Pj4+PiArICAgICAg
+IHsgLmNvbXBhdGlibGUgPSAicWNvbSxhZHJlbm8iIH0sCj4+Pj4+PiArICAgICAgIHt9Cj4+Pj4+
+PiArfTsKPj4+Pj4KPj4+Pj4gTm90IGNvbXBsZXRlbHkgY2xlYXIgdG8gd2hldGhlciB0aGlzIGlz
+IHN0aWxsIG5lZWRlZCBvciBub3QsIGJ1dCB0aGlzCj4+Pj4+IHJlYWxseSB3b24ndCBzY2FsZS4g
+V2h5IGNhbid0IHRoZSBkcml2ZXIgZm9yIHRoZXNlIGRldmljZXMgb3ZlcnJpZGUKPj4+Pj4gd2hh
+dGV2ZXIgaGFzIGJlZW4gc2V0dXAgYnkgZGVmYXVsdD8KPj4+Pj4KPj4+Pgo+Pj4+IGZ3aXcsIGF0
+IHRoZSBtb21lbnQgaXQgaXMgbm90IG5lZWRlZCwgYnV0IGl0IHdpbGwgYmVjb21lIG5lZWRlZCBh
+Z2Fpbgo+Pj4+IHRvIGltcGxlbWVudCBwZXItY29udGV4dCBwYWdldGFibGVzIChhbHRob3VnaCBJ
+IHN1cHBvc2UgZm9yIHRoaXMgd2UKPj4+PiBvbmx5IG5lZWQgdG8gYmxhY2tsaXN0IHFjb20sYWRy
+ZW5vIGFuZCBub3QgYWxzbyB0aGUgZGlzcGxheSBub2RlcykuCj4+Pgo+Pj4gU28sIGFub3RoZXIg
+Y2FzZSBJJ3ZlIGNvbWUgYWNyb3NzLCBvbiB0aGUgZGlzcGxheSBzaWRlLi4gSSdtIHdvcmtpbmcK
+Pj4+IG9uIGhhbmRsaW5nIHRoZSBjYXNlIHdoZXJlIGJvb3Rsb2FkZXIgZW5hYmxlcyBkaXNwbGF5
+IChhbmQgdGFrZXMgaW9tbXUKPj4+IG91dCBvZiByZXNldCkuLiBhcyBzb29uIGFzIERNQSBkb21h
+aW4gZ2V0cyBhdHRhY2hlZCB3ZSBnZXQgaW9tbXUKPj4+IGZhdWx0cywgYmVjYXVzZSBib290bG9h
+ZGVyIGhhcyBhbHJlYWR5IGNvbmZpZ3VyZWQgZGlzcGxheSBmb3Igc2Nhbm91dC4KPj4+IFVuZm9y
+dHVuYXRlbHkgdGhpcyBhbGwgaGFwcGVucyBiZWZvcmUgYWN0dWFsIGRyaXZlciBpcyBwcm9iZWQg
+YW5kIGhhcwo+Pj4gYSBjaGFuY2UgdG8gaW50ZXJ2ZW5lLgo+Pj4KPj4+IEl0J3MgcmF0aGVyIHVu
+Zm9ydHVuYXRlIHRoYXQgd2UgdHJpZWQgdG8gYmUgY2xldmVyIHJhdGhlciB0aGFuIGp1c3QKPj4+
+IG1ha2luZyBkcml2ZXJzIGNhbGwgc29tZSBmdW5jdGlvbiB0byBvcHQtaW4gdG8gdGhlIGhvb2t1
+cCBvZiBkbWEgaW9tbXUKPj4+IG9wcyA6LSgKPj4KPj4gSSB0aGluayBpdCBzdGlsbCB3b3JrcyBm
+b3IgdGhlIDkwJSBvZiBjYXNlcyBhbmQgaWYgMTAlIG5lZWRzIHNvbWUKPj4gZXhwbGljaXQgd29y
+ayBpbiB0aGUgZHJpdmVycywgdGhhdCdzIGJldHRlciB0aGFuIHJlcXVpcmluZyAxMDAlIG9mIHRo
+ZQo+PiBkcml2ZXJzIHRvIGRvIHRoaW5ncyBtYW51YWxseS4KClJpZ2h0LCBpdCdzIG5vdCBhYm91
+dCAiYmVpbmcgY2xldmVyIiwgaXQncyBhYm91dCBub3QgYWRkaW5nIG9wdC1pbiBjb2RlIAp0byB0
+aGUgaHVuZHJlZHMgYW5kIGh1bmRyZWRzIGFuZCBodW5kcmVkcyBvZiBkcml2ZXJzIHdoaWNoICpt
+aWdodCogZXZlciAKZmluZCB0aGVtc2VsdmVzIHVzZWQgb24gYSBzeXN0ZW0gd2hlcmUgdGhleSB3
+b3VsZCBuZWVkIHRoZSBJT01NVSdzIGhlbHAgCmZvciBETUEuCgo+PiBBZGRpbmcgTWFyZWsgd2hv
+IGhhZCB0aGUgc2FtZSBwcm9ibGVtIG9uIEV4eW5vcy4KPiAKPiBJIGRvIHdvbmRlciBob3cgbWFu
+eSBkcml2ZXJzIG5lZWQgdG8gaW9tbXVfbWFwIGluIHRoZWlyIC0+cHJvYmUoKT8KPiBJJ20gdGhp
+bmtpbmcgbW92aW5nIHRoZSBhdXRvLWhvb2t1cCB0byBhZnRlciBhIHN1Y2Nlc3NmdWwgcHJvYmUo
+KSwKPiB3aXRoIHNvbWUgZnVuY3Rpb24gYSBkcml2ZXIgY291bGQgY2FsbCBpZiB0aGV5IG5lZWQg
+bWFwcGluZyBpbiBwcm9iZSwKPiBtaWdodCBiZSBhIHdheSB0byBldmVudHVhbGx5IGdldCByaWQg
+b2YgdGhlIGJsYWNrbGlzdC4gIEJ1dCBJJ3ZlIG5vCj4gaWRlYSBob3cgdG8gZmluZCB0aGUgc3Vi
+c2V0IG9mIGRyaXZlcnMgdGhhdCB3b3VsZCBiZSBicm9rZW4gd2l0aG91dCBhCj4gZG1hX3NldHVw
+X2lvbW11X3N0dWZmKCkgY2FsbCBpbiB0aGVpciBwcm9iZS4KCldvdWxkbid0IGhlbHAgbXVjaC4g
+VGhhdCBwYXJ0aWN1bGFyIGlzc3VlIGlzIG5vdGhpbmcgdG8gZG8gd2l0aCBETUEgb3BzIApyZWFs
+bHksIGl0J3MgYWJvdXQgSU9NTVUgaW5pdGlhbGlzYXRpb24uIE9uIHNvbWV0aGluZyBsaWtlIFNN
+TVV2MyB0aGVyZSAKaXMgbGl0ZXJhbGx5IG5vIHdheSB0byB0dXJuIHRoZSB0aGluZyBvbiB3aXRo
+b3V0IGJsb2NraW5nIHVua25vd24gCnRyYWZmaWMgLSBpdCAqaGFzKiB0byBoYXZlIHN0cmVhbSB0
+YWJsZSBlbnRyaWVzIHByb2dyYW1tZWQgYmVmb3JlIGl0IGNhbiAKZXZlbiBhbGxvdyBzdHVmZiB0
+byBieXBhc3MuCgpUaGUgYW5zd2VyIGlzIGVpdGhlciB0byBlaXRoZXIgcGF5IGF0dGVudGlvbiB0
+byB0aGUgIlF1aWVzY2UgYWxsIERNQSAKY2FwYWJsZSBkZXZpY2VzIiBwYXJ0IG9mIHRoZSBib290
+IHByb3RvY29sICh3aGljaCBoYXMgYmVlbiB0aGVyZSBzaW5jZSAKcHJldHR5IG11Y2ggZm9yZXZl
+ciksIG9yIHRvIGNvbWUgdXAgd2l0aCBzb21lIHJvYnVzdCB3YXkgb2YgCmNvbW11bmljYXRpbmcg
+ImxpdmUiIGJvb3QtdGltZSBtYXBwaW5ncyB0byBJT01NVSBkcml2ZXJzIHNvIHRoYXQgdGhleSAK
+Y2FuIHByb2dyYW0gdGhlbXNlbHZlcyBhcHByb3ByaWF0ZWx5IGR1cmluZyBwcm9iZS4KClJvYmlu
+LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJl
+bm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
