@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 3/3] drm/panel: simple: Add GiantPlus GPM940B0 panel support
-Date: Mon,  3 Jun 2019 17:35:11 +0200
-Message-ID: <20190603153511.24384-3-paul@crapouillou.net>
+Subject: [PATCH v4 2/3] media: uapi: Add RGB bus format for the GiantPlus GPM940B0 panel
+Date: Mon,  3 Jun 2019 17:35:10 +0200
+Message-ID: <20190603153511.24384-2-paul@crapouillou.net>
 References: <20190603153511.24384-1-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,70 +9,46 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190603153511.24384-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Hans Verkuil <hansverk@cisco.com>
-Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The GiantPlus GPM940B0 is a simple 3.0" 320x240 24-bit TFT panel.
+The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB components
+are transferred sequentially on a 8-bit bus.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
 
 Notes:
-    v2: Change bus format to MEDIA_BUS_FMT_RGB888_3X8_BE
+    v2: New patch
     
     v3: No change
     
-    v4: Change bus format to MEDIA_BUS_FMT_RGB888_3X8
+    v4: Add only MEDIA_BUS_FMT_RGB888_3X8, as we don't have to care about
+        endianness
 
- drivers/gpu/drm/panel/panel-simple.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ include/uapi/linux/media-bus-format.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 5a93c4edf1e4..eec9a9efcc73 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1335,6 +1335,31 @@ static const struct panel_desc giantplus_gpg482739qs5 = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
- };
+diff --git a/include/uapi/linux/media-bus-format.h b/include/uapi/linux/media-bus-format.h
+index 2a6b253cfb05..16c1fa2d89a4 100644
+--- a/include/uapi/linux/media-bus-format.h
++++ b/include/uapi/linux/media-bus-format.h
+@@ -34,7 +34,7 @@
  
-+static const struct display_timing giantplus_gpm940b0_timing = {
-+	.pixelclock = { 13500000, 27000000, 27500000 },
-+	.hactive = { 320, 320, 320 },
-+	.hfront_porch = { 14, 686, 718 },
-+	.hback_porch = { 50, 70, 255 },
-+	.hsync_len = { 1, 1, 1 },
-+	.vactive = { 240, 240, 240 },
-+	.vfront_porch = { 1, 1, 179 },
-+	.vback_porch = { 1, 21, 31 },
-+	.vsync_len = { 1, 1, 6 },
-+	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW,
-+};
-+
-+static const struct panel_desc giantplus_gpm940b0 = {
-+	.timings = &giantplus_gpm940b0_timing,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 60,
-+		.height = 45,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_3X8,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_NEGEDGE,
-+};
-+
- static const struct display_timing hannstar_hsd070pww1_timing = {
- 	.pixelclock = { 64300000, 71100000, 82000000 },
- 	.hactive = { 1280, 1280, 1280 },
-@@ -2882,6 +2907,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "giantplus,gpg482739qs5",
- 		.data = &giantplus_gpg482739qs5
-+	}, {
-+		.compatible = "giantplus,gpm940b0",
-+		.data = &giantplus_gpm940b0,
- 	}, {
- 		.compatible = "hannstar,hsd070pww1",
- 		.data = &hannstar_hsd070pww1,
+ #define MEDIA_BUS_FMT_FIXED			0x0001
+ 
+-/* RGB - next is	0x101c */
++/* RGB - next is	0x101d */
+ #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
+ #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
+ #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
+@@ -55,6 +55,7 @@
+ #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
+ #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
+ #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
++#define MEDIA_BUS_FMT_RGB888_3X8		0x101c
+ #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
+ #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
+ #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
 -- 
 2.21.0.593.g511ec345e18
