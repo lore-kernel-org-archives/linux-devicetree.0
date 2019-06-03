@@ -1,82 +1,83 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: marvell: Disable AP I2C on Armada-8040-DB
-Date: Mon, 03 Jun 2019 16:43:41 +0200
-Message-ID: <87muiyk9uq.fsf@FE-laptop>
-References: <20190521143749.488-1-miquel.raynal@bootlin.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: fix isp iommu clocks and power
+ domain
+Date: Mon, 03 Jun 2019 11:44:43 -0300
+Message-ID: <435028daafebcf23425dd5b9338dc3126fac8b89.camel@collabora.com>
+References: <20190603142214.24686-1-helen.koike@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190521143749.488-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Konstantin Porotchkin <kostap@marvell.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190603142214.24686-1-helen.koike@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Helen Koike <helen.koike@collabora.com>, linux-rockchip@lists.infradead.org
+Cc: kernel@collabora.com, laurent.pinchart@ideasonboard.com, manivannan.sadhasivam@linaro.org, linux-arm-kernel@lists.infradead.org, Vicente Bergas <vicencb@gmail.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Rob Herring <robh+dt@kernel.org>, Tony Xie <tony.xie@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
+On Mon, 2019-06-03 at 11:22 -0300, Helen Koike wrote:
+> isp iommu requires wrapper variants of the clocks.
+> noc variants are always on and using the wrapper variants will activate
+> {A,H}CLK_ISP{0,1} due to the hierarchy.
+> 
+> Also add the respective power domain.
+> 
+> Refer:
+>  RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
+>  RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> Hello,
+> 
+> I tested this using the isp patch set (which is not upstream
+> yet). Without this patch, streaming from the isp stalls.
+> 
+> I'm also enabling the power domain and removing the disable status,
+> please let me know if this should be done in a separated patch.
+> 
 
-> From: Konstantin Porotchkin <kostap@marvell.com>
->
-> While AP I2C bus was available to users in early revisions of the SoC,
-> this is not the case anymore since eMMC was connected to the AP. Most
-> users do not have access to this I2C bus so do not enable it in the
-> board device tree.
->
-> As there are three I2C buses enabled on this board, add an alias to be
-> sure the two other buses keep their initial numbering.
->
-> Signed-off-by: Konstantin Porotchkin <kostap@marvell.com>
-> [<miquel.raynal@bootlin.com>: Reword commit message, add alias]
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Applied on mvebu/dt64
+I think you might want to put the comments about enabling power domain
+and removing disable status on the commit log. It's useful information :-)
 
 Thanks,
+Eze
 
-Gregory
-
-> ---
->  arch/arm64/boot/dts/marvell/armada-8040-db.dts | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-> index 9f4f939ab65f..d6e9c014c2f9 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-> @@ -27,6 +27,8 @@
->  		ethernet1 = &cp0_eth2;
->  		ethernet2 = &cp1_eth0;
->  		ethernet3 = &cp1_eth1;
-> +		i2c1 = &cp0_i2c0;
-> +		i2c2 = &cp1_i2c0;
+> Thanks
+> Helen
+> 
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 196ac9b78076..89594a7276f4 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -1706,11 +1706,11 @@
+>  		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
+>  		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+>  		interrupt-names = "isp0_mmu";
+> -		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
+> +		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
+>  		clock-names = "aclk", "iface";
+>  		#iommu-cells = <0>;
+> +		power-domains = <&power RK3399_PD_ISP0>;
+>  		rockchip,disable-mmu-reset;
+> -		status = "disabled";
 >  	};
 >  
->  	cp0_reg_usb3_0_vbus: cp0-usb3-0-vbus {
-> @@ -72,11 +74,6 @@
+>  	isp1_mmu: iommu@ff924000 {
+> @@ -1718,11 +1718,11 @@
+>  		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
+>  		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
+>  		interrupt-names = "isp1_mmu";
+> -		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
+> +		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
+>  		clock-names = "aclk", "iface";
+>  		#iommu-cells = <0>;
+> +		power-domains = <&power RK3399_PD_ISP1>;
+>  		rockchip,disable-mmu-reset;
+> -		status = "disabled";
 >  	};
->  };
 >  
-> -&i2c0 {
-> -	status = "okay";
-> -	clock-frequency = <100000>;
-> -};
-> -
->  &spi0 {
->  	status = "okay";
->  
-> -- 
-> 2.19.1
->
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+>  	hdmi_sound: hdmi-sound {
