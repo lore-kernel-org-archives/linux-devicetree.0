@@ -1,49 +1,211 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 0/9] Add SD host controller support for SC9860 platform
-Date: Mon, 3 Jun 2019 16:41:56 +0800
-Message-ID: <CAMz4ku+E=kFgWrvm_wzM2XQQUyYZhc5uokcGEAEbEKpNAYZQ7g@mail.gmail.com>
-References: <cover.1558346019.git.baolin.wang@linaro.org>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH v6 2/7] dt-binding: cpu-topology: Move cpu-map to a common
+ binding.
+Date: Mon, 3 Jun 2019 01:49:13 -0700
+Message-ID: <28118149-193d-2a8a-995a-2f1829e95c1c@wdc.com>
+References: <20190529211340.17087-1-atish.patra@wdc.com>
+ <20190529211340.17087-3-atish.patra@wdc.com>
+ <0515d803-0da5-dcbe-3d3e-bb786b320d8b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1558346019.git.baolin.wang@linaro.org>
+In-Reply-To: <0515d803-0da5-dcbe-3d3e-bb786b320d8b@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Jeremy Linton <jeremy.linton@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Palmer Dabbelt <palmer@sifive.com>, Will Deacon <will.deacon@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Rob Herring <robh@kernel.org>, Anup Patel <anup@brainfault.org>, Russell King <linux@armlinux.org.uk>, Ingo Molnar <mingo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Adrian & Ulf,
+On 5/30/19 1:55 PM, Jeremy Linton wrote:
+> Hi,
+> 
+> On 5/29/19 4:13 PM, Atish Patra wrote:
+>> cpu-map binding can be used to described cpu topology for both
+>> RISC-V & ARM. It makes more sense to move the binding to document
+>> to a common place.
+>>
+>> The relevant discussion can be found here.
+>> https://lkml.org/lkml/2018/11/6/19
+>>
+>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>>    .../topology.txt => cpu/cpu-topology.txt}     | 82 +++++++++++++++----
+>>    1 file changed, 66 insertions(+), 16 deletions(-)
+>>    rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (86%)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+>> similarity index 86%
+>> rename from Documentation/devicetree/bindings/arm/topology.txt
+>> rename to Documentation/devicetree/bindings/cpu/cpu-topology.txt
+>> index 3b8febb46dad..069addccab14 100644
+>> --- a/Documentation/devicetree/bindings/arm/topology.txt
+>> +++ b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+>> @@ -1,12 +1,12 @@
+>>    ===========================================
+>> -ARM topology binding description
+>> +CPU topology binding description
+>>    ===========================================
+>>    
+>>    ===========================================
+>>    1 - Introduction
+>>    ===========================================
+>>    
+>> -In an ARM system, the hierarchy of CPUs is defined through three entities that
+>> +In a SMP system, the hierarchy of CPUs is defined through three entities that
+>>    are used to describe the layout of physical CPUs in the system:
+>>    
+>>    - socket
+>> @@ -14,9 +14,6 @@ are used to describe the layout of physical CPUs in the system:
+>>    - core
+>>    - thread
+>>    
+>> -The cpu nodes (bindings defined in [1]) represent the devices that
+>> -correspond to physical CPUs and are to be mapped to the hierarchy levels.
+>> -
+>>    The bottom hierarchy level sits at core or thread level depending on whether
+>>    symmetric multi-threading (SMT) is supported or not.
+>>    
+>> @@ -25,33 +22,31 @@ threads existing in the system and map to the hierarchy level "thread" above.
+>>    In systems where SMT is not supported "cpu" nodes represent all cores present
+>>    in the system and map to the hierarchy level "core" above.
+>>    
+>> -ARM topology bindings allow one to associate cpu nodes with hierarchical groups
+>> +CPU topology bindings allow one to associate cpu nodes with hierarchical groups
+>>    corresponding to the system hierarchy; syntactically they are defined as device
+>>    tree nodes.
+>>    
+>> -The remainder of this document provides the topology bindings for ARM, based
+>> -on the Devicetree Specification, available from:
+>> +Currently, only ARM/RISC-V intend to use this cpu topology binding but it may be
+>> +used for any other architecture as well.
+>>    
+>> -https://www.devicetree.org/specifications/
+>> +The cpu nodes, as per bindings defined in [4], represent the devices that
+>> +correspond to physical CPUs and are to be mapped to the hierarchy levels.
+>>    
+>> -If not stated otherwise, whenever a reference to a cpu node phandle is made its
+>> -value must point to a cpu node compliant with the cpu node bindings as
+>> -documented in [1].
+>>    A topology description containing phandles to cpu nodes that are not compliant
+>> -with bindings standardized in [1] is therefore considered invalid.
+>> +with bindings standardized in [4] is therefore considered invalid.
+>>    
+>>    ===========================================
+>>    2 - cpu-map node
+>>    ===========================================
+>>    
+>> -The ARM CPU topology is defined within the cpu-map node, which is a direct
+>> +The ARM/RISC-V CPU topology is defined within the cpu-map node, which is a direct
+>>    child of the cpus node and provides a container where the actual topology
+>>    nodes are listed.
+>>    
+>>    - cpu-map node
+>>    
+>> -	Usage: Optional - On ARM SMP systems provide CPUs topology to the OS.
+>> -			  ARM uniprocessor systems do not require a topology
+>> +	Usage: Optional - On SMP systems provide CPUs topology to the OS.
+>> +			  Uniprocessor systems do not require a topology
+>>    			  description and therefore should not define a
+>>    			  cpu-map node.
+>>    
+>> @@ -494,8 +489,63 @@ cpus {
+>>    	};
+>>    };
+>>    
+>> +Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
+>> +
+>> +{
+>> +	#address-cells = <2>;
+>> +	#size-cells = <2>;
+>> +	compatible = "sifive,fu540g", "sifive,fu500";
+>> +	model = "sifive,hifive-unleashed-a00";
+>> +
+>> +	...
+>> +	cpus {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		cpu-map {
+>> +			cluster0 {
+>> +				core0 {
+>> +					cpu = <&CPU1>;
+>> +				};
+>> +				core1 {
+>> +					cpu = <&CPU2>;
+>> +				};
+>> +				core2 {
+>> +					cpu0 = <&CPU2>;
+>> +				};
+>> +				core3 {
+>> +					cpu0 = <&CPU3>;
+>> +				};
+>> +			};
+>> +		};
+> 
+> 
+> <nit picking>
+> 
+> While socket is optional, its probably a good idea to include the node
+> in the example even if the result is the same. 
 
-On Mon, 20 May 2019 at 18:12, Baolin Wang <baolin.wang@linaro.org> wrote:
->
-> This patch set adds optional clock support, HS400 enhanced strobe mode support,
-> PHY DLL configuration and other optimization to make the SD host controller
-> can work well on the Spreadtrum SC9860 platform.
+Sure. I will update that.
 
-Do you have any comments for this patch set? Thanks.
+That is because at least
+> on arm64 the DT clusters=sockets decision had performance implications
+> for larger systems.
+> 
+> Assuring the socket information is correct is helpful by itself to avoid
+> having to explain why a single socket machine is displaying some other
+> value in lscpu.
+> 
+Just for my understanding, can you give a example?
 
->
-> Baolin Wang (9):
->   mmc: sdhci-sprd: Check the enable clock's return value correctly
->   dt-bindings: mmc: sprd: Add another optional clock documentation
->   mmc: sdhci-sprd: Add optional gate clock support
->   mmc: sdhci-sprd: Implement the get_max_timeout_count() interface
->   mmc: sdhci-sprd: Add HS400 enhanced strobe mode
->   mmc: sdhci-sprd: Enable PHY DLL to make clock stable
->   dt-bindings: mmc: sprd: Add PHY DLL delay documentation
->   mmc: sdhci-sprd: Add PHY DLL delay configuration
->   arm64: dts: sprd: Add Spreadtrum SD host controller support
->
->  .../devicetree/bindings/mmc/sdhci-sprd.txt         |   19 +++
->  arch/arm64/boot/dts/sprd/whale2.dtsi               |   35 ++++
->  drivers/mmc/host/sdhci-sprd.c                      |  171 +++++++++++++++++++-
->  3 files changed, 217 insertions(+), 8 deletions(-)
->
-> --
-> 1.7.9.5
->
+> 
+> 
+>> +
+>> +		CPU1: cpu@1 {
+>> +			device_type = "cpu";
+>> +			compatible = "sifive,rocket0", "riscv";
+>> +			reg = <0x1>;
+>> +		}
+>> +
+>> +		CPU2: cpu@2 {
+>> +			device_type = "cpu";
+>> +			compatible = "sifive,rocket0", "riscv";
+>> +			reg = <0x2>;
+>> +		}
+>> +		CPU3: cpu@3 {
+>> +			device_type = "cpu";
+>> +			compatible = "sifive,rocket0", "riscv";
+>> +			reg = <0x3>;
+>> +		}
+>> +		CPU4: cpu@4 {
+>> +			device_type = "cpu";
+>> +			compatible = "sifive,rocket0", "riscv";
+>> +			reg = <0x4>;
+>> +		}
+>> +	}
+>> +};
+>>    ===============================================================================
+>>    [1] ARM Linux kernel documentation
+>>        Documentation/devicetree/bindings/arm/cpus.yaml
+>>    [2] Devicetree NUMA binding description
+>>        Documentation/devicetree/bindings/numa.txt
+>> +[3] RISC-V Linux kernel documentation
+>> +    Documentation/devicetree/bindings/riscv/cpus.txt
+>> +[4] https://www.devicetree.org/specifications/
+>>
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
 
 
 -- 
-Baolin Wang
-Best Regards
+Regards,
+Atish
