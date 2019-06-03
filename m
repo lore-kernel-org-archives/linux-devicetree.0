@@ -1,40 +1,28 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: clock: renesas,r9a06g032-sysctrl:
- Document power Domains
-Date: Mon, 3 Jun 2019 10:03:02 +0200
-Message-ID: <CAMuHMdXM7j_tCWR-9FZc8DOARmdXqfd88+a=TYHwKZEmMuHCrg@mail.gmail.com>
-References: <1559044467-2639-1-git-send-email-gareth.williams.jx@renesas.com> <1559044467-2639-2-git-send-email-gareth.williams.jx@renesas.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v4] ARM: dts: aspeed: Add YADRO VESNIN BMC
+Date: Mon, 3 Jun 2019 08:04:46 +0000
+Message-ID: <CACPK8Xf9emq+rYjT=O8kQfc-oMcKZwAwXwZ1bciDr+R3CyWz+g@mail.gmail.com>
+References: <20190531090950.13466-1-a.filippov@yadro.com> <246c9b25-1c05-4c2f-9185-c438c97ebdec@www.fastmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559044467-2639-2-git-send-email-gareth.williams.jx@renesas.com>
+In-Reply-To: <246c9b25-1c05-4c2f-9185-c438c97ebdec@www.fastmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gareth Williams <gareth.williams.jx@renesas.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: "Alexander A. Filippov" <a.filippov@yadro.com>, linux-aspeed@lists.ozlabs.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 28, 2019 at 1:55 PM Gareth Williams
-<gareth.williams.jx@renesas.com> wrote:
-> The driver is gaining power domain support, so add the new property
-> to the DT binding and update the examples.
+On Mon, 3 Jun 2019 at 01:28, Andrew Jeffery <andrew@aj.id.au> wrote:
+> On Fri, 31 May 2019, at 18:40, Alexander Filippov wrote:
+> > VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
+> > by YADRO.
+> >
+> > Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
 >
-> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v4:
->  - Added missing HCLK to UART0 example to show the clock added
->    to the driver.
->  - Added Geert's Reviewed-by line.
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
-Thanks for the update, will queue in clock-renesas-for-v5.3.
+Thanks. Applied to the aspeed dt-for-5.3 branch.
 
-Gr{oetje,eeting}s,
+Cheers,
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Joel
