@@ -1,161 +1,271 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
-Date: Mon, 3 Jun 2019 13:26:56 +0530
-Message-ID: <4864dc3e-6e04-43e5-32c8-2cf5a0705fe5@codeaurora.org>
-References: <20181201165348.24140-1-robdclark@gmail.com>
- <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
- <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
- <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
- <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
+From: Amadeusz =?UTF-8?B?U8WCYXdpxYRza2k=?=
+        <amadeuszx.slawinski@linux.intel.com>
+Subject: Re: [alsa-devel] [PATCH 2/7] ASoC: hdmi-codec: use HDMI state
+ notifier to add jack support
+Date: Mon, 3 Jun 2019 10:03:01 +0200
+Message-ID: <20190603100301.00d68690@xxx>
+References: <20190603043251.226549-1-cychiang@chromium.org>
+ <20190603043251.226549-3-cychiang@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190603043251.226549-3-cychiang@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cheng-Yi Chiang <cychiang@chromium.org>
+Cc: linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Liam Girdwood <lgirdwood@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Takashi Iwai <tiwai@suse.com>, linux-rockchip@lists.infradead.org, dgreid@chromium.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, tzungbi@chromium.org, Philipp Zabel <p.zabel@pengutronix.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dianders@chro
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiA2LzMvMjAxOSAxMTo1MCBBTSwgVG9tYXN6IEZpZ2Egd3JvdGU6Cj4gT24gTW9uLCBKdW4g
-MywgMjAxOSBhdCA0OjQwIEFNIFJvYiBDbGFyayA8cm9iZGNsYXJrQGdtYWlsLmNvbT4gd3JvdGU6
-Cj4+IE9uIEZyaSwgTWF5IDEwLCAyMDE5IGF0IDc6MzUgQU0gUm9iIENsYXJrIDxyb2JkY2xhcmtA
-Z21haWwuY29tPiB3cm90ZToKPj4+IE9uIFR1ZSwgRGVjIDQsIDIwMTggYXQgMjoyOSBQTSBSb2Ig
-SGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPiB3cm90ZToKPj4+PiBPbiBTYXQsIERlYyAxLCAy
-MDE4IGF0IDEwOjU0IEFNIFJvYiBDbGFyayA8cm9iZGNsYXJrQGdtYWlsLmNvbT4gd3JvdGU6Cj4+
-Pj4+IFRoaXMgc29sdmVzIGEgcHJvYmxlbSB3ZSBzZWUgd2l0aCBkcm0vbXNtLCBjYXVzZWQgYnkg
-Z2V0dGluZwo+Pj4+PiBpb21tdV9kbWFfb3BzIHdoaWxlIHdlIGF0dGFjaCBvdXIgb3duIGRvbWFp
-biBhbmQgbWFuYWdlIGl0IGRpcmVjdGx5IGF0Cj4+Pj4+IHRoZSBpb21tdSBBUEkgbGV2ZWw6Cj4+
-Pj4+Cj4+Pj4+ICAgIFswMDAwMDAwMDAwMDAwMDM4XSB1c2VyIGFkZHJlc3MgYnV0IGFjdGl2ZV9t
-bSBpcyBzd2FwcGVyCj4+Pj4+ICAgIEludGVybmFsIGVycm9yOiBPb3BzOiA5NjAwMDAwNSBbIzFd
-IFBSRUVNUFQgU01QCj4+Pj4+ICAgIE1vZHVsZXMgbGlua2VkIGluOgo+Pj4+PiAgICBDUFU6IDcg
-UElEOiA3MCBDb21tOiBrd29ya2VyLzc6MSBUYWludGVkOiBHICAgICAgICBXICAgICAgICAgNC4x
-OS4zICM5MAo+Pj4+PiAgICBIYXJkd2FyZSBuYW1lOiB4eHggKERUKQo+Pj4+PiAgICBXb3JrcXVl
-dWU6IGV2ZW50cyBkZWZlcnJlZF9wcm9iZV93b3JrX2Z1bmMKPj4+Pj4gICAgcHN0YXRlOiA4MGMw
-MDAwOSAoTnpjdiBkYWlmICtQQU4gK1VBTykKPj4+Pj4gICAgcGMgOiBpb21tdV9kbWFfbWFwX3Nn
-KzB4N2MvMHgyYzgKPj4+Pj4gICAgbHIgOiBpb21tdV9kbWFfbWFwX3NnKzB4NDAvMHgyYzgKPj4+
-Pj4gICAgc3AgOiBmZmZmZmY4MDA5NWViNGYwCj4+Pj4+ICAgIHgyOTogZmZmZmZmODAwOTVlYjRm
-MCB4Mjg6IDAwMDAwMDAwMDAwMDAwMDAKPj4+Pj4gICAgeDI3OiBmZmZmZmZjMGY5NDMxNTc4IHgy
-NjogMDAwMDAwMDAwMDAwMDAwMAo+Pj4+PiAgICB4MjU6IDAwMDAwMDAwZmZmZmZmZmYgeDI0OiAw
-MDAwMDAwMDAwMDAwMDAzCj4+Pj4+ICAgIHgyMzogMDAwMDAwMDAwMDAwMDAwMSB4MjI6IGZmZmZm
-ZmMwZmE5YWMwMTAKPj4+Pj4gICAgeDIxOiAwMDAwMDAwMDAwMDAwMDAwIHgyMDogZmZmZmZmYzBm
-YWI0MDk4MAo+Pj4+PiAgICB4MTk6IGZmZmZmZmMwZmFiNDA5ODAgeDE4OiAwMDAwMDAwMDAwMDAw
-MDAzCj4+Pj4+ICAgIHgxNzogMDAwMDAwMDAwMDAwMDFjNCB4MTY6IDAwMDAwMDAwMDAwMDAwMDcK
-Pj4+Pj4gICAgeDE1OiAwMDAwMDAwMDAwMDAwMDBlIHgxNDogZmZmZmZmZmZmZmZmZmZmZgo+Pj4+
-PiAgICB4MTM6IGZmZmYwMDAwMDAwMDAwMDAgeDEyOiAwMDAwMDAwMDAwMDAwMDI4Cj4+Pj4+ICAg
-IHgxMTogMDEwMTAxMDEwMTAxMDEwMSB4MTA6IDdmN2Y3ZjdmN2Y3ZjdmN2YKPj4+Pj4gICAgeDkg
-OiAwMDAwMDAwMDAwMDAwMDAwIHg4IDogZmZmZmZmYzBmYWI0MDlhMAo+Pj4+PiAgICB4NyA6IDAw
-MDAwMDAwMDAwMDAwMDAgeDYgOiAwMDAwMDAwMDAwMDAwMDAyCj4+Pj4+ICAgIHg1IDogMDAwMDAw
-MDEwMDAwMDAwMCB4NCA6IDAwMDAwMDAwMDAwMDAwMDAKPj4+Pj4gICAgeDMgOiAwMDAwMDAwMDAw
-MDAwMDAxIHgyIDogMDAwMDAwMDAwMDAwMDAwMgo+Pj4+PiAgICB4MSA6IGZmZmZmZmMwZjk0MzE1
-NzggeDAgOiAwMDAwMDAwMDAwMDAwMDAwCj4+Pj4+ICAgIFByb2Nlc3Mga3dvcmtlci83OjEgKHBp
-ZDogNzAsIHN0YWNrIGxpbWl0ID0gMHgwMDAwMDAwMDE3ZDA4ZmZiKQo+Pj4+PiAgICBDYWxsIHRy
-YWNlOgo+Pj4+PiAgICAgaW9tbXVfZG1hX21hcF9zZysweDdjLzB4MmM4Cj4+Pj4+ICAgICBfX2lv
-bW11X21hcF9zZ19hdHRycysweDcwLzB4ODQKPj4+Pj4gICAgIGdldF9wYWdlcysweDE3MC8weDFl
-OAo+Pj4+PiAgICAgbXNtX2dlbV9nZXRfaW92YSsweDhjLzB4MTI4Cj4+Pj4+ICAgICBfbXNtX2dl
-bV9rZXJuZWxfbmV3KzB4NmMvMHhjOAo+Pj4+PiAgICAgbXNtX2dlbV9rZXJuZWxfbmV3KzB4NGMv
-MHg1OAo+Pj4+PiAgICAgZHNpX3R4X2J1Zl9hbGxvY182ZysweDRjLzB4OGMKPj4+Pj4gICAgIG1z
-bV9kc2lfaG9zdF9tb2Rlc2V0X2luaXQrMHhjOC8weDEwOAo+Pj4+PiAgICAgbXNtX2RzaV9tb2Rl
-c2V0X2luaXQrMHg1NC8weDE4Ywo+Pj4+PiAgICAgX2RwdV9rbXNfZHJtX29ial9pbml0KzB4NDMw
-LzB4NDc0Cj4+Pj4+ICAgICBkcHVfa21zX2h3X2luaXQrMHg1ZjgvMHg2YjQKPj4+Pj4gICAgIG1z
-bV9kcm1fYmluZCsweDM2MC8weDZjOAo+Pj4+PiAgICAgdHJ5X3RvX2JyaW5nX3VwX21hc3Rlci5w
-YXJ0LjcrMHgyOC8weDcwCj4+Pj4+ICAgICBjb21wb25lbnRfbWFzdGVyX2FkZF93aXRoX21hdGNo
-KzB4ZTgvMHgxMjQKPj4+Pj4gICAgIG1zbV9wZGV2X3Byb2JlKzB4Mjk0LzB4MmI0Cj4+Pj4+ICAg
-ICBwbGF0Zm9ybV9kcnZfcHJvYmUrMHg1OC8weGE0Cj4+Pj4+ICAgICByZWFsbHlfcHJvYmUrMHgx
-NTAvMHgyOTQKPj4+Pj4gICAgIGRyaXZlcl9wcm9iZV9kZXZpY2UrMHhhYy8weGU4Cj4+Pj4+ICAg
-ICBfX2RldmljZV9hdHRhY2hfZHJpdmVyKzB4YTQvMHhiNAo+Pj4+PiAgICAgYnVzX2Zvcl9lYWNo
-X2RydisweDk4LzB4YzgKPj4+Pj4gICAgIF9fZGV2aWNlX2F0dGFjaCsweGFjLzB4MTJjCj4+Pj4+
-ICAgICBkZXZpY2VfaW5pdGlhbF9wcm9iZSsweDI0LzB4MzAKPj4+Pj4gICAgIGJ1c19wcm9iZV9k
-ZXZpY2UrMHgzOC8weDk4Cj4+Pj4+ICAgICBkZWZlcnJlZF9wcm9iZV93b3JrX2Z1bmMrMHg3OC8w
-eGE0Cj4+Pj4+ICAgICBwcm9jZXNzX29uZV93b3JrKzB4MjRjLzB4M2RjCj4+Pj4+ICAgICB3b3Jr
-ZXJfdGhyZWFkKzB4MjgwLzB4MzYwCj4+Pj4+ICAgICBrdGhyZWFkKzB4MTM0LzB4MTNjCj4+Pj4+
-ICAgICByZXRfZnJvbV9mb3JrKzB4MTAvMHgxOAo+Pj4+PiAgICBDb2RlOiBkMjgwMDAwNCA5MTAw
-MDcyNSA2YjE3MDM5ZiA1NDAwMDQ4YSAoZjk0MDFmNDApCj4+Pj4+ICAgIC0tLVsgZW5kIHRyYWNl
-IGYyMmRkYTU3ZjM2NDhlMmMgXS0tLQo+Pj4+PiAgICBLZXJuZWwgcGFuaWMgLSBub3Qgc3luY2lu
-ZzogRmF0YWwgZXhjZXB0aW9uCj4+Pj4+ICAgIFNNUDogc3RvcHBpbmcgc2Vjb25kYXJ5IENQVXMK
-Pj4+Pj4gICAgS2VybmVsIE9mZnNldDogZGlzYWJsZWQKPj4+Pj4gICAgQ1BVIGZlYXR1cmVzOiAw
-eDAsMjI4MDJhMTgKPj4+Pj4gICAgTWVtb3J5IExpbWl0OiBub25lCj4+Pj4+Cj4+Pj4+IFRoZSBw
-cm9ibGVtIGlzIHRoYXQgd2hlbiBkcm0vbXNtIGRvZXMgaXQncyBvd24gaW9tbXVfYXR0YWNoX2Rl
-dmljZSgpLAo+Pj4+PiBub3cgdGhlIGRvbWFpbiByZXR1cm5lZCBieSBpb21tdV9nZXRfZG9tYWlu
-X2Zvcl9kZXYoKSBpcyBkcm0vbXNtJ3MKPj4+Pj4gZG9tYWluLCBhbmQgaXQgZG9lc24ndCBoYXZl
-IGRvbWFpbi0+aW92YV9jb29raWUuCj4+Pj4+Cj4+Pj4+IFdlIGtpbmQgb2YgYXZvaWRlZCB0aGlz
-IHByb2JsZW0gcHJpb3IgdG8gc2RtODQ1L2RwdSBiZWNhdXNlIHRoZSBpb21tdQo+Pj4+PiB3YXMg
-YXR0YWNoZWQgdG8gdGhlIG1kcCBub2RlIGluIGR0LCB3aGljaCBpcyBhIGNoaWxkIG9mIHRoZSB0
-b3BsZXZlbAo+Pj4+PiBtZHNzIG5vZGUgKHdoaWNoIGNvcnJlc3BvbmRzIHRvIHRoZSBkZXYgcGFz
-c2VkIGluIGRtYV9tYXBfc2coKSkuICBCdXQKPj4+Pj4gd2l0aCBzZG04NDUsIG5vdyB0aGUgaW9t
-bXUgaXMgYXR0YWNoZWQgYXQgdGhlIG1kc3MgbGV2ZWwgc28gd2UgaGl0IHRoZQo+Pj4+PiBpb21t
-dV9kbWFfb3BzIGluIGRtYV9tYXBfc2coKS4KPj4+Pj4KPj4+Pj4gQnV0IGF1dG8gYWxsb2NhdGlu
-Zy9hdHRhY2hpbmcgYSBkb21haW4gYmVmb3JlIHRoZSBkcml2ZXIgaXMgcHJvYmVkIHdhcwo+Pj4+
-PiBhbHJlYWR5IGEgYmxvY2tpbmcgcHJvYmxlbSBmb3IgZW5hYmxpbmcgcGVyLWNvbnRleHQgcGFn
-ZXRhYmxlcyBmb3IgdGhlCj4+Pj4+IEdQVS4gIFRoaXMgcHJvYmxlbSBpcyBhbHNvIG5vdyBzb2x2
-ZWQgd2l0aCB0aGlzIHBhdGNoLgo+Pj4+Pgo+Pj4+PiBGaXhlczogOTc4OTBiYTkyODljIGRtYS1t
-YXBwaW5nOiBkZXRlY3QgYW5kIGNvbmZpZ3VyZSBJT01NVSBpbiBvZl9kbWFfY29uZmlndXJlCj4+
-Pj4+IFRlc3RlZC1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgo+
-Pj4+PiBTaWduZWQtb2ZmLWJ5OiBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+Cj4+Pj4+
-IC0tLQo+Pj4+PiBUaGlzIGlzIGFuIGFsdGVybmF0aXZlL3JlcGxhY2VtZW50IGZvciBbMV0uICBX
-aGF0IGl0IGxhY2tzIGluIGVsZWdhbmNlCj4+Pj4+IGl0IG1ha2VzIHVwIGZvciBpbiBwcmFjdGlj
-YWxpdHkgOy0pCj4+Pj4+Cj4+Pj4+IFsxXSBodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5v
-cmcvcGF0Y2gvMjY0OTMwLwo+Pj4+Pgo+Pj4+PiAgIGRyaXZlcnMvb2YvZGV2aWNlLmMgfCAyMiAr
-KysrKysrKysrKysrKysrKysrKysrCj4+Pj4+ICAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlv
-bnMoKykKPj4+Pj4KPj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvZGV2aWNlLmMgYi9kcml2
-ZXJzL29mL2RldmljZS5jCj4+Pj4+IGluZGV4IDU5NTdjZDRmYTI2Mi4uMTVmZmVlMDBmYjIyIDEw
-MDY0NAo+Pj4+PiAtLS0gYS9kcml2ZXJzL29mL2RldmljZS5jCj4+Pj4+ICsrKyBiL2RyaXZlcnMv
-b2YvZGV2aWNlLmMKPj4+Pj4gQEAgLTcyLDYgKzcyLDE0IEBAIGludCBvZl9kZXZpY2VfYWRkKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKm9mZGV2KQo+Pj4+PiAgICAgICAgICByZXR1cm4gZGV2aWNl
-X2FkZCgmb2ZkZXYtPmRldik7Cj4+Pj4+ICAgfQo+Pj4+Pgo+Pj4+PiArc3RhdGljIGNvbnN0IHN0
-cnVjdCBvZl9kZXZpY2VfaWQgaW9tbXVfYmxhY2tsaXN0W10gPSB7Cj4+Pj4+ICsgICAgICAgeyAu
-Y29tcGF0aWJsZSA9ICJxY29tLG1kcDQiIH0sCj4+Pj4+ICsgICAgICAgeyAuY29tcGF0aWJsZSA9
-ICJxY29tLG1kc3MiIH0sCj4+Pj4+ICsgICAgICAgeyAuY29tcGF0aWJsZSA9ICJxY29tLHNkbTg0
-NS1tZHNzIiB9LAo+Pj4+PiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAicWNvbSxhZHJlbm8iIH0s
-Cj4+Pj4+ICsgICAgICAge30KPj4+Pj4gK307Cj4+Pj4gTm90IGNvbXBsZXRlbHkgY2xlYXIgdG8g
-d2hldGhlciB0aGlzIGlzIHN0aWxsIG5lZWRlZCBvciBub3QsIGJ1dCB0aGlzCj4+Pj4gcmVhbGx5
-IHdvbid0IHNjYWxlLiBXaHkgY2FuJ3QgdGhlIGRyaXZlciBmb3IgdGhlc2UgZGV2aWNlcyBvdmVy
-cmlkZQo+Pj4+IHdoYXRldmVyIGhhcyBiZWVuIHNldHVwIGJ5IGRlZmF1bHQ/Cj4+Pj4KPj4+IGZ3
-aXcsIGF0IHRoZSBtb21lbnQgaXQgaXMgbm90IG5lZWRlZCwgYnV0IGl0IHdpbGwgYmVjb21lIG5l
-ZWRlZCBhZ2Fpbgo+Pj4gdG8gaW1wbGVtZW50IHBlci1jb250ZXh0IHBhZ2V0YWJsZXMgKGFsdGhv
-dWdoIEkgc3VwcG9zZSBmb3IgdGhpcyB3ZQo+Pj4gb25seSBuZWVkIHRvIGJsYWNrbGlzdCBxY29t
-LGFkcmVubyBhbmQgbm90IGFsc28gdGhlIGRpc3BsYXkgbm9kZXMpLgo+PiBTbywgYW5vdGhlciBj
-YXNlIEkndmUgY29tZSBhY3Jvc3MsIG9uIHRoZSBkaXNwbGF5IHNpZGUuLiBJJ20gd29ya2luZwo+
-PiBvbiBoYW5kbGluZyB0aGUgY2FzZSB3aGVyZSBib290bG9hZGVyIGVuYWJsZXMgZGlzcGxheSAo
-YW5kIHRha2VzIGlvbW11Cj4+IG91dCBvZiByZXNldCkuLiBhcyBzb29uIGFzIERNQSBkb21haW4g
-Z2V0cyBhdHRhY2hlZCB3ZSBnZXQgaW9tbXUKPj4gZmF1bHRzLCBiZWNhdXNlIGJvb3Rsb2FkZXIg
-aGFzIGFscmVhZHkgY29uZmlndXJlZCBkaXNwbGF5IGZvciBzY2Fub3V0Lgo+PiBVbmZvcnR1bmF0
-ZWx5IHRoaXMgYWxsIGhhcHBlbnMgYmVmb3JlIGFjdHVhbCBkcml2ZXIgaXMgcHJvYmVkIGFuZCBo
-YXMKPj4gYSBjaGFuY2UgdG8gaW50ZXJ2ZW5lLgoKVGhpbmdzIGFyZSBiYWQgZm9yIE1UUCBzZG04
-NDUgdG9vIHdoZXJlIHRoZSBib290bG9hZGVyIHNldHMgdXAgaW9tbXUgdG8KZGlzcGxheSBzcGxh
-c2ggc2NyZWVuLCBhbmQgd2hlbiB0aGUga2VybmVsIHJlc2V0cyB0aGUgaW9tbXUsIHRoZSBtYXBw
-aW5ncyBnbwpmb3IgYSB0b3NzIHJlc3VsdGluZyBpbiBmYXRhbCBmYXVsdHMuCkJqb3JuIHdhcyB3
-b3JraW5nIG9uIHNvbWV0aGluZyByZWNlbnRseSB0byBhZGRyZXNzIHRoaXMuIEFkZGluZyBoaW0g
-dG8gCnRoZSB0aHJlYWQuCgoKQmVzdCByZWdhcmRzClZpdmVrCgo+PiBJdCdzIHJhdGhlciB1bmZv
-cnR1bmF0ZSB0aGF0IHdlIHRyaWVkIHRvIGJlIGNsZXZlciByYXRoZXIgdGhhbiBqdXN0Cj4+IG1h
-a2luZyBkcml2ZXJzIGNhbGwgc29tZSBmdW5jdGlvbiB0byBvcHQtaW4gdG8gdGhlIGhvb2t1cCBv
-ZiBkbWEgaW9tbXUKPj4gb3BzIDotKAo+IEkgdGhpbmsgaXQgc3RpbGwgd29ya3MgZm9yIHRoZSA5
-MCUgb2YgY2FzZXMgYW5kIGlmIDEwJSBuZWVkcyBzb21lCj4gZXhwbGljaXQgd29yayBpbiB0aGUg
-ZHJpdmVycywgdGhhdCdzIGJldHRlciB0aGFuIHJlcXVpcmluZyAxMDAlIG9mIHRoZQo+IGRyaXZl
-cnMgdG8gZG8gdGhpbmdzIG1hbnVhbGx5Lgo+Cj4gQWRkaW5nIE1hcmVrIHdobyBoYWQgdGhlIHNh
-bWUgcHJvYmxlbSBvbiBFeHlub3MuCj4KPiBCZXN0IHJlZ2FyZHMsCj4gVG9tYXN6Cj4KPj4gQlIs
-Cj4+IC1SCj4+Cj4+PiBUaGUgcmVhc29uIGlzIHRoYXQgaW4gdGhlIGN1cnJlbnQgc3RhdGUgdGhl
-IGNvcmUgY29kZSBjcmVhdGVzIHRoZQo+Pj4gZmlyc3QgZG9tYWluIGJlZm9yZSB0aGUgZHJpdmVy
-IGhhcyBhIGNoYW5jZSB0byBpbnRlcnZlbmUgYW5kIHRlbGwgaXQKPj4+IG5vdCB0by4gIEFuZCB0
-aGlzIHJlc3VsdHMgdGhhdCBkcml2ZXIgZW5kcyB1cCB1c2luZyBhIGRpZmZlcmVudAo+Pj4gY29u
-dGV4dCBiYW5rIG9uIHRoZSBpb21tdSB0aGFuIHdoYXQgdGhlIGZpcm13YXJlIGV4cGVjdHMuCj4+
-Pgo+Pj4gSSBndWVzcyB0aGUgYWx0ZXJuYXRpdmUgaXMgdG8gcHV0IHNvbWUgcHJvcGVydHkgaW4g
-RFQuLiBidXQgdGhhdAo+Pj4gZG9lc24ndCByZWFsbHkgZmVlbCByaWdodC4gIEkgZ3Vlc3MgdGhl
-cmUgYXJlbid0IHJlYWxseSBtYW55IChvciBhbnk/KQo+Pj4gb3RoZXIgZHJpdmVycyB0aGF0IGhh
-dmUgdGhpcyBzcGVjaWZpYyBwcm9ibGVtLCBzbyBJIGRvbid0IHJlYWxseQo+Pj4gZXhwZWN0IGl0
-IHRvIGJlIGEgc2NhbGluZyBwcm9ibGVtLgo+Pj4KPj4+IFllYWgsIGl0J3MgYSBiaXQgdWdseSwg
-YnV0IEknbGwgdGFrZSBhIHNtYWxsIHVnbHkgd29ya2luZyBoYWNrLCBvdmVyCj4+PiBlbGVnYW50
-IGJ1dCBub24td29ya2luZyBhbnkgZGF5IDstKS4uLiBidXQgaWYgc29tZW9uZSBoYXMgYSBiZXR0
-ZXIKPj4+IGlkZWEgdGhlbiBJJ20gYWxsIGVhcnMuCj4+Pgo+Pj4gQlIsCj4+PiAtUgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxp
-bmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5v
+On Mon,  3 Jun 2019 12:32:46 +0800
+Cheng-Yi Chiang <cychiang@chromium.org> wrote:
+
+> From: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> Use HDMI connection / disconnection notifications to update an ALSA
+> jack object. Also make a copy of the ELD block after every change.
+> 
+> This was posted by Philipp Zabel at
+> 
+> https://patchwork.kernel.org/patch/9430747/
+> 
+> Modified by Cheng-Yi Chiang:
+> - Fix the conflict of removed hdmi_codec_remove ops.
+> - Other minor fix for the conflict with latest hdmi-codec on ASoC
+>   for-next tree.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> ---
+> The original patch is at https://patchwork.kernel.org/patch/9430747/
+> I could not find the LKML link for the patch.
+> 
+>  include/sound/hdmi-codec.h    |   7 +++
+>  sound/soc/codecs/Kconfig      |   1 +
+>  sound/soc/codecs/hdmi-codec.c | 104
+> +++++++++++++++++++++++++++++++++- 3 files changed, 110
+> insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/sound/hdmi-codec.h b/include/sound/hdmi-codec.h
+> index 9483c55f871b..4fa39c93363f 100644
+> --- a/include/sound/hdmi-codec.h
+> +++ b/include/sound/hdmi-codec.h
+> @@ -107,6 +107,13 @@ struct hdmi_codec_pdata {
+>  	void *data;
+>  };
+>  
+> +struct snd_soc_component;
+> +struct snd_soc_jack;
+> +
+> +int hdmi_codec_set_jack_detect(struct snd_soc_component *component,
+> +			       struct snd_soc_jack *jack,
+> +			       struct device *dev);
+> +
+>  #define HDMI_CODEC_DRV_NAME "hdmi-audio-codec"
+>  
+>  #endif /* __HDMI_CODEC_H__ */
+> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+> index 8f577258080b..f5f6dd04234c 100644
+> --- a/sound/soc/codecs/Kconfig
+> +++ b/sound/soc/codecs/Kconfig
+> @@ -639,6 +639,7 @@ config SND_SOC_HDMI_CODEC
+>  	select SND_PCM_ELD
+>  	select SND_PCM_IEC958
+>  	select HDMI
+> +	select HDMI_NOTIFIERS
+>  
+>  config SND_SOC_ES7134
+>         tristate "Everest Semi ES7134 CODEC"
+> diff --git a/sound/soc/codecs/hdmi-codec.c
+> b/sound/soc/codecs/hdmi-codec.c index 6a0cc8d7e141..fe796a7475a5
+> 100644 --- a/sound/soc/codecs/hdmi-codec.c
+> +++ b/sound/soc/codecs/hdmi-codec.c
+> @@ -12,9 +12,12 @@
+>   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See
+> the GNU
+>   * General Public License for more details.
+>   */
+> +#include <linux/hdmi-notifier.h>
+>  #include <linux/module.h>
+> +#include <linux/notifier.h>
+>  #include <linux/string.h>
+>  #include <sound/core.h>
+> +#include <sound/jack.h>
+>  #include <sound/pcm.h>
+>  #include <sound/pcm_params.h>
+>  #include <sound/soc.h>
+> @@ -282,6 +285,13 @@ struct hdmi_codec_priv {
+>  	struct snd_pcm_chmap *chmap_info;
+>  	unsigned int chmap_idx;
+>  	struct mutex lock;
+> +	struct snd_soc_jack *jack;
+> +	/* Lock to protect setting and getting eld. */
+> +	struct mutex eld_lock;
+> +	struct device *dev;
+> +	struct hdmi_notifier *notifier;
+> +	struct notifier_block nb;
+> +	unsigned int jack_status;
+>  };
+>  
+>  static const struct snd_soc_dapm_widget hdmi_widgets[] = {
+> @@ -308,7 +318,9 @@ static int hdmi_eld_ctl_get(struct snd_kcontrol
+> *kcontrol, struct snd_soc_component *component =
+> snd_kcontrol_chip(kcontrol); struct hdmi_codec_priv *hcp =
+> snd_soc_component_get_drvdata(component); 
+> +	mutex_lock(&hcp->eld_lock);
+>  	memcpy(ucontrol->value.bytes.data, hcp->eld,
+> sizeof(hcp->eld));
+> +	mutex_unlock(&hcp->eld_lock);
+>  
+>  	return 0;
+>  }
+> @@ -393,7 +405,7 @@ static int hdmi_codec_startup(struct
+> snd_pcm_substream *substream, struct snd_soc_dai *dai)
+>  {
+>  	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+> -	int ret = 0;
+> +	int ret;
+>  
+>  	ret = mutex_trylock(&hcp->lock);
+>  	if (!ret) {
+> @@ -408,9 +420,9 @@ static int hdmi_codec_startup(struct
+> snd_pcm_substream *substream, }
+>  
+>  	if (hcp->hcd.ops->get_eld) {
+> +		mutex_lock(&hcp->eld_lock);
+>  		ret = hcp->hcd.ops->get_eld(dai->dev->parent,
+> hcp->hcd.data, hcp->eld, sizeof(hcp->eld));
+> -
+>  		if (!ret) {
+>  			ret =
+> snd_pcm_hw_constraint_eld(substream->runtime, hcp->eld);
+
+Seems to me like you missed unlock here. There is return inside this
+if().
+
+> @@ -419,6 +431,7 @@ static int hdmi_codec_startup(struct
+> snd_pcm_substream *substream, }
+>  		/* Select chmap supported */
+>  		hdmi_codec_eld_chmap(hcp);
+> +		mutex_unlock(&hcp->eld_lock);
+>  	}
+>  	return 0;
+>  
+> @@ -747,6 +760,77 @@ static const struct snd_soc_component_driver
+> hdmi_driver = { .non_legacy_dai_naming	= 1,
+>  };
+>  
+> +static void hdmi_codec_jack_report(struct hdmi_codec_priv *hcp,
+> +				   unsigned int jack_status)
+> +{
+> +	if (!hcp->jack)
+> +		return;
+> +
+> +	if (jack_status != hcp->jack_status) {
+> +		snd_soc_jack_report(hcp->jack, jack_status,
+> SND_JACK_LINEOUT);
+> +		hcp->jack_status = jack_status;
+> +	}
+> +}
+> +
+> +static int hdmi_codec_notify(struct notifier_block *nb, unsigned
+> long event,
+> +			     void *data)
+> +{
+> +	struct hdmi_codec_priv *hcp = container_of(nb, struct
+> hdmi_codec_priv,
+> +						   nb);
+> +	struct hdmi_notifier *n = data;
+> +
+> +	if (!hcp->jack)
+> +		return NOTIFY_OK;
+> +
+> +	switch (event) {
+> +	case HDMI_NEW_ELD:
+> +		mutex_lock(&hcp->eld_lock);
+> +		memcpy(hcp->eld, n->eld, sizeof(hcp->eld));
+> +		mutex_unlock(&hcp->eld_lock);
+> +		/* fall through */
+> +	case HDMI_CONNECTED:
+> +		hdmi_codec_jack_report(hcp, SND_JACK_LINEOUT);
+> +		break;
+> +	case HDMI_DISCONNECTED:
+> +		hdmi_codec_jack_report(hcp, 0);
+> +		break;
+> +	}
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +/**
+> + * hdmi_codec_set_jack_detect - register HDMI state notifier callback
+> + * @component: the hdmi-codec instance
+> + * @jack: ASoC jack to report (dis)connection events on
+> + * @dev: hdmi_notifier device, usually HDMI_TX or CEC device
+> + */
+> +int hdmi_codec_set_jack_detect(struct snd_soc_component *component,
+> +			       struct snd_soc_jack *jack,
+> +			       struct device *dev)
+> +{
+> +	struct hdmi_codec_priv *hcp =
+> snd_soc_component_get_drvdata(component);
+> +	int ret;
+> +
+> +	hcp->notifier = hdmi_notifier_get(dev);
+> +	if (!hcp->notifier)
+> +		return -ENOMEM;
+> +
+> +	hcp->jack = jack;
+> +	hcp->nb.notifier_call = hdmi_codec_notify;
+> +	ret = hdmi_notifier_register(hcp->notifier, &hcp->nb);
+> +	if (ret)
+> +		goto err_notifier_put;
+> +
+> +	return 0;
+> +
+> +err_notifier_put:
+> +	hdmi_notifier_put(hcp->notifier);
+> +	hcp->notifier = NULL;
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(hdmi_codec_set_jack_detect);
+> +
+>  static int hdmi_codec_probe(struct platform_device *pdev)
+>  {
+>  	struct hdmi_codec_pdata *hcd = pdev->dev.platform_data;
+> @@ -774,6 +858,7 @@ static int hdmi_codec_probe(struct
+> platform_device *pdev) 
+>  	hcp->hcd = *hcd;
+>  	mutex_init(&hcp->lock);
+> +	mutex_init(&hcp->eld_lock);
+>  
+>  	daidrv = devm_kcalloc(dev, dai_count, sizeof(*daidrv),
+> GFP_KERNEL); if (!daidrv)
+> @@ -797,6 +882,20 @@ static int hdmi_codec_probe(struct
+> platform_device *pdev) __func__, ret);
+>  		return ret;
+>  	}
+> +
+> +	hcp->dev = dev;
+> +
+> +	return 0;
+> +}
+> +
+> +static int hdmi_codec_remove(struct platform_device *pdev)
+> +{
+> +	struct hdmi_codec_priv *hcp = platform_get_drvdata(pdev);
+> +
+> +	if (hcp->notifier) {
+> +		hdmi_notifier_unregister(hcp->notifier, &hcp->nb);
+> +		hdmi_notifier_put(hcp->notifier);
+> +	}
+>  	return 0;
+>  }
+>  
+> @@ -805,6 +904,7 @@ static struct platform_driver hdmi_codec_driver =
+> { .name = HDMI_CODEC_DRV_NAME,
+>  	},
+>  	.probe = hdmi_codec_probe,
+> +	.remove = hdmi_codec_remove,
+>  };
+>  
+>  module_platform_driver(hdmi_codec_driver);
