@@ -1,59 +1,78 @@
-From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Mon, 03 Jun 2019 13:04:37 -0600
-Message-ID: <c200581b8fc167f3a0c09ef6233b8d81@codeaurora.org>
-References: <20190531035348.7194-1-elder@linaro.org>
- <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
- <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
- <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
- <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
- <3b1e12b145a273dd3ded2864d976bdc5fa90e68a.camel@redhat.com>
- <87f98f81-8f77-3bc5-374c-f498e07cb1bd@linaro.org>
- <0fc29577a5c69530145b6095fa1ac1a51949ba8e.camel@redhat.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v2 0/5] Introduce OPP bandwidth bindings
+Date: Mon, 3 Jun 2019 12:12:30 -0700
+Message-ID: <CAGETcx8yV_D+=qLnJOx5s5Nvq2RxhcJvz+gejDBN1-qrBE=Msg@mail.gmail.com>
+References: <20190423132823.7915-1-georgi.djakov@linaro.org>
+ <20190601021228.210574-1-saravanak@google.com> <20190603155634.GA10741@jcrouse1-lnx.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0fc29577a5c69530145b6095fa1ac1a51949ba8e.camel@redhat.com>
+In-Reply-To: <20190603155634.GA10741@jcrouse1-lnx.qualcomm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Williams <dcbw@redhat.com>
-Cc: Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, evgreen@chromium.org, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>, georgi.djakov@linaro.org, amit.kucheria@linaro.org, Bjorn Andersson <bjorn.andersson@linaro.org>, daidavid1@codeaurora.org, devicetree@vger.kernel.org, evgreen@chromium.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, nm@ti.com, rjw@rjwysocki.net, Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org, seansw@qti.qualcomm.com, sibis@codeaurora.org, Vincent Guittot <vincent.guittot@linaro.org>, vireshk@kernel.org, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
->> I can't (or won't) comment right now on whether IPA needs its own
->> netdev for rmnet to use.  The IPA endpoints used for the modem
->> network interfaces are enabled when the netdev is opened and
->> disabled when closed.  Outside of that, TX and RX are pretty
->> much immediately passed through to the layer below or above.
->> IPA currently has no other net device operations.
-> 
-> I don't really have issues with the patchset underneath the netdev
-> layer. I'm interested in how the various bits present themselves to
-> userspace, which is why I am trying to tie this in with Johannes'
-> conversation about WWAN devices, netdevs, channels, and how the various
-> drivers present API for creating data channels that map to different
-> modem contexts.
-> 
-> So let me rephrase. If the control plane has set up the default context
-> and sent a QMI Start Network message (or the network attached the
-> default one) and the resulting IP details are applied to the IPA netdev
-> can things just start sending data? Or do we need to create an rmnet on
-> top to get that working?
-> 
-> Dan
+On Mon, Jun 3, 2019 at 8:56 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> On Fri, May 31, 2019 at 07:12:28PM -0700, Saravana Kannan wrote:
+> > I'll have to Nack this series because it's making a couple of wrong assumptions
+> > about bandwidth voting.
+> >
+> > Firstly, it's mixing up OPP to bandwidth mapping (Eg: CPU freq to CPU<->DDR
+> > bandwidth mapping) with the bandwidth levels that are actually supported by an
+> > interconnect path (Eg: CPU<->DDR bandwidth levels). For example, CPU0 might
+> > decide to vote for a max of 10 GB/s because it's a little CPU and never needs
+> > anything higher than 10 GB/s even at CPU0's max frequency. But that has no
+> > bearing on bandwidth level available between CPU<->DDR.
+>
+> I'm going to just quote this part of the email to avoid forcing people to
+> scroll too much.
+>
+> I agree that there is an enormous universe of new and innovative things that can
+> be done for bandwidth voting. I would love to have smart governors and expansive
+> connections between different components that are all aware of each other. I
+> don't think that anybody is discounting that these things are possible.
+>
+> But as it stands today, as a leaf driver developer my primary concern is that I
+> need to vote something for the GPU->DDR path. Right now I'm voting the maximum
+> because that is the bare minimum we need to get working GPU.
+>
+> Then the next incremental baby step is to allow us to select a minimum
+> vote based on a GPU frequency level to allow for some sort of very coarse power
+> savings. It isn't perfect, but better than cranking everything to 11.
 
-Hi Dan
+I completely agree. I'm not saying you shouldn't do bandwidth voting
+based on device frequency. In some cases, it's actually the right
+thing to do too.
 
-All data from the hardware will have the MAP headers.
-We still need to create rmnet devs over the IPA netdev and use it for 
-the
-data path.
-The IPA netdev will pass on the packets which it receives from the 
-hardware
-and queue it to network stack where it will be intercepted by the
-rmnet rx handler.
+> This is
+> why we need the OPP bandwidth bindings to allow us to make the association and
+> tune down the vote.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Again, I'm perfectly fine with this too.
+
+> I fully agree that this isn't the optimal solution but
+> it is the only knob we have right now.
+> And after that we should go nuts. I'll gladly put the OPP bindings in the
+> rear-view mirror and turn over all bandwidth to a governor or two or three.
+
+This is the problem part in the series. Once a property is exposed in
+DT, we can't just take it back. A new kernel needs to continue
+supporting old compiled DT binaries. So if we know we'll have to
+change a DT property in the future to be "more correct", then we
+should just do that one instead of "for now" bindings.
+
+And I even proposed what the new bindings should look like and why we
+should do it that way.
+
+I'll try to get some patches out for that in the near future. But
+doesn't have to be just from me. I'm just pointing out why the current
+bindings aren't good/scalable.
+
+> I'll be happy to have nothing to do with it again. But until then we need
+> a solution for the leaf drivers that lets us provide some modicum of power
+> control.
+
+Agreed.
+
+-Saravana
