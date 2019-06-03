@@ -1,234 +1,82 @@
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 2/2] dt-bindings: i2c: mv64xxx: Add YAML schemas
-Date: Mon, 03 Jun 2019 16:56:48 +0200
-Message-ID: <87k1e2k98v.fsf@FE-laptop>
-References: <20190525141821.20082-1-maxime.ripard@bootlin.com>
- <20190525141821.20082-2-maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: armada-3720-espressobin: correct spi node
+Date: Mon, 03 Jun 2019 17:04:49 +0200
+Message-ID: <87h896k8vi.fsf@FE-laptop>
+References: <20190527111614.3694-1-tmn505@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190525141821.20082-2-maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190527111614.3694-1-tmn505@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Maciej Nowak <tmn505@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Ellie Reeves <ellierevves@gmail.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Tomasz Maciej Nowak <tmn505@gmail.com> writes:
 
-> Switch the DT binding to a YAML schema to enable the DT validation.
+> The manufacturer of this board, ships it with various SPI NOR chips and
+> increments U-Boot bootloader version along the time. There is no way to
+> tell which is placed on the board since no revision bump takes place.
+> This creates two issues.
 >
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  .../devicetree/bindings/i2c/i2c-mv64xxx.txt   |  64 -----------
->  .../bindings/i2c/marvell,mv64xxx-i2c.yaml     | 106 ++++++++++++++++++
->  2 files changed, 106 insertions(+), 64 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+> The first, cosmetic. Since the NOR chip may differ, there's message on
+> boot stating that kernel expected w25q32dw and found different one. To
+> correct this, remove optional device-specific compatible string. Being
+> here lets replace bogus "spi-flash" compatible string with proper one.
 >
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
-> deleted file mode 100644
-> index 0ffe65a316ae..000000000000
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
-> +++ /dev/null
-> @@ -1,64 +0,0 @@
-> -
-> -* Marvell MV64XXX I2C controller
-> -
-> -Required properties :
-> -
-> - - reg             : Offset and length of the register set for the device
-> - - compatible      : Should be either:
-> -                     - "allwinner,sun4i-a10-i2c"
-> -                     - "allwinner,sun6i-a31-i2c"
-> -                     - "marvell,mv64xxx-i2c"
-> -                     - "marvell,mv78230-i2c"
-> -                     - "marvell,mv78230-a0-i2c"
-> -                       * Note: Only use "marvell,mv78230-a0-i2c" for a
-> -                         very rare, initial version of the SoC which
-> -                         had broken offload support.  Linux
-> -                         auto-detects this and sets it appropriately.
-> - - interrupts      : The interrupt number
-> -
-> -Optional properties :
-> -
-> - - clock-frequency : Desired I2C bus clock frequency in Hz. If not set the
-> -default frequency is 100kHz
-> -
-> - - resets          : phandle to the parent reset controller. Mandatory
-> -                     whenever you're using the "allwinner,sun6i-a31-i2c"
-> -                     compatible.
-> -
-> - - clocks:	   : pointers to the reference clocks for this device, the
-> -		     first one is the one used for the clock on the i2c bus,
-> -		     the second one is the clock used to acces the registers
-> -		     of the controller
-> -
-> - - clock-names	   : names of used clocks, mandatory if the second clock is
-> -		     used, the name must be "core", and "reg" (the latter is
-> -		     only for Armada 7K/8K).
-> -
-> -Examples:
-> -
-> -	i2c@11000 {
-> -		compatible = "marvell,mv64xxx-i2c";
-> -		reg = <0x11000 0x20>;
-> -		interrupts = <29>;
-> -		clock-frequency = <100000>;
-> -	};
-> -
-> -For the Armada XP:
-> -
-> -	i2c@11000 {
-> -		compatible = "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
-> -		reg = <0x11000 0x100>;
-> -		interrupts = <29>;
-> -		clock-frequency = <100000>;
-> -	};
-> -
-> -For the Armada 7040:
-> -
-> -	i2c@701000 {
-> -		compatible = "marvell,mv78230-i2c";
-> -		reg = <0x701000 0x20>;
-> -		interrupts = <29>;
-> -		clock-frequency = <100000>;
-> -		clock-names = "core", "reg";
-> -		clocks = <&core_clock>, <&reg_clock>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-> new file mode 100644
-> index 000000000000..984c01dccc37
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-> @@ -0,0 +1,106 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/i2c/marvell,mv64xxx-i2c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Marvell MV64XXX I2C Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Chen-Yu Tsai <wens@csie.org>
-> +  - Maxime Ripard <maxime.ripard@bootlin.com>
+> The second is linked to partitions layout, it changed after commit:
+> 81e7251252 ("arm64: mvebu: config: move env to the end of the 4MB boot
+> device") in Marvells downstream U-Boot fork [1], shifting environment
+> location to the end of boot device. Since the new boards will have U-Boot
+> with this change, it'll lead to improper results writing or reading from
+> these partitions. We can't tell if users will update bootloader to recent
+> version provided on manufacturer website, so lets drop partitons layout.
+>
+> 1. https://github.com/MarvellEmbeddedProcessors/u-boot-marvell.git
+>
+> Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
 
-If you take over the maintenanceship and became maintainer for this
-driver, then update the MAINTAINERS files too. For now it was assigned
-to me, but I don't mind letting this for both of you.
+Applied on mvebu/dt64
 
-Actually I gave my acked-by to a patch from Wolfram adding the
-Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt file to the "I2C
-MV64XXX MARVELL AND ALLWINNER DRIVER" entry "MAINTAINERS: add DT
-bindings to i2c-mv64xxx" so I guess this patch have to be discarded or
-at least updated.
+Thanks,
 
 Gregory
 
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: allwinner,sun4i-a10-i2c
-> +      - items:
-> +          - const: allwinner,sun7i-a20-i2c
-> +          - const: allwinner,sun4i-a10-i2c
-> +      - const: allwinner,sun6i-a31-i2c
-> +      - items:
-> +          - const: allwinner,sun8i-a23-i2c
-> +          - const: allwinner,sun6i-a31-i2c
-> +      - items:
-> +          - const: allwinner,sun8i-a83t-i2c
-> +          - const: allwinner,sun6i-a31-i2c
-> +      - items:
-> +          - const: allwinner,sun50i-a64-i2c
-> +          - const: allwinner,sun6i-a31-i2c
-> +
-> +      - const: marvell,mv64xxx-i2c
-> +      - const: marvell,mv78230-i2c
-> +      - const: marvell,mv78230-a0-i2c
-> +
-> +    description:
-> +      Only use "marvell,mv78230-a0-i2c" for a very rare, initial
-> +      version of the SoC which had broken offload support. Linux
-> +      auto-detects this and sets it appropriately.
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: Reference clock for the I2C bus
-> +      - description: Bus clock (Only for Armada 7K/8K)
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: core
-> +      - const: reg
-> +    description:
-> +      Mandatory if two clocks are used (only for Armada 7k and 8k).
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +allOf:
-> +  - $ref: /schemas/i2c/i2c-controller.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - allwinner,sun4i-a10-i2c
-> +              - allwinner,sun6i-a31-i2c
-> +
-> +    then:
-> +      required:
-> +        - clocks
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun6i-a31-i2c
-> +
-> +    then:
-> +      required:
-> +        - resets
-> +
-> +# FIXME: We should set it, but it would report all the generic
-> +# properties as additional properties.
-> +# additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    timer {
-> +      compatible = "allwinner,sun4i-a10-timer";
-> +      reg = <0x01c20c00 0x400>;
-> +      interrupts = <22>;
-> +      clocks = <&osc>;
-> +    };
-> +...
+> ---
+>  .../dts/marvell/armada-3720-espressobin.dts    | 18 +-----------------
+>  1 file changed, 1 insertion(+), 17 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+> index 6be019e1888e..fbcf03f86c96 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+> @@ -95,25 +95,9 @@
+>  
+>  	flash@0 {
+>  		reg = <0>;
+> -		compatible = "winbond,w25q32dw", "jedec,spi-flash";
+> +		compatible = "jedec,spi-nor";
+>  		spi-max-frequency = <104000000>;
+>  		m25p,fast-read;
+> -
+> -		partitions {
+> -			compatible = "fixed-partitions";
+> -			#address-cells = <1>;
+> -			#size-cells = <1>;
+> -
+> -			partition@0 {
+> -				label = "uboot";
+> -				reg = <0 0x180000>;
+> -			};
+> -
+> -			partition@180000 {
+> -				label = "ubootenv";
+> -				reg = <0x180000 0x10000>;
+> -			};
+> -		};
+>  	};
+>  };
+>  
 > -- 
 > 2.21.0
 >
