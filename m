@@ -1,102 +1,150 @@
-From: Matheus Castello <matheus@castello.eng.br>
-Subject: Re: [PATCH v3 3/5] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-Date: Sun, 2 Jun 2019 19:26:20 -0300
-Message-ID: <69a4f003-4413-1316-6145-f8bef2171e86@castello.eng.br>
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br>
- <20190527022258.32748-4-matheus@castello.eng.br>
- <CAJKOXPd2F6iy0ZqYf+X2k=eQ=tY1zG4gVbrr68XqE9+w4HK6dw@mail.gmail.com>
+From: Anson.Huang@nxp.com
+Subject: [PATCH] arm64: dts: imx8mm: Fix build warnings
+Date: Mon,  3 Jun 2019 08:48:20 +0800
+Message-ID: <20190603004820.36247-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPd2F6iy0ZqYf+X2k=eQ=tY1zG4gVbrr68XqE9+w4HK6dw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, aisheng.dong@nxp.com, viresh.kumar@linaro.org, ping.bai@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
+From: Anson Huang <Anson.Huang@nxp.com>
 
+This patch fixes below build warning with "W=1":
 
-On 5/29/19 11:46 AM, Krzysztof Kozlowski wrote:
-> On Mon, 27 May 2019 at 04:46, Matheus Castello <matheus@castello.eng.br> wrote:
->>
->> For configuration of fuel gauge alert for a low level state of charge
->> interrupt we add a function to config level threshold and a device tree
->> binding property to set it in flatned device tree node.
->>
->> Now we can use "maxim,alert-low-soc-level" property with the values from
->> 1% up to 32% to configure alert interrupt threshold.
->>
->> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
->> ---
->>   drivers/power/supply/max17040_battery.c | 52 +++++++++++++++++++++++--
->>   1 file changed, 49 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
->> index b7433e9ca7c2..2f4851608cfe 100644
->> --- a/drivers/power/supply/max17040_battery.c
->> +++ b/drivers/power/supply/max17040_battery.c
->> @@ -29,6 +29,9 @@
->>   #define MAX17040_DELAY         1000
->>   #define MAX17040_BATTERY_FULL  95
->>
->> +#define MAX17040_ATHD_MASK             0xFFC0
->> +#define MAX17040_ATHD_DEFAULT_POWER_UP 4
->> +
->>   struct max17040_chip {
->>          struct i2c_client               *client;
->>          struct delayed_work             work;
->> @@ -43,6 +46,8 @@ struct max17040_chip {
->>          int soc;
->>          /* State Of Charge */
->>          int status;
->> +       /* Low alert threshold from 32% to 1% of the State of Charge */
->> +       u32 low_soc_alert_threshold;
->>   };
->>
->>   static int max17040_get_property(struct power_supply *psy,
->> @@ -99,6 +104,28 @@ static void max17040_reset(struct i2c_client *client)
->>          max17040_write_reg(client, MAX17040_CMD, 0x0054);
->>   }
->>
->> +static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
->> +       u32 level)
->> +{
->> +       int ret;
->> +       u16 data;
->> +
->> +       /* check if level is between 1% and 32% */
->> +       if (level > 0 && level < 33) {
->> +               level = 32 - level;
->> +               data = max17040_read_reg(client, MAX17040_RCOMP);
->> +               /* clear the alrt bit and set LSb 5 bits */
->> +               data &= MAX17040_ATHD_MASK;
->> +               data |= level;
->> +               max17040_write_reg(client, MAX17040_RCOMP, data);
->> +               ret = 0;
+arch/arm64/boot/dts/freescale/imx8mm.dtsi:203.6-754.4:
+ Warning (unit_address_vs_reg): /soc: node has a reg or
+ ranges property, but no unit name
+arch/arm64/boot/dts/freescale/imx8mm.dtsi:209.23-388.5:
+ Warning (unit_address_vs_reg): /soc/bus@30000000: node
+ has a unit name, but no reg property
+arch/arm64/boot/dts/freescale/imx8mm.dtsi:390.23-439.5:
+ Warning (unit_address_vs_reg): /soc/bus@30400000: node
+ has a unit name, but no reg property
+arch/arm64/boot/dts/freescale/imx8mm.dtsi:441.23-658.5:
+ Warning (unit_address_vs_reg): /soc/bus@30800000: node
+ has a unit name, but no reg property
+arch/arm64/boot/dts/freescale/imx8mm.dtsi:660.23-724.5:
+ Warning (unit_address_vs_reg): /soc/bus@32c00000: node
+ has a unit name, but no reg property
+arch/arm64/boot/dts/freescale/imx8mm.dtsi:681.27-687.6:
+ Warning (simple_bus_reg): /soc/bus@32c00000/usbphynop1:
+ missing or empty reg/ranges property
+arch/arm64/boot/dts/freescale/imx8mm.dtsi:710.27-716.6:
+ Warning (simple_bus_reg): /soc/bus@32c00000/usbphynop2:
+ missing or empty reg/ranges property
 
-I will put the return of max17040_write_reg on ret, instead of ret = 0.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 38 +++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
->> +       } else {
->> +               ret = -EINVAL;
->> +       }
-> 
-> This is unusual way of handling error... when you parse DTS, you
-> accept any value for "level" (even incorrect one). You validate the
-> value later when setting it and show an error... however you ignore
-> the error of max17040_write_reg() here... This is correct but looks
-> unusual.
-> 
-
-Ok, so would it be better to check the level value in 
-"max17040_get_of_data" and return an error there if the input is wrong?
-
-Best Regards,
-Matheus Castello
-
-> Best regards,
-> Krzysztof
-> 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 708d3c4..dc99f45 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -200,7 +200,7 @@
+ 		arm,no-tick-in-suspend;
+ 	};
+ 
+-	soc {
++	soc@0 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -208,6 +208,7 @@
+ 
+ 		aips1: bus@30000000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
++			reg = <0x30000000 0x400000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+@@ -389,6 +390,7 @@
+ 
+ 		aips2: bus@30400000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
++			reg = <0x30400000 0x400000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+@@ -440,6 +442,7 @@
+ 
+ 		aips3: bus@30800000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
++			reg = <0x30800000 0x400000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+@@ -659,6 +662,7 @@
+ 
+ 		aips4: bus@32c00000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
++			reg = <0x32c00000 0x400000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+@@ -678,14 +682,6 @@
+ 				status = "disabled";
+ 			};
+ 
+-			usbphynop1: usbphynop1 {
+-				compatible = "usb-nop-xceiv";
+-				clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
+-				assigned-clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
+-				assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_100M>;
+-				clock-names = "main_clk";
+-			};
+-
+ 			usbmisc1: usbmisc@32e40200 {
+ 				compatible = "fsl,imx8mm-usbmisc", "fsl,imx7d-usbmisc";
+ 				#index-cells = <1>;
+@@ -707,14 +703,6 @@
+ 				status = "disabled";
+ 			};
+ 
+-			usbphynop2: usbphynop2 {
+-				compatible = "usb-nop-xceiv";
+-				clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
+-				assigned-clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
+-				assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_100M>;
+-				clock-names = "main_clk";
+-			};
+-
+ 			usbmisc2: usbmisc@32e50200 {
+ 				compatible = "fsl,imx8mm-usbmisc", "fsl,imx7d-usbmisc";
+ 				#index-cells = <1>;
+@@ -752,4 +740,20 @@
+ 			status = "disabled";
+ 		};
+ 	};
++
++	usbphynop1: usbphynop1 {
++		compatible = "usb-nop-xceiv";
++		clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
++		assigned-clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
++		assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_100M>;
++		clock-names = "main_clk";
++	};
++
++	usbphynop2: usbphynop2 {
++		compatible = "usb-nop-xceiv";
++		clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
++		assigned-clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
++		assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_100M>;
++		clock-names = "main_clk";
++	};
+ };
+-- 
+2.7.4
