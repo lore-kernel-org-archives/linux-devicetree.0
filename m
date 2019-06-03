@@ -1,43 +1,143 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH v3 0/6] soc/fsl/qe: cleanups and new DT binding
-Date: Mon, 3 Jun 2019 19:55:51 +0000
-Message-ID: <VE1PR04MB6687FF805430978ED307EA2D8F140@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
- <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
- <e11c1e55-1e11-7ce3-3c0f-0b723ab260aa@prevas.se>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH v3 10/12] arm64: dts: allwinner: h6: Add
+ IR receiver node
+Date: Mon, 3 Jun 2019 21:58:23 +0200
+Message-ID: <CAJiuCcdMftAjCwk2_naE9VBGGqS=OY9xcqv6+5pDX2Z8O=L28w@mail.gmail.com>
+References: <20190528161440.27172-1-peron.clem@gmail.com> <20190528161440.27172-11-peron.clem@gmail.com>
+ <20190530145550.amalnxmx7kpokykv@core.my.home> <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
+ <20190531124630.q2guo54kjfzr7rkn@core.my.home>
+Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e11c1e55-1e11-7ce3-3c0f-0b723ab260aa@prevas.se>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <Rasmus.Villemoes@prevas.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Scott Wood <oss@buserror.net>, Christophe Leroy <christophe.leroy@c-s.fr>, Mark Rutland <mark.rutland@arm.com>, "jocke@infinera.com" <joakim.tjernlund@infinera.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCELXIX7UICBB27X2XTQKGQECKHQ2LY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190531124630.q2guo54kjfzr7rkn-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFzbXVzIFZpbGxlbW9l
-cyA8UmFzbXVzLlZpbGxlbW9lc0BwcmV2YXMuc2U+DQo+IFNlbnQ6IE1vbmRheSwgSnVuZSAzLCAy
-MDE5IDI6NTQgUE0NCj4gVG86IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBRaWFuZyBaaGFv
-IDxxaWFuZy56aGFvQG54cC5jb20+OyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT4NCj4g
-Q2M6IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFJvYiBIZXJy
-aW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBTY290dA0KPiBXb29kIDxvc3NAYnVzZXJyb3IubmV0
-PjsgQ2hyaXN0b3BoZSBMZXJveSA8Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+Ow0KPiBNYXJrIFJ1
-dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgam9ja2VAaW5maW5lcmEuY29tDQo+IDxqb2Fr
-aW0udGplcm5sdW5kQGluZmluZXJhLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAwLzZd
-IHNvYy9mc2wvcWU6IGNsZWFudXBzIGFuZCBuZXcgRFQgYmluZGluZw0KPiANCj4gT24gMTMvMDUv
-MjAxOSAxMy4xNCwgUmFzbXVzIFZpbGxlbW9lcyB3cm90ZToNCj4gPiBUaGlzIHNtYWxsIHNlcmll
-cyBjb25zaXN0cyBvZiBzb21lIHNtYWxsIGNsZWFudXBzIGFuZCBzaW1wbGlmaWNhdGlvbnMNCj4g
-PiBvZiB0aGUgUVVJQ0MgZW5naW5lIGRyaXZlciwgYW5kIGludHJvZHVjZXMgYSBuZXcgRFQgYmlu
-ZGluZyB0aGF0IG1ha2VzDQo+ID4gaXQgbXVjaCBlYXNpZXIgdG8gc3VwcG9ydCBvdGhlciB2YXJp
-YW50cyBvZiB0aGUgUVVJQ0MgZW5naW5lIElQIGJsb2NrDQo+ID4gdGhhdCBhcHBlYXJzIGluIHRo
-ZSB3aWxkOiBUaGVyZSdzIG5vIHJlYXNvbiB0byBleHBlY3QgaW4gZ2VuZXJhbCB0aGF0DQo+ID4g
-dGhlIG51bWJlciBvZiB2YWxpZCBTTlVNcyB1bmlxdWVseSBkZXRlcm1pbmVzIHRoZSBzZXQgb2Yg
-c3VjaCwgc28gaXQncw0KPiA+IGJldHRlciB0byBzaW1wbHkgbGV0IHRoZSBkZXZpY2UgdHJlZSBz
-cGVjaWZ5IHRoZSB2YWx1ZXMgKGFuZCwNCj4gPiBpbXBsaWNpdGx5IHZpYSB0aGUgYXJyYXkgbGVu
-Z3RoLCBhbHNvIHRoZSBjb3VudCkuDQo+ID4NCj4gPiBXaGljaCB0cmVlIHNob3VsZCB0aGlzIGdv
-IHRocm91Z2g/DQo+IA0KPiBQaW5nPyBUaGVzZSBwYXRjaGVzIHNob3VsZCBiZSByZWFkeSB0byBn
-byBpbiwgYnV0IEkgZG9uJ3Qga25vdyB3aG8gaXMNCj4gc3VwcG9zZWQgdG8gcGljayB0aGVtIHVw
-Lg0KDQpJIGNhbiBwaWNrIHRoZW0gdXAgdGhyb3VnaCB0aGUgc29jL2ZzbCB0cmVlLg0KDQpSZWdh
-cmRzLA0KTGVvDQo=
+Hi Ondrej,
+
+On Fri, 31 May 2019 at 14:46, Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+>
+> Hello Cl=C3=A9ment,
+>
+> On Fri, May 31, 2019 at 12:25:32AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi Ondrej,
+> >
+> > On Thu, 30 May 2019 at 16:55, Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wr=
+ote:
+> > >
+> > > Hello Cl=C3=A9ment,
+> > >
+> > > On Tue, May 28, 2019 at 06:14:38PM +0200, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > Allwinner H6 IR is similar to A31 and can use same driver.
+> > > >
+> > > > Add support for it.
+> > > >
+> > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > ---
+> > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 ++++++++++++++++=
++++
+> > > >  1 file changed, 19 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/ar=
+m64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > index 16c5c3d0fd81..649cbdfe452e 100644
+> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > @@ -647,6 +647,25 @@
+> > > >                               pins =3D "PL0", "PL1";
+> > > >                               function =3D "s_i2c";
+> > > >                       };
+> > > > +
+> > > > +                     r_ir_rx_pin: r-ir-rx-pin {
+> > > > +                             pins =3D "PL9";
+> > > > +                             function =3D "s_cir_rx";
+> > > > +                     };
+> > > > +             };
+> > > > +
+> > > > +             r_ir: ir@7040000 {
+> > > > +                             compatible =3D "allwinner,sun50i-h6-i=
+r",
+> > > > +                                          "allwinner,sun6i-a31-ir"=
+;
+> > > > +                             reg =3D <0x07040000 0x400>;
+> > > > +                             interrupts =3D <GIC_SPI 109 IRQ_TYPE_=
+LEVEL_HIGH>;
+> > > > +                             clocks =3D <&r_ccu CLK_R_APB1_IR>,
+> > > > +                                      <&r_ccu CLK_IR>;
+> > > > +                             clock-names =3D "apb", "ir";
+> > > > +                             resets =3D <&r_ccu RST_R_APB1_IR>;
+> > > > +                             pinctrl-names =3D "default";
+> > > > +                             pinctrl-0 =3D <&r_ir_rx_pin>;
+> > > > +                             status =3D "disabled";
+> > > >               };
+> > >
+> > > Please make a comment here, that this is known broken on some boards =
+and may
+> > > result IRQ flood if enabled. Otherwise noone will know.
+> >
+> > I'm planning to send a v4 next week with the IRQ_NONE return as Maxime
+> > suggested it.
+> > https://github.com/clementperon/linux/tree/h6_ir_v4
+> >
+> > But maybe we could also use the bit 5 of the IRQ status.
+>
+> Thanks, that's nice, but that will not make the HW work. That will just d=
+isable
+> it. The comment is still necessary.
+I have pushed a new version on my github.
+https://github.com/clementperon/linux/commits/h6_ir_v4
+
+I will submit it, if you are ok with it.
+
+Thanks,
+Cl=C3=A9ment
+
+>
+> thank you,
+>         o.
+>
+> > Regards, Clement
+> >
+> > >
+> > > thanks,
+> > >         o.
+> > >
+> > > >               r_i2c: i2c@7081400 {
+> > > > --
+> > > > 2.20.1
+> > > >
+> > > >
+> > > > _______________________________________________
+> > > > linux-arm-kernel mailing list
+> > > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> >
+> > --
+> > You received this message because you are subscribed to the Google Grou=
+ps "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send =
+an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> > To view this discussion on the web, visit https://groups.google.com/d/m=
+sgid/linux-sunxi/CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw%40mail=
+.gmail.com.
+> > For more options, visit https://groups.google.com/d/optout.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/CAJiuCcdMftAjCwk2_naE9VBGGqS%3DOY9xcqv6%2B5pDX2Z8O%3DL28w%40ma=
+il.gmail.com.
+For more options, visit https://groups.google.com/d/optout.
