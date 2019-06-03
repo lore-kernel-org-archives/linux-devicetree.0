@@ -1,49 +1,53 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 1/3] dt-bindings: display: Add Sharp LS020B1DD01D panel documentation
-Date: Mon,  3 Jun 2019 17:31:18 +0200
-Message-ID: <20190603153120.23947-1-paul@crapouillou.net>
+Subject: [PATCH v4 2/3] drm: Add bus flag for Sharp-specific signals
+Date: Mon,  3 Jun 2019 17:31:19 +0200
+Message-ID: <20190603153120.23947-2-paul@crapouillou.net>
+References: <20190603153120.23947-1-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190603153120.23947-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
-Cc: od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh@kernel.org>
+Cc: od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The LS020B1DD01D is a 2.0" 240x160 16-bit TFT LCD panel.
+Add the DRM_BUS_FLAG_SHARP_SIGNALS to the drm_bus_flags enum.
+
+This flags can be used when the display must be driven with the
+Sharp-specific signals SPL, CLS, REV, PS.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
 Notes:
-    v2: New patch
-    
-    v3: Add Rob's Reviewed-by
+    v3: New patch
     
     v4: Rebase on drm-misc-next (b232d4ed92ea)
 
- .../bindings/display/panel/sharp,ls020b1dd01d.txt    | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ls020b1dd01d.txt
+ include/drm/drm_connector.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sharp,ls020b1dd01d.txt b/Documentation/devicetree/bindings/display/panel/sharp,ls020b1dd01d.txt
-new file mode 100644
-index 000000000000..e45edbc565a3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sharp,ls020b1dd01d.txt
-@@ -0,0 +1,12 @@
-+Sharp 2.0" (240x160 pixels) 16-bit TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "sharp,ls020b1dd01d"
-+- power-supply: as specified in the base binding
-+
-+Optional properties:
-+- backlight: as specified in the base binding
-+- enable-gpios: as specified in the base binding
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
+diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+index 547656173c74..5861367f7339 100644
+--- a/include/drm/drm_connector.h
++++ b/include/drm/drm_connector.h
+@@ -323,6 +323,8 @@ enum drm_panel_orientation {
+  *					edge of the pixel clock
+  * @DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE:	Sync signals are sampled on the falling
+  *					edge of the pixel clock
++ * @DRM_BUS_FLAG_SHARP_SIGNALS:		Set if the Sharp-specific signals
++ *					(SPL, CLS, PS, REV) must be used
+  */
+ enum drm_bus_flags {
+ 	DRM_BUS_FLAG_DE_LOW = BIT(0),
+@@ -341,6 +343,7 @@ enum drm_bus_flags {
+ 	DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE = DRM_BUS_FLAG_SYNC_NEGEDGE,
+ 	DRM_BUS_FLAG_SYNC_SAMPLE_POSEDGE = DRM_BUS_FLAG_SYNC_NEGEDGE,
+ 	DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE = DRM_BUS_FLAG_SYNC_POSEDGE,
++	DRM_BUS_FLAG_SHARP_SIGNALS = BIT(8),
+ };
+ 
+ /**
 -- 
 2.21.0.593.g511ec345e18
