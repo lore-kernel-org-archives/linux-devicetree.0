@@ -1,87 +1,58 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: fix isp iommu clocks and power
- domain
-Date: Mon, 3 Jun 2019 20:18:38 +0530
-Message-ID: <20190603144838.GA27534@mani>
-References: <20190603142214.24686-1-helen.koike@collabora.com>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
+Date: Mon, 3 Jun 2019 08:48:51 -0600
+Message-ID: <20190603144851.GD23227@jcrouse1-lnx.qualcomm.com>
+References: <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
+ <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
+ <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
+ <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
+ <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
+ <401f9948-14bd-27a2-34c1-fb429cae966d@arm.com>
+ <CAF6AEGuGGAThqs9ztTNyGnMyhFc9wbtn=N8A4qqQxcN_PAxsEw@mail.gmail.com>
+ <20190603135408.GE30132@ulmo>
+ <CAF6AEGtrfqYBNyjpHsUy1Tj-FJZ0MybvAJdHQsqb5kqih2BY3A@mail.gmail.com>
+ <20190603144016.GG30132@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20190603142214.24686-1-helen.koike@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Helen Koike <helen.koike@collabora.com>
-Cc: linux-rockchip@lists.infradead.org, kernel@collabora.com, ezequiel@collabora.com, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, Vicente Bergas <vicencb@gmail.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Rob Herring <robh+dt@kernel.org>, Tony Xie <tony.xie@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
+In-Reply-To: <20190603144016.GG30132@ulmo>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 11:22:15AM -0300, Helen Koike wrote:
-> isp iommu requires wrapper variants of the clocks.
-> noc variants are always on and using the wrapper variants will activate
-> {A,H}CLK_ISP{0,1} due to the hierarchy.
-> 
-> Also add the respective power domain.
-> 
-> Refer:
->  RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
->  RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
-> 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-
-Tested on Rock960 with ISP patches.
-
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks,
-Mani
-
-> 
-> ---
-> Hello,
-> 
-> I tested this using the isp patch set (which is not upstream
-> yet). Without this patch, streaming from the isp stalls.
-> 
-> I'm also enabling the power domain and removing the disable status,
-> please let me know if this should be done in a separated patch.
-> 
-> Thanks
-> Helen
-> 
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 196ac9b78076..89594a7276f4 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1706,11 +1706,11 @@
->  		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
->  		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
->  		interrupt-names = "isp0_mmu";
-> -		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
-> +		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
->  		clock-names = "aclk", "iface";
->  		#iommu-cells = <0>;
-> +		power-domains = <&power RK3399_PD_ISP0>;
->  		rockchip,disable-mmu-reset;
-> -		status = "disabled";
->  	};
->  
->  	isp1_mmu: iommu@ff924000 {
-> @@ -1718,11 +1718,11 @@
->  		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
->  		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
->  		interrupt-names = "isp1_mmu";
-> -		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
-> +		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
->  		clock-names = "aclk", "iface";
->  		#iommu-cells = <0>;
-> +		power-domains = <&power RK3399_PD_ISP1>;
->  		rockchip,disable-mmu-reset;
-> -		status = "disabled";
->  	};
->  
->  	hdmi_sound: hdmi-sound {
-> -- 
-> 2.20.1
-> 
+PiBJdCBzaG91bGRuJ3QgYmUgYSBwcm9ibGVtIHRvIGhvb2sgc29tZXRoaW5nIGVsc2UgdXAgdG8g
+dGhlIElPTU1VCj4gc3Vic3lzdGVtLiBIb3BlZnVsbHkgaXQncyBzb21ldGhpbmcgdGhhdCBwZW9w
+bGUgYXJlIGdvaW5nIHRvIHN0YW5kYXJkaXplCj4gb24uCj4gCj4gPiAzKSBUaGUgYXV0b21hdGlj
+IGF0dGFjaCBvZiBETUEgZG9tYWluIGlzIGFsc28gY2F1c2luZyBhIGRpZmZlcmVudAo+ID4gICAg
+cHJvYmxlbSBmb3IgdXMgb24gdGhlIEdQVSBzaWRlLCBwcmV2ZW50aW5nIHVzIGZyb20gc3VwcG9y
+dGluZyBwZXItCj4gPiAgICBjb250ZXh0IHBhZ2V0YWJsZXMgKHNpbmNlIHdlIGVuZCB1cCB3aXRo
+IGEgZGlzYWdyZWVtZW50IGFib3V0Cj4gPiAgICB3aGljaCBjb250ZXh0IGJhbmsgaXMgdXNlZCBi
+ZXR3ZWVuIGFybS1zbW11IGFuZCB0aGUgZmlybXdhcmUpLgo+IAo+IEknbSBub3Qgc3VyZSBJIHVu
+ZGVyc3RhbmQgdGhpcyBpc3N1ZS4gSXMgdGhlIGNvbnRleHQgYmFuayBoYXJkLWNvZGVkIGluCj4g
+dGhlIGZpcm13YXJlIHNvbWVob3c/IE9yIGlzIGl0IHBvc3NpYmxlIHRvIHJld3JpdGUgd2hpY2gg
+b25lIGlzIGdvaW5nIHRvCj4gYmUgdXNlZCBhdCBydW50aW1lPyBEbyB5b3Ugc3dpdGNoIG91dCB0
+aGUgYWN0dWFsIHBhZ2UgdGFibGVzIHJhdGhlciB0aGFuCj4gdGhlIElPTU1VIGRvbWFpbnMgZm9y
+IGNvbnRleHQgc3dpdGNoaW5nPwogCldlIGhhdmUgYSByYXRoZXIgbG9uZyBoaXN0b3J5IG9uIHRo
+aXMgYnV0IHRoZSB0bDtkciBpcyB0aGF0IHRoZSBHUFUgbWljcm9jb2RlCnN3aXRjaGVzIHRoZSBw
+YWdldGFibGVzIGJ5IHJld3JpdGluZyBUVEJSMCBvbiB0aGUgZmx5IChzaW5jZSB0aGlzIGlzCmFy
+bS1zbW11LXYyIHdlIGhhdmUgbm8gYmV0dGVyIG9wdGlvbikgYW5kIHllcywgdW5mb3J0dW5hdGVs
+eSBpdCBpcyBoYXJkIGNvZGVkCnRvIHVzZSBjb250ZXh0IGJhbmsgMC4gWzFdIGlzIHRoZSBjdXJy
+ZW50IHBhdGNoc2V0IHRvIHN1cHBvcnQgYWxsIHRoaXMsCmluY2x1ZGluZyBteSBvd24gdGFrZSBv
+biBhdm9pZGluZyB0aGUgZG1hLWRvbWFpbiAoYWxsIHRoZSBjb29sIGtpZHMgaGF2ZSBvbmUpLgoK
+Sm9yZGFuCgpbMV0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy81NzQ0
+MS8KCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIg
+b2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFBy
+b2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJl
+ZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5v
