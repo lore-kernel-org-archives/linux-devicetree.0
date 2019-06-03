@@ -1,49 +1,43 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [RFC PATCH 12/57] of: platform: Use bus_find_device_by_of_node helper
-Date: Mon,  3 Jun 2019 16:49:38 +0100
-Message-ID: <1559577023-558-13-git-send-email-suzuki.poulose@arm.com>
-References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, suzuki.poulose@arm.com, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Mon, 3 Jun 2019 10:52:47 -0500
+Message-ID: <87f98f81-8f77-3bc5-374c-f498e07cb1bd@linaro.org>
+References: <20190531035348.7194-1-elder@linaro.org>
+ <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+ <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
+ <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+ <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+ <3b1e12b145a273dd3ded2864d976bdc5fa90e68a.camel@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <3b1e12b145a273dd3ded2864d976bdc5fa90e68a.camel@redhat.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Dan Williams <dcbw@redhat.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, evgreen@chromium.org, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Switch to using the bus_find_device_by_of_node helper
+On 6/3/19 9:54 AM, Dan Williams wrote:
+>> To be perfectly honest, at first I thought having IPA use rmnet
+>> was a cargo cult thing like Dan suggested, because I didn't see
+> To be clear I only meant cargo-culting the naming, not any
+> functionality. Clearly IPA/rmnet/QMAP are pretty intimately connected
+> at this point. But this goes back to whether IPA needs a netdev itself
+> or whether you need an rmnet device created on top. If the former then
+> I'd say no cargo-culting, if the later then it's a moot point because
+> the device name will be rmnet%d anyway.
 
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- drivers/of/platform.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+OK I thought you weren't sure why rmnet was a layer at all.  As I
+said, I didn't have a very good understanding of why it was even
+needed when I first started working on this.
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 04ad312..b1e3a51 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -37,11 +37,6 @@ static const struct of_device_id of_skipped_node_table[] = {
- 	{} /* Empty terminated list */
- };
- 
--static int of_dev_node_match(struct device *dev, void *data)
--{
--	return dev->of_node == data;
--}
--
- /**
-  * of_find_device_by_node - Find the platform_device associated with a node
-  * @np: Pointer to device tree node
-@@ -55,7 +50,7 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
- {
- 	struct device *dev;
- 
--	dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
-+	dev = bus_find_device_by_of_node(&platform_bus_type, NULL, np);
- 	return dev ? to_platform_device(dev) : NULL;
- }
- EXPORT_SYMBOL(of_find_device_by_node);
--- 
-2.7.4
+I can't (or won't) comment right now on whether IPA needs its own
+netdev for rmnet to use.  The IPA endpoints used for the modem
+network interfaces are enabled when the netdev is opened and
+disabled when closed.  Outside of that, TX and RX are pretty
+much immediately passed through to the layer below or above.
+IPA currently has no other net device operations.
+
+					-Alex
