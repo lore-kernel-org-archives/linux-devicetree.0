@@ -1,45 +1,104 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 05/10] usb: roles: Introduce stubs for the exiting
- functions in role.h.
-Date: Mon, 3 Jun 2019 15:19:29 +0200
-Message-ID: <20190603131929.GC10397@kroah.com>
-References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
- <1559115828-19146-6-git-send-email-chunfeng.yun@mediatek.com>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
+Date: Mon, 3 Jun 2019 06:20:57 -0700
+Message-ID: <CAF6AEGuGGAThqs9ztTNyGnMyhFc9wbtn=N8A4qqQxcN_PAxsEw@mail.gmail.com>
+References: <20181201165348.24140-1-robdclark@gmail.com>
+ <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
+ <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
+ <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
+ <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
+ <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
+ <401f9948-14bd-27a2-34c1-fb429cae966d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1559115828-19146-6-git-send-email-chunfeng.yun@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, linux-usb@vger.kernel.org, Yu Chen <chenyu56@huawei.com>, linux-kernel@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Min Guo <min.guo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, John Stultz <john.stultz@linaro.org>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <401f9948-14bd-27a2-34c1-fb429cae966d-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 29, 2019 at 03:43:43PM +0800, Chunfeng Yun wrote:
-> From: Yu Chen <chenyu56@huawei.com>
-> 
-> This patch adds stubs for the exiting functions while
-> CONFIG_USB_ROLE_SWITCH does not enabled.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-
-Same here, you need to sign off on it too.
-
-thanks,
-
-greg k-h
+T24gTW9uLCBKdW4gMywgMjAxOSBhdCA0OjE0IEFNIFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5
+QGFybS5jb20+IHdyb3RlOgo+Cj4gT24gMDMvMDYvMjAxOSAxMTo0NywgUm9iIENsYXJrIHdyb3Rl
+Ogo+ID4gT24gU3VuLCBKdW4gMiwgMjAxOSBhdCAxMToyNSBQTSBUb21hc3ogRmlnYSA8dGZpZ2FA
+Y2hyb21pdW0ub3JnPiB3cm90ZToKPiA+Pgo+ID4+IE9uIE1vbiwgSnVuIDMsIDIwMTkgYXQgNDo0
+MCBBTSBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+IHdyb3RlOgo+ID4+Pgo+ID4+PiBT
+bywgYW5vdGhlciBjYXNlIEkndmUgY29tZSBhY3Jvc3MsIG9uIHRoZSBkaXNwbGF5IHNpZGUuLiBJ
+J20gd29ya2luZwo+ID4+PiBvbiBoYW5kbGluZyB0aGUgY2FzZSB3aGVyZSBib290bG9hZGVyIGVu
+YWJsZXMgZGlzcGxheSAoYW5kIHRha2VzIGlvbW11Cj4gPj4+IG91dCBvZiByZXNldCkuLiBhcyBz
+b29uIGFzIERNQSBkb21haW4gZ2V0cyBhdHRhY2hlZCB3ZSBnZXQgaW9tbXUKPiA+Pj4gZmF1bHRz
+LCBiZWNhdXNlIGJvb3Rsb2FkZXIgaGFzIGFscmVhZHkgY29uZmlndXJlZCBkaXNwbGF5IGZvciBz
+Y2Fub3V0Lgo+ID4+PiBVbmZvcnR1bmF0ZWx5IHRoaXMgYWxsIGhhcHBlbnMgYmVmb3JlIGFjdHVh
+bCBkcml2ZXIgaXMgcHJvYmVkIGFuZCBoYXMKPiA+Pj4gYSBjaGFuY2UgdG8gaW50ZXJ2ZW5lLgo+
+ID4+Pgo+ID4+PiBJdCdzIHJhdGhlciB1bmZvcnR1bmF0ZSB0aGF0IHdlIHRyaWVkIHRvIGJlIGNs
+ZXZlciByYXRoZXIgdGhhbiBqdXN0Cj4gPj4+IG1ha2luZyBkcml2ZXJzIGNhbGwgc29tZSBmdW5j
+dGlvbiB0byBvcHQtaW4gdG8gdGhlIGhvb2t1cCBvZiBkbWEgaW9tbXUKPiA+Pj4gb3BzIDotKAo+
+ID4+Cj4gPj4gSSB0aGluayBpdCBzdGlsbCB3b3JrcyBmb3IgdGhlIDkwJSBvZiBjYXNlcyBhbmQg
+aWYgMTAlIG5lZWRzIHNvbWUKPiA+PiBleHBsaWNpdCB3b3JrIGluIHRoZSBkcml2ZXJzLCB0aGF0
+J3MgYmV0dGVyIHRoYW4gcmVxdWlyaW5nIDEwMCUgb2YgdGhlCj4gPj4gZHJpdmVycyB0byBkbyB0
+aGluZ3MgbWFudWFsbHkuCj4KPiBSaWdodCwgaXQncyBub3QgYWJvdXQgImJlaW5nIGNsZXZlciIs
+IGl0J3MgYWJvdXQgbm90IGFkZGluZyBvcHQtaW4gY29kZQo+IHRvIHRoZSBodW5kcmVkcyBhbmQg
+aHVuZHJlZHMgYW5kIGh1bmRyZWRzIG9mIGRyaXZlcnMgd2hpY2ggKm1pZ2h0KiBldmVyCj4gZmlu
+ZCB0aGVtc2VsdmVzIHVzZWQgb24gYSBzeXN0ZW0gd2hlcmUgdGhleSB3b3VsZCBuZWVkIHRoZSBJ
+T01NVSdzIGhlbHAKPiBmb3IgRE1BLgoKV2VsbCwgSSBtZWFuLCBhdCBvbmUgcG9pbnQgd2UgZGlk
+bid0IGRvIHRoZSBhdXRvbWF0aWMgaW9tbXUgaG9va3VwLCB3ZQpjb3VsZCBoYXZlIGp1c3Qgc3R1
+Y2sgd2l0aCB0aGF0IGFuZCBhZGRlZCBhIGhlbHBlciBzbyBkcml2ZXJzIGNvdWxkCnJlcXVlc3Qg
+dGhlIGhvb2t1cC4gIFRoaW5ncyB3b3VsZG4ndCBoYXZlIGJlZW4gYW55IG1vcmUgYnJva2VuIHRo
+YW4KYmVmb3JlLCBhbmQgd2hlbiBwZW9wbGUgYnJpbmcgdXAgc3lzdGVtcyB3aGVyZSBpb21tdSBp
+cyByZXF1aXJlZCwgdGhleQpjb3VsZCBoYXZlIGFkZGVkIHRoZSBuZWNlc3NhcnkgZG1hX2lvbW11
+X2NvbmZpZ3VyZSgpIGNhbGwuICBCdXQgdGhhdAppcyB3YXRlciB1bmRlciB0aGUgYnJpZGdlIG5v
+dy4KCj4gPj4gQWRkaW5nIE1hcmVrIHdobyBoYWQgdGhlIHNhbWUgcHJvYmxlbSBvbiBFeHlub3Mu
+Cj4gPgo+ID4gSSBkbyB3b25kZXIgaG93IG1hbnkgZHJpdmVycyBuZWVkIHRvIGlvbW11X21hcCBp
+biB0aGVpciAtPnByb2JlKCk/Cj4gPiBJJ20gdGhpbmtpbmcgbW92aW5nIHRoZSBhdXRvLWhvb2t1
+cCB0byBhZnRlciBhIHN1Y2Nlc3NmdWwgcHJvYmUoKSwKPiA+IHdpdGggc29tZSBmdW5jdGlvbiBh
+IGRyaXZlciBjb3VsZCBjYWxsIGlmIHRoZXkgbmVlZCBtYXBwaW5nIGluIHByb2JlLAo+ID4gbWln
+aHQgYmUgYSB3YXkgdG8gZXZlbnR1YWxseSBnZXQgcmlkIG9mIHRoZSBibGFja2xpc3QuICBCdXQg
+SSd2ZSBubwo+ID4gaWRlYSBob3cgdG8gZmluZCB0aGUgc3Vic2V0IG9mIGRyaXZlcnMgdGhhdCB3
+b3VsZCBiZSBicm9rZW4gd2l0aG91dCBhCj4gPiBkbWFfc2V0dXBfaW9tbXVfc3R1ZmYoKSBjYWxs
+IGluIHRoZWlyIHByb2JlLgo+Cj4gV291bGRuJ3QgaGVscCBtdWNoLiBUaGF0IHBhcnRpY3VsYXIg
+aXNzdWUgaXMgbm90aGluZyB0byBkbyB3aXRoIERNQSBvcHMKPiByZWFsbHksIGl0J3MgYWJvdXQg
+SU9NTVUgaW5pdGlhbGlzYXRpb24uIE9uIHNvbWV0aGluZyBsaWtlIFNNTVV2MyB0aGVyZQo+IGlz
+IGxpdGVyYWxseSBubyB3YXkgdG8gdHVybiB0aGUgdGhpbmcgb24gd2l0aG91dCBibG9ja2luZyB1
+bmtub3duCj4gdHJhZmZpYyAtIGl0ICpoYXMqIHRvIGhhdmUgc3RyZWFtIHRhYmxlIGVudHJpZXMg
+cHJvZ3JhbW1lZCBiZWZvcmUgaXQgY2FuCj4gZXZlbiBhbGxvdyBzdHVmZiB0byBieXBhc3MuCgpm
+d2l3LCBvbiB0aGVzZSBzZG04NTAgbGFwdG9wcyAoYW5kIEkgdGhpbmsgc2RtODQ1IGJvYXJkcyBs
+aWtlIG10cCBhbmQKZGI4NDVjKSB0aGUgU01NVSAodjIpIGlzIHRha2VuIG91dCBvZiBieXBhc3Mg
+YnkgdGhlIGJvb3Rsb2FkZXIuICBCam9ybgpoYXMgc29tZSBwYXRjaGVzIGZvciBhcm0tc21tdSB0
+byByZWFkLWJhY2sgdGhlIHN0YXRlIGF0IGJvb3QuCgooQWx0aG91Z2ggb2xkZXIgZGV2aWNlcyB3
+ZXJlIGJvb3Rpbmcgd2l0aCBkaXNwbGF5IGVuYWJsZWQgYnV0IFNNTVUgaW4gYnlwYXNzLikKCj4g
+VGhlIGFuc3dlciBpcyBlaXRoZXIgdG8gZWl0aGVyIHBheSBhdHRlbnRpb24gdG8gdGhlICJRdWll
+c2NlIGFsbCBETUEKPiBjYXBhYmxlIGRldmljZXMiIHBhcnQgb2YgdGhlIGJvb3QgcHJvdG9jb2wg
+KHdoaWNoIGhhcyBiZWVuIHRoZXJlIHNpbmNlCj4gcHJldHR5IG11Y2ggZm9yZXZlciksIG9yIHRv
+IGNvbWUgdXAgd2l0aCBzb21lIHJvYnVzdCB3YXkgb2YKPiBjb21tdW5pY2F0aW5nICJsaXZlIiBi
+b290LXRpbWUgbWFwcGluZ3MgdG8gSU9NTVUgZHJpdmVycyBzbyB0aGF0IHRoZXkKPiBjYW4gcHJv
+Z3JhbSB0aGVtc2VsdmVzIGFwcHJvcHJpYXRlbHkgZHVyaW5nIHByb2JlLgoKVW5mb3J0dW5hdGVs
+eSBkaXNwbGF5IGxpdCB1cCBieSBib290bG9hZGVyIGlzIGJhc2ljYWxseSB1YmlxdWl0b3VzLgpF
+dmVyeSBzaW5nbGUgYW5kcm9pZCBwaG9uZSBkb2VzIGl0LiAgQWxsIG9mIHRoZSB3aW5kb3dzLWFy
+bSBsYXB0b3BzIGRvCml0LiAgQmFzaWNhbGx5IDk5LjklIG9mIHRoaW5ncyB0aGF0IGhhdmUgYSBk
+aXNwbGF5IGRvIGl0LiAgSXQncyBhCnRvdWdoIHByb2JsZW0gdG8gc29sdmUgaW52b2x2aW5nIGNs
+a3MsIGdkc2MsIHJlZ3VsYXRvcnMsIGV0YywgaW4KYWRkaXRpb24gdG8gdGhlIGRpc3BsYXkgZHJp
+dmVyLi4gYW5kIHNhZGx5IG5vdyBzbW11LiAgQW5kIGRldmljZXMKd2hlcmUgd2UgY2FuIG1ha2Ug
+Y2hhbmdlcyB0byBhbmQgdXBkYXRlIHRoZSBmaXJtd2FyZSBhcmUgcmF0aGVyIHJhcmUuClNvIHRo
+ZXJlIGlzIHJlYWxseSBubyBvcHRpb24gdG8gaWdub3JlIHRoaXMgcHJvYmxlbS4KCkkgZ3Vlc3Mg
+aWYgd2UgaGFkIHNvbWUgZWFybHktcXVpcmtzIG1lY2hhbmlzbSBsaWtlIHg4NiBkb2VzLCB3ZSBj
+b3VsZAptYXNoIHRoZSBkaXNwbGF5IG9mZiBlYXJseSBpbiBib290LiAgVGhhdCB3b3VsZCBiZSBh
+biBlYXN5IHNvbHV0aW9uLgpBbHRob3VnaCBJJ2QgcHJlZmVyIGEgcHJvcGVyIHNvbHV0aW9uIHNv
+IHRoYXQgYW5kcm9pZCBwaG9uZXMgYXJlbid0CmNhcnJ5aW5nIGFyb3VuZCBlbm9ybW91cyBzdGFj
+a3Mgb2YgaGFjayBwYXRjaGVzIHRvIGFjaGlldmUgYSBzbW9vdGgKZmxpY2tlci1mcmVlIGJvb3Qu
+CgpJIHN1cHBvc2UgYXJtLXNtbXUgY291bGQgcmVhbGl6ZSB0aGF0IHRoZSBjb250ZXh0IGJhbmsg
+aXMgYWxyZWFkeQp0YWtlbiBvdXQgb2YgYnlwYXNzLi4gIGFsdGhvdWdoIEknbSBub3QgZW50aXJl
+bHkgc3VyZSBpZiB3ZSBjYW4gYXNzdW1lCnRoYXQgdGhlIENQVSB3b3VsZCBiZSBhYmxlIHRvIHJl
+YWQgYmFjayB0aGUgcGFnZXRhYmxlIHNldHVwIGJ5IHRoZQpib290bG9hZGVyLiAgTWF5YmUgVml2
+ZWsgaGFzIGFuIGlkZWEgYWJvdXQgdGhhdD8KCkJSLAotUgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVu
+b0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
