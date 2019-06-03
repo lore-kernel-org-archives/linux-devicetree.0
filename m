@@ -1,79 +1,173 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Mon, 3 Jun 2019 12:04:18 +0200
-Message-ID: <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
-References: <20190531035348.7194-1-elder@linaro.org> <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
- <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org> <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
- <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org> <20190531233306.GB25597@minitux>
- <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
+Date: Mon, 3 Jun 2019 03:44:15 -0700
+Message-ID: <CAF6AEGuFyk1DJWUcQTnW=xsEUhYTYJccjzHJFxvipK4M8UdrUA@mail.gmail.com>
+References: <20181201165348.24140-1-robdclark@gmail.com>
+ <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
+ <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
+ <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
+ <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
+ <4864dc3e-6e04-43e5-32c8-2cf5a0705fe5@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Alex Elder <elder@linaro.org>, Dan Williams <dcbw@redhat.com>, David Miller <davem@davemloft.net>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, evgreen@chromium.org, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <4864dc3e-6e04-43e5-32c8-2cf5a0705fe5@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: freedreno <freedreno@lists.freedesktop.org>, Archit Taneja <architt@codeaurora.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Doug Anderson <dianders@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Tomasz Figa <tfiga@chromium.org>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 1, 2019 at 1:59 AM Subash Abhinov Kasiviswanathan
-<subashab@codeaurora.org> wrote:
-> On 2019-05-31 17:33, Bjorn Andersson wrote:
-> > On Fri 31 May 13:47 PDT 2019, Alex Elder wrote:
-> >> On 5/31/19 2:19 PM, Arnd Bergmann wrote:
-> > But any such changes would either be years into the future or for
-> > specific devices and as such not applicable to any/most of devices on
-> > the market now or in the coming years.
-> >
-> >
-> > But as Arnd points out, if the software split between IPA and rmnet is
-> > suboptimal your are encouraged to fix that.
->
-> The split rmnet design was chosen because we could place rmnet
-> over any transport - IPA, PCIe (https://lkml.org/lkml/2018/4/26/1159)
-> or USB.
->
-> rmnet registers a rx handler, so the rmnet packet processing itself
-> happens in the same softirq when packets are queued to network stack
-> by IPA.
-
-I've read up on the implementation some more, and concluded that
-it's mostly a regular protocol wrapper, doing IP over QMAP. There
-is nothing wrong with the basic concept I think, and as you describe
-this is an abstraction to keep the common bits in one place, and
-have them configured consistently.
-
-A few observations on more details here:
-
-- What I'm worried about most here is the flow control handling on the
-  transmit side. The IPA driver now uses the modern BQL method to
-  control how much data gets submitted to the hardware at any time.
-  The rmnet driver also uses flow control using the
-  rmnet_map_command() function, that blocks tx on the higher
-  level device when the remote side asks us to.
-  I fear that doing flow control for a single physical device on two
-  separate netdev instances is counterproductive and confuses
-  both sides.
-
-- I was a little confused by the location of the rmnet driver in
-  drivers/net/ethernet/... More conventionally, I think as a protocol
-  handler it should go into net/qmap/, with the ipa driver going
-  into drivers/net/qmap/ipa/, similar to what we have fo ethernet,
-  wireless, ppp, appletalk, etc.
-
-- The rx_handler uses gro_cells, which as I understand is meant
-  for generic tunnelling setups and takes another loop through
-  NAPI to aggregate data from multiple queues, but in case of
-  IPA's single-queue receive calling gro directly would be simpler
-  and more efficient.
-
-- I'm still not sure I understand the purpose of the layering with
-  using an rx_handler as opposed to just using
-  EXPORT_SYMBOL(rmnet_rx_handler) and calling that from
-  the hardware driver directly.
-  From the overall design and the rmnet Kconfig description, it
-  appears as though the intention as that rmnet could be a
-  generic wrapper on top of any device, but from the
-  implementation it seems that IPA is not actually usable that
-  way and would always go through IPA.
-
-        Arnd
+T24gTW9uLCBKdW4gMywgMjAxOSBhdCAxMjo1NyBBTSBWaXZlayBHYXV0YW0KPHZpdmVrLmdhdXRh
+bUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4KPgo+Cj4gT24gNi8zLzIwMTkgMTE6NTAgQU0sIFRv
+bWFzeiBGaWdhIHdyb3RlOgo+ID4gT24gTW9uLCBKdW4gMywgMjAxOSBhdCA0OjQwIEFNIFJvYiBD
+bGFyayA8cm9iZGNsYXJrQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPj4gT24gRnJpLCBNYXkgMTAsIDIw
+MTkgYXQgNzozNSBBTSBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+IHdyb3RlOgo+ID4+
+PiBPbiBUdWUsIERlYyA0LCAyMDE4IGF0IDI6MjkgUE0gUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
+bmVsLm9yZz4gd3JvdGU6Cj4gPj4+PiBPbiBTYXQsIERlYyAxLCAyMDE4IGF0IDEwOjU0IEFNIFJv
+YiBDbGFyayA8cm9iZGNsYXJrQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPj4+Pj4gVGhpcyBzb2x2ZXMg
+YSBwcm9ibGVtIHdlIHNlZSB3aXRoIGRybS9tc20sIGNhdXNlZCBieSBnZXR0aW5nCj4gPj4+Pj4g
+aW9tbXVfZG1hX29wcyB3aGlsZSB3ZSBhdHRhY2ggb3VyIG93biBkb21haW4gYW5kIG1hbmFnZSBp
+dCBkaXJlY3RseSBhdAo+ID4+Pj4+IHRoZSBpb21tdSBBUEkgbGV2ZWw6Cj4gPj4+Pj4KPiA+Pj4+
+PiAgICBbMDAwMDAwMDAwMDAwMDAzOF0gdXNlciBhZGRyZXNzIGJ1dCBhY3RpdmVfbW0gaXMgc3dh
+cHBlcgo+ID4+Pj4+ICAgIEludGVybmFsIGVycm9yOiBPb3BzOiA5NjAwMDAwNSBbIzFdIFBSRUVN
+UFQgU01QCj4gPj4+Pj4gICAgTW9kdWxlcyBsaW5rZWQgaW46Cj4gPj4+Pj4gICAgQ1BVOiA3IFBJ
+RDogNzAgQ29tbToga3dvcmtlci83OjEgVGFpbnRlZDogRyAgICAgICAgVyAgICAgICAgIDQuMTku
+MyAjOTAKPiA+Pj4+PiAgICBIYXJkd2FyZSBuYW1lOiB4eHggKERUKQo+ID4+Pj4+ICAgIFdvcmtx
+dWV1ZTogZXZlbnRzIGRlZmVycmVkX3Byb2JlX3dvcmtfZnVuYwo+ID4+Pj4+ICAgIHBzdGF0ZTog
+ODBjMDAwMDkgKE56Y3YgZGFpZiArUEFOICtVQU8pCj4gPj4+Pj4gICAgcGMgOiBpb21tdV9kbWFf
+bWFwX3NnKzB4N2MvMHgyYzgKPiA+Pj4+PiAgICBsciA6IGlvbW11X2RtYV9tYXBfc2crMHg0MC8w
+eDJjOAo+ID4+Pj4+ICAgIHNwIDogZmZmZmZmODAwOTVlYjRmMAo+ID4+Pj4+ICAgIHgyOTogZmZm
+ZmZmODAwOTVlYjRmMCB4Mjg6IDAwMDAwMDAwMDAwMDAwMDAKPiA+Pj4+PiAgICB4Mjc6IGZmZmZm
+ZmMwZjk0MzE1NzggeDI2OiAwMDAwMDAwMDAwMDAwMDAwCj4gPj4+Pj4gICAgeDI1OiAwMDAwMDAw
+MGZmZmZmZmZmIHgyNDogMDAwMDAwMDAwMDAwMDAwMwo+ID4+Pj4+ICAgIHgyMzogMDAwMDAwMDAw
+MDAwMDAwMSB4MjI6IGZmZmZmZmMwZmE5YWMwMTAKPiA+Pj4+PiAgICB4MjE6IDAwMDAwMDAwMDAw
+MDAwMDAgeDIwOiBmZmZmZmZjMGZhYjQwOTgwCj4gPj4+Pj4gICAgeDE5OiBmZmZmZmZjMGZhYjQw
+OTgwIHgxODogMDAwMDAwMDAwMDAwMDAwMwo+ID4+Pj4+ICAgIHgxNzogMDAwMDAwMDAwMDAwMDFj
+NCB4MTY6IDAwMDAwMDAwMDAwMDAwMDcKPiA+Pj4+PiAgICB4MTU6IDAwMDAwMDAwMDAwMDAwMGUg
+eDE0OiBmZmZmZmZmZmZmZmZmZmZmCj4gPj4+Pj4gICAgeDEzOiBmZmZmMDAwMDAwMDAwMDAwIHgx
+MjogMDAwMDAwMDAwMDAwMDAyOAo+ID4+Pj4+ICAgIHgxMTogMDEwMTAxMDEwMTAxMDEwMSB4MTA6
+IDdmN2Y3ZjdmN2Y3ZjdmN2YKPiA+Pj4+PiAgICB4OSA6IDAwMDAwMDAwMDAwMDAwMDAgeDggOiBm
+ZmZmZmZjMGZhYjQwOWEwCj4gPj4+Pj4gICAgeDcgOiAwMDAwMDAwMDAwMDAwMDAwIHg2IDogMDAw
+MDAwMDAwMDAwMDAwMgo+ID4+Pj4+ICAgIHg1IDogMDAwMDAwMDEwMDAwMDAwMCB4NCA6IDAwMDAw
+MDAwMDAwMDAwMDAKPiA+Pj4+PiAgICB4MyA6IDAwMDAwMDAwMDAwMDAwMDEgeDIgOiAwMDAwMDAw
+MDAwMDAwMDAyCj4gPj4+Pj4gICAgeDEgOiBmZmZmZmZjMGY5NDMxNTc4IHgwIDogMDAwMDAwMDAw
+MDAwMDAwMAo+ID4+Pj4+ICAgIFByb2Nlc3Mga3dvcmtlci83OjEgKHBpZDogNzAsIHN0YWNrIGxp
+bWl0ID0gMHgwMDAwMDAwMDE3ZDA4ZmZiKQo+ID4+Pj4+ICAgIENhbGwgdHJhY2U6Cj4gPj4+Pj4g
+ICAgIGlvbW11X2RtYV9tYXBfc2crMHg3Yy8weDJjOAo+ID4+Pj4+ICAgICBfX2lvbW11X21hcF9z
+Z19hdHRycysweDcwLzB4ODQKPiA+Pj4+PiAgICAgZ2V0X3BhZ2VzKzB4MTcwLzB4MWU4Cj4gPj4+
+Pj4gICAgIG1zbV9nZW1fZ2V0X2lvdmErMHg4Yy8weDEyOAo+ID4+Pj4+ICAgICBfbXNtX2dlbV9r
+ZXJuZWxfbmV3KzB4NmMvMHhjOAo+ID4+Pj4+ICAgICBtc21fZ2VtX2tlcm5lbF9uZXcrMHg0Yy8w
+eDU4Cj4gPj4+Pj4gICAgIGRzaV90eF9idWZfYWxsb2NfNmcrMHg0Yy8weDhjCj4gPj4+Pj4gICAg
+IG1zbV9kc2lfaG9zdF9tb2Rlc2V0X2luaXQrMHhjOC8weDEwOAo+ID4+Pj4+ICAgICBtc21fZHNp
+X21vZGVzZXRfaW5pdCsweDU0LzB4MThjCj4gPj4+Pj4gICAgIF9kcHVfa21zX2RybV9vYmpfaW5p
+dCsweDQzMC8weDQ3NAo+ID4+Pj4+ICAgICBkcHVfa21zX2h3X2luaXQrMHg1ZjgvMHg2YjQKPiA+
+Pj4+PiAgICAgbXNtX2RybV9iaW5kKzB4MzYwLzB4NmM4Cj4gPj4+Pj4gICAgIHRyeV90b19icmlu
+Z191cF9tYXN0ZXIucGFydC43KzB4MjgvMHg3MAo+ID4+Pj4+ICAgICBjb21wb25lbnRfbWFzdGVy
+X2FkZF93aXRoX21hdGNoKzB4ZTgvMHgxMjQKPiA+Pj4+PiAgICAgbXNtX3BkZXZfcHJvYmUrMHgy
+OTQvMHgyYjQKPiA+Pj4+PiAgICAgcGxhdGZvcm1fZHJ2X3Byb2JlKzB4NTgvMHhhNAo+ID4+Pj4+
+ICAgICByZWFsbHlfcHJvYmUrMHgxNTAvMHgyOTQKPiA+Pj4+PiAgICAgZHJpdmVyX3Byb2JlX2Rl
+dmljZSsweGFjLzB4ZTgKPiA+Pj4+PiAgICAgX19kZXZpY2VfYXR0YWNoX2RyaXZlcisweGE0LzB4
+YjQKPiA+Pj4+PiAgICAgYnVzX2Zvcl9lYWNoX2RydisweDk4LzB4YzgKPiA+Pj4+PiAgICAgX19k
+ZXZpY2VfYXR0YWNoKzB4YWMvMHgxMmMKPiA+Pj4+PiAgICAgZGV2aWNlX2luaXRpYWxfcHJvYmUr
+MHgyNC8weDMwCj4gPj4+Pj4gICAgIGJ1c19wcm9iZV9kZXZpY2UrMHgzOC8weDk4Cj4gPj4+Pj4g
+ICAgIGRlZmVycmVkX3Byb2JlX3dvcmtfZnVuYysweDc4LzB4YTQKPiA+Pj4+PiAgICAgcHJvY2Vz
+c19vbmVfd29yaysweDI0Yy8weDNkYwo+ID4+Pj4+ICAgICB3b3JrZXJfdGhyZWFkKzB4MjgwLzB4
+MzYwCj4gPj4+Pj4gICAgIGt0aHJlYWQrMHgxMzQvMHgxM2MKPiA+Pj4+PiAgICAgcmV0X2Zyb21f
+Zm9yaysweDEwLzB4MTgKPiA+Pj4+PiAgICBDb2RlOiBkMjgwMDAwNCA5MTAwMDcyNSA2YjE3MDM5
+ZiA1NDAwMDQ4YSAoZjk0MDFmNDApCj4gPj4+Pj4gICAgLS0tWyBlbmQgdHJhY2UgZjIyZGRhNTdm
+MzY0OGUyYyBdLS0tCj4gPj4+Pj4gICAgS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IEZhdGFs
+IGV4Y2VwdGlvbgo+ID4+Pj4+ICAgIFNNUDogc3RvcHBpbmcgc2Vjb25kYXJ5IENQVXMKPiA+Pj4+
+PiAgICBLZXJuZWwgT2Zmc2V0OiBkaXNhYmxlZAo+ID4+Pj4+ICAgIENQVSBmZWF0dXJlczogMHgw
+LDIyODAyYTE4Cj4gPj4+Pj4gICAgTWVtb3J5IExpbWl0OiBub25lCj4gPj4+Pj4KPiA+Pj4+PiBU
+aGUgcHJvYmxlbSBpcyB0aGF0IHdoZW4gZHJtL21zbSBkb2VzIGl0J3Mgb3duIGlvbW11X2F0dGFj
+aF9kZXZpY2UoKSwKPiA+Pj4+PiBub3cgdGhlIGRvbWFpbiByZXR1cm5lZCBieSBpb21tdV9nZXRf
+ZG9tYWluX2Zvcl9kZXYoKSBpcyBkcm0vbXNtJ3MKPiA+Pj4+PiBkb21haW4sIGFuZCBpdCBkb2Vz
+bid0IGhhdmUgZG9tYWluLT5pb3ZhX2Nvb2tpZS4KPiA+Pj4+Pgo+ID4+Pj4+IFdlIGtpbmQgb2Yg
+YXZvaWRlZCB0aGlzIHByb2JsZW0gcHJpb3IgdG8gc2RtODQ1L2RwdSBiZWNhdXNlIHRoZSBpb21t
+dQo+ID4+Pj4+IHdhcyBhdHRhY2hlZCB0byB0aGUgbWRwIG5vZGUgaW4gZHQsIHdoaWNoIGlzIGEg
+Y2hpbGQgb2YgdGhlIHRvcGxldmVsCj4gPj4+Pj4gbWRzcyBub2RlICh3aGljaCBjb3JyZXNwb25k
+cyB0byB0aGUgZGV2IHBhc3NlZCBpbiBkbWFfbWFwX3NnKCkpLiAgQnV0Cj4gPj4+Pj4gd2l0aCBz
+ZG04NDUsIG5vdyB0aGUgaW9tbXUgaXMgYXR0YWNoZWQgYXQgdGhlIG1kc3MgbGV2ZWwgc28gd2Ug
+aGl0IHRoZQo+ID4+Pj4+IGlvbW11X2RtYV9vcHMgaW4gZG1hX21hcF9zZygpLgo+ID4+Pj4+Cj4g
+Pj4+Pj4gQnV0IGF1dG8gYWxsb2NhdGluZy9hdHRhY2hpbmcgYSBkb21haW4gYmVmb3JlIHRoZSBk
+cml2ZXIgaXMgcHJvYmVkIHdhcwo+ID4+Pj4+IGFscmVhZHkgYSBibG9ja2luZyBwcm9ibGVtIGZv
+ciBlbmFibGluZyBwZXItY29udGV4dCBwYWdldGFibGVzIGZvciB0aGUKPiA+Pj4+PiBHUFUuICBU
+aGlzIHByb2JsZW0gaXMgYWxzbyBub3cgc29sdmVkIHdpdGggdGhpcyBwYXRjaC4KPiA+Pj4+Pgo+
+ID4+Pj4+IEZpeGVzOiA5Nzg5MGJhOTI4OWMgZG1hLW1hcHBpbmc6IGRldGVjdCBhbmQgY29uZmln
+dXJlIElPTU1VIGluIG9mX2RtYV9jb25maWd1cmUKPiA+Pj4+PiBUZXN0ZWQtYnk6IERvdWdsYXMg
+QW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPiA+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBS
+b2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+Cj4gPj4+Pj4gLS0tCj4gPj4+Pj4gVGhpcyBp
+cyBhbiBhbHRlcm5hdGl2ZS9yZXBsYWNlbWVudCBmb3IgWzFdLiAgV2hhdCBpdCBsYWNrcyBpbiBl
+bGVnYW5jZQo+ID4+Pj4+IGl0IG1ha2VzIHVwIGZvciBpbiBwcmFjdGljYWxpdHkgOy0pCj4gPj4+
+Pj4KPiA+Pj4+PiBbMV0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3BhdGNoLzI2
+NDkzMC8KPiA+Pj4+Pgo+ID4+Pj4+ICAgZHJpdmVycy9vZi9kZXZpY2UuYyB8IDIyICsrKysrKysr
+KysrKysrKysrKysrKysKPiA+Pj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCsp
+Cj4gPj4+Pj4KPiA+Pj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9kZXZpY2UuYyBiL2RyaXZl
+cnMvb2YvZGV2aWNlLmMKPiA+Pj4+PiBpbmRleCA1OTU3Y2Q0ZmEyNjIuLjE1ZmZlZTAwZmIyMiAx
+MDA2NDQKPiA+Pj4+PiAtLS0gYS9kcml2ZXJzL29mL2RldmljZS5jCj4gPj4+Pj4gKysrIGIvZHJp
+dmVycy9vZi9kZXZpY2UuYwo+ID4+Pj4+IEBAIC03Miw2ICs3MiwxNCBAQCBpbnQgb2ZfZGV2aWNl
+X2FkZChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpvZmRldikKPiA+Pj4+PiAgICAgICAgICByZXR1
+cm4gZGV2aWNlX2FkZCgmb2ZkZXYtPmRldik7Cj4gPj4+Pj4gICB9Cj4gPj4+Pj4KPiA+Pj4+PiAr
+c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgaW9tbXVfYmxhY2tsaXN0W10gPSB7Cj4g
+Pj4+Pj4gKyAgICAgICB7IC5jb21wYXRpYmxlID0gInFjb20sbWRwNCIgfSwKPiA+Pj4+PiArICAg
+ICAgIHsgLmNvbXBhdGlibGUgPSAicWNvbSxtZHNzIiB9LAo+ID4+Pj4+ICsgICAgICAgeyAuY29t
+cGF0aWJsZSA9ICJxY29tLHNkbTg0NS1tZHNzIiB9LAo+ID4+Pj4+ICsgICAgICAgeyAuY29tcGF0
+aWJsZSA9ICJxY29tLGFkcmVubyIgfSwKPiA+Pj4+PiArICAgICAgIHt9Cj4gPj4+Pj4gK307Cj4g
+Pj4+PiBOb3QgY29tcGxldGVseSBjbGVhciB0byB3aGV0aGVyIHRoaXMgaXMgc3RpbGwgbmVlZGVk
+IG9yIG5vdCwgYnV0IHRoaXMKPiA+Pj4+IHJlYWxseSB3b24ndCBzY2FsZS4gV2h5IGNhbid0IHRo
+ZSBkcml2ZXIgZm9yIHRoZXNlIGRldmljZXMgb3ZlcnJpZGUKPiA+Pj4+IHdoYXRldmVyIGhhcyBi
+ZWVuIHNldHVwIGJ5IGRlZmF1bHQ/Cj4gPj4+Pgo+ID4+PiBmd2l3LCBhdCB0aGUgbW9tZW50IGl0
+IGlzIG5vdCBuZWVkZWQsIGJ1dCBpdCB3aWxsIGJlY29tZSBuZWVkZWQgYWdhaW4KPiA+Pj4gdG8g
+aW1wbGVtZW50IHBlci1jb250ZXh0IHBhZ2V0YWJsZXMgKGFsdGhvdWdoIEkgc3VwcG9zZSBmb3Ig
+dGhpcyB3ZQo+ID4+PiBvbmx5IG5lZWQgdG8gYmxhY2tsaXN0IHFjb20sYWRyZW5vIGFuZCBub3Qg
+YWxzbyB0aGUgZGlzcGxheSBub2RlcykuCj4gPj4gU28sIGFub3RoZXIgY2FzZSBJJ3ZlIGNvbWUg
+YWNyb3NzLCBvbiB0aGUgZGlzcGxheSBzaWRlLi4gSSdtIHdvcmtpbmcKPiA+PiBvbiBoYW5kbGlu
+ZyB0aGUgY2FzZSB3aGVyZSBib290bG9hZGVyIGVuYWJsZXMgZGlzcGxheSAoYW5kIHRha2VzIGlv
+bW11Cj4gPj4gb3V0IG9mIHJlc2V0KS4uIGFzIHNvb24gYXMgRE1BIGRvbWFpbiBnZXRzIGF0dGFj
+aGVkIHdlIGdldCBpb21tdQo+ID4+IGZhdWx0cywgYmVjYXVzZSBib290bG9hZGVyIGhhcyBhbHJl
+YWR5IGNvbmZpZ3VyZWQgZGlzcGxheSBmb3Igc2Nhbm91dC4KPiA+PiBVbmZvcnR1bmF0ZWx5IHRo
+aXMgYWxsIGhhcHBlbnMgYmVmb3JlIGFjdHVhbCBkcml2ZXIgaXMgcHJvYmVkIGFuZCBoYXMKPiA+
+PiBhIGNoYW5jZSB0byBpbnRlcnZlbmUuCj4KPiBUaGluZ3MgYXJlIGJhZCBmb3IgTVRQIHNkbTg0
+NSB0b28gd2hlcmUgdGhlIGJvb3Rsb2FkZXIgc2V0cyB1cCBpb21tdSB0bwo+IGRpc3BsYXkgc3Bs
+YXNoIHNjcmVlbiwgYW5kIHdoZW4gdGhlIGtlcm5lbCByZXNldHMgdGhlIGlvbW11LCB0aGUgbWFw
+cGluZ3MgZ28KPiBmb3IgYSB0b3NzIHJlc3VsdGluZyBpbiBmYXRhbCBmYXVsdHMuCj4gQmpvcm4g
+d2FzIHdvcmtpbmcgb24gc29tZXRoaW5nIHJlY2VudGx5IHRvIGFkZHJlc3MgdGhpcy4gQWRkaW5n
+IGhpbSB0bwo+IHRoZSB0aHJlYWQuCj4KCnllYWgsIEkgd2FzIGhpdHRpbmcgaXQgb24gdGhlIHlv
+Z2EgYzYzMCBsYXB0b3AsIGJ1dCBpdCBpcyB0aGUgaWRlbnRpY2FsIHByb2JsZW0uCgpXZSdkIHdv
+cmtlZCBhcm91bmQgaXQgc28gZmFyIHdpdGggYSBoYWNrIGluIGFybS1zbW11IHRvIHRlbXBvcmFy
+aWx5CmlvcmVtYXAgdGhlIGRpc3BsYXkgY29udHJvbGxlciBibG9jayBhbmQgZGlzYWJsZSBJTlRG
+MSwgd2hpY2ggaXMKKmRlZm4qIG5vdCBhIGdvb2Qgc29sdXRpb24gOy0pCgpCUiwKLVIKCj4KPiBC
+ZXN0IHJlZ2FyZHMKPiBWaXZlawo+Cj4gPj4gSXQncyByYXRoZXIgdW5mb3J0dW5hdGUgdGhhdCB3
+ZSB0cmllZCB0byBiZSBjbGV2ZXIgcmF0aGVyIHRoYW4ganVzdAo+ID4+IG1ha2luZyBkcml2ZXJz
+IGNhbGwgc29tZSBmdW5jdGlvbiB0byBvcHQtaW4gdG8gdGhlIGhvb2t1cCBvZiBkbWEgaW9tbXUK
+PiA+PiBvcHMgOi0oCj4gPiBJIHRoaW5rIGl0IHN0aWxsIHdvcmtzIGZvciB0aGUgOTAlIG9mIGNh
+c2VzIGFuZCBpZiAxMCUgbmVlZHMgc29tZQo+ID4gZXhwbGljaXQgd29yayBpbiB0aGUgZHJpdmVy
+cywgdGhhdCdzIGJldHRlciB0aGFuIHJlcXVpcmluZyAxMDAlIG9mIHRoZQo+ID4gZHJpdmVycyB0
+byBkbyB0aGluZ3MgbWFudWFsbHkuCj4gPgo+ID4gQWRkaW5nIE1hcmVrIHdobyBoYWQgdGhlIHNh
+bWUgcHJvYmxlbSBvbiBFeHlub3MuCj4gPgo+ID4gQmVzdCByZWdhcmRzLAo+ID4gVG9tYXN6Cj4g
+Pgo+ID4+IEJSLAo+ID4+IC1SCj4gPj4KPiA+Pj4gVGhlIHJlYXNvbiBpcyB0aGF0IGluIHRoZSBj
+dXJyZW50IHN0YXRlIHRoZSBjb3JlIGNvZGUgY3JlYXRlcyB0aGUKPiA+Pj4gZmlyc3QgZG9tYWlu
+IGJlZm9yZSB0aGUgZHJpdmVyIGhhcyBhIGNoYW5jZSB0byBpbnRlcnZlbmUgYW5kIHRlbGwgaXQK
+PiA+Pj4gbm90IHRvLiAgQW5kIHRoaXMgcmVzdWx0cyB0aGF0IGRyaXZlciBlbmRzIHVwIHVzaW5n
+IGEgZGlmZmVyZW50Cj4gPj4+IGNvbnRleHQgYmFuayBvbiB0aGUgaW9tbXUgdGhhbiB3aGF0IHRo
+ZSBmaXJtd2FyZSBleHBlY3RzLgo+ID4+Pgo+ID4+PiBJIGd1ZXNzIHRoZSBhbHRlcm5hdGl2ZSBp
+cyB0byBwdXQgc29tZSBwcm9wZXJ0eSBpbiBEVC4uIGJ1dCB0aGF0Cj4gPj4+IGRvZXNuJ3QgcmVh
+bGx5IGZlZWwgcmlnaHQuICBJIGd1ZXNzIHRoZXJlIGFyZW4ndCByZWFsbHkgbWFueSAob3IgYW55
+PykKPiA+Pj4gb3RoZXIgZHJpdmVycyB0aGF0IGhhdmUgdGhpcyBzcGVjaWZpYyBwcm9ibGVtLCBz
+byBJIGRvbid0IHJlYWxseQo+ID4+PiBleHBlY3QgaXQgdG8gYmUgYSBzY2FsaW5nIHByb2JsZW0u
+Cj4gPj4+Cj4gPj4+IFllYWgsIGl0J3MgYSBiaXQgdWdseSwgYnV0IEknbGwgdGFrZSBhIHNtYWxs
+IHVnbHkgd29ya2luZyBoYWNrLCBvdmVyCj4gPj4+IGVsZWdhbnQgYnV0IG5vbi13b3JraW5nIGFu
+eSBkYXkgOy0pLi4uIGJ1dCBpZiBzb21lb25lIGhhcyBhIGJldHRlcgo+ID4+PiBpZGVhIHRoZW4g
+SSdtIGFsbCBlYXJzLgo+ID4+Pgo+ID4+PiBCUiwKPiA+Pj4gLVIKPgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
