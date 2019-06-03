@@ -1,283 +1,49 @@
-From: Richard Gong <richard.gong@linux.intel.com>
-Subject: A potential broken at platform driver?
-Date: Mon, 3 Jun 2019 10:57:18 -0500
-Message-ID: <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
-References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
- <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
- <20190528232224.GA29225@kroah.com>
- <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------58DC67A8AB4E5FBBD2CB2F4D"
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [RFC PATCH 12/57] of: platform: Use bus_find_device_by_of_node helper
+Date: Mon,  3 Jun 2019 16:49:38 +0100
+Message-ID: <1559577023-558-13-git-send-email-suzuki.poulose@arm.com>
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sen.li@intel.com, Richard Gong <richard.gong@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, suzuki.poulose@arm.com, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------58DC67A8AB4E5FBBD2CB2F4D
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Switch to using the bus_find_device_by_of_node helper
 
-
-Hi Greg,
-
-Following your suggestion, I replaced devm_device_add_groups() with 
-.group = rus_groups in my version #4 submission. But I found out that 
-RSU driver outputs the garbage data if I use .group = rsu_groups.
-
-To make RSU driver work properly, I have to revert the change at version 
-#4 and use devm_device_add_groups() again. Sorry, I didn't catch this 
-problem early.
-
-I did some debug & below are captured log, you can see priv pointer get 
-messed at current_image_show(). I am not sure if something related to 
-platform driver work properly. I attach my debug patch in this mail.
-
-1. Using .groups = rsu_groups,
-
-[    1.191115] *** rsu_status_callback:
-[    1.194782] res->a1=2000000
-[    1.197588] res->a1=0
-[    1.199865] res->a2=0
-[    1.202150] res->a3=0
-[    1.204433] priv=0xffff80007aa28e80
-[    1.207933] version=0, state=0, current_image=2000000, fail_image=0, 
-error_location=0, error_details=0
-[    1.217249] *** stratix10_rsu_probe: priv=0xffff80007aa28e80
-root@stratix10:/sys/bus/platform/drivers/stratix10-rsu# cat current_image
-[   38.849341] *** current_image_show: priv=0xffff80007aa28d00
-... output garbage data
-priv pointer got changed
-
-2. Using devm_device_add_groups
-
-[    1.191196] *** rsu_status_callback:
-[    1.194864] res->a1=2000000
-[    1.197660] res->a1=0
-[    1.199928] res->a2=0
-[    1.202204] res->a3=0
-[    1.204479] priv=0xffff80007a427e80
-[    1.207968] version=0, state=0, current_image=2000000, fail_image=0, 
-error_location=0, error_details=0
-[    1.217322] *** stratix10_rsu_probe: priv=0xffff80007a427e80
-root@stratix10:/sys/devices/platform/stratix10-rsu.0# cat current_image
-[   39.032648] *** current_image_show: priv=0xffff80007a427e80
-0x2000000
- ... output all correct data and correct priv pointer
-
-I checked kernel sources and observed that .groups = xx_groups are 
-widely used in 
-device/misdevice/device_type/device_driver/bus_driver/pci_driver etc, 
-but not in platform driver.
-
-A few platform drivers which does utilize groups,
-1. driver/s390/char/sclp.c does use .group = xx_groups, but it use the 
-global variables for data exchanges between functions.
-2. driver/firmware/arm_scpi.c doesn't use .group = xx_groups, instead it 
-use devm_device_add_groups().
-
-Regards,
-Richard
-
-
-
-On 5/29/19 9:55 AM, Richard Gong wrote:
-> 
-> Hi Greg,
-> 
-> On 5/28/19 6:22 PM, Greg KH wrote:
->> On Tue, May 28, 2019 at 03:20:31PM -0500, richard.gong@linux.intel.com 
->> wrote:
->>> +/**
->>> + * rsu_send_msg() - send a message to Intel service layer
->>> + * @priv: pointer to rsu private data
->>> + * @command: RSU status or update command
->>> + * @arg: the request argument, the bitstream address or notify status
->>> + * @callback: function pointer for the callback (status or update)
->>> + *
->>> + * Start an Intel service layer transaction to perform the SMC call 
->>> that
->>> + * is necessary to get RSU boot log or set the address of bitstream to
->>> + * boot after reboot.
->>> + *
->>> + * Returns 0 on success or -ETIMEDOUT on error.
->>> + */
->>> +static int rsu_send_msg(struct stratix10_rsu_priv *priv,
->>> +            enum stratix10_svc_command_code command,
->>> +    unsigned long arg,
->>> +    void (*callback)(struct stratix10_svc_client *client,
->>> +             struct stratix10_svc_cb_data *data))
->>> +{
->>> +    struct stratix10_svc_client_msg msg;
->>> +    int ret;
->>> +
->>> +    mutex_lock(&priv->lock);
->>> +    reinit_completion(&priv->completion);
->>> +    priv->client.receive_cb = callback;
->>> +
->>> +    msg.command = command;
->>> +    if (arg)
->>> +        msg.arg[0] = arg;
->>> +
->>> +    ret = stratix10_svc_send(priv->chan, &msg);
->>
->> meta-question, can you send messages that are on the stack and not in
->> DMA-able memory?  Or should this be a dynamicly created variable so you
->> know it can work properly with DMA?
->>
->> And how big is that structure, will it mess with stack sizes?
->>
-> 
-> stratix10_svc_send() is a function from Intel Stratix10 service layer 
-> driver, which is used by service clients (RSU and FPGA manager drivers 
-> as now) to add a message to the service layer driver's queue for being 
-> sent to the secure world via SMC call.
-> 
-> It is not DMA related, we send messages via FIFO API.
-> 
-> The size of FIFO is sizeof(struct stratix10_svc_data) * 
-> SVC_NUM_DATA_IN_FIFO, SVC_NUM_DATA_IN_FIFO is defined as 32.
-> 
-> fifo_size = sizeof(struct stratix10_svc_data) *     SVC_NUM_DATA_IN_FIFO;
-> ret = kfifo_alloc(&controller->svc_fifo, fifo_size, GFP_KERNEL);
-> if (ret) {
->      dev_err(dev, "failed to allocate FIFO\n");
->          return ret;
-> }
-> spin_lock_init(&controller->svc_fifo_lock);
-> 
-> It will not mess with stack sizes.
-> 
->> thanks,
->>
->> greg k-h
->>
-> 
-> Regards,
-> Richard
-
---------------58DC67A8AB4E5FBBD2CB2F4D
-Content-Type: text/x-patch;
- name="0001-add-just-for-debug.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0001-add-just-for-debug.patch"
-
->From 2b07d31cf349b1353e7405e196e8e3dd7196ad2d Mon Sep 17 00:00:00 2001
-From: Richard Gong <richard.gong@intel.com>
-Date: Wed, 29 May 2019 15:51:45 -0500
-Subject: [PATCH] add just for debug, this patch will be removed from the
- upstream version 5 submission
-
-Signed-off-by: Richard Gong <richard.gong@intel.com>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/firmware/stratix10-rsu.c | 42 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 2 deletions(-)
+ drivers/of/platform.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/firmware/stratix10-rsu.c b/drivers/firmware/stratix10-rsu.c
-index 8028d0d..c868d97 100644
---- a/drivers/firmware/stratix10-rsu.c
-+++ b/drivers/firmware/stratix10-rsu.c
-@@ -23,6 +23,13 @@
- 
- #define RSU_TIMEOUT	(msecs_to_jiffies(SVC_RSU_REQUEST_TIMEOUT_MS))
- 
-+/*
-+ * for debug purpose:
-+ * set the global variable to make sure data is
-+ * data is correct with cat command
-+ */
-+//static int currentImage = 0;
-+
- typedef void (*rsu_callback)(struct stratix10_svc_client *client,
- 			     struct stratix10_svc_cb_data *data);
- 
-@@ -69,6 +76,14 @@ static void rsu_status_callback(struct stratix10_svc_client *client,
- 	struct stratix10_rsu_priv *priv = client->priv;
- 	struct arm_smccc_res *res = (struct arm_smccc_res *)data->kaddr1;
- 
-+	/* for debug purpose */
-+	printk("*** %s: \n", __func__);
-+	printk("res->a1=%lx\n", res->a0);
-+	printk("res->a1=%lx\n", res->a1);
-+	printk("res->a2=%lx\n", res->a2);
-+	printk("res->a3=%lx\n", res->a3);
-+	printk("priv=%pf\n", priv);
-+
- 	if (data->status == BIT(SVC_STATUS_RSU_OK)) {
- 		priv->status.version = FIELD_GET(RSU_VERSION_MASK,
- 						 res->a2);
-@@ -79,6 +94,15 @@ static void rsu_status_callback(struct stratix10_svc_client *client,
- 			FIELD_GET(RSU_ERROR_LOCATION_MASK, res->a3);
- 		priv->status.error_details =
- 			FIELD_GET(RSU_ERROR_DETAIL_MASK, res->a3);
-+
-+		/* for debug purpose */
-+		printk("version=%lx\, state=%lx, current_image=%lx, fail_image=%lx, error_location=%lx, error_details=%lx\n",
-+			priv->status.version, priv->status.state, priv->status.current_image, priv->status.fail_image,
-+			priv->status.error_location, priv->status.error_details);
-+
-+		/* for debug purpose */
-+		//currentImage = res->a0;
-+
- 	} else {
- 		dev_err(client->dev, "COMMAND_RSU_STATUS returned 0x%lX\n",
- 			res->a0);
-@@ -177,9 +201,12 @@ static ssize_t current_image_show(struct device *dev,
- {
- 	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
- 
-+	printk("*** %s: priv=%pf\n", __func__, priv);
- 	if (!priv)
- 		return -ENODEV;
- 
-+	/* for debug purpose */
-+	//return sprintf(buf, "%ld", currentImage);
- 	return sprintf(buf, "%ld", priv->status.current_image);
- }
- 
-@@ -368,7 +395,6 @@ static int stratix10_rsu_probe(struct platform_device *pdev)
- 	}
- 
- 	init_completion(&priv->completion);
--	platform_set_drvdata(pdev, priv);
- 
- 	/* status is only updated after reboot */
- 	ret = rsu_send_msg(priv, COMMAND_RSU_STATUS,
-@@ -378,6 +404,18 @@ static int stratix10_rsu_probe(struct platform_device *pdev)
- 		stratix10_svc_free_channel(priv->chan);
- 	}
- 
-+#if 1 
-+	/* data will be correct if use devm_device_add_groups()*/
-+	ret = devm_device_add_groups(dev, rsu_groups);
-+	if (ret) {
-+		dev_err(dev, "unable to create sysfs group");
-+		stratix10_svc_free_channel(priv->chan);
-+	}
-+#endif
-+
-+	printk("*** %s: priv=%pf\n", __func__, priv);
-+	platform_set_drvdata(pdev, priv);
-+
- 	return ret;
- }
- 
-@@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
- 	.remove = stratix10_rsu_remove,
- 	.driver = {
- 		.name = "stratix10-rsu",
--		.groups = rsu_groups,
-+//		.groups = rsu_groups,
- 	},
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 04ad312..b1e3a51 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -37,11 +37,6 @@ static const struct of_device_id of_skipped_node_table[] = {
+ 	{} /* Empty terminated list */
  };
  
+-static int of_dev_node_match(struct device *dev, void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+ /**
+  * of_find_device_by_node - Find the platform_device associated with a node
+  * @np: Pointer to device tree node
+@@ -55,7 +50,7 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
+ {
+ 	struct device *dev;
+ 
+-	dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
++	dev = bus_find_device_by_of_node(&platform_bus_type, NULL, np);
+ 	return dev ? to_platform_device(dev) : NULL;
+ }
+ EXPORT_SYMBOL(of_find_device_by_node);
 -- 
 2.7.4
-
-
---------------58DC67A8AB4E5FBBD2CB2F4D--
