@@ -1,167 +1,125 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [v4 3/3] drm/mediatek: add mipi_tx driver for mt8183
-Date: Mon, 3 Jun 2019 10:53:33 +0800
-Message-ID: <1559530413.32185.8.camel@mtksdaap41>
-References: <20190601095235.9194-1-jitao.shi@mediatek.com>
- <20190601095235.9194-4-jitao.shi@mediatek.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
+Subject: [PATCH v10 0/7] Add support for mt8183 SCP.
+Date: Mon,  3 Jun 2019 11:45:05 +0800
+Message-ID: <20190603034529.154969-1-pihsun@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190601095235.9194-4-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, yingjoe.chen@mediatek.com, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sean Paul <seanpaul@chromium.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Pi-Hsun Shih <pihsun@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Erin Lo <erin.lo@mediatek.com>, Guenter Roeck <groeck@chromium.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-mediatek@lists.infradead.org>, "open list:REMOTE PROCESSOR
+        REMOTEPROC SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, Nicolas Boichat <drinkcat@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEppdGFvOgoKT24gU2F0LCAyMDE5LTA2LTAxIGF0IDE3OjUyICswODAwLCBKaXRhbyBTaGkg
-d3JvdGU6Cj4gVGhpcyBwYXRjaCBhZGQgbXQ4MTgzIG1pcGlfdHggZHJpdmVyLgo+IEFuZCBhbHNv
-IHN1cHBvcnQgb3RoZXIgY2hpcHMgdGhhdCB1c2UgdGhlIHNhbWUgYmluZGluZyBhbmQgZHJpdmVy
-Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4K
-PiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgIHwg
-ICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmMgICAgICAgIHwg
-ICAyICsKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmggICAgICAgIHwg
-ICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19tdDgxODNfbWlwaV90eC5jIHwg
-MTYyICsrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDQgZmlsZXMgY2hhbmdlZCwgMTY2IGlu
-c2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfbXQ4MTgzX21pcGlfdHguYwo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvTWFrZWZpbGUKPiBp
-bmRleCAyYzhkZTFmNWE1ZWUuLjgwNjdhNGJlODMxMSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvTWFrZWZpbGUKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-TWFrZWZpbGUKPiBAQCAtMTMsNiArMTMsNyBAQCBtZWRpYXRlay1kcm0teSA6PSBtdGtfZGlzcF9j
-b2xvci5vIFwKPiAgCQkgIG10a19kc2kubyBcCj4gIAkJICBtdGtfbWlwaV90eC5vIFwKPiAgCQkg
-IG10a19tdDgxNzNfbWlwaV90eC5vIFwKPiArCQkgIG10a19tdDgxODNfbWlwaV90eC5vIFwKPiAg
-CQkgIG10a19kcGkubwo+ICAKPiAgb2JqLSQoQ09ORklHX0RSTV9NRURJQVRFSykgKz0gbWVkaWF0
-ZWstZHJtLm8KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBp
-X3R4LmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX21pcGlfdHguYwo+IGluZGV4IGNk
-YzY4Yjg4Y2VmZC4uYWIwZmJmYmE1NTcyIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfbWlwaV90eC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19taXBpX3R4LmMKPiBAQCAtMTgyLDYgKzE4Miw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2Zf
-ZGV2aWNlX2lkIG10a19taXBpX3R4X21hdGNoW10gPSB7Cj4gIAkgIC5kYXRhID0gJm10MjcwMV9t
-aXBpdHhfZGF0YSB9LAo+ICAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtbWlwaS10
-eCIsCj4gIAkgIC5kYXRhID0gJm10ODE3M19taXBpdHhfZGF0YSB9LAo+ICsJeyAuY29tcGF0aWJs
-ZSA9ICJtZWRpYXRlayxtdDgxODMtbWlwaS10eCIsCj4gKwkgIC5kYXRhID0gJm10ODE4M19taXBp
-dHhfZGF0YSB9LAo+ICAJeyB9LAo+ICB9Owo+ICAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19taXBpX3R4LmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X21pcGlfdHguaAo+IGluZGV4IDY2MDcyNjkyNDk5Mi4uM2ZkMjQ1NjM5NTJlIDEwMDY0NAo+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90eC5oCj4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmgKPiBAQCAtNDUsNSArNDUsNiBAQCB1bnNp
-Z25lZCBsb25nIG10a19taXBpX3R4X3BsbF9yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywK
-PiAgCj4gIGV4dGVybiBjb25zdCBzdHJ1Y3QgbXRrX21pcGl0eF9kYXRhIG10MjcwMV9taXBpdHhf
-ZGF0YTsKPiAgZXh0ZXJuIGNvbnN0IHN0cnVjdCBtdGtfbWlwaXR4X2RhdGEgbXQ4MTczX21pcGl0
-eF9kYXRhOwo+ICtleHRlcm4gY29uc3Qgc3RydWN0IG10a19taXBpdHhfZGF0YSBtdDgxODNfbWlw
-aXR4X2RhdGE7Cj4gIAo+ICAjZW5kaWYKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19tdDgxODNfbWlwaV90eC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19tdDgxODNfbWlwaV90eC5jCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAw
-MDAwMDAuLmE5Zjg5M2Q4ZTQwOQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX210ODE4M19taXBpX3R4LmMKPiBAQCAtMCwwICsxLDE2MiBAQAo+ICsv
-LyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQg
-KGMpIDIwMTkgTWVkaWFUZWsgSW5jLgo+ICsgKiBBdXRob3I6IGppdGFvLnNoaSA8aml0YW8uc2hp
-QG1lZGlhdGVrLmNvbT4KPiArICovCj4gKwo+ICsjaW5jbHVkZSAibXRrX21pcGlfdHguaCIKPiAr
-Cj4gKyNkZWZpbmUgTUlQSVRYX0xBTkVfQ09OCQkweDAwMGMKPiArI2RlZmluZSBSR19EU0lfQ1BI
-WV9UMURSVl9FTgkJQklUKDApCj4gKyNkZWZpbmUgUkdfRFNJX0FOQV9DS19TRUwJCUJJVCgxKQo+
-ICsjZGVmaW5lIFJHX0RTSV9QSFlfQ0tfU0VMCQlCSVQoMikKPiArI2RlZmluZSBSR19EU0lfQ1BI
-WV9FTgkJCUJJVCgzKQo+ICsjZGVmaW5lIFJHX0RTSV9QSFlDS19JTlZfRU4JCUJJVCg0KQo+ICsj
-ZGVmaW5lIFJHX0RTSV9QV1IwNF9FTgkJCUJJVCg1KQo+ICsjZGVmaW5lIFJHX0RTSV9CR19MUEZf
-RU4JCUJJVCg2KQo+ICsjZGVmaW5lIFJHX0RTSV9CR19DT1JFX0VOCQlCSVQoNykKPiArI2RlZmlu
-ZSBSR19EU0lfUEFEX1RJRUxfU0VMCQlCSVQoOCkKPiArCj4gKyNkZWZpbmUgTUlQSVRYX1BMTF9Q
-V1IJMHgwMDI4Cj4gKyNkZWZpbmUgTUlQSVRYX1BMTF9DT04wCTB4MDAyYwo+ICsjZGVmaW5lIE1J
-UElUWF9QTExfQ09OMQkweDAwMzAKPiArI2RlZmluZSBNSVBJVFhfUExMX0NPTjIJMHgwMDM0Cj4g
-KyNkZWZpbmUgTUlQSVRYX1BMTF9DT04zCTB4MDAzOAo+ICsjZGVmaW5lIE1JUElUWF9QTExfQ09O
-NAkweDAwM2MKPiArI2RlZmluZSBSR19EU0lfUExMX0lCSUFTCQkoMyA8PCAxMCkKPiArCj4gKyNk
-ZWZpbmUgTUlQSVRYX0QyX1NXX0NUTF9FTgkweDAxNDQKPiArI2RlZmluZSBNSVBJVFhfRDBfU1df
-Q1RMX0VOCTB4MDI0NAo+ICsjZGVmaW5lIE1JUElUWF9DS19DS01PREVfRU4JMHgwMzI4Cj4gKyNk
-ZWZpbmUgRFNJX0NLX0NLTU9ERV9FTgkJQklUKDApCj4gKyNkZWZpbmUgTUlQSVRYX0NLX1NXX0NU
-TF9FTgkweDAzNDQKPiArI2RlZmluZSBNSVBJVFhfRDFfU1dfQ1RMX0VOCTB4MDQ0NAo+ICsjZGVm
-aW5lIE1JUElUWF9EM19TV19DVExfRU4JMHgwNTQ0Cj4gKyNkZWZpbmUgRFNJX1NXX0NUTF9FTgkJ
-CUJJVCgwKQo+ICsjZGVmaW5lIEFEX0RTSV9QTExfU0RNX1BXUl9PTgkJQklUKDApCj4gKyNkZWZp
-bmUgQURfRFNJX1BMTF9TRE1fSVNPX0VOCQlCSVQoMSkKPiArCj4gKyNkZWZpbmUgUkdfRFNJX1BM
-TF9FTgkJCUJJVCg0KQo+ICsjZGVmaW5lIFJHX0RTSV9QTExfUE9TRElWCQkoMHg3IDw8IDgpCj4g
-Kwo+ICtzdGF0aWMgaW50IG10a19taXBpX3R4X3BsbF9wcmVwYXJlKHN0cnVjdCBjbGtfaHcgKmh3
-KQo+ICt7Cj4gKwlzdHJ1Y3QgbXRrX21pcGlfdHggKm1pcGlfdHggPSBtdGtfbWlwaV90eF9mcm9t
-X2Nsa19odyhodyk7Cj4gKwl1bnNpZ25lZCBpbnQgdHhkaXYsIHR4ZGl2MDsKPiArCXU2NCBwY3c7
-Cj4gKwlpbnQgcmV0Owo+ICsKPiArCWRldl9kYmcobWlwaV90eC0+ZGV2LCAicHJlcGFyZTogJXUg
-YnBzXG4iLCBtaXBpX3R4LT5kYXRhX3JhdGUpOwo+ICsKPiArCWlmIChtaXBpX3R4LT5kYXRhX3Jh
-dGUgPj0gMjAwMDAwMDAwMCkgewo+ICsJCXR4ZGl2ID0gMTsKPiArCQl0eGRpdjAgPSAwOwo+ICsJ
-fSBlbHNlIGlmIChtaXBpX3R4LT5kYXRhX3JhdGUgPj0gMTAwMDAwMDAwMCkgewo+ICsJCXR4ZGl2
-ID0gMjsKPiArCQl0eGRpdjAgPSAxOwo+ICsJfSBlbHNlIGlmIChtaXBpX3R4LT5kYXRhX3JhdGUg
-Pj0gNTAwMDAwMDAwKSB7Cj4gKwkJdHhkaXYgPSA0Owo+ICsJCXR4ZGl2MCA9IDI7Cj4gKwl9IGVs
-c2UgaWYgKG1pcGlfdHgtPmRhdGFfcmF0ZSA+IDI1MDAwMDAwMCkgewo+ICsJCXR4ZGl2ID0gODsK
-PiArCQl0eGRpdjAgPSAzOwo+ICsJfSBlbHNlIGlmIChtaXBpX3R4LT5kYXRhX3JhdGUgPj0gMTI1
-MDAwMDAwKSB7Cj4gKwkJdHhkaXYgPSAxNjsKPiArCQl0eGRpdjAgPSA0Owo+ICsJfSBlbHNlIHsK
-PiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCX0KPiArCj4gKwlyZXQgPSBjbGtfcHJlcGFyZV9lbmFi
-bGUobWlwaV90eC0+cmVmX2Nsayk7CgpNeSBsYXN0IGNvbW1lbnQgaXMgaW4gWzFdLgoKWzFdCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1tZWRpYXRlay8yMDE5LU1h
-eS8wMTk4NTEuaHRtbAoKUmVnYXJkcywKQ0sKCj4gKwlpZiAocmV0IDwgMCkgewo+ICsJCWRldl9l
-cnIobWlwaV90eC0+ZGV2LAo+ICsJCQkiY2FuJ3QgcHJlcGFyZSBhbmQgZW5hYmxlIG1pcGlfdHgg
-cmVmX2NsayAlZFxuIiwgcmV0KTsKPiArCQlyZXR1cm4gcmV0Owo+ICsJfQo+ICsKPiArCW10a19t
-aXBpX3R4X2NsZWFyX2JpdHMobWlwaV90eCwgTUlQSVRYX1BMTF9DT040LCBSR19EU0lfUExMX0lC
-SUFTKTsKPiArCj4gKwltdGtfbWlwaV90eF9zZXRfYml0cyhtaXBpX3R4LCBNSVBJVFhfUExMX1BX
-UiwgQURfRFNJX1BMTF9TRE1fUFdSX09OKTsKPiArCXVzbGVlcF9yYW5nZSgzMCwgMTAwKTsKPiAr
-CW10a19taXBpX3R4X2NsZWFyX2JpdHMobWlwaV90eCwgTUlQSVRYX1BMTF9QV1IsIEFEX0RTSV9Q
-TExfU0RNX0lTT19FTik7Cj4gKwltdGtfbWlwaV90eF9jbGVhcl9iaXRzKG1pcGlfdHgsIE1JUElU
-WF9QTExfQ09OMSwgUkdfRFNJX1BMTF9FTik7Cj4gKwlwY3cgPSBkaXZfdTY0KCgodTY0KW1pcGlf
-dHgtPmRhdGFfcmF0ZSAqIHR4ZGl2KSA8PCAyNCwgMjYwMDAwMDApOwo+ICsJd3JpdGVsKHBjdywg
-bWlwaV90eC0+cmVncyArIE1JUElUWF9QTExfQ09OMCk7Cj4gKwltdGtfbWlwaV90eF91cGRhdGVf
-Yml0cyhtaXBpX3R4LCBNSVBJVFhfUExMX0NPTjEsIFJHX0RTSV9QTExfUE9TRElWLAo+ICsJCQkJ
-dHhkaXYwIDw8IDgpOwo+ICsJdXNsZWVwX3JhbmdlKDEwMDAsIDIwMDApOwo+ICsJbXRrX21pcGlf
-dHhfc2V0X2JpdHMobWlwaV90eCwgTUlQSVRYX1BMTF9DT04xLCBSR19EU0lfUExMX0VOKTsKPiAr
-Cj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIHZvaWQgbXRrX21pcGlfdHhfcGxsX3Vu
-cHJlcGFyZShzdHJ1Y3QgY2xrX2h3ICpodykKPiArewo+ICsJc3RydWN0IG10a19taXBpX3R4ICpt
-aXBpX3R4ID0gbXRrX21pcGlfdHhfZnJvbV9jbGtfaHcoaHcpOwo+ICsKPiArCWRldl9kYmcobWlw
-aV90eC0+ZGV2LCAidW5wcmVwYXJlXG4iKTsKPiArCj4gKwltdGtfbWlwaV90eF9jbGVhcl9iaXRz
-KG1pcGlfdHgsIE1JUElUWF9QTExfQ09OMSwgUkdfRFNJX1BMTF9FTik7Cj4gKwo+ICsJbXRrX21p
-cGlfdHhfc2V0X2JpdHMobWlwaV90eCwgTUlQSVRYX1BMTF9QV1IsIEFEX0RTSV9QTExfU0RNX0lT
-T19FTik7Cj4gKwltdGtfbWlwaV90eF9jbGVhcl9iaXRzKG1pcGlfdHgsIE1JUElUWF9QTExfUFdS
-LCBBRF9EU0lfUExMX1NETV9QV1JfT04pOwo+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG1pcGlf
-dHgtPnJlZl9jbGspOwo+ICt9Cj4gKwo+ICtzdGF0aWMgbG9uZyBtdGtfbWlwaV90eF9wbGxfcm91
-bmRfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywgdW5zaWduZWQgbG9uZyByYXRlLAo+ICsJCQkJICAg
-ICAgIHVuc2lnbmVkIGxvbmcgKnByYXRlKQo+ICt7Cj4gKwlyZXR1cm4gY2xhbXBfdmFsKHJhdGUs
-IDUwMDAwMDAwLCAxNjAwMDAwMDAwKTsKPiArfQo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBj
-bGtfb3BzIG10a19taXBpX3R4X3BsbF9vcHMgPSB7Cj4gKwkucHJlcGFyZSA9IG10a19taXBpX3R4
-X3BsbF9wcmVwYXJlLAo+ICsJLnVucHJlcGFyZSA9IG10a19taXBpX3R4X3BsbF91bnByZXBhcmUs
-Cj4gKwkucm91bmRfcmF0ZSA9IG10a19taXBpX3R4X3BsbF9yb3VuZF9yYXRlLAo+ICsJLnNldF9y
-YXRlID0gbXRrX21pcGlfdHhfcGxsX3NldF9yYXRlLAo+ICsJLnJlY2FsY19yYXRlID0gbXRrX21p
-cGlfdHhfcGxsX3JlY2FsY19yYXRlLAo+ICt9Owo+ICsKPiArc3RhdGljIHZvaWQgbXRrX21pcGlf
-dHhfcG93ZXJfb25fc2lnbmFsKHN0cnVjdCBwaHkgKnBoeSkKPiArewo+ICsJc3RydWN0IG10a19t
-aXBpX3R4ICptaXBpX3R4ID0gcGh5X2dldF9kcnZkYXRhKHBoeSk7Cj4gKwo+ICsJLyogQkdfTFBG
-X0VOIC8gQkdfQ09SRV9FTiAqLwo+ICsJd3JpdGVsKFJHX0RTSV9QQURfVElFTF9TRUwgfCBSR19E
-U0lfQkdfQ09SRV9FTiwKPiArCSAgICAgICBtaXBpX3R4LT5yZWdzICsgTUlQSVRYX0xBTkVfQ09O
-KTsKPiArCXVzbGVlcF9yYW5nZSgzMCwgMTAwKTsKPiArCXdyaXRlbChSR19EU0lfQkdfQ09SRV9F
-TiB8IFJHX0RTSV9CR19MUEZfRU4sCj4gKwkgICAgICAgbWlwaV90eC0+cmVncyArIE1JUElUWF9M
-QU5FX0NPTik7Cj4gKwo+ICsJLyogU3dpdGNoIE9GRiBlYWNoIExhbmUgKi8KPiArCW10a19taXBp
-X3R4X2NsZWFyX2JpdHMobWlwaV90eCwgTUlQSVRYX0QwX1NXX0NUTF9FTiwgRFNJX1NXX0NUTF9F
-Tik7Cj4gKwltdGtfbWlwaV90eF9jbGVhcl9iaXRzKG1pcGlfdHgsIE1JUElUWF9EMV9TV19DVExf
-RU4sIERTSV9TV19DVExfRU4pOwo+ICsJbXRrX21pcGlfdHhfY2xlYXJfYml0cyhtaXBpX3R4LCBN
-SVBJVFhfRDJfU1dfQ1RMX0VOLCBEU0lfU1dfQ1RMX0VOKTsKPiArCW10a19taXBpX3R4X2NsZWFy
-X2JpdHMobWlwaV90eCwgTUlQSVRYX0QzX1NXX0NUTF9FTiwgRFNJX1NXX0NUTF9FTik7Cj4gKwlt
-dGtfbWlwaV90eF9jbGVhcl9iaXRzKG1pcGlfdHgsIE1JUElUWF9DS19TV19DVExfRU4sIERTSV9T
-V19DVExfRU4pOwo+ICsKPiArCW10a19taXBpX3R4X3NldF9iaXRzKG1pcGlfdHgsIE1JUElUWF9D
-S19DS01PREVfRU4sIERTSV9DS19DS01PREVfRU4pOwo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCBt
-dGtfbWlwaV90eF9wb3dlcl9vZmZfc2lnbmFsKHN0cnVjdCBwaHkgKnBoeSkKPiArewo+ICsJc3Ry
-dWN0IG10a19taXBpX3R4ICptaXBpX3R4ID0gcGh5X2dldF9kcnZkYXRhKHBoeSk7Cj4gKwo+ICsJ
-LyogU3dpdGNoIE9OIGVhY2ggTGFuZSAqLwo+ICsJbXRrX21pcGlfdHhfc2V0X2JpdHMobWlwaV90
-eCwgTUlQSVRYX0QwX1NXX0NUTF9FTiwgRFNJX1NXX0NUTF9FTik7Cj4gKwltdGtfbWlwaV90eF9z
-ZXRfYml0cyhtaXBpX3R4LCBNSVBJVFhfRDFfU1dfQ1RMX0VOLCBEU0lfU1dfQ1RMX0VOKTsKPiAr
-CW10a19taXBpX3R4X3NldF9iaXRzKG1pcGlfdHgsIE1JUElUWF9EMl9TV19DVExfRU4sIERTSV9T
-V19DVExfRU4pOwo+ICsJbXRrX21pcGlfdHhfc2V0X2JpdHMobWlwaV90eCwgTUlQSVRYX0QzX1NX
-X0NUTF9FTiwgRFNJX1NXX0NUTF9FTik7Cj4gKwltdGtfbWlwaV90eF9zZXRfYml0cyhtaXBpX3R4
-LCBNSVBJVFhfQ0tfU1dfQ1RMX0VOLCBEU0lfU1dfQ1RMX0VOKTsKPiArCj4gKwl3cml0ZWwoUkdf
-RFNJX1BBRF9USUVMX1NFTCB8IFJHX0RTSV9CR19DT1JFX0VOLAo+ICsJICAgICAgIG1pcGlfdHgt
-PnJlZ3MgKyBNSVBJVFhfTEFORV9DT04pOwo+ICsJd3JpdGVsKFJHX0RTSV9QQURfVElFTF9TRUws
-IG1pcGlfdHgtPnJlZ3MgKyBNSVBJVFhfTEFORV9DT04pOwo+ICt9Cj4gKwo+ICtjb25zdCBzdHJ1
-Y3QgbXRrX21pcGl0eF9kYXRhIG10ODE4M19taXBpdHhfZGF0YSA9IHsKPiArCS5taXBpX3R4X2Ns
-a19vcHMgPSAmbXRrX21pcGlfdHhfcGxsX29wcywKPiArCS5taXBpX3R4X2VuYWJsZV9zaWduYWwg
-PSBtdGtfbWlwaV90eF9wb3dlcl9vbl9zaWduYWwsCj4gKwkubWlwaV90eF9kaXNhYmxlX3NpZ25h
-bCA9IG10a19taXBpX3R4X3Bvd2VyX29mZl9zaWduYWwsCj4gK307Cj4gKwoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Add support for controlling and communicating with mt8183's system
+control processor (SCP), using the remoteproc & rpmsg framework.
+And also add a cros_ec driver for CrOS EC host command over rpmsg.
+
+The overall structure of the series is:
+* remoteproc/mtk_scp.c: Control the start / stop of SCP (Patch 2, 3).
+* remoteproc/mtk_scp_ipi.c: Communicates to SCP using inter-processor
+  interrupt (IPI) and shared memory (Patch 2, 3).
+* rpmsg/mtk_rpmsg.c: Wrapper to wrap the IPI communication into a rpmsg
+  device. Supports name service for SCP firmware to
+  announce channels (Patch 4).
+* platform/chrome/cros_ec_rpmsg.c: Communicates with the SCP over the
+  rpmsg framework (like what platform/chrome/cros_ec_{i2c,spi}.c does)
+  (Patch 5, 6).
+* add scp dts node to mt8183 platform (Patch 7).
+
+This series (In particular, Patch 7) is based on
+https://patchwork.kernel.org/cover/10962385/.
+
+Changes from v9:
+ - Remove reserve-memory-vpu_share node.
+ - Remove change to cros_ec_commands.h (That is already in
+   https://lore.kernel.org/lkml/20190518063949.GY4319@dell/T/)
+
+Changes from v8:
+ - Rebased onto https://patchwork.kernel.org/cover/10962385/.
+ - Drop merged cros_ec_rpmsg patch, and add scp dts node patch.
+ - Add more reserved memory region.
+
+Changes from v7:
+ - Rebase onto https://lore.kernel.org/patchwork/patch/1059196/.
+ - Fix clock enable/disable timing for SCP driver.
+ - Add more SCP IPI ID.
+
+Changes from v6:
+ - Decouple mtk_rpmsg from mtk_scp.
+ - Change data of EC response to be aligned to 4 bytes.
+
+Changes from v5:
+ - Add device tree binding document for cros_ec_rpmsg.
+ - Better document in comments for cros_ec_rpmsg.
+ - Remove dependency on CONFIG_ in binding tree document.
+
+Changes from v4:
+ - Merge patch 6 (Load ELF firmware) into patch 2, so the driver loads
+   ELF firmware by default, and no longer accept plain binary.
+ - rpmsg_device listed in device tree (as a child of the SCP node) would
+   have it's device tree node mapped to the rpmsg_device, so the rpmsg
+   driver can use the properties on device tree.
+
+Changes from v3:
+ - Make writing to SCP SRAM aligned.
+ - Add a new patch (Patch 6) to load ELF instead of bin firmware.
+ - Add host event support for EC driver.
+ - Fix some bugs found in testing (missing spin_lock_init,
+   rproc_subdev_unprepare to rproc_subdev_stop).
+ - Fix some coding style issue found by checkpatch.pl.
+
+Changes from v2:
+ - Fold patch 3 into patch 2 in v2.
+ - Move IPI id around to support cross-testing for old and new firmware.
+ - Finish more TODO items.
+
+Changes from v1:
+ - Extract functions and rename variables in mtk_scp.c.
+ - Do cleanup properly in mtk_rpmsg.c, which also removes the problem of
+   short-lived work items.
+ - Code format fix based on feedback for cros_ec_rpmsg.c.
+ - Extract feature detection for SCP into separate patch (Patch 6).
+
+Eddie Huang (1):
+  arm64: dts: mt8183: add scp node
+
+Erin Lo (3):
+  dt-bindings: Add a binding for Mediatek SCP
+  remoteproc/mediatek: add SCP support for mt8183
+  remoteproc: mt8183: add reserved memory manager API
+
+Pi-Hsun Shih (3):
+  rpmsg: add rpmsg support for mt8183 SCP.
+  dt-bindings: Add binding for cros-ec-rpmsg.
+  mfd: cros_ec: differentiate SCP from EC by feature bit.
+
+ .../devicetree/bindings/mfd/cros-ec.txt       |   5 +-
+ .../bindings/remoteproc/mtk,scp.txt           |  36 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |  11 +
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  12 +
+ drivers/mfd/cros_ec_dev.c                     |  10 +
+ drivers/remoteproc/Kconfig                    |  10 +
+ drivers/remoteproc/Makefile                   |   1 +
+ drivers/remoteproc/mtk_common.h               |  77 ++
+ drivers/remoteproc/mtk_scp.c                  | 678 ++++++++++++++++++
+ drivers/remoteproc/mtk_scp_ipi.c              | 163 +++++
+ drivers/rpmsg/Kconfig                         |   9 +
+ drivers/rpmsg/Makefile                        |   1 +
+ drivers/rpmsg/mtk_rpmsg.c                     | 396 ++++++++++
+ include/linux/mfd/cros_ec.h                   |   1 +
+ include/linux/platform_data/mtk_scp.h         | 167 +++++
+ include/linux/rpmsg/mtk_rpmsg.h               |  30 +
+ 16 files changed, 1606 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+ create mode 100644 drivers/remoteproc/mtk_common.h
+ create mode 100644 drivers/remoteproc/mtk_scp.c
+ create mode 100644 drivers/remoteproc/mtk_scp_ipi.c
+ create mode 100644 drivers/rpmsg/mtk_rpmsg.c
+ create mode 100644 include/linux/platform_data/mtk_scp.h
+ create mode 100644 include/linux/rpmsg/mtk_rpmsg.h
+
+-- 
+2.22.0.rc1.257.g3120a18244-goog
