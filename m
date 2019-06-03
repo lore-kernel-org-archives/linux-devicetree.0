@@ -1,395 +1,103 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 2/2] pinctrl: Add drive strength support for BM1880 SoC
-Date: Mon,  3 Jun 2019 13:04:21 +0530
-Message-ID: <20190603073421.10314-2-manivannan.sadhasivam@linaro.org>
-References: <20190603073421.10314-1-manivannan.sadhasivam@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190603073421.10314-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, linux-gpio@vger.kernel.org, alec.lin@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V2 2/3] clk: imx: Add support for i.MX8MN clock driver
+Date: Mon, 3 Jun 2019 07:39:16 +0000
+Message-ID: <DB3PR0402MB3916D2B09BACABB79E8989A2F5140@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190603013503.40626-1-Anson.Huang@nxp.com>
+ <20190603013503.40626-2-Anson.Huang@nxp.com>
+ <20190603073018.j236j57ooc7t5hp6@fsr-ub1664-175>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190603073018.j236j57ooc7t5hp6@fsr-ub1664-175>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Abel Vesa <abel.vesa@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Jacky Bai <ping.bai@nxp.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, Leonard Crestez <leonard.crestez@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "olof@lixom.net" <olof@lixom.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
 List-Id: devicetree@vger.kernel.org
 
-Add drive strength support for Bitmain BM1880 SoC.
+Hi, Abel
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pinctrl/pinctrl-bm1880.c | 290 ++++++++++++++++++++++++++++++-
- 1 file changed, 287 insertions(+), 3 deletions(-)
+> -----Original Message-----
+> From: Abel Vesa
+> Sent: Monday, June 3, 2019 3:30 PM
+> To: Anson Huang <anson.huang@nxp.com>
+> Cc: mturquette@baylibre.com; sboyd@kernel.org; robh+dt@kernel.org;
+> mark.rutland@arm.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> kernel@pengutronix.de; festevam@gmail.com; catalin.marinas@arm.com;
+> will.deacon@arm.com; maxime.ripard@bootlin.com; olof@lixom.net;
+> horms+renesas@verge.net.au; jagan@amarulasolutions.com;
+> bjorn.andersson@linaro.org; Leonard Crestez <leonard.crestez@nxp.com>;
+> dinguyen@kernel.org; enric.balletbo@collabora.com; Aisheng Dong
+> <aisheng.dong@nxp.com>; Jacky Bai <ping.bai@nxp.com>;
+> l.stach@pengutronix.de; linux-clk@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
+> Subject: Re: [PATCH V2 2/3] clk: imx: Add support for i.MX8MN clock driver
+> 
+> On 19-06-03 09:35:02, Anson.Huang@nxp.com wrote:
+> > From: Anson Huang <Anson.Huang@nxp.com>
+> >
+> > This patch adds i.MX8MN clock driver support.
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> > Changes since V1:
+> > 	- add GPIOx clocks.
+> 
+> ...
+> 
+> > +static struct imx_pll14xx_clk imx8mn_sys_pll __initdata = {
+> > +		.type = PLL_1416X,
+> > +		.rate_table = imx8mn_pll1416x_tbl,
+> > +};
+> > +
+> > +static const char *pll_ref_sels[] = { "osc_24m", "dummy", "dummy",
+> > +"dummy", };
+> 
+> All of these should be "static const char * const ".
 
-diff --git a/drivers/pinctrl/pinctrl-bm1880.c b/drivers/pinctrl/pinctrl-bm1880.c
-index 1aaed46d5c30..63b130cb1ffb 100644
---- a/drivers/pinctrl/pinctrl-bm1880.c
-+++ b/drivers/pinctrl/pinctrl-bm1880.c
-@@ -4,8 +4,6 @@
-  *
-  * Copyright (c) 2019 Linaro Ltd.
-  * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-- *
-- * TODO: Drive strength support
-  */
- 
- #include <linux/io.h>
-@@ -29,6 +27,7 @@
-  * @ngroups:	Number of @groups
-  * @funcs:	Pinmux functions
-  * @nfuncs:	Number of @funcs
-+ * @pconf:	Pinconf data
-  */
- struct bm1880_pinctrl {
- 	void __iomem *base;
-@@ -37,6 +36,7 @@ struct bm1880_pinctrl {
- 	unsigned int ngroups;
- 	const struct bm1880_pinmux_function *funcs;
- 	unsigned int nfuncs;
-+	const struct bm1880_pinconf_data *pinconf;
- };
- 
- /**
-@@ -69,6 +69,14 @@ struct bm1880_pinmux_function {
- 	u8 mux_shift;
- };
- 
-+/**
-+ * struct bm1880_pinconf_data - pinconf data
-+ * @drv_bits:	Drive strength bit width
-+ */
-+struct bm1880_pinconf_data {
-+	u32 drv_bits;
-+};
-+
- static const struct pinctrl_pin_desc bm1880_pins[] = {
- 	PINCTRL_PIN(0,   "MIO0"),
- 	PINCTRL_PIN(1,   "MIO1"),
-@@ -785,6 +793,126 @@ static const struct bm1880_pinmux_function bm1880_pmux_functions[] = {
- 	BM1880_PINMUX_FUNCTION(spi0, 1),
- };
- 
-+#define BM1880_PINCONF_DAT(_width)		\
-+	{					\
-+		.drv_bits = _width,		\
-+	}
-+
-+static const struct bm1880_pinconf_data bm1880_pinconf[] = {
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x03),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+	BM1880_PINCONF_DAT(0x02),
-+};
-+
- static int bm1880_pctrl_get_groups_count(struct pinctrl_dev *pctldev)
- {
- 	struct bm1880_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-@@ -878,9 +1006,145 @@ static int bm1880_pinmux_set_mux(struct pinctrl_dev *pctldev,
- #define BM1880_PINCONF_PULLCTRL(pin)	BM1880_PINCONF(pin, 0)
- #define BM1880_PINCONF_PULLUP(pin)	BM1880_PINCONF(pin, 1)
- #define BM1880_PINCONF_PULLDOWN(pin)	BM1880_PINCONF(pin, 2)
-+#define BM1880_PINCONF_DRV(pin)		BM1880_PINCONF(pin, 6)
- #define BM1880_PINCONF_SCHMITT(pin)	BM1880_PINCONF(pin, 9)
- #define BM1880_PINCONF_SLEW(pin)	BM1880_PINCONF(pin, 10)
- 
-+static int bm1880_pinconf_drv_set(unsigned int mA, u32 width,
-+				  u32 *regval, u32 bit_offset)
-+{
-+	u32 _regval;
-+
-+	_regval = *regval;
-+
-+	/*
-+	 * There are two sets of drive strength bit width exposed by the
-+	 * SoC at 4mA step, hence we need to handle them separately.
-+	 */
-+	if (width == 0x03) {
-+		switch (mA) {
-+		case 4:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (0 << bit_offset);
-+			break;
-+		case 8:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (1 << bit_offset);
-+			break;
-+		case 12:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (2 << bit_offset);
-+			break;
-+		case 16:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (3 << bit_offset);
-+			break;
-+		case 20:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (4 << bit_offset);
-+			break;
-+		case 24:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (5 << bit_offset);
-+			break;
-+		case 28:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (6 << bit_offset);
-+			break;
-+		case 32:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (7 << bit_offset);
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	} else {
-+		switch (mA) {
-+		case 4:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (0 << bit_offset);
-+			break;
-+		case 8:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (1 << bit_offset);
-+			break;
-+		case 12:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (2 << bit_offset);
-+			break;
-+		case 16:
-+			_regval &= ~(width << bit_offset);
-+			_regval |= (3 << bit_offset);
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	*regval = _regval;
-+
-+	return 0;
-+}
-+
-+static int bm1880_pinconf_drv_get(u32 width, u32 drv)
-+{
-+	int ret = -ENOTSUPP;
-+
-+	/*
-+	 * There are two sets of drive strength bit width exposed by the
-+	 * SoC at 4mA step, hence we need to handle them separately.
-+	 */
-+	if (width == 0x03) {
-+		switch (drv) {
-+		case 0:
-+			ret  = 4;
-+			break;
-+		case 1:
-+			ret  = 8;
-+			break;
-+		case 2:
-+			ret  = 12;
-+			break;
-+		case 3:
-+			ret  = 16;
-+			break;
-+		case 4:
-+			ret  = 20;
-+			break;
-+		case 5:
-+			ret  = 24;
-+			break;
-+		case 6:
-+			ret  = 28;
-+			break;
-+		case 7:
-+			ret  = 32;
-+			break;
-+		default:
-+			break;
-+		}
-+	} else {
-+		switch (drv) {
-+		case 0:
-+			ret  = 4;
-+			break;
-+		case 1:
-+			ret  = 8;
-+			break;
-+		case 2:
-+			ret  = 12;
-+			break;
-+		case 3:
-+			ret  = 16;
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
- static int bm1880_pinconf_cfg_get(struct pinctrl_dev *pctldev,
- 				  unsigned int pin,
- 				  unsigned long *config)
-@@ -889,6 +1153,7 @@ static int bm1880_pinconf_cfg_get(struct pinctrl_dev *pctldev,
- 	unsigned int param = pinconf_to_config_param(*config);
- 	unsigned int arg = 0;
- 	u32 regval, offset, bit_offset;
-+	int ret;
- 
- 	offset = (pin >> 1) << 2;
- 	regval = readl_relaxed(pctrl->base + BM1880_REG_MUX + offset);
-@@ -914,6 +1179,15 @@ static int bm1880_pinconf_cfg_get(struct pinctrl_dev *pctldev,
- 		bit_offset = BM1880_PINCONF_SLEW(pin);
- 		arg = !!(regval & BIT(bit_offset));
- 		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH:
-+		bit_offset = BM1880_PINCONF_DRV(pin);
-+		ret = bm1880_pinconf_drv_get(pctrl->pinconf[pin].drv_bits,
-+					     !!(regval & BIT(bit_offset)));
-+		if (ret < 0)
-+			return ret;
-+
-+		arg = ret;
-+		break;
- 	default:
- 		return -ENOTSUPP;
- 	}
-@@ -930,7 +1204,7 @@ static int bm1880_pinconf_cfg_set(struct pinctrl_dev *pctldev,
- {
- 	struct bm1880_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
- 	u32 regval, offset, bit_offset;
--	int i;
-+	int i, ret;
- 
- 	offset = (pin >> 1) << 2;
- 	regval = readl_relaxed(pctrl->base + BM1880_REG_MUX + offset);
-@@ -966,6 +1240,15 @@ static int bm1880_pinconf_cfg_set(struct pinctrl_dev *pctldev,
- 			else
- 				regval &= ~BIT(bit_offset);
- 			break;
-+		case PIN_CONFIG_DRIVE_STRENGTH:
-+			bit_offset = BM1880_PINCONF_DRV(pin);
-+			ret = bm1880_pinconf_drv_set(arg,
-+						pctrl->pinconf[pin].drv_bits,
-+						&regval, bit_offset);
-+			if (ret < 0)
-+				return ret;
-+
-+			break;
- 		default:
- 			dev_warn(pctldev->dev,
- 				 "unsupported configuration parameter '%u'\n",
-@@ -1041,6 +1324,7 @@ static int bm1880_pinctrl_probe(struct platform_device *pdev)
- 	pctrl->ngroups = ARRAY_SIZE(bm1880_pctrl_groups);
- 	pctrl->funcs = bm1880_pmux_functions;
- 	pctrl->nfuncs = ARRAY_SIZE(bm1880_pmux_functions);
-+	pctrl->pinconf = bm1880_pinconf;
- 
- 	pctrl->pctrldev = devm_pinctrl_register(&pdev->dev, &bm1880_desc,
- 						pctrl);
--- 
-2.17.1
+OK.
+
+> 
+> > +static const char *audio_pll1_bypass_sels[] = {"audio_pll1",
+> > +"audio_pll1_ref_sel", }; static const char *audio_pll2_bypass_sels[]
+> > += {"audio_pll2", "audio_pll2_ref_sel", };
+> 
+> ...
+> 
+> > +	clk_data.clks = clks;
+> > +	clk_data.clk_num = ARRAY_SIZE(clks);
+> > +	ret = of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
+> > +	if (ret < 0) {
+> > +		pr_err("failed to register clks for i.MX8MN\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	imx_register_uart_clocks(uart_clks);
+> > +
+> > +	return 0;
+> > +}
+> > +CLK_OF_DECLARE_DRIVER(imx8mn, "fsl,imx8mn-ccm",
+> imx8mn_clocks_init);
+> 
+> Any reason why this cannot be a platform driver ?
+
+It should can be, I just did NOT take care of it, 8MQ uses platform driver model, while
+8MM does NOT, I will modify both of them to use platform driver model.
+
+Thanks,
+Anson.
+
+> 
+> > --
+> > 2.7.4
+> >
