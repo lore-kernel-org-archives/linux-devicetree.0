@@ -1,71 +1,48 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v6 2/7] dt-binding: cpu-topology: Move cpu-map to a
- common binding.
-Date: Mon, 3 Jun 2019 10:05:31 +0100
-Message-ID: <20190603090531.GA26487@e107155-lin>
-References: <20190529211340.17087-1-atish.patra@wdc.com>
- <20190529211340.17087-3-atish.patra@wdc.com>
- <0515d803-0da5-dcbe-3d3e-bb786b320d8b@arm.com>
- <28118149-193d-2a8a-995a-2f1829e95c1c@wdc.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v5 1/3] dt-bindings: arm: amlogic: add G12B bindings
+Date: Mon,  3 Jun 2019 11:10:06 +0200
+Message-ID: <20190603091008.2382-2-narmstrong@baylibre.com>
+References: <20190603091008.2382-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <28118149-193d-2a8a-995a-2f1829e95c1c@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Jeremy Linton <jeremy.linton@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Palmer Dabbelt <palmer@sifive.com>, Will Deacon <will.deacon@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Rob Herring <robh@kernel.org>, Anup Patel <anup@brainfault.org>, Russell King <linux@armlinux.org.uk>, Ingo Molnar <mingo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Albert Ou <aou@>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190603091008.2382-1-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: khilman@baylibre.com, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 01:49:13AM -0700, Atish Patra wrote:
-> On 5/30/19 1:55 PM, Jeremy Linton wrote:
-> > Hi,
-> >
-> > On 5/29/19 4:13 PM, Atish Patra wrote:
-> > > cpu-map binding can be used to described cpu topology for both
-> > > RISC-V & ARM. It makes more sense to move the binding to document
-> > > to a common place.
-> > >
-> > > The relevant discussion can be found here.
-> > > https://lkml.org/lkml/2018/11/6/19
-> > >
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >    .../topology.txt => cpu/cpu-topology.txt}     | 82 +++++++++++++++----
-> > >    1 file changed, 66 insertions(+), 16 deletions(-)
-> > >    rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (86%)
-> > >
+Add compatible for the Amlogic G12B SoC, sharing most of the
+features and architecture with the G12A SoC.
 
-[...]
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> > <nit picking>
-> >
-> > While socket is optional, its probably a good idea to include the node
-> > in the example even if the result is the same.
->
-> Sure. I will update that.
->
-> That is because at least
-> > on arm64 the DT clusters=sockets decision had performance implications
-> > for larger systems.
-> >
-> > Assuring the socket information is correct is helpful by itself to avoid
-> > having to explain why a single socket machine is displaying some other
-> > value in lscpu.
-> >
-> Just for my understanding, can you give a example?
->
-
-That's simple. Today any ARM{32,64} DT based platform sets their cluster
-id to physical package id, which is exposed to userspace. The userspace
-can/must interpret that as multi-socket system. E.g. TC2/Juno which
-2 clusters show up as 2 socket systems which is wrong and needs fixing.
-We have fixed it for ARM64 ACPI based systems but for DT(mostly used in
-mobile/embedded) we need to make sure we don't break anything else before
-we fix it.
-
---
-Regards,
-Sudeep
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 6d5bb493db03..28115dd49f96 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -137,4 +137,8 @@ properties:
+               - amlogic,u200
+           - const: amlogic,g12a
+ 
++      - description: Boards with the Amlogic Meson G12B S922X SoC
++        items:
++          - const: amlogic,g12b
++
+ ...
+-- 
+2.21.0
