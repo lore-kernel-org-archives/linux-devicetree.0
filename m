@@ -1,43 +1,34 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [RE-RESEND PATCH v3 3/4] memory: jz4780-nemc: Reduce size of const array
-Date: Tue,  4 Jun 2019 16:30:17 +0200
-Message-ID: <20190604143018.11644-3-paul@crapouillou.net>
-References: <20190604143018.11644-1-paul@crapouillou.net>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Kamal Dasu <kdasu.kdev@gmail.com>
+Subject: [PATCH v2 3/3] dt: bindings: mtd: brcmand: Add brcmnand,brcmnand-v7.3 support
+Date: Tue,  4 Jun 2019 10:36:31 -0400
+Message-ID: <1559659013-34502-3-git-send-email-kdasu.kdev@gmail.com>
+References: <1559659013-34502-1-git-send-email-kdasu.kdev@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604143018.11644-1-paul@crapouillou.net>
+In-Reply-To: <1559659013-34502-1-git-send-email-kdasu.kdev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <bbrezillon@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+To: linux-mtd@lists.infradead.org
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The maximum value found in that array is 15, there's no need to store
-these values as uint32_t, a uint8_t is enough.
+Added brcm,brcmnand-v7.3 as possible compatible string to support
+brcmnand controller v7.3.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 ---
+ Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Notes:
-    v2: Remove casts to uint32_t
-    
-    v3: No change
-
- drivers/memory/jz4780-nemc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
-index bcf06adefc96..66b8b43eaeff 100644
---- a/drivers/memory/jz4780-nemc.c
-+++ b/drivers/memory/jz4780-nemc.c
-@@ -161,7 +161,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	 * Conversion of tBP and tAW cycle counts to values supported by the
- 	 * hardware (round up to the next supported value).
- 	 */
--	static const uint32_t convert_tBP_tAW[] = {
-+	static const u8 convert_tBP_tAW[] = {
- 		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
- 
- 		/* 11 - 12 -> 12 cycles */
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index 0b7c373..ad4cd30 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -28,6 +28,7 @@ Required properties:
+                          brcm,brcmnand-v7.0
+                          brcm,brcmnand-v7.1
+                          brcm,brcmnand-v7.2
++                         brcm,brcmnand-v7.3
+                          brcm,brcmnand
+ - reg              : the register start and length for NAND register region.
+                      (optional) Flash DMA register range (if present)
 -- 
-2.21.0.593.g511ec345e18
+1.9.0.138.g2de3478
