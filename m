@@ -1,97 +1,115 @@
 From: Vishal Sagar <vishal.sagar@xilinx.com>
-Subject: [PATCH 0/2] Add support for Xilinx UHD-SDI Receiver subsystem
-Date: Tue,  4 Jun 2019 19:25:54 +0530
-Message-ID: <1559656556-79174-1-git-send-email-vishal.sagar@xilinx.com>
+Subject: [PATCH 1/2] media: dt-bindings: media: xilinx: Add Xilinx UHD-SDI Receiver Subsystem
+Date: Tue,  4 Jun 2019 19:25:55 +0530
+Message-ID: <1559656556-79174-2-git-send-email-vishal.sagar@xilinx.com>
+References: <1559656556-79174-1-git-send-email-vishal.sagar@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559656556-79174-1-git-send-email-vishal.sagar@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hyun Kwon <hyun.kwon@xilinx.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>, Vishal Sagar <vishal.sagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Xilinx SMPTE UHD-SDI Receiver Subsystem
-----------------------------------------
+Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
 
-The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create
-systems based on SMPTE SDI protocols. It receives unaligned native SDI
-streams from the SDI GT PHY and outputs an AXI4-Stream video stream,
-native video, or native SDI using Xilinx transceivers as the physical
-layer.
+The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
+core, an SDI RX to Video Bridge IP core to convert SDI video to native
+video and a Video In to AXI4-Stream IP core to convert native video to
+AXI4-Stream.
 
-                SMPTE UHD-SDI Rx Subsystem AXI4-Stream Architecture
-
-          +============================================================+
-	  |           Native SDI           Native Video                |
-SDI	  |   +=========+   |   +============+  |   +=============+    |AXI4
-Stream	  |   |  SMPTE  |   V   |   SDI Rx   |  V   | Video In    |    |Stream
---------->|-->| UHD-SDI |------>|    to      |----->|   to        |--->|------->
-	  |   |   RX    |       |  Native    |      | AXI4-Stream |    |
-	  |   +=========+       |Video Bridge|      +=============+    |
-	  |      |  ^           +============+                         |
-   <------|------+  |                                                  |
-sdi_rx_irq|         |                                                  |
-	  +=====+===+==================================================+
-                    |                            ^              ^
-                    |                            |              |
-                 s_axi_aclk                   sdi_rx_clk   video_out_clk
-
-
-The subsystem consists of the following subcores:
-- SMPTE UHD-SDI (RX)
-- SDI RX to Video Bridge
-- Video In to AXI4-Stream
-
-At design time, this subsystem can be configured in 3Gbps, 6Gbps or
-12Gbps mode. It can also be configured to output
-- SDI Native stream
-- Native Video
-- AXI4-Stream
-
-This driver only supports the AXI4-Stream configuration as there is a
-corresponding media bus format for YUV 422 10 bits per component in
-MEDIA_BUS_FMT_UYVY10_1X20.
-
-Though the core also supports YUV 420 10 bits per component, this is
-not supported in driver due to lack of corresponding media bus format
-currently.
-
-The SDI core has detection modes where in it can be configured to detect
-one or more modes from SD (Standard Definition), HD (High Definition),
-3GA, 3GB, 6G and 12G modes. When the core has detected the format, it
-generates a video lock. In case the source is removed or there is data
-corruption, the video may unlock. This is intimated to the application
-via a V4L2 event. Other events which application can subscribe are for
-overflow and underflow of the video bridges.
-
-The driver gives out the stream properties like width, height, colorformat,
-frame interval and progressive/interlaced based on the ST352 packet in SDI
-stream. If the ST352 packet is absent, then the values detected by the
-SMPTE UHD-SDI Rx core are used.
-
-The SDI core detection modes and detected mode, errors, etc are all
-accessible via v4l controls. This driver has been tested with Omnitek
-Ultra4K HD, Phabrix Qx and Blackmagic SDI-HDMI convertors.
-
-This patch set is being sent on top of v8 of Xilinx MIPI CSI2-Rx Subsystem
-driver patches.
-
-Vishal Sagar (2):
-  media: dt-bindings: media: xilinx: Add Xilinx UHD-SDI Receiver
-    Subsystem
-  media: v4l: xilinx: Add Xilinx UHD-SDI Rx Subsystem driver
-
- .../bindings/media/xilinx/xlnx,sdirxss.txt         |   80 +
- drivers/media/platform/xilinx/Kconfig              |   11 +
- drivers/media/platform/xilinx/Makefile             |    1 +
- drivers/media/platform/xilinx/xilinx-sdirxss.c     | 1846 ++++++++++++++++++++
- include/uapi/linux/xilinx-sdirxss.h                |   63 +
- include/uapi/linux/xilinx-v4l2-controls.h          |   30 +
- include/uapi/linux/xilinx-v4l2-events.h            |    9 +
- 7 files changed, 2040 insertions(+)
+Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+---
+ .../bindings/media/xilinx/xlnx,sdirxss.txt         | 80 ++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.txt
- create mode 100644 drivers/media/platform/xilinx/xilinx-sdirxss.c
- create mode 100644 include/uapi/linux/xilinx-sdirxss.h
 
+diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.txt
+new file mode 100644
+index 0000000..8445bee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.txt
+@@ -0,0 +1,80 @@
++
++Xilinx SMPTE UHD-SDI Receiver Subsystem Device Tree Bindings
++------------------------------------------------------------
++
++The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
++based on SMPTE SDI protocols. It receives unaligned native SDI streams from
++the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
++native SDI using Xilinx transceivers as the physical layer.
++
++The subsystem consists of
++1 - SMPTE UHD-SDI Rx
++2 - SDI Rx to Native Video Bridge
++3 - Video In to AXI4-Stream Bridge
++
++The subsystem can capture SDI streams in utpo 12G mode and output a dual pixel
++per clock YUV 422 or 420 10 bits per component AXI4-Stream.
++
++Required properties:
++--------------------
++- compatible: Must contain "xlnx,v-smpte-uhdsdi-rx-ss"
++- reg: Physical base address and length of the registers set for the device.
++- interrupts: Contains the interrupt line number.
++- clocks: List of phandles to AXI4-Lite clock, core clock to SMPTE UHD-SDI Rx
++  and Video clocks.
++- clock-names: Must contain "s_axi_aclk", "sdi_rx_clk" and "video_out_clk" in
++  the same order as clocks listed in clocks property.
++- xlnx,line-rate: The maximum mode supported by the design. Possible values are
++  are as below -
++  12G_SDI_8DS	- 12G mode
++  6G_SDI	-  6G mode
++  3G_SDI	-  3G mode
++
++Optional properties:
++--------------------
++- xlnx,include-edh: This is present when the Error Detection and Handling
++  processor is enabled in design.
++
++Ports
++-----
++The device node shall contain one 'port' child node as defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Generally the SDI port is connected to a device like SDI Broadcast camera which
++is independently controlled. Hence port@0 is a source port which can be
++connected to downstream IP which can work with AXI4 Stream data.
++
++Required port properties:
++-------------------------
++- reg: 0 - for source port.
++
++- xlnx,video-format: This can be XVIP_VF_YUV_422 or XVIP_VF_YUV_420.
++- xlnx,video-width: This is should be 10.
++
++Example:
++		v_smpte_uhdsdi_rx_ss: v_smpte_uhdsdi_rx_ss@80000000 {
++			compatible = "xlnx,v-smpte-uhdsdi-rx-ss";
++			interrupt-parent = <&gic>;
++			interrupts = <0 89 4>;
++			reg = <0x0 0x80000000 0x0 0x10000>;
++			xlnx,include-edh;
++			xlnx,line-rate = "12G_SDI_8DS";
++			clocks = <&clk_1>, <&si570_1>, <&clk_2>;
++			clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++
++					xlnx,video-format = <XVIP_VF_YUV_422>;
++					xlnx,video-width = <10>;
++
++					sdirx_out: endpoint {
++						remote-endpoint = <&vcap_sdirx_in>;
++					};
++				};
++			};
++		};
 -- 
 1.8.3.1
