@@ -1,280 +1,88 @@
 From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v3 10/12] arm64: dts: allwinner: h6: Add
- IR receiver node
-Date: Tue, 4 Jun 2019 17:04:07 +0200
-Message-ID: <CAJiuCcf6gHP_G73w8Gf6QYOfvh9Frc9uQk7qpxbpsLY33PxL3w@mail.gmail.com>
-References: <20190528161440.27172-1-peron.clem@gmail.com> <20190528161440.27172-11-peron.clem@gmail.com>
- <20190530145550.amalnxmx7kpokykv@core.my.home> <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
- <20190531124630.q2guo54kjfzr7rkn@core.my.home> <CAJiuCcdMftAjCwk2_naE9VBGGqS=OY9xcqv6+5pDX2Z8O=L28w@mail.gmail.com>
- <20190604123355.m47ufmhtzuzfvmp7@core.my.home> <20190604144757.xvggmj6asyf44vuc@core.my.home>
+Subject: Re: [PATCH v3 03/12] media: rc: sunxi: Add A31 compatible
+Date: Tue, 4 Jun 2019 17:07:02 +0200
+Message-ID: <CAJiuCceqATLiDjpNLTq+gOhUHun40udJdpXYirn=Z=GVQLQzaw@mail.gmail.com>
+References: <20190528161440.27172-1-peron.clem@gmail.com> <20190528161440.27172-4-peron.clem@gmail.com>
+ <20190604145430.xqufpyosetgb4bo7@core.my.home>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604144757.xvggmj6asyf44vuc@core.my.home>
+In-Reply-To: <20190604145430.xqufpyosetgb4bo7@core.my.home>
 Sender: linux-kernel-owner@vger.kernel.org
 To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ondrej,
+Hi,
 
-On Tue, 4 Jun 2019 at 16:47, Ond=C5=99ej Jirman <megous@megous.com> wrote:
+On Tue, 4 Jun 2019 at 16:54, Ond=C5=99ej Jirman <megous@megous.com> wrote:
 >
-> Hi Cl=C3=A9ment,
->
-> On Tue, Jun 04, 2019 at 02:33:55PM +0200, verejna wrote:
-> > Hi Cl=C3=A9ment,
+> On Tue, May 28, 2019 at 06:14:31PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Allwiner A31 has a different memory mapping so add the compatible
+> > we will need it later.
 > >
-> > On Mon, Jun 03, 2019 at 09:58:23PM +0200, Cl=C3=A9ment P=C3=A9ron wrote=
-:
-> > > Hi Ondrej,
-> > >
-> > > On Fri, 31 May 2019 at 14:46, Ond=C5=99ej Jirman <megous@megous.com> =
-wrote:
-> > > >
-> > > > Hello Cl=C3=A9ment,
-> > > >
-> > > > On Fri, May 31, 2019 at 12:25:32AM +0200, Cl=C3=A9ment P=C3=A9ron w=
-rote:
-> > > > > Hi Ondrej,
-> > > > >
-> > > > > On Thu, 30 May 2019 at 16:55, Ond=C5=99ej Jirman <megous@megous.c=
-om> wrote:
-> > > > > >
-> > > > > > Hello Cl=C3=A9ment,
-> > > > > >
-> > > > > > On Tue, May 28, 2019 at 06:14:38PM +0200, Cl=C3=A9ment P=C3=A9r=
-on wrote:
-> > > > > > > Allwinner H6 IR is similar to A31 and can use same driver.
-> > > > > > >
-> > > > > > > Add support for it.
-> > > > > > >
-> > > > > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > > > > > > ---
-> > > > > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 ++++++++++=
-+++++++++
-> > > > > > >  1 file changed, 19 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/a=
-rch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > > > index 16c5c3d0fd81..649cbdfe452e 100644
-> > > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > > > @@ -647,6 +647,25 @@
-> > > > > > >                               pins =3D "PL0", "PL1";
-> > > > > > >                               function =3D "s_i2c";
-> > > > > > >                       };
-> > > > > > > +
-> > > > > > > +                     r_ir_rx_pin: r-ir-rx-pin {
-> > > > > > > +                             pins =3D "PL9";
-> > > > > > > +                             function =3D "s_cir_rx";
-> > > > > > > +                     };
-> > > > > > > +             };
-> > > > > > > +
-> > > > > > > +             r_ir: ir@7040000 {
-> > > > > > > +                             compatible =3D "allwinner,sun50=
-i-h6-ir",
-> > > > > > > +                                          "allwinner,sun6i-a=
-31-ir";
-> > > > > > > +                             reg =3D <0x07040000 0x400>;
-> > > > > > > +                             interrupts =3D <GIC_SPI 109 IRQ=
-_TYPE_LEVEL_HIGH>;
-> > > > > > > +                             clocks =3D <&r_ccu CLK_R_APB1_I=
-R>,
-> > > > > > > +                                      <&r_ccu CLK_IR>;
-> > > > > > > +                             clock-names =3D "apb", "ir";
-> > > > > > > +                             resets =3D <&r_ccu RST_R_APB1_I=
-R>;
-> > > > > > > +                             pinctrl-names =3D "default";
-> > > > > > > +                             pinctrl-0 =3D <&r_ir_rx_pin>;
-> > > > > > > +                             status =3D "disabled";
-> > > > > > >               };
-> > > > > >
-> > > > > > Please make a comment here, that this is known broken on some b=
-oards and may
-> > > > > > result IRQ flood if enabled. Otherwise noone will know.
-> > > > >
-> > > > > I'm planning to send a v4 next week with the IRQ_NONE return as M=
-axime
-> > > > > suggested it.
-> > > > > https://github.com/clementperon/linux/tree/h6_ir_v4
-> > > > >
-> > > > > But maybe we could also use the bit 5 of the IRQ status.
-> > > >
-> > > > Thanks, that's nice, but that will not make the HW work. That will =
-just disable
-> > > > it. The comment is still necessary.
-> > > I have pushed a new version on my github.
-> > > https://github.com/clementperon/linux/commits/h6_ir_v4
-> > >
-> > > I will submit it, if you are ok with it.
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  drivers/media/rc/sunxi-cir.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
 > >
-> > the changes make it worse. Console is flooded with "Temporarily disable=
- IRQ"
-> > and other symptoms are the same as I described before. Interrupts are n=
-ot
-> > disabled in a any reasonable time. (I've waited for more > 5mins alread=
-y.)
+> > diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.=
+c
+> > index d02dcb6fd0a5..0504ebfc831f 100644
+> > --- a/drivers/media/rc/sunxi-cir.c
+> > +++ b/drivers/media/rc/sunxi-cir.c
+> > @@ -343,6 +343,11 @@ static const struct sunxi_ir_quirks sun5i_a13_ir_q=
+uirks =3D {
+> >       .fifo_size =3D 64,
+> >  };
 > >
-> > You probably need to disable interrupts right away, not wait for 100k f=
-ailures.
+> > +static const struct sunxi_ir_quirks sun6i_a31_ir_quirks =3D {
+> > +     .has_reset =3D true,
+> > +     .fifo_size =3D 64,
+> > +};
+> > +
 >
-> Hmm, this is what the registers look like post-probe:
+> BTW, H6 BSP uses FIFO size 40:
 >
-> R_CIR:
-> 0x07040000 : 00000030
-> 0x07040004 : 00000030
-> 0x07040008 : 00000030
-> 0x0704000c : 00000030
-> 0x07040010 : 00000030
-> 0x07040014 : 00000030
-> 0x07040018 : 00000030
-> 0x0704001c : 00000030
-> 0x07040020 : 00000030
-> 0x07040024 : 00000030
-> 0x07040028 : 00000030
-> 0x0704002c : 00000030
-> 0x07040030 : 00000030
-> 0x07040034 : 00000030
-> 0x07040038 : 00000030
-> 0x0704003c : 00000030
-> 0x07040040 : 00000030
-> 0x07040044 : 00000030
-> 0x07040048 : 00000030
-> 0x0704004c : 00000030
-> 0x07040050 : 00000030
-> 0x07040054 : 00000030
-> 0x07040058 : 00000030
-> 0x0704005c : 00000030
-> 0x07040060 : 00000030
-> 0x07040064 : 00000030
-> 0x07040068 : 00000030
-> 0x0704006c : 00000030
-> 0x07040070 : 00000030
-> 0x07040074 : 00000030
-> 0x07040078 : 00000030
-> 0x0704007c : 00000030
-> 0x07040080 : 00000030
-> 0x07040084 : 00000030
-> 0x07040088 : 00000030
-> 0x0704008c : 00000030
-> 0x07040090 : 00000030
-> 0x07040094 : 00000030
-> 0x07040098 : 00000030
-> 0x0704009c : 00000030
-> 0x070400a0 : 00000030
-> 0x070400a4 : 00000030
-> 0x070400a8 : 00000030
-> 0x070400ac : 00000030
-> 0x070400b0 : 00000030
-> 0x070400b4 : 00000030
-> 0x070400b8 : 00000030
-> 0x070400bc : 00000030
-> 0x070400c0 : 00000030
-> 0x070400c4 : 00000030
-> 0x070400c8 : 00000030
-> 0x070400cc : 00000030
-> 0x070400d0 : 00000030
-> 0x070400d4 : 00000030
-> 0x070400d8 : 00000030
-> 0x070400dc : 00000030
-> 0x070400e0 : 00000030
-> 0x070400e4 : 00000030
-> 0x070400e8 : 00000030
-> 0x070400ec : 00000030
-> 0x070400f0 : 00000030
-> 0x070400f4 : 00000030
-> 0x070400f8 : 00000030
-> 0x070400fc : 00000030
+> https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/drive=
+rs/media/rc/sunxi-ir-dev.c#L290
 >
-> Clearly not right. It's just the R_CIR module, other modules have normal =
-values.
->
-> I've checked:
-> 0x070101c0 : 81000002
-> (IR clock config register)
-> 0x070101cc : 00010000
-> (IR reset/bus clk gate reg)
->
-> static const char * const r_mod0_default_parents[] =3D { "osc32k", "osc24=
-M" };
-> static SUNXI_CCU_MP_WITH_MUX_GATE(ir_clk, "ir",
->                                   r_mod0_default_parents, 0x1c0,
->                                   0, 5,         /* M */
->                                   8, 2,         /* P */
->                                   24, 1,        /* mux */
->                                   BIT(31),      /* gate */
->                                   0);
->
-> static SUNXI_CCU_GATE(r_apb1_ir_clk,    "r-apb1-ir",    "r-apb1",
->                       0x1cc, BIT(0), 0);
->
->         [RST_R_APB1_IR]         =3D  { 0x1cc, BIT(16) },
->
-> So parent clock seems to be OK. But gate clock is not enabled, so the bus
-> is not working.
->
-> And look at this!!:
->
-> static SUNXI_CCU_GATE(r_apb1_ir_clk,    "r-apb1-ir",    "r-apb1",
->                       0x1cc, BIT(0), 0);
-> static SUNXI_CCU_GATE(r_apb1_w1_clk,    "r-apb1-w1",    "r-apb1",
->                       0x1cc, BIT(0), 0);
->
-> So, it's wrong w1 gate config!
->
-> You can drop your changes, because I've probbably found the root cause.
-
-Nice to see that you have found the issue, but I don't understand why
-It's working on my board on not on yours.
+> Have you tried filling the fifo with over 40 words on H6, to see if it wo=
+rks?
+No I didn't try this, but I trust more the user manual than the driver.
+And I don't see why they would have reduce the fifo size in the new generat=
+ion.
+Anyway, I will be able to test that at the end of the week.
 
 Regards,
 Cl=C3=A9ment
 
+> I know it's docummented as having 64 words in the manual, so maybe Allwin=
+er
+> just didn't care enough to make the driver configurable, and the H6
+> FIFO really has that depth.
 >
 > regards,
 >         o.
 >
-> > thank you and regards,
-> >       o.
+> >  static const struct of_device_id sunxi_ir_match[] =3D {
+> >       {
+> >               .compatible =3D "allwinner,sun4i-a10-ir",
+> > @@ -352,6 +357,10 @@ static const struct of_device_id sunxi_ir_match[] =
+=3D {
+> >               .compatible =3D "allwinner,sun5i-a13-ir",
+> >               .data =3D &sun5i_a13_ir_quirks,
+> >       },
+> > +     {
+> > +             .compatible =3D "allwinner,sun6i-a31-ir",
+> > +             .data =3D &sun6i_a31_ir_quirks,
+> > +     },
+> >       {}
+> >  };
+> >  MODULE_DEVICE_TABLE(of, sunxi_ir_match);
+> > --
+> > 2.20.1
 > >
-> > > Thanks,
-> > > Cl=C3=A9ment
-> > >
-> > > >
-> > > > thank you,
-> > > >         o.
-> > > >
-> > > > > Regards, Clement
-> > > > >
-> > > > > >
-> > > > > > thanks,
-> > > > > >         o.
-> > > > > >
-> > > > > > >               r_i2c: i2c@7081400 {
-> > > > > > > --
-> > > > > > > 2.20.1
-> > > > > > >
-> > > > > > >
-> > > > > > > _______________________________________________
-> > > > > > > linux-arm-kernel mailing list
-> > > > > > > linux-arm-kernel@lists.infradead.org
-> > > > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > > > >
-> > > > > --
-> > > > > You received this message because you are subscribed to the Googl=
-e Groups "linux-sunxi" group.
-> > > > > To unsubscribe from this group and stop receiving emails from it,=
- send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > > > > To view this discussion on the web, visit https://groups.google.c=
-om/d/msgid/linux-sunxi/CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw%=
-40mail.gmail.com.
-> > > > > For more options, visit https://groups.google.com/d/optout.
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > >
 > > _______________________________________________
 > > linux-arm-kernel mailing list
