@@ -1,206 +1,59 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH] ASoC: sun4i-i2s: Change SR and WSS computation
-Date: Tue,  4 Jun 2019 10:54:49 +0200
-Message-ID: <20190604085449.13195-1-maxime.ripard@bootlin.com>
+From: Erwan Le Ray <erwan.leray@st.com>
+Subject: [PATCH 02/10] dt-bindings: serial: add optional pinctrl states
+Date: Tue, 4 Jun 2019 10:55:11 +0200
+Message-ID: <1559638519-6128-3-git-send-email-erwan.leray@st.com>
+References: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Maxime Ripard <maxime.ripard@bootlin.com>, Marcus Cooper <codekipper@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-serial@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, Bich Hemon <bich.hemon@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The current computation for the SR (sample resolution) and the WSS (word
-slot size) register parameters is based on a switch returning the matching
-parameters for a given params width.
+From: Bich Hemon <bich.hemon@st.com>
 
-Later SoCs (A83t, H3, A64) changed that calculation, which was loosely the
-same with an offset. Therefore, an offset was added to adjust those
-parameters.
+Add options for pinctrl states:
+- "sleep" for low power
+- "idle" for low power and wakeup capabilities enabled
+- "no_console_suspend" for enabling console messages in low power
 
-However, the calculation is a bit less trivial than initially thought.
-Indeed, while we assumed that SR and WSS were always the same, on older
-SoCs, SR will max at 24 (since those SoCs do not support 32 bits formats),
-but the word size can be 32.
+Signed-off-by: Bich Hemon <bich.hemon@st.com>
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 
-Newer SoCs can also support a much larger range (8 bits to 32 bits, by
-increments of 4) of size than the older SoCs could.
-
-Finally, the A64 and A83t were never adjusted to have that offset in the
-first place, and were therefore broken from that point of view.
-
-In order to fix all those issues, let's introduce two functions, get_wss
-and get_sr, with their respective implementations for all the SoCs
-supported so far.
-
-Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
-Fixes: 66ecce332538 ("ASoC: sun4i-i2s: Add compatibility with A64 codec I2S")
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- sound/soc/sunxi/sun4i-i2s.c | 69 ++++++++++++++++++++++++++++---------
- 1 file changed, 53 insertions(+), 16 deletions(-)
-
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index c53bfed8d4c2..f20f273cf5ac 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -127,7 +127,6 @@
-  * @sun4i_i2s_regmap: regmap config to use.
-  * @mclk_offset: Value by which mclkdiv needs to be adjusted.
-  * @bclk_offset: Value by which bclkdiv needs to be adjusted.
-- * @fmt_offset: Value by which wss and sr needs to be adjusted.
-  * @field_clkdiv_mclk_en: regmap field to enable mclk output.
-  * @field_fmt_wss: regmap field to set word select size.
-  * @field_fmt_sr: regmap field to set sample resolution.
-@@ -150,7 +149,6 @@ struct sun4i_i2s_quirks {
- 	const struct regmap_config	*sun4i_i2s_regmap;
- 	unsigned int			mclk_offset;
- 	unsigned int			bclk_offset;
--	unsigned int			fmt_offset;
+diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+index 5ec80c1..64a5ea9 100644
+--- a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
++++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+@@ -13,7 +13,14 @@ Required properties:
+ - clocks: The input clock of the USART instance
  
- 	/* Register fields for i2s */
- 	struct reg_field		field_clkdiv_mclk_en;
-@@ -163,6 +161,9 @@ struct sun4i_i2s_quirks {
- 	struct reg_field		field_rxchanmap;
- 	struct reg_field		field_txchansel;
- 	struct reg_field		field_rxchansel;
-+
-+	s8	(*get_sr)(const struct sun4i_i2s *, int);
-+	s8	(*get_wss)(const struct sun4i_i2s *, int);
+ Optional properties:
+-- pinctrl: The reference on the pins configuration
++- pinctrl-names: Set to "default". An additional "sleep" state can be defined
++  to set pins in sleep state when in low power. In case the device is used as
++  a wakeup source, "idle" state is defined in order to keep RX pin active.
++  For a console device, an optional state "no_console_suspend" can be defined
++  to enable console messages during suspend. Typically, "no_console_suspend" and
++  "default" states can refer to the same pin configuration.
++- pinctrl-n: Phandle(s) pointing to pin configuration nodes.
++  For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
+ - st,hw-flow-ctrl: bool flag to enable hardware flow control.
+ - rs485-rts-delay, rs485-rx-during-tx, rs485-rts-active-low,
+   linux,rs485-enabled-at-boot-time: see rs485.txt.
+@@ -31,8 +38,11 @@ usart4: serial@40004c00 {
+ 	reg = <0x40004c00 0x400>;
+ 	interrupts = <52>;
+ 	clocks = <&clk_pclk1>;
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "sleep", "idle", "no_console_suspend";
+ 	pinctrl-0 = <&pinctrl_usart4>;
++	pinctrl-1 = <&pinctrl_usart4_sleep>;
++	pinctrl-2 = <&pinctrl_usart4_idle>;
++	pinctrl-3 = <&pinctrl_usart4>;
  };
  
- struct sun4i_i2s {
-@@ -345,6 +346,39 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
- 	return 0;
- }
- 
-+static s8 sun4i_i2s_get_sr(const struct sun4i_i2s *i2s, int width)
-+{
-+	if (width < 16 || width > 24)
-+		return -EINVAL;
-+
-+	if (width % 4)
-+		return -EINVAL;
-+
-+	return (width - 16) / 4;
-+}
-+
-+static s8 sun4i_i2s_get_wss(const struct sun4i_i2s *i2s, int width)
-+{
-+	if (width < 16 || width > 32)
-+		return -EINVAL;
-+
-+	if (width % 4)
-+		return -EINVAL;
-+
-+	return (width - 16) / 4;
-+}
-+
-+static s8 sun8i_i2s_get_sr_wss(const struct sun4i_i2s *i2s, int width)
-+{
-+	if (width % 4)
-+		return -EINVAL;
-+
-+	if (width < 8 || width > 32)
-+		return -EINVAL;
-+
-+	return (width - 8) / 4 + 1;
-+}
-+
- static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
- 			       struct snd_pcm_hw_params *params,
- 			       struct snd_soc_dai *dai)
-@@ -396,22 +430,16 @@ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
- 	}
- 	i2s->playback_dma_data.addr_width = width;
- 
--	switch (params_width(params)) {
--	case 16:
--		sr = 0;
--		wss = 0;
--		break;
-+	sr = i2s->variant->get_sr(i2s, params_width(params));
-+	if (sr < 0)
-+		return -EINVAL;
- 
--	default:
--		dev_err(dai->dev, "Unsupported sample width: %d\n",
--			params_width(params));
-+	wss = i2s->variant->get_wss(i2s, params_width(params));
-+	if (wss < 0)
- 		return -EINVAL;
--	}
- 
--	regmap_field_write(i2s->field_fmt_wss,
--			   wss + i2s->variant->fmt_offset);
--	regmap_field_write(i2s->field_fmt_sr,
--			   sr + i2s->variant->fmt_offset);
-+	regmap_field_write(i2s->field_fmt_wss, wss);
-+	regmap_field_write(i2s->field_fmt_sr, sr);
- 
- 	return sun4i_i2s_set_clk_rate(dai, params_rate(params),
- 				      params_width(params));
-@@ -887,6 +915,8 @@ static const struct sun4i_i2s_quirks sun4i_a10_i2s_quirks = {
- 	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
- 	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
- 	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
-+	.get_sr			= sun4i_i2s_get_sr,
-+	.get_wss		= sun4i_i2s_get_wss,
- };
- 
- static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
-@@ -904,6 +934,8 @@ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
- 	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
- 	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
- 	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
-+	.get_sr			= sun4i_i2s_get_sr,
-+	.get_wss		= sun4i_i2s_get_wss,
- };
- 
- static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
-@@ -921,6 +953,8 @@ static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
- 	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
- 	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
- 	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
-+	.get_sr			= sun8i_i2s_get_sr_wss,
-+	.get_wss		= sun8i_i2s_get_sr_wss,
- };
- 
- static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
-@@ -929,7 +963,6 @@ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
- 	.sun4i_i2s_regmap	= &sun8i_i2s_regmap_config,
- 	.mclk_offset		= 1,
- 	.bclk_offset		= 2,
--	.fmt_offset		= 3,
- 	.has_fmt_set_lrck_period = true,
- 	.has_chcfg		= true,
- 	.has_chsel_tx_chen	= true,
-@@ -944,6 +977,8 @@ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
- 	.field_rxchanmap	= REG_FIELD(SUN8I_I2S_RX_CHAN_MAP_REG, 0, 31),
- 	.field_txchansel	= REG_FIELD(SUN8I_I2S_TX_CHAN_SEL_REG, 0, 2),
- 	.field_rxchansel	= REG_FIELD(SUN8I_I2S_RX_CHAN_SEL_REG, 0, 2),
-+	.get_sr			= sun8i_i2s_get_sr_wss,
-+	.get_wss		= sun8i_i2s_get_sr_wss,
- };
- 
- static const struct sun4i_i2s_quirks sun50i_a64_codec_i2s_quirks = {
-@@ -961,6 +996,8 @@ static const struct sun4i_i2s_quirks sun50i_a64_codec_i2s_quirks = {
- 	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
- 	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
- 	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
-+	.get_sr			= sun8i_i2s_get_sr_wss,
-+	.get_wss		= sun8i_i2s_get_sr_wss,
- };
- 
- static int sun4i_i2s_init_regmap_fields(struct device *dev,
+ usart2: serial@40004400 {
 -- 
-2.21.0
+1.9.1
