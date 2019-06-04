@@ -1,41 +1,49 @@
-From: Chen-Yu Tsai <wens@kernel.org>
-Subject: [PATCH 0/3] rtc: pcf8563: Fix unhandled interrupt storm
-Date: Tue,  4 Jun 2019 12:23:34 +0800
-Message-ID: <20190604042337.26129-1-wens@kernel.org>
+From: Andy Tang <andy.tang@nxp.com>
+Subject: RE: [PATCH] dt-bindings: thermal: Make cooling-maps property optional
+Date: Tue, 4 Jun 2019 05:56:02 +0000
+Message-ID: <VI1PR04MB43335AE882F7898F4DDD1A23F3150@VI1PR04MB4333.eurprd04.prod.outlook.com>
+References: <20190515093647.47656-1-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190515093647.47656-1-andy.tang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Chen-Yu Tsai <wens@kernel.org>, Vincent Donnefort <vdonnefort@gmail.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Andy Tang <andy.tang@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
-
-Hi everyone,
-
-While bringing up my Pine H64, I encountered an interrupt storm from the
-pcf8563 RTC. The RTC chip's interrupt line is shared with the PMIC, and
-was not properly added to the device tree. Also, the driver was using an
-trigger method incompatible with the PMIC, preventing the interrupt line
-from being shared. Last, the driver only clears and masks the alarm
-interrupt, while leaving the timer interrupt untouched. This is a
-problem if previous systems left the timer interrupt enabled, and there
-was an interrupt pending.
-
-This patch set fixes all three issues, one per patch.
-
-Please have a look.
-
-Chen-Yu Tsai (3):
-  rtc: pcf8563: Fix interrupt trigger method
-  rtc: pcf8563: Clear event flags and disable interrupts before
-    requesting irq
-  arm64: dts: allwinner: h6: Pine H64: Add interrupt line for RTC
-
- .../arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts |  2 ++
- drivers/rtc/rtc-pcf8563.c                           | 13 ++++++-------
- 2 files changed, 8 insertions(+), 7 deletions(-)
-
--- 
-2.20.1
+SGkgRWR1YmV6dmFsLCBSdWksDQoNCkFueSBmdXJ0aGVyIGNvbW1lbnRzPw0KDQpCUiwNCkFuZHkN
+Cg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBZdWFudGlhbiBUYW5nIDxh
+bmR5LnRhbmdAbnhwLmNvbT4NCj4gU2VudDogMjAxOcTqNdTCMTXI1SAxNzozNw0KPiBUbzogcnVp
+LnpoYW5nQGludGVsLmNvbTsgZWR1YmV6dmFsQGdtYWlsLmNvbQ0KPiBDYzogcm9iaCtkdEBrZXJu
+ZWwub3JnOyBkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
+Cj4gbGludXgtcG1Admdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsN
+Cj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgQW5keSBUYW5nIDxhbmR5LnRhbmdAbnhw
+LmNvbT4NCj4gU3ViamVjdDogW1BBVENIXSBkdC1iaW5kaW5nczogdGhlcm1hbDogTWFrZSBjb29s
+aW5nLW1hcHMgcHJvcGVydHkgb3B0aW9uYWwNCj4gDQo+IFRoZXJlIG1heSBiZSBubyBjb29saW5n
+IGRldmljZSBvbiBzeXN0ZW0sIG9yIHRoZXJlIGFyZSBubyBlbm91Z2ggY29vbGluZw0KPiBkZXZp
+Y2VzIGZvciBlYWNoIHRoZXJtYWwgem9uZSBpbiBtdWx0aXBsZSB0aGVybWFsIHpvbmUgY2FzZXMg
+c2luY2UgY29vbGluZw0KPiBkZXZpY2VzIGNhbid0IGJlIHNoYXJlZC4NCj4gU28gbWFrZSB0aGlz
+IHByb3BlcnR5IG9wdGlvbmFsIHRvIHJlbW92ZSBzdWNoIGxpbWl0YXRpb25zLg0KPiANCj4gU2ln
+bmVkLW9mZi1ieTogWXVhbnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IC0tLQ0KPiAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC90aGVybWFsLnR4dCAgICAgICAgfCAgICA0
+ICsrLS0NCj4gIDEgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygt
+KQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90
+aGVybWFsL3RoZXJtYWwudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3RoZXJtYWwvdGhlcm1hbC50eHQNCj4gaW5kZXggY2ExNGJhOS4uNjk0ZTgzNCAxMDA2NDQNCj4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvdGhlcm1hbC50
+eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvdGhl
+cm1hbC50eHQNCj4gQEAgLTE0MiwxMSArMTQyLDExIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+
+ICAtIHRyaXBzOgkJQSBzdWItbm9kZSB3aGljaCBpcyBhIGNvbnRhaW5lciBvZiBvbmx5IHRyaXAg
+cG9pbnQgbm9kZXMNCj4gICAgVHlwZTogc3ViLW5vZGUJcmVxdWlyZWQgdG8gZGVzY3JpYmUgdGhl
+IHRoZXJtYWwgem9uZS4NCj4gDQo+ICsNCj4gK09wdGlvbmFsIHByb3BlcnR5Og0KPiAgLSBjb29s
+aW5nLW1hcHM6CQlBIHN1Yi1ub2RlIHdoaWNoIGlzIGEgY29udGFpbmVyIG9mIG9ubHkgY29vbGlu
+ZyBkZXZpY2UNCj4gICAgVHlwZTogc3ViLW5vZGUJbWFwIG5vZGVzLCB1c2VkIHRvIGRlc2NyaWJl
+IHRoZSByZWxhdGlvbiBiZXR3ZWVuDQo+IHRyaXBzDQo+ICAJCQlhbmQgY29vbGluZyBkZXZpY2Vz
+Lg0KPiAtDQo+IC1PcHRpb25hbCBwcm9wZXJ0eToNCj4gIC0gY29lZmZpY2llbnRzOgkJQW4gYXJy
+YXkgb2YgaW50ZWdlcnMgKG9uZSBzaWduZWQgY2VsbCkgY29udGFpbmluZw0KPiAgICBUeXBlOiBh
+cnJheQkJY29lZmZpY2llbnRzIHRvIGNvbXBvc2UgYSBsaW5lYXIgcmVsYXRpb24gYmV0d2Vlbg0K
+PiAgICBFbGVtIHNpemU6IG9uZSBjZWxsCXRoZSBzZW5zb3JzIGxpc3RlZCBpbiB0aGUgdGhlcm1h
+bC1zZW5zb3JzIHByb3BlcnR5Lg0KPiAtLQ0KPiAxLjcuMQ0KDQo=
