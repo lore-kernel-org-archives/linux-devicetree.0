@@ -1,15 +1,13 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 02/13] media: rc: Introduce sunxi_ir_quirks
-Date: Tue,  4 Jun 2019 18:29:48 +0200
-Message-ID: <20190604162959.29199-3-peron.clem@gmail.com>
-References: <20190604162959.29199-1-peron.clem@gmail.com>
+Subject: [PATCH v4 00/13] Allwinner A64/H6 IR support
+Date: Tue,  4 Jun 2019 18:29:46 +0200
+Message-ID: <20190604162959.29199-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBEFZ3LTQKGQEFXLG3WA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBBDVZ3LTQKGQEC5RJMEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190604162959.29199-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,125 +15,76 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver is used in various Allwinner SoC with different configuration.
+Hi,
 
-Introduce a quirks struct to know the fifo size and if a reset is required.
+A64 IR support series[1] pointed out that an A31 bindings should be
+introduced.
 
-Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
----
- drivers/media/rc/sunxi-cir.c | 61 +++++++++++++++++++++++++++---------
- 1 file changed, 47 insertions(+), 14 deletions(-)
+This series introduce the A31 compatible bindings, then switch it on
+the already existing board.
 
-diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-index 307e44714ea0..d02dcb6fd0a5 100644
---- a/drivers/media/rc/sunxi-cir.c
-+++ b/drivers/media/rc/sunxi-cir.c
-@@ -81,6 +81,17 @@
- /* Time after which device stops sending data in ms */
- #define SUNXI_IR_TIMEOUT      120
-=20
-+/**
-+ * struct sunxi_ir_quirks - Differences between SoC variants.
-+ *
-+ * @has_reset: SoC needs reset deasserted.
-+ * @fifo_size: size of the fifo.
-+ */
-+struct sunxi_ir_quirks {
-+	bool		has_reset;
-+	int		fifo_size;
-+};
-+
- struct sunxi_ir {
- 	spinlock_t      ir_lock;
- 	struct rc_dev   *rc;
-@@ -143,6 +154,7 @@ static int sunxi_ir_probe(struct platform_device *pdev)
-=20
- 	struct device *dev =3D &pdev->dev;
- 	struct device_node *dn =3D dev->of_node;
-+	const struct sunxi_ir_quirks *quirks;
- 	struct resource *res;
- 	struct sunxi_ir *ir;
- 	u32 b_clk_freq =3D SUNXI_IR_BASE_CLK;
-@@ -151,12 +163,15 @@ static int sunxi_ir_probe(struct platform_device *pde=
-v)
- 	if (!ir)
- 		return -ENOMEM;
-=20
-+	quirks =3D of_device_get_match_data(&pdev->dev);
-+	if (quirks =3D=3D NULL) {
-+		dev_err(&pdev->dev, "Failed to determine the quirks to use\n");
-+		return -ENODEV;
-+	}
-+
- 	spin_lock_init(&ir->ir_lock);
-=20
--	if (of_device_is_compatible(dn, "allwinner,sun5i-a13-ir"))
--		ir->fifo_size =3D 64;
--	else
--		ir->fifo_size =3D 16;
-+	ir->fifo_size =3D quirks->fifo_size;
-=20
- 	/* Clock */
- 	ir->apb_clk =3D devm_clk_get(dev, "apb");
-@@ -173,13 +188,15 @@ static int sunxi_ir_probe(struct platform_device *pde=
-v)
- 	/* Base clock frequency (optional) */
- 	of_property_read_u32(dn, "clock-frequency", &b_clk_freq);
-=20
--	/* Reset (optional) */
--	ir->rst =3D devm_reset_control_get_optional_exclusive(dev, NULL);
--	if (IS_ERR(ir->rst))
--		return PTR_ERR(ir->rst);
--	ret =3D reset_control_deassert(ir->rst);
--	if (ret)
--		return ret;
-+	/* Reset */
-+	if (quirks->has_reset) {
-+		ir->rst =3D devm_reset_control_get_exclusive(dev, NULL);
-+		if (IS_ERR(ir->rst))
-+			return PTR_ERR(ir->rst);
-+		ret =3D reset_control_deassert(ir->rst);
-+		if (ret)
-+			return ret;
-+	}
-=20
- 	ret =3D clk_set_rate(ir->clk, b_clk_freq);
- 	if (ret) {
-@@ -316,10 +333,26 @@ static int sunxi_ir_remove(struct platform_device *pd=
-ev)
- 	return 0;
- }
-=20
-+static const struct sunxi_ir_quirks sun4i_a10_ir_quirks =3D {
-+	.has_reset =3D false,
-+	.fifo_size =3D 16,
-+};
-+
-+static const struct sunxi_ir_quirks sun5i_a13_ir_quirks =3D {
-+	.has_reset =3D false,
-+	.fifo_size =3D 64,
-+};
-+
- static const struct of_device_id sunxi_ir_match[] =3D {
--	{ .compatible =3D "allwinner,sun4i-a10-ir", },
--	{ .compatible =3D "allwinner,sun5i-a13-ir", },
--	{},
-+	{
-+		.compatible =3D "allwinner,sun4i-a10-ir",
-+		.data =3D &sun4i_a10_ir_quirks,
-+	},
-+	{
-+		.compatible =3D "allwinner,sun5i-a13-ir",
-+		.data =3D &sun5i_a13_ir_quirks,
-+	},
-+	{}
- };
- MODULE_DEVICE_TABLE(of, sunxi_ir_match);
-=20
+Finally introduce A64 and H6 support.
+
+I have reenable the other H6 boards IR support as Ondrej solve the issue.
+
+Regards,
+Cl=C3=A9ment
+
+[1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
+[2] https://lkml.org/lkml/2019/5/27/321
+[3] https://patchwork.kernel.org/patch/10975563/
+
+Changes since v3:
+ - Reenable IR for other H6 boards
+ - Add RXSTA bits definition
+ - Add Sean Young's "Acked-by" tags
+
+Changes since v2:
+ - Disable IR for other H6 boards
+ - Split DTS patch for H3/H5
+ - Introduce IR quirks
+
+Changes since v1:
+ - Document reset lines as required since A31
+ - Explain the memory mapping difference in commit log
+ - Fix misspelling "Allwiner" to "Allwinner"
+Cl=C3=A9ment P=C3=A9ron (11):
+  dt-bindings: media: sunxi-ir: Add A31 compatible
+  media: rc: Introduce sunxi_ir_quirks
+  media: rc: sunxi: Add A31 compatible
+  media: rc: sunxi: Add RXSTA bits definition
+  ARM: dts: sunxi: Prefer A31 bindings for IR
+  ARM: dts: sunxi: Prefer A31 bindings for IR
+  dt-bindings: media: sunxi-ir: Add A64 compatible
+  dt-bindings: media: sunxi-ir: Add H6 compatible
+  arm64: dts: allwinner: h6: Add IR receiver node
+  arm64: dts: allwinner: h6: Enable IR on H6 boards
+  arm64: defconfig: Enable IR SUNXI option
+
+Igors Makejevs (1):
+  arm64: dts: allwinner: a64: Add IR node
+
+Jernej Skrabec (1):
+  arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
+
+ .../devicetree/bindings/media/sunxi-ir.txt    | 11 ++-
+ arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
+ arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 +
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  4 +
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  4 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 ++++
+ arch/arm64/configs/defconfig                  |  1 +
+ drivers/media/rc/sunxi-cir.c                  | 88 ++++++++++++++-----
+ 13 files changed, 135 insertions(+), 26 deletions(-)
+
 --=20
 2.20.1
 
@@ -145,5 +94,5 @@ linux-sunxi" group.
 To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190604162959.29199-3-peron.clem%40gmail.com.
+/linux-sunxi/20190604162959.29199-1-peron.clem%40gmail.com.
 For more options, visit https://groups.google.com/d/optout.
