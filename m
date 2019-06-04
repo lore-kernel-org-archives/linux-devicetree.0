@@ -1,97 +1,65 @@
-From: Benson Leung <bleung@google.com>
-Subject: Re: [PATCH v9 5/7] dt-bindings: Add binding for cros-ec-rpmsg.
-Date: Tue, 4 Jun 2019 10:57:31 -0700
-Message-ID: <20190604175731.GB241153@google.com>
-References: <20190531073848.155444-1-pihsun@chromium.org>
- <20190531073848.155444-6-pihsun@chromium.org>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [EXT] [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
+Date: Tue, 4 Jun 2019 11:10:01 -0700
+Message-ID: <CANcMJZB+bg9LWzo=EaL-QnWiL49=MzyBJy8qsBiSMu8HZeWRxw@mail.gmail.com>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <20190604072001.9288-3-bjorn.andersson@linaro.org> <BN7PR08MB568450B1EC51ABAA2E426AC0DB150@BN7PR08MB5684.namprd08.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190531073848.155444-6-pihsun@chromium.org>
+In-Reply-To: <BN7PR08MB568450B1EC51ABAA2E426AC0DB150@BN7PR08MB5684.namprd08.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pi-Hsun Shih <pihsun@chromium.org>
-Cc: Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Guenter Roeck <groeck@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Subhash Jadavani <subhashj@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 4, 2019 at 1:14 AM Bean Huo (beanhuo) <beanhuo@micron.com> wrote:
+>
+> Hi, Bjorn
+>
+> >Acquire the device-reset GPIO and toggle this to reset the UFS device during
+> >initialization and host reset.
+> >
+> >+/**
+> >+ ufshcd_device_reset() - toggle the (optional) device reset line
+> >+ * @hba: per-adapter instance
+> >+ *
+> >+ * Toggles the (optional) reset line to reset the attached device.
+> >+ */
+> >+static void ufshcd_device_reset(struct ufs_hba *hba) {
+> >+      /*
+> >+       * The USB device shall detect reset pulses of 1us, sleep for 10us to
+> >+       * be on the safe side.
+> >+       */
+> >+      gpiod_set_value_cansleep(hba->device_reset, 1);
+> >+      usleep_range(10, 15);
+> >+
+> >+      gpiod_set_value_cansleep(hba->device_reset, 0);
+> >+      usleep_range(10, 15);
+> >+}
+> >+
+> > /**
+> >  * ufshcd_host_reset_and_restore - reset and restore host controller
+> >  * @hba: per-adapter instance
+> >@@ -6159,6 +6179,9 @@ static int ufshcd_reset_and_restore(struct ufs_hba
+> >*hba)
+> >       int retries = MAX_HOST_RESET_RETRIES;
+> >
+> >       do {
+> >+              /* Reset the attached device */
+> >+              ufshcd_device_reset(hba);
+> >+
+>
+> what's problem you met, and you should reset UFS device here? could you give more info?
 
---H+4ONPRPur6+Ovig
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On the pixel3, devices with micron UFS chips won't boot upstream
+kernels without this patch, which is a rewrite of an earlier patch:
+  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/p3&id=99f3dd8519a848b752679584451c45f42c326a17
 
-On Fri, May 31, 2019 at 03:38:46PM +0800, Pi-Hsun Shih wrote:
-> Add a DT binding documentation for ChromeOS EC driver over rpmsg.
->=20
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+Which was pulled from the downstream tree from here:
+  https://android.googlesource.com/kernel/msm.git/+/9c8077087e818017%5E%21/
 
-Reviewed-by: Benson Leung <bleung@chromium.org>
+CCing Subhash as he may have additional context.
 
->=20
-> ---
-> Changes from v8, v7, v6:
->  - No change.
->=20
-> Changes from v5:
->  - New patch.
-> ---
->  Documentation/devicetree/bindings/mfd/cros-ec.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Document=
-ation/devicetree/bindings/mfd/cros-ec.txt
-> index 6245c9b1a68b..4860eabd0f72 100644
-> --- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-> +++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-> @@ -3,7 +3,7 @@ ChromeOS Embedded Controller
->  Google's ChromeOS EC is a Cortex-M device which talks to the AP and
->  implements various function such as keyboard and battery charging.
-> =20
-> -The EC can be connect through various means (I2C, SPI, LPC) and the
-> +The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and t=
-he
->  compatible string used depends on the interface. Each connection method =
-has
->  its own driver which connects to the top level interface-agnostic EC dri=
-ver.
->  Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connec=
-t to
-> @@ -17,6 +17,9 @@ Required properties (SPI):
->  - compatible: "google,cros-ec-spi"
->  - reg: SPI chip select
-> =20
-> +Required properties (RPMSG):
-> +- compatible: "google,cros-ec-rpmsg"
-> +
->  Optional properties (SPI):
->  - google,cros-ec-spi-pre-delay: Some implementations of the EC need a li=
-ttle
->    time to wake up from sleep before they can receive SPI transfers at a =
-high
-> --=20
-> 2.22.0.rc1.257.g3120a18244-goog
->=20
-
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---H+4ONPRPur6+Ovig
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXPaxCwAKCRBzbaomhzOw
-wrfuAP9QcQ2v/pDWTXePJ8PoBlW9S+7RIpMiCvQTzUnjpZ+iKwD/bQPNeneMkrd5
-fBrGE9T80lwQ9Bjy29YcKEPBBfGIRQI=
-=SqoY
------END PGP SIGNATURE-----
-
---H+4ONPRPur6+Ovig--
+thanks
+-john
