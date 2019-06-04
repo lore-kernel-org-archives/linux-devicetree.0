@@ -1,51 +1,91 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v5 0/3] Qualcomm QCS404 PCIe support
-Date: Tue, 4 Jun 2019 07:52:24 -0500
-Message-ID: <20190604125224.GG189360@google.com>
-References: <20190529005710.23950-1-bjorn.andersson@linaro.org>
- <20190529163155.GA24655@redmoon>
- <20190604113347.GA13029@centauri.ideon.se>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH v5 2/2] dt-bindings: iio: frequency: Add docs for ADF4371 PLL
+Date: Tue, 4 Jun 2019 16:08:17 +0300
+Message-ID: <1559653697-2760-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190604113347.GA13029@centauri.ideon.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 01:33:47PM +0200, Niklas Cassel wrote:
-> On Wed, May 29, 2019 at 05:31:55PM +0100, Lorenzo Pieralisi wrote:
-> > On Tue, May 28, 2019 at 05:57:07PM -0700, Bjorn Andersson wrote:
-> > > This series adds support for the PCIe controller in the Qualcomm QCS404
-> > > platform.
-> > > 
-> > > Bjorn Andersson (3):
-> > >   PCI: qcom: Use clk_bulk API for 2.4.0 controllers
-> > >   dt-bindings: PCI: qcom: Add QCS404 to the binding
-> > >   PCI: qcom: Add QCS404 PCIe controller support
-> > > 
-> > >  .../devicetree/bindings/pci/qcom,pcie.txt     |  25 +++-
-> > >  drivers/pci/controller/dwc/pcie-qcom.c        | 113 ++++++++----------
-> > >  2 files changed, 75 insertions(+), 63 deletions(-)
-> > 
-> > Applied to pci/qcom for v5.3, thanks.
-> > 
-> > Lorenzo
-> 
-> Hello Lorenzo,
-> 
-> I don't see these patches in linux-next.
-> 
-> It appears that only Bjorn Helgaas tree is in linux-next, and not yours.
-> 
-> I think that it makes a lot of sense for patches to cook in linux-next
-> for as long a possible.
-> 
-> Perhaps you and Bjorn Helgaas could have a shared PCI git tree?
-> Or perhaps you could add your tree to linux-next?
-> ..or some other solution :)
+Document support for Analog Devices ADF4371 SPI Wideband Synthesizer.
 
-I pull Lorenzo's branches into my -nexst branch.  I just haven't
-gotten to it yet.
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+Changes in v2:
+	- Nothing changed.
+Changes in v3:
+	- Nothing changed.
+Changes in v4:
+	- Nothing changed.
+Changes in v5:
+	- Nothing changed.
+
+ .../devicetree/bindings/iio/frequency/adf4371.yaml | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+
+diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+new file mode 100644
+index 0000000..d7adf074
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/frequency/adf4371.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADF4371 Wideband Synthesizer
++
++maintainers:
++  - Popa Stefan <stefan.popa@analog.com>
++
++description: |
++  Analog Devices ADF4371 SPI Wideband Synthesizer
++  https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,adf4371
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    description:
++      Definition of the external clock (see clock/clock-bindings.txt)
++    maxItems: 1
++
++  clock-names:
++    description:
++      Must be "clkin"
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    spi0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        frequency@0 {
++                compatible = "adi,adf4371";
++                reg = <0>;
++                spi-max-frequency = <1000000>;
++                clocks = <&adf4371_clkin>;
++                clock-names = "clkin";
++        };
++    };
++...
+-- 
+2.7.4
