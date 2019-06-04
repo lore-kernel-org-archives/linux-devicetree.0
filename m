@@ -1,83 +1,97 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH V2 00/12] LP0 entry and exit support for Tegra210
-Date: Tue, 4 Jun 2019 16:47:21 +0300
-Message-ID: <20190604134721.GF29894@pdeschrijver-desktop.Nvidia.com>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+From: Vishal Sagar <vishal.sagar@xilinx.com>
+Subject: [PATCH 0/2] Add support for Xilinx UHD-SDI Receiver subsystem
+Date: Tue,  4 Jun 2019 19:25:54 +0530
+Message-ID: <1559656556-79174-1-git-send-email-vishal.sagar@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Hyun Kwon <hyun.kwon@xilinx.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>, Vishal Sagar <vishal.sagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 28, 2019 at 04:08:44PM -0700, Sowjanya Komatineni wrote:
-> This patch series includes Tegra210 deepsleep/LP0 support with
-> deep sleep exit through RTC alarm wake and power button wake events.
-> 
+Xilinx SMPTE UHD-SDI Receiver Subsystem
+----------------------------------------
 
-We have been calling this SC7 (system C-state 7) for quite a while now.
+The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create
+systems based on SMPTE SDI protocols. It receives unaligned native SDI
+streams from the SDI GT PHY and outputs an AXI4-Stream video stream,
+native video, or native SDI using Xilinx transceivers as the physical
+layer.
 
-Peter.
+                SMPTE UHD-SDI Rx Subsystem AXI4-Stream Architecture
 
-> Note: Wake on power button is through gpio-keys node in device tree.
-> 
-> This series also includes save and restore of PLLs, clocks, OSC contexts
-> for basic LP0 exit.
-> 
-> This patch series doesn't support 100% suspend/resume to allow fully
-> functional state upon resume and we are working on some more drivers suspend
-> and resume implementations.
-> 
-> [V2] : V1 feedback fixes
-> 	Patch 0002: This version still using syscore. Thierry suggest not to
-> 	use syscore and waiting on suggestion from Linux Walleij for any better
-> 	way of storing current state of pins before suspend entry and restoring
-> 	them on resume at very early stage. So left this the same way as V1 and
-> 	will address once I get more feedback on this.
-> 	Also need to findout and implement proper way of forcing resume order
-> 	between pinctrl and gpio driver.
-> 
-> 
-> Sowjanya Komatineni (12):
->   irqchip: tegra: do not disable COP IRQ during suspend
->   pinctrl: tegra: add suspend and resume support
->   clk: tegra: save and restore PLLs state for system
->   clk: tegra: add support for peripheral clock suspend and resume
->   clk: tegra: add support for OSC clock resume
->   clk: tegra: add suspend resume support for DFLL clock
->   clk: tegra: support for Tegra210 clocks suspend-resume
->   soc/tegra: pmc: allow support for more tegra wake models
->   soc/tegra: pmc: add pmc wake support for tegra210
->   gpio: tegra: implement wake event support for Tegra210 and prior GPIO
->   arm64: tegra: enable wake from deep sleep on RTC alarm.
->   soc/tegra: pmc: configure tegra deep sleep control settings
-> 
->  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |   7 +
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi       |   5 +-
->  drivers/clk/tegra/clk-dfll.c                   |  82 ++++++
->  drivers/clk/tegra/clk-dfll.h                   |   2 +
->  drivers/clk/tegra/clk-divider.c                |  19 ++
->  drivers/clk/tegra/clk-pll-out.c                |  25 ++
->  drivers/clk/tegra/clk-pll.c                    |  99 +++++--
->  drivers/clk/tegra/clk-tegra-fixed.c            |  16 ++
->  drivers/clk/tegra/clk-tegra210.c               | 382 +++++++++++++++++++++++++
->  drivers/clk/tegra/clk.c                        |  74 ++++-
->  drivers/clk/tegra/clk.h                        |  13 +
->  drivers/gpio/gpio-tegra.c                      | 116 +++++++-
->  drivers/irqchip/irq-tegra.c                    |  22 +-
->  drivers/pinctrl/tegra/pinctrl-tegra.c          |  68 ++++-
->  drivers/pinctrl/tegra/pinctrl-tegra.h          |   3 +
->  drivers/pinctrl/tegra/pinctrl-tegra114.c       |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra124.c       |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra20.c        |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra210.c       |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra30.c        |   1 +
->  drivers/soc/tegra/pmc.c                        | 150 +++++++++-
->  21 files changed, 1053 insertions(+), 35 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+          +============================================================+
+	  |           Native SDI           Native Video                |
+SDI	  |   +=========+   |   +============+  |   +=============+    |AXI4
+Stream	  |   |  SMPTE  |   V   |   SDI Rx   |  V   | Video In    |    |Stream
+--------->|-->| UHD-SDI |------>|    to      |----->|   to        |--->|------->
+	  |   |   RX    |       |  Native    |      | AXI4-Stream |    |
+	  |   +=========+       |Video Bridge|      +=============+    |
+	  |      |  ^           +============+                         |
+   <------|------+  |                                                  |
+sdi_rx_irq|         |                                                  |
+	  +=====+===+==================================================+
+                    |                            ^              ^
+                    |                            |              |
+                 s_axi_aclk                   sdi_rx_clk   video_out_clk
+
+
+The subsystem consists of the following subcores:
+- SMPTE UHD-SDI (RX)
+- SDI RX to Video Bridge
+- Video In to AXI4-Stream
+
+At design time, this subsystem can be configured in 3Gbps, 6Gbps or
+12Gbps mode. It can also be configured to output
+- SDI Native stream
+- Native Video
+- AXI4-Stream
+
+This driver only supports the AXI4-Stream configuration as there is a
+corresponding media bus format for YUV 422 10 bits per component in
+MEDIA_BUS_FMT_UYVY10_1X20.
+
+Though the core also supports YUV 420 10 bits per component, this is
+not supported in driver due to lack of corresponding media bus format
+currently.
+
+The SDI core has detection modes where in it can be configured to detect
+one or more modes from SD (Standard Definition), HD (High Definition),
+3GA, 3GB, 6G and 12G modes. When the core has detected the format, it
+generates a video lock. In case the source is removed or there is data
+corruption, the video may unlock. This is intimated to the application
+via a V4L2 event. Other events which application can subscribe are for
+overflow and underflow of the video bridges.
+
+The driver gives out the stream properties like width, height, colorformat,
+frame interval and progressive/interlaced based on the ST352 packet in SDI
+stream. If the ST352 packet is absent, then the values detected by the
+SMPTE UHD-SDI Rx core are used.
+
+The SDI core detection modes and detected mode, errors, etc are all
+accessible via v4l controls. This driver has been tested with Omnitek
+Ultra4K HD, Phabrix Qx and Blackmagic SDI-HDMI convertors.
+
+This patch set is being sent on top of v8 of Xilinx MIPI CSI2-Rx Subsystem
+driver patches.
+
+Vishal Sagar (2):
+  media: dt-bindings: media: xilinx: Add Xilinx UHD-SDI Receiver
+    Subsystem
+  media: v4l: xilinx: Add Xilinx UHD-SDI Rx Subsystem driver
+
+ .../bindings/media/xilinx/xlnx,sdirxss.txt         |   80 +
+ drivers/media/platform/xilinx/Kconfig              |   11 +
+ drivers/media/platform/xilinx/Makefile             |    1 +
+ drivers/media/platform/xilinx/xilinx-sdirxss.c     | 1846 ++++++++++++++++++++
+ include/uapi/linux/xilinx-sdirxss.h                |   63 +
+ include/uapi/linux/xilinx-v4l2-controls.h          |   30 +
+ include/uapi/linux/xilinx-v4l2-events.h            |    9 +
+ 7 files changed, 2040 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.txt
+ create mode 100644 drivers/media/platform/xilinx/xilinx-sdirxss.c
+ create mode 100644 include/uapi/linux/xilinx-sdirxss.h
+
+-- 
+1.8.3.1
