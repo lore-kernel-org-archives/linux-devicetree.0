@@ -1,75 +1,94 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH v3 03/12] media: rc: sunxi: Add A31 compatible
-Date: Tue, 4 Jun 2019 16:54:30 +0200
-Message-ID: <20190604145430.xqufpyosetgb4bo7@core.my.home>
-References: <20190528161440.27172-1-peron.clem@gmail.com>
- <20190528161440.27172-4-peron.clem@gmail.com>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH v6 2/2] dt-bindings: iio: frequency: Add docs for ADF4371 PLL
+Date: Tue, 4 Jun 2019 17:58:21 +0300
+Message-ID: <1559660301-12298-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190528161440.27172-4-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 28, 2019 at 06:14:31PM +0200, Clément Péron wrote:
-> Allwiner A31 has a different memory mapping so add the compatible
-> we will need it later.
-> 
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  drivers/media/rc/sunxi-cir.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-> index d02dcb6fd0a5..0504ebfc831f 100644
-> --- a/drivers/media/rc/sunxi-cir.c
-> +++ b/drivers/media/rc/sunxi-cir.c
-> @@ -343,6 +343,11 @@ static const struct sunxi_ir_quirks sun5i_a13_ir_quirks = {
->  	.fifo_size = 64,
->  };
->  
-> +static const struct sunxi_ir_quirks sun6i_a31_ir_quirks = {
-> +	.has_reset = true,
-> +	.fifo_size = 64,
-> +};
-> +
+Document support for Analog Devices ADF4371 SPI Wideband Synthesizer.
 
-BTW, H6 BSP uses FIFO size 40:
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes in v2:
+	- Nothing changed.
+Changes in v3:
+	- Nothing changed.
+Changes in v4:
+	- Nothing changed.
+Changes in v5:
+	- Nothing changed.
+Changes in v6:
+	- Nothing changed.
 
-https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/drivers/media/rc/sunxi-ir-dev.c#L290
+ .../devicetree/bindings/iio/frequency/adf4371.yaml | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
 
-Have you tried filling the fifo with over 40 words on H6, to see if it works?
-
-I know it's docummented as having 64 words in the manual, so maybe Allwiner
-just didn't care enough to make the driver configurable, and the H6
-FIFO really has that depth.
-
-regards,
-	o.
-
->  static const struct of_device_id sunxi_ir_match[] = {
->  	{
->  		.compatible = "allwinner,sun4i-a10-ir",
-> @@ -352,6 +357,10 @@ static const struct of_device_id sunxi_ir_match[] = {
->  		.compatible = "allwinner,sun5i-a13-ir",
->  		.data = &sun5i_a13_ir_quirks,
->  	},
-> +	{
-> +		.compatible = "allwinner,sun6i-a31-ir",
-> +		.data = &sun6i_a31_ir_quirks,
-> +	},
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, sunxi_ir_match);
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+new file mode 100644
+index 0000000..d7adf074
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/frequency/adf4371.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADF4371 Wideband Synthesizer
++
++maintainers:
++  - Popa Stefan <stefan.popa@analog.com>
++
++description: |
++  Analog Devices ADF4371 SPI Wideband Synthesizer
++  https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,adf4371
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    description:
++      Definition of the external clock (see clock/clock-bindings.txt)
++    maxItems: 1
++
++  clock-names:
++    description:
++      Must be "clkin"
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    spi0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        frequency@0 {
++                compatible = "adi,adf4371";
++                reg = <0>;
++                spi-max-frequency = <1000000>;
++                clocks = <&adf4371_clkin>;
++                clock-names = "clkin";
++        };
++    };
++...
+-- 
+2.7.4
