@@ -1,96 +1,54 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] USB: move usb debugfs directory creation to the usb
- common core
-Date: Tue, 4 Jun 2019 13:59:19 +0200
-Message-ID: <20190604115919.GA24346@kroah.com>
-References: <20190604093258.GB30054@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Torsten Duwe <duwe@lst.de>
+Subject: [PATCH v2 0/7] Add anx6345 DP/eDP bridge for Olimex Teres-I
+Date: Tue,  4 Jun 2019 14:21:50 +0200 (CEST)
+Message-ID: <20190604122150.29D6468B05@newverein.lst.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190604093258.GB30054@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 11:32:58AM +0200, Greg Kroah-Hartman wrote:
-> The USB gadget subsystem wants to use the USB debugfs root directory, so
-> move it to the common "core" USB code so that it is properly initialized
-> and removed as needed.
-> 
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
-> 
-> This should be the "correct" version of this, Chunfeng, can you test
-> this to verify it works for you?
-> 
-> 
-> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> index 18f5dcf58b0d..3b5e4263ffef 100644
-> --- a/drivers/usb/common/common.c
-> +++ b/drivers/usb/common/common.c
-> @@ -15,6 +15,7 @@
->  #include <linux/usb/of.h>
->  #include <linux/usb/otg.h>
->  #include <linux/of_platform.h>
-> +#include <linux/debugfs.h>
->  
->  static const char *const ep_type_names[] = {
->  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
-> @@ -291,4 +292,21 @@ struct device *usb_of_get_companion_dev(struct device *dev)
->  EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
->  #endif
->  
-> +struct dentry *usb_debug_root;
-> +EXPORT_SYMBOL_GPL(usb_debug_root);
-> +
-> +static int usb_common_init(void)
-> +{
-> +	usb_debug_root = debugfs_create_dir("usb", NULL);
-> +	return 0;
-> +}
-> +
-> +static void usb_common_exit(void)
-> +{
-> +	debugfs_remove_recursive(usb_debug_root);
-> +}
-> +
-> +module_init(usb_common_init);
-> +module_exit(usb_common_exit);
-> +
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> index 7fcb9f782931..f3d6b1ab80cb 100644
-> --- a/drivers/usb/core/usb.c
-> +++ b/drivers/usb/core/usb.c
-> @@ -1185,19 +1185,17 @@ static struct notifier_block usb_bus_nb = {
->  	.notifier_call = usb_bus_notify,
->  };
->  
-> -struct dentry *usb_debug_root;
-> -EXPORT_SYMBOL_GPL(usb_debug_root);
-> +static struct dentry *usb_devices_root;
->  
->  static void usb_debugfs_init(void)
->  {
-> -	usb_debug_root = debugfs_create_dir("usb", NULL);
-> -	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
-> -			    &usbfs_devices_fops);
-> +	usb_devices_root = debugfs_create_file("devices", 0444, usb_debug_root,
-> +					       NULL, &usbfs_devices_fops);
->  }
->  
->  static void usb_debugfs_cleanup(void)
->  {
-> -	debugfs_remove_recursive(usb_debug_root);
-> +	debugfs_remove_recursive(usb_devices_root);
 
-That should just be debugfs_remove();
+ANX6345 LVTTL->eDP video bridge, driver with device tree bindings.
 
-I'll fix it up after someone tests this :)
 
-thanks,
+Changes from v1:
 
-greg k-h
+* fixed up copyright information. Most code changes are only moves and thus
+  retain copyright and module ownership. Even the new analogix-anx6345.c originates
+  from the old 1495-line analogix-anx78xx.c, with 306 insertions and 987 deletions
+  (ignoring the trivial anx78xx -> anx6345 replacements) 306 new vs. 508 old...
+
+* fixed all minor formatting issues brought up
+
+* merged previously separate new analogix_dp_i2c module into existing analogix_dp
+
+* split additional defines into a preparatory patch
+
+* renamed the factored-out common functions anx_aux_* -> anx_dp_aux_*, because
+  anx_...aux_transfer was exported globally. Besides, it is now GPL-only exported.
+
+* moved chip ID read into a separate function.
+
+* keep the chip powered after a successful probe.
+  (There's a good chance that this is the only display during boot!)
+
+* updated the binding document: LVTTL input is now required, only the output side
+  description is optional.
+
+ Laurent: I have also looked into the drm_panel_bridge infrastructure,
+ but it's not that trivial to convert these drivers to it.
+
+Changes from the respective previous versions:
+
+* the reset polarity is corrected in DT and the driver;
+  things should be clearer now.
+
+* as requested, add a panel (the known innolux,n116bge) and connect
+  the ports.
+
+* renamed dvdd?? to *-supply to match the established scheme
+
+* trivial update to the #include list, to make it compile in 5.2
+
+	Torsten
