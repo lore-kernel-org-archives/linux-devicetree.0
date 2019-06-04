@@ -1,123 +1,91 @@
-From: Luca Weiss <luca@z3ntu.xyz>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
-Date: Tue, 04 Jun 2019 17:07:57 +0200
-Message-ID: <1832388.aQYCy0c1Lq@g550jk>
-References: <20190604144252.26965-1-luca@z3ntu.xyz> <20190604145907.j3fp52gxupd3bkih@flea>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Date: Tue, 4 Jun 2019 08:08:40 -0700
+Message-ID: <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
+References: <20190604122150.29D6468B05@newverein.lst.de>
+ <20190604122308.98D4868B20@newverein.lst.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2909352.anXG0Hpojg"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604145907.j3fp52gxupd3bkih@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "open list:SUN4I LOW RES ADC ATTACHED TABLET KEYS DRIVER" <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190604122308.98D4868B20@newverein.lst.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Torsten Duwe <duwe@lst.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
---nextPart2909352.anXG0Hpojg
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-Hi Maxime,
-sorry I forgot to mark it as a v2 and add the changelog to v1.
-
-I've actually not split the patch into two on purpose as it's a pretty small 
-change and the patch adding support for the A83T didn't split out the device 
-tree changes - and recently in another patch of mine, the extra devicetree 
-patch was squashed into the driver patch by the maintainer while merging. I'll 
-fix this up asap.
-
-Luca
-
-On Dienstag, 4. Juni 2019 16:59:07 CEST Maxime Ripard wrote:
-> Hi Luca,
-> 
-> On Tue, Jun 04, 2019 at 04:42:53PM +0200, Luca Weiss wrote:
-> > Add a node describing the KEYADC on the A64.
-> > 
-> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> 
-> You should have a changelog detailing which changes you made to your
-> patch with the previous version, and why you made those changes (for
-> example because we looked at the a83t datasheet and found the two
-> controllers to be very similar).
-> 
-> > ---
-> > 
-> >  .../devicetree/bindings/input/sun4i-lradc-keys.txt        | 1 +
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi             | 8 ++++++++
-> >  2 files changed, 9 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> > b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt index
-> > 496125c6bfb7..507b737612ea 100644
-> > --- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> > +++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> > 
-> > @@ -5,6 +5,7 @@ Required properties:
-> >   - compatible: should be one of the following string:
-> >  		"allwinner,sun4i-a10-lradc-keys"
-> >  		"allwinner,sun8i-a83t-r-lradc"
-> > 
-> > +		"allwinner,sun50i-a64-lradc", "allwinner,sun8i-a83t-r-
-lradc"
-> > 
-> >   - reg: mmio address range of the chip
-> >   - interrupts: interrupt to which the chip is connected
-> >   - vref-supply: powersupply for the lradc reference voltage
-> > 
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi index
-> > 7734f70e1057..3a42352b5c9f 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > @@ -704,6 +704,14 @@
-> > 
-> >  			status = "disabled";
-> >  		
-> >  		};
-> > 
-> > +		lradc: lradc@1c21800 {
-> > +			compatible = "allwinner,sun50i-a64-lradc",
-> > +				     "allwinner,sun8i-a83t-r-
-lradc";
-> > +			reg = <0x01c21800 0x400>;
-> > +			interrupts = <GIC_SPI 30 
-IRQ_TYPE_LEVEL_HIGH>;
-> > +			status = "disabled";
-> > +		};
-> > +
-> 
-> The bindings and the dt changes should be two different patches as
-> well.
-> 
-> Thanks!
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-
---nextPart2909352.anXG0Hpojg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE66ocILd+OiPORlvAOY2pEqPLBhkFAlz2iU0ACgkQOY2pEqPL
-BhkUqQ/+LT63fs1EFL67wFkz1sDABOyesiVfTNGHeZxt7U3iBZKMlWr2imGwPypZ
-FZkdHq5CgOTVceNoMvxJtaKFNuewU75VUjGo5bEw/+hO7qdawpu7oni+6BjOaPGY
-3KaDj0GxNELe2wO6ZBcvfJNrgc2IoA6lkTDWdGqkchTO+bb824VGZmeStPfGRAAg
-UXcjmqeQ6UfUZN7OMSKD82VOXNsG55xxLZwGFBIZlw45vZ9+wVEJhPAQFmn6V03V
-y5CHvQYAQ9zOpvPe4DQz3ruOZm7Od+bUEMUP0W2hYVig0l1rkzUMPEEXsrcAY7al
-ow3Mw0J2wMHy7WN6Tjx1MO2C8eTLd+D1e8VfqulEtA/4oy7hvXpiIjEKR5HwQb3P
-Sdk/eWGhnrDLcWZ0tcpP7P5k2k6OrKJzlvaZ3Qiy/sYifBYzM1p+LX3V4WAHGoYx
-5c8vt4XnmGYZN3zyDWnDW/gbpyqNal0PvtiDjnzglFfaYOn+smu8KOB7yJaBzPuT
-+F/ziMdUpiTHvIwbGr/5iNi2stbTp22DE2b86w9JtPJanuLvibQ0Ub/iZXgWR+6j
-GDwAaH0fqhqBoq0dqWkB3LU0dDnjWN4v+ADShF8NYkMBXcCFoGDNlRMrlEmltSM+
-al4GF+2ykyt8QQWDYfBu5fp/ZT0P7XzEo+Cb8SeUOSqZNxXOG7E=
-=Q6BY
------END PGP SIGNATURE-----
-
---nextPart2909352.anXG0Hpojg--
+T24gVHVlLCBKdW4gNCwgMjAxOSBhdCA1OjIzIEFNIFRvcnN0ZW4gRHV3ZSA8ZHV3ZUBsc3QuZGU+
+IHdyb3RlOgo+Cj4gVGVyZXMtSSBoYXMgYW4gYW54NjM0NSBicmlkZ2UgY29ubmVjdGVkIHRvIHRo
+ZSBSR0I2NjYgTENEIG91dHB1dCwgYW5kCj4gdGhlIEkyQyBjb250cm9sbGluZyBzaWduYWxzIGFy
+ZSBjb25uZWN0ZWQgdG8gSTJDMCBidXMuIGVEUCBvdXRwdXQgZ29lcwo+IHRvIGFuIElubm9sdXgg
+TjExNkJHRSBwYW5lbC4KPgo+IEVuYWJsZSBpdCBpbiB0aGUgZGV2aWNlIHRyZWUuCj4KPiBTaWdu
+ZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4gU2lnbmVkLW9mZi1i
+eTogVG9yc3RlbiBEdXdlIDxkdXdlQHN1c2UuZGU+Cj4gLS0tCj4gIC4uLi9ib290L2R0cy9hbGx3
+aW5uZXIvc3VuNTBpLWE2NC10ZXJlcy1pLmR0cyAgICAgIHwgNjUgKysrKysrKysrKysrKysrKysr
+KystLQo+ICAxIGZpbGUgY2hhbmdlZCwgNjEgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkK
+Pgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGktYTY0
+LXRlcmVzLWkuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvc3VuNTBpLWE2NC10
+ZXJlcy1pLmR0cwo+IGluZGV4IDBlYzQ2Yjk2OWE3NS4uYTBhZDQzOGIwMzdmIDEwMDY0NAo+IC0t
+LSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL3N1bjUwaS1hNjQtdGVyZXMtaS5kdHMK
+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGktYTY0LXRlcmVzLWku
+ZHRzCj4gQEAgLTY1LDYgKzY1LDIxIEBACj4gICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICB9
+Owo+Cj4gKyAgICAgICBwYW5lbDogcGFuZWwgewo+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxl
+ID0iaW5ub2x1eCxuMTE2YmdlIiwgInNpbXBsZS1wYW5lbCI7CgpJdCdzIHN0aWxsICJzaW1wbGUt
+cGFuZWwiLiBJIGJlbGlldmUgSSBhbHJlYWR5IG1lbnRpb25lZCB0aGF0IFJvYgphc2tlZCBpdCB0
+byBiZSBlZHAtY29ubmVjdG9yLgoKPiArICAgICAgICAgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+
+ICsgICAgICAgICAgICAgICBwb3dlci1zdXBwbHkgPSA8JnJlZ19kY2RjMT47Cj4gKyAgICAgICAg
+ICAgICAgIGJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKPiArCj4gKyAgICAgICAgICAgICAgIHBv
+cnRzIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBwYW5lbF9pbjogcG9ydCB7Cj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBwYW5lbF9pbl9lZHA6IGVuZHBvaW50IHsKPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZh
+bng2MzQ1X291dD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICB9Owo+
+ICsKPiAgICAgICAgIHJlZ191c2IxX3ZidXM6IHVzYjEtdmJ1cyB7Cj4gICAgICAgICAgICAgICAg
+IGNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKPiAgICAgICAgICAgICAgICAgcmVndWxh
+dG9yLW5hbWUgPSAidXNiMS12YnVzIjsKPiBAQCAtODEsMjAgKzk2LDQ4IEBACj4gICAgICAgICB9
+Owo+ICB9Owo+Cj4gKyZkZSB7Cj4gKyAgICAgICBzdGF0dXMgPSAib2theSI7Cj4gK307Cj4gKwo+
+ICAmZWhjaTEgewo+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+ICB9Owo+Cj4KPiAtLyogVGhl
+IEFOWDYzNDUgZURQLWJyaWRnZSBpcyBvbiBpMmMwLiBUaGVyZSBpcyBubyBsaW51eCAobWFpbmxp
+bmUpCj4gLSAqIGRyaXZlciBmb3IgdGhpcyBjaGlwIGF0IHRoZSBtb21lbnQsIHRoZSBib290bG9h
+ZGVyIGluaXRpYWxpemVzIGl0Lgo+IC0gKiBIb3dldmVyIGl0IGNhbiBiZSBhY2Nlc3NlZCB3aXRo
+IHRoZSBpMmMtZGV2IGRyaXZlciBmcm9tIHVzZXIgc3BhY2UuCj4gLSAqLwo+ICAmaTJjMCB7Cj4g
+ICAgICAgICBjbG9jay1mcmVxdWVuY3kgPSA8MTAwMDAwPjsKPiAgICAgICAgIHBpbmN0cmwtbmFt
+ZXMgPSAiZGVmYXVsdCI7Cj4gICAgICAgICBwaW5jdHJsLTAgPSA8JmkyYzBfcGlucz47Cj4gICAg
+ICAgICBzdGF0dXMgPSAib2theSI7Cj4gKwo+ICsgICAgICAgYW54NjM0NTogYW54NjM0NUAzOCB7
+Cj4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYW5hbG9naXgsYW54NjM0NSI7Cj4gKyAg
+ICAgICAgICAgICAgIHJlZyA9IDwweDM4PjsKPiArICAgICAgICAgICAgICAgcmVzZXQtZ3Bpb3Mg
+PSA8JnBpbyAzIDI0IEdQSU9fQUNUSVZFX0xPVz47IC8qIFBEMjQgKi8KPiArICAgICAgICAgICAg
+ICAgZHZkZDI1LXN1cHBseSA9IDwmcmVnX2RsZG8yPjsKPiArICAgICAgICAgICAgICAgZHZkZDEy
+LXN1cHBseSA9IDwmcmVnX2RsZG8zPjsKPiArCj4gKyAgICAgICAgICAgICAgIHBvcnRzIHsKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArICAgICAgICAg
+ICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgcG9ydEAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFueDYzNDVf
+aW46IGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+cmVtb3RlLWVuZHBvaW50ID0gPCZ0Y29uMF9vdXRfYW54NjM0NT47Cj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgcG9ydEAxIHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIGFueDYzNDVfb3V0OiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW5fZWRwPjsKPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsK
+PiArICAgICAgICAgICAgICAgfTsKPiArICAgICAgIH07Cj4gK307Cj4gKwo+ICsmbWl4ZXIwIHsK
+PiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiAgfTsKPgo+ICAmbW1jMCB7Cj4gQEAgLTI3OSw2
+ICszMjIsMjAgQEAKPiAgICAgICAgIHZjYy1oZG1pLXN1cHBseSA9IDwmcmVnX2RsZG8xPjsKPiAg
+fTsKPgo+ICsmdGNvbjAgewo+ICsgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiAr
+ICAgICAgIHBpbmN0cmwtMCA9IDwmbGNkX3JnYjY2Nl9waW5zPjsKPiArCj4gKyAgICAgICBzdGF0
+dXMgPSAib2theSI7Cj4gK307Cj4gKwo+ICsmdGNvbjBfb3V0IHsKPiArICAgICAgIHRjb24wX291
+dF9hbng2MzQ1OiBlbmRwb2ludEAwIHsKPiArICAgICAgICAgICAgICAgcmVnID0gPDA+Owo+ICsg
+ICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmFueDYzNDVfaW4+Owo+ICsgICAgICAg
+fTsKPiArfTsKPiArCj4gICZ1YXJ0MCB7Cj4gICAgICAgICBwaW5jdHJsLW5hbWVzID0gImRlZmF1
+bHQiOwo+ICAgICAgICAgcGluY3RybC0wID0gPCZ1YXJ0MF9wYl9waW5zPjsKPiAtLQo+IDIuMTYu
+NAo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
