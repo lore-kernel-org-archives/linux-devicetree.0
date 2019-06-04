@@ -1,101 +1,50 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 2/2] arm64: dts: rockchip: Define values for the IPA governor for rock960
-Date: Tue,  4 Jun 2019 18:57:58 +0200
-Message-ID: <20190604165802.7338-2-daniel.lezcano@linaro.org>
-References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH 0/2] Add Mailbox support for TI K3 SoCs
+Date: Tue, 4 Jun 2019 12:01:44 -0500
+Message-ID: <20190604170146.12205-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604165802.7338-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-kernel@vger.kernel.org, edubezval@gmail.com, manivannan.sadhasivam@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Rockchip SoC
-        support" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently the default thermal values for the rk3399-rock960 board is
-inherited from the generic definition in rk3399.dtsi.
+Hi Jassi,
 
-In order to ensure the rock960 has more room for througput before
-being capped by the thermal framework and is correctly supported by
-the IPA governor, let's define the power values and the right trip
-points for better performances:
+The following series adds the support for the Mailbox IP present
+within the Main NavSS module on the newer TI K3 AM65x and J721E SoCs.
 
- - sustainable power is tested to be 1550mW
+The Mailbox IP is similar to the previous generation IP on OMAP SoCs
+with a few differences:
+ - Multiple IP instances from previous DRA7/AM57 family each form a
+   cluster and are part of the same IP. The driver support will continue
+   to be based on a cluster.
+ - The IP is present within a Main NaVSS, and interrupts have to go
+   through an Interrupt Router within Main NavSS before they reach the
+   respective processor sub-system's interrupt controllers.
+ - The register layout is mostly same, with difference in two registers
 
- - increase the first mitigation point to 75°C in order to get better
-   performances
+Support is added by enhancing the existing OMAP Mailbox driver to 
+support the K3 IP using a new compatible. The driver also has to be
+adjusted to deal with the 32-bit mailbox payloads vs the 64-bit 
+pointers used by the Mailbox API on these Arm v8 platforms.
 
- - the first trip point is 65°C in order to let the IPA to collect
-   enough data for the PID regulation when it reaches 75°C
+DT nodes will be posted separately once the binding is acked.
 
- - restrict the cooling device to the big CPUs as the little CPUs
-   contribution to the heating effect can be considered negligible
+regards
+Suman
 
-The intelligent power allocator PID coefficient to be set in sysfs
-are:
+Suman Anna (2):
+  dt-bindings: mailbox: omap: Update bindings for TI K3 SoCs
+  mailbox/omap: Add support for TI K3 SoCs
 
-    k_d: 0
-    k_po: 79
-    k_i: 10
-    k_pu: 50
+ .../bindings/mailbox/omap-mailbox.txt         | 59 ++++++++++++++++---
+ drivers/mailbox/Kconfig                       |  2 +-
+ drivers/mailbox/omap-mailbox.c                | 43 ++++++++------
+ include/linux/omap-mailbox.h                  |  4 +-
+ 4 files changed, 80 insertions(+), 28 deletions(-)
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- .../boot/dts/rockchip/rk3399-rock960.dts      | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-index 12285c51cceb..701d5b5fad46 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-@@ -114,6 +114,45 @@
- 	};
- };
- 
-+&thermal_zones {
-+	cpu_thermal: cpu {
-+		polling-delay-passive = <100>;
-+		polling-delay = <1000>;
-+		thermal-sensors = <&tsadc 0>;
-+		sustainable-power = <1550>;
-+
-+		trips {
-+			cpu_alert0: cpu_alert0 {
-+				    temperature = <65000>;
-+				    hysteresis = <2000>;
-+				    type = "passive";
-+			};
-+
-+			cpu_alert1: cpu_alert1 {
-+				    temperature = <75000>;
-+				    hysteresis = <2000>;
-+				    type = "passive";
-+			};
-+
-+			cpu_crit: cpu_crit {
-+				  temperature = <95000>;
-+				  hysteresis = <2000>;
-+				  type = "critical";
-+			};
-+		};
-+
-+		cooling-maps {
-+			     map0 {
-+
-+			     trip = <&cpu_alert1>;
-+			     cooling-device =
-+					<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+			};
-+		};
-+	};
-+};
-+
- &usbdrd_dwc3_0 {
- 	dr_mode = "otg";
- };
 -- 
-2.17.1
+2.21.0
