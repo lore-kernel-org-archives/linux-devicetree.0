@@ -1,39 +1,59 @@
-From: Erwan Le Ray <erwan.leray@st.com>
-Subject: [PATCH 09/10] ARM: dts: stm32: Update UART4 pin states on stm32mp157a-dk1
-Date: Tue, 4 Jun 2019 10:55:18 +0200
-Message-ID: <1559638519-6128-10-git-send-email-erwan.leray@st.com>
-References: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v4] usb: create usb_debug_root for gadget only
+Date: Tue, 4 Jun 2019 17:13:03 +0800
+Message-ID: <1559639583.8487.76.camel@mhfsdcap03>
+References: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com>
+         <20190604073706.GA25045@kroah.com> <87k1e123mc.fsf@linux.intel.com>
+         <20190604082407.GA3783@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
+In-Reply-To: <20190604082407.GA3783@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-serial@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, Bich Hemon <bich.hemon@st.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bich Hemon <bich.hemon@st.com>
+On Tue, 2019-06-04 at 10:24 +0200, Greg Kroah-Hartman wrote:
+> On Tue, Jun 04, 2019 at 10:47:55AM +0300, Felipe Balbi wrote:
+> > 
+> > Hi,
+> > 
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> > >> +struct dentry *usb_debugfs_init(void)
+> > >> +{
+> > >> +	if (!usb_debug_root)
+> > >> +		usb_debug_root = debugfs_create_dir("usb", NULL);
+> > >> +
+> > >> +	atomic_inc(&usb_debug_root_refcnt);
+> > >> +
+> > >> +	return usb_debug_root;
+> > >> +}
+> > >> +EXPORT_SYMBOL_GPL(usb_debugfs_init);
+> > >> +
+> > >> +void usb_debugfs_cleanup(void)
+> > >> +{
+> > >> +	if (atomic_dec_and_test(&usb_debug_root_refcnt)) {
+> > >> +		debugfs_remove_recursive(usb_debug_root);
+> > >> +		usb_debug_root = NULL;
+> > >> +	}
+> > >> +}
+> > >> +EXPORT_SYMBOL_GPL(usb_debugfs_cleanup);
+> > >
+> > > Only remove the debugfs subdir if the usbcore module is removed.  Create
+> > > the debugfs subdir when the usbcore module is loaded.  No need for any
+> > > reference counting of any sort at all.  No need to overthink this :)
+> > 
+> > There is a slight need to overthink. He wants to use the same directory
+> > for gadget-only builds too :-)
+> 
+> Again, that's fine, this file will be loaded for those builds as well,
+> right?  
+Yes, either usbcore or gadget will select this file.
 
-Add idle and no_console_suspend states to uart4 pin configuration.
-
-Signed-off-by: Bich Hemon <bich.hemon@st.com>
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 098dbfb..b851f80 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -244,7 +244,10 @@
- };
- 
- &uart4 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "sleep", "idle", "no_console_suspend";
- 	pinctrl-0 = <&uart4_pins_a>;
-+	pinctrl-1 = <&uart4_sleep_pins_a>;
-+	pinctrl-2 = <&uart4_idle_pins_a>;
-+	pinctrl-3 = <&uart4_pins_a>;
- 	status = "okay";
- };
--- 
-1.9.1
+> Otherwise, how would this code even be present?  :)
+> 
+> thanks,
+> 
+> greg k-h
