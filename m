@@ -1,66 +1,98 @@
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH net-next v4 00/10] net: dsa: mv88e6xxx: support for mv88e6250
-Date: Tue, 4 Jun 2019 07:34:22 +0000
-Message-ID: <20190604073412.21743-1-rasmus.villemoes@prevas.dk>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4] usb: create usb_debug_root for gadget only
+Date: Tue, 4 Jun 2019 09:37:06 +0200
+Message-ID: <20190604073706.GA25045@kroah.com>
+References: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBtdjg4ZTYyNTAgY2hpcC4gSW5pdGlhbGx5IGJhc2Vk
-IG9uIHRoZQ0KbXY4OGU2MjQwLCB0aGlzIHRpbWUgYXJvdW5kLCBJJ3ZlIGJlZW4gdGhyb3VnaCBl
-YWNoIC0+b3BzIGNhbGxiYWNrIGFuZA0KY2hlY2tlZCB0aGF0IGl0IG1ha2VzIHNlbnNlLCBlaXRo
-ZXIgcmVwbGFjaW5nIHdpdGggYSA2MjUwIHNwZWNpZmljDQp2YXJpYW50IG9yIGRyb3BwaW5nIGl0
-IGlmIG5vIGVxdWl2YWxlbnQgZnVuY3Rpb25hbGl0eSBzZWVtcyB0byBleGlzdA0KZm9yIHRoZSA2
-MjUwLiBBbG9uZyB0aGUgd2F5LCBJIGZvdW5kIGEgZmV3IG9kZGl0aWVzIGluIHRoZSBleGlzdGlu
-Zw0KY29kZSwgbW9zdGx5IHNlbnQgYXMgc2VwYXJhdGUgcGF0Y2hlcy9xdWVzdGlvbnMuDQoNClRo
-ZSBvbmUgcmVsZXZhbnQgdG8gdGhlIDYyNTAgaXMgdGhlIGllZWVfcHJpX21hcCBjYWxsYmFjaywg
-d2hlcmUgdGhlDQpleGlzdGluZyBtdjg4ZTYwODVfZzFfaWVlZV9wcmlfbWFwKCkgaXMgYWN0dWFs
-bHkgd3JvbmcgZm9yIG1hbnkgb2YgdGhlDQpleGlzdGluZyB1c2Vycy4gSSd2ZSBwdXQgdGhlIG12
-ODhlNjI1MF9nMV9pZWVlX3ByaV9tYXAoKSBwYXRjaCBmaXJzdA0KaW4gY2FzZSBzb21lIG9mIHRo
-ZSBleGlzdGluZyBjaGlwcyBnZXQgc3dpdGNoZWQgb3ZlciB0byB1c2UgdGhhdCBhbmQNCml0IGlz
-IGRlZW1lZCBpbXBvcnRhbnQgZW5vdWdoIGZvciAtc3RhYmxlLg0KDQp2NDoNCi0gZml4IHN0eWxl
-IGlzc3VlIGluIDEvMTANCi0gYWRkIEFuZHJldydzIHJldmlld2VkLWJ5IHRvIDEsNiw3LDgsOSwx
-MC4NCg0KdjM6DQotIHJlYmFzZSBvbiB0b3Agb2YgbmV0LW5leHQvbWFzdGVyDQotIGFkZCByZXZp
-ZXdlZC1ieXMgdG8gcGF0Y2hlcyB1bmNoYW5nZWQgZnJvbSB2MiAoMiwzLDQsNSkNCi0gYWRkIDYy
-NTAtc3BlY2lmaWMgLT5pZWVlX3ByaV9tYXAsIC0+cG9ydF9zZXRfc3BlZWQsIC0+cG9ydF9saW5r
-X3N0YXRlICgxLDYsNykNCi0gaW4gYWRkaXRpb24sIHVzZSBtdjg4ZTYwNjVfcGh5bGlua192YWxp
-ZGF0ZSBmb3IgLT5waHlsaW5rX3ZhbGlkYXRlLA0KICBhbmQgZG9uJ3QgaW1wbGVtZW50IC0+cG9y
-dF9nZXRfY21vZGUsIC0+cG9ydF9zZXRfanVtYm9fc2l6ZSwNCiAgLT5wb3J0X2Rpc2FibGVfbGVh
-cm5fbGltaXQsIC0+cm11X2Rpc2FibGUNCi0gZHJvcCBwdHAgc3VwcG9ydA0KLSBhZGQgcGF0Y2gg
-YWRkaW5nIHRoZSBjb21wYXRpYmxlIHN0cmluZyB0byB0aGUgRFQgYmluZGluZyAoOSkNCi0gYWRk
-IHNtYWxsIHJlZmFjdG9yaW5nIHBhdGNoICgxMCkNCg0KdjI6DQotIHJlYmFzZSBvbiB0b3Agb2Yg
-bmV0LW5leHQvbWFzdGVyDQotIGFkZCByZXZpZXdlZC1ieSB0byB0d28gcGF0Y2hlcyB1bmNoYW5n
-ZWQgZnJvbSB2MSAoMiwzKQ0KLSBhZGQgc2VwYXJhdGUgd2F0Y2hkb2dfb3BzDQoNClJhc211cyBW
-aWxsZW1vZXMgKDEwKToNCiAgbmV0OiBkc2E6IG12ODhlNnh4eDogYWRkIG12ODhlNjI1MF9nMV9p
-ZWVlX3ByaV9tYXANCiAgbmV0OiBkc2E6IG12ODhlNnh4eDogaW50cm9kdWNlIHN1cHBvcnQgZm9y
-IHR3byBjaGlwcyB1c2luZyBkaXJlY3Qgc21pDQogICAgYWRkcmVzc2luZw0KICBuZXQ6IGRzYTog
-bXY4OGU2eHh4OiBwcmVwYXJlIG12ODhlNnh4eF9nMV9hdHVfb3AoKSBmb3IgdGhlIG12ODhlNjI1
-MA0KICBuZXQ6IGRzYTogbXY4OGU2eHh4OiBpbXBsZW1lbnQgdnR1X2dldG5leHQgYW5kIHZ0dV9s
-b2FkcHVyZ2UgZm9yDQogICAgbXY4OGU2MjUwDQogIG5ldDogZHNhOiBtdjg4ZTZ4eHg6IGltcGxl
-bWVudCB3YXRjaGRvZ19vcHMgZm9yIG12ODhlNjI1MA0KICBuZXQ6IGRzYTogbXY4OGU2eHh4OiBp
-bXBsZW1lbnQgcG9ydF9zZXRfc3BlZWQgZm9yIG12ODhlNjI1MA0KICBuZXQ6IGRzYTogbXY4OGU2
-eHh4OiBpbXBsZW1lbnQgcG9ydF9saW5rX3N0YXRlIGZvciBtdjg4ZTYyNTANCiAgbmV0OiBkc2E6
-IG12ODhlNnh4eDogYWRkIHN1cHBvcnQgZm9yIG12ODhlNjI1MA0KICBkdC1iaW5kaW5nczogbmV0
-OiBkc2E6IG1hcnZlbGw6IGFkZCAibWFydmVsbCxtdjg4ZTYyNTAiIGNvbXBhdGlibGUNCiAgICBz
-dHJpbmcNCiAgbmV0OiBkc2E6IG12ODhlNnh4eDogcmVmYWN0b3IgbXY4OGU2MzUyX2cxX3Jlc2V0
-DQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvZHNhL21hcnZlbGwudHh0ICAgfCAgNyAr
-LQ0KIGRyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvY2hpcC5jICAgICAgICAgICAgICB8IDgxICsr
-KysrKysrKysrKysrKysrKysNCiBkcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2NoaXAuaCAgICAg
-ICAgICAgICAgfCAgOCArKw0KIGRyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvZ2xvYmFsMS5jICAg
-ICAgICAgICB8IDE3ICsrKy0NCiBkcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2dsb2JhbDEuaCAg
-ICAgICAgICAgfCAgNyArKw0KIGRyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvZ2xvYmFsMV9hdHUu
-YyAgICAgICB8ICA1ICstDQogZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9nbG9iYWwxX3Z0dS5j
-ICAgICAgIHwgNTggKysrKysrKysrKysrKw0KIGRyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvZ2xv
-YmFsMi5jICAgICAgICAgICB8IDI2ICsrKysrKw0KIGRyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgv
-Z2xvYmFsMi5oICAgICAgICAgICB8IDE0ICsrKysNCiBkcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4
-L3BvcnQuYyAgICAgICAgICAgICAgfCA3NyArKysrKysrKysrKysrKysrKysNCiBkcml2ZXJzL25l
-dC9kc2EvbXY4OGU2eHh4L3BvcnQuaCAgICAgICAgICAgICAgfCAxNCArKysrDQogZHJpdmVycy9u
-ZXQvZHNhL212ODhlNnh4eC9zbWkuYyAgICAgICAgICAgICAgIHwgMjUgKysrKystDQogMTIgZmls
-ZXMgY2hhbmdlZCwgMzMzIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQoNCi0tIA0KMi4y
-MC4xDQoNCg==
+On Tue, Jun 04, 2019 at 03:34:07PM +0800, Chunfeng Yun wrote:
+> When CONFIG_USB is not set, and CONFIG_USB_GADGET is set,
+> there is an issue, e.g.:
+> 
+> drivers/usb/mtu3/mtu3_debugfs.o: in function 'ssusb_debugfs_create_root':
+> mtu3_debugfs.c:(.text+0xba3): undefined reference to 'usb_debug_root'
+> 
+> usb_debug_root is currently only built when host is supported
+> (CONFIG_USB is set), for convenience, we also want it created when
+> gadget only is enabled, this patch try to support it.
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v4:
+>   move common API into common.c suggested by Felipe
+> 
+> v3:
+>   1. still create usb_debug_root for gadget only
+>   2. abandon mtu3's change
+>   3. drop acked-by Randy
+> 
+> v2(resend): add acked-by Randy
+> 
+> v1: fix mtu3's build error, replace usb_debug_root by NULL;
+> ---
+>  drivers/usb/common/common.c   | 26 ++++++++++++++++++++++++++
+>  drivers/usb/core/usb.c        | 16 ++++------------
+>  drivers/usb/gadget/udc/core.c |  3 +++
+>  include/linux/usb.h           |  2 ++
+>  4 files changed, 35 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> index 18f5dcf58b0d..c52e9c9f58ec 100644
+> --- a/drivers/usb/common/common.c
+> +++ b/drivers/usb/common/common.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/usb/of.h>
+>  #include <linux/usb/otg.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/debugfs.h>
+>  
+>  static const char *const ep_type_names[] = {
+>  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
+> @@ -139,6 +140,31 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(usb_get_dr_mode);
+>  
+> +struct dentry *usb_debug_root;
+> +EXPORT_SYMBOL_GPL(usb_debug_root);
+> +
+> +static atomic_t usb_debug_root_refcnt = ATOMIC_INIT(0);
+
+Ick, no.
+
+> +
+> +struct dentry *usb_debugfs_init(void)
+> +{
+> +	if (!usb_debug_root)
+> +		usb_debug_root = debugfs_create_dir("usb", NULL);
+> +
+> +	atomic_inc(&usb_debug_root_refcnt);
+> +
+> +	return usb_debug_root;
+> +}
+> +EXPORT_SYMBOL_GPL(usb_debugfs_init);
+> +
+> +void usb_debugfs_cleanup(void)
+> +{
+> +	if (atomic_dec_and_test(&usb_debug_root_refcnt)) {
+> +		debugfs_remove_recursive(usb_debug_root);
+> +		usb_debug_root = NULL;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(usb_debugfs_cleanup);
+
+Only remove the debugfs subdir if the usbcore module is removed.  Create
+the debugfs subdir when the usbcore module is loaded.  No need for any
+reference counting of any sort at all.  No need to overthink this :)
+
+thanks,
+
+greg k-h
