@@ -1,43 +1,85 @@
-From: Hongwei Zhang <Hongweiz@ami.com>
-Subject: RE: [PATCH linux dev-5.1 v1] ARM: dts: aspeed: Add SGPM pinmux
-Date: Tue, 4 Jun 2019 22:03:37 +0000
-Message-ID: <14D3C8298A3B0F42A1EB31EE961CFF8231E4AA@atlms1.us.megatrends.com>
-References: <1559601789-27121-1-git-send-email-hongweiz@ami.com>
- <CACRpkdYPHw994Ov0xCfK6tCg60tiuWrRwTcYpMSfOr4G0VKu_Q@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sdm845-mtp: Specify UFS
+ device-reset GPIO
+Date: Tue, 4 Jun 2019 15:09:10 -0700
+Message-ID: <20190604220910.GA4814@minitux>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <20190604072001.9288-4-bjorn.andersson@linaro.org>
+ <5cf69ad2.1c69fb81.216a9.30f8@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYPHw994Ov0xCfK6tCg60tiuWrRwTcYpMSfOr4G0VKu_Q@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <5cf69ad2.1c69fb81.216a9.30f8@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, Evan Green <evgreen@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IExpbnVzIFdhbGxlaWogPGxpbnVzLndh
-bGxlaWpAbGluYXJvLm9yZz4gDQpTZW50OiBNb25kYXksIEp1bmUgMywgMjAxOSA3OjA4IFBNDQpU
-bzogSG9uZ3dlaSBaaGFuZyA8SG9uZ3dlaXpAYW1pLmNvbT4NCkNjOiBKb2VsIFN0YW5sZXkgPGpv
-ZWxAam1zLmlkLmF1PjsgQW5kcmV3IEplZmZlcnkgPGFuZHJld0Bhai5pZC5hdT47IFJvYiBIZXJy
-aW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
-Y29tPjsgb3BlbiBsaXN0OkdQSU8gU1VCU1lTVEVNIDxsaW51eC1ncGlvQHZnZXIua2VybmVsLm9y
-Zz47IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVWSUNFIFRSRUUgQklO
-RElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgTGludXggQVJNIDxsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBsaW51eC1hc3BlZWRAbGlzdHMub3psYWJzLm9y
-ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSCBsaW51
-eCBkZXYtNS4xIHYxXSBBUk06IGR0czogYXNwZWVkOiBBZGQgU0dQTSBwaW5tdXgNCg0KSGkgSG9u
-Z3dlaSwNCg0KT24gVHVlLCBKdW4gNCwgMjAxOSBhdCAxMjo0NCBBTSBIb25nd2VpIFpoYW5nIDxo
-b25nd2VpekBhbWkuY29tPiB3cm90ZToNCj4NCj4gQWRkIFNHUE0gcGlubXV4IHRvIGFzdDI1MDAt
-cGluY3RybCBmdW5jdGlvbiBhbmQgZ3JvdXAsIHRvIHByZXBhcmUgZm9yIA0KPiBzdXBwb3J0aW5n
-IFNHUElPIGluIEFTVDI1MDAgU29DLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBIb25nd2VpIFpoYW5n
-IDxob25nd2VpekBhbWkuY29tPg0KPiAtLS0NCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtYXNwZWVkLnR4dCB8IDIgKy0NCj4gIGFyY2gvYXJtL2Jv
-b3QvZHRzL2FzcGVlZC1nNS5kdHNpICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDUgKysr
-KysNCj4gIGRyaXZlcnMvcGluY3RybC9hc3BlZWQvcGluY3RybC1hc3BlZWQtZzUuYyAgICAgICAg
-ICAgICAgICAgICB8IDQgKysrKw0KDQpQbGVhc2UgdHJ5IHRvIHNlcGFyYXRlIG91dCB0aGUgY2hh
-bmdlIHRvIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNS5kdHNpIGludG8gYSBzZXBhcmF0ZSBw
-YXRjaCB0aGF0IGdvZXMgdGhyb3VnaCBBUk0gU29DLg0KDQpKdXN0IGNvbW1pdHRlZCB0aGUgRFQg
-cGF0Y2ggdG8gX2h0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0
-L2FybS9hcm0tc29jLmdpdCAsIHBsZWFzZSBoZWxwIHRvIHJldmlldy4gVGhhbmtzIQ0KDQoNCk90
-aGVyIHRoYW4gdGhhdCBpdCBsb29rcyBmaW5lIHRvIG1lLg0KDQpZb3VycywNCkxpbnVzIFdhbGxl
-aWoNCg==
+On Tue 04 Jun 09:22 PDT 2019, Stephen Boyd wrote:
+
+> Quoting Bjorn Andersson (2019-06-04 00:20:01)
+> > Specify the UFS device-reset gpio, so that the controller will issue a
+> > reset of the UFS device.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> > index 2e78638eb73b..d116a0956a9c 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> > @@ -388,6 +388,8 @@
+> >  &ufs_mem_hc {
+> >         status = "okay";
+> >  
+> > +       device-reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
+> > +
+> 
+> We had to do something similar on one particular brand of UFS that we had. I
+> think it was an SK Hynix part that had trouble and wouldn't provision properly.
+> Either way, we did this with a pinctrl toggle in the DTS where the "init" state
+> has the UFS_RESET pin asserted and then "default" state has the pin deasserted.
+> That was good enough to make this work.
+> 
+
+Thanks for pointing this out, I forgot to attribute these downstream
+changes. I can see how this works, but I must say I find it quite
+hackish.
+
+The downstream solution seems to have evolved this into naming these
+states and jumping between them (with the appropriate sleeps) during a
+host reset as well.
+
+
+But thanks for the confirmation that there's more than John's memory
+that needs this.
+
+Regards,
+Bjorn
+
+> 	&ufs_mem_hc {
+> 		pinctrl-names = "init", "default";
+> 		pinctrl-0 = <&ufs_dev_reset_assert>;
+> 		pinctrl-1 = <&ufs_dev_reset_deassert>;
+> 	};
+> 
+>         ufs_dev_reset_assert: ufs_dev_reset_assert {
+>                 config {
+>                         pins = "ufs_reset";
+>                         bias-pull-down;         /* default: pull down */
+>                         drive-strength = <8>;   /* default: 3.1 mA */
+>                         output-low; /* active low reset */
+>                 };
+>         };
+> 
+>         ufs_dev_reset_deassert: ufs_dev_reset_deassert {
+>                 config {
+>                         pins = "ufs_reset";
+>                         bias-pull-down;         /* default: pull down */
+>                         drive-strength = <8>;
+>                         output-high; /* active low reset */
+>                 };
+>         };
