@@ -1,37 +1,38 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH] arm: dts: dra72x: Disable usb4_tm target module
-Date: Tue, 4 Jun 2019 11:43:35 +0530
-Message-ID: <20190604061335.8264-1-j-keerthy@ti.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 0/4] Add Support for MMC in J721E
+Date: Tue, 4 Jun 2019 11:48:55 +0530
+Message-ID: <2f45cef2-c4ca-0404-b205-fabbb92a40fb@ti.com>
+References: <20190604060914.10886-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, robh+dt@kernel.org
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190604060914.10886-1-faiz_abbas@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Faiz Abbas <faiz_abbas@ti.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: nm@ti.com, ulf.hansson@linaro.org, robh+dt@kernel.org, adrian.hunter@intel.com
 List-Id: devicetree@vger.kernel.org
 
-usb4_tm is unsed on dra72 and accessing the module
-with ti,sysc is causing a boot crash hence disable its target
-module.
+On 04/06/19 11:39 AM, Faiz Abbas wrote:
+> The following patches add driver support for MMC SDHCI interfaces on
+> TI's J721E devices. The 8 bit and 4 bit instances have phys which are
+> different from the am65x interfaces as well as different from each
+> other which leads to 3 different compatibles and a bunch of flags for
+> indicating the differences.
+> 
+> Depends on Nishanth's initial J721E patches here:
+> https://lore.kernel.org/patchwork/cover/1077382/
 
-Fixes: 549fce068a3112 ("ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data")
-Reported-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- arch/arm/boot/dts/dra72x.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+This dependency is only for testing, not for applying these, right?
 
-diff --git a/arch/arm/boot/dts/dra72x.dtsi b/arch/arm/boot/dts/dra72x.dtsi
-index 89831552cd86..9c39c6b9b5d6 100644
---- a/arch/arm/boot/dts/dra72x.dtsi
-+++ b/arch/arm/boot/dts/dra72x.dtsi
-@@ -62,3 +62,7 @@
- &pcie2_rc {
- 	compatible = "ti,dra726-pcie-rc", "ti,dra7-pcie";
- };
-+
-+&usb4_tm {
-+	status = "disabled";
-+};
--- 
-2.17.1
+Thanks,
+Sekhar
