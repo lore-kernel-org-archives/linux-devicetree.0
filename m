@@ -1,98 +1,53 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4] usb: create usb_debug_root for gadget only
-Date: Tue, 4 Jun 2019 09:37:06 +0200
-Message-ID: <20190604073706.GA25045@kroah.com>
-References: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v6 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Tue, 4 Jun 2019 13:16:09 +0530
+Message-ID: <b768bde9-d6c8-f655-aecb-d08bcb9286a6@ti.com>
+References: <1554882504-9010-1-git-send-email-pawell@cadence.com>
+ <1554882504-9010-6-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1554882504-9010-6-git-send-email-pawell@cadence.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 03:34:07PM +0800, Chunfeng Yun wrote:
-> When CONFIG_USB is not set, and CONFIG_USB_GADGET is set,
-> there is an issue, e.g.:
-> 
-> drivers/usb/mtu3/mtu3_debugfs.o: in function 'ssusb_debugfs_create_root':
-> mtu3_debugfs.c:(.text+0xba3): undefined reference to 'usb_debug_root'
-> 
-> usb_debug_root is currently only built when host is supported
-> (CONFIG_USB is set), for convenience, we also want it created when
-> gadget only is enabled, this patch try to support it.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v4:
->   move common API into common.c suggested by Felipe
-> 
-> v3:
->   1. still create usb_debug_root for gadget only
->   2. abandon mtu3's change
->   3. drop acked-by Randy
-> 
-> v2(resend): add acked-by Randy
-> 
-> v1: fix mtu3's build error, replace usb_debug_root by NULL;
-> ---
->  drivers/usb/common/common.c   | 26 ++++++++++++++++++++++++++
->  drivers/usb/core/usb.c        | 16 ++++------------
->  drivers/usb/gadget/udc/core.c |  3 +++
->  include/linux/usb.h           |  2 ++
->  4 files changed, 35 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> index 18f5dcf58b0d..c52e9c9f58ec 100644
-> --- a/drivers/usb/common/common.c
-> +++ b/drivers/usb/common/common.c
-> @@ -15,6 +15,7 @@
->  #include <linux/usb/of.h>
->  #include <linux/usb/otg.h>
->  #include <linux/of_platform.h>
-> +#include <linux/debugfs.h>
->  
->  static const char *const ep_type_names[] = {
->  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
-> @@ -139,6 +140,31 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(usb_get_dr_mode);
->  
-> +struct dentry *usb_debug_root;
-> +EXPORT_SYMBOL_GPL(usb_debug_root);
-> +
-> +static atomic_t usb_debug_root_refcnt = ATOMIC_INIT(0);
-
-Ick, no.
-
-> +
-> +struct dentry *usb_debugfs_init(void)
+On 10/04/19 1:18 PM, Pawel Laszczak wrote:
+> +static void cdns3_wa1_tray_restore_cycle_bit(struct cdns3_device *priv_dev,
+> +					     struct cdns3_endpoint *priv_ep)
 > +{
-> +	if (!usb_debug_root)
-> +		usb_debug_root = debugfs_create_dir("usb", NULL);
+> +	int dma_index;
+> +	u32 doorbell;
 > +
-> +	atomic_inc(&usb_debug_root_refcnt);
-> +
-> +	return usb_debug_root;
-> +}
-> +EXPORT_SYMBOL_GPL(usb_debugfs_init);
-> +
-> +void usb_debugfs_cleanup(void)
-> +{
-> +	if (atomic_dec_and_test(&usb_debug_root_refcnt)) {
-> +		debugfs_remove_recursive(usb_debug_root);
-> +		usb_debug_root = NULL;
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(usb_debugfs_cleanup);
+> +	doorbell = !!(readl(&priv_dev->regs->ep_cmd) & EP_CMD_DRDY);
 
-Only remove the debugfs subdir if the usbcore module is removed.  Create
-the debugfs subdir when the usbcore module is loaded.  No need for any
-reference counting of any sort at all.  No need to overthink this :)
+> +	dma_index = (readl(&priv_dev->regs->ep_traddr) -
+> +		    priv_ep->trb_pool_dma) / TRB_SIZE;
 
-thanks,
+This gets upgraded to 64-bit by 64-bit division whenever dma_addr_t is 
+64-bit. That should be avoided. Following diff should fix it. 
+But please review the logic itself. You are subtracting a 64 bit entity 
+from a 32-bit entity. What is guaranteeing that priv_ep->trb_pool_dma is 
+32-bit?
 
-greg k-h
+There is one more instance of same issue in cdns3_request_handled().
+
+Thanks,
+Sekhar
+
+[1]
+diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+index bfd5dbf40c7e..e73b618501fb 100644
+--- a/drivers/usb/cdns3/gadget.c
++++ b/drivers/usb/cdns3/gadget.c
+@@ -749,8 +749,8 @@ static void cdns3_wa1_tray_restore_cycle_bit(struct cdns3_device *priv_dev,
+ 	u32 doorbell;
+ 
+ 	doorbell = !!(readl(&priv_dev->regs->ep_cmd) & EP_CMD_DRDY);
+-	dma_index = (readl(&priv_dev->regs->ep_traddr) -
+-		    priv_ep->trb_pool_dma) / TRB_SIZE;
++	dma_index = readl(&priv_dev->regs->ep_traddr) - priv_ep->trb_pool_dma;
++	dma_index /= TRB_SIZE;
