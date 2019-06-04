@@ -1,92 +1,102 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and optimize
- probe ordering
-Date: Mon,  3 Jun 2019 17:32:13 -0700
-Message-ID: <20190604003218.241354-1-saravanak@google.com>
+Subject: [RESEND PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
+Date: Mon,  3 Jun 2019 17:32:14 -0700
+Message-ID: <20190604003218.241354-2-saravanak@google.com>
+References: <20190604003218.241354-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190604003218.241354-1-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 Cc: Saravana Kannan <saravanak@google.com>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-Add a generic "depends-on" property that allows specifying mandatory
-functional dependencies between devices. Add device-links after the
-devices are created (but before they are probed) by looking at this
-"depends-on" property.
+Add a pointer from device tree node to the device created from it.
+This allows us to find the device corresponding to a device tree node
+without having to loop through all the platform devices.
 
-This property is used instead of existing DT properties that specify
-phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
-is because not all resources referred to by existing DT properties are
-mandatory functional dependencies. Some devices/drivers might be able
-to operate with reduced functionality when some of the resources
-aren't available. For example, a device could operate in polling mode
-if no IRQ is available, a device could skip doing power management if
-clock or voltage control isn't available and they are left on, etc.
+However, fallback to looping through the platform devices to handle
+any devices that might set their own of_node.
 
-So, adding mandatory functional dependency links between devices by
-looking at referred phandles in DT properties won't work as it would
-prevent probing devices that could be probed. By having an explicit
-depends-on property, we can handle these cases correctly.
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/of/platform.c | 20 +++++++++++++++++++-
+ include/linux/of.h    |  3 +++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-Having functional dependencies explicitly called out in DT and
-automatically added before the devices are probed, provides the
-following benefits:
-
-- Optimizes device probe order and avoids the useless work of
-  attempting probes of devices that will not probe successfully
-  (because their suppliers aren't present or haven't probed yet).
-
-  For example, in a commonly available mobile SoC, registering just
-  one consumer device's driver at an initcall level earlier than the
-  supplier device's driver causes 11 failed probe attempts before the
-  consumer device probes successfully. This was with a kernel with all
-  the drivers statically compiled in. This problem gets a lot worse if
-  all the drivers are loaded as modules without direct symbol
-  dependencies.
-
-- Supplier devices like clock providers, regulators providers, etc
-  need to keep the resources they provide active and at a particular
-  state(s) during boot up even if their current set of consumers don't
-  request the resource to be active. This is because the rest of the
-  consumers might not have probed yet and turning off the resource
-  before all the consumers have probed could lead to a hang or
-  undesired user experience.
-
-  Some frameworks (Eg: regulator) handle this today by turning off
-  "unused" resources at late_initcall_sync and hoping all the devices
-  have probed by then. This is not a valid assumption for systems with
-  loadable modules. Other frameworks (Eg: clock) just don't handle
-  this due to the lack of a clear signal for when they can turn off
-  resources. This leads to downstream hacks to handle cases like this
-  that can easily be solved in the upstream kernel.
-
-  By linking devices before they are probed, we give suppliers a clear
-  count of the number of dependent consumers. Once all of the
-  consumers are active, the suppliers can turn off the unused
-  resources without making assumptions about the number of consumers.
-
-By default we just add device-links to track "driver presence" (probe
-succeeded) of the supplier device. If any other functionality provided
-by device-links are needed, it is left to the consumer/supplier
-devices to change the link when they probe.
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 04ad312fd85b..1115a8d80a33 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -42,6 +42,8 @@ static int of_dev_node_match(struct device *dev, void *data)
+ 	return dev->of_node == data;
+ }
  
-
-Saravana Kannan (5):
-  of/platform: Speed up of_find_device_by_node()
-  driver core: Add device links support for pending links to suppliers
-  dt-bindings: Add depends-on property
-  of/platform: Add functional dependency link from "depends-on" property
-  driver core: Add sync_state driver/bus callback
-
- .../devicetree/bindings/depends-on.txt        |  26 +++++
- drivers/base/core.c                           | 106 ++++++++++++++++++
- drivers/of/platform.c                         |  75 ++++++++++++-
- include/linux/device.h                        |  24 ++++
- include/linux/of.h                            |   3 +
- 5 files changed, 233 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/depends-on.txt
-
++static DEFINE_SPINLOCK(of_dev_lock);
++
+ /**
+  * of_find_device_by_node - Find the platform_device associated with a node
+  * @np: Pointer to device tree node
+@@ -55,7 +57,18 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
+ {
+ 	struct device *dev;
+ 
+-	dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
++	/*
++	 * Spinlock needed to make sure np->dev doesn't get freed between NULL
++	 * check inside and kref count increment inside get_device(). This is
++	 * achieved by grabbing the spinlock before setting np->dev = NULL in
++	 * of_platform_device_destroy().
++	 */
++	spin_lock(&of_dev_lock);
++	dev = get_device(np->dev);
++	spin_unlock(&of_dev_lock);
++	if (!dev)
++		dev = bus_find_device(&platform_bus_type, NULL, np,
++				      of_dev_node_match);
+ 	return dev ? to_platform_device(dev) : NULL;
+ }
+ EXPORT_SYMBOL(of_find_device_by_node);
+@@ -196,6 +209,7 @@ static struct platform_device *of_platform_device_create_pdata(
+ 		platform_device_put(dev);
+ 		goto err_clear_flag;
+ 	}
++	np->dev = &dev->dev;
+ 
+ 	return dev;
+ 
+@@ -556,6 +570,10 @@ int of_platform_device_destroy(struct device *dev, void *data)
+ 	if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
+ 		device_for_each_child(dev, NULL, of_platform_device_destroy);
+ 
++	/* Spinlock is needed for of_find_device_by_node() to work */
++	spin_lock(&of_dev_lock);
++	dev->of_node->dev = NULL;
++	spin_unlock(&of_dev_lock);
+ 	of_node_clear_flag(dev->of_node, OF_POPULATED);
+ 	of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+ 
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 0cf857012f11..f2b4912cbca1 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -48,6 +48,8 @@ struct property {
+ struct of_irq_controller;
+ #endif
+ 
++struct device;
++
+ struct device_node {
+ 	const char *name;
+ 	phandle phandle;
+@@ -68,6 +70,7 @@ struct device_node {
+ 	unsigned int unique_id;
+ 	struct of_irq_controller *irq_trans;
+ #endif
++	struct device *dev;		/* Device created from this node */
+ };
+ 
+ #define MAX_PHANDLE_ARGS 16
 -- 
 2.22.0.rc1.257.g3120a18244-goog
