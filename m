@@ -1,30 +1,23 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: fix pwm-cells for rk3288's pwm3
-Date: Tue, 04 Jun 2019 15:37:38 +0200
-Message-ID: <4241857.8QsoknCOxu@phil>
-References: <20190603143435.23352-1-john@metanate.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: add WiFi+BT support on ROCK Pi4 board
+Date: Tue, 04 Jun 2019 15:39:25 +0200
+Message-ID: <1697100.2SMvg6TTVp@phil>
+References: <20190528184705.5240-1-akash@openedev.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190603143435.23352-1-john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190528184705.5240-1-akash@openedev.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Akash Gajjar <akash@openedev.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 3. Juni 2019, 16:34:35 CEST schrieb John Keeping:
-> This is the same as the other PWMs on this SoC and uses 3 cells.
+Am Dienstag, 28. Mai 2019, 20:46:58 CEST schrieb Akash Gajjar:
+> Rock Pi 4 has a on board AP6256 WiFi/BT Module. enable wifi and bluetooth
+> support on Rock Pi 4 board.
 > 
-> Signed-off-by: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Akash Gajjar <akash@openedev.com>
 
 applied for 5.3
 
