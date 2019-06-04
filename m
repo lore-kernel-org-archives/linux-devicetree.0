@@ -1,53 +1,47 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Tue, 4 Jun 2019 13:16:09 +0530
-Message-ID: <b768bde9-d6c8-f655-aecb-d08bcb9286a6@ti.com>
-References: <1554882504-9010-1-git-send-email-pawell@cadence.com>
- <1554882504-9010-6-git-send-email-pawell@cadence.com>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: Re: [PATCH v4] usb: create usb_debug_root for gadget only
+Date: Tue, 04 Jun 2019 10:47:55 +0300
+Message-ID: <87k1e123mc.fsf@linux.intel.com>
+References: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com> <20190604073706.GA25045@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554882504-9010-6-git-send-email-pawell@cadence.com>
-Content-Language: en-US
+In-Reply-To: <20190604073706.GA25045@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, kurahul@cadence.com
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/04/19 1:18 PM, Pawel Laszczak wrote:
-> +static void cdns3_wa1_tray_restore_cycle_bit(struct cdns3_device *priv_dev,
-> +					     struct cdns3_endpoint *priv_ep)
-> +{
-> +	int dma_index;
-> +	u32 doorbell;
-> +
-> +	doorbell = !!(readl(&priv_dev->regs->ep_cmd) & EP_CMD_DRDY);
 
-> +	dma_index = (readl(&priv_dev->regs->ep_traddr) -
-> +		    priv_ep->trb_pool_dma) / TRB_SIZE;
+Hi,
 
-This gets upgraded to 64-bit by 64-bit division whenever dma_addr_t is 
-64-bit. That should be avoided. Following diff should fix it. 
-But please review the logic itself. You are subtracting a 64 bit entity 
-from a 32-bit entity. What is guaranteeing that priv_ep->trb_pool_dma is 
-32-bit?
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>> +struct dentry *usb_debugfs_init(void)
+>> +{
+>> +	if (!usb_debug_root)
+>> +		usb_debug_root = debugfs_create_dir("usb", NULL);
+>> +
+>> +	atomic_inc(&usb_debug_root_refcnt);
+>> +
+>> +	return usb_debug_root;
+>> +}
+>> +EXPORT_SYMBOL_GPL(usb_debugfs_init);
+>> +
+>> +void usb_debugfs_cleanup(void)
+>> +{
+>> +	if (atomic_dec_and_test(&usb_debug_root_refcnt)) {
+>> +		debugfs_remove_recursive(usb_debug_root);
+>> +		usb_debug_root = NULL;
+>> +	}
+>> +}
+>> +EXPORT_SYMBOL_GPL(usb_debugfs_cleanup);
+>
+> Only remove the debugfs subdir if the usbcore module is removed.  Create
+> the debugfs subdir when the usbcore module is loaded.  No need for any
+> reference counting of any sort at all.  No need to overthink this :)
 
-There is one more instance of same issue in cdns3_request_handled().
+There is a slight need to overthink. He wants to use the same directory
+for gadget-only builds too :-)
 
-Thanks,
-Sekhar
-
-[1]
-diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
-index bfd5dbf40c7e..e73b618501fb 100644
---- a/drivers/usb/cdns3/gadget.c
-+++ b/drivers/usb/cdns3/gadget.c
-@@ -749,8 +749,8 @@ static void cdns3_wa1_tray_restore_cycle_bit(struct cdns3_device *priv_dev,
- 	u32 doorbell;
- 
- 	doorbell = !!(readl(&priv_dev->regs->ep_cmd) & EP_CMD_DRDY);
--	dma_index = (readl(&priv_dev->regs->ep_traddr) -
--		    priv_ep->trb_pool_dma) / TRB_SIZE;
-+	dma_index = readl(&priv_dev->regs->ep_traddr) - priv_ep->trb_pool_dma;
-+	dma_index /= TRB_SIZE;
+-- 
+balbi
