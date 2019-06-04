@@ -1,36 +1,35 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 29/30] misc: pci_endpoint_test: Populate sriov_configure ops to configure SRIOV device
-Date: Tue, 4 Jun 2019 18:45:15 +0530
-Message-ID: <20190604131516.13596-30-kishon@ti.com>
-References: <20190604131516.13596-1-kishon@ti.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH] dt-bindings: i2c-stm32: document optional dmas
+Date: Tue, 4 Jun 2019 15:34:13 +0200
+Message-ID: <1559655253-27008-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tom Joseph <tjoseph@cadence.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
+To: wsa@the-dreams.de, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, fabrice.gasnier@st.com
 List-Id: devicetree@vger.kernel.org
 
-Populate sriov_configure ops with pci_sriov_configure_simple to
-configure SRIOV device.
+Add missing documentation for "dmas" and "dma-names" properties that can be
+used on i2c-stm32.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- drivers/misc/pci_endpoint_test.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/i2c/i2c-stm32.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 632c76e33e4e..2a6cd9e65e67 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -831,6 +831,7 @@ static struct pci_driver pci_endpoint_test_driver = {
- 	.id_table	= pci_endpoint_test_tbl,
- 	.probe		= pci_endpoint_test_probe,
- 	.remove		= pci_endpoint_test_remove,
-+	.sriov_configure = pci_sriov_configure_simple,
- };
- module_pci_driver(pci_endpoint_test_driver);
- 
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+index f334738..ce3df2ff 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+@@ -21,6 +21,8 @@ Optional properties:
+   100000 and 400000.
+   For STM32F7, STM32H7 and STM32MP1 SoCs, Standard-mode, Fast-mode and Fast-mode
+   Plus are supported, possible values are 100000, 400000 and 1000000.
++- dmas: List of phandles to rx and tx DMA channels. Refer to stm32-dma.txt.
++- dma-names: List of dma names. Valid names are: "rx" and "tx".
+ - i2c-scl-rising-time-ns: I2C SCL Rising time for the board (default: 25)
+   For STM32F7, STM32H7 and STM32MP1 only.
+ - i2c-scl-falling-time-ns: I2C SCL Falling time for the board (default: 10)
 -- 
-2.17.1
+2.7.4
