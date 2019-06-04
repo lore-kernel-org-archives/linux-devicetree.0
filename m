@@ -1,35 +1,55 @@
-From: Loys Ollivier <lollivier@baylibre.com>
-Subject: Re: [PATCH v3 5/5] riscv: dts: add initial board data for the SiFive HiFive Unleashed
-Date: Tue, 04 Jun 2019 16:41:17 +0200
-Message-ID: <86pnnth0qa.fsf@baylibre.com>
-References: <20190602080500.31700-1-paul.walmsley@sifive.com> <20190602080500.31700-6-paul.walmsley@sifive.com>
+From: Luca Weiss <luca@z3ntu.xyz>
+Subject: [PATCH] arm64: dts: allwinner: a64: Add lradc node
+Date: Tue,  4 Jun 2019 16:42:53 +0200
+Message-ID: <20190604144252.26965-1-luca@z3ntu.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190602080500.31700-6-paul.walmsley@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Luca Weiss <luca@z3ntu.xyz>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, "open list:SUN4I LOW RES ADC ATTACHED
+        TABLET KEYS DRIVER" <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Allwinner
+        sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun 02 Jun 2019 at 01:05, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+Add a node describing the KEYADC on the A64.
 
-> Add initial board data for the SiFive HiFive Unleashed A00.
->
-> Currently the data populated in this DT file describes the board
-> DRAM configuration and the external clock sources that supply the
-> PRCI.
->
-> This third version incorporates changes based on more comments from
-> Rob Herring <robh+dt@kernel.org>.
->
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-Tested-by: Loys Ollivier <lollivier@baylibre.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ .../devicetree/bindings/input/sun4i-lradc-keys.txt        | 1 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi             | 8 ++++++++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+index 496125c6bfb7..507b737612ea 100644
+--- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
++++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+@@ -5,6 +5,7 @@ Required properties:
+  - compatible: should be one of the following string:
+ 		"allwinner,sun4i-a10-lradc-keys"
+ 		"allwinner,sun8i-a83t-r-lradc"
++		"allwinner,sun50i-a64-lradc", "allwinner,sun8i-a83t-r-lradc"
+  - reg: mmio address range of the chip
+  - interrupts: interrupt to which the chip is connected
+  - vref-supply: powersupply for the lradc reference voltage
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 7734f70e1057..3a42352b5c9f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -704,6 +704,14 @@
+ 			status = "disabled";
+ 		};
+ 
++		lradc: lradc@1c21800 {
++			compatible = "allwinner,sun50i-a64-lradc",
++				     "allwinner,sun8i-a83t-r-lradc";
++			reg = <0x01c21800 0x400>;
++			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		i2s0: i2s@1c22000 {
+ 			#sound-dai-cells = <0>;
+ 			compatible = "allwinner,sun50i-a64-i2s",
+-- 
+2.21.0
