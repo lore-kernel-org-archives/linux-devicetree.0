@@ -1,63 +1,68 @@
-Return-Path: <SRS0=ALZF=UD=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mx1.mailbox.org ([80.241.60.212]:41238 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727239AbfFDLeQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:34:16 -0400
-From: Stefan Roese <sr@denx.de>
-Subject: [PATCH 1/2 v3] dt-bindings: i2c: i2c-mt7621: Add bindings for MediaTek MT7621/28/88 I2C
-Date: Tue,  4 Jun 2019 13:34:06 +0200
-Message-Id: <20190604113407.8948-1-sr@denx.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-i2c@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Return-Path: <SRS0=zRjx=UD=linaro.org=masahisa.kojima@kernel.org>
+From: Masahisa Kojima <masahisa.kojima@linaro.org>
+Subject: [PATCH v7 0/3] spi: support for Socionext Synquacer platform
+Date: Tue,  4 Jun 2019 14:12:54 +0900
+Message-Id: <20190604051257.14264-1-masahisa.kojima@linaro.org>
+To: linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: broonie@kernel.org, geert@linux-m68k.org, tpiepho@impinj.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, ard.biesheuvel@linaro.org, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, okamoto.satoru@socionext.com, osaki.yoshitoyo@socionext.com, Masahisa Kojima <masahisa.kojima@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add bindings for the I2C controller that can be found in the MediaTek
-MT7621/7628/7688 SoCs.
+Hello,
 
-Signed-off-by: Stefan Roese <sr@denx.de>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
-v3:
-- New patch
+ Support for Socionext's FIP controller intended for flash device interfacing.
+The controller can operate in 'direct' or 'command' mode. One mode directly
+talks and provide a read/write i/f to the flash device. Other works as plain
+SPI mode. This driver runs the controller as a SPI controller.
 
- .../devicetree/bindings/i2c/i2c-mt7621.txt    | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mt7621.txt
+Changes since v6:
+        # Removed dependency to SPI_BITBANG
+        # Added -EPROBE_DEFER handling for devm_clk_get()
+        # Added check of invalid index(0) of platform_get_irq()
+        # Set the fwnode member
+        # Removed redundant error check for sspi->clk
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mt7621.txt b/Documentation/devicetree/bindings/i2c/i2c-mt7621.txt
-new file mode 100644
-index 000000000000..bc36f0eb94cd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mt7621.txt
-@@ -0,0 +1,25 @@
-+MediaTek MT7621/MT7628 I2C master controller
-+
-+Required properties:
-+
-+- compatible: Should be one of the following:
-+  - "mediatek,mt7621-i2c": for MT7621/MT7628/MT7688 platforms
-+- #address-cells: should be 1.
-+- #size-cells: should be 0.
-+- reg: Address and length of the register set for the device
-+- resets: phandle to the reset controller asserting this device in
-+          reset
-+  See ../reset/reset.txt for details.
-+
-+Optional properties :
-+
-+Example:
-+
-+i2c: i2c@900 {
-+	compatible = "mediatek,mt7621-i2c";
-+	reg = <0x900 0x100>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	resets = <&rstctrl 16>;
-+	reset-names = "i2c";
-+};
+Changes since v5:
+        # Supported ACPI probing and added ACPI device table(SCX0004)
+        # Removed DT dependencies
+        # Removed to call _relaxed variants to access the registers
+        # Updated irq name to use dev_name()
+        # Updated return value for irq handlers
+        # Explicitly listed the supported bits_per_word
+        # Removed FIFO handling from a set_cs() operation
+
+Changes since v4:
+        # Supported interrupt based data handling instead of polling
+        # Added prefix "SYNQUACER_HSSPI_"
+        # Replaced data read/write access with readsx()/writesx()
+        # Updated clock source handling, explicitly specify "iHCLK" or "iPCKL"
+          and removed array of clk
+
+Changes since v3:
+        # Convert IS_ERR returned from devm_clk_get(iPCLK) to NULL, that way
+          we can call clk_xxx(IPCLK) without first checking for it being valid.
+
+Changes since v2:
+        # Made iHCLK clock property required in DT, and iPCLK an optional extra.
+        # Hardcode max number of slaves to 4, as specified in the manual.
+
+Changes since v1:
+        # Changed licence header to C++ style comment.
+        # Removed redundant lock and transfer_mode backup member.
+        # Fixed divisor to allow upto 254.
+
+Masahisa Kojima (3):
+  MAINTAINERS: Add entry for Synquacer SPI driver
+  dt-bindings: spi: Add DT bindings for Synquacer
+  spi: Add spi driver for Socionext SynQuacer platform
+
+ .../devicetree/bindings/spi/spi-synquacer.txt      |  27 +
+ MAINTAINERS                                        |   8 +
+ drivers/spi/Kconfig                                |  10 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-synquacer.c                        | 822 +++++++++++++++++++++
+ 5 files changed, 868 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
+ create mode 100644 drivers/spi/spi-synquacer.c
+
 -- 
-2.21.0
+2.14.2
