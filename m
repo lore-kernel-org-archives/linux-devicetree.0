@@ -1,8 +1,8 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [RESEND PATCH v1 4/5] of/platform: Add functional dependency link
- from "depends-on" property
-Date: Mon,  3 Jun 2019 17:32:17 -0700
-Message-ID: <20190604003218.241354-5-saravanak@google.com>
+Subject: [RESEND PATCH v1 2/5] driver core: Add device links support for
+ pending links to suppliers
+Date: Mon,  3 Jun 2019 17:32:15 -0700
+Message-ID: <20190604003218.241354-3-saravanak@google.com>
 References: <20190604003218.241354-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -13,140 +13,154 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg 
 Cc: Saravana Kannan <saravanak@google.com>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-Add device-links after the devices are created (but before they are
-probed) by looking at the "depends-on" DT property that allows
-specifying mandatory functional dependencies between devices.
+When consumer devices are added, they might not have a supplier device
+to link to despite needing mandatory resources/functionality from one
+or more suppliers. Add a waiting_for_suppliers list to track such
+consumers and add helper functions to manage the list.
 
-This property is used instead of existing DT properties that specify
-phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
-is because not all resources referred to by existing DT properties are
-mandatory functional dependencies. Some devices/drivers might be able
-to operate with reduced functionality when some of the resources
-aren't available. For example, a device could operate in polling mode
-if no IRQ is available, a device could skip doing power management if
-clock or voltage control isn't available and they are left on, etc.
-
-Automatically adding device-links for functional dependencies at the
-framework level provides the following benefits:
-
-- Optimizes device probe order and avoids the useless work of
-  attempting probes of devices that will not probe successfully
-  (because their suppliers aren't present or haven't probed yet).
-
-  For example, in a commonly available mobile SoC, registering just one
-  consumer device's driver at an initcall level earlier than the
-  supplier device's driver causes 11 failed probe attempts before the
-  consumer device probes successfully. This was with a kernel with all
-  the drivers statically compiled in. This problem gets a lot worse if
-  all the drivers are loaded as modules without direct symbol
-  dependencies.
-
-- Supplier devices like clock providers, regulators providers, etc
-  need to keep the resources they provide active and at a particular
-  state(s) during boot up even if their current set of consumers don't
-  request the resource to be active. This is because the rest of the
-  consumers might not have probed yet and turning off the resource
-  before all the consumers have probed could lead to a hang or
-  undesired user experience.
-
-  Some frameworks (Eg: regulator) handle this today by turning off
-  "unused" resources at late_initcall_sync and hoping all the devices
-  have probed by then. This is not a valid assumption for systems with
-  loadable modules. Other frameworks (Eg: clock) just don't handle
-  this due to the lack of a clear signal for when they can turn off
-  resources. This leads to downstream hacks to handle cases like this
-  that can easily be solved in the upstream kernel.
-
-  By linking devices before they are probed, we give suppliers a clear
-  count of the number of dependent consumers. Once all of the consumers
-  are active, the suppliers can turn off the unused resources without
-  making assumptions about the number of consumers.
-
-By default we just add device-links to track "driver presence" (probe
-succeeded) of the supplier device. If any other functionality provided
-by device-links are needed, it is left to the consumer/supplier devices
-to change the link when they probe.
+Marking/unmarking a consumer device as waiting for suppliers is
+generally expected to be done by the entity that's creating the
+device.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/of/platform.c | 46 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ drivers/base/core.c    | 67 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/device.h |  5 ++++
+ 2 files changed, 72 insertions(+)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 1115a8d80a33..da1aa52b310a 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -74,6 +74,45 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
- EXPORT_SYMBOL(of_find_device_by_node);
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index fd7511e04e62..9ab6782dda1c 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -44,6 +44,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
+ #endif
  
- #ifdef CONFIG_OF_ADDRESS
-+static int of_link_to_suppliers(struct device *dev)
-+{
-+	struct device_node *sup_node;
-+	struct platform_device *sup_dev;
-+	unsigned int i = 0, links = 0;
-+	u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-+
-+	if (unlikely(!dev->of_node))
-+		return 0;
-+
-+	while ((sup_node = of_parse_phandle(dev->of_node, "depends-on", i))) {
-+		i++;
-+		sup_dev = of_find_device_by_node(sup_node);
-+		if (!sup_dev)
-+			continue;
-+		if (device_link_add(dev, &sup_dev->dev, dl_flags))
-+			links++;
-+		put_device(&sup_dev->dev);
-+	}
-+	if (links < i)
-+		return -ENODEV;
-+	return 0;
-+}
-+
-+static void link_waiting_consumers_func(struct work_struct *work)
-+{
-+	device_link_check_waiting_consumers(of_link_to_suppliers);
-+}
-+static DECLARE_WORK(link_waiting_consumers_work, link_waiting_consumers_func);
-+
-+static bool link_waiting_consumers_enable;
-+static void link_waiting_consumers_trigger(void)
-+{
-+	if (!link_waiting_consumers_enable)
-+		return;
-+
-+	schedule_work(&link_waiting_consumers_work);
-+}
-+
- /*
-  * The following routines scan a subtree and registers a device for
-  * each applicable node.
-@@ -205,11 +244,14 @@ static struct platform_device *of_platform_device_create_pdata(
- 	dev->dev.platform_data = platform_data;
- 	of_msi_configure(&dev->dev, dev->dev.of_node);
+ /* Device links support. */
++static LIST_HEAD(wait_for_suppliers);
++static DEFINE_MUTEX(wfs_lock);
  
-+	if (of_link_to_suppliers(&dev->dev))
-+		device_link_wait_for_supplier(&dev->dev);
- 	if (of_device_add(dev) != 0) {
- 		platform_device_put(dev);
- 		goto err_clear_flag;
- 	}
- 	np->dev = &dev->dev;
-+	link_waiting_consumers_trigger();
- 
- 	return dev;
- 
-@@ -555,6 +597,10 @@ static int __init of_platform_default_populate_init(void)
- 	/* Populate everything else. */
- 	of_platform_default_populate(NULL, NULL, NULL);
- 
-+	/* Make the device-links between suppliers and consumers */
-+	link_waiting_consumers_enable = true;
-+	device_link_check_waiting_consumers(of_link_to_suppliers);
-+
- 	return 0;
+ #ifdef CONFIG_SRCU
+ static DEFINE_MUTEX(device_links_lock);
+@@ -401,6 +403,53 @@ struct device_link *device_link_add(struct device *consumer,
  }
- arch_initcall_sync(of_platform_default_populate_init);
+ EXPORT_SYMBOL_GPL(device_link_add);
+ 
++/**
++ * device_link_wait_for_supplier - Mark device as waiting for supplier
++ * @consumer: Consumer device
++ *
++ * Marks the consumer device as waiting for suppliers to become available. The
++ * consumer device will never be probed until it's unmarked as waiting for
++ * suppliers. The caller is responsible for adding the link to the supplier
++ * once the supplier device is present.
++ *
++ * This function is NOT meant to be called from the probe function of the
++ * consumer but rather from code that creates the consumer device.
++ */
++void device_link_wait_for_supplier(struct device *consumer)
++{
++	mutex_lock(&wfs_lock);
++	list_add_tail(&consumer->links.needs_suppliers, &wait_for_suppliers);
++	mutex_unlock(&wfs_lock);
++}
++
++/**
++ * device_link_check_waiting_consumers - Try to unmark waiting consumers
++ * @add_suppliers: Callback function to add suppliers to waiting consumer
++ *
++ * Loops through all consumers waiting on suppliers and tries to add all their
++ * supplier links. If that succeeds, the consumer device is unmarked as waiting
++ * for suppliers. Otherwise, they are left marked as waiting on suppliers,
++ *
++ * The add_suppliers callback is expected to return 0 if it has found and added
++ * all the supplier links for the consumer device. It should return an error if
++ * it isn't able to do so.
++ *
++ * The caller of device_link_wait_for_supplier() is expected to call this once
++ * it's aware of potential suppliers becoming available.
++ */
++void device_link_check_waiting_consumers(
++		int (*add_suppliers)(struct device *consumer))
++{
++	struct device *dev, *tmp;
++
++	mutex_lock(&wfs_lock);
++	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
++				 links.needs_suppliers)
++		if (!add_suppliers(dev))
++			list_del_init(&dev->links.needs_suppliers);
++	mutex_unlock(&wfs_lock);
++}
++
+ static void device_link_free(struct device_link *link)
+ {
+ 	while (refcount_dec_not_one(&link->rpm_active))
+@@ -535,6 +584,19 @@ int device_links_check_suppliers(struct device *dev)
+ 	struct device_link *link;
+ 	int ret = 0;
+ 
++	/*
++	 * If a device is waiting for one or more suppliers (in
++	 * wait_for_suppliers list), it is not ready to probe yet. So just
++	 * return -EPROBE_DEFER without having to check the links with existing
++	 * suppliers.
++	 */
++	mutex_lock(&wfs_lock);
++	if (!list_empty(&dev->links.needs_suppliers)) {
++		mutex_unlock(&wfs_lock);
++		return -EPROBE_DEFER;
++	}
++	mutex_unlock(&wfs_lock);
++
+ 	device_links_write_lock();
+ 
+ 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+@@ -812,6 +874,10 @@ static void device_links_purge(struct device *dev)
+ {
+ 	struct device_link *link, *ln;
+ 
++	mutex_lock(&wfs_lock);
++	list_del(&dev->links.needs_suppliers);
++	mutex_unlock(&wfs_lock);
++
+ 	/*
+ 	 * Delete all of the remaining links from this device to any other
+ 	 * devices (either consumers or suppliers).
+@@ -1673,6 +1739,7 @@ void device_initialize(struct device *dev)
+ #endif
+ 	INIT_LIST_HEAD(&dev->links.consumers);
+ 	INIT_LIST_HEAD(&dev->links.suppliers);
++	INIT_LIST_HEAD(&dev->links.needs_suppliers);
+ 	dev->links.status = DL_DEV_NO_DRIVER;
+ }
+ EXPORT_SYMBOL_GPL(device_initialize);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index e85264fb6616..4e71e5386aae 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -887,11 +887,13 @@ enum dl_dev_state {
+  * struct dev_links_info - Device data related to device links.
+  * @suppliers: List of links to supplier devices.
+  * @consumers: List of links to consumer devices.
++ * @needs_suppliers: Hook to global list of devices waiting for suppliers.
+  * @status: Driver status information.
+  */
+ struct dev_links_info {
+ 	struct list_head suppliers;
+ 	struct list_head consumers;
++	struct list_head needs_suppliers;
+ 	enum dl_dev_state status;
+ };
+ 
+@@ -1395,6 +1397,9 @@ struct device_link *device_link_add(struct device *consumer,
+ 				    struct device *supplier, u32 flags);
+ void device_link_del(struct device_link *link);
+ void device_link_remove(void *consumer, struct device *supplier);
++void device_link_wait_for_supplier(struct device *consumer);
++void device_link_check_waiting_consumers(
++		int (*add_suppliers)(struct device *consumer));
+ 
+ #ifndef dev_fmt
+ #define dev_fmt(fmt) fmt
 -- 
 2.22.0.rc1.257.g3120a18244-goog
