@@ -1,43 +1,30 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH] arm64: dts: msm8996: fix PSCI entry-latency-us
-Date: Tue,  4 Jun 2019 14:29:31 +0200
-Message-ID: <20190604122931.22235-1-niklas.cassel@linaro.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v3 1/7] dt-bindings: arm64: allwinner: h6: Add binding
+ for DMA controller
+Date: Tue, 4 Jun 2019 17:57:26 +0530
+Message-ID: <20190604122726.GZ15118@vkoul-mobl>
+References: <20190527201459.20130-1-peron.clem@gmail.com>
+ <20190527201459.20130-2-peron.clem@gmail.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190527201459.20130-2-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: amit.kucheria@linaro.org, bjorn.andersson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The current entry-latency-us is too short.
-The proper way to convert between the device tree properties
-from the vendor tree to the upstream PSCI device tree properties is:
+On 27-05-19, 22:14, Clément Péron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
+> 
+> DMA in H6 is similar to other DMA controller, except it is first which
+> supports more than 32 request sources and has 16 channels. It also needs
+> additional clock to be enabled.
+> 
 
-entry-latency-us = qcom,time-overhead - qcom,latency-us
+Applied, thanks
 
-which gives
-
-entry-latency-us = 210 - 80 = 130
-
-Fixes: f6aee7af59b6 ("arm64: dts: qcom: msm8996: Add PSCI cpuidle low power states")
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index b7cf2a17dcb5..e8c03b5c8990 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -174,7 +174,7 @@
- 				compatible = "arm,idle-state";
- 				idle-state-name = "standalone-power-collapse";
- 				arm,psci-suspend-param = <0x00000004>;
--				entry-latency-us = <40>;
-+				entry-latency-us = <130>;
- 				exit-latency-us = <80>;
- 				min-residency-us = <300>;
- 			};
 -- 
-2.21.0
+~Vinod
