@@ -1,105 +1,69 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH 2/2] i3c: master: Add driver for MediaTek IP
-Date: Tue, 4 Jun 2019 09:58:58 +0200
-Message-ID: <20190604095858.38ed9a28@collabora.com>
-References: <1559533863-10292-1-git-send-email-qii.wang@mediatek.com>
-        <1559533863-10292-3-git-send-email-qii.wang@mediatek.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 4/9] mmc: sdhci-sprd: Implement the get_max_timeout_count()
+ interface
+Date: Tue, 4 Jun 2019 16:03:18 +0800
+Message-ID: <CAMz4kuKEOQwOK2Yh+y+-ZhZDndA2tf9V45J_o-OittuSRJcurQ@mail.gmail.com>
+References: <cover.1558346019.git.baolin.wang@linaro.org> <ae6e23d4de6bb25cd697412f1402036d5ecc9843.1558346019.git.baolin.wang@linaro.org>
+ <ed5bdd08-7227-4d55-23de-e78e15d315c7@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559533863-10292-3-git-send-email-qii.wang@mediatek.com>
+In-Reply-To: <ed5bdd08-7227-4d55-23de-e78e15d315c7@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Qii Wang <qii.wang@mediatek.com>
-Cc: bbrezillon@kernel.org, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, gregkh@linuxfoundation.org, xinping.qian@mediatek.com, linux-kernel@vger.kernel.org, liguo.zhang@mediatek.com, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-i3c@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Vincent Guittot <vincent.guittot@linaro.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 3 Jun 2019 11:51:03 +0800
-Qii Wang <qii.wang@mediatek.com> wrote:
+On Mon, 3 Jun 2019 at 20:35, Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 20/05/19 1:11 PM, Baolin Wang wrote:
+> > Implement the get_max_timeout_count() interface to set the Spredtrum SD
+> > host controller actual maximum timeout count.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>
+> Seems surprising that there isn't a custom ->set_timeout() as well.
+
+Until now we did not find issues when using sdhci_calc_timeout().
+Thanks for your reviewing.
+
+> Nevertheless:
+>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>
+> > ---
+> >  drivers/mmc/host/sdhci-sprd.c |    7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+> > index 31ba7d6..d91281d 100644
+> > --- a/drivers/mmc/host/sdhci-sprd.c
+> > +++ b/drivers/mmc/host/sdhci-sprd.c
+> > @@ -285,6 +285,12 @@ static void sdhci_sprd_hw_reset(struct sdhci_host *host)
+> >       usleep_range(300, 500);
+> >  }
+> >
+> > +static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
+> > +{
+> > +     /* The Spredtrum controller actual maximum timeout count is 1 << 31 */
+> > +     return 1 << 31;
+> > +}
+> > +
+> >  static struct sdhci_ops sdhci_sprd_ops = {
+> >       .read_l = sdhci_sprd_readl,
+> >       .write_l = sdhci_sprd_writel,
+> > @@ -296,6 +302,7 @@ static void sdhci_sprd_hw_reset(struct sdhci_host *host)
+> >       .reset = sdhci_reset,
+> >       .set_uhs_signaling = sdhci_sprd_set_uhs_signaling,
+> >       .hw_reset = sdhci_sprd_hw_reset,
+> > +     .get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
+> >  };
+> >
+> >  static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
+> >
+>
 
 
-> +static int mtk_i3c_master_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct mtk_i3c_master *master;
-> +	struct resource *res;
-> +	int ret, irqnr;
-> +
-> +	master = devm_kzalloc(dev, sizeof(*master), GFP_KERNEL);
-> +	if (!master)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "main");
-> +	master->regs = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(master->regs))
-> +		return PTR_ERR(master->regs);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dma");
-> +	master->dma_regs = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(master->dma_regs))
-> +		return PTR_ERR(master->dma_regs);
-> +
-> +	irqnr = platform_get_irq(pdev, 0);
-> +	if (irqnr < 0)
-> +		return irqnr;
-> +
-> +	ret = devm_request_irq(dev, irqnr, mtk_i3c_master_irq,
-> +			       IRQF_TRIGGER_NONE, DRV_NAME, master);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Request I3C IRQ %d fail\n", irqnr);
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32(pdev->dev.of_node, "clock-div",
-> +				   &master->clk_src_div);
-
-You say in one comment that this clock divider is fixed in HW but might
-change on a per-SoC basis. If that's the case, you should get rid of
-this clock-div prop and attach the divider to the compatible (using an
-mtk_i3c_master_variant struct that contains a divider field).
-
-> +	if (ret < 0)
-> +		return -EINVAL;
-> +
-> +	spin_lock_init(&master->xferqueue.lock);
-> +	INIT_LIST_HEAD(&master->xferqueue.list);
-> +
-> +	if (dma_set_mask(dev, DMA_BIT_MASK(33))) {
-> +		dev_err(dev, "dma_set_mask return error.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	master->clk_main = devm_clk_get(dev, "main");
-> +	if (IS_ERR(master->clk_main)) {
-> +		dev_err(dev, "cannot get main clock\n");
-> +		return PTR_ERR(master->clk_main);
-> +	}
-> +	master->clk_dma = devm_clk_get(dev, "dma");
-> +	if (IS_ERR(master->clk_dma)) {
-> +		dev_err(dev, "cannot get dma clock\n");
-> +		return PTR_ERR(master->clk_dma);
-> +	}
-> +
-> +	master->clk_arb = devm_clk_get_optional(dev, "arb");
-> +	if (IS_ERR(master->clk_arb))
-> +		return PTR_ERR(master->clk_arb);
-> +
-> +	ret = mtk_i3c_master_clock_enable(master);
-> +	if (ret) {
-> +		dev_err(dev, "clock enable failed!\n");
-> +		return ret;
-> +	}
-> +
-> +	master->dev = dev;
-> +	platform_set_drvdata(pdev, master);
-> +
-> +	ret = i3c_master_register(&master->mas_ctrler, dev,
-> +				  &mtk_i3c_master_ops, false);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add i3c bus to i3c core\n");
-> +		mtk_i3c_master_clock_disable(master);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
+-- 
+Baolin Wang
+Best Regards
