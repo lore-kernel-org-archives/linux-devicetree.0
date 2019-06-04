@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 05/13] ARM: dts: sunxi: Prefer A31 bindings
+Subject: [PATCH v4 06/13] ARM: dts: sunxi: Prefer A31 bindings
  for IR
-Date: Tue,  4 Jun 2019 18:29:51 +0200
-Message-ID: <20190604162959.29199-6-peron.clem@gmail.com>
+Date: Tue,  4 Jun 2019 18:29:52 +0200
+Message-ID: <20190604162959.29199-7-peron.clem@gmail.com>
 References: <20190604162959.29199-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBE5Z3LTQKGQEG6NOKJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBBFNZ3LTQKGQEWMEEGQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190604162959.29199-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -28,53 +28,23 @@ Prefer the A31 bindings instead of A13.
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Acked-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi  | 2 +-
- arch/arm/boot/dts/sun8i-a83t.dtsi | 2 +-
- arch/arm/boot/dts/sun9i-a80.dtsi  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31=
-.dtsi
-index c04efad81bbc..110622b30796 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -1351,7 +1351,7 @@
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h=
+3-h5.dtsi
+index 84977d4eb97a..f0f5ba349c1b 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -822,7 +822,7 @@
  		};
 =20
  		ir: ir@1f02000 {
 -			compatible =3D "allwinner,sun5i-a13-ir";
 +			compatible =3D "allwinner,sun6i-a31-ir";
- 			clocks =3D <&apb0_gates 1>, <&ir_clk>;
- 			clock-names =3D "apb", "ir";
- 			resets =3D <&apb0_rst 1>;
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a8=
-3t.dtsi
-index 392b0cabbf0d..8d603f3309f2 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -1067,7 +1067,7 @@
-=20
- 		r_cir: ir@1f02000 {
- 			compatible =3D "allwinner,sun8i-a83t-ir",
--				"allwinner,sun5i-a13-ir";
-+				"allwinner,sun6i-a31-ir";
  			clocks =3D <&r_ccu CLK_APB0_IR>, <&r_ccu CLK_IR>;
  			clock-names =3D "apb", "ir";
  			resets =3D <&r_ccu RST_APB0_IR>;
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80=
-.dtsi
-index 0c1eec9000e3..310cd972ee5b 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -1167,7 +1167,7 @@
- 		};
-=20
- 		r_ir: ir@8002000 {
--			compatible =3D "allwinner,sun5i-a13-ir";
-+			compatible =3D "allwinner,sun6i-a31-ir";
- 			interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
- 			pinctrl-names =3D "default";
- 			pinctrl-0 =3D <&r_ir_pins>;
 --=20
 2.20.1
 
@@ -84,5 +54,5 @@ linux-sunxi" group.
 To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190604162959.29199-6-peron.clem%40gmail.com.
+/linux-sunxi/20190604162959.29199-7-peron.clem%40gmail.com.
 For more options, visit https://groups.google.com/d/optout.
