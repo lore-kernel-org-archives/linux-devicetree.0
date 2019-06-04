@@ -1,63 +1,112 @@
-From: Erwan Le Ray <erwan.leray@st.com>
-Subject: [PATCH 05/10] serial: stm32: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
-Date: Tue, 4 Jun 2019 10:55:14 +0200
-Message-ID: <1559638519-6128-6-git-send-email-erwan.leray@st.com>
-References: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v4] usb: create usb_debug_root for gadget only
+Date: Tue, 4 Jun 2019 16:59:14 +0800
+Message-ID: <1559638754.8487.71.camel@mhfsdcap03>
+References: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com>
+ <20190604073706.GA25045@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-serial@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190604073706.GA25045@kroah.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use __maybe_unused for power management related functionsinstead of
-#if CONFIG_PM_SLEEP to simply the code.
+On Tue, 2019-06-04 at 09:37 +0200, Greg Kroah-Hartman wrote:
+> On Tue, Jun 04, 2019 at 03:34:07PM +0800, Chunfeng Yun wrote:
+> > When CONFIG_USB is not set, and CONFIG_USB_GADGET is set,
+> > there is an issue, e.g.:
+> > 
+> > drivers/usb/mtu3/mtu3_debugfs.o: in function 'ssusb_debugfs_create_root':
+> > mtu3_debugfs.c:(.text+0xba3): undefined reference to 'usb_debug_root'
+> > 
+> > usb_debug_root is currently only built when host is supported
+> > (CONFIG_USB is set), for convenience, we also want it created when
+> > gadget only is enabled, this patch try to support it.
+> > 
+> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> > v4:
+> >   move common API into common.c suggested by Felipe
+> > 
+> > v3:
+> >   1. still create usb_debug_root for gadget only
+> >   2. abandon mtu3's change
+> >   3. drop acked-by Randy
+> > 
+> > v2(resend): add acked-by Randy
+> > 
+> > v1: fix mtu3's build error, replace usb_debug_root by NULL;
+> > ---
+> >  drivers/usb/common/common.c   | 26 ++++++++++++++++++++++++++
+> >  drivers/usb/core/usb.c        | 16 ++++------------
+> >  drivers/usb/gadget/udc/core.c |  3 +++
+> >  include/linux/usb.h           |  2 ++
+> >  4 files changed, 35 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> > index 18f5dcf58b0d..c52e9c9f58ec 100644
+> > --- a/drivers/usb/common/common.c
+> > +++ b/drivers/usb/common/common.c
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/usb/of.h>
+> >  #include <linux/usb/otg.h>
+> >  #include <linux/of_platform.h>
+> > +#include <linux/debugfs.h>
+> >  
+> >  static const char *const ep_type_names[] = {
+> >  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
+> > @@ -139,6 +140,31 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(usb_get_dr_mode);
+> >  
+> > +struct dentry *usb_debug_root;
+> > +EXPORT_SYMBOL_GPL(usb_debug_root);
+> > +
+> > +static atomic_t usb_debug_root_refcnt = ATOMIC_INIT(0);
+> 
+> Ick, no.
+> 
+> > +
+> > +struct dentry *usb_debugfs_init(void)
+> > +{
+> > +	if (!usb_debug_root)
+> > +		usb_debug_root = debugfs_create_dir("usb", NULL);
+> > +
+> > +	atomic_inc(&usb_debug_root_refcnt);
+> > +
+> > +	return usb_debug_root;
+> > +}
+> > +EXPORT_SYMBOL_GPL(usb_debugfs_init);
+> > +
+> > +void usb_debugfs_cleanup(void)
+> > +{
+> > +	if (atomic_dec_and_test(&usb_debug_root_refcnt)) {
+> > +		debugfs_remove_recursive(usb_debug_root);
+> > +		usb_debug_root = NULL;
+> > +	}
+> > +}
+> > +EXPORT_SYMBOL_GPL(usb_debugfs_cleanup);
+> 
+> Only remove the debugfs subdir if the usbcore module is removed. 
+Both usbcore module and gadget module will use this "usb" subdir now.
+Gadget module may still use it when remove usbcore module.
 
-fixes: 270e5a74fe4c ("serial: stm32: add wakeup mechanism")
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 05d2ef6..aa3da1c 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -1200,8 +1200,8 @@ static int stm32_console_setup(struct console *co, char *options)
- 	.cons		= STM32_SERIAL_CONSOLE,
- };
- 
--#ifdef CONFIG_PM_SLEEP
--static void stm32_serial_enable_wakeup(struct uart_port *port, bool enable)
-+static void __maybe_unused stm32_serial_enable_wakeup(struct uart_port *port,
-+						      bool enable)
- {
- 	struct stm32_port *stm32_port = to_stm32_port(port);
- 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
-@@ -1225,7 +1225,7 @@ static void stm32_serial_enable_wakeup(struct uart_port *port, bool enable)
- 	}
- }
- 
--static int stm32_serial_suspend(struct device *dev)
-+static int __maybe_unused stm32_serial_suspend(struct device *dev)
- {
- 	struct uart_port *port = dev_get_drvdata(dev);
- 
-@@ -1241,7 +1241,7 @@ static int stm32_serial_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int stm32_serial_resume(struct device *dev)
-+static int __maybe_unused stm32_serial_resume(struct device *dev)
- {
- 	struct uart_port *port = dev_get_drvdata(dev);
- 
-@@ -1252,7 +1252,6 @@ static int stm32_serial_resume(struct device *dev)
- 
- 	return uart_resume_port(&stm32_usart_driver, port);
- }
--#endif /* CONFIG_PM_SLEEP */
- 
- static int __maybe_unused stm32_serial_runtime_suspend(struct device *dev)
- {
--- 
-1.9.1
+>  Create
+> the debugfs subdir when the usbcore module is loaded.  No need for any
+> reference counting of any sort at all.  No need to overthink this :)
+> 
+> thanks,
+> 
+> greg k-h
