@@ -1,52 +1,37 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 13/30] PCI: cadence: Use local management register to configure Vendor ID
-Date: Tue, 4 Jun 2019 18:44:59 +0530
-Message-ID: <20190604131516.13596-14-kishon@ti.com>
-References: <20190604131516.13596-1-kishon@ti.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] PCI: altera: Allow building as module
+Date: Tue, 4 Jun 2019 08:18:48 -0500
+Message-ID: <20190604131848.GA40122@google.com>
+References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tom Joseph <tjoseph@cadence.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
+To: Ley Foon Tan <ley.foon.tan@intel.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, lftan.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-PCI_VENDOR_ID in root port configuration space is read-only register
-and writing to it will have no effect. Use local management register to
-configure Vendor ID and Subsystem Vendor ID.
+On Wed, Apr 24, 2019 at 12:57:14PM +0800, Ley Foon Tan wrote:
+> Altera PCIe Rootport IP is a soft IP and is only available after
+> FPGA image is programmed.
+> 
+> Make driver modulable to support use case FPGA image is programmed
+> after kernel is booted. User proram FPGA image in kernel then only load
+> PCIe driver module.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/pcie-cadence-host.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+I'm not objecting to these patches, but help me understand how this
+works.  The "usual" scenario is that if a driver is loaded before a
+matching device is available, i.e., either the driver is built
+statically or it is loaded before a device is hot-added, the event of
+the device being available causes the driver's probe method to be
+called.
 
-diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
-index 14a54f6a11de..dcecf47805ad 100644
---- a/drivers/pci/controller/pcie-cadence-host.c
-+++ b/drivers/pci/controller/pcie-cadence-host.c
-@@ -148,6 +148,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
- {
- 	struct cdns_pcie *pcie = &rc->pcie;
- 	u32 value, ctrl;
-+	u32 id;
- 
- 	/*
- 	 * Set the root complex BAR configuration register:
-@@ -167,8 +168,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
- 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
- 
- 	/* Set root port configuration space */
--	if (rc->vendor_id != 0xffff)
--		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
-+	if (rc->vendor_id != 0xffff) {
-+		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
-+			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
-+		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
-+	}
-+
- 	if (rc->device_id != 0xffff)
- 		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
- 
--- 
-2.17.1
+This seems to be a more manual process of programming the FPGA which
+results in a new "altera-pcie" platform device.  And then apparently
+you need to load the appropriate module by hand?  Is there no
+"hot-add" type of event for this platform device that automatically
+looks for the driver?
+
+Bjorn
