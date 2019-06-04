@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@kernel.org>
-Subject: [PATCH 2/3] rtc: pcf8563: Clear event flags and disable interrupts before requesting irq
-Date: Tue,  4 Jun 2019 12:23:36 +0800
-Message-ID: <20190604042337.26129-3-wens@kernel.org>
+Subject: [PATCH 3/3] arm64: dts: allwinner: h6: Pine H64: Add interrupt line for RTC
+Date: Tue,  4 Jun 2019 12:23:37 +0800
+Message-ID: <20190604042337.26129-4-wens@kernel.org>
 References: <20190604042337.26129-1-wens@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,51 +14,29 @@ List-Id: devicetree@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-Besides the alarm, the PCF8563 also has a timer triggered interrupt.
-In cases where the previous system left the timer and interrupts on,
-or somehow the bits got enabled, the interrupt would keep triggering
-as the kernel doesn't know about it.
+The external PCF8563 RTC chip's interrupt line is connected to the NMI
+line on the SoC.
 
-Clear both the alarm and timer event flags, and disable the interrupts,
-before requesting the interrupt line.
+Add the interrupt line to the device tree.
 
-Fixes: ede3e9d47cca ("drivers/rtc/rtc-pcf8563.c: add alarm support")
-Fixes: a45d528aab8b ("rtc: pcf8563: clear expired alarm at boot time")
+Fixes: 17ebc33afc35 ("arm64: allwinner: h6: add PCF8563 RTC on Pine H64 board")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/rtc/rtc-pcf8563.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
-index e358313466f1..d8adf69b6697 100644
---- a/drivers/rtc/rtc-pcf8563.c
-+++ b/drivers/rtc/rtc-pcf8563.c
-@@ -563,7 +563,6 @@ static int pcf8563_probe(struct i2c_client *client,
- 	struct pcf8563 *pcf8563;
- 	int err;
- 	unsigned char buf;
--	unsigned char alm_pending;
- 
- 	dev_dbg(&client->dev, "%s\n", __func__);
- 
-@@ -587,13 +586,13 @@ static int pcf8563_probe(struct i2c_client *client,
- 		return err;
- 	}
- 
--	err = pcf8563_get_alarm_mode(client, NULL, &alm_pending);
--	if (err) {
--		dev_err(&client->dev, "%s: read error\n", __func__);
-+	/* Clear flags and disable interrupts */
-+	buf = 0;
-+	err = pcf8563_write_block_data(client, PCF8563_REG_ST2, 1, &buf);
-+	if (err < 0) {
-+		dev_err(&client->dev, "%s: write error\n", __func__);
- 		return err;
- 	}
--	if (alm_pending)
--		pcf8563_set_alarm_mode(client, 0);
- 
- 	pcf8563->rtc = devm_rtc_device_register(&client->dev,
- 				pcf8563_driver.driver.name,
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index 9e464d40cbff..189834518391 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -249,6 +249,8 @@
+ 	pcf8563: rtc@51 {
+ 		compatible = "nxp,pcf8563";
+ 		reg = <0x51>;
++		interrupt-parent = <&r_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+ 		#clock-cells = <0>;
+ 	};
+ };
 -- 
 2.20.1
