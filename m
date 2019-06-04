@@ -1,105 +1,38 @@
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive
- and queue messages
-Date: Tue, 4 Jun 2019 20:16:11 +0300
-Message-ID: <20190604171611.GS9224@smile.fi.intel.com>
-References: <20190531043347.4196-1-eduval@amazon.com>
- <20190531043347.4196-3-eduval@amazon.com>
+From: Luca Weiss <luca@z3ntu.xyz>
+Subject: [PATCH v2 1/2] dt-bindings: input: sun4i-lradc-keys: Add A64 compatible
+Date: Tue,  4 Jun 2019 19:21:53 +0200
+Message-ID: <20190604172154.25472-1-luca@z3ntu.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190531043347.4196-3-eduval@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <eduval@amazon.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Haiyue Wang <haiyue.wang@linux.intel.com>, jarkko.nikula@linux.intel.com, brendanhiggins@google.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Luca Weiss <luca@z3ntu.xyz>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, "open list:SUN4I LOW RES ADC ATTACHED
+        TABLET KEYS DRIVER" <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Allwinner
+        sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, ~martijnbraam/pmos-upstream@lists.sr.ht
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 30, 2019 at 09:33:46PM -0700, Eduardo Valentin wrote:
-> From: Haiyue Wang <haiyue.wang@linux.intel.com>
-> 
-> Some protocols over I2C are designed for bi-directional transferring
-> messages by using I2C Master Write protocol. Like the MCTP (Management
-> Component Transport Protocol) and IPMB (Intelligent Platform Management
-> Bus), they both require that the userspace can receive messages from
-> I2C dirvers under slave mode.
-> 
-> This new slave mqueue backend is used to receive and queue messages, it
-> will exposes these messages to userspace by sysfs bin file.
-> 
-> Note: DT interface and a couple of minor fixes here and there
-> by Eduardo, so I kept the original authorship here.
+Add the A64 compatible with a fallback to the A83T compatible.
 
-> +#define MQ_MSGBUF_SIZE		CONFIG_I2C_SLAVE_MQUEUE_MESSAGE_SIZE
-> +#define MQ_QUEUE_SIZE		CONFIG_I2C_SLAVE_MQUEUE_QUEUE_SIZE
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+Changes from v1:
+ - New patch. Document new compatible string.
 
-> +#define MQ_QUEUE_NEXT(x)	(((x) + 1) & (MQ_QUEUE_SIZE - 1))
+ Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Also possible ((x + 1) % ..._SIZE)
-
-> +	mq = dev_get_drvdata(container_of(kobj, struct device, kobj));
-
-kobj_to_dev()
-
-> +static int i2c_slave_mqueue_probe(struct i2c_client *client,
-> +				  const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct mq_queue *mq;
-> +	int ret, i;
-> +	void *buf;
-> +
-> +	mq = devm_kzalloc(dev, sizeof(*mq), GFP_KERNEL);
-> +	if (!mq)
-> +		return -ENOMEM;
-> +
-
-> +	BUILD_BUG_ON(!is_power_of_2(MQ_QUEUE_SIZE));
-
-Perhaps start function with this kind of assertions?
-
-> +
-> +	buf = devm_kmalloc_array(dev, MQ_QUEUE_SIZE, MQ_MSGBUF_SIZE,
-> +				 GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < MQ_QUEUE_SIZE; i++)
-> +		mq->queue[i].buf = buf + i * MQ_MSGBUF_SIZE;
-
-
-Just wondering if kfifo API can bring an advantage here?
-
-> +	return 0;
-> +}
-
-> +static const struct of_device_id i2c_slave_mqueue_of_match[] = {
-> +	{
-> +		.compatible = "i2c-slave-mqueue",
-> +	},
-
-> +	{ },
-
-No need for comma here.
-
-> +};
-
-> +
-> +static struct i2c_driver i2c_slave_mqueue_driver = {
-> +	.driver = {
-> +		.name	= "i2c-slave-mqueue",
-
-> +		.of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-
-Wouldn't compiler warn you due to unused data?
-Perhaps drop of_match_ptr() for good...
-
-> +	},
-> +	.probe		= i2c_slave_mqueue_probe,
-> +	.remove		= i2c_slave_mqueue_remove,
-> +	.id_table	= i2c_slave_mqueue_id,
-> +};
-
+diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+index 496125c6bfb7..507b737612ea 100644
+--- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
++++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+@@ -5,6 +5,7 @@ Required properties:
+  - compatible: should be one of the following string:
+ 		"allwinner,sun4i-a10-lradc-keys"
+ 		"allwinner,sun8i-a83t-r-lradc"
++		"allwinner,sun50i-a64-lradc", "allwinner,sun8i-a83t-r-lradc"
+  - reg: mmio address range of the chip
+  - interrupts: interrupt to which the chip is connected
+  - vref-supply: powersupply for the lradc reference voltage
 -- 
-With Best Regards,
-Andy Shevchenko
+2.21.0
