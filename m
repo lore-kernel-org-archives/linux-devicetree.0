@@ -1,54 +1,53 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [RFC PATCH 26/30] MAINTAINERS: Add MAINTAINER entry for PCIe on
- TI's J721E SoC
-Date: Tue, 4 Jun 2019 14:45:57 -0500
-Message-ID: <20190604194557.GB84290@google.com>
-References: <20190604131516.13596-1-kishon@ti.com>
- <20190604131516.13596-27-kishon@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Tue, 4 Jun 2019 22:04:09 +0200
+Message-ID: <CAK8P3a3pQpSpH4q=CL6gr_YzjYgoyD6-eyiLrvnZsqqjpcRxtQ@mail.gmail.com>
+References: <20190531035348.7194-1-elder@linaro.org> <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+ <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org> <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+ <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org> <20190531233306.GB25597@minitux>
+ <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org> <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
+ <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org> <CAK8P3a2U=RzfpVaAgRP1QwPhRpZiBNsG5qdWjzwG=tCKZefYHA@mail.gmail.com>
+ <b26cf34c0d3fa1a7a700cee935244d7a2a7e1388.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190604131516.13596-27-kishon@ti.com>
+In-Reply-To: <b26cf34c0d3fa1a7a700cee935244d7a2a7e1388.camel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Dan Williams <dcbw@redhat.com>
+Cc: Alex Elder <elder@linaro.org>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Miller <davem@davemloft.net>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, evgreen@chromium.org, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Nit: the subject wastes a lot of space in the most valuable part (the
-beginning).  Something like this would make "git log --oneline" more
-useful:
+On Tue, Jun 4, 2019 at 5:18 PM Dan Williams <dcbw@redhat.com> wrote:
+> On Tue, 2019-06-04 at 10:13 +0200, Arnd Bergmann wrote:
+> >
+> > Can you describe what kind of multiplexing is actually going on?
+> > I'm still unclear about what we actually use multiple logical
+> > interfaces for here, and how they relate to one another.
+>
+> Each logical interface represents a different "connection" (PDP/EPS
+> context) to the provider network with a distinct IP address and QoS.
+> VLANs may be a suitable analogy but here they are L3+QoS.
+>
+> In realistic example the main interface (say rmnet0) would be used for
+> web browsing and have best-effort QoS. A second interface (say rmnet1)
+> would be used for VOIP and have certain QoS guarantees from both the
+> modem and the network itself.
+>
+> QMAP can also aggregate frames for a given channel (connection/EPS/PDP
+> context/rmnet interface/etc) to better support LTE speeds.
 
-  MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
+Thanks, that's a very helpful explanation!
 
-On Tue, Jun 04, 2019 at 06:45:12PM +0530, Kishon Vijay Abraham I wrote:
-> Add MAINTAINER entry for PCIe on TI's J721E SoC.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  MAINTAINERS | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a6954776a37e..8a421949f335 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12122,13 +12122,14 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/pci/designware-pcie.txt
->  F:	drivers/pci/controller/dwc/*designware*
->  
-> -PCI DRIVER FOR TI DRA7XX
-> +PCI DRIVER FOR TI DRA7XX/J721E
->  M:	Kishon Vijay Abraham I <kishon@ti.com>
->  L:	linux-omap@vger.kernel.org
->  L:	linux-pci@vger.kernel.org
->  S:	Supported
->  F:	Documentation/devicetree/bindings/pci/ti-pci.txt
->  F:	drivers/pci/controller/dwc/pci-dra7xx.c
-> +F:	drivers/pci/controller/pci-j721e.c
->  
->  PCI DRIVER FOR TI KEYSTONE
->  M:	Murali Karicheri <m-karicheri2@ti.com>
-> -- 
-> 2.17.1
-> 
+Is it correct to say then that the concept of having those separate
+connections would be required for any proper LTE modem implementation,
+but the QMAP protocol (and based on that, the rmnet implementation)
+is Qualcomm specific and shared only among several generations of
+modems from that one vendor?
+
+You mentioned the need to have a common user space interface
+for configuration, and if the above is true, I agree that we should try
+to achieve that, either by ensuring rmnet is generic enough to
+cover other vendors (and non-QMAP clients), or by creating a
+new user level interface that IPA/rmnet can be adapted to.
+
+       Arnd
