@@ -1,81 +1,95 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Tue, 4 Jun 2019 13:54:39 +0530
-Message-ID: <f912a979-1e0c-8013-7f82-09102cb39a19@ti.com>
-References: <1554882504-9010-1-git-send-email-pawell@cadence.com>
- <1554882504-9010-6-git-send-email-pawell@cadence.com>
- <b768bde9-d6c8-f655-aecb-d08bcb9286a6@ti.com>
- <BYAPR07MB47099815FA4691B6106F80FEDD150@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
+Date: Tue, 4 Jun 2019 10:28:06 +0200
+Message-ID: <20190604082806.smght44dmhuoxw2u@flea>
+References: <20190518170929.24789-1-luca@z3ntu.xyz>
+ <6901794.oDhxEVzEqc@g550jk>
+ <20190603074247.hlayod2pxq55f6ci@flea>
+ <3880268.VpfjThaCW4@g550jk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rokvu4c2fxf472od"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB47099815FA4691B6106F80FEDD150@BYAPR07MB4709.namprd07.prod.outlook.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <3880268.VpfjThaCW4@g550jk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
+To: Luca Weiss <luca@z3ntu.xyz>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/19 1:47 PM, Pawel Laszczak wrote:
->>
->> On 10/04/19 1:18 PM, Pawel Laszczak wrote:
->>> +static void cdns3_wa1_tray_restore_cycle_bit(struct cdns3_device *priv_dev,
->>> +					     struct cdns3_endpoint *priv_ep)
->>> +{
->>> +	int dma_index;
->>> +	u32 doorbell;
->>> +
->>> +	doorbell = !!(readl(&priv_dev->regs->ep_cmd) & EP_CMD_DRDY);
->>
->>> +	dma_index = (readl(&priv_dev->regs->ep_traddr) -
->>> +		    priv_ep->trb_pool_dma) / TRB_SIZE;
->>
->> This gets upgraded to 64-bit by 64-bit division whenever dma_addr_t is
->> 64-bit. That should be avoided. Following diff should fix it.
->> But please review the logic itself. You are subtracting a 64 bit entity
->>from a 32-bit entity. What is guaranteeing that priv_ep->trb_pool_dma is
->> 32-bit?
->>
->> There is one more instance of same issue in cdns3_request_handled().
->>
->> Thanks,
->> Sekhar
->>
->> [1]
->> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
->> index bfd5dbf40c7e..e73b618501fb 100644
->> --- a/drivers/usb/cdns3/gadget.c
->> +++ b/drivers/usb/cdns3/gadget.c
->> @@ -749,8 +749,8 @@ static void cdns3_wa1_tray_restore_cycle_bit(struct cdns3_device *priv_dev,
->> 	u32 doorbell;
->>
->> 	doorbell = !!(readl(&priv_dev->regs->ep_cmd) & EP_CMD_DRDY);
->> -	dma_index = (readl(&priv_dev->regs->ep_traddr) -
->> -		    priv_ep->trb_pool_dma) / TRB_SIZE;
->> +	dma_index = readl(&priv_dev->regs->ep_traddr) - priv_ep->trb_pool_dma;
->> +	dma_index /= TRB_SIZE;
-> 
-> Hi Sekhar,
-> 
-> In the next latest version I added setting dma and coherent mask to 32-bits as suggested by Roger. 
-> Controller can do only 32-bit access.
 
-I think this should work for now except if in some future version of
-controller the limitation of 32-bit access is fixed. I guess that might
-mean different logic for DMA handling anyway.
+--rokvu4c2fxf472od
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> DMA address space should be allocated from first 32 bits of address space. Most significant 32-bit 
-> of priv_ep->trb_pool_dma should be zeroed, so I do not assume any issue in this place.
-> 
-> Have you seen any issue with this on your platform ?
+On Mon, Jun 03, 2019 at 05:20:51PM +0200, Luca Weiss wrote:
+> On Montag, 3. Juni 2019 09:42:47 CEST Maxime Ripard wrote:
+> > Hi,
+> >
+> > On Fri, May 31, 2019 at 12:27:55PM +0200, Luca Weiss wrote:
+> > > On Freitag, 24. Mai 2019 11:20:01 CEST Maxime Ripard wrote:
+> > > > It would be great to drop the -keys from the compatible, and to
+> > > > document the bindings
+> > > >
+> > > > Looks good otherwise
+> > > >
+> > > > Maxime
+> > >
+> > > So I should just document the "allwinner,sun50i-a64-lradc" string in
+> > > Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt ? Don't I
+> > > also
+> > > have to add the compatible to the driver code then? Just adding the a64
+> > > compatible to a dts wouldn't work without that.
+> >
+> > What I meant was that you needed both, something like:
+> >
+> > compatible = "allwinner,sun50i-a64-lradc", "allwinner,sun8i-a83t-lradc";
+> >
+> > That way, the OS will try to match a driver for the A64 compatible if
+> > any, and fallback to the A83's otherwise. And since we don't have any
+> > quirk at the moment, there's no change needed to the driver.
+>
+> sorry for the long back and forth, I hope I understood you correctly now.
+> Here's what I would submit as v2 then (I'll split the two files into seperate
+> patches as the devicetree documentation suggests)
+>
+> Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt:
+>   - compatible: should be one of the following string:
+>                 "allwinner,sun4i-a10-lradc-keys"
+>                 "allwinner,sun8i-a83t-r-lradc"
+> +               "allwinner,sun50i-a64-lradc", "allwinner,sun8i-a83t-r-lradc"
+>
+> arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:
+> +               lradc: lradc@1c21800 {
+> +                       compatible = "allwinner,sun50i-a64-lradc",
+> +                                    "allwinner,sun8i-a83t-r-lradc";
+> +                       reg = <0x01c21800 0x400>;
+> +                       interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+> +                       status = "disabled";
+> +               };
+> +
+>
+> Thanks,
+> Luca
 
-build fails with
+That looks correct :)
 
-ERROR: "__aeabi_uldivmod" [drivers/usb/cdns3/cdns3.ko] undefined!
+Maxime
 
-on 32-bit platforms with ARM LPAE enabled. So please roll in the fix I
-suggested.
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Thanks,
-Sekhar
+--rokvu4c2fxf472od
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPYrlgAKCRDj7w1vZxhR
+xZ4wAQDYf4iwJpFsfR8XtFStVojYJ+87YKlwxsWeyc2AY+blqwD/bkhJERAV91vH
+je0Y6DGnu87Ep+qyk/Jh5W384aSsxgM=
+=Mcc7
+-----END PGP SIGNATURE-----
+
+--rokvu4c2fxf472od--
