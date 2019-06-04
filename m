@@ -1,45 +1,37 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: [PATCH 4/4] arm64: defconfig: Add config for MMC on AM65x and J721E
- devices
-Date: Tue, 4 Jun 2019 11:39:14 +0530
-Message-ID: <20190604060914.10886-5-faiz_abbas@ti.com>
-References: <20190604060914.10886-1-faiz_abbas@ti.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH] arm: dts: dra72x: Disable usb4_tm target module
+Date: Tue, 4 Jun 2019 11:43:35 +0530
+Message-ID: <20190604061335.8264-1-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190604060914.10886-1-faiz_abbas@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: nm@ti.com, ulf.hansson@linaro.org, robh+dt@kernel.org, nsekhar@ti.com, adrian.hunter@intel.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, robh+dt@kernel.org
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add config for MMC host controller driver on Am65x and J721E devices.
+usb4_tm is unsed on dra72 and accessing the module
+with ti,sysc is causing a boot crash hence disable its target
+module.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Fixes: 549fce068a3112 ("ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data")
+Reported-by: Vignesh Raghavendra <vigneshr@ti.com>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/dra72x.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 83a509dc247d..8f58b9a84dc2 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -585,6 +585,7 @@ CONFIG_MMC_DW_ROCKCHIP=y
- CONFIG_MMC_SUNXI=y
- CONFIG_MMC_BCM2835=y
- CONFIG_MMC_SDHCI_XENON=y
-+CONFIG_MMC_SDHCI_AM654=y
- CONFIG_NEW_LEDS=y
- CONFIG_LEDS_CLASS=y
- CONFIG_LEDS_GPIO=y
+diff --git a/arch/arm/boot/dts/dra72x.dtsi b/arch/arm/boot/dts/dra72x.dtsi
+index 89831552cd86..9c39c6b9b5d6 100644
+--- a/arch/arm/boot/dts/dra72x.dtsi
++++ b/arch/arm/boot/dts/dra72x.dtsi
+@@ -62,3 +62,7 @@
+ &pcie2_rc {
+ 	compatible = "ti,dra726-pcie-rc", "ti,dra7-pcie";
+ };
++
++&usb4_tm {
++	status = "disabled";
++};
 -- 
-2.19.2
+2.17.1
