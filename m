@@ -1,69 +1,48 @@
-From: Dan Williams <dcbw@redhat.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Tue, 04 Jun 2019 10:21:41 -0500
-Message-ID: <feb3d23718ea462d304369d718c6ed37da8a8f15.camel@redhat.com>
-References: <20190531035348.7194-1-elder@linaro.org>
-         <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
-         <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
-         <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
-         <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
-         <3b1e12b145a273dd3ded2864d976bdc5fa90e68a.camel@redhat.com>
-         <87f98f81-8f77-3bc5-374c-f498e07cb1bd@linaro.org>
-         <0fc29577a5c69530145b6095fa1ac1a51949ba8e.camel@redhat.com>
-         <c200581b8fc167f3a0c09ef6233b8d81@codeaurora.org>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
+Date: Tue, 04 Jun 2019 08:25:14 -0700
+Message-ID: <5cf68d5b.1c69fb81.281cd.5f93@mx.google.com>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org> <20190604072001.9288-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c200581b8fc167f3a0c09ef6233b8d81@codeaurora.org>
+In-Reply-To: <20190604072001.9288-3-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-Cc: Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, evgreen@chromium.org, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
+To: "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Pedro Sousa <pedrom.sousa@synopsys.com>
+Cc: Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-06-03 at 13:04 -0600, Subash Abhinov Kasiviswanathan
-wrote:
-> > > I can't (or won't) comment right now on whether IPA needs its own
-> > > netdev for rmnet to use.  The IPA endpoints used for the modem
-> > > network interfaces are enabled when the netdev is opened and
-> > > disabled when closed.  Outside of that, TX and RX are pretty
-> > > much immediately passed through to the layer below or above.
-> > > IPA currently has no other net device operations.
-> > 
-> > I don't really have issues with the patchset underneath the netdev
-> > layer. I'm interested in how the various bits present themselves to
-> > userspace, which is why I am trying to tie this in with Johannes'
-> > conversation about WWAN devices, netdevs, channels, and how the
-> > various
-> > drivers present API for creating data channels that map to
-> > different
-> > modem contexts.
-> > 
-> > So let me rephrase. If the control plane has set up the default
-> > context
-> > and sent a QMI Start Network message (or the network attached the
-> > default one) and the resulting IP details are applied to the IPA
-> > netdev
-> > can things just start sending data? Or do we need to create an
-> > rmnet on
-> > top to get that working?
-> > 
-> > Dan
-> 
-> Hi Dan
-> 
-> All data from the hardware will have the MAP headers.
-> We still need to create rmnet devs over the IPA netdev and use it
-> for 
-> the
-> data path.
-> The IPA netdev will pass on the packets which it receives from the 
-> hardware
-> and queue it to network stack where it will be intercepted by the
-> rmnet rx handler.
+Quoting Bjorn Andersson (2019-06-04 00:20:00)
+> @@ -6104,6 +6105,25 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
+>         return err;
+>  }
+> =20
+> +/**
+> + ufshcd_device_reset() - toggle the (optional) device reset line
+> + * @hba: per-adapter instance
+> + *
+> + * Toggles the (optional) reset line to reset the attached device.
+> + */
+> +static void ufshcd_device_reset(struct ufs_hba *hba)
+> +{
+> +       /*
+> +        * The USB device shall detect reset pulses of 1us, sleep for 10u=
+s to
 
-Ok, so IPA only needs a netdev so that rmnet has something to
-send/receive packets to/from? This gets even closer to the discussion
-in "cellular modem driver APIs - take 2" from last week.
+This isn't usb though. Can we have a gpio reset driver and then
+implement this in the reset framework instead? Or did that not work out
+for some reason?
 
-Dan
+> +        * be on the safe side.
+> +        */
+> +       gpiod_set_value_cansleep(hba->device_reset, 1);
+> +       usleep_range(10, 15);
+> +
+> +       gpiod_set_value_cansleep(hba->device_reset, 0);
+> +       usleep_range(10, 15);
+> +}
+> +
+>  /**
+>   * ufshcd_host_reset_and_restore - reset and restore host controller
+>   * @hba: per-adapter instance
