@@ -1,7 +1,7 @@
 From: <min.guo@mediatek.com>
-Subject: [PATCH v6 1/6] dt-bindings: usb: musb: Add support for MediaTek musb controller
-Date: Tue, 4 Jun 2019 19:39:14 +0800
-Message-ID: <1559648359-6569-2-git-send-email-min.guo@mediatek.com>
+Subject: [PATCH v6 4/6] usb: musb: Add noirq type of dma create interface
+Date: Tue, 4 Jun 2019 19:39:17 +0800
+Message-ID: <1559648359-6569-5-git-send-email-min.guo@mediatek.com>
 References: <1559648359-6569-1-git-send-email-min.guo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,102 +14,149 @@ List-Id: devicetree@vger.kernel.org
 
 From: Min Guo <min.guo@mediatek.com>
 
-This adds support for MediaTek musb controller in
-host, peripheral and otg mode.
+Add noirq type of dma create interface for platform which do not
+have dedicated DMA interrupt line, move musbhsdma macro definition
+to musb_dma.h
 
 Signed-off-by: Min Guo <min.guo@mediatek.com>
 ---
 changes in v6:
-1. Modify usb connector child node
-
-changes in v5:
-suggested by Rob:
-1. Modify compatible as 
-- compatible : should be one of:
-               "mediatek,mt-2701"
-               ...
-               followed by "mediatek,mtk-musb"
-2. Add usb connector child node
-
-changes in v4:
-suggested by Sergei:
-1. String alignment
-
-changes in v3:
 1. no changes
 
-changes in v2:
-suggested by Bin:
-1. Modify DRC to DRD
-suggested by Rob:
-2. Drop the "<soc-model>-musb" in compatible
-3. Remove phy-names
-4. Add space after comma in clock-names
----
- .../devicetree/bindings/usb/mediatek,musb.txt      | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+changes in v5:
+1. no changes
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-new file mode 100644
-index 0000000..7434299
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-@@ -0,0 +1,55 @@
-+MediaTek musb DRD/OTG controller
-+-------------------------------------------
+new patch based on v4:
+---
+ drivers/usb/musb/musb_dma.h  |  9 ++++++++
+ drivers/usb/musb/musbhsdma.c | 54 ++++++++++++++++++++++++++++++--------------
+ 2 files changed, 46 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/usb/musb/musb_dma.h b/drivers/usb/musb/musb_dma.h
+index 8f60271..05103ea 100644
+--- a/drivers/usb/musb/musb_dma.h
++++ b/drivers/usb/musb/musb_dma.h
+@@ -35,6 +35,12 @@
+  *    whether shared with the Inventra core or separate.
+  */
+ 
++#define MUSB_HSDMA_BASE		0x200
++#define MUSB_HSDMA_INTR		(MUSB_HSDMA_BASE + 0)
++#define MUSB_HSDMA_CONTROL		0x4
++#define MUSB_HSDMA_ADDRESS		0x8
++#define MUSB_HSDMA_COUNT		0xc
 +
-+Required properties:
-+ - compatible      : should be one of:
-+                     "mediatek,mt-2701"
-+                     ...
-+                     followed by "mediatek,mtk-musb"
-+ - reg             : specifies physical base address and size of
-+                     the registers
-+ - interrupts      : interrupt used by musb controller
-+ - interrupt-names : must be "mc"
-+ - phys            : PHY specifier for the OTG phy
-+ - dr_mode         : should be one of "host", "peripheral" or "otg",
-+                     refer to usb/generic.txt
-+ - clocks          : a list of phandle + clock-specifier pairs, one for
-+                     each entry in clock-names
-+ - clock-names     : must contain "main", "mcu", "univpll"
-+                     for clocks of controller
+ #define	DMA_ADDR_INVALID	(~(dma_addr_t)0)
+ 
+ #ifdef CONFIG_MUSB_PIO_ONLY
+@@ -191,6 +197,9 @@ static inline void musb_dma_controller_destroy(struct dma_controller *d) { }
+ extern struct dma_controller *
+ musbhs_dma_controller_create(struct musb *musb, void __iomem *base);
+ extern void musbhs_dma_controller_destroy(struct dma_controller *c);
++extern struct dma_controller *
++musbhs_dma_controller_create_noirq(struct musb *musb, void __iomem *base);
++extern irqreturn_t dma_controller_irq(int irq, void *private_data);
+ 
+ extern struct dma_controller *
+ tusb_dma_controller_create(struct musb *musb, void __iomem *base);
+diff --git a/drivers/usb/musb/musbhsdma.c b/drivers/usb/musb/musbhsdma.c
+index 5fc6825..d549c0b 100644
+--- a/drivers/usb/musb/musbhsdma.c
++++ b/drivers/usb/musb/musbhsdma.c
+@@ -10,12 +10,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include "musb_core.h"
+-
+-#define MUSB_HSDMA_BASE		0x200
+-#define MUSB_HSDMA_INTR		(MUSB_HSDMA_BASE + 0)
+-#define MUSB_HSDMA_CONTROL		0x4
+-#define MUSB_HSDMA_ADDRESS		0x8
+-#define MUSB_HSDMA_COUNT		0xc
++#include "musb_dma.h"
+ 
+ #define MUSB_HSDMA_CHANNEL_OFFSET(_bchannel, _offset)		\
+ 		(MUSB_HSDMA_BASE + (_bchannel << 4) + _offset)
+@@ -268,7 +263,7 @@ static int dma_channel_abort(struct dma_channel *channel)
+ 	return 0;
+ }
+ 
+-static irqreturn_t dma_controller_irq(int irq, void *private_data)
++irqreturn_t dma_controller_irq(int irq, void *private_data)
+ {
+ 	struct musb_dma_controller *controller = private_data;
+ 	struct musb *musb = controller->private_data;
+@@ -383,6 +378,7 @@ static irqreturn_t dma_controller_irq(int irq, void *private_data)
+ 	spin_unlock_irqrestore(&musb->lock, flags);
+ 	return retval;
+ }
++EXPORT_SYMBOL_GPL(dma_controller_irq);
+ 
+ void musbhs_dma_controller_destroy(struct dma_controller *c)
+ {
+@@ -398,18 +394,10 @@ void musbhs_dma_controller_destroy(struct dma_controller *c)
+ }
+ EXPORT_SYMBOL_GPL(musbhs_dma_controller_destroy);
+ 
+-struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
+-						    void __iomem *base)
++static struct musb_dma_controller *
++dma_controller_alloc(struct musb *musb, void __iomem *base)
+ {
+ 	struct musb_dma_controller *controller;
+-	struct device *dev = musb->controller;
+-	struct platform_device *pdev = to_platform_device(dev);
+-	int irq = platform_get_irq_byname(pdev, "dma");
+-
+-	if (irq <= 0) {
+-		dev_err(dev, "No DMA interrupt line!\n");
+-		return NULL;
+-	}
+ 
+ 	controller = kzalloc(sizeof(*controller), GFP_KERNEL);
+ 	if (!controller)
+@@ -423,6 +411,25 @@ struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
+ 	controller->controller.channel_release = dma_channel_release;
+ 	controller->controller.channel_program = dma_channel_program;
+ 	controller->controller.channel_abort = dma_channel_abort;
++	return controller;
++}
 +
-+Optional properties:
-+ - power-domains   : a phandle to USB power domain node to control USB's
-+                     MTCMOS
++struct dma_controller *
++musbhs_dma_controller_create(struct musb *musb, void __iomem *base)
++{
++	struct musb_dma_controller *controller;
++	struct device *dev = musb->controller;
++	struct platform_device *pdev = to_platform_device(dev);
++	int irq = platform_get_irq_byname(pdev, "dma");
 +
-+Required child nodes:
-+ usb connector node as defined in bindings/connector/usb-connector.txt
-+Optional properties:
-+ - id-gpios        : input GPIO for USB ID pin.
-+ - vbus-gpios      : input GPIO for USB VBUS pin.
-+ - vbus-supply     : reference to the VBUS regulator, needed when supports
-+                     dual-role mode
++	if (irq <= 0) {
++		dev_err(dev, "No DMA interrupt line!\n");
++		return NULL;
++	}
 +
-+Example:
++	controller = dma_controller_alloc(musb, base);
++	if (!controller)
++		return NULL;
+ 
+ 	if (request_irq(irq, dma_controller_irq, 0,
+ 			dev_name(musb->controller), &controller->controller)) {
+@@ -437,3 +444,16 @@ struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
+ 	return &controller->controller;
+ }
+ EXPORT_SYMBOL_GPL(musbhs_dma_controller_create);
 +
-+usb2: usb@11200000 {
-+	compatible = "mediatek,mt2701-musb",
-+		     "mediatek,mtk-musb";
-+	reg = <0 0x11200000 0 0x1000>;
-+	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-+	interrupt-names = "mc";
-+	phys = <&u2port2 PHY_TYPE_USB2>;
-+	dr_mode = "otg";
-+	clocks = <&pericfg CLK_PERI_USB0>,
-+		 <&pericfg CLK_PERI_USB0_MCU>,
-+		 <&pericfg CLK_PERI_USB_SLV>;
-+	clock-names = "main","mcu","univpll";
-+	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-+	connector{
-+		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
-+		label = "micro-USB";
-+		type = "micro";
-+		id-gpios = <&pio 44 GPIO_ACTIVE_HIGH>;
-+		vbus-supply = <&usb_vbus>;
-+	};
-+};
++struct dma_controller *
++musbhs_dma_controller_create_noirq(struct musb *musb, void __iomem *base)
++{
++	struct musb_dma_controller *controller;
++
++	controller = dma_controller_alloc(musb, base);
++	if (!controller)
++		return NULL;
++
++	return &controller->controller;
++}
++EXPORT_SYMBOL_GPL(musbhs_dma_controller_create_noirq);
 -- 
 1.9.1
