@@ -1,46 +1,51 @@
-From: Phil Elwell <phil@raspberrypi.org>
-Subject: Dynamic overlay failure in 4.19 & 4.20
-Date: Tue, 4 Jun 2019 13:15:26 +0100
-Message-ID: <c5af11eb-afe5-08c4-8597-3195c25ba1d5@raspberrypi.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v5 0/3] Qualcomm QCS404 PCIe support
+Date: Tue, 4 Jun 2019 07:52:24 -0500
+Message-ID: <20190604125224.GG189360@google.com>
+References: <20190529005710.23950-1-bjorn.andersson@linaro.org>
+ <20190529163155.GA24655@redmoon>
+ <20190604113347.GA13029@centauri.ideon.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190604113347.GA13029@centauri.ideon.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jun 04, 2019 at 01:33:47PM +0200, Niklas Cassel wrote:
+> On Wed, May 29, 2019 at 05:31:55PM +0100, Lorenzo Pieralisi wrote:
+> > On Tue, May 28, 2019 at 05:57:07PM -0700, Bjorn Andersson wrote:
+> > > This series adds support for the PCIe controller in the Qualcomm QCS404
+> > > platform.
+> > > 
+> > > Bjorn Andersson (3):
+> > >   PCI: qcom: Use clk_bulk API for 2.4.0 controllers
+> > >   dt-bindings: PCI: qcom: Add QCS404 to the binding
+> > >   PCI: qcom: Add QCS404 PCIe controller support
+> > > 
+> > >  .../devicetree/bindings/pci/qcom,pcie.txt     |  25 +++-
+> > >  drivers/pci/controller/dwc/pcie-qcom.c        | 113 ++++++++----------
+> > >  2 files changed, 75 insertions(+), 63 deletions(-)
+> > 
+> > Applied to pci/qcom for v5.3, thanks.
+> > 
+> > Lorenzo
+> 
+> Hello Lorenzo,
+> 
+> I don't see these patches in linux-next.
+> 
+> It appears that only Bjorn Helgaas tree is in linux-next, and not yours.
+> 
+> I think that it makes a lot of sense for patches to cook in linux-next
+> for as long a possible.
+> 
+> Perhaps you and Bjorn Helgaas could have a shared PCI git tree?
+> Or perhaps you could add your tree to linux-next?
+> ..or some other solution :)
 
-In the downstream Raspberry Pi kernel we are using configfs to apply overlays at
-runtime, using a patchset from Pantelis that hasn't been accepted upstream yet.
-Apart from the occasional need to adapt to upstream changes, this has been working
-well for us.
-
-A Raspberry Pi user recently noticed that this mechanism was failing for an overlay in
-4.19. Although the overlay appeared to be applied successfully, pinctrl was reporting
-that one of the two fragments contained an invalid phandle, and an examination of the
-live DT agreed - the target of the reference, which was in the other fragment, was
-missing the phandle property.
-
-5.0 added two patches - [1] to stop blindly copying properties from the overlay fragments
-into the live tree, and [2] to explicitly copy across the name and phandle properties.
-These two commits should be treated as a pair; the former requires the properties that
-are legitimately defined by an overlay to be added via a changeset, but this mechanism
-deliberately skips the name and phandle; the latter addresses this shortcoming. However,
-[1] was back-ported to 4.19 and 4.20 but [2] wasn't, hence the problem.
-
-The effect can be seen in the "overlay" overlay in the unittest data. Although the
-overlay appears to apply correctly, the hvac-large-1 node is lacking the phandle it
-should have as a result of the hvac_2 label, and that leaves the hvac-provider property
-of ride@200 with an unresolved phandle.
-
-The obvious fix is to also back-port [2] to 4.19, but that leaves open the question of
-whether either the overlay application mechanism or the unit test framework should have
-detected the missing phandle.
-
-Phil
-
-[1] 8814dc46bd9e ("of: overlay: do not duplicate properties from overlay for new nodes")
-[2] f96278810150 ("of: overlay: set node fields from properties when add new overlay node")
+I pull Lorenzo's branches into my -nexst branch.  I just haven't
+gotten to it yet.
