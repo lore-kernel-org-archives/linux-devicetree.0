@@ -1,37 +1,104 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI: altera: Allow building as module
-Date: Tue, 4 Jun 2019 08:18:48 -0500
-Message-ID: <20190604131848.GA40122@google.com>
-References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [RFC PATCH 10/30] PCI: cadence: Use *_start_link() and *_wait_for_link() to establish link
+Date: Tue, 4 Jun 2019 18:44:56 +0530
+Message-ID: <20190604131516.13596-11-kishon@ti.com>
+References: <20190604131516.13596-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+In-Reply-To: <20190604131516.13596-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ley Foon Tan <ley.foon.tan@intel.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, lftan.linux@gmail.com
+To: Tom Joseph <tjoseph@cadence.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 12:57:14PM +0800, Ley Foon Tan wrote:
-> Altera PCIe Rootport IP is a soft IP and is only available after
-> FPGA image is programmed.
-> 
-> Make driver modulable to support use case FPGA image is programmed
-> after kernel is booted. User proram FPGA image in kernel then only load
-> PCIe driver module.
+Use cdns_pcie_start_link() to start link training and
+cdns_pcie_wait_for_link() in order to wait to establish the link.
 
-I'm not objecting to these patches, but help me understand how this
-works.  The "usual" scenario is that if a driver is loaded before a
-matching device is available, i.e., either the driver is built
-statically or it is loaded before a device is hot-added, the event of
-the device being available causes the driver's probe method to be
-called.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/controller/pcie-cadence-ep.c   | 11 ++++++++++-
+ drivers/pci/controller/pcie-cadence-host.c | 11 +++++++++++
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
-This seems to be a more manual process of programming the FPGA which
-results in a new "altera-pcie" platform device.  And then apparently
-you need to load the appropriate module by hand?  Is there no
-"hot-add" type of event for this platform device that automatically
-looks for the driver?
-
-Bjorn
+diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
+index b044167071e6..825a515821c3 100644
+--- a/drivers/pci/controller/pcie-cadence-ep.c
++++ b/drivers/pci/controller/pcie-cadence-ep.c
+@@ -21,6 +21,7 @@
+ /**
+  * struct cdns_pcie_ep - private data for this PCIe endpoint controller driver
+  * @pcie: Cadence PCIe controller
++ * @dev: pointer to PCIe EP device
+  * @max_regions: maximum number of regions supported by hardware
+  * @ob_region_map: bitmask of mapped outbound regions
+  * @ob_addr: base addresses in the AXI bus where the outbound regions start
+@@ -37,6 +38,7 @@
+  */
+ struct cdns_pcie_ep {
+ 	struct cdns_pcie		pcie;
++	struct device			*dev;
+ 	u32				max_regions;
+ 	unsigned long			ob_region_map;
+ 	phys_addr_t			*ob_addr;
+@@ -386,6 +388,7 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct cdns_pcie *pcie = &ep->pcie;
+ 	struct pci_epf *epf;
++	int ret = 0;
+ 	u32 cfg;
+ 
+ 	/*
+@@ -397,7 +400,11 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 		cfg |= BIT(epf->func_no);
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
+ 
+-	return 0;
++	ret = cdns_pcie_start_link(pcie, true);
++	if (ret)
++		dev_err(ep->dev, "Failed to start link\n");
++
++	return ret;
+ }
+ 
+ static const struct pci_epc_features cdns_pcie_epc_features = {
+@@ -460,6 +467,8 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+ 	if (!ep)
+ 		return -ENOMEM;
+ 
++	ep->dev = dev;
++
+ 	pcie = &ep->pcie;
+ 	pcie->is_rc = false;
+ 	pcie->plat_data = pdev->dev.platform_data;
+diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
+index 2363f05e7c58..4ad8f2ece6e2 100644
+--- a/drivers/pci/controller/pcie-cadence-host.c
++++ b/drivers/pci/controller/pcie-cadence-host.c
+@@ -365,6 +365,14 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+ 		goto err_get_sync;
+ 	}
+ 
++	ret = cdns_pcie_start_link(pcie, true);
++	if (ret) {
++		dev_err(dev, "Failed to start link\n");
++		goto err_start_link;
++	}
++
++	cdns_pcie_wait_for_link(dev, pcie);
++
+ 	ret = cdns_pcie_host_init(dev, &resources, rc);
+ 	if (ret)
+ 		goto err_init;
+@@ -386,6 +394,9 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+ 	pci_free_resource_list(&resources);
+ 
+  err_init:
++	cdns_pcie_start_link(pcie, false);
++
++ err_start_link:
+ 	pm_runtime_put_sync(dev);
+ 
+  err_get_sync:
+-- 
+2.17.1
