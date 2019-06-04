@@ -1,53 +1,70 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Tue, 4 Jun 2019 22:04:09 +0200
-Message-ID: <CAK8P3a3pQpSpH4q=CL6gr_YzjYgoyD6-eyiLrvnZsqqjpcRxtQ@mail.gmail.com>
-References: <20190531035348.7194-1-elder@linaro.org> <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
- <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org> <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
- <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org> <20190531233306.GB25597@minitux>
- <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org> <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
- <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org> <CAK8P3a2U=RzfpVaAgRP1QwPhRpZiBNsG5qdWjzwG=tCKZefYHA@mail.gmail.com>
- <b26cf34c0d3fa1a7a700cee935244d7a2a7e1388.camel@redhat.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH v3 0/6] soc/fsl/qe: cleanups and new DT binding
+Date: Tue, 4 Jun 2019 15:29:22 -0500
+Message-ID: <CADRPPNRfAk2ZWJQt=Wx5SEqvw4iSpzkj8_XvHa_CZYHDAxFgxg@mail.gmail.com>
+References: <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
+ <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b26cf34c0d3fa1a7a700cee935244d7a2a7e1388.camel@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Williams <dcbw@redhat.com>
-Cc: Alex Elder <elder@linaro.org>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Miller <davem@davemloft.net>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, evgreen@chromium.org, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Scott Wood <oss@buserror.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>, Rob Herring <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Qiang Zhao <qiang.zhao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 5:18 PM Dan Williams <dcbw@redhat.com> wrote:
-> On Tue, 2019-06-04 at 10:13 +0200, Arnd Bergmann wrote:
-> >
-> > Can you describe what kind of multiplexing is actually going on?
-> > I'm still unclear about what we actually use multiple logical
-> > interfaces for here, and how they relate to one another.
+On Mon, May 13, 2019 at 6:17 AM Rasmus Villemoes
+<rasmus.villemoes@prevas.dk> wrote:
 >
-> Each logical interface represents a different "connection" (PDP/EPS
-> context) to the provider network with a distinct IP address and QoS.
-> VLANs may be a suitable analogy but here they are L3+QoS.
+> This small series consists of some small cleanups and simplifications
+> of the QUICC engine driver, and introduces a new DT binding that makes
+> it much easier to support other variants of the QUICC engine IP block
+> that appears in the wild: There's no reason to expect in general that
+> the number of valid SNUMs uniquely determines the set of such, so it's
+> better to simply let the device tree specify the values (and,
+> implicitly via the array length, also the count).
 >
-> In realistic example the main interface (say rmnet0) would be used for
-> web browsing and have best-effort QoS. A second interface (say rmnet1)
-> would be used for VOIP and have certain QoS guarantees from both the
-> modem and the network itself.
+> Which tree should this go through?
 >
-> QMAP can also aggregate frames for a given channel (connection/EPS/PDP
-> context/rmnet interface/etc) to better support LTE speeds.
+> v3:
+> - Move example from commit log into binding document (adapting to
+>   MPC8360 which the existing example pertains to).
+> - Add more review tags.
+> - Fix minor style issue.
+>
+> v2:
+> - Address comments from Christophe Leroy
+> - Add his Reviewed-by to 1/6 and 3/6
+> - Split DT binding update to separate patch as per
+>   Documentation/devicetree/bindings/submitting-patches.txt
+>
+> Rasmus Villemoes (6):
+>   soc/fsl/qe: qe.c: drop useless static qualifier
+>   soc/fsl/qe: qe.c: reduce static memory footprint by 1.7K
+>   soc/fsl/qe: qe.c: introduce qe_get_device_node helper
+>   dt-bindings: soc/fsl: qe: document new fsl,qe-snums binding
+>   soc/fsl/qe: qe.c: support fsl,qe-snums property
+>   soc/fsl/qe: qe.c: fold qe_get_num_of_snums into qe_snums_init
 
-Thanks, that's a very helpful explanation!
+Series applied to soc/fsl for-next.  Thanks!
 
-Is it correct to say then that the concept of having those separate
-connections would be required for any proper LTE modem implementation,
-but the QMAP protocol (and based on that, the rmnet implementation)
-is Qualcomm specific and shared only among several generations of
-modems from that one vendor?
+Regards,
+Leo
 
-You mentioned the need to have a common user space interface
-for configuration, and if the above is true, I agree that we should try
-to achieve that, either by ensuring rmnet is generic enough to
-cover other vendors (and non-QMAP clients), or by creating a
-new user level interface that IPA/rmnet can be adapted to.
-
-       Arnd
+>
+>  .../devicetree/bindings/soc/fsl/cpm_qe/qe.txt |  13 +-
+>  drivers/soc/fsl/qe/qe.c                       | 163 +++++++-----------
+>  2 files changed, 77 insertions(+), 99 deletions(-)
+>
+> --
+> 2.20.1
+>
