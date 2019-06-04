@@ -1,172 +1,73 @@
-From: Mauro Carvalho Chehab <mchehab@infradead.org>
-Subject: Re: [PATCH 22/22] docs: fix broken documentation links
-Date: Tue, 4 Jun 2019 06:58:02 -0300
-Message-ID: <20190604065802.47a9d24b@coco.lan>
-References: <cover.1559171394.git.mchehab+samsung@kernel.org>
- <f9fecacbe4ce0b2b3aed38d71ae3753f2daf3ce3.1559171394.git.mchehab+samsung@kernel.org>
- <64e136de-1a7b-3436-9675-44ea9fa7b64a@c-s.fr>
- <20190604064614.67cde821@coco.lan>
+From: Romain Izard <romain.izard.pro@gmail.com>
+Subject: Re: A potential broken at platform driver?
+Date: Tue, 4 Jun 2019 12:33:03 +0200
+Message-ID: <20190604103241.GA4097@5WDYG62>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+ <20190528232224.GA29225@kroah.com>
+ <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
+ <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
+ <20190603180255.GA18054@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20190604064614.67cde821@coco.lan>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Andrew Lunn <andrew@lunn.ch>, Thomas Preston <thomas.preston@codethink.co.uk>, Wolfram Sang <wsa@the-dreams.de>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Paul Mackerras <paulus@samba.org>, Alessia Mantegazza <amantegazza@vaga.pv.it>, Jakub Wilk <jwilk@jwilk.net>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Kevin Hilman <khilman@baylibre.com>, James Morris <jmorris@namei.org>, linux-acpi@vger.kernel.org, Andy Gross <agross@kernel.org>, xen-devel@lists.xenproject.org, Jason Wang <jasowang@redhat.com>, Alexander Popov <alex.popov@linux.com>, Qian Cai <cai@lca.pw>, Al Viro <viro@zeniv.linux.org.uk>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Kairui Song <kasong@redhat.com>, Quentin Perret <quentin.perret@arm.com>, Greg
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190603180255.GA18054@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Richard Gong <richard.gong@linux.intel.com>, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sen.li@intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Em Tue, 4 Jun 2019 06:46:14 -0300
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
-
-> Em Mon, 3 Jun 2019 09:34:15 +0200
-> Christophe Leroy <christophe.leroy@c-s.fr> escreveu:
+On Mon, Jun 03, 2019 at 08:02:55PM +0200, Greg KH wrote:
+> > @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
+> >  	.remove = stratix10_rsu_remove,
+> >  	.driver = {
+> >  		.name = "stratix10-rsu",
+> > -		.groups = rsu_groups,
+> > +//		.groups = rsu_groups,
 > 
-
-> > [...]
-> > 
-> > > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> > > index 8c1c636308c8..e868d2bd48b8 100644
-> > > --- a/arch/powerpc/Kconfig
-> > > +++ b/arch/powerpc/Kconfig
-> > > @@ -898,7 +898,7 @@ config PPC_MEM_KEYS
-> > >   	  page-based protections, but without requiring modification of the
-> > >   	  page tables when an application changes protection domains.
-> > >   
-> > > -	  For details, see Documentation/vm/protection-keys.rst
-> > > +	  For details, see Documentation/x86/protection-keys.rst  
-> > 
-> > It looks strange to reference an x86 file, for powerpc arch.
+> Are you sure this is the correct pointer?  I think that might be
+> pointing to the driver's attributes, not the device's attributes.
 > 
-> Indeed. Yet, seeking for the API documented there:
-> 
->  $ git grep -l pkey_mprotect
-> Documentation/x86/protection-keys.rst
-> arch/alpha/kernel/syscalls/syscall.tbl
-> arch/arm/tools/syscall.tbl
-> arch/arm64/include/asm/unistd32.h
-> arch/ia64/kernel/syscalls/syscall.tbl
-> arch/m68k/kernel/syscalls/syscall.tbl
-> arch/microblaze/kernel/syscalls/syscall.tbl
-> arch/mips/kernel/syscalls/syscall_n32.tbl
-> arch/mips/kernel/syscalls/syscall_n64.tbl
-> arch/mips/kernel/syscalls/syscall_o32.tbl
-> arch/parisc/kernel/syscalls/syscall.tbl
-> arch/powerpc/kernel/syscalls/syscall.tbl
-> arch/s390/kernel/syscalls/syscall.tbl
-> arch/sh/kernel/syscalls/syscall.tbl
-> arch/sparc/kernel/syscalls/syscall.tbl
-> arch/x86/entry/syscalls/syscall_32.tbl
-> arch/x86/entry/syscalls/syscall_64.tbl
-> arch/xtensa/kernel/syscalls/syscall.tbl
-> include/linux/syscalls.h
-> include/uapi/asm-generic/unistd.h
-> kernel/sys_ni.c
-> mm/mprotect.c
-> tools/include/uapi/asm-generic/unistd.h
-> tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-> tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-> tools/perf/builtin-trace.c
-> tools/testing/selftests/x86/protection_keys.c
-> 
-> Despite being used on several archs, the only documentation for it
-> is inside the x86 directory, as it seems that this is not
-> arch-specific.
-> 
-> Perhaps the file should, instead, be moved to another book.
-
-I guess the best is to have this inside the core-api book.
-
-Patch enclosed.
-
-Regards,
-Mauro
-
-
-[PATCH] docs: move protection-keys.rst to the core-api book
-
-This document is used by multiple architectures:
-
-	$ echo $(git grep -l  pkey_mprotect arch|cut -d'/' -f 2|sort|uniq)
-	alpha arm arm64 ia64 m68k microblaze mips parisc powerpc s390 sh sparc x86 xtensa
-
-So, let's move it to the core book and adjust the links to it
-accordingly.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
-index ee1bb8983a88..2466a4c51031 100644
---- a/Documentation/core-api/index.rst
-+++ b/Documentation/core-api/index.rst
-@@ -34,6 +34,7 @@ Core utilities
-    timekeeping
-    boot-time-mm
-    memory-hotplug
-+   protection-keys
+> If platform drivers do not have a way to register groups properly, then
+> that really needs to be fixed, as trying to register it by yourself as
+> you are doing, is ripe for racing with userspace.
  
- 
- Interfaces for kernel debugging
-diff --git a/Documentation/x86/protection-keys.rst b/Documentation/core-api/protection-keys.rst
-similarity index 100%
-rename from Documentation/x86/protection-keys.rst
-rename to Documentation/core-api/protection-keys.rst
-diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index ae36fc5fc649..f2de1b2d3ac7 100644
---- a/Documentation/x86/index.rst
-+++ b/Documentation/x86/index.rst
-@@ -19,7 +19,6 @@ x86-specific Documentation
-    tlb
-    mtrr
-    pat
--   protection-keys
-    intel_mpx
-    amd-memory-encryption
-    pti
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 8c1c636308c8..3b795a0cab62 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -898,7 +898,7 @@ config PPC_MEM_KEYS
- 	  page-based protections, but without requiring modification of the
- 	  page tables when an application changes protection domains.
- 
--	  For details, see Documentation/vm/protection-keys.rst
-+	  For details, see Documentation/core-api/protection-keys.rst
- 
- 	  If unsure, say y.
- 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 2bbbd4d1ba31..d87d53fcd261 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1911,7 +1911,7 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
- 	  page-based protections, but without requiring modification of the
- 	  page tables when an application changes protection domains.
- 
--	  For details, see Documentation/x86/protection-keys.txt
-+	  For details, see Documentation/core-api/protection-keys.rst
- 
- 	  If unsure, say y.
- 
-diff --git a/tools/testing/selftests/x86/protection_keys.c b/tools/testing/selftests/x86/protection_keys.c
-index 5d546dcdbc80..480995bceefa 100644
---- a/tools/testing/selftests/x86/protection_keys.c
-+++ b/tools/testing/selftests/x86/protection_keys.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Tests x86 Memory Protection Keys (see Documentation/x86/protection-keys.txt)
-+ * Tests x86 Memory Protection Keys (see Documentation/core-api/protection-keys.rst)
-  *
-  * There are examples in here of:
-  *  * how to set protection keys on memory
+This is a very common issue with platform drivers, and it seems to me that
+it is not possible to add device attributes when binding a device to a
+driver without entering the race condition.
+
+My understanding is the following one:
+
+The root cause is that the device has already been created and reported
+to the userspace with a KOBJ_ADD uevent before the device and the driver
+are bound together. On receiving this event, userspace will react, and
+it will try to read the device's attributes. In parallel the kernel will
+try to find a matching driver. If a driver is found, the kernel will
+call the probe function from the driver with the device as a parameter,
+and if successful a KOBJ_BIND uevent will be sent to userspace, but this
+is a recent addition.
+
+Unfortunately, not all created devices will be bound to a driver, and the
+existing udev code relies on KOBJ_ADD uevents rather than KOBJ_BIND uevents.
+If new per-device attributes have been added to the device during the
+binding stage userspace may or may not see them, depending on when userspace
+tries to read the device's attributes.
+
+I have this possible workaround, but I do not know if it is a good solution:
+
+When binding the device and the driver together, create a new device as a
+child to the current device, and fill its "groups" member to point to the
+per-device attributes' group. As the device will be created with all the
+attributes, it will not be affected by the race issues. The functions
+handling the attributes will need to be modified to use the parents of their
+"device" parameter, instead of the device itself. Additionnaly, the sysfs
+location of the attributes will be different, as the child device will show
+up in the sysfs path. But for a newly introduced device this will not be
+a problem.
+
+Is this a good compromise ?
+
+Best regards,
+-- 
+Romain Izard
