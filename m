@@ -1,55 +1,85 @@
-From: Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH] arm64: dts: allwinner: a64: Add lradc node
-Date: Tue,  4 Jun 2019 16:42:53 +0200
-Message-ID: <20190604144252.26965-1-luca@z3ntu.xyz>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: sun4i-i2s: Change SR and WSS computation
+Date: Tue, 4 Jun 2019 15:45:17 +0100
+Message-ID: <20190604144517.GF2456@sirena.org.uk>
+References: <20190604085449.13195-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Luca Weiss <luca@z3ntu.xyz>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, "open list:SUN4I LOW RES ADC ATTACHED
-        TABLET KEYS DRIVER" <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Allwinner
-        sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============3270520772289476369=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190604085449.13195-1-maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Marcus Cooper <codekipper@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a node describing the KEYADC on the A64.
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- .../devicetree/bindings/input/sun4i-lradc-keys.txt        | 1 +
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi             | 8 ++++++++
- 2 files changed, 9 insertions(+)
+--===============3270520772289476369==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PLVMksexArUZ/iL3"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-index 496125c6bfb7..507b737612ea 100644
---- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-+++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-@@ -5,6 +5,7 @@ Required properties:
-  - compatible: should be one of the following string:
- 		"allwinner,sun4i-a10-lradc-keys"
- 		"allwinner,sun8i-a83t-r-lradc"
-+		"allwinner,sun50i-a64-lradc", "allwinner,sun8i-a83t-r-lradc"
-  - reg: mmio address range of the chip
-  - interrupts: interrupt to which the chip is connected
-  - vref-supply: powersupply for the lradc reference voltage
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 7734f70e1057..3a42352b5c9f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -704,6 +704,14 @@
- 			status = "disabled";
- 		};
- 
-+		lradc: lradc@1c21800 {
-+			compatible = "allwinner,sun50i-a64-lradc",
-+				     "allwinner,sun8i-a83t-r-lradc";
-+			reg = <0x01c21800 0x400>;
-+			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		i2s0: i2s@1c22000 {
- 			#sound-dai-cells = <0>;
- 			compatible = "allwinner,sun50i-a64-i2s",
--- 
-2.21.0
+
+--PLVMksexArUZ/iL3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 04, 2019 at 10:54:49AM +0200, Maxime Ripard wrote:
+> The current computation for the SR (sample resolution) and the WSS (word
+> slot size) register parameters is based on a switch returning the matching
+> parameters for a given params width.
+
+This doesn't build for me with current code:
+
+  CC      sound/soc/sunxi/sun4i-i2s.o
+sound/soc/sunxi/sun4i-i2s.c:169:28: warning: =E2=80=98struct sun4i_i2s=E2=
+=80=99 declared inside parameter list will not be visible outside of this d=
+efinition or declaration
+  s8 (*get_sr)(const struct sun4i_i2s *, int);
+                            ^~~~~~~~~
+sound/soc/sunxi/sun4i-i2s.c:170:29: warning: =E2=80=98struct sun4i_i2s=E2=
+=80=99 declared inside parameter list will not be visible outside of this d=
+efinition or declaration
+  s8 (*get_wss)(const struct sun4i_i2s *, int);
+                             ^~~~~~~~~
+
+and lots of similar stuff.
+
+--PLVMksexArUZ/iL3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz2g/wACgkQJNaLcl1U
+h9BCIgf/WLTKo7F+GH5yembRxj+jHQz35TZZPqb9mhx/Hyogn+/+bF5LeqEi8hKq
+L7Mpzf0KyzhKz/VDRGc3TlsLihsQ0okqybE+/PlOS3Y7DRvd115KYLsOdfVYOucD
+bF48im6bMWWARcoIyK6B2vAYx9y28Z4qUgLcJGOcLVwwCC1K/nq6A9kFul0lXXs6
+44SRqWz911MOpt3VCP2FHpMnjiHcJP9nZ0pRZTmaV057lQCthPaCNuz+r5nzGy/Z
+Oh8Q+0DbkTmOriia5YZ6OY83lRYHBKFEPtc3nf3zuxgesObEJdvPVRur6ZGZSNDL
+tKXQOFITXAVWrTfyE+Z809Bz1jgX5g==
+=cwPD
+-----END PGP SIGNATURE-----
+
+--PLVMksexArUZ/iL3--
+
+
+--===============3270520772289476369==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3270520772289476369==--
