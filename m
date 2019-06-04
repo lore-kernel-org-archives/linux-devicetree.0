@@ -1,7 +1,7 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v4 06/14] [media] mtk-mipicsi: enable/disable ana clk
-Date: Tue, 4 Jun 2019 18:11:47 +0800
-Message-ID: <1559643115-15124-7-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v4 03/14] dt-bindings: media: Add camsv binding for MT2712 MIPI-CSI2
+Date: Tue, 4 Jun 2019 18:11:44 +0800
+Message-ID: <1559643115-15124-4-git-send-email-stu.hsieh@mediatek.com>
 References: <1559643115-15124-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,67 +12,74 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This patch enable/disable ana clk when power on/off
+Add camsv binding for MT2712 MIPI-CSI2
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ .../bindings/media/mediatek-mipicsi-camsv.txt | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
 
-diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index 28dcc683a958..f5cb29077022 100644
---- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-+++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -182,6 +182,41 @@ static const struct mtk_format mtk_mipicsi_formats[] = {
- },
- };
- 
-+static void mtk_mipicsi_ana_clk_enable(void __iomem *base, bool enable)
-+{
-+	if (enable) {
-+		writel(1UL | readl(base + MIPI_RX_ANA00_CSI),
-+			base + MIPI_RX_ANA00_CSI);
-+		writel(1UL | readl(base + MIPI_RX_ANA04_CSI),
-+			base + MIPI_RX_ANA04_CSI);
-+		writel(1UL | readl(base + MIPI_RX_ANA08_CSI),
-+			base + MIPI_RX_ANA08_CSI);
-+		writel(1UL | readl(base + MIPI_RX_ANA0C_CSI),
-+			base + MIPI_RX_ANA0C_CSI);
-+		writel(1UL | readl(base + MIPI_RX_ANA10_CSI),
-+			base + MIPI_RX_ANA10_CSI);
-+		writel(1UL | readl(base + MIPI_RX_ANA20_CSI),
-+			base + MIPI_RX_ANA20_CSI);
-+		writel(1UL | readl(base + MIPI_RX_ANA24_CSI),
-+			base + MIPI_RX_ANA24_CSI);
-+	} else {
-+		writel(~1UL & readl(base + MIPI_RX_ANA00_CSI),
-+			base + MIPI_RX_ANA00_CSI);
-+		writel(~1UL & readl(base + MIPI_RX_ANA04_CSI),
-+			base + MIPI_RX_ANA04_CSI);
-+		writel(~1UL & readl(base + MIPI_RX_ANA08_CSI),
-+			base + MIPI_RX_ANA08_CSI);
-+		writel(~1UL & readl(base + MIPI_RX_ANA0C_CSI),
-+			base + MIPI_RX_ANA0C_CSI);
-+		writel(~1UL & readl(base + MIPI_RX_ANA10_CSI),
-+			base + MIPI_RX_ANA10_CSI);
-+		writel(~1UL & readl(base + MIPI_RX_ANA20_CSI),
-+			base + MIPI_RX_ANA20_CSI);
-+		writel(~1UL & readl(base + MIPI_RX_ANA24_CSI),
-+			base + MIPI_RX_ANA24_CSI);
-+	}
-+}
+diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+new file mode 100644
+index 000000000000..c9b4af9eeeff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+@@ -0,0 +1,55 @@
++* Mediatek MIPI-CSI2 receiver camsv
 +
- static void mtk_mipicsi_ana_init(void __iomem *base)
- {
- 	writel(0xFEFBEFBEU & readl(base + MIPI_RX_ANA4C_CSI),
-@@ -354,6 +389,8 @@ static void mipicsi_clk_enable(struct mtk_mipicsi_dev *mipicsi, bool enable)
- 	for (i = 0; i < mipicsi->common_clk_num; i++)
- 		enable ? clk_prepare_enable(mipicsi->common_clk[i]) :
- 			 clk_disable_unprepare(mipicsi->common_clk[i]);
++Mediatek MIPI-CSI2 receiver camsv transfer data to DRAM in Mediatek SoCs
 +
-+	mtk_mipicsi_ana_clk_enable(mipicsi->ana, enable);
- }
- 
- static int mtk_mipicsi_pm_suspend(struct device *dev)
++These node are refer by mipicsi
++
++Required properties:
++- reg : physical base address of the mipicsi receiver registers and length of
++  memory mapped region.
++- clocks: device clocks, see
++  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
++- interrupts : interrupt number to the interrupt controller.
++
++Example:
++	seninf1_mux_camsv0: seninf_mux_camsv@15002100 {
++		reg = <0 0x15002120 0 0x40>,
++		      <0 0x15004000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
++		interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	seninf2_mux_camsv1: seninf_mux_camsv@15002500 {
++		reg = <0 0x15002520 0 0x40>,
++		      <0 0x15005000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
++		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	seninf3_mux_camsv2: seninf_mux_camsv@15002900 {
++		reg = <0 0x15002920 0 0x40>,
++		      <0 0x15006000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
++		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	seninf4_mux_camsv3: seninf_mux_camsv@15002D00 {
++		reg = <0 0x15002D20 0 0x40>,
++		      <0 0x15007000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
++		interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	seninf5_mux_camsv4: seninf_mux_camsv@15003100 {
++		reg = <0 0x15003120 0 0x40>,
++		      <0 0x15008000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
++		interrupts = <GIC_SPI 270 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	seninf6_mux_camsv5: seninf_mux_camsv@15003500 {
++		reg = <0 0x15003520 0 0x40>,
++		      <0 0x15009000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
++		interrupts = <GIC_SPI 271 IRQ_TYPE_LEVEL_LOW>;
++	};
 -- 
 2.18.0
