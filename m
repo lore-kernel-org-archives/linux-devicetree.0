@@ -1,95 +1,67 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
-Date: Tue, 4 Jun 2019 10:28:06 +0200
-Message-ID: <20190604082806.smght44dmhuoxw2u@flea>
-References: <20190518170929.24789-1-luca@z3ntu.xyz>
- <6901794.oDhxEVzEqc@g550jk>
- <20190603074247.hlayod2pxq55f6ci@flea>
- <3880268.VpfjThaCW4@g550jk>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v6 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Tue, 4 Jun 2019 08:38:30 +0000
+Message-ID: <BYAPR07MB4709B64FED6F1D274BF1E17DDD150@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1554882504-9010-1-git-send-email-pawell@cadence.com>
+ <1554882504-9010-6-git-send-email-pawell@cadence.com>
+ <b768bde9-d6c8-f655-aecb-d08bcb9286a6@ti.com>
+ <BYAPR07MB47099815FA4691B6106F80FEDD150@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <f912a979-1e0c-8013-7f82-09102cb39a19@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rokvu4c2fxf472od"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3880268.VpfjThaCW4@g550jk>
+In-Reply-To: <f912a979-1e0c-8013-7f82-09102cb39a19@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Weiss <luca@z3ntu.xyz>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Sekhar Nori <nsekhar@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-
---rokvu4c2fxf472od
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Jun 03, 2019 at 05:20:51PM +0200, Luca Weiss wrote:
-> On Montag, 3. Juni 2019 09:42:47 CEST Maxime Ripard wrote:
-> > Hi,
-> >
-> > On Fri, May 31, 2019 at 12:27:55PM +0200, Luca Weiss wrote:
-> > > On Freitag, 24. Mai 2019 11:20:01 CEST Maxime Ripard wrote:
-> > > > It would be great to drop the -keys from the compatible, and to
-> > > > document the bindings
-> > > >
-> > > > Looks good otherwise
-> > > >
-> > > > Maxime
-> > >
-> > > So I should just document the "allwinner,sun50i-a64-lradc" string in
-> > > Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt ? Don't I
-> > > also
-> > > have to add the compatible to the driver code then? Just adding the a64
-> > > compatible to a dts wouldn't work without that.
-> >
-> > What I meant was that you needed both, something like:
-> >
-> > compatible = "allwinner,sun50i-a64-lradc", "allwinner,sun8i-a83t-lradc";
-> >
-> > That way, the OS will try to match a driver for the A64 compatible if
-> > any, and fallback to the A83's otherwise. And since we don't have any
-> > quirk at the moment, there's no change needed to the driver.
->
-> sorry for the long back and forth, I hope I understood you correctly now.
-> Here's what I would submit as v2 then (I'll split the two files into seperate
-> patches as the devicetree documentation suggests)
->
-> Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt:
->   - compatible: should be one of the following string:
->                 "allwinner,sun4i-a10-lradc-keys"
->                 "allwinner,sun8i-a83t-r-lradc"
-> +               "allwinner,sun50i-a64-lradc", "allwinner,sun8i-a83t-r-lradc"
->
-> arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:
-> +               lradc: lradc@1c21800 {
-> +                       compatible = "allwinner,sun50i-a64-lradc",
-> +                                    "allwinner,sun8i-a83t-r-lradc";
-> +                       reg = <0x01c21800 0x400>;
-> +                       interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> +                       status = "disabled";
-> +               };
-> +
->
-> Thanks,
-> Luca
-
-That looks correct :)
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---rokvu4c2fxf472od
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPYrlgAKCRDj7w1vZxhR
-xZ4wAQDYf4iwJpFsfR8XtFStVojYJ+87YKlwxsWeyc2AY+blqwD/bkhJERAV91vH
-je0Y6DGnu87Ep+qyk/Jh5W384aSsxgM=
-=Mcc7
------END PGP SIGNATURE-----
-
---rokvu4c2fxf472od--
+Pj4+IE9uIDEwLzA0LzE5IDE6MTggUE0sIFBhd2VsIExhc3pjemFrIHdyb3RlOg0KPj4+PiArc3Rh
+dGljIHZvaWQgY2RuczNfd2ExX3RyYXlfcmVzdG9yZV9jeWNsZV9iaXQoc3RydWN0IGNkbnMzX2Rl
+dmljZSAqcHJpdl9kZXYsDQo+Pj4+ICsJCQkJCSAgICAgc3RydWN0IGNkbnMzX2VuZHBvaW50ICpw
+cml2X2VwKQ0KPj4+PiArew0KPj4+PiArCWludCBkbWFfaW5kZXg7DQo+Pj4+ICsJdTMyIGRvb3Ji
+ZWxsOw0KPj4+PiArDQo+Pj4+ICsJZG9vcmJlbGwgPSAhIShyZWFkbCgmcHJpdl9kZXYtPnJlZ3Mt
+PmVwX2NtZCkgJiBFUF9DTURfRFJEWSk7DQo+Pj4NCj4+Pj4gKwlkbWFfaW5kZXggPSAocmVhZGwo
+JnByaXZfZGV2LT5yZWdzLT5lcF90cmFkZHIpIC0NCj4+Pj4gKwkJICAgIHByaXZfZXAtPnRyYl9w
+b29sX2RtYSkgLyBUUkJfU0laRTsNCj4+Pg0KPj4+IFRoaXMgZ2V0cyB1cGdyYWRlZCB0byA2NC1i
+aXQgYnkgNjQtYml0IGRpdmlzaW9uIHdoZW5ldmVyIGRtYV9hZGRyX3QgaXMNCj4+PiA2NC1iaXQu
+IFRoYXQgc2hvdWxkIGJlIGF2b2lkZWQuIEZvbGxvd2luZyBkaWZmIHNob3VsZCBmaXggaXQuDQo+
+Pj4gQnV0IHBsZWFzZSByZXZpZXcgdGhlIGxvZ2ljIGl0c2VsZi4gWW91IGFyZSBzdWJ0cmFjdGlu
+ZyBhIDY0IGJpdCBlbnRpdHkNCj4+PmZyb20gYSAzMi1iaXQgZW50aXR5LiBXaGF0IGlzIGd1YXJh
+bnRlZWluZyB0aGF0IHByaXZfZXAtPnRyYl9wb29sX2RtYSBpcw0KPj4+IDMyLWJpdD8NCj4+Pg0K
+Pj4+IFRoZXJlIGlzIG9uZSBtb3JlIGluc3RhbmNlIG9mIHNhbWUgaXNzdWUgaW4gY2RuczNfcmVx
+dWVzdF9oYW5kbGVkKCkuDQo+Pj4NCj4+PiBUaGFua3MsDQo+Pj4gU2VraGFyDQo+Pj4NCj4+PiBb
+MV0NCj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvY2RuczMvZ2FkZ2V0LmMgYi9kcml2ZXJz
+L3VzYi9jZG5zMy9nYWRnZXQuYw0KPj4+IGluZGV4IGJmZDVkYmY0MGM3ZS4uZTczYjYxODUwMWZi
+IDEwMDY0NA0KPj4+IC0tLSBhL2RyaXZlcnMvdXNiL2NkbnMzL2dhZGdldC5jDQo+Pj4gKysrIGIv
+ZHJpdmVycy91c2IvY2RuczMvZ2FkZ2V0LmMNCj4+PiBAQCAtNzQ5LDggKzc0OSw4IEBAIHN0YXRp
+YyB2b2lkIGNkbnMzX3dhMV90cmF5X3Jlc3RvcmVfY3ljbGVfYml0KHN0cnVjdCBjZG5zM19kZXZp
+Y2UgKnByaXZfZGV2LA0KPj4+IAl1MzIgZG9vcmJlbGw7DQo+Pj4NCj4+PiAJZG9vcmJlbGwgPSAh
+IShyZWFkbCgmcHJpdl9kZXYtPnJlZ3MtPmVwX2NtZCkgJiBFUF9DTURfRFJEWSk7DQo+Pj4gLQlk
+bWFfaW5kZXggPSAocmVhZGwoJnByaXZfZGV2LT5yZWdzLT5lcF90cmFkZHIpIC0NCj4+PiAtCQkg
+ICAgcHJpdl9lcC0+dHJiX3Bvb2xfZG1hKSAvIFRSQl9TSVpFOw0KPj4+ICsJZG1hX2luZGV4ID0g
+cmVhZGwoJnByaXZfZGV2LT5yZWdzLT5lcF90cmFkZHIpIC0gcHJpdl9lcC0+dHJiX3Bvb2xfZG1h
+Ow0KPj4+ICsJZG1hX2luZGV4IC89IFRSQl9TSVpFOw0KPj4NCj4+IEhpIFNla2hhciwNCj4+DQo+
+PiBJbiB0aGUgbmV4dCBsYXRlc3QgdmVyc2lvbiBJIGFkZGVkIHNldHRpbmcgZG1hIGFuZCBjb2hl
+cmVudCBtYXNrIHRvIDMyLWJpdHMgYXMgc3VnZ2VzdGVkIGJ5IFJvZ2VyLg0KPj4gQ29udHJvbGxl
+ciBjYW4gZG8gb25seSAzMi1iaXQgYWNjZXNzLg0KPg0KPkkgdGhpbmsgdGhpcyBzaG91bGQgd29y
+ayBmb3Igbm93IGV4Y2VwdCBpZiBpbiBzb21lIGZ1dHVyZSB2ZXJzaW9uIG9mDQo+Y29udHJvbGxl
+ciB0aGUgbGltaXRhdGlvbiBvZiAzMi1iaXQgYWNjZXNzIGlzIGZpeGVkLiBJIGd1ZXNzIHRoYXQg
+bWlnaHQNCj5tZWFuIGRpZmZlcmVudCBsb2dpYyBmb3IgRE1BIGhhbmRsaW5nIGFueXdheS4NCg0K
+SSBub3cgYWJvdXQgbmV3IHJlZ2lzdGVyIHRoYXQgYWxsb3dzIHRvIHNldCB0aGUgc2VnbWVudCBh
+ZGRyZXNzIGFuZCBleHRlbmQgdGhlIGFkZHJlc3MgdG8gNDggYml0LCBidXQgDQppdCByYXRoZXIg
+d2lsbCBub3QgYmUgdXNlZCBvbiBMaW51eC4gQnkgbWVhbnMgb2YgdGhpcyByZWdpc3RlciB3ZSBj
+YW4gc2V0IHRoZSBzYW1lIHNlZ21lbnQgbWVtb3J5IGZvciANCmFsbCBhcmVhIG9mICBETUEgbWVt
+b3J5LiANCkknbSBub3Qgc3VyZSBpZiBMaW51eCBhbGxvdyB0byBjb25maWd1cmUgZG1hIGFuZCBj
+b2hlcmVudCBtYXNrIGluIHRoaXMgd2F5LiANCg0KQnV0IG9rLCBJIHdpbGwgYWRkIHRoaXMgZml4
+Lg0KDQpQYXdlbCwNCg0KPg0KPj4gRE1BIGFkZHJlc3Mgc3BhY2Ugc2hvdWxkIGJlIGFsbG9jYXRl
+ZCBmcm9tIGZpcnN0IDMyIGJpdHMgb2YgYWRkcmVzcyBzcGFjZS4gTW9zdCBzaWduaWZpY2FudCAz
+Mi1iaXQNCj4+IG9mIHByaXZfZXAtPnRyYl9wb29sX2RtYSBzaG91bGQgYmUgemVyb2VkLCBzbyBJ
+IGRvIG5vdCBhc3N1bWUgYW55IGlzc3VlIGluIHRoaXMgcGxhY2UuDQo+Pg0KPj4gSGF2ZSB5b3Ug
+c2VlbiBhbnkgaXNzdWUgd2l0aCB0aGlzIG9uIHlvdXIgcGxhdGZvcm0gPw0KPg0KPmJ1aWxkIGZh
+aWxzIHdpdGgNCj4NCj5FUlJPUjogIl9fYWVhYmlfdWxkaXZtb2QiIFtkcml2ZXJzL3VzYi9jZG5z
+My9jZG5zMy5rb10gdW5kZWZpbmVkIQ0KPg0KPm9uIDMyLWJpdCBwbGF0Zm9ybXMgd2l0aCBBUk0g
+TFBBRSBlbmFibGVkLiBTbyBwbGVhc2Ugcm9sbCBpbiB0aGUgZml4IEkNCj5zdWdnZXN0ZWQuDQo+
+DQo+VGhhbmtzLA0KPlNla2hhcg0K
