@@ -1,208 +1,102 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 2/2] mailbox/omap: Add support for TI K3 SoCs
-Date: Tue, 4 Jun 2019 12:01:46 -0500
-Message-ID: <20190604170146.12205-3-s-anna@ti.com>
-References: <20190604170146.12205-1-s-anna@ti.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: A potential broken at platform driver?
+Date: Tue, 4 Jun 2019 19:03:10 +0200
+Message-ID: <20190604170310.GC14605@kroah.com>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+ <20190528232224.GA29225@kroah.com>
+ <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
+ <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
+ <20190603180255.GA18054@kroah.com>
+ <20190604103241.GA4097@5WDYG62>
+ <20190604142803.GA28355@kroah.com>
+ <e3adbd00-e500-70af-1c27-e4c064486561@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604170146.12205-1-s-anna@ti.com>
+Content-Disposition: inline
+In-Reply-To: <e3adbd00-e500-70af-1c27-e4c064486561@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Suman Anna <s-anna@ti.com>
+To: Richard Gong <richard.gong@linux.intel.com>
+Cc: Romain Izard <romain.izard.pro@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sen.li@intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-The TI K3 AM65x and J721E family of SoCs have a new Mailbox IP that
-is based on the existing Mailbox IP present in OMAP architecture based
-SoCs. Each instance of the legacy OMAP Mailbox IP is now a single cluster
-within the newer Mailbox IP instance on K3 architecture based SoCs. A
-single K3 Mailbox IP instance has multiple clusters with each cluster
-providing the same functionality as the existing OMAP Mailbox IP.
+On Tue, Jun 04, 2019 at 11:13:02AM -0500, Richard Gong wrote:
+> 
+> Hi Greg,
+> 
+> On 6/4/19 9:28 AM, Greg KH wrote:
+> > On Tue, Jun 04, 2019 at 12:33:03PM +0200, Romain Izard wrote:
+> > > On Mon, Jun 03, 2019 at 08:02:55PM +0200, Greg KH wrote:
+> > > > > @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
+> > > > >   	.remove = stratix10_rsu_remove,
+> > > > >   	.driver = {
+> > > > >   		.name = "stratix10-rsu",
+> > > > > -		.groups = rsu_groups,
+> > > > > +//		.groups = rsu_groups,
+> > > > 
+> > > > Are you sure this is the correct pointer?  I think that might be
+> > > > pointing to the driver's attributes, not the device's attributes.
+> > > > 
+> > > > If platform drivers do not have a way to register groups properly, then
+> > > > that really needs to be fixed, as trying to register it by yourself as
+> > > > you are doing, is ripe for racing with userspace.
+> > > This is a very common issue with platform drivers, and it seems to me that
+> > > it is not possible to add device attributes when binding a device to a
+> > > driver without entering the race condition.
+> > > 
+> > > My understanding is the following one:
+> > > 
+> > > The root cause is that the device has already been created and reported
+> > > to the userspace with a KOBJ_ADD uevent before the device and the driver
+> > > are bound together. On receiving this event, userspace will react, and
+> > > it will try to read the device's attributes. In parallel the kernel will
+> > > try to find a matching driver. If a driver is found, the kernel will
+> > > call the probe function from the driver with the device as a parameter,
+> > > and if successful a KOBJ_BIND uevent will be sent to userspace, but this
+> > > is a recent addition.
+> > > 
+> > > Unfortunately, not all created devices will be bound to a driver, and the
+> > > existing udev code relies on KOBJ_ADD uevents rather than KOBJ_BIND uevents.
+> > > If new per-device attributes have been added to the device during the
+> > > binding stage userspace may or may not see them, depending on when userspace
+> > > tries to read the device's attributes.
+> > > 
+> > > I have this possible workaround, but I do not know if it is a good solution:
+> > > 
+> > > When binding the device and the driver together, create a new device as a
+> > > child to the current device, and fill its "groups" member to point to the
+> > > per-device attributes' group. As the device will be created with all the
+> > > attributes, it will not be affected by the race issues. The functions
+> > > handling the attributes will need to be modified to use the parents of their
+> > > "device" parameter, instead of the device itself. Additionnaly, the sysfs
+> > > location of the attributes will be different, as the child device will show
+> > > up in the sysfs path. But for a newly introduced device this will not be
+> > > a problem.
+> > > 
+> > > Is this a good compromise ?
+> > 
+> > Not really.  You just want the attributes on the platform device itself.
+> > 
+> > Given the horrible hack that platform devices are today, what's one more
+> > hack!
+> > 
+> > Here's a patch below of what should probably be done here.  Richard, can
+> > you change your code to use the new dev_groups pointer in the struct
+> > platform_driver and this patch and let me know if that works or not?
+> > 
+> > Note, I've only compiled this code, not tested it...
+> > 
+> 
+> Your patch works.
+> 
+> Many thanks for your help!
 
-Reuse the existing OMAP Mailbox driver to extend the support for this
-newer IP present within the Main NavSS block on K3 SoCs. The K3 family
-of SoCs use 64-bit ARMv8 processors for running Linux, so the driver is
-also enhanced to deal with the differences between the 32-bit message
-payloads and the 64-bit pointers used by the client drivers.
+Nice!
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- drivers/mailbox/Kconfig        |  2 +-
- drivers/mailbox/omap-mailbox.c | 43 ++++++++++++++++++++--------------
- include/linux/omap-mailbox.h   |  4 +++-
- 3 files changed, 30 insertions(+), 19 deletions(-)
+I guess I need to turn it into a real patch now.  Let me do that tonight
+and see if I can convert some existing drivers to use it as well...
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index 595542bfae85..5f48f371a7d0 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -53,7 +53,7 @@ config ARMADA_37XX_RWTM_MBOX
- 
- config OMAP2PLUS_MBOX
- 	tristate "OMAP2+ Mailbox framework support"
--	depends on ARCH_OMAP2PLUS
-+	depends on ARCH_OMAP2PLUS || ARCH_K3
- 	help
- 	  Mailbox implementation for OMAP family chips with hardware for
- 	  interprocessor communication involving DSP, IVA1.0 and IVA2 in
-diff --git a/drivers/mailbox/omap-mailbox.c b/drivers/mailbox/omap-mailbox.c
-index ca50177a33f2..a3cd63583cf7 100644
---- a/drivers/mailbox/omap-mailbox.c
-+++ b/drivers/mailbox/omap-mailbox.c
-@@ -3,7 +3,7 @@
-  * OMAP mailbox driver
-  *
-  * Copyright (C) 2006-2009 Nokia Corporation. All rights reserved.
-- * Copyright (C) 2013-2016 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013-2019 Texas Instruments Incorporated - http://www.ti.com
-  *
-  * Contact: Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
-  *          Suman Anna <s-anna@ti.com>
-@@ -141,14 +141,14 @@ void mbox_write_reg(struct omap_mbox_device *mdev, u32 val, size_t ofs)
- }
- 
- /* Mailbox FIFO handle functions */
--static mbox_msg_t mbox_fifo_read(struct omap_mbox *mbox)
-+static u32 mbox_fifo_read(struct omap_mbox *mbox)
- {
- 	struct omap_mbox_fifo *fifo = &mbox->rx_fifo;
- 
--	return (mbox_msg_t)mbox_read_reg(mbox->parent, fifo->msg);
-+	return mbox_read_reg(mbox->parent, fifo->msg);
- }
- 
--static void mbox_fifo_write(struct omap_mbox *mbox, mbox_msg_t msg)
-+static void mbox_fifo_write(struct omap_mbox *mbox, u32 msg)
- {
- 	struct omap_mbox_fifo *fifo = &mbox->tx_fifo;
- 
-@@ -256,14 +256,16 @@ static void mbox_rx_work(struct work_struct *work)
- {
- 	struct omap_mbox_queue *mq =
- 			container_of(work, struct omap_mbox_queue, work);
--	mbox_msg_t msg;
-+	mbox_msg_t data;
-+	u32 msg;
- 	int len;
- 
- 	while (kfifo_len(&mq->fifo) >= sizeof(msg)) {
- 		len = kfifo_out(&mq->fifo, (unsigned char *)&msg, sizeof(msg));
- 		WARN_ON(len != sizeof(msg));
-+		data = msg;
- 
--		mbox_chan_received_data(mq->mbox->chan, (void *)msg);
-+		mbox_chan_received_data(mq->mbox->chan, (void *)data);
- 		spin_lock_irq(&mq->lock);
- 		if (mq->full) {
- 			mq->full = false;
-@@ -286,7 +288,7 @@ static void __mbox_tx_interrupt(struct omap_mbox *mbox)
- static void __mbox_rx_interrupt(struct omap_mbox *mbox)
- {
- 	struct omap_mbox_queue *mq = mbox->rxq;
--	mbox_msg_t msg;
-+	u32 msg;
- 	int len;
- 
- 	while (!mbox_fifo_empty(mbox)) {
-@@ -540,13 +542,13 @@ static void omap_mbox_chan_shutdown(struct mbox_chan *chan)
- 	mutex_unlock(&mdev->cfg_lock);
- }
- 
--static int omap_mbox_chan_send_noirq(struct omap_mbox *mbox, void *data)
-+static int omap_mbox_chan_send_noirq(struct omap_mbox *mbox, u32 msg)
- {
- 	int ret = -EBUSY;
- 
- 	if (!mbox_fifo_full(mbox)) {
- 		_omap_mbox_enable_irq(mbox, IRQ_RX);
--		mbox_fifo_write(mbox, (mbox_msg_t)data);
-+		mbox_fifo_write(mbox, msg);
- 		ret = 0;
- 		_omap_mbox_disable_irq(mbox, IRQ_RX);
- 
-@@ -558,12 +560,12 @@ static int omap_mbox_chan_send_noirq(struct omap_mbox *mbox, void *data)
- 	return ret;
- }
- 
--static int omap_mbox_chan_send(struct omap_mbox *mbox, void *data)
-+static int omap_mbox_chan_send(struct omap_mbox *mbox, u32 msg)
- {
- 	int ret = -EBUSY;
- 
- 	if (!mbox_fifo_full(mbox)) {
--		mbox_fifo_write(mbox, (mbox_msg_t)data);
-+		mbox_fifo_write(mbox, msg);
- 		ret = 0;
- 	}
- 
-@@ -576,14 +578,15 @@ static int omap_mbox_chan_send_data(struct mbox_chan *chan, void *data)
- {
- 	struct omap_mbox *mbox = mbox_chan_to_omap_mbox(chan);
- 	int ret;
-+	u32 msg = omap_mbox_message(data);
- 
- 	if (!mbox)
- 		return -EINVAL;
- 
- 	if (mbox->send_no_irq)
--		ret = omap_mbox_chan_send_noirq(mbox, data);
-+		ret = omap_mbox_chan_send_noirq(mbox, msg);
- 	else
--		ret = omap_mbox_chan_send(mbox, data);
-+		ret = omap_mbox_chan_send(mbox, msg);
- 
- 	return ret;
- }
-@@ -656,6 +659,10 @@ static const struct of_device_id omap_mailbox_of_match[] = {
- 		.compatible	= "ti,omap4-mailbox",
- 		.data		= &omap4_data,
- 	},
-+	{
-+		.compatible	= "ti,am654-mailbox",
-+		.data		= &omap4_data,
-+	},
- 	{
- 		/* end */
- 	},
-@@ -830,7 +837,10 @@ static int omap_mbox_probe(struct platform_device *pdev)
- 	mdev->intr_type = intr_type;
- 	mdev->mboxes = list;
- 
--	/* OMAP does not have a Tx-Done IRQ, but rather a Tx-Ready IRQ */
-+	/*
-+	 * OMAP/K3 Mailbox IP does not have a Tx-Done IRQ, but rather a Tx-Ready
-+	 * IRQ and is needed to run the Tx state machine
-+	 */
- 	mdev->controller.txdone_irq = true;
- 	mdev->controller.dev = mdev->dev;
- 	mdev->controller.ops = &omap_mbox_chan_ops;
-@@ -899,9 +909,8 @@ static int __init omap_mbox_init(void)
- 		return err;
- 
- 	/* kfifo size sanity check: alignment and minimal size */
--	mbox_kfifo_size = ALIGN(mbox_kfifo_size, sizeof(mbox_msg_t));
--	mbox_kfifo_size = max_t(unsigned int, mbox_kfifo_size,
--							sizeof(mbox_msg_t));
-+	mbox_kfifo_size = ALIGN(mbox_kfifo_size, sizeof(u32));
-+	mbox_kfifo_size = max_t(unsigned int, mbox_kfifo_size, sizeof(u32));
- 
- 	err = platform_driver_register(&omap_mbox_driver);
- 	if (err)
-diff --git a/include/linux/omap-mailbox.h b/include/linux/omap-mailbox.h
-index 6dbcd2da0332..8aa984ec1f38 100644
---- a/include/linux/omap-mailbox.h
-+++ b/include/linux/omap-mailbox.h
-@@ -6,7 +6,9 @@
- #ifndef OMAP_MAILBOX_H
- #define OMAP_MAILBOX_H
- 
--typedef u32 mbox_msg_t;
-+typedef uintptr_t mbox_msg_t;
-+
-+#define omap_mbox_message(data) (u32)(mbox_msg_t)(data)
- 
- typedef int __bitwise omap_mbox_irq_t;
- #define IRQ_TX ((__force omap_mbox_irq_t) 1)
--- 
-2.21.0
+thanks,
+
+greg k-h
