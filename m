@@ -1,59 +1,111 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Subject: Re: [PATCH v4] usb: create usb_debug_root for gadget only
-Date: Tue, 4 Jun 2019 17:13:03 +0800
-Message-ID: <1559639583.8487.76.camel@mhfsdcap03>
+Date: Tue, 4 Jun 2019 11:14:43 +0200
+Message-ID: <20190604091443.GA458@kroah.com>
 References: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com>
-         <20190604073706.GA25045@kroah.com> <87k1e123mc.fsf@linux.intel.com>
-         <20190604082407.GA3783@kroah.com>
+ <20190604073706.GA25045@kroah.com>
+ <1559638754.8487.71.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604082407.GA3783@kroah.com>
+Content-Disposition: inline
+In-Reply-To: <1559638754.8487.71.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
 Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-06-04 at 10:24 +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jun 04, 2019 at 10:47:55AM +0300, Felipe Balbi wrote:
+On Tue, Jun 04, 2019 at 04:59:14PM +0800, Chunfeng Yun wrote:
+> On Tue, 2019-06-04 at 09:37 +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Jun 04, 2019 at 03:34:07PM +0800, Chunfeng Yun wrote:
+> > > When CONFIG_USB is not set, and CONFIG_USB_GADGET is set,
+> > > there is an issue, e.g.:
+> > > 
+> > > drivers/usb/mtu3/mtu3_debugfs.o: in function 'ssusb_debugfs_create_root':
+> > > mtu3_debugfs.c:(.text+0xba3): undefined reference to 'usb_debug_root'
+> > > 
+> > > usb_debug_root is currently only built when host is supported
+> > > (CONFIG_USB is set), for convenience, we also want it created when
+> > > gadget only is enabled, this patch try to support it.
+> > > 
+> > > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > ---
+> > > v4:
+> > >   move common API into common.c suggested by Felipe
+> > > 
+> > > v3:
+> > >   1. still create usb_debug_root for gadget only
+> > >   2. abandon mtu3's change
+> > >   3. drop acked-by Randy
+> > > 
+> > > v2(resend): add acked-by Randy
+> > > 
+> > > v1: fix mtu3's build error, replace usb_debug_root by NULL;
+> > > ---
+> > >  drivers/usb/common/common.c   | 26 ++++++++++++++++++++++++++
+> > >  drivers/usb/core/usb.c        | 16 ++++------------
+> > >  drivers/usb/gadget/udc/core.c |  3 +++
+> > >  include/linux/usb.h           |  2 ++
+> > >  4 files changed, 35 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> > > index 18f5dcf58b0d..c52e9c9f58ec 100644
+> > > --- a/drivers/usb/common/common.c
+> > > +++ b/drivers/usb/common/common.c
+> > > @@ -15,6 +15,7 @@
+> > >  #include <linux/usb/of.h>
+> > >  #include <linux/usb/otg.h>
+> > >  #include <linux/of_platform.h>
+> > > +#include <linux/debugfs.h>
+> > >  
+> > >  static const char *const ep_type_names[] = {
+> > >  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
+> > > @@ -139,6 +140,31 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(usb_get_dr_mode);
+> > >  
+> > > +struct dentry *usb_debug_root;
+> > > +EXPORT_SYMBOL_GPL(usb_debug_root);
+> > > +
+> > > +static atomic_t usb_debug_root_refcnt = ATOMIC_INIT(0);
 > > 
-> > Hi,
+> > Ick, no.
 > > 
-> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> > >> +struct dentry *usb_debugfs_init(void)
-> > >> +{
-> > >> +	if (!usb_debug_root)
-> > >> +		usb_debug_root = debugfs_create_dir("usb", NULL);
-> > >> +
-> > >> +	atomic_inc(&usb_debug_root_refcnt);
-> > >> +
-> > >> +	return usb_debug_root;
-> > >> +}
-> > >> +EXPORT_SYMBOL_GPL(usb_debugfs_init);
-> > >> +
-> > >> +void usb_debugfs_cleanup(void)
-> > >> +{
-> > >> +	if (atomic_dec_and_test(&usb_debug_root_refcnt)) {
-> > >> +		debugfs_remove_recursive(usb_debug_root);
-> > >> +		usb_debug_root = NULL;
-> > >> +	}
-> > >> +}
-> > >> +EXPORT_SYMBOL_GPL(usb_debugfs_cleanup);
-> > >
-> > > Only remove the debugfs subdir if the usbcore module is removed.  Create
-> > > the debugfs subdir when the usbcore module is loaded.  No need for any
-> > > reference counting of any sort at all.  No need to overthink this :)
+> > > +
+> > > +struct dentry *usb_debugfs_init(void)
+> > > +{
+> > > +	if (!usb_debug_root)
+> > > +		usb_debug_root = debugfs_create_dir("usb", NULL);
+> > > +
+> > > +	atomic_inc(&usb_debug_root_refcnt);
+> > > +
+> > > +	return usb_debug_root;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(usb_debugfs_init);
+> > > +
+> > > +void usb_debugfs_cleanup(void)
+> > > +{
+> > > +	if (atomic_dec_and_test(&usb_debug_root_refcnt)) {
+> > > +		debugfs_remove_recursive(usb_debug_root);
+> > > +		usb_debug_root = NULL;
+> > > +	}
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(usb_debugfs_cleanup);
 > > 
-> > There is a slight need to overthink. He wants to use the same directory
-> > for gadget-only builds too :-)
-> 
-> Again, that's fine, this file will be loaded for those builds as well,
-> right?  
-Yes, either usbcore or gadget will select this file.
+> > Only remove the debugfs subdir if the usbcore module is removed. 
+> Both usbcore module and gadget module will use this "usb" subdir now.
+> Gadget module may still use it when remove usbcore module.
 
-> Otherwise, how would this code even be present?  :)
-> 
-> thanks,
-> 
-> greg k-h
+Did you try to remove the usb-common module with the udc gadget module
+remaining loaded with this change in place?  I think you will find that
+it is impossible given that the udc gadget module now depends on a
+symbol in the usb-common code.
+
+So again, just use the module reference counting logic to drive this
+functionality, don't create an atomic variable that duplicates the
+logic we already have in place today.
+
+thanks,
+
+greg k-h
