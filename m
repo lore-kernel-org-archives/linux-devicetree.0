@@ -1,78 +1,51 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] dt-bindings: thermal: Make cooling-maps property optional
-Date: Tue, 4 Jun 2019 08:04:16 +0200
-Message-ID: <f4675fc5-a7d1-1a6c-51ed-b6b6b599f5fe@linaro.org>
-References: <20190515093647.47656-1-andy.tang@nxp.com>
- <VI1PR04MB43335AE882F7898F4DDD1A23F3150@VI1PR04MB4333.eurprd04.prod.outlook.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: [PATCH 0/4] Add Support for MMC in J721E
+Date: Tue, 4 Jun 2019 11:39:10 +0530
+Message-ID: <20190604060914.10886-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB43335AE882F7898F4DDD1A23F3150@VI1PR04MB4333.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Tang <andy.tang@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: nm@ti.com, ulf.hansson@linaro.org, robh+dt@kernel.org, nsekhar@ti.com, adrian.hunter@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/2019 07:56, Andy Tang wrote:
-> Hi Edubezval, Rui,
-> 
-> Any further comments?
+The following patches add driver support for MMC SDHCI interfaces on
+TI's J721E devices. The 8 bit and 4 bit instances have phys which are
+different from the am65x interfaces as well as different from each
+other which leads to 3 different compatibles and a bunch of flags for
+indicating the differences.
 
->From my POV, this patch makes sense. We may be interested to show up the
-thermal zones in sysfs and optionally mitigate them via an userspace
-governor.
+Depends on Nishanth's initial J721E patches here:
+https://lore.kernel.org/patchwork/cover/1077382/
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Also depends on my fixes for AM65x driver here:
+https://lore.kernel.org/patchwork/cover/1079924/
 
->> -----Original Message-----
->> From: Yuantian Tang <andy.tang@nxp.com>
->> Sent: 2019Äê5ÔÂ15ÈÕ 17:37
->> To: rui.zhang@intel.com; edubezval@gmail.com
->> Cc: robh+dt@kernel.org; daniel.lezcano@linaro.org; mark.rutland@arm.com;
->> linux-pm@vger.kernel.org; devicetree@vger.kernel.org;
->> linux-kernel@vger.kernel.org; Andy Tang <andy.tang@nxp.com>
->> Subject: [PATCH] dt-bindings: thermal: Make cooling-maps property optional
->>
->> There may be no cooling device on system, or there are no enough cooling
->> devices for each thermal zone in multiple thermal zone cases since cooling
->> devices can't be shared.
->> So make this property optional to remove such limitations.
->>
->> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
->> ---
->>  .../devicetree/bindings/thermal/thermal.txt        |    4 ++--
->>  1 files changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
->> b/Documentation/devicetree/bindings/thermal/thermal.txt
->> index ca14ba9..694e834 100644
->> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
->> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
->> @@ -142,11 +142,11 @@ Required properties:
->>  - trips:		A sub-node which is a container of only trip point nodes
->>    Type: sub-node	required to describe the thermal zone.
->>
->> +
->> +Optional property:
->>  - cooling-maps:		A sub-node which is a container of only cooling device
->>    Type: sub-node	map nodes, used to describe the relation between
->> trips
->>  			and cooling devices.
->> -
->> -Optional property:
->>  - coefficients:		An array of integers (one signed cell) containing
->>    Type: array		coefficients to compose a linear relation between
->>    Elem size: one cell	the sensors listed in the thermal-sensors property.
->> --
->> 1.7.1
-> 
+Tested with: j721e-evm and am65x-evm.
 
+DT patches will be added in a separate series.
+
+Faiz Abbas (4):
+  dt-bindings: mmc: sdhci-am654: Document bindings for the host
+    controllers on TI's J721E devices.
+  mmc: sdhci_am654: Add Support for 8 bit IP on J721E
+  mmc: sdhci_am654: Add Support for 4 bit IP on J721E
+  arm64: defconfig: Add config for MMC on AM65x and J721E devices
+
+ .../devicetree/bindings/mmc/sdhci-am654.txt   |   9 +-
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/mmc/host/sdhci_am654.c                | 257 +++++++++++++-----
+ 3 files changed, 204 insertions(+), 63 deletions(-)
 
 -- 
- <http://www.linaro.org/> Linaro.org ©¦ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.19.2
