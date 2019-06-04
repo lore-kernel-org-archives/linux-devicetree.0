@@ -1,466 +1,167 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 1/7] video: add HDMI state notifier support
-Date: Tue, 4 Jun 2019 09:24:11 +0200
-Message-ID: <20190604072411.GP21222@phenom.ffwll.local>
-References: <20190603043251.226549-1-cychiang@chromium.org>
- <20190603043251.226549-2-cychiang@chromium.org>
- <41e7052b-a58c-5a8c-5d94-37237e0c2070@xs4all.nl>
- <20190603080931.GG21222@phenom.ffwll.local>
- <CAFv8Nw+1sB8i1d87vLeKxRricZOi4gnXFSgOzW9k0sa_Tzybjg@mail.gmail.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4] usb: create usb_debug_root for gadget only
+Date: Tue, 4 Jun 2019 15:34:07 +0800
+Message-ID: <1559633647-29040-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFv8Nw+1sB8i1d87vLeKxRricZOi4gnXFSgOzW9k0sa_Tzybjg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cheng-yi Chiang <cychiang@chromium.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Russell King <rmk+kernel@armlinux.org.uk>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org, linux-media@vger.kernel.org, moderated list:SOUND - SOC LAYER /
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 10:32:50AM +0800, Cheng-yi Chiang wrote:
-> On Mon, Jun 3, 2019 at 4:09 PM Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > On Mon, Jun 03, 2019 at 09:45:49AM +0200, Hans Verkuil wrote:
-> > > On 6/3/19 6:32 AM, Cheng-Yi Chiang wrote:
-> > > > From: Hans Verkuil <hans.verkuil@cisco.com>
-> > > >
-> > > > Add support for HDMI hotplug and EDID notifiers, which is used to convey
-> > > > information from HDMI drivers to their CEC and audio counterparts.
-> > > >
-> > > > Based on an earlier version from Russell King:
-> > > >
-> > > > https://patchwork.kernel.org/patch/9277043/
-> > > >
-> > > > The hdmi_notifier is a reference counted object containing the HDMI state
-> > > > of an HDMI device.
-> > > >
-> > > > When a new notifier is registered the current state will be reported to
-> > > > that notifier at registration time.
-> > > >
-> > > > Based on Hans Verkuil's patch:
-> > > >
-> > > > https://patchwork.kernel.org/patch/9472521/
-> > >
-> > > Erm, you are aware that this patch morphed into a CEC-specific notifier
-> > > found in drivers/media/cec/cec-notifier.c?
-> > >
-> > > I don't think it makes sense to have two notifier implementations in the kernel.
-> > > The original intention was to have the notifier deal with both CEC and ASoC
-> > > notifications, but there was not enough interest for the ASoC bits at the time
-> > > and it was dropped.
-> > >
-> > > I am planning changes to the cec-notifier API, I hope to work on that this
-> > > week. I'll CC you when I post those. Those might be a good starting point
-> > > to convert the cec-notifier to an hdmi-notifier as was originally intended.
-> > >
-> > > I've added your colleague Dariusz Marcinkiewicz to the CC list since he's been
-> > > working on some nice cec-notifier improvements as well.
-> >
-> > We also have some interfaces for drm/alsa interactions around hdmi
-> > already in drm/drm_audio_component.h, but it's not used by anything
-> > outside of i915. Imo we should extend that, not reinvent a new wheel.
-> >
-> Hi Daniel,
-> Thank you for the pointer. Looking at the ops, it seems that it is
-> specific to HDA.
-> I am not familiar with drm and HDA. I am not sure how applicable it
-> would be to report jack status to ASoC.
-> There is a use case in sound/soc/codecs/hdac_hdmi.c though so it
-> should be possible.
+When CONFIG_USB is not set, and CONFIG_USB_GADGET is set,
+there is an issue, e.g.:
 
-Currently hda is the only user, but the idea was to make it more generic.
-Jack status in alsa is what drm calls connector status btw.
+drivers/usb/mtu3/mtu3_debugfs.o: in function 'ssusb_debugfs_create_root':
+mtu3_debugfs.c:(.text+0xba3): undefined reference to 'usb_debug_root'
 
-So if we can take that as a baseline and extend it (probably needs some
-registration boilerplate and helpers to look up the right endpoint using
-of/dt for soc systems, we use component.c in i915/hda for this), that
-would be great I think.
+usb_debug_root is currently only built when host is supported
+(CONFIG_USB is set), for convenience, we also want it created when
+gadget only is enabled, this patch try to support it.
 
-> > Another note: notifiers considered evil, imo. Gets the job done for one
-> > case, as soon as you have multiple devices and need to make sure you get
-> > the update for the right one it all comes crashing down. Please create an
-> > api which registers for updates from a specific device only, plus
-> > something that has real callbacks (like the drm_audio_component.h thing we
-> > started already).
-> 
-> To clarify a bit, this hdmi-notifier indeed supports updating from a
-> specific device only.
-> hdmi_notifier_get takes a device and return the notifier.
+Reported-by: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+v4:
+  move common API into common.c suggested by Felipe
 
-Hm I missed that, I thought it's global, so one of my usual notifier
-concerns addressed.
+v3:
+  1. still create usb_debug_root for gadget only
+  2. abandon mtu3's change
+  3. drop acked-by Randy
 
-> It seems that a major difference between drm_audio_components and
-> hdmi-notifier is that
-> drm_audio_components defines all supported ops in drm_audio_component_audio_ops.
-> On the other hand, hdmi-notifier passes different events using an enum
-> like HDMI_CONNECTED and let listener handle different events.
-> In this regard I agree with you that drm_audio_component is cleaner.
-> Anyway, I will look into it a bit more and see how it works.
+v2(resend): add acked-by Randy
 
-Yeah I think if we could combine the approach, i.e. notifier side for
-registration, some _ops structure for the actual notifications, then
-there's a solid interface. I just really don't like the opaque void *
-interface notifier provides, it encourages abuse way too much.
+v1: fix mtu3's build error, replace usb_debug_root by NULL;
+---
+ drivers/usb/common/common.c   | 26 ++++++++++++++++++++++++++
+ drivers/usb/core/usb.c        | 16 ++++------------
+ drivers/usb/gadget/udc/core.c |  3 +++
+ include/linux/usb.h           |  2 ++
+ 4 files changed, 35 insertions(+), 12 deletions(-)
 
-Ofc the registration side would then no longer be based on the notifier
-datastructure, list_head (like cec-notifier.c) of registeres devices with
-their _ops structure should be enough.
--Daniel
-
-> 
-> Thanks again!
-> 
-> > -Daniel
-> >
-> > >
-> > > Regards,
-> > >
-> > >       Hans
-> > >
-> > > >
-> > > > Modified by Cheng-Yi Chiang:
-> > > >  - Add a section in MAINTAINER.
-> > > >  - Changes connected and has_eld to bitfield of unsigned int.
-> > > >  - Other minor fixes to pass checkpatch.pl --strict checks.
-> > > >
-> > > > Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-> > > > Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > > > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> > > > ---
-> > > > The original patch is at
-> > > > https://lore.kernel.org/linux-arm-kernel/20161213150813.37966-2-hverkuil@xs4all.nl
-> > > >
-> > > >  MAINTAINERS                   |   6 ++
-> > > >  drivers/video/Kconfig         |   3 +
-> > > >  drivers/video/Makefile        |   1 +
-> > > >  drivers/video/hdmi-notifier.c | 145 ++++++++++++++++++++++++++++++++++
-> > > >  include/linux/hdmi-notifier.h | 112 ++++++++++++++++++++++++++
-> > > >  5 files changed, 267 insertions(+)
-> > > >  create mode 100644 drivers/video/hdmi-notifier.c
-> > > >  create mode 100644 include/linux/hdmi-notifier.h
-> > > >
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index 5cfbea4ce575..ffb7376f9509 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -16676,6 +16676,12 @@ W: https://linuxtv.org
-> > > >  S: Maintained
-> > > >  F: drivers/media/platform/vicodec/*
-> > > >
-> > > > +VIDEO FRAMEWORK
-> > > > +M: Hans Verkuil <hverkuil@xs4all.nl>
-> > > > +L: linux-media@vger.kernel.org
-> > > > +F: drivers/video/hdmi-notifier.*
-> > > > +S: Maintained
-> > > > +
-> > > >  VIDEO MULTIPLEXER DRIVER
-> > > >  M: Philipp Zabel <p.zabel@pengutronix.de>
-> > > >  L: linux-media@vger.kernel.org
-> > > > diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> > > > index 83d3d271ca15..000ba9bc0ae7 100644
-> > > > --- a/drivers/video/Kconfig
-> > > > +++ b/drivers/video/Kconfig
-> > > > @@ -34,6 +34,9 @@ config VIDEOMODE_HELPERS
-> > > >  config HDMI
-> > > >     bool
-> > > >
-> > > > +config HDMI_NOTIFIERS
-> > > > +   bool
-> > > > +
-> > > >  endif # HAS_IOMEM
-> > > >
-> > > >  if VT
-> > > > diff --git a/drivers/video/Makefile b/drivers/video/Makefile
-> > > > index df7650adede9..eff4736102ca 100644
-> > > > --- a/drivers/video/Makefile
-> > > > +++ b/drivers/video/Makefile
-> > > > @@ -1,6 +1,7 @@
-> > > >  # SPDX-License-Identifier: GPL-2.0
-> > > >  obj-$(CONFIG_VGASTATE)            += vgastate.o
-> > > >  obj-$(CONFIG_HDMI)                += hdmi.o
-> > > > +obj-$(CONFIG_HDMI_NOTIFIERS)      += hdmi-notifier.o
-> > > >
-> > > >  obj-$(CONFIG_VT)             += console/
-> > > >  obj-$(CONFIG_FB_STI)                 += console/
-> > > > diff --git a/drivers/video/hdmi-notifier.c b/drivers/video/hdmi-notifier.c
-> > > > new file mode 100644
-> > > > index 000000000000..d1eedf661648
-> > > > --- /dev/null
-> > > > +++ b/drivers/video/hdmi-notifier.c
-> > > > @@ -0,0 +1,145 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/* hdmi-notifier.c - notify interested parties of (dis)connect and EDID
-> > > > + * events
-> > > > + *
-> > > > + * Copyright 2016 Russell King <rmk+kernel@arm.linux.org.uk>
-> > > > + * Copyright 2016 Cisco Systems, Inc. and/or its affiliates.
-> > > > + * All rights reserved.
-> > > > + */
-> > > > +
-> > > > +#include <linux/export.h>
-> > > > +#include <linux/hdmi-notifier.h>
-> > > > +#include <linux/string.h>
-> > > > +#include <linux/slab.h>
-> > > > +#include <linux/list.h>
-> > > > +
-> > > > +static LIST_HEAD(hdmi_notifiers);
-> > > > +static DEFINE_MUTEX(hdmi_notifiers_lock);
-> > > > +
-> > > > +struct hdmi_notifier *hdmi_notifier_get(struct device *dev)
-> > > > +{
-> > > > +   struct hdmi_notifier *n;
-> > > > +
-> > > > +   mutex_lock(&hdmi_notifiers_lock);
-> > > > +   list_for_each_entry(n, &hdmi_notifiers, head) {
-> > > > +           if (n->dev == dev) {
-> > > > +                   mutex_unlock(&hdmi_notifiers_lock);
-> > > > +                   kref_get(&n->kref);
-> > > > +                   return n;
-> > > > +           }
-> > > > +   }
-> > > > +   n = kzalloc(sizeof(*n), GFP_KERNEL);
-> > > > +   if (!n)
-> > > > +           goto unlock;
-> > > > +   n->dev = dev;
-> > > > +   mutex_init(&n->lock);
-> > > > +   BLOCKING_INIT_NOTIFIER_HEAD(&n->notifiers);
-> > > > +   kref_init(&n->kref);
-> > > > +   list_add_tail(&n->head, &hdmi_notifiers);
-> > > > +unlock:
-> > > > +   mutex_unlock(&hdmi_notifiers_lock);
-> > > > +   return n;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(hdmi_notifier_get);
-> > > > +
-> > > > +static void hdmi_notifier_release(struct kref *kref)
-> > > > +{
-> > > > +   struct hdmi_notifier *n =
-> > > > +           container_of(kref, struct hdmi_notifier, kref);
-> > > > +
-> > > > +   mutex_lock(&hdmi_notifiers_lock);
-> > > > +   list_del(&n->head);
-> > > > +   mutex_unlock(&hdmi_notifiers_lock);
-> > > > +   kfree(n->edid);
-> > > > +   kfree(n);
-> > > > +}
-> > > > +
-> > > > +void hdmi_notifier_put(struct hdmi_notifier *n)
-> > > > +{
-> > > > +   kref_put(&n->kref, hdmi_notifier_release);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(hdmi_notifier_put);
-> > > > +
-> > > > +int hdmi_notifier_register(struct hdmi_notifier *n, struct notifier_block *nb)
-> > > > +{
-> > > > +   int ret = blocking_notifier_chain_register(&n->notifiers, nb);
-> > > > +
-> > > > +   if (ret)
-> > > > +           return ret;
-> > > > +   kref_get(&n->kref);
-> > > > +   mutex_lock(&n->lock);
-> > > > +   if (n->connected) {
-> > > > +           blocking_notifier_call_chain(&n->notifiers, HDMI_CONNECTED, n);
-> > > > +           if (n->edid_size)
-> > > > +                   blocking_notifier_call_chain(&n->notifiers,
-> > > > +                                                HDMI_NEW_EDID, n);
-> > > > +           if (n->has_eld)
-> > > > +                   blocking_notifier_call_chain(&n->notifiers,
-> > > > +                                                HDMI_NEW_ELD, n);
-> > > > +   }
-> > > > +   mutex_unlock(&n->lock);
-> > > > +   return 0;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(hdmi_notifier_register);
-> > > > +
-> > > > +int hdmi_notifier_unregister(struct hdmi_notifier *n, struct notifier_block *nb)
-> > > > +{
-> > > > +   int ret = blocking_notifier_chain_unregister(&n->notifiers, nb);
-> > > > +
-> > > > +   if (ret == 0)
-> > > > +           hdmi_notifier_put(n);
-> > > > +   return ret;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(hdmi_notifier_unregister);
-> > > > +
-> > > > +void hdmi_event_connect(struct hdmi_notifier *n)
-> > > > +{
-> > > > +   mutex_lock(&n->lock);
-> > > > +   n->connected = true;
-> > > > +   blocking_notifier_call_chain(&n->notifiers, HDMI_CONNECTED, n);
-> > > > +   mutex_unlock(&n->lock);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(hdmi_event_connect);
-> > > > +
-> > > > +void hdmi_event_disconnect(struct hdmi_notifier *n)
-> > > > +{
-> > > > +   mutex_lock(&n->lock);
-> > > > +   n->connected = false;
-> > > > +   n->has_eld = false;
-> > > > +   n->edid_size = 0;
-> > > > +   blocking_notifier_call_chain(&n->notifiers, HDMI_DISCONNECTED, n);
-> > > > +   mutex_unlock(&n->lock);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(hdmi_event_disconnect);
-> > > > +
-> > > > +int hdmi_event_new_edid(struct hdmi_notifier *n, const void *edid, size_t size)
-> > > > +{
-> > > > +   mutex_lock(&n->lock);
-> > > > +   if (n->edid_allocated_size < size) {
-> > > > +           void *p = kmalloc(size, GFP_KERNEL);
-> > > > +
-> > > > +           if (!p) {
-> > > > +                   mutex_unlock(&n->lock);
-> > > > +                   return -ENOMEM;
-> > > > +           }
-> > > > +           kfree(n->edid);
-> > > > +           n->edid = p;
-> > > > +           n->edid_allocated_size = size;
-> > > > +   }
-> > > > +   memcpy(n->edid, edid, size);
-> > > > +   n->edid_size = size;
-> > > > +   blocking_notifier_call_chain(&n->notifiers, HDMI_NEW_EDID, n);
-> > > > +   mutex_unlock(&n->lock);
-> > > > +   return 0;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(hdmi_event_new_edid);
-> > > > +
-> > > > +void hdmi_event_new_eld(struct hdmi_notifier *n, const u8 eld[128])
-> > > > +{
-> > > > +   mutex_lock(&n->lock);
-> > > > +   memcpy(n->eld, eld, sizeof(n->eld));
-> > > > +   n->has_eld = true;
-> > > > +   blocking_notifier_call_chain(&n->notifiers, HDMI_NEW_ELD, n);
-> > > > +   mutex_unlock(&n->lock);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(hdmi_event_new_eld);
-> > > > diff --git a/include/linux/hdmi-notifier.h b/include/linux/hdmi-notifier.h
-> > > > new file mode 100644
-> > > > index 000000000000..c8f35110e3e3
-> > > > --- /dev/null
-> > > > +++ b/include/linux/hdmi-notifier.h
-> > > > @@ -0,0 +1,112 @@
-> > > > +/* SPDX-License-Identifier: GPL-2.0
-> > > > + * hdmi-notifier.h - notify interested parties of (dis)connect and EDID
-> > > > + * events
-> > > > + *
-> > > > + * Copyright 2016 Russell King <rmk+kernel@arm.linux.org.uk>
-> > > > + * Copyright 2016 Cisco Systems, Inc. and/or its affiliates.
-> > > > + * All rights reserved.
-> > > > + */
-> > > > +
-> > > > +#ifndef LINUX_HDMI_NOTIFIER_H
-> > > > +#define LINUX_HDMI_NOTIFIER_H
-> > > > +
-> > > > +#include <linux/types.h>
-> > > > +#include <linux/notifier.h>
-> > > > +#include <linux/kref.h>
-> > > > +
-> > > > +enum {
-> > > > +   HDMI_CONNECTED,
-> > > > +   HDMI_DISCONNECTED,
-> > > > +   HDMI_NEW_EDID,
-> > > > +   HDMI_NEW_ELD,
-> > > > +};
-> > > > +
-> > > > +struct device;
-> > > > +
-> > > > +struct hdmi_notifier {
-> > > > +   /* Lock to protect callback registration and notification. */
-> > > > +   struct mutex lock;
-> > > > +   struct list_head head;
-> > > > +   struct kref kref;
-> > > > +   struct blocking_notifier_head notifiers;
-> > > > +   struct device *dev;
-> > > > +
-> > > > +   /* Current state */
-> > > > +   unsigned int connected : 1;
-> > > > +   unsigned int has_eld : 1;
-> > > > +   unsigned char eld[128];
-> > > > +   void *edid;
-> > > > +   size_t edid_size;
-> > > > +   size_t edid_allocated_size;
-> > > > +};
-> > > > +
-> > > > +/**
-> > > > + * hdmi_notifier_get - find or create a new hdmi_notifier for the given device.
-> > > > + * @dev: device that sends the events.
-> > > > + *
-> > > > + * If a notifier for device @dev already exists, then increase the refcount
-> > > > + * and return that notifier.
-> > > > + *
-> > > > + * If it doesn't exist, then allocate a new notifier struct and return a
-> > > > + * pointer to that new struct.
-> > > > + *
-> > > > + * Return NULL if the memory could not be allocated.
-> > > > + */
-> > > > +struct hdmi_notifier *hdmi_notifier_get(struct device *dev);
-> > > > +
-> > > > +/**
-> > > > + * hdmi_notifier_put - decrease refcount and delete when the refcount reaches 0.
-> > > > + * @n: notifier
-> > > > + */
-> > > > +void hdmi_notifier_put(struct hdmi_notifier *n);
-> > > > +
-> > > > +/**
-> > > > + * hdmi_notifier_register - register the notifier with the notifier_block.
-> > > > + * @n: the HDMI notifier
-> > > > + * @nb: the notifier_block
-> > > > + */
-> > > > +int hdmi_notifier_register(struct hdmi_notifier *n, struct notifier_block *nb);
-> > > > +
-> > > > +/**
-> > > > + * hdmi_notifier_unregister - unregister the notifier with the notifier_block.
-> > > > + * @n: the HDMI notifier
-> > > > + * @nb: the notifier_block
-> > > > + */
-> > > > +int hdmi_notifier_unregister(struct hdmi_notifier *n,
-> > > > +                        struct notifier_block *nb);
-> > > > +
-> > > > +/**
-> > > > + * hdmi_event_connect - send a connect event.
-> > > > + * @n: the HDMI notifier
-> > > > + *
-> > > > + * Send an HDMI_CONNECTED event to any registered parties.
-> > > > + */
-> > > > +void hdmi_event_connect(struct hdmi_notifier *n);
-> > > > +
-> > > > +/**
-> > > > + * hdmi_event_disconnect - send a disconnect event.
-> > > > + * @n: the HDMI notifier
-> > > > + *
-> > > > + * Send an HDMI_DISCONNECTED event to any registered parties.
-> > > > + */
-> > > > +void hdmi_event_disconnect(struct hdmi_notifier *n);
-> > > > +
-> > > > +/**
-> > > > + * hdmi_event_new_edid - send a new EDID event.
-> > > > + * @n: the HDMI notifier
-> > > > + *
-> > > > + * Send an HDMI_NEW_EDID event to any registered parties.
-> > > > + * This function will make a copy the EDID so it can return -ENOMEM if
-> > > > + * no memory could be allocated.
-> > > > + */
-> > > > +int hdmi_event_new_edid(struct hdmi_notifier *n, const void *edid, size_t size);
-> > > > +
-> > > > +/**
-> > > > + * hdmi_event_new_eld - send a new ELD event.
-> > > > + * @n: the HDMI notifier
-> > > > + *
-> > > > + * Send an HDMI_NEW_ELD event to any registered parties.
-> > > > + */
-> > > > +void hdmi_event_new_eld(struct hdmi_notifier *n, const u8 eld[128]);
-> > > > +
-> > > > +#endif
-> > > >
-> > >
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-
+diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+index 18f5dcf58b0d..c52e9c9f58ec 100644
+--- a/drivers/usb/common/common.c
++++ b/drivers/usb/common/common.c
+@@ -15,6 +15,7 @@
+ #include <linux/usb/of.h>
+ #include <linux/usb/otg.h>
+ #include <linux/of_platform.h>
++#include <linux/debugfs.h>
+ 
+ static const char *const ep_type_names[] = {
+ 	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
+@@ -139,6 +140,31 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(usb_get_dr_mode);
+ 
++struct dentry *usb_debug_root;
++EXPORT_SYMBOL_GPL(usb_debug_root);
++
++static atomic_t usb_debug_root_refcnt = ATOMIC_INIT(0);
++
++struct dentry *usb_debugfs_init(void)
++{
++	if (!usb_debug_root)
++		usb_debug_root = debugfs_create_dir("usb", NULL);
++
++	atomic_inc(&usb_debug_root_refcnt);
++
++	return usb_debug_root;
++}
++EXPORT_SYMBOL_GPL(usb_debugfs_init);
++
++void usb_debugfs_cleanup(void)
++{
++	if (atomic_dec_and_test(&usb_debug_root_refcnt)) {
++		debugfs_remove_recursive(usb_debug_root);
++		usb_debug_root = NULL;
++	}
++}
++EXPORT_SYMBOL_GPL(usb_debugfs_cleanup);
++
+ #ifdef CONFIG_OF
+ /**
+  * of_usb_get_dr_mode_by_phy - Get dual role mode for the controller device
+diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+index 7fcb9f782931..9d8db7faf75f 100644
+--- a/drivers/usb/core/usb.c
++++ b/drivers/usb/core/usb.c
+@@ -1185,19 +1185,11 @@ static struct notifier_block usb_bus_nb = {
+ 	.notifier_call = usb_bus_notify,
+ };
+ 
+-struct dentry *usb_debug_root;
+-EXPORT_SYMBOL_GPL(usb_debug_root);
+-
+-static void usb_debugfs_init(void)
++static void usb_core_debugfs_init(void)
+ {
+-	usb_debug_root = debugfs_create_dir("usb", NULL);
+-	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
+-			    &usbfs_devices_fops);
+-}
++	struct dentry *root = usb_debugfs_init();
+ 
+-static void usb_debugfs_cleanup(void)
+-{
+-	debugfs_remove_recursive(usb_debug_root);
++	debugfs_create_file("devices", 0444, root, NULL, &usbfs_devices_fops);
+ }
+ 
+ /*
+@@ -1212,7 +1204,7 @@ static int __init usb_init(void)
+ 	}
+ 	usb_init_pool_max();
+ 
+-	usb_debugfs_init();
++	usb_core_debugfs_init();
+ 
+ 	usb_acpi_register();
+ 	retval = bus_register(&usb_bus_type);
+diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
+index 7cf34beb50df..8ef000b9baa4 100644
+--- a/drivers/usb/gadget/udc/core.c
++++ b/drivers/usb/gadget/udc/core.c
+@@ -1597,12 +1597,15 @@ static int __init usb_udc_init(void)
+ 	}
+ 
+ 	udc_class->dev_uevent = usb_udc_uevent;
++	usb_debugfs_init();
++
+ 	return 0;
+ }
+ subsys_initcall(usb_udc_init);
+ 
+ static void __exit usb_udc_exit(void)
+ {
++	usb_debugfs_cleanup();
+ 	class_destroy(udc_class);
+ }
+ module_exit(usb_udc_exit);
+diff --git a/include/linux/usb.h b/include/linux/usb.h
+index ae82d9d1112b..175e4a0b1847 100644
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -1995,6 +1995,8 @@ extern void usb_unregister_notify(struct notifier_block *nb);
+ 
+ /* debugfs stuff */
+ extern struct dentry *usb_debug_root;
++extern struct dentry *usb_debugfs_init(void);
++extern void usb_debugfs_cleanup(void);
+ 
+ /* LED triggers */
+ enum usb_led_event {
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.21.0
