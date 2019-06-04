@@ -1,8 +1,8 @@
 Return-Path: <SRS0=CUwV=UD=sirena.org.uk=broonie@kernel.org>
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: Add DT bindings for Synquacer" to the spi tree
-In-Reply-To: <20190604051257.14264-3-masahisa.kojima@linaro.org>
-Message-Id: <20190604145910.341D0440049@finisterre.sirena.org.uk>
+Subject: Applied "MAINTAINERS: Add entry for Synquacer SPI driver" to the spi tree
+In-Reply-To: <20190604051257.14264-2-masahisa.kojima@linaro.org>
+Message-Id: <20190604145910.B119D440046@finisterre.sirena.org.uk>
 Date: Tue,  4 Jun 2019 15:59:10 +0100 (BST)
 To: Masahisa Kojima <masahisa.kojima@linaro.org>
 Cc: andy.shevchenko@gmail.com, ard.biesheuvel@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, geert@linux-m68k.org, Jassi Brar <jaswinder.singh@linaro.org>jaswinder.singh@linaro.org, linux-spi@vger.kernel.orgMarkBrownbroonie@kernel.org, mark.rutland@arm.com, masami.hiramatsu@linaro.org, okamoto.satoru@socionext.com, osaki.yoshitoyo@socionext.com, robh+dt@kernel.org, tpiepho@impinj.com
@@ -10,7 +10,7 @@ List-ID: <devicetree@vger.kernel.org>
 
 The patch
 
-   spi: Add DT bindings for Synquacer
+   MAINTAINERS: Add entry for Synquacer SPI driver
 
 has been applied to the spi tree at
 
@@ -35,55 +35,38 @@ to this mail.
 Thanks,
 Mark
 
->From 6d72a49ff3f6bb0932718c132b75351aedc9458e Mon Sep 17 00:00:00 2001
+>From 6acf0ed57b8c30f57cba1e3d4fd56e37480affc3 Mon Sep 17 00:00:00 2001
 From: Masahisa Kojima <masahisa.kojima@linaro.org>
-Date: Tue, 4 Jun 2019 14:12:56 +0900
-Subject: [PATCH] spi: Add DT bindings for Synquacer
+Date: Tue, 4 Jun 2019 14:12:55 +0900
+Subject: [PATCH] MAINTAINERS: Add entry for Synquacer SPI driver
 
-This patch adds documentation for Device-Tree bindings for the
-Socionext Synquacer spi driver.
+Add entry for the Synquacer spi driver and DT bindings.
 
 Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
 Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/spi/spi-synquacer.txt | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-synquacer.txt b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
-new file mode 100644
-index 000000000000..291dfa692d0a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
-@@ -0,0 +1,27 @@
-+* Socionext Synquacer HS-SPI bindings
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5cfbea4ce575..66738ccc1257 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14599,6 +14599,14 @@ S:	Maintained
+ F:	drivers/net/ethernet/socionext/netsec.c
+ F:	Documentation/devicetree/bindings/net/socionext-netsec.txt
+ 
++SOCIONEXT (SNI) Synquacer SPI DRIVER
++M:	Masahisa Kojima <masahisa.kojima@linaro.org>
++M:	Jassi Brar <jaswinder.singh@linaro.org>
++L:	linux-spi@vger.kernel.org
++S:	Maintained
++F:	drivers/spi/spi-synquacer.c
++F:	Documentation/devicetree/bindings/spi/spi-synquacer.txt
 +
-+Required Properties:
-+- compatible: should be "socionext,synquacer-spi"
-+- reg: physical base address of the controller and length of memory mapped
-+       region.
-+- interrupts: should contain the "spi_rx", "spi_tx" and "spi_fault" interrupts.
-+- clocks: core clock iHCLK. Optional rate clock iPCLK (default is iHCLK)
-+- clock-names: Shall be "iHCLK" and "iPCLK" respectively
-+
-+Optional Properties:
-+- socionext,use-rtm: boolean, if required to use "retimed clock" for RX
-+- socionext,set-aces: boolean, if same active clock edges field to be set.
-+
-+Example:
-+
-+	spi0: spi@ff110000 {
-+		compatible = "socionext,synquacer-spi";
-+		reg = <0xff110000 0x1000>;
-+		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clk_hsspi>;
-+		clock-names = "iHCLK";
-+		socionext,use-rtm;
-+		socionext,set-aces;
-+	};
+ SOLIDRUN CLEARFOG SUPPORT
+ M:	Russell King <linux@armlinux.org.uk>
+ S:	Maintained
 -- 
 2.20.1
