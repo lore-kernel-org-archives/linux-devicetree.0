@@ -1,85 +1,59 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v4 03/14] dt-bindings: media: Add camsv binding for MT2712 MIPI-CSI2
-Date: Tue, 4 Jun 2019 18:11:44 +0800
-Message-ID: <1559643115-15124-4-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v4 02/14] dt-bindings: media: Add mipicsi common node binding
+ for MT2712 MIPI-CSI2
+Date: Tue, 4 Jun 2019 18:11:43 +0800
+Message-ID: <1559643115-15124-3-git-send-email-stu.hsieh@mediatek.com>
 References: <1559643115-15124-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1559643115-15124-1-git-send-email-stu.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add camsv binding for MT2712 MIPI-CSI2
+Add mipicsi common node binding for MT2712 MIPI-CSI2
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../bindings/media/mediatek-mipicsi-camsv.txt | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+ .../media/mediatek-mipicsi-common.txt         | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
 new file mode 100644
-index 000000000000..c9b4af9eeeff
+index 000000000000..a67c744b75f0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
-@@ -0,0 +1,55 @@
-+* Mediatek MIPI-CSI2 receiver camsv
++++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+@@ -0,0 +1,19 @@
++* Mediatek MIPI-CSI2 receiver common
 +
-+Mediatek MIPI-CSI2 receiver camsv transfer data to DRAM in Mediatek SoCs
-+
-+These node are refer by mipicsi
++Mediatek MIPI-CSI2 receiver is the MIPI Signal capture hardware present in Mediatek SoCs
 +
 +Required properties:
++- compatible: should be "mediatek,mt2712-mipicsi-common"
 +- reg : physical base address of the mipicsi receiver registers and length of
 +  memory mapped region.
 +- clocks: device clocks, see
 +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-+- interrupts : interrupt number to the interrupt controller.
++
 +
 +Example:
-+	seninf1_mux_camsv0: seninf_mux_camsv@15002100 {
-+		reg = <0 0x15002120 0 0x40>,
-+		      <0 0x15004000 0 0x1000>;
-+		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
-+		interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	seninf2_mux_camsv1: seninf_mux_camsv@15002500 {
-+		reg = <0 0x15002520 0 0x40>,
-+		      <0 0x15005000 0 0x1000>;
-+		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
-+		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	seninf3_mux_camsv2: seninf_mux_camsv@15002900 {
-+		reg = <0 0x15002920 0 0x40>,
-+		      <0 0x15006000 0 0x1000>;
-+		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
-+		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	seninf4_mux_camsv3: seninf_mux_camsv@15002D00 {
-+		reg = <0 0x15002D20 0 0x40>,
-+		      <0 0x15007000 0 0x1000>;
-+		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
-+		interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	seninf5_mux_camsv4: seninf_mux_camsv@15003100 {
-+		reg = <0 0x15003120 0 0x40>,
-+		      <0 0x15008000 0 0x1000>;
-+		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
-+		interrupts = <GIC_SPI 270 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	seninf6_mux_camsv5: seninf_mux_camsv@15003500 {
-+		reg = <0 0x15003520 0 0x40>,
-+		      <0 0x15009000 0 0x1000>;
-+		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
-+		interrupts = <GIC_SPI 271 IRQ_TYPE_LEVEL_LOW>;
++	mipicsi: mipicsi@15002000 {
++		compatible = "mediatek,mt2712-mipicsi-common", "syscon";
++		reg = <0 0x15002000 0 0x10>;
++		clocks = <&imgsys CLK_IMG_SENINF_CAM_EN>,
++			 <&imgsys CLK_IMG_SENINF_SCAM_EN>;
 +	};
 -- 
 2.18.0
