@@ -1,49 +1,78 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH] dt-bindings: thermal: Make cooling-maps property optional
-Date: Tue, 4 Jun 2019 05:56:02 +0000
-Message-ID: <VI1PR04MB43335AE882F7898F4DDD1A23F3150@VI1PR04MB4333.eurprd04.prod.outlook.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] dt-bindings: thermal: Make cooling-maps property optional
+Date: Tue, 4 Jun 2019 08:04:16 +0200
+Message-ID: <f4675fc5-a7d1-1a6c-51ed-b6b6b599f5fe@linaro.org>
 References: <20190515093647.47656-1-andy.tang@nxp.com>
+ <VI1PR04MB43335AE882F7898F4DDD1A23F3150@VI1PR04MB4333.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515093647.47656-1-andy.tang@nxp.com>
+In-Reply-To: <VI1PR04MB43335AE882F7898F4DDD1A23F3150@VI1PR04MB4333.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Tang <andy.tang@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRWR1YmV6dmFsLCBSdWksDQoNCkFueSBmdXJ0aGVyIGNvbW1lbnRzPw0KDQpCUiwNCkFuZHkN
-Cg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBZdWFudGlhbiBUYW5nIDxh
-bmR5LnRhbmdAbnhwLmNvbT4NCj4gU2VudDogMjAxOcTqNdTCMTXI1SAxNzozNw0KPiBUbzogcnVp
-LnpoYW5nQGludGVsLmNvbTsgZWR1YmV6dmFsQGdtYWlsLmNvbQ0KPiBDYzogcm9iaCtkdEBrZXJu
-ZWwub3JnOyBkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
-Cj4gbGludXgtcG1Admdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsN
-Cj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgQW5keSBUYW5nIDxhbmR5LnRhbmdAbnhw
-LmNvbT4NCj4gU3ViamVjdDogW1BBVENIXSBkdC1iaW5kaW5nczogdGhlcm1hbDogTWFrZSBjb29s
-aW5nLW1hcHMgcHJvcGVydHkgb3B0aW9uYWwNCj4gDQo+IFRoZXJlIG1heSBiZSBubyBjb29saW5n
-IGRldmljZSBvbiBzeXN0ZW0sIG9yIHRoZXJlIGFyZSBubyBlbm91Z2ggY29vbGluZw0KPiBkZXZp
-Y2VzIGZvciBlYWNoIHRoZXJtYWwgem9uZSBpbiBtdWx0aXBsZSB0aGVybWFsIHpvbmUgY2FzZXMg
-c2luY2UgY29vbGluZw0KPiBkZXZpY2VzIGNhbid0IGJlIHNoYXJlZC4NCj4gU28gbWFrZSB0aGlz
-IHByb3BlcnR5IG9wdGlvbmFsIHRvIHJlbW92ZSBzdWNoIGxpbWl0YXRpb25zLg0KPiANCj4gU2ln
-bmVkLW9mZi1ieTogWXVhbnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IC0tLQ0KPiAg
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC90aGVybWFsLnR4dCAgICAgICAgfCAgICA0
-ICsrLS0NCj4gIDEgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygt
-KQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90
-aGVybWFsL3RoZXJtYWwudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3RoZXJtYWwvdGhlcm1hbC50eHQNCj4gaW5kZXggY2ExNGJhOS4uNjk0ZTgzNCAxMDA2NDQNCj4g
-LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvdGhlcm1hbC50
-eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvdGhl
-cm1hbC50eHQNCj4gQEAgLTE0MiwxMSArMTQyLDExIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+
-ICAtIHRyaXBzOgkJQSBzdWItbm9kZSB3aGljaCBpcyBhIGNvbnRhaW5lciBvZiBvbmx5IHRyaXAg
-cG9pbnQgbm9kZXMNCj4gICAgVHlwZTogc3ViLW5vZGUJcmVxdWlyZWQgdG8gZGVzY3JpYmUgdGhl
-IHRoZXJtYWwgem9uZS4NCj4gDQo+ICsNCj4gK09wdGlvbmFsIHByb3BlcnR5Og0KPiAgLSBjb29s
-aW5nLW1hcHM6CQlBIHN1Yi1ub2RlIHdoaWNoIGlzIGEgY29udGFpbmVyIG9mIG9ubHkgY29vbGlu
-ZyBkZXZpY2UNCj4gICAgVHlwZTogc3ViLW5vZGUJbWFwIG5vZGVzLCB1c2VkIHRvIGRlc2NyaWJl
-IHRoZSByZWxhdGlvbiBiZXR3ZWVuDQo+IHRyaXBzDQo+ICAJCQlhbmQgY29vbGluZyBkZXZpY2Vz
-Lg0KPiAtDQo+IC1PcHRpb25hbCBwcm9wZXJ0eToNCj4gIC0gY29lZmZpY2llbnRzOgkJQW4gYXJy
-YXkgb2YgaW50ZWdlcnMgKG9uZSBzaWduZWQgY2VsbCkgY29udGFpbmluZw0KPiAgICBUeXBlOiBh
-cnJheQkJY29lZmZpY2llbnRzIHRvIGNvbXBvc2UgYSBsaW5lYXIgcmVsYXRpb24gYmV0d2Vlbg0K
-PiAgICBFbGVtIHNpemU6IG9uZSBjZWxsCXRoZSBzZW5zb3JzIGxpc3RlZCBpbiB0aGUgdGhlcm1h
-bC1zZW5zb3JzIHByb3BlcnR5Lg0KPiAtLQ0KPiAxLjcuMQ0KDQo=
+On 04/06/2019 07:56, Andy Tang wrote:
+> Hi Edubezval, Rui,
+> 
+> Any further comments?
+
+>From my POV, this patch makes sense. We may be interested to show up the
+thermal zones in sysfs and optionally mitigate them via an userspace
+governor.
+
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+>> -----Original Message-----
+>> From: Yuantian Tang <andy.tang@nxp.com>
+>> Sent: 2019Äê5ÔÂ15ÈÕ 17:37
+>> To: rui.zhang@intel.com; edubezval@gmail.com
+>> Cc: robh+dt@kernel.org; daniel.lezcano@linaro.org; mark.rutland@arm.com;
+>> linux-pm@vger.kernel.org; devicetree@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; Andy Tang <andy.tang@nxp.com>
+>> Subject: [PATCH] dt-bindings: thermal: Make cooling-maps property optional
+>>
+>> There may be no cooling device on system, or there are no enough cooling
+>> devices for each thermal zone in multiple thermal zone cases since cooling
+>> devices can't be shared.
+>> So make this property optional to remove such limitations.
+>>
+>> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+>> ---
+>>  .../devicetree/bindings/thermal/thermal.txt        |    4 ++--
+>>  1 files changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
+>> b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> index ca14ba9..694e834 100644
+>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> @@ -142,11 +142,11 @@ Required properties:
+>>  - trips:		A sub-node which is a container of only trip point nodes
+>>    Type: sub-node	required to describe the thermal zone.
+>>
+>> +
+>> +Optional property:
+>>  - cooling-maps:		A sub-node which is a container of only cooling device
+>>    Type: sub-node	map nodes, used to describe the relation between
+>> trips
+>>  			and cooling devices.
+>> -
+>> -Optional property:
+>>  - coefficients:		An array of integers (one signed cell) containing
+>>    Type: array		coefficients to compose a linear relation between
+>>    Elem size: one cell	the sensors listed in the thermal-sensors property.
+>> --
+>> 1.7.1
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org ©¦ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
