@@ -1,32 +1,43 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 0/3] (Qualcomm) UFS device reset support
-Date: Tue, 4 Jun 2019 15:00:27 -0700
-Message-ID: <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+From: Hongwei Zhang <Hongweiz@ami.com>
+Subject: RE: [PATCH linux dev-5.1 v1] ARM: dts: aspeed: Add SGPM pinmux
+Date: Tue, 4 Jun 2019 22:03:37 +0000
+Message-ID: <14D3C8298A3B0F42A1EB31EE961CFF8231E4AA@atlms1.us.megatrends.com>
+References: <1559601789-27121-1-git-send-email-hongweiz@ami.com>
+ <CACRpkdYPHw994Ov0xCfK6tCg60tiuWrRwTcYpMSfOr4G0VKu_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+In-Reply-To: <CACRpkdYPHw994Ov0xCfK6tCg60tiuWrRwTcYpMSfOr4G0VKu_Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> This series exposes the ufs_reset line as a gpio, adds support for ufshcd to
-> acquire and toggle this and then adds this to SDM845 MTP.
->
-> Bjorn Andersson (3):
->   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
->   scsi: ufs: Allow resetting the UFS device
->   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
-
-Adding similar change as in sdm845-mtp to the not yet upstream
-blueline dts, I validated this allows my micron UFS pixel3 to boot.
-
-Tested-by: John Stultz <john.stultz@linaro.org>
-
-thanks
--john
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IExpbnVzIFdhbGxlaWogPGxpbnVzLndh
+bGxlaWpAbGluYXJvLm9yZz4gDQpTZW50OiBNb25kYXksIEp1bmUgMywgMjAxOSA3OjA4IFBNDQpU
+bzogSG9uZ3dlaSBaaGFuZyA8SG9uZ3dlaXpAYW1pLmNvbT4NCkNjOiBKb2VsIFN0YW5sZXkgPGpv
+ZWxAam1zLmlkLmF1PjsgQW5kcmV3IEplZmZlcnkgPGFuZHJld0Bhai5pZC5hdT47IFJvYiBIZXJy
+aW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
+Y29tPjsgb3BlbiBsaXN0OkdQSU8gU1VCU1lTVEVNIDxsaW51eC1ncGlvQHZnZXIua2VybmVsLm9y
+Zz47IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVWSUNFIFRSRUUgQklO
+RElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgTGludXggQVJNIDxsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBsaW51eC1hc3BlZWRAbGlzdHMub3psYWJzLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSCBsaW51
+eCBkZXYtNS4xIHYxXSBBUk06IGR0czogYXNwZWVkOiBBZGQgU0dQTSBwaW5tdXgNCg0KSGkgSG9u
+Z3dlaSwNCg0KT24gVHVlLCBKdW4gNCwgMjAxOSBhdCAxMjo0NCBBTSBIb25nd2VpIFpoYW5nIDxo
+b25nd2VpekBhbWkuY29tPiB3cm90ZToNCj4NCj4gQWRkIFNHUE0gcGlubXV4IHRvIGFzdDI1MDAt
+cGluY3RybCBmdW5jdGlvbiBhbmQgZ3JvdXAsIHRvIHByZXBhcmUgZm9yIA0KPiBzdXBwb3J0aW5n
+IFNHUElPIGluIEFTVDI1MDAgU29DLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBIb25nd2VpIFpoYW5n
+IDxob25nd2VpekBhbWkuY29tPg0KPiAtLS0NCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtYXNwZWVkLnR4dCB8IDIgKy0NCj4gIGFyY2gvYXJtL2Jv
+b3QvZHRzL2FzcGVlZC1nNS5kdHNpICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDUgKysr
+KysNCj4gIGRyaXZlcnMvcGluY3RybC9hc3BlZWQvcGluY3RybC1hc3BlZWQtZzUuYyAgICAgICAg
+ICAgICAgICAgICB8IDQgKysrKw0KDQpQbGVhc2UgdHJ5IHRvIHNlcGFyYXRlIG91dCB0aGUgY2hh
+bmdlIHRvIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNS5kdHNpIGludG8gYSBzZXBhcmF0ZSBw
+YXRjaCB0aGF0IGdvZXMgdGhyb3VnaCBBUk0gU29DLg0KDQpKdXN0IGNvbW1pdHRlZCB0aGUgRFQg
+cGF0Y2ggdG8gX2h0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0
+L2FybS9hcm0tc29jLmdpdCAsIHBsZWFzZSBoZWxwIHRvIHJldmlldy4gVGhhbmtzIQ0KDQoNCk90
+aGVyIHRoYW4gdGhhdCBpdCBsb29rcyBmaW5lIHRvIG1lLg0KDQpZb3VycywNCkxpbnVzIFdhbGxl
+aWoNCg==
