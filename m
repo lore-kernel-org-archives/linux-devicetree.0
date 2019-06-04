@@ -1,59 +1,90 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v4 02/14] dt-bindings: media: Add mipicsi common node binding
- for MT2712 MIPI-CSI2
-Date: Tue, 4 Jun 2019 18:11:43 +0800
-Message-ID: <1559643115-15124-3-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v4 10/14] [media] mtk-mipicsi: set the output address in HW reg
+Date: Tue, 4 Jun 2019 18:11:51 +0800
+Message-ID: <1559643115-15124-11-git-send-email-stu.hsieh@mediatek.com>
 References: <1559643115-15124-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1559643115-15124-1-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Add mipicsi common node binding for MT2712 MIPI-CSI2
+This patch set the output address in HW reg when buffer queue and ISR.
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/mediatek-mipicsi-common.txt         | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
-new file mode 100644
-index 000000000000..a67c744b75f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
-@@ -0,0 +1,19 @@
-+* Mediatek MIPI-CSI2 receiver common
+diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+index dc5c5c888914..9e45786a0282 100644
+--- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
++++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+@@ -100,6 +100,7 @@
+ #define CAMSV_TG_SEN_GRAB_LIN				0x50C
+ #define CAMSV_TG_PATH_CFG				0x510
+ 
++#define IMGO_BASE_ADDR					0x220
+ #define IMGO_XSIZE					0x230
+ #define IMGO_YSIZE					0x234
+ #define IMGO_STRIDE					0x238
+@@ -538,6 +539,32 @@ static int mtk_mipicsi_vb2_prepare(struct vb2_buffer *vb)
+ 	return 0;
+ }
+ 
++static void mtk_mipicsi_fill_buffer(void __iomem *base, dma_addr_t dma_handle)
++{
++	writel(dma_handle, base + IMGO_BASE_ADDR);
++}
 +
-+Mediatek MIPI-CSI2 receiver is the MIPI Signal capture hardware present in Mediatek SoCs
++static void mtk_mipicsi_write_camsv(struct mtk_mipicsi_dev *mipicsi,
++				    unsigned int index,
++				    unsigned int max_camsv_num)
++{
++	struct mtk_mipicsi_channel *ch = mipicsi->channel;
++	unsigned int i = 0;
++	u8 link_index = 0;
++	u32 bytesperline = mipicsi->fmt.fmt.pix.bytesperline;
++	u32 height = mipicsi->fmt.fmt.pix.height;
++	u64 offset = 0;
 +
-+Required properties:
-+- compatible: should be "mediatek,mt2712-mipicsi-common"
-+- reg : physical base address of the mipicsi receiver registers and length of
-+  memory mapped region.
-+- clocks: device clocks, see
-+  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
++	for (i = 0; i < max_camsv_num; i++)
++		if (((mipicsi->link_reg_val >> i) & 0x01) == 0x01) {
++			offset = (u64)link_index * bytesperline * height;
++			mtk_mipicsi_fill_buffer(ch[i].camsv,
++				mipicsi->cam_buf[index].vb_dma_addr_phy
++					+ offset);
++			link_index++;
++		}
++}
 +
+ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
+ {
+ 	struct mtk_mipicsi_dev *mipicsi = vb2_get_drv_priv(vb->vb2_queue);
+@@ -546,6 +573,12 @@ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
+ 	list_add_tail(&(mipicsi->cam_buf[vb->index].queue),
+ 		&(mipicsi->fb_list));
+ 	spin_unlock(&mipicsi->queue_lock);
 +
-+Example:
-+	mipicsi: mipicsi@15002000 {
-+		compatible = "mediatek,mt2712-mipicsi-common", "syscon";
-+		reg = <0 0x15002000 0 0x10>;
-+		clocks = <&imgsys CLK_IMG_SENINF_CAM_EN>,
-+			 <&imgsys CLK_IMG_SENINF_SCAM_EN>;
-+	};
++	spin_lock(&mipicsi->irqlock);
++	if (!mipicsi->streamon)
++		mtk_mipicsi_write_camsv(mipicsi, vb->index, mipicsi->camsv_num);
++
++	spin_unlock(&mipicsi->irqlock);
+ }
+ 
+ static void mtk_mipicsi_cmos_vf_enable(struct mtk_mipicsi_dev *mipicsi,
+@@ -875,6 +908,8 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
+ 		++i;
+ 	}
+ 
++	mtk_mipicsi_write_camsv(mipicsi, next, mipicsi->camsv_num);
++
+ 	/*
+ 	 * fb_list has one more buffer. Free the first buffer to user
+ 	 * and fill the second buffer to HW.
 -- 
 2.18.0
