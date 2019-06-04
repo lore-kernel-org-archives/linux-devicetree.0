@@ -1,220 +1,334 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Date: Tue, 4 Jun 2019 18:25:40 +0300
-Message-ID: <20190604152540.wd7c3scez2futh6z@paasikivi.fi.intel.com>
-References: <1559555971-193235-1-git-send-email-vishal.sagar@xilinx.com>
- <1559555971-193235-2-git-send-email-vishal.sagar@xilinx.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: Re: [PATCH v3 10/12] arm64: dts: allwinner: h6: Add
+ IR receiver node
+Date: Tue, 4 Jun 2019 17:30:06 +0200
+Message-ID: <20190604153006.g53kzhnx3hzpg5qh@core.my.home>
+References: <20190528161440.27172-1-peron.clem@gmail.com>
+ <20190528161440.27172-11-peron.clem@gmail.com>
+ <20190530145550.amalnxmx7kpokykv@core.my.home>
+ <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
+ <20190531124630.q2guo54kjfzr7rkn@core.my.home>
+ <CAJiuCcdMftAjCwk2_naE9VBGGqS=OY9xcqv6+5pDX2Z8O=L28w@mail.gmail.com>
+ <20190604123355.m47ufmhtzuzfvmp7@core.my.home>
+ <20190604144757.xvggmj6asyf44vuc@core.my.home>
+ <CAJiuCcf6gHP_G73w8Gf6QYOfvh9Frc9uQk7qpxbpsLY33PxL3w@mail.gmail.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBAE53LTQKGQE44SXPTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1559555971-193235-2-git-send-email-vishal.sagar@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vishal Sagar <vishal.sagar@xilinx.com>
-Cc: Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>, Luca Ceresoli <luca@lucaceresoli.net>, Jacopo Mondi <jacopo@jmondi.org>
+In-Reply-To: <CAJiuCcf6gHP_G73w8Gf6QYOfvh9Frc9uQk7qpxbpsLY33PxL3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vishal,
+Hi Cl=C3=A9ment,
 
-Thanks for the update. A few small issues below...
+On Tue, Jun 04, 2019 at 05:04:07PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Hi Ondrej,
+>=20
+> On Tue, 4 Jun 2019 at 16:47, Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote=
+:
+> >
+> > Hi Cl=C3=A9ment,
+> >
+> > On Tue, Jun 04, 2019 at 02:33:55PM +0200, verejna wrote:
+> > > Hi Cl=C3=A9ment,
+> > >
+> > > On Mon, Jun 03, 2019 at 09:58:23PM +0200, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > Hi Ondrej,
+> > > >
+> > > > On Fri, 31 May 2019 at 14:46, Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org=
+> wrote:
+> > > > >
+> > > > > Hello Cl=C3=A9ment,
+> > > > >
+> > > > > On Fri, May 31, 2019 at 12:25:32AM +0200, Cl=C3=A9ment P=C3=A9ron=
+ wrote:
+> > > > > > Hi Ondrej,
+> > > > > >
+> > > > > > On Thu, 30 May 2019 at 16:55, Ond=C5=99ej Jirman <megous@megous=
+.com> wrote:
+> > > > > > >
+> > > > > > > Hello Cl=C3=A9ment,
+> > > > > > >
+> > > > > > > On Tue, May 28, 2019 at 06:14:38PM +0200, Cl=C3=A9ment P=C3=
+=A9ron wrote:
+> > > > > > > > Allwinner H6 IR is similar to A31 and can use same driver.
+> > > > > > > >
+> > > > > > > > Add support for it.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8@public.gmane.org=
+m>
+> > > > > > > > ---
+> > > > > > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 ++++++++=
++++++++++++
+> > > > > > > >  1 file changed, 19 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b=
+/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > > > > index 16c5c3d0fd81..649cbdfe452e 100644
+> > > > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > > > > @@ -647,6 +647,25 @@
+> > > > > > > >                               pins =3D "PL0", "PL1";
+> > > > > > > >                               function =3D "s_i2c";
+> > > > > > > >                       };
+> > > > > > > > +
+> > > > > > > > +                     r_ir_rx_pin: r-ir-rx-pin {
+> > > > > > > > +                             pins =3D "PL9";
+> > > > > > > > +                             function =3D "s_cir_rx";
+> > > > > > > > +                     };
+> > > > > > > > +             };
+> > > > > > > > +
+> > > > > > > > +             r_ir: ir@7040000 {
+> > > > > > > > +                             compatible =3D "allwinner,sun=
+50i-h6-ir",
+> > > > > > > > +                                          "allwinner,sun6i=
+-a31-ir";
+> > > > > > > > +                             reg =3D <0x07040000 0x400>;
+> > > > > > > > +                             interrupts =3D <GIC_SPI 109 I=
+RQ_TYPE_LEVEL_HIGH>;
+> > > > > > > > +                             clocks =3D <&r_ccu CLK_R_APB1=
+_IR>,
+> > > > > > > > +                                      <&r_ccu CLK_IR>;
+> > > > > > > > +                             clock-names =3D "apb", "ir";
+> > > > > > > > +                             resets =3D <&r_ccu RST_R_APB1=
+_IR>;
+> > > > > > > > +                             pinctrl-names =3D "default";
+> > > > > > > > +                             pinctrl-0 =3D <&r_ir_rx_pin>;
+> > > > > > > > +                             status =3D "disabled";
+> > > > > > > >               };
+> > > > > > >
+> > > > > > > Please make a comment here, that this is known broken on some=
+ boards and may
+> > > > > > > result IRQ flood if enabled. Otherwise noone will know.
+> > > > > >
+> > > > > > I'm planning to send a v4 next week with the IRQ_NONE return as=
+ Maxime
+> > > > > > suggested it.
+> > > > > > https://github.com/clementperon/linux/tree/h6_ir_v4
+> > > > > >
+> > > > > > But maybe we could also use the bit 5 of the IRQ status.
+> > > > >
+> > > > > Thanks, that's nice, but that will not make the HW work. That wil=
+l just disable
+> > > > > it. The comment is still necessary.
+> > > > I have pushed a new version on my github.
+> > > > https://github.com/clementperon/linux/commits/h6_ir_v4
+> > > >
+> > > > I will submit it, if you are ok with it.
+> > >
+> > > the changes make it worse. Console is flooded with "Temporarily disab=
+le IRQ"
+> > > and other symptoms are the same as I described before. Interrupts are=
+ not
+> > > disabled in a any reasonable time. (I've waited for more > 5mins alre=
+ady.)
+> > >
+> > > You probably need to disable interrupts right away, not wait for 100k=
+ failures.
+> >
+> > Hmm, this is what the registers look like post-probe:
+> >
+> > R_CIR:
+> > 0x07040000 : 00000030
+> > 0x07040004 : 00000030
+> > 0x07040008 : 00000030
+> > 0x0704000c : 00000030
+> > 0x07040010 : 00000030
+> > 0x07040014 : 00000030
+> > 0x07040018 : 00000030
+> > 0x0704001c : 00000030
+> > 0x07040020 : 00000030
+> > 0x07040024 : 00000030
+> > 0x07040028 : 00000030
+> > 0x0704002c : 00000030
+> > 0x07040030 : 00000030
+> > 0x07040034 : 00000030
+> > 0x07040038 : 00000030
+> > 0x0704003c : 00000030
+> > 0x07040040 : 00000030
+> > 0x07040044 : 00000030
+> > 0x07040048 : 00000030
+> > 0x0704004c : 00000030
+> > 0x07040050 : 00000030
+> > 0x07040054 : 00000030
+> > 0x07040058 : 00000030
+> > 0x0704005c : 00000030
+> > 0x07040060 : 00000030
+> > 0x07040064 : 00000030
+> > 0x07040068 : 00000030
+> > 0x0704006c : 00000030
+> > 0x07040070 : 00000030
+> > 0x07040074 : 00000030
+> > 0x07040078 : 00000030
+> > 0x0704007c : 00000030
+> > 0x07040080 : 00000030
+> > 0x07040084 : 00000030
+> > 0x07040088 : 00000030
+> > 0x0704008c : 00000030
+> > 0x07040090 : 00000030
+> > 0x07040094 : 00000030
+> > 0x07040098 : 00000030
+> > 0x0704009c : 00000030
+> > 0x070400a0 : 00000030
+> > 0x070400a4 : 00000030
+> > 0x070400a8 : 00000030
+> > 0x070400ac : 00000030
+> > 0x070400b0 : 00000030
+> > 0x070400b4 : 00000030
+> > 0x070400b8 : 00000030
+> > 0x070400bc : 00000030
+> > 0x070400c0 : 00000030
+> > 0x070400c4 : 00000030
+> > 0x070400c8 : 00000030
+> > 0x070400cc : 00000030
+> > 0x070400d0 : 00000030
+> > 0x070400d4 : 00000030
+> > 0x070400d8 : 00000030
+> > 0x070400dc : 00000030
+> > 0x070400e0 : 00000030
+> > 0x070400e4 : 00000030
+> > 0x070400e8 : 00000030
+> > 0x070400ec : 00000030
+> > 0x070400f0 : 00000030
+> > 0x070400f4 : 00000030
+> > 0x070400f8 : 00000030
+> > 0x070400fc : 00000030
+> >
+> > Clearly not right. It's just the R_CIR module, other modules have norma=
+l values.
+> >
+> > I've checked:
+> > 0x070101c0 : 81000002
+> > (IR clock config register)
+> > 0x070101cc : 00010000
+> > (IR reset/bus clk gate reg)
+> >
+> > static const char * const r_mod0_default_parents[] =3D { "osc32k", "osc=
+24M" };
+> > static SUNXI_CCU_MP_WITH_MUX_GATE(ir_clk, "ir",
+> >                                   r_mod0_default_parents, 0x1c0,
+> >                                   0, 5,         /* M */
+> >                                   8, 2,         /* P */
+> >                                   24, 1,        /* mux */
+> >                                   BIT(31),      /* gate */
+> >                                   0);
+> >
+> > static SUNXI_CCU_GATE(r_apb1_ir_clk,    "r-apb1-ir",    "r-apb1",
+> >                       0x1cc, BIT(0), 0);
+> >
+> >         [RST_R_APB1_IR]         =3D  { 0x1cc, BIT(16) },
+> >
+> > So parent clock seems to be OK. But gate clock is not enabled, so the b=
+us
+> > is not working.
+> >
+> > And look at this!!:
+> >
+> > static SUNXI_CCU_GATE(r_apb1_ir_clk,    "r-apb1-ir",    "r-apb1",
+> >                       0x1cc, BIT(0), 0);
+> > static SUNXI_CCU_GATE(r_apb1_w1_clk,    "r-apb1-w1",    "r-apb1",
+> >                       0x1cc, BIT(0), 0);
+> >
+> > So, it's wrong w1 gate config!
+> >
+> > You can drop your changes, because I've probbably found the root cause.
+>=20
+> Nice to see that you have found the issue, but I don't understand why
+> It's working on my board on not on yours.
 
-On Mon, Jun 03, 2019 at 03:29:30PM +0530, Vishal Sagar wrote:
-> Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
-> 
-> The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
-> DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
-> 
-> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
-> ---
-> v8
-> - Added reset-gpios optional property to assert video_aresetn
-> 
-> v7
-> - Removed the control name from dt bindings
-> - Updated the example dt node name to csi2rx
-> 
-> v6
-> - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggested by Luca
-> - Added reviewed by Rob Herring
-> 
-> v5
-> - Incorporated comments by Luca Cersoli
-> - Removed DPHY clock from description and example
-> - Removed bayer pattern from device tree MIPI CSI IP
->   doesn't deal with bayer pattern.
-> 
-> v4
-> - Added reviewed by Hyun Kwon
-> 
-> v3
-> - removed interrupt parent as suggested by Rob
-> - removed dphy clock
-> - moved vfb to optional properties
-> - Added required and optional port properties section
-> - Added endpoint property section
-> 
-> v2
-> - updated the compatible string to latest version supported
-> - removed DPHY related parameters
-> - added CSI v2.0 related property (including VCX for supporting upto 16
->   virtual channels).
-> - modified csi-pxl-format from string to unsigned int type where the value
->   is as per the CSI specification
-> - Defined port 0 and port 1 as sink and source ports.
-> - Removed max-lanes property as suggested by Rob and Sakari
-> 
->  .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 119 +++++++++++++++++++++
->  1 file changed, 119 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> new file mode 100644
-> index 0000000..fef8179
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> @@ -0,0 +1,119 @@
-> +Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
-> +--------------------------------------------------------
-> +
-> +The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 traffic
-> +from compliant camera sensors and send the output as AXI4 Stream video data
-> +for image processing.
-> +
-> +The subsystem consists of a MIPI DPHY in slave mode which captures the
-> +data packets. This is passed along the MIPI CSI2 Rx IP which extracts the
-> +packet data. The optional Video Format Bridge (VFB) converts this data to
-> +AXI4 Stream video data.
-> +
-> +For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Subsystem.
-> +
-> +Required properties:
-> +--------------------
-> +- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-4.0".
-> +- reg: Physical base address and length of the registers set for the device.
-> +- interrupts: Property with a value describing the interrupt number.
-> +- clocks: List of phandles to AXI Lite and Video clocks.
-> +- clock-names: Must contain "lite_aclk" and "video_aclk" in the same order
-> +  as clocks listed in clocks property.
-> +- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw design.
-> +  Packets other than this data type (except for RAW8 and User defined data
-> +  types) will be filtered out. Possible values are as below -
-> +  0x1E - YUV4228B
-> +  0x1F - YUV42210B
-> +  0x20 - RGB444
-> +  0x21 - RGB555
-> +  0x22 - RGB565
-> +  0x23 - RGB666
-> +  0x24 - RGB888
-> +  0x28 - RAW6
-> +  0x29 - RAW7
-> +  0x2A - RAW8
-> +  0x2B - RAW10
-> +  0x2C - RAW12
-> +  0x2D - RAW14
-> +  0x2E - RAW16
-> +  0x2F - RAW20
-> +
-> +
-> +Optional properties:
-> +--------------------
-> +- xlnx,vfb: This is present when Video Format Bridge is enabled.
-> +  Without this property the driver won't be loaded as IP won't be able to generate
-> +  media bus format compliant stream output.
-> +- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
-> +- xlnx,en-vcx: When present, there are maximum 16 virtual channels, else
-> +  only 4. This is present only if xlnx,en-csi-v2-0 is present.
-> +- xlnx,en-active-lanes: present if the number of active lanes can be
-> +  re-configured at runtime in the Protocol Configuration Register.
-> +  Otherwise all lanes, as set in IP configuration, are always active.
-> +- reset-gpios: Optional specifier for a GPIO that asserts video_aresetn.
-> +
-> +Ports
-> +-----
-> +The device node shall contain two 'port' child nodes as defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +The port@0 is a sink port and shall connect to CSI2 source like camera.
-> +It must have the data-lanes property.
+Maybe you use modules? I have a builtin driver.
 
-Technically this is wrong as data-lanes is an endpoint property. I'd just
-leave it out here.
+That may change initialization order. It would disable unused gates first, =
+and
+when you load the module later from userpsace then it would enable the gate=
+.
 
-> +
-> +The port@1 is a source port and can be connected to any video processing IP
-> +which can work with AXI4 Stream data.
-> +
-> +Required port properties:
-> +--------------------
-> +- reg: 0 - for sink port.
-> +       1 - for source port.
-> +
-> +Optional endpoint property:
+If builtin, then it would enable IR gate first, and then disable the unused
+gates (W1 in this case), later on when entering userspace.
 
-s/Optional/Required/
+Anyway, I can confirm that now, when I turn on the light in the room, I get
+around 10 interrupts with empty FIFO and than it stops.
 
-> +---------------------------
-> +- data-lanes: specifies MIPI CSI-2 data lanes as covered in video-interfaces.txt.
-> +  This should be in the sink port endpoint which connects to MIPI CSI2 source
-> +  like sensor. The possible values are:
+It doesn't cause the flood anymore.
 
-And add here that it's only needed for port 0. Or put it to the heading.
+regards,
+	o.
 
-I think this is good with these changes.
+> Regards,
+> Cl=C3=A9ment
+>=20
+> >
+> > regards,
+> >         o.
+> >
+> > > thank you and regards,
+> > >       o.
+> > >
+> > > > Thanks,
+> > > > Cl=C3=A9ment
+> > > >
+> > > > >
+> > > > > thank you,
+> > > > >         o.
+> > > > >
+> > > > > > Regards, Clement
+> > > > > >
+> > > > > > >
+> > > > > > > thanks,
+> > > > > > >         o.
+> > > > > > >
+> > > > > > > >               r_i2c: i2c@7081400 {
+> > > > > > > > --
+> > > > > > > > 2.20.1
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > _______________________________________________
+> > > > > > > > linux-arm-kernel mailing list
+> > > > > > > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > > > > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kerne=
+l
+> > > > > >
+> > > > > > --
+> > > > > > You received this message because you are subscribed to the Goo=
+gle Groups "linux-sunxi" group.
+> > > > > > To unsubscribe from this group and stop receiving emails from i=
+t, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> > > > > > To view this discussion on the web, visit https://groups.google=
+.com/d/msgid/linux-sunxi/CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSM=
+w%40mail.gmail.com.
+> > > > > > For more options, visit https://groups.google.com/d/optout.
+> > > >
+> > > > _______________________________________________
+> > > > linux-arm-kernel mailing list
+> > > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> +  1       - For 1 lane enabled in IP.
-> +  1 2     - For 2 lanes enabled in IP.
-> +  1 2 3   - For 3 lanes enabled in IP.
-> +  1 2 3 4 - For 4 lanes enabled in IP.
-> +
-> +Example:
-> +
-> +	xcsi2rxss_1: csi2rx@a0020000 {
-> +		compatible = "xlnx,mipi-csi2-rx-subsystem-4.0";
-> +		reg = <0x0 0xa0020000 0x0 0x10000>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 95 4>;
-> +		xlnx,csi-pxl-format = <0x2a>;
-> +		xlnx,vfb;
-> +		xlnx,en-active-lanes;
-> +		xlnx,en-csi-v2-0;
-> +		xlnx,en-vcx;
-> +		clock-names = "lite_aclk", "video_aclk";
-> +		clocks = <&misc_clk_0>, <&misc_clk_1>;
-> +		reset-gpios = <&gpio 86 GPIO_ACTIVE_LOW>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				/* Sink port */
-> +				reg = <0>;
-> +				csiss_in: endpoint {
-> +					data-lanes = <1 2 3 4>;
-> +					/* MIPI CSI2 Camera handle */
-> +					remote-endpoint = <&camera_out>;
-> +				};
-> +			};
-> +			port@1 {
-> +				/* Source port */
-> +				reg = <1>;
-> +				csiss_out: endpoint {
-> +					remote-endpoint = <&vproc_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> -- 
-> 1.8.3.1
-
-How old is that? :-)
-
--- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190604153006.g53kzhnx3hzpg5qh%40core.my.home.
+For more options, visit https://groups.google.com/d/optout.
