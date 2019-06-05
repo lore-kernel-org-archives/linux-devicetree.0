@@ -1,87 +1,102 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive and
- queue messages
-Date: Wed, 5 Jun 2019 18:58:54 +0300
-Message-ID: <CAHp75VfPYC7xDfsGRZsSy8eV1xoMANsVmyuU_yF0kPG0fMtLCQ@mail.gmail.com>
-References: <20190531043347.4196-1-eduval@amazon.com> <20190531043347.4196-3-eduval@amazon.com>
- <20190604171611.GS9224@smile.fi.intel.com> <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
- <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com>
- <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
- <CAHp75Vc2us0UDmGnzjF0vkzWM_9KqRa0AZKnRsUYmFRTsgwEyg@mail.gmail.com> <20190605153120.GC1534@u40b0340c692b58f6553c.ant.amazon.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: [PATCH v8 1/3] dt-bindings: media: add Amlogic Video Decoder Bindings
+Date: Wed,  5 Jun 2019 18:18:56 +0200
+Message-ID: <20190605161858.29372-2-mjourdan@baylibre.com>
+References: <20190605161858.29372-1-mjourdan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190605153120.GC1534@u40b0340c692b58f6553c.ant.amazon.com>
+In-Reply-To: <20190605161858.29372-1-mjourdan@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <eduval@amazon.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Wolfram Sang <wsa@the-dreams.de>, Haiyue Wang <haiyue.wang@linux.intel.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 6:31 PM Eduardo Valentin <eduval@amazon.com> wrote:
-> On Wed, Jun 05, 2019 at 06:20:37PM +0300, Andy Shevchenko wrote:
-> > On Wed, Jun 5, 2019 at 5:32 PM Eduardo Valentin <eduval@amazon.com> wrote:
-> > > On Wed, Jun 05, 2019 at 11:25:39AM +0300, Andy Shevchenko wrote:
-> > > > On Wed, Jun 5, 2019 at 6:30 AM Eduardo Valentin <eduval@amazon.com> wrote:
+Add documentation for the meson vdec dts node.
 
-> > > > > > > +           .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> > > > > >
-> > > > > > Wouldn't compiler warn you due to unused data?
-> > > > > > Perhaps drop of_match_ptr() for good...
-> > > > >
-> > > > > Not sure what you meant here. I dont see any compiler warning.
-> > > > > Also, of_match_ptr seams to be well spread in the kernel.
-> > > >
-> > > > If this will be compiled with CONFIG_OF=n...
-> > >
-> > > I see.. I obviously did not test with that config..
-> > >
-> > > > Though I didn't check all dependencies to see if it even possible. In
-> > > > any case of_match_ptr() is redundant in both cases here.
-> > > > Either you need to protect i2c_slave_mqueue_of_match with #ifdef
-> > > > CONFIG_OF, or drop the macro use.
-> > >
-> > > I will wrap it into CONFIG_OF..
-> >
-> > Would be this expected to work in the case of CONFIG_OF=n?
-> > If no, why to introduce ugly #ifdef:s and additional macros?
->
-> I do hate those too...
->
-> > Wouldn't be better to have
-> >   depends on OF || COMPILE_TEST
->
-> Well, technically, the original author had a case for using this
-> without CONFIG_OF. That is why I did not force here to be a strong
-> dependency on CONFIG_OF. So, I guess in this case the driver will
-> work properly in both cases if we:
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id i2c_slave_mqueue_of_match[] = {
-> +       {
-> +               .compatible = "i2c-slave-mqueue",
-> +       },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, i2c_slave_mqueue_of_match);
-> +#endif
-> +
-> +static struct i2c_driver i2c_slave_mqueue_driver = {
-> +       .driver = {
-> +               .name   = "i2c-slave-mqueue",
-> +               .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> +       },
-> +       .probe          = i2c_slave_mqueue_probe,
-> +       .remove         = i2c_slave_mqueue_remove,
-> +       .id_table       = i2c_slave_mqueue_id,
-> +};
->
-> The above is a well stablish pattern across the drivers.
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/media/amlogic,vdec.txt           | 71 +++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
 
-My point here that you may achieve the same by simple dropping of_match_ptr().
-
-P.S. Many of the drivers just old enough and not being simplified due
-to pointless churn there, but for new drivers we may avoid it.
-
+diff --git a/Documentation/devicetree/bindings/media/amlogic,vdec.txt b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
+new file mode 100644
+index 000000000000..aabdd01bcf32
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
+@@ -0,0 +1,71 @@
++Amlogic Video Decoder
++================================
++
++The video decoding IP lies within the DOS memory region,
++except for the hardware bitstream parser that makes use of an undocumented
++region.
++
++It makes use of the following blocks:
++
++- ESPARSER is a bitstream parser that outputs to a VIFIFO. Further VDEC blocks
++then feed from this VIFIFO.
++- VDEC_1 can decode MPEG-1, MPEG-2, MPEG-4 part 2, MJPEG, H.263, H.264, VC-1.
++- VDEC_HEVC can decode HEVC and VP9.
++
++Both VDEC_1 and VDEC_HEVC share the "vdec" IRQ and as such cannot run
++concurrently.
++
++Device Tree Bindings:
++---------------------
++
++VDEC: Video Decoder
++--------------------------
++
++Required properties:
++- compatible: value should be different for each SoC family as :
++	- GXBB (S905) : "amlogic,gxbb-vdec"
++	- GXL (S905X, S905D) : "amlogic,gxl-vdec"
++	- GXM (S912) : "amlogic,gxm-vdec"
++- reg: base address and size of he following memory-mapped regions :
++	- dos
++	- esparser
++- reg-names: should contain the names of the previous memory regions
++- interrupts: should contain the following IRQs:
++	- vdec
++	- esparser
++- interrupt-names: should contain the names of the previous interrupts
++- amlogic,ao-sysctrl: should point to the AOBUS sysctrl node
++- amlogic,canvas: should point to a canvas provider node
++- clocks: should contain the following clocks :
++	- dos_parser
++	- dos
++	- vdec_1
++	- vdec_hevc
++- clock-names: should contain the names of the previous clocks
++- resets: should contain the parser reset
++- reset-names: should be "esparser"
++
++Example:
++
++vdec: video-decoder@c8820000 {
++	compatible = "amlogic,gxbb-vdec";
++	reg = <0x0 0xc8820000 0x0 0x10000>,
++	      <0x0 0xc110a580 0x0 0xe4>;
++	reg-names = "dos", "esparser";
++
++	interrupts = <GIC_SPI 44 IRQ_TYPE_EDGE_RISING>,
++		     <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
++	interrupt-names = "vdec", "esparser";
++
++	amlogic,ao-sysctrl = <&sysctrl_AO>;
++	amlogic,canvas = <&canvas>;
++
++	clocks = <&clkc CLKID_DOS_PARSER>,
++		 <&clkc CLKID_DOS>,
++		 <&clkc CLKID_VDEC_1>,
++		 <&clkc CLKID_VDEC_HEVC>;
++	clock-names = "dos_parser", "dos", "vdec_1", "vdec_hevc";
++
++	resets = <&reset RESET_PARSER>;
++	reset-names = "esparser";
++};
 -- 
-With Best Regards,
-Andy Shevchenko
+2.21.0
