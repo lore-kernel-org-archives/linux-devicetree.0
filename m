@@ -1,72 +1,154 @@
-From: Quentin Perret <quentin.perret@arm.com>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-Date: Wed, 5 Jun 2019 18:20:52 +0100
-Message-ID: <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
-References: <20190114184255.258318-1-mka@chromium.org>
- <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
- <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
- <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
- <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
- <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+Date: Wed, 5 Jun 2019 18:26:15 +0100
+Message-ID: <d313bec5-1115-0ef7-0241-83e20672d2f1@arm.com>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+ <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com>
+In-Reply-To: <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>, Andy Gross <agross@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>
+To: Sricharan R <sricharan@codeaurora.org>, robh+dt@kernel.org, sboyd@codeaurora.org, linus.walleij@linaro.org, agross@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 17 May 2019 at 14:55:19 (-0700), Stephen Boyd wrote:
-> Quoting Amit Kucheria (2019-05-16 04:54:45)
-> > (cc'ing Andy's correct email address)
-> > 
-> > On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Amit Kucheria (2019-05-13 04:54:12)
-> > > > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > > > >
-> > > > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > > > > >
-> > > > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
-> > > > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
-> > > > > > that describes this topology.
-> > > > >
-> > > > > This is partly true. There are two groups of gold and silver cores,
-> > > > > but AFAICT they are in a single cluster, not two separate ones. SDM845
-> > > > > is one of the early examples of ARM's Dynamiq architecture.
-> > > > >
-> > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > >
-> > > > > I noticed that this patch sneaked through for this merge window but
-> > > > > perhaps we can whip up a quick fix for -rc2?
-> > > > >
-> > > >
-> > > > And please find attached a patch to fix this up. Andy, since this
-> > > > hasn't landed yet (can we still squash this into the original patch?),
-> > > > I couldn't add a Fixes tag.
-> > > >
-> > >
-> > > I had the same concern. Thanks for catching this. I suspect this must
-> > > cause some problem for IPA given that it can't discern between the big
-> > > and little "power clusters"?
-> > 
-> > Both EAS and IPA, I believe. It influences the scheduler's view of the
-> > the topology.
+On 05/06/2019 18:16, Sricharan R wrote:
+> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+> CP01 evaluation board.
 > 
-> And EAS and IPA are OK with the real topology? I'm just curious if
-> changing the topology to reflect reality will be a problem for those
-> two.
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile            |   1 +
+>  arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  35 ++++
+>  arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 231 +++++++++++++++++++++++++++
+>  3 files changed, 267 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 21d548f..ac22dbb 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -2,6 +2,7 @@
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+> new file mode 100644
+> index 0000000..ac7cb22
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * IPQ6018 CP01 board device tree source
+> + *
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "ipq6018.dtsi"
+> +
+> +/ {
+> +	#address-cells = <0x2>;
+> +	#size-cells = <0x2>;
+> +	model = "Qualcomm Technologies, Inc. IPQ6018/AP-CP01-C1";
+> +	compatible = "qcom,ipq6018-cp01", "qcom,ipq6018";
+> +	interrupt-parent = <&intc>;
+> +};
+> +
+> +&tlmm {
+> +	uart_pins: uart_pins {
+> +		mux {
+> +			pins = "gpio44", "gpio45";
+> +			function = "blsp2_uart";
+> +			drive-strength = <8>;
+> +			bias-pull-down;
+> +		};
+> +	};
+> +};
+> +
+> +&blsp1_uart3 {
+> +	pinctrl-0 = <&uart_pins>;
+> +	pinctrl-names = "default";
+> +	status = "ok";
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> new file mode 100644
+> index 0000000..79cccdd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> @@ -0,0 +1,231 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * IPQ6018 SoC device tree source
+> + *
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. IPQ6018";
+> +	compatible = "qcom,ipq6018";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyMSM0,115200,n8 rw init=/init";
+> +		bootargs-append = " swiotlb=1 clk_ignore_unused";
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		tz:tz@48500000 {
+> +			no-map;
+> +			reg = <0x0 0x48500000 0x0 0x00200000>;
+> +		};
+> +	};
+> +
+> +	soc: soc {
+> +		#address-cells = <0x1>;
+> +		#size-cells = <0x1>;
+> +		ranges = <0 0 0 0xffffffff>;
+> +		dma-ranges;
+> +		compatible = "simple-bus";
+> +
+> +		intc: interrupt-controller@b000000 {
+> +			compatible = "qcom,msm-qgic2";
+> +			interrupt-controller;
+> +			#interrupt-cells = <0x3>;
+> +			reg = <0xb000000 0x1000>, <0xb002000 0x1000>;
 
-FWIW, neither EAS nor IPA depends on this. Not the upstream version of
-EAS at least (which is used in recent Android kernels -- 4.19+).
+Where are the rest of the GICv2 MMIO regions, such as GICV and GICH? And
+the maintenance interrupt?
 
-But doing this is still required for other things in the scheduler (the
-so-called 'capacity-awareness' code). So until we have a better
-solution, this patch is doing the right thing.
+> +		};
+> +
+> +		timer {
+> +			compatible = "arm,armv8-timer";
+> +			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
 
-I hope that helps.
+The fact that you expose the EL2 timer interrupt would tend to confirm
+the idea that this system supports virtualization... Hence my questions
+above.
 
 Thanks,
-Quentin
+
+	M.
+
+-- 
+Jazz is not dead. It just smells funny...
