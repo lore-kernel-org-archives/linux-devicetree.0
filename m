@@ -1,52 +1,58 @@
-From: Eduardo Valentin <eduval@amazon.com>
-Subject: [PATCHv7 3/3] Documentation: ABI: Add i2c-slave-mqueue sysfs documentation
-Date: Wed, 5 Jun 2019 09:46:51 -0700
-Message-ID: <20190605164651.15991-4-eduval@amazon.com>
-References: <20190605164651.15991-1-eduval@amazon.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 0/4] Add MCU SRAM nodes for TI K3 SoCs
+Date: Wed, 5 Jun 2019 12:53:49 -0400
+Message-ID: <acf9cf30-bcd6-76a0-5498-c334c7c43213@ti.com>
+References: <20190605163434.23173-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190605164651.15991-1-eduval@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Haiyue Wang <haiyue.wang@linux.intel.com>, jarkko.nikula@linux.intel.com, andriy.shevchenko@intel.com, brendanhiggins@google.com, Eduardo Valentin <eduval@amazon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190605163434.23173-1-s-anna@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the slave-mqueue sysfs attribute used by
-the i2c-slave-mqueue driver.
+On 6/5/19 12:34 PM, Suman Anna wrote:
+> Hi Tero,
+> 
+> The following series adds the DT nodes for the MCU SRAM present within
+> the MCU domain for both AM65x and J721E SoCs. The first 2 patches enable
+> the MCU SRAM node to be probed properly on AM65x SoCs, and the third
+> patch the equivalent for J721E SoCs. The third patch depends on the
+> base J721E support patch series from Nishanth [1].
+> 
+> The last patch is not related to MCU SRAM, but adds the ranges for the
+> R5F cluster that is also present in the MCU domain in preparation for
+> the R5F nodes.
+> 
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-i2c@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Eduardo Valentin <eduval@amazon.com>
----
+Why not have this last patch as part of the series adding the R5F nodes?
 
-changes from V6 to V7:
-- none
+Andrew
 
- .../ABI/testing/sysfs-bus-i2c-devices-slave-mqueue     | 10 ++++++++++
- 1 file changed, 10 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-slave-mqueue
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-i2c-devices-slave-mqueue b/Documentation/ABI/testing/sysfs-bus-i2c-devices-slave-mqueue
-new file mode 100644
-index 000000000000..28318108ce85
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-i2c-devices-slave-mqueue
-@@ -0,0 +1,10 @@
-+What:		/sys/bus/i2c/devices/*/slave-mqueue
-+Date:		May 2019
-+KernelVersion:	5.2
-+Contact:	Eduardo Valentin <eduval@amazon.com>
-+Description:
-+		Reading to this file will return exactly one message,
-+		when available, of the i2c-slave-mqueue device attached
-+		to that bus. Userspace can also poll on this file to
-+		get notified when new messages are available.
-+Users:		i2c-slave-mqueue driver
--- 
-2.21.0
+> regards
+> Suman
+> 
+> [1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=121189
+> 
+> Suman Anna (4):
+>    arm64: dts: ti: k3-am65: Add MCU SRAM ranges in interconnect nodes
+>    arm64: dts: ti: k3-am65-mcu: Add the MCU RAM node
+>    arm64: dts: ti: k3-j721e: Add the MCU SRAM node
+>    arm64: dts: ti: k3-am65: Add R5F ranges in interconnect nodes
+> 
+>   arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi         | 8 ++++++++
+>   arch/arm64/boot/dts/ti/k3-am65.dtsi             | 6 ++++++
+>   arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 8 ++++++++
+>   3 files changed, 22 insertions(+)
+> 
