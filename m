@@ -1,47 +1,96 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v3 1/3] dt-bindings: arm: nxp: Add device tree binding for
- ls1046a-frwy board
-Date: Wed, 5 Jun 2019 07:00:33 +0000
-Message-ID: <AM0PR04MB42115435AD01AD6481C9D0B980160@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190527123404.30858-1-pramod.kumar_1@nxp.com>
- <20190527123404.30858-2-pramod.kumar_1@nxp.com>
- <20190605063449.GG29853@dragon>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH v3 6/8] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
+Date: Wed, 5 Jun 2019 07:07:30 +0000
+Message-ID: <VI1PR04MB53274359CFCA91AE6A3681678B160@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <20190527030616.44397-1-peter.chen@nxp.com>
+ <20190527030616.44397-7-peter.chen@nxp.com> <20190605062517.GF29853@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190605063449.GG29853@dragon>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190605062517.GF29853@dragon>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Pramod Kumar <pramod.kumar_1@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "chunfeng.yun@mediatek.com" <chunfeng.yun@mediatek.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUHJhbW9kLA0KDQo+IEZyb206IFNoYXduIEd1byBbbWFpbHRvOnNoYXduZ3VvQGtlcm5lbC5v
-cmddDQo+IFNlbnQ6IFdlZG5lc2RheSwgSnVuZSA1LCAyMDE5IDI6MzUgUE0NCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCB2MyAxLzNdIGR0LWJpbmRpbmdzOiBhcm06IG54cDogQWRkIGRldmljZSB0cmVl
-IGJpbmRpbmcgZm9yDQo+IGxzMTA0NmEtZnJ3eSBib2FyZA0KPiANCj4gT24gTW9uLCBNYXkgMjcs
-IDIwMTkgYXQgMTI6MzI6MDlQTSArMDAwMCwgUHJhbW9kIEt1bWFyIHdyb3RlOg0KPiA+IEFkZCAi
-ZnNsLGxzMTA0NmEtZnJ3eSIgYmluZGluZ3MgZm9yIGxzMTA0NmFmcnd5IGJvYXJkIGJhc2VkIG9u
-IGxzMTA0NmEgU29DDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBWYWJoYXYgU2hhcm1hIDx2YWJo
-YXYuc2hhcm1hQG54cC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogUHJhbW9kIEt1bWFyIDxwcmFt
-b2Qua3VtYXJfMUBueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBr
-ZXJuZWwub3JnPg0KPiANCj4gSSBjYW5ub3QgYXBwbHkgcGF0Y2ggZnJvbSBtZXNzYWdlIHVzaW5n
-ICdDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBiYXNlNjQnLg0KPiANCg0KV2hpY2ggc2VydmVy
-IGFyZSB5b3UgdXNpbmc/IElzIGl0IGluIHRoZSB3aGl0ZWxpc3QgZm9yIHVzaW5nIHRoZSBzcGVj
-aWZpYyBTTVRQPw0KSSByZW1lbWJlciBETiBzZXJ2ZXIgZG9lcyBub3QgaGF2ZSB0aGlzIGlzc3Vl
-LiBNYXliZSB1c2luZyB0aGUgd3Jvbmcgb25lPw0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg0K
-PiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55
-YW1sIHwgMSArDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+DQo+ID4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlh
-bWwNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sDQo+
-ID4gaW5kZXggNDA3MTM4ZWJjMGQwLi4wOWZmMTk5OWNlOTYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wueWFtbA0KPiA+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlhbWwNCj4gPiBAQCAtMjQx
-LDYgKzI0MSw3IEBAIHByb3BlcnRpZXM6DQo+ID4gICAgICAgICAgICAtIGVudW06DQo+ID4gICAg
-ICAgICAgICAgICAgLSBmc2wsbHMxMDQ2YS1xZHMNCj4gPiAgICAgICAgICAgICAgICAtIGZzbCxs
-czEwNDZhLXJkYg0KPiA+ICsgICAgICAgICAgICAgIC0gZnNsLGxzMTA0NmEtZnJ3eQ0KPiANCj4g
-SXQgbWlnaHQgYmUgYmV0dGVyIHRvIGtlZXAgdGhlIGxpc3QgYWxwaGFiZXRpY2FsbHkgc29ydGVk
-Lg0KPiANCj4gU2hhd24NCj4gDQo+ID4gICAgICAgICAgICAtIGNvbnN0OiBmc2wsbHMxMDQ2YQ0K
-PiA+DQo+ID4gICAgICAgIC0gZGVzY3JpcHRpb246IExTMTA4OEEgYmFzZWQgQm9hcmRzDQo+ID4g
-LS0NCj4gPiAyLjE3LjENCj4gPg0K
+ 
+> > Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> > ---
+> >  arch/arm/boot/dts/imx7ulp.dtsi | 31 +++++++++++++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/imx7ulp.dtsi
+> > b/arch/arm/boot/dts/imx7ulp.dtsi index fca6e50f37c8..37b058119505
+> > 100644
+> > --- a/arch/arm/boot/dts/imx7ulp.dtsi
+> > +++ b/arch/arm/boot/dts/imx7ulp.dtsi
+> > @@ -30,6 +30,7 @@
+> >  		serial1 = &lpuart5;
+> >  		serial2 = &lpuart6;
+> >  		serial3 = &lpuart7;
+> > +		usbphy0 = &usbphy1;
+> >  	};
+> >
+> >  	cpus {
+> > @@ -133,6 +134,36 @@
+> >  			clock-names = "ipg", "per";
+> >  		};
+> >
+> > +		usbotg1: usb@40330000 {
+> > +			compatible = "fsl,imx7ulp-usb", "fsl,imx6ul-usb",
+> > +				"fsl,imx27-usb";
+> 
+> If "fsl,imx6ul-usb" is the one that imx7ulp device is compatible with and will match in
+> driver, "fsl,imx27-usb" can just be dropped.  Same comment on usbmisc and
+> usbphy below.
+> 
+
+Ok, will change, thanks.
+
+Peter
+
+> Shawn
+> 
+> > +			reg = <0x40330000 0x200>;
+> > +			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&pcc2 IMX7ULP_CLK_USB0>;
+> > +			phys = <&usbphy1>;
+> > +			fsl,usbmisc = <&usbmisc1 0>;
+> > +			ahb-burst-config = <0x0>;
+> > +			tx-burst-size-dword = <0x8>;
+> > +			rx-burst-size-dword = <0x8>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		usbmisc1: usbmisc@40330200 {
+> > +			compatible = "fsl,imx7ulp-usbmisc", "fsl,imx7d-usbmisc",
+> > +				"fsl,imx6q-usbmisc";
+> > +			#index-cells = <1>;
+> > +			reg = <0x40330200 0x200>;
+> > +		};
+> > +
+> > +		usbphy1: usbphy@0x40350000 {
+> > +			compatible = "fsl,imx7ulp-usbphy",
+> > +				"fsl,imx6ul-usbphy", "fsl,imx23-usbphy";
+> > +			reg = <0x40350000 0x1000>;
+> > +			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&pcc2 IMX7ULP_CLK_USB_PHY>;
+> > +			#phy-cells = <0>;
+> > +		};
+> > +
+> >  		usdhc0: mmc@40370000 {
+> >  			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
+> >  			reg = <0x40370000 0x10000>;
+> > --
+> > 2.14.1
+> >
