@@ -1,218 +1,651 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v2] USB: move usb debugfs directory creation to the usb
- common core
-Date: Wed, 5 Jun 2019 19:01:55 +0800
-Message-ID: <1559732515.8487.106.camel@mhfsdcap03>
-References: <20190605092816.GA23758@kroah.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: [PATCH v7 2/6] usb:common Separated decoding functions from dwc3 driver.
+Date: Wed, 5 Jun 2019 11:03:46 +0100
+Message-ID: <1559729030-16390-3-git-send-email-pawell@cadence.com>
+References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190605092816.GA23758@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559729030-16390-1-git-send-email-pawell@cadence.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
-On Wed, 2019-06-05 at 11:28 +0200, Greg Kroah-Hartman wrote:
-> The USB gadget subsystem wants to use the USB debugfs root directory, so
-> move it to the common "core" USB code so that it is properly initialized
-> and removed as needed.
-> 
-> In order to properly do this, we need to load the common code before the
-> usb core code, when everything is linked into the kernel, so reorder the
-> link order of the code.
-> 
-> Also as the usb common code has the possibility of the led trigger logic
-> to be merged into it, handle the build option properly by only having
-> one module init/exit function and have the common code initialize the
-> led trigger if needed.
-> 
-> Reported-by: From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> 
-> Chunfeng, can you test this version to verify it works for you when
-> building the code into the kernel?
-> 
-> v2: handle led common code link error reported by kbuild
->     handle subsys_initcall issue pointed out by Chunfeng
-> 
->  drivers/usb/Makefile        |  3 +--
->  drivers/usb/common/common.c | 21 +++++++++++++++++++++
->  drivers/usb/common/common.h | 14 ++++++++++++++
->  drivers/usb/common/led.c    |  9 +++------
->  drivers/usb/core/usb.c      | 10 ++++------
->  5 files changed, 43 insertions(+), 14 deletions(-)
->  create mode 100644 drivers/usb/common/common.h
-> 
-> diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
-> index 7d1b8c82b208..ecc2de1ffaae 100644
-> --- a/drivers/usb/Makefile
-> +++ b/drivers/usb/Makefile
-> @@ -5,6 +5,7 @@
->  
->  # Object files in subdirectories
->  
-> +obj-$(CONFIG_USB_COMMON)	+= common/
->  obj-$(CONFIG_USB)		+= core/
->  obj-$(CONFIG_USB_SUPPORT)	+= phy/
->  
-> @@ -60,8 +61,6 @@ obj-$(CONFIG_USB_CHIPIDEA)	+= chipidea/
->  obj-$(CONFIG_USB_RENESAS_USBHS)	+= renesas_usbhs/
->  obj-$(CONFIG_USB_GADGET)	+= gadget/
->  
-> -obj-$(CONFIG_USB_COMMON)	+= common/
-> -
->  obj-$(CONFIG_USBIP_CORE)	+= usbip/
->  
->  obj-$(CONFIG_TYPEC)		+= typec/
-> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> index 18f5dcf58b0d..84a4423aaddf 100644
-> --- a/drivers/usb/common/common.c
-> +++ b/drivers/usb/common/common.c
-> @@ -15,6 +15,8 @@
->  #include <linux/usb/of.h>
->  #include <linux/usb/otg.h>
->  #include <linux/of_platform.h>
-> +#include <linux/debugfs.h>
-> +#include "common.h"
->  
->  static const char *const ep_type_names[] = {
->  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
-> @@ -291,4 +293,23 @@ struct device *usb_of_get_companion_dev(struct device *dev)
->  EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
->  #endif
->  
-> +struct dentry *usb_debug_root;
-> +EXPORT_SYMBOL_GPL(usb_debug_root);
-> +
-> +static int usb_common_init(void)
-> +{
-> +	usb_debug_root = debugfs_create_dir("usb", NULL);
-> +	ledtrig_usb_init();
-> +	return 0;
-> +}
-> +
-> +static void usb_common_exit(void)
-> +{
-> +	ledtrig_usb_exit();
-> +	debugfs_remove_recursive(usb_debug_root);
-> +}
-> +
-When enable CONFIG_LED_TRIGGER, there is a warning
+Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
+to driver/usb/common/debug.c file. These moved functions include:
+    dwc3_decode_get_status
+    dwc3_decode_set_clear_feature
+    dwc3_decode_set_address
+    dwc3_decode_get_set_descriptor
+    dwc3_decode_get_configuration
+    dwc3_decode_set_configuration
+    dwc3_decode_get_intf
+    dwc3_decode_set_intf
+    dwc3_decode_synch_frame
+    dwc3_decode_set_sel
+    dwc3_decode_set_isoch_delay
+    dwc3_decode_ctrl
 
- MODPOST vmlinux.o
-WARNING: vmlinux.o(.text+0x68e300): Section mismatch in reference from
-the function usb_common_init() to the
-function .init.text:ledtrig_usb_init()
-The function usb_common_init() references
-the function __init ledtrig_usb_init().
-This is often because usb_common_init lacks a __init
-annotation or the annotation of ledtrig_usb_init is wrong.
+These functions are used also in inroduced cdns3 driver.
 
-WARNING: vmlinux.o(.text+0x68e318): Section mismatch in reference from
-the function usb_common_exit() to the
-function .exit.text:ledtrig_usb_exit()
-The function usb_common_exit() references a function in an exit section.
-Often the function ledtrig_usb_exit() has valid usage outside the exit
-section
-and the fix is to remove the __exit annotation of ledtrig_usb_exit.
+All functions prefixes were changed from dwc3 to usb.
+Also, function's parameters has been extended according to the name
+of fields in standard SETUP packet.
+Additionally, patch adds usb_decode_ctrl function to
+include/linux/usb/ch9.h file.i
 
-seems need add __init and __exit for usb_common_init/exit
+Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+---
+ drivers/usb/common/Makefile |   2 +-
+ drivers/usb/common/debug.c  | 273 ++++++++++++++++++++++++++++++++++++
+ drivers/usb/dwc3/debug.h    | 252 ---------------------------------
+ drivers/usb/dwc3/trace.h    |   2 +-
+ include/linux/usb/ch9.h     |  25 ++++
+ 5 files changed, 300 insertions(+), 254 deletions(-)
+ create mode 100644 drivers/usb/common/debug.c
 
-> +subsys_initcall(usb_common_init);
-> +module_exit(usb_common_exit);
-> +
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/usb/common/common.h b/drivers/usb/common/common.h
-> new file mode 100644
-> index 000000000000..424a91316a4b
-> --- /dev/null
-> +++ b/drivers/usb/common/common.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef __LINUX_USB_COMMON_H
-> +#define __LINUX_USB_COMMON_H
-> +
-> +#if defined(CONFIG_USB_LED_TRIG)
-> +void ledtrig_usb_init(void);
-> +void ledtrig_usb_exit(void);
-> +#else
-> +static inline void ledtrig_usb_init(void) { }
-> +static inline void ledtrig_usb_exit(void) { }
-> +#endif
-> +
-> +#endif	/* __LINUX_USB_COMMON_H */
-> diff --git a/drivers/usb/common/led.c b/drivers/usb/common/led.c
-> index 7bd81166b77d..0865dd44a80a 100644
-> --- a/drivers/usb/common/led.c
-> +++ b/drivers/usb/common/led.c
-> @@ -10,6 +10,7 @@
->  #include <linux/init.h>
->  #include <linux/leds.h>
->  #include <linux/usb.h>
-> +#include "common.h"
->  
->  #define BLINK_DELAY 30
->  
-> @@ -36,18 +37,14 @@ void usb_led_activity(enum usb_led_event ev)
->  EXPORT_SYMBOL_GPL(usb_led_activity);
->  
-> 
-> -static int __init ledtrig_usb_init(void)
-> +void __init ledtrig_usb_init(void)
->  {
->  	led_trigger_register_simple("usb-gadget", &ledtrig_usb_gadget);
->  	led_trigger_register_simple("usb-host", &ledtrig_usb_host);
-> -	return 0;
->  }
->  
-> -static void __exit ledtrig_usb_exit(void)
-> +void __exit ledtrig_usb_exit(void)
->  {
->  	led_trigger_unregister_simple(ledtrig_usb_gadget);
->  	led_trigger_unregister_simple(ledtrig_usb_host);
->  }
-> -
-> -module_init(ledtrig_usb_init);
-> -module_exit(ledtrig_usb_exit);
-> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> index 7fcb9f782931..5a0df527a8ca 100644
-> --- a/drivers/usb/core/usb.c
-> +++ b/drivers/usb/core/usb.c
-> @@ -1185,19 +1185,17 @@ static struct notifier_block usb_bus_nb = {
->  	.notifier_call = usb_bus_notify,
->  };
->  
-> -struct dentry *usb_debug_root;
-> -EXPORT_SYMBOL_GPL(usb_debug_root);
-> +static struct dentry *usb_devices_root;
->  
->  static void usb_debugfs_init(void)
->  {
-> -	usb_debug_root = debugfs_create_dir("usb", NULL);
-> -	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
-> -			    &usbfs_devices_fops);
-> +	usb_devices_root = debugfs_create_file("devices", 0444, usb_debug_root,
-> +					       NULL, &usbfs_devices_fops);
->  }
->  
->  static void usb_debugfs_cleanup(void)
->  {
-> -	debugfs_remove_recursive(usb_debug_root);
-> +	debugfs_remove(usb_devices_root);
->  }
->  
->  /*
+diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
+index 0a7c45e85481..02eb01666289 100644
+--- a/drivers/usb/common/Makefile
++++ b/drivers/usb/common/Makefile
+@@ -4,7 +4,7 @@
+ #
+ 
+ obj-$(CONFIG_USB_COMMON)	  += usb-common.o
+-usb-common-y			  += common.o
++usb-common-y			  += common.o debug.o
+ usb-common-$(CONFIG_USB_LED_TRIG) += led.o
+ 
+ obj-$(CONFIG_USB_OTG_FSM) += usb-otg-fsm.o
+diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
+new file mode 100644
+index 000000000000..f7218d794aa6
+--- /dev/null
++++ b/drivers/usb/common/debug.c
+@@ -0,0 +1,273 @@
++// SPDX-License-Identifier: GPL-2.0
++/**
++ * Common USB debugging functions
++ *
++ * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
++ *
++ * Authors: Felipe Balbi <balbi@ti.com>,
++ *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
++ */
++
++#ifndef __LINUX_USB_COMMON_DEBUG
++#define __LINUX_USB_COMMON_DEBUG
++
++#include <linux/usb/ch9.h>
++
++static void usb_decode_get_status(__u8 bRequestType, __u16 wIndex,
++				  __u16 wLength, char *str, size_t size)
++{
++	switch (bRequestType & USB_RECIP_MASK) {
++	case USB_RECIP_DEVICE:
++		snprintf(str, size, "Get Device Status(Length = %d)", wLength);
++		break;
++	case USB_RECIP_INTERFACE:
++		snprintf(str, size,
++			 "Get Interface Status(Intf = %d, Length = %d)",
++			 wIndex, wLength);
++		break;
++	case USB_RECIP_ENDPOINT:
++		snprintf(str, size, "Get Endpoint Status(ep%d%s)",
++			 wIndex & ~USB_DIR_IN,
++			 wIndex & USB_DIR_IN ? "in" : "out");
++		break;
++	}
++}
++
++static void usb_decode_set_clear_feature(__u8 bRequestType, __u8 bRequest,
++					 __u16 wValue, __u16 wIndex,
++					 char *str, size_t size)
++{
++	switch (bRequestType & USB_RECIP_MASK) {
++	case USB_RECIP_DEVICE:
++		snprintf(str, size, "%s Device Feature(%s%s)",
++			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
++			 ({char *s;
++				switch (wValue) {
++				case USB_DEVICE_SELF_POWERED:
++					s = "Self Powered";
++					break;
++				case USB_DEVICE_REMOTE_WAKEUP:
++					s = "Remote Wakeup";
++					break;
++				case USB_DEVICE_TEST_MODE:
++					s = "Test Mode";
++					break;
++				case USB_DEVICE_U1_ENABLE:
++					s = "U1 Enable";
++					break;
++				case USB_DEVICE_U2_ENABLE:
++					s = "U2 Enable";
++					break;
++				case USB_DEVICE_LTM_ENABLE:
++					s = "LTM Enable";
++					break;
++				default:
++					s = "UNKNOWN";
++				} s; }),
++			 wValue == USB_DEVICE_TEST_MODE ?
++			 ({ char *s;
++				switch (wIndex) {
++				case TEST_J:
++					s = ": TEST_J";
++					break;
++				case TEST_K:
++					s = ": TEST_K";
++					break;
++				case TEST_SE0_NAK:
++					s = ": TEST_SE0_NAK";
++					break;
++				case TEST_PACKET:
++					s = ": TEST_PACKET";
++					break;
++				case TEST_FORCE_EN:
++					s = ": TEST_FORCE_EN";
++					break;
++				default:
++					s = ": UNKNOWN";
++				} s; }) : "");
++		break;
++	case USB_RECIP_INTERFACE:
++		snprintf(str, size, "%s Interface Feature(%s)",
++			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
++			 wValue == USB_INTRF_FUNC_SUSPEND ?
++			 "Function Suspend" : "UNKNOWN");
++		break;
++	case USB_RECIP_ENDPOINT:
++		snprintf(str, size, "%s Endpoint Feature(%s ep%d%s)",
++			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
++			 wValue == USB_ENDPOINT_HALT ? "Halt" : "UNKNOWN",
++			 wIndex & ~USB_DIR_IN,
++			 wIndex & USB_DIR_IN ? "in" : "out");
++		break;
++	}
++}
++
++static void usb_decode_set_address(__u16 wValue, char *str, size_t size)
++{
++	snprintf(str, size, "Set Address(Addr = %02x)", wValue);
++}
++
++static void usb_decode_get_set_descriptor(__u8 bRequestType, __u8 bRequest,
++					  __u16 wValue, __u16 wIndex,
++					  __u16 wLength, char *str, size_t size)
++{
++	snprintf(str, size, "%s %s Descriptor(Index = %d, Length = %d)",
++		 bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
++		 ({ char *s;
++			switch (wValue >> 8) {
++			case USB_DT_DEVICE:
++				s = "Device";
++				break;
++			case USB_DT_CONFIG:
++				s = "Configuration";
++				break;
++			case USB_DT_STRING:
++				s = "String";
++				break;
++			case USB_DT_INTERFACE:
++				s = "Interface";
++				break;
++			case USB_DT_ENDPOINT:
++				s = "Endpoint";
++				break;
++			case USB_DT_DEVICE_QUALIFIER:
++				s = "Device Qualifier";
++				break;
++			case USB_DT_OTHER_SPEED_CONFIG:
++				s = "Other Speed Config";
++				break;
++			case USB_DT_INTERFACE_POWER:
++				s = "Interface Power";
++				break;
++			case USB_DT_OTG:
++				s = "OTG";
++				break;
++			case USB_DT_DEBUG:
++				s = "Debug";
++				break;
++			case USB_DT_INTERFACE_ASSOCIATION:
++				s = "Interface Association";
++				break;
++			case USB_DT_BOS:
++				s = "BOS";
++				break;
++			case USB_DT_DEVICE_CAPABILITY:
++				s = "Device Capability";
++				break;
++			case USB_DT_PIPE_USAGE:
++				s = "Pipe Usage";
++				break;
++			case USB_DT_SS_ENDPOINT_COMP:
++				s = "SS Endpoint Companion";
++				break;
++			case USB_DT_SSP_ISOC_ENDPOINT_COMP:
++				s = "SSP Isochronous Endpoint Companion";
++				break;
++			default:
++				s = "UNKNOWN";
++				break;
++			} s; }), wValue & 0xff, wLength);
++}
++
++static void usb_decode_get_configuration(__u16 wLength, char *str, size_t size)
++{
++	snprintf(str, size, "Get Configuration(Length = %d)", wLength);
++}
++
++static void usb_decode_set_configuration(__u8 wValue, char *str, size_t size)
++{
++	snprintf(str, size, "Set Configuration(Config = %d)", wValue);
++}
++
++static void usb_decode_get_intf(__u16 wIndex, __u16 wLength, char *str,
++				size_t size)
++{
++	snprintf(str, size, "Get Interface(Intf = %d, Length = %d)",
++		 wIndex, wLength);
++}
++
++static void usb_decode_set_intf(__u8 wValue, __u16 wIndex, char *str,
++				size_t size)
++{
++	snprintf(str, size, "Set Interface(Intf = %d, Alt.Setting = %d)",
++		 wIndex, wValue);
++}
++
++static void usb_decode_synch_frame(__u16 wIndex, __u16 wLength,
++				   char *str, size_t size)
++{
++	snprintf(str, size, "Synch Frame(Endpoint = %d, Length = %d)",
++		 wIndex, wLength);
++}
++
++static void usb_decode_set_sel(__u16 wLength, char *str, size_t size)
++{
++	snprintf(str, size, "Set SEL(Length = %d)", wLength);
++}
++
++static void usb_decode_set_isoch_delay(__u8 wValue, char *str, size_t size)
++{
++	snprintf(str, size, "Set Isochronous Delay(Delay = %d ns)", wValue);
++}
++
++/**
++ * usb_decode_ctrl - returns a string representation of ctrl request
++ */
++const char *usb_decode_ctrl(char *str, size_t size, __u8 bRequestType,
++			    __u8 bRequest, __u16 wValue, __u16 wIndex,
++			    __u16 wLength)
++{
++	switch (bRequest) {
++	case USB_REQ_GET_STATUS:
++		usb_decode_get_status(bRequestType, wIndex, wLength, str, size);
++		break;
++	case USB_REQ_CLEAR_FEATURE:
++	case USB_REQ_SET_FEATURE:
++		usb_decode_set_clear_feature(bRequestType, bRequest, wValue,
++					     wIndex, str, size);
++		break;
++	case USB_REQ_SET_ADDRESS:
++		usb_decode_set_address(wValue, str, size);
++		break;
++	case USB_REQ_GET_DESCRIPTOR:
++	case USB_REQ_SET_DESCRIPTOR:
++		usb_decode_get_set_descriptor(bRequestType, bRequest, wValue,
++					      wIndex, wLength, str, size);
++		break;
++	case USB_REQ_GET_CONFIGURATION:
++		usb_decode_get_configuration(wLength, str, size);
++		break;
++	case USB_REQ_SET_CONFIGURATION:
++		usb_decode_set_configuration(wValue, str, size);
++		break;
++	case USB_REQ_GET_INTERFACE:
++		usb_decode_get_intf(wIndex, wLength, str, size);
++		break;
++	case USB_REQ_SET_INTERFACE:
++		usb_decode_set_intf(wValue, wIndex, str, size);
++		break;
++	case USB_REQ_SYNCH_FRAME:
++		usb_decode_synch_frame(wIndex, wLength, str, size);
++		break;
++	case USB_REQ_SET_SEL:
++		usb_decode_set_sel(wLength, str, size);
++		break;
++	case USB_REQ_SET_ISOCH_DELAY:
++		usb_decode_set_isoch_delay(wValue, str, size);
++		break;
++	default:
++		snprintf(str, size, "%02x %02x %02x %02x %02x %02x %02x %02x",
++			 bRequestType, bRequest,
++			 (u8)(cpu_to_le16(wValue) & 0xff),
++			 (u8)(cpu_to_le16(wValue) >> 8),
++			 (u8)(cpu_to_le16(wIndex) & 0xff),
++			 (u8)(cpu_to_le16(wIndex) >> 8),
++			 (u8)(cpu_to_le16(wLength) & 0xff),
++			 (u8)(cpu_to_le16(wLength) >> 8));
++	}
++
++	return str;
++}
++EXPORT_SYMBOL_GPL(usb_decode_ctrl);
++
++#endif /* __LINUX_USB_COMMON_DEBUG */
+diff --git a/drivers/usb/dwc3/debug.h b/drivers/usb/dwc3/debug.h
+index 068259fdfb0c..9baabed87d61 100644
+--- a/drivers/usb/dwc3/debug.h
++++ b/drivers/usb/dwc3/debug.h
+@@ -246,258 +246,6 @@ static inline const char *dwc3_gadget_event_string(char *str, size_t size,
+ 	return str;
+ }
+ 
+-static inline void dwc3_decode_get_status(__u8 t, __u16 i, __u16 l, char *str,
+-		size_t size)
+-{
+-	switch (t & USB_RECIP_MASK) {
+-	case USB_RECIP_DEVICE:
+-		snprintf(str, size, "Get Device Status(Length = %d)", l);
+-		break;
+-	case USB_RECIP_INTERFACE:
+-		snprintf(str, size, "Get Interface Status(Intf = %d, Length = %d)",
+-				i, l);
+-		break;
+-	case USB_RECIP_ENDPOINT:
+-		snprintf(str, size, "Get Endpoint Status(ep%d%s)",
+-			i & ~USB_DIR_IN,
+-			i & USB_DIR_IN ? "in" : "out");
+-		break;
+-	}
+-}
+-
+-static inline void dwc3_decode_set_clear_feature(__u8 t, __u8 b, __u16 v,
+-		__u16 i, char *str, size_t size)
+-{
+-	switch (t & USB_RECIP_MASK) {
+-	case USB_RECIP_DEVICE:
+-		snprintf(str, size, "%s Device Feature(%s%s)",
+-			b == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
+-			({char *s;
+-				switch (v) {
+-				case USB_DEVICE_SELF_POWERED:
+-					s = "Self Powered";
+-					break;
+-				case USB_DEVICE_REMOTE_WAKEUP:
+-					s = "Remote Wakeup";
+-					break;
+-				case USB_DEVICE_TEST_MODE:
+-					s = "Test Mode";
+-					break;
+-				case USB_DEVICE_U1_ENABLE:
+-					s = "U1 Enable";
+-					break;
+-				case USB_DEVICE_U2_ENABLE:
+-					s = "U2 Enable";
+-					break;
+-				case USB_DEVICE_LTM_ENABLE:
+-					s = "LTM Enable";
+-					break;
+-				default:
+-					s = "UNKNOWN";
+-				} s; }),
+-			v == USB_DEVICE_TEST_MODE ?
+-			({ char *s;
+-				switch (i) {
+-				case TEST_J:
+-					s = ": TEST_J";
+-					break;
+-				case TEST_K:
+-					s = ": TEST_K";
+-					break;
+-				case TEST_SE0_NAK:
+-					s = ": TEST_SE0_NAK";
+-					break;
+-				case TEST_PACKET:
+-					s = ": TEST_PACKET";
+-					break;
+-				case TEST_FORCE_EN:
+-					s = ": TEST_FORCE_EN";
+-					break;
+-				default:
+-					s = ": UNKNOWN";
+-				} s; }) : "");
+-		break;
+-	case USB_RECIP_INTERFACE:
+-		snprintf(str, size, "%s Interface Feature(%s)",
+-			b == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
+-			v == USB_INTRF_FUNC_SUSPEND ?
+-			"Function Suspend" : "UNKNOWN");
+-		break;
+-	case USB_RECIP_ENDPOINT:
+-		snprintf(str, size, "%s Endpoint Feature(%s ep%d%s)",
+-			b == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
+-			v == USB_ENDPOINT_HALT ? "Halt" : "UNKNOWN",
+-			i & ~USB_DIR_IN,
+-			i & USB_DIR_IN ? "in" : "out");
+-		break;
+-	}
+-}
+-
+-static inline void dwc3_decode_set_address(__u16 v, char *str, size_t size)
+-{
+-	snprintf(str, size, "Set Address(Addr = %02x)", v);
+-}
+-
+-static inline void dwc3_decode_get_set_descriptor(__u8 t, __u8 b, __u16 v,
+-		__u16 i, __u16 l, char *str, size_t size)
+-{
+-	snprintf(str, size, "%s %s Descriptor(Index = %d, Length = %d)",
+-		b == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
+-		({ char *s;
+-			switch (v >> 8) {
+-			case USB_DT_DEVICE:
+-				s = "Device";
+-				break;
+-			case USB_DT_CONFIG:
+-				s = "Configuration";
+-				break;
+-			case USB_DT_STRING:
+-				s = "String";
+-				break;
+-			case USB_DT_INTERFACE:
+-				s = "Interface";
+-				break;
+-			case USB_DT_ENDPOINT:
+-				s = "Endpoint";
+-				break;
+-			case USB_DT_DEVICE_QUALIFIER:
+-				s = "Device Qualifier";
+-				break;
+-			case USB_DT_OTHER_SPEED_CONFIG:
+-				s = "Other Speed Config";
+-				break;
+-			case USB_DT_INTERFACE_POWER:
+-				s = "Interface Power";
+-				break;
+-			case USB_DT_OTG:
+-				s = "OTG";
+-				break;
+-			case USB_DT_DEBUG:
+-				s = "Debug";
+-				break;
+-			case USB_DT_INTERFACE_ASSOCIATION:
+-				s = "Interface Association";
+-				break;
+-			case USB_DT_BOS:
+-				s = "BOS";
+-				break;
+-			case USB_DT_DEVICE_CAPABILITY:
+-				s = "Device Capability";
+-				break;
+-			case USB_DT_PIPE_USAGE:
+-				s = "Pipe Usage";
+-				break;
+-			case USB_DT_SS_ENDPOINT_COMP:
+-				s = "SS Endpoint Companion";
+-				break;
+-			case USB_DT_SSP_ISOC_ENDPOINT_COMP:
+-				s = "SSP Isochronous Endpoint Companion";
+-				break;
+-			default:
+-				s = "UNKNOWN";
+-				break;
+-			} s; }), v & 0xff, l);
+-}
+-
+-
+-static inline void dwc3_decode_get_configuration(__u16 l, char *str,
+-		size_t size)
+-{
+-	snprintf(str, size, "Get Configuration(Length = %d)", l);
+-}
+-
+-static inline void dwc3_decode_set_configuration(__u8 v, char *str, size_t size)
+-{
+-	snprintf(str, size, "Set Configuration(Config = %d)", v);
+-}
+-
+-static inline void dwc3_decode_get_intf(__u16 i, __u16 l, char *str,
+-		size_t size)
+-{
+-	snprintf(str, size, "Get Interface(Intf = %d, Length = %d)", i, l);
+-}
+-
+-static inline void dwc3_decode_set_intf(__u8 v, __u16 i, char *str, size_t size)
+-{
+-	snprintf(str, size, "Set Interface(Intf = %d, Alt.Setting = %d)", i, v);
+-}
+-
+-static inline void dwc3_decode_synch_frame(__u16 i, __u16 l, char *str,
+-		size_t size)
+-{
+-	snprintf(str, size, "Synch Frame(Endpoint = %d, Length = %d)", i, l);
+-}
+-
+-static inline void dwc3_decode_set_sel(__u16 l, char *str, size_t size)
+-{
+-	snprintf(str, size, "Set SEL(Length = %d)", l);
+-}
+-
+-static inline void dwc3_decode_set_isoch_delay(__u8 v, char *str, size_t size)
+-{
+-	snprintf(str, size, "Set Isochronous Delay(Delay = %d ns)", v);
+-}
+-
+-/**
+- * dwc3_decode_ctrl - returns a string represetion of ctrl request
+- */
+-static inline const char *dwc3_decode_ctrl(char *str, size_t size,
+-		__u8 bRequestType, __u8 bRequest, __u16 wValue, __u16 wIndex,
+-		__u16 wLength)
+-{
+-	switch (bRequest) {
+-	case USB_REQ_GET_STATUS:
+-		dwc3_decode_get_status(bRequestType, wIndex, wLength, str,
+-				size);
+-		break;
+-	case USB_REQ_CLEAR_FEATURE:
+-	case USB_REQ_SET_FEATURE:
+-		dwc3_decode_set_clear_feature(bRequestType, bRequest, wValue,
+-				wIndex, str, size);
+-		break;
+-	case USB_REQ_SET_ADDRESS:
+-		dwc3_decode_set_address(wValue, str, size);
+-		break;
+-	case USB_REQ_GET_DESCRIPTOR:
+-	case USB_REQ_SET_DESCRIPTOR:
+-		dwc3_decode_get_set_descriptor(bRequestType, bRequest, wValue,
+-				wIndex, wLength, str, size);
+-		break;
+-	case USB_REQ_GET_CONFIGURATION:
+-		dwc3_decode_get_configuration(wLength, str, size);
+-		break;
+-	case USB_REQ_SET_CONFIGURATION:
+-		dwc3_decode_set_configuration(wValue, str, size);
+-		break;
+-	case USB_REQ_GET_INTERFACE:
+-		dwc3_decode_get_intf(wIndex, wLength, str, size);
+-		break;
+-	case USB_REQ_SET_INTERFACE:
+-		dwc3_decode_set_intf(wValue, wIndex, str, size);
+-		break;
+-	case USB_REQ_SYNCH_FRAME:
+-		dwc3_decode_synch_frame(wIndex, wLength, str, size);
+-		break;
+-	case USB_REQ_SET_SEL:
+-		dwc3_decode_set_sel(wLength, str, size);
+-		break;
+-	case USB_REQ_SET_ISOCH_DELAY:
+-		dwc3_decode_set_isoch_delay(wValue, str, size);
+-		break;
+-	default:
+-		snprintf(str, size, "%02x %02x %02x %02x %02x %02x %02x %02x",
+-			bRequestType, bRequest,
+-			cpu_to_le16(wValue) & 0xff,
+-			cpu_to_le16(wValue) >> 8,
+-			cpu_to_le16(wIndex) & 0xff,
+-			cpu_to_le16(wIndex) >> 8,
+-			cpu_to_le16(wLength) & 0xff,
+-			cpu_to_le16(wLength) >> 8);
+-	}
+-
+-	return str;
+-}
+-
+ /**
+  * dwc3_ep_event_string - returns event name
+  * @event: then event code
+diff --git a/drivers/usb/dwc3/trace.h b/drivers/usb/dwc3/trace.h
+index 818a63da1a44..9edff17111f7 100644
+--- a/drivers/usb/dwc3/trace.h
++++ b/drivers/usb/dwc3/trace.h
+@@ -86,7 +86,7 @@ DECLARE_EVENT_CLASS(dwc3_log_ctrl,
+ 		__entry->wIndex = le16_to_cpu(ctrl->wIndex);
+ 		__entry->wLength = le16_to_cpu(ctrl->wLength);
+ 	),
+-	TP_printk("%s", dwc3_decode_ctrl(__get_str(str), DWC3_MSG_MAX,
++	TP_printk("%s", usb_decode_ctrl(__get_str(str), DWC3_MSG_MAX,
+ 					__entry->bRequestType,
+ 					__entry->bRequest, __entry->wValue,
+ 					__entry->wIndex, __entry->wLength)
+diff --git a/include/linux/usb/ch9.h b/include/linux/usb/ch9.h
+index da82606be605..a601810ad0f9 100644
+--- a/include/linux/usb/ch9.h
++++ b/include/linux/usb/ch9.h
+@@ -70,4 +70,29 @@ extern enum usb_device_speed usb_get_maximum_speed(struct device *dev);
+  */
+ extern const char *usb_state_string(enum usb_device_state state);
+ 
++/**
++ * usb_decode_ctrl - Returns human readable representation of control request.
++ * @str: buffer to return a human-readable representation of control request.
++ *       This buffer should have about 200 bytes.
++ * @size: size of str buffer.
++ * @bRequestType: matches the USB bmRequestType field
++ * @bRequest: matches the USB bRequest field
++ * @wValue: matches the USB wValue field (CPU byte order)
++ * @wIndex: matches the USB wIndex field (CPU byte order)
++ * @wLength: matches the USB wLength field (CPU byte order)
++ *
++ * Function returns decoded, formatted and human-readable description of
++ * control request packet.
++ *
++ * The usage scenario for this is for tracepoints, so function as a return
++ * use the same value as in parameters. This approach allows to use this
++ * function in TP_printk
++ *
++ * Important: wValue, wIndex, wLength parameters before invoking this function
++ * should be processed by le16_to_cpu macro.
++ */
++const char *usb_decode_ctrl(char *str, size_t size, __u8 bRequestType,
++			    __u8 bRequest, __u16 wValue, __u16 wIndex,
++			    __u16 wLength);
++
+ #endif /* __LINUX_USB_CH9_H */
+-- 
+2.17.1
