@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v3, 23/27] drm/mediatek: add connection from ovl0 to ovl_2l0
-Date: Wed, 5 Jun 2019 19:43:02 +0800
-Message-ID: <1559734986-7379-24-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v3, 14/27] drm/mediatek: add commponent OVL_2L0
+Date: Wed, 5 Jun 2019 19:42:53 +0800
+Message-ID: <1559734986-7379-15-git-send-email-yongqiang.niu@mediatek.com>
 References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,26 +14,53 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add connection from ovl0 to ovl_2l0
+This patch add commponent OVL_2L0
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 2 ++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 872c744..f980826 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -322,6 +322,9 @@ static unsigned int mtk_ddp_mout_en(const struct mtk_mmsys_reg_data *data,
- 	} else if (cur == DDP_COMPONENT_OD1 && next == DDP_COMPONENT_RDMA1) {
- 		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
- 		value = OD1_MOUT_EN_RDMA1;
-+	} else if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_OVL_2L0) {
-+		*addr = DISP_REG_OVL0_MOUT_EN(data);
-+		value = OVL0_MOUT_EN_OVL0_2L;
- 	} else {
- 		value = 0;
- 	}
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+index 310c0b9..8094926 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+@@ -227,6 +227,7 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
+ 
+ static const char * const mtk_ddp_comp_stem[MTK_DDP_COMP_TYPE_MAX] = {
+ 	[MTK_DISP_OVL] = "ovl",
++	[MTK_DISP_OVL_2L] = "ovl_2l",
+ 	[MTK_DISP_RDMA] = "rdma",
+ 	[MTK_DISP_WDMA] = "wdma",
+ 	[MTK_DISP_COLOR] = "color",
+@@ -266,6 +267,7 @@ struct mtk_ddp_comp_match {
+ 	[DDP_COMPONENT_OD1]	= { MTK_DISP_OD,	1, &ddp_od },
+ 	[DDP_COMPONENT_OVL0]	= { MTK_DISP_OVL,	0, NULL },
+ 	[DDP_COMPONENT_OVL1]	= { MTK_DISP_OVL,	1, NULL },
++	[DDP_COMPONENT_OVL_2L0]	= { MTK_DISP_OVL_2L,	0, NULL },
+ 	[DDP_COMPONENT_PWM0]	= { MTK_DISP_PWM,	0, NULL },
+ 	[DDP_COMPONENT_PWM1]	= { MTK_DISP_PWM,	1, NULL },
+ 	[DDP_COMPONENT_PWM2]	= { MTK_DISP_PWM,	2, NULL },
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+index 87ef290..a81c322 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+@@ -25,6 +25,7 @@
+ 
+ enum mtk_ddp_comp_type {
+ 	MTK_DISP_OVL,
++	MTK_DISP_OVL_2L,
+ 	MTK_DISP_RDMA,
+ 	MTK_DISP_WDMA,
+ 	MTK_DISP_COLOR,
+@@ -58,6 +59,7 @@ enum mtk_ddp_comp_id {
+ 	DDP_COMPONENT_OD0,
+ 	DDP_COMPONENT_OD1,
+ 	DDP_COMPONENT_OVL0,
++	DDP_COMPONENT_OVL_2L0,
+ 	DDP_COMPONENT_OVL1,
+ 	DDP_COMPONENT_PWM0,
+ 	DDP_COMPONENT_PWM1,
 -- 
 1.8.1.1.dirty
