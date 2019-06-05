@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v3, 08/27] drm/mediatek: add mutex sof into ddp private data
-Date: Wed, 5 Jun 2019 19:42:47 +0800
-Message-ID: <1559734986-7379-9-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v3, 06/27] drm/mediatek: add mutex mod into ddp private data
+Date: Wed, 5 Jun 2019 19:42:45 +0800
+Message-ID: <1559734986-7379-7-git-send-email-yongqiang.niu@mediatek.com>
 References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,125 +14,136 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-mutex sof will be ddp private data
+except mutex mod, mutex mod reg,mutex sof reg,
+and mutex sof id will be ddp private data
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 44 +++++++++++++++++++++++++++-------
- 1 file changed, 36 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 53 +++++++++++++++++++++++-----------
+ 1 file changed, 36 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 8bde2cf..e1a510f 100644
+index 579ce28..ae94d44 100644
 --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
 +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -149,8 +149,20 @@ struct mtk_disp_mutex {
+@@ -41,12 +41,12 @@
+ #define DISP_REG_CONFIG_DSI_SEL			0x050
+ #define DISP_REG_CONFIG_DPI_SEL			0x064
+ 
+-#define DISP_REG_MUTEX_EN(n)	(0x20 + 0x20 * (n))
+-#define DISP_REG_MUTEX(n)	(0x24 + 0x20 * (n))
+-#define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
+-#define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
+-#define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
+-#define DISP_REG_MUTEX_MOD2(n)	(0x34 + 0x20 * (n))
++#define DISP_REG_MUTEX_EN(n)			(0x20 + 0x20 * (n))
++#define DISP_REG_MUTEX(n)			(0x24 + 0x20 * (n))
++#define DISP_REG_MUTEX_RST(n)			(0x28 + 0x20 * (n))
++#define DISP_REG_MUTEX_MOD(n)			(0x2c + 0x20 * (n))
++#define DISP_REG_MUTEX_SOF(n)			(0x30 + 0x20 * (n))
++#define DISP_REG_MUTEX_MOD2(n)			(0x34 + 0x20 * (n))
+ 
+ #define INT_MUTEX				BIT(1)
+ 
+@@ -147,12 +147,16 @@ struct mtk_disp_mutex {
  	bool claimed;
  };
  
-+enum mtk_ddp_mutex_sof_id {
-+	DDP_MUTEX_SOF_SINGLE_MODE,
-+	DDP_MUTEX_SOF_DSI0,
-+	DDP_MUTEX_SOF_DSI1,
-+	DDP_MUTEX_SOF_DPI0,
-+	DDP_MUTEX_SOF_DPI1,
-+	DDP_MUTEX_SOF_DSI2,
-+	DDP_MUTEX_SOF_DSI3,
-+	DDP_MUTEX_SOF_MAX,
++struct mtk_ddp_data {
++	const unsigned int *mutex_mod;
 +};
 +
- struct mtk_ddp_data {
- 	const unsigned int *mutex_mod;
-+	const unsigned int *mutex_sof;
- 	const unsigned int mutex_mod_reg;
+ struct mtk_ddp {
+ 	struct device			*dev;
+ 	struct clk			*clk;
+ 	void __iomem			*regs;
+ 	struct mtk_disp_mutex		mutex[10];
+-	const unsigned int		*mutex_mod;
++	const struct mtk_ddp_data	*data;
  };
  
-@@ -209,18 +221,31 @@ struct mtk_ddp {
+ static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+@@ -202,6 +206,18 @@ struct mtk_ddp {
  	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
  };
  
-+static const unsigned int mt2712_mutex_sof[DDP_MUTEX_SOF_MAX] = {
-+	[DDP_MUTEX_SOF_SINGLE_MODE] = MUTEX_SOF_SINGLE_MODE,
-+	[DDP_MUTEX_SOF_DSI0] = MUTEX_SOF_DSI0,
-+	[DDP_MUTEX_SOF_DSI1] = MUTEX_SOF_DSI1,
-+	[DDP_MUTEX_SOF_DPI0] = MUTEX_SOF_DPI0,
-+	[DDP_MUTEX_SOF_DPI1] = MUTEX_SOF_DPI1,
-+	[DDP_MUTEX_SOF_DSI2] = MUTEX_SOF_DSI2,
-+	[DDP_MUTEX_SOF_DSI3] = MUTEX_SOF_DSI3,
++static const struct mtk_ddp_data mt2701_ddp_driver_data = {
++	.mutex_mod = mt2701_mutex_mod,
 +};
 +
- static const struct mtk_ddp_data mt2701_ddp_driver_data = {
- 	.mutex_mod = mt2701_mutex_mod,
-+	.mutex_sof = mt2712_mutex_sof,
- 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
- };
- 
- static const struct mtk_ddp_data mt2712_ddp_driver_data = {
- 	.mutex_mod = mt2712_mutex_mod,
-+	.mutex_sof = mt2712_mutex_sof,
- 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
- };
- 
- static const struct mtk_ddp_data mt8173_ddp_driver_data = {
- 	.mutex_mod = mt8173_mutex_mod,
-+	.mutex_sof = mt2712_mutex_sof,
- 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
- };
- 
-@@ -462,28 +487,29 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
- 	struct mtk_ddp *ddp = container_of(mutex, struct mtk_ddp,
- 					   mutex[mutex->id]);
- 	unsigned int reg;
-+	unsigned int sof_id;
- 	unsigned int offset;
- 
- 	WARN_ON(&ddp->mutex[mutex->id] != mutex);
- 
- 	switch (id) {
- 	case DDP_COMPONENT_DSI0:
--		reg = MUTEX_SOF_DSI0;
-+		sof_id = DDP_MUTEX_SOF_DSI0;
- 		break;
- 	case DDP_COMPONENT_DSI1:
--		reg = MUTEX_SOF_DSI0;
-+		sof_id = DDP_MUTEX_SOF_DSI0;
- 		break;
- 	case DDP_COMPONENT_DSI2:
--		reg = MUTEX_SOF_DSI2;
-+		sof_id = DDP_MUTEX_SOF_DSI2;
- 		break;
- 	case DDP_COMPONENT_DSI3:
--		reg = MUTEX_SOF_DSI3;
-+		sof_id = DDP_MUTEX_SOF_DSI3;
- 		break;
- 	case DDP_COMPONENT_DPI0:
--		reg = MUTEX_SOF_DPI0;
-+		sof_id = DDP_MUTEX_SOF_DPI0;
- 		break;
- 	case DDP_COMPONENT_DPI1:
--		reg = MUTEX_SOF_DPI1;
-+		sof_id = DDP_MUTEX_SOF_DPI1;
++static const struct mtk_ddp_data mt2712_ddp_driver_data = {
++	.mutex_mod = mt2712_mutex_mod,
++};
++
++static const struct mtk_ddp_data mt8173_ddp_driver_data = {
++	.mutex_mod = mt8173_mutex_mod,
++};
++
+ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+ 				    enum mtk_ddp_comp_id next,
+ 				    unsigned int *addr)
+@@ -464,15 +480,15 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+ 		reg = MUTEX_SOF_DPI1;
  		break;
  	default:
- 		if (ddp->data->mutex_mod[id] < 32) {
-@@ -501,7 +527,8 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+-		if (ddp->mutex_mod[id] < 32) {
++		if (ddp->data->mutex_mod[id] < 32) {
+ 			offset = DISP_REG_MUTEX_MOD(mutex->id);
+ 			reg = readl_relaxed(ddp->regs + offset);
+-			reg |= 1 << ddp->mutex_mod[id];
++			reg |= 1 << ddp->data->mutex_mod[id];
+ 			writel_relaxed(reg, ddp->regs + offset);
+ 		} else {
+ 			offset = DISP_REG_MUTEX_MOD2(mutex->id);
+ 			reg = readl_relaxed(ddp->regs + offset);
+-			reg |= 1 << (ddp->mutex_mod[id] - 32);
++			reg |= 1 << (ddp->data->mutex_mod[id] - 32);
+ 			writel_relaxed(reg, ddp->regs + offset);
+ 		}
  		return;
+@@ -502,15 +518,15 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+ 			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+ 		break;
+ 	default:
+-		if (ddp->mutex_mod[id] < 32) {
++		if (ddp->data->mutex_mod[id] < 32) {
+ 			offset = DISP_REG_MUTEX_MOD(mutex->id);
+ 			reg = readl_relaxed(ddp->regs + offset);
+-			reg &= ~(1 << ddp->mutex_mod[id]);
++			reg &= ~(1 << ddp->data->mutex_mod[id]);
+ 			writel_relaxed(reg, ddp->regs + offset);
+ 		} else {
+ 			offset = DISP_REG_MUTEX_MOD2(mutex->id);
+ 			reg = readl_relaxed(ddp->regs + offset);
+-			reg &= ~(1 << (ddp->mutex_mod[id] - 32));
++			reg &= ~(1 << (ddp->data->mutex_mod[id] - 32));
+ 			writel_relaxed(reg, ddp->regs + offset);
+ 		}
+ 		break;
+@@ -585,7 +601,7 @@ static int mtk_ddp_probe(struct platform_device *pdev)
+ 		return PTR_ERR(ddp->regs);
  	}
  
--	writel_relaxed(reg, ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
-+	writel_relaxed(ddp->data->mutex_sof[sof_id],
-+		       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+-	ddp->mutex_mod = of_device_get_match_data(dev);
++	ddp->data = of_device_get_match_data(dev);
+ 
+ 	platform_set_drvdata(pdev, ddp);
+ 
+@@ -598,9 +614,12 @@ static int mtk_ddp_remove(struct platform_device *pdev)
  }
  
- void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
-@@ -522,7 +549,8 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
- 	case DDP_COMPONENT_DPI0:
- 	case DDP_COMPONENT_DPI1:
- 		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
--			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
-+			       ddp->regs +
-+			       DISP_REG_MUTEX_SOF(mutex->id));
- 		break;
- 	default:
- 		if (ddp->data->mutex_mod[id] < 32) {
+ static const struct of_device_id ddp_driver_dt_match[] = {
+-	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
+-	{ .compatible = "mediatek,mt2712-disp-mutex", .data = mt2712_mutex_mod},
+-	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
++	{ .compatible = "mediatek,mt2701-disp-mutex",
++	  .data = &mt2701_ddp_driver_data},
++	{ .compatible = "mediatek,mt2712-disp-mutex",
++	  .data = &mt2712_ddp_driver_data},
++	{ .compatible = "mediatek,mt8173-disp-mutex",
++	  .data = &mt8173_ddp_driver_data},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
 -- 
 1.8.1.1.dirty
