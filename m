@@ -1,15 +1,15 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/3] arm: imx6sx: udoo: Use the correct style for SPDX
- License Identifier
-Date: Wed, 5 Jun 2019 12:19:18 -0300
-Message-ID: <CAOMZO5B3dedXPyGgwWpdDL5ccC0TQuN=+UKBOW4Emv1_xwbZJw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: imx6sx-udoo-neo: enable i2c-2 and i2c-4 for
+ onboard sensors
+Date: Wed, 5 Jun 2019 12:19:38 -0300
+Message-ID: <CAOMZO5AtsCBdxD_O_ke8hEZMx8Mzhj1V1T5XZ0RkSw+y7+VG0g@mail.gmail.com>
 References: <20190601070718.26971-1-pbrobinson@gmail.com>
- <20190601070718.26971-2-pbrobinson@gmail.com>
+ <20190601070718.26971-3-pbrobinson@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190601070718.26971-2-pbrobinson@gmail.com>
+In-Reply-To: <20190601070718.26971-3-pbrobinson@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,12 +25,12 @@ List-Id: devicetree@vger.kernel.org
 
 On Sat, Jun 1, 2019 at 4:07 AM Peter Robinson <pbrobinson@gmail.com> wrote:
 >
-> Use the SPDX License Identifier for GPL-2.0+ OR X11
+> The i2c2 bus has a external plug which enables the easy connection of external
+> "bricks" with sensors of various kinds, while i2c4 on the Extended/Full boards
+> has a pair of on board motion sensors, accelerometer and magnetometer on one chip
+> and gyroscope on another so it makes sense to enable these i2c buses for use.
+> Tested on UDOO Neo Full.
 >
 > Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
 
 Reviewed-by: Fabio Estevam <festevam@gmail.com>
-
-Nit: the Subject could be consistent with the other patches in the series:
-
-ARM: dts: imx6sx-udoo: Use the correct...
