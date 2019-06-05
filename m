@@ -1,13 +1,11 @@
-From: "sudheer.v" <open.sudheer@gmail.com>
-Subject: [patch 5/5] Documentation: DT bindings AST2500 DMA UART driver
-Date: Wed,  5 Jun 2019 17:53:15 +0530
-Message-ID: <1559737395-28542-6-git-send-email-open.sudheer@gmail.com>
-References: <1559737395-28542-1-git-send-email-open.sudheer@gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v2 1/2] dt-bindings: i2c: sun6i-p2wi: Add YAML schemas
+Date: Wed,  5 Jun 2019 14:29:35 +0200
+Message-ID: <20190605122936.11972-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1559737395-28542-1-git-send-email-open.sudheer@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,63 +15,143 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, mchehab+samsung@kernel.org, jslaby@suse.com, joel@jms.id.au, andrew@aj.id.au, benh@kernel.crashing.org, robh+dt@kernel.org, mark.rutland@arm.com, shivahshankar.shankarnarayanrao@aspeedtech.com, sudheer.veliseti@aspeedtech.com
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sudheer Kumar veliseti <sudheer.open@gmail.com>
+To: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>
+Cc: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: sudheer Kumar veliseti <sudheer.open@gmail.com>
+Switch the DT binding to a YAML schema to enable the DT validation.
 
-Signed-off-by: sudheer veliseti <sudheer.open@gmail.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- .../bindings/serial/ast2500-dma-uart.txt      | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
+ .../i2c/allwinner,sun6i-a31-p2wi.yaml         | 71 +++++++++++++++++++
+ .../bindings/i2c/i2c-sun6i-p2wi.txt           | 41 -----------
+ 2 files changed, 71 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-sun6i-p2wi.txt
 
-diff --git a/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt b/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
+diff --git a/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml b/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
 new file mode 100644
-index 000000000000..ff9bb6146bd6
+index 000000000000..780a33080140
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
-@@ -0,0 +1,40 @@
++++ b/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i2c/allwinner,sun6i-a31-p2wi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+node for DMA controller:
-+                       ast_uart_sdma: uart_sdma@1e79e000 {
-+                               compatible = "aspeed,ast-uart-sdma";
-+                               reg = <0x1e79e000 0x400>;
-+                               interrupts = <50>;
-+                               status = "disabled";
-+                       };
-+this node  doesn't binds with any driver.
-+DMA controller is handled as a separate SW layer,and is included in the same driver.
-+This DMA controller node is included in DT just for Register and interrupt details
++title: Allwinner A31 P2WI (Push/Pull 2 Wires Interface) Device Tree Bindings
 +
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
 +
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
 +
-+node for DMA-UART :
++properties:
++  "#address-cells":
++    const: 1
 +
++  "#size-cells":
++    const: 0
 +
-+Required properties:
++  compatible:
++    const: allwinner,sun6i-a31-p2wi
 +
-+- compatible: "aspeed,ast-sdma-uart"
-+- reg: The base address of the UART register bank
-+- interrupts: should contain interrupt specifier.
-+- clocks: Clock driving the hardware;
-+- pinctrl-0 : list of pinconfigurations
-+- dma-channel: channel of DMA-controller which is used
++  reg:
++    maxItems: 1
 +
-+Example:
++  interrupts:
++    maxItems: 1
 +
-+                 dma_uart1: dma_uart1@1e783000{
-+                          compatible = "aspeed,ast-sdma-uart";
-+                          reg = <0x1e783000 0x1000>;
-+                          reg-shift = <2>;
-+                          interrupts = <9>;
-+                          clocks = <&syscon ASPEED_CLK_GATE_UART1CLK>;
-+                          dma-channel = <0>;
-+                          no-loopback-test;
-+                          pinctrl-names = "default";
-+                          pinctrl-0 = <&pinctrl_txd1_default &pinctrl_rxd1_default>;
-+                          status = "disabled";
-+                       };
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  clock-frequency:
++    minimum: 1
++    maximum: 6000000
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - resets
++
++# FIXME: We should set it, but it would report all the generic
++# properties as additional properties.
++# additionalProperties: false
++
++examples:
++  - |
++    p2wi@1f03400 {
++      compatible = "allwinner,sun6i-a31-p2wi";
++      reg = <0x01f03400 0x400>;
++      interrupts = <0 39 4>;
++      clocks = <&apb0_gates 3>;
++      clock-frequency = <6000000>;
++      resets = <&apb0_rst 3>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      axp221: pmic@68 {
++        compatible = "x-powers,axp221";
++        reg = <0x68>;
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-sun6i-p2wi.txt b/Documentation/devicetree/bindings/i2c/i2c-sun6i-p2wi.txt
+deleted file mode 100644
+index 49df0053347a..000000000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-sun6i-p2wi.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-
+-* Allwinner P2WI (Push/Pull 2 Wire Interface) controller
+-
+-Required properties :
+-
+- - reg             : Offset and length of the register set for the device.
+- - compatible      : Should one of the following:
+-                     - "allwinner,sun6i-a31-p2wi"
+- - interrupts      : The interrupt line connected to the P2WI peripheral.
+- - clocks          : The gate clk connected to the P2WI peripheral.
+- - resets          : The reset line connected to the P2WI peripheral.
+-
+-Optional properties :
+-
+- - clock-frequency : Desired P2WI bus clock frequency in Hz. If not set the
+-default frequency is 100kHz
+-
+-A P2WI may contain one child node encoding a P2WI slave device.
+-
+-Slave device properties:
+-  Required properties:
+-   - reg           : the I2C slave address used during the initialization
+-                     process to switch from I2C to P2WI mode
+-
+-Example:
+-
+-	p2wi@1f03400 {
+-		compatible = "allwinner,sun6i-a31-p2wi";
+-		reg = <0x01f03400 0x400>;
+-		interrupts = <0 39 4>;
+-		clocks = <&apb0_gates 3>;
+-		clock-frequency = <6000000>;
+-		resets = <&apb0_rst 3>;
+-
+-		axp221: pmic@68 {
+-			compatible = "x-powers,axp221";
+-			reg = <0x68>;
+-
+-			/* ... */
+-		};
+-	};
 -- 
-2.17.1
+2.21.0
