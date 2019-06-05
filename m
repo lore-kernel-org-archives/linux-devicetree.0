@@ -1,100 +1,36 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH] USB: move usb debugfs directory creation to the usb
- common core
-Date: Wed, 5 Jun 2019 10:15:59 +0800
-Message-ID: <1559700959.8487.78.camel@mhfsdcap03>
-References: <20190604093258.GB30054@kroah.com>
-         <20190604115919.GA24346@kroah.com>
+From: Robin Gong <yibin.gong@nxp.com>
+Subject: Re: [PATCH v3 5/8] dmaengine: fsl-edma: add drvdata for vf610
+Date: Wed, 5 Jun 2019 02:25:02 +0000
+Message-ID: <1559730524.24019.11.camel@nxp.com>
+References: <20190529090848.34350-1-yibin.gong@nxp.com>
+         <20190529090848.34350-6-yibin.gong@nxp.com>
+         <20190604123331.GE15118@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604115919.GA24346@kroah.com>
+In-Reply-To: <20190604123331.GE15118@vkoul-mobl>
+Content-Language: en-US
+Content-ID: <8D5076106775FA4C8D1276EB52B6257E@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: "vkoul@kernel.org" <vkoul@kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-06-04 at 13:59 +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jun 04, 2019 at 11:32:58AM +0200, Greg Kroah-Hartman wrote:
-> > The USB gadget subsystem wants to use the USB debugfs root directory, so
-> > move it to the common "core" USB code so that it is properly initialized
-> > and removed as needed.
-> > 
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > ---
-> > 
-> > This should be the "correct" version of this, Chunfeng, can you test
-> > this to verify it works for you?
-I'll test it ASAP, thanks a lot
-
-> > 
-> > 
-> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> > index 18f5dcf58b0d..3b5e4263ffef 100644
-> > --- a/drivers/usb/common/common.c
-> > +++ b/drivers/usb/common/common.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/usb/of.h>
-> >  #include <linux/usb/otg.h>
-> >  #include <linux/of_platform.h>
-> > +#include <linux/debugfs.h>
-> >  
-> >  static const char *const ep_type_names[] = {
-> >  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
-> > @@ -291,4 +292,21 @@ struct device *usb_of_get_companion_dev(struct device *dev)
-> >  EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
-> >  #endif
-> >  
-> > +struct dentry *usb_debug_root;
-> > +EXPORT_SYMBOL_GPL(usb_debug_root);
-> > +
-> > +static int usb_common_init(void)
-> > +{
-> > +	usb_debug_root = debugfs_create_dir("usb", NULL);
-> > +	return 0;
-> > +}
-> > +
-> > +static void usb_common_exit(void)
-> > +{
-> > +	debugfs_remove_recursive(usb_debug_root);
-> > +}
-> > +
-> > +module_init(usb_common_init);
-> > +module_exit(usb_common_exit);
-> > +
-> >  MODULE_LICENSE("GPL");
-> > diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> > index 7fcb9f782931..f3d6b1ab80cb 100644
-> > --- a/drivers/usb/core/usb.c
-> > +++ b/drivers/usb/core/usb.c
-> > @@ -1185,19 +1185,17 @@ static struct notifier_block usb_bus_nb = {
-> >  	.notifier_call = usb_bus_notify,
-> >  };
-> >  
-> > -struct dentry *usb_debug_root;
-> > -EXPORT_SYMBOL_GPL(usb_debug_root);
-> > +static struct dentry *usb_devices_root;
-> >  
-> >  static void usb_debugfs_init(void)
-> >  {
-> > -	usb_debug_root = debugfs_create_dir("usb", NULL);
-> > -	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
-> > -			    &usbfs_devices_fops);
-> > +	usb_devices_root = debugfs_create_file("devices", 0444, usb_debug_root,
-> > +					       NULL, &usbfs_devices_fops);
-> >  }
-> >  
-> >  static void usb_debugfs_cleanup(void)
-> >  {
-> > -	debugfs_remove_recursive(usb_debug_root);
-> > +	debugfs_remove_recursive(usb_devices_root);
-> 
-> That should just be debugfs_remove();
-> 
-> I'll fix it up after someone tests this :)
-> 
-> thanks,
-> 
-> greg k-h
+T24g5LqMLCAyMDE5LTA2LTA0IGF0IDE4OjAzICswNTMwLCBWaW5vZCBLb3VsIHdyb3RlOg0KPiBP
+biAyOS0wNS0xOSwgMTc6MDgsIHlpYmluLmdvbmdAbnhwLmNvbSB3cm90ZToNCj4gDQo+ID4gDQo+
+ID4gQEAgLTIwNSw4ICsyMjgsOSBAQCBzdGF0aWMgaW50IGZzbF9lZG1hX3Byb2JlKHN0cnVjdA0K
+PiA+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiDCoAlpZiAoIWZzbF9lZG1hKQ0KPiA+IMKg
+CQlyZXR1cm4gLUVOT01FTTsNCj4gPiDCoA0KPiA+IC0JZnNsX2VkbWEtPnZlcnNpb24gPSB2MTsN
+Cj4gPiAtCWZzbF9lZG1hLT5kbWFtdXhfbnIgPSBETUFNVVhfTlI7DQo+ID4gKwlmc2xfZWRtYS0+
+ZHJ2ZGF0YSA9IGRydmRhdGE7DQo+ID4gKwlmc2xfZWRtYS0+dmVyc2lvbiA9IGRydmRhdGEtPnZl
+cnNpb247DQo+ID4gKwlmc2xfZWRtYS0+ZG1hbXV4X25yID0gZHJ2ZGF0YS0+ZG1hbXV4czsNCj4g
+QW5kIGNhbiB3ZSBhdm9pZCB0aGUgZHVwbGljYXRpb24gaGVyZSwgeW91IGhhdmUgdmVyc2lvbiBh
+bmQgZG1hbXV4cw0KPiByZXByZXNlbnRlZCBpbiB0d28gcGxhY2VzLiBCdXQgcmlnaHQgbm93IGl0
+IGxvb2tzIGxvZ2ljYWwgc28gdGhlDQo+IHJlbW92YWwNCj4gc2hvdWxkIGJlIGRvbmUgYWZ0ZXIg
+dGhpcyBzZXJpZXMNClRvIGF2b2lkIG1vcmUgY29kZSBjaGFuZ2VzIGluIG90aGVyIGVkbWEgZHJp
+dmVyIHN1Y2ggYXMgbWNmLWVkbWEuYyBhbmQNCmZzbC1lZG1hLWNvbW1vbi5jKHJlcGxhY2UgYWxs
+IHZlcnNpb24vZG1hbXV4X25yIHdpdGggbmV3DQonZHJ2ZGF0YScpLG1lYW53aGlsZSwgbm8gYm9h
+cmQgdG8gdGVzdCBtY2YtZWRtYSBzbyBJIGtlZXANCid2ZXJzaW9uJy8nZG1hbXV4JyBoZXJlIGlu
+IHRoZSBsYXN0IG1pbnV0ZS4gQnV0IGlmIHlvdSBzdGljaywgSSB3b3VsZA0KdHJ5IHRvIHJlZmlu
+ZSBpdCBpbiBuZXh0IHZlcnNpb24uwqANCj4g
