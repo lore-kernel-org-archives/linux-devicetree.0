@@ -1,50 +1,101 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: arm: nxp: Add device tree binding
- for ls1046a-frwy board
-Date: Wed, 5 Jun 2019 14:34:50 +0800
-Message-ID: <20190605063449.GG29853@dragon>
-References: <20190527123404.30858-1-pramod.kumar_1@nxp.com>
- <20190527123404.30858-2-pramod.kumar_1@nxp.com>
+Subject: Re: [PATCH v2] arm64: dts: ls1028a: Add temperature sensor node
+Date: Wed, 5 Jun 2019 14:37:42 +0800
+Message-ID: <20190605063741.GH29853@dragon>
+References: <20190528022633.40124-1-andy.tang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190527123404.30858-2-pramod.kumar_1@nxp.com>
+In-Reply-To: <20190528022633.40124-1-andy.tang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pramod Kumar <pramod.kumar_1@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
+To: Yuantian Tang <andy.tang@nxp.com>
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 27, 2019 at 12:32:09PM +0000, Pramod Kumar wrote:
-> Add "fsl,ls1046a-frwy" bindings for ls1046afrwy board based on ls1046a SoC
+On Tue, May 28, 2019 at 10:26:33AM +0800, Yuantian Tang wrote:
+> Add nxp sa56004 chip node for temperature monitor.
 > 
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-I cannot apply patch from message using 'Content-Transfer-Encoding: base64'.
-
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 > ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> v2:
+> 	- change the node name and add vcc-supply
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 407138ebc0d0..09ff1999ce96 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -241,6 +241,7 @@ properties:
->            - enum:
->                - fsl,ls1046a-qds
->                - fsl,ls1046a-rdb
-> +              - fsl,ls1046a-frwy
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 15 +++++++++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 15 +++++++++++++++
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> index 6571d0483c7a..f12e4f510d6e 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> @@ -47,6 +47,15 @@
+>  		regulator-always-on;
+>  	};
+>  
+> +	sb_3v3: regulator-sb3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3v3_vbus";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+>  	sound {
+>  		compatible = "simple-audio-card";
+>  		simple-audio-card,format = "i2s";
+> @@ -147,6 +156,12 @@
+>  				compatible = "atmel,24c512";
+>  				reg = <0x57>;
+>  			};
+> +
+> +			temperature-sensor@4c {
 
-It might be better to keep the list alphabetically sorted.
+Keep these i2c devices sort in unit-address order.
 
 Shawn
 
->            - const: fsl,ls1046a
+> +				compatible = "nxp,sa56004";
+> +				reg = <0x4c>;
+> +				vcc-supply = <&sb_3v3>;
+> +			};
+>  		};
 >  
->        - description: LS1088A based Boards
+>  		i2c@5 {
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> index 235ca3a83dc3..e64c28983ec9 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> @@ -43,6 +43,15 @@
+>  		regulator-always-on;
+>  	};
+>  
+> +	sb_3v3: regulator-sb3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3v3_vbus";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+>  	sound {
+>  		compatible = "simple-audio-card";
+>  		simple-audio-card,format = "i2s";
+> @@ -132,6 +141,12 @@
+>  				compatible = "nxp,pcf2129";
+>  				reg = <0x51>;
+>  			};
+> +
+> +			temperature-sensor@4c {
+> +				compatible = "nxp,sa56004";
+> +				reg = <0x4c>;
+> +				vcc-supply = <&sb_3v3>;
+> +			};
+>  		};
+>  	};
+>  };
 > -- 
 > 2.17.1
 > 
