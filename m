@@ -1,65 +1,111 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
-Date: Wed, 5 Jun 2019 18:34:42 +0100
-Message-ID: <20190605173441.GA9903@e107155-lin>
-References: <1559755738-28643-1-git-send-email-sricharan@codeaurora.org>
- <1559755738-28643-6-git-send-email-sricharan@codeaurora.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 04/13] media: rc: sunxi: Add RXSTA bits definition
+Date: Wed, 5 Jun 2019 22:00:20 +0200
+Message-ID: <20190605200020.tmyom3lg3inu6vvf@flea>
+References: <20190604162959.29199-1-peron.clem@gmail.com>
+ <20190604162959.29199-5-peron.clem@gmail.com>
+ <20190605095141.psrq6mhk63zto77s@flea>
+ <CAJiuCceZa=WEiF8_LK+jDdiXOn1i8+z8Smr6YKCpo9_XftgueQ@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXF64DTQKGQEHL4376Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1559755738-28643-6-git-send-email-sricharan@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: devicetree@vger.kernel.org, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, linus.walleij@linaro.org, agross@kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, Sudeep Holla <sudeep.holla@arm.com>, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAJiuCceZa=WEiF8_LK+jDdiXOn1i8+z8Smr6YKCpo9_XftgueQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 10:58:57PM +0530, Sricharan R wrote:
-> Add initial device tree support for the Qualcomm IPQ6018 SoC and
-> CP01 evaluation board.
-> 
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile            |   1 +
->  arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  35 ++++
->  arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 231 +++++++++++++++++++++++++++
->  3 files changed, 267 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> 
+On Wed, Jun 05, 2019 at 02:44:06PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Hi Maxime,
+>
+> On Wed, 5 Jun 2019 at 11:51, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wr=
+ote:
+> >
+> > On Tue, Jun 04, 2019 at 06:29:50PM +0200, Cl=C3=A9ment P=C3=A9ron wrote=
+:
+> > > We are using RXINT bits definition when looking at RXSTA register.
+> > >
+> > > These bits are equal but it's not really proper.
+> > >
+> > > Introduce the RXSTA bits and use them to have coherency.
+> > >
+> > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >  drivers/media/rc/sunxi-cir.c | 18 ++++++++++++------
+> > >  1 file changed, 12 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-ci=
+r.c
+> > > index 0504ebfc831f..572bd2257d35 100644
+> > > --- a/drivers/media/rc/sunxi-cir.c
+> > > +++ b/drivers/media/rc/sunxi-cir.c
+> > > @@ -48,11 +48,11 @@
+> > >
+> > >  /* Rx Interrupt Enable */
+> > >  #define SUNXI_IR_RXINT_REG    0x2C
+> > > -/* Rx FIFO Overflow */
+> > > +/* Rx FIFO Overflow Interrupt Enable */
+> > >  #define REG_RXINT_ROI_EN             BIT(0)
+> > > -/* Rx Packet End */
+> > > +/* Rx Packet End Interrupt Enable */
+> > >  #define REG_RXINT_RPEI_EN            BIT(1)
+> > > -/* Rx FIFO Data Available */
+> > > +/* Rx FIFO Data Available Interrupt Enable */
+> > >  #define REG_RXINT_RAI_EN             BIT(4)
+> > >
+> > >  /* Rx FIFO available byte level */
+> > > @@ -60,6 +60,12 @@
+> > >
+> > >  /* Rx Interrupt Status */
+> > >  #define SUNXI_IR_RXSTA_REG    0x30
+> > > +/* Rx FIFO Overflow */
+> > > +#define REG_RXSTA_ROI                        BIT(0)
+> > > +/* Rx Packet End */
+> > > +#define REG_RXSTA_RPE                        BIT(1)
+> > > +/* Rx FIFO Data Available */
+> > > +#define REG_RXSTA_RA                 BIT(4)
+> >
+> > I'm fine with it on principle, but if the consistency needs to be
+> > maintained then we could just reuse the above defines
+>
+> There is no comment why we can reuse them, they can also be some wrong
+> case for example the RXINT_DRQ_EN bit is not present in RXSTA and same
+> for STAT bit present in RXSTA and not present in RXINT.
+>
+> I have discover and read this code a month ago and this logic is
+> really not obvious nor explain.
+>
+> Maybe this hack could be done when we will introduce a quirks, but for
+> the moment I really think that it's more proper and readable to
+> introduce them properly.
 
-[...]
+I don't think we understood each other :)
 
-> +
-> +		CPU3: cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53";
-> +			enable-method = "psci";
-> +			reg = <0x3>;
-> +			next-level-cache = <&L2_0>;
-> +		};
-> +
-> +		L2_0: l2-cache {
-> +			compatible = "cache";
-> +			cache-level = <0x2>;
-> +		};
-> +	};
-> +
-> +	pmuv8: pmu {
-> +		compatible = "arm,armv8-pmuv3";
+I was talking about having something like
 
-We know these are Cortex-A53s, why not update these accordingly ?
+#define REG_RXSTA_ROI  REG_RXINT_ROI_EN
+
+Maxime
 
 --
-Regards,
-Sudeep
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190605200020.tmyom3lg3inu6vvf%40flea.
+For more options, visit https://groups.google.com/d/optout.
