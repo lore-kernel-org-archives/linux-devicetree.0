@@ -1,39 +1,29 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna
- Labs Fabric Interrupt Controller Driver
-Date: Wed, 5 Jun 2019 14:50:55 +0200
-Message-ID: <20190605125055.GA3184@kroah.com>
-References: <1559731921-14023-1-git-send-email-talel@amazon.com>
- <1559731921-14023-3-git-send-email-talel@amazon.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [Freedreno] [PATCH] of/device: add blacklist for iommu dma_ops
+Date: Wed, 5 Jun 2019 05:57:16 -0700
+Message-ID: <CAF6AEGuj=QmEWZVzHMtoDgO0M0t-W9+tay5F4AKYThZqy=nkdA@mail.gmail.com>
+References: <20181201165348.24140-1-robdclark@gmail.com> <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
+ <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
+ <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
+ <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com>
+ <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com> <CAAFQd5Dmr+xyd4dyc_44vJFpNpwK6+MgG+ensoey59HgbxXV6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1559731921-14023-3-git-send-email-talel@amazon.com>
+In-Reply-To: <CAAFQd5Dmr+xyd4dyc_44vJFpNpwK6+MgG+ensoey59HgbxXV6g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Talel Shenhar <talel@amazon.com>
-Cc: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: freedreno <freedreno@lists.freedesktop.org>, Daniel Vetter <daniel@ffwll.ch>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Doug Anderson <dianders@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 01:52:01PM +0300, Talel Shenhar wrote:
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-al-fic.c
-> @@ -0,0 +1,289 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/**
+On Tue, Jun 4, 2019 at 11:58 PM Tomasz Figa <tfiga@chromium.org> wrote:
+>
+> But first of all, I remember Marek already submitted some patches long
+> ago that extended struct driver with some flag that means that the
+> driver doesn't want the IOMMU to be attached before probe. Why
+> wouldn't that work? Sounds like a perfect opt-out solution.
 
-No need for kernel-doc format style here.
+Actually, yeah.. we should do that.  That is the simplest solution.
 
-> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-"or its affiliates"?  You know the answer to this, don't keep us in
-suspense.  Put the proper copyright holder here please, otherwise this
-is totally useless.
-
-Well, copyright notices are technically useless anyway, but lawyers like
-to cargo-cult with the best of them, so it should be correct at the
-least.
-
-thanks,
-
-greg k-h
+BR,
+-R
