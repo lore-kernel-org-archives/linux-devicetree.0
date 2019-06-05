@@ -1,209 +1,41 @@
-From: Renato Lui Geh <renatogeh@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml binding
-Date: Wed, 5 Jun 2019 17:35:56 -0300
-Message-ID: <20190605203554.podktlonhp527iqq@renatolg>
-References: <cover.1558746978.git.renatogeh@gmail.com>
- <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
- <20190526173911.57ae3d11@archlinux>
+From: Christian Lamparter <chunkeey@gmail.com>
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+Date: Wed, 5 Jun 2019 22:41:28 +0200
+Message-ID: <CAAd0S9DKqAgFPgLzHiCBiJgE+OmUW7ainyjM_3-RyfCoKEa51A@mail.gmail.com>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org> <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190526173911.57ae3d11@archlinux>
+In-Reply-To: <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Renato Lui Geh <renatogeh@gmail.com>, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, stefan.popa@analog.com, alexandru.Ardelean@analog.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, agross@kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?0J/QsNCy0LXQuw==?= <be.dissent@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/26, Jonathan Cameron wrote:
->On Fri, 24 May 2019 22:26:30 -0300
->Renato Lui Geh <renatogeh@gmail.com> wrote:
+On Wed, Jun 5, 2019 at 7:16 PM Sricharan R <sricharan@codeaurora.org> wrote:
 >
->> This patch adds a YAML binding for the Analog Devices AD7780/1 and
->> AD7170/1 analog-to-digital converters.
->>
->> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
->Looks good to me, but I'm still finding my feet with these so will
->leave it for a few days for others to have time to comment.
+> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+> CP01 evaluation board.
 >
->Michael, looking for a quick reply from you to say if you are happy
->being explicitly listed as maintainer for this one, or if you'd
->rather land it on someone else.  Same applies for patch 2.
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
 >
->Renato, if I seem to have forgotten this in a week or so, feel
->free to give me a poke. I've been known to loose patches entirely!
+> +       clocks {
+> +               sleep_clk: sleep_clk {
+> +                       compatible = "fixed-clock";
+> +                       clock-frequency = <32000>;
+> +                       #clock-cells = <0>;
+> +               };
+> +
+Recently-ish, we ran into an issue with the clock-frequency of the sleep_clk
+on older IPQ40XX (and IPQ806x) on the OpenWrt Github and ML.
+>From what I know, the external "32KHz" crystals have 32768 Hz, but the QSDK
+declares them at 32000 Hz. Since you probably have access to the BOM and
+datasheets. Can you please confirm what's the real clock frequency for
+the IPQ6018.
+(And maybe also for the sleep_clk of the IPQ4018 as well?).
 
-Hi Jonathan,
-
-Just here to give you a poke. :)
-
-By the way, in these cases, which would be easier for you? To send you
-an email like I'm doing right now on last week's thread; or to resend
-the entire patch(set)?
-
-Thanks,
-Renato
->
->Thanks,
->
->Jonathan
->> ---
->> Changes in v2:
->>  - vref-supply to avdd-supply
->>  - remove avdd-supply from required list
->>  - include adc block in an spi block
->>
->>  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
->>  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
->>  2 files changed, 87 insertions(+), 48 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
->> deleted file mode 100644
->> index 440e52555349..000000000000
->> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
->> +++ /dev/null
->> @@ -1,48 +0,0 @@
->> -* Analog Devices AD7170/AD7171/AD7780/AD7781
->> -
->> -Data sheets:
->> -
->> -- AD7170:
->> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
->> -- AD7171:
->> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
->> -- AD7780:
->> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
->> -- AD7781:
->> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
->> -
->> -Required properties:
->> -
->> -- compatible: should be one of
->> -	* "adi,ad7170"
->> -	* "adi,ad7171"
->> -	* "adi,ad7780"
->> -	* "adi,ad7781"
->> -- reg: spi chip select number for the device
->> -- vref-supply: the regulator supply for the ADC reference voltage
->> -
->> -Optional properties:
->> -
->> -- powerdown-gpios:  must be the device tree identifier of the PDRST pin. If
->> -		    specified, it will be asserted during driver probe. As the
->> -		    line is active high, it should be marked GPIO_ACTIVE_HIGH.
->> -- adi,gain-gpios:   must be the device tree identifier of the GAIN pin. Only for
->> -		    the ad778x chips. If specified, it will be asserted during
->> -		    driver probe. As the line is active low, it should be marked
->> -		    GPIO_ACTIVE_LOW.
->> -- adi,filter-gpios: must be the device tree identifier of the FILTER pin. Only
->> -		    for the ad778x chips. If specified, it will be asserted
->> -		    during driver probe. As the line is active low, it should be
->> -		    marked GPIO_ACTIVE_LOW.
->> -
->> -Example:
->> -
->> -adc@0 {
->> -	compatible =  "adi,ad7780";
->> -	reg =	      <0>;
->> -	vref-supply = <&vdd_supply>
->> -
->> -	powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
->> -	adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
->> -	adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
->> -};
->> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
->> new file mode 100644
->> index 000000000000..d1109416963c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
->> @@ -0,0 +1,87 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital converters
->> +
->> +maintainers:
->> +  - Michael Hennerich <michael.hennerich@analog.com>
->> +
->> +description: |
->> +  The ad7780 is a sigma-delta analog to digital converter. This driver provides
->> +  reading voltage values and status bits from both the ad778x and ad717x series.
->> +  Its interface also allows writing on the FILTER and GAIN GPIO pins on the
->> +  ad778x.
->> +
->> +  Specifications on the converters can be found at:
->> +    AD7170:
->> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
->> +    AD7171:
->> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
->> +    AD7780:
->> +      https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
->> +    AD7781:
->> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - adi,ad7170
->> +      - adi,ad7171
->> +      - adi,ad7780
->> +      - adi,ad7781
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  avdd-supply:
->> +    description:
->> +      The regulator supply for the ADC reference voltage.
->> +    maxItems: 1
->> +
->> +  powerdown-gpios:
->> +    description:
->> +      Must be the device tree identifier of the PDRST pin. If
->> +      specified, it will be asserted during driver probe. As the
->> +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
->> +    maxItems: 1
->> +
->> +  adi,gain-gpios:
->> +    description:
->> +      Must be the device tree identifier of the GAIN pin. Only for
->> +      the ad778x chips. If specified, it will be asserted during
->> +      driver probe. As the line is active low, it should be marked
->> +      GPIO_ACTIVE_LOW.
->> +    maxItems: 1
->> +
->> +  adi,filter-gpios:
->> +    description:
->> +      Must be the device tree identifier of the FILTER pin. Only
->> +      for the ad778x chips. If specified, it will be asserted
->> +      during driver probe. As the line is active low, it should be
->> +      marked GPIO_ACTIVE_LOW.
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/gpio/gpio.h>
->> +    spi0 {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        adc@0 {
->> +            compatible = "adi,ad7780";
->> +            reg = <0>;
->> +
->> +            avdd-supply      = <&vdd_supply>;
->> +            powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
->> +            adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
->> +            adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
->> +        };
->> +    };
->
+Cheers,
+Christian
