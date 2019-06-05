@@ -1,142 +1,137 @@
-From: Eduardo Valentin <eduval@amazon.com>
-Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive
- and queue messages
-Date: Tue, 4 Jun 2019 20:27:09 -0700
-Message-ID: <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
-References: <20190531043347.4196-1-eduval@amazon.com>
- <20190531043347.4196-3-eduval@amazon.com>
- <20190604171611.GS9224@smile.fi.intel.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Add Truly display
+Date: Wed, 5 Jun 2019 10:56:49 +0530
+Message-ID: <CAFp+6iH_pNPVs5QA2fa87ZoVngEFJ362sDivAWzzWPC6K0S5mA@mail.gmail.com>
+References: <20190513210747.22429-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190604171611.GS9224@smile.fi.intel.com>
+In-Reply-To: <20190513210747.22429-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Eduardo Valentin <eduval@amazon.com>, Wolfram Sang <wsa@the-dreams.de>, Haiyue Wang <haiyue.wang@linux.intel.com>, jarkko.nikula@linux.intel.com, brendanhiggins@google.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Andry,
+On Tue, May 14, 2019 at 2:39 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> Bring in the Truly display and enable the DSI channels to make the
+> mdss/gpu probe, even though we're lacking LABIB, preventing us from
+> seeing anything on the screen.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-Long time no seeing :-)
+Looks good to me and work well too with a wip lab-ibb driver change.
 
-On Tue, Jun 04, 2019 at 08:16:11PM +0300, Andy Shevchenko wrote:
-> On Thu, May 30, 2019 at 09:33:46PM -0700, Eduardo Valentin wrote:
-> > From: Haiyue Wang <haiyue.wang@linux.intel.com>
-> > 
-> > Some protocols over I2C are designed for bi-directional transferring
-> > messages by using I2C Master Write protocol. Like the MCTP (Management
-> > Component Transport Protocol) and IPMB (Intelligent Platform Management
-> > Bus), they both require that the userspace can receive messages from
-> > I2C dirvers under slave mode.
-> > 
-> > This new slave mqueue backend is used to receive and queue messages, it
-> > will exposes these messages to userspace by sysfs bin file.
-> > 
-> > Note: DT interface and a couple of minor fixes here and there
-> > by Eduardo, so I kept the original authorship here.
-> 
-> > +#define MQ_MSGBUF_SIZE		CONFIG_I2C_SLAVE_MQUEUE_MESSAGE_SIZE
-> > +#define MQ_QUEUE_SIZE		CONFIG_I2C_SLAVE_MQUEUE_QUEUE_SIZE
-> 
-> > +#define MQ_QUEUE_NEXT(x)	(((x) + 1) & (MQ_QUEUE_SIZE - 1))
-> 
-> Also possible ((x + 1) % ..._SIZE)
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 
-Right.. but I suppose the original idea is to avoid divisions on the hotpath.
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 79 +++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> index 02b8357c8ce8..83198a19ff57 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -352,6 +352,77 @@
+>         status = "okay";
+>  };
+>
+> +&dsi0 {
+> +       status = "okay";
+> +       vdda-supply = <&vdda_mipi_dsi0_1p2>;
+> +
+> +       qcom,dual-dsi-mode;
+> +       qcom,master-dsi;
+> +
+> +       ports {
+> +               port@1 {
+> +                       endpoint {
+> +                               remote-endpoint = <&truly_in_0>;
+> +                               data-lanes = <0 1 2 3>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       panel@0 {
+> +               compatible = "truly,nt35597-2K-display";
+> +               reg = <0>;
+> +               vdda-supply = <&vreg_l14a_1p88>;
+> +
+> +               reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
+> +               mode-gpios = <&tlmm 52 GPIO_ACTIVE_HIGH>;
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               truly_in_0: endpoint {
+> +                                       remote-endpoint = <&dsi0_out>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +                               truly_in_1: endpoint {
+> +                                       remote-endpoint = <&dsi1_out>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&dsi0_phy {
+> +       status = "okay";
+> +       vdds-supply = <&vdda_mipi_dsi0_pll>;
+> +};
+> +
+> +&dsi1 {
+> +       status = "okay";
+> +       vdda-supply = <&vdda_mipi_dsi1_1p2>;
+> +
+> +       qcom,dual-dsi-mode;
+> +
+> +       ports {
+> +               port@1 {
+> +                       endpoint {
+> +                               remote-endpoint = <&truly_in_1>;
+> +                               data-lanes = <0 1 2 3>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&dsi1_phy {
+> +       status = "okay";
+> +       vdds-supply = <&vdda_mipi_dsi1_pll>;
+> +};
+> +
+>  &gcc {
+>         protected-clocks = <GCC_QSPI_CORE_CLK>,
+>                            <GCC_QSPI_CORE_CLK_SRC>,
+> @@ -365,6 +436,14 @@
+>         clock-frequency = <400000>;
+>  };
+>
+> +&mdss {
+> +       status = "okay";
+> +};
+> +
+> +&mdss_mdp {
+> +       status = "okay";
+> +};
+> +
+>  &qupv3_id_1 {
+>         status = "okay";
+>  };
+> --
+> 2.18.0
+>
 
-So, I am actually fine with the limitation of only using power of 2.
-
-> 
-> > +	mq = dev_get_drvdata(container_of(kobj, struct device, kobj));
-> 
-> kobj_to_dev()
-
-Well, yeah, I guess this is a nit, but I can add that in case of a real need for a v7.
-
-> 
-> > +static int i2c_slave_mqueue_probe(struct i2c_client *client,
-> > +				  const struct i2c_device_id *id)
-> > +{
-> > +	struct device *dev = &client->dev;
-> > +	struct mq_queue *mq;
-> > +	int ret, i;
-> > +	void *buf;
-> > +
-> > +	mq = devm_kzalloc(dev, sizeof(*mq), GFP_KERNEL);
-> > +	if (!mq)
-> > +		return -ENOMEM;
-> > +
-> 
-> > +	BUILD_BUG_ON(!is_power_of_2(MQ_QUEUE_SIZE));
-> 
-> Perhaps start function with this kind of assertions?
-> 
-
-
-same here, in case I see a huge ask for a v7, I can move this up.
-
-> > +
-> > +	buf = devm_kmalloc_array(dev, MQ_QUEUE_SIZE, MQ_MSGBUF_SIZE,
-> > +				 GFP_KERNEL);
-> > +	if (!buf)
-> > +		return -ENOMEM;
-> > +
-> > +	for (i = 0; i < MQ_QUEUE_SIZE; i++)
-> > +		mq->queue[i].buf = buf + i * MQ_MSGBUF_SIZE;
-> 
-> 
-> Just wondering if kfifo API can bring an advantage here?
-> 
-
-Well, then again, I suppose the idea is simplify here, not if we need to go
-kfifo as the Protocol on top of this is perfectly fine with the current
-discipline of just having a simple drop of older messages.
-
-
-> > +	return 0;
-> > +}
-> 
-> > +static const struct of_device_id i2c_slave_mqueue_of_match[] = {
-> > +	{
-> > +		.compatible = "i2c-slave-mqueue",
-> > +	},
-> 
-> > +	{ },
-> 
-> No need for comma here.
-
-It does not hurt to have it either :-)
-
-> 
-> > +};
-> 
-> > +
-> > +static struct i2c_driver i2c_slave_mqueue_driver = {
-> > +	.driver = {
-> > +		.name	= "i2c-slave-mqueue",
-> 
-> > +		.of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> 
-> Wouldn't compiler warn you due to unused data?
-> Perhaps drop of_match_ptr() for good...
-
-
-Not sure what you meant here. I dont see any compiler warning.
-Also, of_match_ptr seams to be well spread in the kernel.
-> 
-> > +	},
-> > +	.probe		= i2c_slave_mqueue_probe,
-> > +	.remove		= i2c_slave_mqueue_remove,
-> > +	.id_table	= i2c_slave_mqueue_id,
-> > +};
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
 
 -- 
-All the best,
-Eduardo Valentin
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
