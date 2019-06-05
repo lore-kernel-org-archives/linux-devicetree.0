@@ -1,51 +1,64 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna
- Labs Fabric Interrupt Controller Driver
-Date: Wed, 5 Jun 2019 17:40:44 +0200
-Message-ID: <20190605154044.GA21923@kroah.com>
+From: Eduardo Valentin <eduval@amazon.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: interrupt-controller: Amazon's
+ Annapurna Labs FIC
+Date: Wed, 5 Jun 2019 08:49:55 -0700
+Message-ID: <20190605154955.GD1534@u40b0340c692b58f6553c.ant.amazon.com>
 References: <1559731921-14023-1-git-send-email-talel@amazon.com>
- <1559731921-14023-3-git-send-email-talel@amazon.com>
- <20190605125055.GA3184@kroah.com>
- <fb3f5f4d-26f4-8729-7370-f206369ab2b7@amazon.com>
+ <1559731921-14023-2-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <fb3f5f4d-26f4-8729-7370-f206369ab2b7@amazon.com>
+In-Reply-To: <1559731921-14023-2-git-send-email-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Shenhar, Talel" <talel@amazon.com>
-Cc: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
+To: Talel Shenhar <talel@amazon.com>
+Cc: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 05:51:08PM +0300, Shenhar, Talel wrote:
+On Wed, Jun 05, 2019 at 01:52:00PM +0300, Talel Shenhar wrote:
+> Document Amazon's Annapurna Labs Fabric Interrupt Controller SoC binding.
 > 
-> On 6/5/2019 3:50 PM, Greg KH wrote:
-> > On Wed, Jun 05, 2019 at 01:52:01PM +0300, Talel Shenhar wrote:
-> > > --- /dev/null
-> > > +++ b/drivers/irqchip/irq-al-fic.c
-> > > @@ -0,0 +1,289 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/**
-> > No need for kernel-doc format style here.
-> done
-> > 
-> > > + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-> > "or its affiliates"?  You know the answer to this, don't keep us in
-> > suspense.  Put the proper copyright holder here please, otherwise this
-> > is totally useless.
-> > 
-> > Well, copyright notices are technically useless anyway, but lawyers like
-> > to cargo-cult with the best of them, so it should be correct at the
-> > least.
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> ---
+>  .../interrupt-controller/amazon,al-fic.txt         | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
 > 
-> This is the format we were asked to use and have been using.
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> new file mode 100644
+> index 0000000..a2f31a6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> @@ -0,0 +1,22 @@
+> +Amazon's Annapurna Labs Fabric Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible: should be "amazon,al-fic"
+> +- reg: physical base address and size of the registers
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #interrupt-cells: must be 2.
+
+It would be great if you describe what the 2 numbers must represent here..
+
+> +- interrupt-parent: specifies the parent interrupt controller.
+> +- interrupts: describes which input line in the interrupt parent, this
+> +  fic's output is connected to.
+> +
+> +Example:
+> +
+> +amazon_fic: amazon_fic {
+> +	compatible = "amazon,al-fic";
+> +	interrupt-controller;
+> +	#interrupt-cells = <1>;
+> +	reg = <0x0 0xfd8a8500 0x0 0x1000>;
+> +	interrupt-parent = <&gic>;
+> +	interrupts = <GIC_SPI 0x0 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> -- 
+> 2.7.4
 > 
-> I am pinging them with your comment but I am likely not to get immediate
-> response so I'm publishing v3 without changing the "affiliates" for now.
 
-If that is what your lawyers say to use, that's fine.  Gotta love being
-vague in copyright lines, what could go wrong...
-
-good luck!
-
-greg k-h
+-- 
+All the best,
+Eduardo Valentin
