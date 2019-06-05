@@ -1,131 +1,88 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] USB: move usb debugfs directory creation to the usb
- common core
-Date: Wed, 5 Jun 2019 14:40:11 +0200
-Message-ID: <20190605124011.GB17558@kroah.com>
-References: <20190605092816.GA23758@kroah.com>
- <1559732515.8487.106.camel@mhfsdcap03>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v4 04/13] media: rc: sunxi: Add RXSTA bits definition
+Date: Wed, 5 Jun 2019 14:44:06 +0200
+Message-ID: <CAJiuCceZa=WEiF8_LK+jDdiXOn1i8+z8Smr6YKCpo9_XftgueQ@mail.gmail.com>
+References: <20190604162959.29199-1-peron.clem@gmail.com> <20190604162959.29199-5-peron.clem@gmail.com>
+ <20190605095141.psrq6mhk63zto77s@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1559732515.8487.106.camel@mhfsdcap03>
+In-Reply-To: <20190605095141.psrq6mhk63zto77s@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 07:01:55PM +0800, Chunfeng Yun wrote:
-> Hi Greg,
-> On Wed, 2019-06-05 at 11:28 +0200, Greg Kroah-Hartman wrote:
-> > The USB gadget subsystem wants to use the USB debugfs root directory, so
-> > move it to the common "core" USB code so that it is properly initialized
-> > and removed as needed.
-> > 
-> > In order to properly do this, we need to load the common code before the
-> > usb core code, when everything is linked into the kernel, so reorder the
-> > link order of the code.
-> > 
-> > Also as the usb common code has the possibility of the led trigger logic
-> > to be merged into it, handle the build option properly by only having
-> > one module init/exit function and have the common code initialize the
-> > led trigger if needed.
-> > 
-> > Reported-by: From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Hi Maxime,
+
+On Wed, 5 Jun 2019 at 11:51, Maxime Ripard <maxime.ripard@bootlin.com> wrot=
+e:
+>
+> On Tue, Jun 04, 2019 at 06:29:50PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > We are using RXINT bits definition when looking at RXSTA register.
+> >
+> > These bits are equal but it's not really proper.
+> >
+> > Introduce the RXSTA bits and use them to have coherency.
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
 > > ---
-> > 
-> > Chunfeng, can you test this version to verify it works for you when
-> > building the code into the kernel?
-> > 
-> > v2: handle led common code link error reported by kbuild
-> >     handle subsys_initcall issue pointed out by Chunfeng
-> > 
-> >  drivers/usb/Makefile        |  3 +--
-> >  drivers/usb/common/common.c | 21 +++++++++++++++++++++
-> >  drivers/usb/common/common.h | 14 ++++++++++++++
-> >  drivers/usb/common/led.c    |  9 +++------
-> >  drivers/usb/core/usb.c      | 10 ++++------
-> >  5 files changed, 43 insertions(+), 14 deletions(-)
-> >  create mode 100644 drivers/usb/common/common.h
-> > 
-> > diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
-> > index 7d1b8c82b208..ecc2de1ffaae 100644
-> > --- a/drivers/usb/Makefile
-> > +++ b/drivers/usb/Makefile
-> > @@ -5,6 +5,7 @@
-> >  
-> >  # Object files in subdirectories
-> >  
-> > +obj-$(CONFIG_USB_COMMON)	+= common/
-> >  obj-$(CONFIG_USB)		+= core/
-> >  obj-$(CONFIG_USB_SUPPORT)	+= phy/
-> >  
-> > @@ -60,8 +61,6 @@ obj-$(CONFIG_USB_CHIPIDEA)	+= chipidea/
-> >  obj-$(CONFIG_USB_RENESAS_USBHS)	+= renesas_usbhs/
-> >  obj-$(CONFIG_USB_GADGET)	+= gadget/
-> >  
-> > -obj-$(CONFIG_USB_COMMON)	+= common/
-> > -
-> >  obj-$(CONFIG_USBIP_CORE)	+= usbip/
-> >  
-> >  obj-$(CONFIG_TYPEC)		+= typec/
-> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> > index 18f5dcf58b0d..84a4423aaddf 100644
-> > --- a/drivers/usb/common/common.c
-> > +++ b/drivers/usb/common/common.c
-> > @@ -15,6 +15,8 @@
-> >  #include <linux/usb/of.h>
-> >  #include <linux/usb/otg.h>
-> >  #include <linux/of_platform.h>
-> > +#include <linux/debugfs.h>
-> > +#include "common.h"
-> >  
-> >  static const char *const ep_type_names[] = {
-> >  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
-> > @@ -291,4 +293,23 @@ struct device *usb_of_get_companion_dev(struct device *dev)
-> >  EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
-> >  #endif
-> >  
-> > +struct dentry *usb_debug_root;
-> > +EXPORT_SYMBOL_GPL(usb_debug_root);
-> > +
-> > +static int usb_common_init(void)
-> > +{
-> > +	usb_debug_root = debugfs_create_dir("usb", NULL);
-> > +	ledtrig_usb_init();
-> > +	return 0;
-> > +}
-> > +
-> > +static void usb_common_exit(void)
-> > +{
-> > +	ledtrig_usb_exit();
-> > +	debugfs_remove_recursive(usb_debug_root);
-> > +}
-> > +
-> When enable CONFIG_LED_TRIGGER, there is a warning
-> 
->  MODPOST vmlinux.o
-> WARNING: vmlinux.o(.text+0x68e300): Section mismatch in reference from
-> the function usb_common_init() to the
-> function .init.text:ledtrig_usb_init()
-> The function usb_common_init() references
-> the function __init ledtrig_usb_init().
-> This is often because usb_common_init lacks a __init
-> annotation or the annotation of ledtrig_usb_init is wrong.
-> 
-> WARNING: vmlinux.o(.text+0x68e318): Section mismatch in reference from
-> the function usb_common_exit() to the
-> function .exit.text:ledtrig_usb_exit()
-> The function usb_common_exit() references a function in an exit section.
-> Often the function ledtrig_usb_exit() has valid usage outside the exit
-> section
-> and the fix is to remove the __exit annotation of ledtrig_usb_exit.
-> 
-> seems need add __init and __exit for usb_common_init/exit
+> >  drivers/media/rc/sunxi-cir.c | 18 ++++++++++++------
+> >  1 file changed, 12 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.=
+c
+> > index 0504ebfc831f..572bd2257d35 100644
+> > --- a/drivers/media/rc/sunxi-cir.c
+> > +++ b/drivers/media/rc/sunxi-cir.c
+> > @@ -48,11 +48,11 @@
+> >
+> >  /* Rx Interrupt Enable */
+> >  #define SUNXI_IR_RXINT_REG    0x2C
+> > -/* Rx FIFO Overflow */
+> > +/* Rx FIFO Overflow Interrupt Enable */
+> >  #define REG_RXINT_ROI_EN             BIT(0)
+> > -/* Rx Packet End */
+> > +/* Rx Packet End Interrupt Enable */
+> >  #define REG_RXINT_RPEI_EN            BIT(1)
+> > -/* Rx FIFO Data Available */
+> > +/* Rx FIFO Data Available Interrupt Enable */
+> >  #define REG_RXINT_RAI_EN             BIT(4)
+> >
+> >  /* Rx FIFO available byte level */
+> > @@ -60,6 +60,12 @@
+> >
+> >  /* Rx Interrupt Status */
+> >  #define SUNXI_IR_RXSTA_REG    0x30
+> > +/* Rx FIFO Overflow */
+> > +#define REG_RXSTA_ROI                        BIT(0)
+> > +/* Rx Packet End */
+> > +#define REG_RXSTA_RPE                        BIT(1)
+> > +/* Rx FIFO Data Available */
+> > +#define REG_RXSTA_RA                 BIT(4)
+>
+> I'm fine with it on principle, but if the consistency needs to be
+> maintained then we could just reuse the above defines
 
-Yes, you are right, I'll go add those markings to those functions, good
-catch.
+There is no comment why we can reuse them, they can also be some wrong
+case for example the RXINT_DRQ_EN bit is not present in RXSTA and same
+for STAT bit present in RXSTA and not present in RXINT.
 
-greg k-h
+I have discover and read this code a month ago and this logic is
+really not obvious nor explain.
+
+Maybe this hack could be done when we will introduce a quirks, but for
+the moment I really think that it's more proper and readable to
+introduce them properly.
+
+Regards,
+Cl=C3=A9ment
+
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
