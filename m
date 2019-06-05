@@ -1,48 +1,31 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v3 3/5] soc: ti: ti_sci_pm_domains: Add support for
- exclusive and shared access
-Date: Wed, 5 Jun 2019 11:14:22 +0530
-Message-ID: <b6f005da-3c0a-ce73-79f0-eaa19c7da92c@ti.com>
-References: <20190410053728.17374-1-lokeshvutla@ti.com>
- <20190410053728.17374-4-lokeshvutla@ti.com>
+From: Avri Altman <Avri.Altman@wdc.com>
+Subject: RE: [PATCH 0/3] (Qualcomm) UFS device reset support
+Date: Wed, 5 Jun 2019 05:50:36 +0000
+Message-ID: <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190410053728.17374-4-lokeshvutla@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Santosh,
-
-On 10/04/19 11:07 AM, Lokesh Vutla wrote:
-> TISCI protocol supports for enabling the device either with exclusive
-> permissions for the requesting host or with sharing across the hosts.
-> There are certain devices which are exclusive to Linux context and
-> there are certain devices that are shared across different host contexts.
-> So add support for getting this information from DT by increasing
-> the power-domain cells to 2.
-> 
-> For keeping the DT backward compatibility intact, defaulting the
-> device permissions to set the exclusive flag set. In this case the
-> power-domain-cells is 1.
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-
-Any chance you can pick this patch? Tero is waiting for you to pick it up so
-that dts changes can be pulled. Or can you ack it so that Tero can pick the
-entire series?
-
-Thanks and regards,
-Lokesh
+SGksDQoNCj4gDQo+IE9uIFR1ZSwgSnVuIDQsIDIwMTkgYXQgMTI6MjIgQU0gQmpvcm4gQW5kZXJz
+c29uDQo+IDxiam9ybi5hbmRlcnNzb25AbGluYXJvLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBUaGlz
+IHNlcmllcyBleHBvc2VzIHRoZSB1ZnNfcmVzZXQgbGluZSBhcyBhIGdwaW8sIGFkZHMgc3VwcG9y
+dCBmb3IgdWZzaGNkIHRvDQo+ID4gYWNxdWlyZSBhbmQgdG9nZ2xlIHRoaXMgYW5kIHRoZW4gYWRk
+cyB0aGlzIHRvIFNETTg0NSBNVFAuDQo+ID4NCj4gPiBCam9ybiBBbmRlcnNzb24gKDMpOg0KPiA+
+ICAgcGluY3RybDogcWNvbTogc2RtODQ1OiBFeHBvc2UgdWZzX3Jlc2V0IGFzIGdwaW8NCj4gPiAg
+IHNjc2k6IHVmczogQWxsb3cgcmVzZXR0aW5nIHRoZSBVRlMgZGV2aWNlDQo+ID4gICBhcm02NDog
+ZHRzOiBxY29tOiBzZG04NDUtbXRwOiBTcGVjaWZ5IFVGUyBkZXZpY2UtcmVzZXQgR1BJTw0KPiAN
+Cj4gQWRkaW5nIHNpbWlsYXIgY2hhbmdlIGFzIGluIHNkbTg0NS1tdHAgdG8gdGhlIG5vdCB5ZXQg
+dXBzdHJlYW0NCj4gYmx1ZWxpbmUgZHRzLCBJIHZhbGlkYXRlZCB0aGlzIGFsbG93cyBteSBtaWNy
+b24gVUZTIHBpeGVsMyB0byBib290Lg0KPiANCj4gVGVzdGVkLWJ5OiBKb2huIFN0dWx0eiA8am9o
+bi5zdHVsdHpAbGluYXJvLm9yZz4NCk1heWJlIHVmc19oYmFfdmFyaWFudF9vcHMgd291bGQgYmUg
+dGhlIHByb3BlciBwbGFjZSB0byBhZGQgdGhpcz8NCg0KVGhhbmtzLA0KQXZyaQ0KDQoNCg0KPiAN
+Cj4gdGhhbmtzDQo+IC1qb2huDQo=
