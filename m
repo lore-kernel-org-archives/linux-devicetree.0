@@ -1,37 +1,60 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V3 RESEND AGAIN 1/2] defconfig: arm64: enable i.MX8 SCU
- octop driver
-Date: Wed, 5 Jun 2019 14:15:09 +0800
-Message-ID: <20190605061508.GD29853@dragon>
-References: <20190524063913.44171-1-peng.fan@nxp.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [RFC PATCH 1/3] arm64: dts: ti: am6-wakeup: Add gpio node
+Date: Wed, 5 Jun 2019 11:46:50 +0530
+Message-ID: <e6ec3894-4e3d-e721-c1bc-791263b2d309@ti.com>
+References: <20190605060846.25314-1-j-keerthy@ti.com>
+ <20190605060846.25314-2-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190524063913.44171-1-peng.fan@nxp.com>
+In-Reply-To: <20190605060846.25314-2-j-keerthy@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: peng.fan@nxp.com
-Cc: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, van.freenix@gmail.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Shawn Guo <shawn.guo@linaro.org>, Andy Gross <andy.gross@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Olof Johansson <olof@lixom.net>, Jagan Teki <jagan@amarulasolutions.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Leonard Crestez <leonard.crestez@nxp.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To: Keerthy <j-keerthy@ti.com>, t-kristo@ti.com, nm@ti.com, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2019 at 02:39:12PM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Build in CONFIG_NVMEM_IMX_OCOTP_SCU.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Shawn Guo <shawn.guo@linaro.org>
-> Cc: Andy Gross <andy.gross@linaro.org>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: Jagan Teki <jagan@amarulasolutions.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Leonard Crestez <leonard.crestez@nxp.com>
-> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Applied both, thanks.
+
+On 05/06/19 11:38 AM, Keerthy wrote:
+> Add gpio0 node under wakeup domain. This has 56 gpios
+> and all are capable of generating banked interrupts.
+> 
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+> index f1ca171abdf8..8c6c99e7c6ed 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+> @@ -74,4 +74,19 @@
+>  		ti,sci-dst-id = <56>;
+>  		ti,sci-rm-range-girq = <0x4>;
+>  	};
+> +
+> +	wkup_gpio0: wkup_gpio0@42110000 {
+> +		compatible = "ti,k2g-gpio", "ti,keystone-gpio";
+
+This is not k2g. Can you either create a am6 specific compatible or just use
+ti,keystone-gpio.
+
+Thanks and regards,
+Lokesh
+
+> +		reg = <0x42110000 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&intr_wkup_gpio>;
+> +		interrupts = <59 128>, <59 129>, <59 130>, <59 131>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <56>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		clocks = <&k3_clks 59 0>;
+> +		clock-names = "gpio";
+> +	};
+>  };
+> 
