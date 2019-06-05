@@ -1,31 +1,85 @@
-From: Avri Altman <Avri.Altman@wdc.com>
-Subject: RE: [PATCH 0/3] (Qualcomm) UFS device reset support
-Date: Wed, 5 Jun 2019 05:50:36 +0000
-Message-ID: <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH RESEND V4 2/3] arm64: dts: imx8qxp: Move watchdog node
+ into scu node
+Date: Wed, 5 Jun 2019 14:00:02 +0800
+Message-ID: <20190605060000.GA29853@dragon>
+References: <1557655528-12816-1-git-send-email-Anson.Huang@nxp.com>
+ <1557655528-12816-2-git-send-email-Anson.Huang@nxp.com>
+ <DB3PR0402MB39162F3811484D90546B4CC2F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <DB3PR0402MB39162F3811484D90546B4CC2F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>dl-linux-imx <li>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4gDQo+IE9uIFR1ZSwgSnVuIDQsIDIwMTkgYXQgMTI6MjIgQU0gQmpvcm4gQW5kZXJz
-c29uDQo+IDxiam9ybi5hbmRlcnNzb25AbGluYXJvLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBUaGlz
-IHNlcmllcyBleHBvc2VzIHRoZSB1ZnNfcmVzZXQgbGluZSBhcyBhIGdwaW8sIGFkZHMgc3VwcG9y
-dCBmb3IgdWZzaGNkIHRvDQo+ID4gYWNxdWlyZSBhbmQgdG9nZ2xlIHRoaXMgYW5kIHRoZW4gYWRk
-cyB0aGlzIHRvIFNETTg0NSBNVFAuDQo+ID4NCj4gPiBCam9ybiBBbmRlcnNzb24gKDMpOg0KPiA+
-ICAgcGluY3RybDogcWNvbTogc2RtODQ1OiBFeHBvc2UgdWZzX3Jlc2V0IGFzIGdwaW8NCj4gPiAg
-IHNjc2k6IHVmczogQWxsb3cgcmVzZXR0aW5nIHRoZSBVRlMgZGV2aWNlDQo+ID4gICBhcm02NDog
-ZHRzOiBxY29tOiBzZG04NDUtbXRwOiBTcGVjaWZ5IFVGUyBkZXZpY2UtcmVzZXQgR1BJTw0KPiAN
-Cj4gQWRkaW5nIHNpbWlsYXIgY2hhbmdlIGFzIGluIHNkbTg0NS1tdHAgdG8gdGhlIG5vdCB5ZXQg
-dXBzdHJlYW0NCj4gYmx1ZWxpbmUgZHRzLCBJIHZhbGlkYXRlZCB0aGlzIGFsbG93cyBteSBtaWNy
-b24gVUZTIHBpeGVsMyB0byBib290Lg0KPiANCj4gVGVzdGVkLWJ5OiBKb2huIFN0dWx0eiA8am9o
-bi5zdHVsdHpAbGluYXJvLm9yZz4NCk1heWJlIHVmc19oYmFfdmFyaWFudF9vcHMgd291bGQgYmUg
-dGhlIHByb3BlciBwbGFjZSB0byBhZGQgdGhpcz8NCg0KVGhhbmtzLA0KQXZyaQ0KDQoNCg0KPiAN
-Cj4gdGhhbmtzDQo+IC1qb2huDQo=
+On Tue, Jun 04, 2019 at 09:06:28AM +0000, Anson Huang wrote:
+> Hi, Shawn
+> 	The driver and binding doc are already reviewed and waiting for DT patch, will you help review this DT patch?
+
+I'm fine with it.  Should I just pick this patch up, or is there any
+dependency we need to handle?
+
+Shawn
+
+> 
+> Thanks,
+> Anson
+> 
+> > -----Original Message-----
+> > From: Anson Huang
+> > Sent: Sunday, May 12, 2019 6:11 PM
+> > To: robh+dt@kernel.org; mark.rutland@arm.com; wim@linux-watchdog.org;
+> > linux@roeck-us.net; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> > kernel@pengutronix.de; festevam@gmail.com; Aisheng Dong
+> > <aisheng.dong@nxp.com>; ulf.hansson@linaro.org; Daniel Baluta
+> > <daniel.baluta@nxp.com>; Peng Fan <peng.fan@nxp.com>;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > watchdog@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> > Cc: dl-linux-imx <linux-imx@nxp.com>
+> > Subject: [PATCH RESEND V4 2/3] arm64: dts: imx8qxp: Move watchdog node
+> > into scu node
+> > 
+> > i.MX system controller watchdog has pretimeout function which depends on
+> > i.MX SCU driver, so it should be a subnode of SCU.
+> > 
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> > No change, just resend patch with correct encoding.
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > index 0683ee2..b17c22e 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > @@ -149,6 +149,11 @@
+> >  		rtc: rtc {
+> >  			compatible = "fsl,imx8qxp-sc-rtc";
+> >  		};
+> > +
+> > +		watchdog {
+> > +			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+> > +			timeout-sec = <60>;
+> > +		};
+> >  	};
+> > 
+> >  	timer {
+> > @@ -517,9 +522,4 @@
+> >  			power-domains = <&pd IMX_SC_R_GPIO_7>;
+> >  		};
+> >  	};
+> > -
+> > -	watchdog {
+> > -		compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+> > -		timeout-sec = <60>;
+> > -	};
+> >  };
+> > --
+> > 2.7.4
+> 
