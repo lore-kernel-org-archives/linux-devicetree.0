@@ -1,80 +1,87 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on veyron
-Date: Wed, 05 Jun 2019 23:11:12 +0200
-Message-ID: <3079472.D8Re4Zsj2W@diego>
-References: <20190605204320.22343-1-mka@chromium.org> <20190605204320.22343-2-mka@chromium.org>
+From: "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Subject: RE: [EXT] [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
+Date: Wed, 5 Jun 2019 21:17:48 +0000
+Message-ID: <BN7PR08MB5684B63CABF148C279FD64C1DB160@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <20190604072001.9288-3-bjorn.andersson@linaro.org>
+ <BN7PR08MB568450B1EC51ABAA2E426AC0DB150@BN7PR08MB5684.namprd08.prod.outlook.com>
+ <20190604223025.GD4814@minitux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190605204320.22343-2-mka@chromium.org>
+In-Reply-To: <20190604223025.GD4814@minitux>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 5. Juni 2019, 22:43:20 CEST schrieb Matthias Kaehlcke:
-> This enables wake up on Bluetooth activity when the device is
-> suspended. The BT_HOST_WAKE signal is only connected on devices
-> with BT module that are connected through UART.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Hi, Bjorn
+I think I should give up my preview suggestion DME_ENDPOINTRESET.req softwa=
+re reset,  go back to your HW reset.
+Although SW reset can cover most of the requirement, and compatible with di=
+fferent vendor UFS device, for some device
+fatal error cases, UFS internal stuck and would not accept SW Reset. An HW =
+reset is expected. =20
+Please go on your reset way.
 
-Housekeeping question, with the two Signed-off-by lines, is Doug the
-original author, or was this Co-developer-by?
+Thanks,
+//Bean
 
-Heiko
-
-> ---
->  arch/arm/boot/dts/rk3288-veyron.dtsi | 29 ++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> index cc4c3595f145..145cac7c0847 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> @@ -23,6 +23,31 @@
->  		reg = <0x0 0x0 0x0 0x80000000>;
->  	};
->  
-> +	bt_activity: bt-activity {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&bt_host_wake>;
-> +
-> +		/*
-> +		 * HACK: until we have an LPM driver, we'll use an
-> +		 * ugly GPIO key to allow Bluetooth to wake from S3.
-> +		 * This is expected to only be used by BT modules that
-> +		 * use UART for comms.  For BT modules that talk over
-> +		 * SDIO we should use a wakeup mechanism related to SDIO.
-> +		 *
-> +		 * Use KEY_RESERVED here since that will work as a wakeup but
-> +		 * doesn't get reported to higher levels (so doesn't confuse
-> +		 * Chrome).
-> +		 */
-> +		bt-wake {
-> +			label = "BT Wakeup";
-> +			gpios = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
-> +			linux,code = <KEY_RESERVED>;
-> +			wakeup-source;
-> +		};
-> +
-> +	};
-> +
->  	power_button: power-button {
->  		compatible = "gpio-keys";
->  		pinctrl-names = "default";
-> @@ -555,6 +580,10 @@
->  			rockchip,pins = <4 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>;
->  		};
->  
-> +		bt_host_wake: bt-host-wake {
-> +			rockchip,pins = <4 31 RK_FUNC_GPIO &pcfg_pull_down>;
-> +		};
-> +
->  		/*
->  		 * We run sdio0 at max speed; bump up drive strength.
->  		 * We also have external pulls, so disable the internal ones.
-> 
+>Andy Gross <agross@kernel.org>; Linus Walleij <linus.walleij@linaro.org>;
+>Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+>linux-arm-msm@vger.kernel.org; linux-gpio@vger.kernel.org;
+>devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+>scsi@vger.kernel.org
+>Subject: Re: [EXT] [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
+>
+>On Tue 04 Jun 01:13 PDT 2019, Bean Huo (beanhuo) wrote:
+>> >@@ -6159,6 +6179,9 @@ static int ufshcd_reset_and_restore(struct
+>> >ufs_hba
+>> >*hba)
+>> > 	int retries =3D MAX_HOST_RESET_RETRIES;
+>> >
+>> > 	do {
+>> >+		/* Reset the attached device */
+>> >+		ufshcd_device_reset(hba);
+>> >+
+>>
+>> what's problem you met, and you should reset UFS device here? could you
+>give more info?
+>>
+>> It is true that we don't reset UFS device in case of device fatal
+>> error. According to UFS host spec, Host should be device reset except
+>> that in addition to resetting UIC. But as so far, We didn't experience a=
+ny
+>problems result from this missing reset.
+>>
+>> We have three UFS device reset ways.  Comparing to this hardware
+>> reset, I prefer to use DME_ENDPOINTRESET.req software reset.
+>>
+>
+>Hi Bean,
+>
+>Thanks for your questions. With some memories we see issues establishing
+>the link during bootup, so that's the purpose of issuing this reset.
+>
+>Unfortunately the downstream Qualcomm patch [1] (which I should have
+>remembered to attribute), does not mention why the reset during host
+>controller reset is needed - but I'm fairly certain that this scenario wou=
+ld be
+>similar to the handover from bootloader to kernel that we do see an issue
+>with.
+>
+>
+>[1]
+>https://nam01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fsource
+>.codeaurora.org%2Fquic%2Fla%2Fkernel%2Fmsm-
+>4.4%2Fcommit%2F%3Fh%3Dmsm-
+>4.4%26id%3D0c82737188e2d63a08196e078e411032dbbc3b89&amp;data=3D02%
+>7C01%7Cbeanhuo%40micron.com%7Cf72404eb906440e1f9c408d6e93c401d%7
+>Cf38a5ecd28134862b11bac1d563c806f%7C0%7C0%7C636952842324926509&a
+>mp;sdata=3DI%2FH7km6b34jyoUa1RVEPApfYt5uSFtHqL3%2BvV1bvryM%3D&amp
+>;reserved=3D0
+>
+>Regards,
+>Bjorn
