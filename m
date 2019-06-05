@@ -1,33 +1,187 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx7d-sdb: Make SW2's voltage fixed
-Date: Wed, 5 Jun 2019 17:17:01 +0800
-Message-ID: <20190605091659.GM29853@dragon>
-References: <20190529065056.27516-1-Anson.Huang@nxp.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2] USB: move usb debugfs directory creation to the usb
+ common core
+Date: Wed, 5 Jun 2019 11:28:16 +0200
+Message-ID: <20190605092816.GA23758@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190529065056.27516-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+To: Felipe Balbi <felipe.balbi@linux.intel.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 29, 2019 at 02:50:56PM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> On i.MX7D SDB board, SW2 supplies a lot of peripheral devices,
-> its voltage should be fixed at 1.8V. The commit 43967d9b5a7c
-> ("ARM: dts: imx7d-sdb: Assign corresponding power supply for LDOs")
-> assigns SW2 as the supplier of vdd1p0d, and when its comsumers
-> pcie-phy/mipi-phy try to set the vdd1p0d to 1.0V, regulator core
-> will also set SW2 to its best(min) voltage to 1.5V, and it will
-> lead to board reset.
-> 
-> This patch makes SW2's voltage fixed at 1.8V to avoid this issue.
-> 
-> Fixes: 43967d9b5a7c ("ARM: dts: imx7d-sdb: Assign corresponding power supply for LDOs")
-> Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+The USB gadget subsystem wants to use the USB debugfs root directory, so
+move it to the common "core" USB code so that it is properly initialized
+and removed as needed.
 
-Applied, thanks.
+In order to properly do this, we need to load the common code before the
+usb core code, when everything is linked into the kernel, so reorder the
+link order of the code.
+
+Also as the usb common code has the possibility of the led trigger logic
+to be merged into it, handle the build option properly by only having
+one module init/exit function and have the common code initialize the
+led trigger if needed.
+
+Reported-by: From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+
+Chunfeng, can you test this version to verify it works for you when
+building the code into the kernel?
+
+v2: handle led common code link error reported by kbuild
+    handle subsys_initcall issue pointed out by Chunfeng
+
+ drivers/usb/Makefile        |  3 +--
+ drivers/usb/common/common.c | 21 +++++++++++++++++++++
+ drivers/usb/common/common.h | 14 ++++++++++++++
+ drivers/usb/common/led.c    |  9 +++------
+ drivers/usb/core/usb.c      | 10 ++++------
+ 5 files changed, 43 insertions(+), 14 deletions(-)
+ create mode 100644 drivers/usb/common/common.h
+
+diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
+index 7d1b8c82b208..ecc2de1ffaae 100644
+--- a/drivers/usb/Makefile
++++ b/drivers/usb/Makefile
+@@ -5,6 +5,7 @@
+ 
+ # Object files in subdirectories
+ 
++obj-$(CONFIG_USB_COMMON)	+= common/
+ obj-$(CONFIG_USB)		+= core/
+ obj-$(CONFIG_USB_SUPPORT)	+= phy/
+ 
+@@ -60,8 +61,6 @@ obj-$(CONFIG_USB_CHIPIDEA)	+= chipidea/
+ obj-$(CONFIG_USB_RENESAS_USBHS)	+= renesas_usbhs/
+ obj-$(CONFIG_USB_GADGET)	+= gadget/
+ 
+-obj-$(CONFIG_USB_COMMON)	+= common/
+-
+ obj-$(CONFIG_USBIP_CORE)	+= usbip/
+ 
+ obj-$(CONFIG_TYPEC)		+= typec/
+diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+index 18f5dcf58b0d..84a4423aaddf 100644
+--- a/drivers/usb/common/common.c
++++ b/drivers/usb/common/common.c
+@@ -15,6 +15,8 @@
+ #include <linux/usb/of.h>
+ #include <linux/usb/otg.h>
+ #include <linux/of_platform.h>
++#include <linux/debugfs.h>
++#include "common.h"
+ 
+ static const char *const ep_type_names[] = {
+ 	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
+@@ -291,4 +293,23 @@ struct device *usb_of_get_companion_dev(struct device *dev)
+ EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
+ #endif
+ 
++struct dentry *usb_debug_root;
++EXPORT_SYMBOL_GPL(usb_debug_root);
++
++static int usb_common_init(void)
++{
++	usb_debug_root = debugfs_create_dir("usb", NULL);
++	ledtrig_usb_init();
++	return 0;
++}
++
++static void usb_common_exit(void)
++{
++	ledtrig_usb_exit();
++	debugfs_remove_recursive(usb_debug_root);
++}
++
++subsys_initcall(usb_common_init);
++module_exit(usb_common_exit);
++
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/usb/common/common.h b/drivers/usb/common/common.h
+new file mode 100644
+index 000000000000..424a91316a4b
+--- /dev/null
++++ b/drivers/usb/common/common.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef __LINUX_USB_COMMON_H
++#define __LINUX_USB_COMMON_H
++
++#if defined(CONFIG_USB_LED_TRIG)
++void ledtrig_usb_init(void);
++void ledtrig_usb_exit(void);
++#else
++static inline void ledtrig_usb_init(void) { }
++static inline void ledtrig_usb_exit(void) { }
++#endif
++
++#endif	/* __LINUX_USB_COMMON_H */
+diff --git a/drivers/usb/common/led.c b/drivers/usb/common/led.c
+index 7bd81166b77d..0865dd44a80a 100644
+--- a/drivers/usb/common/led.c
++++ b/drivers/usb/common/led.c
+@@ -10,6 +10,7 @@
+ #include <linux/init.h>
+ #include <linux/leds.h>
+ #include <linux/usb.h>
++#include "common.h"
+ 
+ #define BLINK_DELAY 30
+ 
+@@ -36,18 +37,14 @@ void usb_led_activity(enum usb_led_event ev)
+ EXPORT_SYMBOL_GPL(usb_led_activity);
+ 
+ 
+-static int __init ledtrig_usb_init(void)
++void __init ledtrig_usb_init(void)
+ {
+ 	led_trigger_register_simple("usb-gadget", &ledtrig_usb_gadget);
+ 	led_trigger_register_simple("usb-host", &ledtrig_usb_host);
+-	return 0;
+ }
+ 
+-static void __exit ledtrig_usb_exit(void)
++void __exit ledtrig_usb_exit(void)
+ {
+ 	led_trigger_unregister_simple(ledtrig_usb_gadget);
+ 	led_trigger_unregister_simple(ledtrig_usb_host);
+ }
+-
+-module_init(ledtrig_usb_init);
+-module_exit(ledtrig_usb_exit);
+diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+index 7fcb9f782931..5a0df527a8ca 100644
+--- a/drivers/usb/core/usb.c
++++ b/drivers/usb/core/usb.c
+@@ -1185,19 +1185,17 @@ static struct notifier_block usb_bus_nb = {
+ 	.notifier_call = usb_bus_notify,
+ };
+ 
+-struct dentry *usb_debug_root;
+-EXPORT_SYMBOL_GPL(usb_debug_root);
++static struct dentry *usb_devices_root;
+ 
+ static void usb_debugfs_init(void)
+ {
+-	usb_debug_root = debugfs_create_dir("usb", NULL);
+-	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
+-			    &usbfs_devices_fops);
++	usb_devices_root = debugfs_create_file("devices", 0444, usb_debug_root,
++					       NULL, &usbfs_devices_fops);
+ }
+ 
+ static void usb_debugfs_cleanup(void)
+ {
+-	debugfs_remove_recursive(usb_debug_root);
++	debugfs_remove(usb_devices_root);
+ }
+ 
+ /*
+-- 
+2.21.0
