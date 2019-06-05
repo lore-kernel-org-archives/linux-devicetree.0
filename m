@@ -1,11 +1,13 @@
 From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Subject: [PATCH 1/2] clk: rockchip: add clock for the watchdog pclk on rk3328
-Date: Thu,  6 Jun 2019 02:57:13 +0300
-Message-ID: <20190605235714.22432-1-papadakospan@gmail.com>
+Subject: [PATCH 2/2] arm64: dts: rockchip: enable rk3328 watchdog clock
+Date: Thu,  6 Jun 2019 02:57:14 +0300
+Message-ID: <20190605235714.22432-2-papadakospan@gmail.com>
+References: <20190605235714.22432-1-papadakospan@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190605235714.22432-1-papadakospan@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,58 +23,54 @@ List-Id: devicetree@vger.kernel.org
 
 From: <itdaniher@gmail.com>
 
-Following the discussion here:
-https://github.com/rockchip-linux/kernel/issues/123
+Add the missing clock property for the watchdog on rk3328.
 
-it can be seen that these are the changes needed to enable the use of the hardware watchdog in the rk3328 SoC.
-
-This is in line with past changes for the rk3288:
-http://lists.infradead.org/pipermail/linux-rockchip/2015-January/002314.html
+This patch depends on:
+clk: rockchip: add clock for the watchdog pclk on rk3328
 
 Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
 ---
- drivers/clk/rockchip/clk-rk3328.c      | 9 +++++++++
- include/dt-bindings/clock/rk3328-cru.h | 1 +
- 2 files changed, 10 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++++
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 4 ++++
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi       | 2 ++
+ 3 files changed, 10 insertions(+)
 
-diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
-index 076b9777a..546ee0ab7 100644
---- a/drivers/clk/rockchip/clk-rk3328.c
-+++ b/drivers/clk/rockchip/clk-rk3328.c
-@@ -876,6 +876,8 @@ static const char *const rk3328_critical_clocks[] __initconst = {
- 
- static void __init rk3328_clk_init(struct device_node *np)
- {
-+	struct clk *clk;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index 5d499c908..49d51dd93 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -349,3 +349,7 @@
+ &vop_mmu {
+ 	status = "okay";
+ };
 +
- 	struct rockchip_clk_provider *ctx;
- 	void __iomem *reg_base;
- 
-@@ -892,6 +894,13 @@ static void __init rk3328_clk_init(struct device_node *np)
- 		return;
- 	}
- 
-+	clk = clk_register_fixed_factor(NULL, "pclk_wdt", "pclk_bus", 0, 1, 1);
-+	if (IS_ERR(clk))
-+		pr_warn("%s: could not register clock pclk_wdt: %ld\n",
-+			__func__, PTR_ERR(clk));
-+	else
-+		rockchip_clk_add_lookup(ctx, clk, PCLK_WDT);
++&wdt {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index 7cfd5ca6c..18a3e0dfa 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -405,3 +405,7 @@
+ &vop_mmu {
+ 	status = "okay";
+ };
 +
- 	rockchip_clk_register_plls(ctx, rk3328_pll_clks,
- 				   ARRAY_SIZE(rk3328_pll_clks),
- 				   RK3328_GRF_SOC_STATUS0);
-diff --git a/include/dt-bindings/clock/rk3328-cru.h b/include/dt-bindings/clock/rk3328-cru.h
-index afb811340..555b4ff66 100644
---- a/include/dt-bindings/clock/rk3328-cru.h
-+++ b/include/dt-bindings/clock/rk3328-cru.h
-@@ -164,6 +164,7 @@
- #define PCLK_DCF		233
- #define PCLK_SARADC		234
- #define PCLK_ACODECPHY		235
-+#define PCLK_WDT		236
++&wdt {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index 994468671..e0a6279da 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -407,6 +407,8 @@
+ 		compatible = "snps,dw-wdt";
+ 		reg = <0x0 0xff1a0000 0x0 0x100>;
+ 		interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru PCLK_WDT>;
++		status = "disabled";
+ 	};
  
- /* hclk gates */
- #define HCLK_PERI		308
+ 	pwm0: pwm@ff1b0000 {
 -- 
 2.21.0
