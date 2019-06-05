@@ -1,221 +1,131 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 2/2] dt-bindings: i2c: mv64xxx: Add YAML schemas
-Date: Wed,  5 Jun 2019 14:29:36 +0200
-Message-ID: <20190605122936.11972-2-maxime.ripard@bootlin.com>
-References: <20190605122936.11972-1-maxime.ripard@bootlin.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2] USB: move usb debugfs directory creation to the usb
+ common core
+Date: Wed, 5 Jun 2019 14:40:11 +0200
+Message-ID: <20190605124011.GB17558@kroah.com>
+References: <20190605092816.GA23758@kroah.com>
+ <1559732515.8487.106.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190605122936.11972-1-maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1559732515.8487.106.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Switch the DT binding to a YAML schema to enable the DT validation.
+On Wed, Jun 05, 2019 at 07:01:55PM +0800, Chunfeng Yun wrote:
+> Hi Greg,
+> On Wed, 2019-06-05 at 11:28 +0200, Greg Kroah-Hartman wrote:
+> > The USB gadget subsystem wants to use the USB debugfs root directory, so
+> > move it to the common "core" USB code so that it is properly initialized
+> > and removed as needed.
+> > 
+> > In order to properly do this, we need to load the common code before the
+> > usb core code, when everything is linked into the kernel, so reorder the
+> > link order of the code.
+> > 
+> > Also as the usb common code has the possibility of the led trigger logic
+> > to be merged into it, handle the build option properly by only having
+> > one module init/exit function and have the common code initialize the
+> > led trigger if needed.
+> > 
+> > Reported-by: From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> > 
+> > Chunfeng, can you test this version to verify it works for you when
+> > building the code into the kernel?
+> > 
+> > v2: handle led common code link error reported by kbuild
+> >     handle subsys_initcall issue pointed out by Chunfeng
+> > 
+> >  drivers/usb/Makefile        |  3 +--
+> >  drivers/usb/common/common.c | 21 +++++++++++++++++++++
+> >  drivers/usb/common/common.h | 14 ++++++++++++++
+> >  drivers/usb/common/led.c    |  9 +++------
+> >  drivers/usb/core/usb.c      | 10 ++++------
+> >  5 files changed, 43 insertions(+), 14 deletions(-)
+> >  create mode 100644 drivers/usb/common/common.h
+> > 
+> > diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
+> > index 7d1b8c82b208..ecc2de1ffaae 100644
+> > --- a/drivers/usb/Makefile
+> > +++ b/drivers/usb/Makefile
+> > @@ -5,6 +5,7 @@
+> >  
+> >  # Object files in subdirectories
+> >  
+> > +obj-$(CONFIG_USB_COMMON)	+= common/
+> >  obj-$(CONFIG_USB)		+= core/
+> >  obj-$(CONFIG_USB_SUPPORT)	+= phy/
+> >  
+> > @@ -60,8 +61,6 @@ obj-$(CONFIG_USB_CHIPIDEA)	+= chipidea/
+> >  obj-$(CONFIG_USB_RENESAS_USBHS)	+= renesas_usbhs/
+> >  obj-$(CONFIG_USB_GADGET)	+= gadget/
+> >  
+> > -obj-$(CONFIG_USB_COMMON)	+= common/
+> > -
+> >  obj-$(CONFIG_USBIP_CORE)	+= usbip/
+> >  
+> >  obj-$(CONFIG_TYPEC)		+= typec/
+> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> > index 18f5dcf58b0d..84a4423aaddf 100644
+> > --- a/drivers/usb/common/common.c
+> > +++ b/drivers/usb/common/common.c
+> > @@ -15,6 +15,8 @@
+> >  #include <linux/usb/of.h>
+> >  #include <linux/usb/otg.h>
+> >  #include <linux/of_platform.h>
+> > +#include <linux/debugfs.h>
+> > +#include "common.h"
+> >  
+> >  static const char *const ep_type_names[] = {
+> >  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
+> > @@ -291,4 +293,23 @@ struct device *usb_of_get_companion_dev(struct device *dev)
+> >  EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
+> >  #endif
+> >  
+> > +struct dentry *usb_debug_root;
+> > +EXPORT_SYMBOL_GPL(usb_debug_root);
+> > +
+> > +static int usb_common_init(void)
+> > +{
+> > +	usb_debug_root = debugfs_create_dir("usb", NULL);
+> > +	ledtrig_usb_init();
+> > +	return 0;
+> > +}
+> > +
+> > +static void usb_common_exit(void)
+> > +{
+> > +	ledtrig_usb_exit();
+> > +	debugfs_remove_recursive(usb_debug_root);
+> > +}
+> > +
+> When enable CONFIG_LED_TRIGGER, there is a warning
+> 
+>  MODPOST vmlinux.o
+> WARNING: vmlinux.o(.text+0x68e300): Section mismatch in reference from
+> the function usb_common_init() to the
+> function .init.text:ledtrig_usb_init()
+> The function usb_common_init() references
+> the function __init ledtrig_usb_init().
+> This is often because usb_common_init lacks a __init
+> annotation or the annotation of ledtrig_usb_init is wrong.
+> 
+> WARNING: vmlinux.o(.text+0x68e318): Section mismatch in reference from
+> the function usb_common_exit() to the
+> function .exit.text:ledtrig_usb_exit()
+> The function usb_common_exit() references a function in an exit section.
+> Often the function ledtrig_usb_exit() has valid usage outside the exit
+> section
+> and the fix is to remove the __exit annotation of ledtrig_usb_exit.
+> 
+> seems need add __init and __exit for usb_common_init/exit
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Yes, you are right, I'll go add those markings to those functions, good
+catch.
 
----
-
-Changes from v1:
-  - Fix the maintainers
----
- .../devicetree/bindings/i2c/i2c-mv64xxx.txt   |  64 -----------
- .../bindings/i2c/marvell,mv64xxx-i2c.yaml     | 105 ++++++++++++++++++
- 2 files changed, 105 insertions(+), 64 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
-deleted file mode 100644
-index 0ffe65a316ae..000000000000
---- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
-+++ /dev/null
-@@ -1,64 +0,0 @@
--
--* Marvell MV64XXX I2C controller
--
--Required properties :
--
-- - reg             : Offset and length of the register set for the device
-- - compatible      : Should be either:
--                     - "allwinner,sun4i-a10-i2c"
--                     - "allwinner,sun6i-a31-i2c"
--                     - "marvell,mv64xxx-i2c"
--                     - "marvell,mv78230-i2c"
--                     - "marvell,mv78230-a0-i2c"
--                       * Note: Only use "marvell,mv78230-a0-i2c" for a
--                         very rare, initial version of the SoC which
--                         had broken offload support.  Linux
--                         auto-detects this and sets it appropriately.
-- - interrupts      : The interrupt number
--
--Optional properties :
--
-- - clock-frequency : Desired I2C bus clock frequency in Hz. If not set the
--default frequency is 100kHz
--
-- - resets          : phandle to the parent reset controller. Mandatory
--                     whenever you're using the "allwinner,sun6i-a31-i2c"
--                     compatible.
--
-- - clocks:	   : pointers to the reference clocks for this device, the
--		     first one is the one used for the clock on the i2c bus,
--		     the second one is the clock used to acces the registers
--		     of the controller
--
-- - clock-names	   : names of used clocks, mandatory if the second clock is
--		     used, the name must be "core", and "reg" (the latter is
--		     only for Armada 7K/8K).
--
--Examples:
--
--	i2c@11000 {
--		compatible = "marvell,mv64xxx-i2c";
--		reg = <0x11000 0x20>;
--		interrupts = <29>;
--		clock-frequency = <100000>;
--	};
--
--For the Armada XP:
--
--	i2c@11000 {
--		compatible = "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
--		reg = <0x11000 0x100>;
--		interrupts = <29>;
--		clock-frequency = <100000>;
--	};
--
--For the Armada 7040:
--
--	i2c@701000 {
--		compatible = "marvell,mv78230-i2c";
--		reg = <0x701000 0x20>;
--		interrupts = <29>;
--		clock-frequency = <100000>;
--		clock-names = "core", "reg";
--		clocks = <&core_clock>, <&reg_clock>;
--	};
-diff --git a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-new file mode 100644
-index 000000000000..a1c631eaeafd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-@@ -0,0 +1,105 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/i2c/marvell,mv64xxx-i2c.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell MV64XXX I2C Controller Device Tree Bindings
-+
-+maintainers:
-+  - Gregory CLEMENT <gregory.clement@bootlin.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: allwinner,sun4i-a10-i2c
-+      - items:
-+          - const: allwinner,sun7i-a20-i2c
-+          - const: allwinner,sun4i-a10-i2c
-+      - const: allwinner,sun6i-a31-i2c
-+      - items:
-+          - const: allwinner,sun8i-a23-i2c
-+          - const: allwinner,sun6i-a31-i2c
-+      - items:
-+          - const: allwinner,sun8i-a83t-i2c
-+          - const: allwinner,sun6i-a31-i2c
-+      - items:
-+          - const: allwinner,sun50i-a64-i2c
-+          - const: allwinner,sun6i-a31-i2c
-+
-+      - const: marvell,mv64xxx-i2c
-+      - const: marvell,mv78230-i2c
-+      - const: marvell,mv78230-a0-i2c
-+
-+    description:
-+      Only use "marvell,mv78230-a0-i2c" for a very rare, initial
-+      version of the SoC which had broken offload support. Linux
-+      auto-detects this and sets it appropriately.
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: Reference clock for the I2C bus
-+      - description: Bus clock (Only for Armada 7K/8K)
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: core
-+      - const: reg
-+    description:
-+      Mandatory if two clocks are used (only for Armada 7k and 8k).
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+allOf:
-+  - $ref: /schemas/i2c/i2c-controller.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - allwinner,sun4i-a10-i2c
-+              - allwinner,sun6i-a31-i2c
-+
-+    then:
-+      required:
-+        - clocks
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun6i-a31-i2c
-+
-+    then:
-+      required:
-+        - resets
-+
-+# FIXME: We should set it, but it would report all the generic
-+# properties as additional properties.
-+# additionalProperties: false
-+
-+examples:
-+  - |
-+    timer {
-+      compatible = "allwinner,sun4i-a10-timer";
-+      reg = <0x01c20c00 0x400>;
-+      interrupts = <22>;
-+      clocks = <&osc>;
-+    };
-+...
--- 
-2.21.0
+greg k-h
