@@ -1,85 +1,51 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH RESEND V4 2/3] arm64: dts: imx8qxp: Move watchdog node
- into scu node
-Date: Wed, 5 Jun 2019 14:00:02 +0800
-Message-ID: <20190605060000.GA29853@dragon>
-References: <1557655528-12816-1-git-send-email-Anson.Huang@nxp.com>
- <1557655528-12816-2-git-send-email-Anson.Huang@nxp.com>
- <DB3PR0402MB39162F3811484D90546B4CC2F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 0/3] (Qualcomm) UFS device reset support
+Date: Tue, 4 Jun 2019 23:01:54 -0700
+Message-ID: <20190605060154.GJ22737@tuxbook-pro>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
+ <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39162F3811484D90546B4CC2F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>dl-linux-imx <li>
+To: Avri Altman <Avri.Altman@wdc.com>
+Cc: John Stultz <john.stultz@linaro.org>, Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 09:06:28AM +0000, Anson Huang wrote:
-> Hi, Shawn
-> 	The driver and binding doc are already reviewed and waiting for DT patch, will you help review this DT patch?
+On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
 
-I'm fine with it.  Should I just pick this patch up, or is there any
-dependency we need to handle?
+> Hi,
+> 
+> > 
+> > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> > >
+> > > This series exposes the ufs_reset line as a gpio, adds support for ufshcd to
+> > > acquire and toggle this and then adds this to SDM845 MTP.
+> > >
+> > > Bjorn Andersson (3):
+> > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
+> > >   scsi: ufs: Allow resetting the UFS device
+> > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
+> > 
+> > Adding similar change as in sdm845-mtp to the not yet upstream
+> > blueline dts, I validated this allows my micron UFS pixel3 to boot.
+> > 
+> > Tested-by: John Stultz <john.stultz@linaro.org>
+> Maybe ufs_hba_variant_ops would be the proper place to add this?
+> 
 
-Shawn
+Are you saying that these memories only need a reset when they are
+paired with the Qualcomm host controller?
 
-> 
-> Thanks,
-> Anson
-> 
-> > -----Original Message-----
-> > From: Anson Huang
-> > Sent: Sunday, May 12, 2019 6:11 PM
-> > To: robh+dt@kernel.org; mark.rutland@arm.com; wim@linux-watchdog.org;
-> > linux@roeck-us.net; shawnguo@kernel.org; s.hauer@pengutronix.de;
-> > kernel@pengutronix.de; festevam@gmail.com; Aisheng Dong
-> > <aisheng.dong@nxp.com>; ulf.hansson@linaro.org; Daniel Baluta
-> > <daniel.baluta@nxp.com>; Peng Fan <peng.fan@nxp.com>;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > watchdog@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> > Cc: dl-linux-imx <linux-imx@nxp.com>
-> > Subject: [PATCH RESEND V4 2/3] arm64: dts: imx8qxp: Move watchdog node
-> > into scu node
-> > 
-> > i.MX system controller watchdog has pretimeout function which depends on
-> > i.MX SCU driver, so it should be a subnode of SCU.
-> > 
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> > No change, just resend patch with correct encoding.
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 10 +++++-----
-> >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > index 0683ee2..b17c22e 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > @@ -149,6 +149,11 @@
-> >  		rtc: rtc {
-> >  			compatible = "fsl,imx8qxp-sc-rtc";
-> >  		};
-> > +
-> > +		watchdog {
-> > +			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
-> > +			timeout-sec = <60>;
-> > +		};
-> >  	};
-> > 
-> >  	timer {
-> > @@ -517,9 +522,4 @@
-> >  			power-domains = <&pd IMX_SC_R_GPIO_7>;
-> >  		};
-> >  	};
-> > -
-> > -	watchdog {
-> > -		compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
-> > -		timeout-sec = <60>;
-> > -	};
-> >  };
-> > --
-> > 2.7.4
-> 
+The way it's implemented it here is that the device-reset GPIO is
+optional and only if you specify it we'll toggle the reset. So if your
+board design has a UFS memory that requires a reset pulse during
+initialization you specify this, regardless of which vendor your SoC
+comes from.
+
+Regards,
+Bjorn
