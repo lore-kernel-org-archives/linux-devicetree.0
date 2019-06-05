@@ -1,264 +1,89 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 04/18] kunit: test: add kunit_stream a std::stream like
- logger
-Date: Tue, 4 Jun 2019 17:47:48 -0700
-Message-ID: <CAFd5g456V4aQUSxxTAizun8ak4zogcAt4-YGgebX2L55Kb-xEg@mail.gmail.com>
-References: <20190514221711.248228-1-brendanhiggins@google.com>
- <20190514221711.248228-5-brendanhiggins@google.com>
- <20190517175841.F3396216FD@mail.kernel.org>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH 1/3 linux dev-5.1 v2] ARM: dts: aspeed: Add SGPM pinmux
+Date: Wed, 05 Jun 2019 11:01:13 +0930
+Message-ID: <b4ba9af9-9d6d-45fa-8552-3aad5258352a@www.fastmail.com>
+References: <1559685212-15857-1-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20190517175841.F3396216FD-+nuXSHJNwjE76Z2rM5mHXA@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuah <shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, David Rientjes <rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild <linux-kbuild-u79uwXL29TasMV2rI37PzA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559685212-15857-1-git-send-email-hongweiz@ami.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2019 at 10:58 AM Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+
+
+On Wed, 5 Jun 2019, at 07:23, Hongwei Zhang wrote:
+> Add SGPM pinmux to ast2500-pinctrl function and group, to prepare for
+> supporting SGPIO in AST2500 SoC.
+> 
+> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+> ---
+>  Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 2 +-
+>  drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c                   | 4 ++++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git 
+> a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt 
+> b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+> index 3b7266c..8f1c5c4 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+> @@ -84,7 +84,7 @@ NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4 NDTR1 NDTR2 
+> NDTR3 NDTR4 NRI1 NRI2
+>  NRI3 NRI4 NRTS1 NRTS2 NRTS3 NRTS4 OSCCLK PEWAKE PNOR PWM0 PWM1 PWM2 
+> PWM3 PWM4
+>  PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 RXD1 RXD2 RXD3 RXD4 SALT1 
+> SALT10
+>  SALT11 SALT12 SALT13 SALT14 SALT2 SALT3 SALT4 SALT5 SALT6 SALT7 SALT8 
+> SALT9
+> -SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO 
+> SIOPWREQ
+> +SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPM SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO 
+> SIOPWREQ
+>  SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1CS1 SPI1DEBUG SPI1PASSTHRU SPI2CK 
+> SPI2CS0
+>  SPI2CS1 SPI2MISO SPI2MOSI TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 
+> TXD1 TXD2
+>  TXD3 TXD4 UART6 USB11BHID USB2AD USB2AH USB2BD USB2BH USBCKI 
+> VGABIOSROM VGAHS
+> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c 
+> b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+> index 187abd7..0c89647 100644
+> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+> @@ -577,6 +577,8 @@ SS_PIN_DECL(N3, GPIOJ2, SGPMO);
+>  SIG_EXPR_LIST_DECL_SINGLE(SGPMI, SGPM, SIG_DESC_SET(SCU84, 11));
+>  SS_PIN_DECL(N4, GPIOJ3, SGPMI);
+>  
+> +FUNC_GROUP_DECL(SGPM, R2, L2, N3, N4);
+> +
+>  #define N5 76
+>  SIG_EXPR_LIST_DECL_SINGLE(VGAHS, VGAHS, SIG_DESC_SET(SCU84, 12));
+>  SIG_EXPR_LIST_DECL_SINGLE(DASHN5, DASHN5, SIG_DESC_SET(SCU94, 8));
+> @@ -2127,6 +2129,7 @@ static const struct aspeed_pin_group 
+> aspeed_g5_groups[] = {
+>  	ASPEED_PINCTRL_GROUP(SD2),
+>  	ASPEED_PINCTRL_GROUP(SDA1),
+>  	ASPEED_PINCTRL_GROUP(SDA2),
+> +	ASPEED_PINCTRL_GROUP(SGPM),
+>  	ASPEED_PINCTRL_GROUP(SGPS1),
+>  	ASPEED_PINCTRL_GROUP(SGPS2),
+>  	ASPEED_PINCTRL_GROUP(SIOONCTRL),
+> @@ -2296,6 +2299,7 @@ static const struct aspeed_pin_function 
+> aspeed_g5_functions[] = {
+>  	ASPEED_PINCTRL_FUNC(SD2),
+>  	ASPEED_PINCTRL_FUNC(SDA1),
+>  	ASPEED_PINCTRL_FUNC(SDA2),
+> +	ASPEED_PINCTRL_FUNC(SGPM),
+>  	ASPEED_PINCTRL_FUNC(SGPS1),
+>  	ASPEED_PINCTRL_FUNC(SGPS2),
+>  	ASPEED_PINCTRL_FUNC(SIOONCTRL),
+> -- 
+> 2.7.4
+> 
 >
-> Quoting Brendan Higgins (2019-05-14 15:16:57)
-> > diff --git a/kunit/kunit-stream.c b/kunit/kunit-stream.c
-> > new file mode 100644
-> > index 0000000000000..1884f1b550888
-> > --- /dev/null
-> > +++ b/kunit/kunit-stream.c
-> > @@ -0,0 +1,152 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * C++ stream style string formatter and printer used in KUnit for outputting
-> > + * KUnit messages.
-> > + *
-> > + * Copyright (C) 2019, Google LLC.
-> > + * Author: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> > + */
-> > +
-> > +#include <kunit/test.h>
-> > +#include <kunit/kunit-stream.h>
-> > +#include <kunit/string-stream.h>
-> > +
-> > +static const char *kunit_stream_get_level(struct kunit_stream *this)
-> > +{
-> > +       unsigned long flags;
-> > +       const char *level;
-> > +
-> > +       spin_lock_irqsave(&this->lock, flags);
-> > +       level = this->level;
-> > +       spin_unlock_irqrestore(&this->lock, flags);
-> > +
-> > +       return level;
->
-> Please remove this whole function and inline it to the one call-site.
->
-> > +}
-> > +
-> > +void kunit_stream_set_level(struct kunit_stream *this, const char *level)
-> > +{
-> > +       unsigned long flags;
-> > +
-> > +       spin_lock_irqsave(&this->lock, flags);
-> > +       this->level = level;
-> > +       spin_unlock_irqrestore(&this->lock, flags);
->
-> I don't get the locking here. What are we protecting against? Are tests
-> running in parallel using the same kunit_stream? If so, why is the level
-> changeable in one call and then adding strings is done in a different
-> function call? It would make sense to combine the level setting and
-> string adding so that it's one atomic operation if it's truly a parallel
-> operation, or remove the locking entirely.
-
-I think you are right. I am not sure it makes sense for two separate
-threads to share a kunit_stream; even if locked properly, it would end
-up printing out corrupted text.
-
-In anycase, I think it makes sense to decide the level when the stream
-is allocated which would sidestep this issue entirely.
-
-> > +}
-> > +
-> > +void kunit_stream_add(struct kunit_stream *this, const char *fmt, ...)
-> > +{
-> > +       va_list args;
-> > +       struct string_stream *stream = this->internal_stream;
-> > +
-> > +       va_start(args, fmt);
-> > +
-> > +       if (string_stream_vadd(stream, fmt, args) < 0)
-> > +               kunit_err(this->test, "Failed to allocate fragment: %s\n", fmt);
-> > +
-> > +       va_end(args);
-> > +}
-> > +
-> > +void kunit_stream_append(struct kunit_stream *this,
-> > +                               struct kunit_stream *other)
-> > +{
-> > +       struct string_stream *other_stream = other->internal_stream;
-> > +       const char *other_content;
-> > +
-> > +       other_content = string_stream_get_string(other_stream);
-> > +
-> > +       if (!other_content) {
-> > +               kunit_err(this->test,
-> > +                         "Failed to get string from second argument for appending.\n");
-> > +               return;
-> > +       }
-> > +
-> > +       kunit_stream_add(this, other_content);
-> > +}
-> > +
-> > +void kunit_stream_clear(struct kunit_stream *this)
-> > +{
-> > +       string_stream_clear(this->internal_stream);
-> > +}
-> > +
-> > +void kunit_stream_commit(struct kunit_stream *this)
->
-> Should this be rather called kunit_stream_flush()?
-
-So the intention is that the string in the buffer will not get printed
-out until commit is called. In this way, you can build up a message
-and then decide not to print it. This is useful when you are parsing
-through a lot of data that would be useful in debugging a failing or
-broken test, but are not yet sure if it is going to pass or not.
-
-I think flush has the connotation, that you are just forcing the
-buffer to get written out now, but that it will happen regardless
-eventually, where commit has the correct connotation that you *must*
-call it in order to write out the data stored in the buffer.
-
-Seems as though I should probably add this distinction to the
-kernel-doc comment.
-
-> > +{
-> > +       struct string_stream *stream = this->internal_stream;
-> > +       struct string_stream_fragment *fragment;
-> > +       const char *level;
-> > +       char *buf;
-> > +
-> > +       level = kunit_stream_get_level(this);
-> > +       if (!level) {
-> > +               kunit_err(this->test,
-> > +                         "Stream was committed without a specified log level.\n");
->
-> Drop the full-stop?
-
-Whoops, nice catch. Will fix in next revision.
-
-> > +               level = KERN_ERR;
-> > +               kunit_stream_set_level(this, level);
-> > +       }
-> > +
-> > +       buf = string_stream_get_string(stream);
-> > +       if (!buf) {
-> > +               kunit_err(this->test,
->
-> Can you grow a local variable for 'this->test'? It's used many times.
-
-Sure, will fix in next revision.
-
-> Also, 'this' is not very kernel idiomatic. We usually name variables by
-> their type instead of 'this' which is a keyword in other languages.
-> Perhaps it could be named 'kstream'?
-
-Seems reasonable. Will fix in next revision.
-
-> > +                        "Could not allocate buffer, dumping stream:\n");
-> > +               list_for_each_entry(fragment, &stream->fragments, node) {
-> > +                       kunit_err(this->test, fragment->fragment);
-> > +               }
-> > +               kunit_err(this->test, "\n");
-> > +               goto cleanup;
-> > +       }
-> > +
-> > +       kunit_printk(level, this->test, buf);
-> > +       kfree(buf);
-> > +
-> > +cleanup:
-> > +       kunit_stream_clear(this);
-> > +}
-> > +
-> > +static int kunit_stream_init(struct kunit_resource *res, void *context)
-> > +{
-> > +       struct kunit *test = context;
-> > +       struct kunit_stream *stream;
-> > +
-> > +       stream = kzalloc(sizeof(*stream), GFP_KERNEL);
->
-> Of course, here it's called 'stream', so maybe it should be 'kstream'
-> here too.
-
-Will do.
-
->
-> > +       if (!stream)
-> > +               return -ENOMEM;
-> > +
-> > +       res->allocation = stream;
-> > +       stream->test = test;
-> > +       spin_lock_init(&stream->lock);
-> > +       stream->internal_stream = new_string_stream();
->
-> Can new_string_stream() be renamed to alloc_string_stream()? Sorry, I
-> just see so much C++ isms in here it's hard to read from the kernel
-> developer perspective.
-
-No problem. WIll fix in next revision.
-
-> > +
-> > +       if (!stream->internal_stream) {
->
-> Nitpick: Please join this to the "allocation" event above instead of
-> keeping it separated.
-
-Yeah, that's a lot cleaner. Will do.
-
-> > +               kfree(stream);
-> > +               return -ENOMEM;
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static void kunit_stream_free(struct kunit_resource *res)
-> > +{
-> > +       struct kunit_stream *stream = res->allocation;
-> > +
-> > +       if (!string_stream_is_empty(stream->internal_stream)) {
-> > +               kunit_err(stream->test,
-> > +                        "End of test case reached with uncommitted stream entries.\n");
-> > +               kunit_stream_commit(stream);
-> > +       }
-> > +
-> > +       destroy_string_stream(stream->internal_stream);
-> > +       kfree(stream);
-> > +}
-> > +
-> > +struct kunit_stream *kunit_new_stream(struct kunit *test)
-> > +{
-> > +       struct kunit_resource *res;
-> > +
-> > +       res = kunit_alloc_resource(test,
-> > +                                  kunit_stream_init,
-> > +                                  kunit_stream_free,
-> > +                                  test);
-> > +
-> > +       if (res)
-> > +               return res->allocation;
-> > +       else
-> > +               return NULL;
->
-> Don't have if (...) return ...; else return ..., just return instead of
-> else.
-
-Sorry. Will fix.
-
-Thanks!
