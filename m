@@ -1,97 +1,51 @@
-From: Eduardo Valentin <eduval@amazon.com>
-Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive
- and queue messages
-Date: Wed, 5 Jun 2019 08:31:20 -0700
-Message-ID: <20190605153120.GC1534@u40b0340c692b58f6553c.ant.amazon.com>
-References: <20190531043347.4196-1-eduval@amazon.com>
- <20190531043347.4196-3-eduval@amazon.com>
- <20190604171611.GS9224@smile.fi.intel.com>
- <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
- <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com>
- <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
- <CAHp75Vc2us0UDmGnzjF0vkzWM_9KqRa0AZKnRsUYmFRTsgwEyg@mail.gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna
+ Labs Fabric Interrupt Controller Driver
+Date: Wed, 5 Jun 2019 17:40:44 +0200
+Message-ID: <20190605154044.GA21923@kroah.com>
+References: <1559731921-14023-1-git-send-email-talel@amazon.com>
+ <1559731921-14023-3-git-send-email-talel@amazon.com>
+ <20190605125055.GA3184@kroah.com>
+ <fb3f5f4d-26f4-8729-7370-f206369ab2b7@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vc2us0UDmGnzjF0vkzWM_9KqRa0AZKnRsUYmFRTsgwEyg@mail.gmail.com>
+In-Reply-To: <fb3f5f4d-26f4-8729-7370-f206369ab2b7@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Eduardo Valentin <eduval@amazon.com>, Andy Shevchenko <andriy.shevchenko@intel.com>, Wolfram Sang <wsa@the-dreams.de>, Haiyue Wang <haiyue.wang@linux.intel.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "Shenhar, Talel" <talel@amazon.com>
+Cc: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 06:20:37PM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 5, 2019 at 5:32 PM Eduardo Valentin <eduval@amazon.com> wrote:
-> > On Wed, Jun 05, 2019 at 11:25:39AM +0300, Andy Shevchenko wrote:
-> > > On Wed, Jun 5, 2019 at 6:30 AM Eduardo Valentin <eduval@amazon.com> wrote:
+On Wed, Jun 05, 2019 at 05:51:08PM +0300, Shenhar, Talel wrote:
 > 
-> > Well, yes, but the point is you would be switching from a simple AND (&) operation
-> > to a division...
-> >
-> > I am keeping the power of 2 dep so that we can keep this with a simple &.
+> On 6/5/2019 3:50 PM, Greg KH wrote:
+> > On Wed, Jun 05, 2019 at 01:52:01PM +0300, Talel Shenhar wrote:
+> > > --- /dev/null
+> > > +++ b/drivers/irqchip/irq-al-fic.c
+> > > @@ -0,0 +1,289 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/**
+> > No need for kernel-doc format style here.
+> done
+> > 
+> > > + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+> > "or its affiliates"?  You know the answer to this, don't keep us in
+> > suspense.  Put the proper copyright holder here please, otherwise this
+> > is totally useless.
+> > 
+> > Well, copyright notices are technically useless anyway, but lawyers like
+> > to cargo-cult with the best of them, so it should be correct at the
+> > least.
 > 
-> Works for me.
+> This is the format we were asked to use and have been using.
 > 
-> > > > > > +           .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> > > > >
-> > > > > Wouldn't compiler warn you due to unused data?
-> > > > > Perhaps drop of_match_ptr() for good...
-> > > >
-> > > > Not sure what you meant here. I dont see any compiler warning.
-> > > > Also, of_match_ptr seams to be well spread in the kernel.
-> > >
-> > > If this will be compiled with CONFIG_OF=n...
-> >
-> > I see.. I obviously did not test with that config..
-> >
-> > > Though I didn't check all dependencies to see if it even possible. In
-> > > any case of_match_ptr() is redundant in both cases here.
-> > > Either you need to protect i2c_slave_mqueue_of_match with #ifdef
-> > > CONFIG_OF, or drop the macro use.
-> >
-> > I will wrap it into CONFIG_OF..
-> 
-> Would be this expected to work in the case of CONFIG_OF=n?
-> If no, why to introduce ugly #ifdef:s and additional macros?
+> I am pinging them with your comment but I am likely not to get immediate
+> response so I'm publishing v3 without changing the "affiliates" for now.
 
-I do hate those too...
+If that is what your lawyers say to use, that's fine.  Gotta love being
+vague in copyright lines, what could go wrong...
 
-> Wouldn't be better to have
->   depends on OF || COMPILE_TEST
+good luck!
 
-Well, technically, the original author had a case for using this
-without CONFIG_OF. That is why I did not force here to be a strong
-dependency on CONFIG_OF. So, I guess in this case the driver will
-work properly in both cases if we:
-
-+#ifdef CONFIG_OF
-+static const struct of_device_id i2c_slave_mqueue_of_match[] = {
-+       {
-+               .compatible = "i2c-slave-mqueue",
-+       },
-+       { /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, i2c_slave_mqueue_of_match);
-+#endif
-+
-+static struct i2c_driver i2c_slave_mqueue_driver = {
-+       .driver = {
-+               .name   = "i2c-slave-mqueue",
-+               .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-+       },
-+       .probe          = i2c_slave_mqueue_probe,
-+       .remove         = i2c_slave_mqueue_remove,
-+       .id_table       = i2c_slave_mqueue_id,
-+};
-
-The above is a well stablish pattern across the drivers.
-
-> ?
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-
--- 
-All the best,
-Eduardo Valentin
+greg k-h
