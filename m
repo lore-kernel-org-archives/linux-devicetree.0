@@ -1,62 +1,64 @@
-From: Avri Altman <Avri.Altman@wdc.com>
-Subject: RE: [PATCH 0/3] (Qualcomm) UFS device reset support
-Date: Wed, 5 Jun 2019 09:32:32 +0000
-Message-ID: <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
- <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
- <20190605060154.GJ22737@tuxbook-pro>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 01/13] dt-bindings: media: sunxi-ir: Add
+ A31 compatible
+Date: Wed, 5 Jun 2019 11:49:06 +0200
+Message-ID: <20190605094906.d5fjoeelfblhpvfm@flea>
+References: <20190604162959.29199-1-peron.clem@gmail.com>
+ <20190604162959.29199-2-peron.clem@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190605060154.GJ22737@tuxbook-pro>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: John Stultz <john.stultz@linaro.org>, Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBF5A33TQKGQEXSJNJCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190604162959.29199-2-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Sean Young <sean-hENCXIMQXOg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->=20
-> On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
->=20
-> > Hi,
-> >
-> > >
-> > > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
-> > > <bjorn.andersson@linaro.org> wrote:
-> > > >
-> > > > This series exposes the ufs_reset line as a gpio, adds support for =
-ufshcd to
-> > > > acquire and toggle this and then adds this to SDM845 MTP.
-> > > >
-> > > > Bjorn Andersson (3):
-> > > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
-> > > >   scsi: ufs: Allow resetting the UFS device
-> > > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
-> > >
-> > > Adding similar change as in sdm845-mtp to the not yet upstream
-> > > blueline dts, I validated this allows my micron UFS pixel3 to boot.
-> > >
-> > > Tested-by: John Stultz <john.stultz@linaro.org>
-> > Maybe ufs_hba_variant_ops would be the proper place to add this?
-> >
->=20
-> Are you saying that these memories only need a reset when they are
-> paired with the Qualcomm host controller?
-ufs_hba_variant_ops is for vendors to implement their own vops,
-and as you can see, many of them do.
-Adding hw_reset to that template seems like the proper way
-to do what you are doing.
+On Tue, Jun 04, 2019 at 06:29:47PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Allwinner A31 has introduced a new memory mapping and a
+> reset line.
+>
+> The difference in memory mapping are :
+>
+> - In the configure register there is a new sample bit
+>   and Allwinner has introduced the active threshold feature.
+>
+> - In the status register a new STAT bit is present.
+>
+> Note: CGPO and DRQ_EN bits are removed on A31 but present on A13
+> and on new SoCs like A64/H6.
+> This is actually not an issue as these bits are togglable and new
+> SoCs have a dedicated bindings.
+>
+> Introduce this bindings to make a difference since this generation.
+> And declare the reset line required since A31.
+>
+> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
 
-Thanks,
-Avri
->=20
-> The way it's implemented it here is that the device-reset GPIO is
-> optional and only if you specify it we'll toggle the reset. So if your
-> board design has a UFS memory that requires a reset pulse during
-> initialization you specify this, regardless of which vendor your SoC
-> comes from.
->=20
-> Regards,
-> Bjorn
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190605094906.d5fjoeelfblhpvfm%40flea.
+For more options, visit https://groups.google.com/d/optout.
