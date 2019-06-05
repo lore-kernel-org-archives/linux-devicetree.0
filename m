@@ -1,94 +1,78 @@
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH v5 2/3] media: uapi: Add MEDIA_BUS_FMT_RGB888_3X8 media
- bus format
-Date: Wed, 5 Jun 2019 20:41:52 -0300
-Message-ID: <20190605204152.36f81ebd@coco.lan>
-References: <20190605222247.25657-1-paul@crapouillou.net>
- <20190605222247.25657-2-paul@crapouillou.net>
+From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
+Subject: [PATCH 1/2] clk: rockchip: add clock for the watchdog pclk on rk3328
+Date: Thu,  6 Jun 2019 02:57:13 +0300
+Message-ID: <20190605235714.22432-1-papadakospan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190605222247.25657-2-paul@crapouillou.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: devicetree@vger.kernel.org, od@zcrc.me, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sam Ravnborg <sam@ravnborg.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-rockchip@lists.infradead.org, "Leonidas P. Papadakos" <papadakospan@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-RW0gVGh1LCAgNiBKdW4gMjAxOSAwMDoyMjo0NiArMDIwMApQYXVsIENlcmN1ZWlsIDxwYXVsQGNy
-YXBvdWlsbG91Lm5ldD4gZXNjcmV2ZXU6Cgo+IFRoaXMgcGF0Y2ggYWRkcyBNRURJQV9CVVNfRk1U
-X1JHQjg4OF8zWDgsIHVzZWQgZm9yIHRoZSBHaWFudFBsdXMKPiBHUE05NDBCMCAyNC1iaXQgVEZU
-IHBhbmVsLCB3aGVyZSB0aGUgUkdCIGNvbXBvbmVudHMgYXJlIHRyYW5zZmVycmVkCj4gc2VxdWVu
-dGlhbGx5IG9uIGEgOC1iaXQgYnVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBhdWwgQ2VyY3VlaWwg
-PHBhdWxAY3JhcG91aWxsb3UubmV0PgoKTG9va3Mgb2sgdG8gbWUuIEZlZWwgZnJlZSB0byBhcHBs
-eSB2aWEgRFJNIHRyZWUuCgpBY2tlZC1ieTogTWF1cm8gQ2FydmFsaG8gQ2hlaGFiIDxtY2hlaGFi
-K3NhbXN1bmdAa2VybmVsLm9yZz4KCj4gLS0tCj4gCj4gTm90ZXM6Cj4gICAgIHYyOiBOZXcgcGF0
-Y2gKPiAgICAgCj4gICAgIHYzOiBObyBjaGFuZ2UKPiAgICAgCj4gICAgIHY0OiBBZGQgb25seSBN
-RURJQV9CVVNfRk1UX1JHQjg4OF8zWDgsIGFzIHdlIGRvbid0IGhhdmUgdG8gY2FyZSBhYm91dAo+
-ICAgICAgICAgZW5kaWFubmVzcwo+ICAgICAKPiAgICAgdjU6IEFsc28gdXBkYXRlIERvY3VtZW50
-YXRpb24vbWVkaWEvdWFwaS92NGwvc3ViZGV2LWZvcm1hdHMucnN0Cj4gCj4gIC4uLi9tZWRpYS91
-YXBpL3Y0bC9zdWJkZXYtZm9ybWF0cy5yc3QgICAgICAgICB8IDEwNyArKysrKysrKysrKysrKysr
-KysKPiAgaW5jbHVkZS91YXBpL2xpbnV4L21lZGlhLWJ1cy1mb3JtYXQuaCAgICAgICAgIHwgICAz
-ICstCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTA5IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkK
-PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9zdWJkZXYtZm9y
-bWF0cy5yc3QgYi9Eb2N1bWVudGF0aW9uL21lZGlhL3VhcGkvdjRsL3N1YmRldi1mb3JtYXRzLnJz
-dAo+IGluZGV4IGFiMWE0OGE1YWU4MC4uZjRmOGRlMzFhYzYzIDEwMDY0NAo+IC0tLSBhL0RvY3Vt
-ZW50YXRpb24vbWVkaWEvdWFwaS92NGwvc3ViZGV2LWZvcm1hdHMucnN0Cj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9zdWJkZXYtZm9ybWF0cy5yc3QKPiBAQCAtMTMwNSw2ICsx
-MzA1LDExMyBAQCBUaGUgZm9sbG93aW5nIHRhYmxlcyBsaXN0IGV4aXN0aW5nIHBhY2tlZCBSR0Ig
-Zm9ybWF0cy4KPiAgICAgICAgLSBnXCA6c3ViOmA2YAo+ICAgICAgICAtIGdcIDpzdWI6YDVgCj4g
-ICAgICAgIC0gZ1wgOnN1YjpgNGAKPiArICAgICogLi4gX01FRElBLUJVUy1GTVQtUkdCODg4LTNY
-ODoKPiArCj4gKyAgICAgIC0gTUVESUFfQlVTX0ZNVF9SR0I4ODhfM1g4Cj4gKyAgICAgIC0gMHgx
-MDFjCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAg
-LQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0K
-PiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4g
-KyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsg
-ICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAg
-ICAgLSByXCA6c3ViOmA3YAo+ICsgICAgICAtIHJcIDpzdWI6YDZgCj4gKyAgICAgIC0gclwgOnN1
-YjpgNWAKPiArICAgICAgLSByXCA6c3ViOmA0YAo+ICsgICAgICAtIHJcIDpzdWI6YDNgCj4gKyAg
-ICAgIC0gclwgOnN1YjpgMmAKPiArICAgICAgLSByXCA6c3ViOmAxYAo+ICsgICAgICAtIHJcIDpz
-dWI6YDBgCj4gKyAgICAqIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAg
-ICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAg
-IC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAt
-Cj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+
-ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiAr
-ICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0gZ1wgOnN1YjpgN2AKPiArICAgICAgLSBnXCA6
-c3ViOmA2YAo+ICsgICAgICAtIGdcIDpzdWI6YDVgCj4gKyAgICAgIC0gZ1wgOnN1YjpgNGAKPiAr
-ICAgICAgLSBnXCA6c3ViOmAzYAo+ICsgICAgICAtIGdcIDpzdWI6YDJgCj4gKyAgICAgIC0gZ1wg
-OnN1YjpgMWAKPiArICAgICAgLSBnXCA6c3ViOmAwYAo+ICsgICAgKiAtCj4gKyAgICAgIC0KPiAr
-ICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAg
-ICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAg
-ICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAg
-LQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0K
-PiArICAgICAgLQo+ICsgICAgICAtCj4gKyAgICAgIC0KPiArICAgICAgLQo+ICsgICAgICAtIGJc
-IDpzdWI6YDdgCj4gKyAgICAgIC0gYlwgOnN1YjpgNmAKPiArICAgICAgLSBiXCA6c3ViOmA1YAo+
-ICsgICAgICAtIGJcIDpzdWI6YDRgCj4gKyAgICAgIC0gYlwgOnN1YjpgM2AKPiArICAgICAgLSBi
-XCA6c3ViOmAyYAo+ICsgICAgICAtIGJcIDpzdWI6YDFgCj4gKyAgICAgIC0gYlwgOnN1YjpgMGAK
-PiAgICAgICogLi4gX01FRElBLUJVUy1GTVQtQVJHQjg4OC0xWDMyOgo+ICAKPiAgICAgICAgLSBN
-RURJQV9CVVNfRk1UX0FSR0I4ODhfMVgzMgo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGlu
-dXgvbWVkaWEtYnVzLWZvcm1hdC5oIGIvaW5jbHVkZS91YXBpL2xpbnV4L21lZGlhLWJ1cy1mb3Jt
-YXQuaAo+IGluZGV4IDJhNmIyNTNjZmIwNS4uMTZjMWZhMmQ4OWE0IDEwMDY0NAo+IC0tLSBhL2lu
-Y2x1ZGUvdWFwaS9saW51eC9tZWRpYS1idXMtZm9ybWF0LmgKPiArKysgYi9pbmNsdWRlL3VhcGkv
-bGludXgvbWVkaWEtYnVzLWZvcm1hdC5oCj4gQEAgLTM0LDcgKzM0LDcgQEAKPiAgCj4gICNkZWZp
-bmUgTUVESUFfQlVTX0ZNVF9GSVhFRAkJCTB4MDAwMQo+ICAKPiAtLyogUkdCIC0gbmV4dCBpcwkw
-eDEwMWMgKi8KPiArLyogUkdCIC0gbmV4dCBpcwkweDEwMWQgKi8KPiAgI2RlZmluZSBNRURJQV9C
-VVNfRk1UX1JHQjQ0NF8xWDEyCQkweDEwMTYKPiAgI2RlZmluZSBNRURJQV9CVVNfRk1UX1JHQjQ0
-NF8yWDhfUEFESElfQkUJMHgxMDAxCj4gICNkZWZpbmUgTUVESUFfQlVTX0ZNVF9SR0I0NDRfMlg4
-X1BBREhJX0xFCTB4MTAwMgo+IEBAIC01NSw2ICs1NSw3IEBACj4gICNkZWZpbmUgTUVESUFfQlVT
-X0ZNVF9SR0I4ODhfMVgyNAkJMHgxMDBhCj4gICNkZWZpbmUgTUVESUFfQlVTX0ZNVF9SR0I4ODhf
-MlgxMl9CRQkJMHgxMDBiCj4gICNkZWZpbmUgTUVESUFfQlVTX0ZNVF9SR0I4ODhfMlgxMl9MRQkJ
-MHgxMDBjCj4gKyNkZWZpbmUgTUVESUFfQlVTX0ZNVF9SR0I4ODhfM1g4CQkweDEwMWMKPiAgI2Rl
-ZmluZSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDdYNF9TUFdHCQkweDEwMTEKPiAgI2RlZmluZSBN
-RURJQV9CVVNfRk1UX1JHQjg4OF8xWDdYNF9KRUlEQQkweDEwMTIKPiAgI2RlZmluZSBNRURJQV9C
-VVNfRk1UX0FSR0I4ODg4XzFYMzIJCTB4MTAwZAoKCgpUaGFua3MsCk1hdXJvCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+From: <itdaniher@gmail.com>
+
+Following the discussion here:
+https://github.com/rockchip-linux/kernel/issues/123
+
+it can be seen that these are the changes needed to enable the use of the hardware watchdog in the rk3328 SoC.
+
+This is in line with past changes for the rk3288:
+http://lists.infradead.org/pipermail/linux-rockchip/2015-January/002314.html
+
+Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
+---
+ drivers/clk/rockchip/clk-rk3328.c      | 9 +++++++++
+ include/dt-bindings/clock/rk3328-cru.h | 1 +
+ 2 files changed, 10 insertions(+)
+
+diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
+index 076b9777a..546ee0ab7 100644
+--- a/drivers/clk/rockchip/clk-rk3328.c
++++ b/drivers/clk/rockchip/clk-rk3328.c
+@@ -876,6 +876,8 @@ static const char *const rk3328_critical_clocks[] __initconst = {
+ 
+ static void __init rk3328_clk_init(struct device_node *np)
+ {
++	struct clk *clk;
++
+ 	struct rockchip_clk_provider *ctx;
+ 	void __iomem *reg_base;
+ 
+@@ -892,6 +894,13 @@ static void __init rk3328_clk_init(struct device_node *np)
+ 		return;
+ 	}
+ 
++	clk = clk_register_fixed_factor(NULL, "pclk_wdt", "pclk_bus", 0, 1, 1);
++	if (IS_ERR(clk))
++		pr_warn("%s: could not register clock pclk_wdt: %ld\n",
++			__func__, PTR_ERR(clk));
++	else
++		rockchip_clk_add_lookup(ctx, clk, PCLK_WDT);
++
+ 	rockchip_clk_register_plls(ctx, rk3328_pll_clks,
+ 				   ARRAY_SIZE(rk3328_pll_clks),
+ 				   RK3328_GRF_SOC_STATUS0);
+diff --git a/include/dt-bindings/clock/rk3328-cru.h b/include/dt-bindings/clock/rk3328-cru.h
+index afb811340..555b4ff66 100644
+--- a/include/dt-bindings/clock/rk3328-cru.h
++++ b/include/dt-bindings/clock/rk3328-cru.h
+@@ -164,6 +164,7 @@
+ #define PCLK_DCF		233
+ #define PCLK_SARADC		234
+ #define PCLK_ACODECPHY		235
++#define PCLK_WDT		236
+ 
+ /* hclk gates */
+ #define HCLK_PERI		308
+-- 
+2.21.0
