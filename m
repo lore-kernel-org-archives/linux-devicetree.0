@@ -1,187 +1,62 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2] USB: move usb debugfs directory creation to the usb
- common core
-Date: Wed, 5 Jun 2019 11:28:16 +0200
-Message-ID: <20190605092816.GA23758@kroah.com>
+From: Avri Altman <Avri.Altman@wdc.com>
+Subject: RE: [PATCH 0/3] (Qualcomm) UFS device reset support
+Date: Wed, 5 Jun 2019 09:32:32 +0000
+Message-ID: <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
+ <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+ <20190605060154.GJ22737@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <20190605060154.GJ22737@tuxbook-pro>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: John Stultz <john.stultz@linaro.org>, Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The USB gadget subsystem wants to use the USB debugfs root directory, so
-move it to the common "core" USB code so that it is properly initialized
-and removed as needed.
+>=20
+> On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
+>=20
+> > Hi,
+> >
+> > >
+> > > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
+> > > <bjorn.andersson@linaro.org> wrote:
+> > > >
+> > > > This series exposes the ufs_reset line as a gpio, adds support for =
+ufshcd to
+> > > > acquire and toggle this and then adds this to SDM845 MTP.
+> > > >
+> > > > Bjorn Andersson (3):
+> > > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
+> > > >   scsi: ufs: Allow resetting the UFS device
+> > > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
+> > >
+> > > Adding similar change as in sdm845-mtp to the not yet upstream
+> > > blueline dts, I validated this allows my micron UFS pixel3 to boot.
+> > >
+> > > Tested-by: John Stultz <john.stultz@linaro.org>
+> > Maybe ufs_hba_variant_ops would be the proper place to add this?
+> >
+>=20
+> Are you saying that these memories only need a reset when they are
+> paired with the Qualcomm host controller?
+ufs_hba_variant_ops is for vendors to implement their own vops,
+and as you can see, many of them do.
+Adding hw_reset to that template seems like the proper way
+to do what you are doing.
 
-In order to properly do this, we need to load the common code before the
-usb core code, when everything is linked into the kernel, so reorder the
-link order of the code.
-
-Also as the usb common code has the possibility of the led trigger logic
-to be merged into it, handle the build option properly by only having
-one module init/exit function and have the common code initialize the
-led trigger if needed.
-
-Reported-by: From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-
-Chunfeng, can you test this version to verify it works for you when
-building the code into the kernel?
-
-v2: handle led common code link error reported by kbuild
-    handle subsys_initcall issue pointed out by Chunfeng
-
- drivers/usb/Makefile        |  3 +--
- drivers/usb/common/common.c | 21 +++++++++++++++++++++
- drivers/usb/common/common.h | 14 ++++++++++++++
- drivers/usb/common/led.c    |  9 +++------
- drivers/usb/core/usb.c      | 10 ++++------
- 5 files changed, 43 insertions(+), 14 deletions(-)
- create mode 100644 drivers/usb/common/common.h
-
-diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
-index 7d1b8c82b208..ecc2de1ffaae 100644
---- a/drivers/usb/Makefile
-+++ b/drivers/usb/Makefile
-@@ -5,6 +5,7 @@
- 
- # Object files in subdirectories
- 
-+obj-$(CONFIG_USB_COMMON)	+= common/
- obj-$(CONFIG_USB)		+= core/
- obj-$(CONFIG_USB_SUPPORT)	+= phy/
- 
-@@ -60,8 +61,6 @@ obj-$(CONFIG_USB_CHIPIDEA)	+= chipidea/
- obj-$(CONFIG_USB_RENESAS_USBHS)	+= renesas_usbhs/
- obj-$(CONFIG_USB_GADGET)	+= gadget/
- 
--obj-$(CONFIG_USB_COMMON)	+= common/
--
- obj-$(CONFIG_USBIP_CORE)	+= usbip/
- 
- obj-$(CONFIG_TYPEC)		+= typec/
-diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-index 18f5dcf58b0d..84a4423aaddf 100644
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -15,6 +15,8 @@
- #include <linux/usb/of.h>
- #include <linux/usb/otg.h>
- #include <linux/of_platform.h>
-+#include <linux/debugfs.h>
-+#include "common.h"
- 
- static const char *const ep_type_names[] = {
- 	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
-@@ -291,4 +293,23 @@ struct device *usb_of_get_companion_dev(struct device *dev)
- EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
- #endif
- 
-+struct dentry *usb_debug_root;
-+EXPORT_SYMBOL_GPL(usb_debug_root);
-+
-+static int usb_common_init(void)
-+{
-+	usb_debug_root = debugfs_create_dir("usb", NULL);
-+	ledtrig_usb_init();
-+	return 0;
-+}
-+
-+static void usb_common_exit(void)
-+{
-+	ledtrig_usb_exit();
-+	debugfs_remove_recursive(usb_debug_root);
-+}
-+
-+subsys_initcall(usb_common_init);
-+module_exit(usb_common_exit);
-+
- MODULE_LICENSE("GPL");
-diff --git a/drivers/usb/common/common.h b/drivers/usb/common/common.h
-new file mode 100644
-index 000000000000..424a91316a4b
---- /dev/null
-+++ b/drivers/usb/common/common.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __LINUX_USB_COMMON_H
-+#define __LINUX_USB_COMMON_H
-+
-+#if defined(CONFIG_USB_LED_TRIG)
-+void ledtrig_usb_init(void);
-+void ledtrig_usb_exit(void);
-+#else
-+static inline void ledtrig_usb_init(void) { }
-+static inline void ledtrig_usb_exit(void) { }
-+#endif
-+
-+#endif	/* __LINUX_USB_COMMON_H */
-diff --git a/drivers/usb/common/led.c b/drivers/usb/common/led.c
-index 7bd81166b77d..0865dd44a80a 100644
---- a/drivers/usb/common/led.c
-+++ b/drivers/usb/common/led.c
-@@ -10,6 +10,7 @@
- #include <linux/init.h>
- #include <linux/leds.h>
- #include <linux/usb.h>
-+#include "common.h"
- 
- #define BLINK_DELAY 30
- 
-@@ -36,18 +37,14 @@ void usb_led_activity(enum usb_led_event ev)
- EXPORT_SYMBOL_GPL(usb_led_activity);
- 
- 
--static int __init ledtrig_usb_init(void)
-+void __init ledtrig_usb_init(void)
- {
- 	led_trigger_register_simple("usb-gadget", &ledtrig_usb_gadget);
- 	led_trigger_register_simple("usb-host", &ledtrig_usb_host);
--	return 0;
- }
- 
--static void __exit ledtrig_usb_exit(void)
-+void __exit ledtrig_usb_exit(void)
- {
- 	led_trigger_unregister_simple(ledtrig_usb_gadget);
- 	led_trigger_unregister_simple(ledtrig_usb_host);
- }
--
--module_init(ledtrig_usb_init);
--module_exit(ledtrig_usb_exit);
-diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-index 7fcb9f782931..5a0df527a8ca 100644
---- a/drivers/usb/core/usb.c
-+++ b/drivers/usb/core/usb.c
-@@ -1185,19 +1185,17 @@ static struct notifier_block usb_bus_nb = {
- 	.notifier_call = usb_bus_notify,
- };
- 
--struct dentry *usb_debug_root;
--EXPORT_SYMBOL_GPL(usb_debug_root);
-+static struct dentry *usb_devices_root;
- 
- static void usb_debugfs_init(void)
- {
--	usb_debug_root = debugfs_create_dir("usb", NULL);
--	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
--			    &usbfs_devices_fops);
-+	usb_devices_root = debugfs_create_file("devices", 0444, usb_debug_root,
-+					       NULL, &usbfs_devices_fops);
- }
- 
- static void usb_debugfs_cleanup(void)
- {
--	debugfs_remove_recursive(usb_debug_root);
-+	debugfs_remove(usb_devices_root);
- }
- 
- /*
--- 
-2.21.0
+Thanks,
+Avri
+>=20
+> The way it's implemented it here is that the device-reset GPIO is
+> optional and only if you specify it we'll toggle the reset. So if your
+> board design has a UFS memory that requires a reset pulse during
+> initialization you specify this, regardless of which vendor your SoC
+> comes from.
+>=20
+> Regards,
+> Bjorn
