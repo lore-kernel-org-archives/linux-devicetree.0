@@ -1,80 +1,56 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v5 3/3] drm/panel: simple: Add GiantPlus GPM940B0 panel support
-Date: Thu,  6 Jun 2019 00:22:47 +0200
-Message-ID: <20190605222247.25657-3-paul@crapouillou.net>
-References: <20190605222247.25657-1-paul@crapouillou.net>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 3/3 v2] arm64: dts: qcom: pm8998: Use qcom,pm8998-pon
+ binding for second gen pon
+Date: Wed, 5 Jun 2019 16:16:07 -0700
+Message-ID: <20190605231607.GL4814@minitux>
+References: <20190603222319.62842-1-john.stultz@linaro.org>
+ <20190603222319.62842-3-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190605222247.25657-1-paul@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <20190603222319.62842-3-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+To: John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Amit Pundir <amit.pundir@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The GiantPlus GPM940B0 is a simple 3.0" 320x240 24-bit TFT panel.
+On Mon 03 Jun 15:23 PDT 2019, John Stultz wrote:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
----
+> This changes pm8998 to use the new qcom,pm8998-pon compatible
+> string for the pon in order to support the gen2 pon
+> functionality properly.
+> 
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: David Brown <david.brown@linaro.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Amit Pundir <amit.pundir@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 
-Notes:
-    v2: Change bus format to MEDIA_BUS_FMT_RGB888_3X8_BE
-    
-    v3: No change
-    
-    v4: Change bus format to MEDIA_BUS_FMT_RGB888_3X8
-    
-    v5: No change
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
- drivers/gpu/drm/panel/panel-simple.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 5a93c4edf1e4..eec9a9efcc73 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1335,6 +1335,31 @@ static const struct panel_desc giantplus_gpg482739qs5 = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
- };
- 
-+static const struct display_timing giantplus_gpm940b0_timing = {
-+	.pixelclock = { 13500000, 27000000, 27500000 },
-+	.hactive = { 320, 320, 320 },
-+	.hfront_porch = { 14, 686, 718 },
-+	.hback_porch = { 50, 70, 255 },
-+	.hsync_len = { 1, 1, 1 },
-+	.vactive = { 240, 240, 240 },
-+	.vfront_porch = { 1, 1, 179 },
-+	.vback_porch = { 1, 21, 31 },
-+	.vsync_len = { 1, 1, 6 },
-+	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW,
-+};
-+
-+static const struct panel_desc giantplus_gpm940b0 = {
-+	.timings = &giantplus_gpm940b0_timing,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 60,
-+		.height = 45,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_3X8,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_NEGEDGE,
-+};
-+
- static const struct display_timing hannstar_hsd070pww1_timing = {
- 	.pixelclock = { 64300000, 71100000, 82000000 },
- 	.hactive = { 1280, 1280, 1280 },
-@@ -2882,6 +2907,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "giantplus,gpg482739qs5",
- 		.data = &giantplus_gpg482739qs5
-+	}, {
-+		.compatible = "giantplus,gpm940b0",
-+		.data = &giantplus_gpm940b0,
- 	}, {
- 		.compatible = "hannstar,hsd070pww1",
- 		.data = &hannstar_hsd070pww1,
--- 
-2.21.0.593.g511ec345e18
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/pm8998.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> index d3ca35a940fb6..051a52df80f9e 100644
+> --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> @@ -39,7 +39,7 @@
+>  		#size-cells = <0>;
+>  
+>  		pm8998_pon: pon@800 {
+> -			compatible = "qcom,pm8916-pon";
+> +			compatible = "qcom,pm8998-pon";
+>  
+>  			reg = <0x800>;
+>  			mode-bootloader = <0x2>;
+> -- 
+> 2.17.1
+> 
