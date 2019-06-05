@@ -1,117 +1,167 @@
-From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v3, 21/27] drm/mediatek: add ovl0/ovl_2l0 usecase
-Date: Wed, 5 Jun 2019 19:43:00 +0800
-Message-ID: <1559734986-7379-22-git-send-email-yongqiang.niu@mediatek.com>
+From: <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3, 05/27] arm64: dts: add display nodes for mt8183
+Date: Wed, 5 Jun 2019 19:42:44 +0800
+Message-ID: <1559734986-7379-6-git-send-email-yongqiang.niu@mediatek.com>
 References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Yongqiang Niu <yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1559734986-7379-1-git-send-email-yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob
+ Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+From: Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-This patch add ovl0/ovl_2l0 usecase
-in ovl->ovl_2l0 direct link usecase:
-1. the crtc support layer number will 4+2
-2. ovl_2l0 background color input select ovl0 when crtc init
-and disable it when crtc finish
-3. config ovl_2l0 layer, if crtc config layer number is
-bigger than ovl0 support layers(max is 4)
+This patch add display nodes for mt8183
 
-Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Signed-off-by: Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 114 +++++++++++++++++++++++++++++++
+ 1 file changed, 114 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 11e3404..9c749c3 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -283,6 +283,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 75c4881..547ca7e 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -16,6 +16,14 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
  
- 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
- 		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
-+		enum mtk_ddp_comp_id prev;
++	aliases {
++		ovl0 = &ovl0;
++		ovl_2l0 = &ovl_2l0;
++		ovl_2l1 = &ovl_2l1;
++		rdma0 = &rdma0;
++		rdma1 = &rdma1;
++	};
 +
-+		if (i > 0)
-+			prev = mtk_crtc->ddp_comp[i - 1]->id;
-+		else
-+			prev = DDP_COMPONENT_ID_MAX;
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -317,6 +325,112 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		display_components: dispsys@14000000 {
++			compatible = "mediatek,mt8183-display";
++			reg = <0 0x14000000 0 0x1000>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++		};
 +
-+		if (prev == DDP_COMPONENT_OVL0)
-+			mtk_ddp_comp_bgclr_in_on(comp, prev);
- 
- 		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
- 		mtk_ddp_comp_start(comp);
-@@ -292,9 +301,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
- 	for (i = 0; i < mtk_crtc->layer_nr; i++) {
- 		struct drm_plane *plane = &mtk_crtc->planes[i];
- 		struct mtk_plane_state *plane_state;
-+		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-+		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-+		unsigned int local_layer;
- 
- 		plane_state = to_mtk_plane_state(plane->state);
--		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
++		ovl0: ovl@14008000 {
++			compatible = "mediatek,mt8183-disp-ovl";
++			reg = <0 0x14008000 0 0x1000>;
++			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_OVL0>;
++			iommus = <&iommu M4U_PORT_DISP_OVL0>;
++			mediatek,larb = <&larb0>;
++		};
 +
-+		if (i >= comp_layer_nr) {
-+			comp = mtk_crtc->ddp_comp[1];
-+			local_layer = i - comp_layer_nr;
-+		} else
-+			local_layer = i;
-+		mtk_ddp_comp_layer_config(comp , local_layer,
- 					  plane_state);
- 	}
- 
-@@ -320,6 +338,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- 					   mtk_crtc->ddp_comp[i]->id);
- 	mtk_disp_mutex_disable(mtk_crtc->mutex);
- 	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
-+		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
- 		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
- 					      mtk_crtc->mmsys_reg_data,
- 					      mtk_crtc->ddp_comp[i]->id,
-@@ -340,6 +359,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
- 	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
- 	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
- 	unsigned int i;
-+	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-+	unsigned int local_layer;
- 
- 	/*
- 	 * TODO: instead of updating the registers here, we should prepare
-@@ -362,7 +383,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
- 			plane_state = to_mtk_plane_state(plane->state);
- 
- 			if (plane_state->pending.config) {
--				mtk_ddp_comp_layer_config(comp, i, plane_state);
-+				if (i >= comp_layer_nr) {
-+					comp = mtk_crtc->ddp_comp[1];
-+					local_layer = i - comp_layer_nr;
-+				} else
-+					local_layer = i;
++		ovl_2l0: ovl@14009000 {
++			compatible = "mediatek,mt8183-disp-ovl-2l";
++			reg = <0 0x14009000 0 0x1000>;
++			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_OVL0_2L>;
++			iommus = <&iommu M4U_PORT_DISP_2L_OVL0_LARB0>;
++			mediatek,larb = <&larb0>;
++		};
 +
-+				mtk_ddp_comp_layer_config(comp, local_layer,
-+							  plane_state);
- 				plane_state->pending.config = false;
- 			}
- 		}
-@@ -604,6 +632,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 	}
- 
- 	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
-+	if (mtk_crtc->ddp_comp_nr > 1) {
-+		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
++		ovl_2l1: ovl@1400a000 {
++			compatible = "mediatek,mt8183-disp-ovl-2l";
++			reg = <0 0x1400a000 0 0x1000>;
++			interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_OVL1_2L>;
++			iommus = <&iommu M4U_PORT_DISP_2L_OVL1_LARB0>;
++			mediatek,larb = <&larb0>;
++		};
 +
-+		if (comp->funcs->bgclr_in_on)
-+			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
-+	}
- 	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
- 					sizeof(struct drm_plane),
- 					GFP_KERNEL);
++		rdma0: rdma@1400b000 {
++			compatible = "mediatek,mt8183-disp-rdma";
++			reg = <0 0x1400b000 0 0x1000>;
++			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
++			iommus = <&iommu M4U_PORT_DISP_RDMA0>;
++			mediatek,larb = <&larb0>;
++		};
++
++		rdma1: rdma@1400c000 {
++			compatible = "mediatek,mt8183-disp-rdma1";
++			reg = <0 0x1400c000 0 0x1000>;
++			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
++			iommus = <&iommu M4U_PORT_DISP_RDMA1>;
++			mediatek,larb = <&larb0>;
++		};
++
++		color0: color@1400e000 {
++			compatible = "mediatek,mt8183-disp-color",
++				     "mediatek,mt8173-disp-color";
++			reg = <0 0x1400e000 0 0x1000>;
++			interrupts = <GIC_SPI 231 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_COLOR0>;
++		};
++
++		ccorr0: ccorr@1400f000 {
++			compatible = "mediatek,mt8183-disp-ccorr";
++			reg = <0 0x1400f000 0 0x1000>;
++			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_CCORR0>;
++		};
++
++		aal0: aal@14010000 {
++			compatible = "mediatek,mt8183-disp-aal",
++				     "mediatek,mt8173-disp-aal";
++			reg = <0 0x14010000 0 0x1000>;
++			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_AAL0>;
++		};
++
++		gamma0: gamma@14011000 {
++			compatible = "mediatek,mt8183-disp-gamma",
++				     "mediatek,mt8173-disp-gamma";
++			reg = <0 0x14011000 0 0x1000>;
++			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_GAMMA0>;
++		};
++
++		dither0: dither@14012000 {
++			compatible = "mediatek,mt8183-disp-dither";
++			reg = <0 0x14012000 0 0x1000>;
++			interrupts = <GIC_SPI 235 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_DITHER0>;
++		};
++
++		mutex: mutex@14016000 {
++			compatible = "mediatek,mt8183-disp-mutex";
++			reg = <0 0x14016000 0 0x1000>;
++			interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++		};
++
+ 		smi_common: smi@14019000 {
+ 			compatible = "mediatek,mt8183-smi-common", "syscon";
+ 			reg = <0 0x14019000 0 0x1000>;
 -- 
 1.8.1.1.dirty
