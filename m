@@ -1,49 +1,52 @@
 From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH 0/3] Amazon's Annapurna Labs Fabric Interrupt Controller
-Date: Wed, 5 Jun 2019 09:54:10 +0300
-Message-ID: <1559717653-11258-1-git-send-email-talel@amazon.com>
+Subject: [PATCH 1/3] dt-bindings: interrupt-controller: Amazon's Annapurna Labs FIC
+Date: Wed, 5 Jun 2019 09:54:11 +0300
+Message-ID: <1559717653-11258-2-git-send-email-talel@amazon.com>
+References: <1559717653-11258-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559717653-11258-1-git-send-email-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com, Talel Shenhar <talel@amazon.com>
 List-Id: devicetree@vger.kernel.org
 
-This series introduces support for Amazon's Annapurna Labs Fabric Interrupt
-Controller.
+Document Amazon's Annapurna Labs Fabric Interrupt Controller SoC binding.
 
-The Amazon's Annapurna Labs FIC (Fabric Interrupt Controller) has 32
-inputs/sources. The output of this interrupt controller can be legacy-wired
-output or, in case embedded inside PCIe devices, msi-x message. This FIC may
-be cascaded into another FIC or connected directly to the main CPU
-Interrupt Controller (e.g. GIC).
-
-The FIC is a flexible HW unit that is embedded inside different parts of
-the Amazon's Annapurna Labs chips. It can be a simple level 2 interrupt
-controller which is then configured as a wired interrupt controller that
-aggregates events from different units, or, while embedded inside PCIe
-device, it can generate MSI-X messages based on the tables configured to
-that PCIe device or can be configured to generate wired interrupt. 
-
-
-
-Talel Shenhar (3):
-  dt-bindings: interrupt-controller: Amazon's Annapurna Labs FIC
-  irqchip: al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt
-    Controller Driver
-  irqchip: al-fic: Introducing support for MSI-X
-
- .../interrupt-controller/amazon,al-fic.txt         |  22 ++
- MAINTAINERS                                        |   7 +
- drivers/irqchip/Kconfig                            |  11 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-al-fic.c                       | 388 +++++++++++++++++++++
- include/linux/irqchip/al-fic.h                     |  23 ++
- 6 files changed, 452 insertions(+)
+Signed-off-by: Talel Shenhar <talel@amazon.com>
+---
+ .../interrupt-controller/amazon,al-fic.txt         | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
- create mode 100644 drivers/irqchip/irq-al-fic.c
- create mode 100644 include/linux/irqchip/al-fic.h
 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+new file mode 100644
+index 0000000..a2f31a6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+@@ -0,0 +1,22 @@
++Amazon's Annapurna Labs Fabric Interrupt Controller
++
++Required properties:
++
++- compatible: should be "amazon,al-fic"
++- reg: physical base address and size of the registers
++- interrupt-controller: identifies the node as an interrupt controller
++- #interrupt-cells: must be 2.
++- interrupt-parent: specifies the parent interrupt controller.
++- interrupts: describes which input line in the interrupt parent, this
++  fic's output is connected to.
++
++Example:
++
++amazon_fic: amazon_fic {
++	compatible = "amazon,al-fic";
++	interrupt-controller;
++	#interrupt-cells = <1>;
++	reg = <0x0 0xfd8a8500 0x0 0x1000>;
++	interrupt-parent = <&gic>;
++	interrupts = <GIC_SPI 0x0 IRQ_TYPE_LEVEL_HIGH>;
++};
 -- 
 2.7.4
