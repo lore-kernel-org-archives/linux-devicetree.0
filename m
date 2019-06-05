@@ -1,8 +1,7 @@
 From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 1/4] arm64: dts: ti: k3-am65: Add MCU SRAM ranges in
- interconnect nodes
-Date: Wed, 5 Jun 2019 11:34:31 -0500
-Message-ID: <20190605163434.23173-2-s-anna@ti.com>
+Subject: [PATCH 2/4] arm64: dts: ti: k3-am65-mcu: Add the MCU RAM node
+Date: Wed, 5 Jun 2019 11:34:32 -0500
+Message-ID: <20190605163434.23173-3-s-anna@ti.com>
 References: <20190605163434.23173-1-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,35 +21,34 @@ To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the address space for the MCU SRAM memory to the ranges property
-of the cbass_mcu interconnect node so that the addresses within the
-mcu_sram nodes and its children can be translated properly by the
-relevant OF address API.
+Add the on-chip SRAM present within the MCU domain as a mmio-sram node.
+The K3 AM65x SoCs have 512 KB of such memory. Any specific memory range
+within this RAM needed by a software module ought to be reserved using
+an appropriate child node.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-index 68b3f954f1d1..abb085f5e784 100644
---- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-@@ -72,6 +72,7 @@
- 			 /* MCUSS Range */
- 			 <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>,
- 			 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>,
-+			 <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>,
- 			 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>,
- 			 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>,
- 			 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>,
-@@ -83,6 +84,7 @@
- 			#size-cells = <2>;
- 			ranges = <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>, /* MCU NAVSS*/
- 				 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>, /* First peripheral window */
-+				 <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>, /* MCU SRAM */
- 				 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>, /* WKUP */
- 				 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>, /* MMRs, remaining NAVSS */
- 				 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>, /* CPSW */
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+index 6f7d2b316ded..afc29eaa2638 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+@@ -17,6 +17,14 @@
+ 			power-domains = <&k3_pds 149>;
+ 	};
+ 
++	mcu_ram: sram@41c00000 {
++		compatible = "mmio-sram";
++		reg = <0x00 0x41c00000 0x00 0x80000>;
++		ranges = <0x0 0x00 0x41c00000 0x80000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++	};
++
+ 	mcu_i2c0: i2c@40b00000 {
+ 		compatible = "ti,am654-i2c", "ti,omap4-i2c";
+ 		reg = <0x0 0x40b00000 0x0 0x100>;
 -- 
 2.21.0
