@@ -1,63 +1,60 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH v7 1/6] dt-bindings: add binding for USBSS-DRD controller.
-Date: Wed, 5 Jun 2019 11:03:45 +0100
-Message-ID: <1559729030-16390-2-git-send-email-pawell@cadence.com>
-References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
+From: Torsten Duwe <duwe@lst.de>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345
+ bridge on Teres-I
+Date: Wed, 5 Jun 2019 12:13:17 +0200
+Message-ID: <20190605101317.GA9345@lst.de>
+References: <20190604122150.29D6468B05@newverein.lst.de> <20190604122308.98D4868B20@newverein.lst.de> <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559729030-16390-1-git-send-email-pawell@cadence.com>
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch aim at documenting USB related dt-bindings for the
-Cadence USBSS-DRD controller.
+On Tue, Jun 04, 2019 at 08:08:40AM -0700, Vasily Khoruzhick wrote:
+> On Tue, Jun 4, 2019 at 5:23 AM Torsten Duwe <duwe@lst.de> wrote:
+> >
+> > Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
+> > the I2C controlling signals are connected to I2C0 bus. eDP output goes
+> > to an Innolux N116BGE panel.
+> >
+> > Enable it in the device tree.
+> >
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > Signed-off-by: Torsten Duwe <duwe@suse.de>
+> > ---
+> >  .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 65 ++++++++++++++++++++--
+> >  1 file changed, 61 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > index 0ec46b969a75..a0ad438b037f 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > @@ -65,6 +65,21 @@
+> >                 };
+> >         };
+> >
+> > +       panel: panel {
+> > +               compatible ="innolux,n116bge", "simple-panel";
+> 
+> It's still "simple-panel". I believe I already mentioned that Rob
+> asked it to be edp-connector.
+> 
+For which there are neither bindings nor drivers.
 
-Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Is anybody seriously proposing to hold back support for existing
+(open source!) hardware in favour of an *imaginable* *possibly* better
+solution? Especially when this exact line is already used in some other places?
+(there's a space missing btw...)
 
----
- .../devicetree/bindings/usb/cdns-usb3.txt     | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
+I'm more than glad to follow any constructive improvements towards better
+modularity. However there were none so far, and on top of that, it's a laptop.
+I see little advantage in mentioning an internal connector when the panel
+connected is always the same.
 
-diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
-new file mode 100644
-index 000000000000..1d2b449e3cb4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
-@@ -0,0 +1,30 @@
-+Binding for the Cadence USBSS-DRD controller
-+
-+Required properties:
-+  - reg: Physical base address and size of the controller's register areas.
-+	 Controller has 3 different regions:
-+	 region 1 - HOST registers area
-+	 region 2 - DEVICE registers area
-+	 region 3 - OTG/DRD registers area
-+  - reg-names - register memory area names:
-+	"xhci" - for HOST registers space
-+	"dev" - for DEVICE registers space
-+	"otg" - for OTG/DRD registers space
-+  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
-+  - interrupts: Interrupts used by cdns3 controller.
-+
-+Optional properties:
-+ - maximum-speed : valid arguments are "super-speed", "high-speed" and
-+                   "full-speed"; refer to usb/generic.txt
-+ - dr_mode: Should be one of "host", "peripheral" or "otg".
-+ - phys: reference to the USB PHY
-+
-+Example:
-+	usb@f3000000 {
-+		compatible = "cdns,usb3-1.0.1";
-+		interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
-+		reg = <0xf3000000 0x10000	/* memory area for HOST registers */
-+			0xf3010000 0x10000	/* memory area for DEVICE registers */
-+			0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
-+		reg-names = "xhci", "dev", "otg";
-+	};
--- 
-2.17.1
+FWIW, Rob should also have received these patches.
+
+	Torsten
