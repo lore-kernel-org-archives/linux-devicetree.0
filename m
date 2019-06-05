@@ -1,111 +1,64 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 04/13] media: rc: sunxi: Add RXSTA bits definition
-Date: Wed, 5 Jun 2019 22:00:20 +0200
-Message-ID: <20190605200020.tmyom3lg3inu6vvf@flea>
-References: <20190604162959.29199-1-peron.clem@gmail.com>
- <20190604162959.29199-5-peron.clem@gmail.com>
- <20190605095141.psrq6mhk63zto77s@flea>
- <CAJiuCceZa=WEiF8_LK+jDdiXOn1i8+z8Smr6YKCpo9_XftgueQ@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH 1/5] dt-bindings: drm/bridge/synopsys: dw-hdmi: Add
+ "unwedge" for ddc bus
+Date: Wed, 5 Jun 2019 16:21:01 -0400
+Message-ID: <20190605202101.GG17077@art_vandelay>
+References: <20190502225336.206885-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXF64DTQKGQEHL4376Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJiuCceZa=WEiF8_LK+jDdiXOn1i8+z8Smr6YKCpo9_XftgueQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20190502225336.206885-1-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, mka@chromium.org, Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, linux-arm-kernel@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 02:44:06PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> Hi Maxime,
->
-> On Wed, 5 Jun 2019 at 11:51, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wr=
-ote:
-> >
-> > On Tue, Jun 04, 2019 at 06:29:50PM +0200, Cl=C3=A9ment P=C3=A9ron wrote=
-:
-> > > We are using RXINT bits definition when looking at RXSTA register.
-> > >
-> > > These bits are equal but it's not really proper.
-> > >
-> > > Introduce the RXSTA bits and use them to have coherency.
-> > >
-> > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > ---
-> > >  drivers/media/rc/sunxi-cir.c | 18 ++++++++++++------
-> > >  1 file changed, 12 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-ci=
-r.c
-> > > index 0504ebfc831f..572bd2257d35 100644
-> > > --- a/drivers/media/rc/sunxi-cir.c
-> > > +++ b/drivers/media/rc/sunxi-cir.c
-> > > @@ -48,11 +48,11 @@
-> > >
-> > >  /* Rx Interrupt Enable */
-> > >  #define SUNXI_IR_RXINT_REG    0x2C
-> > > -/* Rx FIFO Overflow */
-> > > +/* Rx FIFO Overflow Interrupt Enable */
-> > >  #define REG_RXINT_ROI_EN             BIT(0)
-> > > -/* Rx Packet End */
-> > > +/* Rx Packet End Interrupt Enable */
-> > >  #define REG_RXINT_RPEI_EN            BIT(1)
-> > > -/* Rx FIFO Data Available */
-> > > +/* Rx FIFO Data Available Interrupt Enable */
-> > >  #define REG_RXINT_RAI_EN             BIT(4)
-> > >
-> > >  /* Rx FIFO available byte level */
-> > > @@ -60,6 +60,12 @@
-> > >
-> > >  /* Rx Interrupt Status */
-> > >  #define SUNXI_IR_RXSTA_REG    0x30
-> > > +/* Rx FIFO Overflow */
-> > > +#define REG_RXSTA_ROI                        BIT(0)
-> > > +/* Rx Packet End */
-> > > +#define REG_RXSTA_RPE                        BIT(1)
-> > > +/* Rx FIFO Data Available */
-> > > +#define REG_RXSTA_RA                 BIT(4)
-> >
-> > I'm fine with it on principle, but if the consistency needs to be
-> > maintained then we could just reuse the above defines
->
-> There is no comment why we can reuse them, they can also be some wrong
-> case for example the RXINT_DRQ_EN bit is not present in RXSTA and same
-> for STAT bit present in RXSTA and not present in RXINT.
->
-> I have discover and read this code a month ago and this logic is
-> really not obvious nor explain.
->
-> Maybe this hack could be done when we will introduce a quirks, but for
-> the moment I really think that it's more proper and readable to
-> introduce them properly.
+On Thu, May 02, 2019 at 03:53:32PM -0700, Douglas Anderson wrote:
+> In certain situations it was seen that we could wedge up the DDC bus
+> on the HDMI adapter on rk3288.  The only way to unwedge was to mux one
+> of the pins over to GPIO output-driven-low temporarily and then
+> quickly mux back.  Full details can be found in the patch
+> ("drm/bridge/synopsys: dw-hdmi: Add "unwedge" for ddc bus").
+> 
+> Since unwedge requires remuxing the pins, we first need to add to the
+> bindings so that we can specify what state the pins should be in for
+> unwedging.
 
-I don't think we understood each other :)
+Pushed to drm-misc-next along with patch 2. I'll let Heiko land the dts patches.
 
-I was talking about having something like
+Thanks!
 
-#define REG_RXSTA_ROI  REG_RXINT_ROI_EN
+Sean
 
-Maxime
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  .../bindings/display/rockchip/dw_hdmi-rockchip.txt         | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> index 39143424a474..8346bac81f1c 100644
+> --- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> +++ b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> @@ -38,6 +38,13 @@ Optional properties
+>  - phys: from general PHY binding: the phandle for the PHY device.
+>  - phy-names: Should be "hdmi" if phys references an external phy.
+>  
+> +Optional pinctrl entry:
+> +- If you have both a "unwedge" and "default" pinctrl entry, dw_hdmi
+> +  will switch to the unwedge pinctrl state for 10ms if it ever gets an
+> +  i2c timeout.  It's intended that this unwedge pinctrl entry will
+> +  cause the SDA line to be driven low to work around a hardware
+> +  errata.
+> +
+>  Example:
+>  
+>  hdmi: hdmi@ff980000 {
+> -- 
+> 2.21.0.1020.gf2820cf01a-goog
+> 
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190605200020.tmyom3lg3inu6vvf%40flea.
-For more options, visit https://groups.google.com/d/optout.
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
