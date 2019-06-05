@@ -1,58 +1,47 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 0/4] Add MCU SRAM nodes for TI K3 SoCs
-Date: Wed, 5 Jun 2019 12:53:49 -0400
-Message-ID: <acf9cf30-bcd6-76a0-5498-c334c7c43213@ti.com>
-References: <20190605163434.23173-1-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190605163434.23173-1-s-anna@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v8 04/13] dt-bindings: ddr: rename lpddr2 directory
+Date: Wed,  5 Jun 2019 18:54:01 +0200
+Message-ID: <20190605165410.14606-5-l.luba@partner.samsung.com>
+References: <20190605165410.14606-1-l.luba@partner.samsung.com>
+        <CGME20190605165430eucas1p1d3e42d3abbaefbdda9658cb814909fad@eucas1p1.samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190605165410.14606-1-l.luba@partner.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com, Lukasz Luba <l.luba@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6/5/19 12:34 PM, Suman Anna wrote:
-> Hi Tero,
-> 
-> The following series adds the DT nodes for the MCU SRAM present within
-> the MCU domain for both AM65x and J721E SoCs. The first 2 patches enable
-> the MCU SRAM node to be probed properly on AM65x SoCs, and the third
-> patch the equivalent for J721E SoCs. The third patch depends on the
-> base J721E support patch series from Nishanth [1].
-> 
-> The last patch is not related to MCU SRAM, but adds the ranges for the
-> R5F cluster that is also present in the MCU domain in preparation for
-> the R5F nodes.
-> 
+Change directory name to be ready for new types of memories.
 
-Why not have this last patch as part of the series adding the R5F nodes?
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+---
+ .../devicetree/bindings/{lpddr2 => ddr}/lpddr2-timings.txt      | 0
+ Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt    | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2-timings.txt (100%)
+ rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt (96%)
 
-Andrew
-
-> regards
-> Suman
-> 
-> [1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=121189
-> 
-> Suman Anna (4):
->    arm64: dts: ti: k3-am65: Add MCU SRAM ranges in interconnect nodes
->    arm64: dts: ti: k3-am65-mcu: Add the MCU RAM node
->    arm64: dts: ti: k3-j721e: Add the MCU SRAM node
->    arm64: dts: ti: k3-am65: Add R5F ranges in interconnect nodes
-> 
->   arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi         | 8 ++++++++
->   arch/arm64/boot/dts/ti/k3-am65.dtsi             | 6 ++++++
->   arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 8 ++++++++
->   3 files changed, 22 insertions(+)
-> 
+diff --git a/Documentation/devicetree/bindings/lpddr2/lpddr2-timings.txt b/Documentation/devicetree/bindings/ddr/lpddr2-timings.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/lpddr2/lpddr2-timings.txt
+rename to Documentation/devicetree/bindings/ddr/lpddr2-timings.txt
+diff --git a/Documentation/devicetree/bindings/lpddr2/lpddr2.txt b/Documentation/devicetree/bindings/ddr/lpddr2.txt
+similarity index 96%
+rename from Documentation/devicetree/bindings/lpddr2/lpddr2.txt
+rename to Documentation/devicetree/bindings/ddr/lpddr2.txt
+index 58354a075e13..ddd40121e6f6 100644
+--- a/Documentation/devicetree/bindings/lpddr2/lpddr2.txt
++++ b/Documentation/devicetree/bindings/ddr/lpddr2.txt
+@@ -36,7 +36,7 @@ Child nodes:
+   "lpddr2-timings" provides AC timing parameters of the device for
+   a given speed-bin. The user may provide the timings for as many
+   speed-bins as is required. Please see Documentation/devicetree/
+-  bindings/lpddr2/lpddr2-timings.txt for more information on "lpddr2-timings"
++  bindings/ddr/lpddr2-timings.txt for more information on "lpddr2-timings"
+ 
+ Example:
+ 
+-- 
+2.17.1
