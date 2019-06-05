@@ -1,42 +1,33 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH] dt-bindings: i2c: omap: Add new compatible for J721E SoCs
-Date: Wed, 5 Jun 2019 14:15:04 +0530
-Message-ID: <20190605084504.2777-1-vigneshr@ti.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6 09/10] usb: roles: add USB Type-B GPIO connector driver
+Date: Wed, 5 Jun 2019 11:45:55 +0300
+Message-ID: <CAHp75VcbZwd0e6r38C2x7HLEHLr4oR7TjwdDXnDxRPRs3anwgA@mail.gmail.com>
+References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com> <1559115828-19146-10-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559115828-19146-10-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB <linux-usb@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+On Wed, May 29, 2019 at 10:44 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+>
+> Due to the requirement of usb-connector.txt binding, the old way
+> using extcon to support USB Dual-Role switch is now deprecated
+> when use Type-B connector.
+> This patch introduces a driver of Type-B connector which typically
+> uses an input GPIO to detect USB ID pin, and try to replace the
+> function provided by extcon-usb-gpio driver
 
-J721E SoCs have same I2C IP as OMAP SoCs. Add new compatible to
-handle J721E SoCs.
+> +static SIMPLE_DEV_PM_OPS(usb_conn_pm_ops,
+> +                        usb_conn_suspend, usb_conn_resume);
+> +
+> +#define DEV_PMS_OPS (IS_ENABLED(CONFIG_PM_SLEEP) ? &usb_conn_pm_ops : NULL)
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
+Why this macro is needed?
 
-Initial support for J721E Platform is proposed here:
-https://lore.kernel.org/patchwork/cover/1077382/
-
- Documentation/devicetree/bindings/i2c/i2c-omap.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-omap.txt b/Documentation/devicetree/bindings/i2c/i2c-omap.txt
-index 4b90ba9f31b7..a44573d7c118 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-omap.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-omap.txt
-@@ -7,6 +7,7 @@ Required properties :
- 	"ti,omap3-i2c" for OMAP3 SoCs
- 	"ti,omap4-i2c" for OMAP4+ SoCs
- 	"ti,am654-i2c", "ti,omap4-i2c" for AM654 SoCs
-+	"ti,j721e-i2c", "ti,omap4-i2c" for J721E SoCs
- - ti,hwmods : Must be "i2c<n>", n being the instance number (1-based)
- - #address-cells = <1>;
- - #size-cells = <0>;
 -- 
-2.21.0
+With Best Regards,
+Andy Shevchenko
