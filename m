@@ -1,48 +1,39 @@
 From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH 0/6] Add minimal boot support for IPQ6018
-Date: Wed,  5 Jun 2019 22:45:55 +0530
-Message-ID: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH 2/6] dt-bindings: qcom: Add ipq6018 bindings
+Date: Wed,  5 Jun 2019 22:45:57 +0530
+Message-ID: <1559754961-26783-3-git-send-email-sricharan@codeaurora.org>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, sboyd@codeaurora.org, linus.walleij@linaro.org, agross@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The IPQ6018 is Qualcomm’s 802.11ax SoC for Routers,
-Gateways and Access Points.
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Signed-off-by: speriaka <speriaka@codeaurora.org>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This series adds minimal board boot support for ipq6018-cp01
-board.
-
-Sricharan R (6):
-  pinctrl: qcom: Add ipq6018 pinctrl driver
-  dt-bindings: qcom: Add ipq6018 bindings
-  clk: qcom: Add DT bindings for ipq6018 gcc clock controller
-  clk: qcom: Add ipq6018 Global Clock Controller support
-  arm64: dts: Add ipq6018 SoC and CP01 board support
-  arm64: defconfig: Enable qcom ipq6018 clock and pinctrl
-
- Documentation/devicetree/bindings/arm/qcom.yaml    |    2 +
- .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
- arch/arm64/boot/dts/qcom/Makefile                  |    1 +
- arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts       |   35 +
- arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  231 +
- arch/arm64/configs/defconfig                       |    2 +
- drivers/clk/qcom/Kconfig                           |    9 +
- drivers/clk/qcom/Makefile                          |    1 +
- drivers/clk/qcom/gcc-ipq6018.c                     | 5267 ++++++++++++++++++++
- drivers/pinctrl/qcom/Kconfig                       |   10 +
- drivers/pinctrl/qcom/Makefile                      |    1 +
- drivers/pinctrl/qcom/pinctrl-ipq6018.c             | 1183 +++++
- include/dt-bindings/clock/qcom,gcc-ipq6018.h       |  405 ++
- 13 files changed, 7148 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
- create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
- create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
- create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq6018.c
- create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq6018.h
-
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index f6316ab..7b19028 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -36,6 +36,7 @@ description: |
+   	mdm9615
+   	ipq8074
+   	sdm845
++	ipq6018
+ 
+   The 'board' element must be one of the following strings:
+ 
+@@ -45,6 +46,7 @@ description: |
+   	mtp
+   	sbc
+   	hk01
++	cp01-c1
+ 
+   The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
+   where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
