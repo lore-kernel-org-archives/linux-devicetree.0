@@ -1,81 +1,209 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v4 04/13] media: rc: sunxi: Add RXSTA bits definition
-Date: Wed, 5 Jun 2019 22:34:58 +0200
-Message-ID: <CAJiuCceuN8JHwLBeoKSzwY2s0-wFJf-N8FbqOGemkhtyax73Eg@mail.gmail.com>
-References: <20190604162959.29199-1-peron.clem@gmail.com>
- <20190604162959.29199-5-peron.clem@gmail.com>
- <20190605095141.psrq6mhk63zto77s@flea>
- <CAJiuCceZa=WEiF8_LK+jDdiXOn1i8+z8Smr6YKCpo9_XftgueQ@mail.gmail.com>
- <20190605200020.tmyom3lg3inu6vvf@flea>
+From: Renato Lui Geh <renatogeh@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml binding
+Date: Wed, 5 Jun 2019 17:35:56 -0300
+Message-ID: <20190605203554.podktlonhp527iqq@renatolg>
+References: <cover.1558746978.git.renatogeh@gmail.com>
+ <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
+ <20190526173911.57ae3d11@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190605200020.tmyom3lg3inu6vvf@flea>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190526173911.57ae3d11@archlinux>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Renato Lui Geh <renatogeh@gmail.com>, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, stefan.popa@analog.com, alexandru.Ardelean@analog.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCA1IEp1biAyMDE5IGF0IDIyOjAwLCBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJk
-QGJvb3RsaW4uY29tPiB3cm90ZToKPgo+IE9uIFdlZCwgSnVuIDA1LCAyMDE5IGF0IDAyOjQ0OjA2
-UE0gKzAyMDAsIENsw6ltZW50IFDDqXJvbiB3cm90ZToKPiA+IEhpIE1heGltZSwKPiA+Cj4gPiBP
-biBXZWQsIDUgSnVuIDIwMTkgYXQgMTE6NTEsIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRA
-Ym9vdGxpbi5jb20+IHdyb3RlOgo+ID4gPgo+ID4gPiBPbiBUdWUsIEp1biAwNCwgMjAxOSBhdCAw
-NjoyOTo1MFBNICswMjAwLCBDbMOpbWVudCBQw6lyb24gd3JvdGU6Cj4gPiA+ID4gV2UgYXJlIHVz
-aW5nIFJYSU5UIGJpdHMgZGVmaW5pdGlvbiB3aGVuIGxvb2tpbmcgYXQgUlhTVEEgcmVnaXN0ZXIu
-Cj4gPiA+ID4KPiA+ID4gPiBUaGVzZSBiaXRzIGFyZSBlcXVhbCBidXQgaXQncyBub3QgcmVhbGx5
-IHByb3Blci4KPiA+ID4gPgo+ID4gPiA+IEludHJvZHVjZSB0aGUgUlhTVEEgYml0cyBhbmQgdXNl
-IHRoZW0gdG8gaGF2ZSBjb2hlcmVuY3kuCj4gPiA+ID4KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBD
-bMOpbWVudCBQw6lyb24gPHBlcm9uLmNsZW1AZ21haWwuY29tPgo+ID4gPiA+IC0tLQo+ID4gPiA+
-ICBkcml2ZXJzL21lZGlhL3JjL3N1bnhpLWNpci5jIHwgMTggKysrKysrKysrKysrLS0tLS0tCj4g
-PiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+
-ID4gPiA+Cj4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcmMvc3VueGktY2lyLmMg
-Yi9kcml2ZXJzL21lZGlhL3JjL3N1bnhpLWNpci5jCj4gPiA+ID4gaW5kZXggMDUwNGViZmM4MzFm
-Li41NzJiZDIyNTdkMzUgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEvZHJpdmVycy9tZWRpYS9yYy9zdW54
-aS1jaXIuYwo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcmMvc3VueGktY2lyLmMKPiA+ID4g
-PiBAQCAtNDgsMTEgKzQ4LDExIEBACj4gPiA+ID4KPiA+ID4gPiAgLyogUnggSW50ZXJydXB0IEVu
-YWJsZSAqLwo+ID4gPiA+ICAjZGVmaW5lIFNVTlhJX0lSX1JYSU5UX1JFRyAgICAweDJDCj4gPiA+
-ID4gLS8qIFJ4IEZJRk8gT3ZlcmZsb3cgKi8KPiA+ID4gPiArLyogUnggRklGTyBPdmVyZmxvdyBJ
-bnRlcnJ1cHQgRW5hYmxlICovCj4gPiA+ID4gICNkZWZpbmUgUkVHX1JYSU5UX1JPSV9FTiAgICAg
-ICAgICAgICBCSVQoMCkKPiA+ID4gPiAtLyogUnggUGFja2V0IEVuZCAqLwo+ID4gPiA+ICsvKiBS
-eCBQYWNrZXQgRW5kIEludGVycnVwdCBFbmFibGUgKi8KPiA+ID4gPiAgI2RlZmluZSBSRUdfUlhJ
-TlRfUlBFSV9FTiAgICAgICAgICAgIEJJVCgxKQo+ID4gPiA+IC0vKiBSeCBGSUZPIERhdGEgQXZh
-aWxhYmxlICovCj4gPiA+ID4gKy8qIFJ4IEZJRk8gRGF0YSBBdmFpbGFibGUgSW50ZXJydXB0IEVu
-YWJsZSAqLwo+ID4gPiA+ICAjZGVmaW5lIFJFR19SWElOVF9SQUlfRU4gICAgICAgICAgICAgQklU
-KDQpCj4gPiA+ID4KPiA+ID4gPiAgLyogUnggRklGTyBhdmFpbGFibGUgYnl0ZSBsZXZlbCAqLwo+
-ID4gPiA+IEBAIC02MCw2ICs2MCwxMiBAQAo+ID4gPiA+Cj4gPiA+ID4gIC8qIFJ4IEludGVycnVw
-dCBTdGF0dXMgKi8KPiA+ID4gPiAgI2RlZmluZSBTVU5YSV9JUl9SWFNUQV9SRUcgICAgMHgzMAo+
-ID4gPiA+ICsvKiBSeCBGSUZPIE92ZXJmbG93ICovCj4gPiA+ID4gKyNkZWZpbmUgUkVHX1JYU1RB
-X1JPSSAgICAgICAgICAgICAgICAgICAgICAgIEJJVCgwKQo+ID4gPiA+ICsvKiBSeCBQYWNrZXQg
-RW5kICovCj4gPiA+ID4gKyNkZWZpbmUgUkVHX1JYU1RBX1JQRSAgICAgICAgICAgICAgICAgICAg
-ICAgIEJJVCgxKQo+ID4gPiA+ICsvKiBSeCBGSUZPIERhdGEgQXZhaWxhYmxlICovCj4gPiA+ID4g
-KyNkZWZpbmUgUkVHX1JYU1RBX1JBICAgICAgICAgICAgICAgICBCSVQoNCkKPiA+ID4KPiA+ID4g
-SSdtIGZpbmUgd2l0aCBpdCBvbiBwcmluY2lwbGUsIGJ1dCBpZiB0aGUgY29uc2lzdGVuY3kgbmVl
-ZHMgdG8gYmUKPiA+ID4gbWFpbnRhaW5lZCB0aGVuIHdlIGNvdWxkIGp1c3QgcmV1c2UgdGhlIGFi
-b3ZlIGRlZmluZXMKPiA+Cj4gPiBUaGVyZSBpcyBubyBjb21tZW50IHdoeSB3ZSBjYW4gcmV1c2Ug
-dGhlbSwgdGhleSBjYW4gYWxzbyBiZSBzb21lIHdyb25nCj4gPiBjYXNlIGZvciBleGFtcGxlIHRo
-ZSBSWElOVF9EUlFfRU4gYml0IGlzIG5vdCBwcmVzZW50IGluIFJYU1RBIGFuZCBzYW1lCj4gPiBm
-b3IgU1RBVCBiaXQgcHJlc2VudCBpbiBSWFNUQSBhbmQgbm90IHByZXNlbnQgaW4gUlhJTlQuCj4g
-Pgo+ID4gSSBoYXZlIGRpc2NvdmVyIGFuZCByZWFkIHRoaXMgY29kZSBhIG1vbnRoIGFnbyBhbmQg
-dGhpcyBsb2dpYyBpcwo+ID4gcmVhbGx5IG5vdCBvYnZpb3VzIG5vciBleHBsYWluLgo+ID4KPiA+
-IE1heWJlIHRoaXMgaGFjayBjb3VsZCBiZSBkb25lIHdoZW4gd2Ugd2lsbCBpbnRyb2R1Y2UgYSBx
-dWlya3MsIGJ1dCBmb3IKPiA+IHRoZSBtb21lbnQgSSByZWFsbHkgdGhpbmsgdGhhdCBpdCdzIG1v
-cmUgcHJvcGVyIGFuZCByZWFkYWJsZSB0bwo+ID4gaW50cm9kdWNlIHRoZW0gcHJvcGVybHkuCj4K
-PiBJIGRvbid0IHRoaW5rIHdlIHVuZGVyc3Rvb2QgZWFjaCBvdGhlciA6KQo+Cj4gSSB3YXMgdGFs
-a2luZyBhYm91dCBoYXZpbmcgc29tZXRoaW5nIGxpa2UKPgo+ICNkZWZpbmUgUkVHX1JYU1RBX1JP
-SSAgUkVHX1JYSU5UX1JPSV9FTgpPaywgSSB3aWxsIHNlbmQgYW4gdXBkYXRlLgoKVGhhbmtzIGZv
-ciB0aGUgcmV2aWV3LApDbMOpbWVudAoKCj4KPiBNYXhpbWUKPgo+IC0tCj4gTWF4aW1lIFJpcGFy
-ZCwgQm9vdGxpbgo+IEVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKPiBodHRw
-czovL2Jvb3RsaW4uY29tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 05/26, Jonathan Cameron wrote:
+>On Fri, 24 May 2019 22:26:30 -0300
+>Renato Lui Geh <renatogeh@gmail.com> wrote:
+>
+>> This patch adds a YAML binding for the Analog Devices AD7780/1 and
+>> AD7170/1 analog-to-digital converters.
+>>
+>> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+>Looks good to me, but I'm still finding my feet with these so will
+>leave it for a few days for others to have time to comment.
+>
+>Michael, looking for a quick reply from you to say if you are happy
+>being explicitly listed as maintainer for this one, or if you'd
+>rather land it on someone else.  Same applies for patch 2.
+>
+>Renato, if I seem to have forgotten this in a week or so, feel
+>free to give me a poke. I've been known to loose patches entirely!
+
+Hi Jonathan,
+
+Just here to give you a poke. :)
+
+By the way, in these cases, which would be easier for you? To send you
+an email like I'm doing right now on last week's thread; or to resend
+the entire patch(set)?
+
+Thanks,
+Renato
+>
+>Thanks,
+>
+>Jonathan
+>> ---
+>> Changes in v2:
+>>  - vref-supply to avdd-supply
+>>  - remove avdd-supply from required list
+>>  - include adc block in an spi block
+>>
+>>  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
+>>  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
+>>  2 files changed, 87 insertions(+), 48 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+>> deleted file mode 100644
+>> index 440e52555349..000000000000
+>> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+>> +++ /dev/null
+>> @@ -1,48 +0,0 @@
+>> -* Analog Devices AD7170/AD7171/AD7780/AD7781
+>> -
+>> -Data sheets:
+>> -
+>> -- AD7170:
+>> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
+>> -- AD7171:
+>> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
+>> -- AD7780:
+>> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
+>> -- AD7781:
+>> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
+>> -
+>> -Required properties:
+>> -
+>> -- compatible: should be one of
+>> -	* "adi,ad7170"
+>> -	* "adi,ad7171"
+>> -	* "adi,ad7780"
+>> -	* "adi,ad7781"
+>> -- reg: spi chip select number for the device
+>> -- vref-supply: the regulator supply for the ADC reference voltage
+>> -
+>> -Optional properties:
+>> -
+>> -- powerdown-gpios:  must be the device tree identifier of the PDRST pin. If
+>> -		    specified, it will be asserted during driver probe. As the
+>> -		    line is active high, it should be marked GPIO_ACTIVE_HIGH.
+>> -- adi,gain-gpios:   must be the device tree identifier of the GAIN pin. Only for
+>> -		    the ad778x chips. If specified, it will be asserted during
+>> -		    driver probe. As the line is active low, it should be marked
+>> -		    GPIO_ACTIVE_LOW.
+>> -- adi,filter-gpios: must be the device tree identifier of the FILTER pin. Only
+>> -		    for the ad778x chips. If specified, it will be asserted
+>> -		    during driver probe. As the line is active low, it should be
+>> -		    marked GPIO_ACTIVE_LOW.
+>> -
+>> -Example:
+>> -
+>> -adc@0 {
+>> -	compatible =  "adi,ad7780";
+>> -	reg =	      <0>;
+>> -	vref-supply = <&vdd_supply>
+>> -
+>> -	powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
+>> -	adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
+>> -	adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
+>> -};
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+>> new file mode 100644
+>> index 000000000000..d1109416963c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+>> @@ -0,0 +1,87 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital converters
+>> +
+>> +maintainers:
+>> +  - Michael Hennerich <michael.hennerich@analog.com>
+>> +
+>> +description: |
+>> +  The ad7780 is a sigma-delta analog to digital converter. This driver provides
+>> +  reading voltage values and status bits from both the ad778x and ad717x series.
+>> +  Its interface also allows writing on the FILTER and GAIN GPIO pins on the
+>> +  ad778x.
+>> +
+>> +  Specifications on the converters can be found at:
+>> +    AD7170:
+>> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
+>> +    AD7171:
+>> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
+>> +    AD7780:
+>> +      https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
+>> +    AD7781:
+>> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - adi,ad7170
+>> +      - adi,ad7171
+>> +      - adi,ad7780
+>> +      - adi,ad7781
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  avdd-supply:
+>> +    description:
+>> +      The regulator supply for the ADC reference voltage.
+>> +    maxItems: 1
+>> +
+>> +  powerdown-gpios:
+>> +    description:
+>> +      Must be the device tree identifier of the PDRST pin. If
+>> +      specified, it will be asserted during driver probe. As the
+>> +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
+>> +    maxItems: 1
+>> +
+>> +  adi,gain-gpios:
+>> +    description:
+>> +      Must be the device tree identifier of the GAIN pin. Only for
+>> +      the ad778x chips. If specified, it will be asserted during
+>> +      driver probe. As the line is active low, it should be marked
+>> +      GPIO_ACTIVE_LOW.
+>> +    maxItems: 1
+>> +
+>> +  adi,filter-gpios:
+>> +    description:
+>> +      Must be the device tree identifier of the FILTER pin. Only
+>> +      for the ad778x chips. If specified, it will be asserted
+>> +      during driver probe. As the line is active low, it should be
+>> +      marked GPIO_ACTIVE_LOW.
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +    spi0 {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        adc@0 {
+>> +            compatible = "adi,ad7780";
+>> +            reg = <0>;
+>> +
+>> +            avdd-supply      = <&vdd_supply>;
+>> +            powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+>> +            adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
+>> +            adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
+>> +        };
+>> +    };
+>
