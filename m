@@ -1,92 +1,68 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 6/8] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
-Date: Wed, 5 Jun 2019 14:25:18 +0800
-Message-ID: <20190605062517.GF29853@dragon>
-References: <20190527030616.44397-1-peter.chen@nxp.com>
- <20190527030616.44397-7-peter.chen@nxp.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [RFC PATCH 1/3] arm64: dts: ti: am6-wakeup: Add gpio node
+Date: Wed, 5 Jun 2019 12:01:35 +0530
+Message-ID: <bac5737a-3924-b59f-1d90-a2a9b3a390f1@ti.com>
+References: <20190605060846.25314-1-j-keerthy@ti.com>
+ <20190605060846.25314-2-j-keerthy@ti.com>
+ <e6ec3894-4e3d-e721-c1bc-791263b2d309@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190527030616.44397-7-peter.chen@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <peter.chen@nxp.com>
-Cc: aisheng.dong@nxp.com, balbi@kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, chunfeng.yun@mediatek.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e6ec3894-4e3d-e721-c1bc-791263b2d309@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>, t-kristo@ti.com, nm@ti.com, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 27, 2019 at 11:06:14AM +0800, Peter Chen wrote:
-> Add imx7ulp USBOTG1 support.
-> 
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> ---
->  arch/arm/boot/dts/imx7ulp.dtsi | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-> index fca6e50f37c8..37b058119505 100644
-> --- a/arch/arm/boot/dts/imx7ulp.dtsi
-> +++ b/arch/arm/boot/dts/imx7ulp.dtsi
-> @@ -30,6 +30,7 @@
->  		serial1 = &lpuart5;
->  		serial2 = &lpuart6;
->  		serial3 = &lpuart7;
-> +		usbphy0 = &usbphy1;
->  	};
->  
->  	cpus {
-> @@ -133,6 +134,36 @@
->  			clock-names = "ipg", "per";
->  		};
->  
-> +		usbotg1: usb@40330000 {
-> +			compatible = "fsl,imx7ulp-usb", "fsl,imx6ul-usb",
-> +				"fsl,imx27-usb";
 
-If "fsl,imx6ul-usb" is the one that imx7ulp device is compatible with
-and will match in driver, "fsl,imx27-usb" can just be dropped.  Same
-comment on usbmisc and usbphy below.
 
-Shawn
-
-> +			reg = <0x40330000 0x200>;
-> +			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&pcc2 IMX7ULP_CLK_USB0>;
-> +			phys = <&usbphy1>;
-> +			fsl,usbmisc = <&usbmisc1 0>;
-> +			ahb-burst-config = <0x0>;
-> +			tx-burst-size-dword = <0x8>;
-> +			rx-burst-size-dword = <0x8>;
-> +			status = "disabled";
-> +		};
-> +
-> +		usbmisc1: usbmisc@40330200 {
-> +			compatible = "fsl,imx7ulp-usbmisc", "fsl,imx7d-usbmisc",
-> +				"fsl,imx6q-usbmisc";
-> +			#index-cells = <1>;
-> +			reg = <0x40330200 0x200>;
-> +		};
-> +
-> +		usbphy1: usbphy@0x40350000 {
-> +			compatible = "fsl,imx7ulp-usbphy",
-> +				"fsl,imx6ul-usbphy", "fsl,imx23-usbphy";
-> +			reg = <0x40350000 0x1000>;
-> +			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&pcc2 IMX7ULP_CLK_USB_PHY>;
-> +			#phy-cells = <0>;
-> +		};
-> +
->  		usdhc0: mmc@40370000 {
->  			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
->  			reg = <0x40370000 0x10000>;
-> -- 
-> 2.14.1
+On 05/06/19 11:46 AM, Lokesh Vutla wrote:
 > 
+> 
+> On 05/06/19 11:38 AM, Keerthy wrote:
+>> Add gpio0 node under wakeup domain. This has 56 gpios
+>> and all are capable of generating banked interrupts.
+>>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>   arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 15 +++++++++++++++
+>>   1 file changed, 15 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+>> index f1ca171abdf8..8c6c99e7c6ed 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+>> @@ -74,4 +74,19 @@
+>>   		ti,sci-dst-id = <56>;
+>>   		ti,sci-rm-range-girq = <0x4>;
+>>   	};
+>> +
+>> +	wkup_gpio0: wkup_gpio0@42110000 {
+>> +		compatible = "ti,k2g-gpio", "ti,keystone-gpio";
+> 
+> This is not k2g. Can you either create a am6 specific compatible or just use
+> ti,keystone-gpio.
+
+It seems practice is now to have separate compatible. I will add am6 
+specific compatible.
+
+> 
+> Thanks and regards,
+> Lokesh
+> 
+>> +		reg = <0x42110000 0x100>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		interrupt-parent = <&intr_wkup_gpio>;
+>> +		interrupts = <59 128>, <59 129>, <59 130>, <59 131>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <2>;
+>> +		ti,ngpio = <56>;
+>> +		ti,davinci-gpio-unbanked = <0>;
+>> +		clocks = <&k3_clks 59 0>;
+>> +		clock-names = "gpio";
+>> +	};
+>>   };
+>>
