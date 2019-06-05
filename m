@@ -1,77 +1,47 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [RFC PATCH v2 4/4] arm64: dts: ti: am654-base-board: Add gpio_keys node
-Date: Wed, 5 Jun 2019 13:27:10 +0530
-Message-ID: <20190605075710.1691-5-j-keerthy@ti.com>
-References: <20190605075710.1691-1-j-keerthy@ti.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/3] irqchip: al-fic: Introduce Amazon's Annapurna Labs
+ Fabric Interrupt Controller Driver
+Date: Wed, 5 Jun 2019 09:59:27 +0200
+Message-ID: <20190605075927.GA9693@kroah.com>
+References: <1559717653-11258-1-git-send-email-talel@amazon.com>
+ <1559717653-11258-3-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190605075710.1691-1-j-keerthy@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1559717653-11258-3-git-send-email-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: t-kristo@ti.com, nm@ti.com, robh+dt@kernel.org
-Cc: lokeshvutla@ti.com, linux-arm-kernel@lists.infradead.org, j-keerthy@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Talel Shenhar <talel@amazon.com>
+Cc: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-There are 2 push buttons: SW5 and SW6 that are basically connected to
-WKUP_GPIO0_24 and WKUP_GPIO0_27 respectively. Add the respective
-nodes and the pinctrl data to set the mode to GPIO and Input.
+On Wed, Jun 05, 2019 at 09:54:12AM +0300, Talel Shenhar wrote:
+> --- /dev/null
+> +++ b/include/linux/irqchip/al-fic.h
+> @@ -0,0 +1,21 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/**
+> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+> + */
+> +
+> +#ifndef _AL_FIC_H_
+> +#define _AL_FIC_H_
+> +
+> +#include <linux/irqdomain.h>
+> +
+> +struct al_fic;
+> +
+> +struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic);
+> +
+> +struct al_fic *al_fic_wire_init(struct device_node *node,
+> +				void __iomem *base,
+> +				const char *name,
+> +				unsigned int parent_irq);
+> +int al_fic_cleanup(struct al_fic *fic);
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- .../arm64/boot/dts/ti/k3-am654-base-board.dts | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Who is using these new functions?  We don't add new apis that no one
+uses :(
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index cf1aa276a1ea..ea50b6e36eff 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -6,6 +6,7 @@
- /dts-v1/;
- 
- #include "k3-am654.dtsi"
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	compatible =  "ti,am654-evm", "ti,am654";
-@@ -33,6 +34,25 @@
- 			no-map;
- 		};
- 	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&push_button_pins_default>;
-+
-+		sw5 {
-+			label = "GPIO Key USER1";
-+			linux,code = <BTN_0>;
-+			gpios = <&wkup_gpio0 24 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		sw6 {
-+			label = "GPIO Key USER2";
-+			linux,code = <BTN_1>;
-+			gpios = <&wkup_gpio0 27 GPIO_ACTIVE_LOW>;
-+		};
-+	};
- };
- 
- &wkup_pmx0 {
-@@ -42,6 +62,13 @@
- 			AM65X_WKUP_IOPAD(0x00e4, PIN_INPUT, 0) /* (AD6) WKUP_I2C0_SDA */
- 		>;
- 	};
-+
-+	push_button_pins_default: push_button__pins_default {
-+		pinctrl-single,pins = <
-+			AM65X_WKUP_IOPAD(0x0030, PIN_INPUT, 7) /* (R5) WKUP_GPIO0_24 */
-+			AM65X_WKUP_IOPAD(0x003c, PIN_INPUT, 7) /* (P2) WKUP_GPIO0_27 */
-+		>;
-+	};
- };
- 
- &main_pmx0 {
--- 
-2.17.1
+thanks,
+
+greg k-h
