@@ -1,375 +1,218 @@
-From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt Controller Driver
-Date: Wed, 5 Jun 2019 13:52:01 +0300
-Message-ID: <1559731921-14023-3-git-send-email-talel@amazon.com>
-References: <1559731921-14023-1-git-send-email-talel@amazon.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v2] USB: move usb debugfs directory creation to the usb
+ common core
+Date: Wed, 5 Jun 2019 19:01:55 +0800
+Message-ID: <1559732515.8487.106.camel@mhfsdcap03>
+References: <20190605092816.GA23758@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559731921-14023-1-git-send-email-talel@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com, Talel Shenhar <talel@amazon.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190605092816.GA23758@kroah.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Amazon's Annapurna Labs Fabric Interrupt Controller has 32 inputs
-lines. A FIC (Fabric Interrupt Controller) may be cascaded into another FIC
-or directly to the main CPU Interrupt Controller (e.g. GIC).
+Hi Greg,
+On Wed, 2019-06-05 at 11:28 +0200, Greg Kroah-Hartman wrote:
+> The USB gadget subsystem wants to use the USB debugfs root directory, so
+> move it to the common "core" USB code so that it is properly initialized
+> and removed as needed.
+> 
+> In order to properly do this, we need to load the common code before the
+> usb core code, when everything is linked into the kernel, so reorder the
+> link order of the code.
+> 
+> Also as the usb common code has the possibility of the led trigger logic
+> to be merged into it, handle the build option properly by only having
+> one module init/exit function and have the common code initialize the
+> led trigger if needed.
+> 
+> Reported-by: From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> 
+> Chunfeng, can you test this version to verify it works for you when
+> building the code into the kernel?
+> 
+> v2: handle led common code link error reported by kbuild
+>     handle subsys_initcall issue pointed out by Chunfeng
+> 
+>  drivers/usb/Makefile        |  3 +--
+>  drivers/usb/common/common.c | 21 +++++++++++++++++++++
+>  drivers/usb/common/common.h | 14 ++++++++++++++
+>  drivers/usb/common/led.c    |  9 +++------
+>  drivers/usb/core/usb.c      | 10 ++++------
+>  5 files changed, 43 insertions(+), 14 deletions(-)
+>  create mode 100644 drivers/usb/common/common.h
+> 
+> diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
+> index 7d1b8c82b208..ecc2de1ffaae 100644
+> --- a/drivers/usb/Makefile
+> +++ b/drivers/usb/Makefile
+> @@ -5,6 +5,7 @@
+>  
+>  # Object files in subdirectories
+>  
+> +obj-$(CONFIG_USB_COMMON)	+= common/
+>  obj-$(CONFIG_USB)		+= core/
+>  obj-$(CONFIG_USB_SUPPORT)	+= phy/
+>  
+> @@ -60,8 +61,6 @@ obj-$(CONFIG_USB_CHIPIDEA)	+= chipidea/
+>  obj-$(CONFIG_USB_RENESAS_USBHS)	+= renesas_usbhs/
+>  obj-$(CONFIG_USB_GADGET)	+= gadget/
+>  
+> -obj-$(CONFIG_USB_COMMON)	+= common/
+> -
+>  obj-$(CONFIG_USBIP_CORE)	+= usbip/
+>  
+>  obj-$(CONFIG_TYPEC)		+= typec/
+> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> index 18f5dcf58b0d..84a4423aaddf 100644
+> --- a/drivers/usb/common/common.c
+> +++ b/drivers/usb/common/common.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/usb/of.h>
+>  #include <linux/usb/otg.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/debugfs.h>
+> +#include "common.h"
+>  
+>  static const char *const ep_type_names[] = {
+>  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
+> @@ -291,4 +293,23 @@ struct device *usb_of_get_companion_dev(struct device *dev)
+>  EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
+>  #endif
+>  
+> +struct dentry *usb_debug_root;
+> +EXPORT_SYMBOL_GPL(usb_debug_root);
+> +
+> +static int usb_common_init(void)
+> +{
+> +	usb_debug_root = debugfs_create_dir("usb", NULL);
+> +	ledtrig_usb_init();
+> +	return 0;
+> +}
+> +
+> +static void usb_common_exit(void)
+> +{
+> +	ledtrig_usb_exit();
+> +	debugfs_remove_recursive(usb_debug_root);
+> +}
+> +
+When enable CONFIG_LED_TRIGGER, there is a warning
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
----
- MAINTAINERS                  |   6 +
- drivers/irqchip/Kconfig      |  11 ++
- drivers/irqchip/Makefile     |   1 +
- drivers/irqchip/irq-al-fic.c | 289 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 307 insertions(+)
- create mode 100644 drivers/irqchip/irq-al-fic.c
+ MODPOST vmlinux.o
+WARNING: vmlinux.o(.text+0x68e300): Section mismatch in reference from
+the function usb_common_init() to the
+function .init.text:ledtrig_usb_init()
+The function usb_common_init() references
+the function __init ledtrig_usb_init().
+This is often because usb_common_init lacks a __init
+annotation or the annotation of ledtrig_usb_init is wrong.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f485597..b4f5255 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1209,6 +1209,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
- F:	drivers/irqchip/irq-vic.c
- 
-+AMAZON ANNAPURNA LABS FIC DRIVER
-+M:	Talel Shenhar <talel@amazon.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
-+F:	drivers/irqchip/irq-al-fic.c
-+
- ARM SMMU DRIVERS
- M:	Will Deacon <will.deacon@arm.com>
- R:	Robin Murphy <robin.murphy@arm.com>
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 51a5ef0..1e51f0f 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -89,6 +89,17 @@ config ALPINE_MSI
- 	select PCI_MSI
- 	select GENERIC_IRQ_CHIP
- 
-+config AL_FIC
-+	bool "Amazon's Annapurna Labs Fabric Interrupt Controller"
-+	depends on OF || COMPILE_TEST
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
-+	select GENERIC_IRQ_MULTI_HANDLER
-+	select IRQ_DOMAIN_HIERARCHY
-+	select SPARSE_IRQ
-+	help
-+	  Support Amazon's Annapurna Labs Fabric Interrupt Controller.
-+
- config ATMEL_AIC_IRQ
- 	bool
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 794c13d..a20eba5 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_IRQCHIP)			+= irqchip.o
- 
-+obj-$(CONFIG_AL_FIC)			+= irq-al-fic.o
- obj-$(CONFIG_ALPINE_MSI)		+= irq-alpine-msi.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
-diff --git a/drivers/irqchip/irq-al-fic.c b/drivers/irqchip/irq-al-fic.c
-new file mode 100644
-index 0000000..484ef18
---- /dev/null
-+++ b/drivers/irqchip/irq-al-fic.c
-@@ -0,0 +1,289 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+/* FIC Registers */
-+#define AL_FIC_CAUSE		0x00
-+#define AL_FIC_MASK		0x10
-+#define AL_FIC_CONTROL		0x28
-+
-+#define CONTROL_TRIGGER_RISING	BIT(3)
-+#define CONTROL_MASK_MSI_X	BIT(5)
-+
-+#define NR_FIC_IRQS 32
-+
-+MODULE_AUTHOR("Talel Shenhar");
-+MODULE_DESCRIPTION("Amazon's Annapurna Labs Interrupt Controller Driver");
-+MODULE_LICENSE("GPL v2");
-+
-+enum al_fic_state {
-+	AL_FIC_CLEAN = 0,
-+	AL_FIC_CONFIGURED_LEVEL,
-+	AL_FIC_CONFIGURED_RAISING_EDGE,
-+};
-+
-+struct al_fic {
-+	void __iomem *base;
-+	struct irq_domain *domain;
-+	const char *name;
-+	unsigned int parent_irq;
-+	enum al_fic_state state;
-+};
-+
-+static void al_fic_set_trigger(struct al_fic *fic,
-+			       struct irq_chip_generic *gc,
-+			       enum al_fic_state new_state)
-+{
-+	irq_flow_handler_t handler;
-+	u32 control = readl(fic->base + AL_FIC_CONTROL);
-+
-+	if (new_state == AL_FIC_CONFIGURED_LEVEL) {
-+		handler = handle_level_irq;
-+		control &= ~CONTROL_TRIGGER_RISING;
-+	} else {
-+		handler = handle_edge_irq;
-+		control |= CONTROL_TRIGGER_RISING;
-+	}
-+	gc->chip_types->handler = handler;
-+	fic->state = new_state;
-+	writel(control, fic->base + AL_FIC_CONTROL);
-+}
-+
-+static int al_fic_irq_set_type(struct irq_data *data, unsigned int flow_type)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-+	struct al_fic *fic = gc->private;
-+	enum al_fic_state new_state;
-+	int ret = 0;
-+
-+	irq_gc_lock(gc);
-+
-+	if (!(flow_type & IRQ_TYPE_LEVEL_HIGH) &&
-+	    !(flow_type & IRQ_TYPE_EDGE_RISING)) {
-+		pr_err("fic doesn't support flow type %d\n", flow_type);
-+		ret = -EPERM;
-+		goto err;
-+	}
-+
-+	new_state = (flow_type & IRQ_TYPE_LEVEL_HIGH) ?
-+		AL_FIC_CONFIGURED_LEVEL : AL_FIC_CONFIGURED_RAISING_EDGE;
-+
-+	/* A given FIC instance can be either all level or all edge triggered.
-+	 * This is generally fixed depending on what pieces of HW it's wired up
-+	 * to.
-+	 *
-+	 * We configure it based on the sensitivity of the first source
-+	 * being setup, and reject any subsequent attempt at configuring it in a
-+	 * different way.
-+	 */
-+	if (fic->state == AL_FIC_CLEAN) {
-+		al_fic_set_trigger(fic, gc, new_state);
-+	} else if (fic->state != new_state) {
-+		pr_err("fic %s state already configured to %d\n",
-+		       fic->name, fic->state);
-+		ret = -EPERM;
-+		goto err;
-+	}
-+
-+err:
-+	irq_gc_unlock(gc);
-+
-+	return ret;
-+}
-+
-+static void al_fic_irq_handler(struct irq_desc *desc)
-+{
-+	struct al_fic *fic = irq_desc_get_handler_data(desc);
-+	struct irq_domain *domain = fic->domain;
-+	struct irq_chip *irqchip = irq_desc_get_chip(desc);
-+	struct irq_chip_generic *gc = irq_get_domain_generic_chip(domain, 0);
-+	unsigned long pending;
-+	unsigned int irq;
-+	u32 hwirq;
-+
-+	chained_irq_enter(irqchip, desc);
-+
-+	pending = readl(fic->base + AL_FIC_CAUSE);
-+	pending &= ~gc->mask_cache;
-+
-+	for_each_set_bit(hwirq, &pending, domain->revmap_size) {
-+		irq = irq_find_mapping(domain, hwirq);
-+		generic_handle_irq(irq);
-+	}
-+
-+	chained_irq_exit(irqchip, desc);
-+}
-+
-+static int al_fic_register(struct device_node *node,
-+			   struct al_fic *fic)
-+{
-+	struct irq_chip_generic *gc;
-+	int ret;
-+
-+	fic->domain = irq_domain_add_linear(node,
-+					    NR_FIC_IRQS,
-+					    &irq_generic_chip_ops,
-+					    fic);
-+	if (!fic->domain) {
-+		pr_err("fail to add irq domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(fic->domain,
-+					     NR_FIC_IRQS,
-+					     1, fic->name,
-+					     handle_level_irq,
-+					     0, 0, IRQ_GC_INIT_MASK_CACHE);
-+	if (ret) {
-+		pr_err("fail to allocate generic chip (%d)\n", ret);
-+		goto err_domain_remove;
-+	}
-+
-+	gc = irq_get_domain_generic_chip(fic->domain, 0);
-+	gc->reg_base = fic->base;
-+	gc->chip_types->regs.mask = AL_FIC_MASK;
-+	gc->chip_types->regs.ack = AL_FIC_CAUSE;
-+	gc->chip_types->chip.irq_mask = irq_gc_mask_set_bit;
-+	gc->chip_types->chip.irq_unmask = irq_gc_mask_clr_bit;
-+	gc->chip_types->chip.irq_ack = irq_gc_ack_clr_bit;
-+	gc->chip_types->chip.irq_set_type = al_fic_irq_set_type;
-+	gc->chip_types->chip.flags = IRQCHIP_SKIP_SET_WAKE;
-+	gc->private = fic;
-+
-+	irq_set_chained_handler_and_data(fic->parent_irq,
-+					 al_fic_irq_handler,
-+					 fic);
-+	return 0;
-+
-+err_domain_remove:
-+	irq_domain_remove(fic->domain);
-+
-+	return ret;
-+}
-+
-+static void al_fic_hw_init(struct al_fic *fic)
-+{
-+	u32 control = CONTROL_MASK_MSI_X;
-+
-+	/* mask out all interrupts */
-+	writel(0xFFFFFFFF, fic->base + AL_FIC_MASK);
-+
-+	/* clear any pending interrupt */
-+	writel(0, fic->base + AL_FIC_CAUSE);
-+
-+	writel(control, fic->base + AL_FIC_CONTROL);
-+}
-+
-+/**
-+ * al_fic_wire_init() - initialize and configure fic in wire mode
-+ * @of_node: optional pointer to interrupt controller's device tree node.
-+ * @base: mmio to fic register
-+ * @name: name of the fic
-+ * @parent_irq: interrupt of parent
-+ *
-+ * This API will configure the fic hardware to to work in wire mode.
-+ * In wire mode, fic hardware is generating a wire ("wired") interrupt.
-+ * Interrupt can be generated based on positive edge or level - configuration is
-+ * to be determined based on connected hardware to this fic.
-+ *
-+ * Returns fic context that allows the user to obtain the irq_domain by using
-+ * al_fic_wire_get_domain().
-+ */
-+static struct al_fic *al_fic_wire_init(struct device_node *node,
-+				       void __iomem *base,
-+				       const char *name,
-+				       unsigned int parent_irq)
-+{
-+	struct al_fic *fic;
-+	int ret;
-+
-+	if (!base)
-+		return ERR_PTR(-EINVAL);
-+
-+	fic = kzalloc(sizeof(*fic), GFP_KERNEL);
-+	if (!fic)
-+		return ERR_PTR(-ENOMEM);
-+
-+	fic->base = base;
-+	fic->parent_irq = parent_irq;
-+	fic->name = (name ?: "al-fic-wire");
-+
-+	al_fic_hw_init(fic);
-+
-+	ret = al_fic_register(node, fic);
-+	if (ret) {
-+		pr_err("fail to register irqchip\n");
-+		goto err_free;
-+	}
-+
-+	pr_debug("%s initialized successfully in Legacy mode (parent-irq=%u)\n",
-+		 fic->name, parent_irq);
-+
-+	return fic;
-+
-+err_free:
-+	kfree(fic);
-+	return ERR_PTR(ret);
-+}
-+
-+static int __init al_fic_init_dt(struct device_node *node,
-+				 struct device_node *parent)
-+{
-+	int ret;
-+	void __iomem *base;
-+	unsigned int parent_irq;
-+	struct al_fic *fic;
-+
-+	if (!parent) {
-+		pr_err("%s: unsupported - device require a parent\n",
-+		       node->name);
-+		return -EINVAL;
-+	}
-+
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		pr_err("%s: fail to map memory\n", node->name);
-+		return -ENOMEM;
-+	}
-+
-+	parent_irq = irq_of_parse_and_map(node, 0);
-+	if (!parent_irq) {
-+		pr_err("%s: fail to map irq\n", node->name);
-+		ret = -EINVAL;
-+		goto err_unmap;
-+	}
-+
-+	fic = al_fic_wire_init(node,
-+			       base,
-+			       node->name,
-+			       parent_irq);
-+	if (IS_ERR(fic)) {
-+		pr_err("%s: fail to initialize irqchip (%lu)\n",
-+		       node->name,
-+		       PTR_ERR(fic));
-+		ret = PTR_ERR(fic);
-+		goto err_irq_dispose;
-+	}
-+
-+	return 0;
-+
-+err_irq_dispose:
-+	irq_dispose_mapping(parent_irq);
-+err_unmap:
-+	iounmap(base);
-+
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(al_fic, "amazon,al-fic", al_fic_init_dt);
--- 
-2.7.4
+WARNING: vmlinux.o(.text+0x68e318): Section mismatch in reference from
+the function usb_common_exit() to the
+function .exit.text:ledtrig_usb_exit()
+The function usb_common_exit() references a function in an exit section.
+Often the function ledtrig_usb_exit() has valid usage outside the exit
+section
+and the fix is to remove the __exit annotation of ledtrig_usb_exit.
+
+seems need add __init and __exit for usb_common_init/exit
+
+> +subsys_initcall(usb_common_init);
+> +module_exit(usb_common_exit);
+> +
+>  MODULE_LICENSE("GPL");
+> diff --git a/drivers/usb/common/common.h b/drivers/usb/common/common.h
+> new file mode 100644
+> index 000000000000..424a91316a4b
+> --- /dev/null
+> +++ b/drivers/usb/common/common.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef __LINUX_USB_COMMON_H
+> +#define __LINUX_USB_COMMON_H
+> +
+> +#if defined(CONFIG_USB_LED_TRIG)
+> +void ledtrig_usb_init(void);
+> +void ledtrig_usb_exit(void);
+> +#else
+> +static inline void ledtrig_usb_init(void) { }
+> +static inline void ledtrig_usb_exit(void) { }
+> +#endif
+> +
+> +#endif	/* __LINUX_USB_COMMON_H */
+> diff --git a/drivers/usb/common/led.c b/drivers/usb/common/led.c
+> index 7bd81166b77d..0865dd44a80a 100644
+> --- a/drivers/usb/common/led.c
+> +++ b/drivers/usb/common/led.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/init.h>
+>  #include <linux/leds.h>
+>  #include <linux/usb.h>
+> +#include "common.h"
+>  
+>  #define BLINK_DELAY 30
+>  
+> @@ -36,18 +37,14 @@ void usb_led_activity(enum usb_led_event ev)
+>  EXPORT_SYMBOL_GPL(usb_led_activity);
+>  
+> 
+> -static int __init ledtrig_usb_init(void)
+> +void __init ledtrig_usb_init(void)
+>  {
+>  	led_trigger_register_simple("usb-gadget", &ledtrig_usb_gadget);
+>  	led_trigger_register_simple("usb-host", &ledtrig_usb_host);
+> -	return 0;
+>  }
+>  
+> -static void __exit ledtrig_usb_exit(void)
+> +void __exit ledtrig_usb_exit(void)
+>  {
+>  	led_trigger_unregister_simple(ledtrig_usb_gadget);
+>  	led_trigger_unregister_simple(ledtrig_usb_host);
+>  }
+> -
+> -module_init(ledtrig_usb_init);
+> -module_exit(ledtrig_usb_exit);
+> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+> index 7fcb9f782931..5a0df527a8ca 100644
+> --- a/drivers/usb/core/usb.c
+> +++ b/drivers/usb/core/usb.c
+> @@ -1185,19 +1185,17 @@ static struct notifier_block usb_bus_nb = {
+>  	.notifier_call = usb_bus_notify,
+>  };
+>  
+> -struct dentry *usb_debug_root;
+> -EXPORT_SYMBOL_GPL(usb_debug_root);
+> +static struct dentry *usb_devices_root;
+>  
+>  static void usb_debugfs_init(void)
+>  {
+> -	usb_debug_root = debugfs_create_dir("usb", NULL);
+> -	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
+> -			    &usbfs_devices_fops);
+> +	usb_devices_root = debugfs_create_file("devices", 0444, usb_debug_root,
+> +					       NULL, &usbfs_devices_fops);
+>  }
+>  
+>  static void usb_debugfs_cleanup(void)
+>  {
+> -	debugfs_remove_recursive(usb_debug_root);
+> +	debugfs_remove(usb_devices_root);
+>  }
+>  
+>  /*
