@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v3, 18/27] drm/medaitek: add layer_nr for ovl private data
-Date: Wed, 5 Jun 2019 19:42:57 +0800
-Message-ID: <1559734986-7379-19-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v3, 25/27] drm/mediatek: add connection from RDMA1 to DSI0
+Date: Wed, 5 Jun 2019 19:43:04 +0800
+Message-ID: <1559734986-7379-26-git-send-email-yongqiang.niu@mediatek.com>
 References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,54 +14,26 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add layer_nr for ovl private data
-ovl_2l almost same with with ovl hardware, except the
-layer number for ovl_2l is 2 and ovl is 4.
-this patch is a preparation for ovl-2l and
-ovl share the same driver.
+This patch add connection from RDMA1 to DSI0
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index afb313c..a0ab760 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -60,6 +60,7 @@
- struct mtk_disp_ovl_data {
- 	unsigned int addr;
- 	unsigned int gmc_bits;
-+	unsigned int layer_nr;
- 	bool fmt_rgb565_is_0;
- };
- 
-@@ -137,7 +138,9 @@ static void mtk_ovl_config(struct mtk_ddp_comp *comp, unsigned int w,
- 
- static unsigned int mtk_ovl_layer_nr(struct mtk_ddp_comp *comp)
- {
--	return 4;
-+	struct mtk_disp_ovl *ovl = comp_to_ovl(comp);
-+
-+	return ovl->data->layer_nr;
- }
- 
- static void mtk_ovl_layer_on(struct mtk_ddp_comp *comp, unsigned int idx)
-@@ -342,12 +345,14 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
- static const struct mtk_disp_ovl_data mt2701_ovl_driver_data = {
- 	.addr = DISP_REG_OVL_ADDR_MT2701,
- 	.gmc_bits = 8,
-+	.layer_nr = 4,
- 	.fmt_rgb565_is_0 = false,
- };
- 
- static const struct mtk_disp_ovl_data mt8173_ovl_driver_data = {
- 	.addr = DISP_REG_OVL_ADDR_MT8173,
- 	.gmc_bits = 8,
-+	.layer_nr = 4,
- 	.fmt_rgb565_is_0 = true,
- };
- 
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index adafa41..9986c61 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -452,6 +452,9 @@ static unsigned int mtk_ddp_sout_sel(const struct mtk_mmsys_reg_data *data,
+ 	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_COLOR0) {
+ 		*addr = DISP_REG_RDMA0_SOUT_SEL_IN(data);
+ 		value = DISP_REG_RDMA0_SOUT_COLOR0(data);
++	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
++		*addr = DISP_REG_RDMA1_SOUT_SEL_IN(data);
++		value = DISP_REG_RDMA1_SOUT_DSI0(data);
+ 	} else {
+ 		value = 0;
+ 	}
 -- 
 1.8.1.1.dirty
