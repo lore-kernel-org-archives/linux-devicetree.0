@@ -1,147 +1,69 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v4 1/2] HID: quirks: Refactor ELAN 400 and 401 handling
-Date: Wed, 5 Jun 2019 17:25:15 -0600
-Message-ID: <CAOCk7Nr-a=ek7xOhBwMgxG55jvKQK2tyy15oknrDn7OYvxtEwA@mail.gmail.com>
-References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
- <20190423160605.9970-1-jeffrey.l.hugo@gmail.com> <20190521164324.GA2085@tuxbook-pro>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V2 03/12] clk: tegra: save and restore PLLs state for system
+Date: Wed, 05 Jun 2019 16:31:22 -0700
+Message-ID: <20190605233123.AC6DD2083E@mail.kernel.org>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com> <1559084936-4610-4-git-send-email-skomatineni@nvidia.com> <20190529232810.14A5224366@mail.kernel.org> <f5fd9068-134a-3343-9cca-94db67cd748f@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521164324.GA2085@tuxbook-pro>
+In-Reply-To: <f5fd9068-134a-3343-9cca-94db67cd748f@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Hans de Goede <hdegoede@redhat.com>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, devicetree@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net, jonathanh@nvidia.com, linus.walleij@linaro.org, marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de, thierry.reding@gmail.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2019 at 10:42 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Tue 23 Apr 09:06 PDT 2019, Jeffrey Hugo wrote:
->
-> > There needs to be coordination between hid-quirks and the elan_i2c driver
-> > about which devices are handled by what drivers.  Currently, both use
-> > whitelists, which results in valid devices being unhandled by default,
-> > when they should not be rejected by hid-quirks.  This is quickly becoming
-> > an issue.
+Quoting Sowjanya Komatineni (2019-05-31 12:52:44)
+>=20
+> On 5/29/19 4:28 PM, Stephen Boyd wrote:
+> > Quoting Sowjanya Komatineni (2019-05-28 16:08:47)
+> >> +               WARN_ON(1);
+> >> +               return;
+> >> +       }
+> >> +
+> >> +       parent_rate =3D clk_hw_get_rate(parent);
+> >> +
+> >> +       if (clk_frac_div_set_rate(hw, rate, parent_rate) < 0)
+> >> +               WARN_ON(1);
+> >> +}
+> >> +#endif
+> >> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> >> index 09bccbb9640c..e4d124cc5657 100644
+> >> --- a/drivers/clk/tegra/clk.h
+> >> +++ b/drivers/clk/tegra/clk.h
+> >> @@ -841,6 +841,15 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *p=
+ll, u8 p_div);
+> >>   int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+> >>                   u8 frac_width, u8 flags);
+> >>  =20
+> >> +#ifdef CONFIG_PM_SLEEP
+> > Can you remove this ifdef? It just complicates compilation testing.
+> OK, Will fix in next version
+> >> +void tegra_clk_pll_resume(struct clk *c, unsigned long rate);
+> >> +void tegra_clk_divider_resume(struct clk_hw *hw, unsigned long rate);
+> >> +void tegra_clk_pll_out_resume(struct clk *clk, unsigned long rate);
+> >> +void tegra_clk_plle_tegra210_resume(struct clk *c);
+> >> +void tegra_clk_sync_state_pll(struct clk *c);
+> >> +void tegra_clk_sync_state_pll_out(struct clk *clk);
+> > Do these APIs need to operate on struct clk? Why can't they operate on
+> > clk_hw or why can't we drive the suspend/resume sequence from the clk
+> > provider driver itself?
 > >
-> > Since elan_i2c has a maintained whitelist of what devices it will handle,
-> > use that to implement a blacklist in hid-quirks so that only the devices
-> > that need to be handled by elan_i2c get rejected by hid-quirks, and
-> > everything else is handled by default.  The downside is the whitelist and
-> > blacklist need to be kept in sync.
-> >
->
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->
-> Jiri, the two patches in this series doesn't have a build time
-> dependency, so if you take this one through your tree I'll take 2/2
-> through arm-soc.
+> Yes can change to use clk_hw.
+>=20
+> By clk provider driver, are you referring to clk-tegra210?
 
-Ping?  Is this good from the HID perspective?  I would really like to
-see this queued for 5.3.
+I guess so.
 
->
-> Regards,
-> Bjorn
->
-> > Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
-> >  drivers/hid/hid-quirks.c            | 64 ++++++++++++++++++++++++-----
-> >  drivers/input/mouse/elan_i2c_core.c |  4 ++
-> >  2 files changed, 58 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> > index 77ffba48cc73..656485e08eb7 100644
-> > --- a/drivers/hid/hid-quirks.c
-> > +++ b/drivers/hid/hid-quirks.c
-> > @@ -987,17 +987,61 @@ bool hid_ignore(struct hid_device *hdev)
-> >               break;
-> >       case USB_VENDOR_ID_ELAN:
-> >               /*
-> > -              * Many Elan devices have a product id of 0x0401 and are handled
-> > -              * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
-> > -              * is not (and cannot be) handled by that driver ->
-> > -              * Ignore all 0x0401 devs except for the ELAN0800 dev.
-> > +              * Blacklist of everything that gets handled by the elan_i2c
-> > +              * input driver.  This should be kept in sync with the whitelist
-> > +              * that exists in that driver.  This avoids disabling valid
-> > +              * touchpads and other ELAN devices.
-> >                */
-> > -             if (hdev->product == 0x0401 &&
-> > -                 strncmp(hdev->name, "ELAN0800", 8) != 0)
-> > -                     return true;
-> > -             /* Same with product id 0x0400 */
-> > -             if (hdev->product == 0x0400 &&
-> > -                 strncmp(hdev->name, "QTEC0001", 8) != 0)
-> > +             if ((hdev->product == 0x0401 || hdev->product == 0x0400) &&
-> > +                (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0100", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0600", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0601", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0602", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0603", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0604", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0605", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0606", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0607", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0608", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0609", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN060B", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN060C", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN060F", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0610", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0611", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0612", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0613", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0614", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0615", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0616", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0617", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0618", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0619", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061A", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061B", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061C", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061D", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061E", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN061F", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0620", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0621", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0622", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0623", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0624", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0625", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0626", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0627", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0628", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0629", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN062A", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN062B", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN062C", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN062D", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0631", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN0632", 8) == 0 ||
-> > +                 strncmp(hdev->name, "ELAN1000", 8) == 0 ||
-> > +                 strncmp(hdev->name, "elan,ekth3000", 13) == 0))
-> >                       return true;
-> >               break;
-> >       }
-> > diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-> > index f9525d6f0bfe..3ded19528cd4 100644
-> > --- a/drivers/input/mouse/elan_i2c_core.c
-> > +++ b/drivers/input/mouse/elan_i2c_core.c
-> > @@ -1332,6 +1332,10 @@ static const struct i2c_device_id elan_id[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, elan_id);
-> >
-> > +/*
-> > + * when these whtielists get updated, the corresponding blacklist in hid-quirks
-> > + * needs to be updated to match.
-> > + */
-> >  #ifdef CONFIG_ACPI
-> >  static const struct acpi_device_id elan_acpi_id[] = {
-> >       { "ELAN0000", 0 },
-> > --
-> > 2.17.1
-> >
+>=20
+> clk-terga210 driver has suspend/resume implementation. These API's are=20
+> for corresponding clock specific implementations (clk-pll, clk-pll-out,=20
+> clk-divider) for enabling and restoring to proper rate and are invoked=20
+> during clk-tegra210 driver resume.
+
+Yes, so when the clk provider suspends it needs to do something? Our
+handling of clk rates and other state like enable/disable over
+suspend/resume isn't really well thought out or implemented so far. TI
+has some code to do some stuff, but otherwise I haven't seen drivers
+handling this. Ideally it would be something generic in the framework so
+that drivers don't have to work around stuff.
