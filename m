@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v3, 24/27] drm/mediatek: add connection from RDMA0 to COLOR0
-Date: Wed, 5 Jun 2019 19:43:03 +0800
-Message-ID: <1559734986-7379-25-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v3, 19/27] drm/mediatek: add function to background color input select for ovl/ovl_2l direct link
+Date: Wed, 5 Jun 2019 19:42:58 +0800
+Message-ID: <1559734986-7379-20-git-send-email-yongqiang.niu@mediatek.com>
 References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,26 +14,49 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add connection from RDMA0 to COLOR0
+This patch add function to background color input select for ovl/ovl_2l direct link
+for ovl/ovl_2l direct link usecase, we need set background color
+input select for these hardware.
+this is preparation patch for ovl/ovl_2l usecase
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index f980826..adafa41 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -449,6 +449,9 @@ static unsigned int mtk_ddp_sout_sel(const struct mtk_mmsys_reg_data *data,
- 	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
- 		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
- 		value = RDMA2_SOUT_DSI3;
-+	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_COLOR0) {
-+		*addr = DISP_REG_RDMA0_SOUT_SEL_IN(data);
-+		value = DISP_REG_RDMA0_SOUT_COLOR0(data);
- 	} else {
- 		value = 0;
- 	}
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+index 158c1e5..aa1e183 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+@@ -92,6 +92,9 @@ struct mtk_ddp_comp_funcs {
+ 			     struct mtk_plane_state *state);
+ 	void (*gamma_set)(struct mtk_ddp_comp *comp,
+ 			  struct drm_crtc_state *state);
++	void (*bgclr_in_on)(struct mtk_ddp_comp *comp,
++			    enum mtk_ddp_comp_id prev);
++	void (*bgclr_in_off)(struct mtk_ddp_comp *comp);
+ };
+ 
+ struct mtk_ddp_comp {
+@@ -173,6 +176,19 @@ static inline void mtk_ddp_gamma_set(struct mtk_ddp_comp *comp,
+ 		comp->funcs->gamma_set(comp, state);
+ }
+ 
++static inline void mtk_ddp_comp_bgclr_in_on(struct mtk_ddp_comp *comp,
++					    enum mtk_ddp_comp_id prev)
++{
++	if (comp->funcs && comp->funcs->bgclr_in_on)
++		comp->funcs->bgclr_in_on(comp, prev);
++}
++
++static inline void mtk_ddp_comp_bgclr_in_off(struct mtk_ddp_comp *comp)
++{
++	if (comp->funcs && comp->funcs->bgclr_in_off)
++		comp->funcs->bgclr_in_off(comp);
++}
++
+ int mtk_ddp_comp_get_id(struct device_node *node,
+ 			enum mtk_ddp_comp_type comp_type);
+ int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
 -- 
 1.8.1.1.dirty
