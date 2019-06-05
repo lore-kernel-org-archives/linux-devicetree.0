@@ -1,100 +1,89 @@
-From: Eduardo Valentin <eduval@amazon.com>
-Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive
- and queue messages
-Date: Wed, 5 Jun 2019 07:31:58 -0700
-Message-ID: <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
-References: <20190531043347.4196-1-eduval@amazon.com>
- <20190531043347.4196-3-eduval@amazon.com>
- <20190604171611.GS9224@smile.fi.intel.com>
- <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
- <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com>
+From: "Shenhar, Talel" <talel@amazon.com>
+Subject: Re: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna Labs
+ Fabric Interrupt Controller Driver
+Date: Wed, 5 Jun 2019 17:38:13 +0300
+Message-ID: <553d06a4-a6b6-816f-b110-6ef7f300dde4@amazon.com>
+References: <1559731921-14023-1-git-send-email-talel@amazon.com>
+ <1559731921-14023-3-git-send-email-talel@amazon.com>
+ <fa6e5a95-d9dd-19f6-43e3-3046e0898bda@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com>
+In-Reply-To: <fa6e5a95-d9dd-19f6-43e3-3046e0898bda@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Eduardo Valentin <eduval@amazon.com>, Andy Shevchenko <andriy.shevchenko@intel.com>, Wolfram Sang <wsa@the-dreams.de>, Haiyue Wang <haiyue.wang@linux.intel.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Marc Zyngier <marc.zyngier@arm.com>, nicolas.ferre@microchip.com, jason@lakedaemon.net, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com, talel@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 11:25:39AM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 5, 2019 at 6:30 AM Eduardo Valentin <eduval@amazon.com> wrote:
-> >
-> > Hey Andry,
-> >
-> > Long time no seeing :-)
-> 
-> True!
-> 
-> 
-> > > > +#define MQ_MSGBUF_SIZE             CONFIG_I2C_SLAVE_MQUEUE_MESSAGE_SIZE
-> > > > +#define MQ_QUEUE_SIZE              CONFIG_I2C_SLAVE_MQUEUE_QUEUE_SIZE
-> > >
-> > > > +#define MQ_QUEUE_NEXT(x)   (((x) + 1) & (MQ_QUEUE_SIZE - 1))
-> > >
-> > > Also possible ((x + 1) % ..._SIZE)
-> >
-> > Right.. but I suppose the original idea is to avoid divisions on the hotpath.
-> >
-> > So, I am actually fine with the limitation of only using power of 2.
-> 
-> The original code implies that anyway, so, my proposal doesn't
-> restrict it any farther.
+Thanks, will publish the fixes on v3.
 
-Well, yes, but the point is you would be switching from a simple AND (&) operation
-to a division...
+On 6/5/2019 3:22 PM, Marc Zyngier wrote:
+> Talel,
+>
+> On 05/06/2019 11:52, Talel Shenhar wrote:
+>> The Amazon's Annapurna Labs Fabric Interrupt Controller has 32 inputs
+>> lines. A FIC (Fabric Interrupt Controller) may be cascaded into another FIC
+> Really? :-(
 
-I am keeping the power of 2 dep so that we can keep this with a simple &.
+Cascading is used for control path events. For data path the HW is not 
+cascaded (and usually even configured in MSI-X instead of wire interrupts)
 
-> > > > +   {
-> > > > +           .compatible = "i2c-slave-mqueue",
-> > > > +   },
-> > >
-> > > > +   { },
-> > >
-> > > No need for comma here.
-> >
-> > It does not hurt to have it either :-)
-> 
-> It's just a protection against some weird cases of adding entries
-> behind the terminator.
 
-Fair..
+>
+> +}
+> +
+> +static int al_fic_irq_set_type(struct irq_data *data, unsigned int flow_type)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+> +	struct al_fic *fic = gc->private;
+> +	enum al_fic_state new_state;
+> +	int ret = 0;
+> +
+> +	irq_gc_lock(gc);
+> +
+> +	if (!(flow_type & IRQ_TYPE_LEVEL_HIGH) &&
+> +	    !(flow_type & IRQ_TYPE_EDGE_RISING)) {
+> And what if this gets passed EDGE_BOTH?
 
-> 
-> > > > +           .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
-> > >
-> > > Wouldn't compiler warn you due to unused data?
-> > > Perhaps drop of_match_ptr() for good...
-> >
-> >
-> > Not sure what you meant here. I dont see any compiler warning.
-> > Also, of_match_ptr seams to be well spread in the kernel.
-> 
-> If this will be compiled with CONFIG_OF=n...
+FIC only support two sensing modes, rising-edge and level.
 
-I see.. I obviously did not test with that config..
+>
+>> +	 * This is generally fixed depending on what pieces of HW it's wired up
+>> +	 * to.
+>> +	 *
+>> +	 * We configure it based on the sensitivity of the first source
+>> +	 * being setup, and reject any subsequent attempt at configuring it in a
+>> +	 * different way.
+> Is that a reliable guess? It also strikes me that the DT binding doesn't
+> allow for the trigger type to be passed, meaning the individual drivers
+> have to request the trigger as part of their request_irq() call. I'd
+> rather you have a complete interrupt specifier in DT, and document the
+> various limitations of the HW.
 
-> Though I didn't check all dependencies to see if it even possible. In
-> any case of_match_ptr() is redundant in both cases here.
-> Either you need to protect i2c_slave_mqueue_of_match with #ifdef
-> CONFIG_OF, or drop the macro use.
+Indeed we use interrupt specifier that has the level type in it 
+(dt-binding: "#interrupt-cells: must be 2.") which in turns causes to 
+this irq_set_type callback.
 
-I will wrap it into CONFIG_OF..
+Part of the FICs are connected to hws that generate pulse (for those, 
+FIC shall be configured to rising-edge-triggered) and the others to hws 
+that keep the line up (for those the FIC shall be configured to 
+level-triggered).
 
-> 
-> P.S. Taking into account the last part, I would wait for v7 with that
-> fixed followed by fixing other nits.
+>
+>> +	 */
+>> +	if (fic->state == AL_FIC_CLEAN) {
+>> +		al_fic_set_trigger(fic, gc, new_state);
+>> +	} else if (fic->state != new_state) {
+>> +		pr_err("fic %s state already configured to %d\n",
+>> +		       fic->name, fic->state);
+>> +		ret = -EPERM;
+> Same as above.
 
-I agree, the warn on CONFIG_OF=n is enough to spin out an extra version.
-I will include the other nits too.
+Those error messages are control path messages. if we return the same 
+error value from here and from the previous error, how can we 
+differentiate between the two error cases by looking at the log?
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-
--- 
-All the best,
-Eduardo Valentin
+Having informative printouts seems like a good idea for bad 
+configuration cases as such, wouldn't you agree?
