@@ -1,58 +1,37 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH RESEND V4 2/3] arm64: dts: imx8qxp: Move watchdog node
- into scu node
-Date: Wed, 5 Jun 2019 14:12:40 +0800
-Message-ID: <20190605061238.GC29853@dragon>
-References: <1557655528-12816-1-git-send-email-Anson.Huang@nxp.com>
- <1557655528-12816-2-git-send-email-Anson.Huang@nxp.com>
- <DB3PR0402MB39162F3811484D90546B4CC2F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190605060000.GA29853@dragon>
- <DB3PR0402MB39161D679A11B05ADCA8A28BF5160@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH V3 RESEND AGAIN 1/2] defconfig: arm64: enable i.MX8 SCU
+ octop driver
+Date: Wed, 5 Jun 2019 14:15:09 +0800
+Message-ID: <20190605061508.GD29853@dragon>
+References: <20190524063913.44171-1-peng.fan@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39161D679A11B05ADCA8A28BF5160@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <20190524063913.44171-1-peng.fan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>dl-linux-imx <li>
+To: peng.fan@nxp.com
+Cc: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, van.freenix@gmail.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Shawn Guo <shawn.guo@linaro.org>, Andy Gross <andy.gross@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Olof Johansson <olof@lixom.net>, Jagan Teki <jagan@amarulasolutions.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Leonard Crestez <leonard.crestez@nxp.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 06:09:12AM +0000, Anson Huang wrote:
-> Hi, Shawn
+On Fri, May 24, 2019 at 02:39:12PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> > -----Original Message-----
-> > From: Shawn Guo <shawnguo@kernel.org>
-> > Sent: Wednesday, June 5, 2019 2:00 PM
-> > To: Anson Huang <anson.huang@nxp.com>
-> > Cc: robh+dt@kernel.org; mark.rutland@arm.com; wim@linux-watchdog.org;
-> > linux@roeck-us.net; s.hauer@pengutronix.de; kernel@pengutronix.de;
-> > festevam@gmail.com; Aisheng Dong <aisheng.dong@nxp.com>;
-> > ulf.hansson@linaro.org; Daniel Baluta <daniel.baluta@nxp.com>; Peng Fan
-> > <peng.fan@nxp.com>; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-watchdog@vger.kernel.org; linux-arm-
-> > kernel@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>
-> > Subject: Re: [PATCH RESEND V4 2/3] arm64: dts: imx8qxp: Move watchdog
-> > node into scu node
-> > 
-> > On Tue, Jun 04, 2019 at 09:06:28AM +0000, Anson Huang wrote:
-> > > Hi, Shawn
-> > > 	The driver and binding doc are already reviewed and waiting for DT
-> > patch, will you help review this DT patch?
-> > 
-> > I'm fine with it.  Should I just pick this patch up, or is there any dependency
-> > we need to handle?
+> Build in CONFIG_NVMEM_IMX_OCOTP_SCU.
 > 
-> No dependency, it just makes more sense to move the node into SCU node as it is NOW depending on SCU
-> driver. Once you pick up this patch
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: Olof Johansson <olof@lixom.net>
+> Cc: Jagan Teki <jagan@amarulasolutions.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Just applied.
-
-> (and maybe the dt-binding patch as well?),
-
-It makes more sense to have it go through watchdog tree.
-
-Shawn
-
-> I will notify the watchdog
-> maintainer to pick up the watchdog patch in this series.
+Applied both, thanks.
