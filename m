@@ -1,301 +1,54 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: [PATCH v8 0/3] Add Amlogic video decoder driver
-Date: Wed,  5 Jun 2019 18:18:55 +0200
-Message-ID: <20190605161858.29372-1-mjourdan@baylibre.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH 3/4] arm64: dts: ti: k3-j721e: Add the MCU SRAM node
+Date: Wed, 5 Jun 2019 11:34:33 -0500
+Message-ID: <20190605163434.23173-4-s-anna@ti.com>
+References: <20190605163434.23173-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190605163434.23173-1-s-anna@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+Add the on-chip SRAM present within the MCU domain as a mmio-sram node.
+The K3 J721E SoCs have 1 MB of such memory. Any specific memory range
+within this RAM needed by a driver/software module ought to be reserved
+using an appropriate child node.
 
-[V7] The Driver was moved to staging until it can pass future
-specification & compliance tools.
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-[V6] Good news, the firmware situation is resolved. We have received a
-redistributable license from Amlogic and the firmwares have been merged
-in linux-firmware[5].
-
-[V5] It's been a while since the last patch series regarding the Amlogic
-video decoder. Unfortunately, the firmware licensing situation is still
-on hold as we await communication from Amlogic. As such, we do not have
-the firmwares in linux-firmware yet.
-I decided to push the V5 anyway, as changes were starting to pile up.
-
-This patch series adds support for the Amlogic video decoder,
-as well as the corresponding dt bindings for GXBB/GXL/GXM chips.
-
-It features decoding for the following formats:
-- MPEG 1
-- MPEG 2
-
-The following formats will be added in future patches:
-- MJPEG
-- MPEG 4 (incl. Xvid, H.263)
-- H.264
-- HEVC (incl. 10-bit)
-- VP9 (incl. 10-bit)
-
-The code was made in such a way to allow easy inclusion of those formats
-in the future.
-
-The decoder is single instance.
-
-Files:
- - vdec.c handles the V4L2 M2M logic
- - esparser.c manages the hardware bitstream parser
- - vdec_helpers.c provides helpers to DONE the dst buffers as well as
- various common code used by the codecs
- - vdec_1.c manages the VDEC_1 block of the vdec IP
- - vdec_ctrls.c handles the V4L2 controls exposed by the driver
- - codec_mpeg12.c enables decoding for MPEG 1/2.
- - vdec_platform.c links codec units with vdec units
- (e.g vdec_1 with codec_mpeg12) and lists all the available
- src/dst formats and requirements (max width/height, etc.),
- per compatible chip.
-
-It was tested primarily with ffmpeg's v4l2-m2m implementation. For instance:
-$ ffmpeg -c:v mpeg2_v4l2m2m -i sample_mpeg2.mkv -f rawvideo out.nv12
-
-The v4l2-compliance results are available below the patch diff.
-Tests start failing when v4l2-compliance tries to dequeue the
-V4L2_EVENT_SOURCE_CHANGE event, which is not supported for MPEG2 currently.
-
-Changes since v7 [7]:
- - Removed the patch with V4L2_FMT_FLAG_FIXED_RESOLUTION from the serie.
- It will be dealt in another manner in the near future.
- - use the new v4l2_m2m_ioctl_try_decoder_cmd helper
- - Rebased against media/master
-
-Changes since v6 [6]:
- - Rebased against v5.2-rc2 (fixed build issue with missing interrupt include)
- - Moved to staging - added TODO file
- - Don't declare V4L2_CID_MIN_BUFFERS_FOR_CAPTURE as volatile. Use
- v4l2_ctrl_s_ctrl() instead.
- - Fix compliance issues with V4L2_DEC_CMD_STOP, V4L2_DEC_CMD_START and
- vbuf->field not prepared to V4L2_FIELD_NONE.
- - Fixed coccinelle issue (unneeded semicolon)
- - Fixed smatch issue (PTR_ERR() could be called with 0)
-
-Changes since v5 [4]:
- - Rebased against media_tree (fixes conflict with platform/meson/Makefile
- following the meson CEC driver updates)
-
-Changes since v4 [3]:
- - Updated for 5.1: 
-  - cropcap -> g_pixelaspect
-  - dma_zalloc_coherent -> dma_alloc_coherent
- - enum_framesizes: changed from STEPWISE to CONTINUOUS, as suggested by Hans
- - Reintroduced support for CREATE_BUFS. It was a driver bug where I wasn't
- accounting for the amount of buffers created this way (only buffers created
- via REQBUFS were).
- - Added the patch introducing V4L2_FMT_FLAG_FIXED_RESOLUTION to the V4L2
- framework, needed as MPEG2 on Amlogic hardware only supports a fixed
- resolution during a decode session.
- - Added support for events and V4L2_EVENT_SOURCE_CHANGE, as it is now checked
- by v4l2-compliance for stateful decoders. I was planning on introducing this
- for codecs that actually use it (H264, HEVC..), but it doesn't hurt to have
- this in the initial commit.
- - Added support for controls, mainly V4L2_CID_MIN_BUFFERS_FOR_CAPTURE
-
-Changes since v3 [2]:
- - strlcpy -> strscpy
- - queue_setup: account for existing buffers when clamping *num_buffers
- - removed support for CREATE_BUFS. This caused issues with gstreamer and allowed
- userspace to alloc more buffers than the decoder can handle in its fixed list.
- So for now we just disable it and only allow allocating via REQBUFS.
- - rebased & tested with 4.20-rc1
-
-Changes since v2 [1]:
- - Override capture queue's min_buffers_needed in queue_setup
- The HW needs the full buffer list to be available when doing start_streaming
- - Fix the draining sequence
- The blob that we write to the ESPARSER to trigger drain is codec-dependent.
- The one that was sent in v1 is specific to H.264 and isn't guaranteed to
- trigger drain for MPEG2. For the latter, a simple MPEG2 EOS code
- should be sent to the ESPARSER instead.
- - Slight enhancements to the way we do vififo offset<=>timestamp matching
-
-Changes since v1 [0]:
- - use named interrupts in the bindings
- - rewrite description in the bindings doc
- - don't include the dts changes in the patch series
- - fill the vb2 queues locks
- - fill the video_device lock
- - use helpers for wait_prepare and wait_finish vb2_ops
- - remove unnecessary usleep in between esparser writes.
- Extensive testing of every codec on GXBB/GXL didn't reveal
- any fails without it, so just remove it.
- - compile v4l2_compliance inside the git repo
- - Check for plane number/plane size to pass the latest v4l2-compliance test
- - Moved the single instance check (returning -EBUSY) to start/stop streaming
- The check was previously in queue_setup but there was no great location to
- clear it except for .close().
- - Slight rework of the way CAPTURE frames are timestamped for better accuracy
- - Implement PAR reporting via VIDIOC_CROPCAP
-
-[7] https://patchwork.kernel.org/cover/10969815/
-[6] https://patchwork.kernel.org/cover/10943029/
-[5] https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/?id=e04cc56d0e6b6ff05924ff88fdba1a438ee7d3c8
-[4] https://patchwork.kernel.org/cover/10879959/
-[3] https://patchwork.kernel.org/cover/10669875/
-[2] https://lore.kernel.org/patchwork/cover/993093/
-[1] https://patchwork.kernel.org/cover/10595803/
-[0] https://patchwork.kernel.org/cover/10583391/
-
-Maxime Jourdan (3):
-  dt-bindings: media: add Amlogic Video Decoder Bindings
-  media: meson: add v4l2 m2m video decoder driver
-  MAINTAINERS: Add meson video decoder
-
- .../bindings/media/amlogic,vdec.txt           |   71 ++
- MAINTAINERS                                   |    8 +
- drivers/staging/media/Kconfig                 |    2 +
- drivers/staging/media/Makefile                |    1 +
- drivers/staging/media/meson/vdec/Kconfig      |   11 +
- drivers/staging/media/meson/vdec/Makefile     |    8 +
- drivers/staging/media/meson/vdec/TODO         |    8 +
- .../staging/media/meson/vdec/codec_mpeg12.c   |  209 ++++
- .../staging/media/meson/vdec/codec_mpeg12.h   |   14 +
- drivers/staging/media/meson/vdec/dos_regs.h   |   98 ++
- drivers/staging/media/meson/vdec/esparser.c   |  324 +++++
- drivers/staging/media/meson/vdec/esparser.h   |   32 +
- drivers/staging/media/meson/vdec/vdec.c       | 1075 +++++++++++++++++
- drivers/staging/media/meson/vdec/vdec.h       |  269 +++++
- drivers/staging/media/meson/vdec/vdec_1.c     |  229 ++++
- drivers/staging/media/meson/vdec/vdec_1.h     |   14 +
- drivers/staging/media/meson/vdec/vdec_ctrls.c |   29 +
- drivers/staging/media/meson/vdec/vdec_ctrls.h |   14 +
- .../staging/media/meson/vdec/vdec_helpers.c   |  449 +++++++
- .../staging/media/meson/vdec/vdec_helpers.h   |   83 ++
- .../staging/media/meson/vdec/vdec_platform.c  |  101 ++
- .../staging/media/meson/vdec/vdec_platform.h  |   30 +
- 22 files changed, 3079 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
- create mode 100644 drivers/staging/media/meson/vdec/Kconfig
- create mode 100644 drivers/staging/media/meson/vdec/Makefile
- create mode 100644 drivers/staging/media/meson/vdec/TODO
- create mode 100644 drivers/staging/media/meson/vdec/codec_mpeg12.c
- create mode 100644 drivers/staging/media/meson/vdec/codec_mpeg12.h
- create mode 100644 drivers/staging/media/meson/vdec/dos_regs.h
- create mode 100644 drivers/staging/media/meson/vdec/esparser.c
- create mode 100644 drivers/staging/media/meson/vdec/esparser.h
- create mode 100644 drivers/staging/media/meson/vdec/vdec.c
- create mode 100644 drivers/staging/media/meson/vdec/vdec.h
- create mode 100644 drivers/staging/media/meson/vdec/vdec_1.c
- create mode 100644 drivers/staging/media/meson/vdec/vdec_1.h
- create mode 100644 drivers/staging/media/meson/vdec/vdec_ctrls.c
- create mode 100644 drivers/staging/media/meson/vdec/vdec_ctrls.h
- create mode 100644 drivers/staging/media/meson/vdec/vdec_helpers.c
- create mode 100644 drivers/staging/media/meson/vdec/vdec_helpers.h
- create mode 100644 drivers/staging/media/meson/vdec/vdec_platform.c
- create mode 100644 drivers/staging/media/meson/vdec/vdec_platform.h
-
-
-root@hardkernel-odroidc2:~# v4l2-compliance -s --stream-from=hst_2.mpg 
-v4l2-compliance SHA: a162244d47d4bb01d0692da879dce5a070f118e7, 64 bits
-
-Compliance test for meson-vdec device /dev/video0:
-
-Driver Info:
-        Driver name      : meson-vdec
-        Card type        : Amlogic Video Decoder
-        Bus info         : platform:meson-vdec
-        Driver version   : 5.2.0
-        Capabilities     : 0x84204000
-                Video Memory-to-Memory Multiplanar
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps      : 0x04204000
-                Video Memory-to-Memory Multiplanar
-                Streaming
-                Extended Pix Format
-        Detected Stateful Decoder
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-        test second /dev/video0 open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-        test VIDIOC_QUERYCTRL: OK
-        test VIDIOC_G/S_CTRL: OK
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 2 Private Controls: 0
-
-Format ioctls:
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-        test VIDIOC_G/S_PARM: OK (Not Supported)
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK
-        test VIDIOC_TRY_FMT: OK
-        test VIDIOC_S_FMT: OK
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK (Not Supported)
-        test Composing: OK (Not Supported)
-        test Scaling: OK
-
-Codec ioctls:
-        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK
-
-Buffer ioctls:
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-        test VIDIOC_EXPBUF: OK
-        test Requests: OK (Not Supported)
-
-Test input 0:
-
-Streaming ioctls:
-        test read/write: OK (Not Supported)
-        test blocking wait: OK
-                fail: v4l2-test-buffers.cpp(1324): node->dqevent(ev)
-        test MMAP (select): FAIL
-                fail: v4l2-test-buffers.cpp(1324): node->dqevent(ev)
-        test MMAP (epoll): FAIL
-        test USERPTR (select): OK (Not Supported)
-        test DMABUF: Cannot test, specify --expbuf-device
-
-Total for meson-vdec device /dev/video0: 49, Succeeded: 47, Failed: 2, Warnings: 0
-
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+index b72e033fa159..397ef715e145 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+@@ -44,6 +44,14 @@
+ 		pinctrl-single,function-mask = <0xffffffff>;
+ 	};
+ 
++	mcu_ram: sram@41c00000 {
++		compatible = "mmio-sram";
++		reg = <0x00 0x41c00000 0x00 0x100000>;
++		ranges = <0x0 0x00 0x41c00000 0x100000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++	};
++
+ 	wkup_uart0: serial@42300000 {
+ 		compatible = "ti,j721e-uart", "ti,am654-uart";
+ 		reg = <0x00 0x42300000 0x00 0x100>;
 -- 
 2.21.0
