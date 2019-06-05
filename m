@@ -1,137 +1,48 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Add Truly display
-Date: Wed, 5 Jun 2019 10:56:49 +0530
-Message-ID: <CAFp+6iH_pNPVs5QA2fa87ZoVngEFJ362sDivAWzzWPC6K0S5mA@mail.gmail.com>
-References: <20190513210747.22429-1-bjorn.andersson@linaro.org>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v3 3/5] soc: ti: ti_sci_pm_domains: Add support for
+ exclusive and shared access
+Date: Wed, 5 Jun 2019 11:14:22 +0530
+Message-ID: <b6f005da-3c0a-ce73-79f0-eaa19c7da92c@ti.com>
+References: <20190410053728.17374-1-lokeshvutla@ti.com>
+ <20190410053728.17374-4-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513210747.22429-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190410053728.17374-4-lokeshvutla@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 2:39 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> Bring in the Truly display and enable the DSI channels to make the
-> mdss/gpu probe, even though we're lacking LABIB, preventing us from
-> seeing anything on the screen.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+Santosh,
 
-Looks good to me and work well too with a wip lab-ibb driver change.
+On 10/04/19 11:07 AM, Lokesh Vutla wrote:
+> TISCI protocol supports for enabling the device either with exclusive
+> permissions for the requesting host or with sharing across the hosts.
+> There are certain devices which are exclusive to Linux context and
+> there are certain devices that are shared across different host contexts.
+> So add support for getting this information from DT by increasing
+> the power-domain cells to 2.
+> 
+> For keeping the DT backward compatibility intact, defaulting the
+> device permissions to set the exclusive flag set. In this case the
+> power-domain-cells is 1.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Any chance you can pick this patch? Tero is waiting for you to pick it up so
+that dts changes can be pulled. Or can you ack it so that Tero can pick the
+entire series?
 
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 79 +++++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index 02b8357c8ce8..83198a19ff57 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -352,6 +352,77 @@
->         status = "okay";
->  };
->
-> +&dsi0 {
-> +       status = "okay";
-> +       vdda-supply = <&vdda_mipi_dsi0_1p2>;
-> +
-> +       qcom,dual-dsi-mode;
-> +       qcom,master-dsi;
-> +
-> +       ports {
-> +               port@1 {
-> +                       endpoint {
-> +                               remote-endpoint = <&truly_in_0>;
-> +                               data-lanes = <0 1 2 3>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       panel@0 {
-> +               compatible = "truly,nt35597-2K-display";
-> +               reg = <0>;
-> +               vdda-supply = <&vreg_l14a_1p88>;
-> +
-> +               reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
-> +               mode-gpios = <&tlmm 52 GPIO_ACTIVE_HIGH>;
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       port@0 {
-> +                               reg = <0>;
-> +                               truly_in_0: endpoint {
-> +                                       remote-endpoint = <&dsi0_out>;
-> +                               };
-> +                       };
-> +
-> +                       port@1 {
-> +                               reg = <1>;
-> +                               truly_in_1: endpoint {
-> +                                       remote-endpoint = <&dsi1_out>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&dsi0_phy {
-> +       status = "okay";
-> +       vdds-supply = <&vdda_mipi_dsi0_pll>;
-> +};
-> +
-> +&dsi1 {
-> +       status = "okay";
-> +       vdda-supply = <&vdda_mipi_dsi1_1p2>;
-> +
-> +       qcom,dual-dsi-mode;
-> +
-> +       ports {
-> +               port@1 {
-> +                       endpoint {
-> +                               remote-endpoint = <&truly_in_1>;
-> +                               data-lanes = <0 1 2 3>;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&dsi1_phy {
-> +       status = "okay";
-> +       vdds-supply = <&vdda_mipi_dsi1_pll>;
-> +};
-> +
->  &gcc {
->         protected-clocks = <GCC_QSPI_CORE_CLK>,
->                            <GCC_QSPI_CORE_CLK_SRC>,
-> @@ -365,6 +436,14 @@
->         clock-frequency = <400000>;
->  };
->
-> +&mdss {
-> +       status = "okay";
-> +};
-> +
-> +&mdss_mdp {
-> +       status = "okay";
-> +};
-> +
->  &qupv3_id_1 {
->         status = "okay";
->  };
-> --
-> 2.18.0
->
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks and regards,
+Lokesh
