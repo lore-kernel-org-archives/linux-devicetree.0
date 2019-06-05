@@ -1,60 +1,149 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345
- bridge on Teres-I
-Date: Wed, 5 Jun 2019 12:13:17 +0200
-Message-ID: <20190605101317.GA9345@lst.de>
-References: <20190604122150.29D6468B05@newverein.lst.de> <20190604122308.98D4868B20@newverein.lst.de> <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: [PATCH v7 4/6] usb:common Simplify usb_decode_get_set_descriptor function.
+Date: Wed, 5 Jun 2019 11:03:48 +0100
+Message-ID: <1559729030-16390-5-git-send-email-pawell@cadence.com>
+References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
+In-Reply-To: <1559729030-16390-1-git-send-email-pawell@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 08:08:40AM -0700, Vasily Khoruzhick wrote:
-> On Tue, Jun 4, 2019 at 5:23 AM Torsten Duwe <duwe@lst.de> wrote:
-> >
-> > Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
-> > the I2C controlling signals are connected to I2C0 bus. eDP output goes
-> > to an Innolux N116BGE panel.
-> >
-> > Enable it in the device tree.
-> >
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > Signed-off-by: Torsten Duwe <duwe@suse.de>
-> > ---
-> >  .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 65 ++++++++++++++++++++--
-> >  1 file changed, 61 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > index 0ec46b969a75..a0ad438b037f 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > @@ -65,6 +65,21 @@
-> >                 };
-> >         };
-> >
-> > +       panel: panel {
-> > +               compatible ="innolux,n116bge", "simple-panel";
-> 
-> It's still "simple-panel". I believe I already mentioned that Rob
-> asked it to be edp-connector.
-> 
-For which there are neither bindings nor drivers.
+Patch moves switch responsible for decoding descriptor type
+outside snprintf. It improves code readability a little.
 
-Is anybody seriously proposing to hold back support for existing
-(open source!) hardware in favour of an *imaginable* *possibly* better
-solution? Especially when this exact line is already used in some other places?
-(there's a space missing btw...)
+Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+---
+ drivers/usb/common/debug.c | 113 +++++++++++++++++++------------------
+ 1 file changed, 58 insertions(+), 55 deletions(-)
 
-I'm more than glad to follow any constructive improvements towards better
-modularity. However there were none so far, and on top of that, it's a laptop.
-I see little advantage in mentioning an internal connector when the panel
-connected is always the same.
-
-FWIW, Rob should also have received these patches.
-
-	Torsten
+diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
+index f948eb7d51b8..a858b3838764 100644
+--- a/drivers/usb/common/debug.c
++++ b/drivers/usb/common/debug.c
+@@ -108,62 +108,65 @@ static void usb_decode_get_set_descriptor(__u8 bRequestType, __u8 bRequest,
+ 					  __u16 wValue, __u16 wIndex,
+ 					  __u16 wLength, char *str, size_t size)
+ {
++	char *s;
++
++	switch (wValue >> 8) {
++	case USB_DT_DEVICE:
++		s = "Device";
++		break;
++	case USB_DT_CONFIG:
++		s = "Configuration";
++		break;
++	case USB_DT_STRING:
++		s = "String";
++		break;
++	case USB_DT_INTERFACE:
++		s = "Interface";
++		break;
++	case USB_DT_ENDPOINT:
++		s = "Endpoint";
++		break;
++	case USB_DT_DEVICE_QUALIFIER:
++		s = "Device Qualifier";
++		break;
++	case USB_DT_OTHER_SPEED_CONFIG:
++		s = "Other Speed Config";
++		break;
++	case USB_DT_INTERFACE_POWER:
++		s = "Interface Power";
++		break;
++	case USB_DT_OTG:
++		s = "OTG";
++		break;
++	case USB_DT_DEBUG:
++		s = "Debug";
++		break;
++	case USB_DT_INTERFACE_ASSOCIATION:
++		s = "Interface Association";
++		break;
++	case USB_DT_BOS:
++		s = "BOS";
++		break;
++	case USB_DT_DEVICE_CAPABILITY:
++		s = "Device Capability";
++		break;
++	case USB_DT_PIPE_USAGE:
++		s = "Pipe Usage";
++		break;
++	case USB_DT_SS_ENDPOINT_COMP:
++		s = "SS Endpoint Companion";
++		break;
++	case USB_DT_SSP_ISOC_ENDPOINT_COMP:
++		s = "SSP Isochronous Endpoint Companion";
++		break;
++	default:
++		s = "UNKNOWN";
++		break;
++	}
++
+ 	snprintf(str, size, "%s %s Descriptor(Index = %d, Length = %d)",
+-		 bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
+-		 ({ char *s;
+-			switch (wValue >> 8) {
+-			case USB_DT_DEVICE:
+-				s = "Device";
+-				break;
+-			case USB_DT_CONFIG:
+-				s = "Configuration";
+-				break;
+-			case USB_DT_STRING:
+-				s = "String";
+-				break;
+-			case USB_DT_INTERFACE:
+-				s = "Interface";
+-				break;
+-			case USB_DT_ENDPOINT:
+-				s = "Endpoint";
+-				break;
+-			case USB_DT_DEVICE_QUALIFIER:
+-				s = "Device Qualifier";
+-				break;
+-			case USB_DT_OTHER_SPEED_CONFIG:
+-				s = "Other Speed Config";
+-				break;
+-			case USB_DT_INTERFACE_POWER:
+-				s = "Interface Power";
+-				break;
+-			case USB_DT_OTG:
+-				s = "OTG";
+-				break;
+-			case USB_DT_DEBUG:
+-				s = "Debug";
+-				break;
+-			case USB_DT_INTERFACE_ASSOCIATION:
+-				s = "Interface Association";
+-				break;
+-			case USB_DT_BOS:
+-				s = "BOS";
+-				break;
+-			case USB_DT_DEVICE_CAPABILITY:
+-				s = "Device Capability";
+-				break;
+-			case USB_DT_PIPE_USAGE:
+-				s = "Pipe Usage";
+-				break;
+-			case USB_DT_SS_ENDPOINT_COMP:
+-				s = "SS Endpoint Companion";
+-				break;
+-			case USB_DT_SSP_ISOC_ENDPOINT_COMP:
+-				s = "SSP Isochronous Endpoint Companion";
+-				break;
+-			default:
+-				s = "UNKNOWN";
+-				break;
+-			} s; }), wValue & 0xff, wLength);
++		bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
++		s, wValue & 0xff, wLength);
+ }
+ 
+ static void usb_decode_get_configuration(__u16 wLength, char *str, size_t size)
+-- 
+2.17.1
