@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v3, 04/27] dt-bindings: mediatek: add dither description for mt8183 display
-Date: Wed, 5 Jun 2019 19:42:43 +0800
-Message-ID: <1559734986-7379-5-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v3, 03/27] dt-bindings: mediatek: add ccorr description for mt8183 display
+Date: Wed, 5 Jun 2019 19:42:42 +0800
+Message-ID: <1559734986-7379-4-git-send-email-yongqiang.niu@mediatek.com>
 References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -23,16 +23,16 @@ Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-index e149245..7c86d71 100644
+index 2418c56..e149245 100644
 --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
 +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-@@ -33,6 +33,7 @@ Required properties (all function blocks):
+@@ -31,6 +31,7 @@ Required properties (all function blocks):
+ 	"mediatek,<chip>-disp-ovl-2l"           - overlay (2 layers, blending, csc)
+ 	"mediatek,<chip>-disp-rdma"  		- read DMA / line buffer
  	"mediatek,<chip>-disp-wdma"  		- write DMA
- 	"mediatek,<chip>-disp-ccorr"            - color correction
++	"mediatek,<chip>-disp-ccorr"            - color correction
  	"mediatek,<chip>-disp-color" 		- color processor
-+	"mediatek,<chip>-disp-dither"           - dither
  	"mediatek,<chip>-disp-aal"   		- adaptive ambient light controller
  	"mediatek,<chip>-disp-gamma" 		- gamma correction
- 	"mediatek,<chip>-disp-merge" 		- merge streams from two RDMA sources
 -- 
 1.8.1.1.dirty
