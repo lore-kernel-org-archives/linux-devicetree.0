@@ -1,64 +1,87 @@
-From: Eduardo Valentin <eduval@amazon.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: interrupt-controller: Amazon's
- Annapurna Labs FIC
-Date: Wed, 5 Jun 2019 08:49:55 -0700
-Message-ID: <20190605154955.GD1534@u40b0340c692b58f6553c.ant.amazon.com>
-References: <1559731921-14023-1-git-send-email-talel@amazon.com>
- <1559731921-14023-2-git-send-email-talel@amazon.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive and
+ queue messages
+Date: Wed, 5 Jun 2019 18:58:54 +0300
+Message-ID: <CAHp75VfPYC7xDfsGRZsSy8eV1xoMANsVmyuU_yF0kPG0fMtLCQ@mail.gmail.com>
+References: <20190531043347.4196-1-eduval@amazon.com> <20190531043347.4196-3-eduval@amazon.com>
+ <20190604171611.GS9224@smile.fi.intel.com> <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
+ <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com>
+ <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
+ <CAHp75Vc2us0UDmGnzjF0vkzWM_9KqRa0AZKnRsUYmFRTsgwEyg@mail.gmail.com> <20190605153120.GC1534@u40b0340c692b58f6553c.ant.amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1559731921-14023-2-git-send-email-talel@amazon.com>
+In-Reply-To: <20190605153120.GC1534@u40b0340c692b58f6553c.ant.amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Talel Shenhar <talel@amazon.com>
-Cc: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
+To: Eduardo Valentin <eduval@amazon.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Wolfram Sang <wsa@the-dreams.de>, Haiyue Wang <haiyue.wang@linux.intel.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 01:52:00PM +0300, Talel Shenhar wrote:
-> Document Amazon's Annapurna Labs Fabric Interrupt Controller SoC binding.
-> 
-> Signed-off-by: Talel Shenhar <talel@amazon.com>
-> ---
->  .../interrupt-controller/amazon,al-fic.txt         | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
-> new file mode 100644
-> index 0000000..a2f31a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
-> @@ -0,0 +1,22 @@
-> +Amazon's Annapurna Labs Fabric Interrupt Controller
-> +
-> +Required properties:
-> +
-> +- compatible: should be "amazon,al-fic"
-> +- reg: physical base address and size of the registers
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +- #interrupt-cells: must be 2.
+On Wed, Jun 5, 2019 at 6:31 PM Eduardo Valentin <eduval@amazon.com> wrote:
+> On Wed, Jun 05, 2019 at 06:20:37PM +0300, Andy Shevchenko wrote:
+> > On Wed, Jun 5, 2019 at 5:32 PM Eduardo Valentin <eduval@amazon.com> wrote:
+> > > On Wed, Jun 05, 2019 at 11:25:39AM +0300, Andy Shevchenko wrote:
+> > > > On Wed, Jun 5, 2019 at 6:30 AM Eduardo Valentin <eduval@amazon.com> wrote:
 
-It would be great if you describe what the 2 numbers must represent here..
-
-> +- interrupt-parent: specifies the parent interrupt controller.
-> +- interrupts: describes which input line in the interrupt parent, this
-> +  fic's output is connected to.
-> +
-> +Example:
-> +
-> +amazon_fic: amazon_fic {
-> +	compatible = "amazon,al-fic";
-> +	interrupt-controller;
-> +	#interrupt-cells = <1>;
-> +	reg = <0x0 0xfd8a8500 0x0 0x1000>;
-> +	interrupt-parent = <&gic>;
-> +	interrupts = <GIC_SPI 0x0 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > > +           .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
+> > > > > >
+> > > > > > Wouldn't compiler warn you due to unused data?
+> > > > > > Perhaps drop of_match_ptr() for good...
+> > > > >
+> > > > > Not sure what you meant here. I dont see any compiler warning.
+> > > > > Also, of_match_ptr seams to be well spread in the kernel.
+> > > >
+> > > > If this will be compiled with CONFIG_OF=n...
+> > >
+> > > I see.. I obviously did not test with that config..
+> > >
+> > > > Though I didn't check all dependencies to see if it even possible. In
+> > > > any case of_match_ptr() is redundant in both cases here.
+> > > > Either you need to protect i2c_slave_mqueue_of_match with #ifdef
+> > > > CONFIG_OF, or drop the macro use.
+> > >
+> > > I will wrap it into CONFIG_OF..
+> >
+> > Would be this expected to work in the case of CONFIG_OF=n?
+> > If no, why to introduce ugly #ifdef:s and additional macros?
+>
+> I do hate those too...
+>
+> > Wouldn't be better to have
+> >   depends on OF || COMPILE_TEST
+>
+> Well, technically, the original author had a case for using this
+> without CONFIG_OF. That is why I did not force here to be a strong
+> dependency on CONFIG_OF. So, I guess in this case the driver will
+> work properly in both cases if we:
+>
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id i2c_slave_mqueue_of_match[] = {
+> +       {
+> +               .compatible = "i2c-slave-mqueue",
+> +       },
+> +       { /* sentinel */ }
 > +};
-> -- 
-> 2.7.4
-> 
+> +MODULE_DEVICE_TABLE(of, i2c_slave_mqueue_of_match);
+> +#endif
+> +
+> +static struct i2c_driver i2c_slave_mqueue_driver = {
+> +       .driver = {
+> +               .name   = "i2c-slave-mqueue",
+> +               .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
+> +       },
+> +       .probe          = i2c_slave_mqueue_probe,
+> +       .remove         = i2c_slave_mqueue_remove,
+> +       .id_table       = i2c_slave_mqueue_id,
+> +};
+>
+> The above is a well stablish pattern across the drivers.
+
+My point here that you may achieve the same by simple dropping of_match_ptr().
+
+P.S. Many of the drivers just old enough and not being simplified due
+to pointless churn there, but for new drivers we may avoid it.
 
 -- 
-All the best,
-Eduardo Valentin
+With Best Regards,
+Andy Shevchenko
