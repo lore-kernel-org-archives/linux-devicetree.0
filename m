@@ -1,49 +1,100 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_1/3_linux_dev-5.1_arm/soc_v2]_ARM:_dts:_aspeed:_Add?=
- =?UTF-8?Q?_SGPM_pinmux?=
-Date: Wed, 05 Jun 2019 11:01:34 +0930
-Message-ID: <b899d98e-6f13-4728-9a62-3228ae7a2021@www.fastmail.com>
-References: <1559684524-15583-1-git-send-email-hongweiz@ami.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH] USB: move usb debugfs directory creation to the usb
+ common core
+Date: Wed, 5 Jun 2019 10:15:59 +0800
+Message-ID: <1559700959.8487.78.camel@mhfsdcap03>
+References: <20190604093258.GB30054@kroah.com>
+         <20190604115919.GA24346@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559684524-15583-1-git-send-email-hongweiz@ami.com>
+In-Reply-To: <20190604115919.GA24346@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hongwei Zhang <hongweiz@ami.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2019-06-04 at 13:59 +0200, Greg Kroah-Hartman wrote:
+> On Tue, Jun 04, 2019 at 11:32:58AM +0200, Greg Kroah-Hartman wrote:
+> > The USB gadget subsystem wants to use the USB debugfs root directory, so
+> > move it to the common "core" USB code so that it is properly initialized
+> > and removed as needed.
+> > 
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > 
+> > ---
+> > 
+> > This should be the "correct" version of this, Chunfeng, can you test
+> > this to verify it works for you?
+I'll test it ASAP, thanks a lot
 
-
-On Wed, 5 Jun 2019, at 07:12, Hongwei Zhang wrote:
-> Add SGPM pinmux to ast2500-pinctrl function and group, to prepare for
-> supporting SGPIO in AST2500 SoC.
+> > 
+> > 
+> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> > index 18f5dcf58b0d..3b5e4263ffef 100644
+> > --- a/drivers/usb/common/common.c
+> > +++ b/drivers/usb/common/common.c
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/usb/of.h>
+> >  #include <linux/usb/otg.h>
+> >  #include <linux/of_platform.h>
+> > +#include <linux/debugfs.h>
+> >  
+> >  static const char *const ep_type_names[] = {
+> >  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
+> > @@ -291,4 +292,21 @@ struct device *usb_of_get_companion_dev(struct device *dev)
+> >  EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
+> >  #endif
+> >  
+> > +struct dentry *usb_debug_root;
+> > +EXPORT_SYMBOL_GPL(usb_debug_root);
+> > +
+> > +static int usb_common_init(void)
+> > +{
+> > +	usb_debug_root = debugfs_create_dir("usb", NULL);
+> > +	return 0;
+> > +}
+> > +
+> > +static void usb_common_exit(void)
+> > +{
+> > +	debugfs_remove_recursive(usb_debug_root);
+> > +}
+> > +
+> > +module_init(usb_common_init);
+> > +module_exit(usb_common_exit);
+> > +
+> >  MODULE_LICENSE("GPL");
+> > diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+> > index 7fcb9f782931..f3d6b1ab80cb 100644
+> > --- a/drivers/usb/core/usb.c
+> > +++ b/drivers/usb/core/usb.c
+> > @@ -1185,19 +1185,17 @@ static struct notifier_block usb_bus_nb = {
+> >  	.notifier_call = usb_bus_notify,
+> >  };
+> >  
+> > -struct dentry *usb_debug_root;
+> > -EXPORT_SYMBOL_GPL(usb_debug_root);
+> > +static struct dentry *usb_devices_root;
+> >  
+> >  static void usb_debugfs_init(void)
+> >  {
+> > -	usb_debug_root = debugfs_create_dir("usb", NULL);
+> > -	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
+> > -			    &usbfs_devices_fops);
+> > +	usb_devices_root = debugfs_create_file("devices", 0444, usb_debug_root,
+> > +					       NULL, &usbfs_devices_fops);
+> >  }
+> >  
+> >  static void usb_debugfs_cleanup(void)
+> >  {
+> > -	debugfs_remove_recursive(usb_debug_root);
+> > +	debugfs_remove_recursive(usb_devices_root);
 > 
-> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-
-> ---
->  arch/arm/boot/dts/aspeed-g5.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
+> That should just be debugfs_remove();
 > 
-> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-> index 85ed9db..8d30818 100644
-> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-> @@ -1321,6 +1321,11 @@
->  		groups = "SDA2";
->  	};
->  
-> +	pinctrl_sgpm_default: sgpm_default {
-> +		function = "SGPM";
-> +		groups = "SGPM";
-> +	};
-> +
->  	pinctrl_sgps1_default: sgps1_default {
->  		function = "SGPS1";
->  		groups = "SGPS1";
-> -- 
-> 2.7.4
+> I'll fix it up after someone tests this :)
 > 
->
+> thanks,
+> 
+> greg k-h
