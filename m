@@ -1,14 +1,12 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/2] dt-bindings: i2c: mv64xxx: Add YAML schemas
-Date: Wed, 5 Jun 2019 14:11:25 +0200
-Message-ID: <20190605121125.4p2eyt7zhtai652b@flea>
-References: <20190525141821.20082-1-maxime.ripard@bootlin.com>
- <20190525141821.20082-2-maxime.ripard@bootlin.com>
- <87k1e2k98v.fsf@FE-laptop>
+From: "sudheer.v" <open.sudheer@gmail.com>
+Subject: [patch 0/5] *** Cover Letter: patch submission for AST2500 UART
+ driver ***
+Date: Wed,  5 Jun 2019 17:53:10 +0530
+Message-ID: <1559737395-28542-1-git-send-email-open.sudheer@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2931956928720380166=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87k1e2k98v.fsf@FE-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,81 +16,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: gregkh@linuxfoundation.org, mchehab+samsung@kernel.org, jslaby@suse.com, joel@jms.id.au, andrew@aj.id.au, benh@kernel.crashing.org, robh+dt@kernel.org, mark.rutland@arm.com, shivahshankar.shankarnarayanrao@aspeedtech.com, sudheer.veliseti@aspeedtech.com
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sudheer Kumar veliseti <sudheer.open@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---===============2931956928720380166==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jcggnhf3ykfk7lac"
-Content-Disposition: inline
-
-
---jcggnhf3ykfk7lac
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: sudheer Kumar veliseti <sudheer.open@gmail.com>
 
 Hi,
 
-On Mon, Jun 03, 2019 at 04:56:48PM +0200, Gregory CLEMENT wrote:
-> > +++ b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-> > @@ -0,0 +1,106 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/i2c/marvell,mv64xxx-i2c.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Marvell MV64XXX I2C Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Chen-Yu Tsai <wens@csie.org>
-> > +  - Maxime Ripard <maxime.ripard@bootlin.com>
->
-> If you take over the maintenanceship and became maintainer for this
-> driver, then update the MAINTAINERS files too. For now it was assigned
-> to me, but I don't mind letting this for both of you.
->
-> Actually I gave my acked-by to a patch from Wolfram adding the
-> Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt file to the "I2C
-> MV64XXX MARVELL AND ALLWINNER DRIVER" entry "MAINTAINERS: add DT
-> bindings to i2c-mv64xxx" so I guess this patch have to be discarded or
-> at least updated.
+The below mentioned patches are for AST2500 UART driver.
 
-Sorry for that, it's definitely not intentional. I'll fix it and resend.
+AST2500 has dedicated Uart DMA controller which has 12 sets of
+Tx and RX channels connected to UART controller directly.
+Since the DMA controller have dedicated buffers and registers,
+there would be little benifit in adding DMA framework overhead.
+So the software for DMA controller is included within the UART driver itself.
 
-Thanks!
-Maxime
+Thanks and Regards
+Sudheer.V
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+sudheer veliseti (5):
+  AST2500 DMA UART driver
+  build configuration for AST2500 DMA UART driver
+  DT nodes for AST2500 DMA UART driver
+  defconfig and MAINTAINERS updated for AST2500 DMA UART driver
+  Documentation: DT bindings AST2500 DMA UART driver
 
---jcggnhf3ykfk7lac
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../bindings/serial/ast2500-dma-uart.txt      |   40 +
+ MAINTAINERS                                   |   13 +
+ arch/arm/boot/dts/aspeed-ast2500-evb.dts      |   21 +
+ arch/arm/boot/dts/aspeed-g5.dtsi              |   71 +-
+ arch/arm/configs/aspeed_g5_defconfig          |    1 +
+ .../tty/serial/8250/8250_ast2500_uart_dma.c   | 1928 +++++++++++++++++
+ drivers/tty/serial/8250/Kconfig               |   35 +-
+ drivers/tty/serial/8250/Makefile              |    1 +
+ 8 files changed, 2105 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
+ create mode 100644 drivers/tty/serial/8250/8250_ast2500_uart_dma.c
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPexbQAKCRDj7w1vZxhR
-xe/dAP9810+E+YG6xK7o/znoo25OToisA4qAfR89Ox8darfLQgEAjPOHR1jQl2S+
-xakb+9c/vF+oAFjJD//9cLNS1UOxHgE=
-=JR2U
------END PGP SIGNATURE-----
-
---jcggnhf3ykfk7lac--
-
-
---===============2931956928720380166==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2931956928720380166==--
+-- 
+2.17.1
