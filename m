@@ -1,190 +1,150 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v3] USB: move usb debugfs directory creation to the usb
- common core
-Date: Wed, 5 Jun 2019 14:44:40 +0200
-Message-ID: <20190605124440.GD17558@kroah.com>
-References: <20190605092816.GA23758@kroah.com>
+From: Angus Ainslie <angus@akkea.ca>
+Subject: Re: [PATCH v15 0/3] Add support for the Purism Librem5 devkit
+Date: Wed, 05 Jun 2019 06:48:05 -0600
+Message-ID: <db174b0173d0bcdb9ab5ff4e2e1cc4bc@www.akkea.ca>
+References: <20190528125747.1047-1-angus@akkea.ca>
+ <20190605090315.GJ29853@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190605092816.GA23758@kroah.com>
+In-Reply-To: <20190605090315.GJ29853@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Carlo Caione <ccaione@baylibre.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The USB gadget subsystem wants to use the USB debugfs root directory, so
-move it to the common "core" USB code so that it is properly initialized
-and removed as needed.
+On 2019-06-05 03:03, Shawn Guo wrote:
+> On Tue, May 28, 2019 at 05:57:44AM -0700, Angus Ainslie (Purism) wrote:
+>> The Librem5 devkit is based on the imx8mq from NXP. This is a default
+>> devicetree to boot the board to a command prompt.
+>> 
+>> Changes since v14:
+>> 
+>> Add regulator-always-on for the SNVS regulators.
+>> Added pgc nodes.
+>> Fixed charger pre-current.
+> 
+> Since Pavel was reviewing your patches, you should copy him on the new
+> version.  Has this version addressed all his review comments?
+> 
 
-In order to properly do this, we need to load the common code before the
-usb core code, when everything is linked into the kernel, so reorder the
-link order of the code.
+Sorry I had meant to include him in the CC.
 
-Also as the usb common code has the possibility of the led trigger logic
-to be merged into it, handle the build option properly by only having
-one module init/exit function and have the common code initialize the
-led trigger if needed.
+I believe so but don't want to speak for him so we should see if he has 
+anymore.
 
-Reported-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-Chunfeng, can you try testing this again?
+Angus
 
-v3: Fix __init and __exit error when building into the tree as reported
-    by Chunfeng
-    Fix Reported-by: line as reported
-v2: handle led common code link error reported by kbuild
-    handle subsys_initcall issue pointed out by Chunfeng
-
- drivers/usb/Makefile        |  3 +--
- drivers/usb/common/common.c | 21 +++++++++++++++++++++
- drivers/usb/common/common.h | 14 ++++++++++++++
- drivers/usb/common/led.c    |  9 +++------
- drivers/usb/core/usb.c      | 10 ++++------
- 5 files changed, 43 insertions(+), 14 deletions(-)
- create mode 100644 drivers/usb/common/common.h
-
-diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
-index 7d1b8c82b208..ecc2de1ffaae 100644
---- a/drivers/usb/Makefile
-+++ b/drivers/usb/Makefile
-@@ -5,6 +5,7 @@
- 
- # Object files in subdirectories
- 
-+obj-$(CONFIG_USB_COMMON)	+= common/
- obj-$(CONFIG_USB)		+= core/
- obj-$(CONFIG_USB_SUPPORT)	+= phy/
- 
-@@ -60,8 +61,6 @@ obj-$(CONFIG_USB_CHIPIDEA)	+= chipidea/
- obj-$(CONFIG_USB_RENESAS_USBHS)	+= renesas_usbhs/
- obj-$(CONFIG_USB_GADGET)	+= gadget/
- 
--obj-$(CONFIG_USB_COMMON)	+= common/
--
- obj-$(CONFIG_USBIP_CORE)	+= usbip/
- 
- obj-$(CONFIG_TYPEC)		+= typec/
-diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-index 18f5dcf58b0d..1433260d99b4 100644
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -15,6 +15,8 @@
- #include <linux/usb/of.h>
- #include <linux/usb/otg.h>
- #include <linux/of_platform.h>
-+#include <linux/debugfs.h>
-+#include "common.h"
- 
- static const char *const ep_type_names[] = {
- 	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
-@@ -291,4 +293,23 @@ struct device *usb_of_get_companion_dev(struct device *dev)
- EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
- #endif
- 
-+struct dentry *usb_debug_root;
-+EXPORT_SYMBOL_GPL(usb_debug_root);
-+
-+static int __init usb_common_init(void)
-+{
-+	usb_debug_root = debugfs_create_dir("usb", NULL);
-+	ledtrig_usb_init();
-+	return 0;
-+}
-+
-+static void __exit usb_common_exit(void)
-+{
-+	ledtrig_usb_exit();
-+	debugfs_remove_recursive(usb_debug_root);
-+}
-+
-+subsys_initcall(usb_common_init);
-+module_exit(usb_common_exit);
-+
- MODULE_LICENSE("GPL");
-diff --git a/drivers/usb/common/common.h b/drivers/usb/common/common.h
-new file mode 100644
-index 000000000000..424a91316a4b
---- /dev/null
-+++ b/drivers/usb/common/common.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __LINUX_USB_COMMON_H
-+#define __LINUX_USB_COMMON_H
-+
-+#if defined(CONFIG_USB_LED_TRIG)
-+void ledtrig_usb_init(void);
-+void ledtrig_usb_exit(void);
-+#else
-+static inline void ledtrig_usb_init(void) { }
-+static inline void ledtrig_usb_exit(void) { }
-+#endif
-+
-+#endif	/* __LINUX_USB_COMMON_H */
-diff --git a/drivers/usb/common/led.c b/drivers/usb/common/led.c
-index 7bd81166b77d..0865dd44a80a 100644
---- a/drivers/usb/common/led.c
-+++ b/drivers/usb/common/led.c
-@@ -10,6 +10,7 @@
- #include <linux/init.h>
- #include <linux/leds.h>
- #include <linux/usb.h>
-+#include "common.h"
- 
- #define BLINK_DELAY 30
- 
-@@ -36,18 +37,14 @@ void usb_led_activity(enum usb_led_event ev)
- EXPORT_SYMBOL_GPL(usb_led_activity);
- 
- 
--static int __init ledtrig_usb_init(void)
-+void __init ledtrig_usb_init(void)
- {
- 	led_trigger_register_simple("usb-gadget", &ledtrig_usb_gadget);
- 	led_trigger_register_simple("usb-host", &ledtrig_usb_host);
--	return 0;
- }
- 
--static void __exit ledtrig_usb_exit(void)
-+void __exit ledtrig_usb_exit(void)
- {
- 	led_trigger_unregister_simple(ledtrig_usb_gadget);
- 	led_trigger_unregister_simple(ledtrig_usb_host);
- }
--
--module_init(ledtrig_usb_init);
--module_exit(ledtrig_usb_exit);
-diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-index 7fcb9f782931..5a0df527a8ca 100644
---- a/drivers/usb/core/usb.c
-+++ b/drivers/usb/core/usb.c
-@@ -1185,19 +1185,17 @@ static struct notifier_block usb_bus_nb = {
- 	.notifier_call = usb_bus_notify,
- };
- 
--struct dentry *usb_debug_root;
--EXPORT_SYMBOL_GPL(usb_debug_root);
-+static struct dentry *usb_devices_root;
- 
- static void usb_debugfs_init(void)
- {
--	usb_debug_root = debugfs_create_dir("usb", NULL);
--	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
--			    &usbfs_devices_fops);
-+	usb_devices_root = debugfs_create_file("devices", 0444, usb_debug_root,
-+					       NULL, &usbfs_devices_fops);
- }
- 
- static void usb_debugfs_cleanup(void)
- {
--	debugfs_remove_recursive(usb_debug_root);
-+	debugfs_remove(usb_devices_root);
- }
- 
- /*
--- 
-2.21.0
+> Shawn
+> 
+>> 
+>> Changes since v13:
+>> 
+>> Moved haptic motor from pwm-led to gpio-vibrator.
+>> Cleaned up regulator node naming.
+>> Whitescpace cleanup.
+>> Re-indent pinmux stanzas.
+>> Drop pwm2 node.
+>> Drop MAINTAINERS patch.
+>> 
+>> Changes since v12:
+>> 
+>> Updated patch to vendor-prefixes.yaml.
+>> Dropped always on from regulators.
+>> 
+>> Changes since v11:
+>> 
+>> Added reviewed-by tags.
+>> Fixed subject typo.
+>> 
+>> Changes since v10:
+>> 
+>> Moved MAINTAINERS entry to "ARM/FREESCALE IMX" section
+>> 
+>> Changes since v9:
+>> 
+>> Added a MAINTAINERS entry for arm64 imx devicetree files.
+>> 
+>> Changes since v8:
+>> 
+>> Fixed license comment.
+>> Changed regulators to all lower case.
+>> Changed clock frequency for NXP errata e7805.
+>> Dropped blank line.
+>> 
+>> Changes since v7:
+>> 
+>> More regulators always on for USB.
+>> Add vbus regulator.
+>> Drop vbat regulator.
+>> Replace legacy "gpio-key,wakeup" with "wakeup-source".
+>> Add vbus-supply to get rid of warning
+>> imx8mq-usb-phy 382f0040.usb-phy: 382f0040.usb-phy supply vbus not 
+>> found,
+>> using dummy regulator
+>> 
+>> Changes since v6:
+>> 
+>> Dropped unused regulators.
+>> Fix regulator phandles case.
+>> Dropped extra whitespace.
+>> 
+>> Changes since v5:
+>> 
+>> Added reviewed-by tags.
+>> Moved USB port links to USB controller node.
+>> 
+>> Changes since v4:
+>> 
+>> Compiled against linux-next next-20190415.
+>> Added imx8mq to the arm yaml file.
+>> Re-arrange regulator nodes to drop undefined supplies.
+>> Additional ordering for aesthetics.
+>> Split some long lines.
+>> Added lots of blank lines.
+>> Moved pinctl muxes to where they are used.
+>> Cleaned out reg defintions from regulator nodes.
+>> 
+>> Changes since v3:
+>> 
+>> Freshly sorted and pressed nodes.
+>> Change the backlight to an interpolated scale.
+>> Dropped i2c2.
+>> Dropped devkit version number to match debian MR.
+>> 
+>> Changes since v2:
+>> 
+>> Fixed incorrect phy-supply for the fsl-fec.
+>> Dropped unused regulator property.
+>> Fixup Makefile for linux-next.
+>> 
+>> Changes since v1:
+>> 
+>> Dropped config file.
+>> Updated the board compatible label.
+>> Changed node names to follow naming conventions.
+>> Added a more complete regulator hierachy.
+>> Removed unused nodes.
+>> Removed unknown devices.
+>> Fixed comment style.
+>> Dropped undocumented properties.
+>> 
+>> Angus Ainslie (Purism) (3):
+>>   arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
+>>   dt-bindings: Add an entry for Purism SPC
+>>   dt-bindings: arm: fsl: Add the imx8mq boards
+>> 
+>>  .../devicetree/bindings/arm/fsl.yaml          |   7 +
+>>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>>  .../dts/freescale/imx8mq-librem5-devkit.dts   | 806 
+>> ++++++++++++++++++
+>>  4 files changed, 816 insertions(+)
+>>  create mode 100644 
+>> arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+>> 
+>> --
+>> 2.17.1
+>> 
