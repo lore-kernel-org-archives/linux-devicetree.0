@@ -1,33 +1,56 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: imx6sx-udoo-neo: add bluetooth config to
- uart3
-Date: Wed, 5 Jun 2019 12:20:07 -0300
-Message-ID: <CAOMZO5C7gZ1RR8DHKsJUTTZ2iCZGUa7N3KooVFjsAvnytX7EnQ@mail.gmail.com>
-References: <20190601070718.26971-1-pbrobinson@gmail.com>
- <20190601070718.26971-4-pbrobinson@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/3] i2c: slave-mqueue: add a slave backend to receive and
+ queue messages
+Date: Wed, 5 Jun 2019 18:20:37 +0300
+Message-ID: <CAHp75Vc2us0UDmGnzjF0vkzWM_9KqRa0AZKnRsUYmFRTsgwEyg@mail.gmail.com>
+References: <20190531043347.4196-1-eduval@amazon.com> <20190531043347.4196-3-eduval@amazon.com>
+ <20190604171611.GS9224@smile.fi.intel.com> <20190605032709.GA1534@u40b0340c692b58f6553c.ant.amazon.com>
+ <CAHp75Vdaeprj0hFXukMqDi_dnK9-vA-O-OTRiGY6y3aGrNHUjQ@mail.gmail.com> <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190601070718.26971-4-pbrobinson@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Robinson <pbrobinson@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190605143158.GB1534@u40b0340c692b58f6553c.ant.amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <eduval@amazon.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Wolfram Sang <wsa@the-dreams.de>, Haiyue Wang <haiyue.wang@linux.intel.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 1, 2019 at 4:07 AM Peter Robinson <pbrobinson@gmail.com> wrote:
->
-> This updates the WL1831 bluetooth to use the serial serdev driver
-> interface.
->
-> Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+On Wed, Jun 5, 2019 at 5:32 PM Eduardo Valentin <eduval@amazon.com> wrote:
+> On Wed, Jun 05, 2019 at 11:25:39AM +0300, Andy Shevchenko wrote:
+> > On Wed, Jun 5, 2019 at 6:30 AM Eduardo Valentin <eduval@amazon.com> wrote:
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> Well, yes, but the point is you would be switching from a simple AND (&) operation
+> to a division...
+>
+> I am keeping the power of 2 dep so that we can keep this with a simple &.
+
+Works for me.
+
+> > > > > +           .of_match_table = of_match_ptr(i2c_slave_mqueue_of_match),
+> > > >
+> > > > Wouldn't compiler warn you due to unused data?
+> > > > Perhaps drop of_match_ptr() for good...
+> > >
+> > > Not sure what you meant here. I dont see any compiler warning.
+> > > Also, of_match_ptr seams to be well spread in the kernel.
+> >
+> > If this will be compiled with CONFIG_OF=n...
+>
+> I see.. I obviously did not test with that config..
+>
+> > Though I didn't check all dependencies to see if it even possible. In
+> > any case of_match_ptr() is redundant in both cases here.
+> > Either you need to protect i2c_slave_mqueue_of_match with #ifdef
+> > CONFIG_OF, or drop the macro use.
+>
+> I will wrap it into CONFIG_OF..
+
+Would be this expected to work in the case of CONFIG_OF=n?
+If no, why to introduce ugly #ifdef:s and additional macros?
+Wouldn't be better to have
+  depends on OF || COMPILE_TEST
+?
+
+-- 
+With Best Regards,
+Andy Shevchenko
