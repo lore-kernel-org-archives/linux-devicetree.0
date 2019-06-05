@@ -1,214 +1,47 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
-Date: Wed, 5 Jun 2019 15:57:54 +0900
-Message-ID: <CAAFQd5Dmr+xyd4dyc_44vJFpNpwK6+MgG+ensoey59HgbxXV6g@mail.gmail.com>
-References: <20181201165348.24140-1-robdclark@gmail.com> <CAL_JsqJmPqis46Un91QyhXgdrVtfATMP_hTp6wSeSAfc8MLFfw@mail.gmail.com>
- <CAF6AEGs9Nsft8ofZkGz_yWBPBC+prh8dBSkJ4PJr8yk2c5FMdQ@mail.gmail.com>
- <CAF6AEGt-dhbQS5zZCNVTLT57OiUwO0RiP5bawTSu2RKZ-7W-aw@mail.gmail.com>
- <CAAFQd5BdrJFL5LKK8O5NPDKWfFgkTX_JU-jU3giEz33tj-jwCA@mail.gmail.com> <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v3 1/3] dt-bindings: arm: nxp: Add device tree binding for
+ ls1046a-frwy board
+Date: Wed, 5 Jun 2019 07:00:33 +0000
+Message-ID: <AM0PR04MB42115435AD01AD6481C9D0B980160@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190527123404.30858-1-pramod.kumar_1@nxp.com>
+ <20190527123404.30858-2-pramod.kumar_1@nxp.com>
+ <20190605063449.GG29853@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAF6AEGtj+kyXqKeJK2-0e1jw_A4wz-yBEyv5zhf5Vfoi2_p2CA@mail.gmail.com>
+In-Reply-To: <20190605063449.GG29853@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, freedreno <freedreno@lists.freedesktop.org>, Sean Paul <seanpaul@chromium.org>, Doug Anderson <dianders@chromium.org>, Daniel Vetter <daniel@ffwll.ch>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Shawn Guo <shawnguo@kernel.org>, Pramod Kumar <pramod.kumar_1@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 7:48 PM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Sun, Jun 2, 2019 at 11:25 PM Tomasz Figa <tfiga@chromium.org> wrote:
-> >
-> > On Mon, Jun 3, 2019 at 4:40 AM Rob Clark <robdclark@gmail.com> wrote:
-> > >
-> > > On Fri, May 10, 2019 at 7:35 AM Rob Clark <robdclark@gmail.com> wrote:
-> > > >
-> > > > On Tue, Dec 4, 2018 at 2:29 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > > > >
-> > > > > On Sat, Dec 1, 2018 at 10:54 AM Rob Clark <robdclark@gmail.com> wrote:
-> > > > > >
-> > > > > > This solves a problem we see with drm/msm, caused by getting
-> > > > > > iommu_dma_ops while we attach our own domain and manage it directly at
-> > > > > > the iommu API level:
-> > > > > >
-> > > > > >   [0000000000000038] user address but active_mm is swapper
-> > > > > >   Internal error: Oops: 96000005 [#1] PREEMPT SMP
-> > > > > >   Modules linked in:
-> > > > > >   CPU: 7 PID: 70 Comm: kworker/7:1 Tainted: G        W         4.19.3 #90
-> > > > > >   Hardware name: xxx (DT)
-> > > > > >   Workqueue: events deferred_probe_work_func
-> > > > > >   pstate: 80c00009 (Nzcv daif +PAN +UAO)
-> > > > > >   pc : iommu_dma_map_sg+0x7c/0x2c8
-> > > > > >   lr : iommu_dma_map_sg+0x40/0x2c8
-> > > > > >   sp : ffffff80095eb4f0
-> > > > > >   x29: ffffff80095eb4f0 x28: 0000000000000000
-> > > > > >   x27: ffffffc0f9431578 x26: 0000000000000000
-> > > > > >   x25: 00000000ffffffff x24: 0000000000000003
-> > > > > >   x23: 0000000000000001 x22: ffffffc0fa9ac010
-> > > > > >   x21: 0000000000000000 x20: ffffffc0fab40980
-> > > > > >   x19: ffffffc0fab40980 x18: 0000000000000003
-> > > > > >   x17: 00000000000001c4 x16: 0000000000000007
-> > > > > >   x15: 000000000000000e x14: ffffffffffffffff
-> > > > > >   x13: ffff000000000000 x12: 0000000000000028
-> > > > > >   x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
-> > > > > >   x9 : 0000000000000000 x8 : ffffffc0fab409a0
-> > > > > >   x7 : 0000000000000000 x6 : 0000000000000002
-> > > > > >   x5 : 0000000100000000 x4 : 0000000000000000
-> > > > > >   x3 : 0000000000000001 x2 : 0000000000000002
-> > > > > >   x1 : ffffffc0f9431578 x0 : 0000000000000000
-> > > > > >   Process kworker/7:1 (pid: 70, stack limit = 0x0000000017d08ffb)
-> > > > > >   Call trace:
-> > > > > >    iommu_dma_map_sg+0x7c/0x2c8
-> > > > > >    __iommu_map_sg_attrs+0x70/0x84
-> > > > > >    get_pages+0x170/0x1e8
-> > > > > >    msm_gem_get_iova+0x8c/0x128
-> > > > > >    _msm_gem_kernel_new+0x6c/0xc8
-> > > > > >    msm_gem_kernel_new+0x4c/0x58
-> > > > > >    dsi_tx_buf_alloc_6g+0x4c/0x8c
-> > > > > >    msm_dsi_host_modeset_init+0xc8/0x108
-> > > > > >    msm_dsi_modeset_init+0x54/0x18c
-> > > > > >    _dpu_kms_drm_obj_init+0x430/0x474
-> > > > > >    dpu_kms_hw_init+0x5f8/0x6b4
-> > > > > >    msm_drm_bind+0x360/0x6c8
-> > > > > >    try_to_bring_up_master.part.7+0x28/0x70
-> > > > > >    component_master_add_with_match+0xe8/0x124
-> > > > > >    msm_pdev_probe+0x294/0x2b4
-> > > > > >    platform_drv_probe+0x58/0xa4
-> > > > > >    really_probe+0x150/0x294
-> > > > > >    driver_probe_device+0xac/0xe8
-> > > > > >    __device_attach_driver+0xa4/0xb4
-> > > > > >    bus_for_each_drv+0x98/0xc8
-> > > > > >    __device_attach+0xac/0x12c
-> > > > > >    device_initial_probe+0x24/0x30
-> > > > > >    bus_probe_device+0x38/0x98
-> > > > > >    deferred_probe_work_func+0x78/0xa4
-> > > > > >    process_one_work+0x24c/0x3dc
-> > > > > >    worker_thread+0x280/0x360
-> > > > > >    kthread+0x134/0x13c
-> > > > > >    ret_from_fork+0x10/0x18
-> > > > > >   Code: d2800004 91000725 6b17039f 5400048a (f9401f40)
-> > > > > >   ---[ end trace f22dda57f3648e2c ]---
-> > > > > >   Kernel panic - not syncing: Fatal exception
-> > > > > >   SMP: stopping secondary CPUs
-> > > > > >   Kernel Offset: disabled
-> > > > > >   CPU features: 0x0,22802a18
-> > > > > >   Memory Limit: none
-> > > > > >
-> > > > > > The problem is that when drm/msm does it's own iommu_attach_device(),
-> > > > > > now the domain returned by iommu_get_domain_for_dev() is drm/msm's
-> > > > > > domain, and it doesn't have domain->iova_cookie.
-> > > > > >
-> > > > > > We kind of avoided this problem prior to sdm845/dpu because the iommu
-> > > > > > was attached to the mdp node in dt, which is a child of the toplevel
-> > > > > > mdss node (which corresponds to the dev passed in dma_map_sg()).  But
-> > > > > > with sdm845, now the iommu is attached at the mdss level so we hit the
-> > > > > > iommu_dma_ops in dma_map_sg().
-> > > > > >
-> > > > > > But auto allocating/attaching a domain before the driver is probed was
-> > > > > > already a blocking problem for enabling per-context pagetables for the
-> > > > > > GPU.  This problem is also now solved with this patch.
-> > > > > >
-> > > > > > Fixes: 97890ba9289c dma-mapping: detect and configure IOMMU in of_dma_configure
-> > > > > > Tested-by: Douglas Anderson <dianders@chromium.org>
-> > > > > > Signed-off-by: Rob Clark <robdclark@gmail.com>
-> > > > > > ---
-> > > > > > This is an alternative/replacement for [1].  What it lacks in elegance
-> > > > > > it makes up for in practicality ;-)
-> > > > > >
-> > > > > > [1] https://patchwork.freedesktop.org/patch/264930/
-> > > > > >
-> > > > > >  drivers/of/device.c | 22 ++++++++++++++++++++++
-> > > > > >  1 file changed, 22 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > > > > > index 5957cd4fa262..15ffee00fb22 100644
-> > > > > > --- a/drivers/of/device.c
-> > > > > > +++ b/drivers/of/device.c
-> > > > > > @@ -72,6 +72,14 @@ int of_device_add(struct platform_device *ofdev)
-> > > > > >         return device_add(&ofdev->dev);
-> > > > > >  }
-> > > > > >
-> > > > > > +static const struct of_device_id iommu_blacklist[] = {
-> > > > > > +       { .compatible = "qcom,mdp4" },
-> > > > > > +       { .compatible = "qcom,mdss" },
-> > > > > > +       { .compatible = "qcom,sdm845-mdss" },
-> > > > > > +       { .compatible = "qcom,adreno" },
-> > > > > > +       {}
-> > > > > > +};
-> > > > >
-> > > > > Not completely clear to whether this is still needed or not, but this
-> > > > > really won't scale. Why can't the driver for these devices override
-> > > > > whatever has been setup by default?
-> > > > >
-> > > >
-> > > > fwiw, at the moment it is not needed, but it will become needed again
-> > > > to implement per-context pagetables (although I suppose for this we
-> > > > only need to blacklist qcom,adreno and not also the display nodes).
-> > >
-> > > So, another case I've come across, on the display side.. I'm working
-> > > on handling the case where bootloader enables display (and takes iommu
-> > > out of reset).. as soon as DMA domain gets attached we get iommu
-> > > faults, because bootloader has already configured display for scanout.
-> > > Unfortunately this all happens before actual driver is probed and has
-> > > a chance to intervene.
-> > >
-> > > It's rather unfortunate that we tried to be clever rather than just
-> > > making drivers call some function to opt-in to the hookup of dma iommu
-> > > ops :-(
-> >
-> > I think it still works for the 90% of cases and if 10% needs some
-> > explicit work in the drivers, that's better than requiring 100% of the
-> > drivers to do things manually.
-> >
-> > Adding Marek who had the same problem on Exynos.
->
-> I do wonder how many drivers need to iommu_map in their ->probe()?
-
-Any driver that allocates some internal buffers using DMA API.
-
-Also all V4L2 drivers would need it, because as soon as they call
-register_video_device() the userspace can open the video node and do
-buffer allocations, which in turn requires the DMA API to be all set.
-
-> I'm thinking moving the auto-hookup to after a successful probe(),
-> with some function a driver could call if they need mapping in probe,
-> might be a way to eventually get rid of the blacklist.  But I've no
-> idea how to find the subset of drivers that would be broken without a
-> dma_setup_iommu_stuff() call in their probe.
-
-Most of the drivers that call dma_alloc_() or dma_map_() from probe
-(or could have it called asynchronously before the probe returns).
-
-But first of all, I remember Marek already submitted some patches long
-ago that extended struct driver with some flag that means that the
-driver doesn't want the IOMMU to be attached before probe. Why
-wouldn't that work? Sounds like a perfect opt-out solution.
-
->
-> BR,
-> -R
->
-> > Best regards,
-> > Tomasz
-> >
-> > >
-> > > BR,
-> > > -R
-> > >
-> > > >
-> > > > The reason is that in the current state the core code creates the
-> > > > first domain before the driver has a chance to intervene and tell it
-> > > > not to.  And this results that driver ends up using a different
-> > > > context bank on the iommu than what the firmware expects.
-> > > >
-> > > > I guess the alternative is to put some property in DT.. but that
-> > > > doesn't really feel right.  I guess there aren't really many (or any?)
-> > > > other drivers that have this specific problem, so I don't really
-> > > > expect it to be a scaling problem.
-> > > >
-> > > > Yeah, it's a bit ugly, but I'll take a small ugly working hack, over
-> > > > elegant but non-working any day ;-)... but if someone has a better
-> > > > idea then I'm all ears.
-> > > >
-> > > > BR,
-> > > > -R
+SGkgUHJhbW9kLA0KDQo+IEZyb206IFNoYXduIEd1byBbbWFpbHRvOnNoYXduZ3VvQGtlcm5lbC5v
+cmddDQo+IFNlbnQ6IFdlZG5lc2RheSwgSnVuZSA1LCAyMDE5IDI6MzUgUE0NCj4gU3ViamVjdDog
+UmU6IFtQQVRDSCB2MyAxLzNdIGR0LWJpbmRpbmdzOiBhcm06IG54cDogQWRkIGRldmljZSB0cmVl
+IGJpbmRpbmcgZm9yDQo+IGxzMTA0NmEtZnJ3eSBib2FyZA0KPiANCj4gT24gTW9uLCBNYXkgMjcs
+IDIwMTkgYXQgMTI6MzI6MDlQTSArMDAwMCwgUHJhbW9kIEt1bWFyIHdyb3RlOg0KPiA+IEFkZCAi
+ZnNsLGxzMTA0NmEtZnJ3eSIgYmluZGluZ3MgZm9yIGxzMTA0NmFmcnd5IGJvYXJkIGJhc2VkIG9u
+IGxzMTA0NmEgU29DDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBWYWJoYXYgU2hhcm1hIDx2YWJo
+YXYuc2hhcm1hQG54cC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogUHJhbW9kIEt1bWFyIDxwcmFt
+b2Qua3VtYXJfMUBueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBr
+ZXJuZWwub3JnPg0KPiANCj4gSSBjYW5ub3QgYXBwbHkgcGF0Y2ggZnJvbSBtZXNzYWdlIHVzaW5n
+ICdDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBiYXNlNjQnLg0KPiANCg0KV2hpY2ggc2VydmVy
+IGFyZSB5b3UgdXNpbmc/IElzIGl0IGluIHRoZSB3aGl0ZWxpc3QgZm9yIHVzaW5nIHRoZSBzcGVj
+aWZpYyBTTVRQPw0KSSByZW1lbWJlciBETiBzZXJ2ZXIgZG9lcyBub3QgaGF2ZSB0aGlzIGlzc3Vl
+LiBNYXliZSB1c2luZyB0aGUgd3Jvbmcgb25lPw0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg0K
+PiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55
+YW1sIHwgMSArDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+DQo+ID4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlh
+bWwNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sDQo+
+ID4gaW5kZXggNDA3MTM4ZWJjMGQwLi4wOWZmMTk5OWNlOTYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wueWFtbA0KPiA+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlhbWwNCj4gPiBAQCAtMjQx
+LDYgKzI0MSw3IEBAIHByb3BlcnRpZXM6DQo+ID4gICAgICAgICAgICAtIGVudW06DQo+ID4gICAg
+ICAgICAgICAgICAgLSBmc2wsbHMxMDQ2YS1xZHMNCj4gPiAgICAgICAgICAgICAgICAtIGZzbCxs
+czEwNDZhLXJkYg0KPiA+ICsgICAgICAgICAgICAgIC0gZnNsLGxzMTA0NmEtZnJ3eQ0KPiANCj4g
+SXQgbWlnaHQgYmUgYmV0dGVyIHRvIGtlZXAgdGhlIGxpc3QgYWxwaGFiZXRpY2FsbHkgc29ydGVk
+Lg0KPiANCj4gU2hhd24NCj4gDQo+ID4gICAgICAgICAgICAtIGNvbnN0OiBmc2wsbHMxMDQ2YQ0K
+PiA+DQo+ID4gICAgICAgIC0gZGVzY3JpcHRpb246IExTMTA4OEEgYmFzZWQgQm9hcmRzDQo+ID4g
+LS0NCj4gPiAyLjE3LjENCj4gPg0K
