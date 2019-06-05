@@ -1,225 +1,42 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH v7 0/6] Introduced new Cadence USBSS DRD Driver.
-Date: Wed, 5 Jun 2019 11:03:44 +0100
-Message-ID: <1559729030-16390-1-git-send-email-pawell@cadence.com>
+From: Talel Shenhar <talel@amazon.com>
+Subject: [PATCH v2 0/2] Amazon's Annapurna Labs Fabric Interrupt Controller
+Date: Wed, 5 Jun 2019 13:51:59 +0300
+Message-ID: <1559731921-14023-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
+To: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com, Talel Shenhar <talel@amazon.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces new Cadence USBSS DRD driver to Linux kernel.
+This series introduces support for Amazon's Annapurna Labs Fabric Interrupt
+Controller.
 
-The Cadence USBSS DRD Driver is a highly configurable IP Core which
-can be instantiated as Dual-Role Device (DRD), Peripheral Only and
-Host Only (XHCI)configurations.
-
-The current driver has been validated with FPGA burned. We have support
-for PCIe bus, which is used on FPGA prototyping.
-
-The host side of USBSS-DRD controller is compliance with XHCI
-specification, so it works with standard XHCI Linux driver.
-
-Change since v6:
-- Fixed issue with L1 support. Controller has issue with hardware 
-  resuming from L1 state. It was fixed in software. 
-- Fixed issues related with Transfer Ring Size equal 2. 
-- Fixed issue with removing cdns3.ko module. Issue appeared on the latest 
-  version of kernel.
-- Added separate interrupt resources for host, device and otg. It was 
-  added mainly for compatibility with TI J721e platforms. 
-- Added enabling ISO OUT just before arming endpoint. It's recommended by 
-  controller specification.
-- Added support for 0x0002450d controller version. This version allows to set 
-  DMULT mode per endpoint. It also fixes WA1 issue.
-- Added support for separate interrupt line for Device and OTG/DRD.
-- Removed drd_update_mode from drd_init, 'desired_dr_mode' is not yet correctly
-  set based on enabled drivers and dr_mode in DT.
-- Added phy power on/off.
-- Added setting dma and coherent mask to 32-bits, because controller can do
-  only 32-bit access.
-- Added Idle state for Type-C for platform TI J721e as suggested by Roger. 
-- Improved the flow according with Figure 24 from Software OTG Control user
-  guide as sugested by Roger.
-
-Change since v5:
-- Fixed controller issue with handling SETUP that has occurred on 0x0002450C
-  controller version. In some case EP_STS_SETUP is reported but SETUP
-  packet has not been copied yet to system memory. This bug caused that
-  driver started handling the previous SETUP packet.
-- Added handling ZLP for EP0.
-- Removed unused cdns3_gadget_ep0_giveback function.
-- Fixed issue with disabling endpoint. Added waiting for clearing EP_STS_DBUSY
-  bit between disabling endpoint and calling EP_CMD_EPRST command.
-  EP_CMD_EPRST command can be called only when DMA is stopped.
-- Fixed issue: EP_CFG_TDL_CHK is currently supported only for OUT direction,
-  It was enabled for both IN/OUT direction.
-- Improved resetting of interrupt in cdns3_device_irq_handler.
-- Fixed issue with ISOC IN transfer in cdns3_ep_run_transfer function. In some
-  cases driver set incorrect Cycle Bit in TRBs.
-- Fixed issue in function cdns3_ep_onchip_buffer_reserve. Driver assigned 
-  incorrect value to priv_dev->out_mem_is_allocated field.
-
-Change since v5:
-- fixed compilation error.
-
-Changes since v4:
-- fixed issue: with choosing incorrect dr_mode in cdns3_core_init_role.
-- speed up DRD timings by adding an appropriate entry to OTGSIMULATE
-  register in cdns3_drd_init function.
-- added detecting transition to DEV_IDLE/H_IDLE state instead using
-  usleep_range in cdns3_drd_switch_gadget and cdns3_drd_switch_host functions.
-- fixed issue with setting incorrect burst and mult field during endpoint
-  configuration. 
-- fixed issue in WA1 algorithm. The previous one could not work correct with
-  slow CPU or in case the access to AXI bus would be blocked for some time.
-- fixed issue with compilation driver occurred when driver was configured
-  as build in. This fix required to move cdns3_handshake function from
-  gadget.c to core.c file.
-- added missing pci_disable_device in cdns3-pci-wrap.c file.
-- fixed issue with pm_runtime_get_sync in cdns3_role_switch function.
-- fixed incorrect condition in cdns3_decode_usb_irq function.
-- removed cdns3_data_flush function - is no longer used.
-- fixed issue in cdns3_descmissing_packet function - fixed incorrect condition
-- added missed callback informing upper layer about reset event.
-- added resetting endpoint in cdns3_gadget_ep_disable function.
-- fixed issue: added statement removing request from descmiss_req_list in
-  cdns3_gadget_ep_disable function.
-- fixed issue in cdns3_ep_onchip_buffer_reserve.
-- fixed issue with incorrect calculation the number of required on-chip buffer 
-  for OUT endpoints cdns3_ep_onchip_buffer_reserve.
-- fixed issue in __cdns3_gadget_init function: pm_runtime_get_sync was in
-  incorrect place in.
-- removed some typos and improved comments as suggested by reviewers.
-- made some other minor changes as suggested by revivers.
-
-Changes since v3:
-- updated dt-binding as suggested by Rob Herring
-- updated patch 002, 003 and 004 according with patch:
-  https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/commit/
-  ?h=next&id=7790b3556fccc555ae422f1576e97bf34c8ab8b6 posted by Felipe Balbi.
-- fixed issues related to isochronous transfers.
-- improved algorithm calculating number of on-chip buffers required
-  by endpoints.
-- fixed incorrect macro EP_CFG_MULT in gadget.h file.
-- fixed potential issue with incorrect order of instruction - added wmb().
-- made some minor changes suggested by reviewers.
-
-*Changes since v2:
-- made some text correction in Kconfig file as suggested by Randy Dunlap.
-- simplified Makefile as suggested by Peter Chan.
-- removed phy-names from dt-binding as suggested Rob Herring.
-- changed cdns3-usb.txt to cdns3-usb3.txt as suggested by Rob Herring.
-- added checking error code in some function in drd.c file 
-  as suggested by Peter Chan.
-- added reg-names to dt-binding documentation as suggested by Chunfeng Yun.
-- replaced platform_get_resource with platform_get_resource_byname.
-- made other changes suggested by Chunfeng Yun.
-- fixed bug in cdns3_get_id. Now function return id instead 1.
-- added trace_cdns3_log trace event.
-- simplify cdns3_disable_write function.
-- create separate patch for work around related with blocking endpoint 
-  issue.
-- Fixed issue related with stale data address in TRB. 
-  Issue: At some situations, the controller may get stale data address
-  in TRB at below sequences:
-  1. Controller read TRB includes data address.
-  2. Software updates TRBs includes data address and Cycle bit.
-  3. Controller read TRB which includes Cycle bit.
-  4. DMA run with stale data address.
-- Fixed issue without transfer. In some cases not all interrupts
-  disabled in Hard IRQ was enabled in Soft Irq.
-- Modified LFPS minimal U1 Exit time for controller revision 0x00024505.
-- Fixed issue - in some case selected endpoint was unexpectedly changed.
-- Fixed issue - after clearing halted endpoint transfer was not started.
-- Fixed issue - in some case driver send ACK instead STALL in status phase.
-- Fixed issues related to dequeue request.
-- Fixed incorrect operator in cdns3_ep_run_transfer function.
+The Amazon's Annapurna Labs FIC (Fabric Interrupt Controller) has 32
+inputs/sources. This FIC may be cascaded into another FIC or connected
+directly to the main CPU Interrupt Controller (e.g. GIC).
 
 Changes since v1:
- - Removed not implemented Suspend/Resume functions.
- - Fixed some issues in debugging related functions.
- - Added trace_cdns3_request_handled marker.
- - Added support for Isochronous transfer. 
- - Added some additional descriptions.
- - Fixed compilation error in cdns3_gadget_ep_disable.
- - Added detection of device controller version at runtime.
- - Upgraded dt-binding documentation.
- - Deleted ENOSYS from phy initialization section. It should be also removed
-   from generic PHY driver.
- - added ep0_stage flag used during enumeration process.
- - Fixed issue with TEST MODE.
- - Added one common function for finish control transfer.
- - Separated some decoding function from dwc3 driver to common library file,
-   and removed equivalents function from debug.h file as suggested  by Felipe.
- - replaced function name cdns3_gadget_unconfig with cdns3_hw_reset_eps_config.
- - Improved algorithm fixing hardware issue related to blocking endpoints.
-   This issue is related to on-chip shared FIFO buffers for OUT packets. 
-   Problem was reported by Peter Chan.
- - Changed organization of endpoint array in cdns3_device object.  
-      - added ep0 to common eps array
-      - removed cdns3_free_trb_pool and cdns3_ep_addr_to_bit_pos macros.
-      - removed ep0_trb_dma, ep0_trb fields from cdns3_device.
- - Removed ep0_request and ep_nums fields from cdns3_device.
- - Other minor changes according with Felipe suggestion.
+=================
+- removing unused exported APIs
+- updating cover letter and commit message accordingly
 
----
 
-Pawel Laszczak (6):
-  dt-bindings: add binding for USBSS-DRD controller.
-  usb:common Separated decoding functions from dwc3 driver.
-  usb:common Patch simplify usb_decode_set_clear_feature function.
-  usb:common Simplify usb_decode_get_set_descriptor function.
-  usb:cdns3 Add Cadence USB3 DRD Driver
-  usb:cdns3 Fix for stuck packets in on-chip OUT buffer.
 
- .../devicetree/bindings/usb/cdns-usb3.txt     |   30 +
- drivers/usb/Kconfig                           |    2 +
- drivers/usb/Makefile                          |    2 +
- drivers/usb/cdns3/Kconfig                     |   44 +
- drivers/usb/cdns3/Makefile                    |   14 +
- drivers/usb/cdns3/cdns3-pci-wrap.c            |  157 +
- drivers/usb/cdns3/core.c                      |  529 ++++
- drivers/usb/cdns3/core.h                      |  121 +
- drivers/usb/cdns3/debug.h                     |  173 ++
- drivers/usb/cdns3/debugfs.c                   |  173 ++
- drivers/usb/cdns3/drd.c                       |  379 +++
- drivers/usb/cdns3/drd.h                       |  166 ++
- drivers/usb/cdns3/ep0.c                       |  915 ++++++
- drivers/usb/cdns3/gadget-export.h             |   28 +
- drivers/usb/cdns3/gadget.c                    | 2616 +++++++++++++++++
- drivers/usb/cdns3/gadget.h                    | 1326 +++++++++
- drivers/usb/cdns3/host-export.h               |   28 +
- drivers/usb/cdns3/host.c                      |   76 +
- drivers/usb/cdns3/trace.c                     |   23 +
- drivers/usb/cdns3/trace.h                     |  447 +++
- drivers/usb/common/Makefile                   |    2 +-
- drivers/usb/common/debug.c                    |  273 ++
- drivers/usb/dwc3/debug.h                      |  252 --
- drivers/usb/dwc3/trace.h                      |    2 +-
- include/linux/usb/ch9.h                       |   25 +
- 25 files changed, 7549 insertions(+), 254 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
- create mode 100644 drivers/usb/cdns3/Kconfig
- create mode 100644 drivers/usb/cdns3/Makefile
- create mode 100644 drivers/usb/cdns3/cdns3-pci-wrap.c
- create mode 100644 drivers/usb/cdns3/core.c
- create mode 100644 drivers/usb/cdns3/core.h
- create mode 100644 drivers/usb/cdns3/debug.h
- create mode 100644 drivers/usb/cdns3/debugfs.c
- create mode 100644 drivers/usb/cdns3/drd.c
- create mode 100644 drivers/usb/cdns3/drd.h
- create mode 100644 drivers/usb/cdns3/ep0.c
- create mode 100644 drivers/usb/cdns3/gadget-export.h
- create mode 100644 drivers/usb/cdns3/gadget.c
- create mode 100644 drivers/usb/cdns3/gadget.h
- create mode 100644 drivers/usb/cdns3/host-export.h
- create mode 100644 drivers/usb/cdns3/host.c
- create mode 100644 drivers/usb/cdns3/trace.c
- create mode 100644 drivers/usb/cdns3/trace.h
- create mode 100644 drivers/usb/common/debug.c
+Talel Shenhar (2):
+  dt-bindings: interrupt-controller: Amazon's Annapurna Labs FIC
+  irqchip: al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt
+    Controller Driver
+
+ .../interrupt-controller/amazon,al-fic.txt         |  22 ++
+ MAINTAINERS                                        |   6 +
+ drivers/irqchip/Kconfig                            |  11 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-al-fic.c                       | 289 +++++++++++++++++++++
+ 5 files changed, 329 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+ create mode 100644 drivers/irqchip/irq-al-fic.c
 
 -- 
-2.17.1
+2.7.4
