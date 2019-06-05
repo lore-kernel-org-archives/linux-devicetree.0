@@ -1,149 +1,48 @@
-From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v3, 06/27] drm/mediatek: add mutex mod into ddp private data
-Date: Wed, 5 Jun 2019 19:42:45 +0800
-Message-ID: <1559734986-7379-7-git-send-email-yongqiang.niu@mediatek.com>
-References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: allwinner: a64: Add lradc node
+Date: Wed, 5 Jun 2019 13:52:03 +0200
+Message-ID: <20190605115203.q6jhjygdh4pnoc3o@flea>
+References: <20190604172154.25472-1-luca@z3ntu.xyz>
+ <20190604172154.25472-2-luca@z3ntu.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hcblokn3om2o3hbe"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20190604172154.25472-2-luca@z3ntu.xyz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Yongqiang Niu <yongqiang.niu@mediatek.com>
+To: Luca Weiss <luca@z3ntu.xyz>
+Cc: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "open list:SUN4I LOW RES ADC ATTACHED TABLET KEYS DRIVER" <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, ~martijnbraam/pmos-upstream@lists.sr.ht
 List-Id: devicetree@vger.kernel.org
 
-From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-except mutex mod, mutex mod reg,mutex sof reg,
-and mutex sof id will be ddp private data
+--hcblokn3om2o3hbe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 53 +++++++++++++++++++++++-----------
- 1 file changed, 36 insertions(+), 17 deletions(-)
+On Tue, Jun 04, 2019 at 07:21:54PM +0200, Luca Weiss wrote:
+> Add a node describing the KEYADC on the A64.
+>
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 579ce28..ae94d44 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -41,12 +41,12 @@
- #define DISP_REG_CONFIG_DSI_SEL			0x050
- #define DISP_REG_CONFIG_DPI_SEL			0x064
- 
--#define DISP_REG_MUTEX_EN(n)	(0x20 + 0x20 * (n))
--#define DISP_REG_MUTEX(n)	(0x24 + 0x20 * (n))
--#define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
--#define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
--#define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
--#define DISP_REG_MUTEX_MOD2(n)	(0x34 + 0x20 * (n))
-+#define DISP_REG_MUTEX_EN(n)			(0x20 + 0x20 * (n))
-+#define DISP_REG_MUTEX(n)			(0x24 + 0x20 * (n))
-+#define DISP_REG_MUTEX_RST(n)			(0x28 + 0x20 * (n))
-+#define DISP_REG_MUTEX_MOD(n)			(0x2c + 0x20 * (n))
-+#define DISP_REG_MUTEX_SOF(n)			(0x30 + 0x20 * (n))
-+#define DISP_REG_MUTEX_MOD2(n)			(0x34 + 0x20 * (n))
- 
- #define INT_MUTEX				BIT(1)
- 
-@@ -147,12 +147,16 @@ struct mtk_disp_mutex {
- 	bool claimed;
- };
- 
-+struct mtk_ddp_data {
-+	const unsigned int *mutex_mod;
-+};
-+
- struct mtk_ddp {
- 	struct device			*dev;
- 	struct clk			*clk;
- 	void __iomem			*regs;
- 	struct mtk_disp_mutex		mutex[10];
--	const unsigned int		*mutex_mod;
-+	const struct mtk_ddp_data	*data;
- };
- 
- static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
-@@ -202,6 +206,18 @@ struct mtk_ddp {
- 	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
- };
- 
-+static const struct mtk_ddp_data mt2701_ddp_driver_data = {
-+	.mutex_mod = mt2701_mutex_mod,
-+};
-+
-+static const struct mtk_ddp_data mt2712_ddp_driver_data = {
-+	.mutex_mod = mt2712_mutex_mod,
-+};
-+
-+static const struct mtk_ddp_data mt8173_ddp_driver_data = {
-+	.mutex_mod = mt8173_mutex_mod,
-+};
-+
- static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
- 				    enum mtk_ddp_comp_id next,
- 				    unsigned int *addr)
-@@ -464,15 +480,15 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
- 		reg = MUTEX_SOF_DPI1;
- 		break;
- 	default:
--		if (ddp->mutex_mod[id] < 32) {
-+		if (ddp->data->mutex_mod[id] < 32) {
- 			offset = DISP_REG_MUTEX_MOD(mutex->id);
- 			reg = readl_relaxed(ddp->regs + offset);
--			reg |= 1 << ddp->mutex_mod[id];
-+			reg |= 1 << ddp->data->mutex_mod[id];
- 			writel_relaxed(reg, ddp->regs + offset);
- 		} else {
- 			offset = DISP_REG_MUTEX_MOD2(mutex->id);
- 			reg = readl_relaxed(ddp->regs + offset);
--			reg |= 1 << (ddp->mutex_mod[id] - 32);
-+			reg |= 1 << (ddp->data->mutex_mod[id] - 32);
- 			writel_relaxed(reg, ddp->regs + offset);
- 		}
- 		return;
-@@ -502,15 +518,15 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
- 			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
- 		break;
- 	default:
--		if (ddp->mutex_mod[id] < 32) {
-+		if (ddp->data->mutex_mod[id] < 32) {
- 			offset = DISP_REG_MUTEX_MOD(mutex->id);
- 			reg = readl_relaxed(ddp->regs + offset);
--			reg &= ~(1 << ddp->mutex_mod[id]);
-+			reg &= ~(1 << ddp->data->mutex_mod[id]);
- 			writel_relaxed(reg, ddp->regs + offset);
- 		} else {
- 			offset = DISP_REG_MUTEX_MOD2(mutex->id);
- 			reg = readl_relaxed(ddp->regs + offset);
--			reg &= ~(1 << (ddp->mutex_mod[id] - 32));
-+			reg &= ~(1 << (ddp->data->mutex_mod[id] - 32));
- 			writel_relaxed(reg, ddp->regs + offset);
- 		}
- 		break;
-@@ -585,7 +601,7 @@ static int mtk_ddp_probe(struct platform_device *pdev)
- 		return PTR_ERR(ddp->regs);
- 	}
- 
--	ddp->mutex_mod = of_device_get_match_data(dev);
-+	ddp->data = of_device_get_match_data(dev);
- 
- 	platform_set_drvdata(pdev, ddp);
- 
-@@ -598,9 +614,12 @@ static int mtk_ddp_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id ddp_driver_dt_match[] = {
--	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
--	{ .compatible = "mediatek,mt2712-disp-mutex", .data = mt2712_mutex_mod},
--	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
-+	{ .compatible = "mediatek,mt2701-disp-mutex",
-+	  .data = &mt2701_ddp_driver_data},
-+	{ .compatible = "mediatek,mt2712-disp-mutex",
-+	  .data = &mt2712_ddp_driver_data},
-+	{ .compatible = "mediatek,mt8173-disp-mutex",
-+	  .data = &mt8173_ddp_driver_data},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
--- 
-1.8.1.1.dirty
+Applied both, thanks
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--hcblokn3om2o3hbe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPes4wAKCRDj7w1vZxhR
+xUBYAP99OcI6+26CnXPVcHAESO3xSvwOMwlcDUPBniupbrvjJwD/YxeoVWBL+sDc
+HZ5G/ReZtD85o3gkvxJTkvCG1/M0Nwg=
+=Ekf6
+-----END PGP SIGNATURE-----
+
+--hcblokn3om2o3hbe--
