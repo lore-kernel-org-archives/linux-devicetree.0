@@ -1,68 +1,50 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [RFC PATCH 1/3] arm64: dts: ti: am6-wakeup: Add gpio node
-Date: Wed, 5 Jun 2019 12:01:35 +0530
-Message-ID: <bac5737a-3924-b59f-1d90-a2a9b3a390f1@ti.com>
-References: <20190605060846.25314-1-j-keerthy@ti.com>
- <20190605060846.25314-2-j-keerthy@ti.com>
- <e6ec3894-4e3d-e721-c1bc-791263b2d309@ti.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: nxp: Add device tree binding
+ for ls1046a-frwy board
+Date: Wed, 5 Jun 2019 14:34:50 +0800
+Message-ID: <20190605063449.GG29853@dragon>
+References: <20190527123404.30858-1-pramod.kumar_1@nxp.com>
+ <20190527123404.30858-2-pramod.kumar_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e6ec3894-4e3d-e721-c1bc-791263b2d309@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190527123404.30858-2-pramod.kumar_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, t-kristo@ti.com, nm@ti.com, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pramod Kumar <pramod.kumar_1@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 27, 2019 at 12:32:09PM +0000, Pramod Kumar wrote:
+> Add "fsl,ls1046a-frwy" bindings for ls1046afrwy board based on ls1046a SoC
+> 
+> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
+I cannot apply patch from message using 'Content-Transfer-Encoding: base64'.
 
-On 05/06/19 11:46 AM, Lokesh Vutla wrote:
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> 
-> On 05/06/19 11:38 AM, Keerthy wrote:
->> Add gpio0 node under wakeup domain. This has 56 gpios
->> and all are capable of generating banked interrupts.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 15 +++++++++++++++
->>   1 file changed, 15 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
->> index f1ca171abdf8..8c6c99e7c6ed 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
->> +++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
->> @@ -74,4 +74,19 @@
->>   		ti,sci-dst-id = <56>;
->>   		ti,sci-rm-range-girq = <0x4>;
->>   	};
->> +
->> +	wkup_gpio0: wkup_gpio0@42110000 {
->> +		compatible = "ti,k2g-gpio", "ti,keystone-gpio";
-> 
-> This is not k2g. Can you either create a am6 specific compatible or just use
-> ti,keystone-gpio.
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index 407138ebc0d0..09ff1999ce96 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -241,6 +241,7 @@ properties:
+>            - enum:
+>                - fsl,ls1046a-qds
+>                - fsl,ls1046a-rdb
+> +              - fsl,ls1046a-frwy
 
-It seems practice is now to have separate compatible. I will add am6 
-specific compatible.
+It might be better to keep the list alphabetically sorted.
 
+Shawn
+
+>            - const: fsl,ls1046a
+>  
+>        - description: LS1088A based Boards
+> -- 
+> 2.17.1
 > 
-> Thanks and regards,
-> Lokesh
-> 
->> +		reg = <0x42110000 0x100>;
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +		interrupt-parent = <&intr_wkup_gpio>;
->> +		interrupts = <59 128>, <59 129>, <59 130>, <59 131>;
->> +		interrupt-controller;
->> +		#interrupt-cells = <2>;
->> +		ti,ngpio = <56>;
->> +		ti,davinci-gpio-unbanked = <0>;
->> +		clocks = <&k3_clks 59 0>;
->> +		clock-names = "gpio";
->> +	};
->>   };
->>
