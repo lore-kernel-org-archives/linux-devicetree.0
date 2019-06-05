@@ -1,78 +1,54 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v8 01/13] clk: samsung: add needed IDs for DMC clocks in
- Exynos5420
-Date: Wed,  5 Jun 2019 18:53:58 +0200
-Message-ID: <20190605165410.14606-2-l.luba@partner.samsung.com>
-References: <20190605165410.14606-1-l.luba@partner.samsung.com>
-        <CGME20190605165427eucas1p27610c38c96313dd80ab445472735a242@eucas1p2.samsung.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 0/4] Add MCU SRAM nodes for TI K3 SoCs
+Date: Wed, 5 Jun 2019 12:01:21 -0500
+Message-ID: <37a5bf73-2f93-8474-bca1-2e9fae4d6668@ti.com>
+References: <20190605163434.23173-1-s-anna@ti.com>
+ <acf9cf30-bcd6-76a0-5498-c334c7c43213@ti.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190605165410.14606-1-l.luba@partner.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com, Lukasz Luba <l.luba@partner.samsung.com>
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <acf9cf30-bcd6-76a0-5498-c334c7c43213@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Andrew F. Davis" <afd@ti.com>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Define new IDs for clocks used by Dynamic Memory Controller in
-Exynos5422 SoC.
-
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
-index 355f469943f1..02d5ac469a3d 100644
---- a/include/dt-bindings/clock/exynos5420.h
-+++ b/include/dt-bindings/clock/exynos5420.h
-@@ -60,6 +60,7 @@
- #define CLK_MAU_EPLL		159
- #define CLK_SCLK_HSIC_12M	160
- #define CLK_SCLK_MPHY_IXTAL24	161
-+#define CLK_SCLK_BPLL		162
- 
- /* gate clocks */
- #define CLK_UART0		257
-@@ -195,6 +196,16 @@
- #define CLK_ACLK432_CAM		518
- #define CLK_ACLK_FL1550_CAM	519
- #define CLK_ACLK550_CAM		520
-+#define CLK_CLKM_PHY0		521
-+#define CLK_CLKM_PHY1		522
-+#define CLK_ACLK_PPMU_DREX0_0	523
-+#define CLK_ACLK_PPMU_DREX0_1	524
-+#define CLK_ACLK_PPMU_DREX1_0	525
-+#define CLK_ACLK_PPMU_DREX1_1	526
-+#define CLK_PCLK_PPMU_DREX0_0	527
-+#define CLK_PCLK_PPMU_DREX0_1	528
-+#define CLK_PCLK_PPMU_DREX1_0	529
-+#define CLK_PCLK_PPMU_DREX1_1	530
- 
- /* mux clocks */
- #define CLK_MOUT_HDMI		640
-@@ -217,6 +228,8 @@
- #define CLK_MOUT_EPLL		657
- #define CLK_MOUT_MAU_EPLL	658
- #define CLK_MOUT_USER_MAU_EPLL	659
-+#define CLK_MOUT_SCLK_SPLL	660
-+#define CLK_MOUT_MX_MSPLL_CCORE_PHY	661
- 
- /* divider clocks */
- #define CLK_DOUT_PIXEL		768
-@@ -248,8 +261,11 @@
- #define CLK_DOUT_CCLK_DREX0	794
- #define CLK_DOUT_CLK2X_PHY0	795
- #define CLK_DOUT_PCLK_CORE_MEM	796
-+#define CLK_FF_DOUT_SPLL2	797
-+#define CLK_DOUT_PCLK_DREX0	798
-+#define CLK_DOUT_PCLK_DREX1	799
- 
- /* must be greater than maximal clock id */
--#define CLK_NR_CLKS		797
-+#define CLK_NR_CLKS		800
- 
- #endif /* _DT_BINDINGS_CLOCK_EXYNOS_5420_H */
--- 
-2.17.1
+T24gNi81LzE5IDExOjUzIEFNLCBBbmRyZXcgRi4gRGF2aXMgd3JvdGU6Cj4gT24gNi81LzE5IDEy
+OjM0IFBNLCBTdW1hbiBBbm5hIHdyb3RlOgo+PiBIaSBUZXJvLAo+Pgo+PiBUaGUgZm9sbG93aW5n
+IHNlcmllcyBhZGRzIHRoZSBEVCBub2RlcyBmb3IgdGhlIE1DVSBTUkFNIHByZXNlbnQgd2l0aGlu
+Cj4+IHRoZSBNQ1UgZG9tYWluIGZvciBib3RoIEFNNjV4IGFuZCBKNzIxRSBTb0NzLiBUaGUgZmly
+c3QgMiBwYXRjaGVzIGVuYWJsZQo+PiB0aGUgTUNVIFNSQU0gbm9kZSB0byBiZSBwcm9iZWQgcHJv
+cGVybHkgb24gQU02NXggU29DcywgYW5kIHRoZSB0aGlyZAo+PiBwYXRjaCB0aGUgZXF1aXZhbGVu
+dCBmb3IgSjcyMUUgU29Dcy4gVGhlIHRoaXJkIHBhdGNoIGRlcGVuZHMgb24gdGhlCj4+IGJhc2Ug
+SjcyMUUgc3VwcG9ydCBwYXRjaCBzZXJpZXMgZnJvbSBOaXNoYW50aCBbMV0uCj4+Cj4+IFRoZSBs
+YXN0IHBhdGNoIGlzIG5vdCByZWxhdGVkIHRvIE1DVSBTUkFNLCBidXQgYWRkcyB0aGUgcmFuZ2Vz
+IGZvciB0aGUKPj4gUjVGIGNsdXN0ZXIgdGhhdCBpcyBhbHNvIHByZXNlbnQgaW4gdGhlIE1DVSBk
+b21haW4gaW4gcHJlcGFyYXRpb24gZm9yCj4+IHRoZSBSNUYgbm9kZXMuCj4+Cj4gCj4gV2h5IG5v
+dCBoYXZlIHRoaXMgbGFzdCBwYXRjaCBhcyBwYXJ0IG9mIHRoZSBzZXJpZXMgYWRkaW5nIHRoZSBS
+NUYgbm9kZXM/CgpUaGUgcGF0Y2ggY2FuIGJlIGFwcGxpZWQgaW5kZXBlbmRlbnRseSBhcyBpcywg
+bm8gcmVhc29uIHRvIHdhaXQgdW50aWwgSQpwb3N0IHRob3NlLgoKcmVnYXJkcwpTdW1hbgoKPiAK
+PiBBbmRyZXcKPiAKPj4gcmVnYXJkcwo+PiBTdW1hbgo+Pgo+PiBbMV0KPj4gaHR0cHM6Ly9wYXRj
+aHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LWFybS1rZXJuZWwvbGlzdC8/c2VyaWVzPTEy
+MTE4OQo+Pgo+PiBTdW1hbiBBbm5hICg0KToKPj4gwqDCoCBhcm02NDogZHRzOiB0aTogazMtYW02
+NTogQWRkIE1DVSBTUkFNIHJhbmdlcyBpbiBpbnRlcmNvbm5lY3Qgbm9kZXMKPj4gwqDCoCBhcm02
+NDogZHRzOiB0aTogazMtYW02NS1tY3U6IEFkZCB0aGUgTUNVIFJBTSBub2RlCj4+IMKgwqAgYXJt
+NjQ6IGR0czogdGk6IGszLWo3MjFlOiBBZGQgdGhlIE1DVSBTUkFNIG5vZGUKPj4gwqDCoCBhcm02
+NDogZHRzOiB0aTogazMtYW02NTogQWRkIFI1RiByYW5nZXMgaW4gaW50ZXJjb25uZWN0IG5vZGVz
+Cj4+Cj4+IMKgIGFyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMtYW02NS1tY3UuZHRzacKgwqDCoMKg
+wqDCoMKgwqAgfCA4ICsrKysrKysrCj4+IMKgIGFyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMtYW02
+NS5kdHNpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgNiArKysrKysKPj4gwqAgYXJjaC9hcm02
+NC9ib290L2R0cy90aS9rMy1qNzIxZS1tY3Utd2FrZXVwLmR0c2kgfCA4ICsrKysrKysrCj4+IMKg
+IDMgZmlsZXMgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKQo+PgoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
+aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
