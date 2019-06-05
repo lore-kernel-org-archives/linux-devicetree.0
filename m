@@ -1,55 +1,39 @@
 From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH 0/6] Add minimal boot support for IPQ6018
-Date: Wed,  5 Jun 2019 22:58:52 +0530
-Message-ID: <1559755738-28643-1-git-send-email-sricharan@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 2/6] dt-bindings: qcom: Add ipq6018 bindings
+Date: Wed,  5 Jun 2019 22:58:54 +0530
+Message-ID: <1559755738-28643-3-git-send-email-sricharan@codeaurora.org>
+References: <1559755738-28643-1-git-send-email-sricharan@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559755738-28643-1-git-send-email-sricharan@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, sboyd@kernel.org, linus.walleij@linaro.org, agross@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIElQUTYwMTggaXMgUXVhbGNvbW3igJlzIDgwMi4xMWF4IFNvQyBmb3IgUm91dGVycywKR2F0
-ZXdheXMgYW5kIEFjY2VzcyBQb2ludHMuCgpUaGlzIHNlcmllcyBhZGRzIG1pbmltYWwgYm9hcmQg
-Ym9vdCBzdXBwb3J0IGZvciBpcHE2MDE4LWNwMDEKYm9hcmQuCgpTcmljaGFyYW4gUiAoNik6CiAg
-cGluY3RybDogcWNvbTogQWRkIGlwcTYwMTggcGluY3RybCBkcml2ZXIKICBkdC1iaW5kaW5nczog
-cWNvbTogQWRkIGlwcTYwMTggYmluZGluZ3MKICBjbGs6IHFjb206IEFkZCBEVCBiaW5kaW5ncyBm
-b3IgaXBxNjAxOCBnY2MgY2xvY2sgY29udHJvbGxlcgogIGNsazogcWNvbTogQWRkIGlwcTYwMTgg
-R2xvYmFsIENsb2NrIENvbnRyb2xsZXIgc3VwcG9ydAogIGFybTY0OiBkdHM6IEFkZCBpcHE2MDE4
-IFNvQyBhbmQgQ1AwMSBib2FyZCBzdXBwb3J0CiAgYXJtNjQ6IGRlZmNvbmZpZzogRW5hYmxlIHFj
-b20gaXBxNjAxOCBjbG9jayBhbmQgcGluY3RybAoKIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9hcm0vcWNvbS55YW1sICAgIHwgICAgMiArCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy9jbG9jay9xY29tLGdjYy50eHQgICAgICAgICB8ICAgIDEgKwogYXJjaC9hcm02NC9ib290L2R0
-cy9xY29tL01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGFyY2gvYXJtNjQvYm9v
-dC9kdHMvcWNvbS9pcHE2MDE4LWNwMDEtYzEuZHRzICAgICAgIHwgICAzNSArCiBhcmNoL2FybTY0
-L2Jvb3QvZHRzL3Fjb20vaXBxNjAxOC5kdHNpICAgICAgICAgICAgICB8ICAyMzEgKwogYXJjaC9h
-cm02NC9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgfCAgICAyICsKIGRy
-aXZlcnMvY2xrL3Fjb20vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgOSAr
-CiBkcml2ZXJzL2Nsay9xY29tL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
-IDEgKwogZHJpdmVycy9jbGsvcWNvbS9nY2MtaXBxNjAxOC5jICAgICAgICAgICAgICAgICAgICAg
-fCA1MjY3ICsrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL3BpbmN0cmwvcWNvbS9LY29uZmln
-ICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTAgKwogZHJpdmVycy9waW5jdHJsL3Fjb20vTWFr
-ZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGRyaXZlcnMvcGluY3RybC9xY29t
-L3BpbmN0cmwtaXBxNjAxOC5jICAgICAgICAgICAgIHwgMTE4MyArKysrKwogaW5jbHVkZS9kdC1i
-aW5kaW5ncy9jbG9jay9xY29tLGdjYy1pcHE2MDE4LmggICAgICAgfCAgNDA1ICsrCiAxMyBmaWxl
-cyBjaGFuZ2VkLCA3MTQ4IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2Fy
-bTY0L2Jvb3QvZHRzL3Fjb20vaXBxNjAxOC1jcDAxLWMxLmR0cwogY3JlYXRlIG1vZGUgMTAwNjQ0
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9pcHE2MDE4LmR0c2kKIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2Nsay9xY29tL2djYy1pcHE2MDE4LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL3BpbmN0cmwvcWNvbS9waW5jdHJsLWlwcTYwMTguYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGlu
-Y2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svcWNvbSxnY2MtaXBxNjAxOC5oCgotLSAKUVVBTENPTU0g
-SU5ESUEsIG9uIGJlaGFsZiBvZiBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBh
-IG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwgaG9zdGVkIGJ5IFRoZSBMaW51eCBGb3VuZGF0
-aW9uCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Signed-off-by: speriaka <speriaka@codeaurora.org>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index f6316ab..7b19028 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -36,6 +36,7 @@ description: |
+   	mdm9615
+   	ipq8074
+   	sdm845
++	ipq6018
+ 
+   The 'board' element must be one of the following strings:
+ 
+@@ -45,6 +46,7 @@ description: |
+   	mtp
+   	sbc
+   	hk01
++	cp01-c1
+ 
+   The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
+   where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
