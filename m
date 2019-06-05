@@ -1,91 +1,66 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Date: Wed, 5 Jun 2019 14:02:37 +0200
-Message-ID: <20190605120237.ekmytfxcwbjaqy3x@flea>
-References: <20190604122150.29D6468B05@newverein.lst.de>
- <20190604122308.98D4868B20@newverein.lst.de>
- <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
- <20190605101317.GA9345@lst.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: power: supply: Max17040: Add low
+ level SOC alert threshold
+Date: Wed, 5 Jun 2019 14:04:00 +0200
+Message-ID: <CAJKOXPdoip-pc=qGxaxV_FAV8n7taXHuP59ve=YAMi-QibVyfQ@mail.gmail.com>
+References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
+ <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-3-matheus@castello.eng.br>
+ <CAJKOXPdtsyY_GhniBAb0yV=HOhGx+x4xRPqNgdO+d0MDZRZ_7w@mail.gmail.com> <71c4f6b6-fbbb-14ba-0cf0-2377498fdfbc@castello.eng.br>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qiya5ip3hgidvmzq"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190605101317.GA9345@lst.de>
+In-Reply-To: <71c4f6b6-fbbb-14ba-0cf0-2377498fdfbc@castello.eng.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Torsten Duwe <duwe@lst.de>
-Cc: Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Matheus Castello <matheus@castello.eng.br>
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---qiya5ip3hgidvmzq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Jun 05, 2019 at 12:13:17PM +0200, Torsten Duwe wrote:
-> On Tue, Jun 04, 2019 at 08:08:40AM -0700, Vasily Khoruzhick wrote:
-> > On Tue, Jun 4, 2019 at 5:23 AM Torsten Duwe <duwe@lst.de> wrote:
-> > >
-> > > Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
-> > > the I2C controlling signals are connected to I2C0 bus. eDP output goes
-> > > to an Innolux N116BGE panel.
-> > >
-> > > Enable it in the device tree.
-> > >
-> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > > Signed-off-by: Torsten Duwe <duwe@suse.de>
-> > > ---
-> > >  .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 65 ++++++++++++++++++++--
-> > >  1 file changed, 61 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > > index 0ec46b969a75..a0ad438b037f 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > > @@ -65,6 +65,21 @@
-> > >                 };
-> > >         };
-> > >
-> > > +       panel: panel {
-> > > +               compatible ="innolux,n116bge", "simple-panel";
+On Sun, 2 Jun 2019 at 23:42, Matheus Castello <matheus@castello.eng.br> wrote:
+>
+> > On Mon, 27 May 2019 at 04:45, Matheus Castello <matheus@castello.eng.br> wrote:
+> >>
+> >> For configure low level state of charge threshold alert signaled from
+> >> max17040 we add "maxim,alert-low-soc-level" property.
+> >>
+> >> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> >> ---
+> >>   .../power/supply/max17040_battery.txt         | 28 +++++++++++++++++++
+> >>   1 file changed, 28 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> >> new file mode 100644
+> >> index 000000000000..a13e8d50ff7b
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> >> @@ -0,0 +1,28 @@
+> >> +max17040_battery
+> >> +~~~~~~~~~~~~~~~~
+> >> +
+> >> +Required properties :
+> >> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
 > >
-> > It's still "simple-panel". I believe I already mentioned that Rob
-> > asked it to be edp-connector.
+> > One more comment. The datasheet for max17040 says that there is on
+> > ALERT pin and ALERT bits in RCOMP register. Which device are you
+> > using? If it turns out that max17040 does not support it, then the
+> > driver and bindings should reflect this - interrupts should not be set
+> > on max17040.
+> >
 >
-> For which there are neither bindings nor drivers.
->
-> Is anybody seriously proposing to hold back support for existing
-> (open source!) hardware in favour of an *imaginable* *possibly*
-> better solution? Especially when this exact line is already used in
-> some other places?  (there's a space missing btw...)
+> Yes you are right, max17040 have no ALERT pin. I am using max17043. Let
+> me know what you think would be best, put a note about it in the
+> description, add a compatibles like "maxim,max17043" and
+> "maxim,max17044"? What do you think?
 
-It's non-existent and imaginable only because you've been ignoring
-everyone that said that you should do it. So it's self-inflicted,
-really.
+Usually in such case driver should behave differently for different
+devices. This difference is chosen by compatible. Since there is
+already max77836 compatible - which has the ALERT pin (probably it
+just includes 17043 fuel gauge) - you can customize it. No need for
+new compatible, unless it stops working on max77836...
 
-And the DT is considered an ABI, so yeah, we will witheld everything
-that doesn't fit what we would like. Your point of view is that it's
-more work and for no particular benefit, ours is that it's a
-short-term pain for a long-term gain, and the benefits will be in the
-maintainance cost.
+Anyway, configuring interrupts on max17040 would be probably harmless
+but still it is not really correct. The registers should not be
+touched in such case.
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---qiya5ip3hgidvmzq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPevXQAKCRDj7w1vZxhR
-xRaUAP4rsNSfzJsmzwtJIlX1UQvArevsqZjEbly5zQoUU26FyAEAsSQVhJt3Xdhr
-y/w4nPyt47sTpjL2pjXHbkTaW+M7hw0=
-=y5GR
------END PGP SIGNATURE-----
-
---qiya5ip3hgidvmzq--
+Best regards,
+Krzysztof
