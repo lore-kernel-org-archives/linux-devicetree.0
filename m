@@ -1,42 +1,52 @@
 From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH v2 0/2] Amazon's Annapurna Labs Fabric Interrupt Controller
-Date: Wed, 5 Jun 2019 13:51:59 +0300
-Message-ID: <1559731921-14023-1-git-send-email-talel@amazon.com>
+Subject: [PATCH v2 1/2] dt-bindings: interrupt-controller: Amazon's Annapurna Labs FIC
+Date: Wed, 5 Jun 2019 13:52:00 +0300
+Message-ID: <1559731921-14023-2-git-send-email-talel@amazon.com>
+References: <1559731921-14023-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559731921-14023-1-git-send-email-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com, Talel Shenhar <talel@amazon.com>
 List-Id: devicetree@vger.kernel.org
 
-This series introduces support for Amazon's Annapurna Labs Fabric Interrupt
-Controller.
+Document Amazon's Annapurna Labs Fabric Interrupt Controller SoC binding.
 
-The Amazon's Annapurna Labs FIC (Fabric Interrupt Controller) has 32
-inputs/sources. This FIC may be cascaded into another FIC or connected
-directly to the main CPU Interrupt Controller (e.g. GIC).
-
-Changes since v1:
-=================
-- removing unused exported APIs
-- updating cover letter and commit message accordingly
-
-
-
-Talel Shenhar (2):
-  dt-bindings: interrupt-controller: Amazon's Annapurna Labs FIC
-  irqchip: al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt
-    Controller Driver
-
- .../interrupt-controller/amazon,al-fic.txt         |  22 ++
- MAINTAINERS                                        |   6 +
- drivers/irqchip/Kconfig                            |  11 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-al-fic.c                       | 289 +++++++++++++++++++++
- 5 files changed, 329 insertions(+)
+Signed-off-by: Talel Shenhar <talel@amazon.com>
+---
+ .../interrupt-controller/amazon,al-fic.txt         | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
- create mode 100644 drivers/irqchip/irq-al-fic.c
 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+new file mode 100644
+index 0000000..a2f31a6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+@@ -0,0 +1,22 @@
++Amazon's Annapurna Labs Fabric Interrupt Controller
++
++Required properties:
++
++- compatible: should be "amazon,al-fic"
++- reg: physical base address and size of the registers
++- interrupt-controller: identifies the node as an interrupt controller
++- #interrupt-cells: must be 2.
++- interrupt-parent: specifies the parent interrupt controller.
++- interrupts: describes which input line in the interrupt parent, this
++  fic's output is connected to.
++
++Example:
++
++amazon_fic: amazon_fic {
++	compatible = "amazon,al-fic";
++	interrupt-controller;
++	#interrupt-cells = <1>;
++	reg = <0x0 0xfd8a8500 0x0 0x1000>;
++	interrupt-parent = <&gic>;
++	interrupts = <GIC_SPI 0x0 IRQ_TYPE_LEVEL_HIGH>;
++};
 -- 
 2.7.4
