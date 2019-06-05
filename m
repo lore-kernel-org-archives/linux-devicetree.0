@@ -1,101 +1,98 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 3/5] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-Date: Wed, 5 Jun 2019 14:05:12 +0200
-Message-ID: <CAJKOXPfpSEq+eOGsZjQQociuemzb1=E4_OetfCEvLyNxVxJpmQ@mail.gmail.com>
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-4-matheus@castello.eng.br>
- <CAJKOXPd2F6iy0ZqYf+X2k=eQ=tY1zG4gVbrr68XqE9+w4HK6dw@mail.gmail.com> <69a4f003-4413-1316-6145-f8bef2171e86@castello.eng.br>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/2] dt-bindings: i2c: mv64xxx: Add YAML schemas
+Date: Wed, 5 Jun 2019 14:11:25 +0200
+Message-ID: <20190605121125.4p2eyt7zhtai652b@flea>
+References: <20190525141821.20082-1-maxime.ripard@bootlin.com>
+ <20190525141821.20082-2-maxime.ripard@bootlin.com>
+ <87k1e2k98v.fsf@FE-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <69a4f003-4413-1316-6145-f8bef2171e86@castello.eng.br>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matheus Castello <matheus@castello.eng.br>
-Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============2931956928720380166=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87k1e2k98v.fsf@FE-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 3 Jun 2019 at 00:42, Matheus Castello <matheus@castello.eng.br> wrote:
->
->
->
-> On 5/29/19 11:46 AM, Krzysztof Kozlowski wrote:
-> > On Mon, 27 May 2019 at 04:46, Matheus Castello <matheus@castello.eng.br> wrote:
-> >>
-> >> For configuration of fuel gauge alert for a low level state of charge
-> >> interrupt we add a function to config level threshold and a device tree
-> >> binding property to set it in flatned device tree node.
-> >>
-> >> Now we can use "maxim,alert-low-soc-level" property with the values from
-> >> 1% up to 32% to configure alert interrupt threshold.
-> >>
-> >> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> >> ---
-> >>   drivers/power/supply/max17040_battery.c | 52 +++++++++++++++++++++++--
-> >>   1 file changed, 49 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-> >> index b7433e9ca7c2..2f4851608cfe 100644
-> >> --- a/drivers/power/supply/max17040_battery.c
-> >> +++ b/drivers/power/supply/max17040_battery.c
-> >> @@ -29,6 +29,9 @@
-> >>   #define MAX17040_DELAY         1000
-> >>   #define MAX17040_BATTERY_FULL  95
-> >>
-> >> +#define MAX17040_ATHD_MASK             0xFFC0
-> >> +#define MAX17040_ATHD_DEFAULT_POWER_UP 4
-> >> +
-> >>   struct max17040_chip {
-> >>          struct i2c_client               *client;
-> >>          struct delayed_work             work;
-> >> @@ -43,6 +46,8 @@ struct max17040_chip {
-> >>          int soc;
-> >>          /* State Of Charge */
-> >>          int status;
-> >> +       /* Low alert threshold from 32% to 1% of the State of Charge */
-> >> +       u32 low_soc_alert_threshold;
-> >>   };
-> >>
-> >>   static int max17040_get_property(struct power_supply *psy,
-> >> @@ -99,6 +104,28 @@ static void max17040_reset(struct i2c_client *client)
-> >>          max17040_write_reg(client, MAX17040_CMD, 0x0054);
-> >>   }
-> >>
-> >> +static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
-> >> +       u32 level)
-> >> +{
-> >> +       int ret;
-> >> +       u16 data;
-> >> +
-> >> +       /* check if level is between 1% and 32% */
-> >> +       if (level > 0 && level < 33) {
-> >> +               level = 32 - level;
-> >> +               data = max17040_read_reg(client, MAX17040_RCOMP);
-> >> +               /* clear the alrt bit and set LSb 5 bits */
-> >> +               data &= MAX17040_ATHD_MASK;
-> >> +               data |= level;
-> >> +               max17040_write_reg(client, MAX17040_RCOMP, data);
-> >> +               ret = 0;
->
-> I will put the return of max17040_write_reg on ret, instead of ret = 0.
->
-> >> +       } else {
-> >> +               ret = -EINVAL;
-> >> +       }
-> >
-> > This is unusual way of handling error... when you parse DTS, you
-> > accept any value for "level" (even incorrect one). You validate the
-> > value later when setting it and show an error... however you ignore
-> > the error of max17040_write_reg() here... This is correct but looks
-> > unusual.
-> >
->
-> Ok, so would it be better to check the level value in
-> "max17040_get_of_data" and return an error there if the input is wrong?
 
-I think yes. It looks more natural - validate the value as early as
-possible and fail the probe which gives the information about point of
-failure.
+--===============2931956928720380166==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jcggnhf3ykfk7lac"
+Content-Disposition: inline
 
-Best regards,
-Krzysztof
+
+--jcggnhf3ykfk7lac
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Mon, Jun 03, 2019 at 04:56:48PM +0200, Gregory CLEMENT wrote:
+> > +++ b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+> > @@ -0,0 +1,106 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/i2c/marvell,mv64xxx-i2c.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Marvell MV64XXX I2C Controller Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Chen-Yu Tsai <wens@csie.org>
+> > +  - Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> If you take over the maintenanceship and became maintainer for this
+> driver, then update the MAINTAINERS files too. For now it was assigned
+> to me, but I don't mind letting this for both of you.
+>
+> Actually I gave my acked-by to a patch from Wolfram adding the
+> Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt file to the "I2C
+> MV64XXX MARVELL AND ALLWINNER DRIVER" entry "MAINTAINERS: add DT
+> bindings to i2c-mv64xxx" so I guess this patch have to be discarded or
+> at least updated.
+
+Sorry for that, it's definitely not intentional. I'll fix it and resend.
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--jcggnhf3ykfk7lac
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPexbQAKCRDj7w1vZxhR
+xe/dAP9810+E+YG6xK7o/znoo25OToisA4qAfR89Ox8darfLQgEAjPOHR1jQl2S+
+xakb+9c/vF+oAFjJD//9cLNS1UOxHgE=
+=JR2U
+-----END PGP SIGNATURE-----
+
+--jcggnhf3ykfk7lac--
+
+
+--===============2931956928720380166==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2931956928720380166==--
