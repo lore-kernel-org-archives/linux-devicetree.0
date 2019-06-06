@@ -1,117 +1,377 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v3, 06/27] drm/mediatek: add mutex mod into ddp private
- data
-Date: Thu, 6 Jun 2019 13:42:37 +0800
-Message-ID: <1559799757.20098.6.camel@mtksdaap41>
-References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
- <1559734986-7379-7-git-send-email-yongqiang.niu@mediatek.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: Add Lenovo Miix 630
+Date: Thu, 6 Jun 2019 06:50:34 +0100
+Message-ID: <20190606055034.GA4797@dell>
+References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
+ <20190423160616.10017-1-jeffrey.l.hugo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1559734986-7379-7-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190423160616.10017-1-jeffrey.l.hugo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org, dmitry.torokhov@gmail.com, jikos@kernel.org, benjamin.tissoires@redhat.com, hdegoede@redhat.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wNi0wNSBhdCAxOTo0MiArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gZXhjZXB0IG11dGV4IG1vZCwgbXV0ZXggbW9kIHJl
-ZyxtdXRleCBzb2YgcmVnLAo+IGFuZCBtdXRleCBzb2YgaWQgd2lsbCBiZSBkZHAgcHJpdmF0ZSBk
-YXRhCj4gCj4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRp
-YXRlay5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5j
-IHwgNTMgKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdl
-ZCwgMzYgaW5zZXJ0aW9ucygrKSwgMTcgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jIGIvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZGRwLmMKPiBpbmRleCA1NzljZTI4Li5hZTk0ZDQ0IDEwMDY0NAo+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiBAQCAtNDEsMTIgKzQxLDEyIEBACj4g
-ICNkZWZpbmUgRElTUF9SRUdfQ09ORklHX0RTSV9TRUwJCQkweDA1MAo+ICAjZGVmaW5lIERJU1Bf
-UkVHX0NPTkZJR19EUElfU0VMCQkJMHgwNjQKPiAgCj4gLSNkZWZpbmUgRElTUF9SRUdfTVVURVhf
-RU4obikJKDB4MjAgKyAweDIwICogKG4pKQo+IC0jZGVmaW5lIERJU1BfUkVHX01VVEVYKG4pCSgw
-eDI0ICsgMHgyMCAqIChuKSkKPiAtI2RlZmluZSBESVNQX1JFR19NVVRFWF9SU1QobikJKDB4Mjgg
-KyAweDIwICogKG4pKQo+IC0jZGVmaW5lIERJU1BfUkVHX01VVEVYX01PRChuKQkoMHgyYyArIDB4
-MjAgKiAobikpCj4gLSNkZWZpbmUgRElTUF9SRUdfTVVURVhfU09GKG4pCSgweDMwICsgMHgyMCAq
-IChuKSkKPiAtI2RlZmluZSBESVNQX1JFR19NVVRFWF9NT0QyKG4pCSgweDM0ICsgMHgyMCAqIChu
-KSkKPiArI2RlZmluZSBESVNQX1JFR19NVVRFWF9FTihuKQkJCSgweDIwICsgMHgyMCAqIChuKSkK
-PiArI2RlZmluZSBESVNQX1JFR19NVVRFWChuKQkJCSgweDI0ICsgMHgyMCAqIChuKSkKPiArI2Rl
-ZmluZSBESVNQX1JFR19NVVRFWF9SU1QobikJCQkoMHgyOCArIDB4MjAgKiAobikpCj4gKyNkZWZp
-bmUgRElTUF9SRUdfTVVURVhfTU9EKG4pCQkJKDB4MmMgKyAweDIwICogKG4pKQo+ICsjZGVmaW5l
-IERJU1BfUkVHX01VVEVYX1NPRihuKQkJCSgweDMwICsgMHgyMCAqIChuKSkKPiArI2RlZmluZSBE
-SVNQX1JFR19NVVRFWF9NT0QyKG4pCQkJKDB4MzQgKyAweDIwICogKG4pKQoKWW91IGFkZCAndGFi
-JyBiZWNhdXNlIG9mICJhZGQgbXV0ZXggbW9kIHJlZ2lzdGVyIG9mZnNldCBpbnRvIGRkcCBwcml2
-YXRlCmRhdGEiIG5vdCAiYWRkIG11dGV4IG1vZCBpbnRvIGRkcCBwcml2YXRlIGRhdGEiLCBzbyBt
-b3ZlIHRoaXMgdG8gdGhlCnJlbGF0ZWQgcGF0Y2guCgpSZWdhcmRzLApDSwoKPiAgCj4gICNkZWZp
-bmUgSU5UX01VVEVYCQkJCUJJVCgxKQo+ICAKPiBAQCAtMTQ3LDEyICsxNDcsMTYgQEAgc3RydWN0
-IG10a19kaXNwX211dGV4IHsKPiAgCWJvb2wgY2xhaW1lZDsKPiAgfTsKPiAgCj4gK3N0cnVjdCBt
-dGtfZGRwX2RhdGEgewo+ICsJY29uc3QgdW5zaWduZWQgaW50ICptdXRleF9tb2Q7Cj4gK307Cj4g
-Kwo+ICBzdHJ1Y3QgbXRrX2RkcCB7Cj4gIAlzdHJ1Y3QgZGV2aWNlCQkJKmRldjsKPiAgCXN0cnVj
-dCBjbGsJCQkqY2xrOwo+ICAJdm9pZCBfX2lvbWVtCQkJKnJlZ3M7Cj4gIAlzdHJ1Y3QgbXRrX2Rp
-c3BfbXV0ZXgJCW11dGV4WzEwXTsKPiAtCWNvbnN0IHVuc2lnbmVkIGludAkJKm11dGV4X21vZDsK
-PiArCWNvbnN0IHN0cnVjdCBtdGtfZGRwX2RhdGEJKmRhdGE7Cj4gIH07Cj4gIAo+ICBzdGF0aWMg
-Y29uc3QgdW5zaWduZWQgaW50IG10MjcwMV9tdXRleF9tb2RbRERQX0NPTVBPTkVOVF9JRF9NQVhd
-ID0gewo+IEBAIC0yMDIsNiArMjA2LDE4IEBAIHN0cnVjdCBtdGtfZGRwIHsKPiAgCVtERFBfQ09N
-UE9ORU5UX1dETUExXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9XRE1BMSwKPiAgfTsKPiAgCj4g
-K3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2RkcF9kYXRhIG10MjcwMV9kZHBfZHJpdmVyX2RhdGEg
-PSB7Cj4gKwkubXV0ZXhfbW9kID0gbXQyNzAxX211dGV4X21vZCwKPiArfTsKPiArCj4gK3N0YXRp
-YyBjb25zdCBzdHJ1Y3QgbXRrX2RkcF9kYXRhIG10MjcxMl9kZHBfZHJpdmVyX2RhdGEgPSB7Cj4g
-KwkubXV0ZXhfbW9kID0gbXQyNzEyX211dGV4X21vZCwKPiArfTsKPiArCj4gK3N0YXRpYyBjb25z
-dCBzdHJ1Y3QgbXRrX2RkcF9kYXRhIG10ODE3M19kZHBfZHJpdmVyX2RhdGEgPSB7Cj4gKwkubXV0
-ZXhfbW9kID0gbXQ4MTczX211dGV4X21vZCwKPiArfTsKPiArCj4gIHN0YXRpYyB1bnNpZ25lZCBp
-bnQgbXRrX2RkcF9tb3V0X2VuKGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwKPiAgCQkJCSAgICBl
-bnVtIG10a19kZHBfY29tcF9pZCBuZXh0LAo+ICAJCQkJICAgIHVuc2lnbmVkIGludCAqYWRkcikK
-PiBAQCAtNDY0LDE1ICs0ODAsMTUgQEAgdm9pZCBtdGtfZGlzcF9tdXRleF9hZGRfY29tcChzdHJ1
-Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4LAo+ICAJCXJlZyA9IE1VVEVYX1NPRl9EUEkxOwo+ICAJ
-CWJyZWFrOwo+ICAJZGVmYXVsdDoKPiAtCQlpZiAoZGRwLT5tdXRleF9tb2RbaWRdIDwgMzIpIHsK
-PiArCQlpZiAoZGRwLT5kYXRhLT5tdXRleF9tb2RbaWRdIDwgMzIpIHsKPiAgCQkJb2Zmc2V0ID0g
-RElTUF9SRUdfTVVURVhfTU9EKG11dGV4LT5pZCk7Cj4gIAkJCXJlZyA9IHJlYWRsX3JlbGF4ZWQo
-ZGRwLT5yZWdzICsgb2Zmc2V0KTsKPiAtCQkJcmVnIHw9IDEgPDwgZGRwLT5tdXRleF9tb2RbaWRd
-Owo+ICsJCQlyZWcgfD0gMSA8PCBkZHAtPmRhdGEtPm11dGV4X21vZFtpZF07Cj4gIAkJCXdyaXRl
-bF9yZWxheGVkKHJlZywgZGRwLT5yZWdzICsgb2Zmc2V0KTsKPiAgCQl9IGVsc2Ugewo+ICAJCQlv
-ZmZzZXQgPSBESVNQX1JFR19NVVRFWF9NT0QyKG11dGV4LT5pZCk7Cj4gIAkJCXJlZyA9IHJlYWRs
-X3JlbGF4ZWQoZGRwLT5yZWdzICsgb2Zmc2V0KTsKPiAtCQkJcmVnIHw9IDEgPDwgKGRkcC0+bXV0
-ZXhfbW9kW2lkXSAtIDMyKTsKPiArCQkJcmVnIHw9IDEgPDwgKGRkcC0+ZGF0YS0+bXV0ZXhfbW9k
-W2lkXSAtIDMyKTsKPiAgCQkJd3JpdGVsX3JlbGF4ZWQocmVnLCBkZHAtPnJlZ3MgKyBvZmZzZXQp
-Owo+ICAJCX0KPiAgCQlyZXR1cm47Cj4gQEAgLTUwMiwxNSArNTE4LDE1IEBAIHZvaWQgbXRrX2Rp
-c3BfbXV0ZXhfcmVtb3ZlX2NvbXAoc3RydWN0IG10a19kaXNwX211dGV4ICptdXRleCwKPiAgCQkJ
-ICAgICAgIGRkcC0+cmVncyArIERJU1BfUkVHX01VVEVYX1NPRihtdXRleC0+aWQpKTsKPiAgCQli
-cmVhazsKPiAgCWRlZmF1bHQ6Cj4gLQkJaWYgKGRkcC0+bXV0ZXhfbW9kW2lkXSA8IDMyKSB7Cj4g
-KwkJaWYgKGRkcC0+ZGF0YS0+bXV0ZXhfbW9kW2lkXSA8IDMyKSB7Cj4gIAkJCW9mZnNldCA9IERJ
-U1BfUkVHX01VVEVYX01PRChtdXRleC0+aWQpOwo+ICAJCQlyZWcgPSByZWFkbF9yZWxheGVkKGRk
-cC0+cmVncyArIG9mZnNldCk7Cj4gLQkJCXJlZyAmPSB+KDEgPDwgZGRwLT5tdXRleF9tb2RbaWRd
-KTsKPiArCQkJcmVnICY9IH4oMSA8PCBkZHAtPmRhdGEtPm11dGV4X21vZFtpZF0pOwo+ICAJCQl3
-cml0ZWxfcmVsYXhlZChyZWcsIGRkcC0+cmVncyArIG9mZnNldCk7Cj4gIAkJfSBlbHNlIHsKPiAg
-CQkJb2Zmc2V0ID0gRElTUF9SRUdfTVVURVhfTU9EMihtdXRleC0+aWQpOwo+ICAJCQlyZWcgPSBy
-ZWFkbF9yZWxheGVkKGRkcC0+cmVncyArIG9mZnNldCk7Cj4gLQkJCXJlZyAmPSB+KDEgPDwgKGRk
-cC0+bXV0ZXhfbW9kW2lkXSAtIDMyKSk7Cj4gKwkJCXJlZyAmPSB+KDEgPDwgKGRkcC0+ZGF0YS0+
-bXV0ZXhfbW9kW2lkXSAtIDMyKSk7Cj4gIAkJCXdyaXRlbF9yZWxheGVkKHJlZywgZGRwLT5yZWdz
-ICsgb2Zmc2V0KTsKPiAgCQl9Cj4gIAkJYnJlYWs7Cj4gQEAgLTU4NSw3ICs2MDEsNyBAQCBzdGF0
-aWMgaW50IG10a19kZHBfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCQly
-ZXR1cm4gUFRSX0VSUihkZHAtPnJlZ3MpOwo+ICAJfQo+ICAKPiAtCWRkcC0+bXV0ZXhfbW9kID0g
-b2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKGRldik7Cj4gKwlkZHAtPmRhdGEgPSBvZl9kZXZpY2Vf
-Z2V0X21hdGNoX2RhdGEoZGV2KTsKPiAgCj4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBk
-ZHApOwo+ICAKPiBAQCAtNTk4LDkgKzYxNCwxMiBAQCBzdGF0aWMgaW50IG10a19kZHBfcmVtb3Zl
-KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIH0KPiAgCj4gIHN0YXRpYyBjb25zdCBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkIGRkcF9kcml2ZXJfZHRfbWF0Y2hbXSA9IHsKPiAtCXsgLmNvbXBh
-dGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWRpc3AtbXV0ZXgiLCAuZGF0YSA9IG10MjcwMV9tdXRl
-eF9tb2R9LAo+IC0JeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MTItZGlzcC1tdXRleCIs
-IC5kYXRhID0gbXQyNzEyX211dGV4X21vZH0sCj4gLQl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVr
-LG10ODE3My1kaXNwLW11dGV4IiwgLmRhdGEgPSBtdDgxNzNfbXV0ZXhfbW9kfSwKPiArCXsgLmNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWRpc3AtbXV0ZXgiLAo+ICsJICAuZGF0YSA9ICZt
-dDI3MDFfZGRwX2RyaXZlcl9kYXRhfSwKPiArCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQy
-NzEyLWRpc3AtbXV0ZXgiLAo+ICsJICAuZGF0YSA9ICZtdDI3MTJfZGRwX2RyaXZlcl9kYXRhfSwK
-PiArCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWRpc3AtbXV0ZXgiLAo+ICsJICAu
-ZGF0YSA9ICZtdDgxNzNfZGRwX2RyaXZlcl9kYXRhfSwKPiAgCXt9LAo+ICB9Owo+ICBNT0RVTEVf
-REVWSUNFX1RBQkxFKG9mLCBkZHBfZHJpdmVyX2R0X21hdGNoKTsKCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Tue, 23 Apr 2019, Jeffrey Hugo wrote:
+
+> This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
+> functionality includes USB (host), microSD-card, keyboard, and trackpad.
+> 
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/msm8998-clamshell.dtsi      | 278 ++++++++++++++++++
+>  .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 ++
+
+What's happening with this patch?
+
+It's been on the list a while now.  I'm waiting for it to be accepted,
+since there are patches I wish to submit which are based on it.
+
+Who is responsible for merging these?
+
+>  3 files changed, 309 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 21d548f02d39..c3e4307bcbd4 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+> new file mode 100644
+> index 000000000000..1a341d4b1597
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+> @@ -0,0 +1,278 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
+> +
+> +/*
+> + * Common include for MSM8998 clamshell devices, ie the Lenovo Miix 630,
+> + * Asus NovaGo TP370QL, and HP Envy x2.  All three devices are basically the
+> + * same, with differences in peripherals.
+> + */
+> +
+> +#include "msm8998.dtsi"
+> +#include "pm8998.dtsi"
+> +#include "pm8005.dtsi"
+> +
+> +/ {
+> +	chosen {
+> +	};
+> +
+> +	thermal-zones {
+> +		battery-thermal {
+> +			polling-delay-passive = <250>;
+> +			polling-delay = <1000>;
+> +
+> +			thermal-sensors = <&tsens0 0>;
+> +
+> +			trips {
+> +				battery_crit: trip0 {
+> +					temperature = <60000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +
+> +		skin-thermal {
+> +			polling-delay-passive = <250>;
+> +			polling-delay = <1000>;
+> +
+> +			thermal-sensors = <&tsens1 5>;
+> +
+> +			trips {
+> +				skin_alert: trip0 {
+> +					temperature = <44000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				skip_crit: trip1 {
+> +					temperature = <70000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	vph_pwr: vph-pwr-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vph_pwr";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +};
+> +
+> +&qusb2phy {
+> +	status = "okay";
+> +
+> +	vdda-pll-supply = <&vreg_l12a_1p8>;
+> +	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
+> +};
+> +
+> +&rpm_requests {
+> +	pm8998-regulators {
+> +		compatible = "qcom,rpm-pm8998-regulators";
+> +
+> +		vdd_s1-supply = <&vph_pwr>;
+> +		vdd_s2-supply = <&vph_pwr>;
+> +		vdd_s3-supply = <&vph_pwr>;
+> +		vdd_s4-supply = <&vph_pwr>;
+> +		vdd_s5-supply = <&vph_pwr>;
+> +		vdd_s6-supply = <&vph_pwr>;
+> +		vdd_s7-supply = <&vph_pwr>;
+> +		vdd_s8-supply = <&vph_pwr>;
+> +		vdd_s9-supply = <&vph_pwr>;
+> +		vdd_s10-supply = <&vph_pwr>;
+> +		vdd_s11-supply = <&vph_pwr>;
+> +		vdd_s12-supply = <&vph_pwr>;
+> +		vdd_s13-supply = <&vph_pwr>;
+> +		vdd_l1_l27-supply = <&vreg_s7a_1p025>;
+> +		vdd_l2_l8_l17-supply = <&vreg_s3a_1p35>;
+> +		vdd_l3_l11-supply = <&vreg_s7a_1p025>;
+> +		vdd_l4_l5-supply = <&vreg_s7a_1p025>;
+> +		vdd_l6-supply = <&vreg_s5a_2p04>;
+> +		vdd_l7_l12_l14_l15-supply = <&vreg_s5a_2p04>;
+> +		vdd_l9-supply = <&vph_pwr>;
+> +		vdd_l10_l23_l25-supply = <&vph_pwr>;
+> +		vdd_l13_l19_l21-supply = <&vph_pwr>;
+> +		vdd_l16_l28-supply = <&vph_pwr>;
+> +		vdd_l18_l22-supply = <&vph_pwr>;
+> +		vdd_l20_l24-supply = <&vph_pwr>;
+> +		vdd_l26-supply = <&vreg_s3a_1p35>;
+> +		vdd_lvs1_lvs2-supply = <&vreg_s4a_1p8>;
+> +
+> +		vreg_s3a_1p35: s3 {
+> +			regulator-min-microvolt = <1352000>;
+> +			regulator-max-microvolt = <1352000>;
+> +		};
+> +		vreg_s4a_1p8: s4 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-allow-set-load;
+> +		};
+> +		vreg_s5a_2p04: s5 {
+> +			regulator-min-microvolt = <1904000>;
+> +			regulator-max-microvolt = <2040000>;
+> +		};
+> +		vreg_s7a_1p025: s7 {
+> +			regulator-min-microvolt = <900000>;
+> +			regulator-max-microvolt = <1028000>;
+> +		};
+> +		vreg_l1a_0p875: l1 {
+> +			regulator-min-microvolt = <880000>;
+> +			regulator-max-microvolt = <880000>;
+> +			regulator-allow-set-load;
+> +		};
+> +		vreg_l2a_1p2: l2 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +			regulator-allow-set-load;
+> +		};
+> +		vreg_l3a_1p0: l3 {
+> +			regulator-min-microvolt = <1000000>;
+> +			regulator-max-microvolt = <1000000>;
+> +		};
+> +		vreg_l5a_0p8: l5 {
+> +			regulator-min-microvolt = <800000>;
+> +			regulator-max-microvolt = <800000>;
+> +		};
+> +		vreg_l6a_1p8: l6 {
+> +			regulator-min-microvolt = <1808000>;
+> +			regulator-max-microvolt = <1808000>;
+> +		};
+> +		vreg_l7a_1p8: l7 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +		vreg_l8a_1p2: l8 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +		};
+> +		vreg_l9a_1p8: l9 {
+> +			regulator-min-microvolt = <1808000>;
+> +			regulator-max-microvolt = <2960000>;
+> +		};
+> +		vreg_l10a_1p8: l10 {
+> +			regulator-min-microvolt = <1808000>;
+> +			regulator-max-microvolt = <2960000>;
+> +		};
+> +		vreg_l11a_1p0: l11 {
+> +			regulator-min-microvolt = <1000000>;
+> +			regulator-max-microvolt = <1000000>;
+> +		};
+> +		vreg_l12a_1p8: l12 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +		vreg_l13a_2p95: l13 {
+> +			regulator-min-microvolt = <1808000>;
+> +			regulator-max-microvolt = <2960000>;
+> +		};
+> +		vreg_l14a_1p88: l14 {
+> +			regulator-min-microvolt = <1880000>;
+> +			regulator-max-microvolt = <1880000>;
+> +		};
+> +		vreg_15a_1p8: l15 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +		vreg_l16a_2p7: l16 {
+> +			regulator-min-microvolt = <2704000>;
+> +			regulator-max-microvolt = <2704000>;
+> +		};
+> +		vreg_l17a_1p3: l17 {
+> +			regulator-min-microvolt = <1304000>;
+> +			regulator-max-microvolt = <1304000>;
+> +		};
+> +		vreg_l18a_2p7: l18 {
+> +			regulator-min-microvolt = <2704000>;
+> +			regulator-max-microvolt = <2704000>;
+> +		};
+> +		vreg_l19a_3p0: l19 {
+> +			regulator-min-microvolt = <3008000>;
+> +			regulator-max-microvolt = <3008000>;
+> +		};
+> +		vreg_l20a_2p95: l20 {
+> +			regulator-min-microvolt = <2960000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-allow-set-load;
+> +		};
+> +		vreg_l21a_2p95: l21 {
+> +			regulator-min-microvolt = <2960000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-allow-set-load;
+> +			regulator-system-load = <800000>;
+> +		};
+> +		vreg_l22a_2p85: l22 {
+> +			regulator-min-microvolt = <2864000>;
+> +			regulator-max-microvolt = <2864000>;
+> +		};
+> +		vreg_l23a_3p3: l23 {
+> +			regulator-min-microvolt = <3312000>;
+> +			regulator-max-microvolt = <3312000>;
+> +		};
+> +		vreg_l24a_3p075: l24 {
+> +			regulator-min-microvolt = <3088000>;
+> +			regulator-max-microvolt = <3088000>;
+> +		};
+> +		vreg_l25a_3p3: l25 {
+> +			regulator-min-microvolt = <3104000>;
+> +			regulator-max-microvolt = <3312000>;
+> +		};
+> +		vreg_l26a_1p2: l26 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +		};
+> +		vreg_l28_3p0: l28 {
+> +			regulator-min-microvolt = <3008000>;
+> +			regulator-max-microvolt = <3008000>;
+> +		};
+> +
+> +		vreg_lvs1a_1p8: lvs1 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +
+> +		vreg_lvs2a_1p8: lvs2 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +
+> +	};
+> +};
+> +
+> +&tlmm {
+> +	gpio-reserved-ranges = <0 4>, <81 4>;
+> +
+> +	touchpad: touchpad {
+> +		config {
+> +			pins = "gpio123";
+> +			bias-pull-up;           /* pull up */
+> +		};
+> +	};
+> +};
+> +
+> +&sdhc2 {
+> +	status = "okay";
+> +
+> +	vmmc-supply = <&vreg_l21a_2p95>;
+> +	vqmmc-supply = <&vreg_l13a_2p95>;
+> +
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
+> +	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+> +};
+> +
+> +&usb3 {
+> +	status = "okay";
+> +};
+> +
+> +&usb3_dwc3 {
+> +	dr_mode = "host"; /* Force to host until we have Type-C hooked up */
+> +};
+> +
+> +&usb3phy {
+> +	status = "okay";
+> +
+> +	vdda-phy-supply = <&vreg_l1a_0p875>;
+> +	vdda-pll-supply = <&vreg_l2a_1p2>;
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+> new file mode 100644
+> index 000000000000..407c6a32911c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+> @@ -0,0 +1,30 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
+> +
+> +/dts-v1/;
+> +
+> +#include "msm8998-clamshell.dtsi"
+> +
+> +/ {
+> +	model = "Lenovo Miix 630";
+> +	compatible = "lenovo,miix-630", "qcom,msm8998";
+> +};
+> +
+> +&blsp1_i2c6 {
+> +	status = "okay";
+> +
+> +	keyboard@3a {
+> +		compatible = "hid-over-i2c";
+> +		interrupt-parent = <&tlmm>;
+> +		interrupts = <0x79 IRQ_TYPE_LEVEL_LOW>;
+> +		reg = <0x3a>;
+> +		hid-descr-addr = <0x0001>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&touchpad>;
+> +	};
+> +};
+> +
+> +&sdhc2 {
+> +	cd-gpios = <&tlmm 95 GPIO_ACTIVE_HIGH>;
+> +};
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
