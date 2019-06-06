@@ -1,46 +1,70 @@
-From: "Hawa, Hanna" <hhhawa@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Date: Thu, 6 Jun 2019 10:53:42 +0300
-Message-ID: <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
- <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
- <20190531051400.GA2275@cz.tnic>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 04/10] dt-bindings: display: renesas: lvds: Add
+ renesas, companion property
+Date: Thu, 6 Jun 2019 10:54:35 +0300
+Message-ID: <20190606075435.GD4931@pendragon.ideasonboard.com>
+References: <20190528141234.15425-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20190528141234.15425-5-laurent.pinchart+renesas@ideasonboard.com>
+ <20190528163730.GA9610@ravnborg.org>
+ <20190528164916.GA17874@pendragon.ideasonboard.com>
+ <20190528165900.GA10262@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190531051400.GA2275@cz.tnic>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>, "Herrenschmidt, Benjamin" <benh@amazon.com>, "james.morse@arm.com" <james.morse@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "Hanoch, Uri" <hanochu@amazon.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190528165900.GA10262@ravnborg.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 5/31/2019 8:14 AM, Borislav Petkov wrote:
-> On Fri, May 31, 2019 at 01:15:33AM +0000, Herrenschmidt, Benjamin wrote:
->> This isn't terribly helpful, there's nothing telling anybody which of
->> those files corresponds to an ARM SoC :-)
-> 
-> drivers/edac/altera_edac.c is one example.
-> 
-> Also, James and I have a small writeup on how an arm driver should look
-> like, we just need to polish it up and post it.
-> 
-> James?
-> 
->> That said ...
->>
->> You really want a single EDAC driver that contains all the stuff for
->> the caches, the memory controller, etc... ?
-> 
-> Yap.
-
-Disagree. The various drivers don't depend on each other.
-I think we should keep the drivers separated as they are distinct and 
-independent IP blocks.
-
-> 
+SGkgU2FtLAoKT24gVHVlLCBNYXkgMjgsIDIwMTkgYXQgMDY6NTk6MDBQTSArMDIwMCwgU2FtIFJh
+dm5ib3JnIHdyb3RlOgo+IEhpIExhdXJlbnQuCj4gCj4gPiA+ID4gIAo+ID4gPiA+ICtPcHRpb25h
+bCBwcm9wZXJ0aWVzOgo+ID4gPiA+ICsKPiA+ID4gPiArLSByZW5lc2FzLGNvbXBhbmlvbiA6IHBo
+YW5kbGUgdG8gdGhlIGNvbXBhbmlvbiBMVkRTIGVuY29kZXIuIFRoaXMgcHJvcGVydHkgaXMKPiA+
+ID4gPiArICBtYW5kYXRvcnkgZm9yIHRoZSBmaXJzdCBMVkRTIGVuY29kZXIgb24gRDMgYW5kIEUz
+IFNvQ3MsIGFuZCBzaGFsbCBwb2ludCB0bwo+ID4gPiA+ICsgIHRoZSBzZWNvbmQgZW5jb2RlciB0
+byBiZSB1c2VkIGFzIGEgY29tcGFuaW9uIGluIGR1YWwtbGluayBtb2RlLiBJdCBzaGFsbCBub3QK
+PiA+ID4gPiArICBiZSBzZXQgZm9yIGFueSBvdGhlciBMVkRTIGVuY29kZXIuCj4gPiA+IAo+ID4g
+PiBJZiB0aGUgRDMgYW5kIEUzIHNvY3MgZG8gbm90IG1hbmRhdGUgdGhlIHVzZSBvZiBkdWFsLWxp
+bmssIHRoZW4gd2hhdCB0bwo+ID4gPiBkbyBpbiB0aGUgRFQ/IEJlY2F1c2UgYWNjb3JkaW5nIHRv
+IHRoZSBhYm92ZSB0aGlzIHByb3BlcnR5IG11c3QgYmUKPiA+ID4gc3BlY2lmaWVkIGZvciBEMyBh
+bmQgRTMgU09DJ3MuCj4gPiAKPiA+IFRoaXMgcHJvcGVydHkgZG9lc24ndCBlbmFibGUgZHVhbC1s
+aW5rIG1vZGUsIGl0IG9ubHkgc3BlY2lmaWVzIHRoZQo+ID4gY29tcGFuaW9uIExWRFMgZW5jb2Rl
+ciB1c2VkIGZvciBkdWFsLWxpbmsgbW9kZSwgd2hlbiBlbmFibGVkICh0aHJvdWdoCj4gPiBjb21t
+dW5pY2F0aW9uIGJldHdlZW4gdGhlIExWRFMgZW5jb2RlciBhbmQgdGhlIExWRFMgcmVjZWl2ZXIg
+YXQKPiA+IHJ1bnRpbWUpLgo+ID4gCj4gPiBKYWNvcG8gaGFkIGEgc2ltaWxhciBjb21tZW50IHNv
+IEkgc3VwcG9zZSB0aGlzIGlzbid0IGNsZWFyLiBIb3cgd291bGQKPiA+IHlvdSB3b3JkIGl0IHRv
+IG1ha2UgaXQgY2xlYXIgPwo+IAo+IExldCBtZSB0cnk6Cj4gCj4gLSByZW5lc2FzLGNvbXBhbmlv
+biA6IHBoYW5kbGUgdG8gdGhlIGNvbXBhbmlvbiBMVkRTIGVuY29kZXIuIFRoaXMgcHJvcGVydHkg
+aXMKPiAgIG1hbmRhdG9yeSBmb3IgdGhlIGZpcnN0IExWRFMgZW5jb2RlciBvbiBEMyBhbmQgRTMg
+U29DcyB3aGVuIGR1YWwtbGluayBtb2RlCj4gICBpcyBzdXBwb3J0ZWQuCj4gICBUaGUgcHJvcGVy
+dHkgc2hhbGwgcG9udCB0byB0aGUgcGhhbmRsZSBvZiB0aGUgc2Vjb25kIGVuY29kZXIgdG8gYmUg
+dXNlZCBhcyBhCj4gICBjb21wYW5pb24gaW4gZHVhbC1saW5rIG1vZGUuIEl0IHNoYWxsIG5vdCBi
+ZSBzZXQgZm9yIGFueSBvdGhlciBMVkRTIGVuY29kZXIuCj4gCj4gVGhlIG1haW4gZGlmZmVyZW5j
+ZSBpcyAid2hlbiBkdWFsLWxpbmsgbW9kZSBpcyBzdXBwb3J0ZWQiLgo+IEFzIHBlciBteSB1bmRl
+cnN0YW5kaW5nIHRoaXMgcHJvcGVydHkgaXMgb25seSByZWxldmFudCB3aGVuIHRoZSBhY3R1YWwK
+PiBIVyBzdXBwb3J0cyAvIHVzZXMgZHVhbC1saW5rIG1vZGUuCj4gU28gZm9yIGEgYm9hcmQgdGhh
+dCBkbyBub3QgZXZlbiB3aXJlIHVwIGR1YWwtbGluaywgdGhlbiBzZXR0aW5nIHRoZQo+IHByb3Bl
+cnR5IHdvdWxkIGJlIGNvbmZ1c2luZy4KClRoYXQncyBub3QgcXVpdGUgY29ycmVjdC4gVGhlIHBy
+b3BlcnR5IHNoYWxsIGJlIHNwZWNpZmllZCB3aGVuIHRoZSBTb0MKc3VwcG9ydHMgZHVhbC1saW5r
+IG1vZGUgKHdoaWNoIGlzIHRoZSBjYXNlIGZvciB0aGUgRDMgYW5kIEUzIFNvQ3Mgb25seSksCnJl
+Z2FyZGxlc3Mgb2Ygd2hldGhlciB0aGUgYm9hcmQgaXMgd2lyZWQgdXAgaW4gc2luZ2xlLWxpbmsg
+b3IgZHVhbC1saW5rCm1vZGUuIFNlbGVjdGlvbiBvZiB0aGUgbW9kZSBpcyBwZXJmb3JtZWQgYXQg
+cnVudGltZSBieSBsb29raW5nIGF0IHRoZQpyZXF1aXJlbWVudHMgb2YgdGhlIExWRFMgc2luaywg
+bm90IGJhc2VkIG9uIHRoZSBjb21wYW5pb24gcHJvcGVydHkgaW4KRFQuIFRoZSByZW5lc2FzLGNv
+bXBhbmlvbiBwcm9wZXJ0eSBpcyB0aHVzIFNvQy1zcGVjaWZpYywgYnV0IG5vdApib2FyZC1zcGVj
+aWZpYy4KCj4gSSBob3BlIHRoaXMgYmV0dGVyIGRlc2NyaWJlcyBteSB1bmRlcnN0YW5kaW5nLgoK
+LS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbA==
