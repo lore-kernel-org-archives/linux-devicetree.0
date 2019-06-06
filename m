@@ -1,79 +1,111 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v8 08/13] drivers: memory: add DMC driver for Exynos5422
-Date: Thu, 6 Jun 2019 15:35:17 +0200
-Message-ID: <20a5e3a9-3ac9-2bb6-2c26-fab02d92c2b4@partner.samsung.com>
-References: <CGME20190605165435eucas1p2fa32f4583f396fdce443b6943ac180d3@eucas1p2.samsung.com>
-        <20190605165410.14606-1-l.luba@partner.samsung.com>
-        <20190605165410.14606-9-l.luba@partner.samsung.com>
-        <CAJKOXPfKbWpx9AapOudDyEZjDpgtMX-aHPQHRivuVNKaap8EQg@mail.gmail.com>
-        <d5758d38-c0e5-1732-1407-91d602ae5500@partner.samsung.com>
-        <CAJKOXPfiFCp52rYtOBk5mfHfLLA=VtBpakAdUB__UcVCqbma-g@mail.gmail.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: [PATCH v9 1/3] dt-bindings: media: add Amlogic Video Decoder Bindings
+Date: Thu,  6 Jun 2019 15:41:20 +0200
+Message-ID: <20190606134122.16854-2-mjourdan@baylibre.com>
+References: <20190606134122.16854-1-mjourdan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfiFCp52rYtOBk5mfHfLLA=VtBpakAdUB__UcVCqbma-g@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190606134122.16854-1-mjourdan@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/6/19 1:45 PM, Krzysztof Kozlowski wrote:
-> On Thu, 6 Jun 2019 at 12:38, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->> Hi Krzysztof,
->>>> +/**
->>>> + * exynos5_dmc_init_clks() - Initialize clocks needed for DMC operation.
->>>> + * @dmc:       DMC structure containing needed fields
->>>> + *
->>>> + * Get the needed clocks defined in DT device, enable and set the right parents.
->>>> + * Read current frequency and initialize the initial rate for governor.
->>>> + */
->>>> +static int exynos5_dmc_init_clks(struct exynos5_dmc *dmc)
->>>> +{
->>>> +       int ret;
->>>> +       unsigned long target_volt = 0;
->>>> +       unsigned long target_rate = 0;
->>>> +
->>>> +       dmc->fout_spll = devm_clk_get(dmc->dev, "fout_spll");
->>>> +       if (IS_ERR(dmc->fout_spll))
->>>> +               return PTR_ERR(dmc->fout_spll);
->>>> +
->>>> +       dmc->fout_bpll = devm_clk_get(dmc->dev, "fout_bpll");
->>>> +       if (IS_ERR(dmc->fout_bpll))
->>>> +               return PTR_ERR(dmc->fout_bpll);
->>>> +
->>>> +       dmc->mout_mclk_cdrex = devm_clk_get(dmc->dev, "mout_mclk_cdrex");
->>>> +       if (IS_ERR(dmc->mout_mclk_cdrex))
->>>> +               return PTR_ERR(dmc->mout_mclk_cdrex);
->>>
->>> You are not enabling this clock. It is divider so it is fine for him
->>> but what about its parents? How can you guarantee that parents are
->>> enabled?
->> It uses two parents in this configuration:
->> 1. 'mout_bpll' which is set by the bootloader and is a default mode
->> 2. 'mout_mx_mspll_ccore' which is used temporary as a 'bypass clock
->> source' only for the time when BPLL is changing it's settings
->>
->> Do you suggest to put a call:
->>
->> to make sure the parent is up and running?
->> OR just move the lines from the end of this function:
->>          clk_prepare_enable(dmc->fout_bpll);
->>          clk_prepare_enable(dmc->mout_bpll);
->> and add:
->>          ret = clk_set_parent(dmc->mout_mclk_cdrex, dmc->mout_bpll);
->> then call the clk_get_rate on 'mout_mclk_cdrex'
->>
-> 
-> Ah, It's my mistake. I missed that later you enable its new parent. It's fine.
-OK, so I will leave it as is and just fix the other stuff that you've
-mentioned.
+Add documentation for the meson vdec dts node.
 
-Regards,
-Lukasz
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/media/amlogic,vdec.txt           | 71 +++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
+
+diff --git a/Documentation/devicetree/bindings/media/amlogic,vdec.txt b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
+new file mode 100644
+index 000000000000..aabdd01bcf32
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
+@@ -0,0 +1,71 @@
++Amlogic Video Decoder
++================================
++
++The video decoding IP lies within the DOS memory region,
++except for the hardware bitstream parser that makes use of an undocumented
++region.
++
++It makes use of the following blocks:
++
++- ESPARSER is a bitstream parser that outputs to a VIFIFO. Further VDEC blocks
++then feed from this VIFIFO.
++- VDEC_1 can decode MPEG-1, MPEG-2, MPEG-4 part 2, MJPEG, H.263, H.264, VC-1.
++- VDEC_HEVC can decode HEVC and VP9.
++
++Both VDEC_1 and VDEC_HEVC share the "vdec" IRQ and as such cannot run
++concurrently.
++
++Device Tree Bindings:
++---------------------
++
++VDEC: Video Decoder
++--------------------------
++
++Required properties:
++- compatible: value should be different for each SoC family as :
++	- GXBB (S905) : "amlogic,gxbb-vdec"
++	- GXL (S905X, S905D) : "amlogic,gxl-vdec"
++	- GXM (S912) : "amlogic,gxm-vdec"
++- reg: base address and size of he following memory-mapped regions :
++	- dos
++	- esparser
++- reg-names: should contain the names of the previous memory regions
++- interrupts: should contain the following IRQs:
++	- vdec
++	- esparser
++- interrupt-names: should contain the names of the previous interrupts
++- amlogic,ao-sysctrl: should point to the AOBUS sysctrl node
++- amlogic,canvas: should point to a canvas provider node
++- clocks: should contain the following clocks :
++	- dos_parser
++	- dos
++	- vdec_1
++	- vdec_hevc
++- clock-names: should contain the names of the previous clocks
++- resets: should contain the parser reset
++- reset-names: should be "esparser"
++
++Example:
++
++vdec: video-decoder@c8820000 {
++	compatible = "amlogic,gxbb-vdec";
++	reg = <0x0 0xc8820000 0x0 0x10000>,
++	      <0x0 0xc110a580 0x0 0xe4>;
++	reg-names = "dos", "esparser";
++
++	interrupts = <GIC_SPI 44 IRQ_TYPE_EDGE_RISING>,
++		     <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
++	interrupt-names = "vdec", "esparser";
++
++	amlogic,ao-sysctrl = <&sysctrl_AO>;
++	amlogic,canvas = <&canvas>;
++
++	clocks = <&clkc CLKID_DOS_PARSER>,
++		 <&clkc CLKID_DOS>,
++		 <&clkc CLKID_VDEC_1>,
++		 <&clkc CLKID_VDEC_HEVC>;
++	clock-names = "dos_parser", "dos", "vdec_1", "vdec_hevc";
++
++	resets = <&reset RESET_PARSER>;
++	reset-names = "esparser";
++};
+-- 
+2.21.0
