@@ -1,47 +1,39 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: Add Lenovo Miix 630
-Date: Thu, 6 Jun 2019 00:26:01 -0700
-Message-ID: <20190606072601.GT22737@tuxbook-pro>
-References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
- <20190423160616.10017-1-jeffrey.l.hugo@gmail.com>
- <20190606055034.GA4797@dell>
+From: "Shenhar, Talel" <talel@amazon.com>
+Subject: Re: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna Labs
+ Fabric Interrupt Controller Driver
+Date: Thu, 6 Jun 2019 10:25:55 +0300
+Message-ID: <88907fea-aee1-62c8-604a-726b603ec48a@amazon.com>
+References: <1559731921-14023-1-git-send-email-talel@amazon.com>
+ <1559731921-14023-3-git-send-email-talel@amazon.com>
+ <fa6e5a95-d9dd-19f6-43e3-3046e0898bda@arm.com>
+ <553d06a4-a6b6-816f-b110-6ef7f300dde4@amazon.com>
+ <0915892c-0e53-8f53-e858-b1c3298a4d35@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190606055034.GA4797@dell>
+In-Reply-To: <0915892c-0e53-8f53-e858-b1c3298a4d35@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org, dmitry.torokhov@gmail.com, jikos@kernel.org, benjamin.tissoires@redhat.com, hdegoede@redhat.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, nicolas.ferre@microchip.com, jason@lakedaemon.net, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com, talel@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed 05 Jun 22:50 PDT 2019, Lee Jones wrote:
 
-> On Tue, 23 Apr 2019, Jeffrey Hugo wrote:
-> 
-> > This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
-> > functionality includes USB (host), microSD-card, keyboard, and trackpad.
-> > 
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/Makefile             |   1 +
-> >  .../boot/dts/qcom/msm8998-clamshell.dtsi      | 278 ++++++++++++++++++
-> >  .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 ++
-> 
-> What's happening with this patch?
-> 
+On 6/5/2019 6:12 PM, Marc Zyngier wrote:
+> On 05/06/2019 15:38, Shenhar, Talel wrote:
+>>
+>> FIC only support two sensing modes, rising-edge and level.
+> Yes, I can tell. Yet, this code will let EDGE_BOTH pass through, even if
+> it cannot handle it.
+Will handle on v4
+> Indeed we use interrupt specifier that has the level type in it
+>> (dt-binding: "#interrupt-cells: must be 2.") which in turns causes to
+>> this irq_set_type callback.
+> Well, this isn't what the example in your DT binding shows.
+Will update the example in v4
 
-The thermal-zones are wrong, but I'm okay with an incremental patch for
-that...
 
-> It's been on the list a while now.  I'm waiting for it to be accepted,
-> since there are patches I wish to submit which are based on it.
-> 
-> Who is responsible for merging these?
-> 
+Thanks,
 
-...so I've just been waiting for a conclusion on the HID patch before I
-could pick this up.
-
-Regards,
-Bjorn
+Talel.
