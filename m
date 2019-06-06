@@ -1,73 +1,99 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V8 13/15] phy: tegra: Add PCIe PIPE2UPHY support
-Date: Thu, 6 Jun 2019 19:30:08 +0300
-Message-ID: <c81c5d42-4292-ba6d-b5ab-afe1a604115f@gmail.com>
-References: <20190526043751.12729-1-vidyas@nvidia.com>
- <20190526043751.12729-14-vidyas@nvidia.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 01/10] dt-bindings: doc: net: keystone-netcp: document cpts
+Date: Thu, 6 Jun 2019 19:30:38 +0300
+Message-ID: <20190606163047.31199-2-grygorii.strashko@ti.com>
+References: <20190606163047.31199-1-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190526043751.12729-14-vidyas@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <20190606163047.31199-1-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
-Cc: mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: "David S. Miller" <davem@davemloft.net>, Santosh Shilimkar <ssantosh@kernel.org>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-26.05.2019 7:37, Vidya Sagar пишет:
-> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
-> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
-> For each PCIe lane of a controller, there is a P2U unit instantiated at
-> hardware level. This driver provides support for the programming required
-> for each P2U that is going to be used for a PCIe controller.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v7]:
-> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
-> 
-> Changes since [v6]:
-> * None
-> 
-> Changes since [v5]:
-> * Addressed review comments from Thierry
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * Rebased on top of linux-next top of the tree
-> 
-> Changes since [v2]:
-> * Replaced spaces with tabs in Kconfig file
-> * Sorted header file inclusion alphabetically
-> 
-> Changes since [v1]:
-> * Added COMPILE_TEST in Kconfig
-> * Removed empty phy_ops implementations
-> * Modified code according to DT documentation file modifications
-> 
->  drivers/phy/tegra/Kconfig            |   7 ++
->  drivers/phy/tegra/Makefile           |   1 +
->  drivers/phy/tegra/phy-tegra194-p2u.c | 109 +++++++++++++++++++++++++++
->  3 files changed, 117 insertions(+)
->  create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
-> 
-> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
-> index a3b1de953fb7..c56fc8452e03 100644
-> --- a/drivers/phy/tegra/Kconfig
-> +++ b/drivers/phy/tegra/Kconfig
-> @@ -6,3 +6,10 @@ config PHY_TEGRA_XUSB
->  
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called phy-tegra-xusb.
-> +
-> +config PHY_TEGRA194_P2U
-> +	tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
-> +	depends on ARCH_TEGRA || COMPILE_TEST
+The Keystone 2 66AK2HK/E/L 1G Ethernet Switch Subsystems contains The
+Common Platform Time Sync (CPTS) module which is in general compatible with
+CPTS module found on "legacy" TI AM3/4/5 SoCs. So, the basic support for
+Keystone 2 CPTS is available by default, but not documented.
+The Keystone 2 CPTS module supports also some additional features like time
+sync reference (RFTCLK) clock selection through CPTS_RFTCLK_SEL register
+(offset: x08) in CPTS module, which is modelled as multiplexer clock.
 
-ARCH_TEGRA is a bit too much, ARCH_TEGRA_194_SOC should fit better here.
+This patch adds missed binding documentation for Keystone 2 66AK2HK/E/L
+CPTS module.
 
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+---
+ .../bindings/net/keystone-netcp.txt           | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/keystone-netcp.txt b/Documentation/devicetree/bindings/net/keystone-netcp.txt
+index 6262c2f293b0..24f11e042f8d 100644
+--- a/Documentation/devicetree/bindings/net/keystone-netcp.txt
++++ b/Documentation/devicetree/bindings/net/keystone-netcp.txt
+@@ -104,6 +104,23 @@ Required properties:
+ 			- 10Gb mac<->mac forced mode : 11
+ ----phy-handle:	phandle to PHY device
+ 
++- cpts:		sub-node time synchronization (CPTS) submodule configuration
++-- clocks:	CPTS reference clock. Should point on cpts-refclk-mux clock.
++-- clock-names: should be "cpts"
++-- cpts-refclk-mux: multiplexer clock definition sub-node for CPTS reference (RFTCLK) clock
++--- #clock-cells: should be 0
++--- clocks:	list of CPTS reference (RFTCLK) clock's parents as defined in Data manual
++--- ti,mux-tbl: array of multiplexer indexes as defined in Data manual
++--- assigned-clocks: should point on cpts-refclk-mux clock
++--- assigned-clock-parents: should point on required RFTCLK clock parent to be selected
++-- cpts_clock_mult: (optional) Numerator to convert input clock ticks
++		into nanoseconds
++-- cpts_clock_shift: (optional) Denominator to convert input clock ticks into
++		nanoseconds.
++		Mult and shift will be calculated basing on CPTS
++		rftclk frequency if both cpts_clock_shift and
++		cpts_clock_mult properties are not provided.
++
+ Optional properties:
+ - enable-ale:	NetCP driver keeps the address learning feature in the ethernet
+ 		switch module disabled. This attribute is to enable the address
+@@ -168,6 +185,23 @@ netcp: netcp@2000000 {
+ 			tx-queue = <648>;
+ 			tx-channel = <8>;
+ 
++			cpts {
++				clocks = <&cpts_refclk_mux>;
++				clock-names = "cpts";
++
++				cpts_refclk_mux: cpts-refclk-mux {
++					#clock-cells = <0>;
++					clocks = <&chipclk12>, <&chipclk13>,
++						 <&timi0>, <&timi1>,
++						 <&tsipclka>, <&tsrefclk>,
++						 <&tsipclkb>;
++					ti,mux-tbl = <0x0>, <0x1>, <0x2>,
++						<0x3>, <0x4>, <0x8>, <0xC>;
++					assigned-clocks = <&cpts_refclk_mux>;
++					assigned-clock-parents = <&chipclk12>;
++				};
++			};
++
+ 			interfaces {
+ 				gbe0: interface-0 {
+ 					slave-port = <0>;
+@@ -219,3 +253,13 @@ netcp: netcp@2000000 {
+ 		};
+ 	};
+ };
++
++CPTS board configuration - select external CPTS RFTCLK:
++
++&tsrefclk{
++	clock-frequency = <500000000>;
++};
++
++&cpts_refclk_mux {
++	assigned-clock-parents = <&tsrefclk>;
++};
 -- 
-Dmitry
+2.17.1
