@@ -1,213 +1,174 @@
-From: Sameer Pujar <spujar@nvidia.com>
-Subject: Re: [PATCH 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
-Date: Thu, 6 Jun 2019 11:28:04 +0530
-Message-ID: <490b81d9-2734-bb93-303b-94bb20a4f6a5@nvidia.com>
-References: <1557143908-5850-1-git-send-email-spujar@nvidia.com>
- <9f9962fc-a261-aecc-b4c5-408a75ebcb5f@nvidia.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH 01/16] firmware: ti_sci: Add resource management APIs for
+ ringacc, psi-l and udma
+Date: Thu, 6 Jun 2019 11:30:09 +0530
+Message-ID: <f2056b18-3f65-b7ae-90ba-5ebf9ac425bc@ti.com>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
+ <20190506123456.6777-2-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9f9962fc-a261-aecc-b4c5-408a75ebcb5f@nvidia.com>
-Content-Language: en-GB
+In-Reply-To: <20190506123456.6777-2-peter.ujfalusi@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
+Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, t-kristo@ti.com, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Peter,
 
-On 6/4/2019 2:37 PM, Jon Hunter wrote:
-> On 06/05/2019 12:58, Sameer Pujar wrote:
->> Add DT nodes for following devices on Tegra186 and Tegra194
->>   * ACONNECT
->>   * ADMA
->>   * AGIC
->>
->> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->> ---
->>   arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67 ++++++++++++++++++++++++++++++++
->>   arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++++++++
->>   2 files changed, 134 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->> index 6e2b6ce..2c432c9 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->> @@ -1153,4 +1153,71 @@
->>   				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
->>   		interrupt-parent = <&gic>;
->>   	};
->> +
->> +	aconnect@2a41000 {
->> +		compatible = "nvidia,tegra210-aconnect";
->> +		clocks = <&bpmp TEGRA186_CLK_APE>,
->> +			 <&bpmp TEGRA186_CLK_APB2APE>;
->> +		clock-names = "ape", "apb2ape";
->> +		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
-> My recollection is that non-empty range is preferred from what Rob told
-> me in the past. See the Tegra210 binding.
-I see at various places empty ranges property is used. From DT spec, it 
-means
-there is no translation in the address space between parent/child.
+On 06/05/19 6:04 PM, Peter Ujfalusi wrote:
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-Also I looked at Tegra210 binding,
-ranges = <0x702c0000 0x0 0x702c0000 0x00040000>;
-Should it be encoded as a triplet(child addr, parent addr, length)?
->
->> +		status = "disabled";
->> +
->> +		dma@2930000 {
-> Although I did not do this for Tegra210, I think that the preferred
-> convention is 'dma-controller@xxxxxxxxx'.
-done.
->> +			compatible = "nvidia,tegra186-adma";
->> +			reg = <0x0 0x02930000 0x0 0x50000>;
->> +			interrupt-parent = <&agic>;
->> +			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH 0>;
->> +			#dma-cells = <1>;
->> +			clocks = <&bpmp TEGRA186_CLK_AHUB>;
->> +			clock-names = "d_audio";
->> +			status = "disabled";
->> +		};
->> +
->> +		agic: agic@2a41000 {
->> +			compatible = "nvidia,tegra210-agic";
->> +			#interrupt-cells = <4>;
-> Why 4? This does not match the binding document for the arm-gic.
-will fix.
->> +			interrupt-controller;
->> +			reg = <0x0 0x02a41000 0x0 0x1000>,
->> +			      <0x0 0x02a42000 0x0 0x1000>;
-> I believe that the 2nd address range should have size 0x2000 for the CPU
-> interfaces.
-done
->> +			interrupts = <GIC_SPI 145 (GIC_CPU_MASK_SIMPLE(4) |
->> +					IRQ_TYPE_LEVEL_HIGH)>;
->> +			clocks = <&bpmp TEGRA186_CLK_APE>;
->> +			clock-names = "clk";
->> +			status = "disabled";
->> +		};
->> +	};
->>   };
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> index c77ca21..dcab504 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> @@ -1054,4 +1054,71 @@
->>   				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
->>   		interrupt-parent = <&gic>;
->>   	};
->> +
->> +	aconnect@2a41000 {
->> +		compatible = "nvidia,tegra210-aconnect";
->> +		clocks = <&bpmp TEGRA194_CLK_APE>,
->> +			 <&bpmp TEGRA194_CLK_APB2APE>;
->> +		clock-names = "ape", "apb2ape";
->> +		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_AUD>;
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
-> Same as above.
->
->> +		status = "disabled";
->> +
->> +		dma@2930000 {
-> Same as above.
->
->> +			compatible = "nvidia,tegra186-adma";
->> +			reg = <0x0 0x02930000 0x0 0x50000>;
->> +			interrupt-parent = <&agic>;
->> +			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH 0>,
->> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH 0>;
->> +			#dma-cells = <1>;
->> +			clocks = <&bpmp TEGRA194_CLK_AHUB>;
->> +			clock-names = "d_audio";
->> +			status = "disabled";
->> +		};
->> +
->> +		agic: agic@2a41000 {
->> +			compatible = "nvidia,tegra210-agic";
->> +			#interrupt-cells = <4>;
-> Same as above.
->
->> +			interrupt-controller;
->> +			reg = <0x0 0x02a41000 0x0 0x1000>,
->> +			      <0x0 0x02a42000 0x0 0x1000>;
-> Same as above.
->
->> +			interrupts = <GIC_SPI 145 (GIC_CPU_MASK_SIMPLE(4) |
->> +					IRQ_TYPE_LEVEL_HIGH)>;
->> +			clocks = <&bpmp TEGRA194_CLK_APE>;
->> +			clock-names = "clk";
->> +			status = "disabled";
->> +		};
->> +	};
->>   };
->>
-> Cheers
-> Jon
->
+Patch has the following checkpatch warnings and checks which can be fixed:
+
+WARNING: Missing commit description - Add an appropriate one
+
+CHECK: Lines should not end with a '('
+#262: FILE: drivers/firmware/ti_sci.c:2286:
++static int ti_sci_cmd_rm_udmap_tx_ch_cfg(
+
+CHECK: Lines should not end with a '('
+#323: FILE: drivers/firmware/ti_sci.c:2347:
++static int ti_sci_cmd_rm_udmap_rx_ch_cfg(
+
+CHECK: Lines should not end with a '('
+#383: FILE: drivers/firmware/ti_sci.c:2407:
++static int ti_sci_cmd_rm_udmap_rx_flow_cfg1(
+
+CHECK: Lines should not end with a '('
+#1414: FILE: include/linux/soc/ti/ti_sci_protocol.h:455:
++	int (*rx_flow_cfg)(
+
+total: 0 errors, 2 warnings, 4 checks, 1399 lines checked
+
+
+
+> ---
+>  drivers/firmware/ti_sci.c              | 439 +++++++++++++++
+>  drivers/firmware/ti_sci.h              | 704 +++++++++++++++++++++++++
+>  include/linux/soc/ti/ti_sci_protocol.h | 216 ++++++++
+>  3 files changed, 1359 insertions(+)
+> 
+> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+> index 64d895b80bc3..af3ebcdeab18 100644
+> --- a/drivers/firmware/ti_sci.c
+> +++ b/drivers/firmware/ti_sci.c
+
+[..snip.]
+
+> +}
+> +
+> +static int ti_sci_cmd_rm_psil_pair(const struct ti_sci_handle *handle,
+> +				   u32 nav_id, u32 src_thread, u32 dst_thread)
+> +{
+
+All the psil ops doesn't have the  kernel-doc function comments. Just be
+consistent with other functions :)
+
+
+> +	struct ti_sci_msg_hdr *resp;
+> +	struct ti_sci_msg_psil_pair *req;
+> +	struct ti_sci_xfer *xfer;
+> +	struct ti_sci_info *info;
+> +	struct device *dev;
+> +	int ret = 0;
+> +
+> +	if (IS_ERR(handle))
+> +		return PTR_ERR(handle);
+> +	if (!handle)
+> +		return -EINVAL;
+> +
+> +	info = handle_to_ti_sci_info(handle);
+> +	dev = info->dev;
+> +
+> +	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_RM_PSIL_PAIR,
+> +				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
+> +				   sizeof(*req), sizeof(*resp));
+> +	if (IS_ERR(xfer)) {
+> +		ret = PTR_ERR(xfer);
+> +		dev_err(dev, "RM_PSIL:Message reconfig failed(%d)\n", ret);
+> +		return ret;
+> +	}
+> +	req = (struct ti_sci_msg_psil_pair *)xfer->xfer_buf;
+> +	req->nav_id = nav_id;
+> +	req->src_thread = src_thread;
+> +	req->dst_thread = dst_thread;
+> +
+> +	ret = ti_sci_do_xfer(info, xfer);
+> +	if (ret) {
+> +		dev_err(dev, "RM_PSIL:Mbox send fail %d\n", ret);
+> +		goto fail;
+> +	}
+> +
+> +	resp = (struct ti_sci_msg_hdr *)xfer->xfer_buf;
+> +	ret = ti_sci_is_response_ack(resp) ? 0 : -EINVAL;
+> +
+> +fail:
+> +	ti_sci_put_one_xfer(&info->minfo, xfer);
+> +
+> +	return ret;
+> +}
+> +
+
+[..snip..]
+
+> + */
+> +struct ti_sci_msg_rm_ring_cfg_req {
+> +	struct ti_sci_msg_hdr hdr;
+> +	u32 valid_params;
+> +	u16 nav_id;
+> +	u16 index;
+> +	u32 addr_lo;
+> +	u32 addr_hi;
+> +	u32 count;
+> +	u8 mode;
+> +	u8 size;
+> +	u8 order_id;
+> +} __packed;
+> +
+> +/**
+> + * struct ti_sci_msg_rm_ring_cfg_resp - Response to configuring a ring.
+> + *
+> + * @hdr:	Generic Header
+> + */
+> +struct ti_sci_msg_rm_ring_cfg_resp {
+> +	struct ti_sci_msg_hdr hdr;
+> +} __packed;
+
+If it is a generic ACK, NACK response, just use the header directly.
+
+[..snip..]
+
+> + */
+> +struct ti_sci_msg_rm_udmap_rx_ch_cfg_req {
+> +	struct ti_sci_msg_hdr hdr;
+> +	u32 valid_params;
+> +	u16 nav_id;
+> +	u16 index;
+> +	u16 rx_fetch_size;
+> +	u16 rxcq_qnum;
+> +	u8 rx_priority;
+> +	u8 rx_qos;
+> +	u8 rx_orderid;
+> +	u8 rx_sched_priority;
+> +	u16 flowid_start;
+> +	u16 flowid_cnt;
+> +	u8 rx_pause_on_err;
+> +	u8 rx_atype;
+> +	u8 rx_chan_type;
+> +	u8 rx_ignore_short;
+> +	u8 rx_ignore_long;
+> +	u8 rx_burst_size;
+> +
+
+extra line?
+
+> +} __packed;
+> +
+> +/**
+
+
+Thanks and regards,
+Lokesh
