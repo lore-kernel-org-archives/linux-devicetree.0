@@ -1,123 +1,66 @@
-From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Subject: Re: [PATCH 1/2] clk: rockchip: add clock for the watchdog pclk on
- rk3328
-Date: Thu, 06 Jun 2019 14:42:20 +0300
-Message-ID: <1559821340.1384.0@gmail.com>
-References: <20190605235714.22432-1-papadakospan@gmail.com>
- <3485393.4UdOu2YNQE@phil>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v8 08/13] drivers: memory: add DMC driver for Exynos5422
+Date: Thu, 6 Jun 2019 13:45:15 +0200
+Message-ID: <CAJKOXPfiFCp52rYtOBk5mfHfLLA=VtBpakAdUB__UcVCqbma-g@mail.gmail.com>
+References: <CGME20190605165435eucas1p2fa32f4583f396fdce443b6943ac180d3@eucas1p2.samsung.com>
+ <20190605165410.14606-1-l.luba@partner.samsung.com> <20190605165410.14606-9-l.luba@partner.samsung.com>
+ <CAJKOXPfKbWpx9AapOudDyEZjDpgtMX-aHPQHRivuVNKaap8EQg@mail.gmail.com> <d5758d38-c0e5-1732-1407-91d602ae5500@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3485393.4UdOu2YNQE@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, itdaniher@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d5758d38-c0e5-1732-1407-91d602ae5500@partner.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 6 Jun 2019 at 12:38, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+> Hi Krzysztof,
+> >> +/**
+> >> + * exynos5_dmc_init_clks() - Initialize clocks needed for DMC operation.
+> >> + * @dmc:       DMC structure containing needed fields
+> >> + *
+> >> + * Get the needed clocks defined in DT device, enable and set the right parents.
+> >> + * Read current frequency and initialize the initial rate for governor.
+> >> + */
+> >> +static int exynos5_dmc_init_clks(struct exynos5_dmc *dmc)
+> >> +{
+> >> +       int ret;
+> >> +       unsigned long target_volt = 0;
+> >> +       unsigned long target_rate = 0;
+> >> +
+> >> +       dmc->fout_spll = devm_clk_get(dmc->dev, "fout_spll");
+> >> +       if (IS_ERR(dmc->fout_spll))
+> >> +               return PTR_ERR(dmc->fout_spll);
+> >> +
+> >> +       dmc->fout_bpll = devm_clk_get(dmc->dev, "fout_bpll");
+> >> +       if (IS_ERR(dmc->fout_bpll))
+> >> +               return PTR_ERR(dmc->fout_bpll);
+> >> +
+> >> +       dmc->mout_mclk_cdrex = devm_clk_get(dmc->dev, "mout_mclk_cdrex");
+> >> +       if (IS_ERR(dmc->mout_mclk_cdrex))
+> >> +               return PTR_ERR(dmc->mout_mclk_cdrex);
+> >
+> > You are not enabling this clock. It is divider so it is fine for him
+> > but what about its parents? How can you guarantee that parents are
+> > enabled?
+> It uses two parents in this configuration:
+> 1. 'mout_bpll' which is set by the bootloader and is a default mode
+> 2. 'mout_mx_mspll_ccore' which is used temporary as a 'bypass clock
+> source' only for the time when BPLL is changing it's settings
+>
+> Do you suggest to put a call:
+>
+> to make sure the parent is up and running?
+> OR just move the lines from the end of this function:
+>         clk_prepare_enable(dmc->fout_bpll);
+>         clk_prepare_enable(dmc->mout_bpll);
+> and add:
+>         ret = clk_set_parent(dmc->mout_mclk_cdrex, dmc->mout_bpll);
+> then call the clk_get_rate on 'mout_mclk_cdrex'
+>
 
-Hi,
-> 
-> Am Donnerstag, 6. Juni 2019, 01:57:13 CEST schrieb Leonidas P. 
-> Papadakos:
->>  From: <itdaniher@gmail.com>
-> 
-> Why is the From different from the Signed-off-by? Would also need a 
-> full name.
-> If the patch is from you, please just use the same From as for the 
-> Signed-off-by.
-> 
+Ah, It's my mistake. I missed that later you enable its new parent. It's fine.
 
-I mistakenly though this was the way to credit someone for a patch, but 
-it seems to be different.
-I'll Cc: the author of this patch
-
->> 
->>  Following the discussion here:
->>  https://github.com/rockchip-linux/kernel/issues/123
->> 
->>  it can be seen that these are the changes needed to enable the use 
->> of the hardware watchdog in the rk3328 SoC.
->> 
->>  This is in line with past changes for the rk3288:
->>  
->> http://lists.infradead.org/pipermail/linux-rockchip/2015-January/002314.html
->> 
->>  Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
->>  ---
->>   drivers/clk/rockchip/clk-rk3328.c      | 9 +++++++++
->>   include/dt-bindings/clock/rk3328-cru.h | 1 +
->>   2 files changed, 10 insertions(+)
->> 
->>  diff --git a/drivers/clk/rockchip/clk-rk3328.c 
->> b/drivers/clk/rockchip/clk-rk3328.c
->>  index 076b9777a..546ee0ab7 100644
->>  --- a/drivers/clk/rockchip/clk-rk3328.c
->>  +++ b/drivers/clk/rockchip/clk-rk3328.c
->>  @@ -876,6 +876,8 @@ static const char *const 
->> rk3328_critical_clocks[] __initconst = {
->> 
->>   static void __init rk3328_clk_init(struct device_node *np)
->>   {
->>  +	struct clk *clk;
->>  +
->>   	struct rockchip_clk_provider *ctx;
->>   	void __iomem *reg_base;
->> 
->>  @@ -892,6 +894,13 @@ static void __init rk3328_clk_init(struct 
->> device_node *np)
->>   		return;
->>   	}
->> 
->>  +	clk = clk_register_fixed_factor(NULL, "pclk_wdt", "pclk_bus", 0, 
->> 1, 1);
->>  +	if (IS_ERR(clk))
->>  +		pr_warn("%s: could not register clock pclk_wdt: %ld\n",
->>  +			__func__, PTR_ERR(clk));
->>  +	else
->>  +		rockchip_clk_add_lookup(ctx, clk, PCLK_WDT);
->>  +
-> 
-> I've just Cc'ed you on 2 patches adding a SGRF_GATE clock-type. Please
-> use that as base for you rk3328-wdt-clock, so that we don't introduce 
-> more
-> boilderplate code.
-> 
-> 
->>   	rockchip_clk_register_plls(ctx, rk3328_pll_clks,
->>   				   ARRAY_SIZE(rk3328_pll_clks),
->>   				   RK3328_GRF_SOC_STATUS0);
-> 
->>  diff --git a/include/dt-bindings/clock/rk3328-cru.h 
->> b/include/dt-bindings/clock/rk3328-cru.h
->>  index afb811340..555b4ff66 100644
->>  --- a/include/dt-bindings/clock/rk3328-cru.h
->>  +++ b/include/dt-bindings/clock/rk3328-cru.h
->>  @@ -164,6 +164,7 @@
->>   #define PCLK_DCF		233
->>   #define PCLK_SARADC		234
->>   #define PCLK_ACODECPHY		235
->>  +#define PCLK_WDT		236
->> 
->>   /* hclk gates */
->>   #define HCLK_PERI		308
-> 
-> please split the addition of the clock-id into a separate patch only 
-> adding
-> said id.
-> 
-> 
-> Thanks
-> Heiko
-> 
-
-I know less than him on this, but I want the feedback to be visible in 
-the Cc:
+Best regards,
+Krzysztof
