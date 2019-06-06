@@ -1,76 +1,62 @@
-From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: rockchip: enable rk3328 watchdog clock
-Date: Thu,  6 Jun 2019 02:57:14 +0300
-Message-ID: <20190605235714.22432-2-papadakospan@gmail.com>
-References: <20190605235714.22432-1-papadakospan@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 0/3] (Qualcomm) UFS device reset support
+Date: Wed, 5 Jun 2019 17:39:59 -0700
+Message-ID: <20190606003959.GM4814@minitux>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
+ <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+ <20190605060154.GJ22737@tuxbook-pro>
+ <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190605235714.22432-1-papadakospan@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-rockchip@lists.infradead.org, "Leonidas P. Papadakos" <papadakospan@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Avri Altman <Avri.Altman@wdc.com>
+Cc: John Stultz <john.stultz@linaro.org>, Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: <itdaniher@gmail.com>
+On Wed 05 Jun 02:32 PDT 2019, Avri Altman wrote:
 
-Add the missing clock property for the watchdog on rk3328.
+> > 
+> > On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
+> > 
+> > > Hi,
+> > >
+> > > >
+> > > > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
+> > > > <bjorn.andersson@linaro.org> wrote:
+> > > > >
+> > > > > This series exposes the ufs_reset line as a gpio, adds support for ufshcd to
+> > > > > acquire and toggle this and then adds this to SDM845 MTP.
+> > > > >
+> > > > > Bjorn Andersson (3):
+> > > > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
+> > > > >   scsi: ufs: Allow resetting the UFS device
+> > > > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
+> > > >
+> > > > Adding similar change as in sdm845-mtp to the not yet upstream
+> > > > blueline dts, I validated this allows my micron UFS pixel3 to boot.
+> > > >
+> > > > Tested-by: John Stultz <john.stultz@linaro.org>
+> > > Maybe ufs_hba_variant_ops would be the proper place to add this?
+> > >
+> > 
+> > Are you saying that these memories only need a reset when they are
+> > paired with the Qualcomm host controller?
+> ufs_hba_variant_ops is for vendors to implement their own vops,
+> and as you can see, many of them do.
+> Adding hw_reset to that template seems like the proper way
+> to do what you are doing.
+> 
 
-This patch depends on:
-clk: rockchip: add clock for the watchdog pclk on rk3328
+Right, but the vops is operations related to the UFS controller, this
+property relates to the memory connected.
 
-Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++++
- arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 4 ++++
- arch/arm64/boot/dts/rockchip/rk3328.dtsi       | 2 ++
- 3 files changed, 10 insertions(+)
+E.g I have a Hynix memory and John have a Micron memory that needs this
+reset and my assumption is that these memories will need their RESET pin
+toggled regardless of which controller they are connected to.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 5d499c908..49d51dd93 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-@@ -349,3 +349,7 @@
- &vop_mmu {
- 	status = "okay";
- };
-+
-+&wdt {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-index 7cfd5ca6c..18a3e0dfa 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-@@ -405,3 +405,7 @@
- &vop_mmu {
- 	status = "okay";
- };
-+
-+&wdt {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 994468671..e0a6279da 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -407,6 +407,8 @@
- 		compatible = "snps,dw-wdt";
- 		reg = <0x0 0xff1a0000 0x0 0x100>;
- 		interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru PCLK_WDT>;
-+		status = "disabled";
- 	};
- 
- 	pwm0: pwm@ff1b0000 {
--- 
-2.21.0
+Regards,
+Bjorn
