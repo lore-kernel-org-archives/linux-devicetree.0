@@ -1,64 +1,79 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] media: dt-bindings: media: Add r8a77965 DRIF bindings
-Date: Thu, 6 Jun 2019 15:32:46 +0200
-Message-ID: <20190606133244.yso6l5ivaat4jwyo@verge.net.au>
-References: <1556014199-12698-1-git-send-email-na-hoan@jinso.co.jp>
- <20190423105046.cshmwghdufaqp4pj@verge.net.au>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v8 08/13] drivers: memory: add DMC driver for Exynos5422
+Date: Thu, 6 Jun 2019 15:35:17 +0200
+Message-ID: <20a5e3a9-3ac9-2bb6-2c26-fab02d92c2b4@partner.samsung.com>
+References: <CGME20190605165435eucas1p2fa32f4583f396fdce443b6943ac180d3@eucas1p2.samsung.com>
+        <20190605165410.14606-1-l.luba@partner.samsung.com>
+        <20190605165410.14606-9-l.luba@partner.samsung.com>
+        <CAJKOXPfKbWpx9AapOudDyEZjDpgtMX-aHPQHRivuVNKaap8EQg@mail.gmail.com>
+        <d5758d38-c0e5-1732-1407-91d602ae5500@partner.samsung.com>
+        <CAJKOXPfiFCp52rYtOBk5mfHfLLA=VtBpakAdUB__UcVCqbma-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190423105046.cshmwghdufaqp4pj@verge.net.au>
+In-Reply-To: <CAJKOXPfiFCp52rYtOBk5mfHfLLA=VtBpakAdUB__UcVCqbma-g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nguyen An Hoan <na-hoan@jinso.co.jp>
-Cc: linux-renesas-soc@vger.kernel.org, ramesh.shanmugasundaram@bp.renesas.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kuninori.morimoto.gx@renesas.com, magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com, h-inayoshi@jinso.co.jp, cv-dong@jinso.co.jp
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 12:50:46PM +0200, Simon Horman wrote:
-> On Tue, Apr 23, 2019 at 07:09:58PM +0900, Nguyen An Hoan wrote:
-> > From: Hoan Nguyen An <na-hoan@jinso.co.jp>
-> > 
-> > Add r8a77965 DRIF bindings.
-> > 
-> > Signed-off-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
+On 6/6/19 1:45 PM, Krzysztof Kozlowski wrote:
+> On Thu, 6 Jun 2019 at 12:38, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>> Hi Krzysztof,
+>>>> +/**
+>>>> + * exynos5_dmc_init_clks() - Initialize clocks needed for DMC operation.
+>>>> + * @dmc:       DMC structure containing needed fields
+>>>> + *
+>>>> + * Get the needed clocks defined in DT device, enable and set the right parents.
+>>>> + * Read current frequency and initialize the initial rate for governor.
+>>>> + */
+>>>> +static int exynos5_dmc_init_clks(struct exynos5_dmc *dmc)
+>>>> +{
+>>>> +       int ret;
+>>>> +       unsigned long target_volt = 0;
+>>>> +       unsigned long target_rate = 0;
+>>>> +
+>>>> +       dmc->fout_spll = devm_clk_get(dmc->dev, "fout_spll");
+>>>> +       if (IS_ERR(dmc->fout_spll))
+>>>> +               return PTR_ERR(dmc->fout_spll);
+>>>> +
+>>>> +       dmc->fout_bpll = devm_clk_get(dmc->dev, "fout_bpll");
+>>>> +       if (IS_ERR(dmc->fout_bpll))
+>>>> +               return PTR_ERR(dmc->fout_bpll);
+>>>> +
+>>>> +       dmc->mout_mclk_cdrex = devm_clk_get(dmc->dev, "mout_mclk_cdrex");
+>>>> +       if (IS_ERR(dmc->mout_mclk_cdrex))
+>>>> +               return PTR_ERR(dmc->mout_mclk_cdrex);
+>>>
+>>> You are not enabling this clock. It is divider so it is fine for him
+>>> but what about its parents? How can you guarantee that parents are
+>>> enabled?
+>> It uses two parents in this configuration:
+>> 1. 'mout_bpll' which is set by the bootloader and is a default mode
+>> 2. 'mout_mx_mspll_ccore' which is used temporary as a 'bypass clock
+>> source' only for the time when BPLL is changing it's settings
+>>
+>> Do you suggest to put a call:
+>>
+>> to make sure the parent is up and running?
+>> OR just move the lines from the end of this function:
+>>          clk_prepare_enable(dmc->fout_bpll);
+>>          clk_prepare_enable(dmc->mout_bpll);
+>> and add:
+>>          ret = clk_set_parent(dmc->mout_mclk_cdrex, dmc->mout_bpll);
+>> then call the clk_get_rate on 'mout_mclk_cdrex'
+>>
 > 
-> According to the User's Manual Hardware, v1.50 Nov 20 2019,
-> the DRIF IP block M3-N (r8a77965) has a BITCTR register which
-> is not present on the H3 (r8a7795) or M3-W (r8a77995).
-> 
-> Does the DRIF IP block present on the M3-N (r8a77965) function
-> without support for this register in the driver?
-> 
-> If not then I think that:
-> 1) This patch should be updated to note that renesas,rcar-gen3-drif
->    can only be used with H3 (r8a7795) and M3-W (r8a77995).
-> 2) A driver patch is required
-> 3) The DT patch, 2/2 of this series, should be updated to
->    i) Not use renesas,rcar-gen3-drif
->    ii) Extend the register aperture from 0x64 to 0x84.
+> Ah, It's my mistake. I missed that later you enable its new parent. It's fine.
+OK, so I will leave it as is and just fix the other stuff that you've
+mentioned.
 
-Hi,
-
-I'm wondering what the status of this patchset it.
-
+Regards,
+Lukasz
 > 
-> > ---
-> >  Documentation/devicetree/bindings/media/renesas,drif.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt b/Documentation/devicetree/bindings/media/renesas,drif.txt
-> > index 0d8974a..16cdee3 100644
-> > --- a/Documentation/devicetree/bindings/media/renesas,drif.txt
-> > +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
-> > @@ -41,6 +41,7 @@ Required properties of an internal channel:
-> >  -------------------------------------------
-> >  - compatible:	"renesas,r8a7795-drif" if DRIF controller is a part of R8A7795 SoC.
-> >  		"renesas,r8a7796-drif" if DRIF controller is a part of R8A7796 SoC.
-> > +		"renesas,r8a77965-drif" if DRIF controller is a part of R8A77965 SoC.
-> >  		"renesas,rcar-gen3-drif" for a generic R-Car Gen3 compatible device.
-> >  
-> >  		When compatible with the generic version, nodes must list the
-> > -- 
-> > 2.7.4
-> > 
+> Best regards,
+> Krzysztof
+> 
 > 
