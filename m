@@ -1,106 +1,57 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH 3/4] iio: adc: mediatek: SET_LATE_SYSTEM_SLEEP_PM_OPS
- support
-Date: Thu, 6 Jun 2019 16:46:00 +0100
-Message-ID: <20190606164600.000060b3@huawei.com>
-References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
-        <1557994247-16739-4-git-send-email-chun-hung.wu@mediatek.com>
-        <20190518113527.5210b0bf@archlinux>
-        <1558332205.11080.6.camel@mtkswgap22>
-        <7838dcae-8a69-0297-718b-a061b14a456d@gmail.com>
-        <1559041196.12867.3.camel@mtkswgap22>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC documentation
+Date: Thu, 6 Jun 2019 16:46:33 +0100
+Message-ID: <066d3d9b-f65e-7689-a3a7-d995e26fcbf3@arm.com>
+References: <20190605141253.38554-1-ghung.quanta@gmail.com>
+ <20190605141253.38554-2-ghung.quanta@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559041196.12867.3.camel@mtkswgap22>
+In-Reply-To: <20190605141253.38554-2-ghung.quanta@gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, peter.wang@mediatek.com, kuohong.wang@mediatek.com, jg_poxu@mediatek.com, stanley.chu@mediatek.com
+To: George Hung <ghung.quanta@gmail.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, benjaminfair@google.com, wak@google.com, Avi.Fishman@nuvoton.com, tomer.maimon@nuvoton.com, openbmc@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>, Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, davem@davemloft.net, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 May 2019 18:59:56 +0800
-Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+Hi George,
 
-> Hi Matthias:
-> 
->   Thanks for your suggestion, I think device_links is a good way to
-> make dependency of module's suspend/resume order.
-> 
-> Hi Jonathan:
-> 
->   Is it ok to keep using late_suspend and early_resume, or do you think
-> it's better to use device_links?
-I think device links would be preferable as the reasoning becomes explicit.
-As I understand them they are also a less fragile solution.
+On 05/06/2019 15:12, George Hung wrote:
+> Add device tree documentation for Nuvoton BMC ECC
+
+(Nit: The DT folk prefer patches adding bindings to come first in the series, before the
+driver that uses them).
+
+
+> diff --git a/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> new file mode 100644
+> index 000000000000..dd4dac59a5bd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> @@ -0,0 +1,17 @@
+> +Nuvoton NPCM7xx SoC EDAC device driver
+> +
+> +The Nuvoton NPCM7xx SoC supports DDR4 memory with/without ECC and the driver
+> +uses the EDAC framework to implement the ECC detection and corrtection.
+
+The commit message in the driver says this is a Cadence memory controller, can we describe
+what it is here, and give it an additional compatible?
+
 
 Thanks,
 
-Jonathan
+James
 
-> 
-> Thanks,
-> Chun-Hung
-> On Wed, 2019-05-22 at 18:28 +0200, Matthias Brugger wrote:
-> > 
-> > On 20/05/2019 08:03, Chun-Hung Wu wrote:  
-> > > Hi Jonathan:
-> > > 
-> > >   Thanks for the prompt reply,
-> > > 
-> > > On Sat, 2019-05-18 at 11:35 +0100, Jonathan Cameron wrote:  
-> > >> On Thu, 16 May 2019 16:10:46 +0800
-> > >> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
-> > >>  
-> > >>>   Move suspend/resume to late_suspend and
-> > >>> early_resume to gurantee users can use auxadc  
-> > >> guarantee
-> > >>  
-> > > will fix it in next version.  
-> > >>> driver at suspend/resume stage.  
-> > >> No problem with the patch content, but we need a reason why they may
-> > >> want to do so?  
-> > > Our thermal drivers uses auxadc at suspend/resume stage.
-> > > In order to avoid auxadc suspended prior to thermal driver,
-> > > we move auxadc to late_suspend and early_resume.
-> > >   
-> > 
-> > That sounds like a user of device_links [1] to me.
-> > 
-> > [1] https://www.kernel.org/doc/html/latest/driver-api/device_link.html
-> >   
-> > > Thanks,
-> > > Chun-Hung  
-> > >>
-> > >> Thanks,
-> > >>
-> > >> Jonathan  
-> > >>>
-> > >>> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-> > >>> ---
-> > >>>  drivers/iio/adc/mt6577_auxadc.c | 7 ++++---
-> > >>>  1 file changed, 4 insertions(+), 3 deletions(-)
-> > >>>
-> > >>> diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
-> > >>> index e1bdcc0..58d7cb2 100644
-> > >>> --- a/drivers/iio/adc/mt6577_auxadc.c
-> > >>> +++ b/drivers/iio/adc/mt6577_auxadc.c
-> > >>> @@ -326,9 +326,10 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
-> > >>>  	return 0;
-> > >>>  }
-> > >>>  
-> > >>> -static SIMPLE_DEV_PM_OPS(mt6577_auxadc_pm_ops,
-> > >>> -			 mt6577_auxadc_suspend,
-> > >>> -			 mt6577_auxadc_resume);
-> > >>> +static const struct dev_pm_ops mt6577_auxadc_pm_ops = {
-> > >>> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(mt6577_auxadc_suspend,
-> > >>> +				     mt6577_auxadc_resume)
-> > >>> +};
-> > >>>  
-> > >>>  static const struct of_device_id mt6577_auxadc_of_match[] = {
-> > >>>  	{ .compatible = "mediatek,mt2701-auxadc", .data = &mt8173_compat},  
-> > >>  
-> > > 
-> > >   
-> 
+> +Required properties:
+> +- compatible:	should be "nuvoton,npcm7xx-sdram-edac"
+> +- reg:		Memory controller register set should be <0xf0824000 0x1000>
+> +- interrupts:	should be MC interrupt #25
+> +Example:
+> +
+> +	mc: memory-controller@f0824000 {
+> +		compatible = "nuvoton,npcm7xx-sdram-edac";
+> +		reg = <0xf0824000 0x1000>;
+> +		interrupts = <0 25 4>;
+> +	};
 > 
