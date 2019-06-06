@@ -1,93 +1,50 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
- mailbox
-Date: Wed, 5 Jun 2019 19:51:52 -0700
-Message-ID: <19931084-8b12-c510-8856-5cc869e4f9ff@gmail.com>
-References: <20190603083005.4304-1-peng.fan@nxp.com>
- <20190603083005.4304-2-peng.fan@nxp.com>
- <ae4c79f0-4aec-250e-e312-20aba5554665@gmail.com>
- <20190603165651.GA12196@e107155-lin>
- <20190603181856.34996aaa@donnerap.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [RESEND][PATCH v3 1/2] usb: dwc3: Add avoiding vbus glitch happen during xhci reset
+Date: Thu,  6 Jun 2019 10:54:17 +0800
+Message-ID: <20190606025418.26313-1-ran.wang_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190603181856.34996aaa@donnerap.cambridge.arm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
-Cc: peng.fan@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com, shawnguo@kernel.org, festevam@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, van.freenix@gmail.com
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, Yang Li <pku.leo@gmail.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+When DWC3 is set to host mode by programming register DWC3_GCTL, VBUS
+(or its control signal) will turn on immediately on related Root Hub
+ports. Then the VBUS will be de-asserted for a little while during xhci
+reset (conducted by xhci driver) for a little while and back to normal.
 
+This VBUS glitch might cause some USB devices emuration fail if kernel
+boot with them connected. One SW workaround which can fix this is to
+program all PORTSC[PP] to 0 to turn off VBUS immediately after setting
+host mode in DWC3 driver(per signal measurement result, it will be too
+late to do it in xhci-plat.c or xhci.c).
 
-On 6/3/2019 10:18 AM, Andre Przywara wrote:
-> On Mon, 3 Jun 2019 17:56:51 +0100
-> Sudeep Holla <sudeep.holla@arm.com> wrote:
-> 
-> Hi,
-> 
->> On Mon, Jun 03, 2019 at 09:22:16AM -0700, Florian Fainelli wrote:
->>> On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:  
->>>> From: Peng Fan <peng.fan@nxp.com>
->>>>
->>>> The ARM SMC mailbox binding describes a firmware interface to trigger
->>>> actions in software layers running in the EL2 or EL3 exception levels.
->>>> The term "ARM" here relates to the SMC instruction as part of the ARM
->>>> instruction set, not as a standard endorsed by ARM Ltd.
->>>>
->>>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->>>> ---
->>>>
->>>> V2:
->>>> Introduce interrupts as a property.
->>>>
->>>> V1:
->>>> arm,func-ids is still kept as an optional property, because there is no
->>>> defined SMC funciton id passed from SCMI. So in my test, I still use
->>>> arm,func-ids for ARM SIP service.
->>>>
->>>>  .../devicetree/bindings/mailbox/arm-smc.txt        | 101 +++++++++++++++++++++
->>>>  1 file changed, 101 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
->>>> new file mode 100644
->>>> index 000000000000..401887118c09
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
->>>> @@ -0,0 +1,101 @@  
->>
->> [...]
->>
->>>> +Optional properties:
->>>> +- arm,func-ids		An array of 32-bit values specifying the function
->>>> +			IDs used by each mailbox channel. Those function IDs
->>>> +			follow the ARM SMC calling convention standard [1].
->>>> +			There is one identifier per channel and the number
->>>> +			of supported channels is determined by the length
->>>> +			of this array.
->>>> +- interrupts		SPI interrupts may be listed for notification,
->>>> +			each channel should use a dedicated interrupt
->>>> +			line.  
->>>
->>> I would not go about defining a specific kind of interrupt, since SPI is
->>> a GIC terminology, this firmware interface could be used in premise with
->>> any parent interrupt controller, for which the concept of a SPI/PPI/SGI
->>> may not be relevant.
->>>  
->>
->> While I agree the binding document may not contain specifics, I still
->> don't see how to use SGI with this. Also note it's generally reserved
->> for OS future use(IPC) and using this for other than IPC may be bit
->> challenging IMO. It opens up lots of questions.
-> 
-> Well, a PPI might be possible to use, although it's somewhat dodgy to hijack the GIC's (re-)distributor from EL3 to write to GICD_ISPENDR<n>. Need to ask Marc about his feelings towards this. But it's definitely possible from a hypervisor to inject arbitrary interrupts into a guest.
-> 
-> But more importantly: is there any actual reason this needs to be a GIC interrupt? If I understand the code correctly, this could just be any interrupt, including one of an interrupt combiner or a GPIO chip. So why not just use the standard wording of: "exactly one interrupt specifier for each channel"?
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes in v3:
+  - None
 
-That was my point, I am not stuck on using an SGI, or PPI, or anything
-(even if that's what we have been using at the moment), any interrupt
-would/should do here so the wording should be exactly as you indicated.
+Changes in v2:
+  - Correct typos
+  - Shorten the name to snps,host-vbus-glitches
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 8e5265e..453f562 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -106,6 +106,9 @@ Optional properties:
+ 			When just one value, which means INCRX burst mode enabled. When
+ 			more than one value, which means undefined length INCR burst type
+ 			enabled. The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
++ - snps,host-vbus-glitches: Power off all Root Hub ports immediately after
++			setting host mode to avoid vbus (negative) glitch happen in later
++			xhci reset. And the vbus will back to 5V automatically when reset done.
+ 
+  - in addition all properties from usb-xhci.txt from the current directory are
+    supported as well
 -- 
-Florian
+1.7.1
