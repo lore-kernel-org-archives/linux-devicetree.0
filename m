@@ -1,82 +1,33 @@
-Return-Path: <SRS0=gQZM=UF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.myocard.eu ([80.211.34.180]:60186 "EHLO mail.myocard.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFFIn0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:43:26 -0400
-Received: by mail.myocard.eu for <devicetree@vger.kernel.org>; Thu,  6 Jun 2019 08:43:15 GMT
-Message-ID: <20190606093813-0.1.g.7o2.0.gepetzv72b@myocard.eu>
-Date: Thu,  6 Jun 2019 08:43:15 GMT
-From: "Radoslav Dobrev" <radoslav.dobrev@myocard.eu>
-Subject: =?UTF-8?Q?=D0=92=D0=B5=D0=BB=D0=B8=D0=BA=D0=B4=D0=B5=D0=BD=D1=81=D0=BA=D0=B8_=D0=B1=D0=BE=D0=BD=D1=83=D1=81=D0=B8?=
+Return-Path: <SRS0=zwzm=UF=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
+References: <1559228266-16724-1-git-send-email-biju.das@bp.renesas.com> <1559228266-16724-4-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1559228266-16724-4-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 6 Jun 2019 12:01:57 +0200
+Message-ID: <CAMuHMdW=5R82QLZre5Azr4VKAXQn+gmavTBzRy7uGZmrVCWDsA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: renesas: Add HiHope RZ/G2M sub board support
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, xu_shunji@hoperun.com, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-=D0=A3=D0=B2=D0=B0=D0=B6=D0=B0=D0=B5=D0=BC=D0=B8 =D0=93=D0=BE=D1=81=D0=BF=
-=D0=BE=D0=B4=D0=B8=D0=BD=D0=B5/=D0=93=D0=BE=D1=81=D0=BF=D0=BE=D0=B6=D0=BE=
-,
+On Thu, May 30, 2019 at 5:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> The HiHope RZ/G2M sub board sits below the HiHope RZ/G2M main board.
+> This patch also adds ethernet support along with a dtsi common to
+> both HiHope RZ/G2M and RZ/G2N sub boards.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-=D0=A1=D1=8A=D0=B2=D1=80=D0=B5=D0=BC=D0=B5=D0=BD=D0=BD=D0=B0=D1=82=D0=B0 =
-=D1=81=D0=BE=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B0 =D0=BF=D1=80=D0=B8=D0=B4=
-=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B0 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=
-=D0=B8 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0, =D0=BA=D0=BE=D0=B8=D1=
-=82=D0=BE =D0=BC=D0=BE=D0=B3=D0=B0=D1=82 =D0=B4=D0=B0 =D0=B1=D1=8A=D0=B4=D0=
-=B0=D1=82 =D0=B8=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0=D0=BD=D0=B8 =D0=
-=B2 =D1=88=D0=B8=D1=80=D0=BE=D0=BA=D0=B0 =D1=82=D1=8A=D1=80=D0=B3=D0=BE=D0=
-=B2=D1=81=D0=BA=D0=B0 =D0=BC=D1=80=D0=B5=D0=B6=D0=B0 =D0=BE=D1=82 =D1=81=D1=
-=83=D0=BF=D0=B5=D1=80=D0=BC=D0=B0=D1=80=D0=BA=D0=B5=D1=82=D0=B8 =D0=B8 =D0=
-=B7=D0=B0=D0=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F =D0=B7=D0=B0 =D1=85=D1=
-=80=D0=B0=D0=BD=D0=B5=D0=BD=D0=B5 =D0=B2 =D1=81=D1=82=D1=80=D0=B0=D0=BD=D0=
-=B0=D1=82=D0=B0, =D0=B5 =D0=B8=D0=BD=D1=81=D1=82=D1=80=D1=83=D0=BC=D0=B5=D0=
-=BD=D1=82, =D0=BA=D0=BE=D0=B9=D1=82=D0=BE =D0=B5=D1=84=D0=B5=D0=BA=D1=82=D0=
-=B8=D0=B2=D0=BD=D0=BE =D0=BF=D0=BE=D0=B2=D0=B8=D1=88=D0=B0=D0=B2=D0=B0 =D0=
-=B5=D1=84=D0=B8=D0=BA=D0=B0=D1=81=D0=BD=D0=BE=D1=81=D1=82=D1=82=D0=B0 =D0=
-=BD=D0=B0 =D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-=D0=A2=D0=BE=D0=B2=D0=B0 =D1=81=D0=B5 =D0=BF=D0=BE=D1=82=D0=B2=D1=8A=D1=80=
-=D0=B6=D0=B4=D0=B0=D0=B2=D0=B0 =D0=B8 =D0=BE=D1=82 =D0=BF=D1=80=D0=BE=D1=83=
-=D1=87=D0=B2=D0=B0=D0=BD=D0=B5=D1=82=D0=BE =D0=BD=D0=B0 =D0=A1=D0=B2=D0=B5=
-=D1=82=D0=BE=D0=B2=D0=BD=D0=B0=D1=82=D0=B0 =D0=B7=D0=B4=D1=80=D0=B0=D0=B2=
-=D0=BD=D0=B0 =D0=BE=D1=80=D0=B3=D0=B0=D0=BD=D0=B8=D0=B7=D0=B0=D1=86=D0=B8=
-=D1=8F (=D0=A1=D0=97=D0=9E), =D0=BA=D0=BE=D0=B5=D1=82=D0=BE =D0=BF=D0=BE=D0=
-=BA=D0=B0=D0=B7=D0=B2=D0=B0, =D1=87=D0=B5 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=
-=82=D0=B5=D0=BB, =D0=BA=D0=BE=D0=B9=D1=82=D0=BE =D0=BF=D0=BE=D0=BB=D1=83=D1=
-=87=D0=B0=D0=B2=D0=B0 =D0=B4=D0=BE=D0=BF=D0=BB=D0=B0=D1=89=D0=B0=D0=BD=D0=
-=B5 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0, =D0=B5 =D0=BF=D0=BE-=D0=B5=
-=D1=84=D0=B5=D0=BA=D1=82=D0=B8=D0=B2=D0=B5=D0=BD =D1=81 20%, =D0=B0  =D0=BE=
-=D1=82=D1=81=D1=8A=D1=81=D1=82=D0=B2=D0=B8=D1=8F=D1=82=D0=B0 =D0=BC=D1=83=
- =D0=BD=D0=B0=D0=BC=D0=B0=D0=BB=D1=8F=D0=B2=D0=B0=D1=82 =D1=81 27%.
+Gr{oetje,eeting}s,
 
-=D0=98=D0=B7=D0=B1=D0=BE=D1=80=D1=8A=D1=82 =D0=BD=D0=B0 =D0=BD=D0=B0=D1=88=
-=D0=B8=D1=82=D0=B5 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8 =D0=B7=D0=B0=
- =D1=85=D1=80=D0=B0=D0=BD=D0=B0 =D0=BA=D0=B0=D1=82=D0=BE =D1=84=D0=BE=D1=80=
-=D0=BC=D0=B0 =D0=BD=D0=B0 =D1=81=D0=BE=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B0=
- =D0=BF=D1=80=D0=B8=D0=B4=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B0 =D0=B5 =D1=80=
-=D0=B0=D0=B2=D0=BD=D0=BE=D0=B7=D0=BD=D0=B0=D1=87=D0=BD=D0=BE =D0=BD=D0=B5=
- =D1=81=D0=B0=D0=BC=D0=BE =D0=BD=D0=B0 =D0=BF=D1=80=D0=BE=D0=B4=D1=83=D0=BA=
-=D1=82=D0=B8=D0=B2=D0=B5=D0=BD =D0=B8 =D0=BC=D0=BE=D1=82=D0=B8=D0=B2=D0=B8=
-=D1=80=D0=B0=D0=BD =D0=B5=D0=BA=D0=B8=D0=BF =D0=B7=D0=B0 =D1=80=D0=B0=D0=B1=
-=D0=BE=D1=82=D0=BE=D0=B4=D0=B0=D1=82=D0=B5=D0=BB=D1=8F, =D0=BD=D0=BE =D0=B8=
- =D1=84=D0=B8=D0=BD=D0=B0=D0=BD=D1=81=D0=BE=D0=B2=D0=BE =D0=BE=D0=B1=D0=BB=
-=D0=B5=D0=BA=D1=87=D0=B5=D0=BD=D0=B8=D0=B5 - =D1=81=D1=82=D0=BE=D0=B9=D0=BD=
-=D0=BE=D1=81=D1=82=D1=82=D0=B0 =D0=BD=D0=B0 =D0=B8=D0=B7=D1=80=D0=B0=D0=B7=
-=D1=85=D0=BE=D0=B4=D0=B2=D0=B0=D0=BD=D0=B8=D1=82=D0=B5 =D1=81=D1=80=D0=B5=
-=D0=B4=D1=81=D1=82=D0=B2=D0=B0 =D0=BD=D0=B5 =D1=81=D0=B5 =D0=BE=D0=B1=D0=BB=
-=D0=B0=D0=B3=D0=B0 =D1=81 =D0=B4=D0=B0=D0=BD=D1=8A=D0=BA.
+                        Geert
 
-=D0=96=D0=B5=D0=BB=D0=B0=D0=B5=D1=82=D0=B5 =D0=BB=D0=B8 =D0=B4=D0=B0 =D0=92=
-=D0=B8 =D0=BF=D1=80=D0=B5=D0=B4=D0=BE=D1=81=D1=82=D0=B0=D0=B2=D1=8F =D0=BF=
-=D0=BE=D0=B2=D0=B5=D1=87=D0=B5 =D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=
-=D1=86=D0=B8=D1=8F =D0=BE=D1=82=D0=BD=D0=BE=D1=81=D0=BD=D0=BE =D0=B2=D0=B0=
-=D1=83=D1=87=D0=B5=D1=80=D0=B8=D1=82=D0=B5 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=
-=D0=BD=D0=B0 =D0=B7=D0=B0 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=
-=D0=B8?
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
-=D0=B5=D0=B2
-Head of HR Benefit Team
-www.myocard.eu
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
