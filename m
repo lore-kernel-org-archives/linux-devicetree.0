@@ -1,29 +1,69 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 3/5] ARM: dts: rockchip: Switch to builtin HDMI DDC bus on rk3288-veyron
-Date: Thu, 06 Jun 2019 12:28:47 +0200
-Message-ID: <1843069.a0lnjFrhvD@phil>
-References: <20190502225336.206885-1-dianders@chromium.org> <20190502225336.206885-3-dianders@chromium.org>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6ull-colibri: enable UHS-I for USDHC1
+Date: Thu, 6 Jun 2019 10:31:27 +0000
+Message-ID: <dc983cea041c3bbe354a62eb30a92b4c3d2734d6.camel@toradex.com>
+References: <20190606090612.16685-1-igor.opaniuk@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502225336.206885-3-dianders@chromium.org>
+In-Reply-To: <20190606090612.16685-1-igor.opaniuk@gmail.com>
+Content-Language: en-US
+Content-ID: <3A1C860EC93D44449ED1A15C1557280A@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Sandy Huang <hjc@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, mka@chromium.org, Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "igor.opaniuk@gmail.com" <igor.opaniuk@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 3. Mai 2019, 00:53:34 CEST schrieb Douglas Anderson:
-> Downstream Chrome OS kernels use the builtin DDC bus from dw_hdmi on
-> veyron.  This is the only way to get them to negotiate HDCP.
-> 
-> Although HDCP isn't currently all supported upstream, it still seems
-> like it makes sense to use dw_hdmi's builtin I2C.  Maybe eventually we
-> can get HDCP negotiation working.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-applied patches 3 to 5 for 5.3
-
-Thanks
-Heiko
+T24gVGh1LCAyMDE5LTA2LTA2IGF0IDEyOjA2ICswMzAwLCBJZ29yIE9wYW5pdWsgd3JvdGU6DQo+
+IEZyb206IElnb3IgT3Bhbml1ayA8aWdvci5vcGFuaXVrQHRvcmFkZXguY29tPg0KPiANCj4gQWxs
+b3dzIHRvIHVzZSB0aGUgU0QgaW50ZXJmYWNlIGF0IGEgaGlnaGVyIHNwZWVkIG1vZGUgaWYgdGhl
+IGNhcmQNCj4gc3VwcG9ydHMgaXQuIEZvciB0aGlzIHRoZSBzaWduYWxpbmcgdm9sdGFnZSBpcyBz
+d2l0Y2hlZCBmcm9tIDMuM1YgdG8NCj4gMS44ViB1bmRlciB0aGUgdXNkaGMxJ3MgZHJpdmVycyBj
+b250cm9sLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogSWdvciBPcGFuaXVrIDxpZ29yLm9wYW5pdWtA
+dG9yYWRleC5jb20+DQoNClJldmlld2VkLWJ5OiBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3
+aWxlckB0b3JhZGV4LmNvbT4NCg0KPiAtLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5k
+dHNpICAgICAgICAgICAgICAgICAgfCAgNCArKysrDQo+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2
+dWxsLWNvbGlicmktZXZhbC12My5kdHNpIHwgMTEgKysrKysrKysrLS0NCj4gIGFyY2gvYXJtL2Jv
+b3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpICAgICAgICAgfCAgNiArKysrKysNCj4gIDMgZmls
+ZXMgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYg
+LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQ0KPiBiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2lteDZ1bC5kdHNpDQo+IGluZGV4IGZjMzg4Yjg0YmYyMi4uOTFhMGNlZDQ0ZTI3IDEwMDY0
+NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQ0KPiArKysgYi9hcmNoL2Fy
+bS9ib290L2R0cy9pbXg2dWwuZHRzaQ0KPiBAQCAtODU3LDYgKzg1Nyw4IEBADQo+ICAJCQkJCSA8
+JmNsa3MgSU1YNlVMX0NMS19VU0RIQzE+LA0KPiAgCQkJCQkgPCZjbGtzIElNWDZVTF9DTEtfVVNE
+SEMxPjsNCj4gIAkJCQljbG9jay1uYW1lcyA9ICJpcGciLCAiYWhiIiwgInBlciI7DQo+ICsJCQkJ
+ZnNsLHR1bmluZy1zdGVwPSA8Mj47DQo+ICsJCQkJZnNsLHR1bmluZy1zdGFydC10YXAgPSA8MjA+
+Ow0KPiAgCQkJCWJ1cy13aWR0aCA9IDw0PjsNCj4gIAkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0K
+PiAgCQkJfTsNCj4gQEAgLTg3MCw2ICs4NzIsOCBAQA0KPiAgCQkJCQkgPCZjbGtzIElNWDZVTF9D
+TEtfVVNESEMyPjsNCj4gIAkJCQljbG9jay1uYW1lcyA9ICJpcGciLCAiYWhiIiwgInBlciI7DQo+
+ICAJCQkJYnVzLXdpZHRoID0gPDQ+Ow0KPiArCQkJCWZzbCx0dW5pbmctc3RlcD0gPDI+Ow0KPiAr
+CQkJCWZzbCx0dW5pbmctc3RhcnQtdGFwID0gPDIwPjsNCj4gIAkJCQlzdGF0dXMgPSAiZGlzYWJs
+ZWQiOw0KPiAgCQkJfTsNCj4gIA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14
+NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaQ0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwt
+Y29saWJyaS1ldmFsLXYzLmR0c2kNCj4gaW5kZXggMDA2NjkwZWE5OGMwLi43ZGM3NzcwY2Y1MmMg
+MTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS1ldmFsLXYz
+LmR0c2kNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMu
+ZHRzaQ0KPiBAQCAtMTQ1LDEzICsxNDUsMjAgQEANCj4gIH07DQo+ICANCj4gICZ1c2RoYzEgew0K
+PiAtCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZh
+dWx0IiwgInN0YXRlXzEwMG1oeiIsICJzdGF0ZV8yMDBtaHoiLA0KPiAic2xlZXAiOw0KPiAgCXBp
+bmN0cmwtMCA9IDwmcGluY3RybF91c2RoYzEgJnBpbmN0cmxfc252c191c2RoYzFfY2Q+Ow0KPiAt
+CW5vLTEtOC12Ow0KPiArCXBpbmN0cmwtMSA9IDwmcGluY3RybF91c2RoYzFfMTAwbWh6ICZwaW5j
+dHJsX3NudnNfdXNkaGMxX2NkPjsNCj4gKwlwaW5jdHJsLTIgPSA8JnBpbmN0cmxfdXNkaGMxXzEw
+MG1oeiAmcGluY3RybF9zbnZzX3VzZGhjMV9jZD47DQo+ICsJcGluY3RybC0zID0gPCZwaW5jdHJs
+X3VzZGhjMSAmcGluY3RybF9zbnZzX3VzZGhjMV9zbGVlcF9jZD47DQo+ICAJY2QtZ3Bpb3MgPSA8
+JmdwaW81IDAgR1BJT19BQ1RJVkVfTE9XPjsNCj4gIAlkaXNhYmxlLXdwOw0KPiAgCXdha2V1cC1z
+b3VyY2U7DQo+ICAJa2VlcC1wb3dlci1pbi1zdXNwZW5kOw0KPiAgCXZtbWMtc3VwcGx5ID0gPCZy
+ZWdfM3YzPjsNCj4gKwl2cW1tYy1zdXBwbHkgPSA8JnJlZ19zZDFfdm1tYz47DQo+ICsJc2QtdWhz
+LXNkcjEyOw0KPiArCXNkLXVocy1zZHIyNTsNCj4gKwlzZC11aHMtc2RyNTA7DQo+ICsJc2QtdWhz
+LXNkcjEwNDsNCj4gIAlzdGF0dXMgPSAib2theSI7DQo+ICB9Ow0KPiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLmR0c2kNCj4gYi9hcmNoL2FybS9ib290L2R0
+cy9pbXg2dWxsLWNvbGlicmkuZHRzaQ0KPiBpbmRleCA5YWQxZGExNTk3NjguLmQ1NjcyOGYwM2Mz
+NSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLmR0c2kN
+Cj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLmR0c2kNCj4gQEAgLTU0
+NSw2ICs1NDUsMTIgQEANCj4gIAkJPjsNCj4gIAl9Ow0KPiAgDQo+ICsJcGluY3RybF9zbnZzX3Vz
+ZGhjMV9zbGVlcF9jZDogc252cy11c2RoYzEtY2QtZ3JwLXNscCB7DQo+ICsJCWZzbCxwaW5zID0g
+PA0KPiArCQkJTVg2VUxMX1BBRF9TTlZTX1RBTVBFUjBfX0dQSU81X0lPMDAJMHgwDQo+ICsJCT47
+DQo+ICsJfTsNCj4gKw0KPiAgCXBpbmN0cmxfc252c193aWZpX3Bkbjogc252cy13aWZpLXBkbi1n
+cnAgew0KPiAgCQlmc2wscGlucyA9IDwNCj4gIAkJCU1YNlVMTF9QQURfQk9PVF9NT0RFMV9fR1BJ
+TzVfSU8xMQkweDE0DQo=
