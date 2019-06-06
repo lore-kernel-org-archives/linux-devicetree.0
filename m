@@ -1,171 +1,90 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v4 1/2] HID: quirks: Refactor ELAN 400 and 401 handling
-Date: Thu, 6 Jun 2019 09:06:51 +0200
-Message-ID: <CAO-hwJKeS06Tsz8BzbWZw2TW74ZowvRqJue=Od-cMmfNH9N7Tw@mail.gmail.com>
-References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
- <20190423160605.9970-1-jeffrey.l.hugo@gmail.com> <20190521164324.GA2085@tuxbook-pro>
- <CAOCk7Nr-a=ek7xOhBwMgxG55jvKQK2tyy15oknrDn7OYvxtEwA@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 0/3] (Qualcomm) UFS device reset support
+Date: Thu, 6 Jun 2019 00:09:55 -0700
+Message-ID: <20190606070955.GR22737@tuxbook-pro>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
+ <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+ <20190605060154.GJ22737@tuxbook-pro>
+ <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+ <20190606003959.GM4814@minitux>
+ <SN6PR04MB49255AF3D92E655E1BBD75AEFC170@SN6PR04MB4925.namprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOCk7Nr-a=ek7xOhBwMgxG55jvKQK2tyy15oknrDn7OYvxtEwA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <SN6PR04MB49255AF3D92E655E1BBD75AEFC170@SN6PR04MB4925.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jiri Kosina <jikos@kernel.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Hans de Goede <hdegoede@redhat.com>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, devicetree@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+To: Avri Altman <Avri.Altman@wdc.com>
+Cc: John Stultz <john.stultz@linaro.org>, Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 1:25 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> On Tue, May 21, 2019 at 10:42 AM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > On Tue 23 Apr 09:06 PDT 2019, Jeffrey Hugo wrote:
-> >
-> > > There needs to be coordination between hid-quirks and the elan_i2c driver
-> > > about which devices are handled by what drivers.  Currently, both use
-> > > whitelists, which results in valid devices being unhandled by default,
-> > > when they should not be rejected by hid-quirks.  This is quickly becoming
-> > > an issue.
-> > >
-> > > Since elan_i2c has a maintained whitelist of what devices it will handle,
-> > > use that to implement a blacklist in hid-quirks so that only the devices
-> > > that need to be handled by elan_i2c get rejected by hid-quirks, and
-> > > everything else is handled by default.  The downside is the whitelist and
-> > > blacklist need to be kept in sync.
-> > >
-> >
-> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> >
-> > Jiri, the two patches in this series doesn't have a build time
-> > dependency, so if you take this one through your tree I'll take 2/2
-> > through arm-soc.
->
-> Ping?  Is this good from the HID perspective?  I would really like to
-> see this queued for 5.3.
->
+On Wed 05 Jun 23:32 PDT 2019, Avri Altman wrote:
 
-Sorry, this felt through the cracks.
-
-I'm fine with the idea of the patch, but I just realized what bugged me:
-we should instead have a static array of the various ACPI matches,
-instead of duplicating the various strncmp.
-
-So IMO, we should:
-- merge patch 2/2 through Bjorn's tree (or with any changes he would request)
-- have a v5 for the HID/input part with:
-  * a static array of the names to match against in hid-quirks.c
-  * separate the elan_i2c trivial change in its separate patch as
-there are already a few changes committed in the input tree, which is
-different from the HID tree. I don't expect any conflicts though, so
-if Dmitry is fine, I can take the whole input/HID part through the HID
-tree, but a separate patch would be more obvious in case of a
-conflict.
-
-Cheers,
-Benjamin
-
-> >
-> > Regards,
-> > Bjorn
-> >
-> > > Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > > ---
-> > >  drivers/hid/hid-quirks.c            | 64 ++++++++++++++++++++++++-----
-> > >  drivers/input/mouse/elan_i2c_core.c |  4 ++
-> > >  2 files changed, 58 insertions(+), 10 deletions(-)
+> > 
+> > On Wed 05 Jun 02:32 PDT 2019, Avri Altman wrote:
+> > 
+> > > >
+> > > > On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
+> > > >
+> > > > > Hi,
+> > > > >
+> > > > > >
+> > > > > > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
+> > > > > > <bjorn.andersson@linaro.org> wrote:
+> > > > > > >
+> > > > > > > This series exposes the ufs_reset line as a gpio, adds support for ufshcd
+> > to
+> > > > > > > acquire and toggle this and then adds this to SDM845 MTP.
+> > > > > > >
+> > > > > > > Bjorn Andersson (3):
+> > > > > > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
+> > > > > > >   scsi: ufs: Allow resetting the UFS device
+> > > > > > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
+> > > > > >
+> > > > > > Adding similar change as in sdm845-mtp to the not yet upstream
+> > > > > > blueline dts, I validated this allows my micron UFS pixel3 to boot.
+> > > > > >
+> > > > > > Tested-by: John Stultz <john.stultz@linaro.org>
+> > > > > Maybe ufs_hba_variant_ops would be the proper place to add this?
+> > > > >
+> > > >
+> > > > Are you saying that these memories only need a reset when they are
+> > > > paired with the Qualcomm host controller?
+> > > ufs_hba_variant_ops is for vendors to implement their own vops,
+> > > and as you can see, many of them do.
+> > > Adding hw_reset to that template seems like the proper way
+> > > to do what you are doing.
 > > >
-> > > diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> > > index 77ffba48cc73..656485e08eb7 100644
-> > > --- a/drivers/hid/hid-quirks.c
-> > > +++ b/drivers/hid/hid-quirks.c
-> > > @@ -987,17 +987,61 @@ bool hid_ignore(struct hid_device *hdev)
-> > >               break;
-> > >       case USB_VENDOR_ID_ELAN:
-> > >               /*
-> > > -              * Many Elan devices have a product id of 0x0401 and are handled
-> > > -              * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
-> > > -              * is not (and cannot be) handled by that driver ->
-> > > -              * Ignore all 0x0401 devs except for the ELAN0800 dev.
-> > > +              * Blacklist of everything that gets handled by the elan_i2c
-> > > +              * input driver.  This should be kept in sync with the whitelist
-> > > +              * that exists in that driver.  This avoids disabling valid
-> > > +              * touchpads and other ELAN devices.
-> > >                */
-> > > -             if (hdev->product == 0x0401 &&
-> > > -                 strncmp(hdev->name, "ELAN0800", 8) != 0)
-> > > -                     return true;
-> > > -             /* Same with product id 0x0400 */
-> > > -             if (hdev->product == 0x0400 &&
-> > > -                 strncmp(hdev->name, "QTEC0001", 8) != 0)
-> > > +             if ((hdev->product == 0x0401 || hdev->product == 0x0400) &&
-> > > +                (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0100", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0600", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0601", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0602", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0603", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0604", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0605", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0606", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0607", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0608", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0609", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN060B", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN060C", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN060F", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0610", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0611", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0612", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0613", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0614", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0615", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0616", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0617", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0618", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0619", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN061A", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN061B", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN061C", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN061D", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN061E", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN061F", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0620", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0621", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0622", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0623", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0624", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0625", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0626", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0627", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0628", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0629", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN062A", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN062B", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN062C", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN062D", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0631", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN0632", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "ELAN1000", 8) == 0 ||
-> > > +                 strncmp(hdev->name, "elan,ekth3000", 13) == 0))
-> > >                       return true;
-> > >               break;
-> > >       }
-> > > diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-> > > index f9525d6f0bfe..3ded19528cd4 100644
-> > > --- a/drivers/input/mouse/elan_i2c_core.c
-> > > +++ b/drivers/input/mouse/elan_i2c_core.c
-> > > @@ -1332,6 +1332,10 @@ static const struct i2c_device_id elan_id[] = {
-> > >  };
-> > >  MODULE_DEVICE_TABLE(i2c, elan_id);
-> > >
-> > > +/*
-> > > + * when these whtielists get updated, the corresponding blacklist in hid-quirks
-> > > + * needs to be updated to match.
-> > > + */
-> > >  #ifdef CONFIG_ACPI
-> > >  static const struct acpi_device_id elan_acpi_id[] = {
-> > >       { "ELAN0000", 0 },
-> > > --
-> > > 2.17.1
-> > >
+> > 
+> > Right, but the vops is operations related to the UFS controller, this
+> > property relates to the memory connected.
+> This is not entirely accurate. Those are vendor/board specific,
+> As the original commit log indicates:
+> " vendor/board specific and hence determined with
+>  the help of compatible property in device tree."
+> 
+> I would rather have this new vop:
+> void    (*device_reset)(struct ufs_hba *), Or whatever, 
+> actively set in ufs_hba_variant_ops, rather than ufshcd_init_device_reset
+> failing as part of the default init flow.
+> 
+
+But such an vops would allow me to provide a Qualcomm-specific way of
+toggling the GPIO that is connected to the UFS_RESET pin on the
+Hynix/Micron memory.
+
+But acquiring and toggling GPIOs is not a Qualcomm thing, it's a
+completely generic thing, and as it's not a chip-internal line it is a
+GPIO and not a reset - regardless of SoC vendor.
+Further more, it's optional so boards that does not have this pin
+connected will just omit the property in their hardware description
+(DeviceTree).
+
+
+So I think the halting part here is that we don't have a representation
+of the memory device's resources, because this is really a matter of
+toggling the reset pin on the memory device.
+
+Regards,
+Bjorn
