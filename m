@@ -1,120 +1,73 @@
-From: "Rojewski, Cezary" <cezary.rojewski@intel.com>
-Subject: RE: [alsa-devel] [PATCH v2] ASoC: sun4i-i2s: Change SR and WSS
- computation
-Date: Thu, 6 Jun 2019 11:49:58 +0000
-Message-ID: <3BD9CEE4EBD5E74B98FE2D277EB60E0B3900D3A0@IRSMSX104.ger.corp.intel.com>
-References: <20190605100801.2488-1-maxime.ripard@bootlin.com>
- <3BD9CEE4EBD5E74B98FE2D277EB60E0B38FF8117@IRSMSX104.ger.corp.intel.com>
- <20190606110647.iojplb27mdo276xk@flea>
+From: Vishal Sagar <vsagar@xilinx.com>
+Subject: RE: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
+ CSI-2 Rx Subsystem
+Date: Thu, 6 Jun 2019 11:54:19 +0000
+Message-ID: <CH2PR02MB60889B850DCAA810A772160DA7170@CH2PR02MB6088.namprd02.prod.outlook.com>
+References: <1559555971-193235-1-git-send-email-vishal.sagar@xilinx.com>
+ <1559555971-193235-2-git-send-email-vishal.sagar@xilinx.com>
+ <20190604192344.7tycwffjd3yeizxh@paasikivi.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190606110647.iojplb27mdo276xk@flea>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190604192344.7tycwffjd3yeizxh@paasikivi.fi.intel.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marcus Cooper <codekipper@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Vishal Sagar <vishal.sagar@xilinx.com>
+Cc: Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>, Luca Ceresoli <luca@lucaceresoli.net>, Jacopo Mondi <jacopo@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
->Hi,
->
->On Wed, Jun 05, 2019 at 04:36:28PM +0000, Rojewski, Cezary wrote:
->> >+static s8 sun4i_i2s_get_sr(const struct sun4i_i2s *i2s, int width)
->> >+{
->> >+	if (width < 16 || width > 24)
->> >+		return -EINVAL;
->> >+
->> >+	if (width % 4)
->> >+		return -EINVAL;
->> >+
->> >+	return (width - 16) / 4;
->> >+}
->> >+
->> >+static s8 sun4i_i2s_get_wss(const struct sun4i_i2s *i2s, int width)
->> >+{
->> >+	if (width < 16 || width > 32)
->> >+		return -EINVAL;
->> >+
->> >+	if (width % 4)
->> >+		return -EINVAL;
->> >+
->> >+	return (width - 16) / 4;
->> >+}
->> >+
->> >+static s8 sun8i_i2s_get_sr_wss(const struct sun4i_i2s *i2s, int width)
->> >+{
->> >+	if (width % 4)
->> >+		return -EINVAL;
->> >+
->>
->> In the two above you start with boundary check before mod yet in
->> this one the order is reversed.  Keeping the same order should prove
->> more cohesive.
->
->Indeed, I'll fix this.
->
->>
->> >+	if (width < 8 || width > 32)
->> >+		return -EINVAL;
->> >+
->> >+	return (width - 8) / 4 + 1;
->> >+}
->> >+
->>
->> Other, probably less welcome suggestion is introduction of unified
->> function which ones listed here would simply invoke. All of these
->> "computations" differ in fact only in: min and max boundary. The +1
->> for _sr_wss is negligible, you can append it on return.
->
->It's not just about the min and max boundaries. It's also the offset
->at which to start with (16 vs 8), and the offset to apply to the
->result (0 vs 1).
->
->That's 4 parameters out of 5 that are different. For something that
->trivial, I don't think it's worth it to put it in common.
->
->Maxime
+Hi Sakari,
 
-This is what was going through my mind:
+> -----Original Message-----
+> From: Sakari Ailus [mailto:sakari.ailus@linux.intel.com]
+> Sent: Wednesday, June 05, 2019 12:54 AM
+> To: Vishal Sagar <vishal.sagar@xilinx.com>
+> Cc: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
+> mchehab@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com; Michal
+> Simek <michals@xilinx.com>; linux-media@vger.kernel.org;
+> devicetree@vger.kernel.org; hans.verkuil@cisco.com; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Dinesh Kumar
+> <dineshk@xilinx.com>; Sandip Kothari <sandipk@xilinx.com>; Luca Ceresoli
+> <luca@lucaceresoli.net>; Jacopo Mondi <jacopo@jmondi.org>
+> Subject: Re: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx=
+ MIPI
+> CSI-2 Rx Subsystem
+>=20
+> EXTERNAL EMAIL
+>=20
+> Hi Vishal,
+>=20
+> On Mon, Jun 03, 2019 at 03:29:30PM +0530, Vishal Sagar wrote:
+>=20
+> > +Optional properties:
+> > +--------------------
+> > +- xlnx,vfb: This is present when Video Format Bridge is enabled.
+> > +  Without this property the driver won't be loaded as IP won't be able=
+ to
+> generate
+> > +  media bus format compliant stream output.
+>=20
+> I think we previously concluded that the format will be just different in
+> this case. So the description appears incorrect.
+>=20
 
-static inline s8 my_unified(int width, u8 min, u8 max)
-{
-	if (width < min || width > max)
-		return -EINVAL;
+Referring to your email https://lkml.org/lkml/2019/3/22/1823 in response to=
+ v6 patches,
+if the video format bridge is not enabled, then the way in which pixels are=
+ transported on
+the bus don't correspond to the existing media bus formats in Linux.
 
-	if (width % 4)
-		return -EINVAL;
+If not loading the driver is incorrect way, is it ok for the driver to allo=
+w same media bus format
+for packed and unpacked data type on the sink pad?
 
-	return (width - min) / 4;
-}
+Or is it ok for the driver to not validate the media bus format set on the =
+sink pad?
 
-static s8 sun4i_i2s_get_sr(const struct sun4i_i2s *i2s, int width)
-{
-	return my_unified(width, 16, 24);
-}
+> --
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
 
-static s8 sun4i_i2s_get_wss(const struct sun4i_i2s *i2s, int width)
-{
-	return my_unified(width, 16, 32);
-}
-
-static s8 sun8i_i2s_get_sr_wss(const struct sun4i_i2s *i2s, int width)
-{
-	return my_unified(width, 8, 32) + 1;
-}
-
-However, if indeed 'start' offset is variable and may differ from min boundary, then my approach would fail.
-Otherwise, treat it as suggestion, personally I find it easier to update only the unified function (development phase), especially if you're planning for adding more of these (the min/ max variants) in the future.
-
-One more thing, the i2s ptr is unused - consider flagging it or simply removing from declaration?
-
-Czarek
+Regards
+Vishal Sagar
