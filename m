@@ -1,9 +1,9 @@
 From: Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v3] ARM: dts: Introduce the NXP LS1021A-TSN board
-Date: Fri,  7 Jun 2019 01:21:30 +0300
-Message-ID: <20190606222130.27515-1-olteanv@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v4] ARM: dts: Introduce the NXP LS1021A-TSN board
+Date: Fri,  7 Jun 2019 01:28:17 +0300
+Message-ID: <20190606222817.14223-1-olteanv@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
 To: shawnguo@kernel.org
 Cc: leoyang.li@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>
 List-Id: devicetree@vger.kernel.org
@@ -27,6 +27,9 @@ It also features:
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
+Changes from v3:
+- Not all nodes were alphabetically sorted ("d->i->e" vs "d->e->i")
+
 Changes from v2:
 - Sorted nodes alphabetically
 - Renamed SAI2 codec node into audio-codec
@@ -60,7 +63,7 @@ index dab2914fa293..a4eb4ca5e148 100644
  	vf500-colibri-eval-v3.dtb \
 diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
 new file mode 100644
-index 000000000000..ef4a0b1e4d47
+index 000000000000..5b7689094b70
 --- /dev/null
 +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
 @@ -0,0 +1,289 @@
@@ -167,6 +170,35 @@ index 000000000000..ef4a0b1e4d47
 +	};
 +};
 +
++&enet0 {
++	tbi-handle = <&tbi0>;
++	phy-handle = <&sgmii_phy2>;
++	phy-mode = "sgmii";
++	status = "okay";
++};
++
++&enet1 {
++	tbi-handle = <&tbi1>;
++	phy-handle = <&sgmii_phy1>;
++	phy-mode = "sgmii";
++	status = "okay";
++};
++
++/* RGMII delays added via PCB traces */
++&enet2 {
++	phy-mode = "rgmii";
++	status = "okay";
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++};
++
++&esdhc {
++	status = "okay";
++};
++
 +&i2c0 {
 +	status = "okay";
 +
@@ -226,35 +258,6 @@ index 000000000000..ef4a0b1e4d47
 +
 +&ifc {
 +	status = "disabled";
-+};
-+
-+&enet0 {
-+	tbi-handle = <&tbi0>;
-+	phy-handle = <&sgmii_phy2>;
-+	phy-mode = "sgmii";
-+	status = "okay";
-+};
-+
-+&enet1 {
-+	tbi-handle = <&tbi1>;
-+	phy-handle = <&sgmii_phy1>;
-+	phy-mode = "sgmii";
-+	status = "okay";
-+};
-+
-+/* RGMII delays added via PCB traces */
-+&enet2 {
-+	phy-mode = "rgmii";
-+	status = "okay";
-+
-+	fixed-link {
-+		speed = <1000>;
-+		full-duplex;
-+	};
-+};
-+
-+&esdhc {
-+	status = "okay";
 +};
 +
 +&lpuart0 {
