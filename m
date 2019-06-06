@@ -1,36 +1,102 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [RESEND][PATCH v3 1/2] usb: dwc3: Add avoiding vbus glitch happen
- during xhci reset
-Date: Thu, 6 Jun 2019 08:20:03 +0000
-Message-ID: <AM5PR0402MB2865979E26017BC5937DBBA5F1170@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190606025418.26313-1-ran.wang_1@nxp.com>
- <78eb1558-b8d4-0632-ad0c-4144c711d2da@cogentembedded.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
+Date: Thu, 6 Jun 2019 10:20:12 +0200
+Message-ID: <CAKfTPtA9WDOH3UzU-Qz4AqhLNGkOPo9EFkTHXGqTq7qsrec_JA@mail.gmail.com>
+References: <20190114184255.258318-1-mka@chromium.org> <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
+ <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
+ <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
+ <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
+ <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com> <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
+ <CAKfTPtCR360osDz3oW+XhHT1R12SacAuJ44W_NfFOPWxJFjOPg@mail.gmail.com> <20190606074921.43mbinemk3j565yu@queper01-ThinkPad-T460s>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <78eb1558-b8d4-0632-ad0c-4144c711d2da@cogentembedded.com>
-Content-Language: en-US
+In-Reply-To: <20190606074921.43mbinemk3j565yu@queper01-ThinkPad-T460s>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, Yang Li <pku.leo@gmail.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Quentin Perret <quentin.perret@arm.com>
+Cc: Stephen Boyd <swboyd@chromium.org>, Amit Kucheria <amit.kucheria@linaro.org>, Andy Gross <agross@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2VyZ2VpLA0KDQpPbiBUaHVyc2RheSwgSnVuZSAwNiwgMjAxOSAxNjoxNyBTZXJnZWkgU2h0
-eWx5b3Ygd3JvdGU6DQo+IA0KPiBIZWxsbyENCj4gDQo+IE9uIDA2LjA2LjIwMTkgNTo1NCwgUmFu
-IFdhbmcgd3JvdGU6DQo+IA0KPiA+IFdoZW4gRFdDMyBpcyBzZXQgdG8gaG9zdCBtb2RlIGJ5IHBy
-b2dyYW1taW5nIHJlZ2lzdGVyIERXQzNfR0NUTCwgVkJVUw0KPiA+IChvciBpdHMgY29udHJvbCBz
-aWduYWwpIHdpbGwgdHVybiBvbiBpbW1lZGlhdGVseSBvbiByZWxhdGVkIFJvb3QgSHViDQo+ID4g
-cG9ydHMuIFRoZW4gdGhlIFZCVVMgd2lsbCBiZSBkZS1hc3NlcnRlZCBmb3IgYSBsaXR0bGUgd2hp
-bGUgZHVyaW5nDQo+ID4geGhjaSByZXNldCAoY29uZHVjdGVkIGJ5IHhoY2kgZHJpdmVyKSBmb3Ig
-YSBsaXR0bGUgd2hpbGUgYW5kIGJhY2sgdG8gbm9ybWFsLg0KPiA+DQo+ID4gVGhpcyBWQlVTIGds
-aXRjaCBtaWdodCBjYXVzZSBzb21lIFVTQiBkZXZpY2VzIGVtdXJhdGlvbiBmYWlsIGlmIGtlcm5l
-bA0KPiANCj4gICAgIEVudW1lcmF0aW9uLiA6LSkNCg0KVGhhbmtzLCB3aWxsIGNvcnJlY3QgaXQg
-aW4gbmV4dCB2ZXJzaW9uDQogDQpSZWdhcmRzLA0KUmFuDQoNCj4gPiBib290IHdpdGggdGhlbSBj
-b25uZWN0ZWQuIE9uZSBTVyB3b3JrYXJvdW5kIHdoaWNoIGNhbiBmaXggdGhpcyBpcyB0bw0KPiA+
-IHByb2dyYW0gYWxsIFBPUlRTQ1tQUF0gdG8gMCB0byB0dXJuIG9mZiBWQlVTIGltbWVkaWF0ZWx5
-IGFmdGVyIHNldHRpbmcNCj4gPiBob3N0IG1vZGUgaW4gRFdDMyBkcml2ZXIocGVyIHNpZ25hbCBt
-ZWFzdXJlbWVudCByZXN1bHQsIGl0IHdpbGwgYmUgdG9vDQo+ID4gbGF0ZSB0byBkbyBpdCBpbiB4
-aGNpLXBsYXQuYyBvciB4aGNpLmMpLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUmFuIFdhbmcg
-PHJhbi53YW5nXzFAbnhwLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhA
-a2VybmVsLm9yZz4NCj4gWy4uLl0NCj4gDQo+IE1CUiwgU2VyZ2VpDQo=
+On Thu, 6 Jun 2019 at 09:49, Quentin Perret <quentin.perret@arm.com> wrote:
+>
+> Hi Vincent,
+>
+> On Thursday 06 Jun 2019 at 09:05:16 (+0200), Vincent Guittot wrote:
+> > Hi Quentin,
+> >
+> > On Wed, 5 Jun 2019 at 19:21, Quentin Perret <quentin.perret@arm.com> wrote:
+> > >
+> > > On Friday 17 May 2019 at 14:55:19 (-0700), Stephen Boyd wrote:
+> > > > Quoting Amit Kucheria (2019-05-16 04:54:45)
+> > > > > (cc'ing Andy's correct email address)
+> > > > >
+> > > > > On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > > > >
+> > > > > > Quoting Amit Kucheria (2019-05-13 04:54:12)
+> > > > > > > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> > > > > > > >
+> > > > > > > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > > > > > > >
+> > > > > > > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
+> > > > > > > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
+> > > > > > > > > that describes this topology.
+> > > > > > > >
+> > > > > > > > This is partly true. There are two groups of gold and silver cores,
+> > > > > > > > but AFAICT they are in a single cluster, not two separate ones. SDM845
+> > > > > > > > is one of the early examples of ARM's Dynamiq architecture.
+> > > > > > > >
+> > > > > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > > > > >
+> > > > > > > > I noticed that this patch sneaked through for this merge window but
+> > > > > > > > perhaps we can whip up a quick fix for -rc2?
+> > > > > > > >
+> > > > > > >
+> > > > > > > And please find attached a patch to fix this up. Andy, since this
+> > > > > > > hasn't landed yet (can we still squash this into the original patch?),
+> > > > > > > I couldn't add a Fixes tag.
+> > > > > > >
+> > > > > >
+> > > > > > I had the same concern. Thanks for catching this. I suspect this must
+> > > > > > cause some problem for IPA given that it can't discern between the big
+> > > > > > and little "power clusters"?
+> > > > >
+> > > > > Both EAS and IPA, I believe. It influences the scheduler's view of the
+> > > > > the topology.
+> > > >
+> > > > And EAS and IPA are OK with the real topology? I'm just curious if
+> > > > changing the topology to reflect reality will be a problem for those
+> > > > two.
+> > >
+> > > FWIW, neither EAS nor IPA depends on this. Not the upstream version of
+> > > EAS at least (which is used in recent Android kernels -- 4.19+).
+> > >
+> > > But doing this is still required for other things in the scheduler (the
+> > > so-called 'capacity-awareness' code). So until we have a better
+> > > solution, this patch is doing the right thing.
+> >
+> > I'm not sure to catch what you mean ?
+> > Which so-called 'capacity-awareness' code are you speaking about ? and
+> > what is the problem ?
+>
+> I'm talking about the wake-up path. ATM select_idle_sibling() is totally
+> unaware of capacity differences. In its current form, this function
+> basically assumes that all CPUs in a given sd_llc have the same
+> capacity, which would be wrong if we had a single MC level for SDM845.
+> So, until select_idle_sibling() is 'fixed' to be capacity-aware, we need
+> two levels of sd for asymetric systems (including DynamIQ) so the
+> wake_cap() story actually works.
+>
+> I hope that clarifies it :)
+
+hmm... does this justifies this wrong topology ?
+select_idle_sibling() is called only when system is overloaded and
+scheduler disables the EAS path
+In this case, the scheduler looks either for an idle cpu or for evenly
+spreading the loads
+This is maybe not always optimal and should probably be fixed but
+doesn't justifies a wrong topology description IMHO
+
+
+>
+> Thanks,
+> Quentin
