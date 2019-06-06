@@ -1,97 +1,82 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v3, 08/27] drm/mediatek: add mutex sof into ddp private
- data
-Date: Thu, 6 Jun 2019 14:12:28 +0800
-Message-ID: <1559801548.20098.8.camel@mtksdaap41>
-References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
- <1559734986-7379-9-git-send-email-yongqiang.niu@mediatek.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: qcom: Add Dragonboard 845c
+Date: Thu, 6 Jun 2019 11:48:57 +0530
+Message-ID: <20190606061857.GA9160@vkoul-mobl.Dlink>
+References: <20190606043851.18050-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1559734986-7379-9-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190606043851.18050-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wNi0wNSBhdCAxOTo0MiArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gbXV0ZXggc29mIHdpbGwgYmUgZGRwIHByaXZhdGUg
-ZGF0YQo+IAo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVk
-aWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAu
-YyB8IDQ0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0KPiAgMSBmaWxlIGNoYW5n
-ZWQsIDM2IGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jIGIvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZGRwLmMKPiBpbmRleCA4YmRlMmNmLi5lMWE1MTBmIDEwMDY0NAo+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiBAQCAtMTQ5LDggKzE0OSwyMCBAQCBz
-dHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggewo+ICAJYm9vbCBjbGFpbWVkOwo+ICB9Owo+ICAKPiArZW51
-bSBtdGtfZGRwX211dGV4X3NvZl9pZCB7Cj4gKwlERFBfTVVURVhfU09GX1NJTkdMRV9NT0RFLAo+
-ICsJRERQX01VVEVYX1NPRl9EU0kwLAo+ICsJRERQX01VVEVYX1NPRl9EU0kxLAo+ICsJRERQX01V
-VEVYX1NPRl9EUEkwLAo+ICsJRERQX01VVEVYX1NPRl9EUEkxLAo+ICsJRERQX01VVEVYX1NPRl9E
-U0kyLAo+ICsJRERQX01VVEVYX1NPRl9EU0kzLAo+ICsJRERQX01VVEVYX1NPRl9NQVgsCgpERFBf
-TVVURVhfU09GX01BWCBjYW4gYmUgcmVtb3ZlZC4KClJlZ2FyZHMsCkNLCgo+ICt9Owo+ICsKPiAg
-c3RydWN0IG10a19kZHBfZGF0YSB7Cj4gIAljb25zdCB1bnNpZ25lZCBpbnQgKm11dGV4X21vZDsK
-PiArCWNvbnN0IHVuc2lnbmVkIGludCAqbXV0ZXhfc29mOwo+ICAJY29uc3QgdW5zaWduZWQgaW50
-IG11dGV4X21vZF9yZWc7Cj4gIH07Cj4gIAo+IEBAIC0yMDksMTggKzIyMSwzMSBAQCBzdHJ1Y3Qg
-bXRrX2RkcCB7Cj4gIAlbRERQX0NPTVBPTkVOVF9XRE1BMV0gPSBNVDgxNzNfTVVURVhfTU9EX0RJ
-U1BfV0RNQTEsCj4gIH07Cj4gIAo+ICtzdGF0aWMgY29uc3QgdW5zaWduZWQgaW50IG10MjcxMl9t
-dXRleF9zb2ZbRERQX01VVEVYX1NPRl9NQVhdID0gewo+ICsJW0REUF9NVVRFWF9TT0ZfU0lOR0xF
-X01PREVdID0gTVVURVhfU09GX1NJTkdMRV9NT0RFLAo+ICsJW0REUF9NVVRFWF9TT0ZfRFNJMF0g
-PSBNVVRFWF9TT0ZfRFNJMCwKPiArCVtERFBfTVVURVhfU09GX0RTSTFdID0gTVVURVhfU09GX0RT
-STEsCj4gKwlbRERQX01VVEVYX1NPRl9EUEkwXSA9IE1VVEVYX1NPRl9EUEkwLAo+ICsJW0REUF9N
-VVRFWF9TT0ZfRFBJMV0gPSBNVVRFWF9TT0ZfRFBJMSwKPiArCVtERFBfTVVURVhfU09GX0RTSTJd
-ID0gTVVURVhfU09GX0RTSTIsCj4gKwlbRERQX01VVEVYX1NPRl9EU0kzXSA9IE1VVEVYX1NPRl9E
-U0kzLAo+ICt9Owo+ICsKPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2RhdGEgbXQyNzAx
-X2RkcF9kcml2ZXJfZGF0YSA9IHsKPiAgCS5tdXRleF9tb2QgPSBtdDI3MDFfbXV0ZXhfbW9kLAo+
-ICsJLm11dGV4X3NvZiA9IG10MjcxMl9tdXRleF9zb2YsCj4gIAkubXV0ZXhfbW9kX3JlZyA9IE1U
-MjcwMV9ESVNQX01VVEVYMF9NT0QwLAo+ICB9Owo+ICAKPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBt
-dGtfZGRwX2RhdGEgbXQyNzEyX2RkcF9kcml2ZXJfZGF0YSA9IHsKPiAgCS5tdXRleF9tb2QgPSBt
-dDI3MTJfbXV0ZXhfbW9kLAo+ICsJLm11dGV4X3NvZiA9IG10MjcxMl9tdXRleF9zb2YsCj4gIAku
-bXV0ZXhfbW9kX3JlZyA9IE1UMjcwMV9ESVNQX01VVEVYMF9NT0QwLAo+ICB9Owo+ICAKPiAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2RhdGEgbXQ4MTczX2RkcF9kcml2ZXJfZGF0YSA9IHsK
-PiAgCS5tdXRleF9tb2QgPSBtdDgxNzNfbXV0ZXhfbW9kLAo+ICsJLm11dGV4X3NvZiA9IG10Mjcx
-Ml9tdXRleF9zb2YsCj4gIAkubXV0ZXhfbW9kX3JlZyA9IE1UMjcwMV9ESVNQX01VVEVYMF9NT0Qw
-LAo+ICB9Owo+ICAKPiBAQCAtNDYyLDI4ICs0ODcsMjkgQEAgdm9pZCBtdGtfZGlzcF9tdXRleF9h
-ZGRfY29tcChzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4LAo+ICAJc3RydWN0IG10a19kZHAg
-KmRkcCA9IGNvbnRhaW5lcl9vZihtdXRleCwgc3RydWN0IG10a19kZHAsCj4gIAkJCQkJICAgbXV0
-ZXhbbXV0ZXgtPmlkXSk7Cj4gIAl1bnNpZ25lZCBpbnQgcmVnOwo+ICsJdW5zaWduZWQgaW50IHNv
-Zl9pZDsKPiAgCXVuc2lnbmVkIGludCBvZmZzZXQ7Cj4gIAo+ICAJV0FSTl9PTigmZGRwLT5tdXRl
-eFttdXRleC0+aWRdICE9IG11dGV4KTsKPiAgCj4gIAlzd2l0Y2ggKGlkKSB7Cj4gIAljYXNlIERE
-UF9DT01QT05FTlRfRFNJMDoKPiAtCQlyZWcgPSBNVVRFWF9TT0ZfRFNJMDsKPiArCQlzb2ZfaWQg
-PSBERFBfTVVURVhfU09GX0RTSTA7Cj4gIAkJYnJlYWs7Cj4gIAljYXNlIEREUF9DT01QT05FTlRf
-RFNJMToKPiAtCQlyZWcgPSBNVVRFWF9TT0ZfRFNJMDsKPiArCQlzb2ZfaWQgPSBERFBfTVVURVhf
-U09GX0RTSTA7Cj4gIAkJYnJlYWs7Cj4gIAljYXNlIEREUF9DT01QT05FTlRfRFNJMjoKPiAtCQly
-ZWcgPSBNVVRFWF9TT0ZfRFNJMjsKPiArCQlzb2ZfaWQgPSBERFBfTVVURVhfU09GX0RTSTI7Cj4g
-IAkJYnJlYWs7Cj4gIAljYXNlIEREUF9DT01QT05FTlRfRFNJMzoKPiAtCQlyZWcgPSBNVVRFWF9T
-T0ZfRFNJMzsKPiArCQlzb2ZfaWQgPSBERFBfTVVURVhfU09GX0RTSTM7Cj4gIAkJYnJlYWs7Cj4g
-IAljYXNlIEREUF9DT01QT05FTlRfRFBJMDoKPiAtCQlyZWcgPSBNVVRFWF9TT0ZfRFBJMDsKPiAr
-CQlzb2ZfaWQgPSBERFBfTVVURVhfU09GX0RQSTA7Cj4gIAkJYnJlYWs7Cj4gIAljYXNlIEREUF9D
-T01QT05FTlRfRFBJMToKPiAtCQlyZWcgPSBNVVRFWF9TT0ZfRFBJMTsKPiArCQlzb2ZfaWQgPSBE
-RFBfTVVURVhfU09GX0RQSTE7Cj4gIAkJYnJlYWs7Cj4gIAlkZWZhdWx0Ogo+ICAJCWlmIChkZHAt
-PmRhdGEtPm11dGV4X21vZFtpZF0gPCAzMikgewo+IEBAIC01MDEsNyArNTI3LDggQEAgdm9pZCBt
-dGtfZGlzcF9tdXRleF9hZGRfY29tcChzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4LAo+ICAJ
-CXJldHVybjsKPiAgCX0KPiAgCj4gLQl3cml0ZWxfcmVsYXhlZChyZWcsIGRkcC0+cmVncyArIERJ
-U1BfUkVHX01VVEVYX1NPRihtdXRleC0+aWQpKTsKPiArCXdyaXRlbF9yZWxheGVkKGRkcC0+ZGF0
-YS0+bXV0ZXhfc29mW3NvZl9pZF0sCj4gKwkJICAgICAgIGRkcC0+cmVncyArIERJU1BfUkVHX01V
-VEVYX1NPRihtdXRleC0+aWQpKTsKPiAgfQo+ICAKPiAgdm9pZCBtdGtfZGlzcF9tdXRleF9yZW1v
-dmVfY29tcChzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4LAo+IEBAIC01MjIsNyArNTQ5LDgg
-QEAgdm9pZCBtdGtfZGlzcF9tdXRleF9yZW1vdmVfY29tcChzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXgg
-Km11dGV4LAo+ICAJY2FzZSBERFBfQ09NUE9ORU5UX0RQSTA6Cj4gIAljYXNlIEREUF9DT01QT05F
-TlRfRFBJMToKPiAgCQl3cml0ZWxfcmVsYXhlZChNVVRFWF9TT0ZfU0lOR0xFX01PREUsCj4gLQkJ
-CSAgICAgICBkZHAtPnJlZ3MgKyBESVNQX1JFR19NVVRFWF9TT0YobXV0ZXgtPmlkKSk7Cj4gKwkJ
-CSAgICAgICBkZHAtPnJlZ3MgKwo+ICsJCQkgICAgICAgRElTUF9SRUdfTVVURVhfU09GKG11dGV4
-LT5pZCkpOwo+ICAJCWJyZWFrOwo+ICAJZGVmYXVsdDoKPiAgCQlpZiAoZGRwLT5kYXRhLT5tdXRl
-eF9tb2RbaWRdIDwgMzIpIHsKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWw=
+On 05-06-19, 21:38, Bjorn Andersson wrote:
+> This adds an initial dts for the Dragonboard 845. Supported
+> functionality includes Debug UART, UFS, USB-C (peripheral), USB-A
+> (host), microSD-card and Bluetooth.
+> 
+> Initializing the SMMU is clearing the mapping used for the splash screen
+> framebuffer, which causes the board to reboot. This can be worked around
+> using:
+> 
+>   fastboot oem select-display-panel none
+
+I was able to boot db845c on v5.2-rc1 with this patch :)
+ 
+I found some nits, nevertheless this looks good, so:
+ 
+Tested-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+> @@ -0,0 +1,556 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+No copyright?
+
+> +	pcie0_3p3v_dual: vldo-3v3-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VLDO_3V3";
+> +
+> +		vin-supply = <&vbat>;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +
+> +		gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pcie0_pwren_state>;
+> +	};
+> +
+> +	gpio_keys {
+
+Rest of this file is sorted but this isn't, so this should be after dc12v
+
+> +		compatible = "gpio-keys";
+> +		#address-cells = <1>;
+
+does this require address cell, we don't have range property here?
+
+> +		#size-cells = <0>;
+> +		autorepeat;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vol_up_pin_a>;
+> +
+> +		vol-up {
+> +			label = "Volume Up";
+> +			linux,code = <KEY_VOLUMEUP>;
+> +			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	leds {
+
+This one as well..
+
+-- 
+~Vinod
