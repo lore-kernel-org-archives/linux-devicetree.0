@@ -1,104 +1,82 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 01/16] firmware: ti_sci: Add resource management APIs for
- ringacc, psi-l and udma
-Date: Thu, 6 Jun 2019 15:04:51 +0300
-Message-ID: <78a2d824-d730-4174-e80b-4153a2744427@ti.com>
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
- <20190506123456.6777-2-peter.ujfalusi@ti.com>
- <f2056b18-3f65-b7ae-90ba-5ebf9ac425bc@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: add binding for USBSS-DRD controller.
+Date: Thu, 6 Jun 2019 15:08:55 +0300
+Message-ID: <f032b3f3-409d-b0fc-8d5f-01c898b4c7a7@ti.com>
+References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
+ <1559729030-16390-2-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f2056b18-3f65-b7ae-90ba-5ebf9ac425bc@ti.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559729030-16390-2-git-send-email-pawell@cadence.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
-Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, tony@atomide.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9rZXNoLAoKT24gMDYvMDYvMjAxOSA5LjAwLCBMb2tlc2ggVnV0bGEgd3JvdGU6Cj4gSGkg
-UGV0ZXIsCj4gCj4gT24gMDYvMDUvMTkgNjowNCBQTSwgUGV0ZXIgVWpmYWx1c2kgd3JvdGU6Cj4+
-IFNpZ25lZC1vZmYtYnk6IFBldGVyIFVqZmFsdXNpIDxwZXRlci51amZhbHVzaUB0aS5jb20+Cj4g
-Cj4gUGF0Y2ggaGFzIHRoZSBmb2xsb3dpbmcgY2hlY2twYXRjaCB3YXJuaW5ncyBhbmQgY2hlY2tz
-IHdoaWNoIGNhbiBiZSBmaXhlZDoKPiAKPiBXQVJOSU5HOiBNaXNzaW5nIGNvbW1pdCBkZXNjcmlw
-dGlvbiAtIEFkZCBhbiBhcHByb3ByaWF0ZSBvbmUKCkhvdyBkaWQgSSBtaXNzZWQgaXQ/Cgo+IENI
-RUNLOiBMaW5lcyBzaG91bGQgbm90IGVuZCB3aXRoIGEgJygnCj4gIzI2MjogRklMRTogZHJpdmVy
-cy9maXJtd2FyZS90aV9zY2kuYzoyMjg2Ogo+ICtzdGF0aWMgaW50IHRpX3NjaV9jbWRfcm1fdWRt
-YXBfdHhfY2hfY2ZnKAo+IAo+IENIRUNLOiBMaW5lcyBzaG91bGQgbm90IGVuZCB3aXRoIGEgJygn
-Cj4gIzMyMzogRklMRTogZHJpdmVycy9maXJtd2FyZS90aV9zY2kuYzoyMzQ3Ogo+ICtzdGF0aWMg
-aW50IHRpX3NjaV9jbWRfcm1fdWRtYXBfcnhfY2hfY2ZnKAo+IAo+IENIRUNLOiBMaW5lcyBzaG91
-bGQgbm90IGVuZCB3aXRoIGEgJygnCj4gIzM4MzogRklMRTogZHJpdmVycy9maXJtd2FyZS90aV9z
-Y2kuYzoyNDA3Ogo+ICtzdGF0aWMgaW50IHRpX3NjaV9jbWRfcm1fdWRtYXBfcnhfZmxvd19jZmcx
-KAo+IAo+IENIRUNLOiBMaW5lcyBzaG91bGQgbm90IGVuZCB3aXRoIGEgJygnCj4gIzE0MTQ6IEZJ
-TEU6IGluY2x1ZGUvbGludXgvc29jL3RpL3RpX3NjaV9wcm90b2NvbC5oOjQ1NToKPiArCWludCAo
-KnJ4X2Zsb3dfY2ZnKSgKPiAKPiB0b3RhbDogMCBlcnJvcnMsIDIgd2FybmluZ3MsIDQgY2hlY2tz
-LCAxMzk5IGxpbmVzIGNoZWNrZWQKClRoZXJlIG11c3QgYmUgYSByZWFzb24gd2h5IHRoZXNlIGxl
-ZnQsIGJ1dCBJIHdpbGwgdGFrZSBhbm90aGVyIGxvb2suCgo+PiAtLS0KPj4gIGRyaXZlcnMvZmly
-bXdhcmUvdGlfc2NpLmMgICAgICAgICAgICAgIHwgNDM5ICsrKysrKysrKysrKysrKwo+PiAgZHJp
-dmVycy9maXJtd2FyZS90aV9zY2kuaCAgICAgICAgICAgICAgfCA3MDQgKysrKysrKysrKysrKysr
-KysrKysrKysrKwo+PiAgaW5jbHVkZS9saW51eC9zb2MvdGkvdGlfc2NpX3Byb3RvY29sLmggfCAy
-MTYgKysrKysrKysKPj4gIDMgZmlsZXMgY2hhbmdlZCwgMTM1OSBpbnNlcnRpb25zKCspCj4+Cj4+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Zpcm13YXJlL3RpX3NjaS5jIGIvZHJpdmVycy9maXJtd2Fy
-ZS90aV9zY2kuYwo+PiBpbmRleCA2NGQ4OTViODBiYzMuLmFmM2ViY2RlYWIxOCAxMDA2NDQKPj4g
-LS0tIGEvZHJpdmVycy9maXJtd2FyZS90aV9zY2kuYwo+PiArKysgYi9kcml2ZXJzL2Zpcm13YXJl
-L3RpX3NjaS5jCj4gCj4gWy4uc25pcC5dCj4gCj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgdGlf
-c2NpX2NtZF9ybV9wc2lsX3BhaXIoY29uc3Qgc3RydWN0IHRpX3NjaV9oYW5kbGUgKmhhbmRsZSwK
-Pj4gKwkJCQkgICB1MzIgbmF2X2lkLCB1MzIgc3JjX3RocmVhZCwgdTMyIGRzdF90aHJlYWQpCj4+
-ICt7Cj4gCj4gQWxsIHRoZSBwc2lsIG9wcyBkb2Vzbid0IGhhdmUgdGhlICBrZXJuZWwtZG9jIGZ1
-bmN0aW9uIGNvbW1lbnRzLiBKdXN0IGJlCj4gY29uc2lzdGVudCB3aXRoIG90aGVyIGZ1bmN0aW9u
-cyA6KQoKT0suCgo+PiArCXN0cnVjdCB0aV9zY2lfbXNnX2hkciAqcmVzcDsKPj4gKwlzdHJ1Y3Qg
-dGlfc2NpX21zZ19wc2lsX3BhaXIgKnJlcTsKPj4gKwlzdHJ1Y3QgdGlfc2NpX3hmZXIgKnhmZXI7
-Cj4+ICsJc3RydWN0IHRpX3NjaV9pbmZvICppbmZvOwo+PiArCXN0cnVjdCBkZXZpY2UgKmRldjsK
-Pj4gKwlpbnQgcmV0ID0gMDsKPj4gKwo+PiArCWlmIChJU19FUlIoaGFuZGxlKSkKPj4gKwkJcmV0
-dXJuIFBUUl9FUlIoaGFuZGxlKTsKPj4gKwlpZiAoIWhhbmRsZSkKPj4gKwkJcmV0dXJuIC1FSU5W
-QUw7Cj4+ICsKPj4gKwlpbmZvID0gaGFuZGxlX3RvX3RpX3NjaV9pbmZvKGhhbmRsZSk7Cj4+ICsJ
-ZGV2ID0gaW5mby0+ZGV2Owo+PiArCj4+ICsJeGZlciA9IHRpX3NjaV9nZXRfb25lX3hmZXIoaW5m
-bywgVElfU0NJX01TR19STV9QU0lMX1BBSVIsCj4+ICsJCQkJICAgVElfU0NJX0ZMQUdfUkVRX0FD
-S19PTl9QUk9DRVNTRUQsCj4+ICsJCQkJICAgc2l6ZW9mKCpyZXEpLCBzaXplb2YoKnJlc3ApKTsK
-Pj4gKwlpZiAoSVNfRVJSKHhmZXIpKSB7Cj4+ICsJCXJldCA9IFBUUl9FUlIoeGZlcik7Cj4+ICsJ
-CWRldl9lcnIoZGV2LCAiUk1fUFNJTDpNZXNzYWdlIHJlY29uZmlnIGZhaWxlZCglZClcbiIsIHJl
-dCk7Cj4+ICsJCXJldHVybiByZXQ7Cj4+ICsJfQo+PiArCXJlcSA9IChzdHJ1Y3QgdGlfc2NpX21z
-Z19wc2lsX3BhaXIgKil4ZmVyLT54ZmVyX2J1ZjsKPj4gKwlyZXEtPm5hdl9pZCA9IG5hdl9pZDsK
-Pj4gKwlyZXEtPnNyY190aHJlYWQgPSBzcmNfdGhyZWFkOwo+PiArCXJlcS0+ZHN0X3RocmVhZCA9
-IGRzdF90aHJlYWQ7Cj4+ICsKPj4gKwlyZXQgPSB0aV9zY2lfZG9feGZlcihpbmZvLCB4ZmVyKTsK
-Pj4gKwlpZiAocmV0KSB7Cj4+ICsJCWRldl9lcnIoZGV2LCAiUk1fUFNJTDpNYm94IHNlbmQgZmFp
-bCAlZFxuIiwgcmV0KTsKPj4gKwkJZ290byBmYWlsOwo+PiArCX0KPj4gKwo+PiArCXJlc3AgPSAo
-c3RydWN0IHRpX3NjaV9tc2dfaGRyICopeGZlci0+eGZlcl9idWY7Cj4+ICsJcmV0ID0gdGlfc2Np
-X2lzX3Jlc3BvbnNlX2FjayhyZXNwKSA/IDAgOiAtRUlOVkFMOwo+PiArCj4+ICtmYWlsOgo+PiAr
-CXRpX3NjaV9wdXRfb25lX3hmZXIoJmluZm8tPm1pbmZvLCB4ZmVyKTsKPj4gKwo+PiArCXJldHVy
-biByZXQ7Cj4+ICt9Cj4+ICsKPiAKPiBbLi5zbmlwLi5dCj4gCj4+ICsgKi8KPj4gK3N0cnVjdCB0
-aV9zY2lfbXNnX3JtX3JpbmdfY2ZnX3JlcSB7Cj4+ICsJc3RydWN0IHRpX3NjaV9tc2dfaGRyIGhk
-cjsKPj4gKwl1MzIgdmFsaWRfcGFyYW1zOwo+PiArCXUxNiBuYXZfaWQ7Cj4+ICsJdTE2IGluZGV4
-Owo+PiArCXUzMiBhZGRyX2xvOwo+PiArCXUzMiBhZGRyX2hpOwo+PiArCXUzMiBjb3VudDsKPj4g
-Kwl1OCBtb2RlOwo+PiArCXU4IHNpemU7Cj4+ICsJdTggb3JkZXJfaWQ7Cj4+ICt9IF9fcGFja2Vk
-Owo+PiArCj4+ICsvKioKPj4gKyAqIHN0cnVjdCB0aV9zY2lfbXNnX3JtX3JpbmdfY2ZnX3Jlc3Ag
-LSBSZXNwb25zZSB0byBjb25maWd1cmluZyBhIHJpbmcuCj4+ICsgKgo+PiArICogQGhkcjoJR2Vu
-ZXJpYyBIZWFkZXIKPj4gKyAqLwo+PiArc3RydWN0IHRpX3NjaV9tc2dfcm1fcmluZ19jZmdfcmVz
-cCB7Cj4+ICsJc3RydWN0IHRpX3NjaV9tc2dfaGRyIGhkcjsKPj4gK30gX19wYWNrZWQ7Cj4gCj4g
-SWYgaXQgaXMgYSBnZW5lcmljIEFDSywgTkFDSyByZXNwb25zZSwganVzdCB1c2UgdGhlIGhlYWRl
-ciBkaXJlY3RseS4KClN1cmUsIEknbGwgZml4IGl0IGFuZCBvdGhlciBwbGFjZXMgaWYgYW55LgoK
-PiAKPiBbLi5zbmlwLi5dCj4gCj4+ICsgKi8KPj4gK3N0cnVjdCB0aV9zY2lfbXNnX3JtX3VkbWFw
-X3J4X2NoX2NmZ19yZXEgewo+PiArCXN0cnVjdCB0aV9zY2lfbXNnX2hkciBoZHI7Cj4+ICsJdTMy
-IHZhbGlkX3BhcmFtczsKPj4gKwl1MTYgbmF2X2lkOwo+PiArCXUxNiBpbmRleDsKPj4gKwl1MTYg
-cnhfZmV0Y2hfc2l6ZTsKPj4gKwl1MTYgcnhjcV9xbnVtOwo+PiArCXU4IHJ4X3ByaW9yaXR5Owo+
-PiArCXU4IHJ4X3FvczsKPj4gKwl1OCByeF9vcmRlcmlkOwo+PiArCXU4IHJ4X3NjaGVkX3ByaW9y
-aXR5Owo+PiArCXUxNiBmbG93aWRfc3RhcnQ7Cj4+ICsJdTE2IGZsb3dpZF9jbnQ7Cj4+ICsJdTgg
-cnhfcGF1c2Vfb25fZXJyOwo+PiArCXU4IHJ4X2F0eXBlOwo+PiArCXU4IHJ4X2NoYW5fdHlwZTsK
-Pj4gKwl1OCByeF9pZ25vcmVfc2hvcnQ7Cj4+ICsJdTggcnhfaWdub3JlX2xvbmc7Cj4+ICsJdTgg
-cnhfYnVyc3Rfc2l6ZTsKPj4gKwo+IAo+IGV4dHJhIGxpbmU/CgpXaWxsIHJlbW92ZSBpdC4KPiAK
-Pj4gK30gX19wYWNrZWQ7Cj4+ICsKPj4gKy8qKgo+IAo+IAo+IFRoYW5rcyBhbmQgcmVnYXJkcywK
-PiBMb2tlc2gKPiAKClRoYW5rcywKLSBQw6l0ZXIKClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQg
-T3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJ
-RDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Pawel,
+
+On 05/06/2019 13:03, Pawel Laszczak wrote:
+> This patch aim at documenting USB related dt-bindings for the
+> Cadence USBSS-DRD controller.
+> 
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> ---
+>  .../devicetree/bindings/usb/cdns-usb3.txt     | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+> new file mode 100644
+> index 000000000000..1d2b449e3cb4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+> @@ -0,0 +1,30 @@
+> +Binding for the Cadence USBSS-DRD controller
+> +
+> +Required properties:
+> +  - reg: Physical base address and size of the controller's register areas.
+> +	 Controller has 3 different regions:
+> +	 region 1 - HOST registers area
+> +	 region 2 - DEVICE registers area
+> +	 region 3 - OTG/DRD registers area
+> +  - reg-names - register memory area names:
+> +	"xhci" - for HOST registers space
+> +	"dev" - for DEVICE registers space
+> +	"otg" - for OTG/DRD registers space
+> +  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
+> +  - interrupts: Interrupts used by cdns3 controller.
+
+Since we are requesting 3 separate named interrupts in code we need to
+mention them here.
+
+> +
+> +Optional properties:
+> + - maximum-speed : valid arguments are "super-speed", "high-speed" and
+> +                   "full-speed"; refer to usb/generic.txt
+> + - dr_mode: Should be one of "host", "peripheral" or "otg".
+> + - phys: reference to the USB PHY
+> +
+> +Example:
+> +	usb@f3000000 {
+> +		compatible = "cdns,usb3-1.0.1";
+> +		interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
+
+This example won't work as code requests for 3 separate interrupts.
+
+> +		reg = <0xf3000000 0x10000	/* memory area for HOST registers */
+> +			0xf3010000 0x10000	/* memory area for DEVICE registers */
+> +			0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
+> +		reg-names = "xhci", "dev", "otg";
+> +	};
+> 
+
+-- 
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
