@@ -1,92 +1,123 @@
-From: "Shenhar, Talel" <talel@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Date: Thu, 6 Jun 2019 14:37:43 +0300
-Message-ID: <71da083e-1a74-cf86-455d-260a34ee01fd@amazon.com>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
- <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
- <20190531051400.GA2275@cz.tnic>
- <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
- <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
+Subject: Re: [PATCH 1/2] clk: rockchip: add clock for the watchdog pclk on
+ rk3328
+Date: Thu, 06 Jun 2019 14:42:20 +0300
+Message-ID: <1559821340.1384.0@gmail.com>
+References: <20190605235714.22432-1-papadakospan@gmail.com>
+ <3485393.4UdOu2YNQE@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, Borislav Petkov <bp@alien8.de>, "Herrenschmidt, Benjamin" <benh@amazon.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "Hanoch, Uri" <hanochu@amazon.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3485393.4UdOu2YNQE@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, itdaniher@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
->> Disagree. The various drivers don't depend on each other.
->> I think we should keep the drivers separated as they are distinct and independent IP blocks.
-> But they don't exist in isolation, they both depend on the integration-choices/firmware
-> that makes up your platform.
->
-> Other platforms may have exactly the same IP blocks, configured differently, or with
-> different features enabled in firmware. This means we can't just probe the driver based on
-> the presence of the IP block, we need to know the integration choices and firmware
-> settings match what the driver requires.
->
-> (Case in point, that A57 ECC support is optional, another A57 may not have it)
->
-> Descriptions of what firmware did don't really belong in the DT. Its not a hardware property.
->
-> This is why its better to probe this stuff based on the machine-compatible/platform-name,
-> not the presence of the IP block in the DT.
->
->
-> Will either of your separate drivers ever run alone? If they're probed from the same
-> machine-compatible this won't happen.
->
->
-> How does your memory controller report errors? Does it send back some data with an invalid
-> checksum, or a specific poison/invalid flag? Will the cache report this as a cache error
-> too, if its an extra signal, does the cache know what it is?
->
-> All these are integration choices between the two IP blocks, done as separate drivers we
-> don't have anywhere to store that information. Even if you don't care about this, making
-> them separate drivers should only be done to make them usable on other platforms, where
-> these choices may have been different.
+Hi,
+> 
+> Am Donnerstag, 6. Juni 2019, 01:57:13 CEST schrieb Leonidas P. 
+> Papadakos:
+>>  From: <itdaniher@gmail.com>
+> 
+> Why is the From different from the Signed-off-by? Would also need a 
+> full name.
+> If the patch is from you, please just use the same From as for the 
+> Signed-off-by.
+> 
 
-James,
+I mistakenly though this was the way to credit someone for a patch, but 
+it seems to be different.
+I'll Cc: the author of this patch
 
-Thanks for the prompt responses.
+>> 
+>>  Following the discussion here:
+>>  https://github.com/rockchip-linux/kernel/issues/123
+>> 
+>>  it can be seen that these are the changes needed to enable the use 
+>> of the hardware watchdog in the rk3328 SoC.
+>> 
+>>  This is in line with past changes for the rk3288:
+>>  
+>> http://lists.infradead.org/pipermail/linux-rockchip/2015-January/002314.html
+>> 
+>>  Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
+>>  ---
+>>   drivers/clk/rockchip/clk-rk3328.c      | 9 +++++++++
+>>   include/dt-bindings/clock/rk3328-cru.h | 1 +
+>>   2 files changed, 10 insertions(+)
+>> 
+>>  diff --git a/drivers/clk/rockchip/clk-rk3328.c 
+>> b/drivers/clk/rockchip/clk-rk3328.c
+>>  index 076b9777a..546ee0ab7 100644
+>>  --- a/drivers/clk/rockchip/clk-rk3328.c
+>>  +++ b/drivers/clk/rockchip/clk-rk3328.c
+>>  @@ -876,6 +876,8 @@ static const char *const 
+>> rk3328_critical_clocks[] __initconst = {
+>> 
+>>   static void __init rk3328_clk_init(struct device_node *np)
+>>   {
+>>  +	struct clk *clk;
+>>  +
+>>   	struct rockchip_clk_provider *ctx;
+>>   	void __iomem *reg_base;
+>> 
+>>  @@ -892,6 +894,13 @@ static void __init rk3328_clk_init(struct 
+>> device_node *np)
+>>   		return;
+>>   	}
+>> 
+>>  +	clk = clk_register_fixed_factor(NULL, "pclk_wdt", "pclk_bus", 0, 
+>> 1, 1);
+>>  +	if (IS_ERR(clk))
+>>  +		pr_warn("%s: could not register clock pclk_wdt: %ld\n",
+>>  +			__func__, PTR_ERR(clk));
+>>  +	else
+>>  +		rockchip_clk_add_lookup(ctx, clk, PCLK_WDT);
+>>  +
+> 
+> I've just Cc'ed you on 2 patches adding a SGRF_GATE clock-type. Please
+> use that as base for you rk3328-wdt-clock, so that we don't introduce 
+> more
+> boilderplate code.
+> 
+> 
+>>   	rockchip_clk_register_plls(ctx, rk3328_pll_clks,
+>>   				   ARRAY_SIZE(rk3328_pll_clks),
+>>   				   RK3328_GRF_SOC_STATUS0);
+> 
+>>  diff --git a/include/dt-bindings/clock/rk3328-cru.h 
+>> b/include/dt-bindings/clock/rk3328-cru.h
+>>  index afb811340..555b4ff66 100644
+>>  --- a/include/dt-bindings/clock/rk3328-cru.h
+>>  +++ b/include/dt-bindings/clock/rk3328-cru.h
+>>  @@ -164,6 +164,7 @@
+>>   #define PCLK_DCF		233
+>>   #define PCLK_SARADC		234
+>>   #define PCLK_ACODECPHY		235
+>>  +#define PCLK_WDT		236
+>> 
+>>   /* hclk gates */
+>>   #define HCLK_PERI		308
+> 
+> please split the addition of the clock-id into a separate patch only 
+> adding
+> said id.
+> 
+> 
+> Thanks
+> Heiko
+> 
 
- From our perspective, l1/l2 has nothing to do with the ddr memory 
-controller.
-
-Its right that they both use same edac subsystem but they are using 
-totally different APIs of it.
-
-We also even want to have separate control for enabling/disabling l1/l2 
-edac vs memory controller edac.
-
-Even from technical point-of-view L1/L2 UE collection method is totally 
-different from collecting memory-controller UE. (CPU exception vs actual 
-interrupts).
-
-So there is less reason why to combine them vs giving each one its own 
-file, e.g. al_mc_edac, al_l1_l2_edac (I even don't see why Hanna 
-combined l1 and l2...)
-
-As we don't have any technical relation between the two we would rather 
-avoid this combination.
-
-Also, Lets assume we have different setups with different memory 
-controllers, having a dt binding to control the difference is super easy 
-and flexible.
-
-Would having a dedicated folder for amazon ease the move to separate files?
-
-Thanks,
-
-Talel.
-
->
-> Thanks,
->
-> James
+I know less than him on this, but I want the feedback to be visible in 
+the Cc:
