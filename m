@@ -1,119 +1,97 @@
 From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
- mailbox
-Date: Thu, 6 Jun 2019 03:24:38 +0000
-Message-ID: <AM0PR04MB4481632406DF235996719C0788170@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+Date: Thu, 6 Jun 2019 03:35:11 +0000
+Message-ID: <AM0PR04MB44816AA83C8B817F8E6DF6EB88170@AM0PR04MB4481.eurprd04.prod.outlook.com>
 References: <20190603083005.4304-1-peng.fan@nxp.com>
-        <20190603083005.4304-2-peng.fan@nxp.com>
-        <ae4c79f0-4aec-250e-e312-20aba5554665@gmail.com>
-        <20190603165651.GA12196@e107155-lin>
- <20190603181856.34996aaa@donnerap.cambridge.arm.com>
+ <20190603083005.4304-3-peng.fan@nxp.com>
+ <866db682-785a-e0a6-b394-bb65c7a694c6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190603181856.34996aaa@donnerap.cambridge.arm.com>
+In-Reply-To: <866db682-785a-e0a6-b394-bb65c7a694c6@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>
+To: Florian Fainelli <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
-> mailbox
->=20
-> On Mon, 3 Jun 2019 17:56:51 +0100
-> Sudeep Holla <sudeep.holla@arm.com> wrote:
->=20
-> Hi,
->=20
-> > On Mon, Jun 03, 2019 at 09:22:16AM -0700, Florian Fainelli wrote:
-> > > On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:
-> > > > From: Peng Fan <peng.fan@nxp.com>
-> > > >
-> > > > The ARM SMC mailbox binding describes a firmware interface to
-> > > > trigger actions in software layers running in the EL2 or EL3 except=
-ion
-> levels.
-> > > > The term "ARM" here relates to the SMC instruction as part of the
-> > > > ARM instruction set, not as a standard endorsed by ARM Ltd.
-> > > >
-> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > > ---
-> > > >
-> > > > V2:
-> > > > Introduce interrupts as a property.
-> > > >
-> > > > V1:
-> > > > arm,func-ids is still kept as an optional property, because there
-> > > > is no defined SMC funciton id passed from SCMI. So in my test, I
-> > > > still use arm,func-ids for ARM SIP service.
-> > > >
-> > > >  .../devicetree/bindings/mailbox/arm-smc.txt        | 101
-> +++++++++++++++++++++
-> > > >  1 file changed, 101 insertions(+)  create mode 100644
-> > > > Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > > b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > > new file mode 100644
-> > > > index 000000000000..401887118c09
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > > @@ -0,0 +1,101 @@
-> >
-> > [...]
-> >
-> > > > +Optional properties:
-> > > > +- arm,func-ids		An array of 32-bit values specifying the function
-> > > > +			IDs used by each mailbox channel. Those function IDs
-> > > > +			follow the ARM SMC calling convention standard [1].
-> > > > +			There is one identifier per channel and the number
-> > > > +			of supported channels is determined by the length
-> > > > +			of this array.
-> > > > +- interrupts		SPI interrupts may be listed for notification,
-> > > > +			each channel should use a dedicated interrupt
-> > > > +			line.
-> > >
-> > > I would not go about defining a specific kind of interrupt, since
-> > > SPI is a GIC terminology, this firmware interface could be used in
-> > > premise with any parent interrupt controller, for which the concept
-> > > of a SPI/PPI/SGI may not be relevant.
-> > >
-> >
-> > While I agree the binding document may not contain specifics, I still
-> > don't see how to use SGI with this. Also note it's generally reserved
-> > for OS future use(IPC) and using this for other than IPC may be bit
-> > challenging IMO. It opens up lots of questions.
->=20
-> Well, a PPI might be possible to use, although it's somewhat dodgy to hij=
-ack
-> the GIC's (re-)distributor from EL3 to write to GICD_ISPENDR<n>. Need to =
-ask
-> Marc about his feelings towards this. But it's definitely possible from a
-> hypervisor to inject arbitrary interrupts into a guest.
->=20
-> But more importantly: is there any actual reason this needs to be a GIC
-> interrupt?=20
-
-No. I just test ATF with SPI when I posting out this. Should not restrict t=
-o be GIC.
-
-If I understand the code correctly, this could just be any interrupt,
-> including one of an interrupt combiner or a GPIO chip. So why not just us=
-e the
-> standard wording of: "exactly one interrupt specifier for each channel"?
-
-Agree.
-
->=20
-> By the way: Shouldn't new bindings use the YAML format instead?
-
-I'll convert to YAML in next version.
-
-Thanks,
-Peng.
-
->=20
-> Cheers,
-> Andre.
+PiBTdWJqZWN0OiBSZTogW1BBVENIIFYyIDIvMl0gbWFpbGJveDogaW50cm9kdWNlIEFSTSBTTUMg
+YmFzZWQgbWFpbGJveA0KPiANCj4gT24gNi8zLzE5IDE6MzAgQU0sIHBlbmcuZmFuQG54cC5jb20g
+d3JvdGU6DQo+ID4gRnJvbTogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+ID4NCj4gPiBU
+aGlzIG1haWxib3ggZHJpdmVyIGltcGxlbWVudHMgYSBtYWlsYm94IHdoaWNoIHNpZ25hbHMgdHJh
+bnNtaXR0ZWQNCj4gPiBkYXRhIHZpYSBhbiBBUk0gc21jIChzZWN1cmUgbW9uaXRvciBjYWxsKSBp
+bnN0cnVjdGlvbi4gVGhlIG1haWxib3gNCj4gPiByZWNlaXZlciBpcyBpbXBsZW1lbnRlZCBpbiBm
+aXJtd2FyZSBhbmQgY2FuIHN5bmNocm9ub3VzbHkgcmV0dXJuIGRhdGENCj4gPiB3aGVuIGl0IHJl
+dHVybnMgZXhlY3V0aW9uIHRvIHRoZSBub24tc2VjdXJlIHdvcmxkIGFnYWluLg0KPiA+IEFuIGFz
+eW5jaHJvbm91cyByZWNlaXZlIHBhdGggaXMgbm90IGltcGxlbWVudGVkLg0KPiA+IFRoaXMgYWxs
+b3dzIHRoZSB1c2FnZSBvZiBhIG1haWxib3ggdG8gdHJpZ2dlciBmaXJtd2FyZSBhY3Rpb25zIG9u
+IFNvQ3MNCj4gPiB3aGljaCBlaXRoZXIgZG9uJ3QgaGF2ZSBhIHNlcGFyYXRlIG1hbmFnZW1lbnQg
+cHJvY2Vzc29yIG9yIG9uIHdoaWNoDQo+ID4gc3VjaCBhIGNvcmUgaXMgbm90IGF2YWlsYWJsZS4g
+QSB1c2VyIG9mIHRoaXMgbWFpbGJveCBjb3VsZCBiZSB0aGUgU0NQDQo+ID4gaW50ZXJmYWNlLg0K
+PiA+DQo+ID4gTW9kaWZpZWQgZnJvbSBBbmRyZSBQcnp5d2FyYSdzIHYyIHBhdGNoDQo+ID4gaHR0
+cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNB
+JTJGJTJGbG9yZQ0KPiA+IC5rZXJuZWwub3JnJTJGcGF0Y2h3b3JrJTJGcGF0Y2glMkY4MTI5OTkl
+MkYmYW1wO2RhdGE9MDIlN0MwMSU3DQo+IENwZW5nLmZhDQo+ID4NCj4gbiU0MG54cC5jb20lN0Nh
+YTM5NmJhMTFiYTI0NDExMWZlNDA4ZDZlODQxMWZiYSU3QzY4NmVhMWQzYmMyYjQNCj4gYzZmYTky
+Y2QNCj4gPg0KPiA5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2OTUxNzYzNzM4NTQ4NjIxJmFtcDtz
+ZGF0YT1VbE5FU05nN0k3DQo+IDRUTTl4cCUyRg0KPiA+IFZNY2U0Q1NiTXVKOTVsaDY4Y1F3JTJG
+blFNT3clM0QmYW1wO3Jlc2VydmVkPTANCj4gPg0KPiA+IENjOiBBbmRyZSBQcnp5d2FyYSA8YW5k
+cmUucHJ6eXdhcmFAYXJtLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5m
+YW5AbnhwLmNvbT4NCj4gPiAtLS0NCj4gDQo+IFtzbmlwXQ0KPiANCj4gKyNkZWZpbmUgQVJNX1NN
+Q19NQk9YX1VTQl9JUlEJQklUKDEpDQo+IA0KPiBUaGF0IGZsYWcgYXBwZWFycyB1bnVzZWQuDQoN
+CkknbGwgcmVtb3ZlIHRoaXMgaW4gVjMuDQoNCj4gDQo+ID4gK3N0YXRpYyBpbnQgYXJtX3NtY19t
+Ym94X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsNCj4gPiArCXN0cnVjdCBk
+ZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gKwlzdHJ1Y3QgbWJveF9jb250cm9sbGVyICpt
+Ym94Ow0KPiA+ICsJc3RydWN0IGFybV9zbWNfY2hhbl9kYXRhICpjaGFuX2RhdGE7DQo+ID4gKwlj
+b25zdCBjaGFyICptZXRob2Q7DQo+ID4gKwlib29sIHVzZV9odmMgPSBmYWxzZTsNCj4gPiArCWlu
+dCByZXQsIGlycV9jb3VudCwgaTsNCj4gPiArCXUzMiB2YWw7DQo+ID4gKw0KPiA+ICsJaWYgKCFv
+Zl9wcm9wZXJ0eV9yZWFkX3UzMihkZXYtPm9mX25vZGUsICJhcm0sbnVtLWNoYW5zIiwgJnZhbCkp
+IHsNCj4gPiArCQlpZiAodmFsIDwgMSB8fCB2YWwgPiBJTlRfTUFYKSB7DQo+ID4gKwkJCWRldl9l
+cnIoZGV2LCAiaW52YWxpZCBhcm0sbnVtLWNoYW5zIHZhbHVlICV1IG9mICVwT0ZuXG4iLA0KPiB2
+YWwsIHBkZXYtPmRldi5vZl9ub2RlKTsNCj4gPiArCQkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKwkJ
+fQ0KPiA+ICsJfQ0KPiANCj4gU2hvdWxkIG5vdCB0aGUgdXBwZXIgYm91bmQgY2hlY2sgYmUgZG9u
+ZSBhZ2FpbnN0IFVJTlRfTUFYIHNpbmNlIHZhbCBpcyBhbg0KPiB1bnNpZ25lZCBpbnQ/DQoNCkZp
+eCBpbiBWMy4NCg0KPiANCj4gPiArDQo+ID4gKwlpcnFfY291bnQgPSBwbGF0Zm9ybV9pcnFfY291
+bnQocGRldik7DQo+ID4gKwlpZiAoaXJxX2NvdW50ID09IC1FUFJPQkVfREVGRVIpDQo+ID4gKwkJ
+cmV0dXJuIGlycV9jb3VudDsNCj4gPiArDQo+ID4gKwlpZiAoaXJxX2NvdW50ICYmIGlycV9jb3Vu
+dCAhPSB2YWwpIHsNCj4gPiArCQlkZXZfZXJyKGRldiwgIkludGVycnVwdHMgbm90IG1hdGNoIG51
+bS1jaGFuc1xuIik7DQo+IA0KPiBJbnRlcnJ1cHRzIHByb3BlcnR5IGRvZXMgbm90IG1hdGNoIFwi
+YXJtLG51bS1jaGFuc1wiIHdvdWxkIGJlIG1vcmUNCj4gY29ycmVjdC4NCg0KRml4IGluIFYzLg0K
+DQo+IA0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWlmICgh
+b2ZfcHJvcGVydHlfcmVhZF9zdHJpbmcoZGV2LT5vZl9ub2RlLCAibWV0aG9kIiwgJm1ldGhvZCkp
+IHsNCj4gPiArCQlpZiAoIXN0cmNtcCgiaHZjIiwgbWV0aG9kKSkgew0KPiA+ICsJCQl1c2VfaHZj
+ID0gdHJ1ZTsNCj4gPiArCQl9IGVsc2UgaWYgKCFzdHJjbXAoInNtYyIsIG1ldGhvZCkpIHsNCj4g
+PiArCQkJdXNlX2h2YyA9IGZhbHNlOw0KPiA+ICsJCX0gZWxzZSB7DQo+ID4gKwkJCWRldl93YXJu
+KGRldiwgImludmFsaWQgXCJtZXRob2RcIiBwcm9wZXJ0eTogJXNcbiIsDQo+ID4gKwkJCQkgbWV0
+aG9kKTsNCj4gPiArDQo+ID4gKwkJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJCX0NCj4gDQo+IEhh
+dmluZyBhdCBsZWFzdCBvbmUgbWV0aG9kIHNwZWNpZmllZCBkb2VzIG5vdCBzZWVtIHRvIGJlIGNo
+ZWNrZWQgbGF0ZXIgb24gaW4NCj4gdGhlIGNvZGUsIHNvIGlmIEkgb21pdHRlZCB0byBzcGVjaWZ5
+IHRoYXQgcHJvcGVydHksIHdlIHdvdWxkIHN0aWxsIHJlZ2lzdGVyIHRoZQ0KPiBtYWlsYm94IGFu
+ZCBkZWZhdWx0IHRvIHVzZSAic21jIiBzaW5jZSB0aGUgQVJNX1NNQ19NQk9YX1VTRV9IVkMgZmxh
+Zw0KPiB3b3VsZCBub3QgYmUgc2V0LCB3b3VsZCBub3Qgd2Ugd2FudCB0byBtYWtlIHN1cmUgdGhh
+dCB3ZSBkbyBoYXZlIGluIGZhY3QgYQ0KPiB2YWxpZCBtZXRob2Qgc3BlY2lmaWVkIGdpdmVuIHRo
+ZSBiaW5kaW5nIGRvY3VtZW50cyB0aGF0IHByb3BlcnR5IGFzDQo+IG1hbmRhdG9yeT8NCg0KV2hl
+biBhcm1fc21jX3NlbmRfZGF0YSwgaXQgd2lsbCBjaGVjayBBUk1fU01DX01CT1hfVVNFX0hWQywN
+CnlvdSBtZWFuIHRoZXJlIGFyZSBvdGhlciBwbGFjZXMgbmVlZHMgdGhpcyBmbGFnIGNoZWNrPw0K
+DQo+IA0KPiBbc25pcF0NCj4gDQo+ID4gKwltYm94LT50eGRvbmVfcG9sbCA9IGZhbHNlOw0KPiA+
+ICsJbWJveC0+dHhkb25lX2lycSA9IGZhbHNlOw0KPiA+ICsJbWJveC0+b3BzID0gJmFybV9zbWNf
+bWJveF9jaGFuX29wczsNCj4gPiArCW1ib3gtPmRldiA9IGRldjsNCj4gPiArDQo+ID4gKwlyZXQg
+PSBtYm94X2NvbnRyb2xsZXJfcmVnaXN0ZXIobWJveCk7DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJ
+CXJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgbWJv
+eCk7DQo+IA0KPiBJIHdvdWxkIG1vdmUgdGhpcyBhYm92ZSBtYm94X2NvbnRyb2xsZXJfcmVnaXN0
+ZXIoKSB0aGF0IHdheSB0aGVyZSBpcyBubyByb29tDQo+IGZvciByYWNlIGNvbmRpdGlvbnMgaW4g
+Y2FzZSBhbm90aGVyIHBhcnQgb2YgdGhlIGRyaXZlciBleHBlY3RzIHRvIGhhdmUNCj4gcGRldi0+
+ZGV2LmRydmRhdGEgc2V0IGJlZm9yZSB0aGUgbWJveCBjb250cm9sbGVyIGlzIHJlZ2lzdGVyZWQu
+DQoNClJpZ2h0Lg0KDQo+IFNpbmNlIHlvdSB1c2UgZGV2bV8qIGZ1bmN0aW9ucyBmb3IgZXZlcnl0
+aGluZywgeW91IG1heSBldmVuIHJlbW92ZSB0aGF0DQo+IGNhbGwuDQoNCllvdSBtZWFuIHJlbW92
+ZSAiIHBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIG1ib3gpOyIgPw0KDQo+IA0KPiBbc25pcF0N
+Cj4gDQo+ID4gKyNpZm5kZWYgX0xJTlVYX0FSTV9TTUNfTUFJTEJPWF9IXw0KPiA+ICsjZGVmaW5l
+IF9MSU5VWF9BUk1fU01DX01BSUxCT1hfSF8NCj4gPiArDQo+ID4gK3N0cnVjdCBhcm1fc21jY2Nf
+bWJveF9jbWQgew0KPiA+ICsJdW5zaWduZWQgbG9uZyBhMCwgYTEsIGEyLCBhMywgYTQsIGE1LCBh
+NiwgYTc7IH07DQo+IA0KPiBEbyB5b3UgZXhwZWN0IHRoaXMgdG8gYmUgdXNlZCBieSBvdGhlciBp
+bi1rZXJuZWwgdXNlcnM/IElmIHNvLCBpdCBtaWdodCBiZSBnb29kDQo+IHRvIGRvY3VtZW50IGhv
+dyBhMCBjYW4gaGF2ZSBhIHNwZWNpYWwgbWVhbmluZyBhbmQgYmUgdXNlZCBhcyBhIHN1YnN0aXR1
+dGUNCj4gZm9yIHRoZSBmdW5jdGlvbl9pZD8NCg0KVGhpcyB3YXMgdG8gYWRkcmVzcyBjb21tZW50
+cyBoZXJlOg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzgxMjk5OS8j
+MTAxMDQzMw0KDQpUaGFua3MsDQpQZW5nLg0KDQo+IC0tDQo+IEZsb3JpYW4NCg==
