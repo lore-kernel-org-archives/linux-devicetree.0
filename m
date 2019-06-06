@@ -1,82 +1,50 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-Date: Thu, 6 Jun 2019 09:05:16 +0200
-Message-ID: <CAKfTPtCR360osDz3oW+XhHT1R12SacAuJ44W_NfFOPWxJFjOPg@mail.gmail.com>
-References: <20190114184255.258318-1-mka@chromium.org> <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
- <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
- <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
- <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
- <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com> <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 2/3] irqchip: al-fic: Introduce Amazon's Annapurna Labs
+ Fabric Interrupt Controller Driver
+Date: Thu, 06 Jun 2019 17:04:57 +1000
+Message-ID: <06384baa09e0f24e0c33f560f461233ef4405799.camel@kernel.crashing.org>
+References: <1559717653-11258-1-git-send-email-talel@amazon.com>
+         <1559717653-11258-3-git-send-email-talel@amazon.com>
+         <20190605075927.GA9693@kroah.com>
+         <a81a46ef13273aa8c6ea87c8d3550e33650e27b6.camel@kernel.crashing.org>
+         <20190606063741.GA23305@kroah.com>
+         <61fe2a4c80e654476a68929da9dcc18df8bc2639.camel@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
+In-Reply-To: <61fe2a4c80e654476a68929da9dcc18df8bc2639.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Perret <quentin.perret@arm.com>
-Cc: Stephen Boyd <swboyd@chromium.org>, Amit Kucheria <amit.kucheria@linaro.org>, Andy Gross <agross@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Talel Shenhar <talel@amazon.com>, nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Quentin,
+On Thu, 2019-06-06 at 16:47 +1000, Benjamin Herrenschmidt wrote:
+> On Thu, 2019-06-06 at 08:37 +0200, Greg KH wrote:
+> > On Thu, Jun 06, 2019 at 07:55:43AM +1000, Benjamin Herrenschmidt wrote:
+> > > On Wed, 2019-06-05 at 09:59 +0200, Greg KH wrote:
+> > > > 
+> > > > > +struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic);
+> > > > > +
+> > > > > +struct al_fic *al_fic_wire_init(struct device_node *node,
+> > > > > +				void __iomem *base,
+> > > > > +				const char *name,
+> > > > > +				unsigned int parent_irq);
+> > > > > +int al_fic_cleanup(struct al_fic *fic);
+> > > > 
+> > > > Who is using these new functions?  We don't add new apis that no one
+> > > > uses :(
+> > > 
+> > > They will be used by subsequent driver submissions but those aren't
+> > > quite ready yet, so we can hold onto patch 3 for now until they are.
+> > 
+> > Patch 2 also should have these removed :)
+> 
+> That's a mistake, that export should have been in patch3. Talel, pls
+> fix that in your next spin.
 
-On Wed, 5 Jun 2019 at 19:21, Quentin Perret <quentin.perret@arm.com> wrote:
->
-> On Friday 17 May 2019 at 14:55:19 (-0700), Stephen Boyd wrote:
-> > Quoting Amit Kucheria (2019-05-16 04:54:45)
-> > > (cc'ing Andy's correct email address)
-> > >
-> > > On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > > >
-> > > > Quoting Amit Kucheria (2019-05-13 04:54:12)
-> > > > > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > > > > >
-> > > > > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > > > > > >
-> > > > > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
-> > > > > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
-> > > > > > > that describes this topology.
-> > > > > >
-> > > > > > This is partly true. There are two groups of gold and silver cores,
-> > > > > > but AFAICT they are in a single cluster, not two separate ones. SDM845
-> > > > > > is one of the early examples of ARM's Dynamiq architecture.
-> > > > > >
-> > > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > > >
-> > > > > > I noticed that this patch sneaked through for this merge window but
-> > > > > > perhaps we can whip up a quick fix for -rc2?
-> > > > > >
-> > > > >
-> > > > > And please find attached a patch to fix this up. Andy, since this
-> > > > > hasn't landed yet (can we still squash this into the original patch?),
-> > > > > I couldn't add a Fixes tag.
-> > > > >
-> > > >
-> > > > I had the same concern. Thanks for catching this. I suspect this must
-> > > > cause some problem for IPA given that it can't discern between the big
-> > > > and little "power clusters"?
-> > >
-> > > Both EAS and IPA, I believe. It influences the scheduler's view of the
-> > > the topology.
-> >
-> > And EAS and IPA are OK with the real topology? I'm just curious if
-> > changing the topology to reflect reality will be a problem for those
-> > two.
->
-> FWIW, neither EAS nor IPA depends on this. Not the upstream version of
-> EAS at least (which is used in recent Android kernels -- 4.19+).
->
-> But doing this is still required for other things in the scheduler (the
-> so-called 'capacity-awareness' code). So until we have a better
-> solution, this patch is doing the right thing.
+Actually that's already fixed in v2 of the series. The API have been
+removed for now.
 
-I'm not sure to catch what you mean ?
-Which so-called 'capacity-awareness' code are you speaking about ? and
-what is the problem ?
-
-Regards,
-Vincent
-
->
-> I hope that helps.
->
-> Thanks,
-> Quentin
+Cheers,
+Ben.
