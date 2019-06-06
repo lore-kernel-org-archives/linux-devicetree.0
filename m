@@ -1,39 +1,79 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 1/6] dt-bindings: clock: Document external clocks for MSM8998 gcc
-Date: Thu, 06 Jun 2019 16:29:55 -0700
-Message-ID: <20190606232956.C742E20868@mail.kernel.org>
-References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org> <1558449993-20902-1-git-send-email-jhugo@codeaurora.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Configure BT_HOST_WAKE as wake-up
+ signal on veyron
+Date: Thu, 6 Jun 2019 16:32:41 -0700
+Message-ID: <CAD=FV=VnjRPokOp+DH5H04Ej=TSxKDeDWhbbJt46b6cVFnOosQ@mail.gmail.com>
+References: <20190605204320.22343-1-mka@chromium.org> <20190605204320.22343-2-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558449993-20902-1-git-send-email-jhugo@codeaurora.org>
+In-Reply-To: <20190605204320.22343-2-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com
-Cc: agross@kernel.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jeffrey Hugo (2019-05-21 07:46:33)
-> The global clock controller on MSM8998 can consume a number of external
-> clocks.  Document them.
->=20
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/clock/qcom,gcc.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Docum=
-entation/devicetree/bindings/clock/qcom,gcc.txt
-> index 8661c3c..7d45323 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> @@ -28,6 +28,16 @@ Required properties :
->  - #clock-cells : shall contain 1
->  - #reset-cells : shall contain 1
-> =20
-> +For MSM8998 only:
+Hi,
 
-It would be nice to get the rest of the SoCs supported by this binding
-to start listing clocks. But this is OK for now.
+On Wed, Jun 5, 2019 at 1:43 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> This enables wake up on Bluetooth activity when the device is
+> suspended. The BT_HOST_WAKE signal is only connected on devices
+> with BT module that are connected through UART.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  arch/arm/boot/dts/rk3288-veyron.dtsi | 29 ++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> index cc4c3595f145..145cac7c0847 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> @@ -23,6 +23,31 @@
+>                 reg = <0x0 0x0 0x0 0x80000000>;
+>         };
+>
+> +       bt_activity: bt-activity {
+> +               compatible = "gpio-keys";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&bt_host_wake>;
+> +
+> +               /*
+> +                * HACK: until we have an LPM driver, we'll use an
+> +                * ugly GPIO key to allow Bluetooth to wake from S3.
+> +                * This is expected to only be used by BT modules that
+> +                * use UART for comms.  For BT modules that talk over
+> +                * SDIO we should use a wakeup mechanism related to SDIO.
+> +                *
+> +                * Use KEY_RESERVED here since that will work as a wakeup but
+> +                * doesn't get reported to higher levels (so doesn't confuse
+> +                * Chrome).
+> +                */
+> +               bt-wake {
+> +                       label = "BT Wakeup";
+> +                       gpios = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
+> +                       linux,code = <KEY_RESERVED>;
+> +                       wakeup-source;
+> +               };
+> +
+> +       };
+> +
+>         power_button: power-button {
+>                 compatible = "gpio-keys";
+>                 pinctrl-names = "default";
+> @@ -555,6 +580,10 @@
+>                         rockchip,pins = <4 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>;
+>                 };
+>
+> +               bt_host_wake: bt-host-wake {
+> +                       rockchip,pins = <4 31 RK_FUNC_GPIO &pcfg_pull_down>;
+
+nit: s/31/RK_PD7
+
+Other than that, feel free to add my Reviewed-by assuming that this
+isn't too hacky for mainline to accept while we wait for someone to
+come up with a better solution.
+
+-Doug
