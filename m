@@ -1,242 +1,251 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 3/3] iio: temperature: add a driver for the temperature
- sensor found in Amlogic Meson G12 SoCs
-Date: Thu, 6 Jun 2019 21:40:29 +0200
-Message-ID: <CAFBinCAecHbXURFMO5z+TuwFMk_h=QMGqWxTou73Vv0q3011fw@mail.gmail.com>
-References: <20190604144714.2009-1-glaroque@baylibre.com> <20190604144714.2009-4-glaroque@baylibre.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: sun4i-i2s: Change SR and WSS computation" to the asoc
+ tree
+Date: Thu,  6 Jun 2019 22:27:20 +0100 (BST)
+Message-ID: <20190606212720.D7CE5440046@finisterre.sirena.org.uk>
+References: <20190605100801.2488-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604144714.2009-4-glaroque@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: jic23@kernel.org, khilman@baylibre.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190605100801.2488-1-maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marcus Cooper <codekipper@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guillaume,
+The patch
 
-below are my initial impressions. I will have a closer look once
-there's a decision whether this belongs to the IIO or thermal
-framework.
+   ASoC: sun4i-i2s: Change SR and WSS computation
 
-On Tue, Jun 4, 2019 at 4:48 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
->
-> The code is based on Amlogic source code. No public datasheet for this.
-the public S922X datasheet from Hardkernel [0] has some documentation
-(starting at page 1106).
+has been applied to the asoc tree at
 
-[...]
-> +config MESON_TSENSOR
-> +       tristate "Amlogic Meson temperature sensor Support"
-> +       default ARCH_MESON
-> +       depends on OF && ARCH_MESON
-depends on OF && (ARCH_MESON || COMPILE_TEST)
-so all the nice auto-builders / testing tools will speak up if someone
-tries to break your driver
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
 
-> +       help
-> +         If you say yess here you get support for Meson Temperature sensor
-s/yess/yes/
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> +         for G12 SoC Family.
-G12 (which I assume includes G12A and G12B) or G12A?
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-[...]
-> diff --git a/drivers/iio/temperature/meson_tsensor.c b/drivers/iio/temperature/meson_tsensor.c
-> new file mode 100644
-> index 000000000000..be0a8d073ba3
-> --- /dev/null
-> +++ b/drivers/iio/temperature/meson_tsensor.c
-> @@ -0,0 +1,416 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Amlogic Meson Temperature Sensor
-> + *
-> + * Copyright (C) 2017 Huan Biao <huan.biao@amlogic.com>
-> + * Copyright (C) 2019 Guillaume La Roque <glaroque@baylibre.com>
-> + *
-> + * Register value to celsius temperature formulas:
-> + *     Read_Val            m * U
-> + * U = ---------, Uptat = ---------
-> + *     2^16              1 + n * U
-> + *
-> + * Temperature = A * ( Uptat + u_efuse / 2^16 )- B
-> + *
-> + *  A B m n : calibration parameters
-> + *  u_efuse : fused calibration value, it's a signed 16 bits value
-it's great to have this explained in the docs (instead of having to
-look it up in some out of tree driver, as it's not part of the
-datasheet) - thank you for this!
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define TSENSOR_CFG_REG1                       0x4
-> +       #define TSENSOR_CFG_REG1_RSET_VBG       BIT(12)
-> +       #define TSENSOR_CFG_REG1_RSET_ADC       BIT(11)
-> +       #define TSENSOR_CFG_REG1_VCM_EN         BIT(10)
-> +       #define TSENSOR_CFG_REG1_VBG_EN         BIT(9)
-> +       #define TSENSOR_CFG_REG1_OUT_CTL        BIT(6)
-> +       #define TSENSOR_CFG_REG1_FILTER_EN      BIT(5)
-> +       #define TSENSOR_CFG_REG1_DEM_EN         BIT(3)
-> +       #define TSENSOR_CFG_REG1_CH_SEL         GENMASK(1, 0)
-> +       #define TSENSOR_CFG_REG1_ENABLE         \
-> +               (TSENSOR_CFG_REG1_FILTER_EN |   \
-> +                TSENSOR_CFG_REG1_VCM_EN |      \
-> +                TSENSOR_CFG_REG1_VBG_EN |      \
-> +                TSENSOR_CFG_REG1_DEM_EN |      \
-> +                TSENSOR_CFG_REG1_CH_SEL)
-are all of these needed to enabled *and* disable the temperature
-sensor? TSENSOR_CFG_REG1_CH_SEL doesn't seem related when disabling
-the sensor reading (but I don't know since there's no documentation)
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> +#define TSENSOR_CFG_REG2                               0x8
-> +       #define TSENSOR_CFG_REG2_HITEMP_EN              BIT(31)
-> +       #define TSENSOR_CFG_REG2_REBOOT_ALL_EN          BIT(30)
-> +       #define TSENSOR_CFG_REG2_REBOOT_TIME            GENMASK(25, 16)
-> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE   \
-> +               (TSENSOR_CFG_REG2_HITEMP_EN |           \
-> +                TSENSOR_CFG_REG2_REBOOT_ALL_EN |       \
-> +                TSENSOR_CFG_REG2_REBOOT_TIME)
-the name mix between TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE and
-TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE_MASK confused me.
-personally I would drop the macros which just bit-wise or multiple
-other macros together
+Thanks,
+Mark
 
-> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE_MASK              \
-> +               (GENMASK(31, 30) | GENMASK(25, 4))
-> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_REG_MASK                 \
-> +               GENMASK(15, 4)
-> +       #define TSENSOR_CFG_REG2_HITEMP_REG_VAL(_reg_val)               \
-> +               (FIELD_PREP(TSENSOR_CFG_REG2_HITEMP_REBOOT_REG_MASK,    \
-> +                           _reg_val) |                                 \
-> +                TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE)
-> +
-> +#define TSENSOR_CFG_REG3               0xC
-I like to use lower-case hex letters
-and I also pad them -> 0x0c in this case because we have for example 0x10 below)
+>From 619c15f7fac98fbeaae02d76a5529f5026a2b6d7 Mon Sep 17 00:00:00 2001
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Date: Wed, 5 Jun 2019 12:08:01 +0200
+Subject: [PATCH] ASoC: sun4i-i2s: Change SR and WSS computation
 
-> +#define TSENSOR_CFG_REG4               0x10
-> +#define TSENSOR_CFG_REG5               0x14
-> +#define TSENSOR_CFG_REG6               0x18
-> +#define TSENSOR_CFG_REG7               0x1C
-> +#define TSENSOR_CFG_REG8               0x20
-> +
-> +#define TSENSOR_STAT0                  0x40
-> +
-> +#define TSENSOR_STAT9                  0x64
-> +
-> +#define TSENSOR_READ_TEMP_MASK         GENMASK(15, 0)
-TSENSOR_STAT0_FILTER_OUT would match the naming from the datasheet
+The current computation for the SR (sample resolution) and the WSS (word
+slot size) register parameters is based on a switch returning the matching
+parameters for a given params width.
 
-> +#define TSENSOR_TEMP_MASK              GENMASK(11, 0)
->
-> +#define TSENSOR_TRIM_SIGN_MASK         BIT(15)
-> +#define TSENSOR_TRIM_TEMP_MASK         GENMASK(14, 0)
-> +#define TSENSOR_TRIM_VERSION_MASK      GENMASK(31, 24)
-> +
-> +#define TSENSOR_TRIM_VERSION(_version)         \
-> +       FIELD_GET(TSENSOR_TRIM_VERSION_MASK, _version)
-I would drop this and use the FIELD_GET directly where needed (it's
-only one occurrence anyways)
+Later SoCs (A83t, H3, A64) changed that calculation, which was loosely the
+same with an offset. Therefore, an offset was added to adjust those
+parameters.
 
-[...]
-> +static int meson_tsensor_enable(struct iio_dev *indio_dev)
-> +{
-> +       struct meson_tsensor *priv = iio_priv(indio_dev);
-> +
-> +       clk_prepare_enable(priv->clk);
-may return an error which you're discarding here
+However, the calculation is a bit less trivial than initially thought.
+Indeed, while we assumed that SR and WSS were always the same, on older
+SoCs, SR will max at 24 (since those SoCs do not support 32 bits formats),
+but the word size can be 32.
 
-> +       regmap_update_bits(priv->regmap, TSENSOR_CFG_REG1,
-> +                          TSENSOR_CFG_REG1_ENABLE, TSENSOR_CFG_REG1_ENABLE);
-> +
-> +       return 0;
-> +}
-> +
-> +static int meson_tsensor_disable(struct iio_dev *indio_dev)
-> +{
-> +       struct meson_tsensor *priv = iio_priv(indio_dev);
-> +
-> +       regmap_update_bits(priv->regmap, TSENSOR_CFG_REG1,
-> +                          TSENSOR_CFG_REG1_ENABLE, 0);
-> +       clk_disable(priv->clk);
-clk_disable_unprepare as you're calling clk_prepare_enable above?
+Newer SoCs can also support a much larger range (8 bits to 32 bits, by
+increments of 4) of size than the older SoCs could.
 
-> +
-> +       return 0;
-make it a void function instead?
+Finally, the A64 and A83t were never adjusted to have that offset in the
+first place, and were therefore broken from that point of view.
 
-> +static const struct regmap_config meson_tsensor_regmap_config_g12a = {
-> +       .reg_bits = 8,
-> +       .val_bits = 32,
-> +       .reg_stride = 4,
-> +       .max_register = TSENSOR_STAT9,
-.fast_io = true
-if you ever need to ACK interrupts from the IRQ handler
-(IIRC fast_io will use a spinlock instead of mutex)
+In order to fix all those issues, let's introduce two functions, get_wss
+and get_sr, with their respective implementations for all the SoCs
+supported so far.
 
-[...]
-> +static const struct of_device_id meson_tsensor_of_match[] = {
-> +       {
-> +               .compatible = "amlogic,meson-g12a-ddr-tsensor",
-> +               .data = &meson_tsensor_g12a_ddr_param,
-> +       },
-> +       {
-> +               .compatible = "amlogic,meson-g12a-cpu-tsensor",
-> +               .data = &meson_tsensor_g12a_cpu_param,
-> +       },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, meson_tsensor_of_match);
-I would move the of_device_id table above the platform_driver definition below
-of_device_get_match_data doesn't need the of_device_id as parameter
-(compared to it's predecessor)
+Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
+Fixes: 66ecce332538 ("ASoC: sun4i-i2s: Add compatibility with A64 codec I2S")
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/sunxi/sun4i-i2s.c | 71 ++++++++++++++++++++++++++++---------
+ 1 file changed, 55 insertions(+), 16 deletions(-)
 
-> +static int meson_tsensor_probe(struct platform_device *pdev)
-> +{
-> +       struct meson_tsensor *priv;
-> +       struct iio_dev *indio_dev;
-> +       struct resource *res;
-> +
-> +       int ret;
-> +
-> +       indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*priv));
-> +       if (!indio_dev) {
-> +               dev_err(&pdev->dev, "failed allocating iio device\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       priv = iio_priv(indio_dev);
-> +       priv->data = of_device_get_match_data(&pdev->dev);
-> +       if (!priv->data) {
-> +               dev_err(&pdev->dev, "failed to get match data\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       indio_dev->channels = temperature_channel;
-> +       indio_dev->num_channels = ARRAY_SIZE(temperature_channel);
-> +       indio_dev->name = dev_name(&pdev->dev);
-> +       indio_dev->dev.parent = &pdev->dev;
-> +       indio_dev->dev.of_node = pdev->dev.of_node;
-> +       indio_dev->modes = INDIO_DIRECT_MODE;
-> +       indio_dev->info = &meson_tsensor_iio_info;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       priv->base = devm_ioremap_resource(&pdev->dev, res);
-you're only using priv->base in this function. consider dropping it
-from struct meson_tsensor
-
-
-[0] https://dn.odroid.com/S922X/ODROID-N2/Datasheet/S922X_Public_Datasheet_V0.2.pdf
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index d5ec1a20499d..03696f880080 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -118,6 +118,8 @@
+ #define SUN8I_I2S_RX_CHAN_SEL_REG	0x54
+ #define SUN8I_I2S_RX_CHAN_MAP_REG	0x58
+ 
++struct sun4i_i2s;
++
+ /**
+  * struct sun4i_i2s_quirks - Differences between SoC variants.
+  *
+@@ -131,7 +133,6 @@
+  * @sun4i_i2s_regmap: regmap config to use.
+  * @mclk_offset: Value by which mclkdiv needs to be adjusted.
+  * @bclk_offset: Value by which bclkdiv needs to be adjusted.
+- * @fmt_offset: Value by which wss and sr needs to be adjusted.
+  * @field_clkdiv_mclk_en: regmap field to enable mclk output.
+  * @field_fmt_wss: regmap field to set word select size.
+  * @field_fmt_sr: regmap field to set sample resolution.
+@@ -154,7 +155,6 @@ struct sun4i_i2s_quirks {
+ 	const struct regmap_config	*sun4i_i2s_regmap;
+ 	unsigned int			mclk_offset;
+ 	unsigned int			bclk_offset;
+-	unsigned int			fmt_offset;
+ 
+ 	/* Register fields for i2s */
+ 	struct reg_field		field_clkdiv_mclk_en;
+@@ -167,6 +167,9 @@ struct sun4i_i2s_quirks {
+ 	struct reg_field		field_rxchanmap;
+ 	struct reg_field		field_txchansel;
+ 	struct reg_field		field_rxchansel;
++
++	s8	(*get_sr)(const struct sun4i_i2s *, int);
++	s8	(*get_wss)(const struct sun4i_i2s *, int);
+ };
+ 
+ struct sun4i_i2s {
+@@ -349,6 +352,39 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
+ 	return 0;
+ }
+ 
++static s8 sun4i_i2s_get_sr(const struct sun4i_i2s *i2s, int width)
++{
++	if (width < 16 || width > 24)
++		return -EINVAL;
++
++	if (width % 4)
++		return -EINVAL;
++
++	return (width - 16) / 4;
++}
++
++static s8 sun4i_i2s_get_wss(const struct sun4i_i2s *i2s, int width)
++{
++	if (width < 16 || width > 32)
++		return -EINVAL;
++
++	if (width % 4)
++		return -EINVAL;
++
++	return (width - 16) / 4;
++}
++
++static s8 sun8i_i2s_get_sr_wss(const struct sun4i_i2s *i2s, int width)
++{
++	if (width % 4)
++		return -EINVAL;
++
++	if (width < 8 || width > 32)
++		return -EINVAL;
++
++	return (width - 8) / 4 + 1;
++}
++
+ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
+ 			       struct snd_pcm_hw_params *params,
+ 			       struct snd_soc_dai *dai)
+@@ -400,22 +436,16 @@ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
+ 	}
+ 	i2s->playback_dma_data.addr_width = width;
+ 
+-	switch (params_width(params)) {
+-	case 16:
+-		sr = 0;
+-		wss = 0;
+-		break;
++	sr = i2s->variant->get_sr(i2s, params_width(params));
++	if (sr < 0)
++		return -EINVAL;
+ 
+-	default:
+-		dev_err(dai->dev, "Unsupported sample width: %d\n",
+-			params_width(params));
++	wss = i2s->variant->get_wss(i2s, params_width(params));
++	if (wss < 0)
+ 		return -EINVAL;
+-	}
+ 
+-	regmap_field_write(i2s->field_fmt_wss,
+-			   wss + i2s->variant->fmt_offset);
+-	regmap_field_write(i2s->field_fmt_sr,
+-			   sr + i2s->variant->fmt_offset);
++	regmap_field_write(i2s->field_fmt_wss, wss);
++	regmap_field_write(i2s->field_fmt_sr, sr);
+ 
+ 	return sun4i_i2s_set_clk_rate(dai, params_rate(params),
+ 				      params_width(params));
+@@ -891,6 +921,8 @@ static const struct sun4i_i2s_quirks sun4i_a10_i2s_quirks = {
+ 	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
+ 	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
+ 	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
++	.get_sr			= sun4i_i2s_get_sr,
++	.get_wss		= sun4i_i2s_get_wss,
+ };
+ 
+ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
+@@ -908,6 +940,8 @@ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
+ 	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
+ 	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
+ 	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
++	.get_sr			= sun4i_i2s_get_sr,
++	.get_wss		= sun4i_i2s_get_wss,
+ };
+ 
+ static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
+@@ -925,6 +959,8 @@ static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
+ 	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
+ 	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
+ 	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
++	.get_sr			= sun8i_i2s_get_sr_wss,
++	.get_wss		= sun8i_i2s_get_sr_wss,
+ };
+ 
+ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
+@@ -933,7 +969,6 @@ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
+ 	.sun4i_i2s_regmap	= &sun8i_i2s_regmap_config,
+ 	.mclk_offset		= 1,
+ 	.bclk_offset		= 2,
+-	.fmt_offset		= 3,
+ 	.has_fmt_set_lrck_period = true,
+ 	.has_chcfg		= true,
+ 	.has_chsel_tx_chen	= true,
+@@ -948,6 +983,8 @@ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
+ 	.field_rxchanmap	= REG_FIELD(SUN8I_I2S_RX_CHAN_MAP_REG, 0, 31),
+ 	.field_txchansel	= REG_FIELD(SUN8I_I2S_TX_CHAN_SEL_REG, 0, 2),
+ 	.field_rxchansel	= REG_FIELD(SUN8I_I2S_RX_CHAN_SEL_REG, 0, 2),
++	.get_sr			= sun8i_i2s_get_sr_wss,
++	.get_wss		= sun8i_i2s_get_sr_wss,
+ };
+ 
+ static const struct sun4i_i2s_quirks sun50i_a64_codec_i2s_quirks = {
+@@ -965,6 +1002,8 @@ static const struct sun4i_i2s_quirks sun50i_a64_codec_i2s_quirks = {
+ 	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
+ 	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
+ 	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
++	.get_sr			= sun8i_i2s_get_sr_wss,
++	.get_wss		= sun8i_i2s_get_sr_wss,
+ };
+ 
+ static int sun4i_i2s_init_regmap_fields(struct device *dev,
+-- 
+2.20.1
