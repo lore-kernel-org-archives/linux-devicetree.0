@@ -1,63 +1,70 @@
 From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v2 05/10] ARM: dts: keystone-clocks: add input fixed clocks
-Date: Thu, 6 Jun 2019 19:30:42 +0300
-Message-ID: <20190606163047.31199-6-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 08/10] ARM: dts: k2hk-netcp: add cpts refclk_mux node
+Date: Thu, 6 Jun 2019 19:30:45 +0300
+Message-ID: <20190606163047.31199-9-grygorii.strashko@ti.com>
 References: <20190606163047.31199-1-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190606163047.31199-1-grygorii.strashko@ti.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: "David S. Miller" <davem@davemloft.net>, Santosh Shilimkar <ssantosh@kernel.org>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>
 Cc: Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add set of fixed, external input clocks definitions for TIMI0, TIMI1,
-TSREFCLK clocks. Such clocks can be used as reference clocks for some HW
-modules (as cpts, for example) by configuring corresponding clock muxes.
-For these clocks real frequencies have to be defined in board files.
+KeyStone 66AK2H/K 1G Ethernet Switch Subsystems, can control an external
+multiplexer that selects one of up to 32 clocks for time sync reference
+(RFTCLK) clock. This feature can be configured through CPTS_RFTCLK_SEL
+register (offset: x08) in CPTS module and modelled as multiplexer clock.
 
+Hence, add cpts-refclk-mux clock node which allows to mux one of SYSCLK2,
+SYSCLK3, TIMI0, TIMI1, TSREFCLK clocks as CPTS reference clock [1] and
+group all CPTS properties under "cpts" subnode.
+
+[1] http://www.ti.com/lit/gpn/66ak2h14
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Acked-by: Richard Cochran <richardcochran@gmail.com>
 ---
- arch/arm/boot/dts/keystone-clocks.dtsi | 27 ++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/arm/boot/dts/keystone-k2hk-netcp.dtsi | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-clocks.dtsi b/arch/arm/boot/dts/keystone-clocks.dtsi
-index 457515b0736a..0397c3423d2d 100644
---- a/arch/arm/boot/dts/keystone-clocks.dtsi
-+++ b/arch/arm/boot/dts/keystone-clocks.dtsi
-@@ -408,4 +408,31 @@ clocks {
- 		reg-names = "control", "domain";
- 		domain-id = <0>;
- 	};
+diff --git a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
+index e203145acbea..d5a6c1f5633c 100644
+--- a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
++++ b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
+@@ -152,8 +152,8 @@ netcp: netcp@2000000 {
+ 	/* NetCP address range */
+ 	ranges  = <0 0x2000000 0x100000>;
+ 
+-	clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
+-	clock-names = "pa_clk", "ethss_clk", "cpts";
++	clocks = <&clkpa>, <&clkcpgmac>;
++	clock-names = "pa_clk", "ethss_clk";
+ 	dma-coherent;
+ 
+ 	ti,navigator-dmas = <&dma_gbe 22>,
+@@ -175,6 +175,22 @@ netcp: netcp@2000000 {
+ 			tx-queue = <648>;
+ 			tx-channel = "nettx";
+ 
++			cpts {
++				clocks = <&cpts_refclk_mux>;
++				clock-names = "cpts";
 +
-+	/*
-+	 * Below are set of fixed, input clocks definitions,
-+	 * for which real frequencies have to be defined in board files.
-+	 * Those clocks can be used as reference clocks for some HW modules
-+	 * (as cpts, for example) by configuring corresponding clock muxes.
-+	 */
-+	timi0: timi0 {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <0>;
-+		clock-output-names = "timi0";
-+	};
++				cpts_refclk_mux: cpts-refclk-mux {
++					#clock-cells = <0>;
++					clocks = <&chipclk12>, <&chipclk13>,
++						 <&timi0>, <&timi1>,
++						 <&tsrefclk>;
++					ti,mux-tbl = <0x0>, <0x1>, <0x2>,
++						<0x3>, <0x8>;
++					assigned-clocks = <&cpts_refclk_mux>;
++					assigned-clock-parents = <&chipclk12>;
++				};
++			};
 +
-+	timi1: timi1 {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <0>;
-+		clock-output-names = "timi1";
-+	};
-+
-+	tsrefclk: tsrefclk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <0>;
-+		clock-output-names = "tsrefclk";
-+	};
- };
+ 			interfaces {
+ 				gbe0: interface-0 {
+ 					slave-port = <0>;
 -- 
 2.17.1
