@@ -1,13 +1,13 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 1/3] Documentation: dt-bindings: add the Amlogic Meson
- Temperature Sensor
-Date: Thu, 6 Jun 2019 21:16:37 +0200
-Message-ID: <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com>
-References: <20190604144714.2009-1-glaroque@baylibre.com> <20190604144714.2009-2-glaroque@baylibre.com>
+Subject: Re: [PATCH 3/3] iio: temperature: add a driver for the temperature
+ sensor found in Amlogic Meson G12 SoCs
+Date: Thu, 6 Jun 2019 21:40:29 +0200
+Message-ID: <CAFBinCAecHbXURFMO5z+TuwFMk_h=QMGqWxTou73Vv0q3011fw@mail.gmail.com>
+References: <20190604144714.2009-1-glaroque@baylibre.com> <20190604144714.2009-4-glaroque@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604144714.2009-2-glaroque@baylibre.com>
+In-Reply-To: <20190604144714.2009-4-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Guillaume La Roque <glaroque@baylibre.com>
 Cc: jic23@kernel.org, khilman@baylibre.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
@@ -15,68 +15,228 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Guillaume,
 
-thank you for working on this!
+below are my initial impressions. I will have a closer look once
+there's a decision whether this belongs to the IIO or thermal
+framework.
 
-On Tue, Jun 4, 2019 at 4:47 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+On Tue, Jun 4, 2019 at 4:48 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
 >
-> This adds the devicetree binding documentation for the Temperature
-> Sensor found in the Amlogic Meson G12 SoCs.
-> Currently only the G12A SoCs are supported.
-so G12B is not supported (yet)?
+> The code is based on Amlogic source code. No public datasheet for this.
+the public S922X datasheet from Hardkernel [0] has some documentation
+(starting at page 1106).
 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  .../iio/temperature/amlogic,meson-tsensor.txt | 31 +++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
->
-> diff --git a/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+[...]
+> +config MESON_TSENSOR
+> +       tristate "Amlogic Meson temperature sensor Support"
+> +       default ARCH_MESON
+> +       depends on OF && ARCH_MESON
+depends on OF && (ARCH_MESON || COMPILE_TEST)
+so all the nice auto-builders / testing tools will speak up if someone
+tries to break your driver
+
+> +       help
+> +         If you say yess here you get support for Meson Temperature sensor
+s/yess/yes/
+
+> +         for G12 SoC Family.
+G12 (which I assume includes G12A and G12B) or G12A?
+
+[...]
+> diff --git a/drivers/iio/temperature/meson_tsensor.c b/drivers/iio/temperature/meson_tsensor.c
 > new file mode 100644
-> index 000000000000..d064db0e9cac
+> index 000000000000..be0a8d073ba3
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> @@ -0,0 +1,31 @@
-> +* Amlogic Meson Temperature Sensor
+> +++ b/drivers/iio/temperature/meson_tsensor.c
+> @@ -0,0 +1,416 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Amlogic Meson Temperature Sensor
+> + *
+> + * Copyright (C) 2017 Huan Biao <huan.biao@amlogic.com>
+> + * Copyright (C) 2019 Guillaume La Roque <glaroque@baylibre.com>
+> + *
+> + * Register value to celsius temperature formulas:
+> + *     Read_Val            m * U
+> + * U = ---------, Uptat = ---------
+> + *     2^16              1 + n * U
+> + *
+> + * Temperature = A * ( Uptat + u_efuse / 2^16 )- B
+> + *
+> + *  A B m n : calibration parameters
+> + *  u_efuse : fused calibration value, it's a signed 16 bits value
+it's great to have this explained in the docs (instead of having to
+look it up in some out of tree driver, as it's not part of the
+datasheet) - thank you for this!
+
+> + */
 > +
-> +Required properties:
-> +- compatible:  depending on the SoC and the position of the sensor,
-> +               this should be one of:
-> +               - "amlogic,meson-g12a-cpu-tsensor" for the CPU G12A SoC sensor
-> +               - "amlogic,meson-g12a-ddr-tsensor" for the DDR G12A SoC sensor
-> +               followed by the common :
-> +               - "amlogic,meson-g12a-tsensor" for G12A SoC family
-> +- reg:         the physical base address and length of the registers
-> +- interrupts:  the interrupt indicating end of sampling
-> +- clocks:      phandle identifier for the reference clock of temperature sensor
-> +- #io-channel-cells: must be 1, see ../iio-bindings.txt
-have you considered using the thermal framework [0] instead of the iio
-framework (see below)?
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define TSENSOR_CFG_REG1                       0x4
+> +       #define TSENSOR_CFG_REG1_RSET_VBG       BIT(12)
+> +       #define TSENSOR_CFG_REG1_RSET_ADC       BIT(11)
+> +       #define TSENSOR_CFG_REG1_VCM_EN         BIT(10)
+> +       #define TSENSOR_CFG_REG1_VBG_EN         BIT(9)
+> +       #define TSENSOR_CFG_REG1_OUT_CTL        BIT(6)
+> +       #define TSENSOR_CFG_REG1_FILTER_EN      BIT(5)
+> +       #define TSENSOR_CFG_REG1_DEM_EN         BIT(3)
+> +       #define TSENSOR_CFG_REG1_CH_SEL         GENMASK(1, 0)
+> +       #define TSENSOR_CFG_REG1_ENABLE         \
+> +               (TSENSOR_CFG_REG1_FILTER_EN |   \
+> +                TSENSOR_CFG_REG1_VCM_EN |      \
+> +                TSENSOR_CFG_REG1_VBG_EN |      \
+> +                TSENSOR_CFG_REG1_DEM_EN |      \
+> +                TSENSOR_CFG_REG1_CH_SEL)
+are all of these needed to enabled *and* disable the temperature
+sensor? TSENSOR_CFG_REG1_CH_SEL doesn't seem related when disabling
+the sensor reading (but I don't know since there's no documentation)
 
-> +- amlogic,ao-secure: phandle to the ao-secure syscon
-the driver has some "u_efuse_off" access. do we need to get some
-calibration values from the AO syscon or can we also fetch it from the
-eFuse? you can look at arch/arm/boot/dts/meson8.dtsi where I'm passing
-the temperature sensor calibration data to the SAR ADC (there's no
-dedicated temperature sensor IP block prior to G12A) while reading the
-data from the eFuse
+> +#define TSENSOR_CFG_REG2                               0x8
+> +       #define TSENSOR_CFG_REG2_HITEMP_EN              BIT(31)
+> +       #define TSENSOR_CFG_REG2_REBOOT_ALL_EN          BIT(30)
+> +       #define TSENSOR_CFG_REG2_REBOOT_TIME            GENMASK(25, 16)
+> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE   \
+> +               (TSENSOR_CFG_REG2_HITEMP_EN |           \
+> +                TSENSOR_CFG_REG2_REBOOT_ALL_EN |       \
+> +                TSENSOR_CFG_REG2_REBOOT_TIME)
+the name mix between TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE and
+TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE_MASK confused me.
+personally I would drop the macros which just bit-wise or multiple
+other macros together
 
-> +Optional properties:
-> +- amlogic,critical-temperature: temperature value in milli degrees Celsius
-> +       to set automatic reboot on too high temperature
-as far as I can tell the thermal framework supports multiple trip
-points. I'm seeing this as a benefit because the hardware can raise
-interrupts at four different temperatures (defined by the driver)
+> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE_MASK              \
+> +               (GENMASK(31, 30) | GENMASK(25, 4))
+> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_REG_MASK                 \
+> +               GENMASK(15, 4)
+> +       #define TSENSOR_CFG_REG2_HITEMP_REG_VAL(_reg_val)               \
+> +               (FIELD_PREP(TSENSOR_CFG_REG2_HITEMP_REBOOT_REG_MASK,    \
+> +                           _reg_val) |                                 \
+> +                TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE)
+> +
+> +#define TSENSOR_CFG_REG3               0xC
+I like to use lower-case hex letters
+and I also pad them -> 0x0c in this case because we have for example 0x10 below)
 
-> +Example:
-> +       cpu_temp: temperature-sensor@ff634800 {
-> +               compatible = "amlogic,meson-g12a-cpu-tsensor",
-> +                            "amlogic,meson-g12a-tsensor";
-> +               reg = <0x0 0xff634800 0x0 0x50>;
-> +               interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-> +               clocks = <&clkc CLKID_TS>;
-> +               status = "okay";
-as far as I know the dt-bindings should not have a status property in
-the examples
+> +#define TSENSOR_CFG_REG4               0x10
+> +#define TSENSOR_CFG_REG5               0x14
+> +#define TSENSOR_CFG_REG6               0x18
+> +#define TSENSOR_CFG_REG7               0x1C
+> +#define TSENSOR_CFG_REG8               0x20
+> +
+> +#define TSENSOR_STAT0                  0x40
+> +
+> +#define TSENSOR_STAT9                  0x64
+> +
+> +#define TSENSOR_READ_TEMP_MASK         GENMASK(15, 0)
+TSENSOR_STAT0_FILTER_OUT would match the naming from the datasheet
+
+> +#define TSENSOR_TEMP_MASK              GENMASK(11, 0)
+>
+> +#define TSENSOR_TRIM_SIGN_MASK         BIT(15)
+> +#define TSENSOR_TRIM_TEMP_MASK         GENMASK(14, 0)
+> +#define TSENSOR_TRIM_VERSION_MASK      GENMASK(31, 24)
+> +
+> +#define TSENSOR_TRIM_VERSION(_version)         \
+> +       FIELD_GET(TSENSOR_TRIM_VERSION_MASK, _version)
+I would drop this and use the FIELD_GET directly where needed (it's
+only one occurrence anyways)
+
+[...]
+> +static int meson_tsensor_enable(struct iio_dev *indio_dev)
+> +{
+> +       struct meson_tsensor *priv = iio_priv(indio_dev);
+> +
+> +       clk_prepare_enable(priv->clk);
+may return an error which you're discarding here
+
+> +       regmap_update_bits(priv->regmap, TSENSOR_CFG_REG1,
+> +                          TSENSOR_CFG_REG1_ENABLE, TSENSOR_CFG_REG1_ENABLE);
+> +
+> +       return 0;
+> +}
+> +
+> +static int meson_tsensor_disable(struct iio_dev *indio_dev)
+> +{
+> +       struct meson_tsensor *priv = iio_priv(indio_dev);
+> +
+> +       regmap_update_bits(priv->regmap, TSENSOR_CFG_REG1,
+> +                          TSENSOR_CFG_REG1_ENABLE, 0);
+> +       clk_disable(priv->clk);
+clk_disable_unprepare as you're calling clk_prepare_enable above?
+
+> +
+> +       return 0;
+make it a void function instead?
+
+> +static const struct regmap_config meson_tsensor_regmap_config_g12a = {
+> +       .reg_bits = 8,
+> +       .val_bits = 32,
+> +       .reg_stride = 4,
+> +       .max_register = TSENSOR_STAT9,
+.fast_io = true
+if you ever need to ACK interrupts from the IRQ handler
+(IIRC fast_io will use a spinlock instead of mutex)
+
+[...]
+> +static const struct of_device_id meson_tsensor_of_match[] = {
+> +       {
+> +               .compatible = "amlogic,meson-g12a-ddr-tsensor",
+> +               .data = &meson_tsensor_g12a_ddr_param,
+> +       },
+> +       {
+> +               .compatible = "amlogic,meson-g12a-cpu-tsensor",
+> +               .data = &meson_tsensor_g12a_cpu_param,
+> +       },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, meson_tsensor_of_match);
+I would move the of_device_id table above the platform_driver definition below
+of_device_get_match_data doesn't need the of_device_id as parameter
+(compared to it's predecessor)
+
+> +static int meson_tsensor_probe(struct platform_device *pdev)
+> +{
+> +       struct meson_tsensor *priv;
+> +       struct iio_dev *indio_dev;
+> +       struct resource *res;
+> +
+> +       int ret;
+> +
+> +       indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*priv));
+> +       if (!indio_dev) {
+> +               dev_err(&pdev->dev, "failed allocating iio device\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       priv = iio_priv(indio_dev);
+> +       priv->data = of_device_get_match_data(&pdev->dev);
+> +       if (!priv->data) {
+> +               dev_err(&pdev->dev, "failed to get match data\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       indio_dev->channels = temperature_channel;
+> +       indio_dev->num_channels = ARRAY_SIZE(temperature_channel);
+> +       indio_dev->name = dev_name(&pdev->dev);
+> +       indio_dev->dev.parent = &pdev->dev;
+> +       indio_dev->dev.of_node = pdev->dev.of_node;
+> +       indio_dev->modes = INDIO_DIRECT_MODE;
+> +       indio_dev->info = &meson_tsensor_iio_info;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       priv->base = devm_ioremap_resource(&pdev->dev, res);
+you're only using priv->base in this function. consider dropping it
+from struct meson_tsensor
 
 
-Martin
+[0] https://dn.odroid.com/S922X/ODROID-N2/Datasheet/S922X_Public_Datasheet_V0.2.pdf
