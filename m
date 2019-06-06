@@ -1,82 +1,47 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V8 14/15] PCI: tegra: Add Tegra194 PCIe support
-Date: Thu, 6 Jun 2019 19:35:47 +0300
-Message-ID: <f30e7fc6-3f64-d321-c32c-5e273115a869@gmail.com>
-References: <20190526043751.12729-1-vidyas@nvidia.com>
- <20190526043751.12729-15-vidyas@nvidia.com>
+From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: [PATCH 1/1] ARM: dts: imx6ul: Add PXP node
+Date: Thu,  6 Jun 2019 18:46:42 +0200
+Message-ID: <20190606164642.11539-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190526043751.12729-15-vidyas@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
-Cc: mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-26.05.2019 7:37, Vidya Sagar пишет:
-> Add support for Synopsys DesignWare core IP based PCIe host controller
-> present in Tegra194 SoC.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v7]:
-> * Addressed review comments from Thierry
-> 
-> Changes since [v6]:
-> * Removed code around "nvidia,disable-aspm-states" DT property
-> * Refactored code to remove code duplication
-> 
-> Changes since [v5]:
-> * Addressed review comments from Thierry
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * None
-> 
-> Changes since [v2]:
-> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
-> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
-> * Removed .runtime_suspend() & .runtime_resume() implementations
-> 
-> Changes since [v1]:
-> * Made CONFIG_PCIE_TEGRA194 as 'm' by default from its previous 'y' state
-> * Modified code as per changes made to DT documentation
-> * Refactored code to address Bjorn & Thierry's review comments
-> * Added goto to avoid recursion in tegra_pcie_dw_host_init() API
-> * Merged .scan_bus() of dw_pcie_host_ops implementation to tegra_pcie_dw_host_init() API
-> 
->  drivers/pci/controller/dwc/Kconfig         |   10 +
->  drivers/pci/controller/dwc/Makefile        |    1 +
->  drivers/pci/controller/dwc/pcie-tegra194.c | 1621 ++++++++++++++++++++
->  3 files changed, 1632 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index a6ce1ee51b4c..884112afc11b 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -220,6 +220,16 @@ config PCI_MESON
->  	  and therefore the driver re-uses the DesignWare core functions to
->  	  implement the driver.
->  
-> +config PCIE_TEGRA194
-> +	tristate "NVIDIA Tegra194 (and later) PCIe controller"
-> +	depends on (TEGRA_BPMP && ARCH_TEGRA) || COMPILE_TEST
-
-TEGRA_BPMP will be enough here as it depends on other relevant options.
-
-Hence I mean:
-
-	depends on TEGRA_BPMP || COMPILE_TEST
-
-
-> +	depends on PCI_MSI_IRQ_DOMAIN
-
-You probably want to s/depends on/select/ PCI_MSI_IRQ_DOMAIN, don't you?
-
--- 
-Dmitry
+QWRkIFBYUCBub2RlIGZvciBpLk1YNlVML0wgU29DLgoKU2lnbmVkLW9mZi1ieTogU8OpYmFzdGll
+biBTenltYW5za2kgPHNlYmFzdGllbi5zenltYW5za2lAYXJtYWRldXMuY29tPgotLS0KIGFyY2gv
+YXJtL2Jvb3QvZHRzL2lteDZ1bC5kdHNpICB8IDkgKysrKysrKysrCiBhcmNoL2FybS9ib290L2R0
+cy9pbXg2dWxsLmR0c2kgfCA2ICsrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25z
+KCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLmR0c2kgYi9hcmNoL2Fy
+bS9ib290L2R0cy9pbXg2dWwuZHRzaQppbmRleCBmMTAwMTJkZTVlYjYuLmEzYzAwNTM3M2FlMSAx
+MDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLmR0c2kKKysrIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14NnVsLmR0c2kKQEAgLTk3MSw2ICs5NzEsMTUgQEAKIAkJCQlzdGF0dXMgPSAi
+ZGlzYWJsZWQiOwogCQkJfTsKIAorCQkJcHhwOiBweHBAMjFjYzAwMCB7CisJCQkJY29tcGF0aWJs
+ZSA9ICJmc2wsaW14NnVsLXB4cCI7CisJCQkJcmVnID0gPDB4MDIxY2MwMDAgMHg0MDAwPjsKKwkJ
+CQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgOCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCQljbG9j
+a3MgPSA8JmNsa3MgSU1YNlVMX0NMS19QWFA+OworCQkJCWNsb2NrLW5hbWVzID0gImF4aSI7CisJ
+CQkJc3RhdHVzID0gImRpc2FibGVkIjsKKwkJCX07CisKIAkJCXFzcGk6IHNwaUAyMWUwMDAwIHsK
+IAkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKIAkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDZ1bGwuZHRzaQppbmRleCAyMmU0YTMwN2ZhNTkuLmIwMTdlOTI1YmQ4NyAxMDA2NDQKLS0t
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDZ1bGwuZHRzaQpAQCAtMzQsNiArMzQsMTIgQEAKIAljb21wYXRpYmxlID0gImZzbCxpbXg2
+dWxsLW9jb3RwIiwgInN5c2NvbiI7CiB9OwogCismcHhwIHsKKwljb21wYXRpYmxlID0gImZzbCxp
+bXg2dWxsLXB4cCI7CisJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDggSVJRX1RZUEVfTEVWRUxfSElH
+SD4sCisJCSAgICAgPEdJQ19TUEkgMTggSVJRX1RZUEVfTEVWRUxfSElHSD47Cit9OworCiAmdXNk
+aGMxIHsKIAljb21wYXRpYmxlID0gImZzbCxpbXg2dWxsLXVzZGhjIiwgImZzbCxpbXg2c3gtdXNk
+aGMiOwogfTsKLS0gCjIuMTkuMgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
