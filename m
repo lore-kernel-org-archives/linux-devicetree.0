@@ -1,250 +1,155 @@
-From: Oliver Graute <oliver.graute@gmail.com>
-Subject: [PATCHv3 2/2] ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
-Date: Thu,  6 Jun 2019 18:47:02 +0200
-Message-ID: <1559839624-12286-3-git-send-email-oliver.graute@gmail.com>
-References: <1559839624-12286-1-git-send-email-oliver.graute@gmail.com>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Thu, 6 Jun 2019 12:42:09 -0500
+Message-ID: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+References: <20190531035348.7194-1-elder@linaro.org>
+ <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+ <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
+ <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+ <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+ <20190531233306.GB25597@minitux>
+ <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
+ <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
+ <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org>
+ <CAK8P3a2U=RzfpVaAgRP1QwPhRpZiBNsG5qdWjzwG=tCKZefYHA@mail.gmail.com>
+ <b26cf34c0d3fa1a7a700cee935244d7a2a7e1388.camel@redhat.com>
+ <CAK8P3a3pQpSpH4q=CL6gr_YzjYgoyD6-eyiLrvnZsqqjpcRxtQ@mail.gmail.com>
+ <0264d7f9a35430201a89c068bb13c84c622af11a.camel@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559839624-12286-1-git-send-email-oliver.graute@gmail.com>
+In-Reply-To: <0264d7f9a35430201a89c068bb13c84c622af11a.camel@redhat.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: oliver.graute@gmail.com, narmstrong@baylibre.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dan Williams <dcbw@redhat.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Miller <davem@davemloft.net>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, evgreen@chromium.org, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DeviceTree Bindings for the i.MX6 UltraLite DART NAND/WIFI
+On 6/4/19 4:29 PM, Dan Williams wrote:
+> On Tue, 2019-06-04 at 22:04 +0200, Arnd Bergmann wrote:
+>> On Tue, Jun 4, 2019 at 5:18 PM Dan Williams <dcbw@redhat.com> wrote:
+>>> On Tue, 2019-06-04 at 10:13 +0200, Arnd Bergmann wrote:
+>>>> Can you describe what kind of multiplexing is actually going on?
+>>>> I'm still unclear about what we actually use multiple logical
+>>>> interfaces for here, and how they relate to one another.
+>>>
+>>> Each logical interface represents a different "connection" (PDP/EPS
+>>> context) to the provider network with a distinct IP address and
+>>> QoS.
+>>> VLANs may be a suitable analogy but here they are L3+QoS.
+>>>
+>>> In realistic example the main interface (say rmnet0) would be used
+>>> for
+>>> web browsing and have best-effort QoS. A second interface (say
+>>> rmnet1)
+>>> would be used for VOIP and have certain QoS guarantees from both
+>>> the
+>>> modem and the network itself.
+>>>
+>>> QMAP can also aggregate frames for a given channel
+>>> (connection/EPS/PDP
+>>> context/rmnet interface/etc) to better support LTE speeds.
+>>
+>> Thanks, that's a very helpful explanation!
+>>
+>> Is it correct to say then that the concept of having those separate
+>> connections would be required for any proper LTE modem
+>> implementation,
+>> but the QMAP protocol (and based on that, the rmnet implementation)
+>> is Qualcomm specific and shared only among several generations of
+>> modems from that one vendor?
+> 
+> Exactly correct.  This is what Johannes is discussing in his "cellular
+> modem APIs - take 2" thread about how this should all be organized at
+> the driver level and I think we should figure that out before we commit
+> to IPA-with-a-useless-netdev that requires rmnets to be created on top.
+> That may end up being the solution but let's have that discussion.
 
-Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
----
- arch/arm/boot/dts/Makefile                      |   1 +
- arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts | 209 ++++++++++++++++++++++++
- 2 files changed, 210 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+I looked at Johannes' message and the follow-on discussion.  As I've
+made clear before, my work on this has been focused on the IPA transport,
+and some of this higher-level LTE architecture is new to me.  But it
+seems pretty clear that an abstracted WWAN subsystem is a good plan,
+because these devices represent a superset of what a "normal" netdev
+implements.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 5559028..7f03ab5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -577,6 +577,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-tx6ul-0010.dtb \
- 	imx6ul-tx6ul-0011.dtb \
- 	imx6ul-tx6ul-mainboard.dtb \
-+	imx6ul-var-6ulcustomboard.dtb \
- 	imx6ull-14x14-evk.dtb \
- 	imx6ull-colibri-eval-v3.dtb \
- 	imx6ull-colibri-wifi-eval-v3.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-new file mode 100644
-index 0000000..80b860a
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-@@ -0,0 +1,209 @@
-+// SPDX-License-Identifier: (GPL-2.0)
-+/*
-+ * Support for Variscite DART-6UL Module
-+ *
-+ * Copyright (C) 2015 Freescale Semiconductor, Inc.
-+ * Copyright (C) 2015-2016 Variscite Ltd. - http://www.variscite.com
-+ * Copyright (C) 2018-2019 Oliver Graute <oliver.graute@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include "imx6ul-imx6ull-var-dart-common.dtsi"
-+
-+/ {
-+	model = "Variscite i.MX6 UltraLite Carrier-board";
-+	compatible = "fsl,6ulcustomboard", "fsl,imx6ul";
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 20000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+		status = "okay";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		user {
-+			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_BACK>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+
-+		d16_led {
-+			gpios = <&gpio4 20 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "wm8731audio";
-+		simple-audio-card,widgets =
-+			"Headphone", "Headphone Jack",
-+			"Line", "Line Jack",
-+			"Microphone", "Mic Jack";
-+		simple-audio-card,routing =
-+			"Headphone Jack", "RHPOUT",
-+			"Headphone Jack", "LHPOUT",
-+			"LLINEIN", "Line Jack",
-+			"RLINEIN", "Line Jack",
-+			"MICIN", "Mic Bias",
-+			"Mic Bias", "Mic Jack";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&sound_master>;
-+		simple-audio-card,frame-master = <&sound_master>;
-+
-+		sound_master: simple-audio-card,cpu {
-+				sound-dai = <&sai2>;
-+		};
-+	};
-+};
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&can2 {
-+	status = "okay";
-+};
-+
-+&gpc {
-+	fsl,cpu_pupscr_sw2iso = <0x2>;
-+	fsl,cpu_pupscr_sw = <0x1>;
-+	fsl,cpu_pdnscr_iso2sw = <0x1>;
-+	fsl,cpu_pdnscr_iso = <0x1>;
-+	fsl,ldo-bypass = <0>; /* DCDC, ldo-enable */
-+};
-+
-+&fec1 {
-+	status = "okay";
-+	phy-mode = "rgmii";
-+	phy-reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-+	phy-handle = <&ethphy0>;
-+};
-+
-+&fec2 {
-+	status = "okay";
-+	phy-mode = "rgmii";
-+	phy-reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
-+	phy-handle = <&ethphy1>;
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock_frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	wm8731: codec@1a {
-+		#sound-dai-cells = <0>;
-+		compatible = "wlf,wm8731";
-+		reg = <0x1a>;
-+		clocks = <&clks IMX6UL_CLK_SAI2>;
-+		clock-names = "mclk";
-+	};
-+
-+	touchscreen@38 {
-+		compatible = "edt,edt-ft5x06";
-+		reg = <0x38>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <4 0>;
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
-+		touchscreen-inverted-x;
-+		touchscreen-inverted-y;
-+	};
-+
-+	rtc@68 {
-+		compatible = "dallas,ds1337";
-+		reg = <0x68>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_rtc>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+};
-+
-+&lcdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcdif_dat
-+		     &pinctrl_lcdif_ctrl>;
-+	display = <&display0>;
-+	status = "okay";
-+
-+	display0: display {
-+		bits-per-pixel = <16>;
-+		bus-width = <24>;
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: timing0 {
-+				clock-frequency =<35000000>;
-+				hactive = <800>;
-+				vactive = <480>;
-+				hfront-porch = <40>;
-+				hback-porch = <40>;
-+				hsync-len = <48>;
-+				vback-porch = <29>;
-+				vfront-porch = <13>;
-+				vsync-len = <3>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <0>;
-+			};
-+		};
-+	};
-+};
-+
-+&pwm1 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog_1>;
-+	imx6ul-evk {
-+
-+		pinctrl_rtc: rtcgrp {
-+			fsl,pins = <
-+				MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
-+			>;
-+		};
-+	};
-+};
--- 
-2.7.4
+HOWEVER I disagree with your suggestion that the IPA code should
+not be committed until after that is all sorted out.  In part it's
+for selfish reasons, but I think there are legitimate reasons to
+commit IPA now *knowing* that it will need to be adapted to fit
+into the generic model that gets defined and developed.  Here
+are some reasons why.
+
+First, the layer of the IPA code that actually interacts with rmnet
+is very small--less than 3% if you simply do a word count of the
+source files.  Arnd actually suggested eliminating the "ipa_netdev"
+files and merging their content elsewhere.  This suggests two things:
+- The interface to rmnet is isolated, so the effect of whatever
+  updates are made to support a WWAN (rather than netdev) model will
+  be focused
+- The vast majority of the driver has nothing to do with that upper
+  layer, and deals almost exclusively with managing the IPA hardware.
+  The idea of a generic framework isn't minor, but it isn't the
+  main focus of the IPA driver either, so I don't think it should
+  hold it up.
+
+Second, the IPA code has been out for review recently, and has been
+the subject of some detailed discussion in the past few weeks.  Arnd
+especially has invested considerable time in review and discussion.
+Delaying things until after a better generic model is settled on
+(which I'm guessing might be on the order of months) means the IPA
+driver will have to be submitted for review again after that, at
+which point it will no longer be "fresh"; it'll be a bit like
+starting over.
+
+Third, having the code upstream actually means the actual requirements
+for rmnet-over-IPA are clear and explicit.  This might not be a huge
+deal, but I think it's better to devise a generic WWAN scheme that
+can refer to actual code than to do so with assumptions about what
+will work with rmnet (and others).  As far as I know, the upstream
+rmnet has no other upstream back end; IPA will make it "real."
+
+I support the idea of developing a generic WWAN framework, and I
+can assure you I'll be involved enough to perhaps be one of the
+first to implement a new generic scheme.
+
+Optimistically, the IPA code itself hasn't seen much feedback
+for v2; maybe that means it's in good shape?
+
+Anyway, I'd obviously like to get the IPA code accepted sooner
+rather than later, and I think there are good reasons to do that.
+
+					-Alex
+
+>>> You mentioned the need to have a common user space interface
+>> for configuration, and if the above is true, I agree that we should
+>> try
+>> to achieve that, either by ensuring rmnet is generic enough to
+>> cover other vendors (and non-QMAP clients), or by creating a
+>> new user level interface that IPA/rmnet can be adapted to.
+> 
+> I would not suggest making rmnet generic; it's pretty QMAP specific
+> (but QMAP is spoken by many many modems both SoC, USB stick, and PCIe
+> minicard).
+> 
+> Instead, I think what Johannes is discussing is a better approach. A
+> kernel WWAN framework with consistent user API that
+> rmnet/IPA/qmi_wwan/MBIM/QMI/serial/Sierra can all implement.
+> 
+> That wouldn't affect the core packet processing of IPA/rmnet but
+> instead:
+> 
+> 1) when/how an rmnet device actually gets created on top of the IPA (or
+> qmi_wwan) device
+> 
+> AND (one of these two)
+> 
+> a) whether IPA creates a netdev on probe
+> 
+> OR
+> 
+> b) whether there is some "WWAN device" kernel object which userspace
+> interacts with create rmnet channels on top of IPA
+> 
+> Dan
+> 
