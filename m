@@ -1,89 +1,53 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V8 14/15] PCI: tegra: Add Tegra194 PCIe support
-Date: Thu, 6 Jun 2019 21:52:09 +0300
-Message-ID: <cbdac43f-32f7-c992-832b-ed40bef2375b@gmail.com>
-References: <20190526043751.12729-1-vidyas@nvidia.com>
- <20190526043751.12729-15-vidyas@nvidia.com>
- <f30e7fc6-3f64-d321-c32c-5e273115a869@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v2 5/7] arm64: dts: msm8998-mtp: Add pm8005_s1 regulator
+Date: Thu,  6 Jun 2019 11:51:03 -0700
+Message-ID: <20190606185103.39788-1-jeffrey.l.hugo@gmail.com>
+References: <20190606184842.39484-1-jeffrey.l.hugo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f30e7fc6-3f64-d321-c32c-5e273115a869@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190606184842.39484-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
-Cc: mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: agross@kernel.org, david.brown@linaro.org, bjorn.andersson@linaro.org
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, jorge.ramirez-ortiz@linaro.org, niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-06.06.2019 19:35, Dmitry Osipenko пишет:
-> 26.05.2019 7:37, Vidya Sagar пишет:
->> Add support for Synopsys DesignWare core IP based PCIe host controller
->> present in Tegra194 SoC.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v7]:
->> * Addressed review comments from Thierry
->>
->> Changes since [v6]:
->> * Removed code around "nvidia,disable-aspm-states" DT property
->> * Refactored code to remove code duplication
->>
->> Changes since [v5]:
->> * Addressed review comments from Thierry
->>
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
->> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
->> * Removed .runtime_suspend() & .runtime_resume() implementations
->>
->> Changes since [v1]:
->> * Made CONFIG_PCIE_TEGRA194 as 'm' by default from its previous 'y' state
->> * Modified code as per changes made to DT documentation
->> * Refactored code to address Bjorn & Thierry's review comments
->> * Added goto to avoid recursion in tegra_pcie_dw_host_init() API
->> * Merged .scan_bus() of dw_pcie_host_ops implementation to tegra_pcie_dw_host_init() API
->>
->>  drivers/pci/controller/dwc/Kconfig         |   10 +
->>  drivers/pci/controller/dwc/Makefile        |    1 +
->>  drivers/pci/controller/dwc/pcie-tegra194.c | 1621 ++++++++++++++++++++
->>  3 files changed, 1632 insertions(+)
->>  create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
->>
->> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
->> index a6ce1ee51b4c..884112afc11b 100644
->> --- a/drivers/pci/controller/dwc/Kconfig
->> +++ b/drivers/pci/controller/dwc/Kconfig
->> @@ -220,6 +220,16 @@ config PCI_MESON
->>  	  and therefore the driver re-uses the DesignWare core functions to
->>  	  implement the driver.
->>  
->> +config PCIE_TEGRA194
->> +	tristate "NVIDIA Tegra194 (and later) PCIe controller"
->> +	depends on (TEGRA_BPMP && ARCH_TEGRA) || COMPILE_TEST
-> 
-> TEGRA_BPMP will be enough here as it depends on other relevant options.
-> 
-> Hence I mean:
-> 
-> 	depends on TEGRA_BPMP || COMPILE_TEST
+The pm8005_s1 is VDD_GFX, and needs to be on to enable the GPU.
+This should be hooked up to the GPU CPR, but we don't have support for that
+yet, so until then, just turn on the regulator and keep it on so that we
+can focus on basic GPU bringup.
 
-Maybe it's worth to even change TEGRA_BPMP to ARCH_TEGRA_194_SOC.
-Although then you'll have to extend it with other platforms later on,
-but probably that's fine.
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-> 
->> +	depends on PCI_MSI_IRQ_DOMAIN
-> 
-> You probably want to s/depends on/select/ PCI_MSI_IRQ_DOMAIN, don't you?
-> 
-
-I actually looked up the PCI_MSI_IRQ_DOMAIN and it is correct in your
-case, my bad.
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index f09f3e03f708..108667ce4f31 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -27,6 +27,23 @@
+ 	status = "okay";
+ };
+ 
++&pm8005_lsid1 {
++	pm8005-regulators {
++		compatible = "qcom,pm8005-regulators";
++
++		vdd_s1-supply = <&vph_pwr>;
++
++		pm8005_s1: s1 { /* VDD_GFX supply */
++			regulator-min-microvolt = <524000>;
++			regulator-max-microvolt = <1100000>;
++			regulator-enable-ramp-delay = <500>;
++
++			/* hack until we rig up the gpu consumer */
++			regulator-always-on;
++		};
++	};
++};
++
+ &qusb2phy {
+ 	status = "okay";
+ 
+-- 
+2.17.1
