@@ -1,154 +1,104 @@
-From: Harish Bandi <c-hbandi@codeaurora.org>
-Subject: Re: [PATCH v6 1/2] Bluetooth: hci_qca: Load customized NVM based on
- the device property
-Date: Thu, 06 Jun 2019 17:32:01 +0530
-Message-ID: <22d7ea0ccaf71af1a83cb5519e9a92d1@codeaurora.org>
-References: <1557919161-11010-1-git-send-email-rjliao@codeaurora.org>
- <1559814030-13833-1-git-send-email-rjliao@codeaurora.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 01/16] firmware: ti_sci: Add resource management APIs for
+ ringacc, psi-l and udma
+Date: Thu, 6 Jun 2019 15:04:51 +0300
+Message-ID: <78a2d824-d730-4174-e80b-4153a2744427@ti.com>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
+ <20190506123456.6777-2-peter.ujfalusi@ti.com>
+ <f2056b18-3f65-b7ae-90ba-5ebf9ac425bc@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559814030-13833-1-git-send-email-rjliao@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rocky Liao <rjliao@codeaurora.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com, thierry.escande@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, linux-bluetooth-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f2056b18-3f65-b7ae-90ba-5ebf9ac425bc@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lokesh Vutla <lokeshvutla@ti.com>, vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
+Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, tony@atomide.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-06-06 15:10, Rocky Liao wrote:
-> QCA BTSOC NVM is a customized firmware file and different vendors may
-> want to have different BTSOC configuration (e.g. Configure SCO over PCM
-> or I2S, Setting Tx power, etc.) via this file. This patch will allow
-> vendors to download different NVM firmware file by reading a device
-> property "firmware-name".
-> 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
-> Changes in v6:
->   * Added read firmware-name property for both QCA6174 and WCN399X
-> ---
->  drivers/bluetooth/btqca.c   |  8 ++++++--
->  drivers/bluetooth/btqca.h   |  6 ++++--
->  drivers/bluetooth/hci_qca.c | 18 +++++++++++++++++-
->  3 files changed, 27 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> index cc12eec..a78b80e 100644
-> --- a/drivers/bluetooth/btqca.c
-> +++ b/drivers/bluetooth/btqca.c
-> @@ -332,7 +332,8 @@ int qca_set_bdaddr_rome(struct hci_dev *hdev,
-> const bdaddr_t *bdaddr)
->  EXPORT_SYMBOL_GPL(qca_set_bdaddr_rome);
-> 
->  int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-> -		   enum qca_btsoc_type soc_type, u32 soc_ver)
-> +		   enum qca_btsoc_type soc_type, u32 soc_ver,
-> +		   const char *firmware_name)
->  {
->  	struct rome_config config;
->  	int err;
-> @@ -365,7 +366,10 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
-> baudrate,
-> 
->  	/* Download NVM configuration */
->  	config.type = TLV_TYPE_NVM;
-> -	if (qca_is_wcn399x(soc_type))
-> +	if (firmware_name)
-> +		snprintf(config.fwname, sizeof(config.fwname),
-> +			 "qca/%s", firmware_name);
-> +	else if (qca_is_wcn399x(soc_type))
->  		snprintf(config.fwname, sizeof(config.fwname),
->  			 "qca/crnv%02x.bin", rom_ver);
->  	else
-> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-> index 4c4fe2b..8c037bb 100644
-> --- a/drivers/bluetooth/btqca.h
-> +++ b/drivers/bluetooth/btqca.h
-> @@ -140,7 +140,8 @@ enum qca_btsoc_type {
-> 
->  int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr);
->  int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-> -		   enum qca_btsoc_type soc_type, u32 soc_ver);
-> +		   enum qca_btsoc_type soc_type, u32 soc_ver,
-> +		   const char *firmware_name);
->  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
->  int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
->  static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
-> @@ -155,7 +156,8 @@ static inline int qca_set_bdaddr_rome(struct
-> hci_dev *hdev, const bdaddr_t *bdad
->  }
-> 
->  static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t 
-> baudrate,
-> -				 enum qca_btsoc_type soc_type, u32 soc_ver)
-> +				 enum qca_btsoc_type soc_type, u32 soc_ver,
-> +				 const char *firmware_name)
->  {
->  	return -EOPNOTSUPP;
->  }
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 57322c4..05ee0a1 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -169,6 +169,7 @@ struct qca_serdev {
->  	struct qca_power *bt_power;
->  	u32 init_speed;
->  	u32 oper_speed;
-> +	const char *firmware_name;
->  };
-> 
->  static int qca_power_setup(struct hci_uart *hu, bool on);
-> @@ -190,6 +191,17 @@ static enum qca_btsoc_type qca_soc_type(struct
-> hci_uart *hu)
->  	return soc_type;
->  }
-> 
-> +static const char *qca_get_firmware_name(struct hci_uart *hu)
-> +{
-> +	if (hu->serdev) {
-> +		struct qca_serdev *qsd = serdev_device_get_drvdata(hu->serdev);
-> +
-> +		return qsd->firmware_name;
-> +	} else {
-> +		return NULL;
-> +	}
-> +}
-> +
->  static void __serial_clock_on(struct tty_struct *tty)
->  {
->  	/* TODO: Some chipset requires to enable UART clock on client
-> @@ -1195,6 +1207,7 @@ static int qca_setup(struct hci_uart *hu)
->  	struct qca_data *qca = hu->priv;
->  	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
->  	enum qca_btsoc_type soc_type = qca_soc_type(hu);
-> +	const char *firmware_name = qca_get_firmware_name(hu);
->  	int ret;
->  	int soc_ver = 0;
-> 
-> @@ -1245,7 +1258,8 @@ static int qca_setup(struct hci_uart *hu)
-> 
->  	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
->  	/* Setup patch / NVM configurations */
-> -	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver);
-> +	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver,
-> +			firmware_name);
->  	if (!ret) {
->  		set_bit(QCA_IBS_ENABLED, &qca->flags);
->  		qca_debugfs_init(hdev);
-> @@ -1439,6 +1453,8 @@ static int qca_serdev_probe(struct serdev_device 
-> *serdev)
->  	qcadev->serdev_hu.serdev = serdev;
->  	data = of_device_get_match_data(&serdev->dev);
->  	serdev_device_set_drvdata(serdev, qcadev);
-> +	device_property_read_string(&serdev->dev, "firmware-name",
-> +					 &qcadev->firmware_name);
->  	if (data && qca_is_wcn399x(data->soc_type)) {
->  		qcadev->btsoc_type = data->soc_type;
->  		qcadev->bt_power = devm_kzalloc(&serdev->dev,
-Tested for WCN3998.
-
-Tested-by: Harish Bandi <c-hbandi@codeaurora.org>
-
-Thanks,
-Harish
+SGkgTG9rZXNoLAoKT24gMDYvMDYvMjAxOSA5LjAwLCBMb2tlc2ggVnV0bGEgd3JvdGU6Cj4gSGkg
+UGV0ZXIsCj4gCj4gT24gMDYvMDUvMTkgNjowNCBQTSwgUGV0ZXIgVWpmYWx1c2kgd3JvdGU6Cj4+
+IFNpZ25lZC1vZmYtYnk6IFBldGVyIFVqZmFsdXNpIDxwZXRlci51amZhbHVzaUB0aS5jb20+Cj4g
+Cj4gUGF0Y2ggaGFzIHRoZSBmb2xsb3dpbmcgY2hlY2twYXRjaCB3YXJuaW5ncyBhbmQgY2hlY2tz
+IHdoaWNoIGNhbiBiZSBmaXhlZDoKPiAKPiBXQVJOSU5HOiBNaXNzaW5nIGNvbW1pdCBkZXNjcmlw
+dGlvbiAtIEFkZCBhbiBhcHByb3ByaWF0ZSBvbmUKCkhvdyBkaWQgSSBtaXNzZWQgaXQ/Cgo+IENI
+RUNLOiBMaW5lcyBzaG91bGQgbm90IGVuZCB3aXRoIGEgJygnCj4gIzI2MjogRklMRTogZHJpdmVy
+cy9maXJtd2FyZS90aV9zY2kuYzoyMjg2Ogo+ICtzdGF0aWMgaW50IHRpX3NjaV9jbWRfcm1fdWRt
+YXBfdHhfY2hfY2ZnKAo+IAo+IENIRUNLOiBMaW5lcyBzaG91bGQgbm90IGVuZCB3aXRoIGEgJygn
+Cj4gIzMyMzogRklMRTogZHJpdmVycy9maXJtd2FyZS90aV9zY2kuYzoyMzQ3Ogo+ICtzdGF0aWMg
+aW50IHRpX3NjaV9jbWRfcm1fdWRtYXBfcnhfY2hfY2ZnKAo+IAo+IENIRUNLOiBMaW5lcyBzaG91
+bGQgbm90IGVuZCB3aXRoIGEgJygnCj4gIzM4MzogRklMRTogZHJpdmVycy9maXJtd2FyZS90aV9z
+Y2kuYzoyNDA3Ogo+ICtzdGF0aWMgaW50IHRpX3NjaV9jbWRfcm1fdWRtYXBfcnhfZmxvd19jZmcx
+KAo+IAo+IENIRUNLOiBMaW5lcyBzaG91bGQgbm90IGVuZCB3aXRoIGEgJygnCj4gIzE0MTQ6IEZJ
+TEU6IGluY2x1ZGUvbGludXgvc29jL3RpL3RpX3NjaV9wcm90b2NvbC5oOjQ1NToKPiArCWludCAo
+KnJ4X2Zsb3dfY2ZnKSgKPiAKPiB0b3RhbDogMCBlcnJvcnMsIDIgd2FybmluZ3MsIDQgY2hlY2tz
+LCAxMzk5IGxpbmVzIGNoZWNrZWQKClRoZXJlIG11c3QgYmUgYSByZWFzb24gd2h5IHRoZXNlIGxl
+ZnQsIGJ1dCBJIHdpbGwgdGFrZSBhbm90aGVyIGxvb2suCgo+PiAtLS0KPj4gIGRyaXZlcnMvZmly
+bXdhcmUvdGlfc2NpLmMgICAgICAgICAgICAgIHwgNDM5ICsrKysrKysrKysrKysrKwo+PiAgZHJp
+dmVycy9maXJtd2FyZS90aV9zY2kuaCAgICAgICAgICAgICAgfCA3MDQgKysrKysrKysrKysrKysr
+KysrKysrKysrKwo+PiAgaW5jbHVkZS9saW51eC9zb2MvdGkvdGlfc2NpX3Byb3RvY29sLmggfCAy
+MTYgKysrKysrKysKPj4gIDMgZmlsZXMgY2hhbmdlZCwgMTM1OSBpbnNlcnRpb25zKCspCj4+Cj4+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Zpcm13YXJlL3RpX3NjaS5jIGIvZHJpdmVycy9maXJtd2Fy
+ZS90aV9zY2kuYwo+PiBpbmRleCA2NGQ4OTViODBiYzMuLmFmM2ViY2RlYWIxOCAxMDA2NDQKPj4g
+LS0tIGEvZHJpdmVycy9maXJtd2FyZS90aV9zY2kuYwo+PiArKysgYi9kcml2ZXJzL2Zpcm13YXJl
+L3RpX3NjaS5jCj4gCj4gWy4uc25pcC5dCj4gCj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgdGlf
+c2NpX2NtZF9ybV9wc2lsX3BhaXIoY29uc3Qgc3RydWN0IHRpX3NjaV9oYW5kbGUgKmhhbmRsZSwK
+Pj4gKwkJCQkgICB1MzIgbmF2X2lkLCB1MzIgc3JjX3RocmVhZCwgdTMyIGRzdF90aHJlYWQpCj4+
+ICt7Cj4gCj4gQWxsIHRoZSBwc2lsIG9wcyBkb2Vzbid0IGhhdmUgdGhlICBrZXJuZWwtZG9jIGZ1
+bmN0aW9uIGNvbW1lbnRzLiBKdXN0IGJlCj4gY29uc2lzdGVudCB3aXRoIG90aGVyIGZ1bmN0aW9u
+cyA6KQoKT0suCgo+PiArCXN0cnVjdCB0aV9zY2lfbXNnX2hkciAqcmVzcDsKPj4gKwlzdHJ1Y3Qg
+dGlfc2NpX21zZ19wc2lsX3BhaXIgKnJlcTsKPj4gKwlzdHJ1Y3QgdGlfc2NpX3hmZXIgKnhmZXI7
+Cj4+ICsJc3RydWN0IHRpX3NjaV9pbmZvICppbmZvOwo+PiArCXN0cnVjdCBkZXZpY2UgKmRldjsK
+Pj4gKwlpbnQgcmV0ID0gMDsKPj4gKwo+PiArCWlmIChJU19FUlIoaGFuZGxlKSkKPj4gKwkJcmV0
+dXJuIFBUUl9FUlIoaGFuZGxlKTsKPj4gKwlpZiAoIWhhbmRsZSkKPj4gKwkJcmV0dXJuIC1FSU5W
+QUw7Cj4+ICsKPj4gKwlpbmZvID0gaGFuZGxlX3RvX3RpX3NjaV9pbmZvKGhhbmRsZSk7Cj4+ICsJ
+ZGV2ID0gaW5mby0+ZGV2Owo+PiArCj4+ICsJeGZlciA9IHRpX3NjaV9nZXRfb25lX3hmZXIoaW5m
+bywgVElfU0NJX01TR19STV9QU0lMX1BBSVIsCj4+ICsJCQkJICAgVElfU0NJX0ZMQUdfUkVRX0FD
+S19PTl9QUk9DRVNTRUQsCj4+ICsJCQkJICAgc2l6ZW9mKCpyZXEpLCBzaXplb2YoKnJlc3ApKTsK
+Pj4gKwlpZiAoSVNfRVJSKHhmZXIpKSB7Cj4+ICsJCXJldCA9IFBUUl9FUlIoeGZlcik7Cj4+ICsJ
+CWRldl9lcnIoZGV2LCAiUk1fUFNJTDpNZXNzYWdlIHJlY29uZmlnIGZhaWxlZCglZClcbiIsIHJl
+dCk7Cj4+ICsJCXJldHVybiByZXQ7Cj4+ICsJfQo+PiArCXJlcSA9IChzdHJ1Y3QgdGlfc2NpX21z
+Z19wc2lsX3BhaXIgKil4ZmVyLT54ZmVyX2J1ZjsKPj4gKwlyZXEtPm5hdl9pZCA9IG5hdl9pZDsK
+Pj4gKwlyZXEtPnNyY190aHJlYWQgPSBzcmNfdGhyZWFkOwo+PiArCXJlcS0+ZHN0X3RocmVhZCA9
+IGRzdF90aHJlYWQ7Cj4+ICsKPj4gKwlyZXQgPSB0aV9zY2lfZG9feGZlcihpbmZvLCB4ZmVyKTsK
+Pj4gKwlpZiAocmV0KSB7Cj4+ICsJCWRldl9lcnIoZGV2LCAiUk1fUFNJTDpNYm94IHNlbmQgZmFp
+bCAlZFxuIiwgcmV0KTsKPj4gKwkJZ290byBmYWlsOwo+PiArCX0KPj4gKwo+PiArCXJlc3AgPSAo
+c3RydWN0IHRpX3NjaV9tc2dfaGRyICopeGZlci0+eGZlcl9idWY7Cj4+ICsJcmV0ID0gdGlfc2Np
+X2lzX3Jlc3BvbnNlX2FjayhyZXNwKSA/IDAgOiAtRUlOVkFMOwo+PiArCj4+ICtmYWlsOgo+PiAr
+CXRpX3NjaV9wdXRfb25lX3hmZXIoJmluZm8tPm1pbmZvLCB4ZmVyKTsKPj4gKwo+PiArCXJldHVy
+biByZXQ7Cj4+ICt9Cj4+ICsKPiAKPiBbLi5zbmlwLi5dCj4gCj4+ICsgKi8KPj4gK3N0cnVjdCB0
+aV9zY2lfbXNnX3JtX3JpbmdfY2ZnX3JlcSB7Cj4+ICsJc3RydWN0IHRpX3NjaV9tc2dfaGRyIGhk
+cjsKPj4gKwl1MzIgdmFsaWRfcGFyYW1zOwo+PiArCXUxNiBuYXZfaWQ7Cj4+ICsJdTE2IGluZGV4
+Owo+PiArCXUzMiBhZGRyX2xvOwo+PiArCXUzMiBhZGRyX2hpOwo+PiArCXUzMiBjb3VudDsKPj4g
+Kwl1OCBtb2RlOwo+PiArCXU4IHNpemU7Cj4+ICsJdTggb3JkZXJfaWQ7Cj4+ICt9IF9fcGFja2Vk
+Owo+PiArCj4+ICsvKioKPj4gKyAqIHN0cnVjdCB0aV9zY2lfbXNnX3JtX3JpbmdfY2ZnX3Jlc3Ag
+LSBSZXNwb25zZSB0byBjb25maWd1cmluZyBhIHJpbmcuCj4+ICsgKgo+PiArICogQGhkcjoJR2Vu
+ZXJpYyBIZWFkZXIKPj4gKyAqLwo+PiArc3RydWN0IHRpX3NjaV9tc2dfcm1fcmluZ19jZmdfcmVz
+cCB7Cj4+ICsJc3RydWN0IHRpX3NjaV9tc2dfaGRyIGhkcjsKPj4gK30gX19wYWNrZWQ7Cj4gCj4g
+SWYgaXQgaXMgYSBnZW5lcmljIEFDSywgTkFDSyByZXNwb25zZSwganVzdCB1c2UgdGhlIGhlYWRl
+ciBkaXJlY3RseS4KClN1cmUsIEknbGwgZml4IGl0IGFuZCBvdGhlciBwbGFjZXMgaWYgYW55LgoK
+PiAKPiBbLi5zbmlwLi5dCj4gCj4+ICsgKi8KPj4gK3N0cnVjdCB0aV9zY2lfbXNnX3JtX3VkbWFw
+X3J4X2NoX2NmZ19yZXEgewo+PiArCXN0cnVjdCB0aV9zY2lfbXNnX2hkciBoZHI7Cj4+ICsJdTMy
+IHZhbGlkX3BhcmFtczsKPj4gKwl1MTYgbmF2X2lkOwo+PiArCXUxNiBpbmRleDsKPj4gKwl1MTYg
+cnhfZmV0Y2hfc2l6ZTsKPj4gKwl1MTYgcnhjcV9xbnVtOwo+PiArCXU4IHJ4X3ByaW9yaXR5Owo+
+PiArCXU4IHJ4X3FvczsKPj4gKwl1OCByeF9vcmRlcmlkOwo+PiArCXU4IHJ4X3NjaGVkX3ByaW9y
+aXR5Owo+PiArCXUxNiBmbG93aWRfc3RhcnQ7Cj4+ICsJdTE2IGZsb3dpZF9jbnQ7Cj4+ICsJdTgg
+cnhfcGF1c2Vfb25fZXJyOwo+PiArCXU4IHJ4X2F0eXBlOwo+PiArCXU4IHJ4X2NoYW5fdHlwZTsK
+Pj4gKwl1OCByeF9pZ25vcmVfc2hvcnQ7Cj4+ICsJdTggcnhfaWdub3JlX2xvbmc7Cj4+ICsJdTgg
+cnhfYnVyc3Rfc2l6ZTsKPj4gKwo+IAo+IGV4dHJhIGxpbmU/CgpXaWxsIHJlbW92ZSBpdC4KPiAK
+Pj4gK30gX19wYWNrZWQ7Cj4+ICsKPj4gKy8qKgo+IAo+IAo+IFRoYW5rcyBhbmQgcmVnYXJkcywK
+PiBMb2tlc2gKPiAKClRoYW5rcywKLSBQw6l0ZXIKClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQg
+T3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJ
+RDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
