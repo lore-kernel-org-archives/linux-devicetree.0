@@ -1,121 +1,357 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: mediatek: add SPI_LSB_FIRST support" to the spi tree
-Date: Thu,  6 Jun 2019 22:27:33 +0100 (BST)
-Message-ID: <20190606212733.5E2FE440046@finisterre.sirena.org.uk>
-References: <1559704024-5369-1-git-send-email-leilk.liu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1559704024-5369-1-git-send-email-leilk.liu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leilk Liu <leilk.liu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, fparent@baylibre.com, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH v3] ARM: dts: Introduce the NXP LS1021A-TSN board
+Date: Fri,  7 Jun 2019 01:21:30 +0300
+Message-ID: <20190606222130.27515-1-olteanv@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+The LS1021A-TSN is a development board built by VVDN/Argonboards in
+partnership with NXP.
 
-   spi: mediatek: add SPI_LSB_FIRST support
+It features the LS1021A SoC and the first-generation SJA1105T Ethernet
+switch for prototyping implementations of a subset of IEEE 802.1 TSN
+standards.
 
-has been applied to the spi tree at
+It has two regular Ethernet ports and four switched, TSN-capable ports.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
+It also features:
+- One Arduino header
+- One expansion header
+- Two USB 3.0 ports
+- One mini PCIe slot
+- One SATA interface
+- Accelerometer, gyroscope, temperature sensors
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 3e582c6e911ffe6c90b9f90324bdf85fc728d0c3 Mon Sep 17 00:00:00 2001
-From: Leilk Liu <leilk.liu@mediatek.com>
-Date: Wed, 5 Jun 2019 11:07:04 +0800
-Subject: [PATCH] spi: mediatek: add SPI_LSB_FIRST support
-
-this patch add SPI_LSB_FIRST feature support.
-
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- drivers/spi/spi-mt65xx.c                 | 15 ++++++---------
- include/linux/platform_data/spi-mt65xx.h |  2 --
- 2 files changed, 6 insertions(+), 11 deletions(-)
+Changes from v2:
+- Sorted nodes alphabetically
+- Renamed SAI2 codec node into audio-codec
 
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index 0cce6f0ba824..7f4dc1844789 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -131,8 +131,6 @@ static const struct mtk_spi_compatible mt8183_compat = {
-  * supplies it.
-  */
- static const struct mtk_chip_config mtk_default_chip_info = {
--	.rx_mlsb = 1,
--	.tx_mlsb = 1,
- 	.cs_pol = 0,
- 	.sample_sel = 0,
- };
-@@ -203,14 +201,13 @@ static int mtk_spi_prepare_message(struct spi_master *master,
- 		reg_val &= ~SPI_CMD_CPOL;
- 
- 	/* set the mlsbx and mlsbtx */
--	if (chip_config->tx_mlsb)
--		reg_val |= SPI_CMD_TXMSBF;
--	else
-+	if (spi->mode & SPI_LSB_FIRST) {
- 		reg_val &= ~SPI_CMD_TXMSBF;
--	if (chip_config->rx_mlsb)
--		reg_val |= SPI_CMD_RXMSBF;
--	else
- 		reg_val &= ~SPI_CMD_RXMSBF;
-+	} else {
-+		reg_val |= SPI_CMD_TXMSBF;
-+		reg_val |= SPI_CMD_RXMSBF;
-+	}
- 
- 	/* set the tx/rx endian */
- #ifdef __LITTLE_ENDIAN
-@@ -607,7 +604,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
- 
- 	master->auto_runtime_pm = true;
- 	master->dev.of_node = pdev->dev.of_node;
--	master->mode_bits = SPI_CPOL | SPI_CPHA;
-+	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
- 
- 	master->set_cs = mtk_spi_set_cs;
- 	master->prepare_message = mtk_spi_prepare_message;
-diff --git a/include/linux/platform_data/spi-mt65xx.h b/include/linux/platform_data/spi-mt65xx.h
-index ba4e4bb70262..8d5df58a13ef 100644
---- a/include/linux/platform_data/spi-mt65xx.h
-+++ b/include/linux/platform_data/spi-mt65xx.h
-@@ -14,8 +14,6 @@
- 
- /* Board specific platform_data */
- struct mtk_chip_config {
--	u32 tx_mlsb;
--	u32 rx_mlsb;
- 	u32 cs_pol;
- 	u32 sample_sel;
- };
+v2 patch available at:
+https://lkml.org/lkml/2019/5/29/998
+
+Changes from v1:
+- Applied Shawn's feedback
+- Introduced QSPI flash node
+
+v1 patch available at:
+https://patchwork.kernel.org/patch/10930451/
+
+ arch/arm/boot/dts/Makefile        |   1 +
+ arch/arm/boot/dts/ls1021a-tsn.dts | 289 ++++++++++++++++++++++++++++++
+ 2 files changed, 290 insertions(+)
+ create mode 100644 arch/arm/boot/dts/ls1021a-tsn.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index dab2914fa293..a4eb4ca5e148 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -602,6 +602,7 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
+ dtb-$(CONFIG_SOC_LS1021A) += \
+ 	ls1021a-moxa-uc-8410a.dtb \
+ 	ls1021a-qds.dtb \
++	ls1021a-tsn.dtb \
+ 	ls1021a-twr.dtb
+ dtb-$(CONFIG_SOC_VF610) += \
+ 	vf500-colibri-eval-v3.dtb \
+diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
+new file mode 100644
+index 000000000000..ef4a0b1e4d47
+--- /dev/null
++++ b/arch/arm/boot/dts/ls1021a-tsn.dts
+@@ -0,0 +1,289 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright 2016-2018 NXP Semiconductors
++ * Copyright 2019 Vladimir Oltean <olteanv@gmail.com>
++ */
++
++/dts-v1/;
++#include "ls1021a.dtsi"
++
++/ {
++	model = "NXP LS1021A-TSN Board";
++
++	sys_mclk: clock-mclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24576000>;
++	};
++
++	reg_vdda_codec: regulator-3V3 {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_vddio_codec: regulator-2V5 {
++		compatible = "regulator-fixed";
++		regulator-name = "2P5V";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		regulator-always-on;
++	};
++};
++
++&dspi0 {
++	bus-num = <0>;
++	status = "okay";
++
++	/* ADG704BRMZ 1:4 SPI mux/demux */
++	sja1105: ethernet-switch@1 {
++		reg = <0x1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "nxp,sja1105t";
++		/* 12 MHz */
++		spi-max-frequency = <12000000>;
++		/* Sample data on trailing clock edge */
++		spi-cpha;
++		/* SPI controller settings for SJA1105 timing requirements */
++		fsl,spi-cs-sck-delay = <1000>;
++		fsl,spi-sck-cs-delay = <1000>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				/* ETH5 written on chassis */
++				label = "swp5";
++				phy-handle = <&rgmii_phy6>;
++				phy-mode = "rgmii-id";
++				reg = <0>;
++			};
++
++			port@1 {
++				/* ETH2 written on chassis */
++				label = "swp2";
++				phy-handle = <&rgmii_phy3>;
++				phy-mode = "rgmii-id";
++				reg = <1>;
++			};
++
++			port@2 {
++				/* ETH3 written on chassis */
++				label = "swp3";
++				phy-handle = <&rgmii_phy4>;
++				phy-mode = "rgmii-id";
++				reg = <2>;
++			};
++
++			port@3 {
++				/* ETH4 written on chassis */
++				label = "swp4";
++				phy-handle = <&rgmii_phy5>;
++				phy-mode = "rgmii-id";
++				reg = <3>;
++			};
++
++			port@4 {
++				/* Internal port connected to eth2 */
++				ethernet = <&enet2>;
++				phy-mode = "rgmii";
++				reg = <4>;
++
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++		};
++	};
++};
++
++&i2c0 {
++	status = "okay";
++
++	/* 3 axis accelerometer */
++	accelerometer@1e {
++		compatible = "fsl,fxls8471";
++		position = <0>;
++		reg = <0x1e>;
++	};
++
++	/* Audio codec (SAI2) */
++	audio-codec@2a {
++		compatible = "fsl,sgtl5000";
++		VDDIO-supply = <&reg_vddio_codec>;
++		VDDA-supply = <&reg_vdda_codec>;
++		#sound-dai-cells = <0>;
++		clocks = <&sys_mclk>;
++		reg = <0x2a>;
++	};
++
++	/* Current sensing circuit for 1V VDDCORE PMIC rail */
++	current-sensor@44 {
++		compatible = "ti,ina220";
++		shunt-resistor = <1000>;
++		reg = <0x44>;
++	};
++
++	/* Current sensing circuit for 12V VCC rail */
++	current-sensor@45 {
++		compatible = "ti,ina220";
++		shunt-resistor = <1000>;
++		reg = <0x45>;
++	};
++
++	/* Thermal monitor - case */
++	temperature-sensor@48 {
++		compatible = "national,lm75";
++		reg = <0x48>;
++	};
++
++	/* Thermal monitor - chip */
++	temperature-sensor@4c {
++		compatible = "ti,tmp451";
++		reg = <0x4c>;
++	};
++
++	eeprom@51 {
++		compatible = "atmel,24c32";
++		reg = <0x51>;
++	};
++
++	/* Unsupported devices:
++	 * - FXAS21002C Gyroscope at 0x20
++	 * - TI ADS7924 4-channel ADC at 0x49
++	 */
++};
++
++&ifc {
++	status = "disabled";
++};
++
++&enet0 {
++	tbi-handle = <&tbi0>;
++	phy-handle = <&sgmii_phy2>;
++	phy-mode = "sgmii";
++	status = "okay";
++};
++
++&enet1 {
++	tbi-handle = <&tbi1>;
++	phy-handle = <&sgmii_phy1>;
++	phy-mode = "sgmii";
++	status = "okay";
++};
++
++/* RGMII delays added via PCB traces */
++&enet2 {
++	phy-mode = "rgmii";
++	status = "okay";
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++};
++
++&esdhc {
++	status = "okay";
++};
++
++&lpuart0 {
++	status = "okay";
++};
++
++&lpuart3 {
++	status = "okay";
++};
++
++&mdio0 {
++	/* AR8031 */
++	sgmii_phy1: ethernet-phy@1 {
++		reg = <0x1>;
++	};
++
++	/* AR8031 */
++	sgmii_phy2: ethernet-phy@2 {
++		reg = <0x2>;
++	};
++
++	/* BCM5464 quad PHY */
++	rgmii_phy3: ethernet-phy@3 {
++		reg = <0x3>;
++	};
++
++	rgmii_phy4: ethernet-phy@4 {
++		reg = <0x4>;
++	};
++
++	rgmii_phy5: ethernet-phy@5 {
++		reg = <0x5>;
++	};
++
++	rgmii_phy6: ethernet-phy@6 {
++		reg = <0x6>;
++	};
++
++	/* SGMII PCS for enet0 */
++	tbi0: tbi-phy@1f {
++		reg = <0x1f>;
++		device_type = "tbi-phy";
++	};
++};
++
++&mdio1 {
++	/* SGMII PCS for enet1 */
++	tbi1: tbi-phy@1f {
++		reg = <0x1f>;
++		device_type = "tbi-phy";
++	};
++};
++
++&qspi {
++	status = "okay";
++
++	flash@0 {
++		/* Rev. A uses 64MB flash, Rev. B & C use 32MB flash */
++		compatible = "jedec,spi-nor", "s25fl256s1", "s25fl512s";
++		spi-max-frequency = <20000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "RCW";
++				reg = <0x0 0x40000>;
++			};
++
++			partition@40000 {
++				label = "U-Boot";
++				reg = <0x40000 0x300000>;
++			};
++
++			partition@340000 {
++				label = "U-Boot Env";
++				reg = <0x340000 0x100000>;
++			};
++		};
++	};
++};
++
++&sai2 {
++	status = "okay";
++};
++
++&sata {
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
 -- 
-2.20.1
+2.17.1
