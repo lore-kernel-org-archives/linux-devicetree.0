@@ -1,373 +1,230 @@
-From: Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: Introduce the NXP LS1021A-TSN board
-Date: Thu, 6 Jun 2019 04:15:00 +0300
-Message-ID: <CA+h21hr1ykigbEhVuqMMgcxNaiqDhiNuZiNURwHqOwEooU6jDQ@mail.gmail.com>
-References: <20190529221222.19276-1-olteanv@gmail.com> <20190606010429.GP29853@dragon>
+From: Iurii Zaikin <yzaikin@google.com>
+Subject: Re: [PATCH v4 17/18] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+Date: Wed, 5 Jun 2019 18:29:42 -0700
+Message-ID: <CAAXuY3p4qhKVsSpQ44_kQeGDMfg7OuFLgFyxhcFWS3yf-5A_7g@mail.gmail.com>
+References: <20190514221711.248228-1-brendanhiggins@google.com>
+ <20190514221711.248228-18-brendanhiggins@google.com> <20190517182254.548EA20815@mail.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190606010429.GP29853@dragon>
-Sender: netdev-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190517182254.548EA20815@mail.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Brendan Higgins <brendanhiggins@google.com>, frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.comk
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Jun 2019 at 04:04, Shawn Guo <shawnguo@kernel.org> wrote:
+On Fri, May 17, 2019 at 11:22 AM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> On Thu, May 30, 2019 at 01:12:22AM +0300, Vladimir Oltean wrote:
-> > The LS1021A-TSN is a development board built by VVDN/Argonboards in
-> > partnership with NXP.
-> >
-> > It features the LS1021A SoC and the first-generation SJA1105T Ethernet
-> > switch for prototyping implementations of a subset of IEEE 802.1 TSN
-> > standards.
-> >
-> > It has two regular Ethernet ports and four switched, TSN-capable ports.
-> >
-> > It also features:
-> > - One Arduino header
-> > - One expansion header
-> > - Two USB 3.0 ports
-> > - One mini PCIe slot
-> > - One SATA interface
-> > - Accelerometer, gyroscope, temperature sensors
-> >
-> > Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> > ---
-> > Changes from v1:
-> > - Applied Shawn's feedback
-> > - Introduced QSPI flash node
-> >
-> > v1 patch available at:
-> > https://patchwork.kernel.org/patch/10930451/
-> >
-> >  arch/arm/boot/dts/Makefile        |   1 +
-> >  arch/arm/boot/dts/ls1021a-tsn.dts | 288 ++++++++++++++++++++++++++++++
-> >  2 files changed, 289 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/ls1021a-tsn.dts
-> >
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index dab2914fa293..a4eb4ca5e148 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -602,6 +602,7 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
-> >  dtb-$(CONFIG_SOC_LS1021A) += \
-> >       ls1021a-moxa-uc-8410a.dtb \
-> >       ls1021a-qds.dtb \
-> > +     ls1021a-tsn.dtb \
-> >       ls1021a-twr.dtb
-> >  dtb-$(CONFIG_SOC_VF610) += \
-> >       vf500-colibri-eval-v3.dtb \
-> > diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
+> Quoting Brendan Higgins (2019-05-14 15:17:10)
+> > diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
 > > new file mode 100644
-> > index 000000000000..b05774eac92e
+> > index 0000000000000..fe0f2bae66085
 > > --- /dev/null
-> > +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-> > @@ -0,0 +1,288 @@
+> > +++ b/kernel/sysctl-test.c
+> > @@ -0,0 +1,293 @@
 > > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright 2016-2018 NXP Semiconductors
-> > + * Copyright 2019 Vladimir Oltean <olteanv@gmail.com>
+> > +/*
+> > + * KUnit test of proc sysctl.
 > > + */
 > > +
-> > +/dts-v1/;
-> > +#include "ls1021a.dtsi"
-> > +
-> > +/ {
-> > +     model = "NXP LS1021A-TSN Board";
-> > +
-> > +     sys_mclk: clock-mclk {
-> > +             compatible = "fixed-clock";
-> > +             #clock-cells = <0>;
-> > +             clock-frequency = <24576000>;
-> > +     };
-> > +
-> > +     reg_vdda_codec: regulator-3V3 {
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "3P3V";
-> > +             regulator-min-microvolt = <3300000>;
-> > +             regulator-max-microvolt = <3300000>;
-> > +             regulator-always-on;
-> > +     };
-> > +
-> > +     reg_vddio_codec: regulator-2V5 {
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "2P5V";
-> > +             regulator-min-microvolt = <2500000>;
-> > +             regulator-max-microvolt = <2500000>;
-> > +             regulator-always-on;
-> > +     };
-> > +};
-> > +
-> > +&enet0 {
-> > +     tbi-handle = <&tbi0>;
-> > +     phy-handle = <&sgmii_phy2>;
-> > +     phy-mode = "sgmii";
-> > +     status = "okay";
-> > +};
-> > +
-> > +&enet1 {
-> > +     tbi-handle = <&tbi1>;
-> > +     phy-handle = <&sgmii_phy1>;
-> > +     phy-mode = "sgmii";
-> > +     status = "okay";
-> > +};
-> > +
-> > +/* RGMII delays added via PCB traces */
-> > +&enet2 {
-> > +     phy-mode = "rgmii";
-> > +     status = "okay";
-> > +
-> > +     fixed-link {
-> > +             speed = <1000>;
-> > +             full-duplex;
-> > +     };
-> > +};
-> > +
-> > +&dspi0 {
-> > +     bus-num = <0>;
-> > +     status = "okay";
-> > +
-> > +     /* ADG704BRMZ 1:4 mux/demux */
-> > +     sja1105: ethernet-switch@1 {
-> > +             reg = <0x1>;
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
-> > +             compatible = "nxp,sja1105t";
-> > +             /* 12 MHz */
-> > +             spi-max-frequency = <12000000>;
-> > +             /* Sample data on trailing clock edge */
-> > +             spi-cpha;
-> > +             fsl,spi-cs-sck-delay = <1000>;
-> > +             fsl,spi-sck-cs-delay = <1000>;
-> > +
-> > +             ports {
-> > +                     #address-cells = <1>;
-> > +                     #size-cells = <0>;
-> > +
-> > +                     port@0 {
-> > +                             /* ETH5 written on chassis */
-> > +                             label = "swp5";
-> > +                             phy-handle = <&rgmii_phy6>;
-> > +                             phy-mode = "rgmii-id";
-> > +                             reg = <0>;
-> > +                     };
-> > +
-> > +                     port@1 {
-> > +                             /* ETH2 written on chassis */
-> > +                             label = "swp2";
-> > +                             phy-handle = <&rgmii_phy3>;
-> > +                             phy-mode = "rgmii-id";
-> > +                             reg = <1>;
-> > +                     };
-> > +
-> > +                     port@2 {
-> > +                             /* ETH3 written on chassis */
-> > +                             label = "swp3";
-> > +                             phy-handle = <&rgmii_phy4>;
-> > +                             phy-mode = "rgmii-id";
-> > +                             reg = <2>;
-> > +                     };
-> > +
-> > +                     port@3 {
-> > +                             /* ETH4 written on chassis */
-> > +                             label = "swp4";
-> > +                             phy-handle = <&rgmii_phy5>;
-> > +                             phy-mode = "rgmii-id";
-> > +                             reg = <3>;
-> > +                     };
-> > +
-> > +                     port@4 {
-> > +                             /* Internal port connected to eth2 */
-> > +                             ethernet = <&enet2>;
-> > +                             phy-mode = "rgmii";
-> > +                             reg = <4>;
-> > +
-> > +                             fixed-link {
-> > +                                     speed = <1000>;
-> > +                                     full-duplex;
-> > +                             };
-> > +                     };
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&mdio0 {
-> > +     /* AR8031 */
-> > +     sgmii_phy1: ethernet-phy@1 {
-> > +             reg = <0x1>;
-> > +     };
-> > +
-> > +     /* AR8031 */
-> > +     sgmii_phy2: ethernet-phy@2 {
-> > +             reg = <0x2>;
-> > +     };
-> > +
-> > +     /* BCM5464 quad PHY */
-> > +     rgmii_phy3: ethernet-phy@3 {
-> > +             reg = <0x3>;
-> > +     };
-> > +
-> > +     rgmii_phy4: ethernet-phy@4 {
-> > +             reg = <0x4>;
-> > +     };
-> > +
-> > +     rgmii_phy5: ethernet-phy@5 {
-> > +             reg = <0x5>;
-> > +     };
-> > +
-> > +     rgmii_phy6: ethernet-phy@6 {
-> > +             reg = <0x6>;
-> > +     };
-> > +
-> > +     /* SGMII PCS for enet0 */
-> > +     tbi0: tbi-phy@1f {
-> > +             reg = <0x1f>;
-> > +             device_type = "tbi-phy";
-> > +     };
-> > +};
-> > +
-> > +&mdio1 {
-> > +     /* SGMII PCS for enet1 */
-> > +     tbi1: tbi-phy@1f {
-> > +             reg = <0x1f>;
-> > +             device_type = "tbi-phy";
-> > +     };
-> > +};
-> > +
-> > +&i2c0 {
-> > +     status = "okay";
-> > +
-> > +     /* 3 axis accelerometer */
-> > +     accelerometer@1e {
-> > +             compatible = "fsl,fxls8471";
-> > +             position = <0>;
-> > +             reg = <0x1e>;
-> > +     };
-> > +
-> > +     /* Audio codec (SAI2) */
-> > +     codec@2a {
+> > +#include <kunit/test.h>
+> > +#include <linux/printk.h>
 >
-> audio-codec for node name.
+> Is this include used?
+  Deleted.
 >
-> > +             compatible = "fsl,sgtl5000";
-> > +             VDDIO-supply = <&reg_vddio_codec>;
-> > +             VDDA-supply = <&reg_vdda_codec>;
-> > +             #sound-dai-cells = <0>;
-> > +             clocks = <&sys_mclk>;
-> > +             reg = <0x2a>;
-> > +     };
-> > +
-> > +     /* Current sensing circuit for 1V VDDCORE PMIC rail */
-> > +     current-sensor@44 {
-> > +             compatible = "ti,ina220";
-> > +             shunt-resistor = <1000>;
-> > +             reg = <0x44>;
-> > +     };
-> > +
-> > +     /* Current sensing circuit for 12V VCC rail */
-> > +     current-sensor@45 {
-> > +             compatible = "ti,ina220";
-> > +             shunt-resistor = <1000>;
-> > +             reg = <0x45>;
-> > +     };
-> > +
-> > +     /* Thermal monitor - case */
-> > +     temperature-sensor@48 {
-> > +             compatible = "national,lm75";
-> > +             reg = <0x48>;
-> > +     };
-> > +
-> > +     /* Thermal monitor - chip */
-> > +     temperature-sensor@4c {
-> > +             compatible = "ti,tmp451";
-> > +             reg = <0x4c>;
-> > +     };
-> > +
-> > +     eeprom@51 {
-> > +             compatible = "atmel,24c32";
-> > +             reg = <0x51>;
-> > +     };
-> > +
-> > +     /* Unsupported devices:
-> > +      * - FXAS21002C Gyroscope at 0x20
-> > +      * - TI ADS7924 4-channel ADC at 0x49
-> > +      */
-> > +};
-> > +
-> > +&qspi {
-> > +     status = "okay";
-> > +
-> > +     flash@0 {
-> > +             /* Rev. A uses 64MB flash, Rev. B & C use 32MB flash */
-> > +             compatible = "jedec,spi-nor", "s25fl256s1", "s25fl512s";
-> > +             spi-max-frequency = <20000000>;
-> > +             #address-cells = <1>;
-> > +             #size-cells = <1>;
-> > +             reg = <0>;
-> > +
-> > +             partitions {
-> > +                     compatible = "fixed-partitions";
-> > +                     #address-cells = <1>;
-> > +                     #size-cells = <1>;
-> > +
-> > +                     partition@0 {
-> > +                             label = "RCW";
-> > +                             reg = <0x0 0x40000>;
-> > +                     };
-> > +
-> > +                     partition@40000 {
-> > +                             label = "U-Boot";
-> > +                             reg = <0x40000 0x300000>;
-> > +                     };
-> > +
-> > +                     partition@340000 {
-> > +                             label = "U-Boot Env";
-> > +                             reg = <0x340000 0x100000>;
-> > +                     };
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&ifc {
+> > +#include <linux/sysctl.h>
+> > +#include <linux/uaccess.h>
 >
-> Please sort all these labelling nodes alphabetically.
+> Is this include used?
+Deleted.
 >
-
-Hi Shawn,
-
-It's not entirely clear to me which nodes you mean.
-
-Regards,
--Vladimir
-
-> Shawn
+> > +
+> > +
+> > +static void sysctl_test_dointvec_happy_single_negative(struct kunit *test)
+> > +{
+> > +       struct ctl_table table = {
+> > +               .procname = "foo",
+> > +               .data           = &test_data.int_0001,
+> > +               .maxlen         = sizeof(int),
+> > +               .mode           = 0644,
+> > +               .proc_handler   = proc_dointvec,
+> > +               .extra1         = &i_zero,
+> > +               .extra2         = &i_one_hundred,
+> > +       };
+> > +       char input[] = "-9";
+> > +       size_t len = sizeof(input) - 1;
+> > +       loff_t pos = 0;
+> > +
+> > +       table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > +       KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len, &pos));
+> > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, pos);
+> > +       KUNIT_EXPECT_EQ(test, -9, *(int *)table.data);
 >
-> > +     status = "disabled";
+> Is the casting necessary? Or can the macro do a type coercion of the
+> second parameter based on the first type?
+ Data field is defined as void* so I believe casting is necessary to
+dereference it as a pointer to an array of ints. I don't think the
+macro should do any type coercion that == operator wouldn't do.
+ I did change the cast to make it more clear that it's a pointer to an
+array of ints being dereferenced.
+>
+> > +}
+> > +
+> > +static void sysctl_test_dointvec_single_less_int_min(struct kunit *test)
+> > +{
+> > +       struct ctl_table table = {
+> > +               .procname = "foo",
+> > +               .data           = &test_data.int_0001,
+> > +               .maxlen         = sizeof(int),
+> > +               .mode           = 0644,
+> > +               .proc_handler   = proc_dointvec,
+> > +               .extra1         = &i_zero,
+> > +               .extra2         = &i_one_hundred,
+> > +       };
+> > +       char input[32];
+> > +       size_t len = sizeof(input) - 1;
+> > +       loff_t pos = 0;
+> > +       unsigned long abs_of_less_than_min = (unsigned long)INT_MAX
+> > +                                            - (INT_MAX + INT_MIN) + 1;
+> > +
+> > +       KUNIT_EXPECT_LT(test,
+> > +                       snprintf(input, sizeof(input), "-%lu",
+> > +                                abs_of_less_than_min),
+> > +                       sizeof(input));
+> > +
+> > +       table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > +       KUNIT_EXPECT_EQ(test, -EINVAL,
+> > +                       proc_dointvec(&table, 1, input, &len, &pos));
+> > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > +       KUNIT_EXPECT_EQ(test, 0, *(int *)table.data);
+> > +}
+> > +
+> > +static void sysctl_test_dointvec_single_greater_int_max(struct kunit *test)
+> > +{
+> > +       struct ctl_table table = {
+> > +               .procname = "foo",
+> > +               .data           = &test_data.int_0001,
+> > +               .maxlen         = sizeof(int),
+> > +               .mode           = 0644,
+> > +               .proc_handler   = proc_dointvec,
+> > +               .extra1         = &i_zero,
+> > +               .extra2         = &i_one_hundred,
+> > +       };
+> > +       char input[32];
+> > +       size_t len = sizeof(input) - 1;
+> > +       loff_t pos = 0;
+> > +       unsigned long greater_than_max = (unsigned long)INT_MAX + 1;
+> > +
+> > +       KUNIT_EXPECT_GT(test, greater_than_max, INT_MAX);
+> > +       KUNIT_EXPECT_LT(test, snprintf(input, sizeof(input), "%lu",
+> > +                                      greater_than_max),
+> > +                       sizeof(input));
+> > +       table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > +       KUNIT_EXPECT_EQ(test, -EINVAL,
+> > +                       proc_dointvec(&table, 1, input, &len, &pos));
+> > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > +       KUNIT_EXPECT_EQ(test, 0, *(int *)table.data);
+> > +}
+> > +
+> > +static int sysctl_test_init(struct kunit *test)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> > +/*
+> > + * This is run once after each test case, see the comment on example_test_module
+> > + * for more information.
+> > + */
+> > +static void sysctl_test_exit(struct kunit *test)
+> > +{
+> > +}
+> Can the above two be omitted? If they can be empty sometimes it would be
+> nice to avoid the extra symbols and code by letting them be assigned to
+> NULL in the kunit_module.
+ Deleted.
+>
+> > +
+> > +/*
+> > + * Here we make a list of all the test cases we want to add to the test module
+> > + * below.
+> > + */
+> > +static struct kunit_case sysctl_test_cases[] = {
+> > +       /*
+> > +        * This is a helper to create a test case object from a test case
+> > +        * function; its exact function is not important to understand how to
+> > +        * use KUnit, just know that this is how you associate test cases with a
+> > +        * test module.
+> > +        */
+> > +       KUNIT_CASE(sysctl_test_dointvec_null_tbl_data),
+> > +       KUNIT_CASE(sysctl_test_dointvec_table_maxlen_unset),
+> > +       KUNIT_CASE(sysctl_test_dointvec_table_len_is_zero),
+> > +       KUNIT_CASE(sysctl_test_dointvec_table_read_but_position_set),
+> > +       KUNIT_CASE(sysctl_test_dointvec_happy_single_positive),
+> > +       KUNIT_CASE(sysctl_test_dointvec_happy_single_negative),
+> > +       KUNIT_CASE(sysctl_test_dointvec_single_less_int_min),
+> > +       KUNIT_CASE(sysctl_test_dointvec_single_greater_int_max),
+> > +       {},
 > > +};
 > > +
-> > +&esdhc {
-> > +     status = "okay";
+> > +/*
+> > + * This defines a suite or grouping of tests.
+> > + *
+> > + * Test cases are defined as belonging to the suite by adding them to
+> > + * `test_cases`.
+> > + *
+> > + * Often it is desirable to run some function which will set up things which
+> > + * will be used by every test; this is accomplished with an `init` function
+> > + * which runs before each test case is invoked. Similarly, an `exit` function
+> > + * may be specified which runs after every test case and can be used to for
+> > + * cleanup. For clarity, running tests in a test module would behave as follows:
+> > + *
+> > + * module.init(test);
+> > + * module.test_case[0](test);
+> > + * module.exit(test);
+> > + * module.init(test);
+> > + * module.test_case[1](test);
+> > + * module.exit(test);
+> > + * ...;
+>
+> This comment (and the one above for "this is a helper") looks generic
+> and should probably only be in some documentation somewhere and not for
+> a sysctl test?
+>
+Deleted.
+> > + */
+> > +static struct kunit_module sysctl_test_module = {
+> > +       .name = "sysctl_test",
+> > +       .init = sysctl_test_init,
+> > +       .exit = sysctl_test_exit,
+> > +       .test_cases = sysctl_test_cases,
 > > +};
 > > +
-> > +&uart0 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&lpuart0 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&lpuart3 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&sai2 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&sata {
-> > +     status = "okay";
-> > +};
-> > --
-> > 2.17.1
+> > +/*
+> > + * This registers the above test module telling KUnit that this is a suite of
+> > + * tests that need to be run.
+> > + */
+>
+> Same comment about generic comment.
+>
+Deleted.
+> > +module_test(sysctl_test_module);
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index d5a4a4036d2f8..772af4ec70111 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -1908,6 +1908,12 @@ config TEST_SYSCTL
 > >
+> >           If unsure, say N.
+> >
+> > +config SYSCTL_KUNIT_TEST
+> > +       bool "KUnit test for sysctl"
+>
+> Why not tristate?
+>
+I don't believe KUnit as a module is currently supported.
+> > +       depends on KUNIT
+> > +       help
+> > +         Enables KUnit sysctl test.
+> > +
