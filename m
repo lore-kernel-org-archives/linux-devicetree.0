@@ -1,112 +1,69 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH v2] dt-bindings: iio: accel: adxl372: switch to YAML
- bindings
-Date: Thu, 6 Jun 2019 08:49:53 +0000
-Message-ID: <e30a3c629f0d355c5131420437c031a522caea01.camel@analog.com>
-References: <20190531201114.2973-1-lucasseikioshiro@gmail.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: [PATCH v2 1/4] mfd: madera: Update DT bindings to add additional CODECs
+Date: Thu, 6 Jun 2019 10:00:01 +0100
+Message-ID: <20190606090004.12748-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190531201114.2973-1-lucasseikioshiro@gmail.com>
-Content-Language: en-US
-Content-ID: <89E64C3058AAC94A86F4072B5749E708@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>, "lucasseikioshiro@gmail.com" <lucasseikioshiro@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lars@metafoo.de" <lars@metafoo.de>, "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ardeleanalex@gmail.com" <ardeleanalex@gmail.com>
-Cc: "marcelo.schmitt1@gmail.com" <marcelo.schmitt1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "matheus.bernardino@usp.br" <matheus.bernardino@usp.br>, "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>
+To: lee.jones@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA1LTMxIGF0IDE3OjExIC0wMzAwLCBMdWNhcyBPc2hpcm8gd3JvdGU6DQo+
-IFtFeHRlcm5hbF0NCj4gDQo+IA0KPiBDb252ZXJ0IHRoZSBvbGQgZGV2aWNlIHRyZWUgZG9jdW1l
-bnRhdGlvbiB0byB5YW1sIGZvcm1hdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEx1Y2FzIE9zaGly
-byA8bHVjYXNzZWlraW9zaGlyb0BnbWFpbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFJvZHJpZ28g
-UmliZWlybyA8cm9kcmlnb3JzZGNAZ21haWwuY29tPg0KPiBDby1kZXZlbG9wZWQtYnk6IFJvZHJp
-Z28gUmliZWlybyA8cm9kcmlnb3JzZGNAZ21haWwuY29tPg0KPiBSZXZpZXdlZC1ieTogTWF0aGV1
-cyBUYXZhcmVzIDxtYXRoZXVzLmJlcm5hcmRpbm9AdXNwLmJyPg0KPiBSZXZpZXdlZC1ieTogTWFy
-Y2VsbyBTY2htaXR0IDxtYXJjZWxvLnNjaG1pdHQxQGdtYWlsLmNvbT4NCg0KUmV2aWV3ZWQtYnk6
-IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQoNCj4g
-LS0tDQo+IFYyOg0KPiAgICAgLSBVcGRhdGUgTUFJTlRBSU5FUlMgZmlsZQ0KPiAgICAgLSBSZW1v
-dmUgZGVzY3JpcHRpb24gZmllbGQgZm9yIHJlZyBhbmQgaW50ZXJydXB0cyBwcm9wZXJ0aWVzDQo+
-ICAgICAtIEFkZCBpbnRlcnJ1cHRzIGFzIGEgcmVxdWlyZWQgcHJvcGVydHkNCj4gDQo+ICAuLi4v
-YmluZGluZ3MvaWlvL2FjY2VsL2FkaSxhZHhsMzcyLnlhbWwgICAgICAgfCA2MyArKysrKysrKysr
-KysrKysrKysrDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWNjZWwvYWR4bDM3Mi50
-eHQgfCAzMyAtLS0tLS0tLS0tDQo+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgMiArLQ0KPiAgMyBmaWxlcyBjaGFuZ2VkLCA2NCBpbnNlcnRpb25zKCsp
-LCAzNCBkZWxldGlvbnMoLSkNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaWlvL2FjY2VsL2FkaSxhZHhsMzcyLnlhbWwNCj4gIGRlbGV0ZSBt
-b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FjY2VsL2Fk
-eGwzNzIudHh0DQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2lpby9hY2NlbC9hZGksYWR4bDM3Mi55YW1sDQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2lpby9hY2NlbC9hZGksYWR4bDM3Mi55YW1sDQo+IG5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYTdmYWZiOWJmNWM2DQo+IC0tLSAvZGV2
-L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hY2Nl
-bC9hZGksYWR4bDM3Mi55YW1sDQo+IEBAIC0wLDAgKzEsNjMgQEANCj4gKyMgU1BEWC1MaWNlbnNl
-LUlkZW50aWZpZXI6IEdQTC0yLjANCj4gKyVZQU1MIDEuMg0KPiArLS0tDQo+ICskaWQ6IGh0dHA6
-Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2lpby9hY2NlbGVyb21ldGVycy9hZGksYWR4bDM3Mi55
-YW1sIw0KPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3Jl
-LnlhbWwjDQo+ICsNCj4gK3RpdGxlOiBBbmFsb2cgRGV2aWNlcyBBRFhMMzcyIDMtQXhpcywgKy8t
-KDIwMGcpIERpZ2l0YWwgQWNjZWxlcm9tZXRlcg0KPiArDQo+ICttYWludGFpbmVyczoNCj4gKyAg
-LSBTdGVmYW4gUG9wYSA8c3RlZmFuLnBvcGFAYW5hbG9nLmNvbT4NCj4gKw0KPiArZGVzY3JpcHRp
-b246IHwNCj4gKyAgQW5hbG9nIERldmljZXMgQURYTDM3MiAzLUF4aXMsICsvLSgyMDBnKSBEaWdp
-dGFsIEFjY2VsZXJvbWV0ZXIgdGhhdCBzdXBwb3J0cw0KPiArICBib3RoIEkyQyAmIFNQSSBpbnRl
-cmZhY2VzDQo+ICsgICAgaHR0cHM6Ly93d3cuYW5hbG9nLmNvbS9lbi9wcm9kdWN0cy9hZHhsMzcy
-Lmh0bWwNCj4gKw0KPiArcHJvcGVydGllczoNCj4gKyAgY29tcGF0aWJsZToNCj4gKyAgICBlbnVt
-Og0KPiArICAgICAgLSBhZGksYWR4bDM3Mg0KPiArDQo+ICsgIHJlZzoNCj4gKyAgICBtYXhJdGVt
-czogMQ0KPiArDQo+ICsgIGludGVycnVwdHM6DQo+ICsgICAgbWF4SXRlbXM6IDENCj4gKw0KPiAr
-cmVxdWlyZWQ6DQo+ICsgIC0gY29tcGF0aWJsZQ0KPiArICAtIHJlZw0KPiArICAtIGludGVycnVw
-dHMNCj4gKw0KPiArZXhhbXBsZXM6DQo+ICsgIC0gfA0KPiArICAgICAgICAjaW5jbHVkZSA8ZHQt
-YmluZGluZ3MvZ3Bpby9ncGlvLmg+DQo+ICsgICAgICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9p
-bnRlcnJ1cHQtY29udHJvbGxlci9pcnEuaD4NCj4gKyAgICAgICAgaTJjMCB7DQo+ICsgICAgICAg
-ICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsgICAgICAgICAgICAgICAgI3NpemUt
-Y2VsbHMgPSA8MD47DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAvKiBFeGFtcGxlIGZvciBhIEky
-QyBkZXZpY2Ugbm9kZSAqLw0KPiArICAgICAgICAgICAgICAgIGFjY2VsZXJvbWV0ZXJANTMgew0K
-PiArICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhZGksYWR4bDM3MiI7DQo+
-ICsgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHg1Mz47DQo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvPjsNCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgIGludGVycnVwdHMgPSA8MjUgSVJRX1RZUEVfRURHRV9GQUxMSU5HPjsNCj4gKyAg
-ICAgICAgICAgICAgICB9Ow0KPiArICAgICAgICB9Ow0KPiArICAtIHwNCj4gKyAgICAgICAgI2lu
-Y2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPg0KPiArICAgICAgICAjaW5jbHVkZSA8ZHQt
-YmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmg+DQo+ICsgICAgICAgIHNwaTAgew0K
-PiArICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArICAgICAgICAgICAg
-ICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPiArDQo+ICsgICAgICAgICAgICAgICAgYWNjZWxlcm9t
-ZXRlckAwIHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWRpLGFk
-eGwzNzIiOw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDA+Ow0KPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8MTAwMDAwMD47DQo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvPjsNCj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MjUgSVJRX1RZUEVfRURHRV9GQUxMSU5H
-PjsNCj4gKyAgICAgICAgICAgICAgICB9Ow0KPiArICAgICAgICB9Ow0KPiBkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hY2NlbC9hZHhsMzcyLnR4dA0K
-PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWNjZWwvYWR4bDM3Mi50
-eHQNCj4gZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IGEyODk5NjQ3NTZhNy4uMDAw
-MDAwMDAwMDAwDQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8v
-YWNjZWwvYWR4bDM3Mi50eHQNCj4gKysrIC9kZXYvbnVsbA0KPiBAQCAtMSwzMyArMCwwIEBADQo+
-IC1BbmFsb2cgRGV2aWNlcyBBRFhMMzcyIDMtQXhpcywgKy8tKDIwMGcpIERpZ2l0YWwgQWNjZWxl
-cm9tZXRlcg0KPiAtDQo+IC1odHRwOi8vd3d3LmFuYWxvZy5jb20vbWVkaWEvZW4vdGVjaG5pY2Fs
-LWRvY3VtZW50YXRpb24vZGF0YS1zaGVldHMvYWR4bDM3Mi5wZGYNCj4gLQ0KPiAtUmVxdWlyZWQg
-cHJvcGVydGllczoNCj4gLSAtIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgImFkaSxhZHhsMzcyIg0K
-PiAtIC0gcmVnOiB0aGUgSTJDIGFkZHJlc3Mgb3IgU1BJIGNoaXAgc2VsZWN0IG51bWJlciBmb3Ig
-dGhlIGRldmljZQ0KPiAtDQo+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBTUEkgYnVzIHVzYWdl
-Og0KPiAtIC0gc3BpLW1heC1mcmVxdWVuY3k6IE1heCBTUEkgZnJlcXVlbmN5IHRvIHVzZQ0KPiAt
-DQo+IC1PcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiAtIC0gaW50ZXJydXB0czogaW50ZXJydXB0IG1h
-cHBpbmcgZm9yIElSUSBhcyBkb2N1bWVudGVkIGluDQo+IC0gICBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50ZXJydXB0cy50eHQNCj4gLQ0K
-PiAtRXhhbXBsZSBmb3IgYSBJMkMgZGV2aWNlIG5vZGU6DQo+IC0NCj4gLSAgICAgICBhY2NlbGVy
-b21ldGVyQDUzIHsNCj4gLSAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWRpLGFkeGwzNzIi
-Ow0KPiAtICAgICAgICAgICAgICAgcmVnID0gPDB4NTM+Ow0KPiAtICAgICAgICAgICAgICAgaW50
-ZXJydXB0LXBhcmVudCA9IDwmZ3Bpbz47DQo+IC0gICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0g
-PDI1IElSUV9UWVBFX0VER0VfRkFMTElORz47DQo+IC0gICAgICAgfTsNCj4gLQ0KPiAtRXhhbXBs
-ZSBmb3IgYSBTUEkgZGV2aWNlIG5vZGU6DQo+IC0NCj4gLSAgICAgICBhY2NlbGVyb21ldGVyQDAg
-ew0KPiAtICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhZGksYWR4bDM3MiI7DQo+IC0gICAg
-ICAgICAgICAgICByZWcgPSA8MD47DQo+IC0gICAgICAgICAgICAgICBzcGktbWF4LWZyZXF1ZW5j
-eSA9IDwxMDAwMDAwPjsNCj4gLSAgICAgICAgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8Jmdw
-aW8+Ow0KPiAtICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwyNSBJUlFfVFlQRV9FREdFX0ZB
-TExJTkc+Ow0KPiAtICAgICAgIH07DQo+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5U
-QUlORVJTDQo+IGluZGV4IDQzYTljZWJiMmMxOS4uMDZjY2E3Y2Q5NjI3IDEwMDY0NA0KPiAtLS0g
-YS9NQUlOVEFJTkVSUw0KPiArKysgYi9NQUlOVEFJTkVSUw0KPiBAQCAtNTU5LDcgKzU1OSw3IEBA
-IFM6ICBTdXBwb3J0ZWQNCj4gIEY6ICAgICBkcml2ZXJzL2lpby9hY2NlbC9hZHhsMzcyLmMNCj4g
-IEY6ICAgICBkcml2ZXJzL2lpby9hY2NlbC9hZHhsMzcyX3NwaS5jDQo+ICBGOiAgICAgZHJpdmVy
-cy9paW8vYWNjZWwvYWR4bDM3Ml9pMmMuYw0KPiAtRjogICAgIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9paW8vYWNjZWwvYWR4bDM3Mi50eHQNCj4gK0Y6ICAgICBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FjY2VsL2FkaSxhZHhsMzcyLnlhbWwNCj4gDQo+
-ICBBRjkwMTMgTUVESUEgRFJJVkVSDQo+ICBNOiAgICAgQW50dGkgUGFsb3NhYXJpIDxjcm9wZUBp
-a2kuZmk+DQo+IC0tDQo+IDIuMjEuMA0KPiANCg==
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+
+This adds the cs47l15, cs42l92, cs47l92 and cs47l93 to the list of
+compatible strings and updates some properties that need to note
+the new CODECs.
+
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+
+No change since v1.
+
+Thanks,
+Charles
+
+ Documentation/devicetree/bindings/mfd/madera.txt | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/madera.txt b/Documentation/devicetree/bindings/mfd/madera.txt
+index db3266088386a..cad0f28005027 100644
+--- a/Documentation/devicetree/bindings/mfd/madera.txt
++++ b/Documentation/devicetree/bindings/mfd/madera.txt
+@@ -11,10 +11,14 @@ bindings/sound/madera.txt
+ Required properties:
+ 
+   - compatible : One of the following chip-specific strings:
++        "cirrus,cs47l15"
+         "cirrus,cs47l35"
+         "cirrus,cs47l85"
+         "cirrus,cs47l90"
+         "cirrus,cs47l91"
++        "cirrus,cs42l92"
++        "cirrus,cs47l92"
++        "cirrus,cs47l93"
+         "cirrus,wm1840"
+ 
+   - reg : I2C slave address when connected using I2C, chip select number when
+@@ -22,7 +26,7 @@ Required properties:
+ 
+   - DCVDD-supply : Power supply for the device as defined in
+     bindings/regulator/regulator.txt
+-    Mandatory on CS47L35, CS47L90, CS47L91
++    Mandatory on CS47L15, CS47L35, CS47L90, CS47L91, CS42L92, CS47L92, CS47L93
+     Optional on CS47L85, WM1840
+ 
+   - AVDD-supply, DBVDD1-supply, DBVDD2-supply, CPVDD1-supply, CPVDD2-supply :
+@@ -35,7 +39,7 @@ Required properties:
+     (CS47L85, WM1840)
+ 
+   - SPKVDD-supply : Power supply for the device
+-    (CS47L35)
++    (CS47L15, CS47L35)
+ 
+   - interrupt-controller : Indicates that this device is an interrupt controller
+ 
+-- 
+2.11.0
