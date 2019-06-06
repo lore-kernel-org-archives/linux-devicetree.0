@@ -1,64 +1,48 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [PATCH V2 2/2] dt-bindings: Document the DesignWare IP reset bindings
-Date: Thu,  6 Jun 2019 17:36:28 +0200
-Message-ID: <1559835388-2578-3-git-send-email-luis.oliveira@synopsys.com>
-References: <1559835388-2578-1-git-send-email-luis.oliveira@synopsys.com>
+From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?=
+        <sebastien.szymanski@armadeus.com>
+Subject: [PATCH v2 1/3] ARM: dts: imx6ul: Add csi node
+Date: Thu,  6 Jun 2019 17:38:23 +0200
+Message-ID: <20190606153825.8183-1-sebastien.szymanski@armadeus.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559835388-2578-1-git-send-email-luis.oliveira@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Joao.Pinto@synopsys.com, Luis Oliveira <Luis.Oliveira@synopsys.com>, Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To: devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rmfrfs@gmail.com>, =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds documentation of device tree bindings for the
-DesignWare IP reset controller.
+Add csi node for i.MX6UL SoC.
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 ---
-Changelog
-- Add active low configuration example
-- Fix compatible string in the active high example
 
- .../devicetree/bindings/reset/snps,dw-reset.txt    | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/snps,dw-reset.txt
+Changes for v2:
+ - only "mclk" clock is required now.
 
-diff --git a/Documentation/devicetree/bindings/reset/snps,dw-reset.txt b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
-new file mode 100644
-index 0000000..85f3301
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
-@@ -0,0 +1,30 @@
-+Synopsys DesignWare Reset controller
-+=======================================
+ arch/arm/boot/dts/imx6ul.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index bbf010c73336..f10012de5eb6 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -951,6 +951,15 @@
+ 				};
+ 			};
+ 
++			csi: csi@21c4000 {
++				compatible = "fsl,imx6ul-csi", "fsl,imx7-csi";
++				reg = <0x021c4000 0x4000>;
++				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX6UL_CLK_CSI>;
++				clock-names = "mclk";
++				status = "disabled";
++			};
 +
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
-+
-+Required properties:
-+
-+- compatible: should be one of the following.
-+	"snps,dw-high-reset" - for active high configuration
-+	"snps,dw-low-reset" - for active low configuration
-+
-+- reg: physical base address of the controller and length of memory mapped
-+	region.
-+
-+- #reset-cells: must be 1.
-+
-+example:
-+
-+	dw_rst_1: reset-controller@0000 {
-+		  compatible = "snps,dw-high-reset";
-+	 	  reg = <0x0000 0x4>;
-+		  #reset-cells = <1>;
-+	};
-+
-+	dw_rst_2: reset-controller@1000 {i
-+		  compatible = "snps,dw-low-reset";
-+		  reg = <0x1000 0x8>;
-+		  #reset-cells = <1>;
-+	};
+ 			lcdif: lcdif@21c8000 {
+ 				compatible = "fsl,imx6ul-lcdif", "fsl,imx28-lcdif";
+ 				reg = <0x021c8000 0x4000>;
 -- 
-2.7.4
+2.19.2
