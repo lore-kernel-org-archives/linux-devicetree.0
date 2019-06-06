@@ -1,150 +1,324 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-Date: Thu, 6 Jun 2019 14:20:56 +0100
-Message-ID: <20190606142056.68272dc0@donnerap.cambridge.arm.com>
-References: <20190603083005.4304-1-peng.fan@nxp.com>
- <20190603083005.4304-3-peng.fan@nxp.com>
- <866db682-785a-e0a6-b394-bb65c7a694c6@gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH V4 02/12] misc: xilinx-sdfec: add core driver
+Date: Thu, 6 Jun 2019 15:25:17 +0200
+Message-ID: <20190606132517.GA7943@kroah.com>
+References: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1558784245-108751-3-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <866db682-785a-e0a6-b394-bb65c7a694c6@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1558784245-108751-3-git-send-email-dragan.cvetic@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: peng.fan@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com, sudeep.holla@arm.com, kernel@pengutronix.de, linux-imx@nxp.com, shawnguo@kernel.org, festevam@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, van.freenix@gmail.com
+To: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc: arnd@arndb.de, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 3 Jun 2019 09:32:42 -0700
-Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Sat, May 25, 2019 at 12:37:15PM +0100, Dragan Cvetic wrote:
+> Implements an platform driver that matches with xlnx,
+> sd-fec-1.1 device tree node and registers as a character
+> device, including:
+> - SD-FEC driver binds to sdfec DT node.
+> - creates and initialise an initial driver dev structure.
+> - add the driver in Linux build and Kconfig.
+> 
+> Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+> Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+> Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+> ---
+>  drivers/misc/Kconfig             |  12 ++++
+>  drivers/misc/Makefile            |   1 +
+>  drivers/misc/xilinx_sdfec.c      | 136 +++++++++++++++++++++++++++++++++++++++
+>  include/uapi/misc/xilinx_sdfec.h |  44 +++++++++++++
+>  4 files changed, 193 insertions(+)
+>  create mode 100644 drivers/misc/xilinx_sdfec.c
+>  create mode 100644 include/uapi/misc/xilinx_sdfec.h
+> 
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 6a0365b..15d93a7 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -480,6 +480,18 @@ config PCI_ENDPOINT_TEST
+>             Enable this configuration option to enable the host side test driver
+>             for PCI Endpoint.
+>  
+> +config XILINX_SDFEC
+> +	tristate "Xilinx SDFEC 16"
+> +	help
 
-Hi,
+No dependancies at all?  Nice!  Let's see what 0-day has to say about it :)
 
-> On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> > 
-> > This mailbox driver implements a mailbox which signals transmitted data
-> > via an ARM smc (secure monitor call) instruction. The mailbox receiver
-> > is implemented in firmware and can synchronously return data when it
-> > returns execution to the non-secure world again.
-> > An asynchronous receive path is not implemented.
-> > This allows the usage of a mailbox to trigger firmware actions on SoCs
-> > which either don't have a separate management processor or on which such
-> > a core is not available. A user of this mailbox could be the SCP
-> > interface.
-> > 
-> > Modified from Andre Przywara's v2 patch
-> > https://lore.kernel.org/patchwork/patch/812999/
-> > 
-> > Cc: Andre Przywara <andre.przywara@arm.com>
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---  
-> 
-> [snip]
-> 
-> +#define ARM_SMC_MBOX_USB_IRQ	BIT(1)
-> 
-> That flag appears unused.
-> 
-> > +static int arm_smc_mbox_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct mbox_controller *mbox;
-> > +	struct arm_smc_chan_data *chan_data;
-> > +	const char *method;
-> > +	bool use_hvc = false;
-> > +	int ret, irq_count, i;
-> > +	u32 val;
-> > +
-> > +	if (!of_property_read_u32(dev->of_node, "arm,num-chans", &val)) {
-> > +		if (val < 1 || val > INT_MAX) {
-> > +			dev_err(dev, "invalid arm,num-chans value %u of %pOFn\n", val, pdev->dev.of_node);
+> +	  This option enables support for the Xilinx SDFEC (Soft Decision
+> +	  Forward Error Correction) driver. This enables a char driver
+> +	  for the SDFEC.
+> +
+> +	  You may select this driver if your design instantiates the
+> +	  SDFEC(16nm) hardened block. To compile this as a module choose M.
+> +
+> +	  If unsure, say N.
+> +
+>  config MISC_RTSX
+>  	tristate
+>  	default MISC_RTSX_PCI || MISC_RTSX_USB
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index b9affcd..29fd1d7 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -49,6 +49,7 @@ obj-$(CONFIG_VMWARE_VMCI)	+= vmw_vmci/
+>  obj-$(CONFIG_LATTICE_ECP3_CONFIG)	+= lattice-ecp3-config.o
+>  obj-$(CONFIG_SRAM)		+= sram.o
+>  obj-$(CONFIG_SRAM_EXEC)		+= sram-exec.o
+> +obj-$(CONFIG_XILINX_SDFEC)	+= xilinx_sdfec.o
+>  obj-y				+= mic/
+>  obj-$(CONFIG_GENWQE)		+= genwqe/
+>  obj-$(CONFIG_ECHO)		+= echo/
+> diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+> new file mode 100644
+> index 0000000..c437f78
+> --- /dev/null
+> +++ b/drivers/misc/xilinx_sdfec.c
+> @@ -0,0 +1,136 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Xilinx SDFEC
+> + *
+> + * Copyright (C) 2019 Xilinx, Inc.
+> + *
+> + * Description:
+> + * This driver is developed for SDFEC16 (Soft Decision FEC 16nm)
+> + * IP. It exposes a char device interface in sysfs and supports file
+> + * operations like  open(), close() and ioctl().
 
-Isn't the of_node parameter redundant, because dev_err() already takes care of that?
+There are no "char device interfaces in sysfs".  What are you trying to
+say here?
 
-> > +			return -EINVAL;
-> > +		}
-> > +	}  
-> 
-> Should not the upper bound check be done against UINT_MAX since val is
-> an unsigned int?
+> + */
+> +
+> +#include <linux/miscdevice.h>
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/poll.h>
+> +#include <linux/slab.h>
+> +#include <linux/clk.h>
+> +
+> +#include <uapi/misc/xilinx_sdfec.h>
+> +
+> +static atomic_t xsdfec_ndevs = ATOMIC_INIT(0);
 
-But wouldn't that be somewhat pointless, given that val is a u32? So I
-guess we could just condense this down to:
-...
-		if (!val) {
-...
+why an atomic variable?  What are you using this for?  Why not an idr?
 
-> > +
-> > +	irq_count = platform_irq_count(pdev);
-> > +	if (irq_count == -EPROBE_DEFER)
-> > +		return irq_count;
-> > +
-> > +	if (irq_count && irq_count != val) {
-> > +		dev_err(dev, "Interrupts not match num-chans\n");  
-> 
-> Interrupts property does not match \"arm,num-chans\" would be more correct.
+> +
+> +/**
+> + * struct xsdfec_dev - Driver data for SDFEC
+> + * @regs: device physical base address
+> + * @dev: pointer to device struct
+> + * @config: Configuration of the SDFEC device
+> + * @open_count: Count of char device being opened
 
-Given that interrupts are optional, do we have to rely on this? Do we
-actually need one interrupt per channel?
+Ugh ugh ugh.  Don't try to count the number of times open is called.
+It's pointless and almost always wrong.  And it doesn't stop anyone from
+really accessing the device "twice".  If they do stupid things like
+that, they deserve the errors that it will cause...
 
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (!of_property_read_string(dev->of_node, "method", &method)) {
-> > +		if (!strcmp("hvc", method)) {
-> > +			use_hvc = true;
-> > +		} else if (!strcmp("smc", method)) {
-> > +			use_hvc = false;
-> > +		} else {
-> > +			dev_warn(dev, "invalid \"method\" property: %s\n",
-> > +				 method);
-> > +
-> > +			return -EINVAL;
-> > +		}  
-> 
-> Having at least one method specified does not seem to be checked later
-> on in the code, so if I omitted to specify that property, we would still
-> register the mailbox and default to use "smc" since the
-> ARM_SMC_MBOX_USE_HVC flag would not be set, would not we want to make
-> sure that we do have in fact a valid method specified given the binding
-> documents that property as mandatory?
-> 
-> [snip]
-> 
-> > +	mbox->txdone_poll = false;
-> > +	mbox->txdone_irq = false;
-> > +	mbox->ops = &arm_smc_mbox_chan_ops;
-> > +	mbox->dev = dev;
-> > +
-> > +	ret = mbox_controller_register(mbox);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	platform_set_drvdata(pdev, mbox);  
-> 
-> I would move this above mbox_controller_register() that way there is no
-> room for race conditions in case another part of the driver expects to
-> have pdev->dev.drvdata set before the mbox controller is registered.
-> Since you use devm_* functions for everything, you may even remove that
-> call.
-> 
-> [snip]
-> 
-> > +#ifndef _LINUX_ARM_SMC_MAILBOX_H_
-> > +#define _LINUX_ARM_SMC_MAILBOX_H_
-> > +
-> > +struct arm_smccc_mbox_cmd {
-> > +	unsigned long a0, a1, a2, a3, a4, a5, a6, a7;
-> > +};  
-> 
-> Do you expect this to be used by other in-kernel users? If so, it might
-> be good to document how a0 can have a special meaning and be used as a
-> substitute for the function_id?
+> + * @miscdev: Misc device handle
+> + * @irq_lock: Driver spinlock
 
-I don't think we should really expose this outside of the driver. From a mailbox point of view this is just the payload, transported according to the SMCCC. Also using "long" here sounds somewhat troublesome.
+locks what?  The irq?
 
-Also, looking at the SMCCC, I only see six parameters in addition to the function identifier. Shall we reflect this here?
+> + *
+> + * This structure contains necessary state for SDFEC driver to operate
+> + */
+> +struct xsdfec_dev {
+> +	void __iomem *regs;
+> +	struct device *dev;
 
-Cheers,
-Andre.
+Is this the parent pointer?  Or something else?
+
+> +	struct xsdfec_config config;
+> +	atomic_t open_count;
+> +	struct miscdevice miscdev;
+> +	/* Spinlock to protect state_updated and stats_updated */
+> +	spinlock_t irq_lock;
+> +};
+> +
+> +static const struct file_operations xsdfec_fops = {
+> +	.owner = THIS_MODULE,
+> +};
+
+empty fops?
+
+> +
+> +#define NAMEBUF_SIZE ((size_t)32)
+
+what is this for?
+
+> +static int xsdfec_probe(struct platform_device *pdev)
+> +{
+> +	struct xsdfec_dev *xsdfec;
+> +	struct device *dev;
+> +	struct resource *res;
+> +	int err;
+> +	char buf[NAMEBUF_SIZE];
+> +
+> +	xsdfec = devm_kzalloc(&pdev->dev, sizeof(*xsdfec), GFP_KERNEL);
+> +	if (!xsdfec)
+> +		return -ENOMEM;
+> +
+> +	xsdfec->dev = &pdev->dev;
+> +	xsdfec->config.fec_id = atomic_read(&xsdfec_ndevs);
+> +	spin_lock_init(&xsdfec->irq_lock);
+> +
+> +	dev = xsdfec->dev;
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	xsdfec->regs = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(xsdfec->regs)) {
+> +		dev_err(dev, "Unable to map resource");
+
+doesn't this call already print an error?
+
+> +		err = PTR_ERR(xsdfec->regs);
+> +		goto err_xsdfec_dev;
+> +	}
+> +
+> +	/* Save driver private data */
+> +	platform_set_drvdata(pdev, xsdfec);
+> +
+> +	snprintf(buf, NAMEBUF_SIZE, "xsdfec%d", xsdfec->config.fec_id);
+> +	xsdfec->miscdev.minor = MISC_DYNAMIC_MINOR;
+> +	xsdfec->miscdev.name = buf;
+> +	xsdfec->miscdev.fops = &xsdfec_fops;
+> +	xsdfec->miscdev.parent = dev;
+> +	err = misc_register(&xsdfec->miscdev);
+> +	if (err) {
+> +		dev_err(dev, "Unable to register device");
+
+Print the error number that was returned to you?
+
+> +		goto err_xsdfec_dev;
+> +	}
+> +
+> +	atomic_set(&xsdfec->open_count, 1);
+> +	dev_info(dev, "XSDFEC%d Probe Successful", xsdfec->config.fec_id);
+
+No need to be noisy when things work correctly, just keep on going.
+
+> +	atomic_inc(&xsdfec_ndevs);
+> +	return 0;
+> +
+> +	/* Failure cleanup */
+> +err_xsdfec_dev:
+> +	return err;
+
+You cleaned up nothing, not good at all :(
+
+> +}
+> +
+> +static int xsdfec_remove(struct platform_device *pdev)
+> +{
+> +	struct xsdfec_dev *xsdfec;
+> +
+> +	xsdfec = platform_get_drvdata(pdev);
+> +	if (!xsdfec)
+> +		return -ENODEV;
+
+How can this be null?
+
+> +
+> +	misc_deregister(&xsdfec->miscdev);
+> +	atomic_dec(&xsdfec_ndevs);
+> +	return 0;
+
+You free nothing?
+
+You are leaking resources like crazy here, this is not ok at all.
+
+> +}
+> +
+> +static const struct of_device_id xsdfec_of_match[] = {
+> +	{
+> +		.compatible = "xlnx,sd-fec-1.1",
+> +	},
+> +	{ /* end of table */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, xsdfec_of_match);
+> +
+> +static struct platform_driver xsdfec_driver = {
+> +	.driver = {
+> +		.name = "xilinx-sdfec",
+> +		.of_match_table = xsdfec_of_match,
+> +	},
+> +	.probe = xsdfec_probe,
+> +	.remove =  xsdfec_remove,
+> +};
+> +
+> +module_platform_driver(xsdfec_driver);
+> +
+> +MODULE_AUTHOR("Xilinx, Inc");
+> +MODULE_DESCRIPTION("Xilinx SD-FEC16 Driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
+> new file mode 100644
+> index 0000000..1b8a63f
+> --- /dev/null
+> +++ b/include/uapi/misc/xilinx_sdfec.h
+> @@ -0,0 +1,44 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+> +/*
+> + * Xilinx SD-FEC
+> + *
+> + * Copyright (C) 2016 - 2017 Xilinx, Inc.
+> + *
+> + * Description:
+> + * This driver is developed for SDFEC16 IP. It provides a char device
+> + * in sysfs and supports file operations like open(), close() and ioctl().
+> + */
+> +#ifndef __XILINX_SDFEC_H__
+> +#define __XILINX_SDFEC_H__
+> +
+> +#include <linux/types.h>
+> +
+> +/**
+> + * enum xsdfec_state - State.
+> + * @XSDFEC_INIT: Driver is initialized.
+> + * @XSDFEC_STARTED: Driver is started.
+> + * @XSDFEC_STOPPED: Driver is stopped.
+> + * @XSDFEC_NEEDS_RESET: Driver needs to be reset.
+> + * @XSDFEC_PL_RECONFIGURE: Programmable Logic needs to be recofigured.
+> + *
+> + * This enum is used to indicate the state of the driver.
+> + */
+> +enum xsdfec_state {
+> +	XSDFEC_INIT = 0,
+> +	XSDFEC_STARTED,
+> +	XSDFEC_STOPPED,
+> +	XSDFEC_NEEDS_RESET,
+> +	XSDFEC_PL_RECONFIGURE,
+> +};
+
+This is not used in this patch, why have it?
+
+> +
+> +/**
+> + * struct xsdfec_config - Configuration of SD-FEC core.
+> + * @fec_id: ID of SD-FEC instance. ID is limited to the number of active
+> + *          SD-FEC's in the FPGA and is related to the driver instance
+> + *          Minor number.
+> + */
+> +struct xsdfec_config {
+> +	__s32 fec_id;
+
+Why signed?
+
+And you are NOT tieing this to the minor number at all, don't lie in the
+comment, that is only going to cause you major problems.
+
+Why does userspace care about this structure?
+
+Do I need to really review the rest of this series?
+
+thanks,
+
+greg k-h
