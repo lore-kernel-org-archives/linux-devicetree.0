@@ -1,33 +1,47 @@
-From: "Shenhar, Talel" <talel@amazon.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: interrupt-controller: Amazon's
- Annapurna Labs FIC
-Date: Thu, 6 Jun 2019 10:23:24 +0300
-Message-ID: <19dbb9a4-2a91-fd6f-f61e-95e1e800e013@amazon.com>
-References: <1559731921-14023-1-git-send-email-talel@amazon.com>
- <1559731921-14023-2-git-send-email-talel@amazon.com>
- <20190605154955.GD1534@u40b0340c692b58f6553c.ant.amazon.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: Add Lenovo Miix 630
+Date: Thu, 6 Jun 2019 00:26:01 -0700
+Message-ID: <20190606072601.GT22737@tuxbook-pro>
+References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
+ <20190423160616.10017-1-jeffrey.l.hugo@gmail.com>
+ <20190606055034.GA4797@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190605154955.GD1534@u40b0340c692b58f6553c.ant.amazon.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190606055034.GA4797@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <eduval@amazon.com>
-Cc: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com, talel@amazon.com
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org, dmitry.torokhov@gmail.com, jikos@kernel.org, benjamin.tissoires@redhat.com, hdegoede@redhat.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed 05 Jun 22:50 PDT 2019, Lee Jones wrote:
 
-On 6/5/2019 6:49 PM, Eduardo Valentin wrote:
-> On Wed, Jun 05, 2019 at 01:52:00PM +0300, Talel Shenhar wrote:
->> +- compatible: should be "amazon,al-fic"
->> +- reg: physical base address and size of the registers
->> +- interrupt-controller: identifies the node as an interrupt controller
->> +- #interrupt-cells: must be 2.
-> It would be great if you describe what the 2 numbers must represent here..
+> On Tue, 23 Apr 2019, Jeffrey Hugo wrote:
+> 
+> > This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
+> > functionality includes USB (host), microSD-card, keyboard, and trackpad.
+> > 
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+> >  .../boot/dts/qcom/msm8998-clamshell.dtsi      | 278 ++++++++++++++++++
+> >  .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 ++
+> 
+> What's happening with this patch?
+> 
 
-will be included in v4
+The thermal-zones are wrong, but I'm okay with an incremental patch for
+that...
 
-Thanks,
+> It's been on the list a while now.  I'm waiting for it to be accepted,
+> since there are patches I wish to submit which are based on it.
+> 
+> Who is responsible for merging these?
+> 
 
-Talel.
+...so I've just been waiting for a conclusion on the HID patch before I
+could pick this up.
+
+Regards,
+Bjorn
