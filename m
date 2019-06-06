@@ -1,31 +1,82 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v8 03/13] clk: samsung: add BPLL rate table for Exynos
- 5422 SoC
-Date: Thu, 6 Jun 2019 10:25:51 +0200
-Message-ID: <CAJKOXPdpKRY7SGfXrOREQQP2mx84umthDp_SVuLomqG-whCQxw@mail.gmail.com>
-References: <CGME20190605165429eucas1p224e803c851c9fd28e3d8737392a8a5c3@eucas1p2.samsung.com>
- <20190605165410.14606-1-l.luba@partner.samsung.com> <20190605165410.14606-4-l.luba@partner.samsung.com>
+From: <Tudor.Ambarus@microchip.com>
+Subject: Re: [PATCHv4 2/2] mtd: spi-nor: cadence-quadspi: add reset control
+Date: Thu, 6 Jun 2019 08:26:14 +0000
+Message-ID: <73c8c69a-0756-811f-7a75-dd2255db7d7b@microchip.com>
+References: <20190508134338.20565-1-dinguyen@kernel.org>
+ <20190508134338.20565-2-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190605165410.14606-4-l.luba@partner.samsung.com>
+In-Reply-To: <20190508134338.20565-2-dinguyen@kernel.org>
+Content-Language: en-US
+Content-ID: <AE9381236212B2468C06D51844F00A69@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+To: dinguyen@kernel.org, linux-mtd@lists.infradead.org
+Cc: marex@denx.de, dwmw2@infradead.org, computersforpeace@gmail.com, bbrezillon@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, tien.fong.chee@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 5 Jun 2019 at 18:54, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Add new table rate for BPLL for Exynos5422 SoC supporting Dynamic Memory
-> Controller frequencies for driver's DRAM timings.
->
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  drivers/clk/samsung/clk-exynos5420.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Best regards,
-Krzysztof
+DQoNCk9uIDA1LzA4LzIwMTkgMDQ6NDMgUE0sIERpbmggTmd1eWVuIHdyb3RlOg0KPiBHZXQgdGhl
+IHJlc2V0IGNvbnRyb2wgcHJvcGVydGllcyBmb3IgdGhlIFFTUEkgY29udHJvbGxlciBhbmQgYnJp
+bmcgdGhlbQ0KPiBvdXQgb2YgcmVzZXQuIE1vc3Qgd2lsbCBoYXZlIGp1c3Qgb25lIHJlc2V0IGJp
+dCwgYnV0IHRoZXJlIGlzIGFuIGFkZGl0aW9uYWwNCj4gT0NQIHJlc2V0IGJpdCB0aGF0IGlzIHVz
+ZWQgRUNDLiBUaGUgT0NQIHJlc2V0IGJpdCB3aWxsIGFsc28gbmVlZCB0byBnZXQNCj4gZGUtYXNz
+ZXJ0ZWQgYXMgd2VsbC4gWzFdDQo+IA0KDQpJdCdzIGFsd2F5cyBnb29kIHRvIHNheSB3aHkgdGhl
+IGNoYW5nZSBpcyBuZWVkZWQsIGUuZy4gcmVzZXQgdGhlIGNvbnRyb2xsZXIgYXQNCmluaXQgdG8g
+aGF2ZSBpdCBpbiBhIGNsZWFuIHN0YXRlIGluIGNhc2UgdGhlIGJvb3Rsb2FkZXIgbWVzc2VkIHdp
+dGggaXQuDQoNCj4gWzFdIGh0dHBzOi8vd3d3LmludGVsLmNvbS9jb250ZW50L3d3dy91cy9lbi9w
+cm9ncmFtbWFibGUvaHBzL2FycmlhLTEwL2hwcy5odG1sI3JlZ19zb2NfdG9wL3NmbzE0Mjk4OTA1
+NzU5NTUuaHRtbA0KPiANCj4gU3VnZ2VzdGVkLWJ5OiBUaWVuLUZvbmcgQ2hlZSA8dGllbi5mb25n
+LmNoZWVAaW50ZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBEaW5oIE5ndXllbiA8ZGluZ3V5ZW5A
+a2VybmVsLm9yZz4NCj4gLS0tDQo+IHY0OiBmaXggY29tcGlsZSBlcnJvcg0KPiB2MzogcmV0dXJu
+IGZ1bGwgZXJyb3IgYnkgdXNpbmcgUFRSX0VSUihydHNjKQ0KPiAgICAgbW92ZSByZXNldCBjb250
+cm9sIGNhbGxzIHVudGlsIGFmdGVyIHRoZSBjbG9jayBlbmFibGVzDQo+ICAgICB1c2UgdWRlbGF5
+KDIpIHRvIGJlIHNhZmUNCj4gICAgIEFkZCBvcHRpb25hbCBPQ1AoT3BlbiBDb3JlIFByb3RvY29s
+KSByZXNldCBzaWduYWwNCj4gdjI6IHVzZSBkZXZtX3Jlc2V0X2NvbnRyb2xfZ2V0X29wdGlvbmFs
+X2V4Y2x1c2l2ZQ0KPiAgICAgcHJpbnQgYW4gZXJyb3IgbWVzc2FnZQ0KPiAgICAgcmV0dXJuIC1F
+UFJPQkVfREVGRVINCj4gLS0tDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL2NhZGVuY2UtcXVhZHNw
+aS5jIHwgMzAgKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwg
+MzAgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL3NwaS1ub3Iv
+Y2FkZW5jZS1xdWFkc3BpLmMgYi9kcml2ZXJzL210ZC9zcGktbm9yL2NhZGVuY2UtcXVhZHNwaS5j
+DQo+IGluZGV4IDc5MjYyODc1MGVlYy4uZDM5MDZlNWExZDQ0IDEwMDY0NA0KPiAtLS0gYS9kcml2
+ZXJzL210ZC9zcGktbm9yL2NhZGVuY2UtcXVhZHNwaS5jDQo+ICsrKyBiL2RyaXZlcnMvbXRkL3Nw
+aS1ub3IvY2FkZW5jZS1xdWFkc3BpLmMNCj4gQEAgLTM0LDYgKzM0LDcgQEANCj4gICNpbmNsdWRl
+IDxsaW51eC9vZi5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiAg
+I2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9yZXNldC5o
+Pg0KPiAgI2luY2x1ZGUgPGxpbnV4L3NjaGVkLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvc3BpL3Nw
+aS5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3RpbWVyLmg+DQo+IEBAIC0xMzM2LDYgKzEzMzcsOCBA
+QCBzdGF0aWMgaW50IGNxc3BpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+
+ICAJc3RydWN0IGNxc3BpX3N0ICpjcXNwaTsNCj4gIAlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4g
+IAlzdHJ1Y3QgcmVzb3VyY2UgKnJlc19haGI7DQo+ICsJc3RydWN0IHJlc2V0X2NvbnRyb2wgKnJz
+dGM7DQo+ICsJc3RydWN0IHJlc2V0X2NvbnRyb2wgKnJzdGNfb2NwOw0KPiAgCWNvbnN0IHN0cnVj
+dCBjcXNwaV9kcml2ZXJfcGxhdGRhdGEgKmRkYXRhOw0KPiAgCWludCByZXQ7DQo+ICAJaW50IGly
+cTsNCj4gQEAgLTE0MDIsNiArMTQwNSwzMyBAQCBzdGF0aWMgaW50IGNxc3BpX3Byb2JlKHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJCWdvdG8gcHJvYmVfY2xrX2ZhaWxlZDsNCj4g
+IAl9DQo+ICANCj4gKwkvKiBPYnRhaW4gUVNQSSByZXNldCBjb250cm9sICovDQo+ICsJcnN0YyA9
+IGRldm1fcmVzZXRfY29udHJvbF9nZXRfb3B0aW9uYWxfZXhjbHVzaXZlKGRldiwgInFzcGkiKTsN
+Cj4gKwlpZiAoSVNfRVJSKHJzdGMpKSB7DQo+ICsJCWRldl9lcnIoZGV2LCAiQ2Fubm90IGdldCBR
+U1BJIHJlc2V0LlxuIik7DQo+ICsJCWlmIChQVFJfRVJSKHJzdGMpID09IC1FUFJPQkVfREVGRVIp
+DQoNCndoYXQgSSBtZWFudCB3YXMgdG8gZ2V0IHJpZCBvZiB0aGlzIGlmIGFuZCByZXR1cm4gUFRS
+X0VSUihyc3RjKSBkaXJlY3RseS4NCg0KPiArCQkJcmV0dXJuIFBUUl9FUlIocnN0Yyk7DQo+ICsJ
+fQ0KPiArDQo+ICsJcnN0Y19vY3AgPSBkZXZtX3Jlc2V0X2NvbnRyb2xfZ2V0X29wdGlvbmFsX2V4
+Y2x1c2l2ZShkZXYsICJxc3BpLW9jcCIpOw0KPiArCWlmIChJU19FUlIocnN0Y19vY3ApKSB7DQo+
+ICsJCWRldl9lcnIoZGV2LCAiQ2Fubm90IGdldCBRU1BJIE9DUCByZXNldC5cbiIpOw0KPiArCQlp
+ZiAoUFRSX0VSUihyc3RjX29jcCkgPT0gLUVQUk9CRV9ERUZFUikNCj4gKwkJCXJldHVybiBQVFJf
+RVJSKHJzdGNfb2NwKTsNCj4gKwl9DQo+ICsNCj4gKwlpZiAocnN0Yykgez4gKwkJcmVzZXRfY29u
+dHJvbF9hc3NlcnQocnN0Yyk7DQo+ICsJCXVkZWxheSgyKTsNCg0Kd2h5IDJ1cz8gd2hhdCdzIHRo
+ZSBhcHByb3ByaWF0ZSBsZW5ndGggb2YgdGltZSB0aGF0IHdlIHNob3VsZCB3YWl0IGJldHdlZW4N
+CmFzc2VydCBhbmQgZGVhc3NlcnQ/DQoNCj4gKwkJcmVzZXRfY29udHJvbF9kZWFzc2VydChyc3Rj
+KTsNCj4gKwl9DQo+ICsNCj4gKwlpZiAocnN0Y19vY3ApIHsNCj4gKwkJcmVzZXRfY29udHJvbF9h
+c3NlcnQocnN0Y19vY3ApOw0KDQpEb2VzIGl0IG1hdGVyIHRoZSBvcmRlciBpbiB3aGljaCB5b3Ug
+YXNzZXJ0IHRoZXNlIHNpZ25hbHM/IGNhbiB3ZSBncm91cCB0aGVzZQ0KbW9kdWxlIHJlc2V0cyBh
+c3NlcnRzLCBpLmUuIGZpcnN0IGRvIHRoZSBhc3NlcnQgZm9yIGJvdGggcnN0YyBhbmQgcnN0Y3Ag
+YW5kIHRoZW4NCnRoZSBkZWFzc2VydD8NCg0KPiArCQl1ZGVsYXkoMik7DQo+ICsJCXJlc2V0X2Nv
+bnRyb2xfZGVhc3NlcnQocnN0Y19vY3ApOw0KSXMgc29mdHdhcmUgZGVhc3NlcnQgbmVlZGVkPyBJ
+J20gbG9va2luZyBhdCBbMl0sIFRhYmxlIDQ2LiBQRVIxIEdyb3VwLCBHZW5lcmF0ZWQNCk1vZHVs
+ZSBSZXNldHMsIGFuZCBpdCBzZWVtcyB0aGF0IHNvZnR3YXJlIGRlYXNzZXJ0IGlzIG5vdCBhbiBv
+cHRpb24gZm9yDQpxc3BpX2ZsYXNoX2VjY19yc3Rfbg0KDQpbMl1odHRwczovL3d3dy5pbnRlbC5j
+b20vY29udGVudC9kYW0vd3d3L3Byb2dyYW1tYWJsZS91cy9lbi9wZGZzL2xpdGVyYXR1cmUvaGIv
+YXJyaWEtMTAvYTEwXzV2NC5wZGYNCg0KPiArCX0NCj4gKw0KPiAgCWNxc3BpLT5tYXN0ZXJfcmVm
+X2Nsa19oeiA9IGNsa19nZXRfcmF0ZShjcXNwaS0+Y2xrKTsNCj4gIAlkZGF0YSAgPSBvZl9kZXZp
+Y2VfZ2V0X21hdGNoX2RhdGEoZGV2KTsNCj4gIAlpZiAoZGRhdGEgJiYgKGRkYXRhLT5xdWlya3Mg
+JiBDUVNQSV9ORUVEU19XUl9ERUxBWSkpDQo+IA0K
