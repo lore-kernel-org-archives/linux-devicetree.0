@@ -1,169 +1,87 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v8 02/13] clk: samsung: add new clocks for DMC for
- Exynos5422 SoC
-Date: Thu, 6 Jun 2019 11:45:29 +0200
-Message-ID: <f070ab98-10bb-7ad4-f794-cfde9a75ddce@partner.samsung.com>
-References: <CGME20190605165428eucas1p11849754e0d0aa8f8d445ceb0cd6c2f61@eucas1p1.samsung.com>
-        <20190605165410.14606-1-l.luba@partner.samsung.com>
-        <20190605165410.14606-3-l.luba@partner.samsung.com>
-        <CAJKOXPfW3QUH+6+g3NXPuogNxtr_uOtWKOwbgPwBVdqn4Y7a_Q@mail.gmail.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [RFC RESEND PATCH v2 4/4] arm64: dts: ti: am654-base-board: Add
+ gpio_keys node
+Date: Thu, 6 Jun 2019 15:26:20 +0530
+Message-ID: <20190606095620.6211-5-j-keerthy@ti.com>
+References: <20190606095620.6211-1-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfW3QUH+6+g3NXPuogNxtr_uOtWKOwbgPwBVdqn4Y7a_Q@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190606095620.6211-1-j-keerthy@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: t-kristo@ti.com, nm@ti.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, lokeshvutla@ti.com, j-keerthy@ti.com, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
->From 9a7532004606875744eb67ad2ce17197ba2fe61e Mon Sep 17 00:00:00 2001
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Date: Tue, 15 Jan 2019 17:12:16 +0100
-Subject: [PATCH 02/13] clk: samsung: add new clocks for DMC for Exynos5422 SoC
+There are 2 push buttons: SW5 and SW6 that are basically connected to
+WKUP_GPIO0_24 and WKUP_GPIO0_27 respectively. Add the respective
+nodes and the pinctrl data to set the mode to GPIO and Input.
 
-This patch provides support for clocks needed for Dynamic Memory Controller
-in Exynos5422 SoC. It adds CDREX base register addresses, new DIV, MUX and
-GATE entries.
-
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
-Regarding the discussions of clocks mapped to the same registers,
-this is a fix which adds the needed flag 'NOCACHE'.
-It also has the ACK from Krzysztof.
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-Regards,
-Lukasz
-
- drivers/clk/samsung/clk-exynos5420.c | 61 +++++++++++++++++++++++++---
- 1 file changed, 55 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 34cce3c5898f..514e16310227 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -134,6 +134,8 @@
- #define SRC_CDREX		0x20200
- #define DIV_CDREX0		0x20500
- #define DIV_CDREX1		0x20504
-+#define GATE_BUS_CDREX0		0x20700
-+#define GATE_BUS_CDREX1		0x20704
- #define KPLL_LOCK		0x28000
- #define KPLL_CON0		0x28100
- #define SRC_KFC			0x28200
-@@ -248,6 +250,8 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
- 	DIV_CDREX1,
- 	SRC_KFC,
- 	DIV_KFC0,
-+	GATE_BUS_CDREX0,
-+	GATE_BUS_CDREX1,
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+index cf1aa276a1ea..ea50b6e36eff 100644
+--- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -6,6 +6,7 @@
+ /dts-v1/;
+ 
+ #include "k3-am654.dtsi"
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	compatible =  "ti,am654-evm", "ti,am654";
+@@ -33,6 +34,25 @@
+ 			no-map;
+ 		};
+ 	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		autorepeat;
++		pinctrl-names = "default";
++		pinctrl-0 = <&push_button_pins_default>;
++
++		sw5 {
++			label = "GPIO Key USER1";
++			linux,code = <BTN_0>;
++			gpios = <&wkup_gpio0 24 GPIO_ACTIVE_LOW>;
++		};
++
++		sw6 {
++			label = "GPIO Key USER2";
++			linux,code = <BTN_1>;
++			gpios = <&wkup_gpio0 27 GPIO_ACTIVE_LOW>;
++		};
++	};
  };
  
- static const unsigned long exynos5800_clk_regs[] __initconst = {
-@@ -425,6 +429,9 @@ PNAME(mout_group13_5800_p)	= { "dout_osc_div", "mout_sw_aclkfl1_550_cam" };
- PNAME(mout_group14_5800_p)	= { "dout_aclk550_cam", "dout_sclk_sw" };
- PNAME(mout_group15_5800_p)	= { "dout_osc_div", "mout_sw_aclk550_cam" };
- PNAME(mout_group16_5800_p)	= { "dout_osc_div", "mout_mau_epll_clk" };
-+PNAME(mout_mx_mspll_ccore_phy_p) = { "sclk_bpll", "mout_sclk_dpll",
-+					"mout_sclk_mpll", "ff_dout_spll2",
-+					"mout_sclk_spll", "mout_sclk_epll"};
- 
- /* fixed rate clocks generated outside the soc */
- static struct samsung_fixed_rate_clock
-@@ -450,7 +457,7 @@ static const struct samsung_fixed_factor_clock
- static const struct samsung_fixed_factor_clock
- 		exynos5800_fixed_factor_clks[] __initconst = {
- 	FFACTOR(0, "ff_dout_epll2", "mout_sclk_epll", 1, 2, 0),
--	FFACTOR(0, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
-+	FFACTOR(CLK_FF_DOUT_SPLL2, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
+ &wkup_pmx0 {
+@@ -42,6 +62,13 @@
+ 			AM65X_WKUP_IOPAD(0x00e4, PIN_INPUT, 0) /* (AD6) WKUP_I2C0_SDA */
+ 		>;
+ 	};
++
++	push_button_pins_default: push_button__pins_default {
++		pinctrl-single,pins = <
++			AM65X_WKUP_IOPAD(0x0030, PIN_INPUT, 7) /* (R5) WKUP_GPIO0_24 */
++			AM65X_WKUP_IOPAD(0x003c, PIN_INPUT, 7) /* (P2) WKUP_GPIO0_27 */
++		>;
++	};
  };
  
- static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
-@@ -472,11 +479,14 @@ static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
- 	MUX(0, "mout_aclk300_disp1", mout_group5_5800_p, SRC_TOP2, 24, 2),
- 	MUX(0, "mout_aclk300_gscl", mout_group5_5800_p, SRC_TOP2, 28, 2),
- 
-+	MUX(CLK_MOUT_MX_MSPLL_CCORE_PHY, "mout_mx_mspll_ccore_phy",
-+		mout_mx_mspll_ccore_phy_p, SRC_TOP7, 0, 3),
-+
- 	MUX(CLK_MOUT_MX_MSPLL_CCORE, "mout_mx_mspll_ccore",
--			mout_mx_mspll_ccore_p, SRC_TOP7, 16, 2),
-+			mout_mx_mspll_ccore_p, SRC_TOP7, 16, 3),
- 	MUX_F(CLK_MOUT_MAU_EPLL, "mout_mau_epll_clk", mout_mau_epll_clk_5800_p,
- 			SRC_TOP7, 20, 2, CLK_SET_RATE_PARENT, 0),
--	MUX(0, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
-+	MUX(CLK_SCLK_BPLL, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
- 	MUX(0, "mout_epll2", mout_epll2_5800_p, SRC_TOP7, 28, 1),
- 
- 	MUX(0, "mout_aclk550_cam", mout_group3_5800_p, SRC_TOP8, 16, 3),
-@@ -648,7 +658,7 @@ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
- 
- 	MUX(0, "mout_sclk_mpll", mout_mpll_p, SRC_TOP6, 0, 1),
- 	MUX(CLK_MOUT_VPLL, "mout_sclk_vpll", mout_vpll_p, SRC_TOP6, 4, 1),
--	MUX(0, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
-+	MUX(CLK_MOUT_SCLK_SPLL, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
- 	MUX(0, "mout_sclk_ipll", mout_ipll_p, SRC_TOP6, 12, 1),
- 	MUX(0, "mout_sclk_rpll", mout_rpll_p, SRC_TOP6, 16, 1),
- 	MUX_F(CLK_MOUT_EPLL, "mout_sclk_epll", mout_epll_p, SRC_TOP6, 20, 1,
-@@ -806,8 +816,21 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
- 			"mout_aclk400_disp1", DIV_TOP2, 4, 3),
- 
- 	/* CDREX Block */
--	DIV(CLK_DOUT_PCLK_CDREX, "dout_pclk_cdrex", "dout_aclk_cdrex1",
--			DIV_CDREX0, 28, 3),
-+	/*
-+	 * The three clocks below are controlled using the same register and
-+	 * bits. They are put into one because there is a need of
-+	 * synchronization between the BUS and DREXs (two external memory
-+	 * interfaces).
-+	 * They are put here to show this HW assumption and for clock
-+	 * information summary completeness.
-+	 */
-+	DIV_F(CLK_DOUT_PCLK_CDREX, "dout_pclk_cdrex", "dout_aclk_cdrex1",
-+			DIV_CDREX0, 28, 3, CLK_GET_RATE_NOCACHE, 0),
-+	DIV_F(CLK_DOUT_PCLK_DREX0, "dout_pclk_drex0", "dout_cclk_drex0",
-+			DIV_CDREX0, 28, 3, CLK_GET_RATE_NOCACHE, 0),
-+	DIV_F(CLK_DOUT_PCLK_DREX1, "dout_pclk_drex1", "dout_cclk_drex0",
-+			DIV_CDREX0, 28, 3, CLK_GET_RATE_NOCACHE, 0),
-+
- 	DIV_F(CLK_DOUT_SCLK_CDREX, "dout_sclk_cdrex", "mout_mclk_cdrex",
- 			DIV_CDREX0, 24, 3, CLK_SET_RATE_PARENT, 0),
- 	DIV(CLK_DOUT_ACLK_CDREX1, "dout_aclk_cdrex1", "dout_clk2x_phy0",
-@@ -1170,6 +1193,32 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 			GATE_TOP_SCLK_ISP, 12, CLK_SET_RATE_PARENT, 0),
- 
- 	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9, 0, 0),
-+
-+	/* CDREX */
-+	GATE(CLK_CLKM_PHY0, "clkm_phy0", "dout_sclk_cdrex",
-+			GATE_BUS_CDREX0, 0, 0, 0),
-+	GATE(CLK_CLKM_PHY1, "clkm_phy1", "dout_sclk_cdrex",
-+			GATE_BUS_CDREX0, 1, 0, 0),
-+	GATE(0, "mx_mspll_ccore_phy", "mout_mx_mspll_ccore_phy",
-+			SRC_MASK_TOP7, 0, CLK_IGNORE_UNUSED, 0),
-+
-+	GATE(CLK_ACLK_PPMU_DREX1_1, "aclk_ppmu_drex1_1", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 12, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_PPMU_DREX1_0, "aclk_ppmu_drex1_0", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 13, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_PPMU_DREX0_1, "aclk_ppmu_drex0_1", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 14, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_PPMU_DREX0_0, "aclk_ppmu_drex0_0", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 15, CLK_IGNORE_UNUSED, 0),
-+
-+	GATE(CLK_PCLK_PPMU_DREX1_1, "pclk_ppmu_drex1_1", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 26, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_PPMU_DREX1_0, "pclk_ppmu_drex1_0", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 27, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_PPMU_DREX0_1, "pclk_ppmu_drex0_1", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 28, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_PPMU_DREX0_0, "pclk_ppmu_drex0_0", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 29, CLK_IGNORE_UNUSED, 0),
- };
- 
- static const struct samsung_div_clock exynos5x_disp_div_clks[] __initconst = {
+ &main_pmx0 {
 -- 
 2.17.1
