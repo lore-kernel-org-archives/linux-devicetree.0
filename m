@@ -1,38 +1,119 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v6 09/10] usb: roles: add USB Type-B GPIO connector
- driver
-Date: Thu, 6 Jun 2019 10:53:51 +0800
-Message-ID: <1559789630.8487.111.camel@mhfsdcap03>
-References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1559115828-19146-10-git-send-email-chunfeng.yun@mediatek.com>
-         <CAHp75VcbZwd0e6r38C2x7HLEHLr4oR7TjwdDXnDxRPRs3anwgA@mail.gmail.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
+ mailbox
+Date: Thu, 6 Jun 2019 03:24:38 +0000
+Message-ID: <AM0PR04MB4481632406DF235996719C0788170@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190603083005.4304-1-peng.fan@nxp.com>
+        <20190603083005.4304-2-peng.fan@nxp.com>
+        <ae4c79f0-4aec-250e-e312-20aba5554665@gmail.com>
+        <20190603165651.GA12196@e107155-lin>
+ <20190603181856.34996aaa@donnerap.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcbZwd0e6r38C2x7HLEHLr4oR7TjwdDXnDxRPRs3anwgA@mail.gmail.com>
+In-Reply-To: <20190603181856.34996aaa@donnerap.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB <linux-usb@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Andre Przywara <andre.przywara@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-06-05 at 11:45 +0300, Andy Shevchenko wrote:
-> On Wed, May 29, 2019 at 10:44 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+> Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
+> mailbox
+>=20
+> On Mon, 3 Jun 2019 17:56:51 +0100
+> Sudeep Holla <sudeep.holla@arm.com> wrote:
+>=20
+> Hi,
+>=20
+> > On Mon, Jun 03, 2019 at 09:22:16AM -0700, Florian Fainelli wrote:
+> > > On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:
+> > > > From: Peng Fan <peng.fan@nxp.com>
+> > > >
+> > > > The ARM SMC mailbox binding describes a firmware interface to
+> > > > trigger actions in software layers running in the EL2 or EL3 except=
+ion
+> levels.
+> > > > The term "ARM" here relates to the SMC instruction as part of the
+> > > > ARM instruction set, not as a standard endorsed by ARM Ltd.
+> > > >
+> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > ---
+> > > >
+> > > > V2:
+> > > > Introduce interrupts as a property.
+> > > >
+> > > > V1:
+> > > > arm,func-ids is still kept as an optional property, because there
+> > > > is no defined SMC funciton id passed from SCMI. So in my test, I
+> > > > still use arm,func-ids for ARM SIP service.
+> > > >
+> > > >  .../devicetree/bindings/mailbox/arm-smc.txt        | 101
+> +++++++++++++++++++++
+> > > >  1 file changed, 101 insertions(+)  create mode 100644
+> > > > Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > > > b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > > > new file mode 100644
+> > > > index 000000000000..401887118c09
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > > > @@ -0,0 +1,101 @@
 > >
-> > Due to the requirement of usb-connector.txt binding, the old way
-> > using extcon to support USB Dual-Role switch is now deprecated
-> > when use Type-B connector.
-> > This patch introduces a driver of Type-B connector which typically
-> > uses an input GPIO to detect USB ID pin, and try to replace the
-> > function provided by extcon-usb-gpio driver
-> 
-> > +static SIMPLE_DEV_PM_OPS(usb_conn_pm_ops,
-> > +                        usb_conn_suspend, usb_conn_resume);
-> > +
-> > +#define DEV_PMS_OPS (IS_ENABLED(CONFIG_PM_SLEEP) ? &usb_conn_pm_ops : NULL)
-> 
-> Why this macro is needed?
-Want to set .pm as NULL when CONFIG_PM_SLEEP is not enabled.
+> > [...]
+> >
+> > > > +Optional properties:
+> > > > +- arm,func-ids		An array of 32-bit values specifying the function
+> > > > +			IDs used by each mailbox channel. Those function IDs
+> > > > +			follow the ARM SMC calling convention standard [1].
+> > > > +			There is one identifier per channel and the number
+> > > > +			of supported channels is determined by the length
+> > > > +			of this array.
+> > > > +- interrupts		SPI interrupts may be listed for notification,
+> > > > +			each channel should use a dedicated interrupt
+> > > > +			line.
+> > >
+> > > I would not go about defining a specific kind of interrupt, since
+> > > SPI is a GIC terminology, this firmware interface could be used in
+> > > premise with any parent interrupt controller, for which the concept
+> > > of a SPI/PPI/SGI may not be relevant.
+> > >
+> >
+> > While I agree the binding document may not contain specifics, I still
+> > don't see how to use SGI with this. Also note it's generally reserved
+> > for OS future use(IPC) and using this for other than IPC may be bit
+> > challenging IMO. It opens up lots of questions.
+>=20
+> Well, a PPI might be possible to use, although it's somewhat dodgy to hij=
+ack
+> the GIC's (re-)distributor from EL3 to write to GICD_ISPENDR<n>. Need to =
+ask
+> Marc about his feelings towards this. But it's definitely possible from a
+> hypervisor to inject arbitrary interrupts into a guest.
+>=20
+> But more importantly: is there any actual reason this needs to be a GIC
+> interrupt?=20
 
-Thanks
-> 
+No. I just test ATF with SPI when I posting out this. Should not restrict t=
+o be GIC.
+
+If I understand the code correctly, this could just be any interrupt,
+> including one of an interrupt combiner or a GPIO chip. So why not just us=
+e the
+> standard wording of: "exactly one interrupt specifier for each channel"?
+
+Agree.
+
+>=20
+> By the way: Shouldn't new bindings use the YAML format instead?
+
+I'll convert to YAML in next version.
+
+Thanks,
+Peng.
+
+>=20
+> Cheers,
+> Andre.
