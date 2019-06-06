@@ -1,48 +1,58 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [RFC RESEND PATCH v2 2/4] arm64: dts: ti: am6-wakeup: Add gpio node
-Date: Thu, 6 Jun 2019 15:26:18 +0530
-Message-ID: <20190606095620.6211-3-j-keerthy@ti.com>
-References: <20190606095620.6211-1-j-keerthy@ti.com>
+From: Louis Kuo <louis.kuo@mediatek.com>
+Subject: [RFC PATCH V3 4/4] dts: arm64: mt8183: Add sensor interface nodes
+Date: Thu, 6 Jun 2019 18:00:33 +0800
+Message-ID: <1559815233-24796-5-git-send-email-louis.kuo@mediatek.com>
+References: <1559815233-24796-1-git-send-email-louis.kuo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190606095620.6211-1-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: t-kristo@ti.com, nm@ti.com, robh+dt@kernel.org
-Cc: lokeshvutla@ti.com, bgolaszewski@baylibre.com, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, j-keerthy@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1559815233-24796-1-git-send-email-louis.kuo@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, keiichiw@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, Louis Kuo <louis.kuo@mediatek.com>, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add gpio0 node under wakeup domain. This has 56 gpios
-and all are capable of generating banked interrupts.
+Add nodes for Mediatek's sensor interface device. Sensor interface module
+embedded in Mediatek SOCs, works as a HW camera interface controller
+intended for image and data transmission between cameras and host devices.
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 15 +++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 15 +++++++++++++++
  1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-index f1ca171abdf8..9cf2c0849a24 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-@@ -74,4 +74,19 @@
- 		ti,sci-dst-id = <56>;
- 		ti,sci-rm-range-girq = <0x4>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 75c4881..d98bb3f 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -370,4 +370,19 @@
+ 			#clock-cells = <1>;
+ 		};
  	};
 +
-+	wkup_gpio0: wkup_gpio0@42110000 {
-+		compatible = "ti,am654-gpio", "ti,keystone-gpio";
-+		reg = <0x42110000 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&intr_wkup_gpio>;
-+		interrupts = <59 128>, <59 129>, <59 130>, <59 131>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		ti,ngpio = <56>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		clocks = <&k3_clks 59 0>;
-+		clock-names = "gpio";
++	seninf: seninf@1a040000 {
++		compatible = "mediatek,mt8183-seninf";
++		reg = <0 0x1a040000 0 0x8000>,
++		      <0 0x11C80000 0 0x6000>;
++		reg-names = "base_reg", "rx_reg";
++		interrupts = <GIC_SPI 251 IRQ_TYPE_LEVEL_LOW>;
++		power-domains = <&scpsys MT8183_POWER_DOMAIN_CAM>;
++		clocks =
++				<&camsys CLK_CAM_SENINF>, <&topckgen CLK_TOP_MUX_SENINF>;
++		clock-names =
++			"CLK_CAM_SENINF", "CLK_TOP_MUX_SENINF";
++		status = "disabled";
++		};
 +	};
  };
 -- 
-2.17.1
+1.9.1
