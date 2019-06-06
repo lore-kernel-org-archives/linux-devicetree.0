@@ -1,86 +1,90 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Date: Thu, 6 Jun 2019 15:12:38 +0300
-Message-ID: <20190606121238.zxdvvogob3umzid4@paasikivi.fi.intel.com>
-References: <1559555971-193235-1-git-send-email-vishal.sagar@xilinx.com>
- <1559555971-193235-2-git-send-email-vishal.sagar@xilinx.com>
- <20190604192344.7tycwffjd3yeizxh@paasikivi.fi.intel.com>
- <CH2PR02MB60889B850DCAA810A772160DA7170@CH2PR02MB6088.namprd02.prod.outlook.com>
+From: Gerald BAEZA <gerald.baeza@st.com>
+Subject: RE: [PATCH v2 0/5] stm32-ddr-pmu driver creation
+Date: Thu, 6 Jun 2019 12:14:44 +0000
+Message-ID: <f886ca5ef786493a8a5c7859465d6822@SFHDAG5NODE1.st.com>
+References: <1558366019-24214-1-git-send-email-gerald.baeza@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CH2PR02MB60889B850DCAA810A772160DA7170@CH2PR02MB6088.namprd02.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vishal Sagar <vsagar@xilinx.com>
-Cc: Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>, Luca Ceresoli <luca@lucaceresoli.net>, Jacopo Mondi <jacopo@jm>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1558366019-24214-1-git-send-email-gerald.baeza@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "will.deacon@arm.com" <will.deacon@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "corbet@lwn.net" <corbet@lwn.net>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "olof@lixom.net" <olof@lixom.net>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vishal,
+Dear all
 
-On Thu, Jun 06, 2019 at 11:54:19AM +0000, Vishal Sagar wrote:
-> Hi Sakari,
-> 
-> > -----Original Message-----
-> > From: Sakari Ailus [mailto:sakari.ailus@linux.intel.com]
-> > Sent: Wednesday, June 05, 2019 12:54 AM
-> > To: Vishal Sagar <vishal.sagar@xilinx.com>
-> > Cc: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
-> > mchehab@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com; Michal
-> > Simek <michals@xilinx.com>; linux-media@vger.kernel.org;
-> > devicetree@vger.kernel.org; hans.verkuil@cisco.com; linux-arm-
-> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Dinesh Kumar
-> > <dineshk@xilinx.com>; Sandip Kothari <sandipk@xilinx.com>; Luca Ceresoli
-> > <luca@lucaceresoli.net>; Jacopo Mondi <jacopo@jmondi.org>
-> > Subject: Re: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
-> > CSI-2 Rx Subsystem
-> > 
-> > EXTERNAL EMAIL
-> > 
-> > Hi Vishal,
-> > 
-> > On Mon, Jun 03, 2019 at 03:29:30PM +0530, Vishal Sagar wrote:
-> > 
-> > > +Optional properties:
-> > > +--------------------
-> > > +- .
-> > > +  Without this property the driver won't be loaded as IP won't be able to
-> > generate
-> > > +  media bus format compliant stream output.
-> > 
-> > I think we previously concluded that the format will be just different in
-> > this case. So the description appears incorrect.
-> > 
-> 
-> Referring to your email https://lkml.org/lkml/2019/3/22/1823 in response to v6 patches,
-> if the video format bridge is not enabled, then the way in which pixels are transported on
-> the bus don't correspond to the existing media bus formats in Linux.
-> 
-> If not loading the driver is incorrect way, is it ok for the driver to allow same media bus format
-> for packed and unpacked data type on the sink pad?
-> 
-> Or is it ok for the driver to not validate the media bus format set on the sink pad?
+A gentle reminder to get your feedbacks on the series below.
 
-Taking a fresh look at the issue --- usually such unpacking is done by the
-DMA engine, or the same device contains both the CSI-2 RX and DMA. But here
-it actually affects the input of that DMA engine. You're right in saying we
-don't have format definitions from which you could tell which case it is,
-and we also don't have other pre-existing means to tell them apart.
+Best regards
 
-Feel free to keep the check in the driver, but we can't refer to the driver
-loading in DT binding documentation: this is really not supposed to be
-related to that driver, or even Linux at all.
+G=E9rald
 
-How about changing this to:
 
-xlnx,vfb: Present when Video Format Bridge is enabled in IP configuration.
 
-That'd be aligned with the other properties and would more accurately
-convey what this means.
+> -----Original Message-----
+> From: Gerald BAEZA <gerald.baeza@st.com>
+> Sent: lundi 20 mai 2019 17:27
+> To: will.deacon@arm.com; mark.rutland@arm.com; robh+dt@kernel.org;
+> mcoquelin.stm32@gmail.com; Alexandre TORGUE
+> <alexandre.torgue@st.com>; corbet@lwn.net; linux@armlinux.org.uk;
+> olof@lixom.net; horms+renesas@verge.net.au; arnd@arndb.de
+> Cc: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; lin=
+ux-
+> stm32@st-md-mailman.stormreply.com; linux-kernel@vger.kernel.org;
+> linux-doc@vger.kernel.org; Gerald BAEZA <gerald.baeza@st.com>
+> Subject: [PATCH v2 0/5] stm32-ddr-pmu driver creation
+> =
 
--- 
-Kind regards,
+> The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1
+> SOC.
+> =
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> This series adds support for the DDRPERFM via a new stm32-ddr-pmu driver,
+> registered into the perf framework.
+> =
+
+> This driver is inspired from arch/arm/mm/cache-l2x0-pmu.c
+> =
+
+> ---
+> Changes from v1:
+> - add 'resets' description (bindings) and using (driver). Thanks Rob.
+> - rebase on 5.2-rc1 (that includes the ddrperfm clock control patch).
+> =
+
+> Gerald Baeza (5):
+>   Documentation: perf: stm32: ddrperfm support
+>   dt-bindings: perf: stm32: ddrperfm support
+>   perf: stm32: ddrperfm driver creation
+>   ARM: configs: enable STM32_DDR_PMU
+>   ARM: dts: stm32: add ddrperfm on stm32mp157c
+> =
+
+>  .../devicetree/bindings/perf/stm32-ddr-pmu.txt     |  20 +
+>  Documentation/perf/stm32-ddr-pmu.txt               |  41 ++
+>  arch/arm/boot/dts/stm32mp157c.dtsi                 |   9 +
+>  arch/arm/configs/multi_v7_defconfig                |   1 +
+>  drivers/perf/Kconfig                               |   6 +
+>  drivers/perf/Makefile                              |   1 +
+>  drivers/perf/stm32_ddr_pmu.c                       | 512 +++++++++++++++=
+++++++
+>  7 files changed, 590 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/perf/stm32-ddr-
+> pmu.txt
+>  create mode 100644 Documentation/perf/stm32-ddr-pmu.txt
+>  create mode 100644 drivers/perf/stm32_ddr_pmu.c
+> =
+
+> --
+> 2.7.4
