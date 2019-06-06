@@ -1,61 +1,45 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 0/4] Add MCU SRAM nodes for TI K3 SoCs
-Date: Thu, 6 Jun 2019 09:51:41 -0400
-Message-ID: <706a01f7-6953-73ec-d72a-62b4aac5dafa@ti.com>
-References: <20190605163434.23173-1-s-anna@ti.com>
- <acf9cf30-bcd6-76a0-5498-c334c7c43213@ti.com>
- <37a5bf73-2f93-8474-bca1-2e9fae4d6668@ti.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v8 00/13] Exynos5 Dynamic Memory Controller driver
+Date: Thu, 6 Jun 2019 15:57:05 +0200
+Message-ID: <b1024bed-a8d9-12d9-9e20-5e5624a1b189@samsung.com>
+References: <CGME20190605165426eucas1p20524669a299f740b5502db24977b098f@eucas1p2.samsung.com>
+        <20190605165410.14606-1-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <37a5bf73-2f93-8474-bca1-2e9fae4d6668@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190605165410.14606-1-l.luba@partner.samsung.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gNi81LzE5IDE6MDEgUE0sIFN1bWFuIEFubmEgd3JvdGU6Cj4gT24gNi81LzE5IDExOjUzIEFN
-LCBBbmRyZXcgRi4gRGF2aXMgd3JvdGU6Cj4+IE9uIDYvNS8xOSAxMjozNCBQTSwgU3VtYW4gQW5u
-YSB3cm90ZToKPj4+IEhpIFRlcm8sCj4+Pgo+Pj4gVGhlIGZvbGxvd2luZyBzZXJpZXMgYWRkcyB0
-aGUgRFQgbm9kZXMgZm9yIHRoZSBNQ1UgU1JBTSBwcmVzZW50IHdpdGhpbgo+Pj4gdGhlIE1DVSBk
-b21haW4gZm9yIGJvdGggQU02NXggYW5kIEo3MjFFIFNvQ3MuIFRoZSBmaXJzdCAyIHBhdGNoZXMg
-ZW5hYmxlCj4+PiB0aGUgTUNVIFNSQU0gbm9kZSB0byBiZSBwcm9iZWQgcHJvcGVybHkgb24gQU02
-NXggU29DcywgYW5kIHRoZSB0aGlyZAo+Pj4gcGF0Y2ggdGhlIGVxdWl2YWxlbnQgZm9yIEo3MjFF
-IFNvQ3MuIFRoZSB0aGlyZCBwYXRjaCBkZXBlbmRzIG9uIHRoZQo+Pj4gYmFzZSBKNzIxRSBzdXBw
-b3J0IHBhdGNoIHNlcmllcyBmcm9tIE5pc2hhbnRoIFsxXS4KPj4+Cj4+PiBUaGUgbGFzdCBwYXRj
-aCBpcyBub3QgcmVsYXRlZCB0byBNQ1UgU1JBTSwgYnV0IGFkZHMgdGhlIHJhbmdlcyBmb3IgdGhl
-Cj4+PiBSNUYgY2x1c3RlciB0aGF0IGlzIGFsc28gcHJlc2VudCBpbiB0aGUgTUNVIGRvbWFpbiBp
-biBwcmVwYXJhdGlvbiBmb3IKPj4+IHRoZSBSNUYgbm9kZXMuCj4+Pgo+Pgo+PiBXaHkgbm90IGhh
-dmUgdGhpcyBsYXN0IHBhdGNoIGFzIHBhcnQgb2YgdGhlIHNlcmllcyBhZGRpbmcgdGhlIFI1RiBu
-b2Rlcz8KPiAKPiBUaGUgcGF0Y2ggY2FuIGJlIGFwcGxpZWQgaW5kZXBlbmRlbnRseSBhcyBpcywg
-bm8gcmVhc29uIHRvIHdhaXQgdW50aWwgSQo+IHBvc3QgdGhvc2UuCj4gCgpObyByZWFzb24gbm90
-IHRvIHdhaXQgZWl0aGVyLi4gcGx1cyBpdCB3b3VsZCBrZWVwIHJlbGF0ZWQgY2hhbmdlcyBpbiB0
-aGUgCnNhbWUgc2VyaWVzLgoKQW55d2F5LCBJIGRvbid0IGhhdmUgYW55IHByb2JsZW0gd2l0aCB0
-aGlzLCB3YXMganVzdCBhc2tpbmcgYXMgSSB3YXMgbm90IApzdXJlIGlmIEkgd2FzIG1pc3Npbmcg
-c29tZSBoaWRkZW4gZGVwZW5kZW5jeSBiZXR3ZWVuIHRoZSBub2Rlcy4KCkFuZHJldwoKPiByZWdh
-cmRzCj4gU3VtYW4KPiAKPj4KPj4gQW5kcmV3Cj4+Cj4+PiByZWdhcmRzCj4+PiBTdW1hbgo+Pj4K
-Pj4+IFsxXQo+Pj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LWFy
-bS1rZXJuZWwvbGlzdC8/c2VyaWVzPTEyMTE4OQo+Pj4KPj4+IFN1bWFuIEFubmEgKDQpOgo+Pj4g
-IMKgwqAgYXJtNjQ6IGR0czogdGk6IGszLWFtNjU6IEFkZCBNQ1UgU1JBTSByYW5nZXMgaW4gaW50
-ZXJjb25uZWN0IG5vZGVzCj4+PiAgwqDCoCBhcm02NDogZHRzOiB0aTogazMtYW02NS1tY3U6IEFk
-ZCB0aGUgTUNVIFJBTSBub2RlCj4+PiAgwqDCoCBhcm02NDogZHRzOiB0aTogazMtajcyMWU6IEFk
-ZCB0aGUgTUNVIFNSQU0gbm9kZQo+Pj4gIMKgwqAgYXJtNjQ6IGR0czogdGk6IGszLWFtNjU6IEFk
-ZCBSNUYgcmFuZ2VzIGluIGludGVyY29ubmVjdCBub2Rlcwo+Pj4KPj4+ICDCoCBhcmNoL2FybTY0
-L2Jvb3QvZHRzL3RpL2szLWFtNjUtbWN1LmR0c2nCoMKgwqDCoMKgwqDCoMKgIHwgOCArKysrKysr
-Kwo+Pj4gIMKgIGFyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMtYW02NS5kdHNpwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHwgNiArKysrKysKPj4+ICDCoCBhcmNoL2FybTY0L2Jvb3QvZHRzL3RpL2sz
-LWo3MjFlLW1jdS13YWtldXAuZHRzaSB8IDggKysrKysrKysKPj4+ICDCoCAzIGZpbGVzIGNoYW5n
-ZWQsIDIyIGluc2VydGlvbnMoKykKPj4+Cj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 6/5/19 18:53, Lukasz Luba wrote:
+> Lukasz Luba (13):
+>   clk: samsung: add needed IDs for DMC clocks in Exynos5420
+>   clk: samsung: add new clocks for DMC for Exynos5422 SoC
+>   clk: samsung: add BPLL rate table for Exynos 5422 SoC
+>   dt-bindings: ddr: rename lpddr2 directory
+>   dt-bindings: ddr: add LPDDR3 memories
+>   drivers: memory: extend of_memory by LPDDR3 support
+>   dt-bindings: memory-controllers: add Exynos5422 DMC device description
+>   drivers: memory: add DMC driver for Exynos5422
+>   drivers: devfreq: events: add Exynos PPMU new events
+>   ARM: dts: exynos: add chipid label and syscon compatible
+>   ARM: dts: exynos: add syscon to clock compatible
+>   ARM: dts: exynos: add DMC device for exynos5422
+>   ARM: exynos_defconfig: enable DMC driver
+
+
+I have applied first 3 patches from this series to clk/samsung tree.
+
+But can you please also send this series to linux-clk@vger.kernel.org 
+ML, adding the clk maintainers (Stephen, Michael) at Cc?
+
+Please make sure if future any clk patches are also sent to 
+linux-clk@vger.kernel.org mailing list.
+
+-- 
+Thanks,
+Sylwester
