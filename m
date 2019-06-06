@@ -1,31 +1,29 @@
 Return-Path: <SRS0=Sfu6=UF=verge.net.au=horms@kernel.org>
-Date: Thu, 6 Jun 2019 11:08:35 +0200
+Date: Thu, 6 Jun 2019 10:55:04 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3] arm64: dts: renesas: Add HiHope RZ/G2M main board
- support
-Message-ID: <20190606090830.hxmqk5s3zil3yjsy@verge.net.au>
-References: <1559228266-16724-1-git-send-email-biju.das@bp.renesas.com>
- <1559228266-16724-2-git-send-email-biju.das@bp.renesas.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: iwg23s-sbc: Fix SDHI2 VccQ regulator
+Message-ID: <20190606085504.agvtxu3vadicfxau@verge.net.au>
+References: <1559555632-2258-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1559555632-2258-3-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1559228266-16724-2-git-send-email-biju.das@bp.renesas.com>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, xu_shunji@hoperun.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1559555632-2258-3-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, May 30, 2019 at 03:57:44PM +0100, Biju Das wrote:
-> Basic support for the HiHope RZ/G2M main board:
->   - Memory,
->   - Main crystal,
->   - Serial console
+On Mon, Jun 03, 2019 at 10:53:52AM +0100, Fabrizio Castro wrote:
+> SDR50 isn't working anymore because the GPIO regulator
+> driver is using descriptors since
+> commit d6cd33ad7102 ("regulator: gpio: Convert to use descriptors")
+> which in turn causes the system to use the polarity of the
+> GPIOs (as specified in the DT) for selecting the states,
+> but the polarity specified in the DT is wrong.
+> This patch fixes the regulator DT definition, and that fixes
+> SDR50.
 > 
-> This patch also includes a dtsi common to both HiHope RZ/G2M
-> and RZ/G2N main boards.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> Fixes: 9eb36b945b5c ("ARM: dts: iwg23s-sbc: Add uSD and eMMC support")
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Thanks,
-
-applied for inclusion in v5.3.
+Thanks, I have applied this for inclusion in v5.3.
