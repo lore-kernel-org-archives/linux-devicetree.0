@@ -1,54 +1,29 @@
-Return-Path: <SRS0=lN0X=UD=renesas.com=prvs=50588f7500=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 1/2] ARM: dts: r7s9210: Add IRQC device node
-Date: Tue, 4 Jun 2019 15:09:13 -0500
-Message-ID: <20190604200914.64896-2-chris.brandt@renesas.com>
-In-Reply-To: <20190604200914.64896-1-chris.brandt@renesas.com>
-References: <20190604200914.64896-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=gQZM=UF=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45756 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbfFFR5T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Jun 2019 13:57:19 -0400
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+References: <20190606164443.6991-1-festevam@gmail.com> <20190606165546.6675520693@mail.kernel.org>
+ <VI1PR04MB5055C4B288BC19F6E1EF9D65EE170@VI1PR04MB5055.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB5055C4B288BC19F6E1EF9D65EE170@VI1PR04MB5055.eurprd04.prod.outlook.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Thu, 6 Jun 2019 14:57:10 -0300
+Message-ID: <CAOMZO5Dt+3FOdvkWTGdLet8r9C1MPia=uwODNYc7T7k2EDdO-Q@mail.gmail.com>
+Subject: Re: [PATCH] clk: imx8qxp: Use devm_platform_ioremap_resource()
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Anson Huang <anson.huang@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable support for the IRQC on RZ/A2M, which is a small front-end to the
-GIC.  This allows to use up to 8 external interrupts with configurable
-sense select.
+On Thu, Jun 6, 2019 at 2:15 PM Leonard Crestez <leonard.crestez@nxp.com> wrote:
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- arch/arm/boot/dts/r7s9210.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> An extremely similar patch was already submitted and then reverted
+> because it breaks boot:
+>
+>      https://patchwork.kernel.org/patch/10908807/
+>
+> I tested and this new patch also breaks boot.
 
-diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
-index 3d0bbc1f4543..72b79770e336 100644
---- a/arch/arm/boot/dts/r7s9210.dtsi
-+++ b/arch/arm/boot/dts/r7s9210.dtsi
-@@ -473,6 +473,25 @@
- 			reg = <0xfcfe8004 4>;
- 		};
- 
-+		irqc: interrupt-controller@fcfef800 {
-+			compatible = "renesas,r7s9210-irqc",
-+				     "renesas,rza1-irqc";
-+			#interrupt-cells = <2>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0xfcfef800 0x6>;
-+			interrupt-map =
-+				<0 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				<1 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+				<2 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+				<3 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				<4 0 &gic GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				<5 0 &gic GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+				<6 0 &gic GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+				<7 0 &gic GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-map-mask = <7 0>;
-+		};
-+
- 		pinctrl: pin-controller@fcffe000 {
- 			compatible = "renesas,r7s9210-pinctrl";
- 			reg = <0xfcffe000 0x1000>;
--- 
-2.16.1
+Ops, sorry about that!
