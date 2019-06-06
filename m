@@ -1,238 +1,304 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml
- binding
-Date: Thu, 6 Jun 2019 16:52:14 +0100
-Message-ID: <20190606165214.00006f09@huawei.com>
-References: <cover.1558746978.git.renatogeh@gmail.com>
-        <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
-        <20190526173911.57ae3d11@archlinux>
-        <20190605203554.podktlonhp527iqq@renatolg>
-        <d70b1ffcc903495cd5eac04e17fd1600e67b9c53.camel@analog.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: [PATCH v10 0/3] Add Amlogic video decoder driver
+Date: Thu,  6 Jun 2019 18:05:09 +0200
+Message-ID: <20190606160512.26211-1-mjourdan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d70b1ffcc903495cd5eac04e17fd1600e67b9c53.camel@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc: "renatogeh@gmail.com" <renatogeh@gmail.com>, "jic23@kernel.org" <jic23@kernel.org>, "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "lars@metafoo.de" <lars@metafoo.de>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Jun 2019 11:13:52 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+Hi everyone,
 
-> On Wed, 2019-06-05 at 17:35 -0300, Renato Lui Geh wrote:
-> > [External]
-> > 
-> > 
-> > On 05/26, Jonathan Cameron wrote:  
-> > > On Fri, 24 May 2019 22:26:30 -0300
-> > > Renato Lui Geh <renatogeh@gmail.com> wrote:
-> > >   
-> > > > This patch adds a YAML binding for the Analog Devices AD7780/1 and
-> > > > AD7170/1 analog-to-digital converters.
-> > > > 
-> > > > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>  
-> > > Looks good to me, but I'm still finding my feet with these so will
-> > > leave it for a few days for others to have time to comment.
-> > > 
-> > > Michael, looking for a quick reply from you to say if you are happy
-> > > being explicitly listed as maintainer for this one, or if you'd
-> > > rather land it on someone else.  Same applies for patch 2.
-> > > 
-> > > Renato, if I seem to have forgotten this in a week or so, feel
-> > > free to give me a poke. I've been known to loose patches entirely!  
-> > 
-> > Hi Jonathan,
-> > 
-> > Just here to give you a poke. :)
-> > 
-> > By the way, in these cases, which would be easier for you? To send you
-> > an email like I'm doing right now on last week's thread; or to resend
-> > the entire patch(set)?
-> >   
-> 
-> I think in this case, maybe let's wait a bit longer.
-> Jonathan has not been active recently.
-> 
-> I think a [RESEND] would be a good idea when he gets back/active and misses your patchset.
-> 
-Sorry, was away last weekend and haven't caught up since.
+[V7] The Driver was moved to staging until it can pass future
+specification & compliance tools.
 
-I should be fine to pick this up this weekend.
+[V6] Good news, the firmware situation is resolved. We have received a
+redistributable license from Amlogic and the firmwares have been merged
+in linux-firmware[5].
 
-A ping like this is fine rather than a resend.
+[V5] It's been a while since the last patch series regarding the Amlogic
+video decoder. Unfortunately, the firmware licensing situation is still
+on hold as we await communication from Amlogic. As such, we do not have
+the firmwares in linux-firmware yet.
+I decided to push the V5 anyway, as changes were starting to pile up.
 
-Thanks,
+This patch series adds support for the Amlogic video decoder,
+as well as the corresponding dt bindings for GXBB/GXL/GXM chips.
 
-Jonathan
+It features decoding for the following formats:
+- MPEG 1
+- MPEG 2
 
-> Thanks
-> Alex
-> 
-> > Thanks,
-> > Renato  
-> > > Thanks,
-> > > 
-> > > Jonathan  
-> > > > ---
-> > > > Changes in v2:
-> > > >  - vref-supply to avdd-supply
-> > > >  - remove avdd-supply from required list
-> > > >  - include adc block in an spi block
-> > > > 
-> > > >  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
-> > > >  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
-> > > >  2 files changed, 87 insertions(+), 48 deletions(-)
-> > > >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> > > > b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> > > > deleted file mode 100644
-> > > > index 440e52555349..000000000000
-> > > > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> > > > +++ /dev/null
-> > > > @@ -1,48 +0,0 @@
-> > > > -* Analog Devices AD7170/AD7171/AD7780/AD7781
-> > > > -
-> > > > -Data sheets:
-> > > > -
-> > > > -- AD7170:
-> > > > -    * https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
-> > > > -- AD7171:
-> > > > -    * https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
-> > > > -- AD7780:
-> > > > -    * https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
-> > > > -- AD7781:
-> > > > -    * https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
-> > > > -
-> > > > -Required properties:
-> > > > -
-> > > > -- compatible: should be one of
-> > > > -    * "adi,ad7170"
-> > > > -    * "adi,ad7171"
-> > > > -    * "adi,ad7780"
-> > > > -    * "adi,ad7781"
-> > > > -- reg: spi chip select number for the device
-> > > > -- vref-supply: the regulator supply for the ADC reference voltage
-> > > > -
-> > > > -Optional properties:
-> > > > -
-> > > > -- powerdown-gpios:  must be the device tree identifier of the PDRST pin. If
-> > > > -                specified, it will be asserted during driver probe. As the
-> > > > -                line is active high, it should be marked GPIO_ACTIVE_HIGH.
-> > > > -- adi,gain-gpios:   must be the device tree identifier of the GAIN pin. Only for
-> > > > -                the ad778x chips. If specified, it will be asserted during
-> > > > -                driver probe. As the line is active low, it should be marked
-> > > > -                GPIO_ACTIVE_LOW.
-> > > > -- adi,filter-gpios: must be the device tree identifier of the FILTER pin. Only
-> > > > -                for the ad778x chips. If specified, it will be asserted
-> > > > -                during driver probe. As the line is active low, it should be
-> > > > -                marked GPIO_ACTIVE_LOW.
-> > > > -
-> > > > -Example:
-> > > > -
-> > > > -adc@0 {
-> > > > -    compatible =  "adi,ad7780";
-> > > > -    reg =         <0>;
-> > > > -    vref-supply = <&vdd_supply>
-> > > > -
-> > > > -    powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
-> > > > -    adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
-> > > > -    adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-> > > > -};
-> > > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> > > > b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..d1109416963c
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> > > > @@ -0,0 +1,87 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital converters
-> > > > +
-> > > > +maintainers:
-> > > > +  - Michael Hennerich <michael.hennerich@analog.com>
-> > > > +
-> > > > +description: |
-> > > > +  The ad7780 is a sigma-delta analog to digital converter. This driver provides
-> > > > +  reading voltage values and status bits from both the ad778x and ad717x series.
-> > > > +  Its interface also allows writing on the FILTER and GAIN GPIO pins on the
-> > > > +  ad778x.
-> > > > +
-> > > > +  Specifications on the converters can be found at:
-> > > > +    AD7170:
-> > > > +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
-> > > > +    AD7171:
-> > > > +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
-> > > > +    AD7780:
-> > > > +      https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
-> > > > +    AD7781:
-> > > > +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    enum:
-> > > > +      - adi,ad7170
-> > > > +      - adi,ad7171
-> > > > +      - adi,ad7780
-> > > > +      - adi,ad7781
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  avdd-supply:
-> > > > +    description:
-> > > > +      The regulator supply for the ADC reference voltage.
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  powerdown-gpios:
-> > > > +    description:
-> > > > +      Must be the device tree identifier of the PDRST pin. If
-> > > > +      specified, it will be asserted during driver probe. As the
-> > > > +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  adi,gain-gpios:
-> > > > +    description:
-> > > > +      Must be the device tree identifier of the GAIN pin. Only for
-> > > > +      the ad778x chips. If specified, it will be asserted during
-> > > > +      driver probe. As the line is active low, it should be marked
-> > > > +      GPIO_ACTIVE_LOW.
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  adi,filter-gpios:
-> > > > +    description:
-> > > > +      Must be the device tree identifier of the FILTER pin. Only
-> > > > +      for the ad778x chips. If specified, it will be asserted
-> > > > +      during driver probe. As the line is active low, it should be
-> > > > +      marked GPIO_ACTIVE_LOW.
-> > > > +    maxItems: 1
-> > > > +
-> > > > +required:
-> > > > +  - compatible
-> > > > +  - reg
-> > > > +
-> > > > +examples:
-> > > > +  - |
-> > > > +    #include <dt-bindings/gpio/gpio.h>
-> > > > +    spi0 {
-> > > > +        #address-cells = <1>;
-> > > > +        #size-cells = <0>;
-> > > > +
-> > > > +        adc@0 {
-> > > > +            compatible = "adi,ad7780";
-> > > > +            reg = <0>;
-> > > > +
-> > > > +            avdd-supply      = <&vdd_supply>;
-> > > > +            powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
-> > > > +            adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
-> > > > +            adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
-> > > > +        };
-> > > > +    };  
+The following formats will be added in future patches:
+- MJPEG
+- MPEG 4 (incl. Xvid, H.263)
+- H.264
+- HEVC (incl. 10-bit)
+- VP9 (incl. 10-bit)
+
+The code was made in such a way to allow easy inclusion of those formats
+in the future.
+
+The decoder is single instance.
+
+Files:
+ - vdec.c handles the V4L2 M2M logic
+ - esparser.c manages the hardware bitstream parser
+ - vdec_helpers.c provides helpers to DONE the dst buffers as well as
+ various common code used by the codecs
+ - vdec_1.c manages the VDEC_1 block of the vdec IP
+ - codec_mpeg12.c enables decoding for MPEG 1/2.
+ - vdec_platform.c links codec units with vdec units
+ (e.g vdec_1 with codec_mpeg12) and lists all the available
+ src/dst formats and requirements (max width/height, etc.),
+ per compatible chip.
+
+It was tested primarily with ffmpeg's v4l2-m2m implementation. For instance:
+$ ffmpeg -c:v mpeg2_v4l2m2m -i sample_mpeg2.mkv -f rawvideo out.nv12
+
+The v4l2-compliance results are available below the patch diff.
+Tests start failing when v4l2-compliance tries to dequeue the
+V4L2_EVENT_SOURCE_CHANGE event, which is not supported for MPEG2.
+
+Changes since v9 [9]:
+ - Removed vdec_ctrls.* and moved the code to vdec.c
+
+Changes since v8 [8]:
+ - Fixed checkpatch & sparse issues
+
+Changes since v7 [7]:
+ - Removed the patch with V4L2_FMT_FLAG_FIXED_RESOLUTION from the serie.
+ It will be dealt in another manner in the near future.
+ - use the new v4l2_m2m_ioctl_try_decoder_cmd helper
+ - Rebased against media/master
+
+Changes since v6 [6]:
+ - Rebased against v5.2-rc2 (fixed build issue with missing interrupt include)
+ - Moved to staging - added TODO file
+ - Don't declare V4L2_CID_MIN_BUFFERS_FOR_CAPTURE as volatile. Use
+ v4l2_ctrl_s_ctrl() instead.
+ - Fix compliance issues with V4L2_DEC_CMD_STOP, V4L2_DEC_CMD_START and
+ vbuf->field not prepared to V4L2_FIELD_NONE.
+ - Fixed coccinelle issue (unneeded semicolon)
+ - Fixed smatch issue (PTR_ERR() could be called with 0)
+
+Changes since v5 [4]:
+ - Rebased against media_tree (fixes conflict with platform/meson/Makefile
+ following the meson CEC driver updates)
+
+Changes since v4 [3]:
+ - Updated for 5.1: 
+  - cropcap -> g_pixelaspect
+  - dma_zalloc_coherent -> dma_alloc_coherent
+ - enum_framesizes: changed from STEPWISE to CONTINUOUS, as suggested by Hans
+ - Reintroduced support for CREATE_BUFS. It was a driver bug where I wasn't
+ accounting for the amount of buffers created this way (only buffers created
+ via REQBUFS were).
+ - Added the patch introducing V4L2_FMT_FLAG_FIXED_RESOLUTION to the V4L2
+ framework, needed as MPEG2 on Amlogic hardware only supports a fixed
+ resolution during a decode session.
+ - Added support for events and V4L2_EVENT_SOURCE_CHANGE, as it is now checked
+ by v4l2-compliance for stateful decoders. I was planning on introducing this
+ for codecs that actually use it (H264, HEVC..), but it doesn't hurt to have
+ this in the initial commit.
+ - Added support for controls, mainly V4L2_CID_MIN_BUFFERS_FOR_CAPTURE
+
+Changes since v3 [2]:
+ - strlcpy -> strscpy
+ - queue_setup: account for existing buffers when clamping *num_buffers
+ - removed support for CREATE_BUFS. This caused issues with gstreamer and allowed
+ userspace to alloc more buffers than the decoder can handle in its fixed list.
+ So for now we just disable it and only allow allocating via REQBUFS.
+ - rebased & tested with 4.20-rc1
+
+Changes since v2 [1]:
+ - Override capture queue's min_buffers_needed in queue_setup
+ The HW needs the full buffer list to be available when doing start_streaming
+ - Fix the draining sequence
+ The blob that we write to the ESPARSER to trigger drain is codec-dependent.
+ The one that was sent in v1 is specific to H.264 and isn't guaranteed to
+ trigger drain for MPEG2. For the latter, a simple MPEG2 EOS code
+ should be sent to the ESPARSER instead.
+ - Slight enhancements to the way we do vififo offset<=>timestamp matching
+
+Changes since v1 [0]:
+ - use named interrupts in the bindings
+ - rewrite description in the bindings doc
+ - don't include the dts changes in the patch series
+ - fill the vb2 queues locks
+ - fill the video_device lock
+ - use helpers for wait_prepare and wait_finish vb2_ops
+ - remove unnecessary usleep in between esparser writes.
+ Extensive testing of every codec on GXBB/GXL didn't reveal
+ any fails without it, so just remove it.
+ - compile v4l2_compliance inside the git repo
+ - Check for plane number/plane size to pass the latest v4l2-compliance test
+ - Moved the single instance check (returning -EBUSY) to start/stop streaming
+ The check was previously in queue_setup but there was no great location to
+ clear it except for .close().
+ - Slight rework of the way CAPTURE frames are timestamped for better accuracy
+ - Implement PAR reporting via VIDIOC_CROPCAP
+
+[9] https://patchwork.kernel.org/cover/10979559/
+[8] https://patchwork.kernel.org/cover/10977259/
+[7] https://patchwork.kernel.org/cover/10969815/
+[6] https://patchwork.kernel.org/cover/10943029/
+[5] https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/?id=e04cc56d0e6b6ff05924ff88fdba1a438ee7d3c8
+[4] https://patchwork.kernel.org/cover/10879959/
+[3] https://patchwork.kernel.org/cover/10669875/
+[2] https://lore.kernel.org/patchwork/cover/993093/
+[1] https://patchwork.kernel.org/cover/10595803/
+[0] https://patchwork.kernel.org/cover/10583391/
+
+Maxime Jourdan (3):
+  dt-bindings: media: add Amlogic Video Decoder Bindings
+  media: meson: add v4l2 m2m video decoder driver
+  MAINTAINERS: Add meson video decoder
+
+ .../bindings/media/amlogic,vdec.txt           |   71 ++
+ MAINTAINERS                                   |    8 +
+ drivers/staging/media/Kconfig                 |    2 +
+ drivers/staging/media/Makefile                |    1 +
+ drivers/staging/media/meson/vdec/Kconfig      |   11 +
+ drivers/staging/media/meson/vdec/Makefile     |    8 +
+ drivers/staging/media/meson/vdec/TODO         |    8 +
+ .../staging/media/meson/vdec/codec_mpeg12.c   |  210 ++++
+ .../staging/media/meson/vdec/codec_mpeg12.h   |   14 +
+ drivers/staging/media/meson/vdec/dos_regs.h   |   98 ++
+ drivers/staging/media/meson/vdec/esparser.c   |  324 +++++
+ drivers/staging/media/meson/vdec/esparser.h   |   32 +
+ drivers/staging/media/meson/vdec/vdec.c       | 1098 +++++++++++++++++
+ drivers/staging/media/meson/vdec/vdec.h       |  267 ++++
+ drivers/staging/media/meson/vdec/vdec_1.c     |  230 ++++
+ drivers/staging/media/meson/vdec/vdec_1.h     |   14 +
+ .../staging/media/meson/vdec/vdec_helpers.c   |  449 +++++++
+ .../staging/media/meson/vdec/vdec_helpers.h   |   83 ++
+ .../staging/media/meson/vdec/vdec_platform.c  |  101 ++
+ .../staging/media/meson/vdec/vdec_platform.h  |   30 +
+ 20 files changed, 3059 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
+ create mode 100644 drivers/staging/media/meson/vdec/Kconfig
+ create mode 100644 drivers/staging/media/meson/vdec/Makefile
+ create mode 100644 drivers/staging/media/meson/vdec/TODO
+ create mode 100644 drivers/staging/media/meson/vdec/codec_mpeg12.c
+ create mode 100644 drivers/staging/media/meson/vdec/codec_mpeg12.h
+ create mode 100644 drivers/staging/media/meson/vdec/dos_regs.h
+ create mode 100644 drivers/staging/media/meson/vdec/esparser.c
+ create mode 100644 drivers/staging/media/meson/vdec/esparser.h
+ create mode 100644 drivers/staging/media/meson/vdec/vdec.c
+ create mode 100644 drivers/staging/media/meson/vdec/vdec.h
+ create mode 100644 drivers/staging/media/meson/vdec/vdec_1.c
+ create mode 100644 drivers/staging/media/meson/vdec/vdec_1.h
+ create mode 100644 drivers/staging/media/meson/vdec/vdec_helpers.c
+ create mode 100644 drivers/staging/media/meson/vdec/vdec_helpers.h
+ create mode 100644 drivers/staging/media/meson/vdec/vdec_platform.c
+ create mode 100644 drivers/staging/media/meson/vdec/vdec_platform.h
+
+
+root@hardkernel-odroidc2:~# v4l2-compliance -s --stream-from=hst_2.mpg 
+v4l2-compliance SHA: a162244d47d4bb01d0692da879dce5a070f118e7, 64 bits
+
+Compliance test for meson-vdec device /dev/video0:
+
+Driver Info:
+        Driver name      : meson-vdec
+        Card type        : Amlogic Video Decoder
+        Bus info         : platform:meson-vdec
+        Driver version   : 5.2.0
+        Capabilities     : 0x84204000
+                Video Memory-to-Memory Multiplanar
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps      : 0x04204000
+                Video Memory-to-Memory Multiplanar
+                Streaming
+                Extended Pix Format
+        Detected Stateful Decoder
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second /dev/video0 open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+        test VIDIOC_QUERYCTRL: OK
+        test VIDIOC_G/S_CTRL: OK
+        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+        Standard Controls: 2 Private Controls: 0
+
+Format ioctls:
+        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+        test VIDIOC_G/S_PARM: OK (Not Supported)
+        test VIDIOC_G_FBUF: OK (Not Supported)
+        test VIDIOC_G_FMT: OK
+        test VIDIOC_TRY_FMT: OK
+        test VIDIOC_S_FMT: OK
+        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+        test Cropping: OK (Not Supported)
+        test Composing: OK (Not Supported)
+        test Scaling: OK
+
+Codec ioctls:
+        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+        test VIDIOC_(TRY_)DECODER_CMD: OK
+
+Buffer ioctls:
+        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+        test VIDIOC_EXPBUF: OK
+        test Requests: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+        test read/write: OK (Not Supported)
+        test blocking wait: OK
+                fail: v4l2-test-buffers.cpp(1324): node->dqevent(ev)
+        test MMAP (select): FAIL
+                fail: v4l2-test-buffers.cpp(1324): node->dqevent(ev)
+        test MMAP (epoll): FAIL
+        test USERPTR (select): OK (Not Supported)
+        test DMABUF: Cannot test, specify --expbuf-device
+
+Total for meson-vdec device /dev/video0: 49, Succeeded: 47, Failed: 2, Warnings: 0
+
+-- 
+2.21.0
