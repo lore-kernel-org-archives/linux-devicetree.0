@@ -1,186 +1,82 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V2 07/12] clk: tegra: support for Tegra210 clocks
- suspend-resume
-Date: Thu, 6 Jun 2019 12:13:18 -0700
-Message-ID: <08e34220-4cec-377e-40eb-107d2c505dd7@nvidia.com>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
- <1559084936-4610-8-git-send-email-skomatineni@nvidia.com>
- <20190606181711.744502083D@mail.kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/3] Documentation: dt-bindings: add the Amlogic Meson
+ Temperature Sensor
+Date: Thu, 6 Jun 2019 21:16:37 +0200
+Message-ID: <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com>
+References: <20190604144714.2009-1-glaroque@baylibre.com> <20190604144714.2009-2-glaroque@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190606181711.744502083D@mail.kernel.org>
-Content-Language: en-US
+In-Reply-To: <20190604144714.2009-2-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, jason@lakedaemon.net, jonathanh@nvidia.com, linus.walleij@linaro.org, marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de, thierry.reding@gmail.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: jic23@kernel.org, khilman@baylibre.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Guillaume,
 
-On 6/6/19 11:17 AM, Stephen Boyd wrote:
-> Quoting Sowjanya Komatineni (2019-05-28 16:08:51)
->> @@ -3381,6 +3398,367 @@ static struct tegra_clk_init_table init_table[] =
-__initdata =3D {
->>          { TEGRA210_CLK_CLK_MAX, TEGRA210_CLK_CLK_MAX, 0, 0 },
->>   };
->>  =20
->> +#ifdef CONFIG_PM_SLEEP
->> +static unsigned long pll_c_rate, pll_c2_rate, pll_c3_rate, pll_x_rate;
->> +static unsigned long pll_c4_rate, pll_d2_rate, pll_dp_rate;
->> +static unsigned long pll_re_vco_rate, pll_d_rate, pll_a_rate, pll_a1_ra=
-te;
->> +static unsigned long pll_c_out1_rate;
->> +static unsigned long pll_a_out0_rate, pll_c4_out3_rate;
->> +static unsigned long pll_p_out_rate[5];
->> +static unsigned long pll_u_out1_rate, pll_u_out2_rate;
->> +static unsigned long pll_mb_rate;
->> +static u32 pll_m_v;
->> +static u32 pll_p_outa, pll_p_outb;
->> +static u32 pll_re_out_div, pll_re_out_1;
->> +static u32 cpu_softrst_ctx[3];
->> +static u32 cclkg_burst_policy_ctx[2];
->> +static u32 cclklp_burst_policy_ctx[2];
->> +static u32 sclk_burst_policy_ctx[3];
->> +static u32 sclk_ctx, spare_ctx, misc_clk_enb_ctx, clk_arm_ctx;
-> This is a lot of state to maintain globally. Can it go into a container
-> struct so we can get docs and understand what's going on a little
-> better?
+thank you for working on this!
+
+On Tue, Jun 4, 2019 at 4:47 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
 >
-Will revisit and change in next version along with using clk driver=20
-save_context and restore_context callbacks.
->> +
->> +static struct platform_device *dfll_pdev;
->> +#define car_readl(_base, _off) \
->> +       readl_relaxed(clk_base + (_base) + ((_off) * 4))
->> +#define car_writel(_val, _base, _off) \
->> +       writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
->> +
->> +static u32 *periph_clk_src_ctx;
->> +struct periph_source_bank {
->> +       u32 start;
->> +       u32 end;
-> Do these need to be u32 or could they be u16?
-WIll update in next version of this patch
->> +};
->> +
->> +static struct periph_source_bank periph_srcs[] =3D {
-> Can this be const?
-WIll update in next version of this patch
+> This adds the devicetree binding documentation for the Temperature
+> Sensor found in the Amlogic Meson G12 SoCs.
+> Currently only the G12A SoCs are supported.
+so G12B is not supported (yet)?
+
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+>  .../iio/temperature/amlogic,meson-tsensor.txt | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
 >
->> +       [0] =3D {
->> +               .start =3D 0x100,
->> +               .end =3D 0x198,
->> +       },
->> +       [1] =3D {
->> +               .start =3D 0x1a0,
->> +               .end =3D 0x1f8,
->> +       },
->> +       [2] =3D {
->> +               .start =3D 0x3b4,
->> +               .end =3D 0x42c,
->> +       },
->> +       [3] =3D {
->> +               .start =3D 0x49c,
->> +               .end =3D 0x4b4,
->> +       },
->> +       [4] =3D {
->> +               .start =3D 0x560,
->> +               .end =3D 0x564,
->> +       },
->> +       [5] =3D {
->> +               .start =3D 0x600,
->> +               .end =3D 0x678,
->> +       },
->> +       [6] =3D {
->> +               .start =3D 0x694,
->> +               .end =3D 0x6a0,
->> +       },
->> +       [7] =3D {
->> +               .start =3D 0x6b8,
->> +               .end =3D 0x718,
->> +       },
->> +};
->> +
->> +/* This array lists the valid clocks for each periph clk bank */
->> +static u32 periph_clks_on[] =3D {
-> const?
-WIll update in next version of this patch
->> +       0xdcd7dff9,
->> +       0x87d1f3e7,
->> +       0xf3fed3fa,
->> +       0xffc18cfb,
->> +       0x793fb7ff,
->> +       0x3fe66fff,
->> +       0xfc1fc7ff,
-> What are these magic numbers?
+> diff --git a/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+> new file mode 100644
+> index 000000000000..d064db0e9cac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+> @@ -0,0 +1,31 @@
+> +* Amlogic Meson Temperature Sensor
+> +
+> +Required properties:
+> +- compatible:  depending on the SoC and the position of the sensor,
+> +               this should be one of:
+> +               - "amlogic,meson-g12a-cpu-tsensor" for the CPU G12A SoC sensor
+> +               - "amlogic,meson-g12a-ddr-tsensor" for the DDR G12A SoC sensor
+> +               followed by the common :
+> +               - "amlogic,meson-g12a-tsensor" for G12A SoC family
+> +- reg:         the physical base address and length of the registers
+> +- interrupts:  the interrupt indicating end of sampling
+> +- clocks:      phandle identifier for the reference clock of temperature sensor
+> +- #io-channel-cells: must be 1, see ../iio-bindings.txt
+have you considered using the thermal framework [0] instead of the iio
+framework (see below)?
 
-These are the hard coded values for peripheral clock enable register=20
-where it enables all clocks before restoring clock sources to proper rate.
+> +- amlogic,ao-secure: phandle to the ao-secure syscon
+the driver has some "u_efuse_off" access. do we need to get some
+calibration values from the AO syscon or can we also fetch it from the
+eFuse? you can look at arch/arm/boot/dts/meson8.dtsi where I'm passing
+the temperature sensor calibration data to the SAR ADC (there's no
+dedicated temperature sensor IP block prior to G12A) while reading the
+data from the eFuse
+
+> +Optional properties:
+> +- amlogic,critical-temperature: temperature value in milli degrees Celsius
+> +       to set automatic reboot on too high temperature
+as far as I can tell the thermal framework supports multiple trip
+points. I'm seeing this as a benefit because the hardware can raise
+interrupts at four different temperatures (defined by the driver)
+
+> +Example:
+> +       cpu_temp: temperature-sensor@ff634800 {
+> +               compatible = "amlogic,meson-g12a-cpu-tsensor",
+> +                            "amlogic,meson-g12a-tsensor";
+> +               reg = <0x0 0xff634800 0x0 0x50>;
+> +               interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
+> +               clocks = <&clkc CLKID_TS>;
+> +               status = "okay";
+as far as I know the dt-bindings should not have a status property in
+the examples
 
 
->> +};
->> +
->> +static inline unsigned long clk_get_rate_nolock(struct clk *clk)
->> +{
->> +       if (IS_ERR_OR_NULL(clk)) {
-> NULL is a valid clk pointer. Typically usage of IS_ERR_OR_NULL() is
-> wrong.
->
->> +               WARN_ON(1);
->> +               return 0;
->> +       }
->> +
->> +       return clk_hw_get_rate(__clk_get_hw(clk));
->> +}
->> +
->> +static inline struct clk *pll_p_clk(unsigned int x)
->> +{
->> +       if (x < 4) {
-> What is magic value 4?
-
-PLLP outs OUT1 through OUT4 are defined sequential in tegra210-car.h and=20
-OUT5=C2=A0 is not so retrieving value from clks using sequential indexing f=
-or=20
-up to OUT4.
-
-Will update in next version to use define
-
->> +               return clks[TEGRA210_CLK_PLL_P_OUT1 + x];
->> +       } else if (x !=3D 4) {
->> +               WARN_ON(1);
->> +               return NULL;
->> +       } else {
->> +               return clks[TEGRA210_CLK_PLL_P_OUT5];
->> +       }
->> +}
->> +
-> [..]
->> +
->> +static void tegra210_clk_resume(void)
->> +{
-> [..]
->> +       fence_udelay(2, clk_base);
->> +       for (i =3D 0; i < BURST_POLICY_REG_SIZE; i++) {
->> +               car_writel(cclklp_burst_policy_ctx[i], CCLKLP_BURST_POLI=
-CY, i);
->> +               car_writel(sclk_burst_policy_ctx[i], SCLK_BURST_POLICY, =
-i);
->> +       }
->> +       car_writel(sclk_burst_policy_ctx[i], SYS_CLK_DIV, 0);
->> +
->> +       car_writel(sclk_ctx, SYSTEM_CLK_RATE, 0);
->> +       car_writel(spare_ctx, SPARE_REG0, 0);
->> +       car_writel(misc_clk_enb_ctx, MISC_CLK_ENB, 0);
->> +       car_writel(clk_arm_ctx, CLK_MASK_ARM, 0);
->> +
->> +       /* enable all clocks before configuring clock sources */
->> +       tegra_clk_periph_force_on(periph_clks_on, ARRAY_SIZE(periph_clks=
-_on),
->> +                                 clk_base);
->> +
->> +       wmb();
-> Please add a comment before barriers so we know what they're for.
-Will do in next version of this patch.
->> +       fence_udelay(2, clk_base);
->> +
+Martin
