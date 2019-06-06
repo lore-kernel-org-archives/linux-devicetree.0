@@ -1,40 +1,44 @@
-From: Avri Altman <Avri.Altman@wdc.com>
-Subject: RE: [PATCH v2 2/3] scsi: ufs: Allow resetting the UFS device
-Date: Thu, 6 Jun 2019 06:36:22 +0000
-Message-ID: <SN6PR04MB4925FC3F1001326AA218DF21FC170@SN6PR04MB4925.namprd04.prod.outlook.com>
-References: <20190606010249.3538-1-bjorn.andersson@linaro.org>
- <20190606010249.3538-3-bjorn.andersson@linaro.org>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/3] irqchip: al-fic: Introduce Amazon's Annapurna Labs
+ Fabric Interrupt Controller Driver
+Date: Thu, 6 Jun 2019 08:37:41 +0200
+Message-ID: <20190606063741.GA23305@kroah.com>
+References: <1559717653-11258-1-git-send-email-talel@amazon.com>
+ <1559717653-11258-3-git-send-email-talel@amazon.com>
+ <20190605075927.GA9693@kroah.com>
+ <a81a46ef13273aa8c6ea87c8d3550e33650e27b6.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190606010249.3538-3-bjorn.andersson@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <a81a46ef13273aa8c6ea87c8d3550e33650e27b6.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Evan Green <evgreen@chromium.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Talel Shenhar <talel@amazon.com>, nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 06, 2019 at 07:55:43AM +1000, Benjamin Herrenschmidt wrote:
+> On Wed, 2019-06-05 at 09:59 +0200, Greg KH wrote:
+> > 
+> > > +struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic);
+> > > +
+> > > +struct al_fic *al_fic_wire_init(struct device_node *node,
+> > > +				void __iomem *base,
+> > > +				const char *name,
+> > > +				unsigned int parent_irq);
+> > > +int al_fic_cleanup(struct al_fic *fic);
+> > 
+> > Who is using these new functions?  We don't add new apis that no one
+> > uses :(
+> 
+> They will be used by subsequent driver submissions but those aren't
+> quite ready yet, so we can hold onto patch 3 for now until they are.
 
->  static int ufshcd_hba_init(struct ufs_hba *hba)
->  {
->  	int err;
-> @@ -7425,9 +7460,15 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
->  	if (err)
->  		goto out_disable_vreg;
->=20
-> +	err =3D ufshcd_init_device_reset(hba);
-> +	if (err)
-> +		goto out_disable_variant;
-> +
->  	hba->is_powered =3D true;
->  	goto out;
->=20
-> +out_disable_variant:
-> +	ufshcd_vops_setup_regulators(hba, false);
-Is this necessary?
-ufshcd_vops_setup_regulators() was just called as part of ufshcd_variant_hb=
-a_init
+Patch 2 also should have these removed :)
 
-Thanks,
-Avri
+You know we don't add new apis until we have a real, in-kernel user for
+them...
+
+thanks,
+
+greg k-h
