@@ -1,137 +1,112 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-Date: Thu, 6 Jun 2019 10:44:58 +0200
-Message-ID: <CAKfTPtAc=aOD=ukuPKhEL_gBSeb9DJaK-oYAPg1MWNcr-6HLQw@mail.gmail.com>
-References: <20190114184255.258318-1-mka@chromium.org> <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
- <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
- <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
- <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
- <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com> <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
- <CAKfTPtCR360osDz3oW+XhHT1R12SacAuJ44W_NfFOPWxJFjOPg@mail.gmail.com>
- <20190606074921.43mbinemk3j565yu@queper01-ThinkPad-T460s> <CAKfTPtA9WDOH3UzU-Qz4AqhLNGkOPo9EFkTHXGqTq7qsrec_JA@mail.gmail.com>
- <9267b9ed-89b0-7b71-88a2-ca1894d4c497@arm.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH v2] dt-bindings: iio: accel: adxl372: switch to YAML
+ bindings
+Date: Thu, 6 Jun 2019 08:49:53 +0000
+Message-ID: <e30a3c629f0d355c5131420437c031a522caea01.camel@analog.com>
+References: <20190531201114.2973-1-lucasseikioshiro@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9267b9ed-89b0-7b71-88a2-ca1894d4c497@arm.com>
+In-Reply-To: <20190531201114.2973-1-lucasseikioshiro@gmail.com>
+Content-Language: en-US
+Content-ID: <89E64C3058AAC94A86F4072B5749E708@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Quentin Perret <quentin.perret@arm.com>, Stephen Boyd <swboyd@chromium.org>, Amit Kucheria <amit.kucheria@linaro.org>, Andy Gross <agross@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>, Morten Rasmussen <Morten.Rasmussen@arm.com>
+To: "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>, "lucasseikioshiro@gmail.com" <lucasseikioshiro@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lars@metafoo.de" <lars@metafoo.de>, "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ardeleanalex@gmail.com" <ardeleanalex@gmail.com>
+Cc: "marcelo.schmitt1@gmail.com" <marcelo.schmitt1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "matheus.bernardino@usp.br" <matheus.bernardino@usp.br>, "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Jun 2019 at 10:34, Dietmar Eggemann <dietmar.eggemann@arm.com> wr=
-ote:
->
-> On 6/6/19 10:20 AM, Vincent Guittot wrote:
-> > On Thu, 6 Jun 2019 at 09:49, Quentin Perret <quentin.perret@arm.com> wr=
-ote:
-> >>
-> >> Hi Vincent,
-> >>
-> >> On Thursday 06 Jun 2019 at 09:05:16 (+0200), Vincent Guittot wrote:
-> >>> Hi Quentin,
-> >>>
-> >>> On Wed, 5 Jun 2019 at 19:21, Quentin Perret <quentin.perret@arm.com> =
-wrote:
-> >>>>
-> >>>> On Friday 17 May 2019 at 14:55:19 (-0700), Stephen Boyd wrote:
-> >>>>> Quoting Amit Kucheria (2019-05-16 04:54:45)
-> >>>>>> (cc'ing Andy's correct email address)
-> >>>>>>
-> >>>>>> On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org>=
- wrote:
-> >>>>>>>
-> >>>>>>> Quoting Amit Kucheria (2019-05-13 04:54:12)
-> >>>>>>>> On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@lin=
-aro.org> wrote:
-> >>>>>>>>>
-> >>>>>>>>> On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromiu=
-m.org> wrote:
-> >>>>>>>>>>
-> >>>>>>>>>> The 8 CPU cores of the SDM845 are organized in two clusters of=
- 4 big
-> >>>>>>>>>> ("gold") and 4 little ("silver") cores. Add a cpu-map node to =
-the DT
-> >>>>>>>>>> that describes this topology.
-> >>>>>>>>>
-> >>>>>>>>> This is partly true. There are two groups of gold and silver co=
-res,
-> >>>>>>>>> but AFAICT they are in a single cluster, not two separate ones.=
- SDM845
-> >>>>>>>>> is one of the early examples of ARM's Dynamiq architecture.
-> >>>>>>>>>
-> >>>>>>>>>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> >>>>>>>>>
-> >>>>>>>>> I noticed that this patch sneaked through for this merge window=
- but
-> >>>>>>>>> perhaps we can whip up a quick fix for -rc2?
-> >>>>>>>>>
-> >>>>>>>>
-> >>>>>>>> And please find attached a patch to fix this up. Andy, since thi=
-s
-> >>>>>>>> hasn't landed yet (can we still squash this into the original pa=
-tch?),
-> >>>>>>>> I couldn't add a Fixes tag.
-> >>>>>>>>
-> >>>>>>>
-> >>>>>>> I had the same concern. Thanks for catching this. I suspect this =
-must
-> >>>>>>> cause some problem for IPA given that it can't discern between th=
-e big
-> >>>>>>> and little "power clusters"?
-> >>>>>>
-> >>>>>> Both EAS and IPA, I believe. It influences the scheduler's view of=
- the
-> >>>>>> the topology.
-> >>>>>
-> >>>>> And EAS and IPA are OK with the real topology? I'm just curious if
-> >>>>> changing the topology to reflect reality will be a problem for thos=
-e
-> >>>>> two.
-> >>>>
-> >>>> FWIW, neither EAS nor IPA depends on this. Not the upstream version =
-of
-> >>>> EAS at least (which is used in recent Android kernels -- 4.19+).
-> >>>>
-> >>>> But doing this is still required for other things in the scheduler (=
-the
-> >>>> so-called 'capacity-awareness' code). So until we have a better
-> >>>> solution, this patch is doing the right thing.
-> >>>
-> >>> I'm not sure to catch what you mean ?
-> >>> Which so-called 'capacity-awareness' code are you speaking about ? an=
-d
-> >>> what is the problem ?
-> >>
-> >> I'm talking about the wake-up path. ATM select_idle_sibling() is total=
-ly
-> >> unaware of capacity differences. In its current form, this function
-> >> basically assumes that all CPUs in a given sd_llc have the same
-> >> capacity, which would be wrong if we had a single MC level for SDM845.
-> >> So, until select_idle_sibling() is 'fixed' to be capacity-aware, we ne=
-ed
-> >> two levels of sd for asymetric systems (including DynamIQ) so the
-> >> wake_cap() story actually works.
-> >>
-> >> I hope that clarifies it :)
-> >
-> > hmm... does this justifies this wrong topology ?
-> > select_idle_sibling() is called only when system is overloaded and
-> > scheduler disables the EAS path
-> > In this case, the scheduler looks either for an idle cpu or for evenly
-> > spreading the loads
-> > This is maybe not always optimal and should probably be fixed but
-> > doesn't justifies a wrong topology description IMHO
->
-> The big/Little cluster detection in wake_cap() doesn't work anymore with
-> DynamIQ w/o Phanton (DIE) domain. So the decision of going sis() or slow
-> path is IMHO broken.
-
-That's probably not the right thread to discuss this further but i'm
-not sure to understand why wake_cap() doesn't work as it compares the
-capacity_orig of local cpu and prev cpu which are the same whatever
-the sche domain=C5=93
-
-> But I support the idea of not introducing Phantom Domains in device tree
-> and fix wake_cap() instead.
+T24gRnJpLCAyMDE5LTA1LTMxIGF0IDE3OjExIC0wMzAwLCBMdWNhcyBPc2hpcm8gd3JvdGU6DQo+
+IFtFeHRlcm5hbF0NCj4gDQo+IA0KPiBDb252ZXJ0IHRoZSBvbGQgZGV2aWNlIHRyZWUgZG9jdW1l
+bnRhdGlvbiB0byB5YW1sIGZvcm1hdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEx1Y2FzIE9zaGly
+byA8bHVjYXNzZWlraW9zaGlyb0BnbWFpbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFJvZHJpZ28g
+UmliZWlybyA8cm9kcmlnb3JzZGNAZ21haWwuY29tPg0KPiBDby1kZXZlbG9wZWQtYnk6IFJvZHJp
+Z28gUmliZWlybyA8cm9kcmlnb3JzZGNAZ21haWwuY29tPg0KPiBSZXZpZXdlZC1ieTogTWF0aGV1
+cyBUYXZhcmVzIDxtYXRoZXVzLmJlcm5hcmRpbm9AdXNwLmJyPg0KPiBSZXZpZXdlZC1ieTogTWFy
+Y2VsbyBTY2htaXR0IDxtYXJjZWxvLnNjaG1pdHQxQGdtYWlsLmNvbT4NCg0KUmV2aWV3ZWQtYnk6
+IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQoNCj4g
+LS0tDQo+IFYyOg0KPiAgICAgLSBVcGRhdGUgTUFJTlRBSU5FUlMgZmlsZQ0KPiAgICAgLSBSZW1v
+dmUgZGVzY3JpcHRpb24gZmllbGQgZm9yIHJlZyBhbmQgaW50ZXJydXB0cyBwcm9wZXJ0aWVzDQo+
+ICAgICAtIEFkZCBpbnRlcnJ1cHRzIGFzIGEgcmVxdWlyZWQgcHJvcGVydHkNCj4gDQo+ICAuLi4v
+YmluZGluZ3MvaWlvL2FjY2VsL2FkaSxhZHhsMzcyLnlhbWwgICAgICAgfCA2MyArKysrKysrKysr
+KysrKysrKysrDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWNjZWwvYWR4bDM3Mi50
+eHQgfCAzMyAtLS0tLS0tLS0tDQo+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgMiArLQ0KPiAgMyBmaWxlcyBjaGFuZ2VkLCA2NCBpbnNlcnRpb25zKCsp
+LCAzNCBkZWxldGlvbnMoLSkNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaWlvL2FjY2VsL2FkaSxhZHhsMzcyLnlhbWwNCj4gIGRlbGV0ZSBt
+b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FjY2VsL2Fk
+eGwzNzIudHh0DQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2lpby9hY2NlbC9hZGksYWR4bDM3Mi55YW1sDQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2lpby9hY2NlbC9hZGksYWR4bDM3Mi55YW1sDQo+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYTdmYWZiOWJmNWM2DQo+IC0tLSAvZGV2
+L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hY2Nl
+bC9hZGksYWR4bDM3Mi55YW1sDQo+IEBAIC0wLDAgKzEsNjMgQEANCj4gKyMgU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IEdQTC0yLjANCj4gKyVZQU1MIDEuMg0KPiArLS0tDQo+ICskaWQ6IGh0dHA6
+Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2lpby9hY2NlbGVyb21ldGVycy9hZGksYWR4bDM3Mi55
+YW1sIw0KPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3Jl
+LnlhbWwjDQo+ICsNCj4gK3RpdGxlOiBBbmFsb2cgRGV2aWNlcyBBRFhMMzcyIDMtQXhpcywgKy8t
+KDIwMGcpIERpZ2l0YWwgQWNjZWxlcm9tZXRlcg0KPiArDQo+ICttYWludGFpbmVyczoNCj4gKyAg
+LSBTdGVmYW4gUG9wYSA8c3RlZmFuLnBvcGFAYW5hbG9nLmNvbT4NCj4gKw0KPiArZGVzY3JpcHRp
+b246IHwNCj4gKyAgQW5hbG9nIERldmljZXMgQURYTDM3MiAzLUF4aXMsICsvLSgyMDBnKSBEaWdp
+dGFsIEFjY2VsZXJvbWV0ZXIgdGhhdCBzdXBwb3J0cw0KPiArICBib3RoIEkyQyAmIFNQSSBpbnRl
+cmZhY2VzDQo+ICsgICAgaHR0cHM6Ly93d3cuYW5hbG9nLmNvbS9lbi9wcm9kdWN0cy9hZHhsMzcy
+Lmh0bWwNCj4gKw0KPiArcHJvcGVydGllczoNCj4gKyAgY29tcGF0aWJsZToNCj4gKyAgICBlbnVt
+Og0KPiArICAgICAgLSBhZGksYWR4bDM3Mg0KPiArDQo+ICsgIHJlZzoNCj4gKyAgICBtYXhJdGVt
+czogMQ0KPiArDQo+ICsgIGludGVycnVwdHM6DQo+ICsgICAgbWF4SXRlbXM6IDENCj4gKw0KPiAr
+cmVxdWlyZWQ6DQo+ICsgIC0gY29tcGF0aWJsZQ0KPiArICAtIHJlZw0KPiArICAtIGludGVycnVw
+dHMNCj4gKw0KPiArZXhhbXBsZXM6DQo+ICsgIC0gfA0KPiArICAgICAgICAjaW5jbHVkZSA8ZHQt
+YmluZGluZ3MvZ3Bpby9ncGlvLmg+DQo+ICsgICAgICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9p
+bnRlcnJ1cHQtY29udHJvbGxlci9pcnEuaD4NCj4gKyAgICAgICAgaTJjMCB7DQo+ICsgICAgICAg
+ICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsgICAgICAgICAgICAgICAgI3NpemUt
+Y2VsbHMgPSA8MD47DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAvKiBFeGFtcGxlIGZvciBhIEky
+QyBkZXZpY2Ugbm9kZSAqLw0KPiArICAgICAgICAgICAgICAgIGFjY2VsZXJvbWV0ZXJANTMgew0K
+PiArICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhZGksYWR4bDM3MiI7DQo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHg1Mz47DQo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvPjsNCj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgIGludGVycnVwdHMgPSA8MjUgSVJRX1RZUEVfRURHRV9GQUxMSU5HPjsNCj4gKyAg
+ICAgICAgICAgICAgICB9Ow0KPiArICAgICAgICB9Ow0KPiArICAtIHwNCj4gKyAgICAgICAgI2lu
+Y2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPg0KPiArICAgICAgICAjaW5jbHVkZSA8ZHQt
+YmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmg+DQo+ICsgICAgICAgIHNwaTAgew0K
+PiArICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArICAgICAgICAgICAg
+ICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPiArDQo+ICsgICAgICAgICAgICAgICAgYWNjZWxlcm9t
+ZXRlckAwIHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWRpLGFk
+eGwzNzIiOw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDA+Ow0KPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8MTAwMDAwMD47DQo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvPjsNCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MjUgSVJRX1RZUEVfRURHRV9GQUxMSU5H
+PjsNCj4gKyAgICAgICAgICAgICAgICB9Ow0KPiArICAgICAgICB9Ow0KPiBkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hY2NlbC9hZHhsMzcyLnR4dA0K
+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWNjZWwvYWR4bDM3Mi50
+eHQNCj4gZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IGEyODk5NjQ3NTZhNy4uMDAw
+MDAwMDAwMDAwDQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8v
+YWNjZWwvYWR4bDM3Mi50eHQNCj4gKysrIC9kZXYvbnVsbA0KPiBAQCAtMSwzMyArMCwwIEBADQo+
+IC1BbmFsb2cgRGV2aWNlcyBBRFhMMzcyIDMtQXhpcywgKy8tKDIwMGcpIERpZ2l0YWwgQWNjZWxl
+cm9tZXRlcg0KPiAtDQo+IC1odHRwOi8vd3d3LmFuYWxvZy5jb20vbWVkaWEvZW4vdGVjaG5pY2Fs
+LWRvY3VtZW50YXRpb24vZGF0YS1zaGVldHMvYWR4bDM3Mi5wZGYNCj4gLQ0KPiAtUmVxdWlyZWQg
+cHJvcGVydGllczoNCj4gLSAtIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgImFkaSxhZHhsMzcyIg0K
+PiAtIC0gcmVnOiB0aGUgSTJDIGFkZHJlc3Mgb3IgU1BJIGNoaXAgc2VsZWN0IG51bWJlciBmb3Ig
+dGhlIGRldmljZQ0KPiAtDQo+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBTUEkgYnVzIHVzYWdl
+Og0KPiAtIC0gc3BpLW1heC1mcmVxdWVuY3k6IE1heCBTUEkgZnJlcXVlbmN5IHRvIHVzZQ0KPiAt
+DQo+IC1PcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiAtIC0gaW50ZXJydXB0czogaW50ZXJydXB0IG1h
+cHBpbmcgZm9yIElSUSBhcyBkb2N1bWVudGVkIGluDQo+IC0gICBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50ZXJydXB0cy50eHQNCj4gLQ0K
+PiAtRXhhbXBsZSBmb3IgYSBJMkMgZGV2aWNlIG5vZGU6DQo+IC0NCj4gLSAgICAgICBhY2NlbGVy
+b21ldGVyQDUzIHsNCj4gLSAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWRpLGFkeGwzNzIi
+Ow0KPiAtICAgICAgICAgICAgICAgcmVnID0gPDB4NTM+Ow0KPiAtICAgICAgICAgICAgICAgaW50
+ZXJydXB0LXBhcmVudCA9IDwmZ3Bpbz47DQo+IC0gICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0g
+PDI1IElSUV9UWVBFX0VER0VfRkFMTElORz47DQo+IC0gICAgICAgfTsNCj4gLQ0KPiAtRXhhbXBs
+ZSBmb3IgYSBTUEkgZGV2aWNlIG5vZGU6DQo+IC0NCj4gLSAgICAgICBhY2NlbGVyb21ldGVyQDAg
+ew0KPiAtICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhZGksYWR4bDM3MiI7DQo+IC0gICAg
+ICAgICAgICAgICByZWcgPSA8MD47DQo+IC0gICAgICAgICAgICAgICBzcGktbWF4LWZyZXF1ZW5j
+eSA9IDwxMDAwMDAwPjsNCj4gLSAgICAgICAgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8Jmdw
+aW8+Ow0KPiAtICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwyNSBJUlFfVFlQRV9FREdFX0ZB
+TExJTkc+Ow0KPiAtICAgICAgIH07DQo+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5U
+QUlORVJTDQo+IGluZGV4IDQzYTljZWJiMmMxOS4uMDZjY2E3Y2Q5NjI3IDEwMDY0NA0KPiAtLS0g
+YS9NQUlOVEFJTkVSUw0KPiArKysgYi9NQUlOVEFJTkVSUw0KPiBAQCAtNTU5LDcgKzU1OSw3IEBA
+IFM6ICBTdXBwb3J0ZWQNCj4gIEY6ICAgICBkcml2ZXJzL2lpby9hY2NlbC9hZHhsMzcyLmMNCj4g
+IEY6ICAgICBkcml2ZXJzL2lpby9hY2NlbC9hZHhsMzcyX3NwaS5jDQo+ICBGOiAgICAgZHJpdmVy
+cy9paW8vYWNjZWwvYWR4bDM3Ml9pMmMuYw0KPiAtRjogICAgIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9paW8vYWNjZWwvYWR4bDM3Mi50eHQNCj4gK0Y6ICAgICBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FjY2VsL2FkaSxhZHhsMzcyLnlhbWwNCj4gDQo+
+ICBBRjkwMTMgTUVESUEgRFJJVkVSDQo+ICBNOiAgICAgQW50dGkgUGFsb3NhYXJpIDxjcm9wZUBp
+a2kuZmk+DQo+IC0tDQo+IDIuMjEuMA0KPiANCg==
