@@ -1,70 +1,70 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 04/10] dt-bindings: display: renesas: lvds: Add
- renesas, companion property
-Date: Thu, 6 Jun 2019 10:54:35 +0300
-Message-ID: <20190606075435.GD4931@pendragon.ideasonboard.com>
-References: <20190528141234.15425-1-laurent.pinchart+renesas@ideasonboard.com>
- <20190528141234.15425-5-laurent.pinchart+renesas@ideasonboard.com>
- <20190528163730.GA9610@ravnborg.org>
- <20190528164916.GA17874@pendragon.ideasonboard.com>
- <20190528165900.GA10262@ravnborg.org>
+From: =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+Subject: [PATCH] ARM: dts: imx7ulp: add crypto support
+Date: Thu,  6 Jun 2019 11:02:55 +0300
+Message-ID: <20190606080255.25504-1-horia.geanta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190528165900.GA10262@ravnborg.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Aymen Sghaier <aymen.sghaier@nxp.com>, Iuliana Prodan <iuliana.prodan@nxp.com>, Franck Lenormand <franck.lenormand@nxp.com>, linux-crypto@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FtLAoKT24gVHVlLCBNYXkgMjgsIDIwMTkgYXQgMDY6NTk6MDBQTSArMDIwMCwgU2FtIFJh
-dm5ib3JnIHdyb3RlOgo+IEhpIExhdXJlbnQuCj4gCj4gPiA+ID4gIAo+ID4gPiA+ICtPcHRpb25h
-bCBwcm9wZXJ0aWVzOgo+ID4gPiA+ICsKPiA+ID4gPiArLSByZW5lc2FzLGNvbXBhbmlvbiA6IHBo
-YW5kbGUgdG8gdGhlIGNvbXBhbmlvbiBMVkRTIGVuY29kZXIuIFRoaXMgcHJvcGVydHkgaXMKPiA+
-ID4gPiArICBtYW5kYXRvcnkgZm9yIHRoZSBmaXJzdCBMVkRTIGVuY29kZXIgb24gRDMgYW5kIEUz
-IFNvQ3MsIGFuZCBzaGFsbCBwb2ludCB0bwo+ID4gPiA+ICsgIHRoZSBzZWNvbmQgZW5jb2RlciB0
-byBiZSB1c2VkIGFzIGEgY29tcGFuaW9uIGluIGR1YWwtbGluayBtb2RlLiBJdCBzaGFsbCBub3QK
-PiA+ID4gPiArICBiZSBzZXQgZm9yIGFueSBvdGhlciBMVkRTIGVuY29kZXIuCj4gPiA+IAo+ID4g
-PiBJZiB0aGUgRDMgYW5kIEUzIHNvY3MgZG8gbm90IG1hbmRhdGUgdGhlIHVzZSBvZiBkdWFsLWxp
-bmssIHRoZW4gd2hhdCB0bwo+ID4gPiBkbyBpbiB0aGUgRFQ/IEJlY2F1c2UgYWNjb3JkaW5nIHRv
-IHRoZSBhYm92ZSB0aGlzIHByb3BlcnR5IG11c3QgYmUKPiA+ID4gc3BlY2lmaWVkIGZvciBEMyBh
-bmQgRTMgU09DJ3MuCj4gPiAKPiA+IFRoaXMgcHJvcGVydHkgZG9lc24ndCBlbmFibGUgZHVhbC1s
-aW5rIG1vZGUsIGl0IG9ubHkgc3BlY2lmaWVzIHRoZQo+ID4gY29tcGFuaW9uIExWRFMgZW5jb2Rl
-ciB1c2VkIGZvciBkdWFsLWxpbmsgbW9kZSwgd2hlbiBlbmFibGVkICh0aHJvdWdoCj4gPiBjb21t
-dW5pY2F0aW9uIGJldHdlZW4gdGhlIExWRFMgZW5jb2RlciBhbmQgdGhlIExWRFMgcmVjZWl2ZXIg
-YXQKPiA+IHJ1bnRpbWUpLgo+ID4gCj4gPiBKYWNvcG8gaGFkIGEgc2ltaWxhciBjb21tZW50IHNv
-IEkgc3VwcG9zZSB0aGlzIGlzbid0IGNsZWFyLiBIb3cgd291bGQKPiA+IHlvdSB3b3JkIGl0IHRv
-IG1ha2UgaXQgY2xlYXIgPwo+IAo+IExldCBtZSB0cnk6Cj4gCj4gLSByZW5lc2FzLGNvbXBhbmlv
-biA6IHBoYW5kbGUgdG8gdGhlIGNvbXBhbmlvbiBMVkRTIGVuY29kZXIuIFRoaXMgcHJvcGVydHkg
-aXMKPiAgIG1hbmRhdG9yeSBmb3IgdGhlIGZpcnN0IExWRFMgZW5jb2RlciBvbiBEMyBhbmQgRTMg
-U29DcyB3aGVuIGR1YWwtbGluayBtb2RlCj4gICBpcyBzdXBwb3J0ZWQuCj4gICBUaGUgcHJvcGVy
-dHkgc2hhbGwgcG9udCB0byB0aGUgcGhhbmRsZSBvZiB0aGUgc2Vjb25kIGVuY29kZXIgdG8gYmUg
-dXNlZCBhcyBhCj4gICBjb21wYW5pb24gaW4gZHVhbC1saW5rIG1vZGUuIEl0IHNoYWxsIG5vdCBi
-ZSBzZXQgZm9yIGFueSBvdGhlciBMVkRTIGVuY29kZXIuCj4gCj4gVGhlIG1haW4gZGlmZmVyZW5j
-ZSBpcyAid2hlbiBkdWFsLWxpbmsgbW9kZSBpcyBzdXBwb3J0ZWQiLgo+IEFzIHBlciBteSB1bmRl
-cnN0YW5kaW5nIHRoaXMgcHJvcGVydHkgaXMgb25seSByZWxldmFudCB3aGVuIHRoZSBhY3R1YWwK
-PiBIVyBzdXBwb3J0cyAvIHVzZXMgZHVhbC1saW5rIG1vZGUuCj4gU28gZm9yIGEgYm9hcmQgdGhh
-dCBkbyBub3QgZXZlbiB3aXJlIHVwIGR1YWwtbGluaywgdGhlbiBzZXR0aW5nIHRoZQo+IHByb3Bl
-cnR5IHdvdWxkIGJlIGNvbmZ1c2luZy4KClRoYXQncyBub3QgcXVpdGUgY29ycmVjdC4gVGhlIHBy
-b3BlcnR5IHNoYWxsIGJlIHNwZWNpZmllZCB3aGVuIHRoZSBTb0MKc3VwcG9ydHMgZHVhbC1saW5r
-IG1vZGUgKHdoaWNoIGlzIHRoZSBjYXNlIGZvciB0aGUgRDMgYW5kIEUzIFNvQ3Mgb25seSksCnJl
-Z2FyZGxlc3Mgb2Ygd2hldGhlciB0aGUgYm9hcmQgaXMgd2lyZWQgdXAgaW4gc2luZ2xlLWxpbmsg
-b3IgZHVhbC1saW5rCm1vZGUuIFNlbGVjdGlvbiBvZiB0aGUgbW9kZSBpcyBwZXJmb3JtZWQgYXQg
-cnVudGltZSBieSBsb29raW5nIGF0IHRoZQpyZXF1aXJlbWVudHMgb2YgdGhlIExWRFMgc2luaywg
-bm90IGJhc2VkIG9uIHRoZSBjb21wYW5pb24gcHJvcGVydHkgaW4KRFQuIFRoZSByZW5lc2FzLGNv
-bXBhbmlvbiBwcm9wZXJ0eSBpcyB0aHVzIFNvQy1zcGVjaWZpYywgYnV0IG5vdApib2FyZC1zcGVj
-aWZpYy4KCj4gSSBob3BlIHRoaXMgYmV0dGVyIGRlc2NyaWJlcyBteSB1bmRlcnN0YW5kaW5nLgoK
-LS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbA==
+From: Iuliana Prodan <iuliana.prodan@nxp.com>
+
+Add crypto node in device tree for CAAM support.
+
+Noteworthy is that on 7ulp the interrupt line is shared
+between the two job rings.
+
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+---
+
+I've just realized that this patch should be merged through the crypto tree,
+else bisectability could be affected due to cryptodev-2.6
+commit 385cfc84a5a8 ("crypto: caam - disable some clock checks for iMX7ULP")
+( https://patchwork.kernel.org/patch/10970017/ )
+which should come first.
+
+ arch/arm/boot/dts/imx7ulp.dtsi | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+index d6b711011cba..e20483714be5 100644
+--- a/arch/arm/boot/dts/imx7ulp.dtsi
++++ b/arch/arm/boot/dts/imx7ulp.dtsi
+@@ -100,6 +100,29 @@
+ 		reg = <0x40000000 0x800000>;
+ 		ranges;
+ 
++		crypto: crypto@40240000 {
++			compatible = "fsl,sec-v4.0";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x40240000 0x10000>;
++			ranges = <0 0x40240000 0x10000>;
++			clocks = <&pcc2 IMX7ULP_CLK_CAAM>,
++				 <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>;
++			clock-names = "aclk", "ipg";
++
++			sec_jr0: jr0@1000 {
++				compatible = "fsl,sec-v4.0-job-ring";
++				reg = <0x1000 0x1000>;
++				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			sec_jr1: jr1@2000 {
++				compatible = "fsl,sec-v4.0-job-ring";
++				reg = <0x2000 0x1000>;
++				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++
+ 		lpuart4: serial@402d0000 {
+ 			compatible = "fsl,imx7ulp-lpuart";
+ 			reg = <0x402d0000 0x1000>;
+-- 
+2.17.1
