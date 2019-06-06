@@ -1,80 +1,195 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx8mm: Move gic node into soc node
-Date: Thu, 6 Jun 2019 10:18:16 +0800
-Message-ID: <20190606021803.GW29853@dragon>
-References: <20190603015020.41410-1-Anson.Huang@nxp.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v3] USB: move usb debugfs directory creation to the usb
+ common core
+Date: Thu, 6 Jun 2019 10:32:48 +0800
+Message-ID: <1559788368.8487.109.camel@mhfsdcap03>
+References: <20190605092816.GA23758@kroah.com>
+         <20190605124440.GD17558@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190603015020.41410-1-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson.Huang@nxp.com
-Cc: mark.rutland@arm.com, aisheng.dong@nxp.com, ping.bai@nxp.com, devicetree@vger.kernel.org, viresh.kumar@linaro.org, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190605124440.GD17558@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 09:50:20AM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
+On Wed, 2019-06-05 at 14:44 +0200, Greg Kroah-Hartman wrote:
+> The USB gadget subsystem wants to use the USB debugfs root directory, so
+> move it to the common "core" USB code so that it is properly initialized
+> and removed as needed.
 > 
-> GIC is inside of SoC from architecture perspective, it should
-> be located inside of soc node in DT.
+> In order to properly do this, we need to load the common code before the
+> usb core code, when everything is linked into the kernel, so reorder the
+> link order of the code.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
-It doesn't apply to my imx/dt64 branch.  Please generate it against that
-branch for my for-next.
-
-Shawn
-
+> Also as the usb common code has the possibility of the led trigger logic
+> to be merged into it, handle the build option properly by only having
+> one module init/exit function and have the common code initialize the
+> led trigger if needed.
+> 
+> Reported-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > ---
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+> Chunfeng, can you try testing this again?
+
+Tested-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+
+Thank you, Greg, Felipe
+
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index dc99f45..429312e 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -169,15 +169,6 @@
->  		clock-output-names = "clk_ext4";
->  	};
+> v3: Fix __init and __exit error when building into the tree as reported
+>     by Chunfeng
+>     Fix Reported-by: line as reported
+> v2: handle led common code link error reported by kbuild
+>     handle subsys_initcall issue pointed out by Chunfeng
+> 
+>  drivers/usb/Makefile        |  3 +--
+>  drivers/usb/common/common.c | 21 +++++++++++++++++++++
+>  drivers/usb/common/common.h | 14 ++++++++++++++
+>  drivers/usb/common/led.c    |  9 +++------
+>  drivers/usb/core/usb.c      | 10 ++++------
+>  5 files changed, 43 insertions(+), 14 deletions(-)
+>  create mode 100644 drivers/usb/common/common.h
+> 
+> diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
+> index 7d1b8c82b208..ecc2de1ffaae 100644
+> --- a/drivers/usb/Makefile
+> +++ b/drivers/usb/Makefile
+> @@ -5,6 +5,7 @@
 >  
-> -	gic: interrupt-controller@38800000 {
-> -		compatible = "arm,gic-v3";
-> -		reg = <0x0 0x38800000 0 0x10000>, /* GIC Dist */
-> -		      <0x0 0x38880000 0 0xC0000>; /* GICR (RD_base + SGI_base) */
-> -		#interrupt-cells = <3>;
-> -		interrupt-controller;
-> -		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> -	};
+>  # Object files in subdirectories
+>  
+> +obj-$(CONFIG_USB_COMMON)	+= common/
+>  obj-$(CONFIG_USB)		+= core/
+>  obj-$(CONFIG_USB_SUPPORT)	+= phy/
+>  
+> @@ -60,8 +61,6 @@ obj-$(CONFIG_USB_CHIPIDEA)	+= chipidea/
+>  obj-$(CONFIG_USB_RENESAS_USBHS)	+= renesas_usbhs/
+>  obj-$(CONFIG_USB_GADGET)	+= gadget/
+>  
+> -obj-$(CONFIG_USB_COMMON)	+= common/
 > -
->  	psci {
->  		compatible = "arm,psci-1.0";
->  		method = "smc";
-> @@ -739,6 +730,15 @@
->  			dma-names = "rx-tx";
->  			status = "disabled";
->  		};
-> +
-> +		gic: interrupt-controller@38800000 {
-> +			compatible = "arm,gic-v3";
-> +			reg = <0x38800000 0x10000>, /* GIC Dist */
-> +			      <0x38880000 0xc0000>; /* GICR (RD_base + SGI_base) */
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
->  	};
+>  obj-$(CONFIG_USBIP_CORE)	+= usbip/
 >  
->  	usbphynop1: usbphynop1 {
-> -- 
-> 2.7.4
+>  obj-$(CONFIG_TYPEC)		+= typec/
+> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> index 18f5dcf58b0d..1433260d99b4 100644
+> --- a/drivers/usb/common/common.c
+> +++ b/drivers/usb/common/common.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/usb/of.h>
+>  #include <linux/usb/otg.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/debugfs.h>
+> +#include "common.h"
+>  
+>  static const char *const ep_type_names[] = {
+>  	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
+> @@ -291,4 +293,23 @@ struct device *usb_of_get_companion_dev(struct device *dev)
+>  EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
+>  #endif
+>  
+> +struct dentry *usb_debug_root;
+> +EXPORT_SYMBOL_GPL(usb_debug_root);
+> +
+> +static int __init usb_common_init(void)
+> +{
+> +	usb_debug_root = debugfs_create_dir("usb", NULL);
+> +	ledtrig_usb_init();
+> +	return 0;
+> +}
+> +
+> +static void __exit usb_common_exit(void)
+> +{
+> +	ledtrig_usb_exit();
+> +	debugfs_remove_recursive(usb_debug_root);
+> +}
+> +
+> +subsys_initcall(usb_common_init);
+> +module_exit(usb_common_exit);
+> +
+>  MODULE_LICENSE("GPL");
+> diff --git a/drivers/usb/common/common.h b/drivers/usb/common/common.h
+> new file mode 100644
+> index 000000000000..424a91316a4b
+> --- /dev/null
+> +++ b/drivers/usb/common/common.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef __LINUX_USB_COMMON_H
+> +#define __LINUX_USB_COMMON_H
+> +
+> +#if defined(CONFIG_USB_LED_TRIG)
+> +void ledtrig_usb_init(void);
+> +void ledtrig_usb_exit(void);
+> +#else
+> +static inline void ledtrig_usb_init(void) { }
+> +static inline void ledtrig_usb_exit(void) { }
+> +#endif
+> +
+> +#endif	/* __LINUX_USB_COMMON_H */
+> diff --git a/drivers/usb/common/led.c b/drivers/usb/common/led.c
+> index 7bd81166b77d..0865dd44a80a 100644
+> --- a/drivers/usb/common/led.c
+> +++ b/drivers/usb/common/led.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/init.h>
+>  #include <linux/leds.h>
+>  #include <linux/usb.h>
+> +#include "common.h"
+>  
+>  #define BLINK_DELAY 30
+>  
+> @@ -36,18 +37,14 @@ void usb_led_activity(enum usb_led_event ev)
+>  EXPORT_SYMBOL_GPL(usb_led_activity);
+>  
 > 
+> -static int __init ledtrig_usb_init(void)
+> +void __init ledtrig_usb_init(void)
+>  {
+>  	led_trigger_register_simple("usb-gadget", &ledtrig_usb_gadget);
+>  	led_trigger_register_simple("usb-host", &ledtrig_usb_host);
+> -	return 0;
+>  }
+>  
+> -static void __exit ledtrig_usb_exit(void)
+> +void __exit ledtrig_usb_exit(void)
+>  {
+>  	led_trigger_unregister_simple(ledtrig_usb_gadget);
+>  	led_trigger_unregister_simple(ledtrig_usb_host);
+>  }
+> -
+> -module_init(ledtrig_usb_init);
+> -module_exit(ledtrig_usb_exit);
+> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+> index 7fcb9f782931..5a0df527a8ca 100644
+> --- a/drivers/usb/core/usb.c
+> +++ b/drivers/usb/core/usb.c
+> @@ -1185,19 +1185,17 @@ static struct notifier_block usb_bus_nb = {
+>  	.notifier_call = usb_bus_notify,
+>  };
+>  
+> -struct dentry *usb_debug_root;
+> -EXPORT_SYMBOL_GPL(usb_debug_root);
+> +static struct dentry *usb_devices_root;
+>  
+>  static void usb_debugfs_init(void)
+>  {
+> -	usb_debug_root = debugfs_create_dir("usb", NULL);
+> -	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
+> -			    &usbfs_devices_fops);
+> +	usb_devices_root = debugfs_create_file("devices", 0444, usb_debug_root,
+> +					       NULL, &usbfs_devices_fops);
+>  }
+>  
+>  static void usb_debugfs_cleanup(void)
+>  {
+> -	debugfs_remove_recursive(usb_debug_root);
+> +	debugfs_remove(usb_devices_root);
+>  }
+>  
+>  /*
