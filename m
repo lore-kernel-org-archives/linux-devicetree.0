@@ -1,231 +1,167 @@
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v7 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Fri, 7 Jun 2019 13:16:02 +0300
-Message-ID: <20190607101602.GD10298@kuha.fi.intel.com>
-References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
- <1559729030-16390-6-git-send-email-pawell@cadence.com>
+Subject: Re: [PATCH v6 06/10] device connection: Add
+ fwnode_connection_find_match()
+Date: Fri, 7 Jun 2019 13:30:26 +0300
+Message-ID: <20190607103026.GE10298@kuha.fi.intel.com>
+References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1559115828-19146-7-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="bg08WKrSYDhXBjb5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1559729030-16390-6-git-send-email-pawell@cadence.com>
+In-Reply-To: <1559115828-19146-7-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>
-Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Yu Chen <chenyu56@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 11:03:49AM +0100, Pawel Laszczak wrote:
-> diff --git a/drivers/usb/cdns3/debugfs.c b/drivers/usb/cdns3/debugfs.c
-> new file mode 100644
-> index 000000000000..dfcbeb5e14f8
-> --- /dev/null
-> +++ b/drivers/usb/cdns3/debugfs.c
-> @@ -0,0 +1,173 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Cadence USBSS DRD Controller DebugFS filer.
-> + *
-> + * Copyright (C) 2018-2019 Cadence.
-> + *
-> + * Author: Pawel Laszczak <pawell@cadence.com>
-> + */
-> +
-> +#include <linux/types.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/seq_file.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include "core.h"
-> +#include "gadget.h"
-> +#include "drd.h"
 
-static const char *const cdns3_mode[] = {
-        [USB_DR_MODE_UNKNOWN]           = "unknown",
-        [USB_DR_MODE_OTG]               = "otg",
-        [USB_DR_MODE_HOST]              = "host",
-        [USB_DR_MODE_PERIPHERAL]        = "device",
-};
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +static int cdns3_mode_show(struct seq_file *s, void *unused)
-> +{
-> +	struct cdns3 *cdns = s->private;
-> +
-> +	switch (cdns->current_dr_mode) {
-> +	case USB_DR_MODE_HOST:
-> +		seq_puts(s, "host\n");
-> +		break;
-> +	case USB_DR_MODE_PERIPHERAL:
-> +		seq_puts(s, "device\n");
-> +		break;
-> +	case USB_DR_MODE_OTG:
-> +		seq_puts(s, "otg\n");
-> +		break;
-> +	default:
-> +		seq_puts(s, "UNKNOWN mode\n");
-> +	}
+Hi,
 
-All you should need here is:
+On Wed, May 29, 2019 at 03:43:44PM +0800, Chunfeng Yun wrote:
+> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> 
+> The fwnode_connection_find_match() function is exactly the
+> same as device_connection_find_match(), except it takes
+> struct fwnode_handle as parameter instead of struct device.
+> That allows locating device connections before the device
+> entries have been created.
+> 
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-        seq_puts(s, cdns3_mode[cdns->current_dr_mode]);
+This one is also missing your SoB.
 
-> +	return 0;
-> +}
-> +
-> +static int cdns3_mode_open(struct inode *inode, struct file *file)
-> +{
-> +	return single_open(file, cdns3_mode_show, inode->i_private);
-> +}
-> +
-> +static ssize_t cdns3_mode_write(struct file *file,
-> +				const char __user *ubuf,
-> +				size_t count, loff_t *ppos)
-> +{
-> +	struct seq_file	 *s = file->private_data;
-> +	struct cdns3 *cdns = s->private;
-> +	u32 mode = USB_DR_MODE_UNKNOWN;
-> +	char buf[32];
-> +	int ret = 0;
+There are now some other changes to the devcon API in Rafael's tree
+[1] that will conflict with this one. I'm attaching a modified version
+of the patch that is rebased on top of today's linux-next. If you use
+it, you should make a note (probable in the cover letter) that the
+series now depends on Rafael's tree.
 
-        int ret;
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
 
-> +	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
-> +		return -EFAULT;
-
-                return -EINVAL;
-
-> +
-> +	if (cdns->debug_disable) {
-> +		dev_err(cdns->dev,
-> +			"Mode can't be changed when disable is set\n");
-> +		return -EFAULT;
-
-                return -EPERM;
-
-> +	}
-> +
-> +	if (!strncmp(buf, "host", 4)) {
-> +		if (cdns->dr_mode == USB_DR_MODE_HOST ||
-> +		    cdns->dr_mode == USB_DR_MODE_OTG) {
-> +			mode = USB_DR_MODE_HOST;
-> +		}
-> +	}
-> +
-> +	if (!strncmp(buf, "device", 6))
-> +		if (cdns->dr_mode == USB_DR_MODE_PERIPHERAL ||
-> +		    cdns->dr_mode == USB_DR_MODE_OTG)
-> +			mode = USB_DR_MODE_PERIPHERAL;
-> +
-> +	if (!strncmp(buf, "otg", 3) && cdns->dr_mode == USB_DR_MODE_OTG)
-> +		mode = USB_DR_MODE_OTG;
-> +
-> +	if (mode == USB_DR_MODE_UNKNOWN) {
-> +		dev_err(cdns->dev, "Failed: incorrect mode setting\n");
-> +		return -EFAULT;
-> +	}
-
-To cover all those, you just need to:
-
-        ret = match_string(cdns3_mode, ARRAY_SIZE(cdns3_mode), buf));
-        if (ret < 0 || ret == USB_DR_MODE_UNKNOWN)
-                return -EINVAL;
-
-> +	if (cdns->current_dr_mode != mode) {
-> +		cdns->desired_dr_mode = mode;
-
-        if (cdns->current_dr_mode != ret)
-		cdns->desired_dr_mode = ret;
-
-> +		cdns3_role_stop(cdns);
-> +		ret = cdns3_drd_update_mode(cdns);
-> +		if (ret)
-> +			return ret;
-> +
-> +		queue_work(system_freezable_wq, &cdns->role_switch_wq);
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static const struct file_operations cdns3_mode_fops = {
-> +	.open			= cdns3_mode_open,
-> +	.write			= cdns3_mode_write,
-> +	.read			= seq_read,
-> +	.llseek			= seq_lseek,
-> +	.release		= single_release,
-> +};
-> +
-> +static int cdns3_disable_show(struct seq_file *s, void *unused)
-> +{
-> +	struct cdns3 *cdns = s->private;
-> +
-> +	if (!cdns->debug_disable)
-> +		seq_puts(s, "0\n");
-> +	else
-> +		seq_puts(s, "1\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t cdns3_disable_write(struct file *file,
-> +				   const char __user *ubuf,
-> +				   size_t count, loff_t *ppos)
-> +{
-> +	struct seq_file	 *s = file->private_data;
-> +	struct cdns3 *cdns = s->private;
-> +	bool disable;
-> +	char buf[16];
-> +
-> +	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
-> +		return -EFAULT;
-> +
-> +	if (kstrtobool(buf, &disable)) {
-> +		dev_err(cdns->dev, "wrong setting\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (disable != cdns->debug_disable) {
-> +		cdns->debug_disable = disable;
-> +		queue_work(system_freezable_wq, &cdns->role_switch_wq);
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static int cdns3_disable_open(struct inode *inode, struct file *file)
-> +{
-> +	return single_open(file, cdns3_disable_show, inode->i_private);
-> +}
-> +
-> +static const struct file_operations cdns3_disable_fops = {
-> +	.open			= cdns3_disable_open,
-> +	.write			= cdns3_disable_write,
-> +	.read			= seq_read,
-> +	.llseek			= seq_lseek,
-> +	.release		= single_release,
-> +};
-> +
-> +void cdns3_debugfs_init(struct cdns3 *cdns)
-> +{
-> +	struct dentry *root;
-> +
-> +	root = debugfs_create_dir(dev_name(cdns->dev), NULL);
-> +	cdns->root = root;
-> +	if (IS_ENABLED(CONFIG_USB_CDNS3_GADGET) &&
-> +	    IS_ENABLED(CONFIG_USB_CDNS3_HOST))
-> +		debugfs_create_file("mode", 0644, root, cdns,
-> +				    &cdns3_mode_fops);
-> +
-> +	debugfs_create_file("disable", 0644, root, cdns,
-> +			    &cdns3_disable_fops);
-> +}
-> +
-> +void cdns3_debugfs_exit(struct cdns3 *cdns)
-> +{
-> +	debugfs_remove_recursive(cdns->root);
-> +}
 
 thanks,
 
 -- 
 heikki
+
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="0001-device-connection-Add-fwnode_connection_find_match.patch"
+
+>From ea4ebbfd00e6ddc7bb7ad32e2f921bfc67f2ff8f Mon Sep 17 00:00:00 2001
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Date: Wed, 22 May 2019 17:06:54 +0300
+Subject: [PATCH] device connection: Add fwnode_connection_find_match()
+
+The fwnode_connection_find_match() function is exactly the
+same as device_connection_find_match(), except it takes
+struct fwnode_handle as parameter instead of struct device.
+That allows locating device connections before the device
+entries have been created.
+
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/base/devcon.c  | 43 ++++++++++++++++++++++++++++++------------
+ include/linux/device.h | 10 +++++++---
+ 2 files changed, 38 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
+index f7035fc12b92..5bf9537bd738 100644
+--- a/drivers/base/devcon.c
++++ b/drivers/base/devcon.c
+@@ -12,9 +12,6 @@
+ static DEFINE_MUTEX(devcon_lock);
+ static LIST_HEAD(devcon_list);
+ 
+-typedef void *(*devcon_match_fn_t)(struct device_connection *con, int ep,
+-				   void *data);
+-
+ static void *
+ fwnode_graph_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
+ 			  void *data, devcon_match_fn_t match)
+@@ -60,6 +57,34 @@ fwnode_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
+ 	return NULL;
+ }
+ 
++/**
++ * fwnode_connection_find_match - Find connection from a device node
++ * @fwnode: Device node with the connection
++ * @con_id: Identifier for the connection
++ * @data: Data for the match function
++ * @match: Function to check and convert the connection description
++ *
++ * Find a connection with unique identifier @con_id between @fwnode and another
++ * device node. @match will be used to convert the connection description to
++ * data the caller is expecting to be returned.
++ */
++void *fwnode_connection_find_match(struct fwnode_handle *fwnode,
++				   const char *con_id, void *data,
++				   devcon_match_fn_t match)
++{
++	void *ret;
++
++	if (!fwnode || !match)
++		return NULL;
++
++	ret = fwnode_graph_devcon_match(fwnode, con_id, data, match);
++	if (ret)
++		return ret;
++
++	return fwnode_devcon_match(fwnode, con_id, data, match);
++}
++EXPORT_SYMBOL_GPL(fwnode_connection_find_match);
++
+ /**
+  * device_connection_find_match - Find physical connection to a device
+  * @dev: Device with the connection
+@@ -83,15 +108,9 @@ void *device_connection_find_match(struct device *dev, const char *con_id,
+ 	if (!match)
+ 		return NULL;
+ 
+-	if (fwnode) {
+-		ret = fwnode_graph_devcon_match(fwnode, con_id, data, match);
+-		if (ret)
+-			return ret;
+-
+-		ret = fwnode_devcon_match(fwnode, con_id, data, match);
+-		if (ret)
+-			return ret;
+-	}
++	ret = fwnode_connection_find_match(fwnode, con_id, data, match);
++	if (ret)
++		return ret;
+ 
+ 	mutex_lock(&devcon_lock);
+ 
+diff --git a/include/linux/device.h b/include/linux/device.h
+index e0649f6adf2e..fd06d75da206 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -773,10 +773,14 @@ struct device_connection {
+ 	struct list_head	list;
+ };
+ 
++typedef void *(*devcon_match_fn_t)(struct device_connection *con, int ep,
++				   void *data);
++
++void *fwnode_connection_find_match(struct fwnode_handle *fwnode,
++				   const char *con_id, void *data,
++				   devcon_match_fn_t match);
+ void *device_connection_find_match(struct device *dev, const char *con_id,
+-				void *data,
+-				void *(*match)(struct device_connection *con,
+-					       int ep, void *data));
++				   void *data, devcon_match_fn_t match);
+ 
+ struct device *device_connection_find(struct device *dev, const char *con_id);
+ 
+-- 
+2.20.1
+
+
+--bg08WKrSYDhXBjb5--
