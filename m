@@ -1,111 +1,138 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: dt-bindings: fix some broken links from txt->yaml conversion" to the asoc tree
-Date: Fri,  7 Jun 2019 20:07:07 +0100 (BST)
-Message-ID: <20190607190707.50C1E440046@finisterre.sirena.org.uk>
-References: <effeafed3023d8dc5f2440c8d5637ea31c02a533.1559933665.git.mchehab+samsung@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <effeafed3023d8dc5f2440c8d5637ea31c02a533.1559933665.git.mchehab+samsung@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>, alsa-devel@alsa-project.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>, devicetree@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>, Jonathan Corbet <corbet@lwn.net>, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Olivier Moysan <olivier.moysan@st.com>, Rob Herring <robh+dt@kernel.org>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [RFC PATCH 0/2] Support for TI Page-based Address Translator
+Date: Fri, 7 Jun 2019 15:35:21 -0400
+Message-ID: <20190607193523.25700-1-afd@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Tero Kristo <t-kristo@ti.com>, William Mills <wmills@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sumit Semwal <sumit.semwal@linaro.org>, John Stultz <john.stultz@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, "Andrew F . Davis" <afd@ti.com>, linaro-mm-sig@lists.linaro.org, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   ASoC: dt-bindings: fix some broken links from txt->yaml conversion
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 6c0215f5d9f2a1fa5cab2ca320a41d9f19cfa80c Mon Sep 17 00:00:00 2001
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Date: Fri, 7 Jun 2019 15:54:33 -0300
-Subject: [PATCH] ASoC: dt-bindings: fix some broken links from txt->yaml
- conversion
-
-Some new files got converted to yaml, but references weren't
-updated accordingly.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/media/st,stm32-dcmi.txt | 2 +-
- Documentation/devicetree/bindings/sound/st,stm32-i2s.txt  | 2 +-
- Documentation/devicetree/bindings/sound/st,stm32-sai.txt  | 2 +-
- MAINTAINERS                                               | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-index 249790a93017..3122ded82eb4 100644
---- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-+++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-@@ -11,7 +11,7 @@ Required properties:
- - clock-names: must contain "mclk", which is the DCMI peripherial clock
- - pinctrl: the pincontrol settings to configure muxing properly
-            for pins that connect to DCMI device.
--           See Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt.
-+           See Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml.
- - dmas: phandle to DMA controller node,
-         see Documentation/devicetree/bindings/dma/stm32-dma.txt
- - dma-names: must contain "tx", which is the transmit channel from DCMI to DMA
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
-index 58c341300552..cbf24bcd1b8d 100644
---- a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
-@@ -18,7 +18,7 @@ Required properties:
-     See Documentation/devicetree/bindings/dma/stm32-dma.txt.
-   - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
-   - pinctrl-names: should contain only value "default"
--  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-+  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
- 
- Optional properties:
-   - resets: Reference to a reset controller asserting the reset controller
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-index 3f4467ff0aa2..944743dd9212 100644
---- a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-@@ -41,7 +41,7 @@ SAI subnodes required properties:
- 	"tx": if sai sub-block is configured as playback DAI
- 	"rx": if sai sub-block is configured as capture DAI
-   - pinctrl-names: should contain only value "default"
--  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-+  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
- 
- SAI subnodes Optional properties:
-   - st,sync: specify synchronization mode.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5cfbea4ce575..b3d686fba562 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1288,7 +1288,7 @@ ARM PRIMECELL SSP PL022 SPI DRIVER
- M:	Linus Walleij <linus.walleij@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
--F:	Documentation/devicetree/bindings/spi/spi_pl022.txt
-+F:	Documentation/devicetree/bindings/spi/spi-pl022.yaml
- F:	drivers/spi/spi-pl022.c
- 
- ARM PRIMECELL UART PL010 AND PL011 DRIVERS
--- 
-2.20.1
+SGVsbG8gYWxsLAoKU28gSSd2ZSBnb3QgYSBuZXcgSVAgb24gb3VyIG5ldyBTb0MgSSdtIGxvb2tp
+bmcgdG8gbWFrZSB1c2Ugb2YgYW5kIHdvdWxkCmxpa2Ugc29tZSBoZWxwIGZpZ3VyaW5nIG91dCB3
+aGF0IGZyYW1ld29yayBiZXN0IG1hdGNoZXMgaXRzIGZ1bmN0aW9uLiBUaGUKSVAgaXMgY2FsbGVk
+IGEgIlBhZ2UtYmFzZWQgQWRkcmVzcyBUcmFuc2xhdG9yIiBvciBQQVQuIEEgUEFUIGluc3RhbmNl
+Cih0aGVyZSBhcmUgNSBvZiB0aGVzZSB0aGluZ3Mgb24gb3VyIEo3MjFlIGRldmljZVswXSkgaXMg
+YmFzaWNhbGx5IGEKcmVhbGx5IHNpbXBsZSBJT01NVSBzaXR0aW5nIG9uIHRoZSBpbnRlcmNvbm5l
+Y3QgYmV0d2VlbiB0aGUgZGV2aWNlIGJ1cwphbmQgd2hhdCBpcyBlZmZlY3RpdmVseSBvdXIgbm9y
+dGhicmlkZ2UgY2FsbGVkCk1TTUMgKERSQU0vU1JBTS9MMy1DYWNoZS9Db2hlcmVuY3kgY29udHJv
+bGxlcikuCgpTaW1wbGlmaWVkIGl0IGxvb2tzIGFib3V0IGxpa2UgdGhpczoKCiAgICAgICAgIENQ
+VXMKICAgICAgICAgIHwKRFJBTSAtLS0gTVNNQyAtLS0gU1JBTS9MMwogICAgICAgICAgfAogICAg
+ICAgIE5BVlNTIC0gKFBBVHMpCiAgICAgICAgICB8CiAgLS0tIERldmljZSBCdXMgLS0tLS0tLS0t
+CiB8ICAgICAgfCAgICAgIHwgICAgICAgICAgfApEZXZpY2UgIERldmljZSAgRGV2aWNlICAgZXRj
+Li4KCkVhY2ggUEFUIGhhcyBhIHNldCBhIHdpbmRvdyBpbiBoaWdoIG1lbW9yeSAoYWJvdXQgMHg0
+OF8wMDAwXzAwMDAgYXJlYSkKZm9yIHdoaWNoIGFueSB0cmFuc2FjdGlvbiB3aXRoIGFuIGFkZHJl
+c3MgdGFyZ2V0aW5nIGl0cyB3aW5kb3cgd2lsbCBiZQpyb3V0ZWQgaW50byB0aGF0IFBBVC4gVGhl
+IFBBVCB0aGVuIGRvZXMgYSBzaW1wbGUgY2FsY3VsYXRpb24gYmFzZWQgb24KdGhlIGhvdyBmYXIg
+aW50byB0aGUgd2luZG93IHRoZSBhZGRyZXNzIGlzIGFuZCB0aGUgY3VycmVudCBwYWdlIHNpemUs
+CmRvZXMgYSBsb29rdXAgdG8gYW4gaW50ZXJuYWxseSBoZWxkIHRhYmxlIG9mIHRyYW5zbGF0aW9u
+cywgdGhlbiBzZW5kcyB0aGUKdHJhbnNhY3Rpb24gYmFjayBvdXQgb24gdGhlIGludGVyY29ubmVj
+dCB3aXRoIGEgbmV3IGFkZHJlc3MuIFVzdWFsbHkgdGhpcwphZGRyZXNzIHNob3VsZCBiZSB0b3dh
+cmRzIHNvbWV3aGVyZSBpbiBEUkFNLCBidXQgY2FuIGJlIHNvbWUgb3RoZXIgZGV2aWNlCm9yIGV2
+ZW4gYmFjayBpbnRvIFBBVCAoSSdtIG5vdCBzdXJlIHRoZXJlIGlzIGEgdmFsaWQgdXNlLWNhc2Ug
+Zm9yIHRoaXMKYnV0IGp1c3QgYSBwb2ludCBvZiBpbnRlcmVzdCkuCgpNeSBndXQgcmVhY3Rpb24g
+aXMgdGhhdCB0aGlzIGlzIGFuIElPTU1VIHdoaWNoIGJlbG9uZ3MgaW4gdGhlIElPTU1VCnN1YnN5
+c3RlbS4gQnV0IHRoZXJlIGFyZSBhIGNvdXBsZSBvZGRpdGllcyB0aGF0IG1ha2UgbWUgbGVzcyBz
+dXJlIGl0IGlzCnJlYWxseSBzdWl0YWJsZSBmb3IgdGhlIElPTU1VIGZyYW1ld29yay4gRmlyc3Qg
+aXQgZG9lc24ndCBzaXQgaW4gZnJvbnQgb2YKYW55IGRldmljZXMsIGl0IHNpdHMgaW4gZnJvbnQg
+b2YgKmFsbCogZGV2aWNlcywgdGhpcyBtZWFucyB3ZSB3b3VsZCBoYXZlCmV2ZXJ5IGRldmljZSBj
+bGFpbSBpdCBhcyBhbiBJT01NVSBwYXJlbnQsIGV2ZW4gdGhvdWdoIG1hbnkgZGV2aWNlcyBhbHNv
+CmhhdmUgYSB0cmFkaXRpb25hbCBJT01NVSBjb25uZWN0ZWQuIFNlY29uZCwgdGhlcmUgaXMgb25s
+eSBhIGxpbWl0ZWQKd2luZG93IG9mIGFkZHJlc3Mgc3BhY2UgcGVyIFBBVCwgdGhpcyBtZWFucyB3
+ZSB3aWxsIGdldCBmcmFnbWVudGF0aW9uIGFuZAphbGxvY2F0aW9uIGZhaWx1cmVzIG9uIG9jY2Fz
+aW9uLCBpbiB0aGlzIHdheSBpdCBsb29rcyB0byBtZSBtb3JlIGxpa2UgQUdQCkdBUlQuIFRoaXJk
+LCB0aGUgd2luZG93IGlzIGluIGhpZ2gtbWVtb3J5LCBzbyB1bmxpa2Ugc29tZSBJT01NVSBkZXZp
+Y2VzCndoaWNoIGNhbiBiZSB1c2VkIHRvIGFsbG93IERNQSB0byBoaWdoLW1lbSBmcm9tIGxvdy1t
+ZW0gb25seSBkZXZpY2VzLCBQQVQKY2FuJ3QgYmUgdXNlZCBmb3IgdGhhdC4gTGFzdGx5IGl0IGRv
+ZXNuJ3QgcHJvdmlkZSBhbnkgaXNvbGF0aW9uLCBpZiB0aGUKYWNjZXNzIGRvZXMgbm90IHRhcmdl
+dCB0aGUgUEFUIHdpbmRvdyBpdCBpcyBub3QgdXNlZCAodGhhdCBpcyBub3QgdG8gc2F5CndlIGRv
+bid0IGhhdmUgaXNvbGF0aW9uLCBqdXN0IHRoYXQgaXQgaXMgdGFrZW4gY2FyZSBvZiBieSBvdGhl
+ciBwYXJ0cyBvZgp0aGUgaW50ZXJjb25uZWN0KS4KClRoaXMgbWVhbnMsIHRvIG1lLCB0aGF0IFBB
+VCBoYXMgb25lIG1haW4gcHVycG9zZTogbWFraW5nCnBoeXNpY2FsbHktY29udGlndW91cyB2aWV3
+cyBvZiBzY2F0dGVyZWQgcGFnZXMgaW4gc3lzdGVtIG1lbW9yeSBmb3IgRE1BLgpCdXQgaXQgZG9l
+cyB0aGF0IHJlYWxseSB3ZWxsLCB0aGUgd2hvbGUgdHJhbnNsYXRpb24gdGFibGUgaXMgaGVsZCBp
+biBhClBBVC1pbnRlcm5hbCBTUkFNIGdpdmluZyAxIGJ1cyBjeWNsZSBsYXRlbmN5IGFuZCBhdCBm
+dWxsIGJ1cyBiYW5kd2lkdGguCgpTbyB3aGF0IGFyZSBteSBvcHRpb25zIGhlcmUsIGlzIElPTU1V
+IHRoZSByaWdodCB3YXkgdG8gZ28gb3Igbm90PwoKTG9va2luZyBhcm91bmQgdGhlIGtlcm5lbCBJ
+IGFsc28gc2VlIHRoZSBjaGFyIGRldiBBUlAvR0FSVCBpbnRlcmZhY2UKd2hpY2ggbG9va3MgbGlr
+ZSBhIGdvb2QgZml0LCBidXQgYWxzbyBsb29rcyBxdWl0ZSBkYXRlZCBhbmQgbXkgZ3Vlc3MKZGVw
+cmVjYXRlZCBhdCB0aGlzIHBvaW50LiBNb3ZpbmcgcmlnaHQgYWxvbmcuLgoKQW5vdGhlciB0aGlu
+ZyBJIHNhdyBpcyB3ZSBoYXZlIHRoZSBzdXBwb3J0IHVwc3RyZWFtIG9mIHRoZSBETU0gZGV2aWNl
+WzFdCmF2YWlsYWJsZSBpbiBzb21lIE9NQVB4L0FNNTd4IFNvQ3MuIEknbSBhIGxpdHRsZSBtb3Jl
+IGZhbWlsaWFyIHdpdGggdGhpcwpkZXZpY2UuIFRoZSBETU0gaXMgYSBidW5kbGUgb2YgSVBzIGFu
+ZCBpbiBmYWN0IG9uZSBvZiB0aGVtIGlzIGNhbGxlZAoiUEFUIiBhbmQgaXQgZXZlbiBkb2VzIGJh
+c2ljYWxseSB0aGUgc2FtZSB0aGluZyB0aGlzIGluY2FybmF0aW9uIG9mICJQQVQiCmRvZXMuIEl0
+J3MgdXBzdHJlYW0gaW50ZWdyYXRpb24gZGVzaWduIGlzIGEgYml0IHF1ZXN0aW9uYWJsZQp1bmZv
+cnR1bmF0ZWx5LCB0aGUgRE1NIHN1cHBvcnQgd2FzIGludGVncmF0ZWQgaW50byB0aGUgT01BUERS
+TSBkaXNwbGF5CmRyaXZlciwgd2hpY2ggZG9lcyBtYWtlIHNvbWUgc2Vuc2UgdGhlbiBnaXZlbiBp
+dHMgc3VwcG9ydCBmb3Igcm90YXRpb24KKHVzaW5nIFRJTEVSIElQIGNvbnRhaW5lZCBpbiBETU0p
+LiBUaGUgaXNzdWUgd2l0aCB0aGlzIHdhcyB0aGF0IHRoZQpETU0vVElMRVIvUEFUIElQIHdhcyBu
+b3QgcGFydCBvZiB0aGUgb3VyIGRpc3BsYXkgSVAsIGJ1dCBpbnN0ZWFkIG91dCBhdAp0aGUgZW5k
+IG9mIHRoZSBzaGFyZWQgZGV2aWNlIGJ1cywgaW5zaWRlIHRoZSBleHRlcm5hbCBtZW1vcnkgY29u
+dHJvbGxlci4KTGlrZSB0aGlzIG5ldyBQQVQgdGhpcyBtZWFudCB0aGF0IGFueSBJUCB0aGF0IGNv
+dWxkIG1ha2UgdXNlIG9mIGl0LCBidXQKb25seSB0aGUgZGlzcGxheSBmcmFtZXdvcmsgY291bGQg
+YWN0dWFsbHkgcHJvdmlkZSBidWZmZXJzIGJhY2tlZCBieSBpdC4KVGhpcyBtZWFudCwgZm9yIGlu
+c3RhbmNlLCBpZiB3ZSB3YW50ZWQgdG8gZGVjb2RlIHNvbWUgdmlkZW8gYnVmZmVyIHVzaW5nCm91
+ciB2aWRlbyBkZWNvZGVyIHdlIHdvdWxkIGhhdmUgdG8gYWxsb2NhdGUgZnJvbSBEUk0gZnJhbWV3
+b3JrIHRoZW4gcGFzcwp0aGF0IG92ZXIgdG8gdGhlIFY0TDIgc3lzdGVtLiBUaGlzIGRvZXNuJ3Qg
+bWFrZSBtdWNoIHNlbnNlIGFuZCByZXF1aXJlZAp0aGUgdXNlci1zcGFjZSB0byBrbm93IGFib3V0
+IHRoaXMgb2RkIHNpdHVhdGlvbiBhbmQgYWxsb2NhdGUgZnJvbSB0aGUKcmlnaHQgc3BvdCBvciBl
+bHNlIGhhdmUgdG8gdXNlIHVwIHZhbHVhYmxlIENNQSBzcGFjZSBvciB3YXN0ZSBtZW1vcnkgd2l0
+aApkZWRpY2F0ZWQgY2FydmVvdXRzLgoKQW5vdGhlciBpZGVhIHdvdWxkIGJlIHRvIGhhdmUgdGhp
+cyBhcyBhIHNwZWNpYWwgY2VudHJhbCBhbGxvY2F0b3IKKGV4cG9zZWQgdGhyb3VnaCBETUEtQlVG
+IGhlYXBzWzJdIG9yIElPTikgdGhhdCB3b3VsZCBnaXZlIG91dCBub3JtYWwKc3lzdGVtIG1lbW9y
+eSBhcyBhIERNQS1CVUYgYnV0IHJlbWFwIGl0IHdpdGggUEFUIGlmIGEgZGV2aWNlIHRoYXQgb25s
+eQpzdXBwb3J0cyBjb250aWd1b3VzIG1lbW9yeSB0cmllcyB0byBhdHRhY2gvbWFwIHRoYXQgRE1B
+LUJVRi4KCk9uZSBsYXN0IG9wdGlvbiB3b3VsZCBiZSB0byBhbGxvdyB1c2VyLXNwYWNlIHRvIGNo
+b29zZSB0byBtYWtlIHRoZSBidWZmZXIKY29udGlndW91cyB3aGVuIGl0IG5lZWRzLiBUaGF0J3Mg
+d2hhdCB0aGUgZHJpdmVyIGluIHRoaXMgc2VyaWVzIGFsbG93cy4KV2UgZXhwb3NlIGEgcmVtYXBw
+aW5nIGRldmljZSwgdXNlci1zcGFjZSBwYXNzZXMgaXQgYSBub24tY29udGlndW91cwpETUEtQlVG
+IGhhbmRsZSBhbmQgaXQgcGFzc2VzIGEgY29udGlndW91cyBvbmUgYmFjay4gU2ltcGxlIGFzIHRo
+YXQuCgpTbyBob3cgZG8gd2UgdXNlIHRoaXMsIGxldHMgdGFrZSBBbmRyb2lkIGZvciBleGFtcGxl
+LCB3ZSBkb24ndCBrbm93IGF0CmFsbG9jYXRpb24gdGltZSBpZiBhIHJlbmRlcmluZyBidWZmZXIg
+d2lsbCBlbmQgdXAgZ29pbmcgYmFjayBpbnRvIHRoZSBHUFUKZm9yIGZ1cnRoZXIgcHJvY2Vzc2lu
+Zywgb3IgaWYgaXQgd2lsbCBiZSBjb25zdW1lZCBkaXJlY3RseSBieSB0aGUgZGlzcGxheS4KVGhp
+cyBpcyBhIHByb2JsZW0gZm9yIHVzIGFzIG91ciBHUFUgY2FuIHdvcmsgd2l0aCBub24tY29udGln
+dW91cyBidWZmZXJzCmJ1dCBvdXIgZGlzcGxheSBjYW5ub3QsIHNvIGFueSBidWZmZXJzIHRoYXQg
+Y291bGQgcG9zc2libHkgZ28gdG8gdGhlCmRpc3BsYXkgYXQgc29tZSBwb2ludCBjdXJyZW50bHkg
+bmVlZHMgdG8gYmUgYWxsb2NhdGVkIGFzIGNvbnRpZ3VvdXMgZnJvbQp0aGUgc3RhcnQsIHRoaXMg
+bGVhZHMgdG8gYSBsb3Qgb2YgdW5uZWVkZWQgdXNlIG9mIGNhcnZlb3V0L0NNQSBtZW1vcnkuCldp
+dGggdGhpcyBkcml2ZXIgb24gdGhlIG90aGVyIGhhbmQsIHdlIGFsbG9jYXRlIHJlZ3VsYXIgbm9u
+LWNvbnRpZ3VvdXMKc3lzdGVtIG1lbW9yeSAoYWdhaW4gdXNpbmcgRE1BLUJVRiBoZWFwcywgYnV0
+IElPTiBjb3VsZCB3b3JrIGhlcmUgdG9vKSwKdGhlbiBvbmx5IHdoZW4gYSBidWZmZXIgaXMgYWJv
+dXQgdG8gYmUgc2VudCB0byB0aGUgZGlzcGxheSB3ZSBwYXNzIHRoZQpoYW5kbGUgdG8gdGhpcyBE
+TUEtQlVGIHRvIG91ciBkcml2ZXIgaGVyZSBhbmQgdGFrZSB0aGUgaGFuZGxlIGl0IGdpdmVzCmJh
+Y2sgYW5kIHBhc3MgdGhhdCB0byB0aGUgZGlzcGxheSBpbnN0ZWFkLgoKQXMgc2FpZCwgaXQgaXMg
+cHJvYmFibHkgbm90IHRoZSBpZGVhbCBzb2x1dGlvbiBidXQgaXQgZG9lcyB3b3JrIGFuZCB3YXMK
+dXNlZCBmb3Igc29tZSBlYXJseSB0ZXN0aW5nIG9mIHRoZSBJUC4KCldlbGwsIHNvcnJ5IGZvciB0
+aGUgd2FsbCBvZiB0ZXh0LgpBbnkgYW5kIGFsbCBzdWdnZXN0aW9ucyB2ZXJ5IHdlbGNvbWUgYW5k
+IGFwcHJlY2lhdGVkLgoKVGhhbmtzLApBbmRyZXcKClswXSBodHRwOi8vd3d3LnRpLmNvbS9saXQv
+cGRmL3NwcnVpbDEKWzFdIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJu
+ZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29t
+YXBfZG1tX3RpbGVyLmMKWzJdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzYvNi8xMjExCgpB
+bmRyZXcgRi4gRGF2aXMgKDIpOgogIGR0LWJpbmRpbmdzOiBzb2M6IHRpOiBBZGQgVEkgUEFUIGJp
+bmRpbmdzCiAgc29jOiB0aTogQWRkIFN1cHBvcnQgZm9yIHRoZSBUSSBQYWdlLWJhc2VkIEFkZHJl
+c3MgVHJhbnNsYXRvciAoUEFUKQoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2MvdGkscGF0
+LnR4dCAgICAgICB8ICAzNCArKwogZHJpdmVycy9zb2MvdGkvS2NvbmZpZyAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgICA5ICsKIGRyaXZlcnMvc29jL3RpL01ha2VmaWxlICAgICAgICAgICAgICAg
+ICAgICAgICB8ICAgMSArCiBkcml2ZXJzL3NvYy90aS90aS1wYXQuYyAgICAgICAgICAgICAgICAg
+ICAgICAgfCA1NjkgKysrKysrKysrKysrKysrKysrCiBpbmNsdWRlL3VhcGkvbGludXgvdGktcGF0
+LmggICAgICAgICAgICAgICAgICAgfCAgNDQgKysKIDUgZmlsZXMgY2hhbmdlZCwgNjU3IGluc2Vy
+dGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbWlzYy90aSxwYXQudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvdGkv
+dGktcGF0LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL3VhcGkvbGludXgvdGktcGF0LmgK
+Ci0tIAoyLjE3LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bA==
