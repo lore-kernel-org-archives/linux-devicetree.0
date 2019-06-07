@@ -1,75 +1,54 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345
- bridge on Teres-I
-Date: Fri, 7 Jun 2019 11:40:30 +0200
-Message-ID: <20190607094030.GA12373@lst.de>
-References: <20190604122150.29D6468B05@newverein.lst.de> <20190604122308.98D4868B20@newverein.lst.de> <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com> <20190605101317.GA9345@lst.de> <20190605120237.ekmytfxcwbjaqy3x@flea> <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at> <20190607062802.m5wslx3imiqooq5a@flea>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH repost 0/5] Repost CAN and CANFD dt-bindings
+Date: Fri, 7 Jun 2019 10:02:13 +0000
+Message-ID: <TY1PR01MB1770D2AAF2ED748575CA4CBFC0100@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1557429622-31676-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190607062802.m5wslx3imiqooq5a@flea>
+In-Reply-To: <1557429622-31676-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Harald Geyer <harald@ccbib.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "David S. Miller" <davem@davemloft.net>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 08:28:02AM +0200, Maxime Ripard wrote:
-> On Thu, Jun 06, 2019 at 03:59:27PM +0200, Harald Geyer wrote:
-> >
-> > If think valid compatible properties would be:
-> > compatible = "innolux,n116bge", "simple-panel";
-> > compatible = "edp-connector", "simple-panel";
-> 
-> A connector isn't a panel.
-> 
-> > compatible = "innolux,n116bge", "edp-connector", "simple-panel";
-> 
-> And the innolux,n116bge is certainly not a connector either.
-> 
-> > compatible = "edp-connector", "innolux,n116bge", "simple-panel";
-> >
-> > I can't make up my mind which one I prefere. However neither of these
-> > variants requires actually implmenting an edp-connector driver.
-> 
-> No-one asked to do an edp-connector driver. You should use it in your
-> DT, but if you want to have some code in your driver that parses the
-> DT directly, I'm totally fine with that.
+Dear All,
 
-I must admit I fail to understand what that extra node would be good for.
-Logically, the eDP far side is connected to the well-known n116bge.
-Inside the laptop case it might as well be a flat ribbon cable or
-soldered directly.
-In good intention, that's all I wanted to express in the DT. I don't
-know whether the relevant mechanical dimensions of the panel and the
-connector are standardised, so whether one could in theory assemble it
-with a different panel than the one it came with.
+These patches have been around for a very long time now, is anybody willing=
+ to take them?
 
-OTOH, as I checked during the discussion with anarsoul, the panel's
-supply voltage is permanently connected to the main 3.3V rail.
-We already agreed that the eDP output port must not neccessarily be
-specified, this setup is a good example why: because the panel is
-always powered, the anx6345 can always pull valid EDID data from it
-so at this stage there's no need for any OS driver to reach beyond
-the bridge. IIRC even the backlight got switched off for the blank
-screen without.
+Cheers,
+Fab
 
-All I wanted to say is that "there's usually an n116bge behind it";
-but this is mostly redundant.
-
-So, shall we just drop the output port specification (along with the
-panel node) in order to get one step further?
-
-> I guess you should describe why do you think it's "clear", because I'm
-> not sure this is obvious for everyone here. eDP allows to discover
-> which device is on the other side and its supported timings, just like
-> HDMI for example (or regular DP, for that matter). Would you think
-> it's clearly preferable to ship a DT with the DP/HDMI monitor
-> connected on the other side exposed as a panel as well?
-
-Well, as I wrote: "in good intention". That's the panel that comes with
-the kit but it is very well detected automatically, just like you describe.
-
-So, just leave it out?
-
-	Torsten
+> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Sent: 09 May 2019 20:20
+> Subject: [PATCH repost 0/5] Repost CAN and CANFD dt-bindings
+>=20
+> Dear All,
+>=20
+> I am reposting some CAN and CANFD related dt-bindings changes for
+> Renesas' R-Car and RZ/G devices that have been originally sent
+> end of last year and beginning of this year.
+>=20
+> Thanks,
+> Fab
+>=20
+> Fabrizio Castro (3):
+>   dt-bindings: can: rcar_can: Fix RZ/G2 CAN clocks
+>   dt-bindings: can: rcar_can: Add r8a774c0 support
+>   dt-bindings: can: rcar_canfd: document r8a774c0 support
+>=20
+> Marek Vasut (2):
+>   dt-bindings: can: rcar_canfd: document r8a77965 support
+>   dt-bindings: can: rcar_canfd: document r8a77990 support
+>=20
+>  Documentation/devicetree/bindings/net/can/rcar_can.txt   | 13 ++++------=
+---
+>  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 16 ++++++++++=
+------
+>  2 files changed, 14 insertions(+), 15 deletions(-)
+>=20
+> --
+> 2.7.4
