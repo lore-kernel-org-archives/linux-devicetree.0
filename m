@@ -1,192 +1,123 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v9 00/13] Exynos5 Dynamic Memory Controller driver
-Date: Fri,  7 Jun 2019 16:34:54 +0200
-Message-ID: <20190607143507.30286-1-l.luba@partner.samsung.com>
-References: <CGME20190607143523eucas1p1015a614a64ed22f4c65ace8b795dd6d0@eucas1p1.samsung.com>
-Content-Type: text/plain; charset="utf-8"
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: [PATCH V9 00/15] Add Tegra194 PCIe support
+Date: Fri, 7 Jun 2019 20:16:25 +0530
+Message-ID: <20190607144640.13427-1-vidyas@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com, Lukasz Luba <l.luba@partner.samsung.com>
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
+Cc: digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+to PCIe controller
+This patch series
+- Adds support for P2U PHY driver
+- Adds support for PCIe host controller
+- Adds device tree nodes each PCIe controllers
+- Enables nodes applicable to p2972-0000 platform
+- Adds helper APIs in Designware core driver to get capability regs offset
+- Adds defines for new feature registers of PCIe spec revision 4
+- Makes changes in DesignWare core driver to get Tegra194 PCIe working
 
-This is v9 which introduces minor changes. The patch set adds support of
-Dynamic Memory Controller for Exynos5422 SoC.
-The driver supports Dynamic Voltage and Frequency Scaling
-for the DMC and DRAM. It also provides needed timings for different
-speed operations of the DRAM memory.
-There is also new generic code in of_memory and headers which allows to parse
-LPDDR3 memories defined in device-tree.
+Testing done on P2972-0000 platform
+- Able to get PCIe link up with on-board Marvel eSATA controller
+- Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+- Able to do data transfers with both SATA drives and NVMe cards
 
-The patch set has been cut to land mainline quickly and the dependency
-on PPMU patches are removed (which was in v7). It implies that the debugging
-code which was presenting details about traffic on the AXI slots has been
-removed. It will be added when this driver got mainline and the PPMU code
-got mainline. Also DT dependency of PPMU header has been removed.
+Note
+- Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+  It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+  disabled in this patch series. A future patch series would enable this.
+- This series is based on top of the following series
+  Jisheng's patches to add support to .remove() in Designware sub-system
+  https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+  (Jisheng's patches are now accepted and applied for v5.2)
+  My patches made on top of Jisheng's patches to export various symbols
+  https://patchwork.kernel.org/project/linux-pci/list/?series=101259
 
-changes:
-v9:
-- disable bpll instead of spll clocks in the remove path
-- safely disable 'bypass' clocks when error was captured
-- removed unused clocks and related code
-- changed code to make 'if' statement clean as Krzysztof sugested
-- removed cloks from dt-binding and DT
-- minor fix for clocks to read the state for DIV with NOCACHE
-- removed spaces in #define and put tabs
-- removed duplicated entry for OPPs phandle in dt-binding
-- collected ACKs
-- based on v5.2-rc3 tag
-v8 [3]:
-- removed chipID dependency, as Krzysztof suggested and drop the whole checking
-  code in the driver (which also Marek suggested offline) (it might be needed
-  in future when other configuration would be supported). It also avoids
-  a misunderstandings and simplifies the documentation.
-- reordered clock IDs in 1st patch to keep the old IDs and add the new clocks
-  at the end as Chanwoo suggested (added also his ACK there)
-- in patch 6 (dt-bindings) added explicit clocks and names in the right order
-  needed for the driver
-- added proper address for the memory node in the documentation and in the DT
-  (lpddr3-timings@0 -> @80000000)
-- fixed wrong reg offset for pause feature
-- removed debug code which shows AXI slots traffic and removed DT ppmu events
-- in the driver code usage of 'dev', 'pdev->dev' has been aligned
-- manipulating clocks has been aligned as Krzysztof suggested, now it enables
-  only two clocks (and disables) and enables/disables the 'bypass' clocks
-  on demand
-- added comments in the documentation why there is a need of clock registers
-  to be accessed via syscon regmap
-- added proper link to Documentation/devicetree/bindings/ddr/lpddr3.txt
-  in dt-bindings for memory controller doc
-- removed unneeded prints when there was a deferred probe or during remove
-- added 'syscon' also to exynos5420-clock node as Krzysztof suggested
-- from 2nd patch removed blank line and added Acked-by: Chanwoo Choi
-- collecting ACKs, which makes the clock related 3 patches
-  ready to be merged (4 ACKs),
-- patches 4,5 got 'Reviewed-by' from Rob
-- it is now based on v5.2-rc3 tag
-v7 [2]:
-- added using regmap in chipid registers and clock registers
-- in DT added "syscon" to compatible field in clock and chipid
-- added two addition clocks in clocks definition file which were there
-  in first implementation but now are grouped and commented properly
-  (CLK_DOUT_PCLK_DREX0, CLK_DOUT_PCLK_DREX1)
-- the BPLL ratio table now is set for Exynos 5422 and 5800 and not for 5420
-- in DMC driver, changed code macro which generates functions for setup events
-  into normal three functions as Krzysztof suggested
-- moved 'clock_prepare_enable()' calls into the same function where 'disable'
-  were called
-- changed 'timing_reg' static variables into static const
-- in DMC driver: the proper device_node *np_ddr is now put correctly
-- in DMC driver: removed code related to counters_enabled
-- mapped only 0x100 from DREX registers
-- in DT memory node there is now 'reg' as Rob suggested instead of 'max-freq'
-- in Documentation/devicetree/bindings/lpddr2 renamed into 'ddr' and the lpdd3*
-  files landed there.
-- cleaned the commit subject and message as Rob suggested for the patch 4/10 in v6
-- added doxygen comments to exported functions in of_memory file
-- cleaned minor issues like: missing space, 2 empty lines, in the doc JESD209-2 ->
-  JESD209-3C, removed 'status = "okay"' from the doc file, etc
-- based on v5.1 (+ PPMU patches from [1])
-v6:
-- driver code has been converted to use generic code which parses DT memory
-  definition in drivers/memory/of_memory.c
-- extended of_memory by LPDDR3 support (there was LPDDR2 made by TI)
-- extended jedec_lpddr.h by the needed structures for LPDDR3 (AC timings)
-- driver file moved to proper directory, where other memory controllers
-  live, which is in this case drivers/memory/samsung/
-- driver code now uses regmap_{read|write} to access registers for pausing
-  and changing timings set, as suggested by Chanwoo
-- DT contains simple definition of memory device, similar to LPDDR2 made by TI
-- driver code generates the needed timings for registered OPPs, based on
-  memory description in DT
-- patch 1 contains Rob's ACK,
-- simplified memory bandwidth calculation
-- added debug information files with timings, raw counters and statistics
-- updated dt-bindings files accordingly
-- based on v5.1-rc5 (+ PPMU patches from [1])
-v5:
-- removed unneeded wrapper functions i.e. for regulator_set_voltage
-- removed unused defines
-- removed direct access to clock register base and used CCF for
-  pause and timing set usage
-- switched to OPP comming from DT according to Chanowoo's comments
-- switched to timings comming from DT, added parsing function
-- extended dt-binding with description of OPPs and timings
-- according to Rob Herring comment, moved dt-binding file before driver code
-  in the patch set.
-- rebased on top of v5.0
-v4:
-- removed unneeded DPLL and G3D clocks IDs
-- changed names of parent clocks for mout_mx_mspll_ccore_phy_p
-  and added one more parent: mout_sclk_epll
-- removed 933Mhz and 138MHz from the BPLL ratio table
-v3:
-- in DTS align to proper indent the clocks and clock-names entries
-v2:
-- changed file name exynos5-dmc.c -> exynos5422-dmc.c
-  and related entries in other files
-- changed dt-binding file name
-- changed config entry to CONFIG_ARM_EXYNOS5422_DMC_DEVFREQ
-- removed sysfs and print info messages (print only one line)
-- removed function exynos5_read_chip_info and compact code
-- changed dt-binding patch and move it up in the patch set
-- new entries in MAINTAINERS are added with the driver c code
-- clean-up in DTS file: renamed nodes to 'ppmu' and 'memory-controller',
-  entries moved to suggested location (before nocp nodes or after),
-  moved according to alfabetical order, compacted clocks names with right indent.
+Changes since [v8]:
+* Made the drivers dependent on ARCH_TEGRA_194_SOC directly
+* Addressed review comments from Dmitry
 
-Regards,
-Lukasz Luba
+Changes since [v7]:
+* Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
+* Addressed review comments from Thierry and Rob
 
-[1] https://lkml.org/lkml/2019/4/19/158
-[2] https://lkml.org/lkml/2019/5/6/829
-[3] https://lkml.org/lkml/2019/6/5/687
+Changes since [v6]:
+* Took care of review comments from Rob
+* Added a quirk to disable MSI for root ports
+* Removed using pcie_pme_disable_msi() API in host controller driver
 
+Changes since [v5]:
+* Removed patch that exports pcie_bus_config symbol
+* Took care of review comments from Thierry and Rob
 
-Lukasz Luba (13):
-  clk: samsung: add needed IDs for DMC clocks in Exynos5420
-  clk: samsung: add new clocks for DMC for Exynos5422 SoC
-  clk: samsung: add BPLL rate table for Exynos 5422 SoC
-  dt-bindings: ddr: rename lpddr2 directory
-  dt-bindings: ddr: add LPDDR3 memories
-  drivers: memory: extend of_memory by LPDDR3 support
-  dt-bindings: memory-controllers: add Exynos5422 DMC device description
-  drivers: memory: add DMC driver for Exynos5422
-  drivers: devfreq: events: add Exynos PPMU new events
-  ARM: dts: exynos: add chipid label and syscon compatible
-  ARM: dts: exynos: add syscon to clock compatible
-  ARM: dts: exynos: add DMC device for exynos5422
-  ARM: exynos_defconfig: enable DMC driver
+Changes since [v4]:
+* Removed redundant APIs in pcie-designware-ep.c file after moving them
+  to pcie-designware.c file based on Bjorn's review comments
 
- .../{lpddr2 => ddr}/lpddr2-timings.txt        |    0
- .../bindings/{lpddr2 => ddr}/lpddr2.txt       |    2 +-
- .../bindings/ddr/lpddr3-timings.txt           |   58 +
- .../devicetree/bindings/ddr/lpddr3.txt        |   97 ++
- .../memory-controllers/exynos5422-dmc.txt     |   75 +
- MAINTAINERS                                   |    8 +
- arch/arm/boot/dts/exynos5.dtsi                |    4 +-
- arch/arm/boot/dts/exynos5420.dtsi             |   75 +-
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  116 ++
- arch/arm/boot/dts/exynos5800.dtsi             |    2 +-
- arch/arm/configs/exynos_defconfig             |    1 +
- drivers/clk/samsung/clk-exynos5420.c          |   78 +-
- drivers/devfreq/event/exynos-ppmu.c           |    6 +
- drivers/memory/of_memory.c                    |  154 ++
- drivers/memory/of_memory.h                    |   18 +
- drivers/memory/samsung/Kconfig                |   17 +
- drivers/memory/samsung/Makefile               |    1 +
- drivers/memory/samsung/exynos5422-dmc.c       | 1261 +++++++++++++++++
- include/dt-bindings/clock/exynos5420.h        |   18 +-
- include/memory/jedec_ddr.h                    |   62 +
- 20 files changed, 2040 insertions(+), 13 deletions(-)
- rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2-timings.txt (100%)
- rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt (96%)
- create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
- create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3.txt
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
- create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
+Changes since [v3]:
+* Rebased on top of linux-next top of the tree
+* Addressed Gustavo's comments and added his Ack for some of the changes.
+
+Changes since [v2]:
+* Addressed review comments from Thierry
+
+Changes since [v1]:
+* Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
+* Added more patches in v2 series
+
+Vidya Sagar (15):
+  PCI: Add #defines for some of PCIe spec r4.0 features
+  PCI: Disable MSI for Tegra194 root port
+  PCI: dwc: Perform dbi regs write lock towards the end
+  PCI: dwc: Move config space capability search API
+  PCI: dwc: Add ext config space capability search API
+  dt-bindings: PCI: designware: Add binding for CDM register check
+  PCI: dwc: Add support to enable CDM register check
+  dt-bindings: Add PCIe supports-clkreq property
+  dt-bindings: PCI: tegra: Add device tree support for Tegra194
+  dt-bindings: PHY: P2U: Add Tegra194 P2U block
+  arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT
+  arm64: tegra: Enable PCIe slots in P2972-0000 board
+  phy: tegra: Add PCIe PIPE2UPHY support
+  PCI: tegra: Add Tegra194 PCIe support
+  arm64: Add Tegra194 PCIe driver to defconfig
+
+ .../bindings/pci/designware-pcie.txt          |    5 +
+ .../bindings/pci/nvidia,tegra194-pcie.txt     |  155 ++
+ Documentation/devicetree/bindings/pci/pci.txt |    5 +
+ .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |    2 +-
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   |   41 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  437 +++++
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/pci/controller/dwc/Kconfig            |   10 +
+ drivers/pci/controller/dwc/Makefile           |    1 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
+ .../pci/controller/dwc/pcie-designware-host.c |   14 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |   87 +
+ drivers/pci/controller/dwc/pcie-designware.h  |   12 +
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 1621 +++++++++++++++++
+ drivers/pci/quirks.c                          |   23 +
+ drivers/phy/tegra/Kconfig                     |    7 +
+ drivers/phy/tegra/Makefile                    |    1 +
+ drivers/phy/tegra/phy-tegra194-p2u.c          |  109 ++
+ include/uapi/linux/pci_regs.h                 |   22 +-
+ 20 files changed, 2575 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+ create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
 
 -- 
 2.17.1
