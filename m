@@ -1,142 +1,102 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Date: Fri, 7 Jun 2019 16:11:42 +0100
-Message-ID: <25efb27c-b725-137d-5735-b3ab88323846@arm.com>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
- <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
- <20190531051400.GA2275@cz.tnic>
- <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
- <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
- <71da083e-1a74-cf86-455d-260a34ee01fd@amazon.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCHv16 1/3] ARM:dt-bindings:display Intel FPGA Video and Image
+ Processing Suite
+Date: Fri, 7 Jun 2019 10:21:49 -0500
+Message-ID: <9695f3e1-92ab-23ce-5922-71fbb7d8149f@kernel.org>
+References: <20190607143022.427-1-hean.loong.ong@intel.com>
+ <20190607143022.427-2-hean.loong.ong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <71da083e-1a74-cf86-455d-260a34ee01fd@amazon.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Shenhar, Talel" <talel@amazon.com>
-Cc: "Hawa, Hanna" <hhhawa@amazon.com>, Borislav Petkov <bp@alien8.de>, "Herrenschmidt, Benjamin" <benh@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>"Hanoch, Uri" <ha>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190607143022.427-2-hean.loong.ong@intel.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "Hean-Loong, Ong" <hean.loong.ong@intel.com>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Randy Dunlap <rdunlap@infradead.org>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, chin.liang.see@intel.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi guys,
-
-On 06/06/2019 12:37, Shenhar, Talel wrote:
->>> Disagree. The various drivers don't depend on each other.
->>> I think we should keep the drivers separated as they are distinct and independent IP
->>> blocks.
->> But they don't exist in isolation, they both depend on the integration-choices/firmware
->> that makes up your platform.
->>
->> Other platforms may have exactly the same IP blocks, configured differently, or with
->> different features enabled in firmware. This means we can't just probe the driver based on
->> the presence of the IP block, we need to know the integration choices and firmware
->> settings match what the driver requires.
->>
->> (Case in point, that A57 ECC support is optional, another A57 may not have it)
->>
->> Descriptions of what firmware did don't really belong in the DT. Its not a hardware
->> property.
->>
->> This is why its better to probe this stuff based on the machine-compatible/platform-name,
->> not the presence of the IP block in the DT.
->>
->>
->> Will either of your separate drivers ever run alone? If they're probed from the same
->> machine-compatible this won't happen.
->>
->>
->> How does your memory controller report errors? Does it send back some data with an invalid
->> checksum, or a specific poison/invalid flag? Will the cache report this as a cache error
->> too, if its an extra signal, does the cache know what it is?
->>
->> All these are integration choices between the two IP blocks, done as separate drivers we
->> don't have anywhere to store that information. Even if you don't care about this, making
->> them separate drivers should only be done to make them usable on other platforms, where
->> these choices may have been different.
-
-> From our perspective, l1/l2 has nothing to do with the ddr memory controller.
-
-I understand you're coming from the position that these things have counters, you want
-something to read and export them.
-
-I'm coming at this from somewhere else. This stuff has to be considered all the way
-through the system. Just because each component supports error detection, doesn't mean you
-aren't going to get silent corruption. Likewise if another platform picks up two piecemeal
-edac drivers for hardware it happens to have in common with yours, it doesn't mean we're
-counting all the errors. This stuff has to be viewed for the whole platform.
-
-
-> Its right that they both use same edac subsystem but they are using totally different APIs
-> of it.
-> 
-> We also even want to have separate control for enabling/disabling l1/l2 edac vs memory
-> controller edac.
-
-Curious, what for? Surely you either care about counting errors, or you don't.
-
-
-> Even from technical point-of-view L1/L2 UE collection method is totally different from
-> collecting memory-controller UE. (CPU exception vs actual interrupts).
-> 
-> So there is less reason why to combine them vs giving each one its own file, e.g.
-> al_mc_edac, al_l1_l2_edac (I even don't see why Hanna combined l1 and l2...)
-
-> As we don't have any technical relation between the two we would rather avoid this
-> combination.
-> 
-> Also, Lets assume we have different setups with different memory controllers, having a dt
-> binding to control the difference is super easy and flexible.
-
-If the hardware is different you should describe this in the DT. I'm not suggesting you
-don't describe it.
-
-The discussion here is whether we should probe the driver based on a dummy-node
-compatible, (which this 'edac_l1_l2' is) or based on the machine compatible.
-
-At the extreme end: you should paint the CPU and cache nodes with a compatible describing
-your integration. (I've mangled Juno's DT here:)
-| A57_0: cpu@0 {
-| 	compatible = "amazon-al,cortex-a57", "arm,cortex-a57";
-| 	reg = <0x0 0x0>;
-| 	device_type = "cpu";
-| 	next-level-cache = <&A57_L2>;
-| };
-|
-[...]
-|
-| A57_L2: l2-cache0 {
-| 	compatible = "amazon-al,cache", "cache";
-|	cpu_map = <A57_0, A57_1>
-| };
-
-
-This is the most accurate way to describe what you have here. The driver can use this to
-know that this integration of CPU and Cache support the edac registers. (This doesn't tell
-us anything about whether firmware enabled this stuff, or made/left it all secure-only)
-
-But this doesn't give you a device you can bind a driver to, to kick this stuff off.
-This (I assume) is why you added a dummy 'edac_l1_l2' node, that just probes the driver.
-The hardware is to do with the CPU and caches, 'edac_l1'_l2' doesn't correspond to any
-distinct part of the soc.
-
-The request is to use the machine compatible, not a dummy node. This wraps up the firmware
-properties too, and any other platform property we don't know about today.
-
-Once you have this, you don't really need the cpu/cache integration annotations, and your
-future memory-controller support can be picked up as part of the platform driver.
-If you have otherwise identical platforms with different memory controllers, OF gives you
-the API to match the node in the DT.
-
-
-> Would having a dedicated folder for amazon ease the move to separate files?
-
-I don't think anyone cares about the number of files. Code duplication and extra
-boiler-plate, maybe.
-
-
-Thanks,
-
-James
+SGkgSGVhbi1Mb29uZzoKClBsZWFzZSBmb3JtYXQgeW91ciBjb21taXQgbWVzc2FnZSBsaWtlIHRo
+aXM6Cgo8Q29tbWl0IG1lc3NhZ2U+CgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
+bmVsLm9yZz4KU2lnbmVkLW9mZi1ieTogT25nLCBIZWFuIExvb25nIDxoZWFuLmxvb25nLm9uZ0Bp
+bnRlbC5jb20+Ci0tLQpWMTU6CnYxNDoKCgpUaGUgdmVyc2lvbiBoaXN0b3J5IG5lZWRzIGdvIGFm
+dGVyIHRoZSAtLS0KCkRpbmgKCk9uIDYvNy8xOSA5OjMwIEFNLCBIZWFuLUxvb25nLCBPbmcgd3Jv
+dGU6Cj4gRnJvbTogIk9uZywgSGVhbiBMb29uZyIgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4K
+PiAKPiBEZXZpY2UgdHJlZSBiaW5kaW5nIGZvciBJbnRlbCBGUEdBIFZpZGVvIGFuZCBJbWFnZSBQ
+cm9jZXNzaW5nIFN1aXRlLgo+IFRoZSBiaW5kaW5ncyB3b3VsZCBzZXQgdGhlIG1heCB3aWR0aCwg
+bWF4IGhlaWdodCwKPiBiaXRzIHBlciBwaXhlbCBhbmQgbWVtb3J5IHBvcnQgd2lkdGguCj4gVGhl
+IGRldmljZSB0cmVlIGJpbmRpbmcgb25seSBzdXBwb3J0cyB0aGUgSW50ZWwKPiBBcnJpYTEwIGRl
+dmtpdCBhbmQgaXRzIHZhcmlhbnRzLiBWZW5kb3IgbmFtZSByZXRhaW5lZCBhcyBhbHRyLgo+IAo+
+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IAo+IFYxNToKPiBS
+ZXZpZXdlZAo+IAo+IFYxNDoKPiBObyBDaGFuZ2UKPiAKPiBWMTM6Cj4gTm8gY2hhbmdlCj4gCj4g
+VjEyOgo+IFdyYXAgY29tbWVudHMgYW5kIGZpeCBjb21taXQgbWVzc2FnZQo+IAo+IFYxMToKPiBO
+byBjaGFuZ2UKPiAKPiBWMTA6Cj4gTm8gY2hhbmdlCj4gCj4gVjk6Cj4gUmVtb3ZlIERpc3BsYXkg
+cG9ydCBub2RlCj4gCj4gVjg6Cj4gKkFkZCBwb3J0IHRvIERpc3BsYXkgcG9ydCBkZWNvZGVyCj4g
+Cj4gVjc6Cj4gKkZpeCBPRiBncmFwaCBmb3IgYmV0dGVyIGRlc2NyaXB0aW9uCj4gKkFkZCBkZXNj
+cmlwdGlvbiBmb3IgZW5jb2Rlcgo+IAo+IFY2Ogo+ICpEZXNjcmlwdGlvbiBoYXZlIG5vdCBkZXNj
+cmliZSBEVCBkZXZpY2UgaW4gZ2VuZXJhbAo+IAo+IFY1Ogo+ICpyZW1vdmUgYmluZGluZ3MgZm9y
+IGJpdHMgcGVyIHN5bWJvbCBhcyBpdCBoYXMgb25seSBvbmUgdmFsdWUgd2hpY2ggaXMgOAo+IAo+
+IFY0Ogo+ICpmaXggcHJvcGVydGllcyB0aGF0IGRvZXMgbm90IGRlc2NyaWJlIHRoZSB2YWx1ZXMK
+PiAKPiBWMzoKPiAqT0YgZ3JhcGggbm90IGluIGFjY29yZGFuY2UgdG8gZ3JhcGgudHh0Cj4gCj4g
+VjI6Cj4gKlJlbW92ZSBMaW51eCBkcml2ZXIgZGVzY3JpcHRpb24KPiAKPiBWMToKPiAqTWlzc2lu
+ZyB2ZW5kb3IgcHJlZml4Cj4gCj4gU2lnbmVkLW9mZi1ieTogT25nLCBIZWFuIExvb25nIDxoZWFu
+Lmxvb25nLm9uZ0BpbnRlbC5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2FsdHIs
+dmlwLWZiMi50eHQgICAgICAgICB8IDYzICsrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNo
+YW5nZWQsIDYzIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlwLWZiMi50eHQKPiAKPiBkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYWx0cix2
+aXAtZmIyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Fs
+dHIsdmlwLWZiMi50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAw
+MC4uODlhM2I5ZTE2NmE4Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlwLWZiMi50eHQKPiBAQCAtMCwwICsxLDYz
+IEBACj4gK0ludGVsIFZpZGVvIGFuZCBJbWFnZSBQcm9jZXNzaW5nKFZJUCkgRnJhbWUgQnVmZmVy
+IElJIGJpbmRpbmdzCj4gKwo+ICtTdXBwb3J0ZWQgaGFyZHdhcmU6IEludGVsIEZQR0EgU29DIEFy
+cmlhMTAgYW5kIGFib3ZlIHdpdGggZGlzcGxheSBwb3J0IElQCj4gKwo+ICtUaGUgVmlkZW8gRnJh
+bWUgQnVmZmVyIElJIGluIFZpZGVvIEltYWdlIFByb2Nlc3NpbmcgKFZJUCkgc3VpdGUgaXMgYW4g
+SVAgY29yZQo+ICt0aGF0IGludGVyZmFjZXMgYmV0d2VlbiBzeXN0ZW0gbWVtb3J5IGFuZCBBdmFs
+b24tU1QgdmlkZW8gcG9ydHMuIFRoZSBJUCBjb3JlCj4gK2NhbiBiZSBjb25maWd1cmVkIHRvIHN1
+cHBvcnQgdGhlIG1lbW9yeSByZWFkZXIgKGZyb20gbWVtb3J5IHRvIEF2YWxvbi1TVCkKPiArYW5k
+L29yIG1lbW9yeSB3cml0ZXIgKGZyb20gQXZhbG9uLVNUIHRvIG1lbW9yeSkgaW50ZXJmYWNlcy4K
+PiArCj4gK01vcmUgaW5mb3JtYXRpb24gdGhlIEZQR0EgdmlkZW8gSVAgY29tcG9uZW50IGNhbiBi
+ZSBhY3F1aXJlZCBmcm9tCj4gK2h0dHBzOi8vd3d3LmFsdGVyYS5jb20vY29udGVudC9kYW0vYWx0
+ZXJhLXd3dy9nbG9iYWwvZW5fVVMvcGRmc1wKPiArL2xpdGVyYXR1cmUvdWcvdWdfdmlwLnBkZgo+
+ICsKPiArRFQtQmluZGluZ3M6Cj4gKz09PT09PT09PT09PT0KPiArUmVxdWlyZWQgcHJvcGVydGll
+czoKPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICstIGNvbXBhdGlibGU6ICJhbHRy
+LHZpcC1mcmFtZS1idWZmZXItMi4wIgo+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFu
+ZCBsZW5ndGggb2YgdGhlIGZyYW1lYnVmZmVyIGNvbnRyb2xsZXIncwo+ICsJcmVnaXN0ZXJzLgo+
+ICstIGFsdHIsbWF4LXdpZHRoOiBUaGUgbWF4aW11bSB3aWR0aCBvZiB0aGUgZnJhbWVidWZmZXIg
+aW4gcGl4ZWxzLgo+ICstIGFsdHIsbWF4LWhlaWdodDogVGhlIG1heGltdW0gaGVpZ2h0IG9mIHRo
+ZSBmcmFtZWJ1ZmZlciBpbiBwaXhlbHMuCj4gKy0gYWx0cixtZW0tcG9ydC13aWR0aCA9IHRoZSBi
+dXMgd2lkdGggb2YgdGhlIGF2YWxvbiBtYXN0ZXIgcG9ydAo+ICsJb24gdGhlIGZyYW1lIHJlYWRl
+cgo+ICsKPiArT3B0aW9uYWwgc3ViLW5vZGVzOgo+ICstIHBvcnRzOiBUaGUgY29ubmVjdGlvbiB0
+byB0aGUgZW5jb2Rlcgo+ICsKPiArQ29ubmVjdGlvbnMgYmV0d2VlbiB0aGUgRnJhbWUgQnVmZmVy
+IElJIGFuZCBvdGhlciB2aWRlbyBJUCBjb3JlcyBpbiB0aGUgc3lzdGVtCj4gK2FyZSBtb2RlbGxl
+ZCB1c2luZyB0aGUgT0YgZ3JhcGggRFQgYmluZGluZ3MuIFRoZSBGcmFtZSBCdWZmZXIgSUkgbm9k
+ZSBoYXMgdXAKPiArdG8gdHdvIE9GIGdyYXBoIHBvcnRzLiBXaGVuIHRoZSBtZW1vcnkgd3JpdGVy
+IGludGVyZmFjZSBpcyBlbmFibGVkLCBwb3J0IDAKPiArbWFwcyB0byB0aGUgQXZhbG9uLVNUIElu
+cHV0IChkaW4pIHBvcnQuIFdoZW4gdGhlIG1lbW9yeSByZWFkZXIgaW50ZXJmYWNlIGlzCj4gK2Vu
+YWJsZWQsIHBvcnQgMSBtYXBzIHRvIHRoZSBBdmFsb24tU1QgT3V0cHV0IChkb3V0KSBwb3J0Lgo+
+ICsKPiArVGhlIGVuY29kZXIgaXMgYnVpbHQgaW50byB0aGUgRlBHQSBIVyBkZXNpZ24gYW5kIHRo
+ZXJlZm9yZSB3b3VsZCBub3QKPiArYmUgYWNjZXNzaWJsZSBmcm9tIHRoZSBERFIuCj4gKwo+ICsJ
+CVBvcnQgMAkJCQlQb3J0MQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArQVJSSUExMCBBVkFMT05fU1QgKERJTikJCUFWQUxPTl9T
+VCAoRE9VVCkKPiArCj4gK1JlcXVpcmVkIFByb3BlcnRpZXMgRXhhbXBsZToKPiArLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArZnJhbWVidWZmZXJAMTAwMDAwMjgwIHsKPiArCQlj
+b21wYXRpYmxlID0gImFsdHIsdmlwLWZyYW1lLWJ1ZmZlci0yLjAiOwo+ICsJCXJlZyA9IDwweDAw
+MDAwMDAxIDB4MDAwMDAyODAgMHgwMDAwMDA0MD47Cj4gKwkJYWx0cixtYXgtd2lkdGggPSA8MTI4
+MD47Cj4gKwkJYWx0cixtYXgtaGVpZ2h0ID0gPDcyMD47Cj4gKwkJYWx0cixtZW0tcG9ydC13aWR0
+aCA9IDwxMjg+Owo+ICsKPiArCQlwb3J0cyB7Cj4gKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsK
+PiArCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArCQkJcG9ydEAxIHsKPiArCQkJCXJlZyA9
+IDwxPjsKPiArCQkJCQlmYl9vdXRwdXQ6IGVuZHBvaW50IHsKPiArCQkJCQkJcmVtb3RlLWVuZHBv
+aW50ID0gPCZkcF9lbmNvZGVyX2lucHV0PjsKPiArCQkJCQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4g
+K307Cj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
