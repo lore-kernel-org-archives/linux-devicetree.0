@@ -1,102 +1,46 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCHv16 1/3] ARM:dt-bindings:display Intel FPGA Video and Image
- Processing Suite
-Date: Fri, 7 Jun 2019 10:21:49 -0500
-Message-ID: <9695f3e1-92ab-23ce-5922-71fbb7d8149f@kernel.org>
-References: <20190607143022.427-1-hean.loong.ong@intel.com>
- <20190607143022.427-2-hean.loong.ong@intel.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/6] dt-bindings: Remove unused compatible strings
+Date: Fri,  7 Jun 2019 17:44:05 +0200
+Message-ID: <20190607154410.10633-2-paul@crapouillou.net>
+References: <20190607154410.10633-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190607143022.427-2-hean.loong.ong@intel.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "Hean-Loong, Ong" <hean.loong.ong@intel.com>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Randy Dunlap <rdunlap@infradead.org>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, chin.liang.see@intel.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190607154410.10633-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVhbi1Mb29uZzoKClBsZWFzZSBmb3JtYXQgeW91ciBjb21taXQgbWVzc2FnZSBsaWtlIHRo
-aXM6Cgo8Q29tbWl0IG1lc3NhZ2U+CgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
-bmVsLm9yZz4KU2lnbmVkLW9mZi1ieTogT25nLCBIZWFuIExvb25nIDxoZWFuLmxvb25nLm9uZ0Bp
-bnRlbC5jb20+Ci0tLQpWMTU6CnYxNDoKCgpUaGUgdmVyc2lvbiBoaXN0b3J5IG5lZWRzIGdvIGFm
-dGVyIHRoZSAtLS0KCkRpbmgKCk9uIDYvNy8xOSA5OjMwIEFNLCBIZWFuLUxvb25nLCBPbmcgd3Jv
-dGU6Cj4gRnJvbTogIk9uZywgSGVhbiBMb29uZyIgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4K
-PiAKPiBEZXZpY2UgdHJlZSBiaW5kaW5nIGZvciBJbnRlbCBGUEdBIFZpZGVvIGFuZCBJbWFnZSBQ
-cm9jZXNzaW5nIFN1aXRlLgo+IFRoZSBiaW5kaW5ncyB3b3VsZCBzZXQgdGhlIG1heCB3aWR0aCwg
-bWF4IGhlaWdodCwKPiBiaXRzIHBlciBwaXhlbCBhbmQgbWVtb3J5IHBvcnQgd2lkdGguCj4gVGhl
-IGRldmljZSB0cmVlIGJpbmRpbmcgb25seSBzdXBwb3J0cyB0aGUgSW50ZWwKPiBBcnJpYTEwIGRl
-dmtpdCBhbmQgaXRzIHZhcmlhbnRzLiBWZW5kb3IgbmFtZSByZXRhaW5lZCBhcyBhbHRyLgo+IAo+
-IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IAo+IFYxNToKPiBS
-ZXZpZXdlZAo+IAo+IFYxNDoKPiBObyBDaGFuZ2UKPiAKPiBWMTM6Cj4gTm8gY2hhbmdlCj4gCj4g
-VjEyOgo+IFdyYXAgY29tbWVudHMgYW5kIGZpeCBjb21taXQgbWVzc2FnZQo+IAo+IFYxMToKPiBO
-byBjaGFuZ2UKPiAKPiBWMTA6Cj4gTm8gY2hhbmdlCj4gCj4gVjk6Cj4gUmVtb3ZlIERpc3BsYXkg
-cG9ydCBub2RlCj4gCj4gVjg6Cj4gKkFkZCBwb3J0IHRvIERpc3BsYXkgcG9ydCBkZWNvZGVyCj4g
-Cj4gVjc6Cj4gKkZpeCBPRiBncmFwaCBmb3IgYmV0dGVyIGRlc2NyaXB0aW9uCj4gKkFkZCBkZXNj
-cmlwdGlvbiBmb3IgZW5jb2Rlcgo+IAo+IFY2Ogo+ICpEZXNjcmlwdGlvbiBoYXZlIG5vdCBkZXNj
-cmliZSBEVCBkZXZpY2UgaW4gZ2VuZXJhbAo+IAo+IFY1Ogo+ICpyZW1vdmUgYmluZGluZ3MgZm9y
-IGJpdHMgcGVyIHN5bWJvbCBhcyBpdCBoYXMgb25seSBvbmUgdmFsdWUgd2hpY2ggaXMgOAo+IAo+
-IFY0Ogo+ICpmaXggcHJvcGVydGllcyB0aGF0IGRvZXMgbm90IGRlc2NyaWJlIHRoZSB2YWx1ZXMK
-PiAKPiBWMzoKPiAqT0YgZ3JhcGggbm90IGluIGFjY29yZGFuY2UgdG8gZ3JhcGgudHh0Cj4gCj4g
-VjI6Cj4gKlJlbW92ZSBMaW51eCBkcml2ZXIgZGVzY3JpcHRpb24KPiAKPiBWMToKPiAqTWlzc2lu
-ZyB2ZW5kb3IgcHJlZml4Cj4gCj4gU2lnbmVkLW9mZi1ieTogT25nLCBIZWFuIExvb25nIDxoZWFu
-Lmxvb25nLm9uZ0BpbnRlbC5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2FsdHIs
-dmlwLWZiMi50eHQgICAgICAgICB8IDYzICsrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNo
-YW5nZWQsIDYzIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlwLWZiMi50eHQKPiAKPiBkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYWx0cix2
-aXAtZmIyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Fs
-dHIsdmlwLWZiMi50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAw
-MC4uODlhM2I5ZTE2NmE4Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlwLWZiMi50eHQKPiBAQCAtMCwwICsxLDYz
-IEBACj4gK0ludGVsIFZpZGVvIGFuZCBJbWFnZSBQcm9jZXNzaW5nKFZJUCkgRnJhbWUgQnVmZmVy
-IElJIGJpbmRpbmdzCj4gKwo+ICtTdXBwb3J0ZWQgaGFyZHdhcmU6IEludGVsIEZQR0EgU29DIEFy
-cmlhMTAgYW5kIGFib3ZlIHdpdGggZGlzcGxheSBwb3J0IElQCj4gKwo+ICtUaGUgVmlkZW8gRnJh
-bWUgQnVmZmVyIElJIGluIFZpZGVvIEltYWdlIFByb2Nlc3NpbmcgKFZJUCkgc3VpdGUgaXMgYW4g
-SVAgY29yZQo+ICt0aGF0IGludGVyZmFjZXMgYmV0d2VlbiBzeXN0ZW0gbWVtb3J5IGFuZCBBdmFs
-b24tU1QgdmlkZW8gcG9ydHMuIFRoZSBJUCBjb3JlCj4gK2NhbiBiZSBjb25maWd1cmVkIHRvIHN1
-cHBvcnQgdGhlIG1lbW9yeSByZWFkZXIgKGZyb20gbWVtb3J5IHRvIEF2YWxvbi1TVCkKPiArYW5k
-L29yIG1lbW9yeSB3cml0ZXIgKGZyb20gQXZhbG9uLVNUIHRvIG1lbW9yeSkgaW50ZXJmYWNlcy4K
-PiArCj4gK01vcmUgaW5mb3JtYXRpb24gdGhlIEZQR0EgdmlkZW8gSVAgY29tcG9uZW50IGNhbiBi
-ZSBhY3F1aXJlZCBmcm9tCj4gK2h0dHBzOi8vd3d3LmFsdGVyYS5jb20vY29udGVudC9kYW0vYWx0
-ZXJhLXd3dy9nbG9iYWwvZW5fVVMvcGRmc1wKPiArL2xpdGVyYXR1cmUvdWcvdWdfdmlwLnBkZgo+
-ICsKPiArRFQtQmluZGluZ3M6Cj4gKz09PT09PT09PT09PT0KPiArUmVxdWlyZWQgcHJvcGVydGll
-czoKPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICstIGNvbXBhdGlibGU6ICJhbHRy
-LHZpcC1mcmFtZS1idWZmZXItMi4wIgo+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFu
-ZCBsZW5ndGggb2YgdGhlIGZyYW1lYnVmZmVyIGNvbnRyb2xsZXIncwo+ICsJcmVnaXN0ZXJzLgo+
-ICstIGFsdHIsbWF4LXdpZHRoOiBUaGUgbWF4aW11bSB3aWR0aCBvZiB0aGUgZnJhbWVidWZmZXIg
-aW4gcGl4ZWxzLgo+ICstIGFsdHIsbWF4LWhlaWdodDogVGhlIG1heGltdW0gaGVpZ2h0IG9mIHRo
-ZSBmcmFtZWJ1ZmZlciBpbiBwaXhlbHMuCj4gKy0gYWx0cixtZW0tcG9ydC13aWR0aCA9IHRoZSBi
-dXMgd2lkdGggb2YgdGhlIGF2YWxvbiBtYXN0ZXIgcG9ydAo+ICsJb24gdGhlIGZyYW1lIHJlYWRl
-cgo+ICsKPiArT3B0aW9uYWwgc3ViLW5vZGVzOgo+ICstIHBvcnRzOiBUaGUgY29ubmVjdGlvbiB0
-byB0aGUgZW5jb2Rlcgo+ICsKPiArQ29ubmVjdGlvbnMgYmV0d2VlbiB0aGUgRnJhbWUgQnVmZmVy
-IElJIGFuZCBvdGhlciB2aWRlbyBJUCBjb3JlcyBpbiB0aGUgc3lzdGVtCj4gK2FyZSBtb2RlbGxl
-ZCB1c2luZyB0aGUgT0YgZ3JhcGggRFQgYmluZGluZ3MuIFRoZSBGcmFtZSBCdWZmZXIgSUkgbm9k
-ZSBoYXMgdXAKPiArdG8gdHdvIE9GIGdyYXBoIHBvcnRzLiBXaGVuIHRoZSBtZW1vcnkgd3JpdGVy
-IGludGVyZmFjZSBpcyBlbmFibGVkLCBwb3J0IDAKPiArbWFwcyB0byB0aGUgQXZhbG9uLVNUIElu
-cHV0IChkaW4pIHBvcnQuIFdoZW4gdGhlIG1lbW9yeSByZWFkZXIgaW50ZXJmYWNlIGlzCj4gK2Vu
-YWJsZWQsIHBvcnQgMSBtYXBzIHRvIHRoZSBBdmFsb24tU1QgT3V0cHV0IChkb3V0KSBwb3J0Lgo+
-ICsKPiArVGhlIGVuY29kZXIgaXMgYnVpbHQgaW50byB0aGUgRlBHQSBIVyBkZXNpZ24gYW5kIHRo
-ZXJlZm9yZSB3b3VsZCBub3QKPiArYmUgYWNjZXNzaWJsZSBmcm9tIHRoZSBERFIuCj4gKwo+ICsJ
-CVBvcnQgMAkJCQlQb3J0MQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArQVJSSUExMCBBVkFMT05fU1QgKERJTikJCUFWQUxPTl9T
-VCAoRE9VVCkKPiArCj4gK1JlcXVpcmVkIFByb3BlcnRpZXMgRXhhbXBsZToKPiArLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArZnJhbWVidWZmZXJAMTAwMDAwMjgwIHsKPiArCQlj
-b21wYXRpYmxlID0gImFsdHIsdmlwLWZyYW1lLWJ1ZmZlci0yLjAiOwo+ICsJCXJlZyA9IDwweDAw
-MDAwMDAxIDB4MDAwMDAyODAgMHgwMDAwMDA0MD47Cj4gKwkJYWx0cixtYXgtd2lkdGggPSA8MTI4
-MD47Cj4gKwkJYWx0cixtYXgtaGVpZ2h0ID0gPDcyMD47Cj4gKwkJYWx0cixtZW0tcG9ydC13aWR0
-aCA9IDwxMjg+Owo+ICsKPiArCQlwb3J0cyB7Cj4gKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsK
-PiArCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArCQkJcG9ydEAxIHsKPiArCQkJCXJlZyA9
-IDwxPjsKPiArCQkJCQlmYl9vdXRwdXQ6IGVuZHBvaW50IHsKPiArCQkJCQkJcmVtb3RlLWVuZHBv
-aW50ID0gPCZkcF9lbmNvZGVyX2lucHV0PjsKPiArCQkJCQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4g
-K307Cj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Right now none of the Ingenic-based boards probe this driver from
+devicetree. This driver defined three compatible strings for the exact
+same behaviour. Before these strings are used, we can remove two of
+them.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+
+Notes:
+    v2: Rebase on v5.2-rc3
+
+ Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
+index 7d9d3f90641b..493bec80d59b 100644
+--- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
+@@ -2,10 +2,7 @@ Ingenic JZ47xx PWM Controller
+ =============================
+ 
+ Required properties:
+-- compatible: One of:
+-  * "ingenic,jz4740-pwm"
+-  * "ingenic,jz4770-pwm"
+-  * "ingenic,jz4780-pwm"
++- compatible: Should be "ingenic,jz4740-pwm"
+ - #pwm-cells: Should be 3. See pwm.txt in this directory for a description
+   of the cells format.
+ - clocks : phandle to the external clock.
+-- 
+2.21.0.593.g511ec345e18
