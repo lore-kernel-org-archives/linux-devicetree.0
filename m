@@ -1,97 +1,79 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V8 14/15] PCI: tegra: Add Tegra194 PCIe support
-Date: Fri, 7 Jun 2019 17:26:32 +0300
-Message-ID: <2a51622f-7bd8-2c6c-b3c5-8b87c2b5be0c@gmail.com>
-References: <20190526043751.12729-1-vidyas@nvidia.com>
- <20190526043751.12729-15-vidyas@nvidia.com>
- <f30e7fc6-3f64-d321-c32c-5e273115a869@gmail.com>
- <cbdac43f-32f7-c992-832b-ed40bef2375b@gmail.com>
- <06f2f74e-d618-8688-14ae-beb4920bcbf6@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v9 01/13] clk: samsung: add needed IDs for DMC clocks in
+ Exynos5420
+Date: Fri,  7 Jun 2019 16:34:55 +0200
+Message-ID: <20190607143507.30286-2-l.luba@partner.samsung.com>
+References: <20190607143507.30286-1-l.luba@partner.samsung.com>
+        <CGME20190607143524eucas1p22e6310f1a5f6e4bab771ebbbcc40f88c@eucas1p2.samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <06f2f74e-d618-8688-14ae-beb4920bcbf6@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <20190607143507.30286-1-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
-Cc: mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com, Lukasz Luba <l.luba@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-07.06.2019 17:10, Vidya Sagar пишет:
-> On 6/7/2019 12:22 AM, Dmitry Osipenko wrote:
->> 06.06.2019 19:35, Dmitry Osipenko пишет:
->>> 26.05.2019 7:37, Vidya Sagar пишет:
->>>> Add support for Synopsys DesignWare core IP based PCIe host controller
->>>> present in Tegra194 SoC.
->>>>
->>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>> ---
->>>> Changes since [v7]:
->>>> * Addressed review comments from Thierry
->>>>
->>>> Changes since [v6]:
->>>> * Removed code around "nvidia,disable-aspm-states" DT property
->>>> * Refactored code to remove code duplication
->>>>
->>>> Changes since [v5]:
->>>> * Addressed review comments from Thierry
->>>>
->>>> Changes since [v4]:
->>>> * None
->>>>
->>>> Changes since [v3]:
->>>> * None
->>>>
->>>> Changes since [v2]:
->>>> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
->>>> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
->>>> * Removed .runtime_suspend() & .runtime_resume() implementations
->>>>
->>>> Changes since [v1]:
->>>> * Made CONFIG_PCIE_TEGRA194 as 'm' by default from its previous 'y'
->>>> state
->>>> * Modified code as per changes made to DT documentation
->>>> * Refactored code to address Bjorn & Thierry's review comments
->>>> * Added goto to avoid recursion in tegra_pcie_dw_host_init() API
->>>> * Merged .scan_bus() of dw_pcie_host_ops implementation to
->>>> tegra_pcie_dw_host_init() API
->>>>
->>>>   drivers/pci/controller/dwc/Kconfig         |   10 +
->>>>   drivers/pci/controller/dwc/Makefile        |    1 +
->>>>   drivers/pci/controller/dwc/pcie-tegra194.c | 1621
->>>> ++++++++++++++++++++
->>>>   3 files changed, 1632 insertions(+)
->>>>   create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/Kconfig
->>>> b/drivers/pci/controller/dwc/Kconfig
->>>> index a6ce1ee51b4c..884112afc11b 100644
->>>> --- a/drivers/pci/controller/dwc/Kconfig
->>>> +++ b/drivers/pci/controller/dwc/Kconfig
->>>> @@ -220,6 +220,16 @@ config PCI_MESON
->>>>         and therefore the driver re-uses the DesignWare core
->>>> functions to
->>>>         implement the driver.
->>>>   +config PCIE_TEGRA194
->>>> +    tristate "NVIDIA Tegra194 (and later) PCIe controller"
->>>> +    depends on (TEGRA_BPMP && ARCH_TEGRA) || COMPILE_TEST
->>>
->>> TEGRA_BPMP will be enough here as it depends on other relevant options.
->>>
->>> Hence I mean:
->>>
->>>     depends on TEGRA_BPMP || COMPILE_TEST
->>
->> Maybe it's worth to even change TEGRA_BPMP to ARCH_TEGRA_194_SOC.
->> Although then you'll have to extend it with other platforms later on,
->> but probably that's fine.
-> I received an explicit comment previously to make this dependent on
-> TEGRA_BPMP
-> as the driver is using APIs to get certain jobs done by BPMP-FW. But, since
-> we can't boot kernel in the first place without having BPMP-FW in place,
-> I think
-> it should be fine to make it dependent on ARCH_TEGRA_194_SOC directly.
+Define new IDs for clocks used by Dynamic Memory Controller in
+Exynos5422 SoC.
 
-ARCH_TEGRA_194_SOC selects BPMP by itself (see
-drivers/soc/tegra/Kconfig), so it's indeed absolutely fine.
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+---
+ include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+index 355f469943f1..02d5ac469a3d 100644
+--- a/include/dt-bindings/clock/exynos5420.h
++++ b/include/dt-bindings/clock/exynos5420.h
+@@ -60,6 +60,7 @@
+ #define CLK_MAU_EPLL		159
+ #define CLK_SCLK_HSIC_12M	160
+ #define CLK_SCLK_MPHY_IXTAL24	161
++#define CLK_SCLK_BPLL		162
+ 
+ /* gate clocks */
+ #define CLK_UART0		257
+@@ -195,6 +196,16 @@
+ #define CLK_ACLK432_CAM		518
+ #define CLK_ACLK_FL1550_CAM	519
+ #define CLK_ACLK550_CAM		520
++#define CLK_CLKM_PHY0		521
++#define CLK_CLKM_PHY1		522
++#define CLK_ACLK_PPMU_DREX0_0	523
++#define CLK_ACLK_PPMU_DREX0_1	524
++#define CLK_ACLK_PPMU_DREX1_0	525
++#define CLK_ACLK_PPMU_DREX1_1	526
++#define CLK_PCLK_PPMU_DREX0_0	527
++#define CLK_PCLK_PPMU_DREX0_1	528
++#define CLK_PCLK_PPMU_DREX1_0	529
++#define CLK_PCLK_PPMU_DREX1_1	530
+ 
+ /* mux clocks */
+ #define CLK_MOUT_HDMI		640
+@@ -217,6 +228,8 @@
+ #define CLK_MOUT_EPLL		657
+ #define CLK_MOUT_MAU_EPLL	658
+ #define CLK_MOUT_USER_MAU_EPLL	659
++#define CLK_MOUT_SCLK_SPLL	660
++#define CLK_MOUT_MX_MSPLL_CCORE_PHY	661
+ 
+ /* divider clocks */
+ #define CLK_DOUT_PIXEL		768
+@@ -248,8 +261,11 @@
+ #define CLK_DOUT_CCLK_DREX0	794
+ #define CLK_DOUT_CLK2X_PHY0	795
+ #define CLK_DOUT_PCLK_CORE_MEM	796
++#define CLK_FF_DOUT_SPLL2	797
++#define CLK_DOUT_PCLK_DREX0	798
++#define CLK_DOUT_PCLK_DREX1	799
+ 
+ /* must be greater than maximal clock id */
+-#define CLK_NR_CLKS		797
++#define CLK_NR_CLKS		800
+ 
+ #endif /* _DT_BINDINGS_CLOCK_EXYNOS_5420_H */
+-- 
+2.17.1
