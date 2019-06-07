@@ -1,167 +1,39 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v6 06/10] device connection: Add
- fwnode_connection_find_match()
-Date: Fri, 7 Jun 2019 13:30:26 +0300
-Message-ID: <20190607103026.GE10298@kuha.fi.intel.com>
-References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
- <1559115828-19146-7-git-send-email-chunfeng.yun@mediatek.com>
+From: Dragan Cvetic <draganc@xilinx.com>
+Subject: RE: [PATCH V4 04/12] misc: xilinx_sdfec: Add open, close and ioctl
+Date: Fri, 7 Jun 2019 10:58:34 +0000
+Message-ID: <CH2PR02MB6359747C72220A978CCA807BCB100@CH2PR02MB6359.namprd02.prod.outlook.com>
+References: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1558784245-108751-5-git-send-email-dragan.cvetic@xilinx.com>
+ <20190606132842.GC7943@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="bg08WKrSYDhXBjb5"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1559115828-19146-7-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <20190606132842.GC7943@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Yu Chen <chenyu56@huawei.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Derek Kiernan <dkiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+> On Sat, May 25, 2019 at 12:37:17PM +0100, Dragan Cvetic wrote:
+> > +static int xsdfec_dev_open(struct inode *iptr, struct file *fptr)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> > +static int xsdfec_dev_release(struct inode *iptr, struct file *fptr)
+> > +{
+> > +	return 0;
+> > +}
+>=20
+> empty open/close functions are never needed, just drop them.
+>=20
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+open() is needed to allocate file descriptor eg.
+fd =3D open(dev_name, O_RDWR);
 
-Hi,
+Please, advise if you have some other idea in mind
 
-On Wed, May 29, 2019 at 03:43:44PM +0800, Chunfeng Yun wrote:
-> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> 
-> The fwnode_connection_find_match() function is exactly the
-> same as device_connection_find_match(), except it takes
-> struct fwnode_handle as parameter instead of struct device.
-> That allows locating device connections before the device
-> entries have been created.
-> 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
-This one is also missing your SoB.
-
-There are now some other changes to the devcon API in Rafael's tree
-[1] that will conflict with this one. I'm attaching a modified version
-of the patch that is rebased on top of today's linux-next. If you use
-it, you should make a note (probable in the cover letter) that the
-series now depends on Rafael's tree.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
-
-
-thanks,
-
--- 
-heikki
-
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="0001-device-connection-Add-fwnode_connection_find_match.patch"
-
->From ea4ebbfd00e6ddc7bb7ad32e2f921bfc67f2ff8f Mon Sep 17 00:00:00 2001
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Date: Wed, 22 May 2019 17:06:54 +0300
-Subject: [PATCH] device connection: Add fwnode_connection_find_match()
-
-The fwnode_connection_find_match() function is exactly the
-same as device_connection_find_match(), except it takes
-struct fwnode_handle as parameter instead of struct device.
-That allows locating device connections before the device
-entries have been created.
-
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/base/devcon.c  | 43 ++++++++++++++++++++++++++++++------------
- include/linux/device.h | 10 +++++++---
- 2 files changed, 38 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
-index f7035fc12b92..5bf9537bd738 100644
---- a/drivers/base/devcon.c
-+++ b/drivers/base/devcon.c
-@@ -12,9 +12,6 @@
- static DEFINE_MUTEX(devcon_lock);
- static LIST_HEAD(devcon_list);
- 
--typedef void *(*devcon_match_fn_t)(struct device_connection *con, int ep,
--				   void *data);
--
- static void *
- fwnode_graph_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
- 			  void *data, devcon_match_fn_t match)
-@@ -60,6 +57,34 @@ fwnode_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
- 	return NULL;
- }
- 
-+/**
-+ * fwnode_connection_find_match - Find connection from a device node
-+ * @fwnode: Device node with the connection
-+ * @con_id: Identifier for the connection
-+ * @data: Data for the match function
-+ * @match: Function to check and convert the connection description
-+ *
-+ * Find a connection with unique identifier @con_id between @fwnode and another
-+ * device node. @match will be used to convert the connection description to
-+ * data the caller is expecting to be returned.
-+ */
-+void *fwnode_connection_find_match(struct fwnode_handle *fwnode,
-+				   const char *con_id, void *data,
-+				   devcon_match_fn_t match)
-+{
-+	void *ret;
-+
-+	if (!fwnode || !match)
-+		return NULL;
-+
-+	ret = fwnode_graph_devcon_match(fwnode, con_id, data, match);
-+	if (ret)
-+		return ret;
-+
-+	return fwnode_devcon_match(fwnode, con_id, data, match);
-+}
-+EXPORT_SYMBOL_GPL(fwnode_connection_find_match);
-+
- /**
-  * device_connection_find_match - Find physical connection to a device
-  * @dev: Device with the connection
-@@ -83,15 +108,9 @@ void *device_connection_find_match(struct device *dev, const char *con_id,
- 	if (!match)
- 		return NULL;
- 
--	if (fwnode) {
--		ret = fwnode_graph_devcon_match(fwnode, con_id, data, match);
--		if (ret)
--			return ret;
--
--		ret = fwnode_devcon_match(fwnode, con_id, data, match);
--		if (ret)
--			return ret;
--	}
-+	ret = fwnode_connection_find_match(fwnode, con_id, data, match);
-+	if (ret)
-+		return ret;
- 
- 	mutex_lock(&devcon_lock);
- 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index e0649f6adf2e..fd06d75da206 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -773,10 +773,14 @@ struct device_connection {
- 	struct list_head	list;
- };
- 
-+typedef void *(*devcon_match_fn_t)(struct device_connection *con, int ep,
-+				   void *data);
-+
-+void *fwnode_connection_find_match(struct fwnode_handle *fwnode,
-+				   const char *con_id, void *data,
-+				   devcon_match_fn_t match);
- void *device_connection_find_match(struct device *dev, const char *con_id,
--				void *data,
--				void *(*match)(struct device_connection *con,
--					       int ep, void *data));
-+				   void *data, devcon_match_fn_t match);
- 
- struct device *device_connection_find(struct device *dev, const char *con_id);
- 
--- 
-2.20.1
-
-
---bg08WKrSYDhXBjb5--
+Thanks
+Dragan
