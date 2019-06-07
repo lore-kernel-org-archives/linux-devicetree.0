@@ -1,59 +1,186 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RFC PATCH 4/6] soundwire: stream: make stream name a const pointer
-Date: Fri,  7 Jun 2019 09:56:41 +0100
-Message-ID: <20190607085643.932-5-srinivas.kandagatla@linaro.org>
-References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: add binding for USBSS-DRD controller.
+Date: Fri, 7 Jun 2019 12:25:57 +0300
+Message-ID: <64be9d26-2a68-1b90-89c8-29b227e0cd9c@ti.com>
+References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
+ <1559729030-16390-2-git-send-email-pawell@cadence.com>
+ <f032b3f3-409d-b0fc-8d5f-01c898b4c7a7@ti.com>
+ <BYAPR07MB470903AF06C1F8A34BBB3C64DD100@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <BYAPR07MB470903AF06C1F8A34BBB3C64DD100@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, vkoul@kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Make stream name const pointer
+On 07/06/2019 07:46, Pawel Laszczak wrote:
+> 
+>>
+>> Pawel,
+>>
+>> On 05/06/2019 13:03, Pawel Laszczak wrote:
+>>> This patch aim at documenting USB related dt-bindings for the
+>>> Cadence USBSS-DRD controller.
+>>>
+>>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>>
+>>> ---
+>>>  .../devicetree/bindings/usb/cdns-usb3.txt     | 30 +++++++++++++++++++
+>>>  1 file changed, 30 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+>>> new file mode 100644
+>>> index 000000000000..1d2b449e3cb4
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+>>> @@ -0,0 +1,30 @@
+>>> +Binding for the Cadence USBSS-DRD controller
+>>> +
+>>> +Required properties:
+>>> +  - reg: Physical base address and size of the controller's register areas.
+>>> +	 Controller has 3 different regions:
+>>> +	 region 1 - HOST registers area
+>>> +	 region 2 - DEVICE registers area
+>>> +	 region 3 - OTG/DRD registers area
+>>> +  - reg-names - register memory area names:
+>>> +	"xhci" - for HOST registers space
+>>> +	"dev" - for DEVICE registers space
+>>> +	"otg" - for OTG/DRD registers space
+>>> +  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
+>>> +  - interrupts: Interrupts used by cdns3 controller.
+>>
+>> Since we are requesting 3 separate named interrupts in code we need to
+>> mention them here.
+> 
+> Hi Roger, 
+> 
+> Yes, I know, but this code is Reviewed-by: Rob Herring, so I thought to add 
+> this as separate patch after putting this driver into kernel.
+> 
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/soundwire/stream.c    | 2 +-
- include/linux/soundwire/sdw.h | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Binding document should be updated as code changes.
 
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index b86992145799..8da1a8d2dac1 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -863,7 +863,7 @@ EXPORT_SYMBOL(sdw_release_stream);
-  * sdw_alloc_stream should be called only once per stream. Typically
-  * invoked from ALSA/ASoC machine/platform driver.
-  */
--struct sdw_stream_runtime *sdw_alloc_stream(char *stream_name)
-+struct sdw_stream_runtime *sdw_alloc_stream(const char *stream_name)
- {
- 	struct sdw_stream_runtime *stream;
- 
-diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index 80ca997e4e5d..457be7d09a4a 100644
---- a/include/linux/soundwire/sdw.h
-+++ b/include/linux/soundwire/sdw.h
-@@ -831,7 +831,7 @@ struct sdw_stream_params {
-  * @m_rt_count: Count of Master runtime(s) in this stream
-  */
- struct sdw_stream_runtime {
--	char *name;
-+	const char *name;
- 	struct sdw_stream_params params;
- 	enum sdw_stream_state state;
- 	enum sdw_stream_type type;
-@@ -839,7 +839,7 @@ struct sdw_stream_runtime {
- 	int m_rt_count;
- };
- 
--struct sdw_stream_runtime *sdw_alloc_stream(char *stream_name);
-+struct sdw_stream_runtime *sdw_alloc_stream(const char *stream_name);
- void sdw_release_stream(struct sdw_stream_runtime *stream);
- int sdw_stream_add_master(struct sdw_bus *bus,
- 		struct sdw_stream_config *stream_config,
+> I assume that after making some change in this file I should remove statement
+> Reviewed-by: Rob Herring <robh@kernel.org> from this patch to start reviving 
+> from the beginning.  
+
+Yes.
+
+> 
+> What do you think about such dt-binding:
+> 
+> Required properties:
+>   - reg: Physical base address and size of the controller's register areas.
+>          Controller has 3 different regions:
+>          region 1 - HOST registers area
+>          region 2 - DEVICE registers area
+>          region 3 - OTG/DRD registers area
+
+Is it so that region 1 is always HOST?
+offset 0 seems to be OTG though.
+
+If it is implementation specific then you could get rid of numbering.
+
+>   - reg-names - register memory area names:
+>         "xhci" - for HOST registers space
+>         "dev" - for DEVICE registers space
+>         "otg" - for OTG/DRD registers space
+>   - compatible: Should contain:
+>         "cdns,usb3-1.0.0" - for 0x00024502 controller version
+>         "cdns,usb3-1.0.1" - for 0x00024509 controller version
+>         "cdns,usb3-1.0.2" - for 0x0002450C controller version
+>         "cdns,usb3-1.0.3" - for 0x0002450d controller version
+> 
+> - interrupts: Interrupts used by cdns3 controller:
+>         "host" - interrupt used by XHCI driver.
+>         "peripheral" - interrupt used by device driver
+>         "otg" - interrupt used by DRD/OTG  part of driver
+> 
+> Optional properties:
+>  - maximum-speed : valid arguments are "super-speed", "high-speed" and
+>                    "full-speed"; refer to usb/generic.txt
+>  - dr_mode: Should be one of "host", "peripheral" or "otg".
+>  - phys: reference to the USB PHY
+
+need to add 'phy-names' since you request the PHY with name.
+
+>  - on-chip-buff-size : size of memory intended as internal memory for endpoints
+>         buffers expressed in KB
+> 
+> Example:
+>         usb@f3000000 {
+>                 compatible = "cdns,usb3-1.0.1";
+>                 interrupts = <USB_HOST_IRQ  7 IRQ_TYPE_LEVEL_HIGH>
+
+coma missing.
+>                                 <USB_DEVICE_IRQ  7 IRQ_TYPE_LEVEL_HIGH>
+here too.
+>                                 <USB_OTG_IRQ  8 IRQ_TYPE_LEVEL_HIGH>;
+
+What is 7 and 8 ?
+
+>                 interrupt-names = "host", "peripheral", "otg";
+>                 reg = <0xf3000000 0x10000       /* memory area for HOST registers */
+
+should end with >,
+
+>                         0xf3010000 0x10000      /* memory area for DEVICE registers */
+here too
+
+>                         0xf3020000 0x10000>;    /* memory area for OTG/DRD registers */
+>                 reg-names = "xhci", "dev", "otg";
+>         };
+
+Isn't otg at offset 0, xhci at offset 0x10000 and dev at offset 0x20000?
+
+> 
+> Is this correct now ?
+> 
+> Maybe I should add something additionally for phy ?
+
+e.g.
+
+                        phys = <&usb3_phy>;
+                        phy-names = "cdns3,usbphy";
+
+> 
+> Regards,
+> Pawel
+> 
+>   
+>>
+>>> +
+>>> +Optional properties:
+>>> + - maximum-speed : valid arguments are "super-speed", "high-speed" and
+>>> +                   "full-speed"; refer to usb/generic.txt
+>>> + - dr_mode: Should be one of "host", "peripheral" or "otg".
+>>> + - phys: reference to the USB PHY
+>>> +
+>>> +Example:
+>>> +	usb@f3000000 {
+>>> +		compatible = "cdns,usb3-1.0.1";
+>>> +		interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
+>>
+>> This example won't work as code requests for 3 separate interrupts.
+>>
+>>> +		reg = <0xf3000000 0x10000	/* memory area for HOST registers */
+>>> +			0xf3010000 0x10000	/* memory area for DEVICE registers */
+>>> +			0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
+>>> +		reg-names = "xhci", "dev", "otg";
+>>> +	};
+>>>
+>>
+
+
 -- 
-2.21.0
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
