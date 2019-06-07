@@ -1,28 +1,77 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/3 linux dev-5.1 arm/soc v2] ARM: dts: aspeed: Add SGPM pinmux
-Date: Sat, 8 Jun 2019 00:25:16 +0200
-Message-ID: <CACRpkdYW3rezzJ3XAuuSNNsRiDh9nYNL8NNFjaZ=_NeXrmZbqA@mail.gmail.com>
-References: <1559684524-15583-1-git-send-email-hongweiz@ami.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 02/10] dt-bindings: display: bridge: thc63lvd1024:
+ Document dual-link operation
+Date: Sat, 8 Jun 2019 01:30:20 +0300
+Message-ID: <20190607223020.GB5110@pendragon.ideasonboard.com>
+References: <20190528141234.15425-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20190528141234.15425-3-laurent.pinchart+renesas@ideasonboard.com>
+ <63985327-c796-c8cc-50c8-f486942e3161@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559684524-15583-1-git-send-email-hongweiz@ami.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hongwei Zhang <hongweiz@ami.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <63985327-c796-c8cc-50c8-f486942e3161@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 11:42 PM Hongwei Zhang <hongweiz@ami.com> wrote:
-
-> Add SGPM pinmux to ast2500-pinctrl function and group, to prepare for
-> supporting SGPIO in AST2500 SoC.
->
-> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Please funnel this part of the patch through the ARM SoC
-tree. I guess Joel will queue this?
-
-Yours,
-Linus Walleij
+SGkgS2llcmFuLAoKT24gRnJpLCBKdW4gMDcsIDIwMTkgYXQgMTE6MTU6MDZQTSArMDEwMCwgS2ll
+cmFuIEJpbmdoYW0gd3JvdGU6Cj4gT24gMjgvMDUvMjAxOSAxNToxMiwgTGF1cmVudCBQaW5jaGFy
+dCB3cm90ZToKPiA+IFRoZSBUSEM2M0xWRDEwMjQgTFZEUyBkZWNvZGVyIGNhbiBvcGVyYXRlIGlu
+IHR3byBtb2Rlcywgc2luZ2xlLWxpbmsgb3IKPiA+IGR1YWwtbGluay4gSW4gZHVhbC1saW5rIG1v
+ZGUgYm90aCBpbnB1dCBwb3J0cyBhcmUgdXNlZCB0byBjYXJyeSBldmVuLQo+ID4gYW5kIG9kZC1u
+dW1iZXJlZCBwaXhlbHMgc2VwYXJhdGVseS4gRG9jdW1lbnQgdGhpcyBpbiB0aGUgRFQgYmluZGlu
+Z3MsCj4gPiBhbG9uZyB3aXRoIHRoZSByZWxhdGVkIHJ1bGVzIGdvdmVybmluZyBwb3J0IGFuZCB1
+c2FnZS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5w
+aW5jaGFydCtyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+Cj4gPiBSZXZpZXdlZC1ieTogSmFjb3Bv
+IE1vbmRpIDxqYWNvcG8rcmVuZXNhc0BqbW9uZGkub3JnPgo+ID4gUmV2aWV3ZWQtYnk6IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gPiBUZXN0ZWQtYnk6IEphY29wbyBNb25kaSA8amFj
+b3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPiA+IC0tLQo+ID4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5
+L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0ICAgICAgICAgIHwgNiArKysrKysKPiA+ICAx
+IGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNs
+dmQxMDI0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
+aWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4gPiBpbmRleCAzN2YwYzA0ZDVhMjguLmQxN2Qx
+ZTU4MjBkNyAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4gPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQx
+MDI0LnR4dAo+ID4gQEAgLTI4LDYgKzI4LDEyIEBAIE9wdGlvbmFsIHZpZGVvIHBvcnQgbm9kZXM6
+Cj4gPiAgLSBwb3J0QDE6IFNlY29uZCBMVkRTIGlucHV0IHBvcnQKPiA+ICAtIHBvcnRAMzogU2Vj
+b25kIGRpZ2l0YWwgQ01PUy9UVEwgcGFyYWxsZWwgb3V0cHV0Cj4gPiAgCj4gPiArVGhlIGRldmlj
+ZSBjYW4gb3BlcmF0ZSBpbiBzaW5nbGUtbGluayBtb2RlIG9yIGR1YWwtbGluayBtb2RlLiBJbiBz
+aW5nbGUtbGluawo+ID4gK21vZGUsIGFsbCBwaXhlbHMgYXJlIHJlY2VpdmVkIG9uIHBvcnRAMCwg
+YW5kIHBvcnRAMSBzaGFsbCBub3QgY29udGFpbiBhbnkKPiA+ICtlbmRwb2ludC4gSW4gZHVhbC1s
+aW5rIG1vZGUsIGV2ZW4tbnVtYmVyZWQgcGl4ZWxzIGFyZSByZWNlaXZlZCBvbiBwb3J0QDAgYW5k
+Cj4gPiArb2RkLW51bWJlcmVkIHBpeGVscyBvbiBwb3J0QDEsIGFuZCBib3RoIHBvcnRAMCBhbmQg
+cG9ydEAxIHNoYWxsIGNvbnRhaW4KPiA+ICtlbmRwb2ludHMuCj4gPiArCj4gCj4gWW91ciBjb3Zl
+ciBsZXR0ZXIgZGV0YWlscyA0IGRpZmZlcmVudCBtb2RlcyBvZiBvcGVyYXRpb24gZm9yIHRoaXMg
+cGFydC4KPiAKPiBEbyB5b3UgYW50aWNpcGF0ZSB0aGUgb3RoZXIgY29tYmluYXRpb25zIHtTaW5n
+bGUtaW4sIGR1YWwtb3V0OyBkdWFsLWluLAo+IGR1YWwtb3V0fSBiZWluZyBzdXBwb3J0ZWQ/IFBl
+cmhhcHMgdGhhdCB3b3VsZCBiZSBkZWZpbmVkIGJ5IHRoZSByZWxldmFudAo+IGVuZHBvaW50cyBi
+ZWluZyBjb25uZWN0ZWQgb3Igbm90ID8KCkkgZXhwZWN0IHRoYXQgc29tZW9uZSBtaWdodCBuZWVk
+IHRob3NlIG1vZGVzIGF0IHNvbWUgcG9pbnQsIGJ1dCBJCmhhdmVuJ3Qgc3BlY2lmaWVkIHRoZW0g
+b24gcHVycG9zZSwgYXMgSSBkb24ndCBsaWtlIHdyaXRpbmcgRFQgYmluZGluZ3MKdGhhdCBjYW4n
+dCBiZSB0ZXN0ZWQuIEkgaG93ZXZlciBleHBvZWN0IHRoYXQgdGhvc2UgYWRkaXRpb25hbCBtb2Rl
+cyBjYW4KYmUgZGVyaXZlZCBmcm9tIHRoZSBjb25uZWN0ZWQgZW5kcG9pbnRzLgoKPiBZb3Ugc3Rh
+dGUgdGhhdCBpbiBkdWFsLWxpbmsgbW9kZSwgYm90aCBwb3J0QDAsIGFuZCBwb3J0QDEgc2hhbGwg
+Y29udGFpbgo+IGVuZHBvaW50cywgc28gdGhhdCBpbXBsaWVzIHRoYXQgeW91IG9ubHkgZXhwZWN0
+IHRvIHN1cHBvcnQgZHVhbC1pbiB3aXRoCj4gdGhlICdkdWFsLWxpbmsnIHByb3BlcnR5LiBJZiB0
+aGF0IGlzIGNvcnJlY3QsIHNob3VsZCBpdCBiZSBzdGF0ZWQKPiBleHBsaWNpdGx5PwoKV2hhdCBk
+byB5b3UgbWVhbiBieSB0aGUgJ2R1YWwtbGluaycgcHJvcGVydHkgPyBUaGUgcGF0Y2ggc2VyaWVz
+IGRlZmluZXMKbm8gc3VjaCBwcm9wZXJ0eS4KCj4gT3RoZXJ3aXNlLAo+IAo+IFJldmlld2VkLWJ5
+OiBLaWVyYW4gQmluZ2hhbSA8a2llcmFuLmJpbmdoYW0rcmVuZXNhc0BpZGVhc29uYm9hcmQuY29t
+Pgo+IAo+ID4gIEV4YW1wbGU6Cj4gPiAgLS0tLS0tLS0KPiA+ICAKCi0tIApSZWdhcmRzLAoKTGF1
+cmVudCBQaW5jaGFydApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWw=
