@@ -1,77 +1,26 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v4 17/18] kernel/sysctl-test: Add null pointer test for
- sysctl.c:proc_dointvec()
-Date: Fri, 7 Jun 2019 15:22:53 -0700
-Message-ID: <CAFd5g475eUKnpNM3kDe_9PboCyZ=aanPeV2gTuzuJXRp-xbsWg@mail.gmail.com>
-References: <20190514221711.248228-1-brendanhiggins@google.com>
- <20190514221711.248228-18-brendanhiggins@google.com>
- <20190517182254.548EA20815@mail.kernel.org>
- <CAAXuY3p4qhKVsSpQ44_kQeGDMfg7OuFLgFyxhcFWS3yf-5A_7g@mail.gmail.com>
- <20190607190047.C3E7A20868@mail.kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3 linux dev-5.1 v2] ARM: dts: aspeed: Add SGPM pinmux
+Date: Sat, 8 Jun 2019 00:23:21 +0200
+Message-ID: <CACRpkdb=NBkqG1qi6F66pcd7UaxmpT9LFVLaCLFrM2SXDihJng@mail.gmail.com>
+References: <1559685212-15857-1-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190607190047.C3E7A20868@mail.kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, Frank Rowand <frowand.list@gmail.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Iurii Zaikin <yzaikin@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.ker>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559685212-15857-1-git-send-email-hongweiz@ami.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hongwei Zhang <hongweiz@ami.com>
+Cc: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gNywgMjAxOSBhdCAxMjowMCBQTSBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5l
-bC5vcmc+IHdyb3RlOgo+Cj4gUXVvdGluZyBJdXJpaSBaYWlraW4gKDIwMTktMDYtMDUgMTg6Mjk6
-NDIpCj4gPiBPbiBGcmksIE1heSAxNywgMjAxOSBhdCAxMToyMiBBTSBTdGVwaGVuIEJveWQgPHNi
-b3lkQGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4gPgo+ID4gPiBRdW90aW5nIEJyZW5kYW4gSGlnZ2lu
-cyAoMjAxOS0wNS0xNCAxNToxNzoxMCkKPiA+ID4gPiBkaWZmIC0tZ2l0IGEva2VybmVsL3N5c2N0
-bC10ZXN0LmMgYi9rZXJuZWwvc3lzY3RsLXRlc3QuYwo+ID4gPiA+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0Cj4gPiA+ID4gaW5kZXggMDAwMDAwMDAwMDAwMC4uZmUwZjJiYWU2NjA4NQo+ID4gPiA+IC0t
-LSAvZGV2L251bGwKPiA+ID4gPiArKysgYi9rZXJuZWwvc3lzY3RsLXRlc3QuYwo+ID4gPiA+ICsK
-PiA+ID4gPiArCj4gPiA+ID4gK3N0YXRpYyB2b2lkIHN5c2N0bF90ZXN0X2RvaW50dmVjX2hhcHB5
-X3NpbmdsZV9uZWdhdGl2ZShzdHJ1Y3Qga3VuaXQgKnRlc3QpCj4gPiA+ID4gK3sKPiA+ID4gPiAr
-ICAgICAgIHN0cnVjdCBjdGxfdGFibGUgdGFibGUgPSB7Cj4gPiA+ID4gKyAgICAgICAgICAgICAg
-IC5wcm9jbmFtZSA9ICJmb28iLAo+ID4gPiA+ICsgICAgICAgICAgICAgICAuZGF0YSAgICAgICAg
-ICAgPSAmdGVzdF9kYXRhLmludF8wMDAxLAo+ID4gPiA+ICsgICAgICAgICAgICAgICAubWF4bGVu
-ICAgICAgICAgPSBzaXplb2YoaW50KSwKPiA+ID4gPiArICAgICAgICAgICAgICAgLm1vZGUgICAg
-ICAgICAgID0gMDY0NCwKPiA+ID4gPiArICAgICAgICAgICAgICAgLnByb2NfaGFuZGxlciAgID0g
-cHJvY19kb2ludHZlYywKPiA+ID4gPiArICAgICAgICAgICAgICAgLmV4dHJhMSAgICAgICAgID0g
-JmlfemVybywKPiA+ID4gPiArICAgICAgICAgICAgICAgLmV4dHJhMiAgICAgICAgID0gJmlfb25l
-X2h1bmRyZWQsCj4gPiA+ID4gKyAgICAgICB9Owo+ID4gPiA+ICsgICAgICAgY2hhciBpbnB1dFtd
-ID0gIi05IjsKPiA+ID4gPiArICAgICAgIHNpemVfdCBsZW4gPSBzaXplb2YoaW5wdXQpIC0gMTsK
-PiA+ID4gPiArICAgICAgIGxvZmZfdCBwb3MgPSAwOwo+ID4gPiA+ICsKPiA+ID4gPiArICAgICAg
-IHRhYmxlLmRhdGEgPSBrdW5pdF9remFsbG9jKHRlc3QsIHNpemVvZihpbnQpLCBHRlBfVVNFUik7
-Cj4gPiA+ID4gKyAgICAgICBLVU5JVF9FWFBFQ1RfRVEodGVzdCwgMCwgcHJvY19kb2ludHZlYygm
-dGFibGUsIDEsIGlucHV0LCAmbGVuLCAmcG9zKSk7Cj4gPiA+ID4gKyAgICAgICBLVU5JVF9FWFBF
-Q1RfRVEodGVzdCwgc2l6ZW9mKGlucHV0KSAtIDEsIGxlbik7Cj4gPiA+ID4gKyAgICAgICBLVU5J
-VF9FWFBFQ1RfRVEodGVzdCwgc2l6ZW9mKGlucHV0KSAtIDEsIHBvcyk7Cj4gPiA+ID4gKyAgICAg
-ICBLVU5JVF9FWFBFQ1RfRVEodGVzdCwgLTksICooaW50ICopdGFibGUuZGF0YSk7Cj4gPiA+Cj4g
-PiA+IElzIHRoZSBjYXN0aW5nIG5lY2Vzc2FyeT8gT3IgY2FuIHRoZSBtYWNybyBkbyBhIHR5cGUg
-Y29lcmNpb24gb2YgdGhlCj4gPiA+IHNlY29uZCBwYXJhbWV0ZXIgYmFzZWQgb24gdGhlIGZpcnN0
-IHR5cGU/Cj4gPiAgRGF0YSBmaWVsZCBpcyBkZWZpbmVkIGFzIHZvaWQqIHNvIEkgYmVsaWV2ZSBj
-YXN0aW5nIGlzIG5lY2Vzc2FyeSB0bwo+ID4gZGVyZWZlcmVuY2UgaXQgYXMgYSBwb2ludGVyIHRv
-IGFuIGFycmF5IG9mIGludHMuIEkgZG9uJ3QgdGhpbmsgdGhlCj4gPiBtYWNybyBzaG91bGQgZG8g
-YW55IHR5cGUgY29lcmNpb24gdGhhdCA9PSBvcGVyYXRvciB3b3VsZG4ndCBkby4KPiA+ICBJIGRp
-ZCBjaGFuZ2UgdGhlIGNhc3QgdG8gbWFrZSBpdCBtb3JlIGNsZWFyIHRoYXQgaXQncyBhIHBvaW50
-ZXIgdG8gYW4KPiA+IGFycmF5IG9mIGludHMgYmVpbmcgZGVyZWZlcmVuY2VkLgo+Cj4gT2ssIEkg
-c3RpbGwgd29uZGVyIGlmIHdlIHNob3VsZCBtYWtlIEtVTklUX0VYUEVDVF9FUSBjaGVjayB0aGUg
-dHlwZXMgb24KPiBib3RoIHNpZGVzIGFuZCBjYXVzZSBhIGJ1aWxkIHdhcm5pbmcvZXJyb3IgaWYg
-dGhlIHR5cGVzIGFyZW4ndCB0aGUgc2FtZS4KPiBUaGlzIHdvdWxkIGJlIHNpbWlsYXIgdG8gb3Vy
-IG1pbi9tYXggbWFjcm9zIHRoYXQgY29tcGxhaW4gYWJvdXQKPiBtaXNtYXRjaGVkIHR5cGVzIGlu
-IHRoZSBjb21wYXJpc29ucy4gVGhlbiBpZiBhIHRlc3QgZGV2ZWxvcGVyIG5lZWRzIHRvCj4gY29u
-dmVydCBvbmUgdHlwZSBvciB0aGUgb3RoZXIgdGhleSBjb3VsZCBkbyBzbyB3aXRoIGEKPiBLVU5J
-VF9FWFBFQ1RfRVFfVCgpIG1hY3JvIHRoYXQgbGlzdHMgdGhlIHR5cGVzIHRvIGNvZXJjZSBib3Ro
-IHNpZGVzIHRvCj4gZXhwbGljaXRseS4KCkdvb2QgcG9pbnQuIEkgd291bGQgZGVmaW5pdGVseSBs
-aWtlIHRvIGRvIHRoaXMsIGZvciBtZSBpdCBpcyBvbmx5IGEKcXVlc3Rpb24gb2YgaG93IGRpZmZp
-Y3VsdCBpdCB3b3VsZCBiZSB0byBtYWtlIGFsbCB0aGF0IGhhcHBlbi4KCldlIHdpbGwgaW52ZXN0
-aWdhdGUgYW5kIHJlcG9ydCBiYWNrIG9uIGl0LgoKVGhhbmtzIGZvciB0aGUgc3VnZ2VzdGlvbiEg
-SXQncyBhIHJlYWxseSBnb29kIGlkZWEhCgpDaGVlcnMKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVs
+On Tue, Jun 4, 2019 at 11:53 PM Hongwei Zhang <hongweiz@ami.com> wrote:
+
+> Add SGPM pinmux to ast2500-pinctrl function and group, to prepare for
+> supporting SGPIO in AST2500 SoC.
+>
+> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+
+Patch applied! I altered the subject a bit to match the change
+to the pinctrl subsystem.
+
+Yours,
+Linus Walleij
