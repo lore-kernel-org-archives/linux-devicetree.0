@@ -1,29 +1,26 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] ARM: dts: qcom: msm8974-hammerhead: add touchscreen support
-Date: Fri, 7 Jun 2019 23:10:58 +0200
-Message-ID: <CACRpkdYP2C1cUN9w9uguSbXV3vkCDrm3o84qNbpTiaD9TcdMog@mail.gmail.com>
-References: <20190603010455.17060-1-masneyb@onstation.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Document drive strength
+ settings for BM1880 SoC
+Date: Fri, 7 Jun 2019 23:13:34 +0200
+Message-ID: <CACRpkdZcwZks6eKOb=Mq1EfCP8Kir+nPC1r9=FrA=si5WpwQww@mail.gmail.com>
+References: <20190603073421.10314-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190603010455.17060-1-masneyb@onstation.org>
+In-Reply-To: <20190603073421.10314-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, frank.rowand@sony.com, =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>, absahu@codeaurora.org, MSM <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Jonathan Marek <jonathan@marek.ca>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, haitao.suo@bitmain.com, darren.tsao@bitmain.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, alec.lin@bitmain.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 3:05 AM Brian Masney <masneyb@onstation.org> wrote:
+On Mon, Jun 3, 2019 at 9:35 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 
-> From: Jonathan Marek <jonathan@marek.ca>
+> Document drive strength settings for Bitmain BM1880 SoC.
 >
-> Add support for the Synaptics RMI4 touchscreen that is found on the
-> Nexus 5.
->
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Looks good to me:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Standard bindings, uncontroversial so patch applied!
 
 Yours,
 Linus Walleij
