@@ -1,46 +1,64 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: rng: Document BCM7211 RNG compatible
- string
-Date: Fri, 7 Jun 2019 11:57:49 -0700
-Message-ID: <ce516362-658f-cde3-9be8-0e092f554782@gmail.com>
-References: <20190510173112.2196-1-f.fainelli@gmail.com>
- <20190510173112.2196-2-f.fainelli@gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 17/18] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+Date: Fri, 07 Jun 2019 12:00:47 -0700
+Message-ID: <20190607190047.C3E7A20868@mail.kernel.org>
+References: <20190514221711.248228-1-brendanhiggins@google.com> <20190514221711.248228-18-brendanhiggins@google.com> <20190517182254.548EA20815@mail.kernel.org> <CAAXuY3p4qhKVsSpQ44_kQeGDMfg7OuFLgFyxhcFWS3yf-5A_7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510173112.2196-2-f.fainelli@gmail.com>
-Content-Language: en-US
+In-Reply-To: <CAAXuY3p4qhKVsSpQ44_kQeGDMfg7OuFLgFyxhcFWS3yf-5A_7g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: bcm-kernel-feedback-list@broadcom.com, stefan.wahren@i2se.com, wahrenst@gmx.net, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, mpm@selenic.com, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM IPROC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Iurii Zaikin <yzaikin@google.com>
+Cc: Brendan Higgins <brendanhiggins@google.com>, frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.comk
 List-Id: devicetree@vger.kernel.org
 
-On 5/10/19 10:31 AM, Florian Fainelli wrote:
-> BCM7211 features a RNG200 block, document its compatible string.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Quoting Iurii Zaikin (2019-06-05 18:29:42)
+> On Fri, May 17, 2019 at 11:22 AM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Brendan Higgins (2019-05-14 15:17:10)
+> > > diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+> > > new file mode 100644
+> > > index 0000000000000..fe0f2bae66085
+> > > --- /dev/null
+> > > +++ b/kernel/sysctl-test.c
+> > > +
+> > > +
+> > > +static void sysctl_test_dointvec_happy_single_negative(struct kunit =
+*test)
+> > > +{
+> > > +       struct ctl_table table =3D {
+> > > +               .procname =3D "foo",
+> > > +               .data           =3D &test_data.int_0001,
+> > > +               .maxlen         =3D sizeof(int),
+> > > +               .mode           =3D 0644,
+> > > +               .proc_handler   =3D proc_dointvec,
+> > > +               .extra1         =3D &i_zero,
+> > > +               .extra2         =3D &i_one_hundred,
+> > > +       };
+> > > +       char input[] =3D "-9";
+> > > +       size_t len =3D sizeof(input) - 1;
+> > > +       loff_t pos =3D 0;
+> > > +
+> > > +       table.data =3D kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > > +       KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len=
+, &pos));
+> > > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, pos);
+> > > +       KUNIT_EXPECT_EQ(test, -9, *(int *)table.data);
+> >
+> > Is the casting necessary? Or can the macro do a type coercion of the
+> > second parameter based on the first type?
+>  Data field is defined as void* so I believe casting is necessary to
+> dereference it as a pointer to an array of ints. I don't think the
+> macro should do any type coercion that =3D=3D operator wouldn't do.
+>  I did change the cast to make it more clear that it's a pointer to an
+> array of ints being dereferenced.
 
-Rob, does this look okay to you?
-
-> ---
->  Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt b/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
-> index 0014da9145af..c223e54452da 100644
-> --- a/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
-> +++ b/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
-> @@ -2,6 +2,7 @@ HWRNG support for the iproc-rng200 driver
->  
->  Required properties:
->  - compatible : Must be one of:
-> +	       "brcm,bcm7211-rng200"
->  	       "brcm,bcm7278-rng200"
->  	       "brcm,iproc-rng200"
->  - reg : base address and size of control register block
-> 
-
-
--- 
-Florian
+Ok, I still wonder if we should make KUNIT_EXPECT_EQ check the types on
+both sides and cause a build warning/error if the types aren't the same.
+This would be similar to our min/max macros that complain about
+mismatched types in the comparisons. Then if a test developer needs to
+convert one type or the other they could do so with a
+KUNIT_EXPECT_EQ_T() macro that lists the types to coerce both sides to
+explicitly.
