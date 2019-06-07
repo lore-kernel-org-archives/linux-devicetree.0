@@ -1,85 +1,29 @@
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH v3 02/10] dt-bindings: display: bridge: thc63lvd1024:
- Document dual-link operation
-Date: Fri, 7 Jun 2019 23:36:17 +0100
-Message-ID: <17f06c94-a2d3-e159-f89a-02e5a355b7ee@ideasonboard.com>
-References: <20190528141234.15425-1-laurent.pinchart+renesas@ideasonboard.com>
- <20190528141234.15425-3-laurent.pinchart+renesas@ideasonboard.com>
- <63985327-c796-c8cc-50c8-f486942e3161@ideasonboard.com>
- <20190607223020.GB5110@pendragon.ideasonboard.com>
-Reply-To: kieran.bingham@ideasonboard.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC RESEND PATCH v2 1/4] dt-bindings: gpio: davinci: Add k3
+ am654 compatible
+Date: Sat, 8 Jun 2019 00:39:55 +0200
+Message-ID: <CACRpkdY-yK3+uZvq1Xk7qJ2Nd7mgRkQ9C22AYO4AiZP5Cs719w@mail.gmail.com>
+References: <20190606095620.6211-1-j-keerthy@ti.com> <20190606095620.6211-2-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190607223020.GB5110@pendragon.ideasonboard.com>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190606095620.6211-2-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>, ext Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCk9uIDA3LzA2LzIwMTkgMjM6MzAsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6
-Cj4gSGkgS2llcmFuLAo+IAo+IE9uIEZyaSwgSnVuIDA3LCAyMDE5IGF0IDExOjE1OjA2UE0gKzAx
-MDAsIEtpZXJhbiBCaW5naGFtIHdyb3RlOgo+PiBPbiAyOC8wNS8yMDE5IDE1OjEyLCBMYXVyZW50
-IFBpbmNoYXJ0IHdyb3RlOgo+Pj4gVGhlIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgY2FuIG9w
-ZXJhdGUgaW4gdHdvIG1vZGVzLCBzaW5nbGUtbGluayBvcgo+Pj4gZHVhbC1saW5rLiBJbiBkdWFs
-LWxpbmsgbW9kZSBib3RoIGlucHV0IHBvcnRzIGFyZSB1c2VkIHRvIGNhcnJ5IGV2ZW4tCj4+PiBh
-bmQgb2RkLW51bWJlcmVkIHBpeGVscyBzZXBhcmF0ZWx5LiBEb2N1bWVudCB0aGlzIGluIHRoZSBE
-VCBiaW5kaW5ncywKPj4+IGFsb25nIHdpdGggdGhlIHJlbGF0ZWQgcnVsZXMgZ292ZXJuaW5nIHBv
-cnQgYW5kIHVzYWdlLgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxh
-dXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+Pj4gUmV2aWV3ZWQtYnk6
-IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPj4+IFJldmlld2VkLWJ5
-OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+Pj4gVGVzdGVkLWJ5OiBKYWNvcG8gTW9u
-ZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+Cj4+PiAtLS0KPj4+ICAuLi4vYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dCAgICAgICAgICB8IDYgKysrKysr
-Cj4+PiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQo+Pj4KPj4+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUs
-dGhjNjNsdmQxMDI0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4+PiBpbmRleCAzN2YwYzA0ZDVhMjgu
-LmQxN2QxZTU4MjBkNyAxMDA2NDQKPj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4+PiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhj
-NjNsdmQxMDI0LnR4dAo+Pj4gQEAgLTI4LDYgKzI4LDEyIEBAIE9wdGlvbmFsIHZpZGVvIHBvcnQg
-bm9kZXM6Cj4+PiAgLSBwb3J0QDE6IFNlY29uZCBMVkRTIGlucHV0IHBvcnQKPj4+ICAtIHBvcnRA
-MzogU2Vjb25kIGRpZ2l0YWwgQ01PUy9UVEwgcGFyYWxsZWwgb3V0cHV0Cj4+PiAgCj4+PiArVGhl
-IGRldmljZSBjYW4gb3BlcmF0ZSBpbiBzaW5nbGUtbGluayBtb2RlIG9yIGR1YWwtbGluayBtb2Rl
-LiBJbiBzaW5nbGUtbGluawo+Pj4gK21vZGUsIGFsbCBwaXhlbHMgYXJlIHJlY2VpdmVkIG9uIHBv
-cnRAMCwgYW5kIHBvcnRAMSBzaGFsbCBub3QgY29udGFpbiBhbnkKPj4+ICtlbmRwb2ludC4gSW4g
-ZHVhbC1saW5rIG1vZGUsIGV2ZW4tbnVtYmVyZWQgcGl4ZWxzIGFyZSByZWNlaXZlZCBvbiBwb3J0
-QDAgYW5kCj4+PiArb2RkLW51bWJlcmVkIHBpeGVscyBvbiBwb3J0QDEsIGFuZCBib3RoIHBvcnRA
-MCBhbmQgcG9ydEAxIHNoYWxsIGNvbnRhaW4KPj4+ICtlbmRwb2ludHMuCj4+PiArCj4+Cj4+IFlv
-dXIgY292ZXIgbGV0dGVyIGRldGFpbHMgNCBkaWZmZXJlbnQgbW9kZXMgb2Ygb3BlcmF0aW9uIGZv
-ciB0aGlzIHBhcnQuCj4+Cj4+IERvIHlvdSBhbnRpY2lwYXRlIHRoZSBvdGhlciBjb21iaW5hdGlv
-bnMge1NpbmdsZS1pbiwgZHVhbC1vdXQ7IGR1YWwtaW4sCj4+IGR1YWwtb3V0fSBiZWluZyBzdXBw
-b3J0ZWQ/IFBlcmhhcHMgdGhhdCB3b3VsZCBiZSBkZWZpbmVkIGJ5IHRoZSByZWxldmFudAo+PiBl
-bmRwb2ludHMgYmVpbmcgY29ubmVjdGVkIG9yIG5vdCA/Cj4gCj4gSSBleHBlY3QgdGhhdCBzb21l
-b25lIG1pZ2h0IG5lZWQgdGhvc2UgbW9kZXMgYXQgc29tZSBwb2ludCwgYnV0IEkKPiBoYXZlbid0
-IHNwZWNpZmllZCB0aGVtIG9uIHB1cnBvc2UsIGFzIEkgZG9uJ3QgbGlrZSB3cml0aW5nIERUIGJp
-bmRpbmdzCj4gdGhhdCBjYW4ndCBiZSB0ZXN0ZWQuIEkgaG93ZXZlciBleHBvZWN0IHRoYXQgdGhv
-c2UgYWRkaXRpb25hbCBtb2RlcyBjYW4KPiBiZSBkZXJpdmVkIGZyb20gdGhlIGNvbm5lY3RlZCBl
-bmRwb2ludHMuCj4gCj4+IFlvdSBzdGF0ZSB0aGF0IGluIGR1YWwtbGluayBtb2RlLCBib3RoIHBv
-cnRAMCwgYW5kIHBvcnRAMSBzaGFsbCBjb250YWluCj4+IGVuZHBvaW50cywgc28gdGhhdCBpbXBs
-aWVzIHRoYXQgeW91IG9ubHkgZXhwZWN0IHRvIHN1cHBvcnQgZHVhbC1pbiB3aXRoCj4+IHRoZSAn
-ZHVhbC1saW5rJyBwcm9wZXJ0eS4gSWYgdGhhdCBpcyBjb3JyZWN0LCBzaG91bGQgaXQgYmUgc3Rh
-dGVkCj4+IGV4cGxpY2l0bHk/Cj4gCj4gV2hhdCBkbyB5b3UgbWVhbiBieSB0aGUgJ2R1YWwtbGlu
-aycgcHJvcGVydHkgPyBUaGUgcGF0Y2ggc2VyaWVzIGRlZmluZXMKPiBubyBzdWNoIHByb3BlcnR5
-LgoKQWhhLCBteSBpbWFnaW5hdGlvbiBpcyBjcmVhdGluZyBzb21ldGhpbmcgZnJvbSBhbGwgdGhl
-IHJlZmVyZW5jZXMgdG8gdGhlCndvcmQgJ2R1YWwtbGluaycgOi1ECgpPayAtIHNvIGl0IGlzIGp1
-c3QgdGhlIGV4aXN0ZW5jZSBvZiB0aGUgZW5kcG9pbnRzIHdoaWNoIHdpbGwKZW5hYmxlLy9jb25m
-aWd1cmUgdGhlIHZhcmlvdXMgbW9kZXMgb2Ygb3BlcmF0aW9uLgoKSSBndWVzcyB0aGF0IHdpbGwg
-YmVjb21lIG1vcmUgY2xlYXIgd2hlbiBJIGdldCBkb3duIHRvIHRoZSBkcml2ZXIgcGF0Y2hlcyA6
-KQoKCgo+IAo+PiBPdGhlcndpc2UsCj4+Cj4+IFJldmlld2VkLWJ5OiBLaWVyYW4gQmluZ2hhbSA8
-a2llcmFuLmJpbmdoYW0rcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+Pgo+Pj4gIEV4YW1wbGU6
-Cj4+PiAgLS0tLS0tLS0KPj4+ICAKPiAKCi0tIApSZWdhcmRzCi0tCktpZXJhbgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Thu, Jun 6, 2019 at 11:55 AM Keerthy <j-keerthy@ti.com> wrote:
+
+> The patch adds k3 am654 compatible, specific properties and
+> an example.
+>
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+
+Patch applied with the three others, so now all
+GPIO changes are in tree.
+
+Please funnel all the DTS changes through ARM SoC.
+
+Yours,
+Linus Walleij
