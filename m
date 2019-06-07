@@ -1,66 +1,43 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v12 05/13] clk: ingenic: Add driver for the TCU clocks
-Date: Fri, 07 Jun 2019 15:50:37 -0700
-Message-ID: <20190607225038.02A5D20868@mail.kernel.org>
-References: <20190521145141.9813-1-paul@crapouillou.net> <20190521145141.9813-6-paul@crapouillou.net> <20190607212819.A5FAE208C3@mail.kernel.org> <1559944794.11351.0@crapouillou.net>
+From: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii
+ performance.
+Date: Fri, 7 Jun 2019 19:07:48 -0400
+Message-ID: <CAMdYzYorvWr1YhmFKaMQUCditjop5AZp4d1tO79XsVr7m7HrMw@mail.gmail.com>
+References: <20190607123731.8737-1-pgwipeout@gmail.com>
+ <1559912295.22520.0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559944794.11351.0@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, James Hogan <jhogan@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1559912295.22520.0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Paul Cercueil (2019-06-07 14:59:54)
-> Hi Stephen, thanks for the review.
-> > Quoting Paul Cercueil (2019-05-21 07:51:33)
-> >>  diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
-> >>  new file mode 100644
-> >>  index 000000000000..7249225a6994
-> >>  --- /dev/null
-> >>  +++ b/drivers/clk/ingenic/tcu.c
-> >>  @@ -0,0 +1,458 @@
-> >>  +// SPDX-License-Identifier: GPL-2.0
-> >>  +/*
-> >>  + * JZ47xx SoCs TCU clocks driver
-> >>  + * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
-> >>  + */
-> >>  +
-> >>  +#include <linux/clk.h>
-> >>  +#include <linux/clk-provider.h>
-> >>  +#include <linux/clkdev.h>
-> >>  +#include <linux/clockchips.h>
-> >>  +#include <linux/mfd/ingenic-tcu.h>
-> >>  +#include <linux/regmap.h>
-> >>  +
-> >>  +#include <dt-bindings/clock/ingenic,tcu.h>
-> >>  +
-> >>  +/* 8 channels max + watchdog + OST */
-> >>  +#define TCU_CLK_COUNT  10
-> >>  +
-> >>  +#define TCU_ERR(...) pr_crit("ingenic-tcu-clk: " __VA_ARGS__)
-> >=20
-> > Why is it pr_crit instead of pr_err()?
->=20
-> If the TCU timer clocks are not provided for any reason, the system
-> will have no timer, and the kernel will hang very early in the init
-> process. That's why I chose pr_crit().
+On Fri, Jun 7, 2019 at 8:58 AM Leonidas P. Papadakos
+<papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>
+> I'll test on my board, but if in the end it does end up being a change
+> to both tx and rxpbl then we can replce the 2 tx/rxpbl options with
+> one, as far as I know:
+>
+> snps,pbl = <0x4>;
+>
+>
 
-HMm. So maybe it should be TCU_CRIT() then? Or just drop the wrapper
-macro and define a pr_fmt for this file that has ingenic-tcu-clk: for
-it?
+The big change was actually snps,aal.
+As per the TRM, DMA channels not address aligned have severe
+limitations, if they work at all.
 
->=20
-> Most of the code here works without a struct device, it wouldn't be=20
-> easy to
-> get it to work with runtime PM.
->=20
-> I can enable the "tcu" clock in the probe and just gate/ungate it in the
-> suspend/resume callbacks, that would work just fine. We don't need=20
-> anything
-> fancy here.
-
-OK. That sounds like a better approach to gate and ungate in
-suspend/resume.
+Setting the DMA ops as address aligned fixed my 30mbps TX issue when
+combined with your snps,txpbl = <0x4>.
