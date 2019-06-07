@@ -1,186 +1,75 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v7 1/6] dt-bindings: add binding for USBSS-DRD controller.
-Date: Fri, 7 Jun 2019 12:25:57 +0300
-Message-ID: <64be9d26-2a68-1b90-89c8-29b227e0cd9c@ti.com>
-References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
- <1559729030-16390-2-git-send-email-pawell@cadence.com>
- <f032b3f3-409d-b0fc-8d5f-01c898b4c7a7@ti.com>
- <BYAPR07MB470903AF06C1F8A34BBB3C64DD100@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Torsten Duwe <duwe@lst.de>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345
+ bridge on Teres-I
+Date: Fri, 7 Jun 2019 11:40:30 +0200
+Message-ID: <20190607094030.GA12373@lst.de>
+References: <20190604122150.29D6468B05@newverein.lst.de> <20190604122308.98D4868B20@newverein.lst.de> <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com> <20190605101317.GA9345@lst.de> <20190605120237.ekmytfxcwbjaqy3x@flea> <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at> <20190607062802.m5wslx3imiqooq5a@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB470903AF06C1F8A34BBB3C64DD100@BYAPR07MB4709.namprd07.prod.outlook.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190607062802.m5wslx3imiqooq5a@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Harald Geyer <harald@ccbib.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/06/2019 07:46, Pawel Laszczak wrote:
+On Fri, Jun 07, 2019 at 08:28:02AM +0200, Maxime Ripard wrote:
+> On Thu, Jun 06, 2019 at 03:59:27PM +0200, Harald Geyer wrote:
+> >
+> > If think valid compatible properties would be:
+> > compatible = "innolux,n116bge", "simple-panel";
+> > compatible = "edp-connector", "simple-panel";
 > 
->>
->> Pawel,
->>
->> On 05/06/2019 13:03, Pawel Laszczak wrote:
->>> This patch aim at documenting USB related dt-bindings for the
->>> Cadence USBSS-DRD controller.
->>>
->>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>
->>> ---
->>>  .../devicetree/bindings/usb/cdns-usb3.txt     | 30 +++++++++++++++++++
->>>  1 file changed, 30 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
->>> new file mode 100644
->>> index 000000000000..1d2b449e3cb4
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
->>> @@ -0,0 +1,30 @@
->>> +Binding for the Cadence USBSS-DRD controller
->>> +
->>> +Required properties:
->>> +  - reg: Physical base address and size of the controller's register areas.
->>> +	 Controller has 3 different regions:
->>> +	 region 1 - HOST registers area
->>> +	 region 2 - DEVICE registers area
->>> +	 region 3 - OTG/DRD registers area
->>> +  - reg-names - register memory area names:
->>> +	"xhci" - for HOST registers space
->>> +	"dev" - for DEVICE registers space
->>> +	"otg" - for OTG/DRD registers space
->>> +  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
->>> +  - interrupts: Interrupts used by cdns3 controller.
->>
->> Since we are requesting 3 separate named interrupts in code we need to
->> mention them here.
+> A connector isn't a panel.
 > 
-> Hi Roger, 
+> > compatible = "innolux,n116bge", "edp-connector", "simple-panel";
 > 
-> Yes, I know, but this code is Reviewed-by: Rob Herring, so I thought to add 
-> this as separate patch after putting this driver into kernel.
+> And the innolux,n116bge is certainly not a connector either.
 > 
-
-Binding document should be updated as code changes.
-
-> I assume that after making some change in this file I should remove statement
-> Reviewed-by: Rob Herring <robh@kernel.org> from this patch to start reviving 
-> from the beginning.  
-
-Yes.
-
+> > compatible = "edp-connector", "innolux,n116bge", "simple-panel";
+> >
+> > I can't make up my mind which one I prefere. However neither of these
+> > variants requires actually implmenting an edp-connector driver.
 > 
-> What do you think about such dt-binding:
-> 
-> Required properties:
->   - reg: Physical base address and size of the controller's register areas.
->          Controller has 3 different regions:
->          region 1 - HOST registers area
->          region 2 - DEVICE registers area
->          region 3 - OTG/DRD registers area
+> No-one asked to do an edp-connector driver. You should use it in your
+> DT, but if you want to have some code in your driver that parses the
+> DT directly, I'm totally fine with that.
 
-Is it so that region 1 is always HOST?
-offset 0 seems to be OTG though.
+I must admit I fail to understand what that extra node would be good for.
+Logically, the eDP far side is connected to the well-known n116bge.
+Inside the laptop case it might as well be a flat ribbon cable or
+soldered directly.
+In good intention, that's all I wanted to express in the DT. I don't
+know whether the relevant mechanical dimensions of the panel and the
+connector are standardised, so whether one could in theory assemble it
+with a different panel than the one it came with.
 
-If it is implementation specific then you could get rid of numbering.
+OTOH, as I checked during the discussion with anarsoul, the panel's
+supply voltage is permanently connected to the main 3.3V rail.
+We already agreed that the eDP output port must not neccessarily be
+specified, this setup is a good example why: because the panel is
+always powered, the anx6345 can always pull valid EDID data from it
+so at this stage there's no need for any OS driver to reach beyond
+the bridge. IIRC even the backlight got switched off for the blank
+screen without.
 
->   - reg-names - register memory area names:
->         "xhci" - for HOST registers space
->         "dev" - for DEVICE registers space
->         "otg" - for OTG/DRD registers space
->   - compatible: Should contain:
->         "cdns,usb3-1.0.0" - for 0x00024502 controller version
->         "cdns,usb3-1.0.1" - for 0x00024509 controller version
->         "cdns,usb3-1.0.2" - for 0x0002450C controller version
->         "cdns,usb3-1.0.3" - for 0x0002450d controller version
-> 
-> - interrupts: Interrupts used by cdns3 controller:
->         "host" - interrupt used by XHCI driver.
->         "peripheral" - interrupt used by device driver
->         "otg" - interrupt used by DRD/OTG  part of driver
-> 
-> Optional properties:
->  - maximum-speed : valid arguments are "super-speed", "high-speed" and
->                    "full-speed"; refer to usb/generic.txt
->  - dr_mode: Should be one of "host", "peripheral" or "otg".
->  - phys: reference to the USB PHY
+All I wanted to say is that "there's usually an n116bge behind it";
+but this is mostly redundant.
 
-need to add 'phy-names' since you request the PHY with name.
+So, shall we just drop the output port specification (along with the
+panel node) in order to get one step further?
 
->  - on-chip-buff-size : size of memory intended as internal memory for endpoints
->         buffers expressed in KB
-> 
-> Example:
->         usb@f3000000 {
->                 compatible = "cdns,usb3-1.0.1";
->                 interrupts = <USB_HOST_IRQ  7 IRQ_TYPE_LEVEL_HIGH>
+> I guess you should describe why do you think it's "clear", because I'm
+> not sure this is obvious for everyone here. eDP allows to discover
+> which device is on the other side and its supported timings, just like
+> HDMI for example (or regular DP, for that matter). Would you think
+> it's clearly preferable to ship a DT with the DP/HDMI monitor
+> connected on the other side exposed as a panel as well?
 
-coma missing.
->                                 <USB_DEVICE_IRQ  7 IRQ_TYPE_LEVEL_HIGH>
-here too.
->                                 <USB_OTG_IRQ  8 IRQ_TYPE_LEVEL_HIGH>;
+Well, as I wrote: "in good intention". That's the panel that comes with
+the kit but it is very well detected automatically, just like you describe.
 
-What is 7 and 8 ?
+So, just leave it out?
 
->                 interrupt-names = "host", "peripheral", "otg";
->                 reg = <0xf3000000 0x10000       /* memory area for HOST registers */
-
-should end with >,
-
->                         0xf3010000 0x10000      /* memory area for DEVICE registers */
-here too
-
->                         0xf3020000 0x10000>;    /* memory area for OTG/DRD registers */
->                 reg-names = "xhci", "dev", "otg";
->         };
-
-Isn't otg at offset 0, xhci at offset 0x10000 and dev at offset 0x20000?
-
-> 
-> Is this correct now ?
-> 
-> Maybe I should add something additionally for phy ?
-
-e.g.
-
-                        phys = <&usb3_phy>;
-                        phy-names = "cdns3,usbphy";
-
-> 
-> Regards,
-> Pawel
-> 
->   
->>
->>> +
->>> +Optional properties:
->>> + - maximum-speed : valid arguments are "super-speed", "high-speed" and
->>> +                   "full-speed"; refer to usb/generic.txt
->>> + - dr_mode: Should be one of "host", "peripheral" or "otg".
->>> + - phys: reference to the USB PHY
->>> +
->>> +Example:
->>> +	usb@f3000000 {
->>> +		compatible = "cdns,usb3-1.0.1";
->>> +		interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
->>
->> This example won't work as code requests for 3 separate interrupts.
->>
->>> +		reg = <0xf3000000 0x10000	/* memory area for HOST registers */
->>> +			0xf3010000 0x10000	/* memory area for DEVICE registers */
->>> +			0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
->>> +		reg-names = "xhci", "dev", "otg";
->>> +	};
->>>
->>
-
-
--- 
-cheers,
--roger
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+	Torsten
