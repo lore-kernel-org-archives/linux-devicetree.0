@@ -1,50 +1,59 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 3/6] soundwire: core: define SDW_MAX_PORT
-Date: Fri, 7 Jun 2019 07:31:59 -0500
-Message-ID: <a4b527af-c999-829d-c4a0-41f0a6775b65@linux.intel.com>
-References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
- <20190607085643.932-4-srinivas.kandagatla@linaro.org>
+From: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii performance.
+Date: Fri,  7 Jun 2019 12:37:32 +0000
+Message-ID: <20190607123731.8737-1-pgwipeout@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190607085643.932-4-srinivas.kandagatla@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, broonie@kernel.org, vkoul@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "Leonidas P . Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/7/19 3:56 AM, Srinivas Kandagatla wrote:
-> This patch adds SDW_MAX_PORT so that other driver can use it.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->   include/linux/soundwire/sdw.h | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-> index aac68e879fae..80ca997e4e5d 100644
-> --- a/include/linux/soundwire/sdw.h
-> +++ b/include/linux/soundwire/sdw.h
-> @@ -36,6 +36,7 @@ struct sdw_slave;
->   #define SDW_FRAME_CTRL_BITS		48
->   #define SDW_MAX_DEVICES			11
->   
-> +#define SDW_MAX_PORTS	14
+Currently the rk3328-roc-cc ethernet is enabled using "snps,force_thresh_dma_mode".
+While this works, the performance leaves a lot to be desired.
+A previous attempt to improve performance used "snps,txpbl = <0x4>".
+This also allowed networking to function, but performance varied between boards.
 
-That's an ambiguous definition.
-You can have 16 ports per the SoundWire spec, but DP0 is reserved for 
-control and DP15 is an alias for all ports (same idea as device 15 for 
-broadcast operations but limited to a single device), which leaves 14 
-ports for audio usages.
+This patch takes that one step further.
+Set txpbl and rxpbl to 0x4.
+This can also be accomplished with "snps,pbl =<0x4>" which affects both.
+Also set "snps,aal" which forces address aligned DMA mode.
 
-In the MIPI specs, specifically the DisCo part, the difference is called 
-about with the the DP0 and DPn notations, so this could be SDW_MAX_DPn. 
-Alternatively you could use SDW_MAX_AUDIO_PORTS which is more 
-self-explanatory and does not require in-depth familiarity with the spec.
+On my board this achieves the best performance yet, however we need broad testing to ensure this works for everyone.
+Please test and provide feedback.
 
->   #define SDW_VALID_PORT_RANGE(n)		((n) <= 14 && (n) >= 1)
->   
->   #define SDW_DAI_ID_RANGE_START		100
-> 
+Signed-off-by: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index 5d499c9086fb..8bcc08de82fb 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -141,10 +141,12 @@
+ 	phy-mode = "rgmii";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmiim1_pins>;
+-	snps,force_thresh_dma_mode;
+ 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
++	snps,txpbl = <0x4>;
++	snps,rxpbl = <0x4>;
++	snps,aal;
+ 	tx_delay = <0x24>;
+ 	rx_delay = <0x18>;
+ 	status = "okay";
+-- 
+2.20.1
