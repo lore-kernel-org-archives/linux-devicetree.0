@@ -1,42 +1,55 @@
 From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v6 5/7] RISC-V: Parse cpu topology during boot.
-Date: Thu, 6 Jun 2019 22:00:51 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1906062159380.28147@viisi.sifive.com>
-References: <20190529211340.17087-1-atish.patra@wdc.com> <20190529211340.17087-6-atish.patra@wdc.com>
+Subject: Re: Patches for v5.2-rc and v5.3 merge window
+Date: Thu, 6 Jun 2019 22:24:33 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1906062219490.28147@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1905201019010.15580@viisi.sifive.com>
+ <7hr288exi7.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190529211340.17087-6-atish.patra@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Rafael J. Wyso
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7hr288exi7.fsf@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com
+Cc: Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, palmer@sifive.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 May 2019, Atish Patra wrote:
++ Rob, devicetree@, Mark
 
-> Currently, there are no topology defined for RISC-V.
-> Parse the cpu-map node from device tree and setup the
-> cpu topology.
+On Wed, 5 Jun 2019, Kevin Hilman wrote:
+
+> Paul Walmsley <paul.walmsley@sifive.com> writes:
 > 
-> CPU topology after applying the patch.
-> $cat /sys/devices/system/cpu/cpu2/topology/core_siblings_list
-> 0-3
-> $cat /sys/devices/system/cpu/cpu3/topology/core_siblings_list
-> 0-3
-> $cat /sys/devices/system/cpu/cpu3/topology/physical_package_id
-> 0
-> $cat /sys/devices/system/cpu/cpu3/topology/core_id
-> 3
+> > Palmer has asked me to collect patches for the v5.2-rc releases and v5.3 
+> > merge window, so I'll be doing so.  This is just a heads-up so no one is 
+> > surprised to see 'patch queued' responses from me.
 > 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+> Speaking of v5.2-rc, any chance your DT series will make it for v5.2?
 
-Looks reasonable to me.
+Ideally it would be nice to get acks from the DT folks first for:
 
-Acked-by: Paul Walmsley <paul.walmsley@sifive.com>
+https://lore.kernel.org/linux-riscv/20190602080500.31700-3-paul.walmsley@sifive.com/T/#u
 
-We're assuming, on the RISC-V side, that these patches will go in via 
-another tree.
+https://lore.kernel.org/linux-riscv/20190602080500.31700-4-paul.walmsley@sifive.com/T/#u
+
+If those come soon, I'd be fine with submitting them for v5.2-rc.  But if 
+that stretches much further into the v5.2-rc series, it seems best to 
+schedule it for v5.3.
+
+
+> I'm hoping to have upstream v5.2 ready for testing in kernelCI, and
+> that's one of the last missing pieces.  I just tested it on v5.2-rc3 and
+> it's working great with mainline u-boot.
+
+OK, great.  Thanks again for your testing help.
 
 
 - Paul
