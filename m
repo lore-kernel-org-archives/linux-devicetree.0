@@ -1,55 +1,105 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: Patches for v5.2-rc and v5.3 merge window
-Date: Thu, 6 Jun 2019 22:24:33 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1906062219490.28147@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.1905201019010.15580@viisi.sifive.com>
- <7hr288exi7.fsf@baylibre.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Date: Fri, 7 Jun 2019 08:28:02 +0200
+Message-ID: <20190607062802.m5wslx3imiqooq5a@flea>
+References: <20190604122150.29D6468B05@newverein.lst.de>
+ <20190604122308.98D4868B20@newverein.lst.de>
+ <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
+ <20190605101317.GA9345@lst.de>
+ <20190605120237.ekmytfxcwbjaqy3x@flea>
+ <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7hr288exi7.fsf@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com
-Cc: Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, palmer@sifive.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Harald Geyer <harald@ccbib.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Sean Paul <seanpaul@chromium.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Torsten Duwe <duwe@lst.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-+ Rob, devicetree@, Mark
-
-On Wed, 5 Jun 2019, Kevin Hilman wrote:
-
-> Paul Walmsley <paul.walmsley@sifive.com> writes:
-> 
-> > Palmer has asked me to collect patches for the v5.2-rc releases and v5.3 
-> > merge window, so I'll be doing so.  This is just a heads-up so no one is 
-> > surprised to see 'patch queued' responses from me.
-> 
-> Speaking of v5.2-rc, any chance your DT series will make it for v5.2?
-
-Ideally it would be nice to get acks from the DT folks first for:
-
-https://lore.kernel.org/linux-riscv/20190602080500.31700-3-paul.walmsley@sifive.com/T/#u
-
-https://lore.kernel.org/linux-riscv/20190602080500.31700-4-paul.walmsley@sifive.com/T/#u
-
-If those come soon, I'd be fine with submitting them for v5.2-rc.  But if 
-that stretches much further into the v5.2-rc series, it seems best to 
-schedule it for v5.3.
-
-
-> I'm hoping to have upstream v5.2 ready for testing in kernelCI, and
-> that's one of the last missing pieces.  I just tested it on v5.2-rc3 and
-> it's working great with mainline u-boot.
-
-OK, great.  Thanks again for your testing help.
-
-
-- Paul
+T24gVGh1LCBKdW4gMDYsIDIwMTkgYXQgMDM6NTk6MjdQTSArMDIwMCwgSGFyYWxkIEdleWVyIHdy
+b3RlOgo+IEd1eXMsIHRoaXMgZGlzY3Vzc2lvbiBpcyBnZXR0aW5nIGhlYXRlZCBmb3Igbm8gcmVh
+c29uLiBMZXQncyBwdXQKPiBwZXJzb25hbCBmcnVzdHJhdGlvbnMgYXNpZGUgYW5kIGRpc2N1c3Mg
+dGhlIGlzc3VlIG9uIGl0cyBtZXJpdHM6Cj4KPiBNYXhpbWUgUmlwYXJkIHdyaXRlczoKPiA+IE9u
+IFdlZCwgSnVuIDA1LCAyMDE5IGF0IDEyOjEzOjE3UE0gKzAyMDAsIFRvcnN0ZW4gRHV3ZSB3cm90
+ZToKPiA+ID4gT24gVHVlLCBKdW4gMDQsIDIwMTkgYXQgMDg6MDg6NDBBTSAtMDcwMCwgVmFzaWx5
+IEtob3J1emhpY2sgd3JvdGU6Cj4gPiA+ID4gT24gVHVlLCBKdW4gNCwgMjAxOSBhdCA1OjIzIEFN
+IFRvcnN0ZW4gRHV3ZSA8ZHV3ZUBsc3QuZGU+IHdyb3RlOgo+ID4gPiA+ID4KPiA+ID4gPiA+IFRl
+cmVzLUkgaGFzIGFuIGFueDYzNDUgYnJpZGdlIGNvbm5lY3RlZCB0byB0aGUgUkdCNjY2IExDRCBv
+dXRwdXQsIGFuZAo+ID4gPiA+ID4gdGhlIEkyQyBjb250cm9sbGluZyBzaWduYWxzIGFyZSBjb25u
+ZWN0ZWQgdG8gSTJDMCBidXMuIGVEUCBvdXRwdXQgZ29lcwo+ID4gPiA+ID4gdG8gYW4gSW5ub2x1
+eCBOMTE2QkdFIHBhbmVsLgo+ID4gPiA+ID4KPiA+ID4gPiA+IEVuYWJsZSBpdCBpbiB0aGUgZGV2
+aWNlIHRyZWUuCj4gPiA+ID4gPgo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSWNlbm93eSBaaGVu
+ZyA8aWNlbm93eUBhb3NjLmlvPgo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogVG9yc3RlbiBEdXdl
+IDxkdXdlQHN1c2UuZGU+Cj4gPiA+ID4gPiAtLS0KPiA+ID4gPiA+ICAuLi4vYm9vdC9kdHMvYWxs
+d2lubmVyL3N1bjUwaS1hNjQtdGVyZXMtaS5kdHMgICAgICB8IDY1ICsrKysrKysrKysrKysrKysr
+KysrLS0KPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNjEgaW5zZXJ0aW9ucygrKSwgNCBkZWxl
+dGlvbnMoLSkKPiA+ID4gPiA+Cj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290
+L2R0cy9hbGx3aW5uZXIvc3VuNTBpLWE2NC10ZXJlcy1pLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvYWxsd2lubmVyL3N1bjUwaS1hNjQtdGVyZXMtaS5kdHMKPiA+ID4gPiA+IGluZGV4IDBlYzQ2
+Yjk2OWE3NS4uYTBhZDQzOGIwMzdmIDEwMDY0NAo+ID4gPiA+ID4gLS0tIGEvYXJjaC9hcm02NC9i
+b290L2R0cy9hbGx3aW5uZXIvc3VuNTBpLWE2NC10ZXJlcy1pLmR0cwo+ID4gPiA+ID4gKysrIGIv
+YXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvc3VuNTBpLWE2NC10ZXJlcy1pLmR0cwo+ID4g
+PiA+ID4gQEAgLTY1LDYgKzY1LDIxIEBACj4gPiA+ID4gPiAgICAgICAgICAgICAgICAgfTsKPiA+
+ID4gPiA+ICAgICAgICAgfTsKPiA+ID4gPiA+Cj4gPiA+ID4gPiArICAgICAgIHBhbmVsOiBwYW5l
+bCB7Cj4gPiA+ID4gPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9Imlubm9sdXgsbjExNmJn
+ZSIsICJzaW1wbGUtcGFuZWwiOwo+ID4gPiA+Cj4gPiA+ID4gSXQncyBzdGlsbCAic2ltcGxlLXBh
+bmVsIi4gSSBiZWxpZXZlIEkgYWxyZWFkeSBtZW50aW9uZWQgdGhhdCBSb2IKPiA+ID4gPiBhc2tl
+ZCBpdCB0byBiZSBlZHAtY29ubmVjdG9yLgo+Cj4gQWN0dWFsbHkganVzdCBkcm9wcGluZyB0aGUg
+InNpbXBsZS1wYW5lbCIgY29tcGF0aWJsZSB3b3VsZCBiZSBhIHBvb3IKPiBjaG9pY2UuIEV2ZW4g
+aWYgImVkcC1jb25uZWN0b3IiIGlzIHNwZWNpZmllZCBhcyBiaW5kaW5nIGFuZCBpbXBsZW1lbnRl
+ZCBpbiBhCj4gZHJpdmVyLCB0aGVyZSBhcmUgb2xkZXIga2VybmVsIHZlcnNpb25zIGFuZCBvdGhl
+ciBvcGVyYXRpbmcgc3lzdGVtcyB0bwo+IGtlZXAgaW4gbWluZC4KCldoaWNoIG9sZGVyIGtlcm5l
+bHM/IFRoaXMgaXMgYSBuZXcgYmluZGluZywgYWRkaW5nIGEgbmV3IGRyaXZlciwgc28gaWYKYW4g
+b2xkZXIga2VybmVsIHVzZXMgYSBzZXBhcmF0ZSBkcml2ZXIgd2l0aCBpdHMgb3duIGJpbmRpbmcs
+IGdvb2QgZm9yCnRoZW0sIGJ1dCB3ZSBkb24ndCBoYXZlIHRvIHN1cHBvcnQgaXQuCgo+IElmIHRo
+ZSBIVyB3b3JrcyB3aXRoICJzaW1wbGUtcGFuZWwiIGRyaXZlciBzYXRpc2ZhY3RvcmlseSwKPiB3
+ZSBzaG91bGQgZGVmaW5pdGVseSBrZWVwIHRoZSBjb21wYXRpYmxlIGFzIGEgZmFsbCBiYWNrIGZv
+ciBjYXNlcyB3aGVyZQo+IHRoZSBlZHAtY29ubmVjdG9yIGRyaXZlciBpcyB1bmF2YWlsYWJsZS4K
+Pgo+IElmIHRoaW5rIHZhbGlkIGNvbXBhdGlibGUgcHJvcGVydGllcyB3b3VsZCBiZToKPiBjb21w
+YXRpYmxlID0gImlubm9sdXgsbjExNmJnZSIsICJzaW1wbGUtcGFuZWwiOwo+IGNvbXBhdGlibGUg
+PSAiZWRwLWNvbm5lY3RvciIsICJzaW1wbGUtcGFuZWwiOwoKQSBjb25uZWN0b3IgaXNuJ3QgYSBw
+YW5lbC4KCj4gY29tcGF0aWJsZSA9ICJpbm5vbHV4LG4xMTZiZ2UiLCAiZWRwLWNvbm5lY3RvciIs
+ICJzaW1wbGUtcGFuZWwiOwoKQW5kIHRoZSBpbm5vbHV4LG4xMTZiZ2UgaXMgY2VydGFpbmx5IG5v
+dCBhIGNvbm5lY3RvciBlaXRoZXIuCgo+IGNvbXBhdGlibGUgPSAiZWRwLWNvbm5lY3RvciIsICJp
+bm5vbHV4LG4xMTZiZ2UiLCAic2ltcGxlLXBhbmVsIjsKPgo+IEkgY2FuJ3QgbWFrZSB1cCBteSBt
+aW5kIHdoaWNoIG9uZSBJIHByZWZlcmUuIEhvd2V2ZXIgbmVpdGhlciBvZiB0aGVzZQo+IHZhcmlh
+bnRzIHJlcXVpcmVzIGFjdHVhbGx5IGltcGxtZW50aW5nIGFuIGVkcC1jb25uZWN0b3IgZHJpdmVy
+LgoKTm8tb25lIGFza2VkIHRvIGRvIGFuIGVkcC1jb25uZWN0b3IgZHJpdmVyLiBZb3Ugc2hvdWxk
+IHVzZSBpdCBpbiB5b3VyCkRULCBidXQgaWYgeW91IHdhbnQgdG8gaGF2ZSBzb21lIGNvZGUgaW4g
+eW91ciBkcml2ZXIgdGhhdCBwYXJzZXMgdGhlCkRUIGRpcmVjdGx5LCBJJ20gdG90YWxseSBmaW5l
+IHdpdGggdGhhdC4KCj4gQW5kIGVhY2ggb2YgdGhlc2UgdmFyaWFudHMgaXMgY2xlYXJseSBwcmVm
+ZXJhYmxlIHRvIHNoaXBwaW5nIERUcwo+IHdpdGhvdXQgZGVzY3JpcHRpb24gb2YgdGhlIHBhbmVs
+IGF0IGFsbCBhbmQgY29tcGxpZXMgd2l0aCBiaW5kaW5ncwo+IGFmdGVyIGFkZGluZyBhIHN0dWIg
+Zm9yICJlZHAtY29ubmVjdG9yIi4KCkkgZ3Vlc3MgeW91IHNob3VsZCBkZXNjcmliZSB3aHkgZG8g
+eW91IHRoaW5rIGl0J3MgImNsZWFyIiwgYmVjYXVzZSBJJ20Kbm90IHN1cmUgdGhpcyBpcyBvYnZp
+b3VzIGZvciBldmVyeW9uZSBoZXJlLiBlRFAgYWxsb3dzIHRvIGRpc2NvdmVyCndoaWNoIGRldmlj
+ZSBpcyBvbiB0aGUgb3RoZXIgc2lkZSBhbmQgaXRzIHN1cHBvcnRlZCB0aW1pbmdzLCBqdXN0IGxp
+a2UKSERNSSBmb3IgZXhhbXBsZSAob3IgcmVndWxhciBEUCwgZm9yIHRoYXQgbWF0dGVyKS4gV291
+bGQgeW91IHRoaW5rCml0J3MgY2xlYXJseSBwcmVmZXJhYmxlIHRvIHNoaXAgYSBEVCB3aXRoIHRo
+ZSBEUC9IRE1JIG1vbml0b3IKY29ubmVjdGVkIG9uIHRoZSBvdGhlciBzaWRlIGV4cG9zZWQgYXMg
+YSBwYW5lbCBhcyB3ZWxsPwoKPiA+IEFuZCB0aGUgRFQgaXMgY29uc2lkZXJlZCBhbiBBQkksIHNv
+IHllYWgsIHdlIHdpbGwgd2l0aGVsZCBldmVyeXRoaW5nCj4gPiB0aGF0IGRvZXNuJ3QgZml0IHdo
+YXQgd2Ugd291bGQgbGlrZS4KPgo+IEkgZmFpbCB0byBzZWUgaG93IHRoZSBwYXRjaCBpbiBkaXNj
+dXNzaW9uIGFkZHMgbmV3IEFCSS4KClRoZSBiaW5kaW5nIGl0c2VsZiBpcyB0aGUgQUJJLCBhbmQg
+d2Ugd2lsbCBoYXZlIHRvIHN1cHBvcnQgdGhhdApiaW5kaW5nIGZvciBwcmV0dHkgbXVjaCBmb3Jl
+dmVyLgoKPiBXaGlsZSBJIHVuZGVyc3RhbmQgdGhlIG5lZWQgdG8gcGVzdGVyIGNvbnRyaWJ1dG9y
+cyBmb3IgbW9yZSB3b3JrLAo+IG91dHJpZ2h0IGJsb2NraW5nIERUcywgdGhhdCBwcm9wZXJseSBk
+ZXNjcmliZSB0aGUgSFcKClByb3Blcmx5IGlzIGFyZ3VhYmxlLgoKPiBhbmQgY29tcGx5IHdpdGgg
+ZXhpc3RpbmcgYmluZGluZ3MKCkFuZCB0aGF0J3MgYmluZGluZ3MgbWVhbnQgZm9yIGFub3RoZXIg
+dXNlLWNhc2UuCgpNYXhpbWUKCi0tCk1heGltZSBSaXBhcmQsIEJvb3RsaW4KRW1iZWRkZWQgTGlu
+dXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwczovL2Jvb3RsaW4uY29tCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
