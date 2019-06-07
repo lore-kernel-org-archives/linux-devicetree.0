@@ -1,511 +1,466 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
-Date: Fri, 7 Jun 2019 21:34:44 +0800
-Message-ID: <CAEExFWtxEB67Pv-8x4ry=tZcJjOD6Kxydq_YB73Gox25VmQn7A@mail.gmail.com>
-References: <20190525181329.18657-1-tiny.windzz@gmail.com> <20190525181329.18657-2-tiny.windzz@gmail.com>
- <20190527122752.uc7q6zkjti3zag4q@flea>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 6/6] soundwire: qcom: add support for
+ SoundWire controller
+Date: Fri, 7 Jun 2019 08:36:02 -0500
+Message-ID: <249f9647-94d0-41d7-3b95-64c36d90f8e8@linux.intel.com>
+References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
+ <20190607085643.932-7-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190527122752.uc7q6zkjti3zag4q@flea>
+In-Reply-To: <20190607085643.932-7-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, David Miller <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, broonie@kernel.org, vkoul@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 27, 2019 at 8:27 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi!
->
-> Thanks for submitting a new version
->
-> On Sat, May 25, 2019 at 02:13:27PM -0400, Yangtao Li wrote:
-> > This patch adds the support for allwinner thermal sensor, within
-> > allwinner SoC. It will register sensors for thermal framework
-> > and use device tree to bind cooling device.
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  MAINTAINERS                     |   7 +
-> >  drivers/thermal/Kconfig         |  14 +
-> >  drivers/thermal/Makefile        |   1 +
-> >  drivers/thermal/sun8i_thermal.c | 437 ++++++++++++++++++++++++++++++++
-> >  4 files changed, 459 insertions(+)
-> >  create mode 100644 drivers/thermal/sun8i_thermal.c
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 2336dd26ece4..d312f9eecf0d 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -674,6 +674,13 @@ L:       linux-crypto@vger.kernel.org
-> >  S:   Maintained
-> >  F:   drivers/crypto/sunxi-ss/
-> >
-> > +ALLWINNER THERMAL DRIVER
-> > +M:   Yangtao Li <tiny.windzz@gmail.com>
-> > +L:   linux-pm@vger.kernel.org
-> > +S:   Maintained
-> > +F:   Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> > +F:   drivers/thermal/sun8i_thermal.c
-> > +
-> >  ALLWINNER VPU DRIVER
-> >  M:   Maxime Ripard <maxime.ripard@bootlin.com>
-> >  M:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> > index 9966364a6deb..e5465053d66f 100644
-> > --- a/drivers/thermal/Kconfig
-> > +++ b/drivers/thermal/Kconfig
-> > @@ -262,6 +262,20 @@ config SPEAR_THERMAL
-> >         Enable this to plug the SPEAr thermal sensor driver into the Linux
-> >         thermal framework.
-> >
-> > +config SUN8I_THERMAL
-> > +     tristate "Allwinner sun8i thermal driver"
-> > +     depends on ARCH_SUNXI || COMPILE_TEST
-> > +     depends on HAS_IOMEM
-> > +     depends on NVMEM_SUNXI_SID
->
-> Do you? It looks from your binding as if it's optional. Also, it's
-> pretty uncommon to depend on a given driver, usually you'll want to
-> depend on the framework instead.
->
-> > +     depends on OF
-> > +     depends on RESET_CONTROLLER
-> > +     help
-> > +       Support for the sun8i thermal sensor driver into the Linux thermal
-> > +       framework.
-> > +
-> > +       To compile this driver as a module, choose M here: the
-> > +       module will be called sun8i-thermal.
-> > +
-> >  config ROCKCHIP_THERMAL
-> >       tristate "Rockchip thermal driver"
-> >       depends on ARCH_ROCKCHIP || COMPILE_TEST
-> > diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> > index 74a37c7f847a..fa6f8b206281 100644
-> > --- a/drivers/thermal/Makefile
-> > +++ b/drivers/thermal/Makefile
-> > @@ -31,6 +31,7 @@ thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
-> >  obj-y                                += broadcom/
-> >  obj-$(CONFIG_THERMAL_MMIO)           += thermal_mmio.o
-> >  obj-$(CONFIG_SPEAR_THERMAL)  += spear_thermal.o
-> > +obj-$(CONFIG_SUN8I_THERMAL)     += sun8i_thermal.o
-> >  obj-$(CONFIG_ROCKCHIP_THERMAL)       += rockchip_thermal.o
-> >  obj-$(CONFIG_RCAR_THERMAL)   += rcar_thermal.o
-> >  obj-$(CONFIG_RCAR_GEN3_THERMAL)      += rcar_gen3_thermal.o
-> > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> > new file mode 100644
-> > index 000000000000..a9cc2197f4cb
-> > --- /dev/null
-> > +++ b/drivers/thermal/sun8i_thermal.c
-> > @@ -0,0 +1,437 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Thermal sensor driver for Allwinner SOC
-> > + * Copyright (C) 2019 Yangtao Li
-> > + *
-> > + * Based on the work of Icenowy Zheng <icenowy@aosc.io>
-> > + * Based on the work of Ondrej Jirman <megous@megous.com>
-> > + * Based on the work of Josef Gajdusek <atx@atx.name>
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/device.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/wait.h>
-> > +#include <linux/module.h>
-> > +#include <linux/nvmem-consumer.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/reset.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/thermal.h>
-> > +
-> > +#define MAX_SENSOR_NUM       4
-> > +
-> > +#define FT_TEMP_MASK                         GENMASK(11, 0)
-> > +#define TEMP_CALIB_MASK                              GENMASK(11, 0)
-> > +#define TEMP_TO_REG                          672
-> > +#define CALIBRATE_DEFAULT                    0x800
-> > +
-> > +#define SUN50I_THS_CTRL0                     0x00
-> > +#define SUN50I_H6_THS_ENABLE                 0x04
-> > +#define SUN50I_H6_THS_PC                     0x08
-> > +#define SUN50I_H6_THS_DIC                    0x10
-> > +#define SUN50I_H6_THS_DIS                    0x20
-> > +#define SUN50I_H6_THS_MFC                    0x30
-> > +#define SUN50I_H6_THS_TEMP_CALIB             0xa0
-> > +#define SUN50I_H6_THS_TEMP_DATA                      0xc0
-> > +
-> > +#define SUN50I_THS_CTRL0_T_ACQ(x)            ((GENMASK(15, 0) & (x)) << 16)
-> > +#define SUN50I_THS_FILTER_EN                 BIT(2)
-> > +#define SUN50I_THS_FILTER_TYPE(x)            (GENMASK(1, 0) & (x))
-> > +#define SUN50I_H6_THS_PC_TEMP_PERIOD(x)              ((GENMASK(19, 0) & (x)) << 12)
-> > +#define SUN50I_H6_THS_DATA_IRQ_STS(x)                BIT(x)
-> > +
-> > +/* millidegree celsius */
-> > +#define SUN50I_H6_FT_DEVIATION                       7000
-> > +
-> > +struct ths_device;
-> > +
-> > +struct tsensor {
-> > +     struct ths_device               *tmdev;
-> > +     struct thermal_zone_device      *tzd;
-> > +     int                             id;
-> > +     wait_queue_head_t               wait_queue;
-> > +};
-> > +
-> > +struct ths_thermal_chip {
-> > +     int             sensor_num;
-> > +     int             offset;
-> > +     int             scale;
-> > +     int             ft_deviation;
-> > +     int             temp_calib_base;
-> > +     int             temp_data_base;
-> > +     int             (*calibrate)(struct ths_device *tmdev);
-> > +     int             (*init)(struct ths_device *tmdev);
-> > +     irqreturn_t     (*irq_thread)(int irq, void *data);
-> > +};
->
-> Again, you should remove these quirks structure at the moment and only
-> deal with the H6.
->
-> > +struct ths_device {
-> > +     const struct ths_thermal_chip           *chip;
-> > +     struct device                           *dev;
-> > +     struct regmap                           *regmap;
-> > +     struct reset_control                    *reset;
-> > +     struct clk                              *bus_clk;
-> > +     struct tsensor                          sensor[MAX_SENSOR_NUM];
-> > +     int                                     data_ready;
-> > +};
-> > +
-> > +/* Temp Unit: millidegree Celsius */
-> > +static int sun8i_ths_reg2temp(struct ths_device *tmdev,
-> > +                           int reg)
-> > +{
-> > +     return (reg + tmdev->chip->offset) * tmdev->chip->scale;
-> > +}
-> > +
-> > +static int sun8i_ths_get_temp(void *data, int *temp)
-> > +{
-> > +     struct tsensor *s = data;
-> > +     struct ths_device *tmdev = s->tmdev;
-> > +     int val;
-> > +
-> > +     wait_event(s->wait_queue, tmdev->data_ready & BIT(s->id));
-> > +     tmdev->data_ready &= ~BIT(s->id);
-> > +
-> > +     regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
-> > +                 0x4 * s->id, &val);
-> > +
-> > +     *temp = sun8i_ths_reg2temp(tmdev, val);
-> > +     /*
-> > +      * XX - According to the original sdk, there are some platforms(rarely)
-> > +      * that add a fixed offset value after calculating the temperature
-> > +      * value. We can't simply put it on the formula for calculating the
-> > +      * temperature above, because the formula for calculating the
-> > +      * temperature above is also used when the sensor is calibrated. If
-> > +      * do this, the correct calibration formula is hard to know.
-> > +      */
-> > +     if (tmdev->chip->ft_deviation)
-> > +             *temp += tmdev->chip->ft_deviation;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct thermal_zone_of_device_ops ths_ops = {
-> > +     .get_temp = sun8i_ths_get_temp,
-> > +};
-> > +
-> > +static const struct regmap_config config = {
-> > +     .reg_bits = 32,
-> > +     .val_bits = 32,
-> > +     .reg_stride = 4,
-> > +     .fast_io = true,
-> > +};
-> > +
-> > +static irqreturn_t sun50i_h6_irq_thread(int irq, void *data)
-> > +{
-> > +     wait_queue_head_t *data_wait;
-> > +     struct ths_device *tmdev = data;
-> > +     int i, state;
-> > +
-> > +     regmap_read(tmdev->regmap, SUN50I_H6_THS_DIS, &state);
-> > +
-> > +     for (i = 0; i < tmdev->chip->sensor_num; i++) {
-> > +             data_wait = &tmdev->sensor[i].wait_queue;
->
-> You're only using data_wait in that scope, so you should define it
-> here.
->
-> > +
-> > +             if (state & SUN50I_H6_THS_DATA_IRQ_STS(i)) {
-> > +                     /* clear data irq pending */
-> > +                     regmap_write(tmdev->regmap, SUN50I_H6_THS_DIS,
-> > +                                  SUN50I_H6_THS_DATA_IRQ_STS(i));
-> > +
-> > +                     tmdev->data_ready |= BIT(i);
-> > +                     wake_up(data_wait);
-> > +             }
-> > +     }
-> > +
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int sun8i_ths_resource_init(struct ths_device *tmdev)
-> > +{
-> > +     struct device *dev = tmdev->dev;
-> > +     struct platform_device *pdev = to_platform_device(dev);
-> > +     struct resource *mem;
-> > +     void __iomem *base;
-> > +     int ret, irq;
-> > +
-> > +     mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +     base = devm_ioremap_resource(dev, mem);
-> > +     if (IS_ERR(base))
-> > +             return PTR_ERR(base);
-> > +
-> > +     tmdev->regmap = devm_regmap_init_mmio(dev, base, &config);
-> > +     if (IS_ERR(tmdev->regmap))
-> > +             return PTR_ERR(tmdev->regmap);
-> > +
-> > +     tmdev->reset = devm_reset_control_get(dev, 0);
-> > +     if (IS_ERR(tmdev->reset))
-> > +             return PTR_ERR(tmdev->reset);
-> > +
-> > +     tmdev->bus_clk = devm_clk_get(&pdev->dev, "bus");
-> > +     if (IS_ERR(tmdev->bus_clk))
-> > +             return PTR_ERR(tmdev->bus_clk);
-> > +
-> > +     irq = platform_get_irq(pdev, 0);
-> > +     if (irq < 0)
-> > +             return irq;
-> > +
-> > +     ret = devm_request_threaded_irq(dev, irq, NULL,
-> > +                                     tmdev->chip->irq_thread,
-> > +                                     IRQF_ONESHOT, "ths", tmdev);
-> > +     if (ret)
-> > +             return ret;
->
-> Is there any particular reason to use a threaded interrupt?
 
-Just to improve real-time.
+> +config SOUNDWIRE_QCOM
+> +	tristate "Qualcomm SoundWire Master driver"
+> +	select SOUNDWIRE_BUS
+> +	depends on SND_SOC
 
->
-> Also, starting from here you can start having interrupts...
->
-> > +
-> > +     ret = reset_control_deassert(tmdev->reset);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = clk_prepare_enable(tmdev->bus_clk);
-> > +     if (ret)
-> > +             goto assert_reset;
-> > +
-> > +     ret = tmdev->chip->calibrate(tmdev);
-> > +     if (ret)
-> > +             goto bus_disable;
->
-> While the device hasn't been properly initialized yet. Especially when
-> held in reset, some Allwinner controllers has been known to send
-> spurious interrupts, so we want to defer that to the very last minute
-> (so right before your call to sun8i_ths_register).
->
-> > +     return 0;
-> > +
-> > +bus_disable:
-> > +     clk_disable_unprepare(tmdev->bus_clk);
-> > +assert_reset:
-> > +     reset_control_assert(tmdev->reset);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static int sun50i_ths_calibrate(struct ths_device *tmdev)
-> > +{
-> > +     struct nvmem_cell *calcell;
-> > +     struct device *dev = tmdev->dev;
-> > +     u16 *caldata;
-> > +     size_t callen;
-> > +     int ft_temp;
-> > +     int i, ret = 0;
-> > +
-> > +     calcell = devm_nvmem_cell_get(dev, "calib");
-> > +     if (IS_ERR(calcell)) {
-> > +             if (PTR_ERR(calcell) == -EPROBE_DEFER)
-> > +                     return -EPROBE_DEFER;
-> > +             /*
-> > +              * Even if the external calibration data stored in sid is
-> > +              * not accessible, the THS hardware can still work, although
-> > +              * the data won't be so accurate.
-> > +              *
-> > +              * The default value of calibration register is 0x800 for
-> > +              * every sensor, and the calibration value is usually 0x7xx
-> > +              * or 0x8xx, so they won't be away from the default value
-> > +              * for a lot.
-> > +              *
-> > +              * So here we do not return error if the calibartion data is
-> > +              * not available, except the probe needs deferring.
-> > +              */
-> > +             goto out;
-> > +     }
-> > +
-> > +     caldata = nvmem_cell_read(calcell, &callen);
-> > +     if (IS_ERR(caldata)) {
-> > +             ret = PTR_ERR(caldata);
-> > +             goto out;
-> > +     }
-> > +
-> > +     if (!caldata[0] || callen < 2 + 2 * tmdev->chip->sensor_num) {
-> > +             ret = -EINVAL;
-> > +             goto out_free;
-> > +     }
-> > +
-> > +     /*
-> > +      * efuse layout:
-> > +      *
-> > +      *      0   11  16       32
-> > +      *      +-------+-------+-------+
-> > +      *      |temp|  |sensor0|sensor1|
-> > +      *      +-------+-------+-------+
-> > +      *
-> > +      * The calibration data on the H6 is the ambient temperature and
-> > +      * sensor values that are filled during the factory test stage.
-> > +      *
-> > +      * The unit of stored FT temperature is 0.1 degreee celusis.
-> > +      * Through the stored ambient temperature and the data read
-> > +      * by the sensor, after a certain calculation, the calibration
-> > +      * value to be compensated can be obtained.
-> > +      */
-> > +     ft_temp = caldata[0] & FT_TEMP_MASK;
-> > +
-> > +     for (i = 0; i < tmdev->chip->sensor_num; i++) {
-> > +             int reg = (int)caldata[i + 1];
-> > +             int sensor_temp = sun8i_ths_reg2temp(tmdev, reg);
-> > +             int delta, cdata, calib_offest;
-> > +
-> > +             /*
-> > +              * To calculate the calibration value:
-> > +              *
-> > +              * X(in Celsius) = Ts - ft_temp
-> > +              * delta = X * 10000 / TEMP_TO_REG
-> > +              * cdata = CALIBRATE_DEFAULT - delta
-> > +              *
-> > +              * cdata: calibration value
-> > +              */
-> > +             delta = (sensor_temp - ft_temp * 100) * 10 / TEMP_TO_REG;
-> > +             cdata = CALIBRATE_DEFAULT - delta;
-> > +             if (cdata & ~TEMP_CALIB_MASK) {
-> > +                     /*
-> > +                      * Calibration value more than 12-bit, but calibration
-> > +                      * register is 12-bit. In this case, ths hardware can
-> > +                      * still work without calibration, although the data
-> > +                      * won't be so accurate.
-> > +                      */
-> > +                     dev_warn(dev, "sensor%d is not calibrated.\n", i);
-> > +
-> > +                     continue;
-> > +             }
-> > +
-> > +             calib_offest = tmdev->chip->temp_calib_base + (i / 2) * 0x4;
-> > +
-> > +             if (i % 2) {
-> > +                     int val;
-> > +
-> > +                     regmap_read(tmdev->regmap, calib_offest, &val);
-> > +                     val = (val & TEMP_CALIB_MASK) | (cdata << 16);
-> > +                     regmap_write(tmdev->regmap, calib_offest, val);
-> > +             } else {
-> > +                     regmap_write(tmdev->regmap, calib_offest, cdata);
-> > +             }
-> > +     }
-> > +
-> > +out_free:
-> > +     kfree(caldata);
-> > +out:
-> > +     return ret;
-> > +}
-> > +
-> > +static int sun8i_ths_register(struct ths_device *tmdev)
-> > +{
-> > +     struct thermal_zone_device *tzd;
-> > +     int i;
-> > +
-> > +     for (i = 0; i < tmdev->chip->sensor_num; i++) {
-> > +             tmdev->sensor[i].tmdev = tmdev;
-> > +             tmdev->sensor[i].id = i;
-> > +             tmdev->sensor[i].tzd =
-> > +                     devm_thermal_zone_of_sensor_register(tmdev->dev,
-> > +                                                          i,
-> > +                                                          &tmdev->sensor[i],
-> > +                                                          &ths_ops);
-> > +             if (IS_ERR(tmdev->sensor[i].tzd))
-> > +                     return PTR_ERR(tzd);
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int sun8i_ths_probe(struct platform_device *pdev)
-> > +{
-> > +     struct ths_device *tmdev;
-> > +     struct device *dev = &pdev->dev;
-> > +     int i, ret;
-> > +
-> > +     tmdev = devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
-> > +     if (!tmdev)
-> > +             return -ENOMEM;
-> > +
-> > +     tmdev->dev = dev;
-> > +     tmdev->chip = of_device_get_match_data(&pdev->dev);
-> > +     if (!tmdev->chip)
-> > +             return -EINVAL;
-> > +
-> > +     /*
-> > +      * Initialize wait_queue in advance, to avoid calling wake_up
-> > +      * before ths is registered in isr.
-> > +      */
-> > +     for (i = 0; i < tmdev->chip->sensor_num; i++)
-> > +             init_waitqueue_head(&tmdev->sensor[i].wait_queue);
-> > +
-> > +     platform_set_drvdata(pdev, tmdev);
-> > +
-> > +     ret = sun8i_ths_resource_init(tmdev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = tmdev->chip->init(tmdev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = sun8i_ths_register(tmdev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static int sun8i_ths_remove(struct platform_device *pdev)
-> > +{
-> > +     struct ths_device *tmdev = platform_get_drvdata(pdev);
-> > +
-> > +     clk_disable_unprepare(tmdev->bus_clk);
->
-> I know that we discussed that already, but I'm not sure why you switch
-> back to a regular call to regmap_init_mmio, while regmap_init_mmio_clk
-> will take care of enabling and disabling the bus clock for you?
+depends on SLIMBUS if you need the SlimBus link to talk to your 
+SoundWire Master?
 
-It seems that regmap_init_mmio_clk just get clk and prepare clk
-but no enable.
+Also depends on device tree since you use of_ functions?
 
-Yangtao
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> +#define SWRM_COMP_HW_VERSION					0x00
+
+Can we please use SDW_ or QCOM_SDW_ as prefix?
+
+> +#define SWRM_INTERRUPT_STATUS_NEW_SLAVE_AUTO_ENUM_FINISHED	BIT(11)
+> +#define SWRM_INTERRUPT_STATUS_AUTO_ENUM_FAILED			BIT(12)
+> +#define SWRM_INTERRUPT_STATUS_AUTO_ENUM_TABLE_IS_FULL		BIT(13)
+
+This hints at hardware support to assign Device Numbers automagically so 
+will likely have impacts on the bus driver code, no?
+
+
+> +#define SWRM_MAX_ROW_VAL	0 /* Rows = 48 */
+> +#define SWRM_DEFAULT_ROWS	48
+> +#define SWRM_MIN_COL_VAL	0 /* Cols = 2 */
+> +#define SWRM_DEFAULT_COL	16
+> +#define SWRM_SPECIAL_CMD_ID	0xF
+> +#define MAX_FREQ_NUM		1
+> +#define TIMEOUT_MS		1000
+> +#define QCOM_SWRM_MAX_RD_LEN	0xf
+> +#define DEFAULT_CLK_FREQ	9600000
+
+The clocks and frame shape don't match usual expectations for PDM.
+For a 9.6 MHz support, you would typically use 8 columns and 50 rows to 
+transport PDM with a 50x oversampling. I've never seen anyone use 48x 
+for PDM.
+
+> +#define SWRM_MAX_DAIS		0xF
+> +
+> +struct qcom_swrm_port_config {
+> +	u8 si;
+> +	u8 off1;
+> +	u8 off2;
+> +};
+> +
+> +struct qcom_swrm_ctrl {
+> +	struct sdw_bus bus;
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +	struct completion sp_cmd_comp;
+> +	struct work_struct slave_work;
+> +	/* read/write lock */
+> +	struct mutex lock;
+> +	/* Port alloc/free lock */
+> +	struct mutex port_lock;
+> +	struct clk *hclk;
+> +	int fifo_status;
+> +	void __iomem *base;
+> +	u8 wr_cmd_id;
+> +	u8 rd_cmd_id;
+> +	int irq;
+> +	unsigned int version;
+> +	int num_din_ports;
+> +	int num_dout_ports;
+> +	unsigned long dout_port_mask;
+> +	unsigned long din_port_mask;
+> +	struct qcom_swrm_port_config pconfig[SDW_MAX_PORTS];
+
+this is not necessarily correct. the initial definitions for 
+SDW_MAX_PORTS was for Slave devices. There is no definitions for Masters 
+in the SoundWire spec, so you could use whatever constant you want for 
+your hardware.
+
+> +	struct sdw_stream_runtime *sruntime[SWRM_MAX_DAIS];
+> +	enum sdw_slave_status status[SDW_MAX_DEVICES];
+> +	u32 (*reg_read)(struct qcom_swrm_ctrl *ctrl, int reg);
+> +	int (*reg_write)(struct qcom_swrm_ctrl *ctrl, int reg, int val);
+> +};
+> +
+> +#define to_qcom_sdw(b)	container_of(b, struct qcom_swrm_ctrl, bus)
+> +
+> +struct usecase {
+> +	u8 num_port;
+> +	u8 num_ch;
+> +	u32 chrate;
+> +};
+
+this structure doesn't seem to be used?
+
+> +static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 cmd_data,
+> +				     u8 dev_addr, u16 reg_addr)
+> +{
+> +	int ret = 0;
+> +	u8 cmd_id;
+> +	u32 val;
+> +
+> +	mutex_lock(&ctrl->lock);
+> +	if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+> +		cmd_id = SWRM_SPECIAL_CMD_ID;
+> +	} else {
+> +		if (++ctrl->wr_cmd_id == SWRM_SPECIAL_CMD_ID)
+> +			ctrl->wr_cmd_id = 0;
+> +
+> +		cmd_id = ctrl->wr_cmd_id;
+> +	}
+
+might be worth having a helper/macro since you are doing the same thing 
+below.
+
+> +
+> +	val = SWRM_REG_VAL_PACK(cmd_data, dev_addr, cmd_id, reg_addr);
+> +	ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_WR_CMD, val);
+> +	if (ret < 0) {
+> +		dev_err(ctrl->dev, "%s: reg 0x%x write failed, err:%d\n",
+> +			__func__, val, ret);
+> +		goto err;
+> +	}
+> +
+> +	if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+> +		ctrl->fifo_status = 0;
+> +		ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
+> +						  msecs_to_jiffies(TIMEOUT_MS));
+
+This is odd. The SoundWire spec does not handle writes to a single 
+device or broadcast writes differently. I don't see a clear reason why 
+you would only timeout for a broadcast write.
+
+> +
+> +		if (!ret || ctrl->fifo_status) {
+> +			dev_err(ctrl->dev, "reg 0x%x write failed\n", val);
+> +			ret = -ENODATA;
+> +			goto err;
+> +		}
+> +	}
+> +err:
+> +	mutex_unlock(&ctrl->lock);
+> +	return ret;
+> +}
+> +
+> +static int qcom_swrm_cmd_fifo_rd_cmd(struct qcom_swrm_ctrl *ctrl,
+> +				     u8 dev_addr, u16 reg_addr,
+> +				     u32 len, u8 *rval)
+> +{
+> +	int i, ret = 0;
+> +	u8 cmd_id = 0;
+> +	u32 val;
+> +
+> +	mutex_lock(&ctrl->lock);
+> +	if (dev_addr == SDW_ENUM_DEV_NUM) {
+> +		cmd_id = SWRM_SPECIAL_CMD_ID;
+> +	} else {
+> +		if (++ctrl->rd_cmd_id == SWRM_SPECIAL_CMD_ID)
+> +			ctrl->rd_cmd_id = 0;
+> +
+> +		cmd_id = ctrl->rd_cmd_id;
+> +	}
+
+helper?
+
+> +	val = SWRM_REG_VAL_PACK(len, dev_addr, cmd_id, reg_addr);
+> +	ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_RD_CMD, val);
+> +	if (ret < 0) {
+> +		dev_err(ctrl->dev, "reg 0x%x write failed err:%d\n", val, ret);
+> +		goto err;
+> +	}
+> +
+> +	if (dev_addr == SDW_ENUM_DEV_NUM) {
+> +		ctrl->fifo_status = 0;
+> +		ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
+> +						  msecs_to_jiffies(TIMEOUT_MS));
+> 
+same comment here, there isn't a clear reason to only timeout for a read 
+from device0.
+
+> +		if (!ret || ctrl->fifo_status) {
+> +			dev_err(ctrl->dev, "reg 0x%x read failed\n", val);
+> +			ret = -ENODATA;
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	for (i = 0; i < len; i++) {
+> +		rval[i] = ctrl->reg_read(ctrl, SWRM_CMD_FIFO_RD_FIFO_ADDR);
+> +		rval[i] &= 0xFF;
+> +	}
+> +
+> +err:
+> +	mutex_unlock(&ctrl->lock);
+> +	return ret;
+> +}
+> +
+> +static void qcom_swrm_get_device_status(struct qcom_swrm_ctrl *ctrl)
+> +{
+> +	u32 val = ctrl->reg_read(ctrl, SWRM_MCP_SLV_STATUS);
+> +	int i;
+> +
+> +	for (i = 1; i < SDW_MAX_DEVICES; i++) {
+> +		u32 s;
+> +
+> +		s = (val >> (i * 2));
+> +		s &= SWRM_MCP_SLV_STATUS_MASK;
+> +		ctrl->status[i] = s;
+> +	}
+> +}
+> +
+> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct qcom_swrm_ctrl *ctrl = dev_id;
+> +	u32 sts, value;
+> +
+> +	sts = ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS);
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED)
+> +		complete(&ctrl->sp_cmd_comp);
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
+> +		value = ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS);
+> +		dev_err_ratelimited(ctrl->dev,
+> +				    "CMD error, fifo status 0x%x\n",
+> +				     value);
+> +		ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
+> +		if ((value & 0xF) == 0xF) {
+> +			ctrl->fifo_status = -ENODATA;
+> +			complete(&ctrl->sp_cmd_comp);
+> +		}
+> +	}
+> +
+> +	if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
+> +	    sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS) {
+> +		if (sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED)
+> +			ctrl->status[0] = SDW_SLAVE_ATTACHED;
+> +
+> +		schedule_work(&ctrl->slave_work);
+> +	}
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_SLAVE_PEND_IRQ)
+> +		dev_dbg(ctrl->dev, "Slave pend irq\n");
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED)
+> +		dev_dbg(ctrl->dev, "New slave attached\n");
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_MASTER_CLASH_DET)
+> +		dev_err_ratelimited(ctrl->dev, "Bus clash detected\n");
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_RD_FIFO_OVERFLOW)
+> +		dev_err(ctrl->dev, "Read FIFO overflow\n");
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_RD_FIFO_UNDERFLOW)
+> +		dev_err(ctrl->dev, "Read FIFO underflow\n");
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_WR_CMD_FIFO_OVERFLOW)
+> +		dev_err(ctrl->dev, "Write FIFO overflow\n");
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_DOUT_PORT_COLLISION)
+> +		dev_err(ctrl->dev, "Port collision detected\n");
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_READ_EN_RD_VALID_MISMATCH)
+> +		dev_err(ctrl->dev, "Read enable valid mismatch\n");
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED)
+> +		dev_err(ctrl->dev, "Cmd id finished\n");
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_BUS_RESET_FINISHED)
+> +		dev_err(ctrl->dev, "Bus reset finished\n");
+
+This list is odd as well. It makes sense to only log error cases if you 
+don't really know how to handle them, but a 'NEW SLAVE ATTACHED' should 
+lead to an action, no?
+
+> +
+> +	ctrl->reg_write(ctrl, SWRM_INTERRUPT_CLEAR, sts);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int qcom_swrm_init(struct qcom_swrm_ctrl *ctrl)
+> +{
+> +	u32 val;
+> +	u8 row_ctrl = SWRM_MAX_ROW_VAL;
+> +	u8 col_ctrl = SWRM_MIN_COL_VAL;
+> +	u8 ssp_period = 1;
+> +	u8 retry_cmd_num = 3;
+
+probably want a define for those magic values, they are quite important.
+
+> +
+> +	/* Clear Rows and Cols */
+> +	val = ((row_ctrl << SWRM_MCP_FRAME_CTRL_BANK_ROW_CTRL_SHFT) |
+> +		(col_ctrl << SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_SHFT) |
+> +		(ssp_period << SWRM_MCP_FRAME_CTRL_BANK_SSP_PERIOD_SHFT));
+> +
+> +	ctrl->reg_write(ctrl, SWRM_MCP_FRAME_CTRL_BANK_ADDR(0), val);
+> +
+> +	/* Disable Auto enumeration */
+> +	ctrl->reg_write(ctrl, SWRM_ENUMERATOR_CFG_ADDR, 0);
+
+This goes back to my earlier comment. Do you disable this 
+auto-enumeration to avoid conflicts with the existing bus management? 
+That's not necessarily smart, we may want to change that bus layer to 
+reduce the enumeration time if hardware can do it.
+
+> +
+> +	/* Mask soundwire interrupts */
+> +	ctrl->reg_write(ctrl, SWRM_INTERRUPT_MASK_ADDR,
+> +					SWRM_INTERRUPT_STATUS_RMSK);
+> +
+> +	/* Configure No pings */
+> +	val = ctrl->reg_read(ctrl, SWRM_MCP_CFG_ADDR);
+
+If there is any sort of PREQ signaling for Slave-initiated interrupts, 
+disabling PINGs is likely a non-conformant implementation since the 
+master is required to issue a PING command within 32 frames. That's also 
+the only way to know if a device is attached, so additional comments are 
+likely required.
+
+> +
+> +	val &= ~SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_BMSK;
+> +	val |= (0x1f << SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_SHFT);
+> +	ctrl->reg_write(ctrl, SWRM_MCP_CFG_ADDR, val);
+> +
+> +	/* Configure number of retries of a read/write cmd */
+> +	val = (retry_cmd_num << SWRM_CMD_FIFO_CFG_NUM_OF_CMD_RETRY_SHFT);
+> +	ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CFG_ADDR, val);
+> +
+> +	/* Set IRQ to PULSE */
+> +	ctrl->reg_write(ctrl, SWRM_COMP_CFG_ADDR,
+> +				SWRM_COMP_CFG_IRQ_LEVEL_OR_PULSE_MSK |
+> +				SWRM_COMP_CFG_ENABLE_MSK);
+
+indentation seems off in this code?
+
+> +	return 0;
+> +}
+> +
+> +static enum sdw_command_response qcom_swrm_xfer_msg(struct sdw_bus *bus,
+> +						    struct sdw_msg *msg)
+> +{
+> +	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+> +	int ret, i, len;
+> +
+> +	if (msg->flags == SDW_MSG_FLAG_READ) {
+> +		for (i = 0; i < msg->len;) {
+> +			if ((msg->len - i) < QCOM_SWRM_MAX_RD_LEN)
+> +				len = msg->len - i;
+> +			else
+> +				len = QCOM_SWRM_MAX_RD_LEN;
+> +
+> +			ret = qcom_swrm_cmd_fifo_rd_cmd(ctrl, msg->dev_num,
+> +							msg->addr + i, len,
+> +						       &msg->buf[i]);
+> +			if (ret < 0) {
+> +				if (ret == -ENODATA)
+> +					return SDW_CMD_IGNORED;
+> +
+> +				return ret;
+> +			}
+> +
+> +			i = i + len;
+> +		}
+> +	} else if (msg->flags == SDW_MSG_FLAG_WRITE) {
+> +		for (i = 0; i < msg->len; i++) {
+> +			ret = qcom_swrm_cmd_fifo_wr_cmd(ctrl, msg->buf[i],
+> +							msg->dev_num,
+> +						       msg->addr + i);
+> +			if (ret < 0) {
+> +				if (ret == -ENODATA)
+> +					return SDW_CMD_IGNORED;
+> +
+> +				return ret;
+> +			}
+> +		}
+> +	}
+> +
+> +	return SDW_CMD_OK;
+> +}
+> +
+> +static int qcom_swrm_pre_bank_switch(struct sdw_bus *bus)
+> +{
+> +	u32 reg = SWRM_MCP_FRAME_CTRL_BANK_ADDR(bus->params.next_bank);
+> +	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+> +	u32 val;
+> +
+> +	val = ctrl->reg_read(ctrl, reg);
+> +	val |= ((0 << SWRM_MCP_FRAME_CTRL_BANK_ROW_CTRL_SHFT) |
+> +		(7l << SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_SHFT));
+
+magic values, probably need a macro here?
+
+> +	ctrl->reg_write(ctrl, reg, val);
+> +
+> +	return 0;
+> +}
+> +
+
+> +static int qcom_swrm_register_dais(struct qcom_swrm_ctrl *ctrl)
+> +{
+> +	int num_dais = ctrl->num_dout_ports + ctrl->num_din_ports;
+> +	struct snd_soc_dai_driver *dais;
+> +	int i;
+> +
+> +	/* PDM dais are only tested for now */
+> +	dais = devm_kcalloc(ctrl->dev, num_dais, sizeof(*dais), GFP_KERNEL);
+> +	if (!dais)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_dais; i++) {
+> +		dais[i].name = kasprintf(GFP_KERNEL, "SDW Pin%d", i);
+
+if (!dais[i].name)
+
+> +		if (i < ctrl->num_dout_ports) {
+> +			dais[i].playback.stream_name = kasprintf(GFP_KERNEL,
+> +								 "SDW Tx%d", i);
+> +			if (!dais[i].playback.stream_name) {
+> +				kfree(dais[i].name);
+> +				return -ENOMEM;
+> +			}
+
+also need to free previously allocated memory in earlier iterations, or 
+use devm_
+
+> +			dais[i].playback.channels_min = 1;
+> +			dais[i].playback.channels_max = 1;
+> +			dais[i].playback.rates = SNDRV_PCM_RATE_48000;
+> +			dais[i].playback.formats = SNDRV_PCM_FMTBIT_S16_LE;
+> +		} else {
+> +			dais[i].capture.stream_name = kasprintf(GFP_KERNEL,
+> +								"SDW Rx%d", i);
+> +			if (!dais[i].capture.stream_name) {
+> +				kfree(dais[i].name);
+> +				kfree(dais[i].playback.stream_name);
+> +				return -ENOMEM;
+> +			}
+> +
+> +			dais[i].capture.channels_min = 1;
+> +			dais[i].capture.channels_max = 1;
+> +			dais[i].capture.rates = SNDRV_PCM_RATE_48000;
+> +			dais[i].capture.formats = SNDRV_PCM_FMTBIT_S16_LE;
+> +		}
+> +		dais[i].ops = &qcom_swrm_pdm_dai_ops;
+> +		dais[i].id = i;
+> +	}
+> +
+> +	return devm_snd_soc_register_component(ctrl->dev,
+> +						&qcom_swrm_dai_component,
+> +						dais, num_dais);
+> +}
