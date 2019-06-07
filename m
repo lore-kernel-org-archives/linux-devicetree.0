@@ -1,46 +1,46 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 17/20] dt: bindings: fix some broken links from
- txt->yaml conversion
-Date: Fri, 7 Jun 2019 19:57:28 +0100
-Message-ID: <20190607185728.GJ2456@sirena.org.uk>
-References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
- <effeafed3023d8dc5f2440c8d5637ea31c02a533.1559933665.git.mchehab+samsung@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: rng: Document BCM7211 RNG compatible
+ string
+Date: Fri, 7 Jun 2019 11:57:49 -0700
+Message-ID: <ce516362-658f-cde3-9be8-0e092f554782@gmail.com>
+References: <20190510173112.2196-1-f.fainelli@gmail.com>
+ <20190510173112.2196-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hEaoa1KyNVzF3lFU"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <effeafed3023d8dc5f2440c8d5637ea31c02a533.1559933665.git.mchehab+samsung@kernel.org>
+In-Reply-To: <20190510173112.2196-2-f.fainelli@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Hugues Fruchet <hugues.fruchet@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Olivier Moysan <olivier.moysan@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: bcm-kernel-feedback-list@broadcom.com, stefan.wahren@i2se.com, wahrenst@gmx.net, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, mpm@selenic.com, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM IPROC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 5/10/19 10:31 AM, Florian Fainelli wrote:
+> BCM7211 features a RNG200 block, document its compatible string.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
---hEaoa1KyNVzF3lFU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Rob, does this look okay to you?
 
-On Fri, Jun 07, 2019 at 03:54:33PM -0300, Mauro Carvalho Chehab wrote:
-> Some new files got converted to yaml, but references weren't
-> updated accordingly.
+> ---
+>  Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt b/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
+> index 0014da9145af..c223e54452da 100644
+> --- a/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
+> +++ b/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
+> @@ -2,6 +2,7 @@ HWRNG support for the iproc-rng200 driver
+>  
+>  Required properties:
+>  - compatible : Must be one of:
+> +	       "brcm,bcm7211-rng200"
+>  	       "brcm,bcm7278-rng200"
+>  	       "brcm,iproc-rng200"
+>  - reg : base address and size of control register block
+> 
 
-These should probably just be sent as normal patches rather than tied in
-with the rest of this series...
 
---hEaoa1KyNVzF3lFU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz6s5UACgkQJNaLcl1U
-h9CF/gf6A8YyjbtWR9vuIU+hiuuPGNe8l/3mKrBQmFg2nEkOiWE+N7jc0/RT0WYy
-PdT6jbc6Cwn5mJJ6fqF0h32OgglLotXMlY3ZtBPiTYfgyfXYLDw8717VzdoI3BBq
-AAprBuCMcg0qZJLD5pYXpWCO0cMo0YZU9dRMIFYeuw/U3RMw+oCd+mf38tXh5kce
-dFFdfcmYNcxsRyICaJl42uB5swb46QAtSo+9HiOLhTQy3kMJuBVAoKjG9OjVbgNX
-w9xYiPp4+6GikQO7Vl+901wH80kUHNSaZYfiTUfssYQHaorIrdRYZCd2RfmK9NO7
-LeseTuJ18aBVgxKkqDEkks1EQqQrEw==
-=sF8P
------END PGP SIGNATURE-----
-
---hEaoa1KyNVzF3lFU--
+-- 
+Florian
