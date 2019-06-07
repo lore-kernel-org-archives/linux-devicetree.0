@@ -1,43 +1,35 @@
-From: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii
- performance.
-Date: Fri, 7 Jun 2019 19:07:48 -0400
-Message-ID: <CAMdYzYorvWr1YhmFKaMQUCditjop5AZp4d1tO79XsVr7m7HrMw@mail.gmail.com>
-References: <20190607123731.8737-1-pgwipeout@gmail.com>
- <1559912295.22520.0@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/6] Add minimal boot support for IPQ6018
+Date: Sat, 8 Jun 2019 01:08:22 +0200
+Message-ID: <CACRpkdbxUHR8Uo+M7+_0v77Pg6k_jmL79KeHKNzWmFhtq+mZXw@mail.gmail.com>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1559912295.22520.0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sricharan R <sricharan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 8:58 AM Leonidas P. Papadakos
-<papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->
-> I'll test on my board, but if in the end it does end up being a change
-> to both tx and rxpbl then we can replce the 2 tx/rxpbl options with
-> one, as far as I know:
->
-> snps,pbl = <0x4>;
->
->
-
-The big change was actually snps,aal.
-As per the TRM, DMA channels not address aligned have severe
-limitations, if they work at all.
-
-Setting the DMA ops as address aligned fixed my 30mbps TX issue when
-combined with your snps,txpbl = <0x4>.
+T24gV2VkLCBKdW4gNSwgMjAxOSBhdCA3OjE2IFBNIFNyaWNoYXJhbiBSIDxzcmljaGFyYW5AY29k
+ZWF1cm9yYS5vcmc+IHdyb3RlOgoKPiBUaGUgSVBRNjAxOCBpcyBRdWFsY29tbeKAmXMgODAyLjEx
+YXggU29DIGZvciBSb3V0ZXJzLAo+IEdhdGV3YXlzIGFuZCBBY2Nlc3MgUG9pbnRzLgo+Cj4gVGhp
+cyBzZXJpZXMgYWRkcyBtaW5pbWFsIGJvYXJkIGJvb3Qgc3VwcG9ydCBmb3IgaXBxNjAxOC1jcDAx
+Cj4gYm9hcmQuCj4KPiBTcmljaGFyYW4gUiAoNik6Cj4gICBwaW5jdHJsOiBxY29tOiBBZGQgaXBx
+NjAxOCBwaW5jdHJsIGRyaXZlcgo+ICAgZHQtYmluZGluZ3M6IHFjb206IEFkZCBpcHE2MDE4IGJp
+bmRpbmdzCgpJJ20gaGFwcHkgdG8gbWVyZ2UgdGhlc2UgdHdvIGlmIEkgY2FuIGdldCBhIHJldmll
+dyBmcm9tCkJqb3JuIEFuZGVyc3NvbiBvbiB0aGVtLgoKWW91cnMsCkxpbnVzIFdhbGxlaWoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
