@@ -1,56 +1,120 @@
-Return-Path: <SRS0=e23W=UL=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1559895251-13931-1-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1559895251-13931-1-git-send-email-fabrizio.castro@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 12 Jun 2019 10:27:56 +0200
-Message-ID: <CAMuHMdXv91Tt+78zLJj6pHFj9XrEJJbWOf-kzBPRbcw=h+iDHg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Add uSD and eMMC
-Content-Type: text/plain; charset="UTF-8"
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Return-Path: <SRS0=tJm0=UG=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH] arm64: dts: renesas: hihope-common: Add uSD and eMMC
+Date: Fri,  7 Jun 2019 09:14:11 +0100
+Message-Id: <1559895251-13931-1-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Fabrizio,
+This patch adds uSD and eMMC support to the HiHope RZ/G2M
+board.
 
-On Fri, Jun 7, 2019 at 10:14 AM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> This patch adds uSD and eMMC support to the HiHope RZ/G2M
-> board.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+---
+This patch applies on top of renesas-devel-20190606-v5.2-rc3
 
-Thanks for your patch!
+ arch/arm64/boot/dts/renesas/hihope-common.dtsi | 77 ++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
-> --- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-
-> +&sdhi3 {
-> +       pinctrl-0 = <&sdhi3_pins>;
-> +       pinctrl-1 = <&sdhi3_pins>;
-> +       pinctrl-names = "default", "state_uhs";
-> +
-> +       vmmc-supply = <&reg_3p3v>;
-> +       vqmmc-supply = <&reg_1p8v>;
-> +       bus-width = <8>;
-> +       mmc-hs200-1_8v;
-
-Does the eMMC support HS400, too?
-
-> +       non-removable;
-> +       fixed-emmc-driver-type = <1>;
-> +       status = "okay";
-> +};
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/renesas/hihope-common.dtsi b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+index 4cc924d..b6411b1 100644
+--- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
++++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+@@ -16,6 +16,37 @@
+ 		bootargs = "ignore_loglevel";
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	reg_1p8v: regulator0 {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-1.8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	reg_3p3v: regulator1 {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vccq_sdhi0: regulator-vccq-sdhi0 {
++		compatible = "regulator-gpio";
++
++		regulator-name = "SDHI0 VccQ";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpios = <&gpio6 30 GPIO_ACTIVE_HIGH>;
++		gpios-states = <1>;
++		states = <3300000 1
++			  1800000 0>;
++	};
+ };
+ 
+ &extal_clk {
+@@ -39,6 +70,24 @@
+ 		groups = "scif_clk_a";
+ 		function = "scif_clk";
+ 	};
++
++	sdhi0_pins: sd0 {
++		groups = "sdhi0_data4", "sdhi0_ctrl";
++		function = "sdhi0";
++		power-source = <3300>;
++	};
++
++	sdhi0_pins_uhs: sd0_uhs {
++		groups = "sdhi0_data4", "sdhi0_ctrl";
++		function = "sdhi0";
++		power-source = <1800>;
++	};
++
++	sdhi3_pins: sd3 {
++		groups = "sdhi3_data8", "sdhi3_ctrl", "sdhi3_ds";
++		function = "sdhi3";
++		power-source = <1800>;
++	};
+ };
+ 
+ &scif2 {
+@@ -51,3 +100,31 @@
+ &scif_clk {
+ 	clock-frequency = <14745600>;
+ };
++
++&sdhi0 {
++	pinctrl-0 = <&sdhi0_pins>;
++	pinctrl-1 = <&sdhi0_pins_uhs>;
++	pinctrl-names = "default", "state_uhs";
++
++	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&vccq_sdhi0>;
++	cd-gpios = <&gpio3 12 GPIO_ACTIVE_LOW>;
++	bus-width = <4>;
++	sd-uhs-sdr50;
++	sd-uhs-sdr104;
++	status = "okay";
++};
++
++&sdhi3 {
++	pinctrl-0 = <&sdhi3_pins>;
++	pinctrl-1 = <&sdhi3_pins>;
++	pinctrl-names = "default", "state_uhs";
++
++	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_1p8v>;
++	bus-width = <8>;
++	mmc-hs200-1_8v;
++	non-removable;
++	fixed-emmc-driver-type = <1>;
++	status = "okay";
++};
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
