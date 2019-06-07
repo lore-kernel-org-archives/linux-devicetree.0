@@ -1,14 +1,13 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 05/13] ARM: dts: sunxi: Prefer A31 bindings
- for IR
-Date: Sat,  8 Jun 2019 01:10:52 +0200
-Message-ID: <20190607231100.5894-6-peron.clem@gmail.com>
+Subject: [PATCH v5 04/13] media: rc: sunxi: Add RXSTA bits definition
+Date: Sat,  8 Jun 2019 01:10:51 +0200
+Message-ID: <20190607231100.5894-5-peron.clem@gmail.com>
 References: <20190607231100.5894-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBE665PTQKGQEKNAO24Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBBEW65PTQKGQECJM5OJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190607231100.5894-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -18,63 +17,75 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since A31, memory mapping of the IR driver has changed.
+We are using RXINT bits definition when looking at RXSTA register.
 
-Prefer the A31 bindings instead of A13.
+These bits are equal but it's not really proper.
+
+Introduce the RXSTA bits and use them to have coherency.
 
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi  | 2 +-
- arch/arm/boot/dts/sun8i-a83t.dtsi | 2 +-
- arch/arm/boot/dts/sun9i-a80.dtsi  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/rc/sunxi-cir.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31=
-.dtsi
-index c04efad81bbc..110622b30796 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -1351,7 +1351,7 @@
- 		};
+diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
+index 0504ebfc831f..5690d0bd51bc 100644
+--- a/drivers/media/rc/sunxi-cir.c
++++ b/drivers/media/rc/sunxi-cir.c
+@@ -48,11 +48,11 @@
 =20
- 		ir: ir@1f02000 {
--			compatible =3D "allwinner,sun5i-a13-ir";
-+			compatible =3D "allwinner,sun6i-a31-ir";
- 			clocks =3D <&apb0_gates 1>, <&ir_clk>;
- 			clock-names =3D "apb", "ir";
- 			resets =3D <&apb0_rst 1>;
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a8=
-3t.dtsi
-index 392b0cabbf0d..8d603f3309f2 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -1067,7 +1067,7 @@
+ /* Rx Interrupt Enable */
+ #define SUNXI_IR_RXINT_REG    0x2C
+-/* Rx FIFO Overflow */
++/* Rx FIFO Overflow Interrupt Enable */
+ #define REG_RXINT_ROI_EN		BIT(0)
+-/* Rx Packet End */
++/* Rx Packet End Interrupt Enable */
+ #define REG_RXINT_RPEI_EN		BIT(1)
+-/* Rx FIFO Data Available */
++/* Rx FIFO Data Available Interrupt Enable */
+ #define REG_RXINT_RAI_EN		BIT(4)
 =20
- 		r_cir: ir@1f02000 {
- 			compatible =3D "allwinner,sun8i-a83t-ir",
--				"allwinner,sun5i-a13-ir";
-+				"allwinner,sun6i-a31-ir";
- 			clocks =3D <&r_ccu CLK_APB0_IR>, <&r_ccu CLK_IR>;
- 			clock-names =3D "apb", "ir";
- 			resets =3D <&r_ccu RST_APB0_IR>;
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80=
-.dtsi
-index 0c1eec9000e3..310cd972ee5b 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -1167,7 +1167,7 @@
- 		};
+ /* Rx FIFO available byte level */
+@@ -60,6 +60,12 @@
 =20
- 		r_ir: ir@8002000 {
--			compatible =3D "allwinner,sun5i-a13-ir";
-+			compatible =3D "allwinner,sun6i-a31-ir";
- 			interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
- 			pinctrl-names =3D "default";
- 			pinctrl-0 =3D <&r_ir_pins>;
+ /* Rx Interrupt Status */
+ #define SUNXI_IR_RXSTA_REG    0x30
++/* Rx FIFO Overflow */
++#define REG_RXSTA_ROI			REG_RXINT_ROI_EN
++/* Rx Packet End */
++#define REG_RXSTA_RPE			REG_RXINT_RPEI_EN
++/* Rx FIFO Data Available */
++#define REG_RXSTA_RA			REG_RXINT_RAI_EN
+ /* RX FIFO Get Available Counter */
+ #define REG_RXSTA_GET_AC(val) (((val) >> 8) & (ir->fifo_size * 2 - 1))
+ /* Clear all interrupt status value */
+@@ -119,7 +125,7 @@ static irqreturn_t sunxi_ir_irq(int irqno, void *dev_id=
+)
+ 	/* clean all pending statuses */
+ 	writel(status | REG_RXSTA_CLEARALL, ir->base + SUNXI_IR_RXSTA_REG);
+=20
+-	if (status & (REG_RXINT_RAI_EN | REG_RXINT_RPEI_EN)) {
++	if (status & (REG_RXSTA_RA | REG_RXSTA_RPE)) {
+ 		/* How many messages in fifo */
+ 		rc  =3D REG_RXSTA_GET_AC(status);
+ 		/* Sanity check */
+@@ -135,9 +141,9 @@ static irqreturn_t sunxi_ir_irq(int irqno, void *dev_id=
+)
+ 		}
+ 	}
+=20
+-	if (status & REG_RXINT_ROI_EN) {
++	if (status & REG_RXSTA_ROI) {
+ 		ir_raw_event_reset(ir->rc);
+-	} else if (status & REG_RXINT_RPEI_EN) {
++	} else if (status & REG_RXSTA_RPE) {
+ 		ir_raw_event_set_idle(ir->rc, true);
+ 		ir_raw_event_handle(ir->rc);
+ 	}
 --=20
 2.20.1
 
@@ -84,5 +95,5 @@ linux-sunxi" group.
 To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190607231100.5894-6-peron.clem%40gmail.com.
+/linux-sunxi/20190607231100.5894-5-peron.clem%40gmail.com.
 For more options, visit https://groups.google.com/d/optout.
