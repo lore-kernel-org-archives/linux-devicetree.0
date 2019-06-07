@@ -1,82 +1,130 @@
-Return-Path: <SRS0=XYop=UK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33536 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfFKKjY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Jun 2019 06:39:24 -0400
-Date: Tue, 11 Jun 2019 12:39:22 +0200
-From: Pavel Machek <pavel@ucw.cz>
+Return-Path: <SRS0=d9CS=UG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.220.in.ua ([89.184.67.205]:51645 "EHLO smtp.220.in.ua"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730145AbfFGVdQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 7 Jun 2019 17:33:16 -0400
+From: Oleh Kravchenko <oleg@kaa.org.ua>
 Subject: Re: [PATCH v2 2/2] leds: add LED driver for EL15203000 board
-Message-ID: <20190611103922.GB20775@amd>
 References: <20190607190351.14092-2-oleg@kaa.org.ua>
  <50e38b87-a7ab-d83b-c4d4-7db9760cfdd6@ti.com>
- <cf0e62c5-2502-19d2-5956-f262eee2255d@kaa.org.ua>
+Message-ID: <cf0e62c5-2502-19d2-5956-f262eee2255d@kaa.org.ua>
+Date: Sat, 8 Jun 2019 00:33:05 +0300
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2B/JsCI69OhZNC5r"
-Content-Disposition: inline
-In-Reply-To: <cf0e62c5-2502-19d2-5956-f262eee2255d@kaa.org.ua>
+In-Reply-To: <50e38b87-a7ab-d83b-c4d4-7db9760cfdd6@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="xeAuN3uWWp73B2XzPbWuG2fCdZ85VurYC"
 Sender: devicetree-owner@vger.kernel.org
-To: Oleh Kravchenko <oleg@kaa.org.ua>
-Cc: Dan Murphy <dmurphy@ti.com>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--xeAuN3uWWp73B2XzPbWuG2fCdZ85VurYC
+Content-Type: multipart/mixed; boundary="IDkWvxBMhmxR6oGTVuyCQ9GITmaDGO55e";
+ protected-headers="v1"
+From: Oleh Kravchenko <oleg@kaa.org.ua>
+To: Dan Murphy <dmurphy@ti.com>, devicetree@vger.kernel.org,
+ linux-leds@vger.kernel.org
+Message-ID: <cf0e62c5-2502-19d2-5956-f262eee2255d@kaa.org.ua>
+Subject: Re: [PATCH v2 2/2] leds: add LED driver for EL15203000 board
+References: <20190607190351.14092-2-oleg@kaa.org.ua>
+ <50e38b87-a7ab-d83b-c4d4-7db9760cfdd6@ti.com>
+In-Reply-To: <50e38b87-a7ab-d83b-c4d4-7db9760cfdd6@ti.com>
 
---2B/JsCI69OhZNC5r
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+--IDkWvxBMhmxR6oGTVuyCQ9GITmaDGO55e
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Content-Language: uk-UA
 
-Hi!
+RGFuLAoKT24gMDcuMDYuMTkgMjM6MTMsIERhbiBNdXJwaHkgd3JvdGU6Cj4gT2xlaAo+Cj4g
+T24gNi83LzE5IDI6MDMgUE0sIE9sZWggS3JhdmNoZW5rbyB3cm90ZToKPj4gKwo+PiArc3Rh
+dGljIGludCBlbDE1MjAzMDAwX3NldF9zeW5jKHN0cnVjdCBsZWRfY2xhc3NkZXYgKmxkZXYs
+Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVudW0gbGVkX2JyaWdo
+dG5lc3MgYnJpZ2h0bmVzcykKPj4gK3sKPj4gK8KgwqDCoCBpbnTCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIHJldDsKPj4gK8KgwqDCoCB1OMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY21kWzJd
+Owo+Cj4gSSBhbSB3b25kZXJpbmcgaWYgeW91IHNob3VsZCAjZGVmaW5lIHRoaXMgYXMgd2Vs
+bC4KSXQncyB1c2VkIG9ubHkgaW4gb25lIHBsYWNlLCBzaG91bGQgSSByZWFsbHkgd3JhcCBp
+dCB0byBkZWZpbmU/Cj4KPiBUaGVuIHRoZSAjZGVmaW5lIGNhbiBiZSB1c2VkIGhlcmUgYW5k
+IHRoZW4gaW4gdGhlIGZvciBsb29wLgo+Cj4gVGhlcmUgaXMgbm8gcmVhc29uIHRvIGRvIEFS
+UkFZX1NJWkUgaWYgaXQgd2lsbCBhbHdheXMgYmUgMi4KClJlc3VsdCBvZiBBUlJBWV9TSVpF
+KCkgd2lsbCBiZSBhbHdheXMgY29uc3RhbnQgYW5kIGFjdHVhbGx5IGl0wqAgY2FuIGJlIGF2
+b2lkZWQgYnkgZGVmaW5lLgoKQnV0IEkgcHJlZmVyIEFSUkFZX1NJWkUoKSA6LSkKCj4KPj4K
+Pj4gK8KgwqDCoCBkZXZpY2VfZm9yX2VhY2hfY2hpbGRfbm9kZShwcml2LT5kZXYsIGNoaWxk
+KSB7Cj4+ICvCoMKgwqDCoMKgwqDCoCBsZWQgPSAmcHJpdi0+bGVkc1tpXTsKPj4gKwo+PiAr
+wqDCoMKgwqDCoMKgwqAgcmV0ID0gZndub2RlX3Byb3BlcnR5X3JlYWRfdTMyKGNoaWxkLCAi
+cmVnIiwgJnJlZyk7Cj4KPiBXaHkgZGlkbid0IHlvdSB1c2UgZndub2RlX3Byb3BlcnR5X3Jl
+YWRfdTggdGhlbiB5b3UgZG9uJ3QgbmVlZCB0byBjaGVjayB0aGUgc2l6ZSBvZiB0aGUgdmFs
+dWUKQmVjYXVzZSBmd25vZGVfcHJvcGVydHlfcmVhZF91OCgpIHJldHVybiAwIGZvciAicmVn
+IiBwcm9wZXJ0eSBhbmQgYnkgRFQgc3RhbmRhcmQgcmVnIGhhcyB1MzIgdHlwZS4KPgo+IGJl
+bG93IGFuZCB5b3UgY2FuIHJlbW92ZSB0aGUgaGVhZGVyPwo+Cj4gQW5kIHRoZW4geW91IGNh
+biBzdG9yZSB0aGUgdmFsdWUgb2YgcmVnIHJpZ2h0IGludG8gbGVkLT5yZWcgYXMgdGhhdCBp
+cyBhIHU4Cj4KPj4gK8KgwqDCoMKgwqDCoMKgIGlmIChyZXQpIHsKPj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgZGV2X2Vycihwcml2LT5kZXYsICJMRUQgd2l0aG91dCBJRCBudW1iZXIi
+KTsKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZndub2RlX2hhbmRsZV9wdXQoY2hpbGQp
+Owo+PiArCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiByZXQ7Cj4+ICvCoMKg
+wqDCoMKgwqDCoCB9Cj4gTmV3IGxpbmUKRG9uZQo+PiArwqDCoMKgwqDCoMKgwqAgaWYgKHJl
+ZyA+IFU4X01BWCkgewo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkZXZfZXJyKHByaXYt
+PmRldiwgIkxFRCB2YWx1ZSAlZCBpcyBpbnZhbGlkIiwgcmVnKTsKPj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgZndub2RlX2hhbmRsZV9wdXQoY2hpbGQpOwo+PiArCj4+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHJldHVybiAtRUlOVkFMOwo+PiArwqDCoMKgwqDCoMKgwqAgfQo+
+IE5ldyBsaW5lCkRvbmUKPj4gK8KgwqDCoMKgwqDCoMKgIGxlZC0+cmVnID0gcmVnOwo+PiAr
+Cj4+ICvCoMKgwqDCoMKgwqDCoCByZXQgPSBmd25vZGVfcHJvcGVydHlfcmVhZF9zdHJpbmco
+Y2hpbGQsICJsYWJlbCIsICZzdHIpOwo+PiArwqDCoMKgwqDCoMKgwqAgaWYgKHJldCkKPj4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc25wcmludGYobGVkLT5uYW1lLCBzaXplb2YobGVk
+LT5uYW1lKSwKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJlbDE1MjAz
+MDAwOjoiKTsKPj4gK8KgwqDCoMKgwqDCoMKgIGVsc2UKPj4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgc25wcmludGYobGVkLT5uYW1lLCBzaXplb2YobGVkLT5uYW1lKSwKPj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJlbDE1MjAzMDAwOiVzIiwgc3RyKTsKPj4g
+Kwo+PiArwqDCoMKgwqDCoMKgwqAgZndub2RlX3Byb3BlcnR5X3JlYWRfc3RyaW5nKGNoaWxk
+LCAibGludXgsZGVmYXVsdC10cmlnZ2VyIiwKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgJmxlZC0+bGRldi5kZWZhdWx0X3RyaWdnZXIpOwo+
+PiArCj4+ICvCoMKgwqDCoMKgwqDCoCBsZWQtPnByaXbCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCA9IHByaXY7Cj4+ICvCoMKgwqDCoMKgwqDCoCBsZWQtPmxkZXYubmFtZcKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgID0gbGVkLT5uYW1lOwo+PiArwqDCoMKgwqDCoMKgwqAgbGVk
+LT5sZGV2Lm1heF9icmlnaHRuZXNzwqDCoMKgwqDCoCA9IExFRF9PTjsKPj4gK8KgwqDCoMKg
+wqDCoMKgIGxlZC0+bGRldi5icmlnaHRuZXNzX3NldF9ibG9ja2luZyA9IGVsMTUyMDMwMDBf
+c2V0X3N5bmM7Cj4+ICsKPj4gK8KgwqDCoMKgwqDCoMKgIHJldCA9IGZ3bm9kZV9wcm9wZXJ0
+eV9yZWFkX3UzMihjaGlsZCwgIm1heC1icmlnaHRuZXNzIiwKPj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgJmxlZC0+bGRldi5tYXhf
+YnJpZ2h0bmVzcyk7Cj4KPiBUaGUgdmFsdWUgbGVkLT5sZGV2Lm1heF9icmlnaHRuZXNzIHdp
+bGwgYmUgb3ZlciB3cml0dGVuIGhlcmUgYnkgdGhpcyBjYWxsLgo+Cj4gU28gc2V0dGluZyBp
+dCBhYm92ZSB3aWxsIGhhdmUgbm8gYWZmZWN0Ckl0IHdpbGwgaGF2ZSBlZmZlY3QsIGJlY2F1
+c2UgaXQgaW5pdGlhbGl6ZWQgdmFsdWUgd2hpY2ggY2FuIGJlIG92ZXIgd3JpdHRlbiBieSBm
+d25vZGVfcHJvcGVydHlfcmVhZF91MzIKPiBZb3Ugc2hvdWxkIG1vdmUgdGhlIGxlZC0+bGRl
+di5tYXhfYnJpZ2h0bmVzcyA9IExFRF9PTiBpbnRvIGEgcmV0IGNoZWNrIGFzIHRoaXMgaXMg
+YW4gb3B0aW9uYWwgcHJvcGVydHkKPgo+IGlmIChyZXQpCj4KPiDCoMKgwqAgbGVkLT5sZGV2
+Lm1heF9icmlnaHRuZXNzID0gTEVEX09OOwpHb29kIHBvaW50LCB0aGFuayB5b3UKPgo+IFRo
+ZW4geW91IGNhbiBjaGVjayB0aGUgYm91bmRzIGJlbG93Lgo+Cj4gQXMgcG9pbnRlZCBvdXQg
+eW91ciBtYXhfYnJpZ2h0bmVzcyBpcyBhIGJpbmFyeSBhbmQgdGhlIDB4MzIgaXMgYW4gZWZm
+ZWN0IHlvdSB0ZWNobmljYWxseSBkb24ndCBldmVuIG5lZWQgbWF4X2JyaWdodG5lc3MgaWYg
+eW91Cj4KPiBleHBvc2UgdGhlIGVmZmVjdHMgYXMgYSBmaWxlLgo+Cj4gRG9lcyAweDMyIHR1
+cm4gdGhlIExFRCBvbiBvciBvZmY/wqAgT3IgZG9lcyBpdCBibGluayB0aGUgTEVEPwoKSXQg
+ZGVwZW5kcyBvbiBMRUQgYm9hcmQsCgppdCBjYW4gYmxpbmsuCkl0IGNhbiBwbGF5IHNjZW5l
+IG9uIExFRCBhcnJheS4KSXQgY2FuIGJsaW5rIHNtb290aGx5LgoKQnV0IGl0IGRlcGVuZCBv
+biB0aGUgYm9hcmQsIG5vdCBhIHByb3RvY29sLgoKPgo+IERhbgo+Cgo=
 
-> >> +=A0=A0=A0 u8=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cmd[2];
-> >
-> > I am wondering if you should #define this as well.
-> It's used only in one place, should I really wrap it to define?
-> >
-> > Then the #define can be used here and then in the for loop.
-> >
-> > There is no reason to do ARRAY_SIZE if it will always be 2.
->=20
-> Result of ARRAY_SIZE() will be always constant and actually it=A0 can be =
-avoided by define.
->=20
-> But I prefer ARRAY_SIZE() :-)
+--IDkWvxBMhmxR6oGTVuyCQ9GITmaDGO55e--
 
-Me too.
-
-> > As pointed out your max_brightness is a binary and the 0x32 is an effec=
-t you technically don't even need max_brightness if you
-> >
-> > expose the effects as a file.
-> >
-> > Does 0x32 turn the LED on or off?=A0 Or does it blink the LED?
->=20
-> It depends on LED board,
->=20
-> it can blink.
-> It can play scene on LED array.
-> It can blink smoothly.
->=20
-> But it depend on the board, not a protocol.
-
-But we expect drivers to control the boards, not protocols.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2B/JsCI69OhZNC5r
+--xeAuN3uWWp73B2XzPbWuG2fCdZ85VurYC
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlz/hNoACgkQMOfwapXb+vK/RwCdGfCYEc19XIHAe3yG9TVrctvm
-qVcAn2l6n9kA5ip3uolH5trhKnbzBipx
-=4t39
+iQIzBAEBCAAdFiEEC/TM5t+2NenFhW0Q0xNJm20pl4wFAlz62BEACgkQ0xNJm20p
+l4wGYRAAogh0eetmvSOBXrj/zBhQ91VR7ndL4iRmZ1txVEmSEtjAdNjXZaVTmRvF
+M007nazfKJ/YABNj5isit3f2gtLOeD2RuvonGGINZ/3h/02HIYmE0RreJiQaE6Ca
+gPajak9roCiRhsVmuncBNH4CTyyNO1cBGSQvXNfTATHQOHOFuD0B53JIE9xJ/hhA
+VodLKuyjRMyrSU9wTn++z4bP8SngFTsAgNNGAk7fDXaju6LqRCXBnork497RWGyl
+cdsp5iRX9nooZCQQWUAKHez8OfE12QefUuqpInZafNk5JKEBEh4tg3uCnQRlnfHX
+/sTkqn9WgYrx4XlMhT8KG5KTbfq/PhQUCIBRUhBjFTMmsTan9w3iFvF+saHWk+s/
+rjR7xA9xQ+W/zvoT7pUPdXj+0+/PmbddW8lQFcbLvM11VonOGXLCGn6Pnlo9Olsl
+mE8+pDcOrOJ8JHk3hWPS641BF5ju5THAoj18fvKy2xOquDztYzaT+5R5IbWdx9Cf
+m8hMzYE8pc9RI2AC0E8uYDpjfPGtDYyFLmcnNG2VLxE79LRjLBELepZVQaKRKcj3
+Jm++4T+1Ud+8/wkrBTftCc/lDg5Yz3OClx1J3wnkabhbpkmTmubwx1Cye+RKX4+1
+dPUAjcgI8gdg0o8VC8PJppGbrG672QF/Jscp6GUw42nhlRl+RII=
+=SzOV
 -----END PGP SIGNATURE-----
 
---2B/JsCI69OhZNC5r--
+--xeAuN3uWWp73B2XzPbWuG2fCdZ85VurYC--
