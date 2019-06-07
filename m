@@ -1,173 +1,97 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v2 7/7] drivers: regulator: qcom: add PMS405 SPMI regulator
-Date: Fri, 7 Jun 2019 08:16:15 -0600
-Message-ID: <CAOCk7Nqks0TWrV8r2Rr_s=1K4w2GW+TnKv=Gs6S9z9UZspxucw@mail.gmail.com>
-References: <20190606184842.39484-1-jeffrey.l.hugo@gmail.com> <20190606185146.39890-1-jeffrey.l.hugo@gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V8 14/15] PCI: tegra: Add Tegra194 PCIe support
+Date: Fri, 7 Jun 2019 17:26:32 +0300
+Message-ID: <2a51622f-7bd8-2c6c-b3c5-8b87c2b5be0c@gmail.com>
+References: <20190526043751.12729-1-vidyas@nvidia.com>
+ <20190526043751.12729-15-vidyas@nvidia.com>
+ <f30e7fc6-3f64-d321-c32c-5e273115a869@gmail.com>
+ <cbdac43f-32f7-c992-832b-ed40bef2375b@gmail.com>
+ <06f2f74e-d618-8688-14ae-beb4920bcbf6@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190606185146.39890-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <06f2f74e-d618-8688-14ae-beb4920bcbf6@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, jorge.ramirez-ortiz@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
+Cc: mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 12:53 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
->
-> The PMS405 has 5 HFSMPS and 13 LDO regulators,
->
-> This commit adds support for one of the 5 HFSMPS regulators (s3) to
-> the spmi regulator driver.
->
-> The PMIC HFSMPS 430 regulators have 8 mV step size and a voltage
-> control scheme consisting of two  8-bit registers defining a 16-bit
-> voltage set point in units of millivolts
->
-> S3 controls the cpu voltages (s3 is a buck regulator of type HFS430);
-> it is therefore required so we can enable voltage scaling for safely
-> running cpufreq.
->
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/regulator/qcom_spmi-regulator.c | 41 +++++++++++++++++++++++--
->  1 file changed, 38 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-> index c7880c1d4bcd..975655e787fe 100644
-> --- a/drivers/regulator/qcom_spmi-regulator.c
-> +++ b/drivers/regulator/qcom_spmi-regulator.c
-> @@ -105,6 +105,7 @@ enum spmi_regulator_logical_type {
->         SPMI_REGULATOR_LOGICAL_TYPE_ULT_HO_SMPS,
->         SPMI_REGULATOR_LOGICAL_TYPE_ULT_LDO,
->         SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426,
-> +       SPMI_REGULATOR_LOGICAL_TYPE_HFS430,
->  };
->
->  enum spmi_regulator_type {
-> @@ -157,6 +158,7 @@ enum spmi_regulator_subtype {
->         SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL2      = 0x0e,
->         SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL3      = 0x0f,
->         SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL4      = 0x10,
-> +       SPMI_REGULATOR_SUBTYPE_HFS430           = 0x0a,
->  };
->
->  enum spmi_common_regulator_registers {
-> @@ -302,6 +304,8 @@ enum spmi_common_control_register_index {
->  /* Clock rate in kHz of the FTSMPS426 regulator reference clock. */
->  #define SPMI_FTSMPS426_CLOCK_RATE              4800
->
-> +#define SPMI_HFS430_CLOCK_RATE                 1600
-> +
->  /* Minimum voltage stepper delay for each step. */
->  #define SPMI_FTSMPS426_STEP_DELAY              2
->
-> @@ -515,6 +519,10 @@ static struct spmi_voltage_range ult_pldo_ranges[] = {
->         SPMI_VOLTAGE_RANGE(0, 1750000, 1750000, 3337500, 3337500, 12500),
->  };
->
-> +static struct spmi_voltage_range hfs430_ranges[] = {
-> +       SPMI_VOLTAGE_RANGE(0, 320000, 320000, 2040000, 2040000, 8000),
-> +};
-> +
->  static DEFINE_SPMI_SET_POINTS(pldo);
->  static DEFINE_SPMI_SET_POINTS(nldo1);
->  static DEFINE_SPMI_SET_POINTS(nldo2);
-> @@ -530,6 +538,7 @@ static DEFINE_SPMI_SET_POINTS(ult_lo_smps);
->  static DEFINE_SPMI_SET_POINTS(ult_ho_smps);
->  static DEFINE_SPMI_SET_POINTS(ult_nldo);
->  static DEFINE_SPMI_SET_POINTS(ult_pldo);
-> +static DEFINE_SPMI_SET_POINTS(hfs430);
->
->  static inline int spmi_vreg_read(struct spmi_regulator *vreg, u16 addr, u8 *buf,
->                                  int len)
-> @@ -1397,12 +1406,24 @@ static struct regulator_ops spmi_ftsmps426_ops = {
->         .set_pull_down          = spmi_regulator_common_set_pull_down,
->  };
->
-> +static struct regulator_ops spmi_hfs430_ops = {
-> +       /* always on regulators */
+07.06.2019 17:10, Vidya Sagar пишет:
+> On 6/7/2019 12:22 AM, Dmitry Osipenko wrote:
+>> 06.06.2019 19:35, Dmitry Osipenko пишет:
+>>> 26.05.2019 7:37, Vidya Sagar пишет:
+>>>> Add support for Synopsys DesignWare core IP based PCIe host controller
+>>>> present in Tegra194 SoC.
+>>>>
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>> ---
+>>>> Changes since [v7]:
+>>>> * Addressed review comments from Thierry
+>>>>
+>>>> Changes since [v6]:
+>>>> * Removed code around "nvidia,disable-aspm-states" DT property
+>>>> * Refactored code to remove code duplication
+>>>>
+>>>> Changes since [v5]:
+>>>> * Addressed review comments from Thierry
+>>>>
+>>>> Changes since [v4]:
+>>>> * None
+>>>>
+>>>> Changes since [v3]:
+>>>> * None
+>>>>
+>>>> Changes since [v2]:
+>>>> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
+>>>> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
+>>>> * Removed .runtime_suspend() & .runtime_resume() implementations
+>>>>
+>>>> Changes since [v1]:
+>>>> * Made CONFIG_PCIE_TEGRA194 as 'm' by default from its previous 'y'
+>>>> state
+>>>> * Modified code as per changes made to DT documentation
+>>>> * Refactored code to address Bjorn & Thierry's review comments
+>>>> * Added goto to avoid recursion in tegra_pcie_dw_host_init() API
+>>>> * Merged .scan_bus() of dw_pcie_host_ops implementation to
+>>>> tegra_pcie_dw_host_init() API
+>>>>
+>>>>   drivers/pci/controller/dwc/Kconfig         |   10 +
+>>>>   drivers/pci/controller/dwc/Makefile        |    1 +
+>>>>   drivers/pci/controller/dwc/pcie-tegra194.c | 1621
+>>>> ++++++++++++++++++++
+>>>>   3 files changed, 1632 insertions(+)
+>>>>   create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/Kconfig
+>>>> b/drivers/pci/controller/dwc/Kconfig
+>>>> index a6ce1ee51b4c..884112afc11b 100644
+>>>> --- a/drivers/pci/controller/dwc/Kconfig
+>>>> +++ b/drivers/pci/controller/dwc/Kconfig
+>>>> @@ -220,6 +220,16 @@ config PCI_MESON
+>>>>         and therefore the driver re-uses the DesignWare core
+>>>> functions to
+>>>>         implement the driver.
+>>>>   +config PCIE_TEGRA194
+>>>> +    tristate "NVIDIA Tegra194 (and later) PCIe controller"
+>>>> +    depends on (TEGRA_BPMP && ARCH_TEGRA) || COMPILE_TEST
+>>>
+>>> TEGRA_BPMP will be enough here as it depends on other relevant options.
+>>>
+>>> Hence I mean:
+>>>
+>>>     depends on TEGRA_BPMP || COMPILE_TEST
+>>
+>> Maybe it's worth to even change TEGRA_BPMP to ARCH_TEGRA_194_SOC.
+>> Although then you'll have to extend it with other platforms later on,
+>> but probably that's fine.
+> I received an explicit comment previously to make this dependent on
+> TEGRA_BPMP
+> as the driver is using APIs to get certain jobs done by BPMP-FW. But, since
+> we can't boot kernel in the first place without having BPMP-FW in place,
+> I think
+> it should be fine to make it dependent on ARCH_TEGRA_194_SOC directly.
 
->From offline discussion, this is apparently now incorrect.  I'll spin
-a v3 with this fixed, but I'll wait a bit to see if there are any
-other comments, or if this is the only fixup.
-
-> +       .set_voltage_sel        = spmi_regulator_ftsmps426_set_voltage,
-> +       .set_voltage_time_sel   = spmi_regulator_set_voltage_time_sel,
-> +       .get_voltage            = spmi_regulator_ftsmps426_get_voltage,
-> +       .map_voltage            = spmi_regulator_single_map_voltage,
-> +       .list_voltage           = spmi_regulator_common_list_voltage,
-> +       .set_mode               = spmi_regulator_ftsmps426_set_mode,
-> +       .get_mode               = spmi_regulator_ftsmps426_get_mode,
-> +};
-> +
->  /* Maximum possible digital major revision value */
->  #define INF 0xFF
->
->  static const struct spmi_regulator_mapping supported_regulators[] = {
->         /*           type subtype dig_min dig_max ltype ops setpoints hpm_min */
->         SPMI_VREG(BUCK,  GP_CTL,   0, INF, SMPS,   smps,   smps,   100000),
-> +       SPMI_VREG(BUCK,  HFS430,   0, INF, HFS430, hfs430, hfs430,  10000),
->         SPMI_VREG(LDO,   N300,     0, INF, LDO,    ldo,    nldo1,   10000),
->         SPMI_VREG(LDO,   N600,     0,   0, LDO,    ldo,    nldo2,   10000),
->         SPMI_VREG(LDO,   N1200,    0,   0, LDO,    ldo,    nldo2,   10000),
-> @@ -1570,7 +1591,8 @@ static int spmi_regulator_init_slew_rate(struct spmi_regulator *vreg)
->         return ret;
->  }
->
-> -static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg)
-> +static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg,
-> +                                                  int clock_rate)
->  {
->         int ret;
->         u8 reg = 0;
-> @@ -1587,7 +1609,7 @@ static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg)
->         delay >>= SPMI_FTSMPS426_STEP_CTRL_DELAY_SHIFT;
->
->         /* slew_rate has units of uV/us */
-> -       slew_rate = SPMI_FTSMPS426_CLOCK_RATE * range->step_uV;
-> +       slew_rate = clock_rate * range->step_uV;
->         slew_rate /= 1000 * (SPMI_FTSMPS426_STEP_DELAY << delay);
->         slew_rate *= SPMI_FTSMPS426_STEP_MARGIN_NUM;
->         slew_rate /= SPMI_FTSMPS426_STEP_MARGIN_DEN;
-> @@ -1739,7 +1761,14 @@ static int spmi_regulator_of_parse(struct device_node *node,
->                         return ret;
->                 break;
->         case SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426:
-> -               ret = spmi_regulator_init_slew_rate_ftsmps426(vreg);
-> +               ret = spmi_regulator_init_slew_rate_ftsmps426(vreg,
-> +                                               SPMI_FTSMPS426_CLOCK_RATE);
-> +               if (ret)
-> +                       return ret;
-> +               break;
-> +       case SPMI_REGULATOR_LOGICAL_TYPE_HFS430:
-> +               ret = spmi_regulator_init_slew_rate_ftsmps426(vreg,
-> +                                                       SPMI_HFS430_CLOCK_RATE);
->                 if (ret)
->                         return ret;
->                 break;
-> @@ -1907,6 +1936,11 @@ static const struct spmi_regulator_data pm8005_regulators[] = {
->         { }
->  };
->
-> +static const struct spmi_regulator_data pms405_regulators[] = {
-> +       { "s3", 0x1a00, }, /* supply name in the dts only */
-> +       { }
-> +};
-> +
->  static const struct of_device_id qcom_spmi_regulator_match[] = {
->         { .compatible = "qcom,pm8005-regulators", .data = &pm8005_regulators },
->         { .compatible = "qcom,pm8841-regulators", .data = &pm8841_regulators },
-> @@ -1914,6 +1948,7 @@ static const struct of_device_id qcom_spmi_regulator_match[] = {
->         { .compatible = "qcom,pm8941-regulators", .data = &pm8941_regulators },
->         { .compatible = "qcom,pm8994-regulators", .data = &pm8994_regulators },
->         { .compatible = "qcom,pmi8994-regulators", .data = &pmi8994_regulators },
-> +       { .compatible = "qcom,pms405-regulators", .data = &pms405_regulators },
->         { }
->  };
->  MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
-> --
-> 2.17.1
->
+ARCH_TEGRA_194_SOC selects BPMP by itself (see
+drivers/soc/tegra/Kconfig), so it's indeed absolutely fine.
