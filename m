@@ -1,39 +1,50 @@
-From: Dragan Cvetic <draganc@xilinx.com>
-Subject: RE: [PATCH V4 04/12] misc: xilinx_sdfec: Add open, close and ioctl
-Date: Fri, 7 Jun 2019 10:58:34 +0000
-Message-ID: <CH2PR02MB6359747C72220A978CCA807BCB100@CH2PR02MB6359.namprd02.prod.outlook.com>
-References: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
- <1558784245-108751-5-git-send-email-dragan.cvetic@xilinx.com>
- <20190606132842.GC7943@kroah.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 0/9] Add SD host controller support for SC9860 platform
+Date: Fri, 7 Jun 2019 13:02:22 +0200
+Message-ID: <CAPDyKFp+UXDrrferK0zP7nPFtvkq6UU29vhJu3HCEUiKcAOsJQ@mail.gmail.com>
+References: <cover.1559635435.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190606132842.GC7943@kroah.com>
-Content-Language: en-US
+In-Reply-To: <cover.1559635435.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Derek Kiernan <dkiernan@xilinx.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Vincent Guittot <vincent.guittot@linaro.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Sat, May 25, 2019 at 12:37:17PM +0100, Dragan Cvetic wrote:
-> > +static int xsdfec_dev_open(struct inode *iptr, struct file *fptr)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +static int xsdfec_dev_release(struct inode *iptr, struct file *fptr)
-> > +{
-> > +	return 0;
-> > +}
->=20
-> empty open/close functions are never needed, just drop them.
->=20
+On Tue, 4 Jun 2019 at 10:14, Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+> This patch set adds optional clock support, HS400 enhanced strobe mode support,
+> PHY DLL configuration and other optimization to make the SD host controller
+> can work well on the Spreadtrum SC9860 platform.
+>
+> Changes from v1:
+>  - Add acked-tags from Adrian.
+>  - Fix one mistake by changing MMC_TIMING_MMC_HS to MMC_TIMING_SD_HS in patch 8.
+>
+> Baolin Wang (9):
+>   mmc: sdhci-sprd: Check the enable clock's return value correctly
+>   dt-bindings: mmc: sprd: Add another optional clock documentation
+>   mmc: sdhci-sprd: Add optional gate clock support
+>   mmc: sdhci-sprd: Implement the get_max_timeout_count() interface
+>   mmc: sdhci-sprd: Add HS400 enhanced strobe mode
+>   mmc: sdhci-sprd: Enable PHY DLL to make clock stable
+>   dt-bindings: mmc: sprd: Add PHY DLL delay documentation
+>   mmc: sdhci-sprd: Add PHY DLL delay configuration
+>   arm64: dts: sprd: Add Spreadtrum SD host controller support
+>
+>  .../devicetree/bindings/mmc/sdhci-sprd.txt         |   19 +++
+>  arch/arm64/boot/dts/sprd/whale2.dtsi               |   35 ++++
+>  drivers/mmc/host/sdhci-sprd.c                      |  171 +++++++++++++++++++-
+>  3 files changed, 217 insertions(+), 8 deletions(-)
+>
+> --
+> 1.7.9.5
+>
 
-open() is needed to allocate file descriptor eg.
-fd =3D open(dev_name, O_RDWR);
+Patch 1 -> patch 8, applied for next, thanks!
 
-Please, advise if you have some other idea in mind
+Patch 9 is for arm-soc.
 
-Thanks
-Dragan
+Kind regards
+Uffe
