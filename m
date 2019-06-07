@@ -1,48 +1,101 @@
-Return-Path: <SRS0=xUMM=UN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16045 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfFNHrR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Jun 2019 03:47:17 -0400
-From: JC Kuo <jckuo@nvidia.com>
-Subject: [PATCH 0/8] Tegra XHCI controller ELPG support
-Date: Fri, 14 Jun 2019 15:46:48 +0800
-Message-ID: <20190614074652.21960-1-jckuo@nvidia.com>
+Return-Path: <SRS0=d9CS=UG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57724 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728311AbfFGOlr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Jun 2019 10:41:47 -0400
+Subject: Re: [PATCH 1/2] dt-bindings: Add vendor prefix and docs for
+ EL15203000
+References: <20190607114823.3735-1-oleg@kaa.org.ua>
+From: Dan Murphy <dmurphy@ti.com>
+Message-ID: <0df31c4a-2cd0-89fa-bd78-dc87de3c640b@ti.com>
+Date: Fri, 7 Jun 2019 09:41:41 -0500
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190607114823.3735-1-oleg@kaa.org.ua>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, pdeschrijver@nvidia.com, afrid@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com, JC Kuo <jckuo@nvidia.com>
+To: Oleh Kravchenko <oleg@kaa.org.ua>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Tegra XHCI controler can be placed in ELPG (Engine Level PowerGate)
-state for power saving when all of the connected USB devices are in
-suspended state. This patch series includes clk, phy and pmc changes
-that are required for properly place controller in ELPG and bring
-controller out of ELPG.
+Oleh
+
+On 6/7/19 6:48 AM, Oleh Kravchenko wrote:
+> Add documentation and example for dt-bindings EL15203000.
+>
+> Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
+> ---
+>   .../bindings/leds/leds-el15203000.txt         | 48 +++++++++++++++++++
+>   1 file changed, 48 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-el15203000.txt
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-el15203000.txt b/Documentation/devicetree/bindings/leds/leds-el15203000.txt
+> new file mode 100644
+> index 000000000000..f47ee91cb419
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-el15203000.txt
+> @@ -0,0 +1,48 @@
+> +Crane Merchandising System - el15203000 LED driver
+> +--------------------------------------------------
+> +
+> +This LED Board (aka RED LEDs board) is widely used in coffee vending machines
+> +produced by Crane Merchandising Systems.
+> +
+> +Required properties:
+> +- compatible: "crane,el15203000"
+> +
+> +Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
+> +apply. In particular, "reg" and "spi-max-frequency" properties must be given.
+> +
+
+Can you please add this instead?
+
+reg : see Documentation/devicetree/bindings/spi/spi-bus.txt
+
+spi-max-frequency : see Documentation/devicetree/bindings/spi/spi-bus.txt
 
 
-JC Kuo (8):
-  clk: tegra: Add PLLE HW power sequencer control
-  clk: tegra: don't enable PLLE HW sequencer at init
-  phy: tegra: xusb: t210: rearrange UPHY init
-  phy: tegra: xusb: add sleepwalk and suspend/resume
-  soc/tegra: pmc: support T210 USB 2.0 Sleepwalk
-  phy: tegra: xusb: t210: support wake and sleepwalk
-  arm64: tegra: add Tegra210 XUSB PADCTL irq
-  xhci: tegra: enable ELPG for runtime/system PM
+> +LED sub-node properties:
+> +- label :
+> +	see Documentation/devicetree/bindings/leds/common.txt
+> +- linux,default-trigger : (optional)
+> +	see Documentation/devicetree/bindings/leds/common.txt
+> +
 
- arch/arm64/boot/dts/nvidia/tegra210.dtsi |    3 +-
- drivers/clk/tegra/clk-pll.c              |   12 -
- drivers/clk/tegra/clk-tegra210.c         |   45 +
- drivers/phy/tegra/xusb-tegra210.c        | 1023 +++++++++++++++++-----
- drivers/phy/tegra/xusb.c                 |   80 +-
- drivers/phy/tegra/xusb.h                 |   10 +
- drivers/soc/tegra/pmc.c                  |  462 ++++++++++
- drivers/usb/host/xhci-tegra.c            |  802 ++++++++++++++---
- include/linux/clk/tegra.h                |    2 +
- include/linux/phy/tegra/xusb.h           |   12 +
- include/soc/tegra/pmc.h                  |   13 +
- 11 files changed, 2108 insertions(+), 356 deletions(-)
+max-brightness?
 
--- 
-2.17.1
+That appears to be optional
+
+N
+
+
+> +Example
+> +-------
+> +
+> +led-controller@0 {
+> +	compatible = "crane,el15203000";
+> +	reg = <0>;
+> +	spi-max-frequency = <50000>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	/* water pipe */
+> +	pipe@50 {
+> +		reg = <0x50>;
+> +		label = "red:pipe";
+> +		max-brightness = <2>;
+> +	};
+> +
+> +	/* screen frame */
+> +	screen@53 {
+> +		reg = <0x53>;
+> +		label = "red:screen";
+> +		max-brightness = <2>;
+> +	};
+> +
+> +	/* vending area */
+> +	vend@56 {
+> +		reg = <0x56>;
+> +		label = "red:vend";
+> +	};
+> +};
