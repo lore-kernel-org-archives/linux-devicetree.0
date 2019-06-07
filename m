@@ -1,60 +1,91 @@
 From: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
-Subject: [PATCHv15 0/3] Intel FPGA Video and Image Processing Suite
-Date: Fri,  7 Jun 2019 22:30:19 +0800
-Message-ID: <20190607143022.427-1-hean.loong.ong@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCHv16 1/3] ARM:dt-bindings:display Intel FPGA Video and Image
+ Processing Suite
+Date: Fri,  7 Jun 2019 22:30:20 +0800
+Message-ID: <20190607143022.427-2-hean.loong.ong@intel.com>
+References: <20190607143022.427-1-hean.loong.ong@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190607143022.427-1-hean.loong.ong@intel.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Randy Dunlap <rdunlap@infradead.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, hean.loong.ong@intel.com, chin.liang.see@intel.com
+Cc: devicetree@vger.kernel.org, hean.loong.ong@intel.com, chin.liang.see@intel.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Ong@freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hean-Loong Ong <hean.loong.ong@intel.com>
-
-The FPGA FrameBuffer Soft IP could be seen  as the GPU and the DRM driver
-patch here is allocating memory for information to be streamed from the
-ARM/Linux to the display port.
-
-Basically the driver just wraps the information such as the pixels to be
-drawn by the Sodt IP FrameBuffer 2.
-
-The piece of hardware in discussion is the SoC FPGA where Linux runs on
-the ARM chip and the FGPA is driven by its NIOS soft core with its own
-proprietary firmware.
-
-For example the application from the ARM Linux would have to write
-information on the /dev/fb0 with the information stored in the
-SDRAM to be fetched by the Framebuffer 2 Soft IP and displayed
-on the Display Port Monitor.
-
-Reviewed and ACKed need to merge this into drm-misc
-
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-Ong Hean Loong (1):
-  ARM:socfpga-defconfig Intel FPGA Video and Image Processing Suite
-
-Ong, Hean Loong (2):
-  ARM:dt-bindings:display Intel FPGA Video and Image Processing Suite
-  ARM:drm ivip Intel FPGA Video and Image Processing Suite
-
- .../bindings/display/altr,vip-fb2.txt         |  63 ++++
- MAINTAINERS                                   |   9 +
- arch/arm/configs/socfpga_defconfig            |   8 +
- drivers/gpu/drm/Kconfig                       |   2 +
- drivers/gpu/drm/Makefile                      |   1 +
- drivers/gpu/drm/ivip/Kconfig                  |  14 +
- drivers/gpu/drm/ivip/Makefile                 |   6 +
- drivers/gpu/drm/ivip/intel_vip_conn.c         |  93 +++++
- drivers/gpu/drm/ivip/intel_vip_drv.c          | 335 ++++++++++++++++++
- drivers/gpu/drm/ivip/intel_vip_drv.h          |  73 ++++
- 10 files changed, 604 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
- create mode 100644 drivers/gpu/drm/ivip/Kconfig
- create mode 100644 drivers/gpu/drm/ivip/Makefile
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_conn.c
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.c
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.h
-
--- 
-2.17.1
+RnJvbTogIk9uZywgSGVhbiBMb29uZyIgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4KCkRldmlj
+ZSB0cmVlIGJpbmRpbmcgZm9yIEludGVsIEZQR0EgVmlkZW8gYW5kIEltYWdlIFByb2Nlc3Npbmcg
+U3VpdGUuClRoZSBiaW5kaW5ncyB3b3VsZCBzZXQgdGhlIG1heCB3aWR0aCwgbWF4IGhlaWdodCwK
+Yml0cyBwZXIgcGl4ZWwgYW5kIG1lbW9yeSBwb3J0IHdpZHRoLgpUaGUgZGV2aWNlIHRyZWUgYmlu
+ZGluZyBvbmx5IHN1cHBvcnRzIHRoZSBJbnRlbApBcnJpYTEwIGRldmtpdCBhbmQgaXRzIHZhcmlh
+bnRzLiBWZW5kb3IgbmFtZSByZXRhaW5lZCBhcyBhbHRyLgoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJy
+aW5nIDxyb2JoQGtlcm5lbC5vcmc+CgpWMTU6ClJldmlld2VkCgpWMTQ6Ck5vIENoYW5nZQoKVjEz
+OgpObyBjaGFuZ2UKClYxMjoKV3JhcCBjb21tZW50cyBhbmQgZml4IGNvbW1pdCBtZXNzYWdlCgpW
+MTE6Ck5vIGNoYW5nZQoKVjEwOgpObyBjaGFuZ2UKClY5OgpSZW1vdmUgRGlzcGxheSBwb3J0IG5v
+ZGUKClY4OgoqQWRkIHBvcnQgdG8gRGlzcGxheSBwb3J0IGRlY29kZXIKClY3OgoqRml4IE9GIGdy
+YXBoIGZvciBiZXR0ZXIgZGVzY3JpcHRpb24KKkFkZCBkZXNjcmlwdGlvbiBmb3IgZW5jb2RlcgoK
+VjY6CipEZXNjcmlwdGlvbiBoYXZlIG5vdCBkZXNjcmliZSBEVCBkZXZpY2UgaW4gZ2VuZXJhbAoK
+VjU6CipyZW1vdmUgYmluZGluZ3MgZm9yIGJpdHMgcGVyIHN5bWJvbCBhcyBpdCBoYXMgb25seSBv
+bmUgdmFsdWUgd2hpY2ggaXMgOAoKVjQ6CipmaXggcHJvcGVydGllcyB0aGF0IGRvZXMgbm90IGRl
+c2NyaWJlIHRoZSB2YWx1ZXMKClYzOgoqT0YgZ3JhcGggbm90IGluIGFjY29yZGFuY2UgdG8gZ3Jh
+cGgudHh0CgpWMjoKKlJlbW92ZSBMaW51eCBkcml2ZXIgZGVzY3JpcHRpb24KClYxOgoqTWlzc2lu
+ZyB2ZW5kb3IgcHJlZml4CgpTaWduZWQtb2ZmLWJ5OiBPbmcsIEhlYW4gTG9vbmcgPGhlYW4ubG9v
+bmcub25nQGludGVsLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC1mYjIu
+dHh0ICAgICAgICAgfCA2MyArKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNjMg
+aW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlwLWZiMi50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC1mYjIudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYWx0cix2aXAtZmIyLnR4dApu
+ZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjg5YTNiOWUxNjZhOAotLS0g
+L2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2FsdHIsdmlwLWZiMi50eHQKQEAgLTAsMCArMSw2MyBAQAorSW50ZWwgVmlkZW8gYW5kIEltYWdl
+IFByb2Nlc3NpbmcoVklQKSBGcmFtZSBCdWZmZXIgSUkgYmluZGluZ3MKKworU3VwcG9ydGVkIGhh
+cmR3YXJlOiBJbnRlbCBGUEdBIFNvQyBBcnJpYTEwIGFuZCBhYm92ZSB3aXRoIGRpc3BsYXkgcG9y
+dCBJUAorCitUaGUgVmlkZW8gRnJhbWUgQnVmZmVyIElJIGluIFZpZGVvIEltYWdlIFByb2Nlc3Np
+bmcgKFZJUCkgc3VpdGUgaXMgYW4gSVAgY29yZQordGhhdCBpbnRlcmZhY2VzIGJldHdlZW4gc3lz
+dGVtIG1lbW9yeSBhbmQgQXZhbG9uLVNUIHZpZGVvIHBvcnRzLiBUaGUgSVAgY29yZQorY2FuIGJl
+IGNvbmZpZ3VyZWQgdG8gc3VwcG9ydCB0aGUgbWVtb3J5IHJlYWRlciAoZnJvbSBtZW1vcnkgdG8g
+QXZhbG9uLVNUKQorYW5kL29yIG1lbW9yeSB3cml0ZXIgKGZyb20gQXZhbG9uLVNUIHRvIG1lbW9y
+eSkgaW50ZXJmYWNlcy4KKworTW9yZSBpbmZvcm1hdGlvbiB0aGUgRlBHQSB2aWRlbyBJUCBjb21w
+b25lbnQgY2FuIGJlIGFjcXVpcmVkIGZyb20KK2h0dHBzOi8vd3d3LmFsdGVyYS5jb20vY29udGVu
+dC9kYW0vYWx0ZXJhLXd3dy9nbG9iYWwvZW5fVVMvcGRmc1wKKy9saXRlcmF0dXJlL3VnL3VnX3Zp
+cC5wZGYKKworRFQtQmluZGluZ3M6Cis9PT09PT09PT09PT09CitSZXF1aXJlZCBwcm9wZXJ0aWVz
+OgorLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQorLSBjb21wYXRpYmxlOiAiYWx0cix2aXAt
+ZnJhbWUtYnVmZmVyLTIuMCIKKy0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0
+aCBvZiB0aGUgZnJhbWVidWZmZXIgY29udHJvbGxlcidzCisJcmVnaXN0ZXJzLgorLSBhbHRyLG1h
+eC13aWR0aDogVGhlIG1heGltdW0gd2lkdGggb2YgdGhlIGZyYW1lYnVmZmVyIGluIHBpeGVscy4K
+Ky0gYWx0cixtYXgtaGVpZ2h0OiBUaGUgbWF4aW11bSBoZWlnaHQgb2YgdGhlIGZyYW1lYnVmZmVy
+IGluIHBpeGVscy4KKy0gYWx0cixtZW0tcG9ydC13aWR0aCA9IHRoZSBidXMgd2lkdGggb2YgdGhl
+IGF2YWxvbiBtYXN0ZXIgcG9ydAorCW9uIHRoZSBmcmFtZSByZWFkZXIKKworT3B0aW9uYWwgc3Vi
+LW5vZGVzOgorLSBwb3J0czogVGhlIGNvbm5lY3Rpb24gdG8gdGhlIGVuY29kZXIKKworQ29ubmVj
+dGlvbnMgYmV0d2VlbiB0aGUgRnJhbWUgQnVmZmVyIElJIGFuZCBvdGhlciB2aWRlbyBJUCBjb3Jl
+cyBpbiB0aGUgc3lzdGVtCithcmUgbW9kZWxsZWQgdXNpbmcgdGhlIE9GIGdyYXBoIERUIGJpbmRp
+bmdzLiBUaGUgRnJhbWUgQnVmZmVyIElJIG5vZGUgaGFzIHVwCit0byB0d28gT0YgZ3JhcGggcG9y
+dHMuIFdoZW4gdGhlIG1lbW9yeSB3cml0ZXIgaW50ZXJmYWNlIGlzIGVuYWJsZWQsIHBvcnQgMAor
+bWFwcyB0byB0aGUgQXZhbG9uLVNUIElucHV0IChkaW4pIHBvcnQuIFdoZW4gdGhlIG1lbW9yeSBy
+ZWFkZXIgaW50ZXJmYWNlIGlzCitlbmFibGVkLCBwb3J0IDEgbWFwcyB0byB0aGUgQXZhbG9uLVNU
+IE91dHB1dCAoZG91dCkgcG9ydC4KKworVGhlIGVuY29kZXIgaXMgYnVpbHQgaW50byB0aGUgRlBH
+QSBIVyBkZXNpZ24gYW5kIHRoZXJlZm9yZSB3b3VsZCBub3QKK2JlIGFjY2Vzc2libGUgZnJvbSB0
+aGUgRERSLgorCisJCVBvcnQgMAkJCQlQb3J0MQorLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCitBUlJJQTEwIEFWQUxPTl9TVCAoRElOKQkJ
+QVZBTE9OX1NUIChET1VUKQorCitSZXF1aXJlZCBQcm9wZXJ0aWVzIEV4YW1wbGU6CistLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tCisKK2ZyYW1lYnVmZmVyQDEwMDAwMDI4MCB7CisJCWNvbXBh
+dGlibGUgPSAiYWx0cix2aXAtZnJhbWUtYnVmZmVyLTIuMCI7CisJCXJlZyA9IDwweDAwMDAwMDAx
+IDB4MDAwMDAyODAgMHgwMDAwMDA0MD47CisJCWFsdHIsbWF4LXdpZHRoID0gPDEyODA+OworCQlh
+bHRyLG1heC1oZWlnaHQgPSA8NzIwPjsKKwkJYWx0cixtZW0tcG9ydC13aWR0aCA9IDwxMjg+Owor
+CisJCXBvcnRzIHsKKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9
+IDwwPjsKKworCQkJcG9ydEAxIHsKKwkJCQlyZWcgPSA8MT47CisJCQkJCWZiX291dHB1dDogZW5k
+cG9pbnQgeworCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkcF9lbmNvZGVyX2lucHV0PjsKKwkJ
+CQkJfTsKKwkJCX07CisJCX07Cit9OwotLSAKMi4xNy4xCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
