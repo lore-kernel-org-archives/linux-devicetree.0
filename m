@@ -1,37 +1,42 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: Re: [PATCH] mtd: spi-nor: stm32: remove the driver as it was replaced
- by spi-stm32-qspi.c
-Date: Fri, 7 Jun 2019 04:54:19 +0000
-Message-ID: <2940804e-2df7-066c-c9da-2e842ec74a04@microchip.com>
-References: <1557220598-18531-1-git-send-email-ludovic.Barre@st.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v6 5/7] RISC-V: Parse cpu topology during boot.
+Date: Thu, 6 Jun 2019 22:00:51 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1906062159380.28147@viisi.sifive.com>
+References: <20190529211340.17087-1-atish.patra@wdc.com> <20190529211340.17087-6-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557220598-18531-1-git-send-email-ludovic.Barre@st.com>
-Content-Language: en-US
-Content-ID: <F1FDC19070F3C5438494749CC8BEED4D@namprd11.prod.outlook.com>
+In-Reply-To: <20190529211340.17087-6-atish.patra@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ludovic.Barre@st.com, marek.vasut@gmail.com
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, bbrezillon@kernel.org, richard@nod.at, alexandre.torgue@st.com, robh+dt@kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
+To: Atish Patra <atish.patra@wdc.com>
+Cc: linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Rafael J. Wyso
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA1LzA3LzIwMTkgMTI6MTYgUE0sIEx1ZG92aWMgQmFycmUgd3JvdGU6DQo+IEZyb206
-IEx1ZG92aWMgQmFycmUgPGx1ZG92aWMuYmFycmVAc3QuY29tPg0KPiANCj4gVGhlcmUncyBhIG5l
-dyBkcml2ZXIgdXNpbmcgdGhlIFNQSSBtZW1vcnkgaW50ZXJmYWNlIG9mIHRoZQ0KPiBTUEkgZnJh
-bWV3b3JrIGF0IHNwaS9zcGktc3RtMzItcXNwaS5jLCB3aGljaCBjYW4gYmUgdXNlZA0KPiB0b2dl
-dGhlciB3aXRoIG0yNXA4MC5jIHRvIHJlcGxhY2UgdGhlIGZ1bmN0aW9uYWxpdHkgb2YNCj4gdGhp
-cyBTUEkgTk9SIGRyaXZlci4NCj4gDQo+IFRoZSAibmV3IiBkcml2ZXIgdXNlcyB0aGUgc2FtZSBk
-dCBwcm9wZXJ0aWVzIGFuZCBub3QgYWZmZWN0cw0KPiB0aGUgbGVnYWN5IGNvbXBhdGliaWxpdHku
-DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMdWRvdmljIEJhcnJlIDxsdWRvdmljLmJhcnJlQHN0LmNv
-bT4NCj4gLS0tDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvc3RtMzItcXVhZHNwaS50
-eHQgICAgICB8ICA0MyAtLQ0KPiAgZHJpdmVycy9tdGQvc3BpLW5vci9LY29uZmlnICAgICAgICAg
-ICAgICAgICAgICAgICAgfCAgIDcgLQ0KPiAgZHJpdmVycy9tdGQvc3BpLW5vci9NYWtlZmlsZSAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgIDEgLQ0KPiAgZHJpdmVycy9tdGQvc3BpLW5vci9zdG0z
-Mi1xdWFkc3BpLmMgICAgICAgICAgICAgICAgfCA3MjAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+
-ICA0IGZpbGVzIGNoYW5nZWQsIDc3MSBkZWxldGlvbnMoLSkNCj4gIGRlbGV0ZSBtb2RlIDEwMDY0
-NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3N0bTMyLXF1YWRzcGkudHh0
-DQo+ICBkZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tdGQvc3BpLW5vci9zdG0zMi1xdWFkc3Bp
-LmMNCg0KQXBwbGllZCB0byBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
-bmVsL2dpdC9tdGQvbGludXguZ2l0LA0Kc3BpLW5vci9uZXh0IGJyYW5jaC4NCg0KVGhhbmtzLA0K
-dGENCg==
+On Wed, 29 May 2019, Atish Patra wrote:
+
+> Currently, there are no topology defined for RISC-V.
+> Parse the cpu-map node from device tree and setup the
+> cpu topology.
+> 
+> CPU topology after applying the patch.
+> $cat /sys/devices/system/cpu/cpu2/topology/core_siblings_list
+> 0-3
+> $cat /sys/devices/system/cpu/cpu3/topology/core_siblings_list
+> 0-3
+> $cat /sys/devices/system/cpu/cpu3/topology/physical_package_id
+> 0
+> $cat /sys/devices/system/cpu/cpu3/topology/core_id
+> 3
+> 
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+
+Looks reasonable to me.
+
+Acked-by: Paul Walmsley <paul.walmsley@sifive.com>
+
+We're assuming, on the RISC-V side, that these patches will go in via 
+another tree.
+
+
+- Paul
