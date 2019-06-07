@@ -1,84 +1,58 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v7 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Fri, 7 Jun 2019 07:59:38 +0000
-Message-ID: <BYAPR07MB4709E1C8B190E5BBC055DC34DD100@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
- <1559729030-16390-6-git-send-email-pawell@cadence.com>
- <a6eb0f66-14a7-d235-94a4-a53d291ac2c3@ti.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [RFC PATCH 0/6] soundwire: Add support to Qualcomm SoundWire master
+Date: Fri,  7 Jun 2019 09:56:37 +0100
+Message-ID: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a6eb0f66-14a7-d235-94a4-a53d291ac2c3@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: broonie@kernel.org, vkoul@kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Pg0KPk9uIDA1LzA2LzIwMTkgMTM6MDMsIFBhd2VsIExhc3pjemFrIHdyb3RlOg0KPj4gVGhpcyBw
-YXRjaCBpbnRyb2R1Y2UgbmV3IENhZGVuY2UgVVNCU1MgRFJEIGRyaXZlciB0byBMaW51eCBrZXJu
-ZWwuDQo+Pg0KPj4gVGhlIENhZGVuY2UgVVNCU1MgRFJEIERyaXZlciBpcyBhIGhpZ2hseSBjb25m
-aWd1cmFibGUgSVAgQ29yZSB3aGljaA0KPj4gY2FuIGJlIGluc3RhbnRpYXRlZCBhcyBEdWFsLVJv
-bGUgRGV2aWNlIChEUkQpLCBQZXJpcGhlcmFsIE9ubHkgYW5kDQo+PiBIb3N0IE9ubHkgKFhIQ0kp
-Y29uZmlndXJhdGlvbnMuDQo+Pg0KPj4gVGhlIGN1cnJlbnQgZHJpdmVyIGhhcyBiZWVuIHZhbGlk
-YXRlZCB3aXRoIEZQR0EgcGxhdGZvcm0uIFdlIGhhdmUNCj4+IHN1cHBvcnQgZm9yIFBDSWUgYnVz
-LCB3aGljaCBpcyB1c2VkIG9uIEZQR0EgcHJvdG90eXBpbmcuDQo+Pg0KPj4gVGhlIGhvc3Qgc2lk
-ZSBvZiBVU0JTUy1EUkQgY29udHJvbGxlciBpcyBjb21wbGlhbnQgd2l0aCBYSENJDQo+PiBzcGVj
-aWZpY2F0aW9uLCBzbyBpdCB3b3JrcyB3aXRoIHN0YW5kYXJkIFhIQ0kgTGludXggZHJpdmVyLg0K
-Pj4NCj4+IFNpZ25lZC1vZmYtYnk6IFBhd2VsIExhc3pjemFrIDxwYXdlbGxAY2FkZW5jZS5jb20+
-DQo+PiAtLS0NCj4+ICBkcml2ZXJzL3VzYi9LY29uZmlnICAgICAgICAgICAgICAgIHwgICAgMiAr
-DQo+PiAgZHJpdmVycy91c2IvTWFrZWZpbGUgICAgICAgICAgICAgICB8ICAgIDIgKw0KPj4gIGRy
-aXZlcnMvdXNiL2NkbnMzL0tjb25maWcgICAgICAgICAgfCAgIDQ0ICsNCj4+ICBkcml2ZXJzL3Vz
-Yi9jZG5zMy9NYWtlZmlsZSAgICAgICAgIHwgICAxNCArDQo+PiAgZHJpdmVycy91c2IvY2RuczMv
-Y2RuczMtcGNpLXdyYXAuYyB8ICAxNTcgKysNCj4+ICBkcml2ZXJzL3VzYi9jZG5zMy9jb3JlLmMg
-ICAgICAgICAgIHwgIDUyOSArKysrKysrDQo+PiAgZHJpdmVycy91c2IvY2RuczMvY29yZS5oICAg
-ICAgICAgICB8ICAxMjEgKysNCj4+ICBkcml2ZXJzL3VzYi9jZG5zMy9kZWJ1Zy5oICAgICAgICAg
-IHwgIDE3MyArKysNCj4+ICBkcml2ZXJzL3VzYi9jZG5zMy9kZWJ1Z2ZzLmMgICAgICAgIHwgIDE3
-MyArKysNCj4+ICBkcml2ZXJzL3VzYi9jZG5zMy9kcmQuYyAgICAgICAgICAgIHwgIDM3OSArKysr
-Kw0KPj4gIGRyaXZlcnMvdXNiL2NkbnMzL2RyZC5oICAgICAgICAgICAgfCAgMTY2ICsrDQo+PiAg
-ZHJpdmVycy91c2IvY2RuczMvZXAwLmMgICAgICAgICAgICB8ICA5MTUgKysrKysrKysrKysNCj4+
-ICBkcml2ZXJzL3VzYi9jZG5zMy9nYWRnZXQtZXhwb3J0LmggIHwgICAyOCArDQo+PiAgZHJpdmVy
-cy91c2IvY2RuczMvZ2FkZ2V0LmMgICAgICAgICB8IDIyOTAgKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKw0KPj4gIGRyaXZlcnMvdXNiL2NkbnMzL2dhZGdldC5oICAgICAgICAgfCAxMzEzICsr
-KysrKysrKysrKysrKysNCj4+ICBkcml2ZXJzL3VzYi9jZG5zMy9ob3N0LWV4cG9ydC5oICAgIHwg
-ICAyOCArDQo+PiAgZHJpdmVycy91c2IvY2RuczMvaG9zdC5jICAgICAgICAgICB8ICAgNzYgKw0K
-Pj4gIGRyaXZlcnMvdXNiL2NkbnMzL3RyYWNlLmMgICAgICAgICAgfCAgIDIzICsNCj4+ICBkcml2
-ZXJzL3VzYi9jZG5zMy90cmFjZS5oICAgICAgICAgIHwgIDQ0NyArKysrKysNCj4+ICAxOSBmaWxl
-cyBjaGFuZ2VkLCA2ODgwIGluc2VydGlvbnMoKykNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy91c2IvY2RuczMvS2NvbmZpZw0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Vz
-Yi9jZG5zMy9NYWtlZmlsZQ0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3VzYi9jZG5z
-My9jZG5zMy1wY2ktd3JhcC5jDQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdXNiL2Nk
-bnMzL2NvcmUuYw0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3VzYi9jZG5zMy9jb3Jl
-LmgNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy91c2IvY2RuczMvZGVidWcuaA0KPj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3VzYi9jZG5zMy9kZWJ1Z2ZzLmMNCj4+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy91c2IvY2RuczMvZHJkLmMNCj4+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy91c2IvY2RuczMvZHJkLmgNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy91c2IvY2RuczMvZXAwLmMNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy91c2Iv
-Y2RuczMvZ2FkZ2V0LWV4cG9ydC5oDQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdXNi
-L2NkbnMzL2dhZGdldC5jDQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdXNiL2NkbnMz
-L2dhZGdldC5oDQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdXNiL2NkbnMzL2hvc3Qt
-ZXhwb3J0LmgNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy91c2IvY2RuczMvaG9zdC5j
-DQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdXNiL2NkbnMzL3RyYWNlLmMNCj4+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy91c2IvY2RuczMvdHJhY2UuaA0KPj4NCj4NCj48c25p
-cD4NCj4NCj4NCj4+ICsvKioNCj4+ICsgKiBjZG5zM19wcm9iZSAtIHByb2JlIGZvciBjZG5zMyBj
-b3JlIGRldmljZQ0KPj4gKyAqIEBwZGV2OiBQb2ludGVyIHRvIGNkbnMzIGNvcmUgcGxhdGZvcm0g
-ZGV2aWNlDQo+PiArICoNCj4+ICsgKiBSZXR1cm5zIDAgb24gc3VjY2VzcyBvdGhlcndpc2UgbmVn
-YXRpdmUgZXJybm8NCj4+ICsgKi8NCj4+ICtzdGF0aWMgaW50IGNkbnMzX3Byb2JlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+PiArew0KPj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAm
-cGRldi0+ZGV2Ow0KPj4gKwlzdHJ1Y3QgcmVzb3VyY2UJKnJlczsNCj4+ICsJc3RydWN0IGNkbnMz
-ICpjZG5zOw0KPj4gKwl2b2lkIF9faW9tZW0gKnJlZ3M7DQo+PiArCWludCByZXQ7DQo+PiArDQo+
-PiArCXJldCA9IGRtYV9zZXRfbWFza19hbmRfY29oZXJlbnQoZGV2LCBETUFfQklUX01BU0soMzIp
-KTsNCj4NCj5BcmUgYWxsIGNvcmVzIHN1cHBvcnRlZCBieSB0aGlzIGRyaXZlciBsaW1pdGVkIHRv
-IDMyLWJpdD8gSWYgbm90IHRoZW4NCj55b3UgbmVlZCB0byBzZXQgdGhlIG1hc2sgYmFzZWQgb24g
-Y29tcGF0aWJsZXM/DQoNClR3byB2ZXJzaW9uOiAweDAwMDI0NTA5IGFuZCAweDAwMDI0NTBkIHN1
-cHBvcnQgZXh0ZW5kZWQgRE1BIGFkZHJlc3MgdG8gNDggYml0cy4NClRoZSBwcm9ibGVtIGlzIHRo
-YXQgdGhlIDE2IG1vc3Qgc2lnbmlmaWNhbnQgYml0IGluZGljYXRlIHRoZSBzZWdtZW50IHRoYXQg
-Y2FuIGJlIHNldCANCnBlciBlbmRwb2ludC4gIFdlIGNhbiBhc3N1bWUgdGhhdCBpdCB3aWxsIGJl
-IGNvbnN0YW50IHBlciBlbmRwb2ludC4gQWxsIERNQSBtZW1vcnkNCmZvciBkYXRhIGJ1ZmZlcnMg
-YW5kIGZvciBUUkJzIG11c3QgYmUgaW4gdGhpcyByYW5nZS4gIA0KDQpJIHRoaW5rIHRoYXQgTGlu
-dXgga2VybmVsIChETUEgc3Vic3lzdGVtKSBjYW4ndCBndWFyYW50ZWUgaXQuIA0KDQpVc2luZyBk
-bWFfc2V0X21hc2tfYW5kX2NvaGVyZW50KGRldiwgRE1BX0JJVF9NQVNLKDQ4KSkgbm90IGd1YXJh
-bnRlZSB0aGF0IHNlZ21lbnQgDQpwYXJ0IHdpbGwgYmUgYWx3YXlzIHRoZSBzYW1lLiAgDQoNClNv
-IHRoZSBzYWZlc3Qgd2F5IGlzIHRvIGxpbWl0IERNQSByYW5nZSB0byAzMiBiaXRzLiAgDQoNCg0K
-PjxzbmlwPg0KDQpSZWdhcmRzLA0KUGF3ZWwNCg0K
+Hi All, 
+
+This patchset is very first version of Qualcomm SoundWire Master Controller
+found in most of Qualcomm SoCs and WCD audio codecs.
+
+This driver along with WCD934x codec and WSA881x Class-D Smart Speaker Amplifier
+drivers is on DragonBoard DB845c based of SDM845 SoC.
+WCD934x and WSA881x patches will be posted soon.
+
+SoundWire controller on SDM845 is integrated in WCD934x audio codec via
+SlimBus interface.
+
+Currently this driver is very minimal and only supports PDM.
+
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
+
+TODO:
+	Test and add PCM support.
+
+Thanks,
+srini
+
+Srinivas Kandagatla (5):
+  ASoC: core: add support to snd_soc_dai_get_sdw_stream()
+  soundwire: core: define SDW_MAX_PORT
+  soundwire: stream: make stream name a const pointer
+  dt-bindings: soundwire: add bindings for Qcom controller
+  soundwire: qcom: add support for SoundWire controller
+
+Vinod Koul (1):
+  soundwire: Add compute_params callback
+
+ .../bindings/soundwire/qcom,swr.txt           |  62 ++
+ drivers/soundwire/Kconfig                     |   9 +
+ drivers/soundwire/Makefile                    |   4 +
+ drivers/soundwire/qcom.c                      | 983 ++++++++++++++++++
+ drivers/soundwire/stream.c                    |  11 +-
+ include/linux/soundwire/sdw.h                 |   7 +-
+ include/sound/soc-dai.h                       |  10 +
+ 7 files changed, 1083 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,swr.txt
+ create mode 100644 drivers/soundwire/qcom.c
+
+-- 
+2.21.0
