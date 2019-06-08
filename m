@@ -1,52 +1,133 @@
-From: Jitao Shi <jitao.shi@mediatek.com>
-Subject: [1/2] dt-bindings: display: panel: add AUO kd101n80-45na panel
- bindings
-Date: Sat, 8 Jun 2019 19:23:41 +0800
-Message-ID: <20190608112342.64416-1-jitao.shi@mediatek.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/4] iio: adc: ad7606: Add software configuration
+Date: Sat, 8 Jun 2019 12:27:46 +0100
+Message-ID: <20190608122746.1e7d4536@archlinux>
+References: <20190527125650.2405-1-beniamin.bia@analog.com>
+        <20190527125650.2405-2-beniamin.bia@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Sean Paul <seanpaul@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190527125650.2405-2-beniamin.bia@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Beniamin Bia <beniamin.bia@analog.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, biabeniamin@outlook.com
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGRvY3VtZW50YXRpb24gZm9yIGF1byBrZDEwMW44MC00NW5hIHBhbmVsLgoKU2lnbmVkLW9m
-Zi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPgotLS0KIC4uLi9kaXNwbGF5
-L3BhbmVsL2F1byxrZDEwMW44MC00NW5hLnR4dCAgICAgICB8IDM0ICsrKysrKysrKysrKysrKysr
-KysKIDEgZmlsZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXVvLGtkMTAx
-bjgwLTQ1bmEudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvYXVvLGtkMTAxbjgwLTQ1bmEudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXVvLGtkMTAxbjgwLTQ1bmEudHh0Cm5l
-dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uNzcxNWNmNzAzNDMxCi0tLSAv
-ZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvYXVvLGtkMTAxbjgwLTQ1bmEudHh0CkBAIC0wLDAgKzEsMzQgQEAKK0FVTyBDb3Jwb3Jh
-dGlvbiAxMC4xIiBXVVhHQSBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6Cist
-IGNvbXBhdGlibGU6IHNob3VsZCBiZSAiYXVvLGtkMTAxbjgwLTQ1bmEiCistIHJlZzogdGhlIHZp
-cnR1YWwgY2hhbm5lbCBudW1iZXIgb2YgYSBEU0kgcGVyaXBoZXJhbAorLSBlbmFibGUtZ3Bpb3M6
-IGEgR1BJTyBzcGVjIGZvciB0aGUgZW5hYmxlIHBpbgorLSBwcDE4MDAtc3VwcGx5OiBjb3JlIHZv
-bHRhZ2Ugc3VwcGx5CistIGF2ZGQtc3VwcGx5OiAKKy0gYXZlZS1zdXBwbHk6IAorLSBiYWNrbGln
-aHQ6IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVs
-CisKK1RoZSBkZXZpY2Ugbm9kZSBjYW4gY29udGFpbiBvbmUgJ3BvcnQnIGNoaWxkIG5vZGUgd2l0
-aCBvbmUgY2hpbGQKKydlbmRwb2ludCcgbm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5ncyBk
-ZWZpbmVkIGluCittZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dC4gVGhpcyBub2RlIHNob3VsZCBk
-ZXNjcmliZSBwYW5lbCdzIHZpZGVvIGJ1cy4KKworRXhhbXBsZToKKyZkc2kgeworCS4uLgorCXBh
-bmVsQDAgeworCQljb21wYXRpYmxlID0gImF1byxrZDEwMW44MC00NW5hIjsKKwkJcmVnID0gPDA+
-OworCQllbmFibGUtZ3Bpb3MgPSA8JnBpbyA0NSAwPjsKKwkJYXZkZC1zdXBwbHkgPSA8JnBwdmFy
-bl9sY2Q+OworCQlhdmVlLXN1cHBseSA9IDwmcHB2YXJwX2xjZD47CisJCXBwMTgwMC1zdXBwbHkg
-PSA8JnBwMTgwMF9sY2Q+OworCQliYWNrbGlnaHQgPSA8JmJhY2tsaWdodF9sY2QwPjsKKwkJc3Rh
-dHVzID0gIm9rYXkiOworCQlwb3J0IHsKKwkJCXBhbmVsX2luOiBlbmRwb2ludCB7CisJCQkJcmVt
-b3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0PjsKKwkJCX07CisJCX07CisJfTsKK307Ci0tIAoyLjIx
-LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Mon, 27 May 2019 15:56:48 +0300
+Beniamin Bia <beniamin.bia@analog.com> wrote:
+
+> Because this driver will support multiple configurations for software,
+> the software configuration was made generic.
+>=20
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> Acked-by: Jonathan Cameron <jic23@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to poke at it.
+
+Thanks,
+
+Jonathan
+
+> ---
+> Changes in v2:
+> -nothing changed
+>=20
+>  drivers/iio/adc/ad7606.c | 40 +++++++++++++++++++++++++++++++++++++---
+>  drivers/iio/adc/ad7606.h |  2 ++
+>  2 files changed, 39 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> index c66ff22f32d2..aba0fd123a51 100644
+> --- a/drivers/iio/adc/ad7606.c
+> +++ b/drivers/iio/adc/ad7606.c
+> @@ -140,7 +140,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>  			   int *val2,
+>  			   long m)
+>  {
+> -	int ret;
+> +	int ret, ch =3D 0;
+>  	struct ad7606_state *st =3D iio_priv(indio_dev);
+> =20
+>  	switch (m) {
+> @@ -157,8 +157,10 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>  		*val =3D (short)ret;
+>  		return IIO_VAL_INT;
+>  	case IIO_CHAN_INFO_SCALE:
+> +		if (st->sw_mode_en)
+> +			ch =3D chan->address;
+>  		*val =3D 0;
+> -		*val2 =3D st->scale_avail[st->range[0]];
+> +		*val2 =3D st->scale_avail[st->range[ch]];
+>  		return IIO_VAL_INT_PLUS_MICRO;
+>  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+>  		*val =3D st->oversampling;
+> @@ -233,7 +235,9 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+>  	case IIO_CHAN_INFO_SCALE:
+>  		mutex_lock(&st->lock);
+>  		i =3D find_closest(val2, st->scale_avail, st->num_scales);
+> -		ret =3D st->write_scale(indio_dev, chan->address, i);
+> +		if (st->sw_mode_en)
+> +			ch =3D chan->address;
+> +		ret =3D st->write_scale(indio_dev, ch, i);
+>  		if (ret < 0) {
+>  			mutex_unlock(&st->lock);
+>  			return ret;
+> @@ -616,6 +620,36 @@ int ad7606_probe(struct device *dev, int irq, void _=
+_iomem *base_address,
+>  	st->write_scale =3D ad7606_write_scale_hw;
+>  	st->write_os =3D ad7606_write_os_hw;
+> =20
+> +	if (st->chip_info->sw_mode_config)
+> +		st->sw_mode_en =3D device_property_present(st->dev,
+> +							 "adi,sw-mode");
+> +
+> +	if (st->sw_mode_en) {
+> +		/* After reset, in software mode, =C2=B110 V is set by default */
+> +		memset32(st->range, 2, ARRAY_SIZE(st->range));
+> +		indio_dev->info =3D &ad7606_info_os_and_range;
+> +
+> +		/*
+> +		 * In software mode, the range gpio has no longer its function.
+> +		 * Instead, the scale can be configured individually for each
+> +		 * channel from the range registers.
+> +		 */
+> +		if (st->chip_info->write_scale_sw)
+> +			st->write_scale =3D st->chip_info->write_scale_sw;
+> +
+> +		/*
+> +		 * In software mode, the oversampling is no longer configured
+> +		 * with GPIO pins. Instead, the oversampling can be configured
+> +		 * in configuratiion register.
+> +		 */
+> +		if (st->chip_info->write_os_sw)
+> +			st->write_os =3D st->chip_info->write_os_sw;
+> +
+> +		ret =3D st->chip_info->sw_mode_config(indio_dev);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+>  	st->trig =3D devm_iio_trigger_alloc(dev, "%s-dev%d",
+>  					  indio_dev->name, indio_dev->id);
+>  	if (!st->trig)
+> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> index 143c30163df9..d8a509c2c428 100644
+> --- a/drivers/iio/adc/ad7606.h
+> +++ b/drivers/iio/adc/ad7606.h
+> @@ -43,6 +43,7 @@ struct ad7606_chip_info {
+>   * @range		voltage range selection, selects which scale to apply
+>   * @oversampling	oversampling selection
+>   * @base_address	address from where to read data in parallel operation
+> + * @sw_mode_en		software mode enabled
+>   * @scale_avail		pointer to the array which stores the available scales
+>   * @num_scales		number of elements stored in the scale_avail array
+>   * @oversampling_avail	pointer to the array which stores the available
+> @@ -71,6 +72,7 @@ struct ad7606_state {
+>  	unsigned int			range[16];
+>  	unsigned int			oversampling;
+>  	void __iomem			*base_address;
+> +	bool				sw_mode_en;
+>  	const unsigned int		*scale_avail;
+>  	unsigned int			num_scales;
+>  	const unsigned int		*oversampling_avail;
