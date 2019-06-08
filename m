@@ -1,215 +1,195 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: ad7606: Move oversampling and scale
- options to chip info
-Date: Sat, 8 Jun 2019 12:23:25 +0100
-Message-ID: <20190608122325.6aeb7fdf@archlinux>
-References: <20190527125650.2405-1-beniamin.bia@analog.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [2/2] drm/panel: support for AUO kd101n80-45na wuxga dsi video mode
+ panel
+Date: Sat, 8 Jun 2019 19:23:42 +0800
+Message-ID: <20190608112342.64416-2-jitao.shi@mediatek.com>
+References: <20190608112342.64416-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190527125650.2405-1-beniamin.bia@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Beniamin Bia <beniamin.bia@analog.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, biabeniamin@outlook.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190608112342.64416-1-jitao.shi@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 May 2019 15:56:47 +0300
-Beniamin Bia <beniamin.bia@analog.com> wrote:
-
-> The device dependent options which are going to be different for devices
-> which will be supported  in the future by this driver,
-> were moved in chip info for a more generic driver. This patch allows
-> supporting more devices by the driver. Also, it is an intermediate
-> step of adding support for ad7616 in software mode.
-> 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> Acked-by: Jonathan Cameron <jic23@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
-> Changes in v2:
-> -nothing changed
-> 
->  drivers/iio/adc/ad7606.c | 61 +++++++++++++++++++++++++++++-----------
->  drivers/iio/adc/ad7606.h | 15 +++++++++-
->  2 files changed, 58 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index 24c70c3cefb4..c66ff22f32d2 100644
-> --- a/drivers/iio/adc/ad7606.c
-> +++ b/drivers/iio/adc/ad7606.c
-> @@ -158,7 +158,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
->  		return IIO_VAL_INT;
->  	case IIO_CHAN_INFO_SCALE:
->  		*val = 0;
-> -		*val2 = st->scale_avail[st->range];
-> +		*val2 = st->scale_avail[st->range[0]];
->  		return IIO_VAL_INT_PLUS_MICRO;
->  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
->  		*val = st->oversampling;
-> @@ -194,6 +194,32 @@ static ssize_t in_voltage_scale_available_show(struct device *dev,
->  
->  static IIO_DEVICE_ATTR_RO(in_voltage_scale_available, 0);
->  
-> +static int ad7606_write_scale_hw(struct iio_dev *indio_dev, int ch, int val)
-> +{
-> +	struct ad7606_state *st = iio_priv(indio_dev);
-> +
-> +	gpiod_set_value(st->gpio_range, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad7606_write_os_hw(struct iio_dev *indio_dev, int val)
-> +{
-> +	struct ad7606_state *st = iio_priv(indio_dev);
-> +	DECLARE_BITMAP(values, 3);
-> +
-> +	values[0] = val;
-> +
-> +	gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
-> +			      st->gpio_os->info, values);
-> +
-> +	/* AD7616 requires a reset to update value */
-> +	if (st->chip_info->os_req_reset)
-> +		ad7606_reset(st);
-> +
-> +	return 0;
-> +}
-> +
->  static int ad7606_write_raw(struct iio_dev *indio_dev,
->  			    struct iio_chan_spec const *chan,
->  			    int val,
-> @@ -201,15 +227,18 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
->  			    long mask)
->  {
->  	struct ad7606_state *st = iio_priv(indio_dev);
-> -	DECLARE_BITMAP(values, 3);
-> -	int i;
-> +	int i, ret, ch = 0;
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_SCALE:
->  		mutex_lock(&st->lock);
->  		i = find_closest(val2, st->scale_avail, st->num_scales);
-> -		gpiod_set_value(st->gpio_range, i);
-> -		st->range = i;
-> +		ret = st->write_scale(indio_dev, chan->address, i);
-> +		if (ret < 0) {
-> +			mutex_unlock(&st->lock);
-> +			return ret;
-> +		}
-> +		st->range[ch] = i;
->  		mutex_unlock(&st->lock);
->  
->  		return 0;
-> @@ -218,17 +247,12 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
->  			return -EINVAL;
->  		i = find_closest(val, st->oversampling_avail,
->  				 st->num_os_ratios);
-> -
-> -		values[0] = i;
-> -
->  		mutex_lock(&st->lock);
-> -		gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
-> -				      st->gpio_os->info, values);
-> -
-> -		/* AD7616 requires a reset to update value */
-> -		if (st->chip_info->os_req_reset)
-> -			ad7606_reset(st);
-> -
-> +		ret = st->write_os(indio_dev, i);
-> +		if (ret < 0) {
-> +			mutex_unlock(&st->lock);
-> +			return ret;
-> +		}
->  		st->oversampling = st->oversampling_avail[i];
->  		mutex_unlock(&st->lock);
->  
-> @@ -536,7 +560,7 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
->  	st->bops = bops;
->  	st->base_address = base_address;
->  	/* tied to logic low, analog input range is +/- 5V */
-> -	st->range = 0;
-> +	st->range[0] = 0;
->  	st->oversampling = 1;
->  	st->scale_avail = ad7606_scale_avail;
->  	st->num_scales = ARRAY_SIZE(ad7606_scale_avail);
-> @@ -589,6 +613,9 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
->  	if (ret)
->  		dev_warn(st->dev, "failed to RESET: no RESET GPIO specified\n");
->  
-> +	st->write_scale = ad7606_write_scale_hw;
-> +	st->write_os = ad7606_write_os_hw;
-> +
->  	st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
->  					  indio_dev->name, indio_dev->id);
->  	if (!st->trig)
-> @@ -643,7 +670,7 @@ static int ad7606_resume(struct device *dev)
->  	struct ad7606_state *st = iio_priv(indio_dev);
->  
->  	if (st->gpio_standby) {
-> -		gpiod_set_value(st->gpio_range, st->range);
-> +		gpiod_set_value(st->gpio_range, st->range[0]);
->  		gpiod_set_value(st->gpio_standby, 1);
->  		ad7606_reset(st);
->  	}
-> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
-> index f9ef52131e74..143c30163df9 100644
-> --- a/drivers/iio/adc/ad7606.h
-> +++ b/drivers/iio/adc/ad7606.h
-> @@ -16,6 +16,12 @@
->   *			oversampling ratios.
->   * @oversampling_num	number of elements stored in oversampling_avail array
->   * @os_req_reset	some devices require a reset to update oversampling
-> + * @write_scale_sw	pointer to the function which writes the scale via spi
-> +			in software mode
-> + * @write_os_sw		pointer to the function which writes the os via spi
-> +			in software mode
-> + * @sw_mode_config:	pointer to a function which configured the device
-> + *			for software mode
->   */
->  struct ad7606_chip_info {
->  	const struct iio_chan_spec	*channels;
-> @@ -23,6 +29,9 @@ struct ad7606_chip_info {
->  	const unsigned int		*oversampling_avail;
->  	unsigned int			oversampling_num;
->  	bool				os_req_reset;
-> +	int (*write_scale_sw)(struct iio_dev *indio_dev, int ch, int val);
-> +	int (*write_os_sw)(struct iio_dev *indio_dev, int val);
-> +	int (*sw_mode_config)(struct iio_dev *indio_dev);
->  };
->  
->  /**
-> @@ -39,6 +48,8 @@ struct ad7606_chip_info {
->   * @oversampling_avail	pointer to the array which stores the available
->   *			oversampling ratios.
->   * @num_os_ratios	number of elements stored in oversampling_avail array
-> + * @write_scale		pointer to the function which writes the scale
-> + * @write_os		pointer to the function which writes the os
->   * @lock		protect sensor state from concurrent accesses to GPIOs
->   * @gpio_convst	GPIO descriptor for conversion start signal (CONVST)
->   * @gpio_reset		GPIO descriptor for device hard-reset
-> @@ -57,13 +68,15 @@ struct ad7606_state {
->  	const struct ad7606_chip_info	*chip_info;
->  	struct regulator		*reg;
->  	const struct ad7606_bus_ops	*bops;
-> -	unsigned int			range;
-> +	unsigned int			range[16];
->  	unsigned int			oversampling;
->  	void __iomem			*base_address;
->  	const unsigned int		*scale_avail;
->  	unsigned int			num_scales;
->  	const unsigned int		*oversampling_avail;
->  	unsigned int			num_os_ratios;
-> +	int (*write_scale)(struct iio_dev *indio_dev, int ch, int val);
-> +	int (*write_os)(struct iio_dev *indio_dev, int val);
->  
->  	struct mutex			lock; /* protect sensor state */
->  	struct gpio_desc		*gpio_convst;
+QWRkIGRyaXZlciBmb3IgQVVPIGtkMTAxbjgwLTQ1bmEgcGFuZWwuClRoaXMgcGFuZWwgc3VwcG9y
+dHMgdGhlIHJlc29sdXRpb24gMTIwMHgxOTIwLCBkc2kgdmlkZW8gbW9kZQphbmQgNCBsYW5lcy4K
+ClNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4KLS0tCiBk
+cml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZyAgICAgICAgICAgICAgICAgfCAgMTAgKwogZHJp
+dmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlICAgICAgICAgICAgICAgIHwgICAxICsKIC4uLi9n
+cHUvZHJtL3BhbmVsL3BhbmVsLWF1by1rZDEwMW44MC00NW5hLmMgICB8IDM1MiArKysrKysrKysr
+KysrKysrKysKIDMgZmlsZXMgY2hhbmdlZCwgMzYzIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtYXVvLWtkMTAxbjgwLTQ1bmEuYwoK
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnIGIvZHJpdmVycy9ncHUv
+ZHJtL3BhbmVsL0tjb25maWcKaW5kZXggZTM2ZGJiNGRmODY3Li5mNWNkNWFmOWNlNDIgMTAwNjQ0
+Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCisrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9LY29uZmlnCkBAIC0yNzIsNCArMjcyLDE0IEBAIGNvbmZpZyBEUk1fUEFORUxfVFJV
+TFlfTlQzNTU5N19XUVhHQQogCWhlbHAKIAkgIFNheSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5h
+YmxlIHN1cHBvcnQgZm9yIFRydWx5IE5UMzU1OTcgV1FYR0EgRHVhbCBEU0kKIAkgIFZpZGVvIE1v
+ZGUgcGFuZWwKKworY29uZmlnIERSTV9QQU5FTF9BVU9fS0QxMDFOODBfNDVOQQorCXRyaXN0YXRl
+ICJBVU8gS0QxMDFOODBfNDVOQSAxMjAweDE5MjAgcGFuZWwiCisJZGVwZW5kcyBvbiBPRgorCWRl
+cGVuZHMgb24gRFJNX01JUElfRFNJCisJZGVwZW5kcyBvbiBCQUNLTElHSFRfQ0xBU1NfREVWSUNF
+CisJaGVscAorCSAgU2F5IFkgaGVyZSBpZiB5b3Ugd2FudCB0byBzdXBwb3J0IGZvciBBVU8gS0Qx
+MDFOODBfNDVOQSBXVVhHQSBQQU5FTAorCSAgRFNJIFZpZGVvIE1vZGUgcGFuZWwKKwogZW5kbWVu
+dQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlIGIvZHJpdmVycy9n
+cHUvZHJtL3BhbmVsL01ha2VmaWxlCmluZGV4IDc4ZTNkYzM3NmJkZC4uMTA1NjkzM2JkZjJlIDEw
+MDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvTWFrZWZpbGUKKysrIGIvZHJpdmVycy9n
+cHUvZHJtL3BhbmVsL01ha2VmaWxlCkBAIC0yOCwzICsyOCw0IEBAIG9iai0kKENPTkZJR19EUk1f
+UEFORUxfU0lUUk9OSVhfU1Q3NzAxKSArPSBwYW5lbC1zaXRyb25peC1zdDc3MDEubwogb2JqLSQo
+Q09ORklHX0RSTV9QQU5FTF9TSVRST05JWF9TVDc3ODlWKSArPSBwYW5lbC1zaXRyb25peC1zdDc3
+ODl2Lm8KIG9iai0kKENPTkZJR19EUk1fUEFORUxfVFBPX1RQRzExMCkgKz0gcGFuZWwtdHBvLXRw
+ZzExMC5vCiBvYmotJChDT05GSUdfRFJNX1BBTkVMX1RSVUxZX05UMzU1OTdfV1FYR0EpICs9IHBh
+bmVsLXRydWx5LW50MzU1OTcubworb2JqLSQoQ09ORklHX0RSTV9QQU5FTF9BVU9fS0QxMDFOODBf
+NDVOQSkgKz0gcGFuZWwtYXVvLWtkMTAxbjgwLTQ1bmEubwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
+cHUvZHJtL3BhbmVsL3BhbmVsLWF1by1rZDEwMW44MC00NW5hLmMgYi9kcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvcGFuZWwtYXVvLWtkMTAxbjgwLTQ1bmEuYwpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRl
+eCAwMDAwMDAwMDAwMDAuLmFiN2JmYzA1OWU4YQotLS0gL2Rldi9udWxsCisrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9wYW5lbC1hdW8ta2QxMDFuODAtNDVuYS5jCkBAIC0wLDAgKzEsMzUyIEBA
+CisvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAorLyoKKyAqIENvcHlyaWdodCAo
+YykgMjAxOCBNZWRpYVRlayBJbmMuCisgKiBBdXRob3I6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1l
+ZGlhdGVrLmNvbT4KKyAqLworCisjaW5jbHVkZSA8bGludXgvYmFja2xpZ2h0Lmg+CisjaW5jbHVk
+ZSA8bGludXgvZ3Bpby9jb25zdW1lci5oPgorI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgorI2lu
+Y2x1ZGUgPGxpbnV4L29mLmg+CisjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+
+CisKKyNpbmNsdWRlIDxkcm0vZHJtUC5oPgorI2luY2x1ZGUgPGRybS9kcm1fY3J0Yy5oPgorI2lu
+Y2x1ZGUgPGRybS9kcm1fbWlwaV9kc2kuaD4KKyNpbmNsdWRlIDxkcm0vZHJtX3BhbmVsLmg+CisK
+KyNpbmNsdWRlIDx2aWRlby9taXBpX2Rpc3BsYXkuaD4KKworc3RydWN0IGF1b19wYW5lbCB7CisJ
+c3RydWN0IGRybV9wYW5lbCBiYXNlOworCXN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRzaTsKKwor
+CXN0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICpiYWNrbGlnaHQ7CisJc3RydWN0IHJlZ3VsYXRvciAq
+cHAxODAwOworCXN0cnVjdCByZWd1bGF0b3IgKmF2ZWU7CisJc3RydWN0IHJlZ3VsYXRvciAqYXZk
+ZDsKKwlzdHJ1Y3QgZ3Bpb19kZXNjICplbmFibGVfZ3BpbzsKKworCWJvb2wgcHJlcGFyZWQ7CisJ
+Ym9vbCBlbmFibGVkOworCisJY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGU7Cit9
+OworCitzdGF0aWMgaW5saW5lIHN0cnVjdCBhdW9fcGFuZWwgKnRvX2F1b19wYW5lbChzdHJ1Y3Qg
+ZHJtX3BhbmVsICpwYW5lbCkKK3sKKwlyZXR1cm4gY29udGFpbmVyX29mKHBhbmVsLCBzdHJ1Y3Qg
+YXVvX3BhbmVsLCBiYXNlKTsKK30KKworc3RhdGljIGludCBhdW9fcGFuZWxfaW5pdChzdHJ1Y3Qg
+YXVvX3BhbmVsICphdW8pCit7CisJc3RydWN0IGRybV9wYW5lbCAqcGFuZWwgPSAmYXVvLT5iYXNl
+OworCWludCBlcnI7CisKKwllcnIgPSBtaXBpX2RzaV9kY3NfZXhpdF9zbGVlcF9tb2RlKGF1by0+
+ZHNpKTsKKwlpZiAoZXJyIDwgMCkgeworCQlEUk1fREVWX0VSUk9SKHBhbmVsLT5kZXYsICJmYWls
+ZWQgdG8gZXhpdCBzbGVlcCBtb2RlOiAlZFxuIiwKKwkJCSAgICAgIGVycik7CisJCXJldHVybiBl
+cnI7CisJfQorCisJLyogVDMuMSovCisJbXNsZWVwKDEyMCk7CisKKwllcnIgPSBtaXBpX2RzaV9k
+Y3Nfc2V0X2Rpc3BsYXlfb24oYXVvLT5kc2kpOworCWlmIChlcnIgPCAwKSB7CisJCURSTV9ERVZf
+RVJST1IocGFuZWwtPmRldiwgImZhaWxlZCB0byBzZXQgZGlzcGxheSBvbjogJWRcbiIsCisJCQkg
+ICAgICBlcnIpOworCX0KKwkvKiBUMy4xICsgVDMuMjogPiAyMDBtcyAqLworCW1zbGVlcCgxMjAp
+OworCisJcmV0dXJuIGVycjsKK30KKworc3RhdGljIGludCBhdW9fcGFuZWxfb2ZmKHN0cnVjdCBh
+dW9fcGFuZWwgKmF1bykKK3sKKwlzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkc2kgPSBhdW8tPmRz
+aTsKKwlpbnQgcmV0OworCisJZHNpLT5tb2RlX2ZsYWdzICY9IH5NSVBJX0RTSV9NT0RFX0xQTTsK
+KworCXJldCA9IG1pcGlfZHNpX2Rjc19zZXRfZGlzcGxheV9vZmYoZHNpKTsKKwlpZiAocmV0IDwg
+MCkKKwkJcmV0dXJuIHJldDsKKworCXJldCA9IG1pcGlfZHNpX2Rjc19lbnRlcl9zbGVlcF9tb2Rl
+KGRzaSk7CisJaWYgKHJldCA8IDApCisJCXJldHVybiByZXQ7CisKKwlyZXR1cm4gMDsKK30KKwor
+c3RhdGljIGludCBhdW9fcGFuZWxfZGlzYWJsZShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKK3sK
+KwlzdHJ1Y3QgYXVvX3BhbmVsICphdW8gPSB0b19hdW9fcGFuZWwocGFuZWwpOworCisJaWYgKCFh
+dW8tPmVuYWJsZWQpCisJCXJldHVybiAwOworCisJYmFja2xpZ2h0X2Rpc2FibGUoYXVvLT5iYWNr
+bGlnaHQpOworCisJYXVvLT5lbmFibGVkID0gZmFsc2U7CisKKwlyZXR1cm4gMDsKK30KKworc3Rh
+dGljIGludCBhdW9fcGFuZWxfdW5wcmVwYXJlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQorewor
+CXN0cnVjdCBhdW9fcGFuZWwgKmF1byA9IHRvX2F1b19wYW5lbChwYW5lbCk7CisJaW50IHJldDsK
+KworCWlmICghYXVvLT5wcmVwYXJlZCkKKwkJcmV0dXJuIDA7CisKKwlyZXQgPSBhdW9fcGFuZWxf
+b2ZmKGF1byk7CisJaWYgKHJldCA8IDApIHsKKwkJZGV2X2VycihwYW5lbC0+ZGV2LCAiZmFpbGVk
+IHRvIHNldCBwYW5lbCBvZmY6ICVkXG4iLCByZXQpOworCQlyZXR1cm4gcmV0OworCX0KKworCW1z
+bGVlcCgxNTApOworCXJlZ3VsYXRvcl9kaXNhYmxlKGF1by0+YXZlZSk7CisJcmVndWxhdG9yX2Rp
+c2FibGUoYXVvLT5hdmRkKTsKKwl1c2xlZXBfcmFuZ2UoNTAwMCwgNzAwMCk7CisJcmVndWxhdG9y
+X2Rpc2FibGUoYXVvLT5wcDE4MDApOworCWlmIChhdW8tPmVuYWJsZV9ncGlvKQorCQlncGlvZF9z
+ZXRfdmFsdWUoYXVvLT5lbmFibGVfZ3BpbywgMCk7CisKKwlhdW8tPnByZXBhcmVkID0gZmFsc2U7
+CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIGludCBhdW9fcGFuZWxfcHJlcGFyZShzdHJ1Y3Qg
+ZHJtX3BhbmVsICpwYW5lbCkKK3sKKwlzdHJ1Y3QgYXVvX3BhbmVsICphdW8gPSB0b19hdW9fcGFu
+ZWwocGFuZWwpOworCWludCByZXQ7CisKKwlpZiAoYXVvLT5wcmVwYXJlZCkKKwkJcmV0dXJuIDA7
+CisKKwlpZiAoYXVvLT5lbmFibGVfZ3BpbykgeworCQlncGlvZF9zZXRfdmFsdWUoYXVvLT5lbmFi
+bGVfZ3BpbywgMCk7CisJCXVzbGVlcF9yYW5nZSgxMDAwLCAxNTAwKTsKKwl9CisKKwlyZXQgPSBy
+ZWd1bGF0b3JfZW5hYmxlKGF1by0+cHAxODAwKTsKKwlpZiAocmV0IDwgMCkKKwkJcmV0dXJuIHJl
+dDsKKwlyZXQgPSByZWd1bGF0b3JfZW5hYmxlKGF1by0+YXZkZCk7CisJaWYgKHJldCA8IDApCisJ
+CWdvdG8gcG93ZXJvZmYxdjg7CisJcmV0ID0gcmVndWxhdG9yX2VuYWJsZShhdW8tPmF2ZWUpOwor
+CWlmIChyZXQgPCAwKQorCQlnb3RvIHBvd2Vyb2ZmYXZkZDsKKworCWlmIChhdW8tPmVuYWJsZV9n
+cGlvKSB7CisJCWdwaW9kX3NldF92YWx1ZShhdW8tPmVuYWJsZV9ncGlvLCAxKTsKKwkJdXNsZWVw
+X3JhbmdlKDEwMDAwLCAxMjAwMCk7CisJfQorCisJcmV0ID0gYXVvX3BhbmVsX2luaXQoYXVvKTsK
+KwlpZiAocmV0IDwgMCkgeworCQlkZXZfZXJyKHBhbmVsLT5kZXYsICJmYWlsZWQgdG8gaW5pdCBw
+YW5lbDogJWRcbiIsIHJldCk7CisJCWdvdG8gcG93ZXJvZmY7CisJfQorCisJYXVvLT5wcmVwYXJl
+ZCA9IHRydWU7CisKKwlyZXR1cm4gMDsKKworcG93ZXJvZmY6CisJcmVndWxhdG9yX2Rpc2FibGUo
+YXVvLT5hdmVlKTsKK3Bvd2Vyb2ZmYXZkZDoKKwlyZWd1bGF0b3JfZGlzYWJsZShhdW8tPmF2ZGQp
+OworcG93ZXJvZmYxdjg6CisJdXNsZWVwX3JhbmdlKDUwMDAsIDcwMDApOworCXJlZ3VsYXRvcl9k
+aXNhYmxlKGF1by0+cHAxODAwKTsKKwlpZiAoYXVvLT5lbmFibGVfZ3BpbykKKwkJZ3Bpb2Rfc2V0
+X3ZhbHVlKGF1by0+ZW5hYmxlX2dwaW8sIDApOworCXJldHVybiByZXQ7Cit9CisKK3N0YXRpYyBp
+bnQgYXVvX3BhbmVsX2VuYWJsZShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKK3sKKwlzdHJ1Y3Qg
+YXVvX3BhbmVsICphdW8gPSB0b19hdW9fcGFuZWwocGFuZWwpOworCWludCByZXQ7CisKKwlpZiAo
+YXVvLT5lbmFibGVkKQorCQlyZXR1cm4gMDsKKworCXJldCA9IGJhY2tsaWdodF9lbmFibGUoYXVv
+LT5iYWNrbGlnaHQpOworCWlmIChyZXQpIHsKKwkJRFJNX0RFVl9FUlJPUihwYW5lbC0+ZHJtLT5k
+ZXYsCisJCQkgICAgICAiRmFpbGVkIHRvIGVuYWJsZSBiYWNrbGlnaHQgJWRcbiIsIHJldCk7CisJ
+CXJldHVybiByZXQ7CisJfQorCisJYXVvLT5lbmFibGVkID0gdHJ1ZTsKKworCXJldHVybiAwOwor
+fQorCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgZGVmYXVsdF9tb2RlID0g
+eworCS5jbG9jayA9IDE1NzAwMCwKKwkuaGRpc3BsYXkgPSAxMjAwLAorCS5oc3luY19zdGFydCA9
+IDEyMDAgKyA4MCwKKwkuaHN5bmNfZW5kID0gMTIwMCArIDgwICsgMjQsCisJLmh0b3RhbCA9IDEy
+MDAgKyA4MCArIDI0ICsgMzYsCisJLnZkaXNwbGF5ID0gMTkyMCwKKwkudnN5bmNfc3RhcnQgPSAx
+OTIwICsgMTYsCisJLnZzeW5jX2VuZCA9IDE5MjAgKyAxNiArIDQsCisJLnZ0b3RhbCA9IDE5MjAg
+KyAxNiArIDQgKyAxNiwKKwkudnJlZnJlc2ggPSA2MCwKK307CisKK3N0YXRpYyBpbnQgYXVvX3Bh
+bmVsX2dldF9tb2RlcyhzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKK3sKKwlzdHJ1Y3QgZHJtX2Rp
+c3BsYXlfbW9kZSAqbW9kZTsKKworCW1vZGUgPSBkcm1fbW9kZV9kdXBsaWNhdGUocGFuZWwtPmRy
+bSwgJmRlZmF1bHRfbW9kZSk7CisJaWYgKCFtb2RlKSB7CisJCWRldl9lcnIocGFuZWwtPmRybS0+
+ZGV2LCAiZmFpbGVkIHRvIGFkZCBtb2RlICV1eCV1eEAldVxuIiwKKwkJCWRlZmF1bHRfbW9kZS5o
+ZGlzcGxheSwgZGVmYXVsdF9tb2RlLnZkaXNwbGF5LAorCQkJZGVmYXVsdF9tb2RlLnZyZWZyZXNo
+KTsKKwkJcmV0dXJuIC1FTk9NRU07CisJfQorCisJZHJtX21vZGVfc2V0X25hbWUobW9kZSk7CisK
+Kwlkcm1fbW9kZV9wcm9iZWRfYWRkKHBhbmVsLT5jb25uZWN0b3IsIG1vZGUpOworCisJcGFuZWwt
+PmNvbm5lY3Rvci0+ZGlzcGxheV9pbmZvLndpZHRoX21tID0gMTM1OworCXBhbmVsLT5jb25uZWN0
+b3ItPmRpc3BsYXlfaW5mby5oZWlnaHRfbW0gPSAyMTY7CisJcGFuZWwtPmNvbm5lY3Rvci0+ZGlz
+cGxheV9pbmZvLmJwYyA9IDg7CisKKwlyZXR1cm4gMTsKK30KKworc3RhdGljIGNvbnN0IHN0cnVj
+dCBkcm1fcGFuZWxfZnVuY3MgYXVvX3BhbmVsX2Z1bmNzID0geworCS5kaXNhYmxlID0gYXVvX3Bh
+bmVsX2Rpc2FibGUsCisJLnVucHJlcGFyZSA9IGF1b19wYW5lbF91bnByZXBhcmUsCisJLnByZXBh
+cmUgPSBhdW9fcGFuZWxfcHJlcGFyZSwKKwkuZW5hYmxlID0gYXVvX3BhbmVsX2VuYWJsZSwKKwku
+Z2V0X21vZGVzID0gYXVvX3BhbmVsX2dldF9tb2RlcywKK307CisKK3N0YXRpYyBpbnQgYXVvX3Bh
+bmVsX2FkZChzdHJ1Y3QgYXVvX3BhbmVsICphdW8pCit7CisJc3RydWN0IGRldmljZSAqZGV2ID0g
+JmF1by0+ZHNpLT5kZXY7CisKKwlhdW8tPmF2ZGQgPSBkZXZtX3JlZ3VsYXRvcl9nZXQoZGV2LCAi
+YXZkZCIpOworCWlmIChJU19FUlIoYXVvLT5hdmRkKSkKKwkJcmV0dXJuIFBUUl9FUlIoYXVvLT5h
+dmRkKTsKKworCWF1by0+YXZlZSA9IGRldm1fcmVndWxhdG9yX2dldChkZXYsICJhdmVlIik7CisJ
+aWYgKElTX0VSUihhdW8tPmF2ZWUpKQorCQlyZXR1cm4gUFRSX0VSUihhdW8tPmF2ZWUpOworCisJ
+YXVvLT5wcDE4MDAgPSBkZXZtX3JlZ3VsYXRvcl9nZXQoZGV2LCAicHAxODAwIik7CisJaWYgKElT
+X0VSUihhdW8tPnBwMTgwMCkpCisJCXJldHVybiBQVFJfRVJSKGF1by0+cHAxODAwKTsKKworCWF1
+by0+ZW5hYmxlX2dwaW8gPSBkZXZtX2dwaW9kX2dldChkZXYsICJlbmFibGUiLCBHUElPRF9PVVRf
+TE9XKTsKKwlpZiAoSVNfRVJSKGF1by0+ZW5hYmxlX2dwaW8pKSB7CisJCWRldl9lcnIoZGV2LCAi
+Y2Fubm90IGdldCByZXNldC1ncGlvcyAlbGRcbiIsCisJCQlQVFJfRVJSKGF1by0+ZW5hYmxlX2dw
+aW8pKTsKKwkJYXVvLT5lbmFibGVfZ3BpbyA9IE5VTEw7CisJfSBlbHNlIHsKKwkJZ3Bpb2Rfc2V0
+X3ZhbHVlKGF1by0+ZW5hYmxlX2dwaW8sIDApOworCX0KKworCWF1by0+YmFja2xpZ2h0ID0gZGV2
+bV9vZl9maW5kX2JhY2tsaWdodChkZXYpOworCWlmIChJU19FUlIoYXVvLT5iYWNrbGlnaHQpKQor
+CQlyZXR1cm4gUFRSX0VSUihhdW8tPmJhY2tsaWdodCk7CisKKwlkcm1fcGFuZWxfaW5pdCgmYXVv
+LT5iYXNlKTsKKwlhdW8tPmJhc2UuZnVuY3MgPSAmYXVvX3BhbmVsX2Z1bmNzOworCWF1by0+YmFz
+ZS5kZXYgPSAmYXVvLT5kc2ktPmRldjsKKworCXJldHVybiBkcm1fcGFuZWxfYWRkKCZhdW8tPmJh
+c2UpOworfQorCitzdGF0aWMgdm9pZCBhdW9fcGFuZWxfZGVsKHN0cnVjdCBhdW9fcGFuZWwgKmF1
+bykKK3sKKwlpZiAoYXVvLT5iYXNlLmRldikKKwkJZHJtX3BhbmVsX3JlbW92ZSgmYXVvLT5iYXNl
+KTsKK30KKworc3RhdGljIGludCBhdW9fcGFuZWxfcHJvYmUoc3RydWN0IG1pcGlfZHNpX2Rldmlj
+ZSAqZHNpKQoreworCXN0cnVjdCBhdW9fcGFuZWwgKmF1bzsKKwlpbnQgcmV0OworCisJZHNpLT5s
+YW5lcyA9IDQ7CisJZHNpLT5mb3JtYXQgPSBNSVBJX0RTSV9GTVRfUkdCODg4OworCWRzaS0+bW9k
+ZV9mbGFncyA9IE1JUElfRFNJX01PREVfVklERU8gfCBNSVBJX0RTSV9NT0RFX1ZJREVPX1NZTkNf
+UFVMU0UgfAorCQkgTUlQSV9EU0lfTU9ERV9MUE07CisKKwlhdW8gPSBkZXZtX2t6YWxsb2MoJmRz
+aS0+ZGV2LCBzaXplb2YoKmF1byksIEdGUF9LRVJORUwpOworCWlmICghYXVvKQorCQlyZXR1cm4g
+LUVOT01FTTsKKworCW1pcGlfZHNpX3NldF9kcnZkYXRhKGRzaSwgYXVvKTsKKworCWF1by0+ZHNp
+ID0gZHNpOworCisJcmV0ID0gYXVvX3BhbmVsX2FkZChhdW8pOworCWlmIChyZXQgPCAwKQorCQly
+ZXR1cm4gcmV0OworCisJcmV0dXJuIG1pcGlfZHNpX2F0dGFjaChkc2kpOworfQorCitzdGF0aWMg
+aW50IGF1b19wYW5lbF9yZW1vdmUoc3RydWN0IG1pcGlfZHNpX2RldmljZSAqZHNpKQoreworCXN0
+cnVjdCBhdW9fcGFuZWwgKmF1byA9IG1pcGlfZHNpX2dldF9kcnZkYXRhKGRzaSk7CisJaW50IHJl
+dDsKKworCXJldCA9IGF1b19wYW5lbF9kaXNhYmxlKCZhdW8tPmJhc2UpOworCWlmIChyZXQgPCAw
+KQorCQlkZXZfZXJyKCZkc2ktPmRldiwgImZhaWxlZCB0byBkaXNhYmxlIHBhbmVsOiAlZFxuIiwg
+cmV0KTsKKworCXJldCA9IG1pcGlfZHNpX2RldGFjaChkc2kpOworCWlmIChyZXQgPCAwKQorCQlk
+ZXZfZXJyKCZkc2ktPmRldiwgImZhaWxlZCB0byBkZXRhY2ggZnJvbSBEU0kgaG9zdDogJWRcbiIs
+IHJldCk7CisKKwlhdW9fcGFuZWxfZGVsKGF1byk7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGlj
+IHZvaWQgYXVvX3BhbmVsX3NodXRkb3duKHN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRzaSkKK3sK
+KwlzdHJ1Y3QgYXVvX3BhbmVsICphdW8gPSBtaXBpX2RzaV9nZXRfZHJ2ZGF0YShkc2kpOworCisJ
+YXVvX3BhbmVsX2Rpc2FibGUoJmF1by0+YmFzZSk7Cit9CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3Qg
+b2ZfZGV2aWNlX2lkIGF1b19vZl9tYXRjaFtdID0geworCXsgLmNvbXBhdGlibGUgPSAiYXVvLGtk
+MTAxbjgwLTQ1bmEiLCB9LAorCXsgfQorfTsKK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGF1b19v
+Zl9tYXRjaCk7CisKK3N0YXRpYyBzdHJ1Y3QgbWlwaV9kc2lfZHJpdmVyIGF1b19wYW5lbF9kcml2
+ZXIgPSB7CisJLmRyaXZlciA9IHsKKwkJLm5hbWUgPSAicGFuZWwtYXVvLWtkMTAxbjgwLTQ1bmEi
+LAorCQkub2ZfbWF0Y2hfdGFibGUgPSBhdW9fb2ZfbWF0Y2gsCisJfSwKKwkucHJvYmUgPSBhdW9f
+cGFuZWxfcHJvYmUsCisJLnJlbW92ZSA9IGF1b19wYW5lbF9yZW1vdmUsCisJLnNodXRkb3duID0g
+YXVvX3BhbmVsX3NodXRkb3duLAorfTsKK21vZHVsZV9taXBpX2RzaV9kcml2ZXIoYXVvX3BhbmVs
+X2RyaXZlcik7CisKK01PRFVMRV9BVVRIT1IoIkppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVr
+LmNvbT4iKTsKK01PRFVMRV9ERVNDUklQVElPTigiQVVPIGtkMTAxbjgwLTQ1bmEgd3V4Z2EgKDEy
+MDB4MTkyMCkgdmlkZW8gbW9kZSBwYW5lbCBkcml2ZXIiKTsKK01PRFVMRV9MSUNFTlNFKCJHUEwg
+djIiKTsKKwotLSAKMi4yMS4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWw=
