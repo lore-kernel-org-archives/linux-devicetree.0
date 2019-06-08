@@ -1,152 +1,52 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v1 0/9] Introduce Bandwidth OPPs & interconnect devfreq
- driver
-Date: Fri, 7 Jun 2019 22:47:11 -0700
-Message-ID: <20190608054711.GZ22737@tuxbook-pro>
-References: <20190608044339.115026-1-saravanak@google.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [1/2] dt-bindngs: display: panel: Add BOE tv101wum-nl6 panel bindings
+Date: Sat, 8 Jun 2019 15:02:29 +0800
+Message-ID: <20190608070230.55381-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190608044339.115026-1-saravanak@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rajendra Nayak <rnayak@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, vincent.guittot@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 07 Jun 21:43 PDT 2019, Saravana Kannan wrote:
-
-> I replied[1] to this patch series[2] and described how I think interconnect
-> bandwidth voting should be captured in DT and how it should work.
-> 
-> So sending out a patch series implementing that. This patch series does the
-> following:
-> - Adds Bandwidth OPP table support (this adds device freq to bandwidth
->   mapping for free)
-> - Adds a devfreq library for interconnect paths
-> 
-
-Please provide a driver that uses this devfreq library, without it this
-its impossible to gauge the usefulness of your approach.
-
-> Interconnects and interconnect paths quantify they performance levels in
-> terms of bandwidth. So similar to how we have frequency based OPP tables
-> in DT and in the OPP framework, this patch series adds bandwidth OPP
-> table support in the OPP framework and in DT.
-> 
-> To simplify voting for interconnects, this patch series adds helper
-> functions to create devfreq devices out of interconnect paths. This
-> allows drivers to add a single line of code to add interconnect voting
-> capability.
-> 
-> To add devfreq device for the "gpu-mem" interconnect path:
-> icc_create_devfreq(dev, "gpu-mem");
-> 
-> With the future addition of a "passive_bandwidth" devfreq governor,
-> device frequency to interconnect bandwidth mapping would come for free.
-> 
-> If the feedback on this patch series is positive, I'll then add the
-> devfreq passive_bandwidth governor (or something similar) to v2 of this
-> patch series.
-> 
-> So with the DT bindings added in this patch series, the DT for a GPU
-> that does bandwidth voting from GPU to Cache and GPU to DDR would look
-> something like this:
-> 
-> gpu_cache_opp_table: gpu_cache_opp_table {
-> 	compatible = "operating-points-v2";
-> 
-> 	gpu_cache_3000: opp-3000 {
-> 		opp-peak-KBps = <3000>;
-> 		opp-avg-KBps = <1000>;
-> 	};
-> 	gpu_cache_6000: opp-6000 {
-> 		opp-peak-KBps = <6000>;
-> 		opp-avg-KBps = <2000>;
-> 	};
-> 	gpu_cache_9000: opp-9000 {
-> 		opp-peak-KBps = <9000>;
-> 		opp-avg-KBps = <9000>;
-> 	};
-> };
-> 
-> gpu_ddr_opp_table: gpu_ddr_opp_table {
-> 	compatible = "operating-points-v2";
-> 
-> 	gpu_ddr_1525: opp-1525 {
-> 		opp-peak-KBps = <1525>;
-> 		opp-avg-KBps = <452>;
-> 	};
-> 	gpu_ddr_3051: opp-3051 {
-> 		opp-peak-KBps = <3051>;
-> 		opp-avg-KBps = <915>;
-> 	};
-> 	gpu_ddr_7500: opp-7500 {
-> 		opp-peak-KBps = <7500>;
-> 		opp-avg-KBps = <3000>;
-> 	};
-> };
-> 
-> gpu_opp_table: gpu_opp_table {
-> 	compatible = "operating-points-v2";
-> 	opp-shared;
-> 
-> 	opp-200000000 {
-> 		opp-hz = /bits/ 64 <200000000>;
-> 		required-opps = <&gpu_cache_3000>, <&gpu_ddr_1525>;
-
-I still don't see the benefit of the indirection, over just spelling out
-the bandwidth values here.
-
-Regards,
-Bjorn
-
-> 	};
-> 	opp-400000000 {
-> 		opp-hz = /bits/ 64 <400000000>;
-> 		required-opps = <&gpu_cache_6000>, <&gpu_ddr_3051>;
-> 	};
-> };
-> 
-> gpu@7864000 {
-> 	...
-> 	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
-> 	interconnects = <&mmnoc MASTER_GPU_1 &bimc SLAVE_SYSTEL_CACHE>,
-> 			<&mmnoc MASTER_GPU_1 &bimc SLAVE_DDR>;
-> 	interconnect-names = "gpu-cache", "gpu-mem";
-> 	interconnect-opp-table = <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>
-> };
-> 
-> Cheers,
-> Saravana
-> 
-> [1] - https://lore.kernel.org/lkml/20190601021228.210574-1-saravanak@google.com/
-> [2] - https://lore.kernel.org/lkml/20190423132823.7915-1-georgi.djakov@linaro.org/ 
-> 
-> Saravana Kannan (9):
->   dt-bindings: opp: Introduce opp-peak-KBps and opp-avg-KBps bindings
->   OPP: Add support for bandwidth OPP tables
->   OPP: Add helper function for bandwidth OPP tables
->   OPP: Add API to find an OPP table from its DT node
->   dt-bindings: interconnect: Add interconnect-opp-table property
->   interconnect: Add OPP table support for interconnects
->   OPP: Add function to look up required OPP's for a given OPP
->   OPP: Allow copying OPPs tables between devices
->   interconnect: Add devfreq support
-> 
->  .../bindings/interconnect/interconnect.txt    |   8 +
->  Documentation/devicetree/bindings/opp/opp.txt |  15 +-
->  drivers/interconnect/Makefile                 |   2 +-
->  drivers/interconnect/core.c                   |  27 +++-
->  drivers/interconnect/icc-devfreq.c            | 144 ++++++++++++++++++
->  drivers/opp/core.c                            | 109 +++++++++++++
->  drivers/opp/of.c                              |  75 +++++++--
->  drivers/opp/opp.h                             |   4 +-
->  include/linux/interconnect.h                  |  17 +++
->  include/linux/pm_opp.h                        |  41 +++++
->  10 files changed, 426 insertions(+), 16 deletions(-)
->  create mode 100644 drivers/interconnect/icc-devfreq.c
-> 
-> -- 
-> 2.22.0.rc2.383.gf4fbbf30c2-goog
-> 
+QWRkIGRvY3VtZW50YXRpb24gZm9yIGJvZSB0djEwMXd1bS1uMTYgcGFuZWwuCgpTaWduZWQtb2Zm
+LWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5jb20+Ci0tLQogLi4uL2Rpc3BsYXkv
+cGFuZWwvYm9lLHR2MTAxd3VtLW5sNi50eHQgICAgICAgIHwgMzQgKysrKysrKysrKysrKysrKysr
+KwogMSBmaWxlIGNoYW5nZWQsIDM0IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9ib2UsdHYxMDF3
+dW0tbmw2LnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL2JvZSx0djEwMXd1bS1ubDYudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYm9lLHR2MTAxd3VtLW5sNi50eHQKbmV3IGZp
+bGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi4yYTg0NzM1ZDc0MmQKLS0tIC9kZXYv
+bnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
+bC9ib2UsdHYxMDF3dW0tbmw2LnR4dApAQCAtMCwwICsxLDM0IEBACitCb2UgQ29ycG9yYXRpb24g
+MTAuMSIgV1VYR0EgVEZUIExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21w
+YXRpYmxlOiBzaG91bGQgYmUgImJvZSx0djEwMXd1bSIKKy0gcmVnOiB0aGUgdmlydHVhbCBjaGFu
+bmVsIG51bWJlciBvZiBhIERTSSBwZXJpcGhlcmFsCistIGVuYWJsZS1ncGlvczogYSBHUElPIHNw
+ZWMgZm9yIHRoZSBlbmFibGUgcGluCistIHBwMTgwMC1zdXBwbHk6IGNvcmUgdm9sdGFnZSBzdXBw
+bHkKKy0gYXZkZC1zdXBwbHk6IAorLSBhdmVlLXN1cHBseTogCistIGJhY2tsaWdodDogcGhhbmRs
+ZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKKworVGhlIGRl
+dmljZSBub2RlIGNhbiBjb250YWluIG9uZSAncG9ydCcgY2hpbGQgbm9kZSB3aXRoIG9uZSBjaGls
+ZAorJ2VuZHBvaW50JyBub2RlLCBhY2NvcmRpbmcgdG8gdGhlIGJpbmRpbmdzIGRlZmluZWQgaW4K
+K21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LiBUaGlzIG5vZGUgc2hvdWxkIGRlc2NyaWJlIHBh
+bmVsJ3MgdmlkZW8gYnVzLgorCitFeGFtcGxlOgorJmRzaSB7CisJLi4uCisJcGFuZWxAMCB7CisJ
+CWNvbXBhdGlibGUgPSAiYm9lLHR2MTAxd3VtLW5sNiI7CisJCXJlZyA9IDwwPjsKKwkJZW5hYmxl
+LWdwaW9zID0gPCZwaW8gNDUgMD47CisJCWF2ZGQtc3VwcGx5ID0gPCZwcHZhcm5fbGNkPjsKKwkJ
+YXZlZS1zdXBwbHkgPSA8JnBwdmFycF9sY2Q+OworCQlwcDE4MDAtc3VwcGx5ID0gPCZwcDE4MDBf
+bGNkPjsKKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHRfbGNkMD47CisJCXN0YXR1cyA9ICJva2F5
+IjsKKwkJcG9ydCB7CisJCQlwYW5lbF9pbjogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2lu
+dCA9IDwmZHNpX291dD47CisJCQl9OworCQl9OworCX07Cit9OwpcIE5vIG5ld2xpbmUgYXQgZW5k
+IG9mIGZpbGUKLS0gCjIuMjEuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVs
