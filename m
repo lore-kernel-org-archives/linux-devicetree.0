@@ -1,99 +1,84 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V4 RESEND 1/3] dt-bindings: watchdog: move i.MX system
- controller watchdog binding to SCU
-Date: Sat, 8 Jun 2019 06:04:52 -0700
-Message-ID: <20190608130452.GA22130@roeck-us.net>
-References: <20190527070317.16904-1-Anson.Huang@nxp.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/3] Documentation: dt-bindings: add the Amlogic Meson
+ Temperature Sensor
+Date: Sat, 8 Jun 2019 14:08:37 +0100
+Message-ID: <20190608140837.34a499a4@archlinux>
+References: <20190604144714.2009-1-glaroque@baylibre.com>
+        <20190604144714.2009-2-glaroque@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190527070317.16904-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190604144714.2009-2-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, wim@linux-watchdog.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, aisheng.dong@nxp.com, ulf.hansson@linaro.org, peng.fan@nxp.com, daniel.baluta@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: khilman@baylibre.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 27, 2019 at 03:03:15PM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> i.MX system controller watchdog depends on SCU driver to support
-> interrupt function, so it needs to be subnode of SCU node in DT,
-> binding doc should be moved to fsl,scu.txt as well.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue,  4 Jun 2019 16:47:12 +0200
+Guillaume La Roque <glaroque@baylibre.com> wrote:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> This adds the devicetree binding documentation for the Temperature
+> Sensor found in the Amlogic Meson G12 SoCs.
+> Currently only the G12A SoCs are supported.
+> 
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+
+Hi Guillaume,
+
+I'm afraid we decided a month or so back that all new dt bindings proposed
+for IIO drivers should be in yaml format.
+
+Please reformat this appropriately for v2 and make sure to run
+make dt_bindings_check.
+
+There are a few examples in tree already, but we are deliberately
+not converting existing bindings too quickly to avoid overloading
+reviewers.
+
+Thanks,
+
+Jonathan
 
 > ---
-> No changes, just rebase the patch to top of linux-next.
-> ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 15 ++++++++++++++
->  .../bindings/watchdog/fsl-imx-sc-wdt.txt           | 24 ----------------------
->  2 files changed, 15 insertions(+), 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
+>  .../iio/temperature/amlogic,meson-tsensor.txt | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> index f378922..a575e42 100644
-> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> @@ -145,6 +145,16 @@ Optional Child nodes:
->  - Data cells of ocotp:
->    Detailed bindings are described in bindings/nvmem/nvmem.txt
->  
-> +Watchdog bindings based on SCU Message Protocol
-> +------------------------------------------------------------
+> diff --git a/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+> new file mode 100644
+> index 000000000000..d064db0e9cac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+> @@ -0,0 +1,31 @@
+> +* Amlogic Meson Temperature Sensor
 > +
 > +Required properties:
-> +- compatible: should be:
-> +              "fsl,imx8qxp-sc-wdt"
-> +              followed by "fsl,imx-sc-wdt";
+> +- compatible:	depending on the SoC and the position of the sensor,
+> +		this should be one of:
+> +		- "amlogic,meson-g12a-cpu-tsensor" for the CPU G12A SoC sensor
+> +		- "amlogic,meson-g12a-ddr-tsensor" for the DDR G12A SoC sensor
+> +		followed by the common :
+> +		- "amlogic,meson-g12a-tsensor" for G12A SoC family
+> +- reg:		the physical base address and length of the registers
+> +- interrupts:	the interrupt indicating end of sampling
+> +- clocks:	phandle identifier for the reference clock of temperature sensor
+> +- #io-channel-cells: must be 1, see ../iio-bindings.txt
+> +- amlogic,ao-secure: phandle to the ao-secure syscon
+> +
 > +Optional properties:
-> +- timeout-sec: contains the watchdog timeout in seconds.
+> +- amlogic,critical-temperature: temperature value in milli degrees Celsius
+> +	to set automatic reboot on too high temperature
 > +
->  Example (imx8qxp):
->  -------------
->  aliases {
-> @@ -207,6 +217,11 @@ firmware {
->  		rtc: rtc {
->  			compatible = "fsl,imx8qxp-sc-rtc";
->  		};
-> +
-> +		watchdog {
-> +			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
-> +			timeout-sec = <60>;
-> +		};
->  	};
->  };
->  
-> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
-> deleted file mode 100644
-> index 02b87e9..0000000
-> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
-> +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -* Freescale i.MX System Controller Watchdog
-> -
-> -i.MX system controller watchdog is for i.MX SoCs with system controller inside,
-> -the watchdog is managed by system controller, users can ONLY communicate with
-> -system controller from secure mode for watchdog operations, so Linux i.MX system
-> -controller watchdog driver will call ARM SMC API and trap into ARM-Trusted-Firmware
-> -for watchdog operations, ARM-Trusted-Firmware is running at secure EL3 mode and
-> -it will request system controller to execute the watchdog operation passed from
-> -Linux kernel.
-> -
-> -Required properties:
-> -- compatible:	Should be :
-> -		"fsl,imx8qxp-sc-wdt"
-> -		followed by "fsl,imx-sc-wdt";
-> -
-> -Optional properties:
-> -- timeout-sec : Contains the watchdog timeout in seconds.
-> -
-> -Examples:
-> -
-> -watchdog {
-> -	compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
-> -	timeout-sec = <60>;
-> -};
+> +Example:
+> +	cpu_temp: temperature-sensor@ff634800 {
+> +		compatible = "amlogic,meson-g12a-cpu-tsensor",
+> +			     "amlogic,meson-g12a-tsensor";
+> +		reg = <0x0 0xff634800 0x0 0x50>;
+> +		interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
+> +		clocks = <&clkc CLKID_TS>;
+> +		status = "okay";
+> +		#io-channel-cells = <1>;
+> +		amlogic,meson-ao-secure = <&sec_AO>;
+> +		amlogic,critical-temperature = <115000>;
+> +	};
