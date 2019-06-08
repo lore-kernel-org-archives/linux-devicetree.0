@@ -1,58 +1,174 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Date: Sat, 08 Jun 2019 10:22:20 +1000
-Message-ID: <a0913966c27ee0be42796b1e49d871e7e858f6b7.camel@kernel.crashing.org>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
-         <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
-         <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
-         <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
-         <20190531051400.GA2275@cz.tnic>
-         <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
-         <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
-         <71da083e-1a74-cf86-455d-260a34ee01fd@amazon.com>
-         <25efb27c-b725-137d-5735-b3ab88323846@arm.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+Date: Sat, 8 Jun 2019 08:14:11 +0530
+Message-ID: <d0e5f602-34de-f28e-cc11-6ebd1d29b495@codeaurora.org>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+ <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
+ <d313bec5-1115-0ef7-0241-83e20672d2f1@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <25efb27c-b725-137d-5735-b3ab88323846@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>, "Shenhar, Talel" <talel@amazon.com>
-Cc: "Hawa, Hanna" <hhhawa@amazon.com>, Borislav Petkov <bp@alien8.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "Hanoch, Uri" <hanochu@amazon.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <d313bec5-1115-0ef7-0241-83e20672d2f1@arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>, robh+dt@kernel.org, sboyd@codeaurora.org, linus.walleij@linaro.org, agross@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-06-07 at 16:11 +0100, James Morse wrote:
-> I'm coming at this from somewhere else. This stuff has to be considered all the way
-> through the system. Just because each component supports error detection, doesn't mean you
-> aren't going to get silent corruption. Likewise if another platform picks up two piecemeal
-> edac drivers for hardware it happens to have in common with yours, it doesn't mean we're
-> counting all the errors. This stuff has to be viewed for the whole platform.
+Hi Marc,
 
-Sure but you don't solve that problem by having a magic myplatform.c
-overseer. And even if you do, it can perfectly access the individual IP
-block drivers, finding them via phandles in the DT for example etc...
-without having to make those individual drivers dependent on some over
-arching machine wide probing mechanism.
-
-> But this doesn't give you a device you can bind a driver to, to kick this stuff off.
-> This (I assume) is why you added a dummy 'edac_l1_l2' node, that just probes the driver.
-> The hardware is to do with the CPU and caches, 'edac_l1'_l2' doesn't correspond to any
-> distinct part of the soc.
+On 6/5/2019 10:56 PM, Marc Zyngier wrote:
+> On 05/06/2019 18:16, Sricharan R wrote:
+>> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+>> CP01 evaluation board.
+>>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/Makefile            |   1 +
+>>  arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  35 ++++
+>>  arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 231 +++++++++++++++++++++++++++
+>>  3 files changed, 267 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>> index 21d548f..ac22dbb 100644
+>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>> @@ -2,6 +2,7 @@
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>> new file mode 100644
+>> index 0000000..ac7cb22
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>> @@ -0,0 +1,35 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * IPQ6018 CP01 board device tree source
+>> + *
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "ipq6018.dtsi"
+>> +
+>> +/ {
+>> +	#address-cells = <0x2>;
+>> +	#size-cells = <0x2>;
+>> +	model = "Qualcomm Technologies, Inc. IPQ6018/AP-CP01-C1";
+>> +	compatible = "qcom,ipq6018-cp01", "qcom,ipq6018";
+>> +	interrupt-parent = <&intc>;
+>> +};
+>> +
+>> +&tlmm {
+>> +	uart_pins: uart_pins {
+>> +		mux {
+>> +			pins = "gpio44", "gpio45";
+>> +			function = "blsp2_uart";
+>> +			drive-strength = <8>;
+>> +			bias-pull-down;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&blsp1_uart3 {
+>> +	pinctrl-0 = <&uart_pins>;
+>> +	pinctrl-names = "default";
+>> +	status = "ok";
+>> +};
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>> new file mode 100644
+>> index 0000000..79cccdd
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>> @@ -0,0 +1,231 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * IPQ6018 SoC device tree source
+>> + *
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+>> +
+>> +/ {
+>> +	model = "Qualcomm Technologies, Inc. IPQ6018";
+>> +	compatible = "qcom,ipq6018";
+>> +
+>> +	chosen {
+>> +		bootargs = "console=ttyMSM0,115200,n8 rw init=/init";
+>> +		bootargs-append = " swiotlb=1 clk_ignore_unused";
+>> +	};
+>> +
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		tz:tz@48500000 {
+>> +			no-map;
+>> +			reg = <0x0 0x48500000 0x0 0x00200000>;
+>> +		};
+>> +	};
+>> +
+>> +	soc: soc {
+>> +		#address-cells = <0x1>;
+>> +		#size-cells = <0x1>;
+>> +		ranges = <0 0 0 0xffffffff>;
+>> +		dma-ranges;
+>> +		compatible = "simple-bus";
+>> +
+>> +		intc: interrupt-controller@b000000 {
+>> +			compatible = "qcom,msm-qgic2";
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <0x3>;
+>> +			reg = <0xb000000 0x1000>, <0xb002000 0x1000>;
 > 
-> The request is to use the machine compatible, not a dummy node. This wraps up the firmware
-> properties too, and any other platform property we don't know about today.
+> Where are the rest of the GICv2 MMIO regions, such as GICV and GICH? And
+> the maintenance interrupt?
 > 
-> Once you have this, you don't really need the cpu/cache integration annotations, and your
-> future memory-controller support can be picked up as part of the platform driver.
-> If you have otherwise identical platforms with different memory controllers, OF gives you
-> the API to match the node in the DT.
+  GICH - 0xB001000 -- 0xB002000
+  GICV - 0xB004000 -- 0xB005000
+  Will add this and the PPI as well.
 
-Dummy nodes are pefectly fine, and has been from the early days of Open
-Firmware. That said, these aren't so much dummy as a way to expose the
-control path to the caches. The DT isn't perfect in its structure and
-the way caches and CPUs are represented makes it difficult to represent
-arbitrary control path to them without extra nodes, which is thus what
-people do.
+Regards,
+ Sricharan
 
-Cheers,
-Ben.
+>> +		};
+>> +
+>> +		timer {
+>> +			compatible = "arm,armv8-timer";
+>> +			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> 
+> The fact that you expose the EL2 timer interrupt would tend to confirm
+> the idea that this system supports virtualization... Hence my questions
+> above.
+> 
+> Thanks,
+> 
+> 	M.
+> 
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
