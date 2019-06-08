@@ -1,190 +1,61 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v1 0/9] Introduce Bandwidth OPPs & interconnect devfreq driver
-Date: Sat, 8 Jun 2019 13:34:07 -0700
-Message-ID: <CAGETcx_4hh0t+Wi4KLh3h6Me8U_6agYbwBZ_Ts8oASiU21Tiig@mail.gmail.com>
-References: <20190608044339.115026-1-saravanak@google.com> <20190608054711.GZ22737@tuxbook-pro>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Date: Sat, 8 Jun 2019 23:02:26 +0200
+Message-ID: <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190608054711.GZ22737@tuxbook-pro>
+Content-Disposition: inline
+In-Reply-To: <20190607220947.GR40515@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rajendra Nayak <rnayak@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, Vincent Guittot <vincent.guittot@linaro.org>, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, Android Kernel Team <kernel-team@android.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 10:46 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Fri 07 Jun 21:43 PDT 2019, Saravana Kannan wrote:
->
-> > I replied[1] to this patch series[2] and described how I think interconnect
-> > bandwidth voting should be captured in DT and how it should work.
-> >
-> > So sending out a patch series implementing that. This patch series does the
-> > following:
-> > - Adds Bandwidth OPP table support (this adds device freq to bandwidth
-> >   mapping for free)
-> > - Adds a devfreq library for interconnect paths
-> >
->
-> Please provide a driver that uses this devfreq library, without it this
-> its impossible to gauge the usefulness of your approach.
+Hi!
 
-Do you have a device/driver from SDM845 that I could add interconnect
-support to other than CPUs? Because the CPU driver doesn't even have
-an OPP table (because it gets that from hardware) and I don't want to
-deal with that right now. Can you also give me the "interconnect"
-values for those so that I can have something valid that you can try
-out?
+> > +	 * Note that this method is based on empirical testing on different
+> > +	 * devices with PWM of 8 and 16 bits of resolution.
+> > +	 */
+> > +	n = period;
+> > +	while (n) {
+> > +		counter += n % 2;
+> > +		n >>= 1;
+> > +	}
+> 
+> I don't quite follow the heuristics above. Are you sure the number of
+> PWM bits can be infered from the period? What if the period value (in
+> ns) doesn't directly correspond to a register value? And even if it
+> did, counting the number of set bits (the above loops is a
+> re-implementation of ffs()) doesn't really result in the dividers
+> mentioned in the comment. E.g. a period of 32768 ns (0x8000) results
+> in a divider of 1, i.e. 32768 brighness levels.
+> 
+> On veyron minnie the period is 1000000 ns, which results in 142858
+> levels (1000000 / 7)!
+> 
+> Not sure if there is a clean solution using heuristics, a DT property
+> specifying the number of levels could be an alternative. This could
+> also be useful to limit the number of (mostly) redundant levels, even
+> the intended max of 4096 seems pretty high.
+> 
+> Another (not directly related) observation is that on minnie the
+> actual brightness at a nominal 50% is close to 0 (duty cycle ~3%). I
+> haven't tested with other devices, but I wonder if it would make
+> sense to have an option to drop the bottom N% of levels, since the
+> near 0 brightness in the lower 50% probably isn't very useful in most
+> use cases, but maybe it looks different on other devices.
 
-> > Interconnects and interconnect paths quantify they performance levels in
-> > terms of bandwidth. So similar to how we have frequency based OPP tables
-> > in DT and in the OPP framework, this patch series adds bandwidth OPP
-> > table support in the OPP framework and in DT.
-> >
-> > To simplify voting for interconnects, this patch series adds helper
-> > functions to create devfreq devices out of interconnect paths. This
-> > allows drivers to add a single line of code to add interconnect voting
-> > capability.
-> >
-> > To add devfreq device for the "gpu-mem" interconnect path:
-> > icc_create_devfreq(dev, "gpu-mem");
-> >
-> > With the future addition of a "passive_bandwidth" devfreq governor,
-> > device frequency to interconnect bandwidth mapping would come for free.
-> >
-> > If the feedback on this patch series is positive, I'll then add the
-> > devfreq passive_bandwidth governor (or something similar) to v2 of this
-> > patch series.
-> >
-> > So with the DT bindings added in this patch series, the DT for a GPU
-> > that does bandwidth voting from GPU to Cache and GPU to DDR would look
-> > something like this:
-> >
-> > gpu_cache_opp_table: gpu_cache_opp_table {
-> >       compatible = "operating-points-v2";
-> >
-> >       gpu_cache_3000: opp-3000 {
-> >               opp-peak-KBps = <3000>;
-> >               opp-avg-KBps = <1000>;
-> >       };
-> >       gpu_cache_6000: opp-6000 {
-> >               opp-peak-KBps = <6000>;
-> >               opp-avg-KBps = <2000>;
-> >       };
-> >       gpu_cache_9000: opp-9000 {
-> >               opp-peak-KBps = <9000>;
-> >               opp-avg-KBps = <9000>;
-> >       };
-> > };
-> >
-> > gpu_ddr_opp_table: gpu_ddr_opp_table {
-> >       compatible = "operating-points-v2";
-> >
-> >       gpu_ddr_1525: opp-1525 {
-> >               opp-peak-KBps = <1525>;
-> >               opp-avg-KBps = <452>;
-> >       };
-> >       gpu_ddr_3051: opp-3051 {
-> >               opp-peak-KBps = <3051>;
-> >               opp-avg-KBps = <915>;
-> >       };
-> >       gpu_ddr_7500: opp-7500 {
-> >               opp-peak-KBps = <7500>;
-> >               opp-avg-KBps = <3000>;
-> >       };
-> > };
-> >
-> > gpu_opp_table: gpu_opp_table {
-> >       compatible = "operating-points-v2";
-> >       opp-shared;
-> >
-> >       opp-200000000 {
-> >               opp-hz = /bits/ 64 <200000000>;
-> >               required-opps = <&gpu_cache_3000>, <&gpu_ddr_1525>;
->
-> I still don't see the benefit of the indirection, over just spelling out
-> the bandwidth values here.
+Eye percieves logarithm(duty cycle), mostly, and I find very low brightness
+levels quite useful when trying to use machine in dark room.
 
-All the things I mentioned in the other email? This explicitly
-enumerates the actual BW OPPs in the interconnect paths as opposed to
-getting a partial list of "performance points" obtained from the
-mapping. Put another way, it's like how you don't try to enumerate the
-voltages supported by a regualtor by looking at the mappings in the
-OPP of a device using the regulator. You instead capture the regulator
-properties separately and the consumer asks what it wants and then
-that's bound within the scope of what the regulator can support.
-
-Also, if more properties are added in the future to interconnects
-(priority, active vs sleep or tagging, etc) the BW OPP tables is well
-suited to capture them than adding them to the GPU/CPU/device's
-mapping to what it wants from the interconnect.
-
-This method also removes the ambiguity of which bandwidth mapping
-belongs to which interconnect path (the question Rajendra was asking
-in the other thread) and the peak vs avg bandwidth.
-
-Also with the interconnect paths actually enumerating the OPPs, you
-don't have to have a useless mapping just so that you bandwidth
-counter based scheme can get a list of the available OPPs.
-
-Also, it is not unusual for the device OPP count vs the interconnect
-path OPP count to be different. So, if their counts aren't the same,
-the method used in the other thread can't capture the OPP lists
-fully/properly.
-
--Saravana
-
->
-> Regards,
-> Bjorn
->
-> >       };
-> >       opp-400000000 {
-> >               opp-hz = /bits/ 64 <400000000>;
-> >               required-opps = <&gpu_cache_6000>, <&gpu_ddr_3051>;
-> >       };
-> > };
-> >
-> > gpu@7864000 {
-> >       ...
-> >       operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
-> >       interconnects = <&mmnoc MASTER_GPU_1 &bimc SLAVE_SYSTEL_CACHE>,
-> >                       <&mmnoc MASTER_GPU_1 &bimc SLAVE_DDR>;
-> >       interconnect-names = "gpu-cache", "gpu-mem";
-> >       interconnect-opp-table = <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>
-> > };
-> >
-> > Cheers,
-> > Saravana
-> >
-> > [1] - https://lore.kernel.org/lkml/20190601021228.210574-1-saravanak@google.com/
-> > [2] - https://lore.kernel.org/lkml/20190423132823.7915-1-georgi.djakov@linaro.org/
-> >
-> > Saravana Kannan (9):
-> >   dt-bindings: opp: Introduce opp-peak-KBps and opp-avg-KBps bindings
-> >   OPP: Add support for bandwidth OPP tables
-> >   OPP: Add helper function for bandwidth OPP tables
-> >   OPP: Add API to find an OPP table from its DT node
-> >   dt-bindings: interconnect: Add interconnect-opp-table property
-> >   interconnect: Add OPP table support for interconnects
-> >   OPP: Add function to look up required OPP's for a given OPP
-> >   OPP: Allow copying OPPs tables between devices
-> >   interconnect: Add devfreq support
-> >
-> >  .../bindings/interconnect/interconnect.txt    |   8 +
-> >  Documentation/devicetree/bindings/opp/opp.txt |  15 +-
-> >  drivers/interconnect/Makefile                 |   2 +-
-> >  drivers/interconnect/core.c                   |  27 +++-
-> >  drivers/interconnect/icc-devfreq.c            | 144 ++++++++++++++++++
-> >  drivers/opp/core.c                            | 109 +++++++++++++
-> >  drivers/opp/of.c                              |  75 +++++++--
-> >  drivers/opp/opp.h                             |   4 +-
-> >  include/linux/interconnect.h                  |  17 +++
-> >  include/linux/pm_opp.h                        |  41 +++++
-> >  10 files changed, 426 insertions(+), 16 deletions(-)
-> >  create mode 100644 drivers/interconnect/icc-devfreq.c
-> >
-> > --
-> > 2.22.0.rc2.383.gf4fbbf30c2-goog
-> >
+But yes, specifying if brightness is linear or exponential would be quite
+useful.
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
