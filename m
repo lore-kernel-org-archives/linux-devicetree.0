@@ -1,84 +1,100 @@
 From: Jonathan Cameron <jic23@kernel.org>
 Subject: Re: [PATCH 1/3] Documentation: dt-bindings: add the Amlogic Meson
  Temperature Sensor
-Date: Sat, 8 Jun 2019 14:08:37 +0100
-Message-ID: <20190608140837.34a499a4@archlinux>
+Date: Sat, 8 Jun 2019 14:10:43 +0100
+Message-ID: <20190608141043.6c7d332e@archlinux>
 References: <20190604144714.2009-1-glaroque@baylibre.com>
         <20190604144714.2009-2-glaroque@baylibre.com>
+        <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604144714.2009-2-glaroque@baylibre.com>
+In-Reply-To: <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: khilman@baylibre.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Guillaume La Roque <glaroque@baylibre.com>, khilman@baylibre.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  4 Jun 2019 16:47:12 +0200
-Guillaume La Roque <glaroque@baylibre.com> wrote:
+On Thu, 6 Jun 2019 21:16:37 +0200
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-> This adds the devicetree binding documentation for the Temperature
-> Sensor found in the Amlogic Meson G12 SoCs.
-> Currently only the G12A SoCs are supported.
+> Hi Guillaume,
 > 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-
-Hi Guillaume,
-
-I'm afraid we decided a month or so back that all new dt bindings proposed
-for IIO drivers should be in yaml format.
-
-Please reformat this appropriately for v2 and make sure to run
-make dt_bindings_check.
-
-There are a few examples in tree already, but we are deliberately
-not converting existing bindings too quickly to avoid overloading
-reviewers.
+> thank you for working on this!
+On comment from me inline.
 
 Thanks,
 
 Jonathan
 
-> ---
->  .../iio/temperature/amlogic,meson-tsensor.txt | 31 +++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> new file mode 100644
-> index 000000000000..d064db0e9cac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> @@ -0,0 +1,31 @@
-> +* Amlogic Meson Temperature Sensor
-> +
-> +Required properties:
-> +- compatible:	depending on the SoC and the position of the sensor,
-> +		this should be one of:
-> +		- "amlogic,meson-g12a-cpu-tsensor" for the CPU G12A SoC sensor
-> +		- "amlogic,meson-g12a-ddr-tsensor" for the DDR G12A SoC sensor
-> +		followed by the common :
-> +		- "amlogic,meson-g12a-tsensor" for G12A SoC family
-> +- reg:		the physical base address and length of the registers
-> +- interrupts:	the interrupt indicating end of sampling
-> +- clocks:	phandle identifier for the reference clock of temperature sensor
-> +- #io-channel-cells: must be 1, see ../iio-bindings.txt
-> +- amlogic,ao-secure: phandle to the ao-secure syscon
-> +
-> +Optional properties:
-> +- amlogic,critical-temperature: temperature value in milli degrees Celsius
-> +	to set automatic reboot on too high temperature
-> +
-> +Example:
-> +	cpu_temp: temperature-sensor@ff634800 {
-> +		compatible = "amlogic,meson-g12a-cpu-tsensor",
-> +			     "amlogic,meson-g12a-tsensor";
-> +		reg = <0x0 0xff634800 0x0 0x50>;
-> +		interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-> +		clocks = <&clkc CLKID_TS>;
-> +		status = "okay";
-> +		#io-channel-cells = <1>;
-> +		amlogic,meson-ao-secure = <&sec_AO>;
-> +		amlogic,critical-temperature = <115000>;
-> +	};
+> On Tue, Jun 4, 2019 at 4:47 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+> >
+> > This adds the devicetree binding documentation for the Temperature
+> > Sensor found in the Amlogic Meson G12 SoCs.
+> > Currently only the G12A SoCs are supported.  
+> so G12B is not supported (yet)?
+> 
+> > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> > ---
+> >  .../iio/temperature/amlogic,meson-tsensor.txt | 31 +++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+> > new file mode 100644
+> > index 000000000000..d064db0e9cac
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+> > @@ -0,0 +1,31 @@
+> > +* Amlogic Meson Temperature Sensor
+> > +
+> > +Required properties:
+> > +- compatible:  depending on the SoC and the position of the sensor,
+> > +               this should be one of:
+> > +               - "amlogic,meson-g12a-cpu-tsensor" for the CPU G12A SoC sensor
+> > +               - "amlogic,meson-g12a-ddr-tsensor" for the DDR G12A SoC sensor
+> > +               followed by the common :
+> > +               - "amlogic,meson-g12a-tsensor" for G12A SoC family
+> > +- reg:         the physical base address and length of the registers
+> > +- interrupts:  the interrupt indicating end of sampling
+> > +- clocks:      phandle identifier for the reference clock of temperature sensor
+> > +- #io-channel-cells: must be 1, see ../iio-bindings.txt  
+> have you considered using the thermal framework [0] instead of the iio
+> framework (see below)?
+I had the same thought.  Right now, this doesn't look generic enough
+for IIO to make that much sense.
+
+I'll review anyway as may give some useful pointers even if you do move
+it over to thermal.
+
+> 
+> > +- amlogic,ao-secure: phandle to the ao-secure syscon  
+> the driver has some "u_efuse_off" access. do we need to get some
+> calibration values from the AO syscon or can we also fetch it from the
+> eFuse? you can look at arch/arm/boot/dts/meson8.dtsi where I'm passing
+> the temperature sensor calibration data to the SAR ADC (there's no
+> dedicated temperature sensor IP block prior to G12A) while reading the
+> data from the eFuse
+> 
+> > +Optional properties:
+> > +- amlogic,critical-temperature: temperature value in milli degrees Celsius
+> > +       to set automatic reboot on too high temperature  
+> as far as I can tell the thermal framework supports multiple trip
+> points. I'm seeing this as a benefit because the hardware can raise
+> interrupts at four different temperatures (defined by the driver)
+> 
+> > +Example:
+> > +       cpu_temp: temperature-sensor@ff634800 {
+> > +               compatible = "amlogic,meson-g12a-cpu-tsensor",
+> > +                            "amlogic,meson-g12a-tsensor";
+> > +               reg = <0x0 0xff634800 0x0 0x50>;
+> > +               interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
+> > +               clocks = <&clkc CLKID_TS>;
+> > +               status = "okay";  
+> as far as I know the dt-bindings should not have a status property in
+> the examples
+> 
+> 
+> Martin
