@@ -1,44 +1,57 @@
-From: Sean Nyekjaer <sean@geanix.com>
-Subject: Re: [PATCH 1/2] can: flexcan: add support for DT property
- 'wakeup-source'
-Date: Sat, 8 Jun 2019 19:36:20 +0200
-Message-ID: <61ce24fa-34ca-326a-dcd2-75d2783c43c8@geanix.com>
-References: <20190409083949.27917-1-sean@geanix.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 0/3] meson-gpio-irqc: Add support for the Meson-G12A SoC
+Date: Sat,  8 Jun 2019 21:04:08 +0200
+Message-ID: <20190608190411.14018-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190409083949.27917-1-sean@geanix.com>
-Content-Language: en-US-large
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, linux-can@vger.kernel.org, mkl@pengutronix.de, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, aisheng.dong@nxp.com, qiangqing.zhang@nxp.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-kind ping :-)
+This series adds GPIO interrupt controller support for Meson-G12A SoCs.
+Although the total number of pins is the same as the Meson-AXG SoC, the
+GPIO banks and IRQ numbers are different. Add a new compatible string
+to avoid confusion when using it.
 
-On 09/04/2019 10.39, Sean Nyekjaer wrote:
-> The flexcan controller can be forced as a wakeup source by
-> stating that explicitly in the device's .dts file using the
-> "wakeup-source" boolean property.
-> 
-> Signed-off-by: Sean Nyekjaer <sean@geanix.com>
-> ---
->   drivers/net/can/flexcan.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
-> index c46e6ce22701..df3d2abd98e4 100644
-> --- a/drivers/net/can/flexcan.c
-> +++ b/drivers/net/can/flexcan.c
-> @@ -1373,6 +1373,9 @@ static int flexcan_setup_stop_mode(struct platform_device *pdev)
->   
->   	device_set_wakeup_capable(&pdev->dev, true);
->   
-> +	if (of_property_read_bool(np, "wakeup-source"))
-> +		device_set_wakeup_enable(&pdev->dev, true);
-> +
->   	return 0;
->   }
->   
-> 
+I am re-sending this update because v2 looked good in my opinion (Xingyu
+Chen did good work here) but it never made it into mainline.
+
+
+Changes since v1 at [1]:
+- share the device data with Meson-AXG
+
+Changes since v2 at [2]:
+- dropped "Change-Id" from patch #2
+- added .dts patch #3 - this should go through Kevin's linux-amlogic
+  tree. if required I can re-send it in a separate series
+
+
+[1] https://lore.kernel.org/lkml/20181203061324.36248-1-xingyu.chen@amlogic.com
+[2] https://lore.kernel.org/patchwork/cover/1021232/
+
+
+Martin Blumenstingl (1):
+  arm64: dts: meson: g12a: add the GPIO interrupt controller
+
+Xingyu Chen (2):
+  dt-bindings: interrupt-controller: New binding for Meson-G12A SoC
+  irqchip/meson-gpio: Add support for Meson-G12A SoC
+
+ .../interrupt-controller/amlogic,meson-gpio-intc.txt     | 1 +
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi              | 9 +++++++++
+ drivers/irqchip/irq-meson-gpio.c                         | 1 +
+ 3 files changed, 11 insertions(+)
+
+-- 
+2.21.0
