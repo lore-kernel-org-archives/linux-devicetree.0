@@ -1,8 +1,7 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v1 7/9] OPP: Add function to look up required OPP's for a
- given OPP
-Date: Fri,  7 Jun 2019 21:43:37 -0700
-Message-ID: <20190608044339.115026-8-saravanak@google.com>
+Subject: [PATCH v1 4/9] OPP: Add API to find an OPP table from its DT node
+Date: Fri,  7 Jun 2019 21:43:34 -0700
+Message-ID: <20190608044339.115026-5-saravanak@google.com>
 References: <20190608044339.115026-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -13,104 +12,104 @@ To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
 Cc: Saravana Kannan <saravanak@google.com>, Rajendra Nayak <rnayak@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a function that allows looking up required OPPs given a source OPP
-table, destination OPP table and the source OPP.
+This allows finding a device's OPP table (when it has multiple) from a
+phandle to the OPP table in DT.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/opp/core.c     | 50 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/pm_opp.h | 11 ++++++++++
- 2 files changed, 61 insertions(+)
+ drivers/opp/of.c       | 42 ++++++++++++++++++++++++++++++++++--------
+ include/linux/pm_opp.h |  7 +++++++
+ 2 files changed, 41 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 89a2ece88480..d96d5746eb47 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -1881,6 +1881,56 @@ void dev_pm_opp_put_genpd_virt_dev(struct opp_table *opp_table,
- 		dev_err(virt_dev, "Failed to find required device entry\n");
+diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+index 54fa70ed2adc..34c51905f56d 100644
+--- a/drivers/opp/of.c
++++ b/drivers/opp/of.c
+@@ -42,14 +42,9 @@ struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(dev_pm_opp_of_get_opp_desc_node);
+ 
+-struct opp_table *_managed_opp(struct device *dev, int index)
++struct opp_table *_find_opp_table_from_node(struct device_node *np)
+ {
+ 	struct opp_table *opp_table, *managed_table = NULL;
+-	struct device_node *np;
+-
+-	np = _opp_of_get_opp_desc_node(dev->of_node, index);
+-	if (!np)
+-		return NULL;
+ 
+ 	list_for_each_entry(opp_table, &opp_tables, node) {
+ 		if (opp_table->np == np) {
+@@ -69,11 +64,42 @@ struct opp_table *_managed_opp(struct device *dev, int index)
+ 		}
+ 	}
+ 
+-	of_node_put(np);
+-
+ 	return managed_table;
  }
  
 +/**
-+ * dev_pm_opp_xlate_opp() - Find required OPP for src_table OPP.
-+ * @src_table: OPP table which has dst_table as one of its required OPP table.
-+ * @dst_table: Required OPP table of the src_table.
-+ * @pstate: OPP of the src_table.
++ * dev_pm_opp_of_find_table_from_node() - Find OPP table from its DT node
++ * @np: DT node used for finding the OPP table
 + *
-+ * This function returns the OPP (present in @dst_table) pointed out by the
-+ * "required-opps" property of the OPP (present in @src_table).
++ * Return: OPP table corresponding to the DT node, else NULL on failure.
 + *
-+ * Return: destination table OPP on success, otherwise NULL on errors.
++ * The caller needs to put the node with of_node_put() after using it.
 + */
-+struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
-+					struct opp_table *dst_table,
-+					struct dev_pm_opp *src_opp)
++struct opp_table *dev_pm_opp_of_find_table_from_node(struct device_node *np)
 +{
-+	struct dev_pm_opp *opp, *dest_opp = NULL;
-+	int i;
++	struct opp_table *opp_table;
 +
-+	if (!src_table || !dst_table || !src_opp)
++	mutex_lock(&opp_table_lock);
++	opp_table = _find_opp_table_from_node(np);
++	mutex_unlock(&opp_table_lock);
++	return opp_table;
++}
++EXPORT_SYMBOL_GPL(dev_pm_opp_of_find_table_from_node);
++
++struct opp_table *_managed_opp(struct device *dev, int index)
++{
++	struct device_node *np;
++	struct opp_table *opp_table;
++
++	np = _opp_of_get_opp_desc_node(dev->of_node, index);
++	if (!np)
 +		return NULL;
 +
-+	for (i = 0; i < src_table->required_opp_count; i++) {
-+		if (src_table->required_opp_tables[i]->np == dst_table->np)
-+			break;
-+	}
-+
-+	if (unlikely(i == src_table->required_opp_count)) {
-+		pr_err("%s: Couldn't find matching OPP table (%p: %p)\n",
-+		       __func__, src_table, dst_table);
-+		return NULL;
-+	}
-+
-+	mutex_lock(&src_table->lock);
-+
-+	list_for_each_entry(opp, &src_table->opp_list, node) {
-+		if (opp == src_opp) {
-+			dest_opp = opp->required_opps[i];
-+			goto unlock;
-+		}
-+	}
-+
-+	pr_err("%s: Couldn't find matching OPP (%p: %p)\n", __func__, src_table,
-+	       dst_table);
-+
-+unlock:
-+	mutex_unlock(&src_table->lock);
-+
-+	return dest_opp;
++	opp_table = _find_opp_table_from_node(np);
++	of_node_put(np);
++	return opp_table;
 +}
 +
- /**
-  * dev_pm_opp_xlate_performance_state() - Find required OPP's pstate for src_table.
-  * @src_table: OPP table which has dst_table as one of its required OPP table.
+ /* The caller must call dev_pm_opp_put() after the OPP is used */
+ static struct dev_pm_opp *_find_opp_of_np(struct opp_table *opp_table,
+ 					  struct device_node *opp_np)
 diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index 3f30ce55e8eb..13381dc3dd39 100644
+index 7f040cc20daf..3f30ce55e8eb 100644
 --- a/include/linux/pm_opp.h
 +++ b/include/linux/pm_opp.h
-@@ -137,6 +137,9 @@ void dev_pm_opp_unregister_set_opp_helper(struct opp_table *opp_table);
- struct opp_table *dev_pm_opp_set_genpd_virt_dev(struct device *dev, struct device *virt_dev, int index);
- void dev_pm_opp_put_genpd_virt_dev(struct opp_table *opp_table, struct device *virt_dev);
- int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
-+struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
-+					struct opp_table *dst_table,
-+					struct dev_pm_opp *src_opp);
- int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
- int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
- int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
-@@ -321,6 +324,14 @@ static inline int dev_pm_opp_xlate_performance_state(struct opp_table *src_table
- 	return -ENOTSUPP;
+@@ -359,6 +359,7 @@ int dev_pm_opp_of_cpumask_add_table(const struct cpumask *cpumask);
+ void dev_pm_opp_of_cpumask_remove_table(const struct cpumask *cpumask);
+ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
+ struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev);
++struct opp_table *dev_pm_opp_of_find_table_from_node(struct device_node *np);
+ struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp);
+ int of_get_required_opp_performance_state(struct device_node *np, int index);
+ void dev_pm_opp_of_register_em(struct cpumask *cpus);
+@@ -396,6 +397,12 @@ static inline struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device
+ 	return NULL;
  }
  
-+static inline struct dev_pm_opp *dev_pm_opp_xlate_opp(
-+						struct opp_table *src_table,
-+						struct opp_table *dst_table,
-+						struct dev_pm_opp *src_opp)
++static inline struct opp_table *dev_pm_opp_of_find_table_from_node(
++							struct device_node *np)
 +{
 +	return NULL;
 +}
 +
- static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+ static inline struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp)
  {
- 	return -ENOTSUPP;
+ 	return NULL;
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
