@@ -1,100 +1,333 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/3] Documentation: dt-bindings: add the Amlogic Meson
- Temperature Sensor
-Date: Sat, 8 Jun 2019 14:10:43 +0100
-Message-ID: <20190608141043.6c7d332e@archlinux>
-References: <20190604144714.2009-1-glaroque@baylibre.com>
-        <20190604144714.2009-2-glaroque@baylibre.com>
-        <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH RESEND V4 3/3] watchdog: imx_sc: Add pretimeout support
+Date: Sat, 8 Jun 2019 06:22:16 -0700
+Message-ID: <ba94ade3-fadb-6822-3db5-802ed7a0736b@roeck-us.net>
+References: <1557655528-12816-1-git-send-email-Anson.Huang@nxp.com>
+ <1557655528-12816-3-git-send-email-Anson.Huang@nxp.com>
+ <e49148ed-82ba-0878-e5ab-933f78f161d6@roeck-us.net>
+ <DB3PR0402MB3916B5E657800C92566047A0F5160@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190607174053.GA15184@roeck-us.net>
+ <DB3PR0402MB39166C5D43B1BF39998123C4F5110@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Guillaume La Roque <glaroque@baylibre.com>, khilman@baylibre.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <DB3PR0402MB39166C5D43B1BF39998123C4F5110@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Jun 2019 21:16:37 +0200
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+On 6/8/19 2:32 AM, Anson Huang wrote:
+> Hi, Guenter
+> 
+>> -----Original Message-----
+>> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
+>> Sent: Saturday, June 8, 2019 1:41 AM
+>> To: Anson Huang <anson.huang@nxp.com>
+>> Cc: robh+dt@kernel.org; mark.rutland@arm.com; wim@linux-watchdog.org;
+>> shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+>> festevam@gmail.com; Aisheng Dong <aisheng.dong@nxp.com>;
+>> ulf.hansson@linaro.org; Daniel Baluta <daniel.baluta@nxp.com>; Peng Fan
+>> <peng.fan@nxp.com>; devicetree@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; linux-watchdog@vger.kernel.org; linux-arm-
+>> kernel@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>
+>> Subject: Re: [PATCH RESEND V4 3/3] watchdog: imx_sc: Add pretimeout
+>> support
+>>
+>> On Wed, Jun 05, 2019 at 06:24:33AM +0000, Anson Huang wrote:
+>>> Hi, Guenter
+>>>
+>>>> -----Original Message-----
+>>>> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
+>>>> Sent: Sunday, May 12, 2019 9:28 PM
+>>>> To: Anson Huang <anson.huang@nxp.com>; robh+dt@kernel.org;
+>>>> mark.rutland@arm.com; wim@linux-watchdog.org;
+>> shawnguo@kernel.org;
+>>>> s.hauer@pengutronix.de; kernel@pengutronix.de; festevam@gmail.com;
+>>>> Aisheng Dong <aisheng.dong@nxp.com>; ulf.hansson@linaro.org; Daniel
+>>>> Baluta <daniel.baluta@nxp.com>; Peng Fan <peng.fan@nxp.com>;
+>>>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+>>>> watchdog@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+>>>> Cc: dl-linux-imx <linux-imx@nxp.com>
+>>>> Subject: Re: [PATCH RESEND V4 3/3] watchdog: imx_sc: Add pretimeout
+>>>> support
+>>>>
+>>>> On 5/12/19 3:10 AM, Anson Huang wrote:
+>>>>> i.MX system controller watchdog can support pretimeout IRQ via
+>>>>> general SCU MU IRQ, it depends on IMX_SCU and driver MUST be
+>>>>> probed after SCU IPC ready, then enable corresponding SCU IRQ
+>>>>> group and register SCU IRQ notifier, when watchdog pretimeout IRQ
+>>>>> fires, SCU MU IRQ will be handled and watchdog pretimeout notifier
+>>>>> will be called to handle the event.
+>>>>>
+>>>>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>>>>
+>>>> Revviewed-by: Guenter Roeck <linux@roeck-us.net>
+>>>>
+>>>> Other patches waiting for DT review. IMX API feedback below.
+>>>
+>>> Shaw just picked up the DT patch. Would you please pick up this driver
+>>> and dt-binding patch to you git repo?
+>>>
+>> I'll pick up patch 3/3, but I can not pick up patches into arch/arm64/boot/;
+>> that is the responsibility of arm64 maintainers. I can only do that if I get an
+>> explicit Ack and permission to do so from an arm64 maintainer, and I don't
+>> recall getting that.
+> 
+> Will you also pick up 1/3, the DT binding patch, as DT binding normally go with
+> driver, if NOT, please advise who should pick up this patch.
+> 
 
-> Hi Guillaume,
-> 
-> thank you for working on this!
-On comment from me inline.
+Makes sense. Will do.
 
-Thanks,
+Guenter
 
-Jonathan
-
+> Thanks,
+> Anson.
 > 
-> On Tue, Jun 4, 2019 at 4:47 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
-> >
-> > This adds the devicetree binding documentation for the Temperature
-> > Sensor found in the Amlogic Meson G12 SoCs.
-> > Currently only the G12A SoCs are supported.  
-> so G12B is not supported (yet)?
-> 
-> > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> > ---
-> >  .../iio/temperature/amlogic,meson-tsensor.txt | 31 +++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> > new file mode 100644
-> > index 000000000000..d064db0e9cac
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> > @@ -0,0 +1,31 @@
-> > +* Amlogic Meson Temperature Sensor
-> > +
-> > +Required properties:
-> > +- compatible:  depending on the SoC and the position of the sensor,
-> > +               this should be one of:
-> > +               - "amlogic,meson-g12a-cpu-tsensor" for the CPU G12A SoC sensor
-> > +               - "amlogic,meson-g12a-ddr-tsensor" for the DDR G12A SoC sensor
-> > +               followed by the common :
-> > +               - "amlogic,meson-g12a-tsensor" for G12A SoC family
-> > +- reg:         the physical base address and length of the registers
-> > +- interrupts:  the interrupt indicating end of sampling
-> > +- clocks:      phandle identifier for the reference clock of temperature sensor
-> > +- #io-channel-cells: must be 1, see ../iio-bindings.txt  
-> have you considered using the thermal framework [0] instead of the iio
-> framework (see below)?
-I had the same thought.  Right now, this doesn't look generic enough
-for IIO to make that much sense.
-
-I'll review anyway as may give some useful pointers even if you do move
-it over to thermal.
-
-> 
-> > +- amlogic,ao-secure: phandle to the ao-secure syscon  
-> the driver has some "u_efuse_off" access. do we need to get some
-> calibration values from the AO syscon or can we also fetch it from the
-> eFuse? you can look at arch/arm/boot/dts/meson8.dtsi where I'm passing
-> the temperature sensor calibration data to the SAR ADC (there's no
-> dedicated temperature sensor IP block prior to G12A) while reading the
-> data from the eFuse
-> 
-> > +Optional properties:
-> > +- amlogic,critical-temperature: temperature value in milli degrees Celsius
-> > +       to set automatic reboot on too high temperature  
-> as far as I can tell the thermal framework supports multiple trip
-> points. I'm seeing this as a benefit because the hardware can raise
-> interrupts at four different temperatures (defined by the driver)
-> 
-> > +Example:
-> > +       cpu_temp: temperature-sensor@ff634800 {
-> > +               compatible = "amlogic,meson-g12a-cpu-tsensor",
-> > +                            "amlogic,meson-g12a-tsensor";
-> > +               reg = <0x0 0xff634800 0x0 0x50>;
-> > +               interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-> > +               clocks = <&clkc CLKID_TS>;
-> > +               status = "okay";  
-> as far as I know the dt-bindings should not have a status property in
-> the examples
-> 
-> 
-> Martin
+>>
+>> Guenter
+>>
+>>> Thanks,
+>>> Anson
+>>>
+>>>>
+>>>> Side note: This patch depends on 'firmware: imx: enable imx scu
+>>>> general irq function' which is not yet in mainline.
+>>>>
+>>>>> ---
+>>>>> No change, just resend patch with correct encoding.
+>>>>> ---
+>>>>>    drivers/watchdog/Kconfig      |   1 +
+>>>>>    drivers/watchdog/imx_sc_wdt.c | 116
+>>>> +++++++++++++++++++++++++++++++++++-------
+>>>>>    2 files changed, 98 insertions(+), 19 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>>>>> index 7ea6037..e08238c 100644
+>>>>> --- a/drivers/watchdog/Kconfig
+>>>>> +++ b/drivers/watchdog/Kconfig
+>>>>> @@ -716,6 +716,7 @@ config IMX2_WDT
+>>>>>    config IMX_SC_WDT
+>>>>>    	tristate "IMX SC Watchdog"
+>>>>>    	depends on HAVE_ARM_SMCCC
+>>>>> +	depends on IMX_SCU
+>>>>>    	select WATCHDOG_CORE
+>>>>>    	help
+>>>>>    	  This is the driver for the system controller watchdog diff
+>>>>> --git a/drivers/watchdog/imx_sc_wdt.c
+>>>>> b/drivers/watchdog/imx_sc_wdt.c index 49848b6..6ecc03f 100644
+>>>>> --- a/drivers/watchdog/imx_sc_wdt.c
+>>>>> +++ b/drivers/watchdog/imx_sc_wdt.c
+>>>>> @@ -4,6 +4,7 @@
+>>>>>     */
+>>>>>
+>>>>>    #include <linux/arm-smccc.h>
+>>>>> +#include <linux/firmware/imx/sci.h>
+>>>>>    #include <linux/io.h>
+>>>>>    #include <linux/init.h>
+>>>>>    #include <linux/kernel.h>
+>>>>> @@ -33,11 +34,19 @@
+>>>>>
+>>>>>    #define SC_TIMER_WDOG_ACTION_PARTITION	0
+>>>>>
+>>>>> +#define SC_IRQ_WDOG			1
+>>>>> +#define SC_IRQ_GROUP_WDOG		1
+>>>>> +
+>>>>>    static bool nowayout = WATCHDOG_NOWAYOUT;
+>>>>>    module_param(nowayout, bool, 0000);
+>>>>>    MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once
+>>>> started (default="
+>>>>>    		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+>>>>>
+>>>>> +struct imx_sc_wdt_device {
+>>>>> +	struct watchdog_device wdd;
+>>>>> +	struct notifier_block wdt_notifier; };
+>>>>> +
+>>>>>    static int imx_sc_wdt_ping(struct watchdog_device *wdog)
+>>>>>    {
+>>>>>    	struct arm_smccc_res res;
+>>>>> @@ -85,24 +94,66 @@ static int imx_sc_wdt_set_timeout(struct
+>>>> watchdog_device *wdog,
+>>>>>    	return res.a0 ? -EACCES : 0;
+>>>>>    }
+>>>>>
+>>>>> +static int imx_sc_wdt_set_pretimeout(struct watchdog_device *wdog,
+>>>>> +				     unsigned int pretimeout) {
+>>>>> +	struct arm_smccc_res res;
+>>>>> +
+>>>>> +	arm_smccc_smc(IMX_SIP_TIMER,
+>>>> IMX_SIP_TIMER_SET_PRETIME_WDOG,
+>>>>> +		      pretimeout * 1000, 0, 0, 0, 0, 0, &res);
+>>>>> +	if (res.a0)
+>>>>> +		return -EACCES;
+>>>>> +
+>>>>> +	wdog->pretimeout = pretimeout;
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int imx_sc_wdt_notify(struct notifier_block *nb,
+>>>>> +			     unsigned long event, void *group) {
+>>>>> +	struct imx_sc_wdt_device *imx_sc_wdd =
+>>>>> +				 container_of(nb,
+>>>>> +					      struct imx_sc_wdt_device,
+>>>>> +					      wdt_notifier);
+>>>>> +
+>>>>> +	if (event & SC_IRQ_WDOG &&
+>>>>> +	    *(u8 *)group == SC_IRQ_GROUP_WDOG)
+>>>>> +		watchdog_notify_pretimeout(&imx_sc_wdd->wdd);
+>>>>
+>>>> This should really not be necessary. Event mask and target group (if
+>>>> needed with a wildcard for the group) should be parameters of
+>>>> imx_scu_irq_register_notifier(), and be handled in the imx code.
+>>>>
+>>>> Also, passing 'group' as pointed seems excessive. Might as well pass
+>>>> it directly.
+>>>>
+>>>> Guenter
+>>>>
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static void imx_sc_wdt_action(void *data) {
+>>>>> +	struct notifier_block *wdt_notifier = data;
+>>>>> +
+>>>>> +	imx_scu_irq_unregister_notifier(wdt_notifier);
+>>>>> +	imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
+>>>>> +				 SC_IRQ_WDOG,
+>>>>> +				 false);
+>>>>> +}
+>>>>> +
+>>>>>    static const struct watchdog_ops imx_sc_wdt_ops = {
+>>>>>    	.owner = THIS_MODULE,
+>>>>>    	.start = imx_sc_wdt_start,
+>>>>>    	.stop  = imx_sc_wdt_stop,
+>>>>>    	.ping  = imx_sc_wdt_ping,
+>>>>>    	.set_timeout = imx_sc_wdt_set_timeout,
+>>>>> +	.set_pretimeout = imx_sc_wdt_set_pretimeout,
+>>>>>    };
+>>>>>
+>>>>> -static const struct watchdog_info imx_sc_wdt_info = {
+>>>>> +static struct watchdog_info imx_sc_wdt_info = {
+>>>>>    	.identity	= "i.MX SC watchdog timer",
+>>>>>    	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
+>>>>> -			  WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT,
+>>>>> +			  WDIOF_MAGICCLOSE,
+>>>>>    };
+>>>>>
+>>>>>    static int imx_sc_wdt_probe(struct platform_device *pdev)
+>>>>>    {
+>>>>> +	struct imx_sc_wdt_device *imx_sc_wdd;
+>>>>> +	struct watchdog_device *wdog;
+>>>>>    	struct device *dev = &pdev->dev;
+>>>>> -	struct watchdog_device *imx_sc_wdd;
+>>>>>    	int ret;
+>>>>>
+>>>>>    	imx_sc_wdd = devm_kzalloc(dev, sizeof(*imx_sc_wdd),
+>>>>> GFP_KERNEL);
+>>>> @@
+>>>>> -111,42 +162,69 @@ static int imx_sc_wdt_probe(struct
+>>>>> platform_device
+>>>>> *pdev)
+>>>>>
+>>>>>    	platform_set_drvdata(pdev, imx_sc_wdd);
+>>>>>
+>>>>> -	imx_sc_wdd->info = &imx_sc_wdt_info;
+>>>>> -	imx_sc_wdd->ops = &imx_sc_wdt_ops;
+>>>>> -	imx_sc_wdd->min_timeout = 1;
+>>>>> -	imx_sc_wdd->max_timeout = MAX_TIMEOUT;
+>>>>> -	imx_sc_wdd->parent = dev;
+>>>>> -	imx_sc_wdd->timeout = DEFAULT_TIMEOUT;
+>>>>> +	wdog = &imx_sc_wdd->wdd;
+>>>>> +	wdog->info = &imx_sc_wdt_info;
+>>>>> +	wdog->ops = &imx_sc_wdt_ops;
+>>>>> +	wdog->min_timeout = 1;
+>>>>> +	wdog->max_timeout = MAX_TIMEOUT;
+>>>>> +	wdog->parent = dev;
+>>>>> +	wdog->timeout = DEFAULT_TIMEOUT;
+>>>>>
+>>>>> -	watchdog_init_timeout(imx_sc_wdd, 0, dev);
+>>>>> -	watchdog_stop_on_reboot(imx_sc_wdd);
+>>>>> -	watchdog_stop_on_unregister(imx_sc_wdd);
+>>>>> +	watchdog_init_timeout(wdog, 0, dev);
+>>>>> +	watchdog_stop_on_reboot(wdog);
+>>>>> +	watchdog_stop_on_unregister(wdog);
+>>>>>
+>>>>> -	ret = devm_watchdog_register_device(dev, imx_sc_wdd);
+>>>>> +	ret = devm_watchdog_register_device(dev, wdog);
+>>>>>    	if (ret) {
+>>>>>    		dev_err(dev, "Failed to register watchdog device\n");
+>>>>>    		return ret;
+>>>>>    	}
+>>>>>
+>>>>> +	ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
+>>>>> +				       SC_IRQ_WDOG,
+>>>>> +				       true);
+>>>>> +	if (ret) {
+>>>>> +		dev_warn(dev, "Enable irq failed, pretimeout NOT
+>>>> supported\n");
+>>>>> +		return 0;
+>>>>> +	}
+>>>>> +
+>>>>> +	imx_sc_wdd->wdt_notifier.notifier_call = imx_sc_wdt_notify;
+>>>>> +	ret = imx_scu_irq_register_notifier(&imx_sc_wdd->wdt_notifier);
+>>>>> +	if (ret) {
+>>>>> +		imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
+>>>>> +					 SC_IRQ_WDOG,
+>>>>> +					 false);
+>>>>> +		dev_warn(dev,
+>>>>> +			 "Register irq notifier failed, pretimeout NOT
+>>>> supported\n");
+>>>>> +		return 0;
+>>>>> +	}
+>>>>> +
+>>>>> +	ret = devm_add_action_or_reset(dev, imx_sc_wdt_action,
+>>>>> +				       &imx_sc_wdd->wdt_notifier);
+>>>>> +	if (!ret)
+>>>>> +		imx_sc_wdt_info.options |= WDIOF_PRETIMEOUT;
+>>>>> +	else
+>>>>> +		dev_warn(dev, "Add action failed, pretimeout NOT
+>>>> supported\n");
+>>>>> +
+>>>>>    	return 0;
+>>>>>    }
+>>>>>
+>>>>>    static int __maybe_unused imx_sc_wdt_suspend(struct device *dev)
+>>>>>    {
+>>>>> -	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
+>>>>> +	struct imx_sc_wdt_device *imx_sc_wdd = dev_get_drvdata(dev);
+>>>>>
+>>>>> -	if (watchdog_active(imx_sc_wdd))
+>>>>> -		imx_sc_wdt_stop(imx_sc_wdd);
+>>>>> +	if (watchdog_active(&imx_sc_wdd->wdd))
+>>>>> +		imx_sc_wdt_stop(&imx_sc_wdd->wdd);
+>>>>>
+>>>>>    	return 0;
+>>>>>    }
+>>>>>
+>>>>>    static int __maybe_unused imx_sc_wdt_resume(struct device *dev)
+>>>>>    {
+>>>>> -	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
+>>>>> +	struct imx_sc_wdt_device *imx_sc_wdd = dev_get_drvdata(dev);
+>>>>>
+>>>>> -	if (watchdog_active(imx_sc_wdd))
+>>>>> -		imx_sc_wdt_start(imx_sc_wdd);
+>>>>> +	if (watchdog_active(&imx_sc_wdd->wdd))
+>>>>> +		imx_sc_wdt_start(&imx_sc_wdd->wdd);
+>>>>>
+>>>>>    	return 0;
+>>>>>    }
+>>>>>
+>>>
