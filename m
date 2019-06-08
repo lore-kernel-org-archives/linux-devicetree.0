@@ -1,66 +1,65 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V3 3/4] clk: imx: Add support for i.MX8MN clock driver
-Date: Sat, 8 Jun 2019 09:58:18 +0000
-Message-ID: <DB3PR0402MB391678C245944942EA2A7F62F5110@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190604015928.23157-1-Anson.Huang@nxp.com>
- <20190604015928.23157-3-Anson.Huang@nxp.com>
- <20190606162543.EFFB820645@mail.kernel.org>
- <DB3PR0402MB391625A0B3D838CE88C53E33F5100@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190607180039.611C7208C0@mail.kernel.org>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 6/6] pwm: jz4740: Use __init_or_module and __exit for
+ .probe and .remove
+Date: Sat, 08 Jun 2019 12:31:01 +0200
+Message-ID: <1559989861.1815.10@crapouillou.net>
+References: <20190607154410.10633-1-paul@crapouillou.net>
+        <20190607154410.10633-7-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190607180039.611C7208C0@mail.kernel.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@kernel.org>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "festevam@gmail.com" <festevam@gmail.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, mturq
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190607154410.10633-7-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stephen
+I misunderstood what __init_or_module was for. Please ignore this patch
+(the rest of the patchset is OK). Sorry for the noise.
 
-> -----Original Message-----
-> From: Stephen Boyd <sboyd@kernel.org>
-> Sent: Saturday, June 8, 2019 2:01 AM
-> To: bjorn.andersson@linaro.org; catalin.marinas@arm.com;
-> devicetree@vger.kernel.org; dinguyen@kernel.org;
-> enric.balletbo@collabora.com; festevam@gmail.com;
-> horms+renesas@verge.net.au; jagan@amarulasolutions.com;
-> kernel@pengutronix.de; l.stach@pengutronix.de; linux-arm-
-> kernel@lists.infradead.org; linux-clk@vger.kernel.org; linux-
-> kernel@vger.kernel.org; mark.rutland@arm.com;
-> maxime.ripard@bootlin.com; mturquette@baylibre.com; olof@lixom.net;
-> robh+dt@kernel.org; s.hauer@pengutronix .de <s.hauer@pengutronix.de>;
-> shawnguo@kernel.org; will.deacon@arm.com; Abel Vesa
-> <abel.vesa@nxp.com>; Aisheng Dong <aisheng.dong@nxp.com>; Anson
-> Huang <anson.huang@nxp.com>; Jacky Bai <ping.bai@nxp.com>; Leonard
-> Crestez <leonard.crestez@nxp.com>
-> Cc: dl-linux-imx <linux-imx@nxp.com>
-> Subject: RE: [PATCH V3 3/4] clk: imx: Add support for i.MX8MN clock driver
-> 
-> Quoting Anson Huang (2019-06-06 17:50:28)
-> >
-> > I will use devm_platform_ioremap_resource() instead of ioremap(), and
-> > can you be more specific about devmified clk registration?
-> >
-> 
-> I mean using things like devm_clk_hw_register().
 
-Sorry, I am still a little confused, all the clock register(clk_register()) are via each different
-clock types like imx_clk_gate4/imx_clk_pll14xx, if using clk_hw_register, means we need
-to re-write the clock driver using different clk register method, that will make the driver
-completely different from i.mx8mq/i.mx8mm, they are actually same series of SoC as i.mx8mn,
-it will introduce many confusion, is my understanding correct? And is it OK to just keep what
-it is and make them all aligned?
+Le ven. 7 juin 2019 =E0 17:44, Paul Cercueil <paul@crapouillou.net> a=20
+=E9crit :
+> This allows the probe function to be dropped after the kernel finished
+> its initialization, in the case where the driver was not compiled as a
+> module.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>=20
+> Notes:
+>     v2: New patch
+>=20
+>  drivers/pwm/pwm-jz4740.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+> index f901e8a0d33d..1b5077825721 100644
+> --- a/drivers/pwm/pwm-jz4740.c
+> +++ b/drivers/pwm/pwm-jz4740.c
+> @@ -145,7 +145,7 @@ static const struct pwm_ops jz4740_pwm_ops =3D {
+>  	.owner =3D THIS_MODULE,
+>  };
+>=20
+> -static int jz4740_pwm_probe(struct platform_device *pdev)
+> +static int __init_or_module jz4740_pwm_probe(struct platform_device=20
+> *pdev)
+>  {
+>  	struct jz4740_pwm_chip *jz4740;
+>=20
+> @@ -169,7 +169,7 @@ static int jz4740_pwm_probe(struct=20
+> platform_device *pdev)
+>  	return pwmchip_add(&jz4740->chip);
+>  }
+>=20
+> -static int jz4740_pwm_remove(struct platform_device *pdev)
+> +static int __exit jz4740_pwm_remove(struct platform_device *pdev)
+>  {
+>  	struct jz4740_pwm_chip *jz4740 =3D platform_get_drvdata(pdev);
+>=20
+> --
+> 2.21.0.593.g511ec345e18
+>=20
 
-Thanks,
-Anson.
+=
