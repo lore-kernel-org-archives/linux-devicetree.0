@@ -1,46 +1,56 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RFC next v1 2/5] gpio: of: parse stmmac PHY reset line specific
- active-low property
-Date: Sun, 9 Jun 2019 22:38:28 +0200
-Message-ID: <20190609203828.GA8247@lunn.ch>
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609180621.7607-3-martin.blumenstingl@googlemail.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v3 0/7] Allwinner H6 DMA support
+Date: Sun, 9 Jun 2019 22:42:31 +0200
+Message-ID: <CAJiuCcebCkdkR9tDOUOEO+Rs-VuSUVLtDpqw3pWUX8o8aPtMsw@mail.gmail.com>
+References: <20190527201459.20130-1-peron.clem@gmail.com> <20190528111024.gj25jh5vstizze74@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190609180621.7607-3-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree@vger.kernel.org, alexandre.torgue@st.com, linux-gpio@vger.kernel.org, netdev@vger.kernel.org, linus.walleij@linaro.org, narmstrong@baylibre.com, linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com, joabreu@synopsys.com, khilman@baylibre.com, peppe.cavallaro@st.com, linux-amlogic@lists.infradead.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190528111024.gj25jh5vstizze74@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 08:06:18PM +0200, Martin Blumenstingl wrote:
-> The stmmac driver currently ignores the GPIO flags which are passed via
-> devicetree because it operates with legacy GPIO numbers instead of GPIO
-> descriptors.
+Hi Maxime,
 
-Hi Martin
+On Tue, 28 May 2019 at 13:10, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Mon, May 27, 2019 at 10:14:52PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi,
+> >
+> > This series has been first proposed by Jernej Skrabec[1].
+> > As this series is mandatory for SPDIF/I2S support and because he is
+> > busy on Cedrus stuff. I asked him to make the minor change requested
+> > and repost it.
+> > Authorship remains to him.
+> >
+> > I have tested this series with SPDIF driver and added a patch to enable
+> > DMA_SUN6I_CONFIG for arm64.
+> >
+> > Original Post:
+> > "
+> > DMA engine engine on H6 almost the same as on older SoCs. The biggest
+> > difference is that it has slightly rearranged bits in registers and
+> > it needs additional clock, probably due to iommu.
+> >
+> > These patches were tested with I2S connected to HDMI. I2S needs
+> > additional patches which will be sent later.
+>
+> For the whole series,
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-I don't think this is the reason. I think historically stmmac messed
-up and ignored the flags. There are a number of device tree blobs
-which have the incorrect flag value, but since it was always ignored,
-it did not matter. Then came along a board which really did need the
-flag, but it was too late, it could not be enabled because too many
-boards would break. So the hack was made, and snps,reset-active-low
-was added.
+Thanks, Is it ok to pick patch 5/6/7 to sunxi tree ?
 
-Since snps,reset-active-low is a hack, it should not be in the
-core. Please don't add it to gpiolib-of.c, keep it within stmmac
-driver.
+Regards,
+Cl=C3=A9ment
 
-	Andrew
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
