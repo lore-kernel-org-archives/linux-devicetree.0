@@ -1,68 +1,68 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RFC next v1 2/5] gpio: of: parse stmmac PHY reset line specific
- active-low property
-Date: Sun,  9 Jun 2019 20:06:18 +0200
-Message-ID: <20190609180621.7607-3-martin.blumenstingl@googlemail.com>
+Subject: [RFC next v1 4/5] net: stmmac: use device_property_read_u32_array to read the reset delays
+Date: Sun,  9 Jun 2019 20:06:20 +0200
+Message-ID: <20190609180621.7607-5-martin.blumenstingl@googlemail.com>
 References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com
-Cc: devicetree@vger.kernel.org, narmstrong@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, khilman@baylibre.com, linux-kernel@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, khilman@baylibre.com, narmstrong@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-The stmmac driver currently ignores the GPIO flags which are passed via
-devicetree because it operates with legacy GPIO numbers instead of GPIO
-descriptors. stmmac assumes that the GPIO is "active HIGH" by default.
-This can be overwritten by setting "snps,reset-active-low" to make the
-reset line "active LOW".
+Change stmmac_mdio_reset() to use device_property_read_u32_array()
+instead of of_property_read_u32_array().
 
-Recent Amlogic SoCs (G12A which includes S905X2 and S905D2 as well as
-G12B which includes S922X) use GPIOZ_14 or GPIOZ_15 for the PHY reset
-line. These GPIOs are special because they are marked as "3.3V input
-tolerant open drain" pins which means they can only drive the pin output
-LOW (to reset the PHY) or to switch to input mode (to take the PHY out
-of reset).
-The GPIO subsystem already supports this with the GPIO_OPEN_DRAIN and
-GPIO_OPEN_SOURCE flags in the devicetree bindings.
+This is meant as a cleanup because we can drop the struct device_node
+variable. Also it will make it easier to get rid of struct
+stmmac_mdio_bus_data (or at least make it private) in the future because
+non-OF platforms can now pass the reset delays as device properties.
 
-Add the stmmac PHY reset line specific active low parsing to gpiolib-of
-so stmmac can be ported to GPIO descriptors while being backwards
-compatible with device trees which use the "old" way of specifying the
-polarity.
+No functional changes (neither for OF platforms nor for ones that are
+not using OF, because the modified code is still contained in an "if
+(priv->device->of_node)").
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/gpio/gpiolib-of.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index aec7bd86ae7e..2533f2471821 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -158,6 +158,12 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 			}
- 		}
- 	}
-+
-+	/* Legacy handling of stmmac's active-low PHY reset line */
-+	if (IS_ENABLED(CONFIG_STMMAC_ETH) &&
-+	    !strcmp(propname, "snps,reset-gpio") &&
-+	    of_property_read_bool(np, "snps,reset-active-low"))
-+		*flags |= OF_GPIO_ACTIVE_LOW;
- }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+index 21bbe3ba3e8e..4614f1f2bffb 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -24,9 +24,9 @@
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+ #include <linux/mii.h>
+-#include <linux/of.h>
+ #include <linux/of_mdio.h>
+ #include <linux/phy.h>
++#include <linux/property.h>
+ #include <linux/slab.h>
  
- /**
+ #include "dwxgmac2.h"
+@@ -254,16 +254,15 @@ int stmmac_mdio_reset(struct mii_bus *bus)
+ 		struct gpio_desc *reset_gpio;
+ 
+ 		if (data->reset_gpio < 0) {
+-			struct device_node *np = priv->device->of_node;
+-
+ 			reset_gpio = devm_gpiod_get_optional(priv->device,
+ 							     "snps,reset",
+ 							     GPIOD_OUT_LOW);
+ 			if (IS_ERR(reset_gpio))
+ 				return PTR_ERR(reset_gpio);
+ 
+-			of_property_read_u32_array(np,
+-				"snps,reset-delays-us", data->delays, 3);
++			device_property_read_u32_array(priv->device,
++						       "snps,reset-delays-us",
++						       data->delays, 3);
+ 		} else {
+ 			reset_gpio = gpio_to_desc(data->reset_gpio);
+ 
 -- 
 2.21.0
