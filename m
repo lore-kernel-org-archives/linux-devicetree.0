@@ -1,519 +1,222 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH V5 04/11] misc: xilinx_sdfec: Store driver config and
- state
-Date: Sun, 9 Jun 2019 13:27:32 +0200
-Message-ID: <20190609112732.GA31438@kroah.com>
-References: <1560038656-380620-1-git-send-email-dragan.cvetic@xilinx.com>
- <1560038656-380620-5-git-send-email-dragan.cvetic@xilinx.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [2/2] drm/panel: support for AUO kd101n80-45na wuxga dsi video
+ mode panel
+Date: Sun, 9 Jun 2019 13:51:05 +0200
+Message-ID: <20190609115105.GA31079@ravnborg.org>
+References: <20190608112342.64416-1-jitao.shi@mediatek.com>
+ <20190608112342.64416-2-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1560038656-380620-5-git-send-email-dragan.cvetic@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Cc: arnd@arndb.de, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Derek Kiernan <derek.kiernan@xilinx.com>
+In-Reply-To: <20190608112342.64416-2-jitao.shi@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, yingjoe.chen@mediatek.com, Thierry Reding <treding@nvidia.com>, Sean Paul <seanpaul@chromium.org>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Russell King <rmk+kernel@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 01:04:09AM +0100, Dragan Cvetic wrote:
-> Stores configuration based on parameters from the DT
-> node and values from the SD-FEC core plus reads
-> the default state from the SD-FEC core. To obtain
-> values from the core register read, write capabilities
-> have been added plus related register map details.
-> 
-> Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-> Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
-> Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-> ---
->  drivers/misc/xilinx_sdfec.c      | 293 +++++++++++++++++++++++++++++++++++++++
->  include/uapi/misc/xilinx_sdfec.h | 138 ++++++++++++++++++
->  2 files changed, 431 insertions(+)
->  create mode 100644 include/uapi/misc/xilinx_sdfec.h
-> 
-> diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-> index 4524677..ddfca54 100644
-> --- a/drivers/misc/xilinx_sdfec.c
-> +++ b/drivers/misc/xilinx_sdfec.c
-> @@ -20,8 +20,89 @@
->  #include <linux/slab.h>
->  #include <linux/clk.h>
->  
-> +#include <uapi/misc/xilinx_sdfec.h>
-> +
->  static int xsdfec_ndevs;
->  
-> +/* Xilinx SDFEC Register Map */
-> +/* CODE_WRI_PROTECT Register */
-> +#define XSDFEC_CODE_WR_PROTECT_ADDR (0x4)
-> +
-> +/* ACTIVE Register */
-> +#define XSDFEC_ACTIVE_ADDR (0x8)
-> +#define XSDFEC_IS_ACTIVITY_SET (0x1)
-> +
-> +/* AXIS_WIDTH Register */
-> +#define XSDFEC_AXIS_WIDTH_ADDR (0xC)
-> +#define XSDFEC_AXIS_DOUT_WORDS_LSB (5)
-> +#define XSDFEC_AXIS_DOUT_WIDTH_LSB (3)
-> +#define XSDFEC_AXIS_DIN_WORDS_LSB (2)
-> +#define XSDFEC_AXIS_DIN_WIDTH_LSB (0)
-> +
-> +/* AXIS_ENABLE Register */
-> +#define XSDFEC_AXIS_ENABLE_ADDR (0x10)
-> +#define XSDFEC_AXIS_OUT_ENABLE_MASK (0x38)
-> +#define XSDFEC_AXIS_IN_ENABLE_MASK (0x7)
-> +#define XSDFEC_AXIS_ENABLE_MASK                                                \
-> +	(XSDFEC_AXIS_OUT_ENABLE_MASK | XSDFEC_AXIS_IN_ENABLE_MASK)
-> +
-> +/* FEC_CODE Register */
-> +#define XSDFEC_FEC_CODE_ADDR (0x14)
-> +
-> +/* ORDER Register Map */
-> +#define XSDFEC_ORDER_ADDR (0x18)
-> +
-> +/* Interrupt Status Register */
-> +#define XSDFEC_ISR_ADDR (0x1C)
-> +/* Interrupt Status Register Bit Mask */
-> +#define XSDFEC_ISR_MASK (0x3F)
-> +
-> +/* Write Only - Interrupt Enable Register */
-> +#define XSDFEC_IER_ADDR (0x20)
-> +/* Write Only - Interrupt Disable Register */
-> +#define XSDFEC_IDR_ADDR (0x24)
-> +/* Read Only - Interrupt Mask Register */
-> +#define XSDFEC_IMR_ADDR (0x28)
-> +
-> +/* ECC Interrupt Status Register */
-> +#define XSDFEC_ECC_ISR_ADDR (0x2C)
-> +/* Single Bit Errors */
-> +#define XSDFEC_ECC_ISR_SBE_MASK (0x7FF)
-> +/* PL Initialize Single Bit Errors */
-> +#define XSDFEC_PL_INIT_ECC_ISR_SBE_MASK (0x3C00000)
-> +/* Multi Bit Errors */
-> +#define XSDFEC_ECC_ISR_MBE_MASK (0x3FF800)
-> +/* PL Initialize Multi Bit Errors */
-> +#define XSDFEC_PL_INIT_ECC_ISR_MBE_MASK (0x3C000000)
-> +/* Multi Bit Error to Event Shift */
-> +#define XSDFEC_ECC_ISR_MBE_TO_EVENT_SHIFT (11)
-> +/* PL Initialize Multi Bit Error to Event Shift */
-> +#define XSDFEC_PL_INIT_ECC_ISR_MBE_TO_EVENT_SHIFT (4)
-> +/* ECC Interrupt Status Bit Mask */
-> +#define XSDFEC_ECC_ISR_MASK (XSDFEC_ECC_ISR_SBE_MASK | XSDFEC_ECC_ISR_MBE_MASK)
-> +/* ECC Interrupt Status PL Initialize Bit Mask */
-> +#define XSDFEC_PL_INIT_ECC_ISR_MASK                                            \
-> +	(XSDFEC_PL_INIT_ECC_ISR_SBE_MASK | XSDFEC_PL_INIT_ECC_ISR_MBE_MASK)
-> +/* ECC Interrupt Status All Bit Mask */
-> +#define XSDFEC_ALL_ECC_ISR_MASK                                                \
-> +	(XSDFEC_ECC_ISR_MASK | XSDFEC_PL_INIT_ECC_ISR_MASK)
-> +/* ECC Interrupt Status Single Bit Errors Mask */
-> +#define XSDFEC_ALL_ECC_ISR_SBE_MASK                                            \
-> +	(XSDFEC_ECC_ISR_SBE_MASK | XSDFEC_PL_INIT_ECC_ISR_SBE_MASK)
-> +/* ECC Interrupt Status Multi Bit Errors Mask */
-> +#define XSDFEC_ALL_ECC_ISR_MBE_MASK                                            \
-> +	(XSDFEC_ECC_ISR_MBE_MASK | XSDFEC_PL_INIT_ECC_ISR_MBE_MASK)
-> +
-> +/* Write Only - ECC Interrupt Enable Register */
-> +#define XSDFEC_ECC_IER_ADDR (0x30)
-> +/* Write Only - ECC Interrupt Disable Register */
-> +#define XSDFEC_ECC_IDR_ADDR (0x34)
-> +/* Read Only - ECC Interrupt Mask Register */
-> +#define XSDFEC_ECC_IMR_ADDR (0x38)
-> +
-> +/* BYPASS Register */
-> +#define XSDFEC_BYPASS_ADDR (0x3C)
-> +
->  /**
->   * struct xsdfec_clks - For managing SD-FEC clocks
->   * @core_clk: Main processing clock for core
-> @@ -48,6 +129,8 @@ struct xsdfec_clks {
->   * struct xsdfec_dev - Driver data for SDFEC
->   * @regs: device physical base address
->   * @dev: pointer to device struct
-> + * @state: State of the SDFEC device
-> + * @config: Configuration of the SDFEC device
->   * @miscdev: Misc device handle
->   * @error_data_lock: Error counter and states spinlock
->   * @clks: Clocks managed by the SDFEC driver
-> @@ -57,16 +140,220 @@ struct xsdfec_clks {
->  struct xsdfec_dev {
->  	void __iomem *regs;
->  	struct device *dev;
-> +	enum xsdfec_state state;
-> +	struct xsdfec_config config;
->  	struct miscdevice miscdev;
->  	/* Spinlock to protect state_updated and stats_updated */
->  	spinlock_t error_data_lock;
->  	struct xsdfec_clks clks;
->  };
->  
-> +static inline void xsdfec_regwrite(struct xsdfec_dev *xsdfec, u32 addr,
-> +				   u32 value)
-> +{
-> +	dev_dbg(xsdfec->dev, "Writing 0x%x to offset 0x%x", value, addr);
-> +	iowrite32(value, xsdfec->regs + addr);
-> +}
-> +
-> +static inline u32 xsdfec_regread(struct xsdfec_dev *xsdfec, u32 addr)
-> +{
-> +	u32 rval;
-> +
-> +	rval = ioread32(xsdfec->regs + addr);
-> +	dev_dbg(xsdfec->dev, "Read value = 0x%x from offset 0x%x", rval, addr);
-> +	return rval;
-> +}
-> +
-> +static void update_bool_config_from_reg(struct xsdfec_dev *xsdfec,
-> +					u32 reg_offset, u32 bit_num,
-> +					char *config_value)
-> +{
-> +	u32 reg_val;
-> +	u32 bit_mask = 1 << bit_num;
-> +
-> +	reg_val = xsdfec_regread(xsdfec, reg_offset);
-> +	*config_value = (reg_val & bit_mask) > 0;
-> +}
-> +
-> +static void update_config_from_hw(struct xsdfec_dev *xsdfec)
-> +{
-> +	u32 reg_value;
-> +	bool sdfec_started;
-> +
-> +	/* Update the Order */
-> +	reg_value = xsdfec_regread(xsdfec, XSDFEC_ORDER_ADDR);
-> +	xsdfec->config.order = reg_value;
-> +
-> +	update_bool_config_from_reg(xsdfec, XSDFEC_BYPASS_ADDR,
-> +				    0, /* Bit Number, maybe change to mask */
-> +				    &xsdfec->config.bypass);
-> +
-> +	update_bool_config_from_reg(xsdfec, XSDFEC_CODE_WR_PROTECT_ADDR,
-> +				    0, /* Bit Number */
-> +				    &xsdfec->config.code_wr_protect);
-> +
-> +	reg_value = xsdfec_regread(xsdfec, XSDFEC_IMR_ADDR);
-> +	xsdfec->config.irq.enable_isr = (reg_value & XSDFEC_ISR_MASK) > 0;
-> +
-> +	reg_value = xsdfec_regread(xsdfec, XSDFEC_ECC_IMR_ADDR);
-> +	xsdfec->config.irq.enable_ecc_isr =
-> +		(reg_value & XSDFEC_ECC_ISR_MASK) > 0;
-> +
-> +	reg_value = xsdfec_regread(xsdfec, XSDFEC_AXIS_ENABLE_ADDR);
-> +	sdfec_started = (reg_value & XSDFEC_AXIS_IN_ENABLE_MASK) > 0;
-> +	if (sdfec_started)
-> +		xsdfec->state = XSDFEC_STARTED;
-> +	else
-> +		xsdfec->state = XSDFEC_STOPPED;
-> +}
-> +
-> +static u32
-> +xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
-> +{
-> +	u32 axis_width_field = 0;
-> +
-> +	switch (axis_width_cfg) {
-> +	case XSDFEC_1x128b:
-> +		axis_width_field = 0;
-> +		break;
-> +	case XSDFEC_2x128b:
-> +		axis_width_field = 1;
-> +		break;
-> +	case XSDFEC_4x128b:
-> +		axis_width_field = 2;
-> +		break;
-> +	}
-> +
-> +	return axis_width_field;
-> +}
-> +
-> +static u32 xsdfec_translate_axis_words_cfg_val(enum xsdfec_axis_word_include
-> +	axis_word_inc_cfg)
-> +{
-> +	u32 axis_words_field = 0;
-> +
-> +	if (axis_word_inc_cfg == XSDFEC_FIXED_VALUE ||
-> +	    axis_word_inc_cfg == XSDFEC_IN_BLOCK)
-> +		axis_words_field = 0;
-> +	else if (axis_word_inc_cfg == XSDFEC_PER_AXI_TRANSACTION)
-> +		axis_words_field = 1;
-> +
-> +	return axis_words_field;
-> +}
-> +
-> +static int xsdfec_cfg_axi_streams(struct xsdfec_dev *xsdfec)
-> +{
-> +	u32 reg_value;
-> +	u32 dout_words_field;
-> +	u32 dout_width_field;
-> +	u32 din_words_field;
-> +	u32 din_width_field;
-> +	struct xsdfec_config *config = &xsdfec->config;
-> +
-> +	/* translate config info to register values */
-> +	dout_words_field =
-> +		xsdfec_translate_axis_words_cfg_val(config->dout_word_include);
-> +	dout_width_field =
-> +		xsdfec_translate_axis_width_cfg_val(config->dout_width);
-> +	din_words_field =
-> +		xsdfec_translate_axis_words_cfg_val(config->din_word_include);
-> +	din_width_field =
-> +		xsdfec_translate_axis_width_cfg_val(config->din_width);
-> +
-> +	reg_value = dout_words_field << XSDFEC_AXIS_DOUT_WORDS_LSB;
-> +	reg_value |= dout_width_field << XSDFEC_AXIS_DOUT_WIDTH_LSB;
-> +	reg_value |= din_words_field << XSDFEC_AXIS_DIN_WORDS_LSB;
-> +	reg_value |= din_width_field << XSDFEC_AXIS_DIN_WIDTH_LSB;
-> +
-> +	xsdfec_regwrite(xsdfec, XSDFEC_AXIS_WIDTH_ADDR, reg_value);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct file_operations xsdfec_fops = {
->  	.owner = THIS_MODULE,
->  };
->  
-> +static int xsdfec_parse_of(struct xsdfec_dev *xsdfec)
-> +{
-> +	struct device *dev = xsdfec->dev;
-> +	struct device_node *node = dev->of_node;
-> +	int rval;
-> +	const char *fec_code;
-> +	u32 din_width;
-> +	u32 din_word_include;
-> +	u32 dout_width;
-> +	u32 dout_word_include;
-> +
-> +	rval = of_property_read_string(node, "xlnx,sdfec-code", &fec_code);
-> +	if (rval < 0)
-> +		return rval;
-> +
-> +	if (!strcasecmp(fec_code, "ldpc"))
-> +		xsdfec->config.code = XSDFEC_LDPC_CODE;
-> +	else if (!strcasecmp(fec_code, "turbo"))
-> +		xsdfec->config.code = XSDFEC_TURBO_CODE;
-> +	else
-> +		return -EINVAL;
-> +
-> +	rval = of_property_read_u32(node, "xlnx,sdfec-din-words",
-> +				    &din_word_include);
-> +	if (rval < 0)
-> +		return rval;
-> +
-> +	if (din_word_include < XSDFEC_AXIS_WORDS_INCLUDE_MAX)
-> +		xsdfec->config.din_word_include = din_word_include;
-> +	else
-> +		return -EINVAL;
-> +
-> +	rval = of_property_read_u32(node, "xlnx,sdfec-din-width", &din_width);
-> +	if (rval < 0)
-> +		return rval;
-> +
-> +	switch (din_width) {
-> +	/* Fall through and set for valid values */
-> +	case XSDFEC_1x128b:
-> +	case XSDFEC_2x128b:
-> +	case XSDFEC_4x128b:
-> +		xsdfec->config.din_width = din_width;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	rval = of_property_read_u32(node, "xlnx,sdfec-dout-words",
-> +				    &dout_word_include);
-> +	if (rval < 0)
-> +		return rval;
-> +
-> +	if (dout_word_include < XSDFEC_AXIS_WORDS_INCLUDE_MAX)
-> +		xsdfec->config.dout_word_include = dout_word_include;
-> +	else
-> +		return -EINVAL;
-> +
-> +	rval = of_property_read_u32(node, "xlnx,sdfec-dout-width", &dout_width);
-> +	if (rval < 0)
-> +		return rval;
-> +
-> +	switch (dout_width) {
-> +	/* Fall through and set for valid values */
-> +	case XSDFEC_1x128b:
-> +	case XSDFEC_2x128b:
-> +	case XSDFEC_4x128b:
-> +		xsdfec->config.dout_width = dout_width;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Write LDPC to CODE Register */
-> +	xsdfec_regwrite(xsdfec, XSDFEC_FEC_CODE_ADDR, xsdfec->config.code);
-> +
-> +	xsdfec_cfg_axi_streams(xsdfec);
-> +
-> +	return 0;
-> +}
-> +
->  static int xsdfec_clk_init(struct platform_device *pdev,
->  			   struct xsdfec_clks *clks)
->  {
-> @@ -247,6 +534,12 @@ static int xsdfec_probe(struct platform_device *pdev)
->  		goto err_xsdfec_dev;
->  	}
->  
-> +	err = xsdfec_parse_of(xsdfec);
-> +	if (err < 0)
-> +		goto err_xsdfec_dev;
-> +
-> +	update_config_from_hw(xsdfec);
-> +
->  	/* Save driver private data */
->  	platform_set_drvdata(pdev, xsdfec);
->  
-> diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
-> new file mode 100644
-> index 0000000..7b47a4c
-> --- /dev/null
-> +++ b/include/uapi/misc/xilinx_sdfec.h
-> @@ -0,0 +1,138 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
-> +/*
-> + * Xilinx SD-FEC
-> + *
-> + * Copyright (C) 2016 - 2017 Xilinx, Inc.
-> + *
-> + * Description:
-> + * This driver is developed for SDFEC16 IP. It provides a char device
-> + * in sysfs and supports file operations like open(), close() and ioctl().
-> + */
-> +#ifndef __XILINX_SDFEC_H__
-> +#define __XILINX_SDFEC_H__
-> +
-> +#include <linux/types.h>
-> +
-> +/**
-> + * enum xsdfec_code - Code Type.
-> + * @XSDFEC_TURBO_CODE: Driver is configured for Turbo mode.
-> + * @XSDFEC_LDPC_CODE: Driver is configured for LDPC mode.
-> + *
-> + * This enum is used to indicate the mode of the driver. The mode is determined
-> + * by checking which codes are set in the driver. Note that the mode cannot be
-> + * changed by the driver.
-> + */
-> +enum xsdfec_code {
-> +	XSDFEC_TURBO_CODE = 0,
-> +	XSDFEC_LDPC_CODE,
-> +};
-> +
-> +/**
-> + * enum xsdfec_order - Order
-> + * @XSDFEC_MAINTAIN_ORDER: Maintain order execution of blocks.
-> + * @XSDFEC_OUT_OF_ORDER: Out-of-order execution of blocks.
-> + *
-> + * This enum is used to indicate whether the order of blocks can change from
-> + * input to output.
-> + */
-> +enum xsdfec_order {
-> +	XSDFEC_MAINTAIN_ORDER = 0,
-> +	XSDFEC_OUT_OF_ORDER,
-> +};
-> +
-> +/**
-> + * enum xsdfec_state - State.
-> + * @XSDFEC_INIT: Driver is initialized.
-> + * @XSDFEC_STARTED: Driver is started.
-> + * @XSDFEC_STOPPED: Driver is stopped.
-> + * @XSDFEC_NEEDS_RESET: Driver needs to be reset.
-> + * @XSDFEC_PL_RECONFIGURE: Programmable Logic needs to be recofigured.
-> + *
-> + * This enum is used to indicate the state of the driver.
-> + */
-> +enum xsdfec_state {
-> +	XSDFEC_INIT = 0,
-> +	XSDFEC_STARTED,
-> +	XSDFEC_STOPPED,
-> +	XSDFEC_NEEDS_RESET,
-> +	XSDFEC_PL_RECONFIGURE,
-> +};
-> +
-> +/**
-> + * enum xsdfec_axis_width - AXIS_WIDTH.DIN Setting for 128-bit width.
-> + * @XSDFEC_1x128b: DIN data input stream consists of a 128-bit lane
-> + * @XSDFEC_2x128b: DIN data input stream consists of two 128-bit lanes
-> + * @XSDFEC_4x128b: DIN data input stream consists of four 128-bit lanes
-> + *
-> + * This enum is used to indicate the AXIS_WIDTH.DIN setting for 128-bit width.
-> + * The number of lanes of the DIN data input stream depends upon the
-> + * AXIS_WIDTH.DIN parameter.
-> + */
-> +enum xsdfec_axis_width {
-> +	XSDFEC_1x128b = 1,
-> +	XSDFEC_2x128b = 2,
-> +	XSDFEC_4x128b = 4,
-> +};
-> +
-> +/**
-> + * enum xsdfec_axis_word_include - Words Configuration.
-> + * @XSDFEC_FIXED_VALUE: Fixed, the DIN_WORDS AXI4-Stream interface is removed
-> + *			from the IP instance and is driven with the specified
-> + *			number of words.
-> + * @XSDFEC_IN_BLOCK: In Block, configures the IP instance to expect a single
-> + *		     DIN_WORDS value per input code block. The DIN_WORDS
-> + *		     interface is present.
-> + * @XSDFEC_PER_AXI_TRANSACTION: Per Transaction, configures the IP instance to
-> + * expect one DIN_WORDS value per input transaction on the DIN interface. The
-> + * DIN_WORDS interface is present.
-> + * @XSDFEC_AXIS_WORDS_INCLUDE_MAX: Used to indicate out of bound Words
-> + *				   Configurations.
-> + *
-> + * This enum is used to specify the DIN_WORDS configuration.
-> + */
-> +enum xsdfec_axis_word_include {
-> +	XSDFEC_FIXED_VALUE = 0,
-> +	XSDFEC_IN_BLOCK,
-> +	XSDFEC_PER_AXI_TRANSACTION,
-> +	XSDFEC_AXIS_WORDS_INCLUDE_MAX,
-> +};
-> +
-> +/**
-> + * struct xsdfec_irq - Enabling or Disabling Interrupts.
-> + * @enable_isr: If true enables the ISR
-> + * @enable_ecc_isr: If true enables the ECC ISR
-> + */
-> +struct xsdfec_irq {
-> +	__s8 enable_isr;
-> +	__s8 enable_ecc_isr;
-> +};
-> +
-> +/**
-> + * struct xsdfec_config - Configuration of SD-FEC core.
-> + * @code: The codes being used by the SD-FEC instance
-> + * @order: Order of Operation
-> + * @bypass: Is the core being bypassed
-> + * @code_wr_protect: Is write protection of LDPC codes enabled
-> + * @din_width: Width of the DIN AXI4-Stream
-> + * @din_word_include: How DIN_WORDS are inputted
-> + * @dout_width: Width of the DOUT AXI4-Stream
-> + * @dout_word_include: HOW DOUT_WORDS are outputted
-> + * @irq: Enabling or disabling interrupts
-> + */
-> +struct xsdfec_config {
-> +	enum xsdfec_code code;
-> +	enum xsdfec_order order;
-> +	__s8 bypass;
-> +	__s8 code_wr_protect;
-> +	enum xsdfec_axis_width din_width;
-> +	enum xsdfec_axis_word_include din_word_include;
-> +	enum xsdfec_axis_width dout_width;
-> +	enum xsdfec_axis_word_include dout_word_include;
-
-You can't put an 'enum' in a structure that crosses the user/kernel
-boundry, as you really do not "know" what the size is going to be.  A
-compiler can pick whatever width it wants to here.
-
-So, if you "know" this is going to fit in 8 bits, then use __u8 for
-these and then cast on the kernel side if you care about trying to keep
-typesafe things.  If it is going to be bigger then 8 bits, then use the
-correct variable.
-
-thanks,
-
-greg k-h
+SGkgSml0YW8uCgpUaGFua3MgZm9yIGFub3RoZXIgcGFuZWwgZHJpdmVyLgoKVGhlIGNvbW1lbnRz
+IGZvciB0aGUgcGFuZWwtYm9lLXR2MTAxd3VtLW5sNiBkaXZlciB0byBleHRlbnQKYXBwbGllcyB0
+byB0aGlzIGRyaXZlciB0b28uClBsZWFzZSBhZGRyZXNzIHRoZXNlIGFuZCBJIHdpbGwgZG8gYSBw
+cm9wZXIgcmV2aWV3IG9mIHRoZSBuZXh0IHZlcnNpb24uCgpJIG5vdGljZSB0aGF0IGVycm9yIGhh
+bmRsaWduIGlzIGEgbGl0dGxlIGJpdCBsZXNzIGluIHRoaXMgZHJpdmVyLgpjb25zaWVyIHdoYXQg
+YXBwcm9jaCB0byB1c2UgYW5kIHNlZSBpZiB5b3UgY2FuIGFsaWduIGJldHdlZW4gdGhlc2UKZHJp
+dmVycywgYW5kIGlmIGluIGRvdWJ0IHVzZSBwYW5lbC1zaW1wbGUgYXMgeW91ciByb2xlIG1vZGVs
+LgoKCVNhbQoKT24gU2F0LCBKdW4gMDgsIDIwMTkgYXQgMDc6MjM6NDJQTSArMDgwMCwgSml0YW8g
+U2hpIHdyb3RlOgo+IEFkZCBkcml2ZXIgZm9yIEFVTyBrZDEwMW44MC00NW5hIHBhbmVsLgo+IFRo
+aXMgcGFuZWwgc3VwcG9ydHMgdGhlIHJlc29sdXRpb24gMTIwMHgxOTIwLCBkc2kgdmlkZW8gbW9k
+ZQo+IGFuZCA0IGxhbmVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hp
+QG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcgICAg
+ICAgICAgICAgICAgIHwgIDEwICsKPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlICAg
+ICAgICAgICAgICAgIHwgICAxICsKPiAgLi4uL2dwdS9kcm0vcGFuZWwvcGFuZWwtYXVvLWtkMTAx
+bjgwLTQ1bmEuYyAgIHwgMzUyICsrKysrKysrKysrKysrKysrKwo+ICAzIGZpbGVzIGNoYW5nZWQs
+IDM2MyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvcGFuZWwtYXVvLWtkMTAxbjgwLTQ1bmEuYwo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L2dwdS9kcm0vcGFuZWwvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCj4g
+aW5kZXggZTM2ZGJiNGRmODY3Li5mNWNkNWFmOWNlNDIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL3BhbmVsL0tjb25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZp
+Zwo+IEBAIC0yNzIsNCArMjcyLDE0IEBAIGNvbmZpZyBEUk1fUEFORUxfVFJVTFlfTlQzNTU5N19X
+UVhHQQo+ICAJaGVscAo+ICAJICBTYXkgWSBoZXJlIGlmIHlvdSB3YW50IHRvIGVuYWJsZSBzdXBw
+b3J0IGZvciBUcnVseSBOVDM1NTk3IFdRWEdBIER1YWwgRFNJCj4gIAkgIFZpZGVvIE1vZGUgcGFu
+ZWwKPiArCj4gK2NvbmZpZyBEUk1fUEFORUxfQVVPX0tEMTAxTjgwXzQ1TkEKPiArCXRyaXN0YXRl
+ICJBVU8gS0QxMDFOODBfNDVOQSAxMjAweDE5MjAgcGFuZWwiCj4gKwlkZXBlbmRzIG9uIE9GCj4g
+KwlkZXBlbmRzIG9uIERSTV9NSVBJX0RTSQo+ICsJZGVwZW5kcyBvbiBCQUNLTElHSFRfQ0xBU1Nf
+REVWSUNFCj4gKwloZWxwCj4gKwkgIFNheSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gc3VwcG9ydCBm
+b3IgQVVPIEtEMTAxTjgwXzQ1TkEgV1VYR0EgUEFORUwKPiArCSAgRFNJIFZpZGVvIE1vZGUgcGFu
+ZWwKPiArCj4gIGVuZG1lbnUKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01h
+a2VmaWxlIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlCj4gaW5kZXggNzhlM2RjMzc2
+YmRkLi4xMDU2OTMzYmRmMmUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01h
+a2VmaWxlCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlCj4gQEAgLTI4LDMg
+KzI4LDQgQEAgb2JqLSQoQ09ORklHX0RSTV9QQU5FTF9TSVRST05JWF9TVDc3MDEpICs9IHBhbmVs
+LXNpdHJvbml4LXN0NzcwMS5vCj4gIG9iai0kKENPTkZJR19EUk1fUEFORUxfU0lUUk9OSVhfU1Q3
+Nzg5VikgKz0gcGFuZWwtc2l0cm9uaXgtc3Q3Nzg5di5vCj4gIG9iai0kKENPTkZJR19EUk1fUEFO
+RUxfVFBPX1RQRzExMCkgKz0gcGFuZWwtdHBvLXRwZzExMC5vCj4gIG9iai0kKENPTkZJR19EUk1f
+UEFORUxfVFJVTFlfTlQzNTU5N19XUVhHQSkgKz0gcGFuZWwtdHJ1bHktbnQzNTU5Ny5vCj4gK29i
+ai0kKENPTkZJR19EUk1fUEFORUxfQVVPX0tEMTAxTjgwXzQ1TkEpICs9IHBhbmVsLWF1by1rZDEw
+MW44MC00NW5hLm8KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWF1
+by1rZDEwMW44MC00NW5hLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtYXVvLWtkMTAx
+bjgwLTQ1bmEuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5h
+YjdiZmMwNTllOGEKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVs
+L3BhbmVsLWF1by1rZDEwMW44MC00NW5hLmMKPiBAQCAtMCwwICsxLDM1MiBAQAo+ICsvLyBTUERY
+LUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKGMpIDIw
+MTggTWVkaWFUZWsgSW5jLgo+ICsgKiBBdXRob3I6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlh
+dGVrLmNvbT4KPiArICovCj4gKwo+ICsjaW5jbHVkZSA8bGludXgvYmFja2xpZ2h0Lmg+Cj4gKyNp
+bmNsdWRlIDxsaW51eC9ncGlvL2NvbnN1bWVyLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUu
+aD4KPiArI2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3Iv
+Y29uc3VtZXIuaD4KPiArCj4gKyNpbmNsdWRlIDxkcm0vZHJtUC5oPgo+ICsjaW5jbHVkZSA8ZHJt
+L2RybV9jcnRjLmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX21pcGlfZHNpLmg+Cj4gKyNpbmNsdWRl
+IDxkcm0vZHJtX3BhbmVsLmg+Cj4gKwo+ICsjaW5jbHVkZSA8dmlkZW8vbWlwaV9kaXNwbGF5Lmg+
+Cj4gKwo+ICtzdHJ1Y3QgYXVvX3BhbmVsIHsKPiArCXN0cnVjdCBkcm1fcGFuZWwgYmFzZTsKPiAr
+CXN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRzaTsKPiArCj4gKwlzdHJ1Y3QgYmFja2xpZ2h0X2Rl
+dmljZSAqYmFja2xpZ2h0Owo+ICsJc3RydWN0IHJlZ3VsYXRvciAqcHAxODAwOwo+ICsJc3RydWN0
+IHJlZ3VsYXRvciAqYXZlZTsKPiArCXN0cnVjdCByZWd1bGF0b3IgKmF2ZGQ7Cj4gKwlzdHJ1Y3Qg
+Z3Bpb19kZXNjICplbmFibGVfZ3BpbzsKPiArCj4gKwlib29sIHByZXBhcmVkOwo+ICsJYm9vbCBl
+bmFibGVkOwo+ICsKPiArCWNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICptb2RlOwo+ICt9
+Owo+ICsKPiArc3RhdGljIGlubGluZSBzdHJ1Y3QgYXVvX3BhbmVsICp0b19hdW9fcGFuZWwoc3Ry
+dWN0IGRybV9wYW5lbCAqcGFuZWwpCj4gK3sKPiArCXJldHVybiBjb250YWluZXJfb2YocGFuZWws
+IHN0cnVjdCBhdW9fcGFuZWwsIGJhc2UpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGF1b19wYW5l
+bF9pbml0KHN0cnVjdCBhdW9fcGFuZWwgKmF1bykKPiArewo+ICsJc3RydWN0IGRybV9wYW5lbCAq
+cGFuZWwgPSAmYXVvLT5iYXNlOwo+ICsJaW50IGVycjsKPiArCj4gKwllcnIgPSBtaXBpX2RzaV9k
+Y3NfZXhpdF9zbGVlcF9tb2RlKGF1by0+ZHNpKTsKPiArCWlmIChlcnIgPCAwKSB7Cj4gKwkJRFJN
+X0RFVl9FUlJPUihwYW5lbC0+ZGV2LCAiZmFpbGVkIHRvIGV4aXQgc2xlZXAgbW9kZTogJWRcbiIs
+Cj4gKwkJCSAgICAgIGVycik7Cj4gKwkJcmV0dXJuIGVycjsKPiArCX0KPiArCj4gKwkvKiBUMy4x
+Ki8KPiArCW1zbGVlcCgxMjApOwo+ICsKPiArCWVyciA9IG1pcGlfZHNpX2Rjc19zZXRfZGlzcGxh
+eV9vbihhdW8tPmRzaSk7Cj4gKwlpZiAoZXJyIDwgMCkgewo+ICsJCURSTV9ERVZfRVJST1IocGFu
+ZWwtPmRldiwgImZhaWxlZCB0byBzZXQgZGlzcGxheSBvbjogJWRcbiIsCj4gKwkJCSAgICAgIGVy
+cik7Cj4gKwl9Cj4gKwkvKiBUMy4xICsgVDMuMjogPiAyMDBtcyAqLwo+ICsJbXNsZWVwKDEyMCk7
+Cj4gKwo+ICsJcmV0dXJuIGVycjsKPiArfQo+ICsKPiArc3RhdGljIGludCBhdW9fcGFuZWxfb2Zm
+KHN0cnVjdCBhdW9fcGFuZWwgKmF1bykKPiArewo+ICsJc3RydWN0IG1pcGlfZHNpX2RldmljZSAq
+ZHNpID0gYXVvLT5kc2k7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCWRzaS0+bW9kZV9mbGFncyAmPSB+
+TUlQSV9EU0lfTU9ERV9MUE07Cj4gKwo+ICsJcmV0ID0gbWlwaV9kc2lfZGNzX3NldF9kaXNwbGF5
+X29mZihkc2kpOwo+ICsJaWYgKHJldCA8IDApCj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwlyZXQg
+PSBtaXBpX2RzaV9kY3NfZW50ZXJfc2xlZXBfbW9kZShkc2kpOwo+ICsJaWYgKHJldCA8IDApCj4g
+KwkJcmV0dXJuIHJldDsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGludCBh
+dW9fcGFuZWxfZGlzYWJsZShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKPiArewo+ICsJc3RydWN0
+IGF1b19wYW5lbCAqYXVvID0gdG9fYXVvX3BhbmVsKHBhbmVsKTsKPiArCj4gKwlpZiAoIWF1by0+
+ZW5hYmxlZCkKPiArCQlyZXR1cm4gMDsKPiArCj4gKwliYWNrbGlnaHRfZGlzYWJsZShhdW8tPmJh
+Y2tsaWdodCk7Cj4gKwo+ICsJYXVvLT5lbmFibGVkID0gZmFsc2U7Cj4gKwo+ICsJcmV0dXJuIDA7
+Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgYXVvX3BhbmVsX3VucHJlcGFyZShzdHJ1Y3QgZHJtX3Bh
+bmVsICpwYW5lbCkKPiArewo+ICsJc3RydWN0IGF1b19wYW5lbCAqYXVvID0gdG9fYXVvX3BhbmVs
+KHBhbmVsKTsKPiArCWludCByZXQ7Cj4gKwo+ICsJaWYgKCFhdW8tPnByZXBhcmVkKQo+ICsJCXJl
+dHVybiAwOwo+ICsKPiArCXJldCA9IGF1b19wYW5lbF9vZmYoYXVvKTsKPiArCWlmIChyZXQgPCAw
+KSB7Cj4gKwkJZGV2X2VycihwYW5lbC0+ZGV2LCAiZmFpbGVkIHRvIHNldCBwYW5lbCBvZmY6ICVk
+XG4iLCByZXQpOwo+ICsJCXJldHVybiByZXQ7Cj4gKwl9Cj4gKwo+ICsJbXNsZWVwKDE1MCk7Cj4g
+KwlyZWd1bGF0b3JfZGlzYWJsZShhdW8tPmF2ZWUpOwo+ICsJcmVndWxhdG9yX2Rpc2FibGUoYXVv
+LT5hdmRkKTsKPiArCXVzbGVlcF9yYW5nZSg1MDAwLCA3MDAwKTsKPiArCXJlZ3VsYXRvcl9kaXNh
+YmxlKGF1by0+cHAxODAwKTsKPiArCWlmIChhdW8tPmVuYWJsZV9ncGlvKQo+ICsJCWdwaW9kX3Nl
+dF92YWx1ZShhdW8tPmVuYWJsZV9ncGlvLCAwKTsKPiArCj4gKwlhdW8tPnByZXBhcmVkID0gZmFs
+c2U7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgYXVvX3BhbmVsX3By
+ZXBhcmUoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCj4gK3sKPiArCXN0cnVjdCBhdW9fcGFuZWwg
+KmF1byA9IHRvX2F1b19wYW5lbChwYW5lbCk7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCWlmIChhdW8t
+PnByZXBhcmVkKQo+ICsJCXJldHVybiAwOwo+ICsKPiArCWlmIChhdW8tPmVuYWJsZV9ncGlvKSB7
+Cj4gKwkJZ3Bpb2Rfc2V0X3ZhbHVlKGF1by0+ZW5hYmxlX2dwaW8sIDApOwo+ICsJCXVzbGVlcF9y
+YW5nZSgxMDAwLCAxNTAwKTsKPiArCX0KPiArCj4gKwlyZXQgPSByZWd1bGF0b3JfZW5hYmxlKGF1
+by0+cHAxODAwKTsKPiArCWlmIChyZXQgPCAwKQo+ICsJCXJldHVybiByZXQ7Cj4gKwlyZXQgPSBy
+ZWd1bGF0b3JfZW5hYmxlKGF1by0+YXZkZCk7Cj4gKwlpZiAocmV0IDwgMCkKPiArCQlnb3RvIHBv
+d2Vyb2ZmMXY4Owo+ICsJcmV0ID0gcmVndWxhdG9yX2VuYWJsZShhdW8tPmF2ZWUpOwo+ICsJaWYg
+KHJldCA8IDApCj4gKwkJZ290byBwb3dlcm9mZmF2ZGQ7Cj4gKwo+ICsJaWYgKGF1by0+ZW5hYmxl
+X2dwaW8pIHsKPiArCQlncGlvZF9zZXRfdmFsdWUoYXVvLT5lbmFibGVfZ3BpbywgMSk7Cj4gKwkJ
+dXNsZWVwX3JhbmdlKDEwMDAwLCAxMjAwMCk7Cj4gKwl9Cj4gKwo+ICsJcmV0ID0gYXVvX3BhbmVs
+X2luaXQoYXVvKTsKPiArCWlmIChyZXQgPCAwKSB7Cj4gKwkJZGV2X2VycihwYW5lbC0+ZGV2LCAi
+ZmFpbGVkIHRvIGluaXQgcGFuZWw6ICVkXG4iLCByZXQpOwo+ICsJCWdvdG8gcG93ZXJvZmY7Cj4g
+Kwl9Cj4gKwo+ICsJYXVvLT5wcmVwYXJlZCA9IHRydWU7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gKwo+
+ICtwb3dlcm9mZjoKPiArCXJlZ3VsYXRvcl9kaXNhYmxlKGF1by0+YXZlZSk7Cj4gK3Bvd2Vyb2Zm
+YXZkZDoKPiArCXJlZ3VsYXRvcl9kaXNhYmxlKGF1by0+YXZkZCk7Cj4gK3Bvd2Vyb2ZmMXY4Ogo+
+ICsJdXNsZWVwX3JhbmdlKDUwMDAsIDcwMDApOwo+ICsJcmVndWxhdG9yX2Rpc2FibGUoYXVvLT5w
+cDE4MDApOwo+ICsJaWYgKGF1by0+ZW5hYmxlX2dwaW8pCj4gKwkJZ3Bpb2Rfc2V0X3ZhbHVlKGF1
+by0+ZW5hYmxlX2dwaW8sIDApOwo+ICsJcmV0dXJuIHJldDsKPiArfQo+ICsKPiArc3RhdGljIGlu
+dCBhdW9fcGFuZWxfZW5hYmxlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+ICt7Cj4gKwlzdHJ1
+Y3QgYXVvX3BhbmVsICphdW8gPSB0b19hdW9fcGFuZWwocGFuZWwpOwo+ICsJaW50IHJldDsKPiAr
+Cj4gKwlpZiAoYXVvLT5lbmFibGVkKQo+ICsJCXJldHVybiAwOwo+ICsKPiArCXJldCA9IGJhY2ts
+aWdodF9lbmFibGUoYXVvLT5iYWNrbGlnaHQpOwo+ICsJaWYgKHJldCkgewo+ICsJCURSTV9ERVZf
+RVJST1IocGFuZWwtPmRybS0+ZGV2LAo+ICsJCQkgICAgICAiRmFpbGVkIHRvIGVuYWJsZSBiYWNr
+bGlnaHQgJWRcbiIsIHJldCk7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4gKwlhdW8tPmVu
+YWJsZWQgPSB0cnVlOwo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgY29uc3Qg
+c3RydWN0IGRybV9kaXNwbGF5X21vZGUgZGVmYXVsdF9tb2RlID0gewo+ICsJLmNsb2NrID0gMTU3
+MDAwLAo+ICsJLmhkaXNwbGF5ID0gMTIwMCwKPiArCS5oc3luY19zdGFydCA9IDEyMDAgKyA4MCwK
+PiArCS5oc3luY19lbmQgPSAxMjAwICsgODAgKyAyNCwKPiArCS5odG90YWwgPSAxMjAwICsgODAg
+KyAyNCArIDM2LAo+ICsJLnZkaXNwbGF5ID0gMTkyMCwKPiArCS52c3luY19zdGFydCA9IDE5MjAg
+KyAxNiwKPiArCS52c3luY19lbmQgPSAxOTIwICsgMTYgKyA0LAo+ICsJLnZ0b3RhbCA9IDE5MjAg
+KyAxNiArIDQgKyAxNiwKPiArCS52cmVmcmVzaCA9IDYwLAo+ICt9Owo+ICsKPiArc3RhdGljIGlu
+dCBhdW9fcGFuZWxfZ2V0X21vZGVzKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+ICt7Cj4gKwlz
+dHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZTsKPiArCj4gKwltb2RlID0gZHJtX21vZGVfZHVw
+bGljYXRlKHBhbmVsLT5kcm0sICZkZWZhdWx0X21vZGUpOwo+ICsJaWYgKCFtb2RlKSB7Cj4gKwkJ
+ZGV2X2VycihwYW5lbC0+ZHJtLT5kZXYsICJmYWlsZWQgdG8gYWRkIG1vZGUgJXV4JXV4QCV1XG4i
+LAo+ICsJCQlkZWZhdWx0X21vZGUuaGRpc3BsYXksIGRlZmF1bHRfbW9kZS52ZGlzcGxheSwKPiAr
+CQkJZGVmYXVsdF9tb2RlLnZyZWZyZXNoKTsKPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCX0KPiAr
+Cj4gKwlkcm1fbW9kZV9zZXRfbmFtZShtb2RlKTsKPiArCj4gKwlkcm1fbW9kZV9wcm9iZWRfYWRk
+KHBhbmVsLT5jb25uZWN0b3IsIG1vZGUpOwo+ICsKPiArCXBhbmVsLT5jb25uZWN0b3ItPmRpc3Bs
+YXlfaW5mby53aWR0aF9tbSA9IDEzNTsKPiArCXBhbmVsLT5jb25uZWN0b3ItPmRpc3BsYXlfaW5m
+by5oZWlnaHRfbW0gPSAyMTY7Cj4gKwlwYW5lbC0+Y29ubmVjdG9yLT5kaXNwbGF5X2luZm8uYnBj
+ID0gODsKPiArCj4gKwlyZXR1cm4gMTsKPiArfQo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBk
+cm1fcGFuZWxfZnVuY3MgYXVvX3BhbmVsX2Z1bmNzID0gewo+ICsJLmRpc2FibGUgPSBhdW9fcGFu
+ZWxfZGlzYWJsZSwKPiArCS51bnByZXBhcmUgPSBhdW9fcGFuZWxfdW5wcmVwYXJlLAo+ICsJLnBy
+ZXBhcmUgPSBhdW9fcGFuZWxfcHJlcGFyZSwKPiArCS5lbmFibGUgPSBhdW9fcGFuZWxfZW5hYmxl
+LAo+ICsJLmdldF9tb2RlcyA9IGF1b19wYW5lbF9nZXRfbW9kZXMsCj4gK307Cj4gKwo+ICtzdGF0
+aWMgaW50IGF1b19wYW5lbF9hZGQoc3RydWN0IGF1b19wYW5lbCAqYXVvKQo+ICt7Cj4gKwlzdHJ1
+Y3QgZGV2aWNlICpkZXYgPSAmYXVvLT5kc2ktPmRldjsKPiArCj4gKwlhdW8tPmF2ZGQgPSBkZXZt
+X3JlZ3VsYXRvcl9nZXQoZGV2LCAiYXZkZCIpOwo+ICsJaWYgKElTX0VSUihhdW8tPmF2ZGQpKQo+
+ICsJCXJldHVybiBQVFJfRVJSKGF1by0+YXZkZCk7Cj4gKwo+ICsJYXVvLT5hdmVlID0gZGV2bV9y
+ZWd1bGF0b3JfZ2V0KGRldiwgImF2ZWUiKTsKPiArCWlmIChJU19FUlIoYXVvLT5hdmVlKSkKPiAr
+CQlyZXR1cm4gUFRSX0VSUihhdW8tPmF2ZWUpOwo+ICsKPiArCWF1by0+cHAxODAwID0gZGV2bV9y
+ZWd1bGF0b3JfZ2V0KGRldiwgInBwMTgwMCIpOwo+ICsJaWYgKElTX0VSUihhdW8tPnBwMTgwMCkp
+Cj4gKwkJcmV0dXJuIFBUUl9FUlIoYXVvLT5wcDE4MDApOwo+ICsKPiArCWF1by0+ZW5hYmxlX2dw
+aW8gPSBkZXZtX2dwaW9kX2dldChkZXYsICJlbmFibGUiLCBHUElPRF9PVVRfTE9XKTsKPiArCWlm
+IChJU19FUlIoYXVvLT5lbmFibGVfZ3BpbykpIHsKPiArCQlkZXZfZXJyKGRldiwgImNhbm5vdCBn
+ZXQgcmVzZXQtZ3Bpb3MgJWxkXG4iLAo+ICsJCQlQVFJfRVJSKGF1by0+ZW5hYmxlX2dwaW8pKTsK
+PiArCQlhdW8tPmVuYWJsZV9ncGlvID0gTlVMTDsKPiArCX0gZWxzZSB7Cj4gKwkJZ3Bpb2Rfc2V0
+X3ZhbHVlKGF1by0+ZW5hYmxlX2dwaW8sIDApOwo+ICsJfQo+ICsKPiArCWF1by0+YmFja2xpZ2h0
+ID0gZGV2bV9vZl9maW5kX2JhY2tsaWdodChkZXYpOwo+ICsJaWYgKElTX0VSUihhdW8tPmJhY2ts
+aWdodCkpCj4gKwkJcmV0dXJuIFBUUl9FUlIoYXVvLT5iYWNrbGlnaHQpOwo+ICsKPiArCWRybV9w
+YW5lbF9pbml0KCZhdW8tPmJhc2UpOwo+ICsJYXVvLT5iYXNlLmZ1bmNzID0gJmF1b19wYW5lbF9m
+dW5jczsKPiArCWF1by0+YmFzZS5kZXYgPSAmYXVvLT5kc2ktPmRldjsKPiArCj4gKwlyZXR1cm4g
+ZHJtX3BhbmVsX2FkZCgmYXVvLT5iYXNlKTsKPiArfQo+ICsKPiArc3RhdGljIHZvaWQgYXVvX3Bh
+bmVsX2RlbChzdHJ1Y3QgYXVvX3BhbmVsICphdW8pCj4gK3sKPiArCWlmIChhdW8tPmJhc2UuZGV2
+KQo+ICsJCWRybV9wYW5lbF9yZW1vdmUoJmF1by0+YmFzZSk7Cj4gK30KPiArCj4gK3N0YXRpYyBp
+bnQgYXVvX3BhbmVsX3Byb2JlKHN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRzaSkKPiArewo+ICsJ
+c3RydWN0IGF1b19wYW5lbCAqYXVvOwo+ICsJaW50IHJldDsKPiArCj4gKwlkc2ktPmxhbmVzID0g
+NDsKPiArCWRzaS0+Zm9ybWF0ID0gTUlQSV9EU0lfRk1UX1JHQjg4ODsKPiArCWRzaS0+bW9kZV9m
+bGFncyA9IE1JUElfRFNJX01PREVfVklERU8gfCBNSVBJX0RTSV9NT0RFX1ZJREVPX1NZTkNfUFVM
+U0UgfAo+ICsJCSBNSVBJX0RTSV9NT0RFX0xQTTsKPiArCj4gKwlhdW8gPSBkZXZtX2t6YWxsb2Mo
+JmRzaS0+ZGV2LCBzaXplb2YoKmF1byksIEdGUF9LRVJORUwpOwo+ICsJaWYgKCFhdW8pCj4gKwkJ
+cmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJbWlwaV9kc2lfc2V0X2RydmRhdGEoZHNpLCBhdW8pOwo+
+ICsKPiArCWF1by0+ZHNpID0gZHNpOwo+ICsKPiArCXJldCA9IGF1b19wYW5lbF9hZGQoYXVvKTsK
+PiArCWlmIChyZXQgPCAwKQo+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJcmV0dXJuIG1pcGlfZHNp
+X2F0dGFjaChkc2kpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGF1b19wYW5lbF9yZW1vdmUoc3Ry
+dWN0IG1pcGlfZHNpX2RldmljZSAqZHNpKQo+ICt7Cj4gKwlzdHJ1Y3QgYXVvX3BhbmVsICphdW8g
+PSBtaXBpX2RzaV9nZXRfZHJ2ZGF0YShkc2kpOwo+ICsJaW50IHJldDsKPiArCj4gKwlyZXQgPSBh
+dW9fcGFuZWxfZGlzYWJsZSgmYXVvLT5iYXNlKTsKPiArCWlmIChyZXQgPCAwKQo+ICsJCWRldl9l
+cnIoJmRzaS0+ZGV2LCAiZmFpbGVkIHRvIGRpc2FibGUgcGFuZWw6ICVkXG4iLCByZXQpOwo+ICsK
+PiArCXJldCA9IG1pcGlfZHNpX2RldGFjaChkc2kpOwo+ICsJaWYgKHJldCA8IDApCj4gKwkJZGV2
+X2VycigmZHNpLT5kZXYsICJmYWlsZWQgdG8gZGV0YWNoIGZyb20gRFNJIGhvc3Q6ICVkXG4iLCBy
+ZXQpOwo+ICsKPiArCWF1b19wYW5lbF9kZWwoYXVvKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+
+ICsKPiArc3RhdGljIHZvaWQgYXVvX3BhbmVsX3NodXRkb3duKHN0cnVjdCBtaXBpX2RzaV9kZXZp
+Y2UgKmRzaSkKPiArewo+ICsJc3RydWN0IGF1b19wYW5lbCAqYXVvID0gbWlwaV9kc2lfZ2V0X2Ry
+dmRhdGEoZHNpKTsKPiArCj4gKwlhdW9fcGFuZWxfZGlzYWJsZSgmYXVvLT5iYXNlKTsKPiArfQo+
+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXVvX29mX21hdGNoW10gPSB7
+Cj4gKwl7IC5jb21wYXRpYmxlID0gImF1byxrZDEwMW44MC00NW5hIiwgfSwKPiArCXsgfQo+ICt9
+Owo+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBhdW9fb2ZfbWF0Y2gpOwo+ICsKPiArc3RhdGlj
+IHN0cnVjdCBtaXBpX2RzaV9kcml2ZXIgYXVvX3BhbmVsX2RyaXZlciA9IHsKPiArCS5kcml2ZXIg
+PSB7Cj4gKwkJLm5hbWUgPSAicGFuZWwtYXVvLWtkMTAxbjgwLTQ1bmEiLAo+ICsJCS5vZl9tYXRj
+aF90YWJsZSA9IGF1b19vZl9tYXRjaCwKPiArCX0sCj4gKwkucHJvYmUgPSBhdW9fcGFuZWxfcHJv
+YmUsCj4gKwkucmVtb3ZlID0gYXVvX3BhbmVsX3JlbW92ZSwKPiArCS5zaHV0ZG93biA9IGF1b19w
+YW5lbF9zaHV0ZG93biwKPiArfTsKPiArbW9kdWxlX21pcGlfZHNpX2RyaXZlcihhdW9fcGFuZWxf
+ZHJpdmVyKTsKPiArCj4gK01PRFVMRV9BVVRIT1IoIkppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlh
+dGVrLmNvbT4iKTsKPiArTU9EVUxFX0RFU0NSSVBUSU9OKCJBVU8ga2QxMDFuODAtNDVuYSB3dXhn
+YSAoMTIwMHgxOTIwKSB2aWRlbyBtb2RlIHBhbmVsIGRyaXZlciIpOwo+ICtNT0RVTEVfTElDRU5T
+RSgiR1BMIHYyIik7Cj4gKwo+IC0tIAo+IDIuMjEuMAo+IAo+IF9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbApfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWw=
