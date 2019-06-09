@@ -1,90 +1,69 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC next v1 5/5] arm64: dts: meson: g12a: x96-max: fix the
- Ethernet PHY reset line
-Date: Sun, 9 Jun 2019 23:17:30 +0200
-Message-ID: <CACRpkdYzeiLB7Yuixv6NsnLJoa_FnGKRHHQm=t4gMH34NdFSYA@mail.gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [RFC next v1 2/5] gpio: of: parse stmmac PHY reset line specific
+ active-low property
+Date: Sun, 9 Jun 2019 23:21:00 +0200
+Message-ID: <CAFBinCA1xp5+77DhYMFjX31D3DsaU7d9EqFkWbn+UFFx5LSqEw@mail.gmail.com>
 References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609180621.7607-6-martin.blumenstingl@googlemail.com>
+ <20190609180621.7607-3-martin.blumenstingl@googlemail.com> <20190609203828.GA8247@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190609180621.7607-6-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jose Abreu <joabreu@synopsys.com>, Kevin Hilman <khilman@baylibre.com>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "David S. Miller" <davem@davemloft.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190609203828.GA8247@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, linux-kernel@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 9, 2019 at 8:06 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+Hi Andrew,
 
-> The PHY reset line and interrupt line are swapped on the X96 Max
-> compared to the Odroid-N2 schematics. This means:
-> - GPIOZ_14 is the interrupt line (on the Odroid-N2 it's the reset line)
-> - GPIOZ_15 is the reset line (on the Odroid-N2 it's the interrupt line)
+On Sun, Jun 9, 2019 at 10:38 PM Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> Also the GPIOZ_14 and GPIOZ_15 pins are special. The datasheet describes
-> that they are "3.3V input tolerant open drain (OD) output pins". This
-> means the GPIO controller can drive the output LOW to reset the PHY. To
-> release the reset it can only switch the pin to input mode. The output
-> cannot be driven HIGH for these pins.
-> This requires configuring the reset line as GPIO_OPEN_SOURCE because
-> otherwise the PHY will be stuck in "reset" state (because driving the
-> pin HIGH seeems to result in the same signal as driving it LOW).
+> On Sun, Jun 09, 2019 at 08:06:18PM +0200, Martin Blumenstingl wrote:
+> > The stmmac driver currently ignores the GPIO flags which are passed via
+> > devicetree because it operates with legacy GPIO numbers instead of GPIO
+> > descriptors.
+>
+> Hi Martin
+>
+> I don't think this is the reason. I think historically stmmac messed
+> up and ignored the flags. There are a number of device tree blobs
+> which have the incorrect flag value, but since it was always ignored,
+> it did not matter. Then came along a board which really did need the
+> flag, but it was too late, it could not be enabled because too many
+> boards would break. So the hack was made, and snps,reset-active-low
+> was added.
+that seems appropriate. I don't know whether you can fetch the GPIO
+flags when using legacy GPIO numbers.
+so it may also be a mix of your explanation and mine.
+in the end it's the same though: stmmac ignores the GPIO flags
 
-This far it seems all right.
+> Since snps,reset-active-low is a hack, it should not be in the
+> core. Please don't add it to gpiolib-of.c, keep it within stmmac
+> driver.
+I don't know how to keep backwards compatibility with old .dtb / .dts
+when moving this into the stmmac driver again.
 
-> Switch to GPIOZ_15 for the reset GPIO with the correct flags and drop
-> the "snps,reset-active-low" property as this is now encoded in the
-> GPIO_OPEN_SOURCE flag.
+let's assume I put the "snps,reset-active-low" inversion logic back into stmmac.
+then I need to ignore the flags because some .dts file use the flag
+GPIO_ACTIVE_LOW *and* set "snps,reset-active-low" at the same time.
+"snps,reset-active-low" would then invert GPIO_ACTIVE_LOW again, which
+basically results in GPIO_ACTIVE_HIGH
 
-Open source doesn't imply active low.
+however, I can't ignore the flags because then I'm losing the
+information I need for the newer Amlogic SoCs like open drain / open
+source.
 
-We have this in stmmac_mdio_reset():
+so the logic that I need is:
+- use GPIO flags from .dtb / .dts
+- set GPIO_ACTIVE_LOW in addition to the flags if
+"snps,reset-active-low" is set (this is different to "always invert
+the output value")
 
-                gpio_direction_output(data->reset_gpio,
-                                      data->active_low ? 1 : 0);
-                if (data->delays[0])
-                        msleep(DIV_ROUND_UP(data->delays[0], 1000));
+my understanding that of_gpio_flags_quirks (which I'm touching with
+this patch) is supposed to manage similar quirks to what we have in
+stmmac (it also contains some regulator and MMC quirks too).
+however, that's exactly the reason why I decided to mark this as RFC -
+so I'm eager to hear Linus comments on this
 
-                gpio_set_value(data->reset_gpio, data->active_low ? 0 : 1);
-                if (data->delays[1])
-                        msleep(DIV_ROUND_UP(data->delays[1], 1000));
 
-                gpio_set_value(data->reset_gpio, data->active_low ? 1 : 0);
-                if (data->delays[2])
-                        msleep(DIV_ROUND_UP(data->delays[2], 1000));
-
-If "snps,reset-active-low" was set it results in the sequence 1, 0, 1
-if it is not set it results in the sequence 0, 1, 0.
-
-The high (reset) is asserted by switching the pin into high-z open drain
-mode, which happens by switching the line into input mode in some
-cases.
-
-I think the real reason it works now is that reset is actually active high.
-
-It makes a lot of sense, since if it resets the device when set as input
-(open drain) it holds all devices on that line in reset, which is likely
-what you want as most GPIOs come up as inputs (open drain).
-A pull-up resistor will ascertain that the devices are in reset.
-
-After power on you need to actively de-assert the reset (to low) for
-it to go out of reset.
-
-> Fixes: 51d116557b2044 ("arm64: dts: meson-g12a-x96-max: Add Gigabit Ethernet Support")
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-
-Other than the commit message:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Martin
