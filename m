@@ -1,7 +1,7 @@
 From: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH V5 04/11] misc: xilinx_sdfec: Store driver config and state
-Date: Sun, 9 Jun 2019 01:04:09 +0100
-Message-ID: <1560038656-380620-5-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V5 06/11] misc: xilinx_sdfec: Add ability to configure LDPC
+Date: Sun, 9 Jun 2019 01:04:11 +0100
+Message-ID: <1560038656-380620-7-git-send-email-dragan.cvetic@xilinx.com>
 References: <1560038656-380620-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,501 +12,502 @@ To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-ar
 Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Stores configuration based on parameters from the DT
-node and values from the SD-FEC core plus reads
-the default state from the SD-FEC core. To obtain
-values from the core register read, write capabilities
-have been added plus related register map details.
+Add the capability to configure LDPC mode via the ioctl
+XSDFEC_ADD_LDPC_CODE_PARAMS.
 
 Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 ---
- drivers/misc/xilinx_sdfec.c      | 293 +++++++++++++++++++++++++++++++++++++++
- include/uapi/misc/xilinx_sdfec.h | 138 ++++++++++++++++++
- 2 files changed, 431 insertions(+)
- create mode 100644 include/uapi/misc/xilinx_sdfec.h
+ drivers/misc/xilinx_sdfec.c      | 324 +++++++++++++++++++++++++++++++++++++++
+ include/uapi/misc/xilinx_sdfec.h |  98 ++++++++++++
+ 2 files changed, 422 insertions(+)
 
 diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 4524677..ddfca54 100644
+index 3b59c12..aa33679 100644
 --- a/drivers/misc/xilinx_sdfec.c
 +++ b/drivers/misc/xilinx_sdfec.c
-@@ -20,8 +20,89 @@
+@@ -20,6 +20,7 @@
  #include <linux/slab.h>
  #include <linux/clk.h>
+ #include <linux/compat.h>
++#include <linux/highmem.h>
  
-+#include <uapi/misc/xilinx_sdfec.h>
-+
- static int xsdfec_ndevs;
+ #include <uapi/misc/xilinx_sdfec.h>
  
-+/* Xilinx SDFEC Register Map */
-+/* CODE_WRI_PROTECT Register */
-+#define XSDFEC_CODE_WR_PROTECT_ADDR (0x4)
+@@ -110,6 +111,57 @@ static int xsdfec_ndevs;
+ #define XSDFEC_TURBO_SCALE_BIT_POS (8)
+ #define XSDFEC_TURBO_SCALE_MAX (15)
+ 
++/* REG0 Register */
++#define XSDFEC_LDPC_CODE_REG0_ADDR_BASE (0x2000)
++#define XSDFEC_LDPC_CODE_REG0_ADDR_HIGH (0x27F0)
++#define XSDFEC_REG0_N_MIN (4)
++#define XSDFEC_REG0_N_MAX (32768)
++#define XSDFEC_REG0_N_MUL_P (256)
++#define XSDFEC_REG0_N_LSB (0)
++#define XSDFEC_REG0_K_MIN (2)
++#define XSDFEC_REG0_K_MAX (32766)
++#define XSDFEC_REG0_K_MUL_P (256)
++#define XSDFEC_REG0_K_LSB (16)
 +
-+/* ACTIVE Register */
-+#define XSDFEC_ACTIVE_ADDR (0x8)
-+#define XSDFEC_IS_ACTIVITY_SET (0x1)
++/* REG1 Register */
++#define XSDFEC_LDPC_CODE_REG1_ADDR_BASE (0x2004)
++#define XSDFEC_LDPC_CODE_REG1_ADDR_HIGH (0x27f4)
++#define XSDFEC_REG1_PSIZE_MIN (2)
++#define XSDFEC_REG1_PSIZE_MAX (512)
++#define XSDFEC_REG1_NO_PACKING_MASK (0x400)
++#define XSDFEC_REG1_NO_PACKING_LSB (10)
++#define XSDFEC_REG1_NM_MASK (0xFF800)
++#define XSDFEC_REG1_NM_LSB (11)
++#define XSDFEC_REG1_BYPASS_MASK (0x100000)
 +
-+/* AXIS_WIDTH Register */
-+#define XSDFEC_AXIS_WIDTH_ADDR (0xC)
-+#define XSDFEC_AXIS_DOUT_WORDS_LSB (5)
-+#define XSDFEC_AXIS_DOUT_WIDTH_LSB (3)
-+#define XSDFEC_AXIS_DIN_WORDS_LSB (2)
-+#define XSDFEC_AXIS_DIN_WIDTH_LSB (0)
++/* REG2 Register */
++#define XSDFEC_LDPC_CODE_REG2_ADDR_BASE (0x2008)
++#define XSDFEC_LDPC_CODE_REG2_ADDR_HIGH (0x27f8)
++#define XSDFEC_REG2_NLAYERS_MIN (1)
++#define XSDFEC_REG2_NLAYERS_MAX (256)
++#define XSDFEC_REG2_NNMQC_MASK (0xFFE00)
++#define XSDFEC_REG2_NMQC_LSB (9)
++#define XSDFEC_REG2_NORM_TYPE_MASK (0x100000)
++#define XSDFEC_REG2_NORM_TYPE_LSB (20)
++#define XSDFEC_REG2_SPECIAL_QC_MASK (0x200000)
++#define XSDFEC_REG2_SPEICAL_QC_LSB (21)
++#define XSDFEC_REG2_NO_FINAL_PARITY_MASK (0x400000)
++#define XSDFEC_REG2_NO_FINAL_PARITY_LSB (22)
++#define XSDFEC_REG2_MAX_SCHEDULE_MASK (0x1800000)
++#define XSDFEC_REG2_MAX_SCHEDULE_LSB (23)
 +
-+/* AXIS_ENABLE Register */
-+#define XSDFEC_AXIS_ENABLE_ADDR (0x10)
-+#define XSDFEC_AXIS_OUT_ENABLE_MASK (0x38)
-+#define XSDFEC_AXIS_IN_ENABLE_MASK (0x7)
-+#define XSDFEC_AXIS_ENABLE_MASK                                                \
-+	(XSDFEC_AXIS_OUT_ENABLE_MASK | XSDFEC_AXIS_IN_ENABLE_MASK)
++/* REG3 Register */
++#define XSDFEC_LDPC_CODE_REG3_ADDR_BASE (0x200C)
++#define XSDFEC_LDPC_CODE_REG3_ADDR_HIGH (0x27FC)
++#define XSDFEC_REG3_LA_OFF_LSB (8)
++#define XSDFEC_REG3_QC_OFF_LSB (16)
 +
-+/* FEC_CODE Register */
-+#define XSDFEC_FEC_CODE_ADDR (0x14)
++#define XSDFEC_LDPC_REG_JUMP (0x10)
++#define XSDFEC_REG_WIDTH_JUMP (4)
 +
-+/* ORDER Register Map */
-+#define XSDFEC_ORDER_ADDR (0x18)
-+
-+/* Interrupt Status Register */
-+#define XSDFEC_ISR_ADDR (0x1C)
-+/* Interrupt Status Register Bit Mask */
-+#define XSDFEC_ISR_MASK (0x3F)
-+
-+/* Write Only - Interrupt Enable Register */
-+#define XSDFEC_IER_ADDR (0x20)
-+/* Write Only - Interrupt Disable Register */
-+#define XSDFEC_IDR_ADDR (0x24)
-+/* Read Only - Interrupt Mask Register */
-+#define XSDFEC_IMR_ADDR (0x28)
-+
-+/* ECC Interrupt Status Register */
-+#define XSDFEC_ECC_ISR_ADDR (0x2C)
-+/* Single Bit Errors */
-+#define XSDFEC_ECC_ISR_SBE_MASK (0x7FF)
-+/* PL Initialize Single Bit Errors */
-+#define XSDFEC_PL_INIT_ECC_ISR_SBE_MASK (0x3C00000)
-+/* Multi Bit Errors */
-+#define XSDFEC_ECC_ISR_MBE_MASK (0x3FF800)
-+/* PL Initialize Multi Bit Errors */
-+#define XSDFEC_PL_INIT_ECC_ISR_MBE_MASK (0x3C000000)
-+/* Multi Bit Error to Event Shift */
-+#define XSDFEC_ECC_ISR_MBE_TO_EVENT_SHIFT (11)
-+/* PL Initialize Multi Bit Error to Event Shift */
-+#define XSDFEC_PL_INIT_ECC_ISR_MBE_TO_EVENT_SHIFT (4)
-+/* ECC Interrupt Status Bit Mask */
-+#define XSDFEC_ECC_ISR_MASK (XSDFEC_ECC_ISR_SBE_MASK | XSDFEC_ECC_ISR_MBE_MASK)
-+/* ECC Interrupt Status PL Initialize Bit Mask */
-+#define XSDFEC_PL_INIT_ECC_ISR_MASK                                            \
-+	(XSDFEC_PL_INIT_ECC_ISR_SBE_MASK | XSDFEC_PL_INIT_ECC_ISR_MBE_MASK)
-+/* ECC Interrupt Status All Bit Mask */
-+#define XSDFEC_ALL_ECC_ISR_MASK                                                \
-+	(XSDFEC_ECC_ISR_MASK | XSDFEC_PL_INIT_ECC_ISR_MASK)
-+/* ECC Interrupt Status Single Bit Errors Mask */
-+#define XSDFEC_ALL_ECC_ISR_SBE_MASK                                            \
-+	(XSDFEC_ECC_ISR_SBE_MASK | XSDFEC_PL_INIT_ECC_ISR_SBE_MASK)
-+/* ECC Interrupt Status Multi Bit Errors Mask */
-+#define XSDFEC_ALL_ECC_ISR_MBE_MASK                                            \
-+	(XSDFEC_ECC_ISR_MBE_MASK | XSDFEC_PL_INIT_ECC_ISR_MBE_MASK)
-+
-+/* Write Only - ECC Interrupt Enable Register */
-+#define XSDFEC_ECC_IER_ADDR (0x30)
-+/* Write Only - ECC Interrupt Disable Register */
-+#define XSDFEC_ECC_IDR_ADDR (0x34)
-+/* Read Only - ECC Interrupt Mask Register */
-+#define XSDFEC_ECC_IMR_ADDR (0x38)
-+
-+/* BYPASS Register */
-+#define XSDFEC_BYPASS_ADDR (0x3C)
++/* The maximum number of pinned pages */
++#define MAX_NUM_PAGES ((XSDFEC_QC_TABLE_DEPTH / PAGE_SIZE) + 1)
 +
  /**
   * struct xsdfec_clks - For managing SD-FEC clocks
   * @core_clk: Main processing clock for core
-@@ -48,6 +129,8 @@ struct xsdfec_clks {
-  * struct xsdfec_dev - Driver data for SDFEC
-  * @regs: device physical base address
-  * @dev: pointer to device struct
-+ * @state: State of the SDFEC device
-+ * @config: Configuration of the SDFEC device
-  * @miscdev: Misc device handle
-  * @error_data_lock: Error counter and states spinlock
-  * @clks: Clocks managed by the SDFEC driver
-@@ -57,16 +140,220 @@ struct xsdfec_clks {
- struct xsdfec_dev {
- 	void __iomem *regs;
- 	struct device *dev;
-+	enum xsdfec_state state;
-+	struct xsdfec_config config;
- 	struct miscdevice miscdev;
- 	/* Spinlock to protect state_updated and stats_updated */
- 	spinlock_t error_data_lock;
- 	struct xsdfec_clks clks;
- };
+@@ -263,6 +315,275 @@ static int xsdfec_get_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
+ 	return err;
+ }
  
-+static inline void xsdfec_regwrite(struct xsdfec_dev *xsdfec, u32 addr,
-+				   u32 value)
++static int xsdfec_reg0_write(struct xsdfec_dev *xsdfec, u32 n, u32 k, u32 psize,
++			     u32 offset)
 +{
-+	dev_dbg(xsdfec->dev, "Writing 0x%x to offset 0x%x", value, addr);
-+	iowrite32(value, xsdfec->regs + addr);
-+}
++	u32 wdata;
 +
-+static inline u32 xsdfec_regread(struct xsdfec_dev *xsdfec, u32 addr)
-+{
-+	u32 rval;
-+
-+	rval = ioread32(xsdfec->regs + addr);
-+	dev_dbg(xsdfec->dev, "Read value = 0x%x from offset 0x%x", rval, addr);
-+	return rval;
-+}
-+
-+static void update_bool_config_from_reg(struct xsdfec_dev *xsdfec,
-+					u32 reg_offset, u32 bit_num,
-+					char *config_value)
-+{
-+	u32 reg_val;
-+	u32 bit_mask = 1 << bit_num;
-+
-+	reg_val = xsdfec_regread(xsdfec, reg_offset);
-+	*config_value = (reg_val & bit_mask) > 0;
-+}
-+
-+static void update_config_from_hw(struct xsdfec_dev *xsdfec)
-+{
-+	u32 reg_value;
-+	bool sdfec_started;
-+
-+	/* Update the Order */
-+	reg_value = xsdfec_regread(xsdfec, XSDFEC_ORDER_ADDR);
-+	xsdfec->config.order = reg_value;
-+
-+	update_bool_config_from_reg(xsdfec, XSDFEC_BYPASS_ADDR,
-+				    0, /* Bit Number, maybe change to mask */
-+				    &xsdfec->config.bypass);
-+
-+	update_bool_config_from_reg(xsdfec, XSDFEC_CODE_WR_PROTECT_ADDR,
-+				    0, /* Bit Number */
-+				    &xsdfec->config.code_wr_protect);
-+
-+	reg_value = xsdfec_regread(xsdfec, XSDFEC_IMR_ADDR);
-+	xsdfec->config.irq.enable_isr = (reg_value & XSDFEC_ISR_MASK) > 0;
-+
-+	reg_value = xsdfec_regread(xsdfec, XSDFEC_ECC_IMR_ADDR);
-+	xsdfec->config.irq.enable_ecc_isr =
-+		(reg_value & XSDFEC_ECC_ISR_MASK) > 0;
-+
-+	reg_value = xsdfec_regread(xsdfec, XSDFEC_AXIS_ENABLE_ADDR);
-+	sdfec_started = (reg_value & XSDFEC_AXIS_IN_ENABLE_MASK) > 0;
-+	if (sdfec_started)
-+		xsdfec->state = XSDFEC_STARTED;
-+	else
-+		xsdfec->state = XSDFEC_STOPPED;
-+}
-+
-+static u32
-+xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
-+{
-+	u32 axis_width_field = 0;
-+
-+	switch (axis_width_cfg) {
-+	case XSDFEC_1x128b:
-+		axis_width_field = 0;
-+		break;
-+	case XSDFEC_2x128b:
-+		axis_width_field = 1;
-+		break;
-+	case XSDFEC_4x128b:
-+		axis_width_field = 2;
-+		break;
++	if (n < XSDFEC_REG0_N_MIN || n > XSDFEC_REG0_N_MAX ||
++	    (n > XSDFEC_REG0_N_MUL_P * psize) || n <= k || ((n % psize) != 0)) {
++		dev_dbg(xsdfec->dev, "N value is not in range");
++		return -EINVAL;
 +	}
++	n <<= XSDFEC_REG0_N_LSB;
 +
-+	return axis_width_field;
-+}
++	if (k < XSDFEC_REG0_K_MIN || k > XSDFEC_REG0_K_MAX ||
++	    (k > XSDFEC_REG0_K_MUL_P * psize) || ((k % psize) != 0)) {
++		dev_dbg(xsdfec->dev, "K value is not in range");
++		return -EINVAL;
++	}
++	k = k << XSDFEC_REG0_K_LSB;
++	wdata = k | n;
 +
-+static u32 xsdfec_translate_axis_words_cfg_val(enum xsdfec_axis_word_include
-+	axis_word_inc_cfg)
-+{
-+	u32 axis_words_field = 0;
-+
-+	if (axis_word_inc_cfg == XSDFEC_FIXED_VALUE ||
-+	    axis_word_inc_cfg == XSDFEC_IN_BLOCK)
-+		axis_words_field = 0;
-+	else if (axis_word_inc_cfg == XSDFEC_PER_AXI_TRANSACTION)
-+		axis_words_field = 1;
-+
-+	return axis_words_field;
-+}
-+
-+static int xsdfec_cfg_axi_streams(struct xsdfec_dev *xsdfec)
-+{
-+	u32 reg_value;
-+	u32 dout_words_field;
-+	u32 dout_width_field;
-+	u32 din_words_field;
-+	u32 din_width_field;
-+	struct xsdfec_config *config = &xsdfec->config;
-+
-+	/* translate config info to register values */
-+	dout_words_field =
-+		xsdfec_translate_axis_words_cfg_val(config->dout_word_include);
-+	dout_width_field =
-+		xsdfec_translate_axis_width_cfg_val(config->dout_width);
-+	din_words_field =
-+		xsdfec_translate_axis_words_cfg_val(config->din_word_include);
-+	din_width_field =
-+		xsdfec_translate_axis_width_cfg_val(config->din_width);
-+
-+	reg_value = dout_words_field << XSDFEC_AXIS_DOUT_WORDS_LSB;
-+	reg_value |= dout_width_field << XSDFEC_AXIS_DOUT_WIDTH_LSB;
-+	reg_value |= din_words_field << XSDFEC_AXIS_DIN_WORDS_LSB;
-+	reg_value |= din_width_field << XSDFEC_AXIS_DIN_WIDTH_LSB;
-+
-+	xsdfec_regwrite(xsdfec, XSDFEC_AXIS_WIDTH_ADDR, reg_value);
-+
++	if (XSDFEC_LDPC_CODE_REG0_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
++	    XSDFEC_LDPC_CODE_REG0_ADDR_HIGH) {
++		dev_dbg(xsdfec->dev, "Writing outside of LDPC reg0 space 0x%x",
++			XSDFEC_LDPC_CODE_REG0_ADDR_BASE +
++				(offset * XSDFEC_LDPC_REG_JUMP));
++		return -EINVAL;
++	}
++	xsdfec_regwrite(xsdfec,
++			XSDFEC_LDPC_CODE_REG0_ADDR_BASE +
++				(offset * XSDFEC_LDPC_REG_JUMP),
++			wdata);
 +	return 0;
 +}
 +
- static const struct file_operations xsdfec_fops = {
- 	.owner = THIS_MODULE,
- };
- 
-+static int xsdfec_parse_of(struct xsdfec_dev *xsdfec)
++static int xsdfec_reg1_write(struct xsdfec_dev *xsdfec, u32 psize,
++			     u32 no_packing, u32 nm, u32 offset)
 +{
-+	struct device *dev = xsdfec->dev;
-+	struct device_node *node = dev->of_node;
-+	int rval;
-+	const char *fec_code;
-+	u32 din_width;
-+	u32 din_word_include;
-+	u32 dout_width;
-+	u32 dout_word_include;
++	u32 wdata;
 +
-+	rval = of_property_read_string(node, "xlnx,sdfec-code", &fec_code);
-+	if (rval < 0)
-+		return rval;
-+
-+	if (!strcasecmp(fec_code, "ldpc"))
-+		xsdfec->config.code = XSDFEC_LDPC_CODE;
-+	else if (!strcasecmp(fec_code, "turbo"))
-+		xsdfec->config.code = XSDFEC_TURBO_CODE;
-+	else
-+		return -EINVAL;
-+
-+	rval = of_property_read_u32(node, "xlnx,sdfec-din-words",
-+				    &din_word_include);
-+	if (rval < 0)
-+		return rval;
-+
-+	if (din_word_include < XSDFEC_AXIS_WORDS_INCLUDE_MAX)
-+		xsdfec->config.din_word_include = din_word_include;
-+	else
-+		return -EINVAL;
-+
-+	rval = of_property_read_u32(node, "xlnx,sdfec-din-width", &din_width);
-+	if (rval < 0)
-+		return rval;
-+
-+	switch (din_width) {
-+	/* Fall through and set for valid values */
-+	case XSDFEC_1x128b:
-+	case XSDFEC_2x128b:
-+	case XSDFEC_4x128b:
-+		xsdfec->config.din_width = din_width;
-+		break;
-+	default:
++	if (psize < XSDFEC_REG1_PSIZE_MIN || psize > XSDFEC_REG1_PSIZE_MAX) {
++		dev_dbg(xsdfec->dev, "Psize is not in range");
 +		return -EINVAL;
 +	}
 +
-+	rval = of_property_read_u32(node, "xlnx,sdfec-dout-words",
-+				    &dout_word_include);
-+	if (rval < 0)
-+		return rval;
++	if (no_packing != 0 && no_packing != 1)
++		dev_dbg(xsdfec->dev, "No-packing bit register invalid");
++	no_packing = ((no_packing << XSDFEC_REG1_NO_PACKING_LSB) &
++		      XSDFEC_REG1_NO_PACKING_MASK);
 +
-+	if (dout_word_include < XSDFEC_AXIS_WORDS_INCLUDE_MAX)
-+		xsdfec->config.dout_word_include = dout_word_include;
-+	else
-+		return -EINVAL;
++	if (nm & ~(XSDFEC_REG1_NM_MASK >> XSDFEC_REG1_NM_LSB))
++		dev_dbg(xsdfec->dev, "NM is beyond 10 bits");
++	nm = (nm << XSDFEC_REG1_NM_LSB) & XSDFEC_REG1_NM_MASK;
 +
-+	rval = of_property_read_u32(node, "xlnx,sdfec-dout-width", &dout_width);
-+	if (rval < 0)
-+		return rval;
-+
-+	switch (dout_width) {
-+	/* Fall through and set for valid values */
-+	case XSDFEC_1x128b:
-+	case XSDFEC_2x128b:
-+	case XSDFEC_4x128b:
-+		xsdfec->config.dout_width = dout_width;
-+		break;
-+	default:
++	wdata = nm | no_packing | psize;
++	if (XSDFEC_LDPC_CODE_REG1_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
++	    XSDFEC_LDPC_CODE_REG1_ADDR_HIGH) {
++		dev_dbg(xsdfec->dev, "Writing outside of LDPC reg1 space 0x%x",
++			XSDFEC_LDPC_CODE_REG1_ADDR_BASE +
++				(offset * XSDFEC_LDPC_REG_JUMP));
 +		return -EINVAL;
 +	}
-+
-+	/* Write LDPC to CODE Register */
-+	xsdfec_regwrite(xsdfec, XSDFEC_FEC_CODE_ADDR, xsdfec->config.code);
-+
-+	xsdfec_cfg_axi_streams(xsdfec);
-+
++	xsdfec_regwrite(xsdfec,
++			XSDFEC_LDPC_CODE_REG1_ADDR_BASE +
++				(offset * XSDFEC_LDPC_REG_JUMP),
++			wdata);
 +	return 0;
 +}
 +
- static int xsdfec_clk_init(struct platform_device *pdev,
- 			   struct xsdfec_clks *clks)
++static int xsdfec_reg2_write(struct xsdfec_dev *xsdfec, u32 nlayers, u32 nmqc,
++			     u32 norm_type, u32 special_qc, u32 no_final_parity,
++			     u32 max_schedule, u32 offset)
++{
++	u32 wdata;
++
++	if (nlayers < XSDFEC_REG2_NLAYERS_MIN ||
++	    nlayers > XSDFEC_REG2_NLAYERS_MAX) {
++		dev_dbg(xsdfec->dev, "Nlayers is not in range");
++		return -EINVAL;
++	}
++
++	if (nmqc & ~(XSDFEC_REG2_NNMQC_MASK >> XSDFEC_REG2_NMQC_LSB))
++		dev_dbg(xsdfec->dev, "NMQC exceeds 11 bits");
++	nmqc = (nmqc << XSDFEC_REG2_NMQC_LSB) & XSDFEC_REG2_NNMQC_MASK;
++
++	if (norm_type > 1)
++		dev_dbg(xsdfec->dev, "Norm type is invalid");
++	norm_type = ((norm_type << XSDFEC_REG2_NORM_TYPE_LSB) &
++		     XSDFEC_REG2_NORM_TYPE_MASK);
++	if (special_qc > 1)
++		dev_dbg(xsdfec->dev, "Special QC in invalid");
++	special_qc = ((special_qc << XSDFEC_REG2_SPEICAL_QC_LSB) &
++		      XSDFEC_REG2_SPECIAL_QC_MASK);
++
++	if (no_final_parity > 1)
++		dev_dbg(xsdfec->dev, "No final parity check invalid");
++	no_final_parity =
++		((no_final_parity << XSDFEC_REG2_NO_FINAL_PARITY_LSB) &
++		 XSDFEC_REG2_NO_FINAL_PARITY_MASK);
++	if (max_schedule &
++	    ~(XSDFEC_REG2_MAX_SCHEDULE_MASK >> XSDFEC_REG2_MAX_SCHEDULE_LSB))
++		dev_dbg(xsdfec->dev, "Max Schdule exceeds 2 bits");
++	max_schedule = ((max_schedule << XSDFEC_REG2_MAX_SCHEDULE_LSB) &
++			XSDFEC_REG2_MAX_SCHEDULE_MASK);
++
++	wdata = (max_schedule | no_final_parity | special_qc | norm_type |
++		 nmqc | nlayers);
++
++	if (XSDFEC_LDPC_CODE_REG2_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
++	    XSDFEC_LDPC_CODE_REG2_ADDR_HIGH) {
++		dev_dbg(xsdfec->dev, "Writing outside of LDPC reg2 space 0x%x",
++			XSDFEC_LDPC_CODE_REG2_ADDR_BASE +
++				(offset * XSDFEC_LDPC_REG_JUMP));
++		return -EINVAL;
++	}
++	xsdfec_regwrite(xsdfec,
++			XSDFEC_LDPC_CODE_REG2_ADDR_BASE +
++				(offset * XSDFEC_LDPC_REG_JUMP),
++			wdata);
++	return 0;
++}
++
++static int xsdfec_reg3_write(struct xsdfec_dev *xsdfec, u8 sc_off, u8 la_off,
++			     u16 qc_off, u32 offset)
++{
++	u32 wdata;
++
++	wdata = ((qc_off << XSDFEC_REG3_QC_OFF_LSB) |
++		 (la_off << XSDFEC_REG3_LA_OFF_LSB) | sc_off);
++	if (XSDFEC_LDPC_CODE_REG3_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
++	    XSDFEC_LDPC_CODE_REG3_ADDR_HIGH) {
++		dev_dbg(xsdfec->dev, "Writing outside of LDPC reg3 space 0x%x",
++			XSDFEC_LDPC_CODE_REG3_ADDR_BASE +
++				(offset * XSDFEC_LDPC_REG_JUMP));
++		return -EINVAL;
++	}
++	xsdfec_regwrite(xsdfec,
++			XSDFEC_LDPC_CODE_REG3_ADDR_BASE +
++				(offset * XSDFEC_LDPC_REG_JUMP),
++			wdata);
++	return 0;
++}
++
++static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
++			      u32 *src_ptr, u32 len, const u32 base_addr,
++			      const u32 depth)
++{
++	u32 reg = 0;
++	u32 res;
++	u32 n, i;
++	u32 *addr = NULL;
++	struct page *page[MAX_NUM_PAGES];
++
++	/*
++	 * Writes that go beyond the length of
++	 * Shared Scale(SC) table should fail
++	 */
++	if ((XSDFEC_REG_WIDTH_JUMP * (offset + len)) > depth) {
++		dev_dbg(xsdfec->dev, "Write exceeds SC table length");
++		return -EINVAL;
++	}
++
++	n = (len * XSDFEC_REG_WIDTH_JUMP) / PAGE_SIZE;
++	if ((len * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE)
++		n += 1;
++
++	res = get_user_pages_fast((unsigned long)src_ptr, n, 0, page);
++	if (res < n) {
++		for (i = 0; i < res; i++)
++			put_page(page[i]);
++		return -EINVAL;
++	}
++
++	for (i = 0; i < n; i++) {
++		addr = kmap(page[i]);
++		do {
++			xsdfec_regwrite(xsdfec,
++					base_addr + ((offset + reg) *
++						     XSDFEC_REG_WIDTH_JUMP),
++					addr[reg]);
++			reg++;
++		} while ((reg < len) &&
++			 ((reg * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE));
++		put_page(page[i]);
++	}
++	return reg;
++}
++
++static int xsdfec_add_ldpc(struct xsdfec_dev *xsdfec, void __user *arg)
++{
++	struct xsdfec_ldpc_params *ldpc;
++	int ret, n;
++
++	ldpc = kzalloc(sizeof(*ldpc), GFP_KERNEL);
++	if (!ldpc)
++		return -ENOMEM;
++
++	ret = copy_from_user(ldpc, arg, sizeof(*ldpc));
++	if (ret)
++		goto err_out;
++
++	if (xsdfec->config.code == XSDFEC_TURBO_CODE) {
++		ret = -EIO;
++		goto err_out;
++	}
++
++	/* Verify Device has not started */
++	if (xsdfec->state == XSDFEC_STARTED) {
++		ret = -EIO;
++		goto err_out;
++	}
++
++	if (xsdfec->config.code_wr_protect) {
++		ret = -EIO;
++		goto err_out;
++	}
++
++	/* Write Reg 0 */
++	ret = xsdfec_reg0_write(xsdfec, ldpc->n, ldpc->k, ldpc->psize,
++				ldpc->code_id);
++	if (ret)
++		goto err_out;
++
++	/* Write Reg 1 */
++	ret = xsdfec_reg1_write(xsdfec, ldpc->psize, ldpc->no_packing, ldpc->nm,
++				ldpc->code_id);
++	if (ret)
++		goto err_out;
++
++	/* Write Reg 2 */
++	ret = xsdfec_reg2_write(xsdfec, ldpc->nlayers, ldpc->nmqc,
++				ldpc->norm_type, ldpc->special_qc,
++				ldpc->no_final_parity, ldpc->max_schedule,
++				ldpc->code_id);
++	if (ret)
++		goto err_out;
++
++	/* Write Reg 3 */
++	ret = xsdfec_reg3_write(xsdfec, ldpc->sc_off, ldpc->la_off,
++				ldpc->qc_off, ldpc->code_id);
++	if (ret)
++		goto err_out;
++
++	/* Write Shared Codes */
++	n = ldpc->nlayers / 4;
++	if (ldpc->nlayers % 4)
++		n++;
++
++	ret = xsdfec_table_write(xsdfec, ldpc->sc_off, ldpc->sc_table, n,
++				 XSDFEC_LDPC_SC_TABLE_ADDR_BASE,
++				 XSDFEC_SC_TABLE_DEPTH);
++	if (ret < 0)
++		goto err_out;
++
++	ret = xsdfec_table_write(xsdfec, 4 * ldpc->la_off, ldpc->la_table,
++				 ldpc->nlayers, XSDFEC_LDPC_LA_TABLE_ADDR_BASE,
++				 XSDFEC_LA_TABLE_DEPTH);
++	if (ret < 0)
++		goto err_out;
++
++	ret = xsdfec_table_write(xsdfec, 4 * ldpc->qc_off, ldpc->qc_table,
++				 ldpc->nqc, XSDFEC_LDPC_QC_TABLE_ADDR_BASE,
++				 XSDFEC_QC_TABLE_DEPTH);
++	if (ret > 0)
++		ret = 0;
++err_out:
++	kfree(ldpc);
++	return ret;
++}
++
+ static u32
+ xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
  {
-@@ -247,6 +534,12 @@ static int xsdfec_probe(struct platform_device *pdev)
- 		goto err_xsdfec_dev;
- 	}
- 
-+	err = xsdfec_parse_of(xsdfec);
-+	if (err < 0)
-+		goto err_xsdfec_dev;
-+
-+	update_config_from_hw(xsdfec);
-+
- 	/* Save driver private data */
- 	platform_set_drvdata(pdev, xsdfec);
- 
+@@ -359,6 +680,9 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 	case XSDFEC_GET_TURBO:
+ 		rval = xsdfec_get_turbo(xsdfec, arg);
+ 		break;
++	case XSDFEC_ADD_LDPC_CODE_PARAMS:
++		rval = xsdfec_add_ldpc(xsdfec, arg);
++		break;
+ 	default:
+ 		/* Should not get here */
+ 		break;
 diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
-new file mode 100644
-index 0000000..7b47a4c
---- /dev/null
+index dc9d4a3..9e3e8d5 100644
+--- a/include/uapi/misc/xilinx_sdfec.h
 +++ b/include/uapi/misc/xilinx_sdfec.h
-@@ -0,0 +1,138 @@
-+/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
-+/*
-+ * Xilinx SD-FEC
-+ *
-+ * Copyright (C) 2016 - 2017 Xilinx, Inc.
-+ *
-+ * Description:
-+ * This driver is developed for SDFEC16 IP. It provides a char device
-+ * in sysfs and supports file operations like open(), close() and ioctl().
-+ */
-+#ifndef __XILINX_SDFEC_H__
-+#define __XILINX_SDFEC_H__
+@@ -13,6 +13,22 @@
+ 
+ #include <linux/types.h>
+ 
++/* Shared LDPC Tables */
++#define XSDFEC_LDPC_SC_TABLE_ADDR_BASE (0x10000)
++#define XSDFEC_LDPC_SC_TABLE_ADDR_HIGH (0x10400)
++#define XSDFEC_LDPC_LA_TABLE_ADDR_BASE (0x18000)
++#define XSDFEC_LDPC_LA_TABLE_ADDR_HIGH (0x19000)
++#define XSDFEC_LDPC_QC_TABLE_ADDR_BASE (0x20000)
++#define XSDFEC_LDPC_QC_TABLE_ADDR_HIGH (0x28000)
 +
-+#include <linux/types.h>
++/* LDPC tables depth */
++#define XSDFEC_SC_TABLE_DEPTH                                                  \
++	(XSDFEC_LDPC_SC_TABLE_ADDR_HIGH - XSDFEC_LDPC_SC_TABLE_ADDR_BASE)
++#define XSDFEC_LA_TABLE_DEPTH                                                  \
++	(XSDFEC_LDPC_LA_TABLE_ADDR_HIGH - XSDFEC_LDPC_LA_TABLE_ADDR_BASE)
++#define XSDFEC_QC_TABLE_DEPTH                                                  \
++	(XSDFEC_LDPC_QC_TABLE_ADDR_HIGH - XSDFEC_LDPC_QC_TABLE_ADDR_BASE)
 +
-+/**
-+ * enum xsdfec_code - Code Type.
-+ * @XSDFEC_TURBO_CODE: Driver is configured for Turbo mode.
-+ * @XSDFEC_LDPC_CODE: Driver is configured for LDPC mode.
+ /**
+  * enum xsdfec_code - Code Type.
+  * @XSDFEC_TURBO_CODE: Driver is configured for Turbo mode.
+@@ -127,6 +143,53 @@ struct xsdfec_turbo {
+ };
+ 
+ /**
++ * struct xsdfec_ldpc_params - User data for LDPC codes.
++ * @n: Number of code word bits
++ * @k: Number of information bits
++ * @psize: Size of sub-matrix
++ * @nlayers: Number of layers in code
++ * @nqc: Quasi Cyclic Number
++ * @nmqc: Number of M-sized QC operations in parity check matrix
++ * @nm: Number of M-size vectors in N
++ * @norm_type: Normalization required or not
++ * @no_packing: Determines if multiple QC ops should be performed
++ * @special_qc: Sub-Matrix property for Circulant weight > 0
++ * @no_final_parity: Decide if final parity check needs to be performed
++ * @max_schedule: Experimental code word scheduling limit
++ * @sc_off: SC offset
++ * @la_off: LA offset
++ * @qc_off: QC offset
++ * @sc_table: Pointer to SC Table which must be page aligned
++ * @la_table: Pointer to LA Table which must be page aligned
++ * @qc_table: Pointer to QC Table which must be page aligned
++ * @code_id: LDPC Code
 + *
-+ * This enum is used to indicate the mode of the driver. The mode is determined
-+ * by checking which codes are set in the driver. Note that the mode cannot be
-+ * changed by the driver.
++ * This structure describes the LDPC code that is passed to the driver by the
++ * application.
 + */
-+enum xsdfec_code {
-+	XSDFEC_TURBO_CODE = 0,
-+	XSDFEC_LDPC_CODE,
++struct xsdfec_ldpc_params {
++	__u32 n;
++	__u32 k;
++	__u32 psize;
++	__u32 nlayers;
++	__u32 nqc;
++	__u32 nmqc;
++	__u32 nm;
++	__u32 norm_type;
++	__u32 no_packing;
++	__u32 special_qc;
++	__u32 no_final_parity;
++	__u32 max_schedule;
++	__u32 sc_off;
++	__u32 la_off;
++	__u32 qc_off;
++	__u32 *sc_table;
++	__u32 *la_table;
++	__u32 *qc_table;
++	__u16 code_id;
 +};
 +
 +/**
-+ * enum xsdfec_order - Order
-+ * @XSDFEC_MAINTAIN_ORDER: Maintain order execution of blocks.
-+ * @XSDFEC_OUT_OF_ORDER: Out-of-order execution of blocks.
+  * struct xsdfec_status - Status of SD-FEC core.
+  * @state: State of the SD-FEC core
+  * @activity: Describes if the SD-FEC instance is Active
+@@ -170,6 +233,20 @@ struct xsdfec_config {
+ 	struct xsdfec_irq irq;
+ };
+ 
++/**
++ * struct xsdfec_ldpc_param_table_sizes - Used to store sizes of SD-FEC table
++ *					  entries for an individual LPDC code
++ *					  parameter.
++ * @sc_size: Size of SC table used
++ * @la_size: Size of LA table used
++ * @qc_size: Size of QC table used
++ */
++struct xsdfec_ldpc_param_table_sizes {
++	__u32 sc_size;
++	__u32 la_size;
++	__u32 qc_size;
++};
++
+ /*
+  * XSDFEC IOCTL List
+  */
+@@ -190,6 +267,27 @@ struct xsdfec_config {
+  */
+ #define XSDFEC_SET_TURBO _IOW(XSDFEC_MAGIC, 4, struct xsdfec_turbo)
+ /**
++ * DOC: XSDFEC_ADD_LDPC_CODE_PARAMS
++ * @Parameters
 + *
-+ * This enum is used to indicate whether the order of blocks can change from
-+ * input to output.
-+ */
-+enum xsdfec_order {
-+	XSDFEC_MAINTAIN_ORDER = 0,
-+	XSDFEC_OUT_OF_ORDER,
-+};
-+
-+/**
-+ * enum xsdfec_state - State.
-+ * @XSDFEC_INIT: Driver is initialized.
-+ * @XSDFEC_STARTED: Driver is started.
-+ * @XSDFEC_STOPPED: Driver is stopped.
-+ * @XSDFEC_NEEDS_RESET: Driver needs to be reset.
-+ * @XSDFEC_PL_RECONFIGURE: Programmable Logic needs to be recofigured.
++ * @struct xsdfec_ldpc_params *
++ *	Pointer to the &struct xsdfec_ldpc_params that contains the LDPC code
++ *	parameters to be added to the SD-FEC Block
 + *
-+ * This enum is used to indicate the state of the driver.
-+ */
-+enum xsdfec_state {
-+	XSDFEC_INIT = 0,
-+	XSDFEC_STARTED,
-+	XSDFEC_STOPPED,
-+	XSDFEC_NEEDS_RESET,
-+	XSDFEC_PL_RECONFIGURE,
-+};
-+
-+/**
-+ * enum xsdfec_axis_width - AXIS_WIDTH.DIN Setting for 128-bit width.
-+ * @XSDFEC_1x128b: DIN data input stream consists of a 128-bit lane
-+ * @XSDFEC_2x128b: DIN data input stream consists of two 128-bit lanes
-+ * @XSDFEC_4x128b: DIN data input stream consists of four 128-bit lanes
++ * @Description
++ * ioctl to add an LDPC code to the SD-FEC LDPC codes
 + *
-+ * This enum is used to indicate the AXIS_WIDTH.DIN setting for 128-bit width.
-+ * The number of lanes of the DIN data input stream depends upon the
-+ * AXIS_WIDTH.DIN parameter.
-+ */
-+enum xsdfec_axis_width {
-+	XSDFEC_1x128b = 1,
-+	XSDFEC_2x128b = 2,
-+	XSDFEC_4x128b = 4,
-+};
-+
-+/**
-+ * enum xsdfec_axis_word_include - Words Configuration.
-+ * @XSDFEC_FIXED_VALUE: Fixed, the DIN_WORDS AXI4-Stream interface is removed
-+ *			from the IP instance and is driven with the specified
-+ *			number of words.
-+ * @XSDFEC_IN_BLOCK: In Block, configures the IP instance to expect a single
-+ *		     DIN_WORDS value per input code block. The DIN_WORDS
-+ *		     interface is present.
-+ * @XSDFEC_PER_AXI_TRANSACTION: Per Transaction, configures the IP instance to
-+ * expect one DIN_WORDS value per input transaction on the DIN interface. The
-+ * DIN_WORDS interface is present.
-+ * @XSDFEC_AXIS_WORDS_INCLUDE_MAX: Used to indicate out of bound Words
-+ *				   Configurations.
++ * This can only be used when:
 + *
-+ * This enum is used to specify the DIN_WORDS configuration.
++ * - Driver is in the XSDFEC_STOPPED state
++ *
++ * - SD-FEC core is configured as LPDC
++ *
++ * - SD-FEC Code Write Protection is disabled
 + */
-+enum xsdfec_axis_word_include {
-+	XSDFEC_FIXED_VALUE = 0,
-+	XSDFEC_IN_BLOCK,
-+	XSDFEC_PER_AXI_TRANSACTION,
-+	XSDFEC_AXIS_WORDS_INCLUDE_MAX,
-+};
-+
++#define XSDFEC_ADD_LDPC_CODE_PARAMS                                            \
++	_IOW(XSDFEC_MAGIC, 5, struct xsdfec_ldpc_params)
 +/**
-+ * struct xsdfec_irq - Enabling or Disabling Interrupts.
-+ * @enable_isr: If true enables the ISR
-+ * @enable_ecc_isr: If true enables the ECC ISR
-+ */
-+struct xsdfec_irq {
-+	__s8 enable_isr;
-+	__s8 enable_ecc_isr;
-+};
-+
-+/**
-+ * struct xsdfec_config - Configuration of SD-FEC core.
-+ * @code: The codes being used by the SD-FEC instance
-+ * @order: Order of Operation
-+ * @bypass: Is the core being bypassed
-+ * @code_wr_protect: Is write protection of LDPC codes enabled
-+ * @din_width: Width of the DIN AXI4-Stream
-+ * @din_word_include: How DIN_WORDS are inputted
-+ * @dout_width: Width of the DOUT AXI4-Stream
-+ * @dout_word_include: HOW DOUT_WORDS are outputted
-+ * @irq: Enabling or disabling interrupts
-+ */
-+struct xsdfec_config {
-+	enum xsdfec_code code;
-+	enum xsdfec_order order;
-+	__s8 bypass;
-+	__s8 code_wr_protect;
-+	enum xsdfec_axis_width din_width;
-+	enum xsdfec_axis_word_include din_word_include;
-+	enum xsdfec_axis_width dout_width;
-+	enum xsdfec_axis_word_include dout_word_include;
-+	struct xsdfec_irq irq;
-+};
-+
-+/*
-+ * XSDFEC IOCTL List
-+ */
-+#define XSDFEC_MAGIC 'f'
-+#endif /* __XILINX_SDFEC_H__ */
+  * DOC: XSDFEC_GET_TURBO
+  * @Parameters
+  *
 -- 
 2.7.4
