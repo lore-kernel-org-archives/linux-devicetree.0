@@ -1,100 +1,65 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v5 4/5] dt-bindings: mtd: Add bindings for TI's AM654 HyperBus memory controller
-Date: Sun, 9 Jun 2019 16:02:26 +0530
-Message-ID: <20190609103227.24875-5-vigneshr@ti.com>
-References: <20190609103227.24875-1-vigneshr@ti.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [1/2] dt-bindngs: display: panel: Add BOE tv101wum-nl6 panel
+ bindings
+Date: Sun, 9 Jun 2019 12:32:41 +0200
+Message-ID: <20190609103241.GA28935@ravnborg.org>
+References: <20190608070230.55381-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190609103227.24875-1-vigneshr@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh Raghavendra <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190608070230.55381-1-jitao.shi@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, yingjoe.chen@mediatek.com, Thierry Reding <treding@nvidia.com>, Sean Paul <seanpaul@chromium.org>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Russell King <rmk+kernel@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for TI's HyperBus memory controller present on
-AM654 SoC.
-
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
-v5:
-Update binding example to show MMIO mux
-Fix reg property for flash slave.
-
- .../devicetree/bindings/mtd/ti,am654-hbmc.txt | 51 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
-new file mode 100644
-index 000000000000..c2a2c2b42a92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
-@@ -0,0 +1,51 @@
-+Bindings for HyperBus Memory Controller (HBMC) on TI's K3 family of SoCs
-+
-+Required properties:
-+- compatible : "ti,am654-hbmc" for AM654 SoC
-+- reg : Two entries:
-+	First entry pointed to the register space of HBMC controller
-+	Second entry pointing to the memory map region dedicated for
-+	MMIO access to attached flash devices
-+- ranges : Address translation from offset within CS to allocated MMIO
-+	   space in SoC
-+
-+Optional properties:
-+- mux-controls : phandle to the multiplexer that controls selection of
-+		 HBMC vs OSPI inside Flash SubSystem. Default is OSPI,
-+		 if property is absent.
-+		 See Documentation/devicetree/bindings/mux/reg-mux.txt
-+		 for mmio-mux binding details
-+
-+Example:
-+
-+	fss: fss@47000000 {
-+		compatible = "syscon", "simple-mfd";
-+		reg = <0x0 0x47000000 0x0 0x100>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		hbmc_mux: hbmc-mux {
-+			compatible = "mmio-mux";
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x4 0x2>; /* 0: reg 0x4, bit 1 */
-+		};
-+
-+		hbmc: hbmc@47034000 {
-+			compatible = "ti,am654-hbmc";
-+			reg = <0x0 0x47034000 0x0 0x100>,
-+				<0x5 0x00000000 0x1 0x0000000>;
-+			power-domains = <&k3_pds 55>;
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
-+				 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
-+			mux-controls = <&hbmc_mux 0>;
-+
-+			/* Slave flash node */
-+			flash@0,0 {
-+				compatible = "cypress,hyperflash", "cfi-flash";
-+				reg = <0x0 0x0 0x4000000>;
-+			};
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 258cf0d9eb8f..d6773a8e3ba2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7344,6 +7344,7 @@ S:	Supported
- F:	drivers/mtd/hyperbus/
- F:	include/linux/mtd/hyperbus.h
- F:	Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
-+F:	Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
- 
- HYPERVISOR VIRTUAL CONSOLE DRIVER
- L:	linuxppc-dev@lists.ozlabs.org
--- 
-2.21.0
+SGkgSml0YW8KCkFsd2F5cyBnb29kIHRvIHNlZSBtb3JlIHBhbmVscyBhZGRlZC4KCk9uIFNhdCwg
+SnVuIDA4LCAyMDE5IGF0IDAzOjAyOjI5UE0gKzA4MDAsIEppdGFvIFNoaSB3cm90ZToKPiBBZGQg
+ZG9jdW1lbnRhdGlvbiBmb3IgYm9lIHR2MTAxd3VtLW4xNiBwYW5lbC4KClRoZSBjaGFuZ2Vsb2cg
+c2F5cyB0djEwMXd1bS1uMTYgYnV0IHRoZSBjb21wYXRpYmxlIHNheXMgdHYxMDF3dW0tbmw2LgpQ
+bGVhc2UgcGljayB0aGUgcmlnaHQgb25lIGFuZCBiZSBjb25zaXN0ZW50LiAobnVtYmVyIG9uZSAn
+MScgdmVyc3VzCmNoYXJhY3RlciAnbCcpCgo+IAo+IFNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8
+aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgLi4uL2Rpc3BsYXkvcGFuZWwvYm9lLHR2
+MTAxd3VtLW5sNi50eHQgICAgICAgIHwgMzQgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUg
+Y2hhbmdlZCwgMzQgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYm9lLHR2MTAxd3VtLW5sNi50
+eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvYm9lLHR2MTAxd3VtLW5sNi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9ib2UsdHYxMDF3dW0tbmw2LnR4dAo+IG5ldyBmaWxl
+IG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi4yYTg0NzM1ZDc0MmQKPiAtLS0gL2Rl
+di9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cGFuZWwvYm9lLHR2MTAxd3VtLW5sNi50eHQKPiBAQCAtMCwwICsxLDM0IEBACj4gK0JvZSBDb3Jw
+b3JhdGlvbiAxMC4xIiBXVVhHQSBURlQgTENEIHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0
+aWVzOgo+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiYm9lLHR2MTAxd3VtIgpUaGUgZXhhbXBs
+ZSB1c2VzICJib2UsdHYxMDF3dW0tbmw2Iiwgd2hpY2ggbWF0Y2hlcyB0aGUgZmlsZW5hbWUuClBs
+ZWFzZSBmaXggc28gaXQgaXMgdGhlIHNhbWUgYWxsIG92ZXIuCgo+ICstIHJlZzogdGhlIHZpcnR1
+YWwgY2hhbm5lbCBudW1iZXIgb2YgYSBEU0kgcGVyaXBoZXJhbAo+ICstIGVuYWJsZS1ncGlvczog
+YSBHUElPIHNwZWMgZm9yIHRoZSBlbmFibGUgcGluCj4gKy0gcHAxODAwLXN1cHBseTogY29yZSB2
+b2x0YWdlIHN1cHBseQo+ICstIGF2ZGQtc3VwcGx5OiAKPiArLSBhdmVlLXN1cHBseTogCk1pc3Np
+bmcgZGVzY3JpcHRpb25zIC0gcGxlYXNlIGFkZC4KPiArLSBiYWNrbGlnaHQ6IHBoYW5kbGUgb2Yg
+dGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCj4gKwo+ICtUaGUgZGV2
+aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdpdGggb25lIGNoaWxk
+Cj4gKydlbmRwb2ludCcgbm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5ncyBkZWZpbmVkIGlu
+Cj4gK21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LiBUaGlzIG5vZGUgc2hvdWxkIGRlc2NyaWJl
+IHBhbmVsJ3MgdmlkZW8gYnVzLgo+ICsKPiArRXhhbXBsZToKPiArJmRzaSB7Cj4gKwkuLi4KPiAr
+CXBhbmVsQDAgewo+ICsJCWNvbXBhdGlibGUgPSAiYm9lLHR2MTAxd3VtLW5sNiI7Cj4gKwkJcmVn
+ID0gPDA+Owo+ICsJCWVuYWJsZS1ncGlvcyA9IDwmcGlvIDQ1IDA+Owo+ICsJCWF2ZGQtc3VwcGx5
+ID0gPCZwcHZhcm5fbGNkPjsKPiArCQlhdmVlLXN1cHBseSA9IDwmcHB2YXJwX2xjZD47Cj4gKwkJ
+cHAxODAwLXN1cHBseSA9IDwmcHAxODAwX2xjZD47Cj4gKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGln
+aHRfbGNkMD47Cj4gKwkJc3RhdHVzID0gIm9rYXkiOwo+ICsJCXBvcnQgewo+ICsJCQlwYW5lbF9p
+bjogZW5kcG9pbnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0PjsKPiArCQkJ
+fTsKPiArCQl9Owo+ICsJfTsKPiArfTsKPiBcIE5vIG5ld2xpbmUgYXQgZW5kIG9mIGZpbGUKUGxl
+YXNlIGFkZCBuZXdsaW5lLgoKCVNhbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWw=
