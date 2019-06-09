@@ -1,78 +1,82 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [RFC PATCH 1/6] ASoC: core: add support to
- snd_soc_dai_get_sdw_stream()
-Date: Sun, 9 Jun 2019 13:16:23 +0100
-Message-ID: <eef7ecf8-330f-c7e8-7d5e-f21d9771f037@linaro.org>
-References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
- <20190607085643.932-2-srinivas.kandagatla@linaro.org>
- <13bfb632-f743-c416-2224-c7acb5b28604@intel.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset GPIO
+Date: Sun,  9 Jun 2019 20:06:16 +0200
+Message-ID: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <13bfb632-f743-c416-2224-c7acb5b28604@intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Cezary Rojewski <cezary.rojewski@intel.com>
-Cc: broonie@kernel.org, vkoul@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com
+Cc: devicetree@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, khilman@baylibre.com, narmstrong@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for taking time to review,
+Recent Amlogic SoCs (G12A which includes S905X2 and S905D2 as well as
+G12B which includes S922X) use GPIOZ_14 or GPIOZ_15 for the PHY reset
+line. These GPIOs are special because they are marked as "3.3V input
+tolerant open drain (OD) pins" which means they can only drive the pin
+output LOW (to reset the PHY) or to switch to input mode (to take the
+PHY out of reset).
+The GPIO subsystem already supports this with the GPIO_OPEN_DRAIN and
+GPIO_OPEN_SOURCE flags in the devicetree bindings.
 
-On 08/06/2019 20:22, Cezary Rojewski wrote:
-> On 2019-06-07 10:56, Srinivas Kandagatla wrote:
->> On platforms which have smart speaker amplifiers connected via
->> soundwire and modeled as aux devices in ASoC, in such usecases machine
->> driver should be able to get sdw master stream from dai so that it can
->> use the runtime stream to setup slave streams.
->>
->> soundwire already as a set function, get function would provide more
->> flexibility to above configurations.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   include/sound/soc-dai.h | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
->> index f5d70041108f..9f90b936fd9a 100644
->> --- a/include/sound/soc-dai.h
->> +++ b/include/sound/soc-dai.h
->> @@ -177,6 +177,7 @@ struct snd_soc_dai_ops {
->>       int (*set_sdw_stream)(struct snd_soc_dai *dai,
->>               void *stream, int direction);
->> +    void *(*get_sdw_stream)(struct snd_soc_dai *dai, int direction);
->>       /*
->>        * DAI digital mute - optional.
->>        * Called by soc-core to minimise any pops.
->> @@ -385,4 +386,13 @@ static inline int 
->> snd_soc_dai_set_sdw_stream(struct snd_soc_dai *dai,
->>           return -ENOTSUPP;
->>   }
->> +static inline void *snd_soc_dai_get_sdw_stream(struct snd_soc_dai 
->> *dai, int direction)
-> 
-> Exceeds character limit?
-> 
->> +{
->> +    if (dai->driver->ops->get_sdw_stream)
->> +        return dai->driver->ops->get_sdw_stream(dai, direction);
->> +    else
->> +        return NULL;
-> 
-> set_ equivalent returns -ENOTSUPP instead.
-> ERR_PTR seems to make more sense here.
-> 
->> +
-> 
-> Unnecessary newline.
+The goal of this series to add support for these special GPIOs in
+stmmac.
 
-I agree with all the comment, will fix this in next version.
+Patch #2 prepares gpiolib-of for the switch from (legacy) GPIO numbers
+to GPIO descriptors in stmmac. This requires the gpiolib-of to take
+care of the "snps,reset-active-low" property.
 
-thanks,
-srini
-> 
->> +}
->> +
->>   #endif
->>
+Patch #3 switches stmmac from (legacy) GPIO numbers to GPIO descriptors
+because this enables tracking of the GPIO flags which are passed via
+devicetree. In other words: GPIO_OPEN_DRAIN and GPIO_OPEN_SOURCE are
+now honored correctly, which is exactly what is needed for these
+Amlogic platforms.
+
+Patch #1 and #4 are minor cleanups which follow the boyscout rule:
+"Always leave the campground cleaner than you found it."
+
+Patch #5 is included here to show how this new functionality is used.
+
+My test-cases were:
+- X96 Max: snps,reset-gpio = <&gpio GPIOZ_15 0> with and without
+           snps,reset-active-low before these patches. The PHY was
+           not detected.
+- X96 Max: snps,reset-gpio = <&gpio GPIOZ_15 GPIO_OPEN_SOURCE>. The
+           PHY is now detected correctly
+- Meson8b EC100: snps,reset-gpio = <&gpio GPIOH_4 0> with
+                 snps,reset-active-low. Before and after these
+                 patches the PHY is detected correctly.
+- Meson8b EC100: snps,reset-gpio = <&gpio GPIOH_4 0> without
+                 snps,reset-active-low. Before and after these
+                 patches the PHY is not detected (this is expected
+                 because we need to set the output LOW to take the
+                 PHY out of reset).
+- Meson8b EC100: snps,reset-gpio = <&gpio GPIOH_4 GPIO_ACTIVE_LOW>
+                 but without snps,reset-active-low. Before these
+                 patches the PHY was not detected. With these patches
+                 the PHY is now detected correctly.
+
+I am sending this as RFC because I'm not very familiar with the GPIO
+subsystem. What I came up with seems fine to me, but I'm not sure so
+I don't want this to be applied before Linus W. is happy with it. I
+am also looking for suggestions how to handle these cross-tree changes
+(patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
+go through the net-next tree. I will re-send patch #5 separately as
+this should go through Kevin's linux-amlogic tree).
+
+
+Martin Blumenstingl (5):
+  net: stmmac: drop redundant check in stmmac_mdio_reset
+  gpio: of: parse stmmac PHY reset line specific active-low property
+  net: stmmac: use GPIO descriptors in stmmac_mdio_reset
+  net: stmmac: use device_property_read_u32_array to read the reset
+    delays
+  arm64: dts: meson: g12a: x96-max: fix the Ethernet PHY reset line
+
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   |  3 +-
+ drivers/gpio/gpiolib-of.c                     |  6 +++
+ .../net/ethernet/stmicro/stmmac/stmmac_mdio.c | 43 ++++++++-----------
+ 3 files changed, 26 insertions(+), 26 deletions(-)
+
+-- 
+2.21.0
