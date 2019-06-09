@@ -1,7 +1,7 @@
 From: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH V5 07/11] misc: xilinx_sdfec: Add ability to get/set config
-Date: Sun, 9 Jun 2019 01:04:12 +0100
-Message-ID: <1560038656-380620-8-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V5 10/11] Docs: misc: xilinx_sdfec: Add documentation
+Date: Sun, 9 Jun 2019 01:04:15 +0100
+Message-ID: <1560038656-380620-11-git-send-email-dragan.cvetic@xilinx.com>
 References: <1560038656-380620-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,218 +12,322 @@ To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-ar
 Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-- Add capability to get SD-FEC config data using ioctl
-XSDFEC_GET_CONFIG.
+Add SD-FEC driver documentation.
 
-- Add capability to set SD-FEC data order using ioctl
-SDFEC_SET_ORDER.
-
-- Add capability to set SD-FEC bypass option using ioctl
-XSDFEC_SET_BYPASS.
-
-- Add capability to set SD-FEC active state using ioctl
-XSDFEC_IS_ACTIVE.
-
-Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 ---
- drivers/misc/xilinx_sdfec.c      | 88 ++++++++++++++++++++++++++++++++++++++++
- include/uapi/misc/xilinx_sdfec.h | 57 ++++++++++++++++++++++++++
- 2 files changed, 145 insertions(+)
+ Documentation/misc-devices/index.rst        |   1 +
+ Documentation/misc-devices/xilinx_sdfec.rst | 291 ++++++++++++++++++++++++++++
+ 2 files changed, 292 insertions(+)
+ create mode 100644 Documentation/misc-devices/xilinx_sdfec.rst
 
-diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index aa33679..77d0aba 100644
---- a/drivers/misc/xilinx_sdfec.c
-+++ b/drivers/misc/xilinx_sdfec.c
-@@ -266,6 +266,17 @@ static void update_config_from_hw(struct xsdfec_dev *xsdfec)
- 		xsdfec->state = XSDFEC_STOPPED;
- }
+diff --git a/Documentation/misc-devices/index.rst b/Documentation/misc-devices/index.rst
+index dfd1f45..b5b4757 100644
+--- a/Documentation/misc-devices/index.rst
++++ b/Documentation/misc-devices/index.rst
+@@ -15,3 +15,4 @@ fit into other categories.
+    :maxdepth: 2
  
-+static int xsdfec_get_config(struct xsdfec_dev *xsdfec, void __user *arg)
-+{
-+	int err;
+    ibmvmc
++   xilinx_sdfec
+diff --git a/Documentation/misc-devices/xilinx_sdfec.rst b/Documentation/misc-devices/xilinx_sdfec.rst
+new file mode 100644
+index 0000000..87966e3
+--- /dev/null
++++ b/Documentation/misc-devices/xilinx_sdfec.rst
+@@ -0,0 +1,291 @@
++.. SPDX-License-Identifier: GPL-2.0+
++====================
++Xilinx SD-FEC Driver
++====================
 +
-+	err = copy_to_user(arg, &xsdfec->config, sizeof(xsdfec->config));
-+	if (err)
-+		err = -EFAULT;
++Overview
++========
 +
-+	return err;
-+}
++This driver supports SD-FEC Integrated Block for Zynq |Ultrascale+ (TM)| RFSoCs.
 +
- static int xsdfec_set_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
- {
- 	struct xsdfec_turbo turbo;
-@@ -584,6 +595,71 @@ static int xsdfec_add_ldpc(struct xsdfec_dev *xsdfec, void __user *arg)
- 	return ret;
- }
- 
-+static int xsdfec_set_order(struct xsdfec_dev *xsdfec, void __user *arg)
-+{
-+	bool order_invalid;
-+	enum xsdfec_order order;
-+	int err;
++.. |Ultrascale+ (TM)| unicode:: Ultrascale+ U+2122
++   .. with trademark sign
 +
-+	err = get_user(order, (enum xsdfec_order *)arg);
-+	if (err)
-+		return -EFAULT;
++For a full description of SD-FEC core features, see the `SD-FEC Product Guide (PG256) <https://www.xilinx.com/cgi-bin/docs/ipdoc?c=sd_fec;v=latest;d=pg256-sdfec-integrated-block.pdf>`_
 +
-+	order_invalid = (order != XSDFEC_MAINTAIN_ORDER) &&
-+			(order != XSDFEC_OUT_OF_ORDER);
-+	if (order_invalid)
-+		return -EINVAL;
++This driver supports the following features:
 +
-+	/* Verify Device has not started */
-+	if (xsdfec->state == XSDFEC_STARTED)
-+		return -EIO;
++  - Retrieval of the Integrated Block configuration and status information
++  - Configuration of LDPC codes
++  - Configuration of Turbo decoding
++  - Monitoring errors
 +
-+	xsdfec_regwrite(xsdfec, XSDFEC_ORDER_ADDR, order);
++Missing features, known issues, and limitations of the SD-FEC driver are as
++follows:
 +
-+	xsdfec->config.order = order;
++  - Only allows a single open file handler to any instance of the driver at any time
++  - Reset of the SD-FEC Integrated Block is not controlled by this driver
++  - Does not support shared LDPC code table wraparound
 +
-+	return 0;
-+}
++The device tree entry is described in:
++`linux-xlnx/Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt <https://github.com/Xilinx/linux-xlnx/blob/master/Documentation/devicetree/bindings/misc/xlnx%2Csd-fec.txt>`_
 +
-+static int xsdfec_set_bypass(struct xsdfec_dev *xsdfec, bool __user *arg)
-+{
-+	bool bypass;
-+	int err;
 +
-+	err = get_user(bypass, arg);
-+	if (err)
-+		return -EFAULT;
++Modes of Operation
++------------------
 +
-+	/* Verify Device has not started */
-+	if (xsdfec->state == XSDFEC_STARTED)
-+		return -EIO;
++The driver works with the SD-FEC core in two modes of operation:
 +
-+	if (bypass)
-+		xsdfec_regwrite(xsdfec, XSDFEC_BYPASS_ADDR, 1);
-+	else
-+		xsdfec_regwrite(xsdfec, XSDFEC_BYPASS_ADDR, 0);
++  - Run-time configuration
++  - Programmable Logic (PL) initialization
 +
-+	xsdfec->config.bypass = bypass;
 +
-+	return 0;
-+}
++Run-time Configuration
++~~~~~~~~~~~~~~~~~~~~~~
 +
-+static int xsdfec_is_active(struct xsdfec_dev *xsdfec, bool __user *arg)
-+{
-+	u32 reg_value;
-+	bool is_active;
-+	int err;
++For Run-time configuration the role of driver is to allow the software application to do the following:
 +
-+	reg_value = xsdfec_regread(xsdfec, XSDFEC_ACTIVE_ADDR);
-+	/* using a double ! operator instead of casting */
-+	is_active = !!(reg_value & XSDFEC_IS_ACTIVITY_SET);
-+	err = put_user(is_active, arg);
-+	if (err)
-+		return -EFAULT;
++	- Load the configuration parameters for either Turbo decode or LDPC encode or decode
++	- Activate the SD-FEC core
++	- Monitor the SD-FEC core for errors
++	- Retrieve the status and configuration of the SD-FEC core
 +
-+	return err;
-+}
++Programmable Logic (PL) Initialization
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 +
- static u32
- xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
- {
-@@ -674,6 +750,9 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
- 	}
- 
- 	switch (cmd) {
-+	case XSDFEC_GET_CONFIG:
-+		rval = xsdfec_get_config(xsdfec, arg);
-+		break;
- 	case XSDFEC_SET_TURBO:
- 		rval = xsdfec_set_turbo(xsdfec, arg);
- 		break;
-@@ -683,6 +762,15 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
- 	case XSDFEC_ADD_LDPC_CODE_PARAMS:
- 		rval = xsdfec_add_ldpc(xsdfec, arg);
- 		break;
-+	case XSDFEC_SET_ORDER:
-+		rval = xsdfec_set_order(xsdfec, arg);
-+		break;
-+	case XSDFEC_SET_BYPASS:
-+		rval = xsdfec_set_bypass(xsdfec, arg);
-+		break;
-+	case XSDFEC_IS_ACTIVE:
-+		rval = xsdfec_is_active(xsdfec, (bool __user *)arg);
-+		break;
- 	default:
- 		/* Should not get here */
- 		break;
-diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
-index 9e3e8d5..77136e0 100644
---- a/include/uapi/misc/xilinx_sdfec.h
-+++ b/include/uapi/misc/xilinx_sdfec.h
-@@ -288,6 +288,19 @@ struct xsdfec_ldpc_param_table_sizes {
- #define XSDFEC_ADD_LDPC_CODE_PARAMS                                            \
- 	_IOW(XSDFEC_MAGIC, 5, struct xsdfec_ldpc_params)
- /**
-+ * DOC: XSDFEC_GET_CONFIG
-+ * @Parameters
-+ *
-+ * @struct xsdfec_config *
-+ *	Pointer to the &struct xsdfec_config that contains the current
-+ *	configuration settings of the SD-FEC Block
-+ *
-+ * @Description
-+ *
-+ * ioctl that returns SD-FEC core configuration
-+ */
-+#define XSDFEC_GET_CONFIG _IOR(XSDFEC_MAGIC, 6, struct xsdfec_config)
-+/**
-  * DOC: XSDFEC_GET_TURBO
-  * @Parameters
-  *
-@@ -300,4 +313,48 @@ struct xsdfec_ldpc_param_table_sizes {
-  * ioctl that returns SD-FEC turbo param values
-  */
- #define XSDFEC_GET_TURBO _IOR(XSDFEC_MAGIC, 7, struct xsdfec_turbo)
-+/**
-+ * DOC: XSDFEC_SET_ORDER
-+ * @Parameters
-+ *
-+ * @struct unsigned long *
-+ *	Pointer to the unsigned long that contains a value from the
-+ *	@enum xsdfec_order
-+ *
-+ * @Description
-+ *
-+ * ioctl that sets order, if order of blocks can change from input to output
-+ *
-+ * This can only be used when the driver is in the XSDFEC_STOPPED state
-+ */
-+#define XSDFEC_SET_ORDER _IOW(XSDFEC_MAGIC, 8, unsigned long)
-+/**
-+ * DOC: XSDFEC_SET_BYPASS
-+ * @Parameters
-+ *
-+ * @struct bool *
-+ *	Pointer to bool that sets the bypass value, where false results in
-+ *	normal operation and false results in the SD-FEC performing the
-+ *	configured operations (same number of cycles) but output data matches
-+ *	the input data
-+ *
-+ * @Description
-+ *
-+ * ioctl that sets bypass.
-+ *
-+ * This can only be used when the driver is in the XSDFEC_STOPPED state
-+ */
-+#define XSDFEC_SET_BYPASS _IOW(XSDFEC_MAGIC, 9, bool)
-+/**
-+ * DOC: XSDFEC_IS_ACTIVE
-+ * @Parameters
-+ *
-+ * @struct bool *
-+ *	Pointer to bool that returns true if the SD-FEC is processing data
-+ *
-+ * @Description
-+ *
-+ * ioctl that determines if SD-FEC is processing data
-+ */
-+#define XSDFEC_IS_ACTIVE _IOR(XSDFEC_MAGIC, 10, bool)
- #endif /* __XILINX_SDFEC_H__ */
++For PL initialization, supporting logic loads configuration parameters for either
++the Turbo decode or LDPC encode or decode.  The role of the driver is to allow
++the software application to do the following:
++
++	- Activate the SD-FEC core
++	- Monitor the SD-FEC core for errors
++	- Retrieve the status and configuration of the SD-FEC core
++
++
++Driver Structure
++================
++
++The driver provides a platform device where the ``probe`` and ``remove``
++operations are provided.
++
++  - probe: Updates configuration register with device-tree entries plus determines the current activate state of the core, for example, is the core bypassed or has the core been started.
++
++
++The driver defines the following driver file operations to provide user
++application interfaces:
++
++  - open: Implements restriction that only a single file descriptor can be open per SD-FEC instance at any time
++  - release: Allows another file descriptor to be open, that is after current file descriptor is closed
++  - poll: Provides a method to monitor for SD-FEC Error events
++  - unlocked_ioctl: Provides the the following ioctl commands that allows the application configure the SD-FEC core:
++
++		- :c:macro:`XSDFEC_START_DEV`
++		- :c:macro:`XSDFEC_STOP_DEV`
++		- :c:macro:`XSDFEC_GET_STATUS`
++		- :c:macro:`XSDFEC_SET_IRQ`
++		- :c:macro:`XSDFEC_SET_TURBO`
++		- :c:macro:`XSDFEC_ADD_LDPC_CODE_PARAMS`
++		- :c:macro:`XSDFEC_GET_CONFIG`
++		- :c:macro:`XSDFEC_SET_ORDER`
++		- :c:macro:`XSDFEC_SET_BYPASS`
++		- :c:macro:`XSDFEC_IS_ACTIVE`
++		- :c:macro:`XSDFEC_CLEAR_STATS`
++		- :c:macro:`XSDFEC_SET_DEFAULT_CONFIG`
++
++
++Driver Usage
++============
++
++
++Overview
++--------
++
++After opening the driver, the user should find out what operations need to be
++performed to configure and activate the SD-FEC core and determine the
++configuration of the driver.
++The following outlines the flow the user should perform:
++
++  - Determine Configuration
++  - Set the order, if not already configured as desired
++  - Set Turbo decode, LPDC encode or decode parameters, depending on how the
++    SD-FEC core is configured plus if the SD-FEC has not been configured for PL
++    initialization
++  - Enable interrupts, if not already enabled
++  - Bypass the SD-FEC core, if required
++  - Start the SD-FEC core if not already started
++  - Get the SD-FEC core status
++  - Monitor for interrupts
++  - Stop the SD-FEC core
++
++
++Note: When monitoring for interrupts if a critical error is detected where a reset is required, the driver will be required to load the default configuration.
++
++
++Determine Configuration
++-----------------------
++
++Determine the configuration of the SD-FEC core by using the ioctl
++:c:macro:`XSDFEC_GET_CONFIG`.
++
++Set the Order
++-------------
++
++Setting the order determines how the order of Blocks can change from input to output.
++
++Setting the order is done by using the ioctl :c:macro:`XSDFEC_SET_ORDER`
++
++Setting the order can only be done if the following restrictions are met:
++
++	- The ``state`` member of struct :c:type:`xsdfec_status <xsdfec_status>` filled by the ioctl :c:macro:`XSDFEC_GET_STATUS` indicates the SD-FEC core has not STARTED
++
++
++Add LDPC Codes
++--------------
++
++The following steps indicate how to add LDPC codes to the SD-FEC core:
++
++	- Use the auto-generated parameters to fill the :c:type:`struct xsdfec_ldpc_params <xsdfec_ldpc_params>` for the desired LDPC code.
++	- Set the SC, QA, and LA table offsets for the LPDC parameters and the parameters in the structure :c:type:`struct xsdfec_ldpc_params <xsdfec_ldpc_params>`
++	- Set the desired Code Id value in the structure :c:type:`struct xsdfec_ldpc_params <xsdfec_ldpc_params>`
++	- Add the LPDC Code Parameters using the ioctl :c:macro:`XSDFEC_ADD_LDPC_CODE_PARAMS`
++	- For the applied LPDC Code Parameter use the function :c:func:`xsdfec_calculate_shared_ldpc_table_entry_size` to calculate the size of shared LPDC code tables. This allows the user to determine the shared table usage so when selecting the table offsets for the next LDPC code parameters unused table areas can be selected.
++	- Repeat for each LDPC code parameter.
++
++Adding LDPC codes can only be done if the following restrictions are met:
++
++	- The ``code`` member of :c:type:`struct xsdfec_config <xsdfec_config>` filled by the ioctl :c:macro:`XSDFEC_GET_CONFIG` indicates the SD-FEC core is configured as LDPC
++	- The ``code_wr_protect`` of :c:type:`struct xsdfec_config <xsdfec_config>` filled by the ioctl :c:macro:`XSDFEC_GET_CONFIG` indicates that write protection is not enabled
++	- The ``state`` member of struct :c:type:`xsdfec_status <xsdfec_status>` filled by the ioctl :c:macro:`XSDFEC_GET_STATUS` indicates the SD-FEC core has not started
++
++Set Turbo Decode
++----------------
++
++Configuring the Turbo decode parameters is done by using the ioctl :c:macro:`XSDFEC_SET_TURBO` using auto-generated parameters to fill the :c:type:`struct xsdfec_turbo <xsdfec_turbo>` for the desired Turbo code.
++
++Adding Turbo decode can only be done if the following restrictions are met:
++
++	- The ``code`` member of :c:type:`struct xsdfec_config <xsdfec_config>` filled by the ioctl :c:macro:`XSDFEC_GET_CONFIG` indicates the SD-FEC core is configured as TURBO
++	- The ``state`` member of struct :c:type:`xsdfec_status <xsdfec_status>` filled by the ioctl :c:macro:`XSDFEC_GET_STATUS` indicates the SD-FEC core has not STARTED
++
++Enable Interrupts
++-----------------
++
++Enabling or disabling interrupts is done by using the ioctl :c:macro:`XSDFEC_SET_IRQ`. The members of the parameter passed, :c:type:`struct xsdfec_irq <xsdfec_irq>`, to the ioctl are used to set and clear different categories of interrupts. The category of interrupt is controlled as following:
++
++  - ``enable_isr`` controls the ``tlast`` interrupts
++  - ``enable_ecc_isr`` controls the ECC interrupts
++
++If the ``code`` member of :c:type:`struct xsdfec_config <xsdfec_config>` filled by the ioctl :c:macro:`XSDFEC_GET_CONFIG` indicates the SD-FEC core is configured as TURBO then the enabling ECC errors is not required.
++
++Bypass the SD-FEC
++-----------------
++
++Bypassing the SD-FEC is done by using the ioctl :c:macro:`XSDFEC_SET_BYPASS`
++
++Bypassing the SD-FEC can only be done if the following restrictions are met:
++
++	- The ``state`` member of :c:type:`struct xsdfec_status <xsdfec_status>` filled by the ioctl :c:macro:`XSDFEC_GET_STATUS` indicates the SD-FEC core has not STARTED
++
++Start the SD-FEC core
++---------------------
++
++Start the SD-FEC core by using the ioctl :c:macro:`XSDFEC_START_DEV`
++
++Get SD-FEC Status
++-----------------
++
++Get the SD-FEC status of the device by using the ioctl :c:macro:`XSDFEC_GET_STATUS`, which will fill the :c:type:`struct xsdfec_status <xsdfec_status>`
++
++Monitor for Interrupts
++----------------------
++
++	- Use the poll system call to monitor for an interrupt. The poll system call waits for an interrupt to wake it up or times out if no interrupt occurs.
++	- On return Poll ``revents`` will indicate whether stats and/or state have been updated
++		- ``POLLPRI`` indicates a critical error and the user should use :c:macro:`XSDFEC_GET_STATUS` and :c:macro:`XSDFEC_GET_STATS` to confirm
++		- ``POLLRDNORM`` indicates a non-critical error has occurred and the user should use  :c:macro:`XSDFEC_GET_STATS` to confirm
++	- Get stats by using the ioctl :c:macro:`XSDFEC_GET_STATS`
++		- For critical error the ``isr_err_count`` or ``uecc_count`` member  of :c:type:`struct xsdfec_stats <xsdfec_stats>` is non-zero
++		- For non-critical errors the ``cecc_count`` member of :c:type:`struct xsdfec_stats <xsdfec_stats>` is non-zero
++	- Get state by using the ioctl :c:macro:`XSDFEC_GET_STATUS`
++		- For a critical error the ``state`` of :c:type:`xsdfec_status <xsdfec_status>` will indicate a Reset Is Required
++	- Clear stats by using the ioctl :c:macro:`XSDFEC_CLEAR_STATS`
++
++If a critical error is detected where a reset is required. The application is required to call the ioctl :c:macro:`XSDFEC_SET_DEFAULT_CONFIG`, after the reset and it is not required to call the ioctl :c:macro:`XSDFEC_STOP_DEV`
++
++Note: Using poll system call prevents busy looping using :c:macro:`XSDFEC_GET_STATS` and :c:macro:`XSDFEC_GET_STATUS`
++
++Stop the SD-FEC Core
++---------------------
++
++Stop the device by using the ioctl :c:macro:`XSDFEC_STOP_DEV`
++
++Set the Default Configuration
++-----------------------------
++
++Load default configuration by using the ioctl :c:macro:`XSDFEC_SET_DEFAULT_CONFIG` to restore the driver.
++
++Limitations
++-----------
++
++Users should not duplicate SD-FEC device file handlers, for example fork() or dup() a process that has a created an SD-FEC file handler.
++
++Driver IOCTLs
++==============
++
++.. c:macro:: XSDFEC_START_DEV
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_START_DEV
++
++.. c:macro:: XSDFEC_STOP_DEV
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_STOP_DEV
++
++.. c:macro:: XSDFEC_GET_STATUS
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_GET_STATUS
++
++.. c:macro:: XSDFEC_SET_IRQ
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_SET_IRQ
++
++.. c:macro:: XSDFEC_SET_TURBO
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_SET_TURBO
++
++.. c:macro:: XSDFEC_ADD_LDPC_CODE_PARAMS
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_ADD_LDPC_CODE_PARAMS
++
++.. c:macro:: XSDFEC_GET_CONFIG
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_GET_CONFIG
++
++.. c:macro:: XSDFEC_SET_ORDER
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_SET_ORDER
++
++.. c:macro:: XSDFEC_SET_BYPASS
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_SET_BYPASS
++
++.. c:macro:: XSDFEC_IS_ACTIVE
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_IS_ACTIVE
++
++.. c:macro:: XSDFEC_CLEAR_STATS
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_CLEAR_STATS
++
++.. c:macro:: XSDFEC_GET_STATS
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_GET_STATS
++
++.. c:macro:: XSDFEC_SET_DEFAULT_CONFIG
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :doc: XSDFEC_SET_DEFAULT_CONFIG
++
++Driver Type Definitions
++=======================
++
++.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
++   :internal:
+\ No newline at end of file
 -- 
 2.7.4
