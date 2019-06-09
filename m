@@ -1,7 +1,7 @@
 From: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH V5 03/11] misc: xilinx_sdfec: Add CCF support
-Date: Sun, 9 Jun 2019 01:04:08 +0100
-Message-ID: <1560038656-380620-4-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V5 05/11] misc: xilinx_sdfec: Add ability to configure turbo
+Date: Sun, 9 Jun 2019 01:04:10 +0100
+Message-ID: <1560038656-380620-6-git-send-email-dragan.cvetic@xilinx.com>
 References: <1560038656-380620-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,267 +12,256 @@ To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-ar
 Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the support for Linux Clock Control Framework (CCF).
-Registers and enables clocks with the Clock Control
-Framework (CCF), to prevent shared clocks from been
-disabled.
+Add the capability to configure and retrieve turbo mode
+via the ioctls XSDFEC_SET_TURBO and XSDFEC_GET_TURBO.
+Add char device interface per DT node present and support
+file operations:
+- open(),
+- close(),
+- unlocked_ioctl(),
+- compat_ioctl().
 
 Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 ---
- drivers/misc/xilinx_sdfec.c | 191 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 189 insertions(+), 2 deletions(-)
+ drivers/misc/xilinx_sdfec.c      | 110 +++++++++++++++++++++++++++++++++++++++
+ include/uapi/misc/xilinx_sdfec.h |  67 ++++++++++++++++++++++++
+ 2 files changed, 177 insertions(+)
 
 diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 75cc980..4524677 100644
+index ddfca54..3b59c12 100644
 --- a/drivers/misc/xilinx_sdfec.c
 +++ b/drivers/misc/xilinx_sdfec.c
-@@ -23,11 +23,34 @@
- static int xsdfec_ndevs;
+@@ -19,6 +19,7 @@
+ #include <linux/poll.h>
+ #include <linux/slab.h>
+ #include <linux/clk.h>
++#include <linux/compat.h>
+ 
+ #include <uapi/misc/xilinx_sdfec.h>
+ 
+@@ -103,6 +104,12 @@ static int xsdfec_ndevs;
+ /* BYPASS Register */
+ #define XSDFEC_BYPASS_ADDR (0x3C)
+ 
++/* Turbo Code Register */
++#define XSDFEC_TURBO_ADDR (0x100)
++#define XSDFEC_TURBO_SCALE_MASK (0xFFF)
++#define XSDFEC_TURBO_SCALE_BIT_POS (8)
++#define XSDFEC_TURBO_SCALE_MAX (15)
++
+ /**
+  * struct xsdfec_clks - For managing SD-FEC clocks
+  * @core_clk: Main processing clock for core
+@@ -207,6 +214,55 @@ static void update_config_from_hw(struct xsdfec_dev *xsdfec)
+ 		xsdfec->state = XSDFEC_STOPPED;
+ }
+ 
++static int xsdfec_set_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
++{
++	struct xsdfec_turbo turbo;
++	int err;
++	u32 turbo_write;
++
++	err = copy_from_user(&turbo, arg, sizeof(turbo));
++	if (err)
++		return -EFAULT;
++
++	if (turbo.alg >= XSDFEC_TURBO_ALG_MAX)
++		return -EINVAL;
++
++	if (turbo.scale > XSDFEC_TURBO_SCALE_MAX)
++		return -EINVAL;
++
++	/* Check to see what device tree says about the FEC codes */
++	if (xsdfec->config.code == XSDFEC_LDPC_CODE)
++		return -EIO;
++
++	turbo_write = ((turbo.scale & XSDFEC_TURBO_SCALE_MASK)
++		       << XSDFEC_TURBO_SCALE_BIT_POS) |
++		      turbo.alg;
++	xsdfec_regwrite(xsdfec, XSDFEC_TURBO_ADDR, turbo_write);
++	return err;
++}
++
++static int xsdfec_get_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
++{
++	u32 reg_value;
++	struct xsdfec_turbo turbo_params;
++	int err;
++
++	if (xsdfec->config.code == XSDFEC_LDPC_CODE)
++		return -EIO;
++
++	reg_value = xsdfec_regread(xsdfec, XSDFEC_TURBO_ADDR);
++
++	turbo_params.scale = (reg_value & XSDFEC_TURBO_SCALE_MASK) >>
++			     XSDFEC_TURBO_SCALE_BIT_POS;
++	turbo_params.alg = reg_value & 0x1;
++
++	err = copy_to_user(arg, &turbo_params, sizeof(turbo_params));
++	if (err)
++		err = -EFAULT;
++
++	return err;
++}
++
+ static u32
+ xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
+ {
+@@ -270,8 +326,62 @@ static int xsdfec_cfg_axi_streams(struct xsdfec_dev *xsdfec)
+ 	return 0;
+ }
+ 
++static int xsdfec_dev_open(struct inode *iptr, struct file *fptr)
++{
++	return 0;
++}
++
++static int xsdfec_dev_release(struct inode *iptr, struct file *fptr)
++{
++	return 0;
++}
++
++static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
++			     unsigned long data)
++{
++	struct xsdfec_dev *xsdfec;
++	void __user *arg = NULL;
++	int rval = -EINVAL;
++
++	xsdfec = container_of(fptr->private_data, struct xsdfec_dev, miscdev);
++
++	/* check if ioctl argument is present and valid */
++	if (_IOC_DIR(cmd) != _IOC_NONE) {
++		arg = (void __user *)data;
++		if (!arg)
++			return rval;
++	}
++
++	switch (cmd) {
++	case XSDFEC_SET_TURBO:
++		rval = xsdfec_set_turbo(xsdfec, arg);
++		break;
++	case XSDFEC_GET_TURBO:
++		rval = xsdfec_get_turbo(xsdfec, arg);
++		break;
++	default:
++		/* Should not get here */
++		break;
++	}
++	return rval;
++}
++
++#ifdef CONFIG_COMPAT
++static long xsdfec_dev_compat_ioctl(struct file *file, unsigned int cmd,
++				    unsigned long data)
++{
++	return xsdfec_dev_ioctl(file, cmd, (unsigned long)compat_ptr(data));
++}
++#endif
++
+ static const struct file_operations xsdfec_fops = {
+ 	.owner = THIS_MODULE,
++	.open = xsdfec_dev_open,
++	.release = xsdfec_dev_release,
++	.unlocked_ioctl = xsdfec_dev_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl = xsdfec_dev_compat_ioctl,
++#endif
+ };
+ 
+ static int xsdfec_parse_of(struct xsdfec_dev *xsdfec)
+diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
+index 7b47a4c..dc9d4a3 100644
+--- a/include/uapi/misc/xilinx_sdfec.h
++++ b/include/uapi/misc/xilinx_sdfec.h
+@@ -41,6 +41,22 @@ enum xsdfec_order {
+ };
  
  /**
-+ * struct xsdfec_clks - For managing SD-FEC clocks
-+ * @core_clk: Main processing clock for core
-+ * @axi_clk: AXI4-Lite memory-mapped clock
-+ * @din_words_clk: DIN Words AXI4-Stream Slave clock
-+ * @din_clk: DIN AXI4-Stream Slave clock
-+ * @dout_clk: DOUT Words AXI4-Stream Slave clock
-+ * @dout_words_clk: DOUT AXI4-Stream Slave clock
-+ * @ctrl_clk: Control AXI4-Stream Slave clock
-+ * @status_clk: Status AXI4-Stream Slave clock
++ * enum xsdfec_turbo_alg - Turbo Algorithm Type.
++ * @XSDFEC_MAX_SCALE: Max Log-Map algorithm with extrinsic scaling. When
++ *		      scaling is set to this is equivalent to the Max Log-Map
++ *		      algorithm.
++ * @XSDFEC_MAX_STAR: Log-Map algorithm.
++ * @XSDFEC_TURBO_ALG_MAX: Used to indicate out of bound Turbo algorithms.
++ *
++ * This enum specifies which Turbo Decode algorithm is in use.
 + */
-+struct xsdfec_clks {
-+	struct clk *core_clk;
-+	struct clk *axi_clk;
-+	struct clk *din_words_clk;
-+	struct clk *din_clk;
-+	struct clk *dout_clk;
-+	struct clk *dout_words_clk;
-+	struct clk *ctrl_clk;
-+	struct clk *status_clk;
++enum xsdfec_turbo_alg {
++	XSDFEC_MAX_SCALE = 0,
++	XSDFEC_MAX_STAR,
++	XSDFEC_TURBO_ALG_MAX,
 +};
 +
 +/**
-  * struct xsdfec_dev - Driver data for SDFEC
-  * @regs: device physical base address
-  * @dev: pointer to device struct
-  * @miscdev: Misc device handle
-  * @error_data_lock: Error counter and states spinlock
-+ * @clks: Clocks managed by the SDFEC driver
-  *
-  * This structure contains necessary state for SDFEC driver to operate
+  * enum xsdfec_state - State.
+  * @XSDFEC_INIT: Driver is initialized.
+  * @XSDFEC_STARTED: Driver is started.
+@@ -98,6 +114,29 @@ enum xsdfec_axis_word_include {
+ };
+ 
+ /**
++ * struct xsdfec_turbo - User data for Turbo codes.
++ * @alg: Specifies which Turbo decode algorithm to use
++ * @scale: Specifies the extrinsic scaling to apply when the Max Scale algorithm
++ *	   has been selected
++ *
++ * Turbo code structure to communicate parameters to XSDFEC driver.
++ */
++struct xsdfec_turbo {
++	enum xsdfec_turbo_alg alg;
++	__u8 scale;
++};
++
++/**
++ * struct xsdfec_status - Status of SD-FEC core.
++ * @state: State of the SD-FEC core
++ * @activity: Describes if the SD-FEC instance is Active
++ */
++struct xsdfec_status {
++	enum xsdfec_state state;
++	__s8 activity;
++};
++
++/**
+  * struct xsdfec_irq - Enabling or Disabling Interrupts.
+  * @enable_isr: If true enables the ISR
+  * @enable_ecc_isr: If true enables the ECC ISR
+@@ -135,4 +174,32 @@ struct xsdfec_config {
+  * XSDFEC IOCTL List
   */
-@@ -37,12 +60,166 @@ struct xsdfec_dev {
- 	struct miscdevice miscdev;
- 	/* Spinlock to protect state_updated and stats_updated */
- 	spinlock_t error_data_lock;
-+	struct xsdfec_clks clks;
- };
- 
- static const struct file_operations xsdfec_fops = {
- 	.owner = THIS_MODULE,
- };
- 
-+static int xsdfec_clk_init(struct platform_device *pdev,
-+			   struct xsdfec_clks *clks)
-+{
-+	int err;
-+
-+	clks->core_clk = devm_clk_get(&pdev->dev, "core_clk");
-+	if (IS_ERR(clks->core_clk)) {
-+		dev_err(&pdev->dev, "failed to get core_clk");
-+		return PTR_ERR(clks->core_clk);
-+	}
-+
-+	clks->axi_clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
-+	if (IS_ERR(clks->axi_clk)) {
-+		dev_err(&pdev->dev, "failed to get axi_clk");
-+		return PTR_ERR(clks->axi_clk);
-+	}
-+
-+	clks->din_words_clk = devm_clk_get(&pdev->dev, "s_axis_din_words_aclk");
-+	if (IS_ERR(clks->din_words_clk)) {
-+		if (PTR_ERR(clks->din_words_clk) != -ENOENT) {
-+			err = PTR_ERR(clks->din_words_clk);
-+			return err;
-+		}
-+		clks->din_words_clk = NULL;
-+	}
-+
-+	clks->din_clk = devm_clk_get(&pdev->dev, "s_axis_din_aclk");
-+	if (IS_ERR(clks->din_clk)) {
-+		if (PTR_ERR(clks->din_clk) != -ENOENT) {
-+			err = PTR_ERR(clks->din_clk);
-+			return err;
-+		}
-+		clks->din_clk = NULL;
-+	}
-+
-+	clks->dout_clk = devm_clk_get(&pdev->dev, "m_axis_dout_aclk");
-+	if (IS_ERR(clks->dout_clk)) {
-+		if (PTR_ERR(clks->dout_clk) != -ENOENT) {
-+			err = PTR_ERR(clks->dout_clk);
-+			return err;
-+		}
-+		clks->dout_clk = NULL;
-+	}
-+
-+	clks->dout_words_clk =
-+		devm_clk_get(&pdev->dev, "s_axis_dout_words_aclk");
-+	if (IS_ERR(clks->dout_words_clk)) {
-+		if (PTR_ERR(clks->dout_words_clk) != -ENOENT) {
-+			err = PTR_ERR(clks->dout_words_clk);
-+			return err;
-+		}
-+		clks->dout_words_clk = NULL;
-+	}
-+
-+	clks->ctrl_clk = devm_clk_get(&pdev->dev, "s_axis_ctrl_aclk");
-+	if (IS_ERR(clks->ctrl_clk)) {
-+		if (PTR_ERR(clks->ctrl_clk) != -ENOENT) {
-+			err = PTR_ERR(clks->ctrl_clk);
-+			return err;
-+		}
-+		clks->ctrl_clk = NULL;
-+	}
-+
-+	clks->status_clk = devm_clk_get(&pdev->dev, "m_axis_status_aclk");
-+	if (IS_ERR(clks->status_clk)) {
-+		if (PTR_ERR(clks->status_clk) != -ENOENT) {
-+			err = PTR_ERR(clks->status_clk);
-+			return err;
-+		}
-+		clks->status_clk = NULL;
-+	}
-+
-+	err = clk_prepare_enable(clks->core_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable core_clk (%d)", err);
-+		return err;
-+	}
-+
-+	err = clk_prepare_enable(clks->axi_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable axi_clk (%d)", err);
-+		goto err_disable_core_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->din_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable din_clk (%d)", err);
-+		goto err_disable_axi_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->din_words_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable din_words_clk (%d)", err);
-+		goto err_disable_din_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->dout_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable dout_clk (%d)", err);
-+		goto err_disable_din_words_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->dout_words_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable dout_words_clk (%d)",
-+			err);
-+		goto err_disable_dout_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->ctrl_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable ctrl_clk (%d)", err);
-+		goto err_disable_dout_words_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->status_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable status_clk (%d)\n", err);
-+		goto err_disable_ctrl_clk;
-+	}
-+
-+	return err;
-+
-+err_disable_ctrl_clk:
-+	clk_disable_unprepare(clks->ctrl_clk);
-+err_disable_dout_words_clk:
-+	clk_disable_unprepare(clks->dout_words_clk);
-+err_disable_dout_clk:
-+	clk_disable_unprepare(clks->dout_clk);
-+err_disable_din_words_clk:
-+	clk_disable_unprepare(clks->din_words_clk);
-+err_disable_din_clk:
-+	clk_disable_unprepare(clks->din_clk);
-+err_disable_axi_clk:
-+	clk_disable_unprepare(clks->axi_clk);
-+err_disable_core_clk:
-+	clk_disable_unprepare(clks->core_clk);
-+
-+	return err;
-+}
-+
-+static void xsdfec_disable_all_clks(struct xsdfec_clks *clks)
-+{
-+	clk_disable_unprepare(clks->status_clk);
-+	clk_disable_unprepare(clks->ctrl_clk);
-+	clk_disable_unprepare(clks->dout_words_clk);
-+	clk_disable_unprepare(clks->dout_clk);
-+	clk_disable_unprepare(clks->din_words_clk);
-+	clk_disable_unprepare(clks->din_clk);
-+	clk_disable_unprepare(clks->core_clk);
-+	clk_disable_unprepare(clks->axi_clk);
-+}
-+
- static int xsdfec_probe(struct platform_device *pdev)
- {
- 	struct xsdfec_dev *xsdfec;
-@@ -58,12 +235,16 @@ static int xsdfec_probe(struct platform_device *pdev)
- 	xsdfec->dev = &pdev->dev;
- 	spin_lock_init(&xsdfec->error_data_lock);
- 
-+	err = xsdfec_clk_init(pdev, &xsdfec->clks);
-+	if (err)
-+		return err;
-+
- 	dev = xsdfec->dev;
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	xsdfec->regs = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(xsdfec->regs)) {
- 		err = PTR_ERR(xsdfec->regs);
--		return err;
-+		goto err_xsdfec_dev;
- 	}
- 
- 	/* Save driver private data */
-@@ -77,11 +258,16 @@ static int xsdfec_probe(struct platform_device *pdev)
- 	err = misc_register(&xsdfec->miscdev);
- 	if (err) {
- 		dev_err(dev, "error:%d. Unable to register device", err);
--		return err;
-+		goto err_xsdfec_dev;
- 	}
- 
- 	xsdfec_ndevs += 1;
- 	return 0;
-+
-+	/* Failure cleanup */
-+err_xsdfec_dev:
-+	xsdfec_disable_all_clks(&xsdfec->clks);
-+	return err;
- }
- 
- static int xsdfec_remove(struct platform_device *pdev)
-@@ -90,6 +276,7 @@ static int xsdfec_remove(struct platform_device *pdev)
- 
- 	xsdfec = platform_get_drvdata(pdev);
- 	misc_deregister(&xsdfec->miscdev);
-+	xsdfec_disable_all_clks(&xsdfec->clks);
- 	xsdfec_ndevs -= 1;
- 	return 0;
- }
+ #define XSDFEC_MAGIC 'f'
++/**
++ * DOC: XSDFEC_SET_TURBO
++ * @Parameters
++ *
++ * @struct xsdfec_turbo *
++ *	Pointer to the &struct xsdfec_turbo that contains the Turbo decode
++ *	settings for the SD-FEC core
++ *
++ * @Description
++ *
++ * ioctl that sets the SD-FEC Turbo parameter values
++ *
++ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ */
++#define XSDFEC_SET_TURBO _IOW(XSDFEC_MAGIC, 4, struct xsdfec_turbo)
++/**
++ * DOC: XSDFEC_GET_TURBO
++ * @Parameters
++ *
++ * @struct xsdfec_turbo *
++ *	Pointer to the &struct xsdfec_turbo that contains the current Turbo
++ *	decode settings of the SD-FEC Block
++ *
++ * @Description
++ *
++ * ioctl that returns SD-FEC turbo param values
++ */
++#define XSDFEC_GET_TURBO _IOR(XSDFEC_MAGIC, 7, struct xsdfec_turbo)
+ #endif /* __XILINX_SDFEC_H__ */
 -- 
 2.7.4
