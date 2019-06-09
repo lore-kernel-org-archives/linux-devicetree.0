@@ -1,222 +1,970 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [2/2] drm/panel: support for AUO kd101n80-45na wuxga dsi video
- mode panel
-Date: Sun, 9 Jun 2019 13:51:05 +0200
-Message-ID: <20190609115105.GA31079@ravnborg.org>
-References: <20190608112342.64416-1-jitao.shi@mediatek.com>
- <20190608112342.64416-2-jitao.shi@mediatek.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [RFC PATCH 6/6] soundwire: qcom: add support for SoundWire
+ controller
+Date: Sun, 9 Jun 2019 13:15:37 +0100
+Message-ID: <6e656981-e141-2831-0732-55f4beca565e@linaro.org>
+References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
+ <20190607085643.932-7-srinivas.kandagatla@linaro.org>
+ <644c7aec-1844-d19b-4620-9da26020752f@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190608112342.64416-2-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, yingjoe.chen@mediatek.com, Thierry Reding <treding@nvidia.com>, Sean Paul <seanpaul@chromium.org>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Russell King <rmk+kernel@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <644c7aec-1844-d19b-4620-9da26020752f@intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cezary Rojewski <cezary.rojewski@intel.com>, broonie@kernel.org, vkoul@kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSml0YW8uCgpUaGFua3MgZm9yIGFub3RoZXIgcGFuZWwgZHJpdmVyLgoKVGhlIGNvbW1lbnRz
-IGZvciB0aGUgcGFuZWwtYm9lLXR2MTAxd3VtLW5sNiBkaXZlciB0byBleHRlbnQKYXBwbGllcyB0
-byB0aGlzIGRyaXZlciB0b28uClBsZWFzZSBhZGRyZXNzIHRoZXNlIGFuZCBJIHdpbGwgZG8gYSBw
-cm9wZXIgcmV2aWV3IG9mIHRoZSBuZXh0IHZlcnNpb24uCgpJIG5vdGljZSB0aGF0IGVycm9yIGhh
-bmRsaWduIGlzIGEgbGl0dGxlIGJpdCBsZXNzIGluIHRoaXMgZHJpdmVyLgpjb25zaWVyIHdoYXQg
-YXBwcm9jaCB0byB1c2UgYW5kIHNlZSBpZiB5b3UgY2FuIGFsaWduIGJldHdlZW4gdGhlc2UKZHJp
-dmVycywgYW5kIGlmIGluIGRvdWJ0IHVzZSBwYW5lbC1zaW1wbGUgYXMgeW91ciByb2xlIG1vZGVs
-LgoKCVNhbQoKT24gU2F0LCBKdW4gMDgsIDIwMTkgYXQgMDc6MjM6NDJQTSArMDgwMCwgSml0YW8g
-U2hpIHdyb3RlOgo+IEFkZCBkcml2ZXIgZm9yIEFVTyBrZDEwMW44MC00NW5hIHBhbmVsLgo+IFRo
-aXMgcGFuZWwgc3VwcG9ydHMgdGhlIHJlc29sdXRpb24gMTIwMHgxOTIwLCBkc2kgdmlkZW8gbW9k
-ZQo+IGFuZCA0IGxhbmVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hp
-QG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcgICAg
-ICAgICAgICAgICAgIHwgIDEwICsKPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlICAg
-ICAgICAgICAgICAgIHwgICAxICsKPiAgLi4uL2dwdS9kcm0vcGFuZWwvcGFuZWwtYXVvLWtkMTAx
-bjgwLTQ1bmEuYyAgIHwgMzUyICsrKysrKysrKysrKysrKysrKwo+ICAzIGZpbGVzIGNoYW5nZWQs
-IDM2MyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-cGFuZWwvcGFuZWwtYXVvLWtkMTAxbjgwLTQ1bmEuYwo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vcGFuZWwvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCj4g
-aW5kZXggZTM2ZGJiNGRmODY3Li5mNWNkNWFmOWNlNDIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL3BhbmVsL0tjb25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZp
-Zwo+IEBAIC0yNzIsNCArMjcyLDE0IEBAIGNvbmZpZyBEUk1fUEFORUxfVFJVTFlfTlQzNTU5N19X
-UVhHQQo+ICAJaGVscAo+ICAJICBTYXkgWSBoZXJlIGlmIHlvdSB3YW50IHRvIGVuYWJsZSBzdXBw
-b3J0IGZvciBUcnVseSBOVDM1NTk3IFdRWEdBIER1YWwgRFNJCj4gIAkgIFZpZGVvIE1vZGUgcGFu
-ZWwKPiArCj4gK2NvbmZpZyBEUk1fUEFORUxfQVVPX0tEMTAxTjgwXzQ1TkEKPiArCXRyaXN0YXRl
-ICJBVU8gS0QxMDFOODBfNDVOQSAxMjAweDE5MjAgcGFuZWwiCj4gKwlkZXBlbmRzIG9uIE9GCj4g
-KwlkZXBlbmRzIG9uIERSTV9NSVBJX0RTSQo+ICsJZGVwZW5kcyBvbiBCQUNLTElHSFRfQ0xBU1Nf
-REVWSUNFCj4gKwloZWxwCj4gKwkgIFNheSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gc3VwcG9ydCBm
-b3IgQVVPIEtEMTAxTjgwXzQ1TkEgV1VYR0EgUEFORUwKPiArCSAgRFNJIFZpZGVvIE1vZGUgcGFu
-ZWwKPiArCj4gIGVuZG1lbnUKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01h
-a2VmaWxlIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlCj4gaW5kZXggNzhlM2RjMzc2
-YmRkLi4xMDU2OTMzYmRmMmUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01h
-a2VmaWxlCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlCj4gQEAgLTI4LDMg
-KzI4LDQgQEAgb2JqLSQoQ09ORklHX0RSTV9QQU5FTF9TSVRST05JWF9TVDc3MDEpICs9IHBhbmVs
-LXNpdHJvbml4LXN0NzcwMS5vCj4gIG9iai0kKENPTkZJR19EUk1fUEFORUxfU0lUUk9OSVhfU1Q3
-Nzg5VikgKz0gcGFuZWwtc2l0cm9uaXgtc3Q3Nzg5di5vCj4gIG9iai0kKENPTkZJR19EUk1fUEFO
-RUxfVFBPX1RQRzExMCkgKz0gcGFuZWwtdHBvLXRwZzExMC5vCj4gIG9iai0kKENPTkZJR19EUk1f
-UEFORUxfVFJVTFlfTlQzNTU5N19XUVhHQSkgKz0gcGFuZWwtdHJ1bHktbnQzNTU5Ny5vCj4gK29i
-ai0kKENPTkZJR19EUk1fUEFORUxfQVVPX0tEMTAxTjgwXzQ1TkEpICs9IHBhbmVsLWF1by1rZDEw
-MW44MC00NW5hLm8KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWF1
-by1rZDEwMW44MC00NW5hLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtYXVvLWtkMTAx
-bjgwLTQ1bmEuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5h
-YjdiZmMwNTllOGEKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVs
-L3BhbmVsLWF1by1rZDEwMW44MC00NW5hLmMKPiBAQCAtMCwwICsxLDM1MiBAQAo+ICsvLyBTUERY
-LUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKGMpIDIw
-MTggTWVkaWFUZWsgSW5jLgo+ICsgKiBBdXRob3I6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlh
-dGVrLmNvbT4KPiArICovCj4gKwo+ICsjaW5jbHVkZSA8bGludXgvYmFja2xpZ2h0Lmg+Cj4gKyNp
-bmNsdWRlIDxsaW51eC9ncGlvL2NvbnN1bWVyLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUu
-aD4KPiArI2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3Iv
-Y29uc3VtZXIuaD4KPiArCj4gKyNpbmNsdWRlIDxkcm0vZHJtUC5oPgo+ICsjaW5jbHVkZSA8ZHJt
-L2RybV9jcnRjLmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX21pcGlfZHNpLmg+Cj4gKyNpbmNsdWRl
-IDxkcm0vZHJtX3BhbmVsLmg+Cj4gKwo+ICsjaW5jbHVkZSA8dmlkZW8vbWlwaV9kaXNwbGF5Lmg+
-Cj4gKwo+ICtzdHJ1Y3QgYXVvX3BhbmVsIHsKPiArCXN0cnVjdCBkcm1fcGFuZWwgYmFzZTsKPiAr
-CXN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRzaTsKPiArCj4gKwlzdHJ1Y3QgYmFja2xpZ2h0X2Rl
-dmljZSAqYmFja2xpZ2h0Owo+ICsJc3RydWN0IHJlZ3VsYXRvciAqcHAxODAwOwo+ICsJc3RydWN0
-IHJlZ3VsYXRvciAqYXZlZTsKPiArCXN0cnVjdCByZWd1bGF0b3IgKmF2ZGQ7Cj4gKwlzdHJ1Y3Qg
-Z3Bpb19kZXNjICplbmFibGVfZ3BpbzsKPiArCj4gKwlib29sIHByZXBhcmVkOwo+ICsJYm9vbCBl
-bmFibGVkOwo+ICsKPiArCWNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICptb2RlOwo+ICt9
-Owo+ICsKPiArc3RhdGljIGlubGluZSBzdHJ1Y3QgYXVvX3BhbmVsICp0b19hdW9fcGFuZWwoc3Ry
-dWN0IGRybV9wYW5lbCAqcGFuZWwpCj4gK3sKPiArCXJldHVybiBjb250YWluZXJfb2YocGFuZWws
-IHN0cnVjdCBhdW9fcGFuZWwsIGJhc2UpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGF1b19wYW5l
-bF9pbml0KHN0cnVjdCBhdW9fcGFuZWwgKmF1bykKPiArewo+ICsJc3RydWN0IGRybV9wYW5lbCAq
-cGFuZWwgPSAmYXVvLT5iYXNlOwo+ICsJaW50IGVycjsKPiArCj4gKwllcnIgPSBtaXBpX2RzaV9k
-Y3NfZXhpdF9zbGVlcF9tb2RlKGF1by0+ZHNpKTsKPiArCWlmIChlcnIgPCAwKSB7Cj4gKwkJRFJN
-X0RFVl9FUlJPUihwYW5lbC0+ZGV2LCAiZmFpbGVkIHRvIGV4aXQgc2xlZXAgbW9kZTogJWRcbiIs
-Cj4gKwkJCSAgICAgIGVycik7Cj4gKwkJcmV0dXJuIGVycjsKPiArCX0KPiArCj4gKwkvKiBUMy4x
-Ki8KPiArCW1zbGVlcCgxMjApOwo+ICsKPiArCWVyciA9IG1pcGlfZHNpX2Rjc19zZXRfZGlzcGxh
-eV9vbihhdW8tPmRzaSk7Cj4gKwlpZiAoZXJyIDwgMCkgewo+ICsJCURSTV9ERVZfRVJST1IocGFu
-ZWwtPmRldiwgImZhaWxlZCB0byBzZXQgZGlzcGxheSBvbjogJWRcbiIsCj4gKwkJCSAgICAgIGVy
-cik7Cj4gKwl9Cj4gKwkvKiBUMy4xICsgVDMuMjogPiAyMDBtcyAqLwo+ICsJbXNsZWVwKDEyMCk7
-Cj4gKwo+ICsJcmV0dXJuIGVycjsKPiArfQo+ICsKPiArc3RhdGljIGludCBhdW9fcGFuZWxfb2Zm
-KHN0cnVjdCBhdW9fcGFuZWwgKmF1bykKPiArewo+ICsJc3RydWN0IG1pcGlfZHNpX2RldmljZSAq
-ZHNpID0gYXVvLT5kc2k7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCWRzaS0+bW9kZV9mbGFncyAmPSB+
-TUlQSV9EU0lfTU9ERV9MUE07Cj4gKwo+ICsJcmV0ID0gbWlwaV9kc2lfZGNzX3NldF9kaXNwbGF5
-X29mZihkc2kpOwo+ICsJaWYgKHJldCA8IDApCj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwlyZXQg
-PSBtaXBpX2RzaV9kY3NfZW50ZXJfc2xlZXBfbW9kZShkc2kpOwo+ICsJaWYgKHJldCA8IDApCj4g
-KwkJcmV0dXJuIHJldDsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGludCBh
-dW9fcGFuZWxfZGlzYWJsZShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKPiArewo+ICsJc3RydWN0
-IGF1b19wYW5lbCAqYXVvID0gdG9fYXVvX3BhbmVsKHBhbmVsKTsKPiArCj4gKwlpZiAoIWF1by0+
-ZW5hYmxlZCkKPiArCQlyZXR1cm4gMDsKPiArCj4gKwliYWNrbGlnaHRfZGlzYWJsZShhdW8tPmJh
-Y2tsaWdodCk7Cj4gKwo+ICsJYXVvLT5lbmFibGVkID0gZmFsc2U7Cj4gKwo+ICsJcmV0dXJuIDA7
-Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgYXVvX3BhbmVsX3VucHJlcGFyZShzdHJ1Y3QgZHJtX3Bh
-bmVsICpwYW5lbCkKPiArewo+ICsJc3RydWN0IGF1b19wYW5lbCAqYXVvID0gdG9fYXVvX3BhbmVs
-KHBhbmVsKTsKPiArCWludCByZXQ7Cj4gKwo+ICsJaWYgKCFhdW8tPnByZXBhcmVkKQo+ICsJCXJl
-dHVybiAwOwo+ICsKPiArCXJldCA9IGF1b19wYW5lbF9vZmYoYXVvKTsKPiArCWlmIChyZXQgPCAw
-KSB7Cj4gKwkJZGV2X2VycihwYW5lbC0+ZGV2LCAiZmFpbGVkIHRvIHNldCBwYW5lbCBvZmY6ICVk
-XG4iLCByZXQpOwo+ICsJCXJldHVybiByZXQ7Cj4gKwl9Cj4gKwo+ICsJbXNsZWVwKDE1MCk7Cj4g
-KwlyZWd1bGF0b3JfZGlzYWJsZShhdW8tPmF2ZWUpOwo+ICsJcmVndWxhdG9yX2Rpc2FibGUoYXVv
-LT5hdmRkKTsKPiArCXVzbGVlcF9yYW5nZSg1MDAwLCA3MDAwKTsKPiArCXJlZ3VsYXRvcl9kaXNh
-YmxlKGF1by0+cHAxODAwKTsKPiArCWlmIChhdW8tPmVuYWJsZV9ncGlvKQo+ICsJCWdwaW9kX3Nl
-dF92YWx1ZShhdW8tPmVuYWJsZV9ncGlvLCAwKTsKPiArCj4gKwlhdW8tPnByZXBhcmVkID0gZmFs
-c2U7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgYXVvX3BhbmVsX3By
-ZXBhcmUoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCj4gK3sKPiArCXN0cnVjdCBhdW9fcGFuZWwg
-KmF1byA9IHRvX2F1b19wYW5lbChwYW5lbCk7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCWlmIChhdW8t
-PnByZXBhcmVkKQo+ICsJCXJldHVybiAwOwo+ICsKPiArCWlmIChhdW8tPmVuYWJsZV9ncGlvKSB7
-Cj4gKwkJZ3Bpb2Rfc2V0X3ZhbHVlKGF1by0+ZW5hYmxlX2dwaW8sIDApOwo+ICsJCXVzbGVlcF9y
-YW5nZSgxMDAwLCAxNTAwKTsKPiArCX0KPiArCj4gKwlyZXQgPSByZWd1bGF0b3JfZW5hYmxlKGF1
-by0+cHAxODAwKTsKPiArCWlmIChyZXQgPCAwKQo+ICsJCXJldHVybiByZXQ7Cj4gKwlyZXQgPSBy
-ZWd1bGF0b3JfZW5hYmxlKGF1by0+YXZkZCk7Cj4gKwlpZiAocmV0IDwgMCkKPiArCQlnb3RvIHBv
-d2Vyb2ZmMXY4Owo+ICsJcmV0ID0gcmVndWxhdG9yX2VuYWJsZShhdW8tPmF2ZWUpOwo+ICsJaWYg
-KHJldCA8IDApCj4gKwkJZ290byBwb3dlcm9mZmF2ZGQ7Cj4gKwo+ICsJaWYgKGF1by0+ZW5hYmxl
-X2dwaW8pIHsKPiArCQlncGlvZF9zZXRfdmFsdWUoYXVvLT5lbmFibGVfZ3BpbywgMSk7Cj4gKwkJ
-dXNsZWVwX3JhbmdlKDEwMDAwLCAxMjAwMCk7Cj4gKwl9Cj4gKwo+ICsJcmV0ID0gYXVvX3BhbmVs
-X2luaXQoYXVvKTsKPiArCWlmIChyZXQgPCAwKSB7Cj4gKwkJZGV2X2VycihwYW5lbC0+ZGV2LCAi
-ZmFpbGVkIHRvIGluaXQgcGFuZWw6ICVkXG4iLCByZXQpOwo+ICsJCWdvdG8gcG93ZXJvZmY7Cj4g
-Kwl9Cj4gKwo+ICsJYXVvLT5wcmVwYXJlZCA9IHRydWU7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gKwo+
-ICtwb3dlcm9mZjoKPiArCXJlZ3VsYXRvcl9kaXNhYmxlKGF1by0+YXZlZSk7Cj4gK3Bvd2Vyb2Zm
-YXZkZDoKPiArCXJlZ3VsYXRvcl9kaXNhYmxlKGF1by0+YXZkZCk7Cj4gK3Bvd2Vyb2ZmMXY4Ogo+
-ICsJdXNsZWVwX3JhbmdlKDUwMDAsIDcwMDApOwo+ICsJcmVndWxhdG9yX2Rpc2FibGUoYXVvLT5w
-cDE4MDApOwo+ICsJaWYgKGF1by0+ZW5hYmxlX2dwaW8pCj4gKwkJZ3Bpb2Rfc2V0X3ZhbHVlKGF1
-by0+ZW5hYmxlX2dwaW8sIDApOwo+ICsJcmV0dXJuIHJldDsKPiArfQo+ICsKPiArc3RhdGljIGlu
-dCBhdW9fcGFuZWxfZW5hYmxlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+ICt7Cj4gKwlzdHJ1
-Y3QgYXVvX3BhbmVsICphdW8gPSB0b19hdW9fcGFuZWwocGFuZWwpOwo+ICsJaW50IHJldDsKPiAr
-Cj4gKwlpZiAoYXVvLT5lbmFibGVkKQo+ICsJCXJldHVybiAwOwo+ICsKPiArCXJldCA9IGJhY2ts
-aWdodF9lbmFibGUoYXVvLT5iYWNrbGlnaHQpOwo+ICsJaWYgKHJldCkgewo+ICsJCURSTV9ERVZf
-RVJST1IocGFuZWwtPmRybS0+ZGV2LAo+ICsJCQkgICAgICAiRmFpbGVkIHRvIGVuYWJsZSBiYWNr
-bGlnaHQgJWRcbiIsIHJldCk7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4gKwlhdW8tPmVu
-YWJsZWQgPSB0cnVlOwo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgY29uc3Qg
-c3RydWN0IGRybV9kaXNwbGF5X21vZGUgZGVmYXVsdF9tb2RlID0gewo+ICsJLmNsb2NrID0gMTU3
-MDAwLAo+ICsJLmhkaXNwbGF5ID0gMTIwMCwKPiArCS5oc3luY19zdGFydCA9IDEyMDAgKyA4MCwK
-PiArCS5oc3luY19lbmQgPSAxMjAwICsgODAgKyAyNCwKPiArCS5odG90YWwgPSAxMjAwICsgODAg
-KyAyNCArIDM2LAo+ICsJLnZkaXNwbGF5ID0gMTkyMCwKPiArCS52c3luY19zdGFydCA9IDE5MjAg
-KyAxNiwKPiArCS52c3luY19lbmQgPSAxOTIwICsgMTYgKyA0LAo+ICsJLnZ0b3RhbCA9IDE5MjAg
-KyAxNiArIDQgKyAxNiwKPiArCS52cmVmcmVzaCA9IDYwLAo+ICt9Owo+ICsKPiArc3RhdGljIGlu
-dCBhdW9fcGFuZWxfZ2V0X21vZGVzKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+ICt7Cj4gKwlz
-dHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZTsKPiArCj4gKwltb2RlID0gZHJtX21vZGVfZHVw
-bGljYXRlKHBhbmVsLT5kcm0sICZkZWZhdWx0X21vZGUpOwo+ICsJaWYgKCFtb2RlKSB7Cj4gKwkJ
-ZGV2X2VycihwYW5lbC0+ZHJtLT5kZXYsICJmYWlsZWQgdG8gYWRkIG1vZGUgJXV4JXV4QCV1XG4i
-LAo+ICsJCQlkZWZhdWx0X21vZGUuaGRpc3BsYXksIGRlZmF1bHRfbW9kZS52ZGlzcGxheSwKPiAr
-CQkJZGVmYXVsdF9tb2RlLnZyZWZyZXNoKTsKPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCX0KPiAr
-Cj4gKwlkcm1fbW9kZV9zZXRfbmFtZShtb2RlKTsKPiArCj4gKwlkcm1fbW9kZV9wcm9iZWRfYWRk
-KHBhbmVsLT5jb25uZWN0b3IsIG1vZGUpOwo+ICsKPiArCXBhbmVsLT5jb25uZWN0b3ItPmRpc3Bs
-YXlfaW5mby53aWR0aF9tbSA9IDEzNTsKPiArCXBhbmVsLT5jb25uZWN0b3ItPmRpc3BsYXlfaW5m
-by5oZWlnaHRfbW0gPSAyMTY7Cj4gKwlwYW5lbC0+Y29ubmVjdG9yLT5kaXNwbGF5X2luZm8uYnBj
-ID0gODsKPiArCj4gKwlyZXR1cm4gMTsKPiArfQo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBk
-cm1fcGFuZWxfZnVuY3MgYXVvX3BhbmVsX2Z1bmNzID0gewo+ICsJLmRpc2FibGUgPSBhdW9fcGFu
-ZWxfZGlzYWJsZSwKPiArCS51bnByZXBhcmUgPSBhdW9fcGFuZWxfdW5wcmVwYXJlLAo+ICsJLnBy
-ZXBhcmUgPSBhdW9fcGFuZWxfcHJlcGFyZSwKPiArCS5lbmFibGUgPSBhdW9fcGFuZWxfZW5hYmxl
-LAo+ICsJLmdldF9tb2RlcyA9IGF1b19wYW5lbF9nZXRfbW9kZXMsCj4gK307Cj4gKwo+ICtzdGF0
-aWMgaW50IGF1b19wYW5lbF9hZGQoc3RydWN0IGF1b19wYW5lbCAqYXVvKQo+ICt7Cj4gKwlzdHJ1
-Y3QgZGV2aWNlICpkZXYgPSAmYXVvLT5kc2ktPmRldjsKPiArCj4gKwlhdW8tPmF2ZGQgPSBkZXZt
-X3JlZ3VsYXRvcl9nZXQoZGV2LCAiYXZkZCIpOwo+ICsJaWYgKElTX0VSUihhdW8tPmF2ZGQpKQo+
-ICsJCXJldHVybiBQVFJfRVJSKGF1by0+YXZkZCk7Cj4gKwo+ICsJYXVvLT5hdmVlID0gZGV2bV9y
-ZWd1bGF0b3JfZ2V0KGRldiwgImF2ZWUiKTsKPiArCWlmIChJU19FUlIoYXVvLT5hdmVlKSkKPiAr
-CQlyZXR1cm4gUFRSX0VSUihhdW8tPmF2ZWUpOwo+ICsKPiArCWF1by0+cHAxODAwID0gZGV2bV9y
-ZWd1bGF0b3JfZ2V0KGRldiwgInBwMTgwMCIpOwo+ICsJaWYgKElTX0VSUihhdW8tPnBwMTgwMCkp
-Cj4gKwkJcmV0dXJuIFBUUl9FUlIoYXVvLT5wcDE4MDApOwo+ICsKPiArCWF1by0+ZW5hYmxlX2dw
-aW8gPSBkZXZtX2dwaW9kX2dldChkZXYsICJlbmFibGUiLCBHUElPRF9PVVRfTE9XKTsKPiArCWlm
-IChJU19FUlIoYXVvLT5lbmFibGVfZ3BpbykpIHsKPiArCQlkZXZfZXJyKGRldiwgImNhbm5vdCBn
-ZXQgcmVzZXQtZ3Bpb3MgJWxkXG4iLAo+ICsJCQlQVFJfRVJSKGF1by0+ZW5hYmxlX2dwaW8pKTsK
-PiArCQlhdW8tPmVuYWJsZV9ncGlvID0gTlVMTDsKPiArCX0gZWxzZSB7Cj4gKwkJZ3Bpb2Rfc2V0
-X3ZhbHVlKGF1by0+ZW5hYmxlX2dwaW8sIDApOwo+ICsJfQo+ICsKPiArCWF1by0+YmFja2xpZ2h0
-ID0gZGV2bV9vZl9maW5kX2JhY2tsaWdodChkZXYpOwo+ICsJaWYgKElTX0VSUihhdW8tPmJhY2ts
-aWdodCkpCj4gKwkJcmV0dXJuIFBUUl9FUlIoYXVvLT5iYWNrbGlnaHQpOwo+ICsKPiArCWRybV9w
-YW5lbF9pbml0KCZhdW8tPmJhc2UpOwo+ICsJYXVvLT5iYXNlLmZ1bmNzID0gJmF1b19wYW5lbF9m
-dW5jczsKPiArCWF1by0+YmFzZS5kZXYgPSAmYXVvLT5kc2ktPmRldjsKPiArCj4gKwlyZXR1cm4g
-ZHJtX3BhbmVsX2FkZCgmYXVvLT5iYXNlKTsKPiArfQo+ICsKPiArc3RhdGljIHZvaWQgYXVvX3Bh
-bmVsX2RlbChzdHJ1Y3QgYXVvX3BhbmVsICphdW8pCj4gK3sKPiArCWlmIChhdW8tPmJhc2UuZGV2
-KQo+ICsJCWRybV9wYW5lbF9yZW1vdmUoJmF1by0+YmFzZSk7Cj4gK30KPiArCj4gK3N0YXRpYyBp
-bnQgYXVvX3BhbmVsX3Byb2JlKHN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRzaSkKPiArewo+ICsJ
-c3RydWN0IGF1b19wYW5lbCAqYXVvOwo+ICsJaW50IHJldDsKPiArCj4gKwlkc2ktPmxhbmVzID0g
-NDsKPiArCWRzaS0+Zm9ybWF0ID0gTUlQSV9EU0lfRk1UX1JHQjg4ODsKPiArCWRzaS0+bW9kZV9m
-bGFncyA9IE1JUElfRFNJX01PREVfVklERU8gfCBNSVBJX0RTSV9NT0RFX1ZJREVPX1NZTkNfUFVM
-U0UgfAo+ICsJCSBNSVBJX0RTSV9NT0RFX0xQTTsKPiArCj4gKwlhdW8gPSBkZXZtX2t6YWxsb2Mo
-JmRzaS0+ZGV2LCBzaXplb2YoKmF1byksIEdGUF9LRVJORUwpOwo+ICsJaWYgKCFhdW8pCj4gKwkJ
-cmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJbWlwaV9kc2lfc2V0X2RydmRhdGEoZHNpLCBhdW8pOwo+
-ICsKPiArCWF1by0+ZHNpID0gZHNpOwo+ICsKPiArCXJldCA9IGF1b19wYW5lbF9hZGQoYXVvKTsK
-PiArCWlmIChyZXQgPCAwKQo+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJcmV0dXJuIG1pcGlfZHNp
-X2F0dGFjaChkc2kpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGF1b19wYW5lbF9yZW1vdmUoc3Ry
-dWN0IG1pcGlfZHNpX2RldmljZSAqZHNpKQo+ICt7Cj4gKwlzdHJ1Y3QgYXVvX3BhbmVsICphdW8g
-PSBtaXBpX2RzaV9nZXRfZHJ2ZGF0YShkc2kpOwo+ICsJaW50IHJldDsKPiArCj4gKwlyZXQgPSBh
-dW9fcGFuZWxfZGlzYWJsZSgmYXVvLT5iYXNlKTsKPiArCWlmIChyZXQgPCAwKQo+ICsJCWRldl9l
-cnIoJmRzaS0+ZGV2LCAiZmFpbGVkIHRvIGRpc2FibGUgcGFuZWw6ICVkXG4iLCByZXQpOwo+ICsK
-PiArCXJldCA9IG1pcGlfZHNpX2RldGFjaChkc2kpOwo+ICsJaWYgKHJldCA8IDApCj4gKwkJZGV2
-X2VycigmZHNpLT5kZXYsICJmYWlsZWQgdG8gZGV0YWNoIGZyb20gRFNJIGhvc3Q6ICVkXG4iLCBy
-ZXQpOwo+ICsKPiArCWF1b19wYW5lbF9kZWwoYXVvKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+
-ICsKPiArc3RhdGljIHZvaWQgYXVvX3BhbmVsX3NodXRkb3duKHN0cnVjdCBtaXBpX2RzaV9kZXZp
-Y2UgKmRzaSkKPiArewo+ICsJc3RydWN0IGF1b19wYW5lbCAqYXVvID0gbWlwaV9kc2lfZ2V0X2Ry
-dmRhdGEoZHNpKTsKPiArCj4gKwlhdW9fcGFuZWxfZGlzYWJsZSgmYXVvLT5iYXNlKTsKPiArfQo+
-ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXVvX29mX21hdGNoW10gPSB7
-Cj4gKwl7IC5jb21wYXRpYmxlID0gImF1byxrZDEwMW44MC00NW5hIiwgfSwKPiArCXsgfQo+ICt9
-Owo+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBhdW9fb2ZfbWF0Y2gpOwo+ICsKPiArc3RhdGlj
-IHN0cnVjdCBtaXBpX2RzaV9kcml2ZXIgYXVvX3BhbmVsX2RyaXZlciA9IHsKPiArCS5kcml2ZXIg
-PSB7Cj4gKwkJLm5hbWUgPSAicGFuZWwtYXVvLWtkMTAxbjgwLTQ1bmEiLAo+ICsJCS5vZl9tYXRj
-aF90YWJsZSA9IGF1b19vZl9tYXRjaCwKPiArCX0sCj4gKwkucHJvYmUgPSBhdW9fcGFuZWxfcHJv
-YmUsCj4gKwkucmVtb3ZlID0gYXVvX3BhbmVsX3JlbW92ZSwKPiArCS5zaHV0ZG93biA9IGF1b19w
-YW5lbF9zaHV0ZG93biwKPiArfTsKPiArbW9kdWxlX21pcGlfZHNpX2RyaXZlcihhdW9fcGFuZWxf
-ZHJpdmVyKTsKPiArCj4gK01PRFVMRV9BVVRIT1IoIkppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlh
-dGVrLmNvbT4iKTsKPiArTU9EVUxFX0RFU0NSSVBUSU9OKCJBVU8ga2QxMDFuODAtNDVuYSB3dXhn
-YSAoMTIwMHgxOTIwKSB2aWRlbyBtb2RlIHBhbmVsIGRyaXZlciIpOwo+ICtNT0RVTEVfTElDRU5T
-RSgiR1BMIHYyIik7Cj4gKwo+IC0tIAo+IDIuMjEuMAo+IAo+IF9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbApfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWw=
+Thanks for taking time to review,
+I agre with most of the comments specially handling returns and making 
+code more readable.
+Will fix them in next version.
+
+On 08/06/2019 22:53, Cezary Rojewski wrote:
+> On 2019-06-07 10:56, Srinivas Kandagatla wrote:
+>> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
+>> either integrated as part of WCD audio codecs via slimbus or
+>> as part of SOC I/O.
+>>
+>> This patchset adds support to a very basic controller which has been
+>> tested with WCD934x SoundWire controller connected to WSA881x smart
+>> speaker amplifiers.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   drivers/soundwire/Kconfig  |   9 +
+>>   drivers/soundwire/Makefile |   4 +
+>>   drivers/soundwire/qcom.c   | 983 +++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 996 insertions(+)
+>>   create mode 100644 drivers/soundwire/qcom.c
+>>
+>> diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
+>> index 53b55b79c4af..f44d4f36dbbb 100644
+>> --- a/drivers/soundwire/Kconfig
+>> +++ b/drivers/soundwire/Kconfig
+>> @@ -34,4 +34,13 @@ config SOUNDWIRE_INTEL
+>>         enable this config option to get the SoundWire support for that
+>>         device.
+>> +config SOUNDWIRE_QCOM
+>> +    tristate "Qualcomm SoundWire Master driver"
+>> +    select SOUNDWIRE_BUS
+>> +    depends on SND_SOC
+>> +    help
+>> +      SoundWire Qualcomm Master driver.
+>> +      If you have an Qualcomm platform which has a SoundWire Master then
+>> +      enable this config option to get the SoundWire support for that
+>> +      device
+>>   endif
+>> diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
+>> index 5817beaca0e1..f4ebfde31372 100644
+>> --- a/drivers/soundwire/Makefile
+>> +++ b/drivers/soundwire/Makefile
+>> @@ -16,3 +16,7 @@ obj-$(CONFIG_SOUNDWIRE_INTEL) += soundwire-intel.o
+>>   soundwire-intel-init-objs := intel_init.o
+>>   obj-$(CONFIG_SOUNDWIRE_INTEL) += soundwire-intel-init.o
+>> +
+>> +#Qualcomm driver
+>> +soundwire-qcom-objs :=    qcom.o
+>> +obj-$(CONFIG_SOUNDWIRE_QCOM) += soundwire-qcom.o
+>> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+>> new file mode 100644
+>> index 000000000000..d1722d44d217
+>> --- /dev/null
+>> +++ b/drivers/soundwire/qcom.c
+>> @@ -0,0 +1,983 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2019, Linaro Limited
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/completion.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/slimbus.h>
+>> +#include <linux/soundwire/sdw.h>
+>> +#include <linux/soundwire/sdw_registers.h>
+>> +#include <sound/pcm_params.h>
+>> +#include <sound/soc.h>
+>> +#include "bus.h"
+>> +
+> 
+> Pierre already pointed this out - SWR looks odd. During my time with 
+> Soundwire I've met SDW and SNDW, but it's the first time I see SWR.
+
+These names are derived from register names from hw datasheet.
+So I have not much choice here other than using them as it. May be 
+adding QCOM_ prefix make it bit more non-confusing.
+> 
+> You seem to shortcut every reg here similarly to how it's done in SDW 
+> spec. INTERRUPT is represented by INT there, and by doing so, this 
+> define block would look more like a real family.
+> 
+Will do that in next version.!
+
+>> +#define SWRM_CMD_FIFO_WR_CMD                    0x300
+>> +#define SWRM_CMD_FIFO_RD_CMD                    0x304
+>> +#define SWRM_CMD_FIFO_CMD                    0x308
+>> +#define SWRM_CMD_FIFO_STATUS                    0x30C
+>> +#define SWRM_CMD_FIFO_CFG_ADDR                    0x314
+>> +#define SWRM_CMD_FIFO_CFG_NUM_OF_CMD_RETRY_SHFT            0x0
+>> +#define SWRM_CMD_FIFO_RD_FIFO_ADDR                0x318
+>> +#define SWRM_ENUMERATOR_CFG_ADDR                0x500
+>> +#define SWRM_MCP_FRAME_CTRL_BANK_ADDR(m)        (0x101C + 0x40 * (m))
+>> +#define SWRM_MCP_FRAME_CTRL_BANK_SSP_PERIOD_SHFT        16
+>> +#define SWRM_MCP_FRAME_CTRL_BANK_ROW_CTRL_SHFT            3
+>> +#define SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_BMSK            GENMASK(2, 0)
+>> +#define SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_SHFT            0
+>> +#define SWRM_MCP_CFG_ADDR                    0x1048
+>> +#define SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_BMSK        GENMASK(21, 17)
+>> +#define SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_SHFT        0x11
+>> +#define SWRM_MCP_STATUS                        0x104C
+>> +#define SWRM_MCP_STATUS_BANK_NUM_MASK                BIT(0)
+>> +#define SWRM_MCP_SLV_STATUS                    0x1090
+>> +#define SWRM_MCP_SLV_STATUS_MASK                GENMASK(1, 0)
+>> +#define SWRM_DP_PORT_CTRL_BANK(n, m)    (0x1124 + 0x100 * (n - 1) + 
+>> 0x40 * m)
+> 
+> Some of these you align, others leave with the equal amount of tabs 
+> despite different widths.
+>
+I will take a closer look at such instance before sending next version.
+
+>> +#define SWRM_DP_PORT_CTRL2_BANK(n, m)    (0x1126 + 0x100 * (n - 1) + 
+>> 0x40 * m)
+> 
+> Consider reusing _CTRL_ and simply adding offset for 2_.
+Okay.
+
+> 
+>> +#define SWRM_DP_PORT_CTRL_EN_CHAN_SHFT                0x18
+>> +#define SWRM_DP_PORT_CTRL_OFFSET2_SHFT                0x10
+>> +#define SWRM_DP_PORT_CTRL_OFFSET1_SHFT                0x08
+>> +#define SWRM_AHB_BRIDGE_WR_DATA_0                0xc885
+>> +#define SWRM_AHB_BRIDGE_WR_ADDR_0                0xc889
+>> +#define SWRM_AHB_BRIDGE_RD_ADDR_0                0xc88d
+>> +#define SWRM_AHB_BRIDGE_RD_DATA_0                0xc891
+>> +
+>> +#define SWRM_REG_VAL_PACK(data, dev, id, reg)    \
+>> +            ((reg) | ((id) << 16) | ((dev) << 20) | ((data) << 24))
+>> +
+>> +#define SWRM_MAX_ROW_VAL    0 /* Rows = 48 */
+>> +#define SWRM_DEFAULT_ROWS    48
+>> +#define SWRM_MIN_COL_VAL    0 /* Cols = 2 */
+>> +#define SWRM_DEFAULT_COL    16
+>> +#define SWRM_SPECIAL_CMD_ID    0xF
+>> +#define MAX_FREQ_NUM        1
+>> +#define TIMEOUT_MS        1000
+>> +#define QCOM_SWRM_MAX_RD_LEN    0xf
+>> +#define DEFAULT_CLK_FREQ    9600000
+>> +#define SWRM_MAX_DAIS        0xF
+> 
+> Given the scale of this block, it might be good to reiterate all defines 
+> and see if indeed all are QCom specific. Maybe some could be replaced by 
+> equivalents from common code.
+> 
+I did take a look at common defines, however these values are pretty 
+much specific to this controller configuration.>> +
+>> +struct qcom_swrm_port_config {
+>> +    u8 si;
+>> +    u8 off1;
+>> +    u8 off2;
+>> +};
+>> +
+>> +struct qcom_swrm_ctrl {
+>> +    struct sdw_bus bus;
+>> +    struct device *dev;
+>> +    struct regmap *regmap;
+>> +    struct completion sp_cmd_comp;
+>> +    struct work_struct slave_work;
+>> +    /* read/write lock */
+>> +    struct mutex lock;
+>> +    /* Port alloc/free lock */
+>> +    struct mutex port_lock;
+>> +    struct clk *hclk;
+>> +    int fifo_status;
+>> +    void __iomem *base;
+>> +    u8 wr_cmd_id;
+>> +    u8 rd_cmd_id;
+>> +    int irq;
+>> +    unsigned int version;
+> 
+> Given the fact you don't use version field directly and always shift it, 
+> I'd consider making use of union here to listing version bits 
+> explicitly. Overall size won't change.
+Okay, I tried to keep most of the driver simple as I could as this is 
+the first version, I will explore adding union as you suggested.
+
+> 
+>> +    int num_din_ports;
+>> +    int num_dout_ports;
+>> +    unsigned long dout_port_mask;
+>> +    unsigned long din_port_mask;
+>> +    struct qcom_swrm_port_config pconfig[SDW_MAX_PORTS];
+>> +    struct sdw_stream_runtime *sruntime[SWRM_MAX_DAIS];
+>> +    enum sdw_slave_status status[SDW_MAX_DEVICES];
+>> +    u32 (*reg_read)(struct qcom_swrm_ctrl *ctrl, int reg);
+>> +    int (*reg_write)(struct qcom_swrm_ctrl *ctrl, int reg, int val);
+>> +};
+>> +
+>> +#define to_qcom_sdw(b)    container_of(b, struct qcom_swrm_ctrl, bus)
+>> +
+>> +struct usecase {
+>> +    u8 num_port;
+>> +    u8 num_ch;
+>> +    u32 chrate;
+>> +};
+>> +
+> 
+> "usecase" looks ambiguous at best.
+
+Its leftover
+
+> 
+>> +static u32 qcom_swrm_slim_reg_read(struct qcom_swrm_ctrl *ctrl, int reg)
+>> +{
+>> +    struct regmap *wcd_regmap = ctrl->regmap;
+>> +    u32 val = 0, ret;
+>> +
+>> +    /* pg register + offset */
+>> +    regmap_bulk_write(wcd_regmap, SWRM_AHB_BRIDGE_RD_ADDR_0,
+>> +              (u8 *)&reg, 4);
+>> +
+>> +    ret = regmap_bulk_read(wcd_regmap, SWRM_AHB_BRIDGE_RD_DATA_0,
+>> +                   (u8 *)&val, 4);
+>> +    if (ret < 0)
+>> +        dev_err(ctrl->dev, "Read Failure (%d)\n", ret);
+>> +
+>> +    return val;
+>> +}
+>> +
+>> +static u32 qcom_swrm_mmio_reg_read(struct qcom_swrm_ctrl *ctrl, int reg)
+>> +{
+>> +    return readl_relaxed(ctrl->base + reg);
+>> +}
+>> +
+>> +static int qcom_swrm_mmio_reg_write(struct qcom_swrm_ctrl *ctrl,
+>> +                    int reg, int val)
+>> +{
+>> +    writel_relaxed(val, ctrl->base + reg);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int qcom_swrm_slim_reg_write(struct qcom_swrm_ctrl *ctrl,
+>> +                    int reg, int val)
+>> +{
+>> +    struct regmap *wcd_regmap = ctrl->regmap;
+>> +
+>> +    /* pg register + offset */
+>> +    regmap_bulk_write(wcd_regmap, SWRM_AHB_BRIDGE_WR_DATA_0,
+>> +              (u8 *)&val, 4);
+>> +    /* write address register */
+>> +    regmap_bulk_write(wcd_regmap, SWRM_AHB_BRIDGE_WR_ADDR_0,
+>> +              (u8 *)&reg, 4);
+>> +
+>> +    return 0;
+>> +}
+> 
+> Ok, so you choose to declare write op as returning "int" yet either it 
+> cannot do so (void writel_relaxed) or ret is completely ignored 
+> (regmap_bulk_write does return an int value). Either switch to void or 
+> check against returned value whenever possible.
+> 
+
+Its right to check the return values, I will change it this accordingly 
+and fix all such occurances.
+
+>> +
+>> +static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 
+>> cmd_data,
+>> +                     u8 dev_addr, u16 reg_addr)
+>> +{
+>> +    int ret = 0;
+>> +    u8 cmd_id;
+>> +    u32 val;
+>> +
+>> +    mutex_lock(&ctrl->lock);
+>> +    if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+>> +        cmd_id = SWRM_SPECIAL_CMD_ID;
+>> +    } else {
+>> +        if (++ctrl->wr_cmd_id == SWRM_SPECIAL_CMD_ID)
+>> +            ctrl->wr_cmd_id = 0;
+>> +
+>> +        cmd_id = ctrl->wr_cmd_id;
+>> +    }
+>> +
+>> +    val = SWRM_REG_VAL_PACK(cmd_data, dev_addr, cmd_id, reg_addr);
+>> +    ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_WR_CMD, val);
+>> +    if (ret < 0) {
+>> +        dev_err(ctrl->dev, "%s: reg 0x%x write failed, err:%d\n",
+>> +            __func__, val, ret);
+>> +        goto err;
+>> +    }
+>> +
+>> +    if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+>> +        ctrl->fifo_status = 0;
+>> +        ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
+>> +                          msecs_to_jiffies(TIMEOUT_MS));
+>> +
+>> +        if (!ret || ctrl->fifo_status) {
+>> +            dev_err(ctrl->dev, "reg 0x%x write failed\n", val);
+> 
+> Both, this and err msg above are generic enough to be put into goto to 
+> save some space.
+
+I agree!
+
+> 
+>> +            ret = -ENODATA;
+>> +            goto err;
+>> +        }
+>> +    }
+>> +err:
+>> +    mutex_unlock(&ctrl->lock);
+>> +    return ret;
+>> +}
+>> +
+>> +static int qcom_swrm_cmd_fifo_rd_cmd(struct qcom_swrm_ctrl *ctrl,
+>> +                     u8 dev_addr, u16 reg_addr,
+>> +                     u32 len, u8 *rval)
+>> +{
+>> +    int i, ret = 0;
+>> +    u8 cmd_id = 0;
+>> +    u32 val;
+>> +
+>> +    mutex_lock(&ctrl->lock);
+>> +    if (dev_addr == SDW_ENUM_DEV_NUM) {
+>> +        cmd_id = SWRM_SPECIAL_CMD_ID;
+>> +    } else {
+>> +        if (++ctrl->rd_cmd_id == SWRM_SPECIAL_CMD_ID)
+>> +            ctrl->rd_cmd_id = 0;
+>> +
+>> +        cmd_id = ctrl->rd_cmd_id;
+>> +    }
+>> +
+>> +    val = SWRM_REG_VAL_PACK(len, dev_addr, cmd_id, reg_addr);
+>> +    ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_RD_CMD, val);
+>> +    if (ret < 0) {
+>> +        dev_err(ctrl->dev, "reg 0x%x write failed err:%d\n", val, ret);
+> 
+> Same for _rt_.
+> 
+>> +        goto err;
+>> +    }
+>> +
+>> +    if (dev_addr == SDW_ENUM_DEV_NUM) {
+>> +        ctrl->fifo_status = 0;
+>> +        ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
+>> +                          msecs_to_jiffies(TIMEOUT_MS));
+>> +
+>> +        if (!ret || ctrl->fifo_status) {
+>> +            dev_err(ctrl->dev, "reg 0x%x read failed\n", val);
+> 
+> Just to be sure. It is really "read" that is failing here?
+>
+The final result is that read has not been sucessfull with a complete 
+interrupt. So yes read is failing here.
+
+
+>> +            ret = -ENODATA;
+>> +            goto err;
+>> +        }
+>> +    }
+>> +
+>> +    for (i = 0; i < len; i++) {
+>> +        rval[i] = ctrl->reg_read(ctrl, SWRM_CMD_FIFO_RD_FIFO_ADDR);
+>> +        rval[i] &= 0xFF;
+>> +    }
+>> +
+>> +err:
+>> +    mutex_unlock(&ctrl->lock);
+>> +    return ret;
+>> +}
+>> +
+>> +static void qcom_swrm_get_device_status(struct qcom_swrm_ctrl *ctrl)
+>> +{
+>> +    u32 val = ctrl->reg_read(ctrl, SWRM_MCP_SLV_STATUS);
+>> +    int i;
+>> +
+>> +    for (i = 1; i < SDW_MAX_DEVICES; i++) {
+>> +        u32 s;
+>> +
+>> +        s = (val >> (i * 2));
+>> +        s &= SWRM_MCP_SLV_STATUS_MASK;
+>> +        ctrl->status[i] = s;
+>> +    }
+>> +}
+>> +
+>> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
+>> +{
+>> +    struct qcom_swrm_ctrl *ctrl = dev_id;
+>> +    u32 sts, value;
+>> +
+>> +    sts = ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS);
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED)
+>> +        complete(&ctrl->sp_cmd_comp);
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
+>> +        value = ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS);
+>> +        dev_err_ratelimited(ctrl->dev,
+>> +                    "CMD error, fifo status 0x%x\n",
+>> +                     value);
+>> +        ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
+>> +        if ((value & 0xF) == 0xF) {
+>> +            ctrl->fifo_status = -ENODATA;
+>> +            complete(&ctrl->sp_cmd_comp);
+>> +        }
+>> +    }
+>> +
+>> +    if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
+>> +        sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS) {
+>> +        if (sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED)
+>> +            ctrl->status[0] = SDW_SLAVE_ATTACHED;
+>> +
+>> +        schedule_work(&ctrl->slave_work);
+>> +    }
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_SLAVE_PEND_IRQ)
+>> +        dev_dbg(ctrl->dev, "Slave pend irq\n");
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED)
+>> +        dev_dbg(ctrl->dev, "New slave attached\n");
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_MASTER_CLASH_DET)
+>> +        dev_err_ratelimited(ctrl->dev, "Bus clash detected\n");
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_RD_FIFO_OVERFLOW)
+>> +        dev_err(ctrl->dev, "Read FIFO overflow\n");
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_RD_FIFO_UNDERFLOW)
+>> +        dev_err(ctrl->dev, "Read FIFO underflow\n");
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_WR_CMD_FIFO_OVERFLOW)
+>> +        dev_err(ctrl->dev, "Write FIFO overflow\n");
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_DOUT_PORT_COLLISION)
+>> +        dev_err(ctrl->dev, "Port collision detected\n");
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_READ_EN_RD_VALID_MISMATCH)
+>> +        dev_err(ctrl->dev, "Read enable valid mismatch\n");
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED)
+>> +        dev_err(ctrl->dev, "Cmd id finished\n");
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_BUS_RESET_FINISHED)
+>> +        dev_err(ctrl->dev, "Bus reset finished\n");
+> 
+> If you do not handle these errors at all, consider declaring 
+> ERROR-message table. I believe leaving erroneus status as is may lead to 
+> fatal consequences. If there is no intention for handling even the most 
+> critical cases, please add TODO/ comment here.
+
+Yep, I agree will clean this up!
+
+> 
+>> +
+>> +    ctrl->reg_write(ctrl, SWRM_INTERRUPT_CLEAR, sts);
+>> +
+>> +    return IRQ_HANDLED;
+>> +}
+>> +
+>> +static int qcom_swrm_init(struct qcom_swrm_ctrl *ctrl)
+>> +{
+>> +    u32 val;
+>> +    u8 row_ctrl = SWRM_MAX_ROW_VAL;
+>> +    u8 col_ctrl = SWRM_MIN_COL_VAL;
+>> +    u8 ssp_period = 1;
+>> +    u8 retry_cmd_num = 3;
+>> +
+>> +    /* Clear Rows and Cols */
+>> +    val = ((row_ctrl << SWRM_MCP_FRAME_CTRL_BANK_ROW_CTRL_SHFT) |
+>> +        (col_ctrl << SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_SHFT) |
+>> +        (ssp_period << SWRM_MCP_FRAME_CTRL_BANK_SSP_PERIOD_SHFT));
+>> +
+>> +    ctrl->reg_write(ctrl, SWRM_MCP_FRAME_CTRL_BANK_ADDR(0), val);
+>> +
+>> +    /* Disable Auto enumeration */
+>> +    ctrl->reg_write(ctrl, SWRM_ENUMERATOR_CFG_ADDR, 0);
+>> +
+>> +    /* Mask soundwire interrupts */
+>> +    ctrl->reg_write(ctrl, SWRM_INTERRUPT_MASK_ADDR,
+>> +                    SWRM_INTERRUPT_STATUS_RMSK);
+>> +
+>> +    /* Configure No pings */
+>> +    val = ctrl->reg_read(ctrl, SWRM_MCP_CFG_ADDR);
+>> +
+>> +    val &= ~SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_BMSK;
+>> +    val |= (0x1f << SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_SHFT);
+>> +    ctrl->reg_write(ctrl, SWRM_MCP_CFG_ADDR, val);
+>> +
+>> +    /* Configure number of retries of a read/write cmd */
+>> +    val = (retry_cmd_num << SWRM_CMD_FIFO_CFG_NUM_OF_CMD_RETRY_SHFT);
+>> +    ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CFG_ADDR, val);
+>> +
+>> +    /* Set IRQ to PULSE */
+>> +    ctrl->reg_write(ctrl, SWRM_COMP_CFG_ADDR,
+>> +                SWRM_COMP_CFG_IRQ_LEVEL_OR_PULSE_MSK |
+>> +                SWRM_COMP_CFG_ENABLE_MSK);
+>> +    return 0;
+> 
+> As in my previous comment, you should check against ret from reg_write 
+> if void approach is not chosen.
+
+I agree!
+
+> 
+>> +}
+>> +
+>> +static enum sdw_command_response qcom_swrm_xfer_msg(struct sdw_bus *bus,
+>> +                            struct sdw_msg *msg)
+>> +{
+>> +    struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+>> +    int ret, i, len;
+>> +
+>> +    if (msg->flags == SDW_MSG_FLAG_READ) {
+>> +        for (i = 0; i < msg->len;) {
+>> +            if ((msg->len - i) < QCOM_SWRM_MAX_RD_LEN)
+>> +                len = msg->len - i;
+>> +            else
+>> +                len = QCOM_SWRM_MAX_RD_LEN;
+>> +
+>> +            ret = qcom_swrm_cmd_fifo_rd_cmd(ctrl, msg->dev_num,
+>> +                            msg->addr + i, len,
+>> +                               &msg->buf[i]);
+>> +            if (ret < 0) {
+>> +                if (ret == -ENODATA)
+>> +                    return SDW_CMD_IGNORED;
+>> +
+>> +                return ret;
+>> +            }
+>> +
+>> +            i = i + len;
+> 
+> Any reason for inlining this incrementation? If _rd_ fails, we leave the 
+> loop anyway.
+> 
+>> +        }
+>> +    } else if (msg->flags == SDW_MSG_FLAG_WRITE) {
+>> +        for (i = 0; i < msg->len; i++) {
+>> +            ret = qcom_swrm_cmd_fifo_wr_cmd(ctrl, msg->buf[i],
+>> +                            msg->dev_num,
+>> +                               msg->addr + i);
+>> +            if (ret < 0) {
+>> +                if (ret == -ENODATA)
+>> +                    return SDW_CMD_IGNORED;
+>> +
+>> +                return ret;
+>> +            }
+>> +        }
+>> +    }
+>> +
+>> +    return SDW_CMD_OK;
+>> +}
+>> +
+>> +static int qcom_swrm_pre_bank_switch(struct sdw_bus *bus)
+>> +{
+>> +    u32 reg = SWRM_MCP_FRAME_CTRL_BANK_ADDR(bus->params.next_bank);
+>> +    struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+>> +    u32 val;
+>> +
+>> +    val = ctrl->reg_read(ctrl, reg);
+>> +    val |= ((0 << SWRM_MCP_FRAME_CTRL_BANK_ROW_CTRL_SHFT) |
+>> +        (7l << SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_SHFT));
+>> +    ctrl->reg_write(ctrl, reg, val);
+>> +
+>> +    return 0;
+> 
+> s/return 0/return ctrl->reg_write(ctrl, reg, val)/
+> 
+>> +}
+>> +
+>> +static int qcom_swrm_port_params(struct sdw_bus *bus,
+>> +                 struct sdw_port_params *p_params,
+>> +                unsigned int bank)
+>> +{
+>> +    /* TBD */
+>> +    return 0;
+>> +}
+>> +
+>> +static int qcom_swrm_transport_params(struct sdw_bus *bus,
+>> +                      struct sdw_transport_params *params,
+>> +                     enum sdw_reg_bank bank)
+>> +{
+>> +    struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+>> +    u32 value;
+>> +
+>> +    value = params->offset1 << SWRM_DP_PORT_CTRL_OFFSET1_SHFT;
+>> +    value |= params->offset2 << SWRM_DP_PORT_CTRL_OFFSET2_SHFT;
+>> +    value |= params->sample_interval - 1;
+>> +
+>> +    ctrl->reg_write(ctrl, SWRM_DP_PORT_CTRL_BANK((params->port_num), 
+>> bank),
+>> +            value);
+>> +
+>> +    return 0;
+> 
+> Another "return issue" here.
+> 
+>> +}
+>> +
+>> +static int qcom_swrm_port_enable(struct sdw_bus *bus,
+>> +                 struct sdw_enable_ch *enable_ch,
+>> +                unsigned int bank)
+>> +{
+>> +    u32 reg = SWRM_DP_PORT_CTRL_BANK(enable_ch->port_num, bank);
+>> +    struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+>> +    u32 val;
+>> +
+>> +    val = ctrl->reg_read(ctrl, reg);
+>> +    if (enable_ch->enable)
+>> +        val |= (enable_ch->ch_mask << SWRM_DP_PORT_CTRL_EN_CHAN_SHFT);
+>> +    else
+>> +        val &= ~(enable_ch->ch_mask << SWRM_DP_PORT_CTRL_EN_CHAN_SHFT);
+>> +
+>> +    ctrl->reg_write(ctrl, reg, val);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static struct sdw_master_port_ops qcom_swrm_port_ops = {
+>> +    .dpn_set_port_params = qcom_swrm_port_params,
+>> +    .dpn_set_port_transport_params = qcom_swrm_transport_params,
+>> +    .dpn_port_enable_ch = qcom_swrm_port_enable,
+>> +};
+>> +
+>> +static struct sdw_master_ops qcom_swrm_ops = {
+>> +    .xfer_msg = qcom_swrm_xfer_msg,
+>> +    .pre_bank_switch = qcom_swrm_pre_bank_switch,
+>> +};
+>> +
+>> +static int qcom_swrm_compute_params(struct sdw_bus *bus)
+>> +{
+>> +    struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+>> +    struct sdw_master_runtime *m_rt;
+>> +    struct sdw_slave_runtime *s_rt;
+>> +    struct sdw_port_runtime *p_rt;
+>> +    int i = 0;
+>> +
+>> +    list_for_each_entry(m_rt, &bus->m_rt_list, bus_node) {
+>> +        list_for_each_entry(p_rt, &m_rt->port_list, port_node) {
+>> +            p_rt->transport_params.port_num = p_rt->num;
+>> +            p_rt->transport_params.sample_interval =
+>> +                    ctrl->pconfig[p_rt->num - 1].si + 1;
+>> +            p_rt->transport_params.offset1 =
+>> +                    ctrl->pconfig[p_rt->num - 1].off1;
+>> +            p_rt->transport_params.offset2 =
+>> +                    ctrl->pconfig[p_rt->num - 1].off2;
+> 
+> ctrl->pconfig[ <idx> ] colleagues bellow make use of local index 
+> variable which clearly makes it more readable.
+> 
+>> +        }
+>> +
+>> +        list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
+>> +            list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
+>> +                p_rt->transport_params.port_num = p_rt->num;
+>> +                p_rt->transport_params.sample_interval =
+>> +                        ctrl->pconfig[i].si + 1;
+>> +                p_rt->transport_params.offset1 =
+>> +                        ctrl->pconfig[i].off1;
+>> +                p_rt->transport_params.offset2 =
+>> +                        ctrl->pconfig[i].off2;
+>> +                i++;
+>> +            }
+>> +        }
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static u32 qcom_swrm_freq_tbl[MAX_FREQ_NUM] = {
+>> +    DEFAULT_CLK_FREQ,
+>> +};
+>> +
+>> +static void qcom_swrm_slave_wq(struct work_struct *work)
+>> +{
+>> +    struct qcom_swrm_ctrl *ctrl =
+>> +            container_of(work, struct qcom_swrm_ctrl, slave_work);
+>> +
+>> +    qcom_swrm_get_device_status(ctrl);
+>> +    sdw_handle_slave_status(&ctrl->bus, ctrl->status);
+>> +}
+>> +
+>> +static int qcom_swrm_prepare(struct snd_pcm_substream *substream,
+>> +                 struct snd_soc_dai *dai)
+>> +{
+>> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
+>> +
+>> +    if (!ctrl->sruntime[dai->id])
+>> +        return -EINVAL;
+>> +
+>> +    return sdw_enable_stream(ctrl->sruntime[dai->id]);
+>> +}
+>> +
+>> +static void qcom_swrm_stream_free_ports(struct qcom_swrm_ctrl *ctrl,
+>> +                    struct sdw_stream_runtime *stream)
+>> +{
+>> +    struct sdw_master_runtime *m_rt;
+>> +    struct sdw_port_runtime *p_rt;
+>> +    unsigned long *port_mask;
+>> +
+>> +    mutex_lock(&ctrl->port_lock);
+>> +
+>> +    list_for_each_entry(m_rt, &stream->master_list, stream_node) {
+>> +        if (m_rt->direction == SDW_DATA_DIR_RX)
+>> +            port_mask = &ctrl->dout_port_mask;
+>> +        else
+>> +            port_mask = &ctrl->din_port_mask;
+>> +
+>> +        list_for_each_entry(p_rt, &m_rt->port_list, port_node) {
+>> +            clear_bit(p_rt->num - 1, port_mask);
+>> +        }
+> 
+> Unnecessary brackets.
+> 
+>> +    }
+>> +
+>> +    mutex_unlock(&ctrl->port_lock);
+>> +}
+>> +
+>> +static int qcom_swrm_stream_alloc_ports(struct qcom_swrm_ctrl *ctrl,
+>> +                    struct sdw_stream_runtime *stream,
+>> +                       struct snd_pcm_hw_params *params,
+>> +                       int direction)
+>> +{
+>> +    struct sdw_port_config pconfig[SDW_MAX_PORTS];
+>> +    struct sdw_stream_config sconfig;
+>> +    struct sdw_master_runtime *m_rt;
+>> +    struct sdw_slave_runtime *s_rt;
+>> +    struct sdw_port_runtime *p_rt;
+>> +    unsigned long *port_mask;
+>> +    int i, maxport, pn, nports = 0, ret = 0;
+>> +
+>> +    mutex_lock(&ctrl->port_lock);
+>> +    list_for_each_entry(m_rt, &stream->master_list, stream_node) {
+>> +        if (m_rt->direction == SDW_DATA_DIR_RX) {
+>> +            maxport = ctrl->num_dout_ports;
+>> +            port_mask = &ctrl->dout_port_mask;
+>> +        } else {
+>> +            maxport = ctrl->num_din_ports;
+>> +            port_mask = &ctrl->din_port_mask;
+>> +        }
+>> +
+>> +        list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
+>> +            list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
+>> +                /* Port numbers start from 1 - 14*/
+>> +                pn = find_first_zero_bit(port_mask, maxport);
+>> +                if (pn > (maxport - 1)) {
+>> +                    dev_err(ctrl->dev, "All ports busy\n");
+>> +                    ret = -EBUSY;
+>> +                    goto err;
+>> +                }
+>> +                set_bit(pn, port_mask);
+>> +                pconfig[nports].num = pn + 1;
+>> +                pconfig[nports].ch_mask = p_rt->ch_mask;
+>> +                nports++;
+>> +            }
+>> +        }
+>> +    }
+>> +
+>> +    if (direction == SNDRV_PCM_STREAM_CAPTURE)
+>> +        sconfig.direction = SDW_DATA_DIR_TX;
+>> +    else
+>> +        sconfig.direction = SDW_DATA_DIR_RX;
+>> +
+>> +    sconfig.ch_count = 1;
+>> +    sconfig.frame_rate = params_rate(params);
+>> +    sconfig.type = stream->type;
+>> +    sconfig.bps = 1;
+> 
+> Hmm. frame_rate and type gets assigned based on "input" data yet the 
+> rest is hardcoded. Is this intended?
+
+For now I only managed to test PDM on this controller, and I agree these 
+need to be more generic..
+>> +    sdw_stream_add_master(&ctrl->bus, &sconfig, pconfig,
+>> +                  nports, stream);
+>> +err:
+>> +    if (ret) {
+>> +        for (i = 0; i < nports; i++)
+>> +            clear_bit(pconfig[i].num - 1, port_mask);
+>> +    }
+>> +
+>> +    mutex_unlock(&ctrl->port_lock);
+>> +
+>> +    return ret;
+>> +}
+>> +
+>> +static int qcom_swrm_hw_params(struct snd_pcm_substream *substream,
+>> +                   struct snd_pcm_hw_params *params,
+>> +                  struct snd_soc_dai *dai)
+>> +{
+>> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
+>> +    int ret;
+>> +
+>> +    ret = qcom_swrm_stream_alloc_ports(ctrl, ctrl->sruntime[dai->id],
+>> +                       params, substream->stream);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    return sdw_prepare_stream(ctrl->sruntime[dai->id]);
+>> +}
+>> +
+>> +static int qcom_swrm_hw_free(struct snd_pcm_substream *substream,
+>> +                 struct snd_soc_dai *dai)
+>> +{
+>> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
+>> +
+>> +    qcom_swrm_stream_free_ports(ctrl, ctrl->sruntime[dai->id]);
+>> +    sdw_stream_remove_master(&ctrl->bus, ctrl->sruntime[dai->id]);
+>> +    sdw_deprepare_stream(ctrl->sruntime[dai->id]);
+>> +    sdw_disable_stream(ctrl->sruntime[dai->id]);
+> 
+> Declaring local variable initialized with ctrl->sruntime[dai->id] should 
+> prove more readable.
+> 
+I agree!
+
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int qcom_swrm_register_dais(struct qcom_swrm_ctrl *ctrl)
+>> +{
+>> +    int num_dais = ctrl->num_dout_ports + ctrl->num_din_ports;
+>> +    struct snd_soc_dai_driver *dais;
+>> +    int i;
+>> +
+>> +    /* PDM dais are only tested for now */
+>> +    dais = devm_kcalloc(ctrl->dev, num_dais, sizeof(*dais), GFP_KERNEL);
+>> +    if (!dais)
+>> +        return -ENOMEM;
+>> +
+>> +    for (i = 0; i < num_dais; i++) {
+>> +        dais[i].name = kasprintf(GFP_KERNEL, "SDW Pin%d", i);
+>> +        if (i < ctrl->num_dout_ports) {
+>> +            dais[i].playback.stream_name = kasprintf(GFP_KERNEL,
+>> +                                 "SDW Tx%d", i);
+>> +            if (!dais[i].playback.stream_name) {
+>> +                kfree(dais[i].name);
+>> +                return -ENOMEM;
+> 
+> Now this got me worried. What about memory allocated in iterations 
+> before the failure? It must be freed in error handling path. goto should 
+> be of help here.
+> 
+I agree.
+
+>> +            }
+>> +            dais[i].playback.channels_min = 1;
+>> +            dais[i].playback.channels_max = 1;
+>> +            dais[i].playback.rates = SNDRV_PCM_RATE_48000;
+>> +            dais[i].playback.formats = SNDRV_PCM_FMTBIT_S16_LE;
+> 
+> All of these formats are hardcoded. Consider declaring a "template" 
+> format above and simply initialize each dai with it.
+
+Okay!
+
+> 
+>> +        } else {
+>> +            dais[i].capture.stream_name = kasprintf(GFP_KERNEL,
+>> +                                "SDW Rx%d", i);
+>> +            if (!dais[i].capture.stream_name) {
+>> +                kfree(dais[i].name);
+>> +                kfree(dais[i].playback.stream_name);
+>> +                return -ENOMEM;
+> 
+> Same memory deallocation issue here.
+I see that, I will take care of this in next version.
+> 
+>> +            }
+>> +
+>> +            dais[i].capture.channels_min = 1;
+>> +            dais[i].capture.channels_max = 1;
+>> +            dais[i].capture.rates = SNDRV_PCM_RATE_48000;
+>> +            dais[i].capture.formats = SNDRV_PCM_FMTBIT_S16_LE;
+> 
+> Comment regarding playback dai initialization applies here too.
+> 
+>> +        }
+>> +        dais[i].ops = &qcom_swrm_pdm_dai_ops;
+>> +        dais[i].id = i;
+>> +    }
+>> +
+>> +    return devm_snd_soc_register_component(ctrl->dev,
+>> +                        &qcom_swrm_dai_component,
+>> +                        dais, num_dais);
+>> +}
+>> +
+>> +static int qcom_swrm_get_port_config(struct qcom_swrm_ctrl *ctrl)
+>> +{
+>> +    struct device_node *np = ctrl->dev->of_node;
+>> +    u8 off1[SDW_MAX_PORTS];
+>> +    u8 off2[SDW_MAX_PORTS];
+>> +    u8 si[SDW_MAX_PORTS];
+> 
+> Array of struct qcom_swrm_port_config instead of this trio?
+> 
+Makes sense! Will do that in next version.
+>> +    int i, ret, nports, val;
+>> +
+>> +    val = ctrl->reg_read(ctrl, SWRM_COMP_PARAMS);
+>> +    ctrl->num_dout_ports = val & SWRM_COMP_PARAMS_DOUT_PORTS_MASK;
+>> +    ctrl->num_din_ports = (val & SWRM_COMP_PARAMS_DIN_PORTS_MASK) >> 5;
+>> +
+>> +    ret = of_property_read_u32(np, "qcom,din-ports", &val);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    if (val > ctrl->num_din_ports)
+>> +        return -EINVAL;
+>> +
+>> +    ctrl->num_din_ports = val;
+>> +
+>> +    ret = of_property_read_u32(np, "qcom,dout-ports", &val);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    if (val > ctrl->num_dout_ports)
+>> +        return -EINVAL;
+>> +
+>> +    ctrl->num_dout_ports = val;
+>> +
+>> +    nports = ctrl->num_dout_ports + ctrl->num_din_ports;
+>> +
+>> +    ret = of_property_read_u8_array(np, "qcom,ports-offset1",
+>> +                    off1, nports);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    ret = of_property_read_u8_array(np, "qcom,ports-offset2",
+>> +                    off2, nports);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    ret = of_property_read_u8_array(np, "qcom,ports-sinterval-low",
+>> +                    si, nports);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    for (i = 0; i < nports; i++) {
+>> +        ctrl->pconfig[i].si = si[i];
+>> +        ctrl->pconfig[i].off1 = off1[i];
+>> +        ctrl->pconfig[i].off2 = off2[i];
+>> +    }
+> 
+> Using array I spoke of earlier leads to brackets being redundant here.
+> 
+>> +
+>> +    return 0;
+>> +}
+>> +
