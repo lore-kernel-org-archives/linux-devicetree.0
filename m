@@ -1,69 +1,44 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [RFC next v1 2/5] gpio: of: parse stmmac PHY reset line specific
  active-low property
-Date: Sun, 9 Jun 2019 23:21:00 +0200
-Message-ID: <CAFBinCA1xp5+77DhYMFjX31D3DsaU7d9EqFkWbn+UFFx5LSqEw@mail.gmail.com>
+Date: Sun, 9 Jun 2019 23:29:08 +0200
+Message-ID: <CACRpkdZ4n+nCip-uoqbDvQeT0ZpJUfHVnp-D8qCSKfgJEapM7w@mail.gmail.com>
 References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609180621.7607-3-martin.blumenstingl@googlemail.com> <20190609203828.GA8247@lunn.ch>
+ <20190609180621.7607-3-martin.blumenstingl@googlemail.com>
+ <20190609203828.GA8247@lunn.ch> <CAFBinCA1xp5+77DhYMFjX31D3DsaU7d9EqFkWbn+UFFx5LSqEw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190609203828.GA8247@lunn.ch>
+In-Reply-To: <CAFBinCA1xp5+77DhYMFjX31D3DsaU7d9EqFkWbn+UFFx5LSqEw@mail.gmail.com>
 Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, linux-kernel@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On Sun, Jun 9, 2019 at 11:21 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
 
-On Sun, Jun 9, 2019 at 10:38 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Sun, Jun 09, 2019 at 08:06:18PM +0200, Martin Blumenstingl wrote:
-> > The stmmac driver currently ignores the GPIO flags which are passed via
-> > devicetree because it operates with legacy GPIO numbers instead of GPIO
-> > descriptors.
->
-> Hi Martin
->
-> I don't think this is the reason. I think historically stmmac messed
-> up and ignored the flags. There are a number of device tree blobs
-> which have the incorrect flag value, but since it was always ignored,
-> it did not matter. Then came along a board which really did need the
-> flag, but it was too late, it could not be enabled because too many
-> boards would break. So the hack was made, and snps,reset-active-low
-> was added.
-that seems appropriate. I don't know whether you can fetch the GPIO
-flags when using legacy GPIO numbers.
-so it may also be a mix of your explanation and mine.
-in the end it's the same though: stmmac ignores the GPIO flags
+> my understanding that of_gpio_flags_quirks (which I'm touching with
+> this patch) is supposed to manage similar quirks to what we have in
+> stmmac (it also contains some regulator and MMC quirks too).
+> however, that's exactly the reason why I decided to mark this as RFC -
+> so I'm eager to hear Linus comments on this
 
-> Since snps,reset-active-low is a hack, it should not be in the
-> core. Please don't add it to gpiolib-of.c, keep it within stmmac
-> driver.
-I don't know how to keep backwards compatibility with old .dtb / .dts
-when moving this into the stmmac driver again.
+The idea with the quirks in gpiolib-of.c is to make device drivers simpler,
+and phase them over to ignoring quirks for mistakes done in the early
+days of DT standardization. This feature of the gpiolib API is supposed
+to make it "narrow and deep": make the generic case simple
+and handle any hardware description languages (DT or ACPI or
+board files) and quirks (mostly historical) under the hood. Especially
+drivers should not need to worry about polarity inversion instead just
+grab a GPIO descriptor and play away with it, asserting it as
+1 and deasserting it as 0 whether that is the right polarity or not,
+the gpiolib should keep track of polarity no matter how that is described,
+even with historical weird bools like "snps,active-low" etc.
 
-let's assume I put the "snps,reset-active-low" inversion logic back into stmmac.
-then I need to ignore the flags because some .dts file use the flag
-GPIO_ACTIVE_LOW *and* set "snps,reset-active-low" at the same time.
-"snps,reset-active-low" would then invert GPIO_ACTIVE_LOW again, which
-basically results in GPIO_ACTIVE_HIGH
+So I think you are probably doing the right thing here.
+This patch is:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-however, I can't ignore the flags because then I'm losing the
-information I need for the newer Amlogic SoCs like open drain / open
-source.
-
-so the logic that I need is:
-- use GPIO flags from .dtb / .dts
-- set GPIO_ACTIVE_LOW in addition to the flags if
-"snps,reset-active-low" is set (this is different to "always invert
-the output value")
-
-my understanding that of_gpio_flags_quirks (which I'm touching with
-this patch) is supposed to manage similar quirks to what we have in
-stmmac (it also contains some regulator and MMC quirks too).
-however, that's exactly the reason why I decided to mark this as RFC -
-so I'm eager to hear Linus comments on this
-
-
-Martin
+Yours,
+Linus Walleij
