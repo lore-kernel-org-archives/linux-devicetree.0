@@ -1,28 +1,57 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V2 1/3] dt-bindings: arm: imx: Add the soc binding for i.MX8MN
-Date: Mon, 10 Jun 2019 15:42:19 -0600
-Message-ID: <CAL_Jsq+HsrQkJpL1hja=NxyQ6qC8tZBDxc9yxKSfSSBo_SrX5w@mail.gmail.com>
-References: <20190603012747.38921-1-Anson.Huang@nxp.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: riscv: sifive: add YAML documentation
+ for the SiFive FU540
+Date: Mon, 10 Jun 2019 15:44:51 -0600
+Message-ID: <CAL_Jsq+Lx+SBZ7_+0tCYJs+oA2zR9c+q2XdmFbEtpWxoLXVibg@mail.gmail.com>
+References: <20190602080500.31700-1-paul.walmsley@sifive.com> <20190602080500.31700-3-paul.walmsley@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190603012747.38921-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190602080500.31700-3-paul.walmsley@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Bai Ping <ping.bai@nxp.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Yang-Leo Li <leoyang.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, devicetr
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 7:26 PM <Anson.Huang@nxp.com> wrote:
+On Sun, Jun 2, 2019 at 2:05 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
 >
-> From: Anson Huang <Anson.Huang@nxp.com>
+> Add YAML DT binding documentation for the SiFive FU540 SoC.  This
+> SoC is documented at:
 >
-> This patch adds the soc & board binding for i.MX8MN.
+>     https://static.dev.sifive.com/FU540-C000-v1.0.pdf
 >
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Passes dt-doc-validate, as of yaml-bindings commit 4c79d42e9216.
+>
+> This second version incorporates review feedback from Rob Herring
+> <robh@kernel.org>.
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
-> No changes.
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../devicetree/bindings/riscv/sifive.yaml     | 25 +++++++++++++++++++
+>  MAINTAINERS                                   |  9 +++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/riscv/sifive.yaml
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+>
+> diff --git a/Documentation/devicetree/bindings/riscv/sifive.yaml b/Documentation/devicetree/bindings/riscv/sifive.yaml
+> new file mode 100644
+> index 000000000000..ce7ca191789e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/riscv/sifive.yaml
+> @@ -0,0 +1,25 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Note that the preference for new bindings (or old ones you have
+ownership of) is to dual license GPL-2.0 and BSD-2-Clause.
+
+Rob
