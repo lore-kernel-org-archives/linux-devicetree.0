@@ -1,50 +1,148 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
-Date: Mon, 10 Jun 2019 14:39:02 +0100
-Message-ID: <6f1052ea-623a-b2e8-9aa8-22aef5fab4ca@arm.com>
-References: <20190610121346.15779-1-abel.vesa@nxp.com>
- <20190610131921.GB14647@lakrids.cambridge.arm.com>
- <20190610132910.srd4j2gtidjeppdx@fsr-ub1664-175>
+From: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Subject: [PATCH V6 00/11] misc: xilinx sd-fec drive
+Date: Mon, 10 Jun 2019 14:45:03 +0100
+Message-ID: <1560174314-124649-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610132910.srd4j2gtidjeppdx@fsr-ub1664-175>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Abel Vesa <abelvesa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Leonard Crestez <leonard.crestez@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Carlo Caione <ccaione@baylibre.com>
+To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/06/2019 14:29, Abel Vesa wrote:
-> On 19-06-10 14:19:21, Mark Rutland wrote:
->> On Mon, Jun 10, 2019 at 03:13:44PM +0300, Abel Vesa wrote:
->>> This is another alternative for the RFC:
->>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F3%2F27%2F545&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7C05d512f83dfa4d4f52d908d6eda64321%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C636957695741584637&amp;sdata=d3X0xyWiaotq4VPNW306wdRhsY4TI%2BBjRSABk6vzf%2B8%3D&amp;reserved=0
->>>
->>> This new workaround proposal is a little bit more hacky but more contained
->>> since everything is done within the irq-imx-gpcv2 driver.
->>>
->>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cross_call
->>> handler and registers instead a wrapper which calls in the 'hijacked' 
->>> handler, after that calling into EL3 which will take care of the actual
->>> wake up. This time, instead of expanding the PSCI ABI, we use a new vendor SIP.
->>
->> IIUC from last time [1,2], this erratum affects all interrupts
->> targetting teh idle CPU, not just IPIs, so even if the bodge is more
->> self-contained, it doesn't really solve the issue, and there are still
->> cases where a CPU will not be woken from idle when it should be (e.g.
->> upon receipt of an LPI).
->>
-> 
-> Wrong, this erratum does not affect any other type of interrupts, other
-> than IPIs. That is because all the other interrupts go through GPC,
-> which means the cores will wake up on any other type (again, other than IPI).
+This patchset is adding the full Soft Decision Forward Error
+Correction (SD-FEC) driver implementation, driver DT binding and
+driver documentation.
 
-Huh... Are you saying that LPIs and PPIs are going through the GPC, and
-will trigger the wake-up of the core? That's not the conclusion we
-reached last time.
+Forward Error Correction (FEC) codes such as Low Density Parity
+Check (LDPC) and turbo codes provide a means to control errors in
+data transmissions over unreliable or noisy communication
+channels. The SD-FEC Integrated Block is an optimized block for
+soft-decision decoding of these codes. Fixed turbo codes are
+supported directly, whereas custom and standardized LDPC codes
+are supported through the ability to specify the parity check
+matrix through an AXI4-Lite bus or using the optional programmable
+(PL)-based support logic. For the further information see
+https://www.xilinx.com/support/documentation/ip_documentation/
+sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
 
-	M.
+This driver is a platform device driver which supports SDFEC16
+(16nm) IP. SD-FEC driver supports LDPC decoding and encoding and
+Turbo code decoding. LDPC codes can be specified on
+a codeword-by-codeword basis, also a custom LDPC code can be used.
+
+The SD-FEC driver exposes a char device interface and supports
+file operations: open(), close(), poll() and ioctl(). The driver
+allows only one usage of the device, open() limits the number of
+driver instances. The driver also utilize Common Clock Framework
+(CCF).
+
+The control and monitoring is supported over ioctl system call.
+The features supported by ioctl():
+- enable or disable data pipes to/from device
+- configure the FEC algorithm parameters
+- set the order of data
+- provide a control of a SDFEC bypass option
+- activates/deactivates SD-FEC
+- collect and provide statistical data
+- enable/disable interrupt mode
+
+Poll can be utilized to detect errors on IRQ trigger rather than
+using looping status and stats ioctl's.
+
+Tested-by: Santhosh Dyavanapally <SDYAVANA@xilinx.com>
+Tested by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+
+Changes V1 -> V2:
+- Removed unnecesary comenting from the commit messages.
+- Removed error log messages which can be triggered from user space.
+- Corrected the SDFEC table end addresses.
+- Removed casting between user pointer and kernel pointer.
+- Corrected definition of ioctl command code, used a corect type for
+size parameters.
+- Changes to declarations of IOCTL that pass structures, i.e. do not
+use pointers for sizeof as prevents compile time checks
+- IOCTL size fix, using a paging to manage a memory. Implemented a big
+tables transfer from user to kernel with get_user_pages_fast().
+- Removed unnecessary check after container_of.
+- Removed not needed ioctl code checkes inside ioctl handler.
+- Implemented compat_ioctl.
+- Updated reviewer and tester lists.
+- Updated documentation, added Limitation chapter related to fork()
+and dup().
+
+Link to V1 patch series:
+https://lore.kernel.org/lkml/1552997064-432700-1-git-send-email-dragan.cvetic@xilinx.com/
+
+Changes V2 -> V3:
+- Corrected a licence in xilinx_sdfec.h changed to uapi licence format.
+- Corrected driver variable data types into user space data types.
+
+Link to V2 patch series:
+https://lore.kernel.org/lkml/1554804414-206099-1-git-send-email-dragan.cvetic@xilinx.com/
+
+Changes V3 -> V4:
+- Migrate to simplier misc driver
+- Fix DT example
+- Remove helper function
+- Remove unused open_count variable
+- Remove some logs
+- Change log level to dev_dbg in the most logs
+- Change spin lock to spin_lock_irqsave/spin_lock_irqrestore
+- Correct a licence date in xilinx_sdfec.c
+- Add PTR_ERR in clock handling
+
+Link to V3 patch series:
+https://lore.kernel.org/lkml/1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com/
+
+Changes V4 -> V5:
+- change atomic variables to c type variables
+- align spinlock name to better description
+- correct a logicla error in LDPC algorithm
+- remove log messages
+- remove useless if statements
+- remove not needed fec_id variable
+- squash commit 4 with 6
+
+Link to V4 patch series:
+https://lore.kernel.org/lkml/1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com/
+
+Changes V5 -> V6:
+- the kernle/user space variables convert enums to __u32
+- put device ID under IDR
+
+Link to V5 patch series:
+https://lore.kernel.org/lkml/1560038656-380620-1-git-send-email-dragan.cvetic@xilinx.com/
+
+Dragan Cvetic (11):
+  dt-bindings: xilinx-sdfec: Add SDFEC binding
+  misc: xilinx-sdfec: add core driver
+  misc: xilinx_sdfec: Add CCF support
+  misc: xilinx_sdfec: Store driver config and state
+  misc: xilinx_sdfec: Add ability to configure turbo
+  misc: xilinx_sdfec: Add ability to configure LDPC
+  misc: xilinx_sdfec: Add ability to get/set config
+  misc: xilinx_sdfec: Support poll file operation
+  misc: xilinx_sdfec: Add stats & status ioctls
+  Docs: misc: xilinx_sdfec: Add documentation
+  MAINTAINERS: add maintainer for SD-FEC
+
+ .../devicetree/bindings/misc/xlnx,sd-fec.txt       |   58 +
+ Documentation/misc-devices/index.rst               |    1 +
+ Documentation/misc-devices/xilinx_sdfec.rst        |  291 ++++
+ MAINTAINERS                                        |   11 +
+ drivers/misc/Kconfig                               |   12 +
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/xilinx_sdfec.c                        | 1516 ++++++++++++++++++++
+ include/uapi/misc/xilinx_sdfec.h                   |  448 ++++++
+ 8 files changed, 2338 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
+ create mode 100644 Documentation/misc-devices/xilinx_sdfec.rst
+ create mode 100644 drivers/misc/xilinx_sdfec.c
+ create mode 100644 include/uapi/misc/xilinx_sdfec.h
+
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
