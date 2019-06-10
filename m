@@ -1,31 +1,22 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 08/11] dt-bindings: net: sun7i-gmac: Convert the
+Subject: Re: [PATCH v2 09/11] dt-bindings: net: sun8i-emac: Convert the
  binding to a schemas
-Date: Mon, 10 Jun 2019 13:14:34 -0600
-Message-ID: <CAL_Jsq+1KWBH7vJ9sBD4CztCxx9jZBzzBPGCYKpWDthjVJ6-pg@mail.gmail.com>
+Date: Mon, 10 Jun 2019 13:22:00 -0600
+Message-ID: <CAL_JsqL8ARs3jQECS+E-BtZGouLYJhofM+oPpS1a3SxPORwMZA@mail.gmail.com>
 References: <91618c7e9a5497462afa74c6d8a947f709f54331.1560158667.git-series.maxime.ripard@bootlin.com>
- <9fbf4e8507b7acf4840db82d9c9d910483784b2e.1560158667.git-series.maxime.ripard@bootlin.com>
+ <f3f393db88b26d84a048cb71887a571611b984a2.1560158667.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9fbf4e8507b7acf4840db82d9c9d910483784b2e.1560158667.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <f3f393db88b26d84a048cb71887a571611b984a2.1560158667.git-series.maxime.ripard@bootlin.com>
+Sender: netdev-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Andrew Lunn <andrew@lunn.ch>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, netdev <netdev@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Jun 10, 2019 at 3:26 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> Switch our Allwinner A20 GMAC controller binding to a YAML schema to enable
+> Switch our Allwinner H3 EMAC controller binding to a YAML schema to enable
 > the DT validation. Since that controller is based on a Synopsys IP, let's
 > add the validation to that schemas with a bunch of conditionals.
 >
@@ -34,13 +25,253 @@ On Mon, Jun 10, 2019 at 3:26 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > ---
 >
 > Changes from v1:
->   - Add a file of its own
+>   - Add specific binding document
 > ---
->  Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt  | 27 ---------------------------
->  Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml | 66 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  Documentation/devicetree/bindings/net/snps,dwmac.yaml               |  3 +++
->  3 files changed, 69 insertions(+), 27 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt
->  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+>  Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml | 353 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/net/dwmac-sun8i.txt                | 201 +-----------------------------------------
+>  Documentation/devicetree/bindings/net/snps,dwmac.yaml                |  15 +++-
+>  3 files changed, 368 insertions(+), 201 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+> new file mode 100644
+> index 000000000000..814cfb862e4f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+> @@ -0,0 +1,353 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/allwinner,sun8i-a83t-gmac.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner A83t EMAC Device Tree Bindings
+> +
+> +maintainers:
+> +  - Chen-Yu Tsai <wens@csie.org>
+> +  - Maxime Ripard <maxime.ripard@bootlin.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: allwinner,sun8i-a83t-emac
+> +      - const: allwinner,sun8i-h3-emac
+> +      - const: allwinner,sun8i-r40-emac
+> +      - const: allwinner,sun8i-v3s-emac
+> +      - const: allwinner,sun50i-a64-emac
+> +      - items:
+> +        - const: allwinner,sun50i-h6-emac
+> +        - const: allwinner,sun50i-a64-emac
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    const: macirq
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: stmmaceth
+> +
+> +  syscon:
+> +    $ref: /schemas/types.yaml#definitions/phandle
+> +    description:
+> +      Phandle to the device containing the EMAC or GMAC clock
+> +      register
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-names
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +  - phy-mode
+> +  - phy-handle
+> +  - syscon
+> +
+> +allOf:
+> +  - $ref: "snps,dwmac.yaml#"
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - allwinner,sun8i-a83t-emac
+> +              - allwinner,sun8i-h3-emac
+> +              - allwinner,sun8i-v3s-emac
+> +              - allwinner,sun50i-a64-emac
+> +
+> +    then:
+> +      properties:
+> +        allwinner,tx-delay-ps:
+> +          allOf:
+> +            - $ref: /schemas/types.yaml#definitions/uint32
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Can drop this as anything with unit prefix has its type defined already.
+
+> +            - enum: [0, 100, 200, 300, 400, 500, 600, 700]
+> +              default: 0
+> +          description:
+> +            External RGMII PHY TX clock delay chain value in ps.
+> +
+> +        allwinner,rx-delay-ps:
+> +          allOf:
+> +            - $ref: /schemas/types.yaml#definitions/uint32
+> +            - enum:
+> +                - 0
+> +                - 100
+> +                - 200
+> +                - 300
+> +                - 400
+> +                - 500
+> +                - 600
+> +                - 700
+> +                - 800
+> +                - 900
+> +                - 1000
+> +                - 1100
+> +                - 1200
+> +                - 1300
+> +                - 1400
+> +                - 1500
+> +                - 1600
+> +                - 1700
+> +                - 1800
+> +                - 1900
+> +                - 2000
+> +                - 2100
+> +                - 2200
+> +                - 2300
+> +                - 2400
+> +                - 2500
+> +                - 2600
+> +                - 2700
+> +                - 2800
+> +                - 2900
+> +                - 3000
+> +                - 3100
+
+I think you can do
+
+enum: [1, 2, 3,
+  4,  5, 6]
+
+Or you can do:
+
+minimum: 0
+maximum: 3100
+multipleOf: 100
+
+IIRC that multipleOf is a json-schema key.
+
+> +              default: 0
+> +          description:
+> +            External RGMII PHY TX clock delay chain value in ps.
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - allwinner,sun8i-r40-emac
+> +
+> +    then:
+> +      properties:
+> +        allwinner,rx-delay-ps:
+> +          allOf:
+> +            - $ref: /schemas/types.yaml#definitions/uint32
+> +            - enum: [0, 100, 200, 300, 400, 500, 600, 700]
+> +              default: 0
+> +          description:
+> +            External RGMII PHY TX clock delay chain value in ps.
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - allwinner,sun8i-h3-emac
+> +              - allwinner,sun8i-v3s-emac
+> +
+> +    then:
+> +      properties:
+> +        allwinner,leds-active-low:
+> +          $ref: /schemas/types.yaml#definitions/flag
+> +          description:
+> +            EPHY LEDs are active low.
+> +
+> +        mdio-mux:
+> +          type: object
+> +
+> +          properties:
+> +            compatible:
+> +              const: allwinner,sun8i-h3-mdio-mux
+> +
+> +            mdio-parent-bus:
+> +              $ref: /schemas/types.yaml#definitions/phandle
+> +              description:
+> +                Phandle to EMAC MDIO.
+> +
+> +            mdio@1:
+> +              type: object
+> +              description: Internal MDIO Bus
+> +
+> +              properties:
+> +                "#address-cells":
+> +                  const: 1
+> +
+> +                "#size-cells":
+> +                  const: 0
+> +
+> +                compatible:
+> +                  const: allwinner,sun8i-h3-mdio-internal
+> +
+> +                reg:
+> +                  const: 1
+> +
+> +              patternProperties:
+> +                "^ethernet-phy@[0-9a-f]$":
+> +                  type: object
+> +                  description:
+> +                    Integrated PHY node
+> +
+> +                  properties:
+> +                    clocks:
+> +                      maxItems: 1
+> +
+> +                    resets:
+> +                      maxItems: 1
+> +
+> +                  required:
+> +                    - clocks
+> +                    - resets
+> +
+> +
+> +            mdio@2:
+> +              type: object
+> +              description: External MDIO Bus (H3 only)
+> +
+> +              properties:
+> +                "#address-cells":
+> +                  const: 1
+> +
+> +                "#size-cells":
+> +                  const: 0
+> +
+> +                reg:
+> +                  const: 2
+> +
+> +          required:
+> +            - compatible
+> +            - mdio-parent-bus
+> +            - mdio@1
+> +
