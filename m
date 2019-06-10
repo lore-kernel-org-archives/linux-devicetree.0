@@ -1,69 +1,80 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 04/13] media: rc: sunxi: Add RXSTA bits definition
-Date: Mon, 10 Jun 2019 11:52:43 +0200
-Message-ID: <20190610095243.7xwp4xhauds22qzw@flea>
-References: <20190607231100.5894-1-peron.clem@gmail.com>
- <20190607231100.5894-5-peron.clem@gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Date: Mon, 10 Jun 2019 12:00:02 +0200
+Message-ID: <819ecbcd-18e3-0f6b-6121-67cb363df440@collabora.com>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
+ <20190608210226.GB2359@xo-6d-61-c0.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ivt2koe4dst4bk6o"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3WQ7DTQKGQERAXQCNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190607231100.5894-5-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>, Matthias Kaehlcke <mka@chromium.org>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Matthias,
 
---ivt2koe4dst4bk6o
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 8/6/19 23:02, Pavel Machek wrote:
+> Hi!
+> 
+>>> +	 * Note that this method is based on empirical testing on different
+>>> +	 * devices with PWM of 8 and 16 bits of resolution.
+>>> +	 */
+>>> +	n = period;
+>>> +	while (n) {
+>>> +		counter += n % 2;
+>>> +		n >>= 1;
+>>> +	}
+>>
+>> I don't quite follow the heuristics above. Are you sure the number of
+>> PWM bits can be infered from the period? What if the period value (in
+>> ns) doesn't directly correspond to a register value? And even if it
+>> did, counting the number of set bits (the above loops is a
+>> re-implementation of ffs()) doesn't really result in the dividers
+>> mentioned in the comment. E.g. a period of 32768 ns (0x8000) results
+>> in a divider of 1, i.e. 32768 brighness levels.
+>>
 
-On Sat, Jun 08, 2019 at 01:10:51AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> We are using RXINT bits definition when looking at RXSTA register.
->
-> These bits are equal but it's not really proper.
->
-> Introduce the RXSTA bits and use them to have coherency.
->
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Right, I think that only works on the cases that we only have one pwm cell, and
+looks like during my tests I did only tests on devices with one pwm cell :-(
 
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+And as you point the code is broken for other cases (pwm-cells > 1)
 
-Maxime
+>> On veyron minnie the period is 1000000 ns, which results in 142858
+>> levels (1000000 / 7)!
+>>
+>> Not sure if there is a clean solution using heuristics, a DT property
+>> specifying the number of levels could be an alternative. This could
+>> also be useful to limit the number of (mostly) redundant levels, even
+>> the intended max of 4096 seems pretty high.
+>>
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Looking again looks like we _can not_ deduce the number of bits of a pwm, it is
+not exposed at all, so I think we will need to end adding a property to specify
+this. Something similar to what leds-pwm binding does, it has:
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190610095243.7xwp4xhauds22qzw%40flea.
-For more options, visit https://groups.google.com/d/optout.
+max-brightness : Maximum brightness possible for the LED
 
---ivt2koe4dst4bk6o
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Enric
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP4oawAKCRDj7w1vZxhR
-xczjAP9NhvNXW8RraDQEXB1eNk6zeYRoUohLhNFarH0MsVC7hQEAx0/R3cfra11q
-g8lAS+DDEk4kx5iSDIwC7EK1bfYB7Q0=
-=c9cn
------END PGP SIGNATURE-----
-
---ivt2koe4dst4bk6o--
+>> Another (not directly related) observation is that on minnie the
+>> actual brightness at a nominal 50% is close to 0 (duty cycle ~3%). I
+>> haven't tested with other devices, but I wonder if it would make
+>> sense to have an option to drop the bottom N% of levels, since the
+>> near 0 brightness in the lower 50% probably isn't very useful in most
+>> use cases, but maybe it looks different on other devices.
+> 
+> Eye percieves logarithm(duty cycle), mostly, and I find very low brightness
+> levels quite useful when trying to use machine in dark room.
+> 
+> But yes, specifying if brightness is linear or exponential would be quite
+> useful.
+> 									Pavel
+> 
