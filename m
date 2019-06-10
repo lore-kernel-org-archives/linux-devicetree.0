@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 11/11] ARM: dts: sunxi: Switch to the generic PHY properties
-Date: Mon, 10 Jun 2019 11:25:50 +0200
-Message-ID: <af3a342a6cba1dda27763c13093a8fc060946c1e.1560158667.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v2 05/11] dt-bindings: net: sun4i-emac: Convert the binding to a schemas
+Date: Mon, 10 Jun 2019 11:25:44 +0200
+Message-ID: <d198d29119b37b2fdb700d8992b31963e98b6693.1560158667.git-series.maxime.ripard@bootlin.com>
 References: <91618c7e9a5497462afa74c6d8a947f709f54331.1560158667.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,112 +12,102 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The DWMAC specific properties to manage the PHY have been superseeded by
-the generic PHY properties. Let's move to it.
+Switch our Allwinner A10 EMAC controller binding to a YAML schema to enable
+the DT validation.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
 ---
+ Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt      | 19 -------------------
+ 2 files changed, 55 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
 
-This patch should go through arm-soc.
-
-Changes from v1:
-  - New patch
----
- arch/arm/boot/dts/sun6i-a31-hummingbird.dts       |  6 +++---
- arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts  |  6 +++---
- arch/arm/boot/dts/sun7i-a20-hummingbird.dts       |  9 ++++-----
- arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts |  8 ++++----
- 4 files changed, 14 insertions(+), 15 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-index 09832b4e8fc8..2652d737fe7c 100644
---- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-@@ -155,13 +155,13 @@
- 	pinctrl-0 = <&gmac_rgmii_pins>;
- 	phy = <&phy1>;
- 	phy-mode = "rgmii";
--	snps,reset-gpio = <&pio 0 21 GPIO_ACTIVE_HIGH>;
--	snps,reset-active-low;
--	snps,reset-delays-us = <0 10000 30000>;
- 	status = "okay";
- 
- 	phy1: ethernet-phy@1 {
- 		reg = <1>;
-+		reset-gpios = <&pio 0 21 GPIO_ACTIVE_LOW>;
-+		reset-assert-us = <10000>;
-+		reset-deassert-us = <30000>;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
-index 8e724c52feff..7899712400b2 100644
---- a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
-+++ b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
-@@ -95,13 +95,13 @@
- 	phy = <&phy1>;
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_dldo1>;
--	snps,reset-gpio = <&pio 0 21 GPIO_ACTIVE_HIGH>; /* PA21 */
--	snps,reset-active-low;
--	snps,reset-delays-us = <0 10000 30000>;
- 	status = "okay";
- 
- 	phy1: ethernet-phy@1 {
- 		reg = <1>;
-+		reset-gpios = <&pio 0 21 GPIO_ACTIVE_LOW>; /* PA21 */
-+		reset-assert-us = <10000>;
-+		reset-deassert-us = <30000>;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/sun7i-a20-hummingbird.dts b/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
-index fd0153f65685..b01d91d025ec 100644
---- a/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
-@@ -103,15 +103,14 @@
- 	phy = <&phy1>;
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_gmac_vdd>;
--	/* phy reset config */
--	snps,reset-gpio = <&pio 0 17 GPIO_ACTIVE_HIGH>; /* PA17 */
--	snps,reset-active-low;
--	/* wait 1s after reset, otherwise fail to read phy id */
--	snps,reset-delays-us = <0 10000 1000000>;
- 	status = "okay";
- 
- 	phy1: ethernet-phy@1 {
- 		reg = <1>;
-+		reset-gpios = <&pio 0 17 GPIO_ACTIVE_LOW>; /* PA17 */
-+		reset-assert-us = <10000>;
-+		/* wait 1s after reset, otherwise fail to read phy id */
-+		reset-deassert-us = <1000000>;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts
-index c34a83f666c7..ca12cee27072 100644
---- a/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts
-@@ -108,14 +108,14 @@
- 	phy = <&phy3>;
- 	phy-mode = "rgmii";
- 	phy-supply = <&reg_vcc3v3>;
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+new file mode 100644
+index 000000000000..b5d82d0a59d8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/allwinner,sun4i-a10-emac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A10 EMAC Ethernet Controller Device Tree Bindings
++
++allOf:
++  - $ref: "ethernet-controller.yaml#"
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  compatible:
++    const: allwinner,sun4i-a10-emac
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  allwinner,sram:
++    description: Phandle to the device SRAM
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - phy
++  - allwinner,sram
++
++examples:
++  - |
++    emac: ethernet@1c0b000 {
++        compatible = "allwinner,sun4i-a10-emac";
++        reg = <0x01c0b000 0x1000>;
++        interrupts = <55>;
++        clocks = <&ahb_gates 17>;
++        phy = <&phy0>;
++    };
++
++# FIXME: We should set it, but it would report all the generic
++# properties as additional properties.
++# additionalProperties: false
++
++...
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
+deleted file mode 100644
+index e98118aef5f6..000000000000
+--- a/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-* Allwinner EMAC ethernet controller
 -
--	snps,reset-gpio = <&pio 0 17 GPIO_ACTIVE_HIGH>;
--	snps,reset-active-low;
--	snps,reset-delays-us = <0 10000 1000000>;
- 	status = "okay";
- 
- 	phy3: ethernet-phy@3 {
- 		reg = <3>;
-+		reset-gpios = <&pio 0 17 GPIO_ACTIVE_LOW>; /* PA17 */
-+		reset-assert-us = <10000>;
-+		/* wait 1s after reset, otherwise fail to read phy id */
-+		reset-deassert-us = <1000000>;
- 	};
- };
- 
+-Required properties:
+-- compatible: should be "allwinner,sun4i-a10-emac" (Deprecated:
+-              "allwinner,sun4i-emac")
+-- reg: address and length of the register set for the device.
+-- interrupts: interrupt for the device
+-- phy: see ethernet.txt file in the same directory.
+-- clocks: A phandle to the reference clock for this device
+-
+-Example:
+-
+-emac: ethernet@1c0b000 {
+-       compatible = "allwinner,sun4i-a10-emac";
+-       reg = <0x01c0b000 0x1000>;
+-       interrupts = <55>;
+-       clocks = <&ahb_gates 17>;
+-       phy = <&phy0>;
+-};
 -- 
 git-series 0.9.1
