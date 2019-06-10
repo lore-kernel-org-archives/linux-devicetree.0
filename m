@@ -1,68 +1,187 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH v7 1/6] dt-bindings: add binding for USBSS-DRD controller.
-Date: Mon, 10 Jun 2019 06:13:57 +0000
-Message-ID: <VI1PR04MB532797447E56454C0E2D3F668B130@VI1PR04MB5327.eurprd04.prod.outlook.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v7 2/6] usb:common Separated decoding functions from dwc3
+ driver.
+Date: Mon, 10 Jun 2019 06:29:24 +0000
+Message-ID: <BYAPR07MB4709C42303D60ABF917E22D0DD130@BYAPR07MB4709.namprd07.prod.outlook.com>
 References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
- <1559729030-16390-2-git-send-email-pawell@cadence.com>
- <f032b3f3-409d-b0fc-8d5f-01c898b4c7a7@ti.com>
- <BYAPR07MB470903AF06C1F8A34BBB3C64DD100@BYAPR07MB4709.namprd07.prod.outlook.com>
- <64be9d26-2a68-1b90-89c8-29b227e0cd9c@ti.com>
- <BYAPR07MB470965B3CBCB58E1C7B1253FDD130@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <1559729030-16390-3-git-send-email-pawell@cadence.com>
+ <20190608134008.GB11489@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB470965B3CBCB58E1C7B1253FDD130@BYAPR07MB4709.namprd07.prod.outlook.com>
+In-Reply-To: <20190608134008.GB11489@kroah.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-IA0KPiAgLSByZWctbmFtZXMgLSByZWdpc3RlciBtZW1vcnkgYXJlYSBuYW1lczoNCj4gICAgICAg
-ICAieGhjaSIgLSBmb3IgSE9TVCByZWdpc3RlcnMgc3BhY2UNCj4gICAgICAgICAiZGV2IiAtIGZv
-ciBERVZJQ0UgcmVnaXN0ZXJzIHNwYWNlDQo+ICAgICAgICAgIm90ZyIgLSBmb3IgT1RHL0RSRCBy
-ZWdpc3RlcnMgc3BhY2UNCj4gIC0gY29tcGF0aWJsZTogU2hvdWxkIGNvbnRhaW46DQo+ICAgICAg
-ICAgImNkbnMsdXNiMy0xLjAuMCIgLSBmb3IgMHgwMDAyNDUwMiBjb250cm9sbGVyIHZlcnNpb24N
-Cj4gICAgICAgICAiY2Rucyx1c2IzLTEuMC4xIiAtIGZvciAweDAwMDI0NTA5IGNvbnRyb2xsZXIg
-dmVyc2lvbg0KPiAgICAgICAgICJjZG5zLHVzYjMtMS4wLjIiIC0gZm9yIDB4MDAwMjQ1MEMgY29u
-dHJvbGxlciB2ZXJzaW9uDQo+ICAgICAgICAgImNkbnMsdXNiMy0xLjAuMyIgLSBmb3IgMHgwMDAy
-NDUwZCBjb250cm9sbGVyIHZlcnNpb24NCg0KSWYgdGhlIHZhbHVlIGNhbiBiZSByZWFkIGZyb20g
-cmVnaXN0ZXIsIHdoeSB3ZSBzdGlsbCBuZWVkIGRpZmZlcmVudCBjb21wYXRpYmxlcz8NCg0KPiBF
-eGFtcGxlOg0KPiAgICAgICAgIHVzYkBmMzAwMDAwMCB7DQo+ICAgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gImNkbnMsdXNiMy0xLjAuMSI7DQo+ICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRz
-ID0gPEdJQ19VU0JfSVJRIDcgSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgPEdJQ19VU0JfSVJRICA3IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0K
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfVVNCX0lSUSAgOCBJUlFfVFlQ
-RV9MRVZFTF9ISUdIPjsNCj4gICAgICAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyA9ICJob3N0
-IiwgInBlcmlwaGVyYWwiLCAib3RnIjsNCj4gICAgICAgICAgICAgICAgIHJlZyA9IDwweGYzMDAw
-MDAwIDB4MTAwMDA+LCAgICAgLyogbWVtb3J5IGFyZWEgZm9yIEhPU1QgcmVnaXN0ZXJzICovDQo+
-ICAgICAgICAgICAgICAgICAgICAgICAgIDwweGYzMDEwMDAwIDB4MTAwMDA+LCAgIC8qIG1lbW9y
-eSBhcmVhIGZvciBERVZJQ0UgcmVnaXN0ZXJzICovDQo+ICAgICAgICAgICAgICAgICAgICAgICAg
-IDwweGYzMDIwMDAwIDB4MTAwMDA+OyAgIC8qIG1lbW9yeSBhcmVhIGZvciBPVEcvRFJEIHJlZ2lz
-dGVycw0KPiAqLw0KPiAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gInhoY2kiLCAiZGV2Iiwg
-Im90ZyI7DQo+ICAgICAgICAgICAgICAgICBwaHlzID0gPCZ1c2IzX3BoeT47DQo+ICAgICAgICAg
-ICAgICAgICBwaHktbmFtZXMgPSAiY2RuczMsdXNicGh5IjsNCj4gDQo+IA0KPiBNYXliZSBJIHNo
-b3VsZCBhZGQgYWxzbyBzb21ldGhpbmcgZm9yIHVzYjJfcGh5IGluIGR0LWJpbmRpbmcgYW5kIGlu
-IGRyaXZlciA/DQo+IA0KDQpUaGUgUEhZIGRyaXZlciBpcyBsb2NhdGVkIGF0OiBkcml2ZXJzL3Bo
-eS9jYWRlbmNlL3BoeS1jYWRlbmNlLXNpZXJyYS5jLg0KV2lsbCB3ZSBuZWVkIGFub3RoZXIgb25l
-IGZvciBVU0IyIFBIWT8NCg0KUGV0ZXINCg0KDQo+IFRoYW5rcywNCj4gUmVnYXJkcywNCj4gUGF3
-ZWwNCj4gDQo+ID4+DQo+ID4+IFJlZ2FyZHMsDQo+ID4+IFBhd2VsDQo+ID4+DQo+ID4+DQo+ID4+
-Pg0KPiA+Pj4+ICsNCj4gPj4+PiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPj4+PiArIC0gbWF4
-aW11bS1zcGVlZCA6IHZhbGlkIGFyZ3VtZW50cyBhcmUgInN1cGVyLXNwZWVkIiwgImhpZ2gtc3Bl
-ZWQiIGFuZA0KPiA+Pj4+ICsgICAgICAgICAgICAgICAgICAgImZ1bGwtc3BlZWQiOyByZWZlciB0
-byB1c2IvZ2VuZXJpYy50eHQNCj4gPj4+PiArIC0gZHJfbW9kZTogU2hvdWxkIGJlIG9uZSBvZiAi
-aG9zdCIsICJwZXJpcGhlcmFsIiBvciAib3RnIi4NCj4gPj4+PiArIC0gcGh5czogcmVmZXJlbmNl
-IHRvIHRoZSBVU0IgUEhZDQo+ID4+Pj4gKw0KPiA+Pj4+ICtFeGFtcGxlOg0KPiA+Pj4+ICsJdXNi
-QGYzMDAwMDAwIHsNCj4gPj4+PiArCQljb21wYXRpYmxlID0gImNkbnMsdXNiMy0xLjAuMSI7DQo+
-ID4+Pj4gKwkJaW50ZXJydXB0cyA9IDxVU0JfSVJRICA3IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0K
-PiA+Pj4NCj4gPj4+IFRoaXMgZXhhbXBsZSB3b24ndCB3b3JrIGFzIGNvZGUgcmVxdWVzdHMgZm9y
-IDMgc2VwYXJhdGUgaW50ZXJydXB0cy4NCj4gPj4+DQo+ID4+Pj4gKwkJcmVnID0gPDB4ZjMwMDAw
-MDAgMHgxMDAwMAkvKiBtZW1vcnkgYXJlYSBmb3IgSE9TVA0KPiByZWdpc3RlcnMgKi8NCj4gPj4+
-PiArCQkJMHhmMzAxMDAwMCAweDEwMDAwCS8qIG1lbW9yeSBhcmVhIGZvciBERVZJQ0UNCj4gcmVn
-aXN0ZXJzICovDQo+ID4+Pj4gKwkJCTB4ZjMwMjAwMDAgMHgxMDAwMD47CS8qIG1lbW9yeSBhcmVh
-IGZvcg0KPiBPVEcvRFJEIHJlZ2lzdGVycyAqLw0KPiA+Pj4+ICsJCXJlZy1uYW1lcyA9ICJ4aGNp
-IiwgImRldiIsICJvdGciOw0KPiA+Pj4+ICsJfTsNCj4gPj4+Pg0KPiA+Pj4NCj4gPg0KPiA+DQo+
-ID4tLQ0KPiA+Y2hlZXJzLA0KPiA+LXJvZ2VyDQo+ID4NCj4gPlRleGFzIEluc3RydW1lbnRzIEZp
-bmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLg0KPiA+WS10dW5udXMv
-QnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kNCg==
+
+>On Wed, Jun 05, 2019 at 11:03:46AM +0100, Pawel Laszczak wrote:
+>
+>> Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
+>
+>> to driver/usb/common/debug.c file. These moved functions include:
+>
+>>     dwc3_decode_get_status
+>
+>>     dwc3_decode_set_clear_feature
+>
+>>     dwc3_decode_set_address
+>
+>>     dwc3_decode_get_set_descriptor
+>
+>>     dwc3_decode_get_configuration
+>
+>>     dwc3_decode_set_configuration
+>
+>>     dwc3_decode_get_intf
+>
+>>     dwc3_decode_set_intf
+>
+>>     dwc3_decode_synch_frame
+>
+>>     dwc3_decode_set_sel
+>
+>>     dwc3_decode_set_isoch_delay
+>
+>>     dwc3_decode_ctrl
+>
+>>
+>
+>> These functions are used also in inroduced cdns3 driver.
+>
+>>
+>
+>> All functions prefixes were changed from dwc3 to usb.
+>
+>> Also, function's parameters has been extended according to the name
+>
+>> of fields in standard SETUP packet.
+>
+>> Additionally, patch adds usb_decode_ctrl function to
+>
+>> include/linux/usb/ch9.h file.i
+>
+>>
+>
+>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+>
+>> ---
+>
+>>  drivers/usb/common/Makefile |   2 +-
+>
+>>  drivers/usb/common/debug.c  | 273 ++++++++++++++++++++++++++++++++++++
+>
+>>  drivers/usb/dwc3/debug.h    | 252 ---------------------------------
+>
+>>  drivers/usb/dwc3/trace.h    |   2 +-
+>
+>>  include/linux/usb/ch9.h     |  25 ++++
+>
+>>  5 files changed, 300 insertions(+), 254 deletions(-)
+>
+>>  create mode 100644 drivers/usb/common/debug.c
+>
+>>
+>
+>> diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
+>
+>> index 0a7c45e85481..02eb01666289 100644
+>
+>> --- a/drivers/usb/common/Makefile
+>
+>> +++ b/drivers/usb/common/Makefile
+>
+>> @@ -4,7 +4,7 @@
+>
+>>  #
+>
+>>
+>
+>>  obj-$(CONFIG_USB_COMMON)	  +=3D usb-common.o
+>
+>> -usb-common-y			  +=3D common.o
+>
+>> +usb-common-y			  +=3D common.o debug.o
+>
+>>  usb-common-$(CONFIG_USB_LED_TRIG) +=3D led.o
+>
+>>
+>
+>>  obj-$(CONFIG_USB_OTG_FSM) +=3D usb-otg-fsm.o
+>
+>> diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
+>
+>> new file mode 100644
+>
+>> index 000000000000..f7218d794aa6
+>
+>> --- /dev/null
+>
+>> +++ b/drivers/usb/common/debug.c
+>
+>> @@ -0,0 +1,273 @@
+>
+>> +// SPDX-License-Identifier: GPL-2.0
+>
+>> +/**
+>
+>> + * Common USB debugging functions
+>
+>> + *
+>
+>> + * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://url=
+defense.proofpoint.com/v2/url?u=3Dhttp-
+>3A__www.ti.com&d=3DDwIBAg&c=3DaUq983L2pue2FqKFoP6PGHMJQyoJ7kl3s3GZ-_haXqY&=
+r=3De1OgxfvkL0qo9XO6fX1gscva-
+>w03uSYC1nIyxl89-rI&m=3DhCAftKt20FnC6KiCwNbVrg7WoY-WnCtUjVuast3iJSw&s=3DQ4q=
+hFXl4s1P2u0s65WgkulIRgV4KZtGphj7Xjr4t6yA&e=3D
+>
+>> + *
+>
+>> + * Authors: Felipe Balbi <balbi@ti.com>,
+>
+>> + *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>
+>> + */
+>
+>> +
+>
+>> +#ifndef __LINUX_USB_COMMON_DEBUG
+>
+>> +#define __LINUX_USB_COMMON_DEBUG
+>
+>
+>
+>Why are you doing thsi in a .c file?
+>
+Good question, I don't know :).=20
+Was removed=20
+
+Also I remember that you complained about placing it in=20
+drivers/usb/common.=20
+Currently this file is used only by two drivers dwc3 and cdns3.
+Both are USB controller drivers. Maybe it could be better to move it to:
+drivers/gadget/udc/debug.c
+drivers/gadget/debug.c=20
+drivers/gadget/common/debug.c
+or
+drivers/gadget/debug/debug.c=20
+
+What do you think Roger?=20
+
+Felipe it's also question for you.=20
+=20
+
+Thanks,
+Pawel
+
+>
+>
+>thanks,
+>
+>
+>
+>greg k-h
