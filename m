@@ -1,51 +1,111 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 00/10] STM32 usart power improvements
-Date: Mon, 10 Jun 2019 18:00:37 +0200
-Message-ID: <e6fecf4c-cb07-4cf7-099a-201b14e90a00@st.com>
-References: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 2/7] dt-bindings: mmc: Add Actions Semi SD/MMC/SDIO
+ controller binding
+Date: Mon, 10 Jun 2019 21:34:59 +0530
+Message-ID: <20190610160459.GA31461@mani>
+References: <20190608195317.6336-1-manivannan.sadhasivam@linaro.org>
+ <20190608195317.6336-3-manivannan.sadhasivam@linaro.org>
+ <5d164528-c797-5f94-f905-719d4f69542c@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <5d164528-c797-5f94-f905-719d4f69542c@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Erwan Le Ray <erwan.leray@st.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-serial@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org, linus.walleij@linaro.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Erwan,
 
-On 6/4/19 10:55 AM, Erwan Le Ray wrote:
-> This series delivers power improvements for stm32-usart driver.
+Hi Andreas,
+
+On Mon, Jun 10, 2019 at 03:45:37PM +0200, Andreas Färber wrote:
+> Am 08.06.19 um 21:53 schrieb Manivannan Sadhasivam:
+> > Add devicetree binding for Actions Semi Owl SoC's SD/MMC/SDIO controller.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  .../devicetree/bindings/mmc/owl-mmc.txt       | 37 +++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mmc/owl-mmc.txt
 > 
-> Bich Hemon (4):
->    dt-bindings: serial: add optional pinctrl states
->    serial: stm32: select pinctrl state in each suspend/resume function
->    ARM: dts: stm32: Update pin states for uart4 on stm32mp157c-ed1
->    ARM: dts: stm32: Update UART4 pin states on stm32mp157a-dk1
+> Rob, should this be YAML now?
 > 
-> Erwan Le Ray (6):
->    dt-bindings: serial: stm32: add wakeup option
->    serial: stm32: add pm_runtime support
->    serial: stm32: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
->    serial: stm32: add support for no_console_suspend
->    ARM: dts: stm32: update uart4 pin configurations for low power
->    ARM: dts: stm32: add wakeup capability on each usart/uart on
->      stm32mp157c
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/owl-mmc.txt b/Documentation/devicetree/bindings/mmc/owl-mmc.txt
+> > new file mode 100644
+> > index 000000000000..a702f8d66cec
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mmc/owl-mmc.txt
+> > @@ -0,0 +1,37 @@
+> > +Actions Semi Owl SoCs SD/MMC/SDIO controller
+> > +
+> > +Required properties:
+> > +- compatible: should be "actions,owl-mmc"
+> > +- reg: offset and length of the register set for the device.
+> > +- interrupts: single interrupt specifier.
+> > +- clocks: single clock specifier of the controller clock.
+> > +- resets: phandle to the reset line.
+> > +- dma-names: should be "mmc".
+> > +- dmas: single DMA channel specifier
 > 
->   .../devicetree/bindings/serial/st,stm32-usart.txt  | 19 ++++-
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          | 17 +++++
->   arch/arm/boot/dts/stm32mp157a-dk1.dts              |  5 +-
->   arch/arm/boot/dts/stm32mp157c-ed1.dts              |  5 +-
->   arch/arm/boot/dts/stm32mp157c.dtsi                 | 40 ++++++++--
->   drivers/tty/serial/stm32-usart.c                   | 88 ++++++++++++++++++++--
->   drivers/tty/serial/stm32-usart.h                   |  1 +
->   7 files changed, 155 insertions(+), 20 deletions(-)
+> I recall the main blocker for MMC being regulators, i.e. the I²C
+> attached multi-function PMIC. Yet I don't see any such required property
+> here, nor any patch series implementing it. Seems like this relies on
+> U-Boot having initialized SD/eMMC? Do you intend to make them optional
+> or did you want to hold off merging this one until the rest is done?
 > 
 
-I'll merge device tree part into stm32-next branch when binding part 
-will be accepted.
+Yeah, I'm planning to rely on u-boot for regulator enablement. PMIC support
+in kernel will take some time because the floating SIRQ patchset is not yet
+finished.
 
-regards
-Alex
+> > +
+> > +Optional properties:
+> > +- pinctrl-names: pinctrl state names "default" must be defined.
+> > +- pinctrl-0: phandle referencing pin configuration of the controller.
+> > +- bus-width: see mmc.txt
+> > +- cap-sd-highspeed: see mmc.txt
+> > +- cap-mmc-highspeed: see mmc.txt
+> > +- sd-uhs-sdr12: see mmc.txt
+> > +- sd-uhs-sdr25: see mmc.txt
+> > +- sd-uhs-sdr50: see mmc.txt
+> > +- non-removable: see mmc.txt
+> 
+> I'm not convinced duplicating common properties is a good idea here, in
+> particular pinctrl.
+> 
+
+Hmmm, I thought of adding the MMC properties which were supported by the SoC.
+I can remove those if needed.
+
+Thanks,
+Mani
+
+> Regards,
+> Andreas
+> 
+> > +
+> > +Example:
+> > +
+> > +		mmc0: mmc@e0330000 {
+> > +			compatible = "actions,owl-mmc";
+> > +			reg = <0x0 0xe0330000 0x0 0x4000>;
+> > +			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&cmu CLK_SD0>;
+> > +			resets = <&cmu RESET_SD0>;
+> > +			dmas = <&dma 2>;
+> > +			dma-names = "mmc";
+> > +			pinctrl-names = "default";
+> > +			pinctrl-0 = <&mmc0_default>;
+> > +			bus-width = <4>;
+> > +			cap-sd-highspeed;
+> > +		};
+> > 
+> 
+> 
+> -- 
+> SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+> GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+> HRB 21284 (AG Nürnberg)
