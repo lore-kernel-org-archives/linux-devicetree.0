@@ -1,141 +1,77 @@
 From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 2/2] backlight: pwm_bl: Get number of brightness levels for CIE 1931 from the device tree
-Date: Mon, 10 Jun 2019 16:37:39 -0700
-Message-ID: <20190610233739.29477-2-mka@chromium.org>
-References: <20190610233739.29477-1-mka@chromium.org>
+Subject: [PATCH v2] ARM: dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on veyron
+Date: Mon, 10 Jun 2019 16:51:44 -0700
+Message-ID: <20190610235144.34261-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610233739.29477-1-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED
-linearly to human eye") uses pwm_period / hweight32(pwm_period) as
-as heuristic to determine the number of brightness levels when the DT
-doesn't provide a brightness level table. This heuristic is broken
-and can result in excessively large brightness tables.
+From: Doug Anderson <dianders@chromium.org>
 
-Instead of using the heuristic try to retrieve the number of
-brightness levels from the device tree (property 'max-brightness'
-+ 1). If the value is not specified use a default of 256 levels.
+This enables wake up on Bluetooth activity when the device is
+suspended. The BT_HOST_WAKE signal is only connected on devices
+with BT module that are connected through UART.
 
-Fixes: 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED linearly to human eye")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
- drivers/video/backlight/pwm_bl.c | 59 ++++++++++++--------------------
- 1 file changed, 21 insertions(+), 38 deletions(-)
+Changes in v2:
+- attributed authorship to Doug
+- use constant instead of literal for pin number
+---
+ arch/arm/boot/dts/rk3288-veyron.dtsi | 29 ++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index fb45f866b923..2913cbe9cfcb 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -194,38 +194,19 @@ int pwm_backlight_brightness_default(struct device *dev,
- 				     struct platform_pwm_backlight_data *data,
- 				     unsigned int period)
- {
--	unsigned int counter = 0;
--	unsigned int i, n;
-+	unsigned int i;
-+	unsigned int nlevels = data->max_brightness + 1;
- 	u64 retval;
+diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+index 3257ca90f0e8..e2635ad574e7 100644
+--- a/arch/arm/boot/dts/rk3288-veyron.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+@@ -23,6 +23,31 @@
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 	};
  
--	/*
--	 * Count the number of bits needed to represent the period number. The
--	 * number of bits is used to calculate the number of levels used for the
--	 * brightness-levels table, the purpose of this calculation is have a
--	 * pre-computed table with enough levels to get linear brightness
--	 * perception. The period is divided by the number of bits so for a
--	 * 8-bit PWM we have 255 / 8 = 32 brightness levels or for a 16-bit PWM
--	 * we have 65535 / 16 = 4096 brightness levels.
--	 *
--	 * Note that this method is based on empirical testing on different
--	 * devices with PWM of 8 and 16 bits of resolution.
--	 */
--	n = period;
--	while (n) {
--		counter += n % 2;
--		n >>= 1;
--	}
--
--	data->max_brightness = DIV_ROUND_UP(period, counter);
--	data->levels = devm_kcalloc(dev, data->max_brightness,
-+	data->levels = devm_kcalloc(dev, nlevels,
- 				    sizeof(*data->levels), GFP_KERNEL);
- 	if (!data->levels)
- 		return -ENOMEM;
- 
- 	/* Fill the table using the cie1931 algorithm */
--	for (i = 0; i < data->max_brightness; i++) {
-+	for (i = 0; i < nlevels; i++) {
- 		retval = cie1931((i * PWM_LUMINANCE_SCALE) /
--				 data->max_brightness, PWM_LUMINANCE_SCALE) *
-+				 nlevels, PWM_LUMINANCE_SCALE) *
- 				 period;
- 		retval = DIV_ROUND_CLOSEST_ULL(retval, PWM_LUMINANCE_SCALE);
- 		if (retval > UINT_MAX)
-@@ -233,8 +214,7 @@ int pwm_backlight_brightness_default(struct device *dev,
- 		data->levels[i] = (unsigned int)retval;
- 	}
- 
--	data->dft_brightness = data->max_brightness / 2;
--	data->max_brightness--;
-+	data->dft_brightness = nlevels / 2;
- 
- 	return 0;
- }
-@@ -272,8 +252,13 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 	 * set a default table of brightness levels will be used.
- 	 */
- 	prop = of_find_property(node, "brightness-levels", &length);
--	if (!prop)
-+	if (!prop) {
-+		if (of_property_read_u32(node, "max-brightness",
-+					 &data->max_brightness))
-+			data->max_brightness = 255;
++	bt_activity: bt-activity {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_host_wake>;
 +
- 		return 0;
-+	}
++		/*
++		 * HACK: until we have an LPM driver, we'll use an
++		 * ugly GPIO key to allow Bluetooth to wake from S3.
++		 * This is expected to only be used by BT modules that
++		 * use UART for comms.  For BT modules that talk over
++		 * SDIO we should use a wakeup mechanism related to SDIO.
++		 *
++		 * Use KEY_RESERVED here since that will work as a wakeup but
++		 * doesn't get reported to higher levels (so doesn't confuse
++		 * Chrome).
++		 */
++		bt-wake {
++			label = "BT Wakeup";
++			gpios = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
++			linux,code = <KEY_RESERVED>;
++			wakeup-source;
++		};
++
++	};
++
+ 	power_button: power-button {
+ 		compatible = "gpio-keys";
+ 		pinctrl-names = "default";
+@@ -549,6 +574,10 @@
+ 			rockchip,pins = <4 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
  
- 	data->max_brightness = length / sizeof(u32);
- 
-@@ -565,13 +550,10 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 
- 			pb->levels = data->levels;
- 		}
--	} else if (!data->max_brightness) {
-+	} else if (node) {
++		bt_host_wake: bt-host-wake {
++			rockchip,pins = <4 RK_PD7 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++
  		/*
--		 * If no brightness levels are provided and max_brightness is
--		 * not set, use the default brightness table. For the DT case,
--		 * max_brightness is set to 0 when brightness levels is not
--		 * specified. For the non-DT case, max_brightness is usually
--		 * set to some value.
-+		 * If no brightness levels are provided use the default
-+		 * brightness table.
- 		 */
- 
- 		/* Get the PWM period (in nanoseconds) */
-@@ -591,12 +573,13 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 
- 			pb->levels = data->levels;
- 		}
--	} else {
--		/*
--		 * That only happens for the non-DT case, where platform data
--		 * sets the max_brightness value.
--		 */
-+	} else if (data->max_brightness) {
-+		/* non-DT case, max_brightness value set in platform data. */
- 		pb->scale = data->max_brightness;
-+	} else {
-+		dev_err(&pdev->dev, "max brightness is not specified\n");
-+		ret = -EINVAL;
-+		goto err_alloc;
- 	}
- 
- 	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
+ 		 * We run sdio0 at max speed; bump up drive strength.
+ 		 * We also have external pulls, so disable the internal ones.
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
