@@ -1,71 +1,27 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
- linearly to human eye.
-Date: Mon, 10 Jun 2019 13:39:28 -0700
-Message-ID: <20190610203928.GA137143@google.com>
-References: <20180208113032.27810-1-enric.balletbo@collabora.com>
- <20180208113032.27810-4-enric.balletbo@collabora.com>
- <20190607220947.GR40515@google.com>
- <20190608210226.GB2359@xo-6d-61-c0.localdomain>
- <819ecbcd-18e3-0f6b-6121-67cb363df440@collabora.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH 12/57] of: platform: Use bus_find_device_by_of_node helper
+Date: Mon, 10 Jun 2019 14:44:24 -0600
+Message-ID: <CAL_JsqLRwC6ZnSgrp_N8X-vefUEUCaAakG7Dvu034WMWzaYYZg@mail.gmail.com>
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com> <1559577023-558-13-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <819ecbcd-18e3-0f6b-6121-67cb363df440@collabora.com>
+In-Reply-To: <1559577023-558-13-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric
+On Mon, Jun 3, 2019 at 9:51 AM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+> Switch to using the bus_find_device_by_of_node helper
+>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/of/platform.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 
-On Mon, Jun 10, 2019 at 12:00:02PM +0200, Enric Balletbo i Serra wrote:
-> Hi Matthias,
-> 
-> On 8/6/19 23:02, Pavel Machek wrote:
-> > Hi!
-> > 
-> >>> +	 * Note that this method is based on empirical testing on different
-> >>> +	 * devices with PWM of 8 and 16 bits of resolution.
-> >>> +	 */
-> >>> +	n = period;
-> >>> +	while (n) {
-> >>> +		counter += n % 2;
-> >>> +		n >>= 1;
-> >>> +	}
-> >>
-> >> I don't quite follow the heuristics above. Are you sure the number of
-> >> PWM bits can be infered from the period? What if the period value (in
-> >> ns) doesn't directly correspond to a register value? And even if it
-> >> did, counting the number of set bits (the above loops is a
-> >> re-implementation of ffs()) doesn't really result in the dividers
-> >> mentioned in the comment. E.g. a period of 32768 ns (0x8000) results
-> >> in a divider of 1, i.e. 32768 brighness levels.
-> >>
-> 
-> Right, I think that only works on the cases that we only have one pwm cell, and
-> looks like during my tests I did only tests on devices with one pwm cell :-(
-> 
-> And as you point the code is broken for other cases (pwm-cells > 1)
-> 
-> >> On veyron minnie the period is 1000000 ns, which results in 142858
-> >> levels (1000000 / 7)!
-> >>
-> >> Not sure if there is a clean solution using heuristics, a DT property
-> >> specifying the number of levels could be an alternative. This could
-> >> also be useful to limit the number of (mostly) redundant levels, even
-> >> the intended max of 4096 seems pretty high.
-> >>
-> 
-> Looking again looks like we _can not_ deduce the number of bits of a pwm, it is
-> not exposed at all, so I think we will need to end adding a property to specify
-> this. Something similar to what leds-pwm binding does, it has:
-> 
-> max-brightness : Maximum brightness possible for the LED
-
-Thanks for the confirmation that I didn't just miss some clever trick.
-
-I also think that some kind of DT property is needed, I'll try to come
-up with a reasonable name, keeping in mind that some devices might not
-want to use the entire range of levels.
+Acked-by: Rob Herring <robh@kernel.org>
