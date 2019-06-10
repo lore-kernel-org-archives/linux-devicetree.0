@@ -1,7 +1,7 @@
 From: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH V6 07/11] misc: xilinx_sdfec: Add ability to get/set config
-Date: Mon, 10 Jun 2019 14:45:10 +0100
-Message-ID: <1560174314-124649-8-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V6 01/11] dt-bindings: xilinx-sdfec: Add SDFEC binding
+Date: Mon, 10 Jun 2019 14:45:04 +0100
+Message-ID: <1560174314-124649-2-git-send-email-dragan.cvetic@xilinx.com>
 References: <1560174314-124649-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,218 +12,80 @@ To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-ar
 Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-- Add capability to get SD-FEC config data using ioctl
-XSDFEC_GET_CONFIG.
+Add the Soft Decision Forward Error Correction (SDFEC) Engine
+bindings which is available for the Zynq UltraScale+ RFSoC
+FPGA's.
 
-- Add capability to set SD-FEC data order using ioctl
-SDFEC_SET_ORDER.
-
-- Add capability to set SD-FEC bypass option using ioctl
-XSDFEC_SET_BYPASS.
-
-- Add capability to set SD-FEC active state using ioctl
-XSDFEC_IS_ACTIVE.
-
-Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 ---
- drivers/misc/xilinx_sdfec.c      | 88 ++++++++++++++++++++++++++++++++++++++++
- include/uapi/misc/xilinx_sdfec.h | 57 ++++++++++++++++++++++++++
- 2 files changed, 145 insertions(+)
+ .../devicetree/bindings/misc/xlnx,sd-fec.txt       | 58 ++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
 
-diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index b2b16771..83de77e 100644
---- a/drivers/misc/xilinx_sdfec.c
-+++ b/drivers/misc/xilinx_sdfec.c
-@@ -273,6 +273,17 @@ static void update_config_from_hw(struct xsdfec_dev *xsdfec)
- 		xsdfec->state = XSDFEC_STOPPED;
- }
- 
-+static int xsdfec_get_config(struct xsdfec_dev *xsdfec, void __user *arg)
-+{
-+	int err;
+diff --git a/Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt b/Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
+new file mode 100644
+index 0000000..e328963
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
+@@ -0,0 +1,58 @@
++* Xilinx SDFEC(16nm) IP *
 +
-+	err = copy_to_user(arg, &xsdfec->config, sizeof(xsdfec->config));
-+	if (err)
-+		err = -EFAULT;
++The Soft Decision Forward Error Correction (SDFEC) Engine is a Hard IP block
++which provides high-throughput LDPC and Turbo Code implementations.
++The LDPC decode & encode functionality is capable of covering a range of
++customer specified Quasi-cyclic (QC) codes. The Turbo decode functionality
++principally covers codes used by LTE. The FEC Engine offers significant
++power and area savings versus implementations done in the FPGA fabric.
 +
-+	return err;
-+}
 +
- static int xsdfec_set_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
- {
- 	struct xsdfec_turbo turbo;
-@@ -591,6 +602,71 @@ static int xsdfec_add_ldpc(struct xsdfec_dev *xsdfec, void __user *arg)
- 	return ret;
- }
- 
-+static int xsdfec_set_order(struct xsdfec_dev *xsdfec, void __user *arg)
-+{
-+	bool order_invalid;
-+	enum xsdfec_order order;
-+	int err;
++Required properties:
++- compatible: Must be "xlnx,sd-fec-1.1"
++- clock-names : List of input clock names from the following:
++    - "core_clk", Main processing clock for processing core (required)
++    - "s_axi_aclk", AXI4-Lite memory-mapped slave interface clock (required)
++    - "s_axis_din_aclk", DIN AXI4-Stream Slave interface clock (optional)
++    - "s_axis_din_words-aclk", DIN_WORDS AXI4-Stream Slave interface clock (optional)
++    - "s_axis_ctrl_aclk",  Control input AXI4-Stream Slave interface clock (optional)
++    - "m_axis_dout_aclk", DOUT AXI4-Stream Master interface clock (optional)
++    - "m_axis_dout_words_aclk", DOUT_WORDS AXI4-Stream Master interface clock (optional)
++    - "m_axis_status_aclk", Status output AXI4-Stream Master interface clock (optional)
++- clocks : Clock phandles (see clock_bindings.txt for details).
++- reg: Should contain Xilinx SDFEC 16nm Hardened IP block registers
++  location and length.
++- xlnx,sdfec-code : Should contain "ldpc" or "turbo" to describe the codes
++  being used.
++- xlnx,sdfec-din-words : A value 0 indicates that the DIN_WORDS interface is
++  driven with a fixed value and is not present on the device, a value of 1
++  configures the DIN_WORDS to be block based, while a value of 2 configures the
++  DIN_WORDS input to be supplied for each AXI transaction.
++- xlnx,sdfec-din-width : Configures the DIN AXI stream where a value of 1
++  configures a width of "1x128b", 2 a width of "2x128b" and 4 configures a width
++  of "4x128b".
++- xlnx,sdfec-dout-words : A value 0 indicates that the DOUT_WORDS interface is
++  driven with a fixed value and is not present on the device, a value of 1
++  configures the DOUT_WORDS to be block based, while a value of 2 configures the
++  DOUT_WORDS input to be supplied for each AXI transaction.
++- xlnx,sdfec-dout-width : Configures the DOUT AXI stream where a value of 1
++  configures a width of "1x128b", 2 a width of "2x128b" and 4 configures a width
++  of "4x128b".
++Optional properties:
++- interrupts: should contain SDFEC interrupt number
 +
-+	err = get_user(order, (enum xsdfec_order *)arg);
-+	if (err)
-+		return -EFAULT;
-+
-+	order_invalid = (order != XSDFEC_MAINTAIN_ORDER) &&
-+			(order != XSDFEC_OUT_OF_ORDER);
-+	if (order_invalid)
-+		return -EINVAL;
-+
-+	/* Verify Device has not started */
-+	if (xsdfec->state == XSDFEC_STARTED)
-+		return -EIO;
-+
-+	xsdfec_regwrite(xsdfec, XSDFEC_ORDER_ADDR, order);
-+
-+	xsdfec->config.order = order;
-+
-+	return 0;
-+}
-+
-+static int xsdfec_set_bypass(struct xsdfec_dev *xsdfec, bool __user *arg)
-+{
-+	bool bypass;
-+	int err;
-+
-+	err = get_user(bypass, arg);
-+	if (err)
-+		return -EFAULT;
-+
-+	/* Verify Device has not started */
-+	if (xsdfec->state == XSDFEC_STARTED)
-+		return -EIO;
-+
-+	if (bypass)
-+		xsdfec_regwrite(xsdfec, XSDFEC_BYPASS_ADDR, 1);
-+	else
-+		xsdfec_regwrite(xsdfec, XSDFEC_BYPASS_ADDR, 0);
-+
-+	xsdfec->config.bypass = bypass;
-+
-+	return 0;
-+}
-+
-+static int xsdfec_is_active(struct xsdfec_dev *xsdfec, bool __user *arg)
-+{
-+	u32 reg_value;
-+	bool is_active;
-+	int err;
-+
-+	reg_value = xsdfec_regread(xsdfec, XSDFEC_ACTIVE_ADDR);
-+	/* using a double ! operator instead of casting */
-+	is_active = !!(reg_value & XSDFEC_IS_ACTIVITY_SET);
-+	err = put_user(is_active, arg);
-+	if (err)
-+		return -EFAULT;
-+
-+	return err;
-+}
-+
- static u32
- xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
- {
-@@ -681,6 +757,9 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
- 	}
- 
- 	switch (cmd) {
-+	case XSDFEC_GET_CONFIG:
-+		rval = xsdfec_get_config(xsdfec, arg);
-+		break;
- 	case XSDFEC_SET_TURBO:
- 		rval = xsdfec_set_turbo(xsdfec, arg);
- 		break;
-@@ -690,6 +769,15 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
- 	case XSDFEC_ADD_LDPC_CODE_PARAMS:
- 		rval = xsdfec_add_ldpc(xsdfec, arg);
- 		break;
-+	case XSDFEC_SET_ORDER:
-+		rval = xsdfec_set_order(xsdfec, arg);
-+		break;
-+	case XSDFEC_SET_BYPASS:
-+		rval = xsdfec_set_bypass(xsdfec, arg);
-+		break;
-+	case XSDFEC_IS_ACTIVE:
-+		rval = xsdfec_is_active(xsdfec, (bool __user *)arg);
-+		break;
- 	default:
- 		/* Should not get here */
- 		break;
-diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
-index 7443ed8..163dff6 100644
---- a/include/uapi/misc/xilinx_sdfec.h
-+++ b/include/uapi/misc/xilinx_sdfec.h
-@@ -288,6 +288,19 @@ struct xsdfec_ldpc_param_table_sizes {
- #define XSDFEC_ADD_LDPC_CODE_PARAMS                                            \
- 	_IOW(XSDFEC_MAGIC, 5, struct xsdfec_ldpc_params)
- /**
-+ * DOC: XSDFEC_GET_CONFIG
-+ * @Parameters
-+ *
-+ * @struct xsdfec_config *
-+ *	Pointer to the &struct xsdfec_config that contains the current
-+ *	configuration settings of the SD-FEC Block
-+ *
-+ * @Description
-+ *
-+ * ioctl that returns SD-FEC core configuration
-+ */
-+#define XSDFEC_GET_CONFIG _IOR(XSDFEC_MAGIC, 6, struct xsdfec_config)
-+/**
-  * DOC: XSDFEC_GET_TURBO
-  * @Parameters
-  *
-@@ -300,4 +313,48 @@ struct xsdfec_ldpc_param_table_sizes {
-  * ioctl that returns SD-FEC turbo param values
-  */
- #define XSDFEC_GET_TURBO _IOR(XSDFEC_MAGIC, 7, struct xsdfec_turbo)
-+/**
-+ * DOC: XSDFEC_SET_ORDER
-+ * @Parameters
-+ *
-+ * @struct unsigned long *
-+ *	Pointer to the unsigned long that contains a value from the
-+ *	@enum xsdfec_order
-+ *
-+ * @Description
-+ *
-+ * ioctl that sets order, if order of blocks can change from input to output
-+ *
-+ * This can only be used when the driver is in the XSDFEC_STOPPED state
-+ */
-+#define XSDFEC_SET_ORDER _IOW(XSDFEC_MAGIC, 8, unsigned long)
-+/**
-+ * DOC: XSDFEC_SET_BYPASS
-+ * @Parameters
-+ *
-+ * @struct bool *
-+ *	Pointer to bool that sets the bypass value, where false results in
-+ *	normal operation and false results in the SD-FEC performing the
-+ *	configured operations (same number of cycles) but output data matches
-+ *	the input data
-+ *
-+ * @Description
-+ *
-+ * ioctl that sets bypass.
-+ *
-+ * This can only be used when the driver is in the XSDFEC_STOPPED state
-+ */
-+#define XSDFEC_SET_BYPASS _IOW(XSDFEC_MAGIC, 9, bool)
-+/**
-+ * DOC: XSDFEC_IS_ACTIVE
-+ * @Parameters
-+ *
-+ * @struct bool *
-+ *	Pointer to bool that returns true if the SD-FEC is processing data
-+ *
-+ * @Description
-+ *
-+ * ioctl that determines if SD-FEC is processing data
-+ */
-+#define XSDFEC_IS_ACTIVE _IOR(XSDFEC_MAGIC, 10, bool)
- #endif /* __XILINX_SDFEC_H__ */
++Example
++---------------------------------------
++	sd_fec_0: sd-fec@a0040000 {
++		compatible = "xlnx,sd-fec-1.1";
++		clock-names = "core_clk","s_axi_aclk","s_axis_ctrl_aclk","s_axis_din_aclk","m_axis_status_aclk","m_axis_dout_aclk";
++		clocks = <&misc_clk_2>,<&misc_clk_0>,<&misc_clk_1>,<&misc_clk_1>,<&misc_clk_1>, <&misc_clk_1>;
++		reg = <0x0 0xa0040000 0x0 0x40000>;
++		interrupt-parent = <&axi_intc>;
++		interrupts = <1 0>;
++		xlnx,sdfec-code = "ldpc";
++		xlnx,sdfec-din-words = <0>;
++		xlnx,sdfec-din-width = <2>;
++		xlnx,sdfec-dout-words = <0>;
++		xlnx,sdfec-dout-width = <1>;
++	};
 -- 
 2.7.4
