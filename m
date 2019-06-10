@@ -1,84 +1,76 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
-Date: Mon, 10 Jun 2019 15:30:03 +0200
-Message-ID: <CAAObsKB=vNr6bBomQ_hMfic8CuwZcqF_x7UJR6rSm2cG=EJAcg@mail.gmail.com>
-References: <20190521161102.29620-1-peron.clem@gmail.com> <CAAObsKD8bij1ANLqX6y11Y6mDEXiymNjrDkmHmvGWiFLKWu_FA@mail.gmail.com>
- <4ff02295-6c34-791b-49f4-6558a92ad7a3@arm.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 1/7] clk: actions: Fix factor clk struct member access
+Date: Mon, 10 Jun 2019 15:36:42 +0200
+Message-ID: <29ef33a9-f1f1-fe10-9288-8103714d40fa@suse.de>
+References: <20190608195317.6336-1-manivannan.sadhasivam@linaro.org>
+ <20190608195317.6336-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4ff02295-6c34-791b-49f4-6558a92ad7a3@arm.com>
+In-Reply-To: <20190608195317.6336-2-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Steven Price <steven.price@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, sboyd@kernel.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org, linus.walleij@linaro.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 May 2019 at 19:38, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 29/05/2019 16:09, Tomeu Vizoso wrote:
-> > On Tue, 21 May 2019 at 18:11, Clément Péron <peron.clem@gmail.com> wrote:
-> >>
-> > [snip]
-> >> [  345.204813] panfrost 1800000.gpu: mmu irq status=1
-> >> [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-> >> 0x0000000002400400
-> >
-> >  From what I can see here, 0x0000000002400400 points to the first byte
-> > of the first submitted job descriptor.
-> >
-> > So mapping buffers for the GPU doesn't seem to be working at all on
-> > 64-bit T-760.
-> >
-> > Steven, Robin, do you have any idea of why this could be?
->
-> I tried rolling back to the old panfrost/nondrm shim, and it works fine
-> with kbase, and I also found that T-820 falls over in the exact same
-> manner, so the fact that it seemed to be common to the smaller 33-bit
-> designs rather than anything to do with the other
-> job_descriptor_size/v4/v5 complication turned out to be telling.
->
-> [ as an aside, are 64-bit jobs actually known not to work on v4 GPUs, or
-> is it just that nobody's yet observed a 64-bit blob driving one? ]
+Hi Mani,
 
-Do you know if 64-bit descriptors work on v4 GPUs with our kernel
-driver but with the DDK?
+Am 08.06.19 um 21:53 schrieb Manivannan Sadhasivam:
+> Since the helper "owl_factor_helper_round_rate" is shared between factor
+> and composite clocks, using the factor clk specific helper function
+> like "hw_to_owl_factor" to access its members will create issues when
+> called from composite clk specific code. Hence, pass the "factor_hw"
+> struct pointer directly instead of fetching it using factor clk specific
+> helpers.
+> 
+> This issue has been observed when a composite clock like "sd0_clk" tried
+> to call "owl_factor_helper_round_rate" resulting in pointer dereferencing
+> error.
+> 
+> Fixes: 4bb78fc9744a ("clk: actions: Add factor clock support")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/clk/actions/owl-factor.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clk/actions/owl-factor.c b/drivers/clk/actions/owl-factor.c
+> index 317d4a9e112e..f419dfdd334f 100644
+> --- a/drivers/clk/actions/owl-factor.c
+> +++ b/drivers/clk/actions/owl-factor.c
+> @@ -64,11 +64,10 @@ static unsigned int _get_table_val(const struct clk_factor_table *table,
+>  	return val;
+>  }
+>  
+> -static int clk_val_best(struct clk_hw *hw, unsigned long rate,
+> +static int clk_val_best(const struct owl_factor_hw *factor_hw,
+> +			struct clk_hw *hw, unsigned long rate,
+>  			unsigned long *best_parent_rate)
+>  {
+> -	struct owl_factor *factor = hw_to_owl_factor(hw);
+> -	struct owl_factor_hw *factor_hw = &factor->factor_hw;
+>  	const struct clk_factor_table *clkt = factor_hw->table;
+>  	unsigned long parent_rate, try_parent_rate, best = 0, cur_rate;
+>  	unsigned long parent_rate_saved = *best_parent_rate;
+> @@ -126,7 +125,7 @@ long owl_factor_helper_round_rate(struct owl_clk_common *common,
+>  	const struct clk_factor_table *clkt = factor_hw->table;
+>  	unsigned int val, mul = 0, div = 1;
+>  
+> -	val = clk_val_best(&common->hw, rate, parent_rate);
+> +	val = clk_val_best(factor_hw, &common->hw, rate, parent_rate);
+>  	_get_table_div_mul(clkt, val, &mul, &div);
+>  
+>  	return *parent_rate * mul / div;
 
-Wonder if there something else to be fixed in the kernel for that scenario.
+While at it, I think it would be a good idea to rename it to
+owl_clk_val_best. Pretty confusing that you're touching only owl files
+for a clk_ refactoring, which sounds like common clk code.
 
-Thanks,
+Regards,
+Andreas
 
-Tomeu
-
-> Long story short, it appears that 'Mali LPAE' is also lacking the start
-> level notion of VMSA, and expects a full 4-level table even for <40 bits
-> when level 0 effectively redundant. Thus walking the 3-level table that
-> io-pgtable comes back with ends up going wildly wrong. The hack below
-> seems to do the job for me; if Clément can confirm (on T-720 you'll
-> still need the userspace hack to force 32-bit jobs as well) then I think
-> I'll cook up a proper refactoring of the allocator to put things right.
->
-> Robin.
->
->
-> ----->8-----
-> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-> index 546968d8a349..f29da6e8dc08 100644
-> --- a/drivers/iommu/io-pgtable-arm.c
-> +++ b/drivers/iommu/io-pgtable-arm.c
-> @@ -1023,12 +1023,14 @@ arm_mali_lpae_alloc_pgtable(struct
-> io_pgtable_cfg *cfg, void *cookie)
->         iop = arm_64_lpae_alloc_pgtable_s1(cfg, cookie);
->         if (iop) {
->                 u64 mair, ttbr;
-> +               struct arm_lpae_io_pgtable *data = io_pgtable_ops_to_data(&iop->ops);
->
-> +               data->levels = 4;
->                 /* Copy values as union fields overlap */
->                 mair = cfg->arm_lpae_s1_cfg.mair[0];
->                 ttbr = cfg->arm_lpae_s1_cfg.ttbr[0];
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
