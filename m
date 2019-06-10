@@ -1,159 +1,109 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 4/7] arm64: dts: actions: Add uSD and eMMC support for
- Bubblegum96
-Date: Mon, 10 Jun 2019 21:41:28 +0530
-Message-ID: <20190610161128.GC31461@mani>
-References: <20190608195317.6336-1-manivannan.sadhasivam@linaro.org>
- <20190608195317.6336-5-manivannan.sadhasivam@linaro.org>
- <1381305a-8585-9dcf-6b43-34e852e785ab@suse.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5 4/5] dt-bindings: mtd: Add bindings for TI's AM654
+ HyperBus memory controller
+Date: Mon, 10 Jun 2019 19:25:21 +0300
+Message-ID: <a808ffca-02a8-14b0-3422-c0905ab212a6@cogentembedded.com>
+References: <20190609103227.24875-1-vigneshr@ti.com>
+ <20190609103227.24875-5-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1381305a-8585-9dcf-6b43-34e852e785ab@suse.de>
+In-Reply-To: <20190609103227.24875-5-vigneshr@ti.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org, linus.walleij@linaro.org, linux-clk@vger.kernel.org
+To: Vignesh Raghavendra <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello!
 
-Hi Andreas,
+On 06/09/2019 01:32 PM, Vignesh Raghavendra wrote:
 
-On Mon, Jun 10, 2019 at 04:08:26PM +0200, Andreas Färber wrote:
-> Hi Mani,
+> Add binding documentation for TI's HyperBus memory controller present on
+> AM654 SoC.
 > 
-> Am 08.06.19 um 21:53 schrieb Manivannan Sadhasivam:
-> > Add uSD and eMMC support for Bubblegum96 board based on Actions Semi
-> > Owl SoC.
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+> v5:
+> Update binding example to show MMIO mux
+> Fix reg property for flash slave.
 > 
-> What information does "based on Actions Semi Owl SoC" give us? :)
-> The board name should be unique enough - Owl is a family of SoCs,
-> "actions:" is in the subject and "s900-" is in the filename.
+>  .../devicetree/bindings/mtd/ti,am654-hbmc.txt | 51 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+> new file mode 100644
+> index 000000000000..c2a2c2b42a92
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+> @@ -0,0 +1,51 @@
+> +Bindings for HyperBus Memory Controller (HBMC) on TI's K3 family of SoCs
+> +
+> +Required properties:
+> +- compatible : "ti,am654-hbmc" for AM654 SoC
+> +- reg : Two entries:
+> +	First entry pointed to the register space of HBMC controller
+> +	Second entry pointing to the memory map region dedicated for
+> +	MMIO access to attached flash devices
+> +- ranges : Address translation from offset within CS to allocated MMIO
+> +	   space in SoC
+> +
+> +Optional properties:
+> +- mux-controls : phandle to the multiplexer that controls selection of
+> +		 HBMC vs OSPI inside Flash SubSystem. Default is OSPI,
+> +		 if property is absent.
+> +		 See Documentation/devicetree/bindings/mux/reg-mux.txt
+> +		 for mmio-mux binding details
+> +
+> +Example:
+> +
+> +	fss: fss@47000000 {
 
-Makes sense!
+   What's FSS?
+   Regardless of the answer, the node names should be generic, like "memory-controller@".
 
-> > SD0 is connected to uSD slot and SD2 is connected to eMMC.
-> 
-> Suggest to add that as comments above the two nodes instead.
-> 
+> +		compatible = "syscon", "simple-mfd";
 
-Okay.
+   If it's "sycon", the nme should probably be "system-controller".
 
-> > Since there is no PMIC support added yet, fixed regulator has been
-> > used as a regulator node.
-> 
-> Fine with me - maybe add a comment and make sure it's aligned with the
-> schematics naming wrt PMIC.
-> 
+> +		reg = <0x0 0x47000000 0x0 0x100>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		hbmc_mux: hbmc-mux {
 
-Okay.
+   So, just "multiplexor"?
 
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  .../boot/dts/actions/s900-bubblegum-96.dts    | 50 +++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-> > index 732daaa6e9d3..3b596d72de25 100644
-> > --- a/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-> > +++ b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-> > @@ -13,6 +13,9 @@
-> >  
-> >  	aliases {
-> >  		serial5 = &uart5;
-> > +		mmc0 = &mmc0;
-> > +		mmc1 = &mmc1;
-> > +		mmc2 = &mmc2;
-> 
-> Sort them alphabetically?
-> 
+> +			compatible = "mmio-mux";
+> +			#mux-control-cells = <1>;
+> +			mux-reg-masks = <0x4 0x2>; /* 0: reg 0x4, bit 1 */
+> +		};
+> +
+> +		hbmc: hbmc@47034000 {
 
-Ack.
+   Should be named "memory-controller@47034000", according to the DT spec.
 
-> >  	};
-> >  
-> >  	chosen {
-> > @@ -23,6 +26,14 @@
-> >  		device_type = "memory";
-> >  		reg = <0x0 0x0 0x0 0x80000000>;
-> >  	};
-> > +
-> > +	reg_3p1v: regulator-3p1v {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "fixed-3.1V";
-> > +		regulator-min-microvolt = <3100000>;
-> > +		regulator-max-microvolt = <3100000>;
-> > +		regulator-always-on;
-> > +	};
-> >  };
-> >  
-> >  &i2c0 {
-> > @@ -241,6 +252,45 @@
-> >  			bias-pull-up;
-> >  		};
-> >  	};
-> > +
-> > +	mmc0_default: mmc0_default {
-> > +		pinmux {
-> > +			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-> > +				 "sd0_cmd_mfp", "sd0_clk_mfp";
-> > +			function = "sd0";
-> > +		};
-> > +	};
-> > +
-> > +	mmc2_default: mmc2_default {
-> > +		pinmux {
-> > +			groups = "nand0_d0_ceb3_mfp";
-> > +			function = "sd2";
-> > +		};
-> > +	};
-> 
-> Wouldn't it make more sense to move these and the below pinctrl-* to
-> s900.dtsi for sharing with other theoretical boards? I really dislike
-> the imx model where pin muxing is duplicated into each individual board.
-> 
+> +			compatible = "ti,am654-hbmc";
+> +			reg = <0x0 0x47034000 0x0 0x100>,
+> +				<0x5 0x00000000 0x1 0x0000000>;
+> +			power-domains = <&k3_pds 55>;
+> +			#address-cells = <2>;
+> +			#size-cells = <1>;
+> +			ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
+> +				 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
+> +			mux-controls = <&hbmc_mux 0>;
+> +
+> +			/* Slave flash node */
+> +			flash@0,0 {
+> +				compatible = "cypress,hyperflash", "cfi-flash";
+> +				reg = <0x0 0x0 0x4000000>;
+> +			};
+> +		};
+> +	};
+[...]
 
-Matter of taste. IMO pinctrl config belongs to the board design and I don't
-wanna dump all combinations in the soc dtsi.
-
-Thanks,
-Mani
-
-> Regards,
-> Andreas
-> 
-> > +};
-> > +
-> > +&mmc0 {
-> > +	status = "okay";
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&mmc0_default>;
-> > +	no-sdio;
-> > +	no-mmc;
-> > +	no-1-8-v;
-> > +	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
-> > +	bus-width = <4>;
-> > +	vmmc-supply = <&reg_3p1v>;
-> > +	vqmmc-supply = <&reg_3p1v>;
-> > +};
-> > +
-> > +&mmc2 {
-> > +	status = "okay";
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&mmc2_default>;
-> > +	no-sdio;
-> > +	no-sd;
-> > +	non-removable;
-> > +	bus-width = <8>;
-> > +	vmmc-supply = <&reg_3p1v>;
-> >  };
-> >  
-> >  &timer {
-> 
-> -- 
-> SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-> GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-> HRB 21284 (AG Nürnberg)
+MBR, Sergei
