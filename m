@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 07/11] dt-bindings: net: stmmac: Convert the binding to a schemas
-Date: Mon, 10 Jun 2019 11:25:46 +0200
-Message-ID: <40b91798a807cc3c232119ec74285325ebb6692a.1560158667.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v2 09/11] dt-bindings: net: sun8i-emac: Convert the binding to a schemas
+Date: Mon, 10 Jun 2019 11:25:48 +0200
+Message-ID: <f3f393db88b26d84a048cb71887a571611b984a2.1560158667.git-series.maxime.ripard@bootlin.com>
 References: <91618c7e9a5497462afa74c6d8a947f709f54331.1560158667.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,411 +12,374 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Switch the STMMAC / Synopsys DesignWare MAC controller binding to a YAML
-schema to enable the DT validation.
+Switch our Allwinner H3 EMAC controller binding to a YAML schema to enable
+the DT validation. Since that controller is based on a Synopsys IP, let's
+add the validation to that schemas with a bunch of conditionals.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
 ---
 
 Changes from v1:
-  - Restrict snps,tso to only a couple of compatibles
-  - Use an enum for the compatibles
-  - Add a custom select statement with the compatibles of all the generic
-    compatibles, including the deprecated ones. Remove the deprecated ones
-    from the valid compatible values to issue a warning when used.
+  - Add specific binding document
 ---
- Documentation/devicetree/bindings/net/snps,dwmac.yaml | 389 +++++++++++-
- Documentation/devicetree/bindings/net/stmmac.txt      | 179 +-----
- 2 files changed, 390 insertions(+), 178 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/snps,dwmac.yaml
+ Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml | 353 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ Documentation/devicetree/bindings/net/dwmac-sun8i.txt                | 201 +-----------------------------------------
+ Documentation/devicetree/bindings/net/snps,dwmac.yaml                |  15 +++-
+ 3 files changed, 368 insertions(+), 201 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
 
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
 new file mode 100644
-index 000000000000..5983715ac5bc
+index 000000000000..814cfb862e4f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -0,0 +1,389 @@
++++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+@@ -0,0 +1,353 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/net/snps,dwmac.yaml#
++$id: http://devicetree.org/schemas/net/allwinner,sun8i-a83t-gmac.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Synopsys DesignWare MAC Device Tree Bindings
++title: Allwinner A83t EMAC Device Tree Bindings
 +
 +maintainers:
-+  - Alexandre Torgue <alexandre.torgue@st.com>
-+  - Giuseppe Cavallaro <peppe.cavallaro@st.com>
-+  - Jose Abreu <joabreu@synopsys.com>
-+
-+# Select every compatible, including the deprecated ones. This way, we
-+# will be able to report a warning when we have that compatible, since
-+# we will validate the node thanks to the select, but won't report it
-+# as a valid value in the compatible property description
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - snps,dwmac
-+          - snps,dwmac-3.50a
-+          - snps,dwmac-3.610
-+          - snps,dwmac-3.70a
-+          - snps,dwmac-3.710
-+          - snps,dwmac-4.00
-+          - snps,dwmac-4.10a
-+          - snps,dwxgmac
-+          - snps,dwxgmac-2.10
-+
-+          # Deprecated
-+          - st,spear600-gmac
-+
-+  required:
-+    - compatible
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
 +
 +properties:
-+
-+  # We need to include all the compatibles from schemas that will
-+  # include that schemas, otherwise compatible won't validate for
-+  # those.
 +  compatible:
-+    contains:
-+      enum:
-+        - snps,dwmac
-+        - snps,dwmac-3.50a
-+        - snps,dwmac-3.610
-+        - snps,dwmac-3.70a
-+        - snps,dwmac-3.710
-+        - snps,dwmac-4.00
-+        - snps,dwmac-4.10a
-+        - snps,dwxgmac
-+        - snps,dwxgmac-2.10
++    oneOf:
++      - const: allwinner,sun8i-a83t-emac
++      - const: allwinner,sun8i-h3-emac
++      - const: allwinner,sun8i-r40-emac
++      - const: allwinner,sun8i-v3s-emac
++      - const: allwinner,sun50i-a64-emac
++      - items:
++        - const: allwinner,sun50i-h6-emac
++        - const: allwinner,sun50i-a64-emac
 +
 +  reg:
 +    maxItems: 1
 +
 +  interrupts:
-+    minItems: 1
-+    maxItems: 3
-+    items:
-+      - description: Combined signal for various interrupt events
-+      - description: The interrupt to manage the remote wake-up packet detection
-+      - description: The interrupt that occurs when Rx exits the LPI state
++    maxItems: 1
 +
 +  interrupt-names:
-+    minItems: 1
-+    maxItems: 3
-+    items:
-+      - const: macirq
-+      - const: eth_wake_irq
-+      - const: eth_lpi
++    const: macirq
 +
 +  clocks:
-+    minItems: 1
-+    maxItems: 3
-+    items:
-+      - description: GMAC main clock
-+      - description: Peripheral registers interface clock
-+      - description:
-+          PTP reference clock. This clock is used for programming the
-+          Timestamp Addend Register. If not passed then the system
-+          clock will be used and this is fine on some platforms.
++    maxItems: 1
 +
 +  clock-names:
-+    additionalItems: true
-+    contains:
-+      enum:
-+        - stmmaceth
-+        - pclk
-+        - ptp_ref
-+
-+  resets:
-+    maxItems: 1
-+    description:
-+      MAC Reset signal.
-+
-+  reset-names:
 +    const: stmmaceth
 +
-+  snps,axi-config:
++  syscon:
 +    $ref: /schemas/types.yaml#definitions/phandle
 +    description:
-+      AXI BUS Mode parameters. Phandle to a node that can contain the
-+      following properties
-+        * snps,lpi_en, enable Low Power Interface
-+        * snps,xit_frm, unlock on WoL
-+        * snps,wr_osr_lmt, max write outstanding req. limit
-+        * snps,rd_osr_lmt, max read outstanding req. limit
-+        * snps,kbbe, do not cross 1KiB boundary.
-+        * snps,blen, this is a vector of supported burst length.
-+        * snps,fb, fixed-burst
-+        * snps,mb, mixed-burst
-+        * snps,rb, rebuild INCRx Burst
-+
-+  snps,mtl-rx-config:
-+    $ref: /schemas/types.yaml#definitions/phandle
-+    description:
-+      Multiple RX Queues parameters. Phandle to a node that can
-+      contain the following properties
-+        * snps,rx-queues-to-use, number of RX queues to be used in the
-+          driver
-+        * Choose one of these RX scheduling algorithms
-+          * snps,rx-sched-sp, Strict priority
-+          * snps,rx-sched-wsp, Weighted Strict priority
-+        * For each RX queue
-+          * Choose one of these modes
-+            * snps,dcb-algorithm, Queue to be enabled as DCB
-+            * snps,avb-algorithm, Queue to be enabled as AVB
-+          * snps,map-to-dma-channel, Channel to map
-+          * Specifiy specific packet routing
-+            * snps,route-avcp, AV Untagged Control packets
-+            * snps,route-ptp, PTP Packets
-+            * snps,route-dcbcp, DCB Control Packets
-+            * snps,route-up, Untagged Packets
-+            * snps,route-multi-broad, Multicast & Broadcast Packets
-+          * snps,priority, RX queue priority (Range 0x0 to 0xF)
-+
-+  snps,mtl-tx-config:
-+    $ref: /schemas/types.yaml#definitions/phandle
-+    description:
-+      Multiple TX Queues parameters. Phandle to a node that can
-+      contain the following properties
-+        * snps,tx-queues-to-use, number of TX queues to be used in the
-+          driver
-+        * Choose one of these TX scheduling algorithms
-+          * snps,tx-sched-wrr, Weighted Round Robin
-+          * snps,tx-sched-wfq, Weighted Fair Queuing
-+          * snps,tx-sched-dwrr, Deficit Weighted Round Robin
-+          * snps,tx-sched-sp, Strict priority
-+        * For each TX queue
-+          * snps,weight, TX queue weight (if using a DCB weight
-+            algorithm)
-+          * Choose one of these modes
-+            * snps,dcb-algorithm, TX queue will be working in DCB
-+            * snps,avb-algorithm, TX queue will be working in AVB
-+              [Attention] Queue 0 is reserved for legacy traffic
-+                          and so no AVB is available in this queue.
-+          * Configure Credit Base Shaper (if AVB Mode selected)
-+            * snps,send_slope, enable Low Power Interface
-+            * snps,idle_slope, unlock on WoL
-+            * snps,high_credit, max write outstanding req. limit
-+            * snps,low_credit, max read outstanding req. limit
-+          * snps,priority, TX queue priority (Range 0x0 to 0xF)
-+
-+  snps,reset-gpio:
-+    maxItems: 1
-+    description:
-+      PHY Reset GPIO
-+
-+  snps,reset-active-low:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      Indicates that the PHY Reset is active low
-+
-+  snps,reset-delays-us:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32-array
-+      - minItems: 3
-+        maxItems: 3
-+    description:
-+      Triplet of delays. The 1st cell is reset pre-delay in micro
-+      seconds. The 2nd cell is reset pulse in micro seconds. The 3rd
-+      cell is reset post-delay in micro seconds.
-+
-+  snps,aal:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      Use Address-Aligned Beats
-+
-+  snps,fixed-burst:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      Program the DMA to use the fixed burst mode
-+
-+  snps,mixed-burst:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      Program the DMA to use the mixed burst mode
-+
-+  snps,force_thresh_dma_mode:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      Force DMA to use the threshold mode for both tx and rx
-+
-+  snps,force_sf_dma_mode:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      Force DMA to use the Store and Forward mode for both tx and
-+      rx. This flag is ignored if force_thresh_dma_mode is set.
-+
-+  snps,en-tx-lpi-clockgating:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      Enable gating of the MAC TX clock during TX low-power mode
-+
-+  snps,multicast-filter-bins:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Number of multicast filter hash bins supported by this device
-+      instance
-+
-+  snps,perfect-filter-entries:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Number of perfect filter entries supported by this device
-+      instance
-+
-+  snps,ps-speed:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Port selection speed that can be passed to the core when PCS
-+      is supported. For example, this is used in case of SGMII and
-+      MAC2MAC connection.
-+
-+  mdio:
-+    type: object
-+    description:
-+      Creates and registers an MDIO bus.
-+
-+    properties:
-+      compatible:
-+        const: snps,dwmac-mdio
-+
-+    required:
-+      - compatible
++      Phandle to the device containing the EMAC or GMAC clock
++      register
 +
 +required:
 +  - compatible
 +  - reg
 +  - interrupts
 +  - interrupt-names
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
 +  - phy-mode
-+
-+dependencies:
-+  snps,reset-active-low: ["snps,reset-gpio"]
-+  snps,reset-delay-us: ["snps,reset-gpio"]
++  - phy-handle
++  - syscon
 +
 +allOf:
-+  - $ref: "ethernet-controller.yaml#"
++  - $ref: "snps,dwmac.yaml#"
 +  - if:
 +      properties:
 +        compatible:
 +          contains:
 +            enum:
-+              - snps,dwxgmac
-+              - snps,dwxgmac-2.10
-+              - st,spear600-gmac
++              - allwinner,sun8i-a83t-emac
++              - allwinner,sun8i-h3-emac
++              - allwinner,sun8i-v3s-emac
++              - allwinner,sun50i-a64-emac
 +
 +    then:
 +      properties:
-+        snps,pbl:
++        allwinner,tx-delay-ps:
 +          allOf:
-+            - $ref: /schemas/types.yaml#definitions/uint32-array
-+            - enum: [2, 4, 8]
++            - $ref: /schemas/types.yaml#definitions/uint32
++            - enum: [0, 100, 200, 300, 400, 500, 600, 700]
++              default: 0
 +          description:
-+            Programmable Burst Length (tx and rx)
++            External RGMII PHY TX clock delay chain value in ps.
 +
-+        snps,txpbl:
++        allwinner,rx-delay-ps:
 +          allOf:
-+            - $ref: /schemas/types.yaml#definitions/uint32-array
-+            - enum: [2, 4, 8]
++            - $ref: /schemas/types.yaml#definitions/uint32
++            - enum:
++                - 0
++                - 100
++                - 200
++                - 300
++                - 400
++                - 500
++                - 600
++                - 700
++                - 800
++                - 900
++                - 1000
++                - 1100
++                - 1200
++                - 1300
++                - 1400
++                - 1500
++                - 1600
++                - 1700
++                - 1800
++                - 1900
++                - 2000
++                - 2100
++                - 2200
++                - 2300
++                - 2400
++                - 2500
++                - 2600
++                - 2700
++                - 2800
++                - 2900
++                - 3000
++                - 3100
++              default: 0
 +          description:
-+            Tx Programmable Burst Length. If set, DMA tx will use this
-+            value rather than snps,pbl.
-+
-+        snps,rxpbl:
-+          allOf:
-+            - $ref: /schemas/types.yaml#definitions/uint32-array
-+            - enum: [2, 4, 8]
-+          description:
-+            Rx Programmable Burst Length. If set, DMA rx will use this
-+            value rather than snps,pbl.
-+
-+        snps,no-pbl-x8:
-+          $ref: /schemas/types.yaml#definitions/flag
-+          description:
-+            Don\'t multiply the pbl/txpbl/rxpbl values by 8. For core
-+            rev < 3.50, don\'t multiply the values by 4.
++            External RGMII PHY TX clock delay chain value in ps.
 +
 +  - if:
 +      properties:
 +        compatible:
 +          contains:
 +            enum:
-+              - snps,dwmac-4.00
-+              - snps,dwmac-4.10a
-+              - snps,dwxgmac
-+              - snps,dwxgmac-2.10
-+              - st,spear600-gmac
++              - allwinner,sun8i-r40-emac
 +
 +    then:
-+        snps,tso:
++      properties:
++        allwinner,rx-delay-ps:
++          allOf:
++            - $ref: /schemas/types.yaml#definitions/uint32
++            - enum: [0, 100, 200, 300, 400, 500, 600, 700]
++              default: 0
++          description:
++            External RGMII PHY TX clock delay chain value in ps.
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - allwinner,sun8i-h3-emac
++              - allwinner,sun8i-v3s-emac
++
++    then:
++      properties:
++        allwinner,leds-active-low:
 +          $ref: /schemas/types.yaml#definitions/flag
 +          description:
-+            Enables the TSO feature otherwise it will be managed by
-+            MAC HW capability register.
++            EPHY LEDs are active low.
++
++        mdio-mux:
++          type: object
++
++          properties:
++            compatible:
++              const: allwinner,sun8i-h3-mdio-mux
++
++            mdio-parent-bus:
++              $ref: /schemas/types.yaml#definitions/phandle
++              description:
++                Phandle to EMAC MDIO.
++
++            mdio@1:
++              type: object
++              description: Internal MDIO Bus
++
++              properties:
++                "#address-cells":
++                  const: 1
++
++                "#size-cells":
++                  const: 0
++
++                compatible:
++                  const: allwinner,sun8i-h3-mdio-internal
++
++                reg:
++                  const: 1
++
++              patternProperties:
++                "^ethernet-phy@[0-9a-f]$":
++                  type: object
++                  description:
++                    Integrated PHY node
++
++                  properties:
++                    clocks:
++                      maxItems: 1
++
++                    resets:
++                      maxItems: 1
++
++                  required:
++                    - clocks
++                    - resets
++
++
++            mdio@2:
++              type: object
++              description: External MDIO Bus (H3 only)
++
++              properties:
++                "#address-cells":
++                  const: 1
++
++                "#size-cells":
++                  const: 0
++
++                reg:
++                  const: 2
++
++          required:
++            - compatible
++            - mdio-parent-bus
++            - mdio@1
 +
 +examples:
 +  - |
-+    stmmac_axi_setup: stmmac-axi-config {
-+        snps,wr_osr_lmt = <0xf>;
-+        snps,rd_osr_lmt = <0xf>;
-+        snps,blen = <256 128 64 32 0 0 0>;
-+    };
-+
-+    mtl_rx_setup: rx-queues-config {
-+        snps,rx-queues-to-use = <1>;
-+        snps,rx-sched-sp;
-+        queue0 {
-+            snps,dcb-algorithm;
-+            snps,map-to-dma-channel = <0x0>;
-+            snps,priority = <0x0>;
-+        };
-+    };
-+
-+    mtl_tx_setup: tx-queues-config {
-+        snps,tx-queues-to-use = <2>;
-+        snps,tx-sched-wrr;
-+        queue0 {
-+            snps,weight = <0x10>;
-+            snps,dcb-algorithm;
-+            snps,priority = <0x0>;
-+        };
-+
-+        queue1 {
-+            snps,avb-algorithm;
-+            snps,send_slope = <0x1000>;
-+            snps,idle_slope = <0x1000>;
-+            snps,high_credit = <0x3E800>;
-+            snps,low_credit = <0xFFC18000>;
-+            snps,priority = <0x1>;
-+        };
-+    };
-+
-+    gmac0: ethernet@e0800000 {
-+        compatible = "st,spear600-gmac";
-+        reg = <0xe0800000 0x8000>;
-+        interrupt-parent = <&vic1>;
-+        interrupts = <24 23 22>;
-+        interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
-+        mac-address = [000000000000]; /* Filled in by U-Boot */
-+        max-frame-size = <3800>;
-+        phy-mode = "gmii";
-+        snps,multicast-filter-bins = <256>;
-+        snps,perfect-filter-entries = <128>;
-+        rx-fifo-depth = <16384>;
-+        tx-fifo-depth = <16384>;
-+        clocks = <&clock>;
++    ethernet@1c0b000 {
++        compatible = "allwinner,sun8i-h3-emac";
++        syscon = <&syscon>;
++        reg = <0x01c0b000 0x104>;
++        interrupts = <0 82 1>;
++        interrupt-names = "macirq";
++        resets = <&ccu 12>;
++        reset-names = "stmmaceth";
++        clocks = <&ccu 27>;
 +        clock-names = "stmmaceth";
-+        snps,axi-config = <&stmmac_axi_setup>;
-+        snps,mtl-rx-config = <&mtl_rx_setup>;
-+        snps,mtl-tx-config = <&mtl_tx_setup>;
-+        mdio0 {
++
++        phy-handle = <&int_mii_phy>;
++        phy-mode = "mii";
++        allwinner,leds-active-low;
++
++        mdio1: mdio {
 +            #address-cells = <1>;
 +            #size-cells = <0>;
 +            compatible = "snps,dwmac-mdio";
-+            phy1: ethernet-phy@0 {
++        };
++
++        mdio-mux {
++            compatible = "allwinner,sun8i-h3-mdio-mux";
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            mdio-parent-bus = <&mdio1>;
++
++            int_mii_phy: mdio@1 {
++                compatible = "allwinner,sun8i-h3-mdio-internal";
++                reg = <1>;
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                ethernet-phy@1 {
++                    reg = <1>;
++                    clocks = <&ccu 67>;
++                    resets = <&ccu 39>;
++                    phy-is-integrated;
++                };
++            };
++
++            mdio@2 {
++                reg = <2>;
++                #address-cells = <1>;
++                #size-cells = <0>;
++            };
++        };
++    };
++
++  - |
++    ethernet@1c0b000 {
++        compatible = "allwinner,sun8i-h3-emac";
++        syscon = <&syscon>;
++        reg = <0x01c0b000 0x104>;
++        interrupts = <0 82 1>;
++        interrupt-names = "macirq";
++        resets = <&ccu 12>;
++        reset-names = "stmmaceth";
++        clocks = <&ccu 27>;
++        clock-names = "stmmaceth";
++
++        phy-handle = <&ext_rgmii_phy>;
++        phy-mode = "rgmii";
++        allwinner,leds-active-low;
++
++        mdio2: mdio {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            compatible = "snps,dwmac-mdio";
++        };
++
++        mdio-mux {
++            compatible = "allwinner,sun8i-h3-mdio-mux";
++            #address-cells = <1>;
++            #size-cells = <0>;
++            mdio-parent-bus = <&mdio2>;
++
++            mdio@1 {
++                compatible = "allwinner,sun8i-h3-mdio-internal";
++                reg = <1>;
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                ethernet-phy@1 {
++                    reg = <1>;
++                    clocks = <&ccu 67>;
++                    resets = <&ccu 39>;
++                };
++            };
++
++            mdio@2 {
++                reg = <2>;
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                ext_rgmii_phy: ethernet-phy@1 {
++                    reg = <1>;
++                };
++            };
++        };
++    };
++
++  - |
++    ethernet@1c0b000 {
++        compatible = "allwinner,sun8i-a83t-emac";
++        syscon = <&syscon>;
++        reg = <0x01c0b000 0x104>;
++        interrupts = <0 82 1>;
++        interrupt-names = "macirq";
++        resets = <&ccu 13>;
++        reset-names = "stmmaceth";
++        clocks = <&ccu 27>;
++        clock-names = "stmmaceth";
++        phy-handle = <&ext_rgmii_phy1>;
++        phy-mode = "rgmii";
++
++        mdio {
++            compatible = "snps,dwmac-mdio";
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            ext_rgmii_phy1: ethernet-phy@1 {
++                reg = <1>;
 +            };
 +        };
 +    };
@@ -426,189 +389,252 @@ index 000000000000..5983715ac5bc
 +# additionalProperties: false
 +
 +...
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index cb694062afff..7d48782767cb 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -1,178 +1 @@
--* STMicroelectronics 10/100/1000/2500/10000 Ethernet (GMAC/XGMAC)
+diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+deleted file mode 100644
+index 54c66d0611cb..000000000000
+--- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
++++ /dev/null
+@@ -1,201 +0,0 @@
+-* Allwinner sun8i GMAC ethernet controller
+-
+-This device is a platform glue layer for stmmac.
+-Please see stmmac.txt for the other unchanged properties.
 -
 -Required properties:
--- compatible: Should be "snps,dwmac-<ip_version>", "snps,dwmac" or
--	"snps,dwxgmac-<ip_version>", "snps,dwxgmac".
--	For backwards compatibility: "st,spear600-gmac" is also supported.
--- reg: Address and length of the register set for the device
--- interrupts: Should contain the STMMAC interrupts
--- interrupt-names: Should contain a list of interrupt names corresponding to
--	the interrupts in the interrupts property, if available.
--	Valid interrupt names are:
--  - "macirq" (combined signal for various interrupt events)
--  - "eth_wake_irq" (the interrupt to manage the remote wake-up packet detection)
--  - "eth_lpi" (the interrupt that occurs when Rx exits the LPI state)
--- phy-mode: See ethernet.txt file in the same directory.
--- snps,reset-gpio 	gpio number for phy reset.
--- snps,reset-active-low boolean flag to indicate if phy reset is active low.
--- snps,reset-delays-us  is triplet of delays
--	The 1st cell is reset pre-delay in micro seconds.
--	The 2nd cell is reset pulse in micro seconds.
--	The 3rd cell is reset post-delay in micro seconds.
+-- compatible: must be one of the following string:
+-		"allwinner,sun8i-a83t-emac"
+-		"allwinner,sun8i-h3-emac"
+-		"allwinner,sun8i-r40-gmac"
+-		"allwinner,sun8i-v3s-emac"
+-		"allwinner,sun50i-a64-emac"
+-		"allwinner,sun50i-h6-emac", "allwinner-sun50i-a64-emac"
+-- reg: address and length of the register for the device.
+-- interrupts: interrupt for the device
+-- interrupt-names: must be "macirq"
+-- clocks: A phandle to the reference clock for this device
+-- clock-names: must be "stmmaceth"
+-- resets: A phandle to the reset control for this device
+-- reset-names: must be "stmmaceth"
+-- phy-mode: See ethernet.txt
+-- phy-handle: See ethernet.txt
+-- syscon: A phandle to the device containing the EMAC or GMAC clock register
 -
 -Optional properties:
--- resets: Should contain a phandle to the STMMAC reset signal, if any
--- reset-names: Should contain the reset signal name "stmmaceth", if a
--	reset phandle is given
--- max-frame-size: See ethernet.txt file in the same directory
--- clocks: If present, the first clock should be the GMAC main clock and
--  the second clock should be peripheral's register interface clock. Further
--  clocks may be specified in derived bindings.
--- clock-names: One name for each entry in the clocks property, the
--  first one should be "stmmaceth" and the second one should be "pclk".
--- ptp_ref: this is the PTP reference clock; in case of the PTP is available
--  this clock is used for programming the Timestamp Addend Register. If not
--  passed then the system clock will be used and this is fine on some
--  platforms.
--- tx-fifo-depth: See ethernet.txt file in the same directory
--- rx-fifo-depth: See ethernet.txt file in the same directory
--- snps,pbl		Programmable Burst Length (tx and rx)
--- snps,txpbl		Tx Programmable Burst Length. Only for GMAC and newer.
--			If set, DMA tx will use this value rather than snps,pbl.
--- snps,rxpbl		Rx Programmable Burst Length. Only for GMAC and newer.
--			If set, DMA rx will use this value rather than snps,pbl.
--- snps,no-pbl-x8	Don't multiply the pbl/txpbl/rxpbl values by 8.
--			For core rev < 3.50, don't multiply the values by 4.
--- snps,aal		Address-Aligned Beats
--- snps,fixed-burst	Program the DMA to use the fixed burst mode
--- snps,mixed-burst	Program the DMA to use the mixed burst mode
--- snps,force_thresh_dma_mode	Force DMA to use the threshold mode for
--				both tx and rx
--- snps,force_sf_dma_mode	Force DMA to use the Store and Forward
--				mode for both tx and rx. This flag is
--				ignored if force_thresh_dma_mode is set.
--- snps,en-tx-lpi-clockgating	Enable gating of the MAC TX clock during
--				TX low-power mode
--- snps,multicast-filter-bins:	Number of multicast filter hash bins
--				supported by this device instance
--- snps,perfect-filter-entries:	Number of perfect filter entries supported
--				by this device instance
--- snps,ps-speed: port selection speed that can be passed to the core when
--		 PCS is supported. For example, this is used in case of SGMII
--		 and MAC2MAC connection.
--- snps,tso: this enables the TSO feature otherwise it will be managed by
--		 MAC HW capability register. Only for GMAC4 and newer.
--- AXI BUS Mode parameters: below the list of all the parameters to program the
--			   AXI register inside the DMA module:
--	- snps,lpi_en: enable Low Power Interface
--	- snps,xit_frm: unlock on WoL
--	- snps,wr_osr_lmt: max write outstanding req. limit
--	- snps,rd_osr_lmt: max read outstanding req. limit
--	- snps,kbbe: do not cross 1KiB boundary.
--	- snps,blen: this is a vector of supported burst length.
--	- snps,fb: fixed-burst
--	- snps,mb: mixed-burst
--	- snps,rb: rebuild INCRx Burst
--- mdio: with compatible = "snps,dwmac-mdio", create and register mdio bus.
--- Multiple RX Queues parameters: below the list of all the parameters to
--				 configure the multiple RX queues:
--	- snps,rx-queues-to-use: number of RX queues to be used in the driver
--	- Choose one of these RX scheduling algorithms:
--		- snps,rx-sched-sp: Strict priority
--		- snps,rx-sched-wsp: Weighted Strict priority
--	- For each RX queue
--		- Choose one of these modes:
--			- snps,dcb-algorithm: Queue to be enabled as DCB
--			- snps,avb-algorithm: Queue to be enabled as AVB
--		- snps,map-to-dma-channel: Channel to map
--		- Specifiy specific packet routing:
--			- snps,route-avcp: AV Untagged Control packets
--			- snps,route-ptp: PTP Packets
--			- snps,route-dcbcp: DCB Control Packets
--			- snps,route-up: Untagged Packets
--			- snps,route-multi-broad: Multicast & Broadcast Packets
--		- snps,priority: RX queue priority (Range: 0x0 to 0xF)
--- Multiple TX Queues parameters: below the list of all the parameters to
--				 configure the multiple TX queues:
--	- snps,tx-queues-to-use: number of TX queues to be used in the driver
--	- Choose one of these TX scheduling algorithms:
--		- snps,tx-sched-wrr: Weighted Round Robin
--		- snps,tx-sched-wfq: Weighted Fair Queuing
--		- snps,tx-sched-dwrr: Deficit Weighted Round Robin
--		- snps,tx-sched-sp: Strict priority
--	- For each TX queue
--		- snps,weight: TX queue weight (if using a DCB weight algorithm)
--		- Choose one of these modes:
--			- snps,dcb-algorithm: TX queue will be working in DCB
--			- snps,avb-algorithm: TX queue will be working in AVB
--			  [Attention] Queue 0 is reserved for legacy traffic
--			  and so no AVB is available in this queue.
--		- Configure Credit Base Shaper (if AVB Mode selected):
--			- snps,send_slope: enable Low Power Interface
--			- snps,idle_slope: unlock on WoL
--			- snps,high_credit: max write outstanding req. limit
--			- snps,low_credit: max read outstanding req. limit
--		- snps,priority: TX queue priority (Range: 0x0 to 0xF)
--Examples:
+-- allwinner,tx-delay-ps: TX clock delay chain value in ps.
+-			 Range is 0-700. Default is 0.
+-			 Unavailable for allwinner,sun8i-r40-gmac
+-- allwinner,rx-delay-ps: RX clock delay chain value in ps.
+-			 Range is 0-3100. Default is 0.
+-			 Range is 0-700 for allwinner,sun8i-r40-gmac
+-Both delay properties need to be a multiple of 100. They control the
+-clock delay for external RGMII PHY. They do not apply to the internal
+-PHY or external non-RGMII PHYs.
 -
--	stmmac_axi_setup: stmmac-axi-config {
--		snps,wr_osr_lmt = <0xf>;
--		snps,rd_osr_lmt = <0xf>;
--		snps,blen = <256 128 64 32 0 0 0>;
+-Optional properties for the following compatibles:
+-  - "allwinner,sun8i-h3-emac",
+-  - "allwinner,sun8i-v3s-emac":
+-- allwinner,leds-active-low: EPHY LEDs are active low
+-
+-Required child node of emac:
+-- mdio bus node: should be named mdio with compatible "snps,dwmac-mdio"
+-
+-Required properties of the mdio node:
+-- #address-cells: shall be 1
+-- #size-cells: shall be 0
+-
+-The device node referenced by "phy" or "phy-handle" must be a child node
+-of the mdio node. See phy.txt for the generic PHY bindings.
+-
+-The following compatibles require that the emac node have a mdio-mux child
+-node called "mdio-mux":
+-  - "allwinner,sun8i-h3-emac"
+-  - "allwinner,sun8i-v3s-emac":
+-Required properties for the mdio-mux node:
+-  - compatible = "allwinner,sun8i-h3-mdio-mux"
+-  - mdio-parent-bus: a phandle to EMAC mdio
+-  - one child mdio for the integrated mdio with the compatible
+-    "allwinner,sun8i-h3-mdio-internal"
+-  - one child mdio for the external mdio if present (V3s have none)
+-Required properties for the mdio-mux children node:
+-  - reg: 1 for internal MDIO bus, 2 for external MDIO bus
+-
+-The following compatibles require a PHY node representing the integrated
+-PHY, under the integrated MDIO bus node if an mdio-mux node is used:
+-  - "allwinner,sun8i-h3-emac",
+-  - "allwinner,sun8i-v3s-emac":
+-
+-Additional information regarding generic multiplexer properties can be found
+-at Documentation/devicetree/bindings/net/mdio-mux.txt
+-
+-Required properties of the integrated phy node:
+-- clocks: a phandle to the reference clock for the EPHY
+-- resets: a phandle to the reset control for the EPHY
+-- Must be a child of the integrated mdio
+-
+-Example with integrated PHY:
+-emac: ethernet@1c0b000 {
+-	compatible = "allwinner,sun8i-h3-emac";
+-	syscon = <&syscon>;
+-	reg = <0x01c0b000 0x104>;
+-	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+-	interrupt-names = "macirq";
+-	resets = <&ccu RST_BUS_EMAC>;
+-	reset-names = "stmmaceth";
+-	clocks = <&ccu CLK_BUS_EMAC>;
+-	clock-names = "stmmaceth";
+-
+-	phy-handle = <&int_mii_phy>;
+-	phy-mode = "mii";
+-	allwinner,leds-active-low;
+-
+-	mdio: mdio {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		compatible = "snps,dwmac-mdio";
 -	};
 -
--	mtl_rx_setup: rx-queues-config {
--		snps,rx-queues-to-use = <1>;
--		snps,rx-sched-sp;
--		queue0 {
--			snps,dcb-algorithm;
--			snps,map-to-dma-channel = <0x0>;
--			snps,priority = <0x0>;
--		};
--	};
+-	mdio-mux {
+-		compatible = "mdio-mux", "allwinner,sun8i-h3-mdio-mux";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
 -
--	mtl_tx_setup: tx-queues-config {
--		snps,tx-queues-to-use = <2>;
--		snps,tx-sched-wrr;
--		queue0 {
--			snps,weight = <0x10>;
--			snps,dcb-algorithm;
--			snps,priority = <0x0>;
--		};
+-		mdio-parent-bus = <&mdio>;
 -
--		queue1 {
--			snps,avb-algorithm;
--			snps,send_slope = <0x1000>;
--			snps,idle_slope = <0x1000>;
--			snps,high_credit = <0x3E800>;
--			snps,low_credit = <0xFFC18000>;
--			snps,priority = <0x1>;
--		};
--	};
--
--	gmac0: ethernet@e0800000 {
--		compatible = "st,spear600-gmac";
--		reg = <0xe0800000 0x8000>;
--		interrupt-parent = <&vic1>;
--		interrupts = <24 23 22>;
--		interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
--		mac-address = [000000000000]; /* Filled in by U-Boot */
--		max-frame-size = <3800>;
--		phy-mode = "gmii";
--		snps,multicast-filter-bins = <256>;
--		snps,perfect-filter-entries = <128>;
--		rx-fifo-depth = <16384>;
--		tx-fifo-depth = <16384>;
--		clocks = <&clock>;
--		clock-names = "stmmaceth";
--		snps,axi-config = <&stmmac_axi_setup>;
--		mdio0 {
+-		int_mdio: mdio@1 {
+-			compatible = "allwinner,sun8i-h3-mdio-internal";
+-			reg = <1>;
 -			#address-cells = <1>;
 -			#size-cells = <0>;
--			compatible = "snps,dwmac-mdio";
--			phy1: ethernet-phy@0 {
+-			int_mii_phy: ethernet-phy@1 {
+-				reg = <1>;
+-				clocks = <&ccu CLK_BUS_EPHY>;
+-				resets = <&ccu RST_BUS_EPHY>;
+-				phy-is-integrated;
 -			};
 -		};
--		snps,mtl-rx-config = <&mtl_rx_setup>;
--		snps,mtl-tx-config = <&mtl_tx_setup>;
+-		ext_mdio: mdio@2 {
+-			reg = <2>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-		};
 -	};
-+This file has moved to snps,dwmac.yaml.
+-};
+-
+-Example with external PHY:
+-emac: ethernet@1c0b000 {
+-	compatible = "allwinner,sun8i-h3-emac";
+-	syscon = <&syscon>;
+-	reg = <0x01c0b000 0x104>;
+-	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+-	interrupt-names = "macirq";
+-	resets = <&ccu RST_BUS_EMAC>;
+-	reset-names = "stmmaceth";
+-	clocks = <&ccu CLK_BUS_EMAC>;
+-	clock-names = "stmmaceth";
+-
+-	phy-handle = <&ext_rgmii_phy>;
+-	phy-mode = "rgmii";
+-	allwinner,leds-active-low;
+-
+-	mdio: mdio {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		compatible = "snps,dwmac-mdio";
+-	};
+-
+-	mdio-mux {
+-		compatible = "allwinner,sun8i-h3-mdio-mux";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		mdio-parent-bus = <&mdio>;
+-
+-		int_mdio: mdio@1 {
+-			compatible = "allwinner,sun8i-h3-mdio-internal";
+-			reg = <1>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			int_mii_phy: ethernet-phy@1 {
+-				reg = <1>;
+-				clocks = <&ccu CLK_BUS_EPHY>;
+-				resets = <&ccu RST_BUS_EPHY>;
+-			};
+-		};
+-		ext_mdio: mdio@2 {
+-			reg = <2>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			ext_rgmii_phy: ethernet-phy@1 {
+-				reg = <1>;
+-			};
+-		}:
+-	};
+-};
+-
+-Example with SoC without integrated PHY
+-
+-emac: ethernet@1c0b000 {
+-	compatible = "allwinner,sun8i-a83t-emac";
+-	syscon = <&syscon>;
+-	reg = <0x01c0b000 0x104>;
+-	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+-	interrupt-names = "macirq";
+-	resets = <&ccu RST_BUS_EMAC>;
+-	reset-names = "stmmaceth";
+-	clocks = <&ccu CLK_BUS_EMAC>;
+-	clock-names = "stmmaceth";
+-
+-	phy-handle = <&ext_rgmii_phy>;
+-	phy-mode = "rgmii";
+-
+-	mdio: mdio {
+-		compatible = "snps,dwmac-mdio";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		ext_rgmii_phy: ethernet-phy@1 {
+-			reg = <1>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index 18d7ecc414be..c48a089edc21 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -45,6 +45,11 @@ properties:
+     contains:
+       enum:
+         - allwinner,sun7i-a20-gmac
++        - allwinner,sun8i-a83t-emac
++        - allwinner,sun8i-h3-emac
++        - allwinner,sun8i-r40-emac
++        - allwinner,sun8i-v3s-emac
++        - allwinner,sun50i-a64-emac
+         - snps,dwmac
+         - snps,dwmac-3.50a
+         - snps,dwmac-3.610
+@@ -267,6 +272,11 @@ allOf:
+           contains:
+             enum:
+               - allwinner,sun7i-a20-gmac
++              - allwinner,sun8i-a83t-emac
++              - allwinner,sun8i-h3-emac
++              - allwinner,sun8i-r40-emac
++              - allwinner,sun8i-v3s-emac
++              - allwinner,sun50i-a64-emac
+               - snps,dwxgmac
+               - snps,dwxgmac-2.10
+               - st,spear600-gmac
+@@ -308,6 +318,11 @@ allOf:
+           contains:
+             enum:
+               - allwinner,sun7i-a20-gmac
++              - allwinner,sun8i-a83t-emac
++              - allwinner,sun8i-h3-emac
++              - allwinner,sun8i-r40-emac
++              - allwinner,sun8i-v3s-emac
++              - allwinner,sun50i-a64-emac
+               - snps,dwmac-4.00
+               - snps,dwmac-4.10a
+               - snps,dwxgmac
 -- 
 git-series 0.9.1
