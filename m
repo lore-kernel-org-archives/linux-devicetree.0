@@ -1,30 +1,208 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH 23/30] of/platform: Export of_platform_device_create_pdata()
-Date: Mon, 10 Jun 2019 11:43:44 -0600
-Message-ID: <CAL_JsqJ5gsctd7L3VOhTO1JdUqmMmSJRpos1XQyfxzmGO7wauw@mail.gmail.com>
-References: <20190604131516.13596-1-kishon@ti.com> <20190604131516.13596-24-kishon@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5 3/5] mtd: Add support for HyperBus memory devices
+Date: Mon, 10 Jun 2019 20:57:18 +0300
+Message-ID: <58e9608d-35ff-0436-6075-b2e4ed4b8594@cogentembedded.com>
+References: <20190609103227.24875-1-vigneshr@ti.com>
+ <20190609103227.24875-4-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604131516.13596-24-kishon@ti.com>
+In-Reply-To: <20190609103227.24875-4-vigneshr@ti.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Tom Joseph <tjoseph@cadence.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Vignesh Raghavendra <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 7:19 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Export of_platform_device_create_pdata() to be used by drivers to
-> create child devices with the given platform data. This can be used
-> by platform specific driver to send platform data core driver. For e.g.,
-> this will be used by TI's J721E SoC specific PCIe driver to send
-> ->start_link() ops and ->is_link_up() ops to Cadence core PCIe driver.
+On 06/09/2019 01:32 PM, Vignesh Raghavendra wrote:
 
-NAK
+> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+> Bus interface between a host system master and one or more slave
+> interfaces. HyperBus is used to connect microprocessor, microcontroller,
+> or ASIC devices with random access NOR flash memory (called HyperFlash)
+> or self refresh DRAM (called HyperRAM).
+> 
+> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+> signal and either Single-ended clock(3.0V parts) or Differential clock
+> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+> At bus level, it follows a separate protocol described in HyperBus
+> specification[1].
+> 
+> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
+> HyperBus operates at >166MHz frequencies.
+> HyperRAM provides direct random read/write access to flash memory
+> array.
+> 
+> But, HyperBus memory controllers seem to abstract implementation details
+> and expose a simple MMIO interface to access connected flash.
+> 
+> Add support for registering HyperFlash devices with MTD framework. MTD
+> maps framework along with CFI chip support framework are used to support
+> communicating with flash.
+> 
+> Framework is modelled along the lines of spi-nor framework. HyperBus
+> memory controller (HBMC) drivers calls hyperbus_register_device() to
+> register a single HyperFlash device. HyperFlash core parses MMIO access
+> information from DT, sets up the map_info struct, probes CFI flash and
+> registers it with MTD framework.
+> 
+> Some HBMC masters need calibration/training sequence[3] to be carried
+> out, in order for DLL inside the controller to lock, by reading a known
+> string/pattern. This is done by repeatedly reading CFI Query
+> Identification String. Calibration needs to be done before trying to detect
+> flash as part of CFI flash probe.
+> 
+> HyperRAM is not supported at the moment.
+> 
+> HyperBus specification can be found at[1]
+> HyperFlash datasheet can be found at[2]
+> 
+> [1] https://www.cypress.com/file/213356/download
+> [2] https://www.cypress.com/file/213346/download
+> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>     Table 12-5741. HyperFlash Access Sequence
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+[...]
+> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+> new file mode 100644
+> index 000000000000..df1f75e10b1a
+> --- /dev/null
+> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+> @@ -0,0 +1,191 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
+> +
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mtd/hyperbus.h>
+> +#include <linux/mtd/map.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/mtd/cfi.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/types.h>
+> +
+> +#define HYPERBUS_CALIB_COUNT 25
 
-of_platform_device_create_pdata() is purely for legacy handling of
-auxdata which is something I hope to get rid of someday. Or to put it
-another way, auxdata use is a sign of platforms not fully converted to
-DT.
+   Mhm, I think I've already protested about this being #define'd here...
 
-Rob
+[...]
+> +int hyperbus_register_device(struct hyperbus_device *hbdev)
+> +{
+> +	const struct hyperbus_ops *ops;
+> +	struct hyperbus_ctlr *ctlr;
+> +	struct device_node *np;
+> +	struct map_info *map;
+> +	struct resource res;
+> +	struct device *dev;
+> +	int ret;
+> +
+> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
+> +		pr_err("hyperbus: please fill all the necessary fields!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	np = hbdev->np;
+> +	ctlr = hbdev->ctlr;
+> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
+> +		return -ENODEV;
+> +
+> +	hbdev->memtype = HYPERFLASH;
+> +
+> +	if (of_address_to_resource(np, 0, &res))
+> +		return -EINVAL;
+
+   Why not just propagate the error upstream (yeah, I've noticed that
+it only can be -EINVAL)?
+
+[...]
+> diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
+> new file mode 100644
+> index 000000000000..ee2eefd822c9
+> --- /dev/null
+> +++ b/include/linux/mtd/hyperbus.h
+> @@ -0,0 +1,91 @@
+> +/* SPDX-License-Identifier: GPL-2.0
+> + *
+> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+> + */
+> +
+> +#ifndef __LINUX_MTD_HYPERBUS_H__
+> +#define __LINUX_MTD_HYPERBUS_H__
+> +
+> +#include <linux/mtd/map.h>
+> +
+> +enum hyperbus_memtype {
+> +	HYPERFLASH,
+> +	HYPERRAM,
+> +};
+> +
+> +/**
+> + * struct hyperbus_device - struct representing HyperBus slave device
+> + * @map: map_info struct for accessing MMIO HyperBus flash memory
+> + * @np:	pointer to HyperBus slave device node
+          ^
+   Space needed here, not tab.
+
+> + * @mtd: pointer to MTD struct
+> + * @ctlr: pointer to HyperBus controller struct
+> + * @memtype: type of memory device: HyperFlash or HyperRAM
+> + * @registered: flag to indicate whether device is registered with MTD core
+> + */
+> +
+> +struct hyperbus_device {
+> +	struct map_info map;
+> +	struct device_node *np;
+> +	struct mtd_info *mtd;
+> +	struct hyperbus_ctlr *ctlr;
+> +	enum hyperbus_memtype memtype;
+> +	bool registered;
+> +};
+> +
+> +/**
+> + * struct hyperbus_ops - struct representing custom HyperBus operations
+> + * @read16: read 16 bit of data, usually from register/ID-CFI space
+> + * @write16: write 16 bit of data, usually to register/ID-CFI space
+
+   Usually? How to differ the register/memory transfers if both are possible?
+
+> + * @copy_from: copy data from flash memory
+> + * @copy_to: copy data to flash memory
+> + * @calibrate: calibrate HyperBus controller
+> + */
+> +
+> +struct hyperbus_ops {
+> +	u16 (*read16)(struct hyperbus_device *hbdev, unsigned long addr);
+> +	void (*write16)(struct hyperbus_device *hbdev,
+> +			unsigned long addr, u16 val);
+> +	void (*copy_from)(struct hyperbus_device *hbdev, void *to,
+> +			  unsigned long from, ssize_t len);
+> +	void (*copy_to)(struct hyperbus_device *dev, unsigned long to,
+> +			const void *from, ssize_t len);
+> +	int (*calibrate)(struct hyperbus_device *dev);
+> +};
+> +
+> +/**
+> + * struct hyperbus_ctlr - struct representing HyperBus controller
+> + * @calibrated: flag to indicate ctlr calibration sequence is complete
+> + * @ops: HyperBus controller ops
+
+   What about @dev?
+
+> + */
+> +struct hyperbus_ctlr {
+> +	struct device *dev;
+> +	bool calibrated;
+> +
+> +	const struct hyperbus_ops *ops;
+> +};
+[...]
+
+MBR, Sergei
