@@ -1,7 +1,7 @@
 From: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH V6 01/11] dt-bindings: xilinx-sdfec: Add SDFEC binding
-Date: Mon, 10 Jun 2019 14:45:04 +0100
-Message-ID: <1560174314-124649-2-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V6 02/11] misc: xilinx-sdfec: add core driver
+Date: Mon, 10 Jun 2019 14:45:05 +0100
+Message-ID: <1560174314-124649-3-git-send-email-dragan.cvetic@xilinx.com>
 References: <1560174314-124649-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,80 +12,222 @@ To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-ar
 Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the Soft Decision Forward Error Correction (SDFEC) Engine
-bindings which is available for the Zynq UltraScale+ RFSoC
-FPGA's.
+Implement a platform driver that matches with xlnx,
+sd-fec-1.1 device tree node and registers as a character
+device, including:
+- SD-FEC driver binds to sdfec DT node.
+- creates and initialise an initial driver dev structure.
+- add the driver in Linux build and Kconfig.
 
-Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 ---
- .../devicetree/bindings/misc/xlnx,sd-fec.txt       | 58 ++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
+ drivers/misc/Kconfig        |  12 ++++
+ drivers/misc/Makefile       |   1 +
+ drivers/misc/xilinx_sdfec.c | 162 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 175 insertions(+)
+ create mode 100644 drivers/misc/xilinx_sdfec.c
 
-diff --git a/Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt b/Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 6b0417b..319a6bf 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -471,6 +471,18 @@ config PCI_ENDPOINT_TEST
+            Enable this configuration option to enable the host side test driver
+            for PCI Endpoint.
+ 
++config XILINX_SDFEC
++	tristate "Xilinx SDFEC 16"
++	help
++	  This option enables support for the Xilinx SDFEC (Soft Decision
++	  Forward Error Correction) driver. This enables a char driver
++	  for the SDFEC.
++
++	  You may select this driver if your design instantiates the
++	  SDFEC(16nm) hardened block. To compile this as a module choose M.
++
++	  If unsure, say N.
++
+ config MISC_RTSX
+ 	tristate
+ 	default MISC_RTSX_PCI || MISC_RTSX_USB
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index b9affcd..0cb3546 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -59,3 +59,4 @@ obj-$(CONFIG_OCXL)		+= ocxl/
+ obj-y				+= cardreader/
+ obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
+ obj-$(CONFIG_HABANA_AI)		+= habanalabs/
++obj-$(CONFIG_XILINX_SDFEC)	+= xilinx_sdfec.o
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
 new file mode 100644
-index 0000000..e328963
+index 0000000..ff0704b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
-@@ -0,0 +1,58 @@
-+* Xilinx SDFEC(16nm) IP *
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -0,0 +1,162 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Xilinx SDFEC
++ *
++ * Copyright (C) 2019 Xilinx, Inc.
++ *
++ * Description:
++ * This driver is developed for SDFEC16 (Soft Decision FEC 16nm)
++ * IP. It exposes a char device which supports file operations
++ * like  open(), close() and ioctl().
++ */
 +
-+The Soft Decision Forward Error Correction (SDFEC) Engine is a Hard IP block
-+which provides high-throughput LDPC and Turbo Code implementations.
-+The LDPC decode & encode functionality is capable of covering a range of
-+customer specified Quasi-cyclic (QC) codes. The Turbo decode functionality
-+principally covers codes used by LTE. The FEC Engine offers significant
-+power and area savings versus implementations done in the FPGA fabric.
++#include <linux/miscdevice.h>
++#include <linux/io.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/poll.h>
++#include <linux/slab.h>
++#include <linux/clk.h>
 +
++#define DEV_NAME_LEN 12
 +
-+Required properties:
-+- compatible: Must be "xlnx,sd-fec-1.1"
-+- clock-names : List of input clock names from the following:
-+    - "core_clk", Main processing clock for processing core (required)
-+    - "s_axi_aclk", AXI4-Lite memory-mapped slave interface clock (required)
-+    - "s_axis_din_aclk", DIN AXI4-Stream Slave interface clock (optional)
-+    - "s_axis_din_words-aclk", DIN_WORDS AXI4-Stream Slave interface clock (optional)
-+    - "s_axis_ctrl_aclk",  Control input AXI4-Stream Slave interface clock (optional)
-+    - "m_axis_dout_aclk", DOUT AXI4-Stream Master interface clock (optional)
-+    - "m_axis_dout_words_aclk", DOUT_WORDS AXI4-Stream Master interface clock (optional)
-+    - "m_axis_status_aclk", Status output AXI4-Stream Master interface clock (optional)
-+- clocks : Clock phandles (see clock_bindings.txt for details).
-+- reg: Should contain Xilinx SDFEC 16nm Hardened IP block registers
-+  location and length.
-+- xlnx,sdfec-code : Should contain "ldpc" or "turbo" to describe the codes
-+  being used.
-+- xlnx,sdfec-din-words : A value 0 indicates that the DIN_WORDS interface is
-+  driven with a fixed value and is not present on the device, a value of 1
-+  configures the DIN_WORDS to be block based, while a value of 2 configures the
-+  DIN_WORDS input to be supplied for each AXI transaction.
-+- xlnx,sdfec-din-width : Configures the DIN AXI stream where a value of 1
-+  configures a width of "1x128b", 2 a width of "2x128b" and 4 configures a width
-+  of "4x128b".
-+- xlnx,sdfec-dout-words : A value 0 indicates that the DOUT_WORDS interface is
-+  driven with a fixed value and is not present on the device, a value of 1
-+  configures the DOUT_WORDS to be block based, while a value of 2 configures the
-+  DOUT_WORDS input to be supplied for each AXI transaction.
-+- xlnx,sdfec-dout-width : Configures the DOUT AXI stream where a value of 1
-+  configures a width of "1x128b", 2 a width of "2x128b" and 4 configures a width
-+  of "4x128b".
-+Optional properties:
-+- interrupts: should contain SDFEC interrupt number
++static struct idr dev_idr;
++static struct mutex dev_idr_lock;
 +
-+Example
-+---------------------------------------
-+	sd_fec_0: sd-fec@a0040000 {
-+		compatible = "xlnx,sd-fec-1.1";
-+		clock-names = "core_clk","s_axi_aclk","s_axis_ctrl_aclk","s_axis_din_aclk","m_axis_status_aclk","m_axis_dout_aclk";
-+		clocks = <&misc_clk_2>,<&misc_clk_0>,<&misc_clk_1>,<&misc_clk_1>,<&misc_clk_1>, <&misc_clk_1>;
-+		reg = <0x0 0xa0040000 0x0 0x40000>;
-+		interrupt-parent = <&axi_intc>;
-+		interrupts = <1 0>;
-+		xlnx,sdfec-code = "ldpc";
-+		xlnx,sdfec-din-words = <0>;
-+		xlnx,sdfec-din-width = <2>;
-+		xlnx,sdfec-dout-words = <0>;
-+		xlnx,sdfec-dout-width = <1>;
-+	};
++/**
++ * struct xsdfec_dev - Driver data for SDFEC
++ * @regs: device physical base address
++ * @dev: pointer to device struct
++ * @miscdev: Misc device handle
++ * @error_data_lock: Error counter and states spinlock
++ * @dev_name: Device name
++ * @dev_id: Device ID
++ *
++ * This structure contains necessary state for SDFEC driver to operate
++ */
++struct xsdfec_dev {
++	void __iomem *regs;
++	struct device *dev;
++	struct miscdevice miscdev;
++	/* Spinlock to protect state_updated and stats_updated */
++	spinlock_t error_data_lock;
++	char dev_name[DEV_NAME_LEN];
++	int dev_id;
++};
++
++static const struct file_operations xsdfec_fops = {
++	.owner = THIS_MODULE,
++};
++
++static void xsdfec_idr_remove(struct xsdfec_dev *xsdfec)
++{
++	mutex_lock(&dev_idr_lock);
++	idr_remove(&dev_idr, xsdfec->dev_id);
++	mutex_unlock(&dev_idr_lock);
++}
++
++static int xsdfec_probe(struct platform_device *pdev)
++{
++	struct xsdfec_dev *xsdfec;
++	struct device *dev;
++	struct resource *res;
++	int err;
++
++	xsdfec = devm_kzalloc(&pdev->dev, sizeof(*xsdfec), GFP_KERNEL);
++	if (!xsdfec)
++		return -ENOMEM;
++
++	xsdfec->dev = &pdev->dev;
++	spin_lock_init(&xsdfec->error_data_lock);
++
++	dev = xsdfec->dev;
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	xsdfec->regs = devm_ioremap_resource(dev, res);
++	if (IS_ERR(xsdfec->regs)) {
++		err = PTR_ERR(xsdfec->regs);
++		return err;
++	}
++
++	/* Save driver private data */
++	platform_set_drvdata(pdev, xsdfec);
++
++	mutex_lock(&dev_idr_lock);
++	err = idr_alloc(&dev_idr, xsdfec->dev_name, 0, 0, GFP_KERNEL);
++	mutex_unlock(&dev_idr_lock);
++	if (err < 0)
++		goto err_xsddev_idr;
++	xsdfec->dev_id = err;
++
++	snprintf(xsdfec->dev_name, DEV_NAME_LEN, "xsdfec%d", xsdfec->dev_id);
++	xsdfec->miscdev.minor = MISC_DYNAMIC_MINOR;
++	xsdfec->miscdev.name = xsdfec->dev_name;
++	xsdfec->miscdev.fops = &xsdfec_fops;
++	xsdfec->miscdev.parent = dev;
++	err = misc_register(&xsdfec->miscdev);
++	if (err) {
++		dev_err(dev, "error:%d. Unable to register device", err);
++		return err;
++	}
++	return 0;
++
++err_xsddev_idr:
++	xsdfec_idr_remove(xsdfec);
++
++	return err;
++}
++
++static int xsdfec_remove(struct platform_device *pdev)
++{
++	struct xsdfec_dev *xsdfec;
++
++	xsdfec = platform_get_drvdata(pdev);
++	misc_deregister(&xsdfec->miscdev);
++	xsdfec_idr_remove(xsdfec);
++	return 0;
++}
++
++static const struct of_device_id xsdfec_of_match[] = {
++	{
++		.compatible = "xlnx,sd-fec-1.1",
++	},
++	{ /* end of table */ }
++};
++MODULE_DEVICE_TABLE(of, xsdfec_of_match);
++
++static struct platform_driver xsdfec_driver = {
++	.driver = {
++		.name = "xilinx-sdfec",
++		.of_match_table = xsdfec_of_match,
++	},
++	.probe = xsdfec_probe,
++	.remove =  xsdfec_remove,
++};
++
++static int __init xsdfec_init(void)
++{
++	int err;
++
++	mutex_init(&dev_idr_lock);
++	idr_init(&dev_idr);
++	err = platform_driver_register(&xsdfec_driver);
++	if (err < 0) {
++		pr_err("%s Unabled to register SDFEC driver", __func__);
++		return err;
++	}
++	return 0;
++}
++
++static void __exit xsdfec_exit(void)
++{
++	platform_driver_unregister(&xsdfec_driver);
++	idr_destroy(&dev_idr);
++}
++
++module_init(xsdfec_init);
++module_exit(xsdfec_exit);
++
++MODULE_AUTHOR("Xilinx, Inc");
++MODULE_DESCRIPTION("Xilinx SD-FEC16 Driver");
++MODULE_LICENSE("GPL");
 -- 
 2.7.4
