@@ -1,279 +1,79 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [RFC PATCH 6/6] soundwire: qcom: add support for SoundWire
- controller
-Date: Mon, 10 Jun 2019 12:10:25 +0530
-Message-ID: <20190610064025.GK9160@vkoul-mobl.Dlink>
-References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
- <20190607085643.932-7-srinivas.kandagatla@linaro.org>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v7 1/6] dt-bindings: add binding for USBSS-DRD controller.
+Date: Mon, 10 Jun 2019 06:45:48 +0000
+Message-ID: <BYAPR07MB470915AB1D833EC1CEA5C8D7DD130@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
+ <1559729030-16390-2-git-send-email-pawell@cadence.com>
+ <f032b3f3-409d-b0fc-8d5f-01c898b4c7a7@ti.com>
+ <BYAPR07MB470903AF06C1F8A34BBB3C64DD100@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <64be9d26-2a68-1b90-89c8-29b227e0cd9c@ti.com>
+ <BYAPR07MB470965B3CBCB58E1C7B1253FDD130@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <VI1PR04MB532797447E56454C0E2D3F668B130@VI1PR04MB5327.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190607085643.932-7-srinivas.kandagatla@linaro.org>
+In-Reply-To: <VI1PR04MB532797447E56454C0E2D3F668B130@VI1PR04MB5327.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: Peter Chen <peter.chen@nxp.com>, Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07-06-19, 09:56, Srinivas Kandagatla wrote:
-> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
-> either integrated as part of WCD audio codecs via slimbus or
-> as part of SOC I/O.
-> 
-> This patchset adds support to a very basic controller which has been
-> tested with WCD934x SoundWire controller connected to WSA881x smart
-> speaker amplifiers.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  drivers/soundwire/Kconfig  |   9 +
->  drivers/soundwire/Makefile |   4 +
->  drivers/soundwire/qcom.c   | 983 +++++++++++++++++++++++++++++++++++++
-
-Can you split this to two patches (at least), master driver followed by
-DAI driver
-
-> +
-> +#define SWRM_COMP_HW_VERSION					0x00
-
-What does COMP stand for?
-
-> +#define SWRM_COMP_CFG_ADDR					0x04
-> +#define SWRM_COMP_CFG_IRQ_LEVEL_OR_PULSE_MSK			BIT(1)
-> +#define SWRM_COMP_CFG_ENABLE_MSK				BIT(0)
-> +#define SWRM_COMP_PARAMS					0x100
-> +#define SWRM_COMP_PARAMS_DOUT_PORTS_MASK			GENMASK(4, 0)
-> +#define SWRM_COMP_PARAMS_DIN_PORTS_MASK				GENMASK(9, 5)
-> +#define SWRM_COMP_PARAMS_WR_FIFO_DEPTH				GENMASK(14, 10)
-> +#define SWRM_COMP_PARAMS_RD_FIFO_DEPTH				GENMASK(19, 15)
-> +#define SWRM_COMP_PARAMS_AUTO_ENUM_SLAVES			GENMASK(32. 20)
-
-Thats a lot of text, So as others have said we need to rethink the
-naming conventions, perhaps QC_SDW_PARAM_AUTO_ENUM (feel free to drop
-SDW as well from here as it QC specific!
-
-Also move common ones to core..
-
-> +#define SWRM_INTERRUPT_STATUS					0x200
-> +#define SWRM_INTERRUPT_STATUS_RMSK				GENMASK(16, 0)
-> +#define SWRM_INTERRUPT_STATUS_SLAVE_PEND_IRQ			BIT(0)
-> +#define SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED		BIT(1)
-> +#define SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS		BIT(2)
-> +#define SWRM_INTERRUPT_STATUS_MASTER_CLASH_DET			BIT(3)
-> +#define SWRM_INTERRUPT_STATUS_RD_FIFO_OVERFLOW			BIT(4)
-> +#define SWRM_INTERRUPT_STATUS_RD_FIFO_UNDERFLOW			BIT(5)
-> +#define SWRM_INTERRUPT_STATUS_WR_CMD_FIFO_OVERFLOW		BIT(6)
-> +#define SWRM_INTERRUPT_STATUS_CMD_ERROR				BIT(7)
-> +#define SWRM_INTERRUPT_STATUS_DOUT_PORT_COLLISION		BIT(8)
-> +#define SWRM_INTERRUPT_STATUS_READ_EN_RD_VALID_MISMATCH		BIT(9)
-> +#define SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED		BIT(10)
-> +#define SWRM_INTERRUPT_STATUS_NEW_SLAVE_AUTO_ENUM_FINISHED	BIT(11)
-> +#define SWRM_INTERRUPT_STATUS_AUTO_ENUM_FAILED			BIT(12)
-> +#define SWRM_INTERRUPT_STATUS_AUTO_ENUM_TABLE_IS_FULL		BIT(13)
-> +#define SWRM_INTERRUPT_STATUS_BUS_RESET_FINISHED		BIT(14)
-> +#define SWRM_INTERRUPT_STATUS_CLK_STOP_FINISHED			BIT(15)
-> +#define SWRM_INTERRUPT_STATUS_ERROR_PORT_TEST			BIT(16)
-> +#define SWRM_INTERRUPT_MASK_ADDR				0x204
-> +#define SWRM_INTERRUPT_CLEAR					0x208
-> +#define SWRM_CMD_FIFO_WR_CMD					0x300
-> +#define SWRM_CMD_FIFO_RD_CMD					0x304
-> +#define SWRM_CMD_FIFO_CMD					0x308
-> +#define SWRM_CMD_FIFO_STATUS					0x30C
-> +#define SWRM_CMD_FIFO_CFG_ADDR					0x314
-> +#define SWRM_CMD_FIFO_CFG_NUM_OF_CMD_RETRY_SHFT			0x0
-> +#define SWRM_CMD_FIFO_RD_FIFO_ADDR				0x318
-> +#define SWRM_ENUMERATOR_CFG_ADDR				0x500
-> +#define SWRM_MCP_FRAME_CTRL_BANK_ADDR(m)		(0x101C + 0x40 * (m))
-> +#define SWRM_MCP_FRAME_CTRL_BANK_SSP_PERIOD_SHFT		16
-> +#define SWRM_MCP_FRAME_CTRL_BANK_ROW_CTRL_SHFT			3
-> +#define SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_BMSK			GENMASK(2, 0)
-> +#define SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_SHFT			0
-> +#define SWRM_MCP_CFG_ADDR					0x1048
-> +#define SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_BMSK		GENMASK(21, 17)
-> +#define SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_SHFT		0x11
-> +#define SWRM_MCP_STATUS						0x104C
-> +#define SWRM_MCP_STATUS_BANK_NUM_MASK				BIT(0)
-> +#define SWRM_MCP_SLV_STATUS					0x1090
-> +#define SWRM_MCP_SLV_STATUS_MASK				GENMASK(1, 0)
-> +#define SWRM_DP_PORT_CTRL_BANK(n, m)	(0x1124 + 0x100 * (n - 1) + 0x40 * m)
-> +#define SWRM_DP_PORT_CTRL2_BANK(n, m)	(0x1126 + 0x100 * (n - 1) + 0x40 * m)
-> +#define SWRM_DP_PORT_CTRL_EN_CHAN_SHFT				0x18
-> +#define SWRM_DP_PORT_CTRL_OFFSET2_SHFT				0x10
-> +#define SWRM_DP_PORT_CTRL_OFFSET1_SHFT				0x08
-> +#define SWRM_AHB_BRIDGE_WR_DATA_0				0xc885
-> +#define SWRM_AHB_BRIDGE_WR_ADDR_0				0xc889
-> +#define SWRM_AHB_BRIDGE_RD_ADDR_0				0xc88d
-> +#define SWRM_AHB_BRIDGE_RD_DATA_0				0xc891
-> +
-> +#define SWRM_REG_VAL_PACK(data, dev, id, reg)	\
-> +			((reg) | ((id) << 16) | ((dev) << 20) | ((data) << 24))
-> +
-> +#define SWRM_MAX_ROW_VAL	0 /* Rows = 48 */
-> +#define SWRM_DEFAULT_ROWS	48
-> +#define SWRM_MIN_COL_VAL	0 /* Cols = 2 */
-> +#define SWRM_DEFAULT_COL	16
-> +#define SWRM_SPECIAL_CMD_ID	0xF
-> +#define MAX_FREQ_NUM		1
-> +#define TIMEOUT_MS		1000
-> +#define QCOM_SWRM_MAX_RD_LEN	0xf
-> +#define DEFAULT_CLK_FREQ	9600000
-> +#define SWRM_MAX_DAIS		0xF
-
-I was thinking it would make sense to move this to DT, DAI is after all
-a hw property!
-
-> +static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 cmd_data,
-> +				     u8 dev_addr, u16 reg_addr)
-> +{
-> +	int ret = 0;
-> +	u8 cmd_id;
-> +	u32 val;
-> +
-> +	mutex_lock(&ctrl->lock);
-> +	if (dev_addr == SDW_BROADCAST_DEV_NUM) {
-> +		cmd_id = SWRM_SPECIAL_CMD_ID;
-> +	} else {
-> +		if (++ctrl->wr_cmd_id == SWRM_SPECIAL_CMD_ID)
-> +			ctrl->wr_cmd_id = 0;
-> +
-> +		cmd_id = ctrl->wr_cmd_id;
-> +	}
-> +
-> +	val = SWRM_REG_VAL_PACK(cmd_data, dev_addr, cmd_id, reg_addr);
-> +	ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_WR_CMD, val);
-> +	if (ret < 0) {
-> +		dev_err(ctrl->dev, "%s: reg 0x%x write failed, err:%d\n",
-> +			__func__, val, ret);
-> +		goto err;
-> +	}
-> +
-> +	if (dev_addr == SDW_BROADCAST_DEV_NUM) {
-> +		ctrl->fifo_status = 0;
-> +		ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
-> +						  msecs_to_jiffies(TIMEOUT_MS));
-
-why not wait for completion on non broadcast?
-
-> +static int qcom_swrm_cmd_fifo_rd_cmd(struct qcom_swrm_ctrl *ctrl,
-> +				     u8 dev_addr, u16 reg_addr,
-> +				     u32 len, u8 *rval)
-> +{
-> +	int i, ret = 0;
-
-Superfluous initialization of ret
-
-> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct qcom_swrm_ctrl *ctrl = dev_id;
-> +	u32 sts, value;
-> +
-> +	sts = ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS);
-> +
-> +	if (sts & SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED)
-> +		complete(&ctrl->sp_cmd_comp);
-> +
-> +	if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
-> +		value = ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS);
-> +		dev_err_ratelimited(ctrl->dev,
-> +				    "CMD error, fifo status 0x%x\n",
-> +				     value);
-> +		ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
-> +		if ((value & 0xF) == 0xF) {
-> +			ctrl->fifo_status = -ENODATA;
-> +			complete(&ctrl->sp_cmd_comp);
-> +		}
-> +	}
-> +
-> +	if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
-> +	    sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS) {
-> +		if (sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED)
-> +			ctrl->status[0] = SDW_SLAVE_ATTACHED;
-> +
-> +		schedule_work(&ctrl->slave_work);
-
-So why are we scheduling work, you are the thread handler so I think it
-should be okay and better to invoke bus for status update.
-
-> +	}
-> +
-> +	if (sts & SWRM_INTERRUPT_STATUS_SLAVE_PEND_IRQ)
-> +		dev_dbg(ctrl->dev, "Slave pend irq\n");
-> +
-> +	if (sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED)
-> +		dev_dbg(ctrl->dev, "New slave attached\n");
-
-No updating bus on the status?
-
-> +static enum sdw_command_response qcom_swrm_xfer_msg(struct sdw_bus *bus,
-> +						    struct sdw_msg *msg)
-> +{
-> +	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
-> +	int ret, i, len;
-> +
-> +	if (msg->flags == SDW_MSG_FLAG_READ) {
-> +		for (i = 0; i < msg->len;) {
-> +			if ((msg->len - i) < QCOM_SWRM_MAX_RD_LEN)
-> +				len = msg->len - i;
-> +			else
-> +				len = QCOM_SWRM_MAX_RD_LEN;
-> +
-> +			ret = qcom_swrm_cmd_fifo_rd_cmd(ctrl, msg->dev_num,
-> +							msg->addr + i, len,
-> +						       &msg->buf[i]);
-> +			if (ret < 0) {
-> +				if (ret == -ENODATA)
-> +					return SDW_CMD_IGNORED;
-> +
-> +				return ret;
-> +			}
-> +
-> +			i = i + len;
-> +		}
-> +	} else if (msg->flags == SDW_MSG_FLAG_WRITE) {
-> +		for (i = 0; i < msg->len; i++) {
-> +			ret = qcom_swrm_cmd_fifo_wr_cmd(ctrl, msg->buf[i],
-> +							msg->dev_num,
-> +						       msg->addr + i);
-> +			if (ret < 0) {
-> +				if (ret == -ENODATA)
-> +					return SDW_CMD_IGNORED;
-> +
-> +				return ret;
-
-So we need to convert this to sdw_command_response before returning.
-
-> +static int qcom_swrm_prepare(struct snd_pcm_substream *substream,
-> +			     struct snd_soc_dai *dai)
-> +{
-> +	struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
-> +
-> +	if (!ctrl->sruntime[dai->id])
-> +		return -EINVAL;
-> +
-> +	return sdw_enable_stream(ctrl->sruntime[dai->id]);
-
-Hmm you need to handle dai prepare being called for multiple times.
-
-> +static int qcom_pdm_set_sdw_stream(struct snd_soc_dai *dai,
-> +				   void *stream, int direction)
-> +{
-> +	return 0;
-> +}
-
-lets remove if we dont intend to do anything!
-
-> +static int qcom_swrm_runtime_suspend(struct device *device)
-> +{
-> +	/* TBD */
-> +	return 0;
-> +}
-> +
-> +static int qcom_swrm_runtime_resume(struct device *device)
-> +{
-> +	/* TBD */
-> +	return 0;
-> +}
-
-Again, lets remove these, add when we have the functionality
--- 
-~Vinod
+Pg0KPj4gIC0gcmVnLW5hbWVzIC0gcmVnaXN0ZXIgbWVtb3J5IGFyZWEgbmFtZXM6DQo+PiAgICAg
+ICAgICJ4aGNpIiAtIGZvciBIT1NUIHJlZ2lzdGVycyBzcGFjZQ0KPj4gICAgICAgICAiZGV2IiAt
+IGZvciBERVZJQ0UgcmVnaXN0ZXJzIHNwYWNlDQo+PiAgICAgICAgICJvdGciIC0gZm9yIE9URy9E
+UkQgcmVnaXN0ZXJzIHNwYWNlDQo+PiAgLSBjb21wYXRpYmxlOiBTaG91bGQgY29udGFpbjoNCj4+
+ICAgICAgICAgImNkbnMsdXNiMy0xLjAuMCIgLSBmb3IgMHgwMDAyNDUwMiBjb250cm9sbGVyIHZl
+cnNpb24NCj4+ICAgICAgICAgImNkbnMsdXNiMy0xLjAuMSIgLSBmb3IgMHgwMDAyNDUwOSBjb250
+cm9sbGVyIHZlcnNpb24NCj4+ICAgICAgICAgImNkbnMsdXNiMy0xLjAuMiIgLSBmb3IgMHgwMDAy
+NDUwQyBjb250cm9sbGVyIHZlcnNpb24NCj4+ICAgICAgICAgImNkbnMsdXNiMy0xLjAuMyIgLSBm
+b3IgMHgwMDAyNDUwZCBjb250cm9sbGVyIHZlcnNpb24NCj4NCj5JZiB0aGUgdmFsdWUgY2FuIGJl
+IHJlYWQgZnJvbSByZWdpc3Rlciwgd2h5IHdlIHN0aWxsIG5lZWQgZGlmZmVyZW50IGNvbXBhdGli
+bGVzPw0KV2UgZG9uJ3QgbmVlZCBpdC4gSSBsZWZ0IGl0IG9ubHkgIGFzIGluZm9ybWF0aW9uIHRo
+YXQgY2RuczMgY29udHJvbGxlciBleGlzdCBpbiA0IGRpZmZlcmVudCB2ZXJzaW9uLiANCg0KPg0K
+Pj4gRXhhbXBsZToNCj4+ICAgICAgICAgdXNiQGYzMDAwMDAwIHsNCj4+ICAgICAgICAgICAgICAg
+ICBjb21wYXRpYmxlID0gImNkbnMsdXNiMy0xLjAuMSI7DQo+PiAgICAgICAgICAgICAgICAgaW50
+ZXJydXB0cyA9IDxHSUNfVVNCX0lSUSA3IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lDX1VTQl9JUlEgIDcgSVJRX1RZUEVfTEVWRUxf
+SElHSD4sDQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfVVNCX0lSUSAg
+OCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4+ICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtbmFt
+ZXMgPSAiaG9zdCIsICJwZXJpcGhlcmFsIiwgIm90ZyI7DQo+PiAgICAgICAgICAgICAgICAgcmVn
+ID0gPDB4ZjMwMDAwMDAgMHgxMDAwMD4sICAgICAvKiBtZW1vcnkgYXJlYSBmb3IgSE9TVCByZWdp
+c3RlcnMgKi8NCj4+ICAgICAgICAgICAgICAgICAgICAgICAgIDwweGYzMDEwMDAwIDB4MTAwMDA+
+LCAgIC8qIG1lbW9yeSBhcmVhIGZvciBERVZJQ0UgcmVnaXN0ZXJzICovDQo+PiAgICAgICAgICAg
+ICAgICAgICAgICAgICA8MHhmMzAyMDAwMCAweDEwMDAwPjsgICAvKiBtZW1vcnkgYXJlYSBmb3Ig
+T1RHL0RSRCByZWdpc3RlcnMNCj4+ICovDQo+PiAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0g
+InhoY2kiLCAiZGV2IiwgIm90ZyI7DQo+PiAgICAgICAgICAgICAgICAgcGh5cyA9IDwmdXNiM19w
+aHk+Ow0KPj4gICAgICAgICAgICAgICAgIHBoeS1uYW1lcyA9ICJjZG5zMyx1c2JwaHkiOw0KPj4N
+Cj4+DQo+PiBNYXliZSBJIHNob3VsZCBhZGQgYWxzbyBzb21ldGhpbmcgZm9yIHVzYjJfcGh5IGlu
+IGR0LWJpbmRpbmcgYW5kIGluIGRyaXZlciA/DQo+Pg0KPg0KPlRoZSBQSFkgZHJpdmVyIGlzIGxv
+Y2F0ZWQgYXQ6IGRyaXZlcnMvcGh5L2NhZGVuY2UvcGh5LWNhZGVuY2Utc2llcnJhLmMuDQo+V2ls
+bCB3ZSBuZWVkIGFub3RoZXIgb25lIGZvciBVU0IyIFBIWT8NCg0KQXMgSSBrbm93IHNpZXJyYSBw
+aHkgaXMgVVNCMy4wIHBoeS4gDQpBbHNvIEkga25vdyB0aGF0IHdlIGhhdmUgdG9yZW50IHBoeSBk
+cml2ZXIgZm9yIDIuMC4gSXQncyByZWFkeSBidXQgaXMgaGFzIG5vdCB5ZXQgaW4ga2VybmVsLiAN
+ClNvIEkgYXNzdW1lIHRoYXQgSSBzaG91bGQgY2hhbmdlDQogICAgICAgICAgICAgIHBoeXMgPSA8
+JnVzYjNfcGh5PjsNCiAgICAgICAgICAgICAgcGh5LW5hbWVzID0gImNkbnMzLHVzYnBoeSI7DQoN
+CndpdGg6IA0KICAgICAgICAgICAgICAgICBwaHlzID0gPCZ1c2IyX3BoeT4sIDwmdXNiM19waHk+
+Ow0KICAgICAgICAgICAgICAgICBwaHktbmFtZXMgPSAiY2RuczMsdXNicGh5MiIsICJjZG5zMyx1
+c2JwaHkzIjsNCg0KUGF3ZWwNCj4NCj5QZXRlcg0KPg0KPg0KPj4gVGhhbmtzLA0KPj4gUmVnYXJk
+cywNCj4+IFBhd2VsDQo+Pg0KPj4gPj4NCj4+ID4+IFJlZ2FyZHMsDQo+PiA+PiBQYXdlbA0KPj4g
+Pj4NCj4+ID4+DQo+PiA+Pj4NCj4+ID4+Pj4gKw0KPj4gPj4+PiArT3B0aW9uYWwgcHJvcGVydGll
+czoNCj4+ID4+Pj4gKyAtIG1heGltdW0tc3BlZWQgOiB2YWxpZCBhcmd1bWVudHMgYXJlICJzdXBl
+ci1zcGVlZCIsICJoaWdoLXNwZWVkIiBhbmQNCj4+ID4+Pj4gKyAgICAgICAgICAgICAgICAgICAi
+ZnVsbC1zcGVlZCI7IHJlZmVyIHRvIHVzYi9nZW5lcmljLnR4dA0KPj4gPj4+PiArIC0gZHJfbW9k
+ZTogU2hvdWxkIGJlIG9uZSBvZiAiaG9zdCIsICJwZXJpcGhlcmFsIiBvciAib3RnIi4NCj4+ID4+
+Pj4gKyAtIHBoeXM6IHJlZmVyZW5jZSB0byB0aGUgVVNCIFBIWQ0KPj4gPj4+PiArDQo+PiA+Pj4+
+ICtFeGFtcGxlOg0KPj4gPj4+PiArCXVzYkBmMzAwMDAwMCB7DQo+PiA+Pj4+ICsJCWNvbXBhdGli
+bGUgPSAiY2Rucyx1c2IzLTEuMC4xIjsNCj4+ID4+Pj4gKwkJaW50ZXJydXB0cyA9IDxVU0JfSVJR
+ICA3IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPj4gPj4+DQo+PiA+Pj4gVGhpcyBleGFtcGxlIHdv
+bid0IHdvcmsgYXMgY29kZSByZXF1ZXN0cyBmb3IgMyBzZXBhcmF0ZSBpbnRlcnJ1cHRzLg0KPj4g
+Pj4+DQo+PiA+Pj4+ICsJCXJlZyA9IDwweGYzMDAwMDAwIDB4MTAwMDAJLyogbWVtb3J5IGFyZWEg
+Zm9yIEhPU1QNCj4+IHJlZ2lzdGVycyAqLw0KPj4gPj4+PiArCQkJMHhmMzAxMDAwMCAweDEwMDAw
+CS8qIG1lbW9yeSBhcmVhIGZvciBERVZJQ0UNCj4+IHJlZ2lzdGVycyAqLw0KPj4gPj4+PiArCQkJ
+MHhmMzAyMDAwMCAweDEwMDAwPjsJLyogbWVtb3J5IGFyZWEgZm9yDQo+PiBPVEcvRFJEIHJlZ2lz
+dGVycyAqLw0KPj4gPj4+PiArCQlyZWctbmFtZXMgPSAieGhjaSIsICJkZXYiLCAib3RnIjsNCj4+
+ID4+Pj4gKwl9Ow0KPj4gPj4+Pg0KPj4gPj4+DQo+PiA+DQo+PiA+DQo+PiA+LS0NCj4+ID5jaGVl
+cnMsDQo+PiA+LXJvZ2VyDQo+PiA+DQo+PiA+VGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwg
+UG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuDQo+PiA+WS10dW5udXMvQnVzaW5lc3Mg
+SUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kNCg==
