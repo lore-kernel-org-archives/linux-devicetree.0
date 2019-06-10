@@ -1,300 +1,245 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 1/8] iommu: Add I/O ASID allocator
-Date: Mon, 10 Jun 2019 19:47:07 +0100
-Message-ID: <20190610184714.6786-2-jean-philippe.brucker@arm.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: [PATCH 5/8] iommu/arm-smmu-v3: Add second level of context descriptor table
+Date: Mon, 10 Jun 2019 19:47:11 +0100
+Message-ID: <20190610184714.6786-6-jean-philippe.brucker@arm.com>
 References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20190610184714.6786-1-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: will.deacon@arm.com
+Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, robin.murphy@arm.com, jacob.jun.pan@linux.intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, eric.auger@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Some devices might support multiple DMA address spaces, in particular
-those that have the PCI PASID feature. PASID (Process Address Space ID)
-allows to share process address spaces with devices (SVA), partition a
-device into VM-assignable entities (VFIO mdev) or simply provide
-multiple DMA address space to kernel drivers. Add a global PASID
-allocator usable by different drivers at the same time. Name it I/O ASID
-to avoid confusion with ASIDs allocated by arch code, which are usually
-a separate ID space.
+The SMMU can support up to 20 bits of SSID. Add a second level of page
+tables to accommodate this. Devices that support more than 1024 SSIDs now
+have a table of 1024 L1 entries (8kB), pointing to tables of 1024 context
+descriptors (64kB), allocated on demand.
 
-The IOASID space is global. Each device can have its own PASID space,
-but by convention the IOMMU ended up having a global PASID space, so
-that with SVA, each mm_struct is associated to a single PASID.
-
-The allocator is primarily used by IOMMU subsystem but in rare occasions
-drivers would like to allocate PASIDs for devices that aren't managed by
-an IOMMU, using the same ID space as IOMMU.
-
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 ---
-The most recent discussion on this patch was at:
-https://lkml.kernel.org/lkml/1556922737-76313-4-git-send-email-jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org/
-I fixed it up a bit following comments in that series, and removed the
-definitions for the custom allocator for now.
+ drivers/iommu/arm-smmu-v3.c | 136 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 128 insertions(+), 8 deletions(-)
 
-There also is a new version that includes the custom allocator into this
-patch, but is currently missing the RCU fixes, at:
-https://lore.kernel.org/lkml/1560087862-57608-13-git-send-email-jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org/
----
- drivers/iommu/Kconfig  |   4 ++
- drivers/iommu/Makefile |   1 +
- drivers/iommu/ioasid.c | 150 +++++++++++++++++++++++++++++++++++++++++
- include/linux/ioasid.h |  49 ++++++++++++++
- 4 files changed, 204 insertions(+)
- create mode 100644 drivers/iommu/ioasid.c
- create mode 100644 include/linux/ioasid.h
-
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 83664db5221d..9b45f70549a7 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -3,6 +3,10 @@
- config IOMMU_IOVA
- 	tristate
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index d90eb604b65d..326b71793336 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -216,6 +216,8 @@
  
-+# The IOASID library may also be used by non-IOMMU_API users
-+config IOASID
-+	tristate
-+
- # IOMMU_API always gets selected by whoever wants it.
- config IOMMU_API
- 	bool
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index 8c71a15e986b..0efac6f1ec73 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
- obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
- obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
- obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
-+obj-$(CONFIG_IOASID) += ioasid.o
- obj-$(CONFIG_IOMMU_IOVA) += iova.o
- obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
- obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
-diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-new file mode 100644
-index 000000000000..bbb771214fa9
---- /dev/null
-+++ b/drivers/iommu/ioasid.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0
+ #define STRTAB_STE_0_S1FMT		GENMASK_ULL(5, 4)
+ #define STRTAB_STE_0_S1FMT_LINEAR	0
++#define STRTAB_STE_0_S1FMT_4K_L2	1
++#define STRTAB_STE_0_S1FMT_64K_L2	2
+ #define STRTAB_STE_0_S1CTXPTR_MASK	GENMASK_ULL(51, 6)
+ #define STRTAB_STE_0_S1CDMAX		GENMASK_ULL(63, 59)
+ 
+@@ -255,6 +257,18 @@
+ 
+ #define STRTAB_STE_3_S2TTB_MASK		GENMASK_ULL(51, 4)
+ 
 +/*
-+ * I/O Address Space ID allocator. There is one global IOASID space, split into
-+ * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
-+ * free IOASIDs with ioasid_alloc and ioasid_free.
++ * Linear: when less than 1024 SSIDs are supported
++ * 2lvl: at most 1024 L1 entrie,
++ *      1024 lazy entries per table.
 + */
-+#include <linux/ioasid.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/xarray.h>
++#define CTXDESC_SPLIT			10
++#define CTXDESC_NUM_L2_ENTRIES		(1 << CTXDESC_SPLIT)
 +
-+struct ioasid_data {
-+	ioasid_t id;
-+	struct ioasid_set *set;
-+	void *private;
-+	struct rcu_head rcu;
-+};
++#define CTXDESC_L1_DESC_DWORD		1
++#define CTXDESC_L1_DESC_VALID		1
++#define CTXDESC_L1_DESC_L2PTR_MASK	GENMASK_ULL(51, 12)
 +
-+static DEFINE_XARRAY_ALLOC(ioasid_xa);
+ /* Context descriptor (stage-1 only) */
+ #define CTXDESC_CD_DWORDS		8
+ #define CTXDESC_CD_0_TCR_T0SZ		GENMASK_ULL(5, 0)
+@@ -530,7 +544,10 @@ struct arm_smmu_ctx_desc {
+ struct arm_smmu_s1_cfg {
+ 	u8				s1fmt;
+ 	u8				s1cdmax;
+-	struct arm_smmu_cd_table	table;
++	struct arm_smmu_cd_table	*tables;
++	size_t				num_tables;
++	__le64				*l1ptr;
++	dma_addr_t			l1ptr_dma;
+ 
+ 	/* Context descriptor 0, when substreams are disabled or s1dss = 0b10 */
+ 	struct arm_smmu_ctx_desc	cd;
+@@ -1118,12 +1135,51 @@ static void arm_smmu_free_cd_leaf_table(struct arm_smmu_device *smmu,
+ {
+ 	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
+ 
++	if (!table->ptr)
++		return;
+ 	dmam_free_coherent(smmu->dev, size, table->ptr, table->ptr_dma);
+ }
+ 
+-static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_s1_cfg *cfg, u32 ssid)
++static void arm_smmu_write_cd_l1_desc(__le64 *dst,
++				      struct arm_smmu_cd_table *table)
+ {
+-	return cfg->table.ptr + ssid * CTXDESC_CD_DWORDS;
++	u64 val = (table->ptr_dma & CTXDESC_L1_DESC_L2PTR_MASK) |
++		  CTXDESC_L1_DESC_VALID;
 +
-+/**
-+ * ioasid_set_data - Set private data for an allocated ioasid
-+ * @ioasid: the ID to set data
-+ * @data:   the private data
-+ *
-+ * For IOASID that is already allocated, private data can be set
-+ * via this API. Future lookup can be done via ioasid_find.
-+ */
-+int ioasid_set_data(ioasid_t ioasid, void *data)
++	*dst = cpu_to_le64(val);
++}
++
++static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_domain *smmu_domain,
++				   u32 ssid)
 +{
-+	struct ioasid_data *ioasid_data;
-+	int ret = 0;
++	unsigned int idx;
++	struct arm_smmu_cd_table *table;
++	struct arm_smmu_device *smmu = smmu_domain->smmu;
++	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
 +
-+	xa_lock(&ioasid_xa);
-+	ioasid_data = xa_load(&ioasid_xa, ioasid);
-+	if (ioasid_data)
-+		rcu_assign_pointer(ioasid_data->private, data);
-+	else
-+		ret = -ENOENT;
-+	xa_unlock(&ioasid_xa);
++	if (cfg->s1fmt == STRTAB_STE_0_S1FMT_LINEAR) {
++		table = &cfg->tables[0];
++		idx = ssid;
++	} else {
++		idx = ssid >> CTXDESC_SPLIT;
++		if (idx >= cfg->num_tables)
++			return NULL;
 +
-+	/*
-+	 * Wait for readers to stop accessing the old private data, so the
-+	 * caller can free it.
-+	 */
-+	if (!ret)
-+		synchronize_rcu();
++		table = &cfg->tables[idx];
++		if (!table->ptr) {
++			__le64 *l1ptr = cfg->l1ptr + idx * CTXDESC_L1_DESC_DWORD;
 +
++			if (arm_smmu_alloc_cd_leaf_table(smmu, table,
++							 CTXDESC_NUM_L2_ENTRIES))
++				return NULL;
++
++			arm_smmu_write_cd_l1_desc(l1ptr, table);
++			/* An invalid L1 entry is allowed to be cached */
++			arm_smmu_sync_cd(smmu_domain, ssid, false);
++		}
++		idx = ssid & (CTXDESC_NUM_L2_ENTRIES - 1);
++	}
++	return table->ptr + idx * CTXDESC_CD_DWORDS;
+ }
+ 
+ static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
+@@ -1149,7 +1205,7 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+ 	u64 val;
+ 	bool cd_live;
+ 	struct arm_smmu_device *smmu = smmu_domain->smmu;
+-	__le64 *cdptr = arm_smmu_get_cd_ptr(&smmu_domain->s1_cfg, ssid);
++	__le64 *cdptr = arm_smmu_get_cd_ptr(smmu_domain, ssid);
+ 
+ 	/*
+ 	 * This function handles the following cases:
+@@ -1213,20 +1269,81 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+ static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain,
+ 				    struct arm_smmu_master *master)
+ {
++	int ret;
++	size_t size = 0;
++	size_t max_contexts, num_leaf_entries;
+ 	struct arm_smmu_device *smmu = smmu_domain->smmu;
+ 	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+ 
+ 	cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
+ 	cfg->s1cdmax = master->ssid_bits;
+-	return arm_smmu_alloc_cd_leaf_table(smmu, &cfg->table, 1 << cfg->s1cdmax);
++
++	max_contexts = 1 << cfg->s1cdmax;
++	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB) ||
++	    max_contexts <= CTXDESC_NUM_L2_ENTRIES) {
++		cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
++		cfg->num_tables = 1;
++		num_leaf_entries = max_contexts;
++	} else {
++		cfg->s1fmt = STRTAB_STE_0_S1FMT_64K_L2;
++		/*
++		 * SSID[S1CDmax-1:10] indexes 1st-level table, SSID[9:0] indexes
++		 * 2nd-level
++		 */
++		cfg->num_tables = max_contexts / CTXDESC_NUM_L2_ENTRIES;
++
++		size = cfg->num_tables * (CTXDESC_L1_DESC_DWORD << 3);
++		cfg->l1ptr = dmam_alloc_coherent(smmu->dev, size,
++						 &cfg->l1ptr_dma,
++						 GFP_KERNEL | __GFP_ZERO);
++		if (!cfg->l1ptr) {
++			dev_warn(smmu->dev, "failed to allocate L1 context table\n");
++			return -ENOMEM;
++		}
++
++		num_leaf_entries = CTXDESC_NUM_L2_ENTRIES;
++	}
++
++	cfg->tables = devm_kzalloc(smmu->dev, sizeof(struct arm_smmu_cd_table) *
++				   cfg->num_tables, GFP_KERNEL);
++	if (!cfg->tables)
++		return -ENOMEM;
++
++	ret = arm_smmu_alloc_cd_leaf_table(smmu, &cfg->tables[0], num_leaf_entries);
++	if (ret)
++		goto err_free_l1;
++
++	if (cfg->l1ptr)
++		arm_smmu_write_cd_l1_desc(cfg->l1ptr, &cfg->tables[0]);
++
++	return 0;
++
++err_free_l1:
++	if (cfg->l1ptr)
++		dmam_free_coherent(smmu->dev, size, cfg->l1ptr, cfg->l1ptr_dma);
++	devm_kfree(smmu->dev, cfg->tables);
 +	return ret;
-+}
-+EXPORT_SYMBOL_GPL(ioasid_set_data);
+ }
+ 
+ static void arm_smmu_free_cd_tables(struct arm_smmu_domain *smmu_domain)
+ {
++	int i;
+ 	struct arm_smmu_device *smmu = smmu_domain->smmu;
+ 	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
++	size_t num_leaf_entries = 1 << cfg->s1cdmax;
++	struct arm_smmu_cd_table *table = cfg->tables;
 +
-+/**
-+ * ioasid_alloc - Allocate an IOASID
-+ * @set: the IOASID set
-+ * @min: the minimum ID (inclusive)
-+ * @max: the maximum ID (inclusive)
-+ * @private: data private to the caller
-+ *
-+ * Allocate an ID between @min and @max. The @private pointer is stored
-+ * internally and can be retrieved with ioasid_find().
-+ *
-+ * Return: the allocated ID on success, or %INVALID_IOASID on failure.
-+ */
-+ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
-+		      void *private)
-+{
-+	u32 id = INVALID_IOASID;
-+	struct ioasid_data *data;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return INVALID_IOASID;
-+
-+	data->set = set;
-+	data->private = private;
-+
-+	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
-+		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
-+		goto exit_free;
++	if (cfg->l1ptr) {
++		size_t size = cfg->num_tables * (CTXDESC_L1_DESC_DWORD << 3);
+ 
+-	arm_smmu_free_cd_leaf_table(smmu, &cfg->table, 1 << cfg->s1cdmax);
++		dmam_free_coherent(smmu->dev, size, cfg->l1ptr,
++				   cfg->l1ptr_dma);
++		num_leaf_entries = CTXDESC_NUM_L2_ENTRIES;
 +	}
-+	data->id = id;
 +
-+exit_free:
-+	if (id == INVALID_IOASID) {
-+		kfree(data);
-+		return INVALID_IOASID;
-+	}
-+	return id;
-+}
-+EXPORT_SYMBOL_GPL(ioasid_alloc);
++	for (i = 0; i < cfg->num_tables; i++, table++)
++		arm_smmu_free_cd_leaf_table(smmu, table, num_leaf_entries);
++	devm_kfree(smmu->dev, cfg->tables);
+ }
+ 
+ /* Stream table manipulation functions */
+@@ -1346,6 +1463,9 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+ 	}
+ 
+ 	if (s1_cfg) {
++		dma_addr_t ptr_dma = s1_cfg->l1ptr ? s1_cfg->l1ptr_dma :
++			             s1_cfg->tables[0].ptr_dma;
 +
-+/**
-+ * ioasid_free - Free an IOASID
-+ * @ioasid: the ID to remove
-+ */
-+void ioasid_free(ioasid_t ioasid)
-+{
-+	struct ioasid_data *ioasid_data;
-+
-+	ioasid_data = xa_erase(&ioasid_xa, ioasid);
-+
-+	kfree_rcu(ioasid_data, rcu);
-+}
-+EXPORT_SYMBOL_GPL(ioasid_free);
-+
-+/**
-+ * ioasid_find - Find IOASID data
-+ * @set: the IOASID set
-+ * @ioasid: the IOASID to find
-+ * @getter: function to call on the found object
-+ *
-+ * The optional getter function allows to take a reference to the found object
-+ * under the rcu lock. The function can also check if the object is still valid:
-+ * if @getter returns false, then the object is invalid and NULL is returned.
-+ *
-+ * If the IOASID has been allocated for this set, return the private pointer
-+ * passed to ioasid_alloc. Private data can be NULL if not set. Return an error
-+ * if the IOASID is not found or does not belong to the set.
-+ */
-+void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-+		  bool (*getter)(void *))
-+{
-+	void *priv = NULL;
-+	struct ioasid_data *ioasid_data;
-+
-+	rcu_read_lock();
-+	ioasid_data = xa_load(&ioasid_xa, ioasid);
-+	if (!ioasid_data) {
-+		priv = ERR_PTR(-ENOENT);
-+		goto unlock;
-+	}
-+	if (set && ioasid_data->set != set) {
-+		/* data found but does not belong to the set */
-+		priv = ERR_PTR(-EACCES);
-+		goto unlock;
-+	}
-+	/* Now IOASID and its set is verified, we can return the private data */
-+	priv = rcu_dereference(ioasid_data->private);
-+	if (getter && !getter(priv))
-+		priv = NULL;
-+unlock:
-+	rcu_read_unlock();
-+
-+	return priv;
-+}
-+EXPORT_SYMBOL_GPL(ioasid_find);
-+
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-new file mode 100644
-index 000000000000..940212422b8f
---- /dev/null
-+++ b/include/linux/ioasid.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_IOASID_H
-+#define __LINUX_IOASID_H
-+
-+#include <linux/types.h>
-+
-+#define INVALID_IOASID ((ioasid_t)-1)
-+typedef unsigned int ioasid_t;
-+
-+struct ioasid_set {
-+	int dummy;
-+};
-+
-+#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
-+
-+#if IS_ENABLED(CONFIG_IOASID)
-+ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
-+		      void *private);
-+void ioasid_free(ioasid_t ioasid);
-+
-+void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-+		  bool (*getter)(void *));
-+
-+int ioasid_set_data(ioasid_t ioasid, void *data);
-+
-+#else /* !CONFIG_IOASID */
-+static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
-+				    ioasid_t max, void *private)
-+{
-+	return INVALID_IOASID;
-+}
-+
-+static inline void ioasid_free(ioasid_t ioasid)
-+{
-+}
-+
-+static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-+				bool (*getter)(void *))
-+{
-+	return NULL;
-+}
-+
-+static inline int ioasid_set_data(ioasid_t ioasid, void *data)
-+{
-+	return -ENODEV;
-+}
-+
-+#endif /* CONFIG_IOASID */
-+#endif /* __LINUX_IOASID_H */
+ 		BUG_ON(ste_live);
+ 		dst[1] = cpu_to_le64(
+ 			 FIELD_PREP(STRTAB_STE_1_S1DSS, STRTAB_STE_1_S1DSS_SSID0) |
+@@ -1358,7 +1478,7 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+ 		   !(smmu->features & ARM_SMMU_FEAT_STALL_FORCE))
+ 			dst[1] |= cpu_to_le64(STRTAB_STE_1_S1STALLD);
+ 
+-		val |= (s1_cfg->table.ptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
++		val |= (ptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
+ 			FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_S1_TRANS) |
+ 			FIELD_PREP(STRTAB_STE_0_S1CDMAX, s1_cfg->s1cdmax) |
+ 			FIELD_PREP(STRTAB_STE_0_S1FMT, s1_cfg->s1fmt);
+@@ -1815,7 +1935,7 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
+ 	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
+ 		struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+ 
+-		if (cfg->table.ptr) {
++		if (cfg->tables) {
+ 			arm_smmu_free_cd_tables(smmu_domain);
+ 			arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
+ 		}
 -- 
 2.21.0
