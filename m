@@ -1,44 +1,38 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 05/11] dt-bindings: net: sun4i-emac: Convert the
- binding to a schemas
-Date: Mon, 10 Jun 2019 12:59:29 -0600
-Message-ID: <CAL_JsqJahCJcdu=+fA=ewbGezuEJ2W6uwMVxkQpdY6w+1OWVVA@mail.gmail.com>
-References: <91618c7e9a5497462afa74c6d8a947f709f54331.1560158667.git-series.maxime.ripard@bootlin.com>
- <d198d29119b37b2fdb700d8992b31963e98b6693.1560158667.git-series.maxime.ripard@bootlin.com>
- <20190610143139.GG28724@lunn.ch>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH V5 11/11] MAINTAINERS: add maintainer for SD-FEC
+Date: Mon, 10 Jun 2019 11:59:48 -0700
+Message-ID: <4491ae98b10f4519874141eb39cd2f0b5491b3a5.camel@perches.com>
+References: <1560038656-380620-1-git-send-email-dragan.cvetic@xilinx.com>
+         <1560038656-380620-12-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190610143139.GG28724@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1560038656-380620-12-git-send-email-dragan.cvetic@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dragan Cvetic <dragan.cvetic@xilinx.com>, arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 8:31 AM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - phy
-> > +  - allwinner,sram
->
-> Quoting ethernet.txt:
->
-> - phy: the same as "phy-handle" property, not recommended for new bindings.
->
-> - phy-handle: phandle, specifies a reference to a node representing a PHY
->   device; this property is described in the Devicetree Specification and so
->   preferred;
->
-> Can this be expressed in Yaml? Accept phy, but give a warning. Accept
-> phy-handle without a warning? Enforce that one or the other is
-> present?
+On Sun, 2019-06-09 at 01:04 +0100, Dragan Cvetic wrote:
+> Add maintainer entry for Xilinx SD-FEC driver support.
+[]
+> diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> @@ -17345,6 +17345,17 @@ S:	Supported
+>  F:	Documentation/filesystems/xfs.txt
+>  F:	fs/xfs/
+>  
+> +XILINX SD-FEC IP CORES
+> +M:	Derek Kiernan <derek.kiernan@xilinx.com>
+> +M:	Dragan Cvetic <dragan.cvetic@xilinx.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
+> +F:	Documentation/misc-devices/xilinx_sdfec.rst
+> +F:	drivers/misc/xilinx_sdfec.c
+> +F:	drivers/misc/Kconfig
+> +F:	drivers/misc/Makefile
 
-The common schema could have 'phy: false'. This works as long as we've
-updated (or plan to) all the dts files to use phy-handle. The issue is
-how far back do you need kernels to work with newer dtbs.
-
-Rob
+I suggest that you do not want to be nor are responsible
+for the Kconfig and Makefile just because entries in
+those files are associated to xilinx files.
