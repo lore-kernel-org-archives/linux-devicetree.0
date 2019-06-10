@@ -1,7 +1,7 @@
 From: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH V6 08/11] misc: xilinx_sdfec: Support poll file operation
-Date: Mon, 10 Jun 2019 14:45:11 +0100
-Message-ID: <1560174314-124649-9-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V6 04/11] misc: xilinx_sdfec: Store driver config and state
+Date: Mon, 10 Jun 2019 14:45:07 +0100
+Message-ID: <1560174314-124649-5-git-send-email-dragan.cvetic@xilinx.com>
 References: <1560174314-124649-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,364 +12,505 @@ To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-ar
 Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Support monitoring and detecting the SD-FEC error events
-through IRQ and poll file operation.
-
-The SD-FEC device can detect one-error or multi-error events.
-An error triggers an interrupt which creates and run the ONE_SHOT
-IRQ thread.
-The ONE_SHOT IRQ thread detects type of error and pass that
-information to the poll function.
-The file_operation callback poll(), collects the events and
-updates the statistics accordingly.
-The function poll blocks() on waiting queue which can be
-unblocked by ONE_SHOT IRQ handling thread.
-
-Support SD-FEC interrupt set ioctl callback.
-The SD-FEC can detect two type of errors: coding errors (ECC) and
-a data interface errors (TLAST).
-The errors are  events which can trigger an IRQ if enabled.
-The driver can monitor and detect these errors through IRQ.
-Also the driver updates the statistical data.
+Stores configuration based on parameters from the DT
+node and values from the SD-FEC core plus reads
+the default state from the SD-FEC core. To obtain
+values from the core register read, write capabilities
+have been added plus related register map details.
 
 Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 ---
- drivers/misc/xilinx_sdfec.c      | 231 +++++++++++++++++++++++++++++++++++++++
- include/uapi/misc/xilinx_sdfec.h |  13 +++
- 2 files changed, 244 insertions(+)
+ drivers/misc/xilinx_sdfec.c      | 293 +++++++++++++++++++++++++++++++++++++++
+ include/uapi/misc/xilinx_sdfec.h | 138 ++++++++++++++++++
+ 2 files changed, 431 insertions(+)
+ create mode 100644 include/uapi/misc/xilinx_sdfec.h
 
 diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 83de77e..040dc59 100644
+index f257d38..3b031c6 100644
 --- a/drivers/misc/xilinx_sdfec.c
 +++ b/drivers/misc/xilinx_sdfec.c
-@@ -193,7 +193,14 @@ struct xsdfec_clks {
+@@ -20,11 +20,92 @@
+ #include <linux/slab.h>
+ #include <linux/clk.h>
+ 
++#include <uapi/misc/xilinx_sdfec.h>
++
+ #define DEV_NAME_LEN 12
+ 
+ static struct idr dev_idr;
+ static struct mutex dev_idr_lock;
+ 
++/* Xilinx SDFEC Register Map */
++/* CODE_WRI_PROTECT Register */
++#define XSDFEC_CODE_WR_PROTECT_ADDR (0x4)
++
++/* ACTIVE Register */
++#define XSDFEC_ACTIVE_ADDR (0x8)
++#define XSDFEC_IS_ACTIVITY_SET (0x1)
++
++/* AXIS_WIDTH Register */
++#define XSDFEC_AXIS_WIDTH_ADDR (0xC)
++#define XSDFEC_AXIS_DOUT_WORDS_LSB (5)
++#define XSDFEC_AXIS_DOUT_WIDTH_LSB (3)
++#define XSDFEC_AXIS_DIN_WORDS_LSB (2)
++#define XSDFEC_AXIS_DIN_WIDTH_LSB (0)
++
++/* AXIS_ENABLE Register */
++#define XSDFEC_AXIS_ENABLE_ADDR (0x10)
++#define XSDFEC_AXIS_OUT_ENABLE_MASK (0x38)
++#define XSDFEC_AXIS_IN_ENABLE_MASK (0x7)
++#define XSDFEC_AXIS_ENABLE_MASK                                                \
++	(XSDFEC_AXIS_OUT_ENABLE_MASK | XSDFEC_AXIS_IN_ENABLE_MASK)
++
++/* FEC_CODE Register */
++#define XSDFEC_FEC_CODE_ADDR (0x14)
++
++/* ORDER Register Map */
++#define XSDFEC_ORDER_ADDR (0x18)
++
++/* Interrupt Status Register */
++#define XSDFEC_ISR_ADDR (0x1C)
++/* Interrupt Status Register Bit Mask */
++#define XSDFEC_ISR_MASK (0x3F)
++
++/* Write Only - Interrupt Enable Register */
++#define XSDFEC_IER_ADDR (0x20)
++/* Write Only - Interrupt Disable Register */
++#define XSDFEC_IDR_ADDR (0x24)
++/* Read Only - Interrupt Mask Register */
++#define XSDFEC_IMR_ADDR (0x28)
++
++/* ECC Interrupt Status Register */
++#define XSDFEC_ECC_ISR_ADDR (0x2C)
++/* Single Bit Errors */
++#define XSDFEC_ECC_ISR_SBE_MASK (0x7FF)
++/* PL Initialize Single Bit Errors */
++#define XSDFEC_PL_INIT_ECC_ISR_SBE_MASK (0x3C00000)
++/* Multi Bit Errors */
++#define XSDFEC_ECC_ISR_MBE_MASK (0x3FF800)
++/* PL Initialize Multi Bit Errors */
++#define XSDFEC_PL_INIT_ECC_ISR_MBE_MASK (0x3C000000)
++/* Multi Bit Error to Event Shift */
++#define XSDFEC_ECC_ISR_MBE_TO_EVENT_SHIFT (11)
++/* PL Initialize Multi Bit Error to Event Shift */
++#define XSDFEC_PL_INIT_ECC_ISR_MBE_TO_EVENT_SHIFT (4)
++/* ECC Interrupt Status Bit Mask */
++#define XSDFEC_ECC_ISR_MASK (XSDFEC_ECC_ISR_SBE_MASK | XSDFEC_ECC_ISR_MBE_MASK)
++/* ECC Interrupt Status PL Initialize Bit Mask */
++#define XSDFEC_PL_INIT_ECC_ISR_MASK                                            \
++	(XSDFEC_PL_INIT_ECC_ISR_SBE_MASK | XSDFEC_PL_INIT_ECC_ISR_MBE_MASK)
++/* ECC Interrupt Status All Bit Mask */
++#define XSDFEC_ALL_ECC_ISR_MASK                                                \
++	(XSDFEC_ECC_ISR_MASK | XSDFEC_PL_INIT_ECC_ISR_MASK)
++/* ECC Interrupt Status Single Bit Errors Mask */
++#define XSDFEC_ALL_ECC_ISR_SBE_MASK                                            \
++	(XSDFEC_ECC_ISR_SBE_MASK | XSDFEC_PL_INIT_ECC_ISR_SBE_MASK)
++/* ECC Interrupt Status Multi Bit Errors Mask */
++#define XSDFEC_ALL_ECC_ISR_MBE_MASK                                            \
++	(XSDFEC_ECC_ISR_MBE_MASK | XSDFEC_PL_INIT_ECC_ISR_MBE_MASK)
++
++/* Write Only - ECC Interrupt Enable Register */
++#define XSDFEC_ECC_IER_ADDR (0x30)
++/* Write Only - ECC Interrupt Disable Register */
++#define XSDFEC_ECC_IDR_ADDR (0x34)
++/* Read Only - ECC Interrupt Mask Register */
++#define XSDFEC_ECC_IMR_ADDR (0x38)
++
++/* BYPASS Register */
++#define XSDFEC_BYPASS_ADDR (0x3C)
++
+ /**
+  * struct xsdfec_clks - For managing SD-FEC clocks
+  * @core_clk: Main processing clock for core
+@@ -51,6 +132,8 @@ struct xsdfec_clks {
+  * struct xsdfec_dev - Driver data for SDFEC
+  * @regs: device physical base address
   * @dev: pointer to device struct
-  * @state: State of the SDFEC device
-  * @config: Configuration of the SDFEC device
-+ * @state_updated: indicates State updated by interrupt handler
-+ * @stats_updated: indicates Stats updated by interrupt handler
-+ * @isr_err_count: Count of ISR errors
-+ * @cecc_count: Count of Correctable ECC errors (SBE)
-+ * @uecc_count: Count of Uncorrectable ECC errors (MBE)
-+ * @irq: IRQ number
++ * @state: State of the SDFEC device
++ * @config: Configuration of the SDFEC device
   * @miscdev: Misc device handle
-+ * @waitq: Driver wait queue
   * @error_data_lock: Error counter and states spinlock
   * @clks: Clocks managed by the SDFEC driver
-  * @dev_name: Device name
-@@ -206,9 +213,17 @@ struct xsdfec_dev {
+@@ -62,6 +145,8 @@ struct xsdfec_clks {
+ struct xsdfec_dev {
+ 	void __iomem *regs;
  	struct device *dev;
- 	enum xsdfec_state state;
- 	struct xsdfec_config config;
-+	bool state_updated;
-+	bool stats_updated;
-+	u32 isr_err_count;
-+	u32 cecc_count;
-+	u32 uecc_count;
-+	int irq;
++	enum xsdfec_state state;
++	struct xsdfec_config config;
  	struct miscdevice miscdev;
-+	wait_queue_head_t waitq;
  	/* Spinlock to protect state_updated and stats_updated */
  	spinlock_t error_data_lock;
-+	unsigned long flags;
- 	struct xsdfec_clks clks;
- 	char dev_name[DEV_NAME_LEN];
+@@ -70,10 +155,212 @@ struct xsdfec_dev {
  	int dev_id;
-@@ -284,6 +299,90 @@ static int xsdfec_get_config(struct xsdfec_dev *xsdfec, void __user *arg)
- 	return err;
- }
+ };
  
-+static int xsdfec_isr_enable(struct xsdfec_dev *xsdfec, bool enable)
++static inline void xsdfec_regwrite(struct xsdfec_dev *xsdfec, u32 addr,
++				   u32 value)
 +{
-+	u32 mask_read;
-+
-+	if (enable) {
-+		/* Enable */
-+		xsdfec_regwrite(xsdfec, XSDFEC_IER_ADDR, XSDFEC_ISR_MASK);
-+		mask_read = xsdfec_regread(xsdfec, XSDFEC_IMR_ADDR);
-+		if (mask_read & XSDFEC_ISR_MASK) {
-+			dev_dbg(xsdfec->dev,
-+				"SDFEC enabling irq with IER failed");
-+			return -EIO;
-+		}
-+	} else {
-+		/* Disable */
-+		xsdfec_regwrite(xsdfec, XSDFEC_IDR_ADDR, XSDFEC_ISR_MASK);
-+		mask_read = xsdfec_regread(xsdfec, XSDFEC_IMR_ADDR);
-+		if ((mask_read & XSDFEC_ISR_MASK) != XSDFEC_ISR_MASK) {
-+			dev_dbg(xsdfec->dev,
-+				"SDFEC disabling irq with IDR failed");
-+			return -EIO;
-+		}
-+	}
-+	return 0;
++	dev_dbg(xsdfec->dev, "Writing 0x%x to offset 0x%x", value, addr);
++	iowrite32(value, xsdfec->regs + addr);
 +}
 +
-+static int xsdfec_ecc_isr_enable(struct xsdfec_dev *xsdfec, bool enable)
++static inline u32 xsdfec_regread(struct xsdfec_dev *xsdfec, u32 addr)
 +{
-+	u32 mask_read;
++	u32 rval;
 +
-+	if (enable) {
-+		/* Enable */
-+		xsdfec_regwrite(xsdfec, XSDFEC_ECC_IER_ADDR,
-+				XSDFEC_ALL_ECC_ISR_MASK);
-+		mask_read = xsdfec_regread(xsdfec, XSDFEC_ECC_IMR_ADDR);
-+		if (mask_read & XSDFEC_ALL_ECC_ISR_MASK) {
-+			dev_dbg(xsdfec->dev,
-+				"SDFEC enabling ECC irq with ECC IER failed");
-+			return -EIO;
-+		}
-+	} else {
-+		/* Disable */
-+		xsdfec_regwrite(xsdfec, XSDFEC_ECC_IDR_ADDR,
-+				XSDFEC_ALL_ECC_ISR_MASK);
-+		mask_read = xsdfec_regread(xsdfec, XSDFEC_ECC_IMR_ADDR);
-+		if (!(((mask_read & XSDFEC_ALL_ECC_ISR_MASK) ==
-+		       XSDFEC_ECC_ISR_MASK) ||
-+		      ((mask_read & XSDFEC_ALL_ECC_ISR_MASK) ==
-+		       XSDFEC_PL_INIT_ECC_ISR_MASK))) {
-+			dev_dbg(xsdfec->dev,
-+				"SDFEC disable ECC irq with ECC IDR failed");
-+			return -EIO;
-+		}
-+	}
-+	return 0;
++	rval = ioread32(xsdfec->regs + addr);
++	dev_dbg(xsdfec->dev, "Read value = 0x%x from offset 0x%x", rval, addr);
++	return rval;
 +}
 +
-+static int xsdfec_set_irq(struct xsdfec_dev *xsdfec, void __user *arg)
++static void update_bool_config_from_reg(struct xsdfec_dev *xsdfec,
++					u32 reg_offset, u32 bit_num,
++					char *config_value)
 +{
-+	struct xsdfec_irq irq;
-+	int err;
-+	int isr_err;
-+	int ecc_err;
++	u32 reg_val;
++	u32 bit_mask = 1 << bit_num;
 +
-+	err = copy_from_user(&irq, arg, sizeof(irq));
-+	if (err)
-+		return -EFAULT;
-+
-+	/* Setup tlast related IRQ */
-+	isr_err = xsdfec_isr_enable(xsdfec, irq.enable_isr);
-+	if (!isr_err)
-+		xsdfec->config.irq.enable_isr = irq.enable_isr;
-+
-+	/* Setup ECC related IRQ */
-+	ecc_err = xsdfec_ecc_isr_enable(xsdfec, irq.enable_ecc_isr);
-+	if (!ecc_err)
-+		xsdfec->config.irq.enable_ecc_isr = irq.enable_ecc_isr;
-+
-+	if (isr_err < 0 || ecc_err < 0)
-+		err = -EIO;
-+
-+	return err;
++	reg_val = xsdfec_regread(xsdfec, reg_offset);
++	*config_value = (reg_val & bit_mask) > 0;
 +}
 +
- static int xsdfec_set_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
- {
- 	struct xsdfec_turbo turbo;
-@@ -760,6 +859,9 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
- 	case XSDFEC_GET_CONFIG:
- 		rval = xsdfec_get_config(xsdfec, arg);
- 		break;
-+	case XSDFEC_SET_IRQ:
-+		rval = xsdfec_set_irq(xsdfec, arg);
++static void update_config_from_hw(struct xsdfec_dev *xsdfec)
++{
++	u32 reg_value;
++	bool sdfec_started;
++
++	/* Update the Order */
++	reg_value = xsdfec_regread(xsdfec, XSDFEC_ORDER_ADDR);
++	xsdfec->config.order = reg_value;
++
++	update_bool_config_from_reg(xsdfec, XSDFEC_BYPASS_ADDR,
++				    0, /* Bit Number, maybe change to mask */
++				    &xsdfec->config.bypass);
++
++	update_bool_config_from_reg(xsdfec, XSDFEC_CODE_WR_PROTECT_ADDR,
++				    0, /* Bit Number */
++				    &xsdfec->config.code_wr_protect);
++
++	reg_value = xsdfec_regread(xsdfec, XSDFEC_IMR_ADDR);
++	xsdfec->config.irq.enable_isr = (reg_value & XSDFEC_ISR_MASK) > 0;
++
++	reg_value = xsdfec_regread(xsdfec, XSDFEC_ECC_IMR_ADDR);
++	xsdfec->config.irq.enable_ecc_isr =
++		(reg_value & XSDFEC_ECC_ISR_MASK) > 0;
++
++	reg_value = xsdfec_regread(xsdfec, XSDFEC_AXIS_ENABLE_ADDR);
++	sdfec_started = (reg_value & XSDFEC_AXIS_IN_ENABLE_MASK) > 0;
++	if (sdfec_started)
++		xsdfec->state = XSDFEC_STARTED;
++	else
++		xsdfec->state = XSDFEC_STOPPED;
++}
++
++static u32
++xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
++{
++	u32 axis_width_field = 0;
++
++	switch (axis_width_cfg) {
++	case XSDFEC_1x128b:
++		axis_width_field = 0;
 +		break;
- 	case XSDFEC_SET_TURBO:
- 		rval = xsdfec_set_turbo(xsdfec, arg);
- 		break;
-@@ -793,11 +895,36 @@ static long xsdfec_dev_compat_ioctl(struct file *file, unsigned int cmd,
- }
- #endif
- 
-+static unsigned int xsdfec_poll(struct file *file, poll_table *wait)
++	case XSDFEC_2x128b:
++		axis_width_field = 1;
++		break;
++	case XSDFEC_4x128b:
++		axis_width_field = 2;
++		break;
++	}
++
++	return axis_width_field;
++}
++
++static u32 xsdfec_translate_axis_words_cfg_val(enum xsdfec_axis_word_include
++	axis_word_inc_cfg)
 +{
-+	unsigned int mask = 0;
-+	struct xsdfec_dev *xsdfec;
++	u32 axis_words_field = 0;
 +
-+	xsdfec = container_of(file->private_data, struct xsdfec_dev, miscdev);
++	if (axis_word_inc_cfg == XSDFEC_FIXED_VALUE ||
++	    axis_word_inc_cfg == XSDFEC_IN_BLOCK)
++		axis_words_field = 0;
++	else if (axis_word_inc_cfg == XSDFEC_PER_AXI_TRANSACTION)
++		axis_words_field = 1;
 +
-+	if (!xsdfec)
-+		return POLLNVAL | POLLHUP;
++	return axis_words_field;
++}
 +
-+	poll_wait(file, &xsdfec->waitq, wait);
++static int xsdfec_cfg_axi_streams(struct xsdfec_dev *xsdfec)
++{
++	u32 reg_value;
++	u32 dout_words_field;
++	u32 dout_width_field;
++	u32 din_words_field;
++	u32 din_width_field;
++	struct xsdfec_config *config = &xsdfec->config;
 +
-+	/* XSDFEC ISR detected an error */
-+	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
-+	if (xsdfec->state_updated)
-+		mask |= POLLIN | POLLPRI;
++	/* translate config info to register values */
++	dout_words_field =
++		xsdfec_translate_axis_words_cfg_val(config->dout_word_include);
++	dout_width_field =
++		xsdfec_translate_axis_width_cfg_val(config->dout_width);
++	din_words_field =
++		xsdfec_translate_axis_words_cfg_val(config->din_word_include);
++	din_width_field =
++		xsdfec_translate_axis_width_cfg_val(config->din_width);
 +
-+	if (xsdfec->stats_updated)
-+		mask |= POLLIN | POLLRDNORM;
-+	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
++	reg_value = dout_words_field << XSDFEC_AXIS_DOUT_WORDS_LSB;
++	reg_value |= dout_width_field << XSDFEC_AXIS_DOUT_WIDTH_LSB;
++	reg_value |= din_words_field << XSDFEC_AXIS_DIN_WORDS_LSB;
++	reg_value |= din_width_field << XSDFEC_AXIS_DIN_WIDTH_LSB;
 +
-+	return mask;
++	xsdfec_regwrite(xsdfec, XSDFEC_AXIS_WIDTH_ADDR, reg_value);
++
++	return 0;
 +}
 +
  static const struct file_operations xsdfec_fops = {
  	.owner = THIS_MODULE,
- 	.open = xsdfec_dev_open,
- 	.release = xsdfec_dev_release,
- 	.unlocked_ioctl = xsdfec_dev_ioctl,
-+	.poll = xsdfec_poll,
- #ifdef CONFIG_COMPAT
- 	.compat_ioctl = xsdfec_dev_compat_ioctl,
- #endif
-@@ -883,6 +1010,91 @@ static int xsdfec_parse_of(struct xsdfec_dev *xsdfec)
- 	return 0;
- }
+ };
  
-+static irqreturn_t xsdfec_irq_thread(int irq, void *dev_id)
++static int xsdfec_parse_of(struct xsdfec_dev *xsdfec)
 +{
-+	struct xsdfec_dev *xsdfec = dev_id;
-+	irqreturn_t ret = IRQ_HANDLED;
-+	u32 ecc_err;
-+	u32 isr_err;
-+	u32 uecc_count;
-+	u32 cecc_count;
-+	u32 isr_err_count;
-+	u32 aecc_count;
-+	u32 tmp;
++	struct device *dev = xsdfec->dev;
++	struct device_node *node = dev->of_node;
++	int rval;
++	const char *fec_code;
++	enum xsdfec_axis_width din_width;
++	enum xsdfec_axis_word_include din_word_include;
++	enum xsdfec_axis_width dout_width;
++	enum xsdfec_axis_word_include dout_word_include;
 +
-+	WARN_ON(xsdfec->irq != irq);
++	rval = of_property_read_string(node, "xlnx,sdfec-code", &fec_code);
++	if (rval < 0)
++		return rval;
 +
-+	/* Mask Interrupts */
-+	xsdfec_isr_enable(xsdfec, false);
-+	xsdfec_ecc_isr_enable(xsdfec, false);
-+	/* Read ISR */
-+	ecc_err = xsdfec_regread(xsdfec, XSDFEC_ECC_ISR_ADDR);
-+	isr_err = xsdfec_regread(xsdfec, XSDFEC_ISR_ADDR);
-+	/* Clear the interrupts */
-+	xsdfec_regwrite(xsdfec, XSDFEC_ECC_ISR_ADDR, ecc_err);
-+	xsdfec_regwrite(xsdfec, XSDFEC_ISR_ADDR, isr_err);
-+
-+	tmp = ecc_err & XSDFEC_ALL_ECC_ISR_MBE_MASK;
-+	/* Count uncorrectable 2-bit errors */
-+	uecc_count = hweight32(tmp);
-+	/* Count all ECC errors */
-+	aecc_count = hweight32(ecc_err);
-+	/* Number of correctable 1-bit ECC error */
-+	cecc_count = aecc_count - 2 * uecc_count;
-+	/* Count ISR errors */
-+	isr_err_count = hweight32(isr_err);
-+	dev_dbg(xsdfec->dev, "tmp=%x, uecc=%x, aecc=%x, cecc=%x, isr=%x", tmp,
-+		uecc_count, aecc_count, cecc_count, isr_err_count);
-+	dev_dbg(xsdfec->dev, "uecc=%x, cecc=%x, isr=%x", xsdfec->uecc_count,
-+		xsdfec->cecc_count, xsdfec->isr_err_count);
-+
-+	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
-+	/* Add new errors to a 2-bits counter */
-+	if (uecc_count)
-+		xsdfec->uecc_count += uecc_count;
-+	/* Add new errors to a 1-bits counter */
-+	if (cecc_count)
-+		xsdfec->cecc_count += cecc_count;
-+	/* Add new errors to a ISR counter */
-+	if (isr_err_count)
-+		xsdfec->isr_err_count += isr_err_count;
-+
-+	/* Update state/stats flag */
-+	if (uecc_count) {
-+		if (ecc_err & XSDFEC_ECC_ISR_MBE_MASK)
-+			xsdfec->state = XSDFEC_NEEDS_RESET;
-+		else if (ecc_err & XSDFEC_PL_INIT_ECC_ISR_MBE_MASK)
-+			xsdfec->state = XSDFEC_PL_RECONFIGURE;
-+		xsdfec->stats_updated = true;
-+		xsdfec->state_updated = true;
-+	}
-+
-+	if (cecc_count)
-+		xsdfec->stats_updated = true;
-+
-+	if (isr_err_count) {
-+		xsdfec->state = XSDFEC_NEEDS_RESET;
-+		xsdfec->stats_updated = true;
-+		xsdfec->state_updated = true;
-+	}
-+
-+	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
-+	dev_dbg(xsdfec->dev, "state=%x, stats=%x", xsdfec->state_updated,
-+		xsdfec->stats_updated);
-+
-+	/* Enable another polling */
-+	if (xsdfec->state_updated || xsdfec->stats_updated)
-+		wake_up_interruptible(&xsdfec->waitq);
++	if (!strcasecmp(fec_code, "ldpc"))
++		xsdfec->config.code = XSDFEC_LDPC_CODE;
++	else if (!strcasecmp(fec_code, "turbo"))
++		xsdfec->config.code = XSDFEC_TURBO_CODE;
 +	else
-+		ret = IRQ_NONE;
++		return -EINVAL;
 +
-+	/* Unmask Interrupts */
-+	xsdfec_isr_enable(xsdfec, true);
-+	xsdfec_ecc_isr_enable(xsdfec, true);
++	rval = of_property_read_u32(node, "xlnx,sdfec-din-words",
++				    &din_word_include);
++	if (rval < 0)
++		return rval;
 +
-+	return ret;
++	if (din_word_include < XSDFEC_AXIS_WORDS_INCLUDE_MAX)
++		xsdfec->config.din_word_include = din_word_include;
++	else
++		return -EINVAL;
++
++	rval = of_property_read_u32(node, "xlnx,sdfec-din-width", &din_width);
++	if (rval < 0)
++		return rval;
++
++	switch (din_width) {
++	/* Fall through and set for valid values */
++	case XSDFEC_1x128b:
++	case XSDFEC_2x128b:
++	case XSDFEC_4x128b:
++		xsdfec->config.din_width = din_width;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	rval = of_property_read_u32(node, "xlnx,sdfec-dout-words",
++				    &dout_word_include);
++	if (rval < 0)
++		return rval;
++
++	if (dout_word_include < XSDFEC_AXIS_WORDS_INCLUDE_MAX)
++		xsdfec->config.dout_word_include = dout_word_include;
++	else
++		return -EINVAL;
++
++	rval = of_property_read_u32(node, "xlnx,sdfec-dout-width", &dout_width);
++	if (rval < 0)
++		return rval;
++
++	switch (dout_width) {
++	/* Fall through and set for valid values */
++	case XSDFEC_1x128b:
++	case XSDFEC_2x128b:
++	case XSDFEC_4x128b:
++		xsdfec->config.dout_width = dout_width;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	/* Write LDPC to CODE Register */
++	xsdfec_regwrite(xsdfec, XSDFEC_FEC_CODE_ADDR, xsdfec->config.code);
++
++	xsdfec_cfg_axi_streams(xsdfec);
++
++	return 0;
 +}
 +
  static int xsdfec_clk_init(struct platform_device *pdev,
  			   struct xsdfec_clks *clks)
  {
-@@ -1049,6 +1261,7 @@ static int xsdfec_probe(struct platform_device *pdev)
- 	struct device *dev;
- 	struct resource *res;
- 	int err;
-+	bool irq_enabled = true;
- 
- 	xsdfec = devm_kzalloc(&pdev->dev, sizeof(*xsdfec), GFP_KERNEL);
- 	if (!xsdfec)
-@@ -1069,6 +1282,12 @@ static int xsdfec_probe(struct platform_device *pdev)
+@@ -260,6 +547,12 @@ static int xsdfec_probe(struct platform_device *pdev)
  		goto err_xsdfec_dev;
  	}
  
-+	xsdfec->irq = platform_get_irq(pdev, 0);
-+	if (xsdfec->irq < 0) {
-+		dev_dbg(dev, "platform_get_irq failed");
-+		irq_enabled = false;
-+	}
++	err = xsdfec_parse_of(xsdfec);
++	if (err < 0)
++		goto err_xsdfec_dev;
 +
- 	err = xsdfec_parse_of(xsdfec);
- 	if (err < 0)
- 		goto err_xsdfec_dev;
-@@ -1078,6 +1297,18 @@ static int xsdfec_probe(struct platform_device *pdev)
++	update_config_from_hw(xsdfec);
++
  	/* Save driver private data */
  	platform_set_drvdata(pdev, xsdfec);
  
-+	if (irq_enabled) {
-+		init_waitqueue_head(&xsdfec->waitq);
-+		/* Register IRQ thread */
-+		err = devm_request_threaded_irq(dev, xsdfec->irq, NULL,
-+						xsdfec_irq_thread, IRQF_ONESHOT,
-+						"xilinx-sdfec16", xsdfec);
-+		if (err < 0) {
-+			dev_err(dev, "unable to request IRQ%d", xsdfec->irq);
-+			goto err_xsdfec_dev;
-+		}
-+	}
-+
- 	mutex_lock(&dev_idr_lock);
- 	err = idr_alloc(&dev_idr, xsdfec->dev_name, 0, 0, GFP_KERNEL);
- 	mutex_unlock(&dev_idr_lock);
 diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
-index 163dff6..59ee10c 100644
---- a/include/uapi/misc/xilinx_sdfec.h
+new file mode 100644
+index 0000000..aec26b3
+--- /dev/null
 +++ b/include/uapi/misc/xilinx_sdfec.h
-@@ -252,6 +252,19 @@ struct xsdfec_ldpc_param_table_sizes {
-  */
- #define XSDFEC_MAGIC 'f'
- /**
-+ * DOC: XSDFEC_SET_IRQ
-+ * @Parameters
+@@ -0,0 +1,138 @@
++/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
++/*
++ * Xilinx SD-FEC
 + *
-+ * @struct xsdfec_irq *
-+ *	Pointer to the &struct xsdfec_irq that contains the interrupt settings
-+ *	for the SD-FEC core
++ * Copyright (C) 2019 Xilinx, Inc.
 + *
-+ * @Description
-+ *
-+ * ioctl to enable or disable irq
++ * Description:
++ * This driver is developed for SDFEC16 IP. It provides a char device
++ * in sysfs and supports file operations like open(), close() and ioctl().
 + */
-+#define XSDFEC_SET_IRQ _IOW(XSDFEC_MAGIC, 3, struct xsdfec_irq)
++#ifndef __XILINX_SDFEC_H__
++#define __XILINX_SDFEC_H__
++
++#include <linux/types.h>
++
 +/**
-  * DOC: XSDFEC_SET_TURBO
-  * @Parameters
-  *
++ * enum xsdfec_code - Code Type.
++ * @XSDFEC_TURBO_CODE: Driver is configured for Turbo mode.
++ * @XSDFEC_LDPC_CODE: Driver is configured for LDPC mode.
++ *
++ * This enum is used to indicate the mode of the driver. The mode is determined
++ * by checking which codes are set in the driver. Note that the mode cannot be
++ * changed by the driver.
++ */
++enum xsdfec_code {
++	XSDFEC_TURBO_CODE = 0,
++	XSDFEC_LDPC_CODE,
++};
++
++/**
++ * enum xsdfec_order - Order
++ * @XSDFEC_MAINTAIN_ORDER: Maintain order execution of blocks.
++ * @XSDFEC_OUT_OF_ORDER: Out-of-order execution of blocks.
++ *
++ * This enum is used to indicate whether the order of blocks can change from
++ * input to output.
++ */
++enum xsdfec_order {
++	XSDFEC_MAINTAIN_ORDER = 0,
++	XSDFEC_OUT_OF_ORDER,
++};
++
++/**
++ * enum xsdfec_state - State.
++ * @XSDFEC_INIT: Driver is initialized.
++ * @XSDFEC_STARTED: Driver is started.
++ * @XSDFEC_STOPPED: Driver is stopped.
++ * @XSDFEC_NEEDS_RESET: Driver needs to be reset.
++ * @XSDFEC_PL_RECONFIGURE: Programmable Logic needs to be recofigured.
++ *
++ * This enum is used to indicate the state of the driver.
++ */
++enum xsdfec_state {
++	XSDFEC_INIT = 0,
++	XSDFEC_STARTED,
++	XSDFEC_STOPPED,
++	XSDFEC_NEEDS_RESET,
++	XSDFEC_PL_RECONFIGURE,
++};
++
++/**
++ * enum xsdfec_axis_width - AXIS_WIDTH.DIN Setting for 128-bit width.
++ * @XSDFEC_1x128b: DIN data input stream consists of a 128-bit lane
++ * @XSDFEC_2x128b: DIN data input stream consists of two 128-bit lanes
++ * @XSDFEC_4x128b: DIN data input stream consists of four 128-bit lanes
++ *
++ * This enum is used to indicate the AXIS_WIDTH.DIN setting for 128-bit width.
++ * The number of lanes of the DIN data input stream depends upon the
++ * AXIS_WIDTH.DIN parameter.
++ */
++enum xsdfec_axis_width {
++	XSDFEC_1x128b = 1,
++	XSDFEC_2x128b = 2,
++	XSDFEC_4x128b = 4,
++};
++
++/**
++ * enum xsdfec_axis_word_include - Words Configuration.
++ * @XSDFEC_FIXED_VALUE: Fixed, the DIN_WORDS AXI4-Stream interface is removed
++ *			from the IP instance and is driven with the specified
++ *			number of words.
++ * @XSDFEC_IN_BLOCK: In Block, configures the IP instance to expect a single
++ *		     DIN_WORDS value per input code block. The DIN_WORDS
++ *		     interface is present.
++ * @XSDFEC_PER_AXI_TRANSACTION: Per Transaction, configures the IP instance to
++ * expect one DIN_WORDS value per input transaction on the DIN interface. The
++ * DIN_WORDS interface is present.
++ * @XSDFEC_AXIS_WORDS_INCLUDE_MAX: Used to indicate out of bound Words
++ *				   Configurations.
++ *
++ * This enum is used to specify the DIN_WORDS configuration.
++ */
++enum xsdfec_axis_word_include {
++	XSDFEC_FIXED_VALUE = 0,
++	XSDFEC_IN_BLOCK,
++	XSDFEC_PER_AXI_TRANSACTION,
++	XSDFEC_AXIS_WORDS_INCLUDE_MAX,
++};
++
++/**
++ * struct xsdfec_irq - Enabling or Disabling Interrupts.
++ * @enable_isr: If true enables the ISR
++ * @enable_ecc_isr: If true enables the ECC ISR
++ */
++struct xsdfec_irq {
++	__s8 enable_isr;
++	__s8 enable_ecc_isr;
++};
++
++/**
++ * struct xsdfec_config - Configuration of SD-FEC core.
++ * @code: The codes being used by the SD-FEC instance
++ * @order: Order of Operation
++ * @bypass: Is the core being bypassed
++ * @code_wr_protect: Is write protection of LDPC codes enabled
++ * @din_width: Width of the DIN AXI4-Stream
++ * @din_word_include: How DIN_WORDS are inputted
++ * @dout_width: Width of the DOUT AXI4-Stream
++ * @dout_word_include: HOW DOUT_WORDS are outputted
++ * @irq: Enabling or disabling interrupts
++ */
++struct xsdfec_config {
++	__u32 code;
++	__u32 order;
++	__s8 bypass;
++	__s8 code_wr_protect;
++	__u32 din_width;
++	__u32 din_word_include;
++	__u32 dout_width;
++	__u32 dout_word_include;
++	struct xsdfec_irq irq;
++};
++
++/*
++ * XSDFEC IOCTL List
++ */
++#define XSDFEC_MAGIC 'f'
++#endif /* __XILINX_SDFEC_H__ */
 -- 
 2.7.4
