@@ -1,71 +1,102 @@
-Return-Path: <SRS0=71Dd=UJ=nvidia.com=mmaddireddy@kernel.org>
-Subject: Re: [PATCH V4 00/28] Enable Tegra PCIe root port features
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Message-ID: <b7d09498-b97e-3428-02bd-ecd7c7f3e733@nvidia.com>
-Date: Mon, 10 Jun 2019 10:15:07 +0530
+Return-Path: <SRS0=bzHF=UJ=nvidia.com=nkristam@kernel.org>
+From: Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V4 0/8] Tegra XUSB gadget driver support
+Date: Mon, 10 Jun 2019 15:49:01 +0530
+Message-ID: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-To: lorenzo.pieralisi@arm.com
-Cc: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Lorenzo,
+This is the fourth version of series "Tegra XUSB gadget driver support"
 
-Thierry Ack'ed most of the patches, I am planning to address the review
-comments for remaining two patches and publish V5. If you can review the
-series, I will consolidate both the comments and address in V5.
+Patches 1-3 are phy driver changes to add support for device
+mode.
+Patches 4-7 are changes related to XUSB device mode
+controller driver.
+Patch 8 is to enable XUDC driver in defconfig
 
-Manikanta
+Test Steps(USB 2.0):
+- Enable "USB Gadget precomposed configurations" in defconfig
+- Build, flash and boot Jetson TX1
+- Connect Jetson TX1 and Ubuntu device using USB A to Micro B
+  cable
+- After boot on Jetson TX1 terminal usb0 network device should be
+  enumerated
+- Assign static ip to usb0 on Jetson TX1 and corresponding net
+  device on ubuntu
+- Run ping test and transfer test(used scp) to check data transfer
+  communication
 
+SS mode is verified by enabling Type A port as peripheral
 
-On 16-May-19 11:22 AM, Manikanta Maddireddy wrote:
-> This series of patches adds,
-> - Tegra root port features like Gen2, AER, etc
-> - Power and perf optimizations
-> - Fixes like "power up sequence", "dev_err prints", etc
->
-> This series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
-> based Jetson-TX1, T124 based Jetson-TK1 platforms, Tegra20 and Tegra30
-> platforms.
->
-> Manikanta Maddireddy (28):
->   soc/tegra: pmc: Export tegra_powergate_power_on()
->   PCI: tegra: Handle failure cases in tegra_pcie_power_on()
->   PCI: tegra: Rearrange Tegra PCIe driver functions
->   PCI: tegra: Mask AFI_INTR in runtime suspend
->   PCI: tegra: Fix PCIe host power up sequence
->   PCI: tegra: Add PCIe Gen2 link speed support
->   PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
->   PCI: tegra: Program UPHY electrical settings for Tegra210
->   PCI: tegra: Enable opportunistic UpdateFC and ACK
->   PCI: tegra: Disable AFI dynamic clock gating
->   PCI: tegra: Process pending DLL transactions before entering L1 or L2
->   PCI: tegra: Enable PCIe xclk clock clamping
->   PCI: tegra: Increase the deskew retry time
->   PCI: tegra: Add SW fixup for RAW violations
->   PCI: tegra: Update flow control timer frequency in Tegra210
->   PCI: tegra: Set target speed as Gen1 before starting LTSSM
->   PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
->   PCI: tegra: Program AFI_CACHE* registers only for Tegra20
->   PCI: tegra: Change PRSNT_SENSE IRQ log to debug
->   PCI: tegra: Use legacy IRQ for port service drivers
->   PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
->   PCI: tegra: Access endpoint config only if PCIe link is up
->   dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
->   arm64: tegra: Add PEX DPD states as pinctrl properties
->   PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
->   PCI: Add DT binding for "reset-gpios" property
->   PCI: tegra: Add support for GPIO based PERST#
->   PCI: tegra: Change link retry log level to debug
->
->  .../bindings/pci/nvidia,tegra20-pcie.txt      |   8 +
->  Documentation/devicetree/bindings/pci/pci.txt |   3 +
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
->  drivers/pci/controller/pci-tegra.c            | 615 +++++++++++++++---
->  drivers/soc/tegra/pmc.c                       |   1 +
->  5 files changed, 566 insertions(+), 80 deletions(-)
->
+This patch series is dependent on
+https://patchwork.kernel.org/cover/10966353/
+
+---
+v4:
+* patch 1 - no changes
+* corrected companion device search based on inputs from Thierry in patch 2
+* removed unneeded dev variable and corrected value read in
+  tegra210_utmi_port_reset function in patch 3
+* dt binding doc and dtb files are corrected for alignments.
+  Replaced extcon-usb-gpio with usb role switch.
+* Added support for USB role switch instead of extcon-usb-gpio and other minor
+  comments as suggested by Chunfeng.
+* Enabled xudc driver as module instead of part of kernel in patch 8
+---
+V3:
+* Rebased patch 1 to top of tree.
+* Fixed bug in patch 2, where xudc interrupts dont get generated if USB host
+  mode fails to probe. Moved fake port detection logic to generic xusb.c. fake
+  usb port data is updated based on soc flag need_fake_usb3_port.
+* Added extra lines whereever necessary to make code more readable in patch 3
+  and 7.
+* dt binding doc is corrected for typos and extcon references. Also added
+  details for clocks and removed xusb_ references to clock and power-domain
+  names and accordingly patch 5 is updated.
+* removed avdd-pll-utmip-supply in patch 6, as its now part of padctl driver.
+* Patch 8 has no changes.
+---
+V2:
+* Patches 1-3 are new patches in this series, which splits unified features
+  patch to speprated features and removes need of port-fake entry in DT.
+* Patch 4 is re-arragend dt-bindings patch which incorporates previous
+  patch comments to sort DT entries alphabetically, addresses name changes
+  and PM domain details added.
+* Patch 5-6 are re-arranged DT patches with major changes - sort entries
+  alphabetically, and adds clock names.
+* Patch 7 is UDC driver tegra XUSB device mode controller with major
+  changes - remove un-used module params, lockinng for device_mode flag,
+  moving un-needed info logs to debug level, making changes feature flag
+  dependent rather than SOC based macros and other error handling in probe.
+* Patch 8 has no changes.
+
+Nagarjuna Kristam (8):
+  phy: tegra: xusb: t210: add XUSB dual mode support
+  phy: tegra: xusb: t210: add usb3 port fake support
+  phy: tegra: xusb: t210: add vbus override support
+  dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
+  arm64: tegra: Add xudc node for Tegra210
+  arm64: tegra: Enable xudc on Jetson TX1
+  usb: gadget: Add UDC driver for tegra XUSB device mode controller
+  arm64: defconfig: Enable tegra XUDC driver
+
+ .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  |  108 +
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   29 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   19 +
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/phy/tegra/xusb-tegra210.c                  |  135 +-
+ drivers/phy/tegra/xusb.c                           |   87 +
+ drivers/phy/tegra/xusb.h                           |    4 +
+ drivers/usb/gadget/udc/Kconfig                     |   11 +
+ drivers/usb/gadget/udc/Makefile                    |    1 +
+ drivers/usb/gadget/udc/tegra_xudc.c                | 3808 ++++++++++++++++++++
+ include/linux/phy/tegra/xusb.h                     |    6 +-
+ 11 files changed, 4204 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
+ create mode 100644 drivers/usb/gadget/udc/tegra_xudc.c
+
+-- 
+2.7.4
