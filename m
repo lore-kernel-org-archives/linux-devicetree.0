@@ -1,40 +1,68 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator
- support
-Date: Mon, 10 Jun 2019 06:48:22 +0100
-Message-ID: <20190610054822.GE4797@dell>
-References: <20190516043218.8222-1-j-keerthy@ti.com>
- <20190516043218.8222-4-j-keerthy@ti.com>
- <20190522153528.GG8582@sirena.org.uk>
- <1712197d-7d43-38a8-efde-11b99537eae9@ti.com>
- <20190528132755.GK2456@sirena.org.uk>
- <e68d9939-a56a-b3c5-7f6d-e5783e16a6de@ti.com>
- <20190608195159.GA5316@sirena.org.uk>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH v7 1/6] dt-bindings: add binding for USBSS-DRD controller.
+Date: Mon, 10 Jun 2019 06:13:57 +0000
+Message-ID: <VI1PR04MB532797447E56454C0E2D3F668B130@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
+ <1559729030-16390-2-git-send-email-pawell@cadence.com>
+ <f032b3f3-409d-b0fc-8d5f-01c898b4c7a7@ti.com>
+ <BYAPR07MB470903AF06C1F8A34BBB3C64DD100@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <64be9d26-2a68-1b90-89c8-29b227e0cd9c@ti.com>
+ <BYAPR07MB470965B3CBCB58E1C7B1253FDD130@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190608195159.GA5316@sirena.org.uk>
+In-Reply-To: <BYAPR07MB470965B3CBCB58E1C7B1253FDD130@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: keerthy <j-keerthy@ti.com>, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com
+To: Pawel Laszczak <pawell@cadence.com>, Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 08 Jun 2019, Mark Brown wrote:
-
-> On Sat, Jun 08, 2019 at 09:26:31AM +0530, keerthy wrote:
-> 
-> > mfd patches are on linux-next already. Hope you can pull this one now that
-> > dependencies are met.
-> 
-> Someone will need to send me a copy of the patch, if I acked it I was
-> expecting it to go in with the MFD changes.
-
-There is/was no need for that.  Patches are built-time orthogonal.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+IA0KPiAgLSByZWctbmFtZXMgLSByZWdpc3RlciBtZW1vcnkgYXJlYSBuYW1lczoNCj4gICAgICAg
+ICAieGhjaSIgLSBmb3IgSE9TVCByZWdpc3RlcnMgc3BhY2UNCj4gICAgICAgICAiZGV2IiAtIGZv
+ciBERVZJQ0UgcmVnaXN0ZXJzIHNwYWNlDQo+ICAgICAgICAgIm90ZyIgLSBmb3IgT1RHL0RSRCBy
+ZWdpc3RlcnMgc3BhY2UNCj4gIC0gY29tcGF0aWJsZTogU2hvdWxkIGNvbnRhaW46DQo+ICAgICAg
+ICAgImNkbnMsdXNiMy0xLjAuMCIgLSBmb3IgMHgwMDAyNDUwMiBjb250cm9sbGVyIHZlcnNpb24N
+Cj4gICAgICAgICAiY2Rucyx1c2IzLTEuMC4xIiAtIGZvciAweDAwMDI0NTA5IGNvbnRyb2xsZXIg
+dmVyc2lvbg0KPiAgICAgICAgICJjZG5zLHVzYjMtMS4wLjIiIC0gZm9yIDB4MDAwMjQ1MEMgY29u
+dHJvbGxlciB2ZXJzaW9uDQo+ICAgICAgICAgImNkbnMsdXNiMy0xLjAuMyIgLSBmb3IgMHgwMDAy
+NDUwZCBjb250cm9sbGVyIHZlcnNpb24NCg0KSWYgdGhlIHZhbHVlIGNhbiBiZSByZWFkIGZyb20g
+cmVnaXN0ZXIsIHdoeSB3ZSBzdGlsbCBuZWVkIGRpZmZlcmVudCBjb21wYXRpYmxlcz8NCg0KPiBF
+eGFtcGxlOg0KPiAgICAgICAgIHVzYkBmMzAwMDAwMCB7DQo+ICAgICAgICAgICAgICAgICBjb21w
+YXRpYmxlID0gImNkbnMsdXNiMy0xLjAuMSI7DQo+ICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRz
+ID0gPEdJQ19VU0JfSVJRIDcgSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgPEdJQ19VU0JfSVJRICA3IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0K
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfVVNCX0lSUSAgOCBJUlFfVFlQ
+RV9MRVZFTF9ISUdIPjsNCj4gICAgICAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyA9ICJob3N0
+IiwgInBlcmlwaGVyYWwiLCAib3RnIjsNCj4gICAgICAgICAgICAgICAgIHJlZyA9IDwweGYzMDAw
+MDAwIDB4MTAwMDA+LCAgICAgLyogbWVtb3J5IGFyZWEgZm9yIEhPU1QgcmVnaXN0ZXJzICovDQo+
+ICAgICAgICAgICAgICAgICAgICAgICAgIDwweGYzMDEwMDAwIDB4MTAwMDA+LCAgIC8qIG1lbW9y
+eSBhcmVhIGZvciBERVZJQ0UgcmVnaXN0ZXJzICovDQo+ICAgICAgICAgICAgICAgICAgICAgICAg
+IDwweGYzMDIwMDAwIDB4MTAwMDA+OyAgIC8qIG1lbW9yeSBhcmVhIGZvciBPVEcvRFJEIHJlZ2lz
+dGVycw0KPiAqLw0KPiAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gInhoY2kiLCAiZGV2Iiwg
+Im90ZyI7DQo+ICAgICAgICAgICAgICAgICBwaHlzID0gPCZ1c2IzX3BoeT47DQo+ICAgICAgICAg
+ICAgICAgICBwaHktbmFtZXMgPSAiY2RuczMsdXNicGh5IjsNCj4gDQo+IA0KPiBNYXliZSBJIHNo
+b3VsZCBhZGQgYWxzbyBzb21ldGhpbmcgZm9yIHVzYjJfcGh5IGluIGR0LWJpbmRpbmcgYW5kIGlu
+IGRyaXZlciA/DQo+IA0KDQpUaGUgUEhZIGRyaXZlciBpcyBsb2NhdGVkIGF0OiBkcml2ZXJzL3Bo
+eS9jYWRlbmNlL3BoeS1jYWRlbmNlLXNpZXJyYS5jLg0KV2lsbCB3ZSBuZWVkIGFub3RoZXIgb25l
+IGZvciBVU0IyIFBIWT8NCg0KUGV0ZXINCg0KDQo+IFRoYW5rcywNCj4gUmVnYXJkcywNCj4gUGF3
+ZWwNCj4gDQo+ID4+DQo+ID4+IFJlZ2FyZHMsDQo+ID4+IFBhd2VsDQo+ID4+DQo+ID4+DQo+ID4+
+Pg0KPiA+Pj4+ICsNCj4gPj4+PiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPj4+PiArIC0gbWF4
+aW11bS1zcGVlZCA6IHZhbGlkIGFyZ3VtZW50cyBhcmUgInN1cGVyLXNwZWVkIiwgImhpZ2gtc3Bl
+ZWQiIGFuZA0KPiA+Pj4+ICsgICAgICAgICAgICAgICAgICAgImZ1bGwtc3BlZWQiOyByZWZlciB0
+byB1c2IvZ2VuZXJpYy50eHQNCj4gPj4+PiArIC0gZHJfbW9kZTogU2hvdWxkIGJlIG9uZSBvZiAi
+aG9zdCIsICJwZXJpcGhlcmFsIiBvciAib3RnIi4NCj4gPj4+PiArIC0gcGh5czogcmVmZXJlbmNl
+IHRvIHRoZSBVU0IgUEhZDQo+ID4+Pj4gKw0KPiA+Pj4+ICtFeGFtcGxlOg0KPiA+Pj4+ICsJdXNi
+QGYzMDAwMDAwIHsNCj4gPj4+PiArCQljb21wYXRpYmxlID0gImNkbnMsdXNiMy0xLjAuMSI7DQo+
+ID4+Pj4gKwkJaW50ZXJydXB0cyA9IDxVU0JfSVJRICA3IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0K
+PiA+Pj4NCj4gPj4+IFRoaXMgZXhhbXBsZSB3b24ndCB3b3JrIGFzIGNvZGUgcmVxdWVzdHMgZm9y
+IDMgc2VwYXJhdGUgaW50ZXJydXB0cy4NCj4gPj4+DQo+ID4+Pj4gKwkJcmVnID0gPDB4ZjMwMDAw
+MDAgMHgxMDAwMAkvKiBtZW1vcnkgYXJlYSBmb3IgSE9TVA0KPiByZWdpc3RlcnMgKi8NCj4gPj4+
+PiArCQkJMHhmMzAxMDAwMCAweDEwMDAwCS8qIG1lbW9yeSBhcmVhIGZvciBERVZJQ0UNCj4gcmVn
+aXN0ZXJzICovDQo+ID4+Pj4gKwkJCTB4ZjMwMjAwMDAgMHgxMDAwMD47CS8qIG1lbW9yeSBhcmVh
+IGZvcg0KPiBPVEcvRFJEIHJlZ2lzdGVycyAqLw0KPiA+Pj4+ICsJCXJlZy1uYW1lcyA9ICJ4aGNp
+IiwgImRldiIsICJvdGciOw0KPiA+Pj4+ICsJfTsNCj4gPj4+Pg0KPiA+Pj4NCj4gPg0KPiA+DQo+
+ID4tLQ0KPiA+Y2hlZXJzLA0KPiA+LXJvZ2VyDQo+ID4NCj4gPlRleGFzIEluc3RydW1lbnRzIEZp
+bmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLg0KPiA+WS10dW5udXMv
+QnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kNCg==
