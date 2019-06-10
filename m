@@ -1,72 +1,80 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
-Date: Mon, 10 Jun 2019 15:07:51 +0100
-Message-ID: <7b86aa90-6d64-589c-f11e-d2ee6ab3fd54@arm.com>
-References: <20190610121346.15779-1-abel.vesa@nxp.com>
- <20190610131921.GB14647@lakrids.cambridge.arm.com>
- <20190610132910.srd4j2gtidjeppdx@fsr-ub1664-175>
- <6f1052ea-623a-b2e8-9aa8-22aef5fab4ca@arm.com>
- <20190610135514.xd5myavjsloos2y3@fsr-ub1664-175>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 4/7] arm64: dts: actions: Add uSD and eMMC support for
+ Bubblegum96
+Date: Mon, 10 Jun 2019 16:08:26 +0200
+Message-ID: <1381305a-8585-9dcf-6b43-34e852e785ab@suse.de>
+References: <20190608195317.6336-1-manivannan.sadhasivam@linaro.org>
+ <20190608195317.6336-5-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610135514.xd5myavjsloos2y3@fsr-ub1664-175>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190608195317.6336-5-manivannan.sadhasivam@linaro.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Abel Vesa <abelvesa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Leonard Crestez <leonard.crestez@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Carlo Caione <ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, sboyd@kernel.org, linux-actions@lists.infradead.org, linus.walleij@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/06/2019 14:55, Abel Vesa wrote:
-> On 19-06-10 14:39:02, Marc Zyngier wrote:
->> On 10/06/2019 14:29, Abel Vesa wrote:
->>> On 19-06-10 14:19:21, Mark Rutland wrote:
->>>> On Mon, Jun 10, 2019 at 03:13:44PM +0300, Abel Vesa wrote:
->>>>> This is another alternative for the RFC:
->>>>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F3%2F27%2F545&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7C7cb2bda286214541bd1e08d6eda903e0%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636957707535314247&amp;sdata=guYqyq5ND6HzW6doFyWrR1Ry4ffWpGwtm0xDZ2ufFSg%3D&amp;reserved=0
->>>>>
->>>>> This new workaround proposal is a little bit more hacky but more contained
->>>>> since everything is done within the irq-imx-gpcv2 driver.
->>>>>
->>>>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cross_call
->>>>> handler and registers instead a wrapper which calls in the 'hijacked' 
->>>>> handler, after that calling into EL3 which will take care of the actual
->>>>> wake up. This time, instead of expanding the PSCI ABI, we use a new vendor SIP.
->>>>
->>>> IIUC from last time [1,2], this erratum affects all interrupts
->>>> targetting teh idle CPU, not just IPIs, so even if the bodge is more
->>>> self-contained, it doesn't really solve the issue, and there are still
->>>> cases where a CPU will not be woken from idle when it should be (e.g.
->>>> upon receipt of an LPI).
->>>>
->>>
->>> Wrong, this erratum does not affect any other type of interrupts, other
->>> than IPIs. That is because all the other interrupts go through GPC,
->>> which means the cores will wake up on any other type (again, other than IPI).
->>
->> Huh... Are you saying that LPIs and PPIs are going through the GPC, and
->> will trigger the wake-up of the core? That's not the conclusion we
->> reached last time.
->>
-> 
-> Hmm, I don't think that was the conclusion. Yes, Lucas was saying (IIRC)
-> that if you terminate the IRQs at GIC then all the other interrupts will be
-> in the same situation. But the performance improvement given by terminating
-> them at GIC might not be worth it when compared to the cpuidle support.
-
-https://lkml.org/lkml/2019/3/27/1124 clearly says that PPIs are broken,
-relying on some other terrible hack for the timer (and only the timer,
-leaving other PPIs dead as a nail). It also implies that LPIs have never
-been looked into, and given that they aren't routed through the GPC, the
-conclusion is pretty easy to draw.
-
-Nobody is talking about performance here. It is strictly about
-correctness, and what I read about this system is that it cannot
-reliably use cpuidle.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+SGkgTWFuaSwKCkFtIDA4LjA2LjE5IHVtIDIxOjUzIHNjaHJpZWIgTWFuaXZhbm5hbiBTYWRoYXNp
+dmFtOgo+IEFkZCB1U0QgYW5kIGVNTUMgc3VwcG9ydCBmb3IgQnViYmxlZ3VtOTYgYm9hcmQgYmFz
+ZWQgb24gQWN0aW9ucyBTZW1pCj4gT3dsIFNvQy4KCldoYXQgaW5mb3JtYXRpb24gZG9lcyAiYmFz
+ZWQgb24gQWN0aW9ucyBTZW1pIE93bCBTb0MiIGdpdmUgdXM/IDopClRoZSBib2FyZCBuYW1lIHNo
+b3VsZCBiZSB1bmlxdWUgZW5vdWdoIC0gT3dsIGlzIGEgZmFtaWx5IG9mIFNvQ3MsCiJhY3Rpb25z
+OiIgaXMgaW4gdGhlIHN1YmplY3QgYW5kICJzOTAwLSIgaXMgaW4gdGhlIGZpbGVuYW1lLgoKPiBT
+RDAgaXMgY29ubmVjdGVkIHRvIHVTRCBzbG90IGFuZCBTRDIgaXMgY29ubmVjdGVkIHRvIGVNTUMu
+CgpTdWdnZXN0IHRvIGFkZCB0aGF0IGFzIGNvbW1lbnRzIGFib3ZlIHRoZSB0d28gbm9kZXMgaW5z
+dGVhZC4KCj4gU2luY2UgdGhlcmUgaXMgbm8gUE1JQyBzdXBwb3J0IGFkZGVkIHlldCwgZml4ZWQg
+cmVndWxhdG9yIGhhcyBiZWVuCj4gdXNlZCBhcyBhIHJlZ3VsYXRvciBub2RlLgoKRmluZSB3aXRo
+IG1lIC0gbWF5YmUgYWRkIGEgY29tbWVudCBhbmQgbWFrZSBzdXJlIGl0J3MgYWxpZ25lZCB3aXRo
+IHRoZQpzY2hlbWF0aWNzIG5hbWluZyB3cnQgUE1JQy4KCj4gCj4gU2lnbmVkLW9mZi1ieTogTWFu
+aXZhbm5hbiBTYWRoYXNpdmFtIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJvLm9yZz4KPiAt
+LS0KPiAgLi4uL2Jvb3QvZHRzL2FjdGlvbnMvczkwMC1idWJibGVndW0tOTYuZHRzICAgIHwgNTAg
+KysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKQo+
+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FjdGlvbnMvczkwMC1idWJibGVn
+dW0tOTYuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9hY3Rpb25zL3M5MDAtYnViYmxlZ3VtLTk2
+LmR0cwo+IGluZGV4IDczMmRhYWE2ZTlkMy4uM2I1OTZkNzJkZTI1IDEwMDY0NAo+IC0tLSBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvYWN0aW9ucy9zOTAwLWJ1YmJsZWd1bS05Ni5kdHMKPiArKysgYi9h
+cmNoL2FybTY0L2Jvb3QvZHRzL2FjdGlvbnMvczkwMC1idWJibGVndW0tOTYuZHRzCj4gQEAgLTEz
+LDYgKzEzLDkgQEAKPiAgCj4gIAlhbGlhc2VzIHsKPiAgCQlzZXJpYWw1ID0gJnVhcnQ1Owo+ICsJ
+CW1tYzAgPSAmbW1jMDsKPiArCQltbWMxID0gJm1tYzE7Cj4gKwkJbW1jMiA9ICZtbWMyOwoKU29y
+dCB0aGVtIGFscGhhYmV0aWNhbGx5PwoKPiAgCX07Cj4gIAo+ICAJY2hvc2VuIHsKPiBAQCAtMjMs
+NiArMjYsMTQgQEAKPiAgCQlkZXZpY2VfdHlwZSA9ICJtZW1vcnkiOwo+ICAJCXJlZyA9IDwweDAg
+MHgwIDB4MCAweDgwMDAwMDAwPjsKPiAgCX07Cj4gKwo+ICsJcmVnXzNwMXY6IHJlZ3VsYXRvci0z
+cDF2IHsKPiArCQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7Cj4gKwkJcmVndWxhdG9y
+LW5hbWUgPSAiZml4ZWQtMy4xViI7Cj4gKwkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzEw
+MDAwMD47Cj4gKwkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzEwMDAwMD47Cj4gKwkJcmVn
+dWxhdG9yLWFsd2F5cy1vbjsKPiArCX07Cj4gIH07Cj4gIAo+ICAmaTJjMCB7Cj4gQEAgLTI0MSw2
+ICsyNTIsNDUgQEAKPiAgCQkJYmlhcy1wdWxsLXVwOwo+ICAJCX07Cj4gIAl9Owo+ICsKPiArCW1t
+YzBfZGVmYXVsdDogbW1jMF9kZWZhdWx0IHsKPiArCQlwaW5tdXggewo+ICsJCQlncm91cHMgPSAi
+c2QwX2QwX21mcCIsICJzZDBfZDFfbWZwIiwgInNkMF9kMl9kM19tZnAiLAo+ICsJCQkJICJzZDBf
+Y21kX21mcCIsICJzZDBfY2xrX21mcCI7Cj4gKwkJCWZ1bmN0aW9uID0gInNkMCI7Cj4gKwkJfTsK
+PiArCX07Cj4gKwo+ICsJbW1jMl9kZWZhdWx0OiBtbWMyX2RlZmF1bHQgewo+ICsJCXBpbm11eCB7
+Cj4gKwkJCWdyb3VwcyA9ICJuYW5kMF9kMF9jZWIzX21mcCI7Cj4gKwkJCWZ1bmN0aW9uID0gInNk
+MiI7Cj4gKwkJfTsKPiArCX07CgpXb3VsZG4ndCBpdCBtYWtlIG1vcmUgc2Vuc2UgdG8gbW92ZSB0
+aGVzZSBhbmQgdGhlIGJlbG93IHBpbmN0cmwtKiB0bwpzOTAwLmR0c2kgZm9yIHNoYXJpbmcgd2l0
+aCBvdGhlciB0aGVvcmV0aWNhbCBib2FyZHM/IEkgcmVhbGx5IGRpc2xpa2UKdGhlIGlteCBtb2Rl
+bCB3aGVyZSBwaW4gbXV4aW5nIGlzIGR1cGxpY2F0ZWQgaW50byBlYWNoIGluZGl2aWR1YWwgYm9h
+cmQuCgpSZWdhcmRzLApBbmRyZWFzCgo+ICt9Owo+ICsKPiArJm1tYzAgewo+ICsJc3RhdHVzID0g
+Im9rYXkiOwo+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiArCXBpbmN0cmwtMCA9IDwm
+bW1jMF9kZWZhdWx0PjsKPiArCW5vLXNkaW87Cj4gKwluby1tbWM7Cj4gKwluby0xLTgtdjsKPiAr
+CWNkLWdwaW9zID0gPCZwaW5jdHJsIDEyMCBHUElPX0FDVElWRV9MT1c+Owo+ICsJYnVzLXdpZHRo
+ID0gPDQ+Owo+ICsJdm1tYy1zdXBwbHkgPSA8JnJlZ18zcDF2PjsKPiArCXZxbW1jLXN1cHBseSA9
+IDwmcmVnXzNwMXY+Owo+ICt9Owo+ICsKPiArJm1tYzIgewo+ICsJc3RhdHVzID0gIm9rYXkiOwo+
+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiArCXBpbmN0cmwtMCA9IDwmbW1jMl9kZWZh
+dWx0PjsKPiArCW5vLXNkaW87Cj4gKwluby1zZDsKPiArCW5vbi1yZW1vdmFibGU7Cj4gKwlidXMt
+d2lkdGggPSA8OD47Cj4gKwl2bW1jLXN1cHBseSA9IDwmcmVnXzNwMXY+Owo+ICB9Owo+ICAKPiAg
+JnRpbWVyIHsKCi0tIApTVVNFIExpbnV4IEdtYkgsIE1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJu
+YmVyZywgR2VybWFueQpHRjogRmVsaXggSW1lbmTDtnJmZmVyLCBNYXJ5IEhpZ2dpbnMsIFNyaSBS
+YXNpYWgKSFJCIDIxMjg0IChBRyBOw7xybmJlcmcpCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
