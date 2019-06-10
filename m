@@ -1,37 +1,33 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH V14 4/5] defconfig: arm64: add i.MX system controller thermal support
-Date: Mon, 10 Jun 2019 10:52:53 +0800
-Message-ID: <20190610025254.23940-4-Anson.Huang@nxp.com>
-References: <20190610025254.23940-1-Anson.Huang@nxp.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v5 07/26] leds: sc27xx-blt: Use generic support for
+ composing LED names
+Date: Mon, 10 Jun 2019 10:52:12 +0800
+Message-ID: <CAMz4kuLHxxDB2SrYZp5TWSk8ZFjiCWPaRX-r_=zpFy+-YM3WEQ@mail.gmail.com>
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com> <20190609190803.14815-8-jacek.anaszewski@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610025254.23940-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190609190803.14815-8-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, aisheng.dong@nxp.com, ulf.hansson@linaro.org, peng.fan@nxp.com, mchehab+samsung@kernel.org, linux@roeck-us.net, daniel.baluta@nxp.com, maxime.ripard@bootlin.com, olof@lixom.net, jagan@amarulasolutions.com, horms+renesas@verge.net.au, leonard.crestez@nxp.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, enric.balletbo@collabora.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>, dtor@google.com, Guenter Roeck <linux@roeck-us.net>, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+Hi Jacek,
 
-This patch enables CONFIG_IMX_SC_THERMAL as module.
+On Mon, 10 Jun 2019 at 03:08, Jacek Anaszewski
+<jacek.anaszewski@gmail.com> wrote:
+>
+> Switch to using generic LED support for composing LED class
+> device name.
+>
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No change.
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Thanks.
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index b3d6eb8..323e772 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -414,6 +414,7 @@ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
- CONFIG_CPU_THERMAL=y
- CONFIG_THERMAL_EMULATION=y
- CONFIG_QORIQ_THERMAL=m
-+CONFIG_IMX_SC_THERMAL=m
- CONFIG_ROCKCHIP_THERMAL=m
- CONFIG_RCAR_THERMAL=y
- CONFIG_RCAR_GEN3_THERMAL=y
 -- 
-2.7.4
+Baolin Wang
+Best Regards
