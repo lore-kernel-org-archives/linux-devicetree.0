@@ -1,41 +1,69 @@
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH 3/3] of: unittest: simplify getting the adapter of a client
-Date: Mon, 10 Jun 2019 11:51:56 +0200
-Message-ID: <20190610095157.11814-4-wsa+renesas@sang-engineering.com>
-References: <20190610095157.11814-1-wsa+renesas@sang-engineering.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 04/13] media: rc: sunxi: Add RXSTA bits definition
+Date: Mon, 10 Jun 2019 11:52:43 +0200
+Message-ID: <20190610095243.7xwp4xhauds22qzw@flea>
+References: <20190607231100.5894-1-peron.clem@gmail.com>
+ <20190607231100.5894-5-peron.clem@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610095157.11814-1-wsa+renesas@sang-engineering.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-i2c@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ivt2koe4dst4bk6o"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3WQ7DTQKGQERAXQCNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190607231100.5894-5-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We have a dedicated pointer for that, so use it. Much easier to read and
-less computation involved.
 
-Reported-by: Peter Rosin <peda@axentia.se>
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
+--ivt2koe4dst4bk6o
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please apply to your subsystem tree.
+On Sat, Jun 08, 2019 at 01:10:51AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> We are using RXINT bits definition when looking at RXSTA register.
+>
+> These bits are equal but it's not really proper.
+>
+> Introduce the RXSTA bits and use them to have coherency.
+>
+> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
- drivers/of/unittest.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 3832a5de4602..e6b175370f2e 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1946,7 +1946,7 @@ static int unittest_i2c_mux_probe(struct i2c_client *client,
- {
- 	int i, nchans;
- 	struct device *dev = &client->dev;
--	struct i2c_adapter *adap = to_i2c_adapter(dev->parent);
-+	struct i2c_adapter *adap = client->adapter;
- 	struct device_node *np = client->dev.of_node, *child;
- 	struct i2c_mux_core *muxc;
- 	u32 reg, max_reg;
--- 
-2.19.1
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190610095243.7xwp4xhauds22qzw%40flea.
+For more options, visit https://groups.google.com/d/optout.
+
+--ivt2koe4dst4bk6o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP4oawAKCRDj7w1vZxhR
+xczjAP9NhvNXW8RraDQEXB1eNk6zeYRoUohLhNFarH0MsVC7hQEAx0/R3cfra11q
+g8lAS+DDEk4kx5iSDIwC7EK1bfYB7Q0=
+=c9cn
+-----END PGP SIGNATURE-----
+
+--ivt2koe4dst4bk6o--
