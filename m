@@ -1,51 +1,54 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH 2/6] dt-bindings: qcom: Add ipq6018 bindings
-Date: Mon, 10 Jun 2019 16:31:54 +0530
-Message-ID: <93e5b0c5-f97b-ef62-8c7f-262e80a53b49@codeaurora.org>
-References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
- <1559754961-26783-3-git-send-email-sricharan@codeaurora.org>
- <20190608032754.GD24059@builder>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 0/3] Qualcomm QCS404 PCIe support
+Date: Mon, 10 Jun 2019 12:21:41 +0100
+Message-ID: <20190610112134.GA30098@redmoon>
+References: <20190529005710.23950-1-bjorn.andersson@linaro.org>
+ <20190529163155.GA24655@redmoon>
+ <20190604113347.GA13029@centauri.ideon.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190608032754.GD24059@builder>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190604113347.GA13029@centauri.ideon.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linus.walleij@linaro.org, Stephen Boyd <sboyd@kernel.org>, agross@kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 6/8/2019 8:57 AM, Bjorn Andersson wrote:
-> On Wed 05 Jun 10:15 PDT 2019, Sricharan R wrote:
+On Tue, Jun 04, 2019 at 01:33:47PM +0200, Niklas Cassel wrote:
+> On Wed, May 29, 2019 at 05:31:55PM +0100, Lorenzo Pieralisi wrote:
+> > On Tue, May 28, 2019 at 05:57:07PM -0700, Bjorn Andersson wrote:
+> > > This series adds support for the PCIe controller in the Qualcomm QCS404
+> > > platform.
+> > > 
+> > > Bjorn Andersson (3):
+> > >   PCI: qcom: Use clk_bulk API for 2.4.0 controllers
+> > >   dt-bindings: PCI: qcom: Add QCS404 to the binding
+> > >   PCI: qcom: Add QCS404 PCIe controller support
+> > > 
+> > >  .../devicetree/bindings/pci/qcom,pcie.txt     |  25 +++-
+> > >  drivers/pci/controller/dwc/pcie-qcom.c        | 113 ++++++++----------
+> > >  2 files changed, 75 insertions(+), 63 deletions(-)
+> > 
+> > Applied to pci/qcom for v5.3, thanks.
+> > 
+> > Lorenzo
 > 
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> Signed-off-by: speriaka <speriaka@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
->> index f6316ab..7b19028 100644
->> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
->> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
->> @@ -36,6 +36,7 @@ description: |
->>    	mdm9615
->>    	ipq8074
->>    	sdm845
->> +	ipq6018
+> Hello Lorenzo,
 > 
-> It would be nice if these lists where sorted, but as that's not the
-> case, please sort it wrt the other ipq at least.
+> I don't see these patches in linux-next.
 > 
+> It appears that only Bjorn Helgaas tree is in linux-next, and not yours.
+> 
+> I think that it makes a lot of sense for patches to cook in linux-next
+> for as long a possible.
+> 
+> Perhaps you and Bjorn Helgaas could have a shared PCI git tree?
+> Or perhaps you could add your tree to linux-next?
+> ..or some other solution :)
 
- ok.
+I ask Bjorn to pull branches into linux-next at appropriate times
+that fit our schedules, be patient and this code will be in -next
+shortly.
 
-Regards,
- Sricharan
-
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Lorenzo
