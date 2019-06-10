@@ -1,104 +1,36 @@
-From: =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-Subject: [PATCH] arm64: dts: ls1028a: add crypto node
-Date: Mon, 10 Jun 2019 18:23:31 +0300
-Message-ID: <20190610152331.10057-1-horia.geanta@nxp.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] arm64: dts: meson: g12a: sort sdio nodes correctly
+Date: Mon, 10 Jun 2019 17:37:54 +0200
+Message-ID: <CAFBinCC4g1WVFyTgQrDUcYs13HDYp7Ggn=eSQ+X=LnpEoGg--w@mail.gmail.com>
+References: <20190610124931.17422-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190610124931.17422-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Laurentiu Tudor <laurentiu.tudor@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-LS1028A has a SEC v5.0 compatible security engine.
+Hi Jerome,
 
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
----
+On Mon, Jun 10, 2019 at 2:49 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+> Fix sdio node order in the soc device tree
+good catch, thank you for fixing this!
 
-Tested with "arm-smmu.disable_bypass=0" kernel boot parameter,
-since ICID (Isolation Context ID, out of which ARM SMMU stream ID
-is derived) programming and DT fix-up support hasn't been added yet
-in U-boot.
+> Fixes: a1737347250e ("arm64: dts: meson: g12a: add SDIO controller")
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
- .../boot/dts/freescale/fsl-ls1028a-qds.dts    |  1 +
- .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  1 +
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 39 +++++++++++++++++++
- 3 files changed, 41 insertions(+)
+[...]
+> +                                       sdio_pins: sdio {
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index 4ed18287e077..c9765bb4bd7f 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -17,6 +17,7 @@
- 	compatible = "fsl,ls1028a-qds", "fsl,ls1028a";
- 
- 	aliases {
-+		crypto = &crypto;
- 		gpio0 = &gpio1;
- 		gpio1 = &gpio2;
- 		gpio2 = &gpio3;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-index 4a203f7da598..745ec462bfae 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -16,6 +16,7 @@
- 	compatible = "fsl,ls1028a-rdb", "fsl,ls1028a";
- 
- 	aliases {
-+		crypto = &crypto;
- 		serial0 = &duart0;
- 		serial1 = &duart1;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index bb386dd1d1b1..0048c2610a09 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -388,6 +388,45 @@
- 				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		crypto: crypto@8000000 {
-+			compatible = "fsl,sec-v5.0", "fsl,sec-v4.0";
-+			fsl,sec-era = <10>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x00 0x8000000 0x100000>;
-+			reg = <0x00 0x8000000 0x0 0x100000>;
-+			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-coherent;
-+
-+			sec_jr0: jr@10000 {
-+				compatible = "fsl,sec-v5.0-job-ring",
-+					     "fsl,sec-v4.0-job-ring";
-+				reg	= <0x10000 0x10000>;
-+				interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			sec_jr1: jr@20000 {
-+				compatible = "fsl,sec-v5.0-job-ring",
-+					     "fsl,sec-v4.0-job-ring";
-+				reg	= <0x20000 0x10000>;
-+				interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			sec_jr2: jr@30000 {
-+				compatible = "fsl,sec-v5.0-job-ring",
-+					     "fsl,sec-v4.0-job-ring";
-+				reg	= <0x30000 0x10000>;
-+				interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			sec_jr3: jr@40000 {
-+				compatible = "fsl,sec-v5.0-job-ring",
-+					     "fsl,sec-v4.0-job-ring";
-+				reg	= <0x40000 0x10000>;
-+				interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
- 		cluster1_core0_watchdog: watchdog@c000000 {
- 			compatible = "arm,sp805", "arm,primecell";
- 			reg = <0x0 0xc000000 0x0 0x1000>;
--- 
-2.17.1
+[...]
+strictly speaking we're not using alphabetical sorting here
+I'm fine with it though because it's consistent with the pattern
+{sdio,emmc,sd}{,_ds,_clk,...}_pins (and thus all other definitions
+here)
+
+
+Martin
