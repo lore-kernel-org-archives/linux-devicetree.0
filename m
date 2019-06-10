@@ -1,80 +1,77 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 4/7] arm64: dts: actions: Add uSD and eMMC support for
- Bubblegum96
-Date: Mon, 10 Jun 2019 16:08:26 +0200
-Message-ID: <1381305a-8585-9dcf-6b43-34e852e785ab@suse.de>
-References: <20190608195317.6336-1-manivannan.sadhasivam@linaro.org>
- <20190608195317.6336-5-manivannan.sadhasivam@linaro.org>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 6/6] soundwire: qcom: add support for
+ SoundWire controller
+Date: Mon, 10 Jun 2019 09:12:39 -0500
+Message-ID: <7269521a-ac89-3856-c18c-ffaaf64c0806@linux.intel.com>
+References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
+ <20190607085643.932-7-srinivas.kandagatla@linaro.org>
+ <249f9647-94d0-41d7-3b95-64c36d90f8e8@linux.intel.com>
+ <40ea774c-8aa8-295d-e91e-71423b03c88d@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190608195317.6336-5-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <40ea774c-8aa8-295d-e91e-71423b03c88d@linaro.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, sboyd@kernel.org, linux-actions@lists.infradead.org, linus.walleij@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, broonie@kernel.org, vkoul@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFuaSwKCkFtIDA4LjA2LjE5IHVtIDIxOjUzIHNjaHJpZWIgTWFuaXZhbm5hbiBTYWRoYXNp
-dmFtOgo+IEFkZCB1U0QgYW5kIGVNTUMgc3VwcG9ydCBmb3IgQnViYmxlZ3VtOTYgYm9hcmQgYmFz
-ZWQgb24gQWN0aW9ucyBTZW1pCj4gT3dsIFNvQy4KCldoYXQgaW5mb3JtYXRpb24gZG9lcyAiYmFz
-ZWQgb24gQWN0aW9ucyBTZW1pIE93bCBTb0MiIGdpdmUgdXM/IDopClRoZSBib2FyZCBuYW1lIHNo
-b3VsZCBiZSB1bmlxdWUgZW5vdWdoIC0gT3dsIGlzIGEgZmFtaWx5IG9mIFNvQ3MsCiJhY3Rpb25z
-OiIgaXMgaW4gdGhlIHN1YmplY3QgYW5kICJzOTAwLSIgaXMgaW4gdGhlIGZpbGVuYW1lLgoKPiBT
-RDAgaXMgY29ubmVjdGVkIHRvIHVTRCBzbG90IGFuZCBTRDIgaXMgY29ubmVjdGVkIHRvIGVNTUMu
-CgpTdWdnZXN0IHRvIGFkZCB0aGF0IGFzIGNvbW1lbnRzIGFib3ZlIHRoZSB0d28gbm9kZXMgaW5z
-dGVhZC4KCj4gU2luY2UgdGhlcmUgaXMgbm8gUE1JQyBzdXBwb3J0IGFkZGVkIHlldCwgZml4ZWQg
-cmVndWxhdG9yIGhhcyBiZWVuCj4gdXNlZCBhcyBhIHJlZ3VsYXRvciBub2RlLgoKRmluZSB3aXRo
-IG1lIC0gbWF5YmUgYWRkIGEgY29tbWVudCBhbmQgbWFrZSBzdXJlIGl0J3MgYWxpZ25lZCB3aXRo
-IHRoZQpzY2hlbWF0aWNzIG5hbWluZyB3cnQgUE1JQy4KCj4gCj4gU2lnbmVkLW9mZi1ieTogTWFu
-aXZhbm5hbiBTYWRoYXNpdmFtIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJvLm9yZz4KPiAt
-LS0KPiAgLi4uL2Jvb3QvZHRzL2FjdGlvbnMvczkwMC1idWJibGVndW0tOTYuZHRzICAgIHwgNTAg
-KysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKQo+
-IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FjdGlvbnMvczkwMC1idWJibGVn
-dW0tOTYuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9hY3Rpb25zL3M5MDAtYnViYmxlZ3VtLTk2
-LmR0cwo+IGluZGV4IDczMmRhYWE2ZTlkMy4uM2I1OTZkNzJkZTI1IDEwMDY0NAo+IC0tLSBhL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvYWN0aW9ucy9zOTAwLWJ1YmJsZWd1bS05Ni5kdHMKPiArKysgYi9h
-cmNoL2FybTY0L2Jvb3QvZHRzL2FjdGlvbnMvczkwMC1idWJibGVndW0tOTYuZHRzCj4gQEAgLTEz
-LDYgKzEzLDkgQEAKPiAgCj4gIAlhbGlhc2VzIHsKPiAgCQlzZXJpYWw1ID0gJnVhcnQ1Owo+ICsJ
-CW1tYzAgPSAmbW1jMDsKPiArCQltbWMxID0gJm1tYzE7Cj4gKwkJbW1jMiA9ICZtbWMyOwoKU29y
-dCB0aGVtIGFscGhhYmV0aWNhbGx5PwoKPiAgCX07Cj4gIAo+ICAJY2hvc2VuIHsKPiBAQCAtMjMs
-NiArMjYsMTQgQEAKPiAgCQlkZXZpY2VfdHlwZSA9ICJtZW1vcnkiOwo+ICAJCXJlZyA9IDwweDAg
-MHgwIDB4MCAweDgwMDAwMDAwPjsKPiAgCX07Cj4gKwo+ICsJcmVnXzNwMXY6IHJlZ3VsYXRvci0z
-cDF2IHsKPiArCQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7Cj4gKwkJcmVndWxhdG9y
-LW5hbWUgPSAiZml4ZWQtMy4xViI7Cj4gKwkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzEw
-MDAwMD47Cj4gKwkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzEwMDAwMD47Cj4gKwkJcmVn
-dWxhdG9yLWFsd2F5cy1vbjsKPiArCX07Cj4gIH07Cj4gIAo+ICAmaTJjMCB7Cj4gQEAgLTI0MSw2
-ICsyNTIsNDUgQEAKPiAgCQkJYmlhcy1wdWxsLXVwOwo+ICAJCX07Cj4gIAl9Owo+ICsKPiArCW1t
-YzBfZGVmYXVsdDogbW1jMF9kZWZhdWx0IHsKPiArCQlwaW5tdXggewo+ICsJCQlncm91cHMgPSAi
-c2QwX2QwX21mcCIsICJzZDBfZDFfbWZwIiwgInNkMF9kMl9kM19tZnAiLAo+ICsJCQkJICJzZDBf
-Y21kX21mcCIsICJzZDBfY2xrX21mcCI7Cj4gKwkJCWZ1bmN0aW9uID0gInNkMCI7Cj4gKwkJfTsK
-PiArCX07Cj4gKwo+ICsJbW1jMl9kZWZhdWx0OiBtbWMyX2RlZmF1bHQgewo+ICsJCXBpbm11eCB7
-Cj4gKwkJCWdyb3VwcyA9ICJuYW5kMF9kMF9jZWIzX21mcCI7Cj4gKwkJCWZ1bmN0aW9uID0gInNk
-MiI7Cj4gKwkJfTsKPiArCX07CgpXb3VsZG4ndCBpdCBtYWtlIG1vcmUgc2Vuc2UgdG8gbW92ZSB0
-aGVzZSBhbmQgdGhlIGJlbG93IHBpbmN0cmwtKiB0bwpzOTAwLmR0c2kgZm9yIHNoYXJpbmcgd2l0
-aCBvdGhlciB0aGVvcmV0aWNhbCBib2FyZHM/IEkgcmVhbGx5IGRpc2xpa2UKdGhlIGlteCBtb2Rl
-bCB3aGVyZSBwaW4gbXV4aW5nIGlzIGR1cGxpY2F0ZWQgaW50byBlYWNoIGluZGl2aWR1YWwgYm9h
-cmQuCgpSZWdhcmRzLApBbmRyZWFzCgo+ICt9Owo+ICsKPiArJm1tYzAgewo+ICsJc3RhdHVzID0g
-Im9rYXkiOwo+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiArCXBpbmN0cmwtMCA9IDwm
-bW1jMF9kZWZhdWx0PjsKPiArCW5vLXNkaW87Cj4gKwluby1tbWM7Cj4gKwluby0xLTgtdjsKPiAr
-CWNkLWdwaW9zID0gPCZwaW5jdHJsIDEyMCBHUElPX0FDVElWRV9MT1c+Owo+ICsJYnVzLXdpZHRo
-ID0gPDQ+Owo+ICsJdm1tYy1zdXBwbHkgPSA8JnJlZ18zcDF2PjsKPiArCXZxbW1jLXN1cHBseSA9
-IDwmcmVnXzNwMXY+Owo+ICt9Owo+ICsKPiArJm1tYzIgewo+ICsJc3RhdHVzID0gIm9rYXkiOwo+
-ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiArCXBpbmN0cmwtMCA9IDwmbW1jMl9kZWZh
-dWx0PjsKPiArCW5vLXNkaW87Cj4gKwluby1zZDsKPiArCW5vbi1yZW1vdmFibGU7Cj4gKwlidXMt
-d2lkdGggPSA8OD47Cj4gKwl2bW1jLXN1cHBseSA9IDwmcmVnXzNwMXY+Owo+ICB9Owo+ICAKPiAg
-JnRpbWVyIHsKCi0tIApTVVNFIExpbnV4IEdtYkgsIE1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJu
-YmVyZywgR2VybWFueQpHRjogRmVsaXggSW1lbmTDtnJmZmVyLCBNYXJ5IEhpZ2dpbnMsIFNyaSBS
-YXNpYWgKSFJCIDIxMjg0IChBRyBOw7xybmJlcmcpCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+>>> +#define SWRM_COMP_HW_VERSION                    0x00
+>>
+>> Can we please use SDW_ or QCOM_SDW_ as prefix?
+>>
+> 
+> SWRM prefix is as per the data sheet register names, If it help am happy 
+> to add QCOM_ prefix it.
+
+That'd be fine. As long as there is no duplication and two 
+terms/prefixes used for the same thing I am happy.
+
+>>> +
+>>> +    val = SWRM_REG_VAL_PACK(cmd_data, dev_addr, cmd_id, reg_addr);
+>>> +    ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_WR_CMD, val);
+>>> +    if (ret < 0) {
+>>> +        dev_err(ctrl->dev, "%s: reg 0x%x write failed, err:%d\n",
+>>> +            __func__, val, ret);
+>>> +        goto err;
+>>> +    }
+>>> +
+>>> +    if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+>>> +        ctrl->fifo_status = 0;
+>>> +        ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
+>>> +                          msecs_to_jiffies(TIMEOUT_MS));
+>>
+>> This is odd. The SoundWire spec does not handle writes to a single 
+>> device or broadcast writes differently. I don't see a clear reason why 
+>> you would only timeout for a broadcast write.
+>>
+> 
+> There is danger of blocking here without timeout.
+
+Right, and it's fine to add a timeout. The question is why add a timeout 
+*only* for a broadcast operation? It should be added for every 
+transaction IMO, unless you have a reason not to do so.
+
+>>
+>>> +
+>>> +    /* Mask soundwire interrupts */
+>>> +    ctrl->reg_write(ctrl, SWRM_INTERRUPT_MASK_ADDR,
+>>> +                    SWRM_INTERRUPT_STATUS_RMSK);
+>>> +
+>>> +    /* Configure No pings */
+>>> +    val = ctrl->reg_read(ctrl, SWRM_MCP_CFG_ADDR);
+>>
+>> If there is any sort of PREQ signaling for Slave-initiated interrupts, 
+>> disabling PINGs is likely a non-conformant implementation since the 
+>> master is required to issue a PING command within 32 frames. That's 
+>> also the only way to know if a device is attached, so additional 
+>> comments are likely required.
+> This is the value of Maximum number of consiecutive read/write commands 
+> without ping command in between. I will try to collect more details and 
+> add some comments here.
+
+Right, so it's probably the comment that's too strict. It's not no pings 
+it's no pings during a sequence of up to N read/writes.
