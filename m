@@ -1,35 +1,66 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/7] ARM: dts: am335x phytec boards: Fix cd-gpios active
- level
-Date: Mon, 10 Jun 2019 00:07:32 -0700
-Message-ID: <20190610070732.GU5447@atomide.com>
-References: <1558704003-393769-1-git-send-email-t.remmet@phytec.de>
- <1558704003-393769-2-git-send-email-t.remmet@phytec.de>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v4 01/14] dt-bindings: Add binding for MT2712 MIPI-CSI2
+Date: Mon, 10 Jun 2019 15:51:13 +0800
+Message-ID: <1560153073.31854.6.camel@mtksdaap41>
+References: <1559643115-15124-1-git-send-email-stu.hsieh@mediatek.com>
+         <1559643115-15124-2-git-send-email-stu.hsieh@mediatek.com>
+         <1560134057.28527.5.camel@mtksdaap41>
+         <CAHD77H=vuPi2Rj4Mw-CQ2=UYX7YnS8w8FpUk0QTVxNUVLWKbJg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1558704003-393769-2-git-send-email-t.remmet@phytec.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Teresa Remmet <t.remmet@phytec.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Schultz <d.schultz@phytec.de>, Rob Herring <robh+dt@kernel.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHD77H=vuPi2Rj4Mw-CQ2=UYX7YnS8w8FpUk0QTVxNUVLWKbJg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Stu Hsieh <stu.hsieh@mediatek.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-* Teresa Remmet <t.remmet@phytec.de> [190524 06:20]:
-> Active level of the mmc1 cd gpio needs to be low instead of high.
-> Fix PCM-953 and phyBOARD-WEGA.
+Hi, Tomasz:
 
-Thanks I'll pick this patch into fixes.
+On Mon, 2019-06-10 at 12:32 +0900, Tomasz Figa wrote:
+> Hi CK, Stu,
+> 
+> On Mon, Jun 10, 2019 at 11:34 AM CK Hu <ck.hu@mediatek.com> wrote:
+> >
+> > Hi, Stu:
+> >
+> > "mediatek,mt2712-mipicsi" and "mediatek,mt2712-mipicsi-common" have many
+> > common part with "mediatek,mt8183-seninf", and I've a discussion in [1],
+> > so I would like these two to be merged together.
+> >
+> > [1] https://patchwork.kernel.org/patch/10979131/
+> >
+> 
+> Thanks CK for spotting this.
+> 
+> I also noticed that the driver in fact handles two hardware blocks at
+> the same time - SenInf and CamSV. Unless the architecture is very
+> different from MT8183, I'd suggest splitting it.
+> 
+> On a general note, the MT8183 SenInf driver has received several
+> rounds of review comments already, but I couldn't find any comments
+> posted for this one.
+> 
+> Given the two aspects above and also based on my quick look at code
+> added by this series, I'd recommend adding MT2712 support on top of
+> the MT8183 series.
+
+In [1], "mediatek,mt8183-seninf" use one device to control multiple csi
+instance, so it duplicate many register definition. In [2], one
+"mediatek,mt2712-mipicsi" device control one csi instance, so there are
+multiple device and the register definition does not duplicate. You
+recommend adding MT2712 support on top of the MT8183 series, do you mean
+that "mediatek,mt2712-mipicsi" should use one device to control multiple
+csi instance and duplicate the register setting?
+
+[1] https://patchwork.kernel.org/patch/10979121/
+[2] https://patchwork.kernel.org/patch/10974573/
 
 Regards,
+CK
 
-Tony
+> 
+> Best regards,
+> Tomasz
