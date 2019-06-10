@@ -1,93 +1,74 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [RFC PATCH 5/6] dt-bindings: soundwire: add bindings for Qcom
- controller
-Date: Mon, 10 Jun 2019 09:14:38 +0100
-Message-ID: <f1e68207-caa2-02e0-19af-ac5763c86e41@linaro.org>
-References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
- <20190607085643.932-6-srinivas.kandagatla@linaro.org>
- <20190610045150.GJ9160@vkoul-mobl.Dlink>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: yibin.gong@nxp.com
+Subject: [PATCH v5 02/15] Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
+Date: Mon, 10 Jun 2019 16:17:40 +0800
+Message-ID: <20190610081753.11422-3-yibin.gong@nxp.com>
+References: <20190610081753.11422-1-yibin.gong@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610045150.GJ9160@vkoul-mobl.Dlink>
-Content-Language: en-US
+In-Reply-To: <20190610081753.11422-1-yibin.gong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org, festevam@gmail.com, vkoul@kernel.org, dan.j.williams@intel.com, u.kleine-koenig@pengutronix.de, catalin.marinas@arm.com, l.stach@pengutronix.de, will.deacon@arm.com
+Cc: linux-spi@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Robin Gong <yibin.gong@nxp.com>
 
+  There are two ways for SDMA accessing SPBA devices: one is SDMA->AIPS
+->SPBA(masterA port), another is SDMA->SPBA(masterC port). Please refer
+to the 'Figure 58-1. i.MX 6Dual/6Quad SPBA connectivity' of i.mx6DQ
+Reference Manual. SDMA provide the corresponding app_2_mcu/mcu_2_app and
+shp_2_mcu/mcu_2_shp script for such two options. So both AIPS and SPBA
+scripts should keep the same behaviour, the issue only caught in AIPS
+script sounds not solide.
+  The issue is more likely as the ecspi errata
+ERR009165(http://www.nxp.com/docs/en/errata/IMX6DQCE.pdf):
+eCSPI: TXFIFO empty flag glitch can cause the current FIFO transfer to
+           be sent twice
+So revert commit 'dd4b487b32a3' firstly.
 
-On 10/06/2019 05:51, Vinod Koul wrote:
-> On 07-06-19, 09:56, Srinivas Kandagatla wrote:
->> This patch adds bindings for Qualcomm soundwire controller.
->>
->> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
->> either integrated as part of WCD audio codecs via slimbus or
->> as part of SOC I/O.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../bindings/soundwire/qcom,swr.txt           | 62 +++++++++++++++++++
-> 
-> So I was expecting to see bus support patches for OF first. I think you
-> have missed those changes. Please do include those in v2 with bindings
-> and OF support for bus.
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I was planning to post bus bindings along with soundwire slave bindings 
-of WSA881x driver!
-I will be sending this soon!
-
-> 
->>   1 file changed, 62 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,swr.txt
->>
->> diff --git a/Documentation/devicetree/bindings/soundwire/qcom,swr.txt b/Documentation/devicetree/bindings/soundwire/qcom,swr.txt
->> new file mode 100644
->> index 000000000000..eb84d0f4f36f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soundwire/qcom,swr.txt
->> @@ -0,0 +1,62 @@
->> +Qualcomm SoundWire Controller
->> +
->> +This binding describes the Qualcomm SoundWire Controller Bindings.
->> +
->> +Required properties:
->> +
->> +- compatible:		Must be "qcom,soundwire-v<MAJOR>.<MINOR>.<STEP>",
->> +	 		example:
->> +			"qcom,soundwire-v1.3.0"
->> +			"qcom,soundwire-v1.5.0"
->> +			"qcom,soundwire-v1.6.0"
->> +- reg:			SoundWire controller address space.
->> +- interrupts:		SoundWire controller interrupt.
->> +- clock-names:		Must contain "iface".
->> +- clocks:		Interface clocks needed for controller.
->> +- #sound-dai-cells:	Must be 1 for digital audio interfaces on the controllers.
->> +- #address-cells:	Must be 1 for SoundWire devices;
->> +- #size-cells:		Must be <0> as SoundWire addresses have no size component.
->> +- qcom,dout-ports: 	Must be count of data out ports
->> +- qcom,din-ports: 	Must be count of data in ports
-> 
-> On these I think we should have specified dpn properties as specified in
-> DisCo, but then looking at spec we do not define that for master, but
-> bus seems to have it.
-> 
-> Pierre do you why master does not have dpn properties in DisCo?
-> 
->> +- qcom,ports-offset1:	Must be frame offset1 of each data port.
->> +			Out followed by In. Used for Block size calculation.
->> +- qcom,ports-offset2: 	Must be frame offset2 of each data port.
->> +			Out followed by In. Used for Block size calculation.
->> +- qcom,ports-sinterval-low: Must be sample interval low of each data port.
->> +			Out followed by In. Used for Sample Interval calculation.
-> 
-> These are software so do not belong here
-These are board-specfic properties w.r.t this controller ports 
-configuration.
-I don't see any other option to specify this?
-Do you have any alternative suggestions?
-
---srini
-> 
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 929fc7d..b352ea2 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -339,7 +339,7 @@
+ 					clocks = <&clks IMX6QDL_CLK_ECSPI1>,
+ 						 <&clks IMX6QDL_CLK_ECSPI1>;
+ 					clock-names = "ipg", "per";
+-					dmas = <&sdma 3 8 1>, <&sdma 4 8 2>;
++					dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
+ 					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
+@@ -353,7 +353,7 @@
+ 					clocks = <&clks IMX6QDL_CLK_ECSPI2>,
+ 						 <&clks IMX6QDL_CLK_ECSPI2>;
+ 					clock-names = "ipg", "per";
+-					dmas = <&sdma 5 8 1>, <&sdma 6 8 2>;
++					dmas = <&sdma 5 7 1>, <&sdma 6 7 2>;
+ 					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
+@@ -367,7 +367,7 @@
+ 					clocks = <&clks IMX6QDL_CLK_ECSPI3>,
+ 						 <&clks IMX6QDL_CLK_ECSPI3>;
+ 					clock-names = "ipg", "per";
+-					dmas = <&sdma 7 8 1>, <&sdma 8 8 2>;
++					dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
+ 					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
+@@ -381,7 +381,7 @@
+ 					clocks = <&clks IMX6QDL_CLK_ECSPI4>,
+ 						 <&clks IMX6QDL_CLK_ECSPI4>;
+ 					clock-names = "ipg", "per";
+-					dmas = <&sdma 9 8 1>, <&sdma 10 8 2>;
++					dmas = <&sdma 9 7 1>, <&sdma 10 7 2>;
+ 					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
+-- 
+2.7.4
