@@ -1,361 +1,369 @@
-From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH v4 2/2] irqchip: al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt Controller Driver
-Date: Mon, 10 Jun 2019 11:34:43 +0300
-Message-ID: <1560155683-29584-3-git-send-email-talel@amazon.com>
-References: <1560155683-29584-1-git-send-email-talel@amazon.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v2 01/11] dt-bindings: net: Add YAML schemas for the generic Ethernet options
+Date: Mon, 10 Jun 2019 11:25:40 +0200
+Message-ID: <91618c7e9a5497462afa74c6d8a947f709f54331.1560158667.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560155683-29584-1-git-send-email-talel@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com, Talel Shenhar <talel@amazon.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The Amazon's Annapurna Labs Fabric Interrupt Controller has 32 inputs.
-A FIC (Fabric Interrupt Controller) may be cascaded into another FIC or
-directly to the main CPU Interrupt Controller (e.g. GIC).
+The Ethernet controllers have a good number of generic options that can be
+needed in a device tree. Add a YAML schemas for those.
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
 ---
- MAINTAINERS                  |   6 +
- drivers/irqchip/Kconfig      |   8 ++
- drivers/irqchip/Makefile     |   1 +
- drivers/irqchip/irq-al-fic.c | 278 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 293 insertions(+)
- create mode 100644 drivers/irqchip/irq-al-fic.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f485597..b4f5255 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1209,6 +1209,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
- F:	drivers/irqchip/irq-vic.c
- 
-+AMAZON ANNAPURNA LABS FIC DRIVER
-+M:	Talel Shenhar <talel@amazon.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
-+F:	drivers/irqchip/irq-al-fic.c
-+
- ARM SMMU DRIVERS
- M:	Will Deacon <will.deacon@arm.com>
- R:	Robin Murphy <robin.murphy@arm.com>
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 51a5ef0..7237892 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -89,6 +89,14 @@ config ALPINE_MSI
- 	select PCI_MSI
- 	select GENERIC_IRQ_CHIP
- 
-+config AL_FIC
-+	bool "Amazon's Annapurna Labs Fabric Interrupt Controller"
-+	depends on OF || COMPILE_TEST
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
-+	help
-+	  Support Amazon's Annapurna Labs Fabric Interrupt Controller.
-+
- config ATMEL_AIC_IRQ
- 	bool
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 794c13d..a20eba5 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_IRQCHIP)			+= irqchip.o
- 
-+obj-$(CONFIG_AL_FIC)			+= irq-al-fic.o
- obj-$(CONFIG_ALPINE_MSI)		+= irq-alpine-msi.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
-diff --git a/drivers/irqchip/irq-al-fic.c b/drivers/irqchip/irq-al-fic.c
+Changes from v1:
+  - Use an enum for phy-connection-types
+  - Validate the items for the fixed-link array
+  - Set the number of valid items for link-gpios to 1
+  - Removed deprecated properties (phy-mode, phy, phy-device)
+---
+ Documentation/devicetree/bindings/net/ethernet-controller.yaml | 194 +++++++-
+ Documentation/devicetree/bindings/net/ethernet.txt             |  69 +--
+ Documentation/devicetree/bindings/net/fixed-link.txt           |  55 +--
+ 3 files changed, 196 insertions(+), 122 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/ethernet-controller.yaml
+
+diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
 new file mode 100644
-index 0000000..1a57cee
+index 000000000000..0f53fb16fa6c
 --- /dev/null
-+++ b/drivers/irqchip/irq-al-fic.c
-@@ -0,0 +1,278 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
++++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+@@ -0,0 +1,194 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/bitfield.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
++title: Ethernet Controller Generic Binding
 +
-+/* FIC Registers */
-+#define AL_FIC_CAUSE		0x00
-+#define AL_FIC_MASK		0x10
-+#define AL_FIC_CONTROL		0x28
++maintainers:
++  - David S. Miller <davem@davemloft.net>
 +
-+#define CONTROL_TRIGGER_RISING	BIT(3)
-+#define CONTROL_MASK_MSI_X	BIT(5)
++properties:
++  $nodename:
++    pattern: "^ethernet(@.*)?$"
 +
-+#define NR_FIC_IRQS 32
++  local-mac-address:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint8-array
++      - minItems: 6
++        maxItems: 6
++    description:
++      Specifies the MAC address that was assigned to the network device.
 +
-+MODULE_AUTHOR("Talel Shenhar");
-+MODULE_DESCRIPTION("Amazon's Annapurna Labs Interrupt Controller Driver");
-+MODULE_LICENSE("GPL v2");
++  mac-address:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint8-array
++      - minItems: 6
++        maxItems: 6
++    description:
++      Specifies the MAC address that was last used by the boot
++      program; should be used in cases where the MAC address assigned
++      to the device by the boot program is different from the
++      local-mac-address property.
 +
-+enum al_fic_state {
-+	AL_FIC_UNCONFIGURED = 0,
-+	AL_FIC_CONFIGURED_LEVEL,
-+	AL_FIC_CONFIGURED_RISING_EDGE,
-+};
++  max-frame-size:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      Maximum transfer unit (IEEE defined MTU), rather than the
++      maximum frame size (there\'s contradiction in the Devicetree
++      Specification).
 +
-+struct al_fic {
-+	void __iomem *base;
-+	struct irq_domain *domain;
-+	const char *name;
-+	unsigned int parent_irq;
-+	enum al_fic_state state;
-+};
++  max-speed:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      Specifies maximum speed in Mbit/s supported by the device.
 +
-+static void al_fic_set_trigger(struct al_fic *fic,
-+			       struct irq_chip_generic *gc,
-+			       enum al_fic_state new_state)
-+{
-+	irq_flow_handler_t handler;
-+	u32 control = readl_relaxed(fic->base + AL_FIC_CONTROL);
++  nvmem-cells:
++    maxItems: 1
++    description:
++      Reference to an nvmem node for the MAC address
 +
-+	if (new_state == AL_FIC_CONFIGURED_LEVEL) {
-+		handler = handle_level_irq;
-+		control &= ~CONTROL_TRIGGER_RISING;
-+	} else {
-+		handler = handle_edge_irq;
-+		control |= CONTROL_TRIGGER_RISING;
-+	}
-+	gc->chip_types->handler = handler;
-+	fic->state = new_state;
-+	writel_relaxed(control, fic->base + AL_FIC_CONTROL);
-+}
++  nvmem-cells-names:
++    const: mac-address
 +
-+static int al_fic_irq_set_type(struct irq_data *data, unsigned int flow_type)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-+	struct al_fic *fic = gc->private;
-+	enum al_fic_state new_state;
-+	int ret = 0;
++  # Deprecated: phy-mode
++  phy-connection-type:
++    description:
++      Operation mode of the PHY interface
++    enum:
++      # There is not a standard bus between the MAC and the PHY,
++      # something proprietary is being used to embed the PHY in the
++      # MAC.
++      - internal
++      - mii
++      - gmii
++      - sgmii
++      - qsgmii
++      - tbi
++      - rev-mii
++      - rmii
 +
-+	irq_gc_lock(gc);
++      # RX and TX delays are added by the MAC when required
++      - rgmii
 +
-+	if (((flow_type & IRQ_TYPE_SENSE_MASK) != IRQ_TYPE_LEVEL_HIGH) &&
-+	    ((flow_type & IRQ_TYPE_SENSE_MASK) != IRQ_TYPE_EDGE_RISING)) {
-+		pr_debug("fic doesn't support flow type %d\n", flow_type);
-+		ret = -EINVAL;
-+		goto err;
-+	}
++      # RGMII with internal RX and TX delays provided by the PHY,
++      # the MAC should not add the RX or TX delays in this case
++      - rgmii-id
 +
-+	new_state = (flow_type & IRQ_TYPE_LEVEL_HIGH) ?
-+		AL_FIC_CONFIGURED_LEVEL : AL_FIC_CONFIGURED_RISING_EDGE;
++      # RGMII with internal RX delay provided by the PHY, the MAC
++      # should not add an RX delay in this case
++      - rgmii-rxid
 +
-+	/*
-+	 * A given FIC instance can be either all level or all edge triggered.
-+	 * This is generally fixed depending on what pieces of HW it's wired up
-+	 * to.
-+	 *
-+	 * We configure it based on the sensitivity of the first source
-+	 * being setup, and reject any subsequent attempt at configuring it in a
-+	 * different way.
-+	 */
-+	if (fic->state == AL_FIC_UNCONFIGURED) {
-+		al_fic_set_trigger(fic, gc, new_state);
-+	} else if (fic->state != new_state) {
-+		pr_debug("fic %s state already configured to %d\n",
-+			 fic->name, fic->state);
-+		ret = -EINVAL;
-+		goto err;
-+	}
++      # RGMII with internal TX delay provided by the PHY, the MAC
++      # should not add an TX delay in this case
++      - rgmii-txid
++      - rtbi
++      - smii
++      - xgmii
++      - trgmii
++      - 1000base-x
++      - 2500base-x
++      - rxaui
++      - xaui
 +
-+err:
-+	irq_gc_unlock(gc);
++      # 10GBASE-KR, XFI, SFI
++      - 10gbase-kr
++      - usxgmii
 +
-+	return ret;
-+}
++  # Deprecated: phy, phy-device
++  phy-handle:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description:
++      Specifies a reference to a node representing a PHY device.
 +
-+static void al_fic_irq_handler(struct irq_desc *desc)
-+{
-+	struct al_fic *fic = irq_desc_get_handler_data(desc);
-+	struct irq_domain *domain = fic->domain;
-+	struct irq_chip *irqchip = irq_desc_get_chip(desc);
-+	struct irq_chip_generic *gc = irq_get_domain_generic_chip(domain, 0);
-+	unsigned long pending;
-+	unsigned int irq;
-+	u32 hwirq;
++  rx-fifo-depth:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      The size of the controller\'s receive fifo in bytes. This is used
++      for components that can have configurable receive fifo sizes,
++      and is useful for determining certain configuration settings
++      such as flow control thresholds.
 +
-+	chained_irq_enter(irqchip, desc);
++  tx-fifo-depth:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      The size of the controller\'s transmit fifo in bytes. This
++      is used for components that can have configurable fifo sizes.
 +
-+	pending = readl_relaxed(fic->base + AL_FIC_CAUSE);
-+	pending &= ~gc->mask_cache;
++  managed:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/string
++      - default: auto
++        enum:
++          - auto
++          - in-band-status
++    description:
++      Specifies the PHY management type. If auto is set and fixed-link
++      is not specified, it uses MDIO for management.
 +
-+	for_each_set_bit(hwirq, &pending, NR_FIC_IRQS) {
-+		irq = irq_find_mapping(domain, hwirq);
-+		generic_handle_irq(irq);
-+	}
++  fixed-link:
++    allOf:
++      - if:
++          type: array
++        then:
++          minItems: 1
++          maxItems: 1
++          items:
++            items:
++              - minimum: 0
++                maximum: 31
++                description:
++                  Emulated PHY ID, choose any but unique to the all
++                  specified fixed-links
 +
-+	chained_irq_exit(irqchip, desc);
-+}
++              - enum: [0, 1]
++                description:
++                  Duplex configuration. 0 for half duplex or 1 for
++                  full duplex
 +
-+static int al_fic_register(struct device_node *node,
-+			   struct al_fic *fic)
-+{
-+	struct irq_chip_generic *gc;
-+	int ret;
++              - enum: [10, 100, 1000]
++                description:
++                  Link speed in Mbits/sec.
 +
-+	fic->domain = irq_domain_add_linear(node,
-+					    NR_FIC_IRQS,
-+					    &irq_generic_chip_ops,
-+					    fic);
-+	if (!fic->domain) {
-+		pr_err("fail to add irq domain\n");
-+		return -ENOMEM;
-+	}
++              - enum: [0, 1]
++                description:
++                  Pause configuration. 0 for no pause, 1 for pause
 +
-+	ret = irq_alloc_domain_generic_chips(fic->domain,
-+					     NR_FIC_IRQS,
-+					     1, fic->name,
-+					     handle_level_irq,
-+					     0, 0, IRQ_GC_INIT_MASK_CACHE);
-+	if (ret) {
-+		pr_err("fail to allocate generic chip (%d)\n", ret);
-+		goto err_domain_remove;
-+	}
++              - enum: [0, 1]
++                description:
++                  Asymmetric pause configuration. 0 for no asymmetric
++                  pause, 1 for asymmetric pause
 +
-+	gc = irq_get_domain_generic_chip(fic->domain, 0);
-+	gc->reg_base = fic->base;
-+	gc->chip_types->regs.mask = AL_FIC_MASK;
-+	gc->chip_types->regs.ack = AL_FIC_CAUSE;
-+	gc->chip_types->chip.irq_mask = irq_gc_mask_set_bit;
-+	gc->chip_types->chip.irq_unmask = irq_gc_mask_clr_bit;
-+	gc->chip_types->chip.irq_ack = irq_gc_ack_clr_bit;
-+	gc->chip_types->chip.irq_set_type = al_fic_irq_set_type;
-+	gc->chip_types->chip.flags = IRQCHIP_SKIP_SET_WAKE;
-+	gc->private = fic;
 +
-+	irq_set_chained_handler_and_data(fic->parent_irq,
-+					 al_fic_irq_handler,
-+					 fic);
-+	return 0;
++      - if:
++          type: object
++        then:
++          properties:
++            speed:
++              allOf:
++                - $ref: /schemas/types.yaml#definitions/uint32
++                - enum: [10, 100, 1000]
++              description:
++                Link speed.
 +
-+err_domain_remove:
-+	irq_domain_remove(fic->domain);
++            full-duplex:
++              $ref: /schemas/types.yaml#definitions/flag
++              description:
++                Indicates that full-duplex is used. When absent, half
++                duplex is assumed.
 +
-+	return ret;
-+}
++            asym-pause:
++              $ref: /schemas/types.yaml#definitions/flag
++              description:
++                Indicates that asym_pause should be enabled.
 +
-+/*
-+ * al_fic_wire_init() - initialize and configure fic in wire mode
-+ * @of_node: optional pointer to interrupt controller's device tree node.
-+ * @base: mmio to fic register
-+ * @name: name of the fic
-+ * @parent_irq: interrupt of parent
-+ *
-+ * This API will configure the fic hardware to to work in wire mode.
-+ * In wire mode, fic hardware is generating a wire ("wired") interrupt.
-+ * Interrupt can be generated based on positive edge or level - configuration is
-+ * to be determined based on connected hardware to this fic.
-+ */
-+static struct al_fic *al_fic_wire_init(struct device_node *node,
-+				       void __iomem *base,
-+				       const char *name,
-+				       unsigned int parent_irq)
-+{
-+	struct al_fic *fic;
-+	int ret;
-+	u32 control = CONTROL_MASK_MSI_X;
++            link-gpios:
++              maxItems: 1
++              description:
++                GPIO to determine if the link is up
 +
-+	fic = kzalloc(sizeof(*fic), GFP_KERNEL);
-+	if (!fic)
-+		return ERR_PTR(-ENOMEM);
++          required:
++            - speed
 +
-+	fic->base = base;
-+	fic->parent_irq = parent_irq;
-+	fic->name = name;
-+
-+	/* mask out all interrupts */
-+	writel_relaxed(0xFFFFFFFF, fic->base + AL_FIC_MASK);
-+
-+	/* clear any pending interrupt */
-+	writel_relaxed(0, fic->base + AL_FIC_CAUSE);
-+
-+	writel_relaxed(control, fic->base + AL_FIC_CONTROL);
-+
-+	ret = al_fic_register(node, fic);
-+	if (ret) {
-+		pr_err("fail to register irqchip\n");
-+		goto err_free;
-+	}
-+
-+	pr_debug("%s initialized successfully in Legacy mode (parent-irq=%u)\n",
-+		 fic->name, parent_irq);
-+
-+	return fic;
-+
-+err_free:
-+	kfree(fic);
-+	return ERR_PTR(ret);
-+}
-+
-+static int __init al_fic_init_dt(struct device_node *node,
-+				 struct device_node *parent)
-+{
-+	int ret;
-+	void __iomem *base;
-+	unsigned int parent_irq;
-+	struct al_fic *fic;
-+
-+	if (!parent) {
-+		pr_err("%s: unsupported - device require a parent\n",
-+		       node->name);
-+		return -EINVAL;
-+	}
-+
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		pr_err("%s: fail to map memory\n", node->name);
-+		return -ENOMEM;
-+	}
-+
-+	parent_irq = irq_of_parse_and_map(node, 0);
-+	if (!parent_irq) {
-+		pr_err("%s: fail to map irq\n", node->name);
-+		ret = -EINVAL;
-+		goto err_unmap;
-+	}
-+
-+	fic = al_fic_wire_init(node,
-+			       base,
-+			       node->name,
-+			       parent_irq);
-+	if (IS_ERR(fic)) {
-+		pr_err("%s: fail to initialize irqchip (%lu)\n",
-+		       node->name,
-+		       PTR_ERR(fic));
-+		ret = PTR_ERR(fic);
-+		goto err_irq_dispose;
-+	}
-+
-+	return 0;
-+
-+err_irq_dispose:
-+	irq_dispose_mapping(parent_irq);
-+err_unmap:
-+	iounmap(base);
-+
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(al_fic, "amazon,al-fic", al_fic_init_dt);
++...
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index 5475682bf06e..5df413d01be2 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -1,68 +1 @@
+-The following properties are common to the Ethernet controllers:
+-
+-NOTE: All 'phy*' properties documented below are Ethernet specific. For the
+-generic PHY 'phys' property, see
+-Documentation/devicetree/bindings/phy/phy-bindings.txt.
+-
+-- mac-address: array of 6 bytes, specifies the MAC address that was last used by
+-  the boot program; should be used in cases where the MAC address assigned to
+-  the device by the boot program is different from the "local-mac-address"
+-  property;
+-- local-mac-address: array of 6 bytes, specifies the MAC address that was
+-  assigned to the network device;
+-- nvmem-cells: phandle, reference to an nvmem node for the MAC address
+-- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used
+-- max-speed: number, specifies maximum speed in Mbit/s supported by the device;
+-- max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
+-  the maximum frame size (there's contradiction in the Devicetree
+-  Specification).
+-- phy-mode: string, operation mode of the PHY interface. This is now a de-facto
+-  standard property; supported values are:
+-  * "internal" (Internal means there is not a standard bus between the MAC and
+-     the PHY, something proprietary is being used to embed the PHY in the MAC.)
+-  * "mii"
+-  * "gmii"
+-  * "sgmii"
+-  * "qsgmii"
+-  * "tbi"
+-  * "rev-mii"
+-  * "rmii"
+-  * "rgmii" (RX and TX delays are added by the MAC when required)
+-  * "rgmii-id" (RGMII with internal RX and TX delays provided by the PHY, the
+-     MAC should not add the RX or TX delays in this case)
+-  * "rgmii-rxid" (RGMII with internal RX delay provided by the PHY, the MAC
+-     should not add an RX delay in this case)
+-  * "rgmii-txid" (RGMII with internal TX delay provided by the PHY, the MAC
+-     should not add an TX delay in this case)
+-  * "rtbi"
+-  * "smii"
+-  * "xgmii"
+-  * "trgmii"
+-  * "1000base-x",
+-  * "2500base-x",
+-  * "rxaui"
+-  * "xaui"
+-  * "10gbase-kr" (10GBASE-KR, XFI, SFI)
+-  * "usxgmii"
+-- phy-connection-type: the same as "phy-mode" property but described in the
+-  Devicetree Specification;
+-- phy-handle: phandle, specifies a reference to a node representing a PHY
+-  device; this property is described in the Devicetree Specification and so
+-  preferred;
+-- phy: the same as "phy-handle" property, not recommended for new bindings.
+-- phy-device: the same as "phy-handle" property, not recommended for new
+-  bindings.
+-- rx-fifo-depth: the size of the controller's receive fifo in bytes. This
+-  is used for components that can have configurable receive fifo sizes,
+-  and is useful for determining certain configuration settings such as
+-  flow control thresholds.
+-- tx-fifo-depth: the size of the controller's transmit fifo in bytes. This
+-  is used for components that can have configurable fifo sizes.
+-- managed: string, specifies the PHY management type. Supported values are:
+-  "auto", "in-band-status". "auto" is the default, it usess MDIO for
+-  management if fixed-link is not specified.
+-
+-Child nodes of the Ethernet controller are typically the individual PHY devices
+-connected via the MDIO bus (sometimes the MDIO bus controller is separate).
+-They are described in the phy.txt file in this same directory.
+-For non-MDIO PHY management see fixed-link.txt.
++This file has moved to ethernet-controller.yaml.
+diff --git a/Documentation/devicetree/bindings/net/fixed-link.txt b/Documentation/devicetree/bindings/net/fixed-link.txt
+index ec5d889fe3d8..5df413d01be2 100644
+--- a/Documentation/devicetree/bindings/net/fixed-link.txt
++++ b/Documentation/devicetree/bindings/net/fixed-link.txt
+@@ -1,54 +1 @@
+-Fixed link Device Tree binding
+-------------------------------
+-
+-Some Ethernet MACs have a "fixed link", and are not connected to a
+-normal MDIO-managed PHY device. For those situations, a Device Tree
+-binding allows to describe a "fixed link".
+-
+-Such a fixed link situation is described by creating a 'fixed-link'
+-sub-node of the Ethernet MAC device node, with the following
+-properties:
+-
+-* 'speed' (integer, mandatory), to indicate the link speed. Accepted
+-  values are 10, 100 and 1000
+-* 'full-duplex' (boolean, optional), to indicate that full duplex is
+-  used. When absent, half duplex is assumed.
+-* 'pause' (boolean, optional), to indicate that pause should be
+-  enabled.
+-* 'asym-pause' (boolean, optional), to indicate that asym_pause should
+-  be enabled.
+-* 'link-gpios' ('gpio-list', optional), to indicate if a gpio can be read
+-  to determine if the link is up.
+-
+-Old, deprecated 'fixed-link' binding:
+-
+-* A 'fixed-link' property in the Ethernet MAC node, with 5 cells, of the
+-  form <a b c d e> with the following accepted values:
+-  - a: emulated PHY ID, choose any but but unique to the all specified
+-    fixed-links, from 0 to 31
+-  - b: duplex configuration: 0 for half duplex, 1 for full duplex
+-  - c: link speed in Mbits/sec, accepted values are: 10, 100 and 1000
+-  - d: pause configuration: 0 for no pause, 1 for pause
+-  - e: asymmetric pause configuration: 0 for no asymmetric pause, 1 for
+-    asymmetric pause
+-
+-Examples:
+-
+-ethernet@0 {
+-	...
+-	fixed-link {
+-	      speed = <1000>;
+-	      full-duplex;
+-	};
+-	...
+-};
+-
+-ethernet@1 {
+-	...
+-	fixed-link {
+-	      speed = <1000>;
+-	      pause;
+-	      link-gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+-	};
+-	...
+-};
++This file has moved to ethernet-controller.yaml.
+
+base-commit: 3f310e51ceb146cfdd4c8872452a1f7fa059af1c
 -- 
-2.7.4
+git-series 0.9.1
