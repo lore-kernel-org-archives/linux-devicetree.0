@@ -1,187 +1,244 @@
 From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v7 2/6] usb:common Separated decoding functions from dwc3
- driver.
-Date: Mon, 10 Jun 2019 06:29:24 +0000
-Message-ID: <BYAPR07MB4709C42303D60ABF917E22D0DD130@BYAPR07MB4709.namprd07.prod.outlook.com>
+Subject: RE: [PATCH v7 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Mon, 10 Jun 2019 06:33:29 +0000
+Message-ID: <BYAPR07MB4709F32FF0C6DAE8905703C7DD130@BYAPR07MB4709.namprd07.prod.outlook.com>
 References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
- <1559729030-16390-3-git-send-email-pawell@cadence.com>
- <20190608134008.GB11489@kroah.com>
+ <1559729030-16390-6-git-send-email-pawell@cadence.com>
+ <20190607101602.GD10298@kuha.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190608134008.GB11489@kroah.com>
+In-Reply-To: <20190607101602.GD10298@kuha.fi.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-
->On Wed, Jun 05, 2019 at 11:03:46AM +0100, Pawel Laszczak wrote:
->
->> Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
->
->> to driver/usb/common/debug.c file. These moved functions include:
->
->>     dwc3_decode_get_status
->
->>     dwc3_decode_set_clear_feature
->
->>     dwc3_decode_set_address
->
->>     dwc3_decode_get_set_descriptor
->
->>     dwc3_decode_get_configuration
->
->>     dwc3_decode_set_configuration
->
->>     dwc3_decode_get_intf
->
->>     dwc3_decode_set_intf
->
->>     dwc3_decode_synch_frame
->
->>     dwc3_decode_set_sel
->
->>     dwc3_decode_set_isoch_delay
->
->>     dwc3_decode_ctrl
->
->>
->
->> These functions are used also in inroduced cdns3 driver.
->
->>
->
->> All functions prefixes were changed from dwc3 to usb.
->
->> Also, function's parameters has been extended according to the name
->
->> of fields in standard SETUP packet.
->
->> Additionally, patch adds usb_decode_ctrl function to
->
->> include/linux/usb/ch9.h file.i
->
->>
->
->> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->
->> ---
->
->>  drivers/usb/common/Makefile |   2 +-
->
->>  drivers/usb/common/debug.c  | 273 ++++++++++++++++++++++++++++++++++++
->
->>  drivers/usb/dwc3/debug.h    | 252 ---------------------------------
->
->>  drivers/usb/dwc3/trace.h    |   2 +-
->
->>  include/linux/usb/ch9.h     |  25 ++++
->
->>  5 files changed, 300 insertions(+), 254 deletions(-)
->
->>  create mode 100644 drivers/usb/common/debug.c
->
->>
->
->> diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
->
->> index 0a7c45e85481..02eb01666289 100644
->
->> --- a/drivers/usb/common/Makefile
->
->> +++ b/drivers/usb/common/Makefile
->
->> @@ -4,7 +4,7 @@
->
->>  #
->
->>
->
->>  obj-$(CONFIG_USB_COMMON)	  +=3D usb-common.o
->
->> -usb-common-y			  +=3D common.o
->
->> +usb-common-y			  +=3D common.o debug.o
->
->>  usb-common-$(CONFIG_USB_LED_TRIG) +=3D led.o
->
->>
->
->>  obj-$(CONFIG_USB_OTG_FSM) +=3D usb-otg-fsm.o
->
->> diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
->
+>On Wed, Jun 05, 2019 at 11:03:49AM +0100, Pawel Laszczak wrote:
+>> diff --git a/drivers/usb/cdns3/debugfs.c b/drivers/usb/cdns3/debugfs.c
 >> new file mode 100644
->
->> index 000000000000..f7218d794aa6
->
+>> index 000000000000..dfcbeb5e14f8
 >> --- /dev/null
->
->> +++ b/drivers/usb/common/debug.c
->
->> @@ -0,0 +1,273 @@
->
+>> +++ b/drivers/usb/cdns3/debugfs.c
+>> @@ -0,0 +1,173 @@
 >> +// SPDX-License-Identifier: GPL-2.0
->
->> +/**
->
->> + * Common USB debugging functions
->
+>> +/*
+>> + * Cadence USBSS DRD Controller DebugFS filer.
 >> + *
->
->> + * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://url=
-defense.proofpoint.com/v2/url?u=3Dhttp-
->3A__www.ti.com&d=3DDwIBAg&c=3DaUq983L2pue2FqKFoP6PGHMJQyoJ7kl3s3GZ-_haXqY&=
-r=3De1OgxfvkL0qo9XO6fX1gscva-
->w03uSYC1nIyxl89-rI&m=3DhCAftKt20FnC6KiCwNbVrg7WoY-WnCtUjVuast3iJSw&s=3DQ4q=
-hFXl4s1P2u0s65WgkulIRgV4KZtGphj7Xjr4t6yA&e=3D
->
+>> + * Copyright (C) 2018-2019 Cadence.
 >> + *
->
->> + * Authors: Felipe Balbi <balbi@ti.com>,
->
->> + *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->
+>> + * Author: Pawel Laszczak <pawell@cadence.com>
 >> + */
+>> +
+>> +#include <linux/types.h>
+>> +#include <linux/debugfs.h>
+>> +#include <linux/seq_file.h>
+>> +#include <linux/uaccess.h>
+>> +
+>> +#include "core.h"
+>> +#include "gadget.h"
+>> +#include "drd.h"
+>
+>static const char *const cdns3_mode[] =3D {
+>        [USB_DR_MODE_UNKNOWN]           =3D "unknown",
+>        [USB_DR_MODE_OTG]               =3D "otg",
+>        [USB_DR_MODE_HOST]              =3D "host",
+>        [USB_DR_MODE_PERIPHERAL]        =3D "device",
+>};
+>
+>> +static int cdns3_mode_show(struct seq_file *s, void *unused)
+>> +{
+>> +	struct cdns3 *cdns =3D s->private;
+>> +
+>> +	switch (cdns->current_dr_mode) {
+>> +	case USB_DR_MODE_HOST:
+>> +		seq_puts(s, "host\n");
+>> +		break;
+>> +	case USB_DR_MODE_PERIPHERAL:
+>> +		seq_puts(s, "device\n");
+>> +		break;
+>> +	case USB_DR_MODE_OTG:
+>> +		seq_puts(s, "otg\n");
+>> +		break;
+>> +	default:
+>> +		seq_puts(s, "UNKNOWN mode\n");
+>> +	}
+>
+>All you should need here is:
+>
+>        seq_puts(s, cdns3_mode[cdns->current_dr_mode]);
+>
+>> +	return 0;
+>> +}
+>> +
+>> +static int cdns3_mode_open(struct inode *inode, struct file *file)
+>> +{
+>> +	return single_open(file, cdns3_mode_show, inode->i_private);
+>> +}
+>> +
+>> +static ssize_t cdns3_mode_write(struct file *file,
+>> +				const char __user *ubuf,
+>> +				size_t count, loff_t *ppos)
+>> +{
+>> +	struct seq_file	 *s =3D file->private_data;
+>> +	struct cdns3 *cdns =3D s->private;
+>> +	u32 mode =3D USB_DR_MODE_UNKNOWN;
+>> +	char buf[32];
+>> +	int ret =3D 0;
+>
+>        int ret;
+>
+>> +	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
+>> +		return -EFAULT;
+>
+>                return -EINVAL;
+
+Why? I've checked in some place in kernel and after copy_from_user are used=
+ EFAULT.
+I think that EINVAL is better but I wanted be  consistent with the rest of =
+kernel.=20
+
+Is there any explanation for this ?
+
 >
 >> +
+>> +	if (cdns->debug_disable) {
+>> +		dev_err(cdns->dev,
+>> +			"Mode can't be changed when disable is set\n");
+>> +		return -EFAULT;
 >
->> +#ifndef __LINUX_USB_COMMON_DEBUG
+>                return -EPERM;
 >
->> +#define __LINUX_USB_COMMON_DEBUG
+>> +	}
+>> +
+>> +	if (!strncmp(buf, "host", 4)) {
+>> +		if (cdns->dr_mode =3D=3D USB_DR_MODE_HOST ||
+>> +		    cdns->dr_mode =3D=3D USB_DR_MODE_OTG) {
+>> +			mode =3D USB_DR_MODE_HOST;
+>> +		}
+>> +	}
+>> +
+>> +	if (!strncmp(buf, "device", 6))
+>> +		if (cdns->dr_mode =3D=3D USB_DR_MODE_PERIPHERAL ||
+>> +		    cdns->dr_mode =3D=3D USB_DR_MODE_OTG)
+>> +			mode =3D USB_DR_MODE_PERIPHERAL;
+>> +
+>> +	if (!strncmp(buf, "otg", 3) && cdns->dr_mode =3D=3D USB_DR_MODE_OTG)
+>> +		mode =3D USB_DR_MODE_OTG;
+>> +
+>> +	if (mode =3D=3D USB_DR_MODE_UNKNOWN) {
+>> +		dev_err(cdns->dev, "Failed: incorrect mode setting\n");
+>> +		return -EFAULT;
+>> +	}
 >
+>To cover all those, you just need to:
 >
+>        ret =3D match_string(cdns3_mode, ARRAY_SIZE(cdns3_mode), buf));
+>        if (ret < 0 ||=A0ret =3D=3D USB_DR_MODE_UNKNOWN)
+>                return -EINVAL;
 >
->Why are you doing thsi in a .c file?
+>> +	if (cdns->current_dr_mode !=3D mode) {
+>> +		cdns->desired_dr_mode =3D mode;
 >
-Good question, I don't know :).=20
-Was removed=20
-
-Also I remember that you complained about placing it in=20
-drivers/usb/common.=20
-Currently this file is used only by two drivers dwc3 and cdns3.
-Both are USB controller drivers. Maybe it could be better to move it to:
-drivers/gadget/udc/debug.c
-drivers/gadget/debug.c=20
-drivers/gadget/common/debug.c
-or
-drivers/gadget/debug/debug.c=20
-
-What do you think Roger?=20
-
-Felipe it's also question for you.=20
-=20
-
-Thanks,
-Pawel
-
+>        if (cdns->current_dr_mode !=3D ret)
+>		cdns->desired_dr_mode =3D ret;
 >
+>> +		cdns3_role_stop(cdns);
+>> +		ret =3D cdns3_drd_update_mode(cdns);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		queue_work(system_freezable_wq, &cdns->role_switch_wq);
+>> +	}
+>> +
+>> +	return count;
+>> +}
+>> +
+>> +static const struct file_operations cdns3_mode_fops =3D {
+>> +	.open			=3D cdns3_mode_open,
+>> +	.write			=3D cdns3_mode_write,
+>> +	.read			=3D seq_read,
+>> +	.llseek			=3D seq_lseek,
+>> +	.release		=3D single_release,
+>> +};
+>> +
+>> +static int cdns3_disable_show(struct seq_file *s, void *unused)
+>> +{
+>> +	struct cdns3 *cdns =3D s->private;
+>> +
+>> +	if (!cdns->debug_disable)
+>> +		seq_puts(s, "0\n");
+>> +	else
+>> +		seq_puts(s, "1\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static ssize_t cdns3_disable_write(struct file *file,
+>> +				   const char __user *ubuf,
+>> +				   size_t count, loff_t *ppos)
+>> +{
+>> +	struct seq_file	 *s =3D file->private_data;
+>> +	struct cdns3 *cdns =3D s->private;
+>> +	bool disable;
+>> +	char buf[16];
+>> +
+>> +	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
+>> +		return -EFAULT;
+>> +
+>> +	if (kstrtobool(buf, &disable)) {
+>> +		dev_err(cdns->dev, "wrong setting\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (disable !=3D cdns->debug_disable) {
+>> +		cdns->debug_disable =3D disable;
+>> +		queue_work(system_freezable_wq, &cdns->role_switch_wq);
+>> +	}
+>> +
+>> +	return count;
+>> +}
+>> +
+>> +static int cdns3_disable_open(struct inode *inode, struct file *file)
+>> +{
+>> +	return single_open(file, cdns3_disable_show, inode->i_private);
+>> +}
+>> +
+>> +static const struct file_operations cdns3_disable_fops =3D {
+>> +	.open			=3D cdns3_disable_open,
+>> +	.write			=3D cdns3_disable_write,
+>> +	.read			=3D seq_read,
+>> +	.llseek			=3D seq_lseek,
+>> +	.release		=3D single_release,
+>> +};
+>> +
+>> +void cdns3_debugfs_init(struct cdns3 *cdns)
+>> +{
+>> +	struct dentry *root;
+>> +
+>> +	root =3D debugfs_create_dir(dev_name(cdns->dev), NULL);
+>> +	cdns->root =3D root;
+>> +	if (IS_ENABLED(CONFIG_USB_CDNS3_GADGET) &&
+>> +	    IS_ENABLED(CONFIG_USB_CDNS3_HOST))
+>> +		debugfs_create_file("mode", 0644, root, cdns,
+>> +				    &cdns3_mode_fops);
+>> +
+>> +	debugfs_create_file("disable", 0644, root, cdns,
+>> +			    &cdns3_disable_fops);
+>> +}
+>> +
+>> +void cdns3_debugfs_exit(struct cdns3 *cdns)
+>> +{
+>> +	debugfs_remove_recursive(cdns->root);
+>> +}
 >
 >thanks,
 >
->
->
->greg k-h
+>--
+>heikki
+
+Thank for nice simplification.=20
+Regards=20
+Pawel
