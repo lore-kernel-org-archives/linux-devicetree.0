@@ -1,244 +1,279 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v7 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Mon, 10 Jun 2019 06:33:29 +0000
-Message-ID: <BYAPR07MB4709F32FF0C6DAE8905703C7DD130@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
- <1559729030-16390-6-git-send-email-pawell@cadence.com>
- <20190607101602.GD10298@kuha.fi.intel.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [RFC PATCH 6/6] soundwire: qcom: add support for SoundWire
+ controller
+Date: Mon, 10 Jun 2019 12:10:25 +0530
+Message-ID: <20190610064025.GK9160@vkoul-mobl.Dlink>
+References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
+ <20190607085643.932-7-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190607101602.GD10298@kuha.fi.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190607085643.932-7-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->On Wed, Jun 05, 2019 at 11:03:49AM +0100, Pawel Laszczak wrote:
->> diff --git a/drivers/usb/cdns3/debugfs.c b/drivers/usb/cdns3/debugfs.c
->> new file mode 100644
->> index 000000000000..dfcbeb5e14f8
->> --- /dev/null
->> +++ b/drivers/usb/cdns3/debugfs.c
->> @@ -0,0 +1,173 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Cadence USBSS DRD Controller DebugFS filer.
->> + *
->> + * Copyright (C) 2018-2019 Cadence.
->> + *
->> + * Author: Pawel Laszczak <pawell@cadence.com>
->> + */
->> +
->> +#include <linux/types.h>
->> +#include <linux/debugfs.h>
->> +#include <linux/seq_file.h>
->> +#include <linux/uaccess.h>
->> +
->> +#include "core.h"
->> +#include "gadget.h"
->> +#include "drd.h"
->
->static const char *const cdns3_mode[] =3D {
->        [USB_DR_MODE_UNKNOWN]           =3D "unknown",
->        [USB_DR_MODE_OTG]               =3D "otg",
->        [USB_DR_MODE_HOST]              =3D "host",
->        [USB_DR_MODE_PERIPHERAL]        =3D "device",
->};
->
->> +static int cdns3_mode_show(struct seq_file *s, void *unused)
->> +{
->> +	struct cdns3 *cdns =3D s->private;
->> +
->> +	switch (cdns->current_dr_mode) {
->> +	case USB_DR_MODE_HOST:
->> +		seq_puts(s, "host\n");
->> +		break;
->> +	case USB_DR_MODE_PERIPHERAL:
->> +		seq_puts(s, "device\n");
->> +		break;
->> +	case USB_DR_MODE_OTG:
->> +		seq_puts(s, "otg\n");
->> +		break;
->> +	default:
->> +		seq_puts(s, "UNKNOWN mode\n");
->> +	}
->
->All you should need here is:
->
->        seq_puts(s, cdns3_mode[cdns->current_dr_mode]);
->
->> +	return 0;
->> +}
->> +
->> +static int cdns3_mode_open(struct inode *inode, struct file *file)
->> +{
->> +	return single_open(file, cdns3_mode_show, inode->i_private);
->> +}
->> +
->> +static ssize_t cdns3_mode_write(struct file *file,
->> +				const char __user *ubuf,
->> +				size_t count, loff_t *ppos)
->> +{
->> +	struct seq_file	 *s =3D file->private_data;
->> +	struct cdns3 *cdns =3D s->private;
->> +	u32 mode =3D USB_DR_MODE_UNKNOWN;
->> +	char buf[32];
->> +	int ret =3D 0;
->
->        int ret;
->
->> +	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
->> +		return -EFAULT;
->
->                return -EINVAL;
+On 07-06-19, 09:56, Srinivas Kandagatla wrote:
+> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
+> either integrated as part of WCD audio codecs via slimbus or
+> as part of SOC I/O.
+> 
+> This patchset adds support to a very basic controller which has been
+> tested with WCD934x SoundWire controller connected to WSA881x smart
+> speaker amplifiers.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  drivers/soundwire/Kconfig  |   9 +
+>  drivers/soundwire/Makefile |   4 +
+>  drivers/soundwire/qcom.c   | 983 +++++++++++++++++++++++++++++++++++++
 
-Why? I've checked in some place in kernel and after copy_from_user are used=
- EFAULT.
-I think that EINVAL is better but I wanted be  consistent with the rest of =
-kernel.=20
+Can you split this to two patches (at least), master driver followed by
+DAI driver
 
-Is there any explanation for this ?
+> +
+> +#define SWRM_COMP_HW_VERSION					0x00
 
->
->> +
->> +	if (cdns->debug_disable) {
->> +		dev_err(cdns->dev,
->> +			"Mode can't be changed when disable is set\n");
->> +		return -EFAULT;
->
->                return -EPERM;
->
->> +	}
->> +
->> +	if (!strncmp(buf, "host", 4)) {
->> +		if (cdns->dr_mode =3D=3D USB_DR_MODE_HOST ||
->> +		    cdns->dr_mode =3D=3D USB_DR_MODE_OTG) {
->> +			mode =3D USB_DR_MODE_HOST;
->> +		}
->> +	}
->> +
->> +	if (!strncmp(buf, "device", 6))
->> +		if (cdns->dr_mode =3D=3D USB_DR_MODE_PERIPHERAL ||
->> +		    cdns->dr_mode =3D=3D USB_DR_MODE_OTG)
->> +			mode =3D USB_DR_MODE_PERIPHERAL;
->> +
->> +	if (!strncmp(buf, "otg", 3) && cdns->dr_mode =3D=3D USB_DR_MODE_OTG)
->> +		mode =3D USB_DR_MODE_OTG;
->> +
->> +	if (mode =3D=3D USB_DR_MODE_UNKNOWN) {
->> +		dev_err(cdns->dev, "Failed: incorrect mode setting\n");
->> +		return -EFAULT;
->> +	}
->
->To cover all those, you just need to:
->
->        ret =3D match_string(cdns3_mode, ARRAY_SIZE(cdns3_mode), buf));
->        if (ret < 0 ||=A0ret =3D=3D USB_DR_MODE_UNKNOWN)
->                return -EINVAL;
->
->> +	if (cdns->current_dr_mode !=3D mode) {
->> +		cdns->desired_dr_mode =3D mode;
->
->        if (cdns->current_dr_mode !=3D ret)
->		cdns->desired_dr_mode =3D ret;
->
->> +		cdns3_role_stop(cdns);
->> +		ret =3D cdns3_drd_update_mode(cdns);
->> +		if (ret)
->> +			return ret;
->> +
->> +		queue_work(system_freezable_wq, &cdns->role_switch_wq);
->> +	}
->> +
->> +	return count;
->> +}
->> +
->> +static const struct file_operations cdns3_mode_fops =3D {
->> +	.open			=3D cdns3_mode_open,
->> +	.write			=3D cdns3_mode_write,
->> +	.read			=3D seq_read,
->> +	.llseek			=3D seq_lseek,
->> +	.release		=3D single_release,
->> +};
->> +
->> +static int cdns3_disable_show(struct seq_file *s, void *unused)
->> +{
->> +	struct cdns3 *cdns =3D s->private;
->> +
->> +	if (!cdns->debug_disable)
->> +		seq_puts(s, "0\n");
->> +	else
->> +		seq_puts(s, "1\n");
->> +
->> +	return 0;
->> +}
->> +
->> +static ssize_t cdns3_disable_write(struct file *file,
->> +				   const char __user *ubuf,
->> +				   size_t count, loff_t *ppos)
->> +{
->> +	struct seq_file	 *s =3D file->private_data;
->> +	struct cdns3 *cdns =3D s->private;
->> +	bool disable;
->> +	char buf[16];
->> +
->> +	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
->> +		return -EFAULT;
->> +
->> +	if (kstrtobool(buf, &disable)) {
->> +		dev_err(cdns->dev, "wrong setting\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (disable !=3D cdns->debug_disable) {
->> +		cdns->debug_disable =3D disable;
->> +		queue_work(system_freezable_wq, &cdns->role_switch_wq);
->> +	}
->> +
->> +	return count;
->> +}
->> +
->> +static int cdns3_disable_open(struct inode *inode, struct file *file)
->> +{
->> +	return single_open(file, cdns3_disable_show, inode->i_private);
->> +}
->> +
->> +static const struct file_operations cdns3_disable_fops =3D {
->> +	.open			=3D cdns3_disable_open,
->> +	.write			=3D cdns3_disable_write,
->> +	.read			=3D seq_read,
->> +	.llseek			=3D seq_lseek,
->> +	.release		=3D single_release,
->> +};
->> +
->> +void cdns3_debugfs_init(struct cdns3 *cdns)
->> +{
->> +	struct dentry *root;
->> +
->> +	root =3D debugfs_create_dir(dev_name(cdns->dev), NULL);
->> +	cdns->root =3D root;
->> +	if (IS_ENABLED(CONFIG_USB_CDNS3_GADGET) &&
->> +	    IS_ENABLED(CONFIG_USB_CDNS3_HOST))
->> +		debugfs_create_file("mode", 0644, root, cdns,
->> +				    &cdns3_mode_fops);
->> +
->> +	debugfs_create_file("disable", 0644, root, cdns,
->> +			    &cdns3_disable_fops);
->> +}
->> +
->> +void cdns3_debugfs_exit(struct cdns3 *cdns)
->> +{
->> +	debugfs_remove_recursive(cdns->root);
->> +}
->
->thanks,
->
->--
->heikki
+What does COMP stand for?
 
-Thank for nice simplification.=20
-Regards=20
-Pawel
+> +#define SWRM_COMP_CFG_ADDR					0x04
+> +#define SWRM_COMP_CFG_IRQ_LEVEL_OR_PULSE_MSK			BIT(1)
+> +#define SWRM_COMP_CFG_ENABLE_MSK				BIT(0)
+> +#define SWRM_COMP_PARAMS					0x100
+> +#define SWRM_COMP_PARAMS_DOUT_PORTS_MASK			GENMASK(4, 0)
+> +#define SWRM_COMP_PARAMS_DIN_PORTS_MASK				GENMASK(9, 5)
+> +#define SWRM_COMP_PARAMS_WR_FIFO_DEPTH				GENMASK(14, 10)
+> +#define SWRM_COMP_PARAMS_RD_FIFO_DEPTH				GENMASK(19, 15)
+> +#define SWRM_COMP_PARAMS_AUTO_ENUM_SLAVES			GENMASK(32. 20)
+
+Thats a lot of text, So as others have said we need to rethink the
+naming conventions, perhaps QC_SDW_PARAM_AUTO_ENUM (feel free to drop
+SDW as well from here as it QC specific!
+
+Also move common ones to core..
+
+> +#define SWRM_INTERRUPT_STATUS					0x200
+> +#define SWRM_INTERRUPT_STATUS_RMSK				GENMASK(16, 0)
+> +#define SWRM_INTERRUPT_STATUS_SLAVE_PEND_IRQ			BIT(0)
+> +#define SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED		BIT(1)
+> +#define SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS		BIT(2)
+> +#define SWRM_INTERRUPT_STATUS_MASTER_CLASH_DET			BIT(3)
+> +#define SWRM_INTERRUPT_STATUS_RD_FIFO_OVERFLOW			BIT(4)
+> +#define SWRM_INTERRUPT_STATUS_RD_FIFO_UNDERFLOW			BIT(5)
+> +#define SWRM_INTERRUPT_STATUS_WR_CMD_FIFO_OVERFLOW		BIT(6)
+> +#define SWRM_INTERRUPT_STATUS_CMD_ERROR				BIT(7)
+> +#define SWRM_INTERRUPT_STATUS_DOUT_PORT_COLLISION		BIT(8)
+> +#define SWRM_INTERRUPT_STATUS_READ_EN_RD_VALID_MISMATCH		BIT(9)
+> +#define SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED		BIT(10)
+> +#define SWRM_INTERRUPT_STATUS_NEW_SLAVE_AUTO_ENUM_FINISHED	BIT(11)
+> +#define SWRM_INTERRUPT_STATUS_AUTO_ENUM_FAILED			BIT(12)
+> +#define SWRM_INTERRUPT_STATUS_AUTO_ENUM_TABLE_IS_FULL		BIT(13)
+> +#define SWRM_INTERRUPT_STATUS_BUS_RESET_FINISHED		BIT(14)
+> +#define SWRM_INTERRUPT_STATUS_CLK_STOP_FINISHED			BIT(15)
+> +#define SWRM_INTERRUPT_STATUS_ERROR_PORT_TEST			BIT(16)
+> +#define SWRM_INTERRUPT_MASK_ADDR				0x204
+> +#define SWRM_INTERRUPT_CLEAR					0x208
+> +#define SWRM_CMD_FIFO_WR_CMD					0x300
+> +#define SWRM_CMD_FIFO_RD_CMD					0x304
+> +#define SWRM_CMD_FIFO_CMD					0x308
+> +#define SWRM_CMD_FIFO_STATUS					0x30C
+> +#define SWRM_CMD_FIFO_CFG_ADDR					0x314
+> +#define SWRM_CMD_FIFO_CFG_NUM_OF_CMD_RETRY_SHFT			0x0
+> +#define SWRM_CMD_FIFO_RD_FIFO_ADDR				0x318
+> +#define SWRM_ENUMERATOR_CFG_ADDR				0x500
+> +#define SWRM_MCP_FRAME_CTRL_BANK_ADDR(m)		(0x101C + 0x40 * (m))
+> +#define SWRM_MCP_FRAME_CTRL_BANK_SSP_PERIOD_SHFT		16
+> +#define SWRM_MCP_FRAME_CTRL_BANK_ROW_CTRL_SHFT			3
+> +#define SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_BMSK			GENMASK(2, 0)
+> +#define SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_SHFT			0
+> +#define SWRM_MCP_CFG_ADDR					0x1048
+> +#define SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_BMSK		GENMASK(21, 17)
+> +#define SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_SHFT		0x11
+> +#define SWRM_MCP_STATUS						0x104C
+> +#define SWRM_MCP_STATUS_BANK_NUM_MASK				BIT(0)
+> +#define SWRM_MCP_SLV_STATUS					0x1090
+> +#define SWRM_MCP_SLV_STATUS_MASK				GENMASK(1, 0)
+> +#define SWRM_DP_PORT_CTRL_BANK(n, m)	(0x1124 + 0x100 * (n - 1) + 0x40 * m)
+> +#define SWRM_DP_PORT_CTRL2_BANK(n, m)	(0x1126 + 0x100 * (n - 1) + 0x40 * m)
+> +#define SWRM_DP_PORT_CTRL_EN_CHAN_SHFT				0x18
+> +#define SWRM_DP_PORT_CTRL_OFFSET2_SHFT				0x10
+> +#define SWRM_DP_PORT_CTRL_OFFSET1_SHFT				0x08
+> +#define SWRM_AHB_BRIDGE_WR_DATA_0				0xc885
+> +#define SWRM_AHB_BRIDGE_WR_ADDR_0				0xc889
+> +#define SWRM_AHB_BRIDGE_RD_ADDR_0				0xc88d
+> +#define SWRM_AHB_BRIDGE_RD_DATA_0				0xc891
+> +
+> +#define SWRM_REG_VAL_PACK(data, dev, id, reg)	\
+> +			((reg) | ((id) << 16) | ((dev) << 20) | ((data) << 24))
+> +
+> +#define SWRM_MAX_ROW_VAL	0 /* Rows = 48 */
+> +#define SWRM_DEFAULT_ROWS	48
+> +#define SWRM_MIN_COL_VAL	0 /* Cols = 2 */
+> +#define SWRM_DEFAULT_COL	16
+> +#define SWRM_SPECIAL_CMD_ID	0xF
+> +#define MAX_FREQ_NUM		1
+> +#define TIMEOUT_MS		1000
+> +#define QCOM_SWRM_MAX_RD_LEN	0xf
+> +#define DEFAULT_CLK_FREQ	9600000
+> +#define SWRM_MAX_DAIS		0xF
+
+I was thinking it would make sense to move this to DT, DAI is after all
+a hw property!
+
+> +static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 cmd_data,
+> +				     u8 dev_addr, u16 reg_addr)
+> +{
+> +	int ret = 0;
+> +	u8 cmd_id;
+> +	u32 val;
+> +
+> +	mutex_lock(&ctrl->lock);
+> +	if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+> +		cmd_id = SWRM_SPECIAL_CMD_ID;
+> +	} else {
+> +		if (++ctrl->wr_cmd_id == SWRM_SPECIAL_CMD_ID)
+> +			ctrl->wr_cmd_id = 0;
+> +
+> +		cmd_id = ctrl->wr_cmd_id;
+> +	}
+> +
+> +	val = SWRM_REG_VAL_PACK(cmd_data, dev_addr, cmd_id, reg_addr);
+> +	ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_WR_CMD, val);
+> +	if (ret < 0) {
+> +		dev_err(ctrl->dev, "%s: reg 0x%x write failed, err:%d\n",
+> +			__func__, val, ret);
+> +		goto err;
+> +	}
+> +
+> +	if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+> +		ctrl->fifo_status = 0;
+> +		ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
+> +						  msecs_to_jiffies(TIMEOUT_MS));
+
+why not wait for completion on non broadcast?
+
+> +static int qcom_swrm_cmd_fifo_rd_cmd(struct qcom_swrm_ctrl *ctrl,
+> +				     u8 dev_addr, u16 reg_addr,
+> +				     u32 len, u8 *rval)
+> +{
+> +	int i, ret = 0;
+
+Superfluous initialization of ret
+
+> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct qcom_swrm_ctrl *ctrl = dev_id;
+> +	u32 sts, value;
+> +
+> +	sts = ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS);
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED)
+> +		complete(&ctrl->sp_cmd_comp);
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
+> +		value = ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS);
+> +		dev_err_ratelimited(ctrl->dev,
+> +				    "CMD error, fifo status 0x%x\n",
+> +				     value);
+> +		ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
+> +		if ((value & 0xF) == 0xF) {
+> +			ctrl->fifo_status = -ENODATA;
+> +			complete(&ctrl->sp_cmd_comp);
+> +		}
+> +	}
+> +
+> +	if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
+> +	    sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS) {
+> +		if (sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED)
+> +			ctrl->status[0] = SDW_SLAVE_ATTACHED;
+> +
+> +		schedule_work(&ctrl->slave_work);
+
+So why are we scheduling work, you are the thread handler so I think it
+should be okay and better to invoke bus for status update.
+
+> +	}
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_SLAVE_PEND_IRQ)
+> +		dev_dbg(ctrl->dev, "Slave pend irq\n");
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED)
+> +		dev_dbg(ctrl->dev, "New slave attached\n");
+
+No updating bus on the status?
+
+> +static enum sdw_command_response qcom_swrm_xfer_msg(struct sdw_bus *bus,
+> +						    struct sdw_msg *msg)
+> +{
+> +	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+> +	int ret, i, len;
+> +
+> +	if (msg->flags == SDW_MSG_FLAG_READ) {
+> +		for (i = 0; i < msg->len;) {
+> +			if ((msg->len - i) < QCOM_SWRM_MAX_RD_LEN)
+> +				len = msg->len - i;
+> +			else
+> +				len = QCOM_SWRM_MAX_RD_LEN;
+> +
+> +			ret = qcom_swrm_cmd_fifo_rd_cmd(ctrl, msg->dev_num,
+> +							msg->addr + i, len,
+> +						       &msg->buf[i]);
+> +			if (ret < 0) {
+> +				if (ret == -ENODATA)
+> +					return SDW_CMD_IGNORED;
+> +
+> +				return ret;
+> +			}
+> +
+> +			i = i + len;
+> +		}
+> +	} else if (msg->flags == SDW_MSG_FLAG_WRITE) {
+> +		for (i = 0; i < msg->len; i++) {
+> +			ret = qcom_swrm_cmd_fifo_wr_cmd(ctrl, msg->buf[i],
+> +							msg->dev_num,
+> +						       msg->addr + i);
+> +			if (ret < 0) {
+> +				if (ret == -ENODATA)
+> +					return SDW_CMD_IGNORED;
+> +
+> +				return ret;
+
+So we need to convert this to sdw_command_response before returning.
+
+> +static int qcom_swrm_prepare(struct snd_pcm_substream *substream,
+> +			     struct snd_soc_dai *dai)
+> +{
+> +	struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
+> +
+> +	if (!ctrl->sruntime[dai->id])
+> +		return -EINVAL;
+> +
+> +	return sdw_enable_stream(ctrl->sruntime[dai->id]);
+
+Hmm you need to handle dai prepare being called for multiple times.
+
+> +static int qcom_pdm_set_sdw_stream(struct snd_soc_dai *dai,
+> +				   void *stream, int direction)
+> +{
+> +	return 0;
+> +}
+
+lets remove if we dont intend to do anything!
+
+> +static int qcom_swrm_runtime_suspend(struct device *device)
+> +{
+> +	/* TBD */
+> +	return 0;
+> +}
+> +
+> +static int qcom_swrm_runtime_resume(struct device *device)
+> +{
+> +	/* TBD */
+> +	return 0;
+> +}
+
+Again, lets remove these, add when we have the functionality
+-- 
+~Vinod
