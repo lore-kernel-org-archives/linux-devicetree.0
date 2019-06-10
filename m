@@ -1,57 +1,127 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [RFC 1/2] irqchip: irq-imx-gpcv2: Add workaround for i.MX8MQ
- ERR11171
-Date: Mon, 10 Jun 2019 12:38:52 +0000
-Message-ID: <VI1PR04MB5055FD984F9BBA733B4D3503EE130@VI1PR04MB5055.eurprd04.prod.outlook.com>
-References: <20190610121346.15779-1-abel.vesa@nxp.com>
- <20190610121346.15779-2-abel.vesa@nxp.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] arm64: dts: meson: g12a: sort sdio nodes correctly
+Date: Mon, 10 Jun 2019 14:49:31 +0200
+Message-ID: <20190610124931.17422-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abelvesa@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jacky Bai <ping.bai@nxp.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Carlo Caione <ccaione@baylibre.com>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/10/2019 3:15 PM, Abel Vesa wrote:=0A=
-> i.MX8MQ is missing the wake_request signals from GIC to GPCv2. This indir=
-ectly=0A=
-> breaks cpuidle support due to inability to wake target cores on IPIs.=0A=
-> =0A=
-> Now, in order to fix this, we can trigger IRQ 32 (hwirq 0) to all the cor=
-es by=0A=
-> setting 12th bit in IOMUX_GPR1 register. In order to control the target c=
-ores=0A=
-> only, that is, not waking up all the cores every time, we can unmask/mask=
- the=0A=
-> IRQ 32 in the first GPC IMR register.=0A=
-> =0A=
-> Since EL3 is the one that deals with powering down/up the cores, and sinc=
-e the=0A=
-> cores wake up in EL3, EL3 should be the one to control the IMRs in this c=
-ase.=0A=
-> This implies we need to get into EL3 on every IPI to do the unmasking, le=
-aving=0A=
-> the masking to be done on the power-up sequence by the core itself.=0A=
-=0A=
-Manipulating same IMR registers in TF-A and Linux is racy so all IMR =0A=
-manipulation (set_wake etc) needs to be done through SIP calls with =0A=
-locking inside TF-A.=0A=
-=0A=
-It would make sense to have an entirely separate SIP-based =0A=
-irq-imx8mq-gpc.c driver based on what is used in NXP tree.=0A=
-=0A=
-> +	iomux_gpr =3D syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr"=
-);=0A=
-> +	if (!IS_ERR(iomux_gpr))=0A=
-> +		regmap_update_bits(iomux_gpr, IOMUXC_GPR1, IMX6Q_GPR1_GINT,=0A=
-> +					IMX6Q_GPR1_GINT);=0A=
-=0A=
-Doesn't this initialization belong in TF-A? On boot enable the irq and =0A=
-keep it masked until somebody calls "wake".=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+Fix sdio node order in the soc device tree
+
+Fixes: a1737347250e ("arm64: dts: meson: g12a: add SDIO controller")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 73 ++++++++++-----------
+ 1 file changed, 36 insertions(+), 37 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index 6aec4cf87350..0642e0a6c605 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -843,6 +843,29 @@
+ 						};
+ 					};
+ 
++					sdio_pins: sdio {
++						mux {
++							groups = "sdio_d0",
++								 "sdio_d1",
++								 "sdio_d2",
++								 "sdio_d3",
++								 "sdio_clk",
++								 "sdio_cmd";
++							function = "sdio";
++							bias-disable;
++							drive-strength-microamp = <4000>;
++						};
++					};
++
++					sdio_clk_gate_pins: sdio_clk_gate {
++						mux {
++							groups = "GPIOX_4";
++							function = "gpio_periphs";
++							bias-pull-down;
++							drive-strength-microamp = <4000>;
++						};
++					};
++
+ 					spdif_in_a10_pins: spdif-in-a10 {
+ 						mux {
+ 							groups = "spdif_in_a10";
+@@ -1326,30 +1349,6 @@
+ 						};
+ 					};
+ 
+-					sdio_pins: sdio {
+-						mux {
+-							groups = "sdio_d0",
+-								 "sdio_d1",
+-								 "sdio_d2",
+-								 "sdio_d3",
+-								 "sdio_cmd",
+-								 "sdio_clk";
+-							function = "sdio";
+-							bias-disable;
+-							drive-strength-microamp = <4000>;
+-						};
+-					};
+-
+-					sdio_clk_gate_pins: sdio_clk_gate {
+-						mux {
+-							groups = "GPIOX_4";
+-							function = "gpio_periphs";
+-							bias-pull-down;
+-							drive-strength-microamp = <4000>;
+-						};
+-					};
+-
+-
+ 					uart_a_pins: uart-a {
+ 						mux {
+ 							groups = "uart_a_tx",
+@@ -2316,6 +2315,19 @@
+ 			};
+ 		};
+ 
++		sd_emmc_a: sd@ffe03000 {
++			compatible = "amlogic,meson-axg-mmc";
++			reg = <0x0 0xffe03000 0x0 0x800>;
++			interrupts = <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
++			status = "disabled";
++			clocks = <&clkc CLKID_SD_EMMC_A>,
++				 <&clkc CLKID_SD_EMMC_A_CLK0>,
++				 <&clkc CLKID_FCLK_DIV2>;
++			clock-names = "core", "clkin0", "clkin1";
++			resets = <&reset RESET_SD_EMMC_A>;
++			amlogic,dram-access-quirk;
++		};
++
+ 		sd_emmc_b: sd@ffe05000 {
+ 			compatible = "amlogic,meson-axg-mmc";
+ 			reg = <0x0 0xffe05000 0x0 0x800>;
+@@ -2340,19 +2352,6 @@
+ 			resets = <&reset RESET_SD_EMMC_C>;
+ 		};
+ 
+-		sd_emmc_a: sd@ffe03000 {
+-			compatible = "amlogic,meson-axg-mmc";
+-			reg = <0x0 0xffe03000 0x0 0x800>;
+-			interrupts = <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
+-			status = "disabled";
+-			clocks = <&clkc CLKID_SD_EMMC_A>,
+-				 <&clkc CLKID_SD_EMMC_A_CLK0>,
+-				 <&clkc CLKID_FCLK_DIV2>;
+-			clock-names = "core", "clkin0", "clkin1";
+-			resets = <&reset RESET_SD_EMMC_A>;
+-			amlogic,dram-access-quirk;
+-		};
+-
+ 		usb: usb@ffe09000 {
+ 			status = "disabled";
+ 			compatible = "amlogic,meson-g12a-usb-ctrl";
+-- 
+2.20.1
