@@ -1,133 +1,142 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH 4/6] clk: qcom: Add ipq6018 Global Clock Controller
- support
-Date: Mon, 10 Jun 2019 17:17:09 +0530
-Message-ID: <6583f576-acf4-a71b-d691-bce548e2c008@codeaurora.org>
-References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
- <1559754961-26783-5-git-send-email-sricharan@codeaurora.org>
- <20190608033229.GE24059@builder>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V9 13/15] phy: tegra: Add PCIe PIPE2UPHY support
+Date: Mon, 10 Jun 2019 14:54:36 +0300
+Message-ID: <58349f3f-b9c2-2653-3a69-3bb5e836a9ef@gmail.com>
+References: <20190607144640.13427-1-vidyas@nvidia.com>
+ <20190607144640.13427-14-vidyas@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190608033229.GE24059@builder>
+In-Reply-To: <20190607144640.13427-14-vidyas@nvidia.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: robh+dt@kernel.org, Stephen Boyd <sboyd@kernel.org>, linus.walleij@linaro.org, agross@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
+Cc: mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
-On 6/8/2019 9:02 AM, Bjorn Andersson wrote:
-> On Wed 05 Jun 10:15 PDT 2019, Sricharan R wrote:
+07.06.2019 17:46, Vidya Sagar пишет:
+> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
+> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
+> For each PCIe lane of a controller, there is a P2U unit instantiated at
+> hardware level. This driver provides support for the programming required
+> for each P2U that is going to be used for a PCIe controller.
 > 
->> This patch adds support for the global clock controller found on
->> the ipq6018 based devices.
->>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> Signed-off-by: anusha <anusharao@codeaurora.org>
->> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v8]:
+> * Made it dependent on ARCH_TEGRA_194_SOC directly instead of ARCH_TEGRA
 > 
-> Please fix your s-o-b chain, as described in my reply to 1/8..
+> Changes since [v7]:
+> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
 > 
-
- ok.
-
->> ---
->>  drivers/clk/qcom/Kconfig       |    9 +
->>  drivers/clk/qcom/Makefile      |    1 +
->>  drivers/clk/qcom/gcc-ipq6018.c | 5267 ++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 5277 insertions(+)
->>  create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
->>
->> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->> index e1ff83c..e5fb091 100644
->> --- a/drivers/clk/qcom/Kconfig
->> +++ b/drivers/clk/qcom/Kconfig
->> @@ -120,6 +120,15 @@ config IPQ_GCC_8074
->>  	  i2c, USB, SD/eMMC, etc. Select this for the root clock
->>  	  of ipq8074.
->>  
->> +config IPQ_GCC_6018
+> Changes since [v6]:
+> * None
 > 
-> Please maintain sort order.
+> Changes since [v5]:
+> * Addressed review comments from Thierry
 > 
-
- ok.
-
->> +	tristate "IPQ6018 Global Clock Controller"
->> +	depends on COMMON_CLK_QCOM
->> +	help
->> +	  Support for global clock controller on ipq6018 devices.
->> +	  Say Y if you want to use peripheral devices such as UART, SPI,
->> +	  i2c, USB, SD/eMMC, etc. Select this for the root clock
->> +	  of ipq6018.
->> +
->>  config MSM_GCC_8660
->>  	tristate "MSM8660 Global Clock Controller"
->>  	help
->> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
->> index f0768fb..025137d 100644
->> --- a/drivers/clk/qcom/Makefile
->> +++ b/drivers/clk/qcom/Makefile
->> @@ -22,6 +22,7 @@ obj-$(CONFIG_APQ_MMCC_8084) += mmcc-apq8084.o
->>  obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
->>  obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
->>  obj-$(CONFIG_IPQ_GCC_8074) += gcc-ipq8074.o
->> +obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
+> Changes since [v4]:
+> * None
 > 
-> Ditto.
+> Changes since [v3]:
+> * Rebased on top of linux-next top of the tree
 > 
-
- ok.
-
->>  obj-$(CONFIG_IPQ_LCC_806X) += lcc-ipq806x.o
->>  obj-$(CONFIG_MDM_GCC_9615) += gcc-mdm9615.o
->>  obj-$(CONFIG_MDM_LCC_9615) += lcc-mdm9615.o
->> diff --git a/drivers/clk/qcom/gcc-ipq6018.c b/drivers/clk/qcom/gcc-ipq6018.c
-> [..]
->> +static int gcc_ipq6018_probe(struct platform_device *pdev)
->> +{
->> +	return qcom_cc_probe(pdev, &gcc_ipq6018_desc);
->> +}
->> +
->> +static int gcc_ipq6018_remove(struct platform_device *pdev)
->> +{
->> +	return 0;
+> Changes since [v2]:
+> * Replaced spaces with tabs in Kconfig file
+> * Sorted header file inclusion alphabetically
 > 
-> Just omit .remove from the gcc_ipq6018_driver instead of providing a
-> dummy function.
+> Changes since [v1]:
+> * Added COMPILE_TEST in Kconfig
+> * Removed empty phy_ops implementations
+> * Modified code according to DT documentation file modifications
 > 
-
- ok.
-
->> +}
->> +
->> +static struct platform_driver gcc_ipq6018_driver = {
->> +	.probe = gcc_ipq6018_probe,
->> +	.remove = gcc_ipq6018_remove,
->> +	.driver = {
->> +		.name   = "qcom,gcc-ipq6018",
->> +		.owner  = THIS_MODULE,
+>  drivers/phy/tegra/Kconfig            |   7 ++
+>  drivers/phy/tegra/Makefile           |   1 +
+>  drivers/phy/tegra/phy-tegra194-p2u.c | 109 +++++++++++++++++++++++++++
+>  3 files changed, 117 insertions(+)
+>  create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
 > 
-> Don't specify .owner in platform drivers.
-> 
+> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+> index e516967d695b..f9817c3ae85f 100644
+> --- a/drivers/phy/tegra/Kconfig
+> +++ b/drivers/phy/tegra/Kconfig
+> @@ -7,3 +7,10 @@ config PHY_TEGRA_XUSB
+>  
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called phy-tegra-xusb.
+> +
+> +config PHY_TEGRA194_P2U
+> +	tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
+> +	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the P2U (PIPE to UPHY) that is part of Tegra 19x SOCs.
+> diff --git a/drivers/phy/tegra/Makefile b/drivers/phy/tegra/Makefile
+> index 64ccaeacb631..320dd389f34d 100644
+> --- a/drivers/phy/tegra/Makefile
+> +++ b/drivers/phy/tegra/Makefile
+> @@ -6,3 +6,4 @@ phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_124_SOC) += xusb-tegra124.o
+>  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_132_SOC) += xusb-tegra124.o
+>  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_210_SOC) += xusb-tegra210.o
+>  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_186_SOC) += xusb-tegra186.o
+> +obj-$(CONFIG_PHY_TEGRA194_P2U) += phy-tegra194-p2u.o
+> diff --git a/drivers/phy/tegra/phy-tegra194-p2u.c b/drivers/phy/tegra/phy-tegra194-p2u.c
+> new file mode 100644
+> index 000000000000..7b84b4c55e43
+> --- /dev/null
+> +++ b/drivers/phy/tegra/phy-tegra194-p2u.c
+> @@ -0,0 +1,109 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * P2U (PIPE to UPHY) driver for Tegra T194 SoC
+> + *
+> + * Copyright (C) 2019 NVIDIA Corporation.
+> + *
+> + * Author: Vidya Sagar <vidyas@nvidia.com>
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/phy/phy.h>
+> +
+> +#define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
+> +#define P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN		BIT(0)
+> +#define P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
+> +#define P2U_PERIODIC_EQ_CTRL_GEN4	0xc4
+> +#define P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
+> +
+> +#define P2U_RX_DEBOUNCE_TIME				0xa4
+> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK	0xffff
+> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL		160
+> +
+> +struct tegra_p2u {
+> +	void __iomem *base;
+> +};
+> +
+> +static int tegra_p2u_power_on(struct phy *x)
+> +{
+> +	struct tegra_p2u *phy = phy_get_drvdata(x);
+> +	u32 val;
+> +
+> +	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
+> +	val &= ~P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN;
+> +	val |= P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN;
+> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
+> +
+> +	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
+> +	val |= P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN;
+> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
+> +
+> +	val = readl(phy->base + P2U_RX_DEBOUNCE_TIME);
+> +	val &= ~P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK;
+> +	val |= P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL;
+> +	writel(val, phy->base + P2U_RX_DEBOUNCE_TIME);
 
- ok.
+I'm wondering whether you're really need to insert memory barriers for
+each readl/writel, can't the relaxed versions be used instead?
 
-> [..]
->> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. GCC IPQ6018 Driver");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_ALIAS("platform:gcc-ipq6018");
-> 
-> This modalias won't be used.
->
-
- ok. But it looks to be there in other clk drivers as well.
- 
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+The same applies to other patches as well.
