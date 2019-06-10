@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [PATCH 4/6] arm64: dts: fsl: add ptp timer node for dpaa2 platforms
-Date: Mon, 10 Jun 2019 11:21:06 +0800
-Message-ID: <20190610032108.5791-5-yangbo.lu@nxp.com>
+Subject: [PATCH 3/6] dt-binding: ptp_qoriq: support DPAA2 PTP compatible
+Date: Mon, 10 Jun 2019 11:21:05 +0800
+Message-ID: <20190610032108.5791-4-yangbo.lu@nxp.com>
 References: <20190610032108.5791-1-yangbo.lu@nxp.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190610032108.5791-1-yangbo.lu@nxp.com>
@@ -10,72 +10,26 @@ To: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Richard Co
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch is to add ptp timer device tree node for dpaa2
-platforms(ls1088a/ls208xa/lx2160a).
+Add a new compatible for DPAA2 PTP.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 8 ++++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 8 ++++++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 8 ++++++++
- 3 files changed, 24 insertions(+)
+ Documentation/devicetree/bindings/ptp/ptp-qoriq.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 661137f..dacd8cf 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -609,6 +609,14 @@
- 				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+diff --git a/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
+index 6ec0534..d48f9eb 100644
+--- a/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
++++ b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
+@@ -4,7 +4,8 @@ General Properties:
  
-+		ptp-timer@8b95000 {
-+			compatible = "fsl,dpaa2-ptp";
-+			reg = <0x0 0x8b95000 0x0 0x100>;
-+			clocks = <&clockgen 4 0>;
-+			little-endian;
-+			fsl,extts-fifo;
-+		};
-+
- 		cluster1_core0_watchdog: wdt@c000000 {
- 			compatible = "arm,sp805-wdt", "arm,primecell";
- 			reg = <0x0 0xc000000 0x0 0x1000>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index d7e78dc..3ace919 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -321,6 +321,14 @@
- 			};
- 		};
- 
-+		ptp-timer@8b95000 {
-+			compatible = "fsl,dpaa2-ptp";
-+			reg = <0x0 0x8b95000 0x0 0x100>;
-+			clocks = <&clockgen 4 1>;
-+			little-endian;
-+			fsl,extts-fifo;
-+		};
-+
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible = "fsl,qoriq-mc";
- 			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index 125a8cc..e6fdba3 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -848,6 +848,14 @@
- 			dma-coherent;
- 		};
- 
-+		ptp-timer@8b95000 {
-+			compatible = "fsl,dpaa2-ptp";
-+			reg = <0x0 0x8b95000 0x0 0x100>;
-+			clocks = <&clockgen 4 1>;
-+			little-endian;
-+			fsl,extts-fifo;
-+		};
-+
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible = "fsl,qoriq-mc";
- 			reg = <0x00000008 0x0c000000 0 0x40>,
+   - compatible   Should be "fsl,etsec-ptp" for eTSEC
+                  Should be "fsl,fman-ptp-timer" for DPAA FMan
+-		 Should be "fsl,enetc-ptp" for ENETC
++                 Should be "fsl,dpaa2-ptp" for DPAA2
++                 Should be "fsl,enetc-ptp" for ENETC
+   - reg          Offset and length of the register set for the device
+   - interrupts   There should be at least two interrupts. Some devices
+                  have as many as four PTP related interrupts.
 -- 
 2.7.4
