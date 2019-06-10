@@ -1,94 +1,93 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 2/7] dt-bindings: mmc: Add Actions Semi SD/MMC/SDIO
- controller binding
-Date: Mon, 10 Jun 2019 15:45:37 +0200
-Message-ID: <5d164528-c797-5f94-f905-719d4f69542c@suse.de>
-References: <20190608195317.6336-1-manivannan.sadhasivam@linaro.org>
- <20190608195317.6336-3-manivannan.sadhasivam@linaro.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset
+ GPIO
+Date: Mon, 10 Jun 2019 15:51:09 +0200
+Message-ID: <20190610135109.7alkvruvw2jbtwph@flea>
+References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
+ <20190609204510.GB8247@lunn.ch>
+ <20190610114700.tymqzzax334ahtz4@flea>
+ <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hlwqgl7jkkjm4sqs"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190608195317.6336-3-manivannan.sadhasivam@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc: sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org, linus.walleij@linaro.org, linux-clk@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, linux-kernel@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am 08.06.19 um 21:53 schrieb Manivannan Sadhasivam:
-> Add devicetree binding for Actions Semi Owl SoC's SD/MMC/SDIO controller.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../devicetree/bindings/mmc/owl-mmc.txt       | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/owl-mmc.txt
 
-Rob, should this be YAML now?
+--hlwqgl7jkkjm4sqs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/owl-mmc.txt b/Documentation/devicetree/bindings/mmc/owl-mmc.txt
-> new file mode 100644
-> index 000000000000..a702f8d66cec
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/owl-mmc.txt
-> @@ -0,0 +1,37 @@
-> +Actions Semi Owl SoCs SD/MMC/SDIO controller
-> +
-> +Required properties:
-> +- compatible: should be "actions,owl-mmc"
-> +- reg: offset and length of the register set for the device.
-> +- interrupts: single interrupt specifier.
-> +- clocks: single clock specifier of the controller clock.
-> +- resets: phandle to the reset line.
-> +- dma-names: should be "mmc".
-> +- dmas: single DMA channel specifier
+Hi Martin,
 
-I recall the main blocker for MMC being regulators, i.e. the I²C
-attached multi-function PMIC. Yet I don't see any such required property
-here, nor any patch series implementing it. Seems like this relies on
-U-Boot having initialized SD/eMMC? Do you intend to make them optional
-or did you want to hold off merging this one until the rest is done?
+On Mon, Jun 10, 2019 at 02:31:17PM +0200, Martin Blumenstingl wrote:
+> On Mon, Jun 10, 2019 at 1:47 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > Hi Andrew,
+> >
+> > On Sun, Jun 09, 2019 at 10:45:10PM +0200, Andrew Lunn wrote:
+> > > > Patch #1 and #4 are minor cleanups which follow the boyscout rule:
+> > > > "Always leave the campground cleaner than you found it."
+> > >
+> > > > I
+> > > > am also looking for suggestions how to handle these cross-tree changes
+> > > > (patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
+> > > > go through the net-next tree. I will re-send patch #5 separately as
+> > > > this should go through Kevin's linux-amlogic tree).
+> > >
+> > > Patches 1 and 4 don't seem to have and dependencies. So i would
+> > > suggest splitting them out and submitting them to netdev for merging
+> > > independent of the rest.
+> >
+> > Jumping on the occasion of that series. These properties have been
+> > defined to deal with phy reset, while it seems that the PHY core can
+> > now handle that pretty easily through generic properties.
+> >
+> > Wouldn't it make more sense to just move to that generic properties
+> > that already deals with the flags properly?
+> thank you for bringing this up!
+> if anyone else (just like me) doesn't know about it, there are generic
+> bindings defined here: [0]
+>
+> I just tested this on my X96 Max by defining the following properties
+> inside the PHY node:
+>   reset-delay-us = <10000>;
+>   reset-assert-us = <10000>;
+>   reset-deassert-us = <10000>;
+>   reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
+>
+> that means I don't need any stmmac patches which seems nice.
 
-> +
-> +Optional properties:
-> +- pinctrl-names: pinctrl state names "default" must be defined.
-> +- pinctrl-0: phandle referencing pin configuration of the controller.
-> +- bus-width: see mmc.txt
-> +- cap-sd-highspeed: see mmc.txt
-> +- cap-mmc-highspeed: see mmc.txt
-> +- sd-uhs-sdr12: see mmc.txt
-> +- sd-uhs-sdr25: see mmc.txt
-> +- sd-uhs-sdr50: see mmc.txt
-> +- non-removable: see mmc.txt
+I'm glad it works for you :)
 
-I'm not convinced duplicating common properties is a good idea here, in
-particular pinctrl.
+> instead I can submit a patch to mark the snps,reset-gpio properties in
+> the dt-bindings deprecated (and refer to the generic bindings instead)
+> what do you think?
 
-Regards,
-Andreas
+I already did as part of the binding reworks I did earlier today:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2019-June/658427.html
 
-> +
-> +Example:
-> +
-> +		mmc0: mmc@e0330000 {
-> +			compatible = "actions,owl-mmc";
-> +			reg = <0x0 0xe0330000 0x0 0x4000>;
-> +			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cmu CLK_SD0>;
-> +			resets = <&cmu RESET_SD0>;
-> +			dmas = <&dma 2>;
-> +			dma-names = "mmc";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&mmc0_default>;
-> +			bus-width = <4>;
-> +			cap-sd-highspeed;
-> +		};
-> 
+Maxime
 
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+--hlwqgl7jkkjm4sqs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP5gTQAKCRDj7w1vZxhR
+xTX2AQDErQs37AlgMjoegkuBtrfya5ARL23dKC2yJPk5bFAPIQEA8brM32gT3g4u
+5bbyMYmku0KJTlZo2bHr8P+VKtd70A0=
+=Jc07
+-----END PGP SIGNATURE-----
+
+--hlwqgl7jkkjm4sqs--
