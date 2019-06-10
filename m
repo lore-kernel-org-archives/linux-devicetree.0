@@ -1,62 +1,57 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset GPIO
-Date: Mon, 10 Jun 2019 14:31:17 +0200
-Message-ID: <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com>
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609204510.GB8247@lunn.ch> <20190610114700.tymqzzax334ahtz4@flea>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [RFC 1/2] irqchip: irq-imx-gpcv2: Add workaround for i.MX8MQ
+ ERR11171
+Date: Mon, 10 Jun 2019 12:38:52 +0000
+Message-ID: <VI1PR04MB5055FD984F9BBA733B4D3503EE130@VI1PR04MB5055.eurprd04.prod.outlook.com>
+References: <20190610121346.15779-1-abel.vesa@nxp.com>
+ <20190610121346.15779-2-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610114700.tymqzzax334ahtz4@flea>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, linux-kernel@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+To: Abel Vesa <abelvesa@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jacky Bai <ping.bai@nxp.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On Mon, Jun 10, 2019 at 1:47 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi Andrew,
->
-> On Sun, Jun 09, 2019 at 10:45:10PM +0200, Andrew Lunn wrote:
-> > > Patch #1 and #4 are minor cleanups which follow the boyscout rule:
-> > > "Always leave the campground cleaner than you found it."
-> >
-> > > I
-> > > am also looking for suggestions how to handle these cross-tree changes
-> > > (patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
-> > > go through the net-next tree. I will re-send patch #5 separately as
-> > > this should go through Kevin's linux-amlogic tree).
-> >
-> > Patches 1 and 4 don't seem to have and dependencies. So i would
-> > suggest splitting them out and submitting them to netdev for merging
-> > independent of the rest.
->
-> Jumping on the occasion of that series. These properties have been
-> defined to deal with phy reset, while it seems that the PHY core can
-> now handle that pretty easily through generic properties.
->
-> Wouldn't it make more sense to just move to that generic properties
-> that already deals with the flags properly?
-thank you for bringing this up!
-if anyone else (just like me) doesn't know about it, there are generic
-bindings defined here: [0]
-
-I just tested this on my X96 Max by defining the following properties
-inside the PHY node:
-  reset-delay-us = <10000>;
-  reset-assert-us = <10000>;
-  reset-deassert-us = <10000>;
-  reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-
-that means I don't need any stmmac patches which seems nice.
-instead I can submit a patch to mark the snps,reset-gpio properties in
-the dt-bindings deprecated (and refer to the generic bindings instead)
-what do you think?
-
-
-Martin
-
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/net/phy.txt?id=b54dd90cab00f5b64ed8ce533991c20bf781a3cd#n58
+On 6/10/2019 3:15 PM, Abel Vesa wrote:=0A=
+> i.MX8MQ is missing the wake_request signals from GIC to GPCv2. This indir=
+ectly=0A=
+> breaks cpuidle support due to inability to wake target cores on IPIs.=0A=
+> =0A=
+> Now, in order to fix this, we can trigger IRQ 32 (hwirq 0) to all the cor=
+es by=0A=
+> setting 12th bit in IOMUX_GPR1 register. In order to control the target c=
+ores=0A=
+> only, that is, not waking up all the cores every time, we can unmask/mask=
+ the=0A=
+> IRQ 32 in the first GPC IMR register.=0A=
+> =0A=
+> Since EL3 is the one that deals with powering down/up the cores, and sinc=
+e the=0A=
+> cores wake up in EL3, EL3 should be the one to control the IMRs in this c=
+ase.=0A=
+> This implies we need to get into EL3 on every IPI to do the unmasking, le=
+aving=0A=
+> the masking to be done on the power-up sequence by the core itself.=0A=
+=0A=
+Manipulating same IMR registers in TF-A and Linux is racy so all IMR =0A=
+manipulation (set_wake etc) needs to be done through SIP calls with =0A=
+locking inside TF-A.=0A=
+=0A=
+It would make sense to have an entirely separate SIP-based =0A=
+irq-imx8mq-gpc.c driver based on what is used in NXP tree.=0A=
+=0A=
+> +	iomux_gpr =3D syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr"=
+);=0A=
+> +	if (!IS_ERR(iomux_gpr))=0A=
+> +		regmap_update_bits(iomux_gpr, IOMUXC_GPR1, IMX6Q_GPR1_GINT,=0A=
+> +					IMX6Q_GPR1_GINT);=0A=
+=0A=
+Doesn't this initialization belong in TF-A? On boot enable the irq and =0A=
+keep it masked until somebody calls "wake".=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
