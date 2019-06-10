@@ -1,65 +1,133 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset
- GPIO
-Date: Mon, 10 Jun 2019 13:47:00 +0200
-Message-ID: <20190610114700.tymqzzax334ahtz4@flea>
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609204510.GB8247@lunn.ch>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH 4/6] clk: qcom: Add ipq6018 Global Clock Controller
+ support
+Date: Mon, 10 Jun 2019 17:17:09 +0530
+Message-ID: <6583f576-acf4-a71b-d691-bce548e2c008@codeaurora.org>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+ <1559754961-26783-5-git-send-email-sricharan@codeaurora.org>
+ <20190608033229.GE24059@builder>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fo7fw3siaxhdftz7"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190609204510.GB8247@lunn.ch>
+In-Reply-To: <20190608033229.GE24059@builder>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, khilman@baylibre.com, linux-kernel@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: robh+dt@kernel.org, Stephen Boyd <sboyd@kernel.org>, linus.walleij@linaro.org, agross@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Bjorn,
 
---fo7fw3siaxhdftz7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 6/8/2019 9:02 AM, Bjorn Andersson wrote:
+> On Wed 05 Jun 10:15 PDT 2019, Sricharan R wrote:
+> 
+>> This patch adds support for the global clock controller found on
+>> the ipq6018 based devices.
+>>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> Signed-off-by: anusha <anusharao@codeaurora.org>
+>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> 
+> Please fix your s-o-b chain, as described in my reply to 1/8..
+> 
 
-Hi Andrew,
+ ok.
 
-On Sun, Jun 09, 2019 at 10:45:10PM +0200, Andrew Lunn wrote:
-> > Patch #1 and #4 are minor cleanups which follow the boyscout rule:
-> > "Always leave the campground cleaner than you found it."
+>> ---
+>>  drivers/clk/qcom/Kconfig       |    9 +
+>>  drivers/clk/qcom/Makefile      |    1 +
+>>  drivers/clk/qcom/gcc-ipq6018.c | 5267 ++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 5277 insertions(+)
+>>  create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
+>>
+>> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+>> index e1ff83c..e5fb091 100644
+>> --- a/drivers/clk/qcom/Kconfig
+>> +++ b/drivers/clk/qcom/Kconfig
+>> @@ -120,6 +120,15 @@ config IPQ_GCC_8074
+>>  	  i2c, USB, SD/eMMC, etc. Select this for the root clock
+>>  	  of ipq8074.
+>>  
+>> +config IPQ_GCC_6018
+> 
+> Please maintain sort order.
+> 
+
+ ok.
+
+>> +	tristate "IPQ6018 Global Clock Controller"
+>> +	depends on COMMON_CLK_QCOM
+>> +	help
+>> +	  Support for global clock controller on ipq6018 devices.
+>> +	  Say Y if you want to use peripheral devices such as UART, SPI,
+>> +	  i2c, USB, SD/eMMC, etc. Select this for the root clock
+>> +	  of ipq6018.
+>> +
+>>  config MSM_GCC_8660
+>>  	tristate "MSM8660 Global Clock Controller"
+>>  	help
+>> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+>> index f0768fb..025137d 100644
+>> --- a/drivers/clk/qcom/Makefile
+>> +++ b/drivers/clk/qcom/Makefile
+>> @@ -22,6 +22,7 @@ obj-$(CONFIG_APQ_MMCC_8084) += mmcc-apq8084.o
+>>  obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
+>>  obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
+>>  obj-$(CONFIG_IPQ_GCC_8074) += gcc-ipq8074.o
+>> +obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
+> 
+> Ditto.
+> 
+
+ ok.
+
+>>  obj-$(CONFIG_IPQ_LCC_806X) += lcc-ipq806x.o
+>>  obj-$(CONFIG_MDM_GCC_9615) += gcc-mdm9615.o
+>>  obj-$(CONFIG_MDM_LCC_9615) += lcc-mdm9615.o
+>> diff --git a/drivers/clk/qcom/gcc-ipq6018.c b/drivers/clk/qcom/gcc-ipq6018.c
+> [..]
+>> +static int gcc_ipq6018_probe(struct platform_device *pdev)
+>> +{
+>> +	return qcom_cc_probe(pdev, &gcc_ipq6018_desc);
+>> +}
+>> +
+>> +static int gcc_ipq6018_remove(struct platform_device *pdev)
+>> +{
+>> +	return 0;
+> 
+> Just omit .remove from the gcc_ipq6018_driver instead of providing a
+> dummy function.
+> 
+
+ ok.
+
+>> +}
+>> +
+>> +static struct platform_driver gcc_ipq6018_driver = {
+>> +	.probe = gcc_ipq6018_probe,
+>> +	.remove = gcc_ipq6018_remove,
+>> +	.driver = {
+>> +		.name   = "qcom,gcc-ipq6018",
+>> +		.owner  = THIS_MODULE,
+> 
+> Don't specify .owner in platform drivers.
+> 
+
+ ok.
+
+> [..]
+>> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. GCC IPQ6018 Driver");
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_ALIAS("platform:gcc-ipq6018");
+> 
+> This modalias won't be used.
 >
-> > I
-> > am also looking for suggestions how to handle these cross-tree changes
-> > (patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
-> > go through the net-next tree. I will re-send patch #5 separately as
-> > this should go through Kevin's linux-amlogic tree).
->
-> Patches 1 and 4 don't seem to have and dependencies. So i would
-> suggest splitting them out and submitting them to netdev for merging
-> independent of the rest.
 
-Jumping on the occasion of that series. These properties have been
-defined to deal with phy reset, while it seems that the PHY core can
-now handle that pretty easily through generic properties.
+ ok. But it looks to be there in other clk drivers as well.
+ 
+Regards,
+ Sricharan
 
-Wouldn't it make more sense to just move to that generic properties
-that already deals with the flags properly?
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---fo7fw3siaxhdftz7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP5DNAAKCRDj7w1vZxhR
-xa7wAPsFyeyyMzy2Mo76JgsYSYvgpcYRFmoiWzu3x+sgya0khgEAjtxK626tAXRA
-KJga7pcCDwguE9DoA7ftHh5GzRGyjQo=
-=h3Ed
------END PGP SIGNATURE-----
-
---fo7fw3siaxhdftz7--
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
