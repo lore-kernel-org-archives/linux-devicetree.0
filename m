@@ -1,124 +1,61 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH v2 10/12] iommu/mediatek: Use builtin_platform_driver
-Date: Mon, 10 Jun 2019 20:55:11 +0800
-Message-ID: <1560171313-28299-11-git-send-email-yong.wu@mediatek.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 11/12] arm: dts: mediatek: Get rid of mediatek,
+	larb for MM nodes
+Date: Mon, 10 Jun 2019 20:55:12 +0800
+Message-ID: <1560171313-28299-12-git-send-email-yong.wu@mediatek.com>
 References: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>, Robin Murphy <robin.murphy@arm.com>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, yong.wu@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1560171313-28299-1-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-MediaTek IOMMU should wait for smi larb which need wait for the
-power domain(mtk-scpsys.c) and the multimedia ccf who both are
-module init. Thus, subsys_initcall for MediaTek IOMMU is not helpful.
-Switch to builtin_platform_driver.
+After adding device_link between the IOMMU consumer and smi,
+the mediatek,larb is unnecessary now.
 
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+CC: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- drivers/iommu/mtk_iommu.c    | 31 +------------------------------
- drivers/iommu/mtk_iommu_v1.c | 24 +-----------------------
- 2 files changed, 2 insertions(+), 53 deletions(-)
+ arch/arm/boot/dts/mt2701.dtsi | 1 -
+ arch/arm/boot/dts/mt7623.dtsi | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 7b70574..8459597 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -712,22 +712,6 @@ static int mtk_iommu_probe(struct platform_device *pdev)
- 	return component_master_add_with_match(dev, &mtk_iommu_com_ops, match);
- }
- 
--static int mtk_iommu_remove(struct platform_device *pdev)
--{
--	struct mtk_iommu_data *data = platform_get_drvdata(pdev);
--
--	iommu_device_sysfs_remove(&data->iommu);
--	iommu_device_unregister(&data->iommu);
--
--	if (iommu_present(&platform_bus_type))
--		bus_set_iommu(&platform_bus_type, NULL);
--
--	clk_disable_unprepare(data->bclk);
--	devm_free_irq(&pdev->dev, data->irq, data);
--	component_master_del(&pdev->dev, &mtk_iommu_com_ops);
--	return 0;
--}
--
- static int __maybe_unused mtk_iommu_suspend(struct device *dev)
- {
- 	struct mtk_iommu_data *data = dev_get_drvdata(dev);
-@@ -808,23 +792,10 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
- 
- static struct platform_driver mtk_iommu_driver = {
- 	.probe	= mtk_iommu_probe,
--	.remove	= mtk_iommu_remove,
- 	.driver	= {
- 		.name = "mtk-iommu",
- 		.of_match_table = of_match_ptr(mtk_iommu_of_ids),
- 		.pm = &mtk_iommu_pm_ops,
- 	}
- };
--
--static int __init mtk_iommu_init(void)
--{
--	int ret;
--
--	ret = platform_driver_register(&mtk_iommu_driver);
--	if (ret != 0)
--		pr_err("Failed to register MTK IOMMU driver\n");
--
--	return ret;
--}
--
--subsys_initcall(mtk_iommu_init)
-+builtin_platform_driver(mtk_iommu_driver);
-diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
-index 845e20b..1c0fb82 100644
---- a/drivers/iommu/mtk_iommu_v1.c
-+++ b/drivers/iommu/mtk_iommu_v1.c
-@@ -650,22 +650,6 @@ static int mtk_iommu_probe(struct platform_device *pdev)
- 	return component_master_add_with_match(dev, &mtk_iommu_com_ops, match);
- }
- 
--static int mtk_iommu_remove(struct platform_device *pdev)
--{
--	struct mtk_iommu_data *data = platform_get_drvdata(pdev);
--
--	iommu_device_sysfs_remove(&data->iommu);
--	iommu_device_unregister(&data->iommu);
--
--	if (iommu_present(&platform_bus_type))
--		bus_set_iommu(&platform_bus_type, NULL);
--
--	clk_disable_unprepare(data->bclk);
--	devm_free_irq(&pdev->dev, data->irq, data);
--	component_master_del(&pdev->dev, &mtk_iommu_com_ops);
--	return 0;
--}
--
- static int __maybe_unused mtk_iommu_suspend(struct device *dev)
- {
- 	struct mtk_iommu_data *data = dev_get_drvdata(dev);
-@@ -702,16 +686,10 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
- 
- static struct platform_driver mtk_iommu_driver = {
- 	.probe	= mtk_iommu_probe,
--	.remove	= mtk_iommu_remove,
- 	.driver	= {
- 		.name = "mtk-iommu-v1",
- 		.of_match_table = mtk_iommu_of_ids,
- 		.pm = &mtk_iommu_pm_ops,
- 	}
- };
--
--static int __init m4u_init(void)
--{
--	return platform_driver_register(&mtk_iommu_driver);
--}
--subsys_initcall(m4u_init);
-+builtin_platform_driver(mtk_iommu_driver);
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 51e1305..57b5de3 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -564,7 +564,6 @@
+ 		clock-names = "jpgdec-smi",
+ 			      "jpgdec";
+ 		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+-		mediatek,larb = <&larb2>;
+ 		iommus = <&iommu MT2701_M4U_PORT_JPGDEC_WDMA>,
+ 			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
+ 	};
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index a79f0b6..cf22c58 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -783,7 +783,6 @@
+ 		clock-names = "jpgdec-smi",
+ 			      "jpgdec";
+ 		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+-		mediatek,larb = <&larb2>;
+ 		iommus = <&iommu MT2701_M4U_PORT_JPGDEC_WDMA>,
+ 			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
+ 	};
 -- 
 1.9.1
