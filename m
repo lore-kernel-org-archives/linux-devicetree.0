@@ -1,64 +1,37 @@
-From: Neal Liu <neal.liu@mediatek.com>
-Subject: [PATCH v3 1/3] soc: mediatek: add SMC fid table for SIP interface
-Date: Mon, 10 Jun 2019 18:36:22 +0800
-Message-ID: <1560162984-26104-2-git-send-email-neal.liu@mediatek.com>
-References: <1560162984-26104-1-git-send-email-neal.liu@mediatek.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: Re: [PATCH v5 2/3] fdt: add support for rng-seed
+Date: Mon, 10 Jun 2019 18:59:11 +0800
+Message-ID: <CAJMQK-i0z1EHCMK3eTya+SmK6GD_C4Ljvb7BHvsaMWLDxxmwMg@mail.gmail.com>
+References: <20190527043336.112854-1-hsinyi@chromium.org> <20190527043336.112854-2-hsinyi@chromium.org>
+ <5ced598d.1c69fb81.dabd8.339d@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560162984-26104-1-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <5ced598d.1c69fb81.dabd8.339d@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>
-Cc: Neal Liu <neal.liu@mediatek.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, Crystal Guo <Crystal.Guo@mediatek.com>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-1. Add a header file to provide SIP interface to ATF
-2. Add hwrng SMC fid
+On Tue, May 28, 2019 at 11:53 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Hsin-Yi Wang (2019-05-26 21:33:35)
+> > Introducing a chosen node, rng-seed, which is an entropy that can be
+> > passed to kernel called very early to increase initial device
+> > randomness. Bootloader should provide this entropy and the value is
+> > read from /chosen/rng-seed in DT.
+> >
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > ---
+>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+>
 
-Signed-off-by: Neal Liu <neal.liu@mediatek.com>
----
- include/linux/soc/mediatek/mtk_sip_svc.h |   33 ++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
+Hi Rob,
 
-diff --git a/include/linux/soc/mediatek/mtk_sip_svc.h b/include/linux/soc/mediatek/mtk_sip_svc.h
-new file mode 100644
-index 0000000..e70c325
---- /dev/null
-+++ b/include/linux/soc/mediatek/mtk_sip_svc.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ */
-+
-+#ifndef _MTK_SECURE_API_H_
-+#define _MTK_SECURE_API_H_
-+
-+#include <linux/kernel.h>
-+
-+/* Error Code */
-+#define SIP_SVC_E_SUCCESS		0
-+#define SIP_SVC_E_NOT_SUPPORTED		-1
-+#define SIP_SVC_E_INVALID_PARAMS	-2
-+#define SIP_SVC_E_INVALID_RANGE		-3
-+#define SIP_SVC_E_PERMISSION_DENY	-4
-+
-+#ifdef CONFIG_ARM64
-+#define MTK_SIP_SMC_AARCH_BIT		BIT(30)
-+#else
-+#define MTK_SIP_SMC_AARCH_BIT		0
-+#endif
-+
-+/*******************************************************************************
-+ * Defines for Mediatek runtime services func ids
-+ ******************************************************************************/
-+
-+/* Security related SMC call */
-+/* HWRNG */
-+#define MTK_SIP_KERNEL_GET_RND \
-+	(0x82000206 | MTK_SIP_SMC_AARCH_BIT)
-+
-+#endif /* _MTK_SECURE_API_H_ */
--- 
-1.7.9.5
+Is this series accepted? Or is there any other related concern?
+
+If it's fine, I also have sent a patch for updating
+schemas/chosen.yaml document.
+
+Thanks
