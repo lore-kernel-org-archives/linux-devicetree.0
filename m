@@ -1,44 +1,54 @@
-Return-Path: <SRS0=5yH4=UC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:32843 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727393AbfFCLc5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Jun 2019 07:32:57 -0400
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH] media: dt-bindings: Fix vendor-prefixes YAML
-Date: Mon,  3 Jun 2019 13:32:50 +0200
-Message-Id: <20190603113250.4115-1-maxime.ripard@bootlin.com>
+Return-Path: <SRS0=bzHF=UJ=nvidia.com=nkristam@kernel.org>
+From: Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V4 5/8] arm64: tegra: Add xudc node for Tegra210
+Date: Mon, 10 Jun 2019 15:49:06 +0530
+Message-ID: <1560161949-26031-6-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
+References: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Michael Tretter <m.tretter@pengutronix.de>
+Content-Type: text/plain
+To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Commit 8df39e16877f ("media: dt-bindings: media: Add vendor prefix for
-allegro") introduced a new devicetree binding vendors, however with an
-improper syntax making the resulting YAML impossible to parse. Let's fix
-this.
+Tegra210 has one XUSB device mode controller, which can be operated
+HS and SS modes. Add DT support for XUSB device mode controller.
 
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Michael Tretter <m.tretter@pengutronix.de>
-Fixes: 8df39e16877f ("media: dt-bindings: media: Add vendor prefix for allegro")
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Reviewed-by: JC Kuo <jckuo@nvidia.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index cb983eee4576..432bababc9bf 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -49,7 +49,7 @@ patternProperties:
-     description: Aeroflex Gaisler AB
-   "^al,.*":
-     description: Annapurna Labs
--  "^allegro,.*"
-+  "^allegro,.*":
-     description: Allegro DVT
-   "^allo,.*":
-     description: Allo.com
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index a550c0a..9d1bea4 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -1184,6 +1184,25 @@
+ 		status = "disabled";
+ 	};
+ 
++	xudc@700d0000 {
++		compatible = "nvidia,tegra210-xudc";
++		reg = <0x0 0x700d0000 0x0 0x8000>,
++		      <0x0 0x700d8000 0x0 0x1000>,
++		      <0x0 0x700d9000 0x0 0x1000>;
++		reg-names = "base", "fpci", "ipfs";
++		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
++			 <&tegra_car TEGRA210_CLK_XUSB_SS>,
++			 <&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
++			 <&tegra_car TEGRA210_CLK_XUSB_HS_SRC>,
++			 <&tegra_car TEGRA210_CLK_XUSB_FS_SRC>;
++		clock-names = "dev", "ss", "ss_src", "hs_src", "fs_src";
++		power-domains = <&pd_xusbdev>, <&pd_xusbss>;
++		power-domain-names = "dev", "ss";
++		nvidia,xusb-padctl = <&padctl>;
++		status = "disabled";
++	};
++
+ 	mipi: mipi@700e3000 {
+ 		compatible = "nvidia,tegra210-mipi";
+ 		reg = <0x0 0x700e3000 0x0 0x100>;
 -- 
-2.21.0
+2.7.4
