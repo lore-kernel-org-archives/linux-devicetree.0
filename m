@@ -1,33 +1,38 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v5 07/26] leds: sc27xx-blt: Use generic support for
- composing LED names
-Date: Mon, 10 Jun 2019 10:52:12 +0800
-Message-ID: <CAMz4kuLHxxDB2SrYZp5TWSk8ZFjiCWPaRX-r_=zpFy+-YM3WEQ@mail.gmail.com>
-References: <20190609190803.14815-1-jacek.anaszewski@gmail.com> <20190609190803.14815-8-jacek.anaszewski@gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [next PATCH] Revert "usb: mtu3: fix up undefined reference to usb_debug_root"
+Date: Mon, 10 Jun 2019 10:52:29 +0800
+Message-ID: <1560135149-9647-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190609190803.14815-8-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>, dtor@google.com, Guenter Roeck <linux@roeck-us.net>, Dan Murphy <dmurphy@ti.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+It's not needed after [1] is applied, because usb_debug_root is created
+by usb common core but not usbcore now.
 
-On Mon, 10 Jun 2019 at 03:08, Jacek Anaszewski
-<jacek.anaszewski@gmail.com> wrote:
->
-> Switch to using generic LED support for composing LED class
-> device name.
->
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Baolin Wang <baolin.wang@linaro.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+[1] 812086d362a1 ("USB: move usb debugfs directory creation to the usb common core")
 
-Thanks.
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/usb/mtu3/mtu3_debugfs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/usb/mtu3/mtu3_debugfs.c b/drivers/usb/mtu3/mtu3_debugfs.c
+index 3ed666f94dd9..c96e5dab0a48 100644
+--- a/drivers/usb/mtu3/mtu3_debugfs.c
++++ b/drivers/usb/mtu3/mtu3_debugfs.c
+@@ -528,7 +528,8 @@ void ssusb_dr_debugfs_init(struct ssusb_mtk *ssusb)
+ 
+ void ssusb_debugfs_create_root(struct ssusb_mtk *ssusb)
+ {
+-	ssusb->dbgfs_root = debugfs_create_dir(dev_name(ssusb->dev), NULL);
++	ssusb->dbgfs_root =
++		debugfs_create_dir(dev_name(ssusb->dev), usb_debug_root);
+ }
+ 
+ void ssusb_debugfs_remove_root(struct ssusb_mtk *ssusb)
 -- 
-Baolin Wang
-Best Regards
+2.21.0
