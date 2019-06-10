@@ -1,60 +1,34 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 05/11] dt-bindings: net: sun4i-emac: Convert the
- binding to a schemas
-Date: Mon, 10 Jun 2019 16:55:46 +0200
-Message-ID: <20190610145546.4xz7hdh3gk6vjrbx@flea>
-References: <91618c7e9a5497462afa74c6d8a947f709f54331.1560158667.git-series.maxime.ripard@bootlin.com>
- <d198d29119b37b2fdb700d8992b31963e98b6693.1560158667.git-series.maxime.ripard@bootlin.com>
- <20190610143139.GG28724@lunn.ch>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/7] clk: actions: Fix factor clk struct member access
+Date: Mon, 10 Jun 2019 08:01:59 -0700
+Message-ID: <20190610150200.8A32220859@mail.kernel.org>
+References: <20190608195317.6336-1-manivannan.sadhasivam@linaro.org> <20190608195317.6336-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2hk2wdgp2lluy5gd"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190610143139.GG28724@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190608195317.6336-2-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: afaerber@suse.de, robh+dt@kernel.org, ulf.hansson@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org, linus.walleij@linaro.org, linux-clk@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Quoting Manivannan Sadhasivam (2019-06-08 12:53:11)
+> Since the helper "owl_factor_helper_round_rate" is shared between factor
+> and composite clocks, using the factor clk specific helper function
+> like "hw_to_owl_factor" to access its members will create issues when
+> called from composite clk specific code. Hence, pass the "factor_hw"
+> struct pointer directly instead of fetching it using factor clk specific
+> helpers.
+>=20
+> This issue has been observed when a composite clock like "sd0_clk" tried
+> to call "owl_factor_helper_round_rate" resulting in pointer dereferencing
+> error.
+>=20
+> Fixes: 4bb78fc9744a ("clk: actions: Add factor clock support")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
 
---2hk2wdgp2lluy5gd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I agree with Andreas on the function name. With that change you can add
 
-Hi Andrew,
-
-On Mon, Jun 10, 2019 at 04:31:39PM +0200, Andrew Lunn wrote:
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - phy
-> > +  - allwinner,sram
->
-> Quoting ethernet.txt:
->
-> - phy: the same as "phy-handle" property, not recommended for new bindings.
-> - phy-handle: phandle, specifies a reference to a node representing a PHY
->   device; this property is described in the Devicetree Specification and so
->   preferred;
->
-> Can this be expressed in Yaml? Accept phy, but give a warning. Accept
-> phy-handle without a warning? Enforce that one or the other is
-> present?
-
-This is what we should be aiming for, yes, but right now we don't
-really have a way to express that for properties.
-
-The next specification of the schema spec seems to address that, and
-it should be released pretty soon, so it's always something that we
-can address later on, when it will be out.
-
-For that particular case, we can also work around it by requiring
-phy-handle instead of phy. That way, if phy-handle is missing we will
-have a warning. phy will not be validated though, which is kind of a
-shame, but still much better than what we currently have.
-
-Maxime
---2hk2wdgp2lluy5gd--
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
