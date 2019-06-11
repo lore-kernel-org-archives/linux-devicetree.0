@@ -1,39 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1 2/2] soc: nuvoton: add NPCM LPC BPC driver
-Date: Tue, 11 Jun 2019 15:11:48 +0200
-Message-ID: <CAK8P3a0s1fdt2yHVjOXffeKPKkwUyJ7DKCZHHMKjx+3j300ZAQ@mail.gmail.com>
-References: <20190610133245.306812-1-tmaimon77@gmail.com> <20190610133245.306812-3-tmaimon77@gmail.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 0/6] Add USB2.0/CMT/TMU support to HiHope RZ/G2M
+Date: Tue, 11 Jun 2019 13:12:04 +0000
+Message-ID: <TYXPR01MB1775725F45944C969BCDD49EC0ED0@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610133245.306812-3-tmaimon77@gmail.com>
+In-Reply-To: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: Olof Johansson <olof@lixom.net>, gregkh <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Avi Fishman <avifishman70@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, benjaminfair@google.com, Joel Stanley <joel@jms.id.au>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 4:19 PM Tomer Maimon <tmaimon77@gmail.com> wrote:
->
-> Add Nuvoton BMC NPCM BIOS post code (BPC) driver.
->
-> The NPCM BPC monitoring two I/O address written by
-> the host on the Low Pin Count (LPC) bus, the capure
-> data stored in 128-word FIFO.
->
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Sent: 11 June 2019 14:07
+> Subject: [PATCH 0/6] Add USB2.0/CMT/TMU support to HiHope RZ/G2M
+>=20
+> Dear All,
+>=20
+> this series adds USB2.0/CMT/TMU support to the HiHope RZ/G2M.
 
-We've run into this situation before, but don't have a good solution yet:
+Ah, I forgot to mention that this series depends on:
+https://patchwork.kernel.org/cover/10980861/
+https://patchwork.kernel.org/patch/10980997/
+https://patchwork.kernel.org/patch/10986211/
 
-The driver seems useful and well implemented, but I keep having a bad
-feeling about adding a chardev driver into drivers/soc for something that
-is clearly specific to a particular implementation on the hardware side
-but generic on the user interface. The same user interface might be
-used on an Aspeed BMC or any other one, so please coordinate at
-least between Novoton and Aspeed developers on creating a common
-user interface, and review each other's patches.
+Thanks,
+Fab
 
-Maybe we can introduce a drivers/bmc/ (or even drivers/openbmc)
-that collects all those user interfaces with a thin abstraction layer
-and one or two hardware specific back-ends?
-
-        Arnd
+>=20
+> Thanks,
+> Fab
+>=20
+> Fabrizio Castro (6):
+>   arm64: dts: renesas: r8a774a1: Fix USB 2.0 clocks
+>   arm64: dts: renesas: hihope-common: Add USB 2.0 support
+>   arm64: dts: renesas: r8a774a1: Add CMT device nodes
+>   clk: renesas: r8a774a1: Add TMU clock
+>   dt-bindings: timer: renesas: tmu: Document r8a774a1 bindings
+>   arm64: dts: renesas: r8a774a1: Add TMU device nodes
+>=20
+>  .../devicetree/bindings/timer/renesas,tmu.txt      |   1 +
+>  arch/arm64/boot/dts/renesas/hihope-common.dtsi     |  76 +++++++++++
+>  arch/arm64/boot/dts/renesas/r8a774a1.dtsi          | 151 +++++++++++++++=
+++++--
+>  drivers/clk/renesas/r8a774a1-cpg-mssr.c            |   5 +
+>  4 files changed, 225 insertions(+), 8 deletions(-)
+>=20
+> --
+> 2.7.4
