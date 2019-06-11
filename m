@@ -1,61 +1,57 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv5 16/20] PCI: mobiveil: Add link up condition check
-Date: Tue, 11 Jun 2019 18:17:33 +0100
-Message-ID: <20190611171733.GB22836@redmoon>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-17-Zhiqiang.Hou@nxp.com>
+From: Dan Williams <dcbw@redhat.com>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Tue, 11 Jun 2019 12:22:58 -0500
+Message-ID: <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190412083635.33626-17-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, bhelgaas@google.com
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Johannes Berg <johannes@sipsolutions.net>, Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-NB: Please trim the CC list and keep it to concerned maintainers.
-
-On Fri, Apr 12, 2019 at 08:36:48AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Tue, 2019-06-11 at 10:52 -0600, Subash Abhinov Kasiviswanathan
+wrote:
+> > The general plan (and I believe Daniele Palmas was working on it)
+> > was
+> > to eventually make qmi_wwan use rmnet rather than its internal
+> > sysfs-
+> > based implementation. qmi_wwan and ipa are at essentially the same
+> > level and both could utilize rmnet on top.
+> > 
+> > *That's* what I'd like to see. I don't want to see two different
+> > ways
+> > to get QMAP packets to modem firmware from two different drivers
+> > that
+> > really could use the same code.
+> > 
+> > Dan
 > 
-> Avoid to issue CFG transactions to link partner when the PCIe
-> link is not up.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> V5:
->  - Corrected the subject.
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 621852078caf..1ee3ea2570c0 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -283,6 +283,10 @@ static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
->  {
->  	struct mobiveil_pcie *pcie = bus->sysdata;
->  
-> +	/* If there is no link, then there is no device */
-> +	if (bus->number > pcie->root_bus_nr && !mobiveil_pcie_link_up(pcie))
+> qmi_wwan is based on USB and is very different from the IPA
+> interconnect
+> though. AFAIK, they do not have much in common (apart from sending &
+> receiving MAP packets from hardware).
 
-I think Bjorn mentioned this a million times already, eg:
+That is correct, they are very different drivers but as you state they
+send and receive MAP packets with the other end via some closer-to-
+hardware protocol (USB or GSI?) than QMAP.
 
-https://lore.kernel.org/linux-pci/20190411201535.GS256045@google.com/
+rmnet should handle muxing the QMAP, QoS, and aggregation and pass the
+resulting packet to the lower layer. That lower layer could be IPA or
+qmi_wwan, which in turn passes that QMAP packet to USB or GSI or
+whatever. This is typically how Linux handles clean abstractions
+between different protocol layers in drivers.
 
-this is racy and gives a false sense of robustness. We have code in the
-kernel that checks the link but adding more seems silly to me, so I am
-inclined to drop this patch.
+Similar to some WiFi drivers (drivers/net/wireless/marvell/libertas for
+example) where the same firmware interface can be accessed via PCI,
+SDIO, USB, SPI, etc. The bus-specific code is self-contained and does
+not creep into the upper more generic parts.
 
-Lorenzo
-
-> +		return false;
-> +
->  	/* Only one device down on each root port */
->  	if ((bus->number == pcie->root_bus_nr) && (devfn > 0))
->  		return false;
-> -- 
-> 2.17.1
-> 
+Dan
