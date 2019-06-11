@@ -1,156 +1,100 @@
-From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
-Date: Tue, 11 Jun 2019 11:13:33 -0700
-Message-ID: <20190611111333.425ce809@jacob-builder>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
-	<20190610184714.6786-2-jean-philippe.brucker@arm.com>
-	<20190611103625.00001399@huawei.com>
-	<62d1f310-0cba-4d55-0f16-68bba3c64927@arm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v1 06/11] ti948: Reconfigure in the alive check when
+ device returns
+Date: Tue, 11 Jun 2019 21:10:46 +0300
+Message-ID: <20190611181046.GU5016@pendragon.ideasonboard.com>
+References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
+ <20190611140412.32151-7-michael.drake@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <62d1f310-0cba-4d55-0f16-68bba3c64927-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190611140412.32151-7-michael.drake@codethink.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Drake <michael.drake@codethink.co.uk>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Jun 2019 15:35:22 +0100
-Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
+Hi Michael,
 
-> On 11/06/2019 10:36, Jonathan Cameron wrote:
-> >> +/**
-> >> + * ioasid_alloc - Allocate an IOASID
-> >> + * @set: the IOASID set
-> >> + * @min: the minimum ID (inclusive)
-> >> + * @max: the maximum ID (inclusive)
-> >> + * @private: data private to the caller
-> >> + *
-> >> + * Allocate an ID between @min and @max. The @private pointer is
-> >> stored
-> >> + * internally and can be retrieved with ioasid_find().
-> >> + *
-> >> + * Return: the allocated ID on success, or %INVALID_IOASID on
-> >> failure.
-> >> + */
-> >> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
-> >> ioasid_t max,
-> >> +		      void *private)
-> >> +{
-> >> +	u32 id = INVALID_IOASID;
-> >> +	struct ioasid_data *data;
-> >> +
-> >> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> >> +	if (!data)
-> >> +		return INVALID_IOASID;
-> >> +
-> >> +	data->set = set;
-> >> +	data->private = private;
-> >> +
-> >> +	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max),
-> >> GFP_KERNEL)) {
-> >> +		pr_err("Failed to alloc ioasid from %d to %d\n",
-> >> min, max);
-> >> +		goto exit_free;
-> >> +	}
-> >> +	data->id = id;
-> >> +
-> >> +exit_free:  
-> > 
-> > This error flow is perhaps a little more confusing than it needs to
-> > be?
-> > 
-> > My assumption (perhaps wrong) is that we only have an id ==
-> > INVALID_IOASID if the xa_alloc fails, and that we will always have
-> > such an id value if it does (I'm not totally sure this second
-> > element is true in __xa_alloc).
-> > 
-> > If I'm missing something perhaps a comment on how else we'd get
-> > here.  
-> 
-> Yes we can simplify this:
-> 
-> 		return id;
-> 	exit_free:
-> 		kfree(data)
-> 		return INVALID_IOASID;
-> 	}
-> 
-> The XA API doesn't say that @id passed to xa_alloc() won't be modified
-> in case of error. It's true in the current implementation, but won't
-> necessarily stay that way. On the other hand I think it's safe to
-> expect @id to always be set when xa_alloc() succeeds.
-> 
-the flow with custom allocator is slightly different, but you are right
-I can simplify it as you suggested.
-Jonathan, I will add you to the cc list in next version. If you could
-also review the current version, it would be greatly appreciated.
+Thank you for the patch.
 
-https://lore.kernel.org/lkml/1560087862-57608-13-git-send-email-jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org/
+On Tue, Jun 11, 2019 at 03:04:07PM +0100, Michael Drake wrote:
+> If the alive check detects a transition to the alive state,
+> the device configuration is rewritten.
 
-> >> +/**
-> >> + * ioasid_find - Find IOASID data
-> >> + * @set: the IOASID set
-> >> + * @ioasid: the IOASID to find
-> >> + * @getter: function to call on the found object
-> >> + *
-> >> + * The optional getter function allows to take a reference to the
-> >> found object
-> >> + * under the rcu lock. The function can also check if the object
-> >> is still valid:
-> >> + * if @getter returns false, then the object is invalid and NULL
-> >> is returned.
-> >> + *
-> >> + * If the IOASID has been allocated for this set, return the
-> >> private pointer
-> >> + * passed to ioasid_alloc. Private data can be NULL if not set.
-> >> Return an error
-> >> + * if the IOASID is not found or does not belong to the set.  
-> > 
-> > Perhaps should make it clear that @set can be null.  
-> 
-> Indeed. But I'm not sure allowing @set to be NULL is such a good idea,
-> because the data type associated to an ioasid depends on its set. For
-> example SVA will put an mm_struct in there, and auxiliary domains use
-> some structure private to the IOMMU domain.
-> 
-I am not sure we need to count on @set to decipher data type. Whoever
-does the allocation and owns the IOASID should knows its own data type.
-My thought was that @set is only used to group IDs, permission check
-etc.
+This seems like a big hack. You will have at the very least to explain
+why this is needed, and why you can't configure the device in response
+to drm_bridge operation calls.
 
-> Jacob, could me make @set mandatory, or do you see a use for a global
-> search? If @set is NULL, then callers can check if the return pointer
-> is NULL, but will run into trouble if they try to dereference it.
+> Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
+> Cc: Patrick Glaser <pglaser@tesla.com>
+> Cc: Nate Case <ncase@tesla.com>
+> ---
+>  drivers/gpu/drm/bridge/ti948.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
 > 
-A global search use case can be for PRQ. IOMMU driver gets a IOASID
-(first interrupt then retrieve from a queue), it has no idea which
-@set it belongs to. But the data types are the same for all IOASIDs
-used by the IOMMU.
-If @set is NULL, the search does not check set match. It is separate
-from return pointer. Sorry i am not seeing the problems here.
+> diff --git a/drivers/gpu/drm/bridge/ti948.c b/drivers/gpu/drm/bridge/ti948.c
+> index 86daa3701b91..b5c766711c4b 100644
+> --- a/drivers/gpu/drm/bridge/ti948.c
+> +++ b/drivers/gpu/drm/bridge/ti948.c
+> @@ -132,6 +132,8 @@ struct ti948_reg_val {
+>   * @reg_names:   Array of regulator names, or NULL.
+>   * @regs:        Array of regulators, or NULL.
+>   * @reg_count:   Number of entries in reg_names and regs arrays.
+> + * @alive_check: Context for the alive checking work item.
+> + * @alive:       Whether the device is alive or not (alive_check).
+>   */
+>  struct ti948_ctx {
+>  	struct i2c_client *i2c;
+> @@ -141,6 +143,8 @@ struct ti948_ctx {
+>  	const char **reg_names;
+>  	struct regulator **regs;
+>  	size_t reg_count;
+> +	struct delayed_work alive_check;
+> +	bool alive;
+>  };
+>  
+>  static bool ti948_readable_reg(struct device *dev, unsigned int reg)
+> @@ -346,6 +350,8 @@ static int ti948_power_on(struct ti948_ctx *ti948)
+>  	if (ret != 0)
+>  		return ret;
+>  
+> +	ti948->alive = true;
+> +
+>  	msleep(500);
+>  
+>  	return 0;
+> @@ -356,6 +362,8 @@ static int ti948_power_off(struct ti948_ctx *ti948)
+>  	int i;
+>  	int ret;
+>  
+> +	ti948->alive = false;
+> +
+>  	for (i = ti948->reg_count; i > 0; i--) {
+>  		dev_info(&ti948->i2c->dev, "Disabling %s regulator\n",
+>  				ti948->reg_names[i - 1]);
+> @@ -388,8 +396,17 @@ static void ti948_alive_check(struct work_struct *work)
+>  {
+>  	struct delayed_work *dwork = to_delayed_work(work);
+>  	struct ti948_ctx *ti948 = delayed_work_to_ti948_ctx(dwork);
+> +	int ret = ti948_device_check(ti948);
+>  
+> -	dev_info(&ti948->i2c->dev, "%s Alive check!\n", __func__);
+> +	if (ti948->alive == false && ret == 0) {
+> +		dev_info(&ti948->i2c->dev, "Device has come back to life!\n");
+> +		ti948_write_config_seq(ti948);
+> +		ti948->alive = true;
+> +
+> +	} else if (ti948->alive == true && ret != 0) {
+> +		dev_info(&ti948->i2c->dev, "Device has stopped responding\n");
+> +		ti948->alive = false;
+> +	}
+>  
+>  	/* Reschedule ourself for the next check. */
+>  	schedule_delayed_work(&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
 
-> >   
-> >> + */
-> >> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-> >> +		  bool (*getter)(void *))
-> >> +{
-> >> +	void *priv = NULL;  
-> > 
-> > Set in all paths, so does need to be set here.  
-> 
-> Right
-> 
-> Thanks,
-> Jean
+-- 
+Regards,
 
-[Jacob Pan]
+Laurent Pinchart
