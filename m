@@ -1,7 +1,8 @@
 From: Jungo Lin <jungo.lin@mediatek.com>
-Subject: [RFC,v3 5/9] media: platform: Add Mediatek ISP P1 V4L2 control
-Date: Tue, 11 Jun 2019 11:53:40 +0800
-Message-ID: <20190611035344.29814-6-jungo.lin@mediatek.com>
+Subject: [RFC,
+ v3 4/9] media: platform: Add Mediatek ISP P1 image & meta formats
+Date: Tue, 11 Jun 2019 11:53:39 +0800
+Message-ID: <20190611035344.29814-5-jungo.lin@mediatek.com>
 References: <jungo.lin@mediatek.com>
  <20190611035344.29814-1-jungo.lin@mediatek.com>
 Reply-To: jungo.lin@mediatek.com
@@ -23,269 +24,771 @@ To: tfiga@chromium.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, m
 Cc: devicetree@vger.kernel.org, sean.cheng@mediatek.com, rynn.wu@mediatek.com, srv_heupstream@mediatek.com, robh@kernel.org, ryan.yu@mediatek.com, frankie.chiu@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, linux-mediatek@lists.infradead.org, ddavenport@chromium.org, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Reserved Mediatek ISP P1 V4L2 control number with 16.
-Moreover, add two V4L2 controls for ISP P1 user space
-usage.
+Add packed/full-g bayer formats with 8/10/12/14 bit
+for image output. Add Pass 1 (P1) specific meta formats for
+parameter processing and 3A/other statistics.
 
-1. V4L2_CID_MTK_GET_BIN_INFO
-- Provide the image output width & height in case
-camera binning mode is enabled.
-
-2. V4L2_CID_MTK_RAW_PATH
-- Export the path control of the main stream to user space.
-One is pure raw and the other is processing raw.
-The default value is 0 which outputs the pure raw bayer image
-from sesnor, without image processing in ISP HW.
+(The current metadata interface used in meta input and partial
+meta nodes is only a temporary solution to kick off the driver
+development and is not ready to be reviewed yet.)
 
 Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
 ---
- drivers/media/platform/mtk-isp/Makefile       |   3 +
- .../media/platform/mtk-isp/isp_50/Makefile    |   5 +
- .../platform/mtk-isp/isp_50/cam/Makefile      |   5 +
- .../mtk-isp/isp_50/cam/mtk_cam-ctrl.c         | 138 ++++++++++++++++++
- .../mtk-isp/isp_50/cam/mtk_cam-ctrl.h         |  38 +++++
- include/uapi/linux/v4l2-controls.h            |   4 +
- 6 files changed, 193 insertions(+)
- create mode 100644 drivers/media/platform/mtk-isp/Makefile
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/Makefile
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/Makefile
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.c
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.h
+ Documentation/media/uapi/v4l/pixfmt-mtb8.rst |  49 +++++++++
+ Documentation/media/uapi/v4l/pixfmt-mtba.rst |  62 +++++++++++
+ Documentation/media/uapi/v4l/pixfmt-mtbc.rst |  58 ++++++++++
+ Documentation/media/uapi/v4l/pixfmt-mtbe.rst |  70 ++++++++++++
+ Documentation/media/uapi/v4l/pixfmt-mtf8.rst |  75 +++++++++++++
+ Documentation/media/uapi/v4l/pixfmt-mtfa.rst |  87 +++++++++++++++
+ Documentation/media/uapi/v4l/pixfmt-mtfc.rst | 107 +++++++++++++++++++
+ Documentation/media/uapi/v4l/pixfmt-mtfe.rst | 107 +++++++++++++++++++
+ drivers/media/v4l2-core/v4l2-ioctl.c         |  13 +++
+ include/uapi/linux/videodev2.h               |  17 +++
+ 10 files changed, 645 insertions(+)
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtb8.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtba.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtbc.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtbe.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtf8.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtfa.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtfc.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtfe.rst
 
-diff --git a/drivers/media/platform/mtk-isp/Makefile b/drivers/media/platform/mtk-isp/Makefile
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtb8.rst b/Documentation/media/uapi/v4l/pixfmt-mtb8.rst
 new file mode 100644
-index 000000000000..c17fb3fc3340
+index 000000000000..2337ccd66277
 --- /dev/null
-+++ b/drivers/media/platform/mtk-isp/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/media/uapi/v4l/pixfmt-mtb8.rst
+@@ -0,0 +1,49 @@
++.. -*- coding: utf-8; mode: rst -*-
 +
-+obj-y += isp_50/
-diff --git a/drivers/media/platform/mtk-isp/isp_50/Makefile b/drivers/media/platform/mtk-isp/isp_50/Makefile
-new file mode 100644
-index 000000000000..8498fe70e418
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/isp_50/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
++.. _V4L2-PIX-FMT-MTISP_B8:
 +
-+ifeq ($(CONFIG_VIDEO_MEDIATEK_ISP_PASS1),y)
-+obj-y += cam/
-+endif
-diff --git a/drivers/media/platform/mtk-isp/isp_50/cam/Makefile b/drivers/media/platform/mtk-isp/isp_50/cam/Makefile
-new file mode 100644
-index 000000000000..53fb69d3add6
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/isp_50/cam/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
++*******************************
++V4L2_PIX_FMT_MTISP_B8 ('MTB8')
++*******************************
 +
-+mtk-cam-isp-objs += mtk_cam-ctrl.o
++8-bit Packed Bayer formats.
 +
-+obj-$(CONFIG_VIDEO_MEDIATEK_ISP_PASS1) += mtk-cam-isp.o
++
++Description
++===========
++
++The four pixel formats are used by Mediatek ISP.
++This is a packed format, meaning all the data for a pixel lie
++next to each other in memory, with a depth of 8 bits per pixel.
++Each sample is stored in a byte.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++Below is an example of conventional RGB byte order BGGR.
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00`
++      - G\ :sub:`01`
++      - B\ :sub:`02`
++      - G\ :sub:`03`
++    * - start + 4:
++      - G\ :sub:`10`
++      - R\ :sub:`11`
++      - G\ :sub:`12`
++      - R\ :sub:`13`
++    * - start + 8:
++      - B\ :sub:`20`
++      - G\ :sub:`21`
++      - B\ :sub:`22`
++      - G\ :sub:`23`
++    * - start + 12:
++      - G\ :sub:`30`
++      - R\ :sub:`31`
++      - G\ :sub:`32`
++      - R\ :sub:`33`
 \ No newline at end of file
-diff --git a/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.c b/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.c
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtba.rst b/Documentation/media/uapi/v4l/pixfmt-mtba.rst
 new file mode 100644
-index 000000000000..31d801c82495
+index 000000000000..ade51d5472b0
 --- /dev/null
-+++ b/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.c
-@@ -0,0 +1,138 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (c) 2018 MediaTek Inc.
++++ b/Documentation/media/uapi/v4l/pixfmt-mtba.rst
+@@ -0,0 +1,62 @@
++.. -*- coding: utf-8; mode: rst -*-
 +
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
++.. _V4L2-PIX-FMT-MTISP_B10:
 +
-+#include "mtk_cam-ctrl.h"
-+#include "mtk_cam.h"
++*******************************
++V4L2_PIX_FMT_MTISP_B10 ('MTBA')
++*******************************
 +
-+static int handle_ctrl_get_bin_info(struct v4l2_ctrl *ctrl, int is_width)
-+{
-+	struct mtk_cam_dev *cam_dev = ctrl->priv;
-+	struct v4l2_format *fmt;
++10-bit Packed Bayer formats.
 +
-+	fmt = &cam_dev->vdev_nodes[MTK_CAM_P1_MAIN_STREAM_OUT].vdev_fmt;
 +
-+	dev_dbg(&cam_dev->pdev->dev, "Get bin info w*h:%d*%d is_width:%d",
-+		fmt->fmt.pix_mp.width, fmt->fmt.pix_mp.height, is_width);
++Description
++===========
 +
-+	if (is_width)
-+		ctrl->val = fmt->fmt.pix_mp.width;
-+	else
-+		ctrl->val = fmt->fmt.pix_mp.height;
++The four pixel formats are used by Mediatek ISP.
++This is a packed format, meaning all the data for a pixel lie
++next to each other with no padding in memory, with a depth of 10 bits per pixel.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++Below is an example of conventional RGB byte order BGGR.
 +
-+	return 0;
-+}
++**Byte Order.**
++Each cell is one byte.
 +
-+static int handle_ctrl_get_process_raw(struct v4l2_ctrl *ctrl)
-+{
-+	struct mtk_cam_dev *cam_dev = ctrl->priv;
-+	struct isp_p1_device *p1_dev = get_p1_device(&cam_dev->pdev->dev);
++pixels cross the byte boundary and have a ratio of 5 bytes for each 4 pixels.
 +
-+	ctrl->val = (p1_dev->isp_ctx.isp_raw_path == ISP_PROCESS_RAW_PATH);
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
 +
-+	dev_dbg(&cam_dev->pdev->dev, "Get process raw:%d", ctrl->val);
-+
-+	return 0;
-+}
-+
-+static int handle_ctrl_set_process_raw(struct v4l2_ctrl *ctrl)
-+{
-+	struct mtk_cam_dev *cam_dev = ctrl->priv;
-+	struct isp_p1_device *p1_dev = get_p1_device(&cam_dev->pdev->dev);
-+
-+	p1_dev->isp_ctx.isp_raw_path = (ctrl->val) ?
-+		ISP_PROCESS_RAW_PATH : ISP_PURE_RAW_PATH;
-+	dev_dbg(&cam_dev->pdev->dev, "Set process raw:%d", ctrl->val);
-+	return 0;
-+}
-+
-+static int mtk_cam_dev_g_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	switch (ctrl->id) {
-+	case V4L2_CID_MTK_PROCESSING_RAW:
-+		handle_ctrl_get_process_raw(ctrl);
-+		break;
-+	case V4L2_CID_MTK_GET_BIN_WIDTH:
-+		handle_ctrl_get_bin_info(ctrl, 1);
-+		break;
-+	case V4L2_CID_MTK_GET_BIN_HEIGTH:
-+		handle_ctrl_get_bin_info(ctrl, 0);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int mtk_cam_dev_s_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	switch (ctrl->id) {
-+	case V4L2_CID_MTK_PROCESSING_RAW:
-+		return handle_ctrl_set_process_raw(ctrl);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct v4l2_ctrl_ops mtk_cam_dev_ctrl_ops = {
-+	.g_volatile_ctrl = mtk_cam_dev_g_ctrl,
-+	.s_ctrl = mtk_cam_dev_s_ctrl,
-+};
-+
-+struct v4l2_ctrl_config mtk_cam_controls[] = {
-+	{
-+	.ops = &mtk_cam_dev_ctrl_ops,
-+	.id = V4L2_CID_MTK_PROCESSING_RAW,
-+	.name = "MTK CAM PROCESSING RAW",
-+	.type = V4L2_CTRL_TYPE_BOOLEAN,
-+	.min = 0,
-+	.max = 1,
-+	.step = 1,
-+	.def = 1,
-+	},
-+	{
-+	.ops = &mtk_cam_dev_ctrl_ops,
-+	.id = V4L2_CID_MTK_GET_BIN_WIDTH,
-+	.name = "MTK CAM GET BIN WIDTH",
-+	.type = V4L2_CTRL_TYPE_INTEGER,
-+	.min = IMG_MIN_WIDTH,
-+	.max = IMG_MAX_WIDTH,
-+	.step = 1,
-+	.def = IMG_MAX_WIDTH,
-+	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_VOLATILE,
-+	},
-+	{
-+	.ops = &mtk_cam_dev_ctrl_ops,
-+	.id = V4L2_CID_MTK_GET_BIN_HEIGTH,
-+	.name = "MTK CAM GET BIN HEIGHT",
-+	.type = V4L2_CTRL_TYPE_INTEGER,
-+	.min = IMG_MIN_HEIGHT,
-+	.max = IMG_MAX_HEIGHT,
-+	.step = 1,
-+	.def = IMG_MAX_HEIGHT,
-+	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_VOLATILE,
-+	},
-+};
-+
-+int mtk_cam_ctrl_init(struct mtk_cam_dev *cam_dev,
-+		      struct v4l2_ctrl_handler *hdl)
-+{
-+	unsigned int i;
-+
-+	/* Initialized HW controls, allow V4L2_CID_MTK_CAM_MAX ctrls */
-+	v4l2_ctrl_handler_init(hdl, V4L2_CID_MTK_CAM_MAX);
-+	if (hdl->error) {
-+		v4l2_ctrl_handler_free(hdl);
-+		return hdl->error;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(mtk_cam_controls); i++)
-+		v4l2_ctrl_new_custom(hdl, &mtk_cam_controls[i], cam_dev);
-+
-+	dev_dbg(&cam_dev->pdev->dev, "%s done", __func__);
-+
-+	return 0;
-+}
-diff --git a/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.h b/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.h
++    * - start + 0:
++      - B\ :sub:`00low bits 7--0`
++      - G\ :sub:`01low bits 5--0` (bits 7--2) B\ :sub:`00high bits 9--8`\ (bits 1--0)
++    * - start + 2:
++      - B\ :sub:`02low bits 3--0`\ (bits 7--4) G\ :sub:`01high bits 9--6`\ (bits 3--0)
++      - G\ :sub:`03low bits 1--0`\ (bits 7--6) B\ :sub:`02high bits 9--4`\ (bits 5--0)
++    * - start + 4:
++      - G\ :sub:`03high bits 9--2`
++    * - start + 6:
++      - G\ :sub:`10low bits 7--0`
++      - R\ :sub:`11low bits 5--0`\ (bits 7--2) G\ :sub:`10high bits 9--8`\ (bits 1--0)
++    * - start + 8:
++      - G\ :sub:`12low bits 3--0`\ (bits 7--4) R\ :sub:`11high bits 9--6`\ (bits 3--0)
++      - R\ :sub:`13low bits 1--0`\ (bits 7--6) G\ :sub:`12high bits 9--4`\ (bits 5--0)
++    * - start + 10:
++      - R\ :sub:`13high bits 9--2`
++    * - start + 12:
++      - B\ :sub:`20low bits 7--0`
++      - G\ :sub:`21low bits 5--0`\ (bits 7--2) B\ :sub:`20high bits 9--8`\ (bits 1--0)
++    * - start + 14:
++      - B\ :sub:`22low bits 3--0`\ (bits 7--4) G\ :sub:`21high bits 9--6`\ (bits 3--0)
++      - G\ :sub:`23low bits 1--0`\ (bits 7--6) B\ :sub:`22high bits 9--4`\ (bits 5--0)
++    * - start + 16:
++      - G\ :sub:`23high bits 9--2`
++    * - start + 18:
++      - G\ :sub:`30low bits 7--0`
++      - R\ :sub:`31low bits 5--0`\ (bits 7--2) G\ :sub:`30high bits 9--8`\ (bits 1--0)
++    * - start + 20:
++      - G\ :sub:`32low bits 3--0`\ (bits 7--4) R\ :sub:`31high bits 9--6`\ (bits 3--0)
++      - R\ :sub:`33low bits 1--0`\ (bits 7--6) G\ :sub:`32high bits 9--4`\ (bits 5--0)
++    * - start + 22:
++      - R\ :sub:`33high bits 9--2` (bits 7--0)
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtbc.rst b/Documentation/media/uapi/v4l/pixfmt-mtbc.rst
 new file mode 100644
-index 000000000000..0f9349ae0b07
+index 000000000000..b122600fddb5
 --- /dev/null
-+++ b/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.h
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2018 MediaTek Inc.
-+ */
++++ b/Documentation/media/uapi/v4l/pixfmt-mtbc.rst
+@@ -0,0 +1,58 @@
++.. -*- coding: utf-8; mode: rst -*-
 +
-+#ifndef __MTK_CAM_CTRL_H__
-+#define __MTK_CAM_CTRL_H__
++.. _V4L2-PIX-FMT-MTISP_B12:
 +
-+#include <media/v4l2-ctrls.h>
++*******************************
++V4L2_PIX_FMT_MTISP_B12 ('MTBC')
++*******************************
 +
-+#include "mtk_cam-v4l2-util.h"
++12-bit Packed Bayer formats.
 +
-+/* The base for the MTK Camera ISP P1 driver controls.
-+ * We reserve 16 controls for this driver.
-+ */
-+#define V4L2_CID_MTK_CAM_BASE			V4L2_CID_USER_MTK_CAM_BASE
 +
-+/* Control MTK ISP P1 main stream to process raw image data or not.
-+ * The default value is 0 which outputs the pure raw bayer data from sensor,
-+ * without image processing in ISP HW.
-+ */
-+#define V4L2_CID_MTK_PROCESSING_RAW		(V4L2_CID_MTK_CAM_BASE + 1)
++Description
++===========
 +
-+/* MTK ISP P1 HW supports frontal binning function.
-+ * If this function is enabled, the 3A algo. may get the new image resolution
-+ * which is binned by ISP P1. If this function is disabled or no supported,
-+ * the image resolution will be equal to configured image format.
-+ * For this control, it is read only.
-+ */
-+#define V4L2_CID_MTK_GET_BIN_WIDTH		(V4L2_CID_MTK_CAM_BASE + 2)
-+#define V4L2_CID_MTK_GET_BIN_HEIGTH		(V4L2_CID_MTK_CAM_BASE + 3)
++The four pixel formats are used by Mediatek ISP.
++This is a packed format, meaning all the data for a pixel lie
++next to each other with no padding in memory, with a depth of 12 bits per pixel.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++Below is an example of conventional RGB byte order BGGR.
 +
-+#define V4L2_CID_MTK_CAM_MAX			16
++**Byte Order.**
++Each cell is one byte.
 +
-+int mtk_cam_ctrl_init(struct mtk_cam_dev *cam_dev,
-+		      struct v4l2_ctrl_handler *hdl);
++pixels cross the byte boundary and have a ratio of 6 bytes for each 4 pixels.
 +
-+#endif /* __MTK_CAM_CTRL_H__ */
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 37807f23231e..2db99716f40d 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -192,6 +192,10 @@ enum v4l2_colorfx {
-  * We reserve 16 controls for this driver. */
- #define V4L2_CID_USER_IMX_BASE			(V4L2_CID_USER_BASE + 0x10b0)
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00lowbits 7--0`
++      - G\ :sub:`01lowbits 3--0`\ (bits 7--4) B\ :sub:`00highbits 11--8`\ (bits 3--0)
++      - G\ :sub:`01highbits 7--0`
++      - B\ :sub:`02lowbits 7--0`
++      - G\ :sub:`03lowbits 3--0`\ (bits 7--4) B\ :sub:`02highbits 11--8`\ (bits 3--0)
++      - G\ :sub:`03highbits 7--0`
++    * - start + 6:
++      - G\ :sub:`10lowbits 7--0`
++      - R\ :sub:`11lowbits 3--0`\ (bits 7--4) G\ :sub:`10highbits 11--8`\ (bits 3--0)
++      - R\ :sub:`11highbits 7--0`
++      - G\ :sub:`12lowbits 7--0`
++      - R\ :sub:`13lowbits 3--0`\ (bits 7--4) G\ :sub:`12highbits 11--8`\ (bits 3--0)
++      - R\ :sub:`13highbits 7--0`
++    * - start + 12:
++      - B\ :sub:`20lowbits 7--0`
++      - G\ :sub:`21lowbits 3--0`\ (bits 7--4) B\ :sub:`20highbits 11--8`\ (bits 3--0)
++      - G\ :sub:`21highbits 7--0`
++      - B\ :sub:`22lowbits 7--0`
++      - G\ :sub:`23lowbits 3--0`\ (bits 7--4) B\ :sub:`22highbits 11--8`\ (bits 3--0)
++      - G\ :sub:`23highbits 7--0`
++    * - start + 18:
++      - G\ :sub:`30lowbits 7--0`
++      - R\ :sub:`31lowbits 3--0`\ (bits 7--4) G\ :sub:`30highbits 11--8`\ (bits 3--0)
++      - R\ :sub:`31highbits 7--0`
++      - G\ :sub:`32lowbits 7--0`
++      - R\ :sub:`33lowbits 3--0`\ (bits 7--4) G\ :sub:`32highbits 11--8`\ (bits 3--0)
++      - R\ :sub:`33highbits 7--0`
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtbe.rst b/Documentation/media/uapi/v4l/pixfmt-mtbe.rst
+new file mode 100644
+index 000000000000..4b9bc9a62504
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtbe.rst
+@@ -0,0 +1,70 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _V4L2-PIX-FMT-MTISP_B14:
++
++*******************************
++V4L2_PIX_FMT_MTISP_B14 ('MTBE')
++*******************************
++
++14-bit Packed Bayer formats.
++
++
++Description
++===========
++
++The four pixel formats are used by Mediatek ISP.
++This is a packed format, meaning all the data for a pixel lie
++next to each other with no padding in memory, with a depth of 14 bits per pixel.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++Below is an example of conventional RGB byte order BGGR.
++
++**Byte Order.**
++Each cell is one byte.
++
++pixels cross the byte boundary and have a ratio of 7 bytes for each 4 pixels.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00low bits 7--0`
++      - G\ :sub:`01low bits 1--0`\ (bits 7--6) B\ :sub:`00high bits 13--8`\ (bits 5--0)
++      - G\ :sub:`01low bits 9--2`\
++      - B\ :sub:`02low bits 3--0`\ (bits 7--4) G\ :sub:`01high bits 13--10`\ (bits 3--0)
++    * - start + 4:
++      - B\ :sub:`02low bits 11--4`\
++      - G\ :sub:`03low bits 5--0`\ (bits 7--2) B\ :sub:`02high bits 13--12`\ (bits 1--0)
++      - G\ :sub:`03high bits 13--6`\
++      -
++    * - start + 8:
++      - G\ :sub:`10low bits 7--0`
++      - R\ :sub:`11low bits 1--0`\ (bits 7--6) G\ :sub:`10high bits 13--8`\ (bits 5--0)
++      - R\ :sub:`11low bits 9--2`\
++      - G\ :sub:`12low bits 3--0`\ (bits 7--4) R\ :sub:`11high bits 13--10`\ (bits 3--0)
++    * - start + 12:
++      - G\ :sub:`12low bits 11--4`\
++      - R\ :sub:`13low bits 5--0`\ (bits 7--2) G\ :sub:`12high bits 13--12`\ (bits 1--0)
++      - R\ :sub:`13high bits 13--6`\
++      -
++    * - start + 16:
++      - B\ :sub:`20low bits 7--0`
++      - G\ :sub:`21low bits 1--0`\ (bits 7--6) B\ :sub:`20high bits 13--8`\ (bits 5--0)
++      - G\ :sub:`21low bits 9--2`\
++      - B\ :sub:`22low bits 3--0`\ (bits 7--4) G\ :sub:`21high bits 13--10`\ (bits 3--0)
++    * - start + 20:
++      - B\ :sub:`22low bits 11--4`\
++      - G\ :sub:`23low bits 5--0`\ (bits 7--2) B\ :sub:`22high bits 13--12`\ (bits 1--0)
++      - G\ :sub:`23high bits 13--6`\
++      -
++    * - start + 24:
++      - G\ :sub:`30low bits 7--0`
++      - R\ :sub:`31low bits 1--0`\ (bits 7--6) G\ :sub:`30high bits 13--8`\ (bits 5--0)
++      - R\ :sub:`31low bits 9--2`\
++      - G\ :sub:`32low bits 3--0`\ (bits 7--4) R\ :sub:`31high bits 13--10`\ (bits 3--0)
++    * - start + 28:
++      - G\ :sub:`32low bits 11--4`\
++      - R\ :sub:`33low bits 5--0`\ (bits 7--2) G\ :sub:`32high bits 13--12`\ (bits 1--0)
++      - R\ :sub:`33high bits 13--6`\
++      -
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtf8.rst b/Documentation/media/uapi/v4l/pixfmt-mtf8.rst
+new file mode 100644
+index 000000000000..51c9ddc4e20d
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtf8.rst
+@@ -0,0 +1,75 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _V4L2-PIX-FMT-MTISP_F8:
++
++*******************************
++V4L2_PIX_FMT_MTISP_F8 ('MTF8')
++*******************************
++
++8-bit Packed Full-G Bayer formats.
++
++
++Description
++===========
++
++The four pixel formats are used by Mediatek ISP.
++This is a packed format with a depth of 8 bits per pixel.
++Full-G means 1 more pixel for green channel every 2 pixels.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++Below is an example of conventional RGB byte order BGGR.
++
++**Bit-packed representation.**
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - B\ :sub:`00`
++      - FG\ :sub:`01`
++      - G\ :sub:`02`
++      - B\ :sub:`03`
++      - FG\ :sub:`04`
++      - G\ :sub:`05`
++    * - G\ :sub:`10`
++      - R\ :sub:`11`
++      - FG\ :sub:`12`
++      - G\ :sub:`13`
++      - R\ :sub:`14`
++      - FG\ :sub:`15`
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00`
++      - FG\ :sub:`01`
++      - G\ :sub:`02`
++      - B\ :sub:`03`
++      - FG\ :sub:`04`
++      - G\ :sub:`05`
++    * - start + 6:
++      - G\ :sub:`10`
++      - R\ :sub:`11`
++      - FG\ :sub:`12`
++      - G\ :sub:`13`
++      - R\ :sub:`14`
++      - FG\ :sub:`15`
++    * - start + 12:
++      - B\ :sub:`20`
++      - FG\ :sub:`21`
++      - G\ :sub:`22`
++      - B\ :sub:`23`
++      - FG\ :sub:`24`
++      - G\ :sub:`25`
++    * - start + 18:
++      - G\ :sub:`30`
++      - R\ :sub:`31`
++      - FG\ :sub:`32`
++      - G\ :sub:`33`
++      - R\ :sub:`34`
++      - FG\ :sub:`35`
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtfa.rst b/Documentation/media/uapi/v4l/pixfmt-mtfa.rst
+new file mode 100644
+index 000000000000..68421c44f5e7
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtfa.rst
+@@ -0,0 +1,87 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _V4L2-PIX-FMT-MTISP_F10:
++
++*******************************
++V4L2_PIX_FMT_MTISP_F10 ('MTFA')
++*******************************
++
++10-bit Packed Full-G Bayer formats.
++
++
++Description
++===========
++
++The four pixel formats are used by Mediatek ISP.
++This is a packed format with a depth of 10 bits per pixel.
++Full-G means 1 more pixel for green channel every 2 pixels.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++Below is an example of conventional RGB byte order BGGR.
++
++**Bit-packed representation.**
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - B\ :sub:`00`
++      - FG\ :sub:`01`
++      - G\ :sub:`02`
++      - B\ :sub:`03`
++      - FG\ :sub:`04`
++      - G\ :sub:`05`
++    * - G\ :sub:`10`
++      - R\ :sub:`11`
++      - FG\ :sub:`12`
++      - G\ :sub:`13`
++      - R\ :sub:`14`
++      - FG\ :sub:`15`
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00low bits 7--0`
++      - FG\ :sub:`01low bits 5--0`\ (bits 7--2) B\ :sub:`00high bits 9--8`\ (bits 1--0)
++      - G\ :sub:`02low bits 3--0`\ (bits 7--4) FG\ :sub:`01high bits 9--6`\ (bits 3--0)
++      - B\ :sub:`03low bits 1--0`\ (bits 7--6) G\ :sub:`02high bits 9--4`\ (bits 5--0)
++    * - start + 4:
++      - B\ :sub:`03high bits 9--2`
++      - FG\ :sub:`04low bits 7--0`
++      - G\ :sub:`05low bits 5--0`\ (bits 7--2) FG\ :sub:`04high bits 9--8`\ (bits 1--0)
++      - G\ :sub:`05high bits 3--0`
++    * - start + 8:
++      - G\ :sub:`10low bits 7--0`
++      - R\ :sub:`11low bits 5--0`\ (bits 7--2) G\ :sub:`10high bits 9--8`\ (bits 1--0)
++      - FG\ :sub:`12low bits 3--0`\ (bits 7--4) R\ :sub:`11high bits 9--6`\ (bits 3--0)
++      - G\ :sub:`13low bits 1--0`\ (bits 7--6) FG\ :sub:`12high bits 9--4`\ (bits 5--0)
++    * - start + 12:
++      - G\ :sub:`13high bits 9--2`
++      - R\ :sub:`14low bits 7--0`
++      - FG\ :sub:`15low bits 5--0`\ (bits 7--2) R\ :sub:`14high bits 9--8`\ (bits 1--0)
++      - FG\ :sub:`15high bits 3--0`
++    * - start + 16:
++      - B\ :sub:`20low bits 7--0`
++      - FG\ :sub:`21low bits 5--0`\ (bits 7--2) B\ :sub:`20high bits 9--8`\ (bits 1--0)
++      - G\ :sub:`22low bits 3--0`\ (bits 7--4) FG\ :sub:`21high bits 9--6`\ (bits 3--0)
++      - B\ :sub:`23low bits 1--0`\ (bits 7--6) G\ :sub:`22high bits 9--4`\ (bits 5--0)
++    * - start + 20:
++      - B\ :sub:`23high bits 9--2`
++      - FG\ :sub:`24low bits 7--0`
++      - G\ :sub:`25low bits 5--0`\ (bits 7--2) FG\ :sub:`24high bits 9--8`\ (bits 1--0)
++      - G\ :sub:`25high bits 3--0`
++    * - start + 24:
++      - G\ :sub:`30low bits 7--0`
++      - R\ :sub:`31low bits 5--0`\ (bits 7--2) G\ :sub:`30high bits 9--8`\ (bits 1--0)
++      - FG\ :sub:`32low bits 3--0`\ (bits 7--4) R\ :sub:`31high bits 9--6`\ (bits 3--0)
++      - G\ :sub:`33low bits 1--0`\ (bits 7--6) FG\ :sub:`32high bits 9--4`\ (bits 5--0)
++    * - start + 28:
++      - G\ :sub:`33high bits 9--2`
++      - R\ :sub:`34low bits 7--0`
++      - FG\ :sub:`35low bits 5--0`\ (bits 7--2) R\ :sub:`34high bits 9--8`\ (bits 1--0)
++      - FG\ :sub:`35high bits 3--0`
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtfc.rst b/Documentation/media/uapi/v4l/pixfmt-mtfc.rst
+new file mode 100644
+index 000000000000..a3535f5435fa
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtfc.rst
+@@ -0,0 +1,107 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _V4L2-PIX-FMT-MTISP_F12:
++
++*******************************
++V4L2_PIX_FMT_MTISP_F12 ('MTFC')
++*******************************
++
++12-bit Packed Full-G Bayer formats.
++
++
++Description
++===========
++
++The four pixel formats are used by Mediatek ISP.
++This is a packed format with a depth of 12 bits per pixel.
++Full-G means 1 more pixel for green channel every 2 pixels.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++Below is an example of conventional RGB byte order BGGR.
++
++**Bit-packed representation.**
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - B\ :sub:`00`
++      - FG\ :sub:`01`
++      - G\ :sub:`02`
++      - B\ :sub:`03`
++      - FG\ :sub:`04`
++      - G\ :sub:`05`
++    * - G\ :sub:`10`
++      - R\ :sub:`11`
++      - FG\ :sub:`12`
++      - G\ :sub:`13`
++      - R\ :sub:`14`
++      - FG\ :sub:`15`
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00low bits 7--0`
++      - FG\ :sub:`01low bits 3--0`\ (bits 7--4) B\ :sub:`00high bits 11--8`\ (bits 3--0)
++    * - start + 2:
++      - FG\ :sub:`01high bits 7--0`
++      - G\ :sub:`02low bits 7--0`
++    * - start + 4:
++      - B\ :sub:`03low bits 3--0`\ (bits 7--4) G\ :sub:`02high bits 11--8`\ (bits 3--0)
++      - B\ :sub:`03high bits 7--0`
++    * - start + 6:
++      - FG\ :sub:`04low bits 7--0`
++      - G\ :sub:`05low bits 3--0`\ (bits 7--4) FG\ :sub:`04high bits 11--8`\ (bits 3--0)
++    * - start + 8:
++      - G\ :sub:`05high bits 7--0`
++      -
++    * - start + 10:
++      - G\ :sub:`10low bits 7--0`
++      - R\ :sub:`11low bits 3--0`\ (bits 7--4) G\ :sub:`10high bits 11--8`\ (bits 3--0)
++    * - start + 12:
++      - R\ :sub:`11high bits 7--0`
++      - FG\ :sub:`12low bits 7--0`
++    * - start + 14:
++      - G\ :sub:`13low bits 3--0`\ (bits 7--4) FG\ :sub:`12high bits 11--8`\ (bits 3--0)
++      - G\ :sub:`13high bits 7--0`
++    * - start + 16:
++      - R\ :sub:`14low bits 7--0`
++      - FG\ :sub:`15low bits 3--0`\ (bits 7--4) R\ :sub:`14high bits 11--8`\ (bits 3--0)
++    * - start + 18:
++      - FG\ :sub:`15high bits 7--0`
++      -
++    * - start + 20:
++      - B\ :sub:`20low bits 7--0`
++      - FG\ :sub:`21low bits 3--0`\ (bits 7--4) B\ :sub:`20high bits 11--8`\ (bits 3--0)
++    * - start + 22:
++      - FG\ :sub:`21high bits 7--0`
++      - G\ :sub:`22low bits 7--0`
++    * - start + 24:
++      - B\ :sub:`23low bits 3--0`\ (bits 7--4) G\ :sub:`22high bits 11--8`\ (bits 3--0)
++      - B\ :sub:`23high bits 7--0`
++    * - start + 26:
++      - FG\ :sub:`24low bits 7--0`
++      - G\ :sub:`25low bits 3--0`\ (bits 7--4) FG\ :sub:`24high bits 11--8`\ (bits 3--0)
++    * - start + 28:
++      - G\ :sub:`25high bits 7--0`
++      -
++    * - start + 30:
++      - G\ :sub:`30low bits 7--0`
++      - R\ :sub:`31low bits 3--0`\ (bits 7--4) G\ :sub:`30high bits 11--8`\ (bits 3--0)
++    * - start + 32:
++      - R\ :sub:`31high bits 7--0`
++      - FG\ :sub:`32low bits 7--0`
++    * - start + 34:
++      - G\ :sub:`33low bits 3--0`\ (bits 7--4) FG\ :sub:`32high bits 11--8`\ (bits 3--0)
++      - G\ :sub:`33high bits 7--0`
++    * - start + 36:
++      - R\ :sub:`34low bits 7--0`
++      - FG\ :sub:`35low bits 3--0`\ (bits 7--4) R\ :sub:`34high bits 11--8`\ (bits 3--0)
++    * - start + 38:
++      - FG\ :sub:`35high bits 7--0`
++      -
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtfe.rst b/Documentation/media/uapi/v4l/pixfmt-mtfe.rst
+new file mode 100644
+index 000000000000..324a258e897f
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtfe.rst
+@@ -0,0 +1,107 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _V4L2-PIX-FMT-MTISP_F14:
++
++*******************************
++V4L2_PIX_FMT_MTISP_F14 ('MTFE')
++*******************************
++
++14-bit Packed Full-G Bayer formats.
++
++
++Description
++===========
++
++The four pixel formats are used by Mediatek ISP.
++This is a packed format with a depth of 14 bits per pixel.
++Full-G means 1 more pixel for green channel every 2 pixels.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++Below is an example of conventional RGB byte order BGGR.
++
++**Bit-packed representation.**
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - B\ :sub:`00`
++      - FG\ :sub:`01`
++      - G\ :sub:`02`
++      - B\ :sub:`03`
++      - FG\ :sub:`04`
++      - G\ :sub:`05`
++    * - G\ :sub:`10`
++      - R\ :sub:`11`
++      - FG\ :sub:`12`
++      - G\ :sub:`13`
++      - R\ :sub:`14`
++      - FG\ :sub:`15`
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00low bits 7--0`
++      - FG\ :sub:`01low bits 1--0`\ (bits 7--6) B\ :sub:`00high bits 13--8`\ (bits 5--0)
++      - FG\ :sub:`01low bits 9--2`
++      - G\ :sub:`02low bits 3--0`\ (bits 7--4) FG\ :sub:`01high bits 13--10`\ (bits 3--0)
++    * - start + 4:
++      - G\ :sub:`02low bits 11--4`
++      - B\ :sub:`03low bits 5--0`\ (bits 7--2) G\ :sub:`02high bits 13--12`\ (bits 1--0)
++      - B\ :sub:`03high bits 13--6`
++      - FG\ :sub:`04low bits 7--0`
++    * - start + 8:
++      - G\ :sub:`05low bits 1--0`\ (bits 7--6) FG\ :sub:`04high bits 13--8`\ (bits 5--0)
++      - G\ :sub:`05high bits 9--2`
++      - G\ :sub:`05high bits 13--10`
++      -
++    * - start + 12:
++      - G\ :sub:`10low bits 7--0`
++      - R\ :sub:`11low bits 1--0`\ (bits 7--6) G\ :sub:`10high bits 13--8`\ (bits 5--0)
++      - R\ :sub:`11low bits 9--2`
++      - FG\ :sub:`12low bits 3--0`\ (bits 7--4) R\ :sub:`11high bits 13--10`\ (bits 3--0)
++    * - start + 16:
++      - FG\ :sub:`12low bits 11--4`
++      - G\ :sub:`13low bits 5--0`\ (bits 7--2) FG\ :sub:`12high bits 13--12`\ (bits 1--0)
++      - G\ :sub:`13high bits 13--6`
++      - R\ :sub:`14low bits 7--0`
++    * - start + 20:
++      - FG\ :sub:`15low bits 1--0`\ (bits 7--6) R\ :sub:`14high bits 13--8`\ (bits 5--0)
++      - FG\ :sub:`15high bits 9--2`
++      - FG\ :sub:`15high bits 13--10`
++      -
++    * - start + 24:
++      - B\ :sub:`20low bits 7--0`
++      - FG\ :sub:`21low bits 1--0`\ (bits 7--6) B\ :sub:`20high bits 13--8`\ (bits 5--0)
++      - FG\ :sub:`21low bits 9--2`
++      - G\ :sub:`22low bits 3--0`\ (bits 7--4) FG\ :sub:`21high bits 13--10`\ (bits 3--0)
++    * - start + 28:
++      - G\ :sub:`22low bits 11--4`
++      - B\ :sub:`23low bits 5--0`\ (bits 7--2) G\ :sub:`22high bits 13--12`\ (bits 1--0)
++      - B\ :sub:`23high bits 13--6`
++      - FG\ :sub:`24low bits 7--0`
++    * - start + 32:
++      - G\ :sub:`25low bits 1--0`\ (bits 7--6) FG\ :sub:`24high bits 13--8`\ (bits 5--0)
++      - G\ :sub:`25high bits 9--2`
++      - G\ :sub:`25high bits 13--10`
++      -
++    * - start + 36:
++      - G\ :sub:`30low bits 7--0`
++      - R\ :sub:`31low bits 1--0`\ (bits 7--6) G\ :sub:`30high bits 13--8`\ (bits 5--0)
++      - R\ :sub:`31low bits 9--2`
++      - FG\ :sub:`32low bits 3--0`\ (bits 7--4) R\ :sub:`31high bits 13--10`\ (bits 3--0)
++    * - start + 40:
++      - FG\ :sub:`32low bits 11--4`
++      - G\ :sub:`33low bits 5--0`\ (bits 7--2) FG\ :sub:`32high bits 13--12`\ (bits 1--0)
++      - G\ :sub:`33high bits 13--6`
++      - R\ :sub:`34low bits 7--0`
++    * - start + 44:
++      - FG\ :sub:`35low bits 1--0`\ (bits 7--6) R\ :sub:`34high bits 13--8`\ (bits 5--0)
++      - FG\ :sub:`35high bits 9--2`
++      - FG\ :sub:`35high bits 13--10`
++      -
+\ No newline at end of file
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index ac87c3e37280..2f536fedd9c4 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1297,6 +1297,14 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_PIX_FMT_KONICA420:	descr = "GSPCA KONICA420"; break;
+ 	case V4L2_PIX_FMT_HSV24:	descr = "24-bit HSV 8-8-8"; break;
+ 	case V4L2_PIX_FMT_HSV32:	descr = "32-bit XHSV 8-8-8-8"; break;
++	case V4L2_PIX_FMT_MTISP_B8:	descr = "8-bit Packed Bayer format"; break;
++	case V4L2_PIX_FMT_MTISP_F8:	descr = "8-bit Packed Full-G Bayer format"; break;
++	case V4L2_PIX_FMT_MTISP_B10:	descr = "10-bit Packed Bayer format"; break;
++	case V4L2_PIX_FMT_MTISP_F10:	descr = "10-bit Packed Full-G Bayer format"; break;
++	case V4L2_PIX_FMT_MTISP_B12:	descr = "12-bit Packed Bayer format"; break;
++	case V4L2_PIX_FMT_MTISP_F12:	descr = "12-bit Packed Full-G Bayer format"; break;
++	case V4L2_PIX_FMT_MTISP_B14:	descr = "14-bit Packed Bayer format"; break;
++	case V4L2_PIX_FMT_MTISP_F14:	descr = "14-bit Packed Full-G Bayer format"; break;
+ 	case V4L2_SDR_FMT_CU8:		descr = "Complex U8"; break;
+ 	case V4L2_SDR_FMT_CU16LE:	descr = "Complex U16LE"; break;
+ 	case V4L2_SDR_FMT_CS8:		descr = "Complex S8"; break;
+@@ -1312,6 +1320,11 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_META_FMT_VSP1_HGO:	descr = "R-Car VSP1 1-D Histogram"; break;
+ 	case V4L2_META_FMT_VSP1_HGT:	descr = "R-Car VSP1 2-D Histogram"; break;
+ 	case V4L2_META_FMT_UVC:		descr = "UVC payload header metadata"; break;
++	case V4L2_META_FMT_MTISP_3A:	descr = "AE/AWB Histogram"; break;
++	case V4L2_META_FMT_MTISP_AF:	descr = "AF Histogram"; break;
++	case V4L2_META_FMT_MTISP_LCS:	descr = "Local contrast enhanced statistics"; break;
++	case V4L2_META_FMT_MTISP_LMV:	descr = "Local motion vector Histogram"; break;
++	case V4L2_META_FMT_MTISP_PARAMS: descr = "MTK ISP tuning metadata"; break;
  
-+/* The base for the mediatek ISP Pass 1 driver controls */
-+/* We reserve 16 controls for this driver. */
-+#define V4L2_CID_USER_MTK_CAM_BASE		(V4L2_CID_USER_BASE + 0x10c0)
+ 	default:
+ 		/* Compressed formats */
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 1050a75fb7ef..ef51911fcfe4 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -728,6 +728,16 @@ struct v4l2_pix_format {
+ #define V4L2_PIX_FMT_IPU3_SGRBG10	v4l2_fourcc('i', 'p', '3', 'G') /* IPU3 packed 10-bit GRBG bayer */
+ #define V4L2_PIX_FMT_IPU3_SRGGB10	v4l2_fourcc('i', 'p', '3', 'r') /* IPU3 packed 10-bit RGGB bayer */
+ 
++/* Vendor specific - Mediatek ISP bayer formats */
++#define V4L2_PIX_FMT_MTISP_B8	v4l2_fourcc('M', 'T', 'B', '8') /* Packed bayer format,  8-bit */
++#define V4L2_PIX_FMT_MTISP_B10	v4l2_fourcc('M', 'T', 'B', 'A') /* Packed bayer format, 10-bit */
++#define V4L2_PIX_FMT_MTISP_B12	v4l2_fourcc('M', 'T', 'B', 'C') /* Packed bayer format, 12-bit */
++#define V4L2_PIX_FMT_MTISP_B14	v4l2_fourcc('M', 'T', 'B', 'E') /* Packed bayer format, 14-bit */
++#define V4L2_PIX_FMT_MTISP_F8	v4l2_fourcc('M', 'T', 'F', '8') /* Full-G bayer format,  8-bit */
++#define V4L2_PIX_FMT_MTISP_F10	v4l2_fourcc('M', 'T', 'F', 'A') /* Full-G bayer format, 10-bit */
++#define V4L2_PIX_FMT_MTISP_F12	v4l2_fourcc('M', 'T', 'F', 'C') /* Full-G bayer format, 12-bit */
++#define V4L2_PIX_FMT_MTISP_F14	v4l2_fourcc('M', 'T', 'F', 'E') /* Full-G bayer format, 14-bit */
 +
- /* MPEG-class control IDs */
- /* The MPEG controls are applicable to all codec controls
-  * and the 'MPEG' part of the define is historical */
+ /* SDR formats - used only for Software Defined Radio devices */
+ #define V4L2_SDR_FMT_CU8          v4l2_fourcc('C', 'U', '0', '8') /* IQ u8 */
+ #define V4L2_SDR_FMT_CU16LE       v4l2_fourcc('C', 'U', '1', '6') /* IQ u16le */
+@@ -750,6 +760,13 @@ struct v4l2_pix_format {
+ #define V4L2_META_FMT_UVC         v4l2_fourcc('U', 'V', 'C', 'H') /* UVC Payload Header metadata */
+ #define V4L2_META_FMT_D4XX        v4l2_fourcc('D', '4', 'X', 'X') /* D4XX Payload Header metadata */
+ 
++/* Vendor specific - Mediatek ISP parameters for firmware */
++#define V4L2_META_FMT_MTISP_PARAMS	v4l2_fourcc('M', 'T', 'f', 'p') /* ISP tuning parameters */
++#define V4L2_META_FMT_MTISP_3A		v4l2_fourcc('M', 'T', 'f', 'a') /* AE/AWB histogram */
++#define V4L2_META_FMT_MTISP_AF		v4l2_fourcc('M', 'T', 'f', 'f') /* AF histogram */
++#define V4L2_META_FMT_MTISP_LCS	v4l2_fourcc('M', 'T', 'f', 'c') /* Local contrast enhanced statistics */
++#define V4L2_META_FMT_MTISP_LMV	v4l2_fourcc('M', 'T', 'f', 'm') /* Local motion vector histogram */
++
+ /* priv field value to indicates that subsequent fields are valid. */
+ #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
+ 
 -- 
 2.18.0
