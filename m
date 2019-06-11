@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 03/11] pinctrl: sunxi: v3s: introduce
- support for V3
-Date: Tue, 11 Jun 2019 16:27:40 +0200
-Message-ID: <20190611142740.2gqm3nxq2nl6sz7w@flea>
+Subject: Re: [PATCH v2 11/11] ARM: dts: sun8i: s3: add
+ devicetree for Lichee zero plus w/ S3
+Date: Tue, 11 Jun 2019 16:32:39 +0200
+Message-ID: <20190611143239.zvganlwaiku3bs63@flea>
 References: <20190611140940.14357-1-icenowy@aosc.io>
- <20190611140940.14357-4-icenowy@aosc.io>
+ <20190611140940.14357-12-icenowy@aosc.io>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ttqlhhfclj7eb7xn"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYXU73TQKGQEFO3RSQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6e3io72tcrt3erkz"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFHX73TQKGQEQU5M5AI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190611140940.14357-4-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20190611140940.14357-12-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,56 +24,78 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai 
 List-Id: devicetree@vger.kernel.org
 
 
---ttqlhhfclj7eb7xn
+--6e3io72tcrt3erkz
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
 Hi,
 
-On Tue, Jun 11, 2019 at 10:09:32PM +0800, Icenowy Zheng wrote:
-> Introduce the GPIO pins that is only available on V3 (not on V3s) to the
-> V3s pinctrl driver.
+On Tue, Jun 11, 2019 at 10:09:40PM +0800, Icenowy Zheng wrote:
+> Lichee zero plus is a core board made by Sipeed, which includes on-board
+> TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
+> header, a microUSB slot and a gold finger connector for expansion. It
+> can use either Sochip S3 or Allwinner S3L SoC.
+>
+> Add the basic device tree for the core board, w/o optional onboard
+> storage, and with S3 SoC.
 >
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
-> Changes in v2:
-> - Dropped the driver rename patch and apply the changes directly on V3s
->   driver.
+> New patch in v2.
 >
->  drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c | 265 +++++++++++++++++++++-
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |   2 +
->  2 files changed, 262 insertions(+), 5 deletions(-)
+>  arch/arm/boot/dts/Makefile                    |  1 +
+>  .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |  8 ++++
+>  .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    | 39 +++++++++++++++++++
+>  3 files changed, 48 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+>  create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
 >
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
-> index 6704ce8e5e3d..9e82fd38cf21 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * Allwinner V3s SoCs pinctrl driver.
-> + * Allwinner V3/V3s SoCs pinctrl driver.
->   *
->   * Copyright (C) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->   *
-> @@ -77,6 +77,30 @@ static const struct sunxi_desc_pin sun8i_v3s_pins[] = {
->  		  SUNXI_FUNCTION(0x2, "i2c1"),		/* SCK */
->  		  SUNXI_FUNCTION(0x3, "uart0"),		/* RX */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),	/* PB_EINT9 */
-> +	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(B, 10),
-> +		  PINCTRL_SUN8I_V3,
-> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
-> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
-> +		  SUNXI_FUNCTION(0x2, "jtag"),		/* MS */
-> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 10)),	/* PB_EINT10 */
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 5559028b770e..2b5e6a1d20ff 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1110,6 +1110,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>  	sun8i-r16-nintendo-super-nes-classic.dtb \
+>  	sun8i-r16-parrot.dtb \
+>  	sun8i-r40-bananapi-m2-ultra.dtb \
+> +	sun8i-s3-lichee-zero-plus.dtb \
+>  	sun8i-t3-cqa3t-bv3.dtb \
+>  	sun8i-v3s-licheepi-zero.dtb \
+>  	sun8i-v3s-licheepi-zero-dock.dtb \
+> diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+> new file mode 100644
+> index 000000000000..7d2f6b145190
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+> @@ -0,0 +1,8 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun8i-s3.dtsi"
+> +#include "sun8i-s3-s3l-lichee-zero-plus.dtsi"
+> diff --git a/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+> new file mode 100644
+> index 000000000000..bb148e796df7
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> + */
+> +
+> +#include "sunxi-common-regulators.dtsi"
 
-The alignment should be on the parenthesis
+If possible, you should get rid of that include. What are you using it
+for?
 
-Looks good otherwise
-
-maxime
+Maxime
 
 --
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---ttqlhhfclj7eb7xn--
+--6e3io72tcrt3erkz--
