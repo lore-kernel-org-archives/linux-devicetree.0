@@ -1,164 +1,56 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH] arm64: dts: hisilicon: Switch to SPDX header
-Date: Tue, 11 Jun 2019 09:20:09 +0200
-Message-ID: <20190611072009.2978447-1-lkundrak@v3.sk>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Date: Tue, 11 Jun 2019 17:21:39 +1000
+Message-ID: <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+         <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+         <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+         <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+         <20190531051400.GA2275@cz.tnic>
+         <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+         <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+         <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+         <20190608090556.GA32464@zn.tnic>
+         <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Xu <xuwei5@hisilicon.com>
-Cc: Pengcheng Li <lipengcheng8@huawei.com>, Leo Yan <leo.yan@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+To: Borislav Petkov <bp@alien8.de>
+Cc: James Morse <james.morse@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Hanoch, Uri
 List-Id: devicetree@vger.kernel.org
 
-The original license text had a typo ("publishhed") which would be
-likely to confuse automated licensing auditing tools. Let's just switch
-to SPDX instead of fixing the wording.
+On Tue, 2019-06-11 at 15:50 +1000, Benjamin Herrenschmidt wrote:
+> On Sat, 2019-06-08 at 11:05 +0200, Borislav Petkov wrote:
+> > On Sat, Jun 08, 2019 at 10:16:11AM +1000, Benjamin Herrenschmidt wrote:
+> > > Those IP blocks don't need any SW coordination at runtime. The drivers
+> > > don't share data nor communicate with each other. There is absolultely
+> > > no reason to go down that path.
+> > 
+> > Let me set one thing straight: the EDAC "subsystem" if you will - or
+> > that pile of code which does error counting and reporting - has its
+> > limitations in supporting one EDAC driver per platform. And whenever we
+> > have two drivers loadable on a platform, we have to do dirty hacks like
+> > 
+> >   301375e76432 ("EDAC: Add owner check to the x86 platform drivers")
+> > 
+> > What that means is, that if you need to call EDAC logging routines or
+> > whatnot from two different drivers, there's no locking, no nothing. So
+> > it might work or it might set your cat on fire.
+> 
+> Should we fix that then instead ? What are the big issues with adding
+> some basic locking ? being called from NMIs ?
+> 
+> If the separate drivers operate on distinct counters I don't see a big
+> problem there.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi | 5 +----
- arch/arm64/boot/dts/hisilicon/hip05-d02.dts         | 5 +----
- arch/arm64/boot/dts/hisilicon/hip05.dtsi            | 5 +----
- arch/arm64/boot/dts/hisilicon/hip06-d03.dts         | 5 +----
- arch/arm64/boot/dts/hisilicon/hip06.dtsi            | 5 +----
- arch/arm64/boot/dts/hisilicon/hip07-d05.dts         | 5 +----
- arch/arm64/boot/dts/hisilicon/hip07.dtsi            | 5 +----
- 7 files changed, 7 insertions(+), 28 deletions(-)
+So looking again ... all the registration/removal of edac devices seem
+to already be protected by mutexes, so that's not a problem.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi b/arch/a=
-rm64/boot/dts/hisilicon/hi6220-coresight.dtsi
-index 68c52f1149be..f9662a9f17b8 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * dtsi file for Hisilicon Hi6220 coresight
-  *
-@@ -6,10 +7,6 @@
-  * Author: Pengcheng Li <lipengcheng8@huawei.com>
-  *         Leo Yan <leo.yan@linaro.org>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-- *
-  */
-=20
- / {
-diff --git a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts b/arch/arm64/boo=
-t/dts/hisilicon/hip05-d02.dts
-index 3bbd017f088f..154c25d1d50d 100644
---- a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /**
-  * dts file for Hisilicon D02 Development Board
-  *
-  * Copyright (C) 2014,2015 Hisilicon Ltd.
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-- *
-  */
-=20
- /dts-v1/;
-diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/boot/d=
-ts/hisilicon/hip05.dtsi
-index d321edc09c3f..a2ffaee686b0 100644
---- a/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /**
-  * dts file for Hisilicon D02 Development Board
-  *
-  * Copyright (C) 2014,2015 Hisilicon Ltd.
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-- *
-  */
-=20
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-diff --git a/arch/arm64/boot/dts/hisilicon/hip06-d03.dts b/arch/arm64/boo=
-t/dts/hisilicon/hip06-d03.dts
-index a95c6f5619bf..46616215969d 100644
---- a/arch/arm64/boot/dts/hisilicon/hip06-d03.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hip06-d03.dts
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /**
-  * dts file for Hisilicon D03 Development Board
-  *
-  * Copyright (C) 2016 Hisilicon Ltd.
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-- *
-  */
-=20
- /dts-v1/;
-diff --git a/arch/arm64/boot/dts/hisilicon/hip06.dtsi b/arch/arm64/boot/d=
-ts/hisilicon/hip06.dtsi
-index 56625587b6de..00baee6d399c 100644
---- a/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /**
-  * dts file for Hisilicon D03 Development Board
-  *
-  * Copyright (C) 2016 Hisilicon Ltd.
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-- *
-  */
-=20
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07-d05.dts b/arch/arm64/boo=
-t/dts/hisilicon/hip07-d05.dts
-index 21147e8e3f94..d0cd986ab3a0 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07-d05.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hip07-d05.dts
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /**
-  * dts file for Hisilicon D05 Development Board
-  *
-  * Copyright (C) 2016 Hisilicon Ltd.
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-- *
-  */
-=20
- /dts-v1/;
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/d=
-ts/hisilicon/hip07.dtsi
-index 28bd4389441f..abfa416613e5 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /**
-  * dts file for Hisilicon D05 Development Board
-  *
-  * Copyright (C) 2016 Hisilicon Ltd.
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-- *
-  */
-=20
- #include <dt-bindings/interrupt-controller/arm-gic.h>
---=20
-2.21.0
+Tell me more about what specific races you think we might have here,
+I'm not sure I follow...
+
+Cheers,
+Ben.
