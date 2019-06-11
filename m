@@ -1,44 +1,81 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 4/6] dt-bindings: display:
- hdmi-connector: Support DDC bus enable
-Date: Tue, 11 Jun 2019 15:52:06 -0600
-Message-ID: <20190611215206.GA17759@bogus>
-References: <20190527162237.18495-1-megous@megous.com>
- <20190527162237.18495-5-megous@megous.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Sandeep Patil <sspatil@android.com>
+Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up
+ of_find_device_by_node()
+Date: Tue, 11 Jun 2019 14:52:42 -0700
+Message-ID: <20190611215242.GE212690@google.com>
+References: <20190604003218.241354-1-saravanak@google.com>
+ <20190604003218.241354-2-saravanak@google.com>
+ <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
+ <570474f4-8749-50fd-5f72-36648ed44653@gmail.com>
+ <CAGETcx8M3YkUBZ-e2LLfrbWgnMKMMNG5cv=p8MMmBe7ZyPJ7xw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBCWFQDUAKGQEHA62LSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190527162237.18495-5-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org
+In-Reply-To: <CAGETcx8M3YkUBZ-e2LLfrbWgnMKMMNG5cv=p8MMmBe7ZyPJ7xw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 May 2019 18:22:35 +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+On Tue, Jun 11, 2019 at 01:56:25PM -0700, 'Saravana Kannan' via kernel-team wrote:
+> On Tue, Jun 11, 2019 at 8:18 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> >
+> > Hi Saravana,
+> >
+> > On 6/10/19 10:36 AM, Rob Herring wrote:
+> > > Why are you resending this rather than replying to Frank's last
+> > > comments on the original?
+> >
+> > Adding on a different aspect...  The independent replies from three different
+> > maintainers (Rob, Mark, myself) pointed out architectural issues with the
+> > patch series.  There were also some implementation issues brought out.
+> > (Although I refrained from bringing up most of my implementation issues
+> > as they are not relevant until architecture issues are resolved.)
 > 
-> Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
-> on-board voltage shifting logic for the DDC bus using a gpio to be able
-> to access DDC bus. Use ddc-en-gpios property on the hdmi-connector to
-> model this.
+> Right, I'm not too worried about the implementation issues before we
+> settle on the architectural issues. Those are easy to fix.
 > 
-> Add binding documentation for optional ddc-en-gpios property.
+> Honestly, the main points that the maintainers raised are:
+> 1) This is a configuration property and not describing the device.
+> Just use the implicit dependencies coming from existing bindings.
 > 
-> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
->  1 file changed, 1 insertion(+)
+> I gave a bunch of reasons for why I think it isn't an OS configuration
+> property. But even if that's not something the maintainers can agree
+> to, I gave a concrete example (cyclic dependencies between clock
+> provider hardware) where the implicit dependencies would prevent one
+> of the devices from probing till the end of time. So even if the
+> maintainers don't agree we should always look at "depends-on" to
+> decide the dependencies, we still need some means to override the
+> implicit dependencies where they don't match the real dependency. Can
+> we use depends-on as an override when the implicit dependencies aren't
+> correct?
 > 
+> 2) This doesn't need to be solved because this is just optimizing
+> probing or saving power ("we should get rid of this auto disabling"):
+> 
+> I explained why this patch series is not just about optimizing probe
+> ordering or saving power. And why we can't ignore auto disabling
+> (because it's more than just auto disabling). The kernel is currently
+> broken when trying to use modules in ARM SoCs (probably in other
+> systems/archs too, but I can't speak for those).
+> 
+> 3) Concerns about backwards compatibility
+> 
+> I pointed out why the current scheme (depends-on being the only source
+> of dependency) doesn't break compatibility. And if we go with
+> "depends-on" as an override what we could do to keep backwards
+> compatibility. Happy to hear more thoughts or discuss options.
+> 
+> 4) How the "sync_state" would work for a device that supplies multiple
+> functionalities but a limited driver.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+<snip>
+To be clear, all of above are _real_ problems that stops us from efficiently
+load device drivers as modules for Android.
 
-If a tag was not added on purpose, please state why and what changed.
+So, if 'depends-on' doesn't seem like the right approach and "going back to
+the drawing board" is the ask, could you please point us in the right
+direction?
+
+- ssp
