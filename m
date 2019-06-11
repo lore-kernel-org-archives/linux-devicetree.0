@@ -1,201 +1,305 @@
 From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
-Date: Tue, 11 Jun 2019 07:51:53 -0700
-Message-ID: <b272ae7b-dcc6-acda-78b2-92eace0b6978@gmail.com>
+Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe
+ ordering
+Date: Tue, 11 Jun 2019 07:56:46 -0700
+Message-ID: <5a3c1776-69ed-eeec-9326-8632c6bd0d58@gmail.com>
 References: <20190524010117.225219-1-saravanak@google.com>
- <20190524010117.225219-2-saravanak@google.com>
- <6f4ca588-106f-93d1-8579-9e8d32c8031d@gmail.com>
- <CAGETcx9zgMs5ne3jPa+6xR+EHR=+QuF7XfRb1gpenh-3ZQwV+w@mail.gmail.com>
- <b3a88f46-5c3b-0e33-e08f-e0d9b5df2864@gmail.com>
+ <06b479e2-e8a0-b3e8-567c-7fa0f1c5bdf6@gmail.com>
+ <CAGETcx-21GEoBKhpzcsrDt3sEo-vUpwqnr3To7VbSPd8aW86Nw@mail.gmail.com>
+ <d49dccee-203a-628a-8e47-191014619f6b@gmail.com>
+ <CAGETcx-HPsxdwMfUJDUBvjpiuK9eyRCYRhqsXxiL5Q8g+YgHEg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b3a88f46-5c3b-0e33-e08f-e0d9b5df2864@gmail.com>
+In-Reply-To: <CAGETcx-HPsxdwMfUJDUBvjpiuK9eyRCYRhqsXxiL5Q8g+YgHEg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Saravana Kannan <saravanak@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Saravana,
 
-(I notice that I never seem to spell your name correctly.  Apologies for that,
-both past and future).
+On 5/24/19 9:04 PM, Saravana Kannan wrote:
+> On Fri, May 24, 2019 at 7:40 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> Hi Saranova,
+>>
+>> I'll try to address the other portions of this email that I <snipped>
+>> in my previous replies.
+>>
+>>
+>> On 5/24/19 2:53 PM, Saravana Kannan wrote:
+>>> On Fri, May 24, 2019 at 10:49 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>
+>>>> On 5/23/19 6:01 PM, Saravana Kannan wrote:
+>>>>> Add a generic "depends-on" property that allows specifying mandatory
+>>>>> functional dependencies between devices. Add device-links after the
+>>>>> devices are created (but before they are probed) by looking at this
+>>>>> "depends-on" property.
+>>>>>
+>>>>> This property is used instead of existing DT properties that specify
+>>>>> phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
+>>>>> is because not all resources referred to by existing DT properties are
+>>>>> mandatory functional dependencies. Some devices/drivers might be able>>>>> to operate with reduced functionality when some of the resources
 
-This email was never answered.
+
+In your original email, you say this:
+
+>>>>> aren't available. For example, a device could operate in polling mode
+>>>>> if no IRQ is available, a device could skip doing power management if
+>>>>> clock or voltage control isn't available and they are left on, etc.
+
+
+>>>>>
+>>>>> So, adding mandatory functional dependency links between devices by
+>>>>> looking at referred phandles in DT properties won't work as it would
+>>>>> prevent probing devices that could be probed. By having an explicit
+>>>>> depends-on property, we can handle these cases correctly.
+>>>>
+>>>> Trying to wrap my brain around the concept, this series seems to be
+>>>> adding the ability to declare that an apparent dependency (eg an IRQ
+>>>> specified by a phandle) is _not_ actually a dependency.
+>>>
+>>> The current implementation completely ignores existing bindings for
+>>> dependencies and so does the current tip of the kernel. So it's not
+>>> really overriding anything. However, if I change the implementation so
+>>> that depends-on becomes the source of truth if it exists and falls
+>>> back to existing common bindings if "depends-on" isn't present -- then
+>>> depends-on would truly be overriding existing bindings for
+>>> dependencies. It depends on how we want to define the DT property.
+>>>
+>>>> The phandle already implies the dependency.
+>>>
+>>> Sure, it might imply, but it's not always true.
+>>>
+>>>> Creating a separate
+>>>> depends-on property provides a method of ignoring the implied
+>>>> dependencies.
+>>>
+>>> implied != true
+>>>
+
+I refer to your irq mode vs polled mode device example:
+
+>>>> This is not just hardware description.  It is instead a combination
+>>>> of hardware functionality and driver functionality.  An example
+>>>> provided in the second paragraph of the email I am replying to
+>>>> suggests a device could operate in polling mode if no IRQ is
+>>>> available.  Using this example, the devicetree does not know
+>>>> whether the driver requires the IRQ (currently an implied
+>>>> dependency since the IRQ phandle exists).  My understanding
+>>>> of this example is that the device node would _not_ have a
+>>>> depends-on property for the IRQ phandle so the IRQ would be
+>>>> optional.  But this is an attribute of the driver, not the
+>>>> hardware.
+>>>
+>>
+
+You change the subject from irq mode vs polled mode device to some
+other type of device:
+
+>>> Not really. The interrupt could be for "SD card plugged in". That's
+>>> never a mandatory dependency for the SD card controller to work. So
+>>> the IRQ provider won't be a "depends-on" in this case. But if there is
+>>> no power supply or clock for the SD card controller, it isn't going to
+>>> work -- so they'd be listed in the "depends-on". So, this is still
+>>> defining the hardware and not the OS.
+>>
+
+I again try to get you to discuss the irq mode vs polled mode device:
+
+>> Please comment on my observation that was based on an IRQ for a device
+>> will polling mode vs interrupt driven mode.
+>> You described a different
+>> case and did not address my comment.
+> > I thought I did reply -- not sure what part you are looking for so
+> I'll rephrase. I was just picking the SD card controller as a concrete
+> example of device that can work with or without an interrupt. But
+> sure, I can call it "the device".
+> 
+
+And the thread is so deeply nested that you are missing the original
+point that I made.
+
+> And yes, the device won't have a "depends-on" on the IRQ provider
+> because the device can still work without a working (as in bound to
+> driver) IRQ provider. Whether the driver insists on waiting on an IRQ
+> provider or not is up to the driver and the depends-on property is NOT
+> trying to dictate what the driver should do in this case. Does that
+> answer your implied question?
+
+If the device _must_ operate in irq mode to achieve the throughput
+that is _required_ for the system to be functional then that system
+would need a devicetree to have a "depends-on" property for the irq.
+But another system using the same exact hardware might be able to
+tolerate the reduced throughput of operating in polled mode.  This
+second system would need a devicetree that does _not_ have a
+depends-on property for that same irq, as used by that same device.
+
+This then becomes configuration, not hardware description, as noted
+in my next paragraph:
+
+> 
+>>
+>>>> This is also configuration, declaring whether the
+>>>> system is willing to accept polling mode instead of interrupt
+>>>> mode.
 
 -Frank
 
-
-On 5/24/19 5:12 PM, Frank Rowand wrote:
-> On 5/24/19 11:21 AM, Saravana Kannan wrote:
->> On Fri, May 24, 2019 at 10:56 AM Frank Rowand <frowand.list@gmail.com> wrote:
 >>>
->>> Hi Sarvana,
+>>> Whether the driver will choose to operate without the IRQ is up to it.
+>>> The OS could also assume the power supply is never turned off and
+>>> still try to use the device. Depending on the hardware configuration,
+>>> that might or might not work.
 >>>
->>> I'm not reviewing patches 1-5 in any detail, given my reply to patch 0.
+>>>> Devicetree is not the proper place for driver description or
+>>>> for configuration.
 >>>
->>> But I had already skimmed through this patch before I received the
->>> email for patch 0, so I want to make one generic comment below,
->>> to give some feedback as you continue thinking through possible
->>> implementations to solve the underlying problems.
->>
->> Appreciate the feedback Frank!
->>
+>>> But depends-on isn't describing the driver configuration though.
 >>>
+>>> Overall, the clock provider example I gave in another reply is a much
+>>> better example. If you just assume implied dependencies are mandatory
+>>> dependencies, some devices will never be probe because the kernel is
+>>> using them incorrectly (they aren't meant to list mandatory
+>>> dependencies).
 >>>
->>> On 5/23/19 6:01 PM, Saravana Kannan wrote:
->>>> Add a pointer from device tree node to the device created from it.
->>>> This allows us to find the device corresponding to a device tree node
->>>> without having to loop through all the platform devices.
->>>>
->>>> However, fallback to looping through the platform devices to handle
->>>> any devices that might set their own of_node.
->>>>
->>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
->>>> ---
->>>>  drivers/of/platform.c | 20 +++++++++++++++++++-
->>>>  include/linux/of.h    |  3 +++
->>>>  2 files changed, 22 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->>>> index 04ad312fd85b..1115a8d80a33 100644
->>>> --- a/drivers/of/platform.c
->>>> +++ b/drivers/of/platform.c
->>>> @@ -42,6 +42,8 @@ static int of_dev_node_match(struct device *dev, void *data)
->>>>       return dev->of_node == data;
->>>>  }
->>>>
->>>> +static DEFINE_SPINLOCK(of_dev_lock);
->>>> +
->>>>  /**
->>>>   * of_find_device_by_node - Find the platform_device associated with a node
->>>>   * @np: Pointer to device tree node
->>>> @@ -55,7 +57,18 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
->>>>  {
->>>>       struct device *dev;
->>>>
->>>> -     dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
->>>> +     /*
->>>> +      * Spinlock needed to make sure np->dev doesn't get freed between NULL
->>>> +      * check inside and kref count increment inside get_device(). This is
->>>> +      * achieved by grabbing the spinlock before setting np->dev = NULL in
->>>> +      * of_platform_device_destroy().
->>>> +      */
->>>> +     spin_lock(&of_dev_lock);
->>>> +     dev = get_device(np->dev);
->>>> +     spin_unlock(&of_dev_lock);
->>>> +     if (!dev)
->>>> +             dev = bus_find_device(&platform_bus_type, NULL, np,
->>>> +                                   of_dev_node_match);
->>>>       return dev ? to_platform_device(dev) : NULL;
->>>>  }
->>>>  EXPORT_SYMBOL(of_find_device_by_node);
->>>> @@ -196,6 +209,7 @@ static struct platform_device *of_platform_device_create_pdata(
->>>>               platform_device_put(dev);
->>>>               goto err_clear_flag;
->>>>       }
->>>> +     np->dev = &dev->dev;
->>>>
->>>>       return dev;
->>>>
->>>> @@ -556,6 +570,10 @@ int of_platform_device_destroy(struct device *dev, void *data)
->>>>       if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
->>>>               device_for_each_child(dev, NULL, of_platform_device_destroy);
->>>>
->>>> +     /* Spinlock is needed for of_find_device_by_node() to work */
->>>> +     spin_lock(&of_dev_lock);
->>>> +     dev->of_node->dev = NULL;
->>>> +     spin_unlock(&of_dev_lock);
->>>>       of_node_clear_flag(dev->of_node, OF_POPULATED);
->>>>       of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
->>>>
->>>> diff --git a/include/linux/of.h b/include/linux/of.h
->>>> index 0cf857012f11..f2b4912cbca1 100644
->>>> --- a/include/linux/of.h
->>>> +++ b/include/linux/of.h
->>>> @@ -48,6 +48,8 @@ struct property {
->>>>  struct of_irq_controller;
->>>>  #endif
->>>>
->>>> +struct device;
->>>> +
->>>>  struct device_node {
->>>>       const char *name;
->>>>       phandle phandle;
->>>> @@ -68,6 +70,7 @@ struct device_node {
->>>>       unsigned int unique_id;
->>>>       struct of_irq_controller *irq_trans;
->>>>  #endif
->>>> +     struct device *dev;             /* Device created from this node */
+>>>> Another flaw with this method is that existing device trees
+>>>> will be broken after the kernel is modified, because existing
+>>>> device trees do not have the depends-on property.  This breaks
+>>>> the devicetree compatibility rules.
 >>>
->>> We have actively been working on shrinking the size of struct device_node,
->>> as part of reducing the devicetree memory usage.  As such, we need strong
->>> justification for adding anything to this struct.  For example, proof that
->>> there is a performance problem that can only be solved by increasing the
->>> memory usage.
+>>> This is 100% not true with the current implementation. I actually
+>>> tested this. This is fully backwards compatible. That's another reason
+>>> for adding depends-on and going by just what it says. The existing
+>>> bindings were never meant to describe only mandatory dependencies. So
+>>> using them as such is what would break backwards compatibility.
+>>>
+>>>>> Having functional dependencies explicitly called out in DT and
+>>>>> automatically added before the devices are probed, provides the
+>>>>> following benefits:
+>>>>>
+>>>>> - Optimizes device probe order and avoids the useless work of
+>>>>>   attempting probes of devices that will not probe successfully
+>>>>>   (because their suppliers aren't present or haven't probed yet).
+>>>>>
+>>>>>   For example, in a commonly available mobile SoC, registering just
+>>>>>   one consumer device's driver at an initcall level earlier than the
+>>>>>   supplier device's driver causes 11 failed probe attempts before the
+>>>>>   consumer device probes successfully. This was with a kernel with all
+>>>>>   the drivers statically compiled in. This problem gets a lot worse if
+>>>>>   all the drivers are loaded as modules without direct symbol
+>>>>>   dependencies.
+>>>>>
+>>>>> - Supplier devices like clock providers, regulators providers, etc
+>>>>>   need to keep the resources they provide active and at a particular
+>>>>>   state(s) during boot up even if their current set of consumers don't
+>>>>>   request the resource to be active. This is because the rest of the
+>>>>>   consumers might not have probed yet and turning off the resource
+>>>>>   before all the consumers have probed could lead to a hang or
+>>>>>   undesired user experience.
+>>>>>
+>>>>>   Some frameworks (Eg: regulator) handle this today by turning off
+>>>>>   "unused" resources at late_initcall_sync and hoping all the devices
+>>>>>   have probed by then. This is not a valid assumption for systems with
+>>>>>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>>>>>   this due to the lack of a clear signal for when they can turn off
+>>>>>   resources. This leads to downstream hacks to handle cases like this
+>>>>>   that can easily be solved in the upstream kernel.
+>>>>>
+>>>>>   By linking devices before they are probed, we give suppliers a clear
+>>>>
+>>>> By linking devices to suppliers before they are probed, we give suppliers a clear
+>>>
+>>> Ack
+>>>
+>>>>>   count of the number of dependent consumers. Once all of the
+>>>>>   consumers are active, the suppliers can turn off the unused
+>>>>>   resources without making assumptions about the number of consumers.
+>>>>>
+>>>>> By default we just add device-links to track "driver presence" (probe
+>>>>> succeeded) of the supplier device. If any other functionality provided
+>>>>> by device-links are needed, it is left to the consumer/supplier
+>>>>> devices to change the link when they probe.
+>>>>>
+>>>>>
+>>>>> Saravana Kannan (5):
+>>>>>   of/platform: Speed up of_find_device_by_node()
+>>>>>   driver core: Add device links support for pending links to suppliers
+>>>>>   dt-bindings: Add depends-on property
+>>>>>   of/platform: Add functional dependency link from "depends-on" property
+>>>>>   driver core: Add sync_state driver/bus callback
+>>>>>
+>>>>>  .../devicetree/bindings/depends-on.txt        |  26 +++++
+>>>>>  drivers/base/core.c                           | 106 ++++++++++++++++++
+>>>>>  drivers/of/platform.c                         |  75 ++++++++++++-
+>>>>>  include/linux/device.h                        |  24 ++++
+>>>>>  include/linux/of.h                            |   3 +
+>>>>>  5 files changed, 233 insertions(+), 1 deletion(-)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
+>>>>>
+>>>>
+>>>> The above issues make this specific implementation not acceptable.
+>>>> I like the analysis of the problem areas, and I like the concepts of
+>>>> trying to solve not only probe ordering, but also the problem of
+>>>> when to turn off resources that will not be needed.
+>>>
+>>> Beating a dead horse here, but I want to make sure I get this into as
+>>> many minds as possible:
+>>> It is NOT just about turning off resources. It's about the kernel
+>>> taking full control of resources (allowing the full range of voltages,
+>>> clock frequencies, bus configurations, etc) and syncing the HW state
+>>> to the SW state as determined by the consumers.
+>>>
+>>>> But at the
+>>>> moment, I don't have a suggestion of a way to implement a solution.
+>>>
+>>> The problem of syncing resources to SW state after boot up completed
+>>> has been broken for a long time in the kernel. It's high time we fix
+>>> it. I'm open to other suggestions, but we can't just say "we don't
+>>> have a solution".
+>>>
+>>> For example, we can have a kernel command line argument that'll use
+>>> all common implicit bindings as mandatory dependencies and allow
+>>> "depends-on" to override them for the few cases where the implicit
+>>> dependencies don't match mandatory dependencies. Then:
+>>> - The kernel will be 100% backwards compatible with existing DT if the
+>>> command line arg isn't provided.
+>>> - New DT + old kernel will be no worse than today because old kernel
+>>> doesn't do any dependency tracking.
+>>> - Command line arg + new kernel + hardware where all implicit
+>>> dependencies are actually mandatory dependencies == things work
+>>> better.
+>>> - Command line arg + new kernel + hardware where all implicit
+>>> dependencies don't match mandatory dependencies + depends-on for those
+>>> exception case == things work better.
 >>
->> I didn't mean for people to focus on the deferred probe optimization.
+>> Using a command line argument for this purpose just seems to be a
+>> hack and bad architecture.
 > 
-> I was speaking specifically of the of_find_device_by_node() optimization.
-> I did not chase any further back in the call chain to see how that would
-> impact anything else.  My comments stand, whether this patch is meant
-> to optimize deferred probe optimization or to optimize something else.
+> I agree -- which is why the current implementation doesn't try to form
+> mandatory dependency from implicit bindings and makes the case that
+> all mandatory dependencies should be called out explicitly. But if
+> people insist on that implicit bindings be used as such, then a CONFIG
+> or commandline option would be an acceptable compromise for me.
 > 
+>> It also seems like an invitation to mis-configure a system (in other
+>> words, increases the complexity and difficulty of properly configuring
+>> and administering a system).
 > 
->> In reality that was just a added side benefit of this series. The main
->> problem to solve is that of suppliers having to know when all their
->> consumers are up and managing the resources actively, especially in a
->> system with loadable modules where we can't depend on the driver to
->> notify the supplier because the consumer driver module might not be
->> available or loaded until much later.
->>
->> Having said that, I'm not saying we should go around and waste space
->> willy-nilly. But, isn't the memory usage going to increase based on
->> the number of DT nodes present in DT? I'd think as the number of DT
->> nodes increase it's more likely for those devices have more memory? So
->> at least in this specific case I think adding the field is justified.
+> Just want to point out that, as of today, we have a broken system --
+> module loading is not compatible with proper handling of shared
+> mandatory resources during boot up. To be clear, I'm not arguing for a
+> commandline arg.
 > 
-> Struct device_node is the nodes of the in kernel devicetree data.  This
-> patch adds a field to every single node of the devicetree.
+>> The is not a hard no (yet), but it will take some convincing for me
+>> to accept the command line approach to add the feature, yet maintain
+>> compatibility.  Please do not spend any time replying to this concern
+>> yet - we will have plenty of time to discuss later if need be.
 > 
-> The patch series is also adding a new property, of varying size, to
-> some nodes.  This also results in additional memory usage by
-> devicetree. 
+> Sounds good.
 > 
-> Arguing that a more complex system is likely to have more memory is
-> likely true, but beside the point.  Minimizing devicetree memory
-> used on less complex systems is also one of our goals.
-> 
-> 
->> Also, right now the look up is O(n) complexity and if we are trying to
->> add device links to most of the devices, that whole process becomes
->> O(n^2). Having this field makes the look up a O(1) and the entire
->> linking process a O(n) process. I think the memory usage increase is
->> worth the efficiency improvement.
-> 
-> Hand waving about O(n) and O(1) and O(n2) is not sufficient.  We require
-> actual measurements that show O(n2) (when the existing algorithm is such)
-> is a performance problem and that the proposed change to the algorithm
-> results in a specific change in the performance.
-> 
-> The devicetree maintainers have decided that memory use is important and
-> to be minimized, and the burden of proof that performance is an issue
-> lies on the submitter of a patch that improves performance at the cost
-> of memory.
-> 
-> Most devicetree boot time cpu overhead only affects the boot event.
-> Added memory use persists for the entire booted lifetime of the system.
-> 
-> That is not to say that we never increase memory use to improve boot
-> performance.  We have done so when the measured performance issue and
-> measured performance improvement justified the change.
-> 
->>
->> And if people are still strongly against it, we could make this a config option.
->>
->> -Saravana
->>
-> 
+> -Saravana
 > 
