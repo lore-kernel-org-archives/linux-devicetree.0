@@ -1,118 +1,256 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Tue, 11 Jun 2019 13:56:49 +0200
-Message-ID: <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org> <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v5 3/5] mtd: Add support for HyperBus memory devices
+Date: Tue, 11 Jun 2019 17:27:25 +0530
+Message-ID: <f47d4d57-afb2-3b39-fae9-3ed740a2b8a6@ti.com>
+References: <20190609103227.24875-1-vigneshr@ti.com>
+ <20190609103227.24875-4-vigneshr@ti.com>
+ <58e9608d-35ff-0436-6075-b2e4ed4b8594@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+In-Reply-To: <58e9608d-35ff-0436-6075-b2e4ed4b8594@cogentembedded.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, Dan Williams <dcbw@redhat.com>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, syadagir@codeaurora.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:12 AM Johannes Berg
-<johannes@sipsolutions.net> wrote:
 
-> > As I've made clear before, my work on this has been focused on the IPA transport,
-> > and some of this higher-level LTE architecture is new to me.  But it
-> > seems pretty clear that an abstracted WWAN subsystem is a good plan,
-> > because these devices represent a superset of what a "normal" netdev
-> > implements.
->
-> I'm not sure I'd actually call it a superset. By themselves, these
-> netdevs are actually completely useless to the network stack, AFAICT.
-> Therefore, the overlap with netdevs you can really use with the network
-> stack is pretty small?
 
-I think Alex meant the concept of having a type of netdev with a generic
-user space interface for wwan and similar to a wlan device, as I understood
-you had suggested as well, as opposed to a stacked device as in
-rmnet or those drivers it seems to be modeled after (vlan, ip tunnel, ...)/.
+On 10/06/19 11:27 PM, Sergei Shtylyov wrote:
+> On 06/09/2019 01:32 PM, Vignesh Raghavendra wrote:
+> 
+>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+>> Bus interface between a host system master and one or more slave
+>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
+>> or ASIC devices with random access NOR flash memory (called HyperFlash)
+>> or self refresh DRAM (called HyperRAM).
+>>
+>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+>> signal and either Single-ended clock(3.0V parts) or Differential clock
+>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+>> At bus level, it follows a separate protocol described in HyperBus
+>> specification[1].
+>>
+>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+>> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
+>> HyperBus operates at >166MHz frequencies.
+>> HyperRAM provides direct random read/write access to flash memory
+>> array.
+>>
+>> But, HyperBus memory controllers seem to abstract implementation details
+>> and expose a simple MMIO interface to access connected flash.
+>>
+>> Add support for registering HyperFlash devices with MTD framework. MTD
+>> maps framework along with CFI chip support framework are used to support
+>> communicating with flash.
+>>
+>> Framework is modelled along the lines of spi-nor framework. HyperBus
+>> memory controller (HBMC) drivers calls hyperbus_register_device() to
+>> register a single HyperFlash device. HyperFlash core parses MMIO access
+>> information from DT, sets up the map_info struct, probes CFI flash and
+>> registers it with MTD framework.
+>>
+>> Some HBMC masters need calibration/training sequence[3] to be carried
+>> out, in order for DLL inside the controller to lock, by reading a known
+>> string/pattern. This is done by repeatedly reading CFI Query
+>> Identification String. Calibration needs to be done before trying to detect
+>> flash as part of CFI flash probe.
+>>
+>> HyperRAM is not supported at the moment.
+>>
+>> HyperBus specification can be found at[1]
+>> HyperFlash datasheet can be found at[2]
+>>
+>> [1] https://www.cypress.com/file/213356/download
+>> [2] https://www.cypress.com/file/213346/download
+>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>>     Table 12-5741. HyperFlash Access Sequence
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> [...]
+>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+>> new file mode 100644
+>> index 000000000000..df1f75e10b1a
+>> --- /dev/null
+>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+>> @@ -0,0 +1,191 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +//
+>> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mtd/hyperbus.h>
+>> +#include <linux/mtd/map.h>
+>> +#include <linux/mtd/mtd.h>
+>> +#include <linux/mtd/cfi.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/types.h>
+>> +
+>> +#define HYPERBUS_CALIB_COUNT 25
+> 
+>    Mhm, I think I've already protested about this being #define'd here...
+> 
 
-> > HOWEVER I disagree with your suggestion that the IPA code should
-> > not be committed until after that is all sorted out.  In part it's
-> > for selfish reasons, but I think there are legitimate reasons to
-> > commit IPA now *knowing* that it will need to be adapted to fit
-> > into the generic model that gets defined and developed.  Here
-> > are some reasons why.
->
-> I can't really argue with those, though I would point out that the
-> converse also holds - if we commit to this now, then we will have to
-> actually keep the API offered by IPA/rmnet today, so we cannot actually
-> remove the netdev again, even if we do migrate it to offer support for a
-> WWAN framework in the future.
+I thought you had agreed that default optional calibration routine can
+be part of core code and thus this #define.
 
-Right. The interface to support rmnet might be simple enough to keep
-next to what becomes the generic interface, but it will always continue
-to be an annoyance.
+Anyways, what is your preference here? Drop the constant and use a local
+variable in hyperbus_calibrate()?
+Or are you suggesting to move hyperbus_calibrate() TI's specific driver?
 
-> > Second, the IPA code has been out for review recently, and has been
-> > the subject of some detailed discussion in the past few weeks.  Arnd
-> > especially has invested considerable time in review and discussion.
-> > Delaying things until after a better generic model is settled on
-> > (which I'm guessing might be on the order of months)
->
->
-> I dunno if it really has to be months. I think we can cobble something
-> together relatively quickly that addresses the needs of IPA more
-> specifically, and then extend later?
->
-> But OTOH it may make sense to take a more paced approach and think
-> about the details more carefully than we have over in the other thread so far.
 
-I would hope that as soon as we can agree on a general approach, it
-would also be possible to merge a minimal implementation into the kernel
-along with IPA. Alex already mentioned that IPA in its current state does
-not actually support more than one data channel, so the necessary
-setup for it becomes even simpler.
+> [...]
+>> +int hyperbus_register_device(struct hyperbus_device *hbdev)
+>> +{
+>> +	const struct hyperbus_ops *ops;
+>> +	struct hyperbus_ctlr *ctlr;
+>> +	struct device_node *np;
+>> +	struct map_info *map;
+>> +	struct resource res;
+>> +	struct device *dev;
+>> +	int ret;
+>> +
+>> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
+>> +		pr_err("hyperbus: please fill all the necessary fields!\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	np = hbdev->np;
+>> +	ctlr = hbdev->ctlr;
+>> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
+>> +		return -ENODEV;
+>> +
+>> +	hbdev->memtype = HYPERFLASH;
+>> +
+>> +	if (of_address_to_resource(np, 0, &res))
+>> +		return -EINVAL;
+> 
+>    Why not just propagate the error upstream (yeah, I've noticed that
+> it only can be -EINVAL)?
+> 
 
-At the moment, the rmnet configuration in include/uapi/linux/if_link.h
-is almost trivial, with the three pieces of information needed being
-an IFLA_LINK to point to the real device (not needed if there is only
-one device per channel, instead of two), the IFLA_RMNET_MUX_ID
-setting the ID of the muxing channel (not needed if there is only
-one channel ?), a way to specify software bridging between channels
-(not useful if there is only one channel) and a few flags that I assume
-must match the remote end:
+Ok.
 
-#define RMNET_FLAGS_INGRESS_DEAGGREGATION         (1U << 0)
-#define RMNET_FLAGS_INGRESS_MAP_COMMANDS          (1U << 1)
-#define RMNET_FLAGS_INGRESS_MAP_CKSUMV4           (1U << 2)
-#define RMNET_FLAGS_EGRESS_MAP_CKSUMV4            (1U << 3)
-enum {
-        IFLA_RMNET_UNSPEC,
-        IFLA_RMNET_MUX_ID,
-        IFLA_RMNET_FLAGS,
-        __IFLA_RMNET_MAX,
-};
-#define IFLA_RMNET_MAX  (__IFLA_RMNET_MAX - 1)
-struct ifla_rmnet_flags {
-        __u32   flags;
-        __u32   mask;
-};
+> [...]
+>> diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
+>> new file mode 100644
+>> index 000000000000..ee2eefd822c9
+>> --- /dev/null
+>> +++ b/include/linux/mtd/hyperbus.h
+>> @@ -0,0 +1,91 @@
+>> +/* SPDX-License-Identifier: GPL-2.0
+>> + *
+>> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> + */
+>> +
+>> +#ifndef __LINUX_MTD_HYPERBUS_H__
+>> +#define __LINUX_MTD_HYPERBUS_H__
+>> +
+>> +#include <linux/mtd/map.h>
+>> +
+>> +enum hyperbus_memtype {
+>> +	HYPERFLASH,
+>> +	HYPERRAM,
+>> +};
+>> +
+>> +/**
+>> + * struct hyperbus_device - struct representing HyperBus slave device
+>> + * @map: map_info struct for accessing MMIO HyperBus flash memory
+>> + * @np:	pointer to HyperBus slave device node
+>           ^
+>    Space needed here, not tab.
+> 
 
-> > Third, having the code upstream actually means the actual requirements
-> > for rmnet-over-IPA are clear and explicit.  This might not be a huge
-> > deal, but I think it's better to devise a generic WWAN scheme that
-> > can refer to actual code than to do so with assumptions about what
-> > will work with rmnet (and others).  As far as I know, the upstream
-> > rmnet has no other upstream back end; IPA will make it "real."
->
-> Is that really true? I had previously been told that rmnet actually does
-> have use with a few existing drivers.
->
->
-> If true though, then I think this would be the killer argument *in
-> favour* of *not* merging this - because that would mean we *don't* have
-> to actually keep the rmnet API around for all foreseeable future.
+Ok
 
-I would agree with that. From the code I can see no other driver
-including the rmnet protocol header (see the discussion about moving
-the header to include/linux in order to merge ipa), and I don't see
-any other driver referencing ETH_P_MAP either. My understanding
-is that any driver used by rmnet would require both, but they are
-all out-of-tree at the moment.
+>> + * @mtd: pointer to MTD struct
+>> + * @ctlr: pointer to HyperBus controller struct
+>> + * @memtype: type of memory device: HyperFlash or HyperRAM
+>> + * @registered: flag to indicate whether device is registered with MTD core
+>> + */
+>> +
+>> +struct hyperbus_device {
+>> +	struct map_info map;
+>> +	struct device_node *np;
+>> +	struct mtd_info *mtd;
+>> +	struct hyperbus_ctlr *ctlr;
+>> +	enum hyperbus_memtype memtype;
+>> +	bool registered;
+>> +};
+>> +
+>> +/**
+>> + * struct hyperbus_ops - struct representing custom HyperBus operations
+>> + * @read16: read 16 bit of data, usually from register/ID-CFI space
+>> + * @write16: write 16 bit of data, usually to register/ID-CFI space
+> 
+>    Usually? How to differ the register/memory transfers if both are possible?
+> 
 
-        Arnd
+CFI + map framework does not provide a way to differentiate b/w reg
+access vs memory access. read16()/write16() is used to either access
+registers or for sending various cmds like lock/unlock etc or for
+programming a single word.
+For regular read/writes copy_from() and copy_to() are used.
+
+Looking at HyperBus protocol, controllers would not need to
+differentiate b/w registers vs memory transfers for HyperFlash devices.
+So, I think I can drop read16/write16 and redirect these calls to
+copy_from()/copy_to()
+
+
+I mainly added these functions keeping HyperRAM in mind. Idea was
+drivers would look at hyperbus_device->memtype and set to register
+access mode for HyperRAM in case of write16()/read16(). Looks like the
+interface is not intuitive enough
+So, will drop these and add it back when adding HyperRAM support.
+
+Does that work for your HW as well?
+
+>> + * @copy_from: copy data from flash memory
+>> + * @copy_to: copy data to flash memory
+>> + * @calibrate: calibrate HyperBus controller
+>> + */
+>> +
+>> +struct hyperbus_ops {
+>> +	u16 (*read16)(struct hyperbus_device *hbdev, unsigned long addr);
+>> +	void (*write16)(struct hyperbus_device *hbdev,
+>> +			unsigned long addr, u16 val);
+>> +	void (*copy_from)(struct hyperbus_device *hbdev, void *to,
+>> +			  unsigned long from, ssize_t len);
+>> +	void (*copy_to)(struct hyperbus_device *dev, unsigned long to,
+>> +			const void *from, ssize_t len);
+>> +	int (*calibrate)(struct hyperbus_device *dev);
+>> +};
+>> +
+>> +/**
+>> + * struct hyperbus_ctlr - struct representing HyperBus controller
+>> + * @calibrated: flag to indicate ctlr calibration sequence is complete
+>> + * @ops: HyperBus controller ops
+> 
+>    What about @dev?
+> 
+
+Will add.
+
+>> + */
+>> +struct hyperbus_ctlr {
+>> +	struct device *dev;
+>> +	bool calibrated;
+>> +
+>> +	const struct hyperbus_ops *ops;
+>> +};
+> [...]
+> 
+> MBR, Sergei
+> 
+
+-- 
+Regards
+Vignesh
