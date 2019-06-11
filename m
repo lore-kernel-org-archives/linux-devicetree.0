@@ -1,36 +1,90 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/2] arm64: dts: meson: sei510: add sound card
-Date: Tue, 11 Jun 2019 16:05:56 -0700
-Message-ID: <7himtb4t9n.fsf@baylibre.com>
-References: <20190524140318.17608-1-jbrunet@baylibre.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: interconnect: Add Qualcomm QCS404 DT
+ bindings
+Date: Tue, 11 Jun 2019 16:08:18 -0700
+Message-ID: <20190611230818.GT4814@minitux>
+References: <20190611164157.24656-1-georgi.djakov@linaro.org>
+ <20190611164157.24656-2-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190524140318.17608-1-jbrunet@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20190611164157.24656-2-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On Tue 11 Jun 09:41 PDT 2019, Georgi Djakov wrote:
 
-> This patchset adds the sound card of sei510 board.
->
-> Note #1:
-> The patchset (build) depends on the tohdmitx ASoC patch [0] for the dt
-> bindings of the tohdmitx glue. It also (run) depends on the mpll clock
-> series [1] to get a correct clock sources.
->
-> Note #2:
-> I would normaly prefer to use the HIFI pll dedicated to audio to provide
-> the base rate for the 48kHz audio family. HIFI pll rate precision is a
-> little bit better than the MPLL. However, the HIFI pll may sometimes,
-> rarely, take a long time to report a lock. I'm still debugging this.
-> In the mean time, let's use MPLL2 instead.
->
-> [0]: e35f5ad6a965 ("ASoC: meson: add tohdmitx DT bindings")
-> [1]: https://lkml.kernel.org/r/20190513123115.18145-1-jbrunet@baylibre.com
+> The Qualcomm QCS404 platform has several buses that could be controlled
+> and tuned according to the bandwidth demand.
+> 
 
-All dependencies are merged or queued for v5.3, so queuing this for v5.3
-also,
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Kevin
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> 
+> v3:
+> - Add a reg property and move the interconnect nodes under the "soc" node.
+> 
+> v2:
+> - No changes.
+> 
+>  .../bindings/interconnect/qcom,qcs404.txt     | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> new file mode 100644
+> index 000000000000..14a827268dda
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> @@ -0,0 +1,46 @@
+> +Qualcomm QCS404 Network-On-Chip interconnect driver binding
+> +-----------------------------------------------------------
+> +
+> +Required properties :
+> +- compatible : shall contain only one of the following:
+> +			"qcom,qcs404-bimc"
+> +			"qcom,qcs404-pcnoc"
+> +			"qcom,qcs404-snoc"
+> +- #interconnect-cells : should contain 1
+> +
+> +Optional properties :
+> +reg : specifies the physical base address and size of registers
+> +clocks : list of phandles and specifiers to all interconnect bus clocks
+> +clock-names : clock names should include both "bus_clk" and "bus_a_clk"
+> +
+> +Example:
+> +
+> +soc {
+> +	...
+> +	bimc: interconnect@400000 {
+> +		reg = <0x00400000 0x80000>;
+> +		compatible = "qcom,qcs404-bimc";
+> +		#interconnect-cells = <1>;
+> +		clock-names = "bus_clk", "bus_a_clk";
+> +		clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+> +			<&rpmcc RPM_SMD_BIMC_A_CLK>;
+> +	};
+> +
+> +	pnoc: interconnect@500000 {
+> +		reg = <0x00500000 0x15080>;
+> +		compatible = "qcom,qcs404-pcnoc";
+> +		#interconnect-cells = <1>;
+> +		clock-names = "bus_clk", "bus_a_clk";
+> +		clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+> +			<&rpmcc RPM_SMD_PNOC_A_CLK>;
+> +	};
+> +
+> +	snoc: interconnect@580000 {
+> +		reg = <0x00580000 0x23080>;
+> +		compatible = "qcom,qcs404-snoc";
+> +		#interconnect-cells = <1>;
+> +		clock-names = "bus_clk", "bus_a_clk";
+> +		clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+> +			<&rpmcc RPM_SMD_SNOC_A_CLK>;
+> +	};
+> +};
