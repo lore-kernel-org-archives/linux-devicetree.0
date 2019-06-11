@@ -1,56 +1,61 @@
-From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH v6 4/6] dt-bindings: display:
- hdmi-connector: Support DDC bus enable
-Date: Wed, 12 Jun 2019 00:25:39 +0200
-Message-ID: <20190611222539.msviqrbptjd5vdji@core.my.home>
-References: <20190527162237.18495-1-megous@megous.com>
- <20190527162237.18495-5-megous@megous.com>
- <20190611215206.GA17759@bogus>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Date: Wed, 12 Jun 2019 08:25:52 +1000
+Message-ID: <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+References: <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+         <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+         <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+         <20190531051400.GA2275@cz.tnic>
+         <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+         <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+         <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+         <20190608090556.GA32464@zn.tnic>
+         <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+         <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+         <20190611115651.GD31772@zn.tnic>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBZGUQDUAKGQEDEM2QLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190611215206.GA17759@bogus>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190611115651.GD31772@zn.tnic>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: James Morse <james.morse@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Hanoch, Uri
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 03:52:06PM -0600, Rob Herring wrote:
-> On Mon, 27 May 2019 18:22:35 +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+On Tue, 2019-06-11 at 13:56 +0200, Borislav Petkov wrote:
+> On Tue, Jun 11, 2019 at 05:21:39PM +1000, Benjamin Herrenschmidt wrote:
+> > So looking again ... all the registration/removal of edac devices seem
+> > to already be protected by mutexes, so that's not a problem.
 > > 
-> > Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
-> > on-board voltage shifting logic for the DDC bus using a gpio to be able
-> > to access DDC bus. Use ddc-en-gpios property on the hdmi-connector to
-> > model this.
-> > 
-> > Add binding documentation for optional ddc-en-gpios property.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
+> > Tell me more about what specific races you think we might have here,
+> > I'm not sure I follow...
 > 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
+> Well, as I said "it might work or it might set your cat on fire." For
+> example, one of the error logging paths is edac_mc_handle_error() and
+> that thing mostly operates using the *mci pointer which should be ok
+> but then it calls the "trace_mc_event" tracepoint and I'd suppose that
+> tracepoints can do lockless but I'm not sure.
+
+Yes, we would be in a world of pain already if tracepoints couldn't
+handle concurrency :-)
+
+> So what needs to happen is for paths which weren't called by multiple
+> EDAC agents in parallel but need to get called in parallel now due to
+> ARM drivers wanting to do that, to get audited that they're safe.
+
+That's the thing, I don't think we have such path. We are talking about
+having separate L1/L2 vs. MC drivers, they don't overlap.
+
+> Situation is easy if you have one platform driver where you can
+> synchronize things in the driver but since you guys need to do separate
+> drivers for whatever reason, then that would need to be done prior.
 > 
-> If a tag was not added on purpose, please state why and what changed.
+> Makes more sense?
 
-Sorry, it was some mistake. Thanks for the note.
+Sort-of... I still don't see a race in what we propose but I might be
+missing something subtle. We are talking about two drivers for two
+different IP blocks updating different counters etc...
 
-regards,
-	Ondrej
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Cheers,
+Ben.
