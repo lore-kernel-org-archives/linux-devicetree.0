@@ -1,7 +1,7 @@
 From: Michael Drake <michael.drake@codethink.co.uk>
-Subject: [PATCH v1 10/11] dt-bindings: display/bridge: Add config property for ti949
-Date: Tue, 11 Jun 2019 15:04:11 +0100
-Message-ID: <20190611140412.32151-11-michael.drake@codethink.co.uk>
+Subject: [PATCH v1 07/11] ti948: Add sysfs node for alive attribute
+Date: Tue, 11 Jun 2019 15:04:08 +0100
+Message-ID: <20190611140412.32151-8-michael.drake@codethink.co.uk>
 References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,45 +12,70 @@ To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@idea
 Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
 List-Id: devicetree@vger.kernel.org
 
-The config property can be used to provide an array of
-register addresses and values to be written to configure
-the device for the board.
+This may be used by userspace to determine the state
+of the device.
 
 Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
 Cc: Patrick Glaser <pglaser@tesla.com>
 Cc: Nate Case <ncase@tesla.com>
 ---
- .../bindings/display/bridge/ti,ds90ub949.txt        | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/gpu/drm/bridge/ti948.c | 28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
-index 3ba3897d5e81..b1e38d732f17 100644
---- a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
-@@ -12,6 +12,8 @@ Required properties:
- Optional properties:
+diff --git a/drivers/gpu/drm/bridge/ti948.c b/drivers/gpu/drm/bridge/ti948.c
+index b5c766711c4b..b624eaeabb43 100644
+--- a/drivers/gpu/drm/bridge/ti948.c
++++ b/drivers/gpu/drm/bridge/ti948.c
+@@ -412,6 +412,16 @@ static void ti948_alive_check(struct work_struct *work)
+ 	schedule_delayed_work(&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
+ }
  
- - regulators: List of regulator name strings to enable for operation of device.
-+- config: List of <register address>,<value> pairs to be set to configure
-+  device on powerup.  The register addresses and values are 8bit.
++static ssize_t alive_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct ti948_ctx *ti948 = ti948_ctx_from_dev(dev);
++
++	return scnprintf(buf, PAGE_SIZE, "%u\n", (unsigned int)ti948->alive);
++}
++
++static DEVICE_ATTR_RO(alive);
++
+ static int ti948_pm_resume(struct device *dev)
+ {
+ 	struct ti948_ctx *ti948 = ti948_ctx_from_dev(dev);
+@@ -614,17 +624,31 @@ static int ti948_probe(struct i2c_client *client,
  
- Example
- -------
-@@ -21,4 +23,15 @@ ti949: ds90ub949@0 {
+ 	i2c_set_clientdata(client, ti948);
  
- 	regulators: "vcc",
- 	            "vcc_hdmi";
-+	config:
-+	        /* GPIO0 is an output with remote value */
-+	        <0x0D>, <0x25>,
-+	        /* GPIO3 is an input for XRES */
-+	        <0x0F>, <0x03>,
-+	        /* GPIO2 is an input for backlight PWM */
-+	        <0x0E>, <0x30>,
-+	        /* Enables forward channel I2C pass through */
-+	        <0x17>, <0x9e>,
-+	        /* Enables PORT1 registers I2C access */
-+	        <0x1E>, <0x04>;
- };
++	ret = device_create_file(&client->dev, &dev_attr_alive);
++	if (ret) {
++		dev_err(&client->dev, "Could not create alive attr\n");
++		return ret;
++	}
++
+ 	ret = ti948_pm_resume(&client->dev);
+-	if (ret != 0)
+-		return -EPROBE_DEFER;
++	if (ret != 0) {
++		ret = -EPROBE_DEFER;
++		goto error;
++	}
+ 
+ 	dev_info(&ti948->i2c->dev, "End probe (addr: %x)\n", ti948->i2c->addr);
+ 
+ 	return 0;
++
++error:
++	device_remove_file(&client->dev, &dev_attr_alive);
++	return ret;
+ }
+ 
+ static int ti948_remove(struct i2c_client *client)
+ {
++	device_remove_file(&client->dev, &dev_attr_alive);
++
+ 	return ti948_pm_suspend(&client->dev);
+ }
+ 
 -- 
 2.20.1
