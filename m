@@ -1,7 +1,7 @@
 From: Michael Drake <michael.drake@codethink.co.uk>
-Subject: [PATCH v1 05/11] ti948: Add alive check function using schedule_delayed_work()
-Date: Tue, 11 Jun 2019 15:04:06 +0100
-Message-ID: <20190611140412.32151-6-michael.drake@codethink.co.uk>
+Subject: [PATCH v1 03/11] dt-bindings: display/bridge: Add config property for ti948
+Date: Tue, 11 Jun 2019 15:04:04 +0100
+Message-ID: <20190611140412.32151-4-michael.drake@codethink.co.uk>
 References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,96 +12,53 @@ To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@idea
 Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
 List-Id: devicetree@vger.kernel.org
 
-This simply runs the function once every 5 seconds, while the
-device is supposed to be active.  The alive check function is
-currently simply a stub, that logs it has been called, and
-re-inserts itself into the work queue.
+The config property can be used to provide an array of
+register addresses and values to be written to configure
+the device for the board.
 
 Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
 Cc: Patrick Glaser <pglaser@tesla.com>
 Cc: Nate Case <ncase@tesla.com>
 ---
- drivers/gpu/drm/bridge/ti948.c | 37 +++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+ .../bindings/display/bridge/ti,ds90ub948.txt  | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/ti948.c b/drivers/gpu/drm/bridge/ti948.c
-index 9cb37215f049..86daa3701b91 100644
---- a/drivers/gpu/drm/bridge/ti948.c
-+++ b/drivers/gpu/drm/bridge/ti948.c
-@@ -16,6 +16,7 @@
+diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
+index f9e86cb22900..1e7033b0f3b7 100644
+--- a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
++++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
+@@ -12,6 +12,8 @@ Required properties:
+ Optional properties:
  
- #include <linux/regulator/consumer.h>
- #include <linux/of_device.h>
-+#include <linux/workqueue.h>
- #include <linux/module.h>
- #include <linux/regmap.h>
- #include <linux/delay.h>
-@@ -25,6 +26,9 @@
- /* Number of times to try checking for device on bringup. */
- #define TI948_DEVICE_ID_TRIES 10
+ - regulators: List of regulator name strings to enable for operation of device.
++- config: List of <register address>,<value> pairs to be set to configure
++  device on powerup.  The register addresses and values are 8bit.
  
-+/* Alive check every 5 seconds. */
-+#define TI948_ALIVE_CHECK_DELAY (5 * HZ)
-+
- /**
-  * enum ti948_reg - TI948 registers.
-  *
-@@ -374,9 +378,27 @@ static inline struct ti948_ctx *ti948_ctx_from_dev(struct device *dev)
- 	return i2c_get_clientdata(client);
- }
+ Example
+ -------
+@@ -21,4 +23,23 @@ ti948: ds90ub948@0 {
  
-+static inline struct ti948_ctx *delayed_work_to_ti948_ctx(
-+		struct delayed_work *dwork)
-+{
-+	return container_of(dwork, struct ti948_ctx, alive_check);
-+}
-+
-+static void ti948_alive_check(struct work_struct *work)
-+{
-+	struct delayed_work *dwork = to_delayed_work(work);
-+	struct ti948_ctx *ti948 = delayed_work_to_ti948_ctx(dwork);
-+
-+	dev_info(&ti948->i2c->dev, "%s Alive check!\n", __func__);
-+
-+	/* Reschedule ourself for the next check. */
-+	schedule_delayed_work(&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
-+}
-+
- static int ti948_pm_resume(struct device *dev)
- {
- 	struct ti948_ctx *ti948 = ti948_ctx_from_dev(dev);
-+	bool scheduled;
- 	int ret;
- 
- 	if (ti948 == NULL)
-@@ -386,7 +408,18 @@ static int ti948_pm_resume(struct device *dev)
- 	if (ret != 0)
- 		return ret;
- 
--	return ti948_write_config_seq(ti948);
-+	ret = ti948_write_config_seq(ti948);
-+	if (ret != 0)
-+		return ret;
-+
-+	INIT_DELAYED_WORK(&ti948->alive_check, ti948_alive_check);
-+
-+	scheduled = schedule_delayed_work(
-+			&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
-+	if (!scheduled)
-+		dev_warn(&ti948->i2c->dev, "Alive check already scheduled\n");
-+
-+	return 0;
- }
- 
- static int ti948_pm_suspend(struct device *dev)
-@@ -396,6 +429,8 @@ static int ti948_pm_suspend(struct device *dev)
- 	if (ti948 == NULL)
- 		return 0;
- 
-+	cancel_delayed_work_sync(&ti948->alive_check);
-+
- 	return ti948_power_off(ti948);
- }
- 
+ 	regulators: "vcc",
+ 	            "vcc_disp";
++	config:
++	        /* set error count to max */
++	        <0x41>, <0x1f>,
++	        /* sets output mode, no change noticed */
++	        <0x49>, <0xe0>,
++	        /* speed up I2C, 0xE is around 480KHz */
++	        <0x26>, <0x0e>,
++	        /* speed up I2C, 0xE is around 480KHz */
++	        <0x27>, <0x0e>,
++	        /* sets GPIO0 as an input */
++	        <0x1D>, <0x13>,
++	        /* set GPIO2 high, backlight PWM (set to 0x50 for normal use) */
++	        <0x1E>, <0x50>,
++	        /* sets GPIO3 as an output with remote control for touch XRES */
++	        <0x1F>, <0x05>,
++	        /* set GPIO5 high, backlight enable on new display */
++	        <0x20>, <0x09>,
++	        /* set GPIO7 and GPIO8 high to enable touch power and prox sense */
++	        <0x21>, <0x91>;
+ };
 -- 
 2.20.1
