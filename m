@@ -1,96 +1,33 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: ti_sci_pm_domains: Add support for
- exclusive and shared access
-Date: Tue, 11 Jun 2019 15:34:59 +0300
-Message-ID: <31dfd9ed-159f-95e7-f5a8-bcf6afec4eaa@ti.com>
-References: <20190410053728.17374-1-lokeshvutla@ti.com>
- <20190410053728.17374-3-lokeshvutla@ti.com>
- <9fe962b7-0500-6916-1dc3-04db0e11cd4d@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9fe962b7-0500-6916-1dc3-04db0e11cd4d@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/6] Add USB2.0/CMT/TMU support to HiHope RZ/G2M
+Date: Tue, 11 Jun 2019 14:06:35 +0100
+Message-ID: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-kernel@vger.kernel.org, xu_shunji@hoperun.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMDIvMDUvMjAxOSAxMjoyNCwgVGVybyBLcmlzdG8gd3JvdGU6Cj4gT24gMTAvMDQvMjAxOSAw
-ODozNywgTG9rZXNoIFZ1dGxhIHdyb3RlOgo+PiBUSVNDSSBwcm90b2NvbCBzdXBwb3J0cyBmb3Ig
-ZW5hYmxpbmcgdGhlIGRldmljZSBlaXRoZXIgd2l0aCBleGNsdXNpdmUKPj4gcGVybWlzc2lvbnMg
-Zm9yIHRoZSByZXF1ZXN0aW5nIGhvc3Qgb3Igd2l0aCBzaGFyaW5nIGFjcm9zcyB0aGUgaG9zdHMu
-Cj4+IFRoZXJlIGFyZSBjZXJ0YWluIGRldmljZXMgd2hpY2ggYXJlIGV4Y2x1c2l2ZSB0byBMaW51
-eCBjb250ZXh0IGFuZAo+PiB0aGVyZSBhcmUgY2VydGFpbiBkZXZpY2VzIHRoYXQgYXJlIHNoYXJl
-ZCBhY3Jvc3MgZGlmZmVyZW50IGhvc3QgY29udGV4dHMuCj4+IFNvIGFkZCBzdXBwb3J0IGZvciBn
-ZXR0aW5nIHRoaXMgaW5mb3JtYXRpb24gZnJvbSBEVCBieSBpbmNyZWFzaW5nCj4+IHRoZSBwb3dl
-ci1kb21haW4gY2VsbHMgdG8gMi4KPj4KPj4gU2lnbmVkLW9mZi1ieTogTG9rZXNoIFZ1dGxhIDxs
-b2tlc2h2dXRsYUB0aS5jb20+Cj4gCj4gQmFzZWQgb24gc29tZSBvZmZsaW5lIGRpc2N1c3Npb25z
-IHdpdGggUm9iLCBJIGFtIHdpdGhkcmF3aW5nIG15IGNvbmNlcm5zIAo+IG9uIHRoaXMgcGF0Y2gs
-IHRodXM6Cj4gCj4gQWNrZWQtYnk6IFRlcm8gS3Jpc3RvIDx0LWtyaXN0b0B0aS5jb20+Cj4gCj4g
-V2Ugd291bGQgc3RpbGwgbmVlZCBhY2sgZnJvbSBSb2IgdGhvdWdoLgoKUm9iPyBBbnkgY2hhbmNl
-IHRvIGdldCBhY2sgb24gdGhpcz8KCi1UZXJvCgo+IAo+PiAtLS0KPj4gwqAgLi4uL2RldmljZXRy
-ZWUvYmluZGluZ3Mvc29jL3RpL3NjaS1wbS1kb21haW4udHh0wqDCoMKgwqDCoCB8IDExICsrKysr
-KysrKy0tCj4+IMKgIE1BSU5UQUlORVJTwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAx
-ICsKPj4gwqAgaW5jbHVkZS9kdC1iaW5kaW5ncy9zb2MvdGksc2NpX3BtX2RvbWFpbi5owqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCB8wqAgOSArKysrKysrKysKPj4gwqAgMyBmaWxlcyBjaGFuZ2VkLCAx
-OSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+PiDCoCBjcmVhdGUgbW9kZSAxMDA2NDQg
-aW5jbHVkZS9kdC1iaW5kaW5ncy9zb2MvdGksc2NpX3BtX2RvbWFpbi5oCj4+Cj4+IGRpZmYgLS1n
-aXQgCj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy90aS9zY2ktcG0t
-ZG9tYWluLnR4dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL3Rp
-L3NjaS1wbS1kb21haW4udHh0Cj4+IGluZGV4IGY3YjAwYTdjMGY2OC4uZjU0MWQxZjc3NmEyIDEw
-MDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL3RpL3Nj
-aS1wbS1kb21haW4udHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9zb2MvdGkvc2NpLXBtLWRvbWFpbi50eHQKPj4gQEAgLTE5LDggKzE5LDE1IEBAIGNoaWxkIG9m
-IHRoZSBwbW1jIG5vZGUuCj4+IMKgIFJlcXVpcmVkIFByb3BlcnRpZXM6Cj4+IMKgIC0tLS0tLS0t
-LS0tLS0tLS0tLS0tCj4+IMKgIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJ0aSxzY2ktcG0tZG9t
-YWluIgo+PiAtLSAjcG93ZXItZG9tYWluLWNlbGxzOiBNdXN0IGJlIDEgc28gdGhhdCBhbiBpZCBj
-YW4gYmUgcHJvdmlkZWQgaW4gZWFjaAo+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBk
-ZXZpY2Ugbm9kZS4KPj4gKy0gI3Bvd2VyLWRvbWFpbi1jZWxsczogQ2FuIGJlIG9uZSBvZiB0aGUg
-Zm9sbG93aW5nOgo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAxOiBDb250YWluaW5nIHRoZSBk
-ZXZpY2UgaWQgb2YgZWFjaCBub2RlCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDI6IEZpcnN0
-IGVudHJ5IHNob3VsZCBiZSBkZXZpY2UgaWQKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgU2Vjb25kIGVudHJ5IHNob3VsZCBiZSBvbmUgb2YgdGhlIGZsb293aW5nOgo+PiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBUSV9TQ0lfUERfRVhDTFVTSVZFOiBUbyBhbGxvdyBkZXZp
-Y2UgdG8gYmUKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgZXhjbHVzaXZlbHkgY29udHJvbGxlZCBieQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0aGUgcmVxdWVzdGluZyBob3N0cy4KPj4gK8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgVElfU0NJX1BEX1NIQVJFRDogVG8gYWxsb3cgZGV2aWNlIHRv
-IGJlIHNoYXJlZAo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIGJ5IG11bHRpcGxlIGhvc3RzLgo+PiDCoCBFeGFtcGxlIChLMkcpOgo+PiDCoCAtLS0t
-LS0tLS0tLS0tCj4+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCj4+IGlu
-ZGV4IDIzNTllMTJlNGM0MS4uZGM3YTE5Y2MxODMxIDEwMDY0NAo+PiAtLS0gYS9NQUlOVEFJTkVS
-Uwo+PiArKysgYi9NQUlOVEFJTkVSUwo+PiBAQCAtMTUzNDUsNiArMTUzNDUsNyBAQCBGOsKgwqDC
-oCBkcml2ZXJzL2Zpcm13YXJlL3RpX3NjaSoKPj4gwqAgRjrCoMKgwqAgaW5jbHVkZS9saW51eC9z
-b2MvdGkvdGlfc2NpX3Byb3RvY29sLmgKPj4gwqAgRjrCoMKgwqAgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3NvYy90aS9zY2ktcG0tZG9tYWluLnR4dAo+PiDCoCBGOsKgwqDCoCBk
-cml2ZXJzL3NvYy90aS90aV9zY2lfcG1fZG9tYWlucy5jCj4+ICtGOsKgwqDCoCBpbmNsdWRlL2R0
-LWJpbmRpbmdzL3NvYy90aSxzY2lfcG1fZG9tYWluLmgKPj4gwqAgRjrCoMKgwqAgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0L3RpLHNjaS1yZXNldC50eHQKPj4gwqAgRjrC
-oMKgwqAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3RpLHNjaS1jbGsu
-dHh0Cj4+IMKgIEY6wqDCoMKgIGRyaXZlcnMvY2xrL2tleXN0b25lL3NjaS1jbGsuYwo+PiBkaWZm
-IC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9zb2MvdGksc2NpX3BtX2RvbWFpbi5oIAo+PiBi
-L2luY2x1ZGUvZHQtYmluZGluZ3Mvc29jL3RpLHNjaV9wbV9kb21haW4uaAo+PiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjhmMmE3MzYwYjY1ZQo+PiAtLS0gL2Rl
-di9udWxsCj4+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3Mvc29jL3RpLHNjaV9wbV9kb21haW4u
-aAo+PiBAQCAtMCwwICsxLDkgQEAKPj4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwt
-Mi4wICovCj4+ICsKPj4gKyNpZm5kZWYgX19EVF9CSU5ESU5HU19USV9TQ0lfUE1fRE9NQUlOX0gK
-Pj4gKyNkZWZpbmUgX19EVF9CSU5ESU5HU19USV9TQ0lfUE1fRE9NQUlOX0gKPj4gKwo+PiArI2Rl
-ZmluZSBUSV9TQ0lfUERfRVhDTFVTSVZFwqDCoMKgIDEKPj4gKyNkZWZpbmUgVElfU0NJX1BEX1NI
-QVJFRMKgwqDCoCAwCj4+ICsKPj4gKyNlbmRpZiAvKiBfX0RUX0JJTkRJTkdTX1RJX1NDSV9QTV9E
-T01BSU5fSCAqLwo+Pgo+IAoKLS0KVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2th
-bGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIx
-LTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Dear All,
+
+this series adds USB2.0/CMT/TMU support to the HiHope RZ/G2M.
+
+Thanks,
+Fab
+
+Fabrizio Castro (6):
+  arm64: dts: renesas: r8a774a1: Fix USB 2.0 clocks
+  arm64: dts: renesas: hihope-common: Add USB 2.0 support
+  arm64: dts: renesas: r8a774a1: Add CMT device nodes
+  clk: renesas: r8a774a1: Add TMU clock
+  dt-bindings: timer: renesas: tmu: Document r8a774a1 bindings
+  arm64: dts: renesas: r8a774a1: Add TMU device nodes
+
+ .../devicetree/bindings/timer/renesas,tmu.txt      |   1 +
+ arch/arm64/boot/dts/renesas/hihope-common.dtsi     |  76 +++++++++++
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi          | 151 +++++++++++++++++++--
+ drivers/clk/renesas/r8a774a1-cpg-mssr.c            |   5 +
+ 4 files changed, 225 insertions(+), 8 deletions(-)
+
+-- 
+2.7.4
