@@ -1,99 +1,160 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 1/3] Documentation: dt-bindings: add the Amlogic Meson
- Temperature Sensor
-Date: Tue, 11 Jun 2019 19:57:59 +0200
-Message-ID: <CAFBinCBCUxZjnrRxFHApp4iwPUCQQ+PU54V6zJew8Sr8La3u7w@mail.gmail.com>
-References: <20190604144714.2009-1-glaroque@baylibre.com> <20190604144714.2009-2-glaroque@baylibre.com>
- <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com> <d68aae23-f877-1f65-94a4-79e909ae111a@baylibre.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v4 17/18] kernel/sysctl-test: Add null pointer test for
+ sysctl.c:proc_dointvec()
+Date: Tue, 11 Jun 2019 10:58:30 -0700
+Message-ID: <20190611175830.GA236872@google.com>
+References: <20190514221711.248228-1-brendanhiggins@google.com>
+ <20190514221711.248228-18-brendanhiggins@google.com>
+ <20190517182254.548EA20815@mail.kernel.org>
+ <CAAXuY3p4qhKVsSpQ44_kQeGDMfg7OuFLgFyxhcFWS3yf-5A_7g@mail.gmail.com>
+ <20190607190047.C3E7A20868@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d68aae23-f877-1f65-94a4-79e909ae111a@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Guillaume La Roque <glaroque@baylibre.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, khilman@baylibre.com, linux-kernel@vger.kernel.org, jic23@kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190607190047.C3E7A20868@mail.kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: pmladek@suse.com, linux-doc@vger.kernel.org, peterz@infradead.org, amir73il@gmail.com, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, yamada.masahiro@socionext.com, mpe@ellerman.id.au, linux-kselftest@vger.kernel.org, shuah@kernel.org, linux-nvdimm@lists.01.org, frowand.list@gmail.com, knut.omang@oracle.com, kieran.bingham@ideasonboard.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, Iurii Zaikin <yzaikin@google.com>, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, jpoimboe@redhat.com, kunit-dev@googlegroups.com, tytso@mit.edu, richard@nod.at, gregkh@linuxfoundation.org, rdunlap@infradead.org, linux-kernel@vger.kernel.org, mcgrof@kernel.org, keescook@google.com, linux-fsdevel@vger.kernel.org, log
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
-
-On Tue, Jun 11, 2019 at 1:01 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 06/06/2019 21:16, Martin Blumenstingl wrote:
-> > Hi Guillaume,
-> >
-> > thank you for working on this!
-> >
-> > On Tue, Jun 4, 2019 at 4:47 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
-> >>
-> >> This adds the devicetree binding documentation for the Temperature
-> >> Sensor found in the Amlogic Meson G12 SoCs.
-> >> Currently only the G12A SoCs are supported.
-> > so G12B is not supported (yet)?
->
-> G12B is 95% similar as G12A, it will certainly use slighly different values.
-OK, thank you for clarifying this
-as far as I can tell Guillaume's code is already prepared for that (as
-there's a per-instance specific struct with settings for the specific
-instance) which is good to know
-
-> >
-> >> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> >> ---
-> >>  .../iio/temperature/amlogic,meson-tsensor.txt | 31 +++++++++++++++++++
-> >>  1 file changed, 31 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> >> new file mode 100644
-> >> index 000000000000..d064db0e9cac
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> >> @@ -0,0 +1,31 @@
-> >> +* Amlogic Meson Temperature Sensor
-> >> +
-> >> +Required properties:
-> >> +- compatible:  depending on the SoC and the position of the sensor,
-> >> +               this should be one of:
-> >> +               - "amlogic,meson-g12a-cpu-tsensor" for the CPU G12A SoC sensor
-> >> +               - "amlogic,meson-g12a-ddr-tsensor" for the DDR G12A SoC sensor
-> >> +               followed by the common :
-> >> +               - "amlogic,meson-g12a-tsensor" for G12A SoC family
-> >> +- reg:         the physical base address and length of the registers
-> >> +- interrupts:  the interrupt indicating end of sampling
-> >> +- clocks:      phandle identifier for the reference clock of temperature sensor
-> >> +- #io-channel-cells: must be 1, see ../iio-bindings.txt
-> > have you considered using the thermal framework [0] instead of the iio
-> > framework (see below)?
->
-> Question: why thermal, and not hwmon ? what's the main difference ?
-this is what came to my mind why the thermal framework fits best (at
-least based on my current knowledge):
-a) the thermal-zones (see meson-gxm-khadas-vim2.dts for example) a
-"thermal-sensors" property. so for active (with a fan) or passive (by
-limiting the maximum frequency and thus the supply voltage) cooling we
-need a thermal device anyways
-b) the thermal bindings support multiple trip points. we can map them
-to one of the four interrupts which the IP block can generate
-c) defining a temperature where the chip will power off sounds like a
-use-case which may be implemented by other thermal IP blocks (in other
-words: maybe the thermal frameworks provides some generic property to
-replace the "amlogic,critical-temperature" property)
-d) as far as I know you can tell the thermal framework to create a
-hwmon device with only a couple (5?) lines of code
-
-as Guillaume has already shown we can implement c) with a custom
-property, but that's not limited to the underlying framework (IIO,
-hwmon, thermal, ...)
-
-use-case d) is not a strong one because I'm using iio-hwmon to create
-a hwmon device on the 32-bit SoCs.
-however, together with case a) using an IIO driver is going to be more
-difficult because currently there's "only" a "generic-adc-thermal"
-binding (but not a "generic-iio-temperature-thermal" binding)
-
-the initial driver version doesn't have to support everything I listed above.
-however, I believe with the thermal framework we don't limit ourselves
-to one use-case and can extend the driver in the future
-
-
-Martin
+T24gRnJpLCBKdW4gMDcsIDIwMTkgYXQgMTI6MDA6NDdQTSAtMDcwMCwgU3RlcGhlbiBCb3lkIHdy
+b3RlOgo+IFF1b3RpbmcgSXVyaWkgWmFpa2luICgyMDE5LTA2LTA1IDE4OjI5OjQyKQo+ID4gT24g
+RnJpLCBNYXkgMTcsIDIwMTkgYXQgMTE6MjIgQU0gU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwu
+b3JnPiB3cm90ZToKPiA+ID4KPiA+ID4gUXVvdGluZyBCcmVuZGFuIEhpZ2dpbnMgKDIwMTktMDUt
+MTQgMTU6MTc6MTApCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2tlcm5lbC9zeXNjdGwtdGVzdC5jIGIv
+a2VybmVsL3N5c2N0bC10ZXN0LmMKPiA+ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gPiA+
+IGluZGV4IDAwMDAwMDAwMDAwMDAuLmZlMGYyYmFlNjYwODUKPiA+ID4gPiAtLS0gL2Rldi9udWxs
+Cj4gPiA+ID4gKysrIGIva2VybmVsL3N5c2N0bC10ZXN0LmMKPiA+ID4gPiArCj4gPiA+ID4gKwo+
+ID4gPiA+ICtzdGF0aWMgdm9pZCBzeXNjdGxfdGVzdF9kb2ludHZlY19oYXBweV9zaW5nbGVfbmVn
+YXRpdmUoc3RydWN0IGt1bml0ICp0ZXN0KQo+ID4gPiA+ICt7Cj4gPiA+ID4gKyAgICAgICBzdHJ1
+Y3QgY3RsX3RhYmxlIHRhYmxlID0gewo+ID4gPiA+ICsgICAgICAgICAgICAgICAucHJvY25hbWUg
+PSAiZm9vIiwKPiA+ID4gPiArICAgICAgICAgICAgICAgLmRhdGEgICAgICAgICAgID0gJnRlc3Rf
+ZGF0YS5pbnRfMDAwMSwKPiA+ID4gPiArICAgICAgICAgICAgICAgLm1heGxlbiAgICAgICAgID0g
+c2l6ZW9mKGludCksCj4gPiA+ID4gKyAgICAgICAgICAgICAgIC5tb2RlICAgICAgICAgICA9IDA2
+NDQsCj4gPiA+ID4gKyAgICAgICAgICAgICAgIC5wcm9jX2hhbmRsZXIgICA9IHByb2NfZG9pbnR2
+ZWMsCj4gPiA+ID4gKyAgICAgICAgICAgICAgIC5leHRyYTEgICAgICAgICA9ICZpX3plcm8sCj4g
+PiA+ID4gKyAgICAgICAgICAgICAgIC5leHRyYTIgICAgICAgICA9ICZpX29uZV9odW5kcmVkLAo+
+ID4gPiA+ICsgICAgICAgfTsKPiA+ID4gPiArICAgICAgIGNoYXIgaW5wdXRbXSA9ICItOSI7Cj4g
+PiA+ID4gKyAgICAgICBzaXplX3QgbGVuID0gc2l6ZW9mKGlucHV0KSAtIDE7Cj4gPiA+ID4gKyAg
+ICAgICBsb2ZmX3QgcG9zID0gMDsKPiA+ID4gPiArCj4gPiA+ID4gKyAgICAgICB0YWJsZS5kYXRh
+ID0ga3VuaXRfa3phbGxvYyh0ZXN0LCBzaXplb2YoaW50KSwgR0ZQX1VTRVIpOwo+ID4gPiA+ICsg
+ICAgICAgS1VOSVRfRVhQRUNUX0VRKHRlc3QsIDAsIHByb2NfZG9pbnR2ZWMoJnRhYmxlLCAxLCBp
+bnB1dCwgJmxlbiwgJnBvcykpOwo+ID4gPiA+ICsgICAgICAgS1VOSVRfRVhQRUNUX0VRKHRlc3Qs
+IHNpemVvZihpbnB1dCkgLSAxLCBsZW4pOwo+ID4gPiA+ICsgICAgICAgS1VOSVRfRVhQRUNUX0VR
+KHRlc3QsIHNpemVvZihpbnB1dCkgLSAxLCBwb3MpOwo+ID4gPiA+ICsgICAgICAgS1VOSVRfRVhQ
+RUNUX0VRKHRlc3QsIC05LCAqKGludCAqKXRhYmxlLmRhdGEpOwo+ID4gPgo+ID4gPiBJcyB0aGUg
+Y2FzdGluZyBuZWNlc3Nhcnk/IE9yIGNhbiB0aGUgbWFjcm8gZG8gYSB0eXBlIGNvZXJjaW9uIG9m
+IHRoZQo+ID4gPiBzZWNvbmQgcGFyYW1ldGVyIGJhc2VkIG9uIHRoZSBmaXJzdCB0eXBlPwo+ID4g
+IERhdGEgZmllbGQgaXMgZGVmaW5lZCBhcyB2b2lkKiBzbyBJIGJlbGlldmUgY2FzdGluZyBpcyBu
+ZWNlc3NhcnkgdG8KPiA+IGRlcmVmZXJlbmNlIGl0IGFzIGEgcG9pbnRlciB0byBhbiBhcnJheSBv
+ZiBpbnRzLiBJIGRvbid0IHRoaW5rIHRoZQo+ID4gbWFjcm8gc2hvdWxkIGRvIGFueSB0eXBlIGNv
+ZXJjaW9uIHRoYXQgPT0gb3BlcmF0b3Igd291bGRuJ3QgZG8uCj4gPiAgSSBkaWQgY2hhbmdlIHRo
+ZSBjYXN0IHRvIG1ha2UgaXQgbW9yZSBjbGVhciB0aGF0IGl0J3MgYSBwb2ludGVyIHRvIGFuCj4g
+PiBhcnJheSBvZiBpbnRzIGJlaW5nIGRlcmVmZXJlbmNlZC4KPiAKPiBPaywgSSBzdGlsbCB3b25k
+ZXIgaWYgd2Ugc2hvdWxkIG1ha2UgS1VOSVRfRVhQRUNUX0VRIGNoZWNrIHRoZSB0eXBlcyBvbgo+
+IGJvdGggc2lkZXMgYW5kIGNhdXNlIGEgYnVpbGQgd2FybmluZy9lcnJvciBpZiB0aGUgdHlwZXMg
+YXJlbid0IHRoZSBzYW1lLgo+IFRoaXMgd291bGQgYmUgc2ltaWxhciB0byBvdXIgbWluL21heCBt
+YWNyb3MgdGhhdCBjb21wbGFpbiBhYm91dAo+IG1pc21hdGNoZWQgdHlwZXMgaW4gdGhlIGNvbXBh
+cmlzb25zLiBUaGVuIGlmIGEgdGVzdCBkZXZlbG9wZXIgbmVlZHMgdG8KPiBjb252ZXJ0IG9uZSB0
+eXBlIG9yIHRoZSBvdGhlciB0aGV5IGNvdWxkIGRvIHNvIHdpdGggYQo+IEtVTklUX0VYUEVDVF9F
+UV9UKCkgbWFjcm8gdGhhdCBsaXN0cyB0aGUgdHlwZXMgdG8gY29lcmNlIGJvdGggc2lkZXMgdG8K
+PiBleHBsaWNpdGx5LgoKRG8geW91IHRoaW5rIGl0IHdvdWxkIGJlIGJldHRlciB0byBkbyBhIHBo
+b255IGNvbXBhcmUgc2ltaWxhciB0byBob3cKbWluL21heCB1c2VkIHRvIHdvcmsgcHJpb3IgdG8g
+NC4xNywgb3IgdG8gdXNlIHRoZSBuZXcgX190eXBlY2hlY2soLi4uKQptYWNybz8gVGhpcyBtaWdo
+dCBzZWVtIGxpa2UgYSBkdW1iIHF1ZXN0aW9uIChhbmQgbWF5YmUgaXQgaXMpLCBidXQgSXVyaWkK
+YW5kIEkgdGhvdWdodCB0aGUgZm9ybWVyIGNyZWF0ZWQgYW4gZXJyb3IgbWVzc2FnZSB0aGF0IHdh
+cyBhIGJpdCBlYXNpZXIKdG8gdW5kZXJzdGFuZCwgd2hlcmVhcyBfX3R5cGVjaGVjayBpcyBvYnZp
+b3VzbHkgc3VwZXJpb3IgaW4gdGVybXMgb2YKY29kZSByZXVzZS4KClRoaXMgaXMgd2hhdCB3ZSBh
+cmUgdGhpbmtpbmcgcmlnaHQgbm93OyBpZiB5b3UgZG9uJ3QgaGF2ZSBhbnkgY29tcGxhaW50cwpJ
+IHdpbGwgc3F1YXNoIGl0IGludG8gdGhlIHJlbGV2YW50IGNvbW1pdHMgb24gdGhlIG5leHQgcmV2
+aXNpb246Ci0tLQpGcm9tOiBJdXJpaSBaYWlraW4gPHl6YWlraW5AZ29vZ2xlLmNvbT4KCkFkZHMg
+YSB3YXJuaW5nIG1lc3NhZ2Ugd2hlbiBjb21wYXJpbmcgdmFsdWVzIG9mIGRpZmZlcmVudCB0eXBl
+cyBzaW1pbGFyCnRvIHdoYXQgbWluKCkgLyBtYXgoKSBtYWNyb3MgZG8uCgpTaWduZWQtb2ZmLWJ5
+OiBJdXJpaSBaYWlraW4gPHl6YWlraW5AZ29vZ2xlLmNvbT4KLS0tCiBpbmNsdWRlL2t1bml0L3Rl
+c3QuaCB8IDE1ICsrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMo
+KykKCmRpZmYgLS1naXQgYS9pbmNsdWRlL2t1bml0L3Rlc3QuaCBiL2luY2x1ZGUva3VuaXQvdGVz
+dC5oCmluZGV4IDUxMWM5ZTg1NDAxYTYuLjc5MWUyMmZiYTU2MjAgMTAwNjQ0Ci0tLSBhL2luY2x1
+ZGUva3VuaXQvdGVzdC5oCisrKyBiL2luY2x1ZGUva3VuaXQvdGVzdC5oCkBAIC0zMzUsNiArMzM1
+LDEzIEBAIHZvaWQgX19wcmludGYoMywgNCkga3VuaXRfcHJpbnRrKGNvbnN0IGNoYXIgKmxldmVs
+LAogI2RlZmluZSBrdW5pdF9lcnIodGVzdCwgZm10LCAuLi4pIFwKIAkJa3VuaXRfcHJpbnRrKEtF
+Uk5fRVJSLCB0ZXN0LCBmbXQsICMjX19WQV9BUkdTX18pCiAKKy8qCisgKiAnVW5uZWNlc3Nhcnkn
+IGNhc3Qgc2VydmVzIHRvIGdlbmVyYXRlIGEgY29tcGlsZS10aW1lIHdhcm5pbmcgaW4gY2FzZQor
+ICogb2YgY29tcGFyaW5nIGluY29tcGF0aWJsZSB0eXBlcy4gSW5zcGlyZWQgYnkgaW5jbHVkZS9s
+aW51eC9rZXJuZWwuaAorICovCisjZGVmaW5lIF9fa3VuaXRfdHlwZWNoZWNrKGxocywgcmhzKSBc
+CisJKCh2b2lkKSAoJihsaHMpID09ICYocmhzKSkpCisKIHN0YXRpYyBpbmxpbmUgc3RydWN0IGt1
+bml0X3N0cmVhbSAqa3VuaXRfZXhwZWN0X3N0YXJ0KHN0cnVjdCBrdW5pdCAqdGVzdCwKIAkJCQkJ
+CSAgICAgIGNvbnN0IGNoYXIgKmZpbGUsCiAJCQkJCQkgICAgICBjb25zdCBjaGFyICpsaW5lKQpA
+QCAtNTE0LDYgKzUyMSw3IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBrdW5pdF9leHBlY3RfcHRyX2Jp
+bmFyeShzdHJ1Y3Qga3VuaXQgKnRlc3QsCiAjZGVmaW5lIEtVTklUX0VYUEVDVF9CSU5BUlkodGVz
+dCwgbGVmdCwgY29uZGl0aW9uLCByaWdodCkgZG8gewkJICAgICAgIFwKIAl0eXBlb2YobGVmdCkg
+X19sZWZ0ID0gKGxlZnQpOwkJCQkJICAgICAgIFwKIAl0eXBlb2YocmlnaHQpIF9fcmlnaHQgPSAo
+cmlnaHQpOwkJCQkgICAgICAgXAorCV9fa3VuaXRfdHlwZWNoZWNrKF9fbGVmdCwgX19yaWdodCk7
+CQkJCSAgICAgICBcCiAJa3VuaXRfZXhwZWN0X2JpbmFyeSh0ZXN0LAkJCQkJICAgICAgIFwKIAkJ
+CSAgICAobG9uZyBsb25nKSBfX2xlZnQsICNsZWZ0LAkJCSAgICAgICBcCiAJCQkgICAgKGxvbmcg
+bG9uZykgX19yaWdodCwgI3JpZ2h0LAkJICAgICAgIFwKQEAgLTUyNCw2ICs1MzIsNyBAQCBzdGF0
+aWMgaW5saW5lIHZvaWQga3VuaXRfZXhwZWN0X3B0cl9iaW5hcnkoc3RydWN0IGt1bml0ICp0ZXN0
+LAogI2RlZmluZSBLVU5JVF9FWFBFQ1RfQklOQVJZX01TRyh0ZXN0LCBsZWZ0LCBjb25kaXRpb24s
+IHJpZ2h0LCBmbXQsIC4uLikgZG8geyAgIFwKIAl0eXBlb2YobGVmdCkgX19sZWZ0ID0gKGxlZnQp
+OwkJCQkJICAgICAgIFwKIAl0eXBlb2YocmlnaHQpIF9fcmlnaHQgPSAocmlnaHQpOwkJCQkgICAg
+ICAgXAorCV9fa3VuaXRfdHlwZWNoZWNrKF9fbGVmdCwgX19yaWdodCk7CQkJCSAgICAgICBcCiAJ
+a3VuaXRfZXhwZWN0X2JpbmFyeV9tc2codGVzdCwJCQkJCSAgICAgICBcCiAJCQkJKGxvbmcgbG9u
+ZykgX19sZWZ0LCAjbGVmdCwJCSAgICAgICBcCiAJCQkJKGxvbmcgbG9uZykgX19yaWdodCwgI3Jp
+Z2h0LAkJICAgICAgIFwKQEAgLTUzOCw2ICs1NDcsNyBAQCBzdGF0aWMgaW5saW5lIHZvaWQga3Vu
+aXRfZXhwZWN0X3B0cl9iaW5hcnkoc3RydWN0IGt1bml0ICp0ZXN0LAogI2RlZmluZSBLVU5JVF9F
+WFBFQ1RfUFRSX0JJTkFSWSh0ZXN0LCBsZWZ0LCBjb25kaXRpb24sIHJpZ2h0KSBkbyB7CSAgICAg
+ICBcCiAJdHlwZW9mKGxlZnQpIF9fbGVmdCA9IChsZWZ0KTsJCQkJCSAgICAgICBcCiAJdHlwZW9m
+KHJpZ2h0KSBfX3JpZ2h0ID0gKHJpZ2h0KTsJCQkJICAgICAgIFwKKwlfX2t1bml0X3R5cGVjaGVj
+ayhfX2xlZnQsIF9fcmlnaHQpOwkJCQkgICAgICAgXAogCWt1bml0X2V4cGVjdF9wdHJfYmluYXJ5
+KHRlc3QsCQkJCQkgICAgICAgXAogCQkJICAgICh2b2lkICopIF9fbGVmdCwgI2xlZnQsCQkJICAg
+ICAgIFwKIAkJCSAgICAodm9pZCAqKSBfX3JpZ2h0LCAjcmlnaHQsCQkJICAgICAgIFwKQEAgLTU1
+Myw2ICs1NjMsNyBAQCBzdGF0aWMgaW5saW5lIHZvaWQga3VuaXRfZXhwZWN0X3B0cl9iaW5hcnko
+c3RydWN0IGt1bml0ICp0ZXN0LAogCQkJCSAgICAuLi4pIGRvIHsJCQkJICAgICAgIFwKIAl0eXBl
+b2YobGVmdCkgX19sZWZ0ID0gKGxlZnQpOwkJCQkJICAgICAgIFwKIAl0eXBlb2YocmlnaHQpIF9f
+cmlnaHQgPSAocmlnaHQpOwkJCQkgICAgICAgXAorCV9fa3VuaXRfdHlwZWNoZWNrKF9fbGVmdCwg
+X19yaWdodCk7CQkJCSAgICAgICBcCiAJa3VuaXRfZXhwZWN0X3B0cl9iaW5hcnlfbXNnKHRlc3Qs
+CQkJCSAgICAgICBcCiAJCQkJICAgICh2b2lkICopIF9fbGVmdCwgI2xlZnQsCQkgICAgICAgXAog
+CQkJCSAgICAodm9pZCAqKSBfX3JpZ2h0LCAjcmlnaHQsCQkgICAgICAgXApAQCAtMTAxMyw2ICsx
+MDI0LDcgQEAgc3RhdGljIGlubGluZSB2b2lkIGt1bml0X2Fzc2VydF9wdHJfYmluYXJ5KHN0cnVj
+dCBrdW5pdCAqdGVzdCwKICNkZWZpbmUgS1VOSVRfQVNTRVJUX0JJTkFSWSh0ZXN0LCBsZWZ0LCBj
+b25kaXRpb24sIHJpZ2h0KSBkbyB7CQkgICAgICAgXAogCXR5cGVvZihsZWZ0KSBfX2xlZnQgPSAo
+bGVmdCk7CQkJCQkgICAgICAgXAogCXR5cGVvZihyaWdodCkgX19yaWdodCA9IChyaWdodCk7CQkJ
+CSAgICAgICBcCisJX19rdW5pdF90eXBlY2hlY2soX19sZWZ0LCBfX3JpZ2h0KTsJCQkJICAgICAg
+IFwKIAlrdW5pdF9hc3NlcnRfYmluYXJ5KHRlc3QsCQkJCQkgICAgICAgXAogCQkJICAgIChsb25n
+IGxvbmcpIF9fbGVmdCwgI2xlZnQsCQkJICAgICAgIFwKIAkJCSAgICAobG9uZyBsb25nKSBfX3Jp
+Z2h0LCAjcmlnaHQsCQkgICAgICAgXApAQCAtMTAyMyw2ICsxMDM1LDcgQEAgc3RhdGljIGlubGlu
+ZSB2b2lkIGt1bml0X2Fzc2VydF9wdHJfYmluYXJ5KHN0cnVjdCBrdW5pdCAqdGVzdCwKICNkZWZp
+bmUgS1VOSVRfQVNTRVJUX0JJTkFSWV9NU0codGVzdCwgbGVmdCwgY29uZGl0aW9uLCByaWdodCwg
+Zm10LCAuLi4pIGRvIHsgICBcCiAJdHlwZW9mKGxlZnQpIF9fbGVmdCA9IChsZWZ0KTsJCQkJCSAg
+ICAgICBcCiAJdHlwZW9mKHJpZ2h0KSBfX3JpZ2h0ID0gKHJpZ2h0KTsJCQkJICAgICAgIFwKKwlf
+X2t1bml0X3R5cGVjaGVjayhfX2xlZnQsIF9fcmlnaHQpOwkJCQkgICAgICAgXAogCWt1bml0X2Fz
+c2VydF9iaW5hcnlfbXNnKHRlc3QsCQkJCQkgICAgICAgXAogCQkJCShsb25nIGxvbmcpIF9fbGVm
+dCwgI2xlZnQsCQkgICAgICAgXAogCQkJCShsb25nIGxvbmcpIF9fcmlnaHQsICNyaWdodCwJCSAg
+ICAgICBcCkBAIC0xMDM3LDYgKzEwNTAsNyBAQCBzdGF0aWMgaW5saW5lIHZvaWQga3VuaXRfYXNz
+ZXJ0X3B0cl9iaW5hcnkoc3RydWN0IGt1bml0ICp0ZXN0LAogI2RlZmluZSBLVU5JVF9BU1NFUlRf
+UFRSX0JJTkFSWSh0ZXN0LCBsZWZ0LCBjb25kaXRpb24sIHJpZ2h0KSBkbyB7CSAgICAgICBcCiAJ
+dHlwZW9mKGxlZnQpIF9fbGVmdCA9IChsZWZ0KTsJCQkJCSAgICAgICBcCiAJdHlwZW9mKHJpZ2h0
+KSBfX3JpZ2h0ID0gKHJpZ2h0KTsJCQkJICAgICAgIFwKKwlfX2t1bml0X3R5cGVjaGVjayhfX2xl
+ZnQsIF9fcmlnaHQpOwkJCQkgICAgICAgXAogCWt1bml0X2Fzc2VydF9wdHJfYmluYXJ5KHRlc3Qs
+CQkJCQkgICAgICAgXAogCQkJCSh2b2lkICopIF9fbGVmdCwgI2xlZnQsCQkJICAgICAgIFwKIAkJ
+CQkodm9pZCAqKSBfX3JpZ2h0LCAjcmlnaHQsCQkgICAgICAgXApAQCAtMTA1MSw2ICsxMDY1LDcg
+QEAgc3RhdGljIGlubGluZSB2b2lkIGt1bml0X2Fzc2VydF9wdHJfYmluYXJ5KHN0cnVjdCBrdW5p
+dCAqdGVzdCwKIAkJCQkgICAgZm10LCAuLi4pIGRvIHsJCQkgICAgICAgXAogCXR5cGVvZihsZWZ0
+KSBfX2xlZnQgPSAobGVmdCk7CQkJCQkgICAgICAgXAogCXR5cGVvZihyaWdodCkgX19yaWdodCA9
+IChyaWdodCk7CQkJCSAgICAgICBcCisJX19rdW5pdF90eXBlY2hlY2soX19sZWZ0LCBfX3JpZ2h0
+KTsJCQkJICAgICAgIFwKIAlrdW5pdF9hc3NlcnRfcHRyX2JpbmFyeV9tc2codGVzdCwJCQkJICAg
+ICAgIFwKIAkJCQkgICAgKHZvaWQgKikgX19sZWZ0LCAjbGVmdCwJCSAgICAgICBcCiAJCQkJICAg
+ICh2b2lkICopIF9fcmlnaHQsICNyaWdodCwJCSAgICAgICBcCi0tIAoyLjIyLjAucmMyLjM4My5n
+ZjRmYmJmMzBjMi1nb29nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWw=
