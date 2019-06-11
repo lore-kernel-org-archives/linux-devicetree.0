@@ -1,77 +1,118 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2] ARM: dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on veyron
-Date: Mon, 10 Jun 2019 16:51:44 -0700
-Message-ID: <20190610235144.34261-1-mka@chromium.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v3 0/8] memory: tegra: Introduce Tegra30 EMC driver
+Date: Tue, 11 Jun 2019 03:01:31 +0300
+Message-ID: <ba4c6423-0a20-daad-4b04-e990aec4c4e6@gmail.com>
+References: <20190524172353.29087-1-digetx@gmail.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190524172353.29087-1-digetx@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Doug Anderson <dianders@chromium.org>
+24.05.2019 20:23, Dmitry Osipenko пишет:
+> Hello,
+> 
+> This series introduces driver for the External Memory Controller (EMC)
+> found on Tegra30 chips, it controls the external DRAM on the board. The
+> purpose of this driver is to program memory timing for external memory on
+> the EMC clock rate change. The driver was tested using the ACTMON devfreq
+> driver that performs memory frequency scaling based on memory-usage load.
+> 
+> Changelog:
+> 
+> v3: - Addressed review comments that were made by Stephen Boyd to v2 by
+>       adding explicit typing for the callback variable, by including
+>       "clk-provider.h" directly in the code and by dropping __clk_lookup
+>       usage where possible.
+> 
+>       Added more patches into this series:
+> 
+>         memory: tegra20-emc: Drop setting EMC rate to max on probe
+>         memory: tegra20-emc: Adapt for clock driver changes
+>         memory: tegra20-emc: Include io.h instead of iopoll.h
+>         memory: tegra20-emc: Replace clk_get_sys with devm_clk_get
+> 
+>       Initially I was going to include these patches into other patchset,
+>       but changed my mind after rearranging things a tad. The "Adapt for
+>       clock driver changes" patch is directly related to the clock changes
+>       done in the first patch of this series, the rest are minor cleanups
+>       that are fine to include here as well.
+> 
+>       Added some more words to the commit message of "Add binding for NVIDIA
+>       Tegra30 External Memory Controller" patch, clarifying why common DDR
+>       timing device-tree form isn't suitable for Tegra30.
+> 
+>       The Tegra30 EMC driver now explicitly selects the registers access
+>       mode (EMC_DBG mux), not relying on the setting left from bootloader.
+> 
+> v2: - Added support for changing MC clock diver configuration based on
+>       Memory Controller (MC) configuration which is part of the memory
+>       timing.
+> 
+>     - Merged the "Add custom EMC clock implementation" patch into this
+>       series because the "Introduce Tegra30 EMC driver" patch directly
+>       depends on it. Please note that Tegra20 EMC driver will need to be
+>       adapted for the clock changes as well, I'll send out the Tegra20
+>       patches after this series will be applied because of some other
+>       dependencies (devfreq) and because the temporary breakage won't
+>       be critical (driver will just error out on probe).
+> 
+>     - EMC driver now performs MC configuration validation by checking
+>       that the number of MC / EMC timings matches and that the timings
+>       rate is the same.
+> 
+>     - EMC driver now supports timings that want to change the MC clock
+>       configuration.
+> 
+>     - Other minor prettifying changes of the code.
+> 
+> Dmitry Osipenko (8):
+>   clk: tegra20/30: Add custom EMC clock implementation
+>   memory: tegra20-emc: Drop setting EMC rate to max on probe
+>   memory: tegra20-emc: Adapt for clock driver changes
+>   memory: tegra20-emc: Include io.h instead of iopoll.h
+>   memory: tegra20-emc: Replace clk_get_sys with devm_clk_get
+>   dt-bindings: memory: Add binding for NVIDIA Tegra30 External Memory
+>     Controller
+>   memory: tegra: Introduce Tegra30 EMC driver
+>   ARM: dts: tegra30: Add External Memory Controller node
+> 
+>  .../memory-controllers/nvidia,tegra30-emc.txt |  249 ++++
+>  arch/arm/boot/dts/tegra30.dtsi                |   11 +
+>  drivers/clk/tegra/Makefile                    |    2 +
+>  drivers/clk/tegra/clk-tegra20-emc.c           |  299 +++++
+>  drivers/clk/tegra/clk-tegra20.c               |   55 +-
+>  drivers/clk/tegra/clk-tegra30.c               |   38 +-
+>  drivers/clk/tegra/clk.h                       |    6 +
+>  drivers/memory/tegra/Kconfig                  |   10 +
+>  drivers/memory/tegra/Makefile                 |    1 +
+>  drivers/memory/tegra/mc.c                     |    3 -
+>  drivers/memory/tegra/mc.h                     |   30 +-
+>  drivers/memory/tegra/tegra20-emc.c            |   94 +-
+>  drivers/memory/tegra/tegra30-emc.c            | 1165 +++++++++++++++++
+>  drivers/memory/tegra/tegra30.c                |   44 +
+>  include/linux/clk/tegra.h                     |   14 +
+>  15 files changed, 1903 insertions(+), 118 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.txt
+>  create mode 100644 drivers/clk/tegra/clk-tegra20-emc.c
+>  create mode 100644 drivers/memory/tegra/tegra30-emc.c
+> 
 
-This enables wake up on Bluetooth activity when the device is
-suspended. The BT_HOST_WAKE signal is only connected on devices
-with BT module that are connected through UART.
+Hello Peter,
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Changes in v2:
-- attributed authorship to Doug
-- use constant instead of literal for pin number
----
- arch/arm/boot/dts/rk3288-veyron.dtsi | 29 ++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Do you have any comments on the clk/emc bits? It looks to me that this
+series basically needs yours, Stephen's and Rob's acks, after which
+Thierry could pick it up once everything is arranged. Stephen and Rob
+already made some comments to the previous versions of the series that
+hopefully are addressed now. Maybe you also have something to say?
+Otherwise just an ack will be also very appreciated. Thanks in advance!
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 3257ca90f0e8..e2635ad574e7 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -23,6 +23,31 @@
- 		reg = <0x0 0x0 0x0 0x80000000>;
- 	};
- 
-+	bt_activity: bt-activity {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_host_wake>;
-+
-+		/*
-+		 * HACK: until we have an LPM driver, we'll use an
-+		 * ugly GPIO key to allow Bluetooth to wake from S3.
-+		 * This is expected to only be used by BT modules that
-+		 * use UART for comms.  For BT modules that talk over
-+		 * SDIO we should use a wakeup mechanism related to SDIO.
-+		 *
-+		 * Use KEY_RESERVED here since that will work as a wakeup but
-+		 * doesn't get reported to higher levels (so doesn't confuse
-+		 * Chrome).
-+		 */
-+		bt-wake {
-+			label = "BT Wakeup";
-+			gpios = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
-+			linux,code = <KEY_RESERVED>;
-+			wakeup-source;
-+		};
-+
-+	};
-+
- 	power_button: power-button {
- 		compatible = "gpio-keys";
- 		pinctrl-names = "default";
-@@ -549,6 +574,10 @@
- 			rockchip,pins = <4 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 
-+		bt_host_wake: bt-host-wake {
-+			rockchip,pins = <4 RK_PD7 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+
- 		/*
- 		 * We run sdio0 at max speed; bump up drive strength.
- 		 * We also have external pulls, so disable the internal ones.
--- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
+Actually just noticed that I accidentally missed to CC Stephen directly
+for this series, but hopefully it's not a problem since he is reading
+the CLK ML. Stephen, please let me know otherwise, I could re-send it
+all if needed.
