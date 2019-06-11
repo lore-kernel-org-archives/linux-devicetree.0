@@ -1,7 +1,7 @@
 From: Jungo Lin <jungo.lin@mediatek.com>
-Subject: [RFC,v3 1/9] dt-bindings: mt8183: Added camera ISP Pass 1
-Date: Tue, 11 Jun 2019 11:53:36 +0800
-Message-ID: <20190611035344.29814-2-jungo.lin@mediatek.com>
+Subject: [RFC,v3 5/9] media: platform: Add Mediatek ISP P1 V4L2 control
+Date: Tue, 11 Jun 2019 11:53:40 +0800
+Message-ID: <20190611035344.29814-6-jungo.lin@mediatek.com>
 References: <jungo.lin@mediatek.com>
  <20190611035344.29814-1-jungo.lin@mediatek.com>
 Reply-To: jungo.lin@mediatek.com
@@ -23,80 +23,269 @@ To: tfiga@chromium.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, m
 Cc: devicetree@vger.kernel.org, sean.cheng@mediatek.com, rynn.wu@mediatek.com, srv_heupstream@mediatek.com, robh@kernel.org, ryan.yu@mediatek.com, frankie.chiu@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, linux-mediatek@lists.infradead.org, ddavenport@chromium.org, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT binding document for the Pass 1 (P1) unit in
-Mediatek's camera ISP system. The Pass 1 unit grabs the sensor data
-out from the sensor interface, applies ISP image effects from tuning
-data and outputs the image data or statistics data to DRAM.
+Reserved Mediatek ISP P1 V4L2 control number with 16.
+Moreover, add two V4L2 controls for ISP P1 user space
+usage.
+
+1. V4L2_CID_MTK_GET_BIN_INFO
+- Provide the image output width & height in case
+camera binning mode is enabled.
+
+2. V4L2_CID_MTK_RAW_PATH
+- Export the path control of the main stream to user space.
+One is pure raw and the other is processing raw.
+The default value is 0 which outputs the pure raw bayer image
+from sesnor, without image processing in ISP HW.
 
 Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
 ---
- .../bindings/media/mediatek,camisp.txt        | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek,camisp.txt
+ drivers/media/platform/mtk-isp/Makefile       |   3 +
+ .../media/platform/mtk-isp/isp_50/Makefile    |   5 +
+ .../platform/mtk-isp/isp_50/cam/Makefile      |   5 +
+ .../mtk-isp/isp_50/cam/mtk_cam-ctrl.c         | 138 ++++++++++++++++++
+ .../mtk-isp/isp_50/cam/mtk_cam-ctrl.h         |  38 +++++
+ include/uapi/linux/v4l2-controls.h            |   4 +
+ 6 files changed, 193 insertions(+)
+ create mode 100644 drivers/media/platform/mtk-isp/Makefile
+ create mode 100644 drivers/media/platform/mtk-isp/isp_50/Makefile
+ create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/Makefile
+ create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.c
+ create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.h
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek,camisp.txt b/Documentation/devicetree/bindings/media/mediatek,camisp.txt
+diff --git a/drivers/media/platform/mtk-isp/Makefile b/drivers/media/platform/mtk-isp/Makefile
 new file mode 100644
-index 000000000000..50a8b4d9ac8e
+index 000000000000..c17fb3fc3340
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek,camisp.txt
-@@ -0,0 +1,57 @@
-+* Mediatek Image Signal Processor Pass 1 (ISP P1)
++++ b/drivers/media/platform/mtk-isp/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+The Pass 1 unit of Mediatek's camera ISP system grabs the sensor data out
-+from the sensor interface, applies ISP effects from tuning data and outputs
-+the image data and statistics data to DRAM. Furthermore, Pass 1 unit has
-+the ability to output two different resolutions frames at the same time to
-+increase the performance of the camera application.
++obj-y += isp_50/
+diff --git a/drivers/media/platform/mtk-isp/isp_50/Makefile b/drivers/media/platform/mtk-isp/isp_50/Makefile
+new file mode 100644
+index 000000000000..8498fe70e418
+--- /dev/null
++++ b/drivers/media/platform/mtk-isp/isp_50/Makefile
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+Required properties:
-+- compatible: Must be "mediatek,mt8183-camisp" for MT8183.
-+- reg: Physical base address of the camera function block registers and
-+  length of memory mapped region. Must contain an entry for each entry
-+  in reg-names.
-+- reg-names: Must include the following entries:
-+  "cam_sys": Camsys base function block
-+  "cam_uni": Camera UNI function block
-+  "cam_a": Single camera ISP P1 hardware module A
-+  "cam_b": Single camera ISP P1 hardware module B
-+- interrupts: Interrupt number to the CPU.
-+- iommus: Shall point to the respective IOMMU block with master port
-+  as argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-+  for details.
-+- clocks: A list of phandle and clock specifier pairs as listed
-+  in clock-names property, see
-+  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-+- clock-names: Must be "camsys_cam_cgpdn" and "camsys_camtg_cgpdn".
-+- mediatek,larb: Must contain the local arbiters in the current SoCs, see
-+  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-+  for details.
-+- mediatek,scp : The node of system control processor (SCP), see
-+  Documentation/devicetree/bindings/remoteproc/mtk,scp.txt for details.
++ifeq ($(CONFIG_VIDEO_MEDIATEK_ISP_PASS1),y)
++obj-y += cam/
++endif
+diff --git a/drivers/media/platform/mtk-isp/isp_50/cam/Makefile b/drivers/media/platform/mtk-isp/isp_50/cam/Makefile
+new file mode 100644
+index 000000000000..53fb69d3add6
+--- /dev/null
++++ b/drivers/media/platform/mtk-isp/isp_50/cam/Makefile
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+Example:
-+SoC specific DT entry:
++mtk-cam-isp-objs += mtk_cam-ctrl.o
 +
-+		camisp: camisp@1a000000 {
-+			compatible = "mediatek,mt8183-camisp", "syscon";
-+			reg = <0 0x1a000000 0 0x1000>,
-+			      <0 0x1a003000 0 0x1000>,
-+			      <0 0x1a004000 0 0x2000>,
-+			      <0 0x1a006000 0 0x2000>;
-+			reg-names = "cam_sys",
-+				    "cam_uni",
-+				    "cam_a",
-+				    "cam_b";
-+			interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_LOW>,
-+				     <GIC_SPI 254 IRQ_TYPE_LEVEL_LOW>,
-+				     <GIC_SPI 255 IRQ_TYPE_LEVEL_LOW>;
-+			iommus = <&iommu M4U_PORT_CAM_IMGO>;
-+			clocks = <&camsys CLK_CAM_CAM>,
-+				 <&camsys CLK_CAM_CAMTG>;
-+			clock-names = "camsys_cam_cgpdn",
-+				      "camsys_camtg_cgpdn";
-+			mediatek,larb = <&larb3>,
-+					<&larb6>;
-+			mediatek,scp = <&scp>;
-+		};
++obj-$(CONFIG_VIDEO_MEDIATEK_ISP_PASS1) += mtk-cam-isp.o
 \ No newline at end of file
+diff --git a/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.c b/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.c
+new file mode 100644
+index 000000000000..31d801c82495
+--- /dev/null
++++ b/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.c
+@@ -0,0 +1,138 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (c) 2018 MediaTek Inc.
++
++#include <linux/device.h>
++#include <linux/platform_device.h>
++
++#include "mtk_cam-ctrl.h"
++#include "mtk_cam.h"
++
++static int handle_ctrl_get_bin_info(struct v4l2_ctrl *ctrl, int is_width)
++{
++	struct mtk_cam_dev *cam_dev = ctrl->priv;
++	struct v4l2_format *fmt;
++
++	fmt = &cam_dev->vdev_nodes[MTK_CAM_P1_MAIN_STREAM_OUT].vdev_fmt;
++
++	dev_dbg(&cam_dev->pdev->dev, "Get bin info w*h:%d*%d is_width:%d",
++		fmt->fmt.pix_mp.width, fmt->fmt.pix_mp.height, is_width);
++
++	if (is_width)
++		ctrl->val = fmt->fmt.pix_mp.width;
++	else
++		ctrl->val = fmt->fmt.pix_mp.height;
++
++	return 0;
++}
++
++static int handle_ctrl_get_process_raw(struct v4l2_ctrl *ctrl)
++{
++	struct mtk_cam_dev *cam_dev = ctrl->priv;
++	struct isp_p1_device *p1_dev = get_p1_device(&cam_dev->pdev->dev);
++
++	ctrl->val = (p1_dev->isp_ctx.isp_raw_path == ISP_PROCESS_RAW_PATH);
++
++	dev_dbg(&cam_dev->pdev->dev, "Get process raw:%d", ctrl->val);
++
++	return 0;
++}
++
++static int handle_ctrl_set_process_raw(struct v4l2_ctrl *ctrl)
++{
++	struct mtk_cam_dev *cam_dev = ctrl->priv;
++	struct isp_p1_device *p1_dev = get_p1_device(&cam_dev->pdev->dev);
++
++	p1_dev->isp_ctx.isp_raw_path = (ctrl->val) ?
++		ISP_PROCESS_RAW_PATH : ISP_PURE_RAW_PATH;
++	dev_dbg(&cam_dev->pdev->dev, "Set process raw:%d", ctrl->val);
++	return 0;
++}
++
++static int mtk_cam_dev_g_ctrl(struct v4l2_ctrl *ctrl)
++{
++	switch (ctrl->id) {
++	case V4L2_CID_MTK_PROCESSING_RAW:
++		handle_ctrl_get_process_raw(ctrl);
++		break;
++	case V4L2_CID_MTK_GET_BIN_WIDTH:
++		handle_ctrl_get_bin_info(ctrl, 1);
++		break;
++	case V4L2_CID_MTK_GET_BIN_HEIGTH:
++		handle_ctrl_get_bin_info(ctrl, 0);
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
++static int mtk_cam_dev_s_ctrl(struct v4l2_ctrl *ctrl)
++{
++	switch (ctrl->id) {
++	case V4L2_CID_MTK_PROCESSING_RAW:
++		return handle_ctrl_set_process_raw(ctrl);
++	default:
++		return -EINVAL;
++	}
++}
++
++static const struct v4l2_ctrl_ops mtk_cam_dev_ctrl_ops = {
++	.g_volatile_ctrl = mtk_cam_dev_g_ctrl,
++	.s_ctrl = mtk_cam_dev_s_ctrl,
++};
++
++struct v4l2_ctrl_config mtk_cam_controls[] = {
++	{
++	.ops = &mtk_cam_dev_ctrl_ops,
++	.id = V4L2_CID_MTK_PROCESSING_RAW,
++	.name = "MTK CAM PROCESSING RAW",
++	.type = V4L2_CTRL_TYPE_BOOLEAN,
++	.min = 0,
++	.max = 1,
++	.step = 1,
++	.def = 1,
++	},
++	{
++	.ops = &mtk_cam_dev_ctrl_ops,
++	.id = V4L2_CID_MTK_GET_BIN_WIDTH,
++	.name = "MTK CAM GET BIN WIDTH",
++	.type = V4L2_CTRL_TYPE_INTEGER,
++	.min = IMG_MIN_WIDTH,
++	.max = IMG_MAX_WIDTH,
++	.step = 1,
++	.def = IMG_MAX_WIDTH,
++	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_VOLATILE,
++	},
++	{
++	.ops = &mtk_cam_dev_ctrl_ops,
++	.id = V4L2_CID_MTK_GET_BIN_HEIGTH,
++	.name = "MTK CAM GET BIN HEIGHT",
++	.type = V4L2_CTRL_TYPE_INTEGER,
++	.min = IMG_MIN_HEIGHT,
++	.max = IMG_MAX_HEIGHT,
++	.step = 1,
++	.def = IMG_MAX_HEIGHT,
++	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_VOLATILE,
++	},
++};
++
++int mtk_cam_ctrl_init(struct mtk_cam_dev *cam_dev,
++		      struct v4l2_ctrl_handler *hdl)
++{
++	unsigned int i;
++
++	/* Initialized HW controls, allow V4L2_CID_MTK_CAM_MAX ctrls */
++	v4l2_ctrl_handler_init(hdl, V4L2_CID_MTK_CAM_MAX);
++	if (hdl->error) {
++		v4l2_ctrl_handler_free(hdl);
++		return hdl->error;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(mtk_cam_controls); i++)
++		v4l2_ctrl_new_custom(hdl, &mtk_cam_controls[i], cam_dev);
++
++	dev_dbg(&cam_dev->pdev->dev, "%s done", __func__);
++
++	return 0;
++}
+diff --git a/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.h b/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.h
+new file mode 100644
+index 000000000000..0f9349ae0b07
+--- /dev/null
++++ b/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.h
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2018 MediaTek Inc.
++ */
++
++#ifndef __MTK_CAM_CTRL_H__
++#define __MTK_CAM_CTRL_H__
++
++#include <media/v4l2-ctrls.h>
++
++#include "mtk_cam-v4l2-util.h"
++
++/* The base for the MTK Camera ISP P1 driver controls.
++ * We reserve 16 controls for this driver.
++ */
++#define V4L2_CID_MTK_CAM_BASE			V4L2_CID_USER_MTK_CAM_BASE
++
++/* Control MTK ISP P1 main stream to process raw image data or not.
++ * The default value is 0 which outputs the pure raw bayer data from sensor,
++ * without image processing in ISP HW.
++ */
++#define V4L2_CID_MTK_PROCESSING_RAW		(V4L2_CID_MTK_CAM_BASE + 1)
++
++/* MTK ISP P1 HW supports frontal binning function.
++ * If this function is enabled, the 3A algo. may get the new image resolution
++ * which is binned by ISP P1. If this function is disabled or no supported,
++ * the image resolution will be equal to configured image format.
++ * For this control, it is read only.
++ */
++#define V4L2_CID_MTK_GET_BIN_WIDTH		(V4L2_CID_MTK_CAM_BASE + 2)
++#define V4L2_CID_MTK_GET_BIN_HEIGTH		(V4L2_CID_MTK_CAM_BASE + 3)
++
++#define V4L2_CID_MTK_CAM_MAX			16
++
++int mtk_cam_ctrl_init(struct mtk_cam_dev *cam_dev,
++		      struct v4l2_ctrl_handler *hdl);
++
++#endif /* __MTK_CAM_CTRL_H__ */
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index 37807f23231e..2db99716f40d 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -192,6 +192,10 @@ enum v4l2_colorfx {
+  * We reserve 16 controls for this driver. */
+ #define V4L2_CID_USER_IMX_BASE			(V4L2_CID_USER_BASE + 0x10b0)
+ 
++/* The base for the mediatek ISP Pass 1 driver controls */
++/* We reserve 16 controls for this driver. */
++#define V4L2_CID_USER_MTK_CAM_BASE		(V4L2_CID_USER_BASE + 0x10c0)
++
+ /* MPEG-class control IDs */
+ /* The MPEG controls are applicable to all codec controls
+  * and the 'MPEG' part of the define is historical */
 -- 
 2.18.0
