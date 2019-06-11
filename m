@@ -1,7 +1,7 @@
 From: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH V7 02/11] misc: xilinx-sdfec: add core driver
-Date: Tue, 11 Jun 2019 18:29:36 +0100
-Message-ID: <1560274185-264438-3-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V7 09/11] misc: xilinx_sdfec: Add stats & status ioctls
+Date: Tue, 11 Jun 2019 18:29:43 +0100
+Message-ID: <1560274185-264438-10-git-send-email-dragan.cvetic@xilinx.com>
 References: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,222 +12,308 @@ To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-ar
 Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Implement a platform driver that matches with xlnx,
-sd-fec-1.1 device tree node and registers as a character
-device, including:
-- SD-FEC driver binds to sdfec DT node.
-- creates and initialise an initial driver dev structure.
-- add the driver in Linux build and Kconfig.
+SD-FEC statistic data are:
+- count of data interface errors (isr_err_count)
+- count of Correctable ECC errors (cecc_count)
+- count of Uncorrectable ECC errors (uecc_count)
 
+Add support:
+1. clear stats ioctl callback which clears collected
+statistic data,
+2. get stats ioctl callback which reads a collected
+statistic data,
+3. set default configuration ioctl callback,
+4. start ioctl callback enables SD-FEC HW,
+5. stop ioctl callback disables SD-FEC HW.
+
+In a failed state driver enables the following ioctls:
+- get status
+- get statistics
+- clear stats
+- set default SD-FEC device configuration
+
+Tested-by: Santhosh Dyavanapally <SDYAVANA@xilinx.com>
+Tested by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Tested-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 ---
- drivers/misc/Kconfig        |  12 ++++
- drivers/misc/Makefile       |   1 +
- drivers/misc/xilinx_sdfec.c | 162 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 175 insertions(+)
- create mode 100644 drivers/misc/xilinx_sdfec.c
+ drivers/misc/xilinx_sdfec.c      | 125 +++++++++++++++++++++++++++++++++++++++
+ include/uapi/misc/xilinx_sdfec.h |  75 +++++++++++++++++++++++
+ 2 files changed, 200 insertions(+)
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 6b0417b..319a6bf 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -471,6 +471,18 @@ config PCI_ENDPOINT_TEST
-            Enable this configuration option to enable the host side test driver
-            for PCI Endpoint.
- 
-+config XILINX_SDFEC
-+	tristate "Xilinx SDFEC 16"
-+	help
-+	  This option enables support for the Xilinx SDFEC (Soft Decision
-+	  Forward Error Correction) driver. This enables a char driver
-+	  for the SDFEC.
-+
-+	  You may select this driver if your design instantiates the
-+	  SDFEC(16nm) hardened block. To compile this as a module choose M.
-+
-+	  If unsure, say N.
-+
- config MISC_RTSX
- 	tristate
- 	default MISC_RTSX_PCI || MISC_RTSX_USB
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index b9affcd..0cb3546 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -59,3 +59,4 @@ obj-$(CONFIG_OCXL)		+= ocxl/
- obj-y				+= cardreader/
- obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
- obj-$(CONFIG_HABANA_AI)		+= habanalabs/
-+obj-$(CONFIG_XILINX_SDFEC)	+= xilinx_sdfec.o
 diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-new file mode 100644
-index 0000000..ff0704b
---- /dev/null
+index 040dc59..881f464 100644
+--- a/drivers/misc/xilinx_sdfec.c
 +++ b/drivers/misc/xilinx_sdfec.c
-@@ -0,0 +1,162 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Xilinx SDFEC
-+ *
-+ * Copyright (C) 2019 Xilinx, Inc.
-+ *
-+ * Description:
-+ * This driver is developed for SDFEC16 (Soft Decision FEC 16nm)
-+ * IP. It exposes a char device which supports file operations
-+ * like  open(), close() and ioctl().
-+ */
-+
-+#include <linux/miscdevice.h>
-+#include <linux/io.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/poll.h>
-+#include <linux/slab.h>
-+#include <linux/clk.h>
-+
-+#define DEV_NAME_LEN 12
-+
-+static struct idr dev_idr;
-+static struct mutex dev_idr_lock;
-+
-+/**
-+ * struct xsdfec_dev - Driver data for SDFEC
-+ * @regs: device physical base address
-+ * @dev: pointer to device struct
-+ * @miscdev: Misc device handle
-+ * @error_data_lock: Error counter and states spinlock
-+ * @dev_name: Device name
-+ * @dev_id: Device ID
-+ *
-+ * This structure contains necessary state for SDFEC driver to operate
-+ */
-+struct xsdfec_dev {
-+	void __iomem *regs;
-+	struct device *dev;
-+	struct miscdevice miscdev;
-+	/* Spinlock to protect state_updated and stats_updated */
-+	spinlock_t error_data_lock;
-+	char dev_name[DEV_NAME_LEN];
-+	int dev_id;
-+};
-+
-+static const struct file_operations xsdfec_fops = {
-+	.owner = THIS_MODULE,
-+};
-+
-+static void xsdfec_idr_remove(struct xsdfec_dev *xsdfec)
+@@ -193,6 +193,7 @@ struct xsdfec_clks {
+  * @dev: pointer to device struct
+  * @state: State of the SDFEC device
+  * @config: Configuration of the SDFEC device
++ * @intr_enabled: indicates IRQ enabled
+  * @state_updated: indicates State updated by interrupt handler
+  * @stats_updated: indicates Stats updated by interrupt handler
+  * @isr_err_count: Count of ISR errors
+@@ -213,6 +214,7 @@ struct xsdfec_dev {
+ 	struct device *dev;
+ 	enum xsdfec_state state;
+ 	struct xsdfec_config config;
++	bool intr_enabled;
+ 	bool state_updated;
+ 	bool stats_updated;
+ 	u32 isr_err_count;
+@@ -288,6 +290,25 @@ static void update_config_from_hw(struct xsdfec_dev *xsdfec)
+ 		xsdfec->state = XSDFEC_STOPPED;
+ }
+ 
++static int xsdfec_get_status(struct xsdfec_dev *xsdfec, void __user *arg)
 +{
-+	mutex_lock(&dev_idr_lock);
-+	idr_remove(&dev_idr, xsdfec->dev_id);
-+	mutex_unlock(&dev_idr_lock);
-+}
-+
-+static int xsdfec_probe(struct platform_device *pdev)
-+{
-+	struct xsdfec_dev *xsdfec;
-+	struct device *dev;
-+	struct resource *res;
++	struct xsdfec_status status;
 +	int err;
 +
-+	xsdfec = devm_kzalloc(&pdev->dev, sizeof(*xsdfec), GFP_KERNEL);
-+	if (!xsdfec)
-+		return -ENOMEM;
++	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
++	status.state = xsdfec->state;
++	xsdfec->state_updated = false;
++	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
++	status.activity = (xsdfec_regread(xsdfec, XSDFEC_ACTIVE_ADDR) &
++			   XSDFEC_IS_ACTIVITY_SET);
 +
-+	xsdfec->dev = &pdev->dev;
-+	spin_lock_init(&xsdfec->error_data_lock);
-+
-+	dev = xsdfec->dev;
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	xsdfec->regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(xsdfec->regs)) {
-+		err = PTR_ERR(xsdfec->regs);
-+		return err;
-+	}
-+
-+	/* Save driver private data */
-+	platform_set_drvdata(pdev, xsdfec);
-+
-+	mutex_lock(&dev_idr_lock);
-+	err = idr_alloc(&dev_idr, xsdfec->dev_name, 0, 0, GFP_KERNEL);
-+	mutex_unlock(&dev_idr_lock);
-+	if (err < 0)
-+		goto err_xsddev_idr;
-+	xsdfec->dev_id = err;
-+
-+	snprintf(xsdfec->dev_name, DEV_NAME_LEN, "xsdfec%d", xsdfec->dev_id);
-+	xsdfec->miscdev.minor = MISC_DYNAMIC_MINOR;
-+	xsdfec->miscdev.name = xsdfec->dev_name;
-+	xsdfec->miscdev.fops = &xsdfec_fops;
-+	xsdfec->miscdev.parent = dev;
-+	err = misc_register(&xsdfec->miscdev);
-+	if (err) {
-+		dev_err(dev, "error:%d. Unable to register device", err);
-+		return err;
-+	}
-+	return 0;
-+
-+err_xsddev_idr:
-+	xsdfec_idr_remove(xsdfec);
++	err = copy_to_user(arg, &status, sizeof(status));
++	if (err)
++		err = -EFAULT;
 +
 +	return err;
 +}
 +
-+static int xsdfec_remove(struct platform_device *pdev)
+ static int xsdfec_get_config(struct xsdfec_dev *xsdfec, void __user *arg)
+ {
+ 	int err;
+@@ -839,6 +860,82 @@ static int xsdfec_dev_release(struct inode *iptr, struct file *fptr)
+ 	return 0;
+ }
+ 
++static int xsdfec_start(struct xsdfec_dev *xsdfec)
 +{
-+	struct xsdfec_dev *xsdfec;
++	u32 regread;
 +
-+	xsdfec = platform_get_drvdata(pdev);
-+	misc_deregister(&xsdfec->miscdev);
-+	xsdfec_idr_remove(xsdfec);
++	regread = xsdfec_regread(xsdfec, XSDFEC_FEC_CODE_ADDR);
++	regread &= 0x1;
++	if (regread != xsdfec->config.code) {
++		dev_dbg(xsdfec->dev,
++			"%s SDFEC HW code does not match driver code, reg %d, code %d",
++			__func__, regread, xsdfec->config.code);
++		return -EINVAL;
++	}
++
++	/* Set AXIS enable */
++	xsdfec_regwrite(xsdfec, XSDFEC_AXIS_ENABLE_ADDR,
++			XSDFEC_AXIS_ENABLE_MASK);
++	/* Done */
++	xsdfec->state = XSDFEC_STARTED;
 +	return 0;
 +}
 +
-+static const struct of_device_id xsdfec_of_match[] = {
-+	{
-+		.compatible = "xlnx,sd-fec-1.1",
-+	},
-+	{ /* end of table */ }
-+};
-+MODULE_DEVICE_TABLE(of, xsdfec_of_match);
++static int xsdfec_stop(struct xsdfec_dev *xsdfec)
++{
++	u32 regread;
 +
-+static struct platform_driver xsdfec_driver = {
-+	.driver = {
-+		.name = "xilinx-sdfec",
-+		.of_match_table = xsdfec_of_match,
-+	},
-+	.probe = xsdfec_probe,
-+	.remove =  xsdfec_remove,
-+};
++	if (xsdfec->state != XSDFEC_STARTED)
++		dev_dbg(xsdfec->dev, "Device not started correctly");
++	/* Disable AXIS_ENABLE Input interfaces only */
++	regread = xsdfec_regread(xsdfec, XSDFEC_AXIS_ENABLE_ADDR);
++	regread &= (~XSDFEC_AXIS_IN_ENABLE_MASK);
++	xsdfec_regwrite(xsdfec, XSDFEC_AXIS_ENABLE_ADDR, regread);
++	/* Stop */
++	xsdfec->state = XSDFEC_STOPPED;
++	return 0;
++}
 +
-+static int __init xsdfec_init(void)
++static int xsdfec_clear_stats(struct xsdfec_dev *xsdfec)
++{
++	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
++	xsdfec->isr_err_count = 0;
++	xsdfec->uecc_count = 0;
++	xsdfec->cecc_count = 0;
++	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
++
++	return 0;
++}
++
++static int xsdfec_get_stats(struct xsdfec_dev *xsdfec, void __user *arg)
 +{
 +	int err;
++	struct xsdfec_stats user_stats;
 +
-+	mutex_init(&dev_idr_lock);
-+	idr_init(&dev_idr);
-+	err = platform_driver_register(&xsdfec_driver);
-+	if (err < 0) {
-+		pr_err("%s Unabled to register SDFEC driver", __func__);
-+		return err;
-+	}
++	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
++	user_stats.isr_err_count = xsdfec->isr_err_count;
++	user_stats.cecc_count = xsdfec->cecc_count;
++	user_stats.uecc_count = xsdfec->uecc_count;
++	xsdfec->stats_updated = false;
++	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
++
++	err = copy_to_user(arg, &user_stats, sizeof(user_stats));
++	if (err)
++		err = -EFAULT;
++
++	return err;
++}
++
++static int xsdfec_set_default_config(struct xsdfec_dev *xsdfec)
++{
++	/* Ensure registers are aligned with core configuration */
++	xsdfec_regwrite(xsdfec, XSDFEC_FEC_CODE_ADDR, xsdfec->config.code);
++	xsdfec_cfg_axi_streams(xsdfec);
++	update_config_from_hw(xsdfec);
++
 +	return 0;
 +}
 +
-+static void __exit xsdfec_exit(void)
-+{
-+	platform_driver_unregister(&xsdfec_driver);
-+	idr_destroy(&dev_idr);
-+}
+ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 			     unsigned long data)
+ {
+@@ -848,6 +945,16 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 
+ 	xsdfec = container_of(fptr->private_data, struct xsdfec_dev, miscdev);
+ 
++	/* In failed state allow only reset and get status IOCTLs */
++	if (xsdfec->state == XSDFEC_NEEDS_RESET &&
++	    (cmd != XSDFEC_SET_DEFAULT_CONFIG && cmd != XSDFEC_GET_STATUS &&
++	     cmd != XSDFEC_GET_STATS && cmd != XSDFEC_CLEAR_STATS)) {
++		return -EPERM;
++	}
 +
-+module_init(xsdfec_init);
-+module_exit(xsdfec_exit);
++	if (_IOC_TYPE(cmd) != XSDFEC_MAGIC)
++		return -ENOTTY;
 +
-+MODULE_AUTHOR("Xilinx, Inc");
-+MODULE_DESCRIPTION("Xilinx SD-FEC16 Driver");
-+MODULE_LICENSE("GPL");
+ 	/* check if ioctl argument is present and valid */
+ 	if (_IOC_DIR(cmd) != _IOC_NONE) {
+ 		arg = (void __user *)data;
+@@ -856,9 +963,27 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 	}
+ 
+ 	switch (cmd) {
++	case XSDFEC_START_DEV:
++		rval = xsdfec_start(xsdfec);
++		break;
++	case XSDFEC_STOP_DEV:
++		rval = xsdfec_stop(xsdfec);
++		break;
++	case XSDFEC_CLEAR_STATS:
++		rval = xsdfec_clear_stats(xsdfec);
++		break;
++	case XSDFEC_GET_STATS:
++		rval = xsdfec_get_stats(xsdfec, arg);
++		break;
++	case XSDFEC_GET_STATUS:
++		rval = xsdfec_get_status(xsdfec, arg);
++		break;
+ 	case XSDFEC_GET_CONFIG:
+ 		rval = xsdfec_get_config(xsdfec, arg);
+ 		break;
++	case XSDFEC_SET_DEFAULT_CONFIG:
++		rval = xsdfec_set_default_config(xsdfec);
++		break;
+ 	case XSDFEC_SET_IRQ:
+ 		rval = xsdfec_set_irq(xsdfec, arg);
+ 		break;
+diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
+index 59ee10c..31a9110 100644
+--- a/include/uapi/misc/xilinx_sdfec.h
++++ b/include/uapi/misc/xilinx_sdfec.h
+@@ -234,6 +234,21 @@ struct xsdfec_config {
+ };
+ 
+ /**
++ * struct xsdfec_stats - Stats retrived by ioctl XSDFEC_GET_STATS. Used
++ *			 to buffer atomic_t variables from struct
++ *			 xsdfec_dev. Counts are accumulated until
++ *			 the user clears them.
++ * @isr_err_count: Count of ISR errors
++ * @cecc_count: Count of Correctable ECC errors (SBE)
++ * @uecc_count: Count of Uncorrectable ECC errors (MBE)
++ */
++struct xsdfec_stats {
++	__u32 isr_err_count;
++	__u32 cecc_count;
++	__u32 uecc_count;
++};
++
++/**
+  * struct xsdfec_ldpc_param_table_sizes - Used to store sizes of SD-FEC table
+  *					  entries for an individual LPDC code
+  *					  parameter.
+@@ -252,6 +267,32 @@ struct xsdfec_ldpc_param_table_sizes {
+  */
+ #define XSDFEC_MAGIC 'f'
+ /**
++ * DOC: XSDFEC_START_DEV
++ *
++ * @Description
++ *
++ * ioctl to start SD-FEC core
++ *
++ * This fails if the XSDFEC_SET_ORDER ioctl has not been previously called
++ */
++#define XSDFEC_START_DEV _IO(XSDFEC_MAGIC, 0)
++/**
++ * DOC: XSDFEC_STOP_DEV
++ *
++ * @Description
++ *
++ * ioctl to stop the SD-FEC core
++ */
++#define XSDFEC_STOP_DEV _IO(XSDFEC_MAGIC, 1)
++/**
++ * DOC: XSDFEC_GET_STATUS
++ *
++ * @Description
++ *
++ * ioctl that returns status of SD-FEC core
++ */
++#define XSDFEC_GET_STATUS _IOR(XSDFEC_MAGIC, 2, struct xsdfec_status)
++/**
+  * DOC: XSDFEC_SET_IRQ
+  * @Parameters
+  *
+@@ -370,4 +411,38 @@ struct xsdfec_ldpc_param_table_sizes {
+  * ioctl that determines if SD-FEC is processing data
+  */
+ #define XSDFEC_IS_ACTIVE _IOR(XSDFEC_MAGIC, 10, bool)
++/**
++ * DOC: XSDFEC_CLEAR_STATS
++ *
++ * @Description
++ *
++ * ioctl that clears error stats collected during interrupts
++ */
++#define XSDFEC_CLEAR_STATS _IO(XSDFEC_MAGIC, 11)
++/**
++ * DOC: XSDFEC_GET_STATS
++ * @Parameters
++ *
++ * @struct xsdfec_stats *
++ *	Pointer to the &struct xsdfec_stats that will contain the updated stats
++ *	values
++ *
++ * @Description
++ *
++ * ioctl that returns SD-FEC core stats
++ *
++ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ */
++#define XSDFEC_GET_STATS _IOR(XSDFEC_MAGIC, 12, struct xsdfec_stats)
++/**
++ * DOC: XSDFEC_SET_DEFAULT_CONFIG
++ *
++ * @Description
++ *
++ * ioctl that returns SD-FEC core to default config, use after a reset
++ *
++ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ */
++#define XSDFEC_SET_DEFAULT_CONFIG _IO(XSDFEC_MAGIC, 13)
++
+ #endif /* __XILINX_SDFEC_H__ */
 -- 
 2.7.4
