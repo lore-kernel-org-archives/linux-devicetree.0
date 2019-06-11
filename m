@@ -1,37 +1,56 @@
-From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Tue, 11 Jun 2019 10:52:16 -0600
-Message-ID: <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+From: Brian Norris <briannorris@google.com>
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Date: Tue, 11 Jun 2019 09:55:30 -0700
+Message-ID: <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com> <20190607220947.GR40515@google.com>
+ <20190608210226.GB2359@xo-6d-61-c0.localdomain> <20190610205233.GB137143@google.com>
+ <20190611104913.egsbwcedshjdy3m5@holly.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+In-Reply-To: <20190611104913.egsbwcedshjdy3m5@holly.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Williams <dcbw@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Johannes Berg <johannes@sipsolutions.net>, Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Matthias Kaehlcke <mka@chromium.org>, Pavel Machek <pavel@ucw.cz>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-> The general plan (and I believe Daniele Palmas was working on it) was
-> to eventually make qmi_wwan use rmnet rather than its internal sysfs-
-> based implementation. qmi_wwan and ipa are at essentially the same
-> level and both could utilize rmnet on top.
-> 
-> *That's* what I'd like to see. I don't want to see two different ways
-> to get QMAP packets to modem firmware from two different drivers that
-> really could use the same code.
-> 
-> Dan
+On Tue, Jun 11, 2019 at 3:49 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+> This is a long standing flaw in the backlight interfaces. AFAIK generic
+> userspaces end up with a (flawed) heuristic.
 
-qmi_wwan is based on USB and is very different from the IPA interconnect
-though. AFAIK, they do not have much in common (apart from sending &
-receiving MAP packets from hardware).
+Bingo! Would be nice if we could start to fix this long-standing flaw.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Basically devices with a narrow range of choices can be assumed to be
+> logarithmic
+
+That's (almost, see below) exactly what we have.
+
+(And this is what Matthias is fighting against, now that we're
+implementing both "large number of data points" and "pre-curved" at
+the same time. We will have to either adapt the heuristic, or else
+adapt our device trees to fit the heuristic.)
+
+> Systems are coming along that allow us to animate the change of
+> brightness (part of the reason for interpolated tables is to
+> permit smooth animation rather than because the user explicitly wants
+> to set the brightness to exactly 1117).
+
+Chrome OS has done this for a long time. So "coming along" is a bit late ;)
+
+Also, I believe Chrome OS will do animation/smoothing for all tables
+(small or large) where it can: even for the small tables.
+
+> These systems are often
+> logarithmic but with a wide range of values.
+
+NB: Chrome OS happens to use a polynomial formula (exponent = 2 or
+0.5, depending on how you look at it), not logarithmic. You can see it
+in all its (non)glory here:
+
+https://chromium.googlesource.com/chromiumos/platform2/+/ee015853b227cf265491bd80ccf096b188490529/power_manager/powerd/policy/internal_backlight_controller.cc#451
+
+Regards,
+Brian
