@@ -1,55 +1,35 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4] arm64: dts: allwinner: h6: Add DMA node
-Date: Tue, 11 Jun 2019 23:40:55 +0200
-Message-ID: <20190611214055.25613-1-peron.clem@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 7/9] dt: bindings: lp50xx: Introduce the lp50xx family
+ of RGB drivers
+Date: Tue, 11 Jun 2019 15:51:21 -0600
+Message-ID: <20190611215121.GA14337@bogus>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-8-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190523190820.29375-8-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Dan Williams <dan.j.williams@intel.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+On Thu, May 23, 2019 at 02:08:18PM -0500, Dan Murphy wrote:
+> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024 and
+> LP5018 RGB LED device driver.  The LP5036/30/24/18 can control RGB LEDs
+> individually or as part of a control bank group.  These devices have the ability
+> to adjust the mixing control for the RGB LEDs to obtain different colors
+> independent of the overall brightness of the LED grouping.
+> 
+> Datasheet:
+> http://www.ti.com/lit/ds/symlink/lp5024.pdf
+> http://www.ti.com/lit/ds/symlink/lp5036.pdf
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/leds/leds-lp50xx.txt  | 142 ++++++++++++++++++
+>  1 file changed, 142 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
 
-H6 has DMA controller which supports 16 channels.
-
-Add a node for it.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
-
-Changes since v3:
- - Rebase on top of sunxi/for-next
- - Sort by physical address
-
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index b9a7dc8d2a40..7628a7c83096 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -203,6 +203,18 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		dma: dma-controller@3002000 {
-+			compatible = "allwinner,sun50i-h6-dma";
-+			reg = <0x03002000 0x1000>;
-+			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_DMA>, <&ccu CLK_MBUS_DMA>;
-+			clock-names = "bus", "mbus";
-+			dma-channels = <16>;
-+			dma-requests = <46>;
-+			resets = <&ccu RST_BUS_DMA>;
-+			#dma-cells = <1>;
-+		};
-+
- 		sid: sid@3006000 {
- 			compatible = "allwinner,sun50i-h6-sid";
- 			reg = <0x03006000 0x400>;
--- 
-2.20.1
+Reviewed-by: Rob Herring <robh@kernel.org>
