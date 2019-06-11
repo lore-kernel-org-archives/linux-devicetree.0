@@ -1,53 +1,109 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 2/2] backlight: pwm_bl: Get number of brightness levels
- for CIE 1931 from the device tree
-Date: Tue, 11 Jun 2019 14:58:59 -0700
-Message-ID: <20190611215859.GF137143@google.com>
-References: <20190610233739.29477-1-mka@chromium.org>
- <20190610233739.29477-2-mka@chromium.org>
- <20190611101843.GD7526@amd>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/2] dt-bindings: iio: frequency: Add docs for ADF4371
+ PLL
+Date: Tue, 11 Jun 2019 15:59:32 -0600
+Message-ID: <20190611215932.GA24974@bogus>
+References: <1559653697-2760-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190611101843.GD7526@amd>
+In-Reply-To: <1559653697-2760-1-git-send-email-stefan.popa@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: jic23@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
-
-On Tue, Jun 11, 2019 at 12:18:43PM +0200, Pavel Machek wrote:
-> On Mon 2019-06-10 16:37:39, Matthias Kaehlcke wrote:
-> > Commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED
-> > linearly to human eye") uses pwm_period / hweight32(pwm_period) as
-> > as heuristic to determine the number of brightness levels when the DT
-> > doesn't provide a brightness level table. This heuristic is broken
-> > and can result in excessively large brightness tables.
-> > 
-> > Instead of using the heuristic try to retrieve the number of
-> > brightness levels from the device tree (property 'max-brightness'
-> > + 1). If the value is not specified use a default of 256 levels.
-> > 
-> > Fixes: 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED linearly to human eye")
+On Tue, Jun 04, 2019 at 04:08:17PM +0300, Stefan Popa wrote:
+> Document support for Analog Devices ADF4371 SPI Wideband Synthesizer.
 > 
-> I don't think this one is suitable for stable. I'm pretty sure the
-> heuristics works well for many boards, and you just replaced it with
-> another heuristics ("256").
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> ---
+> Changes in v2:
+> 	- Nothing changed.
+> Changes in v3:
+> 	- Nothing changed.
+> Changes in v4:
+> 	- Nothing changed.
+> Changes in v5:
+> 	- Nothing changed.
 
-whether the patch is suitable for stable/upstream is certainly
-debatable, in any case I'd argue the current heuristic is bogus and
-works by accident or at a cost:
+Please add acks/reviewed-bys when posting new versions.
 
-nlevels = period / hweight(period)
+But something else I noticed:
 
-w/ period = 131071 ns  (0x1FFFF)
+> 
+>  .../devicetree/bindings/iio/frequency/adf4371.yaml | 54 ++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> new file mode 100644
+> index 0000000..d7adf074
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/frequency/adf4371.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADF4371 Wideband Synthesizer
+> +
+> +maintainers:
+> +  - Popa Stefan <stefan.popa@analog.com>
+> +
+> +description: |
+> +  Analog Devices ADF4371 SPI Wideband Synthesizer
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adf4371
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description:
+> +      Definition of the external clock (see clock/clock-bindings.txt)
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description:
+> +      Must be "clkin"
 
-  nlevels = 131071 / 17 = 7710
+This can be a schema:
 
-w/ period = 131072 ns (0x20000)
+clock-names:
+  items:
+    - clkin
 
-  nlevels = 131072 / 1 = 131072
-
-and some PWMs use significantly higher periods like 1 ms or 10 ms.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        frequency@0 {
+> +                compatible = "adi,adf4371";
+> +                reg = <0>;
+> +                spi-max-frequency = <1000000>;
+> +                clocks = <&adf4371_clkin>;
+> +                clock-names = "clkin";
+> +        };
+> +    };
+> +...
+> -- 
+> 2.7.4
+> 
