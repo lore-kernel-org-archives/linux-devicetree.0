@@ -1,7 +1,7 @@
 From: Michael Drake <michael.drake@codethink.co.uk>
-Subject: [PATCH v1 08/11] dt-bindings: display/bridge: Add bindings for ti949
-Date: Tue, 11 Jun 2019 15:04:09 +0100
-Message-ID: <20190611140412.32151-9-michael.drake@codethink.co.uk>
+Subject: [PATCH v1 11/11] ti949: Add support for configuration via device properties
+Date: Tue, 11 Jun 2019 15:04:12 +0100
+Message-ID: <20190611140412.32151-12-michael.drake@codethink.co.uk>
 References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,53 +12,196 @@ To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@idea
 Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds device tree bindings for:
+This allows the device to be configured for the board in
+device tree, or in ACPI tables.  The device node properties
+can provide an array of register addresses and values to be
+written to configure the device for the board.
 
-  TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
-
-It supports instantiation via device tree / ACPI table.
-
-The device has the compatible string "ti,ds90ub949", and
-and allows an arrray of strings to be provided as regulator
-names to enable for operation of the device.
+The config is written to the device on probe and on PM resume.
 
 Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
 Cc: Patrick Glaser <pglaser@tesla.com>
 Cc: Nate Case <ncase@tesla.com>
 ---
- .../bindings/display/bridge/ti,ds90ub949.txt  | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
+ drivers/gpu/drm/bridge/ti949.c | 120 +++++++++++++++++++++++++++++++++
+ 1 file changed, 120 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
-new file mode 100644
-index 000000000000..3ba3897d5e81
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
-@@ -0,0 +1,24 @@
-+TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
-+============================================================
-+
-+This is the binding for Texas Instruments DS90UB949-Q1 bridge serializer.
-+
-+This device supports I2C only.
-+
-+Required properties:
-+
-+- compatible: "ti,ds90ub949"
-+
-+Optional properties:
-+
-+- regulators: List of regulator name strings to enable for operation of device.
-+
-+Example
-+-------
-+
-+ti949: ds90ub949@0 {
-+	compatible = "ti,ds90ub949";
-+
-+	regulators: "vcc",
-+	            "vcc_hdmi";
+diff --git a/drivers/gpu/drm/bridge/ti949.c b/drivers/gpu/drm/bridge/ti949.c
+index 04618ca5f25e..57dcecd10ace 100644
+--- a/drivers/gpu/drm/bridge/ti949.c
++++ b/drivers/gpu/drm/bridge/ti949.c
+@@ -19,6 +19,7 @@
+ #include <linux/module.h>
+ #include <linux/regmap.h>
+ #include <linux/delay.h>
++#include <linux/slab.h>
+ #include <linux/i2c.h>
+ 
+ /* Number of times to try checking for device on bringup. */
+@@ -127,10 +128,22 @@ enum ti949_reg {
+ 	TI949_REG_TX_ID_5                               = 0xF5,
+ };
+ 
++/**
++ * struct ti949_reg_val - ti949 register value
++ * @addr:     The address of the register
++ * @value:    The initial value of the register
++ */
++struct ti949_reg_val {
++	u8 addr;
++	u8 value;
 +};
++
+ /**
+  * struct ti949_ctx - ti949 driver context
+  * @i2c:         Handle for the device's i2c client.
+  * @regmap:      Handle for the device's regmap.
++ * @config:      Array of register values loaded from device properties.
++ * @config_len:  Number of entries in config.
+  * @reg_names:   Array of regulator names, or NULL.
+  * @regs:        Array of regulators, or NULL.
+  * @reg_count:   Number of entries in reg_names and regs arrays.
+@@ -138,6 +151,8 @@ enum ti949_reg {
+ struct ti949_ctx {
+ 	struct i2c_client *i2c;
+ 	struct regmap *regmap;
++	struct ti949_reg_val *config;
++	size_t config_len;
+ 	const char **reg_names;
+ 	struct regulator **regs;
+ 	size_t reg_count;
+@@ -214,6 +229,42 @@ static const struct regmap_config ti949_regmap_config = {
+ 	.writeable_reg = ti949_writeable_reg,
+ };
+ 
++static int ti949_write_sequence(
++		struct ti949_ctx *ti949,
++		const struct ti949_reg_val *sequence,
++		u32 entries)
++{
++	int i;
++
++	for (i = 0; i < entries; i++) {
++		const struct ti949_reg_val *r = sequence + i;
++		int ret = regmap_write(ti949->regmap, r->addr, r->value);
++
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int ti949_write_config_seq(struct ti949_ctx *ti949)
++{
++	int ret;
++
++	if (ti949->config == NULL) {
++		dev_info(&ti949->i2c->dev, "No config for ti949 device\n");
++		return 0;
++	}
++
++	ret = ti949_write_sequence(ti949, ti949->config, ti949->config_len);
++	if (ret < 0)
++		return ret;
++
++	dev_info(&ti949->i2c->dev, "Successfully configured ti949\n");
++
++	return ret;
++}
++
+ static inline u8 ti949_device_address(struct ti949_ctx *ti949)
+ {
+ 	return ti949->i2c->addr;
+@@ -347,6 +398,12 @@ static int ti949_pm_resume(struct device *dev)
+ 	if (ret != 0)
+ 		return ret;
+ 
++	ret = ti949_write_config_seq(ti949);
++	if (ret != 0)
++		return ret;
++
++	/* Extend 200ms after ti949 init for display HW tolerance. */
++	msleep(200);
+ 	return 0;
+ }
+ 
+@@ -436,6 +493,65 @@ static int ti949_get_regulators(struct ti949_ctx *ti949)
+ 	return 0;
+ }
+ 
++static int ti949_get_config(struct ti949_ctx *ti949)
++{
++	int i;
++	int ret;
++	u8 *config;
++	size_t config_len;
++
++	ret = device_property_read_u8_array(&ti949->i2c->dev,
++			"config", NULL, 0);
++	if (ret == -EINVAL ||
++	    ret == -ENODATA ||
++	    ret == 0) {
++		/* "config" property was either:
++		 *   - unset
++		 *   - valueless
++		 *   - set to empty list
++		 * Not an error; continue without config.
++		 */
++		dev_info(&ti949->i2c->dev, "No config defined for device.\n");
++		return 0;
++
++	} else if (ret < 0) {
++		return ret;
++	} else if (ret & 0x1) {
++		dev_err(&ti949->i2c->dev,
++			"Device property 'config' needs even entry count.\n");
++		return -EINVAL;
++	}
++
++	config_len = ret;
++
++	config = kmalloc_array(config_len, sizeof(*config), GFP_KERNEL);
++	if (!config)
++		return -ENOMEM;
++
++	ret = device_property_read_u8_array(&ti949->i2c->dev, "config",
++			config, config_len);
++	if (ret < 0) {
++		kfree(config);
++		return ret;
++	}
++
++	ti949->config = devm_kmalloc_array(&ti949->i2c->dev,
++			config_len / 2, sizeof(*ti949->config), GFP_KERNEL);
++	if (!ti949->config) {
++		kfree(config);
++		return -ENOMEM;
++	}
++
++	ti949->config_len = config_len / 2;
++	for (i = 0; i < config_len; i += 2) {
++		ti949->config[i / 2].addr = config[i];
++		ti949->config[i / 2].value = config[i + 1];
++	}
++	kfree(config);
++
++	return 0;
++}
++
+ static int ti949_probe(struct i2c_client *client,
+ 		const struct i2c_device_id *id)
+ {
+@@ -458,6 +574,10 @@ static int ti949_probe(struct i2c_client *client,
+ 	if (ret != 0)
+ 		return ret;
+ 
++	ret = ti949_get_config(ti949);
++	if (ret != 0)
++		return ret;
++
+ 	i2c_set_clientdata(client, ti949);
+ 
+ 	ret = ti949_pm_resume(&client->dev);
 -- 
 2.20.1
