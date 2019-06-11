@@ -1,79 +1,71 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
-Date: Tue, 11 Jun 2019 15:37:42 +0100
-Message-ID: <95292b47-4cf4-5fd9-b096-1cb016e2264f@arm.com>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-2-jean-philippe.brucker@arm.com>
- <20190611052626.20bed59a@jacob-builder>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: i2c: sun6i-p2wi: Add YAML schemas
+Date: Tue, 11 Jun 2019 08:50:37 -0600
+Message-ID: <CAL_JsqL3cua3u2gNTzHEdgFU0On5J9ziPZeFNiTpu5HS=SJoDA@mail.gmail.com>
+References: <20190605122936.11972-1-maxime.ripard@bootlin.com>
+ <CAL_JsqKC7uP0J14A8_CvPhbZkoSRNWSpS1ee+Q4sG013jY=JeQ@mail.gmail.com>
+ <20190611090641.byr6mpywkfmbhrbk@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611052626.20bed59a@jacob-builder>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190611090641.byr6mpywkfmbhrbk@flea>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Gregory Clement <gregory.clement@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linux I2C <linux-i2c@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2019 13:26, Jacob Pan wrote:
->> +/**
->> + * ioasid_set_data - Set private data for an allocated ioasid
->> + * @ioasid: the ID to set data
->> + * @data:   the private data
->> + *
->> + * For IOASID that is already allocated, private data can be set
->> + * via this API. Future lookup can be done via ioasid_find.
->> + */
->> +int ioasid_set_data(ioasid_t ioasid, void *data)
->> +{
->> +	struct ioasid_data *ioasid_data;
->> +	int ret = 0;
->> +
->> +	xa_lock(&ioasid_xa);
-> Just wondering if this is necessary, since xa_load is under
-> rcu_read_lock and we are not changing anything internal to xa. For
-> custom allocator I still need to have the mutex against allocator
-> removal.
+On Tue, Jun 11, 2019 at 3:06 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> Hi Rob,
+>
+> On Mon, Jun 10, 2019 at 03:34:18PM -0600, Rob Herring wrote:
+> > On Wed, Jun 5, 2019 at 6:29 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > +properties:
+> > > +  "#address-cells":
+> > > +    const: 1
+> > > +
+> > > +  "#size-cells":
+> > > +    const: 0
+> >
+> > These 2 are covered by i2c-controller.yaml, right?
+>
+> Indeed, I've removed them.
+>
+> > > +examples:
+> > > +  - |
+> > > +    p2wi@1f03400 {
+> >
+> > i2c@...
+> >
+> > That should fail on the schema (I need to get the schema checking of
+> > examples finished.)
+>
+> That would be great :) The compilation of the examples alone already
+> caught a good number of examples that weren't even compiling.
 
-I think we do need this because of a possible race with ioasid_free():
+I'm primarily waiting on a dtc change to be accepted[1]. Feel free to
+review/ack.
 
-         CPU1                      CPU2
-  ioasid_free(ioasid)     ioasid_set_data(ioasid, foo)
-                            data = xa_load(...)
-    xa_erase(...)
-    kfree_rcu(data)           (no RCU lock held)
-    ...free(data)
-                            data->private = foo;
+> Speaking of examples, one thing that would be great too would be to
+> allow the usage of our C headers. It's not supported at the moment,
+> and this often ends up with an example that is less readable than the
+> actual DT.
 
-The issue is theoretical at the moment because no users do this, but I'd
-be more comfortable taking the xa_lock, which prevents a concurrent
-xa_erase()+free(). (I commented on your v3 but you might have missed it)
+It should be. You just have to add them. See
+Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml for
+example.
 
->> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
->> +	if (ioasid_data)
->> +		rcu_assign_pointer(ioasid_data->private, data);
-> it is good to publish and have barrier here. But I just wonder even for
-> weakly ordered machine, this pointer update is quite far away from its
-> data update.
+Maybe the common interrupt and gpio ones should be added by default.
 
-I don't know, it could be right before calling ioasid_set_data():
+Rob
 
-	mydata = kzalloc(sizeof(*mydata));
-	mydata->ops = &my_ops;			(1)
-	ioasid_set_data(ioasid, mydata);
-		... /* no write barrier here */
-		data->private = mydata;		(2)
-
-And then another thread calls ioasid_find():
-
-	mydata = ioasid_find(ioasid);
-	if (mydata)
-		mydata->ops->do_something();
-
-On a weakly ordered machine, this thread could observe the pointer
-assignment (2) before the ops assignment (1), and dereference NULL.
-Using rcu_assign_pointer() should fix that
-
-Thanks,
-Jean
+[1] https://www.spinics.net/lists/devicetree-compiler/msg02709.html
