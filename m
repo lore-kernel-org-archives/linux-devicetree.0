@@ -1,7 +1,7 @@
 From: Michael Drake <michael.drake@codethink.co.uk>
-Subject: [PATCH v1 07/11] ti948: Add sysfs node for alive attribute
-Date: Tue, 11 Jun 2019 15:04:08 +0100
-Message-ID: <20190611140412.32151-8-michael.drake@codethink.co.uk>
+Subject: [PATCH v1 06/11] ti948: Reconfigure in the alive check when device returns
+Date: Tue, 11 Jun 2019 15:04:07 +0100
+Message-ID: <20190611140412.32151-7-michael.drake@codethink.co.uk>
 References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,70 +12,74 @@ To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@idea
 Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
 List-Id: devicetree@vger.kernel.org
 
-This may be used by userspace to determine the state
-of the device.
+If the alive check detects a transition to the alive state,
+the device configuration is rewritten.
 
 Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
 Cc: Patrick Glaser <pglaser@tesla.com>
 Cc: Nate Case <ncase@tesla.com>
 ---
- drivers/gpu/drm/bridge/ti948.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/bridge/ti948.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/bridge/ti948.c b/drivers/gpu/drm/bridge/ti948.c
-index b5c766711c4b..b624eaeabb43 100644
+index 86daa3701b91..b5c766711c4b 100644
 --- a/drivers/gpu/drm/bridge/ti948.c
 +++ b/drivers/gpu/drm/bridge/ti948.c
-@@ -412,6 +412,16 @@ static void ti948_alive_check(struct work_struct *work)
- 	schedule_delayed_work(&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
- }
+@@ -132,6 +132,8 @@ struct ti948_reg_val {
+  * @reg_names:   Array of regulator names, or NULL.
+  * @regs:        Array of regulators, or NULL.
+  * @reg_count:   Number of entries in reg_names and regs arrays.
++ * @alive_check: Context for the alive checking work item.
++ * @alive:       Whether the device is alive or not (alive_check).
+  */
+ struct ti948_ctx {
+ 	struct i2c_client *i2c;
+@@ -141,6 +143,8 @@ struct ti948_ctx {
+ 	const char **reg_names;
+ 	struct regulator **regs;
+ 	size_t reg_count;
++	struct delayed_work alive_check;
++	bool alive;
+ };
  
-+static ssize_t alive_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct ti948_ctx *ti948 = ti948_ctx_from_dev(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", (unsigned int)ti948->alive);
-+}
-+
-+static DEVICE_ATTR_RO(alive);
-+
- static int ti948_pm_resume(struct device *dev)
- {
- 	struct ti948_ctx *ti948 = ti948_ctx_from_dev(dev);
-@@ -614,17 +624,31 @@ static int ti948_probe(struct i2c_client *client,
+ static bool ti948_readable_reg(struct device *dev, unsigned int reg)
+@@ -346,6 +350,8 @@ static int ti948_power_on(struct ti948_ctx *ti948)
+ 	if (ret != 0)
+ 		return ret;
  
- 	i2c_set_clientdata(client, ti948);
- 
-+	ret = device_create_file(&client->dev, &dev_attr_alive);
-+	if (ret) {
-+		dev_err(&client->dev, "Could not create alive attr\n");
-+		return ret;
-+	}
++	ti948->alive = true;
 +
- 	ret = ti948_pm_resume(&client->dev);
--	if (ret != 0)
--		return -EPROBE_DEFER;
-+	if (ret != 0) {
-+		ret = -EPROBE_DEFER;
-+		goto error;
-+	}
- 
- 	dev_info(&ti948->i2c->dev, "End probe (addr: %x)\n", ti948->i2c->addr);
+ 	msleep(500);
  
  	return 0;
-+
-+error:
-+	device_remove_file(&client->dev, &dev_attr_alive);
-+	return ret;
- }
+@@ -356,6 +362,8 @@ static int ti948_power_off(struct ti948_ctx *ti948)
+ 	int i;
+ 	int ret;
  
- static int ti948_remove(struct i2c_client *client)
++	ti948->alive = false;
++
+ 	for (i = ti948->reg_count; i > 0; i--) {
+ 		dev_info(&ti948->i2c->dev, "Disabling %s regulator\n",
+ 				ti948->reg_names[i - 1]);
+@@ -388,8 +396,17 @@ static void ti948_alive_check(struct work_struct *work)
  {
-+	device_remove_file(&client->dev, &dev_attr_alive);
-+
- 	return ti948_pm_suspend(&client->dev);
- }
+ 	struct delayed_work *dwork = to_delayed_work(work);
+ 	struct ti948_ctx *ti948 = delayed_work_to_ti948_ctx(dwork);
++	int ret = ti948_device_check(ti948);
  
+-	dev_info(&ti948->i2c->dev, "%s Alive check!\n", __func__);
++	if (ti948->alive == false && ret == 0) {
++		dev_info(&ti948->i2c->dev, "Device has come back to life!\n");
++		ti948_write_config_seq(ti948);
++		ti948->alive = true;
++
++	} else if (ti948->alive == true && ret != 0) {
++		dev_info(&ti948->i2c->dev, "Device has stopped responding\n");
++		ti948->alive = false;
++	}
+ 
+ 	/* Reschedule ourself for the next check. */
+ 	schedule_delayed_work(&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
 -- 
 2.20.1
