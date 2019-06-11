@@ -1,40 +1,21 @@
-From: Ley Foon Tan <lftan.linux@gmail.com>
-Subject: Re: [PATCH] PCI: altera: Allow building as module
-Date: Tue, 11 Jun 2019 15:22:27 +0800
-Message-ID: <CAFiDJ5_e_iuLPUFnwPo+Sq0C9N_OgFmafJ7dCKZE-7hUC=q1YA@mail.gmail.com>
-References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com> <20190604131848.GA40122@google.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 0/6] ARM: A couple of SoC license header fixes
+Date: Tue, 11 Jun 2019 09:29:15 +0200
+Message-ID: <20190611072921.2979446-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604131848.GA40122@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ley Foon Tan <ley.foon.tan@intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-kernel@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Patrice Chotard <patrice.chotard@st.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 9:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Apr 24, 2019 at 12:57:14PM +0800, Ley Foon Tan wrote:
-> > Altera PCIe Rootport IP is a soft IP and is only available after
-> > FPGA image is programmed.
-> >
-> > Make driver modulable to support use case FPGA image is programmed
-> > after kernel is booted. User proram FPGA image in kernel then only load
-> > PCIe driver module.
->
-> I'm not objecting to these patches, but help me understand how this
-> works.  The "usual" scenario is that if a driver is loaded before a
-> matching device is available, i.e., either the driver is built
-> statically or it is loaded before a device is hot-added, the event of
-> the device being available causes the driver's probe method to be
-> called.
->
-> This seems to be a more manual process of programming the FPGA which
-> results in a new "altera-pcie" platform device.  And then apparently
-> you need to load the appropriate module by hand?  Is there no
-> "hot-add" type of event for this platform device that automatically
-> looks for the driver?
-Yes, we need load module manually now.
+Hi,
 
-Regards
-Ley Foon
+There's one particular typo in the license header ("publishhed") that see=
+ms
+to have spread through the tree by copy-pasting. This patch set fixes the
+occurences within mach-*/ and dts/ by replacing the header with a SPDX
+identifier.
+
+Lubo
