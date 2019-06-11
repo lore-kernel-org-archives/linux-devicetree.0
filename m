@@ -1,252 +1,122 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
-Date: Tue, 11 Jun 2019 13:07:58 -0700
-Message-ID: <CAGETcx9nP8OUV1qX43UwfeJV=95cKrHgCm7wjQ96KHouDKm-Mg@mail.gmail.com>
-References: <20190524010117.225219-1-saravanak@google.com> <20190524010117.225219-2-saravanak@google.com>
- <6f4ca588-106f-93d1-8579-9e8d32c8031d@gmail.com> <CAGETcx9zgMs5ne3jPa+6xR+EHR=+QuF7XfRb1gpenh-3ZQwV+w@mail.gmail.com>
- <b3a88f46-5c3b-0e33-e08f-e0d9b5df2864@gmail.com> <b272ae7b-dcc6-acda-78b2-92eace0b6978@gmail.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH v4 0/6] MSM8998 Multimedia Clock Controller
+Date: Tue, 11 Jun 2019 14:14:06 -0600
+Message-ID: <CAOCk7NpfG6bTj1E-_f+hXRJgiwe5V_w5Mdg2sYuRY9FHyGqEig@mail.gmail.com>
+References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
+ <933023a0-10fd-fedf-6715-381dae174ad9@codeaurora.org> <20190607203838.1361E208C3@mail.kernel.org>
+ <CAOCk7NrnnUzaXtnRvH0pHyHha4sTQDQCRoVPPatHfgVuEPZr0Q@mail.gmail.com> <20190607231841.D101120825@mail.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b272ae7b-dcc6-acda-78b2-92eace0b6978@gmail.com>
+In-Reply-To: <20190607231841.D101120825@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>, David Brown <david.brown@linaro.org>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, linux-clk@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 7:51 AM Frank Rowand <frowand.list@gmail.com> wrote:
+On Fri, Jun 7, 2019 at 5:18 PM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> Hi Saravana,
+> Quoting Jeffrey Hugo (2019-06-07 14:31:13)
+> > On Fri, Jun 7, 2019 at 2:38 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Jeffrey Hugo (2019-05-21 07:52:28)
+> > > > On 5/21/2019 8:44 AM, Jeffrey Hugo wrote:
+> > > > > The multimedia clock controller (mmcc) is the main clock controller for
+> > > > > the multimedia subsystem and is required to enable things like display and
+> > > > > camera.
+> > > >
+> > > > Stephen, I think this series is good to go, and I have display/gpu stuff
+> > > > I'm polishing that will depend on this.  Would you kindly pickup patches
+> > > > 1, 3, 4, and 5 for 5.3?  I can work with Bjorn to pick up patches 2 and 6.
+> > > >
+> > >
+> > > If I apply patch 3 won't it break boot until patch 2 is also in the
+> > > tree? That seems to imply that I'll break bisection, and we have
+> > > kernelci boot testing clk-next so this will probably set off alarms
+> > > somewhere.
+> >
+> > Yes, it'll break boot.  Maybe you and Bjorn can make a deal?  (more below)
+> >
+> > Doesn't look like kernelci is running tests on 8998 anymore, so maybe
+> > no one will complain?  As far as I am aware, Marc, Lee, Bjorn, and I
+> > are the only ones whom care about 8998 presently, and I think we are
+> > all good with a temporary breakage in order to get this basic
+> > functionality in since the platform isn't really well supported yet.
 >
-> (I notice that I never seem to spell your name correctly.  Apologies for that,
-> both past and future).
-
-Thanks for noticing :) One trick that might help with remembering my
-name is that every other letter is an "a" :)
-
+> Ok.
 >
-> This email was never answered.
+> >
+> > >
+> > > I thought we had some code that got removed that was going to make the
+> > > transition "seamless" in the sense that it would search the tree for an
+> > > RPM clk controller and then not add the XO fixed factor clk somehow.
+> > > See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
+> > > clocks") for the code that we removed. So ideally we do something like
+> > > this too, but now we search for a property on the calling node to see if
+> > > the XO clk is there?
+> > >
+> >
+> > Trying to remember back a bit.
+> >
+> > I don't think its possible.  Maybe I'm wrong.  I didn't see a solution
+> > to the below:
+> >
+> > How does GCC know the following?
+> > -RPMCC is compiled in the build (I guess this can be assumed)
+>
+> This is the IS_ENABLED part.
 
-Yeah, because this patch wasn't central to the functionality. At worse
-case, I drop the patch and modules would still work. While waiting for
-responses for the other emails -- I was working on measuring the speed
-up.
-
-If I just took the clock bindings (in a final solution we'll have to
-look up clocks, resets, regulators, interrupts, etc) in a SDM845 and
-made them into device links, that resulted in ~500+ searches for
-devices by their nodes.
-
-Looking at all 500+ of the lookups:
-
-Total time:
-With patch, : 2 milliseconds
-Without patch: 12 milliseconds
-
-Worst case single look up:
-With patch: 39 microseconds
-Without patch: 250 microseconds
-
-Median of lookup times:
-With patch: 208 nanoseconds
-Without patch: 23 microseconds
-
-Even if I assume there are 1000 device nodes, the increase in memory
-from one additional pointer this patch adds is ~8KB.
-2GB is the low ball on the amount of memory available in a typical
-SDM845 device.
-Boot time to userspace on the device Iooked at is: 1149 ms
-So total boot time reduction is 0.8%
-Total memory increase is 0.00038%
-
-Once more device links are added I expect the boot time impact to be
-larger. I think a 1% reduction in boot time for 0.00038% increase in
-memory usage is a good trade off.
-
-That 1% faster boot time can also be approximated to 1% reduction in
-boot up power usage. That scaled to a million or billion devices
-that'll run an Android or some form of ARM Linux kernel is still a
-good chunk of energy savings for a small memory increase.
-
-I still stand by the usefulness of this patch, but this is not the
-hill I'm going to die on (so if dropping this patch is what it takes
-to get modules working, I'll drop it for now).
-
--Saravana
+Eh, this would assume that someone hasn't compiled RPCC out of tree,
+but this is probably me being pedantic.
 
 >
-> -Frank
+> > -RPMCC has probed
+> > -RPMCC is not and will not be providing XO
 >
+> Presumably if it's enabled then it will be providing XO at some point in
+> the future. I'm not suggesting the probe defer logic is removed, just
+> that we don't get into a state where clk tree has merged all the patches
+> for clk driver side and that then relies on DT to provide the clk but it
+> doesn't do that.
 >
-> On 5/24/19 5:12 PM, Frank Rowand wrote:
-> > On 5/24/19 11:21 AM, Saravana Kannan wrote:
-> >> On Fri, May 24, 2019 at 10:56 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>>
-> >>> Hi Sarvana,
-> >>>
-> >>> I'm not reviewing patches 1-5 in any detail, given my reply to patch 0.
-> >>>
-> >>> But I had already skimmed through this patch before I received the
-> >>> email for patch 0, so I want to make one generic comment below,
-> >>> to give some feedback as you continue thinking through possible
-> >>> implementations to solve the underlying problems.
-> >>
-> >> Appreciate the feedback Frank!
-> >>
-> >>>
-> >>>
-> >>> On 5/23/19 6:01 PM, Saravana Kannan wrote:
-> >>>> Add a pointer from device tree node to the device created from it.
-> >>>> This allows us to find the device corresponding to a device tree node
-> >>>> without having to loop through all the platform devices.
-> >>>>
-> >>>> However, fallback to looping through the platform devices to handle
-> >>>> any devices that might set their own of_node.
-> >>>>
-> >>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >>>> ---
-> >>>>  drivers/of/platform.c | 20 +++++++++++++++++++-
-> >>>>  include/linux/of.h    |  3 +++
-> >>>>  2 files changed, 22 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> >>>> index 04ad312fd85b..1115a8d80a33 100644
-> >>>> --- a/drivers/of/platform.c
-> >>>> +++ b/drivers/of/platform.c
-> >>>> @@ -42,6 +42,8 @@ static int of_dev_node_match(struct device *dev, void *data)
-> >>>>       return dev->of_node == data;
-> >>>>  }
-> >>>>
-> >>>> +static DEFINE_SPINLOCK(of_dev_lock);
-> >>>> +
-> >>>>  /**
-> >>>>   * of_find_device_by_node - Find the platform_device associated with a node
-> >>>>   * @np: Pointer to device tree node
-> >>>> @@ -55,7 +57,18 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
-> >>>>  {
-> >>>>       struct device *dev;
-> >>>>
-> >>>> -     dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
-> >>>> +     /*
-> >>>> +      * Spinlock needed to make sure np->dev doesn't get freed between NULL
-> >>>> +      * check inside and kref count increment inside get_device(). This is
-> >>>> +      * achieved by grabbing the spinlock before setting np->dev = NULL in
-> >>>> +      * of_platform_device_destroy().
-> >>>> +      */
-> >>>> +     spin_lock(&of_dev_lock);
-> >>>> +     dev = get_device(np->dev);
-> >>>> +     spin_unlock(&of_dev_lock);
-> >>>> +     if (!dev)
-> >>>> +             dev = bus_find_device(&platform_bus_type, NULL, np,
-> >>>> +                                   of_dev_node_match);
-> >>>>       return dev ? to_platform_device(dev) : NULL;
-> >>>>  }
-> >>>>  EXPORT_SYMBOL(of_find_device_by_node);
-> >>>> @@ -196,6 +209,7 @@ static struct platform_device *of_platform_device_create_pdata(
-> >>>>               platform_device_put(dev);
-> >>>>               goto err_clear_flag;
-> >>>>       }
-> >>>> +     np->dev = &dev->dev;
-> >>>>
-> >>>>       return dev;
-> >>>>
-> >>>> @@ -556,6 +570,10 @@ int of_platform_device_destroy(struct device *dev, void *data)
-> >>>>       if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
-> >>>>               device_for_each_child(dev, NULL, of_platform_device_destroy);
-> >>>>
-> >>>> +     /* Spinlock is needed for of_find_device_by_node() to work */
-> >>>> +     spin_lock(&of_dev_lock);
-> >>>> +     dev->of_node->dev = NULL;
-> >>>> +     spin_unlock(&of_dev_lock);
-> >>>>       of_node_clear_flag(dev->of_node, OF_POPULATED);
-> >>>>       of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
-> >>>>
-> >>>> diff --git a/include/linux/of.h b/include/linux/of.h
-> >>>> index 0cf857012f11..f2b4912cbca1 100644
-> >>>> --- a/include/linux/of.h
-> >>>> +++ b/include/linux/of.h
-> >>>> @@ -48,6 +48,8 @@ struct property {
-> >>>>  struct of_irq_controller;
-> >>>>  #endif
-> >>>>
-> >>>> +struct device;
-> >>>> +
-> >>>>  struct device_node {
-> >>>>       const char *name;
-> >>>>       phandle phandle;
-> >>>> @@ -68,6 +70,7 @@ struct device_node {
-> >>>>       unsigned int unique_id;
-> >>>>       struct of_irq_controller *irq_trans;
-> >>>>  #endif
-> >>>> +     struct device *dev;             /* Device created from this node */
-> >>>
-> >>> We have actively been working on shrinking the size of struct device_node,
-> >>> as part of reducing the devicetree memory usage.  As such, we need strong
-> >>> justification for adding anything to this struct.  For example, proof that
-> >>> there is a performance problem that can only be solved by increasing the
-> >>> memory usage.
-> >>
-> >> I didn't mean for people to focus on the deferred probe optimization.
-> >
-> > I was speaking specifically of the of_find_device_by_node() optimization.
-> > I did not chase any further back in the call chain to see how that would
-> > impact anything else.  My comments stand, whether this patch is meant
-> > to optimize deferred probe optimization or to optimize something else.
-> >
-> >
-> >> In reality that was just a added side benefit of this series. The main
-> >> problem to solve is that of suppliers having to know when all their
-> >> consumers are up and managing the resources actively, especially in a
-> >> system with loadable modules where we can't depend on the driver to
-> >> notify the supplier because the consumer driver module might not be
-> >> available or loaded until much later.
-> >>
-> >> Having said that, I'm not saying we should go around and waste space
-> >> willy-nilly. But, isn't the memory usage going to increase based on
-> >> the number of DT nodes present in DT? I'd think as the number of DT
-> >> nodes increase it's more likely for those devices have more memory? So
-> >> at least in this specific case I think adding the field is justified.
-> >
-> > Struct device_node is the nodes of the in kernel devicetree data.  This
-> > patch adds a field to every single node of the devicetree.
-> >
-> > The patch series is also adding a new property, of varying size, to
-> > some nodes.  This also results in additional memory usage by
-> > devicetree.
-> >
-> > Arguing that a more complex system is likely to have more memory is
-> > likely true, but beside the point.  Minimizing devicetree memory
-> > used on less complex systems is also one of our goals.
-> >
-> >
-> >> Also, right now the look up is O(n) complexity and if we are trying to
-> >> add device links to most of the devices, that whole process becomes
-> >> O(n^2). Having this field makes the look up a O(1) and the entire
-> >> linking process a O(n) process. I think the memory usage increase is
-> >> worth the efficiency improvement.
-> >
-> > Hand waving about O(n) and O(1) and O(n2) is not sufficient.  We require
-> > actual measurements that show O(n2) (when the existing algorithm is such)
-> > is a performance problem and that the proposed change to the algorithm
-> > results in a specific change in the performance.
-> >
-> > The devicetree maintainers have decided that memory use is important and
-> > to be minimized, and the burden of proof that performance is an issue
-> > lies on the submitter of a patch that improves performance at the cost
-> > of memory.
-> >
-> > Most devicetree boot time cpu overhead only affects the boot event.
-> > Added memory use persists for the entire booted lifetime of the system.
-> >
-> > That is not to say that we never increase memory use to improve boot
-> > performance.  We have done so when the measured performance issue and
-> > measured performance improvement justified the change.
-> >
-> >>
-> >> And if people are still strongly against it, we could make this a config option.
-> >>
-> >> -Saravana
-> >>
-> >
-> >
+> So the idea is to check if RPM is compiled in and also check the GCC DT
+> node for the clocks property having the xo clk there. Then we assume
+> that we have the clk patches in place for the RPM clk driver to provide
+> that clk and we skip inserting the fake clk that RPM is going to
+> provide.
+
+So, I thought about this, and I don't think it works.  This appears to be a
+solution for if RPM is not present.  If, in patch 3, I check for the clocks
+property in the gcc DT and don't see it, and I add the fake XO as a result,
+I'll end up with a namespace conflict with either GCC or RPMCC failing
+to register XO since both will attempt it.
+
+The issue is do we have RPM providing XO (ie patch 3) without a DT
+routing it to GCC (ie patch 2).  Since we have patch 3, we know RPM is
+going to provide XO.  We just might not have a handle to it to do the
+probe_defer logic.
+
+I think the solution is check the DT for the clocks property, if present use
+that to attempt to grab XO.  Otherwise, attempt to grab XO from the system
+map.  I'll try this in the next rev.
+
 >
+> This is also a "general" solution to GCC not depending on or selecting
+> the RPM clk driver. It may be better to just have a select statement in
+> GCC Kconfig so that we can't enable the GCC driver without also enabling
+> the RPM driver if it's an essential dependency to the clk tree working.
+> But if we do this design then we can make the clk tree keep working
+> regardless of RPM being there or not, which may be a good thing.
+>
+
+I'm not sure attempting to sidestep the RPM dependency is worthwhile.
+Its not just GCC, but every clock controller that depends on XO, and thus
+implicitly RPM.
+
+I suspect any real system is going to have to have the RPM, just by the
+nature of what the RPM controls that cannot be managed elsewhere,
+such as BIMC.  At some point, a system is going to want to ramp up the
+memory bus and DDR speeds to something more than the bare minimum.
+
+Putting in a bunch of code to try to avoid depending on the RPM seems
+like effort not well spent as its unlikely such code is going to be active.
