@@ -1,134 +1,50 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V3 3/4] clk: imx: Add support for i.MX8MN clock driver
-Date: Tue, 11 Jun 2019 02:06:22 +0000
-Message-ID: <DB3PR0402MB3916F7F7D7CA801F5C0D0610F5ED0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190604015928.23157-1-Anson.Huang@nxp.com>
- <20190604015928.23157-3-Anson.Huang@nxp.com>
- <20190606162543.EFFB820645@mail.kernel.org>
- <DB3PR0402MB391625A0B3D838CE88C53E33F5100@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190607180039.611C7208C0@mail.kernel.org>
- <DB3PR0402MB391678C245944942EA2A7F62F5110@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190610151425.D8139207E0@mail.kernel.org>
+From: Alex Elder <elder@ieee.org>
+Subject: Re: [PATCH v2 02/17] dt-bindings: soc: qcom: add IPA bindings
+Date: Mon, 10 Jun 2019 21:11:38 -0500
+Message-ID: <bcb7f599-3c22-da27-c92b-4c1903a5ea06@ieee.org>
+References: <20190531035348.7194-1-elder@linaro.org>
+ <20190531035348.7194-3-elder@linaro.org>
+ <CAL_JsqLFk3=YN+V=RVxq9xWQTrPA9_0zW+eFrdXkGkCnM_sBkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190610151425.D8139207E0@mail.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLFk3=YN+V=RVxq9xWQTrPA9_0zW+eFrdXkGkCnM_sBkA@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@kernel.org>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "festevam@gmail.com" <festevam@gmail.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, mturq
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stephen
-
-> -----Original Message-----
-> From: Stephen Boyd <sboyd@kernel.org>
-> Sent: Monday, June 10, 2019 11:14 PM
-> To: bjorn.andersson@linaro.org; catalin.marinas@arm.com;
-> devicetree@vger.kernel.org; dinguyen@kernel.org;
-> enric.balletbo@collabora.com; festevam@gmail.com;
-> horms+renesas@verge.net.au; jagan@amarulasolutions.com;
-> kernel@pengutronix.de; l.stach@pengutronix.de; linux-arm-
-> kernel@lists.infradead.org; linux-clk@vger.kernel.org; linux-
-> kernel@vger.kernel.org; mark.rutland@arm.com;
-> maxime.ripard@bootlin.com; mturquette@baylibre.com; olof@lixom.net;
-> robh+dt@kernel.org; s.hauer@pengutronix .de <s.hauer@pengutronix.de>;
-> shawnguo@kernel.org; will.deacon@arm.com; Abel Vesa
-> <abel.vesa@nxp.com>; Aisheng Dong <aisheng.dong@nxp.com>; Anson
-> Huang <anson.huang@nxp.com>; Jacky Bai <ping.bai@nxp.com>; Leonard
-> Crestez <leonard.crestez@nxp.com>
-> Cc: dl-linux-imx <linux-imx@nxp.com>
-> Subject: RE: [PATCH V3 3/4] clk: imx: Add support for i.MX8MN clock driver
+On 6/10/19 5:08 PM, Rob Herring wrote:
+> On Thu, May 30, 2019 at 9:53 PM Alex Elder <elder@linaro.org> wrote:
+>>
+>> Add the binding definitions for the "qcom,ipa" device tree node.
+>>
+>> Signed-off-by: Alex Elder <elder@linaro.org>
+>> ---
+>>  .../devicetree/bindings/net/qcom,ipa.yaml     | 180 ++++++++++++++++++
+>>  1 file changed, 180 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+>> new file mode 100644
+>> index 000000000000..0037fc278a61
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+>> @@ -0,0 +1,180 @@
+>> +# SPDX-License-Identifier: GPL-2.0
 > 
-> Quoting Anson Huang (2019-06-08 02:58:18)
-> > Hi, Stephen
-> >
-> > > -----Original Message-----
-> > > From: Stephen Boyd <sboyd@kernel.org>
-> > > Sent: Saturday, June 8, 2019 2:01 AM
-> > > To: bjorn.andersson@linaro.org; catalin.marinas@arm.com;
-> > > devicetree@vger.kernel.org; dinguyen@kernel.org;
-> > > enric.balletbo@collabora.com; festevam@gmail.com;
-> > > horms+renesas@verge.net.au; jagan@amarulasolutions.com;
-> > > kernel@pengutronix.de; l.stach@pengutronix.de; linux-arm-
-> > > kernel@lists.infradead.org; linux-clk@vger.kernel.org; linux-
-> > > kernel@vger.kernel.org; mark.rutland@arm.com;
-> > > maxime.ripard@bootlin.com; mturquette@baylibre.com; olof@lixom.net;
-> > > robh+dt@kernel.org; s.hauer@pengutronix .de
-> > > robh+<s.hauer@pengutronix.de>;
-> > > shawnguo@kernel.org; will.deacon@arm.com; Abel Vesa
-> > > <abel.vesa@nxp.com>; Aisheng Dong <aisheng.dong@nxp.com>; Anson
-> > > Huang <anson.huang@nxp.com>; Jacky Bai <ping.bai@nxp.com>;
-> Leonard
-> > > Crestez <leonard.crestez@nxp.com>
-> > > Cc: dl-linux-imx <linux-imx@nxp.com>
-> > > Subject: RE: [PATCH V3 3/4] clk: imx: Add support for i.MX8MN clock
-> > > driver
-> > >
-> > > Quoting Anson Huang (2019-06-06 17:50:28)
-> > > >
-> > > > I will use devm_platform_ioremap_resource() instead of ioremap(),
-> > > > and can you be more specific about devmified clk registration?
-> > > >
-> > >
-> > > I mean using things like devm_clk_hw_register().
-> >
-> > Sorry, I am still a little confused, all the clock
-> > register(clk_register()) are via each different clock types like
-> > imx_clk_gate4/imx_clk_pll14xx, if using clk_hw_register, means we need
-> > to re-write the clock driver using different clk register method, that
-> > will make the driver completely different from i.mx8mq/i.mx8mm, they
-> > are actually same series of SoC as i.mx8mn, it will introduce many
-> confusion, is my understanding correct? And is it OK to just keep what it is
-> and make them all aligned?
-> >
+> New bindings are preferred to be dual GPL-2.0 and BSD-2-Clause. But
+> that's really a decision for the submitter.
+
+Thanks Rob.  I'll ask Qualcomm if there's any problem
+with doing that; I presume not.  If I re-submit this
+with dual copyright, I will include your Reviewed-by
+despite the change, OK?
+
+					-Alex
+
 > 
-> Ok, the problem I'm trying to point out is that clk registrations need to be
-> undone, i.e. clk_unregister() needs to be called, when the driver fails to
-> probe. devm_*() is one way to do this, but if you have other ways of
-> removing all the registered clks then that works too. Makes sense?
-
-Yes, it makes sense. Do you think it is OK to add an imx_unregister_clocks() API, then
-call it in every place of returning failure in .probe function? If yes, I will add it and also
-fix it in i.MX8MQ driver which uses platform driver model but does NOT handle this case. 
-
-        base = devm_platform_ioremap_resource(pdev, 0);
--       if (WARN_ON(IS_ERR(base)))
--               return PTR_ERR(base);
-+       if (WARN_ON(IS_ERR(base))) {
-+               ret = PTR_ERR(base);
-+               goto unregister_clks;
-+       }
-
-                pr_err("failed to register clks for i.MX8MN\n");
--               return -EINVAL;
-+               goto unregister_clks;
-        }
-
-        return 0;
-+
-+unregister_clks:
-+       imx_unregister_clocks(clks, ARRAY_SIZE(clks));
-+
-+       return ret;
-
-+void imx_unregister_clocks(struct clk *clks[], unsigned int count)
-+{
-+       unsigned i;
-+
-+       for (i = 0; i < count; i++)
-+               clk_unregister(clks[i]);
-+}
-+
-
-Thanks,
-Anson.
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
