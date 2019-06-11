@@ -1,63 +1,56 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pwm-backlight: Add 'max-brightness'
- property
-Date: Tue, 11 Jun 2019 15:11:47 -0700
-Message-ID: <20190611221147.GG137143@google.com>
-References: <20190610233739.29477-1-mka@chromium.org>
- <00220cd7-ed4b-5250-d448-cf83ed4c2012@gmail.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH v6 4/6] dt-bindings: display:
+ hdmi-connector: Support DDC bus enable
+Date: Wed, 12 Jun 2019 00:25:39 +0200
+Message-ID: <20190611222539.msviqrbptjd5vdji@core.my.home>
+References: <20190527162237.18495-1-megous@megous.com>
+ <20190527162237.18495-5-megous@megous.com>
+ <20190611215206.GA17759@bogus>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBZGUQDUAKGQEDEM2QLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <00220cd7-ed4b-5250-d448-cf83ed4c2012@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>
+In-Reply-To: <20190611215206.GA17759@bogus>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
-
-On Tue, Jun 11, 2019 at 10:02:23PM +0200, Jacek Anaszewski wrote:
-> Hi Matthias,
-> 
-> On 6/11/19 1:37 AM, Matthias Kaehlcke wrote:
-> > Add an optional 'max-brightness' property, which is used to specify
-> > the number of brightness levels (max-brightness + 1) when the node
-> > has no 'brightness-levels' table.
+On Tue, Jun 11, 2019 at 03:52:06PM -0600, Rob Herring wrote:
+> On Mon, 27 May 2019 18:22:35 +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 > > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
+> > on-board voltage shifting logic for the DDC bus using a gpio to be able
+> > to access DDC bus. Use ddc-en-gpios property on the hdmi-connector to
+> > model this.
+> > 
+> > Add binding documentation for optional ddc-en-gpios property.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 > > ---
-> >   .../devicetree/bindings/leds/backlight/pwm-backlight.txt       | 3 +++
-> >   1 file changed, 3 insertions(+)
+> >  .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
+> >  1 file changed, 1 insertion(+)
 > > 
-> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > index 64fa2fbd98c9..98f4ba626054 100644
-> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > @@ -27,6 +27,9 @@ Optional properties:
-> >                               resolution pwm duty cycle can be used without
-> >                               having to list out every possible value in the
-> >                               brightness-level array.
-> > +  - max-brightness: Maximum brightness value. Used to specify the number of
-> > +                    brightness levels (max-brightness + 1) when the node
-> > +                    has no 'brightness-levels' table.
 > 
-> In the LED subsystem we have led-max-microamp property which seems to
-> better describe hardware capabilities. It says just: this is the current
-> level the LED can withstand. max-brightness does not implicitly convey
-> this kind of information.
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
 > 
-> Why the need for the property at all? If for the reasons other than
-> hardware capabilities than it should be more likely handled
-> by userspace.
+> If a tag was not added on purpose, please state why and what changed.
 
-The driver needs to know how many brightness levels to expose to
-userspace. It currently uses a heuristic for that which is broken:
+Sorry, it was some mistake. Thanks for the note.
 
-https://elixir.bootlin.com/linux/v5.1.9/source/drivers/video/backlight/pwm_bl.c#L234
-https://lore.kernel.org/patchwork/patch/1086777/#1282610
+regards,
+	Ondrej
 
-In any case it seems the discussion is going into the direction of
-fixing the heuristic (apparently using the period as an indicator of
-the PWM resolution has more merit than I was initially aware of), if
-that moves forward the property wouldn't be needed.
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
