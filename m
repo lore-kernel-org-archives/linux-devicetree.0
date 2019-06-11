@@ -1,42 +1,142 @@
-Return-Path: <SRS0=t56K=UC=nxp.com=leonard.crestez@kernel.org>
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH V2 2/3] clk: imx: Add support for i.MX8MN clock driver
-Date: Mon, 3 Jun 2019 08:45:16 +0000
-Message-ID: 
- <VI1PR04MB5055D6EB38E84E370E881425EE140@VI1PR04MB5055.eurprd04.prod.outlook.com>
-References: <20190603013503.40626-1-Anson.Huang@nxp.com>
- <20190603013503.40626-2-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=XYop=UK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38211 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389043AbfFKMvI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Jun 2019 08:51:08 -0400
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v4 07/10] media: hantro: allow arbitrary number of clocks
+Date: Tue, 11 Jun 2019 14:50:55 +0200
+Message-Id: <20190611125058.13470-8-p.zabel@pengutronix.de>
+In-Reply-To: <20190611125058.13470-1-p.zabel@pengutronix.de>
+References: <20190611125058.13470-1-p.zabel@pengutronix.de>
 MIME-Version: 1.0
-To: Anson Huang <anson.huang@nxp.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "olof@lixom.net" <olof@lixom.net>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, Aisheng Dong <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-On 6/3/2019 4:33 AM, Anson.Huang@nxp.com wrote:=0A=
-> From: Anson Huang <Anson.Huang@nxp.com>=0A=
-> =0A=
-> This patch adds i.MX8MN clock driver support. =0A=
-=0A=
-> +#include "clk.h"=0A=
-> +=0A=
-> +#define PLL_1416X_RATE(_rate, _m, _p, _s)		\=0A=
-> +	{						\=0A=
-> +		.rate	=3D	(_rate),		\=0A=
-> +		.mdiv	=3D	(_m),			\=0A=
-> +		.pdiv	=3D	(_p),			\=0A=
-> +		.sdiv	=3D	(_s),			\=0A=
-> +	}=0A=
-> +=0A=
-> +#define PLL_1443X_RATE(_rate, _m, _p, _s, _k)		\=0A=
-> +	{						\=0A=
-> +		.rate	=3D	(_rate),		\=0A=
-> +		.mdiv	=3D	(_m),			\=0A=
-> +		.pdiv	=3D	(_p),			\=0A=
-> +		.sdiv	=3D	(_s),			\=0A=
-> +		.kdiv	=3D	(_k),			\=0A=
-> +	}=0A=
-=0A=
-These macros are shared with clk-imx8mm (and perhaps some future chips) =0A=
-so they should be moved to driver/clk/imx/clk.h=0A=
+Dynamically allocate clocks and move clock names out of struct
+hantro_variant. This lifts the four clock limit and allows to use
+ARRAY_SIZE() to fill .num_clocks to reduce the risk of mismatches.
+
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+---
+Changed since v3:
+ - Moved before adding i.MX8M support.
+---
+ drivers/staging/media/hantro/hantro.h        |  6 ++----
+ drivers/staging/media/hantro/hantro_drv.c    |  5 +++++
+ drivers/staging/media/hantro/rk3288_vpu_hw.c |  8 ++++++--
+ drivers/staging/media/hantro/rk3399_vpu_hw.c | 12 ++++++++----
+ 4 files changed, 21 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
+index 5c2f87272ce2..62dcca9ff19c 100644
+--- a/drivers/staging/media/hantro/hantro.h
++++ b/drivers/staging/media/hantro/hantro.h
+@@ -25,8 +25,6 @@
+ 
+ #include "hantro_hw.h"
+ 
+-#define HANTRO_MAX_CLOCKS		4
+-
+ #define MPEG2_MB_DIM			16
+ #define MPEG2_MB_WIDTH(w)		DIV_ROUND_UP(w, MPEG2_MB_DIM)
+ #define MPEG2_MB_HEIGHT(h)		DIV_ROUND_UP(h, MPEG2_MB_DIM)
+@@ -88,7 +86,7 @@ struct hantro_variant {
+ 	int (*runtime_resume)(struct hantro_dev *vpu);
+ 	const struct hantro_irq *irqs;
+ 	int num_irqs;
+-	const char *clk_names[HANTRO_MAX_CLOCKS];
++	const char * const *clk_names;
+ 	int num_clocks;
+ 	const char * const *reg_names;
+ 	int num_regs;
+@@ -182,7 +180,7 @@ struct hantro_dev {
+ 	struct hantro_func *decoder;
+ 	struct platform_device *pdev;
+ 	struct device *dev;
+-	struct clk_bulk_data clocks[HANTRO_MAX_CLOCKS];
++	struct clk_bulk_data *clocks;
+ 	void __iomem **reg_bases;
+ 	void __iomem *enc_base;
+ 	void __iomem *dec_base;
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index fa933960687d..d1f061dd8ede 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -688,6 +688,11 @@ static int hantro_probe(struct platform_device *pdev)
+ 
+ 	INIT_DELAYED_WORK(&vpu->watchdog_work, hantro_watchdog);
+ 
++	vpu->clocks = devm_kcalloc(&pdev->dev, vpu->variant->num_clocks,
++				   sizeof(*vpu->clocks), GFP_KERNEL);
++	if (!vpu->clocks)
++		return -ENOMEM;
++
+ 	for (i = 0; i < vpu->variant->num_clocks; i++)
+ 		vpu->clocks[i].id = vpu->variant->clk_names[i];
+ 	ret = devm_clk_bulk_get(&pdev->dev, vpu->variant->num_clocks,
+diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c b/drivers/staging/media/hantro/rk3288_vpu_hw.c
+index c5473bc1ac29..bcacc4f51093 100644
+--- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
++++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
+@@ -166,6 +166,10 @@ static const struct hantro_irq rk3288_irqs[] = {
+ 	{ "vdpu", rk3288_vdpu_irq },
+ };
+ 
++static const char * const rk3288_clk_names[] = {
++	"aclk", "hclk"
++};
++
+ const struct hantro_variant rk3288_vpu_variant = {
+ 	.enc_offset = 0x0,
+ 	.enc_fmts = rk3288_vpu_enc_fmts,
+@@ -178,6 +182,6 @@ const struct hantro_variant rk3288_vpu_variant = {
+ 	.irqs = rk3288_irqs,
+ 	.num_irqs = ARRAY_SIZE(rk3288_irqs),
+ 	.init = rk3288_vpu_hw_init,
+-	.clk_names = {"aclk", "hclk"},
+-	.num_clocks = 2
++	.clk_names = rk3288_clk_names,
++	.num_clocks = ARRAY_SIZE(rk3288_clk_names)
+ };
+diff --git a/drivers/staging/media/hantro/rk3399_vpu_hw.c b/drivers/staging/media/hantro/rk3399_vpu_hw.c
+index fc52bedf3665..f8400e49bc50 100644
+--- a/drivers/staging/media/hantro/rk3399_vpu_hw.c
++++ b/drivers/staging/media/hantro/rk3399_vpu_hw.c
+@@ -165,6 +165,10 @@ static const struct hantro_irq rk3399_irqs[] = {
+ 	{ "vdpu", rk3399_vdpu_irq },
+ };
+ 
++static const char * const rk3399_clk_names[] = {
++	"aclk", "hclk"
++};
++
+ const struct hantro_variant rk3399_vpu_variant = {
+ 	.enc_offset = 0x0,
+ 	.enc_fmts = rk3399_vpu_enc_fmts,
+@@ -177,8 +181,8 @@ const struct hantro_variant rk3399_vpu_variant = {
+ 	.irqs = rk3399_irqs,
+ 	.num_irqs = ARRAY_SIZE(rk3399_irqs),
+ 	.init = rk3399_vpu_hw_init,
+-	.clk_names = {"aclk", "hclk"},
+-	.num_clocks = 2
++	.clk_names = rk3399_clk_names,
++	.num_clocks = ARRAY_SIZE(rk3399_clk_names)
+ };
+ 
+ static const struct hantro_irq rk3328_irqs[] = {
+@@ -194,6 +198,6 @@ const struct hantro_variant rk3328_vpu_variant = {
+ 	.irqs = rk3328_irqs,
+ 	.num_irqs = ARRAY_SIZE(rk3328_irqs),
+ 	.init = rk3399_vpu_hw_init,
+-	.clk_names = {"aclk", "hclk"},
+-	.num_clocks = 2
++	.clk_names = rk3399_clk_names,
++	.num_clocks = ARRAY_SIZE(rk3399_clk_names),
+ };
+-- 
+2.20.1
