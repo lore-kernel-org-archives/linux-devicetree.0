@@ -1,7 +1,7 @@
 From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2 Host
-Date: Tue, 11 Jun 2019 21:20:50 +0200
-Message-ID: <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
+Subject: [v4 4/6] dt-bindings: phy: Document the Synopsys MIPI DPHY Rx bindings
+Date: Tue, 11 Jun 2019 21:20:53 +0200
+Message-ID: <1560280855-18085-5-git-send-email-luis.oliveira@synopsys.com>
 References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
@@ -10,68 +10,56 @@ To: mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonatha
 Cc: Joao.Pinto@synopsys.com, Luis Oliveira <Luis.Oliveira@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Luis Oliveira <lolivei@synopsys.com>
+Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
+RX mode.
 
-Add bindings for Synopsys DesignWare MIPI CSI-2 host.
-
-Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
 ---
 Changelog
 v3-v4
-- remove "plat" from the block name @rob @laurent
-- remove "phy-names" when single-entry @rob
-- remove "snps,output-type" -> went to the driver config @laurent
+- @Laurent I know I told you I could remove the snps,dphy-frequency on V3 but
+  it is really useful for me here. I removed all other the proprietary
+  properties except this one. Do you still think it must be removed?
+- Frequency units @Rob
 
- .../devicetree/bindings/media/snps,dw-csi.txt      | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/snps,dw-csi.txt
+ .../devicetree/bindings/phy/snps,dw-dphy-rx.txt    | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt
 
-diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi.txt b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
+diff --git a/Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt b/Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt
 new file mode 100644
-index 0000000..613b7f9
+index 0000000..50603e6
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
-@@ -0,0 +1,41 @@
-+Synopsys DesignWare CSI-2 Host controller
++++ b/Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt
+@@ -0,0 +1,29 @@
++Synopsys DesignWare MIPI Rx D-PHY block details
 +
 +Description
 +-----------
 +
-+This HW block is used to receive image coming from an MIPI CSI-2 compatible
-+camera.
++The Synopsys MIPI D-PHY controller supports MIPI-DPHY in receiver mode.
++Please refer to phy-bindings.txt for more information.
 +
 +Required properties:
-+- compatible		: shall be "snps,dw-csi"
-+- reg			: physical base address and size of the device memory
-+			  mapped registers;
-+- interrupts		: DW CSI-2 Host interrupts
-+- phys			: List of one PHY specifier (as defined in
-+			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
-+			  This PHY is a MIPI DPHY working in RX mode.
-+- resets		: Reference to a reset controller (optional)
-+
-+The per-board settings:
-+ - port sub-node describing a single endpoint connected to the camera as
-+   described in video-interfaces.txt[1].
++- compatible		: Shall be "snps,dw-dphy-rx".
++- #phy-cells		: Must be 1.
++- bus-width		: Size of the test interface data bus (8 bits->8 or
++			  12bits->12).
++- snps,dphy-frequency	: Frequency at which D-PHY should start, configurable.
++			  Check Synopsys databook. (-kHz)
++- reg			: Test interface register. This correspondes to the
++			  physical base address of the controller and size of
++			  the device memory mapped registers; Check Synopsys
++			  databook.
 +
 +Example:
 +
-+	csi2: csi2@3000 {
-+		compatible = "snps,dw-csi";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = < 0x03000 0x7FF>;
-+		phys = <&mipi_dphy_rx>;
-+		resets = <&dw_rst 1>;
-+		interrupts = <2>;
-+
-+		port@0 {
-+			reg = <0>;
-+			csi_ep1: endpoint {
-+				remote-endpoint = <&camera_1>;
-+				data-lanes = <1 2>;
-+			};
-+		};
++	mipi_dphy_rx1: dphy@d00003040 {
++		compatible = "snps,dw-dphy-rx";
++		#phy-cells = <1>;
++		bus-width = <12>;
++		snps,dphy-frequency = <300000>;
++		reg = <0xd0003040 0x20>;
 +	};
 -- 
 2.7.4
