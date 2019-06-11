@@ -1,54 +1,61 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v1 3/3] dt-bindings: iio: afe: Add hwmon example
-Date: Tue, 11 Jun 2019 11:14:10 +0000
-Message-ID: <89820e72-dcdc-67a8-b83d-5657d66d910a@axentia.se>
-References: <20190611095659.29845-1-mylene.josserand@bootlin.com>
- <20190611095659.29845-4-mylene.josserand@bootlin.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 0/3] meson-gpio-irqc: Add support for the Meson-G12A
+ SoC
+Date: Tue, 11 Jun 2019 12:20:23 +0100
+Message-ID: <07bd74d6-0e6b-324e-20cf-00db54166b56@arm.com>
+References: <20190608190411.14018-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611095659.29845-4-mylene.josserand@bootlin.com>
+In-Reply-To: <20190608190411.14018-1-martin.blumenstingl@googlemail.com>
 Content-Language: en-US
-Content-ID: <3AC28FDEAA023744A835DD7666AA2CD5@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?TXlsw6huZSBKb3NzZXJhbmQ=?= <mylene.josserand@bootlin.com>, "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOS0wNi0xMSAxMTo1NiwgTXlsw6huZSBKb3NzZXJhbmQgd3JvdGU6DQo+IFdpdGggdGhl
-IHN1cHBvcnQgb2YgQ0hBTl9JTkZPX1BST0NFU1NFRCBpbiB2b2x0YWdlLWRpdmlkZXIsDQo+IGl0
-IGlzIHBvc3NpYmxlIHRvIHJlYWQgdGhlIHByb2Nlc3NlZCB2YWx1ZXMgZGlyZWN0bHkgZnJvbSBp
-aW8ncw0KPiBzeXNmcyBlbnRyaWVzIG9yIGJ5IHVzaW5nIGlpby1od21vbi4gQWRkIGFuIGV4YW1w
-bGUgZm9yIHRoaXMgbGFzdA0KPiB1c2UgY2FzZS4NCg0KQXMgSSB3cm90ZSBpbiByZXNwb25zZSB0
-byB0aGUgY292ZXIgbGV0dGVyLCBJIHRoaW5rIGlpby1od21vbg0KY291bGQgImNvbnN1bWUiIHZv
-bHRhZ2UgZGl2aWRlcnMganVzdCBmaW5lIGJlZm9yZSBhZGRpbmcgdGhlDQpwcm9jZXNzZWQgY2hh
-bm5lbCwgYW5kIHdoaWxlIG1vcmUgZXhhbXBsZXMgbWlnaHQgYmUgZ29vZCwNCnRoZXJlIGlzIHJl
-YWxseSBubyBzcGVjaWZpYyByZWxhdGlvbiBiZXR3ZWVuIGlpby1od21vbiBhbmQNCnZvbHRhZ2Ug
-ZGl2aWRlcnMuIEFkZGluZyBpaW8taHdtb24gZXhhbXBsZXMgdG8gZWFjaCBhbmQgZXZlcnkNCmlp
-byBiaW5kaW5nIHNlZW1zIHBvaW50bGVzcy4gU28sIEkgc2VlIGxpdHRsZSByZWFzb24gdG8gYWRk
-DQpzdWNoIGV4YW1wbGVzIGhlcmUuDQoNCkJ1dCBpZiBldmVyeW9uZSBlbHNlIHdhbnRzIGl0LCBk
-b24ndCBsZXQgbWUgc3RhbmQgaW4gdGhlIHdheS4uLg0KDQpDaGVlcnMsDQpQZXRlcg0KDQo+IFNp
-Z25lZC1vZmYtYnk6IE15bMOobmUgSm9zc2VyYW5kIDxteWxlbmUuam9zc2VyYW5kQGJvb3RsaW4u
-Y29tPg0KPiAtLS0NCj4gIC4uLi9iaW5kaW5ncy9paW8vYWZlL3ZvbHRhZ2UtZGl2aWRlci50eHQg
-ICAgICAgICAgIHwgMjQgKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQs
-IDI0IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvaWlvL2FmZS92b2x0YWdlLWRpdmlkZXIudHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZmUvdm9sdGFnZS1kaXZpZGVyLnR4dA0KPiBpbmRl
-eCBiNDUyYTg0MDYxMDcuLmY3ZTFjN2NiMjc0NCAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZmUvdm9sdGFnZS1kaXZpZGVyLnR4dA0KPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FmZS92b2x0YWdlLWRpdmlk
-ZXIudHh0DQo+IEBAIC01MSwzICs1MSwyNyBAQCBzeXN2IHsNCj4gIAkJc3BpLW1heC1mcmVxdWVu
-Y3kgPSA8MTAwMDAwMD47DQo+ICAJfTsNCj4gIH07DQo+ICsNCj4gK0l0IGlzIGFsc28gcG9zc2li
-bGUgdG8gcmV0cmlldmUgdGhlIHByb2Nlc3NlZCB2YWx1ZXMgdXNpbmcgaHdtb24gbm9kZToNCj4g
-Kw0KPiArZGl2MDogZGl2MCB7DQo+ICsJY29tcGF0aWJsZSA9ICJ2b2x0YWdlLWRpdmlkZXIiOw0K
-PiArCWlvLWNoYW5uZWxzID0gPCZhZGMwIDA+OyAvKiBDaGFubmVsIDAgb2YgdGhlIEFEQyAqLw0K
-PiArCW91dHB1dC1vaG1zID0gPDQ3PjsgLyogUjIgKi8NCj4gKwlmdWxsLW9obXMgPSA8NzM+OyAv
-KiBSMSAoMjYpICsgUjIgKDQ3KSAqLw0KPiArCSNpby1jaGFubmVsLWNlbGxzID0gPDE+Ow0KPiAr
-fTsNCj4gKw0KPiArZGl2MTogZGl2MSB7DQo+ICsJY29tcGF0aWJsZSA9ICJ2b2x0YWdlLWRpdmlk
-ZXIiOw0KPiArCWlvLWNoYW5uZWxzID0gPCZhZGMwIDE+OyAvKiBDaGFubmVsIDEgb2YgdGhlIEFE
-QyAqLw0KPiArCW91dHB1dC1vaG1zID0gPDQ3PjsgLyogUjIgKi8NCj4gKwlmdWxsLW9obXMgPSA8
-MTE1PjsgLyogUjEgKDY4KSArIFIyICg0NykgKi8NCj4gKwkjaW8tY2hhbm5lbC1jZWxscyA9IDwx
-PjsNCj4gK307DQo+ICsNCj4gK2lpby1od21vbiB7DQo+ICsJY29tcGF0aWJsZSA9ICJpaW8taHdt
-b24iOw0KPiArCWlvLWNoYW5uZWxzID0gPCZkaXYwIDA+LCA8JmRpdjEgMD47DQo+ICsJaW8tY2hh
-bm5lbC1uYW1lcyA9ICIzdjMiLCAidXNiIjsNCj4gK307DQo+IA0KDQo=
+On 08/06/2019 20:04, Martin Blumenstingl wrote:
+> This series adds GPIO interrupt controller support for Meson-G12A SoCs.
+> Although the total number of pins is the same as the Meson-AXG SoC, the
+> GPIO banks and IRQ numbers are different. Add a new compatible string
+> to avoid confusion when using it.
+> 
+> I am re-sending this update because v2 looked good in my opinion (Xingyu
+> Chen did good work here) but it never made it into mainline.
+> 
+> 
+> Changes since v1 at [1]:
+> - share the device data with Meson-AXG
+> 
+> Changes since v2 at [2]:
+> - dropped "Change-Id" from patch #2
+> - added .dts patch #3 - this should go through Kevin's linux-amlogic
+>   tree. if required I can re-send it in a separate series
+> 
+> 
+> [1] https://lore.kernel.org/lkml/20181203061324.36248-1-xingyu.chen@amlogic.com
+> [2] https://lore.kernel.org/patchwork/cover/1021232/
+> 
+> 
+> Martin Blumenstingl (1):
+>   arm64: dts: meson: g12a: add the GPIO interrupt controller
+> 
+> Xingyu Chen (2):
+>   dt-bindings: interrupt-controller: New binding for Meson-G12A SoC
+>   irqchip/meson-gpio: Add support for Meson-G12A SoC
+> 
+>  .../interrupt-controller/amlogic,meson-gpio-intc.txt     | 1 +
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi              | 9 +++++++++
+>  drivers/irqchip/irq-meson-gpio.c                         | 1 +
+>  3 files changed, 11 insertions(+)
+> 
+
+I've taken patches 1 and 2 into the irqchip tree. Please route patch 3
+though armsoc.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
