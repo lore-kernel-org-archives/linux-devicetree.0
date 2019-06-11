@@ -1,74 +1,218 @@
-From: Trent Piepho <tpiepho@impinj.com>
-Subject: Re: [PATCH 2/3] rtc: imx-sc: Make compatible string more generic
-Date: Tue, 11 Jun 2019 20:45:31 +0000
-Message-ID: <1560285930.2354.8.camel@impinj.com>
-References: <20190611063333.48501-1-Anson.Huang@nxp.com>
- <20190611063333.48501-2-Anson.Huang@nxp.com>
- <CAOMZO5BCuBKHs1jXkm3qFD84_xcB=0NSwE3SLJHx9kq4Stbd_A@mail.gmail.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
+Date: Tue, 11 Jun 2019 13:56:25 -0700
+Message-ID: <CAGETcx8M3YkUBZ-e2LLfrbWgnMKMMNG5cv=p8MMmBe7ZyPJ7xw@mail.gmail.com>
+References: <20190604003218.241354-1-saravanak@google.com> <20190604003218.241354-2-saravanak@google.com>
+ <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com> <570474f4-8749-50fd-5f72-36648ed44653@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5BCuBKHs1jXkm3qFD84_xcB=0NSwE3SLJHx9kq4Stbd_A@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <DC1328CED465FC4189CCE1BF075530CC@namprd06.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "festevam@gmail.com" <festevam@gmail.com>, "Anson.Huang@nxp.com" <Anson.Huang@nxp.com>
-Cc: "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Linux-imx@nxp.com" <Linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "peng.fan@nxp.com" <peng.fan@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <570474f4-8749-50fd-5f72-36648ed44653@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-06-11 at 17:32 -0300, Fabio Estevam wrote:
-> Hi Anson,
-> 
-> On Tue, Jun 11, 2019 at 3:31 AM <Anson.Huang@nxp.com> wrote:
-> > 
-> > From: Anson Huang <Anson.Huang@nxp.com>
-> > 
-> > i.MX system controller RTC driver can support all i.MX SoCs
-> > with system controller inside, this patch makes the compatible
-> > string more generic to support other i.MX SoCs with system
-> > controller inside, such as i.MX8QM etc..
-> > 
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> >  drivers/rtc/rtc-imx-sc.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
-> > index c933045..38ef3ca 100644
-> > --- a/drivers/rtc/rtc-imx-sc.c
-> > +++ b/drivers/rtc/rtc-imx-sc.c
-> > @@ -178,7 +178,7 @@ static int imx_sc_rtc_probe(struct
-> > platform_device *pdev)
-> >  }
-> > 
-> >  static const struct of_device_id imx_sc_dt_ids[] = {
-> > -       { .compatible = "fsl,imx8qxp-sc-rtc", },
-> > +       { .compatible = "fsl,imx-sc-rtc", },
-> 
-> What is wrong with the current compatible string?
-> 
-> If you want to support i.MX8QM just add in its dtsi:
-> 
-> compatible = "fsl,imx8qm-sc-rtc", "fsl,imx8qxp-sc-rtc"
-> 
-> and add a dt-bindings entry for "fsl,imx8qm-sc-rtc"
+On Tue, Jun 11, 2019 at 8:18 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> Hi Saravana,
+>
+> On 6/10/19 10:36 AM, Rob Herring wrote:
+> > Why are you resending this rather than replying to Frank's last
+> > comments on the original?
+>
+> Adding on a different aspect...  The independent replies from three different
+> maintainers (Rob, Mark, myself) pointed out architectural issues with the
+> patch series.  There were also some implementation issues brought out.
+> (Although I refrained from bringing up most of my implementation issues
+> as they are not relevant until architecture issues are resolved.)
 
-Yes, I thought this is (was?) the recommended practice for IP blocks in
-SoCs that don't have their own version (vs something like a Synopsis
-block used many places):
+Right, I'm not too worried about the implementation issues before we
+settle on the architectural issues. Those are easy to fix.
 
-* Use the first SoC to have the block as the base compatible for the
-block.
-* Always add the current SoC, in additional to the base, in the SoC's
-dts's list of compatibles.  Even if unneeded at the present.
-* The driver will list the base compatible in the match table, and will
-add new ones for specific socs if/when there is a need for it.
+Honestly, the main points that the maintainers raised are:
+1) This is a configuration property and not describing the device.
+Just use the implicit dependencies coming from existing bindings.
+
+I gave a bunch of reasons for why I think it isn't an OS configuration
+property. But even if that's not something the maintainers can agree
+to, I gave a concrete example (cyclic dependencies between clock
+provider hardware) where the implicit dependencies would prevent one
+of the devices from probing till the end of time. So even if the
+maintainers don't agree we should always look at "depends-on" to
+decide the dependencies, we still need some means to override the
+implicit dependencies where they don't match the real dependency. Can
+we use depends-on as an override when the implicit dependencies aren't
+correct?
+
+2) This doesn't need to be solved because this is just optimizing
+probing or saving power ("we should get rid of this auto disabling"):
+
+I explained why this patch series is not just about optimizing probe
+ordering or saving power. And why we can't ignore auto disabling
+(because it's more than just auto disabling). The kernel is currently
+broken when trying to use modules in ARM SoCs (probably in other
+systems/archs too, but I can't speak for those).
+
+3) Concerns about backwards compatibility
+
+I pointed out why the current scheme (depends-on being the only source
+of dependency) doesn't break compatibility. And if we go with
+"depends-on" as an override what we could do to keep backwards
+compatibility. Happy to hear more thoughts or discuss options.
+
+4) How the "sync_state" would work for a device that supplies multiple
+functionalities but a limited driver.
+
+I explained how it would work.
+
+> When three maintainers say the architecture has issues, you should step
+> back and think hard.  (Not to say maintainers are always correct...)
+
+Yes, the 3 maintainers brought up their concerns and I replied to
+explain my viewpoint on their concerns. So I'm waiting for a response
+from them before I proceed further. Even if the response is going to
+be "we still don't agree with this architecture", I'd prefer at least
+some direction on what the maintainers think is the right
+architecture. There are a million different ways to solve this. It's
+not reasonable to expect people submitting patches to shoot in the
+dark and hope it hits what the maintainers have in their mind as
+"acceptable solutions". I even proposed some alternatives. So, it'd be
+nice to hear the maintainers' thoughts on my responses, alternative
+designs or some alternate proposals.
+
+There's a real problem that needs to be solved. Just saying "I don't
+like this solution" without suggesting alternatives isn't a
+constructive way to improve the kernel.
+
+> My suggestion at this point is that you need to go back to the drawing board
+> and re-think how to address the use case.
+
+I'd be happy to and I've been thinking about other ways, but I'd like
+some direction from the maintainers before writing a lot of code
+that's just going to be completely rejected.
+
+To summarize the options:
+1) Use depends-on as the only source of dependency (this patch series)
+- Easy to keep backward compatible
+- Handles all cases
+- Arguable that this is OS configuration
+
+2) Use existing bindings for dependencies, but use "depends-on" for
+overriding cases that are incorrect.
+- New kernel not backward compatible with old DT. So devices will stop
+booting or won't have full functionality.
+- Needs some scheme to disabling all dependency tracking to be
+backward compatible.
+  a) Can have the dependency linking code under CONFIG_XXXXX
+  b) Can have a kernel commandline
+  c) NEW alternative to CONFIG_XXXX or commandline. Can have an
+additional "implicit-dependencies-are-explicit-too" DT property that
+can be added to the "choosen" DT node to tell the OS that the implicit
+dependencies are valid real dependencies too. Then if they need
+overrides, depends-on can be used. So old DT blobs would effectively
+have this feature disabled.
+- Handles all cases
+- Only (c) above could be argued as OS configuration. But I'd argue
+that it's clarifying the DT dependencies to be more explicit.
+
+Thanks,
+Saravana
+
+> -Frank
+>
+> >
+> > On Mon, Jun 3, 2019 at 6:32 PM Saravana Kannan <saravanak@google.com> wrote:
+> >>
+> >> Add a pointer from device tree node to the device created from it.
+> >> This allows us to find the device corresponding to a device tree node
+> >> without having to loop through all the platform devices.
+> >>
+> >> However, fallback to looping through the platform devices to handle
+> >> any devices that might set their own of_node.
+> >>
+> >> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> >> ---
+> >>  drivers/of/platform.c | 20 +++++++++++++++++++-
+> >>  include/linux/of.h    |  3 +++
+> >>  2 files changed, 22 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> >> index 04ad312fd85b..1115a8d80a33 100644
+> >> --- a/drivers/of/platform.c
+> >> +++ b/drivers/of/platform.c
+> >> @@ -42,6 +42,8 @@ static int of_dev_node_match(struct device *dev, void *data)
+> >>         return dev->of_node == data;
+> >>  }
+> >>
+> >> +static DEFINE_SPINLOCK(of_dev_lock);
+> >> +
+> >>  /**
+> >>   * of_find_device_by_node - Find the platform_device associated with a node
+> >>   * @np: Pointer to device tree node
+> >> @@ -55,7 +57,18 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
+> >>  {
+> >>         struct device *dev;
+> >>
+> >> -       dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
+> >> +       /*
+> >> +        * Spinlock needed to make sure np->dev doesn't get freed between NULL
+> >> +        * check inside and kref count increment inside get_device(). This is
+> >> +        * achieved by grabbing the spinlock before setting np->dev = NULL in
+> >> +        * of_platform_device_destroy().
+> >> +        */
+> >> +       spin_lock(&of_dev_lock);
+> >> +       dev = get_device(np->dev);
+> >> +       spin_unlock(&of_dev_lock);
+> >> +       if (!dev)
+> >> +               dev = bus_find_device(&platform_bus_type, NULL, np,
+> >> +                                     of_dev_node_match);
+> >>         return dev ? to_platform_device(dev) : NULL;
+> >>  }
+> >>  EXPORT_SYMBOL(of_find_device_by_node);
+> >> @@ -196,6 +209,7 @@ static struct platform_device *of_platform_device_create_pdata(
+> >>                 platform_device_put(dev);
+> >>                 goto err_clear_flag;
+> >>         }
+> >> +       np->dev = &dev->dev;
+> >>
+> >>         return dev;
+> >>
+> >> @@ -556,6 +570,10 @@ int of_platform_device_destroy(struct device *dev, void *data)
+> >>         if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
+> >>                 device_for_each_child(dev, NULL, of_platform_device_destroy);
+> >>
+> >> +       /* Spinlock is needed for of_find_device_by_node() to work */
+> >> +       spin_lock(&of_dev_lock);
+> >> +       dev->of_node->dev = NULL;
+> >> +       spin_unlock(&of_dev_lock);
+> >>         of_node_clear_flag(dev->of_node, OF_POPULATED);
+> >>         of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+> >>
+> >> diff --git a/include/linux/of.h b/include/linux/of.h
+> >> index 0cf857012f11..f2b4912cbca1 100644
+> >> --- a/include/linux/of.h
+> >> +++ b/include/linux/of.h
+> >> @@ -48,6 +48,8 @@ struct property {
+> >>  struct of_irq_controller;
+> >>  #endif
+> >>
+> >> +struct device;
+> >> +
+> >>  struct device_node {
+> >>         const char *name;
+> >>         phandle phandle;
+> >> @@ -68,6 +70,7 @@ struct device_node {
+> >>         unsigned int unique_id;
+> >>         struct of_irq_controller *irq_trans;
+> >>  #endif
+> >> +       struct device *dev;             /* Device created from this node */
+> >>  };
+> >>
+> >>  #define MAX_PHANDLE_ARGS 16
+> >> --
+> >> 2.22.0.rc1.257.g3120a18244-goog
+> >>
+> > .
+> >
+>
