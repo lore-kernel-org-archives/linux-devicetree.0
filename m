@@ -1,53 +1,116 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 0/6] Add USB2.0/CMT/TMU support to HiHope RZ/G2M
-Date: Tue, 11 Jun 2019 13:12:04 +0000
-Message-ID: <TYXPR01MB1775725F45944C969BCDD49EC0ED0@TYXPR01MB1775.jpnprd01.prod.outlook.com>
-References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Richard Gong <richard.gong@linux.intel.com>
+Subject: Re: A potential broken at platform driver?
+Date: Tue, 11 Jun 2019 09:10:05 -0500
+Message-ID: <f484ce9f-a86e-ce33-686b-b42dc293beb8@linux.intel.com>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+ <20190528232224.GA29225@kroah.com>
+ <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
+ <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
+ <20190603180255.GA18054@kroah.com> <20190604103241.GA4097@5WDYG62>
+ <20190604142803.GA28355@kroah.com>
+ <e3adbd00-e500-70af-1c27-e4c064486561@linux.intel.com>
+ <20190604170310.GC14605@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20190604170310.GC14605@kroah.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Romain Izard <romain.izard.pro@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sen.li@intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Sent: 11 June 2019 14:07
-> Subject: [PATCH 0/6] Add USB2.0/CMT/TMU support to HiHope RZ/G2M
->=20
-> Dear All,
->=20
-> this series adds USB2.0/CMT/TMU support to the HiHope RZ/G2M.
 
-Ah, I forgot to mention that this series depends on:
-https://patchwork.kernel.org/cover/10980861/
-https://patchwork.kernel.org/patch/10980997/
-https://patchwork.kernel.org/patch/10986211/
+Hi Greg,
 
-Thanks,
-Fab
+On 6/4/19 12:03 PM, Greg KH wrote:
+> On Tue, Jun 04, 2019 at 11:13:02AM -0500, Richard Gong wrote:
+>>
+>> Hi Greg,
+>>
+>> On 6/4/19 9:28 AM, Greg KH wrote:
+>>> On Tue, Jun 04, 2019 at 12:33:03PM +0200, Romain Izard wrote:
+>>>> On Mon, Jun 03, 2019 at 08:02:55PM +0200, Greg KH wrote:
+>>>>>> @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
+>>>>>>    	.remove = stratix10_rsu_remove,
+>>>>>>    	.driver = {
+>>>>>>    		.name = "stratix10-rsu",
+>>>>>> -		.groups = rsu_groups,
+>>>>>> +//		.groups = rsu_groups,
+>>>>>
+>>>>> Are you sure this is the correct pointer?  I think that might be
+>>>>> pointing to the driver's attributes, not the device's attributes.
+>>>>>
+>>>>> If platform drivers do not have a way to register groups properly, then
+>>>>> that really needs to be fixed, as trying to register it by yourself as
+>>>>> you are doing, is ripe for racing with userspace.
+>>>> This is a very common issue with platform drivers, and it seems to me that
+>>>> it is not possible to add device attributes when binding a device to a
+>>>> driver without entering the race condition.
+>>>>
+>>>> My understanding is the following one:
+>>>>
+>>>> The root cause is that the device has already been created and reported
+>>>> to the userspace with a KOBJ_ADD uevent before the device and the driver
+>>>> are bound together. On receiving this event, userspace will react, and
+>>>> it will try to read the device's attributes. In parallel the kernel will
+>>>> try to find a matching driver. If a driver is found, the kernel will
+>>>> call the probe function from the driver with the device as a parameter,
+>>>> and if successful a KOBJ_BIND uevent will be sent to userspace, but this
+>>>> is a recent addition.
+>>>>
+>>>> Unfortunately, not all created devices will be bound to a driver, and the
+>>>> existing udev code relies on KOBJ_ADD uevents rather than KOBJ_BIND uevents.
+>>>> If new per-device attributes have been added to the device during the
+>>>> binding stage userspace may or may not see them, depending on when userspace
+>>>> tries to read the device's attributes.
+>>>>
+>>>> I have this possible workaround, but I do not know if it is a good solution:
+>>>>
+>>>> When binding the device and the driver together, create a new device as a
+>>>> child to the current device, and fill its "groups" member to point to the
+>>>> per-device attributes' group. As the device will be created with all the
+>>>> attributes, it will not be affected by the race issues. The functions
+>>>> handling the attributes will need to be modified to use the parents of their
+>>>> "device" parameter, instead of the device itself. Additionnaly, the sysfs
+>>>> location of the attributes will be different, as the child device will show
+>>>> up in the sysfs path. But for a newly introduced device this will not be
+>>>> a problem.
+>>>>
+>>>> Is this a good compromise ?
+>>>
+>>> Not really.  You just want the attributes on the platform device itself.
+>>>
+>>> Given the horrible hack that platform devices are today, what's one more
+>>> hack!
+>>>
+>>> Here's a patch below of what should probably be done here.  Richard, can
+>>> you change your code to use the new dev_groups pointer in the struct
+>>> platform_driver and this patch and let me know if that works or not?
+>>>
+>>> Note, I've only compiled this code, not tested it...
+>>>
+>>
+>> Your patch works.
+>>
+>> Many thanks for your help!
+> 
+> Nice!
+> 
+> I guess I need to turn it into a real patch now.  Let me do that tonight
+> and see if I can convert some existing drivers to use it as well...
+> 
 
->=20
-> Thanks,
-> Fab
->=20
-> Fabrizio Castro (6):
->   arm64: dts: renesas: r8a774a1: Fix USB 2.0 clocks
->   arm64: dts: renesas: hihope-common: Add USB 2.0 support
->   arm64: dts: renesas: r8a774a1: Add CMT device nodes
->   clk: renesas: r8a774a1: Add TMU clock
->   dt-bindings: timer: renesas: tmu: Document r8a774a1 bindings
->   arm64: dts: renesas: r8a774a1: Add TMU device nodes
->=20
->  .../devicetree/bindings/timer/renesas,tmu.txt      |   1 +
->  arch/arm64/boot/dts/renesas/hihope-common.dtsi     |  76 +++++++++++
->  arch/arm64/boot/dts/renesas/r8a774a1.dtsi          | 151 +++++++++++++++=
-++++--
->  drivers/clk/renesas/r8a774a1-cpg-mssr.c            |   5 +
->  4 files changed, 225 insertions(+), 8 deletions(-)
->=20
-> --
-> 2.7.4
+Sorry for asking.
+
+I haven't seen your patch, did you release that?
+
+Regards,
+Richard
+
+> thanks,
+> 
+> greg k-h
+> 
