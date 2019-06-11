@@ -1,59 +1,38 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v1 3/3] dt-bindings: iio: afe: Add hwmon example
-Date: Tue, 11 Jun 2019 11:56:59 +0200
-Message-ID: <20190611095659.29845-4-mylene.josserand@bootlin.com>
-References: <20190611095659.29845-1-mylene.josserand@bootlin.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: serial: add documentation for Rx
+ in-band wakeup support
+Date: Tue, 11 Jun 2019 11:57:52 +0200
+Message-ID: <20190611095752.GA24058@kroah.com>
+References: <20190527083150.220194-1-tientzu@chromium.org>
+ <20190527083150.220194-2-tientzu@chromium.org>
+ <CALiNf2_Kuu9agO31Wg2X4uUa0EHWYL=qG5RLQ=catn8M9XDKGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611095659.29845-1-mylene.josserand@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: peda@axentia.se, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CALiNf2_Kuu9agO31Wg2X4uUa0EHWYL=qG5RLQ=catn8M9XDKGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Claire Chang <tientzu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, changqi.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-With the support of CHAN_INFO_PROCESSED in voltage-divider,
-it is possible to read the processed values directly from iio's
-sysfs entries or by using iio-hwmon. Add an example for this last
-use case.
+On Tue, Jun 11, 2019 at 05:53:54PM +0800, Claire Chang wrote:
+> (cc-ed device tree maintainers and mailing list)
+> 
+> The second patch in this series[1] is already in tty-next[2].
+> 
+> Sorry for not cc-ing device tree maintainers/mailing list at the beginning.
+> I can resend this patch if needed.
 
-Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
----
- .../bindings/iio/afe/voltage-divider.txt           | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Please do, as it is not here for them to review :(
 
-diff --git a/Documentation/devicetree/bindings/iio/afe/voltage-divider.txt b/Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
-index b452a8406107..f7e1c7cb2744 100644
---- a/Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
-+++ b/Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
-@@ -51,3 +51,27 @@ sysv {
- 		spi-max-frequency = <1000000>;
- 	};
- };
-+
-+It is also possible to retrieve the processed values using hwmon node:
-+
-+div0: div0 {
-+	compatible = "voltage-divider";
-+	io-channels = <&adc0 0>; /* Channel 0 of the ADC */
-+	output-ohms = <47>; /* R2 */
-+	full-ohms = <73>; /* R1 (26) + R2 (47) */
-+	#io-channel-cells = <1>;
-+};
-+
-+div1: div1 {
-+	compatible = "voltage-divider";
-+	io-channels = <&adc0 1>; /* Channel 1 of the ADC */
-+	output-ohms = <47>; /* R2 */
-+	full-ohms = <115>; /* R1 (68) + R2 (47) */
-+	#io-channel-cells = <1>;
-+};
-+
-+iio-hwmon {
-+	compatible = "iio-hwmon";
-+	io-channels = <&div0 0>, <&div1 0>;
-+	io-channel-names = "3v3", "usb";
-+};
--- 
-2.11.0
+greg k-h
