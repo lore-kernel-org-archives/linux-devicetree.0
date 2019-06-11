@@ -1,77 +1,124 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v5 15/15] dmaengine: imx-sdma: add uart rom script
-Date: Tue, 11 Jun 2019 10:07:31 +0530
-Message-ID: <20190611043731.GS9160@vkoul-mobl.Dlink>
-References: <20190610081753.11422-1-yibin.gong@nxp.com>
- <20190610081753.11422-16-yibin.gong@nxp.com>
- <20190610125534.GQ9160@vkoul-mobl.Dlink>
- <1560251269.9731.41.camel@nxp.com>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v13 0/2] PWM support for HiFive Unleashed
+Date: Tue, 11 Jun 2019 11:14:42 +0530
+Message-ID: <1560231884-15694-1-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1560251269.9731.41.camel@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vge>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: thierry.reding@gmail.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de
+Cc: mark.rutland@arm.com, aou@eecs.berkeley.edu, palmer@sifive.com, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>, robh+dt@kernel.org, paul.walmsley@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-On 11-06-19, 03:04, Robin Gong wrote:
-> On 2019-06-10 at 12:55 +0000, Vinod Koul wrote:
-> > On 10-06-19, 16:17, yibin.gong@nxp.com wrote:
-> > > 
-> > > From: Robin Gong <yibin.gong@nxp.com>
-> > > 
-> > > For the compatibility of NXP internal legacy kernel before 4.19
-> > > which
-> > > is based on uart ram script and upstreaming kernel based on uart
-> > > rom
-> > > script, add both uart ram/rom script in latest sdma firmware. By
-> > > default
-> > > uart rom script used.
-> > > Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and
-> > > add
-> > > back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for
-> > > i.mx6).
-> > > 
-> > > rom script:
-> > > 	uart_2_mcu_addr
-> > > 	uartsh_2_mcu_addr /* through spba bus */
-> > > ram script:
-> > > 	uart_2_mcu_ram_addr
-> > > 	uartsh_2_mcu_ram_addr /* through spba bus */
-> > > 
-> > > Please get latest sdma firmware from the below and put them into
-> > > the path
-> > > (/lib/firmware/imx/sdma/):
-> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fg
-> > > it.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ffirmware%2Flinux
-> > > -firmware.git&amp;data=02%7C01%7Cyibin.gong%40nxp.com%7C6a7833e8a09
-> > > 344d9951e08d6eda35fc5%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C
-> > > 636957683278190279&amp;sdata=RHeypEOREiPGmKveg6gYPy%2FMg8Dzz4JpcHsm
-> > > %2Bbdxlzo%3D&amp;reserved=0
-> > > /tree/imx/sdma
-> > How does this work with folks have older firmware?
-> The older SDMA RAM script(firmware) will break the uart driver of
-> upstreaming kernel for these years, this is why Lucas raise uart driver
-> patch (commit 905c0decad28) to use ROM script instead. There are two
-> ways to fix uart issue: one is checking 'Idle Condition
-> Detection'/'Aging timer' in RAM script and enable 'IDLE' in uart
-> driver, another is only checking 'Aging timer' in ROM script and
-> adjusting RX FIFO burst length one word less to ensure at least one
-> word left forever in RX FIFO which is the trigger requirement of 'Aging
-> timer'(So no need 'IDLE', 'Aging time' is enough) . FSL/NXP internal
-> kernel go with the first option, while upstreaming kernel go with the
-> second. Since Lucas's patch assume ROM script used in kernel and
-> disable 'IDLE', upstreaming kernel broken in uart driver with older
-> firmware for these years. So this patch is just for fix this
-> compatibility issue with the ram script(older firmware) updated in
-> linux-firmware(done already.), thus both RAM script and ROM script can
-> work in kernel. Besides, kernel with the latest RAM firmware and this
-> patch set can workaround ecspi issue without any function break which
-> Lucas concerned about.
+This patch series adds a PWM driver and DT documentation
+for HiFive Unleashed board. The patches are mostly based on
+Wesley's patch.
 
-Acked-by: Vinod Koul <vkoul@kernel.org>
+This patchset is based on Linux v5.2-rc1 and tested on HiFive Unleashed
+board with additional board related patches needed for testing can be
+found at dev/yashs/pwm_v13 branch of:
+https://github.com/yashshah7/riscv-linux.git
+
+v13
+- Rebased onto Mainline v5.2-rc1
+- Correct the order of pwmchip_remove() after clk_disable() in .remove()
+
+v12
+- Rebased onto Mainline v5.1
+
+v11
+- Change naming convention for pwm_device and pwm_sifive_ddata pointers
+- Assign of_pwm_xlate_with_flag() to of_xlate func ptr since this driver
+  use three pwm-cells (Issue reported by Andreas Schwab <schwab@suse.de>
+- Other minor fixes
+
+v10
+- Use DIV_ROUND_CLOSEST_ULL instead of div_u64_round
+- Change 'num' defination to u64 bit (in pwm_sifive_apply).
+- Remove the usage of pwm_get_state()
+
+v9
+- Use appropriate bitfield macros
+- Add approx_period in pwm_sifive_ddata struct and related changes
+- Correct the eqn for calculation of frac (in pwm_sifive_apply)
+- Other minor fixes
+
+v8
+- Typo corrections
+- Remove active_user and related code
+- Do not clear PWM_SIFIVE_PWMCFG_EN_ALWAYS
+- Other minor fixes
+
+v7
+- Modify description of compatible property in DT documentation
+- Use mutex locks at appropriate places
+- Fix all bad line breaks
+- Allow enabling/disabling PWM only when the user is the only active user
+- Remove Deglitch logic
+- Other minor fixes
+
+v6
+- Remove the global property 'sifive,period-ns'
+- Implement free and request callbacks to maintain user counts.
+- Add user_count member to struct pwm_sifive_ddata
+- Allow period change only if user_count is one
+- Add pwm_sifive_enable function to enable/disable PWM
+- Change calculation logic of frac (in pwm_sifive_apply)
+- Remove state correction
+- Remove pwm_sifive_xlate function
+- Clock to be enabled only when PWM is enabled
+- Other minor fixes
+
+v5
+- Correct the order of compatible string properties
+- PWM state correction to be done always
+- Other minor fixes based upon feedback on v4
+
+v4
+- Rename macros with appropriate names
+- Remove unused macros
+- Rename struct sifive_pwm_device to struct pwm_sifive_ddata
+- Rename function prefix as per driver name
+- Other minor fixes based upon feedback on v3
+
+v3
+- Add a link to the reference manaul
+- Use appropriate apis for division operation
+- Add check for polarity
+- Enable clk before calling clk_get_rate
+- Other minor fixes based upon feedback on v2
+
+V2 changed from V1:
+- Remove inclusion of dt-bindings/pwm/pwm.h
+- Remove artificial alignments
+- Replace ioread32/iowrite32 with readl/writel
+- Remove camelcase
+- Change dev_info to dev_dbg for unnecessary log
+- Correct typo in driver name
+- Remove use of of_match_ptr macro
+- Update the DT compatible strings and Add reference to a common
+  versioning document
+
+Yash Shah (2):
+  pwm: sifive: Add DT documentation for SiFive PWM Controller
+  pwm: sifive: Add a driver for SiFive SoC PWM
+
+ .../devicetree/bindings/pwm/pwm-sifive.txt         |  33 ++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-sifive.c                           | 339 +++++++++++++++++++++
+ 4 files changed, 384 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+ create mode 100644 drivers/pwm/pwm-sifive.c
 
 -- 
-~Vinod
+1.9.1
