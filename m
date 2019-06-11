@@ -1,85 +1,54 @@
 From: Michael Drake <michael.drake@codethink.co.uk>
-Subject: [PATCH v1 06/11] ti948: Reconfigure in the alive check when device returns
-Date: Tue, 11 Jun 2019 15:04:07 +0100
-Message-ID: <20190611140412.32151-7-michael.drake@codethink.co.uk>
-References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
+Subject: [PATCH v1 00/11] Add ti948 and ti949 display bridge drivers
+Date: Tue, 11 Jun 2019 15:04:01 +0100
+Message-ID: <20190611140412.32151-1-michael.drake@codethink.co.uk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611140412.32151-1-michael.drake@codethink.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Drake <michael.drake@codethink.co.uk>
 Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
 List-Id: devicetree@vger.kernel.org
 
-If the alive check detects a transition to the alive state,
-the device configuration is rewritten.
+This patch series adds support for the ti948 and ti949 display
+bridge devices.  They are both regmap i2c device drivers.
 
-Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
+The ti949 converts HDMI video signals to FPD-Link III.
+The ti948 converts FPD-Link III video signals to OpenLDI.
+
+The drivers support PM suspend/resume, and rely on device tree /
+ACPI nodes to set up any device dependency chain.  (ACPI requiring
+the special DT namespace link device ID, PRP0001.)  The unified
+device properties API is used to get board-specific config from
+device tree / ACPI.
+
 Cc: Patrick Glaser <pglaser@tesla.com>
 Cc: Nate Case <ncase@tesla.com>
----
- drivers/gpu/drm/bridge/ti948.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/ti948.c b/drivers/gpu/drm/bridge/ti948.c
-index 86daa3701b91..b5c766711c4b 100644
---- a/drivers/gpu/drm/bridge/ti948.c
-+++ b/drivers/gpu/drm/bridge/ti948.c
-@@ -132,6 +132,8 @@ struct ti948_reg_val {
-  * @reg_names:   Array of regulator names, or NULL.
-  * @regs:        Array of regulators, or NULL.
-  * @reg_count:   Number of entries in reg_names and regs arrays.
-+ * @alive_check: Context for the alive checking work item.
-+ * @alive:       Whether the device is alive or not (alive_check).
-  */
- struct ti948_ctx {
- 	struct i2c_client *i2c;
-@@ -141,6 +143,8 @@ struct ti948_ctx {
- 	const char **reg_names;
- 	struct regulator **regs;
- 	size_t reg_count;
-+	struct delayed_work alive_check;
-+	bool alive;
- };
- 
- static bool ti948_readable_reg(struct device *dev, unsigned int reg)
-@@ -346,6 +350,8 @@ static int ti948_power_on(struct ti948_ctx *ti948)
- 	if (ret != 0)
- 		return ret;
- 
-+	ti948->alive = true;
-+
- 	msleep(500);
- 
- 	return 0;
-@@ -356,6 +362,8 @@ static int ti948_power_off(struct ti948_ctx *ti948)
- 	int i;
- 	int ret;
- 
-+	ti948->alive = false;
-+
- 	for (i = ti948->reg_count; i > 0; i--) {
- 		dev_info(&ti948->i2c->dev, "Disabling %s regulator\n",
- 				ti948->reg_names[i - 1]);
-@@ -388,8 +396,17 @@ static void ti948_alive_check(struct work_struct *work)
- {
- 	struct delayed_work *dwork = to_delayed_work(work);
- 	struct ti948_ctx *ti948 = delayed_work_to_ti948_ctx(dwork);
-+	int ret = ti948_device_check(ti948);
- 
--	dev_info(&ti948->i2c->dev, "%s Alive check!\n", __func__);
-+	if (ti948->alive == false && ret == 0) {
-+		dev_info(&ti948->i2c->dev, "Device has come back to life!\n");
-+		ti948_write_config_seq(ti948);
-+		ti948->alive = true;
-+
-+	} else if (ti948->alive == true && ret != 0) {
-+		dev_info(&ti948->i2c->dev, "Device has stopped responding\n");
-+		ti948->alive = false;
-+	}
- 
- 	/* Reschedule ourself for the next check. */
- 	schedule_delayed_work(&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
+Michael Drake (11):
+  dt-bindings: display/bridge: Add bindings for ti948
+  ti948: i2c device driver for TI DS90UB948-Q1
+  dt-bindings: display/bridge: Add config property for ti948
+  ti948: Add support for configuration via device properties
+  ti948: Add alive check function using schedule_delayed_work()
+  ti948: Reconfigure in the alive check when device returns
+  ti948: Add sysfs node for alive attribute
+  dt-bindings: display/bridge: Add bindings for ti949
+  ti949: i2c device driver for TI DS90UB949-Q1
+  dt-bindings: display/bridge: Add config property for ti949
+  ti949: Add support for configuration via device properties
+
+ .../bindings/display/bridge/ti,ds90ub948.txt  |  45 ++
+ .../bindings/display/bridge/ti,ds90ub949.txt  |  37 +
+ drivers/gpu/drm/bridge/Kconfig                |  16 +
+ drivers/gpu/drm/bridge/Makefile               |   2 +
+ drivers/gpu/drm/bridge/ti948.c                | 689 ++++++++++++++++++
+ drivers/gpu/drm/bridge/ti949.c                | 631 ++++++++++++++++
+ 6 files changed, 1420 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
+ create mode 100644 drivers/gpu/drm/bridge/ti948.c
+ create mode 100644 drivers/gpu/drm/bridge/ti949.c
+
 -- 
 2.20.1
