@@ -1,325 +1,415 @@
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
-Date: Tue, 11 Jun 2019 05:26:26 -0700
-Message-ID: <20190611052626.20bed59a@jacob-builder>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
-        <20190610184714.6786-2-jean-philippe.brucker@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Anson.Huang@nxp.com
+Subject: [PATCH V2 2/3] pinctrl: freescale: Add i.MX8MN pinctrl driver support
+Date: Tue, 11 Jun 2019 20:25:34 +0800
+Message-ID: <20190611122535.23583-2-Anson.Huang@nxp.com>
+References: <20190611122535.23583-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610184714.6786-2-jean-philippe.brucker@arm.com>
+In-Reply-To: <20190611122535.23583-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: will.deacon@arm.com, joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, robin.murphy@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, eric.auger@redhat.com, jacob.jun.pan@linux.intel.com
+To: aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org, stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, catalin.marinas@arm.com, will.deacon@arm.com, maxime.ripard@bootlin.com, olof@lixom.net, horms+renesas@verge.net.au, jagan@amarulasolutions.com, bjorn.andersson@linaro.org, leonard.crestez@nxp.com, dinguyen@kernel.org, enric.balletbo@collabora.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Jun 2019 19:47:07 +0100
-Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
+From: Anson Huang <Anson.Huang@nxp.com>
 
-> Some devices might support multiple DMA address spaces, in particular
-> those that have the PCI PASID feature. PASID (Process Address Space
-> ID) allows to share process address spaces with devices (SVA),
-> partition a device into VM-assignable entities (VFIO mdev) or simply
-> provide multiple DMA address space to kernel drivers. Add a global
-> PASID allocator usable by different drivers at the same time. Name it
-> I/O ASID to avoid confusion with ASIDs allocated by arch code, which
-> are usually a separate ID space.
-> 
-> The IOASID space is global. Each device can have its own PASID space,
-> but by convention the IOMMU ended up having a global PASID space, so
-> that with SVA, each mm_struct is associated to a single PASID.
-> 
-> The allocator is primarily used by IOMMU subsystem but in rare
-> occasions drivers would like to allocate PASIDs for devices that
-> aren't managed by an IOMMU, using the same ID space as IOMMU.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
-> The most recent discussion on this patch was at:
-> https://lkml.kernel.org/lkml/1556922737-76313-4-git-send-email-jacob.jun.pan@linux.intel.com/
-> I fixed it up a bit following comments in that series, and removed the
-> definitions for the custom allocator for now.
-> 
-> There also is a new version that includes the custom allocator into
-> this patch, but is currently missing the RCU fixes, at:
-> https://lore.kernel.org/lkml/1560087862-57608-13-git-send-email-jacob.jun.pan@linux.intel.com/
-> ---
->  drivers/iommu/Kconfig  |   4 ++
->  drivers/iommu/Makefile |   1 +
->  drivers/iommu/ioasid.c | 150
-> +++++++++++++++++++++++++++++++++++++++++ include/linux/ioasid.h |
-> 49 ++++++++++++++ 4 files changed, 204 insertions(+)
->  create mode 100644 drivers/iommu/ioasid.c
->  create mode 100644 include/linux/ioasid.h
-> 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 83664db5221d..9b45f70549a7 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -3,6 +3,10 @@
->  config IOMMU_IOVA
->  	tristate
->  
-> +# The IOASID library may also be used by non-IOMMU_API users
-> +config IOASID
-> +	tristate
-> +
->  # IOMMU_API always gets selected by whoever wants it.
->  config IOMMU_API
->  	bool
-> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-> index 8c71a15e986b..0efac6f1ec73 100644
-> --- a/drivers/iommu/Makefile
-> +++ b/drivers/iommu/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
->  obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
->  obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
->  obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
-> +obj-$(CONFIG_IOASID) += ioasid.o
->  obj-$(CONFIG_IOMMU_IOVA) += iova.o
->  obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
->  obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
-> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> new file mode 100644
-> index 000000000000..bbb771214fa9
-> --- /dev/null
-> +++ b/drivers/iommu/ioasid.c
-> @@ -0,0 +1,150 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * I/O Address Space ID allocator. There is one global IOASID space,
-> split into
-> + * subsets. Users create a subset with DECLARE_IOASID_SET, then
-> allocate and
-> + * free IOASIDs with ioasid_alloc and ioasid_free.
-> + */
-> +#include <linux/ioasid.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/xarray.h>
-> +
-> +struct ioasid_data {
-> +	ioasid_t id;
-> +	struct ioasid_set *set;
-> +	void *private;
-> +	struct rcu_head rcu;
-> +};
-> +
-> +static DEFINE_XARRAY_ALLOC(ioasid_xa);
-> +
-> +/**
-> + * ioasid_set_data - Set private data for an allocated ioasid
-> + * @ioasid: the ID to set data
-> + * @data:   the private data
-> + *
-> + * For IOASID that is already allocated, private data can be set
-> + * via this API. Future lookup can be done via ioasid_find.
-> + */
-> +int ioasid_set_data(ioasid_t ioasid, void *data)
-> +{
-> +	struct ioasid_data *ioasid_data;
-> +	int ret = 0;
-> +
-> +	xa_lock(&ioasid_xa);
-Just wondering if this is necessary, since xa_load is under
-rcu_read_lock and we are not changing anything internal to xa. For
-custom allocator I still need to have the mutex against allocator
-removal.
-> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
-> +	if (ioasid_data)
-> +		rcu_assign_pointer(ioasid_data->private, data);
-it is good to publish and have barrier here. But I just wonder even for
-weakly ordered machine, this pointer update is quite far away from its
-data update.
-> +	else
-> +		ret = -ENOENT;
-> +	xa_unlock(&ioasid_xa);
-> +
-> +	/*
-> +	 * Wait for readers to stop accessing the old private data,
-> so the
-> +	 * caller can free it.
-> +	 */
-> +	if (!ret)
-> +		synchronize_rcu();
-> +
-I will add that to my next version to check ret value.
+Add the pinctrl driver support for i.MX8MN.
 
-Thanks,
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+Changes since V1:
+	- Fix some nitpicks like sorting the change in alphabet order
+	  and improve the headfile included.
+---
+ drivers/pinctrl/freescale/Kconfig          |   7 +
+ drivers/pinctrl/freescale/Makefile         |   1 +
+ drivers/pinctrl/freescale/pinctrl-imx8mn.c | 348 +++++++++++++++++++++++++++++
+ 3 files changed, 356 insertions(+)
+ create mode 100644 drivers/pinctrl/freescale/pinctrl-imx8mn.c
 
-Jacob
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_set_data);
-> +
-> +/**
-> + * ioasid_alloc - Allocate an IOASID
-> + * @set: the IOASID set
-> + * @min: the minimum ID (inclusive)
-> + * @max: the maximum ID (inclusive)
-> + * @private: data private to the caller
-> + *
-> + * Allocate an ID between @min and @max. The @private pointer is
-> stored
-> + * internally and can be retrieved with ioasid_find().
-> + *
-> + * Return: the allocated ID on success, or %INVALID_IOASID on
-> failure.
-> + */
-> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t
-> max,
-> +		      void *private)
-> +{
-> +	u32 id = INVALID_IOASID;
-> +	struct ioasid_data *data;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return INVALID_IOASID;
-> +
-> +	data->set = set;
-> +	data->private = private;
-> +
-> +	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max),
-> GFP_KERNEL)) {
-> +		pr_err("Failed to alloc ioasid from %d to %d\n",
-> min, max);
-> +		goto exit_free;
-> +	}
-> +	data->id = id;
-> +
-> +exit_free:
-> +	if (id == INVALID_IOASID) {
-> +		kfree(data);
-> +		return INVALID_IOASID;
-> +	}
-> +	return id;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_alloc);
-> +
-> +/**
-> + * ioasid_free - Free an IOASID
-> + * @ioasid: the ID to remove
-> + */
-> +void ioasid_free(ioasid_t ioasid)
-> +{
-> +	struct ioasid_data *ioasid_data;
-> +
-> +	ioasid_data = xa_erase(&ioasid_xa, ioasid);
-> +
-> +	kfree_rcu(ioasid_data, rcu);
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_free);
-> +
-> +/**
-> + * ioasid_find - Find IOASID data
-> + * @set: the IOASID set
-> + * @ioasid: the IOASID to find
-> + * @getter: function to call on the found object
-> + *
-> + * The optional getter function allows to take a reference to the
-> found object
-> + * under the rcu lock. The function can also check if the object is
-> still valid:
-> + * if @getter returns false, then the object is invalid and NULL is
-> returned.
-> + *
-> + * If the IOASID has been allocated for this set, return the private
-> pointer
-> + * passed to ioasid_alloc. Private data can be NULL if not set.
-> Return an error
-> + * if the IOASID is not found or does not belong to the set.
-> + */
-> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-> +		  bool (*getter)(void *))
-> +{
-> +	void *priv = NULL;
-> +	struct ioasid_data *ioasid_data;
-> +
-> +	rcu_read_lock();
-> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
-> +	if (!ioasid_data) {
-> +		priv = ERR_PTR(-ENOENT);
-> +		goto unlock;
-> +	}
-> +	if (set && ioasid_data->set != set) {
-> +		/* data found but does not belong to the set */
-> +		priv = ERR_PTR(-EACCES);
-> +		goto unlock;
-> +	}
-> +	/* Now IOASID and its set is verified, we can return the
-> private data */
-> +	priv = rcu_dereference(ioasid_data->private);
-> +	if (getter && !getter(priv))
-> +		priv = NULL;
-> +unlock:
-> +	rcu_read_unlock();
-> +
-> +	return priv;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_find);
-> +
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> new file mode 100644
-> index 000000000000..940212422b8f
-> --- /dev/null
-> +++ b/include/linux/ioasid.h
-> @@ -0,0 +1,49 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __LINUX_IOASID_H
-> +#define __LINUX_IOASID_H
-> +
-> +#include <linux/types.h>
-> +
-> +#define INVALID_IOASID ((ioasid_t)-1)
-> +typedef unsigned int ioasid_t;
-> +
-> +struct ioasid_set {
-> +	int dummy;
-> +};
-> +
-> +#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
-> +
-> +#if IS_ENABLED(CONFIG_IOASID)
-> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t
-> max,
-> +		      void *private);
-> +void ioasid_free(ioasid_t ioasid);
-> +
-> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-> +		  bool (*getter)(void *));
-> +
-> +int ioasid_set_data(ioasid_t ioasid, void *data);
-> +
-> +#else /* !CONFIG_IOASID */
-> +static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t
-> min,
-> +				    ioasid_t max, void *private)
-> +{
-> +	return INVALID_IOASID;
-> +}
-> +
-> +static inline void ioasid_free(ioasid_t ioasid)
-> +{
-> +}
-> +
-> +static inline void *ioasid_find(struct ioasid_set *set, ioasid_t
-> ioasid,
-> +				bool (*getter)(void *))
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline int ioasid_set_data(ioasid_t ioasid, void *data)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +#endif /* CONFIG_IOASID */
-> +#endif /* __LINUX_IOASID_H */
-
-[Jacob Pan]
+diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
+index aeab0d9..5f40580 100644
+--- a/drivers/pinctrl/freescale/Kconfig
++++ b/drivers/pinctrl/freescale/Kconfig
+@@ -130,6 +130,13 @@ config PINCTRL_IMX8MM
+ 	help
+ 	  Say Y here to enable the imx8mm pinctrl driver
+ 
++config PINCTRL_IMX8MN
++	bool "IMX8MN pinctrl driver"
++	depends on ARCH_MXC && ARM64
++	select PINCTRL_IMX
++	help
++	  Say Y here to enable the imx8mn pinctrl driver
++
+ config PINCTRL_IMX8MQ
+ 	bool "IMX8MQ pinctrl driver"
+ 	depends on ARCH_MXC && ARM64
+diff --git a/drivers/pinctrl/freescale/Makefile b/drivers/pinctrl/freescale/Makefile
+index 02020a7..78e9140 100644
+--- a/drivers/pinctrl/freescale/Makefile
++++ b/drivers/pinctrl/freescale/Makefile
+@@ -19,6 +19,7 @@ obj-$(CONFIG_PINCTRL_IMX6UL)	+= pinctrl-imx6ul.o
+ obj-$(CONFIG_PINCTRL_IMX7D)	+= pinctrl-imx7d.o
+ obj-$(CONFIG_PINCTRL_IMX7ULP)	+= pinctrl-imx7ulp.o
+ obj-$(CONFIG_PINCTRL_IMX8MM)	+= pinctrl-imx8mm.o
++obj-$(CONFIG_PINCTRL_IMX8MN)	+= pinctrl-imx8mn.o
+ obj-$(CONFIG_PINCTRL_IMX8MQ)	+= pinctrl-imx8mq.o
+ obj-$(CONFIG_PINCTRL_IMX8QM)	+= pinctrl-imx8qm.o
+ obj-$(CONFIG_PINCTRL_IMX8QXP)	+= pinctrl-imx8qxp.o
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8mn.c b/drivers/pinctrl/freescale/pinctrl-imx8mn.c
+new file mode 100644
+index 0000000..100ed8c
+--- /dev/null
++++ b/drivers/pinctrl/freescale/pinctrl-imx8mn.c
+@@ -0,0 +1,348 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2018-2019 NXP
++ */
++
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/of.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/platform_device.h>
++
++#include "pinctrl-imx.h"
++
++enum imx8mn_pads {
++	MX8MN_PAD_RESERVE0 = 0,
++	MX8MN_PAD_RESERVE1 = 1,
++	MX8MN_PAD_RESERVE2 = 2,
++	MX8MN_PAD_RESERVE3 = 3,
++	MX8MN_PAD_RESERVE4 = 4,
++	MX8MN_PAD_RESERVE5 = 5,
++	MX8MN_PAD_RESERVE6 = 6,
++	MX8MN_PAD_RESERVE7 = 7,
++	MX8MN_IOMUXC_BOOT_MODE2 = 8,
++	MX8MN_IOMUXC_BOOT_MODE3 = 9,
++	MX8MN_IOMUXC_GPIO1_IO00 = 10,
++	MX8MN_IOMUXC_GPIO1_IO01 = 11,
++	MX8MN_IOMUXC_GPIO1_IO02 = 12,
++	MX8MN_IOMUXC_GPIO1_IO03 = 13,
++	MX8MN_IOMUXC_GPIO1_IO04 = 14,
++	MX8MN_IOMUXC_GPIO1_IO05 = 15,
++	MX8MN_IOMUXC_GPIO1_IO06 = 16,
++	MX8MN_IOMUXC_GPIO1_IO07 = 17,
++	MX8MN_IOMUXC_GPIO1_IO08 = 18,
++	MX8MN_IOMUXC_GPIO1_IO09 = 19,
++	MX8MN_IOMUXC_GPIO1_IO10 = 20,
++	MX8MN_IOMUXC_GPIO1_IO11 = 21,
++	MX8MN_IOMUXC_GPIO1_IO12 = 22,
++	MX8MN_IOMUXC_GPIO1_IO13 = 23,
++	MX8MN_IOMUXC_GPIO1_IO14 = 24,
++	MX8MN_IOMUXC_GPIO1_IO15 = 25,
++	MX8MN_IOMUXC_ENET_MDC = 26,
++	MX8MN_IOMUXC_ENET_MDIO = 27,
++	MX8MN_IOMUXC_ENET_TD3 = 28,
++	MX8MN_IOMUXC_ENET_TD2 = 29,
++	MX8MN_IOMUXC_ENET_TD1 = 30,
++	MX8MN_IOMUXC_ENET_TD0 = 31,
++	MX8MN_IOMUXC_ENET_TX_CTL = 32,
++	MX8MN_IOMUXC_ENET_TXC = 33,
++	MX8MN_IOMUXC_ENET_RX_CTL = 34,
++	MX8MN_IOMUXC_ENET_RXC = 35,
++	MX8MN_IOMUXC_ENET_RD0 = 36,
++	MX8MN_IOMUXC_ENET_RD1 = 37,
++	MX8MN_IOMUXC_ENET_RD2 = 38,
++	MX8MN_IOMUXC_ENET_RD3 = 39,
++	MX8MN_IOMUXC_SD1_CLK = 40,
++	MX8MN_IOMUXC_SD1_CMD = 41,
++	MX8MN_IOMUXC_SD1_DATA0 = 42,
++	MX8MN_IOMUXC_SD1_DATA1 = 43,
++	MX8MN_IOMUXC_SD1_DATA2 = 44,
++	MX8MN_IOMUXC_SD1_DATA3 = 45,
++	MX8MN_IOMUXC_SD1_DATA4 = 46,
++	MX8MN_IOMUXC_SD1_DATA5 = 47,
++	MX8MN_IOMUXC_SD1_DATA6 = 48,
++	MX8MN_IOMUXC_SD1_DATA7 = 49,
++	MX8MN_IOMUXC_SD1_RESET_B = 50,
++	MX8MN_IOMUXC_SD1_STROBE = 51,
++	MX8MN_IOMUXC_SD2_CD_B = 52,
++	MX8MN_IOMUXC_SD2_CLK = 53,
++	MX8MN_IOMUXC_SD2_CMD = 54,
++	MX8MN_IOMUXC_SD2_DATA0 = 55,
++	MX8MN_IOMUXC_SD2_DATA1 = 56,
++	MX8MN_IOMUXC_SD2_DATA2 = 57,
++	MX8MN_IOMUXC_SD2_DATA3 = 58,
++	MX8MN_IOMUXC_SD2_RESET_B = 59,
++	MX8MN_IOMUXC_SD2_WP = 60,
++	MX8MN_IOMUXC_NAND_ALE = 61,
++	MX8MN_IOMUXC_NAND_CE0 = 62,
++	MX8MN_IOMUXC_NAND_CE1 = 63,
++	MX8MN_IOMUXC_NAND_CE2 = 64,
++	MX8MN_IOMUXC_NAND_CE3 = 65,
++	MX8MN_IOMUXC_NAND_CLE = 66,
++	MX8MN_IOMUXC_NAND_DATA00 = 67,
++	MX8MN_IOMUXC_NAND_DATA01 = 68,
++	MX8MN_IOMUXC_NAND_DATA02 = 69,
++	MX8MN_IOMUXC_NAND_DATA03 = 70,
++	MX8MN_IOMUXC_NAND_DATA04 = 71,
++	MX8MN_IOMUXC_NAND_DATA05 = 72,
++	MX8MN_IOMUXC_NAND_DATA06 = 73,
++	MX8MN_IOMUXC_NAND_DATA07 = 74,
++	MX8MN_IOMUXC_NAND_DQS = 75,
++	MX8MN_IOMUXC_NAND_RE_B = 76,
++	MX8MN_IOMUXC_NAND_READY_B = 77,
++	MX8MN_IOMUXC_NAND_WE_B = 78,
++	MX8MN_IOMUXC_NAND_WP_B = 79,
++	MX8MN_IOMUXC_SAI5_RXFS = 80,
++	MX8MN_IOMUXC_SAI5_RXC = 81,
++	MX8MN_IOMUXC_SAI5_RXD0 = 82,
++	MX8MN_IOMUXC_SAI5_RXD1 = 83,
++	MX8MN_IOMUXC_SAI5_RXD2 = 84,
++	MX8MN_IOMUXC_SAI5_RXD3 = 85,
++	MX8MN_IOMUXC_SAI5_MCLK = 86,
++	MX8MN_IOMUXC_SAI1_RXFS = 87,
++	MX8MN_IOMUXC_SAI1_RXC = 88,
++	MX8MN_IOMUXC_SAI1_RXD0 = 89,
++	MX8MN_IOMUXC_SAI1_RXD1 = 90,
++	MX8MN_IOMUXC_SAI1_RXD2 = 91,
++	MX8MN_IOMUXC_SAI1_RXD3 = 92,
++	MX8MN_IOMUXC_SAI1_RXD4 = 93,
++	MX8MN_IOMUXC_SAI1_RXD5 = 94,
++	MX8MN_IOMUXC_SAI1_RXD6 = 95,
++	MX8MN_IOMUXC_SAI1_RXD7 = 96,
++	MX8MN_IOMUXC_SAI1_TXFS = 97,
++	MX8MN_IOMUXC_SAI1_TXC = 98,
++	MX8MN_IOMUXC_SAI1_TXD0 = 99,
++	MX8MN_IOMUXC_SAI1_TXD1 = 100,
++	MX8MN_IOMUXC_SAI1_TXD2 = 101,
++	MX8MN_IOMUXC_SAI1_TXD3 = 102,
++	MX8MN_IOMUXC_SAI1_TXD4 = 103,
++	MX8MN_IOMUXC_SAI1_TXD5 = 104,
++	MX8MN_IOMUXC_SAI1_TXD6 = 105,
++	MX8MN_IOMUXC_SAI1_TXD7 = 106,
++	MX8MN_IOMUXC_SAI1_MCLK = 107,
++	MX8MN_IOMUXC_SAI2_RXFS = 108,
++	MX8MN_IOMUXC_SAI2_RXC = 109,
++	MX8MN_IOMUXC_SAI2_RXD0 = 110,
++	MX8MN_IOMUXC_SAI2_TXFS = 111,
++	MX8MN_IOMUXC_SAI2_TXC = 112,
++	MX8MN_IOMUXC_SAI2_TXD0 = 113,
++	MX8MN_IOMUXC_SAI2_MCLK = 114,
++	MX8MN_IOMUXC_SAI3_RXFS = 115,
++	MX8MN_IOMUXC_SAI3_RXC = 116,
++	MX8MN_IOMUXC_SAI3_RXD = 117,
++	MX8MN_IOMUXC_SAI3_TXFS = 118,
++	MX8MN_IOMUXC_SAI3_TXC = 119,
++	MX8MN_IOMUXC_SAI3_TXD = 120,
++	MX8MN_IOMUXC_SAI3_MCLK = 121,
++	MX8MN_IOMUXC_SPDIF_TX = 122,
++	MX8MN_IOMUXC_SPDIF_RX = 123,
++	MX8MN_IOMUXC_SPDIF_EXT_CLK = 124,
++	MX8MN_IOMUXC_ECSPI1_SCLK = 125,
++	MX8MN_IOMUXC_ECSPI1_MOSI = 126,
++	MX8MN_IOMUXC_ECSPI1_MISO = 127,
++	MX8MN_IOMUXC_ECSPI1_SS0 = 128,
++	MX8MN_IOMUXC_ECSPI2_SCLK = 129,
++	MX8MN_IOMUXC_ECSPI2_MOSI = 130,
++	MX8MN_IOMUXC_ECSPI2_MISO = 131,
++	MX8MN_IOMUXC_ECSPI2_SS0 = 132,
++	MX8MN_IOMUXC_I2C1_SCL = 133,
++	MX8MN_IOMUXC_I2C1_SDA = 134,
++	MX8MN_IOMUXC_I2C2_SCL = 135,
++	MX8MN_IOMUXC_I2C2_SDA = 136,
++	MX8MN_IOMUXC_I2C3_SCL = 137,
++	MX8MN_IOMUXC_I2C3_SDA = 138,
++	MX8MN_IOMUXC_I2C4_SCL = 139,
++	MX8MN_IOMUXC_I2C4_SDA = 140,
++	MX8MN_IOMUXC_UART1_RXD = 141,
++	MX8MN_IOMUXC_UART1_TXD = 142,
++	MX8MN_IOMUXC_UART2_RXD = 143,
++	MX8MN_IOMUXC_UART2_TXD = 144,
++	MX8MN_IOMUXC_UART3_RXD = 145,
++	MX8MN_IOMUXC_UART3_TXD = 146,
++	MX8MN_IOMUXC_UART4_RXD = 147,
++	MX8MN_IOMUXC_UART4_TXD = 148,
++};
++
++/* Pad names for the pinmux subsystem */
++static const struct pinctrl_pin_desc imx8mn_pinctrl_pads[] = {
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE0),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE1),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE2),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE3),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE4),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE5),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE6),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE7),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_BOOT_MODE2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_BOOT_MODE3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO00),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO01),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO02),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO03),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO04),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO05),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO06),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO07),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO08),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO09),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO10),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO11),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO12),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO13),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO14),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO15),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_MDC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_MDIO),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TD3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TD2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TD1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TX_CTL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RX_CTL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RD1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RD2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RD3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_CLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_CMD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA4),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA5),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA6),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA7),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_RESET_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_STROBE),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_CD_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_CLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_CMD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_DATA0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_DATA1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_DATA2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_DATA3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_RESET_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_WP),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_ALE),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_CE0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_CE1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_CE2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_CE3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_CLE),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA00),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA01),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA02),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA03),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA04),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA05),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA06),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA07),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DQS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_RE_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_READY_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_WE_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_WP_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXD1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXD2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXD3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_MCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD4),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD5),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD6),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD7),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD4),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD5),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD6),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD7),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_MCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_RXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_RXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_RXD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_TXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_TXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_TXD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_MCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_RXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_RXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_RXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_TXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_TXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_TXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_MCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SPDIF_TX),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SPDIF_RX),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SPDIF_EXT_CLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI1_SCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI1_MOSI),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI1_MISO),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI1_SS0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI2_SCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI2_MOSI),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI2_MISO),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI2_SS0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C1_SCL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C1_SDA),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C2_SCL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C2_SDA),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C3_SCL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C3_SDA),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C4_SCL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C4_SDA),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART1_RXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART1_TXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART2_RXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART2_TXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART3_RXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART3_TXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART4_RXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART4_TXD),
++};
++
++static struct imx_pinctrl_soc_info imx8mn_pinctrl_info = {
++	.pins = imx8mn_pinctrl_pads,
++	.npins = ARRAY_SIZE(imx8mn_pinctrl_pads),
++	.gpr_compatible = "fsl,imx8mn-iomuxc-gpr",
++};
++
++static const struct of_device_id imx8mn_pinctrl_of_match[] = {
++	{ .compatible = "fsl,imx8mn-iomuxc", .data = &imx8mn_pinctrl_info, },
++	{ /* sentinel */ }
++};
++
++static int imx8mn_pinctrl_probe(struct platform_device *pdev)
++{
++	return imx_pinctrl_probe(pdev, &imx8mn_pinctrl_info);
++}
++
++static struct platform_driver imx8mn_pinctrl_driver = {
++	.driver = {
++		.name = "imx8mn-pinctrl",
++		.of_match_table = of_match_ptr(imx8mn_pinctrl_of_match),
++		.suppress_bind_attrs = true,
++	},
++	.probe = imx8mn_pinctrl_probe,
++};
++
++static int __init imx8mn_pinctrl_init(void)
++{
++	return platform_driver_register(&imx8mn_pinctrl_driver);
++}
++arch_initcall(imx8mn_pinctrl_init);
+-- 
+2.7.4
