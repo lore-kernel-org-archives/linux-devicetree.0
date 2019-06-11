@@ -1,122 +1,154 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v4 0/6] MSM8998 Multimedia Clock Controller
-Date: Tue, 11 Jun 2019 14:14:06 -0600
-Message-ID: <CAOCk7NpfG6bTj1E-_f+hXRJgiwe5V_w5Mdg2sYuRY9FHyGqEig@mail.gmail.com>
-References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
- <933023a0-10fd-fedf-6715-381dae174ad9@codeaurora.org> <20190607203838.1361E208C3@mail.kernel.org>
- <CAOCk7NrnnUzaXtnRvH0pHyHha4sTQDQCRoVPPatHfgVuEPZr0Q@mail.gmail.com> <20190607231841.D101120825@mail.kernel.org>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe ordering
+Date: Tue, 11 Jun 2019 13:19:53 -0700
+Message-ID: <CAGETcx_kFMXTCdBVFX-VQ6mktoDe=nqYMS76QBWGdhL=+fT79Q@mail.gmail.com>
+References: <20190524010117.225219-1-saravanak@google.com> <06b479e2-e8a0-b3e8-567c-7fa0f1c5bdf6@gmail.com>
+ <CAGETcx-21GEoBKhpzcsrDt3sEo-vUpwqnr3To7VbSPd8aW86Nw@mail.gmail.com>
+ <d49dccee-203a-628a-8e47-191014619f6b@gmail.com> <CAGETcx-HPsxdwMfUJDUBvjpiuK9eyRCYRhqsXxiL5Q8g+YgHEg@mail.gmail.com>
+ <5a3c1776-69ed-eeec-9326-8632c6bd0d58@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190607231841.D101120825@mail.kernel.org>
+In-Reply-To: <5a3c1776-69ed-eeec-9326-8632c6bd0d58@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Jeffrey Hugo <jhugo@codeaurora.org>, David Brown <david.brown@linaro.org>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, linux-clk@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 5:18 PM Stephen Boyd <sboyd@kernel.org> wrote:
+On Tue, Jun 11, 2019 at 7:56 AM Frank Rowand <frowand.list@gmail.com> wrote:
 >
-> Quoting Jeffrey Hugo (2019-06-07 14:31:13)
-> > On Fri, Jun 7, 2019 at 2:38 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > >
-> > > Quoting Jeffrey Hugo (2019-05-21 07:52:28)
-> > > > On 5/21/2019 8:44 AM, Jeffrey Hugo wrote:
-> > > > > The multimedia clock controller (mmcc) is the main clock controller for
-> > > > > the multimedia subsystem and is required to enable things like display and
-> > > > > camera.
-> > > >
-> > > > Stephen, I think this series is good to go, and I have display/gpu stuff
-> > > > I'm polishing that will depend on this.  Would you kindly pickup patches
-> > > > 1, 3, 4, and 5 for 5.3?  I can work with Bjorn to pick up patches 2 and 6.
-> > > >
-> > >
-> > > If I apply patch 3 won't it break boot until patch 2 is also in the
-> > > tree? That seems to imply that I'll break bisection, and we have
-> > > kernelci boot testing clk-next so this will probably set off alarms
-> > > somewhere.
+> Hi Saravana,
+>
+> On 5/24/19 9:04 PM, Saravana Kannan wrote:
+> > On Fri, May 24, 2019 at 7:40 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>
+> >> Hi Saranova,
+> >>
+> >> I'll try to address the other portions of this email that I <snipped>
+> >> in my previous replies.
+> >>
+> >>
+> >> On 5/24/19 2:53 PM, Saravana Kannan wrote:
+> >>> On Fri, May 24, 2019 at 10:49 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>>>
+> >>>> On 5/23/19 6:01 PM, Saravana Kannan wrote:
+> >>>>> Add a generic "depends-on" property that allows specifying mandatory
+> >>>>> functional dependencies between devices. Add device-links after the
+> >>>>> devices are created (but before they are probed) by looking at this
+> >>>>> "depends-on" property.
+> >>>>>
+> >>>>> This property is used instead of existing DT properties that specify
+> >>>>> phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
+> >>>>> is because not all resources referred to by existing DT properties are
+> >>>>> mandatory functional dependencies. Some devices/drivers might be able>>>>> to operate with reduced functionality when some of the resources
+>
+>
+> In your original email, you say this:
+>
+> >>>>> aren't available. For example, a device could operate in polling mode
+> >>>>> if no IRQ is available, a device could skip doing power management if
+> >>>>> clock or voltage control isn't available and they are left on, etc.
+>
+>
+> >>>>>
+> >>>>> So, adding mandatory functional dependency links between devices by
+> >>>>> looking at referred phandles in DT properties won't work as it would
+> >>>>> prevent probing devices that could be probed. By having an explicit
+> >>>>> depends-on property, we can handle these cases correctly.
+> >>>>
+> >>>> Trying to wrap my brain around the concept, this series seems to be
+> >>>> adding the ability to declare that an apparent dependency (eg an IRQ
+> >>>> specified by a phandle) is _not_ actually a dependency.
+> >>>
+> >>> The current implementation completely ignores existing bindings for
+> >>> dependencies and so does the current tip of the kernel. So it's not
+> >>> really overriding anything. However, if I change the implementation so
+> >>> that depends-on becomes the source of truth if it exists and falls
+> >>> back to existing common bindings if "depends-on" isn't present -- then
+> >>> depends-on would truly be overriding existing bindings for
+> >>> dependencies. It depends on how we want to define the DT property.
+> >>>
+> >>>> The phandle already implies the dependency.
+> >>>
+> >>> Sure, it might imply, but it's not always true.
+> >>>
+> >>>> Creating a separate
+> >>>> depends-on property provides a method of ignoring the implied
+> >>>> dependencies.
+> >>>
+> >>> implied != true
+> >>>
+>
+> I refer to your irq mode vs polled mode device example:
+>
+> >>>> This is not just hardware description.  It is instead a combination
+> >>>> of hardware functionality and driver functionality.  An example
+> >>>> provided in the second paragraph of the email I am replying to
+> >>>> suggests a device could operate in polling mode if no IRQ is
+> >>>> available.  Using this example, the devicetree does not know
+> >>>> whether the driver requires the IRQ (currently an implied
+> >>>> dependency since the IRQ phandle exists).  My understanding
+> >>>> of this example is that the device node would _not_ have a
+> >>>> depends-on property for the IRQ phandle so the IRQ would be
+> >>>> optional.  But this is an attribute of the driver, not the
+> >>>> hardware.
+> >>>
+> >>
+>
+> You change the subject from irq mode vs polled mode device to some
+> other type of device:
+>
+> >>> Not really. The interrupt could be for "SD card plugged in". That's
+> >>> never a mandatory dependency for the SD card controller to work. So
+> >>> the IRQ provider won't be a "depends-on" in this case. But if there is
+> >>> no power supply or clock for the SD card controller, it isn't going to
+> >>> work -- so they'd be listed in the "depends-on". So, this is still
+> >>> defining the hardware and not the OS.
+> >>
+>
+> I again try to get you to discuss the irq mode vs polled mode device:
+>
+> >> Please comment on my observation that was based on an IRQ for a device
+> >> will polling mode vs interrupt driven mode.
+> >> You described a different
+> >> case and did not address my comment.
+> > > I thought I did reply -- not sure what part you are looking for so
+> > I'll rephrase. I was just picking the SD card controller as a concrete
+> > example of device that can work with or without an interrupt. But
+> > sure, I can call it "the device".
 > >
-> > Yes, it'll break boot.  Maybe you and Bjorn can make a deal?  (more below)
-> >
-> > Doesn't look like kernelci is running tests on 8998 anymore, so maybe
-> > no one will complain?  As far as I am aware, Marc, Lee, Bjorn, and I
-> > are the only ones whom care about 8998 presently, and I think we are
-> > all good with a temporary breakage in order to get this basic
-> > functionality in since the platform isn't really well supported yet.
 >
-> Ok.
+> And the thread is so deeply nested that you are missing the original
+> point that I made.
 >
-> >
-> > >
-> > > I thought we had some code that got removed that was going to make the
-> > > transition "seamless" in the sense that it would search the tree for an
-> > > RPM clk controller and then not add the XO fixed factor clk somehow.
-> > > See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
-> > > clocks") for the code that we removed. So ideally we do something like
-> > > this too, but now we search for a property on the calling node to see if
-> > > the XO clk is there?
-> > >
-> >
-> > Trying to remember back a bit.
-> >
-> > I don't think its possible.  Maybe I'm wrong.  I didn't see a solution
-> > to the below:
-> >
-> > How does GCC know the following?
-> > -RPMCC is compiled in the build (I guess this can be assumed)
+> > And yes, the device won't have a "depends-on" on the IRQ provider
+> > because the device can still work without a working (as in bound to
+> > driver) IRQ provider. Whether the driver insists on waiting on an IRQ
+> > provider or not is up to the driver and the depends-on property is NOT
+> > trying to dictate what the driver should do in this case. Does that
+> > answer your implied question?
 >
-> This is the IS_ENABLED part.
+> If the device _must_ operate in irq mode to achieve the throughput
+> that is _required_ for the system to be functional then that system
+> would need a devicetree to have a "depends-on" property for the irq.
+> But another system using the same exact hardware might be able to
+> tolerate the reduced throughput of operating in polled mode.  This
+> second system would need a devicetree that does _not_ have a
+> depends-on property for that same irq, as used by that same device.
 
-Eh, this would assume that someone hasn't compiled RPCC out of tree,
-but this is probably me being pedantic.
+Thanks for clarifying the point. I see the difference in our view points.
 
->
-> > -RPMCC has probed
-> > -RPMCC is not and will not be providing XO
->
-> Presumably if it's enabled then it will be providing XO at some point in
-> the future. I'm not suggesting the probe defer logic is removed, just
-> that we don't get into a state where clk tree has merged all the patches
-> for clk driver side and that then relies on DT to provide the clk but it
-> doesn't do that.
->
-> So the idea is to check if RPM is compiled in and also check the GCC DT
-> node for the clocks property having the xo clk there. Then we assume
-> that we have the clk patches in place for the RPM clk driver to provide
-> that clk and we skip inserting the fake clk that RPM is going to
-> provide.
+The way I see it, on the system where the device must operate in IRQ
+mode to meet performance requirements, the DRIVER would choose to
+always -EPROBE_DEFER till it gets the IRQ. Or if it's BSD or Windows
+or whatever other theoretical OS that is trying to use the same DT
+blob, it'll follow whatever mechanism that OS provides for waiting for
+the IRQ to become available.
+On the system where not having the IRQ is okay, the DRIVER would not
+EPROBE_DEFER and just go to using polling mode.
+In both these cases I don't expect the depends-on to list the IRQ provider.
 
-So, I thought about this, and I don't think it works.  This appears to be a
-solution for if RPM is not present.  If, in patch 3, I check for the clocks
-property in the gcc DT and don't see it, and I add the fake XO as a result,
-I'll end up with a namespace conflict with either GCC or RPMCC failing
-to register XO since both will attempt it.
+I have more to say but I'll say that in the RESEND thread as a reply
+to your other email.
 
-The issue is do we have RPM providing XO (ie patch 3) without a DT
-routing it to GCC (ie patch 2).  Since we have patch 3, we know RPM is
-going to provide XO.  We just might not have a handle to it to do the
-probe_defer logic.
-
-I think the solution is check the DT for the clocks property, if present use
-that to attempt to grab XO.  Otherwise, attempt to grab XO from the system
-map.  I'll try this in the next rev.
-
->
-> This is also a "general" solution to GCC not depending on or selecting
-> the RPM clk driver. It may be better to just have a select statement in
-> GCC Kconfig so that we can't enable the GCC driver without also enabling
-> the RPM driver if it's an essential dependency to the clk tree working.
-> But if we do this design then we can make the clk tree keep working
-> regardless of RPM being there or not, which may be a good thing.
->
-
-I'm not sure attempting to sidestep the RPM dependency is worthwhile.
-Its not just GCC, but every clock controller that depends on XO, and thus
-implicitly RPM.
-
-I suspect any real system is going to have to have the RPM, just by the
-nature of what the RPM controls that cannot be managed elsewhere,
-such as BIMC.  At some point, a system is going to want to ramp up the
-memory bus and DDR speeds to something more than the bare minimum.
-
-Putting in a bunch of code to try to avoid depending on the RPM seems
-like effort not well spent as its unlikely such code is going to be active.
+-Saravana
