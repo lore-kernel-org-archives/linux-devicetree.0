@@ -1,32 +1,102 @@
-Return-Path: <SRS0=e23W=UL=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com> <1560258401-9517-4-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1560258401-9517-4-git-send-email-fabrizio.castro@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 12 Jun 2019 09:02:11 +0200
-Message-ID: <CAMuHMdWx6opBuDeLv35E2dK3BDLrqd=3D_9PaK8FbpBEHvRFDQ@mail.gmail.com>
-Subject: Re: [PATCH 3/6] arm64: dts: renesas: r8a774a1: Add CMT device nodes
-Content-Type: text/plain; charset="UTF-8"
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=x+Gy=UK=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 3/6] arm64: dts: renesas: r8a774a1: Add CMT device nodes
+Date: Tue, 11 Jun 2019 14:06:38 +0100
+Message-Id: <1560258401-9517-4-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jun 11, 2019 at 3:07 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> This patch adds the CMT[0123] device tree nodes to the
-> r8a774a1 SoC specific DT.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+This patch adds the CMT[0123] device tree nodes to the
+r8a774a1 SoC specific DT.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+---
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 70 +++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+index 4a12a42..b8a423d 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+@@ -374,6 +374,76 @@
+ 			reg = <0 0xe6060000 0 0x50c>;
+ 		};
+ 
++		cmt0: timer@e60f0000 {
++			compatible = "renesas,r8a774a1-cmt0",
++				     "renesas,rcar-gen3-cmt0";
++			reg = <0 0xe60f0000 0 0x1004>;
++			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 303>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
++			resets = <&cpg 303>;
++			status = "disabled";
++		};
++
++		cmt1: timer@e6130000 {
++			compatible = "renesas,r8a774a1-cmt1",
++				     "renesas,rcar-gen3-cmt1";
++			reg = <0 0xe6130000 0 0x1004>;
++			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 302>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
++			resets = <&cpg 302>;
++			status = "disabled";
++		};
++
++		cmt2: timer@e6140000 {
++			compatible = "renesas,r8a774a1-cmt1",
++				     "renesas,rcar-gen3-cmt1";
++			reg = <0 0xe6140000 0 0x1004>;
++			interrupts = <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 301>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
++			resets = <&cpg 301>;
++			status = "disabled";
++		};
++
++		cmt3: timer@e6148000 {
++			compatible = "renesas,r8a774a1-cmt1",
++				     "renesas,rcar-gen3-cmt1";
++			reg = <0 0xe6148000 0 0x1004>;
++			interrupts = <GIC_SPI 470 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 471 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 476 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 477 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 300>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
++			resets = <&cpg 300>;
++			status = "disabled";
++		};
++
+ 		cpg: clock-controller@e6150000 {
+ 			compatible = "renesas,r8a774a1-cpg-mssr";
+ 			reg = <0 0xe6150000 0 0x0bb0>;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
