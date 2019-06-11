@@ -1,39 +1,61 @@
-Return-Path: <SRS0=bp0t=UQ=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v2 0/3] Add Support for Kontron SMARC-sAMX6i
-Date: Mon, 17 Jun 2019 18:14:29 +0200
-Message-Id: <20190617161432.32268-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=qJfG=UK=nxp.com=aisheng.dong@kernel.org>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 2/3] pinctrl: freescale: Add i.MX8MN pinctrl driver
+ support
+Date: Tue, 11 Jun 2019 10:45:51 +0000
+Message-ID: 
+ <AM0PR04MB4211964EA3993A99465D861980ED0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190530030546.9224-1-Anson.Huang@nxp.com>
+ <20190530030546.9224-2-Anson.Huang@nxp.com>
+In-Reply-To: <20190530030546.9224-2-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
-Cc: devicetree@vger.kernel.org, Gilles.Buloz@kontron.com, frieder.schrempf@kontron.de, thomas.schaefer@kontron.com, Stefan.Nickl@kontron.com, Michael.Brunner@kontron.com, kernel@pengutronix.de, festevam@gmail.com, plaes@plaes.org
+To: Anson Huang <anson.huang@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "olof@lixom.net" <olof@lixom.net>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, Leonard Crestez <leonard.crestez@nxp.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-
-this v2 covers the feedback made on my v1 [1]. Patch 3-17 are now
-squashed into one patch.
-
-[1] https://www.spinics.net/lists/devicetree/msg287251.html
-
-Marco Felsch (1):
-  dt-bindings: add Kontron vendor prefix
-
-Michael Grzeschik (1):
-  ARM: dts: imx6qdl-kontron-samx6i: add Kontron SMARC SoM Support
-
-Priit Laes (1):
-  ARM: dts: imx6qdl-kontron-samx6i: Add iMX6-based Kontron SMARC-sAMX6i
-    module
-
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- arch/arm/boot/dts/imx6dl-kontron-samx6i.dtsi  |  12 +
- arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi   |  36 +
- arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 815 ++++++++++++++++++
- 4 files changed, 865 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-kontron-samx6i.dtsi
- create mode 100644 arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi
- create mode 100644 arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-
--- 
-2.20.1
+PiBGcm9tOiBBbnNvbi5IdWFuZ0BueHAuY29tIFttYWlsdG86QW5zb24uSHVhbmdAbnhwLmNvbV0N
+Cj4gU2VudDogVGh1cnNkYXksIE1heSAzMCwgMjAxOSAxMTowNiBBTQ0KPiANCj4gRnJvbTogQW5z
+b24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IA0KPiBBZGQgdGhlIHBpbmN0cmwgZHJp
+dmVyIHN1cHBvcnQgZm9yIGkuTVg4TU4uDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFu
+ZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3BpbmN0cmwvZnJlZXNj
+YWxlL0tjb25maWcgICAgICAgICAgfCAgIDcgKw0KPiAgZHJpdmVycy9waW5jdHJsL2ZyZWVzY2Fs
+ZS9NYWtlZmlsZSAgICAgICAgIHwgICAxICsNCj4gIGRyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUv
+cGluY3RybC1pbXg4bW4uYyB8IDM0OA0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0K
+PiAgMyBmaWxlcyBjaGFuZ2VkLCAzNTYgaW5zZXJ0aW9ucygrKQ0KPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4bW4uYw0KPiANCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvS2NvbmZpZyBiL2RyaXZlcnMvcGlu
+Y3RybC9mcmVlc2NhbGUvS2NvbmZpZw0KPiBpbmRleCBhZWFiMGQ5Li40ZmY1MmZhIDEwMDY0NA0K
+PiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL0tjb25maWcNCj4gKysrIGIvZHJpdmVy
+cy9waW5jdHJsL2ZyZWVzY2FsZS9LY29uZmlnDQo+IEBAIC0xMjMsNiArMTIzLDEzIEBAIGNvbmZp
+ZyBQSU5DVFJMX0lNWDdVTFANCj4gIAloZWxwDQo+ICAJICBTYXkgWSBoZXJlIHRvIGVuYWJsZSB0
+aGUgaW14N3VscCBwaW5jdHJsIGRyaXZlcg0KPiANCj4gK2NvbmZpZyBQSU5DVFJMX0lNWDhNTg0K
+DQpOaXRwaWNrOiB0aGlzIHNlZW1zIHNob3VsZCBiZSB1bmRlciBpbXg4bW0gaWYgaW4gYWxwaGFi
+ZXRpY2FsIG9yZGVyDQoNCj4gKwlib29sICJJTVg4TU4gcGluY3RybCBkcml2ZXIiDQo+ICsJZGVw
+ZW5kcyBvbiBBUkNIX01YQyAmJiBBUk02NA0KPiArCXNlbGVjdCBQSU5DVFJMX0lNWA0KPiArCWhl
+bHANCj4gKwkgIFNheSBZIGhlcmUgdG8gZW5hYmxlIHRoZSBpbXg4bW4gcGluY3RybCBkcml2ZXIN
+Cj4gKw0KPiAgY29uZmlnIFBJTkNUUkxfSU1YOE1NDQo+ICAJYm9vbCAiSU1YOE1NIHBpbmN0cmwg
+ZHJpdmVyIg0KPiAgCWRlcGVuZHMgb24gQVJDSF9NWEMgJiYgQVJNNjQNCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvTWFrZWZpbGUNCj4gYi9kcml2ZXJzL3BpbmN0cmwv
+ZnJlZXNjYWxlL01ha2VmaWxlDQo+IGluZGV4IDAyMDIwYTcuLjE4MjI1ZGEgMTAwNjQ0DQo+IC0t
+LSBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvTWFrZWZpbGUNCj4gKysrIGIvZHJpdmVycy9w
+aW5jdHJsL2ZyZWVzY2FsZS9NYWtlZmlsZQ0KPiBAQCAtMTgsNiArMTgsNyBAQCBvYmotJChDT05G
+SUdfUElOQ1RSTF9JTVg2U1gpCSs9IHBpbmN0cmwtaW14NnN4Lm8NCj4gIG9iai0kKENPTkZJR19Q
+SU5DVFJMX0lNWDZVTCkJKz0gcGluY3RybC1pbXg2dWwubw0KPiAgb2JqLSQoQ09ORklHX1BJTkNU
+UkxfSU1YN0QpCSs9IHBpbmN0cmwtaW14N2Qubw0KPiAgb2JqLSQoQ09ORklHX1BJTkNUUkxfSU1Y
+N1VMUCkJKz0gcGluY3RybC1pbXg3dWxwLm8NCj4gK29iai0kKENPTkZJR19QSU5DVFJMX0lNWDhN
+TikJKz0gcGluY3RybC1pbXg4bW4ubw0KDQpkaXR0bw0KDQo+ICBvYmotJChDT05GSUdfUElOQ1RS
+TF9JTVg4TU0pCSs9IHBpbmN0cmwtaW14OG1tLm8NCj4gIG9iai0kKENPTkZJR19QSU5DVFJMX0lN
+WDhNUSkJKz0gcGluY3RybC1pbXg4bXEubw0KPiAgb2JqLSQoQ09ORklHX1BJTkNUUkxfSU1YOFFN
+KQkrPSBwaW5jdHJsLWlteDhxbS5vDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvZnJl
+ZXNjYWxlL3BpbmN0cmwtaW14OG1uLmMNCj4gYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3Bp
+bmN0cmwtaW14OG1uLmMNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMC4u
+NjcxNjFkZg0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2Nh
+bGUvcGluY3RybC1pbXg4bW4uYw0KPiBAQCAtMCwwICsxLDM0OCBAQA0KPiArLy8gU1BEWC1MaWNl
+bnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gKy8qDQo+ICsgKiBDb3B5cmlnaHQgMjAxOC0yMDE5
+IE5YUA0KPiArICovDQo+ICsNCj4gKyNpbmNsdWRlIDxsaW51eC9lcnIuaD4NCj4gKyNpbmNsdWRl
+IDxsaW51eC9pbml0Lmg+DQo+ICsjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+DQoNClRoaXMg
+Y291bGQgYmUgb2YuaA0KDQpPdGhlcndpc2U6DQpBY2tlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNo
+ZW5nLmRvbmdAbnhwLmNvbT4NCg0KUmVnYXJkcw0KRG9uZyBBaXNoZW5nDQo=
