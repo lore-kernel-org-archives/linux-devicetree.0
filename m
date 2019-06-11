@@ -1,61 +1,77 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC PATCH 23/30] of/platform: Export
- of_platform_device_create_pdata()
-Date: Tue, 11 Jun 2019 10:08:24 +0530
-Message-ID: <a80c7c33-7091-70d9-cd86-a19fe43d3bc6@ti.com>
-References: <20190604131516.13596-1-kishon@ti.com>
- <20190604131516.13596-24-kishon@ti.com>
- <CAL_JsqJ5gsctd7L3VOhTO1JdUqmMmSJRpos1XQyfxzmGO7wauw@mail.gmail.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v5 15/15] dmaengine: imx-sdma: add uart rom script
+Date: Tue, 11 Jun 2019 10:07:31 +0530
+Message-ID: <20190611043731.GS9160@vkoul-mobl.Dlink>
+References: <20190610081753.11422-1-yibin.gong@nxp.com>
+ <20190610081753.11422-16-yibin.gong@nxp.com>
+ <20190610125534.GQ9160@vkoul-mobl.Dlink>
+ <1560251269.9731.41.camel@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAL_JsqJ5gsctd7L3VOhTO1JdUqmMmSJRpos1XQyfxzmGO7wauw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tom Joseph <tjoseph-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Gustavo Pimentel <gustavo.pimentel-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1560251269.9731.41.camel@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Gong <yibin.gong@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vge>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 11-06-19, 03:04, Robin Gong wrote:
+> On 2019-06-10 at 12:55 +0000, Vinod Koul wrote:
+> > On 10-06-19, 16:17, yibin.gong@nxp.com wrote:
+> > > 
+> > > From: Robin Gong <yibin.gong@nxp.com>
+> > > 
+> > > For the compatibility of NXP internal legacy kernel before 4.19
+> > > which
+> > > is based on uart ram script and upstreaming kernel based on uart
+> > > rom
+> > > script, add both uart ram/rom script in latest sdma firmware. By
+> > > default
+> > > uart rom script used.
+> > > Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and
+> > > add
+> > > back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for
+> > > i.mx6).
+> > > 
+> > > rom script:
+> > > 	uart_2_mcu_addr
+> > > 	uartsh_2_mcu_addr /* through spba bus */
+> > > ram script:
+> > > 	uart_2_mcu_ram_addr
+> > > 	uartsh_2_mcu_ram_addr /* through spba bus */
+> > > 
+> > > Please get latest sdma firmware from the below and put them into
+> > > the path
+> > > (/lib/firmware/imx/sdma/):
+> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fg
+> > > it.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ffirmware%2Flinux
+> > > -firmware.git&amp;data=02%7C01%7Cyibin.gong%40nxp.com%7C6a7833e8a09
+> > > 344d9951e08d6eda35fc5%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C
+> > > 636957683278190279&amp;sdata=RHeypEOREiPGmKveg6gYPy%2FMg8Dzz4JpcHsm
+> > > %2Bbdxlzo%3D&amp;reserved=0
+> > > /tree/imx/sdma
+> > How does this work with folks have older firmware?
+> The older SDMA RAM script(firmware) will break the uart driver of
+> upstreaming kernel for these years, this is why Lucas raise uart driver
+> patch (commit 905c0decad28) to use ROM script instead. There are two
+> ways to fix uart issue: one is checking 'Idle Condition
+> Detection'/'Aging timer' in RAM script and enable 'IDLE' in uart
+> driver, another is only checking 'Aging timer' in ROM script and
+> adjusting RX FIFO burst length one word less to ensure at least one
+> word left forever in RX FIFO which is the trigger requirement of 'Aging
+> timer'(So no need 'IDLE', 'Aging time' is enough) . FSL/NXP internal
+> kernel go with the first option, while upstreaming kernel go with the
+> second. Since Lucas's patch assume ROM script used in kernel and
+> disable 'IDLE', upstreaming kernel broken in uart driver with older
+> firmware for these years. So this patch is just for fix this
+> compatibility issue with the ram script(older firmware) updated in
+> linux-firmware(done already.), thus both RAM script and ROM script can
+> work in kernel. Besides, kernel with the latest RAM firmware and this
+> patch set can workaround ecspi issue without any function break which
+> Lucas concerned about.
 
-On 10/06/19 11:13 PM, Rob Herring wrote:
-> On Tue, Jun 4, 2019 at 7:19 AM Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->>
->> Export of_platform_device_create_pdata() to be used by drivers to
->> create child devices with the given platform data. This can be used
->> by platform specific driver to send platform data core driver. For e.g.,
->> this will be used by TI's J721E SoC specific PCIe driver to send
->> ->start_link() ops and ->is_link_up() ops to Cadence core PCIe driver.
-> 
-> NAK
-> 
-> of_platform_device_create_pdata() is purely for legacy handling of
-> auxdata which is something I hope to get rid of someday. Or to put it
-> another way, auxdata use is a sign of platforms not fully converted to
-> DT.
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
-All right. Thanks for letting me know your thoughts.
-
-Lorenzo,
-
-We've modeled Cadence PCIe core as a separate driver and for some of the
-functionalities (for example starting LTSSM or checking link status) it has to
-invoke the wrapper driver functions (The registers for these are present in
-wrapper and not in Cadence Core). In the case of Designware, we modeled DWC
-core as a library which provided APIs to be used by wrapper driver. Now that
-Rob is not inclined for passing platform data from one driver to another (in
-this case TI specific J721E driver to Cadence PCIe driver), should we model
-Cadence core also as a library? If you agree, I can prepare patches for making
-Cadence PCIe core as a library. Please let me know your thoughts.
-
-Thanks
-Kishon
+-- 
+~Vinod
