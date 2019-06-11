@@ -1,29 +1,32 @@
-Return-Path: <SRS0=qchw=UL=verge.net.au=horms@kernel.org>
-Date: Wed, 12 Jun 2019 14:09:15 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v7 7/7] arm64: dts: renesas: cat874: Enable usb role
- switch support
-Message-ID: <20190612120915.pkoljraxl7oilk5u@verge.net.au>
-References: <1559296800-5610-1-git-send-email-biju.das@bp.renesas.com>
- <1559296800-5610-8-git-send-email-biju.das@bp.renesas.com>
+Return-Path: <SRS0=XYop=UK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:52720 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390485AbfFKGhQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Jun 2019 02:37:16 -0400
+Date: Mon, 10 Jun 2019 23:37:13 -0700
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: Drop bogus CLKSEL for timer12 on dra7
+Message-ID: <20190611063713.GA5447@atomide.com>
+References: <20190530065635.42811-1-tony@atomide.com>
+ <89884096-cda4-ea67-6776-4fb25abc65e3@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1559296800-5610-8-git-send-email-biju.das@bp.renesas.com>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+In-Reply-To: <89884096-cda4-ea67-6776-4fb25abc65e3@ti.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, May 31, 2019 at 11:00:00AM +0100, Biju Das wrote:
-> This patch enables TI HD3SS3220 device and support usb role switch
-> for the CAT 874 platform.
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [190531 12:06]:
+> On 30/05/2019 09:56, Tony Lindgren wrote:
+> > There is no CLKSEL for timer12 on dra6 unlike for timer1. This
 > 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> dra7
 
-Thanks,
+Thanks for spotting the typo, pushed out now and will send
+a pull request for the dra7 fixes probably on Wednesday.
 
-the related dt-bindings patch, "[PATCH v7 1/7] dt-bindings: usb: hd3ss3220
-device tree binding document" appears to have been reviewed and on-track
-for inclusion in mainline. On the strength of that I have applied this
-patch for inclusion in v5.3. Let me know if that is not desired at this
-time.
+Regards,
+
+Tony
