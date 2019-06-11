@@ -1,101 +1,111 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 11/11] ARM: dts: sun8i: s3: add
- devicetree for Lichee zero plus w/ S3
-Date: Tue, 11 Jun 2019 16:32:39 +0200
-Message-ID: <20190611143239.zvganlwaiku3bs63@flea>
-References: <20190611140940.14357-1-icenowy@aosc.io>
- <20190611140940.14357-12-icenowy@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
+Date: Tue, 11 Jun 2019 15:35:22 +0100
+Message-ID: <62d1f310-0cba-4d55-0f16-68bba3c64927@arm.com>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+ <20190610184714.6786-2-jean-philippe.brucker@arm.com>
+ <20190611103625.00001399@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6e3io72tcrt3erkz"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFHX73TQKGQEQU5M5AI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190611140940.14357-12-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190611103625.00001399@huawei.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
+On 11/06/2019 10:36, Jonathan Cameron wrote:
+>> +/**
+>> + * ioasid_alloc - Allocate an IOASID
+>> + * @set: the IOASID set
+>> + * @min: the minimum ID (inclusive)
+>> + * @max: the maximum ID (inclusive)
+>> + * @private: data private to the caller
+>> + *
+>> + * Allocate an ID between @min and @max. The @private pointer is stored
+>> + * internally and can be retrieved with ioasid_find().
+>> + *
+>> + * Return: the allocated ID on success, or %INVALID_IOASID on failure.
+>> + */
+>> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+>> +		      void *private)
+>> +{
+>> +	u32 id = INVALID_IOASID;
+>> +	struct ioasid_data *data;
+>> +
+>> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+>> +	if (!data)
+>> +		return INVALID_IOASID;
+>> +
+>> +	data->set = set;
+>> +	data->private = private;
+>> +
+>> +	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
+>> +		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
+>> +		goto exit_free;
+>> +	}
+>> +	data->id = id;
+>> +
+>> +exit_free:
+> 
+> This error flow is perhaps a little more confusing than it needs to be?
+> 
+> My assumption (perhaps wrong) is that we only have an id == INVALID_IOASID
+> if the xa_alloc fails, and that we will always have such an id value if
+> it does (I'm not totally sure this second element is true in __xa_alloc).
+> 
+> If I'm missing something perhaps a comment on how else we'd get here.
 
---6e3io72tcrt3erkz
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Yes we can simplify this:
 
-Hi,
+		return id;
+	exit_free:
+		kfree(data)
+		return INVALID_IOASID;
+	}
 
-On Tue, Jun 11, 2019 at 10:09:40PM +0800, Icenowy Zheng wrote:
-> Lichee zero plus is a core board made by Sipeed, which includes on-board
-> TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
-> header, a microUSB slot and a gold finger connector for expansion. It
-> can use either Sochip S3 or Allwinner S3L SoC.
->
-> Add the basic device tree for the core board, w/o optional onboard
-> storage, and with S3 SoC.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
-> New patch in v2.
->
->  arch/arm/boot/dts/Makefile                    |  1 +
->  .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |  8 ++++
->  .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    | 39 +++++++++++++++++++
->  3 files changed, 48 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
->  create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 5559028b770e..2b5e6a1d20ff 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1110,6 +1110,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->  	sun8i-r16-nintendo-super-nes-classic.dtb \
->  	sun8i-r16-parrot.dtb \
->  	sun8i-r40-bananapi-m2-ultra.dtb \
-> +	sun8i-s3-lichee-zero-plus.dtb \
->  	sun8i-t3-cqa3t-bv3.dtb \
->  	sun8i-v3s-licheepi-zero.dtb \
->  	sun8i-v3s-licheepi-zero-dock.dtb \
-> diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-> new file mode 100644
-> index 000000000000..7d2f6b145190
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-> @@ -0,0 +1,8 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun8i-s3.dtsi"
-> +#include "sun8i-s3-s3l-lichee-zero-plus.dtsi"
-> diff --git a/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
-> new file mode 100644
-> index 000000000000..bb148e796df7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
-> @@ -0,0 +1,39 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> + */
-> +
-> +#include "sunxi-common-regulators.dtsi"
+The XA API doesn't say that @id passed to xa_alloc() won't be modified
+in case of error. It's true in the current implementation, but won't
+necessarily stay that way. On the other hand I think it's safe to expect
+@id to always be set when xa_alloc() succeeds.
 
-If possible, you should get rid of that include. What are you using it
-for?
+>> +/**
+>> + * ioasid_find - Find IOASID data
+>> + * @set: the IOASID set
+>> + * @ioasid: the IOASID to find
+>> + * @getter: function to call on the found object
+>> + *
+>> + * The optional getter function allows to take a reference to the found object
+>> + * under the rcu lock. The function can also check if the object is still valid:
+>> + * if @getter returns false, then the object is invalid and NULL is returned.
+>> + *
+>> + * If the IOASID has been allocated for this set, return the private pointer
+>> + * passed to ioasid_alloc. Private data can be NULL if not set. Return an error
+>> + * if the IOASID is not found or does not belong to the set.
+> 
+> Perhaps should make it clear that @set can be null.
 
-Maxime
+Indeed. But I'm not sure allowing @set to be NULL is such a good idea,
+because the data type associated to an ioasid depends on its set. For
+example SVA will put an mm_struct in there, and auxiliary domains use
+some structure private to the IOMMU domain.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---6e3io72tcrt3erkz--
+Jacob, could me make @set mandatory, or do you see a use for a global
+search? If @set is NULL, then callers can check if the return pointer is
+NULL, but will run into trouble if they try to dereference it.
+
+> 
+>> + */
+>> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+>> +		  bool (*getter)(void *))
+>> +{
+>> +	void *priv = NULL;
+> 
+> Set in all paths, so does need to be set here.
+
+Right
+
+Thanks,
+Jean
