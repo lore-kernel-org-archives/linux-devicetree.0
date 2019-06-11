@@ -1,133 +1,129 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RFC PATCH 2/5] soundwire: core: add device tree support for slave devices
-Date: Tue, 11 Jun 2019 11:40:40 +0100
-Message-ID: <20190611104043.22181-3-srinivas.kandagatla@linaro.org>
-References: <20190611104043.22181-1-srinivas.kandagatla@linaro.org>
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH 8/8] iommu/arm-smmu-v3: Add support for PCI PASID
+Date: Tue, 11 Jun 2019 11:45:42 +0100
+Message-ID: <20190611114542.000021f1@huawei.com>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+        <20190610184714.6786-9-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611104043.22181-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20190610184714.6786-9-jean-philippe.brucker@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, vkoul@kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, bgoswami@quicinc.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: will.deacon@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to parsing device tree based
-SoundWire slave devices.
+On Mon, 10 Jun 2019 19:47:14 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/soundwire/bus.c   |  2 +-
- drivers/soundwire/bus.h   |  1 +
- drivers/soundwire/slave.c | 54 ++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 55 insertions(+), 2 deletions(-)
+> Enable PASID for PCI devices that support it. Since the SSID tables are
+> allocated by arm_smmu_attach_dev(), PASID has to be enabled early enough.
+> arm_smmu_dev_feature_enable() would be too late, since by that time the
+> main DMA domain has already been attached. Do it in add_device() instead.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Nitpick in line.
 
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index fe745830a261..20f26cf4ba74 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -78,7 +78,7 @@ int sdw_add_bus_master(struct sdw_bus *bus)
- 	if (IS_ENABLED(CONFIG_ACPI) && ACPI_HANDLE(bus->dev))
- 		ret = sdw_acpi_find_slaves(bus);
- 	else
--		ret = -ENOTSUPP; /* No ACPI/DT so error out */
-+		ret = sdw_of_find_slaves(bus);
- 
- 	if (ret) {
- 		dev_err(bus->dev, "Finding slaves failed:%d\n", ret);
-diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
-index 3048ca153f22..ee46befedbd1 100644
---- a/drivers/soundwire/bus.h
-+++ b/drivers/soundwire/bus.h
-@@ -15,6 +15,7 @@ static inline int sdw_acpi_find_slaves(struct sdw_bus *bus)
- }
- #endif
- 
-+int sdw_of_find_slaves(struct sdw_bus *bus);
- void sdw_extract_slave_id(struct sdw_bus *bus,
- 			  u64 addr, struct sdw_slave_id *id);
- 
-diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-index f39a5815e25d..6e7f5cfeb854 100644
---- a/drivers/soundwire/slave.c
-+++ b/drivers/soundwire/slave.c
-@@ -2,6 +2,7 @@
- // Copyright(c) 2015-17 Intel Corporation.
- 
- #include <linux/acpi.h>
-+#include <linux/of.h>
- #include <linux/soundwire/sdw.h>
- #include <linux/soundwire/sdw_type.h>
- #include "bus.h"
-@@ -28,13 +29,14 @@ static int sdw_slave_add(struct sdw_bus *bus,
- 	slave->dev.parent = bus->dev;
- 	slave->dev.fwnode = fwnode;
- 
--	/* name shall be sdw:link:mfg:part:class:unique */
-+	/* name shall be sdw:link:mfg:part:class */
- 	dev_set_name(&slave->dev, "sdw:%x:%x:%x:%x:%x",
- 		     bus->link_id, id->mfg_id, id->part_id,
- 		     id->class_id, id->unique_id);
- 
- 	slave->dev.release = sdw_slave_release;
- 	slave->dev.bus = &sdw_bus_type;
-+	slave->dev.of_node = of_node_get(to_of_node(fwnode));
- 	slave->bus = bus;
- 	slave->status = SDW_SLAVE_UNATTACHED;
- 	slave->dev_num = 0;
-@@ -112,3 +114,53 @@ int sdw_acpi_find_slaves(struct sdw_bus *bus)
- }
- 
- #endif
-+
-+#if IS_ENABLED(CONFIG_OF)
-+/*
-+ * sdw_of_find_slaves() - Find Slave devices in master device tree node
-+ * @bus: SDW bus instance
-+ *
-+ * Scans Master DT node for SDW child Slave devices and registers it.
-+ */
-+int sdw_of_find_slaves(struct sdw_bus *bus)
-+{
-+	struct device *dev = bus->dev;
-+	struct device_node *node;
-+
-+	if (!bus->dev->of_node)
-+		return 0;
-+
-+	for_each_child_of_node(bus->dev->of_node, node) {
-+		struct sdw_slave_id id;
-+		const char *compat = NULL;
-+		int unique_id, ret;
-+		int ver, mfg_id, part_id, class_id;
-+		compat = of_get_property(node, "compatible", NULL);
-+		if (!compat)
-+			continue;
-+
-+		ret = sscanf(compat, "sdw%x,%x,%x,%x",
-+			     &ver, &mfg_id, &part_id, &class_id);
-+		if (ret != 4) {
-+			dev_err(dev, "Manf ID & Product code not found %s\n",
-+				compat);
-+			continue;
-+		}
-+
-+		ret = of_property_read_u32(node, "sdw-instance-id", &unique_id);
-+		if (ret) {
-+			dev_err(dev, "Instance id not found:%d\n", ret);
-+			continue;
-+		}
-+
-+		id.sdw_version = ver - 0xF;
-+		id.unique_id = unique_id;
-+		id.mfg_id = mfg_id;
-+		id.part_id = part_id;
-+		id.class_id = class_id;
-+		sdw_slave_add(bus, &id, of_fwnode_handle(node));
-+	}
-+	return 0;
-+}
-+
-+#endif
--- 
-2.21.0
+Thanks,
+
+Jonathan
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 51 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 50 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 972bfb80f964..a8a516d9ff10 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2197,6 +2197,49 @@ static void arm_smmu_disable_ats(struct arm_smmu_master *master)
+>  	master->ats_enabled = false;
+>  }
+>  
+> +static int arm_smmu_enable_pasid(struct arm_smmu_master *master)
+> +{
+> +	int ret;
+> +	int features;
+> +	int num_pasids;
+> +	struct pci_dev *pdev;
+> +
+> +	if (!dev_is_pci(master->dev))
+> +		return -ENOSYS;
+> +
+> +	pdev = to_pci_dev(master->dev);
+> +
+> +	features = pci_pasid_features(pdev);
+> +	if (features < 0)
+> +		return -ENOSYS;
+> +
+> +	num_pasids = pci_max_pasids(pdev);
+> +	if (num_pasids <= 0)
+> +		return -ENOSYS;
+> +
+> +	ret = pci_enable_pasid(pdev, features);
+> +	if (!ret)
+> +		master->ssid_bits = min_t(u8, ilog2(num_pasids),
+> +					  master->smmu->ssid_bits);
+> +	return ret;
+> +}
+> +
+> +static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
+> +{
+> +	struct pci_dev *pdev;
+> +
+> +	if (!dev_is_pci(master->dev))
+> +		return;
+> +
+> +	pdev = to_pci_dev(master->dev);
+> +
+> +	if (!pdev->pasid_enabled)
+> +		return;
+> +
+> +	pci_disable_pasid(pdev);
+> +	master->ssid_bits = 0;
+
+If we are being really fussy about ordering, why have this set of
+ssid_bits after pci_disable_pasid rather than before (to reverse order
+of .._enable_pasid)?
+
+> +}
+> +
+>  static void arm_smmu_detach_dev(struct arm_smmu_master *master)
+>  {
+>  	unsigned long flags;
+> @@ -2413,6 +2456,9 @@ static int arm_smmu_add_device(struct device *dev)
+>  
+>  	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
+>  
+> +	/* Note that PASID must be enabled before, and disabled after ATS */
+> +	arm_smmu_enable_pasid(master);
+> +
+>  	/*
+>  	 * If the SMMU doesn't support 2-stage CD, limit the linear
+>  	 * tables to a reasonable number of contexts, let's say
+> @@ -2423,7 +2469,7 @@ static int arm_smmu_add_device(struct device *dev)
+>  
+>  	ret = iommu_device_link(&smmu->iommu, dev);
+>  	if (ret)
+> -		goto err_free_master;
+> +		goto err_disable_pasid;
+>  
+>  	group = iommu_group_get_for_dev(dev);
+>  	if (IS_ERR(group)) {
+> @@ -2436,6 +2482,8 @@ static int arm_smmu_add_device(struct device *dev)
+>  
+>  err_unlink:
+>  	iommu_device_unlink(&smmu->iommu, dev);
+> +err_disable_pasid:
+> +	arm_smmu_disable_pasid(master);
+>  err_free_master:
+>  	kfree(master);
+>  	fwspec->iommu_priv = NULL;
+> @@ -2456,6 +2504,7 @@ static void arm_smmu_remove_device(struct device *dev)
+>  	arm_smmu_detach_dev(master);
+>  	iommu_group_remove_device(dev);
+>  	iommu_device_unlink(&smmu->iommu, dev);
+> +	arm_smmu_disable_pasid(master);
+>  	kfree(master);
+>  	iommu_fwspec_free(dev);
+>  }
