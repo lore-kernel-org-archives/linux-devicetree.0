@@ -1,59 +1,79 @@
-From: Erwan Le Ray <erwan.leray@st.com>
-Subject: [PATCH v2 02/10] dt-bindings: serial: add optional pinctrl states
-Date: Tue, 11 Jun 2019 14:25:22 +0200
-Message-ID: <1560255930-22554-3-git-send-email-erwan.leray@st.com>
-References: <1560255930-22554-1-git-send-email-erwan.leray@st.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH 2/2] i3c: master: Add driver for MediaTek IP
+Date: Tue, 11 Jun 2019 14:28:49 +0200
+Message-ID: <20190611142849.43f6d1e4@collabora.com>
+References: <1559533863-10292-1-git-send-email-qii.wang@mediatek.com>
+        <1559533863-10292-3-git-send-email-qii.wang@mediatek.com>
+        <20190604095858.38ed9a28@collabora.com>
+        <1559651200.5871.2.camel@mhfsdcap03>
+        <1560255922.12217.3.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560255930-22554-1-git-send-email-erwan.leray@st.com>
+In-Reply-To: <1560255922.12217.3.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-serial@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, Bich Hemon <bich.hemon@st.com>
+To: Qii Wang <qii.wang@mediatek.com>
+Cc: bbrezillon@kernel.org, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, gregkh@linuxfoundation.org, xinping.qian@mediatek.com, linux-kernel@vger.kernel.org, liguo.zhang@mediatek.com, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-i3c@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bich Hemon <bich.hemon@st.com>
+On Tue, 11 Jun 2019 20:25:22 +0800
+Qii Wang <qii.wang@mediatek.com> wrote:
 
-Add options for pinctrl states:
-- "sleep" for low power
-- "idle" for low power and wakeup capabilities enabled
-- "no_console_suspend" for enabling console messages in low power
+> On Tue, 2019-06-04 at 20:26 +0800, Qii Wang wrote:
+> > On Tue, 2019-06-04 at 09:58 +0200, Boris Brezillon wrote:  
+> > > On Mon, 3 Jun 2019 11:51:03 +0800
+> > > Qii Wang <qii.wang@mediatek.com> wrote:
+> > > 
+> > >   
+> > > > +static int mtk_i3c_master_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +	struct device *dev = &pdev->dev;
+> > > > +	struct mtk_i3c_master *master;
+> > > > +	struct resource *res;
+> > > > +	int ret, irqnr;
+> > > > +
+> > > > +	master = devm_kzalloc(dev, sizeof(*master), GFP_KERNEL);
+> > > > +	if (!master)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "main");
+> > > > +	master->regs = devm_ioremap_resource(dev, res);
+> > > > +	if (IS_ERR(master->regs))
+> > > > +		return PTR_ERR(master->regs);
+> > > > +
+> > > > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dma");
+> > > > +	master->dma_regs = devm_ioremap_resource(dev, res);
+> > > > +	if (IS_ERR(master->dma_regs))
+> > > > +		return PTR_ERR(master->dma_regs);
+> > > > +
+> > > > +	irqnr = platform_get_irq(pdev, 0);
+> > > > +	if (irqnr < 0)
+> > > > +		return irqnr;
+> > > > +
+> > > > +	ret = devm_request_irq(dev, irqnr, mtk_i3c_master_irq,
+> > > > +			       IRQF_TRIGGER_NONE, DRV_NAME, master);
+> > > > +	if (ret < 0) {
+> > > > +		dev_err(dev, "Request I3C IRQ %d fail\n", irqnr);
+> > > > +		return ret;
+> > > > +	}
+> > > > +
+> > > > +	ret = of_property_read_u32(pdev->dev.of_node, "clock-div",
+> > > > +				   &master->clk_src_div);  
+> > > 
+> > > You say in one comment that this clock divider is fixed in HW but might
+> > > change on a per-SoC basis. If that's the case, you should get rid of
+> > > this clock-div prop and attach the divider to the compatible (using an
+> > > mtk_i3c_master_variant struct that contains a divider field).
+> > >   
+> > 
+> > ok, I will attach the divider to the compatible.
+> >   
+> I have rechecked your comment, maybe I have misunderstood what you mean.
+> "clock-div" changes according to i2c source clock, different project may
+> change i2c source clock, The previous dt-binding may be misleading, I
+> will modify it.
 
-Signed-off-by: Bich Hemon <bich.hemon@st.com>
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-
-diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-index 5ec80c1..64a5ea9 100644
---- a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-+++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-@@ -13,7 +13,14 @@ Required properties:
- - clocks: The input clock of the USART instance
- 
- Optional properties:
--- pinctrl: The reference on the pins configuration
-+- pinctrl-names: Set to "default". An additional "sleep" state can be defined
-+  to set pins in sleep state when in low power. In case the device is used as
-+  a wakeup source, "idle" state is defined in order to keep RX pin active.
-+  For a console device, an optional state "no_console_suspend" can be defined
-+  to enable console messages during suspend. Typically, "no_console_suspend" and
-+  "default" states can refer to the same pin configuration.
-+- pinctrl-n: Phandle(s) pointing to pin configuration nodes.
-+  For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
- - st,hw-flow-ctrl: bool flag to enable hardware flow control.
- - rs485-rts-delay, rs485-rx-during-tx, rs485-rts-active-low,
-   linux,rs485-enabled-at-boot-time: see rs485.txt.
-@@ -31,8 +38,11 @@ usart4: serial@40004c00 {
- 	reg = <0x40004c00 0x400>;
- 	interrupts = <52>;
- 	clocks = <&clk_pclk1>;
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "sleep", "idle", "no_console_suspend";
- 	pinctrl-0 = <&pinctrl_usart4>;
-+	pinctrl-1 = <&pinctrl_usart4_sleep>;
-+	pinctrl-2 = <&pinctrl_usart4_idle>;
-+	pinctrl-3 = <&pinctrl_usart4>;
- };
- 
- usart2: serial@40004400 {
--- 
-1.9.1
+Is it fixed or configurable? Maybe it should be modeled as a clk
+driver. What's for sure is that we shouldn't have this divider defined
+in the DT.
