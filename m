@@ -1,41 +1,32 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
- linearly to human eye.
-Date: Tue, 11 Jun 2019 15:30:19 -0700
-Message-ID: <20190611223019.GH137143@google.com>
-References: <20180208113032.27810-1-enric.balletbo@collabora.com>
- <20180208113032.27810-4-enric.balletbo@collabora.com>
- <20190607220947.GR40515@google.com>
- <20190608210226.GB2359@xo-6d-61-c0.localdomain>
- <20190610205233.GB137143@google.com>
- <20190611104913.egsbwcedshjdy3m5@holly.lan>
- <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 10/15] dma: imx-sdma: add i.mx6ul/6sx compatible name
+Date: Tue, 11 Jun 2019 16:35:07 -0600
+Message-ID: <20190611223507.GA25722@bogus>
+References: <20190610081753.11422-1-yibin.gong@nxp.com>
+ <20190610081753.11422-11-yibin.gong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
+In-Reply-To: <20190610081753.11422-11-yibin.gong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@google.com>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>, Pavel Machek <pavel@ucw.cz>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, kernel@collabora.com
+To: yibin.gong@nxp.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org, festevam@gmail.com, vkoul@kernel.org, dan.j.williams@intel.com, u.kleine-koenig@pengutronix.de, catalin.marinas@arm.com, l.stach@pengutronix.de, will.deacon@arm.com, linux-spi@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 09:55:30AM -0700, Brian Norris wrote:
-> On Tue, Jun 11, 2019 at 3:49 AM Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> > This is a long standing flaw in the backlight interfaces. AFAIK generic
-> > userspaces end up with a (flawed) heuristic.
+On Mon, 10 Jun 2019 16:17:48 +0800, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
 > 
-> Bingo! Would be nice if we could start to fix this long-standing flaw.
+> Add i.mx6ul and i.mx6sx compatible name in binding doc.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Agreed!
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-How could a fix look like, a sysfs attribute? Would a boolean value
-like 'logarithmic_scale' or 'linear_scale' be enough or could more
-granularity be needed?
-
-The new attribute could be optional (it only exists if explicitly
-specified by the driver) or be set to a default based on a heuristic
-if not specified and be 'fixed' on a case by case basis. The latter
-might violate "don't break userspace" though, so I'm not sure it's a
-good idea.
+If a tag was not added on purpose, please state why and what changed.
