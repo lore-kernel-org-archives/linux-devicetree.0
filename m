@@ -1,100 +1,65 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v1 06/11] ti948: Reconfigure in the alive check when
- device returns
-Date: Tue, 11 Jun 2019 21:10:46 +0300
-Message-ID: <20190611181046.GU5016@pendragon.ideasonboard.com>
+Subject: Re: [PATCH v1 07/11] ti948: Add sysfs node for alive attribute
+Date: Tue, 11 Jun 2019 21:11:44 +0300
+Message-ID: <20190611181144.GV5016@pendragon.ideasonboard.com>
 References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
- <20190611140412.32151-7-michael.drake@codethink.co.uk>
+ <20190611140412.32151-8-michael.drake@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20190611140412.32151-7-michael.drake@codethink.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20190611140412.32151-8-michael.drake@codethink.co.uk>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Michael Drake <michael.drake@codethink.co.uk>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nate Case <ncase@tesla.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
-
-Thank you for the patch.
-
-On Tue, Jun 11, 2019 at 03:04:07PM +0100, Michael Drake wrote:
-> If the alive check detects a transition to the alive state,
-> the device configuration is rewritten.
-
-This seems like a big hack. You will have at the very least to explain
-why this is needed, and why you can't configure the device in response
-to drm_bridge operation calls.
-
-> Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
-> Cc: Patrick Glaser <pglaser@tesla.com>
-> Cc: Nate Case <ncase@tesla.com>
-> ---
->  drivers/gpu/drm/bridge/ti948.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/ti948.c b/drivers/gpu/drm/bridge/ti948.c
-> index 86daa3701b91..b5c766711c4b 100644
-> --- a/drivers/gpu/drm/bridge/ti948.c
-> +++ b/drivers/gpu/drm/bridge/ti948.c
-> @@ -132,6 +132,8 @@ struct ti948_reg_val {
->   * @reg_names:   Array of regulator names, or NULL.
->   * @regs:        Array of regulators, or NULL.
->   * @reg_count:   Number of entries in reg_names and regs arrays.
-> + * @alive_check: Context for the alive checking work item.
-> + * @alive:       Whether the device is alive or not (alive_check).
->   */
->  struct ti948_ctx {
->  	struct i2c_client *i2c;
-> @@ -141,6 +143,8 @@ struct ti948_ctx {
->  	const char **reg_names;
->  	struct regulator **regs;
->  	size_t reg_count;
-> +	struct delayed_work alive_check;
-> +	bool alive;
->  };
->  
->  static bool ti948_readable_reg(struct device *dev, unsigned int reg)
-> @@ -346,6 +350,8 @@ static int ti948_power_on(struct ti948_ctx *ti948)
->  	if (ret != 0)
->  		return ret;
->  
-> +	ti948->alive = true;
-> +
->  	msleep(500);
->  
->  	return 0;
-> @@ -356,6 +362,8 @@ static int ti948_power_off(struct ti948_ctx *ti948)
->  	int i;
->  	int ret;
->  
-> +	ti948->alive = false;
-> +
->  	for (i = ti948->reg_count; i > 0; i--) {
->  		dev_info(&ti948->i2c->dev, "Disabling %s regulator\n",
->  				ti948->reg_names[i - 1]);
-> @@ -388,8 +396,17 @@ static void ti948_alive_check(struct work_struct *work)
->  {
->  	struct delayed_work *dwork = to_delayed_work(work);
->  	struct ti948_ctx *ti948 = delayed_work_to_ti948_ctx(dwork);
-> +	int ret = ti948_device_check(ti948);
->  
-> -	dev_info(&ti948->i2c->dev, "%s Alive check!\n", __func__);
-> +	if (ti948->alive == false && ret == 0) {
-> +		dev_info(&ti948->i2c->dev, "Device has come back to life!\n");
-> +		ti948_write_config_seq(ti948);
-> +		ti948->alive = true;
-> +
-> +	} else if (ti948->alive == true && ret != 0) {
-> +		dev_info(&ti948->i2c->dev, "Device has stopped responding\n");
-> +		ti948->alive = false;
-> +	}
->  
->  	/* Reschedule ourself for the next check. */
->  	schedule_delayed_work(&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
-
--- 
-Regards,
-
-Laurent Pinchart
+SGkgTWljaGFlbCwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gVHVlLCBKdW4gMTEsIDIw
+MTkgYXQgMDM6MDQ6MDhQTSArMDEwMCwgTWljaGFlbCBEcmFrZSB3cm90ZToKPiBUaGlzIG1heSBi
+ZSB1c2VkIGJ5IHVzZXJzcGFjZSB0byBkZXRlcm1pbmUgdGhlIHN0YXRlCj4gb2YgdGhlIGRldmlj
+ZS4KCldoeSBpcyB0aGlzIG5lZWRlZCA/IFVzZXJzcGFjZSBzaG91bGRuJ3QgZXZlbiBiZSBhd2Fy
+ZSB0aGF0IHRoaXMgZGV2aWNlCmV4aXN0cy4KCj4gU2lnbmVkLW9mZi1ieTogTWljaGFlbCBEcmFr
+ZSA8bWljaGFlbC5kcmFrZUBjb2RldGhpbmsuY28udWs+Cj4gQ2M6IFBhdHJpY2sgR2xhc2VyIDxw
+Z2xhc2VyQHRlc2xhLmNvbT4KPiBDYzogTmF0ZSBDYXNlIDxuY2FzZUB0ZXNsYS5jb20+Cj4gLS0t
+Cj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGk5NDguYyB8IDI4ICsrKysrKysrKysrKysrKysr
+KysrKysrKysrLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKyksIDIgZGVsZXRp
+b25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGk5NDguYyBi
+L2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGk5NDguYwo+IGluZGV4IGI1Yzc2NjcxMWM0Yi4uYjYy
+NGVhZWFiYjQzIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGk5NDguYwo+
+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGk5NDguYwo+IEBAIC00MTIsNiArNDEyLDE2
+IEBAIHN0YXRpYyB2b2lkIHRpOTQ4X2FsaXZlX2NoZWNrKHN0cnVjdCB3b3JrX3N0cnVjdCAqd29y
+aykKPiAgCXNjaGVkdWxlX2RlbGF5ZWRfd29yaygmdGk5NDgtPmFsaXZlX2NoZWNrLCBUSTk0OF9B
+TElWRV9DSEVDS19ERUxBWSk7Cj4gIH0KPiAgCj4gK3N0YXRpYyBzc2l6ZV90IGFsaXZlX3Nob3co
+c3RydWN0IGRldmljZSAqZGV2LAo+ICsJCXN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLCBj
+aGFyICpidWYpCj4gK3sKPiArCXN0cnVjdCB0aTk0OF9jdHggKnRpOTQ4ID0gdGk5NDhfY3R4X2Zy
+b21fZGV2KGRldik7Cj4gKwo+ICsJcmV0dXJuIHNjbnByaW50ZihidWYsIFBBR0VfU0laRSwgIiV1
+XG4iLCAodW5zaWduZWQgaW50KXRpOTQ4LT5hbGl2ZSk7Cj4gK30KPiArCj4gK3N0YXRpYyBERVZJ
+Q0VfQVRUUl9STyhhbGl2ZSk7Cj4gKwo+ICBzdGF0aWMgaW50IHRpOTQ4X3BtX3Jlc3VtZShzdHJ1
+Y3QgZGV2aWNlICpkZXYpCj4gIHsKPiAgCXN0cnVjdCB0aTk0OF9jdHggKnRpOTQ4ID0gdGk5NDhf
+Y3R4X2Zyb21fZGV2KGRldik7Cj4gQEAgLTYxNCwxNyArNjI0LDMxIEBAIHN0YXRpYyBpbnQgdGk5
+NDhfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwKPiAgCj4gIAlpMmNfc2V0X2NsaWVu
+dGRhdGEoY2xpZW50LCB0aTk0OCk7Cj4gIAo+ICsJcmV0ID0gZGV2aWNlX2NyZWF0ZV9maWxlKCZj
+bGllbnQtPmRldiwgJmRldl9hdHRyX2FsaXZlKTsKPiArCWlmIChyZXQpIHsKPiArCQlkZXZfZXJy
+KCZjbGllbnQtPmRldiwgIkNvdWxkIG5vdCBjcmVhdGUgYWxpdmUgYXR0clxuIik7Cj4gKwkJcmV0
+dXJuIHJldDsKPiArCX0KPiArCj4gIAlyZXQgPSB0aTk0OF9wbV9yZXN1bWUoJmNsaWVudC0+ZGV2
+KTsKPiAtCWlmIChyZXQgIT0gMCkKPiAtCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKPiArCWlmIChy
+ZXQgIT0gMCkgewo+ICsJCXJldCA9IC1FUFJPQkVfREVGRVI7Cj4gKwkJZ290byBlcnJvcjsKPiAr
+CX0KPiAgCj4gIAlkZXZfaW5mbygmdGk5NDgtPmkyYy0+ZGV2LCAiRW5kIHByb2JlIChhZGRyOiAl
+eClcbiIsIHRpOTQ4LT5pMmMtPmFkZHIpOwo+ICAKPiAgCXJldHVybiAwOwo+ICsKPiArZXJyb3I6
+Cj4gKwlkZXZpY2VfcmVtb3ZlX2ZpbGUoJmNsaWVudC0+ZGV2LCAmZGV2X2F0dHJfYWxpdmUpOwo+
+ICsJcmV0dXJuIHJldDsKPiAgfQo+ICAKPiAgc3RhdGljIGludCB0aTk0OF9yZW1vdmUoc3RydWN0
+IGkyY19jbGllbnQgKmNsaWVudCkKPiAgewo+ICsJZGV2aWNlX3JlbW92ZV9maWxlKCZjbGllbnQt
+PmRldiwgJmRldl9hdHRyX2FsaXZlKTsKPiArCj4gIAlyZXR1cm4gdGk5NDhfcG1fc3VzcGVuZCgm
+Y2xpZW50LT5kZXYpOwo+ICB9Cj4gIAoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
