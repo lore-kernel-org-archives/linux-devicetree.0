@@ -1,47 +1,100 @@
-From: Dehui Sun <dehui.sun@mediatek.com>
-Subject: [PATCH v1 2/2] arm64: dts: mt8183: add systimer0 device node
-Date: Tue, 11 Jun 2019 19:28:54 +0800
-Message-ID: <1560252534-11412-3-git-send-email-dehui.sun@mediatek.com>
-References: <1560252534-11412-1-git-send-email-dehui.sun@mediatek.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 09/11] dt-bindings: net: sun8i-emac: Convert the
+ binding to a schemas
+Date: Tue, 11 Jun 2019 13:31:08 +0200
+Message-ID: <20190611113108.pxiia2u5skbnl2au@flea>
+References: <91618c7e9a5497462afa74c6d8a947f709f54331.1560158667.git-series.maxime.ripard@bootlin.com>
+ <f3f393db88b26d84a048cb71887a571611b984a2.1560158667.git-series.maxime.ripard@bootlin.com>
+ <CAL_JsqL8ARs3jQECS+E-BtZGouLYJhofM+oPpS1a3SxPORwMZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560252534-11412-1-git-send-email-dehui.sun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, erin.lo@mediatek.com, weiyi.lu@mediatek.com, dehui.sun@mediatek.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="twpj3baugamuul24"
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL8ARs3jQECS+E-BtZGouLYJhofM+oPpS1a3SxPORwMZA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add systimer0 device node for MT8183.
 
-Signed-off-by: Dehui Sun <dehui.sun@mediatek.com>
----
-This patch is based on the following patches:
-https://patchwork.kernel.org/cover/10962385/
-https://patchwork.kernel.org/patch/10983939/
----
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+--twpj3baugamuul24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index c2749c4..ac3f87d 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -254,6 +254,15 @@
- 			clock-names = "spi", "wrap";
- 		};
- 
-+		systimer: systimer@10017000 {
-+			compatible = "mediatek,mt8183-timer",
-+				     "mediatek,mt6765-timer";
-+			reg = <0 0x10017000 0 0x1000>;
-+			interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&topckgen CLK_TOP_CLK13M>;
-+			clock-names = "clk13m";
-+		};
-+
- 		auxadc: auxadc@11001000 {
- 			compatible = "mediatek,mt8183-auxadc",
- 				     "mediatek,mt8173-auxadc";
--- 
-2.1.0
+Hi,
+
+On Mon, Jun 10, 2019 at 01:22:00PM -0600, Rob Herring wrote:
+> On Mon, Jun 10, 2019 at 3:26 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > +    then:
+> > +      properties:
+> > +        allwinner,tx-delay-ps:
+> > +          allOf:
+> > +            - $ref: /schemas/types.yaml#definitions/uint32
+>
+> Can drop this as anything with unit prefix has its type defined
+> already.
+
+Not for picoseconds though. I'll send a PR to dt-schema if you prefer
+to define it there.
+
+>
+> > +            - enum: [0, 100, 200, 300, 400, 500, 600, 700]
+> > +              default: 0
+> > +          description:
+> > +            External RGMII PHY TX clock delay chain value in ps.
+> > +
+> > +        allwinner,rx-delay-ps:
+> > +          allOf:
+> > +            - $ref: /schemas/types.yaml#definitions/uint32
+> > +            - enum:
+> > +                - 0
+> > +                - 100
+> > +                - 200
+> > +                - 300
+> > +                - 400
+> > +                - 500
+> > +                - 600
+> > +                - 700
+> > +                - 800
+> > +                - 900
+> > +                - 1000
+> > +                - 1100
+> > +                - 1200
+> > +                - 1300
+> > +                - 1400
+> > +                - 1500
+> > +                - 1600
+> > +                - 1700
+> > +                - 1800
+> > +                - 1900
+> > +                - 2000
+> > +                - 2100
+> > +                - 2200
+> > +                - 2300
+> > +                - 2400
+> > +                - 2500
+> > +                - 2600
+> > +                - 2700
+> > +                - 2800
+> > +                - 2900
+> > +                - 3000
+> > +                - 3100
+>
+> I think you can do
+>
+> enum: [1, 2, 3,
+>   4,  5, 6]
+>
+> Or you can do:
+>
+> minimum: 0
+> maximum: 3100
+> multipleOf: 100
+>
+> IIRC that multipleOf is a json-schema key.
+
+I really like that second syntax, thanks!
+
+Maxime
+--twpj3baugamuul24--
