@@ -1,57 +1,229 @@
-From: Dan Williams <dcbw@redhat.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Tue, 11 Jun 2019 12:22:58 -0500
-Message-ID: <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
-         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
-         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
-         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
-         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+From: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Subject: [PATCH V7 07/11] misc: xilinx_sdfec: Add ability to get/set config
+Date: Tue, 11 Jun 2019 18:29:41 +0100
+Message-ID: <1560274185-264438-8-git-send-email-dragan.cvetic@xilinx.com>
+References: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+In-Reply-To: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Johannes Berg <johannes@sipsolutions.net>, Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
+To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-06-11 at 10:52 -0600, Subash Abhinov Kasiviswanathan
-wrote:
-> > The general plan (and I believe Daniele Palmas was working on it)
-> > was
-> > to eventually make qmi_wwan use rmnet rather than its internal
-> > sysfs-
-> > based implementation. qmi_wwan and ipa are at essentially the same
-> > level and both could utilize rmnet on top.
-> > 
-> > *That's* what I'd like to see. I don't want to see two different
-> > ways
-> > to get QMAP packets to modem firmware from two different drivers
-> > that
-> > really could use the same code.
-> > 
-> > Dan
-> 
-> qmi_wwan is based on USB and is very different from the IPA
-> interconnect
-> though. AFAIK, they do not have much in common (apart from sending &
-> receiving MAP packets from hardware).
+- Add capability to get SD-FEC config data using ioctl
+XSDFEC_GET_CONFIG.
 
-That is correct, they are very different drivers but as you state they
-send and receive MAP packets with the other end via some closer-to-
-hardware protocol (USB or GSI?) than QMAP.
+- Add capability to set SD-FEC data order using ioctl
+SDFEC_SET_ORDER.
 
-rmnet should handle muxing the QMAP, QoS, and aggregation and pass the
-resulting packet to the lower layer. That lower layer could be IPA or
-qmi_wwan, which in turn passes that QMAP packet to USB or GSI or
-whatever. This is typically how Linux handles clean abstractions
-between different protocol layers in drivers.
+- Add capability to set SD-FEC bypass option using ioctl
+XSDFEC_SET_BYPASS.
 
-Similar to some WiFi drivers (drivers/net/wireless/marvell/libertas for
-example) where the same firmware interface can be accessed via PCI,
-SDIO, USB, SPI, etc. The bus-specific code is self-contained and does
-not creep into the upper more generic parts.
+- Add capability to set SD-FEC active state using ioctl
+XSDFEC_IS_ACTIVE.
 
-Dan
+Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+---
+ drivers/misc/xilinx_sdfec.c      | 88 ++++++++++++++++++++++++++++++++++++++++
+ include/uapi/misc/xilinx_sdfec.h | 57 ++++++++++++++++++++++++++
+ 2 files changed, 145 insertions(+)
+
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index b2b16771..83de77e 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -273,6 +273,17 @@ static void update_config_from_hw(struct xsdfec_dev *xsdfec)
+ 		xsdfec->state = XSDFEC_STOPPED;
+ }
+ 
++static int xsdfec_get_config(struct xsdfec_dev *xsdfec, void __user *arg)
++{
++	int err;
++
++	err = copy_to_user(arg, &xsdfec->config, sizeof(xsdfec->config));
++	if (err)
++		err = -EFAULT;
++
++	return err;
++}
++
+ static int xsdfec_set_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
+ {
+ 	struct xsdfec_turbo turbo;
+@@ -591,6 +602,71 @@ static int xsdfec_add_ldpc(struct xsdfec_dev *xsdfec, void __user *arg)
+ 	return ret;
+ }
+ 
++static int xsdfec_set_order(struct xsdfec_dev *xsdfec, void __user *arg)
++{
++	bool order_invalid;
++	enum xsdfec_order order;
++	int err;
++
++	err = get_user(order, (enum xsdfec_order *)arg);
++	if (err)
++		return -EFAULT;
++
++	order_invalid = (order != XSDFEC_MAINTAIN_ORDER) &&
++			(order != XSDFEC_OUT_OF_ORDER);
++	if (order_invalid)
++		return -EINVAL;
++
++	/* Verify Device has not started */
++	if (xsdfec->state == XSDFEC_STARTED)
++		return -EIO;
++
++	xsdfec_regwrite(xsdfec, XSDFEC_ORDER_ADDR, order);
++
++	xsdfec->config.order = order;
++
++	return 0;
++}
++
++static int xsdfec_set_bypass(struct xsdfec_dev *xsdfec, bool __user *arg)
++{
++	bool bypass;
++	int err;
++
++	err = get_user(bypass, arg);
++	if (err)
++		return -EFAULT;
++
++	/* Verify Device has not started */
++	if (xsdfec->state == XSDFEC_STARTED)
++		return -EIO;
++
++	if (bypass)
++		xsdfec_regwrite(xsdfec, XSDFEC_BYPASS_ADDR, 1);
++	else
++		xsdfec_regwrite(xsdfec, XSDFEC_BYPASS_ADDR, 0);
++
++	xsdfec->config.bypass = bypass;
++
++	return 0;
++}
++
++static int xsdfec_is_active(struct xsdfec_dev *xsdfec, bool __user *arg)
++{
++	u32 reg_value;
++	bool is_active;
++	int err;
++
++	reg_value = xsdfec_regread(xsdfec, XSDFEC_ACTIVE_ADDR);
++	/* using a double ! operator instead of casting */
++	is_active = !!(reg_value & XSDFEC_IS_ACTIVITY_SET);
++	err = put_user(is_active, arg);
++	if (err)
++		return -EFAULT;
++
++	return err;
++}
++
+ static u32
+ xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
+ {
+@@ -681,6 +757,9 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 	}
+ 
+ 	switch (cmd) {
++	case XSDFEC_GET_CONFIG:
++		rval = xsdfec_get_config(xsdfec, arg);
++		break;
+ 	case XSDFEC_SET_TURBO:
+ 		rval = xsdfec_set_turbo(xsdfec, arg);
+ 		break;
+@@ -690,6 +769,15 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 	case XSDFEC_ADD_LDPC_CODE_PARAMS:
+ 		rval = xsdfec_add_ldpc(xsdfec, arg);
+ 		break;
++	case XSDFEC_SET_ORDER:
++		rval = xsdfec_set_order(xsdfec, arg);
++		break;
++	case XSDFEC_SET_BYPASS:
++		rval = xsdfec_set_bypass(xsdfec, arg);
++		break;
++	case XSDFEC_IS_ACTIVE:
++		rval = xsdfec_is_active(xsdfec, (bool __user *)arg);
++		break;
+ 	default:
+ 		/* Should not get here */
+ 		break;
+diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
+index 7443ed8..163dff6 100644
+--- a/include/uapi/misc/xilinx_sdfec.h
++++ b/include/uapi/misc/xilinx_sdfec.h
+@@ -288,6 +288,19 @@ struct xsdfec_ldpc_param_table_sizes {
+ #define XSDFEC_ADD_LDPC_CODE_PARAMS                                            \
+ 	_IOW(XSDFEC_MAGIC, 5, struct xsdfec_ldpc_params)
+ /**
++ * DOC: XSDFEC_GET_CONFIG
++ * @Parameters
++ *
++ * @struct xsdfec_config *
++ *	Pointer to the &struct xsdfec_config that contains the current
++ *	configuration settings of the SD-FEC Block
++ *
++ * @Description
++ *
++ * ioctl that returns SD-FEC core configuration
++ */
++#define XSDFEC_GET_CONFIG _IOR(XSDFEC_MAGIC, 6, struct xsdfec_config)
++/**
+  * DOC: XSDFEC_GET_TURBO
+  * @Parameters
+  *
+@@ -300,4 +313,48 @@ struct xsdfec_ldpc_param_table_sizes {
+  * ioctl that returns SD-FEC turbo param values
+  */
+ #define XSDFEC_GET_TURBO _IOR(XSDFEC_MAGIC, 7, struct xsdfec_turbo)
++/**
++ * DOC: XSDFEC_SET_ORDER
++ * @Parameters
++ *
++ * @struct unsigned long *
++ *	Pointer to the unsigned long that contains a value from the
++ *	@enum xsdfec_order
++ *
++ * @Description
++ *
++ * ioctl that sets order, if order of blocks can change from input to output
++ *
++ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ */
++#define XSDFEC_SET_ORDER _IOW(XSDFEC_MAGIC, 8, unsigned long)
++/**
++ * DOC: XSDFEC_SET_BYPASS
++ * @Parameters
++ *
++ * @struct bool *
++ *	Pointer to bool that sets the bypass value, where false results in
++ *	normal operation and false results in the SD-FEC performing the
++ *	configured operations (same number of cycles) but output data matches
++ *	the input data
++ *
++ * @Description
++ *
++ * ioctl that sets bypass.
++ *
++ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ */
++#define XSDFEC_SET_BYPASS _IOW(XSDFEC_MAGIC, 9, bool)
++/**
++ * DOC: XSDFEC_IS_ACTIVE
++ * @Parameters
++ *
++ * @struct bool *
++ *	Pointer to bool that returns true if the SD-FEC is processing data
++ *
++ * @Description
++ *
++ * ioctl that determines if SD-FEC is processing data
++ */
++#define XSDFEC_IS_ACTIVE _IOR(XSDFEC_MAGIC, 10, bool)
+ #endif /* __XILINX_SDFEC_H__ */
+-- 
+2.7.4
