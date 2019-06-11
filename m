@@ -1,102 +1,41 @@
-Return-Path: <SRS0=bzHF=UJ=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V4 0/8] Tegra XUSB gadget driver support
-Date: Mon, 10 Jun 2019 15:49:01 +0530
-Message-ID: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Date: Tue, 11 Jun 2019 15:55:26 -0600
+References: <1559296800-5610-1-git-send-email-biju.das@bp.renesas.com>
+	<1559296800-5610-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1559296800-5610-2-git-send-email-biju.das@bp.renesas.com>
+Message-ID: <CAL_JsqLvmxAt1ahaS3XAoqwR2F_eAosce-jhF74_bZuefdYybA@mail.gmail.com>
+Subject: Re: [PATCH v7 1/7] dt-bindings: usb: hd3ss3220 device tree binding document
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This is the fourth version of series "Tegra XUSB gadget driver support"
+On Fri, May 31, 2019 at 4:07 AM Biju Das <biju.das@bp.renesas.com> wrote:
+>
+> Add device tree binding document for TI HD3SS3220 Type-C DRP port
+> controller driver.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+> v6-->V7
+>    * Removed Rob's reviewed by tag, since there is a rework
+>    * Incorporated Sergie and Shimoda-San's review comment
+>      (https://patchwork.kernel.org/patch/10944629/)
+> V5-->V6
+>   * No change.
+> V4-->V5
+>   * No Change.
+> V3-->V4
+>   * No Change.
+> V2-->V3
+>   * Added Rob's Reviewed by tag.
+> V1-->V2
+>   * Added connector node.
+>   * updated the example with connector node.
+> ---
+>  .../devicetree/bindings/usb/ti,hd3ss3220.txt       | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
 
-Patches 1-3 are phy driver changes to add support for device
-mode.
-Patches 4-7 are changes related to XUSB device mode
-controller driver.
-Patch 8 is to enable XUDC driver in defconfig
-
-Test Steps(USB 2.0):
-- Enable "USB Gadget precomposed configurations" in defconfig
-- Build, flash and boot Jetson TX1
-- Connect Jetson TX1 and Ubuntu device using USB A to Micro B
-  cable
-- After boot on Jetson TX1 terminal usb0 network device should be
-  enumerated
-- Assign static ip to usb0 on Jetson TX1 and corresponding net
-  device on ubuntu
-- Run ping test and transfer test(used scp) to check data transfer
-  communication
-
-SS mode is verified by enabling Type A port as peripheral
-
-This patch series is dependent on
-https://patchwork.kernel.org/cover/10966353/
-
----
-v4:
-* patch 1 - no changes
-* corrected companion device search based on inputs from Thierry in patch 2
-* removed unneeded dev variable and corrected value read in
-  tegra210_utmi_port_reset function in patch 3
-* dt binding doc and dtb files are corrected for alignments.
-  Replaced extcon-usb-gpio with usb role switch.
-* Added support for USB role switch instead of extcon-usb-gpio and other minor
-  comments as suggested by Chunfeng.
-* Enabled xudc driver as module instead of part of kernel in patch 8
----
-V3:
-* Rebased patch 1 to top of tree.
-* Fixed bug in patch 2, where xudc interrupts dont get generated if USB host
-  mode fails to probe. Moved fake port detection logic to generic xusb.c. fake
-  usb port data is updated based on soc flag need_fake_usb3_port.
-* Added extra lines whereever necessary to make code more readable in patch 3
-  and 7.
-* dt binding doc is corrected for typos and extcon references. Also added
-  details for clocks and removed xusb_ references to clock and power-domain
-  names and accordingly patch 5 is updated.
-* removed avdd-pll-utmip-supply in patch 6, as its now part of padctl driver.
-* Patch 8 has no changes.
----
-V2:
-* Patches 1-3 are new patches in this series, which splits unified features
-  patch to speprated features and removes need of port-fake entry in DT.
-* Patch 4 is re-arragend dt-bindings patch which incorporates previous
-  patch comments to sort DT entries alphabetically, addresses name changes
-  and PM domain details added.
-* Patch 5-6 are re-arranged DT patches with major changes - sort entries
-  alphabetically, and adds clock names.
-* Patch 7 is UDC driver tegra XUSB device mode controller with major
-  changes - remove un-used module params, lockinng for device_mode flag,
-  moving un-needed info logs to debug level, making changes feature flag
-  dependent rather than SOC based macros and other error handling in probe.
-* Patch 8 has no changes.
-
-Nagarjuna Kristam (8):
-  phy: tegra: xusb: t210: add XUSB dual mode support
-  phy: tegra: xusb: t210: add usb3 port fake support
-  phy: tegra: xusb: t210: add vbus override support
-  dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
-  arm64: tegra: Add xudc node for Tegra210
-  arm64: tegra: Enable xudc on Jetson TX1
-  usb: gadget: Add UDC driver for tegra XUSB device mode controller
-  arm64: defconfig: Enable tegra XUDC driver
-
- .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  |  108 +
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   29 +
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   19 +
- arch/arm64/configs/defconfig                       |    1 +
- drivers/phy/tegra/xusb-tegra210.c                  |  135 +-
- drivers/phy/tegra/xusb.c                           |   87 +
- drivers/phy/tegra/xusb.h                           |    4 +
- drivers/usb/gadget/udc/Kconfig                     |   11 +
- drivers/usb/gadget/udc/Makefile                    |    1 +
- drivers/usb/gadget/udc/tegra_xudc.c                | 3808 ++++++++++++++++++++
- include/linux/phy/tegra/xusb.h                     |    6 +-
- 11 files changed, 4204 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
- create mode 100644 drivers/usb/gadget/udc/tegra_xudc.c
-
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
