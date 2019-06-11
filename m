@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v7 01/10] dt-binding: usb: add usb-role-switch property
-Date: Tue, 11 Jun 2019 16:44:31 +0800
-Message-ID: <1560242680-23844-2-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v7 03/10] dt-bindings: usb: add binding for Type-B GPIO connector driver
+Date: Tue, 11 Jun 2019 16:44:33 +0800
+Message-ID: <1560242680-23844-4-git-send-email-chunfeng.yun@mediatek.com>
 References: <1560242680-23844-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,62 +12,74 @@ To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation
 Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Yu Chen <chenyu56@huawei.com>, Nagarjuna Kristam <nkristam@nvidia.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a property usb-role-switch to tell the driver that use
-USB Role Switch framework to handle the role switch,
-it's useful when the driver has already supported other ways,
-such as extcon framework etc.
+It's used to support dual role switch via GPIO when use Type-B
+receptacle, typically the USB ID pin is connected to an input
+GPIO, and also used to enable/disable device when the USB Vbus
+pin is connected to an input GPIO.
 
-Cc: Biju Das <biju.das@bp.renesas.com>
-Cc: Yu Chen <chenyu56@huawei.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
-v7: no changes
+v7 changes:
+ 1. add description for device only mode
 
-v6:
-    1. merge into this series patch
-    2. add Reviewed-by
+v6 changes:
+ 1. remove status and port nodes in example
+ 2. make vbus-supply as optional property
 
-(no v4, v5)
+v5 changes:
+ 1. treat type-B connector as child device of USB controller's, but not
+    as a separate virtual device, suggested by Rob
+ 2. put connector's port node under connector node, suggested by Rob
 
-v3:
-    add property type, modify description suggested by Heikki
+v4 no changes
 
-v2:
-    describe it in terms of h/w functionality suggested by Rob
+v3 changes:
+ 1. treat type-B connector as a virtual device, but not child device of
+    USB controller's
 
-v1:
-    the property is discussed in:
-    [v2,2/7] dt-bindings: usb: renesas_usb3: add usb-role-switch property
-    https://patchwork.kernel.org/patch/10852497/
-
-    Mediatek and Hisilicon also try to use it:
-    [v4,3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
-    https://patchwork.kernel.org/patch/10918385/
-    [v4,6/6] usb: mtu3: register a USB Role Switch for dual role mode
-    https://patchwork.kernel.org/patch/10918367/
-
-    [v6,10/13] usb: dwc3: Registering a role switch in the DRD code
-    https://patchwork.kernel.org/patch/10909981/
+v2 changes:
+  1. new patch to make binding clear suggested by Hans
 ---
- Documentation/devicetree/bindings/usb/generic.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../bindings/usb/typeb-conn-gpio.txt          | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
 
-diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-index 0a74ab8dfdc2..cf5a1ad456e6 100644
---- a/Documentation/devicetree/bindings/usb/generic.txt
-+++ b/Documentation/devicetree/bindings/usb/generic.txt
-@@ -30,6 +30,10 @@ Optional properties:
- 			optional for OTG device.
-  - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
- 			optional for OTG device.
-+ - usb-role-switch: boolean, indicates that the device is capable of assigning
-+			the USB data role (USB host or USB device) for a given
-+			USB connector, such as Type-C, Type-B(micro).
-+			see connector/usb-connector.txt.
- 
- This is an attribute to a USB controller such as:
- 
+diff --git a/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+new file mode 100644
+index 000000000000..83adb38ceead
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+@@ -0,0 +1,31 @@
++USB Type-B GPIO Connector
++
++This is typically used to switch dual role mode from the USB ID pin connected
++to an input GPIO, and also used to enable/disable device mode from the USB
++Vbus pin connected to an input GPIO.
++
++Required properties:
++- compatible : should include "linux,typeb-conn-gpio" and "usb-b-connector".
++- id-gpios, vbus-gpios : input gpios, either one of them must be present,
++	and both can be present as well.
++	see connector/usb-connector.txt
++
++Optional properties:
++- vbus-supply : can be present if needed when supports dual role mode.
++	see connector/usb-connector.txt
++
++- Sub-nodes:
++	- port : can be present.
++		see graph.txt
++
++Example:
++
++&mtu3 {
++	connector {
++		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
++		label = "micro-USB";
++		type = "micro";
++		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
++		vbus-supply = <&usb_p0_vbus>;
++	};
++};
 -- 
 2.21.0
