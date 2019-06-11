@@ -1,55 +1,61 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
- MSI_FLAG_MULTI_PCI_MSI
-Date: Tue, 11 Jun 2019 17:59:43 +0100
-Message-ID: <20190611165935.GA22836@redmoon>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 2/2] backlight: pwm_bl: Get number of brightness levels
+ for CIE 1931 from the device tree
+Date: Tue, 11 Jun 2019 10:01:23 -0700
+Message-ID: <20190611170123.GD137143@google.com>
+References: <20190610233739.29477-1-mka@chromium.org>
+ <20190610233739.29477-2-mka@chromium.org>
+ <20190611153314.cj6j6l4kcl4kk4t2@holly.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20190611153314.cj6j6l4kcl4kk4t2@holly.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 08:35:36AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> The current code does not support multiple MSIs, so remove
-> the corresponding flag from the msi_domain_info structure.
+Hi Daniel,
 
-Please explain me what's the problem before removing multi MSI
-support.
+On Tue, Jun 11, 2019 at 04:33:14PM +0100, Daniel Thompson wrote:
+> On Mon, Jun 10, 2019 at 04:37:39PM -0700, Matthias Kaehlcke wrote:
+> > Commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED
+> > linearly to human eye") uses pwm_period / hweight32(pwm_period) as
+> > as heuristic to determine the number of brightness levels when the DT
+> > doesn't provide a brightness level table. This heuristic is broken
+> > and can result in excessively large brightness tables.
+> > 
+> > Instead of using the heuristic try to retrieve the number of
+> > brightness levels from the device tree (property 'max-brightness'
+> > + 1). If the value is not specified use a default of 256 levels.
+> 
+> I'll look at the code tomorrow but why 256?
+> 
+> To me it feels simultaneously too big for a simple 8-bit PWM and too
+> small for animated backlight effects.
 
-Thanks,
-Lorenzo
+I agree there is no one-size-fits-it-all default, 256 seemed like a
+possible compromise.
 
-> Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> ---
-> V5:
->  - Corrected the subject.
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 563210e731d3..a0dd337c6214 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -703,7 +703,7 @@ static struct irq_chip mobiveil_msi_irq_chip = {
->  
->  static struct msi_domain_info mobiveil_msi_domain_info = {
->  	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> -		   MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-> +		   MSI_FLAG_PCI_MSIX),
->  	.chip	= &mobiveil_msi_irq_chip,
->  };
->  
-> -- 
-> 2.17.1
-> 
+> I certainly agree that an override could be useful but I'm not clear why
+> deriving a default based on the period is bogus (and the description is
+> merely concerned about uselessly big tables).
+
+Maybe it's not necessarily bogus, but the current heuristic that
+counts the number of set bits (hweight()) in the period certainly is.
+
+IIUC the period provides a clue about the PWM resolution, because it
+would be hard/impossible to accomodate the high resolution in shorter
+periods.
+
+> /*
+>  * Once we have 4096 levels there's little point going much higher...
+>  * neither interactive sliders nor animation benefits from having
+>  * more values in the table.
+>  */
+> max_brightness = min(DIV_ROUND_UP(period, ffs(period), 4096);
+
+I was also considering something along these lines, but wasn't sure
+if there is indeed a relation between the period and the PWM
+resolution. I take your suggestion as a confirmation :)
