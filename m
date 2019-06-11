@@ -1,661 +1,99 @@
-From: Thomas Preston <thomas.preston@codethink.co.uk>
-Subject: [PATCH v1 2/4] ASoC: Add codec driver for ST TDA7802
-Date: Tue, 11 Jun 2019 18:49:07 +0100
-Message-ID: <20190611174909.12162-3-thomas.preston@codethink.co.uk>
-References: <20190611174909.12162-1-thomas.preston@codethink.co.uk>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/3] Documentation: dt-bindings: add the Amlogic Meson
+ Temperature Sensor
+Date: Tue, 11 Jun 2019 19:57:59 +0200
+Message-ID: <CAFBinCBCUxZjnrRxFHApp4iwPUCQQ+PU54V6zJew8Sr8La3u7w@mail.gmail.com>
+References: <20190604144714.2009-1-glaroque@baylibre.com> <20190604144714.2009-2-glaroque@baylibre.com>
+ <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com> <d68aae23-f877-1f65-94a4-79e909ae111a@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611174909.12162-1-thomas.preston@codethink.co.uk>
+In-Reply-To: <d68aae23-f877-1f65-94a4-79e909ae111a@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Jerome Brunet <jbrunet@baylibre.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Marco Felsch <m.felsch@pengutronix.de>, Paul Cercueil <paul@crapouillou.net>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Cheng-Yi Chiang <cychiang@chromium.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Vinod Koul <vkoul@kernel.org>, Annaliese McDermond <nh6z@nh6z.net>, Thomas Preston <thomas.preston@codethink.co.uk>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Guillaume La Roque <glaroque@baylibre.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, khilman@baylibre.com, linux-kernel@vger.kernel.org, jic23@kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add an I2C based codec driver for ST TDA7802 amplifier. By default, the
-amplifier supports 4 audio channels but can support up to 16 with
-multiple devices. Input is configurable for I2S or TDM.
+Hi Neil,
 
-The unified device properties API is used to get board-specific config from
-device tree / ACPI.
+On Tue, Jun 11, 2019 at 1:01 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On 06/06/2019 21:16, Martin Blumenstingl wrote:
+> > Hi Guillaume,
+> >
+> > thank you for working on this!
+> >
+> > On Tue, Jun 4, 2019 at 4:47 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+> >>
+> >> This adds the devicetree binding documentation for the Temperature
+> >> Sensor found in the Amlogic Meson G12 SoCs.
+> >> Currently only the G12A SoCs are supported.
+> > so G12B is not supported (yet)?
+>
+> G12B is 95% similar as G12A, it will certainly use slighly different values.
+OK, thank you for clarifying this
+as far as I can tell Guillaume's code is already prepared for that (as
+there's a per-instance specific struct with settings for the specific
+instance) which is good to know
 
-Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
-Cc: Patrick Glaser <pglaser@tesla.com>
-Cc: Rob Duncan <rduncan@tesla.com>
-Cc: Nate Case <ncase@tesla.com>
----
- sound/soc/codecs/Kconfig   |   6 +
- sound/soc/codecs/Makefile  |   2 +
- sound/soc/codecs/tda7802.c | 580 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 588 insertions(+)
- create mode 100644 sound/soc/codecs/tda7802.c
+> >
+> >> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> >> ---
+> >>  .../iio/temperature/amlogic,meson-tsensor.txt | 31 +++++++++++++++++++
+> >>  1 file changed, 31 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+> >> new file mode 100644
+> >> index 000000000000..d064db0e9cac
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+> >> @@ -0,0 +1,31 @@
+> >> +* Amlogic Meson Temperature Sensor
+> >> +
+> >> +Required properties:
+> >> +- compatible:  depending on the SoC and the position of the sensor,
+> >> +               this should be one of:
+> >> +               - "amlogic,meson-g12a-cpu-tsensor" for the CPU G12A SoC sensor
+> >> +               - "amlogic,meson-g12a-ddr-tsensor" for the DDR G12A SoC sensor
+> >> +               followed by the common :
+> >> +               - "amlogic,meson-g12a-tsensor" for G12A SoC family
+> >> +- reg:         the physical base address and length of the registers
+> >> +- interrupts:  the interrupt indicating end of sampling
+> >> +- clocks:      phandle identifier for the reference clock of temperature sensor
+> >> +- #io-channel-cells: must be 1, see ../iio-bindings.txt
+> > have you considered using the thermal framework [0] instead of the iio
+> > framework (see below)?
+>
+> Question: why thermal, and not hwmon ? what's the main difference ?
+this is what came to my mind why the thermal framework fits best (at
+least based on my current knowledge):
+a) the thermal-zones (see meson-gxm-khadas-vim2.dts for example) a
+"thermal-sensors" property. so for active (with a fan) or passive (by
+limiting the maximum frequency and thus the supply voltage) cooling we
+need a thermal device anyways
+b) the thermal bindings support multiple trip points. we can map them
+to one of the four interrupts which the IP block can generate
+c) defining a temperature where the chip will power off sounds like a
+use-case which may be implemented by other thermal IP blocks (in other
+words: maybe the thermal frameworks provides some generic property to
+replace the "amlogic,critical-temperature" property)
+d) as far as I know you can tell the thermal framework to create a
+hwmon device with only a couple (5?) lines of code
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index e730d47ac85b..1d30c2333cb1 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -176,6 +176,7 @@ config SND_SOC_ALL_CODECS
- 	select SND_SOC_TAS5720 if I2C
- 	select SND_SOC_TAS6424 if I2C
- 	select SND_SOC_TDA7419 if I2C
-+	select SND_SOC_TDA7802 if I2C
- 	select SND_SOC_TFA9879 if I2C
- 	select SND_SOC_TLV320AIC23_I2C if I2C
- 	select SND_SOC_TLV320AIC23_SPI if SPI_MASTER
-@@ -1078,6 +1079,11 @@ config SND_SOC_TDA7419
- 	depends on I2C
- 	select REGMAP_I2C
- 
-+config SND_SOC_TDA7802
-+	tristate "ST TDA7802 audio processor"
-+	depends on I2C
-+	select REGMAP_I2C
-+
- config SND_SOC_TFA9879
- 	tristate "NXP Semiconductors TFA9879 amplifier"
- 	depends on I2C
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index aa7720a7a0aa..fc3fc672bc4b 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -187,6 +187,7 @@ snd-soc-tas571x-objs := tas571x.o
- snd-soc-tas5720-objs := tas5720.o
- snd-soc-tas6424-objs := tas6424.o
- snd-soc-tda7419-objs := tda7419.o
-+snd-soc-tda7802-objs := tda7802.o
- snd-soc-tfa9879-objs := tfa9879.o
- snd-soc-tlv320aic23-objs := tlv320aic23.o
- snd-soc-tlv320aic23-i2c-objs := tlv320aic23-i2c.o
-@@ -460,6 +461,7 @@ obj-$(CONFIG_SND_SOC_TAS571X)	+= snd-soc-tas571x.o
- obj-$(CONFIG_SND_SOC_TAS5720)	+= snd-soc-tas5720.o
- obj-$(CONFIG_SND_SOC_TAS6424)	+= snd-soc-tas6424.o
- obj-$(CONFIG_SND_SOC_TDA7419)	+= snd-soc-tda7419.o
-+obj-$(CONFIG_SND_SOC_TDA7802)	+= snd-soc-tda7802.o
- obj-$(CONFIG_SND_SOC_TFA9879)	+= snd-soc-tfa9879.o
- obj-$(CONFIG_SND_SOC_TLV320AIC23)	+= snd-soc-tlv320aic23.o
- obj-$(CONFIG_SND_SOC_TLV320AIC23_I2C)	+= snd-soc-tlv320aic23-i2c.o
-diff --git a/sound/soc/codecs/tda7802.c b/sound/soc/codecs/tda7802.c
-new file mode 100644
-index 000000000000..38ca52de85f0
---- /dev/null
-+++ b/sound/soc/codecs/tda7802.c
-@@ -0,0 +1,580 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * tda7802.c  --  codec driver for ST TDA7802
-+ *
-+ * Copyright (C) 2016-2019 Tesla Motors, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of the
-+ * License, or (at your option) any later version.
-+ *
-+ */
-+
-+#include <linux/regulator/consumer.h>
-+#include <linux/of_device.h>
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/delay.h>
-+#include <linux/regmap.h>
-+#include <linux/string.h>
-+#include <sound/soc.h>
-+
-+enum tda7802_type {
-+	tda7802_base,
-+};
-+
-+#define I2C_BUS				   4
-+
-+#define CHANNELS_PER_AMP		   4
-+#define MAX_NUM_AMPS			   4
-+
-+#define ENABLE_DELAY_MS			   10
-+
-+#define TDA7802_IB0			   0x00
-+#define TDA7802_IB1			   0x01
-+#define TDA7802_IB2			   0x02
-+#define TDA7802_IB3			   0x03
-+#define TDA7802_IB4			   0x04
-+#define TDA7802_IB5			   0x05
-+
-+#define TDA7802_DB0			   0x10
-+#define TDA7802_DB1			   0x11
-+#define TDA7802_DB2			   0x12
-+#define TDA7802_DB3			   0x13
-+#define TDA7802_DB4			   0x14
-+#define TDA7802_DB5			   0x15
-+
-+#define IB0_CH4_TRISTATE_ON		   (1 << 7)
-+#define IB0_CH3_TRISTATE_ON		   (1 << 6)
-+#define IB0_CH2_TRISTATE_ON		   (1 << 5)
-+#define IB0_CH1_TRISTATE_ON		   (1 << 4)
-+#define IB0_CH4_HIGH_EFF		   (0 << 3)
-+#define IB0_CH4_CLASS_AB		   (1 << 3)
-+#define IB0_CH3_HIGH_EFF		   (0 << 2)
-+#define IB0_CH3_CLASS_AB		   (1 << 2)
-+#define IB0_CH2_HIGH_EFF		   (0 << 0)
-+#define IB0_CH2_CLASS_AB		   (1 << 1)
-+#define IB0_CH1_HIGH_EFF		   (0 << 0)
-+#define IB0_CH1_CLASS_AB		   (1 << 0)
-+
-+#define IB1_REAR_IMPEDANCE_2_OHM	   (0 << 7)
-+#define IB1_REAR_IMPEDANCE_4_OHM	   (1 << 7)
-+#define IB1_LONG_DIAG_TIMING_x1		   (0 << 5)
-+#define IB1_LONG_DIAG_TIMING_x2		   (1 << 5)
-+#define IB1_LONG_DIAG_TIMING_x4		   (2 << 5)
-+#define IB1_LONG_DIAG_TIMING_x8		   (3 << 5)
-+#define IB1_GAIN_CH13_GV1		   (0 << 3)
-+#define IB1_GAIN_CH13_GV2		   (1 << 3)
-+#define IB1_GAIN_CH13_GV3		   (2 << 3)
-+#define IB1_GAIN_CH13_GV4		   (3 << 3)
-+#define IB1_GAIN_CH24_GV1		   (0 << 1)
-+#define IB1_GAIN_CH24_GV2		   (1 << 1)
-+#define IB1_GAIN_CH24_GV3		   (2 << 1)
-+#define IB1_GAIN_CH24_GV4		   (3 << 1)
-+#define IB1_DIGITAL_GAIN_BOOST		   (1 << 0)
-+
-+#define IB2_MUTE_TIME_1_MS		   (0 << 5)
-+#define IB2_MUTE_TIME_5_MS		   (1 << 5)
-+#define IB2_MUTE_TIME_11_MS		   (2 << 5)
-+#define IB2_MUTE_TIME_23_MS		   (3 << 5)
-+#define IB2_MUTE_TIME_46_MS		   (4 << 5)
-+#define IB2_MUTE_TIME_92_MS		   (5 << 5)
-+#define IB2_MUTE_TIME_185_MS		   (6 << 5)
-+#define IB2_MUTE_TIME_371_MS		   (7 << 5)
-+#define IB2_CH13_UNMUTED		   (1 << 4)
-+#define IB2_CH24_UNMUTED		   (1 << 3)
-+#define IB2_DIGITAL_MUTE_DISABLED	   (1 << 2)
-+#define IB2_AUTOMUTE_THRESHOLD_5V3	   (0 << 1)
-+#define IB2_AUTOMUTE_THRESHOLD_7V3	   (1 << 1)
-+#define IB2_FRONT_IMPEDANCE_2_OHM	   (0 << 0)
-+#define IB2_FRONT_IMPEDANCE_4_OHM	   (1 << 0)
-+
-+#define IB3_SAMPLE_RATE_44_KHZ		   (0 << 6)
-+#define IB3_SAMPLE_RATE_48_KHZ		   (1 << 6)
-+#define IB3_SAMPLE_RATE_96_KHZ		   (2 << 6)
-+#define IB3_SAMPLE_RATE_192_KHZ		   (3 << 6)
-+#define IB3_FORMAT_I2S			   (0 << 3)
-+#define IB3_FORMAT_TDM4			   (1 << 3)
-+#define IB3_FORMAT_TDM8_DEV1		   (2 << 3)
-+#define IB3_FORMAT_TDM8_DEV2		   (3 << 3)
-+#define IB3_FORMAT_TDM16_DEV1		   (4 << 3)
-+#define IB3_FORMAT_TDM16_DEV2		   (5 << 3)
-+#define IB3_FORMAT_TDM16_DEV3		   (6 << 3)
-+#define IB3_FORMAT_TDM16_DEV4		   (7 << 3)
-+#define IB3_I2S_FRAME_PERIOD_64		   (0 << 2)
-+#define IB3_I2S_FRAME_PERIOD_50		   (1 << 2)
-+#define IB3_PLL_CLOCK_DITHER_ENABLE	   (1 << 1)
-+#define IB3_HIGH_PASS_FILTER_ENABLE	   (1 << 0)
-+
-+static const u8 IB3_FORMAT[4][4] = {
-+	/* 1x amp, 4 channels */
-+	{ IB3_FORMAT_TDM4 },
-+	/* 2x amp, 8 channels */
-+	{ IB3_FORMAT_TDM8_DEV1,
-+		IB3_FORMAT_TDM8_DEV2 },
-+	/* 3x amp not supported */
-+	{ },
-+	/* 4x amp, 16 channels */
-+	{ IB3_FORMAT_TDM16_DEV1,
-+		IB3_FORMAT_TDM16_DEV2,
-+		IB3_FORMAT_TDM16_DEV3,
-+		IB3_FORMAT_TDM16_DEV4 },
-+};
-+
-+#define IB4_NOISE_GATE_DISABLE		   (1 << 7)
-+#define IB4_SHORT_FAULT_ON_CDDIAG_YES	   (0 << 6)
-+#define IB4_SHORT_FAULT_ON_CDDIAG_NO	   (1 << 6)
-+#define IB4_OFFSET_ON_CDDIAG_YES	   (0 << 5)
-+#define IB4_OFFSET_ON_CDDIAG_NO		   (1 << 5)
-+#define IB4_AC_DIAG_CURRENT_THRESHOLD_HIGH (0 << 4)
-+#define IB4_AC_DIAG_CURRENT_THRESHOLD_LOW  (1 << 4)
-+#define IB4_AC_DIAG_ENABLE		   (1 << 3)
-+#define IB4_CH13_DIAG_MODE_SPEAKER	   (0 << 2)
-+#define IB4_CH13_DIAG_MODE_BOOSTER	   (1 << 2)
-+#define IB4_CH24_DIAG_MODE_SPEAKER	   (0 << 1)
-+#define IB4_CH24_DIAG_MODE_BOOSTER	   (1 << 1)
-+#define IB4_DIAG_MODE_ENABLE		   (1 << 0)
-+
-+#define IB5_TEMP_WARNING_ON_CDDIAG_TW1	   (0 << 5)
-+#define IB5_TEMP_WARNING_ON_CDDIAG_TW2	   (1 << 5)
-+#define IB5_TEMP_WARNING_ON_CDDIAG_TW3	   (2 << 5)
-+#define IB5_TEMP_WARNING_ON_CDDIAG_TW4	   (3 << 5)
-+#define IB5_TEMP_WARNING_ON_CDDIAG_NONE	   (4 << 5)
-+#define IB5_CLIP_DETECT_FRONT_1PC	   (0 << 3)
-+#define IB5_CLIP_DETECT_FRONT_5PC	   (1 << 3)
-+#define IB5_CLIP_DETECT_FRONT_10PC	   (2 << 3)
-+#define IB5_CLIP_DETECT_FRONT_NONE	   (3 << 3)
-+#define IB5_CLIP_DETECT_REAR_1PC	   (0 << 1)
-+#define IB5_CLIP_DETECT_REAR_5PC	   (1 << 1)
-+#define IB5_CLIP_DETECT_REAR_10PC	   (2 << 1)
-+#define IB5_CLIP_DETECT_REAR_NONE	   (3 << 1)
-+#define IB5_AMPLIFIER_ON		   (1 << 0)
-+
-+#define DB0_STARTUP_DIAG_STATUS		   0x40
-+
-+#define DUMP_NUM_BLOCK			   6
-+#define DUMP_NUM_REGS			   (DUMP_NUM_BLOCK * 2)
-+
-+struct tda7802_priv {
-+	struct i2c_client *i2c;
-+	struct regmap *regmap;
-+	struct regulator *enable_reg;
-+	const char *diag_mode_ch13, *diag_mode_ch24;
-+	u8 gain_ch13, gain_ch24;
-+};
-+
-+static bool tda7802_readable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case TDA7802_IB0 ... TDA7802_IB5:
-+	case TDA7802_DB0 ... TDA7802_DB5:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool tda7802_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case TDA7802_IB0 ... TDA7802_IB5:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config tda7802_regmap_config = {
-+	.val_bits      = 8,
-+	.reg_bits      = 8,
-+	.max_register  = TDA7802_DB5,
-+	.use_single_read = 1,
-+	.use_single_write = 1,
-+
-+	.readable_reg  = tda7802_readable_reg,
-+	.writeable_reg = tda7802_writeable_reg,
-+};
-+
-+#ifdef DEBUG
-+static int tda7802_dump_regs(struct tda7802_priv *tda7802)
-+{
-+	u8 regs[DUMP_NUM_REGS];
-+	const char *prefix;
-+	int err = 0;
-+
-+	prefix = kasprintf(GFP_KERNEL, "%s ", dev_name(&tda7802->i2c->dev));
-+	if (!prefix)
-+		return -ENOMEM;
-+
-+	err = regmap_bulk_read(tda7802->regmap, TDA7802_IB0, &regs[0],
-+			DUMP_NUM_BLOCK);
-+	if (err < 0)
-+		goto cleanup_dump_regs;
-+
-+	err = regmap_bulk_read(tda7802->regmap, TDA7802_DB0,
-+			&regs[DUMP_NUM_BLOCK], DUMP_NUM_BLOCK);
-+	if (err < 0)
-+		goto cleanup_dump_regs;
-+
-+	print_hex_dump_bytes(prefix, DUMP_PREFIX_NONE, &regs[0], DUMP_NUM_REGS);
-+
-+cleanup_dump_regs:
-+	kfree(prefix);
-+	return err;
-+}
-+#else
-+static int tda7802_dump_regs(struct tda7802_priv *tda7802)
-+{
-+	return 0;
-+}
-+#endif
-+
-+static int tda7802_dai_startup(struct snd_pcm_substream *substream,
-+			       struct snd_soc_dai *dai)
-+{
-+	struct tda7802_priv *tda7802 =
-+		snd_soc_component_get_drvdata(dai->component);
-+	struct device *dev = dai->dev;
-+	u8 data[6] = { 0 };
-+	int err;
-+
-+	dev_dbg(dev, "%s\n", __func__);
-+
-+	/* enable the device */
-+	err = regulator_enable(tda7802->enable_reg);
-+	if (err < 0) {
-+		dev_err(dev, "Could not enable (startup).\n");
-+		return err;
-+	}
-+	msleep(ENABLE_DELAY_MS);
-+
-+	/* All channels out of tri-state mode, all channels in Standard Class
-+	 * AB mode (not High-efficiency)
-+	 */
-+	data[0] = IB0_CH4_CLASS_AB | IB0_CH3_CLASS_AB | IB0_CH2_CLASS_AB |
-+		IB0_CH1_CLASS_AB;
-+
-+	/* Rear channel load impedance set to 2-Ohm, default diagnostic timing,
-+	 * GV1 gain on all channels (default), no digital gain increase
-+	 */
-+	data[1] = IB1_REAR_IMPEDANCE_2_OHM | IB1_LONG_DIAG_TIMING_x1;
-+	switch (tda7802->gain_ch13) {
-+	case 4:
-+		data[1] |= IB1_GAIN_CH13_GV4;
-+		break;
-+	case 3:
-+		data[1] |= IB1_GAIN_CH13_GV3;
-+		break;
-+	case 2:
-+		data[1] |= IB1_GAIN_CH13_GV2;
-+		break;
-+	default:
-+		dev_err(dev, "Unknown gain for channel 1,3 %d, setting to 1\n",
-+				tda7802->gain_ch13);
-+	case 1:
-+		data[1] |= IB1_GAIN_CH13_GV1;
-+		break;
-+	}
-+	switch (tda7802->gain_ch24) {
-+	case 4:
-+		data[1] |= IB1_GAIN_CH24_GV4;
-+		break;
-+	case 3:
-+		data[1] |= IB1_GAIN_CH24_GV3;
-+		break;
-+	case 2:
-+		data[1] |= IB1_GAIN_CH24_GV2;
-+		break;
-+	default:
-+		dev_err(dev, "Unknown gain for channel 2,4 %d, setting to 1\n",
-+				tda7802->gain_ch24);
-+	case 1:
-+		data[1] |= IB1_GAIN_CH24_GV1;
-+		break;
-+	}
-+
-+	/* Mute timing 1.45ms, all channels un-muted, digital mute enabled,
-+	 * 5.3V undervoltage threshold, front-channel load impedance set to
-+	 * 2-Ohms
-+	 */
-+	data[2] = IB2_MUTE_TIME_1_MS | IB2_CH13_UNMUTED | IB2_CH24_UNMUTED |
-+		IB2_AUTOMUTE_THRESHOLD_5V3 | IB2_FRONT_IMPEDANCE_2_OHM;
-+
-+	/* Don't set IB3 here, we should set it in set_tdm_slot
-+	 * data[3] = 0;
-+	 */
-+
-+	/* Noise gating enabled, short and offset info on CD-Diag (fault) pin,
-+	 * diagnostics disabled. Default to speaker.
-+	 */
-+	if (strcmp(tda7802->diag_mode_ch13, "Booster") == 0)
-+		data[4] |= IB4_CH13_DIAG_MODE_BOOSTER;
-+	else
-+		data[4] |= IB4_CH13_DIAG_MODE_SPEAKER;
-+
-+	if (strcmp(tda7802->diag_mode_ch24, "Booster") == 0)
-+		data[4] |= IB4_CH24_DIAG_MODE_BOOSTER;
-+	else
-+		data[4] |= IB4_CH24_DIAG_MODE_SPEAKER;
-+
-+	/* Temperature warning on diag pin set to TW1 (highest setting), clip
-+	 * detection set to 1% on all channels
-+	 */
-+	data[5] = IB5_TEMP_WARNING_ON_CDDIAG_TW1 | IB5_CLIP_DETECT_FRONT_1PC |
-+		IB5_CLIP_DETECT_REAR_1PC,
-+
-+	err = regmap_bulk_write(tda7802->regmap, TDA7802_IB0, data,
-+			ARRAY_SIZE(data));
-+	if (err < 0) {
-+		dev_err(dev, "Cannot configure amp %d\n", err);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static void tda7802_dai_shutdown(struct snd_pcm_substream *substream,
-+				 struct snd_soc_dai *dai)
-+{
-+	struct tda7802_priv *tda7802 =
-+		snd_soc_component_get_drvdata(dai->component);
-+	struct device *dev = dai->dev;
-+	int err;
-+
-+	dev_dbg(dev, "%s\n", __func__);
-+
-+	err = regulator_disable(tda7802->enable_reg);
-+	if (err < 0)
-+		dev_err(dev, "Could not disable (shutdown)\n");
-+}
-+
-+static int tda7802_digital_mute(struct snd_soc_dai *dai, int mute)
-+{
-+	struct device *dev = dai->dev;
-+	int err;
-+
-+	dev_dbg(dev, "%s mute=%d\n", __func__, mute);
-+
-+	if (mute) {
-+		/* digital mute */
-+		err = snd_soc_component_update_bits(dai->component, TDA7802_IB2,
-+				IB2_DIGITAL_MUTE_DISABLED,
-+				~IB2_DIGITAL_MUTE_DISABLED);
-+		if (err < 0)
-+			dev_err(dev, "Cannot mute amp %d\n", err);
-+
-+		/* amp off */
-+		err = snd_soc_component_update_bits(dai->component, TDA7802_IB5,
-+				IB5_AMPLIFIER_ON, ~IB5_AMPLIFIER_ON);
-+		if (err < 0)
-+			dev_err(dev, "Cannot amp off %d\n", err);
-+
-+	} else {
-+		/* amp on */
-+		err = snd_soc_component_update_bits(dai->component, TDA7802_IB5,
-+				IB5_AMPLIFIER_ON, IB5_AMPLIFIER_ON);
-+		if (err < 0)
-+			dev_err(dev, "Cannot amp on %d\n", err);
-+
-+		/* digital unmute */
-+		err = snd_soc_component_update_bits(dai->component, TDA7802_IB2,
-+				IB2_DIGITAL_MUTE_DISABLED,
-+				IB2_DIGITAL_MUTE_DISABLED);
-+		if (err < 0)
-+			dev_err(dev, "Cannot unmute amp %d\n", err);
-+	}
-+
-+	return 0;
-+}
-+
-+static int tda7802_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
-+		unsigned int rx_mask, int slots, int slot_width)
-+{
-+	struct tda7802_priv *tda7802 =
-+		snd_soc_component_get_drvdata(dai->component);
-+	int width_index, slot_index, ret;
-+	struct device *dev = dai->dev;
-+	u8 data;
-+
-+	if (!(slots == 4 || slots == 8 || slots == 16)) {
-+		dev_err(dev, "Failed to set %d slots, supported: 4, 8, 16\n",
-+				slots);
-+		return -ENOTSUPP;
-+	}
-+	width_index = (slots / 4) - 1;
-+
-+	switch (tx_mask) {
-+	case 0x000f:
-+		slot_index = 0;
-+		break;
-+	case 0x00f0:
-+		slot_index = 1;
-+		break;
-+	case 0x0f00:
-+		slot_index = 2;
-+		break;
-+	case 0xf000:
-+		slot_index = 3;
-+		break;
-+	default:
-+		/* must be contigious nibble */
-+		dev_err(dev, "Failed to set tx_mask %08x\n", tx_mask);
-+		return -ENOTSUPP;
-+	}
-+
-+	/* 48kHz sample rate, TDM configuration, 64-bit I2S frame period, PLL
-+	 * clock dither disabled, high-pass filter enabled (blocks DC output)
-+	 */
-+	data = IB3_SAMPLE_RATE_48_KHZ | IB3_FORMAT[width_index][slot_index] |
-+		IB3_I2S_FRAME_PERIOD_64 | IB3_HIGH_PASS_FILTER_ENABLE;
-+	ret = snd_soc_component_write(dai->component, TDA7802_IB3, data);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to write IB3 config %d\n", ret);
-+		return ret;
-+	}
-+
-+	tda7802_dump_regs(tda7802);
-+
-+	return 0;
-+}
-+
-+static const struct snd_soc_dai_ops tda7802_dai_ops = {
-+	.startup      = tda7802_dai_startup,
-+	.shutdown     = tda7802_dai_shutdown,
-+	.digital_mute = tda7802_digital_mute,
-+	.set_tdm_slot = tda7802_set_tdm_slot,
-+};
-+
-+static struct snd_soc_dai_driver tda7802_dai_driver = {
-+	.name = "tda7802",
-+	.playback = {
-+		.stream_name  = "Playback",
-+		.channels_min = 4,
-+		.channels_max = 4,
-+		.rates	      = SNDRV_PCM_RATE_48000,
-+		.formats      = SNDRV_PCM_FMTBIT_S32_LE,
-+	},
-+	.ops = &tda7802_dai_ops,
-+};
-+
-+/* read device tree or ACPI properties from device */
-+static int tda7802_read_properties(struct tda7802_priv *tda7802)
-+{
-+	struct device *dev = &tda7802->i2c->dev;
-+	int err = 0;
-+
-+	tda7802->enable_reg = devm_regulator_get(dev, "enable");
-+	if (IS_ERR(tda7802->enable_reg)) {
-+		dev_err(dev, "Failed to get enable regulator\n");
-+		return PTR_ERR(tda7802->enable_reg);
-+	}
-+
-+	err = device_property_read_u8(dev, "st,gain-ch13", &tda7802->gain_ch13);
-+	if (err < 0)
-+		dev_err(dev, "Failed to read gain, channel 1,3 %d\n", err);
-+
-+	err = device_property_read_u8(dev, "st,gain-ch24", &tda7802->gain_ch24);
-+	if (err < 0)
-+		dev_err(dev, "Failed to read gain, channel 2,4 %d\n", err);
-+
-+	err = device_property_read_string(dev, "st,diagnostic-mode-ch13",
-+			&tda7802->diag_mode_ch13);
-+	if (err < 0)
-+		dev_err(dev, "Failed to read diagnostic mode, channel 1,3 %d\n",
-+				err);
-+
-+	err = device_property_read_string(dev, "st,diagnostic-mode-ch24",
-+			&tda7802->diag_mode_ch24);
-+	if (err < 0)
-+		dev_err(dev, "Failed to read diagnostic mode, channel 2,4 %d\n",
-+				err);
-+
-+	return err;
-+}
-+
-+static const struct snd_soc_component_driver tda7802_component_driver;
-+
-+static int tda7802_i2c_probe(struct i2c_client *i2c,
-+			     const struct i2c_device_id *id)
-+{
-+	struct device *dev = &i2c->dev;
-+	struct tda7802_priv *tda7802;
-+	int status, err, err2;
-+
-+	dev_dbg(dev, "%s addr=0x%02hx, id %p\n", __func__, i2c->addr, id);
-+
-+	tda7802 = devm_kmalloc(dev, sizeof(*tda7802), GFP_KERNEL);
-+	if (!tda7802)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(i2c, tda7802);
-+	tda7802->i2c = i2c;
-+
-+	err = tda7802_read_properties(tda7802);
-+	if (err < 0)
-+		return err;
-+
-+	tda7802->regmap = devm_regmap_init_i2c(tda7802->i2c,
-+			&tda7802_regmap_config);
-+	if (IS_ERR(tda7802->regmap))
-+		return PTR_ERR(tda7802->regmap);
-+
-+	/* Enable and verify the connection */
-+	err = regulator_enable(tda7802->enable_reg);
-+	if (err < 0) {
-+		dev_err(dev, "Failed to enable (init)\n");
-+		return err;
-+	}
-+	msleep(ENABLE_DELAY_MS);
-+
-+	err = regmap_read(tda7802->regmap, TDA7802_DB1, &status);
-+
-+	/* always disable the regulator, even if the read fails */
-+	err2 = regulator_disable(tda7802->enable_reg);
-+	if (err2 < 0) {
-+		dev_err(dev, "Failed to disable (init)\n");
-+		return err2;
-+	}
-+	/* now check for regmap_read errors */
-+	if (err < 0) {
-+		dev_err(dev, "Could not read from device\n");
-+		return -ENODEV;
-+	}
-+
-+	err = devm_snd_soc_register_component(dev, &tda7802_component_driver,
-+			&tda7802_dai_driver, 1);
-+	if (err < 0)
-+		dev_err(dev, "Failed to register codec: %d\n", err);
-+	return err;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id tda7802_of_match[] = {
-+	{ .compatible = "st,tda7802" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, tda7802_of_match);
-+#endif
-+
-+static const struct i2c_device_id tda7802_i2c_id[] = {
-+	{ "tda7802", tda7802_base },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, tda7802_i2c_id);
-+
-+static struct i2c_driver tda7802_i2c_driver = {
-+	.driver = {
-+		.name  = "tda7802-codec",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(tda7802_of_match),
-+	},
-+	.probe	  = tda7802_i2c_probe,
-+	.id_table = tda7802_i2c_id,
-+};
-+module_i2c_driver(tda7802_i2c_driver);
-+
-+MODULE_DESCRIPTION("ASoC ST TDA7802 driver");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Rob Duncan <rduncan@tesla.com>");
-+MODULE_AUTHOR("Thomas Preston <thomas.preston@codethink.co.uk>");
--- 
-2.11.0
+as Guillaume has already shown we can implement c) with a custom
+property, but that's not limited to the underlying framework (IIO,
+hwmon, thermal, ...)
+
+use-case d) is not a strong one because I'm using iio-hwmon to create
+a hwmon device on the 32-bit SoCs.
+however, together with case a) using an IIO driver is going to be more
+difficult because currently there's "only" a "generic-adc-thermal"
+binding (but not a "generic-iio-temperature-thermal" binding)
+
+the initial driver version doesn't have to support everything I listed above.
+however, I believe with the thermal framework we don't limit ourselves
+to one use-case and can extend the driver in the future
+
+
+Martin
