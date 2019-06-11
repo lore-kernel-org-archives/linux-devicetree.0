@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 3/3] arm64: dts: imx8qxp: Add fallback compatible string for RTC node
-Date: Tue, 11 Jun 2019 14:33:33 +0800
-Message-ID: <20190611063333.48501-3-Anson.Huang@nxp.com>
+Subject: [PATCH 2/3] rtc: imx-sc: Make compatible string more generic
+Date: Tue, 11 Jun 2019 14:33:32 +0800
+Message-ID: <20190611063333.48501-2-Anson.Huang@nxp.com>
 References: <20190611063333.48501-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190611063333.48501-1-Anson.Huang@nxp.com>
@@ -12,28 +12,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-The i.MX system controller RTC driver uses generic compatible
-string to support all i.MX SoCs with system controller inside,
-this patch adds the generic system controller RTC compatible
-string as fallback compatible string accordingly.
+i.MX system controller RTC driver can support all i.MX SoCs
+with system controller inside, this patch makes the compatible
+string more generic to support other i.MX SoCs with system
+controller inside, such as i.MX8QM etc..
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 2 +-
+ drivers/rtc/rtc-imx-sc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index 12044be..40811a2 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -162,7 +162,7 @@
- 		};
+diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
+index c933045..38ef3ca 100644
+--- a/drivers/rtc/rtc-imx-sc.c
++++ b/drivers/rtc/rtc-imx-sc.c
+@@ -178,7 +178,7 @@ static int imx_sc_rtc_probe(struct platform_device *pdev)
+ }
  
- 		rtc: rtc {
--			compatible = "fsl,imx8qxp-sc-rtc";
-+			compatible = "fsl,imx8qxp-sc-rtc", "fsl,imx-sc-rtc";
- 		};
- 
- 		watchdog {
+ static const struct of_device_id imx_sc_dt_ids[] = {
+-	{ .compatible = "fsl,imx8qxp-sc-rtc", },
++	{ .compatible = "fsl,imx-sc-rtc", },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, imx_sc_dt_ids);
 -- 
 2.7.4
