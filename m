@@ -1,116 +1,107 @@
-From: Richard Gong <richard.gong@linux.intel.com>
-Subject: Re: A potential broken at platform driver?
-Date: Tue, 11 Jun 2019 09:10:05 -0500
-Message-ID: <f484ce9f-a86e-ce33-686b-b42dc293beb8@linux.intel.com>
-References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
- <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
- <20190528232224.GA29225@kroah.com>
- <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
- <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
- <20190603180255.GA18054@kroah.com> <20190604103241.GA4097@5WDYG62>
- <20190604142803.GA28355@kroah.com>
- <e3adbd00-e500-70af-1c27-e4c064486561@linux.intel.com>
- <20190604170310.GC14605@kroah.com>
+From: Michael Drake <michael.drake@codethink.co.uk>
+Subject: [PATCH v1 05/11] ti948: Add alive check function using schedule_delayed_work()
+Date: Tue, 11 Jun 2019 15:04:06 +0100
+Message-ID: <20190611140412.32151-6-michael.drake@codethink.co.uk>
+References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604170310.GC14605@kroah.com>
-Content-Language: en-US
+In-Reply-To: <20190611140412.32151-1-michael.drake@codethink.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Romain Izard <romain.izard.pro@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sen.li@intel.com, Richard Gong <richard.gong@intel.com>
+To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Drake <michael.drake@codethink.co.uk>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
 List-Id: devicetree@vger.kernel.org
 
+This simply runs the function once every 5 seconds, while the
+device is supposed to be active.  The alive check function is
+currently simply a stub, that logs it has been called, and
+re-inserts itself into the work queue.
 
-Hi Greg,
+Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
+Cc: Patrick Glaser <pglaser@tesla.com>
+Cc: Nate Case <ncase@tesla.com>
+---
+ drivers/gpu/drm/bridge/ti948.c | 37 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 36 insertions(+), 1 deletion(-)
 
-On 6/4/19 12:03 PM, Greg KH wrote:
-> On Tue, Jun 04, 2019 at 11:13:02AM -0500, Richard Gong wrote:
->>
->> Hi Greg,
->>
->> On 6/4/19 9:28 AM, Greg KH wrote:
->>> On Tue, Jun 04, 2019 at 12:33:03PM +0200, Romain Izard wrote:
->>>> On Mon, Jun 03, 2019 at 08:02:55PM +0200, Greg KH wrote:
->>>>>> @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
->>>>>>    	.remove = stratix10_rsu_remove,
->>>>>>    	.driver = {
->>>>>>    		.name = "stratix10-rsu",
->>>>>> -		.groups = rsu_groups,
->>>>>> +//		.groups = rsu_groups,
->>>>>
->>>>> Are you sure this is the correct pointer?  I think that might be
->>>>> pointing to the driver's attributes, not the device's attributes.
->>>>>
->>>>> If platform drivers do not have a way to register groups properly, then
->>>>> that really needs to be fixed, as trying to register it by yourself as
->>>>> you are doing, is ripe for racing with userspace.
->>>> This is a very common issue with platform drivers, and it seems to me that
->>>> it is not possible to add device attributes when binding a device to a
->>>> driver without entering the race condition.
->>>>
->>>> My understanding is the following one:
->>>>
->>>> The root cause is that the device has already been created and reported
->>>> to the userspace with a KOBJ_ADD uevent before the device and the driver
->>>> are bound together. On receiving this event, userspace will react, and
->>>> it will try to read the device's attributes. In parallel the kernel will
->>>> try to find a matching driver. If a driver is found, the kernel will
->>>> call the probe function from the driver with the device as a parameter,
->>>> and if successful a KOBJ_BIND uevent will be sent to userspace, but this
->>>> is a recent addition.
->>>>
->>>> Unfortunately, not all created devices will be bound to a driver, and the
->>>> existing udev code relies on KOBJ_ADD uevents rather than KOBJ_BIND uevents.
->>>> If new per-device attributes have been added to the device during the
->>>> binding stage userspace may or may not see them, depending on when userspace
->>>> tries to read the device's attributes.
->>>>
->>>> I have this possible workaround, but I do not know if it is a good solution:
->>>>
->>>> When binding the device and the driver together, create a new device as a
->>>> child to the current device, and fill its "groups" member to point to the
->>>> per-device attributes' group. As the device will be created with all the
->>>> attributes, it will not be affected by the race issues. The functions
->>>> handling the attributes will need to be modified to use the parents of their
->>>> "device" parameter, instead of the device itself. Additionnaly, the sysfs
->>>> location of the attributes will be different, as the child device will show
->>>> up in the sysfs path. But for a newly introduced device this will not be
->>>> a problem.
->>>>
->>>> Is this a good compromise ?
->>>
->>> Not really.  You just want the attributes on the platform device itself.
->>>
->>> Given the horrible hack that platform devices are today, what's one more
->>> hack!
->>>
->>> Here's a patch below of what should probably be done here.  Richard, can
->>> you change your code to use the new dev_groups pointer in the struct
->>> platform_driver and this patch and let me know if that works or not?
->>>
->>> Note, I've only compiled this code, not tested it...
->>>
->>
->> Your patch works.
->>
->> Many thanks for your help!
-> 
-> Nice!
-> 
-> I guess I need to turn it into a real patch now.  Let me do that tonight
-> and see if I can convert some existing drivers to use it as well...
-> 
-
-Sorry for asking.
-
-I haven't seen your patch, did you release that?
-
-Regards,
-Richard
-
-> thanks,
-> 
-> greg k-h
-> 
+diff --git a/drivers/gpu/drm/bridge/ti948.c b/drivers/gpu/drm/bridge/ti948.c
+index 9cb37215f049..86daa3701b91 100644
+--- a/drivers/gpu/drm/bridge/ti948.c
++++ b/drivers/gpu/drm/bridge/ti948.c
+@@ -16,6 +16,7 @@
+ 
+ #include <linux/regulator/consumer.h>
+ #include <linux/of_device.h>
++#include <linux/workqueue.h>
+ #include <linux/module.h>
+ #include <linux/regmap.h>
+ #include <linux/delay.h>
+@@ -25,6 +26,9 @@
+ /* Number of times to try checking for device on bringup. */
+ #define TI948_DEVICE_ID_TRIES 10
+ 
++/* Alive check every 5 seconds. */
++#define TI948_ALIVE_CHECK_DELAY (5 * HZ)
++
+ /**
+  * enum ti948_reg - TI948 registers.
+  *
+@@ -374,9 +378,27 @@ static inline struct ti948_ctx *ti948_ctx_from_dev(struct device *dev)
+ 	return i2c_get_clientdata(client);
+ }
+ 
++static inline struct ti948_ctx *delayed_work_to_ti948_ctx(
++		struct delayed_work *dwork)
++{
++	return container_of(dwork, struct ti948_ctx, alive_check);
++}
++
++static void ti948_alive_check(struct work_struct *work)
++{
++	struct delayed_work *dwork = to_delayed_work(work);
++	struct ti948_ctx *ti948 = delayed_work_to_ti948_ctx(dwork);
++
++	dev_info(&ti948->i2c->dev, "%s Alive check!\n", __func__);
++
++	/* Reschedule ourself for the next check. */
++	schedule_delayed_work(&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
++}
++
+ static int ti948_pm_resume(struct device *dev)
+ {
+ 	struct ti948_ctx *ti948 = ti948_ctx_from_dev(dev);
++	bool scheduled;
+ 	int ret;
+ 
+ 	if (ti948 == NULL)
+@@ -386,7 +408,18 @@ static int ti948_pm_resume(struct device *dev)
+ 	if (ret != 0)
+ 		return ret;
+ 
+-	return ti948_write_config_seq(ti948);
++	ret = ti948_write_config_seq(ti948);
++	if (ret != 0)
++		return ret;
++
++	INIT_DELAYED_WORK(&ti948->alive_check, ti948_alive_check);
++
++	scheduled = schedule_delayed_work(
++			&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
++	if (!scheduled)
++		dev_warn(&ti948->i2c->dev, "Alive check already scheduled\n");
++
++	return 0;
+ }
+ 
+ static int ti948_pm_suspend(struct device *dev)
+@@ -396,6 +429,8 @@ static int ti948_pm_suspend(struct device *dev)
+ 	if (ti948 == NULL)
+ 		return 0;
+ 
++	cancel_delayed_work_sync(&ti948->alive_check);
++
+ 	return ti948_power_off(ti948);
+ }
+ 
+-- 
+2.20.1
