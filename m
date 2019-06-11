@@ -1,154 +1,90 @@
-From: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH V7 00/11] misc: xilinx sd-fec drive
-Date: Tue, 11 Jun 2019 18:29:34 +0100
-Message-ID: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH v2] arm64: dts: ls1028a: Fix CPU idle fail.
+Date: Tue, 11 Jun 2019 12:40:42 -0500
+Message-ID: <CADRPPNRa11z98Rw5cgApn-2ZFMSTGj-h73wZThmgp9w8dQD4iw@mail.gmail.com>
+References: <20190517045753.3709-1-ran.wang_1@nxp.com> <20190523085104.GP9261@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190523085104.GP9261@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Ran Wang <ran.wang_1@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset is adding the full Soft Decision Forward Error
-Correction (SD-FEC) driver implementation, driver DT binding and
-driver documentation.
+On Thu, May 23, 2019 at 3:52 AM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Fri, May 17, 2019 at 12:57:53PM +0800, Ran Wang wrote:
+> > PSCI spec define 1st parameter's bit 16 of function CPU_SUSPEND to
+> > indicate CPU State Type: 0 for standby, 1 for power down. In this
+> > case, we want to select standby for CPU idle feature. But current
+> > setting wrongly select power down and cause CPU SUSPEND fail every
+> > time. Need this fix.
+> >
+> > Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+>
+> Leo, Bhaskar,
+>
+> Do you guys agree with it?
 
-Forward Error Correction (FEC) codes such as Low Density Parity
-Check (LDPC) and turbo codes provide a means to control errors in
-data transmissions over unreliable or noisy communication
-channels. The SD-FEC Integrated Block is an optimized block for
-soft-decision decoding of these codes. Fixed turbo codes are
-supported directly, whereas custom and standardized LDPC codes
-are supported through the ability to specify the parity check
-matrix through an AXI4-Lite bus or using the optional programmable
-(PL)-based support logic. For the further information see
-https://www.xilinx.com/support/documentation/ip_documentation/
-sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
+Sorry that I missed this email previously.  I agree with this change.
+CPU idle should use a low power state that could be waked up by
+interrupts and that should be PW20. And Ran is right that both PW20
+and PH20 are actually not power down state.
 
-This driver is a platform device driver which supports SDFEC16
-(16nm) IP. SD-FEC driver supports LDPC decoding and encoding and
-Turbo code decoding. LDPC codes can be specified on
-a codeword-by-codeword basis, also a custom LDPC code can be used.
+- Leo
 
-The SD-FEC driver exposes a char device interface and supports
-file operations: open(), close(), poll() and ioctl(). The driver
-allows only one usage of the device, open() limits the number of
-driver instances. The driver also utilize Common Clock Framework
-(CCF).
-
-The control and monitoring is supported over ioctl system call.
-The features supported by ioctl():
-- enable or disable data pipes to/from device
-- configure the FEC algorithm parameters
-- set the order of data
-- provide a control of a SDFEC bypass option
-- activates/deactivates SD-FEC
-- collect and provide statistical data
-- enable/disable interrupt mode
-
-Poll can be utilized to detect errors on IRQ trigger rather than
-using looping status and stats ioctl's.
-
-Tested-by: Santhosh Dyavanapally <SDYAVANA@xilinx.com>
-Tested by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
-Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-
-Changes V1 -> V2:
-- Removed unnecesary comenting from the commit messages.
-- Removed error log messages which can be triggered from user space.
-- Corrected the SDFEC table end addresses.
-- Removed casting between user pointer and kernel pointer.
-- Corrected definition of ioctl command code, used a corect type for
-size parameters.
-- Changes to declarations of IOCTL that pass structures, i.e. do not
-use pointers for sizeof as prevents compile time checks
-- IOCTL size fix, using a paging to manage a memory. Implemented a big
-tables transfer from user to kernel with get_user_pages_fast().
-- Removed unnecessary check after container_of.
-- Removed not needed ioctl code checkes inside ioctl handler.
-- Implemented compat_ioctl.
-- Updated reviewer and tester lists.
-- Updated documentation, added Limitation chapter related to fork()
-and dup().
-
-Link to V1 patch series:
-https://lore.kernel.org/lkml/1552997064-432700-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Changes V2 -> V3:
-- Corrected a licence in xilinx_sdfec.h changed to uapi licence format.
-- Corrected driver variable data types into user space data types.
-
-Link to V2 patch series:
-https://lore.kernel.org/lkml/1554804414-206099-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Changes V3 -> V4:
-- Migrate to simplier misc driver
-- Fix DT example
-- Remove helper function
-- Remove unused open_count variable
-- Remove some logs
-- Change log level to dev_dbg in the most logs
-- Change spin lock to spin_lock_irqsave/spin_lock_irqrestore
-- Correct a licence date in xilinx_sdfec.c
-- Add PTR_ERR in clock handling
-
-Link to V3 patch series:
-https://lore.kernel.org/lkml/1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Changes V4 -> V5:
-- change atomic variables to c type variables
-- align spinlock name to better description
-- correct a logicla error in LDPC algorithm
-- remove log messages
-- remove useless if statements
-- remove not needed fec_id variable
-- squash commit 4 with 6
-
-Link to V4 patch series:
-https://lore.kernel.org/lkml/1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Changes V5 -> V6:
-- the kernle/user space variables convert enums to __u32
-- put device ID under IDR
-
-Link to V5 patch series:
-https://lore.kernel.org/lkml/1560038656-380620-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Changes V6 -> V7:
-- Fix maintainers list
-
-Link to V6 patch series:
-https://lore.kernel.org/lkml/1560174314-124649-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Dragan Cvetic (11):
-  dt-bindings: xilinx-sdfec: Add SDFEC binding
-  misc: xilinx-sdfec: add core driver
-  misc: xilinx_sdfec: Add CCF support
-  misc: xilinx_sdfec: Store driver config and state
-  misc: xilinx_sdfec: Add ability to configure turbo
-  misc: xilinx_sdfec: Add ability to configure LDPC
-  misc: xilinx_sdfec: Add ability to get/set config
-  misc: xilinx_sdfec: Support poll file operation
-  misc: xilinx_sdfec: Add stats & status ioctls
-  Docs: misc: xilinx_sdfec: Add documentation
-  MAINTAINERS: add maintainer for SD-FEC
-
- .../devicetree/bindings/misc/xlnx,sd-fec.txt       |   58 +
- Documentation/misc-devices/index.rst               |    1 +
- Documentation/misc-devices/xilinx_sdfec.rst        |  291 ++++
- MAINTAINERS                                        |    9 +
- drivers/misc/Kconfig                               |   12 +
- drivers/misc/Makefile                              |    1 +
- drivers/misc/xilinx_sdfec.c                        | 1516 ++++++++++++++++++++
- include/uapi/misc/xilinx_sdfec.h                   |  448 ++++++
- 8 files changed, 2336 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
- create mode 100644 Documentation/misc-devices/xilinx_sdfec.rst
- create mode 100644 drivers/misc/xilinx_sdfec.c
- create mode 100644 include/uapi/misc/xilinx_sdfec.h
-
--- 
-2.7.4
+>
+> Shawn
+>
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   18 +++++++++---------
+> >  1 files changed, 9 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > index b045812..bf7f845 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > @@ -28,7 +28,7 @@
+> >                       enable-method = "psci";
+> >                       clocks = <&clockgen 1 0>;
+> >                       next-level-cache = <&l2>;
+> > -                     cpu-idle-states = <&CPU_PH20>;
+> > +                     cpu-idle-states = <&CPU_PW20>;
+> >               };
+> >
+> >               cpu1: cpu@1 {
+> > @@ -38,7 +38,7 @@
+> >                       enable-method = "psci";
+> >                       clocks = <&clockgen 1 0>;
+> >                       next-level-cache = <&l2>;
+> > -                     cpu-idle-states = <&CPU_PH20>;
+> > +                     cpu-idle-states = <&CPU_PW20>;
+> >               };
+> >
+> >               l2: l2-cache {
+> > @@ -53,13 +53,13 @@
+> >                */
+> >               entry-method = "arm,psci";
+> >
+> > -             CPU_PH20: cpu-ph20 {
+> > -                     compatible = "arm,idle-state";
+> > -                     idle-state-name = "PH20";
+> > -                     arm,psci-suspend-param = <0x00010000>;
+> > -                     entry-latency-us = <1000>;
+> > -                     exit-latency-us = <1000>;
+> > -                     min-residency-us = <3000>;
+> > +             CPU_PW20: cpu-pw20 {
+> > +                       compatible = "arm,idle-state";
+> > +                       idle-state-name = "PW20";
+> > +                       arm,psci-suspend-param = <0x0>;
+> > +                       entry-latency-us = <2000>;
+> > +                       exit-latency-us = <2000>;
+> > +                       min-residency-us = <6000>;
+> >               };
+> >       };
+> >
+> > --
+> > 1.7.1
+> >
