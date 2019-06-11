@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 5/6] ARM: pxa: Switch to SPDX header
-Date: Tue, 11 Jun 2019 09:29:20 +0200
-Message-ID: <20190611072921.2979446-6-lkundrak@v3.sk>
+Subject: [PATCH 6/6] ARM: hisilicon: DT: Switch to SPDX header
+Date: Tue, 11 Jun 2019 09:29:21 +0200
+Message-ID: <20190611072921.2979446-7-lkundrak@v3.sk>
 References: <20190611072921.2979446-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -18,87 +18,101 @@ to SPDX instead of fixing the wording.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/mach-pxa/littleton.c | 5 +----
- arch/arm/mach-pxa/pxa-dt.c    | 5 +----
- arch/arm/mach-pxa/saar.c      | 5 +----
- arch/arm/mach-pxa/tavorevb.c  | 5 +----
- 4 files changed, 4 insertions(+), 16 deletions(-)
+ arch/arm/boot/dts/hi3620-hi4511.dts  | 5 +----
+ arch/arm/boot/dts/hi3620.dtsi        | 5 +----
+ arch/arm/boot/dts/hip04-d01.dts      | 5 +----
+ arch/arm/boot/dts/hisi-x5hd2-dkb.dts | 5 +----
+ arch/arm/boot/dts/hisi-x5hd2.dtsi    | 5 +----
+ 5 files changed, 5 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm/mach-pxa/littleton.c b/arch/arm/mach-pxa/littleton.=
-c
-index 464b8bd2bcb9..5c78bf53be5c 100644
---- a/arch/arm/mach-pxa/littleton.c
-+++ b/arch/arm/mach-pxa/littleton.c
+diff --git a/arch/arm/boot/dts/hi3620-hi4511.dts b/arch/arm/boot/dts/hi36=
+20-hi4511.dts
+index a579fbf13b5f..86282e6a2eff 100644
+--- a/arch/arm/boot/dts/hi3620-hi4511.dts
++++ b/arch/arm/boot/dts/hi3620-hi4511.dts
+@@ -1,10 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  *  Copyright (C) 2012-2013 Linaro Ltd.
+  *  Author: Haojian Zhuang <haojian.zhuang@linaro.org>
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License version 2 as
+- *  publishhed by the Free Software Foundation.
+  */
+=20
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/hi3620.dtsi b/arch/arm/boot/dts/hi3620.dts=
+i
+index 541d70094544..d6aed21eaac5 100644
+--- a/arch/arm/boot/dts/hi3620.dtsi
++++ b/arch/arm/boot/dts/hi3620.dtsi
 @@ -1,3 +1,4 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  *  linux/arch/arm/mach-pxa/littleton.c
+  * Hisilicon Ltd. Hi3620 SoC
   *
-@@ -9,10 +10,6 @@
+@@ -5,10 +6,6 @@
+  * Copyright (C) 2012-2013 Linaro Ltd.
   *
-  *  2007-11-22  modified to align with latest kernel
-  *              eric miao <eric.miao@marvell.com>
+  * Author: Haojian Zhuang <haojian.zhuang@linaro.org>
 - *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License version 2 as
-- *  publishhed by the Free Software Foundation.
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * publishhed by the Free Software Foundation.
   */
 =20
- #include <linux/init.h>
-diff --git a/arch/arm/mach-pxa/pxa-dt.c b/arch/arm/mach-pxa/pxa-dt.c
-index aa9b255f5570..e5508e04fadc 100644
---- a/arch/arm/mach-pxa/pxa-dt.c
-+++ b/arch/arm/mach-pxa/pxa-dt.c
-@@ -1,11 +1,8 @@
+ #include <dt-bindings/clock/hi3620-clock.h>
+diff --git a/arch/arm/boot/dts/hip04-d01.dts b/arch/arm/boot/dts/hip04-d0=
+1.dts
+index ca48641d0f48..157244dbd074 100644
+--- a/arch/arm/boot/dts/hip04-d01.dts
++++ b/arch/arm/boot/dts/hip04-d01.dts
+@@ -1,10 +1,7 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  *  linux/arch/arm/mach-pxa/pxa-dt.c
-  *
-  *  Copyright (C) 2012 Daniel Mack
+  *  Copyright (C) 2013-2014 Linaro Ltd.
+  *  Author: Haojian Zhuang <haojian.zhuang@linaro.org>
 - *
 - *  This program is free software; you can redistribute it and/or modify
 - *  it under the terms of the GNU General Public License version 2 as
 - *  publishhed by the Free Software Foundation.
   */
 =20
- #include <linux/irq.h>
-diff --git a/arch/arm/mach-pxa/saar.c b/arch/arm/mach-pxa/saar.c
-index 834991034f30..a5f5bc5c20fb 100644
---- a/arch/arm/mach-pxa/saar.c
-+++ b/arch/arm/mach-pxa/saar.c
-@@ -1,13 +1,10 @@
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts b/arch/arm/boot/dts/his=
+i-x5hd2-dkb.dts
+index d13af8437d10..cb507e237068 100644
+--- a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
++++ b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
+@@ -1,10 +1,7 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  *  linux/arch/arm/mach-pxa/saar.c
-  *
-  *  Support for the Marvell PXA930 Handheld Platform (aka SAAR)
-  *
-  *  Copyright (C) 2007-2008 Marvell International Ltd.
+  * Copyright (c) 2013-2014 Linaro Ltd.
+  * Copyright (c) 2013-2014 Hisilicon Limited.
 - *
 - *  This program is free software; you can redistribute it and/or modify
 - *  it under the terms of the GNU General Public License version 2 as
 - *  publishhed by the Free Software Foundation.
   */
 =20
- #include <linux/module.h>
-diff --git a/arch/arm/mach-pxa/tavorevb.c b/arch/arm/mach-pxa/tavorevb.c
-index 4b38e821ac9c..129b7de675a7 100644
---- a/arch/arm/mach-pxa/tavorevb.c
-+++ b/arch/arm/mach-pxa/tavorevb.c
-@@ -1,13 +1,10 @@
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x=
+5hd2.dtsi
+index 50d3f8426da1..2dd1d4fb0c27 100644
+--- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
++++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
+@@ -1,10 +1,7 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  *  linux/arch/arm/mach-pxa/tavorevb.c
-  *
-  *  Support for the Marvell PXA930 Evaluation Board
-  *
-  *  Copyright (C) 2007-2008 Marvell International Ltd.
+  * Copyright (c) 2013-2014 Linaro Ltd.
+  * Copyright (c) 2013-2014 Hisilicon Limited.
 - *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License version 2 as
-- *  publishhed by the Free Software Foundation.
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * publishhed by the Free Software Foundation.
   */
 =20
- #include <linux/module.h>
+ #include <dt-bindings/clock/hix5hd2-clock.h>
 --=20
 2.21.0
