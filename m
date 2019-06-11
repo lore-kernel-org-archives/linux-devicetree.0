@@ -1,15 +1,15 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 3/5] soc: qcom: smd-rpm: Create RPM interconnect proxy
- child device
-Date: Tue, 11 Jun 2019 16:23:39 -0700
-Message-ID: <20190611232339.GU4814@minitux>
+Subject: Re: [PATCH v3 4/5] interconnect: qcom: Add interconnect SMD over SMD
+ driver
+Date: Tue, 11 Jun 2019 16:31:43 -0700
+Message-ID: <20190611233143.GV4814@minitux>
 References: <20190611164157.24656-1-georgi.djakov@linaro.org>
- <20190611164157.24656-4-georgi.djakov@linaro.org>
+ <20190611164157.24656-5-georgi.djakov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190611164157.24656-4-georgi.djakov@linaro.org>
+In-Reply-To: <20190611164157.24656-5-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Georgi Djakov <georgi.djakov@linaro.org>
 Cc: robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
@@ -17,11 +17,10 @@ List-Id: devicetree@vger.kernel.org
 
 On Tue 11 Jun 09:41 PDT 2019, Georgi Djakov wrote:
 
-> Register a platform device to handle the communication of bus bandwidth
-> requests with the remote processor. The interconnect proxy device is part
-> of this remote processor (RPM) hardware. Let's create a icc-smd-rpm proxy
-> child device to represent the bus throughput functionality that is provided
-> by the RPM.
+> On some Qualcomm SoCs, there is a remote processor, which controls some of
+> the Network-On-Chip interconnect resources. Other CPUs express their needs
+> by communicating with this processor. Add a driver to handle communication
+> with this remote processor.
 > 
 > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 > ---
@@ -29,78 +28,160 @@ On Tue 11 Jun 09:41 PDT 2019, Georgi Djakov wrote:
 > v3:
 > - New patch.
 > 
->  drivers/soc/qcom/smd-rpm.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
+>  drivers/interconnect/qcom/Kconfig   |  9 ++++
+>  drivers/interconnect/qcom/Makefile  |  2 +
+>  drivers/interconnect/qcom/smd-rpm.c | 72 +++++++++++++++++++++++++++++
+>  drivers/interconnect/qcom/smd-rpm.h | 15 ++++++
+>  4 files changed, 98 insertions(+)
+>  create mode 100644 drivers/interconnect/qcom/smd-rpm.c
+>  create mode 100644 drivers/interconnect/qcom/smd-rpm.h
 > 
-> diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
-> index 9956bb2c63f2..a028250737ec 100644
-> --- a/drivers/soc/qcom/smd-rpm.c
-> +++ b/drivers/soc/qcom/smd-rpm.c
-> @@ -27,12 +27,14 @@
->  /**
->   * struct qcom_smd_rpm - state of the rpm device driver
->   * @rpm_channel:	reference to the smd channel
-> + * @icc:		interconnect proxy device
->   * @ack:		completion for acks
->   * @lock:		mutual exclusion around the send/complete pair
->   * @ack_status:		result of the rpm request
->   */
->  struct qcom_smd_rpm {
->  	struct rpmsg_endpoint *rpm_channel;
-> +	struct platform_device *icc;
->  	struct device *dev;
+> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
+> index e76e3e248c41..b0eade1da5d5 100644
+> --- a/drivers/interconnect/qcom/Kconfig
+> +++ b/drivers/interconnect/qcom/Kconfig
+> @@ -9,6 +9,7 @@ config INTERCONNECT_QCOM_QCS404
+>  	tristate "Qualcomm QCS404 interconnect driver"
+>  	depends on INTERCONNECT_QCOM
+>  	depends on QCOM_SMD_RPM || COMPILE_TEST
+> +	select INTERCONNECT_QCOM_SMD_RPM
+>  	help
+>  	  This is a driver for the Qualcomm Network-on-Chip on qcs404-based
+>  	  platforms.
+> @@ -20,3 +21,11 @@ config INTERCONNECT_QCOM_SDM845
+>  	help
+>  	  This is a driver for the Qualcomm Network-on-Chip on sdm845-based
+>  	  platforms.
+> +
+> +config INTERCONNECT_QCOM_SMD_RPM
+> +	tristate "Qualcomm SMD RPM interconnect driver"
+
+I think it's correct to have INTERCONNECT_QCOM_QCS404 select
+INTERCONNECT_QCOM_SMD_RPM and then but INTERCONNECT_QCOM_SMD_RPM should
+not be user selectable. So leave the tristate but drop the description
+and the help text.
+
+> +	depends on INTERCONNECT_QCOM
+> +	depends on QCOM_SMD_RPM || COMPILE_TEST
+> +	help
+> +	  This is a driver for communicating interconnect related configuration
+> +	  details with a remote processor (RPM) on Qualcomm platforms.
+> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
+> index 059ff325ee6c..67dafb783dec 100644
+> --- a/drivers/interconnect/qcom/Makefile
+> +++ b/drivers/interconnect/qcom/Makefile
+> @@ -2,6 +2,8 @@
 >  
->  	struct completion ack;
-> @@ -201,6 +203,7 @@ static int qcom_smd_rpm_callback(struct rpmsg_device *rpdev,
->  static int qcom_smd_rpm_probe(struct rpmsg_device *rpdev)
->  {
->  	struct qcom_smd_rpm *rpm;
-> +	int ret;
+>  qnoc-qcs404-objs			:= qcs404.o
+>  qnoc-sdm845-objs			:= sdm845.o
+> +icc-smd-rpm-objs			:= smd-rpm.o
 >  
->  	rpm = devm_kzalloc(&rpdev->dev, sizeof(*rpm), GFP_KERNEL);
->  	if (!rpm)
-> @@ -213,11 +216,23 @@ static int qcom_smd_rpm_probe(struct rpmsg_device *rpdev)
->  	rpm->rpm_channel = rpdev->ept;
->  	dev_set_drvdata(&rpdev->dev, rpm);
->  
-> -	return of_platform_populate(rpdev->dev.of_node, NULL, NULL, &rpdev->dev);
-> +	rpm->icc = platform_device_register_data(&rpdev->dev, "icc_smd_rpm", -1,
-> +						 NULL, 0);
-> +	if (!IS_ERR(rpm->icc))
+>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
+> +obj-$(CONFIG_INTERCONNECT_QCOM_SMD_RPM) += icc-smd-rpm.o
+> diff --git a/drivers/interconnect/qcom/smd-rpm.c b/drivers/interconnect/qcom/smd-rpm.c
+> new file mode 100644
+> index 000000000000..af22c0a293e6
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/smd-rpm.c
+> @@ -0,0 +1,72 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * RPM over SMD communication wrapper for interconnects
+> + *
+> + * Copyright (C) 2019 Linaro Ltd
+> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
+> + */
+> +
+> +#include <linux/interconnect-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/soc/qcom/smd-rpm.h>
+> +
+> +#include "smd-rpm.h"
+> +
+> +#define RPM_KEY_BW		0x00007762
+> +
+> +static struct qcom_smd_rpm *icc_smd_rpm;
+> +
+> +struct icc_rpm_smd_req {
+> +	__le32 key;
+> +	__le32 nbytes;
+> +	__le32 value;
+> +};
+> +
+> +bool qcom_icc_rpm_smd_available(void)
+> +{
+> +	if (!icc_smd_rpm)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_rpm_smd_available);
+> +
+> +int qcom_icc_rpm_smd_send(int ctx, int rsc_type, int id, u32 val)
+> +{
+> +	struct icc_rpm_smd_req req = {
+> +		.key = cpu_to_le32(RPM_KEY_BW),
+> +		.nbytes = cpu_to_le32(sizeof(u32)),
+> +		.value = cpu_to_le32(val),
+> +	};
+> +
+> +	return qcom_rpm_smd_write(icc_smd_rpm, ctx, rsc_type, id, &req,
+> +				  sizeof(req));
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_rpm_smd_send);
+> +
+> +static int qcom_icc_rpm_smd_probe(struct platform_device *pdev)
+> +{
+> +	icc_smd_rpm = dev_get_drvdata(pdev->dev.parent);
+> +
+> +	if (!icc_smd_rpm) {
+> +		dev_err(&pdev->dev, "unable to retrieve handle to RPM\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
 
-This will be IS_ERR() only if the struct platform_device couldn't be
-allocated or registered, it does not relate to that driver's probe. As
-such it makes sense to fail the probe if this failed.
-
-So flip this around and return PTR_ERR() here.
-
-> +		platform_set_drvdata(rpm->icc, rpm);
-
-It's possible that the device_register above finds the driver and calls
-it (pending initcall ordering etc), in which case the child's drvdata
-wouldn't yet be set.
-
-In the other drivers where we do this we have the child to request the
-drvdata of its parent, so I think you should do the same here.
-
-Apart from this, this patch looks good!
+It would probably be nice to have a remove function that zeros out
+icc_smd_rpm as well.
 
 Regards,
 Bjorn
 
 > +
-> +	ret = of_platform_populate(rpdev->dev.of_node, NULL, NULL, &rpdev->dev);
-> +	if (ret)
-> +		platform_device_unregister(rpm->icc);
+> +static struct platform_driver qcom_interconnect_rpm_smd_driver = {
+> +	.driver = {
+> +		.name		= "icc_smd_rpm",
+> +	},
+> +	.probe = qcom_icc_rpm_smd_probe,
+> +};
+> +module_platform_driver(qcom_interconnect_rpm_smd_driver);
+> +MODULE_AUTHOR("Georgi Djakov <georgi.djakov@linaro.org>");
+> +MODULE_DESCRIPTION("Qualcomm SMD RPM interconnect proxy driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:icc_smd_rpm");
+> diff --git a/drivers/interconnect/qcom/smd-rpm.h b/drivers/interconnect/qcom/smd-rpm.h
+> new file mode 100644
+> index 000000000000..ca9d0327b8ac
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/smd-rpm.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019, Linaro Ltd.
+> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
+> + */
 > +
-> +	return ret;
->  }
->  
->  static void qcom_smd_rpm_remove(struct rpmsg_device *rpdev)
->  {
-> +	struct qcom_smd_rpm *rpm = dev_get_drvdata(&rpdev->dev);
+> +#ifndef __DRIVERS_INTERCONNECT_QCOM_SMD_RPM_H
+> +#define __DRIVERS_INTERCONNECT_QCOM_SMD_RPM_H
 > +
-> +	platform_device_unregister(rpm->icc);
->  	of_platform_depopulate(&rpdev->dev);
->  }
->  
+> +#include <linux/soc/qcom/smd-rpm.h>
+> +
+> +bool qcom_icc_rpm_smd_available(void);
+> +int qcom_icc_rpm_smd_send(int ctx, int rsc_type, int id, u32 val);
+> +
+> +#endif
