@@ -1,79 +1,56 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v1 08/11] dt-bindings: display/bridge: Add bindings for
- ti949
-Date: Tue, 11 Jun 2019 21:13:51 +0300
-Message-ID: <20190611181351.GW5016@pendragon.ideasonboard.com>
-References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
- <20190611140412.32151-9-michael.drake@codethink.co.uk>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: How to inject fwnode/oftree/acpi data by platform driver ?
+Date: Tue, 11 Jun 2019 21:44:23 +0300
+Message-ID: <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
+References: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190611140412.32151-9-michael.drake@codethink.co.uk>
+In-Reply-To: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Drake <michael.drake@codethink.co.uk>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
+To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
++Cc: Heikki.
+Heikki, can you help here with swnodes?
 
-Thank you for the patch.
+On Sat, Jun 1, 2019 at 5:17 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+>
+> Hi folks,
+>
+>
+> I'm looking for a way to inject fwnode data from a platform driver,
+> in order to initialize generic drivers w/ board specific configuration.
+> The idea is getting rid of passing driver specific pdata structs
+> (which, IIRC, seem to be deprecated).
+>
+> An example usecase is the APUv2/3 board, which have things like gpios
+> wired to buttons and LEDs. The board can only be detected via DMI
+> string, no way to probe the platform devices - have to be initialized
+> explicitly (that's how I'm already doing it now).
+>
+> The nicest way, IMHO, would be if I could just write some piece of DTS
+> and some fancy magic all the rest under the hood. Such thing doesn't
+> seem to exist yet. Does it make sense to implement that ? How could
+> we do it ?
+>
+> Which other options do we have ?
+>
+> Or should we just leave everything as it is and stick w/ pdata structs ?
+>
+>
+> thx
+> --mtx
+>
+> --
+> Enrico Weigelt, metux IT consult
+> Free software and Linux embedded engineering
+> info@metux.net -- +49-151-27565287
 
-On Tue, Jun 11, 2019 at 03:04:09PM +0100, Michael Drake wrote:
-> Adds device tree bindings for:
-> 
->   TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
-> 
-> It supports instantiation via device tree / ACPI table.
-> 
-> The device has the compatible string "ti,ds90ub949", and
-> and allows an arrray of strings to be provided as regulator
-> names to enable for operation of the device.
 
-All the comments I made regarding the ds90ub948 DT bindings apply here
-too. Same for the comments related to the driver, they apply to the
-subsequent patches in this series.
-
-> Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
-> Cc: Patrick Glaser <pglaser@tesla.com>
-> Cc: Nate Case <ncase@tesla.com>
-> ---
->  .../bindings/display/bridge/ti,ds90ub949.txt  | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
-> new file mode 100644
-> index 000000000000..3ba3897d5e81
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
-> @@ -0,0 +1,24 @@
-> +TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
-> +============================================================
-> +
-> +This is the binding for Texas Instruments DS90UB949-Q1 bridge serializer.
-> +
-> +This device supports I2C only.
-> +
-> +Required properties:
-> +
-> +- compatible: "ti,ds90ub949"
-> +
-> +Optional properties:
-> +
-> +- regulators: List of regulator name strings to enable for operation of device.
-> +
-> +Example
-> +-------
-> +
-> +ti949: ds90ub949@0 {
-> +	compatible = "ti,ds90ub949";
-> +
-> +	regulators: "vcc",
-> +	            "vcc_hdmi";
-> +};
 
 -- 
-Regards,
-
-Laurent Pinchart
+With Best Regards,
+Andy Shevchenko
