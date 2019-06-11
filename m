@@ -1,70 +1,82 @@
-From: Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH v2 2/2] arm64: tegra: enable ACONNECT, ADMA and AGIC
-Date: Tue, 11 Jun 2019 14:26:46 +0530
-Message-ID: <1560243406-2535-2-git-send-email-spujar@nvidia.com>
-References: <1560243406-2535-1-git-send-email-spujar@nvidia.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 3/5] drm/panel: Add attach/detach callbacks
+Date: Tue, 11 Jun 2019 10:57:22 +0200
+Message-ID: <20190611085722.GX21222@phenom.ffwll.local>
+References: <20190611040350.90064-1-dbasehore@chromium.org>
+ <20190611040350.90064-4-dbasehore@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560243406-2535-1-git-send-email-spujar@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: mkumard@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190611040350.90064-4-dbasehore@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
+To: Derek Basehore <dbasehore@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, CK Hu <ck.hu@mediatek.com>, linux-mediatek@lists.infradead.org, Sam Ravnborg <sam@ravnborg.org>, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable ACONNECT, ADMA and AGIC devices for following platforms
-  * Jetson TX2
-  * Jetson Xavier
-
-Verified driver probe path and devices get registered fine.
-
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts | 12 ++++++++++++
- arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts | 12 ++++++++++++
- 2 files changed, 24 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-index 5102de1..b818355 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-@@ -298,4 +298,16 @@
- 			vin-supply = <&vdd_5v0_sys>;
- 		};
- 	};
-+
-+	aconnect@2a41000 {
-+		status = "okay";
-+
-+		dma-controller@2930000 {
-+			status = "okay";
-+		};
-+
-+		agic@2a41000 {
-+			status = "okay";
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index 6e6df65..d1cc028 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -167,4 +167,16 @@
- 			};
- 		};
- 	};
-+
-+	aconnect@2a41000 {
-+		status = "okay";
-+
-+		dma-controller@2930000 {
-+			status = "okay";
-+		};
-+
-+		agic@2a41000 {
-+			status = "okay";
-+		};
-+	};
- };
--- 
-2.7.4
+T24gTW9uLCBKdW4gMTAsIDIwMTkgYXQgMDk6MDM6NDhQTSAtMDcwMCwgRGVyZWsgQmFzZWhvcmUg
+d3JvdGU6Cj4gVGhpcyBhZGRzIHRoZSBhdHRhY2gvZGV0YWNoIGNhbGxiYWNrcy4gVGhlc2UgYXJl
+IGZvciBzZXR0aW5nIHVwCj4gaW50ZXJuYWwgc3RhdGUgZm9yIHRoZSBjb25uZWN0b3IvcGFuZWwg
+cGFpciB0aGF0IGNhbid0IGJlIGRvbmUgYXQKPiBwcm9iZSAoc2luY2UgdGhlIGNvbm5lY3RvciBk
+b2Vzbid0IGV4aXN0KSBhbmQgd2hpY2ggZG9uJ3QgbmVlZCB0byBiZQo+IHJlcGVhdGVkbHkgZG9u
+ZSBmb3IgZXZlcnkgZ2V0L21vZGVzLCBwcmVwYXJlLCBvciBlbmFibGUgY2FsbGJhY2suCj4gVmFs
+dWVzIHN1Y2ggYXMgdGhlIHBhbmVsIG9yaWVudGF0aW9uLCBhbmQgZGlzcGxheSBzaXplIGNhbiBi
+ZSBmaWxsZWQKPiBpbiBmb3IgdGhlIGNvbm5lY3Rvci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBEZXJl
+ayBCYXNlaG9yZSA8ZGJhc2Vob3JlQGNocm9taXVtLm9yZz4KPiAtLS0KPiAgZHJpdmVycy9ncHUv
+ZHJtL2RybV9wYW5lbC5jIHwgMTQgKysrKysrKysrKysrKysKPiAgaW5jbHVkZS9kcm0vZHJtX3Bh
+bmVsLmggICAgIHwgIDQgKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKykK
+PiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2RybV9wYW5lbC5jIGIvZHJpdmVycy9n
+cHUvZHJtL2RybV9wYW5lbC5jCj4gaW5kZXggM2I2ODljZTRhNTFhLi43MmY2NzY3OGQ5ZDUgMTAw
+NjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2RybV9wYW5lbC5jCj4gKysrIGIvZHJpdmVycy9n
+cHUvZHJtL2RybV9wYW5lbC5jCj4gQEAgLTEwNCwxMiArMTA0LDIzIEBAIEVYUE9SVF9TWU1CT0wo
+ZHJtX3BhbmVsX3JlbW92ZSk7Cj4gICAqLwo+ICBpbnQgZHJtX3BhbmVsX2F0dGFjaChzdHJ1Y3Qg
+ZHJtX3BhbmVsICpwYW5lbCwgc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiAgewo+
+ICsJaW50IHJldDsKPiArCj4gIAlpZiAocGFuZWwtPmNvbm5lY3RvcikKPiAgCQlyZXR1cm4gLUVC
+VVNZOwo+ICAKPiAgCXBhbmVsLT5jb25uZWN0b3IgPSBjb25uZWN0b3I7Cj4gIAlwYW5lbC0+ZHJt
+ID0gY29ubmVjdG9yLT5kZXY7Cj4gIAo+ICsJaWYgKHBhbmVsLT5mdW5jcy0+YXR0YWNoKSB7Cj4g
+KwkJcmV0ID0gcGFuZWwtPmZ1bmNzLT5hdHRhY2gocGFuZWwpOwo+ICsJCWlmIChyZXQgPCAwKSB7
+Cj4gKwkJCXBhbmVsLT5jb25uZWN0b3IgPSBOVUxMOwo+ICsJCQlwYW5lbC0+ZHJtID0gTlVMTDsK
+PiArCQkJcmV0dXJuIHJldDsKPiArCQl9Cj4gKwl9CgpXaHkgY2FuJ3Qgd2UganVzdCBpbXBsZW1l
+bnQgdGhpcyBpbiB0aGUgZHJtIGhlbHBlcnMgZm9yIGV2ZXJ5b25lLCBieSBlLmcuCnN0b3Jpbmcg
+YSBkdCBub2RlIGluIGRybV9wYW5lbD8gRmVlbHMgYSBiaXQgb3ZlcmtpbGwgdG8gaGF2ZSB0aGVz
+ZSBuZXcKaG9va3MgaGVyZS4KCkFsc28sIG15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCB0aGlzIGR0
+IHN0dWZmIGlzIHN1cHBvc2VkIHRvIGJlCnN0YW5kYXJkaXplZCwgc28gdGhpcyBzaG91bGQgd29y
+ay4KLURhbmllbAoKPiArCj4gIAlyZXR1cm4gMDsKPiAgfQo+ICBFWFBPUlRfU1lNQk9MKGRybV9w
+YW5lbF9hdHRhY2gpOwo+IEBAIC0xMjgsNiArMTM5LDkgQEAgRVhQT1JUX1NZTUJPTChkcm1fcGFu
+ZWxfYXR0YWNoKTsKPiAgICovCj4gIGludCBkcm1fcGFuZWxfZGV0YWNoKHN0cnVjdCBkcm1fcGFu
+ZWwgKnBhbmVsKQo+ICB7Cj4gKwlpZiAocGFuZWwtPmZ1bmNzLT5kZXRhY2gpCj4gKwkJcGFuZWwt
+PmZ1bmNzLT5kZXRhY2gocGFuZWwpOwo+ICsKPiAgCXBhbmVsLT5jb25uZWN0b3IgPSBOVUxMOwo+
+ICAJcGFuZWwtPmRybSA9IE5VTEw7Cj4gIAo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2RybS9kcm1f
+cGFuZWwuaCBiL2luY2x1ZGUvZHJtL2RybV9wYW5lbC5oCj4gaW5kZXggMTM2MzFiMmVmYmFhLi5l
+MTM2ZTNhM2M5OTYgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX3BhbmVsLmgKPiArKysg
+Yi9pbmNsdWRlL2RybS9kcm1fcGFuZWwuaAo+IEBAIC0zNyw2ICszNyw4IEBAIHN0cnVjdCBkaXNw
+bGF5X3RpbWluZzsKPiAgICogc3RydWN0IGRybV9wYW5lbF9mdW5jcyAtIHBlcmZvcm0gb3BlcmF0
+aW9ucyBvbiBhIGdpdmVuIHBhbmVsCj4gICAqIEBkaXNhYmxlOiBkaXNhYmxlIHBhbmVsICh0dXJu
+IG9mZiBiYWNrIGxpZ2h0LCBldGMuKQo+ICAgKiBAdW5wcmVwYXJlOiB0dXJuIG9mZiBwYW5lbAo+
+ICsgKiBAZGV0YWNoOiBkZXRhY2ggcGFuZWwtPmNvbm5lY3RvciAoY2xlYXIgaW50ZXJuYWwgc3Rh
+dGUsIGV0Yy4pCj4gKyAqIEBhdHRhY2g6IGF0dGFjaCBwYW5lbC0+Y29ubmVjdG9yICh1cGRhdGUg
+aW50ZXJuYWwgc3RhdGUsIGV0Yy4pCj4gICAqIEBwcmVwYXJlOiB0dXJuIG9uIHBhbmVsIGFuZCBw
+ZXJmb3JtIHNldCB1cAo+ICAgKiBAZW5hYmxlOiBlbmFibGUgcGFuZWwgKHR1cm4gb24gYmFjayBs
+aWdodCwgZXRjLikKPiAgICogQGdldF9tb2RlczogYWRkIG1vZGVzIHRvIHRoZSBjb25uZWN0b3Ig
+dGhhdCB0aGUgcGFuZWwgaXMgYXR0YWNoZWQgdG8gYW5kCj4gQEAgLTcwLDYgKzcyLDggQEAgc3Ry
+dWN0IGRpc3BsYXlfdGltaW5nOwo+ICBzdHJ1Y3QgZHJtX3BhbmVsX2Z1bmNzIHsKPiAgCWludCAo
+KmRpc2FibGUpKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKTsKPiAgCWludCAoKnVucHJlcGFyZSko
+c3RydWN0IGRybV9wYW5lbCAqcGFuZWwpOwo+ICsJdm9pZCAoKmRldGFjaCkoc3RydWN0IGRybV9w
+YW5lbCAqcGFuZWwpOwo+ICsJaW50ICgqYXR0YWNoKShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCk7
+Cj4gIAlpbnQgKCpwcmVwYXJlKShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCk7Cj4gIAlpbnQgKCpl
+bmFibGUpKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKTsKPiAgCWludCAoKmdldF9tb2Rlcykoc3Ry
+dWN0IGRybV9wYW5lbCAqcGFuZWwpOwo+IC0tIAo+IDIuMjIuMC5yYzIuMzgzLmdmNGZiYmYzMGMy
+LWdvb2cKPiAKCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jw
+b3JhdGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpJbnRlbC1nZnggbWFpbGluZyBsaXN0CkludGVsLWdmeEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9pbnRlbC1nZng=
