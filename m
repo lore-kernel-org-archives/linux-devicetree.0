@@ -1,42 +1,54 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next] net: ethernet: ti: cpts: fix build failure for powerpc
-Date: Tue, 11 Jun 2019 14:06:17 +0300
-Message-ID: <20190611110617.8994-1-grygorii.strashko@ti.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v1 3/3] dt-bindings: iio: afe: Add hwmon example
+Date: Tue, 11 Jun 2019 11:14:10 +0000
+Message-ID: <89820e72-dcdc-67a8-b83d-5657d66d910a@axentia.se>
+References: <20190611095659.29845-1-mylene.josserand@bootlin.com>
+ <20190611095659.29845-4-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190611095659.29845-4-mylene.josserand@bootlin.com>
+Content-Language: en-US
+Content-ID: <3AC28FDEAA023744A835DD7666AA2CD5@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-next@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+To: =?utf-8?B?TXlsw6huZSBKb3NzZXJhbmQ=?= <mylene.josserand@bootlin.com>, "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Add dependency to TI CPTS from Common CLK framework COMMON_CLK to fix
-allyesconfig build for Powerpc:
-
-drivers/net/ethernet/ti/cpts.c: In function 'cpts_of_mux_clk_setup':
-drivers/net/ethernet/ti/cpts.c:567:2: error: implicit declaration of function 'of_clk_parent_fill'; did you mean 'of_clk_get_parent_name'? [-Werror=implicit-function-declaration]
-  of_clk_parent_fill(refclk_np, parent_names, num_parents);
-  ^~~~~~~~~~~~~~~~~~
-  of_clk_get_parent_name
-
-Fixes: a3047a81ba13 ("net: ethernet: ti: cpts: add support for ext rftclk selection")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index bd05a977ee7e..a800d3417411 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -60,6 +60,7 @@ config TI_CPSW
- config TI_CPTS
- 	bool "TI Common Platform Time Sync (CPTS) Support"
- 	depends on TI_CPSW || TI_KEYSTONE_NETCP || COMPILE_TEST
-+	depends on COMMON_CLK
- 	depends on POSIX_TIMERS
- 	---help---
- 	  This driver supports the Common Platform Time Sync unit of
--- 
-2.17.1
+T24gMjAxOS0wNi0xMSAxMTo1NiwgTXlsw6huZSBKb3NzZXJhbmQgd3JvdGU6DQo+IFdpdGggdGhl
+IHN1cHBvcnQgb2YgQ0hBTl9JTkZPX1BST0NFU1NFRCBpbiB2b2x0YWdlLWRpdmlkZXIsDQo+IGl0
+IGlzIHBvc3NpYmxlIHRvIHJlYWQgdGhlIHByb2Nlc3NlZCB2YWx1ZXMgZGlyZWN0bHkgZnJvbSBp
+aW8ncw0KPiBzeXNmcyBlbnRyaWVzIG9yIGJ5IHVzaW5nIGlpby1od21vbi4gQWRkIGFuIGV4YW1w
+bGUgZm9yIHRoaXMgbGFzdA0KPiB1c2UgY2FzZS4NCg0KQXMgSSB3cm90ZSBpbiByZXNwb25zZSB0
+byB0aGUgY292ZXIgbGV0dGVyLCBJIHRoaW5rIGlpby1od21vbg0KY291bGQgImNvbnN1bWUiIHZv
+bHRhZ2UgZGl2aWRlcnMganVzdCBmaW5lIGJlZm9yZSBhZGRpbmcgdGhlDQpwcm9jZXNzZWQgY2hh
+bm5lbCwgYW5kIHdoaWxlIG1vcmUgZXhhbXBsZXMgbWlnaHQgYmUgZ29vZCwNCnRoZXJlIGlzIHJl
+YWxseSBubyBzcGVjaWZpYyByZWxhdGlvbiBiZXR3ZWVuIGlpby1od21vbiBhbmQNCnZvbHRhZ2Ug
+ZGl2aWRlcnMuIEFkZGluZyBpaW8taHdtb24gZXhhbXBsZXMgdG8gZWFjaCBhbmQgZXZlcnkNCmlp
+byBiaW5kaW5nIHNlZW1zIHBvaW50bGVzcy4gU28sIEkgc2VlIGxpdHRsZSByZWFzb24gdG8gYWRk
+DQpzdWNoIGV4YW1wbGVzIGhlcmUuDQoNCkJ1dCBpZiBldmVyeW9uZSBlbHNlIHdhbnRzIGl0LCBk
+b24ndCBsZXQgbWUgc3RhbmQgaW4gdGhlIHdheS4uLg0KDQpDaGVlcnMsDQpQZXRlcg0KDQo+IFNp
+Z25lZC1vZmYtYnk6IE15bMOobmUgSm9zc2VyYW5kIDxteWxlbmUuam9zc2VyYW5kQGJvb3RsaW4u
+Y29tPg0KPiAtLS0NCj4gIC4uLi9iaW5kaW5ncy9paW8vYWZlL3ZvbHRhZ2UtZGl2aWRlci50eHQg
+ICAgICAgICAgIHwgMjQgKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDI0IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvaWlvL2FmZS92b2x0YWdlLWRpdmlkZXIudHh0IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZmUvdm9sdGFnZS1kaXZpZGVyLnR4dA0KPiBpbmRl
+eCBiNDUyYTg0MDYxMDcuLmY3ZTFjN2NiMjc0NCAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZmUvdm9sdGFnZS1kaXZpZGVyLnR4dA0KPiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FmZS92b2x0YWdlLWRpdmlk
+ZXIudHh0DQo+IEBAIC01MSwzICs1MSwyNyBAQCBzeXN2IHsNCj4gIAkJc3BpLW1heC1mcmVxdWVu
+Y3kgPSA8MTAwMDAwMD47DQo+ICAJfTsNCj4gIH07DQo+ICsNCj4gK0l0IGlzIGFsc28gcG9zc2li
+bGUgdG8gcmV0cmlldmUgdGhlIHByb2Nlc3NlZCB2YWx1ZXMgdXNpbmcgaHdtb24gbm9kZToNCj4g
+Kw0KPiArZGl2MDogZGl2MCB7DQo+ICsJY29tcGF0aWJsZSA9ICJ2b2x0YWdlLWRpdmlkZXIiOw0K
+PiArCWlvLWNoYW5uZWxzID0gPCZhZGMwIDA+OyAvKiBDaGFubmVsIDAgb2YgdGhlIEFEQyAqLw0K
+PiArCW91dHB1dC1vaG1zID0gPDQ3PjsgLyogUjIgKi8NCj4gKwlmdWxsLW9obXMgPSA8NzM+OyAv
+KiBSMSAoMjYpICsgUjIgKDQ3KSAqLw0KPiArCSNpby1jaGFubmVsLWNlbGxzID0gPDE+Ow0KPiAr
+fTsNCj4gKw0KPiArZGl2MTogZGl2MSB7DQo+ICsJY29tcGF0aWJsZSA9ICJ2b2x0YWdlLWRpdmlk
+ZXIiOw0KPiArCWlvLWNoYW5uZWxzID0gPCZhZGMwIDE+OyAvKiBDaGFubmVsIDEgb2YgdGhlIEFE
+QyAqLw0KPiArCW91dHB1dC1vaG1zID0gPDQ3PjsgLyogUjIgKi8NCj4gKwlmdWxsLW9obXMgPSA8
+MTE1PjsgLyogUjEgKDY4KSArIFIyICg0NykgKi8NCj4gKwkjaW8tY2hhbm5lbC1jZWxscyA9IDwx
+PjsNCj4gK307DQo+ICsNCj4gK2lpby1od21vbiB7DQo+ICsJY29tcGF0aWJsZSA9ICJpaW8taHdt
+b24iOw0KPiArCWlvLWNoYW5uZWxzID0gPCZkaXYwIDA+LCA8JmRpdjEgMD47DQo+ICsJaW8tY2hh
+bm5lbC1uYW1lcyA9ICIzdjMiLCAidXNiIjsNCj4gK307DQo+IA0KDQo=
