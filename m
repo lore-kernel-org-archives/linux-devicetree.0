@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 6/6] ARM: hisilicon: DT: Switch to SPDX header
-Date: Tue, 11 Jun 2019 09:29:21 +0200
-Message-ID: <20190611072921.2979446-7-lkundrak@v3.sk>
+Subject: [PATCH 1/6] ARM: dts: STi: Switch to SPDX header
+Date: Tue, 11 Jun 2019 09:29:16 +0200
+Message-ID: <20190611072921.2979446-2-lkundrak@v3.sk>
 References: <20190611072921.2979446-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -18,101 +18,115 @@ to SPDX instead of fixing the wording.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/hi3620-hi4511.dts  | 5 +----
- arch/arm/boot/dts/hi3620.dtsi        | 5 +----
- arch/arm/boot/dts/hip04-d01.dts      | 5 +----
- arch/arm/boot/dts/hisi-x5hd2-dkb.dts | 5 +----
- arch/arm/boot/dts/hisi-x5hd2.dtsi    | 5 +----
- 5 files changed, 5 insertions(+), 20 deletions(-)
+ arch/arm/boot/dts/stih407-family.dtsi  | 5 +----
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 5 +----
+ arch/arm/boot/dts/stih407.dtsi         | 5 +----
+ arch/arm/boot/dts/stih410-pinctrl.dtsi | 5 +----
+ arch/arm/boot/dts/stih410.dtsi         | 5 +----
+ arch/arm/boot/dts/stih418.dtsi         | 5 +----
+ 6 files changed, 6 insertions(+), 24 deletions(-)
 
-diff --git a/arch/arm/boot/dts/hi3620-hi4511.dts b/arch/arm/boot/dts/hi36=
-20-hi4511.dts
-index a579fbf13b5f..86282e6a2eff 100644
---- a/arch/arm/boot/dts/hi3620-hi4511.dts
-+++ b/arch/arm/boot/dts/hi3620-hi4511.dts
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/st=
+ih407-family.dtsi
+index 9e29a4499938..2ff2542bf335 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
 @@ -1,10 +1,7 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  *  Copyright (C) 2012-2013 Linaro Ltd.
-  *  Author: Haojian Zhuang <haojian.zhuang@linaro.org>
-- *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License version 2 as
-- *  publishhed by the Free Software Foundation.
-  */
-=20
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/hi3620.dtsi b/arch/arm/boot/dts/hi3620.dts=
-i
-index 541d70094544..d6aed21eaac5 100644
---- a/arch/arm/boot/dts/hi3620.dtsi
-+++ b/arch/arm/boot/dts/hi3620.dtsi
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Hisilicon Ltd. Hi3620 SoC
-  *
-@@ -5,10 +6,6 @@
-  * Copyright (C) 2012-2013 Linaro Ltd.
-  *
-  * Author: Haojian Zhuang <haojian.zhuang@linaro.org>
+  * Copyright (C) 2014 STMicroelectronics Limited.
+  * Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 - *
 - * This program is free software; you can redistribute it and/or modify
 - * it under the terms of the GNU General Public License version 2 as
 - * publishhed by the Free Software Foundation.
   */
-=20
- #include <dt-bindings/clock/hi3620-clock.h>
-diff --git a/arch/arm/boot/dts/hip04-d01.dts b/arch/arm/boot/dts/hip04-d0=
-1.dts
-index ca48641d0f48..157244dbd074 100644
---- a/arch/arm/boot/dts/hip04-d01.dts
-+++ b/arch/arm/boot/dts/hip04-d01.dts
+ #include "stih407-pinctrl.dtsi"
+ #include <dt-bindings/mfd/st-lpc.h>
+diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/s=
+tih407-pinctrl.dtsi
+index e393519fb84c..db174019626f 100644
+--- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
 @@ -1,10 +1,7 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  *  Copyright (C) 2013-2014 Linaro Ltd.
-  *  Author: Haojian Zhuang <haojian.zhuang@linaro.org>
-- *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License version 2 as
-- *  publishhed by the Free Software Foundation.
-  */
-=20
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts b/arch/arm/boot/dts/his=
-i-x5hd2-dkb.dts
-index d13af8437d10..cb507e237068 100644
---- a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
-+++ b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
-@@ -1,10 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2013-2014 Linaro Ltd.
-  * Copyright (c) 2013-2014 Hisilicon Limited.
-- *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License version 2 as
-- *  publishhed by the Free Software Foundation.
-  */
-=20
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x=
-5hd2.dtsi
-index 50d3f8426da1..2dd1d4fb0c27 100644
---- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
-+++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-@@ -1,10 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2013-2014 Linaro Ltd.
-  * Copyright (c) 2013-2014 Hisilicon Limited.
+  * Copyright (C) 2014 STMicroelectronics Limited.
+  * Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 - *
 - * This program is free software; you can redistribute it and/or modify
 - * it under the terms of the GNU General Public License version 2 as
 - * publishhed by the Free Software Foundation.
   */
-=20
- #include <dt-bindings/clock/hix5hd2-clock.h>
+ #include "st-pincfg.h"
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.d=
+tsi
+index 5b7951ffc350..242ac72e4d4a 100644
+--- a/arch/arm/boot/dts/stih407.dtsi
++++ b/arch/arm/boot/dts/stih407.dtsi
+@@ -1,10 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright (C) 2015 STMicroelectronics Limited.
+  * Author: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * publishhed by the Free Software Foundation.
+  */
+ #include "stih407-clock.dtsi"
+ #include "stih407-family.dtsi"
+diff --git a/arch/arm/boot/dts/stih410-pinctrl.dtsi b/arch/arm/boot/dts/s=
+tih410-pinctrl.dtsi
+index 5ae1fd66c0b8..8532ae3f61e8 100644
+--- a/arch/arm/boot/dts/stih410-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih410-pinctrl.dtsi
+@@ -1,10 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright (C) 2014 STMicroelectronics Limited.
+  * Author: Peter Griffin <peter.griffin@linaro.org>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * publishhed by the Free Software Foundation.
+  */
+ #include "st-pincfg.h"
+ / {
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.d=
+tsi
+index 888548ea9b5c..23b494a13c47 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -1,10 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright (C) 2014 STMicroelectronics Limited.
+  * Author: Peter Griffin <peter.griffin@linaro.org>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * publishhed by the Free Software Foundation.
+  */
+ #include "stih410-clock.dtsi"
+ #include "stih407-family.dtsi"
+diff --git a/arch/arm/boot/dts/stih418.dtsi b/arch/arm/boot/dts/stih418.d=
+tsi
+index 0efb3cd6a86e..f3f0a0e0f23c 100644
+--- a/arch/arm/boot/dts/stih418.dtsi
++++ b/arch/arm/boot/dts/stih418.dtsi
+@@ -1,10 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright (C) 2014 STMicroelectronics Limited.
+  * Author: Peter Griffin <peter.griffin@linaro.org>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * publishhed by the Free Software Foundation.
+  */
+ #include "stih418-clock.dtsi"
+ #include "stih407-family.dtsi"
 --=20
 2.21.0
