@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 2/6] ARM: dts: pxa: Switch to SPDX header
-Date: Tue, 11 Jun 2019 09:29:17 +0200
-Message-ID: <20190611072921.2979446-3-lkundrak@v3.sk>
+Subject: [PATCH 5/6] ARM: pxa: Switch to SPDX header
+Date: Tue, 11 Jun 2019 09:29:20 +0200
+Message-ID: <20190611072921.2979446-6-lkundrak@v3.sk>
 References: <20190611072921.2979446-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -18,79 +18,87 @@ to SPDX instead of fixing the wording.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/pxa168-aspenite.dts | 5 +----
- arch/arm/boot/dts/pxa168.dtsi         | 5 +----
- arch/arm/boot/dts/pxa910-dkb.dts      | 5 +----
- arch/arm/boot/dts/pxa910.dtsi         | 5 +----
+ arch/arm/mach-pxa/littleton.c | 5 +----
+ arch/arm/mach-pxa/pxa-dt.c    | 5 +----
+ arch/arm/mach-pxa/saar.c      | 5 +----
+ arch/arm/mach-pxa/tavorevb.c  | 5 +----
  4 files changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/boot/dts/pxa168-aspenite.dts b/arch/arm/boot/dts/px=
-a168-aspenite.dts
-index 0a988b3fb248..4928a109557d 100644
---- a/arch/arm/boot/dts/pxa168-aspenite.dts
-+++ b/arch/arm/boot/dts/pxa168-aspenite.dts
-@@ -1,10 +1,7 @@
+diff --git a/arch/arm/mach-pxa/littleton.c b/arch/arm/mach-pxa/littleton.=
+c
+index 464b8bd2bcb9..5c78bf53be5c 100644
+--- a/arch/arm/mach-pxa/littleton.c
++++ b/arch/arm/mach-pxa/littleton.c
+@@ -1,3 +1,4 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  *  Copyright (C) 2012 Marvell Technology Group Ltd.
-  *  Author: Haojian Zhuang <haojian.zhuang@marvell.com>
+  *  linux/arch/arm/mach-pxa/littleton.c
+  *
+@@ -9,10 +10,6 @@
+  *
+  *  2007-11-22  modified to align with latest kernel
+  *              eric miao <eric.miao@marvell.com>
 - *
 - *  This program is free software; you can redistribute it and/or modify
 - *  it under the terms of the GNU General Public License version 2 as
 - *  publishhed by the Free Software Foundation.
   */
 =20
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/pxa168.dtsi b/arch/arm/boot/dts/pxa168.dts=
-i
-index 7137f3550183..ad6f428a33ea 100644
---- a/arch/arm/boot/dts/pxa168.dtsi
-+++ b/arch/arm/boot/dts/pxa168.dtsi
-@@ -1,10 +1,7 @@
+ #include <linux/init.h>
+diff --git a/arch/arm/mach-pxa/pxa-dt.c b/arch/arm/mach-pxa/pxa-dt.c
+index aa9b255f5570..e5508e04fadc 100644
+--- a/arch/arm/mach-pxa/pxa-dt.c
++++ b/arch/arm/mach-pxa/pxa-dt.c
+@@ -1,11 +1,8 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  *  Copyright (C) 2012 Marvell Technology Group Ltd.
-  *  Author: Haojian Zhuang <haojian.zhuang@marvell.com>
+  *  linux/arch/arm/mach-pxa/pxa-dt.c
+  *
+  *  Copyright (C) 2012 Daniel Mack
 - *
 - *  This program is free software; you can redistribute it and/or modify
 - *  it under the terms of the GNU General Public License version 2 as
 - *  publishhed by the Free Software Foundation.
   */
 =20
- #include <dt-bindings/clock/marvell,pxa168.h>
-diff --git a/arch/arm/boot/dts/pxa910-dkb.dts b/arch/arm/boot/dts/pxa910-=
-dkb.dts
-index c82f2810ec73..a43a51d2ae81 100644
---- a/arch/arm/boot/dts/pxa910-dkb.dts
-+++ b/arch/arm/boot/dts/pxa910-dkb.dts
-@@ -1,10 +1,7 @@
+ #include <linux/irq.h>
+diff --git a/arch/arm/mach-pxa/saar.c b/arch/arm/mach-pxa/saar.c
+index 834991034f30..a5f5bc5c20fb 100644
+--- a/arch/arm/mach-pxa/saar.c
++++ b/arch/arm/mach-pxa/saar.c
+@@ -1,13 +1,10 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  *  Copyright (C) 2012 Marvell Technology Group Ltd.
-  *  Author: Haojian Zhuang <haojian.zhuang@marvell.com>
+  *  linux/arch/arm/mach-pxa/saar.c
+  *
+  *  Support for the Marvell PXA930 Handheld Platform (aka SAAR)
+  *
+  *  Copyright (C) 2007-2008 Marvell International Ltd.
 - *
 - *  This program is free software; you can redistribute it and/or modify
 - *  it under the terms of the GNU General Public License version 2 as
 - *  publishhed by the Free Software Foundation.
   */
 =20
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/pxa910.dtsi b/arch/arm/boot/dts/pxa910.dts=
-i
-index c88553a8ee29..69d152c2d52c 100644
---- a/arch/arm/boot/dts/pxa910.dtsi
-+++ b/arch/arm/boot/dts/pxa910.dtsi
-@@ -1,10 +1,7 @@
+ #include <linux/module.h>
+diff --git a/arch/arm/mach-pxa/tavorevb.c b/arch/arm/mach-pxa/tavorevb.c
+index 4b38e821ac9c..129b7de675a7 100644
+--- a/arch/arm/mach-pxa/tavorevb.c
++++ b/arch/arm/mach-pxa/tavorevb.c
+@@ -1,13 +1,10 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  *  Copyright (C) 2012 Marvell Technology Group Ltd.
-  *  Author: Haojian Zhuang <haojian.zhuang@marvell.com>
+  *  linux/arch/arm/mach-pxa/tavorevb.c
+  *
+  *  Support for the Marvell PXA930 Evaluation Board
+  *
+  *  Copyright (C) 2007-2008 Marvell International Ltd.
 - *
 - *  This program is free software; you can redistribute it and/or modify
 - *  it under the terms of the GNU General Public License version 2 as
 - *  publishhed by the Free Software Foundation.
   */
 =20
- #include <dt-bindings/clock/marvell,pxa910.h>
+ #include <linux/module.h>
 --=20
 2.21.0
