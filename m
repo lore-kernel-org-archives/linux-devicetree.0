@@ -1,78 +1,59 @@
-Return-Path: <SRS0=XYop=UK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43961 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388969AbfFKMvI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Jun 2019 08:51:08 -0400
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v4 03/10] media: hantro: add PM runtime resume callback
-Date: Tue, 11 Jun 2019 14:50:51 +0200
-Message-Id: <20190611125058.13470-4-p.zabel@pengutronix.de>
-In-Reply-To: <20190611125058.13470-1-p.zabel@pengutronix.de>
-References: <20190611125058.13470-1-p.zabel@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+Date: Tue, 11 Jun 2019 15:31:46 -0600
+References: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
+In-Reply-To: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
+Message-ID: <CAL_JsqK=A7rH0wxsteU_5Kjenq7jHb5a3aAp-4UF4LG7Pd0jZQ@mail.gmail.com>
+Subject: Re: How to inject fwnode/oftree/acpi data by platform driver ?
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-It seems that on i.MX8MQ the power domain controller does not propagate
-resets to the VPU cores on resume. Add a callback to allow implementing
-manual reset of the VPU cores after ungating the power domain.
+On Sat, Jun 1, 2019 at 8:14 AM Enrico Weigelt, metux IT consult <lkml@metux=
+.net> wrote:
+>
+> Hi folks,
+>
+>
+> I'm looking for a way to inject fwnode data from a platform driver,
+> in order to initialize generic drivers w/ board specific configuration.
+> The idea is getting rid of passing driver specific pdata structs
+> (which, IIRC, seem to be deprecated).
+>
+> An example usecase is the APUv2/3 board, which have things like gpios
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
----
- drivers/staging/media/hantro/hantro.h     |  2 ++
- drivers/staging/media/hantro/hantro_drv.c | 13 +++++++++++++
- 2 files changed, 15 insertions(+)
+No idea what an APU board is...
 
-diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
-index 14e685428203..296b9ffad547 100644
---- a/drivers/staging/media/hantro/hantro.h
-+++ b/drivers/staging/media/hantro/hantro.h
-@@ -56,6 +56,7 @@ struct hantro_codec_ops;
-  * @codec:			Supported codecs
-  * @codec_ops:			Codec ops.
-  * @init:			Initialize hardware.
-+ * @runtime_resume:		reenable hardware after power gating
-  * @vepu_irq:			encoder interrupt handler
-  * @vdpu_irq:			decoder interrupt handler
-  * @clk_names:			array of clock names
-@@ -71,6 +72,7 @@ struct hantro_variant {
- 	unsigned int codec;
- 	const struct hantro_codec_ops *codec_ops;
- 	int (*init)(struct hantro_dev *vpu);
-+	int (*runtime_resume)(struct hantro_dev *vpu);
- 	irqreturn_t (*vepu_irq)(int irq, void *priv);
- 	irqreturn_t (*vdpu_irq)(int irq, void *priv);
- 	const char *clk_names[HANTRO_MAX_CLOCKS];
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index c248ce4f7ca6..79c351d57200 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -833,9 +833,22 @@ static int hantro_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM
-+static int hantro_runtime_resume(struct device *dev)
-+{
-+	struct hantro_dev *vpu = dev_get_drvdata(dev);
-+
-+	if (vpu->variant->runtime_resume)
-+		return vpu->variant->runtime_resume(vpu);
-+
-+	return 0;
-+}
-+#endif
-+
- static const struct dev_pm_ops hantro_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
- 				pm_runtime_force_resume)
-+	SET_RUNTIME_PM_OPS(NULL, hantro_runtime_resume, NULL)
- };
- 
- static struct platform_driver hantro_driver = {
--- 
-2.20.1
+> wired to buttons and LEDs. The board can only be detected via DMI
+> string, no way to probe the platform devices - have to be initialized
+> explicitly (that's how I'm already doing it now).
+
+Detecting a board or attachment of some set of devices is a separate proble=
+m from how we describe the devices.
+
+> The nicest way, IMHO, would be if I could just write some piece of DTS
+> and some fancy magic all the rest under the hood. Such thing doesn't
+> seem to exist yet. Does it make sense to implement that ? How could
+> we do it ?
+
+Not the first time this has come up. The general idea is to use DT overlays=
+, but support is not complete. There's at least 2 scenarios. A DT based pla=
+tform and you are applying overlays to the base DT. The second scenario whi=
+ch probably matches your use case is ov
+
+
+>
+> Which other options do we have ?
+>
+> Or should we just leave everything as it is and stick w/ pdata structs ?
+>
+>
+> thx
+> --mtx
+>
+> --
+> Enrico Weigelt, metux IT consult
+> Free software and Linux embedded engineering
+> info@metux.net -- +49-151-27565287
