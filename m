@@ -1,23 +1,44 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 4/7] ARM: dts: BCM53573: Fix DTC W=1 warnings
-Date: Tue, 11 Jun 2019 14:54:56 -0700
-Message-ID: <20190611215456.10353-1-f.fainelli@gmail.com>
-References: <20190528230134.27007-1-f.fainelli@gmail.com> <20190528230134.27007-5-f.fainelli@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: Add doc for the Ingenic JZ47xx LCD
+ controller driver
+Date: Tue, 11 Jun 2019 15:55:54 -0600
+Message-ID: <20190611215554.GA23791@bogus>
+References: <20190603152331.23160-1-paul@crapouillou.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190528230134.27007-5-f.fainelli@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190603152331.23160-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <zajec5@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Sam Ravnborg <sam@ravnborg.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 May 2019 16:01:31 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> Fix the the unit_address_vs_reg warnings and unnecessary
-> \#address-cells/#size-cells without "ranges" or child "reg" property
-> warnings.
+On Mon,  3 Jun 2019 17:23:30 +0200, Paul Cercueil wrote:
+> Add documentation for the devicetree bindings of the LCD controller present in
+> the JZ47xx family of SoCs from Ingenic.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
 > ---
+> 
+> Notes:
+>     v2: Remove ingenic,panel property.
+>     
+>     v3: - Rename compatible strings from ingenic,jz47XX-drm to ingenic,jz47XX-lcd
+>         - The ingenic,lcd-mode property is now read from the panel node instead
+>     	  of from the driver node
+>     
+>     v4: Remove ingenic,lcd-mode property completely.
+>     
+>     v5: No change
+> 
+>  .../bindings/display/ingenic,lcd.txt          | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
+> 
 
-Applied to devicetree/next, thanks!
---
-Florian
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
