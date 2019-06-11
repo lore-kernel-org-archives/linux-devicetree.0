@@ -1,129 +1,88 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH 8/8] iommu/arm-smmu-v3: Add support for PCI PASID
-Date: Tue, 11 Jun 2019 11:45:42 +0100
-Message-ID: <20190611114542.000021f1@huawei.com>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
-        <20190610184714.6786-9-jean-philippe.brucker@arm.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Date: Tue, 11 Jun 2019 11:49:13 +0100
+Message-ID: <20190611104913.egsbwcedshjdy3m5@holly.lan>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
+ <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+ <20190610205233.GB137143@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610184714.6786-9-jean-philippe.brucker@arm.com>
+Content-Disposition: inline
+In-Reply-To: <20190610205233.GB137143@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: will.deacon@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Jun 2019 19:47:14 +0100
-Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
-
-> Enable PASID for PCI devices that support it. Since the SSID tables are
-> allocated by arm_smmu_attach_dev(), PASID has to be enabled early enough.
-> arm_smmu_dev_feature_enable() would be too late, since by that time the
-> main DMA domain has already been attached. Do it in add_device() instead.
+On Mon, Jun 10, 2019 at 01:52:33PM -0700, Matthias Kaehlcke wrote:
+> Hi Pavel,
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Nitpick in line.
-
-Thanks,
-
-Jonathan
-> ---
->  drivers/iommu/arm-smmu-v3.c | 51 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 50 insertions(+), 1 deletion(-)
+> On Sat, Jun 08, 2019 at 11:02:26PM +0200, Pavel Machek wrote:
+> > Hi!
+> > 
+> > > > +	 * Note that this method is based on empirical testing on different
+> > > > +	 * devices with PWM of 8 and 16 bits of resolution.
+> > > > +	 */
+> > > > +	n = period;
+> > > > +	while (n) {
+> > > > +		counter += n % 2;
+> > > > +		n >>= 1;
+> > > > +	}
+> > > 
+> > > I don't quite follow the heuristics above. Are you sure the number of
+> > > PWM bits can be infered from the period? What if the period value (in
+> > > ns) doesn't directly correspond to a register value? And even if it
+> > > did, counting the number of set bits (the above loops is a
+> > > re-implementation of ffs()) doesn't really result in the dividers
+> > > mentioned in the comment. E.g. a period of 32768 ns (0x8000) results
+> > > in a divider of 1, i.e. 32768 brighness levels.
+> > > 
+> > > On veyron minnie the period is 1000000 ns, which results in 142858
+> > > levels (1000000 / 7)!
+> > > 
+> > > Not sure if there is a clean solution using heuristics, a DT property
+> > > specifying the number of levels could be an alternative. This could
+> > > also be useful to limit the number of (mostly) redundant levels, even
+> > > the intended max of 4096 seems pretty high.
+> > > 
+> > > Another (not directly related) observation is that on minnie the
+> > > actual brightness at a nominal 50% is close to 0 (duty cycle ~3%). I
+> > > haven't tested with other devices, but I wonder if it would make
+> > > sense to have an option to drop the bottom N% of levels, since the
+> > > near 0 brightness in the lower 50% probably isn't very useful in most
+> > > use cases, but maybe it looks different on other devices.
+> > 
+> > Eye percieves logarithm(duty cycle), mostly, and I find very low brightness
+> > levels quite useful when trying to use machine in dark room.
 > 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 972bfb80f964..a8a516d9ff10 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2197,6 +2197,49 @@ static void arm_smmu_disable_ats(struct arm_smmu_master *master)
->  	master->ats_enabled = false;
->  }
->  
-> +static int arm_smmu_enable_pasid(struct arm_smmu_master *master)
-> +{
-> +	int ret;
-> +	int features;
-> +	int num_pasids;
-> +	struct pci_dev *pdev;
-> +
-> +	if (!dev_is_pci(master->dev))
-> +		return -ENOSYS;
-> +
-> +	pdev = to_pci_dev(master->dev);
-> +
-> +	features = pci_pasid_features(pdev);
-> +	if (features < 0)
-> +		return -ENOSYS;
-> +
-> +	num_pasids = pci_max_pasids(pdev);
-> +	if (num_pasids <= 0)
-> +		return -ENOSYS;
-> +
-> +	ret = pci_enable_pasid(pdev, features);
-> +	if (!ret)
-> +		master->ssid_bits = min_t(u8, ilog2(num_pasids),
-> +					  master->smmu->ssid_bits);
-> +	return ret;
-> +}
-> +
-> +static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
-> +{
-> +	struct pci_dev *pdev;
-> +
-> +	if (!dev_is_pci(master->dev))
-> +		return;
-> +
-> +	pdev = to_pci_dev(master->dev);
-> +
-> +	if (!pdev->pasid_enabled)
-> +		return;
-> +
-> +	pci_disable_pasid(pdev);
-> +	master->ssid_bits = 0;
+> I realized that the brightness level display on Chrome OS (= my test
+> device) is non-linear, and it isn't actually the lower 50% of levels
+> that is near 0 brightness, but 'only' about 20%.
+> 
+> > But yes, specifying if brightness is linear or exponential would be quite
+> > useful.
+> 
+> Agreed, this could help userspace with displaying a reasonable
+> brightness level.
 
-If we are being really fussy about ordering, why have this set of
-ssid_bits after pci_disable_pasid rather than before (to reverse order
-of .._enable_pasid)?
+This is a long standing flaw in the backlight interfaces. AFAIK generic
+userspaces end up with a (flawed) heuristic.
 
-> +}
-> +
->  static void arm_smmu_detach_dev(struct arm_smmu_master *master)
->  {
->  	unsigned long flags;
-> @@ -2413,6 +2456,9 @@ static int arm_smmu_add_device(struct device *dev)
->  
->  	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
->  
-> +	/* Note that PASID must be enabled before, and disabled after ATS */
-> +	arm_smmu_enable_pasid(master);
-> +
->  	/*
->  	 * If the SMMU doesn't support 2-stage CD, limit the linear
->  	 * tables to a reasonable number of contexts, let's say
-> @@ -2423,7 +2469,7 @@ static int arm_smmu_add_device(struct device *dev)
->  
->  	ret = iommu_device_link(&smmu->iommu, dev);
->  	if (ret)
-> -		goto err_free_master;
-> +		goto err_disable_pasid;
->  
->  	group = iommu_group_get_for_dev(dev);
->  	if (IS_ERR(group)) {
-> @@ -2436,6 +2482,8 @@ static int arm_smmu_add_device(struct device *dev)
->  
->  err_unlink:
->  	iommu_device_unlink(&smmu->iommu, dev);
-> +err_disable_pasid:
-> +	arm_smmu_disable_pasid(master);
->  err_free_master:
->  	kfree(master);
->  	fwspec->iommu_priv = NULL;
-> @@ -2456,6 +2504,7 @@ static void arm_smmu_remove_device(struct device *dev)
->  	arm_smmu_detach_dev(master);
->  	iommu_group_remove_device(dev);
->  	iommu_device_unlink(&smmu->iommu, dev);
-> +	arm_smmu_disable_pasid(master);
->  	kfree(master);
->  	iommu_fwspec_free(dev);
->  }
+Basically devices with a narrow range of choices can be assumed to be
+logarithmic (since anything linear with a narrow range of choices is
+junk anyway and the slider will never feel right).
+
+On the other side though we can only really make a guess.
+
+Systems are coming along that allow us to animate the change of
+brightness (part of the reason for interpolated tables is to
+permit smooth animation rather than because the user explicitly wants
+to set the brightness to exactly 1117). These systems are often
+logarithmic but with a wide range of values.
+
+
+Daniel.
