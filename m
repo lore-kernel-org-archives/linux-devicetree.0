@@ -1,29 +1,59 @@
-From: Claire Chang <tientzu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: serial: add documentation for Rx
- in-band wakeup support
-Date: Tue, 11 Jun 2019 20:17:59 +0800
-Message-ID: <CALiNf2-79LEg+dvSqQK8kVkf99ARLwy9uLCmJNgq-vJO9r0a9g@mail.gmail.com>
-References: <20190527083150.220194-1-tientzu@chromium.org>
- <20190527083150.220194-2-tientzu@chromium.org>
- <CALiNf2_Kuu9agO31Wg2X4uUa0EHWYL=qG5RLQ=catn8M9XDKGQ@mail.gmail.com>
- <20190611095752.GA24058@kroah.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 6/6] soundwire: qcom: add support for
+ SoundWire controller
+Date: Tue, 11 Jun 2019 07:21:20 -0500
+Message-ID: <0e836692-2297-4cb7-d681-76692db78a56@linux.intel.com>
+References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
+ <20190607085643.932-7-srinivas.kandagatla@linaro.org>
+ <249f9647-94d0-41d7-3b95-64c36d90f8e8@linux.intel.com>
+ <40ea774c-8aa8-295d-e91e-71423b03c88d@linaro.org>
+ <7269521a-ac89-3856-c18c-ffaaf64c0806@linux.intel.com>
+ <462620fc-ac91-6a36-46c7-7af0080f06cb@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190611095752.GA24058-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, changqi.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <462620fc-ac91-6a36-46c7-7af0080f06cb@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, broonie@kernel.org, vkoul@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-resent here: https://patchwork.ozlabs.org/patch/1113768/
-sorry for the inconvenience
+
+
+On 6/11/19 5:29 AM, Srinivas Kandagatla wrote:
+> 
+> 
+> On 10/06/2019 15:12, Pierre-Louis Bossart wrote:
+>>>>> +
+>>>>> +    if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+>>>>> +        ctrl->fifo_status = 0;
+>>>>> +        ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
+>>>>> +                          msecs_to_jiffies(TIMEOUT_MS));
+>>>>
+>>>> This is odd. The SoundWire spec does not handle writes to a single 
+>>>> device or broadcast writes differently. I don't see a clear reason 
+>>>> why you would only timeout for a broadcast write.
+>>>>
+>>>
+>>> There is danger of blocking here without timeout.
+>>
+>> Right, and it's fine to add a timeout. The question is why add a 
+>> timeout *only* for a broadcast operation? It should be added for every 
+>> transaction IMO, unless you have a reason not to do so.
+>>
+> 
+> I did try this before, the issue is when we read/write registers from 
+> interrupt handler, these can be deadlocked as we will be interrupt 
+> handler waiting for another completion interrupt, which will never 
+> happen unless we return from the first interrupt.
+
+I don't quite get the issue. With the Intel hardware we only deal with 
+Master registers (some of which mirror the bus state) in the handler and 
+will only modify Slave registers in the thread. All changes to Slave 
+registers will be subject to a timeout as well as a check for no 
+response or NAK. Not sure what is specific about your solution that 
+requires a different handling of commands depending on which device 
+number is used. It could very well be that you've uncovered a flaw in 
+the bus design but I still don't see how it would be Qualcomm-specific?
