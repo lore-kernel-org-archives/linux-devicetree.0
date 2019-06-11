@@ -1,89 +1,124 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/5] dt-bindings: display/panel: Expand rotation documentation
-Date: Tue, 11 Jun 2019 09:25:37 -0600
-Message-ID: <CAL_JsqLM1CikZ8+NPjLk2CEW-z9vPynZpVG20x0jsa7hVq0LvA@mail.gmail.com>
-References: <20190611040350.90064-1-dbasehore@chromium.org> <20190611040350.90064-3-dbasehore@chromium.org>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 2/2] backlight: pwm_bl: Get number of brightness levels
+ for CIE 1931 from the device tree
+Date: Tue, 11 Jun 2019 16:33:14 +0100
+Message-ID: <20190611153314.cj6j6l4kcl4kk4t2@holly.lan>
+References: <20190610233739.29477-1-mka@chromium.org>
+ <20190610233739.29477-2-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611040350.90064-3-dbasehore@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Derek Basehore <dbasehore@chromium.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Intel Graphics <intel-gfx@lists.freedesktop.org>, moderated list:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190610233739.29477-2-mka@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 10:03 PM Derek Basehore <dbasehore@chromium.org> wrote:
->
-> This adds to the rotation documentation to explain how drivers should
-> use the property and gives an example of the property in a devicetree
-> node.
->
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> ---
->  .../bindings/display/panel/panel.txt          | 32 +++++++++++++++++++
->  1 file changed, 32 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel.txt b/Documentation/devicetree/bindings/display/panel/panel.txt
-> index e2e6867852b8..f35d62d933fc 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel.txt
-> +++ b/Documentation/devicetree/bindings/display/panel/panel.txt
-> @@ -2,3 +2,35 @@ Common display properties
->  -------------------------
->
->  - rotation:    Display rotation in degrees counter clockwise (0,90,180,270)
-> +
-> +Property read from the device tree using of of_drm_get_panel_orientation
-
-Don't put kernel specifics into bindings.
-
-> +
-> +The panel driver may apply the rotation at the TCON level, which will
-
-What's TCON? Something Mediatek specific IIRC.
-
-> +make the panel look like it isn't rotated to the kernel and any other
-> +software.
-> +
-> +If not, a panel orientation property should be added through the SoC
-> +vendor DRM code using the drm_connector_init_panel_orientation_property
-> +function.
-
-The 'rotation' property should be defined purely based on how the
-panel is mounted relative to a device's orientation. If the display
-pipeline has some ability to handle rotation, that's a feature of the
-display pipeline and not the panel.
-
-> +
-> +Example:
-
-This file is a collection of common properties. It shouldn't have an
-example especially as this example is mostly non-common properties.
-
-> +       panel: panel@0 {
-> +               compatible = "boe,himax8279d8p";
-> +               reg = <0>;
-> +               enable-gpios = <&pio 45 0>;
-
-> +               pp33-gpios = <&pio 35 0>;
-> +               pp18-gpios = <&pio 36 0>;
-
-BTW, are these upstream because they look like GPIO controlled
-supplies which we model with gpio-regulator binding typically.
-
-> +               pinctrl-names = "default", "state_3300mv", "state_1800mv";
-> +               pinctrl-0 = <&panel_pins_default>;
-> +               pinctrl-1 = <&panel_pins_3300mv>;
-> +               pinctrl-2 = <&panel_pins_1800mv>;
-> +               backlight = <&backlight_lcd0>;
-> +               rotation = <180>;
-> +               status = "okay";
-> +
-> +               port {
-> +                       panel_in: endpoint {
-> +                               remote-endpoint = <&dsi_out>;
-> +                       };
-> +               };
-> +       };
-> --
-> 2.22.0.rc2.383.gf4fbbf30c2-goog
->
+T24gTW9uLCBKdW4gMTAsIDIwMTkgYXQgMDQ6Mzc6MzlQTSAtMDcwMCwgTWF0dGhpYXMgS2FlaGxj
+a2Ugd3JvdGU6Cj4gQ29tbWl0IDg4YmE5NWJlZGI3OSAoImJhY2tsaWdodDogcHdtX2JsOiBDb21w
+dXRlIGJyaWdodG5lc3Mgb2YgTEVECj4gbGluZWFybHkgdG8gaHVtYW4gZXllIikgdXNlcyBwd21f
+cGVyaW9kIC8gaHdlaWdodDMyKHB3bV9wZXJpb2QpIGFzCj4gYXMgaGV1cmlzdGljIHRvIGRldGVy
+bWluZSB0aGUgbnVtYmVyIG9mIGJyaWdodG5lc3MgbGV2ZWxzIHdoZW4gdGhlIERUCj4gZG9lc24n
+dCBwcm92aWRlIGEgYnJpZ2h0bmVzcyBsZXZlbCB0YWJsZS4gVGhpcyBoZXVyaXN0aWMgaXMgYnJv
+a2VuCj4gYW5kIGNhbiByZXN1bHQgaW4gZXhjZXNzaXZlbHkgbGFyZ2UgYnJpZ2h0bmVzcyB0YWJs
+ZXMuCj4gCj4gSW5zdGVhZCBvZiB1c2luZyB0aGUgaGV1cmlzdGljIHRyeSB0byByZXRyaWV2ZSB0
+aGUgbnVtYmVyIG9mCj4gYnJpZ2h0bmVzcyBsZXZlbHMgZnJvbSB0aGUgZGV2aWNlIHRyZWUgKHBy
+b3BlcnR5ICdtYXgtYnJpZ2h0bmVzcycKPiArIDEpLiBJZiB0aGUgdmFsdWUgaXMgbm90IHNwZWNp
+ZmllZCB1c2UgYSBkZWZhdWx0IG9mIDI1NiBsZXZlbHMuCgpJJ2xsIGxvb2sgYXQgdGhlIGNvZGUg
+dG9tb3Jyb3cgYnV0IHdoeSAyNTY/CgpUbyBtZSBpdCBmZWVscyBzaW11bHRhbmVvdXNseSB0b28g
+YmlnIGZvciBhIHNpbXBsZSA4LWJpdCBQV00gYW5kIHRvbwpzbWFsbCBmb3IgYW5pbWF0ZWQgYmFj
+a2xpZ2h0IGVmZmVjdHMuCgpJIGNlcnRhaW5seSBhZ3JlZSB0aGF0IGFuIG92ZXJyaWRlIGNvdWxk
+IGJlIHVzZWZ1bCBidXQgSSdtIG5vdCBjbGVhciB3aHkKZGVyaXZpbmcgYSBkZWZhdWx0IGJhc2Vk
+IG9uIHRoZSBwZXJpb2QgaXMgYm9ndXMgKGFuZCB0aGUgZGVzY3JpcHRpb24gaXMKbWVyZWx5IGNv
+bmNlcm5lZCBhYm91dCB1c2VsZXNzbHkgYmlnIHRhYmxlcykuCgovKgogKiBPbmNlIHdlIGhhdmUg
+NDA5NiBsZXZlbHMgdGhlcmUncyBsaXR0bGUgcG9pbnQgZ29pbmcgbXVjaCBoaWdoZXIuLi4KICog
+bmVpdGhlciBpbnRlcmFjdGl2ZSBzbGlkZXJzIG5vciBhbmltYXRpb24gYmVuZWZpdHMgZnJvbSBo
+YXZpbmcKICogbW9yZSB2YWx1ZXMgaW4gdGhlIHRhYmxlLgogKi8KbWF4X2JyaWdodG5lc3MgPSBt
+aW4oRElWX1JPVU5EX1VQKHBlcmlvZCwgZmZzKHBlcmlvZCksIDQwOTYpOwoKCkRhbmllbC4KCj4g
+Cj4gRml4ZXM6IDg4YmE5NWJlZGI3OSAoImJhY2tsaWdodDogcHdtX2JsOiBDb21wdXRlIGJyaWdo
+dG5lc3Mgb2YgTEVEIGxpbmVhcmx5IHRvIGh1bWFuIGV5ZSIpCj4gU2lnbmVkLW9mZi1ieTogTWF0
+dGhpYXMgS2FlaGxja2UgPG1rYUBjaHJvbWl1bS5vcmc+Cj4gLS0tCj4gIGRyaXZlcnMvdmlkZW8v
+YmFja2xpZ2h0L3B3bV9ibC5jIHwgNTkgKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0K
+PiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDM4IGRlbGV0aW9ucygtKQo+IAo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9wd21fYmwuYyBiL2RyaXZlcnMv
+dmlkZW8vYmFja2xpZ2h0L3B3bV9ibC5jCj4gaW5kZXggZmI0NWY4NjZiOTIzLi4yOTEzY2JlOWNm
+Y2IgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvcHdtX2JsLmMKPiArKysg
+Yi9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9wd21fYmwuYwo+IEBAIC0xOTQsMzggKzE5NCwxOSBA
+QCBpbnQgcHdtX2JhY2tsaWdodF9icmlnaHRuZXNzX2RlZmF1bHQoc3RydWN0IGRldmljZSAqZGV2
+LAo+ICAJCQkJICAgICBzdHJ1Y3QgcGxhdGZvcm1fcHdtX2JhY2tsaWdodF9kYXRhICpkYXRhLAo+
+ICAJCQkJICAgICB1bnNpZ25lZCBpbnQgcGVyaW9kKQo+ICB7Cj4gLQl1bnNpZ25lZCBpbnQgY291
+bnRlciA9IDA7Cj4gLQl1bnNpZ25lZCBpbnQgaSwgbjsKPiArCXVuc2lnbmVkIGludCBpOwo+ICsJ
+dW5zaWduZWQgaW50IG5sZXZlbHMgPSBkYXRhLT5tYXhfYnJpZ2h0bmVzcyArIDE7Cj4gIAl1NjQg
+cmV0dmFsOwo+ICAKPiAtCS8qCj4gLQkgKiBDb3VudCB0aGUgbnVtYmVyIG9mIGJpdHMgbmVlZGVk
+IHRvIHJlcHJlc2VudCB0aGUgcGVyaW9kIG51bWJlci4gVGhlCj4gLQkgKiBudW1iZXIgb2YgYml0
+cyBpcyB1c2VkIHRvIGNhbGN1bGF0ZSB0aGUgbnVtYmVyIG9mIGxldmVscyB1c2VkIGZvciB0aGUK
+PiAtCSAqIGJyaWdodG5lc3MtbGV2ZWxzIHRhYmxlLCB0aGUgcHVycG9zZSBvZiB0aGlzIGNhbGN1
+bGF0aW9uIGlzIGhhdmUgYQo+IC0JICogcHJlLWNvbXB1dGVkIHRhYmxlIHdpdGggZW5vdWdoIGxl
+dmVscyB0byBnZXQgbGluZWFyIGJyaWdodG5lc3MKPiAtCSAqIHBlcmNlcHRpb24uIFRoZSBwZXJp
+b2QgaXMgZGl2aWRlZCBieSB0aGUgbnVtYmVyIG9mIGJpdHMgc28gZm9yIGEKPiAtCSAqIDgtYml0
+IFBXTSB3ZSBoYXZlIDI1NSAvIDggPSAzMiBicmlnaHRuZXNzIGxldmVscyBvciBmb3IgYSAxNi1i
+aXQgUFdNCj4gLQkgKiB3ZSBoYXZlIDY1NTM1IC8gMTYgPSA0MDk2IGJyaWdodG5lc3MgbGV2ZWxz
+Lgo+IC0JICoKPiAtCSAqIE5vdGUgdGhhdCB0aGlzIG1ldGhvZCBpcyBiYXNlZCBvbiBlbXBpcmlj
+YWwgdGVzdGluZyBvbiBkaWZmZXJlbnQKPiAtCSAqIGRldmljZXMgd2l0aCBQV00gb2YgOCBhbmQg
+MTYgYml0cyBvZiByZXNvbHV0aW9uLgo+IC0JICovCj4gLQluID0gcGVyaW9kOwo+IC0Jd2hpbGUg
+KG4pIHsKPiAtCQljb3VudGVyICs9IG4gJSAyOwo+IC0JCW4gPj49IDE7Cj4gLQl9Cj4gLQo+IC0J
+ZGF0YS0+bWF4X2JyaWdodG5lc3MgPSBESVZfUk9VTkRfVVAocGVyaW9kLCBjb3VudGVyKTsKPiAt
+CWRhdGEtPmxldmVscyA9IGRldm1fa2NhbGxvYyhkZXYsIGRhdGEtPm1heF9icmlnaHRuZXNzLAo+
+ICsJZGF0YS0+bGV2ZWxzID0gZGV2bV9rY2FsbG9jKGRldiwgbmxldmVscywKPiAgCQkJCSAgICBz
+aXplb2YoKmRhdGEtPmxldmVscyksIEdGUF9LRVJORUwpOwo+ICAJaWYgKCFkYXRhLT5sZXZlbHMp
+Cj4gIAkJcmV0dXJuIC1FTk9NRU07Cj4gIAo+ICAJLyogRmlsbCB0aGUgdGFibGUgdXNpbmcgdGhl
+IGNpZTE5MzEgYWxnb3JpdGhtICovCj4gLQlmb3IgKGkgPSAwOyBpIDwgZGF0YS0+bWF4X2JyaWdo
+dG5lc3M7IGkrKykgewo+ICsJZm9yIChpID0gMDsgaSA8IG5sZXZlbHM7IGkrKykgewo+ICAJCXJl
+dHZhbCA9IGNpZTE5MzEoKGkgKiBQV01fTFVNSU5BTkNFX1NDQUxFKSAvCj4gLQkJCQkgZGF0YS0+
+bWF4X2JyaWdodG5lc3MsIFBXTV9MVU1JTkFOQ0VfU0NBTEUpICoKPiArCQkJCSBubGV2ZWxzLCBQ
+V01fTFVNSU5BTkNFX1NDQUxFKSAqCj4gIAkJCQkgcGVyaW9kOwo+ICAJCXJldHZhbCA9IERJVl9S
+T1VORF9DTE9TRVNUX1VMTChyZXR2YWwsIFBXTV9MVU1JTkFOQ0VfU0NBTEUpOwo+ICAJCWlmIChy
+ZXR2YWwgPiBVSU5UX01BWCkKPiBAQCAtMjMzLDggKzIxNCw3IEBAIGludCBwd21fYmFja2xpZ2h0
+X2JyaWdodG5lc3NfZGVmYXVsdChzdHJ1Y3QgZGV2aWNlICpkZXYsCj4gIAkJZGF0YS0+bGV2ZWxz
+W2ldID0gKHVuc2lnbmVkIGludClyZXR2YWw7Cj4gIAl9Cj4gIAo+IC0JZGF0YS0+ZGZ0X2JyaWdo
+dG5lc3MgPSBkYXRhLT5tYXhfYnJpZ2h0bmVzcyAvIDI7Cj4gLQlkYXRhLT5tYXhfYnJpZ2h0bmVz
+cy0tOwo+ICsJZGF0YS0+ZGZ0X2JyaWdodG5lc3MgPSBubGV2ZWxzIC8gMjsKPiAgCj4gIAlyZXR1
+cm4gMDsKPiAgfQo+IEBAIC0yNzIsOCArMjUyLDEzIEBAIHN0YXRpYyBpbnQgcHdtX2JhY2tsaWdo
+dF9wYXJzZV9kdChzdHJ1Y3QgZGV2aWNlICpkZXYsCj4gIAkgKiBzZXQgYSBkZWZhdWx0IHRhYmxl
+IG9mIGJyaWdodG5lc3MgbGV2ZWxzIHdpbGwgYmUgdXNlZC4KPiAgCSAqLwo+ICAJcHJvcCA9IG9m
+X2ZpbmRfcHJvcGVydHkobm9kZSwgImJyaWdodG5lc3MtbGV2ZWxzIiwgJmxlbmd0aCk7Cj4gLQlp
+ZiAoIXByb3ApCj4gKwlpZiAoIXByb3ApIHsKPiArCQlpZiAob2ZfcHJvcGVydHlfcmVhZF91MzIo
+bm9kZSwgIm1heC1icmlnaHRuZXNzIiwKPiArCQkJCQkgJmRhdGEtPm1heF9icmlnaHRuZXNzKSkK
+PiArCQkJZGF0YS0+bWF4X2JyaWdodG5lc3MgPSAyNTU7Cj4gKwo+ICAJCXJldHVybiAwOwo+ICsJ
+fQo+ICAKPiAgCWRhdGEtPm1heF9icmlnaHRuZXNzID0gbGVuZ3RoIC8gc2l6ZW9mKHUzMik7Cj4g
+IAo+IEBAIC01NjUsMTMgKzU1MCwxMCBAQCBzdGF0aWMgaW50IHB3bV9iYWNrbGlnaHRfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCj4gIAkJCXBiLT5sZXZlbHMgPSBkYXRh
+LT5sZXZlbHM7Cj4gIAkJfQo+IC0JfSBlbHNlIGlmICghZGF0YS0+bWF4X2JyaWdodG5lc3MpIHsK
+PiArCX0gZWxzZSBpZiAobm9kZSkgewo+ICAJCS8qCj4gLQkJICogSWYgbm8gYnJpZ2h0bmVzcyBs
+ZXZlbHMgYXJlIHByb3ZpZGVkIGFuZCBtYXhfYnJpZ2h0bmVzcyBpcwo+IC0JCSAqIG5vdCBzZXQs
+IHVzZSB0aGUgZGVmYXVsdCBicmlnaHRuZXNzIHRhYmxlLiBGb3IgdGhlIERUIGNhc2UsCj4gLQkJ
+ICogbWF4X2JyaWdodG5lc3MgaXMgc2V0IHRvIDAgd2hlbiBicmlnaHRuZXNzIGxldmVscyBpcyBu
+b3QKPiAtCQkgKiBzcGVjaWZpZWQuIEZvciB0aGUgbm9uLURUIGNhc2UsIG1heF9icmlnaHRuZXNz
+IGlzIHVzdWFsbHkKPiAtCQkgKiBzZXQgdG8gc29tZSB2YWx1ZS4KPiArCQkgKiBJZiBubyBicmln
+aHRuZXNzIGxldmVscyBhcmUgcHJvdmlkZWQgdXNlIHRoZSBkZWZhdWx0Cj4gKwkJICogYnJpZ2h0
+bmVzcyB0YWJsZS4KPiAgCQkgKi8KPiAgCj4gIAkJLyogR2V0IHRoZSBQV00gcGVyaW9kIChpbiBu
+YW5vc2Vjb25kcykgKi8KPiBAQCAtNTkxLDEyICs1NzMsMTMgQEAgc3RhdGljIGludCBwd21fYmFj
+a2xpZ2h0X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIAo+ICAJCQlwYi0+
+bGV2ZWxzID0gZGF0YS0+bGV2ZWxzOwo+ICAJCX0KPiAtCX0gZWxzZSB7Cj4gLQkJLyoKPiAtCQkg
+KiBUaGF0IG9ubHkgaGFwcGVucyBmb3IgdGhlIG5vbi1EVCBjYXNlLCB3aGVyZSBwbGF0Zm9ybSBk
+YXRhCj4gLQkJICogc2V0cyB0aGUgbWF4X2JyaWdodG5lc3MgdmFsdWUuCj4gLQkJICovCj4gKwl9
+IGVsc2UgaWYgKGRhdGEtPm1heF9icmlnaHRuZXNzKSB7Cj4gKwkJLyogbm9uLURUIGNhc2UsIG1h
+eF9icmlnaHRuZXNzIHZhbHVlIHNldCBpbiBwbGF0Zm9ybSBkYXRhLiAqLwo+ICAJCXBiLT5zY2Fs
+ZSA9IGRhdGEtPm1heF9icmlnaHRuZXNzOwo+ICsJfSBlbHNlIHsKPiArCQlkZXZfZXJyKCZwZGV2
+LT5kZXYsICJtYXggYnJpZ2h0bmVzcyBpcyBub3Qgc3BlY2lmaWVkXG4iKTsKPiArCQlyZXQgPSAt
+RUlOVkFMOwo+ICsJCWdvdG8gZXJyX2FsbG9jOwo+ICAJfQo+ICAKPiAgCXBiLT5sdGhfYnJpZ2h0
+bmVzcyA9IGRhdGEtPmx0aF9icmlnaHRuZXNzICogKHN0YXRlLnBlcmlvZCAvIHBiLT5zY2FsZSk7
+Cj4gLS0gCj4gMi4yMi4wLnJjMi4zODMuZ2Y0ZmJiZjMwYzItZ29vZwo+IApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
