@@ -1,55 +1,49 @@
-Return-Path: <SRS0=DAy5=UA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46322 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbfFAJQx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Jun 2019 05:16:53 -0400
-Date: Sat, 1 Jun 2019 11:16:49 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v3 06/10] media: hantro: add support for separate
- control block
-Message-ID: <20190601111649.51118ad5@collabora.com>
-In-Reply-To: <20190531085523.10892-7-p.zabel@pengutronix.de>
-References: <20190531085523.10892-1-p.zabel@pengutronix.de>
-        <20190531085523.10892-7-p.zabel@pengutronix.de>
+Return-Path: <SRS0=5lcI=UL=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH] arm64: dts: renesas: hihope-common: Add uSD and eMMC
+Date: Wed, 12 Jun 2019 12:29:02 +0000
+Message-ID: 
+ <TY1PR01MB1770847D11F78F1509DFAB34C0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1559895251-13931-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdXv91Tt+78zLJj6pHFj9XrEJJbWOf-kzBPRbcw=h+iDHg@mail.gmail.com>
+ <TY1PR01MB1770E7346A27FB36658142E1C0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20190612094524.GA2153@kunai>
+ <TY1PR01MB17707726AF6BF3EE5408D5CDC0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20190612101516.xrlvqw7cls7eiv4u@ninjato>
+ <TY1PR01MB1770B85D549CD20C963620E6C0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20190612111900.2crgsg4adinrrw5u@ninjato>
+ <20190612115520.27likbbmm7dqbx7u@verge.net.au>
+In-Reply-To: <20190612115520.27likbbmm7dqbx7u@verge.net.au>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, 31 May 2019 10:55:19 +0200
-Philipp Zabel <p.zabel@pengutronix.de> wrote:
+Hello Simon,
 
-> On i.MX8MQ/MM a separate control block contains registers for per-core
-> resets, clock gating, and fuse register control.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Thank you for your feedback!
 
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> From: Simon Horman <horms@verge.net.au>
+> Sent: 12 June 2019 12:55
+> Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Add uSD and eMMC
+>=20
+> On Wed, Jun 12, 2019 at 01:19:00PM +0200, Wolfram Sang wrote:
+> >
+> > I think it is confusing to describe a HS400 property if the HW is not
+> > capable of it. Even if the driver has a safety check and will prevent i=
+t
+> > from being used.
+> >
+> > But as I said, I won't be insisting. I understood it simplifies things
+> > in grouping boards. From my side, we can close the case here.
+>=20
+> I would slightly prefer if the property was left out
+> for one thing, how can we verify the board supports HS400 at this time?
 
-> ---
->  drivers/staging/media/hantro/hantro.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
-> index feaa439a17b3..295a00d59a5f 100644
-> --- a/drivers/staging/media/hantro/hantro.h
-> +++ b/drivers/staging/media/hantro/hantro.h
-> @@ -167,6 +167,7 @@ hantro_vdev_to_func(struct video_device *vdev)
->   * @bases:		Mapped addresses of VPU registers.
->   * @enc_base:		Mapped address of VPU encoder register for convenience.
->   * @dec_base:		Mapped address of VPU decoder register for convenience.
-> + * @ctrl_base:		Mapped address of VPU control block.
->   * @vpu_mutex:		Mutex to synchronize V4L2 calls.
->   * @irqlock:		Spinlock to synchronize access to data structures
->   *			shared with interrupt handlers.
-> @@ -185,6 +186,7 @@ struct hantro_dev {
->  	void __iomem **bases;
->  	void __iomem *enc_base;
->  	void __iomem *dec_base;
-> +	void __iomem *ctrl_base;
->  
->  	struct mutex vpu_mutex;	/* video_device lock */
->  	spinlock_t irqlock;
+We can't, hence the compatibility only with HS200, for now.
+
+Thanks,
+Fab
