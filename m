@@ -1,940 +1,588 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 5/7] drm/bridge: Add Analogix anx6345 support
-Date: Wed, 12 Jun 2019 11:13:10 +0200
-Message-ID: <610ab353-7e05-81b6-2cc4-2dac09823d42@samsung.com>
-References: <20190604122150.29D6468B05@newverein.lst.de>
-        <CGME20190604122331epcas1p45e234dfad3f1288cb557e3bae7f9af38@epcas1p4.samsung.com>
-        <20190604122302.006A168C7B@newverein.lst.de>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v9 2/4] soc: qcom: Add AOSS QMP driver
+Date: Wed, 12 Jun 2019 14:58:05 +0530
+Message-ID: <297d68d21bbd3465ef344cbea888e653@codeaurora.org>
+References: <20190612044536.13940-1-bjorn.andersson@linaro.org>
+ <20190612044536.13940-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604122302.006A168C7B@newverein.lst.de>
-Content-Language: en-US
+In-Reply-To: <20190612044536.13940-3-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Torsten Duwe <duwe@lst.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04.06.2019 14:23, Torsten Duwe wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
->
-> The ANX6345 is an ultra-low power DisplayPower/eDP transmitter designed
-> for portable devices. This driver adds initial support for RGB to eDP
-> mode, without HPD and interrupts.
->
-> This is a configuration usually seen in eDP applications.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
+On 2019-06-12 10:15, Bjorn Andersson wrote:
+> The Always On Subsystem (AOSS) Qualcomm Messaging Protocol (QMP) driver
+> is used to communicate with the AOSS for certain side-channel requests,
+> that are not available through the RPMh interface.
+> 
+> The communication is a very simple synchronous mechanism of messages
+> being written in message RAM and a doorbell in the AOSS is rung. As the
+> AOSS has processed the message length is cleared and an interrupt is
+> fired by the AOSS as acknowledgment.
+> 
+> The driver exposes the QDSS clock as a clock and the low-power state
+> associated with the remoteprocs in the system as a set of 
+> power-domains.
+> 
+
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  drivers/gpu/drm/bridge/analogix/Kconfig            |  12 +
->  drivers/gpu/drm/bridge/analogix/Makefile           |   1 +
->  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 814 +++++++++++++++++++++
->  3 files changed, 827 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->
-> diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
-> index 704fb0f41dc3..cd89e238b93e 100644
-> --- a/drivers/gpu/drm/bridge/analogix/Kconfig
-> +++ b/drivers/gpu/drm/bridge/analogix/Kconfig
-> @@ -1,6 +1,18 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> +config DRM_ANALOGIX_ANX6345
-> +	tristate "Analogix ANX6345 bridge"
-> +	select DRM_ANALOGIX_DP
-> +	select DRM_KMS_HELPER
-> +	select REGMAP_I2C
+> 
+> Changes since v8:
+> - ret => time_left
+> - static const the clk_init_data
+> 
+>  drivers/soc/qcom/Kconfig     |  12 +
+>  drivers/soc/qcom/Makefile    |   1 +
+>  drivers/soc/qcom/qcom_aoss.c | 480 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 493 insertions(+)
+>  create mode 100644 drivers/soc/qcom/qcom_aoss.c
+> 
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> index 880cf0290962..1ecd95a1c654 100644
+> --- a/drivers/soc/qcom/Kconfig
+> +++ b/drivers/soc/qcom/Kconfig
+> @@ -4,6 +4,18 @@
+>  #
+>  menu "Qualcomm SoC drivers"
+> 
+> +config QCOM_AOSS_QMP
+> +	tristate "Qualcomm AOSS Driver"
+> +	depends on ARCH_QCOM || COMPILE_TEST
+> +	depends on MAILBOX
+> +	depends on COMMON_CLK
+> +	select PM_GENERIC_DOMAINS
 > +	help
-> +	  ANX6345 is an ultra-low Full-HD DisplayPort/eDP
-> +	  transmitter designed for portable devices. The
-> +	  ANX6345 transforms the LVTTL RGB output of an
-> +	  application processor to eDP or DisplayPort.
+> +	  This driver provides the means of communicating with and 
+> controlling
+> +	  the low-power state for resources related to the remoteproc
+> +	  subsystems as well as controlling the debug clocks exposed by the 
+> Always On
+> +	  Subsystem (AOSS) using Qualcomm Messaging Protocol (QMP).
 > +
->  config DRM_ANALOGIX_ANX78XX
->  	tristate "Analogix ANX78XX bridge"
-> +	select DRM_ANALOGIX_DP
->  	select DRM_KMS_HELPER
->  	select REGMAP_I2C
->  	help
-> diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
-> index 7623b9b80167..97669b374098 100644
-> --- a/drivers/gpu/drm/bridge/analogix/Makefile
-> +++ b/drivers/gpu/drm/bridge/analogix/Makefile
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o analogix-i2c-dptx.o
-> +obj-$(CONFIG_DRM_ANALOGIX_ANX6345) += analogix-anx6345.o
->  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
->  obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
-> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+>  config QCOM_COMMAND_DB
+>  	bool "Qualcomm Command DB"
+>  	depends on ARCH_QCOM || COMPILE_TEST
+> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> index ffe519b0cb66..eeb088beb15f 100644
+> --- a/drivers/soc/qcom/Makefile
+> +++ b/drivers/soc/qcom/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  CFLAGS_rpmh-rsc.o := -I$(src)
+> +obj-$(CONFIG_QCOM_AOSS_QMP) +=	qcom_aoss.o
+>  obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
+>  obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
+>  obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
+> diff --git a/drivers/soc/qcom/qcom_aoss.c 
+> b/drivers/soc/qcom/qcom_aoss.c
 > new file mode 100644
-> index 000000000000..ae222f9f6586
+> index 000000000000..5f885196f4d0
 > --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-> @@ -0,0 +1,814 @@
+> +++ b/drivers/soc/qcom/qcom_aoss.c
+> @@ -0,0 +1,480 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Copyright(c) 2016, Analogix Semiconductor.
-> + * Copyright(c) 2017, Icenowy Zheng <icenowy@aosc.io>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-
-
-SPDX
-
-
-> + *
-> + * Based on anx7808 driver obtained from chromeos with copyright:
-> + * Copyright(c) 2013, Google Inc.
-> + *
+> + * Copyright (c) 2019, Linaro Ltd
 > + */
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/i2c.h>
+> +#include <dt-bindings/power/qcom-aoss-qmp.h>
+> +#include <linux/clk-provider.h>
 > +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
+> +#include <linux/io.h>
+> +#include <linux/mailbox_client.h>
 > +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/types.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
 > +
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_crtc.h>
-> +#include <drm/drm_crtc_helper.h>
-> +#include <drm/drm_dp_helper.h>
-> +#include <drm/drm_edid.h>
-> +#include <drm/drm_of.h>
-> +#include <drm/drm_panel.h>
-> +#include <drm/drm_print.h>
-> +#include <drm/drm_probe_helper.h>
+> +#define QMP_DESC_MAGIC			0x0
+> +#define QMP_DESC_VERSION		0x4
+> +#define QMP_DESC_FEATURES		0x8
 > +
-> +#include "analogix-i2c-dptx.h"
-> +#include "analogix-i2c-txcommon.h"
+> +/* AOP-side offsets */
+> +#define QMP_DESC_UCORE_LINK_STATE	0xc
+> +#define QMP_DESC_UCORE_LINK_STATE_ACK	0x10
+> +#define QMP_DESC_UCORE_CH_STATE		0x14
+> +#define QMP_DESC_UCORE_CH_STATE_ACK	0x18
+> +#define QMP_DESC_UCORE_MBOX_SIZE	0x1c
+> +#define QMP_DESC_UCORE_MBOX_OFFSET	0x20
 > +
-> +#define I2C_NUM_ADDRESSES	2
-
-
-You can define it as ARRAY_SIZE(anx6345_i2c_addresses) - more generic.
-
-
-> +#define I2C_IDX_DPTX		0
-> +#define I2C_IDX_TXCOM		1
+> +/* Linux-side offsets */
+> +#define QMP_DESC_MCORE_LINK_STATE	0x24
+> +#define QMP_DESC_MCORE_LINK_STATE_ACK	0x28
+> +#define QMP_DESC_MCORE_CH_STATE		0x2c
+> +#define QMP_DESC_MCORE_CH_STATE_ACK	0x30
+> +#define QMP_DESC_MCORE_MBOX_SIZE	0x34
+> +#define QMP_DESC_MCORE_MBOX_OFFSET	0x38
 > +
-> +#define POLL_DELAY		50000 /* us */
-> +#define POLL_TIMEOUT		5000000 /* us */
+> +#define QMP_STATE_UP			GENMASK(15, 0)
+> +#define QMP_STATE_DOWN			GENMASK(31, 16)
 > +
-> +static const u8 anx6345_i2c_addresses[] = {
-> +	[I2C_IDX_DPTX]	= ANALOGIX_I2C_DPTX,
-> +	[I2C_IDX_TXCOM]	= ANALOGIX_I2C_TXCOMMON,
+> +#define QMP_MAGIC			0x4d41494c /* mail */
+> +#define QMP_VERSION			1
+> +
+> +/* 64 bytes is enough to store the requests and provides padding to 4 
+> bytes */
+> +#define QMP_MSG_LEN			64
+> +
+> +/**
+> + * struct qmp - driver state for QMP implementation
+> + * @msgram: iomem referencing the message RAM used for communication
+> + * @dev: reference to QMP device
+> + * @mbox_client: mailbox client used to ring the doorbell on transmit
+> + * @mbox_chan: mailbox channel used to ring the doorbell on transmit
+> + * @offset: offset within @msgram where messages should be written
+> + * @size: maximum size of the messages to be transmitted
+> + * @event: wait_queue for synchronization with the IRQ
+> + * @tx_lock: provides synchronization between multiple callers of 
+> qmp_send()
+> + * @qdss_clk: QDSS clock hw struct
+> + * @pd_data: genpd data
+> + */
+> +struct qmp {
+> +	void __iomem *msgram;
+> +	struct device *dev;
+> +
+> +	struct mbox_client mbox_client;
+> +	struct mbox_chan *mbox_chan;
+> +
+> +	size_t offset;
+> +	size_t size;
+> +
+> +	wait_queue_head_t event;
+> +
+> +	struct mutex tx_lock;
+> +
+> +	struct clk_hw qdss_clk;
+> +	struct genpd_onecell_data pd_data;
 > +};
 > +
-> +struct anx6345 {
-> +	struct drm_dp_aux aux;
-> +	struct drm_bridge bridge;
-> +	struct i2c_client *client;
-> +	struct edid *edid;
-> +	struct drm_connector connector;
-> +	struct drm_dp_link link;
-> +	struct drm_panel *panel;
-> +	struct regulator *dvdd12;
-> +	struct regulator *dvdd25;
-> +	struct gpio_desc *gpiod_reset;
-> +	struct mutex lock;	/* protect EDID access */
-> +
-> +	/* I2C Slave addresses of ANX6345 are mapped as DPTX and SYS */
-> +	struct i2c_client *i2c_clients[I2C_NUM_ADDRESSES];
-> +	struct regmap *map[I2C_NUM_ADDRESSES];
-> +
-> +	u16 chipid;
-> +	u8 dpcd[DP_RECEIVER_CAP_SIZE];
-> +
-> +	bool powered;
+> +struct qmp_pd {
+> +	struct qmp *qmp;
+> +	struct generic_pm_domain pd;
 > +};
 > +
-> +static inline struct anx6345 *connector_to_anx6345(struct drm_connector *c)
+> +#define to_qmp_pd_resource(res) container_of(res, struct qmp_pd, pd)
+> +
+> +static void qmp_kick(struct qmp *qmp)
 > +{
-> +	return container_of(c, struct anx6345, connector);
+> +	mbox_send_message(qmp->mbox_chan, NULL);
+> +	mbox_client_txdone(qmp->mbox_chan, 0);
 > +}
 > +
-> +static inline struct anx6345 *bridge_to_anx6345(struct drm_bridge *bridge)
+> +static bool qmp_magic_valid(struct qmp *qmp)
 > +{
-> +	return container_of(bridge, struct anx6345, bridge);
+> +	return readl(qmp->msgram + QMP_DESC_MAGIC) == QMP_MAGIC;
 > +}
 > +
-> +static int anx6345_set_bits(struct regmap *map, u8 reg, u8 mask)
+> +static bool qmp_link_acked(struct qmp *qmp)
 > +{
-> +	return regmap_update_bits(map, reg, mask, mask);
+> +	return readl(qmp->msgram + QMP_DESC_MCORE_LINK_STATE_ACK) == 
+> QMP_STATE_UP;
 > +}
 > +
-> +static int anx6345_clear_bits(struct regmap *map, u8 reg, u8 mask)
+> +static bool qmp_mcore_channel_acked(struct qmp *qmp)
 > +{
-> +	return regmap_update_bits(map, reg, mask, 0);
+> +	return readl(qmp->msgram + QMP_DESC_MCORE_CH_STATE_ACK) == 
+> QMP_STATE_UP;
 > +}
 > +
-> +static ssize_t anx6345_aux_transfer(struct drm_dp_aux *aux,
-> +				    struct drm_dp_aux_msg *msg)
+> +static bool qmp_ucore_channel_up(struct qmp *qmp)
 > +{
-> +	struct anx6345 *anx6345 = container_of(aux, struct anx6345, aux);
-> +
-> +	return anx_dp_aux_transfer(anx6345->map[I2C_IDX_DPTX], msg);
+> +	return readl(qmp->msgram + QMP_DESC_UCORE_CH_STATE) == QMP_STATE_UP;
 > +}
 > +
-> +static int anx6345_dp_link_training(struct anx6345 *anx6345)
+> +static int qmp_open(struct qmp *qmp)
 > +{
-> +	unsigned int value;
-> +	u8 dp_bw;
-> +	int err;
+> +	int ret;
+> +	u32 val;
 > +
-> +	err = anx6345_clear_bits(anx6345->map[I2C_IDX_TXCOM],
-> +				 SP_POWERDOWN_CTRL_REG,
-> +				 SP_TOTAL_PD);
-> +	if (err)
-> +		return err;
-> +
-> +	err = drm_dp_dpcd_readb(&anx6345->aux, DP_MAX_LINK_RATE, &dp_bw);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	switch (dp_bw) {
-> +	case DP_LINK_BW_1_62:
-> +	case DP_LINK_BW_2_7:
-> +		break;
-> +
-> +	default:
-> +		DRM_DEBUG_KMS("DP bandwidth (%#02x) not supported\n", dp_bw);
+> +	if (!qmp_magic_valid(qmp)) {
+> +		dev_err(qmp->dev, "QMP magic doesn't match\n");
 > +		return -EINVAL;
 > +	}
 > +
-> +	err = anx6345_set_bits(anx6345->map[I2C_IDX_TXCOM], SP_VID_CTRL1_REG,
-> +			       SP_VIDEO_MUTE);
-> +	if (err)
-> +		return err;
-> +
-> +	err = anx6345_clear_bits(anx6345->map[I2C_IDX_TXCOM],
-> +				 SP_VID_CTRL1_REG, SP_VIDEO_EN);
-> +	if (err)
-> +		return err;
-> +
-> +	/* Get DPCD info */
-> +	err = drm_dp_dpcd_read(&anx6345->aux, DP_DPCD_REV,
-> +			       &anx6345->dpcd, DP_RECEIVER_CAP_SIZE);
-> +	if (err < 0) {
-> +		DRM_ERROR("Failed to read DPCD: %d\n", err);
-> +		return err;
+> +	val = readl(qmp->msgram + QMP_DESC_VERSION);
+> +	if (val != QMP_VERSION) {
+> +		dev_err(qmp->dev, "unsupported QMP version %d\n", val);
+> +		return -EINVAL;
 > +	}
 > +
-> +	/* Clear channel x SERDES power down */
-> +	err = anx6345_clear_bits(anx6345->map[I2C_IDX_DPTX],
-> +				 SP_DP_ANALOG_POWER_DOWN_REG, SP_CH0_PD);
-> +	if (err)
-> +		return err;
-> +
-> +	/* Check link capabilities */
-> +	err = drm_dp_link_probe(&anx6345->aux, &anx6345->link);
-> +	if (err < 0) {
-> +		DRM_ERROR("Failed to probe link capabilities: %d\n", err);
-> +		return err;
+> +	qmp->offset = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_OFFSET);
+> +	qmp->size = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_SIZE);
+> +	if (!qmp->size) {
+> +		dev_err(qmp->dev, "invalid mailbox size\n");
+> +		return -EINVAL;
 > +	}
 > +
-> +	/* Power up the sink */
-> +	err = drm_dp_link_power_up(&anx6345->aux, &anx6345->link);
-> +	if (err < 0) {
-> +		DRM_ERROR("Failed to power up DisplayPort link: %d\n", err);
-> +		return err;
+> +	/* Ack remote core's link state */
+> +	val = readl(qmp->msgram + QMP_DESC_UCORE_LINK_STATE);
+> +	writel(val, qmp->msgram + QMP_DESC_UCORE_LINK_STATE_ACK);
+> +
+> +	/* Set local core's link state to up */
+> +	writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
+> +
+> +	qmp_kick(qmp);
+> +
+> +	ret = wait_event_timeout(qmp->event, qmp_link_acked(qmp), HZ);
+> +	if (!ret) {
+> +		dev_err(qmp->dev, "ucore didn't ack link\n");
+> +		goto timeout_close_link;
 > +	}
 > +
-> +	/* Possibly enable downspread on the sink */
-> +	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
-> +			   SP_DP_DOWNSPREAD_CTRL1_REG, 0);
-> +	if (err)
-> +		return err;
+> +	writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
 > +
-> +	if (anx6345->dpcd[DP_MAX_DOWNSPREAD] & DP_MAX_DOWNSPREAD_0_5) {
-> +		DRM_DEBUG("Enable downspread on the sink\n");
-> +		/* 4000PPM */
-> +		err = regmap_write(anx6345->map[I2C_IDX_DPTX],
-> +				   SP_DP_DOWNSPREAD_CTRL1_REG, 8);
-> +		if (err)
-> +			return err;
+> +	qmp_kick(qmp);
 > +
-> +		err = drm_dp_dpcd_writeb(&anx6345->aux, DP_DOWNSPREAD_CTRL,
-> +					 DP_SPREAD_AMP_0_5);
-> +		if (err < 0)
-> +			return err;
+> +	ret = wait_event_timeout(qmp->event, qmp_ucore_channel_up(qmp), HZ);
+> +	if (!ret) {
+> +		dev_err(qmp->dev, "ucore didn't open channel\n");
+> +		goto timeout_close_channel;
+> +	}
+> +
+> +	/* Ack remote core's channel state */
+> +	writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_UCORE_CH_STATE_ACK);
+> +
+> +	qmp_kick(qmp);
+> +
+> +	ret = wait_event_timeout(qmp->event, qmp_mcore_channel_acked(qmp), 
+> HZ);
+> +	if (!ret) {
+> +		dev_err(qmp->dev, "ucore didn't ack channel\n");
+> +		goto timeout_close_channel;
+> +	}
+> +
+> +	return 0;
+> +
+> +timeout_close_channel:
+> +	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
+> +
+> +timeout_close_link:
+> +	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
+> +	qmp_kick(qmp);
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +static void qmp_close(struct qmp *qmp)
+> +{
+> +	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
+> +	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
+> +	qmp_kick(qmp);
+> +}
+> +
+> +static irqreturn_t qmp_intr(int irq, void *data)
+> +{
+> +	struct qmp *qmp = data;
+> +
+> +	wake_up_interruptible_all(&qmp->event);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static bool qmp_message_empty(struct qmp *qmp)
+> +{
+> +	return readl(qmp->msgram + qmp->offset) == 0;
+> +}
+> +
+> +/**
+> + * qmp_send() - send a message to the AOSS
+> + * @qmp: qmp context
+> + * @data: message to be sent
+> + * @len: length of the message
+> + *
+> + * Transmit @data to AOSS and wait for the AOSS to acknowledge the 
+> message.
+> + * @len must be a multiple of 4 and not longer than the mailbox size. 
+> Access is
+> + * synchronized by this implementation.
+> + *
+> + * Return: 0 on success, negative errno on failure
+> + */
+> +static int qmp_send(struct qmp *qmp, const void *data, size_t len)
+> +{
+> +	long time_left;
+> +	int ret;
+> +
+> +	if (WARN_ON(len + sizeof(u32) > qmp->size))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(len % sizeof(u32)))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&qmp->tx_lock);
+> +
+> +	/* The message RAM only implements 32-bit accesses */
+> +	__iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
+> +			 data, len / sizeof(u32));
+> +	writel(len, qmp->msgram + qmp->offset);
+> +	qmp_kick(qmp);
+> +
+> +	time_left = wait_event_interruptible_timeout(qmp->event,
+> +						     qmp_message_empty(qmp), HZ);
+> +	if (!time_left) {
+> +		dev_err(qmp->dev, "ucore did not ack channel\n");
+> +		ret = -ETIMEDOUT;
+> +
+> +		/* Clear message from buffer */
+> +		writel(0, qmp->msgram + qmp->offset);
 > +	} else {
-> +		err = drm_dp_dpcd_writeb(&anx6345->aux, DP_DOWNSPREAD_CTRL, 0);
-> +		if (err < 0)
-> +			return err;
+> +		ret = 0;
 > +	}
 > +
-> +	/* Set the lane count and the link rate on the sink */
-> +	if (drm_dp_enhanced_frame_cap(anx6345->dpcd))
-> +		err = anx6345_set_bits(anx6345->map[I2C_IDX_DPTX],
-> +				       SP_DP_SYSTEM_CTRL_BASE + 4,
-> +				       SP_ENHANCED_MODE);
-> +	else
-> +		err = anx6345_clear_bits(anx6345->map[I2C_IDX_DPTX],
-> +					 SP_DP_SYSTEM_CTRL_BASE + 4,
-> +					 SP_ENHANCED_MODE);
-> +	if (err)
-> +		return err;
+> +	mutex_unlock(&qmp->tx_lock);
 > +
-> +	value = drm_dp_link_rate_to_bw_code(anx6345->link.rate);
-> +	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
-> +			   SP_DP_MAIN_LINK_BW_SET_REG, value);
-> +	if (err)
-> +		return err;
-> +
-> +	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
-> +			   SP_DP_LANE_COUNT_SET_REG, anx6345->link.num_lanes);
-> +	if (err)
-> +		return err;
-> +
-> +	err = drm_dp_link_configure(&anx6345->aux, &anx6345->link);
-> +	if (err < 0) {
-> +		DRM_ERROR("Failed to configure DisplayPort link: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	/* Start training on the source */
-> +	err = regmap_write(anx6345->map[I2C_IDX_DPTX], SP_DP_LT_CTRL_REG,
-> +			   SP_LT_EN);
-> +	if (err)
-> +		return err;
-> +
-> +	err = regmap_read_poll_timeout(anx6345->map[I2C_IDX_DPTX],
-> +				       SP_DP_LT_CTRL_REG,
-> +				       value, !(value & SP_DP_LT_INPROGRESS),
-> +				       POLL_DELAY, POLL_TIMEOUT);
-> +	if (err)
-> +		return err;
-> +
-> +	return 0;
-
-
-You can use:
-
-    return regmap_read_poll_timeout(....);
-
-
-
+> +	return ret;
 > +}
 > +
-> +static int anx6345_tx_initialization(struct anx6345 *anx6345)
+> +static int qmp_qdss_clk_prepare(struct clk_hw *hw)
 > +{
-> +	int err, i;
+> +	static const char buf[QMP_MSG_LEN] = "{class: clock, res: qdss, val: 
+> 1}";
+> +	struct qmp *qmp = container_of(hw, struct qmp, qdss_clk);
 > +
-> +	/* FIXME: colordepth is hardcoded for now */
-> +	err = regmap_write(anx6345->map[I2C_IDX_TXCOM], SP_VID_CTRL2_REG,
-> +			   SP_IN_BPC_6BIT << SP_IN_BPC_SHIFT);
-> +	if (err)
-> +		return err;
-> +
-> +	err = regmap_write(anx6345->map[I2C_IDX_DPTX], SP_DP_PLL_CTRL_REG, 0);
-> +	if (err)
-> +		return err;
-> +
-> +	err = regmap_write(anx6345->map[I2C_IDX_TXCOM],
-> +			   SP_ANALOG_DEBUG1_REG, 0);
-> +	if (err)
-> +		return err;
-> +
-> +	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
-> +			   SP_DP_LINK_DEBUG_CTRL_REG,
-> +			   SP_NEW_PRBS7 | SP_M_VID_DEBUG);
-> +	if (err)
-> +		return err;
-> +
-> +	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
-> +			   SP_DP_ANALOG_POWER_DOWN_REG, 0);
-> +	if (err)
-> +		return err;
-> +
-> +	/* Force HPD */
-> +	err = anx6345_set_bits(anx6345->map[I2C_IDX_DPTX],
-> +			       SP_DP_SYSTEM_CTRL_BASE + 3,
-> +			       SP_HPD_FORCE | SP_HPD_CTRL);
-> +	if (err)
-> +		return err;
-> +
-> +	for (i = 0; i < 4; i++) {
-> +		/* 4 lanes */
-> +		err = regmap_write(anx6345->map[I2C_IDX_DPTX],
-> +				   SP_DP_LANE0_LT_CTRL_REG + i, 0);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	/* Reset AUX */
-> +	err = anx6345_set_bits(anx6345->map[I2C_IDX_TXCOM],
-> +			       SP_RESET_CTRL2_REG, SP_AUX_RST);
-> +	if (err)
-> +		return err;
-> +
-> +	err = anx6345_clear_bits(anx6345->map[I2C_IDX_TXCOM],
-> +				 SP_RESET_CTRL2_REG, SP_AUX_RST);
-> +	if (err)
-> +		return err;
-> +
-> +	return 0;
-
-
-ditto
-
-
+> +	return qmp_send(qmp, buf, sizeof(buf));
 > +}
 > +
-> +static void anx6345_poweron(struct anx6345 *anx6345)
+> +static void qmp_qdss_clk_unprepare(struct clk_hw *hw)
 > +{
-> +	int err;
+> +	static const char buf[QMP_MSG_LEN] = "{class: clock, res: qdss, val: 
+> 0}";
+> +	struct qmp *qmp = container_of(hw, struct qmp, qdss_clk);
 > +
-> +	/* Ensure reset is asserted before starting power on sequence */
-> +	gpiod_set_value_cansleep(anx6345->gpiod_reset, 1);
-
-
-With fixed devm_gpiod_get below this line can be removed.
-
-
-> +	usleep_range(1000, 2000);
-> +
-> +	err = regulator_enable(anx6345->dvdd12);
-> +	if (err) {
-> +		DRM_ERROR("Failed to enable dvdd12 regulator: %d\n",
-> +			  err);
-> +		return;
-> +	}
-> +
-> +	/* T1 - delay between VDD12 and VDD25 should be 0-2ms */
-> +	usleep_range(1000, 2000);
-> +
-> +	err = regulator_enable(anx6345->dvdd25);
-> +	if (err) {
-> +		DRM_ERROR("Failed to enable dvdd25 regulator: %d\n",
-> +			  err);
-> +		return;
-> +	}
-> +
-> +	/* T2 - delay between RESETN and all power rail stable,
-> +	 * should be 2-5ms
-> +	 */
-> +	usleep_range(2000, 5000);
-> +
-> +	gpiod_set_value_cansleep(anx6345->gpiod_reset, 0);
-> +
-> +	/* Power on registers module */
-> +	anx6345_set_bits(anx6345->map[I2C_IDX_TXCOM], SP_POWERDOWN_CTRL_REG,
-> +			 SP_HDCP_PD | SP_AUDIO_PD | SP_VIDEO_PD | SP_LINK_PD);
-> +	anx6345_clear_bits(anx6345->map[I2C_IDX_TXCOM], SP_POWERDOWN_CTRL_REG,
-> +			   SP_REGISTER_PD | SP_TOTAL_PD);
-> +
-> +	if (anx6345->panel)
-> +		drm_panel_prepare(anx6345->panel);
-> +
-> +	anx6345->powered = true;
+> +	qmp_send(qmp, buf, sizeof(buf));
 > +}
 > +
-> +static void anx6345_poweroff(struct anx6345 *anx6345)
-> +{
-> +	int err;
-> +
-> +	gpiod_set_value_cansleep(anx6345->gpiod_reset, 1);
-> +	usleep_range(1000, 2000);
-> +
-> +	if (anx6345->panel)
-> +		drm_panel_unprepare(anx6345->panel);
-> +
-> +	err = regulator_disable(anx6345->dvdd25);
-> +	if (err) {
-> +		DRM_ERROR("Failed to disable dvdd25 regulator: %d\n",
-> +			  err);
-> +		return;
-> +	}
-> +
-> +	usleep_range(5000, 10000);
-> +
-> +	err = regulator_disable(anx6345->dvdd12);
-> +	if (err) {
-> +		DRM_ERROR("Failed to disable dvdd12 regulator: %d\n",
-> +			  err);
-> +		return;
-> +	}
-> +
-> +	usleep_range(1000, 2000);
-> +
-> +	anx6345->powered = false;
-> +}
-> +
-> +static int anx6345_start(struct anx6345 *anx6345)
-> +{
-> +	int err;
-> +
-> +	if (!anx6345->powered)
-> +		anx6345_poweron(anx6345);
-> +
-> +	/* Power on needed modules */
-> +	err = anx6345_clear_bits(anx6345->map[I2C_IDX_TXCOM],
-> +				SP_POWERDOWN_CTRL_REG,
-> +				SP_VIDEO_PD | SP_LINK_PD);
-> +
-> +	err = anx6345_tx_initialization(anx6345);
-> +	if (err) {
-> +		DRM_ERROR("Failed eDP transmitter initialization: %d\n", err);
-> +		anx6345_poweroff(anx6345);
-> +		return err;
-> +	}
-> +
-> +	err = anx6345_dp_link_training(anx6345);
-> +	if (err) {
-> +		DRM_ERROR("Failed link training: %d\n", err);
-> +		anx6345_poweroff(anx6345);
-> +		return err;
-> +	}
-> +
-> +	/*
-> +	 * This delay seems to help keep the hardware in a good state. Without
-> +	 * it, there are times where it fails silently.
-> +	 */
-> +	usleep_range(10000, 15000);
-> +
-> +	return 0;
-> +}
-> +
-> +static int anx6345_config_dp_output(struct anx6345 *anx6345)
-> +{
-> +	int err;
-> +
-> +	err = anx6345_clear_bits(anx6345->map[I2C_IDX_TXCOM], SP_VID_CTRL1_REG,
-> +				 SP_VIDEO_MUTE);
-> +	if (err)
-> +		return err;
-> +
-> +	/* Enable DP output */
-> +	err = anx6345_set_bits(anx6345->map[I2C_IDX_TXCOM], SP_VID_CTRL1_REG,
-> +			       SP_VIDEO_EN);
-> +	if (err)
-> +		return err;
-> +
-> +	/* Force stream valid */
-> +	err = anx6345_set_bits(anx6345->map[I2C_IDX_DPTX],
-> +			       SP_DP_SYSTEM_CTRL_BASE + 3,
-> +			       SP_STRM_FORCE | SP_STRM_CTRL);
-> +	if (err)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +static int anx6345_get_downstream_info(struct anx6345 *anx6345)
-> +{
-> +	u8 value;
-> +	int err;
-> +
-> +	err = drm_dp_dpcd_readb(&anx6345->aux, DP_SINK_COUNT, &value);
-> +	if (err < 0) {
-> +		DRM_ERROR("Get sink count failed %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (!DP_GET_SINK_COUNT(value)) {
-> +		DRM_ERROR("Downstream disconnected\n");
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int anx6345_get_modes(struct drm_connector *connector)
-> +{
-> +	struct anx6345 *anx6345 = connector_to_anx6345(connector);
-> +	int err, num_modes = 0;
-> +	bool power_off = false;
-> +
-> +	mutex_lock(&anx6345->lock);
-> +
-> +	if (!anx6345->edid) {
-> +		if (!anx6345->powered) {
-> +			anx6345_poweron(anx6345);
-> +			power_off = true;
-> +		}
-> +
-> +		err = anx6345_get_downstream_info(anx6345);
-> +		if (err) {
-> +			DRM_ERROR("Failed to get downstream info: %d\n", err);
-> +			goto unlock;
-> +		}
-> +
-> +		anx6345->edid = drm_get_edid(connector, &anx6345->aux.ddc);
-> +		if (!anx6345->edid)
-> +			DRM_ERROR("Failed to read EDID from panel\n");
-> +
-> +		err = drm_connector_update_edid_property(connector,
-> +							 anx6345->edid);
-> +		if (err) {
-> +			DRM_ERROR("Failed to update EDID property: %d\n", err);
-> +			goto unlock;
-> +		}
-> +	}
-> +
-> +	num_modes += drm_add_edid_modes(connector, anx6345->edid);
-> +
-> +unlock:
-> +	if (power_off)
-> +		anx6345_poweroff(anx6345);
-> +
-> +	mutex_unlock(&anx6345->lock);
-> +
-> +	if (!num_modes && anx6345->panel)
-> +		num_modes += drm_panel_get_modes(anx6345->panel);
-> +
-> +	return num_modes;
-> +}
-> +
-> +static const struct drm_connector_helper_funcs anx6345_connector_helper_funcs = {
-> +	.get_modes = anx6345_get_modes,
+> +static const struct clk_ops qmp_qdss_clk_ops = {
+> +	.prepare = qmp_qdss_clk_prepare,
+> +	.unprepare = qmp_qdss_clk_unprepare,
 > +};
 > +
-> +static void
-> +anx6345_connector_destroy(struct drm_connector *connector)
+> +static int qmp_qdss_clk_add(struct qmp *qmp)
 > +{
-> +	struct anx6345 *anx6345 = connector_to_anx6345(connector);
+> +	static const struct clk_init_data qdss_init = {
+> +		.ops = &qmp_qdss_clk_ops,
+> +		.name = "qdss",
+> +	};
+> +	int ret;
 > +
-> +	if (anx6345->panel)
-> +		drm_panel_detach(anx6345->panel);
-> +	drm_connector_cleanup(connector);
+> +	qmp->qdss_clk.init = &qdss_init;
+> +	ret = clk_hw_register(qmp->dev, &qmp->qdss_clk);
+> +	if (ret < 0) {
+> +		dev_err(qmp->dev, "failed to register qdss clock\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = of_clk_add_hw_provider(qmp->dev->of_node, of_clk_hw_simple_get,
+> +				     &qmp->qdss_clk);
+> +	if (ret < 0) {
+> +		dev_err(qmp->dev, "unable to register of clk hw provider\n");
+> +		clk_hw_unregister(&qmp->qdss_clk);
+> +	}
+> +
+> +	return ret;
 > +}
 > +
-> +static const struct drm_connector_funcs anx6345_connector_funcs = {
-> +	.fill_modes = drm_helper_probe_single_connector_modes,
-> +	.destroy = anx6345_connector_destroy,
-> +	.reset = drm_atomic_helper_connector_reset,
-> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+> +static void qmp_qdss_clk_remove(struct qmp *qmp)
+> +{
+> +	of_clk_del_provider(qmp->dev->of_node);
+> +	clk_hw_unregister(&qmp->qdss_clk);
+> +}
+> +
+> +static int qmp_pd_power_toggle(struct qmp_pd *res, bool enable)
+> +{
+> +	char buf[QMP_MSG_LEN] = {};
+> +
+> +	snprintf(buf, sizeof(buf),
+> +		 "{class: image, res: load_state, name: %s, val: %s}",
+> +		 res->pd.name, enable ? "on" : "off");
+> +	return qmp_send(res->qmp, buf, sizeof(buf));
+> +}
+> +
+> +static int qmp_pd_power_on(struct generic_pm_domain *domain)
+> +{
+> +	return qmp_pd_power_toggle(to_qmp_pd_resource(domain), true);
+> +}
+> +
+> +static int qmp_pd_power_off(struct generic_pm_domain *domain)
+> +{
+> +	return qmp_pd_power_toggle(to_qmp_pd_resource(domain), false);
+> +}
+> +
+> +static const char * const sdm845_resources[] = {
+> +	[AOSS_QMP_LS_CDSP] = "cdsp",
+> +	[AOSS_QMP_LS_LPASS] = "adsp",
+> +	[AOSS_QMP_LS_MODEM] = "modem",
+> +	[AOSS_QMP_LS_SLPI] = "slpi",
+> +	[AOSS_QMP_LS_SPSS] = "spss",
+> +	[AOSS_QMP_LS_VENUS] = "venus",
 > +};
 > +
-> +static int anx6345_bridge_attach(struct drm_bridge *bridge)
+> +static int qmp_pd_add(struct qmp *qmp)
 > +{
-> +	struct anx6345 *anx6345 = bridge_to_anx6345(bridge);
-> +	int err;
+> +	struct genpd_onecell_data *data = &qmp->pd_data;
+> +	struct device *dev = qmp->dev;
+> +	struct qmp_pd *res;
+> +	size_t num = ARRAY_SIZE(sdm845_resources);
+> +	int ret;
+> +	int i;
 > +
-> +	if (!bridge->encoder) {
-> +		DRM_ERROR("Parent encoder object not found");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* Register aux channel */
-> +	anx6345->aux.name = "DP-AUX";
-> +	anx6345->aux.dev = &anx6345->client->dev;
-> +	anx6345->aux.transfer = anx6345_aux_transfer;
-> +
-> +	err = drm_dp_aux_register(&anx6345->aux);
-> +	if (err < 0) {
-> +		DRM_ERROR("Failed to register aux channel: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = drm_connector_init(bridge->dev, &anx6345->connector,
-> +				 &anx6345_connector_funcs,
-> +				 DRM_MODE_CONNECTOR_eDP);
-> +	if (err) {
-> +		DRM_ERROR("Failed to initialize connector: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	drm_connector_helper_add(&anx6345->connector,
-> +				 &anx6345_connector_helper_funcs);
-> +
-> +	err = drm_connector_register(&anx6345->connector);
-> +	if (err) {
-> +		DRM_ERROR("Failed to register connector: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	anx6345->connector.polled = DRM_CONNECTOR_POLL_HPD;
-> +
-> +	err = drm_connector_attach_encoder(&anx6345->connector,
-> +					   bridge->encoder);
-> +	if (err) {
-> +		DRM_ERROR("Failed to link up connector to encoder: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (anx6345->panel) {
-> +		err = drm_panel_attach(anx6345->panel, &anx6345->connector);
-> +		if (err) {
-> +			DRM_ERROR("Failed to attach panel: %d\n", err);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static enum drm_mode_status
-> +anx6345_bridge_mode_valid(struct drm_bridge *bridge,
-> +			  const struct drm_display_mode *mode)
-> +{
-> +	if (mode->flags & DRM_MODE_FLAG_INTERLACE)
-> +		return MODE_NO_INTERLACE;
-> +
-> +	/* Max 1200p at 5.4 Ghz, one lane */
-> +	if (mode->clock > 154000)
-> +		return MODE_CLOCK_HIGH;
-
-
-I wonder if you shouldn't take into account training results here, ie.
-training perfrormed before validation.
-
-
-> +
-> +	return MODE_OK;
-> +}
-> +
-> +static void anx6345_bridge_disable(struct drm_bridge *bridge)
-> +{
-> +	struct anx6345 *anx6345 = bridge_to_anx6345(bridge);
-> +
-> +	/* Power off all modules except configuration registers access */
-> +	anx6345_set_bits(anx6345->map[I2C_IDX_TXCOM], SP_POWERDOWN_CTRL_REG,
-> +			 SP_HDCP_PD | SP_AUDIO_PD | SP_VIDEO_PD | SP_LINK_PD);
-> +	if (anx6345->panel)
-> +		drm_panel_disable(anx6345->panel);
-> +
-> +	if (anx6345->powered)
-> +		anx6345_poweroff(anx6345);
-> +}
-> +
-> +static void anx6345_bridge_enable(struct drm_bridge *bridge)
-> +{
-> +	struct anx6345 *anx6345 = bridge_to_anx6345(bridge);
-> +	int err;
-> +
-> +	if (anx6345->panel)
-> +		drm_panel_enable(anx6345->panel);
-> +
-> +	err = anx6345_start(anx6345);
-> +	if (err) {
-> +		DRM_ERROR("Failed to initialize: %d\n", err);
-> +		return;
-> +	}
-> +
-> +	err = anx6345_config_dp_output(anx6345);
-> +	if (err)
-> +		DRM_ERROR("Failed to enable DP output: %d\n", err);
-> +}
-> +
-> +static const struct drm_bridge_funcs anx6345_bridge_funcs = {
-> +	.attach = anx6345_bridge_attach,
-> +	.mode_valid = anx6345_bridge_mode_valid,
-> +	.disable = anx6345_bridge_disable,
-> +	.enable = anx6345_bridge_enable,
-> +};
-> +
-> +static void unregister_i2c_dummy_clients(struct anx6345 *anx6345)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 1; i < ARRAY_SIZE(anx6345->i2c_clients); i++)
-> +		if (anx6345->i2c_clients[i] &&
-> +		    anx6345->i2c_clients[i]->addr != anx6345->client->addr)
-> +			i2c_unregister_device(anx6345->i2c_clients[i]);
-> +}
-> +
-> +static const struct regmap_config anx6345_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = 0xff,
-> +	.cache_type = REGCACHE_NONE,
-> +};
-> +
-> +static const u16 anx6345_chipid_list[] = {
-> +	0x6345,
-> +};
-> +
-> +static bool anx6345_get_chip_id(struct anx6345 *anx6345)
-> +{
-> +	unsigned int i, idl, idh, version;
-> +
-> +	if (regmap_read(anx6345->map[I2C_IDX_TXCOM], SP_DEVICE_IDL_REG, &idl))
-> +		return false;
-> +
-> +	if (regmap_read(anx6345->map[I2C_IDX_TXCOM], SP_DEVICE_IDH_REG, &idh))
-> +		return false;
-> +
-> +	anx6345->chipid = (u8)idl | ((u8)idh << 8);
-> +
-> +	if (regmap_read(anx6345->map[I2C_IDX_TXCOM], SP_DEVICE_VERSION_REG,
-> +			&version))
-> +		return false;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(anx6345_chipid_list); i++) {
-> +		if (anx6345->chipid == anx6345_chipid_list[i]) {
-> +			DRM_INFO("Found ANX%x (ver. %d) eDP Transmitter\n",
-> +				 anx6345->chipid, version);
-> +			return true;
-> +		}
-> +	}
-> +
-> +	DRM_ERROR("ANX%x (ver. %d) not supported by this driver\n",
-> +		  anx6345->chipid, version);
-> +
-> +	return false;
-> +}
-> +
-> +static int anx6345_i2c_probe(struct i2c_client *client,
-> +			     const struct i2c_device_id *id)
-> +{
-> +	struct anx6345 *anx6345;
-> +	struct device *dev;
-> +	int i, err;
-> +
-> +	anx6345 = devm_kzalloc(&client->dev, sizeof(*anx6345), GFP_KERNEL);
-> +	if (!anx6345)
+> +	res = devm_kcalloc(dev, num, sizeof(*res), GFP_KERNEL);
+> +	if (!res)
 > +		return -ENOMEM;
 > +
-> +	mutex_init(&anx6345->lock);
+> +	data->domains = devm_kcalloc(dev, num, sizeof(*data->domains),
+> +				     GFP_KERNEL);
+> +	if (!data->domains)
+> +		return -ENOMEM;
 > +
-> +	anx6345->bridge.of_node = client->dev.of_node;
+> +	for (i = 0; i < num; i++) {
+> +		res[i].qmp = qmp;
+> +		res[i].pd.name = sdm845_resources[i];
+> +		res[i].pd.power_on = qmp_pd_power_on;
+> +		res[i].pd.power_off = qmp_pd_power_off;
 > +
-> +	anx6345->client = client;
-> +	i2c_set_clientdata(client, anx6345);
-> +
-> +	dev = &anx6345->client->dev;
-> +
-> +	err = drm_of_find_panel_or_bridge(client->dev.of_node, 1, 0,
-> +					  &anx6345->panel, NULL);
-> +	if (err == -EPROBE_DEFER)
-> +		return err;
-> +
-> +	if (err)
-> +		DRM_DEBUG("No panel found\n");
-> +
-> +	/* 1.2V digital core power regulator  */
-> +	anx6345->dvdd12 = devm_regulator_get(dev, "dvdd12-supply");
-> +	if (IS_ERR(anx6345->dvdd12)) {
-> +		DRM_ERROR("dvdd12-supply not found\n");
-> +		return PTR_ERR(anx6345->dvdd12);
-> +	}
-> +
-> +	/* 2.5V digital core power regulator  */
-> +	anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25-supply");
-> +	if (IS_ERR(anx6345->dvdd25)) {
-> +		DRM_ERROR("dvdd25-supply not found\n");
-> +		return PTR_ERR(anx6345->dvdd25);
-> +	}
-> +
-> +	/* GPIO for chip reset */
-> +	anx6345->gpiod_reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-
-
-Shouldn't be set to GPIOD_OUT_HIGH?
-
-
-> +	if (IS_ERR(anx6345->gpiod_reset)) {
-> +		DRM_ERROR("Reset gpio not found\n");
-> +		return PTR_ERR(anx6345->gpiod_reset);
-> +	}
-> +
-> +	/* Map slave addresses of ANX6345 */
-> +	for (i = 0; i < I2C_NUM_ADDRESSES; i++) {
-> +		if (anx6345_i2c_addresses[i] >> 1 != client->addr)
-> +			anx6345->i2c_clients[i] = i2c_new_dummy(client->adapter,
-> +						anx6345_i2c_addresses[i] >> 1);
-> +		else
-> +			anx6345->i2c_clients[i] = client;
-> +
-> +		if (!anx6345->i2c_clients[i]) {
-> +			err = -ENOMEM;
-> +			DRM_ERROR("Failed to reserve I2C bus %02x\n",
-> +				  anx6345_i2c_addresses[i]);
-> +			goto err_unregister_i2c;
+> +		ret = pm_genpd_init(&res[i].pd, NULL, true);
+> +		if (ret < 0) {
+> +			dev_err(dev, "failed to init genpd\n");
+> +			goto unroll_genpds;
 > +		}
 > +
-> +		anx6345->map[i] = devm_regmap_init_i2c(anx6345->i2c_clients[i],
-> +						       &anx6345_regmap_config);
-> +		if (IS_ERR(anx6345->map[i])) {
-> +			err = PTR_ERR(anx6345->map[i]);
-> +			DRM_ERROR("Failed regmap initialization %02x\n",
-> +				  anx6345_i2c_addresses[i]);
-> +			goto err_unregister_i2c;
-> +		}
+> +		data->domains[i] = &res[i].pd;
 > +	}
 > +
-> +	/* Look for supported chip ID */
-> +	anx6345_poweron(anx6345);
-> +	if (anx6345_get_chip_id(anx6345)) {
-> +		anx6345->bridge.funcs = &anx6345_bridge_funcs;
-> +		drm_bridge_add(&anx6345->bridge);
+> +	data->num_domains = i;
 > +
-> +		return 0;
-> +	} else {
-> +		anx6345_poweroff(anx6345);
-> +		err = -ENODEV;
-> +	}
+> +	ret = of_genpd_add_provider_onecell(dev->of_node, data);
+> +	if (ret < 0)
+> +		goto unroll_genpds;
 > +
-> +err_unregister_i2c:
-> +	unregister_i2c_dummy_clients(anx6345);
-> +	return err;
+> +	return 0;
+> +
+> +unroll_genpds:
+> +	for (i--; i >= 0; i--)
+> +		pm_genpd_remove(data->domains[i]);
+> +
+> +	return ret;
 > +}
 > +
-> +static int anx6345_i2c_remove(struct i2c_client *client)
+> +static void qmp_pd_remove(struct qmp *qmp)
 > +{
-> +	struct anx6345 *anx6345 = i2c_get_clientdata(client);
+> +	struct genpd_onecell_data *data = &qmp->pd_data;
+> +	struct device *dev = qmp->dev;
+> +	int i;
 > +
-> +	drm_bridge_remove(&anx6345->bridge);
+> +	of_genpd_del_provider(dev->of_node);
 > +
-> +	unregister_i2c_dummy_clients(anx6345);
+> +	for (i = 0; i < data->num_domains; i++)
+> +		pm_genpd_remove(data->domains[i]);
+> +}
 > +
-> +	kfree(anx6345->edid);
+> +static int qmp_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	struct qmp *qmp;
+> +	int irq;
+> +	int ret;
 > +
-> +	mutex_destroy(&anx6345->lock);
+> +	qmp = devm_kzalloc(&pdev->dev, sizeof(*qmp), GFP_KERNEL);
+> +	if (!qmp)
+> +		return -ENOMEM;
+> +
+> +	qmp->dev = &pdev->dev;
+> +	init_waitqueue_head(&qmp->event);
+> +	mutex_init(&qmp->tx_lock);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	qmp->msgram = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(qmp->msgram))
+> +		return PTR_ERR(qmp->msgram);
+> +
+> +	qmp->mbox_client.dev = &pdev->dev;
+> +	qmp->mbox_client.knows_txdone = true;
+> +	qmp->mbox_chan = mbox_request_channel(&qmp->mbox_client, 0);
+> +	if (IS_ERR(qmp->mbox_chan)) {
+> +		dev_err(&pdev->dev, "failed to acquire ipc mailbox\n");
+> +		return PTR_ERR(qmp->mbox_chan);
+> +	}
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	ret = devm_request_irq(&pdev->dev, irq, qmp_intr, IRQF_ONESHOT,
+> +			       "aoss-qmp", qmp);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to request interrupt\n");
+> +		goto err_free_mbox;
+> +	}
+> +
+> +	ret = qmp_open(qmp);
+> +	if (ret < 0)
+> +		goto err_free_mbox;
+> +
+> +	ret = qmp_qdss_clk_add(qmp);
+> +	if (ret)
+> +		goto err_close_qmp;
+> +
+> +	ret = qmp_pd_add(qmp);
+> +	if (ret)
+> +		goto err_remove_qdss_clk;
+> +
+> +	platform_set_drvdata(pdev, qmp);
+> +
+> +	return 0;
+> +
+> +err_remove_qdss_clk:
+> +	qmp_qdss_clk_remove(qmp);
+> +err_close_qmp:
+> +	qmp_close(qmp);
+> +err_free_mbox:
+> +	mbox_free_channel(qmp->mbox_chan);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qmp_remove(struct platform_device *pdev)
+> +{
+> +	struct qmp *qmp = platform_get_drvdata(pdev);
+> +
+> +	qmp_qdss_clk_remove(qmp);
+> +	qmp_pd_remove(qmp);
+> +
+> +	qmp_close(qmp);
+> +	mbox_free_channel(qmp->mbox_chan);
 > +
 > +	return 0;
 > +}
 > +
-> +static const struct i2c_device_id anx6345_id[] = {
-> +	{ "anx6345", 0 },
-> +	{ /* sentinel */ }
+> +static const struct of_device_id qmp_dt_match[] = {
+> +	{ .compatible = "qcom,sdm845-aoss-qmp", },
+> +	{}
 > +};
-> +MODULE_DEVICE_TABLE(i2c, anx6345_id);
+> +MODULE_DEVICE_TABLE(of, qmp_dt_match);
 > +
-> +static const struct of_device_id anx6345_match_table[] = {
-> +	{ .compatible = "analogix,anx6345", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, anx6345_match_table);
-> +
-> +static struct i2c_driver anx6345_driver = {
+> +static struct platform_driver qmp_driver = {
 > +	.driver = {
-> +		   .name = "anx6345",
-> +		   .of_match_table = of_match_ptr(anx6345_match_table),
-> +		  },
-> +	.probe = anx6345_i2c_probe,
-> +	.remove = anx6345_i2c_remove,
-> +	.id_table = anx6345_id,
+> +		.name		= "qcom_aoss_qmp",
+> +		.of_match_table	= qmp_dt_match,
+> +	},
+> +	.probe = qmp_probe,
+> +	.remove	= qmp_remove,
 > +};
-> +module_i2c_driver(anx6345_driver);
+> +module_platform_driver(qmp_driver);
 > +
-> +MODULE_DESCRIPTION("ANX6345 eDP Transmitter driver");
-> +MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
-
-
-Submitter, patch author, and module author are different, this can be
-correct, but maybe somebody forgot to update some of these fields.
-
-
-Regards
-
-Andrzej
-
-
+> +MODULE_DESCRIPTION("Qualcomm AOSS QMP driver");
 > +MODULE_LICENSE("GPL v2");
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
