@@ -1,55 +1,31 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 1/3] dt-bindings: iio: adc: stm32: add analog switches supply
- control
-Date: Wed, 12 Jun 2019 09:24:34 +0200
-Message-ID: <1560324276-681-2-git-send-email-fabrice.gasnier@st.com>
-References: <1560324276-681-1-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH 0/3] STM32 ADC analog switches supply control
+Date: Wed, 12 Jun 2019 09:24:33 +0200
+Message-ID: <1560324276-681-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1560324276-681-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: jic23@kernel.org, robh+dt@kernel.org, alexandre.torgue@st.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On stm32h7 and stm32mp1, the ADC inputs are multiplexed with analog
-switches which have reduced performances when their supply is below 2.7V
-(vdda by default).
+This series adds support for SYSCFG bits that control ADC analog switches
+supply on STM32MP1 and STM32H7.
 
-Add documentation for optional vdda-supply & vdd-supply that can be used
-to supply analog circuitry (controlled by syscfg bits).
+The ADC inputs are multiplexed with analog switches which have reduced
+performances when their supply is below 2.7V. Analog switches supply
+can be controlled using SYSCFG bits, to reach full ADC performance.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+Fabrice Gasnier (3):
+  dt-bindings: iio: adc: stm32: add analog switches supply control
+  iio: adc: stm32-adc: add analog switches supply control
+  ARM: dts: stm32: add ADC analog switches syscfg on stm32mp157c
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-index 8346bcb..3af48b9 100644
---- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-@@ -46,6 +46,12 @@ Required properties:
- Optional properties:
- - A pinctrl state named "default" for each ADC channel may be defined to set
-   inX ADC pins in mode of operation for analog input on external pin.
-+- vdda-supply: Phandle to the vdda input voltage. It can be used to supply ADC
-+  analog inputs switches on stm32h7 and stm32mp1.
-+- vdd-supply: Phandle to the vdd input voltage. It can be used to supply ADC
-+  analog inputs switches on stm32mp1.
-+- st,syscfg: Phandle to system configuration controller. It can be used to
-+  control the analog circuitry on stm32h7 and stm32mp1.
- 
- Contents of a stm32 adc child node:
- -----------------------------------
+ .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |   6 +
+ arch/arm/boot/dts/stm32mp157c.dtsi                 |   1 +
+ drivers/iio/adc/stm32-adc-core.c                   | 232 ++++++++++++++++++++-
+ 3 files changed, 237 insertions(+), 2 deletions(-)
+
 -- 
 2.7.4
