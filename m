@@ -1,199 +1,124 @@
 From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH next] of/fdt: Fix defined but not used compiler warning
-Date: Wed, 12 Jun 2019 11:29:07 -0700
-Message-ID: <41acc800-1ab8-c715-2674-c1204d546b4f@gmail.com>
-References: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
- <0702fa2d-1952-e9fc-8e17-a93f3b90a958@gmail.com>
- <CAL_JsqKsjK237W+-Yz4McxSZG=Gd3Pfp2JtgMnfAqiNRUcCg1g@mail.gmail.com>
+Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up
+ of_find_device_by_node()
+Date: Wed, 12 Jun 2019 12:03:01 -0700
+Message-ID: <6dc08d14-6351-0f75-a213-453e405da8e0@gmail.com>
+References: <20190604003218.241354-1-saravanak@google.com>
+ <20190604003218.241354-2-saravanak@google.com>
+ <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
+ <570474f4-8749-50fd-5f72-36648ed44653@gmail.com>
+ <CAGETcx8M3YkUBZ-e2LLfrbWgnMKMMNG5cv=p8MMmBe7ZyPJ7xw@mail.gmail.com>
+ <20190611215242.GE212690@google.com>
+ <CAL_Jsq+V9QUBpzmPyYjWe93-06-mpU=5JmUqvf-QsnuLxPnmUA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKsjK237W+-Yz4McxSZG=Gd3Pfp2JtgMnfAqiNRUcCg1g@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+V9QUBpzmPyYjWe93-06-mpU=5JmUqvf-QsnuLxPnmUA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>
+To: Rob Herring <robh+dt@kernel.org>, Sandeep Patil <sspatil@android.com>, Saravana Kannan <saravanak@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6/12/19 10:00 AM, Rob Herring wrote:
-> On Wed, Jun 12, 2019 at 10:45 AM Frank Rowand <frowand.list@gmail.com> wrote:
+On 6/12/19 6:53 AM, Rob Herring wrote:
+> On Tue, Jun 11, 2019 at 3:52 PM Sandeep Patil <sspatil@android.com> wrote:
 >>
->> Hi Kefeng,
+>> On Tue, Jun 11, 2019 at 01:56:25PM -0700, 'Saravana Kannan' via kernel-team wrote:
+>>> On Tue, Jun 11, 2019 at 8:18 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>
+>>>> Hi Saravana,
+>>>>
+>>>> On 6/10/19 10:36 AM, Rob Herring wrote:
+>>>>> Why are you resending this rather than replying to Frank's last
+>>>>> comments on the original?
+>>>>
+>>>> Adding on a different aspect...  The independent replies from three different
+>>>> maintainers (Rob, Mark, myself) pointed out architectural issues with the
+>>>> patch series.  There were also some implementation issues brought out.
+>>>> (Although I refrained from bringing up most of my implementation issues
+>>>> as they are not relevant until architecture issues are resolved.)
+>>>
+>>> Right, I'm not too worried about the implementation issues before we
+>>> settle on the architectural issues. Those are easy to fix.
+>>>
+>>> Honestly, the main points that the maintainers raised are:
+>>> 1) This is a configuration property and not describing the device.
+>>> Just use the implicit dependencies coming from existing bindings.
+>>>
+>>> I gave a bunch of reasons for why I think it isn't an OS configuration
+>>> property. But even if that's not something the maintainers can agree
+>>> to, I gave a concrete example (cyclic dependencies between clock
+>>> provider hardware) where the implicit dependencies would prevent one
+>>> of the devices from probing till the end of time. So even if the
+>>> maintainers don't agree we should always look at "depends-on" to
+>>> decide the dependencies, we still need some means to override the
+>>> implicit dependencies where they don't match the real dependency. Can
+>>> we use depends-on as an override when the implicit dependencies aren't
+>>> correct?
+>>>
+>>> 2) This doesn't need to be solved because this is just optimizing
+>>> probing or saving power ("we should get rid of this auto disabling"):
+>>>
+>>> I explained why this patch series is not just about optimizing probe
+>>> ordering or saving power. And why we can't ignore auto disabling
+>>> (because it's more than just auto disabling). The kernel is currently
+>>> broken when trying to use modules in ARM SoCs (probably in other
+>>> systems/archs too, but I can't speak for those).
+>>>
+>>> 3) Concerns about backwards compatibility
+>>>
+>>> I pointed out why the current scheme (depends-on being the only source
+>>> of dependency) doesn't break compatibility. And if we go with
+>>> "depends-on" as an override what we could do to keep backwards
+>>> compatibility. Happy to hear more thoughts or discuss options.
+>>>
+>>> 4) How the "sync_state" would work for a device that supplies multiple
+>>> functionalities but a limited driver.
 >>
->> If Rob agrees, I'd like to see one more change in this patch.
+>> <snip>
+>> To be clear, all of above are _real_ problems that stops us from efficiently
+>> load device drivers as modules for Android.
 >>
->> Since the only caller of of_fdt_match() is of_flat_dt_match(),
->> can you move the body of of_fdt_match() into  of_flat_dt_match()
->> and eliminate of_fdt_match()?
+>> So, if 'depends-on' doesn't seem like the right approach and "going back to
+>> the drawing board" is the ask, could you please point us in the right
+>> direction?
 > 
-> That's fine as long as we think there's never any use for of_fdt_match
-> after init? Fixup of nodes in an overlay for example.
 
-We can always re-expose the functionality as of_fdt_match() in the future
-if the need arises.  But Stephen's recent patch was moving in the opposite
-direction, removing of_fdt_match() from the header file and making it
-static.
+
+> Use the dependencies which are already there in DT. That's clocks,
+> pinctrl, regulators, interrupts, gpio at a minimum. I'm simply not
+> going to accept duplicating all those dependencies in DT. The downside
+
+Just in case it isn't obvious from my other comments, I'm fully in
+agreement with Rob on this.
 
 -Frank
 
+> for the kernel is you have to address these one by one and can't have
+> a generic property the driver core code can parse. After that's in
+> place, then maybe we can consider handling any additional dependencies
+> not already captured in DT. Once all that is in place, we can probably
+> sort device and/or driver lists to optimize the probe order (maybe the
+> driver core already does that now?).
+> 
+> Get rid of the auto disabling of clocks and regulators in
+> late_initcall. It's simply not a valid marker that boot is done when
+> modules are involved. We probably can't get rid of it as lot's of
+> platforms rely on that, so it will have to be opt out. Make it the
+> platform's responsibility for ensuring a consistent state.
+> 
+> Perhaps we need a 'boot done' or 'stop deferring probe' trigger from
+> userspace in order to make progress if dependencies are missing. Or
+> maybe just some timeout would be sufficient. I think this is probably
+> more useful for development than in a shipping product. Even if you
+> could fallback to polling mode instead of interrupts for example, I
+> doubt you would want to in a product.
+> 
+> You should also keep in mind that everything needed for a console has
+> to be built in. Maybe Android can say the console isn't needed, but in
+> general we can't.
 > 
 > Rob
-> 
->>
->> (Noting that of_flat_dt_match() consists only of the call to
->> of_fdt_match().)
->>
->> -Frank
->>
->>
->> On 6/11/19 6:00 PM, Kefeng Wang wrote:
->>> When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler warning,
->>>
->>> drivers/of/fdt.c:129:19: warning: ‘of_fdt_match’ defined but not used [-Wunused-function]
->>>  static int __init of_fdt_match(const void *blob, unsigned long node,
->>>
->>> Move of_fdt_match() and of_fdt_is_compatible() under CONFIG_OF_EARLY_FLATTREE
->>> to fix it.
->>>
->>> Cc: Stephen Boyd <swboyd@chromium.org>
->>> Cc: Rob Herring <robh@kernel.org>
->>> Cc: Frank Rowand <frowand.list@gmail.com>
->>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->>> ---
->>>  drivers/of/fdt.c | 106 +++++++++++++++++++++++------------------------
->>>  1 file changed, 53 insertions(+), 53 deletions(-)
->>>
->>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->>> index 3d36b5afd9bd..d6afd5b22940 100644
->>> --- a/drivers/of/fdt.c
->>> +++ b/drivers/of/fdt.c
->>> @@ -78,38 +78,6 @@ void __init of_fdt_limit_memory(int limit)
->>>       }
->>>  }
->>>
->>> -/**
->>> - * of_fdt_is_compatible - Return true if given node from the given blob has
->>> - * compat in its compatible list
->>> - * @blob: A device tree blob
->>> - * @node: node to test
->>> - * @compat: compatible string to compare with compatible list.
->>> - *
->>> - * On match, returns a non-zero value with smaller values returned for more
->>> - * specific compatible values.
->>> - */
->>> -static int of_fdt_is_compatible(const void *blob,
->>> -                   unsigned long node, const char *compat)
->>> -{
->>> -     const char *cp;
->>> -     int cplen;
->>> -     unsigned long l, score = 0;
->>> -
->>> -     cp = fdt_getprop(blob, node, "compatible", &cplen);
->>> -     if (cp == NULL)
->>> -             return 0;
->>> -     while (cplen > 0) {
->>> -             score++;
->>> -             if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
->>> -                     return score;
->>> -             l = strlen(cp) + 1;
->>> -             cp += l;
->>> -             cplen -= l;
->>> -     }
->>> -
->>> -     return 0;
->>> -}
->>> -
->>>  static bool of_fdt_device_is_available(const void *blob, unsigned long node)
->>>  {
->>>       const char *status = fdt_getprop(blob, node, "status", NULL);
->>> @@ -123,27 +91,6 @@ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
->>>       return false;
->>>  }
->>>
->>> -/**
->>> - * of_fdt_match - Return true if node matches a list of compatible values
->>> - */
->>> -static int __init of_fdt_match(const void *blob, unsigned long node,> -                             const char *const *compat)
->>> -{
->>> -     unsigned int tmp, score = 0;
->>> -
->>> -     if (!compat)
->>> -             return 0;
->>> -
->>> -     while (*compat) {
->>> -             tmp = of_fdt_is_compatible(blob, node, *compat);
->>> -             if (tmp && (score == 0 || (tmp < score)))
->>> -                     score = tmp;
->>> -             compat++;
->>> -     }
->>> -
->>> -     return score;
->>> -}
->>> -
->>>  static void *unflatten_dt_alloc(void **mem, unsigned long size,
->>>                                      unsigned long align)
->>>  {
->>> @@ -764,6 +711,59 @@ const void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
->>>       return fdt_getprop(initial_boot_params, node, name, size);
->>>  }
->>>
->>> +/**
->>> + * of_fdt_is_compatible - Return true if given node from the given blob has
->>> + * compat in its compatible list
->>> + * @blob: A device tree blob
->>> + * @node: node to test
->>> + * @compat: compatible string to compare with compatible list.
->>> + *
->>> + * On match, returns a non-zero value with smaller values returned for more
->>> + * specific compatible values.
->>> + */
->>> +static int of_fdt_is_compatible(const void *blob,
->>> +                   unsigned long node, const char *compat)
->>> +{
->>> +     const char *cp;
->>> +     int cplen;
->>> +     unsigned long l, score = 0;
->>> +
->>> +     cp = fdt_getprop(blob, node, "compatible", &cplen);
->>> +     if (cp == NULL)
->>> +             return 0;
->>> +     while (cplen > 0) {
->>> +             score++;
->>> +             if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
->>> +                     return score;
->>> +             l = strlen(cp) + 1;
->>> +             cp += l;
->>> +             cplen -= l;
->>> +     }
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +/**
->>> + * of_fdt_match - Return true if node matches a list of compatible values
->>> + */
->>> +static int __init of_fdt_match(const void *blob, unsigned long node,
->>> +                            const char *const *compat)
->>> +{
->>> +     unsigned int tmp, score = 0;
->>> +
->>> +     if (!compat)
->>> +             return 0;
->>> +
->>> +     while (*compat) {
->>> +             tmp = of_fdt_is_compatible(blob, node, *compat);
->>> +             if (tmp && (score == 0 || (tmp < score)))
->>> +                     score = tmp;
->>> +             compat++;
->>> +     }
->>> +
->>> +     return score;
->>> +}
->>> +
->>>  /**
->>>   * of_flat_dt_is_compatible - Return true if given node has compat in compatible list
->>>   * @node: node to test
->>>
->>
+> .
 > 
