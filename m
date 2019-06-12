@@ -1,129 +1,43 @@
-Return-Path: <SRS0=DAy5=UA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46304 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfFAJOG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Jun 2019 05:14:06 -0400
-Date: Sat, 1 Jun 2019 11:14:01 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v3 05/10] media: hantro: add support for named register
- ranges
-Message-ID: <20190601111401.540166d0@collabora.com>
-In-Reply-To: <20190531085523.10892-6-p.zabel@pengutronix.de>
-References: <20190531085523.10892-1-p.zabel@pengutronix.de>
-        <20190531085523.10892-6-p.zabel@pengutronix.de>
+Return-Path: <SRS0=ypAS=UL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47735 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437590AbfFLJj0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Jun 2019 05:39:26 -0400
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v5 02/10] media: hantro: print video device name in addition to device node
+Date: Wed, 12 Jun 2019 11:39:07 +0200
+Message-Id: <20190612093915.18973-3-p.zabel@pengutronix.de>
+In-Reply-To: <20190612093915.18973-1-p.zabel@pengutronix.de>
+References: <20190612093915.18973-1-p.zabel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, 31 May 2019 10:55:18 +0200
-Philipp Zabel <p.zabel@pengutronix.de> wrote:
+It can be helpful to know which video device was registered at which
+device node.
 
-> Add support for multiple register ranges with SoC specific names.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
-> Changes since v2 [1]:
->  - Move array of reg_names out of struct hantro_variant
->  - Use ARRAY_SIZE to set num_regs
->  - Dynamically allocate base address array in struct hantro_dev and
->    rename it to bases
->  - More concise IORESOURCE_MEM setup in hantro_probe
-> 
-> [1] https://patchwork.linuxtv.org/patch/56424/
-> ---
->  drivers/staging/media/hantro/hantro.h     |  8 ++++++--
->  drivers/staging/media/hantro/hantro_drv.c | 24 +++++++++++++++++------
->  2 files changed, 24 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
-> index d041d36a0805..feaa439a17b3 100644
-> --- a/drivers/staging/media/hantro/hantro.h
-> +++ b/drivers/staging/media/hantro/hantro.h
-> @@ -72,6 +72,8 @@ struct hantro_irq {
->   * @num_irqs:			number of irqs in the array
->   * @clk_names:			array of clock names
->   * @num_clocks:			number of clocks in the array
-> + * @reg_names:			array of register range names
-> + * @num_regs:			number of register range names in the array
->   */
->  struct hantro_variant {
->  	unsigned int enc_offset;
-> @@ -88,6 +90,8 @@ struct hantro_variant {
->  	int num_irqs;
->  	const char *clk_names[HANTRO_MAX_CLOCKS];
->  	int num_clocks;
-> +	const char * const *reg_names;
-> +	int num_regs;
->  };
->  
->  /**
-> @@ -160,7 +164,7 @@ hantro_vdev_to_func(struct video_device *vdev)
->   * @dev:		Pointer to device for convenient logging using
->   *			dev_ macros.
->   * @clocks:		Array of clock handles.
-> - * @base:		Mapped address of VPU registers.
-> + * @bases:		Mapped addresses of VPU registers.
-
-I find the name 'bases' a bit too generic, maybe 'reg_bases'.
-The rest of the patch LGTM
-
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+---
+ drivers/staging/media/hantro/hantro_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->   * @enc_base:		Mapped address of VPU encoder register for convenience.
->   * @dec_base:		Mapped address of VPU decoder register for convenience.
->   * @vpu_mutex:		Mutex to synchronize V4L2 calls.
-> @@ -178,7 +182,7 @@ struct hantro_dev {
->  	struct platform_device *pdev;
->  	struct device *dev;
->  	struct clk_bulk_data clocks[HANTRO_MAX_CLOCKS];
-> -	void __iomem *base;
-> +	void __iomem **bases;
->  	void __iomem *enc_base;
->  	void __iomem *dec_base;
->  
-> diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-> index e49bb03a988e..1f756e06dfc6 100644
-> --- a/drivers/staging/media/hantro/hantro_drv.c
-> +++ b/drivers/staging/media/hantro/hantro_drv.c
-> @@ -669,6 +669,7 @@ static int hantro_probe(struct platform_device *pdev)
->  	const struct of_device_id *match;
->  	struct hantro_dev *vpu;
->  	struct resource *res;
-> +	int num_bases;
->  	int i, ret;
->  
->  	vpu = devm_kzalloc(&pdev->dev, sizeof(*vpu), GFP_KERNEL);
-> @@ -692,12 +693,23 @@ static int hantro_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> -	res = platform_get_resource(vpu->pdev, IORESOURCE_MEM, 0);
-> -	vpu->base = devm_ioremap_resource(vpu->dev, res);
-> -	if (IS_ERR(vpu->base))
-> -		return PTR_ERR(vpu->base);
-> -	vpu->enc_base = vpu->base + vpu->variant->enc_offset;
-> -	vpu->dec_base = vpu->base + vpu->variant->dec_offset;
-> +	num_bases = vpu->variant->num_regs ?: 1;
-> +	vpu->bases = devm_kcalloc(&pdev->dev, num_bases, sizeof(*vpu->bases),
-> +				  GFP_KERNEL);
-> +	if (!vpu->bases)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < num_bases; i++) {
-> +		res = vpu->variant->reg_names ?
-> +		      platform_get_resource_byname(vpu->pdev, IORESOURCE_MEM,
-> +						   vpu->variant->reg_names[i]) :
-> +		      platform_get_resource(vpu->pdev, IORESOURCE_MEM, 0);
-> +		vpu->bases[i] = devm_ioremap_resource(vpu->dev, res);
-> +		if (IS_ERR(vpu->bases[i]))
-> +			return PTR_ERR(vpu->bases[i]);
-> +	}
-> +	vpu->enc_base = vpu->bases[0] + vpu->variant->enc_offset;
-> +	vpu->dec_base = vpu->bases[0] + vpu->variant->dec_offset;
->  
->  	ret = dma_set_coherent_mask(vpu->dev, DMA_BIT_MASK(32));
->  	if (ret) {
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index d325f63c7412..0eadcc530e63 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -607,7 +607,8 @@ static int hantro_add_func(struct hantro_dev *vpu, unsigned int funcid)
+ 		goto err_unreg_dev;
+ 	}
+ 
+-	v4l2_info(&vpu->v4l2_dev, "registered as /dev/video%d\n", vfd->num);
++	v4l2_info(&vpu->v4l2_dev, "registered %s as /dev/video%d\n", vfd->name,
++		  vfd->num);
+ 
+ 	return 0;
+ 
+-- 
+2.20.1
