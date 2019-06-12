@@ -1,62 +1,48 @@
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Date: Wed, 12 Jun 2019 08:42:13 -0300
-Message-ID: <20190612084213.4fb9e054@coco.lan>
-References: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
-        <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
-        <20190608090556.GA32464@zn.tnic>
-        <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
-        <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
-        <20190611115651.GD31772@zn.tnic>
-        <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
-        <20190612034813.GA32652@zn.tnic>
-        <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
-        <20190612074242.53a4cf56@coco.lan>
-        <20190612110039.GH32652@zn.tnic>
+From: Horia Geanta <horia.geanta@nxp.com>
+Subject: Re: [PATCH] ARM: dts: imx7ulp: add crypto support
+Date: Wed, 12 Jun 2019 11:45:18 +0000
+Message-ID: <VI1PR0402MB3485A573518D60A573BA55C298EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190606080255.25504-1-horia.geanta@nxp.com>
+ <20190612103926.GE11086@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612110039.GH32652@zn.tnic>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, James Morse <james.morse@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Hanoc
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, Iuliana Prodan <iuliana.prodan@nxp.com>, Franck Lenormand <franck.lenormand@nxp.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 12 Jun 2019 13:00:39 +0200
-Borislav Petkov <bp@alien8.de> escreveu:
-
-> On Wed, Jun 12, 2019 at 07:42:42AM -0300, Mauro Carvalho Chehab wrote:
-> > That's said, from the admin PoV, it makes sense to have a single
-> > daemon that collect errors from all error sources and take the
-> > needed actions.  
-> 
-> Doing recovery actions in userspace is too flaky. Daemon can get killed
-> at any point in time and there are error types where you want to do
-> recovery *before* you return to userspace.
-
-Yeah, some actions would work a lot better at Kernelspace. Yet, some
-actions would work a lot better if implemented on userspace.
-
-For example, a server with multiple network interfaces may re-route
-the traffic to a backup interface if the main one has too many errors.
-
-This can easily be done on userspace.
-
-> Yes, we do have different error reporting facilities but I still think
-> that concentrating all the error information needed in order to do
-> proper recovery action is the better approach here. And make that part
-> of the kernel so that it is robust. Userspace can still configure it and
-> so on.
-
-If the error reporting facilities are for the same hardware "group"
-(like the machine's memory controllers), I agree with you: it makes
-sense to have a single driver. 
-
-If they are for completely independent hardware then implementing
-as separate drivers would work equally well, with the advantage of
-making easier to maintain and make it generic enough to support
-different vendors using the same IP block.
-
-Thanks,
-Mauro
+On 6/12/2019 1:40 PM, Shawn Guo wrote:=0A=
+> On Thu, Jun 06, 2019 at 11:02:55AM +0300, Horia Geant=E3 wrote:=0A=
+>> From: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+>>=0A=
+>> Add crypto node in device tree for CAAM support.=0A=
+>>=0A=
+>> Noteworthy is that on 7ulp the interrupt line is shared=0A=
+>> between the two job rings.=0A=
+>>=0A=
+>> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+>> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>=0A=
+>> Signed-off-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+>> ---=0A=
+>>=0A=
+>> I've just realized that this patch should be merged through the crypto t=
+ree,=0A=
+>> else bisectability could be affected due to cryptodev-2.6=0A=
+>> commit 385cfc84a5a8 ("crypto: caam - disable some clock checks for iMX7U=
+LP")=0A=
+>> ( https://patchwork.kernel.org/patch/10970017/ )=0A=
+>> which should come first.=0A=
+> =0A=
+> I'm not sure I follow it.  This is a new device added to imx7ulp DT.=0A=
+> It's never worked before on imx7ulp.  How would it affect git bisect?=0A=
+> =0A=
+Driver corresponding to this device (drivers/crypto/caam) has to be updated=
+=0A=
+before adding the node in DT.=0A=
+Is there any guarantee wrt. merge order of the crypto and DT trees?=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
