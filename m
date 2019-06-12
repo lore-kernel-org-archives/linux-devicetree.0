@@ -1,48 +1,53 @@
-From: Horia Geanta <horia.geanta@nxp.com>
-Subject: Re: [PATCH] ARM: dts: imx7ulp: add crypto support
-Date: Wed, 12 Jun 2019 11:45:18 +0000
-Message-ID: <VI1PR0402MB3485A573518D60A573BA55C298EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190606080255.25504-1-horia.geanta@nxp.com>
- <20190612103926.GE11086@dragon>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Date: Wed, 12 Jun 2019 21:57:40 +1000
+Message-ID: <7705227ea831793cc9e45af32e0da8f5547cb14d.camel@kernel.crashing.org>
+References: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+         <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+         <20190608090556.GA32464@zn.tnic>
+         <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+         <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+         <20190611115651.GD31772@zn.tnic>
+         <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+         <20190612034813.GA32652@zn.tnic>
+         <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+         <20190612074242.53a4cf56@coco.lan> <20190612110039.GH32652@zn.tnic>
+         <20190612084213.4fb9e054@coco.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <20190612084213.4fb9e054@coco.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, Iuliana Prodan <iuliana.prodan@nxp.com>, Franck Lenormand <franck.lenormand@nxp.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Borislav Petkov <bp@alien8.de>
+Cc: James Morse <james.morse@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "Hanoch, Uri" <hanochu@amazon.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6/12/2019 1:40 PM, Shawn Guo wrote:=0A=
-> On Thu, Jun 06, 2019 at 11:02:55AM +0300, Horia Geant=E3 wrote:=0A=
->> From: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
->>=0A=
->> Add crypto node in device tree for CAAM support.=0A=
->>=0A=
->> Noteworthy is that on 7ulp the interrupt line is shared=0A=
->> between the two job rings.=0A=
->>=0A=
->> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
->> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>=0A=
->> Signed-off-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
->> ---=0A=
->>=0A=
->> I've just realized that this patch should be merged through the crypto t=
-ree,=0A=
->> else bisectability could be affected due to cryptodev-2.6=0A=
->> commit 385cfc84a5a8 ("crypto: caam - disable some clock checks for iMX7U=
-LP")=0A=
->> ( https://patchwork.kernel.org/patch/10970017/ )=0A=
->> which should come first.=0A=
-> =0A=
-> I'm not sure I follow it.  This is a new device added to imx7ulp DT.=0A=
-> It's never worked before on imx7ulp.  How would it affect git bisect?=0A=
-> =0A=
-Driver corresponding to this device (drivers/crypto/caam) has to be updated=
-=0A=
-before adding the node in DT.=0A=
-Is there any guarantee wrt. merge order of the crypto and DT trees?=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On Wed, 2019-06-12 at 08:42 -0300, Mauro Carvalho Chehab wrote:
+> > Yes, we do have different error reporting facilities but I still
+> > think
+> > that concentrating all the error information needed in order to do
+> > proper recovery action is the better approach here. And make that
+> > part
+> > of the kernel so that it is robust. Userspace can still configure
+> > it and
+> > so on.
+> 
+> If the error reporting facilities are for the same hardware "group"
+> (like the machine's memory controllers), I agree with you: it makes
+> sense to have a single driver. 
+> 
+> If they are for completely independent hardware then implementing
+> as separate drivers would work equally well, with the advantage of
+> making easier to maintain and make it generic enough to support
+> different vendors using the same IP block.
+
+Right. And if you really want a platform orchestrator for recovery in
+the kenrel, it should be a separate one, that consumes data from the
+individual IP block drivers that report the raw errors anyway.
+
+But for the main case that really needs to be in the kernel, which is
+DRAM, the recovery can usually be contained to the MC driver anyway.
+
+Cheers,
+Ben.
