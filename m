@@ -1,123 +1,81 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 1/7] drm/bridge: move ANA78xx driver to analogix
- subdirectory
-Date: Wed, 12 Jun 2019 12:16:54 +0200
-Message-ID: <5617d9f2-9935-eec6-748b-02cd00450d76@samsung.com>
-References: <20190604122150.29D6468B05@newverein.lst.de>
-        <CGME20190604122320epcas3p3bdb18dc38aaad91e8c132625649db9ba@epcas3p3.samsung.com>
-        <20190604122251.676BF68B05@newverein.lst.de>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx7ulp: add crypto support
+Date: Wed, 12 Jun 2019 18:39:27 +0800
+Message-ID: <20190612103926.GE11086@dragon>
+References: <20190606080255.25504-1-horia.geanta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604122251.676BF68B05@newverein.lst.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190606080255.25504-1-horia.geanta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Torsten Duwe <duwe@lst.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, Iuliana Prodan <iuliana.prodan@nxp.com>, Franck Lenormand <franck.lenormand@nxp.com>, linux-crypto@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04.06.2019 14:22, Torsten Duwe wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
->
-> As ANA78xx chips are designed and produced by Analogix Semiconductor,
-> Inc, move their driver codes into analogix subdirectory.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-
- --
-Regards
-Andrzej
+On Thu, Jun 06, 2019 at 11:02:55AM +0300, Horia Geantă wrote:
+> From: Iuliana Prodan <iuliana.prodan@nxp.com>
+> 
+> Add crypto node in device tree for CAAM support.
+> 
+> Noteworthy is that on 7ulp the interrupt line is shared
+> between the two job rings.
+> 
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
+> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 > ---
->  drivers/gpu/drm/bridge/Kconfig                           | 10 ----------
->  drivers/gpu/drm/bridge/Makefile                          |  4 ++--
->  drivers/gpu/drm/bridge/analogix/Kconfig                  | 10 ++++++++++
->  drivers/gpu/drm/bridge/analogix/Makefile                 |  1 +
->  drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c |  0
->  drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h |  0
->  6 files changed, 13 insertions(+), 12 deletions(-)
->  rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (100%)
->  rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h (100%)
->
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index ee777469293a..862789bf64a0 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -16,16 +16,6 @@ config DRM_PANEL_BRIDGE
->  menu "Display Interface Bridges"
->  	depends on DRM && DRM_BRIDGE
+> 
+> I've just realized that this patch should be merged through the crypto tree,
+> else bisectability could be affected due to cryptodev-2.6
+> commit 385cfc84a5a8 ("crypto: caam - disable some clock checks for iMX7ULP")
+> ( https://patchwork.kernel.org/patch/10970017/ )
+> which should come first.
+
+I'm not sure I follow it.  This is a new device added to imx7ulp DT.
+It's never worked before on imx7ulp.  How would it affect git bisect?
+
+Shawn
+
+> 
+>  arch/arm/boot/dts/imx7ulp.dtsi | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+> index d6b711011cba..e20483714be5 100644
+> --- a/arch/arm/boot/dts/imx7ulp.dtsi
+> +++ b/arch/arm/boot/dts/imx7ulp.dtsi
+> @@ -100,6 +100,29 @@
+>  		reg = <0x40000000 0x800000>;
+>  		ranges;
 >  
-> -config DRM_ANALOGIX_ANX78XX
-> -	tristate "Analogix ANX78XX bridge"
-> -	select DRM_KMS_HELPER
-> -	select REGMAP_I2C
-> -	---help---
-> -	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
-> -	  designed for portable devices. The ANX78XX transforms
-> -	  the HDMI output of an application processor to MyDP
-> -	  or DisplayPort.
-> -
->  config DRM_CDNS_DSI
->  	tristate "Cadence DPI/DSI bridge"
->  	select DRM_KMS_HELPER
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 4934fcf5a6f8..a6c7dd7727ea 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -1,5 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
->  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
->  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
->  obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
-> @@ -12,8 +11,9 @@ obj-$(CONFIG_DRM_SII9234) += sii9234.o
->  obj-$(CONFIG_DRM_THINE_THC63LVD1024) += thc63lvd1024.o
->  obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
->  obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
-> -obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
->  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
->  obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
->  obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
+> +		crypto: crypto@40240000 {
+> +			compatible = "fsl,sec-v4.0";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			reg = <0x40240000 0x10000>;
+> +			ranges = <0 0x40240000 0x10000>;
+> +			clocks = <&pcc2 IMX7ULP_CLK_CAAM>,
+> +				 <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>;
+> +			clock-names = "aclk", "ipg";
 > +
-> +obj-y += analogix/
->  obj-y += synopsys/
-> diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
-> index e930ff9b5cd4..704fb0f41dc3 100644
-> --- a/drivers/gpu/drm/bridge/analogix/Kconfig
-> +++ b/drivers/gpu/drm/bridge/analogix/Kconfig
-> @@ -1,4 +1,14 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> +config DRM_ANALOGIX_ANX78XX
-> +	tristate "Analogix ANX78XX bridge"
-> +	select DRM_KMS_HELPER
-> +	select REGMAP_I2C
-> +	help
-> +	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
-> +	  designed for portable devices. The ANX78XX transforms
-> +	  the HDMI output of an application processor to MyDP
-> +	  or DisplayPort.
+> +			sec_jr0: jr0@1000 {
+> +				compatible = "fsl,sec-v4.0-job-ring";
+> +				reg = <0x1000 0x1000>;
+> +				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
 > +
->  config DRM_ANALOGIX_DP
->  	tristate
->  	depends on DRM
-> diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
-> index fdbf3fd2f087..6fcbfd3ee560 100644
-> --- a/drivers/gpu/drm/bridge/analogix/Makefile
-> +++ b/drivers/gpu/drm/bridge/analogix/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o
-> +obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
->  obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
-> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
-> similarity index 100%
-> rename from drivers/gpu/drm/bridge/analogix-anx78xx.c
-> rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
-> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
-> similarity index 100%
-> rename from drivers/gpu/drm/bridge/analogix-anx78xx.h
-> rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+> +			sec_jr1: jr1@2000 {
+> +				compatible = "fsl,sec-v4.0-job-ring";
+> +				reg = <0x2000 0x1000>;
+> +				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +		};
+> +
+>  		lpuart4: serial@402d0000 {
+>  			compatible = "fsl,imx7ulp-lpuart";
+>  			reg = <0x402d0000 0x1000>;
+> -- 
+> 2.17.1
+> 
