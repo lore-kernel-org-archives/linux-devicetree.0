@@ -1,7 +1,7 @@
 From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH v3 2/4] firmware/qcom_scm: Add scm call to handle smmu errata
-Date: Wed, 12 Jun 2019 12:45:52 +0530
-Message-ID: <20190612071554.13573-3-vivek.gautam@codeaurora.org>
+Subject: [PATCH v3 1/4] firmware: qcom_scm-64: Add atomic version of qcom_scm_call
+Date: Wed, 12 Jun 2019 12:45:51 +0530
+Message-ID: <20190612071554.13573-2-vivek.gautam@codeaurora.org>
 References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
@@ -10,113 +10,190 @@ To: agross@kernel.org, robh+dt@kernel.org, will.deacon@arm.com, robin.murphy@arm
 Cc: linux-kernel@vger.kernel.org, david.brown@linaro.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Qcom's smmu-500 needs to toggle wait-for-safe logic to
-handle TLB invalidations.
-Few firmwares allow doing that through SCM interface.
-Add API to toggle wait for safe from firmware through a
-SCM call.
+There are scnenarios where drivers are required to make a
+scm call in atomic context, such as in one of the qcom's
+arm-smmu-500 errata [1].
+
+[1] ("https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/
+      drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/
+      msm-4.9&id=da765c6c75266b38191b38ef086274943f353ea7")
 
 Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/firmware/qcom_scm-32.c |  5 +++++
- drivers/firmware/qcom_scm-64.c | 13 +++++++++++++
- drivers/firmware/qcom_scm.c    |  6 ++++++
- drivers/firmware/qcom_scm.h    |  5 +++++
- include/linux/qcom_scm.h       |  2 ++
- 5 files changed, 31 insertions(+)
+ drivers/firmware/qcom_scm-64.c | 136 ++++++++++++++++++++++++++++-------------
+ 1 file changed, 92 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-index 215061c581e1..bee8729525ec 100644
---- a/drivers/firmware/qcom_scm-32.c
-+++ b/drivers/firmware/qcom_scm-32.c
-@@ -614,3 +614,8 @@ int __qcom_scm_io_writel(struct device *dev, phys_addr_t addr, unsigned int val)
- 	return qcom_scm_call_atomic2(QCOM_SCM_SVC_IO, QCOM_SCM_IO_WRITE,
- 				     addr, val);
- }
-+
-+int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev, bool enable)
-+{
-+	return -ENODEV;
-+}
 diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-index b6dca32c5ac4..23de54b75cd7 100644
+index 91d5ad7cf58b..b6dca32c5ac4 100644
 --- a/drivers/firmware/qcom_scm-64.c
 +++ b/drivers/firmware/qcom_scm-64.c
-@@ -550,3 +550,16 @@ int __qcom_scm_io_writel(struct device *dev, phys_addr_t addr, unsigned int val)
- 	return qcom_scm_call(dev, QCOM_SCM_SVC_IO, QCOM_SCM_IO_WRITE,
- 			     &desc, &res);
- }
-+
-+int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev, bool en)
-+{
-+	struct qcom_scm_desc desc = {0};
-+	struct arm_smccc_res res;
-+
-+	desc.args[0] = QCOM_SCM_CONFIG_SAFE_EN_CLIENT_ALL;
-+	desc.args[1] = en;
-+	desc.arginfo = QCOM_SCM_ARGS(2);
-+
-+	return qcom_scm_call_atomic(dev, QCOM_SCM_SVC_SMMU_PROGRAM,
-+				    QCOM_SCM_CONFIG_SAFE_EN, &desc, &res);
-+}
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 2ddc118dba1b..2b3b7a8c4270 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -344,6 +344,12 @@ int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
- }
- EXPORT_SYMBOL(qcom_scm_iommu_secure_ptbl_init);
+@@ -62,32 +62,71 @@ static DEFINE_MUTEX(qcom_scm_lock);
+ #define FIRST_EXT_ARG_IDX 3
+ #define N_REGISTER_ARGS (MAX_QCOM_SCM_ARGS - N_EXT_QCOM_SCM_ARGS + 1)
  
-+int qcom_scm_qsmmu500_wait_safe_toggle(bool en)
+-/**
+- * qcom_scm_call() - Invoke a syscall in the secure world
+- * @dev:	device
+- * @svc_id:	service identifier
+- * @cmd_id:	command identifier
+- * @desc:	Descriptor structure containing arguments and return values
+- *
+- * Sends a command to the SCM and waits for the command to finish processing.
+- * This should *only* be called in pre-emptible context.
+-*/
+-static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
+-			 const struct qcom_scm_desc *desc,
+-			 struct arm_smccc_res *res)
++static void __qcom_scm_call_do(const struct qcom_scm_desc *desc,
++			       struct arm_smccc_res *res, u32 fn_id,
++			       u64 x5, u32 type)
 +{
-+	return __qcom_scm_qsmmu500_wait_safe_toggle(__scm->dev, en);
-+}
-+EXPORT_SYMBOL(qcom_scm_qsmmu500_wait_safe_toggle);
++	u64 cmd;
++	struct arm_smccc_quirk quirk = {.id = ARM_SMCCC_QUIRK_QCOM_A6};
 +
- int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val)
++	cmd = ARM_SMCCC_CALL_VAL(type, qcom_smccc_convention,
++				 ARM_SMCCC_OWNER_SIP, fn_id);
++
++	quirk.state.a6 = 0;
++
++	do {
++		arm_smccc_smc_quirk(cmd, desc->arginfo, desc->args[0],
++				    desc->args[1], desc->args[2], x5,
++				    quirk.state.a6, 0, res, &quirk);
++
++		if (res->a0 == QCOM_SCM_INTERRUPTED)
++			cmd = res->a0;
++
++	} while (res->a0 == QCOM_SCM_INTERRUPTED);
++}
++
++static void qcom_scm_call_do(const struct qcom_scm_desc *desc,
++			     struct arm_smccc_res *res, u32 fn_id,
++			     u64 x5, bool atomic)
++{
++	int retry_count = 0;
++
++	if (!atomic) {
++		do {
++			mutex_lock(&qcom_scm_lock);
++
++			__qcom_scm_call_do(desc, res, fn_id, x5,
++					   ARM_SMCCC_STD_CALL);
++
++			mutex_unlock(&qcom_scm_lock);
++
++			if (res->a0 == QCOM_SCM_V2_EBUSY) {
++				if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
++					break;
++				msleep(QCOM_SCM_EBUSY_WAIT_MS);
++			}
++		}  while (res->a0 == QCOM_SCM_V2_EBUSY);
++	} else {
++		__qcom_scm_call_do(desc, res, fn_id, x5, ARM_SMCCC_FAST_CALL);
++	}
++}
++
++static int ___qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
++			    const struct qcom_scm_desc *desc,
++			    struct arm_smccc_res *res, bool atomic)
  {
- 	return __qcom_scm_io_readl(__scm->dev, addr, val);
-diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
-index 99506bd873c0..0b63ded89b41 100644
---- a/drivers/firmware/qcom_scm.h
-+++ b/drivers/firmware/qcom_scm.h
-@@ -91,10 +91,15 @@ extern int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id,
- 				      u32 spare);
- #define QCOM_SCM_IOMMU_SECURE_PTBL_SIZE	3
- #define QCOM_SCM_IOMMU_SECURE_PTBL_INIT	4
-+#define QCOM_SCM_SVC_SMMU_PROGRAM	0x15
-+#define QCOM_SCM_CONFIG_SAFE_EN		0x3
-+#define QCOM_SCM_CONFIG_SAFE_EN_CLIENT_ALL	0x2
- extern int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
- 					     size_t *size);
- extern int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr,
- 					     u32 size, u32 spare);
-+extern int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev,
-+						bool enable);
- #define QCOM_MEM_PROT_ASSIGN_ID	0x16
- extern int  __qcom_scm_assign_mem(struct device *dev,
- 				  phys_addr_t mem_region, size_t mem_sz,
-diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
-index 3f12cc77fb58..aee3d8580d89 100644
---- a/include/linux/qcom_scm.h
-+++ b/include/linux/qcom_scm.h
-@@ -57,6 +57,7 @@ extern int qcom_scm_set_remote_state(u32 state, u32 id);
- extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
- extern int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size);
- extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
-+extern int qcom_scm_qsmmu500_wait_safe_toggle(bool en);
- extern int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val);
- extern int qcom_scm_io_writel(phys_addr_t addr, unsigned int val);
- #else
-@@ -96,6 +97,7 @@ qcom_scm_set_remote_state(u32 state,u32 id) { return -ENODEV; }
- static inline int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare) { return -ENODEV; }
- static inline int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size) { return -ENODEV; }
- static inline int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare) { return -ENODEV; }
-+static inline int qcom_scm_qsmmu500_wait_safe_toggle(bool en) { return -ENODEV; }
- static inline int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val) { return -ENODEV; }
- static inline int qcom_scm_io_writel(phys_addr_t addr, unsigned int val) { return -ENODEV; }
- #endif
+ 	int arglen = desc->arginfo & 0xf;
+-	int retry_count = 0, i;
++	int i;
+ 	u32 fn_id = QCOM_SCM_FNID(svc_id, cmd_id);
+-	u64 cmd, x5 = desc->args[FIRST_EXT_ARG_IDX];
++	u64 x5 = desc->args[FIRST_EXT_ARG_IDX];
+ 	dma_addr_t args_phys = 0;
+ 	void *args_virt = NULL;
+ 	size_t alloc_len;
+-	struct arm_smccc_quirk quirk = {.id = ARM_SMCCC_QUIRK_QCOM_A6};
++	gfp_t flag = atomic ? GFP_ATOMIC : GFP_KERNEL;
+ 
+ 	if (unlikely(arglen > N_REGISTER_ARGS)) {
+ 		alloc_len = N_EXT_QCOM_SCM_ARGS * sizeof(u64);
+-		args_virt = kzalloc(PAGE_ALIGN(alloc_len), GFP_KERNEL);
++		args_virt = kzalloc(PAGE_ALIGN(alloc_len), flag);
+ 
+ 		if (!args_virt)
+ 			return -ENOMEM;
+@@ -117,33 +156,7 @@ static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
+ 		x5 = args_phys;
+ 	}
+ 
+-	do {
+-		mutex_lock(&qcom_scm_lock);
+-
+-		cmd = ARM_SMCCC_CALL_VAL(ARM_SMCCC_STD_CALL,
+-					 qcom_smccc_convention,
+-					 ARM_SMCCC_OWNER_SIP, fn_id);
+-
+-		quirk.state.a6 = 0;
+-
+-		do {
+-			arm_smccc_smc_quirk(cmd, desc->arginfo, desc->args[0],
+-				      desc->args[1], desc->args[2], x5,
+-				      quirk.state.a6, 0, res, &quirk);
+-
+-			if (res->a0 == QCOM_SCM_INTERRUPTED)
+-				cmd = res->a0;
+-
+-		} while (res->a0 == QCOM_SCM_INTERRUPTED);
+-
+-		mutex_unlock(&qcom_scm_lock);
+-
+-		if (res->a0 == QCOM_SCM_V2_EBUSY) {
+-			if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
+-				break;
+-			msleep(QCOM_SCM_EBUSY_WAIT_MS);
+-		}
+-	}  while (res->a0 == QCOM_SCM_V2_EBUSY);
++	qcom_scm_call_do(desc, res, fn_id, x5, atomic);
+ 
+ 	if (args_virt) {
+ 		dma_unmap_single(dev, args_phys, alloc_len, DMA_TO_DEVICE);
+@@ -156,6 +169,41 @@ static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
+ 	return 0;
+ }
+ 
++/**
++ * qcom_scm_call() - Invoke a syscall in the secure world
++ * @dev:	device
++ * @svc_id:	service identifier
++ * @cmd_id:	command identifier
++ * @desc:	Descriptor structure containing arguments and return values
++ *
++ * Sends a command to the SCM and waits for the command to finish processing.
++ * This should *only* be called in pre-emptible context.
++ */
++static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
++			 const struct qcom_scm_desc *desc,
++			 struct arm_smccc_res *res)
++{
++	return ___qcom_scm_call(dev, svc_id, cmd_id, desc, res, false);
++}
++
++/**
++ * qcom_scm_call_atomic() - atomic variation of qcom_scm_call()
++ * @dev:	device
++ * @svc_id:	service identifier
++ * @cmd_id:	command identifier
++ * @desc:	Descriptor structure containing arguments and return values
++ * @res:	Structure containing results from SMC/HVC call
++ *
++ * Sends a command to the SCM and waits for the command to finish processing.
++ * This should be called in atomic context only.
++ */
++static int qcom_scm_call_atomic(struct device *dev, u32 svc_id, u32 cmd_id,
++				const struct qcom_scm_desc *desc,
++				struct arm_smccc_res *res)
++{
++	return ___qcom_scm_call(dev, svc_id, cmd_id, desc, res, true);
++}
++
+ /**
+  * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
+  * @entry: Entry point function for the cpus
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
