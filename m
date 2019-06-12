@@ -1,111 +1,62 @@
 Return-Path: <SRS0=ypAS=UL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42401 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437591AbfFLJj0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Jun 2019 05:39:26 -0400
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v5 05/10] media: hantro: add support for named register ranges
-Date: Wed, 12 Jun 2019 11:39:10 +0200
-Message-Id: <20190612093915.18973-6-p.zabel@pengutronix.de>
-In-Reply-To: <20190612093915.18973-1-p.zabel@pengutronix.de>
-References: <20190612093915.18973-1-p.zabel@pengutronix.de>
+Received: from muru.com ([72.249.23.125]:52888 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730954AbfFLIwT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Jun 2019 04:52:19 -0400
+Date: Wed, 12 Jun 2019 01:52:16 -0700
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am335x-baltos: Fix PHY mode for ethernet
+Message-ID: <20190612085216.GE5447@atomide.com>
+References: <20190611093045.4810-1-yegorslists@googlemail.com>
+ <20190612080421.GC5447@atomide.com>
+ <CAGm1_kufcx3siXKc6EtFJhLQ_K+V7MgVtvZuXeN2YikkPcufmg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGm1_kufcx3siXKc6EtFJhLQ_K+V7MgVtvZuXeN2YikkPcufmg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: Yegor Yefremov <yegorslists@googlemail.com>
+Cc: linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, peter.ujfalusi@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for multiple register ranges with SoC specific names.
+* Yegor Yefremov <yegorslists@googlemail.com> [190612 08:21]:
+> Hi Tony,
+> 
+> On Wed, Jun 12, 2019 at 10:04 AM Tony Lindgren <tony@atomide.com> wrote:
+> >
+> > Hi,
+> >
+> > * yegorslists@googlemail.com <yegorslists@googlemail.com> [190611 02:31]:
+> > > From: Yegor Yefremov <yegorslists@googlemail.com>
+> > >
+> > > The PHY must add both tx and rx delay and not only on the tx clock.
+> >
+> > As we're close to -rc5, I applied this against v5.2-rc1 and merged into
+> > omap-for-v5.3/dt as it seems it's optional or has been broken for a while
+> > with no fixes tag. After it hits the mainline kernel during the merge
+> > window you can request it be applied into the stable trees as needed.
+> >
+> > However, if this is urgent, let me know what regression it fixes and
+> > I'll merge it into my fixes branch too.
+> 
+> This is the same fix as 759c962d3c9bb1a60e3b4b780daa66ee6d4be13a:
+> 
+>     ARM: dts: am335x-evmsk: Fix PHY mode for ethernet
+> 
+>     The PHY must add both tx and rx delay and not only on the tx clock.
+>     The board uses AR8031_AL1A PHY where the rx delay is enabled by default,
+>     the tx dealy is disabled.
+> 
+>     The reason why rgmii-txid worked because the rx delay was not disabled by
+>     the driver so essentially we ended up with rgmii-id PHY mode.
+> 
+> It seems to be working in 4.19. So I think kernels 5.0, 5.1 are the
+> first to be affected. Without this patch eth1 is not working on Baltos
+> devices.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
----
- drivers/staging/media/hantro/hantro.h     |  8 ++++++--
- drivers/staging/media/hantro/hantro_drv.c | 24 +++++++++++++++++------
- 2 files changed, 24 insertions(+), 8 deletions(-)
+OK thanks so it's pretty regression recent then, I'll merge it into fixes
+too.
 
-diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
-index d041d36a0805..e8eb747f22ef 100644
---- a/drivers/staging/media/hantro/hantro.h
-+++ b/drivers/staging/media/hantro/hantro.h
-@@ -72,6 +72,8 @@ struct hantro_irq {
-  * @num_irqs:			number of irqs in the array
-  * @clk_names:			array of clock names
-  * @num_clocks:			number of clocks in the array
-+ * @reg_names:			array of register range names
-+ * @num_regs:			number of register range names in the array
-  */
- struct hantro_variant {
- 	unsigned int enc_offset;
-@@ -88,6 +90,8 @@ struct hantro_variant {
- 	int num_irqs;
- 	const char *clk_names[HANTRO_MAX_CLOCKS];
- 	int num_clocks;
-+	const char * const *reg_names;
-+	int num_regs;
- };
- 
- /**
-@@ -160,7 +164,7 @@ hantro_vdev_to_func(struct video_device *vdev)
-  * @dev:		Pointer to device for convenient logging using
-  *			dev_ macros.
-  * @clocks:		Array of clock handles.
-- * @base:		Mapped address of VPU registers.
-+ * @reg_bases:		Mapped addresses of VPU registers.
-  * @enc_base:		Mapped address of VPU encoder register for convenience.
-  * @dec_base:		Mapped address of VPU decoder register for convenience.
-  * @vpu_mutex:		Mutex to synchronize V4L2 calls.
-@@ -178,7 +182,7 @@ struct hantro_dev {
- 	struct platform_device *pdev;
- 	struct device *dev;
- 	struct clk_bulk_data clocks[HANTRO_MAX_CLOCKS];
--	void __iomem *base;
-+	void __iomem **reg_bases;
- 	void __iomem *enc_base;
- 	void __iomem *dec_base;
- 
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index 4ed39728da3d..fc8f3ed8e80c 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -670,6 +670,7 @@ static int hantro_probe(struct platform_device *pdev)
- 	const struct of_device_id *match;
- 	struct hantro_dev *vpu;
- 	struct resource *res;
-+	int num_bases;
- 	int i, ret;
- 
- 	vpu = devm_kzalloc(&pdev->dev, sizeof(*vpu), GFP_KERNEL);
-@@ -693,12 +694,23 @@ static int hantro_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	res = platform_get_resource(vpu->pdev, IORESOURCE_MEM, 0);
--	vpu->base = devm_ioremap_resource(vpu->dev, res);
--	if (IS_ERR(vpu->base))
--		return PTR_ERR(vpu->base);
--	vpu->enc_base = vpu->base + vpu->variant->enc_offset;
--	vpu->dec_base = vpu->base + vpu->variant->dec_offset;
-+	num_bases = vpu->variant->num_regs ?: 1;
-+	vpu->reg_bases = devm_kcalloc(&pdev->dev, num_bases,
-+				      sizeof(*vpu->reg_bases), GFP_KERNEL);
-+	if (!vpu->reg_bases)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num_bases; i++) {
-+		res = vpu->variant->reg_names ?
-+		      platform_get_resource_byname(vpu->pdev, IORESOURCE_MEM,
-+						   vpu->variant->reg_names[i]) :
-+		      platform_get_resource(vpu->pdev, IORESOURCE_MEM, 0);
-+		vpu->reg_bases[i] = devm_ioremap_resource(vpu->dev, res);
-+		if (IS_ERR(vpu->reg_bases[i]))
-+			return PTR_ERR(vpu->reg_bases[i]);
-+	}
-+	vpu->enc_base = vpu->reg_bases[0] + vpu->variant->enc_offset;
-+	vpu->dec_base = vpu->reg_bases[0] + vpu->variant->dec_offset;
- 
- 	ret = dma_set_coherent_mask(vpu->dev, DMA_BIT_MASK(32));
- 	if (ret) {
--- 
-2.20.1
+Regards,
+
+Tony
