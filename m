@@ -1,82 +1,133 @@
-Return-Path: <SRS0=5yH4=UC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52136 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfFCHot (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Jun 2019 03:44:49 -0400
-Subject: Re: [PATCH] clk: ti: clkctrl: Fix returning uninitialized data
-References: <20190530065557.42741-1-tony@atomide.com>
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <8f77a28b-4496-fbfe-f4e2-4cc8043f27d8@ti.com>
-Date: Mon, 3 Jun 2019 10:45:07 +0300
+Return-Path: <SRS0=ypAS=UL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38563 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437594AbfFLJj0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Jun 2019 05:39:26 -0400
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v5 07/10] media: hantro: allow arbitrary number of clocks
+Date: Wed, 12 Jun 2019 11:39:12 +0200
+Message-Id: <20190612093915.18973-8-p.zabel@pengutronix.de>
+In-Reply-To: <20190612093915.18973-1-p.zabel@pengutronix.de>
+References: <20190612093915.18973-1-p.zabel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190530065557.42741-1-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
+Dynamically allocate clocks and move clock names out of struct
+hantro_variant. This lifts the four clock limit and allows to use
+ARRAY_SIZE() to fill .num_clocks to reduce the risk of mismatches.
 
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+---
+Changes since v4 [1]:
+ - Rebased onto media-tree master
 
-On 30/05/2019 9.55, Tony Lindgren wrote:
-> If we do a clk_get() for a clock that does not exists, we have
-> _ti_omap4_clkctrl_xlate() return uninitialized data if no match
-> is found. This can be seen in some cases with SLAB_DEBUG enabled:
-> 
-> Unable to handle kernel paging request at virtual address 5a5a5a5a
-> ...
-> clk_hw_create_clk.part.33
-> sysc_notifier_call
-> notifier_call_chain
-> blocking_notifier_call_chain
-> device_add
-> 
-> Let's fix this by setting a found flag only when we find a match.
+[1] https://patchwork.linuxtv.org/patch/56808/
+---
+ drivers/staging/media/hantro/hantro.h        | 6 ++----
+ drivers/staging/media/hantro/hantro_drv.c    | 5 +++++
+ drivers/staging/media/hantro/rk3288_vpu_hw.c | 8 ++++++--
+ drivers/staging/media/hantro/rk3399_vpu_hw.c | 8 ++++++--
+ 4 files changed, 19 insertions(+), 8 deletions(-)
 
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-> 
-> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  drivers/clk/ti/clkctrl.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
-> --- a/drivers/clk/ti/clkctrl.c
-> +++ b/drivers/clk/ti/clkctrl.c
-> @@ -229,6 +229,7 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
->  {
->  	struct omap_clkctrl_provider *provider = data;
->  	struct omap_clkctrl_clk *entry;
-> +	bool found = false;
->  
->  	if (clkspec->args_count != 2)
->  		return ERR_PTR(-EINVAL);
-> @@ -238,11 +239,13 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
->  
->  	list_for_each_entry(entry, &provider->clocks, node) {
->  		if (entry->reg_offset == clkspec->args[0] &&
-> -		    entry->bit_offset == clkspec->args[1])
-> +		    entry->bit_offset == clkspec->args[1]) {
-> +			found = true;
->  			break;
-> +		}
->  	}
->  
-> -	if (!entry)
-> +	if (!found)
->  		return ERR_PTR(-EINVAL);
->  
->  	return entry->clk;
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
+index 5c2f87272ce2..62dcca9ff19c 100644
+--- a/drivers/staging/media/hantro/hantro.h
++++ b/drivers/staging/media/hantro/hantro.h
+@@ -25,8 +25,6 @@
+ 
+ #include "hantro_hw.h"
+ 
+-#define HANTRO_MAX_CLOCKS		4
+-
+ #define MPEG2_MB_DIM			16
+ #define MPEG2_MB_WIDTH(w)		DIV_ROUND_UP(w, MPEG2_MB_DIM)
+ #define MPEG2_MB_HEIGHT(h)		DIV_ROUND_UP(h, MPEG2_MB_DIM)
+@@ -88,7 +86,7 @@ struct hantro_variant {
+ 	int (*runtime_resume)(struct hantro_dev *vpu);
+ 	const struct hantro_irq *irqs;
+ 	int num_irqs;
+-	const char *clk_names[HANTRO_MAX_CLOCKS];
++	const char * const *clk_names;
+ 	int num_clocks;
+ 	const char * const *reg_names;
+ 	int num_regs;
+@@ -182,7 +180,7 @@ struct hantro_dev {
+ 	struct hantro_func *decoder;
+ 	struct platform_device *pdev;
+ 	struct device *dev;
+-	struct clk_bulk_data clocks[HANTRO_MAX_CLOCKS];
++	struct clk_bulk_data *clocks;
+ 	void __iomem **reg_bases;
+ 	void __iomem *enc_base;
+ 	void __iomem *dec_base;
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index fc8f3ed8e80c..1d3af881d088 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -687,6 +687,11 @@ static int hantro_probe(struct platform_device *pdev)
+ 
+ 	INIT_DELAYED_WORK(&vpu->watchdog_work, hantro_watchdog);
+ 
++	vpu->clocks = devm_kcalloc(&pdev->dev, vpu->variant->num_clocks,
++				   sizeof(*vpu->clocks), GFP_KERNEL);
++	if (!vpu->clocks)
++		return -ENOMEM;
++
+ 	for (i = 0; i < vpu->variant->num_clocks; i++)
+ 		vpu->clocks[i].id = vpu->variant->clk_names[i];
+ 	ret = devm_clk_bulk_get(&pdev->dev, vpu->variant->num_clocks,
+diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c b/drivers/staging/media/hantro/rk3288_vpu_hw.c
+index c5473bc1ac29..bcacc4f51093 100644
+--- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
++++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
+@@ -166,6 +166,10 @@ static const struct hantro_irq rk3288_irqs[] = {
+ 	{ "vdpu", rk3288_vdpu_irq },
+ };
+ 
++static const char * const rk3288_clk_names[] = {
++	"aclk", "hclk"
++};
++
+ const struct hantro_variant rk3288_vpu_variant = {
+ 	.enc_offset = 0x0,
+ 	.enc_fmts = rk3288_vpu_enc_fmts,
+@@ -178,6 +182,6 @@ const struct hantro_variant rk3288_vpu_variant = {
+ 	.irqs = rk3288_irqs,
+ 	.num_irqs = ARRAY_SIZE(rk3288_irqs),
+ 	.init = rk3288_vpu_hw_init,
+-	.clk_names = {"aclk", "hclk"},
+-	.num_clocks = 2
++	.clk_names = rk3288_clk_names,
++	.num_clocks = ARRAY_SIZE(rk3288_clk_names)
+ };
+diff --git a/drivers/staging/media/hantro/rk3399_vpu_hw.c b/drivers/staging/media/hantro/rk3399_vpu_hw.c
+index 965030e21ea9..5718f8063542 100644
+--- a/drivers/staging/media/hantro/rk3399_vpu_hw.c
++++ b/drivers/staging/media/hantro/rk3399_vpu_hw.c
+@@ -165,6 +165,10 @@ static const struct hantro_irq rk3399_irqs[] = {
+ 	{ "vdpu", rk3399_vdpu_irq },
+ };
+ 
++static const char * const rk3399_clk_names[] = {
++	"aclk", "hclk"
++};
++
+ const struct hantro_variant rk3399_vpu_variant = {
+ 	.enc_offset = 0x0,
+ 	.enc_fmts = rk3399_vpu_enc_fmts,
+@@ -177,6 +181,6 @@ const struct hantro_variant rk3399_vpu_variant = {
+ 	.irqs = rk3399_irqs,
+ 	.num_irqs = ARRAY_SIZE(rk3399_irqs),
+ 	.init = rk3399_vpu_hw_init,
+-	.clk_names = {"aclk", "hclk"},
+-	.num_clocks = 2
++	.clk_names = rk3399_clk_names,
++	.num_clocks = ARRAY_SIZE(rk3399_clk_names)
+ };
+-- 
+2.20.1
