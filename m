@@ -1,44 +1,86 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Date: Wed, 12 Jun 2019 13:00:39 +0200
-Message-ID: <20190612110039.GH32652@zn.tnic>
-References: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
- <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
- <20190608090556.GA32464@zn.tnic>
- <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
- <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
- <20190611115651.GD31772@zn.tnic>
- <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
- <20190612034813.GA32652@zn.tnic>
- <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
- <20190612074242.53a4cf56@coco.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Nisha Kumari <nishakumari@codeaurora.org>
+Subject: [PATCH 1/4] dt-bindings: regulator: Add labibb regulator
+Date: Wed, 12 Jun 2019 16:30:49 +0530
+Message-ID: <1560337252-27193-2-git-send-email-nishakumari@codeaurora.org>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190612074242.53a4cf56@coco.lan>
+In-Reply-To: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, James Morse <james.morse@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Hanoc
+To: bjorn.andersson@linaro.org, broonie@kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, agross@kernel.org
+Cc: lgirdwood@gmail.com, mark.rutland@arm.com, david.brown@linaro.org, linux-kernel@vger.kernel.org, kgunda@codeaurora.org, rnayak@codeaurora.org, Nisha Kumari <nishakumari@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 07:42:42AM -0300, Mauro Carvalho Chehab wrote:
-> That's said, from the admin PoV, it makes sense to have a single
-> daemon that collect errors from all error sources and take the
-> needed actions.
+Adding the devicetree binding for labibb regulator.
 
-Doing recovery actions in userspace is too flaky. Daemon can get killed
-at any point in time and there are error types where you want to do
-recovery *before* you return to userspace.
+Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+---
+ .../bindings/regulator/qcom-labibb-regulator.txt   | 57 ++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
 
-Yes, we do have different error reporting facilities but I still think
-that concentrating all the error information needed in order to do
-proper recovery action is the better approach here. And make that part
-of the kernel so that it is robust. Userspace can still configure it and
-so on.
-
+diff --git a/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
+new file mode 100644
+index 0000000..79aad6f4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
+@@ -0,0 +1,57 @@
++Qualcomm's LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost) Regulator
++
++LAB can be used as a positive boost power supply and IBB can be used as a negative
++boost power supply for display panels.
++
++Main node required properties:
++
++- compatible:			Must be:
++				"qcom,lab-ibb-regulator"
++- #address-cells:		Must be 1
++- #size-cells:			Must be 0
++
++LAB subnode required properties:
++
++- reg:				Specifies the SPMI address and size for this peripheral.
++- regulator-name:		A string used to describe the regulator.
++- interrupts:			Specify the interrupts as per the interrupt
++				encoding.
++- interrupt-names:		Interrupt names to match up 1-to-1 with
++				the interrupts specified in 'interrupts'
++				property.
++
++IBB subnode required properties:
++
++- reg:				Specifies the SPMI address and size for this peripheral.
++- regulator-name:		A string used to describe the regulator.
++- interrupts:			Specify the interrupts as per the interrupt
++				encoding.
++- interrupt-names:		Interrupt names to match up 1-to-1 with
++				the interrupts specified in 'interrupts'
++				property.
++
++Example:
++	pmi8998_lsid1: pmic@3 {
++		qcom-labibb-regulator {
++			compatible = "qcom,lab-ibb-regulator";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			lab_regulator: qcom,lab@de00 {
++				reg = <0xde00>;
++				regulator-name = "lab_reg";
++
++				interrupts = <0x3 0xde 0x0 IRQ_TYPE_EDGE_RISING>;
++				interrupt-names = "lab-sc-err";
++			};
++
++			ibb_regulator: qcom,ibb@dc00 {
++				reg = <0xdc00>;
++				regulator-name = "ibb_reg";
++
++				interrupts = <0x3 0xdc 0x2 IRQ_TYPE_EDGE_RISING>;
++				interrupt-names = "ibb-sc-err";
++			};
++
++		};
++	};
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
