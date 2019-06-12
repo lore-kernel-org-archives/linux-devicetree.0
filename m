@@ -1,60 +1,39 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v5 1/2] dt-bindings: Add doc for the Ingenic JZ47xx LCD
- controller driver
-Date: Wed, 12 Jun 2019 10:49:52 +0200
-Message-ID: <1560329392.1823.1@crapouillou.net>
-References: <20190603152331.23160-1-paul@crapouillou.net>
-        <20190611215554.GA23791@bogus>
+From: Peter Rosin <peda@axentia.se>
+Subject: [RESEND PATCH 0/2] mux: a couple of patches for 5.3-rc1
+Date: Wed, 12 Jun 2019 08:52:51 +0000
+Message-ID: <20190612085238.1763-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611215554.GA23791@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Sam Ravnborg <sam@ravnborg.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pankaj Bansal <pankaj.bansal@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-Le mar. 11 juin 2019 =E0 23:55, Rob Herring <robh@kernel.org> a =E9crit :
-> On Mon,  3 Jun 2019 17:23:30 +0200, Paul Cercueil wrote:
->>  Add documentation for the devicetree bindings of the LCD controller=20
->> present in
->>  the JZ47xx family of SoCs from Ingenic.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>  ---
->>=20
->>  Notes:
->>      v2: Remove ingenic,panel property.
->>=20
->>      v3: - Rename compatible strings from ingenic,jz47XX-drm to=20
->> ingenic,jz47XX-lcd
->>          - The ingenic,lcd-mode property is now read from the panel=20
->> node instead
->>      	  of from the driver node
->>=20
->>      v4: Remove ingenic,lcd-mode property completely.
->>=20
->>      v5: No change
->>=20
->>   .../bindings/display/ingenic,lcd.txt          | 44=20
->> +++++++++++++++++++
->>   1 file changed, 44 insertions(+)
->>   create mode 100644=20
->> Documentation/devicetree/bindings/display/ingenic,lcd.txt
->>=20
->=20
-> Please add Acked-by/Reviewed-by tags when posting new versions.=20
-> However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->=20
-> If a tag was not added on purpose, please state why and what changed.
-
-Sorry Rob, my mistake. I simply forgot that you ever reviewed that=20
-patch.
-
-=
+SGkgR3JlZywNCg0KKEZvciBHcmVnLCB0aGlzIGlzIG5vdCBhIHJlc2VuZCwgc2luY2UgSSBhcHBh
+cmVudGx5IGZvcmdvdCB0bw0KIGluY2x1ZGUgaGltIGxhc3QgdGltZSBbMV0uIE15IG1pc3Rha2Us
+IHNvcnJ5IGFib3V0IHRoYXQpDQoNCkEgc21hbGwgYWRkaXRpb24gdG8gdGhlIG1taW8gbXV4IHNv
+IHRoYXQgaXQgY2FuIGhhbmRsZSBub24tc3lzY29uDQpyZWdtYXBzLiBUaGUgYmluZGluZ3MgcGF0
+Y2ggc2hvdWxkIHByb2JhYmx5IGhhdmUgaGFkIFJvYnMgdGFnLA0KYnV0IGFmdGVyIGEgYml0IG9m
+IGJhY2sgYW5kIGZvcnRoIEkgZ290IHRoZSBpbXByZXNzaW9uIHRoYXQgaXQNCndhc24ndCByZWFs
+bHkgbmVlZGVkLCBzaW5jZSBpdCdzIGJhc2ljYWxseSBqdXN0IGEgZmlsZSByZW5hbWUNCnBsdXMg
+YWRkaXRpb24gb2YgYSBjb21wYXRpYmxlIFsyXS4gVGhlIHBhdGNoZXMgaGF2ZSBiZWVuIGluIC1u
+ZXh0DQpmb3IgYSB3ZWVrIG9yIHNvLg0KDQpCdXQsIGlmIEkgbWlzdW5kZXJzdG9vZCBvciBpZiB5
+b3UgaGF2ZSBhIHRhZyB0byBzcGFyZSBSb2IsIG5vdw0KaXMgdGhlIHRpbWUuIDotKQ0KDQpDaGVl
+cnMsDQpQZXRlcg0KDQpbMV0gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDE5MDQzMDE5
+NTIyNi44OTY1LTEtcGVkYUBheGVudGlhLnNlLw0KWzJdIGh0dHBzOi8vbWFyYy5pbmZvLz9sPWRl
+dmljZXRyZWUmbT0xNTUxMjE4NDM1MDM1OTANCiAgICAiVGhhdCB3b3VsZCBoYXZlIHNhdmVkIG1l
+IHJldmlld2luZyB0aGUgd2hvbGUgdGhpbmcgYWdhaW4uLi4iDQoNClBhbmthaiBCYW5zYWwgKDIp
+Og0KICBkdC1iaW5kaW5nczogYWRkIHJlZ2lzdGVyIGJhc2VkIGRldmljZXMnIG11eCBjb250cm9s
+bGVyIERUIGJpbmRpbmdzDQogIG11eDogbW1pbzogYWRkIGdlbmVyaWMgcmVnbWFwIGJpdGZpZWxk
+LWJhc2VkIG11bHRpcGxleGVyDQoNCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bXV4L21taW8tbXV4LnR4dCB8ICA2MCAtLS0tLS0tLS0tDQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL211eC9yZWctbXV4LnR4dCAgfCAxMjkgKysrKysrKysrKysrKysrKysrKysr
+DQogZHJpdmVycy9tdXgvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+MTIgKy0NCiBkcml2ZXJzL211eC9tbWlvLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAgNiArLQ0KIDQgZmlsZXMgY2hhbmdlZCwgMTQwIGluc2VydGlvbnMoKyksIDY3IGRlbGV0
+aW9ucygtKQ0KIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbXV4L21taW8tbXV4LnR4dA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbXV4L3JlZy1tdXgudHh0DQoNCi0tIA0KMi4xMS4wDQoNCg==
