@@ -1,53 +1,173 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
-Date: Wed, 12 Jun 2019 09:38:48 -0600
-Message-ID: <13ffac55-7760-9dda-8c80-d15283cf8f92@codeaurora.org>
-References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com>
- <20190606161322.47192-1-jeffrey.l.hugo@gmail.com>
- <20190612003507.GG143729@dtor-ws>
- <nycvar.YFH.7.76.1906121644160.27227@cbobk.fhfr.pm>
- <CAKdAkRQOxTX51rhodoFyYpwi85pk8apvWjCLLX5Sw6NTH=j1kA@mail.gmail.com>
- <CAO-hwJKDxu0Bxxjd9reAojHODQTnW1POmifBCVsnjt8+CT4rmw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: ti: davinci-mcasp: Support for auxclk-fs-ratio" to the asoc tree
+Date: Wed, 12 Jun 2019 16:59:26 +0100 (BST)
+Message-ID: <20190612155927.04CC7440046@finisterre.sirena.org.uk>
+References: <20190611122941.10708-3-peter.ujfalusi@ti.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAO-hwJKDxu0Bxxjd9reAojHODQTnW1POmifBCVsnjt8+CT4rmw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190611122941.10708-3-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Jiri Kosina <jikos@kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Hans de Goede <hdegoede@redhat.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: alsa-devel@alsa-project.org, broonie@kernel.org, devicetree@vger.kernel.org, jsarha@ti.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, misael.lopez@ti.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/12/2019 9:21 AM, Benjamin Tissoires wrote:
-> On Wed, Jun 12, 2019 at 5:14 PM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
->>
->> On Wed, Jun 12, 2019 at 7:45 AM Jiri Kosina <jikos@kernel.org> wrote:
->>>
->>> On Tue, 11 Jun 2019, Dmitry Torokhov wrote:
->>>
->>>>> +static const char *hid_elan_i2c_ignore[] = {
->>>>
->>>> If this is a copy of elan whitelist, then, if we do not want to bother
->>>> with sharing it in object form (as a elan-i2c-ids module), can we at
->>>> least move it into include/linux/input/elan-i2c-ids.h and consume from
->>>> hid-quirks.c?
->>>
->>> Let's just not duplicate it in both objects. Why not properly export it
->>> from hid_quirks?
->>
->> Strictly speaking Elan does not depend on HID; exporting it from
->> quirks would mean adding this dependency. This also mean that you
->> can't make Elan built-in while keeping HID as a module (I think this
->> at least used to be config on some Chromebooks).
->>
-> 
-> I also think it would me things cleaner to have the list of devices in elan_i2c.
-> If we put the list of devices supported by elan_i2c in a header, and
-> have HID read this .h file directly, there will be no runtime
-> dependency.
-> 
-> I am sure we can work something out to remove Jeffrey's fears.
+The patch
 
-Works for me.  I plan to have the next rev posted by the end of the week.
+   ASoC: ti: davinci-mcasp: Support for auxclk-fs-ratio
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 764958f2b5239cbf174e70cad4c3f19a8c1081ba Mon Sep 17 00:00:00 2001
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Date: Tue, 11 Jun 2019 15:29:41 +0300
+Subject: [PATCH] ASoC: ti: davinci-mcasp: Support for auxclk-fs-ratio
+
+When McASP is bus master and it's AUXCLK clock is not static, but it is
+a multiple of the frame sync the constraint rules should take it account
+when validating possible stream formats.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/ti/davinci-mcasp.c | 52 ++++++++++++++++++++++++++++++------
+ 1 file changed, 44 insertions(+), 8 deletions(-)
+
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index 9fbc759fdefe..a8378d223a9e 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -100,6 +100,7 @@ struct davinci_mcasp {
+ 
+ 	int	sysclk_freq;
+ 	bool	bclk_master;
++	u32	auxclk_fs_ratio;
+ 
+ 	unsigned long pdir; /* Pin direction bitfield */
+ 
+@@ -1064,13 +1065,13 @@ static int mcasp_dit_hw_param(struct davinci_mcasp *mcasp,
+ }
+ 
+ static int davinci_mcasp_calc_clk_div(struct davinci_mcasp *mcasp,
++				      unsigned int sysclk_freq,
+ 				      unsigned int bclk_freq, bool set)
+ {
+-	int error_ppm;
+-	unsigned int sysclk_freq = mcasp->sysclk_freq;
+ 	u32 reg = mcasp_get_reg(mcasp, DAVINCI_MCASP_AHCLKXCTL_REG);
+ 	int div = sysclk_freq / bclk_freq;
+ 	int rem = sysclk_freq % bclk_freq;
++	int error_ppm;
+ 	int aux_div = 1;
+ 
+ 	if (div > (ACLKXDIV_MASK + 1)) {
+@@ -1175,7 +1176,8 @@ static int davinci_mcasp_hw_params(struct snd_pcm_substream *substream,
+ 		if (mcasp->slot_width)
+ 			sbits = mcasp->slot_width;
+ 
+-		davinci_mcasp_calc_clk_div(mcasp, rate * sbits * slots, true);
++		davinci_mcasp_calc_clk_div(mcasp, mcasp->sysclk_freq,
++					   rate * sbits * slots, true);
+ 	}
+ 
+ 	ret = mcasp_common_hw_param(mcasp, substream->stream,
+@@ -1282,12 +1284,19 @@ static int davinci_mcasp_hw_rule_rate(struct snd_pcm_hw_params *params,
+ 
+ 	for (i = 0; i < ARRAY_SIZE(davinci_mcasp_dai_rates); i++) {
+ 		if (snd_interval_test(ri, davinci_mcasp_dai_rates[i])) {
+-			uint bclk_freq = sbits*slots*
+-				davinci_mcasp_dai_rates[i];
++			uint bclk_freq = sbits * slots *
++					 davinci_mcasp_dai_rates[i];
++			unsigned int sysclk_freq;
+ 			int ppm;
+ 
+-			ppm = davinci_mcasp_calc_clk_div(rd->mcasp, bclk_freq,
+-							 false);
++			if (rd->mcasp->auxclk_fs_ratio)
++				sysclk_freq =  davinci_mcasp_dai_rates[i] *
++					       rd->mcasp->auxclk_fs_ratio;
++			else
++				sysclk_freq = rd->mcasp->sysclk_freq;
++
++			ppm = davinci_mcasp_calc_clk_div(rd->mcasp, sysclk_freq,
++							 bclk_freq, false);
+ 			if (abs(ppm) < DAVINCI_MAX_RATE_ERROR_PPM) {
+ 				if (range.empty) {
+ 					range.min = davinci_mcasp_dai_rates[i];
+@@ -1321,12 +1330,19 @@ static int davinci_mcasp_hw_rule_format(struct snd_pcm_hw_params *params,
+ 	for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; i++) {
+ 		if (snd_mask_test(fmt, i)) {
+ 			uint sbits = snd_pcm_format_width(i);
++			unsigned int sysclk_freq;
+ 			int ppm;
+ 
++			if (rd->mcasp->auxclk_fs_ratio)
++				sysclk_freq =  rate *
++					       rd->mcasp->auxclk_fs_ratio;
++			else
++				sysclk_freq = rd->mcasp->sysclk_freq;
++
+ 			if (rd->mcasp->slot_width)
+ 				sbits = rd->mcasp->slot_width;
+ 
+-			ppm = davinci_mcasp_calc_clk_div(rd->mcasp,
++			ppm = davinci_mcasp_calc_clk_div(rd->mcasp, sysclk_freq,
+ 							 sbits * slots * rate,
+ 							 false);
+ 			if (abs(ppm) < DAVINCI_MAX_RATE_ERROR_PPM) {
+@@ -1991,6 +2007,22 @@ static inline int davinci_mcasp_init_gpiochip(struct davinci_mcasp *mcasp)
+ }
+ #endif /* CONFIG_GPIOLIB */
+ 
++static int davinci_mcasp_get_dt_params(struct davinci_mcasp *mcasp)
++{
++	struct device_node *np = mcasp->dev->of_node;
++	int ret;
++	u32 val;
++
++	if (!np)
++		return 0;
++
++	ret = of_property_read_u32(np, "auxclk-fs-ratio", &val);
++	if (ret >= 0)
++		mcasp->auxclk_fs_ratio = val;
++
++	return 0;
++}
++
+ static int davinci_mcasp_probe(struct platform_device *pdev)
+ {
+ 	struct snd_dmaengine_dai_dma_data *dma_data;
+@@ -2224,6 +2256,10 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err;
+ 
++	ret = davinci_mcasp_get_dt_params(mcasp);
++	if (ret)
++		return -EINVAL;
++
+ 	ret = devm_snd_soc_register_component(&pdev->dev,
+ 					&davinci_mcasp_component,
+ 					&davinci_mcasp_dai[pdata->op_mode], 1);
+-- 
+2.20.1
