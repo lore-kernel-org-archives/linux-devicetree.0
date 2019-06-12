@@ -1,71 +1,84 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx7ulp: add crypto support
-Date: Wed, 12 Jun 2019 21:26:02 +0800
-Message-ID: <20190612132600.GI11086@dragon>
-References: <20190606080255.25504-1-horia.geanta@nxp.com>
- <20190612103926.GE11086@dragon>
- <VI1PR0402MB3485A573518D60A573BA55C298EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <20190612130602.GH11086@dragon>
- <VI1PR0402MB348596BF52CE43B5D4CD534798EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6ull-colibri: enable UHS-I for USDHC1
+Date: Wed, 12 Jun 2019 21:38:22 +0800
+Message-ID: <20190612132705.GJ11086@dragon>
+References: <20190606090612.16685-1-igor.opaniuk@gmail.com>
+ <3b84f3cc6cd5399f25ebd8e1c8559c58@agner.ch>
+ <CAByghJZJzFN9c9V-o=SV0z07++RPqsB0R8MTsovbtLr3vqJgyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB348596BF52CE43B5D4CD534798EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <CAByghJZJzFN9c9V-o=SV0z07++RPqsB0R8MTsovbtLr3vqJgyw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Horia Geanta <horia.geanta@nxp.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, Iuliana Prodan <iuliana.prodan@nxp.com>, Franck Lenormand <franck.lenormand@nxp.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Igor Opaniuk <igor.opaniuk@gmail.com>
+Cc: Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-imx@nxp.com, Marcel Ziswiler <marcel@ziswiler.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 01:15:46PM +0000, Horia Geanta wrote:
-> On 6/12/2019 4:06 PM, Shawn Guo wrote:
-> > On Wed, Jun 12, 2019 at 11:45:18AM +0000, Horia Geanta wrote:
-> >> On 6/12/2019 1:40 PM, Shawn Guo wrote:
-> >>> On Thu, Jun 06, 2019 at 11:02:55AM +0300, Horia Geantă wrote:
-> >>>> From: Iuliana Prodan <iuliana.prodan@nxp.com>
-> >>>>
-> >>>> Add crypto node in device tree for CAAM support.
-> >>>>
-> >>>> Noteworthy is that on 7ulp the interrupt line is shared
-> >>>> between the two job rings.
-> >>>>
-> >>>> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> >>>> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-> >>>> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-> >>>> ---
-> >>>>
-> >>>> I've just realized that this patch should be merged through the crypto tree,
-> >>>> else bisectability could be affected due to cryptodev-2.6
-> >>>> commit 385cfc84a5a8 ("crypto: caam - disable some clock checks for iMX7ULP")
-> >>>> ( https://patchwork.kernel.org/patch/10970017/ )
-> >>>> which should come first.
-> >>>
-> >>> I'm not sure I follow it.  This is a new device added to imx7ulp DT.
-> >>> It's never worked before on imx7ulp.  How would it affect git bisect?
-> >>>
-> >> Driver corresponding to this device (drivers/crypto/caam) has to be updated
-> >> before adding the node in DT.
-> >> Is there any guarantee wrt. merge order of the crypto and DT trees?
-> > 
-> > Do not merge DT changes until driver part hits mainline.
-> > 
-> That would mean driver changes would be merged in v5.3 and DT node in v5.4.
-
-It's quite normal that dependent changes land on mainline in multiple
-cycles.
-
+On Wed, Jun 12, 2019 at 03:49:03PM +0300, Igor Opaniuk wrote:
+> Hi Stefan,
 > 
-> Would going through the crypto tree with this patch be such a big issue?
+> On Wed, Jun 12, 2019 at 3:17 PM Stefan Agner <stefan@agner.ch> wrote:
+> >
+> > On 06.06.2019 11:06, Igor Opaniuk wrote:
+> > > From: Igor Opaniuk <igor.opaniuk@toradex.com>
+> > >
+> > > Allows to use the SD interface at a higher speed mode if the card
+> > > supports it. For this the signaling voltage is switched from 3.3V to
+> > > 1.8V under the usdhc1's drivers control.
+> > >
+> > > Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+> > > ---
+> > >  arch/arm/boot/dts/imx6ul.dtsi                  |  4 ++++
+> > >  arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 11 +++++++++--
+> > >  arch/arm/boot/dts/imx6ull-colibri.dtsi         |  6 ++++++
+> > >  3 files changed, 19 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+> > > index fc388b84bf22..91a0ced44e27 100644
+> > > --- a/arch/arm/boot/dts/imx6ul.dtsi
+> > > +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> > > @@ -857,6 +857,8 @@
+> > >                                        <&clks IMX6UL_CLK_USDHC1>,
+> > >                                        <&clks IMX6UL_CLK_USDHC1>;
+> > >                               clock-names = "ipg", "ahb", "per";
+> > > +                             fsl,tuning-step= <2>;
+> > > +                             fsl,tuning-start-tap = <20>;
+> > >                               bus-width = <4>;
+> > >                               status = "disabled";
+> > >                       };
+> > > @@ -870,6 +872,8 @@
+> > >                                        <&clks IMX6UL_CLK_USDHC2>;
+> > >                               clock-names = "ipg", "ahb", "per";
+> > >                               bus-width = <4>;
+> > > +                             fsl,tuning-step= <2>;
+> > > +                             fsl,tuning-start-tap = <20>;
+> > >                               status = "disabled";
+> > >                       };
+> > >
+> > > diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> > > b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> > > index 006690ea98c0..7dc7770cf52c 100644
+> > > --- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> > > +++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> > > @@ -145,13 +145,20 @@
+> > >  };
+> > >
+> > >  &usdhc1 {
+> > > -     pinctrl-names = "default";
+> > > +     pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
+> > >       pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_snvs_usdhc1_cd>;
+> > > -     no-1-8-v;
+> > > +     pinctrl-1 = <&pinctrl_usdhc1_100mhz &pinctrl_snvs_usdhc1_cd>;
+> > > +     pinctrl-2 = <&pinctrl_usdhc1_100mhz &pinctrl_snvs_usdhc1_cd>;
+> >
+> > Should that not be pinctrl_usdhc1_200mhz?
+> >
+> 
+> Correct, thanks for pointing this out.
+> Taking into account that the patch was already accepted by Shawn, will
+> send another to fix this typo ASAP (added to my todo list).
 
-The only issue would be the potential merge conflict.
-
-> I don't think it's the first time (relatively small) DT patches
-> are merged via other trees.
-
-Yes, it happens from time to time depending on maintainer's style. I'm
-fine with the DT changes going through other subsystem tree, if the
-subsystem maintainer wants to and is willing to take the risk of merge
-conflict between his tree and arm-soc tree.
+I just fixed it up on my branch.
 
 Shawn
