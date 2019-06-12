@@ -1,122 +1,48 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Date: Wed, 12 Jun 2019 17:20:22 +0200
-Message-ID: <20190612152022.c3cfhp4cauhzhfyr@flea>
-References: <20190604122150.29D6468B05@newverein.lst.de>
- <20190604122308.98D4868B20@newverein.lst.de>
- <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
- <20190605101317.GA9345@lst.de>
- <20190605120237.ekmytfxcwbjaqy3x@flea>
- <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
- <20190607062802.m5wslx3imiqooq5a@flea>
- <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
- <20190607094030.GA12373@lst.de>
- <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
+Subject: Re: [PATCH v4] arm64: dts: allwinner: h6: Add DMA node
+Date: Wed, 12 Jun 2019 15:26:15 +0200
+Message-ID: <20190612132615.roglo6p7oanjniao@flea>
+References: <20190611214055.25613-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0930956222=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Sean Paul <seanpaul@chromium.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Torsten Duwe <duwe@lst.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: multipart/mixed; boundary="===============4356099246497952910=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190611214055.25613-1-peron.clem@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0930956222==
+--===============4356099246497952910==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kbzg5qkkfku6tqsr"
+	protocol="application/pgp-signature"; boundary="wifg27wmr2vtryhw"
 Content-Disposition: inline
 
 
---kbzg5qkkfku6tqsr
-Content-Type: text/plain; charset=us-ascii
+--wifg27wmr2vtryhw
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Jun 12, 2019 at 12:00:21PM +0200, Andrzej Hajda wrote:
-> On 07.06.2019 11:40, Torsten Duwe wrote:
-> > On Fri, Jun 07, 2019 at 08:28:02AM +0200, Maxime Ripard wrote:
-> >> On Thu, Jun 06, 2019 at 03:59:27PM +0200, Harald Geyer wrote:
-> >>> If think valid compatible properties would be:
-> >>> compatible =3D "innolux,n116bge", "simple-panel";
-> >>> compatible =3D "edp-connector", "simple-panel";
-> >> A connector isn't a panel.
-> >>
-> >>> compatible =3D "innolux,n116bge", "edp-connector", "simple-panel";
-> >> And the innolux,n116bge is certainly not a connector either.
-> >>
-> >>> compatible =3D "edp-connector", "innolux,n116bge", "simple-panel";
-> >>>
-> >>> I can't make up my mind which one I prefere. However neither of these
-> >>> variants requires actually implmenting an edp-connector driver.
-> >> No-one asked to do an edp-connector driver. You should use it in your
-> >> DT, but if you want to have some code in your driver that parses the
-> >> DT directly, I'm totally fine with that.
-> > I must admit I fail to understand what that extra node would be good fo=
-r.
-> > Logically, the eDP far side is connected to the well-known n116bge.
-> > Inside the laptop case it might as well be a flat ribbon cable or
-> > soldered directly.
-> > In good intention, that's all I wanted to express in the DT. I don't
-> > know whether the relevant mechanical dimensions of the panel and the
-> > connector are standardised, so whether one could in theory assemble it
-> > with a different panel than the one it came with.
-> >
-> > OTOH, as I checked during the discussion with anarsoul, the panel's
-> > supply voltage is permanently connected to the main 3.3V rail.
-> > We already agreed that the eDP output port must not neccessarily be
-> > specified, this setup is a good example why: because the panel is
-> > always powered, the anx6345 can always pull valid EDID data from it
-> > so at this stage there's no need for any OS driver to reach beyond
-> > the bridge. IIRC even the backlight got switched off for the blank
-> > screen without.
-> >
-> > All I wanted to say is that "there's usually an n116bge behind it";
-> > but this is mostly redundant.
-> >
-> > So, shall we just drop the output port specification (along with the
-> > panel node) in order to get one step further?
+On Tue, Jun 11, 2019 at 11:40:55PM +0200, Cl=E9ment P=E9ron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
 >
-> I am not sure if I understand whole discussion here, but I also do not
-> understand whole edp-connector thing.
+> H6 has DMA controller which supports 16 channels.
+>
+> Add a node for it.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 
-The context is this one:
-https://patchwork.freedesktop.org/patch/257352/?series=3D51182&rev=3D1
-https://patchwork.freedesktop.org/patch/283012/?series=3D56163&rev=3D1
-https://patchwork.freedesktop.org/patch/286468/?series=3D56776&rev=3D2
-
-TL;DR: This bridge is being used on ARM laptops that can come with
-different eDP panels. Some of these panels require a regulator to be
-enabled for the panel to work, and this is obviously something that
-should be in the DT.
-
-However, we can't really describe the panel itself, since the vendor
-uses several of them and just relies on the eDP bus to do its job at
-retrieving the EDIDs. A generic panel isn't really working either
-since that would mean having a generic behaviour for all the panels
-connected to that bus, which isn't there either.
-
-The connector allows to expose this nicely.
-
-> According to VESA[1] eDP is "Internal display interface" - there is no
-> external connector for eDP, the way it is connected is integrator's
-> decision, but it is fixed - ie end user do not plug/unplug it.
-
-I'm not sure if you mean DRM or DT connector here though. In DRM,
-we're doing this all the time for panels. I'm literaly typing this
-=66rom a laptop that has a screen with an eDP connector.
-
+Applied, thanks!
 Maxime
 
 --
@@ -124,27 +50,29 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---kbzg5qkkfku6tqsr
+--wifg27wmr2vtryhw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQEYNgAKCRDj7w1vZxhR
-xagZAP9+AZ8uzanMLNIT15MfMeCtszC85MU2JHwDCbzueao68wD/WPbzy8s2BkPf
-pRPeI1xiny1h0ObfHZ8o1OdpRlKPHQg=
-=nu8d
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQD9dwAKCRDj7w1vZxhR
+xTPPAQDwqeaWzIXvVqScIX0NTUe7WK7fmLzHPVpab8IJpa5dGwD/f3YtkUYQPqTG
+coeXk9Fx3YFFviAuHQZtPs7OUKhl5ws=
+=sK8n
 -----END PGP SIGNATURE-----
 
---kbzg5qkkfku6tqsr--
+--wifg27wmr2vtryhw--
 
---===============0930956222==
-Content-Type: text/plain; charset="utf-8"
+
+--===============4356099246497952910==
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============0930956222==--
+--===============4356099246497952910==--
