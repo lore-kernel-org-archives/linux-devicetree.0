@@ -1,110 +1,66 @@
-Return-Path: <dinguyen@kernel.org>
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCHv2 2/2] dmagengine: pl330: add code to get reset property
-Date: Tue, 11 Jun 2019 10:34:33 -0500
-Message-Id: <20190611153433.22129-2-dinguyen@kernel.org>
-In-Reply-To: <20190611153433.22129-1-dinguyen@kernel.org>
-References: <20190611153433.22129-1-dinguyen@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: dmaengine@vger.kernel.org
-Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, vkoul@kernel.org, geert@linux-m68k.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=ypAS=UL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42323 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437339AbfFLJqj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Jun 2019 05:46:39 -0400
+Message-ID: <1560332796.5160.3.camel@pengutronix.de>
+Subject: Re: [PATCH v4 00/10] Rename Rockchip VPU driver to Hantro, add
+ initial i.MX8M support
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Date: Wed, 12 Jun 2019 11:46:36 +0200
+In-Reply-To: <d6a0007c-72b9-f45d-2f4c-736dd1214dbd@xs4all.nl>
+References: <20190611125058.13470-1-p.zabel@pengutronix.de>
+         <aa108619-2c1b-56af-0db7-cf27b3e66c29@xs4all.nl>
+         <d6a0007c-72b9-f45d-2f4c-736dd1214dbd@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>, Nicolas Dufresne <nicolas@ndufresne.ca>, Boris Brezillon <boris.brezillon@collabora.com>, kernel@pengutronix.de, Mauro Carvalho Chehab <mchehab@kernel.org>, Ezequiel Garcia <ezequiel@collabora.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The DMA controller on some SoCs can be held in reset, and thus requires
-the reset signal(s) to deasserted. Most SoCs will have just one reset
-signal, but there are others, i.e. Arria10/Stratix10 will have an
-additional reset signal, referred to as the OCP.
+On Wed, 2019-06-12 at 10:00 +0200, Hans Verkuil wrote:
+> On 6/12/19 9:55 AM, Hans Verkuil wrote:
+> > On 6/11/19 2:50 PM, Philipp Zabel wrote:
+> > > There are several other SoCs that contain Hantro IP based VPUs, such as
+> > > NXP i.MX8MQ (Hantro G1 and G2) and i.MX8MM (Hantro G1, G2, and H1). To
+> > > maximize code sharing, add initial support for these SoCs to the
+> > > Rockchip VPU driver, after renaming it to Hantro VPU.
+> > > 
+> > > This series is based on the br-v5.3g tag, commit e568d2cc1ef6
+> > > ("rockchip/vpu: Add support for MPEG-2 decoding on RK3288") with
+> > > https://patchwork.linuxtv.org/patch/56402/ ("rockchip/vpu: Add support
+> > > for MPEG-2 decoding on RK3328") applied on top. It supports MPEG-2
+> > > decoding on i.MX8MQ. MPEG-2 decoding and JPEG encoding on i.MX8MM may
+> > > or may not work, I don't have the hardware to test.
+> > > 
+> > > Changes since v3:
+> > >  - Split rk3288_vpu_regs.h into hantro_g1_regs.h and hantro_h1_regs.h,
+> > >    rename VDPU register defines to G1 and VEPU register defines to H1.
+> > >  - Make Rockchip / i.MX8M support configurable.
+> > >  - Keep staging/media Kconfig in alphabetic order.
+> > >  - Rename bases to reg_bases
+> > >  - Move dynamic clocks before i.MX8M support.
+> > 
+> > Can you please rebase this on top of the media_tree master? This series
+> > doesn't apply there.
+> > 
+> > I'd like to get this rename series in asap since keeping this out-of-tree
+> > is a pain.
+> > 
+> > It looks in good shape in general.
+> 
+> In fact, I would like to hold off on applying any other rockchip patches
+> until this is in (and that means any pending rockchip patches probably
+> need rebasing).
+> 
+> So if a v5 applies cleanly and doesn't throw up new sparse/smatch issues,
+> then I'll take it.
 
-Add code to get the reset property from the device tree for deassert and
-assert.
+I've rebased onto media-tree master, checked sparse/smatch, and resent.
+The RK3328 patch is pulled out from under it and sent separately on top
+of the series.
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v2: Update error handling and messages when pointers to the reset controller is
-    not found.
----
- drivers/dma/pl330.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 6e6837214210..5208c6a80a39 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -29,6 +29,7 @@
- #include <linux/err.h>
- #include <linux/pm_runtime.h>
- #include <linux/bug.h>
-+#include <linux/reset.h>
- 
- #include "dmaengine.h"
- #define PL330_MAX_CHAN		8
-@@ -500,6 +501,9 @@ struct pl330_dmac {
- 	unsigned int num_peripherals;
- 	struct dma_pl330_chan *peripherals; /* keep at end */
- 	int quirks;
-+
-+	struct reset_control	*rstc;
-+	struct reset_control	*rstc_ocp;
- };
- 
- static struct pl330_of_quirks {
-@@ -3028,6 +3032,32 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
- 
- 	amba_set_drvdata(adev, pl330);
- 
-+	pl330->rstc = devm_reset_control_get_optional(&adev->dev, "dma");
-+	if (IS_ERR(pl330->rstc)) {
-+		if (PTR_ERR(pl330->rstc) != -EPROBE_DEFER)
-+			dev_err(&adev->dev, "Failed to get reset!\n");
-+		return PTR_ERR(pl330->rstc);
-+	} else {
-+		ret = reset_control_deassert(pl330->rstc);
-+		if (ret) {
-+			dev_err(&adev->dev, "Couldn't deassert the device from reset!\n");
-+			return ret;
-+		}
-+	}
-+
-+	pl330->rstc_ocp = devm_reset_control_get_optional(&adev->dev, "dma-ocp");
-+	if (IS_ERR(pl330->rstc_ocp)) {
-+		if (PTR_ERR(pl330->rstc_ocp) != -EPROBE_DEFER)
-+			dev_err(&adev->dev, "Failed to get OCP reset!\n");
-+		return PTR_ERR(pl330->rstc_ocp);
-+	} else {
-+		ret = reset_control_deassert(pl330->rstc_ocp);
-+		if (ret) {
-+			dev_err(&adev->dev, "Couldn't deassert the device from OCP reset!\n");
-+			return ret;
-+		}
-+	}
-+
- 	for (i = 0; i < AMBA_NR_IRQS; i++) {
- 		irq = adev->irq[i];
- 		if (irq) {
-@@ -3168,6 +3198,11 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
- probe_err2:
- 	pl330_del(pl330);
- 
-+	if (pl330->rstc_ocp)
-+		reset_control_assert(pl330->rstc_ocp);
-+
-+	if (pl330->rstc)
-+		reset_control_assert(pl330->rstc);
- 	return ret;
- }
- 
-@@ -3206,6 +3241,11 @@ static int pl330_remove(struct amba_device *adev)
- 
- 	pl330_del(pl330);
- 
-+	if (pl330->rstc_ocp)
-+		reset_control_assert(pl330->rstc_ocp);
-+
-+	if (pl330->rstc)
-+		reset_control_assert(pl330->rstc);
- 	return 0;
- }
- 
--- 
-2.20.0
+regards
+Philipp
