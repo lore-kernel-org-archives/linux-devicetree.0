@@ -1,34 +1,107 @@
-From: Robin Gong <yibin.gong@nxp.com>
-Subject: Re: [PATCH v5 10/15] dma: imx-sdma: add i.mx6ul/6sx compatible name
-Date: Wed, 12 Jun 2019 02:32:46 +0000
-Message-ID: <1560335783.21664.6.camel@nxp.com>
-References: <20190610081753.11422-1-yibin.gong@nxp.com>
-         <20190610081753.11422-11-yibin.gong@nxp.com> <20190611223507.GA25722@bogus>
+From: "Wang, Haiyue" <haiyue.wang@linux.intel.com>
+Subject: Re: [PATCHv7 1/3] dt-bindings: i2c: document bindings for
+ i2c-slave-mqueue
+Date: Wed, 12 Jun 2019 10:46:43 +0800
+Message-ID: <b3e5ac5c-baf7-bc8a-701a-4af3b8983155@linux.intel.com>
+References: <20190605164651.15991-1-eduval@amazon.com>
+ <20190605164651.15991-2-eduval@amazon.com> <20190611231425.GA29500@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611223507.GA25722@bogus>
-Content-Language: en-US
-Content-ID: <804F0C69EA776E4583B6B19240044F3A@eurprd04.prod.outlook.com>
+In-Reply-To: <20190611231425.GA29500@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh@kernel.org" <robh@kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "vkoul@kernel.org" <vkoul@kernel.org>
+To: Rob Herring <robh@kernel.org>, Eduardo Valentin <eduval@amazon.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, jarkko.nikula@linux.intel.com, andriy.shevchenko@intel.com, brendanhiggins@google.com, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOS0wNi0xMSBhdCAyMjozNSArMDAwMCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIE1v
-biwgMTAgSnVuIDIwMTkgMTY6MTc6NDggKzA4MDAsIHlpYmluLmdvbmdAbnhwLmNvbSB3cm90ZToN
-Cj4gPiANCj4gPiBGcm9tOiBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+DQo+ID4gDQo+
-ID4gQWRkIGkubXg2dWwgYW5kIGkubXg2c3ggY29tcGF0aWJsZSBuYW1lIGluIGJpbmRpbmcgZG9j
-Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNv
-bT4NCj4gPiAtLS0NCj4gPiDCoERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEv
-ZnNsLWlteC1zZG1hLnR4dCB8IDIgKysNCj4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
-bnMoKykNCj4gPiANCj4gUGxlYXNlIGFkZCBBY2tlZC1ieS9SZXZpZXdlZC1ieSB0YWdzIHdoZW4g
-cG9zdGluZyBuZXcgdmVyc2lvbnMuDQo+IEhvd2V2ZXIsDQo+IHRoZXJlJ3Mgbm8gbmVlZCB0byBy
-ZXBvc3QgcGF0Y2hlcyAqb25seSogdG8gYWRkIHRoZSB0YWdzLiBUaGUNCj4gdXBzdHJlYW0NCj4g
-bWFpbnRhaW5lciB3aWxsIGRvIHRoYXQgZm9yIGFja3MgcmVjZWl2ZWQgb24gdGhlIHZlcnNpb24g
-dGhleSBhcHBseS4NCj4gDQoNCj4gSWYgYSB0YWcgd2FzIG5vdCBhZGRlZCBvbiBwdXJwb3NlLCBw
-bGVhc2Ugc3RhdGUgd2h5IGFuZCB3aGF0IGNoYW5nZWQuDQpTb3JyeSBSb2IuLi5JIG1pc3MgeW91
-ciBtYWlsIHdpdGggJ1Jldmlld2VkLWJ5JyBpbiB2MiBiZWNhdXNlIGl0IHNsaXANCmludG8gJ3Vu
-ayBFbWFpbCcgZm9sZGVyLiBXaWxsIGFkZCB5b3VyIHRhZyBpbiB2NiBpZiBjb21tZW50cyByZWNl
-aXZlZA0KZnJvbSB2NQ==
+
+ÔÚ 2019-06-12 07:14, Rob Herring Ð´µÀ:
+> On Wed, Jun 05, 2019 at 09:46:49AM -0700, Eduardo Valentin wrote:
+>> Document the i2c-slave-mqueue binding by adding
+>> descriptor, required properties, and example.
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Wolfram Sang <wsa@the-dreams.de>
+>> Cc: linux-i2c@vger.kernel.org
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+>> ---
+>>
+>> Changes from V6 to V7:
+>> - none
+>>
+>>   .../bindings/i2c/i2c-slave-mqueue.txt         | 34 +++++++++++++++++++
+>>   1 file changed, 34 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt b/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+>> new file mode 100644
+>> index 000000000000..eb1881a4fc0e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+>> @@ -0,0 +1,34 @@
+>> +===============================================
+>> +Device Tree for I2C slave message queue backend
+>> +===============================================
+>> +
+>> +Some protocols over I2C/SMBus are designed for bi-directional transferring
+>> +messages by using I2C Master Write protocol. This requires that both sides
+>> +of the communication have slave addresses.
+> So the address 0x10 in the example below is the address of the I2C
+> controller?
+>
+>> +
+>> +This I2C slave mqueue (message queue) is used to receive and queue
+Hi Rob, This is mqueue comes from, not from specs directly.
+>> +messages from the remote i2c intelligent device; and it will add the target
+>> +slave address (with R/W# bit is always 0) into the message at the first byte.
+>> +
+>> +Links
+>> +----
+>> +`Intelligent Platform Management Bus
+>> +Communications Protocol Specification
+>> +<https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/ipmp-spec-v1.0.pdf>`_
+>> +
+>> +`Management Component Transport Protocol (MCTP)
+>> +SMBus/I2C Transport Binding Specification
+>> +<https://www.dmtf.org/sites/default/files/standards/documents/DSP0237_1.1.0.pdf>`_
+>> +
+>> +Required Properties:
+>> +- compatible		: should be "i2c-slave-mqueue"
+> There is no mention of mqueue (or queue) in these specs. Where does that
+> come from? Perhaps something more closely matching the protocol would be
+> better name.
+>
+>> +- reg			: slave address
+>> +
+>> +Example:
+>> +
+>> +i2c {
+> Would there be other slaves?
+>
+> The common binding states 'multi-master' property should be present.
+>
+> I need a more complete example.
+>
+>> +	slave_mqueue: i2c-slave-mqueue {
+>> +		compatible = "i2c-slave-mqueue";
+>> +		reg = <0x10>;
+
+Hi Eduardo,
+
+Looks like the slave reg missed the key value bit:
+
+
+https://elinux.org/images/f/f6/ELCE15-WolframSang-ShinyNewI2CSlaveFramework.pdf
+
+Example: reg = <(I2C_OWN_SLAVE_ADDRESS | 0x42)>;
+
+
+>> +	};
+>> +};
+>> -- 
+>> 2.21.0
+>>
