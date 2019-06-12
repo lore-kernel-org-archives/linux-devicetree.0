@@ -1,79 +1,177 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
- linearly to human eye.
-Date: Wed, 12 Jun 2019 11:54:13 +0200
-Message-ID: <20190612095413.GA12656@amd>
-References: <20180208113032.27810-1-enric.balletbo@collabora.com>
- <20180208113032.27810-4-enric.balletbo@collabora.com>
- <20190607220947.GR40515@google.com>
- <20190608210226.GB2359@xo-6d-61-c0.localdomain>
- <20190610205233.GB137143@google.com>
- <20190611104913.egsbwcedshjdy3m5@holly.lan>
- <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
- <20190611223019.GH137143@google.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: [PATCH V10 04/15] PCI: dwc: Move config space capability search API
+Date: Wed, 12 Jun 2019 15:23:28 +0530
+Message-ID: <20190612095339.20118-5-vidyas@nvidia.com>
+References: <20190612095339.20118-1-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190611223019.GH137143@google.com>
+In-Reply-To: <20190612095339.20118-1-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Brian Norris <briannorris@google.com>, Daniel Thompson <daniel.thompson@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, kernel@collabora.com
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
+Cc: digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Move PCIe config space capability search API to common DesignWare file
+as this can be used by both host and ep mode codes.
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+---
+Changes since [v9]:
+* None
 
-On Tue 2019-06-11 15:30:19, Matthias Kaehlcke wrote:
-> On Tue, Jun 11, 2019 at 09:55:30AM -0700, Brian Norris wrote:
-> > On Tue, Jun 11, 2019 at 3:49 AM Daniel Thompson
-> > <daniel.thompson@linaro.org> wrote:
-> > > This is a long standing flaw in the backlight interfaces. AFAIK gener=
-ic
-> > > userspaces end up with a (flawed) heuristic.
-> >=20
-> > Bingo! Would be nice if we could start to fix this long-standing flaw.
->=20
-> Agreed!
->=20
-> How could a fix look like, a sysfs attribute? Would a boolean value
-> like 'logarithmic_scale' or 'linear_scale' be enough or could more
-> granularity be needed?
+Changes since [v8]:
+* None
 
-I'd expect attribute "scale" with values "linear" or "logarithmic".
+Changes since [v7]:
+* Changed comment to explicitly state their mere resemblance to standard APIs
+  but not their operation and place of use.
 
-> The new attribute could be optional (it only exists if explicitly
-> specified by the driver) or be set to a default based on a heuristic
-> if not specified and be 'fixed' on a case by case basis. The latter
-> might violate "don't break userspace" though, so I'm not sure it's a
-> good idea.
+Changes since [v6]:
+* Exported dw_pcie_find_capability() API
 
-I'd do it only when we explicitely know. We don't want it to be buggy.
+Changes since [v5]:
+* None
 
-And I guess we should decide what interface we really want? (Linear?
-Logarithmic?) And make new drivers do that.
+Changes since [v4]:
+* Removed redundant APIs in pcie-designware-ep.c file after moving them
+  to pcie-designware.c file based on Bjorn's comments.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Changes since [v3]:
+* Rebased to linux-next top of the tree
 
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes since [v2]:
+* None
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Changes since [v1]:
+* Removed dw_pcie_find_next_ext_capability() API from here and made a
+  separate patch for that
 
-iEYEARECAAYFAl0Ay8UACgkQMOfwapXb+vIeJgCggLbpjHz3nKmV58LAUi3ZiuUa
-uScAn2D1iGqQP7z/oj5Jluw9Rq5L6vCE
-=G1uG
------END PGP SIGNATURE-----
+ .../pci/controller/dwc/pcie-designware-ep.c   | 37 +-----------------
+ drivers/pci/controller/dwc/pcie-designware.c  | 39 +++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h  |  2 +
+ 3 files changed, 43 insertions(+), 35 deletions(-)
 
---2fHTh5uZTiUOsy+g--
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 2bf5a35c0570..65f479250087 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -40,39 +40,6 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+ 	__dw_pcie_ep_reset_bar(pci, bar, 0);
+ }
+ 
+-static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+-			      u8 cap)
+-{
+-	u8 cap_id, next_cap_ptr;
+-	u16 reg;
+-
+-	if (!cap_ptr)
+-		return 0;
+-
+-	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+-	cap_id = (reg & 0x00ff);
+-
+-	if (cap_id > PCI_CAP_ID_MAX)
+-		return 0;
+-
+-	if (cap_id == cap)
+-		return cap_ptr;
+-
+-	next_cap_ptr = (reg & 0xff00) >> 8;
+-	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+-}
+-
+-static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
+-{
+-	u8 next_cap_ptr;
+-	u16 reg;
+-
+-	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+-	next_cap_ptr = (reg & 0x00ff);
+-
+-	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+-}
+-
+ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
+ 				   struct pci_epf_header *hdr)
+ {
+@@ -612,9 +579,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+ 		return -ENOMEM;
+ 	}
+-	ep->msi_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSI);
++	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+ 
+-	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
++	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+ 
+ 	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+ 	if (offset) {
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 83cdd2ce2486..38d76bd63b8f 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -14,6 +14,45 @@
+ 
+ #include "pcie-designware.h"
+ 
++/*
++ * These interfaces resemble the pci_find_*capability() interfaces, but these
++ * are for configuring host controllers, which are bridges *to* PCI devices but
++ * are not PCI devices themselves.
++ */
++static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
++				  u8 cap)
++{
++	u8 cap_id, next_cap_ptr;
++	u16 reg;
++
++	if (!cap_ptr)
++		return 0;
++
++	reg = dw_pcie_readw_dbi(pci, cap_ptr);
++	cap_id = (reg & 0x00ff);
++
++	if (cap_id > PCI_CAP_ID_MAX)
++		return 0;
++
++	if (cap_id == cap)
++		return cap_ptr;
++
++	next_cap_ptr = (reg & 0xff00) >> 8;
++	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++}
++
++u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
++{
++	u8 next_cap_ptr;
++	u16 reg;
++
++	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
++	next_cap_ptr = (reg & 0x00ff);
++
++	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++}
++EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
++
+ int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+ {
+ 	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 14762e262758..6cb978132469 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -251,6 +251,8 @@ struct dw_pcie {
+ #define to_dw_pcie_from_ep(endpoint)   \
+ 		container_of((endpoint), struct dw_pcie, ep)
+ 
++u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
++
+ int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+ int dw_pcie_write(void __iomem *addr, int size, u32 val);
+ 
+-- 
+2.17.1
