@@ -1,103 +1,72 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Date: Wed, 12 Jun 2019 17:34:23 +0200
-Message-ID: <20190612153423.jjcxsturjip3pn56@flea>
-References: <20190604122150.29D6468B05@newverein.lst.de>
- <20190604122308.98D4868B20@newverein.lst.de>
- <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
- <20190605101317.GA9345@lst.de>
- <20190605120237.ekmytfxcwbjaqy3x@flea>
- <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
- <20190607062802.m5wslx3imiqooq5a@flea>
- <20190607094030.GA12373@lst.de>
+Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
+Date: Wed, 12 Jun 2019 17:43:25 +0200
+Message-ID: <20190612154325.m6z7xsxlpdq4wkxv@flea>
+References: <20190525181329.18657-1-tiny.windzz@gmail.com>
+ <20190525181329.18657-2-tiny.windzz@gmail.com>
+ <20190527122752.uc7q6zkjti3zag4q@flea>
+ <CAEExFWtxEB67Pv-8x4ry=tZcJjOD6Kxydq_YB73Gox25VmQn7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1114226112=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190607094030.GA12373@lst.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Torsten Duwe <duwe@lst.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: multipart/mixed; boundary="===============5789302248751940124=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAEExFWtxEB67Pv-8x4ry=tZcJjOD6Kxydq_YB73Gox25VmQn7A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Lee <tiny.windzz@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, robh+dt@kernel.org, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, rui.zhang@intel.com, paulmck@linux.ibm.com, David Miller <davem@davemloft.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
---===============1114226112==
+--===============5789302248751940124==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="l4e2w5m2mlsciqb7"
+	protocol="application/pgp-signature"; boundary="oy7r5ps7iphlasam"
 Content-Disposition: inline
 
 
---l4e2w5m2mlsciqb7
+--oy7r5ps7iphlasam
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Jun 07, 2019 at 11:40:30AM +0200, Torsten Duwe wrote:
-> On Fri, Jun 07, 2019 at 08:28:02AM +0200, Maxime Ripard wrote:
-> > On Thu, Jun 06, 2019 at 03:59:27PM +0200, Harald Geyer wrote:
-> > >
-> > > If think valid compatible properties would be:
-> > > compatible = "innolux,n116bge", "simple-panel";
-> > > compatible = "edp-connector", "simple-panel";
+On Fri, Jun 07, 2019 at 09:34:44PM +0800, Frank Lee wrote:
+> On Mon, May 27, 2019 at 8:27 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > +     ret = devm_request_threaded_irq(dev, irq, NULL,
+> > > +                                     tmdev->chip->irq_thread,
+> > > +                                     IRQF_ONESHOT, "ths", tmdev);
+> > > +     if (ret)
+> > > +             return ret;
 > >
-> > A connector isn't a panel.
-> >
-> > > compatible = "innolux,n116bge", "edp-connector", "simple-panel";
-> >
-> > And the innolux,n116bge is certainly not a connector either.
-> >
-> > > compatible = "edp-connector", "innolux,n116bge", "simple-panel";
-> > >
-> > > I can't make up my mind which one I prefere. However neither of these
-> > > variants requires actually implmenting an edp-connector driver.
-> >
-> > No-one asked to do an edp-connector driver. You should use it in your
-> > DT, but if you want to have some code in your driver that parses the
-> > DT directly, I'm totally fine with that.
+> > Is there any particular reason to use a threaded interrupt?
 >
-> I must admit I fail to understand what that extra node would be good for.
-> Logically, the eDP far side is connected to the well-known n116bge.
-> Inside the laptop case it might as well be a flat ribbon cable or
-> soldered directly.
-> In good intention, that's all I wanted to express in the DT. I don't
-> know whether the relevant mechanical dimensions of the panel and the
-> connector are standardised, so whether one could in theory assemble it
-> with a different panel than the one it came with.
+> Just to improve real-time.
 
-Because the panel that comes with the Teres-I is always the
-same. However, that's not true for all the devices out there using the
-bridge, starting with the pinebook.
+What do you mean by real-time here? If anything, that will increase
+the latency of the interrupts here.
 
-> OTOH, as I checked during the discussion with anarsoul, the panel's
-> supply voltage is permanently connected to the main 3.3V rail.
+And in preempt-rt, regular top-half interrupts will be forced into a
+threaded interrupt anyway.
 
-Again, that may be the case on the Teres-I, but not necessarily on
-other boards.
-
-> We already agreed that the eDP output port must not neccessarily be
-> specified, this setup is a good example why: because the panel is
-> always powered, the anx6345 can always pull valid EDID data from it
-> so at this stage there's no need for any OS driver to reach beyond
-> the bridge. IIRC even the backlight got switched off for the blank
-> screen without.
-
-That's not really the outcome of the discussion we had here though:
-https://patchwork.freedesktop.org/patch/305035/
-
-> All I wanted to say is that "there's usually an n116bge behind it";
-> but this is mostly redundant.
+> > > +static int sun8i_ths_remove(struct platform_device *pdev)
+> > > +{
+> > > +     struct ths_device *tmdev = platform_get_drvdata(pdev);
+> > > +
+> > > +     clk_disable_unprepare(tmdev->bus_clk);
+> >
+> > I know that we discussed that already, but I'm not sure why you switch
+> > back to a regular call to regmap_init_mmio, while regmap_init_mmio_clk
+> > will take care of enabling and disabling the bus clock for you?
 >
-> So, shall we just drop the output port specification (along with the
-> panel node) in order to get one step further?
+> It seems that regmap_init_mmio_clk just get clk and prepare clk
+> but no enable.
 
-Depending on the outcome of the discussion above, yes or no :)
+At init time, yes. But it will enable it only when you access the
+registers, which is what you want anyway.
 
 Maxime
 
@@ -106,27 +75,29 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---l4e2w5m2mlsciqb7
+--oy7r5ps7iphlasam
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHQEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQEbfwAKCRDj7w1vZxhR
-xXboAP9taP8cVAug0AmgG1n+5b7orZtPN+yeWqkQV/4rx6fcdgD3Tma8ZrLudyMc
-SNeQDRS8FMpPCWr42VcLCNdIMRk6CA==
-=j/Ze
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQEdnQAKCRDj7w1vZxhR
+xXCpAQCYtE67+V1lgKQJZxd7NFi0spq61ecHzscNxJ/t6H+OXQD/ZYw/N1ST4pg3
+MGrcJRd4vnNOs5alaAicdNFepVsmQQQ=
+=g51D
 -----END PGP SIGNATURE-----
 
---l4e2w5m2mlsciqb7--
+--oy7r5ps7iphlasam--
 
---===============1114226112==
-Content-Type: text/plain; charset="utf-8"
+
+--===============5789302248751940124==
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============1114226112==--
+--===============5789302248751940124==--
