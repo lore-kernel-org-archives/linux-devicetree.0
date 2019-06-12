@@ -1,76 +1,77 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RESEND PATCH v1 3/5] dt-bindings: Add depends-on property
-Date: Wed, 12 Jun 2019 15:45:59 +0100
-Message-ID: <20190612144559.GA21466@e107155-lin>
-References: <20190604003218.241354-1-saravanak@google.com>
- <20190604003218.241354-4-saravanak@google.com>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
+Date: Wed, 12 Jun 2019 08:48:33 -0600
+Message-ID: <77e54e66-c7c8-9fd3-995a-7633202bb81e@codeaurora.org>
+References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com>
+ <20190606161322.47192-1-jeffrey.l.hugo@gmail.com>
+ <20190612003507.GG143729@dtor-ws>
+ <2282f3e1-e76a-4fe7-d447-51d9a4bee2de@codeaurora.org>
+ <20190612143715.GC4660@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190604003218.241354-4-saravanak@google.com>
+In-Reply-To: <20190612143715.GC4660@dell>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com, Sudeep Holla <sudeep.holla@arm.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, benjamin.tissoires@redhat.com, jikos@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org, hdegoede@redhat.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 05:32:16PM -0700, Saravana Kannan wrote:
-> The depends-on property is used to list the mandatory functional
-> dependencies of a consumer device on zero or more supplier devices.
+On 6/12/2019 8:37 AM, Lee Jones wrote:
+> On Wed, 12 Jun 2019, Jeffrey Hugo wrote:
 > 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  .../devicetree/bindings/depends-on.txt        | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
+>> On 6/11/2019 6:35 PM, Dmitry Torokhov wrote:
+>>> On Thu, Jun 06, 2019 at 09:13:22AM -0700, Jeffrey Hugo wrote:
+>>>> There needs to be coordination between hid-quirks and the elan_i2c driver
+>>>> about which devices are handled by what drivers.  Currently, both use
+>>>> whitelists, which results in valid devices being unhandled by default,
+>>>> when they should not be rejected by hid-quirks.  This is quickly becoming
+>>>> an issue.
+>>>>
+>>>> Since elan_i2c has a maintained whitelist of what devices it will handle,
+>>>> use that to implement a blacklist in hid-quirks so that only the devices
+>>>> that need to be handled by elan_i2c get rejected by hid-quirks, and
+>>>> everything else is handled by default.  The downside is the whitelist and
+>>>> blacklist need to be kept in sync.
+>>>>
+>>>> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>>>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+>>>> ---
+>>>>    drivers/hid/hid-quirks.c | 78 ++++++++++++++++++++++++++++++++++------
+>>>>    1 file changed, 67 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+>>>> index e5ca6fe2ca57..edebd0700e3d 100644
+>>>> --- a/drivers/hid/hid-quirks.c
+>>>> +++ b/drivers/hid/hid-quirks.c
+>>>> @@ -912,8 +912,66 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
+>>>>    	{ }
+>>>>    };
+>>>> +/*
+>>>> + * List of device names that elan_i2c is handling and HID should ignore.  Must
+>>>> + * be kept in sync with elan_i2c
+>>>> + */
+>>>> +static const char *hid_elan_i2c_ignore[] = {
+>>>
+>>> If this is a copy of elan whitelist, then, if we do not want to bother
+>>> with sharing it in object form (as a elan-i2c-ids module), can we at
+>>> least move it into include/linux/input/elan-i2c-ids.h and consume from
+>>> hid-quirks.c?
+>>
+>> I can put it in a shared header file, however elan-i2c and hid-quirks
+>> would need to be updated in the same change to prevent a breakage, but
+>> that would seem to violate a concern Benjamin brought up in v4 given
+>> that elan-i2c is maintained in your input tree, and hid-quirks is
+>> maintained in his hid tree.
+>>
+>> Are you ok with the elan-i2c changes going through Benjamin's hid tree?
 > 
-> diff --git a/Documentation/devicetree/bindings/depends-on.txt b/Documentation/devicetree/bindings/depends-on.txt
-> new file mode 100644
-> index 000000000000..1cbddd11cf17
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/depends-on.txt
-> @@ -0,0 +1,26 @@
-> +Functional dependency linking
-> +=============================
-> +
-> +Apart from parent-child relationships, devices (consumers) often have
-> +functional dependencies on other devices (suppliers). Common examples of
-> +suppliers are clock, regulators, pinctrl, etc. However not all of them are
-> +dependencies with well defined devicetree bindings. Also, not all functional
-> +dependencies are mandatory as the device might be able to operate in a limited
-> +mode without some of the dependencies.
-> +
-> +The depends-on property allows marking these mandatory functional dependencies
-> +between one or more devices. The depends-on property is used by the consumer
-> +device to point to all its mandatory supplier devices.
-> +
-> +Optional properties:
-> +- depends-on:	A list of phandles to mandatory suppliers of the device.
-> +
-> +
-> +Examples:
-> +Here, the device is dependent on only 2 of the 3 clock providers
-> +dev@40031000 {
-> +	      compatible = "name";
-> +	      reg = <0x40031000 0x1000>;
-> +	      clocks = <&osc_1 1>, <&osc_2 7> <&osc_3 5>;
-> +	      depends-on = <&osc_1>, <&osc_3>;
+> We co-ordinate cross-subsystem merges all the time.  That is never a
+> reason to not do the 'right thing (tm)'.  If this information can be
+> held in a single, central place, without the need for constant
+> re-alignment, I'm all for it.
+> 
 
-Why is this not implicit from clocks property and why is there need for
-explicit mention of this ?
-
-What happens if there's a cyclic dependency ? From hardware perspective,
-cyclic dependency is quite feasible, so IMO it's hard to define this
-property unambiguously.
-
-And being optional, we need to deal with the absence of these, and if we
-fallback to marking clock, regulators, pinctrl suppliers as depends-on,
-this may end up redundant.
-
-You may need to show examples(preferably with DTs in mainline just to
-help understand it quickly and easily) that are beyond these standard
-suppliers that are not implicit to add this property.
-
---
-Regards,
-Sudeep
+I'm aware coordination is a thing.  I'm trying to elicit some 
+coordination between Dmitry and Benjamin.
