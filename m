@@ -1,84 +1,107 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6ull-colibri: enable UHS-I for USDHC1
-Date: Wed, 12 Jun 2019 21:38:22 +0800
-Message-ID: <20190612132705.GJ11086@dragon>
-References: <20190606090612.16685-1-igor.opaniuk@gmail.com>
- <3b84f3cc6cd5399f25ebd8e1c8559c58@agner.ch>
- <CAByghJZJzFN9c9V-o=SV0z07++RPqsB0R8MTsovbtLr3vqJgyw@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
+Date: Wed, 12 Jun 2019 07:53:39 -0600
+Message-ID: <CAL_Jsq+V9QUBpzmPyYjWe93-06-mpU=5JmUqvf-QsnuLxPnmUA@mail.gmail.com>
+References: <20190604003218.241354-1-saravanak@google.com> <20190604003218.241354-2-saravanak@google.com>
+ <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
+ <570474f4-8749-50fd-5f72-36648ed44653@gmail.com> <CAGETcx8M3YkUBZ-e2LLfrbWgnMKMMNG5cv=p8MMmBe7ZyPJ7xw@mail.gmail.com>
+ <20190611215242.GE212690@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAByghJZJzFN9c9V-o=SV0z07++RPqsB0R8MTsovbtLr3vqJgyw@mail.gmail.com>
+In-Reply-To: <20190611215242.GE212690@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Igor Opaniuk <igor.opaniuk@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-imx@nxp.com, Marcel Ziswiler <marcel@ziswiler.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>
+To: Sandeep Patil <sspatil@android.com>, Saravana Kannan <saravanak@google.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 03:49:03PM +0300, Igor Opaniuk wrote:
-> Hi Stefan,
-> 
-> On Wed, Jun 12, 2019 at 3:17 PM Stefan Agner <stefan@agner.ch> wrote:
+On Tue, Jun 11, 2019 at 3:52 PM Sandeep Patil <sspatil@android.com> wrote:
+>
+> On Tue, Jun 11, 2019 at 01:56:25PM -0700, 'Saravana Kannan' via kernel-team wrote:
+> > On Tue, Jun 11, 2019 at 8:18 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> > >
+> > > Hi Saravana,
+> > >
+> > > On 6/10/19 10:36 AM, Rob Herring wrote:
+> > > > Why are you resending this rather than replying to Frank's last
+> > > > comments on the original?
+> > >
+> > > Adding on a different aspect...  The independent replies from three different
+> > > maintainers (Rob, Mark, myself) pointed out architectural issues with the
+> > > patch series.  There were also some implementation issues brought out.
+> > > (Although I refrained from bringing up most of my implementation issues
+> > > as they are not relevant until architecture issues are resolved.)
 > >
-> > On 06.06.2019 11:06, Igor Opaniuk wrote:
-> > > From: Igor Opaniuk <igor.opaniuk@toradex.com>
-> > >
-> > > Allows to use the SD interface at a higher speed mode if the card
-> > > supports it. For this the signaling voltage is switched from 3.3V to
-> > > 1.8V under the usdhc1's drivers control.
-> > >
-> > > Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-> > > ---
-> > >  arch/arm/boot/dts/imx6ul.dtsi                  |  4 ++++
-> > >  arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 11 +++++++++--
-> > >  arch/arm/boot/dts/imx6ull-colibri.dtsi         |  6 ++++++
-> > >  3 files changed, 19 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-> > > index fc388b84bf22..91a0ced44e27 100644
-> > > --- a/arch/arm/boot/dts/imx6ul.dtsi
-> > > +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> > > @@ -857,6 +857,8 @@
-> > >                                        <&clks IMX6UL_CLK_USDHC1>,
-> > >                                        <&clks IMX6UL_CLK_USDHC1>;
-> > >                               clock-names = "ipg", "ahb", "per";
-> > > +                             fsl,tuning-step= <2>;
-> > > +                             fsl,tuning-start-tap = <20>;
-> > >                               bus-width = <4>;
-> > >                               status = "disabled";
-> > >                       };
-> > > @@ -870,6 +872,8 @@
-> > >                                        <&clks IMX6UL_CLK_USDHC2>;
-> > >                               clock-names = "ipg", "ahb", "per";
-> > >                               bus-width = <4>;
-> > > +                             fsl,tuning-step= <2>;
-> > > +                             fsl,tuning-start-tap = <20>;
-> > >                               status = "disabled";
-> > >                       };
-> > >
-> > > diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-> > > b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-> > > index 006690ea98c0..7dc7770cf52c 100644
-> > > --- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-> > > +++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-> > > @@ -145,13 +145,20 @@
-> > >  };
-> > >
-> > >  &usdhc1 {
-> > > -     pinctrl-names = "default";
-> > > +     pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
-> > >       pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_snvs_usdhc1_cd>;
-> > > -     no-1-8-v;
-> > > +     pinctrl-1 = <&pinctrl_usdhc1_100mhz &pinctrl_snvs_usdhc1_cd>;
-> > > +     pinctrl-2 = <&pinctrl_usdhc1_100mhz &pinctrl_snvs_usdhc1_cd>;
+> > Right, I'm not too worried about the implementation issues before we
+> > settle on the architectural issues. Those are easy to fix.
 > >
-> > Should that not be pinctrl_usdhc1_200mhz?
+> > Honestly, the main points that the maintainers raised are:
+> > 1) This is a configuration property and not describing the device.
+> > Just use the implicit dependencies coming from existing bindings.
 > >
-> 
-> Correct, thanks for pointing this out.
-> Taking into account that the patch was already accepted by Shawn, will
-> send another to fix this typo ASAP (added to my todo list).
+> > I gave a bunch of reasons for why I think it isn't an OS configuration
+> > property. But even if that's not something the maintainers can agree
+> > to, I gave a concrete example (cyclic dependencies between clock
+> > provider hardware) where the implicit dependencies would prevent one
+> > of the devices from probing till the end of time. So even if the
+> > maintainers don't agree we should always look at "depends-on" to
+> > decide the dependencies, we still need some means to override the
+> > implicit dependencies where they don't match the real dependency. Can
+> > we use depends-on as an override when the implicit dependencies aren't
+> > correct?
+> >
+> > 2) This doesn't need to be solved because this is just optimizing
+> > probing or saving power ("we should get rid of this auto disabling"):
+> >
+> > I explained why this patch series is not just about optimizing probe
+> > ordering or saving power. And why we can't ignore auto disabling
+> > (because it's more than just auto disabling). The kernel is currently
+> > broken when trying to use modules in ARM SoCs (probably in other
+> > systems/archs too, but I can't speak for those).
+> >
+> > 3) Concerns about backwards compatibility
+> >
+> > I pointed out why the current scheme (depends-on being the only source
+> > of dependency) doesn't break compatibility. And if we go with
+> > "depends-on" as an override what we could do to keep backwards
+> > compatibility. Happy to hear more thoughts or discuss options.
+> >
+> > 4) How the "sync_state" would work for a device that supplies multiple
+> > functionalities but a limited driver.
+>
+> <snip>
+> To be clear, all of above are _real_ problems that stops us from efficiently
+> load device drivers as modules for Android.
+>
+> So, if 'depends-on' doesn't seem like the right approach and "going back to
+> the drawing board" is the ask, could you please point us in the right
+> direction?
 
-I just fixed it up on my branch.
+Use the dependencies which are already there in DT. That's clocks,
+pinctrl, regulators, interrupts, gpio at a minimum. I'm simply not
+going to accept duplicating all those dependencies in DT. The downside
+for the kernel is you have to address these one by one and can't have
+a generic property the driver core code can parse. After that's in
+place, then maybe we can consider handling any additional dependencies
+not already captured in DT. Once all that is in place, we can probably
+sort device and/or driver lists to optimize the probe order (maybe the
+driver core already does that now?).
 
-Shawn
+Get rid of the auto disabling of clocks and regulators in
+late_initcall. It's simply not a valid marker that boot is done when
+modules are involved. We probably can't get rid of it as lot's of
+platforms rely on that, so it will have to be opt out. Make it the
+platform's responsibility for ensuring a consistent state.
+
+Perhaps we need a 'boot done' or 'stop deferring probe' trigger from
+userspace in order to make progress if dependencies are missing. Or
+maybe just some timeout would be sufficient. I think this is probably
+more useful for development than in a shipping product. Even if you
+could fallback to polling mode instead of interrupts for example, I
+doubt you would want to in a product.
+
+You should also keep in mind that everything needed for a console has
+to be built in. Maybe Android can say the console isn't needed, but in
+general we can't.
+
+Rob
