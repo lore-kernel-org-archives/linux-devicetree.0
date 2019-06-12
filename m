@@ -1,47 +1,35 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/3] mfd: madera: Add Madera core support for CS47L92
-Date: Wed, 12 Jun 2019 09:38:46 +0100
-Message-ID: <20190612083846.GZ4797@dell>
-References: <20190530143953.25799-1-ckeepax@opensource.cirrus.com>
- <20190530143953.25799-3-ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v10 5/7] dt-bindings: Add binding for cros-ec-rpmsg.
+Date: Wed, 12 Jun 2019 09:40:14 +0100
+Message-ID: <20190612084014.GA4797@dell>
+References: <20190603034529.154969-1-pihsun@chromium.org>
+ <20190603034529.154969-6-pihsun@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190530143953.25799-3-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20190603034529.154969-6-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+To: Pi-Hsun Shih <pihsun@chromium.org>
+Cc: Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Guenter Roeck <groeck@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 May 2019, Charles Keepax wrote:
+On Mon, 03 Jun 2019, Pi-Hsun Shih wrote:
 
-> From: Richard Fitzgerald <rf@opensource.cirrus.com>
+> Add a DT binding documentation for ChromeOS EC driver over rpmsg.
 > 
-> This patch adds all the core support and defines for the Cirrus
-> Logic CS42L92, CS47L92 and CS47L93 smart audio CODECs.
-> 
-> Registers or fields are named MADERA_* if it is part of the
-> common hardware platform and does not conflict with any other
-> Madera codecs. It is named CS47L15_* if it is unique to CS47L15
-> and conflicts with definitions on other codecs.
-> 
-> Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/mfd/Kconfig                  |    7 +
->  drivers/mfd/Makefile                 |    3 +
->  drivers/mfd/cs47l92-tables.c         | 1948 ++++++++++++++++++++++++++++++++++
->  drivers/mfd/madera-core.c            |   58 +
->  drivers/mfd/madera-i2c.c             |   11 +
->  drivers/mfd/madera-spi.c             |   11 +
->  drivers/mfd/madera.h                 |    7 +
->  include/linux/mfd/madera/core.h      |    4 +
->  include/linux/mfd/madera/registers.h |  195 ++++
->  9 files changed, 2244 insertions(+)
->  create mode 100644 drivers/mfd/cs47l92-tables.c
+> Changes from v9, v8, v7, v6:
+>  - No change.
+> 
+> Changes from v5:
+>  - New patch.
+> ---
+>  Documentation/devicetree/bindings/mfd/cros-ec.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
 Applied, thanks.
 
