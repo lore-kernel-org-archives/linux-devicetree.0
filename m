@@ -1,51 +1,66 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator
- support
-Date: Wed, 12 Jun 2019 15:33:50 +0100
-Message-ID: <20190612143350.GB4660@dell>
-References: <20190516043218.8222-1-j-keerthy@ti.com>
- <20190516043218.8222-4-j-keerthy@ti.com>
- <20190522153528.GG8582@sirena.org.uk>
- <1712197d-7d43-38a8-efde-11b99537eae9@ti.com>
- <20190528132755.GK2456@sirena.org.uk>
- <e68d9939-a56a-b3c5-7f6d-e5783e16a6de@ti.com>
- <20190608195159.GA5316@sirena.org.uk>
- <20190610054822.GE4797@dell>
- <c58ef6cd-893e-c20f-f437-e0343aa83fea@ti.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv5 17/20] PCI: mobiveil: Complete initialization of host
+ even if no PCIe link
+Date: Wed, 12 Jun 2019 15:34:40 +0100
+Message-ID: <20190612143440.GC15747@redmoon>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-18-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c58ef6cd-893e-c20f-f437-e0343aa83fea@ti.com>
+In-Reply-To: <20190412083635.33626-18-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Jun 2019, Keerthy wrote:
-
+On Fri, Apr 12, 2019 at 08:36:54AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> 
-> On 10/06/19 11:18 AM, Lee Jones wrote:
-> > On Sat, 08 Jun 2019, Mark Brown wrote:
-> > 
-> > > On Sat, Jun 08, 2019 at 09:26:31AM +0530, keerthy wrote:
-> > > 
-> > > > mfd patches are on linux-next already. Hope you can pull this one now that
-> > > > dependencies are met.
-> > > 
-> > > Someone will need to send me a copy of the patch, if I acked it I was
-> > > expecting it to go in with the MFD changes.
-> > 
-> > There is/was no need for that.  Patches are built-time orthogonal.
-> 
-> Sorry i am still not clear. Should i resend this patch?
+> Sometimes there is not a PCIe Endpoint stalled in the slot,
+> so do not exit when the PCIe link is not up. And degrade the
+> print level of link up info.
 
-Yes.  It sounds like Mark no longer has the patch to apply.
+So what's the point of probing if the link does not initialize ?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Lorenzo
+
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> ---
+> V5:
+>  - Corrected and retouched the subject and changelog.
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index 1ee3ea2570c0..8dc87c7a600e 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -560,7 +560,7 @@ static int mobiveil_bringup_link(struct mobiveil_pcie *pcie)
+>  		usleep_range(LINK_WAIT_MIN, LINK_WAIT_MAX);
+>  	}
+>  
+> -	dev_err(&pcie->pdev->dev, "link never came up\n");
+> +	dev_info(&pcie->pdev->dev, "link never came up\n");
+>  
+>  	return -ETIMEDOUT;
+>  }
+> @@ -926,10 +926,8 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  	bridge->swizzle_irq = pci_common_swizzle;
+>  
+>  	ret = mobiveil_bringup_link(pcie);
+> -	if (ret) {
+> +	if (ret)
+>  		dev_info(dev, "link bring-up failed\n");
+> -		goto error;
+> -	}
+>  
+>  	/* setup the kernel resources for the newly added PCIe root bus */
+>  	ret = pci_scan_root_bus_bridge(bridge);
+> -- 
+> 2.17.1
+> 
