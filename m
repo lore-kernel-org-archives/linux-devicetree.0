@@ -1,64 +1,52 @@
-Return-Path: <SRS0=e23W=UL=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=5lcI=UL=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH] arm64: dts: renesas: hihope-common: Add uSD and eMMC
+Date: Wed, 12 Jun 2019 08:39:22 +0000
+Message-ID: 
+ <TY1PR01MB1770E7346A27FB36658142E1C0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 References: <1559895251-13931-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdXv91Tt+78zLJj6pHFj9XrEJJbWOf-kzBPRbcw=h+iDHg@mail.gmail.com> <TY1PR01MB1770E7346A27FB36658142E1C0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB1770E7346A27FB36658142E1C0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 12 Jun 2019 11:29:19 +0200
-Message-ID: <CAMuHMdWcTKAC8V5S0=asvs2eekc4dH72G3rMT5dxqRd8ouPNBA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Add uSD and eMMC
-Content-Type: text/plain; charset="UTF-8"
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+ <CAMuHMdXv91Tt+78zLJj6pHFj9XrEJJbWOf-kzBPRbcw=h+iDHg@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdXv91Tt+78zLJj6pHFj9XrEJJbWOf-kzBPRbcw=h+iDHg@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Chris Paterson" <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Fabrizio,
-
-On Wed, Jun 12, 2019 at 10:39 AM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Sent: 12 June 2019 09:28
-> > Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Add uSD and eMMC
-> >
-> > On Fri, Jun 7, 2019 at 10:14 AM Fabrizio Castro
-> > <fabrizio.castro@bp.renesas.com> wrote:
-> > > This patch adds uSD and eMMC support to the HiHope RZ/G2M
-> > > board.
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >
-> > Thanks for your patch!
-> >
-> > > --- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-> >
-> > > +&sdhi3 {
-> > > +       pinctrl-0 = <&sdhi3_pins>;
-> > > +       pinctrl-1 = <&sdhi3_pins>;
-> > > +       pinctrl-names = "default", "state_uhs";
-> > > +
-> > > +       vmmc-supply = <&reg_3p3v>;
-> > > +       vqmmc-supply = <&reg_1p8v>;
-> > > +       bus-width = <8>;
-> > > +       mmc-hs200-1_8v;
-> >
-> > Does the eMMC support HS400, too?
->
-> The eMMC does support HS400, but if I list it here the eMMC won't work properly as the SoC can't deal with it.
-> Wolfram's patch blacklists HS400 for the RZ/G2M (revisions "ES1.[012]"):
-> https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg40630.html
-> I was thinking about sending a follow-up patch to list hs400 here after Wolfram's patch appears in a RC, would
-> that be okay with you?
-
-Fine for me.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGVsbG8gR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPiBGcm9tOiBH
+ZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiBTZW50OiAxMiBKdW5l
+IDIwMTkgMDk6MjgNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYXJtNjQ6IGR0czogcmVuZXNhczog
+aGlob3BlLWNvbW1vbjogQWRkIHVTRCBhbmQgZU1NQw0KPiANCj4gSGkgRmFicml6aW8sDQo+IA0K
+PiBPbiBGcmksIEp1biA3LCAyMDE5IGF0IDEwOjE0IEFNIEZhYnJpemlvIENhc3Rybw0KPiA8ZmFi
+cml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMg
+dVNEIGFuZCBlTU1DIHN1cHBvcnQgdG8gdGhlIEhpSG9wZSBSWi9HMk0NCj4gPiBib2FyZC4NCj4g
+Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJw
+LnJlbmVzYXMuY29tPg0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQ0KPiANCj4gPiAtLS0g
+YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvaGlob3BlLWNvbW1vbi5kdHNpDQo+ID4gKysr
+IGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL2hpaG9wZS1jb21tb24uZHRzaQ0KPiANCj4g
+PiArJnNkaGkzIHsNCj4gPiArICAgICAgIHBpbmN0cmwtMCA9IDwmc2RoaTNfcGlucz47DQo+ID4g
+KyAgICAgICBwaW5jdHJsLTEgPSA8JnNkaGkzX3BpbnM+Ow0KPiA+ICsgICAgICAgcGluY3RybC1u
+YW1lcyA9ICJkZWZhdWx0IiwgInN0YXRlX3VocyI7DQo+ID4gKw0KPiA+ICsgICAgICAgdm1tYy1z
+dXBwbHkgPSA8JnJlZ18zcDN2PjsNCj4gPiArICAgICAgIHZxbW1jLXN1cHBseSA9IDwmcmVnXzFw
+OHY+Ow0KPiA+ICsgICAgICAgYnVzLXdpZHRoID0gPDg+Ow0KPiA+ICsgICAgICAgbW1jLWhzMjAw
+LTFfOHY7DQo+IA0KPiBEb2VzIHRoZSBlTU1DIHN1cHBvcnQgSFM0MDAsIHRvbz8NCg0KVGhlIGVN
+TUMgZG9lcyBzdXBwb3J0IEhTNDAwLCBidXQgaWYgSSBsaXN0IGl0IGhlcmUgdGhlIGVNTUMgd29u
+J3Qgd29yayBwcm9wZXJseSBhcyB0aGUgU29DIGNhbid0IGRlYWwgd2l0aCBpdC4NCldvbGZyYW0n
+cyBwYXRjaCBibGFja2xpc3RzIEhTNDAwIGZvciB0aGUgUlovRzJNIChyZXZpc2lvbnMgIkVTMS5b
+MDEyXSIpOg0KaHR0cHM6Ly93d3cubWFpbC1hcmNoaXZlLmNvbS9saW51eC1yZW5lc2FzLXNvY0B2
+Z2VyLmtlcm5lbC5vcmcvbXNnNDA2MzAuaHRtbA0KSSB3YXMgdGhpbmtpbmcgYWJvdXQgc2VuZGlu
+ZyBhIGZvbGxvdy11cCBwYXRjaCB0byBsaXN0IGhzNDAwIGhlcmUgYWZ0ZXIgV29sZnJhbSdzIHBh
+dGNoIGFwcGVhcnMgaW4gYSBSQywgd291bGQNCnRoYXQgYmUgb2theSB3aXRoIHlvdT8NCg0KVGhh
+bmtzLA0KRmFiDQoNCj4gDQo+ID4gKyAgICAgICBub24tcmVtb3ZhYmxlOw0KPiA+ICsgICAgICAg
+Zml4ZWQtZW1tYy1kcml2ZXItdHlwZSA9IDwxPjsNCj4gPiArICAgICAgIHN0YXR1cyA9ICJva2F5
+IjsNCj4gPiArfTsNCj4gDQo+IFJldmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0
+K3JlbmVzYXNAZ2xpZGVyLmJlPg0KPiANCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAg
+ICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVu
+IC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhr
+Lm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9w
+bGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpv
+dXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQu
+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
