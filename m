@@ -1,58 +1,77 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
-Date: Tue, 11 Jun 2019 17:35:07 -0700
-Message-ID: <20190612003507.GG143729@dtor-ws>
-References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com>
- <20190606161322.47192-1-jeffrey.l.hugo@gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 2/3] rtc: imx-sc: Make compatible string more generic
+Date: Wed, 12 Jun 2019 00:48:27 +0000
+Message-ID: <DB3PR0402MB3916A7887EBC63477A5297E6F5EC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190611063333.48501-1-Anson.Huang@nxp.com>
+         <20190611063333.48501-2-Anson.Huang@nxp.com>
+         <CAOMZO5BCuBKHs1jXkm3qFD84_xcB=0NSwE3SLJHx9kq4Stbd_A@mail.gmail.com>
+ <1560285930.2354.8.camel@impinj.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190606161322.47192-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <1560285930.2354.8.camel@impinj.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: benjamin.tissoires@redhat.com, jikos@kernel.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org, hdegoede@redhat.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Trent Piepho <tpiepho@impinj.com>, "festevam@gmail.com" <festevam@gmail.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Peng Fan <peng.fan@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Baluta <daniel.baluta@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, s.hauer@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 09:13:22AM -0700, Jeffrey Hugo wrote:
-> There needs to be coordination between hid-quirks and the elan_i2c driver
-> about which devices are handled by what drivers.  Currently, both use
-> whitelists, which results in valid devices being unhandled by default,
-> when they should not be rejected by hid-quirks.  This is quickly becoming
-> an issue.
-> 
-> Since elan_i2c has a maintained whitelist of what devices it will handle,
-> use that to implement a blacklist in hid-quirks so that only the devices
-> that need to be handled by elan_i2c get rejected by hid-quirks, and
-> everything else is handled by default.  The downside is the whitelist and
-> blacklist need to be kept in sync.
-> 
-> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/hid/hid-quirks.c | 78 ++++++++++++++++++++++++++++++++++------
->  1 file changed, 67 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> index e5ca6fe2ca57..edebd0700e3d 100644
-> --- a/drivers/hid/hid-quirks.c
-> +++ b/drivers/hid/hid-quirks.c
-> @@ -912,8 +912,66 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
->  	{ }
->  };
->  
-> +/* 
-> + * List of device names that elan_i2c is handling and HID should ignore.  Must
-> + * be kept in sync with elan_i2c
-> + */
-> +static const char *hid_elan_i2c_ignore[] = {
-
-If this is a copy of elan whitelist, then, if we do not want to bother
-with sharing it in object form (as a elan-i2c-ids module), can we at
-least move it into include/linux/input/elan-i2c-ids.h and consume from
-hid-quirks.c?
-
-Thanks.
-
--- 
-Dmitry
+SGksIEZhYmlvL1RyZW50DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTog
+VHJlbnQgUGllcGhvIDx0cGllcGhvQGltcGluai5jb20+DQo+IFNlbnQ6IFdlZG5lc2RheSwgSnVu
+ZSAxMiwgMjAxOSA0OjQ2IEFNDQo+IFRvOiBmZXN0ZXZhbUBnbWFpbC5jb207IEFuc29uIEh1YW5n
+IDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogQWlzaGVuZyBEb25nIDxhaXNoZW5nLmRvbmdA
+bnhwLmNvbT47IGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tOw0KPiByb2JoK2R0QGtlcm5l
+bC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+OyBsaW51eC0NCj4ga2VybmVs
+QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGEuenVtbW9A
+dG93ZXJ0ZWNoLml0OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgUGVuZyBGYW4NCj4gPHBlbmcuZmFu
+QG54cC5jb20+OyBzaGF3bmd1b0BrZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnOyBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+Ow0K
+PiB1bGYuaGFuc3NvbkBsaW5hcm8ub3JnOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGxpbnV4LXJ0
+Y0B2Z2VyLmtlcm5lbC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGUNCj4gU3ViamVjdDog
+UmU6IFtQQVRDSCAyLzNdIHJ0YzogaW14LXNjOiBNYWtlIGNvbXBhdGlibGUgc3RyaW5nIG1vcmUg
+Z2VuZXJpYw0KPiANCj4gT24gVHVlLCAyMDE5LTA2LTExIGF0IDE3OjMyIC0wMzAwLCBGYWJpbyBF
+c3RldmFtIHdyb3RlOg0KPiA+IEhpIEFuc29uLA0KPiA+DQo+ID4gT24gVHVlLCBKdW4gMTEsIDIw
+MTkgYXQgMzozMSBBTSA8QW5zb24uSHVhbmdAbnhwLmNvbT4gd3JvdGU6DQo+ID4gPg0KPiA+ID4g
+RnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gPg0KPiA+ID4gaS5N
+WCBzeXN0ZW0gY29udHJvbGxlciBSVEMgZHJpdmVyIGNhbiBzdXBwb3J0IGFsbCBpLk1YIFNvQ3Mg
+d2l0aA0KPiA+ID4gc3lzdGVtIGNvbnRyb2xsZXIgaW5zaWRlLCB0aGlzIHBhdGNoIG1ha2VzIHRo
+ZSBjb21wYXRpYmxlIHN0cmluZw0KPiA+ID4gbW9yZSBnZW5lcmljIHRvIHN1cHBvcnQgb3RoZXIg
+aS5NWCBTb0NzIHdpdGggc3lzdGVtIGNvbnRyb2xsZXINCj4gPiA+IGluc2lkZSwgc3VjaCBhcyBp
+Lk1YOFFNIGV0Yy4uDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFu
+c29uLkh1YW5nQG54cC5jb20+DQo+ID4gPiAtLS0NCj4gPiA+ICBkcml2ZXJzL3J0Yy9ydGMtaW14
+LXNjLmMgfCAyICstDQo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRl
+bGV0aW9uKC0pDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcnRjL3J0Yy1pbXgt
+c2MuYyBiL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2MuYw0KPiA+ID4gaW5kZXggYzkzMzA0NS4uMzhl
+ZjNjYSAxMDA2NDQNCj4gPiA+IC0tLSBhL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2MuYw0KPiA+ID4g
+KysrIGIvZHJpdmVycy9ydGMvcnRjLWlteC1zYy5jDQo+ID4gPiBAQCAtMTc4LDcgKzE3OCw3IEBA
+IHN0YXRpYyBpbnQgaW14X3NjX3J0Y19wcm9iZShzdHJ1Y3QNCj4gPiA+IHBsYXRmb3JtX2Rldmlj
+ZSAqcGRldikgIH0NCj4gPiA+DQo+ID4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
+aWQgaW14X3NjX2R0X2lkc1tdID0gew0KPiA+ID4gLSAgICAgICB7IC5jb21wYXRpYmxlID0gImZz
+bCxpbXg4cXhwLXNjLXJ0YyIsIH0sDQo+ID4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAiZnNs
+LGlteC1zYy1ydGMiLCB9LA0KPiA+DQo+ID4gV2hhdCBpcyB3cm9uZyB3aXRoIHRoZSBjdXJyZW50
+IGNvbXBhdGlibGUgc3RyaW5nPw0KDQpOb3RoaW5nIHdyb25nLCBqdXN0IHdhbnQgdG8gbWFrZSBp
+dCBhbGlnbmVkIHdpdGggb3RoZXIgU0NVIGRyaXZlcnMsIGxpa2UNClNDVSB3YXRjaGRvZywgU0NV
+IHRoZXJtYWwgZXRjLiwgdGhlIGRyaXZlciBPTkxZIGNvbnRhaW5zICJmc2wsaW14LXNjLXh4eCIN
+CmNvbXBhdGlibGUgc3RyaW5nLCB0aGVuIGZvciBuZXcgU29DLCB3ZSBjYW4ganVzdCBhZGQgaXQg
+YXMgY29tcGF0aWJsZSBvcg0KZmFsbGJhY2sgY29tcGF0aWJsZSBzdHJpbmcsIG5vIG5lZWQgdG8g
+ZG8gYW55IGNoYW5nZSBmb3IgZHJpdmVyLiAgDQoNCj4gPg0KPiA+IElmIHlvdSB3YW50IHRvIHN1
+cHBvcnQgaS5NWDhRTSBqdXN0IGFkZCBpbiBpdHMgZHRzaToNCj4gPg0KPiA+IGNvbXBhdGlibGUg
+PSAiZnNsLGlteDhxbS1zYy1ydGMiLCAiZnNsLGlteDhxeHAtc2MtcnRjIg0KPiA+DQo+ID4gYW5k
+IGFkZCBhIGR0LWJpbmRpbmdzIGVudHJ5IGZvciAiZnNsLGlteDhxbS1zYy1ydGMiDQoNCkkgYW0g
+T0sgaWYgd2UgY2FuIGp1c3QgdXNlICIgZnNsLGlteDhxeHAtc2MtcnRjIiBhcyBmYWxsYmFjayBj
+b21wYXRpYmxlIHN0cmluZw0KZm9yIGxhdGVyIFNvQ3MuDQoNCj4gDQo+IFllcywgSSB0aG91Z2h0
+IHRoaXMgaXMgKHdhcz8pIHRoZSByZWNvbW1lbmRlZCBwcmFjdGljZSBmb3IgSVAgYmxvY2tzIGlu
+IFNvQ3MNCj4gdGhhdCBkb24ndCBoYXZlIHRoZWlyIG93biB2ZXJzaW9uICh2cyBzb21ldGhpbmcg
+bGlrZSBhIFN5bm9wc2lzIGJsb2NrIHVzZWQNCj4gbWFueSBwbGFjZXMpOg0KPiANCj4gKiBVc2Ug
+dGhlIGZpcnN0IFNvQyB0byBoYXZlIHRoZSBibG9jayBhcyB0aGUgYmFzZSBjb21wYXRpYmxlIGZv
+ciB0aGUgYmxvY2suDQo+ICogQWx3YXlzIGFkZCB0aGUgY3VycmVudCBTb0MsIGluIGFkZGl0aW9u
+YWwgdG8gdGhlIGJhc2UsIGluIHRoZSBTb0MncyBkdHMncyBsaXN0DQo+IG9mIGNvbXBhdGlibGVz
+LiAgRXZlbiBpZiB1bm5lZWRlZCBhdCB0aGUgcHJlc2VudC4NCj4gKiBUaGUgZHJpdmVyIHdpbGwg
+bGlzdCB0aGUgYmFzZSBjb21wYXRpYmxlIGluIHRoZSBtYXRjaCB0YWJsZSwgYW5kIHdpbGwgYWRk
+IG5ldw0KPiBvbmVzIGZvciBzcGVjaWZpYyBzb2NzIGlmL3doZW4gdGhlcmUgaXMgYSBuZWVkIGZv
+ciBpdC4NCg0KTWFrZSBzZW5zZSwgSSB3YXMgcmVjb21tZW5kZWQgdG8gbWFrZSB0aGUgZmFsbGJh
+Y2sgY29tcGF0aWJsZSBzdHJpbmcgYWxpZ25lZA0KZm9yIGFsbCBTQ1UgZHJpdmVycywgZm9yIG1l
+LCBJIGFtIE9LIHdpdGggZWl0aGVyIHdheSwgc28gaWYgeW91IHRoaW5rIGl0IGlzIE5PVCBuZWNl
+c3NhcnkNCnRvIGRvIGl0LCB3ZSBjYW4gZHJvcCB0aGlzIHNlcmllcy4NCg0KVGhhbmtzLA0KQW5z
+b24NCg0K
