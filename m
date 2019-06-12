@@ -1,15 +1,13 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
-Date: Wed, 12 Jun 2019 17:43:25 +0200
-Message-ID: <20190612154325.m6z7xsxlpdq4wkxv@flea>
-References: <20190525181329.18657-1-tiny.windzz@gmail.com>
- <20190525181329.18657-2-tiny.windzz@gmail.com>
- <20190527122752.uc7q6zkjti3zag4q@flea>
- <CAEExFWtxEB67Pv-8x4ry=tZcJjOD6Kxydq_YB73Gox25VmQn7A@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: vendor: Escape single quote
+Date: Wed, 12 Jun 2019 17:48:27 +0200
+Message-ID: <20190612154827.ykrxtuv2q7uxmwoj@flea>
+References: <20190525134140.6220-1-maxime.ripard@bootlin.com>
+ <CAL_JsqK829bfc4VX1hmYRuLYWQXaixAgSwU2N7veA41vfxLXvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5789302248751940124=="
+Content-Type: multipart/mixed; boundary="===============3434485603240582558=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAEExFWtxEB67Pv-8x4ry=tZcJjOD6Kxydq_YB73Gox25VmQn7A@mail.gmail.com>
+In-Reply-To: <CAL_JsqK829bfc4VX1hmYRuLYWQXaixAgSwU2N7veA41vfxLXvw@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,54 +17,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Lee <tiny.windzz@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, robh+dt@kernel.org, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, rui.zhang@intel.com, paulmck@linux.ibm.com, David Miller <davem@davemloft.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
---===============5789302248751940124==
+--===============3434485603240582558==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oy7r5ps7iphlasam"
+	protocol="application/pgp-signature"; boundary="ojdig4ufr3fvpwhg"
 Content-Disposition: inline
 
 
---oy7r5ps7iphlasam
+--ojdig4ufr3fvpwhg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Jun 07, 2019 at 09:34:44PM +0800, Frank Lee wrote:
-> On Mon, May 27, 2019 at 8:27 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > +     ret = devm_request_threaded_irq(dev, irq, NULL,
-> > > +                                     tmdev->chip->irq_thread,
-> > > +                                     IRQF_ONESHOT, "ths", tmdev);
-> > > +     if (ret)
-> > > +             return ret;
+Hi,
+
+On Tue, Jun 11, 2019 at 03:18:51PM -0600, Rob Herring wrote:
+> On Sat, May 25, 2019 at 7:41 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > >
-> > Is there any particular reason to use a threaded interrupt?
->
-> Just to improve real-time.
-
-What do you mean by real-time here? If anything, that will increase
-the latency of the interrupts here.
-
-And in preempt-rt, regular top-half interrupts will be forced into a
-threaded interrupt anyway.
-
-> > > +static int sun8i_ths_remove(struct platform_device *pdev)
-> > > +{
-> > > +     struct ths_device *tmdev = platform_get_drvdata(pdev);
-> > > +
-> > > +     clk_disable_unprepare(tmdev->bus_clk);
+> > Single quotes need to be escaped in YAML, make sure it's the case.
 > >
-> > I know that we discussed that already, but I'm not sure why you switch
-> > back to a regular call to regmap_init_mmio, while regmap_init_mmio_clk
-> > will take care of enabling and disabling the bus clock for you?
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > index 19cc3240a445..ec53162e900d 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > @@ -672,7 +672,7 @@ patternProperties:
+> >    "^plantower,.*":
+> >      description: Plantower Co., Ltd
+> >    "^plathome,.*":
+> > -    description: Plat'Home Co., Ltd.
+> > +    description: Plat\'Home Co., Ltd.
 >
-> It seems that regmap_init_mmio_clk just get clk and prepare clk
-> but no enable.
+> Actually, I think this isn't necessary. Where was this causing a
+> problem? Only in single quoted strings do you have to escape a single
+> quote and it is done with 2 single quotes rather than a backslash.
 
-At init time, yes. But it will enable it only when you access the
-registers, which is what you want anyway.
+I guess I misread the YAML spec though... Sorry.
+
+> However, to maintain a json compatible subset of yaml, maybe we do
+> need it.
+
+If you don't want it anymore, I guess we can drop or revert it.
 
 Maxime
 
@@ -75,21 +73,21 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---oy7r5ps7iphlasam
+--ojdig4ufr3fvpwhg
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQEdnQAKCRDj7w1vZxhR
-xXCpAQCYtE67+V1lgKQJZxd7NFi0spq61ecHzscNxJ/t6H+OXQD/ZYw/N1ST4pg3
-MGrcJRd4vnNOs5alaAicdNFepVsmQQQ=
-=g51D
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQEeywAKCRDj7w1vZxhR
+xbQTAP9aeBEzFtsrAUI/WlTsmFq1tfkJJNyS0XOvprvVnIF4vwEA/8L4kV9E7v0K
+/oXbZNPQojz/la/iqD91nAmsPXcDtQg=
+=Y1ER
 -----END PGP SIGNATURE-----
 
---oy7r5ps7iphlasam--
+--ojdig4ufr3fvpwhg--
 
 
---===============5789302248751940124==
+--===============3434485603240582558==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -100,4 +98,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============5789302248751940124==--
+--===============3434485603240582558==--
