@@ -1,74 +1,88 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Date: Wed, 12 Jun 2019 14:25:04 +0200
-Message-ID: <20190612122504.GI32652@zn.tnic>
-References: <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
- <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
- <20190611115651.GD31772@zn.tnic>
- <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
- <20190612034813.GA32652@zn.tnic>
- <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
- <20190612074242.53a4cf56@coco.lan>
- <20190612110039.GH32652@zn.tnic>
- <20190612084213.4fb9e054@coco.lan>
- <7705227ea831793cc9e45af32e0da8f5547cb14d.camel@kernel.crashing.org>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v2 2/2] dt-bindings: net: wiznet: add w5x00 support
+Date: Wed, 12 Jun 2019 14:25:27 +0200
+Message-ID: <20190612122526.14332-2-nsaenzjulienne@suse.de>
+References: <20190612122526.14332-1-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7705227ea831793cc9e45af32e0da8f5547cb14d.camel@kernel.crashing.org>
+In-Reply-To: <20190612122526.14332-1-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, James Morse <james.morse@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Hanoch, Uri
+To: "David S. Miller" <davem@davemloft.net>
+Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 09:57:40PM +1000, Benjamin Herrenschmidt wrote:
-> On Wed, 2019-06-12 at 08:42 -0300, Mauro Carvalho Chehab wrote:
-> > > Yes, we do have different error reporting facilities but I still
-> > > think
-> > > that concentrating all the error information needed in order to do
-> > > proper recovery action is the better approach here. And make that
-> > > part
-> > > of the kernel so that it is robust. Userspace can still configure
-> > > it and
-> > > so on.
-> > 
-> > If the error reporting facilities are for the same hardware "group"
-> > (like the machine's memory controllers), I agree with you: it makes
-> > sense to have a single driver. 
-> > 
-> > If they are for completely independent hardware then implementing
-> > as separate drivers would work equally well, with the advantage of
-> > making easier to maintain and make it generic enough to support
-> > different vendors using the same IP block.
-> 
-> Right. And if you really want a platform orchestrator for recovery in
-> the kenrel, it should be a separate one, that consumes data from the
-> individual IP block drivers that report the raw errors anyway.
+Add bindings for Wiznet's w5x00 series of SPI interfaced Ethernet chips.
 
-Yap, I think we're in agreement here. I believe the important question
-is whether you need to get error information from multiple sources
-together in order to do proper recovery or doing it per error source
-suffices.
+Based on the bindings for microchip,enc28j60.
 
-And I think the actual use cases could/should dictate our
-drivers/orchestrators design.
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
 
-Thus my question how you guys are planning on tying all that error info
-the drivers report, into the whole system design?
+Changes since v1:
+  - one compatible sting per line
+  - use correct 'ethenet@0' phandle name
 
-> But for the main case that really needs to be in the kernel, which is
-> DRAM, the recovery can usually be contained to the MC driver anyway.
+ .../devicetree/bindings/net/wiznet,w5x00.txt  | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wiznet,w5x00.txt
 
-Right, if that is enough to handle the error properly.
-
-The memory-failure.c example I gave before is the error reporting
-mechanism (x86 MCA) calling into the mm subsystem to poison and isolate
-page frames which are known to contain errors. So you have two things
-talking to each other.
-
+diff --git a/Documentation/devicetree/bindings/net/wiznet,w5x00.txt b/Documentation/devicetree/bindings/net/wiznet,w5x00.txt
+new file mode 100644
+index 000000000000..901946dea3de
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wiznet,w5x00.txt
+@@ -0,0 +1,51 @@
++* Wiznet w5x00
++
++This is a standalone 10/100 MBit Ethernet controller with SPI interface.
++
++For each device connected to a SPI bus, define a child node within
++the SPI master node.
++
++Required properties:
++- compatible: Should be one of the following strings:
++	      "wiznet,w5100"
++	      "wiznet,w5200"
++	      "wiznet,w5500"
++- reg: Specify the SPI chip select the chip is wired to.
++- interrupts: Specify the interrupt index within the interrupt controller (referred
++              to above in interrupt-parent) and interrupt type. w5x00 natively
++              generates falling edge interrupts, however, additional board logic
++              might invert the signal.
++- pinctrl-names: List of assigned state names, see pinctrl binding documentation.
++- pinctrl-0: List of phandles to configure the GPIO pin used as interrupt line,
++             see also generic and your platform specific pinctrl binding
++             documentation.
++
++Optional properties:
++- spi-max-frequency: Maximum frequency of the SPI bus when accessing the w5500.
++  According to the w5500 datasheet, the chip allows a maximum of 80 MHz, however,
++  board designs may need to limit this value.
++- local-mac-address: See ethernet.txt in the same directory.
++
++
++Example (for Raspberry Pi with pin control stuff for GPIO irq):
++
++&spi {
++	ethernet@0: w5500@0 {
++		compatible = "wiznet,w5500";
++		reg = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&eth1_pins>;
++		interrupt-parent = <&gpio>;
++		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++		spi-max-frequency = <30000000>;
++	};
++};
++
++&gpio {
++	eth1_pins: eth1_pins {
++		brcm,pins = <25>;
++		brcm,function = <0>; /* in */
++		brcm,pull = <0>; /* none */
++	};
++};
++
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+2.21.0
