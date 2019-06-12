@@ -1,59 +1,112 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [RESEND PATCH 2/2] mux: mmio: add generic regmap bitfield-based
- multiplexer
-Date: Wed, 12 Jun 2019 08:53:00 +0000
-Message-ID: <20190612085238.1763-3-peda@axentia.se>
-References: <20190612085238.1763-1-peda@axentia.se>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v8 08/12] soc: mediatek: cmdq: change the type of input parameter
+Date: Wed, 12 Jun 2019 16:53:45 +0800
+Message-ID: <20190612085349.21243-9-bibby.hsieh@mediatek.com>
+References: <20190612085349.21243-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612085238.1763-1-peda@axentia.se>
-Content-Language: en-US
+In-Reply-To: <20190612085349.21243-1-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Pankaj Bansal <pankaj.bansal@nxp.com>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUGFua2FqIEJhbnNhbCA8cGFua2FqLmJhbnNhbEBueHAuY29tPg0KDQpHZW5lcmljIHJl
-Z2lzdGVyIGJpdGZpZWxkLWJhc2VkIG11bHRpcGxleGVyIHRoYXQgY29udHJvbHMgdGhlIG11bHRp
-cGxleGVyDQpwcm9kdWNlciBkZWZpbmVkIHVuZGVyIGEgcGFyZW50IG5vZGUuDQpUaGUgZHJpdmVy
-IGNvcnJlc3BvbmRpbmcgdG8gcGFyZW50IG5vZGUgcHJvdmlkZXMgcmVnaXN0ZXIgcmVhZC93cml0
-ZQ0KY2FwYWJpbGl0aWVzLg0KDQpTaWduZWQtb2ZmLWJ5OiBQYW5rYWogQmFuc2FsIDxwYW5rYWou
-YmFuc2FsQG54cC5jb20+DQpTaWduZWQtb2ZmLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlh
-LnNlPg0KLS0tDQogZHJpdmVycy9tdXgvS2NvbmZpZyB8IDEyICsrKysrKy0tLS0tLQ0KIGRyaXZl
-cnMvbXV4L21taW8uYyAgfCAgNiArKysrKy0NCiAyIGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlv
-bnMoKyksIDcgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL211eC9LY29uZmln
-IGIvZHJpdmVycy9tdXgvS2NvbmZpZw0KaW5kZXggNzY1OWQ2YzVmNzE4Li5lNWM1NzFmZDIzMmMg
-MTAwNjQ0DQotLS0gYS9kcml2ZXJzL211eC9LY29uZmlnDQorKysgYi9kcml2ZXJzL211eC9LY29u
-ZmlnDQpAQCAtNDYsMTQgKzQ2LDE0IEBAIGNvbmZpZyBNVVhfR1BJTw0KIAkgIGJlIGNhbGxlZCBt
-dXgtZ3Bpby4NCiANCiBjb25maWcgTVVYX01NSU8NCi0JdHJpc3RhdGUgIk1NSU8gcmVnaXN0ZXIg
-Yml0ZmllbGQtY29udHJvbGxlZCBNdWx0aXBsZXhlciINCi0JZGVwZW5kcyBvbiAoT0YgJiYgTUZE
-X1NZU0NPTikgfHwgQ09NUElMRV9URVNUDQorCXRyaXN0YXRlICJNTUlPL1JlZ21hcCByZWdpc3Rl
-ciBiaXRmaWVsZC1jb250cm9sbGVkIE11bHRpcGxleGVyIg0KKwlkZXBlbmRzIG9uIE9GIHx8IENP
-TVBJTEVfVEVTVA0KIAloZWxwDQotCSAgTU1JTyByZWdpc3RlciBiaXRmaWVsZC1jb250cm9sbGVk
-IE11bHRpcGxleGVyIGNvbnRyb2xsZXIuDQorCSAgTU1JTy9SZWdtYXAgcmVnaXN0ZXIgYml0Zmll
-bGQtY29udHJvbGxlZCBNdWx0aXBsZXhlciBjb250cm9sbGVyLg0KIA0KLQkgIFRoZSBkcml2ZXIg
-YnVpbGRzIG11bHRpcGxleGVyIGNvbnRyb2xsZXJzIGZvciBiaXRmaWVsZHMgaW4gYSBzeXNjb24N
-Ci0JICByZWdpc3Rlci4gRm9yIE4gYml0IHdpZGUgYml0ZmllbGRzLCB0aGVyZSB3aWxsIGJlIDJe
-TiBwb3NzaWJsZQ0KLQkgIG11bHRpcGxleGVyIHN0YXRlcy4NCisJICBUaGUgZHJpdmVyIGJ1aWxk
-cyBtdWx0aXBsZXhlciBjb250cm9sbGVycyBmb3IgYml0ZmllbGRzIGluIGVpdGhlcg0KKwkgIGEg
-c3lzY29uIHJlZ2lzdGVyIG9yIGEgZHJpdmVyIHJlZ21hcCByZWdpc3Rlci4gRm9yIE4gYml0IHdp
-ZGUNCisJICBiaXRmaWVsZHMsIHRoZXJlIHdpbGwgYmUgMl5OIHBvc3NpYmxlIG11bHRpcGxleGVy
-IHN0YXRlcy4NCiANCiAJICBUbyBjb21waWxlIHRoZSBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29z
-ZSBNIGhlcmU6IHRoZSBtb2R1bGUgd2lsbA0KIAkgIGJlIGNhbGxlZCBtdXgtbW1pby4NCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL211eC9tbWlvLmMgYi9kcml2ZXJzL211eC9tbWlvLmMNCmluZGV4IDkz
-NWFjNDRhYTIwOS4uNDRhN2EwZTg4NWI4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9tdXgvbW1pby5j
-DQorKysgYi9kcml2ZXJzL211eC9tbWlvLmMNCkBAIC0yOCw2ICsyOCw3IEBAIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgbXV4X2NvbnRyb2xfb3BzIG11eF9tbWlvX29wcyA9IHsNCiANCiBzdGF0aWMgY29u
-c3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdXhfbW1pb19kdF9pZHNbXSA9IHsNCiAJeyAuY29tcGF0
-aWJsZSA9ICJtbWlvLW11eCIsIH0sDQorCXsgLmNvbXBhdGlibGUgPSAicmVnLW11eCIsIH0sDQog
-CXsgLyogc2VudGluZWwgKi8gfQ0KIH07DQogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgbXV4X21t
-aW9fZHRfaWRzKTsNCkBAIC00Myw3ICs0NCwxMCBAQCBzdGF0aWMgaW50IG11eF9tbWlvX3Byb2Jl
-KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCWludCByZXQ7DQogCWludCBpOw0KIA0K
-LQlyZWdtYXAgPSBzeXNjb25fbm9kZV90b19yZWdtYXAobnAtPnBhcmVudCk7DQorCWlmIChvZl9k
-ZXZpY2VfaXNfY29tcGF0aWJsZShucCwgIm1taW8tbXV4IikpDQorCQlyZWdtYXAgPSBzeXNjb25f
-bm9kZV90b19yZWdtYXAobnAtPnBhcmVudCk7DQorCWVsc2UNCisJCXJlZ21hcCA9IGRldl9nZXRf
-cmVnbWFwKGRldi0+cGFyZW50LCBOVUxMKSA/OiBFUlJfUFRSKC1FTk9ERVYpOw0KIAlpZiAoSVNf
-RVJSKHJlZ21hcCkpIHsNCiAJCXJldCA9IFBUUl9FUlIocmVnbWFwKTsNCiAJCWRldl9lcnIoZGV2
-LCAiZmFpbGVkIHRvIGdldCByZWdtYXA6ICVkXG4iLCByZXQpOw0KLS0gDQoyLjExLjANCg0K
+According to the cmdq hardware design, the subsys is u8,
+the offset is u16 and the event id is u16.
+This patch changes the type of subsys, offset and event id
+to the correct type.
+
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+---
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 10 +++++-----
+ include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
+ 2 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index 082b8978651e..7aa0517ff2f3 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+ 	return 0;
+ }
+ 
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+ {
+ 	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+ 		    (subsys << CMDQ_SUBSYS_SHIFT);
+@@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write);
+ 
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+-			u32 offset, u32 value, u32 mask)
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
++			u16 offset, u32 value, u32 mask)
+ {
+ 	u32 offset_mask = offset;
+ 	int err = 0;
+@@ -161,7 +161,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write_mask);
+ 
+-int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
++int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+ {
+ 	u32 arg_b;
+ 
+@@ -181,7 +181,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_wfe);
+ 
+-int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
++int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+ {
+ 	if (event >= CMDQ_MAX_EVENT)
+ 		return -EINVAL;
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index 39d813dde4b4..9618debb9ceb 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -66,7 +66,7 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
+ 
+ /**
+  * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+@@ -78,8 +78,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+-			u32 offset, u32 value, u32 mask);
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
++			u16 offset, u32 value, u32 mask);
+ 
+ /**
+  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+@@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
++int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+ 
+ /**
+  * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
+@@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
++int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+ 
+ /**
+  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+-- 
+2.18.0
