@@ -1,93 +1,58 @@
-From: "dbasehore ." <dbasehore@chromium.org>
-Subject: Re: [PATCH 3/5] drm/panel: Add attach/detach callbacks
-Date: Tue, 11 Jun 2019 17:25:47 -0700
-Message-ID: <CAGAzgsr2sh5B1xi_ztQPN0xoQsZd26DDXwWT_qqJ68XeKReJ_Q@mail.gmail.com>
-References: <20190611040350.90064-1-dbasehore@chromium.org>
- <20190611040350.90064-4-dbasehore@chromium.org>
- <20190611085722.GX21222@phenom.ffwll.local>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
+Date: Tue, 11 Jun 2019 17:35:07 -0700
+Message-ID: <20190612003507.GG143729@dtor-ws>
+References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com>
+ <20190606161322.47192-1-jeffrey.l.hugo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-In-Reply-To: <20190611085722.GX21222@phenom.ffwll.local>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
-To: Derek Basehore <dbasehore@chromium.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Intel Graphics <intel-gfx@lists.freedesktop.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>moderated
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190606161322.47192-1-jeffrey.l.hugo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: benjamin.tissoires@redhat.com, jikos@kernel.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org, hdegoede@redhat.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMTEsIDIwMTkgYXQgMTo1NyBBTSBEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3
-bGwuY2g+IHdyb3RlOgo+Cj4gT24gTW9uLCBKdW4gMTAsIDIwMTkgYXQgMDk6MDM6NDhQTSAtMDcw
-MCwgRGVyZWsgQmFzZWhvcmUgd3JvdGU6Cj4gPiBUaGlzIGFkZHMgdGhlIGF0dGFjaC9kZXRhY2gg
-Y2FsbGJhY2tzLiBUaGVzZSBhcmUgZm9yIHNldHRpbmcgdXAKPiA+IGludGVybmFsIHN0YXRlIGZv
-ciB0aGUgY29ubmVjdG9yL3BhbmVsIHBhaXIgdGhhdCBjYW4ndCBiZSBkb25lIGF0Cj4gPiBwcm9i
-ZSAoc2luY2UgdGhlIGNvbm5lY3RvciBkb2Vzbid0IGV4aXN0KSBhbmQgd2hpY2ggZG9uJ3QgbmVl
-ZCB0byBiZQo+ID4gcmVwZWF0ZWRseSBkb25lIGZvciBldmVyeSBnZXQvbW9kZXMsIHByZXBhcmUs
-IG9yIGVuYWJsZSBjYWxsYmFjay4KPiA+IFZhbHVlcyBzdWNoIGFzIHRoZSBwYW5lbCBvcmllbnRh
-dGlvbiwgYW5kIGRpc3BsYXkgc2l6ZSBjYW4gYmUgZmlsbGVkCj4gPiBpbiBmb3IgdGhlIGNvbm5l
-Y3Rvci4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBEZXJlayBCYXNlaG9yZSA8ZGJhc2Vob3JlQGNo
-cm9taXVtLm9yZz4KPiA+IC0tLQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9kcm1fcGFuZWwuYyB8IDE0
-ICsrKysrKysrKysrKysrCj4gPiAgaW5jbHVkZS9kcm0vZHJtX3BhbmVsLmggICAgIHwgIDQgKysr
-Kwo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKQo+ID4KPiA+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2dwdS9kcm0vZHJtX3BhbmVsLmMgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX3Bh
-bmVsLmMKPiA+IGluZGV4IDNiNjg5Y2U0YTUxYS4uNzJmNjc2NzhkOWQ1IDEwMDY0NAo+ID4gLS0t
-IGEvZHJpdmVycy9ncHUvZHJtL2RybV9wYW5lbC5jCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
-ZHJtX3BhbmVsLmMKPiA+IEBAIC0xMDQsMTIgKzEwNCwyMyBAQCBFWFBPUlRfU1lNQk9MKGRybV9w
-YW5lbF9yZW1vdmUpOwo+ID4gICAqLwo+ID4gIGludCBkcm1fcGFuZWxfYXR0YWNoKHN0cnVjdCBk
-cm1fcGFuZWwgKnBhbmVsLCBzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+ID4gIHsK
-PiA+ICsgICAgIGludCByZXQ7Cj4gPiArCj4gPiAgICAgICBpZiAocGFuZWwtPmNvbm5lY3RvcikK
-PiA+ICAgICAgICAgICAgICAgcmV0dXJuIC1FQlVTWTsKPiA+Cj4gPiAgICAgICBwYW5lbC0+Y29u
-bmVjdG9yID0gY29ubmVjdG9yOwo+ID4gICAgICAgcGFuZWwtPmRybSA9IGNvbm5lY3Rvci0+ZGV2
-Owo+ID4KPiA+ICsgICAgIGlmIChwYW5lbC0+ZnVuY3MtPmF0dGFjaCkgewo+ID4gKyAgICAgICAg
-ICAgICByZXQgPSBwYW5lbC0+ZnVuY3MtPmF0dGFjaChwYW5lbCk7Cj4gPiArICAgICAgICAgICAg
-IGlmIChyZXQgPCAwKSB7Cj4gPiArICAgICAgICAgICAgICAgICAgICAgcGFuZWwtPmNvbm5lY3Rv
-ciA9IE5VTEw7Cj4gPiArICAgICAgICAgICAgICAgICAgICAgcGFuZWwtPmRybSA9IE5VTEw7Cj4g
-PiArICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsKPiA+ICsgICAgICAgICAgICAgfQo+
-ID4gKyAgICAgfQo+Cj4gV2h5IGNhbid0IHdlIGp1c3QgaW1wbGVtZW50IHRoaXMgaW4gdGhlIGRy
-bSBoZWxwZXJzIGZvciBldmVyeW9uZSwgYnkgZS5nLgo+IHN0b3JpbmcgYSBkdCBub2RlIGluIGRy
-bV9wYW5lbD8gRmVlbHMgYSBiaXQgb3ZlcmtpbGwgdG8gaGF2ZSB0aGVzZSBuZXcKPiBob29rcyBo
-ZXJlLgo+Cj4gQWxzbywgbXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHRoaXMgZHQgc3R1ZmYgaXMg
-c3VwcG9zZWQgdG8gYmUKPiBzdGFuZGFyZGl6ZWQsIHNvIHRoaXMgc2hvdWxkIHdvcmsuCgpTbyBk
-byB5b3Ugd2FudCBhbGwgb2YgdGhpcyBpbmZvcm1hdGlvbiBhZGRlZCB0byB0aGUgZHJtX3BhbmVs
-IHN0cnVjdD8KSWYgd2UgZG8gdGhhdCwgd2UgZG9uJ3QgbmVjZXNzYXJpbHkgZXZlbiBuZWVkIHRo
-ZSBkcm0gaGVscGVyIGZ1bmN0aW9uLgpXZSBjb3VsZCBqdXN0IGNvcHkgdGhlIHZhbHVlcyBvdmVy
-IGhlcmUgaW4gdGhlIGRybV9wYW5lbF9hdHRhY2gKZnVuY3Rpb24gKGFuZCBjbGVhciB0aGVtIGlu
-IGRybV9wYW5lbF9kZXRhY2gpLgoKPiAtRGFuaWVsCj4KPiA+ICsKPiA+ICAgICAgIHJldHVybiAw
-Owo+ID4gIH0KPiA+ICBFWFBPUlRfU1lNQk9MKGRybV9wYW5lbF9hdHRhY2gpOwo+ID4gQEAgLTEy
-OCw2ICsxMzksOSBAQCBFWFBPUlRfU1lNQk9MKGRybV9wYW5lbF9hdHRhY2gpOwo+ID4gICAqLwo+
-ID4gIGludCBkcm1fcGFuZWxfZGV0YWNoKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+ID4gIHsK
-PiA+ICsgICAgIGlmIChwYW5lbC0+ZnVuY3MtPmRldGFjaCkKPiA+ICsgICAgICAgICAgICAgcGFu
-ZWwtPmZ1bmNzLT5kZXRhY2gocGFuZWwpOwo+ID4gKwo+ID4gICAgICAgcGFuZWwtPmNvbm5lY3Rv
-ciA9IE5VTEw7Cj4gPiAgICAgICBwYW5lbC0+ZHJtID0gTlVMTDsKPiA+Cj4gPiBkaWZmIC0tZ2l0
-IGEvaW5jbHVkZS9kcm0vZHJtX3BhbmVsLmggYi9pbmNsdWRlL2RybS9kcm1fcGFuZWwuaAo+ID4g
-aW5kZXggMTM2MzFiMmVmYmFhLi5lMTM2ZTNhM2M5OTYgMTAwNjQ0Cj4gPiAtLS0gYS9pbmNsdWRl
-L2RybS9kcm1fcGFuZWwuaAo+ID4gKysrIGIvaW5jbHVkZS9kcm0vZHJtX3BhbmVsLmgKPiA+IEBA
-IC0zNyw2ICszNyw4IEBAIHN0cnVjdCBkaXNwbGF5X3RpbWluZzsKPiA+ICAgKiBzdHJ1Y3QgZHJt
-X3BhbmVsX2Z1bmNzIC0gcGVyZm9ybSBvcGVyYXRpb25zIG9uIGEgZ2l2ZW4gcGFuZWwKPiA+ICAg
-KiBAZGlzYWJsZTogZGlzYWJsZSBwYW5lbCAodHVybiBvZmYgYmFjayBsaWdodCwgZXRjLikKPiA+
-ICAgKiBAdW5wcmVwYXJlOiB0dXJuIG9mZiBwYW5lbAo+ID4gKyAqIEBkZXRhY2g6IGRldGFjaCBw
-YW5lbC0+Y29ubmVjdG9yIChjbGVhciBpbnRlcm5hbCBzdGF0ZSwgZXRjLikKPiA+ICsgKiBAYXR0
-YWNoOiBhdHRhY2ggcGFuZWwtPmNvbm5lY3RvciAodXBkYXRlIGludGVybmFsIHN0YXRlLCBldGMu
-KQo+ID4gICAqIEBwcmVwYXJlOiB0dXJuIG9uIHBhbmVsIGFuZCBwZXJmb3JtIHNldCB1cAo+ID4g
-ICAqIEBlbmFibGU6IGVuYWJsZSBwYW5lbCAodHVybiBvbiBiYWNrIGxpZ2h0LCBldGMuKQo+ID4g
-ICAqIEBnZXRfbW9kZXM6IGFkZCBtb2RlcyB0byB0aGUgY29ubmVjdG9yIHRoYXQgdGhlIHBhbmVs
-IGlzIGF0dGFjaGVkIHRvIGFuZAo+ID4gQEAgLTcwLDYgKzcyLDggQEAgc3RydWN0IGRpc3BsYXlf
-dGltaW5nOwo+ID4gIHN0cnVjdCBkcm1fcGFuZWxfZnVuY3Mgewo+ID4gICAgICAgaW50ICgqZGlz
-YWJsZSkoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpOwo+ID4gICAgICAgaW50ICgqdW5wcmVwYXJl
-KShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCk7Cj4gPiArICAgICB2b2lkICgqZGV0YWNoKShzdHJ1
-Y3QgZHJtX3BhbmVsICpwYW5lbCk7Cj4gPiArICAgICBpbnQgKCphdHRhY2gpKHN0cnVjdCBkcm1f
-cGFuZWwgKnBhbmVsKTsKPiA+ICAgICAgIGludCAoKnByZXBhcmUpKHN0cnVjdCBkcm1fcGFuZWwg
-KnBhbmVsKTsKPiA+ICAgICAgIGludCAoKmVuYWJsZSkoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwp
-Owo+ID4gICAgICAgaW50ICgqZ2V0X21vZGVzKShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCk7Cj4g
-PiAtLQo+ID4gMi4yMi4wLnJjMi4zODMuZ2Y0ZmJiZjMwYzItZ29vZwo+ID4KPgo+IC0tCj4gRGFu
-aWVsIFZldHRlcgo+IFNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgo+IGh0dHA6
-Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCkludGVsLWdmeCBtYWlsaW5nIGxpc3QKSW50ZWwtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ludGVs
-LWdmeA==
+On Thu, Jun 06, 2019 at 09:13:22AM -0700, Jeffrey Hugo wrote:
+> There needs to be coordination between hid-quirks and the elan_i2c driver
+> about which devices are handled by what drivers.  Currently, both use
+> whitelists, which results in valid devices being unhandled by default,
+> when they should not be rejected by hid-quirks.  This is quickly becoming
+> an issue.
+> 
+> Since elan_i2c has a maintained whitelist of what devices it will handle,
+> use that to implement a blacklist in hid-quirks so that only the devices
+> that need to be handled by elan_i2c get rejected by hid-quirks, and
+> everything else is handled by default.  The downside is the whitelist and
+> blacklist need to be kept in sync.
+> 
+> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  drivers/hid/hid-quirks.c | 78 ++++++++++++++++++++++++++++++++++------
+>  1 file changed, 67 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+> index e5ca6fe2ca57..edebd0700e3d 100644
+> --- a/drivers/hid/hid-quirks.c
+> +++ b/drivers/hid/hid-quirks.c
+> @@ -912,8 +912,66 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
+>  	{ }
+>  };
+>  
+> +/* 
+> + * List of device names that elan_i2c is handling and HID should ignore.  Must
+> + * be kept in sync with elan_i2c
+> + */
+> +static const char *hid_elan_i2c_ignore[] = {
+
+If this is a copy of elan whitelist, then, if we do not want to bother
+with sharing it in object form (as a elan-i2c-ids module), can we at
+least move it into include/linux/input/elan-i2c-ids.h and consume from
+hid-quirks.c?
+
+Thanks.
+
+-- 
+Dmitry
