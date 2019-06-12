@@ -1,56 +1,104 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v5 6/6] arm64: dts: qcom: msm8998: Add mmcc node
-Date: Wed, 12 Jun 2019 13:13:17 -0600
-Message-ID: <1560366797-6155-1-git-send-email-jhugo@codeaurora.org>
-References: <1560366600-5826-1-git-send-email-jhugo@codeaurora.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Date: Wed, 12 Jun 2019 12:26:42 -0700
+Message-ID: <20190612192642.GK137143@google.com>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
+ <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+ <20190610205233.GB137143@google.com>
+ <20190611104913.egsbwcedshjdy3m5@holly.lan>
+ <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
+ <20190611223019.GH137143@google.com>
+ <20190612110325.xdn3q2aod52oalge@holly.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560366600-5826-1-git-send-email-jhugo@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190612110325.xdn3q2aod52oalge@holly.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: agross@kernel.org, bjorn.andersson@linaro.org
-Cc: marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Brian Norris <briannorris@google.com>, Pavel Machek <pavel@ucw.cz>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Add MSM8998 Multimedia Clock Controller DT node.
+Hi Daniel,
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On Wed, Jun 12, 2019 at 12:03:25PM +0100, Daniel Thompson wrote:
+> On Tue, Jun 11, 2019 at 03:30:19PM -0700, Matthias Kaehlcke wrote:
+> > On Tue, Jun 11, 2019 at 09:55:30AM -0700, Brian Norris wrote:
+> > > On Tue, Jun 11, 2019 at 3:49 AM Daniel Thompson
+> > > <daniel.thompson@linaro.org> wrote:
+> > > > This is a long standing flaw in the backlight interfaces. AFAIK generic
+> > > > userspaces end up with a (flawed) heuristic.
+> > > 
+> > > Bingo! Would be nice if we could start to fix this long-standing flaw.
+> > 
+> > Agreed!
+> > 
+> > How could a fix look like, a sysfs attribute? Would a boolean value
+> > like 'logarithmic_scale' or 'linear_scale' be enough or could more
+> > granularity be needed?
+> 
+> Certainly "linear" (this device will work more or less correctly if the
+> userspace applies perceptual curves). Not sure about logarithmic since
+> what is actually useful is something that is "perceptually linear"
+> (logarithmic is merely a way to approximate that).
+> 
+> I do wonder about a compatible string like most-detailed to
+> least-detailed description. This for a PWM with the auto-generated
+> tables we'd see something like:
+> 
+> cie-1991,perceptual,non-linear
+> 
+> For something that is non-linear but we are not sure what its tables are
+> we can offer just "non-linear".
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 9c88801..856c8ec 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -3,6 +3,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
-+#include <dt-bindings/clock/qcom,mmcc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -1066,6 +1067,19 @@
- 			status = "disabled";
- 		};
- 
-+		mmcc: clock-controller@c8c0000 {
-+			compatible = "qcom,mmcc-msm8998";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+			reg = <0x0c8c0000 0x40000>;
-+
-+			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
-+				 <&gcc GPLL0_OUT_MAIN>;
-+			clock-names = "xo",
-+				      "gpll0";
-+		};
-+
- 		timer@17920000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Thanks for the feedback!
+
+It seems clear that we want a string for the added flexibility. I can
+work on a patch with the compatible string like description you
+suggested and we can discuss in the review if we want to go with that
+or prefer something else.
+
+> > The new attribute could be optional (it only exists if explicitly
+> > specified by the driver) or be set to a default based on a heuristic
+> > if not specified and be 'fixed' on a case by case basis. The latter
+> > might violate "don't break userspace" though, so I'm not sure it's a
+> > good idea.
+> 
+> I think we should avoid any heuristic! There are several drivers and we
+> may not be able to work through all of them and make the correct
+> decision.
+
+Agreed
+
+> Instead one valid value for the sysfs should be "unknown" and this be
+> the default for drivers we have not analysed (this also makes it easy to
+> introduce change here).
+
+An "unknown" value sounds good, it allows userspace to just do what it
+did/would hace done before this attribute existed.
+
+> We should only set the property to something else for drivers that have
+> been reviewed.
+> 
+> There could be a special case for pwm_bl.c in that I'm prepared to
+> assume that the hardware components downstream of the PWM have a
+> roughly linear response and that if the user provided tables that their
+> function is to provide a perceptually comfortable response.
+
+Unfortunately this isn't universally true :(
+
+At least several Chrome OS devices use a linear brightness scale and
+userspace does the transformation in the animated slider. A quick
+'git grep -A10 brightness-levels arch' suggests that there are
+multiple other devices/platforms using a linear scale.
+
+We could treat devices with a predefined brightness table as
+"unknown", unless there is a (new optional) DT property that indicates
+the type of the scale.
+
+Cheers
+
+Matthias
