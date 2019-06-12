@@ -1,33 +1,31 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH next] of/fdt: Fix defined but not used compiler warning
-Date: Wed, 12 Jun 2019 07:44:36 -0700
-Message-ID: <5d010fd5.1c69fb81.e7b77.87ae@mx.google.com>
-References: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
+From: Jiri Kosina <jikos@kernel.org>
+Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
+Date: Wed, 12 Jun 2019 16:45:11 +0200 (CEST)
+Message-ID: <nycvar.YFH.7.76.1906121644160.27227@cbobk.fhfr.pm>
+References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com> <20190606161322.47192-1-jeffrey.l.hugo@gmail.com> <20190612003507.GG143729@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
+In-Reply-To: <20190612003507.GG143729@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, benjamin.tissoires@redhat.com, bjorn.andersson@linaro.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org, hdegoede@redhat.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Kefeng Wang (2019-06-11 18:00:11)
-> When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler warning,
->=20
-> drivers/of/fdt.c:129:19: warning: =E2=80=98of_fdt_match=E2=80=99 defined =
-but not used [-Wunused-function]
->  static int __init of_fdt_match(const void *blob, unsigned long node,
->=20
-> Move of_fdt_match() and of_fdt_is_compatible() under CONFIG_OF_EARLY_FLAT=
-TREE
-> to fix it.
->=20
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
+On Tue, 11 Jun 2019, Dmitry Torokhov wrote:
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > +static const char *hid_elan_i2c_ignore[] = {
+> 
+> If this is a copy of elan whitelist, then, if we do not want to bother
+> with sharing it in object form (as a elan-i2c-ids module), can we at
+> least move it into include/linux/input/elan-i2c-ids.h and consume from
+> hid-quirks.c?
+
+Let's just not duplicate it in both objects. Why not properly export it 
+from hid_quirks?
+
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
