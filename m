@@ -1,95 +1,123 @@
 From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345
- bridge on Teres-I
-Date: Wed, 12 Jun 2019 12:00:21 +0200
-Message-ID: <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
+Subject: Re: [PATCH v2 1/7] drm/bridge: move ANA78xx driver to analogix
+ subdirectory
+Date: Wed, 12 Jun 2019 12:16:54 +0200
+Message-ID: <5617d9f2-9935-eec6-748b-02cd00450d76@samsung.com>
 References: <20190604122150.29D6468B05@newverein.lst.de>
- <20190604122308.98D4868B20@newverein.lst.de>
- <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
- <20190605101317.GA9345@lst.de> <20190605120237.ekmytfxcwbjaqy3x@flea>
- <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
- <20190607062802.m5wslx3imiqooq5a@flea>
- <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
- <20190607094030.GA12373@lst.de>
+        <CGME20190604122320epcas3p3bdb18dc38aaad91e8c132625649db9ba@epcas3p3.samsung.com>
+        <20190604122251.676BF68B05@newverein.lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190607094030.GA12373@lst.de>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190604122251.676BF68B05@newverein.lst.de>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Torsten Duwe <duwe@lst.de>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Torsten Duwe <duwe@lst.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDcuMDYuMjAxOSAxMTo0MCwgVG9yc3RlbiBEdXdlIHdyb3RlOgo+IE9uIEZyaSwgSnVuIDA3
-LCAyMDE5IGF0IDA4OjI4OjAyQU0gKzAyMDAsIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4+IE9uIFRo
-dSwgSnVuIDA2LCAyMDE5IGF0IDAzOjU5OjI3UE0gKzAyMDAsIEhhcmFsZCBHZXllciB3cm90ZToK
-Pj4+IElmIHRoaW5rIHZhbGlkIGNvbXBhdGlibGUgcHJvcGVydGllcyB3b3VsZCBiZToKPj4+IGNv
-bXBhdGlibGUgPSAiaW5ub2x1eCxuMTE2YmdlIiwgInNpbXBsZS1wYW5lbCI7Cj4+PiBjb21wYXRp
-YmxlID0gImVkcC1jb25uZWN0b3IiLCAic2ltcGxlLXBhbmVsIjsKPj4gQSBjb25uZWN0b3IgaXNu
-J3QgYSBwYW5lbC4KPj4KPj4+IGNvbXBhdGlibGUgPSAiaW5ub2x1eCxuMTE2YmdlIiwgImVkcC1j
-b25uZWN0b3IiLCAic2ltcGxlLXBhbmVsIjsKPj4gQW5kIHRoZSBpbm5vbHV4LG4xMTZiZ2UgaXMg
-Y2VydGFpbmx5IG5vdCBhIGNvbm5lY3RvciBlaXRoZXIuCj4+Cj4+PiBjb21wYXRpYmxlID0gImVk
-cC1jb25uZWN0b3IiLCAiaW5ub2x1eCxuMTE2YmdlIiwgInNpbXBsZS1wYW5lbCI7Cj4+Pgo+Pj4g
-SSBjYW4ndCBtYWtlIHVwIG15IG1pbmQgd2hpY2ggb25lIEkgcHJlZmVyZS4gSG93ZXZlciBuZWl0
-aGVyIG9mIHRoZXNlCj4+PiB2YXJpYW50cyByZXF1aXJlcyBhY3R1YWxseSBpbXBsbWVudGluZyBh
-biBlZHAtY29ubmVjdG9yIGRyaXZlci4KPj4gTm8tb25lIGFza2VkIHRvIGRvIGFuIGVkcC1jb25u
-ZWN0b3IgZHJpdmVyLiBZb3Ugc2hvdWxkIHVzZSBpdCBpbiB5b3VyCj4+IERULCBidXQgaWYgeW91
-IHdhbnQgdG8gaGF2ZSBzb21lIGNvZGUgaW4geW91ciBkcml2ZXIgdGhhdCBwYXJzZXMgdGhlCj4+
-IERUIGRpcmVjdGx5LCBJJ20gdG90YWxseSBmaW5lIHdpdGggdGhhdC4KPiBJIG11c3QgYWRtaXQg
-SSBmYWlsIHRvIHVuZGVyc3RhbmQgd2hhdCB0aGF0IGV4dHJhIG5vZGUgd291bGQgYmUgZ29vZCBm
-b3IuCj4gTG9naWNhbGx5LCB0aGUgZURQIGZhciBzaWRlIGlzIGNvbm5lY3RlZCB0byB0aGUgd2Vs
-bC1rbm93biBuMTE2YmdlLgo+IEluc2lkZSB0aGUgbGFwdG9wIGNhc2UgaXQgbWlnaHQgYXMgd2Vs
-bCBiZSBhIGZsYXQgcmliYm9uIGNhYmxlIG9yCj4gc29sZGVyZWQgZGlyZWN0bHkuCj4gSW4gZ29v
-ZCBpbnRlbnRpb24sIHRoYXQncyBhbGwgSSB3YW50ZWQgdG8gZXhwcmVzcyBpbiB0aGUgRFQuIEkg
-ZG9uJ3QKPiBrbm93IHdoZXRoZXIgdGhlIHJlbGV2YW50IG1lY2hhbmljYWwgZGltZW5zaW9ucyBv
-ZiB0aGUgcGFuZWwgYW5kIHRoZQo+IGNvbm5lY3RvciBhcmUgc3RhbmRhcmRpc2VkLCBzbyB3aGV0
-aGVyIG9uZSBjb3VsZCBpbiB0aGVvcnkgYXNzZW1ibGUgaXQKPiB3aXRoIGEgZGlmZmVyZW50IHBh
-bmVsIHRoYW4gdGhlIG9uZSBpdCBjYW1lIHdpdGguCj4KPiBPVE9ILCBhcyBJIGNoZWNrZWQgZHVy
-aW5nIHRoZSBkaXNjdXNzaW9uIHdpdGggYW5hcnNvdWwsIHRoZSBwYW5lbCdzCj4gc3VwcGx5IHZv
-bHRhZ2UgaXMgcGVybWFuZW50bHkgY29ubmVjdGVkIHRvIHRoZSBtYWluIDMuM1YgcmFpbC4KPiBX
-ZSBhbHJlYWR5IGFncmVlZCB0aGF0IHRoZSBlRFAgb3V0cHV0IHBvcnQgbXVzdCBub3QgbmVjY2Vz
-c2FyaWx5IGJlCj4gc3BlY2lmaWVkLCB0aGlzIHNldHVwIGlzIGEgZ29vZCBleGFtcGxlIHdoeTog
-YmVjYXVzZSB0aGUgcGFuZWwgaXMKPiBhbHdheXMgcG93ZXJlZCwgdGhlIGFueDYzNDUgY2FuIGFs
-d2F5cyBwdWxsIHZhbGlkIEVESUQgZGF0YSBmcm9tIGl0Cj4gc28gYXQgdGhpcyBzdGFnZSB0aGVy
-ZSdzIG5vIG5lZWQgZm9yIGFueSBPUyBkcml2ZXIgdG8gcmVhY2ggYmV5b25kCj4gdGhlIGJyaWRn
-ZS4gSUlSQyBldmVuIHRoZSBiYWNrbGlnaHQgZ290IHN3aXRjaGVkIG9mZiBmb3IgdGhlIGJsYW5r
-Cj4gc2NyZWVuIHdpdGhvdXQuCj4KPiBBbGwgSSB3YW50ZWQgdG8gc2F5IGlzIHRoYXQgInRoZXJl
-J3MgdXN1YWxseSBhbiBuMTE2YmdlIGJlaGluZCBpdCI7Cj4gYnV0IHRoaXMgaXMgbW9zdGx5IHJl
-ZHVuZGFudC4KPgo+IFNvLCBzaGFsbCB3ZSBqdXN0IGRyb3AgdGhlIG91dHB1dCBwb3J0IHNwZWNp
-ZmljYXRpb24gKGFsb25nIHdpdGggdGhlCj4gcGFuZWwgbm9kZSkgaW4gb3JkZXIgdG8gZ2V0IG9u
-ZSBzdGVwIGZ1cnRoZXI/CgoKSSBhbSBub3Qgc3VyZSBpZiBJIHVuZGVyc3RhbmQgd2hvbGUgZGlz
-Y3Vzc2lvbiBoZXJlLCBidXQgSSBhbHNvIGRvIG5vdAp1bmRlcnN0YW5kIHdob2xlIGVkcC1jb25u
-ZWN0b3IgdGhpbmcuCgpBY2NvcmRpbmcgdG8gVkVTQVsxXSBlRFAgaXMgIkludGVybmFsIGRpc3Bs
-YXkgaW50ZXJmYWNlIiAtIHRoZXJlIGlzIG5vCmV4dGVybmFsIGNvbm5lY3RvciBmb3IgZURQLCB0
-aGUgd2F5IGl0IGlzIGNvbm5lY3RlZCBpcyBpbnRlZ3JhdG9yJ3MKZGVjaXNpb24sIGJ1dCBpdCBp
-cyBmaXhlZCAtIGllIGVuZCB1c2VyIGRvIG5vdCBwbHVnL3VucGx1ZyBpdC4KCklmIEkgcmVtZW1i
-ZXIgY29ycmVjdGx5IGluIHNvbWUgYm9hcmRzIGVEUCBpcyBjb25uZWN0ZWQgdG8gc29tZSBEUApj
-b25uZWN0b3IgKG9kcm9pZCB4dTMgaWYgSSByZW1lbWJlciBjb3JyZWN0bHkpLCBidXQgdGhpcyBp
-cyBub24tc3RhbmRhcmQKaGFjaywgYW5kIGZvciB0aGlzIGNhc2UgaW4gYmluZGluZ3MgdGhlcmUg
-c2hvdWxkIGJlIHJhdGhlciBkcC1jb25uZWN0b3IKbm90IGVkcC1jb25uZWN0b3IuCgpbMV06Cmh0
-dHBzOi8vd3d3LnZlc2Eub3JnL3dwLWNvbnRlbnQvdXBsb2Fkcy8yMDEwLzEyL0Rpc3BsYXlQb3J0
-LURldkNvbi1QcmVzZW50YXRpb24tZURQLURlYy0yMDEwLXYzLnBkZgoKClJlZ2FyZHMKCkFuZHJ6
-ZWoKCgo+Cj4+IEkgZ3Vlc3MgeW91IHNob3VsZCBkZXNjcmliZSB3aHkgZG8geW91IHRoaW5rIGl0
-J3MgImNsZWFyIiwgYmVjYXVzZSBJJ20KPj4gbm90IHN1cmUgdGhpcyBpcyBvYnZpb3VzIGZvciBl
-dmVyeW9uZSBoZXJlLiBlRFAgYWxsb3dzIHRvIGRpc2NvdmVyCj4+IHdoaWNoIGRldmljZSBpcyBv
-biB0aGUgb3RoZXIgc2lkZSBhbmQgaXRzIHN1cHBvcnRlZCB0aW1pbmdzLCBqdXN0IGxpa2UKPj4g
-SERNSSBmb3IgZXhhbXBsZSAob3IgcmVndWxhciBEUCwgZm9yIHRoYXQgbWF0dGVyKS4gV291bGQg
-eW91IHRoaW5rCj4+IGl0J3MgY2xlYXJseSBwcmVmZXJhYmxlIHRvIHNoaXAgYSBEVCB3aXRoIHRo
-ZSBEUC9IRE1JIG1vbml0b3IKPj4gY29ubmVjdGVkIG9uIHRoZSBvdGhlciBzaWRlIGV4cG9zZWQg
-YXMgYSBwYW5lbCBhcyB3ZWxsPwo+IFdlbGwsIGFzIEkgd3JvdGU6ICJpbiBnb29kIGludGVudGlv
-biIuIFRoYXQncyB0aGUgcGFuZWwgdGhhdCBjb21lcyB3aXRoCj4gdGhlIGtpdCBidXQgaXQgaXMg
-dmVyeSB3ZWxsIGRldGVjdGVkIGF1dG9tYXRpY2FsbHksIGp1c3QgbGlrZSB5b3UgZGVzY3JpYmUu
-Cj4KPiBTbywganVzdCBsZWF2ZSBpdCBvdXQ/Cj4KPiAJVG9yc3Rlbgo+Cj4KPgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On 04.06.2019 14:22, Torsten Duwe wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
+>
+> As ANA78xx chips are designed and produced by Analogix Semiconductor,
+> Inc, move their driver codes into analogix subdirectory.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Torsten Duwe <duwe@suse.de>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+
+ --
+Regards
+Andrzej
+> ---
+>  drivers/gpu/drm/bridge/Kconfig                           | 10 ----------
+>  drivers/gpu/drm/bridge/Makefile                          |  4 ++--
+>  drivers/gpu/drm/bridge/analogix/Kconfig                  | 10 ++++++++++
+>  drivers/gpu/drm/bridge/analogix/Makefile                 |  1 +
+>  drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c |  0
+>  drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h |  0
+>  6 files changed, 13 insertions(+), 12 deletions(-)
+>  rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (100%)
+>  rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h (100%)
+>
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index ee777469293a..862789bf64a0 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -16,16 +16,6 @@ config DRM_PANEL_BRIDGE
+>  menu "Display Interface Bridges"
+>  	depends on DRM && DRM_BRIDGE
+>  
+> -config DRM_ANALOGIX_ANX78XX
+> -	tristate "Analogix ANX78XX bridge"
+> -	select DRM_KMS_HELPER
+> -	select REGMAP_I2C
+> -	---help---
+> -	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
+> -	  designed for portable devices. The ANX78XX transforms
+> -	  the HDMI output of an application processor to MyDP
+> -	  or DisplayPort.
+> -
+>  config DRM_CDNS_DSI
+>  	tristate "Cadence DPI/DSI bridge"
+>  	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> index 4934fcf5a6f8..a6c7dd7727ea 100644
+> --- a/drivers/gpu/drm/bridge/Makefile
+> +++ b/drivers/gpu/drm/bridge/Makefile
+> @@ -1,5 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+>  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+>  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+>  obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+> @@ -12,8 +11,9 @@ obj-$(CONFIG_DRM_SII9234) += sii9234.o
+>  obj-$(CONFIG_DRM_THINE_THC63LVD1024) += thc63lvd1024.o
+>  obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
+>  obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
+> -obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
+>  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
+>  obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
+>  obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
+> +
+> +obj-y += analogix/
+>  obj-y += synopsys/
+> diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
+> index e930ff9b5cd4..704fb0f41dc3 100644
+> --- a/drivers/gpu/drm/bridge/analogix/Kconfig
+> +++ b/drivers/gpu/drm/bridge/analogix/Kconfig
+> @@ -1,4 +1,14 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> +config DRM_ANALOGIX_ANX78XX
+> +	tristate "Analogix ANX78XX bridge"
+> +	select DRM_KMS_HELPER
+> +	select REGMAP_I2C
+> +	help
+> +	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
+> +	  designed for portable devices. The ANX78XX transforms
+> +	  the HDMI output of an application processor to MyDP
+> +	  or DisplayPort.
+> +
+>  config DRM_ANALOGIX_DP
+>  	tristate
+>  	depends on DRM
+> diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
+> index fdbf3fd2f087..6fcbfd3ee560 100644
+> --- a/drivers/gpu/drm/bridge/analogix/Makefile
+> +++ b/drivers/gpu/drm/bridge/analogix/Makefile
+> @@ -1,3 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o
+> +obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+>  obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
+> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+> similarity index 100%
+> rename from drivers/gpu/drm/bridge/analogix-anx78xx.c
+> rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+> similarity index 100%
+> rename from drivers/gpu/drm/bridge/analogix-anx78xx.h
+> rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
