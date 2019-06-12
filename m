@@ -1,213 +1,131 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up
- of_find_device_by_node()
-Date: Wed, 12 Jun 2019 19:08:21 +0200
-Message-ID: <20190612170821.GA6396@kroah.com>
-References: <20190604003218.241354-1-saravanak@google.com>
- <20190604003218.241354-2-saravanak@google.com>
- <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
- <570474f4-8749-50fd-5f72-36648ed44653@gmail.com>
- <CAGETcx8M3YkUBZ-e2LLfrbWgnMKMMNG5cv=p8MMmBe7ZyPJ7xw@mail.gmail.com>
- <20190611215242.GE212690@google.com>
- <CAL_Jsq+V9QUBpzmPyYjWe93-06-mpU=5JmUqvf-QsnuLxPnmUA@mail.gmail.com>
- <20190612142159.GA11563@kroah.com>
- <CAL_Jsq+x=_6jfC7hkHy+zAaPRB_3K7i9axRiBMHGE9mHQQtPtg@mail.gmail.com>
+From: Cezary Rojewski <cezary.rojewski@intel.com>
+Subject: Re: [PATCH v1 3/4] ASoC: tda7802: Add enable device attribute
+Date: Wed, 12 Jun 2019 19:14:57 +0200
+Message-ID: <1546f318-2b34-b42c-7aa3-a51429020bca@intel.com>
+References: <20190611174909.12162-1-thomas.preston@codethink.co.uk>
+ <20190611174909.12162-4-thomas.preston@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+x=_6jfC7hkHy+zAaPRB_3K7i9axRiBMHGE9mHQQtPtg@mail.gmail.com>
+In-Reply-To: <20190611174909.12162-4-thomas.preston@codethink.co.uk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Sandeep Patil <sspatil@android.com>, Saravana Kannan <saravanak@google.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+To: Thomas Preston <thomas.preston@codethink.co.uk>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Jerome Brunet <jbrunet@baylibre.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Marco Felsch <m.felsch@pengutronix.de>, Paul Cercueil <paul@crapouillou.net>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Cheng-Yi Chiang <cychiang@chromium.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Vinod Koul <vkoul@kernel.org>, Annaliese McDermond <nh6z@nh6z.net>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 10:53:09AM -0600, Rob Herring wrote:
-> On Wed, Jun 12, 2019 at 8:22 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Jun 12, 2019 at 07:53:39AM -0600, Rob Herring wrote:
-> > > On Tue, Jun 11, 2019 at 3:52 PM Sandeep Patil <sspatil@android.com> wrote:
-> > > >
-> > > > On Tue, Jun 11, 2019 at 01:56:25PM -0700, 'Saravana Kannan' via kernel-team wrote:
-> > > > > On Tue, Jun 11, 2019 at 8:18 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> > > > > >
-> > > > > > Hi Saravana,
-> > > > > >
-> > > > > > On 6/10/19 10:36 AM, Rob Herring wrote:
-> > > > > > > Why are you resending this rather than replying to Frank's last
-> > > > > > > comments on the original?
-> > > > > >
-> > > > > > Adding on a different aspect...  The independent replies from three different
-> > > > > > maintainers (Rob, Mark, myself) pointed out architectural issues with the
-> > > > > > patch series.  There were also some implementation issues brought out.
-> > > > > > (Although I refrained from bringing up most of my implementation issues
-> > > > > > as they are not relevant until architecture issues are resolved.)
-> > > > >
-> > > > > Right, I'm not too worried about the implementation issues before we
-> > > > > settle on the architectural issues. Those are easy to fix.
-> > > > >
-> > > > > Honestly, the main points that the maintainers raised are:
-> > > > > 1) This is a configuration property and not describing the device.
-> > > > > Just use the implicit dependencies coming from existing bindings.
-> > > > >
-> > > > > I gave a bunch of reasons for why I think it isn't an OS configuration
-> > > > > property. But even if that's not something the maintainers can agree
-> > > > > to, I gave a concrete example (cyclic dependencies between clock
-> > > > > provider hardware) where the implicit dependencies would prevent one
-> > > > > of the devices from probing till the end of time. So even if the
-> > > > > maintainers don't agree we should always look at "depends-on" to
-> > > > > decide the dependencies, we still need some means to override the
-> > > > > implicit dependencies where they don't match the real dependency. Can
-> > > > > we use depends-on as an override when the implicit dependencies aren't
-> > > > > correct?
-> > > > >
-> > > > > 2) This doesn't need to be solved because this is just optimizing
-> > > > > probing or saving power ("we should get rid of this auto disabling"):
-> > > > >
-> > > > > I explained why this patch series is not just about optimizing probe
-> > > > > ordering or saving power. And why we can't ignore auto disabling
-> > > > > (because it's more than just auto disabling). The kernel is currently
-> > > > > broken when trying to use modules in ARM SoCs (probably in other
-> > > > > systems/archs too, but I can't speak for those).
-> > > > >
-> > > > > 3) Concerns about backwards compatibility
-> > > > >
-> > > > > I pointed out why the current scheme (depends-on being the only source
-> > > > > of dependency) doesn't break compatibility. And if we go with
-> > > > > "depends-on" as an override what we could do to keep backwards
-> > > > > compatibility. Happy to hear more thoughts or discuss options.
-> > > > >
-> > > > > 4) How the "sync_state" would work for a device that supplies multiple
-> > > > > functionalities but a limited driver.
-> > > >
-> > > > <snip>
-> > > > To be clear, all of above are _real_ problems that stops us from efficiently
-> > > > load device drivers as modules for Android.
-> > > >
-> > > > So, if 'depends-on' doesn't seem like the right approach and "going back to
-> > > > the drawing board" is the ask, could you please point us in the right
-> > > > direction?
-> > >
-> > > Use the dependencies which are already there in DT. That's clocks,
-> > > pinctrl, regulators, interrupts, gpio at a minimum. I'm simply not
-> > > going to accept duplicating all those dependencies in DT. The downside
-> > > for the kernel is you have to address these one by one and can't have
-> > > a generic property the driver core code can parse. After that's in
-> > > place, then maybe we can consider handling any additional dependencies
-> > > not already captured in DT. Once all that is in place, we can probably
-> > > sort device and/or driver lists to optimize the probe order (maybe the
-> > > driver core already does that now?).
-> > >
-> > > Get rid of the auto disabling of clocks and regulators in
-> > > late_initcall. It's simply not a valid marker that boot is done when
-> > > modules are involved. We probably can't get rid of it as lot's of
-> > > platforms rely on that, so it will have to be opt out. Make it the
-> > > platform's responsibility for ensuring a consistent state.
-> > >
-> > > Perhaps we need a 'boot done' or 'stop deferring probe' trigger from
-> > > userspace in order to make progress if dependencies are missing.
-> >
-> > People have tried to do this multiple times, and you never really know
-> > when "boot is done" due to busses that have discoverable devices and
-> > async probing of other busses.
+On 2019-06-11 19:49, Thomas Preston wrote:
+> Add a device attribute to control the enable regulator. Write 1 to
+> enable, 0 to disable (ref-count minus one), or -1 to force disable the
+> physical pin.
 > 
-> Yes, I know which is why I proposed the second name with more limited
-> meaning/function.
-
-I still don't want to have the kernel have to rely on this.
-
-> > You do know "something" when you pivot to a new boot disk, and when you
-> > try to load init, but given initramfs and the fact that modules are
-> > usually included on them, that's not really a good indication that
-> > anything is "finished".
-> >
-> > I don't want userspace to be responsible for telling the kernel, "hey
-> > you should be finished now!", as that's an async notification that is
-> > going to be ripe for problems.
+> To disable a set of amplifiers wired to the same enable gpio, each
+> device must be disabled. For example:
 > 
-> The usecase I care about here is when the DT has the dependency
-> information, but the kernel doesn't have the driver and the dependency
-> is never resolved.
-
-Then we have the same situation as today and nothing different happens,
-right?
-
-> The same problem has to be solved with a
-> 'depends-on' property. This easily happens with a new DT with added
-> dependencies like pinctrl and an old kernel that doesn't have the
-> "new" driver. Another example is IOMMUs. We need some way to say stop
-> waiting for dependencies. It is really just a debug option (of course,
-> how to prevent a debug option from being used in production?). This
-> works now for built-in cases with the same late_initcall abuse.
-
-What is a debug option?  We need something "for real".
-
-> Using late_initcall_sync as an indicator has all the same problems
-> with userspace indicating boot finished. We should get rid of the
-> late_initcall_sync abuses and stop trying to work around them.
-
-I agree, but that's not the issue here.
-
-> > I really like the "depends-on" information, as it shows a topology that
-> > DT doesn't seem to be able to show today, yet we rely on it in the
-> > kernel with the whole deferred probing mess.  To me, there doesn't seem
-> > to be any other way to properly "know" this.
+> 	echo 0 > /sys/devices/.../device:00/enable
+> 	echo 0 > /sys/devices/.../device:01/enable
 > 
-> As I said, DT *does* have this dependency information already. The
-> problem is the kernel probing doesn't use it. Fix that and then we can
-> discuss dependencies the DT doesn't provide that the kernel needs.
-
-Where can the kernel probing be fixed to use it?  What am I missing that
-can be done instead of what this patchset does?
-
-> > > Or
-> > > maybe just some timeout would be sufficient. I think this is probably
-> > > more useful for development than in a shipping product. Even if you
-> > > could fallback to polling mode instead of interrupts for example, I
-> > > doubt you would want to in a product.
-> >
-> > timeouts suck.  And do not work for shipping products.  I want a device
-> > with 100 modules that relys on DT to be able to boot just as fast as a
-> > laptop with 100 modules that has all of the needed dependancies
-> > described today in their bus topologies, because they used sane hardware
-> > (i.e. PCI and ACPI).  Why hurt embedded people just because their
-> > hardware relies on a system where you have to loop for long periods of
-> > time because DT can not show the topology correctly?
+> In an emergency, we can force disable from any device:
 > 
-> I failed to list buses, but those too are already described in DT. Bus
-> dependencies are handled already.
-
-That's not my point, I know sane busses are described in DT :)
-
-> > > You should also keep in mind that everything needed for a console has
-> > > to be built in. Maybe Android can say the console isn't needed, but in
-> > > general we can't.
-> >
-> > What does a console have to do with any of this?
+> 	echo -1 > /sys/devices/.../device:00/enable
 > 
-> Do you want to move all the SoC support to modules and have a console?
-
-That's not the issue/point here at all.  I really could care less about
-a console, the issue is that we need a way to take a "generic" arm64
-kernel, with a load of modules (i.e. allmodconfig) and have it boot in a
-sane amount of time.
-
-Other arches do this today, why can't arm64?  That is the issue here,
-not console or late init calls.
-
-> That doesn't work. Dependencies for the console have to be resolved
-> before initcalls are done. I don't recall the exact details, but I did
-> hit that issue when working on handling the missing dependency issues
-> (25b4e70dcce9 driver core: allow stopping deferred probe after init).
+> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+> Cc: Patrick Glaser <pglaser@tesla.com>
+> Cc: Rob Duncan <rduncan@tesla.com>
+> Cc: Nate Case <ncase@tesla.com>
+> ---
+>   sound/soc/codecs/tda7802.c | 65 +++++++++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 64 insertions(+), 1 deletion(-)
 > 
-> The point is that moving things to modules does introduce issues
-> beyond just dependency tracking.
+> diff --git a/sound/soc/codecs/tda7802.c b/sound/soc/codecs/tda7802.c
+> index 38ca52de85f0..62aae011d9f1 100644
+> --- a/sound/soc/codecs/tda7802.c
+> +++ b/sound/soc/codecs/tda7802.c
+> @@ -458,6 +458,42 @@ static struct snd_soc_dai_driver tda7802_dai_driver = {
+>   	.ops = &tda7802_dai_ops,
+>   };
+>   
+> +static ssize_t enable_show(struct device *dev, struct device_attribute *attr,
+> +		char *buf)
+> +{
+> +	struct tda7802_priv *tda7802 = dev_get_drvdata(dev);
+> +	int enabled = regulator_is_enabled(tda7802->enable_reg) ? 1 : 0;
+> +
+> +	return scnprintf(buf, PAGE_SIZE, "%d\n", enabled);
+> +}
+> +
+> +static ssize_t enable_store(struct device *dev, struct device_attribute *attr,
+> +		const char *buf, size_t count)
+> +{
+> +	struct tda7802_priv *tda7802 = dev_get_drvdata(dev);
+> +	int err;
+> +
+> +	if (sysfs_streq(buf, "1")) {
+> +		err = regulator_enable(tda7802->enable_reg);
+> +		if (err < 0)
+> +			dev_err(dev, "Could not enable (sysfs)\n");
+> +	} else if (sysfs_streq(buf, "0")) {
+> +		err = regulator_disable(tda7802->enable_reg);
+> +		if (err < 0)
+> +			dev_err(dev, "Could not disable (sysfs)\n");
+> +	} else if (sysfs_streq(buf, "-1")) {
+> +		err = regulator_force_disable(tda7802->enable_reg);
+> +		if (err < 0)
+> +			dev_err(dev, "Could not force disable (sysfs)\n");
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_RW(enable);
+> +
+>   /* read device tree or ACPI properties from device */
+>   static int tda7802_read_properties(struct tda7802_priv *tda7802)
+>   {
+> @@ -493,7 +529,34 @@ static int tda7802_read_properties(struct tda7802_priv *tda7802)
+>   	return err;
+>   }
+>   
+> -static const struct snd_soc_component_driver tda7802_component_driver;
+> +static int tda7802_probe(struct snd_soc_component *component)
+> +{
+> +	struct tda7802_priv *tda7802 = snd_soc_component_get_drvdata(component);
+> +	struct device *dev = &tda7802->i2c->dev;
+> +	int err;
+> +
+> +	dev_dbg(dev, "%s\n", __func__);
 
-I totally agree, and yet here we both are typing on Linux machines where
-this all "just works" today.  Now to get that to work on a DT-based
-system :)
+Function name alone ain't very informational. Is this intended?
 
-thanks,
+> +
+> +	err = device_create_file(dev, &dev_attr_enable);
+> +	if (err < 0) {
+> +		dev_err(dev, "Could not create enable attr\n");
+> +		return err;
+> +	}
 
-greg k-h
+Regardless of outcome, you'll be returning err here. Consider leaving 
+error message alone within if-statement. Remove redundant brackets if 
+you decide to do so.
+
+> +
+> +	return err;
+> +}
+> +
+> +static void tda7802_remove(struct snd_soc_component *component)
+> +{
+> +	struct tda7802_priv *tda7802 = snd_soc_component_get_drvdata(component);
+> +
+> +	device_remove_file(&tda7802->i2c->dev, &dev_attr_enable);
+> +}
+> +
+> +static const struct snd_soc_component_driver tda7802_component_driver = {
+> +	.probe = tda7802_probe,
+> +	.remove = tda7802_remove,
+> +};
+>   
+>   static int tda7802_i2c_probe(struct i2c_client *i2c,
+>   			     const struct i2c_device_id *id)
+> 
