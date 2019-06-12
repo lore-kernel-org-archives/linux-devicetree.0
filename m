@@ -1,8 +1,8 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 3/3] ARM: dts: stm32: add ADC analog switches syscfg on
- stm32mp157c
-Date: Wed, 12 Jun 2019 09:24:36 +0200
-Message-ID: <1560324276-681-4-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH 1/3] dt-bindings: iio: adc: stm32: add analog switches supply
+ control
+Date: Wed, 12 Jun 2019 09:24:34 +0200
+Message-ID: <1560324276-681-2-git-send-email-fabrice.gasnier@st.com>
 References: <1560324276-681-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,28 +22,34 @@ To: jic23@kernel.org, robh+dt@kernel.org, alexandre.torgue@st.com
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On stm32mp157c, the ADC inputs are multiplexed with analog switches which
-have reduced performances when their supply is below 2.7V (vdda by
-default).
-Add syscfg registers that can be used on stm32mp157c, to get full ADC
-analog performances.
+On stm32h7 and stm32mp1, the ADC inputs are multiplexed with analog
+switches which have reduced performances when their supply is below 2.7V
+(vdda by default).
+
+Add documentation for optional vdda-supply & vdd-supply that can be used
+to supply analog circuitry (controlled by syscfg bits).
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 2afeee6..64d71c9 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -856,6 +856,7 @@
- 			clocks = <&rcc ADC12>, <&rcc ADC12_K>;
- 			clock-names = "bus", "adc";
- 			interrupt-controller;
-+			st,syscfg = <&syscfg>;
- 			#interrupt-cells = <1>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+index 8346bcb..3af48b9 100644
+--- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+@@ -46,6 +46,12 @@ Required properties:
+ Optional properties:
+ - A pinctrl state named "default" for each ADC channel may be defined to set
+   inX ADC pins in mode of operation for analog input on external pin.
++- vdda-supply: Phandle to the vdda input voltage. It can be used to supply ADC
++  analog inputs switches on stm32h7 and stm32mp1.
++- vdd-supply: Phandle to the vdd input voltage. It can be used to supply ADC
++  analog inputs switches on stm32mp1.
++- st,syscfg: Phandle to system configuration controller. It can be used to
++  control the analog circuitry on stm32h7 and stm32mp1.
+ 
+ Contents of a stm32 adc child node:
+ -----------------------------------
 -- 
 2.7.4
