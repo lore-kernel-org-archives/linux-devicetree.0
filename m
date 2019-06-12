@@ -1,65 +1,62 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv5 16/20] PCI: mobiveil: Add link up condition check
-Date: Wed, 12 Jun 2019 11:36:45 +0000
-Message-ID: <AM0PR04MB673830A6DF6FEDFC9155037184EC0@AM0PR04MB6738.eurprd04.prod.outlook.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-17-Zhiqiang.Hou@nxp.com>
- <20190611171733.GB22836@redmoon>
+From: Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Date: Wed, 12 Jun 2019 08:42:13 -0300
+Message-ID: <20190612084213.4fb9e054@coco.lan>
+References: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+        <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+        <20190608090556.GA32464@zn.tnic>
+        <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+        <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+        <20190611115651.GD31772@zn.tnic>
+        <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+        <20190612034813.GA32652@zn.tnic>
+        <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+        <20190612074242.53a4cf56@coco.lan>
+        <20190612110039.GH32652@zn.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611171733.GB22836@redmoon>
-Content-Language: en-US
+In-Reply-To: <20190612110039.GH32652@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, James Morse <james.morse@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Hanoc
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3Jlbnpv
-LnBpZXJhbGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo21MIxMsjVIDE6MTgNCj4gVG86IFou
-cS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IGJoZWxnYWFzQGdvb2dsZS5jb20NCj4gQ2M6
-IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207
-IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExl
-byBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdp
-bGwuZGVhY29uQGFybS5jb207IE1pbmdrYWkgSHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0u
-aC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgWGlhb3dlaSBCYW8NCj4gPHhpYW93ZWku
-YmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NSAxNi8yMF0gUENJOiBtb2JpdmVp
-bDogQWRkIGxpbmsgdXAgY29uZGl0aW9uIGNoZWNrDQo+IA0KPiBOQjogUGxlYXNlIHRyaW0gdGhl
-IENDIGxpc3QgYW5kIGtlZXAgaXQgdG8gY29uY2VybmVkIG1haW50YWluZXJzLg0KPiANCj4gT24g
-RnJpLCBBcHIgMTIsIDIwMTkgYXQgMDg6MzY6NDhBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6DQo+
-ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0KPiA+IEF2
-b2lkIHRvIGlzc3VlIENGRyB0cmFuc2FjdGlvbnMgdG8gbGluayBwYXJ0bmVyIHdoZW4gdGhlIFBD
-SWUgbGluayBpcw0KPiA+IG5vdCB1cC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlx
-aWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4gLS0tDQo+ID4gVjU6DQo+ID4gIC0gQ29y
-cmVjdGVkIHRoZSBzdWJqZWN0Lg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNp
-ZS1tb2JpdmVpbC5jIHwgNCArKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
-KykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9i
-aXZlaWwuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4g
-PiBpbmRleCA2MjE4NTIwNzhjYWYuLjFlZTNlYTI1NzBjMCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
-ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gQEAgLTI4Myw2ICsyODMsMTAgQEAgc3Rh
-dGljIGJvb2wgbW9iaXZlaWxfcGNpZV92YWxpZF9kZXZpY2Uoc3RydWN0DQo+ID4gcGNpX2J1cyAq
-YnVzLCB1bnNpZ25lZCBpbnQgZGV2Zm4pICB7DQo+ID4gIAlzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAq
-cGNpZSA9IGJ1cy0+c3lzZGF0YTsNCj4gPg0KPiA+ICsJLyogSWYgdGhlcmUgaXMgbm8gbGluaywg
-dGhlbiB0aGVyZSBpcyBubyBkZXZpY2UgKi8NCj4gPiArCWlmIChidXMtPm51bWJlciA+IHBjaWUt
-PnJvb3RfYnVzX25yICYmICFtb2JpdmVpbF9wY2llX2xpbmtfdXAocGNpZSkpDQo+IA0KPiBJIHRo
-aW5rIEJqb3JuIG1lbnRpb25lZCB0aGlzIGEgbWlsbGlvbiB0aW1lcyBhbHJlYWR5LCBlZzoNCj4g
-DQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1o
-dHRwcyUzQSUyRiUyRmxvcmUua2UNCj4gcm5lbC5vcmclMkZsaW51eC1wY2klMkYyMDE5MDQxMTIw
-MTUzNS5HUzI1NjA0NSU0MGdvb2dsZS5jb20lMkYmYW0NCj4gcDtkYXRhPTAyJTdDMDElN0N6aGlx
-aWFuZy5ob3UlNDBueHAuY29tJTdDZmZiNGM4ZGNlYmU0NDkzYTM3NTkwOA0KPiBkNmVlOTBiNDcx
-JTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjk1DQo+IDg3
-MDI2Mzc5NzM1NDMmYW1wO3NkYXRhPW0lMkZxVjV6b2hxeUJNVURUN3pyVmpGJTJGTHRZZUpaTzM2
-cmRZDQo+IGVNVFBHR2JIZyUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiANCj4gdGhpcyBpcyByYWN5IGFu
-ZCBnaXZlcyBhIGZhbHNlIHNlbnNlIG9mIHJvYnVzdG5lc3MuIFdlIGhhdmUgY29kZSBpbiB0aGUg
-a2VybmVsDQo+IHRoYXQgY2hlY2tzIHRoZSBsaW5rIGJ1dCBhZGRpbmcgbW9yZSBzZWVtcyBzaWxs
-eSB0byBtZSwgc28gSSBhbSBpbmNsaW5lZCB0bw0KPiBkcm9wIHRoaXMgcGF0Y2guDQo+IA0KDQpV
-bmRlcnN0YW5kLCBkcm9wIGl0Lg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IExvcmVuem8NCj4g
-DQo+ID4gKwkJcmV0dXJuIGZhbHNlOw0KPiA+ICsNCj4gPiAgCS8qIE9ubHkgb25lIGRldmljZSBk
-b3duIG9uIGVhY2ggcm9vdCBwb3J0ICovDQo+ID4gIAlpZiAoKGJ1cy0+bnVtYmVyID09IHBjaWUt
-PnJvb3RfYnVzX25yKSAmJiAoZGV2Zm4gPiAwKSkNCj4gPiAgCQlyZXR1cm4gZmFsc2U7DQo+ID4g
-LS0NCj4gPiAyLjE3LjENCj4gPg0K
+Em Wed, 12 Jun 2019 13:00:39 +0200
+Borislav Petkov <bp@alien8.de> escreveu:
+
+> On Wed, Jun 12, 2019 at 07:42:42AM -0300, Mauro Carvalho Chehab wrote:
+> > That's said, from the admin PoV, it makes sense to have a single
+> > daemon that collect errors from all error sources and take the
+> > needed actions.  
+> 
+> Doing recovery actions in userspace is too flaky. Daemon can get killed
+> at any point in time and there are error types where you want to do
+> recovery *before* you return to userspace.
+
+Yeah, some actions would work a lot better at Kernelspace. Yet, some
+actions would work a lot better if implemented on userspace.
+
+For example, a server with multiple network interfaces may re-route
+the traffic to a backup interface if the main one has too many errors.
+
+This can easily be done on userspace.
+
+> Yes, we do have different error reporting facilities but I still think
+> that concentrating all the error information needed in order to do
+> proper recovery action is the better approach here. And make that part
+> of the kernel so that it is robust. Userspace can still configure it and
+> so on.
+
+If the error reporting facilities are for the same hardware "group"
+(like the machine's memory controllers), I agree with you: it makes
+sense to have a single driver. 
+
+If they are for completely independent hardware then implementing
+as separate drivers would work equally well, with the advantage of
+making easier to maintain and make it generic enough to support
+different vendors using the same IP block.
+
+Thanks,
+Mauro
