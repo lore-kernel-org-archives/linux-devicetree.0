@@ -1,138 +1,29 @@
-Return-Path: <SRS0=7yb5=UQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:17074 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfFQRkm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Jun 2019 13:40:42 -0400
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 12/27] PCI: tegra: Enable PCIe xclk clock clamping
-Date: Mon, 17 Jun 2019 23:09:37 +0530
-Message-ID: <20190617173952.29363-13-mmaddireddy@nvidia.com>
-In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
-References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=qchw=UL=verge.net.au=horms@kernel.org>
+Date: Wed, 12 Jun 2019 14:27:42 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 3/6] arm64: dts: renesas: r8a774a1: Add CMT device nodes
+Message-ID: <20190612122741.ucaig7fj3r73raq3@verge.net.au>
+References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1560258401-9517-4-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdWx6opBuDeLv35E2dK3BDLrqd=3D_9PaK8FbpBEHvRFDQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWx6opBuDeLv35E2dK3BDLrqd=3D_9PaK8FbpBEHvRFDQ@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable xclk clock clamping when entering L1. Clamp threshold will
-determine the time spent waiting for clock module to turn on xclk after
-signaling it. Default threshold value in Tegra124 and Tegra210 is not
-enough to turn on xclk clock. Increase the clamp threshold to meet the
-clock module timing in Tegra124 and Tegra210. Default threshold value is
-enough in Tegra20, Tegra30 and Tegra186.
+On Wed, Jun 12, 2019 at 09:02:11AM +0200, Geert Uytterhoeven wrote:
+> On Tue, Jun 11, 2019 at 3:07 PM Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com> wrote:
+> > This patch adds the CMT[0123] device tree nodes to the
+> > r8a774a1 SoC specific DT.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V5: No change
+Thanks,
 
-V4: No change
-
-V3: No change
-
-V2: Took care of typos in commit log and coding style comments.
-
- drivers/pci/controller/pci-tegra.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 7cd2a8948919..add649d91e7c 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -219,8 +219,14 @@
- #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
- 
- #define RP_PRIV_MISC	0x00000fe0
--#define  RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT (0xe << 0)
--#define  RP_PRIV_MISC_PRSNT_MAP_EP_ABSNT (0xf << 0)
-+#define  RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT		(0xe << 0)
-+#define  RP_PRIV_MISC_PRSNT_MAP_EP_ABSNT		(0xf << 0)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD_MASK	(0x7f << 16)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD		(0xf << 16)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_ENABLE		(1 << 23)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD_MASK	(0x7f << 24)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD		(0xf << 24)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_ENABLE		(1 << 31)
- 
- #define RP_LINK_CONTROL_STATUS			0x00000090
- #define  RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE	0x20000000
-@@ -298,6 +304,7 @@ struct tegra_pcie_soc {
- 	bool has_gen2;
- 	bool force_pca_enable;
- 	bool program_uphy;
-+	bool update_clamp_threshold;
- 	struct {
- 		struct {
- 			u32 rp_ectl_2_r1;
-@@ -529,6 +536,7 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
- 
- static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- {
-+	const struct tegra_pcie_soc *soc = port->pcie->soc;
- 	u32 value;
- 
- 	/* Enable AER capability */
-@@ -549,6 +557,19 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- 	value = readl(port->base + RP_VEND_XP_BIST);
- 	value |= RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE;
- 	writel(value, port->base + RP_VEND_XP_BIST);
-+
-+	value = readl(port->base + RP_PRIV_MISC);
-+	value |= RP_PRIV_MISC_CTLR_CLK_CLAMP_ENABLE;
-+	value |= RP_PRIV_MISC_TMS_CLK_CLAMP_ENABLE;
-+
-+	if (soc->update_clamp_threshold) {
-+		value &= ~(RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD_MASK |
-+				RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD_MASK);
-+		value |= RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD |
-+			RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD;
-+	}
-+
-+	writel(value, port->base + RP_PRIV_MISC);
- }
- 
- static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
-@@ -2334,6 +2355,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.has_gen2 = false,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2358,6 +2380,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.has_gen2 = false,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2375,6 +2398,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = true,
- 	.ectl.enable = false,
- };
- 
-@@ -2392,6 +2416,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = true,
- 	.program_uphy = true,
-+	.update_clamp_threshold = true,
- 	.ectl = {
- 		.regs = {
- 			.rp_ectl_2_r1 = 0x0000000f,
-@@ -2428,6 +2453,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = false,
- 	.program_uphy = false,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
--- 
-2.17.1
+applied for inclusion in v5.3.
