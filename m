@@ -1,7 +1,7 @@
 From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH v3 1/4] firmware: qcom_scm-64: Add atomic version of qcom_scm_call
-Date: Wed, 12 Jun 2019 12:45:51 +0530
-Message-ID: <20190612071554.13573-2-vivek.gautam@codeaurora.org>
+Subject: [PATCH v3 4/4] arm64: dts/sdm845: Enable FW implemented safe sequence handler on MTP
+Date: Wed, 12 Jun 2019 12:45:54 +0530
+Message-ID: <20190612071554.13573-5-vivek.gautam@codeaurora.org>
 References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
@@ -10,190 +10,28 @@ To: agross@kernel.org, robh+dt@kernel.org, will.deacon@arm.com, robin.murphy@arm
 Cc: linux-kernel@vger.kernel.org, david.brown@linaro.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-There are scnenarios where drivers are required to make a
-scm call in atomic context, such as in one of the qcom's
-arm-smmu-500 errata [1].
-
-[1] ("https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/
-      drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/
-      msm-4.9&id=da765c6c75266b38191b38ef086274943f353ea7")
+Indicate on MTP SDM845 that firmware implements handler to
+TLB invalidate erratum SCM call where SAFE sequence is toggled
+to achieve optimum performance on real-time clients, such as
+display and camera.
 
 Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/firmware/qcom_scm-64.c | 136 ++++++++++++++++++++++++++++-------------
- 1 file changed, 92 insertions(+), 44 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-index 91d5ad7cf58b..b6dca32c5ac4 100644
---- a/drivers/firmware/qcom_scm-64.c
-+++ b/drivers/firmware/qcom_scm-64.c
-@@ -62,32 +62,71 @@ static DEFINE_MUTEX(qcom_scm_lock);
- #define FIRST_EXT_ARG_IDX 3
- #define N_REGISTER_ARGS (MAX_QCOM_SCM_ARGS - N_EXT_QCOM_SCM_ARGS + 1)
- 
--/**
-- * qcom_scm_call() - Invoke a syscall in the secure world
-- * @dev:	device
-- * @svc_id:	service identifier
-- * @cmd_id:	command identifier
-- * @desc:	Descriptor structure containing arguments and return values
-- *
-- * Sends a command to the SCM and waits for the command to finish processing.
-- * This should *only* be called in pre-emptible context.
--*/
--static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
--			 const struct qcom_scm_desc *desc,
--			 struct arm_smccc_res *res)
-+static void __qcom_scm_call_do(const struct qcom_scm_desc *desc,
-+			       struct arm_smccc_res *res, u32 fn_id,
-+			       u64 x5, u32 type)
-+{
-+	u64 cmd;
-+	struct arm_smccc_quirk quirk = {.id = ARM_SMCCC_QUIRK_QCOM_A6};
-+
-+	cmd = ARM_SMCCC_CALL_VAL(type, qcom_smccc_convention,
-+				 ARM_SMCCC_OWNER_SIP, fn_id);
-+
-+	quirk.state.a6 = 0;
-+
-+	do {
-+		arm_smccc_smc_quirk(cmd, desc->arginfo, desc->args[0],
-+				    desc->args[1], desc->args[2], x5,
-+				    quirk.state.a6, 0, res, &quirk);
-+
-+		if (res->a0 == QCOM_SCM_INTERRUPTED)
-+			cmd = res->a0;
-+
-+	} while (res->a0 == QCOM_SCM_INTERRUPTED);
-+}
-+
-+static void qcom_scm_call_do(const struct qcom_scm_desc *desc,
-+			     struct arm_smccc_res *res, u32 fn_id,
-+			     u64 x5, bool atomic)
-+{
-+	int retry_count = 0;
-+
-+	if (!atomic) {
-+		do {
-+			mutex_lock(&qcom_scm_lock);
-+
-+			__qcom_scm_call_do(desc, res, fn_id, x5,
-+					   ARM_SMCCC_STD_CALL);
-+
-+			mutex_unlock(&qcom_scm_lock);
-+
-+			if (res->a0 == QCOM_SCM_V2_EBUSY) {
-+				if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
-+					break;
-+				msleep(QCOM_SCM_EBUSY_WAIT_MS);
-+			}
-+		}  while (res->a0 == QCOM_SCM_V2_EBUSY);
-+	} else {
-+		__qcom_scm_call_do(desc, res, fn_id, x5, ARM_SMCCC_FAST_CALL);
-+	}
-+}
-+
-+static int ___qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
-+			    const struct qcom_scm_desc *desc,
-+			    struct arm_smccc_res *res, bool atomic)
- {
- 	int arglen = desc->arginfo & 0xf;
--	int retry_count = 0, i;
-+	int i;
- 	u32 fn_id = QCOM_SCM_FNID(svc_id, cmd_id);
--	u64 cmd, x5 = desc->args[FIRST_EXT_ARG_IDX];
-+	u64 x5 = desc->args[FIRST_EXT_ARG_IDX];
- 	dma_addr_t args_phys = 0;
- 	void *args_virt = NULL;
- 	size_t alloc_len;
--	struct arm_smccc_quirk quirk = {.id = ARM_SMCCC_QUIRK_QCOM_A6};
-+	gfp_t flag = atomic ? GFP_ATOMIC : GFP_KERNEL;
- 
- 	if (unlikely(arglen > N_REGISTER_ARGS)) {
- 		alloc_len = N_EXT_QCOM_SCM_ARGS * sizeof(u64);
--		args_virt = kzalloc(PAGE_ALIGN(alloc_len), GFP_KERNEL);
-+		args_virt = kzalloc(PAGE_ALIGN(alloc_len), flag);
- 
- 		if (!args_virt)
- 			return -ENOMEM;
-@@ -117,33 +156,7 @@ static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
- 		x5 = args_phys;
- 	}
- 
--	do {
--		mutex_lock(&qcom_scm_lock);
--
--		cmd = ARM_SMCCC_CALL_VAL(ARM_SMCCC_STD_CALL,
--					 qcom_smccc_convention,
--					 ARM_SMCCC_OWNER_SIP, fn_id);
--
--		quirk.state.a6 = 0;
--
--		do {
--			arm_smccc_smc_quirk(cmd, desc->arginfo, desc->args[0],
--				      desc->args[1], desc->args[2], x5,
--				      quirk.state.a6, 0, res, &quirk);
--
--			if (res->a0 == QCOM_SCM_INTERRUPTED)
--				cmd = res->a0;
--
--		} while (res->a0 == QCOM_SCM_INTERRUPTED);
--
--		mutex_unlock(&qcom_scm_lock);
--
--		if (res->a0 == QCOM_SCM_V2_EBUSY) {
--			if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
--				break;
--			msleep(QCOM_SCM_EBUSY_WAIT_MS);
--		}
--	}  while (res->a0 == QCOM_SCM_V2_EBUSY);
-+	qcom_scm_call_do(desc, res, fn_id, x5, atomic);
- 
- 	if (args_virt) {
- 		dma_unmap_single(dev, args_phys, alloc_len, DMA_TO_DEVICE);
-@@ -156,6 +169,41 @@ static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
- 	return 0;
- }
- 
-+/**
-+ * qcom_scm_call() - Invoke a syscall in the secure world
-+ * @dev:	device
-+ * @svc_id:	service identifier
-+ * @cmd_id:	command identifier
-+ * @desc:	Descriptor structure containing arguments and return values
-+ *
-+ * Sends a command to the SCM and waits for the command to finish processing.
-+ * This should *only* be called in pre-emptible context.
-+ */
-+static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
-+			 const struct qcom_scm_desc *desc,
-+			 struct arm_smccc_res *res)
-+{
-+	return ___qcom_scm_call(dev, svc_id, cmd_id, desc, res, false);
-+}
-+
-+/**
-+ * qcom_scm_call_atomic() - atomic variation of qcom_scm_call()
-+ * @dev:	device
-+ * @svc_id:	service identifier
-+ * @cmd_id:	command identifier
-+ * @desc:	Descriptor structure containing arguments and return values
-+ * @res:	Structure containing results from SMC/HVC call
-+ *
-+ * Sends a command to the SCM and waits for the command to finish processing.
-+ * This should be called in atomic context only.
-+ */
-+static int qcom_scm_call_atomic(struct device *dev, u32 svc_id, u32 cmd_id,
-+				const struct qcom_scm_desc *desc,
-+				struct arm_smccc_res *res)
-+{
-+	return ___qcom_scm_call(dev, svc_id, cmd_id, desc, res, true);
-+}
-+
- /**
-  * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
-  * @entry: Entry point function for the cpus
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 78ec373a2b18..6a73d9744a71 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2368,6 +2368,7 @@
+ 			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
+ 			reg = <0 0x15000000 0 0x80000>;
+ 			#iommu-cells = <2>;
++			qcom,smmu-500-fw-impl-safe-errata;
+ 			#global-interrupts = <1>;
+ 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
