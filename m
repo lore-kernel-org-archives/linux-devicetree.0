@@ -1,90 +1,45 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 4/5] drm/connector: Split out orientation quirk detection
-Date: Wed, 12 Jun 2019 14:33:05 +0200
-Message-ID: <fe774952-6fd5-b4ec-56c9-32fd30546313@redhat.com>
-References: <20190611040350.90064-1-dbasehore@chromium.org>
- <20190611040350.90064-5-dbasehore@chromium.org> <87zhmoy270.fsf@intel.com>
- <01636500-0be5-acf8-5f93-a57383bf4b20@redhat.com>
- <CAGAzgsoxpsft-vmVOuKSAbLJqR-EZvcceLpMeWkz6ikJEKGJHg@mail.gmail.com>
+From: "Hawa, Hanna" <hhhawa@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Date: Wed, 12 Jun 2019 15:35:31 +0300
+Message-ID: <6911a79a-bcd7-03e1-1c90-2adb88aaa1db@amazon.com>
+References: <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+ <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+ <20190611115651.GD31772@zn.tnic>
+ <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+ <20190612034813.GA32652@zn.tnic>
+ <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+ <20190612074242.53a4cf56@coco.lan> <20190612110039.GH32652@zn.tnic>
+ <20190612084213.4fb9e054@coco.lan>
+ <7705227ea831793cc9e45af32e0da8f5547cb14d.camel@kernel.crashing.org>
+ <20190612122504.GI32652@zn.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGAzgsoxpsft-vmVOuKSAbLJqR-EZvcceLpMeWkz6ikJEKGJHg@mail.gmail.com>
+In-Reply-To: <20190612122504.GI32652@zn.tnic>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "dbasehore ." <dbasehore@chromium.org>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Intel Graphics <intel-gfx@lists.freedesktop.org>
+To: Borislav Petkov <bp@alien8.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, James Morse <james.morse@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "Hanoch, Uri" <hanochu@amazon.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Boris,
 
-On 12-06-19 02:16, dbasehore . wrote:
-> On Tue, Jun 11, 2019 at 1:54 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 11-06-19 10:08, Jani Nikula wrote:
->>> On Mon, 10 Jun 2019, Derek Basehore <dbasehore@chromium.org> wrote:
->>>> This removes the orientation quirk detection from the code to add
->>>> an orientation property to a panel. This is used only for legacy x86
->>>> systems, yet we'd like to start using this on devicetree systems where
->>>> quirk detection like this is not needed.
->>>
->>> Not needed, but no harm done either, right?
->>>
->>> I guess I'll defer judgement on this to Hans and Ville (Cc'd).
->>
->> Hmm, I'm not big fan of this change. It adds code duplication and as
->> other models with the same issue using a different driver or panel-type
->> show up we will get more code duplication.
->>
->> Also I'm not convinced that devicetree based platforms will not need
->> this. The whole devicetree as an ABI thing, which means that all
->> devicetree bindings need to be set in stone before things are merged
->> into the mainline, is done solely so that we can get vendors to ship
->> hardware with the dtb files included in the firmware.
 > 
-> We've posted fixes to the devicetree well after the initial merge into
-> mainline before, so I don't see what you mean about the bindings being
-> set in stone.
-
-That was just me repeating the official party line about devicetree.
-
-> I also don't really see the point. The devicetree is in
-> the kernel. If there's some setting in the devicetree that we want to
-> change, it's effectively the same to make the change in the devicetree
-> versus some quirk setting. The only difference seems to be that making
-> the change in the devicetree is cleaner.
-
-I agree with you that devicetree in practice is easy to update after
-shipping. But at least whenever I tried to get new bindings reviewed
-I was always told that I was not allowed to count on that.
-
->> I'm 100% sure that there is e.g. ARM hardware out there which uses
->> non upright mounted LCD panels (I used to have a few Allwinner
->> tablets which did this). And given my experience with the quality
->> of firmware bundled tables like ACPI tables I'm quite sure that
->> if we ever move to firmware included dtb files that we will need
->> quirks for those too.
+> Yap, I think we're in agreement here. I believe the important question
+> is whether you need to get error information from multiple sources
+> together in order to do proper recovery or doing it per error source
+> suffices.
 > 
-> Is there a timeline to start using firmware bundled tables?
-
-Nope, as I said "if we ever move to ...".
-
-> Since the
-> quirk code only uses DMI, it will need to be changed anyways for
-> firmware bundled devicetree files anyways.
+> And I think the actual use cases could/should dictate our
+> drivers/orchestrators design.
 > 
-> We could consolidate the duplicated code into another function that
-> calls drm_get_panel_orientation_quirks too. The only reason it's like
-> it is is because I initially only had the call to
-> drm_get_panel_orientation_quirk once in the code.
+> Thus my question how you guys are planning on tying all that error info
+> the drivers report, into the whole system design?
+We have daemon script that collects correctable/uncorrectable errors 
+from EDAC sysfs and reports to Amazon service that allow us to take 
+action on specific error thresholds.
 
-Yes if you can add a new helper for the current callers, then
-I'm fine with dropping the quirk handling from
-drm_connector_init_panel_orientation_property()
-
-Regards,
-
-Hans
+Thanks,
+Hanna
+> 
