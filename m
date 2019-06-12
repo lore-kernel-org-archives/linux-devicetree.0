@@ -1,82 +1,257 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6ul: Add PXP node
-Date: Wed, 12 Jun 2019 19:21:03 +0200
-Message-ID: <20190612172103.gat3yrub2iyurai5@pengutronix.de>
-References: <20190606164642.11539-1-sebastien.szymanski@armadeus.com>
+From: Cezary Rojewski <cezary.rojewski@intel.com>
+Subject: Re: [PATCH v1 4/4] ASoC: tda7802: Add speaker-test sysfs
+Date: Wed, 12 Jun 2019 19:56:16 +0200
+Message-ID: <607e83fb-3d37-cf05-ded5-4f582352bdb0@intel.com>
+References: <20190611174909.12162-1-thomas.preston@codethink.co.uk>
+ <20190611174909.12162-5-thomas.preston@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190606164642.11539-1-sebastien.szymanski@armadeus.com>
+In-Reply-To: <20190611174909.12162-5-thomas.preston@codethink.co.uk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+To: Thomas Preston <thomas.preston@codethink.co.uk>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Jerome Brunet <jbrunet@baylibre.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Marco Felsch <m.felsch@pengutronix.de>, Paul Cercueil <paul@crapouillou.net>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Cheng-Yi Chiang <cychiang@chromium.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Vinod Koul <vkoul@kernel.org>, Annaliese McDermond <nh6z@nh6z.net>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sébastien,
-
-On 19-06-06 18:46, Sébastien Szymanski wrote:
-> Add PXP node for i.MX6UL/L SoC.
+On 2019-06-11 19:49, Thomas Preston wrote:
+> Add speaker_test device attribute. When the speaker-test node is read
+> the hardware speaker test is started.
 > 
-> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+> 	$ cat /sys/devices/.../device:00/speaker_test
+> 	04 04 04 04
+> 
+> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+> Cc: Patrick Glaser <pglaser@tesla.com>
+> Cc: Rob Duncan <rduncan@tesla.com>
+> Cc: Nate Case <ncase@tesla.com>
 > ---
->  arch/arm/boot/dts/imx6ul.dtsi  | 9 +++++++++
->  arch/arm/boot/dts/imx6ull.dtsi | 6 ++++++
->  2 files changed, 15 insertions(+)
+>   sound/soc/codecs/tda7802.c | 172 +++++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 172 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-> index f10012de5eb6..a3c005373ae1 100644
-> --- a/arch/arm/boot/dts/imx6ul.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> @@ -971,6 +971,15 @@
->  				status = "disabled";
->  			};
->  
-> +			pxp: pxp@21cc000 {
-> +				compatible = "fsl,imx6ul-pxp";
-> +				reg = <0x021cc000 0x4000>;
-> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks IMX6UL_CLK_PXP>;
-> +				clock-names = "axi";
-> +				status = "disabled";
-
-Can you drop the status line because its a platform device and isn't
-removeable.
-
-> +			};
+> diff --git a/sound/soc/codecs/tda7802.c b/sound/soc/codecs/tda7802.c
+> index 62aae011d9f1..edfa752c0c9f 100644
+> --- a/sound/soc/codecs/tda7802.c
+> +++ b/sound/soc/codecs/tda7802.c
+> @@ -157,6 +157,7 @@ static const u8 IB3_FORMAT[4][4] = {
+>   #define DUMP_NUM_REGS			   (DUMP_NUM_BLOCK * 2)
+>   
+>   struct tda7802_priv {
+> +	struct mutex mutex;
+>   	struct i2c_client *i2c;
+>   	struct regmap *regmap;
+>   	struct regulator *enable_reg;
+> @@ -458,6 +459,159 @@ static struct snd_soc_dai_driver tda7802_dai_driver = {
+>   	.ops = &tda7802_dai_ops,
+>   };
+>   
+> +/* The speaker test is triggered by reading a sysfs attribute file attached to
+> + * the I2C device. The user space thread that's doing the reading is blocked
+> + * until the test completes (or times out). We only permit one test to be in
+> + * progress at a time.
+> + */
 > +
->  			qspi: spi@21e0000 {
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
-> index 22e4a307fa59..b017e925bd87 100644
-> --- a/arch/arm/boot/dts/imx6ull.dtsi
-> +++ b/arch/arm/boot/dts/imx6ull.dtsi
-> @@ -34,6 +34,12 @@
->  	compatible = "fsl,imx6ull-ocotp", "syscon";
->  };
->  
-> +&pxp {
-> +	compatible = "fsl,imx6ull-pxp";
-> +	interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-> +};
+> +static int speaker_test_start(struct regmap *regmap)
+> +{
+> +	int err;
 > +
->  &usdhc1 {
->  	compatible = "fsl,imx6ull-usdhc", "fsl,imx6sx-usdhc";
->  };
-> -- 
-> 2.19.2
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> +	err = regmap_update_bits(regmap, TDA7802_IB5, IB5_AMPLIFIER_ON, 0);
+> +	if (err < 0) {
+> +		dev_err(regmap_get_device(regmap),
+> +			"Cannot disable amp for speaker test (%d)\n", err);
+> +		return err;
+> +	}
+> +
+> +	err = regmap_update_bits(regmap, TDA7802_IB4, IB4_DIAG_MODE_ENABLE, 0);
+> +	if (err < 0) {
+> +		dev_err(regmap_get_device(regmap),
+> +			"Cannot disable diag mode before speaker test (%d)\n",
+> +			err);
+> +		return err;
+> +	}
+> +
+> +	/* Seem to need at least a 15 ms delay here before the rising
+> +	 * edge. Otherwise the diagnostics never complete (perhaps
+> +	 * they never start).
+> +	 */
+> +	msleep(20);
+> +
+> +	err = regmap_update_bits(regmap, TDA7802_IB4,
+> +				 IB4_DIAG_MODE_ENABLE, IB4_DIAG_MODE_ENABLE);
+> +	if (err < 0) {
+> +		dev_err(regmap_get_device(regmap),
+> +			"Cannot enable diag mode for speaker test (%d)\n", err);
+> +		return err;
+> +	}
+> +
+> +	return 0;
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+You may want to follow path set by speaker_test_stop: replace "return 0" 
+with "return err" and have only error msg found within preceding 
+if-statement.
+
+> +}
+> +
+> +static int speaker_test_stop(struct regmap *regmap)
+> +{
+> +	int err;
+> +
+> +	err = regmap_update_bits(regmap, TDA7802_IB4, IB4_DIAG_MODE_ENABLE, 0);
+> +	if (err < 0)
+> +		dev_err(regmap_get_device(regmap),
+> +			"Cannot disable diag mode after speaker test (%d)\n",
+> +			err);
+> +	return err;
+> +}
+> +
+> +/* We poll the test completion bit, letting the current thread sleep
+> + * until we're done. These values are not critical.
+> + */
+> +#define SPEAKER_TEST_DONE_POLL_PERIOD_US 5000
+> +#define SPEAKER_TEST_DONE_TIMEOUT_US	 5000000
+> +
+> +static int speaker_test_check(struct tda7802_priv *tda7802,
+> +		unsigned int *status)
+> +{
+> +	struct regmap *regmap = tda7802->regmap;
+> +	struct device *dev = &tda7802->i2c->dev;
+> +	int reg_err = 0, err = 0, i, amp_on;
+
+Both reg_err and err are initialized unnecessarily.
+
+> +	unsigned int val;
+> +
+> +	reg_err = regulator_enable(tda7802->enable_reg);
+> +	if (reg_err < 0) {
+> +		dev_err(dev, "Could not enable (speaker-test).\n");
+> +		return reg_err;
+> +	}
+> +	msleep(ENABLE_DELAY_MS);
+> +
+> +	/* we should return amp on state when speaker-test is done */
+> +	err = regmap_read(regmap, TDA7802_IB5, &amp_on);
+> +	if (err < 0) {
+> +		dev_err(dev, "Could not read amp on state (speaker-test)\n");
+> +		goto speaker_test_disable;
+> +	}
+> +
+> +	for (i = 0; i < CHANNELS_PER_AMP; ++i)
+> +		status[i] = 0xff;
+> +
+> +	err = speaker_test_start(regmap);
+> +	if (err < 0)
+> +		goto speaker_test_restore;
+> +
+> +	/* Wait until DB0_STARTUP_DIAG_STATUS is set */
+> +	err = regmap_read_poll_timeout(regmap, TDA7802_DB0, val,
+> +			val & DB0_STARTUP_DIAG_STATUS,
+> +			SPEAKER_TEST_DONE_POLL_PERIOD_US,
+> +			SPEAKER_TEST_DONE_TIMEOUT_US);
+> +	if (err < 0) {
+> +		if (err == -ENODATA)
+> +			dev_err(dev,
+> +				"Speaker diagnostic test did not complete\n");
+> +		speaker_test_stop(regmap);
+> +		goto speaker_test_restore;
+> +	}
+> +
+> +	err = speaker_test_stop(regmap);
+> +	if (err < 0)
+> +		goto speaker_test_restore;
+
+This sequence looks weird and as if it could be simplified but I might 
+be just plain wrong. speaker_test_stop gets invoked whether or not 
+regmap_read_poll_timeout fails, though only in "happy" path its return 
+is account for. If it's not too much to ask, could you clarify?
+
+> +
+> +	for (i = 0; i < CHANNELS_PER_AMP; ++i) {
+> +		err = regmap_read(regmap, TDA7802_DB1 + i, status + i);
+> +		if (err < 0) {
+> +			dev_err(dev,
+> +				"Cannot get speaker %d status (%d)\n", i, err);
+> +			goto speaker_test_restore;
+> +		}
+> +	}
+> +
+> +speaker_test_restore:
+> +	err = regmap_update_bits(regmap, TDA7802_IB5, IB5_AMPLIFIER_ON,
+> +			amp_on);
+> +	if (err < 0)
+> +		dev_err(dev, "Could not restore amp on state (speaker-test)\n");
+> +
+> +speaker_test_disable:
+> +	reg_err = regulator_disable(tda7802->enable_reg);
+> +	if (reg_err < 0) {
+> +		dev_err(dev, "Could not disable (speaker-test).\n");
+> +		return reg_err;
+> +	}
+> +	return err;
+> +}
+> +
+> +static ssize_t speaker_test_show(struct device *dev,
+> +		struct device_attribute *attr, char *buf)
+> +{
+> +	struct tda7802_priv *tda7802 = dev_get_drvdata(dev);
+> +	unsigned int channel_status[CHANNELS_PER_AMP];
+> +	char *str = buf;
+> +	int ret, i;
+> +
+> +	mutex_lock(&tda7802->mutex);
+> +	ret = speaker_test_check(tda7802, channel_status);
+> +	mutex_unlock(&tda7802->mutex);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (i = 0; i < CHANNELS_PER_AMP; i++)
+> +		str += sprintf(str, "%02x ", channel_status[i]);
+> +	str += sprintf(str, "\n");
+> +
+> +	return str - buf;
+> +}
+> +
+> +static DEVICE_ATTR_RO(speaker_test);
+> +
+>   static ssize_t enable_show(struct device *dev, struct device_attribute *attr,
+>   		char *buf)
+>   {
+> @@ -537,12 +691,28 @@ static int tda7802_probe(struct snd_soc_component *component)
+>   
+>   	dev_dbg(dev, "%s\n", __func__);
+>   
+> +	/* Device is ready, now we should create sysfs attributes.
+> +	 * Rememer to cleanup
+> +	 */
+>   	err = device_create_file(dev, &dev_attr_enable);
+>   	if (err < 0) {
+>   		dev_err(dev, "Could not create enable attr\n");
+>   		return err;
+>   	}
+>   
+> +	mutex_init(&tda7802->mutex);
+> +	err = device_create_file(dev, &dev_attr_speaker_test);
+> +	if (err < 0) {
+> +		dev_err(dev, "Could not create speaker_test attr\n");
+> +		goto cleanup_speaker_test;
+> +	}
+> +
+> +	return 0;
+> +
+> +cleanup_speaker_test:
+> +	mutex_destroy(&tda7802->mutex);
+> +	device_remove_file(&tda7802->i2c->dev, &dev_attr_enable);
+> +
+>   	return err;
+>   }
+>   
+> @@ -550,6 +720,8 @@ static void tda7802_remove(struct snd_soc_component *component)
+>   {
+>   	struct tda7802_priv *tda7802 = snd_soc_component_get_drvdata(component);
+>   
+> +	device_remove_file(&tda7802->i2c->dev, &dev_attr_speaker_test);
+> +	mutex_destroy(&tda7802->mutex);
+>   	device_remove_file(&tda7802->i2c->dev, &dev_attr_enable);
+>   }
+>   
+> 
