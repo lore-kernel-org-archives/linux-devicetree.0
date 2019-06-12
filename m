@@ -1,82 +1,83 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Wed, 12 Jun 2019 17:06:17 +0200
-Message-ID: <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
- <36bca57c999f611353fd9741c55bb2a7@codeaurora.org> <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
- <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com> <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv5 10/20] PCI: mobiveil: Fix the INTx process errors
+Date: Wed, 12 Jun 2019 16:08:20 +0100
+Message-ID: <20190612150819.GD15747@redmoon>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Williams <dcbw@redhat.com>
-Cc: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, Johannes Berg <johannes@sipsolutions.net>, Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 4:28 PM Dan Williams <dcbw@redhat.com> wrote:
-> On Wed, 2019-06-12 at 10:31 +0200, Arnd Bergmann wrote:
-> > On Tue, Jun 11, 2019 at 7:23 PM Dan Williams <dcbw@redhat.com> wrote:
-> I was trying to make the point that rmnet doesn't need to care about
-> how the QMAP packets get to the device itself; it can be pretty generic
-> so that it can be used by IPA/qmi_wwan/rmnet_smd/etc.
+On Fri, Apr 12, 2019 at 08:36:12AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> In the loop block, there is not code to update the loop key,
+> this patch updates the loop key by re-read the INTx status
+> register.
+> 
+> This patch also add the clearing of the handled INTx status.
+> 
+> Note: Need MV to test this fix.
 
-rmnet at the moment is completely generic in that regard already,
-however it is implemented as a tunnel driver talking to another
-device rather than an abstraction layer below that driver.
+This means INTX were never tested and current code handling them is,
+AFAICS, an infinite loop which is very very bad.
 
-> > The current rmnet model is different in that by design the upper
-> > layer
-> > (rmnet) and the lower layer (qmi_wwan, ipa, ...) are kept independent
-> > in
-> > both directions, i.e. ipa has (almost) no knowledge of rmnet, and
-> > just
-> > has pointers to the other net_device:
-> >
-> >        ipa_device
-> >            net_device
-> >
-> >        rmnet_port
-> >            net_device
-> >
-> > I understand that the rmnet model was intended to provide a cleaner
-> > abstraction, but it's not how we normally structure subsystems in
-> > Linux, and moving to a model more like how wireless_dev works
-> > would improve both readability and performance, as you describe
-> > it, it would be more like (ignoring for now the need for multiple
-> > connections):
-> >
-> >    ipa_dev
-> >         rmnet_dev
-> >                wwan_dev
-> >                       net_device
->
-> Perhaps I'm assuming too much from this diagram but this shows a 1:1
-> between wwan_dev and "lower" devices.
->
-> What Johannes is proposing (IIRC) is something a bit looser where a
-> wwan_dev does not necessarily provide netdev itself, but is instead the
-> central point that various channels (control, data, gps, sim card, etc)
-> register with. That way the wwan_dev can provide an overall view of the
-> WWAN device to userspace, and userspace can talk to the wwan_dev to ask
-> the lower drivers (ipa, rmnet, etc) to create new channels (netdev,
-> tty, otherwise) when the control channel has told the modem firmware to
-> expect one.
+This is a gross bug and must be fixed as soon as possible.
 
-Right, as I noted above, I simplified it a bit. We probably want to
-have multiple net_device instances for an ipa_dev, so there has
-to be a 1:n relationship instead of 1:1 at one of the intermediate
-levels, but it's not obvious which level that should be.
+I want Karthikeyan ACK and Tested-by on this patch.
 
-In theory we could even have a single net_device instance correspond
-to the ipa_dev, but then have multiple IP addresses bound to it,
-so each IP address corresponds to a channel/queue/napi_struct,
-but the user visible object remains a single device.
+Lorenzo
 
-I trust that you and Johannes are more qualified than me to make
-the call on that point.
-
-       Arnd
+> Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> ---
+> V5:
+>  - Corrected and retouched the subject and changelog.
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index 4ba458474e42..78e575e71f4d 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  	/* Handle INTx */
+>  	if (intr_status & PAB_INTP_INTX_MASK) {
+>  		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+> +		shifted_status &= PAB_INTP_INTX_MASK;
+>  		shifted_status >>= PAB_INTX_START;
+>  		do {
+>  			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
+> @@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  					dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
+>  							    bit);
+>  
+> -				/* clear interrupt */
+> -				csr_writel(pcie,
+> -					   shifted_status << PAB_INTX_START,
+> +				/* clear interrupt handled */
+> +				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
+>  					   PAB_INTP_AMBA_MISC_STAT);
+>  			}
+> -		} while ((shifted_status >> PAB_INTX_START) != 0);
+> +
+> +			shifted_status = csr_readl(pcie,
+> +						   PAB_INTP_AMBA_MISC_STAT);
+> +			shifted_status &= PAB_INTP_INTX_MASK;
+> +			shifted_status >>= PAB_INTX_START;
+> +		} while (shifted_status != 0);
+>  	}
+>  
+>  	/* read extra MSI status register */
+> -- 
+> 2.17.1
+> 
