@@ -1,119 +1,108 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 6/7] dt-bindings: Add ANX6345 DP/eDP transmitter
- binding
-Date: Wed, 12 Jun 2019 10:16:37 +0200
-Message-ID: <354de37d-57bb-6b06-c81a-a2081ea4f222@samsung.com>
-References: <20190604122150.29D6468B05@newverein.lst.de>
-        <CGME20190604122333epcas2p2f2c750e19a363901c83abb83354f55d4@epcas2p2.samsung.com>
-        <20190604122305.07B9068B05@newverein.lst.de>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Date: Wed, 12 Jun 2019 18:29:26 +1000
+Message-ID: <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+References: <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+         <20190531051400.GA2275@cz.tnic>
+         <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+         <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+         <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+         <20190608090556.GA32464@zn.tnic>
+         <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+         <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+         <20190611115651.GD31772@zn.tnic>
+         <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+         <20190612034813.GA32652@zn.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604122305.07B9068B05@newverein.lst.de>
-Content-Language: en-US
+In-Reply-To: <20190612034813.GA32652@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Torsten Duwe <duwe@lst.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>
+Cc: "Hawa, Hanna" <hhhawa@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "Hanoch, Uri" <hanochu@amazon.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04.06.2019 14:23, Torsten Duwe wrote:
-> The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
-> for portable devices.
+On Wed, 2019-06-12 at 05:48 +0200, Borislav Petkov wrote:
+> On Wed, Jun 12, 2019 at 08:25:52AM +1000, Benjamin Herrenschmidt wrote:
+> > Yes, we would be in a world of pain already if tracepoints couldn't
+> > handle concurrency :-)
+> 
+> Right, lockless buffer and the whole shebang :)
+
+Yup.
+
+> > Sort-of... I still don't see a race in what we propose but I might be
+> > missing something subtle. We are talking about two drivers for two
+> > different IP blocks updating different counters etc...
+> 
+> If you do only *that* you should be fine. That should technically be ok.
+
+Yes, that' the point.
+
+> I still think, though, that the sensible thing to do is have one
+> platform driver which concentrates all RAS functionality. 
+
+I tend to disagree here. We've been down that rabbit hole in the past
+and we (Linux in general) are trying to move away from that sort of
+"platform" overarching driver as much as possible.
+
+> It is the
+> more sensible design and takes care of potential EDAC shortcomings and
+> the need to communicate between the different logging functionality,
+> as in, for example, "I had so many errors, lemme go and increase DRAM
+> scrubber frequency." For example. And all the other advantages of having
+> everything in a single driver.
+
+This is a policy. It should either belong to userspace, or be in some
+generic RAS code in the kernel, there's no reason why these can't be
+abstracted. Also in your specific example, it could be entirely local
+to the MC EDAC / DRAM controller path, we could have a generic way for
+EDAC to advertise that a given memory channel is giving lots of errors
+and have memory controller drivers listen to it but usually the EDAC MC
+driver *is* the only thing that looks like a MC driver to begin with,
+so again, pretty much no overlap with L1/L2 caches RAS or PCIe RAS
+etc...
+
+> And x86 already does that - we even have a single driver for all AMD
+> platforms - amd64_edac. Intel has a couple but there's still a lot of
+> sharing.
+
+Unless I'm mistaken, that amd64 EDAC is just an MC one... but I only
+had a cursory glance at the code.
+
+> But apparently ARM folks want to have one driver per IP block. And we
+> have this discussion each time a new vendor decides to upstream its
+> driver. And there's no shortage of vendors in ARM-land trying to do
+> that.
+
+For good reasons :-)
+
+> James and I have tried to come up with a nice scheme to make that work
+> on ARM and he has an example prototype here:
+> 
+> http://www.linux-arm.org/git?p=linux-jm.git;a=shortlog;h=refs/heads/edac_dummy/v1
 >
-> Add a binding document for it.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  .../devicetree/bindings/display/bridge/anx6345.txt | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.txt b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> new file mode 100644
-> index 000000000000..bd63f6ac107e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> @@ -0,0 +1,57 @@
-> +Analogix ANX6345 eDP Transmitter
-> +--------------------------------
-> +
-> +The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
-> +portable devices.
-> +
-> +Required properties:
-> +
-> + - compatible		: "analogix,anx6345"
-> + - reg			: I2C address of the device
-> + - reset-gpios		: Which GPIO to use for reset
+> to show how it could look like.
+> 
+> But I'm slowly growing a serious aversion against having this very same
+> discussion each time an ARM vendor sends a driver. And that happens
+> pretty often nowadays.
 
+Maybe because what you are promoting might not be the right path
+here... seriously, there's a reason why all vendors want to go down
+that path and in this case I don't think they are wrong.
 
-You have not specified it's active state, since in driver's code you
-named it RESETN I guess it should be active low.
+This isn't about just another ARM vendor, in fact I'm rather new to the
+whole ARM thing, I used to maintain arch/powerpc :-) The point is what
+you are trying to push for goes against everything we've been trying to
+do in Linux when it comes to splitting drivers to individual IP blocks.
 
+Yes, in *some* cases coordination will be needed in which case there
+are ways to do that that don't necessarily involve matching a driver to
+the root of the DT, and a pseudo-device is in fact a very reasonable
+way to do it, it was a common practice in IEEE1275 before I invented
+the FDT, and we do that for a number of other things already.
 
-> + - dvdd12-supply	: Regulator for 1.2V digital core power.
-> + - dvdd25-supply	: Regulator for 2.5V digital core power.
-> + - Video port for LVTTL input, using the DT bindings defined in [1].
-
-
-Please assign port number for input (I guess 0).
-
-
-> +
-> +Optional properties:
-> +
-> + - Video port for eDP output (panel or connector) using the DT bindings
-> +   defined in [1].
-
-
-Shouldn't it be also required?
-
-
-Regards
-
-Andrzej
-
-
-> +
-> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +anx6345: anx6345@38 {
-> +	compatible = "analogix,anx6345";
-> +	reg = <0x38>;
-> +	reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-> +	dvdd25-supply = <&reg_dldo2>;
-> +	dvdd12-supply = <&reg_fldo1>;
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		anx6345_in: port@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +			anx6345_in_tcon0: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&tcon0_out_anx6345>;
-> +			};
-> +		};
-> +
-> +		anx6345_out: port@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +
-> +			anx6345_out_panel: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&panel_in_edp>;
-> +			};
-> +		};
-> +	};
-> +};
+Cheers,
+Ben.
