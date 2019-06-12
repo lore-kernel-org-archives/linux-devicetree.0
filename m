@@ -1,93 +1,63 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: How to inject fwnode/oftree/acpi data by platform driver ?
-Date: Wed, 12 Jun 2019 11:01:18 +0300
-Message-ID: <20190612080118.GA18301@kuha.fi.intel.com>
-References: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
- <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v1 1/4] dt-bindings: ASoC: Add TDA7802
+	amplifier
+Date: Wed, 12 Jun 2019 09:10:34 +0100
+Message-ID: <20190612081034.GS28362@ediswmail.ad.cirrus.com>
+References: <20190611174909.12162-1-thomas.preston@codethink.co.uk>
+ <20190611174909.12162-2-thomas.preston@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc: LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+In-Reply-To: <20190611174909.12162-2-thomas.preston@codethink.co.uk>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Thomas Preston <thomas.preston@codethink.co.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Marco Felsch <m.felsch@pengutronix.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Cheng-Yi Chiang <cychiang@chromium.org>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, Jun 11, 2019 at 09:44:23PM +0300, Andy Shevchenko wrote:
-> +Cc: Heikki.
-> Heikki, can you help here with swnodes?
+On Tue, Jun 11, 2019 at 06:49:06PM +0100, Thomas Preston wrote:
+> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+> Cc: Patrick Glaser <pglaser@tesla.com>
+> Cc: Rob Duncan <rduncan@tesla.com>
+> Cc: Nate Case <ncase@tesla.com>
+> ---
+>  .../devicetree/bindings/sound/tda7802.txt          | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/tda7802.txt
 > 
-> On Sat, Jun 1, 2019 at 5:17 PM Enrico Weigelt, metux IT consult
-> <lkml@metux.net> wrote:
-> >
-> > Hi folks,
-> >
-> >
-> > I'm looking for a way to inject fwnode data from a platform driver,
-> > in order to initialize generic drivers w/ board specific configuration.
-> > The idea is getting rid of passing driver specific pdata structs
-> > (which, IIRC, seem to be deprecated).
-> >
-> > An example usecase is the APUv2/3 board, which have things like gpios
-> > wired to buttons and LEDs. The board can only be detected via DMI
-> > string, no way to probe the platform devices - have to be initialized
-> > explicitly (that's how I'm already doing it now).
-> >
-> > The nicest way, IMHO, would be if I could just write some piece of DTS
-> > and some fancy magic all the rest under the hood. Such thing doesn't
-> > seem to exist yet. Does it make sense to implement that ? How could
-> > we do it ?
-> >
-> > Which other options do we have ?
-> >
-> > Or should we just leave everything as it is and stick w/ pdata structs ?
+> diff --git a/Documentation/devicetree/bindings/sound/tda7802.txt b/Documentation/devicetree/bindings/sound/tda7802.txt
+> new file mode 100644
+> index 000000000000..f80aaf4f1ba0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/tda7802.txt
+> @@ -0,0 +1,26 @@
+> +ST TDA7802 audio processor
+> +
+> +This device supports I2C only.
+> +
+> +Required properties:
+> +
+> +- compatible : "st,tda7802"
+> +- reg : the I2C address of the device
+> +- enable-supply : a regulator spec for the PLLen pin
+> +
+> +Optional properties:
+> +
+> +- st,gain-ch13 : gain for channels 1 and 3 (range: 1-4)
+> +- st,gain-ch24 : gain for channels 2 and 3 (range: 1-4)
 
-The software nodes (drivers/base/swnode.c) were designed to supply
-fwnodes that describe devices in the same way DT does. The goal I had
-with the software nodes was exaclty to get rid of pdata, so they do
-sound like the thing you are looking for. If you check Rafael's latest
-linux-next branch [1], drivers/platform/x86/intel_cht_int33fe.c can be
-used as an example how to use the software nodes.
+Does it make sense to have the gains in device tree? Are these
+expected to be fixed by the system design, normally the gain
+would be controlled through an ALSA control.
 
-I think it's time to add documentation for the software nodes to the
-kernel, but I'll list here the features the software nodes have:
-
-- The software nodes are created independently from device entries.
-- Software nodes support hierarchy. Every software node has a pointer
-  to a parent software node.
-- Software nodes can have device properties.
-- Software nodes can have reference pointers to other software nodes
-  (outside of the hierarchy).
-
-Creating the software nodes from static description (struct
-software_node - available from Linux kernel v5.3 onwards) is
-straightforward. Once you have them, when you create your device
-entries (struct device), you can associate a software node with a
-device just like like any other fwnode:
-
-        device_initialize(&my_dev);
-        my_dev.parent = parent;
-        my_dev.fwnode = software_node_fwnode(&my_node);
-        ...
-        device_add(&my_device);
-
-After that, you can access all the information the software nodes
-supply to the device by using fwnode_* APIs from your driver, just
-like with ACPI or DT. Basically the entire fwnode_* API is now
-supported with softwarw nodes, except the device graph (fwnode_graph*)
-API.
-
-One final note. The hardware description must always primarily come
-from the system firmware. You only use software nodes if it's too
-late to influence what goes to the ACPI tables, or if using DTS is not
-an option.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
-
-thanks,
-
--- 
-heikki
+Thanks,
+Charles
