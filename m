@@ -1,61 +1,56 @@
-Return-Path: <SRS0=5lcI=UL=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH] arm64: dts: renesas: hihope-common: Add uSD and eMMC
-Date: Wed, 12 Jun 2019 11:02:11 +0000
-Message-ID: 
- <TY1PR01MB1770B85D549CD20C963620E6C0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=kOQp=UL=the-dreams.de=wsa@kernel.org>
+Date: Wed, 12 Jun 2019 12:15:16 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Add uSD and eMMC
+Message-ID: <20190612101516.xrlvqw7cls7eiv4u@ninjato>
 References: <1559895251-13931-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <CAMuHMdXv91Tt+78zLJj6pHFj9XrEJJbWOf-kzBPRbcw=h+iDHg@mail.gmail.com>
  <TY1PR01MB1770E7346A27FB36658142E1C0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
  <20190612094524.GA2153@kunai>
  <TY1PR01MB17707726AF6BF3EE5408D5CDC0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20190612101516.xrlvqw7cls7eiv4u@ninjato>
-In-Reply-To: <20190612101516.xrlvqw7cls7eiv4u@ninjato>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Chris Paterson" <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ubnrwpqkzxqqz7qm"
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB17707726AF6BF3EE5408D5CDC0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Wolfram,
 
-Thank you for your feedback!
+--ubnrwpqkzxqqz7qm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> From: Wolfram Sang <wsa@the-dreams.de>
-> Sent: 12 June 2019 11:15
-> Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Add uSD and eMMC
->=20
->=20
-> > File arch/arm64/boot/dts/renesas/hihope-common.dtsi contains common
-> > definitions for the mother boards for both flavours (including the
-> > eMMC). My understanding is that R-Car M3-N does support HS400, hence
-> > the need for the property here.
->=20
-> I won't be super strict here, yet I think it is more elegant to add the
-> HS400 properties to the board DTS files, not the dtsi. I mean we could
-> add them to the SoC dtsi otherwise.
 
-We will give both approaches a shot in due time, once the relevant HW
-will be available, but I do wonder why we need to make a distinction in the=
- DT
-when we have a quirk in the driver (the real problem is that HS400 doesn't =
-work
-only on some revisions of the RZ/G2M chip, do we need to create different .=
-dtsi for
-different revisions of the same SoC? Or perhaps different versions of the s=
-ame board
-dts?)? We could simply put a comment in the DT once we add the compatibilit=
-y of the
-eMMC with HS400, something like:
-"HS400 won't work on RZ/G2M rev=3D1.2"
-and let the driver handle the difference between revisions of the SoC, this=
- would keep
-things as compact as they possibly can be, as well as simplify design and m=
-aintenance.
+> File arch/arm64/boot/dts/renesas/hihope-common.dtsi contains common
+> definitions for the mother boards for both flavours (including the
+> eMMC). My understanding is that R-Car M3-N does support HS400, hence
+> the need for the property here.
 
-I hope this helps.
+I won't be super strict here, yet I think it is more elegant to add the
+HS400 properties to the board DTS files, not the dtsi. I mean we could
+add them to the SoC dtsi otherwise.
 
-Thanks,
-Fab
+
+--ubnrwpqkzxqqz7qm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0A0LAACgkQFA3kzBSg
+KbbbABAAnmgC8ly7+YRT6ZDRmSAhWx6azitJAMB6tEyklT8JVLVv9u0XKIf+JPCN
+9Aaz9kY9dTaeqYp1/EiKdIvG2Zn/BKvhTiRmFTeIea8x8TIDC+yGx+HtoB+m6wt+
+UGJ4e+k3ovpBMmDkLaOoQF6Qqxl/vzgP+rHiBpuNzv+UdPsuMKWV5f7LwLArcoEq
+IsZYTJOtMFHzzLVyB37UglTZLHwtlgAH+NyHlyGRNhOO4G7jZvP8Ckvb5cMniSJK
+28+wtTF6fkgP1nk6DQV17R44GJ3CPv7BQ3T5taN8t+Ax2SCdBQlVUoDbSQakE5ue
+V5TdQd96BdHoQpRbpNhpeNscRfEK0BpY3G579CSH2ywi39oeJ106CtFjDHo9UJnb
+rCD9alPSs33yGdsxM+JBk+LP8K+p+CBrEXfLTnp8iZvDVwCjgEyEtkquFD9OhPCq
+0cYYhzdnVNfzXLAjujnj/FWuclcwQgl1YXwzbHMfWHXvT5RV/PB4n8eIvlYlHDIN
+K8kRuyvLHsSFznImDRBzLFAe0NcBbcijaq8djBnfpaN56ki/Rn7bcW01Grj315Yz
+CEsnduK/NK8MHaJhlyawK+0Snu4TsvBToxEUJ3sa9z4DEFZni5l6MjuKo782nJK1
+cI2CBhBLp86YkQ2VjY3mtaLL34KQ5ghabULsuAJh9mofVASM9gc=
+=tY2m
+-----END PGP SIGNATURE-----
+
+--ubnrwpqkzxqqz7qm--
