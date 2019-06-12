@@ -1,154 +1,100 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V9 13/15] phy: tegra: Add PCIe PIPE2UPHY support
-Date: Wed, 12 Jun 2019 14:57:57 +0530
-Message-ID: <a126dbca-29e3-963b-5a41-f5f29d48de77@nvidia.com>
-References: <20190607144640.13427-1-vidyas@nvidia.com>
- <20190607144640.13427-14-vidyas@nvidia.com>
- <58349f3f-b9c2-2653-3a69-3bb5e836a9ef@gmail.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+Date: Wed, 12 Jun 2019 15:18:48 +0530
+Message-ID: <1a00e8c8-d07c-3b02-8ea5-6d5f3e2c7b1a@codeaurora.org>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+ <CAAd0S9DKqAgFPgLzHiCBiJgE+OmUW7ainyjM_3-RyfCoKEa51A@mail.gmail.com>
+ <50231fba-7212-f8b9-9313-0c79294d4cc6@codeaurora.org>
+ <4056907.DrFocau5Ix@debian64>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58349f3f-b9c2-2653-3a69-3bb5e836a9ef@gmail.com>
+In-Reply-To: <4056907.DrFocau5Ix@debian64>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
-Cc: mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Christian Lamparter <chunkeey@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, agross@kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?0J/QsNCy0LXQuw==?= <be.dissent@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6/10/2019 5:24 PM, Dmitry Osipenko wrote:
-> 07.06.2019 17:46, Vidya Sagar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interfa=
-ce
->> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
->> For each PCIe lane of a controller, there is a P2U unit instantiated at
->> hardware level. This driver provides support for the programming require=
-d
->> for each P2U that is going to be used for a PCIe controller.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v8]:
->> * Made it dependent on ARCH_TEGRA_194_SOC directly instead of ARCH_TEGRA
->>
->> Changes since [v7]:
->> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-=
-p2u.c
->>
->> Changes since [v6]:
->> * None
->>
->> Changes since [v5]:
->> * Addressed review comments from Thierry
->>
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * Rebased on top of linux-next top of the tree
->>
->> Changes since [v2]:
->> * Replaced spaces with tabs in Kconfig file
->> * Sorted header file inclusion alphabetically
->>
->> Changes since [v1]:
->> * Added COMPILE_TEST in Kconfig
->> * Removed empty phy_ops implementations
->> * Modified code according to DT documentation file modifications
->>
->>   drivers/phy/tegra/Kconfig            |   7 ++
->>   drivers/phy/tegra/Makefile           |   1 +
->>   drivers/phy/tegra/phy-tegra194-p2u.c | 109 +++++++++++++++++++++++++++
->>   3 files changed, 117 insertions(+)
->>   create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
->>
->> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
->> index e516967d695b..f9817c3ae85f 100644
->> --- a/drivers/phy/tegra/Kconfig
->> +++ b/drivers/phy/tegra/Kconfig
->> @@ -7,3 +7,10 @@ config PHY_TEGRA_XUSB
->>  =20
->>   	  To compile this driver as a module, choose M here: the module will
->>   	  be called phy-tegra-xusb.
->> +
->> +config PHY_TEGRA194_P2U
->> +	tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
->> +	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
->> +	select GENERIC_PHY
->> +	help
->> +	  Enable this to support the P2U (PIPE to UPHY) that is part of Tegra =
-19x SOCs.
->> diff --git a/drivers/phy/tegra/Makefile b/drivers/phy/tegra/Makefile
->> index 64ccaeacb631..320dd389f34d 100644
->> --- a/drivers/phy/tegra/Makefile
->> +++ b/drivers/phy/tegra/Makefile
->> @@ -6,3 +6,4 @@ phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_124_SOC) +=3D xusb-te=
-gra124.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_132_SOC) +=3D xusb-tegra124.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_210_SOC) +=3D xusb-tegra210.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_186_SOC) +=3D xusb-tegra186.o
->> +obj-$(CONFIG_PHY_TEGRA194_P2U) +=3D phy-tegra194-p2u.o
->> diff --git a/drivers/phy/tegra/phy-tegra194-p2u.c b/drivers/phy/tegra/ph=
-y-tegra194-p2u.c
->> new file mode 100644
->> index 000000000000..7b84b4c55e43
->> --- /dev/null
->> +++ b/drivers/phy/tegra/phy-tegra194-p2u.c
->> @@ -0,0 +1,109 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * P2U (PIPE to UPHY) driver for Tegra T194 SoC
->> + *
->> + * Copyright (C) 2019 NVIDIA Corporation.
->> + *
->> + * Author: Vidya Sagar <vidyas@nvidia.com>
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/phy/phy.h>
->> +
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN		BIT(0)
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
->> +#define P2U_PERIODIC_EQ_CTRL_GEN4	0xc4
->> +#define P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
->> +
->> +#define P2U_RX_DEBOUNCE_TIME				0xa4
->> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK	0xffff
->> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL		160
->> +
->> +struct tegra_p2u {
->> +	void __iomem *base;
->> +};
->> +
->> +static int tegra_p2u_power_on(struct phy *x)
->> +{
->> +	struct tegra_p2u *phy =3D phy_get_drvdata(x);
->> +	u32 val;
->> +
->> +	val =3D readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
->> +	val &=3D ~P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN;
->> +	val |=3D P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN;
->> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
->> +
->> +	val =3D readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
->> +	val |=3D P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN;
->> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
->> +
->> +	val =3D readl(phy->base + P2U_RX_DEBOUNCE_TIME);
->> +	val &=3D ~P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK;
->> +	val |=3D P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL;
->> +	writel(val, phy->base + P2U_RX_DEBOUNCE_TIME);
->=20
-> I'm wondering whether you're really need to insert memory barriers for
-> each readl/writel, can't the relaxed versions be used instead?
-Well, there is no real need to use readl/writel with their memory barriers.
-I'll push new series replacing them with their _relaxed() counterparts.
+Hi Christian,
 
->=20
-> The same applies to other patches as well.
->=20
+On 6/10/2019 5:45 PM, Christian Lamparter wrote:
+> On Monday, June 10, 2019 12:09:56 PM CEST Sricharan R wrote:
+>> Hi Christian,
+>>
+>> On 6/6/2019 2:11 AM, Christian Lamparter wrote:
+>>> On Wed, Jun 5, 2019 at 7:16 PM Sricharan R <sricharan@codeaurora.org> wrote:
+>>>>
+>>>> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+>>>> CP01 evaluation board.
+>>>>
+>>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>>>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+>>>> --- /dev/null
+>>>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>>>>
+>>>> +       clocks {
+>>>> +               sleep_clk: sleep_clk {
+>>>> +                       compatible = "fixed-clock";
+>>>> +                       clock-frequency = <32000>;
+>>>> +                       #clock-cells = <0>;
+>>>> +               };
+>>>> +
+>>> Recently-ish, we ran into an issue with the clock-frequency of the sleep_clk
+>>> on older IPQ40XX (and IPQ806x) on the OpenWrt Github and ML.
+>>> From what I know, the external "32KHz" crystals have 32768 Hz, but the QSDK
+>>> declares them at 32000 Hz. Since you probably have access to the BOM and
+>>> datasheets. Can you please confirm what's the real clock frequency for
+>>> the IPQ6018.
+>>> (And maybe also for the sleep_clk of the IPQ4018 as well?).
+>>>
+>>
+>> What exactly is the issue that you faced ?
+>> Looking in to the docs, it is <32000> only on ipq6018 and ipq40xx as well.
+> 
+> We need just a confirmation.
+> 
+> Then again, Currently the qcom-ipq4019.dtsi is using 32768 Hz.
+> 
+> |		sleep_clk: sleep_clk {
+> |			compatible = "fixed-clock";
+> |			clock-frequency = <32768>;
+> |			#clock-cells = <0>;
+> |		};
+> 
+> <https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/qcom-ipq4019.dtsi#L144>
+> 
+> Which makes sense, because all previous Qualcomm Atheros MIPS and the
+> future IPQ8072 SoCs have been either using or deriving a 32768 Hz clock.
+> 
+> For example: The AR9344 derives the clock from the 25MHz/40MHz external
+> oscillator. This is explained in "8.16.9 Derived RTC Clock (DERIVED_RTC_CLK)".
+> Which mentions that the "32KHz" clock interval is 30.5 usec / 30.48 usec
+> depending whenever the external reference crystal has 40MHz or 25MHz.
+> (1/30.5usec = 32.7868852 kilohertz!). The QCA9558 datasheet says the same
+> in "10.19.11 Derived RTC Clock". 
+> 
+> For IPQ8072: I point to the post by Sven Eckelmann on the OpenWrt ML:
+> <http://lists.infradead.org/pipermail/openwrt-devel/2019-May/017131.html>
+> "I was only able to verify for IPQ8072 that it had a 32.768 KHz
+> sleep clock." 
+> 
+> So this is pretty much "why there is an issue", it's confusing.
+> Is possible can you please look if there are (fixed) divisors values
+> listed in the documentation or the registers and bits that the values
+> are stored in? Because then we could just calculate it. 
+> 
+
+Really sorry for the confusion. So looking little more, SLEEP_CLK is derived
+from an external 38.4MHZ crystal, it is 32.768 KHZ. Somehow the
+clk freq plan etc seems to mention them only as .032 MHZ and misses
+out. That means i will correct the patch for 32768 and probably the
+ipq8074.dtsi as well
+
+Regards,
+  Sricharan
+
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
