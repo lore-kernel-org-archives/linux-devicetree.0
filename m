@@ -1,98 +1,220 @@
-From: Igor Opaniuk <igor.opaniuk@gmail.com>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6ull-colibri: enable UHS-I for USDHC1
-Date: Wed, 12 Jun 2019 15:49:03 +0300
-Message-ID: <CAByghJZJzFN9c9V-o=SV0z07++RPqsB0R8MTsovbtLr3vqJgyw@mail.gmail.com>
-References: <20190606090612.16685-1-igor.opaniuk@gmail.com>
- <3b84f3cc6cd5399f25ebd8e1c8559c58@agner.ch>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+Date: Wed, 12 Jun 2019 12:59:04 +0000
+Message-ID: <AM0PR04MB4481617CD1DFA9C01470B38E88EC0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190603083005.4304-1-peng.fan@nxp.com>
+ <20190603083005.4304-3-peng.fan@nxp.com>
+ <866db682-785a-e0a6-b394-bb65c7a694c6@gmail.com>
+ <20190606142056.68272dc0@donnerap.cambridge.arm.com>
+ <AM0PR04MB448168C72F1D40C1B9BEB1F788130@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3b84f3cc6cd5399f25ebd8e1c8559c58@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Fabio Estevam <festevam@gmail.com>, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marcel Ziswiler <marcel@ziswiler.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM0PR04MB448168C72F1D40C1B9BEB1F788130@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andre Przywara <andre.przywara@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlZmFuLAoKT24gV2VkLCBKdW4gMTIsIDIwMTkgYXQgMzoxNyBQTSBTdGVmYW4gQWduZXIg
-PHN0ZWZhbkBhZ25lci5jaD4gd3JvdGU6Cj4KPiBPbiAwNi4wNi4yMDE5IDExOjA2LCBJZ29yIE9w
-YW5pdWsgd3JvdGU6Cj4gPiBGcm9tOiBJZ29yIE9wYW5pdWsgPGlnb3Iub3Bhbml1a0B0b3JhZGV4
-LmNvbT4KPiA+Cj4gPiBBbGxvd3MgdG8gdXNlIHRoZSBTRCBpbnRlcmZhY2UgYXQgYSBoaWdoZXIg
-c3BlZWQgbW9kZSBpZiB0aGUgY2FyZAo+ID4gc3VwcG9ydHMgaXQuIEZvciB0aGlzIHRoZSBzaWdu
-YWxpbmcgdm9sdGFnZSBpcyBzd2l0Y2hlZCBmcm9tIDMuM1YgdG8KPiA+IDEuOFYgdW5kZXIgdGhl
-IHVzZGhjMSdzIGRyaXZlcnMgY29udHJvbC4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBJZ29yIE9w
-YW5pdWsgPGlnb3Iub3Bhbml1a0B0b3JhZGV4LmNvbT4KPiA+IC0tLQo+ID4gIGFyY2gvYXJtL2Jv
-b3QvZHRzL2lteDZ1bC5kdHNpICAgICAgICAgICAgICAgICAgfCAgNCArKysrCj4gPiAgYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaSB8IDExICsrKysrKysrKy0t
-Cj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLmR0c2kgICAgICAgICB8ICA2
-ICsrKysrKwo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlv
-bnMoLSkKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLmR0c2kg
-Yi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQo+ID4gaW5kZXggZmMzODhiODRiZjIyLi45
-MWEwY2VkNDRlMjcgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRz
-aQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLmR0c2kKPiA+IEBAIC04NTcsNiAr
-ODU3LDggQEAKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmY2xr
-cyBJTVg2VUxfQ0xLX1VTREhDMT4sCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICA8JmNsa3MgSU1YNlVMX0NMS19VU0RIQzE+Owo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiaXBnIiwgImFoYiIsICJwZXIiOwo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgZnNsLHR1bmluZy1zdGVwPSA8Mj47Cj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBmc2wsdHVuaW5nLXN0YXJ0LXRhcCA9IDwyMD47Cj4gPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBidXMtd2lkdGggPSA8ND47Cj4gPiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4gICAgICAgICAg
-ICAgICAgICAgICAgIH07Cj4gPiBAQCAtODcwLDYgKzg3Miw4IEBACj4gPiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNsa3MgSU1YNlVMX0NMS19VU0RIQzI+Owo+ID4g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiaXBnIiwgImFoYiIs
-ICJwZXIiOwo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYnVzLXdpZHRoID0gPDQ+
-Owo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZnNsLHR1bmluZy1zdGVwPSA8Mj47
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmc2wsdHVuaW5nLXN0YXJ0LXRhcCA9
-IDwyMD47Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJs
-ZWQiOwo+ID4gICAgICAgICAgICAgICAgICAgICAgIH07Cj4gPgo+ID4gZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS1ldmFsLXYzLmR0c2kKPiA+IGIvYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaQo+ID4gaW5kZXggMDA2Njkw
-ZWE5OGMwLi43ZGM3NzcwY2Y1MmMgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9p
-bXg2dWxsLWNvbGlicmktZXZhbC12My5kdHNpCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9p
-bXg2dWxsLWNvbGlicmktZXZhbC12My5kdHNpCj4gPiBAQCAtMTQ1LDEzICsxNDUsMjAgQEAKPiA+
-ICB9Owo+ID4KPiA+ICAmdXNkaGMxIHsKPiA+IC0gICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCI7Cj4gPiArICAgICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiLCAic3RhdGVfMTAwbWh6Iiwg
-InN0YXRlXzIwMG1oeiIsICJzbGVlcCI7Cj4gPiAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxf
-dXNkaGMxICZwaW5jdHJsX3NudnNfdXNkaGMxX2NkPjsKPiA+IC0gICAgIG5vLTEtOC12Owo+ID4g
-KyAgICAgcGluY3RybC0xID0gPCZwaW5jdHJsX3VzZGhjMV8xMDBtaHogJnBpbmN0cmxfc252c191
-c2RoYzFfY2Q+Owo+ID4gKyAgICAgcGluY3RybC0yID0gPCZwaW5jdHJsX3VzZGhjMV8xMDBtaHog
-JnBpbmN0cmxfc252c191c2RoYzFfY2Q+Owo+Cj4gU2hvdWxkIHRoYXQgbm90IGJlIHBpbmN0cmxf
-dXNkaGMxXzIwMG1oej8KPgoKQ29ycmVjdCwgdGhhbmtzIGZvciBwb2ludGluZyB0aGlzIG91dC4K
-VGFraW5nIGludG8gYWNjb3VudCB0aGF0IHRoZSBwYXRjaCB3YXMgYWxyZWFkeSBhY2NlcHRlZCBi
-eSBTaGF3biwgd2lsbApzZW5kIGFub3RoZXIgdG8gZml4IHRoaXMgdHlwbyBBU0FQIChhZGRlZCB0
-byBteSB0b2RvIGxpc3QpLgoKVGhhbmtzCgo+IC0tCj4gU3RlZmFuCj4KPiA+ICsgICAgIHBpbmN0
-cmwtMyA9IDwmcGluY3RybF91c2RoYzEgJnBpbmN0cmxfc252c191c2RoYzFfc2xlZXBfY2Q+Owo+
-ID4gICAgICAgY2QtZ3Bpb3MgPSA8JmdwaW81IDAgR1BJT19BQ1RJVkVfTE9XPjsKPiA+ICAgICAg
-IGRpc2FibGUtd3A7Cj4gPiAgICAgICB3YWtldXAtc291cmNlOwo+ID4gICAgICAga2VlcC1wb3dl
-ci1pbi1zdXNwZW5kOwo+ID4gICAgICAgdm1tYy1zdXBwbHkgPSA8JnJlZ18zdjM+Owo+ID4gKyAg
-ICAgdnFtbWMtc3VwcGx5ID0gPCZyZWdfc2QxX3ZtbWM+Owo+ID4gKyAgICAgc2QtdWhzLXNkcjEy
-Owo+ID4gKyAgICAgc2QtdWhzLXNkcjI1Owo+ID4gKyAgICAgc2QtdWhzLXNkcjUwOwo+ID4gKyAg
-ICAgc2QtdWhzLXNkcjEwNDsKPiA+ICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiA+ICB9Owo+ID4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpCj4gPiBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpCj4gPiBpbmRleCA5YWQxZGEx
-NTk3NjguLmQ1NjcyOGYwM2MzNSAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDZ1bGwtY29saWJyaS5kdHNpCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNv
-bGlicmkuZHRzaQo+ID4gQEAgLTU0NSw2ICs1NDUsMTIgQEAKPiA+ICAgICAgICAgICAgICAgPjsK
-PiA+ICAgICAgIH07Cj4gPgo+ID4gKyAgICAgcGluY3RybF9zbnZzX3VzZGhjMV9zbGVlcF9jZDog
-c252cy11c2RoYzEtY2QtZ3JwLXNscCB7Cj4gPiArICAgICAgICAgICAgIGZzbCxwaW5zID0gPAo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgIE1YNlVMTF9QQURfU05WU19UQU1QRVIwX19HUElPNV9J
-TzAwICAgICAweDAKPiA+ICsgICAgICAgICAgICAgPjsKPiA+ICsgICAgIH07Cj4gPiArCj4gPiAg
-ICAgICBwaW5jdHJsX3NudnNfd2lmaV9wZG46IHNudnMtd2lmaS1wZG4tZ3JwIHsKPiA+ICAgICAg
-ICAgICAgICAgZnNsLHBpbnMgPSA8Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgTVg2VUxMX1BB
-RF9CT09UX01PREUxX19HUElPNV9JTzExICAgICAgIDB4MTQKCgoKLS0gCkJlc3QgcmVnYXJkcyAt
-IEZyZXVuZGxpY2hlIEdyw7xzc2UgLSBNZWlsbGV1cmVzIHNhbHV0YXRpb25zCgpJZ29yIE9wYW5p
-dWsKCm1haWx0bzogaWdvci5vcGFuaXVrQGdtYWlsLmNvbQpza3lwZTogaWdvci5vcGFueXVrCisz
-ODAgKDkzKSA4MzYgNDAgNjcKaHR0cDovL3VhLmxpbmtlZGluLmNvbS9pbi9pb3Bhbml1awoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+Hi Andre,
+
+> Subject: RE: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+>=20
+> Hi Andre,
+> > Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+> >
+> > On Mon, 3 Jun 2019 09:32:42 -0700
+> > Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >
+> > Hi,
+> >
+> > > On 6/3/19 1:30 AM, peng.fan@nxp.com wrote:
+> > > > From: Peng Fan <peng.fan@nxp.com>
+> > > >
+> > > > This mailbox driver implements a mailbox which signals transmitted
+> > > > data via an ARM smc (secure monitor call) instruction. The mailbox
+> > > > receiver is implemented in firmware and can synchronously return
+> > > > data when it returns execution to the non-secure world again.
+> > > > An asynchronous receive path is not implemented.
+> > > > This allows the usage of a mailbox to trigger firmware actions on
+> > > > SoCs which either don't have a separate management processor or on
+> > > > which such a core is not available. A user of this mailbox could
+> > > > be the SCP interface.
+> > > >
+> > > > Modified from Andre Przywara's v2 patch
+> > > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
+F
+> > > > lo
+> > > >
+> >
+> re.kernel.org%2Fpatchwork%2Fpatch%2F812999%2F&amp;data=3D02%7C01%
+> > 7Cpen
+> > > >
+> >
+> g.fan%40nxp.com%7C15c4180b8fe5405d3de808d6ea81d5f1%7C686ea1d3bc
+> > 2b4c6
+> > > >
+> > fa92cd99c5c301635%7C0%7C0%7C636954240720601454&amp;sdata=3D1Cp
+> > WSgTH7lF
+> > > > cBKxJnLeIDw%2FDAQJJO%2FVypV1LUU1BRQA%3D&amp;reserved=3D0
+> > > >
+> > > > Cc: Andre Przywara <andre.przywara@arm.com>
+> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > ---
+> > >
+> > > [snip]
+> > >
+> > > +#define ARM_SMC_MBOX_USB_IRQ	BIT(1)
+> > >
+> > > That flag appears unused.
+> > >
+> > > > +static int arm_smc_mbox_probe(struct platform_device *pdev) {
+> > > > +	struct device *dev =3D &pdev->dev;
+> > > > +	struct mbox_controller *mbox;
+> > > > +	struct arm_smc_chan_data *chan_data;
+> > > > +	const char *method;
+> > > > +	bool use_hvc =3D false;
+> > > > +	int ret, irq_count, i;
+> > > > +	u32 val;
+> > > > +
+> > > > +	if (!of_property_read_u32(dev->of_node, "arm,num-chans", &val)) {
+> > > > +		if (val < 1 || val > INT_MAX) {
+> > > > +			dev_err(dev, "invalid arm,num-chans value %u
+> > of %pOFn\n", val,
+> > > > +pdev->dev.of_node);
+> >
+> > Isn't the of_node parameter redundant, because dev_err() already takes
+> > care of that?
+>=20
+> I'll remove that.
+>=20
+> >
+> > > > +			return -EINVAL;
+> > > > +		}
+> > > > +	}
+> > >
+> > > Should not the upper bound check be done against UINT_MAX since val
+> > > is an unsigned int?
+> >
+> > But wouldn't that be somewhat pointless, given that val is a u32? So I
+> > guess we could just condense this down to:
+> > ...
+> > 		if (!val) {
+> > ...
+>=20
+> make sense.
+>=20
+> >
+> > > > +
+> > > > +	irq_count =3D platform_irq_count(pdev);
+> > > > +	if (irq_count =3D=3D -EPROBE_DEFER)
+> > > > +		return irq_count;
+> > > > +
+> > > > +	if (irq_count && irq_count !=3D val) {
+> > > > +		dev_err(dev, "Interrupts not match num-chans\n");
+> > >
+> > > Interrupts property does not match \"arm,num-chans\" would be more
+> > correct.
+> >
+> > Given that interrupts are optional, do we have to rely on this?
+>=20
+> If there is interrupt property, the interrupts should match channel count=
+s.
+>=20
+> Do we actually
+> > need one interrupt per channel?
+>=20
+> I thought about this, provide one interrupt for all channels.
+> But there is no good way to let interrupt handlers know which channel
+> triggers the interrupt. So I use one interrupt per channel.
+>=20
+> >
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > > +	if (!of_property_read_string(dev->of_node, "method", &method)) {
+> > > > +		if (!strcmp("hvc", method)) {
+> > > > +			use_hvc =3D true;
+> > > > +		} else if (!strcmp("smc", method)) {
+> > > > +			use_hvc =3D false;
+> > > > +		} else {
+> > > > +			dev_warn(dev, "invalid \"method\" property: %s\n",
+> > > > +				 method);
+> > > > +
+> > > > +			return -EINVAL;
+> > > > +		}
+> > >
+> > > Having at least one method specified does not seem to be checked
+> > > later on in the code, so if I omitted to specify that property, we
+> > > would still register the mailbox and default to use "smc" since the
+> > > ARM_SMC_MBOX_USE_HVC flag would not be set, would not we want to
+> > make
+> > > sure that we do have in fact a valid method specified given the
+> > > binding documents that property as mandatory?
+> > >
+> > > [snip]
+> > >
+> > > > +	mbox->txdone_poll =3D false;
+> > > > +	mbox->txdone_irq =3D false;
+> > > > +	mbox->ops =3D &arm_smc_mbox_chan_ops;
+> > > > +	mbox->dev =3D dev;
+> > > > +
+> > > > +	ret =3D mbox_controller_register(mbox);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > +	platform_set_drvdata(pdev, mbox);
+> > >
+> > > I would move this above mbox_controller_register() that way there is
+> > > no room for race conditions in case another part of the driver
+> > > expects to have pdev->dev.drvdata set before the mbox controller is
+> registered.
+> > > Since you use devm_* functions for everything, you may even remove
+> > > that call.
+> > >
+> > > [snip]
+> > >
+> > > > +#ifndef _LINUX_ARM_SMC_MAILBOX_H_ #define
+> > > > +_LINUX_ARM_SMC_MAILBOX_H_
+> > > > +
+> > > > +struct arm_smccc_mbox_cmd {
+> > > > +	unsigned long a0, a1, a2, a3, a4, a5, a6, a7; };
+> > >
+> > > Do you expect this to be used by other in-kernel users? If so, it
+> > > might be good to document how a0 can have a special meaning and be
+> > > used as a substitute for the function_id?
+> >
+> > I don't think we should really expose this outside of the driver. From
+> > a mailbox point of view this is just the payload, transported according=
+ to the
+> SMCCC.
+> > Also using "long" here sounds somewhat troublesome.
+
+Long on ARM64 is 64bit, and 32bit on ARM32, so I use long.
+Do you forsee any issues?
+
+> >
+> > Also, looking at the SMCCC, I only see six parameters in addition to
+> > the function identifier. Shall we reflect this here?
+
+a0 is used as function id, not no arm,func-ids provided in dts. a1-a7 are
+also passed to smc.
+If arm,func-ids is provided, a0 will be omitted just for consistency as abo=
+ve.
+
+You mean write comments in the code for it?
+
+Thanks,
+Peng.
+
+>=20
+> I could move it to driver code. Jassi, do you have any comments?
+>=20
+> Thanks,
+> Peng.
+>=20
+> >
+> > Cheers,
+> > Andre.
