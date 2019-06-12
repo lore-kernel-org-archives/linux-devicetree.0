@@ -1,59 +1,71 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: Re: [PATCH v2 6/7] dt-bindings: Add ANX6345 DP/eDP transmitter
- binding
-Date: Wed, 12 Jun 2019 16:59:26 +0200
-Message-ID: <20190612145926.GA28426@lst.de>
-References: <20190604122150.29D6468B05@newverein.lst.de> <CGME20190604122333epcas2p2f2c750e19a363901c83abb83354f55d4@epcas2p2.samsung.com> <20190604122305.07B9068B05@newverein.lst.de> <354de37d-57bb-6b06-c81a-a2081ea4f222@samsung.com>
+From: Angus Ainslie <angus@akkea.ca>
+Subject: Re: [PATCH v15 0/3] Add support for the Purism Librem5 devkit
+Date: Wed, 12 Jun 2019 09:02:41 -0600
+Message-ID: <b1de3d5fd352744f2c1f4e7bae266d01@www.akkea.ca>
+References: <20190528125747.1047-1-angus@akkea.ca>
+ <20190605090315.GJ29853@dragon>
+ <db174b0173d0bcdb9ab5ff4e2e1cc4bc@www.akkea.ca>
+ <20190610135258.GA7976@xo-6d-61-c0.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <354de37d-57bb-6b06-c81a-a2081ea4f222@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190610135258.GA7976@xo-6d-61-c0.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, linux-kernel-owner@vger.kernel.org, Carlo Caione <ccaione@baylibre.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, angus.ainslie@puri.sm, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 10:16:37AM +0200, Andrzej Hajda wrote:
-> > +The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
-> > +portable devices.
-> > +
-> > +Required properties:
-> > +
-> > + - compatible		: "analogix,anx6345"
-> > + - reg			: I2C address of the device
-> > + - reset-gpios		: Which GPIO to use for reset
-> 
-> 
-> You have not specified it's active state, since in driver's code you
-> named it RESETN I guess it should be active low.
+Hi Pavel,
 
-Yes. The chip's reset is active low.
+On 2019-06-10 07:52, Pavel Machek wrote:
+> On Wed 2019-06-05 06:48:05, Angus Ainslie wrote:
+>> On 2019-06-05 03:03, Shawn Guo wrote:
+>> >On Tue, May 28, 2019 at 05:57:44AM -0700, Angus Ainslie (Purism) wrote:
+>> >>The Librem5 devkit is based on the imx8mq from NXP. This is a default
+>> >>devicetree to boot the board to a command prompt.
+>> >>
+>> >>Changes since v14:
+>> >>
+>> >>Add regulator-always-on for the SNVS regulators.
+>> >>Added pgc nodes.
+>> >>Fixed charger pre-current.
+>> >
+>> >Since Pavel was reviewing your patches, you should copy him on the new
+>> >version.  Has this version addressed all his review comments?
+>> >
+>> 
+>> Sorry I had meant to include him in the CC.
+>> 
+>> I believe so but don't want to speak for him so we should see if he
+>> has anymore.
 > 
-> > + - dvdd12-supply	: Regulator for 1.2V digital core power.
-> > + - dvdd25-supply	: Regulator for 2.5V digital core power.
-> > + - Video port for LVTTL input, using the DT bindings defined in [1].
+> I did not check the code, sorry.
 > 
+> I still believe your shutdown voltage is too low; try that. Battery
+> will go down from 3V
+> to 2.8V in seconds, so you don't really gain anything by using lower
+> threshold, and you
+> may not even have enough time to shutdown the system if you set it too 
+> low.
 > 
-> Please assign port number for input (I guess 0).
+> Normally something like 3.0V, 3.2V is reasonable shutdown voltage.
+> 
 
-True.
+I took another look at the BQ25896 datasheet and the minimum-sys-voltage 
+register is limited to 3.0-3.7 V.
 
-> 
-> > +
-> > +Optional properties:
-> > +
-> > + - Video port for eDP output (panel or connector) using the DT bindings
-> > +   defined in [1].
-> 
-> 
-> Shouldn't it be also required?
+I'll submit a new version.
 
-See previous discussion. Surely there should be _something_ connected to
-the output side, but that something might not be relevant for the software
-side, so it might be omitted from the device tree.
+Angus
 
-In fact, I'll submit v3 with the SPDX changes and without exactly this
-output port spec which had caused the heated discussion.
-
-	Torsten
+> Best regards,
+> 										Pavel
