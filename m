@@ -1,49 +1,44 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
- MSI_FLAG_MULTI_PCI_MSI
-Date: Wed, 12 Jun 2019 11:54:10 +0100
-Message-ID: <20190612105410.GA9918@redmoon>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
- <20190611165935.GA22836@redmoon>
- <3b883516-1d63-1504-bdc9-22ac9c6f2d46@arm.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Date: Wed, 12 Jun 2019 13:00:39 +0200
+Message-ID: <20190612110039.GH32652@zn.tnic>
+References: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+ <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+ <20190608090556.GA32464@zn.tnic>
+ <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+ <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+ <20190611115651.GD31772@zn.tnic>
+ <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+ <20190612034813.GA32652@zn.tnic>
+ <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+ <20190612074242.53a4cf56@coco.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3b883516-1d63-1504-bdc9-22ac9c6f2d46@arm.com>
+In-Reply-To: <20190612074242.53a4cf56@coco.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, James Morse <james.morse@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Hanoc
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 06:29:49PM +0100, Marc Zyngier wrote:
-> On 11/06/2019 17:59, Lorenzo Pieralisi wrote:
-> > On Fri, Apr 12, 2019 at 08:35:36AM +0000, Z.q. Hou wrote:
-> >> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> >>
-> >> The current code does not support multiple MSIs, so remove
-> >> the corresponding flag from the msi_domain_info structure.
-> > 
-> > Please explain me what's the problem before removing multi MSI
-> > support.
-> 
-> The reason seems to be the following code in the allocator:
-> 
->         WARN_ON(nr_irqs != 1);
->         mutex_lock(&msi->lock);
-> 
->         bit = find_first_zero_bit(msi->msi_irq_in_use, msi->num_of_vectors);
->         if (bit >= msi->num_of_vectors) {
->                 mutex_unlock(&msi->lock);
->                 return -ENOSPC;
->         }
-> 
->         set_bit(bit, msi->msi_irq_in_use);
-> 
-> So instead of fixing the allocator, the author prefers disabling
-> the feature. I'm not sure whether that is an acceptable outcome...
+On Wed, Jun 12, 2019 at 07:42:42AM -0300, Mauro Carvalho Chehab wrote:
+> That's said, from the admin PoV, it makes sense to have a single
+> daemon that collect errors from all error sources and take the
+> needed actions.
 
-:) No it is not that's why I asked and I am waiting for an answer.
+Doing recovery actions in userspace is too flaky. Daemon can get killed
+at any point in time and there are error types where you want to do
+recovery *before* you return to userspace.
 
-Lorenzo
+Yes, we do have different error reporting facilities but I still think
+that concentrating all the error information needed in order to do
+proper recovery action is the better approach here. And make that part
+of the kernel so that it is robust. Userspace can still configure it and
+so on.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
