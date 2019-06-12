@@ -1,40 +1,42 @@
-Return-Path: <SRS0=zRjx=UD=linaro.org=masahisa.kojima@kernel.org>
-From: Masahisa Kojima <masahisa.kojima@linaro.org>
-Subject: [PATCH v7 1/3] MAINTAINERS: Add entry for Synquacer SPI driver
-Date: Tue,  4 Jun 2019 14:12:55 +0900
-Message-Id: <20190604051257.14264-2-masahisa.kojima@linaro.org>
-In-Reply-To: <20190604051257.14264-1-masahisa.kojima@linaro.org>
-References: <20190604051257.14264-1-masahisa.kojima@linaro.org>
-To: linux-spi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: broonie@kernel.org, geert@linux-m68k.org, tpiepho@impinj.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, ard.biesheuvel@linaro.org, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, okamoto.satoru@socionext.com, osaki.yoshitoyo@socionext.com, Masahisa Kojima <masahisa.kojima@linaro.org>
+Return-Path: <SRS0=x9uM=UL=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 4/4] arm64: dts: renesas: r8a774a1: Add dynamic power coefficient
+Date: Wed, 12 Jun 2019 15:20:55 +0100
+Message-Id: <1560349255-26336-5-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1560349255-26336-1-git-send-email-biju.das@bp.renesas.com>
+References: <1560349255-26336-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add entry for the Synquacer spi driver and DT bindings.
+Describe the dynamic power coefficient of A57 and A53 CPUs.
 
-Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Based on work by Gaku Inami <gaku.inami.xw@bp.renesas.com> and others.
+
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a6954776a37e..06c3e03e3c0b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14613,6 +14613,14 @@ S:	Maintained
- F:	drivers/net/ethernet/socionext/netsec.c
- F:	Documentation/devicetree/bindings/net/socionext-netsec.txt
- 
-+SOCIONEXT (SNI) Synquacer SPI DRIVER
-+M:	Masahisa Kojima <masahisa.kojima@linaro.org>
-+M:	Jassi Brar <jaswinder.singh@linaro.org>
-+L:	linux-spi@vger.kernel.org
-+S:	Maintained
-+F:	drivers/spi/spi-synquacer.c
-+F:	Documentation/devicetree/bindings/spi/spi-synquacer.txt
-+
- SOLIDRUN CLEARFOG SUPPORT
- M:	Russell King <linux@armlinux.org.uk>
- S:	Maintained
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+index 6f52451..addf74c 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+@@ -135,6 +135,7 @@
+ 			power-domains = <&sysc R8A774A1_PD_CA57_CPU0>;
+ 			next-level-cache = <&L2_CA57>;
+ 			enable-method = "psci";
++			dynamic-power-coefficient = <854>;
+ 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z>;
+ 			operating-points-v2 = <&cluster0_opp>;
+ 			capacity-dmips-mhz = <1024>;
+@@ -162,6 +163,7 @@
+ 			next-level-cache = <&L2_CA53>;
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
++			dynamic-power-coefficient = <277>;
+ 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z2>;
+ 			operating-points-v2 = <&cluster1_opp>;
+ 			capacity-dmips-mhz = <560>;
 -- 
-2.14.2
+2.7.4
