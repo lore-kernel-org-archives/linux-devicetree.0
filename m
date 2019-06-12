@@ -1,84 +1,121 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 05/11] dt-bindings: net: sun4i-emac: Convert the
- binding to a schemas
-Date: Tue, 11 Jun 2019 16:58:56 +0200
-Message-ID: <20190611145856.ua2ggkn6ccww6vpp@flea>
-References: <91618c7e9a5497462afa74c6d8a947f709f54331.1560158667.git-series.maxime.ripard@bootlin.com>
- <d198d29119b37b2fdb700d8992b31963e98b6693.1560158667.git-series.maxime.ripard@bootlin.com>
- <20190610143139.GG28724@lunn.ch>
- <CAL_JsqJahCJcdu=+fA=ewbGezuEJ2W6uwMVxkQpdY6w+1OWVVA@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Date: Wed, 12 Jun 2019 17:20:22 +0200
+Message-ID: <20190612152022.c3cfhp4cauhzhfyr@flea>
+References: <20190604122150.29D6468B05@newverein.lst.de>
+ <20190604122308.98D4868B20@newverein.lst.de>
+ <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
+ <20190605101317.GA9345@lst.de>
+ <20190605120237.ekmytfxcwbjaqy3x@flea>
+ <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
+ <20190607062802.m5wslx3imiqooq5a@flea>
+ <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
+ <20190607094030.GA12373@lst.de>
+ <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2313426000568281042=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJahCJcdu=+fA=ewbGezuEJ2W6uwMVxkQpdY6w+1OWVVA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>, netdev <netdev@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: multipart/mixed; boundary="===============0930956222=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Sean Paul <seanpaul@chromium.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Torsten Duwe <duwe@lst.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
 
---===============2313426000568281042==
+--===============0930956222==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="akgu3rpnhcjfd75m"
+	protocol="application/pgp-signature"; boundary="kbzg5qkkfku6tqsr"
 Content-Disposition: inline
 
 
---akgu3rpnhcjfd75m
+--kbzg5qkkfku6tqsr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rob,
+Hi,
 
-On Mon, Jun 10, 2019 at 12:59:29PM -0600, Rob Herring wrote:
-> On Mon, Jun 10, 2019 at 8:31 AM Andrew Lunn <andrew@lunn.ch> wrote:
+On Wed, Jun 12, 2019 at 12:00:21PM +0200, Andrzej Hajda wrote:
+> On 07.06.2019 11:40, Torsten Duwe wrote:
+> > On Fri, Jun 07, 2019 at 08:28:02AM +0200, Maxime Ripard wrote:
+> >> On Thu, Jun 06, 2019 at 03:59:27PM +0200, Harald Geyer wrote:
+> >>> If think valid compatible properties would be:
+> >>> compatible =3D "innolux,n116bge", "simple-panel";
+> >>> compatible =3D "edp-connector", "simple-panel";
+> >> A connector isn't a panel.
+> >>
+> >>> compatible =3D "innolux,n116bge", "edp-connector", "simple-panel";
+> >> And the innolux,n116bge is certainly not a connector either.
+> >>
+> >>> compatible =3D "edp-connector", "innolux,n116bge", "simple-panel";
+> >>>
+> >>> I can't make up my mind which one I prefere. However neither of these
+> >>> variants requires actually implmenting an edp-connector driver.
+> >> No-one asked to do an edp-connector driver. You should use it in your
+> >> DT, but if you want to have some code in your driver that parses the
+> >> DT directly, I'm totally fine with that.
+> > I must admit I fail to understand what that extra node would be good fo=
+r.
+> > Logically, the eDP far side is connected to the well-known n116bge.
+> > Inside the laptop case it might as well be a flat ribbon cable or
+> > soldered directly.
+> > In good intention, that's all I wanted to express in the DT. I don't
+> > know whether the relevant mechanical dimensions of the panel and the
+> > connector are standardised, so whether one could in theory assemble it
+> > with a different panel than the one it came with.
 > >
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - interrupts
-> > > +  - clocks
-> > > +  - phy
-> > > +  - allwinner,sram
+> > OTOH, as I checked during the discussion with anarsoul, the panel's
+> > supply voltage is permanently connected to the main 3.3V rail.
+> > We already agreed that the eDP output port must not neccessarily be
+> > specified, this setup is a good example why: because the panel is
+> > always powered, the anx6345 can always pull valid EDID data from it
+> > so at this stage there's no need for any OS driver to reach beyond
+> > the bridge. IIRC even the backlight got switched off for the blank
+> > screen without.
 > >
-> > Quoting ethernet.txt:
+> > All I wanted to say is that "there's usually an n116bge behind it";
+> > but this is mostly redundant.
 > >
-> > - phy: the same as "phy-handle" property, not recommended for new bindings.
-> >
-> > - phy-handle: phandle, specifies a reference to a node representing a PHY
-> >   device; this property is described in the Devicetree Specification and so
-> >   preferred;
-> >
-> > Can this be expressed in Yaml? Accept phy, but give a warning. Accept
-> > phy-handle without a warning? Enforce that one or the other is
-> > present?
+> > So, shall we just drop the output port specification (along with the
+> > panel node) in order to get one step further?
 >
-> The common schema could have 'phy: false'. This works as long as we've
-> updated (or plan to) all the dts files to use phy-handle. The issue is
-> how far back do you need kernels to work with newer dtbs.
+> I am not sure if I understand whole discussion here, but I also do not
+> understand whole edp-connector thing.
 
-I guess another question being raised by this is how hard do we want
-to be a deprecating things, and should the DT validation be a tool to
-enforce that validation.
+The context is this one:
+https://patchwork.freedesktop.org/patch/257352/?series=3D51182&rev=3D1
+https://patchwork.freedesktop.org/patch/283012/?series=3D56163&rev=3D1
+https://patchwork.freedesktop.org/patch/286468/?series=3D56776&rev=3D2
 
-For example, you've used in you GPIO meta-schema false for anything
-ending with -gpio, since it's deprecated. This means that we can't
-convert any binding using a deprecated property without introducing a
-build error in the schemas, which in turn means that you'll have a lot
-of friction to support schemas, since you would have to convert your
-driver to support the new way of doing things, before being able to
-have a schema for your binding.
+TL;DR: This bridge is being used on ARM laptops that can come with
+different eDP panels. Some of these panels require a regulator to be
+enabled for the panel to work, and this is obviously something that
+should be in the DT.
 
-And then, we need to agree on how to express the deprecation. I guess
-we could allow the deprecated keyword that will be there in the
-draft-8, instead of ad-hoc solutions?
+However, we can't really describe the panel itself, since the vendor
+uses several of them and just relies on the eDP bus to do its job at
+retrieving the EDIDs. A generic panel isn't really working either
+since that would mean having a generic behaviour for all the panels
+connected to that bus, which isn't there either.
+
+The connector allows to expose this nicely.
+
+> According to VESA[1] eDP is "Internal display interface" - there is no
+> external connector for eDP, the way it is connected is integrator's
+> decision, but it is fixed - ie end user do not plug/unplug it.
+
+I'm not sure if you mean DRM or DT connector here though. In DRM,
+we're doing this all the time for panels. I'm literaly typing this
+=66rom a laptop that has a screen with an eDP connector.
 
 Maxime
 
@@ -87,29 +124,27 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---akgu3rpnhcjfd75m
+--kbzg5qkkfku6tqsr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP/BsAAKCRDj7w1vZxhR
-xU7tAQDcrE7AmbrNpKlW8XjNBwjZBTaNMJbwICwP0nzygayxHQD+MjHzz6TZnhQF
-Qm1qbD7O25WDq9BPnYW8XMjLhY6IgQE=
-=f1jE
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQEYNgAKCRDj7w1vZxhR
+xagZAP9+AZ8uzanMLNIT15MfMeCtszC85MU2JHwDCbzueao68wD/WPbzy8s2BkPf
+pRPeI1xiny1h0ObfHZ8o1OdpRlKPHQg=
+=nu8d
 -----END PGP SIGNATURE-----
 
---akgu3rpnhcjfd75m--
+--kbzg5qkkfku6tqsr--
 
-
---===============2313426000568281042==
-Content-Type: text/plain; charset="us-ascii"
+--===============0930956222==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Content-Disposition: inline
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
 
---===============2313426000568281042==--
+--===============0930956222==--
