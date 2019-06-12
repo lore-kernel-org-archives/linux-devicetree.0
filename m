@@ -1,109 +1,115 @@
-Return-Path: <SRS0=x9uM=UL=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 3/4] arm64: dts: renesas: r8a774a1: Create thermal zone to support IPA
-Date: Wed, 12 Jun 2019 15:20:54 +0100
-Message-Id: <1560349255-26336-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1560349255-26336-1-git-send-email-biju.das@bp.renesas.com>
-References: <1560349255-26336-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=ypAS=UL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46379 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437579AbfFLJj0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Jun 2019 05:39:26 -0400
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v5 00/10] Rename Rockchip VPU driver to Hantro, add initial i.MX8M support
+Date: Wed, 12 Jun 2019 11:39:05 +0200
+Message-Id: <20190612093915.18973-1-p.zabel@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Setup a thermal zone driven by SoC temperature sensor. Create passive trip
-points and bind them to CPUFreq cooling device that supports power
-extension.
+There are several other SoCs that contain Hantro IP based VPUs, such as
+NXP i.MX8MQ (Hantro G1 and G2) and i.MX8MM (Hantro G1, G2, and H1). To
+maximize code sharing, add initial support for these SoCs to the
+Rockchip VPU driver, after renaming it to Hantro VPU.
 
-Based on work by Dien Pham <dien.pham.ry@renesas.com> for r8a7796 SoC.
+This series is based on the br-v5.3g tag, commit e568d2cc1ef6
+("rockchip/vpu: Add support for MPEG-2 decoding on RK3288") with
+https://patchwork.linuxtv.org/patch/56402/ ("rockchip/vpu: Add support
+for MPEG-2 decoding on RK3328") applied on top. It supports MPEG-2
+decoding on i.MX8MQ. MPEG-2 decoding and JPEG encoding on i.MX8MM may
+or may not work, I don't have the hardware to test.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+Changes since v4:
+ - Rebased onto media-tree master,
+   RK3328 support will have to be rebased as well
+ - Fixed duplicated num_irqs initializer in imx8mq_vpu_variant
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index 603cfdb..6f52451 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -138,6 +138,7 @@
- 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
- 			capacity-dmips-mhz = <1024>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		a57_1: cpu@1 {
-@@ -150,6 +151,7 @@
- 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
- 			capacity-dmips-mhz = <1024>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		a53_0: cpu@100 {
-@@ -159,6 +161,7 @@
- 			power-domains = <&sysc R8A774A1_PD_CA53_CPU0>;
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
- 			capacity-dmips-mhz = <560>;
-@@ -2248,6 +2251,7 @@
- 			polling-delay-passive = <250>;
- 			polling-delay = <1000>;
- 			thermal-sensors = <&tsc 0>;
-+			sustainable-power = <3874>;
- 
- 			trips {
- 				sensor1_crit: sensor1-crit {
-@@ -2262,6 +2266,7 @@
- 			polling-delay-passive = <250>;
- 			polling-delay = <1000>;
- 			thermal-sensors = <&tsc 1>;
-+			sustainable-power = <3874>;
- 
- 			trips {
- 				sensor2_crit: sensor2-crit {
-@@ -2270,21 +2275,39 @@
- 					type = "critical";
- 				};
- 			};
--
- 		};
- 
- 		sensor_thermal3: sensor-thermal3 {
- 			polling-delay-passive = <250>;
- 			polling-delay = <1000>;
- 			thermal-sensors = <&tsc 2>;
-+			sustainable-power = <3874>;
- 
- 			trips {
-+				target: trip-point1 {
-+					temperature = <100000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+
- 				sensor3_crit: sensor3-crit {
- 					temperature = <120000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&target>;
-+					cooling-device = <&a57_0 0 2>;
-+					contribution = <1024>;
-+				};
-+				map1 {
-+					trip = <&target>;
-+					cooling-device = <&a53_0 0 2>;
-+					contribution = <1024>;
-+				};
-+			};
- 		};
- 	};
- 
+regards
+Philipp
+
+Philipp Zabel (10):
+  rockchip/vpu: rename from rockchip to hantro
+  media: hantro: print video device name in addition to device node
+  media: hantro: add PM runtime resume callback
+  media: hantro: make irq names configurable
+  media: hantro: add support for named register ranges
+  media: hantro: add support for separate control block
+  media: hantro: allow arbitrary number of clocks
+  media: dt-bindings: Document i.MX8MQ and i.MX8MM VPU bindings
+  media: hantro: add initial i.MX8MQ support
+  media: hantro: add initial i.MX8MM support (untested)
+
+ .../devicetree/bindings/media/imx8m-vpu.txt   |  56 +++
+ MAINTAINERS                                   |   4 +-
+ drivers/staging/media/Kconfig                 |   4 +-
+ drivers/staging/media/Makefile                |   2 +-
+ drivers/staging/media/hantro/Kconfig          |  31 ++
+ drivers/staging/media/hantro/Makefile         |  18 +
+ .../media/{rockchip/vpu => hantro}/TODO       |   0
+ .../vpu/rockchip_vpu.h => hantro/hantro.h}    | 167 ++++---
+ .../hantro_drv.c}                             | 335 ++++++-------
+ .../media/hantro/hantro_g1_mpeg2_dec.c        | 260 ++++++++++
+ drivers/staging/media/hantro/hantro_g1_regs.h | 301 ++++++++++++
+ .../staging/media/hantro/hantro_h1_jpeg_enc.c | 125 +++++
+ drivers/staging/media/hantro/hantro_h1_regs.h | 154 ++++++
+ drivers/staging/media/hantro/hantro_hw.h      | 104 ++++
+ .../hantro_jpeg.c}                            |  18 +-
+ drivers/staging/media/hantro/hantro_jpeg.h    |  13 +
+ .../hantro_mpeg2.c}                           |  14 +-
+ .../hantro_v4l2.c}                            | 234 +++++----
+ .../hantro_v4l2.h}                            |  16 +-
+ drivers/staging/media/hantro/imx8m_vpu_hw.c   | 310 ++++++++++++
+ drivers/staging/media/hantro/rk3288_vpu_hw.c  | 187 ++++++++
+ .../{rockchip/vpu => hantro}/rk3399_vpu_hw.c  |  77 +--
+ .../vpu => hantro}/rk3399_vpu_hw_jpeg_enc.c   |  32 +-
+ .../vpu => hantro}/rk3399_vpu_hw_mpeg2_dec.c  |  37 +-
+ .../vpu => hantro}/rk3399_vpu_regs.h          |   2 +-
+ drivers/staging/media/rockchip/vpu/Kconfig    |  14 -
+ drivers/staging/media/rockchip/vpu/Makefile   |  14 -
+ .../media/rockchip/vpu/rk3288_vpu_hw.c        | 177 -------
+ .../rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c     | 125 -----
+ .../rockchip/vpu/rk3288_vpu_hw_mpeg2_dec.c    | 261 -----------
+ .../media/rockchip/vpu/rk3288_vpu_regs.h      | 443 ------------------
+ .../media/rockchip/vpu/rockchip_vpu_hw.h      | 102 ----
+ .../media/rockchip/vpu/rockchip_vpu_jpeg.h    |  14 -
+ 33 files changed, 2050 insertions(+), 1601 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/imx8m-vpu.txt
+ create mode 100644 drivers/staging/media/hantro/Kconfig
+ create mode 100644 drivers/staging/media/hantro/Makefile
+ rename drivers/staging/media/{rockchip/vpu => hantro}/TODO (100%)
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu.h => hantro/hantro.h} (66%)
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_drv.c => hantro/hantro_drv.c} (69%)
+ create mode 100644 drivers/staging/media/hantro/hantro_g1_mpeg2_dec.c
+ create mode 100644 drivers/staging/media/hantro/hantro_g1_regs.h
+ create mode 100644 drivers/staging/media/hantro/hantro_h1_jpeg_enc.c
+ create mode 100644 drivers/staging/media/hantro/hantro_h1_regs.h
+ create mode 100644 drivers/staging/media/hantro/hantro_hw.h
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_jpeg.c => hantro/hantro_jpeg.c} (95%)
+ create mode 100644 drivers/staging/media/hantro/hantro_jpeg.h
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_mpeg2.c => hantro/hantro_mpeg2.c} (79%)
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_v4l2.c => hantro/hantro_v4l2.c} (69%)
+ rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_v4l2.h => hantro/hantro_v4l2.h} (53%)
+ create mode 100644 drivers/staging/media/hantro/imx8m_vpu_hw.c
+ create mode 100644 drivers/staging/media/hantro/rk3288_vpu_hw.c
+ rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_hw.c (65%)
+ rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_hw_jpeg_enc.c (86%)
+ rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_hw_mpeg2_dec.c (92%)
+ rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_regs.h (99%)
+ delete mode 100644 drivers/staging/media/rockchip/vpu/Kconfig
+ delete mode 100644 drivers/staging/media/rockchip/vpu/Makefile
+ delete mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw.c
+ delete mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c
+ delete mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_mpeg2_dec.c
+ delete mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_regs.h
+ delete mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_hw.h
+ delete mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h
+
 -- 
-2.7.4
+2.20.1
