@@ -1,257 +1,194 @@
-From: Cezary Rojewski <cezary.rojewski@intel.com>
-Subject: Re: [PATCH v1 4/4] ASoC: tda7802: Add speaker-test sysfs
-Date: Wed, 12 Jun 2019 19:56:16 +0200
-Message-ID: <607e83fb-3d37-cf05-ded5-4f582352bdb0@intel.com>
-References: <20190611174909.12162-1-thomas.preston@codethink.co.uk>
- <20190611174909.12162-5-thomas.preston@codethink.co.uk>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
+Date: Wed, 12 Jun 2019 12:19:35 -0600
+Message-ID: <CAL_JsqJRPesdBQH7b7kDLs69pj7Ehw7DFx-pMA-eB2f+PY+Ngg@mail.gmail.com>
+References: <20190604003218.241354-1-saravanak@google.com> <20190604003218.241354-2-saravanak@google.com>
+ <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
+ <570474f4-8749-50fd-5f72-36648ed44653@gmail.com> <CAGETcx8M3YkUBZ-e2LLfrbWgnMKMMNG5cv=p8MMmBe7ZyPJ7xw@mail.gmail.com>
+ <20190611215242.GE212690@google.com> <CAL_Jsq+V9QUBpzmPyYjWe93-06-mpU=5JmUqvf-QsnuLxPnmUA@mail.gmail.com>
+ <20190612142159.GA11563@kroah.com> <CAL_Jsq+x=_6jfC7hkHy+zAaPRB_3K7i9axRiBMHGE9mHQQtPtg@mail.gmail.com>
+ <20190612170821.GA6396@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611174909.12162-5-thomas.preston@codethink.co.uk>
-Content-Language: en-US
+In-Reply-To: <20190612170821.GA6396@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Preston <thomas.preston@codethink.co.uk>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Jerome Brunet <jbrunet@baylibre.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Marco Felsch <m.felsch@pengutronix.de>, Paul Cercueil <paul@crapouillou.net>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Cheng-Yi Chiang <cychiang@chromium.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Vinod Koul <vkoul@kernel.org>, Annaliese McDermond <nh6z@nh6z.net>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Sandeep Patil <sspatil@android.com>, Saravana Kannan <saravanak@google.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-06-11 19:49, Thomas Preston wrote:
-> Add speaker_test device attribute. When the speaker-test node is read
-> the hardware speaker test is started.
-> 
-> 	$ cat /sys/devices/.../device:00/speaker_test
-> 	04 04 04 04
-> 
-> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
-> Cc: Patrick Glaser <pglaser@tesla.com>
-> Cc: Rob Duncan <rduncan@tesla.com>
-> Cc: Nate Case <ncase@tesla.com>
-> ---
->   sound/soc/codecs/tda7802.c | 172 +++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 172 insertions(+)
-> 
-> diff --git a/sound/soc/codecs/tda7802.c b/sound/soc/codecs/tda7802.c
-> index 62aae011d9f1..edfa752c0c9f 100644
-> --- a/sound/soc/codecs/tda7802.c
-> +++ b/sound/soc/codecs/tda7802.c
-> @@ -157,6 +157,7 @@ static const u8 IB3_FORMAT[4][4] = {
->   #define DUMP_NUM_REGS			   (DUMP_NUM_BLOCK * 2)
->   
->   struct tda7802_priv {
-> +	struct mutex mutex;
->   	struct i2c_client *i2c;
->   	struct regmap *regmap;
->   	struct regulator *enable_reg;
-> @@ -458,6 +459,159 @@ static struct snd_soc_dai_driver tda7802_dai_driver = {
->   	.ops = &tda7802_dai_ops,
->   };
->   
-> +/* The speaker test is triggered by reading a sysfs attribute file attached to
-> + * the I2C device. The user space thread that's doing the reading is blocked
-> + * until the test completes (or times out). We only permit one test to be in
-> + * progress at a time.
-> + */
-> +
-> +static int speaker_test_start(struct regmap *regmap)
-> +{
-> +	int err;
-> +
-> +	err = regmap_update_bits(regmap, TDA7802_IB5, IB5_AMPLIFIER_ON, 0);
-> +	if (err < 0) {
-> +		dev_err(regmap_get_device(regmap),
-> +			"Cannot disable amp for speaker test (%d)\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = regmap_update_bits(regmap, TDA7802_IB4, IB4_DIAG_MODE_ENABLE, 0);
-> +	if (err < 0) {
-> +		dev_err(regmap_get_device(regmap),
-> +			"Cannot disable diag mode before speaker test (%d)\n",
-> +			err);
-> +		return err;
-> +	}
-> +
-> +	/* Seem to need at least a 15 ms delay here before the rising
-> +	 * edge. Otherwise the diagnostics never complete (perhaps
-> +	 * they never start).
-> +	 */
-> +	msleep(20);
-> +
-> +	err = regmap_update_bits(regmap, TDA7802_IB4,
-> +				 IB4_DIAG_MODE_ENABLE, IB4_DIAG_MODE_ENABLE);
-> +	if (err < 0) {
-> +		dev_err(regmap_get_device(regmap),
-> +			"Cannot enable diag mode for speaker test (%d)\n", err);
-> +		return err;
-> +	}
-> +
-> +	return 0;
+On Wed, Jun 12, 2019 at 11:08 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Jun 12, 2019 at 10:53:09AM -0600, Rob Herring wrote:
+> > On Wed, Jun 12, 2019 at 8:22 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Wed, Jun 12, 2019 at 07:53:39AM -0600, Rob Herring wrote:
+> > > > On Tue, Jun 11, 2019 at 3:52 PM Sandeep Patil <sspatil@android.com> wrote:
+> > > > >
+> > > > > On Tue, Jun 11, 2019 at 01:56:25PM -0700, 'Saravana Kannan' via kernel-team wrote:
+> > > > > > On Tue, Jun 11, 2019 at 8:18 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> > > > > > >
+> > > > > > > Hi Saravana,
+> > > > > > >
+> > > > > > > On 6/10/19 10:36 AM, Rob Herring wrote:
+> > > > > > > > Why are you resending this rather than replying to Frank's last
+> > > > > > > > comments on the original?
+> > > > > > >
+> > > > > > > Adding on a different aspect...  The independent replies from three different
+> > > > > > > maintainers (Rob, Mark, myself) pointed out architectural issues with the
+> > > > > > > patch series.  There were also some implementation issues brought out.
+> > > > > > > (Although I refrained from bringing up most of my implementation issues
+> > > > > > > as they are not relevant until architecture issues are resolved.)
+> > > > > >
+> > > > > > Right, I'm not too worried about the implementation issues before we
+> > > > > > settle on the architectural issues. Those are easy to fix.
+> > > > > >
+> > > > > > Honestly, the main points that the maintainers raised are:
+> > > > > > 1) This is a configuration property and not describing the device.
+> > > > > > Just use the implicit dependencies coming from existing bindings.
+> > > > > >
+> > > > > > I gave a bunch of reasons for why I think it isn't an OS configuration
+> > > > > > property. But even if that's not something the maintainers can agree
+> > > > > > to, I gave a concrete example (cyclic dependencies between clock
+> > > > > > provider hardware) where the implicit dependencies would prevent one
+> > > > > > of the devices from probing till the end of time. So even if the
+> > > > > > maintainers don't agree we should always look at "depends-on" to
+> > > > > > decide the dependencies, we still need some means to override the
+> > > > > > implicit dependencies where they don't match the real dependency. Can
+> > > > > > we use depends-on as an override when the implicit dependencies aren't
+> > > > > > correct?
+> > > > > >
+> > > > > > 2) This doesn't need to be solved because this is just optimizing
+> > > > > > probing or saving power ("we should get rid of this auto disabling"):
+> > > > > >
+> > > > > > I explained why this patch series is not just about optimizing probe
+> > > > > > ordering or saving power. And why we can't ignore auto disabling
+> > > > > > (because it's more than just auto disabling). The kernel is currently
+> > > > > > broken when trying to use modules in ARM SoCs (probably in other
+> > > > > > systems/archs too, but I can't speak for those).
+> > > > > >
+> > > > > > 3) Concerns about backwards compatibility
+> > > > > >
+> > > > > > I pointed out why the current scheme (depends-on being the only source
+> > > > > > of dependency) doesn't break compatibility. And if we go with
+> > > > > > "depends-on" as an override what we could do to keep backwards
+> > > > > > compatibility. Happy to hear more thoughts or discuss options.
+> > > > > >
+> > > > > > 4) How the "sync_state" would work for a device that supplies multiple
+> > > > > > functionalities but a limited driver.
+> > > > >
+> > > > > <snip>
+> > > > > To be clear, all of above are _real_ problems that stops us from efficiently
+> > > > > load device drivers as modules for Android.
+> > > > >
+> > > > > So, if 'depends-on' doesn't seem like the right approach and "going back to
+> > > > > the drawing board" is the ask, could you please point us in the right
+> > > > > direction?
+> > > >
+> > > > Use the dependencies which are already there in DT. That's clocks,
+> > > > pinctrl, regulators, interrupts, gpio at a minimum. I'm simply not
+> > > > going to accept duplicating all those dependencies in DT. The downside
+> > > > for the kernel is you have to address these one by one and can't have
+> > > > a generic property the driver core code can parse. After that's in
+> > > > place, then maybe we can consider handling any additional dependencies
+> > > > not already captured in DT. Once all that is in place, we can probably
+> > > > sort device and/or driver lists to optimize the probe order (maybe the
+> > > > driver core already does that now?).
+> > > >
+> > > > Get rid of the auto disabling of clocks and regulators in
+> > > > late_initcall. It's simply not a valid marker that boot is done when
+> > > > modules are involved. We probably can't get rid of it as lot's of
+> > > > platforms rely on that, so it will have to be opt out. Make it the
+> > > > platform's responsibility for ensuring a consistent state.
+> > > >
+> > > > Perhaps we need a 'boot done' or 'stop deferring probe' trigger from
+> > > > userspace in order to make progress if dependencies are missing.
+> > >
+> > > People have tried to do this multiple times, and you never really know
+> > > when "boot is done" due to busses that have discoverable devices and
+> > > async probing of other busses.
+> >
+> > Yes, I know which is why I proposed the second name with more limited
+> > meaning/function.
+>
+> I still don't want to have the kernel have to rely on this.
+>
+> > > You do know "something" when you pivot to a new boot disk, and when you
+> > > try to load init, but given initramfs and the fact that modules are
+> > > usually included on them, that's not really a good indication that
+> > > anything is "finished".
+> > >
+> > > I don't want userspace to be responsible for telling the kernel, "hey
+> > > you should be finished now!", as that's an async notification that is
+> > > going to be ripe for problems.
+> >
+> > The usecase I care about here is when the DT has the dependency
+> > information, but the kernel doesn't have the driver and the dependency
+> > is never resolved.
+>
+> Then we have the same situation as today and nothing different happens,
+> right?
 
-You may want to follow path set by speaker_test_stop: replace "return 0" 
-with "return err" and have only error msg found within preceding 
-if-statement.
+Huh?
 
-> +}
-> +
-> +static int speaker_test_stop(struct regmap *regmap)
-> +{
-> +	int err;
-> +
-> +	err = regmap_update_bits(regmap, TDA7802_IB4, IB4_DIAG_MODE_ENABLE, 0);
-> +	if (err < 0)
-> +		dev_err(regmap_get_device(regmap),
-> +			"Cannot disable diag mode after speaker test (%d)\n",
-> +			err);
-> +	return err;
-> +}
-> +
-> +/* We poll the test completion bit, letting the current thread sleep
-> + * until we're done. These values are not critical.
-> + */
-> +#define SPEAKER_TEST_DONE_POLL_PERIOD_US 5000
-> +#define SPEAKER_TEST_DONE_TIMEOUT_US	 5000000
-> +
-> +static int speaker_test_check(struct tda7802_priv *tda7802,
-> +		unsigned int *status)
-> +{
-> +	struct regmap *regmap = tda7802->regmap;
-> +	struct device *dev = &tda7802->i2c->dev;
-> +	int reg_err = 0, err = 0, i, amp_on;
+This works today, but not for modules.
 
-Both reg_err and err are initialized unnecessarily.
+>
+> > The same problem has to be solved with a
+> > 'depends-on' property. This easily happens with a new DT with added
+> > dependencies like pinctrl and an old kernel that doesn't have the
+> > "new" driver. Another example is IOMMUs. We need some way to say stop
+> > waiting for dependencies. It is really just a debug option (of course,
+> > how to prevent a debug option from being used in production?). This
+> > works now for built-in cases with the same late_initcall abuse.
+>
+> What is a debug option?  We need something "for real".
+>
+> > Using late_initcall_sync as an indicator has all the same problems
+> > with userspace indicating boot finished. We should get rid of the
+> > late_initcall_sync abuses and stop trying to work around them.
+>
+> I agree, but that's not the issue here.
 
-> +	unsigned int val;
-> +
-> +	reg_err = regulator_enable(tda7802->enable_reg);
-> +	if (reg_err < 0) {
-> +		dev_err(dev, "Could not enable (speaker-test).\n");
-> +		return reg_err;
-> +	}
-> +	msleep(ENABLE_DELAY_MS);
-> +
-> +	/* we should return amp on state when speaker-test is done */
-> +	err = regmap_read(regmap, TDA7802_IB5, &amp_on);
-> +	if (err < 0) {
-> +		dev_err(dev, "Could not read amp on state (speaker-test)\n");
-> +		goto speaker_test_disable;
-> +	}
-> +
-> +	for (i = 0; i < CHANNELS_PER_AMP; ++i)
-> +		status[i] = 0xff;
-> +
-> +	err = speaker_test_start(regmap);
-> +	if (err < 0)
-> +		goto speaker_test_restore;
-> +
-> +	/* Wait until DB0_STARTUP_DIAG_STATUS is set */
-> +	err = regmap_read_poll_timeout(regmap, TDA7802_DB0, val,
-> +			val & DB0_STARTUP_DIAG_STATUS,
-> +			SPEAKER_TEST_DONE_POLL_PERIOD_US,
-> +			SPEAKER_TEST_DONE_TIMEOUT_US);
-> +	if (err < 0) {
-> +		if (err == -ENODATA)
-> +			dev_err(dev,
-> +				"Speaker diagnostic test did not complete\n");
-> +		speaker_test_stop(regmap);
-> +		goto speaker_test_restore;
-> +	}
-> +
-> +	err = speaker_test_stop(regmap);
-> +	if (err < 0)
-> +		goto speaker_test_restore;
+It is because the cover letter mentions it and downstream work around it.
 
-This sequence looks weird and as if it could be simplified but I might 
-be just plain wrong. speaker_test_stop gets invoked whether or not 
-regmap_read_poll_timeout fails, though only in "happy" path its return 
-is account for. If it's not too much to ask, could you clarify?
+> > > I really like the "depends-on" information, as it shows a topology that
+> > > DT doesn't seem to be able to show today, yet we rely on it in the
+> > > kernel with the whole deferred probing mess.  To me, there doesn't seem
+> > > to be any other way to properly "know" this.
+> >
+> > As I said, DT *does* have this dependency information already. The
+> > problem is the kernel probing doesn't use it. Fix that and then we can
+> > discuss dependencies the DT doesn't provide that the kernel needs.
+>
+> Where can the kernel probing be fixed to use it?  What am I missing that
+> can be done instead of what this patchset does?
 
-> +
-> +	for (i = 0; i < CHANNELS_PER_AMP; ++i) {
-> +		err = regmap_read(regmap, TDA7802_DB1 + i, status + i);
-> +		if (err < 0) {
-> +			dev_err(dev,
-> +				"Cannot get speaker %d status (%d)\n", i, err);
-> +			goto speaker_test_restore;
-> +		}
-> +	}
-> +
-> +speaker_test_restore:
-> +	err = regmap_update_bits(regmap, TDA7802_IB5, IB5_AMPLIFIER_ON,
-> +			amp_on);
-> +	if (err < 0)
-> +		dev_err(dev, "Could not restore amp on state (speaker-test)\n");
-> +
-> +speaker_test_disable:
-> +	reg_err = regulator_disable(tda7802->enable_reg);
-> +	if (reg_err < 0) {
-> +		dev_err(dev, "Could not disable (speaker-test).\n");
-> +		return reg_err;
-> +	}
-> +	return err;
-> +}
-> +
-> +static ssize_t speaker_test_show(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	struct tda7802_priv *tda7802 = dev_get_drvdata(dev);
-> +	unsigned int channel_status[CHANNELS_PER_AMP];
-> +	char *str = buf;
-> +	int ret, i;
-> +
-> +	mutex_lock(&tda7802->mutex);
-> +	ret = speaker_test_check(tda7802, channel_status);
-> +	mutex_unlock(&tda7802->mutex);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	for (i = 0; i < CHANNELS_PER_AMP; i++)
-> +		str += sprintf(str, "%02x ", channel_status[i]);
-> +	str += sprintf(str, "\n");
-> +
-> +	return str - buf;
-> +}
-> +
-> +static DEVICE_ATTR_RO(speaker_test);
-> +
->   static ssize_t enable_show(struct device *dev, struct device_attribute *attr,
->   		char *buf)
->   {
-> @@ -537,12 +691,28 @@ static int tda7802_probe(struct snd_soc_component *component)
->   
->   	dev_dbg(dev, "%s\n", __func__);
->   
-> +	/* Device is ready, now we should create sysfs attributes.
-> +	 * Rememer to cleanup
-> +	 */
->   	err = device_create_file(dev, &dev_attr_enable);
->   	if (err < 0) {
->   		dev_err(dev, "Could not create enable attr\n");
->   		return err;
->   	}
->   
-> +	mutex_init(&tda7802->mutex);
-> +	err = device_create_file(dev, &dev_attr_speaker_test);
-> +	if (err < 0) {
-> +		dev_err(dev, "Could not create speaker_test attr\n");
-> +		goto cleanup_speaker_test;
-> +	}
-> +
-> +	return 0;
-> +
-> +cleanup_speaker_test:
-> +	mutex_destroy(&tda7802->mutex);
-> +	device_remove_file(&tda7802->i2c->dev, &dev_attr_enable);
-> +
->   	return err;
->   }
->   
-> @@ -550,6 +720,8 @@ static void tda7802_remove(struct snd_soc_component *component)
->   {
->   	struct tda7802_priv *tda7802 = snd_soc_component_get_drvdata(component);
->   
-> +	device_remove_file(&tda7802->i2c->dev, &dev_attr_speaker_test);
-> +	mutex_destroy(&tda7802->mutex);
->   	device_remove_file(&tda7802->i2c->dev, &dev_attr_enable);
->   }
->   
-> 
+Somewhere, either in each subsystem or in the DT or core code creating
+struct devices, you need to iterate thru the dependencies. Take clocks
+as an example:
+
+for each node:
+  for each 'clocks' phandle
+    Lookup struct device from clock phandle
+    Add the clock provider struct device to node's struct device links
+
+Now, repeat this for regulators, interrupts, etc.
+
+This series is pretty much doing the same thing, you just have to
+parse each provider rather than only 'depends-on'.
+
+One issue is the struct device for the dependency may not be created
+yet. I think this series would have the same issue, but haven't dug
+into how it avoids that or whether it just ignores it and falls back
+to deferring probe.
+
+I'm also not clear on how you create struct devices and add
+dependencies before probing gets attempted. If a driver is already
+registered, probe is going to be attempted before any dependencies are
+added. I guess the issue is avoided with drivers being modules, but
+any solution should work for built-in too.
+
+Rob
