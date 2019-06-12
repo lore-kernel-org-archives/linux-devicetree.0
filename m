@@ -1,43 +1,75 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH] ARM: dts: imx7ulp: add crypto support
-Date: Wed, 12 Jun 2019 21:59:52 +0800
-Message-ID: <20190612135952.ds6zzh7ppahiuodd@gondor.apana.org.au>
-References: <20190606080255.25504-1-horia.geanta@nxp.com>
- <20190612103926.GE11086@dragon>
- <VI1PR0402MB3485A573518D60A573BA55C298EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <20190612130602.GH11086@dragon>
- <VI1PR0402MB348596BF52CE43B5D4CD534798EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <20190612132600.GI11086@dragon>
+From: "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>
+Subject: Re: [PATCH v5 2/2] dt-bindings: iio: frequency: Add docs for
+ ADF4371 PLL
+Date: Wed, 12 Jun 2019 14:09:47 +0000
+Message-ID: <1560348586.4768.5.camel@analog.com>
+References: <1559653697-2760-1-git-send-email-stefan.popa@analog.com>
+         <20190611215932.GA24974@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190612132600.GI11086@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Aymen Sghaier <aymen.sghaier@nxp.com>, Horia Geanta <horia.geanta@nxp.com>, Iuliana Prodan <iuliana.prodan@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Franck Lenormand <franck.lenormand@nxp.com>, Rob Herring <robh+dt@kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190611215932.GA24974@bogus>
+Content-Language: en-US
+Content-ID: <79AF52B7F5E7FA4BB1D76ECE4FFEA5BD@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh@kernel.org" <robh@kernel.org>
+Cc: "lars@metafoo.de" <lars@metafoo.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "jic23@kernel.org" <jic23@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 09:26:02PM +0800, Shawn Guo wrote:
->
-> Yes, it happens from time to time depending on maintainer's style. I'm
-> fine with the DT changes going through other subsystem tree, if the
-> subsystem maintainer wants to and is willing to take the risk of merge
-> conflict between his tree and arm-soc tree.
-
-I have no problems with potential merge conflicts.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+SGkgUm9iLA0KDQpJJ20gc29ycnkgSSBmb3Jnb3QgdG8gaW5jbHVkZSB5b3VyIFJldmlld2VkLWJ5
+IGluIHRoaXMgcGF0Y2ggc2VyaWVzLg0KSG93ZXZlciwgSSByZWFsaXplZCB0aGlzIG1pc3Rha2Ug
+YW5kIGFkZGVkIGl0IHRvIHY2IHdoaWNoIGluIHRoZSBtZWFudGltZQ0KSm9uYXRoYW4gaGFzIGFw
+cGxpZWQuDQoNCkkgd2lsbCBmaXggeW91ciByZW1hcmsgYmVsbG93IHJlZ2FyZGluZyBjbG9jay1u
+YW1lcyBpbiB0aGUgbmV4dCBwYXRjaA0Kc2VyaWVzIGZvciB0aGlzIGRldmljZS4NCg0KVGhhbmsg
+eW91LA0KLVN0ZWZhbg0KDQpPbiBNYSwgMjAxOS0wNi0xMSBhdCAxNTo1OSAtMDYwMCwgUm9iIEhl
+cnJpbmcgd3JvdGU6DQo+IA0KPiANCj4gT24gVHVlLCBKdW4gMDQsIDIwMTkgYXQgMDQ6MDg6MTdQ
+TSArMDMwMCwgU3RlZmFuIFBvcGEgd3JvdGU6DQo+ID4gDQo+ID4gRG9jdW1lbnQgc3VwcG9ydCBm
+b3IgQW5hbG9nIERldmljZXMgQURGNDM3MSBTUEkgV2lkZWJhbmQgU3ludGhlc2l6ZXIuDQo+ID4g
+DQo+ID4gU2lnbmVkLW9mZi1ieTogU3RlZmFuIFBvcGEgPHN0ZWZhbi5wb3BhQGFuYWxvZy5jb20+
+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiDCoMKgwqDCoMKgwqAtIE5vdGhpbmcg
+Y2hhbmdlZC4NCj4gPiBDaGFuZ2VzIGluIHYzOg0KPiA+IMKgwqDCoMKgwqDCoC0gTm90aGluZyBj
+aGFuZ2VkLg0KPiA+IENoYW5nZXMgaW4gdjQ6DQo+ID4gwqDCoMKgwqDCoMKgLSBOb3RoaW5nIGNo
+YW5nZWQuDQo+ID4gQ2hhbmdlcyBpbiB2NToNCj4gPiDCoMKgwqDCoMKgwqAtIE5vdGhpbmcgY2hh
+bmdlZC4NCj4gUGxlYXNlIGFkZCBhY2tzL3Jldmlld2VkLWJ5cyB3aGVuIHBvc3RpbmcgbmV3IHZl
+cnNpb25zLg0KPiANCj4gQnV0IHNvbWV0aGluZyBlbHNlIEkgbm90aWNlZDoNCj4gDQo+ID4gDQo+
+ID4gDQo+ID4gwqAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vZnJlcXVlbmN5L2FkZjQzNzEu
+eWFtbCB8IDU0DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKw0KPiA+IMKgMSBmaWxlIGNoYW5n
+ZWQsIDU0IGluc2VydGlvbnMoKykNCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vZnJlcXVlbmN5L2FkZjQzNzEueWFtbA0K
+PiA+IA0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9paW8vZnJlcXVlbmN5L2FkZjQzNzEueWFtbA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2lpby9mcmVxdWVuY3kvYWRmNDM3MS55YW1sDQo+ID4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5kN2FkZjA3NA0KPiA+IC0tLSAvZGV2L251
+bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2ZyZXF1
+ZW5jeS9hZGY0MzcxLnlhbWwNCj4gPiBAQCAtMCwwICsxLDU0IEBADQo+ID4gKyMgU1BEWC1MaWNl
+bnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiArJVlBTUwgMS4yDQo+ID4gKy0tLQ0KPiA+ICsk
+aWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2lpby9mcmVxdWVuY3kvYWRmNDM3MS55
+YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2Nv
+cmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBBbmFsb2cgRGV2aWNlcyBBREY0MzcxIFdpZGVi
+YW5kIFN5bnRoZXNpemVyDQo+ID4gKw0KPiA+ICttYWludGFpbmVyczoNCj4gPiArwqDCoC0gUG9w
+YSBTdGVmYW4gPHN0ZWZhbi5wb3BhQGFuYWxvZy5jb20+DQo+ID4gKw0KPiA+ICtkZXNjcmlwdGlv
+bjogfA0KPiA+ICvCoMKgQW5hbG9nIERldmljZXMgQURGNDM3MSBTUEkgV2lkZWJhbmQgU3ludGhl
+c2l6ZXINCj4gPiArwqDCoGh0dHBzOi8vd3d3LmFuYWxvZy5jb20vbWVkaWEvZW4vdGVjaG5pY2Fs
+LWRvY3VtZW50YXRpb24vZGF0YS1zaGVldHMvDQo+ID4gYWRmNDM3MS5wZGYNCj4gPiArDQo+ID4g
+K3Byb3BlcnRpZXM6DQo+ID4gK8KgwqBjb21wYXRpYmxlOg0KPiA+ICvCoMKgwqDCoGVudW06DQo+
+ID4gK8KgwqDCoMKgwqDCoC0gYWRpLGFkZjQzNzENCj4gPiArDQo+ID4gK8KgwqByZWc6DQo+ID4g
+K8KgwqDCoMKgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gK8KgwqBjbG9ja3M6DQo+ID4gK8KgwqDC
+oMKgZGVzY3JpcHRpb246DQo+ID4gK8KgwqDCoMKgwqDCoERlZmluaXRpb24gb2YgdGhlIGV4dGVy
+bmFsIGNsb2NrIChzZWUgY2xvY2svY2xvY2stYmluZGluZ3MudHh0KQ0KPiA+ICvCoMKgwqDCoG1h
+eEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICvCoMKgY2xvY2stbmFtZXM6DQo+ID4gK8KgwqDCoMKgZGVz
+Y3JpcHRpb246DQo+ID4gK8KgwqDCoMKgwqDCoE11c3QgYmUgImNsa2luIg0KPiBUaGlzIGNhbiBi
+ZSBhIHNjaGVtYToNCj4gDQo+IGNsb2NrLW5hbWVzOg0KPiDCoCBpdGVtczoNCj4gwqDCoMKgwqAt
+IGNsa2luDQo+IA0KPiA+IA0KPiA+ICvCoMKgwqDCoG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICty
+ZXF1aXJlZDoNCj4gPiArwqDCoC0gY29tcGF0aWJsZQ0KPiA+ICvCoMKgLSByZWcNCj4gPiArwqDC
+oC0gY2xvY2tzDQo+ID4gK8KgwqAtIGNsb2NrLW5hbWVzDQo+ID4gKw0KPiA+ICtleGFtcGxlczoN
+Cj4gPiArwqDCoC0gfA0KPiA+ICvCoMKgwqDCoHNwaTAgew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKg
+I2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqAjc2l6ZS1jZWxscyA9
+IDwwPjsNCj4gPiArDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqBmcmVxdWVuY3lAMCB7DQo+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJhZGksYWRmNDM3MSI7
+DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVnID0gPDA+Ow0KPiA+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHNwaS1tYXgtZnJlcXVlbmN5ID0gPDEwMDAw
+MDA+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsb2NrcyA9IDwmYWRm
+NDM3MV9jbGtpbj47DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2xvY2st
+bmFtZXMgPSAiY2xraW4iOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgfTsNCj4gPiArwqDCoMKgwqB9
+Ow0KPiA+ICsuLi4NCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4g
