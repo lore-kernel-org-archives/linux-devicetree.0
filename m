@@ -1,162 +1,34 @@
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: [PATCH next] of/fdt: Fix defined but not used compiler warning
-Date: Wed, 12 Jun 2019 09:00:11 +0800
-Message-ID: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
+From: Robin Gong <yibin.gong@nxp.com>
+Subject: Re: [PATCH v5 10/15] dma: imx-sdma: add i.mx6ul/6sx compatible name
+Date: Wed, 12 Jun 2019 02:32:46 +0000
+Message-ID: <1560335783.21664.6.camel@nxp.com>
+References: <20190610081753.11422-1-yibin.gong@nxp.com>
+         <20190610081753.11422-11-yibin.gong@nxp.com> <20190611223507.GA25722@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190611223507.GA25722@bogus>
+Content-Language: en-US
+Content-ID: <804F0C69EA776E4583B6B19240044F3A@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, Stephen Boyd <swboyd@chromium.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: "robh@kernel.org" <robh@kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "vkoul@kernel.org" <vkoul@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler warning,
-
-drivers/of/fdt.c:129:19: warning: ‘of_fdt_match’ defined but not used [-Wunused-function]
- static int __init of_fdt_match(const void *blob, unsigned long node,
-
-Move of_fdt_match() and of_fdt_is_compatible() under CONFIG_OF_EARLY_FLATTREE
-to fix it.
-
-Cc: Stephen Boyd <swboyd@chromium.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- drivers/of/fdt.c | 106 +++++++++++++++++++++++------------------------
- 1 file changed, 53 insertions(+), 53 deletions(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 3d36b5afd9bd..d6afd5b22940 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -78,38 +78,6 @@ void __init of_fdt_limit_memory(int limit)
- 	}
- }
- 
--/**
-- * of_fdt_is_compatible - Return true if given node from the given blob has
-- * compat in its compatible list
-- * @blob: A device tree blob
-- * @node: node to test
-- * @compat: compatible string to compare with compatible list.
-- *
-- * On match, returns a non-zero value with smaller values returned for more
-- * specific compatible values.
-- */
--static int of_fdt_is_compatible(const void *blob,
--		      unsigned long node, const char *compat)
--{
--	const char *cp;
--	int cplen;
--	unsigned long l, score = 0;
--
--	cp = fdt_getprop(blob, node, "compatible", &cplen);
--	if (cp == NULL)
--		return 0;
--	while (cplen > 0) {
--		score++;
--		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
--			return score;
--		l = strlen(cp) + 1;
--		cp += l;
--		cplen -= l;
--	}
--
--	return 0;
--}
--
- static bool of_fdt_device_is_available(const void *blob, unsigned long node)
- {
- 	const char *status = fdt_getprop(blob, node, "status", NULL);
-@@ -123,27 +91,6 @@ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
- 	return false;
- }
- 
--/**
-- * of_fdt_match - Return true if node matches a list of compatible values
-- */
--static int __init of_fdt_match(const void *blob, unsigned long node,
--			       const char *const *compat)
--{
--	unsigned int tmp, score = 0;
--
--	if (!compat)
--		return 0;
--
--	while (*compat) {
--		tmp = of_fdt_is_compatible(blob, node, *compat);
--		if (tmp && (score == 0 || (tmp < score)))
--			score = tmp;
--		compat++;
--	}
--
--	return score;
--}
--
- static void *unflatten_dt_alloc(void **mem, unsigned long size,
- 				       unsigned long align)
- {
-@@ -764,6 +711,59 @@ const void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
- 	return fdt_getprop(initial_boot_params, node, name, size);
- }
- 
-+/**
-+ * of_fdt_is_compatible - Return true if given node from the given blob has
-+ * compat in its compatible list
-+ * @blob: A device tree blob
-+ * @node: node to test
-+ * @compat: compatible string to compare with compatible list.
-+ *
-+ * On match, returns a non-zero value with smaller values returned for more
-+ * specific compatible values.
-+ */
-+static int of_fdt_is_compatible(const void *blob,
-+		      unsigned long node, const char *compat)
-+{
-+	const char *cp;
-+	int cplen;
-+	unsigned long l, score = 0;
-+
-+	cp = fdt_getprop(blob, node, "compatible", &cplen);
-+	if (cp == NULL)
-+		return 0;
-+	while (cplen > 0) {
-+		score++;
-+		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
-+			return score;
-+		l = strlen(cp) + 1;
-+		cp += l;
-+		cplen -= l;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * of_fdt_match - Return true if node matches a list of compatible values
-+ */
-+static int __init of_fdt_match(const void *blob, unsigned long node,
-+			       const char *const *compat)
-+{
-+	unsigned int tmp, score = 0;
-+
-+	if (!compat)
-+		return 0;
-+
-+	while (*compat) {
-+		tmp = of_fdt_is_compatible(blob, node, *compat);
-+		if (tmp && (score == 0 || (tmp < score)))
-+			score = tmp;
-+		compat++;
-+	}
-+
-+	return score;
-+}
-+
- /**
-  * of_flat_dt_is_compatible - Return true if given node has compat in compatible list
-  * @node: node to test
--- 
-2.20.1
+T24gMjAxOS0wNi0xMSBhdCAyMjozNSArMDAwMCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIE1v
+biwgMTAgSnVuIDIwMTkgMTY6MTc6NDggKzA4MDAsIHlpYmluLmdvbmdAbnhwLmNvbSB3cm90ZToN
+Cj4gPiANCj4gPiBGcm9tOiBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+DQo+ID4gDQo+
+ID4gQWRkIGkubXg2dWwgYW5kIGkubXg2c3ggY29tcGF0aWJsZSBuYW1lIGluIGJpbmRpbmcgZG9j
+Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNv
+bT4NCj4gPiAtLS0NCj4gPiDCoERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEv
+ZnNsLWlteC1zZG1hLnR4dCB8IDIgKysNCj4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
+bnMoKykNCj4gPiANCj4gUGxlYXNlIGFkZCBBY2tlZC1ieS9SZXZpZXdlZC1ieSB0YWdzIHdoZW4g
+cG9zdGluZyBuZXcgdmVyc2lvbnMuDQo+IEhvd2V2ZXIsDQo+IHRoZXJlJ3Mgbm8gbmVlZCB0byBy
+ZXBvc3QgcGF0Y2hlcyAqb25seSogdG8gYWRkIHRoZSB0YWdzLiBUaGUNCj4gdXBzdHJlYW0NCj4g
+bWFpbnRhaW5lciB3aWxsIGRvIHRoYXQgZm9yIGFja3MgcmVjZWl2ZWQgb24gdGhlIHZlcnNpb24g
+dGhleSBhcHBseS4NCj4gDQoNCj4gSWYgYSB0YWcgd2FzIG5vdCBhZGRlZCBvbiBwdXJwb3NlLCBw
+bGVhc2Ugc3RhdGUgd2h5IGFuZCB3aGF0IGNoYW5nZWQuDQpTb3JyeSBSb2IuLi5JIG1pc3MgeW91
+ciBtYWlsIHdpdGggJ1Jldmlld2VkLWJ5JyBpbiB2MiBiZWNhdXNlIGl0IHNsaXANCmludG8gJ3Vu
+ayBFbWFpbCcgZm9sZGVyLiBXaWxsIGFkZCB5b3VyIHRhZyBpbiB2NiBpZiBjb21tZW50cyByZWNl
+aXZlZA0KZnJvbSB2NQ==
