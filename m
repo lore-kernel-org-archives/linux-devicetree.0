@@ -1,175 +1,200 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
-Date: Wed, 12 Jun 2019 10:53:09 -0600
-Message-ID: <CAL_Jsq+x=_6jfC7hkHy+zAaPRB_3K7i9axRiBMHGE9mHQQtPtg@mail.gmail.com>
-References: <20190604003218.241354-1-saravanak@google.com> <20190604003218.241354-2-saravanak@google.com>
- <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
- <570474f4-8749-50fd-5f72-36648ed44653@gmail.com> <CAGETcx8M3YkUBZ-e2LLfrbWgnMKMMNG5cv=p8MMmBe7ZyPJ7xw@mail.gmail.com>
- <20190611215242.GE212690@google.com> <CAL_Jsq+V9QUBpzmPyYjWe93-06-mpU=5JmUqvf-QsnuLxPnmUA@mail.gmail.com>
- <20190612142159.GA11563@kroah.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH next] of/fdt: Fix defined but not used compiler warning
+Date: Wed, 12 Jun 2019 11:00:08 -0600
+Message-ID: <CAL_JsqKsjK237W+-Yz4McxSZG=Gd3Pfp2JtgMnfAqiNRUcCg1g@mail.gmail.com>
+References: <20190612010011.90185-1-wangkefeng.wang@huawei.com> <0702fa2d-1952-e9fc-8e17-a93f3b90a958@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612142159.GA11563@kroah.com>
+In-Reply-To: <0702fa2d-1952-e9fc-8e17-a93f3b90a958@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Sandeep Patil <sspatil@android.com>, Saravana Kannan <saravanak@google.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 8:22 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, Jun 12, 2019 at 10:45 AM Frank Rowand <frowand.list@gmail.com> wrot=
+e:
 >
-> On Wed, Jun 12, 2019 at 07:53:39AM -0600, Rob Herring wrote:
-> > On Tue, Jun 11, 2019 at 3:52 PM Sandeep Patil <sspatil@android.com> wrote:
-> > >
-> > > On Tue, Jun 11, 2019 at 01:56:25PM -0700, 'Saravana Kannan' via kernel-team wrote:
-> > > > On Tue, Jun 11, 2019 at 8:18 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> > > > >
-> > > > > Hi Saravana,
-> > > > >
-> > > > > On 6/10/19 10:36 AM, Rob Herring wrote:
-> > > > > > Why are you resending this rather than replying to Frank's last
-> > > > > > comments on the original?
-> > > > >
-> > > > > Adding on a different aspect...  The independent replies from three different
-> > > > > maintainers (Rob, Mark, myself) pointed out architectural issues with the
-> > > > > patch series.  There were also some implementation issues brought out.
-> > > > > (Although I refrained from bringing up most of my implementation issues
-> > > > > as they are not relevant until architecture issues are resolved.)
-> > > >
-> > > > Right, I'm not too worried about the implementation issues before we
-> > > > settle on the architectural issues. Those are easy to fix.
-> > > >
-> > > > Honestly, the main points that the maintainers raised are:
-> > > > 1) This is a configuration property and not describing the device.
-> > > > Just use the implicit dependencies coming from existing bindings.
-> > > >
-> > > > I gave a bunch of reasons for why I think it isn't an OS configuration
-> > > > property. But even if that's not something the maintainers can agree
-> > > > to, I gave a concrete example (cyclic dependencies between clock
-> > > > provider hardware) where the implicit dependencies would prevent one
-> > > > of the devices from probing till the end of time. So even if the
-> > > > maintainers don't agree we should always look at "depends-on" to
-> > > > decide the dependencies, we still need some means to override the
-> > > > implicit dependencies where they don't match the real dependency. Can
-> > > > we use depends-on as an override when the implicit dependencies aren't
-> > > > correct?
-> > > >
-> > > > 2) This doesn't need to be solved because this is just optimizing
-> > > > probing or saving power ("we should get rid of this auto disabling"):
-> > > >
-> > > > I explained why this patch series is not just about optimizing probe
-> > > > ordering or saving power. And why we can't ignore auto disabling
-> > > > (because it's more than just auto disabling). The kernel is currently
-> > > > broken when trying to use modules in ARM SoCs (probably in other
-> > > > systems/archs too, but I can't speak for those).
-> > > >
-> > > > 3) Concerns about backwards compatibility
-> > > >
-> > > > I pointed out why the current scheme (depends-on being the only source
-> > > > of dependency) doesn't break compatibility. And if we go with
-> > > > "depends-on" as an override what we could do to keep backwards
-> > > > compatibility. Happy to hear more thoughts or discuss options.
-> > > >
-> > > > 4) How the "sync_state" would work for a device that supplies multiple
-> > > > functionalities but a limited driver.
-> > >
-> > > <snip>
-> > > To be clear, all of above are _real_ problems that stops us from efficiently
-> > > load device drivers as modules for Android.
-> > >
-> > > So, if 'depends-on' doesn't seem like the right approach and "going back to
-> > > the drawing board" is the ask, could you please point us in the right
-> > > direction?
-> >
-> > Use the dependencies which are already there in DT. That's clocks,
-> > pinctrl, regulators, interrupts, gpio at a minimum. I'm simply not
-> > going to accept duplicating all those dependencies in DT. The downside
-> > for the kernel is you have to address these one by one and can't have
-> > a generic property the driver core code can parse. After that's in
-> > place, then maybe we can consider handling any additional dependencies
-> > not already captured in DT. Once all that is in place, we can probably
-> > sort device and/or driver lists to optimize the probe order (maybe the
-> > driver core already does that now?).
-> >
-> > Get rid of the auto disabling of clocks and regulators in
-> > late_initcall. It's simply not a valid marker that boot is done when
-> > modules are involved. We probably can't get rid of it as lot's of
-> > platforms rely on that, so it will have to be opt out. Make it the
-> > platform's responsibility for ensuring a consistent state.
-> >
-> > Perhaps we need a 'boot done' or 'stop deferring probe' trigger from
-> > userspace in order to make progress if dependencies are missing.
+> Hi Kefeng,
 >
-> People have tried to do this multiple times, and you never really know
-> when "boot is done" due to busses that have discoverable devices and
-> async probing of other busses.
-
-Yes, I know which is why I proposed the second name with more limited
-meaning/function.
-
-> You do know "something" when you pivot to a new boot disk, and when you
-> try to load init, but given initramfs and the fact that modules are
-> usually included on them, that's not really a good indication that
-> anything is "finished".
+> If Rob agrees, I'd like to see one more change in this patch.
 >
-> I don't want userspace to be responsible for telling the kernel, "hey
-> you should be finished now!", as that's an async notification that is
-> going to be ripe for problems.
+> Since the only caller of of_fdt_match() is of_flat_dt_match(),
+> can you move the body of of_fdt_match() into  of_flat_dt_match()
+> and eliminate of_fdt_match()?
 
-The usecase I care about here is when the DT has the dependency
-information, but the kernel doesn't have the driver and the dependency
-is never resolved. The same problem has to be solved with a
-'depends-on' property. This easily happens with a new DT with added
-dependencies like pinctrl and an old kernel that doesn't have the
-"new" driver. Another example is IOMMUs. We need some way to say stop
-waiting for dependencies. It is really just a debug option (of course,
-how to prevent a debug option from being used in production?). This
-works now for built-in cases with the same late_initcall abuse.
-
-Using late_initcall_sync as an indicator has all the same problems
-with userspace indicating boot finished. We should get rid of the
-late_initcall_sync abuses and stop trying to work around them.
-
-> I really like the "depends-on" information, as it shows a topology that
-> DT doesn't seem to be able to show today, yet we rely on it in the
-> kernel with the whole deferred probing mess.  To me, there doesn't seem
-> to be any other way to properly "know" this.
-
-As I said, DT *does* have this dependency information already. The
-problem is the kernel probing doesn't use it. Fix that and then we can
-discuss dependencies the DT doesn't provide that the kernel needs.
-
-> > Or
-> > maybe just some timeout would be sufficient. I think this is probably
-> > more useful for development than in a shipping product. Even if you
-> > could fallback to polling mode instead of interrupts for example, I
-> > doubt you would want to in a product.
->
-> timeouts suck.  And do not work for shipping products.  I want a device
-> with 100 modules that relys on DT to be able to boot just as fast as a
-> laptop with 100 modules that has all of the needed dependancies
-> described today in their bus topologies, because they used sane hardware
-> (i.e. PCI and ACPI).  Why hurt embedded people just because their
-> hardware relies on a system where you have to loop for long periods of
-> time because DT can not show the topology correctly?
-
-I failed to list buses, but those too are already described in DT. Bus
-dependencies are handled already.
-
-> > You should also keep in mind that everything needed for a console has
-> > to be built in. Maybe Android can say the console isn't needed, but in
-> > general we can't.
->
-> What does a console have to do with any of this?
-
-Do you want to move all the SoC support to modules and have a console?
-That doesn't work. Dependencies for the console have to be resolved
-before initcalls are done. I don't recall the exact details, but I did
-hit that issue when working on handling the missing dependency issues
-(25b4e70dcce9 driver core: allow stopping deferred probe after init).
-
-The point is that moving things to modules does introduce issues
-beyond just dependency tracking.
+That's fine as long as we think there's never any use for of_fdt_match
+after init? Fixup of nodes in an overlay for example.
 
 Rob
+
+>
+> (Noting that of_flat_dt_match() consists only of the call to
+> of_fdt_match().)
+>
+> -Frank
+>
+>
+> On 6/11/19 6:00 PM, Kefeng Wang wrote:
+> > When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler warning,
+> >
+> > drivers/of/fdt.c:129:19: warning: =E2=80=98of_fdt_match=E2=80=99 define=
+d but not used [-Wunused-function]
+> >  static int __init of_fdt_match(const void *blob, unsigned long node,
+> >
+> > Move of_fdt_match() and of_fdt_is_compatible() under CONFIG_OF_EARLY_FL=
+ATTREE
+> > to fix it.
+> >
+> > Cc: Stephen Boyd <swboyd@chromium.org>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> > ---
+> >  drivers/of/fdt.c | 106 +++++++++++++++++++++++------------------------
+> >  1 file changed, 53 insertions(+), 53 deletions(-)
+> >
+> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > index 3d36b5afd9bd..d6afd5b22940 100644
+> > --- a/drivers/of/fdt.c
+> > +++ b/drivers/of/fdt.c
+> > @@ -78,38 +78,6 @@ void __init of_fdt_limit_memory(int limit)
+> >       }
+> >  }
+> >
+> > -/**
+> > - * of_fdt_is_compatible - Return true if given node from the given blo=
+b has
+> > - * compat in its compatible list
+> > - * @blob: A device tree blob
+> > - * @node: node to test
+> > - * @compat: compatible string to compare with compatible list.
+> > - *
+> > - * On match, returns a non-zero value with smaller values returned for=
+ more
+> > - * specific compatible values.
+> > - */
+> > -static int of_fdt_is_compatible(const void *blob,
+> > -                   unsigned long node, const char *compat)
+> > -{
+> > -     const char *cp;
+> > -     int cplen;
+> > -     unsigned long l, score =3D 0;
+> > -
+> > -     cp =3D fdt_getprop(blob, node, "compatible", &cplen);
+> > -     if (cp =3D=3D NULL)
+> > -             return 0;
+> > -     while (cplen > 0) {
+> > -             score++;
+> > -             if (of_compat_cmp(cp, compat, strlen(compat)) =3D=3D 0)
+> > -                     return score;
+> > -             l =3D strlen(cp) + 1;
+> > -             cp +=3D l;
+> > -             cplen -=3D l;
+> > -     }
+> > -
+> > -     return 0;
+> > -}
+> > -
+> >  static bool of_fdt_device_is_available(const void *blob, unsigned long=
+ node)
+> >  {
+> >       const char *status =3D fdt_getprop(blob, node, "status", NULL);
+> > @@ -123,27 +91,6 @@ static bool of_fdt_device_is_available(const void *=
+blob, unsigned long node)
+> >       return false;
+> >  }
+> >
+> > -/**
+> > - * of_fdt_match - Return true if node matches a list of compatible val=
+ues
+> > - */
+> > -static int __init of_fdt_match(const void *blob, unsigned long node,> =
+-                             const char *const *compat)
+> > -{
+> > -     unsigned int tmp, score =3D 0;
+> > -
+> > -     if (!compat)
+> > -             return 0;
+> > -
+> > -     while (*compat) {
+> > -             tmp =3D of_fdt_is_compatible(blob, node, *compat);
+> > -             if (tmp && (score =3D=3D 0 || (tmp < score)))
+> > -                     score =3D tmp;
+> > -             compat++;
+> > -     }
+> > -
+> > -     return score;
+> > -}
+> > -
+> >  static void *unflatten_dt_alloc(void **mem, unsigned long size,
+> >                                      unsigned long align)
+> >  {
+> > @@ -764,6 +711,59 @@ const void *__init of_get_flat_dt_prop(unsigned lo=
+ng node, const char *name,
+> >       return fdt_getprop(initial_boot_params, node, name, size);
+> >  }
+> >
+> > +/**
+> > + * of_fdt_is_compatible - Return true if given node from the given blo=
+b has
+> > + * compat in its compatible list
+> > + * @blob: A device tree blob
+> > + * @node: node to test
+> > + * @compat: compatible string to compare with compatible list.
+> > + *
+> > + * On match, returns a non-zero value with smaller values returned for=
+ more
+> > + * specific compatible values.
+> > + */
+> > +static int of_fdt_is_compatible(const void *blob,
+> > +                   unsigned long node, const char *compat)
+> > +{
+> > +     const char *cp;
+> > +     int cplen;
+> > +     unsigned long l, score =3D 0;
+> > +
+> > +     cp =3D fdt_getprop(blob, node, "compatible", &cplen);
+> > +     if (cp =3D=3D NULL)
+> > +             return 0;
+> > +     while (cplen > 0) {
+> > +             score++;
+> > +             if (of_compat_cmp(cp, compat, strlen(compat)) =3D=3D 0)
+> > +                     return score;
+> > +             l =3D strlen(cp) + 1;
+> > +             cp +=3D l;
+> > +             cplen -=3D l;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +/**
+> > + * of_fdt_match - Return true if node matches a list of compatible val=
+ues
+> > + */
+> > +static int __init of_fdt_match(const void *blob, unsigned long node,
+> > +                            const char *const *compat)
+> > +{
+> > +     unsigned int tmp, score =3D 0;
+> > +
+> > +     if (!compat)
+> > +             return 0;
+> > +
+> > +     while (*compat) {
+> > +             tmp =3D of_fdt_is_compatible(blob, node, *compat);
+> > +             if (tmp && (score =3D=3D 0 || (tmp < score)))
+> > +                     score =3D tmp;
+> > +             compat++;
+> > +     }
+> > +
+> > +     return score;
+> > +}
+> > +
+> >  /**
+> >   * of_flat_dt_is_compatible - Return true if given node has compat in =
+compatible list
+> >   * @node: node to test
+> >
+>
