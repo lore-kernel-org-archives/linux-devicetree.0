@@ -1,75 +1,145 @@
-From: "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>
-Subject: Re: [PATCH v5 2/2] dt-bindings: iio: frequency: Add docs for
- ADF4371 PLL
-Date: Wed, 12 Jun 2019 14:09:47 +0000
-Message-ID: <1560348586.4768.5.camel@analog.com>
-References: <1559653697-2760-1-git-send-email-stefan.popa@analog.com>
-         <20190611215932.GA24974@bogus>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up
+ of_find_device_by_node()
+Date: Wed, 12 Jun 2019 16:21:59 +0200
+Message-ID: <20190612142159.GA11563@kroah.com>
+References: <20190604003218.241354-1-saravanak@google.com>
+ <20190604003218.241354-2-saravanak@google.com>
+ <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
+ <570474f4-8749-50fd-5f72-36648ed44653@gmail.com>
+ <CAGETcx8M3YkUBZ-e2LLfrbWgnMKMMNG5cv=p8MMmBe7ZyPJ7xw@mail.gmail.com>
+ <20190611215242.GE212690@google.com>
+ <CAL_Jsq+V9QUBpzmPyYjWe93-06-mpU=5JmUqvf-QsnuLxPnmUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611215932.GA24974@bogus>
-Content-Language: en-US
-Content-ID: <79AF52B7F5E7FA4BB1D76ECE4FFEA5BD@analog.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+V9QUBpzmPyYjWe93-06-mpU=5JmUqvf-QsnuLxPnmUA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh@kernel.org" <robh@kernel.org>
-Cc: "lars@metafoo.de" <lars@metafoo.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "jic23@kernel.org" <jic23@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Sandeep Patil <sspatil@android.com>, Saravana Kannan <saravanak@google.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpJJ20gc29ycnkgSSBmb3Jnb3QgdG8gaW5jbHVkZSB5b3VyIFJldmlld2VkLWJ5
-IGluIHRoaXMgcGF0Y2ggc2VyaWVzLg0KSG93ZXZlciwgSSByZWFsaXplZCB0aGlzIG1pc3Rha2Ug
-YW5kIGFkZGVkIGl0IHRvIHY2IHdoaWNoIGluIHRoZSBtZWFudGltZQ0KSm9uYXRoYW4gaGFzIGFw
-cGxpZWQuDQoNCkkgd2lsbCBmaXggeW91ciByZW1hcmsgYmVsbG93IHJlZ2FyZGluZyBjbG9jay1u
-YW1lcyBpbiB0aGUgbmV4dCBwYXRjaA0Kc2VyaWVzIGZvciB0aGlzIGRldmljZS4NCg0KVGhhbmsg
-eW91LA0KLVN0ZWZhbg0KDQpPbiBNYSwgMjAxOS0wNi0xMSBhdCAxNTo1OSAtMDYwMCwgUm9iIEhl
-cnJpbmcgd3JvdGU6DQo+IA0KPiANCj4gT24gVHVlLCBKdW4gMDQsIDIwMTkgYXQgMDQ6MDg6MTdQ
-TSArMDMwMCwgU3RlZmFuIFBvcGEgd3JvdGU6DQo+ID4gDQo+ID4gRG9jdW1lbnQgc3VwcG9ydCBm
-b3IgQW5hbG9nIERldmljZXMgQURGNDM3MSBTUEkgV2lkZWJhbmQgU3ludGhlc2l6ZXIuDQo+ID4g
-DQo+ID4gU2lnbmVkLW9mZi1ieTogU3RlZmFuIFBvcGEgPHN0ZWZhbi5wb3BhQGFuYWxvZy5jb20+
-DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiDCoMKgwqDCoMKgwqAtIE5vdGhpbmcg
-Y2hhbmdlZC4NCj4gPiBDaGFuZ2VzIGluIHYzOg0KPiA+IMKgwqDCoMKgwqDCoC0gTm90aGluZyBj
-aGFuZ2VkLg0KPiA+IENoYW5nZXMgaW4gdjQ6DQo+ID4gwqDCoMKgwqDCoMKgLSBOb3RoaW5nIGNo
-YW5nZWQuDQo+ID4gQ2hhbmdlcyBpbiB2NToNCj4gPiDCoMKgwqDCoMKgwqAtIE5vdGhpbmcgY2hh
-bmdlZC4NCj4gUGxlYXNlIGFkZCBhY2tzL3Jldmlld2VkLWJ5cyB3aGVuIHBvc3RpbmcgbmV3IHZl
-cnNpb25zLg0KPiANCj4gQnV0IHNvbWV0aGluZyBlbHNlIEkgbm90aWNlZDoNCj4gDQo+ID4gDQo+
-ID4gDQo+ID4gwqAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vZnJlcXVlbmN5L2FkZjQzNzEu
-eWFtbCB8IDU0DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKw0KPiA+IMKgMSBmaWxlIGNoYW5n
-ZWQsIDU0IGluc2VydGlvbnMoKykNCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vZnJlcXVlbmN5L2FkZjQzNzEueWFtbA0K
-PiA+IA0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9paW8vZnJlcXVlbmN5L2FkZjQzNzEueWFtbA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2lpby9mcmVxdWVuY3kvYWRmNDM3MS55YW1sDQo+ID4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5kN2FkZjA3NA0KPiA+IC0tLSAvZGV2L251
-bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2ZyZXF1
-ZW5jeS9hZGY0MzcxLnlhbWwNCj4gPiBAQCAtMCwwICsxLDU0IEBADQo+ID4gKyMgU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiArJVlBTUwgMS4yDQo+ID4gKy0tLQ0KPiA+ICsk
-aWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2lpby9mcmVxdWVuY3kvYWRmNDM3MS55
-YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2Nv
-cmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBBbmFsb2cgRGV2aWNlcyBBREY0MzcxIFdpZGVi
-YW5kIFN5bnRoZXNpemVyDQo+ID4gKw0KPiA+ICttYWludGFpbmVyczoNCj4gPiArwqDCoC0gUG9w
-YSBTdGVmYW4gPHN0ZWZhbi5wb3BhQGFuYWxvZy5jb20+DQo+ID4gKw0KPiA+ICtkZXNjcmlwdGlv
-bjogfA0KPiA+ICvCoMKgQW5hbG9nIERldmljZXMgQURGNDM3MSBTUEkgV2lkZWJhbmQgU3ludGhl
-c2l6ZXINCj4gPiArwqDCoGh0dHBzOi8vd3d3LmFuYWxvZy5jb20vbWVkaWEvZW4vdGVjaG5pY2Fs
-LWRvY3VtZW50YXRpb24vZGF0YS1zaGVldHMvDQo+ID4gYWRmNDM3MS5wZGYNCj4gPiArDQo+ID4g
-K3Byb3BlcnRpZXM6DQo+ID4gK8KgwqBjb21wYXRpYmxlOg0KPiA+ICvCoMKgwqDCoGVudW06DQo+
-ID4gK8KgwqDCoMKgwqDCoC0gYWRpLGFkZjQzNzENCj4gPiArDQo+ID4gK8KgwqByZWc6DQo+ID4g
-K8KgwqDCoMKgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gK8KgwqBjbG9ja3M6DQo+ID4gK8KgwqDC
-oMKgZGVzY3JpcHRpb246DQo+ID4gK8KgwqDCoMKgwqDCoERlZmluaXRpb24gb2YgdGhlIGV4dGVy
-bmFsIGNsb2NrIChzZWUgY2xvY2svY2xvY2stYmluZGluZ3MudHh0KQ0KPiA+ICvCoMKgwqDCoG1h
-eEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICvCoMKgY2xvY2stbmFtZXM6DQo+ID4gK8KgwqDCoMKgZGVz
-Y3JpcHRpb246DQo+ID4gK8KgwqDCoMKgwqDCoE11c3QgYmUgImNsa2luIg0KPiBUaGlzIGNhbiBi
-ZSBhIHNjaGVtYToNCj4gDQo+IGNsb2NrLW5hbWVzOg0KPiDCoCBpdGVtczoNCj4gwqDCoMKgwqAt
-IGNsa2luDQo+IA0KPiA+IA0KPiA+ICvCoMKgwqDCoG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICty
-ZXF1aXJlZDoNCj4gPiArwqDCoC0gY29tcGF0aWJsZQ0KPiA+ICvCoMKgLSByZWcNCj4gPiArwqDC
-oC0gY2xvY2tzDQo+ID4gK8KgwqAtIGNsb2NrLW5hbWVzDQo+ID4gKw0KPiA+ICtleGFtcGxlczoN
-Cj4gPiArwqDCoC0gfA0KPiA+ICvCoMKgwqDCoHNwaTAgew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKg
-I2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqAjc2l6ZS1jZWxscyA9
-IDwwPjsNCj4gPiArDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqBmcmVxdWVuY3lAMCB7DQo+ID4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJhZGksYWRmNDM3MSI7
-DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVnID0gPDA+Ow0KPiA+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHNwaS1tYXgtZnJlcXVlbmN5ID0gPDEwMDAw
-MDA+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsb2NrcyA9IDwmYWRm
-NDM3MV9jbGtpbj47DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2xvY2st
-bmFtZXMgPSAiY2xraW4iOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgfTsNCj4gPiArwqDCoMKgwqB9
-Ow0KPiA+ICsuLi4NCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4g
+On Wed, Jun 12, 2019 at 07:53:39AM -0600, Rob Herring wrote:
+> On Tue, Jun 11, 2019 at 3:52 PM Sandeep Patil <sspatil@android.com> wrote:
+> >
+> > On Tue, Jun 11, 2019 at 01:56:25PM -0700, 'Saravana Kannan' via kernel-team wrote:
+> > > On Tue, Jun 11, 2019 at 8:18 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> > > >
+> > > > Hi Saravana,
+> > > >
+> > > > On 6/10/19 10:36 AM, Rob Herring wrote:
+> > > > > Why are you resending this rather than replying to Frank's last
+> > > > > comments on the original?
+> > > >
+> > > > Adding on a different aspect...  The independent replies from three different
+> > > > maintainers (Rob, Mark, myself) pointed out architectural issues with the
+> > > > patch series.  There were also some implementation issues brought out.
+> > > > (Although I refrained from bringing up most of my implementation issues
+> > > > as they are not relevant until architecture issues are resolved.)
+> > >
+> > > Right, I'm not too worried about the implementation issues before we
+> > > settle on the architectural issues. Those are easy to fix.
+> > >
+> > > Honestly, the main points that the maintainers raised are:
+> > > 1) This is a configuration property and not describing the device.
+> > > Just use the implicit dependencies coming from existing bindings.
+> > >
+> > > I gave a bunch of reasons for why I think it isn't an OS configuration
+> > > property. But even if that's not something the maintainers can agree
+> > > to, I gave a concrete example (cyclic dependencies between clock
+> > > provider hardware) where the implicit dependencies would prevent one
+> > > of the devices from probing till the end of time. So even if the
+> > > maintainers don't agree we should always look at "depends-on" to
+> > > decide the dependencies, we still need some means to override the
+> > > implicit dependencies where they don't match the real dependency. Can
+> > > we use depends-on as an override when the implicit dependencies aren't
+> > > correct?
+> > >
+> > > 2) This doesn't need to be solved because this is just optimizing
+> > > probing or saving power ("we should get rid of this auto disabling"):
+> > >
+> > > I explained why this patch series is not just about optimizing probe
+> > > ordering or saving power. And why we can't ignore auto disabling
+> > > (because it's more than just auto disabling). The kernel is currently
+> > > broken when trying to use modules in ARM SoCs (probably in other
+> > > systems/archs too, but I can't speak for those).
+> > >
+> > > 3) Concerns about backwards compatibility
+> > >
+> > > I pointed out why the current scheme (depends-on being the only source
+> > > of dependency) doesn't break compatibility. And if we go with
+> > > "depends-on" as an override what we could do to keep backwards
+> > > compatibility. Happy to hear more thoughts or discuss options.
+> > >
+> > > 4) How the "sync_state" would work for a device that supplies multiple
+> > > functionalities but a limited driver.
+> >
+> > <snip>
+> > To be clear, all of above are _real_ problems that stops us from efficiently
+> > load device drivers as modules for Android.
+> >
+> > So, if 'depends-on' doesn't seem like the right approach and "going back to
+> > the drawing board" is the ask, could you please point us in the right
+> > direction?
+> 
+> Use the dependencies which are already there in DT. That's clocks,
+> pinctrl, regulators, interrupts, gpio at a minimum. I'm simply not
+> going to accept duplicating all those dependencies in DT. The downside
+> for the kernel is you have to address these one by one and can't have
+> a generic property the driver core code can parse. After that's in
+> place, then maybe we can consider handling any additional dependencies
+> not already captured in DT. Once all that is in place, we can probably
+> sort device and/or driver lists to optimize the probe order (maybe the
+> driver core already does that now?).
+> 
+> Get rid of the auto disabling of clocks and regulators in
+> late_initcall. It's simply not a valid marker that boot is done when
+> modules are involved. We probably can't get rid of it as lot's of
+> platforms rely on that, so it will have to be opt out. Make it the
+> platform's responsibility for ensuring a consistent state.
+> 
+> Perhaps we need a 'boot done' or 'stop deferring probe' trigger from
+> userspace in order to make progress if dependencies are missing.
+
+People have tried to do this multiple times, and you never really know
+when "boot is done" due to busses that have discoverable devices and
+async probing of other busses.
+
+You do know "something" when you pivot to a new boot disk, and when you
+try to load init, but given initramfs and the fact that modules are
+usually included on them, that's not really a good indication that
+anything is "finished".
+
+I don't want userspace to be responsible for telling the kernel, "hey
+you should be finished now!", as that's an async notification that is
+going to be ripe for problems.
+
+I really like the "depends-on" information, as it shows a topology that
+DT doesn't seem to be able to show today, yet we rely on it in the
+kernel with the whole deferred probing mess.  To me, there doesn't seem
+to be any other way to properly "know" this.
+
+> Or
+> maybe just some timeout would be sufficient. I think this is probably
+> more useful for development than in a shipping product. Even if you
+> could fallback to polling mode instead of interrupts for example, I
+> doubt you would want to in a product.
+
+timeouts suck.  And do not work for shipping products.  I want a device
+with 100 modules that relys on DT to be able to boot just as fast as a
+laptop with 100 modules that has all of the needed dependancies
+described today in their bus topologies, because they used sane hardware
+(i.e. PCI and ACPI).  Why hurt embedded people just because their
+hardware relies on a system where you have to loop for long periods of
+time because DT can not show the topology correctly?
+
+> You should also keep in mind that everything needed for a console has
+> to be built in. Maybe Android can say the console isn't needed, but in
+> general we can't.
+
+What does a console have to do with any of this?
+
+confused,
+
+greg k-h
