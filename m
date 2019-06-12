@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v8 11/12] soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
-Date: Wed, 12 Jun 2019 16:53:48 +0800
-Message-ID: <20190612085349.21243-12-bibby.hsieh@mediatek.com>
+Subject: [PATCH v8 10/12] soc: mediatek: cmdq: add polling function
+Date: Wed, 12 Jun 2019 16:53:47 +0800
+Message-ID: <20190612085349.21243-11-bibby.hsieh@mediatek.com>
 References: <20190612085349.21243-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,85 +12,92 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-GCE cannot know the register base address, this function
-can help cmdq client to get the cmdq_client_reg structure.
+add polling function in cmdq helper functions
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-cmdq-helper.c | 24 ++++++++++++++++++++++++
- include/linux/soc/mediatek/mtk-cmdq.h  | 20 ++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ drivers/soc/mediatek/mtk-cmdq-helper.c   | 28 ++++++++++++++++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
+ include/linux/soc/mediatek/mtk-cmdq.h    | 15 +++++++++++++
+ 3 files changed, 44 insertions(+)
 
 diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 70ad4d806fac..fac4d33fd520 100644
+index 0886c4967ca4..70ad4d806fac 100644
 --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
 +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -27,6 +27,30 @@ struct cmdq_instruction {
- 	u8 op;
- };
+@@ -220,6 +220,34 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_clear_event);
  
-+int cmdq_dev_get_client_reg(struct device *dev,
-+			    struct cmdq_client_reg *client_reg, int idx)
++int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
++		  u16 offset, u32 value, u32 mask)
 +{
-+	struct of_phandle_args spec;
++	struct cmdq_instruction *inst;
 +
-+	if (!client_reg)
-+		return -EINVAL;
++	if (mask != 0xffffffff) {
++		inst = cmdq_pkt_append_command(pkt);
++		if (!inst)
++			return -ENOMEM;
 +
-+	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
-+				       "#subsys-cells", idx, &spec)) {
-+		dev_err(dev, "can't parse gce-client-reg property (%d)", idx);
-+
-+		return -EINVAL;
++		inst->op = CMDQ_CODE_MASK;
++		inst->value = ~mask;
++		offset = offset | 0x1;
 +	}
 +
-+	client_reg->subsys = spec.args[0];
-+	client_reg->offset = spec.args[1];
-+	client_reg->size = spec.args[2];
-+	of_node_put(spec.np);
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_POLL;
++	inst->value = value;
++	inst->offset = offset;
++	inst->subsys = subsys;
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL(cmdq_dev_get_client_reg);
++EXPORT_SYMBOL(cmdq_pkt_poll);
 +
- static void cmdq_client_timeout(struct timer_list *t)
+ static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
  {
- 	struct cmdq_client *client = from_timer(client, t, timer);
+ 	struct cmdq_instruction *inst;
+diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+index c8adedefaf42..9e3502945bc1 100644
+--- a/include/linux/mailbox/mtk-cmdq-mailbox.h
++++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+@@ -46,6 +46,7 @@
+ enum cmdq_code {
+ 	CMDQ_CODE_MASK = 0x02,
+ 	CMDQ_CODE_WRITE = 0x04,
++	CMDQ_CODE_POLL = 0x08,
+ 	CMDQ_CODE_JUMP = 0x10,
+ 	CMDQ_CODE_WFE = 0x20,
+ 	CMDQ_CODE_EOC = 0x40,
 diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index a345870a6d10..2e2a2274c231 100644
+index 9618debb9ceb..a345870a6d10 100644
 --- a/include/linux/soc/mediatek/mtk-cmdq.h
 +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -15,6 +15,12 @@
- 
- struct cmdq_pkt;
- 
-+struct cmdq_client_reg {
-+	u8 subsys;
-+	u16 offset;
-+	u16 size;
-+};
-+
- struct cmdq_client {
- 	spinlock_t lock;
- 	u32 pkt_cnt;
-@@ -142,4 +148,18 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+@@ -99,6 +99,21 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
   */
- int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
  
 +/**
-+ * cmdq_dev_get_client_reg() - parse cmdq client reg from the device node of CMDQ client
-+ * @dev:	device of CMDQ mailbox clienti
-+ * @client_reg: CMDQ client reg pointer
-+ * @idx:	the index of desired reg
++ * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
++ *		     execute an instruction that wait for a specified hardware
++ *		     register to check for the value. All GCE hardware
++ *		     threads will be blocked by this instruction.
++ * @pkt:	the CMDQ packet
++ * @subsys:	the CMDQ sub system code
++ * @offset:	register offset from CMDQ sub system
++ * @value:	the specified target register value
++ * @mask:	the specified target register mask
 + *
 + * Return: 0 for success; else the error code is returned
-+ *
-+ * Help CMDQ client pasing the cmdq client reg
-+ * from the device node of CMDQ client.
 + */
-+int cmdq_dev_get_client_reg(struct device *dev,
-+			    struct cmdq_client_reg *client_reg, int idx);
-+
- #endif	/* __MTK_CMDQ_H__ */
++int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
++		  u16 offset, u32 value, u32 mask);
+ /**
+  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+  *                          packet and call back at the end of done packet
 -- 
 2.18.0
