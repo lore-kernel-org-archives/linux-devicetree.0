@@ -1,64 +1,102 @@
-Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 11/27] PCI: tegra: Process pending DLL transactions before entering L1 or L2
-Date: Tue, 18 Jun 2019 23:31:50 +0530
-Message-ID: <20190618180206.4908-12-mmaddireddy@nvidia.com>
-In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
-References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Return-Path: <SRS0=x9uM=UL=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 2/4] arm64: dts: renesas: r8a774a1: Add CPU capacity-dmips-mhz
+Date: Wed, 12 Jun 2019 15:20:53 +0100
+Message-Id: <1560349255-26336-3-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1560349255-26336-1-git-send-email-biju.das@bp.renesas.com>
+References: <1560349255-26336-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-PM message are truncated while entering L1 or L2, which is resulting in
-receiver errors. Set the required bit to finish processing DLLP before
-link enter L1 or L2.
+Set the capacity-dmips-mhz for RZ/G2M(r8a774a1) SoC, that is based on
+dhrystone.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
+Based on work done by Gaku Inami <gaku.inami.xw@bp.renesas.com> for
+r8a7796 SoC.
+
+The average dhrystone result for 5 iterations is as below:
+
+r8a774a1 SoC (CA57x2 + CA53x4)
+  CPU   max-freq   dhrystone
+  ---------------------------------
+  CA57   1500 MHz  11428571 lps/s
+  CA53   1200 MHz   5000000 lps/s
+
+>From this, CPU capacity-dmips-mhz for CA57 and CA53 are calculated
+as follows:
+
+r8a774a1 SoC
+  CA57 : 1024 / (11428571 / 1500) * (11428571 / 1500) = 1024
+  CA53 : 1024 / (11428571 / 1500) * ( 5000000 / 1200) =  560
+
+Since each CPUs have different max frequencies, the final CPU
+capacities of A53 scaled by the above difference is as below
+
+$ cat /sys/devices/system/cpu/cpu*/cpu_capacity
+1024
+1024
+448
+448
+448
+448
+
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
-V6: No change
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-V5: No change
-
-V4: No change
-
-V3: No change
-
-V2: No change
-
- drivers/pci/controller/pci-tegra.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index ca02866fbbb4..7cd2a8948919 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -212,6 +212,9 @@
- #define RP_VEND_CTL1	0x00000f48
- #define  RP_VEND_CTL1_ERPT	(1 << 13)
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+index e6ea5a1..603cfdb 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+@@ -137,6 +137,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z>;
+ 			operating-points-v2 = <&cluster0_opp>;
++			capacity-dmips-mhz = <1024>;
+ 		};
  
-+#define RP_VEND_XP_BIST	0x00000f4c
-+#define  RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE	(1 << 28)
-+
- #define RP_VEND_CTL2 0x00000fa8
- #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
+ 		a57_1: cpu@1 {
+@@ -148,6 +149,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z>;
+ 			operating-points-v2 = <&cluster0_opp>;
++			capacity-dmips-mhz = <1024>;
+ 		};
  
-@@ -538,6 +541,14 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- 	value |= RP_VEND_XP_OPPORTUNISTIC_ACK;
- 	value |= RP_VEND_XP_OPPORTUNISTIC_UPDATEFC;
- 	writel(value, port->base + RP_VEND_XP);
-+
-+	/*
-+	 * LTSSM will wait for DLLP to finish before entering L1 or L2,
-+	 * to avoid truncation of PM messages which results in receiver errors
-+	 */
-+	value = readl(port->base + RP_VEND_XP_BIST);
-+	value |= RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE;
-+	writel(value, port->base + RP_VEND_XP_BIST);
- }
+ 		a53_0: cpu@100 {
+@@ -159,6 +161,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z2>;
+ 			operating-points-v2 = <&cluster1_opp>;
++			capacity-dmips-mhz = <560>;
+ 		};
  
- static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
+ 		a53_1: cpu@101 {
+@@ -170,6 +173,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z2>;
+ 			operating-points-v2 = <&cluster1_opp>;
++			capacity-dmips-mhz = <560>;
+ 		};
+ 
+ 		a53_2: cpu@102 {
+@@ -181,6 +185,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z2>;
+ 			operating-points-v2 = <&cluster1_opp>;
++			capacity-dmips-mhz = <560>;
+ 		};
+ 
+ 		a53_3: cpu@103 {
+@@ -192,6 +197,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z2>;
+ 			operating-points-v2 = <&cluster1_opp>;
++			capacity-dmips-mhz = <560>;
+ 		};
+ 
+ 		L2_CA57: cache-controller-0 {
 -- 
-2.17.1
+2.7.4
