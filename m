@@ -1,68 +1,29 @@
-Return-Path: <SRS0=bzHF=UJ=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V4 6/8] arm64: tegra: Enable xudc on Jetson TX1
-Date: Mon, 10 Jun 2019 15:49:07 +0530
-Message-ID: <1560161949-26031-7-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
-References: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=qchw=UL=verge.net.au=horms@kernel.org>
+Date: Wed, 12 Jun 2019 14:29:45 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 6/6] arm64: dts: renesas: r8a774a1: Add TMU device nodes
+Message-ID: <20190612122945.ajcuhki6xz7l7aus@verge.net.au>
+References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1560258401-9517-7-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdVHNv4-x_xdiX_ZbQk=oK3S3ZiNb9_Ukb9L-GGc743O0Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVHNv4-x_xdiX_ZbQk=oK3S3ZiNb9_Ukb9L-GGc743O0Q@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable XUSB device mode driver for USB0 slot on Jetson TX1.
+On Wed, Jun 12, 2019 at 08:56:37AM +0200, Geert Uytterhoeven wrote:
+> On Tue, Jun 11, 2019 at 3:07 PM Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com> wrote:
+> > This patch adds TMU[01234] device tree nodes to the r8a774a1
+> > SoC specific DT.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Reviewed-by: JC Kuo <jckuo@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 29 ++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Thanks,
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-index a7dc319..f3f3704 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-@@ -1483,6 +1483,21 @@
- 		vmmc-supply = <&vdd_3v3_sd>;
- 	};
- 
-+	xudc@700d0000 {
-+		status = "okay";
-+		phys = <&{/padctl@7009f000/pads/usb2/lanes/usb2-0}>;
-+		phy-names = "usb2";
-+		avddio-usb-supply = <&vdd_3v3_sys>;
-+		hvdd-usb-supply = <&vdd_1v8>;
-+		usb-role-switch;
-+
-+		port {
-+			usb_role_switch: endpoint@0 {
-+				remote-endpoint = <&usb_b_conn_ep>;
-+			};
-+		};
-+	};
-+
- 	regulators {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -1641,4 +1656,18 @@
- 			linux,code = <KEY_VOLUMEUP>;
- 		};
- 	};
-+
-+	usb_type_b: connector {
-+		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
-+		label = "micro-USB";
-+		type = "micro";
-+		vbus-gpio = <&gpio TEGRA_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
-+
-+		port {
-+			usb_b_conn_ep: endpoint@0 {
-+				remote-endpoint = <&usb_role_switch>;
-+			};
-+		};
-+	};
-+
- };
--- 
-2.7.4
+applied for inclusion in v5.3.
