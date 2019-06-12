@@ -1,30 +1,72 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
-Date: Wed, 12 Jun 2019 09:14:16 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1906120913090.2214@nanos.tec.linutronix.de>
-References: <20190610121346.15779-1-abel.vesa@nxp.com> <20190610131921.GB14647@lakrids.cambridge.arm.com> <20190610132910.srd4j2gtidjeppdx@fsr-ub1664-175> <6f1052ea-623a-b2e8-9aa8-22aef5fab4ca@arm.com> <20190610135514.xd5myavjsloos2y3@fsr-ub1664-175>
- <7b86aa90-6d64-589c-f11e-d2ee6ab3fd54@arm.com> <VI1PR04MB5055A808A08A1C47784E4332EE130@VI1PR04MB5055.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH v3 0/4] Qcom smmu-500 wait-for-safe handling for sdm845
+Date: Wed, 12 Jun 2019 12:45:50 +0530
+Message-ID: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB5055A808A08A1C47784E4332EE130@VI1PR04MB5055.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Abel Vesa <abel.vesa@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Abel Vesa <abelvesa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Carlo Caione <ccaione@baylibre.com>
+To: agross@kernel.org, robh+dt@kernel.org, will.deacon@arm.com, robin.murphy@arm.com, joro@8bytes.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, david.brown@linaro.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Jun 2019, Leonard Crestez wrote:
-> On 6/10/2019 5:08 PM, Marc Zyngier wrote:
-> > Nobody is talking about performance here. It is strictly about
-> > correctness, and what I read about this system is that it cannot
-> > reliably use cpuidle.
-> My argument was that it's fine if PPIs and LPIs are broken as long as 
-> they're not used:
-> 
->   * PPIs are only used for local timer which is not used for wakeup.
+Subject changed, older subject was -
+Qcom smmu-500 TLB invalidation errata for sdm845.
+Previous version of the patches are at [1]:
 
-Huch? The timer has to bring the CPU out of idle as any other interrupt. 
+Qcom's implementation of smmu-500 on sdm845 adds a hardware logic called
+wait-for-safe. This logic helps in meeting the invalidation requirements
+from 'real-time clients', such as display and camera. This wait-for-safe
+logic ensures that the invalidations happen after getting an ack from these
+devices.
+In this patch-series we are disabling this wait-for-safe logic from the
+arm-smmu driver's probe as with this enabled the hardware tries to
+throttle invalidations from 'non-real-time clients', such as USB and UFS.
 
-Thanks,
+For detailed information please refer to patch [3/4] in this series.
+I have included the device tree patch too in this series for someone who
+would like to test out this. Here's a branch [2] that gets display on MTP
+SDM845 device.
 
-	tglx
+This patch series is inspired from downstream work to handle under-performance
+issues on real-time clients on sdm845. In downstream we add separate page table
+ops to handle TLB maintenance and toggle wait-for-safe in tlb_sync call so that
+achieve required performance for display and camera [3, 4].
+
+Changes since v2:
+ * Dropped the patch to add atomic io_read/write scm API.
+ * Removed support for any separate page table ops to handle wait-for-safe.
+   Currently just disabling this wait-for-safe logic from arm_smmu_device_probe()
+   to achieve performance on USB/UFS on sdm845.
+ * Added a device tree patch to add smmu option for fw-implemented support
+   for SCM call to take care of SAFE toggling.
+
+Changes since v1:
+ * Addressed Will and Robin's comments:
+    - Dropped the patch[4] that forked out __arm_smmu_tlb_inv_range_nosync(),
+      and __arm_smmu_tlb_sync().
+    - Cleaned up the errata patch further to use downstream polling mechanism
+      for tlb sync.
+ * No change in SCM call patches - patches 1 to 3.
+
+[1] https://lore.kernel.org/patchwork/cover/983913/
+[2] https://github.com/vivekgautam1/linux/tree/v5.2-rc4/sdm845-display-working
+[3] https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/msm-4.9&id=da765c6c75266b38191b38ef086274943f353ea7
+[4] https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/msm-4.9&id=8696005aaaf745de68f57793c1a534a34345c30a
+
+Vivek Gautam (4):
+  firmware: qcom_scm-64: Add atomic version of qcom_scm_call
+  firmware/qcom_scm: Add scm call to handle smmu errata
+  iommu/arm-smmu: Add support to handle Qcom's wait-for-safe logic
+  arm64: dts/sdm845: Enable FW implemented safe sequence handler on MTP
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi |   1 +
+ drivers/firmware/qcom_scm-32.c       |   5 ++
+ drivers/firmware/qcom_scm-64.c       | 149 ++++++++++++++++++++++++-----------
+ drivers/firmware/qcom_scm.c          |   6 ++
+ drivers/firmware/qcom_scm.h          |   5 ++
+ drivers/iommu/arm-smmu.c             |  16 ++++
+ include/linux/qcom_scm.h             |   2 +
+ 7 files changed, 140 insertions(+), 44 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
