@@ -1,212 +1,52 @@
-Return-Path: <SRS0=7yb5=UQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10872 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFQRk3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Jun 2019 13:40:29 -0400
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 08/27] PCI: tegra: Program UPHY electrical settings for Tegra210
-Date: Mon, 17 Jun 2019 23:09:33 +0530
-Message-ID: <20190617173952.29363-9-mmaddireddy@nvidia.com>
-In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
-References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+Return-Path: <vkoul@kernel.org>
+Date: Wed, 12 Jun 2019 10:37:25 +0530
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/2] clk: qcom: gcc: Add global clock controller driver
+ for SM8150
+Message-ID: <20190612050725.GA9160@vkoul-mobl.Dlink>
+References: <20190607101234.30449-1-vkoul@kernel.org>
+ <20190607101234.30449-2-vkoul@kernel.org>
+ <20190607174353.31EDA208C3@mail.kernel.org>
+ <20190608091537.GG9160@vkoul-mobl.Dlink>
+ <20190610150827.607F6207E0@mail.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610150827.607F6207E0@mail.kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Deepak Katragadda <dkatraga@codeaurora.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-UPHY electrical programming guidelines are documented in Tegra210 TRM.
-Program these electrical settings for proper eye diagram in Gen1 and Gen2
-link speeds.
+On 10-06-19, 08:08, Stephen Boyd wrote:
+> Quoting Vinod Koul (2019-06-08 02:15:37)
+> > On 07-06-19, 10:43, Stephen Boyd wrote:
+> > > Quoting Vinod Koul (2019-06-07 03:12:34)
+> > > > diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+> > > > new file mode 100644
+> > > > index 000000000000..1cbc884444c9
+> > > > --- /dev/null
+> > > > +++ b/drivers/clk/qcom/gcc-sm8150.c
+> > > > +static const struct parent_map gcc_parent_map_0[] = {
+> > > > +       { P_BI_TCXO, 0 },
+> > > > +       { P_GPLL0_OUT_MAIN, 1 },
+> > > > +       { P_GPLL0_OUT_EVEN, 6 },
+> > > > +       { P_CORE_BI_PLL_TEST_SE, 7 },
+> > > > +};
+> > > > +
+> > > > +static const char * const gcc_parent_names_0[] = {
+> > > 
+> > > We have a new way of specifying clk parents now. Can you use that
+> > > instead of using strings everywhere?
+> > 
+> > Okay I will update, any pointers on new implementation I can look up?
+> > 
+> 
+> Not really yet. Chen-Yu is working on the Allwinner driver
+> (drivers/clk/sunxi-ng/) and some work from Jeff for MSM8998 is on the
+> list that you can look at.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V5: No change
+Thanks for the pointer, I have done the conversion and will post the
+update in v2
 
-V4: No change
-
-V3: No change
-
-V2: Addressed coding style comments
-
- drivers/pci/controller/pci-tegra.c | 107 +++++++++++++++++++++++++++++
- 1 file changed, 107 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 39a8cbf6da24..c38a370ed853 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -177,6 +177,32 @@
- 
- #define AFI_PEXBIAS_CTRL_0		0x168
- 
-+#define RP_ECTL_2_R1	0x00000e84
-+#define  RP_ECTL_2_R1_RX_CTLE_1C_MASK		0xffff
-+
-+#define RP_ECTL_4_R1	0x00000e8c
-+#define  RP_ECTL_4_R1_RX_CDR_CTRL_1C_MASK	(0xffff << 16)
-+#define  RP_ECTL_4_R1_RX_CDR_CTRL_1C_SHIFT	16
-+
-+#define RP_ECTL_5_R1	0x00000e90
-+#define  RP_ECTL_5_R1_RX_EQ_CTRL_L_1C_MASK	0xffffffff
-+
-+#define RP_ECTL_6_R1	0x00000e94
-+#define  RP_ECTL_6_R1_RX_EQ_CTRL_H_1C_MASK	0xffffffff
-+
-+#define RP_ECTL_2_R2	0x00000ea4
-+#define  RP_ECTL_2_R2_RX_CTLE_1C_MASK	0xffff
-+
-+#define RP_ECTL_4_R2	0x00000eac
-+#define  RP_ECTL_4_R2_RX_CDR_CTRL_1C_MASK	(0xffff << 16)
-+#define  RP_ECTL_4_R2_RX_CDR_CTRL_1C_SHIFT	16
-+
-+#define RP_ECTL_5_R2	0x00000eb0
-+#define  RP_ECTL_5_R2_RX_EQ_CTRL_L_1C_MASK	0xffffffff
-+
-+#define RP_ECTL_6_R2	0x00000eb4
-+#define  RP_ECTL_6_R2_RX_EQ_CTRL_H_1C_MASK	0xffffffff
-+
- #define RP_VEND_XP	0x00000f00
- #define  RP_VEND_XP_DL_UP	(1 << 30)
- 
-@@ -266,6 +292,19 @@ struct tegra_pcie_soc {
- 	bool has_gen2;
- 	bool force_pca_enable;
- 	bool program_uphy;
-+	struct {
-+		struct {
-+			u32 rp_ectl_2_r1;
-+			u32 rp_ectl_4_r1;
-+			u32 rp_ectl_5_r1;
-+			u32 rp_ectl_6_r1;
-+			u32 rp_ectl_2_r2;
-+			u32 rp_ectl_4_r2;
-+			u32 rp_ectl_5_r2;
-+			u32 rp_ectl_6_r2;
-+		} regs;
-+		bool enable;
-+	} ectl;
- };
- 
- static inline struct tegra_msi *to_tegra_msi(struct msi_controller *chip)
-@@ -492,6 +531,54 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- 	writel(value, port->base + RP_VEND_CTL1);
- }
- 
-+static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
-+{
-+	const struct tegra_pcie_soc *soc = port->pcie->soc;
-+	u32 value;
-+
-+	value = readl(port->base + RP_ECTL_2_R1);
-+	value &= ~RP_ECTL_2_R1_RX_CTLE_1C_MASK;
-+	value |= soc->ectl.regs.rp_ectl_2_r1;
-+	writel(value, port->base + RP_ECTL_2_R1);
-+
-+	value = readl(port->base + RP_ECTL_4_R1);
-+	value &= ~RP_ECTL_4_R1_RX_CDR_CTRL_1C_MASK;
-+	value |= soc->ectl.regs.rp_ectl_4_r1 <<
-+				RP_ECTL_4_R1_RX_CDR_CTRL_1C_SHIFT;
-+	writel(value, port->base + RP_ECTL_4_R1);
-+
-+	value = readl(port->base + RP_ECTL_5_R1);
-+	value &= ~RP_ECTL_5_R1_RX_EQ_CTRL_L_1C_MASK;
-+	value |= soc->ectl.regs.rp_ectl_5_r1;
-+	writel(value, port->base + RP_ECTL_5_R1);
-+
-+	value = readl(port->base + RP_ECTL_6_R1);
-+	value &= ~RP_ECTL_6_R1_RX_EQ_CTRL_H_1C_MASK;
-+	value |= soc->ectl.regs.rp_ectl_6_r1;
-+	writel(value, port->base + RP_ECTL_6_R1);
-+
-+	value = readl(port->base + RP_ECTL_2_R2);
-+	value &= ~RP_ECTL_2_R2_RX_CTLE_1C_MASK;
-+	value |= soc->ectl.regs.rp_ectl_2_r2;
-+	writel(value, port->base + RP_ECTL_2_R2);
-+
-+	value = readl(port->base + RP_ECTL_4_R2);
-+	value &= ~RP_ECTL_4_R2_RX_CDR_CTRL_1C_MASK;
-+	value |= soc->ectl.regs.rp_ectl_4_r2 <<
-+				RP_ECTL_4_R2_RX_CDR_CTRL_1C_SHIFT;
-+	writel(value, port->base + RP_ECTL_4_R2);
-+
-+	value = readl(port->base + RP_ECTL_5_R2);
-+	value &= ~RP_ECTL_5_R2_RX_EQ_CTRL_L_1C_MASK;
-+	value |= soc->ectl.regs.rp_ectl_5_r2;
-+	writel(value, port->base + RP_ECTL_5_R2);
-+
-+	value = readl(port->base + RP_ECTL_6_R2);
-+	value &= ~RP_ECTL_6_R2_RX_EQ_CTRL_H_1C_MASK;
-+	value |= soc->ectl.regs.rp_ectl_6_r2;
-+	writel(value, port->base + RP_ECTL_6_R2);
-+}
-+
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- {
- 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
-@@ -518,6 +605,9 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- 	}
- 
- 	tegra_pcie_enable_rp_features(port);
-+
-+	if (soc->ectl.enable)
-+		tegra_pcie_program_ectl_settings(port);
- }
- 
- static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
-@@ -2223,6 +2313,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.has_gen2 = false,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.ectl.enable = false,
- };
- 
- static const struct tegra_pcie_port_soc tegra30_pcie_ports[] = {
-@@ -2246,6 +2337,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.has_gen2 = false,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.ectl.enable = false,
- };
- 
- static const struct tegra_pcie_soc tegra124_pcie = {
-@@ -2262,6 +2354,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.ectl.enable = false,
- };
- 
- static const struct tegra_pcie_soc tegra210_pcie = {
-@@ -2278,6 +2371,19 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = true,
- 	.program_uphy = true,
-+	.ectl = {
-+		.regs = {
-+			.rp_ectl_2_r1 = 0x0000000f,
-+			.rp_ectl_4_r1 = 0x00000067,
-+			.rp_ectl_5_r1 = 0x55010000,
-+			.rp_ectl_6_r1 = 0x00000001,
-+			.rp_ectl_2_r2 = 0x0000008f,
-+			.rp_ectl_4_r2 = 0x000000c7,
-+			.rp_ectl_5_r2 = 0x55010000,
-+			.rp_ectl_6_r2 = 0x00000001,
-+		},
-+		.enable = true,
-+	},
- };
- 
- static const struct tegra_pcie_port_soc tegra186_pcie_ports[] = {
-@@ -2301,6 +2407,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = false,
- 	.program_uphy = false,
-+	.ectl.enable = false,
- };
- 
- static const struct of_device_id tegra_pcie_of_match[] = {
 -- 
-2.17.1
+~Vinod
