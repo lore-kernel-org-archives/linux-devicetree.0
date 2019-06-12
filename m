@@ -1,77 +1,78 @@
-Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 17/27] PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
-Date: Mon, 17 Jun 2019 23:09:42 +0530
-Message-ID: <20190617173952.29363-18-mmaddireddy@nvidia.com>
-In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
-References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=ypAS=UL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35653 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437592AbfFLJj0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Jun 2019 05:39:26 -0400
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v5 03/10] media: hantro: add PM runtime resume callback
+Date: Wed, 12 Jun 2019 11:39:08 +0200
+Message-Id: <20190612093915.18973-4-p.zabel@pengutronix.de>
+In-Reply-To: <20190612093915.18973-1-p.zabel@pengutronix.de>
+References: <20190612093915.18973-1-p.zabel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Disable controllers which failed to link up and configure CLKREQ# signals
-of these controllers as GPIO. This is required to avoid CLKREQ# signal of
-inactive controllers interfering with PLLE power down sequence.
+It seems that on i.MX8MQ the power domain controller does not propagate
+resets to the VPU cores on resume. Add a callback to allow implementing
+manual reset of the VPU cores after ungating the power domain.
 
-PCIE_CLKREQ_GPIO bits are defined only in Tegra186, however programming
-these bits in other SoCs doesn't cause any side effects. Program these
-bits for all Tegra SoCs to avoid conditional check.
-
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 ---
-V5: No change
+ drivers/staging/media/hantro/hantro.h     |  2 ++
+ drivers/staging/media/hantro/hantro_drv.c | 13 +++++++++++++
+ 2 files changed, 15 insertions(+)
 
-V4: No change
-
-V3: No change
-
-V2: Corrected the comment in driver
-
- drivers/pci/controller/pci-tegra.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index abb94595c76b..3d9028cecc18 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -160,6 +160,8 @@
- #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_211	(0x1 << 20)
- #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_411	(0x2 << 20)
- #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_111	(0x2 << 20)
-+#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(x)		(1 << ((x) + 29))
-+#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL		(0x7 << 29)
- 
- #define AFI_FUSE			0x104
- #define  AFI_FUSE_PCIE_T0_GEN2_DIS	(1 << 2)
-@@ -741,6 +743,12 @@ static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
- 
- 	value &= ~AFI_PEX_CTRL_REFCLK_EN;
- 	afi_writel(port->pcie, value, ctrl);
-+
-+	/* disable PCIe port and set CLKREQ# as GPIO to allow PLLE power down */
-+	value = afi_readl(port->pcie, AFI_PCIE_CONFIG);
-+	value |= AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
-+	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
-+	afi_writel(port->pcie, value, AFI_PCIE_CONFIG);
+diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
+index 14e685428203..296b9ffad547 100644
+--- a/drivers/staging/media/hantro/hantro.h
++++ b/drivers/staging/media/hantro/hantro.h
+@@ -56,6 +56,7 @@ struct hantro_codec_ops;
+  * @codec:			Supported codecs
+  * @codec_ops:			Codec ops.
+  * @init:			Initialize hardware.
++ * @runtime_resume:		reenable hardware after power gating
+  * @vepu_irq:			encoder interrupt handler
+  * @vdpu_irq:			decoder interrupt handler
+  * @clk_names:			array of clock names
+@@ -71,6 +72,7 @@ struct hantro_variant {
+ 	unsigned int codec;
+ 	const struct hantro_codec_ops *codec_ops;
+ 	int (*init)(struct hantro_dev *vpu);
++	int (*runtime_resume)(struct hantro_dev *vpu);
+ 	irqreturn_t (*vepu_irq)(int irq, void *priv);
+ 	irqreturn_t (*vdpu_irq)(int irq, void *priv);
+ 	const char *clk_names[HANTRO_MAX_CLOCKS];
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index 0eadcc530e63..ed10052dc1c8 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -832,9 +832,22 @@ static int hantro_remove(struct platform_device *pdev)
+ 	return 0;
  }
  
- static void tegra_pcie_port_free(struct tegra_pcie_port *port)
-@@ -1153,9 +1161,12 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- 	value = afi_readl(pcie, AFI_PCIE_CONFIG);
- 	value &= ~AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_MASK;
- 	value |= AFI_PCIE_CONFIG_PCIE_DISABLE_ALL | pcie->xbar_config;
-+	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL;
++#ifdef CONFIG_PM
++static int hantro_runtime_resume(struct device *dev)
++{
++	struct hantro_dev *vpu = dev_get_drvdata(dev);
++
++	if (vpu->variant->runtime_resume)
++		return vpu->variant->runtime_resume(vpu);
++
++	return 0;
++}
++#endif
++
+ static const struct dev_pm_ops hantro_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+ 				pm_runtime_force_resume)
++	SET_RUNTIME_PM_OPS(NULL, hantro_runtime_resume, NULL)
+ };
  
--	list_for_each_entry(port, &pcie->ports, list)
-+	list_for_each_entry(port, &pcie->ports, list) {
- 		value &= ~AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
-+		value &= ~AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
-+	}
- 
- 	afi_writel(pcie, value, AFI_PCIE_CONFIG);
- 
+ static struct platform_driver hantro_driver = {
 -- 
-2.17.1
+2.20.1
