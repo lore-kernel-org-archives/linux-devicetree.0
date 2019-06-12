@@ -1,64 +1,51 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
-Date: Wed, 12 Jun 2019 08:29:43 -0600
-Message-ID: <2282f3e1-e76a-4fe7-d447-51d9a4bee2de@codeaurora.org>
-References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com>
- <20190606161322.47192-1-jeffrey.l.hugo@gmail.com>
- <20190612003507.GG143729@dtor-ws>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator
+ support
+Date: Wed, 12 Jun 2019 15:33:50 +0100
+Message-ID: <20190612143350.GB4660@dell>
+References: <20190516043218.8222-1-j-keerthy@ti.com>
+ <20190516043218.8222-4-j-keerthy@ti.com>
+ <20190522153528.GG8582@sirena.org.uk>
+ <1712197d-7d43-38a8-efde-11b99537eae9@ti.com>
+ <20190528132755.GK2456@sirena.org.uk>
+ <e68d9939-a56a-b3c5-7f6d-e5783e16a6de@ti.com>
+ <20190608195159.GA5316@sirena.org.uk>
+ <20190610054822.GE4797@dell>
+ <c58ef6cd-893e-c20f-f437-e0343aa83fea@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612003507.GG143729@dtor-ws>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <c58ef6cd-893e-c20f-f437-e0343aa83fea@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: benjamin.tissoires@redhat.com, jikos@kernel.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org, hdegoede@redhat.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 6/11/2019 6:35 PM, Dmitry Torokhov wrote:
-> On Thu, Jun 06, 2019 at 09:13:22AM -0700, Jeffrey Hugo wrote:
->> There needs to be coordination between hid-quirks and the elan_i2c driver
->> about which devices are handled by what drivers.  Currently, both use
->> whitelists, which results in valid devices being unhandled by default,
->> when they should not be rejected by hid-quirks.  This is quickly becoming
->> an issue.
->>
->> Since elan_i2c has a maintained whitelist of what devices it will handle,
->> use that to implement a blacklist in hid-quirks so that only the devices
->> that need to be handled by elan_i2c get rejected by hid-quirks, and
->> everything else is handled by default.  The downside is the whitelist and
->> blacklist need to be kept in sync.
->>
->> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->> ---
->>   drivers/hid/hid-quirks.c | 78 ++++++++++++++++++++++++++++++++++------
->>   1 file changed, 67 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
->> index e5ca6fe2ca57..edebd0700e3d 100644
->> --- a/drivers/hid/hid-quirks.c
->> +++ b/drivers/hid/hid-quirks.c
->> @@ -912,8 +912,66 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
->>   	{ }
->>   };
->>   
->> +/*
->> + * List of device names that elan_i2c is handling and HID should ignore.  Must
->> + * be kept in sync with elan_i2c
->> + */
->> +static const char *hid_elan_i2c_ignore[] = {
+On Wed, 12 Jun 2019, Keerthy wrote:
+
 > 
-> If this is a copy of elan whitelist, then, if we do not want to bother
-> with sharing it in object form (as a elan-i2c-ids module), can we at
-> least move it into include/linux/input/elan-i2c-ids.h and consume from
-> hid-quirks.c?
+> 
+> On 10/06/19 11:18 AM, Lee Jones wrote:
+> > On Sat, 08 Jun 2019, Mark Brown wrote:
+> > 
+> > > On Sat, Jun 08, 2019 at 09:26:31AM +0530, keerthy wrote:
+> > > 
+> > > > mfd patches are on linux-next already. Hope you can pull this one now that
+> > > > dependencies are met.
+> > > 
+> > > Someone will need to send me a copy of the patch, if I acked it I was
+> > > expecting it to go in with the MFD changes.
+> > 
+> > There is/was no need for that.  Patches are built-time orthogonal.
+> 
+> Sorry i am still not clear. Should i resend this patch?
 
-I can put it in a shared header file, however elan-i2c and hid-quirks
-would need to be updated in the same change to prevent a breakage, but
-that would seem to violate a concern Benjamin brought up in v4 given
-that elan-i2c is maintained in your input tree, and hid-quirks is
-maintained in his hid tree.
+Yes.  It sounds like Mark no longer has the patch to apply.
 
-Are you ok with the elan-i2c changes going through Benjamin's hid tree?
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
