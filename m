@@ -1,58 +1,39 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv5 07/20] PCI: mobiveil: Use WIN_NUM_0 explicitly for CFG
- outbound window
-Date: Wed, 12 Jun 2019 16:13:31 +0100
-Message-ID: <20190612151331.GE15747@redmoon>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-8-Zhiqiang.Hou@nxp.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
+Date: Wed, 12 Jun 2019 08:13:47 -0700
+Message-ID: <CAKdAkRQOxTX51rhodoFyYpwi85pk8apvWjCLLX5Sw6NTH=j1kA@mail.gmail.com>
+References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com>
+ <20190606161322.47192-1-jeffrey.l.hugo@gmail.com> <20190612003507.GG143729@dtor-ws>
+ <nycvar.YFH.7.76.1906121644160.27227@cbobk.fhfr.pm>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190412083635.33626-8-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <nycvar.YFH.7.76.1906121644160.27227@cbobk.fhfr.pm>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Jiri Kosina <jikos@kernel.org>
+Cc: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, agross@kernel.org, David Brown <david.brown@linaro.org>, Hans de Goede <hdegoede@redhat.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 08:35:54AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> As the .map_bus() use the WIN_NUM_0 for CFG transactions,
-> it's better passing WIN_NUM_0 explicitly when initialize
-> the CFG outbound window.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> ---
-> V5:
->  - Corrected the subject.
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index b2cc9c097fc9..df71c11b4810 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -612,9 +612,8 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  	 */
->  
->  	/* config outbound translation window */
-> -	program_ob_windows(pcie, pcie->ob_wins_configured,
-> -			   pcie->ob_io_res->start, 0, CFG_WINDOW_TYPE,
-> -			   resource_size(pcie->ob_io_res));
-> +	program_ob_windows(pcie, WIN_NUM_0, pcie->ob_io_res->start, 0,
-> +			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+On Wed, Jun 12, 2019 at 7:45 AM Jiri Kosina <jikos@kernel.org> wrote:
+>
+> On Tue, 11 Jun 2019, Dmitry Torokhov wrote:
+>
+> > > +static const char *hid_elan_i2c_ignore[] = {
+> >
+> > If this is a copy of elan whitelist, then, if we do not want to bother
+> > with sharing it in object form (as a elan-i2c-ids module), can we at
+> > least move it into include/linux/input/elan-i2c-ids.h and consume from
+> > hid-quirks.c?
+>
+> Let's just not duplicate it in both objects. Why not properly export it
+> from hid_quirks?
 
-This makes sense - current code is quite obscure and prone to
-bugs.
+Strictly speaking Elan does not depend on HID; exporting it from
+quirks would mean adding this dependency. This also mean that you
+can't make Elan built-in while keeping HID as a module (I think this
+at least used to be config on some Chromebooks).
 
-Lorenzo
+Thanks.
 
->  	/* memory inbound translation window */
->  	program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
-> -- 
-> 2.17.1
-> 
+-- 
+Dmitry
