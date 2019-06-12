@@ -1,51 +1,57 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH] ARM: dts: imx7ulp: add crypto support
-Date: Thu, 13 Jun 2019 14:56:34 +0800
-Message-ID: <20190613065634.alck5wads6toe7uk@gondor.apana.org.au>
-References: <20190606080255.25504-1-horia.geanta@nxp.com>
- <20190612103926.GE11086@dragon>
- <VI1PR0402MB3485A573518D60A573BA55C298EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <20190612130602.GH11086@dragon>
- <VI1PR0402MB348596BF52CE43B5D4CD534798EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <20190612132600.GI11086@dragon>
- <20190612135952.ds6zzh7ppahiuodd@gondor.apana.org.au>
- <20190613004709.GB20747@dragon>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3] dt-bindings: display: renesas: du: Document optional reset
+ properties
+Date: Wed, 12 Jun 2019 15:57:23 +0200
+Message-ID: <20190612135723.19561-1-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190613004709.GB20747@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Aymen Sghaier <aymen.sghaier@nxp.com>, Horia Geanta <horia.geanta@nxp.com>, Iuliana Prodan <iuliana.prodan@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Franck Lenormand <franck.lenormand@nxp.com>, Rob Herring <robh+dt@kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 08:47:10AM +0800, Shawn Guo wrote:
-> On Wed, Jun 12, 2019 at 09:59:52PM +0800, Herbert Xu wrote:
-> > On Wed, Jun 12, 2019 at 09:26:02PM +0800, Shawn Guo wrote:
-> > >
-> > > Yes, it happens from time to time depending on maintainer's style. I'm
-> > > fine with the DT changes going through other subsystem tree, if the
-> > > subsystem maintainer wants to and is willing to take the risk of merge
-> > > conflict between his tree and arm-soc tree.
-> > 
-> > I have no problems with potential merge conflicts.
-> 
-> Then feel free to take it:
-> 
-> Acked-by: Shawn Guo <shawnguo@kernel.org>
-
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+RG9jdW1lbnQgdGhlIG9wdGlvbmFsIHByb3BlcnRpZXMgZm9yIGRlc2NyaWJpbmcgbW9kdWxlIHJl
+c2V0cywgdG8Kc3VwcG9ydCByZXNldHRpbmcgZGlzcGxheSBjaGFubmVscyBvbiBSLUNhciBHZW4y
+IGFuZCBHZW4zLgoKU2lnbmVkLW9mZi1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5l
+c2FzQGdsaWRlci5iZT4KQWNrZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hh
+cnRAaWRlYXNvbmJvYXJkLmNvbT4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5v
+cmc+Ci0tLQp2MzoKICAtIEFkZCBBY2tlZC1ieSwKICAtIERyb3AgTFZEUyByZXNldHMsIGFzIExW
+RFMgaXMgbm93IGNvdmVyZWQgYnkgYSBzZXBhcmF0ZSBiaW5kaW5nLAogIC0gVXBkYXRlIHRoZSBl
+eGFtcGxlLgoKdjI6CiAgLSBzL3BoYW5kbGVzL3BoYW5kbGUvLgotLS0KIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgICAgICAgICB8IDEwICsrKysrKysrKysK
+IDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAppbmRleCBh
+ZWRiMjJiNGQxNjEzZDFmLi44N2U1ZmIyY2U3NWUxMDNmIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dApAQCAt
+NDQsNiArNDQsMTQgQEAgUmVxdWlyZWQgUHJvcGVydGllczoKICAgICBpbnN0YW5jZSB0aGF0IHNl
+cnZlcyB0aGUgRFUgY2hhbm5lbCwgYW5kIHRoZSBjaGFubmVsIGluZGV4IGlkZW50aWZpZXMgdGhl
+CiAgICAgTElGIGluc3RhbmNlIGluIHRoYXQgVlNQLgogCitPcHRpb25hbCBwcm9wZXJ0aWVzOgor
+ICAtIHJlc2V0czogQSBsaXN0IG9mIHBoYW5kbGUgKyByZXNldC1zcGVjaWZpZXIgcGFpcnMsIG9u
+ZSBmb3IgZWFjaCBlbnRyeSBpbgorICAgIHRoZSByZXNldC1uYW1lcyBwcm9wZXJ0eS4KKyAgLSBy
+ZXNldC1uYW1lczogTmFtZXMgb2YgdGhlIHJlc2V0cy4gVGhpcyBwcm9wZXJ0eSBpcyBtb2RlbC1k
+ZXBlbmRlbnQuCisgICAgLSBSOEE3NzlbMDEyMzQ1Nl0gdXNlIG9uZSByZXNldCBmb3IgYSBncm91
+cCBvZiBvbmUgb3IgbW9yZSBzdWNjZXNzaXZlCisgICAgICBjaGFubmVscy4gVGhlIHJlc2V0cyBt
+dXN0IGJlIG5hbWVkICJkdS54IiB3aXRoICJ4IiBiZWluZyB0aGUgbnVtZXJpY2FsCisgICAgICBp
+bmRleCBvZiB0aGUgbG93ZXN0IGNoYW5uZWwgaW4gdGhlIGdyb3VwLgorCiBSZXF1aXJlZCBub2Rl
+czoKIAogVGhlIGNvbm5lY3Rpb25zIHRvIHRoZSBEVSBvdXRwdXQgdmlkZW8gcG9ydHMgYXJlIG1v
+ZGVsZWQgdXNpbmcgdGhlIE9GIGdyYXBoCkBAIC04OCw2ICs5Niw4IEBAIEV4YW1wbGU6IFI4QTc3
+OTUgKFItQ2FyIEgzKSBFUzIuMCBEVQogCQkJIDwmY3BnIENQR19NT0QgNzIyPiwKIAkJCSA8JmNw
+ZyBDUEdfTU9EIDcyMT47CiAJCWNsb2NrLW5hbWVzID0gImR1LjAiLCAiZHUuMSIsICJkdS4yIiwg
+ImR1LjMiOworCQlyZXNldHMgPSA8JmNwZyA3MjQ+LCA8JmNwZyA3MjI+OworCQlyZXNldC1uYW1l
+cyA9ICJkdS4wIiwgImR1LjIiOwogCQl2c3BzID0gPCZ2c3BkMCAwPiwgPCZ2c3BkMSAwPiwgPCZ2
+c3BkMiAwPiwgPCZ2c3BkMCAxPjsKIAogCQlwb3J0cyB7Ci0tIAoyLjE3LjEKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
