@@ -1,76 +1,49 @@
-From: Neal Liu <neal.liu@mediatek.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: rng: update bindings for MediaTek
- ARMv8 SoCs
-Date: Wed, 12 Jun 2019 12:02:54 +0800
-Message-ID: <1560312174.20601.6.camel@mtkswgap22>
-References: <1560162984-26104-1-git-send-email-neal.liu@mediatek.com>
-         <1560162984-26104-3-git-send-email-neal.liu@mediatek.com>
-         <20190611225351.GA17332@bogus>
+From: "Y.b. Lu" <yangbo.lu@nxp.com>
+Subject: RE: [PATCH 1/6] ptp: add QorIQ PTP support for DPAA2
+Date: Wed, 12 Jun 2019 04:14:58 +0000
+Message-ID: <VI1PR0401MB2237247525AB5DB5B5F275A8F8EC0@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+References: <20190610032108.5791-1-yangbo.lu@nxp.com>
+ <20190610032108.5791-2-yangbo.lu@nxp.com> <20190610130601.GD8247@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611225351.GA17332@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, Crystal Guo <Crystal.Guo@mediatek.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190610130601.GD8247@lunn.ch>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-06-11 at 16:53 -0600, Rob Herring wrote:
-> On Mon, Jun 10, 2019 at 06:36:23PM +0800, Neal Liu wrote:
-> > Document the binding used by the MediaTek ARMv8 SoCs random
-> > number generator with TrustZone enabled.
-> > 
-> > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > ---
-> >  Documentation/devicetree/bindings/rng/mtk-rng.txt |   15 ++++++++++++---
-> >  1 file changed, 12 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rng/mtk-rng.txt b/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> > index 2bc89f1..fb3dd59 100644
-> > --- a/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> > +++ b/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> > @@ -3,9 +3,13 @@ found in MediaTek SoC family
-> >  
-> >  Required properties:
-> >  - compatible	    : Should be
-> > -			"mediatek,mt7622-rng", 	"mediatek,mt7623-rng" : for MT7622
-> > -			"mediatek,mt7629-rng",  "mediatek,mt7623-rng" : for MT7629
-> > -			"mediatek,mt7623-rng" : for MT7623
-> > +			"mediatek,mt7622-rng", "mediatek,mt7623-rng" for MT7622
-> > +			"mediatek,mt7629-rng", "mediatek,mt7623-rng" for MT7629
-> > +			"mediatek,mt7623-rng" for MT7623
-> > +			"mediatek,mtk-sec-rng" for MediaTek ARMv8 SoCs with
-> > +			security RNG
-> 
-> Is there any commonality with the prior h/w? If not, make this a 
-> separate binding doc.
-
-There are less common with the prior h/w... I had been thinking about
-make new binding doc. Since your suggestion, I'll make one.
-
-> 
-> > +
-> > +Optional properties:
-> >  - clocks	    : list of clock specifiers, corresponding to
-> >  		      entries in clock-names property;
-> >  - clock-names	    : Should contain "rng" entries;
-> > @@ -19,3 +23,8 @@ rng: rng@1020f000 {
-> >  	clocks = <&infracfg CLK_INFRA_TRNG>;
-> >  	clock-names = "rng";
-> >  };
-> > +
-> > +/* secure RNG */
-> > +hwrng: hwrng {
-> > +	compatible = "mediatek,mtk-sec-rng";
-> 
-> How does one access this? Seems like this should be part of a node for 
-> firmware? What about other functions?
-
-Yes, We move all hw register & clock control access to the ATF by smc.
-
-> 
-> > +};
-> > -- 
-> > 1.7.9.5
-> > 
+SGkgQW5kcmV3LA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFuZHJl
+dyBMdW5uIDxhbmRyZXdAbHVubi5jaD4NCj4gU2VudDogMjAxOcTqNtTCMTDI1SAyMTowNg0KPiBU
+bzogWS5iLiBMdSA8eWFuZ2JvLmx1QG54cC5jb20+DQo+IENjOiBuZXRkZXZAdmdlci5rZXJuZWwu
+b3JnOyBEYXZpZCBTIC4gTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0PjsNCj4gUmljaGFyZCBD
+b2NocmFuIDxyaWNoYXJkY29jaHJhbkBnbWFpbC5jb20+OyBSb2IgSGVycmluZw0KPiA8cm9iaCtk
+dEBrZXJuZWwub3JnPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsNCj4gZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENI
+IDEvNl0gcHRwOiBhZGQgUW9ySVEgUFRQIHN1cHBvcnQgZm9yIERQQUEyDQo+IA0KPiBPbiBNb24s
+IEp1biAxMCwgMjAxOSBhdCAxMToyMTowM0FNICswODAwLCBZYW5nYm8gTHUgd3JvdGU6DQo+ID4g
+VGhpcyBwYXRjaCBpcyB0byBhZGQgUW9ySVEgUFRQIHN1cHBvcnQgZm9yIERQQUEyLg0KPiA+IEFs
+dGhvdWdoIGRwYWEyLXB0cC5jIGRyaXZlciBpcyBhIGZzbF9tY19kcml2ZXIgd2hpY2ggaXMgdXNp
+bmcgTUMgQVBJcw0KPiA+IGZvciByZWdpc3RlciBhY2Nlc3NpbmcsIGl0J3Mgc2FtZSBJUCBibG9j
+ayB3aXRoIGVUU0VDL0RQQUEvRU5FVEMgMTU4OA0KPiA+IHRpbWVyLiBXZSB3aWxsIGNvbnZlcnQg
+dG8gcmV1c2UgcHRwX3FvcmlxIGRyaXZlciBieSB1c2luZyByZWdpc3Rlcg0KPiA+IGlvcmVtYXAg
+YW5kIGRyb3BwaW5nIHJlbGF0ZWQgTUMgQVBJcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFlh
+bmdibyBMdSA8eWFuZ2JvLmx1QG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcHRwL0tj
+b25maWcgfCAyICstDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
+dGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHRwL0tjb25maWcgYi9kcml2
+ZXJzL3B0cC9LY29uZmlnIGluZGV4DQo+ID4gOWI4ZmVlNS4uYjFiNDU0ZiAxMDA2NDQNCj4gPiAt
+LS0gYS9kcml2ZXJzL3B0cC9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9wdHAvS2NvbmZpZw0K
+PiA+IEBAIC00NCw3ICs0NCw3IEBAIGNvbmZpZyBQVFBfMTU4OF9DTE9DS19EVEUNCj4gPg0KPiA+
+ICBjb25maWcgUFRQXzE1ODhfQ0xPQ0tfUU9SSVENCj4gPiAgCXRyaXN0YXRlICJGcmVlc2NhbGUg
+UW9ySVEgMTU4OCB0aW1lciBhcyBQVFAgY2xvY2siDQo+ID4gLQlkZXBlbmRzIG9uIEdJQU5GQVIg
+fHwgRlNMX0RQQUFfRVRIIHx8IEZTTF9FTkVUQyB8fCBGU0xfRU5FVENfVkYNCj4gPiArCWRlcGVu
+ZHMgb24gR0lBTkZBUiB8fCBGU0xfRFBBQV9FVEggfHwgRlNMX0RQQUEyX0VUSCB8fA0KPiBGU0xf
+RU5FVEMgfHwNCj4gPiArRlNMX0VORVRDX1ZGDQo+ID4gIAlkZXBlbmRzIG9uIFBUUF8xNTg4X0NM
+T0NLDQo+IA0KPiBIaSBZYW5nYm8NCj4gDQo+IENvdWxkIENPTVBJTEVfVEVTVCBhbHNvIGJlIGFk
+ZGVkPw0KDQpbWS5iLiBMdV0gQ09NUElMRV9URVNUIGlzIHVzdWFsbHkgZm9yIG90aGVyIEFSQ0hz
+IGJ1aWxkIGNvdmVyYWdlLg0KRG8geW91IHdhbnQgbWUgdG8gYXBwZW5kIGl0IGFmdGVyIHRoZXNl
+IEV0aGVybmV0IGRyaXZlciBkZXBlbmRlbmNpZXM/DQoNClRoYW5rcy4NCg0KPiANCj4gVGhhbmtz
+DQo+IAlBbmRyZXcNCg==
