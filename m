@@ -1,12 +1,14 @@
 Return-Path: <SRS0=ypAS=UL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46379 "EHLO
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42401 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437579AbfFLJj0 (ORCPT
+        with ESMTP id S2437591AbfFLJj0 (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 12 Jun 2019 05:39:26 -0400
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v5 00/10] Rename Rockchip VPU driver to Hantro, add initial i.MX8M support
-Date: Wed, 12 Jun 2019 11:39:05 +0200
-Message-Id: <20190612093915.18973-1-p.zabel@pengutronix.de>
+Subject: [PATCH v5 05/10] media: hantro: add support for named register ranges
+Date: Wed, 12 Jun 2019 11:39:10 +0200
+Message-Id: <20190612093915.18973-6-p.zabel@pengutronix.de>
+In-Reply-To: <20190612093915.18973-1-p.zabel@pengutronix.de>
+References: <20190612093915.18973-1-p.zabel@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -14,102 +16,96 @@ To: linux-media@vger.kernel.org
 Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-There are several other SoCs that contain Hantro IP based VPUs, such as
-NXP i.MX8MQ (Hantro G1 and G2) and i.MX8MM (Hantro G1, G2, and H1). To
-maximize code sharing, add initial support for these SoCs to the
-Rockchip VPU driver, after renaming it to Hantro VPU.
+Add support for multiple register ranges with SoC specific names.
 
-This series is based on the br-v5.3g tag, commit e568d2cc1ef6
-("rockchip/vpu: Add support for MPEG-2 decoding on RK3288") with
-https://patchwork.linuxtv.org/patch/56402/ ("rockchip/vpu: Add support
-for MPEG-2 decoding on RK3328") applied on top. It supports MPEG-2
-decoding on i.MX8MQ. MPEG-2 decoding and JPEG encoding on i.MX8MM may
-or may not work, I don't have the hardware to test.
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+---
+ drivers/staging/media/hantro/hantro.h     |  8 ++++++--
+ drivers/staging/media/hantro/hantro_drv.c | 24 +++++++++++++++++------
+ 2 files changed, 24 insertions(+), 8 deletions(-)
 
-Changes since v4:
- - Rebased onto media-tree master,
-   RK3328 support will have to be rebased as well
- - Fixed duplicated num_irqs initializer in imx8mq_vpu_variant
-
-regards
-Philipp
-
-Philipp Zabel (10):
-  rockchip/vpu: rename from rockchip to hantro
-  media: hantro: print video device name in addition to device node
-  media: hantro: add PM runtime resume callback
-  media: hantro: make irq names configurable
-  media: hantro: add support for named register ranges
-  media: hantro: add support for separate control block
-  media: hantro: allow arbitrary number of clocks
-  media: dt-bindings: Document i.MX8MQ and i.MX8MM VPU bindings
-  media: hantro: add initial i.MX8MQ support
-  media: hantro: add initial i.MX8MM support (untested)
-
- .../devicetree/bindings/media/imx8m-vpu.txt   |  56 +++
- MAINTAINERS                                   |   4 +-
- drivers/staging/media/Kconfig                 |   4 +-
- drivers/staging/media/Makefile                |   2 +-
- drivers/staging/media/hantro/Kconfig          |  31 ++
- drivers/staging/media/hantro/Makefile         |  18 +
- .../media/{rockchip/vpu => hantro}/TODO       |   0
- .../vpu/rockchip_vpu.h => hantro/hantro.h}    | 167 ++++---
- .../hantro_drv.c}                             | 335 ++++++-------
- .../media/hantro/hantro_g1_mpeg2_dec.c        | 260 ++++++++++
- drivers/staging/media/hantro/hantro_g1_regs.h | 301 ++++++++++++
- .../staging/media/hantro/hantro_h1_jpeg_enc.c | 125 +++++
- drivers/staging/media/hantro/hantro_h1_regs.h | 154 ++++++
- drivers/staging/media/hantro/hantro_hw.h      | 104 ++++
- .../hantro_jpeg.c}                            |  18 +-
- drivers/staging/media/hantro/hantro_jpeg.h    |  13 +
- .../hantro_mpeg2.c}                           |  14 +-
- .../hantro_v4l2.c}                            | 234 +++++----
- .../hantro_v4l2.h}                            |  16 +-
- drivers/staging/media/hantro/imx8m_vpu_hw.c   | 310 ++++++++++++
- drivers/staging/media/hantro/rk3288_vpu_hw.c  | 187 ++++++++
- .../{rockchip/vpu => hantro}/rk3399_vpu_hw.c  |  77 +--
- .../vpu => hantro}/rk3399_vpu_hw_jpeg_enc.c   |  32 +-
- .../vpu => hantro}/rk3399_vpu_hw_mpeg2_dec.c  |  37 +-
- .../vpu => hantro}/rk3399_vpu_regs.h          |   2 +-
- drivers/staging/media/rockchip/vpu/Kconfig    |  14 -
- drivers/staging/media/rockchip/vpu/Makefile   |  14 -
- .../media/rockchip/vpu/rk3288_vpu_hw.c        | 177 -------
- .../rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c     | 125 -----
- .../rockchip/vpu/rk3288_vpu_hw_mpeg2_dec.c    | 261 -----------
- .../media/rockchip/vpu/rk3288_vpu_regs.h      | 443 ------------------
- .../media/rockchip/vpu/rockchip_vpu_hw.h      | 102 ----
- .../media/rockchip/vpu/rockchip_vpu_jpeg.h    |  14 -
- 33 files changed, 2050 insertions(+), 1601 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/imx8m-vpu.txt
- create mode 100644 drivers/staging/media/hantro/Kconfig
- create mode 100644 drivers/staging/media/hantro/Makefile
- rename drivers/staging/media/{rockchip/vpu => hantro}/TODO (100%)
- rename drivers/staging/media/{rockchip/vpu/rockchip_vpu.h => hantro/hantro.h} (66%)
- rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_drv.c => hantro/hantro_drv.c} (69%)
- create mode 100644 drivers/staging/media/hantro/hantro_g1_mpeg2_dec.c
- create mode 100644 drivers/staging/media/hantro/hantro_g1_regs.h
- create mode 100644 drivers/staging/media/hantro/hantro_h1_jpeg_enc.c
- create mode 100644 drivers/staging/media/hantro/hantro_h1_regs.h
- create mode 100644 drivers/staging/media/hantro/hantro_hw.h
- rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_jpeg.c => hantro/hantro_jpeg.c} (95%)
- create mode 100644 drivers/staging/media/hantro/hantro_jpeg.h
- rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_mpeg2.c => hantro/hantro_mpeg2.c} (79%)
- rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_v4l2.c => hantro/hantro_v4l2.c} (69%)
- rename drivers/staging/media/{rockchip/vpu/rockchip_vpu_v4l2.h => hantro/hantro_v4l2.h} (53%)
- create mode 100644 drivers/staging/media/hantro/imx8m_vpu_hw.c
- create mode 100644 drivers/staging/media/hantro/rk3288_vpu_hw.c
- rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_hw.c (65%)
- rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_hw_jpeg_enc.c (86%)
- rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_hw_mpeg2_dec.c (92%)
- rename drivers/staging/media/{rockchip/vpu => hantro}/rk3399_vpu_regs.h (99%)
- delete mode 100644 drivers/staging/media/rockchip/vpu/Kconfig
- delete mode 100644 drivers/staging/media/rockchip/vpu/Makefile
- delete mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw.c
- delete mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c
- delete mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_mpeg2_dec.c
- delete mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_regs.h
- delete mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_hw.h
- delete mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h
-
+diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
+index d041d36a0805..e8eb747f22ef 100644
+--- a/drivers/staging/media/hantro/hantro.h
++++ b/drivers/staging/media/hantro/hantro.h
+@@ -72,6 +72,8 @@ struct hantro_irq {
+  * @num_irqs:			number of irqs in the array
+  * @clk_names:			array of clock names
+  * @num_clocks:			number of clocks in the array
++ * @reg_names:			array of register range names
++ * @num_regs:			number of register range names in the array
+  */
+ struct hantro_variant {
+ 	unsigned int enc_offset;
+@@ -88,6 +90,8 @@ struct hantro_variant {
+ 	int num_irqs;
+ 	const char *clk_names[HANTRO_MAX_CLOCKS];
+ 	int num_clocks;
++	const char * const *reg_names;
++	int num_regs;
+ };
+ 
+ /**
+@@ -160,7 +164,7 @@ hantro_vdev_to_func(struct video_device *vdev)
+  * @dev:		Pointer to device for convenient logging using
+  *			dev_ macros.
+  * @clocks:		Array of clock handles.
+- * @base:		Mapped address of VPU registers.
++ * @reg_bases:		Mapped addresses of VPU registers.
+  * @enc_base:		Mapped address of VPU encoder register for convenience.
+  * @dec_base:		Mapped address of VPU decoder register for convenience.
+  * @vpu_mutex:		Mutex to synchronize V4L2 calls.
+@@ -178,7 +182,7 @@ struct hantro_dev {
+ 	struct platform_device *pdev;
+ 	struct device *dev;
+ 	struct clk_bulk_data clocks[HANTRO_MAX_CLOCKS];
+-	void __iomem *base;
++	void __iomem **reg_bases;
+ 	void __iomem *enc_base;
+ 	void __iomem *dec_base;
+ 
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index 4ed39728da3d..fc8f3ed8e80c 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -670,6 +670,7 @@ static int hantro_probe(struct platform_device *pdev)
+ 	const struct of_device_id *match;
+ 	struct hantro_dev *vpu;
+ 	struct resource *res;
++	int num_bases;
+ 	int i, ret;
+ 
+ 	vpu = devm_kzalloc(&pdev->dev, sizeof(*vpu), GFP_KERNEL);
+@@ -693,12 +694,23 @@ static int hantro_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	res = platform_get_resource(vpu->pdev, IORESOURCE_MEM, 0);
+-	vpu->base = devm_ioremap_resource(vpu->dev, res);
+-	if (IS_ERR(vpu->base))
+-		return PTR_ERR(vpu->base);
+-	vpu->enc_base = vpu->base + vpu->variant->enc_offset;
+-	vpu->dec_base = vpu->base + vpu->variant->dec_offset;
++	num_bases = vpu->variant->num_regs ?: 1;
++	vpu->reg_bases = devm_kcalloc(&pdev->dev, num_bases,
++				      sizeof(*vpu->reg_bases), GFP_KERNEL);
++	if (!vpu->reg_bases)
++		return -ENOMEM;
++
++	for (i = 0; i < num_bases; i++) {
++		res = vpu->variant->reg_names ?
++		      platform_get_resource_byname(vpu->pdev, IORESOURCE_MEM,
++						   vpu->variant->reg_names[i]) :
++		      platform_get_resource(vpu->pdev, IORESOURCE_MEM, 0);
++		vpu->reg_bases[i] = devm_ioremap_resource(vpu->dev, res);
++		if (IS_ERR(vpu->reg_bases[i]))
++			return PTR_ERR(vpu->reg_bases[i]);
++	}
++	vpu->enc_base = vpu->reg_bases[0] + vpu->variant->enc_offset;
++	vpu->dec_base = vpu->reg_bases[0] + vpu->variant->dec_offset;
+ 
+ 	ret = dma_set_coherent_mask(vpu->dev, DMA_BIT_MASK(32));
+ 	if (ret) {
 -- 
 2.20.1
