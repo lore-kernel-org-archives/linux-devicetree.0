@@ -1,382 +1,93 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 4/4] ARM: dts: Add Avenger96 devicetree support based on STM32MP157A
-Date: Wed, 12 Jun 2019 13:24:51 +0530
-Message-ID: <20190612075451.8643-5-manivannan.sadhasivam@linaro.org>
-References: <20190612075451.8643-1-manivannan.sadhasivam@linaro.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: How to inject fwnode/oftree/acpi data by platform driver ?
+Date: Wed, 12 Jun 2019 11:01:18 +0300
+Message-ID: <20190612080118.GA18301@kuha.fi.intel.com>
+References: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
+ <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612075451.8643-1-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, robh+dt@kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loic.pallardy@st.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree support for Avenger96 board based on STM32MP157A MPU
-from ST Micro. This board is one of the 96Boards Consumer Edition board
-from Arrow Electronics and has the following features:
+Hi,
 
-SoC: STM32MP157AAC
-PMIC: STPMIC1A
-RAM: 1024 Mbyte @ 533MHz
-Storage: eMMC v4.51: 8 Gbyte
-         microSD Socket: UHS-1 v3.01
-Ethernet Port: 10/100/1000 Mbit/s, IEEE 802.3 Compliant
-Wireless: WiFi 5 GHz & 2.4GHz IEEE 802.11a/b/g/n/ac
-          Bluetooth®v4.2 (BR/EDR/BLE)
-USB: 2x Type A (USB 2.0) Host and 1x Micro B (USB 2.0) OTG
-Display: HDMI: WXGA (1366x768)@ 60 fps, HDMI 1.4
-LED: 4x User LED, 1x WiFi LED, 1x BT LED
+On Tue, Jun 11, 2019 at 09:44:23PM +0300, Andy Shevchenko wrote:
+> +Cc: Heikki.
+> Heikki, can you help here with swnodes?
+> 
+> On Sat, Jun 1, 2019 at 5:17 PM Enrico Weigelt, metux IT consult
+> <lkml@metux.net> wrote:
+> >
+> > Hi folks,
+> >
+> >
+> > I'm looking for a way to inject fwnode data from a platform driver,
+> > in order to initialize generic drivers w/ board specific configuration.
+> > The idea is getting rid of passing driver specific pdata structs
+> > (which, IIRC, seem to be deprecated).
+> >
+> > An example usecase is the APUv2/3 board, which have things like gpios
+> > wired to buttons and LEDs. The board can only be detected via DMI
+> > string, no way to probe the platform devices - have to be initialized
+> > explicitly (that's how I'm already doing it now).
+> >
+> > The nicest way, IMHO, would be if I could just write some piece of DTS
+> > and some fancy magic all the rest under the hood. Such thing doesn't
+> > seem to exist yet. Does it make sense to implement that ? How could
+> > we do it ?
+> >
+> > Which other options do we have ?
+> >
+> > Or should we just leave everything as it is and stick w/ pdata structs ?
 
-More information about this board can be found in 96Boards website:
-https://www.96boards.org/product/avenger96/
+The software nodes (drivers/base/swnode.c) were designed to supply
+fwnodes that describe devices in the same way DT does. The goal I had
+with the software nodes was exaclty to get rid of pdata, so they do
+sound like the thing you are looking for. If you check Rafael's latest
+linux-next branch [1], drivers/platform/x86/intel_cht_int33fe.c can be
+used as an example how to use the software nodes.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/stm32mp157a-avenger96.dts | 321 ++++++++++++++++++++
- 2 files changed, 322 insertions(+)
- create mode 100644 arch/arm/boot/dts/stm32mp157a-avenger96.dts
+I think it's time to add documentation for the software nodes to the
+kernel, but I'll list here the features the software nodes have:
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index dab2914fa293..918c85c227b5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -975,6 +975,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
- 	stm32746g-eval.dtb \
- 	stm32h743i-eval.dtb \
- 	stm32h743i-disco.dtb \
-+	stm32mp157a-avenger96.dtb \
- 	stm32mp157a-dk1.dtb \
- 	stm32mp157c-dk2.dtb \
- 	stm32mp157c-ed1.dtb \
-diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-new file mode 100644
-index 000000000000..9d00be78010f
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-@@ -0,0 +1,321 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+/*
-+ * Copyright (C) Linaro Ltd 2019 - All Rights Reserved
-+ * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "stm32mp157c.dtsi"
-+#include "stm32mp157-pinctrl.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/mfd/st,stpmic1.h>
-+
-+/ {
-+	model = "Arrow Electronics STM32MP157A Avenger96 board";
-+	compatible = "arrow,stm32mp157a-avenger96", "st,stm32mp157";
-+
-+	aliases {
-+		ethernet0 = &ethernet0;
-+		mmc0 = &sdmmc1;
-+		serial0 = &uart4;
-+		serial1 = &uart7;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@c0000000 {
-+		device_type = "memory";
-+		reg = <0xc0000000 0x40000000>;
-+	};
-+
-+	led {
-+		compatible = "gpio-leds";
-+		led1 {
-+			label = "green:user1";
-+			gpios = <&gpioz 7 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+
-+		led2 {
-+			label = "green:user2";
-+			gpios = <&gpiof 3 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc0";
-+			default-state = "off";
-+		};
-+
-+		led3 {
-+			label = "green:user3";
-+			gpios = <&gpiog 0 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc1";
-+			default-state = "off";
-+		};
-+
-+		led4 {
-+			label = "green:user3";
-+			gpios = <&gpiog 1 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "none";
-+			default-state = "off";
-+			panic-indicator;
-+		};
-+
-+		led5 {
-+			label = "yellow:wifi";
-+			gpios = <&gpioz 3 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "phy0tx";
-+			default-state = "off";
-+		};
-+
-+		led6 {
-+			label = "blue:bt";
-+			gpios = <&gpioz 6 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "bluetooth-power";
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&ethernet0 {
-+	status = "okay";
-+	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
-+	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
-+	pinctrl-names = "default", "sleep";
-+	phy-mode = "rgmii";
-+	max-speed = <1000>;
-+	phy-handle = <&phy0>;
-+
-+	mdio0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy0: ethernet-phy@7 {
-+			reg = <7>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_b>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_b1 &i2c2_pins_b2>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+};
-+
-+&i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c4_pins_a>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+
-+	pmic: stpmic@33 {
-+		compatible = "st,stpmic1";
-+		reg = <0x33>;
-+		interrupts-extended = <&exti 55 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		status = "okay";
-+
-+		st,main-control-register = <0x04>;
-+		st,vin-control-register = <0xc0>;
-+		st,usb-control-register = <0x30>;
-+
-+		regulators {
-+			compatible = "st,stpmic1-regulators";
-+
-+			ldo1-supply = <&v3v3>;
-+			ldo2-supply = <&v3v3>;
-+			ldo3-supply = <&vdd_ddr>;
-+			ldo5-supply = <&v3v3>;
-+			ldo6-supply = <&v3v3>;
-+			pwr_sw1-supply = <&bst_out>;
-+			pwr_sw2-supply = <&bst_out>;
-+
-+			vddcore: buck1 {
-+				regulator-name = "vddcore";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_ddr: buck2 {
-+				regulator-name = "vdd_ddr";
-+				regulator-min-microvolt = <1350000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd: buck3 {
-+				regulator-name = "vdd";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				st,mask_reset;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			v3v3: buck4 {
-+				regulator-name = "v3v3";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+				regulator-initial-mode = <0>;
-+			};
-+
-+			vdda: ldo1 {
-+				regulator-name = "vdda";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				interrupts = <IT_CURLIM_LDO1 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			v2v8: ldo2 {
-+				regulator-name = "v2v8";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				interrupts = <IT_CURLIM_LDO2 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			vtt_ddr: ldo3 {
-+				regulator-name = "vtt_ddr";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <750000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_usb: ldo4 {
-+				regulator-name = "vdd_usb";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				interrupts = <IT_CURLIM_LDO4 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			vdd_sd: ldo5 {
-+				regulator-name = "vdd_sd";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				interrupts = <IT_CURLIM_LDO5 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-boot-on;
-+			};
-+
-+			v1v8: ldo6 {
-+				regulator-name = "v1v8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				interrupts = <IT_CURLIM_LDO6 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-enable-ramp-delay = <300000>;
-+			};
-+
-+			vref_ddr: vref_ddr {
-+				regulator-name = "vref_ddr";
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			bst_out: boost {
-+				regulator-name = "bst_out";
-+				interrupts = <IT_OCP_BOOST 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			vbus_otg: pwr_sw1 {
-+				regulator-name = "vbus_otg";
-+				interrupts = <IT_OCP_OTG 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-active-discharge;
-+			};
-+
-+			vbus_sw: pwr_sw2 {
-+				regulator-name = "vbus_sw";
-+				interrupts = <IT_OCP_SWOUT 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-active-discharge;
-+			};
-+		};
-+
-+		onkey {
-+			compatible = "st,stpmic1-onkey";
-+			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 1>;
-+			interrupt-names = "onkey-falling", "onkey-rising";
-+			status = "okay";
-+		};
-+
-+		watchdog {
-+			compatible = "st,stpmic1-wdt";
-+			status = "disabled";
-+		};
-+	};
-+};
-+
-+&iwdg2 {
-+	timeout-sec = <32>;
-+	status = "okay";
-+};
-+
-+&rng1 {
-+	status = "okay";
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&sdmmc1 {
-+	pinctrl-names = "default", "opendrain", "sleep";
-+	pinctrl-0 = <&sdmmc1_b4_pins_a &sdmmc1_dir_pins_a>;
-+	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
-+	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
-+	broken-cd;
-+	st,sig-dir;
-+	st,neg-edge;
-+	st,use-ckin;
-+	bus-width = <4>;
-+	vmmc-supply = <&vdd_sd>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	/* On Low speed expansion header */
-+	label = "LS-UART1";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_pins_b>;
-+	status = "okay";
-+};
-+
-+&uart7 {
-+	/* On Low speed expansion header */
-+	label = "LS-UART0";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart7_pins_a>;
-+	status = "okay";
-+};
+- The software nodes are created independently from device entries.
+- Software nodes support hierarchy. Every software node has a pointer
+  to a parent software node.
+- Software nodes can have device properties.
+- Software nodes can have reference pointers to other software nodes
+  (outside of the hierarchy).
+
+Creating the software nodes from static description (struct
+software_node - available from Linux kernel v5.3 onwards) is
+straightforward. Once you have them, when you create your device
+entries (struct device), you can associate a software node with a
+device just like like any other fwnode:
+
+        device_initialize(&my_dev);
+        my_dev.parent = parent;
+        my_dev.fwnode = software_node_fwnode(&my_node);
+        ...
+        device_add(&my_device);
+
+After that, you can access all the information the software nodes
+supply to the device by using fwnode_* APIs from your driver, just
+like with ACPI or DT. Basically the entire fwnode_* API is now
+supported with softwarw nodes, except the device graph (fwnode_graph*)
+API.
+
+One final note. The hardware description must always primarily come
+from the system firmware. You only use software nodes if it's too
+late to influence what goes to the ACPI tables, or if using DTS is not
+an option.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
+
+thanks,
+
 -- 
-2.17.1
+heikki
