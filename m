@@ -1,40 +1,65 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v15 0/7] support ROHM BD70528 PMIC
-Date: Wed, 12 Jun 2019 07:03:28 +0100
-Message-ID: <20190612060328.GQ4797@dell>
-References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
- <20190611200043.eib3g3acc7ilawsx@earth.universe>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: imx: Add pinctrl binding doc for i.MX8MN
+Date: Wed, 12 Jun 2019 14:05:29 +0800
+Message-ID: <20190612060522.GB11086@dragon>
+References: <20190530030546.9224-1-Anson.Huang@nxp.com>
+ <CACRpkdY-35o378Ka+4bgeSPjmq6P8DM872sgTxq2X3dDP9XZHQ@mail.gmail.com>
+ <AM0PR04MB421171336B9206D02FF6514080ED0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190611200043.eib3g3acc7ilawsx@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+In-Reply-To: <AM0PR04MB421171336B9206D02FF6514080ED0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Leonard Crestez <leonard.crestez@nxp.com>, Fabio Estevam <festevam@gmail.com>, Anson Huang <anson.huang@nxp.com>, Olof Johansson <olof@lixom.net>, Jagan Teki <jagan@amarulasolutions.com>, dl-linux-imx <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinh
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Jun 2019, Sebastian Reichel wrote:
-
-> Hi,
+On Tue, Jun 11, 2019 at 10:00:36AM +0000, Aisheng Dong wrote:
+> > From: Linus Walleij [mailto:linus.walleij@linaro.org]
+> > Sent: Saturday, June 8, 2019 5:04 AM
+> > 
+> > On Thu, May 30, 2019 at 5:04 AM <Anson.Huang@nxp.com> wrote:
+> > 
+> > > From: Anson Huang <Anson.Huang@nxp.com>
+> > >
+> > > Add binding doc for i.MX8MN pinctrl driver.
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > 
+> > Looks mostly OK to me, but I'd like the maintainers to review, so Dong et al
+> > please look at this!
+> > 
+> > > +Required properties:
+> > > +- compatible: "fsl,imx8mn-iomuxc"
+> > 
+> > So should this not be "nxp,imx8mn-iomuxc"
+> > or "nxp,freescale-imx8mn-iomuxc" or something these days? The vendor name
+> > is nxp is it not.
+> > 
+> > I was complaining to the DT maintainers at one point that these companies
+> > seem to buy each other left and right so this vendor nomenclature is dubious,
+> > but I guess at least it should reflect the vendor that produced the chip or
+> > something.
+> > 
+> > If everyone is happy with "fsl,*" I will not complain though.
+> > (i.e. if the maintainers ACK it.)
 > 
-> On Mon, Jun 03, 2019 at 10:23:37AM +0300, Matti Vaittinen wrote:
-> > Patch series introducing support for ROHM BD70528 PMIC
-> > [...]
-> 
-> I think all patches have been reviewed by the respective subsystem
-> maintainers. Lee, can you provide an immutable branch with the MFD
-> patches (1, 2, 4)? Looks like the other patches only depend on those
-> and can go through their respective subsystems.
+> We preferred to keep "fsl,*" for Freescale i.MX product line according to last discussion.
+> And we already did this way for most i.MX devices.
 
-Yes.  It's on my TODO list.
++1
 
-Would you prefer this method over me just taking them all and sending
-out a PR?  The latter is my usual flow, but I'm happy with either.
+We do not see serious problem with 'fsl' prefix, so would rather stay
+with it.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Shawn
