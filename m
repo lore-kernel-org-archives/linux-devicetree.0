@@ -1,44 +1,26 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 3/5] dt-bindings: usb: mtk-xhci: add an optional xhci_ck clock
-Date: Wed, 12 Jun 2019 13:55:19 +0800
-Message-ID: <9b6ad8dee142d73b56d653ecb7475c4ed28e5eb8.1560246390.git.chunfeng.yun@mediatek.com>
-References: <5e06482a0be15476c7b5825f155accf98275afa8.1560246390.git.chunfeng.yun@mediatek.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: ls1028a: Fix CPU idle fail.
+Date: Wed, 12 Jun 2019 13:58:53 +0800
+Message-ID: <20190612054716.GA11086@dragon>
+References: <20190517045753.3709-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5e06482a0be15476c7b5825f155accf98275afa8.1560246390.git.chunfeng.yun@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20190517045753.3709-1-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Jumin Li <jumin.li@mediatek.com>
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new optional clock xhci_ck
+On Fri, May 17, 2019 at 12:57:53PM +0800, Ran Wang wrote:
+> PSCI spec define 1st parameter's bit 16 of function CPU_SUSPEND to
+> indicate CPU State Type: 0 for standby, 1 for power down. In this
+> case, we want to select standby for CPU idle feature. But current
+> setting wrongly select power down and cause CPU SUSPEND fail every
+> time. Need this fix.
+> 
+> Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-index 266c2d917a28..91c0704b586b 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-@@ -29,6 +29,7 @@ Required properties:
- 	"sys_ck": controller clock used by normal mode,
- 	the following ones are optional:
- 	"ref_ck": reference clock used by low power mode etc,
-+	"xhci_ck": controller clock,
- 	"mcu_ck": mcu_bus clock for register access,
- 	"dma_ck": dma_bus clock for data transfer by DMA
- 
-@@ -100,7 +101,7 @@ Required properties:
-  - clocks : a list of phandle + clock-specifier pairs, one for each
- 	entry in clock-names
-  - clock-names : must contain "sys_ck", and the following ones are optional:
--	"ref_ck", "mcu_ck" and "dma_ck"
-+	"ref_ck", "xhci_ck", "mcu_ck" and "dma_ck"
- 
- Optional properties:
-  - vbus-supply : reference to the VBUS regulator;
--- 
-2.21.0
+Applied, thanks.
