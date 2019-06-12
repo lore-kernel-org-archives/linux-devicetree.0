@@ -1,76 +1,138 @@
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: [PATCH v6 3/3] arm64: kexec_file: add rng-seed support
-Date: Wed, 12 Jun 2019 12:33:02 +0800
-Message-ID: <20190612043258.166048-4-hsinyi@chromium.org>
-References: <20190612043258.166048-1-hsinyi@chromium.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v9 1/4] dt-bindings: soc: qcom: Add AOSS QMP binding
+Date: Tue, 11 Jun 2019 21:45:33 -0700
+Message-ID: <20190612044536.13940-2-bjorn.andersson@linaro.org>
+References: <20190612044536.13940-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612043258.166048-1-hsinyi@chromium.org>
+In-Reply-To: <20190612044536.13940-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, Hsin-Yi Wang <hsinyi@chromium.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adding "rng-seed" to dtb. It's fine to add this property if original
-fdt doesn't contain it. Since original seed will be wiped after
-read, so use a default size 128 bytes here.
+Add binding for the QMP based side-channel communication mechanism to
+the AOSS, which is used to control resources not exposed through the
+RPMh interface.
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-change log v5->v6:
-* no change
----
- arch/arm64/kernel/machine_kexec_file.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 58871333737a..d40fde72a023 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -27,6 +27,8 @@
- #define FDT_PROP_INITRD_END	"linux,initrd-end"
- #define FDT_PROP_BOOTARGS	"bootargs"
- #define FDT_PROP_KASLR_SEED	"kaslr-seed"
-+#define FDT_PROP_RNG_SEED	"rng-seed"
-+#define RNG_SEED_SIZE		128
- 
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 	&kexec_image_ops,
-@@ -102,6 +104,23 @@ static int setup_dtb(struct kimage *image,
- 				FDT_PROP_KASLR_SEED);
- 	}
- 
-+	/* add rng-seed */
-+	if (rng_is_initialized()) {
-+		void *rng_seed = kmalloc(RNG_SEED_SIZE, GFP_ATOMIC);
-+		get_random_bytes(rng_seed, RNG_SEED_SIZE);
+Changes since v8:
+- None
+
+ .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 81 +++++++++++++++++++
+ include/dt-bindings/power/qcom-aoss-qmp.h     | 14 ++++
+ 2 files changed, 95 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+ create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+new file mode 100644
+index 000000000000..954ffee0a9c4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+@@ -0,0 +1,81 @@
++Qualcomm Always-On Subsystem side channel binding
 +
-+		ret = fdt_setprop(dtb, off, FDT_PROP_RNG_SEED, rng_seed,
-+				RNG_SEED_SIZE);
-+		kfree(rng_seed);
++This binding describes the hardware component responsible for side channel
++requests to the always-on subsystem (AOSS), used for certain power management
++requests that is not handled by the standard RPMh interface. Each client in the
++SoC has it's own block of message RAM and IRQ for communication with the AOSS.
++The protocol used to communicate in the message RAM is known as Qualcomm
++Messaging Protocol (QMP)
 +
-+		if (ret)
-+			goto out;
++The AOSS side channel exposes control over a set of resources, used to control
++a set of debug related clocks and to affect the low power state of resources
++related to the secondary subsystems. These resources are exposed as a set of
++power-domains.
 +
-+	} else {
-+		pr_notice("RNG is not initialised: omitting \"%s\" property\n",
-+				FDT_PROP_RNG_SEED);
-+	}
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be "qcom,sdm845-aoss-qmp"
 +
- out:
- 	if (ret)
- 		return (ret == -FDT_ERR_NOSPACE) ? -ENOMEM : -EINVAL;
-@@ -110,7 +129,8 @@ static int setup_dtb(struct kimage *image,
- }
- 
- /*
-- * More space needed so that we can add initrd, bootargs and kaslr-seed.
-+ * More space needed so that we can add initrd, bootargs, kaslr-seed, and
-+ * rng-seed.
-  */
- #define DTB_EXTRA_SPACE 0x1000
- 
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the base address and size of the message RAM for this
++		    client's communication with the AOSS
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the AOSS message IRQ for this client
++
++- mboxes:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: reference to the mailbox representing the outgoing doorbell
++		    in APCS for this client, as described in mailbox/mailbox.txt
++
++- #clock-cells:
++	Usage: optional
++	Value type: <u32>
++	Definition: must be 0
++		    The single clock represents the QDSS clock.
++
++- #power-domain-cells:
++	Usage: optional
++	Value type: <u32>
++	Definition: must be 1
++		    The provided power-domains are:
++		    CDSP state (0), LPASS state (1), modem state (2), SLPI
++		    state (3), SPSS state (4) and Venus state (5).
++
++= SUBNODES
++The AOSS side channel also provides the controls for three cooling devices,
++these are expressed as subnodes of the QMP node. The name of the node is used
++to identify the resource and must therefor be "cx", "mx" or "ebi".
++
++- #cooling-cells:
++	Usage: optional
++	Value type: <u32>
++	Definition: must be 2
++
++= EXAMPLE
++
++The following example represents the AOSS side-channel message RAM and the
++mechanism exposing the power-domains, as found in SDM845.
++
++  aoss_qmp: qmp@c300000 {
++	  compatible = "qcom,sdm845-aoss-qmp";
++	  reg = <0x0c300000 0x100000>;
++	  interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
++	  mboxes = <&apss_shared 0>;
++
++	  #power-domain-cells = <1>;
++
++	  cx_cdev: cx {
++		#cooling-cells = <2>;
++	  };
++
++	  mx_cdev: mx {
++		#cooling-cells = <2>;
++	  };
++  };
+diff --git a/include/dt-bindings/power/qcom-aoss-qmp.h b/include/dt-bindings/power/qcom-aoss-qmp.h
+new file mode 100644
+index 000000000000..ec336d31dee4
+--- /dev/null
++++ b/include/dt-bindings/power/qcom-aoss-qmp.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (c) 2018, Linaro Ltd. */
++
++#ifndef __DT_BINDINGS_POWER_QCOM_AOSS_QMP_H
++#define __DT_BINDINGS_POWER_QCOM_AOSS_QMP_H
++
++#define AOSS_QMP_LS_CDSP		0
++#define AOSS_QMP_LS_LPASS	1
++#define AOSS_QMP_LS_MODEM	2
++#define AOSS_QMP_LS_SLPI		3
++#define AOSS_QMP_LS_SPSS		4
++#define AOSS_QMP_LS_VENUS	5
++
++#endif
 -- 
-2.20.1
+2.18.0
