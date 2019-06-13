@@ -1,8 +1,8 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 3/6] ARM: dts: imx6ul: Enable SNVS power key according to
+Subject: [PATCH 4/6] ARM: dts: imx6sll: Enable SNVS power key according to
  board design
-Date: Thu, 13 Jun 2019 11:35:24 +0800
-Message-ID: <20190613033527.40555-3-Anson.Huang@nxp.com>
+Date: Thu, 13 Jun 2019 11:35:25 +0800
+Message-ID: <20190613033527.40555-4-Anson.Huang@nxp.com>
 References: <20190613033527.40555-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -30,36 +30,36 @@ wired up.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/imx6ul-14x14-evk.dtsi | 4 ++++
- arch/arm/boot/dts/imx6ul.dtsi           | 1 +
+ arch/arm/boot/dts/imx6sll-evk.dts | 4 ++++
+ arch/arm/boot/dts/imx6sll.dtsi    | 1 +
  2 files changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-index 9207d5d..cbe61b6 100644
---- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-@@ -238,6 +238,10 @@
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
+index 78809ea..61aa074 100644
+--- a/arch/arm/boot/dts/imx6sll-evk.dts
++++ b/arch/arm/boot/dts/imx6sll-evk.dts
+@@ -269,6 +269,10 @@
+ 	vin-supply = <&sw2_reg>;
  };
  
 +&snvs_pwrkey {
 +	status = "okay";
 +};
 +
- &tsc {
+ &uart1 {
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_tsc>;
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index fc388b8..0c51439 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -650,6 +650,7 @@
+ 	pinctrl-0 = <&pinctrl_uart1>;
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index 1b4899f..4384023 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -576,6 +576,7 @@
  					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
  					linux,keycode = <KEY_POWER>;
  					wakeup-source;
 +					status = "disabled";
  				};
+ 			};
  
- 				snvs_lpgpr: snvs-lpgpr {
 -- 
 2.7.4
