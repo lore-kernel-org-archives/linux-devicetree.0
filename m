@@ -1,14 +1,21 @@
-From: Erwan Le Ray <erwan.leray@st.com>
-Subject: [PATCH v3 10/10] ARM: dts: stm32: add wakeup capability on each
- usart/uart on stm32mp157c
-Date: Thu, 13 Jun 2019 15:50:00 +0200
-Message-ID: <1560433800-12255-11-git-send-email-erwan.leray@st.com>
-References: <1560433800-12255-1-git-send-email-erwan.leray@st.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: Re: [PATCH 2/5] clocksource/drivers/timer-microchip-pit64b: add
+ Microchip PIT64B support
+Date: Thu, 13 Jun 2019 14:12:53 +0000
+Message-ID: <5e3d783e-7bcc-64c1-c814-eaf99a6aa205@microchip.com>
+References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
+ <1552580772-8499-3-git-send-email-claudiu.beznea@microchip.com>
+ <a738fce5-1108-34d7-d255-dfcb86f51c56@linaro.org>
+ <20190408121141.GK7480@piout.net>
+ <88ab46de-c3b6-6dd2-3fa2-f2d0075e969f@microchip.com>
+ <7267f37b-4f80-97e3-7a8e-bc1a9a28b995@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1560433800-12255-1-git-send-email-erwan.leray@st.com>
+In-Reply-To: <7267f37b-4f80-97e3-7a8e-bc1a9a28b995@linaro.org>
+Content-Language: en-US
+Content-ID: <AD599551A64A914392D310BA074C0663@namprd11.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,122 +25,84 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre
- Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>, linux-serial@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+To: daniel.lezcano@linaro.org, alexandre.belloni@bootlin.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, tglx@linutronix.de, arnd.bergmann@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-- Mark all usart/uart devices as wakeup source.
-- Identify all dedicated interrupts with a specific interrupt name (either
- "event" or "wakeup").
-- add interrupts-extended wakeup interrupt
+Hi Daniel,
 
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+On 31.05.2019 13:41, Daniel Lezcano wrote:
+> 
+> Hi Claudiu,
+> 
+> 
+> On 30/05/2019 09:46, Claudiu.Beznea@microchip.com wrote:
+>> Hi Daniel,
+>>
+>> Taking into account the discussion on this tread and the fact that we have
+>> no answer from Rob on this topic (I'm talking about [1]), what do you think
+>> it would be best for this driver to be accepted the soonest? Would it be OK
+>> for you to mimic the approach done by:
+>>
+>> drivers/clocksource/timer-integrator-ap.c
+>>
+>> with the following bindings in DT:
+>>
+>> aliases {
+>> 	arm,timer-primary = &timer2;
+>> 	arm,timer-secondary = &timer1;
+>> };
+>>
+>> also in PIT64B driver?
+>>
+>> Or do you think re-spinning the Alexandre's patches at [2] (which seems to
+>> me like the generic way to do it) would be better?
+> 
+> This hardware / OS connection problem is getting really annoying for
+> everyone and this pattern is repeating itself since several years. It is
+> time we fix it properly.
+> 
+> The first solution looks hackish from my POV. The second approach looks
+> nicer and generic as you say. So I would vote for [2]
+> flagging approach proposed by Mark [3].
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 2afeee6..de5b1bf 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -395,32 +395,44 @@
- 		usart2: serial@4000e000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x4000e000 0x400>;
--			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "event", "wakeup";
-+			interrupts-extended = <&intc GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&exti 27 1>;
- 			clocks = <&rcc USART2_K>;
-+			wakeup-source;
- 			status = "disabled";
- 		};
- 
- 		usart3: serial@4000f000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x4000f000 0x400>;
--			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "event", "wakeup";
-+			interrupts-extended = <&intc GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&exti 28 1>;
- 			clocks = <&rcc USART3_K>;
-+			wakeup-source;
- 			status = "disabled";
- 		};
- 
- 		uart4: serial@40010000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x40010000 0x400>;
--			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "event", "wakeup";
-+			interrupts-extended = <&intc GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&exti 30 1>;
- 			clocks = <&rcc UART4_K>;
-+			wakeup-source;
- 			status = "disabled";
- 		};
- 
- 		uart5: serial@40011000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x40011000 0x400>;
--			interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "event", "wakeup";
-+			interrupts-extended = <&intc GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&exti 31 1>;
- 			clocks = <&rcc UART5_K>;
-+			wakeup-source;
- 			status = "disabled";
- 		};
- 
-@@ -512,16 +524,22 @@
- 		uart7: serial@40018000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x40018000 0x400>;
--			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "event", "wakeup";
-+			interrupts-extended = <&intc GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&exti 32 1>;
- 			clocks = <&rcc UART7_K>;
-+			wakeup-source;
- 			status = "disabled";
- 		};
- 
- 		uart8: serial@40019000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x40019000 0x400>;
--			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "event", "wakeup";
-+			interrupts-extended = <&intc GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&exti 33 1>;
- 			clocks = <&rcc UART8_K>;
-+			wakeup-source;
- 			status = "disabled";
- 		};
- 
-@@ -588,8 +606,11 @@
- 		usart6: serial@44003000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x44003000 0x400>;
--			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "event", "wakeup";
-+			interrupts-extended = <&intc GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&exti 29 1>;
- 			clocks = <&rcc USART6_K>;
-+			wakeup-source;
- 			status = "disabled";
- 		};
- 
-@@ -1201,8 +1222,11 @@
- 		usart1: serial@5c000000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x5c000000 0x400>;
--			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "event", "wakeup";
-+			interrupts-extended = <&intc GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&exti 26 1>;
- 			clocks = <&rcc USART1_K>;
-+			wakeup-source;
- 			status = "disabled";
- 		};
- 
--- 
-1.9.1
+With this flagging approach this would mean a kind unification of
+clocksource and clockevent functionalities under a single one, right? So
+that the driver would register to the above layers only one device w/ 2
+functionalities (clocksource and clockevent)? Please correct me if I'm
+wrong? If so, from my point of view this would require major re-working of
+clocksource and clockevent subsystems. Correctly if I wrongly understood,
+please.
+
+At the moment we register different functionalities (clocksource and
+clockevent) to the above layers for hardware blocks (e.g. with
+clocksource_register_hz() or clockevents_config_and_register()). If
+hardware can support clocksource and clockevent we register both these
+functionalities, if only one is supported we register only one of these.
+The above layers would choose the best clocksource/clockevent device from
+the available ones based on rating field for each clocksource/clockevent we
+register. In all this current behavior I don't see how these flags would
+interact with clocksource/clockevent subsystem. Could you please let me
+know how do you see these and the way these new flags would interact with
+the layers above the drivers?
+
+Thank you,
+Claudiu Beznea
+
+> 
+> I added Arnd in Cc in order to have its opinion.
+> 
+> [3]
+> https://lore.kernel.org/lkml/20171215113242.skmh5nzr7wqdmvnw@lakrids.cambridge.arm.com/
+> 
+>> [1]
+>> https://lore.kernel.org/lkml/20190408151155.20279-1-alexandre.belloni@bootlin.com/#t
+>> [2]
+>> https://lore.kernel.org/lkml/20171213185313.20017-1-alexandre.belloni@free-electrons.com/
+>>
+> 
+> 
+> 
+> 
+> 
+> 
