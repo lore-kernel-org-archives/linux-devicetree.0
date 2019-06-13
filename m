@@ -1,93 +1,185 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Update DWC3 modules on RK3399 SoCs
-Date: Thu, 13 Jun 2019 19:20:46 +0200
-Message-ID: <a685fef9-8f45-700c-17d6-59d792fca092@collabora.com>
-References: <20190613162745.12195-1-enric.balletbo@collabora.com>
- <40d2260f-3925-acdc-eb02-8abb972f1056@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/4] regulator: Add labibb driver
+Date: Thu, 13 Jun 2019 18:25:18 +0100
+Message-ID: <20190613172518.GN5316@sirena.org.uk>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+ <1560337252-27193-4-git-send-email-nishakumari@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <40d2260f-3925-acdc-eb02-8abb972f1056@arm.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Felipe Balbi <felipe.balbi@linux.intel.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Viresh Kumar <viresh.kumar@linaro.org>, Randy Li <ayaka@soulik.info>, linux-kernel@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>, linux-rockchip@lists.infradead.org, Tony Xie <tony.xie@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Rob Herring <robh+dt@kernel.org>, Collabora Kernel ML <kernel@collabora.com>, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tpyx7gKuSYt+mjHM"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1560337252-27193-4-git-send-email-nishakumari@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nisha Kumari <nishakumari@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, david.brown@linaro.org, linux-kernel@vger.kernel.org, kgunda@codeaurora.org, rnayak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iaW4sCgpPbiAxMy82LzE5IDE4OjU2LCBSb2JpbiBNdXJwaHkgd3JvdGU6Cj4gT24gMTMv
-MDYvMjAxOSAxNzoyNywgRW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSB3cm90ZToKPj4gQXMgcGVyIGJp
-bmRpbmcgZG9jdW1lbnRhdGlvbiBbMV0sIHRoZSBEV0MzIGNvcmUgc2hvdWxkIGhhdmUgdGhlICJy
-ZWYiLAo+PiAiYnVzX2Vhcmx5IiBhbmQgInN1c3BlbmQiIGNsb2Nrcy4gQXMgZXhwbGFpbmVkIGlu
-IHRoZSBiaW5kaW5nLCB0aG9zZQo+PiBjbG9ja3MgYXJlIHJlcXVpcmVkIGZvciBuZXcgcGxhdGZv
-cm1zIGJ1dCBub3QgZm9yIGV4aXN0aW5nIHBsYXRmb3Jtcwo+PiBiZWZvcmUgY29tbWl0IGZlOGFi
-ZjMzMmI4ZiAoInVzYjogZHdjMzogc3VwcG9ydCBjbG9ja3MgYW5kIHJlc2V0cyBmb3IKPj4gRFdD
-MyBjb3JlIikuCj4+Cj4+IEhvd2V2ZXIsIGFzIHRob3NlIGNsb2NrcyBhcmUgcmVhbGx5IHRyZWF0
-ZWQgYXMgcmVxdWlyZWQsIHRoaXMgZW5kcyB3aXRoCj4+IGhhdmluZyBzb21lIGFubm95aW5nIG1l
-c3NhZ2VzIHdoZW4gdGhlICJyb2NrY2hpcCxyazMzOTktZHdjMyIgaXMgdXNlZDoKPj4KPj4gW8Kg
-wqDCoCAxLjcyNDEwN10gZHdjMyBmZTgwMDAwMC5kd2MzOiBGYWlsZWQgdG8gZ2V0IGNsayAncmVm
-JzogLTIKPj4gW8KgwqDCoCAxLjczMTg5M10gZHdjMyBmZTkwMDAwMC5kd2MzOiBGYWlsZWQgdG8g
-Z2V0IGNsayAncmVmJzogLTIKPj4gW8KgwqDCoCAyLjQ5NTkzN10gZHdjMyBmZTgwMDAwMC5kd2Mz
-OiBGYWlsZWQgdG8gZ2V0IGNsayAncmVmJzogLTIKPj4gW8KgwqDCoCAyLjY0NzIzOV0gZHdjMyBm
-ZTkwMDAwMC5kd2MzOiBGYWlsZWQgdG8gZ2V0IGNsayAncmVmJzogLTIKPj4KPj4gSW4gb3JkZXIg
-dG8gcmVtb3ZlIHRob3NlIGFubm95aW5nIG1lc3NhZ2VzLCB1cGRhdGUgdGhlIERXQzMgaGFyZHdh
-cmUKPj4gbW9kdWxlIG5vZGUgYW5kIGFkZCBhbGwgdGhlIHJlcXVpcmVkIGNsb2Nrcy4gV2l0aCB0
-aGlzIGNoYW5nZSwgYm90aCwgdGhlCj4+IGdsdWUgbm9kZSBhbmQgdGhlIERXQzMgY29yZSBub2Rl
-LCBoYXZlIHRoZSBjbG9ja3MgZGVmaW5lZCwgYnV0IHRoYXQncwo+PiBub3QgcmVhbGx5IGEgcHJv
-YmxlbSBhbmQgdGhlcmUgaXNuJ3QgYSBzaWRlIGVmZmVjdCBvbiBkbyB0aGlzLiBTbywgd2UKPj4g
-Y2FuIGdldCByaWQgb2YgdGhlIGFubm95aW5nIGdldCBjbGsgZXJyb3IgbWVzc2FnZXMuCj4gCj4g
-Q2FuIHdlIG5vdCBqdXN0IG1vdmUgdGhlc2UgY2xvY2tzIGVudGlyZWx5IGZyb20gdGhlIGdsdWUg
-bGF5ZXIgdG8gdGhlIGNvcmUKPiBsYXllcj8gVGhhdCBkaWRuJ3Qgc2VlbSB0byBicmVhayB3aGVu
-IEkgdHJpZWQgaXQsIGFsdGhvdWdoIEknbGwgYWRtaXQgbXkKPiAndGVzdGluZycgd2FzIG5vIG1v
-cmUgdGhhbiBib290aW5nIGFuZCBtb3VudGluZyBhIFVTQiAzLjAgZmxhc2ggZHJpdmUsIG5vCj4g
-c3VzcGVuZCBvciBhbnl0aGluZyBmYW5jeS4KPiAKCkFGQUlDVCB1c2IgZG9lc24ndCBicmVhaywg
-YnV0IHdlIHdvbid0IGJyZWFrIGJhY2t3YXJkIGNvbXBhYmlsaXR5IHRoZW4/ICgvbWUKc3RpbGwg
-ZG9lc24ndCBrbm93IHdoZW4gYmFja3dhcmQgY29tcGFiaWxpdHkgaXMgcmVhbGx5IGltcG9ydGFu
-dCBvciBub3QpCgo+IE15IG93biBhdHRlbXB0IHRvIHNodXQgdXAgdGhlc2UgZXJyb3JzIGdvdCBz
-aWRldHJhY2tlZCBpbnRvIGMwYzYxNDcxZWY4NiAoInVzYjoKPiBkd2MzOiBvZi1zaW1wbGU6IENv
-bnZlcnQgdG8gYnVsayBjbGsgQVBJIiksIHRoZW4gYXBwYXJlbnRseSBzdGFsbGVkIDopCj4gCgpU
-aGVyZSB3YXMgYW55IG9mZiB0aGUgcmVjb3JkIGRpc2N1c3Npb24gYW5kIHN0YWxsZWQgb3Igc2lt
-cGx5IHlvdSBkaWRuJ3QgZ2V0CmZlZWRiYWNrPwoKSSdsbCB0YWtlIGEgbG9vay4KClRoYW5rcywK
-fiBFbnJpYwoKPiBSb2Jpbi4KPiAKPj4KPj4gWzFdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy91c2IvZHdjMy50eHQKPj4KPj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFsbGV0Ym8g
-aSBTZXJyYSA8ZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4KPj4gLS0tCj4+Cj4+IMKgIGFy
-Y2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LmR0c2kgfCA2ICsrKysrKwo+PiDCoCAx
-IGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNpCj4+IGIvYXJjaC9hcm02NC9ib290L2R0
-cy9yb2NrY2hpcC9yazMzOTkuZHRzaQo+PiBpbmRleCAxOTZhYzliNzgwNzYuLmExNTM0OGQxODVj
-ZSAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkuZHRz
-aQo+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNpCj4+IEBA
-IC00MTQsNiArNDE0LDkgQEAKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJs
-ZSA9ICJzbnBzLGR3YzMiOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWcgPSA8MHgw
-IDB4ZmU4MDAwMDAgMHgwIDB4MTAwMDAwPjsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-aW50ZXJydXB0cyA9IDxHSUNfU1BJIDEwNSBJUlFfVFlQRV9MRVZFTF9ISUdIIDA+Owo+PiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBjbG9ja3MgPSA8JmNydSBTQ0xLX1VTQjNPVEcwX1JFRj4sIDwm
-Y3J1IEFDTEtfVVNCM09URzA+LAo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-PCZjcnUgU0NMS19VU0IzT1RHMF9TVVNQRU5EPjsKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-Y2xvY2stbmFtZXMgPSAicmVmIiwgImJ1c19lYXJseSIsICJzdXNwZW5kIjsKPj4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgZHJfbW9kZSA9ICJvdGciOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCBwaHlzID0gPCZ1MnBoeTBfb3RnPiwgPCZ0Y3BoeTBfdXNiMz47Cj4+IMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIHBoeS1uYW1lcyA9ICJ1c2IyLXBoeSIsICJ1c2IzLXBoeSI7Cj4+
-IEBAIC00NDcsNiArNDUwLDkgQEAKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29tcGF0
-aWJsZSA9ICJzbnBzLGR3YzMiOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWcgPSA8
-MHgwIDB4ZmU5MDAwMDAgMHgwIDB4MTAwMDAwPjsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDExMCBJUlFfVFlQRV9MRVZFTF9ISUdIIDA+Owo+PiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjbG9ja3MgPSA8JmNydSBTQ0xLX1VTQjNPVEcxX1JFRj4s
-IDwmY3J1IEFDTEtfVVNCM09URzE+LAo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgPCZjcnUgU0NMS19VU0IzT1RHMV9TVVNQRU5EPjsKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgY2xvY2stbmFtZXMgPSAicmVmIiwgImJ1c19lYXJseSIsICJzdXNwZW5kIjsKPj4gwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgZHJfbW9kZSA9ICJvdGciOwo+PiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBwaHlzID0gPCZ1MnBoeTFfb3RnPiwgPCZ0Y3BoeTFfdXNiMz47Cj4+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBoeS1uYW1lcyA9ICJ1c2IyLXBoeSIsICJ1c2IzLXBoeSI7
-Cj4+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+
+--tpyx7gKuSYt+mjHM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 12, 2019 at 04:30:51PM +0530, Nisha Kumari wrote:
+
+> +static int qcom_labibb_read(struct qcom_labibb *labibb, u16 address,
+> +			    u8 *val, int count)
+> +{
+> +	int ret;
+> +
+> +	ret =3D regmap_bulk_read(labibb->regmap, address, val, count);
+> +	if (ret < 0)
+> +		dev_err(labibb->dev, "spmi read failed ret=3D%d\n", ret);
+> +
+> +	return ret;
+> +}
+
+This (and the write function) are utterly trivial wrappers around the
+corresponding regmap functions...
+
+> +static int qcom_labibb_masked_write(struct qcom_labibb *labibb, u16 addr=
+ess,
+> +				    u8 mask, u8 val)
+> +{
+> +	int ret;
+> +
+> +	ret =3D regmap_update_bits(labibb->regmap, address, mask, val);
+> +	if (ret < 0)
+> +		dev_err(labibb->dev, "spmi write failed: ret=3D%d\n", ret);
+> +
+> +	return ret;
+> +}
+
+=2E..as is this but it changes the name for some reason.
+
+> +static int qcom_enable_ibb(struct qcom_labibb *labibb, bool enable)
+> +{
+> +	int ret;
+> +	u8 val =3D enable ? IBB_CONTROL_ENABLE : 0;
+
+Please write normal conditional statements, it makes things easier to
+read.  Though this function is so trivial it seems better to just inline
+it into the callers.
+
+> +static int qcom_lab_regulator_enable(struct regulator_dev *rdev)
+> +{
+> +	int ret;
+> +	u8 val;
+> +	struct qcom_labibb *labibb  =3D rdev_get_drvdata(rdev);
+> +
+> +	val =3D LAB_ENABLE_CTL_EN;
+> +	ret =3D qcom_labibb_write(labibb,
+> +				labibb->lab_base + REG_LAB_ENABLE_CTL,
+> +				&val, 1);
+
+Why not just use regmap_write()?  It'd be clearer.
+
+> +	labibb->lab_vreg.vreg_enabled =3D 1;
+
+What function does this serve?  It never seems to be read.
+
+> +	ret =3D qcom_labibb_write(labibb,
+> +				labibb->lab_base + REG_LAB_ENABLE_CTL,
+> +				&val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Write register failed ret =3D %d\n", ret);
+> +		return ret;
+> +	}
+> +	/* after this delay, lab should get disabled */
+> +	usleep_range(POWER_DELAY, POWER_DELAY + 100);
+> +
+> +	ret =3D qcom_labibb_read(labibb, labibb->lab_base +
+> +			       REG_LAB_STATUS1, &val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Read register failed ret =3D %d\n", ret);
+> +		return ret;
+> +	}
+
+I'm not clear that these status checks are actually a good idea, and if
+they are it feels like they should be factored out into the framework -
+these are just regular enable or disable followed by the usual dead
+reckoning delay for completion and then a get_status() call to confirm
+if the operation worked.  That's not at all driver specific so if it's
+useful the core should do it for all regulators with status readback and
+if you didn't do it you could use the standard regmap helpers for these
+operations. =20
+
+> +static int qcom_lab_regulator_is_enabled(struct regulator_dev *rdev)
+> +{
+> +	int ret;
+> +	u8 val;
+> +	struct qcom_labibb *labibb  =3D rdev_get_drvdata(rdev);
+> +
+> +	ret =3D qcom_labibb_read(labibb, labibb->lab_base +
+> +			       REG_LAB_STATUS1, &val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Read register failed ret =3D %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return val & LAB_STATUS1_VREG_OK_BIT;
+> +}
+
+Please use the standard helper for this, and this is a get_status()
+operation not an is_enabled() - it checks if the regulator is working,
+not what status was requested.
+
+> +	while (retries--) {
+> +		/* Wait for a small period before reading IBB_STATUS1 */
+> +		usleep_range(POWER_DELAY, POWER_DELAY + 100);
+> +
+> +		ret =3D qcom_labibb_read(labibb, labibb->ibb_base +
+> +				       REG_IBB_STATUS1, &val, 1);
+> +		if (ret < 0) {
+> +			dev_err(labibb->dev,
+> +				"Read register failed ret =3D %d\n", ret);
+> +			return ret;
+> +		}
+> +
+> +		if (val & IBB_STATUS1_VREG_OK_BIT) {
+> +			labibb->ibb_vreg.vreg_enabled =3D 1;
+> +			return 0;
+> +		}
+> +	}
+
+This is doing more than the other regulator was but it's not clear why -
+is it just that the delays are different for the two regulators?
+
+> +static int register_lab_regulator(struct qcom_labibb *labibb,
+> +				  struct device_node *of_node)
+> +{
+> +	int ret =3D 0;
+> +	struct regulator_init_data *init_data;
+> +	struct regulator_config cfg =3D {};
+> +
+> +	cfg.dev =3D labibb->dev;
+> +	cfg.driver_data =3D labibb;
+> +	cfg.of_node =3D of_node;
+> +	init_data =3D
+> +		of_get_regulator_init_data(labibb->dev,
+> +					   of_node, &lab_desc);
+> +	if (!init_data) {
+> +		dev_err(labibb->dev,
+> +			"unable to get init data for LAB\n");
+> +		return -ENOMEM;
+> +	}
+
+The core will parse the DT for you.
+
+--tpyx7gKuSYt+mjHM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0Chv4ACgkQJNaLcl1U
+h9CEqAf/QFvYLRcHvi2D2fwm6tH8HKFCtw/AKOh5X+6AF1YFlXl8kSNv4OrZBGgx
+A6p7x+PAr05eyRsfgVT1F324CG7oGi7dQV1P4ogG6Reg7iuxXxbbmrxb7QZ3biBO
+N+j7fXdFflwtEEexU8uV3oQ2DMB2CGX+E+VCm1OSrVfbLV1rLN2tOJ3f5cW9e4D5
+lCC5kzwTzkmnsjYlFpf1+zFp15Vj+2NTeP90Thuqx2InT1iJxU/ZqDIA8fmHfWK8
+YK60LTjRxn/brpHY9BjiLX5g2On658n8XRz1oP9l5JfhYqS3oBnU9dFQAHGcy1I2
+sI/GreeI0hc5CW0Vltk94O9Y4ZB/IQ==
+=TFUj
+-----END PGP SIGNATURE-----
+
+--tpyx7gKuSYt+mjHM--
