@@ -1,71 +1,77 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH 2/8] tpm_tis_core: add optional max xfer size check
-Date: Thu, 13 Jun 2019 11:09:25 -0700
-Message-ID: <20190613180931.65445-3-swboyd@chromium.org>
-References: <20190613180931.65445-1-swboyd@chromium.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v1 3/4] ASoC: tda7802: Add enable device
+	attribute
+Date: Thu, 13 Jun 2019 19:14:43 +0100
+Message-ID: <20190613181443.GQ5316@sirena.org.uk>
+References: <20190611174909.12162-1-thomas.preston@codethink.co.uk>
+ <20190611174909.12162-4-thomas.preston@codethink.co.uk>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190613180931.65445-1-swboyd@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>, Guenter Roeck <groeck@chromium.org>, Dmitry Torokhov <dtor@chromium.org>
+Content-Type: multipart/mixed; boundary="===============0819496718414029623=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190611174909.12162-4-thomas.preston@codethink.co.uk>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Thomas Preston <thomas.preston@codethink.co.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Charles Keepax <ckeepax@opensource.cirrus.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Cheng-Yi Chiang <cychiang@chromium.org>, Marco Felsch <m.felsch@pengutronix.de>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrey Pronin <apronin@chromium.org>
 
-If tpm reports a bigger burstcnt than allowed by the physical protocol,
-set burstcnt to the max allowed value.
+--===============0819496718414029623==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uRjmd8ppyyws0Tml"
+Content-Disposition: inline
 
-In practice, seen in case of xfer issues (e.g. in spi interface case,
-lost header causing flow control issues and wrong values returned on read
-from TPM_STS). Without catching, causes the physical layer to reject xfer.
 
-Signed-off-by: Andrey Pronin <apronin@chromium.org>
-Reviewed-by: Dmitry Torokhov <dtor@chromium.org>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-[swboyd@chromium.org: Drop extra parenthesis in if statement]
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
+--uRjmd8ppyyws0Tml
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is a resend of https://lkml.kernel.org/r/1469677797-74304-2-git-send-email-apronin@chromium.org
+On Tue, Jun 11, 2019 at 06:49:08PM +0100, Thomas Preston wrote:
+> Add a device attribute to control the enable regulator. Write 1 to
+> enable, 0 to disable (ref-count minus one), or -1 to force disable the
+> physical pin.
 
- drivers/char/tpm/tpm_tis_core.c | 9 ++++++++-
- drivers/char/tpm/tpm_tis_core.h | 1 +
- 2 files changed, 9 insertions(+), 1 deletion(-)
+> To disable a set of amplifiers wired to the same enable gpio, each
+> device must be disabled. For example:
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index b9f64684c3fb..ecf703802333 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -272,8 +272,15 @@ static int get_burstcount(struct tpm_chip *chip)
- 			return rc;
- 
- 		burstcnt = (value >> 8) & 0xFFFF;
--		if (burstcnt)
-+		if (burstcnt) {
-+			if (priv->phy_ops->max_xfer_size &&
-+			    burstcnt > priv->phy_ops->max_xfer_size) {
-+				dev_warn(&chip->dev,
-+					 "Bad burstcnt read: %d\n", burstcnt);
-+				burstcnt = priv->phy_ops->max_xfer_size;
-+			}
- 			return burstcnt;
-+		}
- 		usleep_range(TPM_TIMEOUT_USECS_MIN, TPM_TIMEOUT_USECS_MAX);
- 	} while (time_before(jiffies, stop));
- 	return -EBUSY;
-diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
-index f48125f1e6e0..bb4979cf81ed 100644
---- a/drivers/char/tpm/tpm_tis_core.h
-+++ b/drivers/char/tpm/tpm_tis_core.h
-@@ -110,6 +110,7 @@ struct tpm_tis_phy_ops {
- 	int (*read16)(struct tpm_tis_data *data, u32 addr, u16 *result);
- 	int (*read32)(struct tpm_tis_data *data, u32 addr, u32 *result);
- 	int (*write32)(struct tpm_tis_data *data, u32 addr, u32 src);
-+	u16 max_xfer_size;
- };
- 
- static inline int tpm_tis_read_bytes(struct tpm_tis_data *data, u32 addr,
--- 
-Sent by a computer through tubes
+> 	echo 0 > /sys/devices/.../device:00/enable
+> 	echo 0 > /sys/devices/.../device:01/enable
+
+This is adding a new ABI completely outstide the standard ALSA and power
+management frameworks and ABIs with no explanation as to why or
+integration with the rest of the driver.  This is obviously not in the
+slightest bit OK.  If there's something missing from the frameworks
+extend the frameworks, don't just ignore them.
+
+--uRjmd8ppyyws0Tml
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0CkpIACgkQJNaLcl1U
+h9BS2Qf/eUVj90LcvztgsSKTKJesxl0D3bt7RMK299c2vYLHkirE0vtrBBYdi4Pl
+FJ8puURfuyztbRnoMYrmvkGzoB+kCtwXLSxo2i1Mi6NSlQfnwwg0aoE9RHuB0oOD
+/2hT/ekihe5UadF/JGir89imbhQob5EDyVVzjEgyWULQ4ITpkAw8wiaIcF3GNrjY
+yFLb/wBrR+BM4SXfJKc+SmWy+xt1btn93sWuiaU7SMS86bIEbT1h0w4vQ1p3v2+/
+qjopN+wN8BrUnWRHi7xBR4eocG6hGN9+z6/Xkhr2XL8E0tyaDly5TMDZomOPYAif
+beljIAen1oDtCE4MOp25DYHPAJUmzg==
+=ioNi
+-----END PGP SIGNATURE-----
+
+--uRjmd8ppyyws0Tml--
+
+--===============0819496718414029623==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0819496718414029623==--
