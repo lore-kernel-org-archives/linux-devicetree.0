@@ -1,8 +1,8 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 3/4] ASoC: meson: axg-tdm: fix sample clock
-	inversion
-Date: Thu, 13 Jun 2019 13:42:32 +0200
-Message-ID: <20190613114233.21130-4-jbrunet@baylibre.com>
+Subject: [PATCH 4/4] ASoC: meson: axg-tdm: consistently use
+	SND_SOC_DAIFMT defines
+Date: Thu, 13 Jun 2019 13:42:33 +0200
+Message-ID: <20190613114233.21130-5-jbrunet@baylibre.com>
 References: <20190613114233.21130-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,31 +22,29 @@ To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin 
 Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The content of SND_SOC_DAIFMT_FORMAT_MASK is a number, not a bitfield,
-so the test to check if the format is i2s is wrong. Because of this the
-clock setting may be wrong. For example, the sample clock gets inverted
-in DSP B mode, when it should not.
+There a mix of SND_SOC_DAIFMT_ and SND_SOC_DAI_FORMAT_ in
+axg-tdm-interface.c. Even, if this is currently the same thing, lets use
+the same group consistently.
 
-Fix the lrclk invert helper function
-
-Fixes: 1a11d88f499c ("ASoC: meson: add tdm formatter base driver")
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- sound/soc/meson/axg-tdm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/meson/axg-tdm-interface.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/meson/axg-tdm.h b/sound/soc/meson/axg-tdm.h
-index e578b6f40a07..5774ce0916d4 100644
---- a/sound/soc/meson/axg-tdm.h
-+++ b/sound/soc/meson/axg-tdm.h
-@@ -40,7 +40,7 @@ struct axg_tdm_iface {
+diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
+index 585ce030b79b..d51f3344be7c 100644
+--- a/sound/soc/meson/axg-tdm-interface.c
++++ b/sound/soc/meson/axg-tdm-interface.c
+@@ -306,8 +306,8 @@ static int axg_tdm_iface_hw_params(struct snd_pcm_substream *substream,
+ 		}
+ 		break;
  
- static inline bool axg_tdm_lrclk_invert(unsigned int fmt)
- {
--	return (fmt & SND_SOC_DAIFMT_I2S) ^
-+	return ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) == SND_SOC_DAIFMT_I2S) ^
- 		!!(fmt & (SND_SOC_DAIFMT_IB_IF | SND_SOC_DAIFMT_NB_IF));
- }
+-	case SND_SOC_DAI_FORMAT_DSP_A:
+-	case SND_SOC_DAI_FORMAT_DSP_B:
++	case SND_SOC_DAIFMT_DSP_A:
++	case SND_SOC_DAIFMT_DSP_B:
+ 		break;
  
+ 	default:
 -- 
 2.20.1
