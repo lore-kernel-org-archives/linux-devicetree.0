@@ -1,83 +1,34 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 2/7] regulator: qcom_spmi: Refactor get_mode/set_mode
-Date: Thu, 13 Jun 2019 14:32:00 -0700
-Message-ID: <20190613213200.GC4814@minitux>
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
- <20190613212531.10452-1-jeffrey.l.hugo@gmail.com>
- <20190613212531.10452-2-jeffrey.l.hugo@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] MIPS: ralink: add mt7621-clk.h for device tree binding
+Date: Thu, 13 Jun 2019 15:34:12 -0600
+Message-ID: <20190613213412.GA4156@bogus>
+References: <20190516072731.21957-1-gch981213@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190613212531.10452-2-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20190516072731.21957-1-gch981213@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>, Weijie Gao <hackpascal@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 13 Jun 14:25 PDT 2019, Jeffrey Hugo wrote:
-
-> spmi_regulator_common_get_mode and spmi_regulator_common_set_mode use
-> multi-level ifs which mirror a switch statement.  Refactor to use a switch
-> statement to make the code flow more clear.
+On Thu, 16 May 2019 15:25:51 +0800, Chuanhong Guo wrote:
+> This patch adds dt binding header for mediatek,mt7621-pll which
+> was added in:
+> commit e6046b5e69a0 ("MIPS: ralink: fix cpu clock of mt7621 and add dt clk devices")
 > 
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> Signed-off-by: Weijie Gao <hackpascal@gmail.com>
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
 > ---
->  drivers/regulator/qcom_spmi-regulator.c | 26 +++++++++++++++++--------
->  1 file changed, 18 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-> index 42c429d50743..1b3383a24c9d 100644
-> --- a/drivers/regulator/qcom_spmi-regulator.c
-> +++ b/drivers/regulator/qcom_spmi-regulator.c
-> @@ -911,13 +911,16 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
->  
->  	spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
->  
-> -	if (reg & SPMI_COMMON_MODE_HPM_MASK)
-> -		return REGULATOR_MODE_NORMAL;
-> +	reg &= SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
->  
-> -	if (reg & SPMI_COMMON_MODE_AUTO_MASK)
-> +	switch (reg) {
-> +	case SPMI_COMMON_MODE_HPM_MASK:
-> +		return REGULATOR_MODE_NORMAL;
-> +	case SPMI_COMMON_MODE_AUTO_MASK:
->  		return REGULATOR_MODE_FAST;
-> -
-> -	return REGULATOR_MODE_IDLE;
-> +	default:
-> +		return REGULATOR_MODE_IDLE;
-> +	}
->  }
->  
->  static int
-> @@ -925,12 +928,19 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
->  {
->  	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
->  	u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
-> -	u8 val = 0;
-> +	u8 val;
->  
-> -	if (mode == REGULATOR_MODE_NORMAL)
-> +	switch (mode) {
-> +	case REGULATOR_MODE_NORMAL:
->  		val = SPMI_COMMON_MODE_HPM_MASK;
-> -	else if (mode == REGULATOR_MODE_FAST)
-> +		break;
-> +	case REGULATOR_MODE_FAST:
->  		val = SPMI_COMMON_MODE_AUTO_MASK;
-> +		break;
-> +	default:
-> +		val = 0;
-> +		break;
-> +	}
->  
->  	return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
->  }
-> -- 
-> 2.17.1
+> checkpatch.pl shows a warning that the line referencing old commit
+> is over 75 chars but if I shink it down anyhow it gave me an error
+> saying I should use a proper style for commits. So I chose to ignore
+> the warning and fix the error.
 > 
+>  include/dt-bindings/clock/mt7621-clk.h | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/mt7621-clk.h
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
