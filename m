@@ -1,73 +1,134 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: axg-tdm: fix sample clock inversion" to the asoc tree
-Date: Thu, 13 Jun 2019 20:06:11 +0100 (BST)
-Message-ID: <20190613190611.3AA0B440046@finisterre.sirena.org.uk>
-References: <20190613114233.21130-4-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190613114233.21130-4-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH V12 2/4] drivers/perf: imx_ddr: Add ddr performance
+ counter support
+Date: Thu, 13 Jun 2019 14:13:20 -0500
+Message-ID: <CAHrpEqS9GEC9Shf-6xLL0_+WJNuwYOdKe=5jtUogLajfcWYMew@mail.gmail.com>
+References: <1556736193-29411-1-git-send-email-Frank.Li@nxp.com>
+ <1556736193-29411-2-git-send-email-Frank.Li@nxp.com>
+ <20190613112320.GA18966@fuggles.cambridge.arm.com>
+ <CAHrpEqRZ0YL9SFk6o7iebJ+diJVMTtyba_9GtujL7H7e4G8qQA@mail.gmail.com>
+ <20190613174436.GG18966@fuggles.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190613174436.GG18966@fuggles.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Thu, Jun 13, 2019 at 12:44 PM Will Deacon <will.deacon@arm.com> wrote:
+>
+> On Thu, Jun 13, 2019 at 12:04:37PM -0500, Zhi Li wrote:
+> > On Thu, Jun 13, 2019 at 6:23 AM Will Deacon <will.deacon@arm.com> wrote:
+> > >
+> > > On Wed, May 01, 2019 at 06:43:29PM +0000, Frank Li wrote:
+> > > > Add ddr performance monitor support for iMX8QXP
+> > > >
+> > > > There are 4 counters for ddr perfomance events.
+> > > > counter 0 is dedicated for cycles.
+> > > > you choose any up to 3 no cycles events.
+> > > >
+> > > > for example:
+> > > >
+> > > > perf stat -a -e imx8_ddr0/read-cycles/,imx8_ddr0/write-cycles/,imx8_ddr0/precharge/ ls
+> > > > perf stat -a -e imx8_ddr0/cycles/,imx8_ddr0/read-access/,imx8_ddr0/write-access/ ls
+> > >
+> > > I've pushed patches 1, 2 and 4 out with some minor tweaks to:
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-next/perf
+> > >
+> > > I'll leave the actual .dts change to go via the soc tree, since last time
+> > > I took one of those it just resulted in conflicts.
+> > >
+> > > Frank, Andrey: Please could you try to run the perf fuzzer on this before
+> > > it lands in mainline? It has a good track record of finding nasty PMU driver
+> > > bugs, but it obviously requires access to hardware which implements the PMU:
+> > >
+> > > http://web.eece.maine.edu/~vweaver/projects/perf_events/fuzzer/
+> >
+> > Okay, how long should be run generally?
+> > I need make sure it can pass without my patches at our platform.
+>
+> As you long as you can really, but if it survives a few hours that's usually
+> a good sign. Overnight is even better.
 
-   ASoC: meson: axg-tdm: fix sample clock inversion
+Base on commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun Jun 2 13:55:33 2019 -0700
 
-has been applied to the asoc tree at
+    Linux 5.2-rc3
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+RCU report problem:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+[ 6048.741784] rcu: INFO: rcu_preempt self-detected stall on CPU
+[ 6048.747550] rcu:     1-....: (5249 ticks this GP)
+idle=c5a/1/0x4000000000000004 softirq=503121/503121 fqs=2425
+[ 6048.757384]  (t=5253 jiffies g=1416105 q=117)
+[ 6048.761745] Task dump for CPU 1:
+[ 6048.764977] perf_fuzzer     R  running task        0 32520    426 0x00000202
+[ 6048.772030] Call trace:
+[ 6048.774493]  dump_backtrace+0x0/0x130
+[ 6048.778159]  show_stack+0x14/0x20
+[ 6048.781477]  sched_show_task+0x108/0x138
+[ 6048.785401]  dump_cpu_task+0x40/0x4c
+[ 6048.788983]  rcu_dump_cpu_stacks+0x94/0xd0
+[ 6048.793082]  rcu_sched_clock_irq+0x5e0/0x918
+[ 6048.797357]  update_process_times+0x2c/0x70
+[ 6048.801545]  tick_sched_handle.isra.6+0x3c/0x50
+[ 6048.806076]  tick_sched_timer+0x48/0x98
+[ 6048.809918]  __hrtimer_run_queues+0x118/0x1a8
+[ 6048.814277]  hrtimer_interrupt+0xe4/0x238
+[ 6048.818296]  arch_timer_handler_phys+0x2c/0x38
+[ 6048.822743]  handle_percpu_devid_irq+0x80/0x140
+[ 6048.827277]  generic_handle_irq+0x24/0x38
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Only armv8_pmuv3 and basic perf event enabled.
+perf list
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+List of pre-defined events (to be used in -e):
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+  branch-instructions OR branches                    [Hardware event]
+  branch-misses                                      [Hardware event]
+  bus-cycles                                         [Hardware event]
+  cache-misses                                       [Hardware event]
+  cache-references                                   [Hardware event]
+  cpu-cycles OR cycles                               [Hardware event]
+  instructions                                       [Hardware event]
 
-Thanks,
-Mark
+  alignment-faults                                   [Software event]
+  bpf-output                                         [Software event]
+  context-switches OR cs                             [Software event]
+  cpu-clock                                          [Software event]
+  cpu-migrations OR migrations                       [Software event]
+  dummy                                              [Software event]
+  emulation-faults                                   [Software event]
+  major-faults                                       [Software event]
+  minor-faults                                       [Software event]
+  page-faults OR faults                              [Software event]
+  task-clock                                         [Software event]
 
->From cb36ff785e868992e96e8b9e5a0c2822b680a9e2 Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 13 Jun 2019 13:42:32 +0200
-Subject: [PATCH] ASoC: meson: axg-tdm: fix sample clock inversion
+  L1-dcache-load-misses                              [Hardware cache event]
+  L1-dcache-loads                                    [Hardware cache event]
+  L1-icache-load-misses                              [Hardware cache event]
+  L1-icache-loads                                    [Hardware cache event]
+  branch-load-misses                                 [Hardware cache event]
+  branch-loads                                       [Hardware cache event]
+  dTLB-load-misses                                   [Hardware cache event]
+  iTLB-load-misses                                   [Hardware cache event]
 
-The content of SND_SOC_DAIFMT_FORMAT_MASK is a number, not a bitfield,
-so the test to check if the format is i2s is wrong. Because of this the
-clock setting may be wrong. For example, the sample clock gets inverted
-in DSP B mode, when it should not.
+  armv8_pmuv3/br_immed_retired/                      [Kernel PMU event]
+  armv8_pmuv3/br_mis_pred/                           [Kernel PMU event]
+ ****8
 
-Fix the lrclk invert helper function
-
-Fixes: 1a11d88f499c ("ASoC: meson: add tdm formatter base driver")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/meson/axg-tdm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/meson/axg-tdm.h b/sound/soc/meson/axg-tdm.h
-index e578b6f40a07..5774ce0916d4 100644
---- a/sound/soc/meson/axg-tdm.h
-+++ b/sound/soc/meson/axg-tdm.h
-@@ -40,7 +40,7 @@ struct axg_tdm_iface {
- 
- static inline bool axg_tdm_lrclk_invert(unsigned int fmt)
- {
--	return (fmt & SND_SOC_DAIFMT_I2S) ^
-+	return ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) == SND_SOC_DAIFMT_I2S) ^
- 		!!(fmt & (SND_SOC_DAIFMT_IB_IF | SND_SOC_DAIFMT_NB_IF));
- }
- 
--- 
-2.20.1
+>
+> Will
