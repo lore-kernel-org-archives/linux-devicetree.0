@@ -1,61 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/7] drivers: regulator: qcom_spmi: enable linear
- range info
-Date: Thu, 13 Jun 2019 19:51:36 +0100
-Message-ID: <20190613185136.GW5316@sirena.org.uk>
-References: <20190606184842.39484-1-jeffrey.l.hugo@gmail.com>
- <20190606184923.39537-1-jeffrey.l.hugo@gmail.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH 0/9] drm/sun4i: Allwinner R40 MIPI-DSI support
+Date: Fri, 14 Jun 2019 00:22:32 +0530
+Message-ID: <20190613185241.22800-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ahZICQ7iXVM/oLYH"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190606184923.39537-1-jeffrey.l.hugo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: lgirdwood@gmail.com, agross@kernel.org, david.brown@linaro.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, jorge.ramirez-ortiz@linaro.org, niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBO5XRLUAKGQEILHL5MQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This is initial version for supporting MIPI-DSI on Allwinner R40.
 
---ahZICQ7iXVM/oLYH
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The controller look similar like, Allwinnwe A64 so it has
+dependencies with A64 MIPI DSI changes, DSI fixes and R40 pwm 
+driver [1] [2] [3] 
 
-On Thu, Jun 06, 2019 at 11:49:23AM -0700, Jeffrey Hugo wrote:
+PLL-MIPI, dclk divders logic bpp/lanes are properly work for R40,
+like A31, A64.
 
-> +		if (vreg->logical_type =3D=3D SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
-> +			/* since there is only one range */
-> +			range =3D spmi_regulator_find_range(vreg);
-> +			vreg->desc.uV_step =3D range->step_uV;
-> +		}
+patch 1, 2: TCON LCD support
 
-This doesn't build for me:
+patch 3, 4: Use clock index macros instead of numbers
 
-drivers/regulator/qcom_spmi-regulator.c: In function =E2=80=98qcom_spmi_reg=
-ulator_probe=E2=80=99:
-drivers/regulator/qcom_spmi-regulator.c:1837:29: error: =E2=80=98SPMI_REGUL=
-ATOR_LOGICAL_TYPE_HFS430=E2=80=99 undeclared (first use in this function); =
-did you mean =E2=80=98SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS=E2=80=99?
-   if (vreg->logical_type =3D=3D SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
-                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                             SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS
-drivers/regulator/qcom_spmi-regulator.c:1837:29: note: each undeclared iden=
-tifier is reported only once for each function it appears in
+patch 5: Add tcon top lcd clocking
 
---ahZICQ7iXVM/oLYH
-Content-Type: application/pgp-signature; name="signature.asc"
+patch 6, 7: Add dt-bindings for r40 dsi, dphy
 
------BEGIN PGP SIGNATURE-----
+patch 8: Add R40 MIPI DSI pipeline
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0CmzcACgkQJNaLcl1U
-h9BLcAf+LbREmfxXdirC6a4pyidOidMHVXvJ5RSlum+DW3aj56vF/aXiYyZm9d2C
-4I+6WFnpU6GIbsNXcYPRkng30IZO5++Da8NPRPyYhcmBs+pJhpQjlPiPg6UK2/iB
-AmsQStemH0Zi1crGMEeLU/nYREfZpTnS9GXH4r5SMvja5EigTEKfSqlhoWl5hoJd
-INPx2zNjnBP21hVt0aUs+uEj2xiAuwMrN8VtHT152T51jVofsIxXZYBXtmSFKdLJ
-9nkFy36LT6YA2gso7Caw+ku3SYPfXgkPu7YdOjnlFOp5sDC2dX7nlKeAZwiphDcU
-IgFxUVv32eyNOS7wxahaxSq/ypFIPg==
-=u3Lf
------END PGP SIGNATURE-----
+patch 9: Overlay patch to test it on BPI-M2U
 
---ahZICQ7iXVM/oLYH--
+[1] https://patchwork.freedesktop.org/series/61310/
+[2] https://patchwork.freedesktop.org/series/60847/ 
+[3] https://lore.kernel.org/patchwork/cover/862766/ 
+
+Jagan Teki (9):
+  dt-bindings: display: Add TCON LCD compatible for R40
+  drm/sun4i: tcon: Add TCON LCD support for R40
+  ARM: dts: sun8i: r40: Use tcon top clock index macros
+  drm/sun4i: tcon_top: Use clock name index macros
+  ARM: dts: sun8i: r40: Add TCON TOP LCD clocking
+  dt-bindings: sun6i-dsi: Add R40 MIPI-DSI compatible (w/ A64 fallback)
+  dt-bindings: sun6i-dsi: Add R40 DPHY compatible (w/ A31 fallback)
+  ARM: dts: sun8i: r40: Add MIPI DSI pipeline
+  [DO NOT MERGE] ARM: dts: sun8i-r40: bananapi-m2-ultra: Enable Bananapi S070WV20-CT16 DSI panel
+
+ .../bindings/display/sunxi/sun4i-drm.txt      |  1 +
+ .../bindings/display/sunxi/sun6i-dsi.txt      |  2 +
+ .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 36 ++++++++
+ arch/arm/boot/dts/sun8i-r40.dtsi              | 84 +++++++++++++++++--
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            |  7 ++
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c        | 13 +--
+ include/dt-bindings/clock/sun8i-tcon-top.h    |  2 +-
+ 7 files changed, 134 insertions(+), 11 deletions(-)
+
+-- 
+2.18.0.321.gffc6fa0e3
