@@ -1,72 +1,27 @@
-Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 23/27] arm64: tegra: Add PEX DPD states as pinctrl properties
-Date: Tue, 18 Jun 2019 23:32:02 +0530
-Message-ID: <20190618180206.4908-24-mmaddireddy@nvidia.com>
-In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
-References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+Return-Path: <robherring2@gmail.com>
+Date: Thu, 13 Jun 2019 12:07:03 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/8] media: dt-bindings: imx7-csi: Document a single CSI
+ clock
+Message-ID: <20190613180703.GA2190@bogus>
+References: <20190504144027.31920-1-festevam@gmail.com>
+ <20190504144027.31920-6-festevam@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190504144027.31920-6-festevam@gmail.com>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: hverkuil-cisco@xs4all.nl, rui.silva@linaro.org, slongerbeam@gmail.com, p.zabel@pengutronix.de, linux-media@vger.kernel.org, sebastien.szymanski@armadeus.com, otavio@ossystems.com.br, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add PEX deep power down states as pinctrl properties to set in PCIe driver.
-In Tegra210, BIAS pads are not in power down mode when clamps are applied.
-To set the pads in DPD, pass the PEX DPD states as pinctrl properties to
-PCIe driver.
+On Sat,  4 May 2019 11:40:25 -0300, Fabio Estevam wrote:
+> As per the i.MX7D Reference Manual only the MCLK is used for
+> the CSI block, so only document this single clock.
+> 
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/media/imx7-csi.txt | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
-V6: No change
-
-V5: No change
-
-V4: No change
-
-V3: No change
-
-V2: Using standard pinctrl names, default and idle
-
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index a550c0a4d572..3899c54ea28f 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -48,6 +48,11 @@
- 			 <&tegra_car 72>,
- 			 <&tegra_car 74>;
- 		reset-names = "pex", "afi", "pcie_x";
-+
-+		pinctrl-names = "default", "idle";
-+		pinctrl-0 = <&pex_dpd_disable>;
-+		pinctrl-1 = <&pex_dpd_enable>;
-+
- 		status = "disabled";
- 
- 		pci@1,0 {
-@@ -848,6 +853,20 @@
- 			pins = "sdmmc3";
- 			power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
- 		};
-+
-+		pex_dpd_disable: pex_en {
-+			pex-dpd-disable {
-+				pins = "pex-bias", "pex-clk1", "pex-clk2";
-+				low-power-disable;
-+			};
-+		};
-+
-+		pex_dpd_enable: pex_dis {
-+			pex-dpd-enable {
-+				pins = "pex-bias", "pex-clk1", "pex-clk2";
-+				low-power-enable;
-+			};
-+		};
- 	};
- 
- 	fuse@7000f800 {
--- 
-2.17.1
+Reviewed-by: Rob Herring <robh@kernel.org>
