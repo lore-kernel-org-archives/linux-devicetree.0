@@ -1,99 +1,67 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 2/7] drivers: regulator: qcom_spmi: Refactor
- get_mode/set_mode
-Date: Thu, 13 Jun 2019 08:12:09 -0700
-Message-ID: <20190613151209.GB6792@builder>
-References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
- <20190613142239.8779-1-jeffrey.l.hugo@gmail.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH v4 0/5] Add QCS404 interconnect provider driver
+Date: Thu, 13 Jun 2019 18:13:18 +0300
+Message-ID: <20190613151323.10850-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190613142239.8779-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, georgi.djakov@linaro.org
+Cc: vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 13 Jun 07:22 PDT 2019, Jeffrey Hugo wrote:
+Add drivers to support scaling of the on-chip interconnects on QCS404-based
+platforms. Also add the necessary device-tree nodes, so that the driver for
+each NoC can probe and register as interconnect-provider.
 
-> spmi_regulator_common_get_mode and spmi_regulator_common_set_mode use
-> multi-level ifs which mirror a switch statement.  Refactor to use a switch
-> statement to make the code flow more clear.
-> 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/regulator/qcom_spmi-regulator.c | 28 ++++++++++++++++---------
->  1 file changed, 18 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-> index fd55438c25d6..1c18fe5969b5 100644
-> --- a/drivers/regulator/qcom_spmi-regulator.c
-> +++ b/drivers/regulator/qcom_spmi-regulator.c
-> @@ -911,13 +911,14 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
->  
->  	spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
->  
-> -	if (reg & SPMI_COMMON_MODE_HPM_MASK)
-> +	switch (reg) {
-> +	case SPMI_COMMON_MODE_HPM_MASK:
->  		return REGULATOR_MODE_NORMAL;
-> -
-> -	if (reg & SPMI_COMMON_MODE_AUTO_MASK)
-> +	case SPMI_COMMON_MODE_AUTO_MASK:
->  		return REGULATOR_MODE_FAST;
-> -
-> -	return REGULATOR_MODE_IDLE;
-> +	default:
-> +		return REGULATOR_MODE_IDLE;
-> +	}
->  }
->  
->  static int
-> @@ -925,12 +926,19 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
->  {
->  	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
->  	u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
-> -	u8 val = 0;
-> +	u8 val;
->  
-> -	if (mode == REGULATOR_MODE_NORMAL)
-> +	switch (mode) {
-> +	case REGULATOR_MODE_NORMAL:
->  		val = SPMI_COMMON_MODE_HPM_MASK;
-> -	else if (mode == REGULATOR_MODE_FAST)
-> +		break;
-> +	case REGULATOR_MODE_FAST:
->  		val = SPMI_COMMON_MODE_AUTO_MASK;
-> +		break;
-> +	default:
-> +		val = 0;
-> +		break;
-> +	}
+v4:
+- Move DT headers into the dt-bindings patch (Bjorn)
+- Pick Bjorn's r-b on some patches.
+- Return error if platform_device_register_data() fails (Bjorn)
+- Use platform_set_drvdata() only in the child device. (Bjorn)
+- Hide the smd-rpm proxy driver from config menu. (Bjorn)
+- Add remove() function to zero out the rpm handle. (Bjorn)
+- Move move the qcs404 driver patch later in the serie. (Bjorn)
+- Insert the DT nodes after rng to keep the list sorted by address. (Bjorn)
 
-For this part:
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->  
->  	return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
->  }
-> @@ -1834,9 +1842,9 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
->  			}
->  		}
->  
-> -		if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
+v3: https://lore.kernel.org/lkml/20190611164157.24656-1-georgi.djakov@linaro.org/
+- Drop the patch introducing the qcom,qos DT property.
+- Add two new patches to create an interconnect proxy device. This device is
+  part of the RPM hardware and handles the communication of the bus bandwidth
+  requests.
+- Add a DT reg property and move the interconnect nodes under the "soc" node.
 
-Squash this into patch 1.
+v2: https://lore.kernel.org/lkml/20190415104357.5305-1-georgi.djakov@linaro.org/
+- Use the clk_bulk API. (Bjorn)
+- Move the port IDs into the provider file. (Bjorn)
+- Use ARRAY_SIZE in the macro to automagically count the num_links. (Bjorn)
+- Improve code readability. (Bjorn)
+- Add patch [4/4] introducing a qcom,qos DT property to represent the link to
+  the MMIO QoS registers HW block.
 
-Regards,
-Bjorn
+v1: https://lore.kernel.org/lkml/20190405035446.31886-1-georgi.djakov@linaro.org/
 
-> +		if (vreg->set_points->count == 1) {
->  			/* since there is only one range */
-> -			range = spmi_regulator_find_range(vreg);
-> +			range = vreg->set_points->range;
->  			vreg->desc.uV_step = range->step_uV;
->  		}
->  
-> -- 
-> 2.17.1
-> 
+Bjorn Andersson (1):
+  interconnect: qcom: Add QCS404 interconnect provider driver
+
+Georgi Djakov (4):
+  dt-bindings: interconnect: Add Qualcomm QCS404 DT bindings
+  soc: qcom: smd-rpm: Create RPM interconnect proxy child device
+  interconnect: qcom: Add interconnect SMD over SMD driver
+  arm64: dts: qcs404: Add interconnect provider DT nodes
+
+ .../bindings/interconnect/qcom,qcs404.txt     |  46 ++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  28 +
+ drivers/interconnect/qcom/Kconfig             |  12 +
+ drivers/interconnect/qcom/Makefile            |   4 +
+ drivers/interconnect/qcom/qcs404.c            | 539 ++++++++++++++++++
+ drivers/interconnect/qcom/smd-rpm.c           |  80 +++
+ drivers/interconnect/qcom/smd-rpm.h           |  15 +
+ drivers/soc/qcom/smd-rpm.c                    |  17 +-
+ .../dt-bindings/interconnect/qcom,qcs404.h    |  88 +++
+ 9 files changed, 828 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+ create mode 100644 drivers/interconnect/qcom/qcs404.c
+ create mode 100644 drivers/interconnect/qcom/smd-rpm.c
+ create mode 100644 drivers/interconnect/qcom/smd-rpm.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,qcs404.h
