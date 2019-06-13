@@ -1,100 +1,97 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [v1 1/4] dt-bindings: display: Add DT bindings for LS1028A
- HDP-TX PHY.
-Date: Thu, 13 Jun 2019 14:08:13 -0600
-Message-ID: <20190613200813.GA895@bogus>
-References: <20190508103703.40885-1-wen.he_1@nxp.com>
+Subject: Re: [RFC 3/3] dt-bindings: net: dsa: document additional Microchip
+ KSZ8863 family switches
+Date: Thu, 13 Jun 2019 14:09:35 -0600
+Message-ID: <20190613200935.GA16851@bogus>
+References: <20190508211330.19328-1-m.grzeschik@pengutronix.de>
+ <20190508211330.19328-4-m.grzeschik@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190508103703.40885-1-wen.he_1@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wen He <wen.he_1@nxp.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
+In-Reply-To: <20190508211330.19328-4-m.grzeschik@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Cc: Tristram.Ha@microchip.com, kernel@pengutronix.de, UNGLinuxDriver@microchip.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 08, 2019 at 10:35:25AM +0000, Wen He wrote:
-> Add DT bindings documentmation for the HDP-TX PHY controller. The describes
-> which could be found on NXP Layerscape ls1028a platform.
-
-Drop the hard stop (.) from the subject.
-
+On Wed, May 08, 2019 at 11:13:30PM +0200, Michael Grzeschik wrote:
+> Document additional Microchip KSZ8863 family switches.
 > 
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> Show how KSZ8863 switch should be configured as the host port is port 3.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 > ---
->  .../devicetree/bindings/display/fsl,hdp.txt   | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/fsl,hdp.txt
+>  .../devicetree/bindings/net/dsa/ksz.txt       | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/fsl,hdp.txt b/Documentation/devicetree/bindings/display/fsl,hdp.txt
-> new file mode 100644
-> index 000000000000..36b5687a1261
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/fsl,hdp.txt
-> @@ -0,0 +1,56 @@
-> +NXP Layerscpae ls1028a HDP-TX PHY Controller
-> +============================================
-> +
-> +The following bindings describe the Cadence HDP TX PHY on ls1028a that
-> +offer multi-protocol support of standars such as eDP and Displayport,
-> +supports for 25-600MHz pixel clock and up to 4k2k at 60MHz resolution.
-> +The HDP transmitter is a Cadence HDP TX controller IP with a companion
-> +PHY IP.
+> diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+> index e7db7268fd0fd..4ac576e1cc34e 100644
+> --- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
+> +++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+> @@ -5,6 +5,8 @@ Required properties:
+>  
+>  - compatible: For external switch chips, compatible string must be exactly one
+>    of the following:
+> +  - "microchip,ksz8863"
+> +  - "microchip,ksz8873"
+>    - "microchip,ksz9477"
+>    - "microchip,ksz9897"
+>    - "microchip,ksz9896"
+> @@ -31,6 +33,48 @@ Ethernet switch connected via SPI to the host, CPU port wired to eth0:
+>  		};
+>  	};
+>  
+> +	mdio0: mdio-gpio {
 
-I'm confused. This binding covers both blocks or is just one of them?
+Does this example show something new? Examples don't need to instantiate 
+every possible option.
 
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_mdio_1>;
+> +		compatible = "virtual,mdio-gpio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		gpios = <&gpio1 31 0 &gpio1 22 0>;
 > +
-> +Required properties:
-> +  - compatible:   Should be "fsl,ls1028a-dp" for ls1028a.
-> +  - reg:          Physical base address and size of the block of registers used
-> +  by the processor.
-> +  - interrupts:   HDP hotplug in/out detect interrupt number
-> +  - clocks:       A list of phandle + clock-specifier pairs, one for each entry
-> +  in 'clock-names'
-> +  - clock-names:  A list of clock names. It should contain:
-> +      - "clk_ipg": inter-Integrated circuit clock
-> +      - "clk_core": for the Main Display TX controller clock
-> +      - "clk_pxl": for the pixel clock feeding the output PLL of the processor
-> +      - "clk_pxl_mux": for the high PerfPLL bypass clock
-> +      - "clk_pxl_link": for the link rate pixel clock
-> +      - "clk_apb": for the APB interface clock
-> +      - "clk_vif": for the Video pixel clock
-
-The 'clk_' part is redundant.
-
+> +		ksz8863@3 {
+> +			compatible = "microchip,ksz8863";
+> +			interrupt-parrent = <&gpio3>;
+> +			interrupt = <30 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg = <0>;
 > +
-> +Required sub-nodes:
-> +  - port: The HDP connection to an encoder output port. The connection
-> +    is modelled using the OF graph bindings specified in
-> +    Documentation/devicetree/bindings/graph.txt
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
 > +
+> +				ports@0 {
+> +					reg = <0>;
+> +					label = "lan1";
+> +				};
 > +
-> +Example:
+> +				ports@1 {
+> +					reg = <1>;
+> +					label = "lan2";
+> +				};
 > +
-> +/ {
-> +        ...
+> +				ports@2 {
+> +					reg = <2>;
+> +					label = "cpu";
+> +					ethernet = <&eth0>;
 > +
-> +	hdp: display@f200000 {
-> +                compatible = "fsl,ls1028a-dp";
-> +		reg = <0x0 0xf1f0000 0x0 0xffff>,
-> +		    <0x0 0xf200000 0x0 0xfffff>;
-> +                interrupts = <0 221 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&sysclk>, <&hdpclk>, <&dpclk>,
-> +                         <&dpclk>, <&dpclk>, <&pclk>, <&dpclk>;
-> +		clock-names = "clk_ipg", "clk_core", "clk_pxl",
-> +                              "clk_pxl_mux", "clk_pxl_link", "clk_apb",
-> +                              "clk_vif";
-> +
-> +		port {
-> +			dp1_output: endpoint {
-> +				remote-endpoint = <&dp0_input>;
+> +					fixed-link {
+> +						speed = <100>;
+> +						full-duplex;
+> +					};
+> +				};
 > +			};
 > +		};
-> +        };
+> +	};
 > +
-> +        ...
-> +};
+>  	spi1: spi@f8008000 {
+>  		pinctrl-0 = <&pinctrl_spi_ksz>;
+>  		cs-gpios = <&pioC 25 0>;
 > -- 
-> 2.17.1
+> 2.20.1
 > 
