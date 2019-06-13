@@ -1,8 +1,8 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 2/6] ARM: dts: imx6sx: Enable SNVS power key according to
+Subject: [PATCH 3/6] ARM: dts: imx6ul: Enable SNVS power key according to
  board design
-Date: Thu, 13 Jun 2019 11:35:23 +0800
-Message-ID: <20190613033527.40555-2-Anson.Huang@nxp.com>
+Date: Thu, 13 Jun 2019 11:35:24 +0800
+Message-ID: <20190613033527.40555-3-Anson.Huang@nxp.com>
 References: <20190613033527.40555-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -30,46 +30,36 @@ wired up.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/imx6sx-sdb-reva.dts | 4 ++++
- arch/arm/boot/dts/imx6sx-sdb.dts      | 4 ++++
- arch/arm/boot/dts/imx6sx.dtsi         | 1 +
- 3 files changed, 9 insertions(+)
+ arch/arm/boot/dts/imx6ul-14x14-evk.dtsi | 4 ++++
+ arch/arm/boot/dts/imx6ul.dtsi           | 1 +
+ 2 files changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-index 5b3d6c10..f1830ed 100644
---- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-+++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-@@ -166,3 +166,7 @@
- &reg_vdd2p5 {
- 	vin-supply = <&vgen6_reg>;
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+index 9207d5d..cbe61b6 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+@@ -238,6 +238,10 @@
+ 	status = "okay";
  };
-+
+ 
 +&snvs_pwrkey {
 +	status = "okay";
 +};
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dts
-index 10f6da8..a8ee708 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dts
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dts
-@@ -153,3 +153,7 @@
- 	/* Transceiver EN/STBY is active low on RevB board */
- 	gpio = <&gpio4 27 GPIO_ACTIVE_LOW>;
- };
 +
-+&snvs_pwrkey {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index bbdfdd8..bb25add 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -738,6 +738,7 @@
+ &tsc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_tsc>;
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index fc388b8..0c51439 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -650,6 +650,7 @@
  					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
  					linux,keycode = <KEY_POWER>;
  					wakeup-source;
 +					status = "disabled";
  				};
- 			};
  
+ 				snvs_lpgpr: snvs-lpgpr {
 -- 
 2.7.4
