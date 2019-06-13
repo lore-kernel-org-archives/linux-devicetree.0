@@ -1,39 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] dt-bindings: arm: Convert MediaTek board/soc bindings
- to json-schema
-Date: Thu, 13 Jun 2019 16:49:21 -0600
-Message-ID: <20190613224921.GA9199@bogus>
-References: <20190517154202.24594-1-robh@kernel.org>
+Subject: Re: [RFC/PATCH 1/5] reserved_mem: Add a devm_memremap_reserved_mem()
+ API
+Date: Thu, 13 Jun 2019 16:51:14 -0600
+Message-ID: <20190613225114.GA16158@bogus>
+References: <20190517164746.110786-1-swboyd@chromium.org>
+ <20190517164746.110786-2-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190517154202.24594-1-robh@kernel.org>
+In-Reply-To: <20190517164746.110786-2-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Dan Williams <dan.j.williams@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2019 at 10:42:02AM -0500, Rob Herring wrote:
-> Convert MediaTek SoC bindings to DT schema format using json-schema.
+On Fri, 17 May 2019 09:47:42 -0700, Stephen Boyd wrote:
+> We have a few drivers that need to get a reserved memory region, request
+> the region, and map the reserved memory with memremap(). Add an API to
+> do this all in one function call.
 > 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-mediatek@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
-> v3:
->  - Rebase to Linus' master
+>  drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
+>  include/linux/of_reserved_mem.h |  6 +++++
+>  2 files changed, 51 insertions(+)
 > 
->  .../devicetree/bindings/arm/mediatek.txt      | 89 ------------------
->  .../devicetree/bindings/arm/mediatek.yaml     | 91 +++++++++++++++++++
->  2 files changed, 91 insertions(+), 89 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/mediatek.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek.yaml
 
-Ping. Three versions of this and no comments... Is Mediatek a dead 
-platform?
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
