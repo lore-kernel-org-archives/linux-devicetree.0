@@ -1,64 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: input: Add support for the
- MPR121 without interrupt line
-Date: Thu, 13 Jun 2019 16:39:45 -0600
-Message-ID: <20190613223945.GA938@bogus>
-References: <1558098773-47416-1-git-send-email-michal.vokac@ysoft.com>
- <1558098773-47416-2-git-send-email-michal.vokac@ysoft.com>
+Subject: Re: [PATCH v3] dt-bindings: clock: Add silabs,si5341
+Date: Thu, 13 Jun 2019 16:41:51 -0600
+Message-ID: <20190613224151.GA32304@bogus>
+References: <20190424090216.18417-1-mike.looijmans@topic.nl>
+ <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com>
+ <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl>
+ <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com>
+ <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl>
+ <20190507140413.28335-1-mike.looijmans@topic.nl>
+ <20190513203146.GA24085@bogus>
+ <20190517132020.31081-1-mike.looijmans@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1558098773-47416-2-git-send-email-michal.vokac@ysoft.com>
+In-Reply-To: <20190517132020.31081-1-mike.looijmans@topic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2019 at 03:12:50PM +0200, Michal Vokáč wrote:
-> Normally, the MPR121 controller uses separate interrupt line to notify
-> the I2C host that a key was touched/released. To support platforms that
-> can not use the interrupt line, polling of the MPR121 registers can be
-> used.
-
-'separate' from what?
-
+On Fri, 17 May 2019 15:20:20 +0200, Mike Looijmans wrote:
+> Adds the devicetree bindings for the Si5341 and Si5340 chips from
+> Silicon Labs. These are multiple-input multiple-output clock
+> synthesizers.
 > 
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> 
 > ---
-> Changes since v1:
-> - Document the polled binding in the original file, do not create a new one.
->   (Rob)
+> v3: Remove synthesizers child nodes
+>     Fix typo
+> v2: Add data sheet reference.
+>     Restructured to enable use of "assigned-clock*" properties to set
+>     up both outputs and internal synthesizers.
+>     Nicer indentation.
+>     Updated subject line and body of commit message.
 > 
->  Documentation/devicetree/bindings/input/mpr121-touchkey.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+>  .../bindings/clock/silabs,si5341.txt          | 162 ++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/silabs,si5341.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/input/mpr121-touchkey.txt b/Documentation/devicetree/bindings/input/mpr121-touchkey.txt
-> index b7c61ee5841b..97f55273d473 100644
-> --- a/Documentation/devicetree/bindings/input/mpr121-touchkey.txt
-> +++ b/Documentation/devicetree/bindings/input/mpr121-touchkey.txt
-> @@ -1,9 +1,14 @@
-> -* Freescale MPR121 Controllor
-> +* Freescale MPR121 Controller
->  
->  Required Properties:
-> -- compatible:		Should be "fsl,mpr121-touchkey"
-> +- compatible:		Should be one of:
-> +			- "fsl,mpr121-touchkey" - MPR121 with interrupt line
-> +			- "fsl,mpr121-touchkey-polled" - MPR121 with polling
->  - reg:			The I2C slave address of the device.
->  - interrupts:		The interrupt number to the cpu.
-> +			In case of "fsl,mpr121-touchkey-polled" the interrupt
-> +			line is not used and hence the interrupts property is
-> +			not required.
 
-Absence of the interrupts property is enough to determine polled mode 
-and you don't need a separate compatible string.
-
->  - vdd-supply:		Phandle to the Vdd power supply.
->  - linux,keycodes:	Specifies an array of numeric keycode values to
->  			be used for reporting button presses. The array can
-> -- 
-> 2.1.4
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
