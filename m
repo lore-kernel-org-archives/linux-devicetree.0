@@ -1,92 +1,78 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
-Date: Thu, 13 Jun 2019 11:21:45 +0100
-Message-ID: <7a8426e9-a2c3-5cf6-9088-8ad81f558488@nvidia.com>
-References: <1560417053-2966-1-git-send-email-spujar@nvidia.com>
- <8a71e670-7943-6bce-ba61-3f020fd9450d@nvidia.com>
- <6a4b5fac-68cd-542a-a907-0d80713f9d82@nvidia.com>
+From: Frank Lee <tiny.windzz@gmail.com>
+Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
+Date: Thu, 13 Jun 2019 23:35:15 +0800
+Message-ID: <CAEExFWskAsNquULKBLtBFUOosNpks8L6aUhw-+cF=oZ0aghAtQ@mail.gmail.com>
+References: <20190525181329.18657-1-tiny.windzz@gmail.com>
+ <20190525181329.18657-2-tiny.windzz@gmail.com>
+ <20190527122752.uc7q6zkjti3zag4q@flea>
+ <CAEExFWtxEB67Pv-8x4ry=tZcJjOD6Kxydq_YB73Gox25VmQn7A@mail.gmail.com>
+ <20190612154325.m6z7xsxlpdq4wkxv@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6a4b5fac-68cd-542a-a907-0d80713f9d82@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sameer Pujar <spujar@nvidia.com>, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: mkumard@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190612154325.m6z7xsxlpdq4wkxv@flea>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, rui.zhang@intel.com, paulmck@linux.ibm.com, David Miller <davem@davemloft.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 13, 2019 at 9:26 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Fri, Jun 07, 2019 at 09:34:44PM +0800, Frank Lee wrote:
+> > On Mon, May 27, 2019 at 8:27 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > +     ret = devm_request_threaded_irq(dev, irq, NULL,
+> > > > +                                     tmdev->chip->irq_thread,
+> > > > +                                     IRQF_ONESHOT, "ths", tmdev);
+> > > > +     if (ret)
+> > > > +             return ret;
+> > >
+> > > Is there any particular reason to use a threaded interrupt?
+> >
+> > Just to improve real-time.
+>
+> What do you mean by real-time here? If anything, that will increase
+> the latency of the interrupts here.
+>
+> And in preempt-rt, regular top-half interrupts will be forced into a
+> threaded interrupt anyway.
+>
+> > > > +static int sun8i_ths_remove(struct platform_device *pdev)
+> > > > +{
+> > > > +     struct ths_device *tmdev = platform_get_drvdata(pdev);
+> > > > +
+> > > > +     clk_disable_unprepare(tmdev->bus_clk);
+> > >
+> > > I know that we discussed that already, but I'm not sure why you switch
+> > > back to a regular call to regmap_init_mmio, while regmap_init_mmio_clk
+> > > will take care of enabling and disabling the bus clock for you?
+> >
+> > It seems that regmap_init_mmio_clk just get clk and prepare clk
+> > but no enable.
+>
+> At init time, yes. But it will enable it only when you access the
+> registers, which is what you want anyway.
 
-On 13/06/2019 10:47, Sameer Pujar wrote:
->=20
-> On 6/13/2019 3:12 PM, Jon Hunter wrote:
->> On 13/06/2019 10:10, Sameer Pujar wrote:
->>> Add DT nodes for following devices on Tegra186 and Tegra194
->>> =C2=A0 * ACONNECT
->>> =C2=A0 * ADMA
->>> =C2=A0 * AGIC
->>>
->>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->>> ---
->>> =C2=A0 changes in current revision
->>> =C2=A0=C2=A0 * use single address range for all APE modules
->>> =C2=A0=C2=A0 * fix address range for agic
->>>
->>> =C2=A0 arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67
->>> ++++++++++++++++++++++++++++++++
->>> =C2=A0 arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67
->>> ++++++++++++++++++++++++++++++++
->>> =C2=A0 2 files changed, 134 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> index 426ac0b..b4d735e 100644
->>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> @@ -1295,4 +1295,71 @@
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_=
-LOW)>;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupt-parent=
- =3D <&gic>;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>> +
->>> +=C2=A0=C2=A0=C2=A0 aconnect@2a41000 {
->> This address does not look correct. This appears to be the address of
->> the AGIC. I think it should be 2900000, however, I also wonder if we
->> should even bother with an address for the aconnect as this is just a
->> bus and we don't specific a 'reg' property.
-> Do you mean, should be ok to just mention "aconnect {"?
+But after accessing the register, it turns the clock off, which
+affects the ad conversion and the occurrence of the interrupt.
 
-I did a bit more reading and for Tegra186 there are no registers
-implement for the aconnect (which is different from Tegra210) and so in
-this case we should just have ...
+In addition, when resuming from suspend, we need to enable
+the clock, so I think it is necessary to have a clock pointer.
 
-	aconnect {
-		...
+Yangtao
 
->>
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "nvidia,tegr=
-a210-aconnect";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&bpmp TEGRA186_=
-CLK_APE>,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 <&bpmp TEGRA186_CLK_APB2APE>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-names =3D "ape", "apb=
-2ape";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains =3D <&bpmp TE=
-GRA186_POWER_DOMAIN_AUD>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <1>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <1>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ranges =3D <0x02900000 0x0 =
-0x02900000 0x1FFFFF>;
->> This should be 0x1fffff.
-> done
-
-Sorry this should be 0x200000.
-
-Cheers
-Jon
-
---=20
-nvpublic
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
