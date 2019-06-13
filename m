@@ -1,37 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH repost 4/5] dt-bindings: can: rcar_canfd: document
- r8a77990 support
-Date: Thu, 13 Jun 2019 14:11:14 -0600
-Message-ID: <20190613201114.GA22253@bogus>
-References: <1557429622-31676-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1557429622-31676-5-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH 1/2] dt-bindings: rng: Document BCM7211 RNG compatible
+ string
+Date: Thu, 13 Jun 2019 14:16:30 -0600
+Message-ID: <20190613201630.GA29776@bogus>
+References: <20190510173112.2196-1-f.fainelli@gmail.com>
+ <20190510173112.2196-2-f.fainelli@gmail.com>
+ <ce516362-658f-cde3-9be8-0e092f554782@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1557429622-31676-5-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <ce516362-658f-cde3-9be8-0e092f554782@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marek.vasut@gmail.com>, "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, stefan.wahren@i2se.com, wahrenst@gmx.net, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, mpm@selenic.com, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM IPROC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  9 May 2019 20:20:21 +0100, Fabrizio Castro wrote:
-> From: Marek Vasut <marek.vasut@gmail.com>
+On Fri, Jun 07, 2019 at 11:57:49AM -0700, Florian Fainelli wrote:
+> On 5/10/19 10:31 AM, Florian Fainelli wrote:
+> > BCM7211 features a RNG200 block, document its compatible string.
+> > 
+> > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > 
-> Document the support for rcar_canfd on R8A77990 SoC devices.
-> 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Simon Horman <horms+renesas@verge.net.au>
-> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Cc: linux-renesas-soc@vger.kernel.org
-> To: devicetree@vger.kernel.org
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
+> Rob, does this look okay to you?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yes, sorry, a bit behind on reviews.
