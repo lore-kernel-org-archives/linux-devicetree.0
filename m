@@ -1,180 +1,114 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 3/5] interconnect: qcom: Add interconnect SMD over SMD
- driver
-Date: Thu, 13 Jun 2019 08:42:14 -0700
-Message-ID: <20190613154214.GI6792@builder>
-References: <20190613151323.10850-1-georgi.djakov@linaro.org>
- <20190613151323.10850-4-georgi.djakov@linaro.org>
+From: Sameer Pujar <spujar@nvidia.com>
+Subject: Re: [PATCH v3 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
+Date: Thu, 13 Jun 2019 15:17:02 +0530
+Message-ID: <6a4b5fac-68cd-542a-a907-0d80713f9d82@nvidia.com>
+References: <1560417053-2966-1-git-send-email-spujar@nvidia.com>
+ <8a71e670-7943-6bce-ba61-3f020fd9450d@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190613151323.10850-4-georgi.djakov@linaro.org>
+In-Reply-To: <8a71e670-7943-6bce-ba61-3f020fd9450d@nvidia.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: mkumard@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 13 Jun 08:13 PDT 2019, Georgi Djakov wrote:
 
-> On some Qualcomm SoCs, there is a remote processor, which controls some of
-> the Network-On-Chip interconnect resources. Other CPUs express their needs
-> by communicating with this processor. Add a driver to handle communication
-> with this remote processor.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> 
-> v4:
-> - Hide the driver from config menu. It will be selected by other driver.
-> - Add remove() function to zero out the rpm handle.
-> 
-> v3:
-> - New patch.
-> 
->  drivers/interconnect/qcom/Kconfig   |  3 ++
->  drivers/interconnect/qcom/Makefile  |  2 +
->  drivers/interconnect/qcom/smd-rpm.c | 80 +++++++++++++++++++++++++++++
->  drivers/interconnect/qcom/smd-rpm.h | 15 ++++++
->  4 files changed, 100 insertions(+)
->  create mode 100644 drivers/interconnect/qcom/smd-rpm.c
->  create mode 100644 drivers/interconnect/qcom/smd-rpm.h
-> 
-> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-> index d5e70ebc2410..03fd67173494 100644
-> --- a/drivers/interconnect/qcom/Kconfig
-> +++ b/drivers/interconnect/qcom/Kconfig
-> @@ -12,3 +12,6 @@ config INTERCONNECT_QCOM_SDM845
->  	help
->  	  This is a driver for the Qualcomm Network-on-Chip on sdm845-based
->  	  platforms.
-> +
-> +config INTERCONNECT_QCOM_SMD_RPM
-> +	tristate
-> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-> index 1c1cea690f92..a600cf6cc272 100644
-> --- a/drivers/interconnect/qcom/Makefile
-> +++ b/drivers/interconnect/qcom/Makefile
-> @@ -1,5 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
->  qnoc-sdm845-objs			:= sdm845.o
-> +icc-smd-rpm-objs			:= smd-rpm.o
->  
->  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
-> +obj-$(CONFIG_INTERCONNECT_QCOM_SMD_RPM) += icc-smd-rpm.o
-> diff --git a/drivers/interconnect/qcom/smd-rpm.c b/drivers/interconnect/qcom/smd-rpm.c
-> new file mode 100644
-> index 000000000000..0a8c9547bd29
-> --- /dev/null
-> +++ b/drivers/interconnect/qcom/smd-rpm.c
-> @@ -0,0 +1,80 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * RPM over SMD communication wrapper for interconnects
-> + *
-> + * Copyright (C) 2019 Linaro Ltd
-> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
-> + */
-> +
-> +#include <linux/interconnect-provider.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/soc/qcom/smd-rpm.h>
-> +
-> +#include "smd-rpm.h"
-> +
-> +#define RPM_KEY_BW		0x00007762
-> +
-> +static struct qcom_smd_rpm *icc_smd_rpm;
-> +
-> +struct icc_rpm_smd_req {
-> +	__le32 key;
-> +	__le32 nbytes;
-> +	__le32 value;
-> +};
-> +
-> +bool qcom_icc_rpm_smd_available(void)
-> +{
-> +	if (!icc_smd_rpm)
-> +		return false;
-> +
-> +	return true;
-
-A more succinct form would have been:
-
-	return !!icc_smd_rpm;
-
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_icc_rpm_smd_available);
-> +
-> +int qcom_icc_rpm_smd_send(int ctx, int rsc_type, int id, u32 val)
-> +{
-> +	struct icc_rpm_smd_req req = {
-> +		.key = cpu_to_le32(RPM_KEY_BW),
-> +		.nbytes = cpu_to_le32(sizeof(u32)),
-> +		.value = cpu_to_le32(val),
-> +	};
-> +
-> +	return qcom_rpm_smd_write(icc_smd_rpm, ctx, rsc_type, id, &req,
-> +				  sizeof(req));
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_icc_rpm_smd_send);
-> +
-> +static int qcom_icc_rpm_smd_remove(struct platform_device *pdev)
-> +{
-> +	icc_smd_rpm = NULL;
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_icc_rpm_smd_probe(struct platform_device *pdev)
-> +{
-> +	icc_smd_rpm = dev_get_drvdata(pdev->dev.parent);
-> +
-> +	if (!icc_smd_rpm) {
-> +		dev_err(&pdev->dev, "unable to retrieve handle to RPM\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver qcom_interconnect_rpm_smd_driver = {
-> +	.driver = {
-> +		.name		= "icc_smd_rpm",
-> +	},
-> +	.probe = qcom_icc_rpm_smd_probe,
-> +	.remove = qcom_icc_rpm_smd_remove,
-> +};
-> +module_platform_driver(qcom_interconnect_rpm_smd_driver);
-> +MODULE_AUTHOR("Georgi Djakov <georgi.djakov@linaro.org>");
-> +MODULE_DESCRIPTION("Qualcomm SMD RPM interconnect proxy driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:icc_smd_rpm");
-> diff --git a/drivers/interconnect/qcom/smd-rpm.h b/drivers/interconnect/qcom/smd-rpm.h
-> new file mode 100644
-> index 000000000000..ca9d0327b8ac
-> --- /dev/null
-> +++ b/drivers/interconnect/qcom/smd-rpm.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2019, Linaro Ltd.
-> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
-> + */
-> +
-> +#ifndef __DRIVERS_INTERCONNECT_QCOM_SMD_RPM_H
-> +#define __DRIVERS_INTERCONNECT_QCOM_SMD_RPM_H
-> +
-> +#include <linux/soc/qcom/smd-rpm.h>
-> +
-> +bool qcom_icc_rpm_smd_available(void);
-> +int qcom_icc_rpm_smd_send(int ctx, int rsc_type, int id, u32 val);
-> +
-> +#endif
+On 6/13/2019 3:12 PM, Jon Hunter wrote:
+> On 13/06/2019 10:10, Sameer Pujar wrote:
+>> Add DT nodes for following devices on Tegra186 and Tegra194
+>>   * ACONNECT
+>>   * ADMA
+>>   * AGIC
+>>
+>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+>> ---
+>>   changes in current revision
+>>    * use single address range for all APE modules
+>>    * fix address range for agic
+>>
+>>   arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67 ++++++++++++++++++++++++++++++++
+>>   arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++++++++
+>>   2 files changed, 134 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>> index 426ac0b..b4d735e 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>> @@ -1295,4 +1295,71 @@
+>>   				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>>   		interrupt-parent = <&gic>;
+>>   	};
+>> +
+>> +	aconnect@2a41000 {
+> This address does not look correct. This appears to be the address of
+> the AGIC. I think it should be 2900000, however, I also wonder if we
+> should even bother with an address for the aconnect as this is just a
+> bus and we don't specific a 'reg' property.
+Do you mean, should be ok to just mention "aconnect {"?
+>
+>> +		compatible = "nvidia,tegra210-aconnect";
+>> +		clocks = <&bpmp TEGRA186_CLK_APE>,
+>> +			 <&bpmp TEGRA186_CLK_APB2APE>;
+>> +		clock-names = "ape", "apb2ape";
+>> +		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges = <0x02900000 0x0 0x02900000 0x1FFFFF>;
+> This should be 0x1fffff.
+done
+>
+>> +		status = "disabled";
+>> +
+>> +		dma-controller@2930000 {
+>> +			compatible = "nvidia,tegra186-adma";
+>> +			reg = <0x02930000 0x50000>;
+>> +			interrupt-parent = <&agic>;
+>> +			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+>> +			#dma-cells = <1>;
+>> +			clocks = <&bpmp TEGRA186_CLK_AHUB>;
+>> +			clock-names = "d_audio";
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		agic: agic@2a41000 {
+> I think that this should also be "agic: interrupt-controller@xxxx" to
+> conform with standard names. Sorry the Tegra210 version is not the best
+> reference!
+will change
+> Cheers
+> Jon
+>
