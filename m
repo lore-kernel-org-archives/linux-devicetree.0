@@ -1,66 +1,115 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH] arm64: dts: rockchip: Update DWC3 modules on RK3399 SoCs
-Date: Thu, 13 Jun 2019 18:27:45 +0200
-Message-ID: <20190613162745.12195-1-enric.balletbo@collabora.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/4] dt-bindings: regulator: Add labibb regulator
+Date: Thu, 13 Jun 2019 09:28:08 -0700
+Message-ID: <20190613162808.GG22737@tuxbook-pro>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+ <1560337252-27193-2-git-send-email-nishakumari@codeaurora.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1560337252-27193-2-git-send-email-nishakumari@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Collabora Kernel ML <kernel@collabora.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Vicente Bergas <vicencb@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
+To: Nisha Kumari <nishakumari@codeaurora.org>
+Cc: broonie@kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, david.brown@linaro.org, linux-kernel@vger.kernel.org, kgunda@codeaurora.org, rnayak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-As per binding documentation [1], the DWC3 core should have the "ref",
-"bus_early" and "suspend" clocks. As explained in the binding, those
-clocks are required for new platforms but not for existing platforms
-before commit fe8abf332b8f ("usb: dwc3: support clocks and resets for
-DWC3 core").
+On Wed 12 Jun 04:00 PDT 2019, Nisha Kumari wrote:
 
-However, as those clocks are really treated as required, this ends with
-having some annoying messages when the "rockchip,rk3399-dwc3" is used:
+> Adding the devicetree binding for labibb regulator.
+> 
+> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+> ---
+>  .../bindings/regulator/qcom-labibb-regulator.txt   | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
+> new file mode 100644
+> index 0000000..79aad6f4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
+> @@ -0,0 +1,57 @@
+> +Qualcomm's LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost) Regulator
+> +
+> +LAB can be used as a positive boost power supply and IBB can be used as a negative
+> +boost power supply for display panels.
+> +
+> +Main node required properties:
+> +
+> +- compatible:			Must be:
+> +				"qcom,lab-ibb-regulator"
 
-[    1.724107] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
-[    1.731893] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
-[    2.495937] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
-[    2.647239] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
+In order to handle variations in future LABIBB implementations, make
+this "qcom,pmi8998-lab-ibb";
 
-In order to remove those annoying messages, update the DWC3 hardware
-module node and add all the required clocks. With this change, both, the
-glue node and the DWC3 core node, have the clocks defined, but that's
-not really a problem and there isn't a side effect on do this. So, we
-can get rid of the annoying get clk error messages.
+> +- #address-cells:		Must be 1
+> +- #size-cells:			Must be 0
+> +
+> +LAB subnode required properties:
+> +
+> +- reg:				Specifies the SPMI address and size for this peripheral.
+> +- regulator-name:		A string used to describe the regulator.
+> +- interrupts:			Specify the interrupts as per the interrupt
+> +				encoding.
+> +- interrupt-names:		Interrupt names to match up 1-to-1 with
+> +				the interrupts specified in 'interrupts'
+> +				property.
+> +
+> +IBB subnode required properties:
+> +
+> +- reg:				Specifies the SPMI address and size for this peripheral.
+> +- regulator-name:		A string used to describe the regulator.
+> +- interrupts:			Specify the interrupts as per the interrupt
+> +				encoding.
+> +- interrupt-names:		Interrupt names to match up 1-to-1 with
+> +				the interrupts specified in 'interrupts'
+> +				property.
+> +
+> +Example:
+> +	pmi8998_lsid1: pmic@3 {
+> +		qcom-labibb-regulator {
 
-[1] Documentation/devicetree/bindings/usb/dwc3.txt
+We typically want to use generic names here, but as the spmi regulator
+binding suggest the use of "regulators" without a unit address that
+wouldn't work.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+But you can shorten this to either "labibb" or at least
+"labibb-regulator".
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+> +			compatible = "qcom,lab-ibb-regulator";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			lab_regulator: qcom,lab@de00 {
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 196ac9b78076..a15348d185ce 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -414,6 +414,9 @@
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0xfe800000 0x0 0x100000>;
- 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>;
-+			clocks = <&cru SCLK_USB3OTG0_REF>, <&cru ACLK_USB3OTG0>,
-+				 <&cru SCLK_USB3OTG0_SUSPEND>;
-+			clock-names = "ref", "bus_early", "suspend";
- 			dr_mode = "otg";
- 			phys = <&u2phy0_otg>, <&tcphy0_usb3>;
- 			phy-names = "usb2-phy", "usb3-phy";
-@@ -447,6 +450,9 @@
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0xfe900000 0x0 0x100000>;
- 			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
-+			clocks = <&cru SCLK_USB3OTG1_REF>, <&cru ACLK_USB3OTG1>,
-+				 <&cru SCLK_USB3OTG1_SUSPEND>;
-+			clock-names = "ref", "bus_early", "suspend";
- 			dr_mode = "otg";
- 			phys = <&u2phy1_otg>, <&tcphy1_usb3>;
- 			phy-names = "usb2-phy", "usb3-phy";
--- 
-2.20.1
+Don't use "qcom," in the node names.
+
+> +				reg = <0xde00>;
+
+Please follow the spmi-regulator and hide these in the driver.
+
+> +				regulator-name = "lab_reg";
+
+We know it's a regulator, so no need for _reg, which means that if you
+drop "qcom," from the node name and use the node name as the default
+regulator name you don't need this.
+
+> +
+> +				interrupts = <0x3 0xde 0x0 IRQ_TYPE_EDGE_RISING>;
+> +				interrupt-names = "lab-sc-err";
+> +			};
+> +
+> +			ibb_regulator: qcom,ibb@dc00 {
+> +				reg = <0xdc00>;
+> +				regulator-name = "ibb_reg";
+> +
+> +				interrupts = <0x3 0xdc 0x2 IRQ_TYPE_EDGE_RISING>;
+> +				interrupt-names = "ibb-sc-err";
+> +			};
+> +
+> +		};
+> +	};
+
+Regards,
+Bjorn
