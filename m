@@ -1,37 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC/PATCH 1/5] reserved_mem: Add a devm_memremap_reserved_mem()
- API
-Date: Thu, 13 Jun 2019 16:51:14 -0600
-Message-ID: <20190613225114.GA16158@bogus>
-References: <20190517164746.110786-1-swboyd@chromium.org>
- <20190517164746.110786-2-swboyd@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mtd: brcmnand: Make nand-ecc-strength
+ and nand-ecc-step-size optional
+Date: Thu, 13 Jun 2019 16:51:46 -0600
+Message-ID: <20190613225146.GA17725@bogus>
+References: <1558117914-35807-1-git-send-email-kdasu.kdev@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190517164746.110786-2-swboyd@chromium.org>
+In-Reply-To: <1558117914-35807-1-git-send-email-kdasu.kdev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Dan Williams <dan.j.williams@intel.com>
+Cc: linux-mtd@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 May 2019 09:47:42 -0700, Stephen Boyd wrote:
-> We have a few drivers that need to get a reserved memory region, request
-> the region, and map the reserved memory with memremap(). Add an API to
-> do this all in one function call.
+On Fri, 17 May 2019 14:29:54 -0400, Kamal Dasu wrote:
+> nand-ecc-strength and nand-ecc-step-size can be made optional as
+> brcmanand driver can support using the nand_base driver detected
+> values.
 > 
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 > ---
->  drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
->  include/linux/of_reserved_mem.h |  6 +++++
->  2 files changed, 51 insertions(+)
+>  Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
