@@ -1,48 +1,85 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 7/9] dt-bindings: sun6i-dsi: Add R40 DPHY
- compatible (w/ A31 fallback)
-Date: Fri, 14 Jun 2019 00:22:39 +0530
-Message-ID: <20190613185241.22800-8-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 8/9] ARM: dts: sun8i: r40: Add MIPI DSI pipeline
+Date: Fri, 14 Jun 2019 00:22:40 +0530
+Message-ID: <20190613185241.22800-9-jagan@amarulasolutions.com>
 References: <20190613185241.22800-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBXFXRLUAKGQECSDZ3AA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190613185241.22800-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190613185241.22800-1-jagan@amarulasolutions.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: linux-sunxi@googlegroups.com, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-The MIPI DSI PHY controller on Allwinner R40 is similar
-on the one on A31.
-
-Add R40 compatible and append A31 compatible as fallback.
-
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-index 438f1f999aeb..b7ad1be33008 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-@@ -40,6 +40,7 @@ Required properties:
-   - compatible: value must be one of:
-     * allwinner,sun6i-a31-mipi-dphy
-     * allwinner,sun50i-a64-mipi-dphy, allwinner,sun6i-a31-mipi-dphy
-+    * allwinner,sun8i-r40-mipi-dphy, allwinner,sun6i-a31-mipi-dphy
-   - reg: base address and size of memory-mapped region
-   - clocks: phandles to the clocks feeding the DSI encoder
-     * bus: the DSI interface clock
--- 
-2.18.0.321.gffc6fa0e3
+QWRkIE1JUEkgRFNJIHBpcGVsaW5lIGZvciBBbGx3aW5uZXIgUjQwLgoKVW5saWtlIGNvbnZlbnRp
+b25hbCBEaXNwbGF5IHBpcGVsaW5lIGluIGFsbHdpbm5lciwgUjQwIGhhdmUKVENPTiBUQ09QIHdo
+aWNoIHdvdWxkIGludGVyYWN0IHZhcmlvdXMgYmxvY2sgbGlrZSBtdXhlcywKdGNvbiBsY2QsIHRj
+b25fdHYgZm9yIGJldHRlciBwaXBlbGluZSBmaXR0aW5nLgoKRm9yIE1JUEkgRFNJIHBpcGVsaW5l
+LCB3ZSBoYXZlIHRvIGNvbmZpZ3VyZSB0aGUgdGNvbl9sY2QwCmJsb2NrIHdoaWNoIHdvdWxkIGlu
+dGVyYWN0IHdpdGggdGNvbl90b3AgZm9yIHVwcGVyIHBpcGVsaW5lCmNvbm5lY3Rpb25zIGFuZCBk
+c2kgYmxvY2sgZm9yIGxvd2VyIHBpcGVsaW5lIGNvbm5lY3Rpb25zLgoKU28sIHRoaXMgcGF0Y2gg
+Y3JlYXRlZCB0aGF0IHBpcGVsaW5lIGJ5IGFkZGluZyBuZXcgbm9kZXMKZm9yIHRjb25fbGNkMCwg
+ZHNpLCBkcGh5IGFuZCBjb25uZXQgdGhlbSB0byBtYWtlIHByb3BlcgpwaXBlbGluZSBmaXR0aW5n
+LgoKU2lnbmVkLW9mZi1ieTogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+
+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktcjQwLmR0c2kgfCA3MyArKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDczIGluc2VydGlvbnMoKykKCmRp
+ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdW44aS1yNDAuZHRzaSBiL2FyY2gvYXJtL2Jv
+b3QvZHRzL3N1bjhpLXI0MC5kdHNpCmluZGV4IDEyNTc2NTM2ZGY0YS4uM2VhMjQ1MTE1MWZmIDEw
+MDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdW44aS1yNDAuZHRzaQorKysgYi9hcmNoL2Fy
+bS9ib290L2R0cy9zdW44aS1yNDAuZHRzaQpAQCAtNjIzLDYgKzYyMyw3IEBACiAKIAkJCQkJdGNv
+bl90b3BfbWl4ZXIwX291dF90Y29uX2xjZDA6IGVuZHBvaW50QDAgewogCQkJCQkJcmVnID0gPDA+
+OworCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ0Y29uX2xjZDBfaW5fdGNvbl90b3BfbWl4ZXIw
+PjsKIAkJCQkJfTsKIAogCQkJCQl0Y29uX3RvcF9taXhlcjBfb3V0X3Rjb25fbGNkMTogZW5kcG9p
+bnRAMSB7CkBAIC03MDEsNiArNzAyLDQ1IEBACiAJCQl9OwogCQl9OwogCisJCXRjb25fbGNkMDog
+bGNkLWNvbnRyb2xsZXJAMWM3MTAwMCB7CisJCQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW44
+aS1yNDAtdGNvbi1sY2QiOworCQkJcmVnID0gPDB4MDFjNzEwMDAgMHgxMDAwPjsKKwkJCWludGVy
+cnVwdHMgPSA8R0lDX1NQSSA0NCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCWNsb2NrcyA9IDwm
+Y2N1IENMS19CVVNfVENPTl9MQ0QwPiwgPCZ0Y29uX3RvcCBDTEtfVENPTl9UT1BfTENEMD47CisJ
+CQljbG9jay1uYW1lcyA9ICJhaGIiLCAidGNvbi1jaDAiOworCQkJY2xvY2stb3V0cHV0LW5hbWVz
+ID0gInRjb24tcGl4ZWwtY2xvY2siOworCQkJcmVzZXRzID0gPCZjY3UgUlNUX0JVU19UQ09OX0xD
+RDA+LCA8JmNjdSBSU1RfQlVTX0xWRFM+OworCQkJcmVzZXQtbmFtZXMgPSAibGNkIiwgImx2ZHMi
+OworCQkJc3RhdHVzID0gImRpc2FibGVkIjsKKworCQkJcG9ydHMgeworCQkJCSNhZGRyZXNzLWNl
+bGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0gPDA+OworCisJCQkJdGNvbl9sY2QwX2luOiBw
+b3J0QDAgeworCQkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkJI3NpemUtY2VsbHMgPSA8
+MD47CisJCQkJCXJlZyA9IDwwPjsKKworCQkJCQl0Y29uX2xjZDBfaW5fdGNvbl90b3BfbWl4ZXIw
+OiBlbmRwb2ludEAwIHsKKwkJCQkJCXJlZyA9IDwwPjsKKwkJCQkJCXJlbW90ZS1lbmRwb2ludCA9
+IDwmdGNvbl90b3BfbWl4ZXIwX291dF90Y29uX2xjZDA+OworCQkJCQl9OworCQkJCX07CisKKwkJ
+CQl0Y29uX2xjZDBfb3V0OiBwb3J0QDEgeworCQkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJ
+CQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQkJCXJlZyA9IDwxPjsKKworCQkJCQl0Y29uX2xjZDBf
+b3V0X2RzaV9vdXQ6IGVuZHBvaW50QDEgeworCQkJCQkJcmVnID0gPDE+OworCQkJCQkJcmVtb3Rl
+LWVuZHBvaW50ID0gPCZkc2lfaW5fdGNvbl9sY2QwX291dD47CisJCQkJCX07CisJCQkJfTsKKwkJ
+CX07CisJCX07CisKIAkJdGNvbl90djA6IGxjZC1jb250cm9sbGVyQDFjNzMwMDAgewogCQkJY29t
+cGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuOGktcjQwLXRjb24tdHYiOwogCQkJcmVnID0gPDB4MDFj
+NzMwMDAgMHgxMDAwPjsKQEAgLTc5OCw2ICs4MzgsMzkgQEAKIAkJCWludGVycnVwdHMgPSA8R0lD
+X1BQSSA5IChHSUNfQ1BVX01BU0tfU0lNUExFKDQpIHwgSVJRX1RZUEVfTEVWRUxfSElHSCk+Owog
+CQl9OwogCisJCWRzaTogZHNpQDFjYTAwMDAgeworCQkJY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIs
+c3VuOGktcjQwLW1pcGktZHNpIiwKKwkJCQkgICAgICJhbGx3aW5uZXIsc3VuNTBpLWE2NC1taXBp
+LWRzaSI7CisJCQlyZWcgPSA8MHgwMWNhMDAwMCAweDEwMDA+OworCQkJaW50ZXJydXB0cyA9IDxH
+SUNfU1BJIDU3IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQkJY2xvY2tzID0gPCZjY3UgQ0xLX0JV
+U19NSVBJX0RTST47CisJCQljbG9jay1uYW1lcyA9ICJidXMiOworCQkJcmVzZXRzID0gPCZjY3Ug
+UlNUX0JVU19NSVBJX0RTST47CisJCQlwaHlzID0gPCZkcGh5PjsKKwkJCXBoeS1uYW1lcyA9ICJk
+cGh5IjsKKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsK
+KwkJCSNzaXplLWNlbGxzID0gPDA+OworCisJCQlwb3J0IHsKKwkJCQlkc2lfaW5fdGNvbl9sY2Qw
+X291dDogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRjb25fbGNkMF9vdXRf
+ZHNpX291dD47CisJCQkJfTsKKwkJCX07CisJCX07CisKKwkJZHBoeTogZC1waHlAMWNhMTAwMCB7
+CisJCQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW44aS1yNDAtbWlwaS1kcGh5IiwKKwkJCQkg
+ICAgICJhbGx3aW5uZXIsc3VuNmktYTMxLW1pcGktZHBoeSI7CisJCQlyZWcgPSA8MHgwMWNhMTAw
+MCAweDEwMDA+OworCQkJY2xvY2tzID0gPCZjY3UgQ0xLX0JVU19NSVBJX0RTST4sCisJCQkJIDwm
+Y2N1IENMS19EU0lfRFBIWT47CisJCQljbG9jay1uYW1lcyA9ICJidXMiLCAibW9kIjsKKwkJCXJl
+c2V0cyA9IDwmY2N1IFJTVF9CVVNfTUlQSV9EU0k+OworCQkJc3RhdHVzID0gImRpc2FibGVkIjsK
+KwkJCSNwaHktY2VsbHMgPSA8MD47CisJCX07CisKIAkJaGRtaTogaGRtaUAxZWUwMDAwIHsKIAkJ
+CWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLXI0MC1kdy1oZG1pIiwKIAkJCQkgICAgICJh
+bGx3aW5uZXIsc3VuOGktYTgzdC1kdy1oZG1pIjsKLS0gCjIuMTguMC4zMjEuZ2ZmYzZmYTBlMwoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
