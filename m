@@ -1,183 +1,180 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 7/7] drivers: regulator: qcom: add PMS405 SPMI
- regulator
-Date: Thu, 13 Jun 2019 08:33:16 -0700
-Message-ID: <20190613153316.GE6792@builder>
-References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
- <20190613142425.9036-1-jeffrey.l.hugo@gmail.com>
+From: Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH v5 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
+Date: Thu, 13 Jun 2019 16:11:16 +0530
+Message-ID: <1560422477-11242-1-git-send-email-spujar@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190613142425.9036-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+To: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: mkumard@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 13 Jun 07:24 PDT 2019, Jeffrey Hugo wrote:
+Add DT nodes for following devices on Tegra186 and Tegra194
+ * ACONNECT
+ * ADMA
+ * AGIC
 
-> From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-> 
-> The PMS405 has 5 HFSMPS and 13 LDO regulators,
-> 
-> This commit adds support for one of the 5 HFSMPS regulators (s3) to
-> the spmi regulator driver.
-> 
-> The PMIC HFSMPS 430 regulators have 8 mV step size and a voltage
-> control scheme consisting of two  8-bit registers defining a 16-bit
-> voltage set point in units of millivolts
-> 
-> S3 controls the cpu voltages (s3 is a buck regulator of type HFS430);
-> it is therefore required so we can enable voltage scaling for safely
-> running cpufreq.
-> 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/regulator/qcom_spmi-regulator.c | 41 +++++++++++++++++++++++--
->  1 file changed, 38 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-> index c7880c1d4bcd..975655e787fe 100644
-> --- a/drivers/regulator/qcom_spmi-regulator.c
-> +++ b/drivers/regulator/qcom_spmi-regulator.c
-> @@ -105,6 +105,7 @@ enum spmi_regulator_logical_type {
->  	SPMI_REGULATOR_LOGICAL_TYPE_ULT_HO_SMPS,
->  	SPMI_REGULATOR_LOGICAL_TYPE_ULT_LDO,
->  	SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426,
-> +	SPMI_REGULATOR_LOGICAL_TYPE_HFS430,
->  };
->  
->  enum spmi_regulator_type {
-> @@ -157,6 +158,7 @@ enum spmi_regulator_subtype {
->  	SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL2	= 0x0e,
->  	SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL3	= 0x0f,
->  	SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL4	= 0x10,
-> +	SPMI_REGULATOR_SUBTYPE_HFS430		= 0x0a,
->  };
->  
->  enum spmi_common_regulator_registers {
-> @@ -302,6 +304,8 @@ enum spmi_common_control_register_index {
->  /* Clock rate in kHz of the FTSMPS426 regulator reference clock. */
->  #define SPMI_FTSMPS426_CLOCK_RATE		4800
->  
-> +#define SPMI_HFS430_CLOCK_RATE			1600
-> +
->  /* Minimum voltage stepper delay for each step. */
->  #define SPMI_FTSMPS426_STEP_DELAY		2
->  
-> @@ -515,6 +519,10 @@ static struct spmi_voltage_range ult_pldo_ranges[] = {
->  	SPMI_VOLTAGE_RANGE(0, 1750000, 1750000, 3337500, 3337500, 12500),
->  };
->  
-> +static struct spmi_voltage_range hfs430_ranges[] = {
-> +	SPMI_VOLTAGE_RANGE(0, 320000, 320000, 2040000, 2040000, 8000),
-> +};
-> +
->  static DEFINE_SPMI_SET_POINTS(pldo);
->  static DEFINE_SPMI_SET_POINTS(nldo1);
->  static DEFINE_SPMI_SET_POINTS(nldo2);
-> @@ -530,6 +538,7 @@ static DEFINE_SPMI_SET_POINTS(ult_lo_smps);
->  static DEFINE_SPMI_SET_POINTS(ult_ho_smps);
->  static DEFINE_SPMI_SET_POINTS(ult_nldo);
->  static DEFINE_SPMI_SET_POINTS(ult_pldo);
-> +static DEFINE_SPMI_SET_POINTS(hfs430);
->  
->  static inline int spmi_vreg_read(struct spmi_regulator *vreg, u16 addr, u8 *buf,
->  				 int len)
-> @@ -1397,12 +1406,24 @@ static struct regulator_ops spmi_ftsmps426_ops = {
->  	.set_pull_down		= spmi_regulator_common_set_pull_down,
->  };
->  
-> +static struct regulator_ops spmi_hfs430_ops = {
-> +	/* always on regulators */
-> +	.set_voltage_sel	= spmi_regulator_ftsmps426_set_voltage,
-> +	.set_voltage_time_sel	= spmi_regulator_set_voltage_time_sel,
-> +	.get_voltage		= spmi_regulator_ftsmps426_get_voltage,
-> +	.map_voltage		= spmi_regulator_single_map_voltage,
-> +	.list_voltage		= spmi_regulator_common_list_voltage,
-> +	.set_mode		= spmi_regulator_ftsmps426_set_mode,
-> +	.get_mode		= spmi_regulator_ftsmps426_get_mode,
-> +};
-> +
->  /* Maximum possible digital major revision value */
->  #define INF 0xFF
->  
->  static const struct spmi_regulator_mapping supported_regulators[] = {
->  	/*           type subtype dig_min dig_max ltype ops setpoints hpm_min */
->  	SPMI_VREG(BUCK,  GP_CTL,   0, INF, SMPS,   smps,   smps,   100000),
-> +	SPMI_VREG(BUCK,  HFS430,   0, INF, HFS430, hfs430, hfs430,  10000),
->  	SPMI_VREG(LDO,   N300,     0, INF, LDO,    ldo,    nldo1,   10000),
->  	SPMI_VREG(LDO,   N600,     0,   0, LDO,    ldo,    nldo2,   10000),
->  	SPMI_VREG(LDO,   N1200,    0,   0, LDO,    ldo,    nldo2,   10000),
-> @@ -1570,7 +1591,8 @@ static int spmi_regulator_init_slew_rate(struct spmi_regulator *vreg)
->  	return ret;
->  }
->  
-> -static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg)
-> +static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg,
-> +						   int clock_rate)
->  {
->  	int ret;
->  	u8 reg = 0;
-> @@ -1587,7 +1609,7 @@ static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg)
->  	delay >>= SPMI_FTSMPS426_STEP_CTRL_DELAY_SHIFT;
->  
->  	/* slew_rate has units of uV/us */
-> -	slew_rate = SPMI_FTSMPS426_CLOCK_RATE * range->step_uV;
-> +	slew_rate = clock_rate * range->step_uV;
->  	slew_rate /= 1000 * (SPMI_FTSMPS426_STEP_DELAY << delay);
->  	slew_rate *= SPMI_FTSMPS426_STEP_MARGIN_NUM;
->  	slew_rate /= SPMI_FTSMPS426_STEP_MARGIN_DEN;
-> @@ -1739,7 +1761,14 @@ static int spmi_regulator_of_parse(struct device_node *node,
->  			return ret;
->  		break;
->  	case SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426:
-> -		ret = spmi_regulator_init_slew_rate_ftsmps426(vreg);
-> +		ret = spmi_regulator_init_slew_rate_ftsmps426(vreg,
-> +						SPMI_FTSMPS426_CLOCK_RATE);
-> +		if (ret)
-> +			return ret;
-> +		break;
-> +	case SPMI_REGULATOR_LOGICAL_TYPE_HFS430:
-> +		ret = spmi_regulator_init_slew_rate_ftsmps426(vreg,
-> +							SPMI_HFS430_CLOCK_RATE);
->  		if (ret)
->  			return ret;
->  		break;
-> @@ -1907,6 +1936,11 @@ static const struct spmi_regulator_data pm8005_regulators[] = {
->  	{ }
->  };
->  
-> +static const struct spmi_regulator_data pms405_regulators[] = {
-> +	{ "s3", 0x1a00, }, /* supply name in the dts only */
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+---
+ changes from previous revision
+  * fixed size value for ranges property in aconnect
 
-Not sure what this comment is trying to say. The third element here
-should be the string that is used to find the supply as specified in DT.
-For s3 this is "vdd_s3".
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67 ++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++++++++
+ 2 files changed, 134 insertions(+)
 
-
-So please drop the comment and make this:
-	{ "s3", 0x1a00, "s3" },
-
-Regards,
-Bjorn
-
-> +	{ }
-> +};
-> +
->  static const struct of_device_id qcom_spmi_regulator_match[] = {
->  	{ .compatible = "qcom,pm8005-regulators", .data = &pm8005_regulators },
->  	{ .compatible = "qcom,pm8841-regulators", .data = &pm8841_regulators },
-> @@ -1914,6 +1948,7 @@ static const struct of_device_id qcom_spmi_regulator_match[] = {
->  	{ .compatible = "qcom,pm8941-regulators", .data = &pm8941_regulators },
->  	{ .compatible = "qcom,pm8994-regulators", .data = &pm8994_regulators },
->  	{ .compatible = "qcom,pmi8994-regulators", .data = &pmi8994_regulators },
-> +	{ .compatible = "qcom,pms405-regulators", .data = &pms405_regulators },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
-> -- 
-> 2.17.1
-> 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+index 426ac0b..5e9fe7e 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+@@ -1295,4 +1295,71 @@
+ 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 		interrupt-parent = <&gic>;
+ 	};
++
++	aconnect {
++		compatible = "nvidia,tegra210-aconnect";
++		clocks = <&bpmp TEGRA186_CLK_APE>,
++			 <&bpmp TEGRA186_CLK_APB2APE>;
++		clock-names = "ape", "apb2ape";
++		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x02900000 0x0 0x02900000 0x200000>;
++		status = "disabled";
++
++		dma-controller@2930000 {
++			compatible = "nvidia,tegra186-adma";
++			reg = <0x02930000 0x50000>;
++			interrupt-parent = <&agic>;
++			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			#dma-cells = <1>;
++			clocks = <&bpmp TEGRA186_CLK_AHUB>;
++			clock-names = "d_audio";
++			status = "disabled";
++		};
++
++		agic: interrupt-controller@2a41000 {
++			compatible = "nvidia,tegra210-agic";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0x02a41000 0x1000>,
++			      <0x02a42000 0x2000>;
++			interrupts = <GIC_SPI 145
++				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++			clocks = <&bpmp TEGRA186_CLK_APE>;
++			clock-names = "clk";
++			status = "disabled";
++		};
++	};
+ };
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index c77ca21..a60ed5f 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1054,4 +1054,71 @@
+ 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 		interrupt-parent = <&gic>;
+ 	};
++
++	aconnect {
++		compatible = "nvidia,tegra210-aconnect";
++		clocks = <&bpmp TEGRA194_CLK_APE>,
++			 <&bpmp TEGRA194_CLK_APB2APE>;
++		clock-names = "ape", "apb2ape";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_AUD>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x02900000 0x0 0x02900000 0x200000>;
++		status = "disabled";
++
++		dma-controller@2930000 {
++			compatible = "nvidia,tegra186-adma";
++			reg = <0x02930000 0x50000>;
++			interrupt-parent = <&agic>;
++			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			#dma-cells = <1>;
++			clocks = <&bpmp TEGRA194_CLK_AHUB>;
++			clock-names = "d_audio";
++			status = "disabled";
++		};
++
++		agic: interrupt-controller@2a41000 {
++			compatible = "nvidia,tegra210-agic";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0x02a41000 0x1000>,
++			      <0x02a42000 0x2000>;
++			interrupts = <GIC_SPI 145
++				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++			clocks = <&bpmp TEGRA194_CLK_APE>;
++			clock-names = "clk";
++			status = "disabled";
++		};
++	};
+ };
+-- 
+2.7.4
