@@ -1,110 +1,93 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v3 2/7] drivers: regulator: qcom_spmi: Refactor get_mode/set_mode
-Date: Thu, 13 Jun 2019 09:37:38 -0600
-Message-ID: <CAOCk7NpLz-6kM2X=HOh4ZcEw4bzhKcjd=8664HX43w1V+ffeag@mail.gmail.com>
-References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
- <20190613142239.8779-1-jeffrey.l.hugo@gmail.com> <20190613151209.GB6792@builder>
- <20190613152430.GC6792@builder>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 2/5] soc: qcom: smd-rpm: Create RPM interconnect proxy
+ child device
+Date: Thu, 13 Jun 2019 08:40:02 -0700
+Message-ID: <20190613154002.GH6792@builder>
+References: <20190613151323.10850-1-georgi.djakov@linaro.org>
+ <20190613151323.10850-3-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190613152430.GC6792@builder>
+Content-Disposition: inline
+In-Reply-To: <20190613151323.10850-3-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 9:24 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Thu 13 Jun 08:12 PDT 2019, Bjorn Andersson wrote:
->
-> > On Thu 13 Jun 07:22 PDT 2019, Jeffrey Hugo wrote:
-> >
-> > > spmi_regulator_common_get_mode and spmi_regulator_common_set_mode use
-> > > multi-level ifs which mirror a switch statement.  Refactor to use a switch
-> > > statement to make the code flow more clear.
-> > >
-> > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > > ---
-> > >  drivers/regulator/qcom_spmi-regulator.c | 28 ++++++++++++++++---------
-> > >  1 file changed, 18 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-> > > index fd55438c25d6..1c18fe5969b5 100644
-> > > --- a/drivers/regulator/qcom_spmi-regulator.c
-> > > +++ b/drivers/regulator/qcom_spmi-regulator.c
-> > > @@ -911,13 +911,14 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
-> > >
-> > >     spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
-> > >
-> > > -   if (reg & SPMI_COMMON_MODE_HPM_MASK)
->
-> Sorry, didn't see the & here. Don't you need to mask out the mode bits
-> before turning this into a switch?
+On Thu 13 Jun 08:13 PDT 2019, Georgi Djakov wrote:
 
-Ah.  Yes.  I read the documentation wrong when doing this.  Will fix.
+> Register a platform device to handle the communication of bus bandwidth
+> requests with the remote processor. The interconnect proxy device is part
+> of this remote processor (RPM) hardware. Let's create a icc-smd-rpm proxy
+> child device to represent the bus throughput functionality that is provided
+> by the RPM.
+> 
 
->
-> > > +   switch (reg) {
-> > > +   case SPMI_COMMON_MODE_HPM_MASK:
-> > >             return REGULATOR_MODE_NORMAL;
-> > > -
-> > > -   if (reg & SPMI_COMMON_MODE_AUTO_MASK)
-> > > +   case SPMI_COMMON_MODE_AUTO_MASK:
-> > >             return REGULATOR_MODE_FAST;
-> > > -
-> > > -   return REGULATOR_MODE_IDLE;
-> > > +   default:
-> > > +           return REGULATOR_MODE_IDLE;
-> > > +   }
-> > >  }
-> > >
-> > >  static int
-> > > @@ -925,12 +926,19 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
-> > >  {
-> > >     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> > >     u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
-> > > -   u8 val = 0;
-> > > +   u8 val;
-> > >
-> > > -   if (mode == REGULATOR_MODE_NORMAL)
-> > > +   switch (mode) {
-> > > +   case REGULATOR_MODE_NORMAL:
-> > >             val = SPMI_COMMON_MODE_HPM_MASK;
-> > > -   else if (mode == REGULATOR_MODE_FAST)
-> > > +           break;
-> > > +   case REGULATOR_MODE_FAST:
-> > >             val = SPMI_COMMON_MODE_AUTO_MASK;
-> > > +           break;
-> > > +   default:
-> > > +           val = 0;
-> > > +           break;
-> > > +   }
-> >
-> > For this part:
-> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > >
-> > >     return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
-> > >  }
-> > > @@ -1834,9 +1842,9 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
-> > >                     }
-> > >             }
-> > >
-> > > -           if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
-> >
-> > Squash this into patch 1.
-> >
-> > Regards,
-> > Bjorn
-> >
-> > > +           if (vreg->set_points->count == 1) {
-> > >                     /* since there is only one range */
-> > > -                   range = spmi_regulator_find_range(vreg);
-> > > +                   range = vreg->set_points->range;
-> > >                     vreg->desc.uV_step = range->step_uV;
-> > >             }
-> > >
-> > > --
-> > > 2.17.1
-> > >
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> 
+> v4:
+> - Return error if platform_device_register_data() fails
+> - Remove platform_set_drvdata() on the child device.
+> 
+> v3:
+> - New patch.
+> 
+>  drivers/soc/qcom/smd-rpm.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
+> index fa9dd12b5e39..34cdd638a6c1 100644
+> --- a/drivers/soc/qcom/smd-rpm.c
+> +++ b/drivers/soc/qcom/smd-rpm.c
+> @@ -19,12 +19,14 @@
+>  /**
+>   * struct qcom_smd_rpm - state of the rpm device driver
+>   * @rpm_channel:	reference to the smd channel
+> + * @icc:		interconnect proxy device
+>   * @ack:		completion for acks
+>   * @lock:		mutual exclusion around the send/complete pair
+>   * @ack_status:		result of the rpm request
+>   */
+>  struct qcom_smd_rpm {
+>  	struct rpmsg_endpoint *rpm_channel;
+> +	struct platform_device *icc;
+>  	struct device *dev;
+>  
+>  	struct completion ack;
+> @@ -193,6 +195,7 @@ static int qcom_smd_rpm_callback(struct rpmsg_device *rpdev,
+>  static int qcom_smd_rpm_probe(struct rpmsg_device *rpdev)
+>  {
+>  	struct qcom_smd_rpm *rpm;
+> +	int ret;
+>  
+>  	rpm = devm_kzalloc(&rpdev->dev, sizeof(*rpm), GFP_KERNEL);
+>  	if (!rpm)
+> @@ -205,11 +208,23 @@ static int qcom_smd_rpm_probe(struct rpmsg_device *rpdev)
+>  	rpm->rpm_channel = rpdev->ept;
+>  	dev_set_drvdata(&rpdev->dev, rpm);
+>  
+> -	return of_platform_populate(rpdev->dev.of_node, NULL, NULL, &rpdev->dev);
+> +	rpm->icc = platform_device_register_data(&rpdev->dev, "icc_smd_rpm", -1,
+> +						 NULL, 0);
+> +	if (IS_ERR(rpm->icc))
+> +		return PTR_ERR(rpm->icc);
+> +
+> +	ret = of_platform_populate(rpdev->dev.of_node, NULL, NULL, &rpdev->dev);
+> +	if (ret)
+> +		platform_device_unregister(rpm->icc);
+> +
+> +	return ret;
+>  }
+>  
+>  static void qcom_smd_rpm_remove(struct rpmsg_device *rpdev)
+>  {
+> +	struct qcom_smd_rpm *rpm = dev_get_drvdata(&rpdev->dev);
+> +
+> +	platform_device_unregister(rpm->icc);
+>  	of_platform_depopulate(&rpdev->dev);
+>  }
+>  
