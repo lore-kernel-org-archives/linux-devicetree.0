@@ -1,124 +1,86 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: Re: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
-Date: Thu, 13 Jun 2019 10:55:31 +0200
-Message-ID: <CAO-hwJJUivfzFj-Downqt8nY3iTwF8-oq_iBqs1Dxyx92HdYPw@mail.gmail.com>
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
- <20190612212721.32195-1-jeffrey.l.hugo@gmail.com> <20190612214636.GA40779@dtor-ws>
- <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
+From: Auger Eric <eric.auger@redhat.com>
+Subject: Re: [PATCH v8 0/7] Add virtio-iommu driver
+Date: Thu, 13 Jun 2019 17:54:13 +0200
+Message-ID: <42408240-81a1-fe25-72da-5a93c9e1cb89@redhat.com>
+References: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Jiri Kosina <jikos@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <virtio-dev-return-5772-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
+Sender: <virtio-dev@lists.oasis-open.org>
+List-Post: <mailto:virtio-dev@lists.oasis-open.org>
+List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
+List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
+List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+In-Reply-To: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
+Content-Language: en-US
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, joro@8bytes.org, mst@redhat.com
+Cc: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, Lorenzo.Pieralisi@arm.com, robin.murphy@arm.com, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu, Tomasz Nowicki <tn@semihalf.com>, kevin.tian@intel.com, bauerman@linux.ibm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 12:20 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
->
-> On 6/12/2019 3:46 PM, Dmitry Torokhov wrote:
-> > On Wed, Jun 12, 2019 at 02:27:21PM -0700, Jeffrey Hugo wrote:
-> >> There needs to be coordination between hid-quirks and the elan_i2c driver
-> >> about which devices are handled by what drivers.  Currently, both use
-> >> whitelists, which results in valid devices being unhandled by default,
-> >> when they should not be rejected by hid-quirks.  This is quickly becoming
-> >> an issue.
-> >>
-> >> Since elan_i2c has a maintained whitelist of what devices it will handle,
-> >> which is now in a header file that hid-quirks can access, use that to
-> >> implement a blacklist in hid-quirks so that only the devices that need to
-> >> be handled by elan_i2c get rejected by hid-quirks, and everything else is
-> >> handled by default.
-> >>
-> >> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> >> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> >> ---
-> >>   drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
-> >>   1 file changed, 16 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> >> index e5ca6fe2ca57..bd81bb090222 100644
-> >> --- a/drivers/hid/hid-quirks.c
-> >> +++ b/drivers/hid/hid-quirks.c
-> >> @@ -16,6 +16,7 @@
-> >>   #include <linux/export.h>
-> >>   #include <linux/slab.h>
-> >>   #include <linux/mutex.h>
-> >> +#include <linux/input/elan-i2c-ids.h>
-> >>
-> >>   #include "hid-ids.h"
-> >>
-> >> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
-> >>
-> >>   bool hid_ignore(struct hid_device *hdev)
-> >>   {
-> >> +    int i;
-> >> +
-> >>      if (hdev->quirks & HID_QUIRK_NO_IGNORE)
-> >>              return false;
-> >>      if (hdev->quirks & HID_QUIRK_IGNORE)
-> >> @@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
-> >>              break;
-> >>      case USB_VENDOR_ID_ELAN:
-> >>              /*
-> >> -             * Many Elan devices have a product id of 0x0401 and are handled
-> >> -             * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
-> >> -             * is not (and cannot be) handled by that driver ->
-> >> -             * Ignore all 0x0401 devs except for the ELAN0800 dev.
-> >> +             * Blacklist of everything that gets handled by the elan_i2c
-> >> +             * input driver.  This avoids disabling valid touchpads and
-> >> +             * other ELAN devices.
-> >>               */
-> >> -            if (hdev->product == 0x0401 &&
-> >> -                strncmp(hdev->name, "ELAN0800", 8) != 0)
-> >> -                    return true;
-> >> -            /* Same with product id 0x0400 */
-> >> -            if (hdev->product == 0x0400 &&
-> >> -                strncmp(hdev->name, "QTEC0001", 8) != 0)
-> >> -                    return true;
-> >> +            if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
-> >> +                    for (i = 0; strlen(elan_acpi_id[i].id); ++i)
-> >> +                            if (!strncmp(hdev->name, elan_acpi_id[i].id,
-> >> +                                         strlen(elan_acpi_id[i].id)))
-> >> +                                    return true;
-> >> +                    for (i = 0; strlen(elan_of_match[i].name); ++i)
-> >> +                            if (!strncmp(hdev->name, elan_of_match[i].name,
-> >> +                                         strlen(elan_of_match[i].name)))
-> >> +                                    return true;
-> >
-> > Do we really need to blacklist the OF case here? I thought that in ACPI
-> > case we have clashes as HID gets matched by elan_i2c and CID is matched
-> > by i2c-hid, but I do not believe we'll run into the same situation on OF
-> > systems.
->
-> I think its the safer approach.
->
-> On an OF system, such as patch 3 in the series, the "hid-over-i2c" will
-> end up running through this (kind of the whole reason why this series
-> exists).  The vendor and product ids will still match, so we'll end up
-> going through the lists to see if the hdev->name (the compatible string)
-> will match the blacklist.  "hid-over-i2c" won't match the blacklist, but
-> if there is a more specific compatible, it might.
->
-> In that case, not matching OF would work, however how it could break
-> today is if both "hid-over-i2c" and "elan,ekth3000" were listed for the
-> same device, and elan_i2c was not compiled.  In that case, if we skip
-> the OF part of the black list, hid-quirks will not reject the device,
-> and you'll probably have some odd behavior instead of the obvious "the
-> device doesn't work because the correct driver isn't present" behavior.
->
-> While that scenario might be far fetched since having both
-> "hid-over-i2c" and "elan,ekth3000" probably violates the OF bindings,
-> its still safer to include the OF case in the blacklist against future
-> scenarios.
->
->
+Hi,
 
-Dmitry, if you are happy with Jeffrey's answer, feel free to take this
-through your tree and add:
-Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+On 5/30/19 7:09 PM, Jean-Philippe Brucker wrote:
+> Implement the virtio-iommu driver, following specification v0.12 [1].
+> Since last version [2] we've worked on improving the specification,
+> which resulted in the following changes to the interface:
+> * Remove the EXEC flag.
+> * Add feature bit for the MMIO flag.
+> * Change domain_bits to domain_range.
+> 
+> Given that there were small changes to patch 5/7, I removed the review
+> and test tags. Please find the code at [3].
+> 
+> [1] Virtio-iommu specification v0.12, sources and pdf
+>     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.12
+>     http://jpbrucker.net/virtio-iommu/spec/v0.12/virtio-iommu-v0.12.pdf
+>     http://jpbrucker.net/virtio-iommu/spec/diffs/virtio-iommu-dev-diff-v0.11-v0.12.pdf
+> 
+> [2] [PATCH v7 0/7] Add virtio-iommu driver
+>     https://lore.kernel.org/linux-pci/0ba215f5-e856-bf31-8dd9-a85710714a7a@arm.com/T/
+> 
+> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.12
+>     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.12
 
-I don't expect any major conflicts given on where the code is located.
+SERIES
+Tested-by: Eric Auger <eric.auger@redhat.com>
 
-Cheers,
-Benjamin
+with QEMU branch:
+https://github.com/eauger/qemu/tree/v4.0-virtio-iommu-v0.12
+
+and kernel branch:
+https://github.com/eauger/linux/tree/virtio-iommu-v0.12
+(where I just added the rebased iort patches on top of Jean-Philippe's
+virtio-iommu/v0.12 branch). So I also tested the ACPI boot.
+
+I will formally submit the QEMU series ASAP.
+
+Thanks
+
+Eric
+
+> 
+> Jean-Philippe Brucker (7):
+>   dt-bindings: virtio-mmio: Add IOMMU description
+>   dt-bindings: virtio: Add virtio-pci-iommu node
+>   of: Allow the iommu-map property to omit untranslated devices
+>   PCI: OF: Initialize dev->fwnode appropriately
+>   iommu: Add virtio-iommu driver
+>   iommu/virtio: Add probe request
+>   iommu/virtio: Add event queue
+> 
+>  .../devicetree/bindings/virtio/iommu.txt      |   66 +
+>  .../devicetree/bindings/virtio/mmio.txt       |   30 +
+>  MAINTAINERS                                   |    7 +
+>  drivers/iommu/Kconfig                         |   11 +
+>  drivers/iommu/Makefile                        |    1 +
+>  drivers/iommu/virtio-iommu.c                  | 1176 +++++++++++++++++
+>  drivers/of/base.c                             |   10 +-
+>  drivers/pci/of.c                              |    6 +
+>  include/uapi/linux/virtio_ids.h               |    1 +
+>  include/uapi/linux/virtio_iommu.h             |  165 +++
+>  10 files changed, 1470 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
+>  create mode 100644 drivers/iommu/virtio-iommu.c
+>  create mode 100644 include/uapi/linux/virtio_iommu.h
+> 
