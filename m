@@ -1,54 +1,125 @@
-Return-Path: <SRS0=5yH4=UC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1400095.outbound.protection.outlook.com ([40.107.140.95]:64765
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725856AbfFCI1f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Jun 2019 04:27:35 -0400
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 0/2] Fix SDR50 on iwg20d and iwg23s
-Date: Mon, 3 Jun 2019 08:27:30 +0000
-Message-ID: <TY1PR01MB177000019AE130363FB65CE4C0140@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1559203675-19675-1-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1559203675-19675-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=+6Kn=UM=gmail.com=tmaimon77@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+References: <20190610133245.306812-1-tmaimon77@gmail.com> <20190610133245.306812-3-tmaimon77@gmail.com>
+ <CAK8P3a0s1fdt2yHVjOXffeKPKkwUyJ7DKCZHHMKjx+3j300ZAQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a0s1fdt2yHVjOXffeKPKkwUyJ7DKCZHHMKjx+3j300ZAQ@mail.gmail.com>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Thu, 13 Jun 2019 12:26:42 +0300
+Message-ID: <CAP6Zq1jZEUzbB-ZidF2SD24k8iC_uBkXZ9WbtPpOYNCRjRTz3g@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] soc: nuvoton: add NPCM LPC BPC driver
+Content-Type: multipart/alternative; boundary="000000000000100856058b3104ab"
+To: Arnd Bergmann <arnd@arndb.de>, Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Cc: Olof Johansson <olof@lixom.net>, gregkh <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Avi Fishman <avifishman70@gmail.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
-Actually, it looks like that since commit
-0e7d6f940164 ("gpio: of: Apply regulator-gpio quirk only to enable-gpios")
-property enable-active-high is not necessary anymore.
-I am going to send a v2 to only flip the polarity of the GPIOs.
+--000000000000100856058b3104ab
+Content-Type: text/plain; charset="UTF-8"
+
+Adding Patrick and Joel to this discussion,
+
+Thanks for your prompt reply!
+
+On Tue, 11 Jun 2019 at 16:12, Arnd Bergmann <arnd@arndb.de> wrote:
+
+> On Mon, Jun 10, 2019 at 4:19 PM Tomer Maimon <tmaimon77@gmail.com> wrote:
+> >
+> > Add Nuvoton BMC NPCM BIOS post code (BPC) driver.
+> >
+> > The NPCM BPC monitoring two I/O address written by
+> > the host on the Low Pin Count (LPC) bus, the capure
+> > data stored in 128-word FIFO.
+> >
+> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+>
+> We've run into this situation before, but don't have a good solution yet:
+>
+> The driver seems useful and well implemented, but I keep having a bad
+> feeling about adding a chardev driver into drivers/soc for something that
+> is clearly specific to a particular implementation on the hardware side
+> but generic on the user interface. The same user interface might be
+> used on an Aspeed BMC or any other one, so please coordinate at
+> least between Novoton and Aspeed developers on creating a common
+> user interface, and review each other's patches.
+>
+
+Probably the only vendors that will use the snoop will be Nuvoton and
+Aspeed.
+is it worth to create new snoop common user interface for it,
+if we will develop a new snoop user interface who will be the maintainer?
+
+
+> Maybe we can introduce a drivers/bmc/ (or even drivers/openbmc)
+>
+that collects all those user interfaces with a thin abstraction layer
+> and one or two hardware specific back-ends?
+>
+
+Sounds good, Maybe we can move the KCS BMC from driver/char/ipmi to the
+drivers/bmc/?
+
+
+>         Arnd
+>
+
+appreciate your opinions, Joel, Andrew and Patrick?
 
 Thanks,
-Fab
 
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Sent: 30 May 2019 09:08
-> Subject: [PATCH 0/2] Fix SDR50 on iwg20d and iwg23s
->=20
-> Dear All,
->=20
-> SDR50 has been broken on both the iwg20d and the iwg23s since
-> commit d6cd33ad7102 ("regulator: gpio: Convert to use descriptors").
-> Other Renesas' platforms may be affected as well due
-> to the lack of property enable-active-high.
-> This patch series fixes the problem with the iWave platforms.
->=20
-> Thanks,
-> Fab
->=20
-> Fabrizio Castro (2):
->   ARM: dts: iwg20d-q7-common: Fix SDHI1 VccQ regularor
->   ARM: dts: iwg23s-sbc: Fix SDHI2 VccQ regulator
->=20
->  arch/arm/boot/dts/iwg20d-q7-common.dtsi   | 4 +++-
->  arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 4 +++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
->=20
-> --
-> 2.7.4
+Tomer
+
+--000000000000100856058b3104ab
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Adding Patrick and Joel to this discussion,</div><div=
+><br></div><div>Thanks for your prompt reply!</div><br><div class=3D"gmail_=
+quote"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, 11 Jun 2019 at 16:12, =
+Arnd Bergmann &lt;<a href=3D"mailto:arnd@arndb.de">arnd@arndb.de</a>&gt; wr=
+ote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px=
+ 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On Mon, Jun=
+ 10, 2019 at 4:19 PM Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@gmail.com=
+" target=3D"_blank">tmaimon77@gmail.com</a>&gt; wrote:<br>
+&gt;<br>
+&gt; Add Nuvoton BMC NPCM BIOS post code (BPC) driver.<br>
+&gt;<br>
+&gt; The NPCM BPC monitoring two I/O address written by<br>
+&gt; the host on the Low Pin Count (LPC) bus, the capure<br>
+&gt; data stored in 128-word FIFO.<br>
+&gt;<br>
+&gt; Signed-off-by: Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@gmail.com"=
+ target=3D"_blank">tmaimon77@gmail.com</a>&gt;<br>
+<br>
+We&#39;ve run into this situation before, but don&#39;t have a good solutio=
+n yet:<br>
+<br>
+The driver seems useful and well implemented, but I keep having a bad<br>
+feeling about adding a chardev driver into drivers/soc for something that<b=
+r>
+is clearly specific to a particular implementation on the hardware side<br>
+but generic on the user interface. The same user interface might be<br>
+used on an Aspeed BMC or any other one, so please coordinate at<br>
+least between Novoton and Aspeed developers on creating a common<br>
+user interface, and review each other&#39;s patches.<br></blockquote><div>=
+=C2=A0</div><div>Probably the only vendors that will use the snoop will be =
+Nuvoton and Aspeed.</div><div>is it worth to create new snoop common user i=
+nterface for it,=C2=A0</div><div>if we will develop a new snoop user interf=
+ace who will be the maintainer?</div><div><br></div><blockquote class=3D"gm=
+ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
+204,204);padding-left:1ex">
+<br>
+Maybe we can introduce a drivers/bmc/ (or even drivers/openbmc)<br></blockq=
+uote><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bo=
+rder-left:1px solid rgb(204,204,204);padding-left:1ex">that collects all th=
+ose user interfaces with a thin abstraction layer<br>
+and one or two hardware specific back-ends?<br></blockquote><div>=C2=A0</di=
+v><div>Sounds good, Maybe we can move the KCS BMC from driver/char/ipmi to =
+the drivers/bmc/?</div><div>=C2=A0<br></div><blockquote class=3D"gmail_quot=
+e" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204)=
+;padding-left:1ex">
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 Arnd<br></blockquote><div><br></div>appreciate =
+your opinions, Joel, Andrew and Patrick?</div><div class=3D"gmail_quote"><b=
+r></div><div class=3D"gmail_quote">Thanks,</div><div class=3D"gmail_quote">=
+<br></div><div class=3D"gmail_quote">Tomer<br class=3D"gmail-Apple-intercha=
+nge-newline"><div>=C2=A0</div></div></div>
+
+--000000000000100856058b3104ab--
