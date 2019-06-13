@@ -1,236 +1,319 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v3 1/8] clk: tegra20/30: Add custom EMC clock
- implementation
-Date: Thu, 13 Jun 2019 15:14:28 +0300
-Message-ID: <9c4af080-89d1-84a3-d909-b5595b8a6959@gmail.com>
-References: <20190524172353.29087-1-digetx@gmail.com>
- <20190524172353.29087-2-digetx@gmail.com>
- <20190613104945.GJ29894@pdeschrijver-desktop.Nvidia.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 4/7] regulator: qcom_spmi: Add support for PM8005
+Date: Thu, 13 Jun 2019 08:25:19 -0700
+Message-ID: <20190613152519.GD6792@builder>
+References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
+ <20190613142334.8882-1-jeffrey.l.hugo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190613104945.GJ29894@pdeschrijver-desktop.Nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190613142334.8882-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-13.06.2019 13:49, Peter De Schrijver пишет:
-> On Fri, May 24, 2019 at 08:23:46PM +0300, Dmitry Osipenko wrote:
->> A proper External Memory Controller clock rounding and parent selection
->> functionality is required by the EMC drivers. It is not available using
->> the generic clock implementation, hence add a custom one. The clock rate
->> rounding shall be done by the EMC drivers because they have information
->> about available memory timings, so the drivers will have to register a
->> callback that will round the requested rate. EMC clock users won't be able
->> to request EMC clock by getting -EPROBE_DEFER until EMC driver is probed
->> and the callback is set up. The functionality is somewhat similar to the
->> clk-emc.c which serves Tegra124+ SoC's, the later HW generations support
->> more parent clock sources and the HW configuration and integration with
->> the EMC drivers differs a tad from the older gens, hence it's not really
->> worth to try to squash everything into a single source file.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/clk/tegra/Makefile          |   2 +
->>  drivers/clk/tegra/clk-tegra20-emc.c | 299 ++++++++++++++++++++++++++++
->>  drivers/clk/tegra/clk-tegra20.c     |  55 ++---
->>  drivers/clk/tegra/clk-tegra30.c     |  38 +++-
->>  drivers/clk/tegra/clk.h             |   6 +
->>  include/linux/clk/tegra.h           |  14 ++
->>  6 files changed, 362 insertions(+), 52 deletions(-)
->>  create mode 100644 drivers/clk/tegra/clk-tegra20-emc.c
->>
->> diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
->> index 4812e45c2214..df966ca06788 100644
->> --- a/drivers/clk/tegra/Makefile
->> +++ b/drivers/clk/tegra/Makefile
->> @@ -17,7 +17,9 @@ obj-y					+= clk-tegra-fixed.o
->>  obj-y					+= clk-tegra-super-gen4.o
->>  obj-$(CONFIG_TEGRA_CLK_EMC)		+= clk-emc.o
->>  obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o
->> +obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= clk-tegra20-emc.o
->>  obj-$(CONFIG_ARCH_TEGRA_3x_SOC)         += clk-tegra30.o
->> +obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= clk-tegra20-emc.o
->>  obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= clk-tegra114.o
->>  obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124.o
->>  obj-$(CONFIG_TEGRA_CLK_DFLL)		+= clk-tegra124-dfll-fcpu.o
->> diff --git a/drivers/clk/tegra/clk-tegra20-emc.c b/drivers/clk/tegra/clk-tegra20-emc.c
->> new file mode 100644
->> index 000000000000..d971b5425ce3
->> --- /dev/null
->> +++ b/drivers/clk/tegra/clk-tegra20-emc.c
->> @@ -0,0 +1,299 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/bits.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/clk/tegra.h>
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/slab.h>
->> +
->> +#include "clk.h"
->> +
->> +#define CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK	GENMASK(7, 0)
->> +#define CLK_SOURCE_EMC_2X_CLK_SRC_MASK		GENMASK(31, 30)
->> +#define CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT		30
->> +
->> +#define MC_EMC_SAME_FREQ	BIT(16)
->> +#define USE_PLLM_UD		BIT(29)
->> +
->> +#define EMC_SRC_PLL_M		0
->> +#define EMC_SRC_PLL_C		1
->> +#define EMC_SRC_PLL_P		2
->> +#define EMC_SRC_CLK_M		3
->> +
->> +static const char * const emc_parent_clk_names[] = {
->> +	"pll_m", "pll_c", "pll_p", "clk_m",
->> +};
->> +
->> +struct tegra_clk_emc {
->> +	struct clk_hw hw;
->> +	void __iomem *reg;
->> +	bool mc_same_freq;
->> +	bool want_low_jitter;
->> +
->> +	tegra20_clk_emc_round_cb *round_cb;
->> +	void *cb_arg;
->> +};
->> +
->> +static inline struct tegra_clk_emc *to_tegra_clk_emc(struct clk_hw *hw)
->> +{
->> +	return container_of(hw, struct tegra_clk_emc, hw);
->> +}
->> +
->> +static unsigned long emc_recalc_rate(struct clk_hw *hw,
->> +				     unsigned long parent_rate)
->> +{
->> +	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
->> +	u32 val, div;
->> +
->> +	val = readl_relaxed(emc->reg);
->> +	div = val & CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
->> +
->> +	return DIV_ROUND_UP(parent_rate * 2, div + 2);
->> +}
->> +
->> +static u8 emc_get_parent(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
->> +
->> +	return readl_relaxed(emc->reg) >> CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
->> +}
->> +
->> +static int emc_set_parent(struct clk_hw *hw, u8 index)
->> +{
->> +	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
->> +	u32 val, div;
->> +
->> +	val = readl_relaxed(emc->reg);
->> +	val &= ~CLK_SOURCE_EMC_2X_CLK_SRC_MASK;
->> +	val |= index << CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
->> +
->> +	div = val & CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
->> +
->> +	if (index == EMC_SRC_PLL_M && div == 0 && emc->want_low_jitter)
->> +		val |= USE_PLLM_UD;
->> +	else
->> +		val &= ~USE_PLLM_UD;
->> +
->> +	if (emc->mc_same_freq)
->> +		val |= MC_EMC_SAME_FREQ;
->> +	else
->> +		val &= ~MC_EMC_SAME_FREQ;
->> +
->> +	writel_relaxed(val, emc->reg);
->> +
-> 
-> I think technically you need a fence_udelay(1) here, but in practice
-> this is probably not needed because you will poll some EMC register for
-> the frequency completion anyway. Maybe add a comment about this?
-> 
->> +	return 0;
->> +}
->> +
->> +static int emc_set_rate(struct clk_hw *hw, unsigned long rate,
->> +			unsigned long parent_rate)
->> +{
->> +	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
->> +	unsigned int index;
->> +	u32 val, div;
->> +
->> +	div = div_frac_get(rate, parent_rate, 8, 1, 0);
->> +
->> +	val = readl_relaxed(emc->reg);
->> +	val &= ~CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
->> +	val |= div;
->> +
->> +	index = val >> CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
->> +
->> +	if (index == EMC_SRC_PLL_M && div == 0 && emc->want_low_jitter)
->> +		val |= USE_PLLM_UD;
->> +	else
->> +		val &= ~USE_PLLM_UD;
->> +
->> +	if (emc->mc_same_freq)
->> +		val |= MC_EMC_SAME_FREQ;
->> +	else
->> +		val &= ~MC_EMC_SAME_FREQ;
->> +
->> +	writel_relaxed(val, emc->reg);
->> +
-> 
-> Same here.
-> 
->> +	return 0;
->> +}
->> +
->> +static int emc_set_rate_and_parent(struct clk_hw *hw,
->> +				   unsigned long rate,
->> +				   unsigned long parent_rate,
->> +				   u8 index)
->> +{
->> +	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
->> +	u32 val, div;
->> +
->> +	div = div_frac_get(rate, parent_rate, 8, 1, 0);
->> +
->> +	val = readl_relaxed(emc->reg);
->> +
->> +	val &= ~CLK_SOURCE_EMC_2X_CLK_SRC_MASK;
->> +	val |= index << CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
->> +
->> +	val &= ~CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
->> +	val |= div;
->> +
->> +	if (index == EMC_SRC_PLL_M && div == 0 && emc->want_low_jitter)
->> +		val |= USE_PLLM_UD;
->> +	else
->> +		val &= ~USE_PLLM_UD;
->> +
->> +	if (emc->mc_same_freq)
->> +		val |= MC_EMC_SAME_FREQ;
->> +	else
->> +		val &= ~MC_EMC_SAME_FREQ;
->> +
->> +	writel_relaxed(val, emc->reg);
->> +
-> 
-> And here.
-> 
->> +	return 0;
->> +}
-> 
-> Peter.
+On Thu 13 Jun 07:23 PDT 2019, Jeffrey Hugo wrote:
+
+> The PM8005 is used on the msm8998 MTP.  The S1 regulator is VDD_GFX, ie
+> it needs to be on and controlled inorder to use the GPU.  Add support to
+> drive the PM8005 regulators so that we can bring up the GPU on msm8998.
 > 
 
-Thank you very much for the feedback! Indeed, it will be a bit more
-robust to add fence_udelay() since one microsecond is practically
-nothing and then it will be a part of the clk-change awaiting anyway
-(note that EMC driver waits for the interrupt event and doesn't poll the
-status), we also don't really care about the EMC rate-change performance
-much because it won't happen frequently.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  drivers/regulator/qcom_spmi-regulator.c | 169 ++++++++++++++++++++++++
+>  1 file changed, 169 insertions(+)
+> 
+> diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+> index 1c18fe5969b5..c7880c1d4bcd 100644
+> --- a/drivers/regulator/qcom_spmi-regulator.c
+> +++ b/drivers/regulator/qcom_spmi-regulator.c
+> @@ -104,6 +104,7 @@ enum spmi_regulator_logical_type {
+>  	SPMI_REGULATOR_LOGICAL_TYPE_ULT_LO_SMPS,
+>  	SPMI_REGULATOR_LOGICAL_TYPE_ULT_HO_SMPS,
+>  	SPMI_REGULATOR_LOGICAL_TYPE_ULT_LDO,
+> +	SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426,
+>  };
+>  
+>  enum spmi_regulator_type {
+> @@ -150,6 +151,7 @@ enum spmi_regulator_subtype {
+>  	SPMI_REGULATOR_SUBTYPE_5V_BOOST		= 0x01,
+>  	SPMI_REGULATOR_SUBTYPE_FTS_CTL		= 0x08,
+>  	SPMI_REGULATOR_SUBTYPE_FTS2p5_CTL	= 0x09,
+> +	SPMI_REGULATOR_SUBTYPE_FTS426_CTL	= 0x0a,
+>  	SPMI_REGULATOR_SUBTYPE_BB_2A		= 0x01,
+>  	SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL1	= 0x0d,
+>  	SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL2	= 0x0e,
+> @@ -170,6 +172,18 @@ enum spmi_common_regulator_registers {
+>  	SPMI_COMMON_REG_STEP_CTRL		= 0x61,
+>  };
+>  
+> +/*
+> + * Second common register layout used by newer devices starting with ftsmps426
+> + * Note that some of the registers from the first common layout remain
+> + * unchanged and their definition is not duplicated.
+> + */
+> +enum spmi_ftsmps426_regulator_registers {
+> +	SPMI_FTSMPS426_REG_VOLTAGE_LSB		= 0x40,
+> +	SPMI_FTSMPS426_REG_VOLTAGE_MSB		= 0x41,
+> +	SPMI_FTSMPS426_REG_VOLTAGE_ULS_LSB	= 0x68,
+> +	SPMI_FTSMPS426_REG_VOLTAGE_ULS_MSB	= 0x69,
+> +};
+> +
+>  enum spmi_vs_registers {
+>  	SPMI_VS_REG_OCP				= 0x4a,
+>  	SPMI_VS_REG_SOFT_START			= 0x4c,
+> @@ -229,6 +243,14 @@ enum spmi_common_control_register_index {
+>  #define SPMI_COMMON_MODE_FOLLOW_HW_EN0_MASK	0x01
+>  #define SPMI_COMMON_MODE_FOLLOW_ALL_MASK	0x1f
+>  
+> +#define SPMI_FTSMPS426_MODE_BYPASS_MASK		3
+> +#define SPMI_FTSMPS426_MODE_RETENTION_MASK	4
+> +#define SPMI_FTSMPS426_MODE_LPM_MASK		5
+> +#define SPMI_FTSMPS426_MODE_AUTO_MASK		6
+> +#define SPMI_FTSMPS426_MODE_HPM_MASK		7
+> +
+> +#define SPMI_FTSMPS426_MODE_MASK		0x07
+> +
+>  /* Common regulator pull down control register layout */
+>  #define SPMI_COMMON_PULL_DOWN_ENABLE_MASK	0x80
+>  
+> @@ -274,6 +296,23 @@ enum spmi_common_control_register_index {
+>  #define SPMI_FTSMPS_STEP_MARGIN_NUM	4
+>  #define SPMI_FTSMPS_STEP_MARGIN_DEN	5
+>  
+> +#define SPMI_FTSMPS426_STEP_CTRL_DELAY_MASK	0x03
+> +#define SPMI_FTSMPS426_STEP_CTRL_DELAY_SHIFT	0
+> +
+> +/* Clock rate in kHz of the FTSMPS426 regulator reference clock. */
+> +#define SPMI_FTSMPS426_CLOCK_RATE		4800
+> +
+> +/* Minimum voltage stepper delay for each step. */
+> +#define SPMI_FTSMPS426_STEP_DELAY		2
+> +
+> +/*
+> + * The ratio SPMI_FTSMPS426_STEP_MARGIN_NUM/SPMI_FTSMPS426_STEP_MARGIN_DEN is
+> + * used to adjust the step rate in order to account for oscillator variance.
+> + */
+> +#define SPMI_FTSMPS426_STEP_MARGIN_NUM	10
+> +#define SPMI_FTSMPS426_STEP_MARGIN_DEN	11
+> +
+> +
+>  /* VSET value to decide the range of ULT SMPS */
+>  #define ULT_SMPS_RANGE_SPLIT 0x60
+>  
+> @@ -447,6 +486,10 @@ static struct spmi_voltage_range ftsmps2p5_ranges[] = {
+>  	SPMI_VOLTAGE_RANGE(1,  160000, 1360000, 2200000, 2200000, 10000),
+>  };
+>  
+> +static struct spmi_voltage_range ftsmps426_ranges[] = {
+> +	SPMI_VOLTAGE_RANGE(0,       0,  320000, 1352000, 1352000,  4000),
+> +};
+> +
+>  static struct spmi_voltage_range boost_ranges[] = {
+>  	SPMI_VOLTAGE_RANGE(0, 4000000, 4000000, 5550000, 5550000, 50000),
+>  };
+> @@ -480,6 +523,7 @@ static DEFINE_SPMI_SET_POINTS(ln_ldo);
+>  static DEFINE_SPMI_SET_POINTS(smps);
+>  static DEFINE_SPMI_SET_POINTS(ftsmps);
+>  static DEFINE_SPMI_SET_POINTS(ftsmps2p5);
+> +static DEFINE_SPMI_SET_POINTS(ftsmps426);
+>  static DEFINE_SPMI_SET_POINTS(boost);
+>  static DEFINE_SPMI_SET_POINTS(boost_byp);
+>  static DEFINE_SPMI_SET_POINTS(ult_lo_smps);
+> @@ -747,6 +791,23 @@ spmi_regulator_common_set_voltage(struct regulator_dev *rdev, unsigned selector)
+>  	return spmi_vreg_write(vreg, SPMI_COMMON_REG_VOLTAGE_RANGE, buf, 2);
+>  }
+>  
+> +static int spmi_regulator_common_list_voltage(struct regulator_dev *rdev,
+> +					      unsigned selector);
+> +
+> +static int spmi_regulator_ftsmps426_set_voltage(struct regulator_dev *rdev,
+> +					      unsigned selector)
+> +{
+> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> +	u8 buf[2];
+> +	int mV;
+> +
+> +	mV = spmi_regulator_common_list_voltage(rdev, selector) / 1000;
+> +
+> +	buf[0] = mV & 0xff;
+> +	buf[1] = mV >> 8;
+> +	return spmi_vreg_write(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
+> +}
+> +
+>  static int spmi_regulator_set_voltage_time_sel(struct regulator_dev *rdev,
+>  		unsigned int old_selector, unsigned int new_selector)
+>  {
+> @@ -778,6 +839,16 @@ static int spmi_regulator_common_get_voltage(struct regulator_dev *rdev)
+>  	return spmi_hw_selector_to_sw(vreg, voltage_sel, range);
+>  }
+>  
+> +static int spmi_regulator_ftsmps426_get_voltage(struct regulator_dev *rdev)
+> +{
+> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> +	u8 buf[2];
+> +
+> +	spmi_vreg_read(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
+> +
+> +	return (((unsigned int)buf[1] << 8) | (unsigned int)buf[0]) * 1000;
+> +}
+> +
+>  static int spmi_regulator_single_map_voltage(struct regulator_dev *rdev,
+>  		int min_uV, int max_uV)
+>  {
+> @@ -921,6 +992,23 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
+>  	}
+>  }
+>  
+> +static unsigned int spmi_regulator_ftsmps426_get_mode(struct regulator_dev *rdev)
+> +{
+> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> +	u8 reg;
+> +
+> +	spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
+> +
+> +	switch (reg) {
+> +	case SPMI_FTSMPS426_MODE_HPM_MASK:
+> +		return REGULATOR_MODE_NORMAL;
+> +	case SPMI_FTSMPS426_MODE_AUTO_MASK:
+> +		return REGULATOR_MODE_FAST;
+> +	default:
+> +		return REGULATOR_MODE_IDLE;
+> +	}
+> +}
+> +
+>  static int
+>  spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
+>  {
+> @@ -943,6 +1031,28 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
+>  	return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
+>  }
+>  
+> +static int
+> +spmi_regulator_ftsmps426_set_mode(struct regulator_dev *rdev, unsigned int mode)
+> +{
+> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> +	u8 mask = SPMI_FTSMPS426_MODE_MASK;
+> +	u8 val;
+> +
+> +	switch (mode) {
+> +	case REGULATOR_MODE_NORMAL:
+> +		val = SPMI_FTSMPS426_MODE_HPM_MASK;
+> +		break;
+> +	case REGULATOR_MODE_FAST:
+> +		val = SPMI_FTSMPS426_MODE_AUTO_MASK;
+> +		break;
+> +	default:
+> +		val = SPMI_FTSMPS426_MODE_LPM_MASK;
+> +		break;
+> +	}
+> +
+> +	return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
+> +}
+> +
+>  static int
+>  spmi_regulator_common_set_load(struct regulator_dev *rdev, int load_uA)
+>  {
+> @@ -1272,6 +1382,21 @@ static struct regulator_ops spmi_ult_ldo_ops = {
+>  	.set_soft_start		= spmi_regulator_common_set_soft_start,
+>  };
+>  
+> +static struct regulator_ops spmi_ftsmps426_ops = {
+> +	.enable			= regulator_enable_regmap,
+> +	.disable		= regulator_disable_regmap,
+> +	.is_enabled		= regulator_is_enabled_regmap,
+> +	.set_voltage_sel	= spmi_regulator_ftsmps426_set_voltage,
+> +	.set_voltage_time_sel	= spmi_regulator_set_voltage_time_sel,
+> +	.get_voltage		= spmi_regulator_ftsmps426_get_voltage,
+> +	.map_voltage		= spmi_regulator_single_map_voltage,
+> +	.list_voltage		= spmi_regulator_common_list_voltage,
+> +	.set_mode		= spmi_regulator_ftsmps426_set_mode,
+> +	.get_mode		= spmi_regulator_ftsmps426_get_mode,
+> +	.set_load		= spmi_regulator_common_set_load,
+> +	.set_pull_down		= spmi_regulator_common_set_pull_down,
+> +};
+> +
+>  /* Maximum possible digital major revision value */
+>  #define INF 0xFF
+>  
+> @@ -1307,6 +1432,7 @@ static const struct spmi_regulator_mapping supported_regulators[] = {
+>  	SPMI_VREG(BOOST, 5V_BOOST, 0, INF, BOOST,  boost,  boost,       0),
+>  	SPMI_VREG(FTS,   FTS_CTL,  0, INF, FTSMPS, ftsmps, ftsmps, 100000),
+>  	SPMI_VREG(FTS, FTS2p5_CTL, 0, INF, FTSMPS, ftsmps, ftsmps2p5, 100000),
+> +	SPMI_VREG(FTS, FTS426_CTL, 0, INF, FTSMPS426, ftsmps426, ftsmps426, 100000),
+>  	SPMI_VREG(BOOST_BYP, BB_2A, 0, INF, BOOST_BYP, boost, boost_byp, 0),
+>  	SPMI_VREG(ULT_BUCK, ULT_HF_CTL1, 0, INF, ULT_LO_SMPS, ult_lo_smps,
+>  						ult_lo_smps,   100000),
+> @@ -1444,6 +1570,34 @@ static int spmi_regulator_init_slew_rate(struct spmi_regulator *vreg)
+>  	return ret;
+>  }
+>  
+> +static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg)
+> +{
+> +	int ret;
+> +	u8 reg = 0;
+> +	int delay, slew_rate;
+> +	const struct spmi_voltage_range *range = &vreg->set_points->range[0];
+> +
+> +	ret = spmi_vreg_read(vreg, SPMI_COMMON_REG_STEP_CTRL, &reg, 1);
+> +	if (ret) {
+> +		dev_err(vreg->dev, "spmi read failed, ret=%d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	delay = reg & SPMI_FTSMPS426_STEP_CTRL_DELAY_MASK;
+> +	delay >>= SPMI_FTSMPS426_STEP_CTRL_DELAY_SHIFT;
+> +
+> +	/* slew_rate has units of uV/us */
+> +	slew_rate = SPMI_FTSMPS426_CLOCK_RATE * range->step_uV;
+> +	slew_rate /= 1000 * (SPMI_FTSMPS426_STEP_DELAY << delay);
+> +	slew_rate *= SPMI_FTSMPS426_STEP_MARGIN_NUM;
+> +	slew_rate /= SPMI_FTSMPS426_STEP_MARGIN_DEN;
+> +
+> +	/* Ensure that the slew rate is greater than 0 */
+> +	vreg->slew_rate = max(slew_rate, 1);
+> +
+> +	return ret;
+> +}
+> +
+>  static int spmi_regulator_init_registers(struct spmi_regulator *vreg,
+>  				const struct spmi_regulator_init_data *data)
+>  {
+> @@ -1583,6 +1737,12 @@ static int spmi_regulator_of_parse(struct device_node *node,
+>  		ret = spmi_regulator_init_slew_rate(vreg);
+>  		if (ret)
+>  			return ret;
+> +		break;
+> +	case SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426:
+> +		ret = spmi_regulator_init_slew_rate_ftsmps426(vreg);
+> +		if (ret)
+> +			return ret;
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> @@ -1739,7 +1899,16 @@ static const struct spmi_regulator_data pmi8994_regulators[] = {
+>  	{ }
+>  };
+>  
+> +static const struct spmi_regulator_data pm8005_regulators[] = {
+> +	{ "s1", 0x1400, "vdd_s1", },
+> +	{ "s2", 0x1700, "vdd_s2", },
+> +	{ "s3", 0x1a00, "vdd_s3", },
+> +	{ "s4", 0x1d00, "vdd_s4", },
+> +	{ }
+> +};
+> +
+>  static const struct of_device_id qcom_spmi_regulator_match[] = {
+> +	{ .compatible = "qcom,pm8005-regulators", .data = &pm8005_regulators },
+>  	{ .compatible = "qcom,pm8841-regulators", .data = &pm8841_regulators },
+>  	{ .compatible = "qcom,pm8916-regulators", .data = &pm8916_regulators },
+>  	{ .compatible = "qcom,pm8941-regulators", .data = &pm8941_regulators },
+> -- 
+> 2.17.1
+> 
