@@ -1,78 +1,35 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
-Date: Thu, 13 Jun 2019 23:35:15 +0800
-Message-ID: <CAEExFWskAsNquULKBLtBFUOosNpks8L6aUhw-+cF=oZ0aghAtQ@mail.gmail.com>
-References: <20190525181329.18657-1-tiny.windzz@gmail.com>
- <20190525181329.18657-2-tiny.windzz@gmail.com>
- <20190527122752.uc7q6zkjti3zag4q@flea>
- <CAEExFWtxEB67Pv-8x4ry=tZcJjOD6Kxydq_YB73Gox25VmQn7A@mail.gmail.com>
- <20190612154325.m6z7xsxlpdq4wkxv@flea>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH] dt: leds-lm36274.txt: fix a broken reference to ti-lmu.txt
+Date: Thu, 13 Jun 2019 07:23:15 -0300
+Message-ID: <79b9bf3388eb231da77c6a804862d21339262d0a.1560421387.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190612154325.m6z7xsxlpdq4wkxv@flea>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, rui.zhang@intel.com, paulmck@linux.ibm.com, David Miller <davem@davemloft.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 9:26 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Fri, Jun 07, 2019 at 09:34:44PM +0800, Frank Lee wrote:
-> > On Mon, May 27, 2019 at 8:27 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > +     ret = devm_request_threaded_irq(dev, irq, NULL,
-> > > > +                                     tmdev->chip->irq_thread,
-> > > > +                                     IRQF_ONESHOT, "ths", tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > >
-> > > Is there any particular reason to use a threaded interrupt?
-> >
-> > Just to improve real-time.
->
-> What do you mean by real-time here? If anything, that will increase
-> the latency of the interrupts here.
->
-> And in preempt-rt, regular top-half interrupts will be forced into a
-> threaded interrupt anyway.
->
-> > > > +static int sun8i_ths_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +     struct ths_device *tmdev = platform_get_drvdata(pdev);
-> > > > +
-> > > > +     clk_disable_unprepare(tmdev->bus_clk);
-> > >
-> > > I know that we discussed that already, but I'm not sure why you switch
-> > > back to a regular call to regmap_init_mmio, while regmap_init_mmio_clk
-> > > will take care of enabling and disabling the bus clock for you?
-> >
-> > It seems that regmap_init_mmio_clk just get clk and prepare clk
-> > but no enable.
->
-> At init time, yes. But it will enable it only when you access the
-> registers, which is what you want anyway.
+There's a typo there:
+	ti_lmu.txt -> ti-lmu.txt
 
-But after accessing the register, it turns the clock off, which
-affects the ad conversion and the occurrence of the interrupt.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/devicetree/bindings/leds/leds-lm36274.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In addition, when resuming from suspend, we need to enable
-the clock, so I think it is necessary to have a clock pointer.
-
-Yangtao
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm36274.txt b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
+index 456a589c65f0..39c230d59a4d 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lm36274.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
+@@ -6,7 +6,7 @@ up to 29V total output voltage. The 11-bit LED current is programmable via
+ the I2C bus and/or controlled via a logic level PWM input from 60 uA to 30 mA.
+ 
+ Parent device properties are documented in
+-Documentation/devicetree/bindings/mfd/ti_lmu.txt
++Documentation/devicetree/bindings/mfd/ti-lmu.txt
+ 
+ Regulator properties are documented in
+ Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
+-- 
+2.21.0
