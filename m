@@ -1,54 +1,70 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1 2/2] soc: nuvoton: add NPCM LPC BPC driver
-Date: Thu, 13 Jun 2019 13:49:42 +0200
-Message-ID: <CAK8P3a1YvBoehevVuRHMD71pkA1iDJLrfhvdhup2p+f-33HtzA@mail.gmail.com>
-References: <20190610133245.306812-1-tmaimon77@gmail.com> <20190610133245.306812-3-tmaimon77@gmail.com>
- <CAK8P3a0s1fdt2yHVjOXffeKPKkwUyJ7DKCZHHMKjx+3j300ZAQ@mail.gmail.com> <CAP6Zq1jZEUzbB-ZidF2SD24k8iC_uBkXZ9WbtPpOYNCRjRTz3g@mail.gmail.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH v3 1/7] drivers: regulator: qcom_spmi: enable linear range info
+Date: Thu, 13 Jun 2019 09:28:06 -0600
+Message-ID: <CAOCk7NpPkcFLR9HWQmfx+9heHs6KCPCZo9mSa_ibezdMUMXNFg@mail.gmail.com>
+References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
+ <20190613142231.8728-1-jeffrey.l.hugo@gmail.com> <20190613151008.GA6792@builder>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP6Zq1jZEUzbB-ZidF2SD24k8iC_uBkXZ9WbtPpOYNCRjRTz3g@mail.gmail.com>
+In-Reply-To: <20190613151008.GA6792@builder>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Olof Johansson <olof@lixom.net>, gregkh <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Avi Fishman <avifishman70@gmail.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:18 AM Tomer Maimon <tmaimon77@gmail.com> wrote:
+On Thu, Jun 13, 2019 at 9:10 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
+> On Thu 13 Jun 07:22 PDT 2019, Jeffrey Hugo wrote:
 >
-> Probably the only vendors that will use the snoop will be Nuvoton and Aspeed.
-> is it worth to create new snoop common user interface for it,
-> if we will develop a new snoop user interface who will be the maintainer?
-
-One or more of you will have to volunteer to maintain the new subsystem.
-
-There are lots of ways this can be structured, and once you have
-a maintainer (team), they can decide how to do it, but I'm available
-to come up with ideas here.
-
-Generally speaking, you don't need a ton of abstraction. The
-drivers/watchdog subsystem could serve as a template there.
-This has both models, the old way in which each HW specific
-driver uses its own chardev, and the new model in which the
-common code sits in a library module, and individual drivers
-register to it.
-
-I think the amount of code for two drivers is roughly the same
-in either model, but the shared user interface implementation
-makes it easier to ensure that the interfaces are in fact
-compatible.
-
-The other thing your own framework can do is to provide some
-consistency between BMC specific drivers for different
-functionality.
-
->> Maybe we can introduce a drivers/bmc/ (or even drivers/openbmc)
->>
->> that collects all those user interfaces with a thin abstraction layer
->> and one or two hardware specific back-ends?
+> > From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> >
+> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > ---
+> >  drivers/regulator/qcom_spmi-regulator.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+> > index 53a61fb65642..fd55438c25d6 100644
+> > --- a/drivers/regulator/qcom_spmi-regulator.c
+> > +++ b/drivers/regulator/qcom_spmi-regulator.c
+> > @@ -1744,6 +1744,7 @@ MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
+> >  static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+> >  {
+> >       const struct spmi_regulator_data *reg;
+> > +     const struct spmi_voltage_range *range;
+> >       const struct of_device_id *match;
+> >       struct regulator_config config = { };
+> >       struct regulator_dev *rdev;
+> > @@ -1833,6 +1834,12 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+> >                       }
+> >               }
+> >
+> > +             if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
 >
-> Sounds good, Maybe we can move the KCS BMC from driver/char/ipmi to the drivers/bmc/?
+> This doesn't compile, because HFS430 isn't defined until patch 7.
+>
+> But in patch 2 you replace this with a check to see if there's just a
+> single range, which is a better solution. So squash the last hunk of
+> patch 2 into this.
 
-Good idea. Yes, please.
+Huh, I did botch that.  The patch 2 hunk was intended to be in patch
+1.  Will fix.
 
-       Arnd
+>
+> Regards,
+> Bjorn
+>
+> > +                     /* since there is only one range */
+> > +                     range = spmi_regulator_find_range(vreg);
+> > +                     vreg->desc.uV_step = range->step_uV;
+> > +             }
+> > +
+> >               config.dev = dev;
+> >               config.driver_data = vreg;
+> >               config.regmap = regmap;
+> > --
+> > 2.17.1
+> >
