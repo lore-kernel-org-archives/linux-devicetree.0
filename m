@@ -1,115 +1,35 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
-Date: Thu, 13 Jun 2019 10:42:50 +0100
-Message-ID: <8a71e670-7943-6bce-ba61-3f020fd9450d@nvidia.com>
-References: <1560417053-2966-1-git-send-email-spujar@nvidia.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH repost 0/5] Repost CAN and CANFD dt-bindings
+Date: Thu, 13 Jun 2019 11:26:37 +0200
+Message-ID: <20190613092635.ztm4k34o5jrxmadd@verge.net.au>
+References: <1557429622-31676-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TY1PR01MB1770D2AAF2ED748575CA4CBFC0100@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20190612122020.sgp5q427ilh6bbbg@verge.net.au>
+ <20190612.094908.1957141510166169801.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560417053-2966-1-git-send-email-spujar@nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190612.094908.1957141510166169801.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sameer Pujar <spujar@nvidia.com>, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: mkumard@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: fabrizio.castro@bp.renesas.com, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert+renesas@glider.be, Chris.Paterson2@renesas.com, biju.das@bp.renesas.com, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 13/06/2019 10:10, Sameer Pujar wrote:
-> Add DT nodes for following devices on Tegra186 and Tegra194
->  * ACONNECT
->  * ADMA
->  * AGIC
+On Wed, Jun 12, 2019 at 09:49:08AM -0700, David Miller wrote:
+> From: Simon Horman <horms@verge.net.au>
+> Date: Wed, 12 Jun 2019 14:20:20 +0200
 > 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
->  changes in current revision
->   * use single address range for all APE modules
->   * fix address range for agic
+> > are you comfortable with me taking these patches
+> > through the renesas tree? Or perhaps should they be reposted
+> > to you for inclusion in net-next?
+> > 
+> > They have been stuck for a long time now.
 > 
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67 ++++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++++++++
->  2 files changed, 134 insertions(+)
+> They can go through the renesas tree, no problem.
 > 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> index 426ac0b..b4d735e 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> @@ -1295,4 +1295,71 @@
->  				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
->  		interrupt-parent = <&gic>;
->  	};
-> +
-> +	aconnect@2a41000 {
+> Acked-by: David S. Miller <davem@davemloft.net>
 
-This address does not look correct. This appears to be the address of
-the AGIC. I think it should be 2900000, however, I also wonder if we
-should even bother with an address for the aconnect as this is just a
-bus and we don't specific a 'reg' property.
+Thanks Dave,
 
-> +		compatible = "nvidia,tegra210-aconnect";
-> +		clocks = <&bpmp TEGRA186_CLK_APE>,
-> +			 <&bpmp TEGRA186_CLK_APB2APE>;
-> +		clock-names = "ape", "apb2ape";
-> +		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x02900000 0x0 0x02900000 0x1FFFFF>;
-
-This should be 0x1fffff.
-
-> +		status = "disabled";
-> +
-> +		dma-controller@2930000 {
-> +			compatible = "nvidia,tegra186-adma";
-> +			reg = <0x02930000 0x50000>;
-> +			interrupt-parent = <&agic>;
-> +			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +			#dma-cells = <1>;
-> +			clocks = <&bpmp TEGRA186_CLK_AHUB>;
-> +			clock-names = "d_audio";
-> +			status = "disabled";
-> +		};
-> +
-> +		agic: agic@2a41000 {
-
-I think that this should also be "agic: interrupt-controller@xxxx" to
-conform with standard names. Sorry the Tegra210 version is not the best
-reference!
-
-Cheers
-Jon
-
--- 
-nvpublic
+I have applied these to the renesas tree for inclusion in v5.3.
