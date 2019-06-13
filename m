@@ -1,86 +1,57 @@
-From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v8 0/7] Add virtio-iommu driver
-Date: Thu, 13 Jun 2019 17:54:13 +0200
-Message-ID: <42408240-81a1-fe25-72da-5a93c9e1cb89@redhat.com>
-References: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V3 4/4] soc/tegra: select pinctrl for Tegra194
+Date: Thu, 13 Jun 2019 10:47:36 +0200
+Message-ID: <20190613084736.GA30664@ulmo>
+References: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
+ <1558007594-14824-4-git-send-email-kyarlagadda@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <virtio-dev-return-5772-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-In-Reply-To: <20190530170929.19366-1-jean-philippe.brucker@arm.com>
-Content-Language: en-US
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, joro@8bytes.org, mst@redhat.com
-Cc: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, Lorenzo.Pieralisi@arm.com, robin.murphy@arm.com, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu, Tomasz Nowicki <tn@semihalf.com>, kevin.tian@intel.com, bauerman@linux.ibm.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1558007594-14824-4-git-send-email-kyarlagadda@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Cc: linus.walleij@linaro.org, jonathanh@nvidia.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, pdeschrijver@nvidia.com, josephl@nvidia.com, smangipudi@nvidia.com, ldewangan@nvidia.com, vidyas@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 5/30/19 7:09 PM, Jean-Philippe Brucker wrote:
-> Implement the virtio-iommu driver, following specification v0.12 [1].
-> Since last version [2] we've worked on improving the specification,
-> which resulted in the following changes to the interface:
-> * Remove the EXEC flag.
-> * Add feature bit for the MMIO flag.
-> * Change domain_bits to domain_range.
-> 
-> Given that there were small changes to patch 5/7, I removed the review
-> and test tags. Please find the code at [3].
-> 
-> [1] Virtio-iommu specification v0.12, sources and pdf
->     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.12
->     http://jpbrucker.net/virtio-iommu/spec/v0.12/virtio-iommu-v0.12.pdf
->     http://jpbrucker.net/virtio-iommu/spec/diffs/virtio-iommu-dev-diff-v0.11-v0.12.pdf
-> 
-> [2] [PATCH v7 0/7] Add virtio-iommu driver
->     https://lore.kernel.org/linux-pci/0ba215f5-e856-bf31-8dd9-a85710714a7a@arm.com/T/
-> 
-> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.12
->     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.12
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-SERIES
-Tested-by: Eric Auger <eric.auger@redhat.com>
+On Thu, May 16, 2019 at 05:23:14PM +0530, Krishna Yarlagadda wrote:
+> Select PINCTRL_TEGRA194 by default for Tegra194 SOC needed
+> for dynamically controlling PCIe pins
+>=20
+> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+> ---
+>  drivers/soc/tegra/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-with QEMU branch:
-https://github.com/eauger/qemu/tree/v4.0-virtio-iommu-v0.12
+Applied to for-5.3/soc, thanks.
 
-and kernel branch:
-https://github.com/eauger/linux/tree/virtio-iommu-v0.12
-(where I just added the rebased iort patches on top of Jean-Philippe's
-virtio-iommu/v0.12 branch). So I also tested the ACPI boot.
+Thierry
 
-I will formally submit the QEMU series ASAP.
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks
+-----BEGIN PGP SIGNATURE-----
 
-Eric
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0CDaUACgkQ3SOs138+
+s6Gw+Q/9GEMCAGe1/osKqqMZNuojtuyy3aCNb+QVhJWlJVtLn/VtdBx0AqAuAf63
+2HPt17CnmoqKcToQFlPHma+uC0BEiNuPx7E0dPLCddNI9JrNxqNuU7JaPN81WsXi
+Spydy5O5ioyDK42BTkWtljUAVHT8KwUDuLDMlvoINV8pWGCRKmU6CuN4+7XraC5R
+kZRutq0uc0bILzcVxVbzbe449ZF3y2aZyHdayaEYwPWmpN0JXWkmFIr093TWK7li
+NE+KSHUQBxujoct5IkKzgDTHAHLn3edNlzxXDLM1aM3QVN1BIo0ADnybyyFBj69y
+bhiOeczT5iI74h8cuNGf5BwCsgk2CgeQX4M3DpQMXHfdkZchqC/xTbSuafI9BiAS
+X9sip1PaNzHJyPMrfefXtx2uZJFz8IU6LGUqKsOfomFS4JkvJ/DKJtBaTMU8C+yq
+U2FCfMJfm79zUe1Gii2dHK2BCjj2Op8LRW3vKOP9B+qL+EIdBk75VxwbJABAI2ly
+C7B2Rkjl4JZ/Q0Co8+vHQ6DSxjNPJB7xnaM0S4oF0TFz++ykcLrnEVZP5QsevWrk
+Hjdysh9Od2rXOKhr3NlFHlarY8ZcvQGg2KTLiKpa4IOrC8MAKabs2AmKlsCjxA24
+FgzBW5XkLVHGKkUy5SmJSgE2B2Xlb/k9denLDi1UotFiEAMBhZ8=
+=7+8+
+-----END PGP SIGNATURE-----
 
-> 
-> Jean-Philippe Brucker (7):
->   dt-bindings: virtio-mmio: Add IOMMU description
->   dt-bindings: virtio: Add virtio-pci-iommu node
->   of: Allow the iommu-map property to omit untranslated devices
->   PCI: OF: Initialize dev->fwnode appropriately
->   iommu: Add virtio-iommu driver
->   iommu/virtio: Add probe request
->   iommu/virtio: Add event queue
-> 
->  .../devicetree/bindings/virtio/iommu.txt      |   66 +
->  .../devicetree/bindings/virtio/mmio.txt       |   30 +
->  MAINTAINERS                                   |    7 +
->  drivers/iommu/Kconfig                         |   11 +
->  drivers/iommu/Makefile                        |    1 +
->  drivers/iommu/virtio-iommu.c                  | 1176 +++++++++++++++++
->  drivers/of/base.c                             |   10 +-
->  drivers/pci/of.c                              |    6 +
->  include/uapi/linux/virtio_ids.h               |    1 +
->  include/uapi/linux/virtio_iommu.h             |  165 +++
->  10 files changed, 1470 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
->  create mode 100644 drivers/iommu/virtio-iommu.c
->  create mode 100644 include/uapi/linux/virtio_iommu.h
-> 
+--SLDf9lqlvOQaIe6s--
