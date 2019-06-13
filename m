@@ -1,15 +1,17 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCHv3 1/2] ARM: dts: imx6ul: Add Variscite DART-6UL SoM support
-Date: Thu, 13 Jun 2019 10:02:11 +0800
-Message-ID: <20190613015622.GD20747@dragon>
-References: <1559839624-12286-1-git-send-email-oliver.graute@gmail.com>
- <1559839624-12286-2-git-send-email-oliver.graute@gmail.com>
+From: Qii Wang <qii.wang@mediatek.com>
+Subject: Re: [PATCH 2/2] i3c: master: Add driver for MediaTek IP
+Date: Thu, 13 Jun 2019 10:29:21 +0800
+Message-ID: <1560392961.12217.7.camel@mhfsdcap03>
+References: <1559533863-10292-1-git-send-email-qii.wang@mediatek.com>
+ <1559533863-10292-3-git-send-email-qii.wang@mediatek.com>
+ <20190604095858.38ed9a28@collabora.com>
+ <1559651200.5871.2.camel@mhfsdcap03> <1560255922.12217.3.camel@mhfsdcap03>
+ <20190611142849.43f6d1e4@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1559839624-12286-2-git-send-email-oliver.graute@gmail.com>
+In-Reply-To: <20190611142849.43f6d1e4@collabora.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,524 +21,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oliver Graute <oliver.graute@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, narmstrong@baylibre.com, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, bbrezillon@kernel.org, leilk.liu@mediatek.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, liguo.zhang@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, matthias.bgg@gmail.com, linux-i3c@lists.infradead.org, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 06:47:01PM +0200, Oliver Graute wrote:
-> This patch adds support for the i.MX6UL variant of the Variscite DART-6UL
-> SoM Carrier-Board
+On Tue, 2019-06-11 at 14:28 +0200, Boris Brezillon wrote:
+> On Tue, 11 Jun 2019 20:25:22 +0800
+> Qii Wang <qii.wang@mediatek.com> wrote:
 > 
-> Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
-> ---
->  .../boot/dts/imx6ul-imx6ull-var-dart-common.dtsi   | 458 +++++++++++++++++++++
->  1 file changed, 458 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
+> > On Tue, 2019-06-04 at 20:26 +0800, Qii Wang wrote:
+> > > On Tue, 2019-06-04 at 09:58 +0200, Boris Brezillon wrote:  
+> > > > On Mon, 3 Jun 2019 11:51:03 +0800
+> > > > Qii Wang <qii.wang@mediatek.com> wrote:
+> > > > 
+> > > >   
+> > > > > +static int mtk_i3c_master_probe(struct platform_device *pdev)
+> > > > > +{
+> > > > > +	struct device *dev = &pdev->dev;
+> > > > > +	struct mtk_i3c_master *master;
+> > > > > +	struct resource *res;
+> > > > > +	int ret, irqnr;
+> > > > > +
+> > > > > +	master = devm_kzalloc(dev, sizeof(*master), GFP_KERNEL);
+> > > > > +	if (!master)
+> > > > > +		return -ENOMEM;
+> > > > > +
+> > > > > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "main");
+> > > > > +	master->regs = devm_ioremap_resource(dev, res);
+> > > > > +	if (IS_ERR(master->regs))
+> > > > > +		return PTR_ERR(master->regs);
+> > > > > +
+> > > > > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dma");
+> > > > > +	master->dma_regs = devm_ioremap_resource(dev, res);
+> > > > > +	if (IS_ERR(master->dma_regs))
+> > > > > +		return PTR_ERR(master->dma_regs);
+> > > > > +
+> > > > > +	irqnr = platform_get_irq(pdev, 0);
+> > > > > +	if (irqnr < 0)
+> > > > > +		return irqnr;
+> > > > > +
+> > > > > +	ret = devm_request_irq(dev, irqnr, mtk_i3c_master_irq,
+> > > > > +			       IRQF_TRIGGER_NONE, DRV_NAME, master);
+> > > > > +	if (ret < 0) {
+> > > > > +		dev_err(dev, "Request I3C IRQ %d fail\n", irqnr);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	ret = of_property_read_u32(pdev->dev.of_node, "clock-div",
+> > > > > +				   &master->clk_src_div);  
+> > > > 
+> > > > You say in one comment that this clock divider is fixed in HW but might
+> > > > change on a per-SoC basis. If that's the case, you should get rid of
+> > > > this clock-div prop and attach the divider to the compatible (using an
+> > > > mtk_i3c_master_variant struct that contains a divider field).
+> > > >   
+> > > 
+> > > ok, I will attach the divider to the compatible.
+> > >   
+> > I have rechecked your comment, maybe I have misunderstood what you mean.
+> > "clock-div" changes according to i2c source clock, different project may
+> > change i2c source clock, The previous dt-binding may be misleading, I
+> > will modify it.
 > 
-> diff --git a/arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi b/arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
-> new file mode 100644
-> index 0000000..89e48be
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
-> @@ -0,0 +1,458 @@
-> +// SPDX-License-Identifier: (GPL-2.0)
-> +/dts-v1/;
-> +
-> +#include "imx6ul.dtsi"
-> +/ {
-> +	chosen {
-> +		stdout-path = &uart1;
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x20000000>;
-> +	};
-> +
-> +	touch_3v3_regulator: regulator-touch-3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "touch_3v3_supply";
-> +		regulator-always-on;
-> +		status = "okay";
+> Is it fixed or configurable? Maybe it should be modeled as a clk
+> driver. What's for sure is that we shouldn't have this divider defined
+> in the DT.
 
-The 'status' property is mostly used to enable devices that are disabled
-by default.  It doesn't seem to be needed here.
-
-> +	};
-> +
-> +	reg_sd1_vmmc: regulator-sd1-vmmc {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VSD_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	reg_gpio_dvfs: regulator-gpio {
-> +		compatible = "regulator-gpio";
-> +		regulator-min-microvolt = <1300000>;
-> +		regulator-max-microvolt = <1400000>;
-> +		regulator-name = "gpio_dvfs";
-> +		regulator-type = "voltage";
-> +		gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
-> +		states = <1300000 0x1 1400000 0x0>;
-> +	};
-> +};
-> +
-> +&adc1 {
-> +	vref-supply = <&touch_3v3_regulator>;
-> +	status = "okay";
-> +};
-> +
-> +&can1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_flexcan1>;
-> +	status = "disabled";
-> +};
-> +
-> +&can2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_flexcan2>;
-> +	status = "disabled";
-> +};
-> +
-> +&clks {
-> +	/* ref_clk for micrel ethernet phy */
-> +	rmii_ref_clk: rmii_ref_clk_grp {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <25000000>;
-> +		clock-output-names = "rmii-ref";
-> +	};
-
-Fixed clocks should be put directly under root, and preferably using
-naming convention like:
-
-	clock-xxx {
-		...
-	};
-
-> +};
-> +
-> +&clks {
-> +	assigned-clocks = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
-> +	assigned-clock-rates = <786432000>;
-> +};
-> +
-> +&cpu0 {
-> +	arm-supply = <&reg_arm>;
-> +	soc-supply = <&reg_soc>;
-> +	dc-supply = <&reg_gpio_dvfs>;
-> +};
-> +
-> +&fec1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_enet1>;
-> +	phy-mode = "rmii";
-> +	status = "disabled";
-> +};
-> +
-> +&fec2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_enet2>;
-> +	phy-mode = "rmii";
-> +	status = "disabled";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@1 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			micrel,rmii-reference-clock-select-25-mhz;
-> +			clocks = <&rmii_ref_clk>;
-> +			clock-names = "rmii-ref";
-> +			reg = <1>;
-> +		};
-> +
-> +		ethphy1: ethernet-phy@3 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			micrel,rmii-reference-clock-select-25-mhz;
-> +			clocks = <&rmii_ref_clk>;
-> +			clock-names = "rmii-ref";
-> +			reg = <3>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c1>;
-> +	status = "disabled";
-> +};
-> +
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c2>;
-> +	status = "disabled";
-> +};
-> +
-> +&pwm1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pwm1>;
-> +	status = "disabled";
-> +};
-> +
-> +&sai2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_sai2>;
-> +	assigned-clocks = <&clks IMX6UL_CLK_SAI2_SEL>,
-> +			  <&clks IMX6UL_CLK_SAI2>;
-> +	assigned-clock-parents = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
-> +	assigned-clock-rates = <0>, <12288000>;
-> +	fsl,sai-mclk-direction-output;
-> +	status = "okay";
-> +};
-> +
-> +&snvs_poweroff {
-> +	status = "okay";
-> +};
-> +
-> +&snvs_rtc {
-> +	status = "disabled";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "disabled";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart2>;
-> +	uart-has-rtscts;
-> +	status = "disabled";
-> +};
-> +
-> +&uart3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart3>;
-> +	uart-has-rtscts;
-> +	status = "disabled";
-> +};
-> +
-> +&usbotg1 {
-> +	disable-over-current;
-> +	status = "disabled";
-> +};
-> +
-> +&usbotg2 {
-> +	disable-over-current;
-> +	status = "disabled";
-> +};
-> +
-> +&usdhc1 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-> +	no-1-8-v;
-> +	keep-power-in-suspend;
-> +	vmmc-supply = <&reg_sd1_vmmc>;
-> +	non-removable;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc2 {
-> +	status = "disabled";
-> +};
-> +
-> +&gpmi {
-
-It breaks the alphabetic order of labelling nodes.  That said, it should
-go after &fec2.
-
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_gpmi_nand_1>;
-> +	fsl,legacy-bch-geometry;
-
-Unsupported/undocumented property?
-
-> +	status = "okay";
-> +
-> +	partition@0 {
-> +		label = "spl";
-> +		reg = <0x00000000 0x00200000>;
-> +	};
-> +
-> +	partition@200000 {
-> +		label = "uboot";
-> +		reg = <0x00200000 0x00200000>;
-> +	};
-> +
-> +	partition@400000 {
-> +		label = "uboot-env";
-> +		reg = <0x00400000 0x00200000>;
-> +	};
-> +
-> +	partition@600000 {
-> +		label = "kernel";
-> +		reg = <0x00600000 0x00800000>;
-> +	};
-> +
-> +	partition@e00000 {
-> +		label = "rootfs";
-> +		reg = <0x00e00000 0x3f200000>;
-> +	};
-> +};
-> +
-> +&iomuxc {
-
-&iomuxc can be an exception, considering it has many contents.  People
-feel that putting it at the end of the file improves readability.
-
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hog_1>;
-
-Have a newline between properties and child node.
-
-> +	pinctrl_hog_1: hoggrp-1 {
-
-The '1' suffix doesn't make too much sense, since we have only one hog
-group here.
-
-> +		fsl,pins = <
-> +			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT    0x03029
-> +		>;
-> +	};
-> +
-> +	pinctrl_gpio_leds: gpioledsgrp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_CSI_HSYNC__GPIO4_IO20		0x1b0b0
-> +			MX6UL_PAD_GPIO1_IO00__GPIO1_IO00	0x17059
-> +		>;
-> +	};
-> +
-> +	pinctrl_enet1: enet1grp {
-
-Please try to sort these pinctrl nodes alphabetically.
-
-> +		fsl,pins = <
-> +			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-> +			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
-> +			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
-> +			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
-> +			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-> +			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
-> +			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
-> +			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
-> +		>;
-> +	};
-> +
-> +	pinctrl_enet2: enet2grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
-> +			MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
-> +			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
-> +			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
-> +			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
-> +			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
-> +			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
-> +			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
-> +			MX6UL_PAD_GPIO1_IO07__ENET2_MDC		0x1b0b0
-> +			MX6UL_PAD_GPIO1_IO06__ENET2_MDIO	0x1b0b0
-> +			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0x1b0b0
-> +		>;
-> +	};
-> +
-> +	pinctrl_flexcan1: flexcan1grp{
-> +		fsl,pins = <
-> +			MX6UL_PAD_LCD_DATA09__FLEXCAN1_RX	0x1b020
-> +			MX6UL_PAD_LCD_DATA08__FLEXCAN1_TX	0x1b020
-> +		>;
-> +	};
-> +
-> +	pinctrl_flexcan2: flexcan2grp{
-> +		fsl,pins = <
-> +			MX6UL_PAD_UART2_RTS_B__FLEXCAN2_RX	0x1b020
-> +			MX6UL_PAD_UART2_CTS_B__FLEXCAN2_TX	0x1b020
-> +		>;
-> +	};
-> +
-> +	pinctrl_lcdif_dat: lcdifdatgrp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02	0x79
-> +			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03	0x79
-> +			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04	0x79
-> +			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05	0x79
-> +			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06	0x79
-> +			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07	0x79
-> +			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10	0x79
-> +			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11	0x79
-> +			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12	0x79
-> +			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13	0x79
-> +			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14	0x79
-> +			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15	0x79
-> +			MX6UL_PAD_LCD_DATA18__LCDIF_DATA18	0x79
-> +			MX6UL_PAD_LCD_DATA19__LCDIF_DATA19	0x79
-> +			MX6UL_PAD_LCD_DATA20__LCDIF_DATA20	0x79
-> +			MX6UL_PAD_LCD_DATA21__LCDIF_DATA21	0x79
-> +			MX6UL_PAD_LCD_DATA22__LCDIF_DATA22	0x79
-> +			MX6UL_PAD_LCD_DATA23__LCDIF_DATA23	0x79
-> +		>;
-> +	};
-> +
-> +	pinctrl_lcdif_ctrl: lcdifctrlgrp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_LCD_CLK__LCDIF_CLK		0x79
-> +			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE	0x79
-> +		>;
-> +	};
-> +
-> +	pinctrl_pwm1: pwm1grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_LCD_DATA00__PWM1_OUT		0x110b0
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart1: uart1grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
-> +			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart2: uart2grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
-> +			MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
-> +			MX6UL_PAD_UART2_CTS_B__UART2_DCE_CTS	0x1b0b1
-> +			MX6UL_PAD_UART2_RTS_B__UART2_DCE_RTS	0x1b0b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart3: uart3grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX	0x1b0b1
-> +			MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX	0x1b0b1
-> +			MX6UL_PAD_UART3_CTS_B__UART3_DCE_CTS	0x1b0b1
-> +			MX6UL_PAD_UART3_RTS_B__UART3_DCE_RTS	0x1b0b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1: usdhc1grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
-> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x17059
-> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
-> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
-> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
-> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
-> +			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x1b0b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-> +		fsl,pins = <
-> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170b9
-> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100b9
-> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170b9
-> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170b9
-> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170b9
-> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170b9
-> +			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x1b0b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-> +		fsl,pins = <
-> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170f9
-> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100f9
-> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170f9
-> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170f9
-> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170f9
-> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170f9
-> +			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x1b0b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_gpmi_nand_1: gpmi-nand-1 {
-
-Please name it more consistently with others:
-
-	pinctrl_gpmi_nand: gpminandgrp
-
-Shawn
-
-> +		fsl,pins = <
-> +			MX6UL_PAD_NAND_CLE__RAWNAND_CLE		0xb0b1
-> +			MX6UL_PAD_NAND_ALE__RAWNAND_ALE		0xb0b1
-> +			MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B	0xb0b1
-> +			MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B	0xb000
-> +			MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B	0xb0b1
-> +			MX6UL_PAD_NAND_CE1_B__RAWNAND_CE1_B	0xb0b1
-> +			MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B	0xb0b1
-> +			MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B	0xb0b1
-> +			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00	0xb0b1
-> +			MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01	0xb0b1
-> +			MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02	0xb0b1
-> +			MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03	0xb0b1
-> +			MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04	0xb0b1
-> +			MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05	0xb0b1
-> +			MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06	0xb0b1
-> +			MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07	0xb0b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c1: i2c1grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL	0x4001b8b0
-> +			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA	0x4001b8b0
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c2: i2c2grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_UART5_TX_DATA__I2C2_SCL	0x4001b8b0
-> +			MX6UL_PAD_UART5_RX_DATA__I2C2_SDA	0x4001b8b0
-> +		>;
-> +	};
-> +
-> +	pinctrl_tsc: tscgrp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0xb0
-> +			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
-> +			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
-> +			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0xb0
-> +		>;
-> +	};
-> +
-> +	pinctrl_sai1: sai1grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_CSI_DATA05__SAI1_TX_BCLK	0x11088
-> +			MX6UL_PAD_CSI_DATA04__SAI1_TX_SYNC	0x17088
-> +			MX6UL_PAD_CSI_DATA06__SAI1_RX_DATA	0x11088
-> +			MX6UL_PAD_CSI_DATA07__SAI1_TX_DATA	0x11088
-> +		>;
-> +	};
-> +
-> +	pinctrl_sai2: sai2grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_JTAG_TDI__SAI2_TX_BCLK	0x17088
-> +			MX6UL_PAD_JTAG_TDO__SAI2_TX_SYNC	0x17088
-> +			MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA	0x11088
-> +			MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA	0x11088
-> +			MX6UL_PAD_JTAG_TMS__SAI2_MCLK		0x17088
-> +		>;
-> +	};
-> +
-> +	pinctrl_wdog: wdoggrp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_GPIO1_IO08__WDOG1_WDOG_B	0x78b0
-> +		>;
-> +	};
-> +};
-> +
-> +&wdog1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_wdog>;
-> +	fsl,ext-reset-output;
-> +};
-> -- 
-> 2.7.4
-> 
+ok, I have let the clk driver handle it, and remove it in DT and i3c
+driver. Thanks!
