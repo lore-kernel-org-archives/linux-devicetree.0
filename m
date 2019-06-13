@@ -1,63 +1,38 @@
-From: =?UTF-8?Q?S=c3=a9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6ul: Add PXP node
-Date: Thu, 13 Jun 2019 13:34:36 +0200
-Message-ID: <6802e25d-f12b-28e3-d975-7f21fe002a35@armadeus.com>
-References: <20190606164642.11539-1-sebastien.szymanski@armadeus.com>
- <20190612172103.gat3yrub2iyurai5@pengutronix.de>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/4] ASoC: meson: axg-tdm: i2s format fixups
+Date: Thu, 13 Jun 2019 13:42:29 +0200
+Message-ID: <20190613114233.21130-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190612172103.gat3yrub2iyurai5@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyY28sCgpPbiA2LzEyLzE5IDc6MjEgUE0sIE1hcmNvIEZlbHNjaCB3cm90ZToKPiBIaSBT
-w6liYXN0aWVuLAo+IAo+IE9uIDE5LTA2LTA2IDE4OjQ2LCBTw6liYXN0aWVuIFN6eW1hbnNraSB3
-cm90ZToKPj4gQWRkIFBYUCBub2RlIGZvciBpLk1YNlVML0wgU29DLgo+Pgo+PiBTaWduZWQtb2Zm
-LWJ5OiBTw6liYXN0aWVuIFN6eW1hbnNraSA8c2ViYXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5j
-b20+Cj4+IC0tLQo+PiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLmR0c2kgIHwgOSArKysrKysr
-KysKPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwuZHRzaSB8IDYgKysrKysrCj4+ICAyIGZp
-bGVzIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2lteDZ1bC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLmR0c2kKPj4g
-aW5kZXggZjEwMDEyZGU1ZWI2Li5hM2MwMDUzNzNhZTEgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2lteDZ1bC5kdHNpCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5k
-dHNpCj4+IEBAIC05NzEsNiArOTcxLDE1IEBACj4+ICAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsK
-Pj4gIAkJCX07Cj4+ICAKPj4gKwkJCXB4cDogcHhwQDIxY2MwMDAgewo+PiArCQkJCWNvbXBhdGli
-bGUgPSAiZnNsLGlteDZ1bC1weHAiOwo+PiArCQkJCXJlZyA9IDwweDAyMWNjMDAwIDB4NDAwMD47
-Cj4+ICsJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDggSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4+
-ICsJCQkJY2xvY2tzID0gPCZjbGtzIElNWDZVTF9DTEtfUFhQPjsKPj4gKwkJCQljbG9jay1uYW1l
-cyA9ICJheGkiOwo+PiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gCj4gQ2FuIHlvdSBkcm9w
-IHRoZSBzdGF0dXMgbGluZSBiZWNhdXNlIGl0cyBhIHBsYXRmb3JtIGRldmljZSBhbmQgaXNuJ3QK
-PiByZW1vdmVhYmxlLgoKT2ssIGRvbmUuIHRoYW5rcyEKClJlZ2FyZHMsCgo+IAo+PiArCQkJfTsK
-Pj4gKwo+PiAgCQkJcXNwaTogc3BpQDIxZTAwMDAgewo+PiAgCQkJCSNhZGRyZXNzLWNlbGxzID0g
-PDE+Owo+PiAgCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NnVsbC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC5kdHNpCj4+
-IGluZGV4IDIyZTRhMzA3ZmE1OS4uYjAxN2U5MjViZDg3IDEwMDY0NAo+PiAtLS0gYS9hcmNoL2Fy
-bS9ib290L2R0cy9pbXg2dWxsLmR0c2kKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVs
-bC5kdHNpCj4+IEBAIC0zNCw2ICszNCwxMiBAQAo+PiAgCWNvbXBhdGlibGUgPSAiZnNsLGlteDZ1
-bGwtb2NvdHAiLCAic3lzY29uIjsKPj4gIH07Cj4+ICAKPj4gKyZweHAgewo+PiArCWNvbXBhdGli
-bGUgPSAiZnNsLGlteDZ1bGwtcHhwIjsKPj4gKwlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgOCBJUlFf
-VFlQRV9MRVZFTF9ISUdIPiwKPj4gKwkJICAgICA8R0lDX1NQSSAxOCBJUlFfVFlQRV9MRVZFTF9I
-SUdIPjsKPj4gK307Cj4+ICsKPj4gICZ1c2RoYzEgewo+PiAgCWNvbXBhdGlibGUgPSAiZnNsLGlt
-eDZ1bGwtdXNkaGMiLCAiZnNsLGlteDZzeC11c2RoYyI7Cj4+ICB9Owo+PiAtLSAKPj4gMi4xOS4y
-Cj4+Cj4+Cj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Cj4+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cj4+IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZwo+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKPiAKCgotLSAKU8OpYmFzdGllbiBTenltYW5za2kKU29m
-dHdhcmUgZW5naW5lZXIsIEFybWFkZXVzIFN5c3RlbXMKVGVsOiArMzMgKDApOSA3MiAyOSA0MSA0
-NApGYXg6ICszMyAoMCk5IDcyIDI4IDc5IDI2CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+The patchset fixes a few mistakes regarding the format on the i2s bus
+on the Amlogic axg tdm drivers.
+
+Jerome Brunet (4):
+  ASoC: meson: axg-tdmin: right_j is not supported
+  ASoC: meson: axg-tdmout: right_j is not supported
+  ASoC: meson: axg-tdm: fix sample clock inversion
+  ASoC: meson: axg-tdm: consistently use SND_SOC_DAIFMT defines
+
+ sound/soc/meson/axg-tdm-interface.c | 4 ++--
+ sound/soc/meson/axg-tdm.h           | 2 +-
+ sound/soc/meson/axg-tdmin.c         | 1 -
+ sound/soc/meson/axg-tdmout.c        | 1 -
+ 4 files changed, 3 insertions(+), 5 deletions(-)
+
+-- 
+2.20.1
