@@ -1,11 +1,14 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH] arm64: dts: imx8mq-evk: Enable SNVS power key
-Date: Thu, 13 Jun 2019 09:02:27 +0800
-Message-ID: <20190613010227.46860-1-Anson.Huang@nxp.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCHv3 0/2] Variscite DART-6UL SoM support
+Date: Thu, 13 Jun 2019 09:38:32 +0800
+Message-ID: <20190613013830.GC20747@dragon>
+References: <1559839624-12286-1-git-send-email-oliver.graute@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1559839624-12286-1-git-send-email-oliver.graute@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,33 +18,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, ccaione@baylibre.com, abel.vesa@nxp.com, baruch@tkos.co.il, daniel.baluta@nxp.com, andrew.smirnov@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Oliver Graute <oliver.graute@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, narmstrong@baylibre.com, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Thu, Jun 06, 2019 at 06:47:00PM +0200, Oliver Graute wrote:
+> Need feedback to the following patches which adds support for a DART-6UL Board
+> 
+> Product Page: https://www.variscite.com/product/evaluation-kits/dart-6ul-kits
+> 
+> Oliver Graute (2):
+>   ARM: dts: imx6ul: Add Variscite DART-6UL SoM support
+>   ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
 
-Enable SNVS power key for i.MX8MQ EVK board.
+It's already v3?  I did not find previous versions.  What's changed
+since previous versions?
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Shawn
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index b2038be..e3df9b8 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -242,6 +242,10 @@
- 	power-supply = <&sw1a_reg>;
- };
- 
-+&snvs_pwrkey {
-+	status = "okay";
-+};
-+
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
--- 
-2.7.4
+> 
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  .../boot/dts/imx6ul-imx6ull-var-dart-common.dtsi   | 458 +++++++++++++++++++++
+>  arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts    | 209 ++++++++++
+>  3 files changed, 668 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
+>  create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+> 
+> -- 
+> 2.7.4
+> 
