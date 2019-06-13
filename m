@@ -1,63 +1,71 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [DO NOT MERGE] [PATCH 9/9] ARM: dts: sun8i-r40: bananapi-m2-ultra:
- Enable Bananapi S070WV20-CT16 DSI panel
-Date: Fri, 14 Jun 2019 00:22:41 +0530
-Message-ID: <20190613185241.22800-10-jagan@amarulasolutions.com>
-References: <20190613185241.22800-1-jagan@amarulasolutions.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190613185241.22800-1-jagan@amarulasolutions.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: linux-sunxi@googlegroups.com, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: meson: axg-tdm: consistently use SND_SOC_DAIFMT defines" to the asoc tree
+Date: Thu, 13 Jun 2019 20:06:09 +0100 (BST)
+Message-ID: <20190613190610.10949440046@finisterre.sirena.org.uk>
+References: <20190613114233.21130-5-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190613114233.21130-5-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgc3VwcG9ydCBmb3IgQmFuYW5hcGkgUzA3MFdWMjAtQ1QxNiBEU0kgcGFu
-ZWwgdG8KQlBJLU0yVSBib2FyZC4KCkRTSSBwYW5lbCBjb25uZWN0ZWQgdmlhIGJvYXJkIERTSSBw
-b3J0IHdpdGgsCi0gRENEQzEgYXMgVkNDLURTSSBzdXBwbHkKLSBQSDE4IGdwaW8gZm9yIGxjZCBl
-bmFibGUgcGluCi0gUEQxNyBncGlvIGZvciBsY2QgcmVzZXQgcGluCi0gUEQxNiBncGlvIGZvciBi
-YWNrbGlnaHQgZW5hYmxlIHBpbgoKU2lnbmVkLW9mZi1ieTogSmFnYW4gVGVraSA8amFnYW5AYW1h
-cnVsYXNvbHV0aW9ucy5jb20+Ci0tLQogLi4uL2Jvb3QvZHRzL3N1bjhpLXI0MC1iYW5hbmFwaS1t
-Mi11bHRyYS5kdHMgIHwgMzYgKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDM2
-IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdW44aS1yNDAt
-YmFuYW5hcGktbTItdWx0cmEuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktcjQwLWJhbmFu
-YXBpLW0yLXVsdHJhLmR0cwppbmRleCBjNDg4YWFhY2JkNjguLjVmMzkzMTdiNzgzZSAxMDA2NDQK
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktcjQwLWJhbmFuYXBpLW0yLXVsdHJhLmR0cwor
-KysgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1yNDAtYmFuYW5hcGktbTItdWx0cmEuZHRzCkBA
-IC00NSw2ICs0NSw3IEBACiAjaW5jbHVkZSAic3VuOGktcjQwLmR0c2kiCiAKICNpbmNsdWRlIDxk
-dC1iaW5kaW5ncy9ncGlvL2dwaW8uaD4KKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9wd20vcHdtLmg+
-CiAKIC8gewogCW1vZGVsID0gIkJhbmFuYSBQaSBCUEktTTItVWx0cmEiOwpAQCAtNTUsNiArNTYs
-MTQgQEAKIAkJc2VyaWFsMCA9ICZ1YXJ0MDsKIAl9OwogCisJYmFja2xpZ2h0OiBiYWNrbGlnaHQg
-eworCQljb21wYXRpYmxlID0gInB3bS1iYWNrbGlnaHQiOworCQlwd21zID0gPCZwd20gMCA1MDAw
-MCBQV01fUE9MQVJJVFlfSU5WRVJURUQ+OworCQlicmlnaHRuZXNzLWxldmVscyA9IDwxIDIgNCA4
-IDE2IDMyIDY0IDEyOCAyNTU+OworCQlkZWZhdWx0LWJyaWdodG5lc3MtbGV2ZWwgPSA8OD47CisJ
-CWVuYWJsZS1ncGlvcyA9IDwmcGlvIDcgMTYgR1BJT19BQ1RJVkVfSElHSD47IC8qIExDRC1CTC1F
-TjogUEgxNiAqLworCX07CisKIAljaG9zZW4gewogCQlzdGRvdXQtcGF0aCA9ICJzZXJpYWwwOjEx
-NTIwMG44IjsKIAl9OwpAQCAtMTE3LDYgKzEyNiwyMyBAQAogCXN0YXR1cyA9ICJva2F5IjsKIH07
-CiAKKyZkcGh5IHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismZHNpIHsKKwl2Y2MtZHNpLXN1
-cHBseSA9IDwmcmVnX2RjZGMxPjsJCS8qIFZDQy1EU0kgKi8KKwlzdGF0dXMgPSAib2theSI7CisK
-KwlwYW5lbEAwIHsKKwkJY29tcGF0aWJsZSA9ICJiYW5hbmFwaSxzMDcwd3YyMC1jdDE2LWljbjYy
-MTEiOworCQlyZWcgPSA8MD47CisJCWVuYWJsZS1ncGlvID0gPCZwaW8gNyAxOCBHUElPX0FDVElW
-RV9ISUdIPjsgLyogTENELVBXUi1FTjogUEgxOCAqLworCQlyZXNldC1ncGlvcyA9IDwmcGlvIDcg
-MTcgR1BJT19BQ1RJVkVfSElHSD47IC8qIExDRC1SU1Q6IFBIMTcgKi8KKwkJYmFja2xpZ2h0ID0g
-PCZiYWNrbGlnaHQ+OworCX07Cit9OworCiAmZWhjaTEgewogCXN0YXR1cyA9ICJva2F5IjsKIH07
-CkBAIC0yMDMsNiArMjI5LDEyIEBACiAJcGluY3RybC0wID0gPCZjbGtfb3V0X2FfcGluPjsKIH07
-CiAKKyZwd20geworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZw
-d21fcGlucz47CisJc3RhdHVzID0gIm9rYXkiOworfTsKKwogJnJlZ19hbGRvMiB7CiAJcmVndWxh
-dG9yLWFsd2F5cy1vbjsKIAlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwyNTAwMDAwPjsKQEAg
-LTI5MCw2ICszMjIsMTAgQEAKIAlyZWd1bGF0b3ItbmFtZSA9ICJ2ZGQxdjItc2F0YSI7CiB9Owog
-CismdGNvbl9sY2QwIHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCiAmdGNvbl90djAgewogCXN0
-YXR1cyA9ICJva2F5IjsKIH07Ci0tIAoyLjE4LjAuMzIxLmdmZmM2ZmEwZTMKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+The patch
+
+   ASoC: meson: axg-tdm: consistently use SND_SOC_DAIFMT defines
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 05113483fd300d7a4605a726770e7255e29f1ac7 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Thu, 13 Jun 2019 13:42:33 +0200
+Subject: [PATCH] ASoC: meson: axg-tdm: consistently use SND_SOC_DAIFMT defines
+
+There a mix of SND_SOC_DAIFMT_ and SND_SOC_DAI_FORMAT_ in
+axg-tdm-interface.c. Even, if this is currently the same thing, lets use
+the same group consistently.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/meson/axg-tdm-interface.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
+index 585ce030b79b..d51f3344be7c 100644
+--- a/sound/soc/meson/axg-tdm-interface.c
++++ b/sound/soc/meson/axg-tdm-interface.c
+@@ -306,8 +306,8 @@ static int axg_tdm_iface_hw_params(struct snd_pcm_substream *substream,
+ 		}
+ 		break;
+ 
+-	case SND_SOC_DAI_FORMAT_DSP_A:
+-	case SND_SOC_DAI_FORMAT_DSP_B:
++	case SND_SOC_DAIFMT_DSP_A:
++	case SND_SOC_DAIFMT_DSP_B:
+ 		break;
+ 
+ 	default:
+-- 
+2.20.1
