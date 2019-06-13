@@ -1,187 +1,93 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and
- optimize probe ordering
-Date: Wed, 12 Jun 2019 14:21:01 -0700
-Message-ID: <095b631b-155d-483e-5ffb-3a04b0db0245@gmail.com>
-References: <20190604003218.241354-1-saravanak@google.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Update DWC3 modules on RK3399 SoCs
+Date: Thu, 13 Jun 2019 19:20:46 +0200
+Message-ID: <a685fef9-8f45-700c-17d6-59d792fca092@collabora.com>
+References: <20190613162745.12195-1-enric.balletbo@collabora.com>
+ <40d2260f-3925-acdc-eb02-8abb972f1056@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604003218.241354-1-saravanak@google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.comDavid Collins <collinsd@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <40d2260f-3925-acdc-eb02-8abb972f1056@arm.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Felipe Balbi <felipe.balbi@linux.intel.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Viresh Kumar <viresh.kumar@linaro.org>, Randy Li <ayaka@soulik.info>, linux-kernel@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>, linux-rockchip@lists.infradead.org, Tony Xie <tony.xie@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Rob Herring <robh+dt@kernel.org>, Collabora Kernel ML <kernel@collabora.com>, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Adding cc: David Collins
-
-Plus my comments below.
-
-On 6/3/19 5:32 PM, Saravana Kannan wrote:
-> Add a generic "depends-on" property that allows specifying mandatory
-> functional dependencies between devices. Add device-links after the
-> devices are created (but before they are probed) by looking at this
-> "depends-on" property.
-> 
-> This property is used instead of existing DT properties that specify
-> phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
-> is because not all resources referred to by existing DT properties are
-> mandatory functional dependencies. Some devices/drivers might be able
-> to operate with reduced functionality when some of the resources
-> aren't available. For example, a device could operate in polling mode
-> if no IRQ is available, a device could skip doing power management if
-> clock or voltage control isn't available and they are left on, etc.
-> 
-> So, adding mandatory functional dependency links between devices by
-> looking at referred phandles in DT properties won't work as it would
-> prevent probing devices that could be probed. By having an explicit
-> depends-on property, we can handle these cases correctly.
-> 
-> Having functional dependencies explicitly called out in DT and
-> automatically added before the devices are probed, provides the
-> following benefits:
-> 
-> - Optimizes device probe order and avoids the useless work of
->   attempting probes of devices that will not probe successfully
->   (because their suppliers aren't present or haven't probed yet).
-> 
->   For example, in a commonly available mobile SoC, registering just
->   one consumer device's driver at an initcall level earlier than the
->   supplier device's driver causes 11 failed probe attempts before the
->   consumer device probes successfully. This was with a kernel with all
->   the drivers statically compiled in. This problem gets a lot worse if
->   all the drivers are loaded as modules without direct symbol
->   dependencies.
-> 
-> - Supplier devices like clock providers, regulators providers, etc
->   need to keep the resources they provide active and at a particular
->   state(s) during boot up even if their current set of consumers don't
->   request the resource to be active. This is because the rest of the
->   consumers might not have probed yet and turning off the resource
->   before all the consumers have probed could lead to a hang or
->   undesired user experience.
-> 
->   Some frameworks (Eg: regulator) handle this today by turning off
->   "unused" resources at late_initcall_sync and hoping all the devices
->   have probed by then. This is not a valid assumption for systems with
->   loadable modules. Other frameworks (Eg: clock) just don't handle
->   this due to the lack of a clear signal for when they can turn off
->   resources. This leads to downstream hacks to handle cases like this
->   that can easily be solved in the upstream kernel.
-> 
->   By linking devices before they are probed, we give suppliers a clear
->   count of the number of dependent consumers. Once all of the
->   consumers are active, the suppliers can turn off the unused
->   resources without making assumptions about the number of consumers.
-> 
-> By default we just add device-links to track "driver presence" (probe
-> succeeded) of the supplier device. If any other functionality provided
-> by device-links are needed, it is left to the consumer/supplier
-> devices to change the link when they probe.
->  
-> 
-> Saravana Kannan (5):
->   of/platform: Speed up of_find_device_by_node()
->   driver core: Add device links support for pending links to suppliers
->   dt-bindings: Add depends-on property
->   of/platform: Add functional dependency link from "depends-on" property
->   driver core: Add sync_state driver/bus callback
-> 
->  .../devicetree/bindings/depends-on.txt        |  26 +++++
->  drivers/base/core.c                           | 106 ++++++++++++++++++
->  drivers/of/platform.c                         |  75 ++++++++++++-
->  include/linux/device.h                        |  24 ++++
->  include/linux/of.h                            |   3 +
->  5 files changed, 233 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
-> 
-
-
-I don't think the above description adequately describes one key problem
-that the patch set addresses.
-
-David Collins described the problem in an email late in the thread of
-the first submission of this series.  Instead of providing a link to
-that email, I am going to fully copy it here:
-
-On 5/31/19 4:27 PM, David Collins wrote:
-> Hello Saravana,
-> 
-> On 5/23/19 6:01 PM, Saravana Kannan wrote:
-> ...
->> Having functional dependencies explicitly called out in DT and
->> automatically added before the devices are probed, provides the
->> following benefits:
-> ...
->> - Supplier devices like clock providers, regulators providers, etc
->>   need to keep the resources they provide active and at a particular
->>   state(s) during boot up even if their current set of consumers don't
->>   request the resource to be active. This is because the rest of the
->>   consumers might not have probed yet and turning off the resource
->>   before all the consumers have probed could lead to a hang or
->>   undesired user experience.
-> This benefit provided by the sync_state() callback function introduced in
-> this series gives us a mechanism to solve a specific problem encountered
-> on Qualcomm Technologies, Inc. (QTI) boards when booting with drivers
-> compiled as modules.  QTI boards have a regulator that powers the PHYs for
-> display, camera, USB, UFS, and PCIe.  When these boards boot up, the boot
-> loader enables this regulator along with other resources in order to
-> display a splash screen image.  The regulator must remain enabled until
-> the Linux display driver has probed and made a request with the regulator
-> framework to keep the regulator enabled.  If the regulator is disabled
-> prematurely, then the screen image is corrupted and the display hardware
-> enters a bad state.
-> 
-> We have observed that when the camera driver probes before the display
-> driver, it performs this sequence: regulator_enable(), camera register IO,
-> regulator_disable().  Since it is the first consumer of the shared
-> regulator, the regulator is physically disabled (even though display
-> hardware still requires it to be enabled).  We have solved this problem
-> when compiling drivers statically with a downstream regulator
-> proxy-consumer driver.  This proxy-consumer is able to make an enable
-> request for the shared regulator before any other consumer.  It then
-> removes its request at late_initcall_sync.
-> 
-> Unfortunately, when drivers are compiled as modules instead of compiled
-> statically into the kernel image, late_initcall_sync is not a meaningful
-> marker of driver probe completion.  This means that our existing proxy
-> voting system will not work when drivers are compiled as modules.  The
-> sync_state() callback resolves this issue by providing a notification that
-> is guaranteed to arrive only after all consumers of the shared regulator
-> have probed.
-> 
-> QTI boards have other cases of shared resources such as bus bandwidth
-> which must remain at least at a level set by boot loaders in order to
-> properly support hardware blocks that are enabled before the Linux kernel
-> starts booting.
-> 
-> Take care,
-> David
-> 
-
-To paraphrase, the problem is:
-
-   - bootloader enables a regulator for display
-   - during Linux boot camera driver probes:
-      * enable the regulator also used for display
-      * disable the regulator
-         + screen image is corrupted
-         + display hardware enters bad state
-   - later during Linux boot display driver probes:
-      * enable the regulator, but too late
-
-So the problem is an ordering dependency between the camera driver probe
-and the display driver probe.
-
-Or alternatively the problem could be seen as: the bootloader has enabled
-a regulator for a device that the bootloader is aware of, but has not
-communicated to the Linux regulator framework that the device requires
-the regulator to remain enabled.
-
-Thinking about the problem this way could lead to an entirely different
-solution.
-
--Frank
-      
+SGkgUm9iaW4sCgpPbiAxMy82LzE5IDE4OjU2LCBSb2JpbiBNdXJwaHkgd3JvdGU6Cj4gT24gMTMv
+MDYvMjAxOSAxNzoyNywgRW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSB3cm90ZToKPj4gQXMgcGVyIGJp
+bmRpbmcgZG9jdW1lbnRhdGlvbiBbMV0sIHRoZSBEV0MzIGNvcmUgc2hvdWxkIGhhdmUgdGhlICJy
+ZWYiLAo+PiAiYnVzX2Vhcmx5IiBhbmQgInN1c3BlbmQiIGNsb2Nrcy4gQXMgZXhwbGFpbmVkIGlu
+IHRoZSBiaW5kaW5nLCB0aG9zZQo+PiBjbG9ja3MgYXJlIHJlcXVpcmVkIGZvciBuZXcgcGxhdGZv
+cm1zIGJ1dCBub3QgZm9yIGV4aXN0aW5nIHBsYXRmb3Jtcwo+PiBiZWZvcmUgY29tbWl0IGZlOGFi
+ZjMzMmI4ZiAoInVzYjogZHdjMzogc3VwcG9ydCBjbG9ja3MgYW5kIHJlc2V0cyBmb3IKPj4gRFdD
+MyBjb3JlIikuCj4+Cj4+IEhvd2V2ZXIsIGFzIHRob3NlIGNsb2NrcyBhcmUgcmVhbGx5IHRyZWF0
+ZWQgYXMgcmVxdWlyZWQsIHRoaXMgZW5kcyB3aXRoCj4+IGhhdmluZyBzb21lIGFubm95aW5nIG1l
+c3NhZ2VzIHdoZW4gdGhlICJyb2NrY2hpcCxyazMzOTktZHdjMyIgaXMgdXNlZDoKPj4KPj4gW8Kg
+wqDCoCAxLjcyNDEwN10gZHdjMyBmZTgwMDAwMC5kd2MzOiBGYWlsZWQgdG8gZ2V0IGNsayAncmVm
+JzogLTIKPj4gW8KgwqDCoCAxLjczMTg5M10gZHdjMyBmZTkwMDAwMC5kd2MzOiBGYWlsZWQgdG8g
+Z2V0IGNsayAncmVmJzogLTIKPj4gW8KgwqDCoCAyLjQ5NTkzN10gZHdjMyBmZTgwMDAwMC5kd2Mz
+OiBGYWlsZWQgdG8gZ2V0IGNsayAncmVmJzogLTIKPj4gW8KgwqDCoCAyLjY0NzIzOV0gZHdjMyBm
+ZTkwMDAwMC5kd2MzOiBGYWlsZWQgdG8gZ2V0IGNsayAncmVmJzogLTIKPj4KPj4gSW4gb3JkZXIg
+dG8gcmVtb3ZlIHRob3NlIGFubm95aW5nIG1lc3NhZ2VzLCB1cGRhdGUgdGhlIERXQzMgaGFyZHdh
+cmUKPj4gbW9kdWxlIG5vZGUgYW5kIGFkZCBhbGwgdGhlIHJlcXVpcmVkIGNsb2Nrcy4gV2l0aCB0
+aGlzIGNoYW5nZSwgYm90aCwgdGhlCj4+IGdsdWUgbm9kZSBhbmQgdGhlIERXQzMgY29yZSBub2Rl
+LCBoYXZlIHRoZSBjbG9ja3MgZGVmaW5lZCwgYnV0IHRoYXQncwo+PiBub3QgcmVhbGx5IGEgcHJv
+YmxlbSBhbmQgdGhlcmUgaXNuJ3QgYSBzaWRlIGVmZmVjdCBvbiBkbyB0aGlzLiBTbywgd2UKPj4g
+Y2FuIGdldCByaWQgb2YgdGhlIGFubm95aW5nIGdldCBjbGsgZXJyb3IgbWVzc2FnZXMuCj4gCj4g
+Q2FuIHdlIG5vdCBqdXN0IG1vdmUgdGhlc2UgY2xvY2tzIGVudGlyZWx5IGZyb20gdGhlIGdsdWUg
+bGF5ZXIgdG8gdGhlIGNvcmUKPiBsYXllcj8gVGhhdCBkaWRuJ3Qgc2VlbSB0byBicmVhayB3aGVu
+IEkgdHJpZWQgaXQsIGFsdGhvdWdoIEknbGwgYWRtaXQgbXkKPiAndGVzdGluZycgd2FzIG5vIG1v
+cmUgdGhhbiBib290aW5nIGFuZCBtb3VudGluZyBhIFVTQiAzLjAgZmxhc2ggZHJpdmUsIG5vCj4g
+c3VzcGVuZCBvciBhbnl0aGluZyBmYW5jeS4KPiAKCkFGQUlDVCB1c2IgZG9lc24ndCBicmVhaywg
+YnV0IHdlIHdvbid0IGJyZWFrIGJhY2t3YXJkIGNvbXBhYmlsaXR5IHRoZW4/ICgvbWUKc3RpbGwg
+ZG9lc24ndCBrbm93IHdoZW4gYmFja3dhcmQgY29tcGFiaWxpdHkgaXMgcmVhbGx5IGltcG9ydGFu
+dCBvciBub3QpCgo+IE15IG93biBhdHRlbXB0IHRvIHNodXQgdXAgdGhlc2UgZXJyb3JzIGdvdCBz
+aWRldHJhY2tlZCBpbnRvIGMwYzYxNDcxZWY4NiAoInVzYjoKPiBkd2MzOiBvZi1zaW1wbGU6IENv
+bnZlcnQgdG8gYnVsayBjbGsgQVBJIiksIHRoZW4gYXBwYXJlbnRseSBzdGFsbGVkIDopCj4gCgpU
+aGVyZSB3YXMgYW55IG9mZiB0aGUgcmVjb3JkIGRpc2N1c3Npb24gYW5kIHN0YWxsZWQgb3Igc2lt
+cGx5IHlvdSBkaWRuJ3QgZ2V0CmZlZWRiYWNrPwoKSSdsbCB0YWtlIGEgbG9vay4KClRoYW5rcywK
+fiBFbnJpYwoKPiBSb2Jpbi4KPiAKPj4KPj4gWzFdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy91c2IvZHdjMy50eHQKPj4KPj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFsbGV0Ym8g
+aSBTZXJyYSA8ZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4KPj4gLS0tCj4+Cj4+IMKgIGFy
+Y2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LmR0c2kgfCA2ICsrKysrKwo+PiDCoCAx
+IGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNpCj4+IGIvYXJjaC9hcm02NC9ib290L2R0
+cy9yb2NrY2hpcC9yazMzOTkuZHRzaQo+PiBpbmRleCAxOTZhYzliNzgwNzYuLmExNTM0OGQxODVj
+ZSAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkuZHRz
+aQo+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNpCj4+IEBA
+IC00MTQsNiArNDE0LDkgQEAKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJs
+ZSA9ICJzbnBzLGR3YzMiOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWcgPSA8MHgw
+IDB4ZmU4MDAwMDAgMHgwIDB4MTAwMDAwPjsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+aW50ZXJydXB0cyA9IDxHSUNfU1BJIDEwNSBJUlFfVFlQRV9MRVZFTF9ISUdIIDA+Owo+PiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBjbG9ja3MgPSA8JmNydSBTQ0xLX1VTQjNPVEcwX1JFRj4sIDwm
+Y3J1IEFDTEtfVVNCM09URzA+LAo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+PCZjcnUgU0NMS19VU0IzT1RHMF9TVVNQRU5EPjsKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+Y2xvY2stbmFtZXMgPSAicmVmIiwgImJ1c19lYXJseSIsICJzdXNwZW5kIjsKPj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgZHJfbW9kZSA9ICJvdGciOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBwaHlzID0gPCZ1MnBoeTBfb3RnPiwgPCZ0Y3BoeTBfdXNiMz47Cj4+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHBoeS1uYW1lcyA9ICJ1c2IyLXBoeSIsICJ1c2IzLXBoeSI7Cj4+
+IEBAIC00NDcsNiArNDUwLDkgQEAKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29tcGF0
+aWJsZSA9ICJzbnBzLGR3YzMiOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWcgPSA8
+MHgwIDB4ZmU5MDAwMDAgMHgwIDB4MTAwMDAwPjsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDExMCBJUlFfVFlQRV9MRVZFTF9ISUdIIDA+Owo+PiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjbG9ja3MgPSA8JmNydSBTQ0xLX1VTQjNPVEcxX1JFRj4s
+IDwmY3J1IEFDTEtfVVNCM09URzE+LAo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgPCZjcnUgU0NMS19VU0IzT1RHMV9TVVNQRU5EPjsKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgY2xvY2stbmFtZXMgPSAicmVmIiwgImJ1c19lYXJseSIsICJzdXNwZW5kIjsKPj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgZHJfbW9kZSA9ICJvdGciOwo+PiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBwaHlzID0gPCZ1MnBoeTFfb3RnPiwgPCZ0Y3BoeTFfdXNiMz47Cj4+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBoeS1uYW1lcyA9ICJ1c2IyLXBoeSIsICJ1c2IzLXBoeSI7
+Cj4+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
+eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
+cm0ta2VybmVsCg==
