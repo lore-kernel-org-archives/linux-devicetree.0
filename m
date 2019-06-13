@@ -1,65 +1,93 @@
 From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH 0/8] tpm: Add driver for cr50
-Date: Thu, 13 Jun 2019 11:09:23 -0700
-Message-ID: <20190613180931.65445-1-swboyd@chromium.org>
+Subject: [PATCH 1/8] tpm: block messages while suspended
+Date: Thu, 13 Jun 2019 11:09:24 -0700
+Message-ID: <20190613180931.65445-2-swboyd@chromium.org>
+References: <20190613180931.65445-1-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190613180931.65445-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-integrity@vger.kernel.org, Andrey Pronin <apronin@chromium.org>, devicetree@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>, Guenter Roeck <groeck@chromium.org>
+Cc: Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>, Guenter Roeck <groeck@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for the the H1 secure microcontroller
-running cr50 firmware found on various recent Chromebooks. This driver
-is necessary to boot into a ChromeOS userspace environment. It
-implements support for several functions, including TPM-like
-functionality, and supports SPI and I2C interfaces.
+From: Andrey Pronin <apronin@chromium.org>
 
-The last time this was series sent looks to be [1]. I've looked over the
-patches and review comments and tried to address any feedback that
-Andrey didn't address (really minor things like newlines). The first
-three patches add a couple pre-requisite core changes so that the
-drivers can be merged. The last two patches add some sysfs attributes
-and make symlinks so that ChromeOS userspace works.
+Other drivers or userspace may initiate sending a message to the tpm
+while the device itself and the controller of the bus it is on are
+suspended. That may break the bus driver logic.
+Block sending messages while the device is suspended.
 
-[1] https://lkml.kernel.org/r/1469757314-116169-1-git-send-email-apronin@chromium.org
+Signed-off-by: Andrey Pronin <apronin@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
 
-Andrey Pronin (7):
-  tpm: block messages while suspended
-  tpm_tis_core: add optional max xfer size check
-  tpm_tis_spi: add max xfer size
-  dt-bindings: tpm: document properties for cr50
-  tpm: add driver for cr50 on SPI
-  tpm: add sysfs attributes for tpm2
-  tpm: add legacy sysfs attributes for tpm2
+I don't think this was ever posted before.
 
-Duncan Laurie (1):
-  tpm: Add driver for cr50 on I2C
+ drivers/char/tpm/tpm-interface.c | 16 ++++++++++++++--
+ include/linux/tpm.h              |  2 ++
+ 2 files changed, 16 insertions(+), 2 deletions(-)
 
- .../bindings/security/tpm/cr50_spi.txt        |  19 +
- drivers/char/tpm/Kconfig                      |  26 +
- drivers/char/tpm/Makefile                     |   3 +
- drivers/char/tpm/cr50.c                       |  39 +
- drivers/char/tpm/cr50.h                       |  30 +
- drivers/char/tpm/cr50_i2c.c                   | 704 ++++++++++++++++++
- drivers/char/tpm/cr50_spi.c                   | 450 +++++++++++
- drivers/char/tpm/tpm-chip.c                   |   4 +-
- drivers/char/tpm/tpm-interface.c              |  16 +-
- drivers/char/tpm/tpm-sysfs.c                  | 138 +++-
- drivers/char/tpm/tpm.h                        |  29 +-
- drivers/char/tpm/tpm_tis_core.c               |   9 +-
- drivers/char/tpm/tpm_tis_core.h               |   1 +
- drivers/char/tpm/tpm_tis_spi.c                |   1 +
- include/linux/tpm.h                           |   2 +
- 15 files changed, 1455 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
- create mode 100644 drivers/char/tpm/cr50.c
- create mode 100644 drivers/char/tpm/cr50.h
- create mode 100644 drivers/char/tpm/cr50_i2c.c
- create mode 100644 drivers/char/tpm/cr50_spi.c
-
-
-base-commit: f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index ae1030c9b086..7232527652e8 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -86,6 +86,11 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+ 		return -E2BIG;
+ 	}
+ 
++	if (test_bit(0, &chip->is_suspended)) {
++		dev_warn(&chip->dev, "blocking transmit while suspended\n");
++		return -EAGAIN;
++	}
++
+ 	rc = chip->ops->send(chip, buf, count);
+ 	if (rc < 0) {
+ 		if (rc != -EPIPE)
+@@ -403,14 +408,19 @@ int tpm_pm_suspend(struct device *dev)
+ 		return 0;
+ 
+ 	if (!tpm_chip_start(chip)) {
+-		if (chip->flags & TPM_CHIP_FLAG_TPM2)
++		if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+ 			tpm2_shutdown(chip, TPM2_SU_STATE);
+-		else
++			set_bit(0, &chip->is_suspended);
++		} else {
+ 			rc = tpm1_pm_suspend(chip, tpm_suspend_pcr);
++		}
+ 
+ 		tpm_chip_stop(chip);
+ 	}
+ 
++	if (!rc)
++		set_bit(0, &chip->is_suspended);
++
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(tpm_pm_suspend);
+@@ -426,6 +436,8 @@ int tpm_pm_resume(struct device *dev)
+ 	if (chip == NULL)
+ 		return -ENODEV;
+ 
++	clear_bit(0, &chip->is_suspended);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(tpm_pm_resume);
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 1b5436b213a2..48df005228d0 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -132,6 +132,8 @@ struct tpm_chip {
+ 	int dev_num;		/* /dev/tpm# */
+ 	unsigned long is_open;	/* only one allowed */
+ 
++	unsigned long is_suspended;
++
+ 	char hwrng_name[64];
+ 	struct hwrng hwrng;
+ 
 -- 
 Sent by a computer through tubes
