@@ -1,34 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/9] Documentation: arm: Link idle-states binding to
- "enable-method" property
-Date: Thu, 13 Jun 2019 17:13:38 -0600
-Message-ID: <20190613231338.GA23667@bogus>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <9dc4ce06143de48039e841c337fafa7cb9c8d7d2.1558430617.git.amit.kucheria@linaro.org>
+From: Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH 1/8] tpm: block messages while suspended
+Date: Thu, 13 Jun 2019 20:26:13 -0300
+Message-ID: <20190613232613.GH22901@ziepe.ca>
+References: <20190613180931.65445-1-swboyd@chromium.org>
+ <20190613180931.65445-2-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9dc4ce06143de48039e841c337fafa7cb9c8d7d2.1558430617.git.amit.kucheria@linaro.org>
+In-Reply-To: <20190613180931.65445-2-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, niklas.cassel@linaro.org, marc.w.gonzalez@free.fr, sibis@codeaurora.org, daniel.lezcano@linaro.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>, Guenter Roeck <groeck@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 May 2019 15:05:12 +0530, Amit Kucheria wrote:
-> The "enable-method" property for cpu nodes needs to be "psci" for CPU
-> idle management to be setup correctly.
+On Thu, Jun 13, 2019 at 11:09:24AM -0700, Stephen Boyd wrote:
+> From: Andrey Pronin <apronin@chromium.org>
 > 
-> Add a note to the binding documentation to this effect to make it
-> obvious.
+> Other drivers or userspace may initiate sending a message to the tpm
+> while the device itself and the controller of the bus it is on are
+> suspended. That may break the bus driver logic.
+> Block sending messages while the device is suspended.
 > 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  .../devicetree/bindings/arm/idle-states.txt         | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+> Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > 
+> I don't think this was ever posted before.
 
-Applied, thanks.
+Use a real lock.
 
-Rob
+Jason
