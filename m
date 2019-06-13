@@ -1,67 +1,85 @@
 From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v4 0/5] Add QCS404 interconnect provider driver
-Date: Thu, 13 Jun 2019 18:13:18 +0300
-Message-ID: <20190613151323.10850-1-georgi.djakov@linaro.org>
+Subject: [PATCH v4 2/5] soc: qcom: smd-rpm: Create RPM interconnect proxy child device
+Date: Thu, 13 Jun 2019 18:13:20 +0300
+Message-ID: <20190613151323.10850-3-georgi.djakov@linaro.org>
+References: <20190613151323.10850-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190613151323.10850-1-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, georgi.djakov@linaro.org
 Cc: vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add drivers to support scaling of the on-chip interconnects on QCS404-based
-platforms. Also add the necessary device-tree nodes, so that the driver for
-each NoC can probe and register as interconnect-provider.
+Register a platform device to handle the communication of bus bandwidth
+requests with the remote processor. The interconnect proxy device is part
+of this remote processor (RPM) hardware. Let's create a icc-smd-rpm proxy
+child device to represent the bus throughput functionality that is provided
+by the RPM.
+
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
 
 v4:
-- Move DT headers into the dt-bindings patch (Bjorn)
-- Pick Bjorn's r-b on some patches.
-- Return error if platform_device_register_data() fails (Bjorn)
-- Use platform_set_drvdata() only in the child device. (Bjorn)
-- Hide the smd-rpm proxy driver from config menu. (Bjorn)
-- Add remove() function to zero out the rpm handle. (Bjorn)
-- Move move the qcs404 driver patch later in the serie. (Bjorn)
-- Insert the DT nodes after rng to keep the list sorted by address. (Bjorn)
+- Return error if platform_device_register_data() fails
+- Remove platform_set_drvdata() on the child device.
 
-v3: https://lore.kernel.org/lkml/20190611164157.24656-1-georgi.djakov@linaro.org/
-- Drop the patch introducing the qcom,qos DT property.
-- Add two new patches to create an interconnect proxy device. This device is
-  part of the RPM hardware and handles the communication of the bus bandwidth
-  requests.
-- Add a DT reg property and move the interconnect nodes under the "soc" node.
+v3:
+- New patch.
 
-v2: https://lore.kernel.org/lkml/20190415104357.5305-1-georgi.djakov@linaro.org/
-- Use the clk_bulk API. (Bjorn)
-- Move the port IDs into the provider file. (Bjorn)
-- Use ARRAY_SIZE in the macro to automagically count the num_links. (Bjorn)
-- Improve code readability. (Bjorn)
-- Add patch [4/4] introducing a qcom,qos DT property to represent the link to
-  the MMIO QoS registers HW block.
+ drivers/soc/qcom/smd-rpm.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-v1: https://lore.kernel.org/lkml/20190405035446.31886-1-georgi.djakov@linaro.org/
-
-Bjorn Andersson (1):
-  interconnect: qcom: Add QCS404 interconnect provider driver
-
-Georgi Djakov (4):
-  dt-bindings: interconnect: Add Qualcomm QCS404 DT bindings
-  soc: qcom: smd-rpm: Create RPM interconnect proxy child device
-  interconnect: qcom: Add interconnect SMD over SMD driver
-  arm64: dts: qcs404: Add interconnect provider DT nodes
-
- .../bindings/interconnect/qcom,qcs404.txt     |  46 ++
- arch/arm64/boot/dts/qcom/qcs404.dtsi          |  28 +
- drivers/interconnect/qcom/Kconfig             |  12 +
- drivers/interconnect/qcom/Makefile            |   4 +
- drivers/interconnect/qcom/qcs404.c            | 539 ++++++++++++++++++
- drivers/interconnect/qcom/smd-rpm.c           |  80 +++
- drivers/interconnect/qcom/smd-rpm.h           |  15 +
- drivers/soc/qcom/smd-rpm.c                    |  17 +-
- .../dt-bindings/interconnect/qcom,qcs404.h    |  88 +++
- 9 files changed, 828 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
- create mode 100644 drivers/interconnect/qcom/qcs404.c
- create mode 100644 drivers/interconnect/qcom/smd-rpm.c
- create mode 100644 drivers/interconnect/qcom/smd-rpm.h
- create mode 100644 include/dt-bindings/interconnect/qcom,qcs404.h
+diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
+index fa9dd12b5e39..34cdd638a6c1 100644
+--- a/drivers/soc/qcom/smd-rpm.c
++++ b/drivers/soc/qcom/smd-rpm.c
+@@ -19,12 +19,14 @@
+ /**
+  * struct qcom_smd_rpm - state of the rpm device driver
+  * @rpm_channel:	reference to the smd channel
++ * @icc:		interconnect proxy device
+  * @ack:		completion for acks
+  * @lock:		mutual exclusion around the send/complete pair
+  * @ack_status:		result of the rpm request
+  */
+ struct qcom_smd_rpm {
+ 	struct rpmsg_endpoint *rpm_channel;
++	struct platform_device *icc;
+ 	struct device *dev;
+ 
+ 	struct completion ack;
+@@ -193,6 +195,7 @@ static int qcom_smd_rpm_callback(struct rpmsg_device *rpdev,
+ static int qcom_smd_rpm_probe(struct rpmsg_device *rpdev)
+ {
+ 	struct qcom_smd_rpm *rpm;
++	int ret;
+ 
+ 	rpm = devm_kzalloc(&rpdev->dev, sizeof(*rpm), GFP_KERNEL);
+ 	if (!rpm)
+@@ -205,11 +208,23 @@ static int qcom_smd_rpm_probe(struct rpmsg_device *rpdev)
+ 	rpm->rpm_channel = rpdev->ept;
+ 	dev_set_drvdata(&rpdev->dev, rpm);
+ 
+-	return of_platform_populate(rpdev->dev.of_node, NULL, NULL, &rpdev->dev);
++	rpm->icc = platform_device_register_data(&rpdev->dev, "icc_smd_rpm", -1,
++						 NULL, 0);
++	if (IS_ERR(rpm->icc))
++		return PTR_ERR(rpm->icc);
++
++	ret = of_platform_populate(rpdev->dev.of_node, NULL, NULL, &rpdev->dev);
++	if (ret)
++		platform_device_unregister(rpm->icc);
++
++	return ret;
+ }
+ 
+ static void qcom_smd_rpm_remove(struct rpmsg_device *rpdev)
+ {
++	struct qcom_smd_rpm *rpm = dev_get_drvdata(&rpdev->dev);
++
++	platform_device_unregister(rpm->icc);
+ 	of_platform_depopulate(&rpdev->dev);
+ }
+ 
