@@ -1,59 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: power: supply: Add documentation for
- the VINDPM properties
-Date: Thu, 13 Jun 2019 17:09:06 -0600
-Message-ID: <20190613230906.GA10492@bogus>
-References: <20190520180712.32405-1-angus@akkea.ca>
- <20190520180712.32405-3-angus@akkea.ca>
+Subject: Re: [PATCH v2 2/9] Documentation: arm: Link idle-states binding to
+ "enable-method" property
+Date: Thu, 13 Jun 2019 17:13:38 -0600
+Message-ID: <20190613231338.GA23667@bogus>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <9dc4ce06143de48039e841c337fafa7cb9c8d7d2.1558430617.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190520180712.32405-3-angus@akkea.ca>
+In-Reply-To: <9dc4ce06143de48039e841c337fafa7cb9c8d7d2.1558430617.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: angus.ainslie@puri.sm, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, niklas.cassel@linaro.org, marc.w.gonzalez@free.fr, sibis@codeaurora.org, daniel.lezcano@linaro.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:07:12AM -0700, Angus Ainslie (Purism) wrote:
-> Add documentation on how to control VINDPM from the devicetree.
+On Tue, 21 May 2019 15:05:12 +0530, Amit Kucheria wrote:
+> The "enable-method" property for cpu nodes needs to be "psci" for CPU
+> idle management to be setup correctly.
 > 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> Add a note to the binding documentation to this effect to make it
+> obvious.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 > ---
->  .../devicetree/bindings/power/supply/bq25890.txt          | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  .../devicetree/bindings/arm/idle-states.txt         | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> index dc0568933359..fe8b709dd666 100644
-> --- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> @@ -26,9 +26,15 @@ Optional properties:
->  - ti,use-ilim-pin: boolean, if present the ILIM resistor will be used and the
->      input current will be the lower between the resistor setting and the IINLIM
->      register setting;
-> +- ti,use-vinmin-threshold: boolean, if present the FORCE_VINDPM bit will be set
-> +    and the input voltage limit will be configured based on "ti,vinmin-threshold"
 
-Isn't presence of ti,vinmin-threshold enough to determine whether to set 
-FORCE_VINDPM or not? Just get rid of the default being 4.4V.
+Applied, thanks.
 
->  - ti,thermal-regulation-threshold: integer, temperature above which the charge
->      current is lowered, to avoid overheating (in degrees Celsius). If omitted,
->      the default setting will be used (120 degrees);
-> +- ti,vinmin-threshold: integer, lower absolute threshold for VINDPM. If the
-> +    voltage falls below this threshold the charge current is reduced until the
-> +    input voltage rises above the input voltage limit. If omitted, the default
-> +    setting will be used (4.4V);
->  
->  Example:
->  
-> @@ -46,4 +52,6 @@ bq25890 {
->  
->          ti,use-ilim-pin;
->          ti,thermal-regulation-threshold = <120>;
-> +        ti,use-vinmin-threshold;
-> +        ti,vinmin-threshold = <3900000>;
->  };
-> -- 
-> 2.17.1
-> 
+Rob
