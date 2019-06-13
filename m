@@ -1,15 +1,13 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: i2c: sun6i-p2wi: Add YAML schemas
-Date: Wed, 12 Jun 2019 17:38:18 +0200
-Message-ID: <20190612153818.q5xj5su33krlignu@flea>
-References: <20190605122936.11972-1-maxime.ripard@bootlin.com>
- <CAL_JsqKC7uP0J14A8_CvPhbZkoSRNWSpS1ee+Q4sG013jY=JeQ@mail.gmail.com>
- <20190611090641.byr6mpywkfmbhrbk@flea>
- <CAL_JsqL3cua3u2gNTzHEdgFU0On5J9ziPZeFNiTpu5HS=SJoDA@mail.gmail.com>
+Subject: [PATCH 2/2] dt-bindings: nvmem: Convert Allwinner SID to a schema
+Date: Thu, 13 Jun 2019 10:57:12 +0200
+Message-ID: <20190613085712.22241-2-maxime.ripard@bootlin.com>
+References: <20190613085712.22241-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5426759145756999558=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqL3cua3u2gNTzHEdgFU0On5J9ziPZeFNiTpu5HS=SJoDA@mail.gmail.com>
+In-Reply-To: <20190613085712.22241-1-maxime.ripard@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,103 +17,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Gregory Clement <gregory.clement@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linux I2C <linux-i2c@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The Allwinner SoCs have an efuse supported in Linux, with a matching Device
+Tree binding.
 
---===============5426759145756999558==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jqnskoivfbu5krfp"
-Content-Disposition: inline
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
 
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ .../nvmem/allwinner,sun4i-a10-sid.yaml        | 51 +++++++++++++++++++
+ .../bindings/nvmem/allwinner,sunxi-sid.txt    | 29 -----------
+ 2 files changed, 51 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+ delete mode 100644 Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
 
---jqnskoivfbu5krfp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Tue, Jun 11, 2019 at 08:50:37AM -0600, Rob Herring wrote:
-> On Tue, Jun 11, 2019 at 3:06 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > Hi Rob,
-> >
-> > On Mon, Jun 10, 2019 at 03:34:18PM -0600, Rob Herring wrote:
-> > > On Wed, Jun 5, 2019 at 6:29 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > +properties:
-> > > > +  "#address-cells":
-> > > > +    const: 1
-> > > > +
-> > > > +  "#size-cells":
-> > > > +    const: 0
-> > >
-> > > These 2 are covered by i2c-controller.yaml, right?
-> >
-> > Indeed, I've removed them.
-> >
-> > > > +examples:
-> > > > +  - |
-> > > > +    p2wi@1f03400 {
-> > >
-> > > i2c@...
-> > >
-> > > That should fail on the schema (I need to get the schema checking of
-> > > examples finished.)
-> >
-> > That would be great :) The compilation of the examples alone already
-> > caught a good number of examples that weren't even compiling.
->
-> I'm primarily waiting on a dtc change to be accepted[1]. Feel free to
-> review/ack.
-
-I guess it's too late now :)
-
-> > Speaking of examples, one thing that would be great too would be to
-> > allow the usage of our C headers. It's not supported at the moment,
-> > and this often ends up with an example that is less readable than the
-> > actual DT.
->
-> It should be. You just have to add them. See
-> Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml for
-> example.
-
-Hmmm, I'm pretty sure I tried this before. I'll try again.
-
-> Maybe the common interrupt and gpio ones should be added by default.
-
-I guess so, yeah. The GIC too is pretty common
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---jqnskoivfbu5krfp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQEcaQAKCRDj7w1vZxhR
-xWTgAP9WB+1aXtMSPMtLHzMJKOV6r1RNowdkygnwiE+cBDkvOAD7BDqmviqSzzZt
-6saIUD3M+DBgvkUTsko4s0nJ4Wp+1AQ=
-=GewT
------END PGP SIGNATURE-----
-
---jqnskoivfbu5krfp--
-
-
---===============5426759145756999558==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5426759145756999558==--
+diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+new file mode 100644
+index 000000000000..c9efd6e2c134
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/nvmem/allwinner,sun4i-a10-sid.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A10 Security ID Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++allOf:
++  - $ref: "nvmem.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - allwinner,sun4i-a10-sid
++      - allwinner,sun7i-a20-sid
++      - allwinner,sun8i-a83t-sid
++      - allwinner,sun8i-h3-sid
++      - allwinner,sun50i-a64-sid
++      - allwinner,sun50i-h5-sid
++      - allwinner,sun50i-h6-sid
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++# FIXME: We should set it, but it would report all the generic
++# properties as additional properties.
++# additionalProperties: false
++
++examples:
++  - |
++    sid@1c23800 {
++        compatible = "allwinner,sun4i-a10-sid";
++        reg = <0x01c23800 0x10>;
++    };
++
++  - |
++    sid@1c23800 {
++        compatible = "allwinner,sun7i-a20-sid";
++        reg = <0x01c23800 0x200>;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+deleted file mode 100644
+index cfb18b4ef8f7..000000000000
+--- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-Allwinner sunxi-sid
+-
+-Required properties:
+-- compatible: Should be one of the following:
+-  "allwinner,sun4i-a10-sid"
+-  "allwinner,sun7i-a20-sid"
+-  "allwinner,sun8i-a83t-sid"
+-  "allwinner,sun8i-h3-sid"
+-  "allwinner,sun50i-a64-sid"
+-  "allwinner,sun50i-h5-sid"
+-  "allwinner,sun50i-h6-sid"
+-
+-- reg: Should contain registers location and length
+-
+-= Data cells =
+-Are child nodes of sunxi-sid, bindings of which as described in
+-bindings/nvmem/nvmem.txt
+-
+-Example for sun4i:
+-	sid@1c23800 {
+-		compatible = "allwinner,sun4i-a10-sid";
+-		reg = <0x01c23800 0x10>
+-	};
+-
+-Example for sun7i:
+-	sid@1c23800 {
+-		compatible = "allwinner,sun7i-a20-sid";
+-		reg = <0x01c23800 0x200>
+-	};
+-- 
+2.21.0
