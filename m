@@ -1,71 +1,31 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 6/7] dt-bindings: qcom_spmi: Document pms405 support
-Date: Thu, 13 Jun 2019 14:37:31 -0700
-Message-ID: <20190613213731.GE4814@minitux>
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
- <20190613212707.5966-1-jeffrey.l.hugo@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] Documentation: dt: binding: fsl: Add 'little-endian'
+ and update Chassis define
+Date: Thu, 13 Jun 2019 16:07:29 -0600
+Message-ID: <20190613220729.GA29761@bogus>
+References: <20190517024748.15534-1-ran.wang_1@nxp.com>
+ <20190517024748.15534-2-ran.wang_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190613212707.5966-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20190517024748.15534-2-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Cc: Li Yang <leoyang.li@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 13 Jun 14:27 PDT 2019, Jeffrey Hugo wrote:
-
-> From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+On Fri, 17 May 2019 10:47:47 +0800, Ran Wang wrote:
+> By default, QorIQ SoC's RCPM register block is Big Endian. But
+> there are some exceptions, such as LS1088A and LS2088A, are Little
+> Endian. So add this optional property to help identify them.
 > 
-> The PMS405 supports 5 SMPS and 13 LDO regulators.
+> Actually LS2021A and other Layerscapes won't totally follow Chassis
+> 2.1, so separate them from powerpc SoC.
 > 
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 > ---
->  .../bindings/regulator/qcom,spmi-regulator.txt | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+>  Documentation/devicetree/bindings/soc/fsl/rcpm.txt |    8 +++++++-
+>  1 files changed, 7 insertions(+), 1 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> index ba94bc2d407a..430b8622bda1 100644
-> --- a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> @@ -10,6 +10,7 @@ Qualcomm SPMI Regulators
->  			"qcom,pm8941-regulators"
->  			"qcom,pm8994-regulators"
->  			"qcom,pmi8994-regulators"
-> +			"qcom,pms405-regulators"
->  
->  - interrupts:
->  	Usage: optional
-> @@ -111,6 +112,23 @@ Qualcomm SPMI Regulators
->  	Definition: Reference to regulator supplying the input pin, as
->  		    described in the data sheet.
->  
-> +- vdd_l1_l2-supply:
-> +- vdd_l3_l8-supply:
-> +- vdd_l4-supply:
-> +- vdd_l5_l6-supply:
-> +- vdd_l10_l11_l12_l13-supply:
-> +- vdd_l7-supply:
-> +- vdd_l9-supply:
-> +- vdd_s1-supply:
-> +- vdd_s2-supply:
-> +- vdd_s3-supply:
-> +- vdd_s4-supply:
-> +- vdd_s5-supply
-> +	Usage: optional (pms405 only)
-> +	Value type: <phandle>
-> +	Definition: Reference to regulator supplying the input pin, as
-> +		    described in the data sheet.
-> +
->  - qcom,saw-reg:
->  	Usage: optional
->  	Value type: <phandle>
-> -- 
-> 2.17.1
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
