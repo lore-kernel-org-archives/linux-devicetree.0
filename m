@@ -1,49 +1,96 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/7] drivers: regulator: qcom_spmi: enable linear
- range info
-Date: Thu, 13 Jun 2019 19:40:21 +0100
-Message-ID: <20190613184021.GT5316@sirena.org.uk>
-References: <20190606184842.39484-1-jeffrey.l.hugo@gmail.com>
- <20190606184923.39537-1-jeffrey.l.hugo@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 10/16] dmaengine: ti: New driver for K3 UDMA - split#1:
+ defines, structs, io func
+Date: Thu, 13 Jun 2019 12:43:24 -0600
+Message-ID: <20190613184324.GA26206@bogus>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
+ <20190506123456.6777-11-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tRcR9GoWqjXrt11v"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190606184923.39537-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20190506123456.6777-11-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: lgirdwood@gmail.com, agross@kernel.org, david.brown@linaro.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, jorge.ramirez-ortiz@linaro.org, niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: vkoul@kernel.org, nm@ti.com, ssantosh@kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 06, 2019 at 03:34:50PM +0300, Peter Ujfalusi wrote:
+> Split patch for review containing: defines, structs, io and low level
+> functions and interrupt callbacks.
 
---tRcR9GoWqjXrt11v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Not a useful comment for upstream.
 
-On Thu, Jun 06, 2019 at 11:49:23AM -0700, Jeffrey Hugo wrote:
-> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
->=20
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> 
+> DMA driver for
+> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
+> 
+> The UDMA-P is intended to perform similar (but significantly upgraded) functions
+> as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
+> supports the transmission and reception of various packet types. The UDMA-P is
+> architected to facilitate the segmentation and reassembly of SoC DMA data
+> structure compliant packets to/from smaller data blocks that are natively
+> compatible with the specific requirements of each connected peripheral. Multiple
+> Tx and Rx channels are provided within the DMA which allow multiple segmentation
+> or reassembly operations to be ongoing. The DMA controller maintains state
+> information for each of the channels which allows packet segmentation and
+> reassembly operations to be time division multiplexed between channels in order
+> to share the underlying DMA hardware. An external DMA scheduler is used to
+> control the ordering and rate at which this multiplexing occurs for Transmit
+> operations. The ordering and rate of Receive operations is indirectly controlled
+> by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
+> 
+> The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
+> channels. Channels in the UDMA-P can be configured to be either Packet-Based or
+> Third-Party channels on a channel by channel basis.
+> 
+> The initial driver supports:
+> - MEM_TO_MEM (TR mode)
+> - DEV_TO_MEM (Packet / TR mode)
+> - MEM_TO_DEV (Packet / TR mode)
+> - Cyclic (Packet / TR mode)
+> - Metadata for descriptors
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/dma/ti/k3-udma.c          | 1008 +++++++++++++++++++++++++++++
+>  drivers/dma/ti/k3-udma.h          |  129 ++++
+>  include/dt-bindings/dma/k3-udma.h |   26 +
 
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
+This belongs in the binding patch.
 
---tRcR9GoWqjXrt11v
-Content-Type: application/pgp-signature; name="signature.asc"
+>  3 files changed, 1163 insertions(+)
+>  create mode 100644 drivers/dma/ti/k3-udma.c
+>  create mode 100644 drivers/dma/ti/k3-udma.h
+>  create mode 100644 include/dt-bindings/dma/k3-udma.h
 
------BEGIN PGP SIGNATURE-----
+> diff --git a/include/dt-bindings/dma/k3-udma.h b/include/dt-bindings/dma/k3-udma.h
+> new file mode 100644
+> index 000000000000..89ba6a9d4a8f
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/k3-udma.h
+> @@ -0,0 +1,26 @@
+> +#ifndef __DT_TI_UDMA_H
+> +#define __DT_TI_UDMA_H
+> +
+> +#define UDMA_TR_MODE		0
+> +#define UDMA_PKT_MODE		1
+> +
+> +#define UDMA_DIR_TX		0
+> +#define UDMA_DIR_RX		1
+> +
+> +#define PSIL_STATIC_TR_NONE	0
+> +#define PSIL_STATIC_TR_XY	1
+> +#define PSIL_STATIC_TR_MCAN	2
+> +
+> +#define UDMA_PDMA_TR_XY(id)				\
+> +	ti,psil-config##id {				\
+> +		linux,udma-mode = <UDMA_TR_MODE>;	\
+> +		statictr-type = <PSIL_STATIC_TR_XY>;	\
+> +	}
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0CmJQACgkQJNaLcl1U
-h9Ahywf+PzmqBut8uqKJcwRB5GhEE/ja3bqrcVbbgZGMo9jgh3NlGBd1xhCjnT7B
-C7rWgMGl8IkSs6871omjtoMd+oUUN71u263yIqbB8TlcB4iHMJClXET/2GMK0xZb
-YINX6pN+iKs2M097dGHBFOLEsVnWF6P9Qk286okJE308HdaPHYopjMbpvaxoObR/
-o0Q58ziZ2r9Cz2lIux8y1vfh4aliq+Vdkzv7kkLpLNo4UZ3vOK37ZISo2Ur/pRDE
-t2NxWi3pwdJrCttqy11GJulo6F8Es1p+MQccN2ve2T7DekndPP9fuhX+1XYjgj9G
-ekVpT2ORE+6wnxpps1nVEZS4hP5nvQ==
-=totN
------END PGP SIGNATURE-----
+We don't accept this kind of complex macros in dts files. It obfuscates 
+reading dts files.
 
---tRcR9GoWqjXrt11v--
+Rob
