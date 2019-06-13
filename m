@@ -1,60 +1,110 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH repost] dt-bindings: timer: renesas, cmt: Document
- r8a779{5|65|90} CMT support
-Date: Thu, 13 Jun 2019 12:12:20 +0200
-Message-ID: <20190613101219.vx4ht6dixxu7fioi@verge.net.au>
-References: <20190509122949.23256-1-horms+renesas@verge.net.au>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH v3 2/7] drivers: regulator: qcom_spmi: Refactor get_mode/set_mode
+Date: Thu, 13 Jun 2019 09:37:38 -0600
+Message-ID: <CAOCk7NpLz-6kM2X=HOh4ZcEw4bzhKcjd=8664HX43w1V+ffeag@mail.gmail.com>
+References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
+ <20190613142239.8779-1-jeffrey.l.hugo@gmail.com> <20190613151209.GB6792@builder>
+ <20190613152430.GC6792@builder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190509122949.23256-1-horms+renesas@verge.net.au>
+In-Reply-To: <20190613152430.GC6792@builder>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-renesas-soc@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cao Van Dong <cv-dong@jinso.co.jp>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 09, 2019 at 02:29:49PM +0200, Simon Horman wrote:
-> From: Cao Van Dong <cv-dong@jinso.co.jp>
-> 
-> Document SoC specific bindings for R-Car H3/M3-N/E3 SoCs.
+On Thu, Jun 13, 2019 at 9:24 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 13 Jun 08:12 PDT 2019, Bjorn Andersson wrote:
+>
+> > On Thu 13 Jun 07:22 PDT 2019, Jeffrey Hugo wrote:
+> >
+> > > spmi_regulator_common_get_mode and spmi_regulator_common_set_mode use
+> > > multi-level ifs which mirror a switch statement.  Refactor to use a switch
+> > > statement to make the code flow more clear.
+> > >
+> > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > ---
+> > >  drivers/regulator/qcom_spmi-regulator.c | 28 ++++++++++++++++---------
+> > >  1 file changed, 18 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+> > > index fd55438c25d6..1c18fe5969b5 100644
+> > > --- a/drivers/regulator/qcom_spmi-regulator.c
+> > > +++ b/drivers/regulator/qcom_spmi-regulator.c
+> > > @@ -911,13 +911,14 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
+> > >
+> > >     spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
+> > >
+> > > -   if (reg & SPMI_COMMON_MODE_HPM_MASK)
+>
+> Sorry, didn't see the & here. Don't you need to mask out the mode bits
+> before turning this into a switch?
 
-Hi Daniel and Thomas,
+Ah.  Yes.  I read the documentation wrong when doing this.  Will fix.
 
-would you object to me taking this patch through the renesas tree.
-It has been outstanding for some time now.
-
-> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> index c0594450e9ef..c5220bcd852b 100644
-> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> @@ -42,12 +42,18 @@ Required Properties:
->      - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
->      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
->      - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
-> +    - "renesas,r8a7795-cmt0" for the 32-bit CMT0 device included in r8a7795.
-> +    - "renesas,r8a7795-cmt1" for the 48-bit CMT1 device included in r8a7795.
->      - "renesas,r8a7796-cmt0" for the 32-bit CMT0 device included in r8a7796.
->      - "renesas,r8a7796-cmt1" for the 48-bit CMT1 device included in r8a7796.
-> +    - "renesas,r8a77965-cmt0" for the 32-bit CMT0 device included in r8a77965.
-> +    - "renesas,r8a77965-cmt1" for the 48-bit CMT1 device included in r8a77965.
->      - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
->      - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
->      - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
->      - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
-> +    - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
-> +    - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
->  
->      - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
->  		and RZ/G1.
-> -- 
-> 2.11.0
-> 
+>
+> > > +   switch (reg) {
+> > > +   case SPMI_COMMON_MODE_HPM_MASK:
+> > >             return REGULATOR_MODE_NORMAL;
+> > > -
+> > > -   if (reg & SPMI_COMMON_MODE_AUTO_MASK)
+> > > +   case SPMI_COMMON_MODE_AUTO_MASK:
+> > >             return REGULATOR_MODE_FAST;
+> > > -
+> > > -   return REGULATOR_MODE_IDLE;
+> > > +   default:
+> > > +           return REGULATOR_MODE_IDLE;
+> > > +   }
+> > >  }
+> > >
+> > >  static int
+> > > @@ -925,12 +926,19 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
+> > >  {
+> > >     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> > >     u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
+> > > -   u8 val = 0;
+> > > +   u8 val;
+> > >
+> > > -   if (mode == REGULATOR_MODE_NORMAL)
+> > > +   switch (mode) {
+> > > +   case REGULATOR_MODE_NORMAL:
+> > >             val = SPMI_COMMON_MODE_HPM_MASK;
+> > > -   else if (mode == REGULATOR_MODE_FAST)
+> > > +           break;
+> > > +   case REGULATOR_MODE_FAST:
+> > >             val = SPMI_COMMON_MODE_AUTO_MASK;
+> > > +           break;
+> > > +   default:
+> > > +           val = 0;
+> > > +           break;
+> > > +   }
+> >
+> > For this part:
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > >
+> > >     return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
+> > >  }
+> > > @@ -1834,9 +1842,9 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+> > >                     }
+> > >             }
+> > >
+> > > -           if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
+> >
+> > Squash this into patch 1.
+> >
+> > Regards,
+> > Bjorn
+> >
+> > > +           if (vreg->set_points->count == 1) {
+> > >                     /* since there is only one range */
+> > > -                   range = spmi_regulator_find_range(vreg);
+> > > +                   range = vreg->set_points->range;
+> > >                     vreg->desc.uV_step = range->step_uV;
+> > >             }
+> > >
+> > > --
+> > > 2.17.1
+> > >
