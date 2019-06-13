@@ -1,31 +1,25 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/6] dt-bindings: clock: Document external clocks for
- MSM8998 gcc
-Date: Thu, 13 Jun 2019 11:56:55 -0600
-Message-ID: <20190613175655.GA13079@bogus>
-References: <1560366600-5826-1-git-send-email-jhugo@codeaurora.org>
- <1560366648-5886-1-git-send-email-jhugo@codeaurora.org>
+Subject: Re: [PATCH 4/4] dt-bindings: fsl-qdma: Add LS1028A qDMA bindings
+Date: Thu, 13 Jun 2019 12:07:34 -0600
+Message-ID: <20190613180734.GA3178@bogus>
+References: <20190506090344.37784-1-peng.ma@nxp.com>
+ <20190506090344.37784-4-peng.ma@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1560366648-5886-1-git-send-email-jhugo@codeaurora.org>
+In-Reply-To: <20190506090344.37784-4-peng.ma@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peng Ma <peng.ma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Jun 2019 13:10:48 -0600, Jeffrey Hugo wrote:
-> The global clock controller on MSM8998 can consume a number of external
-> clocks.  Document them.
+On Mon,  6 May 2019 09:03:44 +0000, Peng Ma wrote:
+> Add LS1028A qDMA controller bindings to fsl-qdma bindings.
 > 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> Signed-off-by: Peng Ma <peng.ma@nxp.com>
 > ---
->  Documentation/devicetree/bindings/clock/qcom,gcc.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  Documentation/devicetree/bindings/dma/fsl-qdma.txt |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
 > 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+Reviewed-by: Rob Herring <robh@kernel.org>
