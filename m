@@ -1,40 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/3] Documentation: dt: binding: fsl: Add
- 'little-endian' and update Chassis define
-Date: Thu, 13 Jun 2019 17:03:44 -0600
-Message-ID: <20190613230344.GA6005@bogus>
-References: <20190520095238.29210-1-ran.wang_1@nxp.com>
- <20190520095238.29210-2-ran.wang_1@nxp.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: perf: stm32: ddrperfm support
+Date: Thu, 13 Jun 2019 17:04:42 -0600
+Message-ID: <20190613230442.GA7783@bogus>
+References: <1558366019-24214-1-git-send-email-gerald.baeza@st.com>
+ <1558366019-24214-3-git-send-email-gerald.baeza@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190520095238.29210-2-ran.wang_1@nxp.com>
+In-Reply-To: <1558366019-24214-3-git-send-email-gerald.baeza@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Li Yang <leoyang.li@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
+To: Gerald BAEZA <gerald.baeza@st.com>
+Cc: "will.deacon@arm.com" <will.deacon@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "corbet@lwn.net" <corbet@lwn.net>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "olof@lixom.net" <olof@lixom.net>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>"linux-doc@vger.kernel.org" <li>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 May 2019 17:52:37 +0800, Ran Wang wrote:
-> By default, QorIQ SoC's RCPM register block is Big Endian. But
-> there are some exceptions, such as LS1088A and LS2088A, are Little
-> Endian. So add this optional property to help identify them.
+On Mon, 20 May 2019 15:27:16 +0000, Gerald BAEZA wrote:
+> The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1 SOC.
 > 
-> Actually LS2021A and other Layerscapes won't totally follow Chassis
-> 2.1, so separate them from powerpc SoC.
+> This documentation indicates how to enable stm32-ddr-pmu driver on
+> DDRPERFM peripheral, via the device tree.
 > 
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
 > ---
-> Change in v4:
-> 	- Adjust indectation of 'ls1021a, ls1012a, ls1043a, ls1046a'.
-> 
-> Change in v3:
-> 	- None.
-> 
-> Change in v2:
-> 	- None.
-> 
->  Documentation/devicetree/bindings/soc/fsl/rcpm.txt |    8 +++++++-
->  1 files changed, 7 insertions(+), 1 deletions(-)
+>  .../devicetree/bindings/perf/stm32-ddr-pmu.txt       | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
