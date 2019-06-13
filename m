@@ -1,166 +1,77 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v4 7/7] regulator: qcom_spmi: add PMS405 SPMI regulator
-Date: Thu, 13 Jun 2019 14:27:07 -0700
-Message-ID: <20190613212707.5966-2-jeffrey.l.hugo@gmail.com>
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
- <20190613212707.5966-1-jeffrey.l.hugo@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: mfd: lp87565: Add lp87561
+ configuration
+Date: Thu, 13 Jun 2019 15:28:38 -0600
+Message-ID: <20190613212838.GA21714@bogus>
+References: <20190516043218.8222-1-j-keerthy@ti.com>
+ <20190516043218.8222-2-j-keerthy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190613212707.5966-1-jeffrey.l.hugo@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190516043218.8222-2-j-keerthy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org
-Cc: agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To: Keerthy <j-keerthy@ti.com>
+Cc: lee.jones@linaro.org, broonie@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+On Thu, May 16, 2019 at 10:02:16AM +0530, Keerthy wrote:
+> lp87561 is a single output 4-phase regulator configuration.
+> Add support for the same.
+> 
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>  .../devicetree/bindings/mfd/lp87565.txt       | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/lp87565.txt b/Documentation/devicetree/bindings/mfd/lp87565.txt
+> index a48df7c08ab0..41671e0dc26b 100644
+> --- a/Documentation/devicetree/bindings/mfd/lp87565.txt
+> +++ b/Documentation/devicetree/bindings/mfd/lp87565.txt
+> @@ -41,3 +41,39 @@ lp87565_pmic: pmic@60 {
+>  		};
+>  	};
+>  };
+> +
+> +TI LP87561 PMIC:
+> +
+> +This is a single output 4-phase regulator configuration
+> +
+> +Required properties:
+> +  - compatible:	"ti,lp87561-q1"
+> +  - reg:		I2C slave address.
+> +  - gpio-controller:	Marks the device node as a GPIO Controller.
+> +  - #gpio-cells:	Should be two.  The first cell is the pin number and
+> +			the second cell is used to specify flags.
+> +			See ../gpio/gpio.txt for more information.
+> +  - xxx-in-supply:	Phandle to parent supply node of each regulator
+> +			populated under regulators node. xxx should match
+> +			the supply_name populated in driver.
 
-The PMS405 has 5 HFSMPS and 13 LDO regulators,
+This is not something we can validate. You need to enumerate values of 
+'xxx'.
 
-This commit adds support for one of the 5 HFSMPS regulators (s3) to
-the spmi regulator driver.
-
-The PMIC HFSMPS 430 regulators have 8 mV step size and a voltage
-control scheme consisting of two  8-bit registers defining a 16-bit
-voltage set point in units of millivolts
-
-S3 controls the cpu voltages (s3 is a buck regulator of type HFS430);
-it is therefore required so we can enable voltage scaling for safely
-running cpufreq.
-
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/regulator/qcom_spmi-regulator.c | 43 +++++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-index c8791b036c53..debe4dc74d27 100644
---- a/drivers/regulator/qcom_spmi-regulator.c
-+++ b/drivers/regulator/qcom_spmi-regulator.c
-@@ -105,6 +105,7 @@ enum spmi_regulator_logical_type {
- 	SPMI_REGULATOR_LOGICAL_TYPE_ULT_HO_SMPS,
- 	SPMI_REGULATOR_LOGICAL_TYPE_ULT_LDO,
- 	SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426,
-+	SPMI_REGULATOR_LOGICAL_TYPE_HFS430,
- };
- 
- enum spmi_regulator_type {
-@@ -157,6 +158,7 @@ enum spmi_regulator_subtype {
- 	SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL2	= 0x0e,
- 	SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL3	= 0x0f,
- 	SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL4	= 0x10,
-+	SPMI_REGULATOR_SUBTYPE_HFS430		= 0x0a,
- };
- 
- enum spmi_common_regulator_registers {
-@@ -302,6 +304,8 @@ enum spmi_common_control_register_index {
- /* Clock rate in kHz of the FTSMPS426 regulator reference clock. */
- #define SPMI_FTSMPS426_CLOCK_RATE		4800
- 
-+#define SPMI_HFS430_CLOCK_RATE			1600
-+
- /* Minimum voltage stepper delay for each step. */
- #define SPMI_FTSMPS426_STEP_DELAY		2
- 
-@@ -515,6 +519,10 @@ static struct spmi_voltage_range ult_pldo_ranges[] = {
- 	SPMI_VOLTAGE_RANGE(0, 1750000, 1750000, 3337500, 3337500, 12500),
- };
- 
-+static struct spmi_voltage_range hfs430_ranges[] = {
-+	SPMI_VOLTAGE_RANGE(0, 320000, 320000, 2040000, 2040000, 8000),
-+};
-+
- static DEFINE_SPMI_SET_POINTS(pldo);
- static DEFINE_SPMI_SET_POINTS(nldo1);
- static DEFINE_SPMI_SET_POINTS(nldo2);
-@@ -530,6 +538,7 @@ static DEFINE_SPMI_SET_POINTS(ult_lo_smps);
- static DEFINE_SPMI_SET_POINTS(ult_ho_smps);
- static DEFINE_SPMI_SET_POINTS(ult_nldo);
- static DEFINE_SPMI_SET_POINTS(ult_pldo);
-+static DEFINE_SPMI_SET_POINTS(hfs430);
- 
- static inline int spmi_vreg_read(struct spmi_regulator *vreg, u16 addr, u8 *buf,
- 				 int len)
-@@ -1399,12 +1408,26 @@ static struct regulator_ops spmi_ftsmps426_ops = {
- 	.set_pull_down		= spmi_regulator_common_set_pull_down,
- };
- 
-+static struct regulator_ops spmi_hfs430_ops = {
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.set_voltage_sel	= spmi_regulator_ftsmps426_set_voltage,
-+	.set_voltage_time_sel	= spmi_regulator_set_voltage_time_sel,
-+	.get_voltage		= spmi_regulator_ftsmps426_get_voltage,
-+	.map_voltage		= spmi_regulator_single_map_voltage,
-+	.list_voltage		= spmi_regulator_common_list_voltage,
-+	.set_mode		= spmi_regulator_ftsmps426_set_mode,
-+	.get_mode		= spmi_regulator_ftsmps426_get_mode,
-+};
-+
- /* Maximum possible digital major revision value */
- #define INF 0xFF
- 
- static const struct spmi_regulator_mapping supported_regulators[] = {
- 	/*           type subtype dig_min dig_max ltype ops setpoints hpm_min */
- 	SPMI_VREG(BUCK,  GP_CTL,   0, INF, SMPS,   smps,   smps,   100000),
-+	SPMI_VREG(BUCK,  HFS430,   0, INF, HFS430, hfs430, hfs430,  10000),
- 	SPMI_VREG(LDO,   N300,     0, INF, LDO,    ldo,    nldo1,   10000),
- 	SPMI_VREG(LDO,   N600,     0,   0, LDO,    ldo,    nldo2,   10000),
- 	SPMI_VREG(LDO,   N1200,    0,   0, LDO,    ldo,    nldo2,   10000),
-@@ -1572,7 +1595,8 @@ static int spmi_regulator_init_slew_rate(struct spmi_regulator *vreg)
- 	return ret;
- }
- 
--static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg)
-+static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg,
-+						   int clock_rate)
- {
- 	int ret;
- 	u8 reg = 0;
-@@ -1589,7 +1613,7 @@ static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg)
- 	delay >>= SPMI_FTSMPS426_STEP_CTRL_DELAY_SHIFT;
- 
- 	/* slew_rate has units of uV/us */
--	slew_rate = SPMI_FTSMPS426_CLOCK_RATE * range->step_uV;
-+	slew_rate = clock_rate * range->step_uV;
- 	slew_rate /= 1000 * (SPMI_FTSMPS426_STEP_DELAY << delay);
- 	slew_rate *= SPMI_FTSMPS426_STEP_MARGIN_NUM;
- 	slew_rate /= SPMI_FTSMPS426_STEP_MARGIN_DEN;
-@@ -1741,7 +1765,14 @@ static int spmi_regulator_of_parse(struct device_node *node,
- 			return ret;
- 		break;
- 	case SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426:
--		ret = spmi_regulator_init_slew_rate_ftsmps426(vreg);
-+		ret = spmi_regulator_init_slew_rate_ftsmps426(vreg,
-+						SPMI_FTSMPS426_CLOCK_RATE);
-+		if (ret)
-+			return ret;
-+		break;
-+	case SPMI_REGULATOR_LOGICAL_TYPE_HFS430:
-+		ret = spmi_regulator_init_slew_rate_ftsmps426(vreg,
-+							SPMI_HFS430_CLOCK_RATE);
- 		if (ret)
- 			return ret;
- 		break;
-@@ -1909,6 +1940,11 @@ static const struct spmi_regulator_data pm8005_regulators[] = {
- 	{ }
- };
- 
-+static const struct spmi_regulator_data pms405_regulators[] = {
-+	{ "s3", 0x1a00, "vdd_s3"},
-+	{ }
-+};
-+
- static const struct of_device_id qcom_spmi_regulator_match[] = {
- 	{ .compatible = "qcom,pm8005-regulators", .data = &pm8005_regulators },
- 	{ .compatible = "qcom,pm8841-regulators", .data = &pm8841_regulators },
-@@ -1916,6 +1952,7 @@ static const struct of_device_id qcom_spmi_regulator_match[] = {
- 	{ .compatible = "qcom,pm8941-regulators", .data = &pm8941_regulators },
- 	{ .compatible = "qcom,pm8994-regulators", .data = &pm8994_regulators },
- 	{ .compatible = "qcom,pmi8994-regulators", .data = &pmi8994_regulators },
-+	{ .compatible = "qcom,pms405-regulators", .data = &pms405_regulators },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
--- 
-2.17.1
+> +Example:
+> +
+> +lp87561_pmic: pmic@62 {
+> +	compatible = "ti,lp87561-q1";
+> +	reg = <0x62>;
+> +	gpio-controller;
+> +	#gpio-cells = <2>;
+> +
+> +	buck3210-in-supply = <&vsys_3v3>;
+> +
+> +	regulators: regulators {
+> +		buck3210_reg: buck3210 {
+> +			/* VDD_CORE */
+> +			regulator-name = "buck3210";
+> +			regulator-min-microvolt = <800000>;
+> +			regulator-max-microvolt = <800000>;
+> +			regulator-always-on;
+> +			regulator-boot-on;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.17.1
+> 
