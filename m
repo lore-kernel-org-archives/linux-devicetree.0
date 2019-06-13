@@ -1,15 +1,14 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V3 4/4] dt-bindings: arm: imx: Add the soc binding for
- i.MX8MQ
-Date: Thu, 13 Jun 2019 06:54:29 -0600
-Message-ID: <CAL_JsqKQgQ=+4xt41_2X3ddsO=rt4u--MJ28+p=is33c1=0DQg@mail.gmail.com>
-References: <20190613051344.1170-1-Anson.Huang@nxp.com>
- <20190613051344.1170-4-Anson.Huang@nxp.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V3 0/3] mmc: mmci: add busy detect for stm32 sdmmc variant
+Date: Thu, 13 Jun 2019 15:02:02 +0200
+Message-ID: <5b7e1ae5-c97e-5a21-fc3e-7cc328087f04@st.com>
+References: <1559577325-19266-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190613051344.1170-4-Anson.Huang@nxp.com>
+In-Reply-To: <1559577325-19266-1-git-send-email-ludovic.Barre@st.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,22 +18,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Bai Ping <ping.bai@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Leonard Crestez <leonard.crestez@nxp.com>, Fabio Estevam <festevam@gmail.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, NXP Linux Team <Linux-imx@nxp.com>, devicetree@vger.kernel.org, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <Michal.Vokac@ysoft.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Vabhav Sharma <vabhav.sharma@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Dong Aisheng <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yang-Leo Li <leoyang.li@nxp.c>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 11:12 PM <Anson.Huang@nxp.com> wrote:
->
-> From: Anson Huang <Anson.Huang@nxp.com>
->
-> This patch adds the soc & board binding for i.MX8MQ.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> New patch, as I just found i.MX8MQ SoC & board binding is missed, so add this patch
-> based on i.MX8MN binding, so put it in same series to avoid dependency issue.
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+hi Ulf
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Just a "gentleman ping" about this series.
+I know you are busy, it's just to be sure you do not forget me :-)
+
+Regards
+Ludo
+
+On 6/3/19 5:55 PM, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+> 
+> This patch series adds busy detect for stm32 sdmmc variant.
+> Some adaptations are required:
+> -Clear busy status bit if busy_detect_flag and busy_detect_mask are
+>   different.
+> -Add hardware busy timeout with MMCIDATATIMER register.
+> 
+> V3:
+> -rebase on latest mmc next
+> -replace re-read by status parameter.
+> 
+> V2:
+> -mmci_cmd_irq cleanup in separate patch.
+> -simplify the busy_detect_flag exclude
+> -replace sdmmc specific comment in
+> "mmc: mmci: avoid fake busy polling in mmci_irq"
+> to focus on common behavior
+> 
+> Ludovic Barre (3):
+>    mmc: mmci: fix read status for busy detect
+>    mmc: mmci: add hardware busy timeout feature
+>    mmc: mmci: add busy detect for stm32 sdmmc variant
+> 
+>   drivers/mmc/host/mmci.c | 49 +++++++++++++++++++++++++++++++++++++++++--------
+>   drivers/mmc/host/mmci.h |  3 +++
+>   2 files changed, 44 insertions(+), 8 deletions(-)
+> 
