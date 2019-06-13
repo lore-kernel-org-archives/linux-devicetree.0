@@ -1,96 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 10/16] dmaengine: ti: New driver for K3 UDMA - split#1:
- defines, structs, io func
-Date: Thu, 13 Jun 2019 12:43:24 -0600
-Message-ID: <20190613184324.GA26206@bogus>
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
- <20190506123456.6777-11-peter.ujfalusi@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/7] drivers: regulator: qcom_spmi: enable linear
+ range info
+Date: Thu, 13 Jun 2019 19:51:36 +0100
+Message-ID: <20190613185136.GW5316@sirena.org.uk>
+References: <20190606184842.39484-1-jeffrey.l.hugo@gmail.com>
+ <20190606184923.39537-1-jeffrey.l.hugo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ahZICQ7iXVM/oLYH"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190506123456.6777-11-peter.ujfalusi@ti.com>
+In-Reply-To: <20190606184923.39537-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: vkoul@kernel.org, nm@ti.com, ssantosh@kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: lgirdwood@gmail.com, agross@kernel.org, david.brown@linaro.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, jorge.ramirez-ortiz@linaro.org, niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 06, 2019 at 03:34:50PM +0300, Peter Ujfalusi wrote:
-> Split patch for review containing: defines, structs, io and low level
-> functions and interrupt callbacks.
 
-Not a useful comment for upstream.
+--ahZICQ7iXVM/oLYH
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> DMA driver for
-> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
-> 
-> The UDMA-P is intended to perform similar (but significantly upgraded) functions
-> as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
-> supports the transmission and reception of various packet types. The UDMA-P is
-> architected to facilitate the segmentation and reassembly of SoC DMA data
-> structure compliant packets to/from smaller data blocks that are natively
-> compatible with the specific requirements of each connected peripheral. Multiple
-> Tx and Rx channels are provided within the DMA which allow multiple segmentation
-> or reassembly operations to be ongoing. The DMA controller maintains state
-> information for each of the channels which allows packet segmentation and
-> reassembly operations to be time division multiplexed between channels in order
-> to share the underlying DMA hardware. An external DMA scheduler is used to
-> control the ordering and rate at which this multiplexing occurs for Transmit
-> operations. The ordering and rate of Receive operations is indirectly controlled
-> by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
-> 
-> The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
-> channels. Channels in the UDMA-P can be configured to be either Packet-Based or
-> Third-Party channels on a channel by channel basis.
-> 
-> The initial driver supports:
-> - MEM_TO_MEM (TR mode)
-> - DEV_TO_MEM (Packet / TR mode)
-> - MEM_TO_DEV (Packet / TR mode)
-> - Cyclic (Packet / TR mode)
-> - Metadata for descriptors
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/ti/k3-udma.c          | 1008 +++++++++++++++++++++++++++++
->  drivers/dma/ti/k3-udma.h          |  129 ++++
->  include/dt-bindings/dma/k3-udma.h |   26 +
+On Thu, Jun 06, 2019 at 11:49:23AM -0700, Jeffrey Hugo wrote:
 
-This belongs in the binding patch.
+> +		if (vreg->logical_type =3D=3D SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
+> +			/* since there is only one range */
+> +			range =3D spmi_regulator_find_range(vreg);
+> +			vreg->desc.uV_step =3D range->step_uV;
+> +		}
 
->  3 files changed, 1163 insertions(+)
->  create mode 100644 drivers/dma/ti/k3-udma.c
->  create mode 100644 drivers/dma/ti/k3-udma.h
->  create mode 100644 include/dt-bindings/dma/k3-udma.h
+This doesn't build for me:
 
-> diff --git a/include/dt-bindings/dma/k3-udma.h b/include/dt-bindings/dma/k3-udma.h
-> new file mode 100644
-> index 000000000000..89ba6a9d4a8f
-> --- /dev/null
-> +++ b/include/dt-bindings/dma/k3-udma.h
-> @@ -0,0 +1,26 @@
-> +#ifndef __DT_TI_UDMA_H
-> +#define __DT_TI_UDMA_H
-> +
-> +#define UDMA_TR_MODE		0
-> +#define UDMA_PKT_MODE		1
-> +
-> +#define UDMA_DIR_TX		0
-> +#define UDMA_DIR_RX		1
-> +
-> +#define PSIL_STATIC_TR_NONE	0
-> +#define PSIL_STATIC_TR_XY	1
-> +#define PSIL_STATIC_TR_MCAN	2
-> +
-> +#define UDMA_PDMA_TR_XY(id)				\
-> +	ti,psil-config##id {				\
-> +		linux,udma-mode = <UDMA_TR_MODE>;	\
-> +		statictr-type = <PSIL_STATIC_TR_XY>;	\
-> +	}
+drivers/regulator/qcom_spmi-regulator.c: In function =E2=80=98qcom_spmi_reg=
+ulator_probe=E2=80=99:
+drivers/regulator/qcom_spmi-regulator.c:1837:29: error: =E2=80=98SPMI_REGUL=
+ATOR_LOGICAL_TYPE_HFS430=E2=80=99 undeclared (first use in this function); =
+did you mean =E2=80=98SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS=E2=80=99?
+   if (vreg->logical_type =3D=3D SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
+                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                             SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS
+drivers/regulator/qcom_spmi-regulator.c:1837:29: note: each undeclared iden=
+tifier is reported only once for each function it appears in
 
-We don't accept this kind of complex macros in dts files. It obfuscates 
-reading dts files.
+--ahZICQ7iXVM/oLYH
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Rob
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0CmzcACgkQJNaLcl1U
+h9BLcAf+LbREmfxXdirC6a4pyidOidMHVXvJ5RSlum+DW3aj56vF/aXiYyZm9d2C
+4I+6WFnpU6GIbsNXcYPRkng30IZO5++Da8NPRPyYhcmBs+pJhpQjlPiPg6UK2/iB
+AmsQStemH0Zi1crGMEeLU/nYREfZpTnS9GXH4r5SMvja5EigTEKfSqlhoWl5hoJd
+INPx2zNjnBP21hVt0aUs+uEj2xiAuwMrN8VtHT152T51jVofsIxXZYBXtmSFKdLJ
+9nkFy36LT6YA2gso7Caw+ku3SYPfXgkPu7YdOjnlFOp5sDC2dX7nlKeAZwiphDcU
+IgFxUVv32eyNOS7wxahaxSq/ypFIPg==
+=u3Lf
+-----END PGP SIGNATURE-----
+
+--ahZICQ7iXVM/oLYH--
