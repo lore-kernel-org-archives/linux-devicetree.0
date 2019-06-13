@@ -1,206 +1,71 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and
- optimize probe ordering
-Date: Thu, 13 Jun 2019 07:19:37 -0600
-Message-ID: <CAL_JsqLFTfAN5UZ8yy+z5fAXBa83JU0FGVDKzpu7pMLi10jvZQ@mail.gmail.com>
-References: <20190604003218.241354-1-saravanak@google.com> <095b631b-155d-483e-5ffb-3a04b0db0245@gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v15 0/7] support ROHM BD70528 PMIC
+Date: Thu, 13 Jun 2019 15:05:29 +0200
+Message-ID: <20190613130529.kgswgbuszb24itxz@earth.universe>
+References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190611200043.eib3g3acc7ilawsx@earth.universe>
+ <20190612060328.GQ4797@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="z7gwwmvwfgzls6v6"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <095b631b-155d-483e-5ffb-3a04b0db0245@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190612060328.GQ4797@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Saravana Kannan <saravanak@google.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 3:21 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> Adding cc: David Collins
->
-> Plus my comments below.
->
-> On 6/3/19 5:32 PM, Saravana Kannan wrote:
-> > Add a generic "depends-on" property that allows specifying mandatory
-> > functional dependencies between devices. Add device-links after the
-> > devices are created (but before they are probed) by looking at this
-> > "depends-on" property.
-> >
-> > This property is used instead of existing DT properties that specify
-> > phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
-> > is because not all resources referred to by existing DT properties are
-> > mandatory functional dependencies. Some devices/drivers might be able
-> > to operate with reduced functionality when some of the resources
-> > aren't available. For example, a device could operate in polling mode
-> > if no IRQ is available, a device could skip doing power management if
-> > clock or voltage control isn't available and they are left on, etc.
-> >
-> > So, adding mandatory functional dependency links between devices by
-> > looking at referred phandles in DT properties won't work as it would
-> > prevent probing devices that could be probed. By having an explicit
-> > depends-on property, we can handle these cases correctly.
-> >
-> > Having functional dependencies explicitly called out in DT and
-> > automatically added before the devices are probed, provides the
-> > following benefits:
-> >
-> > - Optimizes device probe order and avoids the useless work of
-> >   attempting probes of devices that will not probe successfully
-> >   (because their suppliers aren't present or haven't probed yet).
-> >
-> >   For example, in a commonly available mobile SoC, registering just
-> >   one consumer device's driver at an initcall level earlier than the
-> >   supplier device's driver causes 11 failed probe attempts before the
-> >   consumer device probes successfully. This was with a kernel with all
-> >   the drivers statically compiled in. This problem gets a lot worse if
-> >   all the drivers are loaded as modules without direct symbol
-> >   dependencies.
-> >
-> > - Supplier devices like clock providers, regulators providers, etc
-> >   need to keep the resources they provide active and at a particular
-> >   state(s) during boot up even if their current set of consumers don't
-> >   request the resource to be active. This is because the rest of the
-> >   consumers might not have probed yet and turning off the resource
-> >   before all the consumers have probed could lead to a hang or
-> >   undesired user experience.
-> >
-> >   Some frameworks (Eg: regulator) handle this today by turning off
-> >   "unused" resources at late_initcall_sync and hoping all the devices
-> >   have probed by then. This is not a valid assumption for systems with
-> >   loadable modules. Other frameworks (Eg: clock) just don't handle
-> >   this due to the lack of a clear signal for when they can turn off
-> >   resources. This leads to downstream hacks to handle cases like this
-> >   that can easily be solved in the upstream kernel.
-> >
-> >   By linking devices before they are probed, we give suppliers a clear
-> >   count of the number of dependent consumers. Once all of the
-> >   consumers are active, the suppliers can turn off the unused
-> >   resources without making assumptions about the number of consumers.
-> >
-> > By default we just add device-links to track "driver presence" (probe
-> > succeeded) of the supplier device. If any other functionality provided
-> > by device-links are needed, it is left to the consumer/supplier
-> > devices to change the link when they probe.
-> >
-> >
-> > Saravana Kannan (5):
-> >   of/platform: Speed up of_find_device_by_node()
-> >   driver core: Add device links support for pending links to suppliers
-> >   dt-bindings: Add depends-on property
-> >   of/platform: Add functional dependency link from "depends-on" property
-> >   driver core: Add sync_state driver/bus callback
-> >
-> >  .../devicetree/bindings/depends-on.txt        |  26 +++++
-> >  drivers/base/core.c                           | 106 ++++++++++++++++++
-> >  drivers/of/platform.c                         |  75 ++++++++++++-
-> >  include/linux/device.h                        |  24 ++++
-> >  include/linux/of.h                            |   3 +
-> >  5 files changed, 233 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
-> >
->
->
-> I don't think the above description adequately describes one key problem
-> that the patch set addresses.
->
-> David Collins described the problem in an email late in the thread of
-> the first submission of this series.  Instead of providing a link to
-> that email, I am going to fully copy it here:
->
-> On 5/31/19 4:27 PM, David Collins wrote:
-> > Hello Saravana,
-> >
-> > On 5/23/19 6:01 PM, Saravana Kannan wrote:
-> > ...
-> >> Having functional dependencies explicitly called out in DT and
-> >> automatically added before the devices are probed, provides the
-> >> following benefits:
-> > ...
-> >> - Supplier devices like clock providers, regulators providers, etc
-> >>   need to keep the resources they provide active and at a particular
-> >>   state(s) during boot up even if their current set of consumers don't
-> >>   request the resource to be active. This is because the rest of the
-> >>   consumers might not have probed yet and turning off the resource
-> >>   before all the consumers have probed could lead to a hang or
-> >>   undesired user experience.
-> > This benefit provided by the sync_state() callback function introduced in
-> > this series gives us a mechanism to solve a specific problem encountered
-> > on Qualcomm Technologies, Inc. (QTI) boards when booting with drivers
-> > compiled as modules.  QTI boards have a regulator that powers the PHYs for
-> > display, camera, USB, UFS, and PCIe.  When these boards boot up, the boot
-> > loader enables this regulator along with other resources in order to
-> > display a splash screen image.  The regulator must remain enabled until
-> > the Linux display driver has probed and made a request with the regulator
-> > framework to keep the regulator enabled.  If the regulator is disabled
-> > prematurely, then the screen image is corrupted and the display hardware
-> > enters a bad state.
-> >
-> > We have observed that when the camera driver probes before the display
-> > driver, it performs this sequence: regulator_enable(), camera register IO,
-> > regulator_disable().  Since it is the first consumer of the shared
-> > regulator, the regulator is physically disabled (even though display
-> > hardware still requires it to be enabled).  We have solved this problem
-> > when compiling drivers statically with a downstream regulator
-> > proxy-consumer driver.  This proxy-consumer is able to make an enable
-> > request for the shared regulator before any other consumer.  It then
-> > removes its request at late_initcall_sync.
-> >
-> > Unfortunately, when drivers are compiled as modules instead of compiled
-> > statically into the kernel image, late_initcall_sync is not a meaningful
-> > marker of driver probe completion.  This means that our existing proxy
-> > voting system will not work when drivers are compiled as modules.  The
-> > sync_state() callback resolves this issue by providing a notification that
-> > is guaranteed to arrive only after all consumers of the shared regulator
-> > have probed.
-> >
-> > QTI boards have other cases of shared resources such as bus bandwidth
-> > which must remain at least at a level set by boot loaders in order to
-> > properly support hardware blocks that are enabled before the Linux kernel
-> > starts booting.
-> >
-> > Take care,
-> > David
-> >
->
-> To paraphrase, the problem is:
->
->    - bootloader enables a regulator for display
->    - during Linux boot camera driver probes:
->       * enable the regulator also used for display
->       * disable the regulator
->          + screen image is corrupted
->          + display hardware enters bad state
->    - later during Linux boot display driver probes:
->       * enable the regulator, but too late
->
-> So the problem is an ordering dependency between the camera driver probe
-> and the display driver probe.
->
-> Or alternatively the problem could be seen as: the bootloader has enabled
-> a regulator for a device that the bootloader is aware of, but has not
-> communicated to the Linux regulator framework that the device requires
-> the regulator to remain enabled.
 
-The bootloader should have communicated this information via the
-'simple-framebuffer' binding. The problem is I think we don't have any
-mechanism to ensure the simple-fb driver probes before other drivers
-(other than it's dependencies). Well, there are initcall levels, but
-I'd really like to get rid of any reliance on that. Anything that
-relies on initcall level ordering is not going to work as module
-unless userspace also ensures the ordering.
+--z7gwwmvwfgzls6v6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The other case I've heard of is the serial port's clock getting
-disabled and killing the earlycon as we assume the bootloader left
-serial port dependencies configured.
+Hi,
 
-> Thinking about the problem this way could lead to an entirely different
-> solution.
+On Wed, Jun 12, 2019 at 07:03:28AM +0100, Lee Jones wrote:
+> On Tue, 11 Jun 2019, Sebastian Reichel wrote:
+> > On Mon, Jun 03, 2019 at 10:23:37AM +0300, Matti Vaittinen wrote:
+> > > Patch series introducing support for ROHM BD70528 PMIC
+> > > [...]
+> >=20
+> > I think all patches have been reviewed by the respective subsystem
+> > maintainers. Lee, can you provide an immutable branch with the MFD
+> > patches (1, 2, 4)? Looks like the other patches only depend on those
+> > and can go through their respective subsystems.
+>=20
+> Yes.  It's on my TODO list.
 
-I think the ordering issue is orthogonal to using modules. We need
-some way to prioritize probing of some devices. IMO, just prioritizing
-the 'stdout-path' device and 'simple-framebuffer' if present solves
-this. I don't think we need a general solution in this case. The may
-be a few other cases, but I think these are the exception. The state
-from the bootloader (and don't forget about kexec) needs to be well
-defined and minimal.
+Thanks.
 
-Rob
+> Would you prefer this method over me just taking them all and sending
+> out a PR?  The latter is my usual flow, but I'm happy with either.
+
+Both methods are fine with me. I usually go with "my" method, since
+that results in less shared commits. It simplifies potential
+follow-up bug fixes, since there is only one tree to fix.
+
+-- Sebastian
+
+--z7gwwmvwfgzls6v6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0CShYACgkQ2O7X88g7
++pr+dQ//UKZYRSKZHKIkw81U/LPaGmkXOWyyYGwVfxHDYeMyeHur/klljg+mU4bW
+gMCGCns23SP/L4c9lOc3aY/Ovkjuq2gjonKtMFo66fY9slf6MdnC4L9FNXXUqsPK
+oa8Fir0ful7FdJ4HxsxLqkiTT1wWDNRgchMI/iNEhcjMt14rlzwIM7wyktT8O/Zr
+9Om2Cx282JEE5hGbl2D98VPrR67vqNRqOwIhZ+lQBNgXiOUgvlh2UDqpXziOjdwX
+vxgmoxUB1v72itnyz0qf46L+ayqnPmBH6MSEdTYs5vYz4l64c4jIXoyyJ/pPr+ck
+rb6eygO0LkADnW6zab11yWn1HH/CYJG1TUNMNOw8a4RFPpCyDW17U5ksICi55hhx
+HrG1YXCPgpiGV2d0MawLwLhEbv3FXIYDPPt6xEne0FXUHg53apOQjmyPoGP404RN
+M7jJJlpkGyHd5N2iskFU79NBES64aHkc/uvmEZw56xHUVg0SZ9e/V7zLKWwxMYeM
+C0kaTjsN86xnoNwsMoVx94RiIjk38xDz1anaAafOtpkUxdFb2xL9qpGWiUlwZKVJ
+ALa7k8jleI0Mzv/fOFHGBZzkGoPCdqURkANKyCLHBA8Pi++nGR4RHF2Om/goK/mb
+pLme4LVfDKswR8HYUbrfCBLsG/uBNX1GfoEH9/CQ2gNKSphUZ90=
+=ScGm
+-----END PGP SIGNATURE-----
+
+--z7gwwmvwfgzls6v6--
