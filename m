@@ -1,70 +1,74 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v3 1/7] drivers: regulator: qcom_spmi: enable linear range info
-Date: Thu, 13 Jun 2019 09:28:06 -0600
-Message-ID: <CAOCk7NpPkcFLR9HWQmfx+9heHs6KCPCZo9mSa_ibezdMUMXNFg@mail.gmail.com>
-References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
- <20190613142231.8728-1-jeffrey.l.hugo@gmail.com> <20190613151008.GA6792@builder>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH repost] dt-bindings: timer: renesas, cmt: Document
+ r8a779{5|65|90} CMT support
+Date: Thu, 13 Jun 2019 13:09:08 +0200
+Message-ID: <7171405c-4647-173f-2883-c7a281e998ea@linaro.org>
+References: <20190509122949.23256-1-horms+renesas@verge.net.au>
+ <20190613101219.vx4ht6dixxu7fioi@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190613151008.GA6792@builder>
+In-Reply-To: <20190613101219.vx4ht6dixxu7fioi@verge.net.au>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+To: Simon Horman <horms@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>, linux-renesas-soc@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cao Van Dong <cv-dong@jinso.co.jp>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 9:10 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Thu 13 Jun 07:22 PDT 2019, Jeffrey Hugo wrote:
->
-> > From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> >
-> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
-> >  drivers/regulator/qcom_spmi-regulator.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-> > index 53a61fb65642..fd55438c25d6 100644
-> > --- a/drivers/regulator/qcom_spmi-regulator.c
-> > +++ b/drivers/regulator/qcom_spmi-regulator.c
-> > @@ -1744,6 +1744,7 @@ MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
-> >  static int qcom_spmi_regulator_probe(struct platform_device *pdev)
-> >  {
-> >       const struct spmi_regulator_data *reg;
-> > +     const struct spmi_voltage_range *range;
-> >       const struct of_device_id *match;
-> >       struct regulator_config config = { };
-> >       struct regulator_dev *rdev;
-> > @@ -1833,6 +1834,12 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
-> >                       }
-> >               }
-> >
-> > +             if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
->
-> This doesn't compile, because HFS430 isn't defined until patch 7.
->
-> But in patch 2 you replace this with a check to see if there's just a
-> single range, which is a better solution. So squash the last hunk of
-> patch 2 into this.
+On 13/06/2019 12:12, Simon Horman wrote:
+> On Thu, May 09, 2019 at 02:29:49PM +0200, Simon Horman wrote:
+>> From: Cao Van Dong <cv-dong@jinso.co.jp>
+>>
+>> Document SoC specific bindings for R-Car H3/M3-N/E3 SoCs.
+> 
+> Hi Daniel and Thomas,
+> 
+> would you object to me taking this patch through the renesas tree.
+> It has been outstanding for some time now.
 
-Huh, I did botch that.  The patch 2 hunk was intended to be in patch
-1.  Will fix.
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
->
-> Regards,
-> Bjorn
->
-> > +                     /* since there is only one range */
-> > +                     range = spmi_regulator_find_range(vreg);
-> > +                     vreg->desc.uV_step = range->step_uV;
-> > +             }
-> > +
-> >               config.dev = dev;
-> >               config.driver_data = vreg;
-> >               config.regmap = regmap;
-> > --
-> > 2.17.1
-> >
+
+>> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+>> ---
+>>  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+>> index c0594450e9ef..c5220bcd852b 100644
+>> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+>> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+>> @@ -42,12 +42,18 @@ Required Properties:
+>>      - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
+>>      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
+>>      - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
+>> +    - "renesas,r8a7795-cmt0" for the 32-bit CMT0 device included in r8a7795.
+>> +    - "renesas,r8a7795-cmt1" for the 48-bit CMT1 device included in r8a7795.
+>>      - "renesas,r8a7796-cmt0" for the 32-bit CMT0 device included in r8a7796.
+>>      - "renesas,r8a7796-cmt1" for the 48-bit CMT1 device included in r8a7796.
+>> +    - "renesas,r8a77965-cmt0" for the 32-bit CMT0 device included in r8a77965.
+>> +    - "renesas,r8a77965-cmt1" for the 48-bit CMT1 device included in r8a77965.
+>>      - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
+>>      - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
+>>      - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
+>>      - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
+>> +    - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
+>> +    - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
+>>  
+>>      - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
+>>  		and RZ/G1.
+>> -- 
+>> 2.11.0
+>>
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
