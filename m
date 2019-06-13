@@ -1,187 +1,180 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v3 7/7] drivers: regulator: qcom: add PMS405 SPMI regulator
-Date: Thu, 13 Jun 2019 09:41:12 -0600
-Message-ID: <CAOCk7NrKa9YvoTmbhXDeKp6cKWOaXmD67LJNf=obgtx7GnZfVg@mail.gmail.com>
-References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
- <20190613142425.9036-1-jeffrey.l.hugo@gmail.com> <20190613153316.GE6792@builder>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 3/5] interconnect: qcom: Add interconnect SMD over SMD
+ driver
+Date: Thu, 13 Jun 2019 08:42:14 -0700
+Message-ID: <20190613154214.GI6792@builder>
+References: <20190613151323.10850-1-georgi.djakov@linaro.org>
+ <20190613151323.10850-4-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190613153316.GE6792@builder>
+Content-Disposition: inline
+In-Reply-To: <20190613151323.10850-4-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 9:33 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Thu 13 Jun 07:24 PDT 2019, Jeffrey Hugo wrote:
->
-> > From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-> >
-> > The PMS405 has 5 HFSMPS and 13 LDO regulators,
-> >
-> > This commit adds support for one of the 5 HFSMPS regulators (s3) to
-> > the spmi regulator driver.
-> >
-> > The PMIC HFSMPS 430 regulators have 8 mV step size and a voltage
-> > control scheme consisting of two  8-bit registers defining a 16-bit
-> > voltage set point in units of millivolts
-> >
-> > S3 controls the cpu voltages (s3 is a buck regulator of type HFS430);
-> > it is therefore required so we can enable voltage scaling for safely
-> > running cpufreq.
-> >
-> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
-> >  drivers/regulator/qcom_spmi-regulator.c | 41 +++++++++++++++++++++++--
-> >  1 file changed, 38 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-> > index c7880c1d4bcd..975655e787fe 100644
-> > --- a/drivers/regulator/qcom_spmi-regulator.c
-> > +++ b/drivers/regulator/qcom_spmi-regulator.c
-> > @@ -105,6 +105,7 @@ enum spmi_regulator_logical_type {
-> >       SPMI_REGULATOR_LOGICAL_TYPE_ULT_HO_SMPS,
-> >       SPMI_REGULATOR_LOGICAL_TYPE_ULT_LDO,
-> >       SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426,
-> > +     SPMI_REGULATOR_LOGICAL_TYPE_HFS430,
-> >  };
-> >
-> >  enum spmi_regulator_type {
-> > @@ -157,6 +158,7 @@ enum spmi_regulator_subtype {
-> >       SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL2      = 0x0e,
-> >       SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL3      = 0x0f,
-> >       SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL4      = 0x10,
-> > +     SPMI_REGULATOR_SUBTYPE_HFS430           = 0x0a,
-> >  };
-> >
-> >  enum spmi_common_regulator_registers {
-> > @@ -302,6 +304,8 @@ enum spmi_common_control_register_index {
-> >  /* Clock rate in kHz of the FTSMPS426 regulator reference clock. */
-> >  #define SPMI_FTSMPS426_CLOCK_RATE            4800
-> >
-> > +#define SPMI_HFS430_CLOCK_RATE                       1600
-> > +
-> >  /* Minimum voltage stepper delay for each step. */
-> >  #define SPMI_FTSMPS426_STEP_DELAY            2
-> >
-> > @@ -515,6 +519,10 @@ static struct spmi_voltage_range ult_pldo_ranges[] = {
-> >       SPMI_VOLTAGE_RANGE(0, 1750000, 1750000, 3337500, 3337500, 12500),
-> >  };
-> >
-> > +static struct spmi_voltage_range hfs430_ranges[] = {
-> > +     SPMI_VOLTAGE_RANGE(0, 320000, 320000, 2040000, 2040000, 8000),
-> > +};
-> > +
-> >  static DEFINE_SPMI_SET_POINTS(pldo);
-> >  static DEFINE_SPMI_SET_POINTS(nldo1);
-> >  static DEFINE_SPMI_SET_POINTS(nldo2);
-> > @@ -530,6 +538,7 @@ static DEFINE_SPMI_SET_POINTS(ult_lo_smps);
-> >  static DEFINE_SPMI_SET_POINTS(ult_ho_smps);
-> >  static DEFINE_SPMI_SET_POINTS(ult_nldo);
-> >  static DEFINE_SPMI_SET_POINTS(ult_pldo);
-> > +static DEFINE_SPMI_SET_POINTS(hfs430);
-> >
-> >  static inline int spmi_vreg_read(struct spmi_regulator *vreg, u16 addr, u8 *buf,
-> >                                int len)
-> > @@ -1397,12 +1406,24 @@ static struct regulator_ops spmi_ftsmps426_ops = {
-> >       .set_pull_down          = spmi_regulator_common_set_pull_down,
-> >  };
-> >
-> > +static struct regulator_ops spmi_hfs430_ops = {
-> > +     /* always on regulators */
-> > +     .set_voltage_sel        = spmi_regulator_ftsmps426_set_voltage,
-> > +     .set_voltage_time_sel   = spmi_regulator_set_voltage_time_sel,
-> > +     .get_voltage            = spmi_regulator_ftsmps426_get_voltage,
-> > +     .map_voltage            = spmi_regulator_single_map_voltage,
-> > +     .list_voltage           = spmi_regulator_common_list_voltage,
-> > +     .set_mode               = spmi_regulator_ftsmps426_set_mode,
-> > +     .get_mode               = spmi_regulator_ftsmps426_get_mode,
-> > +};
-> > +
-> >  /* Maximum possible digital major revision value */
-> >  #define INF 0xFF
-> >
-> >  static const struct spmi_regulator_mapping supported_regulators[] = {
-> >       /*           type subtype dig_min dig_max ltype ops setpoints hpm_min */
-> >       SPMI_VREG(BUCK,  GP_CTL,   0, INF, SMPS,   smps,   smps,   100000),
-> > +     SPMI_VREG(BUCK,  HFS430,   0, INF, HFS430, hfs430, hfs430,  10000),
-> >       SPMI_VREG(LDO,   N300,     0, INF, LDO,    ldo,    nldo1,   10000),
-> >       SPMI_VREG(LDO,   N600,     0,   0, LDO,    ldo,    nldo2,   10000),
-> >       SPMI_VREG(LDO,   N1200,    0,   0, LDO,    ldo,    nldo2,   10000),
-> > @@ -1570,7 +1591,8 @@ static int spmi_regulator_init_slew_rate(struct spmi_regulator *vreg)
-> >       return ret;
-> >  }
-> >
-> > -static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg)
-> > +static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg,
-> > +                                                int clock_rate)
-> >  {
-> >       int ret;
-> >       u8 reg = 0;
-> > @@ -1587,7 +1609,7 @@ static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg)
-> >       delay >>= SPMI_FTSMPS426_STEP_CTRL_DELAY_SHIFT;
-> >
-> >       /* slew_rate has units of uV/us */
-> > -     slew_rate = SPMI_FTSMPS426_CLOCK_RATE * range->step_uV;
-> > +     slew_rate = clock_rate * range->step_uV;
-> >       slew_rate /= 1000 * (SPMI_FTSMPS426_STEP_DELAY << delay);
-> >       slew_rate *= SPMI_FTSMPS426_STEP_MARGIN_NUM;
-> >       slew_rate /= SPMI_FTSMPS426_STEP_MARGIN_DEN;
-> > @@ -1739,7 +1761,14 @@ static int spmi_regulator_of_parse(struct device_node *node,
-> >                       return ret;
-> >               break;
-> >       case SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426:
-> > -             ret = spmi_regulator_init_slew_rate_ftsmps426(vreg);
-> > +             ret = spmi_regulator_init_slew_rate_ftsmps426(vreg,
-> > +                                             SPMI_FTSMPS426_CLOCK_RATE);
-> > +             if (ret)
-> > +                     return ret;
-> > +             break;
-> > +     case SPMI_REGULATOR_LOGICAL_TYPE_HFS430:
-> > +             ret = spmi_regulator_init_slew_rate_ftsmps426(vreg,
-> > +                                                     SPMI_HFS430_CLOCK_RATE);
-> >               if (ret)
-> >                       return ret;
-> >               break;
-> > @@ -1907,6 +1936,11 @@ static const struct spmi_regulator_data pm8005_regulators[] = {
-> >       { }
-> >  };
-> >
-> > +static const struct spmi_regulator_data pms405_regulators[] = {
-> > +     { "s3", 0x1a00, }, /* supply name in the dts only */
->
-> Not sure what this comment is trying to say. The third element here
-> should be the string that is used to find the supply as specified in DT.
-> For s3 this is "vdd_s3".
->
->
-> So please drop the comment and make this:
->         { "s3", 0x1a00, "s3" },
+On Thu 13 Jun 08:13 PDT 2019, Georgi Djakov wrote:
 
-Makes sense, will update.
+> On some Qualcomm SoCs, there is a remote processor, which controls some of
+> the Network-On-Chip interconnect resources. Other CPUs express their needs
+> by communicating with this processor. Add a driver to handle communication
+> with this remote processor.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> 
+> v4:
+> - Hide the driver from config menu. It will be selected by other driver.
+> - Add remove() function to zero out the rpm handle.
+> 
+> v3:
+> - New patch.
+> 
+>  drivers/interconnect/qcom/Kconfig   |  3 ++
+>  drivers/interconnect/qcom/Makefile  |  2 +
+>  drivers/interconnect/qcom/smd-rpm.c | 80 +++++++++++++++++++++++++++++
+>  drivers/interconnect/qcom/smd-rpm.h | 15 ++++++
+>  4 files changed, 100 insertions(+)
+>  create mode 100644 drivers/interconnect/qcom/smd-rpm.c
+>  create mode 100644 drivers/interconnect/qcom/smd-rpm.h
+> 
+> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
+> index d5e70ebc2410..03fd67173494 100644
+> --- a/drivers/interconnect/qcom/Kconfig
+> +++ b/drivers/interconnect/qcom/Kconfig
+> @@ -12,3 +12,6 @@ config INTERCONNECT_QCOM_SDM845
+>  	help
+>  	  This is a driver for the Qualcomm Network-on-Chip on sdm845-based
+>  	  platforms.
+> +
+> +config INTERCONNECT_QCOM_SMD_RPM
+> +	tristate
+> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
+> index 1c1cea690f92..a600cf6cc272 100644
+> --- a/drivers/interconnect/qcom/Makefile
+> +++ b/drivers/interconnect/qcom/Makefile
+> @@ -1,5 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+>  qnoc-sdm845-objs			:= sdm845.o
+> +icc-smd-rpm-objs			:= smd-rpm.o
+>  
+>  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
+> +obj-$(CONFIG_INTERCONNECT_QCOM_SMD_RPM) += icc-smd-rpm.o
+> diff --git a/drivers/interconnect/qcom/smd-rpm.c b/drivers/interconnect/qcom/smd-rpm.c
+> new file mode 100644
+> index 000000000000..0a8c9547bd29
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/smd-rpm.c
+> @@ -0,0 +1,80 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * RPM over SMD communication wrapper for interconnects
+> + *
+> + * Copyright (C) 2019 Linaro Ltd
+> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
+> + */
+> +
+> +#include <linux/interconnect-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/soc/qcom/smd-rpm.h>
+> +
+> +#include "smd-rpm.h"
+> +
+> +#define RPM_KEY_BW		0x00007762
+> +
+> +static struct qcom_smd_rpm *icc_smd_rpm;
+> +
+> +struct icc_rpm_smd_req {
+> +	__le32 key;
+> +	__le32 nbytes;
+> +	__le32 value;
+> +};
+> +
+> +bool qcom_icc_rpm_smd_available(void)
+> +{
+> +	if (!icc_smd_rpm)
+> +		return false;
+> +
+> +	return true;
 
->
-> Regards,
-> Bjorn
->
-> > +     { }
-> > +};
-> > +
-> >  static const struct of_device_id qcom_spmi_regulator_match[] = {
-> >       { .compatible = "qcom,pm8005-regulators", .data = &pm8005_regulators },
-> >       { .compatible = "qcom,pm8841-regulators", .data = &pm8841_regulators },
-> > @@ -1914,6 +1948,7 @@ static const struct of_device_id qcom_spmi_regulator_match[] = {
-> >       { .compatible = "qcom,pm8941-regulators", .data = &pm8941_regulators },
-> >       { .compatible = "qcom,pm8994-regulators", .data = &pm8994_regulators },
-> >       { .compatible = "qcom,pmi8994-regulators", .data = &pmi8994_regulators },
-> > +     { .compatible = "qcom,pms405-regulators", .data = &pms405_regulators },
-> >       { }
-> >  };
-> >  MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
-> > --
-> > 2.17.1
-> >
+A more succinct form would have been:
+
+	return !!icc_smd_rpm;
+
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_rpm_smd_available);
+> +
+> +int qcom_icc_rpm_smd_send(int ctx, int rsc_type, int id, u32 val)
+> +{
+> +	struct icc_rpm_smd_req req = {
+> +		.key = cpu_to_le32(RPM_KEY_BW),
+> +		.nbytes = cpu_to_le32(sizeof(u32)),
+> +		.value = cpu_to_le32(val),
+> +	};
+> +
+> +	return qcom_rpm_smd_write(icc_smd_rpm, ctx, rsc_type, id, &req,
+> +				  sizeof(req));
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_rpm_smd_send);
+> +
+> +static int qcom_icc_rpm_smd_remove(struct platform_device *pdev)
+> +{
+> +	icc_smd_rpm = NULL;
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_icc_rpm_smd_probe(struct platform_device *pdev)
+> +{
+> +	icc_smd_rpm = dev_get_drvdata(pdev->dev.parent);
+> +
+> +	if (!icc_smd_rpm) {
+> +		dev_err(&pdev->dev, "unable to retrieve handle to RPM\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver qcom_interconnect_rpm_smd_driver = {
+> +	.driver = {
+> +		.name		= "icc_smd_rpm",
+> +	},
+> +	.probe = qcom_icc_rpm_smd_probe,
+> +	.remove = qcom_icc_rpm_smd_remove,
+> +};
+> +module_platform_driver(qcom_interconnect_rpm_smd_driver);
+> +MODULE_AUTHOR("Georgi Djakov <georgi.djakov@linaro.org>");
+> +MODULE_DESCRIPTION("Qualcomm SMD RPM interconnect proxy driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:icc_smd_rpm");
+> diff --git a/drivers/interconnect/qcom/smd-rpm.h b/drivers/interconnect/qcom/smd-rpm.h
+> new file mode 100644
+> index 000000000000..ca9d0327b8ac
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/smd-rpm.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019, Linaro Ltd.
+> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
+> + */
+> +
+> +#ifndef __DRIVERS_INTERCONNECT_QCOM_SMD_RPM_H
+> +#define __DRIVERS_INTERCONNECT_QCOM_SMD_RPM_H
+> +
+> +#include <linux/soc/qcom/smd-rpm.h>
+> +
+> +bool qcom_icc_rpm_smd_available(void);
+> +int qcom_icc_rpm_smd_send(int ctx, int rsc_type, int id, u32 val);
+> +
+> +#endif
