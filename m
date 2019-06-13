@@ -1,37 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
-Date: Thu, 13 Jun 2019 17:00:55 -0600
-Message-ID: <20190613230055.GA19296@bogus>
-References: <20190520032020.7920-1-peng.fan@nxp.com>
+Subject: Re: [PATCH v4 2/3] Documentation: dt: binding: fsl: Add
+ 'little-endian' and update Chassis define
+Date: Thu, 13 Jun 2019 17:03:44 -0600
+Message-ID: <20190613230344.GA6005@bogus>
+References: <20190520095238.29210-1-ran.wang_1@nxp.com>
+ <20190520095238.29210-2-ran.wang_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190520032020.7920-1-peng.fan@nxp.com>
+In-Reply-To: <20190520095238.29210-2-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Li Yang <leoyang.li@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 03:06:35AM +0000, Peng Fan wrote:
-> Introduce fusable-node property for i.MX OCOTP driver.
-> The property will only be used by Firmware(eg. U-Boot) to
-> runtime disable the nodes.
+On Mon, 20 May 2019 17:52:37 +0800, Ran Wang wrote:
+> By default, QorIQ SoC's RCPM register block is Big Endian. But
+> there are some exceptions, such as LS1088A and LS2088A, are Little
+> Endian. So add this optional property to help identify them.
 > 
-> Take i.MX6ULL for example, there are several parts that only
-> have limited modules enabled controlled by OCOTP fuse. It is
-> not flexible to provide several dts for the serval parts, instead
-> we could provide one device tree and let Firmware to runtime disable
-> the device tree nodes for those modules that are disable(fused).
+> Actually LS2021A and other Layerscapes won't totally follow Chassis
+> 2.1, so separate them from powerpc SoC.
 > 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 > ---
+> Change in v4:
+> 	- Adjust indectation of 'ls1021a, ls1012a, ls1043a, ls1046a'.
 > 
-> Currently NXP vendor use U-Boot to set status to disabled for devices
-> that could not function,
-> https://source.codeaurora.org/external/imx/uboot-imx/tree/arch/arm/mach-imx/mx6/module_fuse.c?h=imx_v2018.03_4.14.98_2.0.0_ga#n149
-> But this approach is will not work if kernel dts node path changed.
+> Change in v3:
+> 	- None.
+> 
+> Change in v2:
+> 	- None.
+> 
+>  Documentation/devicetree/bindings/soc/fsl/rcpm.txt |    8 +++++++-
+>  1 files changed, 7 insertions(+), 1 deletions(-)
+> 
 
-Why would the path change? The DT should be stable.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
