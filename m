@@ -1,7 +1,7 @@
 From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH 4/8] dt-bindings: tpm: document properties for cr50
-Date: Thu, 13 Jun 2019 11:09:27 -0700
-Message-ID: <20190613180931.65445-5-swboyd@chromium.org>
+Subject: [PATCH 2/8] tpm_tis_core: add optional max xfer size check
+Date: Thu, 13 Jun 2019 11:09:25 -0700
+Message-ID: <20190613180931.65445-3-swboyd@chromium.org>
 References: <20190613180931.65445-1-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,50 +9,63 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190613180931.65445-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>, Guenter Roeck <groeck@chromium.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>, Guenter Roeck <groeck@chromium.org>, Dmitry Torokhov <dtor@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Andrey Pronin <apronin@chromium.org>
 
-Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-firmware.
+If tpm reports a bigger burstcnt than allowed by the physical protocol,
+set burstcnt to the max allowed value.
+
+In practice, seen in case of xfer issues (e.g. in spi interface case,
+lost header causing flow control issues and wrong values returned on read
+from TPM_STS). Without catching, causes the physical layer to reject xfer.
 
 Signed-off-by: Andrey Pronin <apronin@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>
+Reviewed-by: Dmitry Torokhov <dtor@chromium.org>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+[swboyd@chromium.org: Drop extra parenthesis in if statement]
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
-This is a resend of https://lkml.kernel.org/r/1469757314-116169-2-git-send-email-apronin@chromium.org
-with status removed.
+This is a resend of https://lkml.kernel.org/r/1469677797-74304-2-git-send-email-apronin@chromium.org
 
- .../bindings/security/tpm/cr50_spi.txt        | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+ drivers/char/tpm/tpm_tis_core.c | 9 ++++++++-
+ drivers/char/tpm/tpm_tis_core.h | 1 +
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
-new file mode 100644
-index 000000000000..401f4ba281b7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
-@@ -0,0 +1,19 @@
-+* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
-+
-+H1 Secure Microcontroller running Cr50 firmware provides several
-+functions, including TPM-like functionality. It communicates over
-+SPI using the FIFO protocol described in the PTP Spec, section 6.
-+
-+Required properties:
-+- compatible: Should be "google,cr50".
-+- spi-max-frequency: Maximum SPI frequency.
-+
-+Example:
-+
-+&spi0 {
-+        cr50@0 {
-+                compatible = "google,cr50";
-+                reg = <0>;
-+                spi-max-frequency = <800000>;
-+        };
-+};
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index b9f64684c3fb..ecf703802333 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -272,8 +272,15 @@ static int get_burstcount(struct tpm_chip *chip)
+ 			return rc;
+ 
+ 		burstcnt = (value >> 8) & 0xFFFF;
+-		if (burstcnt)
++		if (burstcnt) {
++			if (priv->phy_ops->max_xfer_size &&
++			    burstcnt > priv->phy_ops->max_xfer_size) {
++				dev_warn(&chip->dev,
++					 "Bad burstcnt read: %d\n", burstcnt);
++				burstcnt = priv->phy_ops->max_xfer_size;
++			}
+ 			return burstcnt;
++		}
+ 		usleep_range(TPM_TIMEOUT_USECS_MIN, TPM_TIMEOUT_USECS_MAX);
+ 	} while (time_before(jiffies, stop));
+ 	return -EBUSY;
+diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+index f48125f1e6e0..bb4979cf81ed 100644
+--- a/drivers/char/tpm/tpm_tis_core.h
++++ b/drivers/char/tpm/tpm_tis_core.h
+@@ -110,6 +110,7 @@ struct tpm_tis_phy_ops {
+ 	int (*read16)(struct tpm_tis_data *data, u32 addr, u16 *result);
+ 	int (*read32)(struct tpm_tis_data *data, u32 addr, u32 *result);
+ 	int (*write32)(struct tpm_tis_data *data, u32 addr, u32 src);
++	u16 max_xfer_size;
+ };
+ 
+ static inline int tpm_tis_read_bytes(struct tpm_tis_data *data, u32 addr,
 -- 
 Sent by a computer through tubes
