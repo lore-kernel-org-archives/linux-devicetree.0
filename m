@@ -1,47 +1,151 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/4] ASoC: meson: axg-tdmout: right_j is not
-	supported
-Date: Thu, 13 Jun 2019 13:42:31 +0200
-Message-ID: <20190613114233.21130-3-jbrunet@baylibre.com>
-References: <20190613114233.21130-1-jbrunet@baylibre.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v6 1/3] arm64: map FDT as RW for early_init_dt_scan()
+Date: Thu, 13 Jun 2019 14:44:44 +0300
+Message-ID: <20190613114443.GA25164@rapoport-lnx>
+References: <20190612043258.166048-1-hsinyi@chromium.org>
+ <20190612043258.166048-2-hsinyi@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190613114233.21130-1-jbrunet@baylibre.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190612043258.166048-2-hsinyi@chromium.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yu Zhao <yuzhao@google.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>, Jun Yao <yaojun8558363@gmail.com>, Miles Chen <miles.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Laura Abbott <labbott@redhat.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Right justified format is actually not supported by the amlogic tdm output
-encoder.
+On Wed, Jun 12, 2019 at 12:32:58PM +0800, Hsin-Yi Wang wrote:
+> Currently in arm64, FDT is mapped to RO before it's passed to
+> early_init_dt_scan(). However, there might be some codes
+> (eg. commit "fdt: add support for rng-seed") that need to modify FDT
+> during init. Map FDT to RO after early fixups are done.
+> 
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Fixes: c41c2a355b86 ("ASoC: meson: add tdm output driver")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/meson/axg-tdmout.c | 1 -
- 1 file changed, 1 deletion(-)
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
 
-diff --git a/sound/soc/meson/axg-tdmout.c b/sound/soc/meson/axg-tdmout.c
-index 527bfc4487e0..86537fc0ecb5 100644
---- a/sound/soc/meson/axg-tdmout.c
-+++ b/sound/soc/meson/axg-tdmout.c
-@@ -137,7 +137,6 @@ static int axg_tdmout_prepare(struct regmap *map,
- 		break;
- 
- 	case SND_SOC_DAIFMT_LEFT_J:
--	case SND_SOC_DAIFMT_RIGHT_J:
- 	case SND_SOC_DAIFMT_DSP_B:
- 		skew += 1;
- 		break;
+> ---
+> change log v5->v6:
+> * no change.
+> ---
+>  arch/arm64/include/asm/mmu.h |  2 +-
+>  arch/arm64/kernel/kaslr.c    |  5 +----
+>  arch/arm64/kernel/setup.c    |  9 ++++++++-
+>  arch/arm64/mm/mmu.c          | 15 +--------------
+>  4 files changed, 11 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+> index 67ef25d037ea..27f6f17aae36 100644
+> --- a/arch/arm64/include/asm/mmu.h
+> +++ b/arch/arm64/include/asm/mmu.h
+> @@ -137,7 +137,7 @@ extern void init_mem_pgprot(void);
+>  extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+>  			       unsigned long virt, phys_addr_t size,
+>  			       pgprot_t prot, bool page_mappings_only);
+> -extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
+> +extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
+>  extern void mark_linear_text_alias_ro(void);
+>  
+>  #define INIT_MM_CONTEXT(name)	\
+> diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
+> index 06941c1fe418..92bb53460401 100644
+> --- a/arch/arm64/kernel/kaslr.c
+> +++ b/arch/arm64/kernel/kaslr.c
+> @@ -65,9 +65,6 @@ static __init const u8 *kaslr_get_cmdline(void *fdt)
+>  	return default_cmdline;
+>  }
+>  
+> -extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
+> -				       pgprot_t prot);
+> -
+>  /*
+>   * This routine will be executed with the kernel mapped at its default virtual
+>   * address, and if it returns successfully, the kernel will be remapped, and
+> @@ -96,7 +93,7 @@ u64 __init kaslr_early_init(u64 dt_phys)
+>  	 * attempt at mapping the FDT in setup_machine()
+>  	 */
+>  	early_fixmap_init();
+> -	fdt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+> +	fdt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+>  	if (!fdt)
+>  		return 0;
+>  
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index 413d566405d1..6a7050319b5b 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -181,9 +181,13 @@ static void __init smp_build_mpidr_hash(void)
+>  
+>  static void __init setup_machine_fdt(phys_addr_t dt_phys)
+>  {
+> -	void *dt_virt = fixmap_remap_fdt(dt_phys);
+> +	int size;
+> +	void *dt_virt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+>  	const char *name;
+>  
+> +	if (dt_virt)
+> +		memblock_reserve(dt_phys, size);
+> +
+>  	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
+>  		pr_crit("\n"
+>  			"Error: invalid device tree blob at physical address %pa (virtual address 0x%p)\n"
+> @@ -195,6 +199,9 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+>  			cpu_relax();
+>  	}
+>  
+> +	/* Early fixups are done, map the FDT as read-only now */
+> +	fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
+> +
+>  	name = of_flat_dt_get_machine_name();
+>  	if (!name)
+>  		return;
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 93ed0df4df79..5d01365a4333 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -887,7 +887,7 @@ void __set_fixmap(enum fixed_addresses idx,
+>  	}
+>  }
+>  
+> -void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+> +void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+>  {
+>  	const u64 dt_virt_base = __fix_to_virt(FIX_FDT);
+>  	int offset;
+> @@ -940,19 +940,6 @@ void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+>  	return dt_virt;
+>  }
+>  
+> -void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
+> -{
+> -	void *dt_virt;
+> -	int size;
+> -
+> -	dt_virt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
+> -	if (!dt_virt)
+> -		return NULL;
+> -
+> -	memblock_reserve(dt_phys, size);
+> -	return dt_virt;
+> -}
+> -
+>  int __init arch_ioremap_pud_supported(void)
+>  {
+>  	/*
+> -- 
+> 2.20.1
+> 
+
 -- 
-2.20.1
+Sincerely yours,
+Mike.
