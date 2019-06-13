@@ -1,181 +1,124 @@
-From: Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH v3 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
-Date: Thu, 13 Jun 2019 14:40:52 +0530
-Message-ID: <1560417053-2966-1-git-send-email-spujar@nvidia.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: Re: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
+Date: Thu, 13 Jun 2019 10:55:31 +0200
+Message-ID: <CAO-hwJJUivfzFj-Downqt8nY3iTwF8-oq_iBqs1Dxyx92HdYPw@mail.gmail.com>
+References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
+ <20190612212721.32195-1-jeffrey.l.hugo@gmail.com> <20190612214636.GA40779@dtor-ws>
+ <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: mkumard@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>
+To: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Jiri Kosina <jikos@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT nodes for following devices on Tegra186 and Tegra194
- * ACONNECT
- * ADMA
- * AGIC
+On Thu, Jun 13, 2019 at 12:20 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>
+> On 6/12/2019 3:46 PM, Dmitry Torokhov wrote:
+> > On Wed, Jun 12, 2019 at 02:27:21PM -0700, Jeffrey Hugo wrote:
+> >> There needs to be coordination between hid-quirks and the elan_i2c driver
+> >> about which devices are handled by what drivers.  Currently, both use
+> >> whitelists, which results in valid devices being unhandled by default,
+> >> when they should not be rejected by hid-quirks.  This is quickly becoming
+> >> an issue.
+> >>
+> >> Since elan_i2c has a maintained whitelist of what devices it will handle,
+> >> which is now in a header file that hid-quirks can access, use that to
+> >> implement a blacklist in hid-quirks so that only the devices that need to
+> >> be handled by elan_i2c get rejected by hid-quirks, and everything else is
+> >> handled by default.
+> >>
+> >> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> >> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> >> ---
+> >>   drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
+> >>   1 file changed, 16 insertions(+), 11 deletions(-)
+> >>
+> >> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+> >> index e5ca6fe2ca57..bd81bb090222 100644
+> >> --- a/drivers/hid/hid-quirks.c
+> >> +++ b/drivers/hid/hid-quirks.c
+> >> @@ -16,6 +16,7 @@
+> >>   #include <linux/export.h>
+> >>   #include <linux/slab.h>
+> >>   #include <linux/mutex.h>
+> >> +#include <linux/input/elan-i2c-ids.h>
+> >>
+> >>   #include "hid-ids.h"
+> >>
+> >> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
+> >>
+> >>   bool hid_ignore(struct hid_device *hdev)
+> >>   {
+> >> +    int i;
+> >> +
+> >>      if (hdev->quirks & HID_QUIRK_NO_IGNORE)
+> >>              return false;
+> >>      if (hdev->quirks & HID_QUIRK_IGNORE)
+> >> @@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
+> >>              break;
+> >>      case USB_VENDOR_ID_ELAN:
+> >>              /*
+> >> -             * Many Elan devices have a product id of 0x0401 and are handled
+> >> -             * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
+> >> -             * is not (and cannot be) handled by that driver ->
+> >> -             * Ignore all 0x0401 devs except for the ELAN0800 dev.
+> >> +             * Blacklist of everything that gets handled by the elan_i2c
+> >> +             * input driver.  This avoids disabling valid touchpads and
+> >> +             * other ELAN devices.
+> >>               */
+> >> -            if (hdev->product == 0x0401 &&
+> >> -                strncmp(hdev->name, "ELAN0800", 8) != 0)
+> >> -                    return true;
+> >> -            /* Same with product id 0x0400 */
+> >> -            if (hdev->product == 0x0400 &&
+> >> -                strncmp(hdev->name, "QTEC0001", 8) != 0)
+> >> -                    return true;
+> >> +            if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
+> >> +                    for (i = 0; strlen(elan_acpi_id[i].id); ++i)
+> >> +                            if (!strncmp(hdev->name, elan_acpi_id[i].id,
+> >> +                                         strlen(elan_acpi_id[i].id)))
+> >> +                                    return true;
+> >> +                    for (i = 0; strlen(elan_of_match[i].name); ++i)
+> >> +                            if (!strncmp(hdev->name, elan_of_match[i].name,
+> >> +                                         strlen(elan_of_match[i].name)))
+> >> +                                    return true;
+> >
+> > Do we really need to blacklist the OF case here? I thought that in ACPI
+> > case we have clashes as HID gets matched by elan_i2c and CID is matched
+> > by i2c-hid, but I do not believe we'll run into the same situation on OF
+> > systems.
+>
+> I think its the safer approach.
+>
+> On an OF system, such as patch 3 in the series, the "hid-over-i2c" will
+> end up running through this (kind of the whole reason why this series
+> exists).  The vendor and product ids will still match, so we'll end up
+> going through the lists to see if the hdev->name (the compatible string)
+> will match the blacklist.  "hid-over-i2c" won't match the blacklist, but
+> if there is a more specific compatible, it might.
+>
+> In that case, not matching OF would work, however how it could break
+> today is if both "hid-over-i2c" and "elan,ekth3000" were listed for the
+> same device, and elan_i2c was not compiled.  In that case, if we skip
+> the OF part of the black list, hid-quirks will not reject the device,
+> and you'll probably have some odd behavior instead of the obvious "the
+> device doesn't work because the correct driver isn't present" behavior.
+>
+> While that scenario might be far fetched since having both
+> "hid-over-i2c" and "elan,ekth3000" probably violates the OF bindings,
+> its still safer to include the OF case in the blacklist against future
+> scenarios.
+>
+>
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- changes in current revision
-  * use single address range for all APE modules
-  * fix address range for agic
+Dmitry, if you are happy with Jeffrey's answer, feel free to take this
+through your tree and add:
+Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67 ++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++++++++
- 2 files changed, 134 insertions(+)
+I don't expect any major conflicts given on where the code is located.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 426ac0b..b4d735e 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -1295,4 +1295,71 @@
- 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 		interrupt-parent = <&gic>;
- 	};
-+
-+	aconnect@2a41000 {
-+		compatible = "nvidia,tegra210-aconnect";
-+		clocks = <&bpmp TEGRA186_CLK_APE>,
-+			 <&bpmp TEGRA186_CLK_APB2APE>;
-+		clock-names = "ape", "apb2ape";
-+		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x02900000 0x0 0x02900000 0x1FFFFF>;
-+		status = "disabled";
-+
-+		dma-controller@2930000 {
-+			compatible = "nvidia,tegra186-adma";
-+			reg = <0x02930000 0x50000>;
-+			interrupt-parent = <&agic>;
-+			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			clocks = <&bpmp TEGRA186_CLK_AHUB>;
-+			clock-names = "d_audio";
-+			status = "disabled";
-+		};
-+
-+		agic: agic@2a41000 {
-+			compatible = "nvidia,tegra210-agic";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			reg = <0x02a41000 0x1000>,
-+			      <0x02a42000 0x2000>;
-+			interrupts = <GIC_SPI 145
-+				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+			clocks = <&bpmp TEGRA186_CLK_APE>;
-+			clock-names = "clk";
-+			status = "disabled";
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index c77ca21..60ef2a6 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1054,4 +1054,71 @@
- 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 		interrupt-parent = <&gic>;
- 	};
-+
-+	aconnect@2a41000 {
-+		compatible = "nvidia,tegra210-aconnect";
-+		clocks = <&bpmp TEGRA194_CLK_APE>,
-+			 <&bpmp TEGRA194_CLK_APB2APE>;
-+		clock-names = "ape", "apb2ape";
-+		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_AUD>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x02900000 0x0 0x02900000 0x1FFFFF>;
-+		status = "disabled";
-+
-+		dma-controller@2930000 {
-+			compatible = "nvidia,tegra186-adma";
-+			reg = <0x02930000 0x50000>;
-+			interrupt-parent = <&agic>;
-+			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			clocks = <&bpmp TEGRA194_CLK_AHUB>;
-+			clock-names = "d_audio";
-+			status = "disabled";
-+		};
-+
-+		agic: agic@2a41000 {
-+			compatible = "nvidia,tegra210-agic";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			reg = <0x02a41000 0x1000>,
-+			      <0x02a42000 0x2000>;
-+			interrupts = <GIC_SPI 145
-+				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+			clocks = <&bpmp TEGRA194_CLK_APE>;
-+			clock-names = "clk";
-+			status = "disabled";
-+		};
-+	};
- };
--- 
-2.7.4
+Cheers,
+Benjamin
