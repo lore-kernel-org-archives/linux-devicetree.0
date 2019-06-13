@@ -1,12 +1,14 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 1/6] ARM: dts: imx6qdl: Enable SNVS power key according to
+Subject: [PATCH 2/6] ARM: dts: imx6sx: Enable SNVS power key according to
  board design
-Date: Thu, 13 Jun 2019 11:35:22 +0800
-Message-ID: <20190613033527.40555-1-Anson.Huang@nxp.com>
+Date: Thu, 13 Jun 2019 11:35:23 +0800
+Message-ID: <20190613033527.40555-2-Anson.Huang@nxp.com>
+References: <20190613033527.40555-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190613033527.40555-1-Anson.Huang@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -28,36 +30,46 @@ wired up.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 4 ++++
- arch/arm/boot/dts/imx6qdl.dtsi         | 1 +
- 2 files changed, 5 insertions(+)
+ arch/arm/boot/dts/imx6sx-sdb-reva.dts | 4 ++++
+ arch/arm/boot/dts/imx6sx-sdb.dts      | 4 ++++
+ arch/arm/boot/dts/imx6sx.dtsi         | 1 +
+ 3 files changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-index 11103a4..71ca76a 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -761,6 +761,10 @@
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+index 5b3d6c10..f1830ed 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+@@ -166,3 +166,7 @@
+ &reg_vdd2p5 {
+ 	vin-supply = <&vgen6_reg>;
  };
- 
++
 +&snvs_pwrkey {
 +	status = "okay";
 +};
-+
- &ssi2 {
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dts
+index 10f6da8..a8ee708 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb.dts
+@@ -153,3 +153,7 @@
+ 	/* Transceiver EN/STBY is active low on RevB board */
+ 	gpio = <&gpio4 27 GPIO_ACTIVE_LOW>;
  };
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 929fc7d..4b80193 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -841,6 +841,7 @@
++
++&snvs_pwrkey {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index bbdfdd8..bb25add 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -738,6 +738,7 @@
  					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
  					linux,keycode = <KEY_POWER>;
  					wakeup-source;
 +					status = "disabled";
  				};
+ 			};
  
- 				snvs_lpgpr: snvs-lpgpr {
 -- 
 2.7.4
