@@ -1,55 +1,35 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v3, 10/27] drm/mediatek: split DISP_REG_CONFIG_DSI_SEL
- setting into another use case
-Date: Fri, 14 Jun 2019 10:26:34 +0800
-Message-ID: <1560479194.16718.5.camel@mtksdaap41>
-References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
- <1559734986-7379-11-git-send-email-yongqiang.niu@mediatek.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 1/9] dt-bindings: display: Add TCON LCD
+ compatible for R40
+Date: Fri, 14 Jun 2019 11:18:41 +0800
+Message-ID: <CAGb2v64NVoakoRzg6XeE0jzgACU3G7=_E6MOGfPYGkw3f8E8nQ@mail.gmail.com>
+References: <20190613185241.22800-1-jagan@amarulasolutions.com> <20190613185241.22800-2-jagan@amarulasolutions.com>
+Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1559734986-7379-11-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: yongqiang.niu@mediatek.com, bibby.hsieh@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBIFERTUAKGQEADALSYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190613185241.22800-2-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-K0JpYmJ5OgoKSGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wNi0wNSBhdCAxOTo0MiArMDgw
-MCwgeW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5p
-dSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gSGVyZSBpcyB0d28gbW9kaWZpdGlv
-biBpbiB0aGlzIHBhdGNoOgo+IDEuYmxzLT5kcGkwIGFuZCByZG1hMS0+ZHNpIGFyZSBkaWZmZXJl
-biB1c2VjYXNlLAo+IFNwbGl0IERJU1BfUkVHX0NPTkZJR19EU0lfU0VMIHNldHRpbmcgaW50byBh
-bnRoZXIgdXNlY2FzZQo+IDIucmVtb3ZlIERJU1BfUkVHX0NPTkZJR19EUElfU0VMIHNldHRpbmcs
-IERQSV9TRUxfSU5fQkxTIGlzIDAgYW5kCj4gdGhpcyBpcyBzYW1lIHdpdGggaGFyZHdhcmUgZGVm
-YXV0bCBzZXR0aW5nLAo+IAo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFu
-Zy5uaXVAbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9kZHAuYyB8IDMgKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBk
-ZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+IGlu
-ZGV4IDcxNzYwOWQuLjFiYmFiZTYgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fZGRwLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9kZHAuYwo+IEBAIC00MDEsMTAgKzQwMSw5IEBAIHN0YXRpYyB2b2lkIG10a19kZHBfc291dF9z
-ZWwodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywKPiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9D
-T01QT05FTlRfQkxTICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkwKSB7Cj4gIAkJd3JpdGVs
-X3JlbGF4ZWQoQkxTX1RPX0RQSV9SRE1BMV9UT19EU0ksCj4gIAkJCSAgICAgICBjb25maWdfcmVn
-cyArIERJU1BfUkVHX0NPTkZJR19PVVRfU0VMKTsKCllvdSBtb3ZlIDIgcmVnaXN0ZXIgc2V0dGlu
-ZyBvdXQgb2YgdGhlIHBhdGggZnJvbSBCTFMgdG8gRFBJMCwgZG9lcyB0aGlzCnBhdGggc3RpbGwg
-d29yaz8gUGxlYXNlIG1ha2Ugc3VyZSB0aGF0IGFsbCBtb2RpZmljYXRpb24gY291bGQgd29yayBv
-bgphbGwgc3VwcG9ydGVkIFNvQy4KClJlZ2FyZHMsCkNLCgo+ICsJfSBlbHNlIGlmIChjdXIgPT0g
-RERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMCkgewo+ICAJ
-CXdyaXRlbF9yZWxheGVkKERTSV9TRUxfSU5fUkRNQSwKPiAgCQkJICAgICAgIGNvbmZpZ19yZWdz
-ICsgRElTUF9SRUdfQ09ORklHX0RTSV9TRUwpOwo+IC0JCXdyaXRlbF9yZWxheGVkKERQSV9TRUxf
-SU5fQkxTLAo+IC0JCQkgICAgICAgY29uZmlnX3JlZ3MgKyBESVNQX1JFR19DT05GSUdfRFBJX1NF
-TCk7Cj4gIAl9Cj4gIH0KPiAgCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVs
+On Fri, Jun 14, 2019 at 2:53 AM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> Like TCON TV0, TV1 allwinner R40 has TCON LCD0, LCD1 which
+> are managed via TCON TOP.
+>
+> Add tcon lcd compatible R40, the same compatible can handle
+> TCON LCD0, LCD1.
+>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
