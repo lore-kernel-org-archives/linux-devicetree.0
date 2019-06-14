@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH V5 3/5] clk: imx: Add API for clk unregister when driver probe fail
-Date: Fri, 14 Jun 2019 16:37:45 +0800
-Message-ID: <20190614083747.28762-3-Anson.Huang@nxp.com>
+Subject: [PATCH V5 5/5] arm64: defconfig: Select CONFIG_CLK_IMX8MN by default
+Date: Fri, 14 Jun 2019 16:37:47 +0800
+Message-ID: <20190614083747.28762-5-Anson.Huang@nxp.com>
 References: <20190614083747.28762-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190614083747.28762-1-Anson.Huang@nxp.com>
@@ -12,48 +12,26 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-For i.MX clock drivers probe fail case, clks should be unregistered
-in the return path, this patch adds a common API for i.MX clock
-drivers to unregister clocks when fail.
+Enable CONFIG_CLK_IMX8MN to support i.MX8MN clock driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-New patch.
+No changes.
 ---
- drivers/clk/imx/clk.c | 8 ++++++++
- drivers/clk/imx/clk.h | 1 +
- 2 files changed, 9 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/imx/clk.c b/drivers/clk/imx/clk.c
-index f241189..14a6161 100644
---- a/drivers/clk/imx/clk.c
-+++ b/drivers/clk/imx/clk.c
-@@ -13,6 +13,14 @@
- 
- DEFINE_SPINLOCK(imx_ccm_lock);
- 
-+void imx_unregister_clocks(struct clk *clks[], unsigned int count)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < count; i++)
-+		clk_unregister(clks[i]);
-+}
-+
- void __init imx_mmdc_mask_handshake(void __iomem *ccm_base,
- 				    unsigned int chn)
- {
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index 19d7b8b..bb4ec1b 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -12,6 +12,7 @@ void imx_check_clk_hws(struct clk_hw *clks[], unsigned int count);
- void imx_register_uart_clocks(struct clk ** const clks[]);
- void imx_register_uart_clocks_hws(struct clk_hw ** const hws[]);
- void imx_mmdc_mask_handshake(void __iomem *ccm_base, unsigned int chn);
-+void imx_unregister_clocks(struct clk *clks[], unsigned int count);
- 
- extern void imx_cscmr1_fixup(u32 *val);
- 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 3dfbd6a..b2de9d0 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -658,6 +658,7 @@ CONFIG_COMMON_CLK_S2MPS11=y
+ CONFIG_CLK_QORIQ=y
+ CONFIG_COMMON_CLK_PWM=y
+ CONFIG_CLK_IMX8MM=y
++CONFIG_CLK_IMX8MN=y
+ CONFIG_CLK_IMX8MQ=y
+ CONFIG_CLK_IMX8QXP=y
+ CONFIG_TI_SCI_CLK=y
 -- 
 2.7.4
