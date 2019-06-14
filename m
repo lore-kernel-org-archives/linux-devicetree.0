@@ -1,84 +1,91 @@
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v2, 4/6] arm64: dts: fsl: add ptp timer node for dpaa2 platforms
-Date: Fri, 14 Jun 2019 18:40:53 +0800
-Message-ID: <20190614104055.43998-5-yangbo.lu@nxp.com>
-References: <20190614104055.43998-1-yangbo.lu@nxp.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190614104055.43998-1-yangbo.lu@nxp.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v5 0/7] drm/panel: simple: Add mode support to devicetree
+Date: Fri, 14 Jun 2019 12:39:31 +0200
+Message-ID: <1584725.WvTV0KElQL@phil>
+References: <20190401171724.215780-1-dianders@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190401171724.215780-1-dianders@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Douglas Anderson <dianders@chromium.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Viresh Kumar <viresh.kumar@linaro.org>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Enric =?ISO-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch is to add ptp timer device tree node for dpaa2
-platforms(ls1088a/ls208xa/lx2160a).
-
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
----
-Changes for v2:
-	- None.
----
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 8 ++++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 8 ++++++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 8 ++++++++
- 3 files changed, 24 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 661137f..dacd8cf 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -609,6 +609,14 @@
- 				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		ptp-timer@8b95000 {
-+			compatible = "fsl,dpaa2-ptp";
-+			reg = <0x0 0x8b95000 0x0 0x100>;
-+			clocks = <&clockgen 4 0>;
-+			little-endian;
-+			fsl,extts-fifo;
-+		};
-+
- 		cluster1_core0_watchdog: wdt@c000000 {
- 			compatible = "arm,sp805-wdt", "arm,primecell";
- 			reg = <0x0 0xc000000 0x0 0x1000>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index d7e78dc..3ace919 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -321,6 +321,14 @@
- 			};
- 		};
- 
-+		ptp-timer@8b95000 {
-+			compatible = "fsl,dpaa2-ptp";
-+			reg = <0x0 0x8b95000 0x0 0x100>;
-+			clocks = <&clockgen 4 1>;
-+			little-endian;
-+			fsl,extts-fifo;
-+		};
-+
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible = "fsl,qoriq-mc";
- 			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index 125a8cc..e6fdba3 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -848,6 +848,14 @@
- 			dma-coherent;
- 		};
- 
-+		ptp-timer@8b95000 {
-+			compatible = "fsl,dpaa2-ptp";
-+			reg = <0x0 0x8b95000 0x0 0x100>;
-+			clocks = <&clockgen 4 1>;
-+			little-endian;
-+			fsl,extts-fifo;
-+		};
-+
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible = "fsl,qoriq-mc";
- 			reg = <0x00000008 0x0c000000 0 0x40>,
--- 
-2.7.4
+QW0gTW9udGFnLCAxLiBBcHJpbCAyMDE5LCAxOToxNzoxNyBDRVNUIHNjaHJpZWIgRG91Z2xhcyBB
+bmRlcnNvbjoKPiBJJ20gcmV2aXZpbmcgU2VhbiBQYXVsJ3Mgb2xkIHBhdGNoc2V0IHRvIGdldCBt
+b2RlIHN1cHBvcnQgaW4gZGV2aWNlCj4gdHJlZS4gIFRoZSBjb3ZlciBsZXR0ZXIgZm9yIGhpcyB2
+MyBpcyBhdDoKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2
+ZWwvMjAxOC1GZWJydWFyeS8xNjUxNjIuaHRtbAo+IAo+IE5vIGNvZGUgaXMgZGlmZmVyZW50IGJl
+dHdlZW4gdjQgYW5kIHY1LCBqdXN0IGNvbW1pdCBtZXNzYWdlcyBhbmQgdGV4dAo+IGluIHRoZSBi
+aW5kaW5ncy4KPiAKPiBJJ3ZlIHB1bGxlZCB0b2dldGhlciB0aGUgcGF0Y2hlcyB0aGF0IGRpZG4n
+dCBsYW5kIGluIHYzLCBhZGRyZXNzZWQKPiBvdXRzdGFuZGluZyBmZWVkYmFjaywgYW5kIHJlcG9z
+dGVkLiAgQXRvcCB0aGVtIEkndmUgYWRkZWQgcGF0Y2hlcyBmb3IKPiByazMyODgtdmV5cm9uLWNo
+cm9tZWJvb2sgKHVzZWQgZm9yIGphcSwgamVycnksIG1pZ2h0eSwgc3BlZWR5KSBhbmQKPiByazMy
+ODgtdmVyeW9uLW1pbm5pZS4KPiAKPiBQbGVhc2UgbGV0IG1lIGtub3cgaG93IHRoZXkgbG9vay4K
+PiAKPiBJbiBnZW5lcmFsIEkgaGF2ZSBhZGRlZCBwZW9wbGUgdG8gdGhlIHdob2xlIHNlcmllcyB3
+aG8gSSB0aGluayB3b3VsZAo+IGxpa2UgdGhlIHdob2xlIHNlcmllcyBhbmQgdGhlbiBsZXQgZ2V0
+X21haW50YWluZXIgcGljayBleHRyYSBwZW9wbGUgaXQKPiB0aGlua3MgYXJlIHJlbGV2YW50IHRv
+IGVhY2ggaW5kaXZpZHVhbCBwYXRjaC4gIElmIEkgc2VlIHlvdSByZXNwb25kIHRvCj4gYW55IG9m
+IHRoZSBwYXRjaGVzIGluIHRoZSBzZXJpZXMsIHRob3VnaCwgSSdsbCBhZGQgeW91IHRvIHRoZSB3
+aG9sZQo+IHNlcmllcyBDYyBsaXN0IG5leHQgdGltZS4KCnNhZGx5IGl0IGxvb2tzIGxpa2UgdGhl
+IHBhbmVsLXNpbXBsZSBwYXJ0cyBoYXZlbid0IG1hZGUgaXQgaW50bwpkcm0tbWlzYyB5ZXQgYW5k
+IHRoZSBjb252ZXJzYXRpb24gb24gcGF0Y2ggMS83IHNlZW1zIHRvIGhhdmUgc3RhbGxlZAphZnRl
+ciBEb3VnJ3MgcmVwbGllcy4KClRoaWVycnksIGRvIHlvdSBoYXZlIGFuIG9waW5pb24gb24gdGhl
+c2U/CgoKVGhhbmtzCkhlaWtvCgo+IENoYW5nZXMgaW4gdjU6Cj4gLSBSZW1vdmVkIGJpdCBhYm91
+dCBPUyBtYXkgaWdub3JlIChSb2IvRXplcXVpZWwpCj4gLSBBZGRlZCBIZWlrbydzIFRlc3RlZC1i
+eQo+IC0gSXQncyBub3QganVzdCBqZXJyeSwgaXQncyBtb3N0IHJrMzI4OCBDaHJvbWVib29rcyAo
+SGVpa28pCj4gCj4gQ2hhbmdlcyBpbiB2NDoKPiAtIFNpbXBsaWZ5IGRlc2MuIGZvciB3aGVuIG92
+ZXJyaWRlIHNob3VsZCBiZSB1c2VkIChUaGllcnJ5L0xhdXJlbnQpCj4gLSBSZW1vdmVkIFJvYiBI
+IHJldmlldyBzaW5jZSBpdCdzIGJlZW4gYSB5ZWFyIGFuZCB3b3JkaW5nIGNoYW5nZWQKPiAtIERv
+bid0IGFkZCBtb2RlIGZyb20gdGltaW5nIGlmIG92ZXJyaWRlIHdhcyBzcGVjaWZpZWQgKFRoaWVy
+cnkpCj4gLSBBZGQgd2FybmluZyBpZiB0aW1pbmcgYW5kIGZpeGVkIG1vZGUgd2FzIHNwZWNpZmll
+ZCAoVGhpZXJyeSkKPiAtIERvbid0IGFkZCBmaXhlZCBtb2RlIGlmIHRpbWluZyB3YXMgc3BlY2lm
+aWVkIChUaGllcnJ5KQo+IC0gUmVmYWN0b3IvcmVuYW1lIGEgYml0IHRvIGF2b2lkIGV4dHJhIGlu
+ZGVudGF0aW9uIGZyb20gImlmIiB0ZXN0cwo+IC0gaSBzaG91bGQgYmUgdW5zaWduZWQgKFRoaWVy
+cnkpCj4gLSBBZGQgYW5ub3lpbmcgV0FSTl9PTnMgZm9yIHNvbWUgY2FzZXMgKFRoaWVycnkpCj4g
+LSBTaW1wbGlmeSAnTm8gZGlzcGxheV90aW1pbmcgZm91bmQnIGhhbmRsaW5nIChUaGllcnJ5KQo+
+IC0gUmVuYW1lIHRvIHBhbmVsX3NpbXBsZV9wYXJzZV9vdmVycmlkZV9tb2RlKCkgKFRoaWVycnkp
+Cj4gLSBSZWJhc2UgdG8gdG9wIG9mIEhlaWtvJ3MgdHJlZQo+IC0gQ29udmVydGVkIGNoYW5nZWxv
+ZyB0byBhZnRlci10aGUtY3V0IGZvciBub24tRFJNIGNoYW5nZS4KPiAtIGRpc3BsYXlfdGltaW5n
+IGZvciBJbm5vbHV4IG4xMTZiZ2UgbmV3IGZvciB2NC4KPiAtIGRpc3BsYXlfdGltaW5nIGZvciBB
+VU8gYjEwMWVhbjAxIG5ldyBmb3IgdjQuCj4gLSByazMyODgtdmV5cm9uLWplcnJ5IHBhdGNoIG5l
+dyBmb3IgdjQuCj4gLSByazMyODgtdmV5cm9uLW1pbm5pZSBwYXRjaCBuZXcgZm9yIHY0Lgo+IAo+
+IENoYW5nZXMgaW4gdjM6Cj4gLSBHbyBiYWNrIHRvIHVzaW5nIHRoZSB0aW1pbmcgc3Vibm9kZSBk
+aXJlY3RseSwgYnV0IHJlbmFtZSB0bwo+ICAgcGFuZWwtdGltaW5nIChSb2IpCj4gLSBObyBsb25n
+ZXIgcGFyc2UgZGlzcGxheS10aW1pbmdzIHN1Ym5vZGUsIHVzZSBwYW5lbC10aW1pbmcgKFJvYikK
+PiAtIFVud3JhcCB0aGUgdGltaW5nIGZyb20gZGlzcGxheS10aW1pbmdzIGFuZCByZW5hbWUgcGFu
+ZWwtdGltaW5nIChSb2IpCj4gCj4gQ2hhbmdlcyBpbiB2MjoKPiAtIFNwbGl0IG91dCB0aGUgYmlu
+ZGluZyBpbnRvIGEgbmV3IHBhdGNoIChSb2IpCj4gLSBkaXNwbGF5LXRpbWluZ3MgaXMgYSBuZXcg
+c2VjdGlvbiAoUm9iKQo+IC0gVXNlIHRoZSBmdWxsIGRpc3BsYXktdGltaW5ncyBzdWJub2RlIGlu
+c3RlYWQgb2YgcGlja2luZyB0aGUgdGltaW5nCj4gICBvdXQgKFJvYi9UaGllcnJ5KQo+IC0gUGFy
+c2UgdGhlIGZ1bGwgZGlzcGxheS10aW1pbmdzIG5vZGUgKHVzaW5nIHRoZSBuYXRpdmUtbW9kZSkg
+KFJvYikKPiAtIFdyYXAgdGhlIHRpbWluZyBpbiBkaXNwbGF5LXRpbWluZ3Mgbm9kZSB0byBtYXRj
+aCBiaW5kaW5nIChSb2IvVGhpZXJyeSkKPiAKPiBEb3VnbGFzIEFuZGVyc29uICg0KToKPiAgIGRy
+bS9wYW5lbDogc2ltcGxlOiBVc2UgZGlzcGxheV90aW1pbmcgZm9yIElubm9sdXggbjExNmJnZQo+
+ICAgZHJtL3BhbmVsOiBzaW1wbGU6IFVzZSBkaXNwbGF5X3RpbWluZyBmb3IgQVVPIGIxMDFlYW4w
+MQo+ICAgQVJNOiBkdHM6IHJvY2tjaGlwOiBTcGVjaWZ5IHJrMzI4OC12ZXlyb24tY2hyb21lYm9v
+aydzIGRpc3BsYXkgdGltaW5ncwo+ICAgQVJNOiBkdHM6IHJvY2tjaGlwOiBTcGVjaWZ5IHJrMzI4
+OC12ZXlyb24tbWlubmllJ3MgZGlzcGxheSB0aW1pbmdzCj4gCj4gU2VhbiBQYXVsICgzKToKPiAg
+IGR0LWJpbmRpbmdzOiBBZGQgcGFuZWwtdGltaW5nIHN1Ym5vZGUgdG8gc2ltcGxlLXBhbmVsCj4g
+ICBkcm0vcGFuZWw6IHNpbXBsZTogQWRkIGFiaWxpdHkgdG8gb3ZlcnJpZGUgdHlwaWNhbCB0aW1p
+bmcKPiAgIGFybTY0OiBkdHM6IHJvY2tjaGlwOiBTcGVjaWZ5IG92ZXJyaWRlIG1vZGUgZm9yIGtl
+dmluIHBhbmVsCj4gCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50
+eHQgICB8ICAyMiArKysKPiAgLi4uL2Jvb3QvZHRzL3JrMzI4OC12ZXlyb24tY2hyb21lYm9vay5k
+dHNpICAgIHwgIDE0ICsrCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC12ZXlyb24tbWlubmll
+LmR0cyAgICB8ICAxNCArKwo+ICAuLi4vYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LWdydS1rZXZp
+bi5kdHMgICAgfCAgMTQgKysKPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
+ICAgICAgICAgIHwgMTcxICsrKysrKysrKysrKysrLS0tLQo+ICA1IGZpbGVzIGNoYW5nZWQsIDIw
+MyBpbnNlcnRpb25zKCspLCAzMiBkZWxldGlvbnMoLSkKPiAKPiAKCgoKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
