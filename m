@@ -1,378 +1,186 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH 1/2] firmware: imx: Add DSP IPC protocol driver
-Date: Fri, 14 Jun 2019 11:08:15 +0200
-Message-ID: <20190614090815.lb2vnncqnom3fgu2@pengutronix.de>
-References: <20190614081650.11880-1-daniel.baluta@nxp.com>
- <20190614081650.11880-2-daniel.baluta@nxp.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: add display nodes for rk322x
+Date: Fri, 14 Jun 2019 11:15:29 +0200
+Message-ID: <1854794.0zkvb3x0FP@phil>
+References: <20190613101305.30491-1-justin.swartz@risingedge.co.za>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190614081650.11880-2-daniel.baluta@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.baluta@nxp.com
-Cc: shawnguo@kernel.org, s.hauer@pengutronix.de, shengjiu.wang@nxp.com, festevam@gmail.com, linux-imx@nxp.com, aisheng.dong@nxp.com, daniel.baluta@gmail.com, anson.huang@nxp.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190613101305.30491-1-justin.swartz@risingedge.co.za>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Justin Swartz <justin.swartz@risingedge.co.za>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi Justin,
 
-please, see my review inline.
+Am Donnerstag, 13. Juni 2019, 12:13:04 CEST schrieb Justin Swartz:
+> Add display_subsystem, hdmi_phy, vop, and hdmi device nodes plus
+> a few hdmi pinctrl entries to allow for HDMI output.
+> 
+> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
 
-On Fri, Jun 14, 2019 at 04:16:49PM +0800, daniel.baluta@nxp.com wrote:
-> From: Daniel Baluta <daniel.baluta@nxp.com>
-> 
-> Some of i.MX8 processors (e.g i.MX8QM, i.MX8QXP) contain
-> the Tensilica HiFi4 DSP for advanced pre- and post-audio
-> processing.
-> 
-> The communication between Host CPU and DSP firmware is
-> taking place using a shared memory area for message passing
-> and a dedicated Messaging Unit for notifications.
-> 
-> DSP IPC protocol driver offers a doorbell interface using
-> imx-mailbox API.
-> 
-> We use 4 MU channels (2 x TXDB, 2 x RXDB) to implement a
-> request-reply protocol.
-> 
-> Connection 0 (txdb0, rxdb0):
->         - Host writes messasge to shared memory [SHMEM]
-> 	- Host sends a request [MU]
-> 	- DSP handles request [SHMEM]
-> 	- DSP sends reply [MU]
-> 
-> Connection 1 (txdb1, rxdb1):
-> 	- DSP writes a message to shared memory [SHMEM]
-> 	- DSP sends a request [MU]
-> 	- Host handles request [SHMEM]
-> 	- Host sends reply [MU]
-> 
-> The protocol driver will be used by a Host client to
-> communicate with the DSP. First client will be the i.MX8
-> part from Sound Open Firmware infrastructure.
-> 
-> The protocol drivers offers the following interface:
-> 
-> On Tx:
->    - imx_dsp_ring_doorbell, will be called to notify the DSP
->    that it needs to handle a request.
-> 
-> On Rx:
->    - clients need to provide two callbacks:
-> 	.handle_reply
-> 	.handle_request
->   - the callbacks will be used by the protocol driver on
->     notification arrival from DSP.
-> 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Overall looks good, but in combination with the clock-patch you posted,
+I'd really prefer if we could try a slightly different approach.
+
+Hard register-level settings in the clock driver look bad and tend to
+cause problems later on, so I've adapted things a bit in [0] (untested)
+and would be glad if you could give it a try on actual hardware.
+
+The hdmiphy itself is a clock-provider for its pll and therefore the
+assigned-clock* properties into the hdmi controller, as the phy needs
+to probe before trying to set clocks.
+But in theory this should achieve the same result of reparenting the
+system's hdmiphy clock to the actual output of the phy-pll.
+
+I've also moved the iommu-cells fix to a separate commit.
+
+Please test, thanks
+Heiko
+
+
+[0] https://github.com/mmind/linux-rockchip/commits/wip/rk3229-hdmi
+
 > ---
->  drivers/firmware/imx/Kconfig     |  11 ++
->  drivers/firmware/imx/Makefile    |   1 +
->  drivers/firmware/imx/imx-dsp.c   | 167 +++++++++++++++++++++++++++++++
->  include/linux/firmware/imx/dsp.h |  61 +++++++++++
->  4 files changed, 240 insertions(+)
->  create mode 100644 drivers/firmware/imx/imx-dsp.c
->  create mode 100644 include/linux/firmware/imx/dsp.h
+>  arch/arm/boot/dts/rk322x.dtsi | 83 ++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 82 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/firmware/imx/Kconfig b/drivers/firmware/imx/Kconfig
-> index 42b566f8903f..383996b679a8 100644
-> --- a/drivers/firmware/imx/Kconfig
-> +++ b/drivers/firmware/imx/Kconfig
-> @@ -1,4 +1,15 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> +config IMX_DSP
-> +	bool "IMX DSP Protocol driver"
-> +	depends on IMX_MBOX
-> +	help
-> +	  This enables DSP IPC protocol between host CPU (Linux)
-> +	  and the firmware running on DSP.
-> +	  DSP exists on some i.MX8 processors (e.g i.MX8QM, i.MX8QXP).
+> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+> index da102fff96a2..7eb883eec126 100644
+> --- a/arch/arm/boot/dts/rk322x.dtsi
+> +++ b/arch/arm/boot/dts/rk322x.dtsi
+> @@ -143,6 +143,11 @@
+>  		#clock-cells = <0>;
+>  	};
+>  
+> +	display_subsystem: display-subsystem {
+> +		compatible = "rockchip,display-subsystem";
+> +		ports = <&vop_out>;
+> +	};
 > +
-> +          It acts like a doorbell. Client might use shared memory to
-> +	  exchange information with DSP side.
+>  	i2s1: i2s1@100b0000 {
+>  		compatible = "rockchip,rk3228-i2s", "rockchip,rk3066-i2s";
+>  		reg = <0x100b0000 0x4000>;
+> @@ -529,6 +534,17 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	hdmi_phy: hdmi-phy@12030000 {
+> +		compatible = "rockchip,rk3228-hdmi-phy";
+> +		reg = <0x12030000 0x10000>;
+> +		clocks = <&cru PCLK_HDMI_PHY>, <&xin24m>, <&cru DCLK_HDMI_PHY>;
+> +		clock-names = "sysclk", "refoclk", "refpclk";
+> +		#clock-cells = <0>;
+> +		clock-output-names = "hdmiphy_phy";
+> +		#phy-cells = <0>;
+> +		status = "disabled";
+> +	};
 > +
->  config IMX_SCU
->  	bool "IMX SCU Protocol driver"
->  	depends on IMX_MBOX
-> diff --git a/drivers/firmware/imx/Makefile b/drivers/firmware/imx/Makefile
-> index 802c4ad8e8f9..08bc9ddfbdfb 100644
-> --- a/drivers/firmware/imx/Makefile
-> +++ b/drivers/firmware/imx/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_IMX_DSP)		+= imx-dsp.o
->  obj-$(CONFIG_IMX_SCU)		+= imx-scu.o misc.o imx-scu-irq.o
->  obj-$(CONFIG_IMX_SCU_PD)	+= scu-pd.o
-> diff --git a/drivers/firmware/imx/imx-dsp.c b/drivers/firmware/imx/imx-dsp.c
-> new file mode 100644
-> index 000000000000..953fd364ad76
-> --- /dev/null
-> +++ b/drivers/firmware/imx/imx-dsp.c
-> @@ -0,0 +1,167 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2018 NXP
-> + *  Author: Daniel Baluta <daniel.baluta@nxp.com>
-> + *
-> + * Implementation of the DSP IPC interface (host side)
-> + */
+>  	gpu: gpu@20000000 {
+>  		compatible = "rockchip,rk3228-mali", "arm,mali-400";
+>  		reg = <0x20000000 0x10000>;
+> @@ -572,6 +588,28 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	vop: vop@20050000 {
+> +		compatible = "rockchip,rk3228-vop";
+> +		reg = <0x20050000 0x1ffc>;
+> +		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru ACLK_VOP>, <&cru DCLK_VOP>, <&cru HCLK_VOP>;
+> +		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+> +		resets = <&cru SRST_VOP_A>, <&cru SRST_VOP_H>, <&cru SRST_VOP_D>;
+> +		reset-names = "axi", "ahb", "dclk";
+> +		iommus = <&vop_mmu>;
+> +		status = "disabled";
 > +
-> +#include <linux/firmware/imx/dsp.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mailbox_client.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
+> +		vop_out: port {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
 > +
-> +static struct imx_dsp_ipc *imx_dsp_handle;
+> +			vop_out_hdmi: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&hdmi_in_vop>;
+> +			};
+> +		};
+> +	};
 > +
-> +/*
-> + * Get the default handle used by DSP
-> + */
-> +int imx_dsp_get_handle(struct imx_dsp_ipc **ipc)
-> +{
-> +	if (!imx_dsp_handle)
-> +		return -EPROBE_DEFER;
+>  	vop_mmu: iommu@20053f00 {
+>  		compatible = "rockchip,iommu";
+>  		reg = <0x20053f00 0x100>;
+> @@ -579,7 +617,7 @@
+>  		interrupt-names = "vop_mmu";
+>  		clocks = <&cru ACLK_VOP>, <&cru HCLK_VOP>;
+>  		clock-names = "aclk", "iface";
+> -		iommu-cells = <0>;
+> +		#iommu-cells = <0>;
+>  		status = "disabled";
+>  	};
+>  
+> @@ -594,6 +632,34 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	hdmi: hdmi@200a0000 {
+> +		compatible = "rockchip,rk3228-dw-hdmi";
+> +		reg = <0x200a0000 0x20000>;
+> +		reg-io-width = <4>;
+> +		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru SCLK_HDMI_HDCP>, <&cru PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_CEC>;
+> +		clock-names = "isfr", "iahb", "cec";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&hdmii2c_xfer &hdmi_hpd &hdmi_cec>;
+> +		resets = <&cru SRST_HDMI_P>;
+> +		reset-names = "hdmi";
+> +		phys = <&hdmi_phy>;
+> +		phy-names = "hdmi";
+> +		rockchip,grf = <&grf>;
+> +		status = "disabled";
 > +
-> +	*ipc = imx_dsp_handle;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(imx_dsp_get_handle);
-
-Please, extract needed device or handle form device tree. The consumer
-should pars own device tree node and get the phandle to the dsp node.
-
-> +void imx_dsp_set_data(struct imx_dsp_ipc *ipc, void *data)
-> +{
-> +	if (!ipc)
-> +		return;
+> +		ports {
+> +			hdmi_in: port {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				hdmi_in_vop: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&vop_out_hdmi>;
+> +				};
+> +			};
+> +		};
+> +	};
 > +
-> +	ipc->private_data = data;
-> +}
-> +EXPORT_SYMBOL(imx_dsp_set_data);
+>  	sdmmc: dwmmc@30000000 {
+>  		compatible = "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc";
+>  		reg = <0x30000000 0x4000>;
+> @@ -922,6 +988,21 @@
+>  			};
+>  		};
+>  
+> +		hdmi {
+> +			hdmi_hpd: hdmi-hpd {
+> +				rockchip,pins = <0 RK_PB7 1 &pcfg_pull_down>;
+> +			};
 > +
-> +void *imx_dsp_get_data(struct imx_dsp_ipc *ipc)
-> +{
-> +	if (!ipc)
-> +		return NULL;
+> +			hdmii2c_xfer: hdmii2c-xfer {
+> +				rockchip,pins = <0 RK_PA6 2 &pcfg_pull_none>,
+> +						<0 RK_PA7 2 &pcfg_pull_none>;
+> +			};
 > +
-> +	return ipc->private_data;
-> +}
-> +EXPORT_SYMBOL(imx_dsp_get_data);
+> +			hdmi_cec: hdmi-cec {
+> +				rockchip,pins = <0 RK_PC4 1 &pcfg_pull_none>;
+> +			};
+> +		};
 > +
-> +/*
-> + * imx_dsp_ring_doorbell - triggers an interrupt on the other side (DSP)
-> + *
-> + * @dsp: DSP IPC handle
-> + * @chan_idx: index of the channel where to trigger the interrupt
-> + *
-> + * Returns non-negative value for success, negative value for error
-> + */
-> +int imx_dsp_ring_doorbell(struct imx_dsp_ipc *ipc, unsigned int idx)
-> +{
-> +	int ret;
-> +	struct imx_dsp_chan *dsp_chan;
-> +
-> +	if (idx > DSP_MU_CHAN_NUM)
-> +		return -EINVAL;
-
-On this test idx may overflow. DSP_MU_CHAN_NUM is 4, means idx can be:
-0, 1, 2, 3. In you case idx == 4 is allowed, so the caller will be able
-to corrupt the rest of imx_dsp_ipc struct.
-
-> +	dsp_chan = &ipc->chans[idx];
-> +	ret = mbox_send_message(dsp_chan->ch, NULL);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(imx_dsp_ring_doorbell);
-> +
-> +/*
-> + * imx_dsp_handle_rx - rx callback used by imx mailbox
-> + *
-> + * @c: mbox client
-> + * @msg: message received
-> + *
-> + * Users of DSP IPC will need to privde handle_reply and handle_request
-> + * callbacks.
-> + */
-> +static void imx_dsp_handle_rx(struct mbox_client *c, void *msg)
-> +{
-> +	struct imx_dsp_chan *chan = container_of(c, struct imx_dsp_chan, cl);
-> +
-> +	if (chan->idx == 0) {
-> +		chan->ipc->ops->handle_reply(chan->ipc);
-> +	} else {
-> +		chan->ipc->ops->handle_request(chan->ipc);
-> +		imx_dsp_ring_doorbell(chan->ipc, 1);
-> +	}
-> +}
-> +
-> +static int imx_dsp_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct imx_dsp_ipc *dsp_ipc;
-> +	struct imx_dsp_chan *dsp_chan;
-> +	struct mbox_client *cl;
-> +	char *chan_name;
-> +	int ret;
-> +	int i;
-> +
-> +	dsp_ipc = devm_kzalloc(dev, sizeof(*dsp_ipc), GFP_KERNEL);
-> +	if (!dsp_ipc)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < DSP_MU_CHAN_NUM; i++) {
-> +		if (i < 2)
-> +			chan_name = kasprintf(GFP_KERNEL, "txdb%d", i);
-> +		else
-> +			chan_name = kasprintf(GFP_KERNEL, "rxdb%d", i - 2);
-> +
-> +		if (!chan_name)
-> +			return -ENOMEM;
-> +
-> +		dsp_chan = &dsp_ipc->chans[i];
-> +		cl = &dsp_chan->cl;
-> +		cl->dev = dev;
-> +		cl->tx_block = false;
-> +		cl->knows_txdone = true;
-> +		cl->rx_callback = imx_dsp_handle_rx;
-> +
-> +		dsp_chan->ipc = dsp_ipc;
-> +		dsp_chan->idx = i % 2;
-> +		dsp_chan->ch = mbox_request_channel_byname(cl, chan_name);
-> +		if (IS_ERR(dsp_chan->ch)) {
-> +			ret = PTR_ERR(dsp_chan->ch);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "Failed to request mbox chan %s ret %d\n",
-> +					chan_name, ret);
-> +			return ret;
-
-On the error you will leak the memory previously allocated chan_name.
-And you should call mbox_free_channel() for each previously registered
-channel in this loop. 
-
-> +		}
-> +
-> +		dev_dbg(dev, "request mbox chan %s\n", chan_name);
-> +		/* chan_name is not used anymore by framework */
-> +		kfree(chan_name);
-> +	}
-> +
-> +	dsp_ipc->dev = dev;
-> +
-> +	imx_dsp_handle = dsp_ipc;
-
-bad idea. What happens if multiple dsp nodes are registered in the
-device tree?
-
-> +	dev_info(dev, "NXP i.MX DSP IPC initialized\n");
-> +
-> +	return devm_of_platform_populate(dev);
-> +}
-> +
-> +static const struct of_device_id imx_dsp_match[] = {
-> +	{ .compatible = "fsl,imx-dsp", },
-
-i would prefer to have chip name in the compatible. For example
-fsl,imx8qm-dsp. Soon or later we will need to define some quirks
-for on or another chip.
-
-> +	{ /* Sentinel */ }
-> +};
-> +
-> +static struct platform_driver imx_dsp_driver = {
-> +	.driver = {
-> +		.name = "imx-dsp",
-> +		.of_match_table = imx_dsp_match,
-> +	},
-> +	.probe = imx_dsp_probe,
-> +};
-> +builtin_platform_driver(imx_dsp_driver);
-> +
-> +MODULE_AUTHOR("Daniel Baluta <daniel.baluta@nxp.com>");
-> +MODULE_DESCRIPTION("IMX DSP IPC protocol driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/firmware/imx/dsp.h b/include/linux/firmware/imx/dsp.h
-> new file mode 100644
-> index 000000000000..75637d8fab34
-> --- /dev/null
-> +++ b/include/linux/firmware/imx/dsp.h
-> @@ -0,0 +1,61 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Copyright 2018 NXP
-> + *
-> + * Header file for the DSP IPC implementation
-> + */
-> +
-> +#ifndef _IMX_DSP_IPC_H
-> +#define _IMX_DSP_IPC_H
-> +
-> +#include <linux/device.h>
-> +#include <linux/types.h>
-> +#include <linux/mailbox_client.h>
-> +
-> +#define DSP_MU_CHAN_NUM		4
-> +
-> +struct imx_dsp_chan {
-> +	struct imx_dsp_ipc *ipc;
-> +	struct mbox_client cl;
-> +	struct mbox_chan *ch;
-> +	int idx;
-> +};
-> +
-> +struct imx_dsp_ops {
-> +	void (*handle_reply)(struct imx_dsp_ipc *ipc);
-> +	void (*handle_request)(struct imx_dsp_ipc *ipc);
-> +};
-> +
-> +struct imx_dsp_ipc {
-> +	/* Host <-> DSP communication uses 2 txdb and 2 rxdb channels */
-> +	struct imx_dsp_chan chans[DSP_MU_CHAN_NUM];
-> +	struct device *dev;
-> +	struct imx_dsp_ops *ops;
-> +	void *private_data;
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_IMX_DSP)
-> +
-> +int imx_dsp_ring_doorbell(struct imx_dsp_ipc *dsp, unsigned int chan_idx);
-> +int imx_dsp_get_handle(struct imx_dsp_ipc **ipc);
-> +void imx_dsp_set_data(struct imx_dsp_ipc *ipc, void *data);
-> +void *imx_dsp_get_data(struct imx_dsp_ipc *ipc);
-> +
-> +#else
-> +
-> +static inline int imx_dsp_get_handle(struct imx_dsp_ipc **ipc)
-> +{
-> +	return -EIO;
-
-please, use -ENOTSUPP instead.
-
-> +}
-> +
-> +static inline int imx_dsp_ring_doorbell(struct imx_dsp_ipc *ipc,
-> +					unsigned int chan_idx)
-> +{
-> +	return -EIO;
-> +}
-> +
-> +void imx_dsp_set_data(struct imx_dsp_ipc *ipc, void *data) { }
-> +void *imx_dsp_get_data(struct imx_dsp_ipc *ipc) { return NULL; }
-> +
-> +#endif
-> +#endif /* _IMX_DSP_IPC_H */
-> -- 
-> 2.17.1
+>  		i2c0 {
+>  			i2c0_xfer: i2c0-xfer {
+>  				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_none>,
 > 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
