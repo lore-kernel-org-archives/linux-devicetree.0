@@ -1,73 +1,96 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
-Date: Fri, 14 Jun 2019 07:20:57 -0600
-Message-ID: <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com> <20190506123456.6777-10-peter.ujfalusi@ti.com>
- <20190613181626.GA7039@bogus> <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [EXT] Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191
+ panel driver
+Date: Fri, 14 Jun 2019 13:29:14 +0000
+Message-ID: <1560518953.9328.31.camel@nxp.com>
+References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com>
+         <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
+         <CAOMZO5BAborMvk=4cgreWKX6rJjK-237me98dM1dDV53oUnExQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
+In-Reply-To: <CAOMZO5BAborMvk=4cgreWKX6rJjK-237me98dM1dDV53oUnExQ@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <6B40518580B34A4591C8D937481773BE@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Dan Williams <dan.j.williams@intel.com>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+To: "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sam@ravnborg.org" <sam@ravnborg.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->
-> Rob,
->
-> On 13/06/2019 21.16, Rob Herring wrote:
-> >> +Remote PSI-L endpoint
-> >> +
-> >> +Required properties:
-> >> +--------------------
-> >> +- ti,psil-base:             PSI-L thread ID base of the endpoint
-> >> +
-> >> +Within the PSI-L endpoint node thread configuration subnodes must present with:
-> >> +ti,psil-configX naming convention, where X is the thread ID offset.
-> >
-> > Don't use vendor prefixes on node names.
->
-> OK.
->
-> >> +
-> >> +Configuration node Required properties:
-> >> +--------------------
-> >> +- linux,udma-mode:  Channel mode, can be:
-> >> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
-> >> +                    - UDMA_TR_MODE: for Third-Party mode
-> >
-> > This is hardly a common linux thing. What determines the value here.
->
-> Unfortunately it is.
-
-No, it's a feature of your h/w and in no way is something linux
-defined which is the point of 'linux' prefix.
-
-> Each channel can be configured to Packet or TR mode. For some
-> peripherals it is true that they only support packet mode, these are the
-> newer PSI-L native peripherals.
-> For these channels a udma-mode property would be correct.
->
-> But we have legacy peripherals as well and they are serviced by PDMA
-> (which is a native peripheral designed to talk to the given legacy IP).
-> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
-> most cases clear what to use, but for example for audio (McASP) channels
-> Linux is using TR channel because we need cyclic DMA while for example
-> RTOS is using Packet mode as it fits their needs better.
->
-> Here I need to prefix the udma-mode with linux as the mode is used by
-> Linux, but other OS might opt to use different channel mode.
-
-So you'd need <os>,udma-mode? That doesn't work... If the setting is
-per OS, then it belongs in the OS because the same dtb should work
-across OS's.
-
-> The reason why this needs to be in the DT is that when the channel is
-> requested we need to configure the mode and it can not be swapped
-> runtime easily between Packet and TR mode.
-
-So when the client makes the channel request, why doesn't it specify the mode?
-
-Rob
+SGkgRmFiaW8sDQoNCk9uIFZpLCAyMDE5LTA2LTE0IGF0IDA5OjI3IC0wMzAwLCBGYWJpbyBFc3Rl
+dmFtIHdyb3RlOg0KPiBIaSBSb2JlcnQsDQo+IA0KPiBPbiBGcmksIEp1biAxNCwgMjAxOSBhdCA4
+OjUyIEFNIFJvYmVydCBDaGlyYXMgPHJvYmVydC5jaGlyYXNAbnhwLmNvbT4NCj4gd3JvdGU6DQo+
+IA0KPiA+IA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvcGFuZWwtcmF5ZGl1bS1ybTY3MTkxLmMNCj4gPiBAQCAtMCwwICsxLDczMCBAQA0KPiA+ICsv
+LyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ICsvKg0KPiA+ICsgKiBpLk1Y
+IGRybSBkcml2ZXIgLSBSYXlkaXVtIE1JUEktRFNJIHBhbmVsIGRyaXZlcg0KPiA+ICsgKg0KPiA+
+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTcgTlhQDQo+ID4gKyAqDQo+ID4gKyAqIFRoaXMgcHJvZ3Jh
+bSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3INCj4gPiAr
+ICogbW9kaWZ5IGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExp
+Y2Vuc2UNCj4gPiArICogYXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRp
+b247IGVpdGhlciB2ZXJzaW9uIDINCj4gPiArICogb2YgdGhlIExpY2Vuc2UsIG9yIChhdCB5b3Vy
+IG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uDQo+ID4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBkaXN0
+cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLA0KPiA+ICsgKiBidXQg
+V0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBv
+Zg0KPiA+ICsgKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBV
+UlBPU0UuwqDCoFNlZSB0aGUNCj4gPiArICogR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9y
+IG1vcmUgZGV0YWlscy4NCj4gTm8gbmVlZCBmb3IgdGhpcyB0ZXh0IGFzIHlvdSBhcmUgdXNpbmcg
+U1BEWCB0YWcuDQo+IA0KPiA+IA0KPiA+ICtzdGF0aWMgaW50IGNvbG9yX2Zvcm1hdF9mcm9tX2Rz
+aV9mb3JtYXQoZW51bSBtaXBpX2RzaV9waXhlbF9mb3JtYXQNCj4gPiBmb3JtYXQpDQo+ID4gK3sN
+Cj4gPiArwqDCoMKgwqDCoMKgwqBzd2l0Y2ggKGZvcm1hdCkgew0KPiA+ICvCoMKgwqDCoMKgwqDC
+oGNhc2UgTUlQSV9EU0lfRk1UX1JHQjU2NToNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgcmV0dXJuIDB4NTU7DQo+ID4gK8KgwqDCoMKgwqDCoMKgY2FzZSBNSVBJX0RTSV9GTVRf
+UkdCNjY2Og0KPiA+ICvCoMKgwqDCoMKgwqDCoGNhc2UgTUlQSV9EU0lfRk1UX1JHQjY2Nl9QQUNL
+RUQ6DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAweDY2Ow0KPiA+
+ICvCoMKgwqDCoMKgwqDCoGNhc2UgTUlQSV9EU0lfRk1UX1JHQjg4ODoNCj4gPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIDB4Nzc7DQo+IENvdWxkIHlvdSB1c2UgZGVmaW5l
+cyBmb3IgdGhlc2UgbWFnaWMgMHg1NSwgMHg2NiBhbmQgMHg3NyBudW1iZXJzPw0KVGhvc2UgbWFn
+aWMgbnVtYmVycyBtZWFuIGV4YWN0bHkgd2hhdCB0aGVpciBjYXNlIHN0YXRlbWVudHMgYXJlLiBU
+aGV5DQpjb21lIGZyb20gdGhlIHBhbmVsIGRvY3VtZW50YXRpb24uIEkgdGhvdWdodCB0aGF0IHRo
+ZSBhbHJlYWR5IGV4aXN0aW5nDQpkZWZpbmVzIChNSVBJX0RTSV9GTVRfKSBhcmUgc2VsZiBleHBs
+YW5hdG9yeSBoZXJlLCBzbyB1c2luZyBkZWZpbmVzDQpzZWVtZWQgcmVkdW5kYW50IGZvciBtZS4g
+QnV0LCBpZiB5b3UgdGhpbmsgdGhhdCB1c2luZyBkZWZpbmVzIGZvciB0aGVtDQppcyBiZXR0ZXIs
+IEkgY2FuIGRvIHRoYXQuDQo+IA0KPiA+IA0KPiA+ICtzdGF0aWMgaW50IHJhZF9wYW5lbF9wcmVw
+YXJlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQ0KPiA+ICt7DQo+ID4gK8KgwqDCoMKgwqDCoMKg
+c3RydWN0IHJhZF9wYW5lbCAqcmFkID0gdG9fcmFkX3BhbmVsKHBhbmVsKTsNCj4gPiArDQo+ID4g
+K8KgwqDCoMKgwqDCoMKgaWYgKHJhZC0+cHJlcGFyZWQpDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoHJldHVybiAwOw0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAocmFk
+LT5yZXNldCkgew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBncGlvZF9zZXRf
+dmFsdWUocmFkLT5yZXNldCwgMCk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oHVzbGVlcF9yYW5nZSg1MDAwLCAxMDAwMCk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoGdwaW9kX3NldF92YWx1ZShyYWQtPnJlc2V0LCAxKTsNCj4gPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgdXNsZWVwX3JhbmdlKDIwMDAwLCAyNTAwMCk7DQo+IFRoaXMgZG9l
+cyBub3QgbG9vayBjb3JyZWN0Lg0KPiANCj4gVGhlIGNvcnJlY3Qgd2F5IHRvIGRvIGEgcmVzZXQg
+d2l0aCBncGlvZCBBUEkgaXM6DQo+IA0KPiDCoGdwaW9kX3NldF92YWx1ZShyYWQtPnJlc2V0LCAx
+KTsNCj4gDQo+IGRlbGF5DQo+IA0KPiBncGlvZF9zZXRfdmFsdWUocmFkLT5yZXNldCwgMCk7DQo+
+IA0KPiBJIGRvbid0IGhhdmUgdGhlIGRhdGFzaGVldCBmb3IgdGhlIFJNNjcxOTEgcGFuZWwsIGJ1
+dCBJIGFzc3VtZSB0aGUNCj4gcmVzZXQgR1BJTyBpcyBhY3RpdmUgbG93Lg0KPiANCj4gU2luY2Ug
+eW91IGludmVydGVkIHRoZSBwb2xhcml0eSBpbiB0aGUgZHRzIGFuZCBpbnNpZGUgdGhlIGRyaXZl
+ciwgeW91DQo+IGdvdCBpdCByaWdodCBieSBhY2NpZGVudC4NClRoZSBHUElPIGlzIGFjdGl2ZSBo
+aWdoLCBhbmQgdGhlIGFib3ZlIHNlcXVlbmNlIHdhcyByZWNlaXZlZCBmcm9tIHRoZQ0KcGFuZWwg
+dmVuZG9yIGluIHRoZSBmb2xsb3dpbmcgZm9ybToNCglTRVRfUkVTRVRfUElOKDEpOw0KCU1ERUxB
+WSgxMCk7DQoJU0VUX1JFU0VUX1BJTigwKTsNCglNREVMQVkoNSk7DQoJU0VUX1JFU0VUX1BJTigx
+KTsNCglNREVMQVkoMjApOw0KSSBnb3QgcmlkIG9mIHRoZSBmaXJzdCB0cmFuc2l0aW9uIHRvIGhp
+Z2ggc2luY2Ugc2VlbWVkIHJlZHVuZGFudC4NCkFsc28sIGFjY29yZGluZyB0byB0aGUgbWFudWFs
+IHJlZmVyZW5jZSwgdGhlIFJTVEIgcGluIG5lZWRzIHRvIGJlDQphY3RpdmUgaGlnaCB3aGlsZSBv
+cGVyYXRpbmcgdGhlIGRpc3BsYXkuDQo+IA0KPiBZb3UgY291bGQgYWxzbyBjb25zaWRlciB1c2lu
+ZyBncGlvZF9zZXRfdmFsdWVfY2Fuc2xlZXAoKSB2YXJpYW50DQo+IGluc3RlYWQgYmVjYXVzZSB0
+aGUgR1BJTyByZXNldCBjb3VsZCBiZSBwcm92aWRlZCBieSBhbiBJMkMgR1BJTw0KPiBleHBhbmRl
+ciwgZm9yIGV4YW1wbGUuDQpUaGFua3MsIHdpbGwgdXNlIHRoaXMgaW4gdGhlIG5leHQgcmV2aXNp
+b24uDQo+IA0KPiBBbHNvLCB3aGVuIHNsZWVwaW5nIGZvciBtb3JlIHRoYW4gMTBtcywgbXNsZWVw
+IGlzIGEgYmV0dGVyIGZpdCBhcyBwZXINCj4gRG9jdW1lbnRhdGlvbi90aW1lcnMvdGltZXJzLWhv
+d3RvLnR4dC4NCk9LLCBJIHdpbGwgdXNlIG1zbGVlcC4gVGhhdCBkb2N1bWVudGF0aW9uIHJlY29t
+bWVuZHMgdXNpbmcgdXNsZWVwX3JhbmdlDQpmb3Igc2xlZXBzIDwyMG0sIGJ1dCBhbHNvIHVzaW5n
+IG1zbGVlcCBmb3IgPjEwbXMgKHNvIEkgZm9sbG93ZWQgdGhlDQpyZWNvbWVuZGF0aW9ucyBmcm9t
+IHVzbGVlcF9yYW5nZSkNCj4gDQo+ID4gDQo+ID4gK8KgwqDCoMKgwqDCoMKgaWYgKHJhZC0+cmVz
+ZXQpIHsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZ3Bpb2Rfc2V0X3ZhbHVl
+KHJhZC0+cmVzZXQsIDApOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB1c2xl
+ZXBfcmFuZ2UoMTUwMDAsIDE3MDAwKTsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgZ3Bpb2Rfc2V0X3ZhbHVlKHJhZC0+cmVzZXQsIDEpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoH0N
+Cj4gQW5vdGhlciByZXNldD8NClllcy4gVGhpcyBpcyB0cmlja3ksIHNpbmNlIHRoaXMgR1BJTyBp
+cyBzaGFyZWQgYmV0d2VlbiB0aGUgRFNJDQpjb250cm9sbGVyIGFuZCB0b3VjaCBjb250cm9sbGVy
+LiBUaGUgQW5kcm9pZCBndXlzIG5lZWRzIHRoZSB0b3VjaA0KY29udHJvbGxlciB0byBiZSBhY3Rp
+dmUsIHdoaWxlIHRoZSBkaXNwbGF5IGNhbiBiZSB0dXJuZWQgb2ZmLiBTbyB0aGlzDQppcyB3aHks
+IGFmdGVyIHRoZSBkaXNwbGF5IGlzIHR1cm5lZCBvZmYsIHRoZSByZXNldCBwaW4gaXMgcHV0IGJh
+Y2sgdG8NCkhJR0ggaW4gb3JkZXIgdG8ga2VlcCB0aGUgdG91Y2ggd29ya2luZy4NCg==
