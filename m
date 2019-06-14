@@ -1,63 +1,159 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v3] dt-bindings: arm: Convert Actions Semi bindings to
- jsonschema
-Date: Fri, 14 Jun 2019 19:07:44 +0200
-Message-ID: <5946467c-7674-de2b-a657-627cf3be42df@suse.de>
-References: <20190517153223.7650-1-robh@kernel.org>
- <20190613224435.GA32572@bogus> <20190614170450.GA29654@Mani-XPS-13-9360>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v3 2/9] dt: bindings: Add multicolor class dt bindings
+ documention
+Date: Fri, 14 Jun 2019 12:18:21 -0500
+Message-ID: <c234361e-f5f7-f8d7-18c6-9cc8ef74ac99@ti.com>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-3-dmurphy@ti.com> <20190614170011.GA3277@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614170450.GA29654@Mani-XPS-13-9360>
+In-Reply-To: <20190614170011.GA3277@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 14.06.19 um 19:04 schrieb Manivannan Sadhasivam:
-> On Thu, Jun 13, 2019 at 04:44:35PM -0600, Rob Herring wrote:
->> On Fri, May 17, 2019 at 10:32:23AM -0500, Rob Herring wrote:
->>> Convert Actions Semi SoC bindings to DT schema format using json-schema.
->>>
->>> Cc: "Andreas Färber" <afaerber@suse.de>
->>> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: linux-arm-kernel@lists.infradead.org
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>> ---
->>> v3:
->>> - update MAINTAINERS
->>>
->>>  .../devicetree/bindings/arm/actions.txt       | 56 -------------------
->>>  .../devicetree/bindings/arm/actions.yaml      | 38 +++++++++++++
->>>  MAINTAINERS                                   |  2 +-
->>>  3 files changed, 39 insertions(+), 57 deletions(-)
->>>  delete mode 100644 Documentation/devicetree/bindings/arm/actions.txt
->>>  create mode 100644 Documentation/devicetree/bindings/arm/actions.yaml
+Rob
+
+Thanks for the review
+
+On 6/14/19 12:00 PM, Rob Herring wrote:
+> On Thu, May 23, 2019 at 02:08:13PM -0500, Dan Murphy wrote:
+>> Add DT bindings for the LEDs multicolor class framework.
 >>
->> Ping. Please apply or modify this how you'd prefer. I'm not going to 
->> keep respinning this.
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../bindings/leds/leds-class-multicolor.txt   | 97 +++++++++++++++++++
+>>   1 file changed, 97 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
 >>
-> 
-> Sorry for that Rob.
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+>> new file mode 100644
+>> index 000000000000..e2a2ce3279cb
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+>> @@ -0,0 +1,97 @@
+>> +* Multicolor LED properties
+>> +
+>> +Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
+>> +can be grouped together and also provide a modeling mechanism so that the
+>> +cluster LEDs can vary in hue and intensity to produce a wide range of colors.
+>> +
+>> +The nodes and properties defined in this document are unique to the multicolor
+>> +LED class.  Common LED nodes and properties are inherited from the common.txt
+>> +within this documentation directory.
+>> +
+>> +Required LED Child properties:
+>> +	- color : For multicolor LED support this property should be defined as
+>> +		  LED_COLOR_ID_MULTI and further definition can be found in
+>> +		  include/linux/leds/common.h.
+>> +
+>> +led-controller@30 {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	compatible = "ti,lp5024";
+>> +	reg = <0x29>;
+>> +
+>> +	multi-led@4 {
+> Typically we sort by address order.
 
-Well, it was simply not clear whether we were supposed to or not. :)
+These are not addresses these end up being the "module" number that the 
+LEDs below are associated to.
 
-> Andreas, are you going to take this patch? Else I'll pick it up (If you
-> want me to do the PR for next cycle)
 
-I had checked that all previous changes to the .txt file were by myself,
-so I would prefer if we not license it under GPLv2-only but under the
-same dual-license (MIT/GPLv2+) as the DTs. That modification would need
-Rob's approval then.
+>
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		reg = <4>;
+>> +		color = <LED_COLOR_ID_MULTI>;
+>> +		function = LED_FUNCTION_ACTIVITY;
+>> +
+>> +		led@12 {
+>> +			reg = <12>;
+>> +			color = <LED_COLOR_ID_RED>;
+>> +		};
+>> +
+>> +		led@13 {
+>> +			reg = <13>;
+>> +			color = <LED_COLOR_ID_GREEN>;
+>> +		};
+>> +
+>> +		led@14 {
+>> +			reg = <14>;
+>> +			color = <LED_COLOR_ID_BLUE>;
+>> +		};
+>> +	};
+>> +
+>> +	/* Only support RGB no model defined */
+> I don't understand this comment.
 
-Regards,
-Andreas
+Artifact can be removed
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+
+>
+>> +	multi-led@1 {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		reg = <1>;
+>> +		color = <LED_COLOR_ID_MULTI>;
+>> +		function = LED_FUNCTION_;
+> ??
+
+I meant to change that but missed it in the example.
+
+Dan
+
+
+>
+>> +
+>> +
+>> +		led@3 {
+>> +			reg = <3>;
+>> +			color = <LED_COLOR_ID_RED>;
+>> +		};
+>> +
+>> +		led@4 {
+>> +			reg = <4>;
+>> +			color = <LED_COLOR_ID_GREEN>;
+>> +		};
+>> +
+>> +		led@5 {
+>> +			reg = <5>;
+>> +			color = <LED_COLOR_ID_BLUE>;
+>> +		};
+>> +	};
+>> +
+>> +	multi-led@2 {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		color = <LED_COLOR_ID_MULTI>;
+>> +		function = LED_FUNCTION_ACTIVITY;
+>> +		reg = <2>;
+>> +		ti,led-bank = <2 3 5>;
+>> +
+>> +		led@6 {
+>> +			reg = <0x6>;
+>> +			color = <LED_COLOR_ID_RED>;
+>> +			led-sources = <6 9 15>;
+>> +		};
+>> +
+>> +		led@7 {
+>> +			reg = <0x7>;
+>> +			color = <LED_COLOR_ID_GREEN>;
+>> +			led-sources = <7 10 16>;
+>> +		};
+>> +
+>> +		led@8 {
+>> +			reg = <0x8>;
+>> +			color = <LED_COLOR_ID_BLUE>;
+>> +			led-sources = <8 11 17>;
+>> +		};
+>> +	};
+>> +
+>> +};
+>> -- 
+>> 2.21.0.5.gaeb582a983
+>>
