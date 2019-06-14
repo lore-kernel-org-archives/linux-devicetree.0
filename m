@@ -1,39 +1,89 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [EXT] Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191
- panel driver
-Date: Fri, 14 Jun 2019 10:39:53 -0300
-Message-ID: <CAOMZO5DcvKQPDhP468VSCfQkFy-7roKBkw7uqXxTMn9PTTgS+A@mail.gmail.com>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [EXT] Re: [PATCH 1/2] dt-bindings: display: panel: Add support
+ for Raydium RM67191 panel
+Date: Fri, 14 Jun 2019 13:40:00 +0000
+Message-ID: <1560519599.9328.40.camel@nxp.com>
 References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com>
- <1560513063-24995-3-git-send-email-robert.chiras@nxp.com> <CAOMZO5BAborMvk=4cgreWKX6rJjK-237me98dM1dDV53oUnExQ@mail.gmail.com>
- <1560518953.9328.31.camel@nxp.com>
+         <1560513063-24995-2-git-send-email-robert.chiras@nxp.com>
+         <CAOMZO5AMBr0TZip_PRBRPkMZ-d-kVeEOB4-rMTtcfcYtjLrLqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560518953.9328.31.camel@nxp.com>
+In-Reply-To: <CAOMZO5AMBr0TZip_PRBRPkMZ-d-kVeEOB4-rMTtcfcYtjLrLqw@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <A18DBB5F78197446B9957E0EF041D354@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>
+To: "festevam@gmail.com" <festevam@gmail.com>
 Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sam@ravnborg.org" <sam@ravnborg.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:29 AM Robert Chiras <robert.chiras@nxp.com> wrote:
-
-> The GPIO is active high, and the above sequence was received from the
-> panel vendor in the following form:
->         SET_RESET_PIN(1);
->         MDELAY(10);
->         SET_RESET_PIN(0);
->         MDELAY(5);
->         SET_RESET_PIN(1);
->         MDELAY(20);
-> I got rid of the first transition to high since seemed redundant.
-> Also, according to the manual reference, the RSTB pin needs to be
-> active high while operating the display.
-
-That's exactly my point :-)
-
-In normal operation the GPIO reset needs to be high.
-
-During reset the GPIO reset needs to be low., which means that the
-GPIO reset is "active low".
-
-So you should invert both the dts and the driver to behave correctly.
+SGkgRmFiaW8sDQoNCk9uIFZpLCAyMDE5LTA2LTE0IGF0IDA5OjU5IC0wMzAwLCBGYWJpbyBFc3Rl
+dmFtIHdyb3RlOg0KPiBPbiBGcmksIEp1biAxNCwgMjAxOSBhdCA4OjUzIEFNIFJvYmVydCBDaGly
+YXMgPHJvYmVydC5jaGlyYXNAbnhwLmNvbT4NCj4gd3JvdGU6DQo+ID4gDQo+ID4gDQo+ID4gQWRk
+IGR0LWJpbmRpbmdzIGRvY3VtZW50YXRpb24gZm9yIFJheWRpdW0gUk02NzE5MSBEU0kgcGFuZWwu
+DQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogUm9iZXJ0IENoaXJhcyA8cm9iZXJ0LmNoaXJhc0Bu
+eHAuY29tPg0KPiA+IC0tLQ0KPiA+IMKgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmF5ZGl1
+bSxybTY3MTkxLnR4dMKgwqDCoMKgwqB8IDQyDQo+ID4gKysrKysrKysrKysrKysrKysrKysrKw0K
+PiA+IMKgMSBmaWxlIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKykNCj4gPiDCoGNyZWF0ZSBtb2Rl
+IDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
+bmVsL3JheWRpdW0scm02NzE5MS50eHQNCj4gPiANCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9yYXlkaXVtLHJtNjcx
+OTEudA0KPiA+IHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9yYXlkaXVtLHJtNjcxOTEudA0KPiA+IHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi41YTYyNjhkDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
+ICsrKw0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvcmF5ZGl1bSxybTY3MTkxLnQNCj4gPiB4dA0KPiA+IEBAIC0wLDAgKzEsNDIgQEANCj4gPiAr
+UmF5ZGl1bSBSTTY3MTcxIE9MRUQgTENEIHBhbmVsIHdpdGggTUlQSS1EU0kgcHJvdG9jb2wNCj4g
+PiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0aWJsZTrCoMKgwqDC
+oMKgwqDCoMKgwqDCoCJyYXlkaXVtLHJtNjcxOTEiDQo+ID4gKy0gcmVnOsKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqB2aXJ0dWFsIGNoYW5uZWwgZm9yIE1JUEktRFNJIHByb3RvY29s
+DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtdXN0
+IGJlIDwwPg0KPiA+ICstIGRzaS1sYW5lczrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbnVtYmVyIG9m
+IERTSSBsYW5lcyB0byBiZSB1c2VkDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqBtdXN0IGJlIDwzPiBvciA8ND4NCj4gPiArLSBwb3J0OsKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW5wdXQgcG9ydCBub2RlIHdpdGggZW5kcG9pbnQgZGVm
+aW5pdGlvbiBhcw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgZGVmaW5lZCBpbg0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
+cmFwaC50eHQ7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqB0aGUgaW5wdXQgcG9ydCBzaG91bGQgYmUgY29ubmVjdGVkIHRvIGENCj4gPiBNSVBJLURT
+SSBkZXZpY2UNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoGRyaXZlcg0KPiA+ICsNCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiArLSByZXNl
+dC1ncGlvOsKgwqDCoMKgwqDCoMKgwqDCoMKgYSBHUElPIHNwZWMgZm9yIHRoZSBSU1RfQiBHUElP
+IHBpbg0KPiByZXNldC1ncGlvcyAod2l0aCB0aGUgcyBpbiB0aGUgZW5kKSBpcyB0aGUgcmVjb21t
+ZW5kYXRpb24uDQo+IA0KPiA+IA0KPiA+ICstIGRpc3BsYXktdGltaW5nczrCoMKgwqDCoMKgdGlt
+aW5ncyBmb3IgdGhlIGNvbm5lY3RlZCBwYW5lbCBhY2NvcmRpbmcNCj4gPiB0byBbMV0NCj4gVGhp
+cyBpcyBub3QgbmVlZGVkLg0KV2VsbCwgSSBrbm93IHRoYXQgdGhlIHBhbmVsIHRpbWluZ3MgYXJl
+IGFscmVhZHkgaGFyZC1jb2RlZCBpbnRvIHRoZQ0KZHJpdmVyLCBidXQgb24gODUwRCwgd2UgaGF2
+ZSB0d28gZGlzcGxheSBjb250cm9sbGVyczogZUxDRERJRiBhbmQgRENTUy4NCldoaWxlIGVMQ0RJ
+RiB3b3JrcyBqdXN0IGZpbmUgd2l0aCB0aGUgZGlzcGxheS10aW1pbmdzIHJlY2VpdmVkIChhbmQN
+CnVuZG9jdW1lbnRlZCkgZnJvbSBwYW5lbCB2ZW5kb3IsIHdpdGggRENTUyB3ZSBoYWQgc29tZSBp
+c3N1ZXMgYW5kIHdlDQpoYWQgdG8gdHdlYWsgdGhlIGRpc3BsYXktdGltaW5ncy4gVGhpcyBpcyB3
+aHkgSSBhZGRlZCB0aGlzIHByb3BlcnR5LA0KZm9yIGEgc3BlY2lhbCBjYXNlIHdoZXJlIHdlIGhh
+dmUgdG8gdXNlIGRpZmZlcmVudCB0aW1pbmdzIHdpdGhvdXQNCmNoYW5naW5nIHRoZSBkcml2ZXIg
+KGp1c3QgYSBkaWZmZXJlbnQgZHRiIGZpbGUpLiBEbyB5b3UgdGhpbmsgdGhpcyBpcyBhDQpiYWQg
+cHJhY3RpY2U/IElmIHllcywgdGhlbiB3aGF0IG1lY2hhbmlzbSBvZiBkb2luZyB0aGF0IGRvIHlv
+dQ0KcmVjb21tZW5kPw0KPiANCj4gPiANCj4gPiArLSB2aWRlby1tb2RlOsKgwqDCoMKgwqDCoMKg
+wqDCoMKgMCAtIGJ1cnN0LW1vZGUNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoDEgLSBub24tYnVyc3Qgd2l0aCBzeW5jIGV2ZW50DQo+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAyIC0gbm9uLWJ1cnN0IHdp
+dGggc3luYyBwdWxzZQ0KPiA+ICsNCj4gPiArWzFdOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9kaXNwbGF5LXRpbWluZy50eHQNCj4gVGhpcyBwYXRoIGRvZXMgbm90
+IGV4aXN0Lg0KUmlnaHQuIFdpbGwgdXBkYXRlIHRoZSBwYXRoLg0KPiANCj4gQWxzbywgY291bGQg
+eW91IHRyeSB0byBhbGlnbiB0aGVzZSBiaW5kaW5ncyB3aXRoIHRoZSBvbmUgZnJvbQ0KPiByYXlk
+aXVtLHJtNjgyMDA/DQo+IA0KPiBUaGVyZSBhcmUgcG93ZXItc3VwcGx5IGFuZCBiYWNrbGlnaHQg
+b3B0aW9uYWwgcHJvcGVydGllcyB0aGVyZSwgd2hpY2gNCj4gc2VlbSB1c2VmdWwuDQpUaGlzIHBh
+bmVsIGlzIE9MRUQsIHdoaWxlIHRoZSBybTY4MjAwIGlzIExDRCAoZnJvbSB3aGF0IEkndmUgbm90
+aWNlZCkuDQpNZWFuaW5nIHRoaXMgcGFuZWwgYmFja2xpZ3RoIGlzIGFsc28gY29udHJvbGxlZCBi
+eSB0aGUgRFNJIGNvbnRyb2xsZXIsDQpub3QgYnkgYSBzZXBhcmF0ZSBiYWNrbGlnaHQgTEVEIGRy
+aXZlci4NCkkgd2lsbCBjb25zaWRlciwgaW5zdGVhZCwgYWRkaW5nIHN1cHBvcnQgZm9yIGEgcG93
+ZXItc3VwcGx5IChpZg0KcG9zc2libGUpLg0KPiANCj4gPiANCj4gPiArDQo+ID4gK0V4YW1wbGU6
+DQo+ID4gKw0KPiA+ICvCoMKgwqDCoMKgwqDCoHBhbmVsQDAgew0KPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0gInJheWRpdW0scm02NzE5MSI7DQo+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlZyA9IDwwPjsNCj4gPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgcGluY3RybC0wID0gPCZwaW5jdHJsX21pcGlfZHNpXzBfMV9lbj47
+DQo+IFlvdSBzaG91bGQgYWxzbyBwYXNzIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7IGlmIHlv
+dSB1c2UgcGluY3RybC0wLg0KVGhhbmtzLiBXaWxsIGRvIHRoYXQNCj4gDQo+ID4gDQo+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlc2V0LWdwaW8gPSA8JmdwaW8xIDcgR1BJT19B
+Q1RJVkVfSElHSD47DQo+IFNob3VsZCBiZSBhY3RpdmUgbG93Lg0KQnV0LCB0aGUgR1BJTyBpcyBh
+Y3RpdmUgaGlnaC4=
