@@ -1,41 +1,215 @@
-From: Robert Chiras <robert.chiras@nxp.com>
-Subject: Re: [EXT] Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191
- panel driver
-Date: Fri, 14 Jun 2019 13:50:12 +0000
-Message-ID: <1560520211.9328.41.camel@nxp.com>
-References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com>
-         <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
-         <CAOMZO5BAborMvk=4cgreWKX6rJjK-237me98dM1dDV53oUnExQ@mail.gmail.com>
-         <1560518953.9328.31.camel@nxp.com>
-         <CAOMZO5DcvKQPDhP468VSCfQkFy-7roKBkw7uqXxTMn9PTTgS+A@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v10 08/13] drivers: memory: add DMC driver for Exynos5422
+Date: Fri, 14 Jun 2019 15:47:27 +0200
+Message-ID: <CAJKOXPdjXhfcNRL-XMS6K1jrUQoqoNHXGirjXoeoL4GyXzarpg@mail.gmail.com>
+References: <CGME20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9@eucas1p1.samsung.com>
+ <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-9-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DcvKQPDhP468VSCfQkFy-7roKBkw7uqXxTMn9PTTgS+A@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <AFE0FA3EDFCE8F479938F2D5F10DD015@eurprd04.prod.outlook.com>
+In-Reply-To: <20190614095309.24100-9-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "festevam@gmail.com" <festevam@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sam@ravnborg.org" <sam@ravnborg.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVmksIDIwMTktMDYtMTQgYXQgMTA6MzkgLTAzMDAsIEZhYmlvIEVzdGV2YW0gd3JvdGU6DQo+
-IENhdXRpb246IEVYVCBFbWFpbA0KPiANCj4gT24gRnJpLCBKdW4gMTQsIDIwMTkgYXQgMTA6Mjkg
-QU0gUm9iZXJ0IENoaXJhcyA8cm9iZXJ0LmNoaXJhc0BueHAuY29tDQo+ID4gd3JvdGU6DQo+IA0K
-PiA+IA0KPiA+IFRoZSBHUElPIGlzIGFjdGl2ZSBoaWdoLCBhbmQgdGhlIGFib3ZlIHNlcXVlbmNl
-IHdhcyByZWNlaXZlZCBmcm9tDQo+ID4gdGhlDQo+ID4gcGFuZWwgdmVuZG9yIGluIHRoZSBmb2xs
-b3dpbmcgZm9ybToNCj4gPiDCoMKgwqDCoMKgwqDCoMKgU0VUX1JFU0VUX1BJTigxKTsNCj4gPiDC
-oMKgwqDCoMKgwqDCoMKgTURFTEFZKDEwKTsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgU0VUX1JFU0VU
-X1BJTigwKTsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgTURFTEFZKDUpOw0KPiA+IMKgwqDCoMKgwqDC
-oMKgwqBTRVRfUkVTRVRfUElOKDEpOw0KPiA+IMKgwqDCoMKgwqDCoMKgwqBNREVMQVkoMjApOw0K
-PiA+IEkgZ290IHJpZCBvZiB0aGUgZmlyc3QgdHJhbnNpdGlvbiB0byBoaWdoIHNpbmNlIHNlZW1l
-ZCByZWR1bmRhbnQuDQo+ID4gQWxzbywgYWNjb3JkaW5nIHRvIHRoZSBtYW51YWwgcmVmZXJlbmNl
-LCB0aGUgUlNUQiBwaW4gbmVlZHMgdG8gYmUNCj4gPiBhY3RpdmUgaGlnaCB3aGlsZSBvcGVyYXRp
-bmcgdGhlIGRpc3BsYXkuDQo+IFRoYXQncyBleGFjdGx5IG15IHBvaW50IDotKQ0KPiANCj4gSW4g
-bm9ybWFsIG9wZXJhdGlvbiB0aGUgR1BJTyByZXNldCBuZWVkcyB0byBiZSBoaWdoLg0KPiANCj4g
-RHVyaW5nIHJlc2V0IHRoZSBHUElPIHJlc2V0IG5lZWRzIHRvIGJlIGxvdy4sIHdoaWNoIG1lYW5z
-IHRoYXQgdGhlDQo+IEdQSU8gcmVzZXQgaXMgImFjdGl2ZSBsb3ciLg0KPiANCj4gU28geW91IHNo
-b3VsZCBpbnZlcnQgYm90aCB0aGUgZHRzIGFuZCB0aGUgZHJpdmVyIHRvIGJlaGF2ZSBjb3JyZWN0
-bHkuDQpOb3cgSSBnZXQgaXQuIFRoYW5rcyEgSSB3aWxsIHVwZGF0ZSB0aGUgZHRzIGFuZCBkcml2
-ZXIgZm9yIHRoZSBncGlvLg==
+On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> This patch adds driver for Exynos5422 Dynamic Memory Controller.
+> The driver provides support for dynamic frequency and voltage scaling for
+> DMC and DRAM. It supports changing timings of DRAM running with different
+> frequency. There is also an algorithm to calculate timigns based on
+> memory description provided in DT.
+> The patch also contains needed MAINTAINERS file update.
+>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  MAINTAINERS                             |    8 +
+>  drivers/memory/samsung/Kconfig          |   17 +
+>  drivers/memory/samsung/Makefile         |    1 +
+>  drivers/memory/samsung/exynos5422-dmc.c | 1262 +++++++++++++++++++++++
+>  4 files changed, 1288 insertions(+)
+>  create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 57f496cff999..6ffccfd95351 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3470,6 +3470,14 @@ S:       Maintained
+>  F:     drivers/devfreq/exynos-bus.c
+>  F:     Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+>
+> +DMC FREQUENCY DRIVER FOR SAMSUNG EXYNOS5422
+> +M:     Lukasz Luba <l.luba@partner.samsung.com>
+> +L:     linux-pm@vger.kernel.org
+> +L:     linux-samsung-soc@vger.kernel.org
+> +S:     Maintained
+> +F:     drivers/memory/samsung/exynos5422-dmc.c
+> +F:     Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> +
+>  BUSLOGIC SCSI DRIVER
+>  M:     Khalid Aziz <khalid@gonehiking.org>
+>  L:     linux-scsi@vger.kernel.org
+> diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
+> index 79ce7ea58903..c93baa029654 100644
+> --- a/drivers/memory/samsung/Kconfig
+> +++ b/drivers/memory/samsung/Kconfig
+> @@ -5,6 +5,23 @@ config SAMSUNG_MC
+>           Support for the Memory Controller (MC) devices found on
+>           Samsung Exynos SoCs.
+>
+> +config ARM_EXYNOS5422_DMC
+> +       tristate "ARM EXYNOS5422 Dynamic Memory Controller driver"
+> +       depends on ARCH_EXYNOS
+> +       select DDR
+> +       select PM_DEVFREQ
+> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
+> +       select DEVFREQ_GOV_USERSPACE
+> +       select PM_DEVFREQ_EVENT
+> +       select PM_OPP
+> +       help
+> +         This adds driver for Exynos5422 DMC (Dynamic Memory Controller).
+> +         The driver provides support for Dynamic Voltage and Frequency Scaling in
+> +         DMC and DRAM. It also supports changing timings of DRAM running with
+> +         different frequency. The timings are calculated based on DT memory
+> +         information.
+> +
+> +
+>  if SAMSUNG_MC
+>
+>  config EXYNOS_SROM
+> diff --git a/drivers/memory/samsung/Makefile b/drivers/memory/samsung/Makefile
+> index 00587be66211..4f6e4383bab7 100644
+> --- a/drivers/memory/samsung/Makefile
+> +++ b/drivers/memory/samsung/Makefile
+> @@ -1,2 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_ARM_EXYNOS5422_DMC)       += exynos5422-dmc.o
+>  obj-$(CONFIG_EXYNOS_SROM)      += exynos-srom.o
+> diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+> new file mode 100644
+> index 000000000000..b397efe0da57
+> --- /dev/null
+> +++ b/drivers/memory/samsung/exynos5422-dmc.c
+> @@ -0,0 +1,1262 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 Samsung Electronics Co., Ltd.
+> + * Author: Lukasz Luba <l.luba@partner.samsung.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/devfreq.h>
+> +#include <linux/devfreq-event.h>
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pm_opp.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +#include <memory/jedec_ddr.h>
+> +#include "../of_memory.h"
+> +
+> +#define EXYNOS5_DREXI_TIMINGAREF               (0x0030)
+> +#define EXYNOS5_DREXI_TIMINGROW0               (0x0034)
+> +#define EXYNOS5_DREXI_TIMINGDATA0              (0x0038)
+> +#define EXYNOS5_DREXI_TIMINGPOWER0             (0x003C)
+> +#define EXYNOS5_DREXI_TIMINGROW1               (0x00E4)
+> +#define EXYNOS5_DREXI_TIMINGDATA1              (0x00E8)
+> +#define EXYNOS5_DREXI_TIMINGPOWER1             (0x00EC)
+> +#define CDREX_PAUSE                            (0x2091c)
+> +#define CDREX_LPDDR3PHY_CON3                   (0x20a20)
+> +#define EXYNOS5_TIMING_SET_SWI                 (1UL << 28)
+> +#define USE_MX_MSPLL_TIMINGS                   (1)
+> +#define USE_BPLL_TIMINGS                       (0)
+> +#define EXYNOS5_AREF_NORMAL                    (0x2e)
+> +
+> +/**
+> + * struct dmc_opp_table - Operating level desciption
+> + *
+> + * Covers frequency and voltage settings of the DMC operating mode.
+> + */
+> +struct dmc_opp_table {
+> +       u32 freq_hz;
+> +       u32 volt_uv;
+> +};
+> +
+> +/**
+> + * struct exynos5_dmc - main structure describing DMC device
+> + *
+> + * The main structure for the Dynamic Memory Controller which covers clocks,
+> + * memory regions, HW information, parameters and current operating mode.
+> + */
+> +struct exynos5_dmc {
+> +       struct device *dev;
+> +       struct devfreq *df;
+> +       struct devfreq_simple_ondemand_data gov_data;
+> +       void __iomem *base_drexi0;
+> +       void __iomem *base_drexi1;
+> +       struct regmap *clk_regmap;
+> +       struct mutex lock;
+> +       unsigned long curr_rate;
+> +       unsigned long curr_volt;
+> +       unsigned long bypass_rate;
+> +       struct dmc_opp_table *opp;
+> +       struct dmc_opp_table opp_bypass;
+> +       int opp_count;
+> +       u32 timings_arr_size;
+> +       u32 *timing_row;
+> +       u32 *timing_data;
+> +       u32 *timing_power;
+> +       const struct lpddr3_timings *timings;
+> +       const struct lpddr3_min_tck *min_tck;
+> +       u32 bypass_timing_row;
+> +       u32 bypass_timing_data;
+> +       u32 bypass_timing_power;
+> +       struct regulator *vdd_mif;
+> +       struct clk *fout_spll;
+> +       struct clk *fout_bpll;
+> +       struct clk *mout_spll;
+> +       struct clk *mout_bpll;
+> +       struct clk *mout_mclk_cdrex;
+> +       struct clk *mout_mx_mspll_ccore;
+> +       struct clk *mx_mspll_ccore_phy;
+> +       struct clk *mout_mx_mspll_ccore_phy;
+> +       struct devfreq_event_dev **counter;
+> +       int num_counters;
+> +};
+> +
+> +#define TIMING_FIELD(t_name, t_bit_beg, t_bit_end) \
+> +       { .name = t_name, .bit_beg = t_bit_beg, .bit_end = t_bit_end }
+> +
+> +#define TIMING_VAL(timing_array, id, t_val)                    \
+> +({                                                             \
+> +               u32 __val;                              \
+> +               __val = t_val << timing_array[id].bit_beg;      \
+> +               __val;                                          \
+> +})
+> +
+> +#define TIMING_VAL2REG(timing, t_val)                  \
+> +({                                                             \
+> +               u32 __val;                              \
+> +               __val = t_val << timing->bit_beg;       \
+> +               __val;                                          \
+> +})
+> +
+> +#define TIMING_REG2VAL(reg, timing)                    \
+
+It seems that only some of these defines are used. Please clean them up.
+You have also a lot of checkpatch --strict suggestions:
+    CHECK: Macro argument 'reg' may be better as '(reg)' to avoid
+precedence issues
+which seems to be valid.
+
+While at it please also fix few other --strict errors:
+CHECK: Please don't use multiple blank lines
+CHECK: Alignment should match open parenthesis
+CHECK: Prefer using the BIT macro
+CHECK: struct mutex definition without comment
+
+Best regards,
+Krzysztof
