@@ -1,63 +1,56 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v3, 14/27] drm/mediatek: add commponent OVL_2L0
-Date: Fri, 14 Jun 2019 11:54:30 +0800
-Message-ID: <1560484470.16718.13.camel@mtksdaap41>
+Subject: Re: [PATCH v3, 15/27] drm/mediatek: add component OVL_2L1
+Date: Fri, 14 Jun 2019 11:55:37 +0800
+Message-ID: <1560484537.16718.14.camel@mtksdaap41>
 References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
- <1559734986-7379-15-git-send-email-yongqiang.niu@mediatek.com>
+         <1559734986-7379-16-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1559734986-7379-15-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1559734986-7379-16-git-send-email-yongqiang.niu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wNi0wNSBhdCAxOTo0MiArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgY29tbXBvbmVudCBPVkxf
-MkwwCgpSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KCj4gCj4gU2lnbmVk
-LW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gLS0t
-Cj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgfCAyICsrCj4g
-IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggfCAyICsrCj4gIDIg
-ZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gaW5kZXggMzEwYzBiOS4uODA5NDkyNiAxMDA2NDQK
-PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gKysr
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+IEBAIC0yMjcs
-NiArMjI3LDcgQEAgc3RhdGljIHZvaWQgbXRrX2dhbW1hX3NldChzdHJ1Y3QgbXRrX2RkcF9jb21w
-ICpjb21wLAo+ICAKPiAgc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBtdGtfZGRwX2NvbXBfc3Rl
-bVtNVEtfRERQX0NPTVBfVFlQRV9NQVhdID0gewo+ICAJW01US19ESVNQX09WTF0gPSAib3ZsIiwK
-PiArCVtNVEtfRElTUF9PVkxfMkxdID0gIm92bF8ybCIsCj4gIAlbTVRLX0RJU1BfUkRNQV0gPSAi
-cmRtYSIsCj4gIAlbTVRLX0RJU1BfV0RNQV0gPSAid2RtYSIsCj4gIAlbTVRLX0RJU1BfQ09MT1Jd
-ID0gImNvbG9yIiwKPiBAQCAtMjY2LDYgKzI2Nyw3IEBAIHN0cnVjdCBtdGtfZGRwX2NvbXBfbWF0
-Y2ggewo+ICAJW0REUF9DT01QT05FTlRfT0QxXQk9IHsgTVRLX0RJU1BfT0QsCTEsICZkZHBfb2Qg
-fSwKPiAgCVtERFBfQ09NUE9ORU5UX09WTDBdCT0geyBNVEtfRElTUF9PVkwsCTAsIE5VTEwgfSwK
-PiAgCVtERFBfQ09NUE9ORU5UX09WTDFdCT0geyBNVEtfRElTUF9PVkwsCTEsIE5VTEwgfSwKPiAr
-CVtERFBfQ09NUE9ORU5UX09WTF8yTDBdCT0geyBNVEtfRElTUF9PVkxfMkwsCTAsIE5VTEwgfSwK
-PiAgCVtERFBfQ09NUE9ORU5UX1BXTTBdCT0geyBNVEtfRElTUF9QV00sCTAsIE5VTEwgfSwKPiAg
-CVtERFBfQ09NUE9ORU5UX1BXTTFdCT0geyBNVEtfRElTUF9QV00sCTEsIE5VTEwgfSwKPiAgCVtE
-RFBfQ09NUE9ORU5UX1BXTTJdCT0geyBNVEtfRElTUF9QV00sCTIsIE5VTEwgfSwKPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCBiL2RyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgKPiBpbmRleCA4N2VmMjkwLi5h
-ODFjMzIyIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
-cF9jb21wLmgKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29t
-cC5oCj4gQEAgLTI1LDYgKzI1LDcgQEAKPiAgCj4gIGVudW0gbXRrX2RkcF9jb21wX3R5cGUgewo+
-ICAJTVRLX0RJU1BfT1ZMLAo+ICsJTVRLX0RJU1BfT1ZMXzJMLAo+ICAJTVRLX0RJU1BfUkRNQSwK
-PiAgCU1US19ESVNQX1dETUEsCj4gIAlNVEtfRElTUF9DT0xPUiwKPiBAQCAtNTgsNiArNTksNyBA
-QCBlbnVtIG10a19kZHBfY29tcF9pZCB7Cj4gIAlERFBfQ09NUE9ORU5UX09EMCwKPiAgCUREUF9D
-T01QT05FTlRfT0QxLAo+ICAJRERQX0NPTVBPTkVOVF9PVkwwLAo+ICsJRERQX0NPTVBPTkVOVF9P
-VkxfMkwwLAo+ICAJRERQX0NPTVBPTkVOVF9PVkwxLAo+ICAJRERQX0NPTVBPTkVOVF9QV00wLAo+
-ICAJRERQX0NPTVBPTkVOVF9QV00xLAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbA==
+Hi, Yongqiang:
+
+On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add component OVL_2L1
+
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 1 +
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> index 8094926..5a0ec0f 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> @@ -268,6 +268,7 @@ struct mtk_ddp_comp_match {
+>  	[DDP_COMPONENT_OVL0]	= { MTK_DISP_OVL,	0, NULL },
+>  	[DDP_COMPONENT_OVL1]	= { MTK_DISP_OVL,	1, NULL },
+>  	[DDP_COMPONENT_OVL_2L0]	= { MTK_DISP_OVL_2L,	0, NULL },
+> +	[DDP_COMPONENT_OVL_2L1]	= { MTK_DISP_OVL_2L,	1, NULL },
+>  	[DDP_COMPONENT_PWM0]	= { MTK_DISP_PWM,	0, NULL },
+>  	[DDP_COMPONENT_PWM1]	= { MTK_DISP_PWM,	1, NULL },
+>  	[DDP_COMPONENT_PWM2]	= { MTK_DISP_PWM,	2, NULL },
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> index a81c322..d7ef480 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -60,6 +60,7 @@ enum mtk_ddp_comp_id {
+>  	DDP_COMPONENT_OD1,
+>  	DDP_COMPONENT_OVL0,
+>  	DDP_COMPONENT_OVL_2L0,
+> +	DDP_COMPONENT_OVL_2L1,
+>  	DDP_COMPONENT_OVL1,
+>  	DDP_COMPONENT_PWM0,
+>  	DDP_COMPONENT_PWM1,
