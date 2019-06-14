@@ -1,66 +1,50 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v1] tty: serial: max310x: Add optional reset gpio
-Date: Fri, 14 Jun 2019 16:11:12 +0200
-Message-ID: <20190614141112.29962-1-mylene.josserand@bootlin.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v3 0/9] Multicolor Framework update
+Date: Fri, 14 Jun 2019 09:23:33 -0500
+Message-ID: <adfe9901-5428-3cd5-32a2-1e9ee3654460@ti.com>
+References: <20190523190820.29375-1-dmurphy@ti.com> <55737098.K72IVJ5cDM@ada>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55737098.K72IVJ5cDM@ada>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mylene.josserand@bootlin.com, thomas.petazzoni@bootlin.com
+To: Alexander Dahl <ada@thorsis.com>, linux-leds@vger.kernel.org
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the possibility to use a gpio as reset.
+Hello
 
-Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
----
- Documentation/devicetree/bindings/serial/maxim,max310x.txt | 1 +
- drivers/tty/serial/max310x.c                               | 7 +++++++
- 2 files changed, 8 insertions(+)
+On 6/14/19 2:02 AM, Alexander Dahl wrote:
+> Hello Dan,
+>
+> Am Donnerstag, 23. Mai 2019, 14:08:11 CEST schrieb Dan Murphy:
+>>    leds: multicolor: Add sysfs interface definition
+>>    dt: bindings: Add multicolor class dt bindings documention
+>>    documention: leds: Add multicolor class documentation
+>>    dt-bindings: leds: Add multicolor ID to the color ID  list
+>>    leds: Add multicolor ID to the color ID list
+>>    leds: multicolor: Introduce a multicolor class definition
+>>    dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+>>    leds: lp50xx: Add the LP50XX family of the RGB LED driver
+>>    leds: Update the lp55xx to use the multi color framework
+> While not having much experience with the implementation of the LED subsystem,
+> I've had a short look at those. Curious question: would it be possible to take
+> three gpio-leds and group those together to one multicolor-led? I know at
+> least one board, where things are wired up like this, see e.g.
+> at91-sama5d27_som1_ek.dts
 
-diff --git a/Documentation/devicetree/bindings/serial/maxim,max310x.txt b/Documentation/devicetree/bindings/serial/maxim,max310x.txt
-index 79e10a05a96a..1d7d8a0b4260 100644
---- a/Documentation/devicetree/bindings/serial/maxim,max310x.txt
-+++ b/Documentation/devicetree/bindings/serial/maxim,max310x.txt
-@@ -15,6 +15,7 @@ Required properties:
-   "osc" if an external clock source is used.
- 
- Optional properties:
-+- reset-gpios: Gpio to use for reset.
- - gpio-controller: Marks the device node as a GPIO controller.
- - #gpio-cells: Should be two. The first cell is the GPIO number and
-   the second cell is used to specify the GPIO polarity:
-diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index e5aebbf5f302..d056fa2eed1b 100644
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -14,6 +14,7 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/gpio/driver.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-@@ -1413,12 +1414,18 @@ static int max310x_spi_probe(struct spi_device *spi)
- 		return ret;
- 
- 	if (spi->dev.of_node) {
-+		struct gpio_desc *reset_gpio;
- 		const struct of_device_id *of_id =
- 			of_match_device(max310x_dt_ids, &spi->dev);
- 		if (!of_id)
- 			return -ENODEV;
- 
- 		devtype = (struct max310x_devtype *)of_id->data;
-+		reset_gpio = devm_gpiod_get_optional(&spi->dev, "reset",
-+						     GPIOD_OUT_HIGH);
-+		if (IS_ERR(reset_gpio))
-+			return PTR_ERR(reset_gpio);
-+		gpiod_set_value_cansleep(reset_gpio, 0);
- 	} else {
- 		const struct spi_device_id *id_entry = spi_get_device_id(spi);
- 
--- 
-2.11.0
+I have been thinking a lot about how gpio LEDs would fit into the mix here.
+
+The leds-gpio.c would need to be extended to register to the multicolor 
+framework for this to work.
+
+I would need to get or create a gpio led cluster to test it out.
+
+Dan
+
+
+> Greets
+> Alex
+>
