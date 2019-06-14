@@ -1,130 +1,59 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv5 10/20] PCI: mobiveil: Fix the INTx process errors
-Date: Fri, 14 Jun 2019 11:43:59 +0100
-Message-ID: <20190614104351.GA29955@e121166-lin.cambridge.arm.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
- <20190612150819.GD15747@redmoon>
- <CAKnKUHFMH6=ox=qdaUR1kNEhETDCVyu3jQZEj+taEbbMRBRuYA@mail.gmail.com>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Date: Fri, 14 Jun 2019 11:49:42 +0100
+Message-ID: <fb5c11b4-6fd1-830b-7a3a-ccf4b31ec337@arm.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <3129ed19-0259-d227-0cff-e9f165ce5964@arm.com>
+ <4514bfa2-68b2-2074-b817-2f5037650c4e@amazon.com>
+ <fdc3b458-96eb-1734-c294-2463f37f2244@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKnKUHFMH6=ox=qdaUR1kNEhETDCVyu3jQZEj+taEbbMRBRuYA@mail.gmail.com>
+In-Reply-To: <fdc3b458-96eb-1734-c294-2463f37f2244@arm.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: "Hawa, Hanna" <hhhawa@amazon.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, linux-edac@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:38:51PM +0530, Karthikeyan Mitran wrote:
-> Hi Lorenzo and Hou Zhiqiang
->  PAB_INTP_AMBA_MISC_STAT does have other status in the higher bits, it
-> should have been masked before checking for the status
+Hi Hawa,
 
-You are the maintainer for this driver, so if there is something to be
-changed you must post a patch to that extent, I do not understand what
-the above means, write the code to fix it, I won't do it.
+On 13/06/2019 18:05, James Morse wrote:
+> On 11/06/2019 20:56, Hawa, Hanna wrote:
+>> James Morse wrote:
+>>> Hawa, Hanna wrote:
+>>>> +        if (cluster != last_cluster) {
+>>>> +            smp_call_function_single(cpu, al_a57_edac_l2merrsr,
+>>>> +                         edac_dev, 0);
+>>>> +            last_cluster = cluster;
+>>>> +        }
+>>> Here you depend on the CPUs being listed in cluster-order in the DT. I'm fairly sure the
+>>> numbering is arbitrary: On my Juno 0,3,4,5 are the A53 cluster, and 1,2 are the A57
+>>> cluster.
+>>>
+>>> If 1,3,5 were cluster-a and 2,4,6 were cluster-b, you would end up calling
+>>> al_a57_edac_l2merrsr() for each cpu. As you don't wait, they could race.
+>>>
+>>> If you can get a cpu-mask for each cluster, smp_call_function_any() would to the
+>>> pick-one-online-cpu work for you.
 
-I am getting a bit annoyed with this Mobiveil driver so either you guys
-sort this out or I will have to remove it from the kernel.
+>> Again, I rely on that it's alpine SoC specific driver.
 
-> Acked-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+An example of where this goes wrong is kexec:
+If you offline CPU0, then kexec, the new kernel will start up on the lowest numbered
+online CPU, which won't be zero. But the new kernel will call it CPU0.
 
-Ok I assume this means you tested it but according to what you
-say above, are there still issues with this code path ? Should
-we update the patch ?
+Kdump is even better, as it starts up on whichever CPU called panic(), and calls it CPU0.
 
-Moreover:
-
-https://kernelnewbies.org/PatchCulture
-
-Please read it and never top-post.
 
 Thanks,
-Lorenzo
 
-> On Wed, Jun 12, 2019 at 8:38 PM Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com> wrote:
-> >
-> > On Fri, Apr 12, 2019 at 08:36:12AM +0000, Z.q. Hou wrote:
-> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > >
-> > > In the loop block, there is not code to update the loop key,
-> > > this patch updates the loop key by re-read the INTx status
-> > > register.
-> > >
-> > > This patch also add the clearing of the handled INTx status.
-> > >
-> > > Note: Need MV to test this fix.
-> >
-> > This means INTX were never tested and current code handling them is,
-> > AFAICS, an infinite loop which is very very bad.
-> >
-> > This is a gross bug and must be fixed as soon as possible.
-> >
-> > I want Karthikeyan ACK and Tested-by on this patch.
-> >
-> > Lorenzo
-> >
-> > > Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> > > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> > > ---
-> > > V5:
-> > >  - Corrected and retouched the subject and changelog.
-> > >
-> > >  drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
-> > >  1 file changed, 9 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> > > index 4ba458474e42..78e575e71f4d 100644
-> > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > @@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
-> > >       /* Handle INTx */
-> > >       if (intr_status & PAB_INTP_INTX_MASK) {
-> > >               shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-> > > +             shifted_status &= PAB_INTP_INTX_MASK;
-> > >               shifted_status >>= PAB_INTX_START;
-> > >               do {
-> > >                       for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-> > > @@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
-> > >                                       dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
-> > >                                                           bit);
-> > >
-> > > -                             /* clear interrupt */
-> > > -                             csr_writel(pcie,
-> > > -                                        shifted_status << PAB_INTX_START,
-> > > +                             /* clear interrupt handled */
-> > > +                             csr_writel(pcie, 1 << (PAB_INTX_START + bit),
-> > >                                          PAB_INTP_AMBA_MISC_STAT);
-> > >                       }
-> > > -             } while ((shifted_status >> PAB_INTX_START) != 0);
-> > > +
-> > > +                     shifted_status = csr_readl(pcie,
-> > > +                                                PAB_INTP_AMBA_MISC_STAT);
-> > > +                     shifted_status &= PAB_INTP_INTX_MASK;
-> > > +                     shifted_status >>= PAB_INTX_START;
-> > > +             } while (shifted_status != 0);
-> > >       }
-> > >
-> > >       /* read extra MSI status register */
-> > > --
-> > > 2.17.1
-> > >
-> 
-> 
-> 
-> -- 
-> Thanks,
-> Regards,
-> Karthikeyan Mitran
-> 
-> -- 
-> Mobiveil INC., CONFIDENTIALITY NOTICE: This e-mail message, including any 
-> attachments, is for the sole use of the intended recipient(s) and may 
-> contain proprietary confidential or privileged information or otherwise be 
-> protected by law. Any unauthorized review, use, disclosure or distribution 
-> is prohibited. If you are not the intended recipient, please notify the 
-> sender and destroy all copies and the original message.
+James
+
+
+>> How can I get cpu-mask for each cluster? from DT?
+
+> Its not cluster you want, its the L2. Cacheinfo has this for online CPUs, and you're
+> already holding the cpus_read_lock().
