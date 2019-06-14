@@ -1,314 +1,65 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 2/2] drm/panel: truly: Add MSM8998 MTP support
-Date: Fri, 14 Jun 2019 12:02:46 -0700
-Message-ID: <20190614190246.34617-1-jeffrey.l.hugo@gmail.com>
-References: <20190614185547.34518-1-jeffrey.l.hugo@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614185547.34518-1-jeffrey.l.hugo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com, sam@ravnborg.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] dt-bindings: arm: Convert Actions Semi bindings to
+ jsonschema
+Date: Fri, 14 Jun 2019 13:33:47 -0600
+Message-ID: <CAL_JsqJoQDkqZO_4XdaQymVW0cJDXVmAPh3uieRkBjoUXeWE1w@mail.gmail.com>
+References: <20190517153223.7650-1-robh@kernel.org>
+ <20190613224435.GA32572@bogus>
+ <20190614170450.GA29654@Mani-XPS-13-9360>
+ <5946467c-7674-de2b-a657-627cf3be42df@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5946467c-7674-de2b-a657-627cf3be42df@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The MSM8998 MTP is the MSM8998 reference platform, and like the SDM845 MTP
-it uses the Truly NT35587 Display driver.  However, unlike the SDM845 MTP,
-the instance in the MSM8998 MTP is a single DSI interface, command mode
-type panel that supports a WQHD resolution and requires DSC compression.
-
-Add support for the MSM8998 MTP by extending the driver to handle both
-configurations.
-
-Note that the delay after the reset has been de-asserted has been extended
-to 100 ms.  Through experimentation, it has been determined that the
-MSM8998 instance requires a 50 ms delay between reset de-assert and sending
-configuration commands for the display to work.  Significantly shorter
-than that, and timeouts/errors occur signaling a non-working display.
-Shorter than 50 ms, but in the ball park, results in no "loud" errors, but
-nothing is displayed.  100 ms is used since double the minimum should
-guarantee enough delay for the device to finish whatever reset processing
-seems necessary, while also providing a safe buffer incase the experimental
-measurement was somehow not accurate enough for everyone.
-
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/gpu/drm/panel/panel-truly-nt35597.c | 149 +++++++++++++++-----
- 1 file changed, 112 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/gpu/drm/panel/panel-truly-nt35597.c b/drivers/gpu/drm/panel/panel-truly-nt35597.c
-index 77e1311b7c69..5ee76acb8f49 100644
---- a/drivers/gpu/drm/panel/panel-truly-nt35597.c
-+++ b/drivers/gpu/drm/panel/panel-truly-nt35597.c
-@@ -49,6 +49,8 @@ struct nt35597_config {
- 	const struct cmd_set *panel_on_cmds;
- 	u32 num_on_cmds;
- 	const struct drm_display_mode *dm;
-+	bool dual_dsi; /* true if panel uses two dsi connections */
-+	bool cmd_type; /* true if panel is command mode type, not video mode */
- };
- 
- struct truly_nt35597 {
-@@ -63,6 +65,7 @@ struct truly_nt35597 {
- 	struct backlight_device *backlight;
- 
- 	struct mipi_dsi_device *dsi[2];
-+	int num_dsi;
- 
- 	const struct nt35597_config *config;
- 	bool prepared;
-@@ -223,12 +226,42 @@ static const struct cmd_set qcom_2k_panel_magic_cmds[] = {
- 	{ { 0xFB, 0x01 }, 2 },
- };
- 
-+static const struct cmd_set qcom_wqhd_cmd_dsc_panel_magic_cmds[] = {
-+	{ { 0xff, 0x10 }, 2 },
-+	{ { 0xfb, 0x01 }, 2 },
-+	{ { 0xba, 0x03 }, 2 },
-+	{ { 0xe5, 0x01 }, 2 },
-+	{ { 0xb0, 0x03 }, 2 },
-+	{ { 0xff, 0x28 }, 2 },
-+	{ { 0x7a, 0x02 }, 2 },
-+	{ { 0xfb, 0x01 }, 2 },
-+	{ { 0xff, 0x10 }, 2 },
-+	{ { 0xfb, 0x01 }, 2 },
-+	{ { 0xc0, 0x03 }, 2 },
-+	{ { 0xbb, 0x10 }, 2 },
-+	{ { 0xff, 0xe0 }, 2 },
-+	{ { 0xfb, 0x01 }, 2 },
-+	{ { 0x6b, 0x3d }, 2 },
-+	{ { 0x6c, 0x3d }, 2 },
-+	{ { 0x6d, 0x3d }, 2 },
-+	{ { 0x6e, 0x3d }, 2 },
-+	{ { 0x6f, 0x3d }, 2 },
-+	{ { 0x35, 0x02 }, 2 },
-+	{ { 0x36, 0x72 }, 2 },
-+	{ { 0x37, 0x10 }, 2 },
-+	{ { 0x08, 0xc0 }, 2 },
-+	{ { 0xff, 0x24 }, 2 },
-+	{ { 0xfb, 0x01 }, 2 },
-+	{ { 0xc6, 0x06 }, 2 },
-+	{ { 0xff, 0x10 }, 2 },
-+};
-+
- static int truly_dcs_write(struct drm_panel *panel, u32 command)
- {
- 	struct truly_nt35597 *ctx = panel_to_ctx(panel);
--	int i, ret;
-+	int i, ret = 0;
- 
--	for (i = 0; i < ARRAY_SIZE(ctx->dsi); i++) {
-+	for (i = 0; i < ctx->num_dsi; i++) {
- 		ret = mipi_dsi_dcs_write(ctx->dsi[i], command, NULL, 0);
- 		if (ret < 0) {
- 			DRM_DEV_ERROR(ctx->dev,
-@@ -247,7 +280,7 @@ static int truly_dcs_write_buf(struct drm_panel *panel,
- 	int ret = 0;
- 	int i;
- 
--	for (i = 0; i < ARRAY_SIZE(ctx->dsi); i++) {
-+	for (i = 0; i < ctx->num_dsi; i++) {
- 		ret = mipi_dsi_dcs_write_buffer(ctx->dsi[i], buf, size);
- 		if (ret < 0) {
- 			DRM_DEV_ERROR(ctx->dev,
-@@ -284,7 +317,7 @@ static int truly_35597_power_on(struct truly_nt35597 *ctx)
- 	gpiod_set_value(ctx->reset_gpio, 1);
- 	usleep_range(10000, 20000);
- 	gpiod_set_value(ctx->reset_gpio, 0);
--	usleep_range(10000, 20000);
-+	msleep(100);
- 
- 	return 0;
- }
-@@ -342,7 +375,8 @@ static int truly_nt35597_unprepare(struct drm_panel *panel)
- 		return 0;
- 
- 	ctx->dsi[0]->mode_flags = 0;
--	ctx->dsi[1]->mode_flags = 0;
-+	if (ctx->config->dual_dsi)
-+		ctx->dsi[1]->mode_flags = 0;
- 
- 	ret = truly_dcs_write(panel, MIPI_DCS_SET_DISPLAY_OFF);
- 	if (ret < 0) {
-@@ -384,10 +418,12 @@ static int truly_nt35597_prepare(struct drm_panel *panel)
- 	if (ret < 0)
- 		return ret;
- 
-+	config = ctx->config;
-+
- 	ctx->dsi[0]->mode_flags |= MIPI_DSI_MODE_LPM;
--	ctx->dsi[1]->mode_flags |= MIPI_DSI_MODE_LPM;
-+	if (config->dual_dsi)
-+		ctx->dsi[1]->mode_flags |= MIPI_DSI_MODE_LPM;
- 
--	config = ctx->config;
- 	panel_on_cmds = config->panel_on_cmds;
- 	num_cmds = config->num_on_cmds;
- 
-@@ -515,8 +551,10 @@ static int truly_nt35597_panel_add(struct truly_nt35597 *ctx)
- 		return PTR_ERR(ctx->mode_gpio);
- 	}
- 
--	/* dual port */
--	gpiod_set_value(ctx->mode_gpio, 0);
-+	if (config->dual_dsi)
-+		gpiod_set_value(ctx->mode_gpio, 0);
-+	else
-+		gpiod_set_value(ctx->mode_gpio, 1);
- 
- 	drm_panel_init(&ctx->panel);
- 	ctx->panel.dev = dev;
-@@ -541,6 +579,21 @@ static const struct drm_display_mode qcom_sdm845_mtp_2k_mode = {
- 	.flags = 0,
- };
- 
-+static const struct drm_display_mode qcom_msm8998_mtp_wqhd_mode = {
-+	.name = "1440x2560",
-+	.clock = 113447,
-+	.hdisplay = 1440,
-+	.hsync_start = 1440 + 154,
-+	.hsync_end = 1440 + 154 + 32,
-+	.htotal = 1440 + 154 + 32 + 68,
-+	.vdisplay = 2560,
-+	.vsync_start = 2560 + 8,
-+	.vsync_end = 2560 + 8 + 1,
-+	.vtotal = 2560 + 8 + 1 + 7,
-+	.vrefresh = 60,
-+	.flags = 0,
-+};
-+
- static const struct nt35597_config nt35597_dir = {
- 	.width_mm = 74,
- 	.height_mm = 131,
-@@ -548,13 +601,24 @@ static const struct nt35597_config nt35597_dir = {
- 	.dm = &qcom_sdm845_mtp_2k_mode,
- 	.panel_on_cmds = qcom_2k_panel_magic_cmds,
- 	.num_on_cmds = ARRAY_SIZE(qcom_2k_panel_magic_cmds),
-+	.dual_dsi = true,
-+};
-+
-+static const struct nt35597_config msm8998_mtp = {
-+	.width_mm = 74,
-+	.height_mm = 131,
-+	.panel_name = "qcom_msm8998_mtp_wqhd_panel",
-+	.dm = &qcom_msm8998_mtp_wqhd_mode,
-+	.panel_on_cmds = qcom_wqhd_cmd_dsc_panel_magic_cmds,
-+	.num_on_cmds = ARRAY_SIZE(qcom_wqhd_cmd_dsc_panel_magic_cmds),
-+	.cmd_type = true,
- };
- 
- static int truly_nt35597_probe(struct mipi_dsi_device *dsi)
- {
- 	struct device *dev = &dsi->dev;
- 	struct truly_nt35597 *ctx;
--	struct mipi_dsi_device *dsi1_device;
-+	struct mipi_dsi_device *dsi1_device = NULL;
- 	struct device_node *dsi1;
- 	struct mipi_dsi_host *dsi1_host;
- 	struct mipi_dsi_device *dsi_dev;
-@@ -572,13 +636,6 @@ static int truly_nt35597_probe(struct mipi_dsi_device *dsi)
- 	if (!ctx)
- 		return -ENOMEM;
- 
--	/*
--	 * This device represents itself as one with two input ports which are
--	 * fed by the output ports of the two DSI controllers . The DSI0 is
--	 * the master controller and has most of the panel related info in its
--	 * child node.
--	 */
--
- 	ctx->config = of_device_get_match_data(dev);
- 
- 	if (!ctx->config) {
-@@ -586,25 +643,36 @@ static int truly_nt35597_probe(struct mipi_dsi_device *dsi)
- 		return -ENODEV;
- 	}
- 
--	dsi1 = of_graph_get_remote_node(dsi->dev.of_node, 1, -1);
--	if (!dsi1) {
--		DRM_DEV_ERROR(dev,
--			"failed to get remote node for dsi1_device\n");
--		return -ENODEV;
--	}
-+	ctx->num_dsi = 1;
-+	/*
-+	 * This device represents itself as one with two input ports which are
-+	 * fed by the output ports of the two DSI controllers . The DSI0 is
-+	 * the master controller and has most of the panel related info in its
-+	 * child node.
-+	 */
-+	if (ctx->config->dual_dsi) {
-+		ctx->num_dsi = 2;
- 
--	dsi1_host = of_find_mipi_dsi_host_by_node(dsi1);
--	of_node_put(dsi1);
--	if (!dsi1_host) {
--		DRM_DEV_ERROR(dev, "failed to find dsi host\n");
--		return -EPROBE_DEFER;
--	}
-+		dsi1 = of_graph_get_remote_node(dsi->dev.of_node, 1, -1);
-+		if (!dsi1) {
-+			DRM_DEV_ERROR(dev,
-+				"failed to get remote node for dsi1_device\n");
-+			return -ENODEV;
-+		}
-+
-+		dsi1_host = of_find_mipi_dsi_host_by_node(dsi1);
-+		of_node_put(dsi1);
-+		if (!dsi1_host) {
-+			DRM_DEV_ERROR(dev, "failed to find dsi host\n");
-+			return -EPROBE_DEFER;
-+		}
- 
--	/* register the second DSI device */
--	dsi1_device = mipi_dsi_device_register_full(dsi1_host, &info);
--	if (IS_ERR(dsi1_device)) {
--		DRM_DEV_ERROR(dev, "failed to create dsi device\n");
--		return PTR_ERR(dsi1_device);
-+		/* register the second DSI device */
-+		dsi1_device = mipi_dsi_device_register_full(dsi1_host, &info);
-+		if (IS_ERR(dsi1_device)) {
-+			DRM_DEV_ERROR(dev, "failed to create dsi device\n");
-+			return PTR_ERR(dsi1_device);
-+		}
- 	}
- 
- 	mipi_dsi_set_drvdata(dsi, ctx);
-@@ -619,12 +687,14 @@ static int truly_nt35597_probe(struct mipi_dsi_device *dsi)
- 		goto err_panel_add;
- 	}
- 
--	for (i = 0; i < ARRAY_SIZE(ctx->dsi); i++) {
-+	for (i = 0; i < ctx->num_dsi; i++) {
- 		dsi_dev = ctx->dsi[i];
- 		dsi_dev->lanes = 4;
- 		dsi_dev->format = MIPI_DSI_FMT_RGB888;
--		dsi_dev->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_LPM |
-+		dsi_dev->mode_flags =  MIPI_DSI_MODE_LPM |
- 			MIPI_DSI_CLOCK_NON_CONTINUOUS;
-+		if (!ctx->config->cmd_type)
-+			dsi_dev->mode_flags |= MIPI_DSI_MODE_VIDEO;
- 		ret = mipi_dsi_attach(dsi_dev);
- 		if (ret < 0) {
- 			DRM_DEV_ERROR(dev,
-@@ -638,7 +708,8 @@ static int truly_nt35597_probe(struct mipi_dsi_device *dsi)
- err_dsi_attach:
- 	drm_panel_remove(&ctx->panel);
- err_panel_add:
--	mipi_dsi_device_unregister(dsi1_device);
-+	if (ctx->config->dual_dsi)
-+		mipi_dsi_device_unregister(dsi1_device);
- 	return ret;
- }
- 
-@@ -662,6 +733,10 @@ static const struct of_device_id truly_nt35597_of_match[] = {
- 		.compatible = "truly,nt35597-2K-display",
- 		.data = &nt35597_dir,
- 	},
-+	{
-+		.compatible = "truly,nt35597-wqhd-cmd-dsc-display",
-+		.data = &msm8998_mtp,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, truly_nt35597_of_match);
--- 
-2.17.1
+T24gRnJpLCBKdW4gMTQsIDIwMTkgYXQgMTE6MDcgQU0gQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJl
+ckBzdXNlLmRlPiB3cm90ZToKPgo+IEFtIDE0LjA2LjE5IHVtIDE5OjA0IHNjaHJpZWIgTWFuaXZh
+bm5hbiBTYWRoYXNpdmFtOgo+ID4gT24gVGh1LCBKdW4gMTMsIDIwMTkgYXQgMDQ6NDQ6MzVQTSAt
+MDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPj4gT24gRnJpLCBNYXkgMTcsIDIwMTkgYXQgMTA6
+MzI6MjNBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPj4+IENvbnZlcnQgQWN0aW9ucyBT
+ZW1pIFNvQyBiaW5kaW5ncyB0byBEVCBzY2hlbWEgZm9ybWF0IHVzaW5nIGpzb24tc2NoZW1hLgo+
+ID4+Pgo+ID4+PiBDYzogIkFuZHJlYXMgRsOkcmJlciIgPGFmYWVyYmVyQHN1c2UuZGU+Cj4gPj4+
+IENjOiBNYW5pdmFubmFuIFNhZGhhc2l2YW0gPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8u
+b3JnPgo+ID4+PiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4KPiA+Pj4g
+Q2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+ID4+PiBDYzogZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiA+Pj4gU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4KPiA+Pj4gLS0tCj4gPj4+IHYzOgo+ID4+PiAtIHVwZGF0ZSBNQUlOVEFJ
+TkVSUwo+ID4+Pgo+ID4+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2FjdGlvbnMudHh0
+ICAgICAgIHwgNTYgLS0tLS0tLS0tLS0tLS0tLS0tLQo+ID4+PiAgLi4uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvYXJtL2FjdGlvbnMueWFtbCAgICAgIHwgMzggKysrKysrKysrKysrKwo+ID4+PiAgTUFJ
+TlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KPiA+Pj4g
+IDMgZmlsZXMgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKSwgNTcgZGVsZXRpb25zKC0pCj4gPj4+
+ICBkZWxldGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Fy
+bS9hY3Rpb25zLnR4dAo+ID4+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9hcm0vYWN0aW9ucy55YW1sCj4gPj4KPiA+PiBQaW5nLiBQbGVhc2Ug
+YXBwbHkgb3IgbW9kaWZ5IHRoaXMgaG93IHlvdSdkIHByZWZlci4gSSdtIG5vdCBnb2luZyB0bwo+
+ID4+IGtlZXAgcmVzcGlubmluZyB0aGlzLgo+ID4+Cj4gPgo+ID4gU29ycnkgZm9yIHRoYXQgUm9i
+Lgo+Cj4gV2VsbCwgaXQgd2FzIHNpbXBseSBub3QgY2xlYXIgd2hldGhlciB3ZSB3ZXJlIHN1cHBv
+c2VkIHRvIG9yIG5vdC4gOikKCkkgdGhvdWdodCAnVG8nIHlvdSBhbmQgYSBzaW5nbGUgcGF0Y2gg
+c2hvdWxkIGJlIGNsZWFyIGVub3VnaC4KCj4gPiBBbmRyZWFzLCBhcmUgeW91IGdvaW5nIHRvIHRh
+a2UgdGhpcyBwYXRjaD8gRWxzZSBJJ2xsIHBpY2sgaXQgdXAgKElmIHlvdQo+ID4gd2FudCBtZSB0
+byBkbyB0aGUgUFIgZm9yIG5leHQgY3ljbGUpCj4KPiBJIGhhZCBjaGVja2VkIHRoYXQgYWxsIHBy
+ZXZpb3VzIGNoYW5nZXMgdG8gdGhlIC50eHQgZmlsZSB3ZXJlIGJ5IG15c2VsZiwKPiBzbyBJIHdv
+dWxkIHByZWZlciBpZiB3ZSBub3QgbGljZW5zZSBpdCB1bmRlciBHUEx2Mi1vbmx5IGJ1dCB1bmRl
+ciB0aGUKPiBzYW1lIGR1YWwtbGljZW5zZSAoTUlUL0dQTHYyKykgYXMgdGhlIERUcy4gVGhhdCBt
+b2RpZmljYXRpb24gd291bGQgbmVlZAo+IFJvYidzIGFwcHJvdmFsIHRoZW4uCgpUaGF0J3MgZmlu
+ZSBhbmQgZHVhbCBsaWNlbnNlIGlzIHByZWZlcnJlZC4gQ2FuIHlvdSBhZGp1c3QgdGhhdCB3aGVu
+CmFwcGx5aW5nLiBOb3RlIHRoYXQgdGhlIHByZWZlcmVuY2UgZm9yIHNjaGVtYSBpcyAoR1BMLTIu
+MCBPUgpCU0QtMi1DbGF1c2UpLCBidXQgTUlUL0dQTHYyKyBpcyBmaW5lIGJ5IG1lLgoKUm9iCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
+a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
+bmVsCg==
