@@ -1,89 +1,73 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones
- conflict in rk3399.dtsi
-Date: Fri, 14 Jun 2019 15:03:52 +0200
-Message-ID: <55b9018e-672e-522b-d0a0-c5655be0f353@linaro.org>
-References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
- <5188064.YWmxIpmbGp@phil>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
+Date: Fri, 14 Jun 2019 07:20:57 -0600
+Message-ID: <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com> <20190506123456.6777-10-peter.ujfalusi@ti.com>
+ <20190613181626.GA7039@bogus> <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5188064.YWmxIpmbGp@phil>
-Content-Language: en-US
+In-Reply-To: <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-kernel@vger.kernel.org, edubezval@gmail.com, manivannan.sadhasivam@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Emil Renner Berthing <kernel@esmil.dk>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infr>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Dan Williams <dan.j.williams@intel.com>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On 14/06/2019 11:35, Heiko Stuebner wrote:
-> Hi Daniel,
-> 
-> Am Dienstag, 4. Juni 2019, 18:57:57 CEST schrieb Daniel Lezcano:
->> Currently the common thermal zones definitions for the rk3399 assumes
->> multiple thermal zones are supported by the governors. This is not the
->> case and each thermal zone has its own governor instance acting
->> individually without collaboration with other governors.
->>
->> As the cooling device for the CPU and the GPU thermal zones is the
->> same, each governors take different decisions for the same cooling
->> device leading to conflicting instructions and an erratic behavior.
->>
->> As the cooling-maps is about to become an optional property, let's
->> remove the cpu cooling device map from the GPU thermal zone.
->>
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->> ---
->>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 ---------
->>  1 file changed, 9 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> index 196ac9b78076..e1357e0f60f7 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> @@ -821,15 +821,6 @@
->>  					type = "critical";
->>  				};
->>  			};
->> -
->> -			cooling-maps {
->> -				map0 {
->> -					trip = <&gpu_alert0>;
->> -					cooling-device =
->> -						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> -						<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> -				};
->> -			};
->>  		};
->>  	};
-> 
-> my knowledge of the thermal framework is not that big, but what about the
-> rk3399-devices which further detail the cooling-maps like rk3399-gru-kevin
-> and the rk3399-nanopc-t4 with its fan-handling in the cooling-maps?
+On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>
+> Rob,
+>
+> On 13/06/2019 21.16, Rob Herring wrote:
+> >> +Remote PSI-L endpoint
+> >> +
+> >> +Required properties:
+> >> +--------------------
+> >> +- ti,psil-base:             PSI-L thread ID base of the endpoint
+> >> +
+> >> +Within the PSI-L endpoint node thread configuration subnodes must present with:
+> >> +ti,psil-configX naming convention, where X is the thread ID offset.
+> >
+> > Don't use vendor prefixes on node names.
+>
+> OK.
+>
+> >> +
+> >> +Configuration node Required properties:
+> >> +--------------------
+> >> +- linux,udma-mode:  Channel mode, can be:
+> >> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
+> >> +                    - UDMA_TR_MODE: for Third-Party mode
+> >
+> > This is hardly a common linux thing. What determines the value here.
+>
+> Unfortunately it is.
 
-The rk3399-gru-kevin is correct.
+No, it's a feature of your h/w and in no way is something linux
+defined which is the point of 'linux' prefix.
 
-The rk3399-nanopc-t4 is not correct because the cpu and the gpu are
-sharing the same cooling device (the fan). There are different
-configurations:
+> Each channel can be configured to Packet or TR mode. For some
+> peripherals it is true that they only support packet mode, these are the
+> newer PSI-L native peripherals.
+> For these channels a udma-mode property would be correct.
+>
+> But we have legacy peripherals as well and they are serviced by PDMA
+> (which is a native peripheral designed to talk to the given legacy IP).
+> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
+> most cases clear what to use, but for example for audio (McASP) channels
+> Linux is using TR channel because we need cyclic DMA while for example
+> RTOS is using Packet mode as it fits their needs better.
+>
+> Here I need to prefix the udma-mode with linux as the mode is used by
+> Linux, but other OS might opt to use different channel mode.
 
-1. The cpu cooling device for the CPU and the fan for the GPU
+So you'd need <os>,udma-mode? That doesn't work... If the setting is
+per OS, then it belongs in the OS because the same dtb should work
+across OS's.
 
-2. Different trip points on the CPU thermal zone, eg. one to for the CPU
-cooling device and another one for the fan.
+> The reason why this needs to be in the DT is that when the channel is
+> requested we need to configure the mode and it can not be swapped
+> runtime easily between Packet and TR mode.
 
-There are some variant for the above. If this board is not on battery,
-you may want to give priority to the throughput, so activate the fan
-first and then cool down the CPU. Or if you are on battery, you may want
-to invert the trip points.
+So when the client makes the channel request, why doesn't it specify the mode?
 
-In any case, it is not possible to share the same cooling device for
-different thermal zones.
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Rob
