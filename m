@@ -1,113 +1,387 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v5 03/10] [media] marvell-ccic: don't generate EOF on
- parallel bus
-Date: Fri, 14 Jun 2019 12:01:33 +0200
-Message-ID: <20190614100133.euxhdaktlemnd2ep@uno.localdomain>
-References: <20190505140031.9636-1-lkundrak@v3.sk>
- <20190505140031.9636-4-lkundrak@v3.sk>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH 1/2] firmware: imx: Add DSP IPC protocol driver
+Date: Fri, 14 Jun 2019 13:09:16 +0300
+Message-ID: <CAEnQRZCCsWZUyeoaRns6HjjyG-u0Nrac9g9Ga5E2UiF=CJLqEg@mail.gmail.com>
+References: <20190614081650.11880-1-daniel.baluta@nxp.com> <20190614081650.11880-2-daniel.baluta@nxp.com>
+ <20190614090815.lb2vnncqnom3fgu2@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mmzrrql2dydy5u5w"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190505140031.9636-4-lkundrak@v3.sk>
+In-Reply-To: <20190614090815.lb2vnncqnom3fgu2@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>, Sakari Ailus <sakari.ailus@iki.fi>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "S.j. Wang" <shengjiu.wang@nxp.com>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---mmzrrql2dydy5u5w
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Lubomir,
-
-On Sun, May 05, 2019 at 04:00:24PM +0200, Lubomir Rintel wrote:
-> The commit 05fed81625bf ("[media] marvell-ccic: add MIPI support for
-> marvell-ccic driver") that claimed to add CSI2 turned on C0_EOF_VSYNC for
-> parallel bus without a very good explanation.
+On Fri, Jun 14, 2019 at 12:08 PM Oleksij Rempel <o.rempel@pengutronix.de> wrote:
 >
-> That broke camera on OLPC XO-1.75 which precisely uses a sensor on a
-> parallel bus. Revert that chunk.
+> Hi Daniel,
 >
-> Tested on an OLPC XO-1.75.
+> please, see my review inline.
+
+Thanks Oleksij for review. See my answers inline.
+
 >
-> Fixes: 05fed81625bf755cc67c5864cdfd18b69ea828d1
-
-Use the proper fixes format here
-Fixes: 05fed81625bf ("[media] marvell-ccic: add MIPI support for marvell-ccic driver")
-
-I have this simple entry in my git config:
-
-[pretty]
-	fixes = Fixes: %h (\"%s\")
-
-With
-        abbrev=12
-
-in the [core] section.
-
-You can now
-$git show 05fed81625bf755cc67c5864cdfd18b69ea828d1 --pretty=fixes
-
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  drivers/media/platform/marvell-ccic/mcam-core.c | 6 ------
->  1 file changed, 6 deletions(-)
+> On Fri, Jun 14, 2019 at 04:16:49PM +0800, daniel.baluta@nxp.com wrote:
+> > From: Daniel Baluta <daniel.baluta@nxp.com>
+> >
+> > Some of i.MX8 processors (e.g i.MX8QM, i.MX8QXP) contain
+> > the Tensilica HiFi4 DSP for advanced pre- and post-audio
+> > processing.
+> >
+> > The communication between Host CPU and DSP firmware is
+> > taking place using a shared memory area for message passing
+> > and a dedicated Messaging Unit for notifications.
+> >
+> > DSP IPC protocol driver offers a doorbell interface using
+> > imx-mailbox API.
+> >
+> > We use 4 MU channels (2 x TXDB, 2 x RXDB) to implement a
+> > request-reply protocol.
+> >
+> > Connection 0 (txdb0, rxdb0):
+> >         - Host writes messasge to shared memory [SHMEM]
+> >       - Host sends a request [MU]
+> >       - DSP handles request [SHMEM]
+> >       - DSP sends reply [MU]
+> >
+> > Connection 1 (txdb1, rxdb1):
+> >       - DSP writes a message to shared memory [SHMEM]
+> >       - DSP sends a request [MU]
+> >       - Host handles request [SHMEM]
+> >       - Host sends reply [MU]
+> >
+> > The protocol driver will be used by a Host client to
+> > communicate with the DSP. First client will be the i.MX8
+> > part from Sound Open Firmware infrastructure.
+> >
+> > The protocol drivers offers the following interface:
+> >
+> > On Tx:
+> >    - imx_dsp_ring_doorbell, will be called to notify the DSP
+> >    that it needs to handle a request.
+> >
+> > On Rx:
+> >    - clients need to provide two callbacks:
+> >       .handle_reply
+> >       .handle_request
+> >   - the callbacks will be used by the protocol driver on
+> >     notification arrival from DSP.
+> >
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > ---
+> >  drivers/firmware/imx/Kconfig     |  11 ++
+> >  drivers/firmware/imx/Makefile    |   1 +
+> >  drivers/firmware/imx/imx-dsp.c   | 167 +++++++++++++++++++++++++++++++
+> >  include/linux/firmware/imx/dsp.h |  61 +++++++++++
+> >  4 files changed, 240 insertions(+)
+> >  create mode 100644 drivers/firmware/imx/imx-dsp.c
+> >  create mode 100644 include/linux/firmware/imx/dsp.h
+> >
+> > diff --git a/drivers/firmware/imx/Kconfig b/drivers/firmware/imx/Kconfig
+> > index 42b566f8903f..383996b679a8 100644
+> > --- a/drivers/firmware/imx/Kconfig
+> > +++ b/drivers/firmware/imx/Kconfig
+> > @@ -1,4 +1,15 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> > +config IMX_DSP
+> > +     bool "IMX DSP Protocol driver"
+> > +     depends on IMX_MBOX
+> > +     help
+> > +       This enables DSP IPC protocol between host CPU (Linux)
+> > +       and the firmware running on DSP.
+> > +       DSP exists on some i.MX8 processors (e.g i.MX8QM, i.MX8QXP).
+> > +
+> > +          It acts like a doorbell. Client might use shared memory to
+> > +       exchange information with DSP side.
+> > +
+> >  config IMX_SCU
+> >       bool "IMX SCU Protocol driver"
+> >       depends on IMX_MBOX
+> > diff --git a/drivers/firmware/imx/Makefile b/drivers/firmware/imx/Makefile
+> > index 802c4ad8e8f9..08bc9ddfbdfb 100644
+> > --- a/drivers/firmware/imx/Makefile
+> > +++ b/drivers/firmware/imx/Makefile
+> > @@ -1,3 +1,4 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> > +obj-$(CONFIG_IMX_DSP)                += imx-dsp.o
+> >  obj-$(CONFIG_IMX_SCU)                += imx-scu.o misc.o imx-scu-irq.o
+> >  obj-$(CONFIG_IMX_SCU_PD)     += scu-pd.o
+> > diff --git a/drivers/firmware/imx/imx-dsp.c b/drivers/firmware/imx/imx-dsp.c
+> > new file mode 100644
+> > index 000000000000..953fd364ad76
+> > --- /dev/null
+> > +++ b/drivers/firmware/imx/imx-dsp.c
+> > @@ -0,0 +1,167 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright 2018 NXP
+> > + *  Author: Daniel Baluta <daniel.baluta@nxp.com>
+> > + *
+> > + * Implementation of the DSP IPC interface (host side)
+> > + */
+> > +
+> > +#include <linux/firmware/imx/dsp.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/mailbox_client.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/slab.h>
+> > +
+> > +static struct imx_dsp_ipc *imx_dsp_handle;
+> > +
+> > +/*
+> > + * Get the default handle used by DSP
+> > + */
+> > +int imx_dsp_get_handle(struct imx_dsp_ipc **ipc)
+> > +{
+> > +     if (!imx_dsp_handle)
+> > +             return -EPROBE_DEFER;
+> > +
+> > +     *ipc = imx_dsp_handle;
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL(imx_dsp_get_handle);
 >
-> diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
-> index d97f39bde9bd6..d24e5b7a3bc52 100644
-> --- a/drivers/media/platform/marvell-ccic/mcam-core.c
-> +++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-> @@ -792,12 +792,6 @@ static void mcam_ctlr_image(struct mcam_camera *cam)
->  	 * Make sure it knows we want to use hsync/vsync.
->  	 */
->  	mcam_reg_write_mask(cam, REG_CTRL0, C0_SIF_HVSYNC, C0_SIFM_MASK);
-> -	/*
-> -	 * This field controls the generation of EOF(DVP only)
-> -	 */
-> -	if (cam->bus_type != V4L2_MBUS_CSI2_DPHY)
-> -		mcam_reg_set_bit(cam, REG_CTRL0,
-> -				C0_EOF_VSYNC | C0_VEDGE_CTRL);
+> Please, extract needed device or handle form device tree. The consumer
+> should pars own device tree node and get the phandle to the dsp node.
 
-This change seems in facts unrelated to the original patch. As you
-remove all usages of C0_EOF_VSYNC and C0_VEDGE_CTRL you can drop their
-definition in mcam-core.h.
+I understand the idea, but I'm not sure how this can be done.
 
-As I've said, the change seems unrelated to CSI-2 support and could
-probably be salfey dropped, but pay attention, you're also dropping
-C0_VEDGE_CTRL, which seems to enable VSYNC detection on the signal
-falling edge. Is this intentional ?
+imx_dsp_handle is just a pointer to the memory allocated in imx_dsp_probe.
 
-Thanks
-   j
+I assume that consumer might have access to this driver's
+platform_device dev and
+we can hive the imx_dsp_ipc handle inside some sort of private date. I will
+investigate this. So far I have followed the approach taken in
+drivers/firmware/imx/imx-scu.c
 
->  }
 >
+> > +void imx_dsp_set_data(struct imx_dsp_ipc *ipc, void *data)
+> > +{
+> > +     if (!ipc)
+> > +             return;
+> > +
+> > +     ipc->private_data = data;
+> > +}
+> > +EXPORT_SYMBOL(imx_dsp_set_data);
+> > +
+> > +void *imx_dsp_get_data(struct imx_dsp_ipc *ipc)
+> > +{
+> > +     if (!ipc)
+> > +             return NULL;
+> > +
+> > +     return ipc->private_data;
+> > +}
+> > +EXPORT_SYMBOL(imx_dsp_get_data);
+> > +
+> > +/*
+> > + * imx_dsp_ring_doorbell - triggers an interrupt on the other side (DSP)
+> > + *
+> > + * @dsp: DSP IPC handle
+> > + * @chan_idx: index of the channel where to trigger the interrupt
+> > + *
+> > + * Returns non-negative value for success, negative value for error
+> > + */
+> > +int imx_dsp_ring_doorbell(struct imx_dsp_ipc *ipc, unsigned int idx)
+> > +{
+> > +     int ret;
+> > +     struct imx_dsp_chan *dsp_chan;
+> > +
+> > +     if (idx > DSP_MU_CHAN_NUM)
+> > +             return -EINVAL;
 >
-> --
-> 2.21.0
+> On this test idx may overflow. DSP_MU_CHAN_NUM is 4, means idx can be:
+> 0, 1, 2, 3. In you case idx == 4 is allowed, so the caller will be able
+> to corrupt the rest of imx_dsp_ipc struct.
+
+Indeed, you are right! Will fix in v2.
+
 >
+> > +     dsp_chan = &ipc->chans[idx];
+> > +     ret = mbox_send_message(dsp_chan->ch, NULL);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL(imx_dsp_ring_doorbell);
+> > +
+> > +/*
+> > + * imx_dsp_handle_rx - rx callback used by imx mailbox
+> > + *
+> > + * @c: mbox client
+> > + * @msg: message received
+> > + *
+> > + * Users of DSP IPC will need to privde handle_reply and handle_request
+> > + * callbacks.
+> > + */
+> > +static void imx_dsp_handle_rx(struct mbox_client *c, void *msg)
+> > +{
+> > +     struct imx_dsp_chan *chan = container_of(c, struct imx_dsp_chan, cl);
+> > +
+> > +     if (chan->idx == 0) {
+> > +             chan->ipc->ops->handle_reply(chan->ipc);
+> > +     } else {
+> > +             chan->ipc->ops->handle_request(chan->ipc);
+> > +             imx_dsp_ring_doorbell(chan->ipc, 1);
+> > +     }
+> > +}
+> > +
+> > +static int imx_dsp_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +     struct imx_dsp_ipc *dsp_ipc;
+> > +     struct imx_dsp_chan *dsp_chan;
+> > +     struct mbox_client *cl;
+> > +     char *chan_name;
+> > +     int ret;
+> > +     int i;
+> > +
+> > +     dsp_ipc = devm_kzalloc(dev, sizeof(*dsp_ipc), GFP_KERNEL);
+> > +     if (!dsp_ipc)
+> > +             return -ENOMEM;
+> > +
+> > +     for (i = 0; i < DSP_MU_CHAN_NUM; i++) {
+> > +             if (i < 2)
+> > +                     chan_name = kasprintf(GFP_KERNEL, "txdb%d", i);
+> > +             else
+> > +                     chan_name = kasprintf(GFP_KERNEL, "rxdb%d", i - 2);
+> > +
+> > +             if (!chan_name)
+> > +                     return -ENOMEM;
+> > +
+> > +             dsp_chan = &dsp_ipc->chans[i];
+> > +             cl = &dsp_chan->cl;
+> > +             cl->dev = dev;
+> > +             cl->tx_block = false;
+> > +             cl->knows_txdone = true;
+> > +             cl->rx_callback = imx_dsp_handle_rx;
+> > +
+> > +             dsp_chan->ipc = dsp_ipc;
+> > +             dsp_chan->idx = i % 2;
+> > +             dsp_chan->ch = mbox_request_channel_byname(cl, chan_name);
+> > +             if (IS_ERR(dsp_chan->ch)) {
+> > +                     ret = PTR_ERR(dsp_chan->ch);
+> > +                     if (ret != -EPROBE_DEFER)
+> > +                             dev_err(dev, "Failed to request mbox chan %s ret %d\n",
+> > +                                     chan_name, ret);
+> > +                     return ret;
+>
+> On the error you will leak the memory previously allocated chan_name.
+> And you should call mbox_free_channel() for each previously registered
+> channel in this loop.
 
---mmzrrql2dydy5u5w
-Content-Type: application/pgp-signature; name="signature.asc"
+Will fix in v2.
 
------BEGIN PGP SIGNATURE-----
+>
+> > +             }
+> > +
+> > +             dev_dbg(dev, "request mbox chan %s\n", chan_name);
+> > +             /* chan_name is not used anymore by framework */
+> > +             kfree(chan_name);
+> > +     }
+> > +
+> > +     dsp_ipc->dev = dev;
+> > +
+> > +     imx_dsp_handle = dsp_ipc;
+>
+> bad idea. What happens if multiple dsp nodes are registered in the
+> device tree?
 
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0DcH0ACgkQcjQGjxah
-VjyxcRAAoBs1nLSqKz9dDuh1ExoER+gBlhUSp11xMqI770WvPzLLiSgVImxYpd3f
-JfLjOEzypnmiitZ8+V6+erHY0uTNnQaVgeaZpkLSe+uLBNqxzcMioFWoxBEgPDSq
-Uo1GYLMJ/bXEb2gmgH2/5EOjLME6fGyOlsUbU//ft0eAvOmS8qTA3z1cmvpRfume
-a+e2qav1MUXZ5EoImgWSSjn6YS8Epr96uKWg+lmoYzUaSuFJ8MvY7dc9Cq+yn5lz
-EVDCHkA7JMvfA6j1sbiPMwN+kB1QCKp8c2+IfQFQAo2A/M7MyYOl9oz45YOkqNKL
-Ub6olMo3EN6ZRePt2ooFLOuUJNLwnbgB4g4TQ8QlNW1dMrT0D2eRZw01sw6Sh6Qu
-xqmfrf9Jgjei1epV1/8KPNBUOTs/tr/AJGn00SSgpd/TcSnXTguPGZbkhvxs/1Un
-8A2pF8y1pR8l3FDbGkwWg1HzcbReyVrPmpTG2F+Z72SGAVsDDmOfapRi9++1owNf
-DTNjRshLw2fjmjFvrTgdyKEPJ7ENv1I57CLC7OdkdPf4uISeXfvuMkU2OIgP5j9x
-3Wf2WGumaR8U1uMQy98V5JYJzA+pNKhgzSlK6TWQQDCdpUt+LwlWFVjv4LmT1EQ/
-BnSdMDXuA1rBQ32TtrBIqVk9oDOrk51uXGuo5c48wz7htS8Tu4M=
-=DOfD
------END PGP SIGNATURE-----
+True. Altough we have only one DSP. Having that global variable seemed
+a very idea from the start. Will need to fix that also in imx-scu.c
 
---mmzrrql2dydy5u5w--
+>
+> > +     dev_info(dev, "NXP i.MX DSP IPC initialized\n");
+> > +
+> > +     return devm_of_platform_populate(dev);
+> > +}
+> > +
+> > +static const struct of_device_id imx_dsp_match[] = {
+> > +     { .compatible = "fsl,imx-dsp", },
+>
+> i would prefer to have chip name in the compatible. For example
+> fsl,imx8qm-dsp. Soon or later we will need to define some quirks
+> for on or another chip.
+
+I see. Will fix in v2.
+
+>
+> > +     { /* Sentinel */ }
+> > +};
+> > +
+> > +static struct platform_driver imx_dsp_driver = {
+> > +     .driver = {
+> > +             .name = "imx-dsp",
+> > +             .of_match_table = imx_dsp_match,
+> > +     },
+> > +     .probe = imx_dsp_probe,
+> > +};
+> > +builtin_platform_driver(imx_dsp_driver);
+> > +
+> > +MODULE_AUTHOR("Daniel Baluta <daniel.baluta@nxp.com>");
+> > +MODULE_DESCRIPTION("IMX DSP IPC protocol driver");
+> > +MODULE_LICENSE("GPL v2");
+> > diff --git a/include/linux/firmware/imx/dsp.h b/include/linux/firmware/imx/dsp.h
+> > new file mode 100644
+> > index 000000000000..75637d8fab34
+> > --- /dev/null
+> > +++ b/include/linux/firmware/imx/dsp.h
+> > @@ -0,0 +1,61 @@
+> > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > +/*
+> > + * Copyright 2018 NXP
+> > + *
+> > + * Header file for the DSP IPC implementation
+> > + */
+> > +
+> > +#ifndef _IMX_DSP_IPC_H
+> > +#define _IMX_DSP_IPC_H
+> > +
+> > +#include <linux/device.h>
+> > +#include <linux/types.h>
+> > +#include <linux/mailbox_client.h>
+> > +
+> > +#define DSP_MU_CHAN_NUM              4
+> > +
+> > +struct imx_dsp_chan {
+> > +     struct imx_dsp_ipc *ipc;
+> > +     struct mbox_client cl;
+> > +     struct mbox_chan *ch;
+> > +     int idx;
+> > +};
+> > +
+> > +struct imx_dsp_ops {
+> > +     void (*handle_reply)(struct imx_dsp_ipc *ipc);
+> > +     void (*handle_request)(struct imx_dsp_ipc *ipc);
+> > +};
+> > +
+> > +struct imx_dsp_ipc {
+> > +     /* Host <-> DSP communication uses 2 txdb and 2 rxdb channels */
+> > +     struct imx_dsp_chan chans[DSP_MU_CHAN_NUM];
+> > +     struct device *dev;
+> > +     struct imx_dsp_ops *ops;
+> > +     void *private_data;
+> > +};
+> > +
+> > +#if IS_ENABLED(CONFIG_IMX_DSP)
+> > +
+> > +int imx_dsp_ring_doorbell(struct imx_dsp_ipc *dsp, unsigned int chan_idx);
+> > +int imx_dsp_get_handle(struct imx_dsp_ipc **ipc);
+> > +void imx_dsp_set_data(struct imx_dsp_ipc *ipc, void *data);
+> > +void *imx_dsp_get_data(struct imx_dsp_ipc *ipc);
+> > +
+> > +#else
+> > +
+> > +static inline int imx_dsp_get_handle(struct imx_dsp_ipc **ipc)
+> > +{
+> > +     return -EIO;
+>
+> please, use -ENOTSUPP instead.
+
+Makes sense. Will fix in v2.
+
+thanks,
+Daniel.
