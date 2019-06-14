@@ -1,42 +1,48 @@
-Return-Path: <SRS0=x9uM=UL=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 4/4] arm64: dts: renesas: r8a774a1: Add dynamic power coefficient
-Date: Wed, 12 Jun 2019 15:20:55 +0100
-Message-Id: <1560349255-26336-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1560349255-26336-1-git-send-email-biju.das@bp.renesas.com>
-References: <1560349255-26336-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=xUMM=UN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:16045 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfFNHrR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Jun 2019 03:47:17 -0400
+From: JC Kuo <jckuo@nvidia.com>
+Subject: [PATCH 0/8] Tegra XHCI controller ELPG support
+Date: Fri, 14 Jun 2019 15:46:48 +0800
+Message-ID: <20190614074652.21960-1-jckuo@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, pdeschrijver@nvidia.com, afrid@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com, JC Kuo <jckuo@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Describe the dynamic power coefficient of A57 and A53 CPUs.
+Tegra XHCI controler can be placed in ELPG (Engine Level PowerGate)
+state for power saving when all of the connected USB devices are in
+suspended state. This patch series includes clk, phy and pmc changes
+that are required for properly place controller in ELPG and bring
+controller out of ELPG.
 
-Based on work by Gaku Inami <gaku.inami.xw@bp.renesas.com> and others.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+JC Kuo (8):
+  clk: tegra: Add PLLE HW power sequencer control
+  clk: tegra: don't enable PLLE HW sequencer at init
+  phy: tegra: xusb: t210: rearrange UPHY init
+  phy: tegra: xusb: add sleepwalk and suspend/resume
+  soc/tegra: pmc: support T210 USB 2.0 Sleepwalk
+  phy: tegra: xusb: t210: support wake and sleepwalk
+  arm64: tegra: add Tegra210 XUSB PADCTL irq
+  xhci: tegra: enable ELPG for runtime/system PM
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index 6f52451..addf74c 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -135,6 +135,7 @@
- 			power-domains = <&sysc R8A774A1_PD_CA57_CPU0>;
- 			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
-+			dynamic-power-coefficient = <854>;
- 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
- 			capacity-dmips-mhz = <1024>;
-@@ -162,6 +163,7 @@
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
- 			#cooling-cells = <2>;
-+			dynamic-power-coefficient = <277>;
- 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
- 			capacity-dmips-mhz = <560>;
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi |    3 +-
+ drivers/clk/tegra/clk-pll.c              |   12 -
+ drivers/clk/tegra/clk-tegra210.c         |   45 +
+ drivers/phy/tegra/xusb-tegra210.c        | 1023 +++++++++++++++++-----
+ drivers/phy/tegra/xusb.c                 |   80 +-
+ drivers/phy/tegra/xusb.h                 |   10 +
+ drivers/soc/tegra/pmc.c                  |  462 ++++++++++
+ drivers/usb/host/xhci-tegra.c            |  802 ++++++++++++++---
+ include/linux/clk/tegra.h                |    2 +
+ include/linux/phy/tegra/xusb.h           |   12 +
+ include/soc/tegra/pmc.h                  |   13 +
+ 11 files changed, 2108 insertions(+), 356 deletions(-)
+
 -- 
-2.7.4
+2.17.1
