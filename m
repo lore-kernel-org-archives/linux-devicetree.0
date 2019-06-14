@@ -1,68 +1,166 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 3/9] ARM: dts: sun8i: r40: Use tcon top clock
- index macros
-Date: Fri, 14 Jun 2019 22:13:18 +0530
-Message-ID: <20190614164324.9427-4-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock gates in probe
+Date: Fri, 14 Jun 2019 22:13:20 +0530
+Message-ID: <20190614164324.9427-6-jagan@amarulasolutions.com>
 References: <20190614164324.9427-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBSM5R7UAKGQETH7AQ3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190614164324.9427-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190614164324.9427-1-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-tcon_tv0, tcon_tv1 nodes have a clock names of tcon-ch0,
-tcon-ch1 which are referring tcon_top clocks via index
-numbers like 0, 1 with CLK_TCON_TV0 and CLK_TCON_TV1
-respectively.
+TCON TOP have clock gates for TV0, TV1, dsi and right
+now these are register during bind call.
 
-Use the macro in place of index numbers, for more code
-readability.
+Of which, dsi clock gate would required during DPHY probe
+but same can miss to get since tcon top is not bound at
+that time.
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+To solve, this circular dependency move the clock gate
+registration from bind to probe so-that DPHY can get the
+dsi gate clock on time.
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
+ 1 file changed, 49 insertions(+), 45 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index bb856e53b806..219d2dca16b3 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -44,6 +44,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/sun8i-de2.h>
- #include <dt-bindings/clock/sun8i-r40-ccu.h>
-+#include <dt-bindings/clock/sun8i-tcon-top.h>
- #include <dt-bindings/reset/sun8i-r40-ccu.h>
- #include <dt-bindings/reset/sun8i-de2.h>
+diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+index 465e9b0cdfee..a8978b3fe851 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
++++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+@@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
+ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+ 			       void *data)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
++	struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
++	int ret;
++
++	ret = reset_control_deassert(tcon_top->rst);
++	if (ret) {
++		dev_err(dev, "Could not deassert ctrl reset control\n");
++		return ret;
++	}
++
++	ret = clk_prepare_enable(tcon_top->bus);
++	if (ret) {
++		dev_err(dev, "Could not enable bus clock\n");
++		goto err_assert_reset;
++	}
++
++	return 0;
++
++err_assert_reset:
++	reset_control_assert(tcon_top->rst);
++
++	return ret;
++}
++
++static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
++				  void *data)
++{
++	struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
++	struct clk_hw_onecell_data *clk_data = tcon_top->clk_data;
++	int i;
++
++	of_clk_del_provider(dev->of_node);
++	for (i = 0; i < CLK_NUM; i++)
++		if (clk_data->hws[i])
++			clk_hw_unregister_gate(clk_data->hws[i]);
++
++	clk_disable_unprepare(tcon_top->bus);
++	reset_control_assert(tcon_top->rst);
++}
++
++static const struct component_ops sun8i_tcon_top_ops = {
++	.bind	= sun8i_tcon_top_bind,
++	.unbind	= sun8i_tcon_top_unbind,
++};
++
++static int sun8i_tcon_top_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
+ 	struct clk_hw_onecell_data *clk_data;
+ 	struct sun8i_tcon_top *tcon_top;
+ 	const struct sun8i_tcon_top_quirks *quirks;
+@@ -132,7 +178,7 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+ 	void __iomem *regs;
+ 	int ret, i;
  
-@@ -704,7 +705,7 @@
- 			compatible = "allwinner,sun8i-r40-tcon-tv";
- 			reg = <0x01c73000 0x1000>;
- 			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_BUS_TCON_TV0>, <&tcon_top 0>;
-+			clocks = <&ccu CLK_BUS_TCON_TV0>, <&tcon_top CLK_TCON_TOP_TV0>;
- 			clock-names = "ahb", "tcon-ch1";
- 			resets = <&ccu RST_BUS_TCON_TV0>;
- 			reset-names = "lcd";
-@@ -747,7 +748,7 @@
- 			compatible = "allwinner,sun8i-r40-tcon-tv";
- 			reg = <0x01c74000 0x1000>;
- 			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_BUS_TCON_TV1>, <&tcon_top 1>;
-+			clocks = <&ccu CLK_BUS_TCON_TV1>, <&tcon_top CLK_TCON_TOP_TV1>;
- 			clock-names = "ahb", "tcon-ch1";
- 			resets = <&ccu RST_BUS_TCON_TV1>;
- 			reset-names = "lcd";
+-	quirks = of_device_get_match_data(&pdev->dev);
++	quirks = of_device_get_match_data(dev);
+ 
+ 	tcon_top = devm_kzalloc(dev, sizeof(*tcon_top), GFP_KERNEL);
+ 	if (!tcon_top)
+@@ -164,18 +210,6 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+ 	if (IS_ERR(regs))
+ 		return PTR_ERR(regs);
+ 
+-	ret = reset_control_deassert(tcon_top->rst);
+-	if (ret) {
+-		dev_err(dev, "Could not deassert ctrl reset control\n");
+-		return ret;
+-	}
+-
+-	ret = clk_prepare_enable(tcon_top->bus);
+-	if (ret) {
+-		dev_err(dev, "Could not enable bus clock\n");
+-		goto err_assert_reset;
+-	}
+-
+ 	/*
+ 	 * At least on H6, some registers have some bits set by default
+ 	 * which may cause issues. Clear them here.
+@@ -226,45 +260,15 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+ 
+ 	dev_set_drvdata(dev, tcon_top);
+ 
+-	return 0;
++	return component_add(dev, &sun8i_tcon_top_ops);
+ 
+ err_unregister_gates:
+ 	for (i = 0; i < CLK_NUM; i++)
+ 		if (!IS_ERR_OR_NULL(clk_data->hws[i]))
+ 			clk_hw_unregister_gate(clk_data->hws[i]);
+-	clk_disable_unprepare(tcon_top->bus);
+-err_assert_reset:
+-	reset_control_assert(tcon_top->rst);
+-
+ 	return ret;
+ }
+ 
+-static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
+-				  void *data)
+-{
+-	struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
+-	struct clk_hw_onecell_data *clk_data = tcon_top->clk_data;
+-	int i;
+-
+-	of_clk_del_provider(dev->of_node);
+-	for (i = 0; i < CLK_NUM; i++)
+-		if (clk_data->hws[i])
+-			clk_hw_unregister_gate(clk_data->hws[i]);
+-
+-	clk_disable_unprepare(tcon_top->bus);
+-	reset_control_assert(tcon_top->rst);
+-}
+-
+-static const struct component_ops sun8i_tcon_top_ops = {
+-	.bind	= sun8i_tcon_top_bind,
+-	.unbind	= sun8i_tcon_top_unbind,
+-};
+-
+-static int sun8i_tcon_top_probe(struct platform_device *pdev)
+-{
+-	return component_add(&pdev->dev, &sun8i_tcon_top_ops);
+-}
+-
+ static int sun8i_tcon_top_remove(struct platform_device *pdev)
+ {
+ 	component_del(&pdev->dev, &sun8i_tcon_top_ops);
 -- 
 2.18.0.321.gffc6fa0e3
