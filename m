@@ -1,42 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 01/12] dt-bindings: media: sunxi-ir: add A31 compatible
-Date: Fri, 14 Jun 2019 14:18:42 -0600
-Message-ID: <20190614201842.GA6768@bogus>
-References: <20190528161440.27172-1-peron.clem@gmail.com>
- <20190528161440.27172-2-peron.clem@gmail.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 11/59] ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC node
+Date: Fri, 14 Jun 2019 16:27:55 -0400
+Message-ID: <20190614202843.26941-11-sashal@kernel.org>
+References: <20190614202843.26941-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190528161440.27172-2-peron.clem@gmail.com>
+In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Jose Abreu <joabreu@synopsys.com>, Joao Pinto <jpinto@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Alexey Brodkin <abrodkin@synopsys.com>, Vineet Gupta <vgupta@synopsys.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 May 2019 18:14:29 +0200, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= wrote:
-> Allwinner A31 has introduced a new memory mapping and a
-> reset line.
-> 
-> The difference in memory mapping are :
-> 
-> - In the configure register there is a new sample bit
->   and Allwinner has introduced the active threshold feature.
-> 
-> - In the status register a new STAT bit is present.
-> 
-> Note: CGPO and DRQ_EN bits are removed on A31 but present on A13
-> and on new SoCs like A64/H6.
-> This is actually not an issue as these bits are togglable and new
-> SoCs have a dedicated bindings.
-> 
-> Introduce this bindings to make a difference since this generation.
-> And declare the reset line required since A31.
-> 
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  Documentation/devicetree/bindings/media/sunxi-ir.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
+From: Jose Abreu <joabreu@synopsys.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+[ Upstream commit ecc906a11c2a0940e1a380debd8bd5bc09faf454 ]
+
+GMAC controller on HSDK boards supports 256 Hash Table size so we need to
+add the multicast filter bins property. This allows for the Hash filter
+to work properly using stmmac driver.
+
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arc/boot/dts/hsdk.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 7425bb0f2d1b..699f372b2a6f 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -187,6 +187,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = <32>;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&gmacclk>;
+ 			clock-names = "stmmaceth";
+ 			phy-handle = <&phy0>;
+-- 
+2.20.1
