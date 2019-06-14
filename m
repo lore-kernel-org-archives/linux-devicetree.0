@@ -1,125 +1,39 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 05/11] dt-bindings: net: sun4i-emac: Convert the
- binding to a schemas
-Date: Fri, 14 Jun 2019 07:37:49 -0600
-Message-ID: <CAL_Jsq+=yh3WhTg=1G02LUHGLHts6mECR9BQ+n7qHAihFViAxA@mail.gmail.com>
-References: <91618c7e9a5497462afa74c6d8a947f709f54331.1560158667.git-series.maxime.ripard@bootlin.com>
- <d198d29119b37b2fdb700d8992b31963e98b6693.1560158667.git-series.maxime.ripard@bootlin.com>
- <20190610143139.GG28724@lunn.ch> <CAL_JsqJahCJcdu=+fA=ewbGezuEJ2W6uwMVxkQpdY6w+1OWVVA@mail.gmail.com>
- <20190611145856.ua2ggkn6ccww6vpp@flea> <CAL_Jsq+KwH-j8f+r+fWhMuqJPWcHdBQau+nUz3NRAXYTpsyuvg@mail.gmail.com>
- <20190614095048.j2xwdsucucbakkl2@flea>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [EXT] Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191
+ panel driver
+Date: Fri, 14 Jun 2019 10:39:53 -0300
+Message-ID: <CAOMZO5DcvKQPDhP468VSCfQkFy-7roKBkw7uqXxTMn9PTTgS+A@mail.gmail.com>
+References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com>
+ <1560513063-24995-3-git-send-email-robert.chiras@nxp.com> <CAOMZO5BAborMvk=4cgreWKX6rJjK-237me98dM1dDV53oUnExQ@mail.gmail.com>
+ <1560518953.9328.31.camel@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190614095048.j2xwdsucucbakkl2@flea>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1560518953.9328.31.camel@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Chiras <robert.chiras@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sam@ravnborg.org" <sam@ravnborg.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 3:50 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi Rob,
->
-> On Thu, Jun 13, 2019 at 11:32:30AM -0600, Rob Herring wrote:
-> > On Thu, Jun 13, 2019 at 7:25 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > On Mon, Jun 10, 2019 at 12:59:29PM -0600, Rob Herring wrote:
-> > > > On Mon, Jun 10, 2019 at 8:31 AM Andrew Lunn <andrew@lunn.ch> wrote:
-> > > > >
-> > > > > > +required:
-> > > > > > +  - compatible
-> > > > > > +  - reg
-> > > > > > +  - interrupts
-> > > > > > +  - clocks
-> > > > > > +  - phy
-> > > > > > +  - allwinner,sram
-> > > > >
-> > > > > Quoting ethernet.txt:
-> > > > >
-> > > > > - phy: the same as "phy-handle" property, not recommended for new bindings.
-> > > > >
-> > > > > - phy-handle: phandle, specifies a reference to a node representing a PHY
-> > > > >   device; this property is described in the Devicetree Specification and so
-> > > > >   preferred;
-> > > > >
-> > > > > Can this be expressed in Yaml? Accept phy, but give a warning. Accept
-> > > > > phy-handle without a warning? Enforce that one or the other is
-> > > > > present?
-> > > >
-> > > > The common schema could have 'phy: false'. This works as long as we've
-> > > > updated (or plan to) all the dts files to use phy-handle. The issue is
-> > > > how far back do you need kernels to work with newer dtbs.
-> > >
-> > > I guess another question being raised by this is how hard do we want
-> > > to be a deprecating things, and should the DT validation be a tool to
-> > > enforce that validation.
-> > >
-> > > For example, you've used in you GPIO meta-schema false for anything
-> > > ending with -gpio, since it's deprecated. This means that we can't
-> > > convert any binding using a deprecated property without introducing a
-> > > build error in the schemas, which in turn means that you'll have a lot
-> > > of friction to support schemas, since you would have to convert your
-> > > driver to support the new way of doing things, before being able to
-> > > have a schema for your binding.
-> >
-> > I've err'ed on the stricter side. We may need to back off on some
-> > things to get to warning free builds. Really, I'd like to have levels
-> > to separate checks for existing bindings, new bindings, and pedantic
-> > checks.
->
-> That would be awesome. Do you have a plan for that already though? I
-> can't really think of a way to implement it at the moment.
+On Fri, Jun 14, 2019 at 10:29 AM Robert Chiras <robert.chiras@nxp.com> wrote:
 
-The only idea I have so far is some sort of 'level' property and then
-we filter schema based on what level we run validation at. I'm not too
-sure if that would take some restructuring of schema though because
-it's all a mixture ATM.
+> The GPIO is active high, and the above sequence was received from the
+> panel vendor in the following form:
+>         SET_RESET_PIN(1);
+>         MDELAY(10);
+>         SET_RESET_PIN(0);
+>         MDELAY(5);
+>         SET_RESET_PIN(1);
+>         MDELAY(20);
+> I got rid of the first transition to high since seemed redundant.
+> Also, according to the manual reference, the RSTB pin needs to be
+> active high while operating the display.
 
-The other aspect is how to set the 'level' per platform so new
-platforms have to pass a higher level. We already have that problem
-just with dtc warnings. Ideally, we should build new platforms with
-'W=1' or 'W=12'. Maybe the soc/board schema's can specify the level.
+That's exactly my point :-)
 
-> > For '-gpio', we may be okay because the suffix is handled in the GPIO
-> > core. It should be safe to update the binding to use the preferred
-> > form.
->
-> It might require a bit of work though in drivers, since the fallback
-> is only handled if you're using the gpiod API, and not the legacy one.
->
-> > > And then, we need to agree on how to express the deprecation. I guess
-> > > we could allow the deprecated keyword that will be there in the
-> > > draft-8, instead of ad-hoc solutions?
-> >
-> > Oh, nice! I hadn't seen that. Seems like we should use that. We can
-> > start even without draft-8 support because unknown keywords are
-> > ignored (though we probably have to add it to our meta-schema). Then
-> > at some point we can add a 'disallow deprecated' flag to the tool.
->
-> So, in the generic ethernet binding, we would have:
->
-> properties:
->   phy-handle:
->     $ref: /schemas/types.yaml#definitions/phandle
->     description:
->       Specifies a reference to a node representing a PHY device.
->
->   phy:
->     $ref: "#/properties/phy-handle"
->     deprecated: true
->
->   phy-device:
->     $ref: "#/properties/phy-handle"
->     deprecated: true
->
-> Does that sound good?
+In normal operation the GPIO reset needs to be high.
 
-Yes.
+During reset the GPIO reset needs to be low., which means that the
+GPIO reset is "active low".
 
-> Now, how do we handle the case above, in the device specific binding?
-> We just require the non-deprecated one, or the three?
-
-Wouldn't that just depend if all the instances of the device specific
-binding have been updated?
-
-Rob
+So you should invert both the dts and the driver to behave correctly.
