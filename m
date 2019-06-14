@@ -1,41 +1,29 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v10 01/13] clk: samsung: add needed IDs for DMC clocks in Exynos5420
-Date: Fri, 14 Jun 2019 14:04:27 +0200
-Message-ID: <CAJKOXPeeVhHS62jiUgwySf5EYzW2Rkvu=HxyA7NjpGZFp=fWYQ@mail.gmail.com>
-References: <CGME20190614095320eucas1p2919a6169c997bb81c80416e8a0ede538@eucas1p2.samsung.com>
- <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-2-l.luba@partner.samsung.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] drm/rockchip: dw_hdmi: add basic rk3228 support
+Date: Fri, 14 Jun 2019 14:04:48 +0200
+Message-ID: <1679832.6k0ngRgKtg@phil>
+References: <20190522224631.25164-1-justin.swartz@risingedge.co.za>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614095309.24100-2-l.luba@partner.samsung.com>
+In-Reply-To: <20190522224631.25164-1-justin.swartz@risingedge.co.za>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, linux-clk@vger.kernel.org, s.nawrocki@samsung.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
+To: Justin Swartz <justin.swartz@risingedge.co.za>
+Cc: Sandy Huang <hjc@rock-chips.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Define new IDs for clocks used by Dynamic Memory Controller in
-> Exynos5422 SoC.
->
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+Am Donnerstag, 23. Mai 2019, 00:46:29 CEST schrieb Justin Swartz:
+> Like the RK3328, RK322x SoCs offer a Synopsis DesignWare HDMI transmitter
+> and an Innosilicon HDMI PHY.
+> 
+> Add a new dw_hdmi_plat_data struct, rk3228_hdmi_drv_data.
+> Assign a set of mostly generic rk3228_hdmi_phy_ops functions.
+> Add dw_hdmi_rk3228_setup_hpd() to enable the HDMI HPD and DDC lines.
+> 
+> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
 
-I do not quite understand why this patch is still being resent instead
-of have been applied some time ago. Are there any issues here? Or are
-there any issues with the entire patchset (except some review comments
-to be resolved)? If not, then this is a dependency which should go
-regardless of other patches. There is no point to keep it pending...
-All other changes, e.g. DTS will have to wait for more cycles till
-this gets in.
+applied to drm-misc-next
 
-Therefore either please apply this or please comment what is stopping
-dependencies from being applied.
-
-Best regards,
-Krzysztof
+Thanks
+Heiko
