@@ -1,115 +1,123 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v2 07/11] OPP: Add API to find an OPP table from its DT node
-Date: Thu, 13 Jun 2019 21:17:29 -0700
-Message-ID: <20190614041733.120807-8-saravanak@google.com>
-References: <20190614041733.120807-1-saravanak@google.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v3, 16/27] drm/mediatek: add component DITHER
+Date: Fri, 14 Jun 2019 12:36:39 +0800
+Message-ID: <1560486999.16718.15.camel@mtksdaap41>
+References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1559734986-7379-17-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614041733.120807-1-saravanak@google.com>
+In-Reply-To: <1559734986-7379-17-git-send-email-yongqiang.niu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Saravana Kannan <saravanak@google.com>, Rajendra Nayak <rnayak@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: yongqiang.niu@mediatek.com
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This allows finding a device's OPP table (when it has multiple) from a
-phandle to the OPP table in DT.
+Hi, Yongqiang:
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/opp/of.c       | 42 ++++++++++++++++++++++++++++++++++--------
- include/linux/pm_opp.h |  7 +++++++
- 2 files changed, 41 insertions(+), 8 deletions(-)
+On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add component DITHER
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index d5815289518a..e8697a4ca3bc 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -42,14 +42,9 @@ struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_of_get_opp_desc_node);
- 
--struct opp_table *_managed_opp(struct device *dev, int index)
-+struct opp_table *_find_opp_table_from_node(struct device_node *np)
- {
- 	struct opp_table *opp_table, *managed_table = NULL;
--	struct device_node *np;
--
--	np = _opp_of_get_opp_desc_node(dev->of_node, index);
--	if (!np)
--		return NULL;
- 
- 	list_for_each_entry(opp_table, &opp_tables, node) {
- 		if (opp_table->np == np) {
-@@ -69,11 +64,42 @@ struct opp_table *_managed_opp(struct device *dev, int index)
- 		}
- 	}
- 
--	of_node_put(np);
--
- 	return managed_table;
- }
- 
-+/**
-+ * dev_pm_opp_of_find_table_from_node() - Find OPP table from its DT node
-+ * @np: DT node used for finding the OPP table
-+ *
-+ * Return: OPP table corresponding to the DT node, else NULL on failure.
-+ *
-+ * The caller needs to put the node with of_node_put() after using it.
-+ */
-+struct opp_table *dev_pm_opp_of_find_table_from_node(struct device_node *np)
-+{
-+	struct opp_table *opp_table;
-+
-+	mutex_lock(&opp_table_lock);
-+	opp_table = _find_opp_table_from_node(np);
-+	mutex_unlock(&opp_table_lock);
-+	return opp_table;
-+}
-+EXPORT_SYMBOL_GPL(dev_pm_opp_of_find_table_from_node);
-+
-+struct opp_table *_managed_opp(struct device *dev, int index)
-+{
-+	struct device_node *np;
-+	struct opp_table *opp_table;
-+
-+	np = _opp_of_get_opp_desc_node(dev->of_node, index);
-+	if (!np)
-+		return NULL;
-+
-+	opp_table = _find_opp_table_from_node(np);
-+	of_node_put(np);
-+	return opp_table;
-+}
-+
- /* The caller must call dev_pm_opp_put() after the OPP is used */
- static struct dev_pm_opp *_find_opp_of_np(struct opp_table *opp_table,
- 					  struct device_node *opp_np)
-diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index 2e122af26b8e..d9156b62d966 100644
---- a/include/linux/pm_opp.h
-+++ b/include/linux/pm_opp.h
-@@ -370,6 +370,7 @@ int dev_pm_opp_of_cpumask_add_table(const struct cpumask *cpumask);
- void dev_pm_opp_of_cpumask_remove_table(const struct cpumask *cpumask);
- int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
- struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev);
-+struct opp_table *dev_pm_opp_of_find_table_from_node(struct device_node *np);
- struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp);
- int of_get_required_opp_performance_state(struct device_node *np, int index);
- void dev_pm_opp_of_register_em(struct cpumask *cpus);
-@@ -407,6 +408,12 @@ static inline struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device
- 	return NULL;
- }
- 
-+static inline struct opp_table *dev_pm_opp_of_find_table_from_node(
-+							struct device_node *np)
-+{
-+	return NULL;
-+}
-+
- static inline struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp)
- {
- 	return NULL;
--- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 32 +++++++++++++++++++++++++++++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  2 ++
+>  2 files changed, 34 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> index 5a0ec0f..989024d 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> @@ -47,6 +47,12 @@
+>  #define CCORR_RELAY_MODE			BIT(0)
+>  #define DISP_CCORR_SIZE				0x0030
+>  
+> +#define DISP_DITHER_EN				0x0000
+> +#define DITHER_EN				BIT(0)
+> +#define DISP_DITHER_CFG				0x0020
+> +#define DITHER_RELAY_MODE			BIT(0)
+> +#define DISP_DITHER_SIZE			0x0030
+> +
+>  #define DISP_GAMMA_EN				0x0000
+>  #define DISP_GAMMA_CFG				0x0020
+>  #define DISP_GAMMA_SIZE				0x0030
+> @@ -155,6 +161,24 @@ static void mtk_ccorr_stop(struct mtk_ddp_comp *comp)
+>  	writel_relaxed(0x0, comp->regs + DISP_CCORR_EN);
+>  }
+>  
+> +static void mtk_dither_config(struct mtk_ddp_comp *comp, unsigned int w,
+> +			      unsigned int h, unsigned int vrefresh,
+> +			      unsigned int bpc)
+> +{
+> +	writel(h << 16 | w, comp->regs + DISP_DITHER_SIZE);
+> +	writel(DITHER_RELAY_MODE, comp->regs + DISP_DITHER_CFG);
+> +}
+> +
+> +static void mtk_dither_start(struct mtk_ddp_comp *comp)
+> +{
+> +	writel(DITHER_EN, comp->regs + DISP_DITHER_EN);
+> +}
+> +
+> +static void mtk_dither_stop(struct mtk_ddp_comp *comp)
+> +{
+> +	writel_relaxed(0x0, comp->regs + DISP_DITHER_EN);
+> +}
+> +
+>  static void mtk_gamma_config(struct mtk_ddp_comp *comp, unsigned int w,
+>  			     unsigned int h, unsigned int vrefresh,
+>  			     unsigned int bpc)
+> @@ -209,6 +233,12 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
+>  	.stop = mtk_ccorr_stop,
+>  };
+>  
+> +static const struct mtk_ddp_comp_funcs ddp_dither = {
+> +	.config = mtk_dither_config,
+> +	.start = mtk_dither_start,
+> +	.stop = mtk_dither_stop,
+> +};
+> +
+>  static const struct mtk_ddp_comp_funcs ddp_gamma = {
+>  	.gamma_set = mtk_gamma_set,
+>  	.config = mtk_gamma_config,
+> @@ -234,6 +264,7 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
+>  	[MTK_DISP_CCORR] = "ccorr",
+>  	[MTK_DISP_AAL] = "aal",
+>  	[MTK_DISP_GAMMA] = "gamma",
+> +	[MTK_DISP_DITHER] = "dither",
+>  	[MTK_DISP_UFOE] = "ufoe",
+>  	[MTK_DSI] = "dsi",
+>  	[MTK_DPI] = "dpi",
+> @@ -256,6 +287,7 @@ struct mtk_ddp_comp_match {
+>  	[DDP_COMPONENT_CCORR]	= { MTK_DISP_CCORR,	0, &ddp_ccorr },
+>  	[DDP_COMPONENT_COLOR0]	= { MTK_DISP_COLOR,	0, NULL },
+>  	[DDP_COMPONENT_COLOR1]	= { MTK_DISP_COLOR,	1, NULL },
+> +	[DDP_COMPONENT_DITHER]	= { MTK_DISP_DITHER,	0, &ddp_dither },
+>  	[DDP_COMPONENT_DPI0]	= { MTK_DPI,		0, NULL },
+>  	[DDP_COMPONENT_DPI1]	= { MTK_DPI,		1, NULL },
+>  	[DDP_COMPONENT_DSI0]	= { MTK_DSI,		0, NULL },
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> index d7ef480..158c1e5 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -30,6 +30,7 @@ enum mtk_ddp_comp_type {
+>  	MTK_DISP_WDMA,
+>  	MTK_DISP_COLOR,
+>  	MTK_DISP_CCORR,
+> +	MTK_DISP_DITHER,
+>  	MTK_DISP_AAL,
+>  	MTK_DISP_GAMMA,
+>  	MTK_DISP_UFOE,
+> @@ -49,6 +50,7 @@ enum mtk_ddp_comp_id {
+>  	DDP_COMPONENT_CCORR,
+>  	DDP_COMPONENT_COLOR0,
+>  	DDP_COMPONENT_COLOR1,
+> +	DDP_COMPONENT_DITHER,
+>  	DDP_COMPONENT_DPI0,
+>  	DDP_COMPONENT_DPI1,
+>  	DDP_COMPONENT_DSI0,
