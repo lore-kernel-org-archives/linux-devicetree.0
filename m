@@ -1,186 +1,159 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: add display nodes for rk322x
-Date: Fri, 14 Jun 2019 11:15:29 +0200
-Message-ID: <1854794.0zkvb3x0FP@phil>
-References: <20190613101305.30491-1-justin.swartz@risingedge.co.za>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
+ wait-for-safe logic
+Date: Fri, 14 Jun 2019 14:48:07 +0530
+Message-ID: <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-4-vivek.gautam@codeaurora.org>
+ <20190614040520.GK22737@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190613101305.30491-1-justin.swartz@risingedge.co.za>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Justin Swartz <justin.swartz@risingedge.co.za>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190614040520.GK22737@tuxbook-pro>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, will.deacon@arm.com, robin.murphy@arm.com
+Cc: agross@kernel.org, robh+dt@kernel.org, joro@8bytes.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, david.brown@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Justin,
-
-Am Donnerstag, 13. Juni 2019, 12:13:04 CEST schrieb Justin Swartz:
-> Add display_subsystem, hdmi_phy, vop, and hdmi device nodes plus
-> a few hdmi pinctrl entries to allow for HDMI output.
-> 
-> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
-
-Overall looks good, but in combination with the clock-patch you posted,
-I'd really prefer if we could try a slightly different approach.
-
-Hard register-level settings in the clock driver look bad and tend to
-cause problems later on, so I've adapted things a bit in [0] (untested)
-and would be glad if you could give it a try on actual hardware.
-
-The hdmiphy itself is a clock-provider for its pll and therefore the
-assigned-clock* properties into the hdmi controller, as the phy needs
-to probe before trying to set clocks.
-But in theory this should achieve the same result of reparenting the
-system's hdmiphy clock to the actual output of the phy-pll.
-
-I've also moved the iommu-cells fix to a separate commit.
-
-Please test, thanks
-Heiko
 
 
-[0] https://github.com/mmind/linux-rockchip/commits/wip/rk3229-hdmi
+On 6/14/2019 9:35 AM, Bjorn Andersson wrote:
+> On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
+>
+>> Qcom's implementation of arm,mmu-500 adds a WAIT-FOR-SAFE logic
+>> to address under-performance issues in real-time clients, such as
+>> Display, and Camera.
+>> On receiving an invalidation requests, the SMMU forwards SAFE request
+>> to these clients and waits for SAFE ack signal from real-time clients.
+>> The SAFE signal from such clients is used to qualify the start of
+>> invalidation.
+>> This logic is controlled by chicken bits, one for each - MDP (display),
+>> IFE0, and IFE1 (camera), that can be accessed only from secure software
+>> on sdm845.
+>>
+>> This configuration, however, degrades the performance of non-real time
+>> clients, such as USB, and UFS etc. This happens because, with wait-for-safe
+>> logic enabled the hardware tries to throttle non-real time clients while
+>> waiting for SAFE ack signals from real-time clients.
+>>
+>> On MTP sdm845 devices, with wait-for-safe logic enabled at the boot time
+>> by the bootloaders we see degraded performance of USB and UFS when kernel
+>> enables the smmu stage-1 translations for these clients.
+>> Turn off this wait-for-safe logic from the kernel gets us back the perf
+>> of USB and UFS devices until we re-visit this when we start seeing perf
+>> issues on display/camera on upstream supported SDM845 platforms.
+>>
+>> Now, different bootloaders with their access control policies allow this
+>> register access differently through secure monitor calls -
+>> 1) With one we can issue io-read/write secure monitor call (qcom-scm)
+>>     to update the register, while,
+>> 2) With other, such as one on MTP sdm845 we should use the specific
+>>     qcom-scm command to send request to do the complete register
+>>     configuration.
+>> Adding a separate device tree flag for arm-smmu to identify which
+>> firmware configuration of the two mentioned above we use.
+>> Not adding code change to allow type-(1) bootloaders to toggle the
+>> safe using io-read/write qcom-scm call.
+>>
+>> This change is inspired by the downstream change from Patrick Daly
+>> to address performance issues with display and camera by handling
+>> this wait-for-safe within separte io-pagetable ops to do TLB
+>> maintenance. So a big thanks to him for the change.
+>>
+>> Without this change the UFS reads are pretty slow:
+>> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=10 conv=sync
+>> 10+0 records in
+>> 10+0 records out
+>> 10485760 bytes (10.0MB) copied, 22.394903 seconds, 457.2KB/s
+>> real    0m 22.39s
+>> user    0m 0.00s
+>> sys     0m 0.01s
+>>
+>> With this change they are back to rock!
+>> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=300 conv=sync
+>> 300+0 records in
+>> 300+0 records out
+>> 314572800 bytes (300.0MB) copied, 1.030541 seconds, 291.1MB/s
+>> real    0m 1.03s
+>> user    0m 0.00s
+>> sys     0m 0.54s
+>>
+>> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+>> ---
+>>   drivers/iommu/arm-smmu.c | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index 0ad086da399c..3c3ad43eda97 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -39,6 +39,7 @@
+>>   #include <linux/pci.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/pm_runtime.h>
+>> +#include <linux/qcom_scm.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/spinlock.h>
+>>   
+>> @@ -177,6 +178,7 @@ struct arm_smmu_device {
+>>   	u32				features;
+>>   
+>>   #define ARM_SMMU_OPT_SECURE_CFG_ACCESS (1 << 0)
+>> +#define ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA (1 << 1)
+>>   	u32				options;
+>>   	enum arm_smmu_arch_version	version;
+>>   	enum arm_smmu_implementation	model;
+>> @@ -262,6 +264,7 @@ static bool using_legacy_binding, using_generic_binding;
+>>   
+>>   static struct arm_smmu_option_prop arm_smmu_options[] = {
+>>   	{ ARM_SMMU_OPT_SECURE_CFG_ACCESS, "calxeda,smmu-secure-config-access" },
+>> +	{ ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA, "qcom,smmu-500-fw-impl-safe-errata" },
+> This should be added to the DT binding as well.
 
-> ---
->  arch/arm/boot/dts/rk322x.dtsi | 83 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 82 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-> index da102fff96a2..7eb883eec126 100644
-> --- a/arch/arm/boot/dts/rk322x.dtsi
-> +++ b/arch/arm/boot/dts/rk322x.dtsi
-> @@ -143,6 +143,11 @@
->  		#clock-cells = <0>;
->  	};
->  
-> +	display_subsystem: display-subsystem {
-> +		compatible = "rockchip,display-subsystem";
-> +		ports = <&vop_out>;
-> +	};
-> +
->  	i2s1: i2s1@100b0000 {
->  		compatible = "rockchip,rk3228-i2s", "rockchip,rk3066-i2s";
->  		reg = <0x100b0000 0x4000>;
-> @@ -529,6 +534,17 @@
->  		status = "disabled";
->  	};
->  
-> +	hdmi_phy: hdmi-phy@12030000 {
-> +		compatible = "rockchip,rk3228-hdmi-phy";
-> +		reg = <0x12030000 0x10000>;
-> +		clocks = <&cru PCLK_HDMI_PHY>, <&xin24m>, <&cru DCLK_HDMI_PHY>;
-> +		clock-names = "sysclk", "refoclk", "refpclk";
-> +		#clock-cells = <0>;
-> +		clock-output-names = "hdmiphy_phy";
-> +		#phy-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
->  	gpu: gpu@20000000 {
->  		compatible = "rockchip,rk3228-mali", "arm,mali-400";
->  		reg = <0x20000000 0x10000>;
-> @@ -572,6 +588,28 @@
->  		status = "disabled";
->  	};
->  
-> +	vop: vop@20050000 {
-> +		compatible = "rockchip,rk3228-vop";
-> +		reg = <0x20050000 0x1ffc>;
-> +		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru ACLK_VOP>, <&cru DCLK_VOP>, <&cru HCLK_VOP>;
-> +		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-> +		resets = <&cru SRST_VOP_A>, <&cru SRST_VOP_H>, <&cru SRST_VOP_D>;
-> +		reset-names = "axi", "ahb", "dclk";
-> +		iommus = <&vop_mmu>;
-> +		status = "disabled";
-> +
-> +		vop_out: port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			vop_out_hdmi: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&hdmi_in_vop>;
-> +			};
-> +		};
-> +	};
-> +
->  	vop_mmu: iommu@20053f00 {
->  		compatible = "rockchip,iommu";
->  		reg = <0x20053f00 0x100>;
-> @@ -579,7 +617,7 @@
->  		interrupt-names = "vop_mmu";
->  		clocks = <&cru ACLK_VOP>, <&cru HCLK_VOP>;
->  		clock-names = "aclk", "iface";
-> -		iommu-cells = <0>;
-> +		#iommu-cells = <0>;
->  		status = "disabled";
->  	};
->  
-> @@ -594,6 +632,34 @@
->  		status = "disabled";
->  	};
->  
-> +	hdmi: hdmi@200a0000 {
-> +		compatible = "rockchip,rk3228-dw-hdmi";
-> +		reg = <0x200a0000 0x20000>;
-> +		reg-io-width = <4>;
-> +		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru SCLK_HDMI_HDCP>, <&cru PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_CEC>;
-> +		clock-names = "isfr", "iahb", "cec";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&hdmii2c_xfer &hdmi_hpd &hdmi_cec>;
-> +		resets = <&cru SRST_HDMI_P>;
-> +		reset-names = "hdmi";
-> +		phys = <&hdmi_phy>;
-> +		phy-names = "hdmi";
-> +		rockchip,grf = <&grf>;
-> +		status = "disabled";
-> +
-> +		ports {
-> +			hdmi_in: port {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				hdmi_in_vop: endpoint@0 {
-> +					reg = <0>;
-> +					remote-endpoint = <&vop_out_hdmi>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->  	sdmmc: dwmmc@30000000 {
->  		compatible = "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc";
->  		reg = <0x30000000 0x4000>;
-> @@ -922,6 +988,21 @@
->  			};
->  		};
->  
-> +		hdmi {
-> +			hdmi_hpd: hdmi-hpd {
-> +				rockchip,pins = <0 RK_PB7 1 &pcfg_pull_down>;
-> +			};
-> +
-> +			hdmii2c_xfer: hdmii2c-xfer {
-> +				rockchip,pins = <0 RK_PA6 2 &pcfg_pull_none>,
-> +						<0 RK_PA7 2 &pcfg_pull_none>;
-> +			};
-> +
-> +			hdmi_cec: hdmi-cec {
-> +				rockchip,pins = <0 RK_PC4 1 &pcfg_pull_none>;
-> +			};
-> +		};
-> +
->  		i2c0 {
->  			i2c0_xfer: i2c0-xfer {
->  				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_none>,
-> 
+Ah right. I missed that. Will add this and respin unless Robin and Will 
+have concerns with this change.
+
+>
+>>   	{ 0, NULL},
+>>   };
+>>   
+>> @@ -2292,6 +2295,19 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>>   	arm_smmu_device_reset(smmu);
+>>   	arm_smmu_test_smr_masks(smmu);
+>>   
+>> +	/*
+>> +	 * To address performance degradation in non-real time clients,
+>> +	 * such as USB and UFS, turn off wait-for-safe on sdm845 platforms,
+>> +	 * such as MTP, whose firmwares implement corresponding secure monitor
+>> +	 * call handlers.
+>> +	 */
+>> +	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500") &&
+>> +	    smmu->options & ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA) {
+>> +		err = qcom_scm_qsmmu500_wait_safe_toggle(0);
+>> +		if (err)
+>> +			dev_warn(dev, "Failed to turn off SAFE logic\n");
+>> +	}
+>> +
+> This looks good, I presume at some point we can profile things and
+> review if it's worth toggling this on the fly, but given that this is
+> conditioned on smmu->options that should be an implementation detail..
+>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Thanks Bjorn.
+
+Best regards
+Vivek
+
+> Regards,
+> Bjorn
+>
+>>   	/*
+>>   	 * We want to avoid touching dev->power.lock in fastpaths unless
+>>   	 * it's really going to do something useful - pm_runtime_enabled()
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+>>
