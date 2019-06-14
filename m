@@ -1,106 +1,79 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v10 08/13] drivers: memory: add DMC driver for Exynos5422
-Date: Fri, 14 Jun 2019 14:58:55 +0200
-Message-ID: <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com>
-References: <CGME20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9@eucas1p1.samsung.com>
- <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-9-l.luba@partner.samsung.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: display: panel: Add support for Raydium
+ RM67191 panel
+Date: Fri, 14 Jun 2019 09:59:54 -0300
+Message-ID: <CAOMZO5AMBr0TZip_PRBRPkMZ-d-kVeEOB4-rMTtcfcYtjLrLqw@mail.gmail.com>
+References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com> <1560513063-24995-2-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614095309.24100-9-l.luba@partner.samsung.com>
+In-Reply-To: <1560513063-24995-2-git-send-email-robert.chiras@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
+To: Robert Chiras <robert.chiras@nxp.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+On Fri, Jun 14, 2019 at 8:53 AM Robert Chiras <robert.chiras@nxp.com> wrote:
 >
-> This patch adds driver for Exynos5422 Dynamic Memory Controller.
-> The driver provides support for dynamic frequency and voltage scaling for
-> DMC and DRAM. It supports changing timings of DRAM running with different
-> frequency. There is also an algorithm to calculate timigns based on
-> memory description provided in DT.
-> The patch also contains needed MAINTAINERS file update.
+> Add dt-bindings documentation for Raydium RM67191 DSI panel.
 >
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 > ---
->  MAINTAINERS                             |    8 +
->  drivers/memory/samsung/Kconfig          |   17 +
->  drivers/memory/samsung/Makefile         |    1 +
->  drivers/memory/samsung/exynos5422-dmc.c | 1262 +++++++++++++++++++++++
->  4 files changed, 1288 insertions(+)
->  create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
+>  .../bindings/display/panel/raydium,rm67191.txt     | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 57f496cff999..6ffccfd95351 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3470,6 +3470,14 @@ S:       Maintained
->  F:     drivers/devfreq/exynos-bus.c
->  F:     Documentation/devicetree/bindings/devfreq/exynos-bus.txt
->
-> +DMC FREQUENCY DRIVER FOR SAMSUNG EXYNOS5422
-
-Eh, more comments from my side.
-"For the hard of thinking, this list is meant to remain in alphabetical order."
-
-> +M:     Lukasz Luba <l.luba@partner.samsung.com>
-> +L:     linux-pm@vger.kernel.org
-> +L:     linux-samsung-soc@vger.kernel.org
-> +S:     Maintained
-> +F:     drivers/memory/samsung/exynos5422-dmc.c
-> +F:     Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+> new file mode 100644
+> index 0000000..5a6268d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+> @@ -0,0 +1,42 @@
+> +Raydium RM67171 OLED LCD panel with MIPI-DSI protocol
 > +
->  BUSLOGIC SCSI DRIVER
->  M:     Khalid Aziz <khalid@gonehiking.org>
->  L:     linux-scsi@vger.kernel.org
-> diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
-> index 79ce7ea58903..c93baa029654 100644
-> --- a/drivers/memory/samsung/Kconfig
-> +++ b/drivers/memory/samsung/Kconfig
-> @@ -5,6 +5,23 @@ config SAMSUNG_MC
->           Support for the Memory Controller (MC) devices found on
->           Samsung Exynos SoCs.
->
-> +config ARM_EXYNOS5422_DMC
-
-Why you added prefix of ARM to CONFIG_? I think none of other Exynos
-Kconfig options follow such convention (except devfreq).
-
-> +       tristate "ARM EXYNOS5422 Dynamic Memory Controller driver"
-> +       depends on ARCH_EXYNOS
-> +       select DDR
-
-In general select should be used only for non-visible symbols and DDR
-is visible. Use depends.
-
-> +       select PM_DEVFREQ
-
-This definitely cannot be select. You do not select entire subsystem
-because some similar driver was chosen.
-
-> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
-> +       select DEVFREQ_GOV_USERSPACE
-
-I think only simple_ondemand is needed. Is userspace governor
-necessary for working? Or actually maybe both could be skipped?
-
-> +       select PM_DEVFREQ_EVENT
-
-Again, depends.
-
-> +       select PM_OPP
-> +       help
-> +         This adds driver for Exynos5422 DMC (Dynamic Memory Controller).
-> +         The driver provides support for Dynamic Voltage and Frequency Scaling in
-> +         DMC and DRAM. It also supports changing timings of DRAM running with
-> +         different frequency. The timings are calculated based on DT memory
-> +         information.
+> +Required properties:
+> +- compatible:          "raydium,rm67191"
+> +- reg:                 virtual channel for MIPI-DSI protocol
+> +                       must be <0>
+> +- dsi-lanes:           number of DSI lanes to be used
+> +                       must be <3> or <4>
+> +- port:                input port node with endpoint definition as
+> +                       defined in Documentation/devicetree/bindings/graph.txt;
+> +                       the input port should be connected to a MIPI-DSI device
+> +                       driver
 > +
+> +Optional properties:
+> +- reset-gpio:          a GPIO spec for the RST_B GPIO pin
+
+reset-gpios (with the s in the end) is the recommendation.
+
+> +- display-timings:     timings for the connected panel according to [1]
+
+This is not needed.
+
+> +- video-mode:          0 - burst-mode
+> +                       1 - non-burst with sync event
+> +                       2 - non-burst with sync pulse
 > +
->  if SAMSUNG_MC
+> +[1]: Documentation/devicetree/bindings/display/display-timing.txt
 
-Why this is outside of SAMSUNG_MC?
+This path does not exist.
 
-Best regards,
-Krzysztof
+Also, could you try to align these bindings with the one from raydium,rm68200?
+
+There are power-supply and backlight optional properties there, which
+seem useful.
+
+> +
+> +Example:
+> +
+> +       panel@0 {
+> +               compatible = "raydium,rm67191";
+> +               reg = <0>;
+> +               pinctrl-0 = <&pinctrl_mipi_dsi_0_1_en>;
+
+You should also pass pinctrl-names = "default"; if you use pinctrl-0.
+
+> +               reset-gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+
+Should be active low.
