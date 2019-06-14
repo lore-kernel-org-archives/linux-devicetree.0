@@ -1,7 +1,7 @@
 From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v2 4/5] arm64: Add support for arch_memremap_ro()
-Date: Fri, 14 Jun 2019 13:37:16 -0700
-Message-ID: <20190614203717.75479-5-swboyd@chromium.org>
+Subject: [PATCH v2 3/5] memremap: Add support for read-only memory mappings
+Date: Fri, 14 Jun 2019 13:37:15 -0700
+Message-ID: <20190614203717.75479-4-swboyd@chromium.org>
 References: <20190614203717.75479-1-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,9 +12,12 @@ To: Dan Williams <dan.j.williams@intel.com>
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Pass in PAGE_KERNEL_RO to the underlying IO mapping mechanism to get a
-read-only mapping for the MEMREMAP_RO type of memory mappings that
-memremap() supports.
+Sometimes we have memories that are supposed to be read-only, but when
+we map these regions the best we can do is map them as write-back with
+MEMREMAP_WB. Introduce a read-only memory mapping (MEMREMAP_RO) that
+allows us to map reserved memory regions as read-only. This way, we're
+less likely to see these special memory regions become corrupted by
+stray writes to them.
 
 Cc: Evan Green <evgreen@chromium.org>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -24,23 +27,63 @@ Cc: Will Deacon <will.deacon@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- arch/arm64/include/asm/io.h | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/io.h |  1 +
+ kernel/iomem.c     | 15 +++++++++++++--
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-index b807cb9b517d..cc33f4c8647b 100644
---- a/arch/arm64/include/asm/io.h
-+++ b/arch/arm64/include/asm/io.h
-@@ -183,6 +183,7 @@ extern void __iomem *ioremap_cache(phys_addr_t phys_addr, size_t size);
- #define ioremap_nocache(addr, size)	__ioremap((addr), (size), __pgprot(PROT_DEVICE_nGnRE))
- #define ioremap_wc(addr, size)		__ioremap((addr), (size), __pgprot(PROT_NORMAL_NC))
- #define ioremap_wt(addr, size)		__ioremap((addr), (size), __pgprot(PROT_DEVICE_nGnRE))
-+#define arch_memremap_ro(addr, size)	__ioremap((addr), (size), PAGE_KERNEL_RO)
- #define iounmap				__iounmap
+diff --git a/include/linux/io.h b/include/linux/io.h
+index 32e30e8fb9db..16c7f4498869 100644
+--- a/include/linux/io.h
++++ b/include/linux/io.h
+@@ -159,6 +159,7 @@ enum {
+ 	MEMREMAP_WC = 1 << 2,
+ 	MEMREMAP_ENC = 1 << 3,
+ 	MEMREMAP_DEC = 1 << 4,
++	MEMREMAP_RO = 1 << 5,
+ };
  
- /*
+ void *memremap(resource_size_t offset, size_t size, unsigned long flags);
+diff --git a/kernel/iomem.c b/kernel/iomem.c
+index 93c264444510..10d5ef0ff09e 100644
+--- a/kernel/iomem.c
++++ b/kernel/iomem.c
+@@ -19,6 +19,13 @@ static void *arch_memremap_wb(resource_size_t offset, unsigned long size)
+ }
+ #endif
+ 
++#ifndef arch_memremap_ro
++static void *arch_memremap_ro(resource_size_t offset, unsigned long size)
++{
++	return NULL;
++}
++#endif
++
+ #ifndef arch_memremap_can_ram_remap
+ static bool arch_memremap_can_ram_remap(resource_size_t offset, size_t size,
+ 					unsigned long flags)
+@@ -84,7 +91,10 @@ void *memremap(resource_size_t offset, size_t size, unsigned long flags)
+ 	}
+ 
+ 	/* Try all mapping types requested until one returns non-NULL */
+-	if (flags & MEMREMAP_WB) {
++	if ((flags & MEMREMAP_RO) && is_ram != REGION_INTERSECTS)
++		addr = arch_memremap_ro(offset, size);
++
++	if (!addr && (flags & MEMREMAP_WB)) {
+ 		/*
+ 		 * MEMREMAP_WB is special in that it can be satisfied
+ 		 * from the direct map.  Some archs depend on the
+@@ -103,7 +113,8 @@ void *memremap(resource_size_t offset, size_t size, unsigned long flags)
+ 	 * address mapping.  Enforce that this mapping is not aliasing
+ 	 * System RAM.
+ 	 */
+-	if (!addr && is_ram == REGION_INTERSECTS && flags != MEMREMAP_WB) {
++	if (!addr && is_ram == REGION_INTERSECTS &&
++	    (flags != MEMREMAP_WB || flags != MEMREMAP_RO)) {
+ 		WARN_ONCE(1, "memremap attempted on ram %pa size: %#lx\n",
+ 				&offset, (unsigned long) size);
+ 		return NULL;
 -- 
 Sent by a computer through tubes
