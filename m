@@ -1,57 +1,54 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] arm: dts: add ARM Mali GPU node for Odroid XU3
-Date: Fri, 14 Jun 2019 14:36:45 -0600
-Message-ID: <CAL_JsqJjqCRU2a9sfMimTJoMQnR6CjqAqjHRAxyaebWAad299g@mail.gmail.com>
-References: <20190614203144.3850-1-joseph.kogut@gmail.com>
- <20190614203144.3850-2-joseph.kogut@gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH v2 0/5] Read-only memremap()
+Date: Fri, 14 Jun 2019 13:37:12 -0700
+Message-ID: <20190614203717.75479-1-swboyd@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190614203144.3850-2-joseph.kogut@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Joseph Kogut <joseph.kogut@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMTQsIDIwMTkgYXQgMjozMSBQTSBKb3NlcGggS29ndXQgPGpvc2VwaC5rb2d1
-dEBnbWFpbC5jb20+IHdyb3RlOgo+Cj4gQWRkIGRldmljZSB0cmVlIG5vZGUgZm9yIG1hbGkgZ3B1
-IG9uIE9kcm9pZCBYVTMgU29Dcy4KPgo+IFNpZ25lZC1vZmYtYnk6IEpvc2VwaCBLb2d1dCA8am9z
-ZXBoLmtvZ3V0QGdtYWlsLmNvbT4KPiAtLS0KPiAgLi4uL2Jvb3QvZHRzL2V4eW5vczU0MjItb2Ry
-b2lkeHUzLWNvbW1vbi5kdHNpICB8IDE4ICsrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hh
-bmdlZCwgMTggaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2V4eW5vczU0MjItb2Ryb2lkeHUzLWNvbW1vbi5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5
-bm9zNTQyMi1vZHJvaWR4dTMtY29tbW9uLmR0c2kKPiBpbmRleCA5M2E0OGYyZGRhNDkuLjFmMmFl
-MTlkMDFhZiAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIyLW9kcm9p
-ZHh1My1jb21tb24uZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjItb2Ry
-b2lkeHUzLWNvbW1vbi5kdHNpCj4gQEAgLTQ4LDYgKzQ4LDI0IEBACj4gICAgICAgICAgICAgICAg
-IGNvb2xpbmctbGV2ZWxzID0gPDAgMTMwIDE3MCAyMzA+Owo+ICAgICAgICAgfTsKPgo+ICsgICAg
-ICAgZ3B1OiBncHVAMTE4MDAwMDAgewo+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInNh
-bXN1bmcsZXh5bm9zLW1hbGkiLCAiYXJtLG1hbGktdDYyOCI7Cj4gKyAgICAgICAgICAgICAgIHJl
-ZyA9IDwweDExODAwMDAwIDB4NTAwMD47Cj4gKyAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8
-MCAxMTcgMD4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MCAyMTkgMD4sCj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICA8MCA3NCAgMD47Cj4gKyAgICAgICAgICAgICAgIGlu
-dGVycnVwdC1uYW1lcyA9ICJncHUiLCAiam9iIiwgIm1tdSI7CgpQbGVhc2UgdXNlIHRoZSBvcmRl
-ciBkZWZpbmVkIGluIHRoZSBiaW5kaW5nIGRvYy4KCj4gKyAgICAgICAgICAgICAgIGNsb2NrcyA9
-IDwmY2xvY2sgQ0xLX0czRD4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIDwmY2xvY2sgQ0xL
-X0RPVVRfQUNMS19HM0Q+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICA8JmNsb2NrIENMS19G
-T1VUX1ZQTEw+OwoKVGhlIGJpbmRpbmcgZG9jIHNheXMgYSBzaW5nbGUgY2xvY2suCgo+ICsgICAg
-ICAgICAgICAgICBtYWxpLXN1cHBseSA9IDwmYnVjazRfcmVnPjsKPiArICAgICAgICAgICAgICAg
-b3BlcmF0aW5nLXBvaW50cyA9IDwKClRoZSBiaW5kaW5nIGRvYyBzYXlzIG9wZXJhdGluZy1wb2lu
-dHMtdjIuCgo+ICsgICAgICAgICAgICAgICAgICAgICAgIC8qIEtIeiAgdVYgICAqLwo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIDYwMDAwMCAgMTE1MDAwMAo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIDE3NzAwMCAgODEyNTAwCj4gKyAgICAgICAgICAgICAgID47Cj4gKyAgICAgICB9Owo+ICsK
-PiAgICAgICAgIHRoZXJtYWwtem9uZXMgewo+ICAgICAgICAgICAgICAgICBjcHUwX3RoZXJtYWw6
-IGNwdTAtdGhlcm1hbCB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgdGhlcm1hbC1zZW5zb3Jz
-ID0gPCZ0bXVfY3B1MCAwPjsKPiAtLQo+IDIuMjIuMAo+Cl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+This patch series implements a read-only version of memremap() via
+a new MEMREMAP_RO flag. If this is passed in the mapping call, we'll
+try to map the memory region as read-only if it doesn't intersect
+with an existing mapping. Otherwise, we'll try to fallback to other
+flags to try to map the memory that way.
+
+The main use case I have is to map the command-db memory region on
+Qualcomm devices with a read-only mapping. It's already a const marked
+pointer and the API returns const pointers as well, so this series makes
+sure that even stray writes can't modify the memory. To get there we
+introduce a devm version of memremap() for a reserved memory region, add
+a memremap() flag, and implement support for that flag on arm64.
+
+Changes from v1:
+ * Picked up tags and rebased to v5.2-rc3
+
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+
+Stephen Boyd (5):
+  reserved_mem: Add a devm_memremap_reserved_mem() API
+  soc: qcom: cmd-db: Migrate to devm_memremap_reserved_mem()
+  memremap: Add support for read-only memory mappings
+  arm64: Add support for arch_memremap_ro()
+  soc: qcom: cmd-db: Map with read-only mappings
+
+ arch/arm64/include/asm/io.h     |  1 +
+ drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
+ drivers/soc/qcom/cmd-db.c       | 14 +++-------
+ include/linux/io.h              |  1 +
+ include/linux/of_reserved_mem.h |  6 +++++
+ kernel/iomem.c                  | 15 +++++++++--
+ 6 files changed, 70 insertions(+), 12 deletions(-)
+
+
+base-commit: f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a
+-- 
+Sent by a computer through tubes
