@@ -1,79 +1,89 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: display: panel: Add support for Raydium
- RM67191 panel
-Date: Fri, 14 Jun 2019 09:59:54 -0300
-Message-ID: <CAOMZO5AMBr0TZip_PRBRPkMZ-d-kVeEOB4-rMTtcfcYtjLrLqw@mail.gmail.com>
-References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com> <1560513063-24995-2-git-send-email-robert.chiras@nxp.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones
+ conflict in rk3399.dtsi
+Date: Fri, 14 Jun 2019 15:03:52 +0200
+Message-ID: <55b9018e-672e-522b-d0a0-c5655be0f353@linaro.org>
+References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
+ <5188064.YWmxIpmbGp@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560513063-24995-2-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <5188064.YWmxIpmbGp@phil>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-kernel@vger.kernel.org, edubezval@gmail.com, manivannan.sadhasivam@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Emil Renner Berthing <kernel@esmil.dk>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infr>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 8:53 AM Robert Chiras <robert.chiras@nxp.com> wrote:
->
-> Add dt-bindings documentation for Raydium RM67191 DSI panel.
->
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> ---
->  .../bindings/display/panel/raydium,rm67191.txt     | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
->
-> diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
-> new file mode 100644
-> index 0000000..5a6268d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
-> @@ -0,0 +1,42 @@
-> +Raydium RM67171 OLED LCD panel with MIPI-DSI protocol
-> +
-> +Required properties:
-> +- compatible:          "raydium,rm67191"
-> +- reg:                 virtual channel for MIPI-DSI protocol
-> +                       must be <0>
-> +- dsi-lanes:           number of DSI lanes to be used
-> +                       must be <3> or <4>
-> +- port:                input port node with endpoint definition as
-> +                       defined in Documentation/devicetree/bindings/graph.txt;
-> +                       the input port should be connected to a MIPI-DSI device
-> +                       driver
-> +
-> +Optional properties:
-> +- reset-gpio:          a GPIO spec for the RST_B GPIO pin
+On 14/06/2019 11:35, Heiko Stuebner wrote:
+> Hi Daniel,
+> 
+> Am Dienstag, 4. Juni 2019, 18:57:57 CEST schrieb Daniel Lezcano:
+>> Currently the common thermal zones definitions for the rk3399 assumes
+>> multiple thermal zones are supported by the governors. This is not the
+>> case and each thermal zone has its own governor instance acting
+>> individually without collaboration with other governors.
+>>
+>> As the cooling device for the CPU and the GPU thermal zones is the
+>> same, each governors take different decisions for the same cooling
+>> device leading to conflicting instructions and an erratic behavior.
+>>
+>> As the cooling-maps is about to become an optional property, let's
+>> remove the cpu cooling device map from the GPU thermal zone.
+>>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> ---
+>>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 ---------
+>>  1 file changed, 9 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> index 196ac9b78076..e1357e0f60f7 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> @@ -821,15 +821,6 @@
+>>  					type = "critical";
+>>  				};
+>>  			};
+>> -
+>> -			cooling-maps {
+>> -				map0 {
+>> -					trip = <&gpu_alert0>;
+>> -					cooling-device =
+>> -						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> -						<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>> -				};
+>> -			};
+>>  		};
+>>  	};
+> 
+> my knowledge of the thermal framework is not that big, but what about the
+> rk3399-devices which further detail the cooling-maps like rk3399-gru-kevin
+> and the rk3399-nanopc-t4 with its fan-handling in the cooling-maps?
 
-reset-gpios (with the s in the end) is the recommendation.
+The rk3399-gru-kevin is correct.
 
-> +- display-timings:     timings for the connected panel according to [1]
+The rk3399-nanopc-t4 is not correct because the cpu and the gpu are
+sharing the same cooling device (the fan). There are different
+configurations:
 
-This is not needed.
+1. The cpu cooling device for the CPU and the fan for the GPU
 
-> +- video-mode:          0 - burst-mode
-> +                       1 - non-burst with sync event
-> +                       2 - non-burst with sync pulse
-> +
-> +[1]: Documentation/devicetree/bindings/display/display-timing.txt
+2. Different trip points on the CPU thermal zone, eg. one to for the CPU
+cooling device and another one for the fan.
 
-This path does not exist.
+There are some variant for the above. If this board is not on battery,
+you may want to give priority to the throughput, so activate the fan
+first and then cool down the CPU. Or if you are on battery, you may want
+to invert the trip points.
 
-Also, could you try to align these bindings with the one from raydium,rm68200?
+In any case, it is not possible to share the same cooling device for
+different thermal zones.
 
-There are power-supply and backlight optional properties there, which
-seem useful.
 
-> +
-> +Example:
-> +
-> +       panel@0 {
-> +               compatible = "raydium,rm67191";
-> +               reg = <0>;
-> +               pinctrl-0 = <&pinctrl_mipi_dsi_0_1_en>;
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-You should also pass pinctrl-names = "default"; if you use pinctrl-0.
-
-> +               reset-gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
-
-Should be active low.
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
