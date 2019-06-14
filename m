@@ -1,58 +1,57 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v2 2/5] soc: qcom: cmd-db: Migrate to devm_memremap_reserved_mem()
-Date: Fri, 14 Jun 2019 13:37:14 -0700
-Message-ID: <20190614203717.75479-3-swboyd@chromium.org>
-References: <20190614203717.75479-1-swboyd@chromium.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] arm: dts: add ARM Mali GPU node for Odroid XU3
+Date: Fri, 14 Jun 2019 14:36:45 -0600
+Message-ID: <CAL_JsqJjqCRU2a9sfMimTJoMQnR6CjqAqjHRAxyaebWAad299g@mail.gmail.com>
+References: <20190614203144.3850-1-joseph.kogut@gmail.com>
+ <20190614203144.3850-2-joseph.kogut@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614203717.75479-1-swboyd@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190614203144.3850-2-joseph.kogut@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Joseph Kogut <joseph.kogut@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This gets rid of some duplicate code, and also makes the reserved memory
-region show up as 'cmd-db' memory in /proc/iomem.
-
-Cc: Evan Green <evgreen@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/soc/qcom/cmd-db.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-index f6c3d17b05c7..10a34d26b753 100644
---- a/drivers/soc/qcom/cmd-db.c
-+++ b/drivers/soc/qcom/cmd-db.c
-@@ -238,18 +238,11 @@ EXPORT_SYMBOL(cmd_db_read_slave_id);
- 
- static int cmd_db_dev_probe(struct platform_device *pdev)
- {
--	struct reserved_mem *rmem;
- 	int ret = 0;
- 
--	rmem = of_reserved_mem_lookup(pdev->dev.of_node);
--	if (!rmem) {
--		dev_err(&pdev->dev, "failed to acquire memory region\n");
--		return -EINVAL;
--	}
--
--	cmd_db_header = memremap(rmem->base, rmem->size, MEMREMAP_WB);
--	if (!cmd_db_header) {
--		ret = -ENOMEM;
-+	cmd_db_header = devm_memremap_reserved_mem(&pdev->dev, MEMREMAP_WB);
-+	if (IS_ERR(cmd_db_header)) {
-+		ret = PTR_ERR(cmd_db_header);
- 		cmd_db_header = NULL;
- 		return ret;
- 	}
--- 
-Sent by a computer through tubes
+T24gRnJpLCBKdW4gMTQsIDIwMTkgYXQgMjozMSBQTSBKb3NlcGggS29ndXQgPGpvc2VwaC5rb2d1
+dEBnbWFpbC5jb20+IHdyb3RlOgo+Cj4gQWRkIGRldmljZSB0cmVlIG5vZGUgZm9yIG1hbGkgZ3B1
+IG9uIE9kcm9pZCBYVTMgU29Dcy4KPgo+IFNpZ25lZC1vZmYtYnk6IEpvc2VwaCBLb2d1dCA8am9z
+ZXBoLmtvZ3V0QGdtYWlsLmNvbT4KPiAtLS0KPiAgLi4uL2Jvb3QvZHRzL2V4eW5vczU0MjItb2Ry
+b2lkeHUzLWNvbW1vbi5kdHNpICB8IDE4ICsrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hh
+bmdlZCwgMTggaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L2V4eW5vczU0MjItb2Ryb2lkeHUzLWNvbW1vbi5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5
+bm9zNTQyMi1vZHJvaWR4dTMtY29tbW9uLmR0c2kKPiBpbmRleCA5M2E0OGYyZGRhNDkuLjFmMmFl
+MTlkMDFhZiAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIyLW9kcm9p
+ZHh1My1jb21tb24uZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjItb2Ry
+b2lkeHUzLWNvbW1vbi5kdHNpCj4gQEAgLTQ4LDYgKzQ4LDI0IEBACj4gICAgICAgICAgICAgICAg
+IGNvb2xpbmctbGV2ZWxzID0gPDAgMTMwIDE3MCAyMzA+Owo+ICAgICAgICAgfTsKPgo+ICsgICAg
+ICAgZ3B1OiBncHVAMTE4MDAwMDAgewo+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInNh
+bXN1bmcsZXh5bm9zLW1hbGkiLCAiYXJtLG1hbGktdDYyOCI7Cj4gKyAgICAgICAgICAgICAgIHJl
+ZyA9IDwweDExODAwMDAwIDB4NTAwMD47Cj4gKyAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8
+MCAxMTcgMD4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MCAyMTkgMD4sCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICA8MCA3NCAgMD47Cj4gKyAgICAgICAgICAgICAgIGlu
+dGVycnVwdC1uYW1lcyA9ICJncHUiLCAiam9iIiwgIm1tdSI7CgpQbGVhc2UgdXNlIHRoZSBvcmRl
+ciBkZWZpbmVkIGluIHRoZSBiaW5kaW5nIGRvYy4KCj4gKyAgICAgICAgICAgICAgIGNsb2NrcyA9
+IDwmY2xvY2sgQ0xLX0czRD4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIDwmY2xvY2sgQ0xL
+X0RPVVRfQUNMS19HM0Q+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICA8JmNsb2NrIENMS19G
+T1VUX1ZQTEw+OwoKVGhlIGJpbmRpbmcgZG9jIHNheXMgYSBzaW5nbGUgY2xvY2suCgo+ICsgICAg
+ICAgICAgICAgICBtYWxpLXN1cHBseSA9IDwmYnVjazRfcmVnPjsKPiArICAgICAgICAgICAgICAg
+b3BlcmF0aW5nLXBvaW50cyA9IDwKClRoZSBiaW5kaW5nIGRvYyBzYXlzIG9wZXJhdGluZy1wb2lu
+dHMtdjIuCgo+ICsgICAgICAgICAgICAgICAgICAgICAgIC8qIEtIeiAgdVYgICAqLwo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgIDYwMDAwMCAgMTE1MDAwMAo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIDE3NzAwMCAgODEyNTAwCj4gKyAgICAgICAgICAgICAgID47Cj4gKyAgICAgICB9Owo+ICsK
+PiAgICAgICAgIHRoZXJtYWwtem9uZXMgewo+ICAgICAgICAgICAgICAgICBjcHUwX3RoZXJtYWw6
+IGNwdTAtdGhlcm1hbCB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgdGhlcm1hbC1zZW5zb3Jz
+ID0gPCZ0bXVfY3B1MCAwPjsKPiAtLQo+IDIuMjIuMAo+Cl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
