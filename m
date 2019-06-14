@@ -1,59 +1,83 @@
-From: James Morse <james.morse@arm.com>
+From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Date: Fri, 14 Jun 2019 11:49:42 +0100
-Message-ID: <fb5c11b4-6fd1-830b-7a3a-ccf4b31ec337@arm.com>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <3129ed19-0259-d227-0cff-e9f165ce5964@arm.com>
- <4514bfa2-68b2-2074-b817-2f5037650c4e@amazon.com>
- <fdc3b458-96eb-1734-c294-2463f37f2244@arm.com>
+Date: Fri, 14 Jun 2019 12:53:01 +0200
+Message-ID: <20190614105301.GB2586@zn.tnic>
+References: <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+ <20190608090556.GA32464@zn.tnic>
+ <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+ <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+ <20190611115651.GD31772@zn.tnic>
+ <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+ <20190612034813.GA32652@zn.tnic>
+ <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+ <20190612104238.GG32652@zn.tnic>
+ <2a53690aa81a406b9a6290f70e47470d0f698f00.camel@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fdc3b458-96eb-1734-c294-2463f37f2244@arm.com>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <2a53690aa81a406b9a6290f70e47470d0f698f00.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Hawa, Hanna" <hhhawa@amazon.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, linux-edac@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: James Morse <james.morse@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shenhar, Talel" <talel@amazon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Hanoch, Uri
 List-Id: devicetree@vger.kernel.org
 
-Hi Hawa,
+Reply part 2.
 
-On 13/06/2019 18:05, James Morse wrote:
-> On 11/06/2019 20:56, Hawa, Hanna wrote:
->> James Morse wrote:
->>> Hawa, Hanna wrote:
->>>> +        if (cluster != last_cluster) {
->>>> +            smp_call_function_single(cpu, al_a57_edac_l2merrsr,
->>>> +                         edac_dev, 0);
->>>> +            last_cluster = cluster;
->>>> +        }
->>> Here you depend on the CPUs being listed in cluster-order in the DT. I'm fairly sure the
->>> numbering is arbitrary: On my Juno 0,3,4,5 are the A53 cluster, and 1,2 are the A57
->>> cluster.
->>>
->>> If 1,3,5 were cluster-a and 2,4,6 were cluster-b, you would end up calling
->>> al_a57_edac_l2merrsr() for each cpu. As you don't wait, they could race.
->>>
->>> If you can get a cpu-mask for each cluster, smp_call_function_any() would to the
->>> pick-one-online-cpu work for you.
+On Thu, Jun 13, 2019 at 09:54:18AM +1000, Benjamin Herrenschmidt wrote:
+> Why ? Because one or two historical drivers mix MC and PCI then "it
+> makes sense" to do that for everybody ?
 
->> Again, I rely on that it's alpine SoC specific driver.
+Because it was like that. And now all of a sudden ARM wants something
+different. So we must at least talk about it before we do it, right?
 
-An example of where this goes wrong is kexec:
-If you offline CPU0, then kexec, the new kernel will start up on the lowest numbered
-online CPU, which won't be zero. But the new kernel will call it CPU0.
+Also, I don't know if you've noticed but RAS "architecture" on Linux is
+still a big WIP, to put it mildly. So before we do anything, we should
+have at least some rough idea of where it is all going to.
 
-Kdump is even better, as it starts up on whichever CPU called panic(), and calls it CPU0.
+> And then you have 20 platforms and 20 drivers, with 50% or more code
+> duplication, bugs fixed in one and not the other, gratuituous behaviour
+> differences to confuse users etc... No. that doesn't make sense.
 
+No different on ARM if you have a memory controller IP which is roughly
+the same IP but different vendors integrate it and they each tweak it
+a bit in their own way (registers, ECC support, etc) and you get an
+EDAC MC driver from every vendor and they all don't share the basic
+functionality.
 
-Thanks,
+> I have no idea what "the DT argument" is, and that's from the guy who
+> created the FDT....
+> 
+> I have difficulties understanding how you cannot see that having re-
+> usable single drivers for a single piece of HW makes sense. If anything
+> in term of avoiding duplication, bitrot, bugs being fixed in some and
+> not others, etc etc... It also means more eyes on a given piece of code
+> which is a good thing.
+> 
+> Also you "have heard more than enough" is again a sign that a whole lot
+> of people are trying to tell you something that you seem to refuse to
+> hear.
 
-James
+Hmm, I think I'm hearing it. But not without good arguments for why
+we're going to do it. I believe that became clear so far..
 
+> Whatever that "DT argument" is, did you just ignore it or had
+> some good and solid arguments of your own to refute it ?
 
->> How can I get cpu-mask for each cluster? from DT?
+I don't care about refuting it or not - all I care about is getting good
+arguments for why we should do this driver-per-IP-block thing. EDAC was
+was ok so far - I wasn't going to change it just because someone is
+sending me drivers per-IP block and not selling me the idea properly.
 
-> Its not cluster you want, its the L2. Cacheinfo has this for online CPUs, and you're
-> already holding the cpus_read_lock().
+And AFAIR I haven't heard a single good argument trying to convince me
+why it should be done this way. Only after this thread started and we
+started poking at it, I got some good arguments.
+
+So enough wasting time, I think we can try the per-IP things and see
+where it would get us.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
