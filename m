@@ -1,29 +1,52 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on veyron
-Date: Fri, 14 Jun 2019 11:38:03 +0200
-Message-ID: <8216847.YA7l6QMt1s@phil>
-References: <20190610235144.34261-1-mka@chromium.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii
+ performance.
+Date: Fri, 14 Jun 2019 11:39:55 +0200
+Message-ID: <4025583.lUYsg5j2zl@phil>
+References: <20190607123731.8737-1-pgwipeout@gmail.com>
+ <1559912295.22520.0@gmail.com>
+ <CAMdYzYorvWr1YhmFKaMQUCditjop5AZp4d1tO79XsVr7m7HrMw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610235144.34261-1-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAMdYzYorvWr1YhmFKaMQUCditjop5AZp4d1tO79XsVr7m7HrMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 11. Juni 2019, 01:51:44 CEST schrieb Matthias Kaehlcke:
-> From: Doug Anderson <dianders@chromium.org>
+Am Samstag, 8. Juni 2019, 01:07:48 CEST schrieb Peter Geis:
+> On Fri, Jun 7, 2019 at 8:58 AM Leonidas P. Papadakos
+> <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >
+> >
+> > I'll test on my board, but if in the end it does end up being a change
+> > to both tx and rxpbl then we can replce the 2 tx/rxpbl options with
+> > one, as far as I know:
+> >
+> > snps,pbl = <0x4>;
+> >
+> >
 > 
-> This enables wake up on Bluetooth activity when the device is
-> suspended. The BT_HOST_WAKE signal is only connected on devices
-> with BT module that are connected through UART.
+> The big change was actually snps,aal.
+> As per the TRM, DMA channels not address aligned have severe
+> limitations, if they work at all.
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Setting the DMA ops as address aligned fixed my 30mbps TX issue when
+> combined with your snps,txpbl = <0x4>.
 
-applied for 5.3
+same as with the other patch: I've lost track of what matters,
+so please resend the ones that matter with appropriate
+Tested-by, Reviewed-by tags by involved people.
 
 Thanks
 Heiko
