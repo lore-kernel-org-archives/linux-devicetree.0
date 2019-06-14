@@ -1,79 +1,102 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v4 0/7] Allwinner H6 SPDIF support
-Date: Fri, 14 Jun 2019 10:29:57 +0200
-Message-ID: <CAJiuCcfUhBxEr=o7VVpPROQZadQh7z1QC0SkWSYt-53Sj3H2qw@mail.gmail.com>
-References: <20190527200627.8635-1-peron.clem@gmail.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH v8 11/12] soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
+Date: Fri, 14 Jun 2019 16:31:26 +0800
+Message-ID: <CANMq1KDWOr8f6nx7CS9Z_0OCwZFSTxaAT=333xXE-R5FJfEyfg@mail.gmail.com>
+References: <20190612085349.21243-1-bibby.hsieh@mediatek.com> <20190612085349.21243-12-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190527200627.8635-1-peron.clem@gmail.com>
+In-Reply-To: <20190612085349.21243-12-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Jagan Teki <jagan@amarulasolutions.com>
-Cc: Linux-ALSA <alsa-devel@alsa-project.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Jun 12, 2019 at 4:53 PM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
+>
+> GCE cannot know the register base address, this function
+> can help cmdq client to get the cmdq_client_reg structure.
+>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 24 ++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 20 ++++++++++++++++++++
+>  2 files changed, 44 insertions(+)
+>
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 70ad4d806fac..fac4d33fd520 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -27,6 +27,30 @@ struct cmdq_instruction {
+>         u8 op;
+>  };
+>
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +                           struct cmdq_client_reg *client_reg, int idx)
+> +{
+> +       struct of_phandle_args spec;
+> +
+> +       if (!client_reg)
+> +               return -EINVAL;
+> +
+> +       if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
+> +                                      "#subsys-cells", idx, &spec)) {
+> +               dev_err(dev, "can't parse gce-client-reg property (%d)", idx);
+> +
+> +               return -EINVAL;
+> +       }
+> +
+> +       client_reg->subsys = spec.args[0];
+> +       client_reg->offset = spec.args[1];
+> +       client_reg->size = spec.args[2];
+> +       of_node_put(spec.np);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>         struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index a345870a6d10..2e2a2274c231 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -15,6 +15,12 @@
+>
+>  struct cmdq_pkt;
+>
+> +struct cmdq_client_reg {
+> +       u8 subsys;
+> +       u16 offset;
+> +       u16 size;
+> +};
+> +
+>  struct cmdq_client {
+>         spinlock_t lock;
+>         u32 pkt_cnt;
+> @@ -142,4 +148,18 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+>   */
+>  int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+>
+> +/**
+> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device node of CMDQ client
 
-On Mon, 27 May 2019 at 22:10, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
-> wrote:
->
-> *H6 DMA support IS REQUIRED*
+Minor nit: this line is over 80 chars.
 
-DMA has been merged, so this series can be merge when ASoC maintainers
-have reviewed it.
-
-Regards,
-Cl=C3=A9ment
-
->
-> Allwinner H6 SoC has a SPDIF controller called One Wire Audio (OWA) which
-> is different from the previous H3 generation and not compatible.
->
-> Difference are an increase of fifo sizes, some memory mapping are differe=
-nt
-> and there is now the possibility to output the master clock on a pin.
->
-> Actually all these features are unused and only a bit for flushing the TX
-> fifo is required.
->
-> Also this series requires the DMA working on H6, a first version has been
-> submitted by Jernej =C5=A0krabec[1] but has not been accepted yet.
->
-> [1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=3D=
-89011
->
-> Changes since v3:
->  - rename reg_fctl_ftx to val_fctl_ftx
->  - rebase this series on sound-next
->  - fix dt-bindings due to change in sound-next
->  - change node name sound_spdif to sound-spdif
->
-> Changes since v2:
->  - Split quirks and H6 support patch
->  - Add specific section for quirks comment
->
-> Changes since v1:
->  - Remove H3 compatible
->  - Add TX fifo bit flush quirks
->  - Add H6 bindings in SPDIF driver
->
-> Cl=C3=A9ment P=C3=A9ron (7):
->   dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible
->   ASoC: sun4i-spdif: Move quirks to the top
->   ASoC: sun4i-spdif: Add TX fifo bit flush quirks
->   ASoC: sun4i-spdif: Add support for H6 SoC
->   arm64: dts: allwinner: Add SPDIF node for Allwinner H6
->   arm64: dts: allwinner: h6: Enable SPDIF for Beelink GS1
->   arm64: defconfig: Enable Sun4i SPDIF module
->
->  .../sound/allwinner,sun4i-a10-spdif.yaml      |  1 +
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 38 ++++++++++++++
->  arch/arm64/configs/defconfig                  |  1 +
->  sound/soc/sunxi/sun4i-spdif.c                 | 49 ++++++++++++++++---
->  5 files changed, 87 insertions(+), 6 deletions(-)
->
+> + * @dev:       device of CMDQ mailbox clienti
+> + * @client_reg: CMDQ client reg pointer
+> + * @idx:       the index of desired reg
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + *
+> + * Help CMDQ client pasing the cmdq client reg
+> + * from the device node of CMDQ client.
+> + */
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +                           struct cmdq_client_reg *client_reg, int idx);
+> +
+>  #endif /* __MTK_CMDQ_H__ */
 > --
-> 2.20.1
+> 2.18.0
 >
