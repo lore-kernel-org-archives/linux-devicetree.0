@@ -1,54 +1,142 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v2 0/5] Read-only memremap()
-Date: Fri, 14 Jun 2019 13:37:12 -0700
-Message-ID: <20190614203717.75479-1-swboyd@chromium.org>
+From: Christian Lamparter <chunkeey@gmail.com>
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+Date: Fri, 14 Jun 2019 22:41:15 +0200
+Message-ID: <1981742.H2rzviYcjI@debian64>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org> <4056907.DrFocau5Ix@debian64> <1a00e8c8-d07c-3b02-8ea5-6d5f3e2c7b1a@codeaurora.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1a00e8c8-d07c-3b02-8ea5-6d5f3e2c7b1a@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, agross@kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?utf-8?B?0J/QsNCy0LXQuw==?= <be.dissent@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series implements a read-only version of memremap() via
-a new MEMREMAP_RO flag. If this is passed in the mapping call, we'll
-try to map the memory region as read-only if it doesn't intersect
-with an existing mapping. Otherwise, we'll try to fallback to other
-flags to try to map the memory that way.
+On Wednesday, June 12, 2019 11:48:48 AM CEST Sricharan R wrote:
+> Hi Christian,
+> 
+> On 6/10/2019 5:45 PM, Christian Lamparter wrote:
+> > On Monday, June 10, 2019 12:09:56 PM CEST Sricharan R wrote:
+> >> Hi Christian,
+> >>
+> >> On 6/6/2019 2:11 AM, Christian Lamparter wrote:
+> >>> On Wed, Jun 5, 2019 at 7:16 PM Sricharan R <sricharan@codeaurora.org> wrote:
+> >>>>
+> >>>> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+> >>>> CP01 evaluation board.
+> >>>>
+> >>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> >>>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> >>>> --- /dev/null
+> >>>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> >>>>
+> >>>> +       clocks {
+> >>>> +               sleep_clk: sleep_clk {
+> >>>> +                       compatible = "fixed-clock";
+> >>>> +                       clock-frequency = <32000>;
+> >>>> +                       #clock-cells = <0>;
+> >>>> +               };
+> >>>> +
+> >>> Recently-ish, we ran into an issue with the clock-frequency of the sleep_clk
+> >>> on older IPQ40XX (and IPQ806x) on the OpenWrt Github and ML.
+> >>> From what I know, the external "32KHz" crystals have 32768 Hz, but the QSDK
+> >>> declares them at 32000 Hz. Since you probably have access to the BOM and
+> >>> datasheets. Can you please confirm what's the real clock frequency for
+> >>> the IPQ6018.
+> >>> (And maybe also for the sleep_clk of the IPQ4018 as well?).
+> >>>
+> >>
+> >> What exactly is the issue that you faced ?
+> >> Looking in to the docs, it is <32000> only on ipq6018 and ipq40xx as well.
+> > 
+> > We need just a confirmation.
+> > 
+> > Then again, Currently the qcom-ipq4019.dtsi is using 32768 Hz.
+> > 
+> > |		sleep_clk: sleep_clk {
+> > |			compatible = "fixed-clock";
+> > |			clock-frequency = <32768>;
+> > |			#clock-cells = <0>;
+> > |		};
+> > 
+> > <https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/qcom-ipq4019.dtsi#L144>
+> > 
+> > Which makes sense, because all previous Qualcomm Atheros MIPS and the
+> > future IPQ8072 SoCs have been either using or deriving a 32768 Hz clock.
+> > 
+> > For example: The AR9344 derives the clock from the 25MHz/40MHz external
+> > oscillator. This is explained in "8.16.9 Derived RTC Clock (DERIVED_RTC_CLK)".
+> > Which mentions that the "32KHz" clock interval is 30.5 usec / 30.48 usec
+> > depending whenever the external reference crystal has 40MHz or 25MHz.
+> > (1/30.5usec = 32.7868852 kilohertz!). The QCA9558 datasheet says the same
+> > in "10.19.11 Derived RTC Clock". 
+> > 
+> > For IPQ8072: I point to the post by Sven Eckelmann on the OpenWrt ML:
+> > <http://lists.infradead.org/pipermail/openwrt-devel/2019-May/017131.html>
+> > "I was only able to verify for IPQ8072 that it had a 32.768 KHz
+> > sleep clock." 
+> > 
+> > So this is pretty much "why there is an issue", it's confusing.
+> > Is possible can you please look if there are (fixed) divisors values
+> > listed in the documentation or the registers and bits that the values
+> > are stored in? Because then we could just calculate it. 
+> > 
+> 
+> Really sorry for the confusion. So looking little more, SLEEP_CLK is derived
+> from an external 38.4MHZ crystal, it is 32.768 KHZ.
+That's really valuable information to have. Thank you!
 
-The main use case I have is to map the command-db memory region on
-Qualcomm devices with a read-only mapping. It's already a const marked
-pointer and the API returns const pointers as well, so this series makes
-sure that even stray writes can't modify the memory. To get there we
-introduce a devm version of memremap() for a reserved memory region, add
-a memremap() flag, and implement support for that flag on arm64.
+> Somehow the clk freq plan etc seems to mention them only as .032 MHZ and misses
+> out. That means i will correct the patch for 32768 and probably the
+> ipq8074.dtsi as well
 
-Changes from v1:
- * Picked up tags and rebased to v5.2-rc3
+Ok, there's one more issue that Paul found (at least with the IPQ4019),
+https://patchwork.ozlabs.org/patch/1099482
 
-Cc: Evan Green <evgreen@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
+it seems that the "sleep_clk" node in the qcom-ipq4019.dtsi is not used by
+the gcc-ipq4019.c clk driver. this causes both wifi rtc_clks and the usb sleep
+clks to dangle in the /sys/kernel/debug/clk/clk_summary (from a RT-AC58U)
 
-Stephen Boyd (5):
-  reserved_mem: Add a devm_memremap_reserved_mem() API
-  soc: qcom: cmd-db: Migrate to devm_memremap_reserved_mem()
-  memremap: Add support for read-only memory mappings
-  arm64: Add support for arch_memremap_ro()
-  soc: qcom: cmd-db: Map with read-only mappings
+   clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
+----------------------------------------------------------------------------------------
+ xo                                       9            9    48000000          0 0
+ [...]
+ sleep_clk                                1            1       32768          0 0  
+ gcc_wcss5g_rtc_clk                       1            1           0          0 0  
+ gcc_wcss2g_rtc_clk                       1            1           0          0 0  
+ gcc_usb3_sleep_clk                       1            1           0          0 0  
+ gcc_usb2_sleep_clk                       1            1           0          0 0  
 
- arch/arm64/include/asm/io.h     |  1 +
- drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
- drivers/soc/qcom/cmd-db.c       | 14 +++-------
- include/linux/io.h              |  1 +
- include/linux/of_reserved_mem.h |  6 +++++
- kernel/iomem.c                  | 15 +++++++++--
- 6 files changed, 70 insertions(+), 12 deletions(-)
+with his patch the /sys/kernel/debug/clk/clk_summary looks "better" 
 
+(something like this:)
 
-base-commit: f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a
--- 
-Sent by a computer through tubes
+   clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
+----------------------------------------------------------------------------------------
+ xo                                       9            9    48000000          0 0
+ [...] 
+ gcc_sleep_clk_src                        5            5       32000          0 0  
+    gcc_wcss5g_rtc_clk                    1            1       32000          0 0  
+    gcc_wcss2g_rtc_clk                    1            1       32000          0 0  
+    gcc_usb3_sleep_clk                    1            1       32000          0 0  
+    gcc_usb2_sleep_clk                    1            1       32000          0 0  
+
+but judging from your comment "SLEEP_CLK is derived from an
+external 38.4MHZ crystal" the gcc_sleep_clk_src / sleep_clk
+should have xo as the parent. so the ideal output should be:
+
+   clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
+----------------------------------------------------------------------------------------
+ xo                                      10           10    48000000          0 0
+ [...] 
+    gcc_sleep_clk                         5            5       32768          0 0  
+       gcc_wcss5g_rtc_clk                 1            1       32768          0 0  
+       gcc_wcss2g_rtc_clk                 1            1       32768          0 0  
+       gcc_usb3_sleep_clk                 1            1       32768          0 0  
+       gcc_usb2_sleep_clk                 1            1       32768          0 0  
+
+or am I missing/skipping over something important? 
+
+Regards,
+Christian
