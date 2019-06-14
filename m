@@ -1,69 +1,96 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] ARM: dts: exynos: Add PMU interrupt affinity to Exynos4 boards
-Date: Fri, 14 Jun 2019 16:26:40 +0200
-Message-ID: <1560522400-31086-1-git-send-email-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, notify@kernel.org
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones
+ conflict in rk3399.dtsi
+Date: Fri, 14 Jun 2019 16:30:13 +0200
+Message-ID: <9bf85c22-f1ba-3dbc-0b67-17e124484fa1@linaro.org>
+References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
+ <5188064.YWmxIpmbGp@phil> <55b9018e-672e-522b-d0a0-c5655be0f353@linaro.org>
+ <e5a4f850-27e0-cad3-04bd-6c004fca2b81@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e5a4f850-27e0-cad3-04bd-6c004fca2b81@arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>, "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>, Tony Xie <tony.xie@rock-chips.com>, Viresh Kumar <viresh.kumar@linaro.org>, Randy Li <ayaka@soulik.info>, linux-kernel@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>, dianders@chromium.org, edubezval@gmail.com, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Kukjin Kim <kgene@kernel.org>, manivannan.sadhasivam@linaro.org, Matthias Brugger <matthias.bgg@gmail.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, "moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Move SoC-specific PMU properties from exynos4.dtsi to respective SoC
-(4210 or 4412) so common DTSI would have only common properties.
-
-Define there also interrupt affinity to remove the boot warning message:
-
-    hw perfevents: no interrupt-affinity property for /pmu, guessing.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos4.dtsi    | 2 +-
- arch/arm/boot/dts/exynos4210.dtsi | 6 ++++++
- arch/arm/boot/dts/exynos4412.dtsi | 2 ++
- 3 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 36ccf227434d..dde27451faa8 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -54,7 +54,7 @@
- 	pmu: pmu {
- 		compatible = "arm,cortex-a9-pmu";
- 		interrupt-parent = <&combiner>;
--		interrupts = <2 2>, <3 2>;
-+		status = "disabled";
- 	};
- 
- 	soc: soc {
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index b491c345b2e8..ce29e026e226 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -461,6 +461,12 @@
- 		 <&clock CLK_MOUT_MIXER>, <&clock CLK_SCLK_MIXER>;
- };
- 
-+&pmu {
-+	interrupts = <2 2>, <3 2>;
-+	interrupt-affinity = <&cpu0>, <&cpu1>;
-+	status = "okay";
-+};
-+
- &pmu_system_controller {
- 	clock-names = "clkout0", "clkout1", "clkout2", "clkout3",
- 			"clkout4", "clkout8", "clkout9";
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-index e5c041ec0756..4a58b70df125 100644
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -737,6 +737,8 @@
- 
- &pmu {
- 	interrupts = <2 2>, <3 2>, <18 2>, <19 2>;
-+	interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	status = "okay";
- };
- 
- &pmu_system_controller {
--- 
-2.7.4
+T24gMTQvMDYvMjAxOSAxNjowMiwgUm9iaW4gTXVycGh5IHdyb3RlOgo+IE9uIDE0LzA2LzIwMTkg
+MTQ6MDMsIERhbmllbCBMZXpjYW5vIHdyb3RlOgo+PiBPbiAxNC8wNi8yMDE5IDExOjM1LCBIZWlr
+byBTdHVlYm5lciB3cm90ZToKPj4+IEhpIERhbmllbCwKPj4+Cj4+PiBBbSBEaWVuc3RhZywgNC4g
+SnVuaSAyMDE5LCAxODo1Nzo1NyBDRVNUIHNjaHJpZWIgRGFuaWVsIExlemNhbm86Cj4+Pj4gQ3Vy
+cmVudGx5IHRoZSBjb21tb24gdGhlcm1hbCB6b25lcyBkZWZpbml0aW9ucyBmb3IgdGhlIHJrMzM5
+OSBhc3N1bWVzCj4+Pj4gbXVsdGlwbGUgdGhlcm1hbCB6b25lcyBhcmUgc3VwcG9ydGVkIGJ5IHRo
+ZSBnb3Zlcm5vcnMuIFRoaXMgaXMgbm90IHRoZQo+Pj4+IGNhc2UgYW5kIGVhY2ggdGhlcm1hbCB6
+b25lIGhhcyBpdHMgb3duIGdvdmVybm9yIGluc3RhbmNlIGFjdGluZwo+Pj4+IGluZGl2aWR1YWxs
+eSB3aXRob3V0IGNvbGxhYm9yYXRpb24gd2l0aCBvdGhlciBnb3Zlcm5vcnMuCj4+Pj4KPj4+PiBB
+cyB0aGUgY29vbGluZyBkZXZpY2UgZm9yIHRoZSBDUFUgYW5kIHRoZSBHUFUgdGhlcm1hbCB6b25l
+cyBpcyB0aGUKPj4+PiBzYW1lLCBlYWNoIGdvdmVybm9ycyB0YWtlIGRpZmZlcmVudCBkZWNpc2lv
+bnMgZm9yIHRoZSBzYW1lIGNvb2xpbmcKPj4+PiBkZXZpY2UgbGVhZGluZyB0byBjb25mbGljdGlu
+ZyBpbnN0cnVjdGlvbnMgYW5kIGFuIGVycmF0aWMgYmVoYXZpb3IuCj4+Pj4KPj4+PiBBcyB0aGUg
+Y29vbGluZy1tYXBzIGlzIGFib3V0IHRvIGJlY29tZSBhbiBvcHRpb25hbCBwcm9wZXJ0eSwgbGV0
+J3MKPj4+PiByZW1vdmUgdGhlIGNwdSBjb29saW5nIGRldmljZSBtYXAgZnJvbSB0aGUgR1BVIHRo
+ZXJtYWwgem9uZS4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IERhbmllbCBMZXpjYW5vIDxkYW5p
+ZWwubGV6Y2Fub0BsaW5hcm8ub3JnPgo+Pj4+IC0tLQo+Pj4+IMKgIGFyY2gvYXJtNjQvYm9vdC9k
+dHMvcm9ja2NoaXAvcmszMzk5LmR0c2kgfCA5IC0tLS0tLS0tLQo+Pj4+IMKgIDEgZmlsZSBjaGFu
+Z2VkLCA5IGRlbGV0aW9ucygtKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvcm9ja2NoaXAvcmszMzk5LmR0c2kKPj4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9j
+a2NoaXAvcmszMzk5LmR0c2kKPj4+PiBpbmRleCAxOTZhYzliNzgwNzYuLmUxMzU3ZTBmNjBmNyAx
+MDA2NDQKPj4+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNp
+Cj4+Pj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkuZHRzaQo+Pj4+
+IEBAIC04MjEsMTUgKzgyMSw2IEBACj4+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIHR5cGUgPSAiY3JpdGljYWwiOwo+Pj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgfTsKPj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Owo+Pj4+
+IC0KPj4+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb29saW5nLW1hcHMgewo+Pj4+IC3CoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbWFwMCB7Cj4+Pj4gLcKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHRyaXAgPSA8JmdwdV9hbGVydDA+Owo+Pj4+IC3CoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb29saW5nLWRldmljZSA9Cj4+Pj4gLcKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPCZjcHVfYjAgVEhF
+Uk1BTF9OT19MSU1JVCBUSEVSTUFMX05PX0xJTUlUPiwKPj4+PiAtwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8JmNwdV9iMSBUSEVSTUFMX05PX0xJTUlUIFRI
+RVJNQUxfTk9fTElNSVQ+Owo+Pj4+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTsK
+Pj4+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Owo+Pj4+IMKgwqDCoMKgwqDCoMKgwqDCoCB9
+Owo+Pj4+IMKgwqDCoMKgwqAgfTsKPj4+Cj4+PiBteSBrbm93bGVkZ2Ugb2YgdGhlIHRoZXJtYWwg
+ZnJhbWV3b3JrIGlzIG5vdCB0aGF0IGJpZywgYnV0IHdoYXQgYWJvdXQKPj4+IHRoZQo+Pj4gcmsz
+Mzk5LWRldmljZXMgd2hpY2ggZnVydGhlciBkZXRhaWwgdGhlIGNvb2xpbmctbWFwcyBsaWtlCj4+
+PiByazMzOTktZ3J1LWtldmluCj4+PiBhbmQgdGhlIHJrMzM5OS1uYW5vcGMtdDQgd2l0aCBpdHMg
+ZmFuLWhhbmRsaW5nIGluIHRoZSBjb29saW5nLW1hcHM/Cj4+Cj4+IFRoZSByazMzOTktZ3J1LWtl
+dmluIGlzIGNvcnJlY3QuCj4+Cj4+IFRoZSByazMzOTktbmFub3BjLXQ0IGlzIG5vdCBjb3JyZWN0
+IGJlY2F1c2UgdGhlIGNwdSBhbmQgdGhlIGdwdSBhcmUKPj4gc2hhcmluZyB0aGUgc2FtZSBjb29s
+aW5nIGRldmljZSAodGhlIGZhbikuIFRoZXJlIGFyZSBkaWZmZXJlbnQKPj4gY29uZmlndXJhdGlv
+bnM6Cj4+Cj4+IDEuIFRoZSBjcHUgY29vbGluZyBkZXZpY2UgZm9yIHRoZSBDUFUgYW5kIHRoZSBm
+YW4gZm9yIHRoZSBHUFUKPj4KPj4gMi4gRGlmZmVyZW50IHRyaXAgcG9pbnRzIG9uIHRoZSBDUFUg
+dGhlcm1hbCB6b25lLCBlZy4gb25lIHRvIGZvciB0aGUgQ1BVCj4+IGNvb2xpbmcgZGV2aWNlIGFu
+ZCBhbm90aGVyIG9uZSBmb3IgdGhlIGZhbi4KPj4KPj4gVGhlcmUgYXJlIHNvbWUgdmFyaWFudCBm
+b3IgdGhlIGFib3ZlLiBJZiB0aGlzIGJvYXJkIGlzIG5vdCBvbiBiYXR0ZXJ5LAo+PiB5b3UgbWF5
+IHdhbnQgdG8gZ2l2ZSBwcmlvcml0eSB0byB0aGUgdGhyb3VnaHB1dCwgc28gYWN0aXZhdGUgdGhl
+IGZhbgo+PiBmaXJzdCBhbmQgdGhlbiBjb29sIGRvd24gdGhlIENQVS4gT3IgaWYgeW91IGFyZSBv
+biBiYXR0ZXJ5LCB5b3UgbWF5IHdhbnQKPj4gdG8gaW52ZXJ0IHRoZSB0cmlwIHBvaW50cy4KPj4K
+Pj4gSW4gYW55IGNhc2UsIGl0IGlzIG5vdCBwb3NzaWJsZSB0byBzaGFyZSB0aGUgc2FtZSBjb29s
+aW5nIGRldmljZSBmb3IKPj4gZGlmZmVyZW50IHRoZXJtYWwgem9uZXMuCj4gCj4gT0ssIHRoYW5r
+cyBmb3IgdGhlIGNsYXJpZmljYXRpb24uIEknbGwgZ2V0IG15IGJvYXJkIHNldCB1cCBhZ2FpbiB0
+bwo+IGZpZ3VyZSBvdXQgdGhlIGJlc3QgZml4IGZvciByazMzOTktbmFub3BjLXQ0IChGV0lXIG1v
+c3QgdXNlcnMgYXJlCj4gcHJvYmFibHkganVzdCB1c2luZyBwYXNzaXZlIGNvb2xpbmcgb3IgYSBw
+bGFpbiBEQyBmYW4gYW55d2F5KS4gWW91IG1pZ2h0Cj4gd2FudCB0byByYWlzZSB0aGlzIGlzc3Vl
+IHdpdGggdGhlIG1haW50YWluZXJzIG9mCj4gYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMi1v
+ZHJvaWR4dTMtY29tbW9uLmR0c2ksIHNpbmNlIHRoZQo+IGV2ZXJ5dGhpbmctc2hhcmVkLWJ5LWV2
+ZXJ5dGhpbmcgYXBwcm9hY2ggaW4gdGhlcmUgd2FzIHdoYXQgSSB1c2VkIGFzIGEKPiByZWZlcmVu
+Y2UuCgpDYydlZDogS3VramluIEtpbSBhbmQgS3J6eXN6dG9mIEtvemxvd3NraQoKRWFzeSA6KQoK
+Ci0tIAogPGh0dHA6Ly93d3cubGluYXJvLm9yZy8+IExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNl
+IHNvZnR3YXJlIGZvciBBUk0gU29DcwoKRm9sbG93IExpbmFybzogIDxodHRwOi8vd3d3LmZhY2Vi
+b29rLmNvbS9wYWdlcy9MaW5hcm8+IEZhY2Vib29rIHwKPGh0dHA6Ly90d2l0dGVyLmNvbS8jIS9s
+aW5hcm9vcmc+IFR3aXR0ZXIgfAo8aHR0cDovL3d3dy5saW5hcm8ub3JnL2xpbmFyby1ibG9nLz4g
+QmxvZwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
