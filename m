@@ -1,48 +1,47 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 1/2] clk: rockchip: add clock for the watchdog pclk on
- rk3328
-Date: Fri, 14 Jun 2019 12:31:58 +0200
-Message-ID: <2207770.HSO279VB62@phil>
-References: <20190605235714.22432-1-papadakospan@gmail.com>
- <5657669.4RvfzeBcXs@phil> <1560506054.1367.0@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1560506054.1367.0@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, itdaniher@gmail.com
+From: Yangbo Lu <yangbo.lu@nxp.com>
+Subject: [v2, 0/6] Reuse ptp_qoriq driver for dpaa2-ptp
+Date: Fri, 14 Jun 2019 18:40:49 +0800
+Message-ID: <20190614104055.43998-1-yangbo.lu@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Andrew Lunn <andrew@lunn.ch>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Although dpaa2-ptp.c driver is a fsl_mc_driver which
+is using MC APIs for register accessing, it's same IP
+block with eTSEC/DPAA/ENETC 1588 timer.
+This patch-set is to convert to reuse ptp_qoriq driver by
+using register ioremap and dropping related MC APIs.
+However the interrupts could only be handled by MC which
+fires MSIs to ARM cores. So the interrupt enabling and
+handling still rely on MC APIs. MC APIs for interrupt
+and PPS event support are also added by this patch-set.
 
-Am Freitag, 14. Juni 2019, 11:54:14 CEST schrieb Leonidas P. Papadakos:
-> 
-> > Were you able yet to take a look at the clock-patches I Cc'ed you on
-> > and look at reworking your patch accrodingly?
-> > 
-> > 
-> > Thanks
-> > Heiko
-> > 
-> My time is limited due to exams, and I have no knowledge on how the clk 
-> stuff works, but I'll read up when I have the time. The patched you 
-> CCed me on is certainly helpful in this regard
+---
+Changes for v2:
+	- Allowed to compile with COMPILE_TEST.
 
-ok. I have tested the conversion on the platforms I did convert there,
-so I'll just apply the 2 patches later on.
+Yangbo Lu (6):
+  ptp: add QorIQ PTP support for DPAA2
+  dpaa2-ptp: reuse ptp_qoriq driver
+  dt-binding: ptp_qoriq: support DPAA2 PTP compatible
+  arm64: dts: fsl: add ptp timer node for dpaa2 platforms
+  dpaa2-ptp: add interrupt support
+  MAINTAINERS: maintain DPAA2 PTP driver in QorIQ PTP entry
 
-Should I wait on you respinning the rk3328 watchdog patch, or just
-add the rk3328 watchdog pclk myself?
+ .../devicetree/bindings/ptp/ptp-qoriq.txt          |   3 +-
+ MAINTAINERS                                        |   9 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |   8 +
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     |   8 +
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |   8 +
+ drivers/net/ethernet/freescale/dpaa2/Kconfig       |   3 +-
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-ptp.c   | 242 +++++++++++----------
+ drivers/net/ethernet/freescale/dpaa2/dprtc-cmd.h   |  48 +++-
+ drivers/net/ethernet/freescale/dpaa2/dprtc.c       | 191 ++++++++++++----
+ drivers/net/ethernet/freescale/dpaa2/dprtc.h       |  62 ++++--
+ drivers/ptp/Kconfig                                |   2 +-
+ 11 files changed, 386 insertions(+), 198 deletions(-)
 
-
-Heiko
+-- 
+2.7.4
