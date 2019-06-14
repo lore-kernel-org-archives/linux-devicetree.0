@@ -1,35 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] dt-bindings: serial: 8250_omap: Add compatible for
- J721E UART controller
-Date: Fri, 14 Jun 2019 10:45:55 -0600
-Message-ID: <20190614164555.GA18636@bogus>
-References: <20190522161921.20750-1-nm@ti.com>
- <20190522161921.20750-3-nm@ti.com>
+Subject: Re: [PATCH] drm/rockchip: dw_hdmi: add basic rk3228 support
+Date: Fri, 14 Jun 2019 10:47:02 -0600
+Message-ID: <20190614164702.GA20322@bogus>
+References: <20190522224631.25164-1-justin.swartz@risingedge.co.za>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190522161921.20750-3-nm@ti.com>
+In-Reply-To: <20190522224631.25164-1-justin.swartz@risingedge.co.za>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
+Cc: Sandy Huang <hjc@rock-chips.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Justin Swartz <justin.swartz@risingedge.co.za>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 May 2019 11:19:17 -0500, Nishanth Menon wrote:
-> J721e uses a UART controller that is compatible with AM654 UART.
-> Introduce a specific compatible to help handle the differences if
-> necessary.
+On Wed, 22 May 2019 22:46:29 +0000, Justin Swartz wrote:
+> Like the RK3328, RK322x SoCs offer a Synopsis DesignWare HDMI transmitter
+> and an Innosilicon HDMI PHY.
 > 
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: Vignesh R <vigneshr@ti.com>
-> Signed-off-by: Nishanth Menon <nm@ti.com>
+> Add a new dw_hdmi_plat_data struct, rk3228_hdmi_drv_data.
+> Assign a set of mostly generic rk3228_hdmi_phy_ops functions.
+> Add dw_hdmi_rk3228_setup_hpd() to enable the HDMI HPD and DDC lines.
+> 
+> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
 > ---
-> NOTE:
->  - If Greg is ok, we can pick up the uart compatibility via the k3 tree,
->    else, I can spawn it off the series into it's own patch, but it
->    seemed better in a logical order.
-> 
->  Documentation/devicetree/bindings/serial/omap_serial.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/display/rockchip/dw_hdmi-rockchip.txt |  1 +
+>  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 53 ++++++++++++++++++++++
+>  2 files changed, 54 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
