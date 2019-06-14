@@ -1,166 +1,46 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock gates in probe
-Date: Fri, 14 Jun 2019 22:13:20 +0530
-Message-ID: <20190614164324.9427-6-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v2 7/9] dt-bindings: sun6i-dsi: Add R40 DPHY
+ compatible (w/ A31 fallback)
+Date: Fri, 14 Jun 2019 22:13:22 +0530
+Message-ID: <20190614164324.9427-8-jagan@amarulasolutions.com>
 References: <20190614164324.9427-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614164324.9427-1-jagan@amarulasolutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBWU5R7UAKGQEXQMSMOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190614164324.9427-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-TCON TOP have clock gates for TV0, TV1, dsi and right
-now these are register during bind call.
+The MIPI DSI PHY controller on Allwinner R40 is similar
+on the one on A31.
 
-Of which, dsi clock gate would required during DPHY probe
-but same can miss to get since tcon top is not bound at
-that time.
+Add R40 compatible and append A31 compatible as fallback.
 
-To solve, this circular dependency move the clock gate
-registration from bind to probe so-that DPHY can get the
-dsi gate clock on time.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
- 1 file changed, 49 insertions(+), 45 deletions(-)
+ Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-index 465e9b0cdfee..a8978b3fe851 100644
---- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-@@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
- static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
- 			       void *data)
- {
--	struct platform_device *pdev = to_platform_device(dev);
-+	struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = reset_control_deassert(tcon_top->rst);
-+	if (ret) {
-+		dev_err(dev, "Could not deassert ctrl reset control\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(tcon_top->bus);
-+	if (ret) {
-+		dev_err(dev, "Could not enable bus clock\n");
-+		goto err_assert_reset;
-+	}
-+
-+	return 0;
-+
-+err_assert_reset:
-+	reset_control_assert(tcon_top->rst);
-+
-+	return ret;
-+}
-+
-+static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
-+				  void *data)
-+{
-+	struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
-+	struct clk_hw_onecell_data *clk_data = tcon_top->clk_data;
-+	int i;
-+
-+	of_clk_del_provider(dev->of_node);
-+	for (i = 0; i < CLK_NUM; i++)
-+		if (clk_data->hws[i])
-+			clk_hw_unregister_gate(clk_data->hws[i]);
-+
-+	clk_disable_unprepare(tcon_top->bus);
-+	reset_control_assert(tcon_top->rst);
-+}
-+
-+static const struct component_ops sun8i_tcon_top_ops = {
-+	.bind	= sun8i_tcon_top_bind,
-+	.unbind	= sun8i_tcon_top_unbind,
-+};
-+
-+static int sun8i_tcon_top_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
- 	struct clk_hw_onecell_data *clk_data;
- 	struct sun8i_tcon_top *tcon_top;
- 	const struct sun8i_tcon_top_quirks *quirks;
-@@ -132,7 +178,7 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
- 	void __iomem *regs;
- 	int ret, i;
- 
--	quirks = of_device_get_match_data(&pdev->dev);
-+	quirks = of_device_get_match_data(dev);
- 
- 	tcon_top = devm_kzalloc(dev, sizeof(*tcon_top), GFP_KERNEL);
- 	if (!tcon_top)
-@@ -164,18 +210,6 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
- 	if (IS_ERR(regs))
- 		return PTR_ERR(regs);
- 
--	ret = reset_control_deassert(tcon_top->rst);
--	if (ret) {
--		dev_err(dev, "Could not deassert ctrl reset control\n");
--		return ret;
--	}
--
--	ret = clk_prepare_enable(tcon_top->bus);
--	if (ret) {
--		dev_err(dev, "Could not enable bus clock\n");
--		goto err_assert_reset;
--	}
--
- 	/*
- 	 * At least on H6, some registers have some bits set by default
- 	 * which may cause issues. Clear them here.
-@@ -226,45 +260,15 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
- 
- 	dev_set_drvdata(dev, tcon_top);
- 
--	return 0;
-+	return component_add(dev, &sun8i_tcon_top_ops);
- 
- err_unregister_gates:
- 	for (i = 0; i < CLK_NUM; i++)
- 		if (!IS_ERR_OR_NULL(clk_data->hws[i]))
- 			clk_hw_unregister_gate(clk_data->hws[i]);
--	clk_disable_unprepare(tcon_top->bus);
--err_assert_reset:
--	reset_control_assert(tcon_top->rst);
--
- 	return ret;
- }
- 
--static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
--				  void *data)
--{
--	struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
--	struct clk_hw_onecell_data *clk_data = tcon_top->clk_data;
--	int i;
--
--	of_clk_del_provider(dev->of_node);
--	for (i = 0; i < CLK_NUM; i++)
--		if (clk_data->hws[i])
--			clk_hw_unregister_gate(clk_data->hws[i]);
--
--	clk_disable_unprepare(tcon_top->bus);
--	reset_control_assert(tcon_top->rst);
--}
--
--static const struct component_ops sun8i_tcon_top_ops = {
--	.bind	= sun8i_tcon_top_bind,
--	.unbind	= sun8i_tcon_top_unbind,
--};
--
--static int sun8i_tcon_top_probe(struct platform_device *pdev)
--{
--	return component_add(&pdev->dev, &sun8i_tcon_top_ops);
--}
--
- static int sun8i_tcon_top_remove(struct platform_device *pdev)
- {
- 	component_del(&pdev->dev, &sun8i_tcon_top_ops);
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
+index 438f1f999aeb..b7ad1be33008 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
+@@ -40,6 +40,7 @@ Required properties:
+   - compatible: value must be one of:
+     * allwinner,sun6i-a31-mipi-dphy
+     * allwinner,sun50i-a64-mipi-dphy, allwinner,sun6i-a31-mipi-dphy
++    * allwinner,sun8i-r40-mipi-dphy, allwinner,sun6i-a31-mipi-dphy
+   - reg: base address and size of memory-mapped region
+   - clocks: phandles to the clocks feeding the DSI encoder
+     * bus: the DSI interface clock
 -- 
 2.18.0.321.gffc6fa0e3
