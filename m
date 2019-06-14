@@ -1,140 +1,125 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v1] Input: rotary-encoder - Add gpio as push button
-Date: Fri, 14 Jun 2019 15:36:51 +0200
-Message-ID: <20190614133651.28396-1-mylene.josserand@bootlin.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 05/11] dt-bindings: net: sun4i-emac: Convert the
+ binding to a schemas
+Date: Fri, 14 Jun 2019 07:37:49 -0600
+Message-ID: <CAL_Jsq+=yh3WhTg=1G02LUHGLHts6mECR9BQ+n7qHAihFViAxA@mail.gmail.com>
+References: <91618c7e9a5497462afa74c6d8a947f709f54331.1560158667.git-series.maxime.ripard@bootlin.com>
+ <d198d29119b37b2fdb700d8992b31963e98b6693.1560158667.git-series.maxime.ripard@bootlin.com>
+ <20190610143139.GG28724@lunn.ch> <CAL_JsqJahCJcdu=+fA=ewbGezuEJ2W6uwMVxkQpdY6w+1OWVVA@mail.gmail.com>
+ <20190611145856.ua2ggkn6ccww6vpp@flea> <CAL_Jsq+KwH-j8f+r+fWhMuqJPWcHdBQau+nUz3NRAXYTpsyuvg@mail.gmail.com>
+ <20190614095048.j2xwdsucucbakkl2@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mylene.josserand@bootlin.com, thomas.petazzoni@bootlin.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190614095048.j2xwdsucucbakkl2@flea>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the support of a gpio that can be defined as a push button.
-Thanks to that, it is possible to emit a keycode in case of a
-"push" event, if the rotary supports that.
+On Fri, Jun 14, 2019 at 3:50 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> Hi Rob,
+>
+> On Thu, Jun 13, 2019 at 11:32:30AM -0600, Rob Herring wrote:
+> > On Thu, Jun 13, 2019 at 7:25 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > On Mon, Jun 10, 2019 at 12:59:29PM -0600, Rob Herring wrote:
+> > > > On Mon, Jun 10, 2019 at 8:31 AM Andrew Lunn <andrew@lunn.ch> wrote:
+> > > > >
+> > > > > > +required:
+> > > > > > +  - compatible
+> > > > > > +  - reg
+> > > > > > +  - interrupts
+> > > > > > +  - clocks
+> > > > > > +  - phy
+> > > > > > +  - allwinner,sram
+> > > > >
+> > > > > Quoting ethernet.txt:
+> > > > >
+> > > > > - phy: the same as "phy-handle" property, not recommended for new bindings.
+> > > > >
+> > > > > - phy-handle: phandle, specifies a reference to a node representing a PHY
+> > > > >   device; this property is described in the Devicetree Specification and so
+> > > > >   preferred;
+> > > > >
+> > > > > Can this be expressed in Yaml? Accept phy, but give a warning. Accept
+> > > > > phy-handle without a warning? Enforce that one or the other is
+> > > > > present?
+> > > >
+> > > > The common schema could have 'phy: false'. This works as long as we've
+> > > > updated (or plan to) all the dts files to use phy-handle. The issue is
+> > > > how far back do you need kernels to work with newer dtbs.
+> > >
+> > > I guess another question being raised by this is how hard do we want
+> > > to be a deprecating things, and should the DT validation be a tool to
+> > > enforce that validation.
+> > >
+> > > For example, you've used in you GPIO meta-schema false for anything
+> > > ending with -gpio, since it's deprecated. This means that we can't
+> > > convert any binding using a deprecated property without introducing a
+> > > build error in the schemas, which in turn means that you'll have a lot
+> > > of friction to support schemas, since you would have to convert your
+> > > driver to support the new way of doing things, before being able to
+> > > have a schema for your binding.
+> >
+> > I've err'ed on the stricter side. We may need to back off on some
+> > things to get to warning free builds. Really, I'd like to have levels
+> > to separate checks for existing bindings, new bindings, and pedantic
+> > checks.
+>
+> That would be awesome. Do you have a plan for that already though? I
+> can't really think of a way to implement it at the moment.
 
-The keycode to emit is defined using "linux,code" property
-(such as in gpio-keys).
+The only idea I have so far is some sort of 'level' property and then
+we filter schema based on what level we run validation at. I'm not too
+sure if that would take some restructuring of schema though because
+it's all a mixture ATM.
 
-Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
----
- .../devicetree/bindings/input/rotary-encoder.txt   |  5 +++
- drivers/input/misc/rotary_encoder.c                | 50 ++++++++++++++++++++++
- 2 files changed, 55 insertions(+)
+The other aspect is how to set the 'level' per platform so new
+platforms have to pass a higher level. We already have that problem
+just with dtc warnings. Ideally, we should build new platforms with
+'W=1' or 'W=12'. Maybe the soc/board schema's can specify the level.
 
-diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-index a644408b33b8..1cfce5d0b5c4 100644
---- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-+++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-@@ -22,6 +22,9 @@ Optional properties:
- - wakeup-source: Boolean, rotary encoder can wake up the system.
- - rotary-encoder,encoding: String, the method used to encode steps.
-   Supported are "gray" (the default and more common) and "binary".
-+- push-gpio: a gpio to be used as a detection of a push from the rotary.
-+- linux,code: keycode to emit with the push-gpio of this rotary encoder.
-+  Required property in case "push-gpio"'s one is used.
- 
- Deprecated properties:
- - rotary-encoder,half-period: Makes the driver work on half-period mode.
-@@ -47,4 +50,6 @@ Example:
- 			rotary-encoder,steps = <24>;
- 			rotary-encoder,encoding = "binary";
- 			rotary-encoder,rollover;
-+			push-gpio = <&gpio 20 0>;
-+			linux-code = <28> /* KEY_ENTER */
- 		};
-diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/rotary_encoder.c
-index d748897bf5e9..556995fb7dde 100644
---- a/drivers/input/misc/rotary_encoder.c
-+++ b/drivers/input/misc/rotary_encoder.c
-@@ -47,8 +47,10 @@ struct rotary_encoder {
- 	unsigned int pos;
- 
- 	struct gpio_descs *gpios;
-+	struct gpio_desc *gpio_push;
- 
- 	unsigned int *irq;
-+	unsigned int code;
- 
- 	bool armed;
- 	signed char dir;	/* 1 - clockwise, -1 - CCW */
-@@ -56,6 +58,23 @@ struct rotary_encoder {
- 	unsigned int last_stable;
- };
- 
-+static irqreturn_t rotary_push_irq(int irq, void *dev_id)
-+{
-+	struct rotary_encoder *encoder = dev_id;
-+	int val;
-+
-+	mutex_lock(&encoder->access_mutex);
-+
-+	val = gpiod_get_value_cansleep(encoder->gpio_push);
-+
-+	input_report_key(encoder->input, encoder->code, val);
-+	input_sync(encoder->input);
-+
-+	mutex_unlock(&encoder->access_mutex);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static unsigned int rotary_encoder_get_state(struct rotary_encoder *encoder)
- {
- 	int i;
-@@ -190,6 +209,7 @@ static int rotary_encoder_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct rotary_encoder *encoder;
- 	struct input_dev *input;
-+	unsigned int irq_push;
- 	irq_handler_t handler;
- 	u32 steps_per_period;
- 	unsigned int i;
-@@ -250,6 +270,20 @@ static int rotary_encoder_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
-+	encoder->gpio_push = devm_gpiod_get_optional(dev, "push", GPIOD_IN);
-+	if (IS_ERR(encoder->gpio_push)) {
-+		dev_err(dev, "unable to get gpio-push\n");
-+		return PTR_ERR(encoder->gpio_push);
-+	}
-+
-+	if (encoder->gpio_push) {
-+		if (device_property_read_u32(dev, "linux,code",
-+					     &encoder->code)) {
-+			dev_err(dev, "gpio-push without keycode\n");
-+			return -EINVAL;
-+		}
-+	}
-+
- 	input = devm_input_allocate_device(dev);
- 	if (!input)
- 		return -ENOMEM;
-@@ -306,6 +340,22 @@ static int rotary_encoder_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (encoder->gpio_push) {
-+		input_set_capability(encoder->input, EV_KEY, encoder->code);
-+
-+		irq_push = gpiod_to_irq(encoder->gpio_push);
-+		err = devm_request_threaded_irq(dev, irq_push,
-+						NULL, rotary_push_irq,
-+						IRQF_TRIGGER_RISING |
-+						IRQF_TRIGGER_FALLING |
-+						IRQF_ONESHOT,
-+						DRV_NAME, encoder);
-+		if (err) {
-+			dev_err(dev, "unable to request IRQ %d\n", irq_push);
-+			return err;
-+		}
-+	}
-+
- 	err = input_register_device(input);
- 	if (err) {
- 		dev_err(dev, "failed to register input device\n");
--- 
-2.11.0
+> > For '-gpio', we may be okay because the suffix is handled in the GPIO
+> > core. It should be safe to update the binding to use the preferred
+> > form.
+>
+> It might require a bit of work though in drivers, since the fallback
+> is only handled if you're using the gpiod API, and not the legacy one.
+>
+> > > And then, we need to agree on how to express the deprecation. I guess
+> > > we could allow the deprecated keyword that will be there in the
+> > > draft-8, instead of ad-hoc solutions?
+> >
+> > Oh, nice! I hadn't seen that. Seems like we should use that. We can
+> > start even without draft-8 support because unknown keywords are
+> > ignored (though we probably have to add it to our meta-schema). Then
+> > at some point we can add a 'disallow deprecated' flag to the tool.
+>
+> So, in the generic ethernet binding, we would have:
+>
+> properties:
+>   phy-handle:
+>     $ref: /schemas/types.yaml#definitions/phandle
+>     description:
+>       Specifies a reference to a node representing a PHY device.
+>
+>   phy:
+>     $ref: "#/properties/phy-handle"
+>     deprecated: true
+>
+>   phy-device:
+>     $ref: "#/properties/phy-handle"
+>     deprecated: true
+>
+> Does that sound good?
+
+Yes.
+
+> Now, how do we handle the case above, in the device specific binding?
+> We just require the non-deprecated one, or the three?
+
+Wouldn't that just depend if all the instances of the device specific
+binding have been updated?
+
+Rob
