@@ -1,29 +1,43 @@
-From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH 0/2] Add DSI panel driver for Raydium RM67191
-Date: Fri, 14 Jun 2019 14:51:01 +0300
-Message-ID: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com, Robert Chiras <robert.chiras@nxp.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/6] More CAN support for RZ/G2 devices
+Date: Fri, 14 Jun 2019 12:53:28 +0100
+Message-ID: <1560513214-28031-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "David S. Miller" <davem@davemloft.net>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-Id: devicetree@vger.kernel.org
 
-This patch-set contains the DRM panel driver and dt-bindings documentation
-for the DSI driven panel: Raydium RM67191.
+Dear All,
 
-Robert Chiras (2):
-  dt-bindings: display: panel: Add support for Raydium RM67191 panel
-  drm/panel: Add support for Raydium RM67191 panel driver
+This series adds CAN and CANFD support to the HiHope RZ/G2M, and also
+improves SoC support for the RZ/G2E.
+Please note that I wasn't able to test CAN-FD mode but only classical
+CAN mode with the CANFD IP, my unit unfortunately comes with CAN-FD
+mode disabled in HW, but the CANFD IP is working and responding
+correctly while in classical mode.
 
- .../bindings/display/panel/raydium,rm67191.txt     |  42 ++
- drivers/gpu/drm/panel/Kconfig                      |   9 +
- drivers/gpu/drm/panel/Makefile                     |   1 +
- drivers/gpu/drm/panel/panel-raydium-rm67191.c      | 730 +++++++++++++++++++++
- 4 files changed, 782 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
- create mode 100644 drivers/gpu/drm/panel/panel-raydium-rm67191.c
+Please note that this work depends on:
+https://patchwork.kernel.org/cover/10986911/
+https://patchwork.kernel.org/cover/10990113/
+
+Thanks,
+Fab
+
+Fabrizio Castro (6):
+  dt-bindings: can: rcar_canfd: document r8a774a1 support
+  dt-bindings: can: rcar_can: Complete documentation for RZ/G2[EM]
+  arm64: dts: renesas: r8a774c0: Add missing assigned-clocks for CAN[01]
+  arm64: dts: renesas: r8a774a1: Add missing assigned-clocks for CAN[01]
+  arm64: dts: renesas: r8a774a1: Add CANFD support
+  arm64: dts: renesas: hihope-rzg2-ex: Enable CAN interfaces
+
+ .../devicetree/bindings/net/can/rcar_can.txt       |  2 +-
+ .../devicetree/bindings/net/can/rcar_canfd.txt     |  9 ++++---
+ arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi    | 22 ++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi          | 29 ++++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a774c0.dtsi          |  4 +++
+ 5 files changed, 61 insertions(+), 5 deletions(-)
 
 -- 
 2.7.4
