@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 7/9] dt-bindings: sun6i-dsi: Add R40 DPHY
- compatible (w/ A31 fallback)
-Date: Fri, 14 Jun 2019 22:13:22 +0530
-Message-ID: <20190614164324.9427-8-jagan@amarulasolutions.com>
+Subject: [PATCH v2 6/9] dt-bindings: sun6i-dsi: Add R40 MIPI-DSI
+ compatible (w/ A64 fallback)
+Date: Fri, 14 Jun 2019 22:13:21 +0530
+Message-ID: <20190614164324.9427-7-jagan@amarulasolutions.com>
 References: <20190614164324.9427-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBWU5R7UAKGQEXQMSMOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBVU5R7UAKGQE2E2QVNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190614164324.9427-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,10 +20,10 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David
 Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The MIPI DSI PHY controller on Allwinner R40 is similar
-on the one on A31.
+The MIPI DSI controller on Allwinner R40 is similar on
+the one on A64 like doesn't associate any DSI_SCLK gating.
 
-Add R40 compatible and append A31 compatible as fallback.
+So, add R40 compatible and append A64 compatible as fallback.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
@@ -31,16 +31,16 @@ Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.o
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-index 438f1f999aeb..b7ad1be33008 100644
+index d0ce51fea103..438f1f999aeb 100644
 --- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
 +++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-@@ -40,6 +40,7 @@ Required properties:
+@@ -13,6 +13,7 @@ Required properties:
    - compatible: value must be one of:
-     * allwinner,sun6i-a31-mipi-dphy
-     * allwinner,sun50i-a64-mipi-dphy, allwinner,sun6i-a31-mipi-dphy
-+    * allwinner,sun8i-r40-mipi-dphy, allwinner,sun6i-a31-mipi-dphy
+     * allwinner,sun6i-a31-mipi-dsi
+     * allwinner,sun50i-a64-mipi-dsi
++    * allwinner,sun8i-r40-mipi-dsi, allwinner,sun50i-a64-mipi-dsi
    - reg: base address and size of memory-mapped region
+   - interrupts: interrupt associated to this IP
    - clocks: phandles to the clocks feeding the DSI encoder
-     * bus: the DSI interface clock
 -- 
 2.18.0.321.gffc6fa0e3
