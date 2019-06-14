@@ -1,57 +1,77 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] arm64: dts/sdm845: Enable FW implemented safe
-	sequence handler on MTP
-Date: Thu, 13 Jun 2019 21:06:59 -0700
-Message-ID: <20190614040659.GL22737@tuxbook-pro>
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
-	<20190612071554.13573-5-vivek.gautam@codeaurora.org>
+From: Saravana Kannan <saravanak@google.com>
+Subject: [PATCH v2 03/11] PM / devfreq: Add required OPPs support to passive governor
+Date: Thu, 13 Jun 2019 21:17:25 -0700
+Message-ID: <20190614041733.120807-4-saravanak@google.com>
+References: <20190614041733.120807-1-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190612071554.13573-5-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190614041733.120807-1-saravanak@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Saravana Kannan <saravanak@google.com>, Rajendra Nayak <rnayak@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
+Look at the required OPPs of the "parent" device to determine the OPP that
+is required from the slave device managed by the passive governor. This
+allows having mappings between a parent device and a slave device even when
+they don't have the same number of OPPs.
 
-> Indicate on MTP SDM845 that firmware implements handler to
-> TLB invalidate erratum SCM call where SAFE sequence is toggled
-> to achieve optimum performance on real-time clients, such as
-> display and camera.
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/devfreq/governor_passive.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 78ec373a2b18..6a73d9744a71 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -2368,6 +2368,7 @@
->  			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
->  			reg = <0 0x15000000 0 0x80000>;
->  			#iommu-cells = <2>;
-> +			qcom,smmu-500-fw-impl-safe-errata;
->  			#global-interrupts = <1>;
->  			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+index 3bc29acbd54e..bd4a98bb15b1 100644
+--- a/drivers/devfreq/governor_passive.c
++++ b/drivers/devfreq/governor_passive.c
+@@ -21,8 +21,9 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+ 	struct devfreq_passive_data *p_data
+ 			= (struct devfreq_passive_data *)devfreq->data;
+ 	struct devfreq *parent_devfreq = (struct devfreq *)p_data->parent;
++	struct opp_table *opp_table = NULL, *c_opp_table = NULL;
+ 	unsigned long child_freq = ULONG_MAX;
+-	struct dev_pm_opp *opp;
++	struct dev_pm_opp *opp = NULL, *c_opp = NULL;
+ 	int i, count, ret = 0;
+ 
+ 	/*
+@@ -65,7 +66,20 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+ 		goto out;
+ 	}
+ 
+-	dev_pm_opp_put(opp);
++	opp_table = dev_pm_opp_get_opp_table(parent_devfreq->dev.parent);
++	if (IS_ERR_OR_NULL(opp_table)) {
++		ret = PTR_ERR(opp_table);
++		goto out;
++	}
++
++	c_opp_table = dev_pm_opp_get_opp_table(devfreq->dev.parent);
++	if (!IS_ERR_OR_NULL(c_opp_table))
++		c_opp = dev_pm_opp_xlate_opp(opp_table, c_opp_table, opp);
++	if (c_opp) {
++		*freq = dev_pm_opp_get_freq(c_opp);
++		dev_pm_opp_put(c_opp);
++		goto out;
++	}
+ 
+ 	/*
+ 	 * Get the OPP table's index of decided freqeuncy by governor
+@@ -92,6 +106,13 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+ 	*freq = child_freq;
+ 
+ out:
++	if (!IS_ERR_OR_NULL(opp_table))
++		dev_pm_opp_put_opp_table(opp_table);
++	if (!IS_ERR_OR_NULL(c_opp_table))
++		dev_pm_opp_put_opp_table(c_opp_table);
++	if (!IS_ERR_OR_NULL(opp))
++		dev_pm_opp_put(opp);
++
+ 	return ret;
+ }
+ 
+-- 
+2.22.0.rc2.383.gf4fbbf30c2-goog
