@@ -1,35 +1,48 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 3/9] ARM: dts: sun8i: r40: Use tcon top
- clock index macros
-Date: Fri, 14 Jun 2019 11:21:32 +0800
-Message-ID: <CAGb2v65mR0DwAuf_YvDS-dwx2RpEdBeV-5R44zgWn83GNEgp6w@mail.gmail.com>
-References: <20190613185241.22800-1-jagan@amarulasolutions.com> <20190613185241.22800-4-jagan@amarulasolutions.com>
-Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBSVFRTUAKGQEIPDAZ7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190613185241.22800-4-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Tony Xie <tony.xie@rock-chips.com>
+Subject: [PATCH v9 1/6] mfd: rk808: remove the id_table
+Date: Thu, 13 Jun 2019 23:14:20 -0400
+Message-ID: <20190614031425.15741-2-tony.xie@rock-chips.com>
+References: <20190614031425.15741-1-tony.xie@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190614031425.15741-1-tony.xie@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 2:54 AM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
->
-> tcon_tv0, tcon_tv1 nodes have a clock names of tcon-ch0,
-> tcon-ch1 which are referring tcon_top clocks via index
-> numbers like 0, 1 with CLK_TCON_TV0 and CLK_TCON_TV1
-> respectively.
->
-> Use the macro in place of index numbers, for more code
-> readability.
->
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Remove the id_table because it's not used.
 
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+---
+ drivers/mfd/rk808.c | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+index 216fbf6adec9..94377782d208 100644
+--- a/drivers/mfd/rk808.c
++++ b/drivers/mfd/rk808.c
+@@ -568,14 +568,6 @@ static int rk808_remove(struct i2c_client *client)
+ 	return 0;
+ }
+ 
+-static const struct i2c_device_id rk808_ids[] = {
+-	{ "rk805" },
+-	{ "rk808" },
+-	{ "rk818" },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(i2c, rk808_ids);
+-
+ static struct i2c_driver rk808_i2c_driver = {
+ 	.driver = {
+ 		.name = "rk808",
+@@ -583,7 +575,6 @@ static struct i2c_driver rk808_i2c_driver = {
+ 	},
+ 	.probe    = rk808_probe,
+ 	.remove   = rk808_remove,
+-	.id_table = rk808_ids,
+ };
+ 
+ module_i2c_driver(rk808_i2c_driver);
+-- 
+2.17.1
