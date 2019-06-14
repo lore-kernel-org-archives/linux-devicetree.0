@@ -1,58 +1,128 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH v6 3/5] arm64: dts: qcom: Add Lenovo Miix 630
-Date: Fri, 14 Jun 2019 06:44:31 -0700
-Message-ID: <CAF6AEGvAkCqNXg-NwxfpYJteWs6hfBnOb0yJN6vQOnmMck-HDQ@mail.gmail.com>
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com> <20190612212748.32246-1-jeffrey.l.hugo@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v10 08/13] drivers: memory: add DMC driver for Exynos5422
+Date: Fri, 14 Jun 2019 15:46:11 +0200
+Message-ID: <CAJKOXPcsNe+PEszGAS+YyGH3qqQdELXnwhD+x=+9POrZziCOpw@mail.gmail.com>
+References: <CGME20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9@eucas1p1.samsung.com>
+ <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-9-l.luba@partner.samsung.com>
+ <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com> <6f86228d-8409-a835-20ba-ad20464379dd@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612212748.32246-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <6f86228d-8409-a835-20ba-ad20464379dd@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, jikos@kernel.org, Hans de Goede <hdegoede@redhat.com>, Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:17 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+On Fri, 14 Jun 2019 at 15:41, Lukasz Luba <l.luba@partner.samsung.com> wrote:
 >
-> This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
-> functionality includes USB (host), microSD-card, keyboard, and trackpad.
+> Hi Krzysztof,
 >
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
+> On 6/14/19 2:58 PM, Krzysztof Kozlowski wrote:
+> > On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+> >>
+> >> This patch adds driver for Exynos5422 Dynamic Memory Controller.
+> >> The driver provides support for dynamic frequency and voltage scaling for
+> >> DMC and DRAM. It supports changing timings of DRAM running with different
+> >> frequency. There is also an algorithm to calculate timigns based on
+> >> memory description provided in DT.
+> >> The patch also contains needed MAINTAINERS file update.
+> >>
+> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> >> ---
+> >>   MAINTAINERS                             |    8 +
+> >>   drivers/memory/samsung/Kconfig          |   17 +
+> >>   drivers/memory/samsung/Makefile         |    1 +
+> >>   drivers/memory/samsung/exynos5422-dmc.c | 1262 +++++++++++++++++++++++
+> >>   4 files changed, 1288 insertions(+)
+> >>   create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
+> >>
+> >> diff --git a/MAINTAINERS b/MAINTAINERS
+> >> index 57f496cff999..6ffccfd95351 100644
+> >> --- a/MAINTAINERS
+> >> +++ b/MAINTAINERS
+> >> @@ -3470,6 +3470,14 @@ S:       Maintained
+> >>   F:     drivers/devfreq/exynos-bus.c
+> >>   F:     Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> >>
+> >> +DMC FREQUENCY DRIVER FOR SAMSUNG EXYNOS5422
+> >
+> > Eh, more comments from my side.
+> > "For the hard of thinking, this list is meant to remain in alphabetical order."
+> OK
+> >
+> >> +M:     Lukasz Luba <l.luba@partner.samsung.com>
+> >> +L:     linux-pm@vger.kernel.org
+> >> +L:     linux-samsung-soc@vger.kernel.org
+> >> +S:     Maintained
+> >> +F:     drivers/memory/samsung/exynos5422-dmc.c
+> >> +F:     Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> >> +
+> >>   BUSLOGIC SCSI DRIVER
+> >>   M:     Khalid Aziz <khalid@gonehiking.org>
+> >>   L:     linux-scsi@vger.kernel.org
+> >> diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
+> >> index 79ce7ea58903..c93baa029654 100644
+> >> --- a/drivers/memory/samsung/Kconfig
+> >> +++ b/drivers/memory/samsung/Kconfig
+> >> @@ -5,6 +5,23 @@ config SAMSUNG_MC
+> >>            Support for the Memory Controller (MC) devices found on
+> >>            Samsung Exynos SoCs.
+> >>
+> >> +config ARM_EXYNOS5422_DMC
+> >
+> > Why you added prefix of ARM to CONFIG think none of other Exynos
+> > Kconfig options follow such convention (except devfreq).
+> In the previous versions the driver was in drivers/devfreq/,
+> that's why they have this prefix.
+> >
+> >> +       tristate "ARM EXYNOS5422 Dynamic Memory Controller driver"
+> >> +       depends on ARCH_EXYNOS
+> >> +       select DDR
+> >
+> > In general select should be used only for non-visible symbols and DDR
+> > is visible. Use depends.
+> OK
+> >
+> >> +       select PM_DEVFREQ
+> >
+> > This definitely cannot be select. You do not select entire subsystem
+> > because some similar driver was chosen.
+> So I will use depends int this case
+> >
+> >> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
+> >> +       select DEVFREQ_GOV_USERSPACE
+> >
+> > I think only simple_ondemand is needed. Is userspace governor
+> > necessary for working? Or actually maybe both could be skipped?
+> >
+> Actually we can skip both governors from here.
+>
+> >> +       select PM_DEVFREQ_EVENT
+> >
+> > Again, depends.
+> OK
+>
+> There are these 4 options which the driver depends on:
+>          depends on ARCH_EXYNOS
+>          depends on DDR
+>          depends on PM_DEVFREQ
+>          depends on PM_DEVFREQ_EVENT
+>
+> Should I merged them into one, two lines? like below:
+> a)
+> depends on (ARCH_EXYNOS && DDR && PM_DEVFREQ && PM_DEVFREQ_EVENT)
+> b) grouped into two sets
+> depends on (ARCH_EXYNOS && DDR)
+> depends on (PM_DEVFREQ && PM_DEVFREQ_EVENT)
+> c) grouped by pm_devfreq only
+> depends on ARCH_EXYNOS
+> depends on DDR
+> depends on (PM_DEVFREQ && PM_DEVFREQ_EVENT)
 
-[snip]
+I like the third option... although I would be also happy to see
+COMPILE_TEST (probably with IOMEM). You need to check which
+dependencies are still necessary for COMPILE_TEST.
 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> new file mode 100644
-> index 000000000000..407c6a32911c
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> @@ -0,0 +1,30 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
-> +
-> +/dts-v1/;
-> +
-> +#include "msm8998-clamshell.dtsi"
-> +
-> +/ {
-> +       model = "Lenovo Miix 630";
-> +       compatible = "lenovo,miix-630", "qcom,msm8998";
-> +};
-
-
-So, I'm not sure if there is some precedent for this (but maybe we
-haven't really had this problem before).. but as I mentioned on
-#arch64-laptops, I think we should put vendor/product/board-id strings
-from SMBIOS table in the dts files.  That could be used by grub to
-find the correct dtb file to load in a generic way.  (Ie, look for a
-match of all three strings, and maybe fallback to a match on just
-vendor+product??)
-
-At any rate, how the strings are used can be refined later.  But I
-think we should include the strings from the beginning for anything
-that is booting via UEFI.  It's perhaps more useful than the
-compatible string.
-
-BR,
--R
+Best regards,
+Krzysztof
