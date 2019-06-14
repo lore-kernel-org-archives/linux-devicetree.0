@@ -1,106 +1,35 @@
-From: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Subject: Re: [PATCHv5 10/20] PCI: mobiveil: Fix the INTx process errors
-Date: Fri, 14 Jun 2019 12:38:51 +0530
-Message-ID: <CAKnKUHFMH6=ox=qdaUR1kNEhETDCVyu3jQZEj+taEbbMRBRuYA@mail.gmail.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com> <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
- <20190612150819.GD15747@redmoon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Alexander Dahl <ada@thorsis.com>
+Subject: Re: [PATCH v3 0/9] Multicolor Framework update
+Date: Fri, 14 Jun 2019 09:02:23 +0200
+Message-ID: <55737098.K72IVJ5cDM@ada>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612150819.GD15747@redmoon>
+In-Reply-To: <20190523190820.29375-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: linux-leds@vger.kernel.org
+Cc: Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo and Hou Zhiqiang
- PAB_INTP_AMBA_MISC_STAT does have other status in the higher bits, it
-should have been masked before checking for the status
+Hello Dan,
 
-Acked-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Am Donnerstag, 23. Mai 2019, 14:08:11 CEST schrieb Dan Murphy:
+>   leds: multicolor: Add sysfs interface definition
+>   dt: bindings: Add multicolor class dt bindings documention
+>   documention: leds: Add multicolor class documentation
+>   dt-bindings: leds: Add multicolor ID to the color ID  list
+>   leds: Add multicolor ID to the color ID list
+>   leds: multicolor: Introduce a multicolor class definition
+>   dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+>   leds: lp50xx: Add the LP50XX family of the RGB LED driver
+>   leds: Update the lp55xx to use the multi color framework
 
-On Wed, Jun 12, 2019 at 8:38 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Fri, Apr 12, 2019 at 08:36:12AM +0000, Z.q. Hou wrote:
-> > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> >
-> > In the loop block, there is not code to update the loop key,
-> > this patch updates the loop key by re-read the INTx status
-> > register.
-> >
-> > This patch also add the clearing of the handled INTx status.
-> >
-> > Note: Need MV to test this fix.
->
-> This means INTX were never tested and current code handling them is,
-> AFAICS, an infinite loop which is very very bad.
->
-> This is a gross bug and must be fixed as soon as possible.
->
-> I want Karthikeyan ACK and Tested-by on this patch.
->
-> Lorenzo
->
-> > Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> > ---
-> > V5:
-> >  - Corrected and retouched the subject and changelog.
-> >
-> >  drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
-> >  1 file changed, 9 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> > index 4ba458474e42..78e575e71f4d 100644
-> > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > @@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
-> >       /* Handle INTx */
-> >       if (intr_status & PAB_INTP_INTX_MASK) {
-> >               shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-> > +             shifted_status &= PAB_INTP_INTX_MASK;
-> >               shifted_status >>= PAB_INTX_START;
-> >               do {
-> >                       for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-> > @@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
-> >                                       dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
-> >                                                           bit);
-> >
-> > -                             /* clear interrupt */
-> > -                             csr_writel(pcie,
-> > -                                        shifted_status << PAB_INTX_START,
-> > +                             /* clear interrupt handled */
-> > +                             csr_writel(pcie, 1 << (PAB_INTX_START + bit),
-> >                                          PAB_INTP_AMBA_MISC_STAT);
-> >                       }
-> > -             } while ((shifted_status >> PAB_INTX_START) != 0);
-> > +
-> > +                     shifted_status = csr_readl(pcie,
-> > +                                                PAB_INTP_AMBA_MISC_STAT);
-> > +                     shifted_status &= PAB_INTP_INTX_MASK;
-> > +                     shifted_status >>= PAB_INTX_START;
-> > +             } while (shifted_status != 0);
-> >       }
-> >
-> >       /* read extra MSI status register */
-> > --
-> > 2.17.1
-> >
+While not having much experience with the implementation of the LED subsystem, 
+I've had a short look at those. Curious question: would it be possible to take 
+three gpio-leds and group those together to one multicolor-led? I know at 
+least one board, where things are wired up like this, see e.g. 
+at91-sama5d27_som1_ek.dts
 
-
-
--- 
-Thanks,
-Regards,
-Karthikeyan Mitran
-
--- 
-Mobiveil INC., CONFIDENTIALITY NOTICE: This e-mail message, including any 
-attachments, is for the sole use of the intended recipient(s) and may 
-contain proprietary confidential or privileged information or otherwise be 
-protected by law. Any unauthorized review, use, disclosure or distribution 
-is prohibited. If you are not the intended recipient, please notify the 
-sender and destroy all copies and the original message.
+Greets
+Alex
