@@ -1,45 +1,27 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] Revert "ARM: dts: rockchip: set PWM delay backlight settings for Minnie"
-Date: Fri, 14 Jun 2019 15:45:33 -0700
-Message-ID: <20190614224533.169881-1-mka@chromium.org>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
+Date: Fri, 14 Jun 2019 16:07:36 -0700
+Message-ID: <CA+E=qVf-_2DWbf55bCnjbkZH9N4a1_K16OxN9=o=NrZAV7GXPA@mail.gmail.com>
+References: <20190525181329.18657-1-tiny.windzz@gmail.com> <20190525181329.18657-2-tiny.windzz@gmail.com>
+ <CA+E=qVdh1E8Y7dZO0JSS4DJE2bo=98MuSKRt7nmeFg-td7Ua9Q@mail.gmail.com>
+ <CAEExFWtjNridLsMXOnBe2mJOPhUOYJ6G3wGF3gx=0oQoQROOGg@mail.gmail.com>
+ <CA+E=qVeOSw=_z4OiQ4++z8g-KN29UYVXGicNd3PtHobg4xaG+w@mail.gmail.com> <CAEExFWs58UNcVcQNnwK3dk5cpmfQRnjdRWAmYs5M1t_ONr1Bpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAEExFWs58UNcVcQNnwK3dk5cpmfQRnjdRWAmYs5M1t_ONr1Bpw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Pavel Machek <pavel@ucw.cz>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Frank Lee <tiny.windzz@gmail.com>
+Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Linux PM <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
+On Wed, Jun 12, 2019 at 9:50 AM Frank Lee <tiny.windzz@gmail.com> wrote:
+>
+> > If you have a git tree I'll be happy to contribute A64 support. IIRC
+> > it was quite similar to H3.
+>
+> I built a ths branch and I will do some work later.
+>
+> https://github.com/TinyWindzz/linux/tree/ths
 
-According to the commit message the AUO B101EAN01 panel on minnie
-requires a PWM delay of 200 ms, however this is not what the
-datasheet says. The datasheet mentions a *max* delay of 200 ms
-for T2 ("delay from LCDVDD to black video generation") and T3
-("delay from LCDVDD to HPD high"), which aren't related to the
-PWM. The backlight power sequence does not specify min/max
-constraints for T15 (time from PWM on to BL enable) or T16
-(time from BL disable to PWM off).
-
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Enric, if you think I misinterpreted the datasheet please holler!
----
- arch/arm/boot/dts/rk3288-veyron-minnie.dts | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-index 468a1818545d..28cbe07f96ec 100644
---- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-@@ -86,8 +86,6 @@
- 			240 241 242 243 244 245 246 247
- 			248 249 250 251 252 253 254 255>;
- 	power-supply = <&backlight_regulator>;
--	post-pwm-on-delay-ms = <200>;
--	pwm-off-delay-ms = <200>;
- };
- 
- &emmc {
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Looks like you forgot to add your patches to this branch.
