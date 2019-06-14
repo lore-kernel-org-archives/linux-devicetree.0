@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v2, 6/6] MAINTAINERS: maintain DPAA2 PTP driver in QorIQ PTP entry
-Date: Fri, 14 Jun 2019 18:40:55 +0800
-Message-ID: <20190614104055.43998-7-yangbo.lu@nxp.com>
+Subject: [v2, 4/6] arm64: dts: fsl: add ptp timer node for dpaa2 platforms
+Date: Fri, 14 Jun 2019 18:40:53 +0800
+Message-ID: <20190614104055.43998-5-yangbo.lu@nxp.com>
 References: <20190614104055.43998-1-yangbo.lu@nxp.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190614104055.43998-1-yangbo.lu@nxp.com>
@@ -10,42 +10,75 @@ To: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Richard Co
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Maintain DPAA2 PTP driver in QorIQ PTP entry.
+This patch is to add ptp timer device tree node for dpaa2
+platforms(ls1088a/ls208xa/lx2160a).
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
 Changes for v2:
 	- None.
 ---
- MAINTAINERS | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 8 ++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 8 ++++++++
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 8 ++++++++
+ 3 files changed, 24 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b70d5d5..b1f2207 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4922,13 +4922,6 @@ L:	linux-kernel@vger.kernel.org
- S:	Maintained
- F:	drivers/staging/fsl-dpaa2/ethsw
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 661137f..dacd8cf 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -609,6 +609,14 @@
+ 				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  
--DPAA2 PTP CLOCK DRIVER
--M:	Yangbo Lu <yangbo.lu@nxp.com>
--L:	netdev@vger.kernel.org
--S:	Maintained
--F:	drivers/net/ethernet/freescale/dpaa2/dpaa2-ptp*
--F:	drivers/net/ethernet/freescale/dpaa2/dprtc*
--
- DPT_I2O SCSI RAID DRIVER
- M:	Adaptec OEM Raid Solutions <aacraid@microsemi.com>
- L:	linux-scsi@vger.kernel.org
-@@ -6371,6 +6364,8 @@ FREESCALE QORIQ PTP CLOCK DRIVER
- M:	Yangbo Lu <yangbo.lu@nxp.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
-+F:	drivers/net/ethernet/freescale/dpaa2/dpaa2-ptp*
-+F:	drivers/net/ethernet/freescale/dpaa2/dprtc*
- F:	drivers/net/ethernet/freescale/enetc/enetc_ptp.c
- F:	drivers/ptp/ptp_qoriq.c
- F:	drivers/ptp/ptp_qoriq_debugfs.c
++		ptp-timer@8b95000 {
++			compatible = "fsl,dpaa2-ptp";
++			reg = <0x0 0x8b95000 0x0 0x100>;
++			clocks = <&clockgen 4 0>;
++			little-endian;
++			fsl,extts-fifo;
++		};
++
+ 		cluster1_core0_watchdog: wdt@c000000 {
+ 			compatible = "arm,sp805-wdt", "arm,primecell";
+ 			reg = <0x0 0xc000000 0x0 0x1000>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index d7e78dc..3ace919 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -321,6 +321,14 @@
+ 			};
+ 		};
+ 
++		ptp-timer@8b95000 {
++			compatible = "fsl,dpaa2-ptp";
++			reg = <0x0 0x8b95000 0x0 0x100>;
++			clocks = <&clockgen 4 1>;
++			little-endian;
++			fsl,extts-fifo;
++		};
++
+ 		fsl_mc: fsl-mc@80c000000 {
+ 			compatible = "fsl,qoriq-mc";
+ 			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index 125a8cc..e6fdba3 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -848,6 +848,14 @@
+ 			dma-coherent;
+ 		};
+ 
++		ptp-timer@8b95000 {
++			compatible = "fsl,dpaa2-ptp";
++			reg = <0x0 0x8b95000 0x0 0x100>;
++			clocks = <&clockgen 4 1>;
++			little-endian;
++			fsl,extts-fifo;
++		};
++
+ 		fsl_mc: fsl-mc@80c000000 {
+ 			compatible = "fsl,qoriq-mc";
+ 			reg = <0x00000008 0x0c000000 0 0x40>,
 -- 
 2.7.4
