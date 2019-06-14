@@ -1,65 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] dt-bindings: arm: Convert Actions Semi bindings to
- jsonschema
-Date: Fri, 14 Jun 2019 13:33:47 -0600
-Message-ID: <CAL_JsqJoQDkqZO_4XdaQymVW0cJDXVmAPh3uieRkBjoUXeWE1w@mail.gmail.com>
-References: <20190517153223.7650-1-robh@kernel.org>
- <20190613224435.GA32572@bogus>
- <20190614170450.GA29654@Mani-XPS-13-9360>
- <5946467c-7674-de2b-a657-627cf3be42df@suse.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml binding
+Date: Fri, 14 Jun 2019 13:43:02 -0600
+Message-ID: <20190614194302.GA18613@bogus>
+References: <cover.1558746978.git.renatogeh@gmail.com>
+ <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5946467c-7674-de2b-a657-627cf3be42df@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Renato Lui Geh <renatogeh@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, stefan.popa@analog.com, alexandru.Ardelean@analog.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMTQsIDIwMTkgYXQgMTE6MDcgQU0gQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJl
-ckBzdXNlLmRlPiB3cm90ZToKPgo+IEFtIDE0LjA2LjE5IHVtIDE5OjA0IHNjaHJpZWIgTWFuaXZh
-bm5hbiBTYWRoYXNpdmFtOgo+ID4gT24gVGh1LCBKdW4gMTMsIDIwMTkgYXQgMDQ6NDQ6MzVQTSAt
-MDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPj4gT24gRnJpLCBNYXkgMTcsIDIwMTkgYXQgMTA6
-MzI6MjNBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPj4+IENvbnZlcnQgQWN0aW9ucyBT
-ZW1pIFNvQyBiaW5kaW5ncyB0byBEVCBzY2hlbWEgZm9ybWF0IHVzaW5nIGpzb24tc2NoZW1hLgo+
-ID4+Pgo+ID4+PiBDYzogIkFuZHJlYXMgRsOkcmJlciIgPGFmYWVyYmVyQHN1c2UuZGU+Cj4gPj4+
-IENjOiBNYW5pdmFubmFuIFNhZGhhc2l2YW0gPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8u
-b3JnPgo+ID4+PiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4KPiA+Pj4g
-Q2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+ID4+PiBDYzogZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiA+Pj4gU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4KPiA+Pj4gLS0tCj4gPj4+IHYzOgo+ID4+PiAtIHVwZGF0ZSBNQUlOVEFJ
-TkVSUwo+ID4+Pgo+ID4+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2FjdGlvbnMudHh0
-ICAgICAgIHwgNTYgLS0tLS0tLS0tLS0tLS0tLS0tLQo+ID4+PiAgLi4uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvYXJtL2FjdGlvbnMueWFtbCAgICAgIHwgMzggKysrKysrKysrKysrKwo+ID4+PiAgTUFJ
-TlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KPiA+Pj4g
-IDMgZmlsZXMgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKSwgNTcgZGVsZXRpb25zKC0pCj4gPj4+
-ICBkZWxldGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Fy
-bS9hY3Rpb25zLnR4dAo+ID4+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9hcm0vYWN0aW9ucy55YW1sCj4gPj4KPiA+PiBQaW5nLiBQbGVhc2Ug
-YXBwbHkgb3IgbW9kaWZ5IHRoaXMgaG93IHlvdSdkIHByZWZlci4gSSdtIG5vdCBnb2luZyB0bwo+
-ID4+IGtlZXAgcmVzcGlubmluZyB0aGlzLgo+ID4+Cj4gPgo+ID4gU29ycnkgZm9yIHRoYXQgUm9i
-Lgo+Cj4gV2VsbCwgaXQgd2FzIHNpbXBseSBub3QgY2xlYXIgd2hldGhlciB3ZSB3ZXJlIHN1cHBv
-c2VkIHRvIG9yIG5vdC4gOikKCkkgdGhvdWdodCAnVG8nIHlvdSBhbmQgYSBzaW5nbGUgcGF0Y2gg
-c2hvdWxkIGJlIGNsZWFyIGVub3VnaC4KCj4gPiBBbmRyZWFzLCBhcmUgeW91IGdvaW5nIHRvIHRh
-a2UgdGhpcyBwYXRjaD8gRWxzZSBJJ2xsIHBpY2sgaXQgdXAgKElmIHlvdQo+ID4gd2FudCBtZSB0
-byBkbyB0aGUgUFIgZm9yIG5leHQgY3ljbGUpCj4KPiBJIGhhZCBjaGVja2VkIHRoYXQgYWxsIHBy
-ZXZpb3VzIGNoYW5nZXMgdG8gdGhlIC50eHQgZmlsZSB3ZXJlIGJ5IG15c2VsZiwKPiBzbyBJIHdv
-dWxkIHByZWZlciBpZiB3ZSBub3QgbGljZW5zZSBpdCB1bmRlciBHUEx2Mi1vbmx5IGJ1dCB1bmRl
-ciB0aGUKPiBzYW1lIGR1YWwtbGljZW5zZSAoTUlUL0dQTHYyKykgYXMgdGhlIERUcy4gVGhhdCBt
-b2RpZmljYXRpb24gd291bGQgbmVlZAo+IFJvYidzIGFwcHJvdmFsIHRoZW4uCgpUaGF0J3MgZmlu
-ZSBhbmQgZHVhbCBsaWNlbnNlIGlzIHByZWZlcnJlZC4gQ2FuIHlvdSBhZGp1c3QgdGhhdCB3aGVu
-CmFwcGx5aW5nLiBOb3RlIHRoYXQgdGhlIHByZWZlcmVuY2UgZm9yIHNjaGVtYSBpcyAoR1BMLTIu
-MCBPUgpCU0QtMi1DbGF1c2UpLCBidXQgTUlUL0dQTHYyKyBpcyBmaW5lIGJ5IG1lLgoKUm9iCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
-a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsCg==
+On Fri, 24 May 2019 22:26:30 -0300, Renato Lui Geh wrote:
+> This patch adds a YAML binding for the Analog Devices AD7780/1 and
+> AD7170/1 analog-to-digital converters.
+> 
+> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+> ---
+> Changes in v2:
+>  - vref-supply to avdd-supply
+>  - remove avdd-supply from required list
+>  - include adc block in an spi block
+> 
+>  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
+>  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
+>  2 files changed, 87 insertions(+), 48 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
