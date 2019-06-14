@@ -1,139 +1,137 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v5 01/10] media: dt-bindings: marvell,mmp2-ccic: Add
- Marvell MMP2 camera
-Date: Fri, 14 Jun 2019 11:50:58 +0200
-Message-ID: <20190614094921.tf4nqgszhg7pxzft@uno.localdomain>
-References: <20190505140031.9636-1-lkundrak@v3.sk>
- <20190505140031.9636-2-lkundrak@v3.sk>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 1/2] clk: rockchip: add clock for the watchdog pclk on
+ rk3328
+Date: Fri, 14 Jun 2019 11:50:24 +0200
+Message-ID: <5657669.4RvfzeBcXs@phil>
+References: <20190605235714.22432-1-papadakospan@gmail.com>
+ <3485393.4UdOu2YNQE@phil> <1559821340.1384.0@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kj5s4had2x4icus2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190505140031.9636-2-lkundrak@v3.sk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>, Sakari Ailus <sakari.ailus@iki.fi>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1559821340.1384.0@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Leonidas P. Papadakos" <papadakospan@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, itdaniher@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---kj5s4had2x4icus2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Am Donnerstag, 6. Juni 2019, 13:42:20 CEST schrieb Leonidas P. Papadakos:
+> 
+> Hi,
+> > 
+> > Am Donnerstag, 6. Juni 2019, 01:57:13 CEST schrieb Leonidas P. 
+> > Papadakos:
+> >>  From: <itdaniher@gmail.com>
+> > 
+> > Why is the From different from the Signed-off-by? Would also need a 
+> > full name.
+> > If the patch is from you, please just use the same From as for the 
+> > Signed-off-by.
+> > 
+> 
+> I mistakenly though this was the way to credit someone for a patch, but 
+> it seems to be different.
+> I'll Cc: the author of this patch
 
-Hi Lubomir,
+Were you able yet to take a look at the clock-patches I Cc'ed you on
+and look at reworking your patch accrodingly?
 
-On Sun, May 05, 2019 at 04:00:22PM +0200, Lubomir Rintel wrote:
-> Add Marvell MMP2 camera host interface.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
->
-> ---
-> Changes since v4:
-> - s/Nust/Must/
-> - Documented required endpoint properties; bus-type, hsync-active,
->   vsync-active and pclk-sample.
->
-> Changes since v3:
-> - Dropped the video-interfaces.txt reference
-> - Clarify "clocks", "clock-names" and "clock-output-names" descriptions
-> - Refer to other documentation by full path
->
-> Changes since v2:
-> - Added #clock-cells, clock-names, port
->
->  .../bindings/media/marvell,mmp2-ccic.txt      | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> new file mode 100644
-> index 0000000000000..7ec2c8c8a3b98
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> @@ -0,0 +1,50 @@
-> +Marvell MMP2 camera host interface
-> +
-> +Required properties:
-> + - compatible: Should be "marvell,mmp2-ccic".
-> + - reg: Register base and size.
-> + - interrupts: The interrupt number.
-> + - #clock-cells: Must be 0.
-> +
-> +Optional properties:
-> + - clocks: Reference to the input clock as specified by
-> +           Documentation/devicetree/bindings/clock/clock-bindings.txt.
-> + - clock-names: Names of the clocks used; "axi" for the AXI bus interface,
-> +                "func" for the peripheral clock and "phy" for the parallel
-> +                video bus interface.
-> + - clock-output-names: Optional clock source for sensors. Shall be "mclk".
-> +
-> +Required subnodes:
-> + - port: The parallel bus interface port with a single endpoint linked to
-> +         the sensor's endpoint as described in
-> +         Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Required endpoint properties:
-> + - bus-type: data bus type, <5> or <6> for Parallel or Bt.656 respectively
-> + - pclk-sample: pixel clock polarity
-> + - hsync-active: horizontal synchronization polarity (only required for
-> +   parallel bus)
-> + - vsync-active: vertical synchronization polarity (only required for
-> +   parallel bus)
-
-Minor nit: if you don't want to specify what maps to 0/1 in the
-properties, could you add "as defined in video-interfaces.txt" after
-each property?
-
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
 
 Thanks
-  j
+Heiko
 
-> +
-> +Example:
-> +
-> +	camera0: camera@d420a000 {
-> +		compatible = "marvell,mmp2-ccic";
-> +		reg = <0xd420a000 0x800>;
-> +		interrupts = <42>;
-> +		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
-> +		clock-names = "axi";
-> +		#clock-cells = <0>;
-> +		clock-output-names = "mclk";
-> +
-> +		port {
-> +			camera0_0: endpoint {
-> +				remote-endpoint = <&ov7670_0>;
-> +                                bus-type = <5>;      /* Parallel */
-> +                                hsync-active = <1>;  /* Active high */
-> +                                vsync-active = <1>;  /* Active high */
-> +                                pclk-sample = <0>;   /* Falling */
-> +			};
-> +		};
-> +	};
-> --
-> 2.21.0
->
-
---kj5s4had2x4icus2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0DbgIACgkQcjQGjxah
-Vjyzcg//clH4UtRYjsI86mItIoXCvJcGZTdFoZ/gLPd5Di9SslN9R2iMjN3VAY2f
-48IBTCCE9shwey6dCHak6yLlgvlH2DUaXG6o9E7t92ryxnYt3ydTEG4Jtq6X97MU
-xNRHPWcdBxpt3UNFUgkPol2iXX9mjltw9QhR+SNb2pBrOwHfU3JXQI1tTWvUkw8S
-7M1ajKUW3/fAVhaOKWKTfwU5Tov0IZaDBXLS7wRuQ5CI06ebk//yCjy/2dNTE1q4
-EWoXD/Fl/S0Z7nAmtn2eQG3H2ezlkIrEIi0wZXckgBOXHUe8D+8pqQE8Q6PQeFhA
-CxVXquKIa7MQfqY1Mybu7Wa9o99Xt0Jjaxtfp9Sy+mEb4gABA2WALwFn2SOscJbY
-YdN2wJmbr7+cwJ1720dDEA21/Vwc95S/UEiZji3BxnU+oEFOL1NUbxlDS6E8HMfp
-F0R7xUrCkjU1bcTfigzOJ/uGC4Mnm/vbgft18mK+uZSj4U6+sDvfMNYGMSLFzjmK
-7nA+8uOALWCoji7VMU+nlqAmxxxw7LL/T/mD8GA2n3S+wW2VIPZA2G6z3Xt59HYw
-neZJXsk/JaamauA4iIRAHi1nnOVSPVO2O0BE16tO+ALL/r7HJxUzgwjExmkEQHu6
-5lrtTA1XVqxWPndB0ODL/YTtzROZ5r7mCKC0uSVAMz8LEb1mggY=
-=ENUC
------END PGP SIGNATURE-----
-
---kj5s4had2x4icus2--
+> 
+> >> 
+> >>  Following the discussion here:
+> >>  https://github.com/rockchip-linux/kernel/issues/123
+> >> 
+> >>  it can be seen that these are the changes needed to enable the use 
+> >> of the hardware watchdog in the rk3328 SoC.
+> >> 
+> >>  This is in line with past changes for the rk3288:
+> >>  
+> >> http://lists.infradead.org/pipermail/linux-rockchip/2015-January/002314.html
+> >> 
+> >>  Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
+> >>  ---
+> >>   drivers/clk/rockchip/clk-rk3328.c      | 9 +++++++++
+> >>   include/dt-bindings/clock/rk3328-cru.h | 1 +
+> >>   2 files changed, 10 insertions(+)
+> >> 
+> >>  diff --git a/drivers/clk/rockchip/clk-rk3328.c 
+> >> b/drivers/clk/rockchip/clk-rk3328.c
+> >>  index 076b9777a..546ee0ab7 100644
+> >>  --- a/drivers/clk/rockchip/clk-rk3328.c
+> >>  +++ b/drivers/clk/rockchip/clk-rk3328.c
+> >>  @@ -876,6 +876,8 @@ static const char *const 
+> >> rk3328_critical_clocks[] __initconst = {
+> >> 
+> >>   static void __init rk3328_clk_init(struct device_node *np)
+> >>   {
+> >>  +	struct clk *clk;
+> >>  +
+> >>   	struct rockchip_clk_provider *ctx;
+> >>   	void __iomem *reg_base;
+> >> 
+> >>  @@ -892,6 +894,13 @@ static void __init rk3328_clk_init(struct 
+> >> device_node *np)
+> >>   		return;
+> >>   	}
+> >> 
+> >>  +	clk = clk_register_fixed_factor(NULL, "pclk_wdt", "pclk_bus", 0, 
+> >> 1, 1);
+> >>  +	if (IS_ERR(clk))
+> >>  +		pr_warn("%s: could not register clock pclk_wdt: %ld\n",
+> >>  +			__func__, PTR_ERR(clk));
+> >>  +	else
+> >>  +		rockchip_clk_add_lookup(ctx, clk, PCLK_WDT);
+> >>  +
+> > 
+> > I've just Cc'ed you on 2 patches adding a SGRF_GATE clock-type. Please
+> > use that as base for you rk3328-wdt-clock, so that we don't introduce 
+> > more
+> > boilderplate code.
+> > 
+> > 
+> >>   	rockchip_clk_register_plls(ctx, rk3328_pll_clks,
+> >>   				   ARRAY_SIZE(rk3328_pll_clks),
+> >>   				   RK3328_GRF_SOC_STATUS0);
+> > 
+> >>  diff --git a/include/dt-bindings/clock/rk3328-cru.h 
+> >> b/include/dt-bindings/clock/rk3328-cru.h
+> >>  index afb811340..555b4ff66 100644
+> >>  --- a/include/dt-bindings/clock/rk3328-cru.h
+> >>  +++ b/include/dt-bindings/clock/rk3328-cru.h
+> >>  @@ -164,6 +164,7 @@
+> >>   #define PCLK_DCF		233
+> >>   #define PCLK_SARADC		234
+> >>   #define PCLK_ACODECPHY		235
+> >>  +#define PCLK_WDT		236
+> >> 
+> >>   /* hclk gates */
+> >>   #define HCLK_PERI		308
+> > 
+> > please split the addition of the clock-id into a separate patch only 
+> > adding
+> > said id.
+> > 
+> > 
+> > Thanks
+> > Heiko
+> > 
+> 
+> I know less than him on this, but I want the feedback to be visible in 
+> the Cc:
+> 
+> 
+> 
