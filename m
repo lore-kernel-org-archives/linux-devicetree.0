@@ -1,128 +1,41 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v10 08/13] drivers: memory: add DMC driver for Exynos5422
-Date: Fri, 14 Jun 2019 15:46:11 +0200
-Message-ID: <CAJKOXPcsNe+PEszGAS+YyGH3qqQdELXnwhD+x=+9POrZziCOpw@mail.gmail.com>
-References: <CGME20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9@eucas1p1.samsung.com>
- <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-9-l.luba@partner.samsung.com>
- <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com> <6f86228d-8409-a835-20ba-ad20464379dd@partner.samsung.com>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [EXT] Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191
+ panel driver
+Date: Fri, 14 Jun 2019 13:50:12 +0000
+Message-ID: <1560520211.9328.41.camel@nxp.com>
+References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com>
+         <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
+         <CAOMZO5BAborMvk=4cgreWKX6rJjK-237me98dM1dDV53oUnExQ@mail.gmail.com>
+         <1560518953.9328.31.camel@nxp.com>
+         <CAOMZO5DcvKQPDhP468VSCfQkFy-7roKBkw7uqXxTMn9PTTgS+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6f86228d-8409-a835-20ba-ad20464379dd@partner.samsung.com>
+In-Reply-To: <CAOMZO5DcvKQPDhP468VSCfQkFy-7roKBkw7uqXxTMn9PTTgS+A@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <AFE0FA3EDFCE8F479938F2D5F10DD015@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
+To: "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sam@ravnborg.org" <sam@ravnborg.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Jun 2019 at 15:41, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Hi Krzysztof,
->
-> On 6/14/19 2:58 PM, Krzysztof Kozlowski wrote:
-> > On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
-> >>
-> >> This patch adds driver for Exynos5422 Dynamic Memory Controller.
-> >> The driver provides support for dynamic frequency and voltage scaling for
-> >> DMC and DRAM. It supports changing timings of DRAM running with different
-> >> frequency. There is also an algorithm to calculate timigns based on
-> >> memory description provided in DT.
-> >> The patch also contains needed MAINTAINERS file update.
-> >>
-> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> >> ---
-> >>   MAINTAINERS                             |    8 +
-> >>   drivers/memory/samsung/Kconfig          |   17 +
-> >>   drivers/memory/samsung/Makefile         |    1 +
-> >>   drivers/memory/samsung/exynos5422-dmc.c | 1262 +++++++++++++++++++++++
-> >>   4 files changed, 1288 insertions(+)
-> >>   create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
-> >>
-> >> diff --git a/MAINTAINERS b/MAINTAINERS
-> >> index 57f496cff999..6ffccfd95351 100644
-> >> --- a/MAINTAINERS
-> >> +++ b/MAINTAINERS
-> >> @@ -3470,6 +3470,14 @@ S:       Maintained
-> >>   F:     drivers/devfreq/exynos-bus.c
-> >>   F:     Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> >>
-> >> +DMC FREQUENCY DRIVER FOR SAMSUNG EXYNOS5422
-> >
-> > Eh, more comments from my side.
-> > "For the hard of thinking, this list is meant to remain in alphabetical order."
-> OK
-> >
-> >> +M:     Lukasz Luba <l.luba@partner.samsung.com>
-> >> +L:     linux-pm@vger.kernel.org
-> >> +L:     linux-samsung-soc@vger.kernel.org
-> >> +S:     Maintained
-> >> +F:     drivers/memory/samsung/exynos5422-dmc.c
-> >> +F:     Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> >> +
-> >>   BUSLOGIC SCSI DRIVER
-> >>   M:     Khalid Aziz <khalid@gonehiking.org>
-> >>   L:     linux-scsi@vger.kernel.org
-> >> diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
-> >> index 79ce7ea58903..c93baa029654 100644
-> >> --- a/drivers/memory/samsung/Kconfig
-> >> +++ b/drivers/memory/samsung/Kconfig
-> >> @@ -5,6 +5,23 @@ config SAMSUNG_MC
-> >>            Support for the Memory Controller (MC) devices found on
-> >>            Samsung Exynos SoCs.
-> >>
-> >> +config ARM_EXYNOS5422_DMC
-> >
-> > Why you added prefix of ARM to CONFIG think none of other Exynos
-> > Kconfig options follow such convention (except devfreq).
-> In the previous versions the driver was in drivers/devfreq/,
-> that's why they have this prefix.
-> >
-> >> +       tristate "ARM EXYNOS5422 Dynamic Memory Controller driver"
-> >> +       depends on ARCH_EXYNOS
-> >> +       select DDR
-> >
-> > In general select should be used only for non-visible symbols and DDR
-> > is visible. Use depends.
-> OK
-> >
-> >> +       select PM_DEVFREQ
-> >
-> > This definitely cannot be select. You do not select entire subsystem
-> > because some similar driver was chosen.
-> So I will use depends int this case
-> >
-> >> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
-> >> +       select DEVFREQ_GOV_USERSPACE
-> >
-> > I think only simple_ondemand is needed. Is userspace governor
-> > necessary for working? Or actually maybe both could be skipped?
-> >
-> Actually we can skip both governors from here.
->
-> >> +       select PM_DEVFREQ_EVENT
-> >
-> > Again, depends.
-> OK
->
-> There are these 4 options which the driver depends on:
->          depends on ARCH_EXYNOS
->          depends on DDR
->          depends on PM_DEVFREQ
->          depends on PM_DEVFREQ_EVENT
->
-> Should I merged them into one, two lines? like below:
-> a)
-> depends on (ARCH_EXYNOS && DDR && PM_DEVFREQ && PM_DEVFREQ_EVENT)
-> b) grouped into two sets
-> depends on (ARCH_EXYNOS && DDR)
-> depends on (PM_DEVFREQ && PM_DEVFREQ_EVENT)
-> c) grouped by pm_devfreq only
-> depends on ARCH_EXYNOS
-> depends on DDR
-> depends on (PM_DEVFREQ && PM_DEVFREQ_EVENT)
-
-I like the third option... although I would be also happy to see
-COMPILE_TEST (probably with IOMEM). You need to check which
-dependencies are still necessary for COMPILE_TEST.
-
-Best regards,
-Krzysztof
+T24gVmksIDIwMTktMDYtMTQgYXQgMTA6MzkgLTAzMDAsIEZhYmlvIEVzdGV2YW0gd3JvdGU6DQo+
+IENhdXRpb246IEVYVCBFbWFpbA0KPiANCj4gT24gRnJpLCBKdW4gMTQsIDIwMTkgYXQgMTA6Mjkg
+QU0gUm9iZXJ0IENoaXJhcyA8cm9iZXJ0LmNoaXJhc0BueHAuY29tDQo+ID4gd3JvdGU6DQo+IA0K
+PiA+IA0KPiA+IFRoZSBHUElPIGlzIGFjdGl2ZSBoaWdoLCBhbmQgdGhlIGFib3ZlIHNlcXVlbmNl
+IHdhcyByZWNlaXZlZCBmcm9tDQo+ID4gdGhlDQo+ID4gcGFuZWwgdmVuZG9yIGluIHRoZSBmb2xs
+b3dpbmcgZm9ybToNCj4gPiDCoMKgwqDCoMKgwqDCoMKgU0VUX1JFU0VUX1BJTigxKTsNCj4gPiDC
+oMKgwqDCoMKgwqDCoMKgTURFTEFZKDEwKTsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgU0VUX1JFU0VU
+X1BJTigwKTsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgTURFTEFZKDUpOw0KPiA+IMKgwqDCoMKgwqDC
+oMKgwqBTRVRfUkVTRVRfUElOKDEpOw0KPiA+IMKgwqDCoMKgwqDCoMKgwqBNREVMQVkoMjApOw0K
+PiA+IEkgZ290IHJpZCBvZiB0aGUgZmlyc3QgdHJhbnNpdGlvbiB0byBoaWdoIHNpbmNlIHNlZW1l
+ZCByZWR1bmRhbnQuDQo+ID4gQWxzbywgYWNjb3JkaW5nIHRvIHRoZSBtYW51YWwgcmVmZXJlbmNl
+LCB0aGUgUlNUQiBwaW4gbmVlZHMgdG8gYmUNCj4gPiBhY3RpdmUgaGlnaCB3aGlsZSBvcGVyYXRp
+bmcgdGhlIGRpc3BsYXkuDQo+IFRoYXQncyBleGFjdGx5IG15IHBvaW50IDotKQ0KPiANCj4gSW4g
+bm9ybWFsIG9wZXJhdGlvbiB0aGUgR1BJTyByZXNldCBuZWVkcyB0byBiZSBoaWdoLg0KPiANCj4g
+RHVyaW5nIHJlc2V0IHRoZSBHUElPIHJlc2V0IG5lZWRzIHRvIGJlIGxvdy4sIHdoaWNoIG1lYW5z
+IHRoYXQgdGhlDQo+IEdQSU8gcmVzZXQgaXMgImFjdGl2ZSBsb3ciLg0KPiANCj4gU28geW91IHNo
+b3VsZCBpbnZlcnQgYm90aCB0aGUgZHRzIGFuZCB0aGUgZHJpdmVyIHRvIGJlaGF2ZSBjb3JyZWN0
+bHkuDQpOb3cgSSBnZXQgaXQuIFRoYW5rcyEgSSB3aWxsIHVwZGF0ZSB0aGUgZHRzIGFuZCBkcml2
+ZXIgZm9yIHRoZSBncGlvLg==
