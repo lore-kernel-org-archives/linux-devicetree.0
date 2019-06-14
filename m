@@ -1,51 +1,67 @@
-Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 01/27] soc/tegra: pmc: Export tegra_powergate_power_on()
-Date: Tue, 18 Jun 2019 23:31:40 +0530
-Message-ID: <20190618180206.4908-2-mmaddireddy@nvidia.com>
-In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
-References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Date: Fri, 14 Jun 2019 07:05:24 -0600
+References: <20190520032020.7920-1-peng.fan@nxp.com>
+	<20190613230055.GA19296@bogus>
+	<AM0PR04MB4481288D0D1B8DA704FEF82B88EE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB4481288D0D1B8DA704FEF82B88EE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Message-ID: <CAL_JsqKzf-AXrypaD3_iCqiy1WQg1DDiFQ0XxHz8R9+Uxz1YqA@mail.gmail.com>
+Subject: Re: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-tegra_powergate_sequence_power_up() powers up partition and also enables
-clock & reset. However, if a controller like PCIe have multiple clocks
-& resets and they need to be enabled in a sequence, driver must use
-standalone function tegra_powergate_power_on() to power up partition.
-
-Export tegra_powergate_power_on() to allow Tegra controller drivers to
-unpower gate partition independent to clock & reset.
-
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V6: No change
-
-V5: No change
-
-V4: No change
-
-V3: No change
-
-V2: No change
-
- drivers/soc/tegra/pmc.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 0c5f79528e5f..cb3de81348bd 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -701,6 +701,7 @@ int tegra_powergate_power_on(unsigned int id)
- 
- 	return tegra_powergate_set(pmc, id, true);
- }
-+EXPORT_SYMBOL(tegra_powergate_power_on);
- 
- /**
-  * tegra_powergate_power_off() - power off partition
--- 
-2.17.1
+On Thu, Jun 13, 2019 at 7:19 PM Peng Fan <peng.fan@nxp.com> wrote:
+>
+> Hi Rob,
+>
+> > Subject: Re: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
+> >
+> > On Mon, May 20, 2019 at 03:06:35AM +0000, Peng Fan wrote:
+> > > Introduce fusable-node property for i.MX OCOTP driver.
+> > > The property will only be used by Firmware(eg. U-Boot) to runtime
+> > > disable the nodes.
+> > >
+> > > Take i.MX6ULL for example, there are several parts that only have
+> > > limited modules enabled controlled by OCOTP fuse. It is not flexible
+> > > to provide several dts for the serval parts, instead we could provide
+> > > one device tree and let Firmware to runtime disable the device tree
+> > > nodes for those modules that are disable(fused).
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >
+> > > Currently NXP vendor use U-Boot to set status to disabled for devices
+> > > that could not function,
+> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fsour
+> > >
+> > ce.codeaurora.org%2Fexternal%2Fimx%2Fuboot-imx%2Ftree%2Farch%2Far
+> > m%2Fm
+> > >
+> > ach-imx%2Fmx6%2Fmodule_fuse.c%3Fh%3Dimx_v2018.03_4.14.98_2.0.0_g
+> > a%23n1
+> > >
+> > 49&amp;data=02%7C01%7Cpeng.fan%40nxp.com%7Ceb74876c943c4471d7f
+> > f08d6f05
+> > >
+> > 2fffb%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63696063660
+> > 6051306&
+> > >
+> > amp;sdata=MrjCP0ufBu3uTb1ehTEu2g5eSQuYcho4UxuR9KUFEOA%3D&amp;
+> > reserved=
+> > > 0 But this approach is will not work if kernel dts node path changed.
+> >
+> > Why would the path change? The DT should be stable.
+>
+> It changes sometimes, such as
+> efb9adb27475 ("ARM: dts: imx6ul: Remove leading zeroes from unit addresses"),
+>
+> in bootloader, we are using node path, so if the node name changes, the bootloader
+> will fail to disable the node.
+>
+> Thanks,
+> Peng.
+>
+> >
+> > Rob
