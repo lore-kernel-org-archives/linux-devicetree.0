@@ -1,138 +1,120 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v2 00/11] Introduce Bandwidth OPPs & interconnect devfreq driver
-Date: Thu, 13 Jun 2019 21:17:22 -0700
-Message-ID: <20190614041733.120807-1-saravanak@google.com>
+Subject: [PATCH v2 02/11] OPP: Add function to look up required OPP's for a
+ given OPP
+Date: Thu, 13 Jun 2019 21:17:24 -0700
+Message-ID: <20190614041733.120807-3-saravanak@google.com>
+References: <20190614041733.120807-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190614041733.120807-1-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 Cc: Saravana Kannan <saravanak@google.com>, Rajendra Nayak <rnayak@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-I replied[1] to this patch series[2] and described how I think interconnect
-bandwidth voting should be captured in DT and how it should work.
+Add a function that allows looking up required OPPs given a source OPP
+table, destination OPP table and the source OPP.
 
-So sending out a patch series implementing that. This patch series does the
-following:
-- Allow required-opps to point to any device's OPP
-- Add support to devfreq passive governor to look at the "parent"
-  devfreq's required-opps to decide the "slave" device's frequency
-- Adds Bandwidth OPP table support
-- Adds a devfreq library for interconnect paths
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/opp/core.c     | 54 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pm_opp.h | 11 +++++++++
+ 2 files changed, 65 insertions(+)
 
-Interconnects and interconnect paths quantify they performance levels in
-terms of bandwidth. So similar to how we have frequency based OPP tables
-in DT and in the OPP framework, this patch series adds bandwidth OPP
-table support in the OPP framework and in DT.
-
-To simplify voting for interconnects, this patch series adds helper
-functions to create devfreq devices out of interconnect paths. This
-allows drivers to add a single line of code to add interconnect voting
-capability.
-
-To add devfreq device for the "gpu-mem" interconnect path and use
-required OPPs to do decide gpu-mem bandwidth:
-icc_create_devfreq(dev, "gpu-mem", gpu_devfreq);
-
-To add devfreq device for the "gpu-mem" interconnect path and use some
-other governor to device gpu-mem bandwidth:
-icc_create_devfreq(dev, "gpu-mem", NULL);
-
-So with the DT bindings added in this patch series, the DT for a GPU
-that does bandwidth voting from GPU to Cache and GPU to DDR would look
-something like this:
-
-gpu_cache_opp_table: gpu_cache_opp_table {
-	compatible = "operating-points-v2";
-
-	gpu_cache_3000: opp-3000 {
-		opp-peak-KBps = <3000>;
-		opp-avg-KBps = <1000>;
-	};
-	gpu_cache_6000: opp-6000 {
-		opp-peak-KBps = <6000>;
-		opp-avg-KBps = <2000>;
-	};
-	gpu_cache_9000: opp-9000 {
-		opp-peak-KBps = <9000>;
-		opp-avg-KBps = <9000>;
-	};
-};
-
-gpu_ddr_opp_table: gpu_ddr_opp_table {
-	compatible = "operating-points-v2";
-
-	gpu_ddr_1525: opp-1525 {
-		opp-peak-KBps = <1525>;
-		opp-avg-KBps = <452>;
-	};
-	gpu_ddr_3051: opp-3051 {
-		opp-peak-KBps = <3051>;
-		opp-avg-KBps = <915>;
-	};
-	gpu_ddr_7500: opp-7500 {
-		opp-peak-KBps = <7500>;
-		opp-avg-KBps = <3000>;
-	};
-};
-
-gpu_opp_table: gpu_opp_table {
-	compatible = "operating-points-v2";
-	opp-shared;
-
-	opp-200000000 {
-		opp-hz = /bits/ 64 <200000000>;
-		required-opps = <&gpu_cache_3000>, <&gpu_ddr_1525>;
-	};
-	opp-400000000 {
-		opp-hz = /bits/ 64 <400000000>;
-		required-opps = <&gpu_cache_6000>, <&gpu_ddr_3051>;
-	};
-};
-
-gpu@7864000 {
-	...
-	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
-	interconnects = <&mmnoc MASTER_GPU_1 &bimc SLAVE_SYSTEL_CACHE>,
-			<&mmnoc MASTER_GPU_1 &bimc SLAVE_DDR>;
-	interconnect-names = "gpu-cache", "gpu-mem";
-	interconnect-opp-table = <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>
-};
-
-Cheers,
-Saravana
-
-[1] - https://lore.kernel.org/lkml/20190601021228.210574-1-saravanak@google.com/
-[2] - https://lore.kernel.org/lkml/20190423132823.7915-1-georgi.djakov@linaro.org/ 
-
-
-Saravana Kannan (11):
-  OPP: Allow required-opps even if the device doesn't have power-domains
-  OPP: Add function to look up required OPP's for a given OPP
-  PM / devfreq: Add required OPPs support to passive governor
-  dt-bindings: opp: Introduce opp-peak-KBps and opp-avg-KBps bindings
-  OPP: Add support for bandwidth OPP tables
-  OPP: Add helper function for bandwidth OPP tables
-  OPP: Add API to find an OPP table from its DT node
-  dt-bindings: interconnect: Add interconnect-opp-table property
-  interconnect: Add OPP table support for interconnects
-  OPP: Allow copying OPPs tables between devices
-  interconnect: Add devfreq support
-
- .../bindings/interconnect/interconnect.txt    |   8 +
- Documentation/devicetree/bindings/opp/opp.txt |  15 +-
- drivers/devfreq/governor_passive.c            |  25 ++-
- drivers/interconnect/Makefile                 |   2 +-
- drivers/interconnect/core.c                   |  27 ++-
- drivers/interconnect/icc-devfreq.c            | 156 ++++++++++++++++++
- drivers/opp/core.c                            | 115 ++++++++++++-
- drivers/opp/of.c                              |  90 +++++++---
- drivers/opp/opp.h                             |   4 +-
- include/linux/interconnect.h                  |  21 +++
- include/linux/pm_opp.h                        |  44 +++++
- 11 files changed, 474 insertions(+), 33 deletions(-)
- create mode 100644 drivers/interconnect/icc-devfreq.c
-
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 74c7bdc6f463..4f7870bffbf8 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -1830,6 +1830,60 @@ void dev_pm_opp_put_genpd_virt_dev(struct opp_table *opp_table,
+ 		dev_err(virt_dev, "Failed to find required device entry\n");
+ }
+ 
++/**
++ * dev_pm_opp_xlate_opp() - Find required OPP for src_table OPP.
++ * @src_table: OPP table which has dst_table as one of its required OPP table.
++ * @dst_table: Required OPP table of the src_table.
++ * @pstate: OPP of the src_table.
++ *
++ * This function returns the OPP (present in @dst_table) pointed out by the
++ * "required-opps" property of the OPP (present in @src_table).
++ *
++ * The callers are required to call dev_pm_opp_put() for the returned OPP after
++ * use.
++ *
++ * Return: destination table OPP on success, otherwise NULL on errors.
++ */
++struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
++					struct opp_table *dst_table,
++					struct dev_pm_opp *src_opp)
++{
++	struct dev_pm_opp *opp, *dest_opp = NULL;
++	int i;
++
++	if (!src_table || !dst_table || !src_opp)
++		return NULL;
++
++	for (i = 0; i < src_table->required_opp_count; i++) {
++		if (src_table->required_opp_tables[i]->np == dst_table->np)
++			break;
++	}
++
++	if (unlikely(i == src_table->required_opp_count)) {
++		pr_err("%s: Couldn't find matching OPP table (%p: %p)\n",
++		       __func__, src_table, dst_table);
++		return NULL;
++	}
++
++	mutex_lock(&src_table->lock);
++
++	list_for_each_entry(opp, &src_table->opp_list, node) {
++		if (opp == src_opp) {
++			dest_opp = opp->required_opps[i];
++			dev_pm_opp_get(dest_opp);
++			goto unlock;
++		}
++	}
++
++	pr_err("%s: Couldn't find matching OPP (%p: %p)\n", __func__, src_table,
++	       dst_table);
++
++unlock:
++	mutex_unlock(&src_table->lock);
++
++	return dest_opp;
++}
++
+ /**
+  * dev_pm_opp_xlate_performance_state() - Find required OPP's pstate for src_table.
+  * @src_table: OPP table which has dst_table as one of its required OPP table.
+diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+index b150fe97ce5a..bc5c68bdfc8d 100644
+--- a/include/linux/pm_opp.h
++++ b/include/linux/pm_opp.h
+@@ -134,6 +134,9 @@ void dev_pm_opp_unregister_set_opp_helper(struct opp_table *opp_table);
+ struct opp_table *dev_pm_opp_set_genpd_virt_dev(struct device *dev, struct device *virt_dev, int index);
+ void dev_pm_opp_put_genpd_virt_dev(struct opp_table *opp_table, struct device *virt_dev);
+ int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
++struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
++					struct opp_table *dst_table,
++					struct dev_pm_opp *src_opp);
+ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
+ int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
+ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
+@@ -307,6 +310,14 @@ static inline int dev_pm_opp_xlate_performance_state(struct opp_table *src_table
+ 	return -ENOTSUPP;
+ }
+ 
++static inline struct dev_pm_opp *dev_pm_opp_xlate_opp(
++						struct opp_table *src_table,
++						struct opp_table *dst_table,
++						struct dev_pm_opp *src_opp)
++{
++	return NULL;
++}
++
+ static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+ {
+ 	return -ENOTSUPP;
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
