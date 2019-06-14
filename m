@@ -1,144 +1,52 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 00/28] drivers: Consolidate device lookup helpers
-Date: Fri, 14 Jun 2019 11:24:18 -0700
-Message-ID: <3aa6d42db4b64c625b8461ee7d442f3f1830e8c3.camel@perches.com>
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 3/6] regulator: rk808: add RK809 and RK817 support.
+Date: Fri, 14 Jun 2019 19:24:21 +0100
+Message-ID: <20190614182421.GI5316@sirena.org.uk>
+References: <20190614031425.15741-1-tony.xie@rock-chips.com>
+ <20190614031425.15741-4-tony.xie@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="je2i5r69C8+2chMc"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+Content-Disposition: inline
+In-Reply-To: <20190614031425.15741-4-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Tony Xie <tony.xie@rock-chips.com>
+Cc: heiko@sntech.de, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-(dropping the very long cc list just cc'ing LKML and devicetree)
 
-On Fri, 2019-06-14 at 18:53 +0100, Suzuki K Poulose wrote:
-> We have device iterators to find a particular device matching a criteria
-> for a given bus/class/driver. i.e, {bus,class,driver}_find_device() APIs.
-> The matching criteria is a function pointer for the APIs. Often the lookup
-> is based on a generic property of a device (e.g, name, fwnode, of node pointer
-> or device type) rather than a driver specific information. However, each driver
-> writes up its own "match" function, spilling the similar match functions all
-> over the driver subsystems.
-> 
-> Additionally the prototype for the "match" functions accepted by the above APIs
-> have a minute difference which prevents us otherwise sharing the match functions.
-> i.e,
-> 	int (*match)(struct device *dev, void *data) for {bus/driver}_find_device()
-> 	  vs
-> 	int (*match)(struct device *dev, const void *) for class_find_device()
-> 
+--je2i5r69C8+2chMc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As you are doing treewide conversions, perhaps using
+On Thu, Jun 13, 2019 at 11:14:22PM -0400, Tony Xie wrote:
+>     Add support for the rk809 and rk817 regulator driver.
+>     Their specifications are as follows=EF=BC=9A
+>     1. The RK809 and RK809 consist of 5 DCDCs, 9 LDOs
+>        and have the same registers for these components except dcdc5.
+>     2. The dcdc5 is a boost dcdc for RK817 and is a buck for RK809.
+>     3. The RK817 has one switch but The Rk809 has two.
+>=20
+>     The output voltages are configurable and are meant to supply power
+>     to the main processor and other components.
 
-	bool (*match)(...)
+Acked-by: Mark Brown <broonie@kernel.org>
 
-is a more sensible api.
+--je2i5r69C8+2chMc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Changes since v1:
->  - Drop start parameter for *_find_device_by_devt().
->  - Fix build warnings for s390
->  - Add *_find_device_by_acpi_dev() wrappers.
->  - Group wrappers and the consumers into single patch, reducing
->    the total patches to 28 from 57. (Rafael).
->  - Better description for acpi cleanup patch.
->  - Added tags from v1.
+-----BEGIN PGP SIGNATURE-----
 
-Below this is a _very_ long list of cc:'s.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0D5lQACgkQJNaLcl1U
+h9Cg3gf+PI+oNUSN6SISGiEj0NLwGYqM6Zuaotd0ItoKH0gSxFrTbuNhIGdsI/mN
+fjDHx3QiGEsRBgKLaae3GP35+L2B7d4sUs7+ZpVC0DrldSFUQ3G6xbsez1CKm5wB
+o3u5dBWZSKGHHxjJV/VH27wu6BonLndiAbFuwA/vjB2tTr7003bRMYeVDoI3uPik
+o7vU+ZwFhCGUuh4TmPusYRWepB5cyGCuo9j/IX+HfWnLeVvcOlz0qtIVcr0DARzF
+ZPAxMHqtm2lvyldzgU456YAA1wTVihRwRvhSyz3hAKgZLzlngjGxPrrgszbJJ05I
+SUAgVqBJ/phpgaL6BBLqlGNDtUXPmg==
+=Qfnw
+-----END PGP SIGNATURE-----
 
-If the list is generated using scripts/get_maintainer.pl
-perhaps it is more sensible to add --nogit --nogit-fallback
-to its arguments to cc actual maintainers and avoid people
-that have submitted cleanup style patches to various files.
-
-> Cc: Alan Tull <atull@kernel.org>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexander Aring <alex.aring@gmail.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Andreas Noever <andreas.noever@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Corey Minyard <minyard@acm.org>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: David Kershner <david.kershner@unisys.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Doug Ledford <dledford@redhat.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: Elie Morisse <syniurge@gmail.com>
-> Cc: Eric Anholt <eric@anholt.net>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Grant Likely <grant.likely@arm.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-> Cc: Harald Freudenberger <freude@linux.ibm.com>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: "Heiko Stübner" <heiko@sntech.de>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> Cc: Inki Dae <inki.dae@samsung.com>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: Joe Perches <joe@perches.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Len Brown <lenb@kernel.org
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Michael Jamet <michael.jamet@intel.com>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: Moritz Fischer <mdf@kernel.org>
-> Cc: Nehal Shah <nehal-bakulchandra.shah@amd.com>
-> Cc: Oliver Neukum <oneukum@suse.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Sandy Huang <hjc@rock-chips.com>
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Cc: Sebastian Ott <sebott@linux.ibm.com>
-> Cc: Seung-Woo Kim <sw0312.kim@samsung.com>
-> Cc: Shyam Sundar S K <shyam-sundar.s-k@amd.com>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: Stefan Schmidt <stefan@datenfreihafen.org>
-> Cc: Takashi Iwai <tiwai@suse.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Thor Thayer <thor.thayer@linux.intel.com>
-> Cc: Tomas Winkler <tomas.winkler@intel.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-acpi@vger.kernel.org
-> Cc: linux-fpga@vger.kernel.org
-> Cc: linux-i2c@vger.kernel.org
-> Cc: linux-leds@vger.kernel.org
-> Cc: linux-rockchip@lists.infradead.org
-> Cc: linux-rtc@vger.kernel.org
-> Cc: linux-spi@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> Cc: linux-wpan@vger.kernel.org
+--je2i5r69C8+2chMc--
