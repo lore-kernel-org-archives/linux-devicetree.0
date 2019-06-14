@@ -1,80 +1,108 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v1] Input: rotary-encoder - Add gpio as push button
-Date: Fri, 14 Jun 2019 16:51:58 +0200
-Message-ID: <20190614145158.ic5n4jauzigvcpru@flea>
-References: <20190614133651.28396-1-mylene.josserand@bootlin.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: arm: fsl: Add DSP IPC binding support
+Date: Fri, 14 Jun 2019 08:52:51 -0600
+Message-ID: <CAL_JsqJKgMB1PNA33gmFju4AQTc2WaSBoOGQExVaGd9LZRmk_g@mail.gmail.com>
+References: <20190614081650.11880-1-daniel.baluta@nxp.com> <20190614081650.11880-3-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zhhrocqtd54h66wd"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190614133651.28396-1-mylene.josserand@bootlin.com>
+In-Reply-To: <20190614081650.11880-3-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "S.j. Wang" <shengjiu.wang@nxp.com>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@gmail.com>, Anson Huang <anson.huang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-
---zhhrocqtd54h66wd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Mylene,
-
-On Fri, Jun 14, 2019 at 03:36:51PM +0200, Myl=E8ne Josserand wrote:
-> Add the support of a gpio that can be defined as a push button.
-> Thanks to that, it is possible to emit a keycode in case of a
-> "push" event, if the rotary supports that.
+On Fri, Jun 14, 2019 at 2:15 AM <daniel.baluta@nxp.com> wrote:
 >
-> The keycode to emit is defined using "linux,code" property
-> (such as in gpio-keys).
+> From: Daniel Baluta <daniel.baluta@nxp.com>
 >
-> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+> DSP IPC is the layer that allows the Host CPU to communicate
+> with DSP firmware.
+> DSP is part of some i.MX8 boards (e.g i.MX8QM, i.MX8QXP)
+>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 > ---
->  .../devicetree/bindings/input/rotary-encoder.txt   |  5 +++
->  drivers/input/misc/rotary_encoder.c                | 50 ++++++++++++++++=
-++++++
->  2 files changed, 55 insertions(+)
+>  .../bindings/arm/freescale/fsl,dsp.yaml       | 43 +++++++++++++++++++
+
+bindings/dsp/...
+
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
 >
-> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b=
-/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> index a644408b33b8..1cfce5d0b5c4 100644
-> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> @@ -22,6 +22,9 @@ Optional properties:
->  - wakeup-source: Boolean, rotary encoder can wake up the system.
->  - rotary-encoder,encoding: String, the method used to encode steps.
->    Supported are "gray" (the default and more common) and "binary".
-> +- push-gpio: a gpio to be used as a detection of a push from the rotary.
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml b/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
+> new file mode 100644
+> index 000000000000..16d9df1d397b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-According to Documentation/devicetree/bindings/gpio/gpio.txt, GPIO
-properties with a -gpio suffix are now deprecated in favor of the
--gpios suffix.
+The preference is to dual license new bindings: GPL-2.0 OR BSD-2-Clause
 
-> +- linux,code: keycode to emit with the push-gpio of this rotary encoder.
-> +  Required property in case "push-gpio"'s one is used.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/freescale/fsl,dsp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP i.MX IPC DSP driver
 
-I guess we should make it clear in the property name that it's the
-keycode emitted at push. Otherwise, it will be ambiguous between the
-rotary itself, or the button.
+This isn't a driver.
 
-Maxime
+> +
+> +maintainers:
+> +  - Daniel Baluta <daniel.baluta@nxp.com>
+> +
+> +description: |
+> +  IPC communication layer between Host CPU and DSP on NXP i.MX8 platforms
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,imx-dsp
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+You can have a fallback, but it needs SoC specific compatible(s).
 
---zhhrocqtd54h66wd
-Content-Type: application/pgp-signature; name="signature.asc"
+> +
+> +  mboxes:
+> +    description:
+> +      List of phandle of 2 MU channels for TXDB, 2 MU channels for RXDB
+> +      (see mailbox/fsl,mu.txt)
+> +    maxItems: 1
 
------BEGIN PGP SIGNATURE-----
+Should be 4?
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQO0jQAKCRDj7w1vZxhR
-xfa/APwNihQsA19qm8pkGRWL3Qlt9LOqUvcojAJKnBgw5Ey79gD/an1E5acjkg+i
-vYdRBFvAGVoRBhf+EhuKBQMgH/N2mww=
-=iSqL
------END PGP SIGNATURE-----
+> +
+> +  mbox-names
+> +    description:
+> +      Mailboxes names
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/string"
 
---zhhrocqtd54h66wd--
+No need for this, '*-names' already has a defined type.
+
+> +      - enum: [ "txdb0", "txdb1", "rxdb0", "rxdb1" ]
+
+Should be an 'items' list with 4 entries?
+
+> +required:
+> +  - compatible
+> +  - mboxes
+> +  - mbox-names
+
+This seems incomplete. How does one boot the DSP? Load firmware? No
+resources that Linux has to manage. Shared memory?
+
+> +
+> +examples:
+> +  - |
+> +    dsp {
+> +      compatbile = "fsl,imx-dsp";
+> +      mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
+> +      mboxes = <&lsio_mu13 2 0 &lsio_mu13 2 1 &lsio_mu13 3 0 &lsio_mu13 3 1>;
+
+mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
+
+> +    };
+> --
+> 2.17.1
+>
