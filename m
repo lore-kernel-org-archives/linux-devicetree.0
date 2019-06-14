@@ -1,38 +1,45 @@
-From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii
- performance.
-Date: Sat, 15 Jun 2019 00:27:11 +0300
-Message-ID: <1560547631.1367.4@gmail.com>
-References: <20190607123731.8737-1-pgwipeout@gmail.com>
- <1559912295.22520.0@gmail.com>
- <CAMdYzYorvWr1YhmFKaMQUCditjop5AZp4d1tO79XsVr7m7HrMw@mail.gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] Revert "ARM: dts: rockchip: set PWM delay backlight settings for Minnie"
+Date: Fri, 14 Jun 2019 15:45:33 -0700
+Message-ID: <20190614224533.169881-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMdYzYorvWr1YhmFKaMQUCditjop5AZp4d1tO79XsVr7m7HrMw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Geis <pgwipeout@gmail.com>
-Cc: Jose Abreu <jose.abreu@synopsys.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Pavel Machek <pavel@ucw.cz>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
+This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
 
+According to the commit message the AUO B101EAN01 panel on minnie
+requires a PWM delay of 200 ms, however this is not what the
+datasheet says. The datasheet mentions a *max* delay of 200 ms
+for T2 ("delay from LCDVDD to black video generation") and T3
+("delay from LCDVDD to HPD high"), which aren't related to the
+PWM. The backlight power sequence does not specify min/max
+constraints for T15 (time from PWM on to BL enable) or T16
+(time from BL disable to PWM off).
 
-> The big change was actually snps,aal.
-> As per the TRM, DMA channels not address aligned have severe
-> limitations, if they work at all.
-> 
-> Setting the DMA ops as address aligned fixed my 30mbps TX issue when
-> combined with your snps,txpbl = <0x4>.
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Enric, if you think I misinterpreted the datasheet please holler!
+---
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-Honestly, I don't notice any difference either way with aal. So what 
-happens without it? If You only use the 0x4 txpbl and having removed 
-thresh dma mode, (2 things then) do you get bad tx?
+diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+index 468a1818545d..28cbe07f96ec 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+@@ -86,8 +86,6 @@
+ 			240 241 242 243 244 245 246 247
+ 			248 249 250 251 252 253 254 255>;
+ 	power-supply = <&backlight_regulator>;
+-	post-pwm-on-delay-ms = <200>;
+-	pwm-off-delay-ms = <200>;
+ };
+ 
+ &emmc {
+-- 
+2.22.0.410.gd8fdbe21b5-goog
