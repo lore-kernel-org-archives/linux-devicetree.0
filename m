@@ -1,108 +1,83 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: fsl: Add DSP IPC binding support
-Date: Fri, 14 Jun 2019 08:52:51 -0600
-Message-ID: <CAL_JsqJKgMB1PNA33gmFju4AQTc2WaSBoOGQExVaGd9LZRmk_g@mail.gmail.com>
-References: <20190614081650.11880-1-daniel.baluta@nxp.com> <20190614081650.11880-3-daniel.baluta@nxp.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 05/11] dt-bindings: net: sun4i-emac: Convert the
+ binding to a schemas
+Date: Fri, 14 Jun 2019 16:59:02 +0200
+Message-ID: <20190614145902.vjytw74bs5roh2f2@flea>
+References: <91618c7e9a5497462afa74c6d8a947f709f54331.1560158667.git-series.maxime.ripard@bootlin.com>
+ <d198d29119b37b2fdb700d8992b31963e98b6693.1560158667.git-series.maxime.ripard@bootlin.com>
+ <20190610143139.GG28724@lunn.ch>
+ <CAL_JsqJahCJcdu=+fA=ewbGezuEJ2W6uwMVxkQpdY6w+1OWVVA@mail.gmail.com>
+ <20190611145856.ua2ggkn6ccww6vpp@flea>
+ <CAL_Jsq+KwH-j8f+r+fWhMuqJPWcHdBQau+nUz3NRAXYTpsyuvg@mail.gmail.com>
+ <20190614095048.j2xwdsucucbakkl2@flea>
+ <CAL_Jsq+=yh3WhTg=1G02LUHGLHts6mECR9BQ+n7qHAihFViAxA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614081650.11880-3-daniel.baluta@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "S.j. Wang" <shengjiu.wang@nxp.com>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@gmail.com>, Anson Huang <anson.huang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wmxpz6l3hrzuotke"
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+=yh3WhTg=1G02LUHGLHts6mECR9BQ+n7qHAihFViAxA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 2:15 AM <daniel.baluta@nxp.com> wrote:
+
+--wmxpz6l3hrzuotke
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Fri, Jun 14, 2019 at 07:37:49AM -0600, Rob Herring wrote:
+> > > For '-gpio', we may be okay because the suffix is handled in the GPIO
+> > > core. It should be safe to update the binding to use the preferred
+> > > form.
+> >
+> > It might require a bit of work though in drivers, since the fallback
+> > is only handled if you're using the gpiod API, and not the legacy one.
+> >
+> > > > And then, we need to agree on how to express the deprecation. I guess
+> > > > we could allow the deprecated keyword that will be there in the
+> > > > draft-8, instead of ad-hoc solutions?
+> > >
+> > > Oh, nice! I hadn't seen that. Seems like we should use that. We can
+> > > start even without draft-8 support because unknown keywords are
+> > > ignored (though we probably have to add it to our meta-schema). Then
+> > > at some point we can add a 'disallow deprecated' flag to the tool.
+> >
+> > So, in the generic ethernet binding, we would have:
+> >
+> > properties:
+> >   phy-handle:
+> >     $ref: /schemas/types.yaml#definitions/phandle
+> >     description:
+> >       Specifies a reference to a node representing a PHY device.
+> >
+> >   phy:
+> >     $ref: "#/properties/phy-handle"
+> >     deprecated: true
+> >
+> >   phy-device:
+> >     $ref: "#/properties/phy-handle"
+> >     deprecated: true
+> >
+> > Does that sound good?
 >
-> From: Daniel Baluta <daniel.baluta@nxp.com>
+> Yes.
+
+Great, I'll post that.
+
+> > Now, how do we handle the case above, in the device specific binding?
+> > We just require the non-deprecated one, or the three?
 >
-> DSP IPC is the layer that allows the Host CPU to communicate
-> with DSP firmware.
-> DSP is part of some i.MX8 boards (e.g i.MX8QM, i.MX8QXP)
->
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  .../bindings/arm/freescale/fsl,dsp.yaml       | 43 +++++++++++++++++++
+> Wouldn't that just depend if all the instances of the device specific
+> binding have been updated?
 
-bindings/dsp/...
+You mean in the DTS?
 
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
->
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml b/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
-> new file mode 100644
-> index 000000000000..16d9df1d397b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
-> @@ -0,0 +1,43 @@
-> +# SPDX-License-Identifier: GPL-2.0
+It shouldn't matter, we'll want to have a warning anyway. But yeah,
+I'll update them too.
 
-The preference is to dual license new bindings: GPL-2.0 OR BSD-2-Clause
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/freescale/fsl,dsp.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP i.MX IPC DSP driver
-
-This isn't a driver.
-
-> +
-> +maintainers:
-> +  - Daniel Baluta <daniel.baluta@nxp.com>
-> +
-> +description: |
-> +  IPC communication layer between Host CPU and DSP on NXP i.MX8 platforms
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,imx-dsp
-
-You can have a fallback, but it needs SoC specific compatible(s).
-
-> +
-> +  mboxes:
-> +    description:
-> +      List of phandle of 2 MU channels for TXDB, 2 MU channels for RXDB
-> +      (see mailbox/fsl,mu.txt)
-> +    maxItems: 1
-
-Should be 4?
-
-> +
-> +  mbox-names
-> +    description:
-> +      Mailboxes names
-> +    allOf:
-> +      - $ref: "/schemas/types.yaml#/definitions/string"
-
-No need for this, '*-names' already has a defined type.
-
-> +      - enum: [ "txdb0", "txdb1", "rxdb0", "rxdb1" ]
-
-Should be an 'items' list with 4 entries?
-
-> +required:
-> +  - compatible
-> +  - mboxes
-> +  - mbox-names
-
-This seems incomplete. How does one boot the DSP? Load firmware? No
-resources that Linux has to manage. Shared memory?
-
-> +
-> +examples:
-> +  - |
-> +    dsp {
-> +      compatbile = "fsl,imx-dsp";
-> +      mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
-> +      mboxes = <&lsio_mu13 2 0 &lsio_mu13 2 1 &lsio_mu13 3 0 &lsio_mu13 3 1>;
-
-mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
-
-> +    };
-> --
-> 2.17.1
->
+Maxme
+--wmxpz6l3hrzuotke--
