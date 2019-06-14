@@ -1,40 +1,46 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v9 07/13] dt-bindings: memory-controllers: add
- Exynos5422 DMC device description
-Date: Fri, 14 Jun 2019 10:52:02 +0200
-Message-ID: <91ba13c8-bbfe-ea3a-7912-98d213ea3029@partner.samsung.com>
-References: <20190607143507.30286-1-l.luba@partner.samsung.com>
-        <CGME20190607143530eucas1p15c794d0f1401fc3a48f1408c3435084a@eucas1p1.samsung.com>
-        <20190607143507.30286-8-l.luba@partner.samsung.com>
-        <20190611224319.GA7484@bogus>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] arm64: dts/sdm845: Enable FW implemented safe
+	sequence handler on MTP
+Date: Fri, 14 Jun 2019 14:31:07 +0530
+Message-ID: <eaa8abc7-07a1-9c52-685c-25883cba67b9@codeaurora.org>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+	<20190612071554.13573-5-vivek.gautam@codeaurora.org>
+	<20190614040659.GL22737@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611224319.GA7484@bogus>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20190614040659.GL22737@tuxbook-pro>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 6/12/19 12:43 AM, Rob Herring wrote:
-> On Fri,  7 Jun 2019 16:35:01 +0200, Lukasz Luba wrote:
->> The patch adds description for DT binding for a new Exynos5422 Dynamic
->> Memory Controller device.
->>
->> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   .../memory-controllers/exynos5422-dmc.txt     | 75 +++++++++++++++++++
->>   1 file changed, 75 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
->>
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thank you Rob. I have added it into the next version.
+On 6/14/2019 9:36 AM, Bjorn Andersson wrote:
+> On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
+>
+>> Indicate on MTP SDM845 that firmware implements handler to
+>> TLB invalidate erratum SCM call where SAFE sequence is toggled
+>> to achieve optimum performance on real-time clients, such as
+>> display and camera.
+>>
+>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Regards,
-Lukasz Luba
+Thanks Bjorn for reviewing this.
+
+Best regards
+Vivek
+
+[snip]
