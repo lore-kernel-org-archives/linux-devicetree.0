@@ -1,61 +1,172 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones conflict in rk3399.dtsi
-Date: Fri, 14 Jun 2019 11:35:25 +0200
-Message-ID: <5188064.YWmxIpmbGp@phil>
-References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH v4 5/8] usb: chipidea: imx: add imx7ulp support
+Date: Fri, 14 Jun 2019 17:35:41 +0800
+Message-ID: <20190614093544.11730-6-peter.chen@nxp.com>
+References: <20190614093544.11730-1-peter.chen@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604165802.7338-1-daniel.lezcano@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-kernel@vger.kernel.org, edubezval@gmail.com, manivannan.sadhasivam@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Emil Renner Berthing <kernel@esmil.dk>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infr>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190614093544.11730-1-peter.chen@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: balbi@kernel.org, shawnguo@kernel.org
+Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, chunfeng.yun@mediatek.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+In this commit, we add CI_HDRC_PMQOS to avoid system entering idle,
+at imx7ulp, if the system enters idle, the DMA will stop, so the USB
+transfer can't work at this case.
 
-Am Dienstag, 4. Juni 2019, 18:57:57 CEST schrieb Daniel Lezcano:
-> Currently the common thermal zones definitions for the rk3399 assumes
-> multiple thermal zones are supported by the governors. This is not the
-> case and each thermal zone has its own governor instance acting
-> individually without collaboration with other governors.
-> 
-> As the cooling device for the CPU and the GPU thermal zones is the
-> same, each governors take different decisions for the same cooling
-> device leading to conflicting instructions and an erratic behavior.
-> 
-> As the cooling-maps is about to become an optional property, let's
-> remove the cpu cooling device map from the GPU thermal zone.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 ---------
->  1 file changed, 9 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 196ac9b78076..e1357e0f60f7 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -821,15 +821,6 @@
->  					type = "critical";
->  				};
->  			};
-> -
-> -			cooling-maps {
-> -				map0 {
-> -					trip = <&gpu_alert0>;
-> -					cooling-device =
-> -						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> -						<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> -				};
-> -			};
->  		};
->  	};
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+---
+ drivers/usb/chipidea/ci_hdrc_imx.c | 28 +++++++++++++++++++++++++++-
+ drivers/usb/chipidea/usbmisc_imx.c |  4 ++++
+ include/linux/usb/chipidea.h       |  1 +
+ 3 files changed, 32 insertions(+), 1 deletion(-)
 
-my knowledge of the thermal framework is not that big, but what about the
-rk3399-devices which further detail the cooling-maps like rk3399-gru-kevin
-and the rk3399-nanopc-t4 with its fan-handling in the cooling-maps?
-
-
-Heiko
+diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
+index ceec8d5985d4..a76708501236 100644
+--- a/drivers/usb/chipidea/ci_hdrc_imx.c
++++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+@@ -13,6 +13,7 @@
+ #include <linux/usb/of.h>
+ #include <linux/clk.h>
+ #include <linux/pinctrl/consumer.h>
++#include <linux/pm_qos.h>
+ 
+ #include "ci.h"
+ #include "ci_hdrc_imx.h"
+@@ -63,6 +64,11 @@ static const struct ci_hdrc_imx_platform_flag imx7d_usb_data = {
+ 	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM,
+ };
+ 
++static const struct ci_hdrc_imx_platform_flag imx7ulp_usb_data = {
++	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM |
++		CI_HDRC_PMQOS,
++};
++
+ static const struct of_device_id ci_hdrc_imx_dt_ids[] = {
+ 	{ .compatible = "fsl,imx23-usb", .data = &imx23_usb_data},
+ 	{ .compatible = "fsl,imx28-usb", .data = &imx28_usb_data},
+@@ -72,6 +78,7 @@ static const struct of_device_id ci_hdrc_imx_dt_ids[] = {
+ 	{ .compatible = "fsl,imx6sx-usb", .data = &imx6sx_usb_data},
+ 	{ .compatible = "fsl,imx6ul-usb", .data = &imx6ul_usb_data},
+ 	{ .compatible = "fsl,imx7d-usb", .data = &imx7d_usb_data},
++	{ .compatible = "fsl,imx7ulp-usb", .data = &imx7ulp_usb_data},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, ci_hdrc_imx_dt_ids);
+@@ -93,6 +100,8 @@ struct ci_hdrc_imx_data {
+ 	struct clk *clk_ahb;
+ 	struct clk *clk_per;
+ 	/* --------------------------------- */
++	struct pm_qos_request pm_qos_req;
++	const struct ci_hdrc_imx_platform_flag *plat_data;
+ };
+ 
+ /* Common functions shared by usbmisc drivers */
+@@ -309,6 +318,8 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
+ 
++	data->plat_data = imx_platform_flag;
++	pdata.flags |= imx_platform_flag->flags;
+ 	platform_set_drvdata(pdev, data);
+ 	data->usbmisc_data = usbmisc_get_init_data(dev);
+ 	if (IS_ERR(data->usbmisc_data))
+@@ -369,6 +380,11 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ 			}
+ 		}
+ 	}
++
++	if (pdata.flags & CI_HDRC_PMQOS)
++		pm_qos_add_request(&data->pm_qos_req,
++			PM_QOS_CPU_DMA_LATENCY, 0);
++
+ 	ret = imx_get_clks(dev);
+ 	if (ret)
+ 		goto disable_hsic_regulator;
+@@ -396,7 +412,6 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ 		usb_phy_init(pdata.usb_phy);
+ 	}
+ 
+-	pdata.flags |= imx_platform_flag->flags;
+ 	if (pdata.flags & CI_HDRC_SUPPORTS_RUNTIME_PM)
+ 		data->supports_runtime_pm = true;
+ 
+@@ -439,6 +454,8 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ disable_hsic_regulator:
+ 	if (data->hsic_pad_regulator)
+ 		ret = regulator_disable(data->hsic_pad_regulator);
++	if (pdata.flags & CI_HDRC_PMQOS)
++		pm_qos_remove_request(&data->pm_qos_req);
+ 	return ret;
+ }
+ 
+@@ -455,6 +472,8 @@ static int ci_hdrc_imx_remove(struct platform_device *pdev)
+ 	if (data->override_phy_control)
+ 		usb_phy_shutdown(data->phy);
+ 	imx_disable_unprepare_clks(&pdev->dev);
++	if (data->plat_data->flags & CI_HDRC_PMQOS)
++		pm_qos_remove_request(&data->pm_qos_req);
+ 	if (data->hsic_pad_regulator)
+ 		regulator_disable(data->hsic_pad_regulator);
+ 
+@@ -480,6 +499,9 @@ static int __maybe_unused imx_controller_suspend(struct device *dev)
+ 	}
+ 
+ 	imx_disable_unprepare_clks(dev);
++	if (data->plat_data->flags & CI_HDRC_PMQOS)
++		pm_qos_remove_request(&data->pm_qos_req);
++
+ 	data->in_lpm = true;
+ 
+ 	return 0;
+@@ -497,6 +519,10 @@ static int __maybe_unused imx_controller_resume(struct device *dev)
+ 		return 0;
+ 	}
+ 
++	if (data->plat_data->flags & CI_HDRC_PMQOS)
++		pm_qos_add_request(&data->pm_qos_req,
++			PM_QOS_CPU_DMA_LATENCY, 0);
++
+ 	ret = imx_prepare_enable_clks(dev);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
+index d8b67e150b12..b7a5727d0c8a 100644
+--- a/drivers/usb/chipidea/usbmisc_imx.c
++++ b/drivers/usb/chipidea/usbmisc_imx.c
+@@ -763,6 +763,10 @@ static const struct of_device_id usbmisc_imx_dt_ids[] = {
+ 		.compatible = "fsl,imx7d-usbmisc",
+ 		.data = &imx7d_usbmisc_ops,
+ 	},
++	{
++		.compatible = "fsl,imx7ulp-usbmisc",
++		.data = &imx7d_usbmisc_ops,
++	},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, usbmisc_imx_dt_ids);
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index 911e05af671e..edd89b7c8f18 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -61,6 +61,7 @@ struct ci_hdrc_platform_data {
+ #define CI_HDRC_OVERRIDE_PHY_CONTROL	BIT(12) /* Glue layer manages phy */
+ #define CI_HDRC_REQUIRES_ALIGNED_DMA	BIT(13)
+ #define CI_HDRC_IMX_IS_HSIC		BIT(14)
++#define CI_HDRC_PMQOS			BIT(15)
+ 	enum usb_dr_mode	dr_mode;
+ #define CI_HDRC_CONTROLLER_RESET_EVENT		0
+ #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
+-- 
+2.14.1
