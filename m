@@ -1,85 +1,82 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v3, 18/27] drm/medaitek: add layer_nr for ovl private data
-Date: Fri, 14 Jun 2019 13:02:07 +0800
-Message-ID: <1560488527.16718.17.camel@mtksdaap41>
+Subject: Re: [PATCH v3, 20/27] drm/mediatek: add background color input
+ select function for ovl/ovl_2l
+Date: Fri, 14 Jun 2019 13:06:35 +0800
+Message-ID: <1560488795.16718.18.camel@mtksdaap41>
 References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
- <1559734986-7379-19-git-send-email-yongqiang.niu@mediatek.com>
+ <1559734986-7379-21-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1559734986-7379-19-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1559734986-7379-21-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch add layer_nr for ovl private data
-> ovl_2l almost same with with ovl hardware, except the
-> layer number for ovl_2l is 2 and ovl is 4.
-> this patch is a preparation for ovl-2l and
-> ovl share the same driver.
-
-This patch is identical to v2, and I've give a 'Reviewed-by' for v2,
-so you should keep this 'Reviewed-by' tag in this patch, so I still give
-you a
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> index afb313c..a0ab760 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> @@ -60,6 +60,7 @@
->  struct mtk_disp_ovl_data {
->  	unsigned int addr;
->  	unsigned int gmc_bits;
-> +	unsigned int layer_nr;
->  	bool fmt_rgb565_is_0;
->  };
->  
-> @@ -137,7 +138,9 @@ static void mtk_ovl_config(struct mtk_ddp_comp *comp, unsigned int w,
->  
->  static unsigned int mtk_ovl_layer_nr(struct mtk_ddp_comp *comp)
->  {
-> -	return 4;
-> +	struct mtk_disp_ovl *ovl = comp_to_ovl(comp);
-> +
-> +	return ovl->data->layer_nr;
->  }
->  
->  static void mtk_ovl_layer_on(struct mtk_ddp_comp *comp, unsigned int idx)
-> @@ -342,12 +345,14 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
->  static const struct mtk_disp_ovl_data mt2701_ovl_driver_data = {
->  	.addr = DISP_REG_OVL_ADDR_MT2701,
->  	.gmc_bits = 8,
-> +	.layer_nr = 4,
->  	.fmt_rgb565_is_0 = false,
->  };
->  
->  static const struct mtk_disp_ovl_data mt8173_ovl_driver_data = {
->  	.addr = DISP_REG_OVL_ADDR_MT8173,
->  	.gmc_bits = 8,
-> +	.layer_nr = 4,
->  	.fmt_rgb565_is_0 = true,
->  };
->  
+SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wNi0wNSBhdCAxOTo0MiArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgYmFja2dyb3VuZCBjb2xv
+ciBpbnB1dCBzZWxlY3QgZnVuY3Rpb24gZm9yIG92bC9vdmxfMmwKPiAKPiBvdmwgaW5jbHVkZSA0
+IERSQU0gbGF5ZXIgYW5kIDEgYmFja2dyb3VuZCBjb2xvciBsYXllcgo+IG92bF8ybCBpbmNsdWRl
+IDQgRFJBTSBsYXllciBhbmQgMSBiYWNrZ3JvdW5kIGNvbG9yIGxheWVyCj4gRFJBTSBsYXllciBm
+cmFtZSBidWZmZXIgZGF0YSBmcm9tIHJlbmRlciBoYXJkd2FyZSwgR1BVIGZvciBleGFtcGxlLgo+
+IGJhY2tnb3VybmQgY29sb3IgbGF5ZXIgaXMgZW1iZWQgaW4gb3ZsL292bF8ybCwgd2UgY2FuIG9u
+bHkgc2V0Cj4gaXQgY29sb3IsIGJ1dCBub3Qgc3VwcG9ydCBEUkFNIGZyYW1lIGJ1ZmZlci4KPiAK
+PiBmb3Igb3ZsMC0+b3ZsMF8ybCBkaXJlY3QgbGluayB1c2VjYXNlLAo+IHdlIG5lZWQgc2V0IG92
+bDBfMmwgYmFja2dyb3VuZCBjb2xvciBpbnRwdXQgc2VsZWN0IGZyb20gb3ZsMAo+IGlmIHJlbmRl
+ciBzZW5kIERSQU0gYnVmZmVyIGxheWVyIG51bWJlciA8PTQsIGFsbCB0aGVzZSBsYXllciByZWFk
+Cj4gYnkgb3ZsLgo+IGxheWVyMCBpcyBhdCB0aGUgYm90dG9tIG9mIGFsbCBsYXllcnMuCj4gbGF5
+ZXIzIGlzIGF0IHRoZSB0b3Agb2YgYWxsIGxheWVycy4KPiBpZiByZW5kZXIgc2VuZCBEUkFNIGJ1
+ZmZlciBsYXllciBudW1iZmVyID49NCAmJiA8PTYKPiBvdmwwIHJlYWQgbGF5ZXIwfjMKPiBvdmww
+XzJsIHJlYWQgbGF5ZXI0fjUKPiBsYXllcjUgaXMgYXQgdGhlIHRvcCBvdCBhbGwgdGhlc2UgbGF5
+ZXJzLgo+IAo+IHRoZSBkZWNpc2lvbiBvZiBob3cgdG8gc2V0dGluZyBvdmwwL292bDBfMmwgcmVh
+ZCB0aGVzZSBsYXllciBkYXRhCj4gaXMgY29udHJvbGxlZCBpbiBtdGsgY3J0Yywgd2hpY2ggd2ls
+bCBiZSBhbm90aGVyIHBhdGNoCj4gCj4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9u
+Z3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZGlzcF9vdmwuYyB8IDIzICsrKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBj
+aGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZGlzcF9vdmwuYwo+IGluZGV4IGEwYWI3NjAuLmI1YTk5MDcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kaXNwX292bC5jCj4gQEAgLTI3LDYgKzI3LDggQEAKPiAgI2RlZmluZSBE
+SVNQX1JFR19PVkxfRU4JCQkJMHgwMDBjCj4gICNkZWZpbmUgRElTUF9SRUdfT1ZMX1JTVAkJCTB4
+MDAxNAo+ICAjZGVmaW5lIERJU1BfUkVHX09WTF9ST0lfU0laRQkJCTB4MDAyMAo+ICsjZGVmaW5l
+IERJU1BfUkVHX09WTF9EQVRBUEFUSF9DT04JCTB4MDAyNAo+ICsjZGVmaW5lIE9WTF9CR0NMUl9T
+RUxfSU4JCQkJQklUKDIpCj4gICNkZWZpbmUgRElTUF9SRUdfT1ZMX1JPSV9CR0NMUgkJCTB4MDAy
+OAo+ICAjZGVmaW5lIERJU1BfUkVHX09WTF9TUkNfQ09OCQkJMHgwMDJjCj4gICNkZWZpbmUgRElT
+UF9SRUdfT1ZMX0NPTihuKQkJCSgweDAwMzAgKyAweDIwICogKG4pKQo+IEBAIC0yNDUsNiArMjQ3
+LDI1IEBAIHN0YXRpYyB2b2lkIG10a19vdmxfbGF5ZXJfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2Nv
+bXAgKmNvbXAsIHVuc2lnbmVkIGludCBpZHgsCj4gIAkJbXRrX292bF9sYXllcl9vbihjb21wLCBp
+ZHgpOwo+ICB9Cj4gIAo+ICtzdGF0aWMgdm9pZCBtdGtfb3ZsX2JnY2xyX2luX29uKHN0cnVjdCBt
+dGtfZGRwX2NvbXAgKmNvbXAsCj4gKwkJCQllbnVtIG10a19kZHBfY29tcF9pZCBwcmV2KQoKcHJl
+diBpcyB1c2VsZXNzLCBzbyByZW1vdmUgaXQuCgpSZWdhcmRzLApDSwoKPiArewo+ICsJdW5zaWdu
+ZWQgaW50IHJlZzsKPiArCj4gKwlyZWcgPSByZWFkbChjb21wLT5yZWdzICsgRElTUF9SRUdfT1ZM
+X0RBVEFQQVRIX0NPTik7Cj4gKwlyZWcgPSByZWcgfCBPVkxfQkdDTFJfU0VMX0lOOwo+ICsJd3Jp
+dGVsKHJlZywgY29tcC0+cmVncyArIERJU1BfUkVHX09WTF9EQVRBUEFUSF9DT04pOwo+ICt9Cj4g
+Kwo+ICtzdGF0aWMgdm9pZCBtdGtfb3ZsX2JnY2xyX2luX29mZihzdHJ1Y3QgbXRrX2RkcF9jb21w
+ICpjb21wKQo+ICt7Cj4gKwl1bnNpZ25lZCBpbnQgcmVnOwo+ICsKPiArCXJlZyA9IHJlYWRsKGNv
+bXAtPnJlZ3MgKyBESVNQX1JFR19PVkxfREFUQVBBVEhfQ09OKTsKPiArCXJlZyA9IHJlZyAmIH5P
+VkxfQkdDTFJfU0VMX0lOOwo+ICsJd3JpdGVsKHJlZywgY29tcC0+cmVncyArIERJU1BfUkVHX09W
+TF9EQVRBUEFUSF9DT04pOwo+ICt9Cj4gKwo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19kZHBf
+Y29tcF9mdW5jcyBtdGtfZGlzcF9vdmxfZnVuY3MgPSB7Cj4gIAkuY29uZmlnID0gbXRrX292bF9j
+b25maWcsCj4gIAkuc3RhcnQgPSBtdGtfb3ZsX3N0YXJ0LAo+IEBAIC0yNTUsNiArMjc2LDggQEAg
+c3RhdGljIHZvaWQgbXRrX292bF9sYXllcl9jb25maWcoc3RydWN0IG10a19kZHBfY29tcCAqY29t
+cCwgdW5zaWduZWQgaW50IGlkeCwKPiAgCS5sYXllcl9vbiA9IG10a19vdmxfbGF5ZXJfb24sCj4g
+IAkubGF5ZXJfb2ZmID0gbXRrX292bF9sYXllcl9vZmYsCj4gIAkubGF5ZXJfY29uZmlnID0gbXRr
+X292bF9sYXllcl9jb25maWcsCj4gKwkuYmdjbHJfaW5fb24gPSBtdGtfb3ZsX2JnY2xyX2luX29u
+LAo+ICsJLmJnY2xyX2luX29mZiA9IG10a19vdmxfYmdjbHJfaW5fb2ZmLAo+ICB9Owo+ICAKPiAg
+c3RhdGljIGludCBtdGtfZGlzcF9vdmxfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBk
+ZXZpY2UgKm1hc3RlciwKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWw=
