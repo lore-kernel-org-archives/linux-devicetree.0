@@ -1,159 +1,64 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
- wait-for-safe logic
-Date: Fri, 14 Jun 2019 14:48:07 +0530
-Message-ID: <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org>
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
- <20190612071554.13573-4-vivek.gautam@codeaurora.org>
- <20190614040520.GK22737@tuxbook-pro>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: set TX PBL for rk3328-roc-cc gmac
+Date: Fri, 14 Jun 2019 11:26:17 +0200
+Message-ID: <1619091.6MGD9gV0do@phil>
+References: <20190417210059.26262-1-papadakospan@gmail.com>
+ <1555938803.1241.1@gmail.com>
+ <8ded737d-1fd5-3609-ca2e-cfeba63b2d95@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614040520.GK22737@tuxbook-pro>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, will.deacon@arm.com, robin.murphy@arm.com
-Cc: agross@kernel.org, robh+dt@kernel.org, joro@8bytes.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, david.brown@linaro.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <8ded737d-1fd5-3609-ca2e-cfeba63b2d95-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+Am Donnerstag, 23. Mai 2019, 02:00:27 CEST schrieb Peter Geis:
+> 
+> On 4/22/2019 9:13 AM, Leonidas P. Papadakos wrote:
+> > 
+> > Indeed, at least with that first patch users won't have a crappy 
+> > experience by default (ssh lags and the like)
+> > 
+> > 
+> 
+> I apologize for taking so long at this, but I wanted to make sure I had 
+> it right.
+> 
+> So far I've found a few things that seem to help, and would like y'all 
+> to test them when you get the chance.
+> 
+> Adding snps,aal (configures DMA for address alignment) appears to make a 
+> massive improvement to stability, although the the snps,txpbl = <0x4> is 
+> still necessary for this to work.
+> 
+> Second, I added snps,rxpbl = <0x4> as well, which seems to help with my 
+> RX issues a bit.
+> The biggest improvement with these two settings is more stable transmit 
+> and receive.
+> Currently I'm getting about 800mbps on tx and 400 mbps on rx.
+> 
+> Please test when you get the chance and provide feedback.
 
-On 6/14/2019 9:35 AM, Bjorn Andersson wrote:
-> On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
->
->> Qcom's implementation of arm,mmu-500 adds a WAIT-FOR-SAFE logic
->> to address under-performance issues in real-time clients, such as
->> Display, and Camera.
->> On receiving an invalidation requests, the SMMU forwards SAFE request
->> to these clients and waits for SAFE ack signal from real-time clients.
->> The SAFE signal from such clients is used to qualify the start of
->> invalidation.
->> This logic is controlled by chicken bits, one for each - MDP (display),
->> IFE0, and IFE1 (camera), that can be accessed only from secure software
->> on sdm845.
->>
->> This configuration, however, degrades the performance of non-real time
->> clients, such as USB, and UFS etc. This happens because, with wait-for-safe
->> logic enabled the hardware tries to throttle non-real time clients while
->> waiting for SAFE ack signals from real-time clients.
->>
->> On MTP sdm845 devices, with wait-for-safe logic enabled at the boot time
->> by the bootloaders we see degraded performance of USB and UFS when kernel
->> enables the smmu stage-1 translations for these clients.
->> Turn off this wait-for-safe logic from the kernel gets us back the perf
->> of USB and UFS devices until we re-visit this when we start seeing perf
->> issues on display/camera on upstream supported SDM845 platforms.
->>
->> Now, different bootloaders with their access control policies allow this
->> register access differently through secure monitor calls -
->> 1) With one we can issue io-read/write secure monitor call (qcom-scm)
->>     to update the register, while,
->> 2) With other, such as one on MTP sdm845 we should use the specific
->>     qcom-scm command to send request to do the complete register
->>     configuration.
->> Adding a separate device tree flag for arm-smmu to identify which
->> firmware configuration of the two mentioned above we use.
->> Not adding code change to allow type-(1) bootloaders to toggle the
->> safe using io-read/write qcom-scm call.
->>
->> This change is inspired by the downstream change from Patrick Daly
->> to address performance issues with display and camera by handling
->> this wait-for-safe within separte io-pagetable ops to do TLB
->> maintenance. So a big thanks to him for the change.
->>
->> Without this change the UFS reads are pretty slow:
->> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=10 conv=sync
->> 10+0 records in
->> 10+0 records out
->> 10485760 bytes (10.0MB) copied, 22.394903 seconds, 457.2KB/s
->> real    0m 22.39s
->> user    0m 0.00s
->> sys     0m 0.01s
->>
->> With this change they are back to rock!
->> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=300 conv=sync
->> 300+0 records in
->> 300+0 records out
->> 314572800 bytes (300.0MB) copied, 1.030541 seconds, 291.1MB/s
->> real    0m 1.03s
->> user    0m 0.00s
->> sys     0m 0.54s
->>
->> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->> ---
->>   drivers/iommu/arm-smmu.c | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
->>
->> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->> index 0ad086da399c..3c3ad43eda97 100644
->> --- a/drivers/iommu/arm-smmu.c
->> +++ b/drivers/iommu/arm-smmu.c
->> @@ -39,6 +39,7 @@
->>   #include <linux/pci.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/pm_runtime.h>
->> +#include <linux/qcom_scm.h>
->>   #include <linux/slab.h>
->>   #include <linux/spinlock.h>
->>   
->> @@ -177,6 +178,7 @@ struct arm_smmu_device {
->>   	u32				features;
->>   
->>   #define ARM_SMMU_OPT_SECURE_CFG_ACCESS (1 << 0)
->> +#define ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA (1 << 1)
->>   	u32				options;
->>   	enum arm_smmu_arch_version	version;
->>   	enum arm_smmu_implementation	model;
->> @@ -262,6 +264,7 @@ static bool using_legacy_binding, using_generic_binding;
->>   
->>   static struct arm_smmu_option_prop arm_smmu_options[] = {
->>   	{ ARM_SMMU_OPT_SECURE_CFG_ACCESS, "calxeda,smmu-secure-config-access" },
->> +	{ ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA, "qcom,smmu-500-fw-impl-safe-errata" },
-> This should be added to the DT binding as well.
+I have to confess I lost track of the multitude of patches touching
+the gmac on rk3328 and their long mail threads in terms of which
+to pick up and which are considered superseeded.
 
-Ah right. I missed that. Will add this and respin unless Robin and Will 
-have concerns with this change.
+So I'd really appreciate if you could resend the patches that matter
+and provide relevant Tested-by, Reviewed-by, etc tags from involved
+people that actually were able to test patches
 
->
->>   	{ 0, NULL},
->>   };
->>   
->> @@ -2292,6 +2295,19 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->>   	arm_smmu_device_reset(smmu);
->>   	arm_smmu_test_smr_masks(smmu);
->>   
->> +	/*
->> +	 * To address performance degradation in non-real time clients,
->> +	 * such as USB and UFS, turn off wait-for-safe on sdm845 platforms,
->> +	 * such as MTP, whose firmwares implement corresponding secure monitor
->> +	 * call handlers.
->> +	 */
->> +	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500") &&
->> +	    smmu->options & ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA) {
->> +		err = qcom_scm_qsmmu500_wait_safe_toggle(0);
->> +		if (err)
->> +			dev_warn(dev, "Failed to turn off SAFE logic\n");
->> +	}
->> +
-> This looks good, I presume at some point we can profile things and
-> review if it's worth toggling this on the fly, but given that this is
-> conditioned on smmu->options that should be an implementation detail..
->
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Thanks Bjorn.
-
-Best regards
-Vivek
-
-> Regards,
-> Bjorn
->
->>   	/*
->>   	 * We want to avoid touching dev->power.lock in fastpaths unless
->>   	 * it's really going to do something useful - pm_runtime_enabled()
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
+Thanks
+Heiko
