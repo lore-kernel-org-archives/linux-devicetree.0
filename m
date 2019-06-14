@@ -1,111 +1,146 @@
-Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 15/27] PCI: tegra: Update flow control timer frequency in Tegra210
-Date: Mon, 17 Jun 2019 23:09:40 +0530
-Message-ID: <20190617173952.29363-16-mmaddireddy@nvidia.com>
-In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
-References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=8nFa=UN=gmail.com=xieqinick@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+References: <1559035267-1884-1-git-send-email-xieqinick@gmail.com>
+ <4566563.QzcLDyM7tj@phil> <CAP4nuTUQZRG9yV1Bz2hpe10K3CrWhVWf_YYBnMs3O1KyahhrMw@mail.gmail.com>
+ <1719008.LxYQEzyXAE@diego>
+In-Reply-To: <1719008.LxYQEzyXAE@diego>
+From: Nick Xie <xieqinick@gmail.com>
+Date: Fri, 14 Jun 2019 22:06:19 +0800
+Message-ID: <CAP4nuTWLMTnbsT0WFLzX+HEY_W2_m+JyJ16cwkcWyTaKBJiAWA@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: Add support for Khadas
+ Edge/Edge-V/Captain boards
+Content-Type: multipart/alternative; boundary="0000000000004134c8058b4927ba"
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, nick@khadas.com
 List-ID: <devicetree@vger.kernel.org>
 
-Recommended UpdateFC threshold in Tegra210 is 0x60 for best performance
-of x1 link. Setting this to 0x60 provides the best balance between number
-of UpdateFC packets and read data sent over the link.
+--0000000000004134c8058b4927ba
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-UpdateFC timer frequency is equal to twice the value of register content
-in nsec, i.e (2 * 0x60) = 192 nsec.
+Awesome, thanks!
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V5: No change
+Heiko St=C3=BCbner <heiko@sntech.de> =E4=BA=8E2019=E5=B9=B46=E6=9C=8814=E6=
+=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=8810:01=E5=86=99=E9=81=93=EF=BC=9A
 
-V4: No change
+> Hi Nick,
+>
+> Am Freitag, 14. Juni 2019, 15:32:11 CEST schrieb Nick Xie:
+> > Thanks, I'll check them out.
+> >
+> > But there is a small typo:
+> >
+> https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/=
+tree/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi?h=3Dv5.3-armsoc/d=
+ts64&id=3D910249897d13beaa0b46069e27139024cd77e916#n299
+> >
+> > *22 (GPIO1_C6)* should be *RK_PC6* NOT *RK_PD6*.
+>
+> thanks for double-checking ... I've updated the commit to use the right
+> gpio now.
+>
+> Heiko
+>
+> >
+> > Heiko Stuebner <heiko@sntech.de> =E4=BA=8E2019=E5=B9=B46=E6=9C=8814=E6=
+=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=887:32=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > > Am Montag, 10. Juni 2019, 09:57:53 CEST schrieb xieqinick@gmail.com:
+> > > > From: Nick Xie <nick@khadas.com>
+> > > >
+> > > > Add devicetree support for Khadas Edge/Edge-V/Captain boards.
+> > > > Khadas Edge is an expandable Rockchip RK3399 board with goldfinger.
+> > > > Khadas Captain is the carrier board for Khadas Edge.
+> > > > Khadas Edge-V is a Khadas VIM form factor Rockchip RK3399 board.
+> > > >
+> > > > Signed-off-by: Nick Xie <nick@khadas.com>
+> > >
+> > > applied for 5.3 after doing some style-fixes to the edge.dtsi
+> > > (2 missing gpio constants, some newlines and sdio-regulator
+> > > references were missing "<..>")
+> > >
+> > > Please double-check the result
+> > >
+> > >
+> > > Thanks
+> > > Heiko
+> > >
+> > >
+> > >
+>
+>
+>
+>
+>
 
-V3: No change
+--0000000000004134c8058b4927ba
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-V2: Changed update_fc_val to update_fc_threshold
+<div dir=3D"ltr">Awesome, thanks!=C2=A0<br></div><br><div class=3D"gmail_qu=
+ote"><div dir=3D"ltr" class=3D"gmail_attr">Heiko St=C3=BCbner &lt;<a href=
+=3D"mailto:heiko@sntech.de">heiko@sntech.de</a>&gt; =E4=BA=8E2019=E5=B9=B46=
+=E6=9C=8814=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=8810:01=E5=86=99=E9=
+=81=93=EF=BC=9A<br></div><blockquote class=3D"gmail_quote" style=3D"margin:=
+0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">=
+Hi Nick,<br>
+<br>
+Am Freitag, 14. Juni 2019, 15:32:11 CEST schrieb Nick Xie:<br>
+&gt; Thanks, I&#39;ll check them out.<br>
+&gt; <br>
+&gt; But there is a small typo:<br>
+&gt; <a href=3D"https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux=
+-rockchip.git/tree/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi?h=
+=3Dv5.3-armsoc/dts64&amp;id=3D910249897d13beaa0b46069e27139024cd77e916#n299=
+" rel=3D"noreferrer" target=3D"_blank">https://git.kernel.org/pub/scm/linux=
+/kernel/git/mmind/linux-rockchip.git/tree/arch/arm64/boot/dts/rockchip/rk33=
+99-khadas-edge.dtsi?h=3Dv5.3-armsoc/dts64&amp;id=3D910249897d13beaa0b46069e=
+27139024cd77e916#n299</a><br>
+&gt; <br>
+&gt; *22 (GPIO1_C6)* should be *RK_PC6* NOT *RK_PD6*.<br>
+<br>
+thanks for double-checking ... I&#39;ve updated the commit to use the right=
+ gpio now.<br>
+<br>
+Heiko<br>
+<br>
+&gt; <br>
+&gt; Heiko Stuebner &lt;<a href=3D"mailto:heiko@sntech.de" target=3D"_blank=
+">heiko@sntech.de</a>&gt; =E4=BA=8E2019=E5=B9=B46=E6=9C=8814=E6=97=A5=E5=91=
+=A8=E4=BA=94 =E4=B8=8B=E5=8D=887:32=E5=86=99=E9=81=93=EF=BC=9A<br>
+&gt; <br>
+&gt; &gt; Am Montag, 10. Juni 2019, 09:57:53 CEST schrieb <a href=3D"mailto=
+:xieqinick@gmail.com" target=3D"_blank">xieqinick@gmail.com</a>:<br>
+&gt; &gt; &gt; From: Nick Xie &lt;<a href=3D"mailto:nick@khadas.com" target=
+=3D"_blank">nick@khadas.com</a>&gt;<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; Add devicetree support for Khadas Edge/Edge-V/Captain boards=
+.<br>
+&gt; &gt; &gt; Khadas Edge is an expandable Rockchip RK3399 board with gold=
+finger.<br>
+&gt; &gt; &gt; Khadas Captain is the carrier board for Khadas Edge.<br>
+&gt; &gt; &gt; Khadas Edge-V is a Khadas VIM form factor Rockchip RK3399 bo=
+ard.<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; Signed-off-by: Nick Xie &lt;<a href=3D"mailto:nick@khadas.co=
+m" target=3D"_blank">nick@khadas.com</a>&gt;<br>
+&gt; &gt;<br>
+&gt; &gt; applied for 5.3 after doing some style-fixes to the edge.dtsi<br>
+&gt; &gt; (2 missing gpio constants, some newlines and sdio-regulator<br>
+&gt; &gt; references were missing &quot;&lt;..&gt;&quot;)<br>
+&gt; &gt;<br>
+&gt; &gt; Please double-check the result<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt; Thanks<br>
+&gt; &gt; Heiko<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+<br>
+<br>
+<br>
+<br>
+</blockquote></div>
 
- drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 70bfbb7930c8..6ed406c46409 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -320,6 +320,7 @@ struct tegra_pcie_soc {
- 	bool update_clamp_threshold;
- 	bool program_deskew_time;
- 	bool raw_violation_fixup;
-+	bool update_fc_timer;
- 	struct {
- 		struct {
- 			u32 rp_ectl_2_r1;
-@@ -668,6 +669,13 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
- 		value |= soc->update_fc_threshold;
- 		writel(value, port->base + RP_VEND_XP);
- 	}
-+
-+	if (soc->update_fc_timer) {
-+		value = readl(port->base + RP_VEND_XP);
-+		value &= ~RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK;
-+		value |= soc->update_fc_threshold;
-+		writel(value, port->base + RP_VEND_XP);
-+	}
- }
- 
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
-@@ -2410,6 +2418,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.update_clamp_threshold = false,
- 	.program_deskew_time = false,
- 	.raw_violation_fixup = false,
-+	.update_fc_timer = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2437,6 +2446,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.update_clamp_threshold = false,
- 	.program_deskew_time = false,
- 	.raw_violation_fixup = false,
-+	.update_fc_timer = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2459,6 +2469,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.update_clamp_threshold = true,
- 	.program_deskew_time = false,
- 	.raw_violation_fixup = true,
-+	.update_fc_timer = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2469,6 +2480,8 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
- 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
- 	.pads_refclk_cfg0 = 0x90b890b8,
-+	/* FC threshold is bit[25:18] */
-+	.update_fc_threshold = 0x01800000,
- 	.has_pex_clkreq_en = true,
- 	.has_pex_bias_ctrl = true,
- 	.has_intr_prsnt_sense = true,
-@@ -2479,6 +2492,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.update_clamp_threshold = true,
- 	.program_deskew_time = true,
- 	.raw_violation_fixup = false,
-+	.update_fc_timer = true,
- 	.ectl = {
- 		.regs = {
- 			.rp_ectl_2_r1 = 0x0000000f,
-@@ -2518,6 +2532,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.update_clamp_threshold = false,
- 	.program_deskew_time = false,
- 	.raw_violation_fixup = false,
-+	.update_fc_timer = false,
- 	.ectl.enable = false,
- };
- 
--- 
-2.17.1
+--0000000000004134c8058b4927ba--
