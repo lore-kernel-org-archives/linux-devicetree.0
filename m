@@ -1,66 +1,63 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 5/9] ARM: dts: sun8i: r40: Add TCON TOP LCD clocking
-Date: Fri, 14 Jun 2019 11:46:36 +0800
-Message-ID: <CAGb2v654p=HZuXCTJkrbWbFP_kEkpRWHwj-7_Ck_=XbyMFmvFw@mail.gmail.com>
-References: <20190613185241.22800-1-jagan@amarulasolutions.com> <20190613185241.22800-6-jagan@amarulasolutions.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v3, 14/27] drm/mediatek: add commponent OVL_2L0
+Date: Fri, 14 Jun 2019 11:54:30 +0800
+Message-ID: <1560484470.16718.13.camel@mtksdaap41>
+References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1559734986-7379-15-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190613185241.22800-6-jagan@amarulasolutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Michael Trimarchi <michael@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1559734986-7379-15-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: yongqiang.niu@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 2:54 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> According to Fig 7-2. TCON Top Block Diagram in User manual.
->
-> TCON TOP can have an hierarchy for TCON_LCD0, LCD1 like
-> TCON_TV0, TV1 so, the tcon top would handle the clocks of
-> TCON_LCD0, LCD1 similar like TV0, TV1.
-
-That is not guaranteed. The diagram shows the pixel data path,
-not necessarily the clocks. In addition, the LCD TCONs have an
-internal clock gate for the dot-clock output, which the TV variants
-do not. That might explain the need for the gates in TCON TOP.
-
-> But, the current tcon_top node is using dsi clock name with
-> CLK_DSI_DPHY which is ideally handle via dphy which indeed
-> a separate interface block.
->
-> So, use tcon-lcd0 instead of dsi which would refer the
-> CLK_TCON_LCD0 similar like CLK_TCON_TV0 with tcon-tv0.
->
-> This way we can refer CLK_TCON_LCD0 from tcon_top clock in
-> tcon_lcd0 node and the actual DSI_DPHY clock node would
-> refer in dphy node.
-
-That doesn't make sense. What about TCON_LCD1?
-
-The CCU already has CLK_TCON_LCD0 and CLK_TCON_LCD1. What makes
-you think that the TCONs don't use them directly?
-
-Or maybe they do go through TCON_TOP, but there's no gate,
-so we don't know about it.
-
-You need to rethink this. What are you trying to deal with?
-
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
->  arch/arm/boot/dts/sun8i-r40.dtsi           | 6 +++---
->  drivers/gpu/drm/sun4i/sun8i_tcon_top.c     | 6 +++---
->  include/dt-bindings/clock/sun8i-tcon-top.h | 2 +-
-
-This is going to be a pain to merge.
-
-First, you need to split the driver parts from the DT parts.
-
-Second, you might need to revert CLK_DSI_DPHY back to a raw
-number for now, so that when the patches get merged through
-different trees, nothing breaks.
-
-Third, you'll come back after everything is merged, and change
-the raw number to the new macro.
-
-ChenYu
+SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wNi0wNSBhdCAxOTo0MiArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgY29tbXBvbmVudCBPVkxf
+MkwwCgpSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KCj4gCj4gU2lnbmVk
+LW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gLS0t
+Cj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgfCAyICsrCj4g
+IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggfCAyICsrCj4gIDIg
+ZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gaW5kZXggMzEwYzBiOS4uODA5NDkyNiAxMDA2NDQK
+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gKysr
+IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+IEBAIC0yMjcs
+NiArMjI3LDcgQEAgc3RhdGljIHZvaWQgbXRrX2dhbW1hX3NldChzdHJ1Y3QgbXRrX2RkcF9jb21w
+ICpjb21wLAo+ICAKPiAgc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBtdGtfZGRwX2NvbXBfc3Rl
+bVtNVEtfRERQX0NPTVBfVFlQRV9NQVhdID0gewo+ICAJW01US19ESVNQX09WTF0gPSAib3ZsIiwK
+PiArCVtNVEtfRElTUF9PVkxfMkxdID0gIm92bF8ybCIsCj4gIAlbTVRLX0RJU1BfUkRNQV0gPSAi
+cmRtYSIsCj4gIAlbTVRLX0RJU1BfV0RNQV0gPSAid2RtYSIsCj4gIAlbTVRLX0RJU1BfQ09MT1Jd
+ID0gImNvbG9yIiwKPiBAQCAtMjY2LDYgKzI2Nyw3IEBAIHN0cnVjdCBtdGtfZGRwX2NvbXBfbWF0
+Y2ggewo+ICAJW0REUF9DT01QT05FTlRfT0QxXQk9IHsgTVRLX0RJU1BfT0QsCTEsICZkZHBfb2Qg
+fSwKPiAgCVtERFBfQ09NUE9ORU5UX09WTDBdCT0geyBNVEtfRElTUF9PVkwsCTAsIE5VTEwgfSwK
+PiAgCVtERFBfQ09NUE9ORU5UX09WTDFdCT0geyBNVEtfRElTUF9PVkwsCTEsIE5VTEwgfSwKPiAr
+CVtERFBfQ09NUE9ORU5UX09WTF8yTDBdCT0geyBNVEtfRElTUF9PVkxfMkwsCTAsIE5VTEwgfSwK
+PiAgCVtERFBfQ09NUE9ORU5UX1BXTTBdCT0geyBNVEtfRElTUF9QV00sCTAsIE5VTEwgfSwKPiAg
+CVtERFBfQ09NUE9ORU5UX1BXTTFdCT0geyBNVEtfRElTUF9QV00sCTEsIE5VTEwgfSwKPiAgCVtE
+RFBfQ09NUE9ORU5UX1BXTTJdCT0geyBNVEtfRElTUF9QV00sCTIsIE5VTEwgfSwKPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCBiL2RyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgKPiBpbmRleCA4N2VmMjkwLi5h
+ODFjMzIyIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cF9jb21wLmgKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29t
+cC5oCj4gQEAgLTI1LDYgKzI1LDcgQEAKPiAgCj4gIGVudW0gbXRrX2RkcF9jb21wX3R5cGUgewo+
+ICAJTVRLX0RJU1BfT1ZMLAo+ICsJTVRLX0RJU1BfT1ZMXzJMLAo+ICAJTVRLX0RJU1BfUkRNQSwK
+PiAgCU1US19ESVNQX1dETUEsCj4gIAlNVEtfRElTUF9DT0xPUiwKPiBAQCAtNTgsNiArNTksNyBA
+QCBlbnVtIG10a19kZHBfY29tcF9pZCB7Cj4gIAlERFBfQ09NUE9ORU5UX09EMCwKPiAgCUREUF9D
+T01QT05FTlRfT0QxLAo+ICAJRERQX0NPTVBPTkVOVF9PVkwwLAo+ICsJRERQX0NPTVBPTkVOVF9P
+VkxfMkwwLAo+ICAJRERQX0NPTVBPTkVOVF9PVkwxLAo+ICAJRERQX0NPTVBPTkVOVF9QV00wLAo+
+ICAJRERQX0NPTVBPTkVOVF9QV00xLAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbA==
