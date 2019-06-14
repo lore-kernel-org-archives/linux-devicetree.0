@@ -1,48 +1,99 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 2/6] dt-bindings: can: rcar_can: Complete documentation for RZ/G2[EM]
-Date: Fri, 14 Jun 2019 12:53:30 +0100
-Message-ID: <1560513214-28031-3-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1560513214-28031-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1560513214-28031-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191 panel driver
+Date: Fri, 14 Jun 2019 15:03:15 +0300
+Message-ID: <CAEnQRZA0yB8KKU8zcZU1CgPE5x9bYtp_4ESQ+miMkwuYKRkbJQ@mail.gmail.com>
+References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com> <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Chiras <robert.chiras@nxp.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add missing RZ/G2[EM] CANFD clock specific documentation.
+Hi Robert,
 
-Fixes: 868b7c0f43e6 ("dt-bindings: can: rcar_can: Add r8a774a1 support")
-Fixes: 0c11e7d0f51c ("dt-bindings: can: rcar_can: Add r8a774c0 support")
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
-Hello Simon,
+Minor comment. See inline:
 
-I think it would make more sense if this patch went through you as it
-sits on series:
-https://lkml.org/lkml/2019/5/9/941
+On Fri, Jun 14, 2019 at 2:52 PM Robert Chiras <robert.chiras@nxp.com> wrote:
+>
+> This patch adds Raydium RM67191 TFT LCD panel driver (MIPI-DSI
+> protocol).
+>
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> ---
+>  drivers/gpu/drm/panel/Kconfig                 |   9 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  drivers/gpu/drm/panel/panel-raydium-rm67191.c | 730 ++++++++++++++++++++++++++
+>  3 files changed, 740 insertions(+)
+>  create mode 100644 drivers/gpu/drm/panel/panel-raydium-rm67191.c
+>
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index d9d931a..8be1ac1 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -159,6 +159,15 @@ config DRM_PANEL_RASPBERRYPI_TOUCHSCREEN
+>           Pi 7" Touchscreen.  To compile this driver as a module,
+>           choose M here.
+>
+> +config DRM_PANEL_RAYDIUM_RM67191
+> +       tristate "Raydium RM67191 FHD 1080x1920 DSI video mode panel"
+> +       depends on OF
+> +       depends on DRM_MIPI_DSI
+> +       depends on BACKLIGHT_CLASS_DEVICE
+> +       help
+> +         Say Y here if you want to enable support for Raydium RM67191 FHD
+> +         (1080x1920) DSI panel.
+> +
+>  config DRM_PANEL_RAYDIUM_RM68200
+>         tristate "Raydium RM68200 720x1280 DSI video mode panel"
+>         depends on OF
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index fb0cb3a..1fc0f68 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_DRM_PANEL_ORISETECH_OTM8009A) += panel-orisetech-otm8009a.o
+>  obj-$(CONFIG_DRM_PANEL_OSD_OSD101T2587_53TS) += panel-osd-osd101t2587-53ts.o
+>  obj-$(CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00) += panel-panasonic-vvx10f034n00.o
+>  obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen.o
+> +obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
+>  obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
+>  obj-$(CONFIG_DRM_PANEL_ROCKTECH_JH057N00900) += panel-rocktech-jh057n00900.o
+>  obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
+> diff --git a/drivers/gpu/drm/panel/panel-raydium-rm67191.c b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
+> new file mode 100644
+> index 0000000..75bfb03
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
+> @@ -0,0 +1,730 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * i.MX drm driver - Raydium MIPI-DSI panel driver
+> + *
+> + * Copyright (C) 2017 NXP
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
 
-Do you think that's doable?
+Please remove the license text once you already added the SPDX identifier.
 
-Thanks,
-Fab
+Also preferred copyright for NXP is:
 
- Documentation/devicetree/bindings/net/can/rcar_can.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Copyright 2019 NXP
 
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-index b463e12..e1f315a 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-@@ -33,7 +33,7 @@ Required properties:
- - pinctrl-0: pin control group to be used for this controller.
- - pinctrl-names: must be "default".
- 
--Required properties for R8A7795, R8A7796 and R8A77965:
-+Required properties for R8A774A1, R8A774C0, R8A7795, R8A7796 and R8A77965:
- For the denoted SoCs, "clkp2" can be CANFD clock. This is a div6 clock and can
- be used by both CAN and CAN FD controller at the same time. It needs to be
- scaled to maximum frequency if any of these controllers use it. This is done
--- 
-2.7.4
+So, the file should look like this:
+
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * i.MX drm driver - Raydium MIPI-DSI panel driver
+ *
+ * Copyright 2019 NXP
+ */
