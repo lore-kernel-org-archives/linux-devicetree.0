@@ -1,16 +1,14 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones
- conflict in rk3399.dtsi
-Date: Fri, 14 Jun 2019 16:30:13 +0200
-Message-ID: <9bf85c22-f1ba-3dbc-0b67-17e124484fa1@linaro.org>
-References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
- <5188064.YWmxIpmbGp@phil> <55b9018e-672e-522b-d0a0-c5655be0f353@linaro.org>
- <e5a4f850-27e0-cad3-04bd-6c004fca2b81@arm.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH] arm64: dts: ti: k3-j721e-main: Add Main NavSS Interrupt
+ controller node
+Date: Fri, 14 Jun 2019 20:17:37 +0530
+Message-ID: <5e8fa7b4-6c44-85dc-0a33-bcf930b6d795@ti.com>
+References: <20190531004848.32061-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e5a4f850-27e0-cad3-04bd-6c004fca2b81@arm.com>
+In-Reply-To: <20190531004848.32061-1-s-anna@ti.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -21,76 +19,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>, "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>, Tony Xie <tony.xie@rock-chips.com>, Viresh Kumar <viresh.kumar@linaro.org>, Randy Li <ayaka@soulik.info>, linux-kernel@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>, dianders@chromium.org, edubezval@gmail.com, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Kukjin Kim <kgene@kernel.org>, manivannan.sadhasivam@linaro.org, Matthias Brugger <matthias.bgg@gmail.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, "moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>
+To: Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTQvMDYvMjAxOSAxNjowMiwgUm9iaW4gTXVycGh5IHdyb3RlOgo+IE9uIDE0LzA2LzIwMTkg
-MTQ6MDMsIERhbmllbCBMZXpjYW5vIHdyb3RlOgo+PiBPbiAxNC8wNi8yMDE5IDExOjM1LCBIZWlr
-byBTdHVlYm5lciB3cm90ZToKPj4+IEhpIERhbmllbCwKPj4+Cj4+PiBBbSBEaWVuc3RhZywgNC4g
-SnVuaSAyMDE5LCAxODo1Nzo1NyBDRVNUIHNjaHJpZWIgRGFuaWVsIExlemNhbm86Cj4+Pj4gQ3Vy
-cmVudGx5IHRoZSBjb21tb24gdGhlcm1hbCB6b25lcyBkZWZpbml0aW9ucyBmb3IgdGhlIHJrMzM5
-OSBhc3N1bWVzCj4+Pj4gbXVsdGlwbGUgdGhlcm1hbCB6b25lcyBhcmUgc3VwcG9ydGVkIGJ5IHRo
-ZSBnb3Zlcm5vcnMuIFRoaXMgaXMgbm90IHRoZQo+Pj4+IGNhc2UgYW5kIGVhY2ggdGhlcm1hbCB6
-b25lIGhhcyBpdHMgb3duIGdvdmVybm9yIGluc3RhbmNlIGFjdGluZwo+Pj4+IGluZGl2aWR1YWxs
-eSB3aXRob3V0IGNvbGxhYm9yYXRpb24gd2l0aCBvdGhlciBnb3Zlcm5vcnMuCj4+Pj4KPj4+PiBB
-cyB0aGUgY29vbGluZyBkZXZpY2UgZm9yIHRoZSBDUFUgYW5kIHRoZSBHUFUgdGhlcm1hbCB6b25l
-cyBpcyB0aGUKPj4+PiBzYW1lLCBlYWNoIGdvdmVybm9ycyB0YWtlIGRpZmZlcmVudCBkZWNpc2lv
-bnMgZm9yIHRoZSBzYW1lIGNvb2xpbmcKPj4+PiBkZXZpY2UgbGVhZGluZyB0byBjb25mbGljdGlu
-ZyBpbnN0cnVjdGlvbnMgYW5kIGFuIGVycmF0aWMgYmVoYXZpb3IuCj4+Pj4KPj4+PiBBcyB0aGUg
-Y29vbGluZy1tYXBzIGlzIGFib3V0IHRvIGJlY29tZSBhbiBvcHRpb25hbCBwcm9wZXJ0eSwgbGV0
-J3MKPj4+PiByZW1vdmUgdGhlIGNwdSBjb29saW5nIGRldmljZSBtYXAgZnJvbSB0aGUgR1BVIHRo
-ZXJtYWwgem9uZS4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IERhbmllbCBMZXpjYW5vIDxkYW5p
-ZWwubGV6Y2Fub0BsaW5hcm8ub3JnPgo+Pj4+IC0tLQo+Pj4+IMKgIGFyY2gvYXJtNjQvYm9vdC9k
-dHMvcm9ja2NoaXAvcmszMzk5LmR0c2kgfCA5IC0tLS0tLS0tLQo+Pj4+IMKgIDEgZmlsZSBjaGFu
-Z2VkLCA5IGRlbGV0aW9ucygtKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvcm9ja2NoaXAvcmszMzk5LmR0c2kKPj4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9j
-a2NoaXAvcmszMzk5LmR0c2kKPj4+PiBpbmRleCAxOTZhYzliNzgwNzYuLmUxMzU3ZTBmNjBmNyAx
-MDA2NDQKPj4+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNp
-Cj4+Pj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkuZHRzaQo+Pj4+
-IEBAIC04MjEsMTUgKzgyMSw2IEBACj4+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHR5cGUgPSAiY3JpdGljYWwiOwo+Pj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgfTsKPj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Owo+Pj4+
-IC0KPj4+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb29saW5nLW1hcHMgewo+Pj4+IC3CoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbWFwMCB7Cj4+Pj4gLcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHRyaXAgPSA8JmdwdV9hbGVydDA+Owo+Pj4+IC3CoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb29saW5nLWRldmljZSA9Cj4+Pj4gLcKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPCZjcHVfYjAgVEhF
-Uk1BTF9OT19MSU1JVCBUSEVSTUFMX05PX0xJTUlUPiwKPj4+PiAtwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8JmNwdV9iMSBUSEVSTUFMX05PX0xJTUlUIFRI
-RVJNQUxfTk9fTElNSVQ+Owo+Pj4+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTsK
-Pj4+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Owo+Pj4+IMKgwqDCoMKgwqDCoMKgwqDCoCB9
-Owo+Pj4+IMKgwqDCoMKgwqAgfTsKPj4+Cj4+PiBteSBrbm93bGVkZ2Ugb2YgdGhlIHRoZXJtYWwg
-ZnJhbWV3b3JrIGlzIG5vdCB0aGF0IGJpZywgYnV0IHdoYXQgYWJvdXQKPj4+IHRoZQo+Pj4gcmsz
-Mzk5LWRldmljZXMgd2hpY2ggZnVydGhlciBkZXRhaWwgdGhlIGNvb2xpbmctbWFwcyBsaWtlCj4+
-PiByazMzOTktZ3J1LWtldmluCj4+PiBhbmQgdGhlIHJrMzM5OS1uYW5vcGMtdDQgd2l0aCBpdHMg
-ZmFuLWhhbmRsaW5nIGluIHRoZSBjb29saW5nLW1hcHM/Cj4+Cj4+IFRoZSByazMzOTktZ3J1LWtl
-dmluIGlzIGNvcnJlY3QuCj4+Cj4+IFRoZSByazMzOTktbmFub3BjLXQ0IGlzIG5vdCBjb3JyZWN0
-IGJlY2F1c2UgdGhlIGNwdSBhbmQgdGhlIGdwdSBhcmUKPj4gc2hhcmluZyB0aGUgc2FtZSBjb29s
-aW5nIGRldmljZSAodGhlIGZhbikuIFRoZXJlIGFyZSBkaWZmZXJlbnQKPj4gY29uZmlndXJhdGlv
-bnM6Cj4+Cj4+IDEuIFRoZSBjcHUgY29vbGluZyBkZXZpY2UgZm9yIHRoZSBDUFUgYW5kIHRoZSBm
-YW4gZm9yIHRoZSBHUFUKPj4KPj4gMi4gRGlmZmVyZW50IHRyaXAgcG9pbnRzIG9uIHRoZSBDUFUg
-dGhlcm1hbCB6b25lLCBlZy4gb25lIHRvIGZvciB0aGUgQ1BVCj4+IGNvb2xpbmcgZGV2aWNlIGFu
-ZCBhbm90aGVyIG9uZSBmb3IgdGhlIGZhbi4KPj4KPj4gVGhlcmUgYXJlIHNvbWUgdmFyaWFudCBm
-b3IgdGhlIGFib3ZlLiBJZiB0aGlzIGJvYXJkIGlzIG5vdCBvbiBiYXR0ZXJ5LAo+PiB5b3UgbWF5
-IHdhbnQgdG8gZ2l2ZSBwcmlvcml0eSB0byB0aGUgdGhyb3VnaHB1dCwgc28gYWN0aXZhdGUgdGhl
-IGZhbgo+PiBmaXJzdCBhbmQgdGhlbiBjb29sIGRvd24gdGhlIENQVS4gT3IgaWYgeW91IGFyZSBv
-biBiYXR0ZXJ5LCB5b3UgbWF5IHdhbnQKPj4gdG8gaW52ZXJ0IHRoZSB0cmlwIHBvaW50cy4KPj4K
-Pj4gSW4gYW55IGNhc2UsIGl0IGlzIG5vdCBwb3NzaWJsZSB0byBzaGFyZSB0aGUgc2FtZSBjb29s
-aW5nIGRldmljZSBmb3IKPj4gZGlmZmVyZW50IHRoZXJtYWwgem9uZXMuCj4gCj4gT0ssIHRoYW5r
-cyBmb3IgdGhlIGNsYXJpZmljYXRpb24uIEknbGwgZ2V0IG15IGJvYXJkIHNldCB1cCBhZ2FpbiB0
-bwo+IGZpZ3VyZSBvdXQgdGhlIGJlc3QgZml4IGZvciByazMzOTktbmFub3BjLXQ0IChGV0lXIG1v
-c3QgdXNlcnMgYXJlCj4gcHJvYmFibHkganVzdCB1c2luZyBwYXNzaXZlIGNvb2xpbmcgb3IgYSBw
-bGFpbiBEQyBmYW4gYW55d2F5KS4gWW91IG1pZ2h0Cj4gd2FudCB0byByYWlzZSB0aGlzIGlzc3Vl
-IHdpdGggdGhlIG1haW50YWluZXJzIG9mCj4gYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMi1v
-ZHJvaWR4dTMtY29tbW9uLmR0c2ksIHNpbmNlIHRoZQo+IGV2ZXJ5dGhpbmctc2hhcmVkLWJ5LWV2
-ZXJ5dGhpbmcgYXBwcm9hY2ggaW4gdGhlcmUgd2FzIHdoYXQgSSB1c2VkIGFzIGEKPiByZWZlcmVu
-Y2UuCgpDYydlZDogS3VramluIEtpbSBhbmQgS3J6eXN6dG9mIEtvemxvd3NraQoKRWFzeSA6KQoK
-Ci0tIAogPGh0dHA6Ly93d3cubGluYXJvLm9yZy8+IExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNl
-IHNvZnR3YXJlIGZvciBBUk0gU29DcwoKRm9sbG93IExpbmFybzogIDxodHRwOi8vd3d3LmZhY2Vi
-b29rLmNvbS9wYWdlcy9MaW5hcm8+IEZhY2Vib29rIHwKPGh0dHA6Ly90d2l0dGVyLmNvbS8jIS9s
-aW5hcm9vcmc+IFR3aXR0ZXIgfAo8aHR0cDovL3d3dy5saW5hcm8ub3JnL2xpbmFyby1ibG9nLz4g
-QmxvZwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+
+
+On 31/05/19 6:18 AM, Suman Anna wrote:
+> Add the Interrupt controller node for the Interrupt Router present within
+> the Main NavSS module. This Interrupt Router can route 192 interrupts to
+> the GIC_SPI in 3 sets of 64 interrupts each. Note that the last set is
+> reserved for the host ID A72_3 for hypervisor usecases, so the node is
+> added only with 2 sets for the Linux kernel context (host id A72_2). This
+> is specified through the ti,sci-rm-range-girq property.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+
+Thanks and regards,
+Lokesh
+
+> ---
+> Hi Tero,
+> 
+> This patch depends on the J721E series [1] from Nishanth. Patch tested
+> using additional patches exercising Mailbox IP.
+> 
+> regards
+> Suman
+> 
+> [1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=121189
+> 
+>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> index d42912044a5d..36c51ff9a898 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> @@ -50,6 +50,24 @@
+>  		#iommu-cells = <1>;
+>  	};
+>  
+> +	cbass_main_navss: interconnect0 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		main_navss_intr: interrupt-controller1 {
+> +			compatible = "ti,sci-intr";
+> +			ti,intr-trigger-type = <4>;
+> +			interrupt-controller;
+> +			interrupt-parent = <&gic500>;
+> +			#interrupt-cells = <2>;
+> +			ti,sci = <&dmsc>;
+> +			ti,sci-dst-id = <14>;
+> +			ti,sci-rm-range-girq = <0>, <2>;
+> +		};
+> +	};
+> +
+>  	secure_proxy_main: mailbox@32c00000 {
+>  		compatible = "ti,am654-secure-proxy";
+>  		#mbox-cells = <1>;
+> 
