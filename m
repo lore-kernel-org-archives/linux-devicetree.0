@@ -1,29 +1,58 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] drm/rockchip: dw_hdmi: add basic rk3228 support
-Date: Fri, 14 Jun 2019 14:04:48 +0200
-Message-ID: <1679832.6k0ngRgKtg@phil>
-References: <20190522224631.25164-1-justin.swartz@risingedge.co.za>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [linux-sunxi] [PATCH 2/9] drm/sun4i: tcon: Add TCON LCD support
+ for R40
+Date: Fri, 14 Jun 2019 17:36:26 +0530
+Message-ID: <CAMty3ZC39yQs+_Cytp25xJO9Da0FWkC9g1VwYmzQZSGNoWc-yw@mail.gmail.com>
+References: <20190613185241.22800-1-jagan@amarulasolutions.com>
+ <20190613185241.22800-3-jagan@amarulasolutions.com> <CAGb2v65xuXc4C1jOyM1GbEFVDam5P-6NN0ZhtzwzA7qU5F3nJQ@mail.gmail.com>
+ <CAGb2v67DY534hXrx2H4jnZXA7jJS7sq2UwYCqw1iAgyLKdNzgA@mail.gmail.com>
+ <CAMty3ZBc-AqbNGZCxRhOPw46iMvEZxoq1oATA46=K29gRYi4Sg@mail.gmail.com> <CAGb2v6466QSF1wJ_wJsVwAgHsnLXD9GAwbPQtXcTDq4aqAeEfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190522224631.25164-1-justin.swartz@risingedge.co.za>
+In-Reply-To: <CAGb2v6466QSF1wJ_wJsVwAgHsnLXD9GAwbPQtXcTDq4aqAeEfQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Justin Swartz <justin.swartz@risingedge.co.za>
-Cc: Sandy Huang <hjc@rock-chips.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Michael Trimarchi <michael@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula <linux-amarula@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 23. Mai 2019, 00:46:29 CEST schrieb Justin Swartz:
-> Like the RK3328, RK322x SoCs offer a Synopsis DesignWare HDMI transmitter
-> and an Innosilicon HDMI PHY.
-> 
-> Add a new dw_hdmi_plat_data struct, rk3228_hdmi_drv_data.
-> Assign a set of mostly generic rk3228_hdmi_phy_ops functions.
-> Add dw_hdmi_rk3228_setup_hpd() to enable the HDMI HPD and DDC lines.
-> 
-> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+On Fri, Jun 14, 2019 at 4:32 PM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Fri, Jun 14, 2019 at 6:56 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> >
+> > On Fri, Jun 14, 2019 at 9:05 AM Chen-Yu Tsai <wens@csie.org> wrote:
+> > >
+> > > On Fri, Jun 14, 2019 at 11:19 AM Chen-Yu Tsai <wens@csie.org> wrote:
+> > > >
+> > > > On Fri, Jun 14, 2019 at 2:53 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > > >
+> > > > > TCON LCD0, LCD1 in allwinner R40, are used for managing
+> > > > > LCD interfaces like RGB, LVDS and DSI.
+> > > > >
+> > > > > Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
+> > > > > tcon top.
+> > > > >
+> > > > > Add support for it, in tcon driver.
+> > > > >
+> > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > >
+> > > > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> > >
+> > > I take that back.
+> > >
+> > > The TCON output muxing (which selects whether TCON LCD or TCON TV
+> > > outputs to the GPIO pins)
+> > > is not supported yet. Please at least add TODO notes, or ideally,
+> >
+> > Are you referring about port selection? it is support in
+> > sun8i_tcon_top_de_config.
+>
+> No. That's supported as you already pointed out. That only selects
+> which mixer outputs to which TCON.
+>
+> I'm talking about the GPIOD and GPIOH bits, which select which of
+> LCD or TV TCON outputs to the LCD function pins. Keep in mind that
+> the TV TCON's H/V SYNC signals are used in combination with the
+> TV encoder RGB outputs for VGA.
 
-applied to drm-misc-next
-
-Thanks
-Heiko
+Got it, so do I need to add TODO on sun8i_r40_lcd_quirks struct?
