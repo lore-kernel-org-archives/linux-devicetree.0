@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v4 6/8] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
-Date: Fri, 14 Jun 2019 17:35:42 +0800
-Message-ID: <20190614093544.11730-7-peter.chen@nxp.com>
+Subject: [PATCH v4 7/8] ARM: dts: imx7ulp-evk: enable USBOTG1 support
+Date: Fri, 14 Jun 2019 17:35:43 +0800
+Message-ID: <20190614093544.11730-8-peter.chen@nxp.com>
 References: <20190614093544.11730-1-peter.chen@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,58 +21,73 @@ To: balbi@kernel.org, shawnguo@kernel.org
 Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, chunfeng.yun@mediatek.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add imx7ulp USBOTG1 support.
+Enable USBOTG1 support for evk board, it is dual-role function
+port.
 
 Signed-off-by: Peter Chen <peter.chen@nxp.com>
 ---
- arch/arm/boot/dts/imx7ulp.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm/boot/dts/imx7ulp-evk.dts | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index fca6e50f37c8..5115e47715c3 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -30,6 +30,7 @@
- 		serial1 = &lpuart5;
- 		serial2 = &lpuart6;
- 		serial3 = &lpuart7;
-+		usbphy0 = &usbphy1;
+diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-evk.dts
+index a09026a6d22e..c8a56a2ae9a5 100644
+--- a/arch/arm/boot/dts/imx7ulp-evk.dts
++++ b/arch/arm/boot/dts/imx7ulp-evk.dts
+@@ -22,6 +22,17 @@
+ 		reg = <0x60000000 0x40000000>;
  	};
  
- 	cpus {
-@@ -133,6 +134,33 @@
- 			clock-names = "ipg", "per";
- 		};
++	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_usbotg1_vbus>;
++		regulator-name = "usb_otg1_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio_ptc 0 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
+ 	reg_vsd_3v3: regulator-vsd-3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "VSD_3V3";
+@@ -40,6 +51,17 @@
+ 	status = "okay";
+ };
  
-+		usbotg1: usb@40330000 {
-+			compatible = "fsl,imx7ulp-usb", "fsl,imx6ul-usb";
-+			reg = <0x40330000 0x200>;
-+			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc2 IMX7ULP_CLK_USB0>;
-+			phys = <&usbphy1>;
-+			fsl,usbmisc = <&usbmisc1 0>;
-+			ahb-burst-config = <0x0>;
-+			tx-burst-size-dword = <0x8>;
-+			rx-burst-size-dword = <0x8>;
-+			status = "disabled";
-+		};
++&usbotg1 {
++	vbus-supply = <&reg_usb_otg1_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg1_id>;
++	srp-disable;
++	hnp-disable;
++	adp-disable;
++	over-current-active-low;
++	status = "okay";
++};
 +
-+		usbmisc1: usbmisc@40330200 {
-+			compatible = "fsl,imx7ulp-usbmisc", "fsl,imx7d-usbmisc";
-+			#index-cells = <1>;
-+			reg = <0x40330200 0x200>;
-+		};
+ &usdhc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc0>;
+@@ -57,6 +79,19 @@
+ 		bias-pull-up;
+ 	};
+ 
++	pinctrl_usbotg1_vbus: otg1vbusgrp {
++		fsl,pins = <
++			IMX7ULP_PAD_PTC0__PTC0		0x20000
++		>;
++	};
 +
-+		usbphy1: usbphy@0x40350000 {
-+			compatible = "fsl,imx7ulp-usbphy", "fsl,imx6ul-usbphy";
-+			reg = <0x40350000 0x1000>;
-+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc2 IMX7ULP_CLK_USB_PHY>;
-+			#phy-cells = <0>;
-+		};
++	pinctrl_usbotg1_id: otg1idgrp {
++		fsl,pins = <
++			IMX7ULP_PAD_PTC13__USB0_ID	0x10003
++			IMX7ULP_PAD_PTC16__USB1_OC2	0x10003
++		>;
++	};
 +
- 		usdhc0: mmc@40370000 {
- 			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
- 			reg = <0x40370000 0x10000>;
+ 	pinctrl_usdhc0: usdhc0grp {
+ 		fsl,pins = <
+ 			IMX7ULP_PAD_PTD1__SDHC0_CMD	0x43
 -- 
 2.14.1
