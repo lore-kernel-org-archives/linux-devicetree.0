@@ -1,133 +1,123 @@
-Return-Path: <SRS0=ypAS=UL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38563 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437594AbfFLJj0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Jun 2019 05:39:26 -0400
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v5 07/10] media: hantro: allow arbitrary number of clocks
-Date: Wed, 12 Jun 2019 11:39:12 +0200
-Message-Id: <20190612093915.18973-8-p.zabel@pengutronix.de>
-In-Reply-To: <20190612093915.18973-1-p.zabel@pengutronix.de>
-References: <20190612093915.18973-1-p.zabel@pengutronix.de>
+Return-Path: <SRS0=xUMM=UN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from sauhun.de ([88.99.104.3]:57478 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbfFNVkJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Jun 2019 17:40:09 -0400
+Date: Fri, 14 Jun 2019 23:40:05 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 2/2 v3] i2c: mt7621: Add MediaTek MT7621/7628/7688 I2C
+ driver
+Message-ID: <20190614214005.GK17899@ninjato>
+References: <20190604113407.8948-1-sr@denx.de>
+ <20190604113407.8948-2-sr@denx.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZG5hGh9V5E9QzVHS"
+Content-Disposition: inline
+In-Reply-To: <20190604113407.8948-2-sr@denx.de>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: Stefan Roese <sr@denx.de>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Jan Breuer <jan.breuer@jaybee.cz>, John Crispin <john@phrozen.org>, =?utf-8?B?UmVuw6k=?= van Dorst <opensource@vdorst.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Dynamically allocate clocks and move clock names out of struct
-hantro_variant. This lifts the four clock limit and allows to use
-ARRAY_SIZE() to fill .num_clocks to reduce the risk of mismatches.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
----
-Changes since v4 [1]:
- - Rebased onto media-tree master
+--ZG5hGh9V5E9QzVHS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://patchwork.linuxtv.org/patch/56808/
----
- drivers/staging/media/hantro/hantro.h        | 6 ++----
- drivers/staging/media/hantro/hantro_drv.c    | 5 +++++
- drivers/staging/media/hantro/rk3288_vpu_hw.c | 8 ++++++--
- drivers/staging/media/hantro/rk3399_vpu_hw.c | 8 ++++++--
- 4 files changed, 19 insertions(+), 8 deletions(-)
+Hi Stefan,
 
-diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
-index 5c2f87272ce2..62dcca9ff19c 100644
---- a/drivers/staging/media/hantro/hantro.h
-+++ b/drivers/staging/media/hantro/hantro.h
-@@ -25,8 +25,6 @@
- 
- #include "hantro_hw.h"
- 
--#define HANTRO_MAX_CLOCKS		4
--
- #define MPEG2_MB_DIM			16
- #define MPEG2_MB_WIDTH(w)		DIV_ROUND_UP(w, MPEG2_MB_DIM)
- #define MPEG2_MB_HEIGHT(h)		DIV_ROUND_UP(h, MPEG2_MB_DIM)
-@@ -88,7 +86,7 @@ struct hantro_variant {
- 	int (*runtime_resume)(struct hantro_dev *vpu);
- 	const struct hantro_irq *irqs;
- 	int num_irqs;
--	const char *clk_names[HANTRO_MAX_CLOCKS];
-+	const char * const *clk_names;
- 	int num_clocks;
- 	const char * const *reg_names;
- 	int num_regs;
-@@ -182,7 +180,7 @@ struct hantro_dev {
- 	struct hantro_func *decoder;
- 	struct platform_device *pdev;
- 	struct device *dev;
--	struct clk_bulk_data clocks[HANTRO_MAX_CLOCKS];
-+	struct clk_bulk_data *clocks;
- 	void __iomem **reg_bases;
- 	void __iomem *enc_base;
- 	void __iomem *dec_base;
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index fc8f3ed8e80c..1d3af881d088 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -687,6 +687,11 @@ static int hantro_probe(struct platform_device *pdev)
- 
- 	INIT_DELAYED_WORK(&vpu->watchdog_work, hantro_watchdog);
- 
-+	vpu->clocks = devm_kcalloc(&pdev->dev, vpu->variant->num_clocks,
-+				   sizeof(*vpu->clocks), GFP_KERNEL);
-+	if (!vpu->clocks)
-+		return -ENOMEM;
-+
- 	for (i = 0; i < vpu->variant->num_clocks; i++)
- 		vpu->clocks[i].id = vpu->variant->clk_names[i];
- 	ret = devm_clk_bulk_get(&pdev->dev, vpu->variant->num_clocks,
-diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-index c5473bc1ac29..bcacc4f51093 100644
---- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
-+++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-@@ -166,6 +166,10 @@ static const struct hantro_irq rk3288_irqs[] = {
- 	{ "vdpu", rk3288_vdpu_irq },
- };
- 
-+static const char * const rk3288_clk_names[] = {
-+	"aclk", "hclk"
-+};
-+
- const struct hantro_variant rk3288_vpu_variant = {
- 	.enc_offset = 0x0,
- 	.enc_fmts = rk3288_vpu_enc_fmts,
-@@ -178,6 +182,6 @@ const struct hantro_variant rk3288_vpu_variant = {
- 	.irqs = rk3288_irqs,
- 	.num_irqs = ARRAY_SIZE(rk3288_irqs),
- 	.init = rk3288_vpu_hw_init,
--	.clk_names = {"aclk", "hclk"},
--	.num_clocks = 2
-+	.clk_names = rk3288_clk_names,
-+	.num_clocks = ARRAY_SIZE(rk3288_clk_names)
- };
-diff --git a/drivers/staging/media/hantro/rk3399_vpu_hw.c b/drivers/staging/media/hantro/rk3399_vpu_hw.c
-index 965030e21ea9..5718f8063542 100644
---- a/drivers/staging/media/hantro/rk3399_vpu_hw.c
-+++ b/drivers/staging/media/hantro/rk3399_vpu_hw.c
-@@ -165,6 +165,10 @@ static const struct hantro_irq rk3399_irqs[] = {
- 	{ "vdpu", rk3399_vdpu_irq },
- };
- 
-+static const char * const rk3399_clk_names[] = {
-+	"aclk", "hclk"
-+};
-+
- const struct hantro_variant rk3399_vpu_variant = {
- 	.enc_offset = 0x0,
- 	.enc_fmts = rk3399_vpu_enc_fmts,
-@@ -177,6 +181,6 @@ const struct hantro_variant rk3399_vpu_variant = {
- 	.irqs = rk3399_irqs,
- 	.num_irqs = ARRAY_SIZE(rk3399_irqs),
- 	.init = rk3399_vpu_hw_init,
--	.clk_names = {"aclk", "hclk"},
--	.num_clocks = 2
-+	.clk_names = rk3399_clk_names,
-+	.num_clocks = ARRAY_SIZE(rk3399_clk_names)
- };
--- 
-2.20.1
+On Tue, Jun 04, 2019 at 01:34:07PM +0200, Stefan Roese wrote:
+> This patch adds a driver for the I2C controller found on the MediaTek
+> MT7621/7628/7688 SoC's. The base version of this driver was done by
+> Steven Liu (according to the copyright and MODULE_AUTHOR lines). It
+> can be found in the OpenWRT repositories (v4.14 at the time I looked).
+>=20
+> The base driver had many issues, which are disccussed here:
+>=20
+> https://en.forum.labs.mediatek.com/t/openwrt-15-05-loads-non-working-i2c-=
+kernel-module-for-mt7688/1286/3
+>=20
+> From this link an enhanced driver version (complete rewrite, mayor
+> changes: support clock stretching, repeated start, ACK handling and
+> unlimited message length) from Jan Breuer can be found here:
+>=20
+> https://gist.github.com/j123b567/9b555b635c2b4069d716b24198546954
+>=20
+> This patch now adds this enhanced I2C driver to mainline.
+>=20
+> Changes by Stefan Roese for upstreaming:
+> - Add devicetree bindings
+> - checkpatch clean
+> - Use module_platform_driver()
+> - Minor cosmetic enhancements
+> - Removed IO warpped functions
+> - Use readl_relaxed_poll_timeout() and drop poll_down_timeout()
+> - Removed superfluous barrier() in mtk_i2c_reset()
+> - Use i2c_8bit_addr_from_msg()
+> - Added I2C_FUNC_PROTOCOL_MANGLING
+> - Removed adap->class =3D I2C_CLASS_HWMON | I2C_CLASS_SPD;
+>=20
+> Signed-off-by: Stefan Roese <sr@denx.de>
+
+Mostly good, really minor nits left.
+
+> +config I2C_MT7621
+> +	tristate "MT7621/MT7628 I2C Controller"
+> +	depends on (RALINK && (SOC_MT7620 || SOC_MT7621)) || COMPILE_TEST
+> +	select OF_I2C
+
+OF_I2C is gone since 2013. Didn't Kconfig complain?
+
+> +
+> +#define MT76XX_I2C_INPUT_CLOCK	40000000
+
+Add a comment here explaining that this is a temporary solution until
+proper clock support is added?
+
+> +	ret =3D readl_relaxed_poll_timeout(i2c->base + REG_SM0CTL1_REG,
+> +					 val, !(val & SM0CTL1_TRI),
+> +					 10, TIMEOUT_MS * 1000);
+
+Yay, much better.
+
+> +	if (i2c->bus_freq =3D=3D 0) {
+> +		dev_warn(i2c->dev,
+> +			 "clock-frequency 0 not supported, using 1\n");
+> +		i2c->bus_freq =3D 1;
+> +	}
+
+A bus frequency of 1 Hz does neither make much sense. -EINVAL because
+there is surely something broken then?
+
+> +MODULE_AUTHOR("Steven Liu <steven_liu@mediatek.com>");
+
+His address is known to be broken!
+
+Regards,
+
+   Wolfram
+
+
+--ZG5hGh9V5E9QzVHS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0EFDUACgkQFA3kzBSg
+KbaYmA/+Pk6EKiOklBWcrEM5rmp8OdZhk8Ay7VVs38Pb1pA/qvkrfmDt8EIFdFoB
+ysgnrGUCARrMMYfU1xxOay5C2ZedQq0hT8y+aB5YVYRE+cOL54Y76YmzvH4+0/Qf
+16za7WVLKalegbM216SHbh+uitHY8JMB/Lwl1AwCyK75ZTZRwLfsmqFSPXqkwaG/
+q3hSVWSRAx7z4dELYAbKfgwPwhJ7G9uFq7bn3mNFXWZ0tMv/MN3FZFmNEvhGWwry
+ZQC9zCUstll30i/BaELNqlFTlGKN2JWPLlS+DQSbcFd2CwzS/x/m5ddS2C35KU5X
+vWrOJCPmAnxrioR45zYfEtqaKJTuXY+tf52BPolrIRpYef8Boa0T+uEhKe+yYNRW
+ohc6AOxW8ocRiS/+ZyWldY6QPUnEAj1mjd0D92QoiR4nF9xjYJxnfkNVZ6OvWkn/
+9Atr1jSExJpnxqXDKAQHmMBjwK2WVPkSwIz4wHDi/yBi2xYQzQZxZqHRRwO5cHA5
+t5463LR4f1wDFzl3N3V7cxH+aapBUueRLlpeRmzal6RwNfwPNExPklwZS0iiz/32
+VbocpSRk6SV7iOIQW/NhJZpWOV6GrpTBwZ2PLM/Ff8oQ7mb+YzaSb82zzTVMgS8S
+MJ/7b8ZxR4gEtSM/7q4/i+ttK4BFGqn7jCtIm6Cd8eZ2WOCo1T8=
+=uD5t
+-----END PGP SIGNATURE-----
+
+--ZG5hGh9V5E9QzVHS--
