@@ -1,30 +1,73 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH] ARM: dts: aspeed: Add Facebook YAMP BMC
-Date: Fri, 14 Jun 2019 12:20:01 +0000
-Message-ID: <CACPK8Xe8qNww18hJx2skjYJtsCRLA+uwZsjGUb50u6QLE+wmSg@mail.gmail.com>
-References: <20190509035549.2203169-1-taoren@fb.com> <29d7503b-6c14-4990-aadc-7cbce2897fc2@www.fastmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191 panel
+ driver
+Date: Fri, 14 Jun 2019 09:27:49 -0300
+Message-ID: <CAOMZO5BAborMvk=4cgreWKX6rJjK-237me98dM1dDV53oUnExQ@mail.gmail.com>
+References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com>
+ <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <29d7503b-6c14-4990-aadc-7cbce2897fc2@www.fastmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Tao Ren <taoren@fb.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Robert Chiras <robert.chiras@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 9 May 2019 at 06:06, Andrew Jeffery <andrew@aj.id.au> wrote:
->
->
->
-> On Thu, 9 May 2019, at 13:26, Tao Ren wrote:
-> > Add initial version of device tree for Facebook YAMP ast2500 BMC.
-> >
-> > Signed-off-by: Tao Ren <taoren@fb.com>
->
-> Acked-by: Andrew Jeffery <andrew@aj.id.au>
-
-Committed to dev-5.1.
-
-Cheers,
-
-Joel
+SGkgUm9iZXJ0LAoKT24gRnJpLCBKdW4gMTQsIDIwMTkgYXQgODo1MiBBTSBSb2JlcnQgQ2hpcmFz
+IDxyb2JlcnQuY2hpcmFzQG54cC5jb20+IHdyb3RlOgoKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXJheWRpdW0tcm02NzE5MS5jCj4gQEAgLTAsMCAr
+MSw3MzAgQEAKPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKPiArLyoKPiAr
+ICogaS5NWCBkcm0gZHJpdmVyIC0gUmF5ZGl1bSBNSVBJLURTSSBwYW5lbCBkcml2ZXIKPiArICoK
+PiArICogQ29weXJpZ2h0IChDKSAyMDE3IE5YUAo+ICsgKgo+ICsgKiBUaGlzIHByb2dyYW0gaXMg
+ZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yCj4gKyAqIG1vZGlm
+eSBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlCj4g
+KyAqIGFzIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIg
+dmVyc2lvbiAyCj4gKyAqIG9mIHRoZSBMaWNlbnNlLCBvciAoYXQgeW91ciBvcHRpb24pIGFueSBs
+YXRlciB2ZXJzaW9uLgo+ICsgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhv
+cGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwKPiArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZ
+OyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YKPiArICogTUVSQ0hBTlRBQklM
+SVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQo+ICsgKiBH
+TlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgoKTm8gbmVlZCBmb3Ig
+dGhpcyB0ZXh0IGFzIHlvdSBhcmUgdXNpbmcgU1BEWCB0YWcuCgo+ICtzdGF0aWMgaW50IGNvbG9y
+X2Zvcm1hdF9mcm9tX2RzaV9mb3JtYXQoZW51bSBtaXBpX2RzaV9waXhlbF9mb3JtYXQgZm9ybWF0
+KQo+ICt7Cj4gKyAgICAgICBzd2l0Y2ggKGZvcm1hdCkgewo+ICsgICAgICAgY2FzZSBNSVBJX0RT
+SV9GTVRfUkdCNTY1Ogo+ICsgICAgICAgICAgICAgICByZXR1cm4gMHg1NTsKPiArICAgICAgIGNh
+c2UgTUlQSV9EU0lfRk1UX1JHQjY2NjoKPiArICAgICAgIGNhc2UgTUlQSV9EU0lfRk1UX1JHQjY2
+Nl9QQUNLRUQ6Cj4gKyAgICAgICAgICAgICAgIHJldHVybiAweDY2Owo+ICsgICAgICAgY2FzZSBN
+SVBJX0RTSV9GTVRfUkdCODg4Ogo+ICsgICAgICAgICAgICAgICByZXR1cm4gMHg3NzsKCkNvdWxk
+IHlvdSB1c2UgZGVmaW5lcyBmb3IgdGhlc2UgbWFnaWMgMHg1NSwgMHg2NiBhbmQgMHg3NyBudW1i
+ZXJzPwoKPiArc3RhdGljIGludCByYWRfcGFuZWxfcHJlcGFyZShzdHJ1Y3QgZHJtX3BhbmVsICpw
+YW5lbCkKPiArewo+ICsgICAgICAgc3RydWN0IHJhZF9wYW5lbCAqcmFkID0gdG9fcmFkX3BhbmVs
+KHBhbmVsKTsKPiArCj4gKyAgICAgICBpZiAocmFkLT5wcmVwYXJlZCkKPiArICAgICAgICAgICAg
+ICAgcmV0dXJuIDA7Cj4gKwo+ICsgICAgICAgaWYgKHJhZC0+cmVzZXQpIHsKPiArICAgICAgICAg
+ICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlKHJhZC0+cmVzZXQsIDApOwo+ICsgICAgICAgICAgICAgICB1
+c2xlZXBfcmFuZ2UoNTAwMCwgMTAwMDApOwo+ICsgICAgICAgICAgICAgICBncGlvZF9zZXRfdmFs
+dWUocmFkLT5yZXNldCwgMSk7Cj4gKyAgICAgICAgICAgICAgIHVzbGVlcF9yYW5nZSgyMDAwMCwg
+MjUwMDApOwoKVGhpcyBkb2VzIG5vdCBsb29rIGNvcnJlY3QuCgpUaGUgY29ycmVjdCB3YXkgdG8g
+ZG8gYSByZXNldCB3aXRoIGdwaW9kIEFQSSBpczoKCiBncGlvZF9zZXRfdmFsdWUocmFkLT5yZXNl
+dCwgMSk7CgpkZWxheQoKZ3Bpb2Rfc2V0X3ZhbHVlKHJhZC0+cmVzZXQsIDApOwoKSSBkb24ndCBo
+YXZlIHRoZSBkYXRhc2hlZXQgZm9yIHRoZSBSTTY3MTkxIHBhbmVsLCBidXQgSSBhc3N1bWUgdGhl
+CnJlc2V0IEdQSU8gaXMgYWN0aXZlIGxvdy4KClNpbmNlIHlvdSBpbnZlcnRlZCB0aGUgcG9sYXJp
+dHkgaW4gdGhlIGR0cyBhbmQgaW5zaWRlIHRoZSBkcml2ZXIsIHlvdQpnb3QgaXQgcmlnaHQgYnkg
+YWNjaWRlbnQuCgpZb3UgY291bGQgYWxzbyBjb25zaWRlciB1c2luZyBncGlvZF9zZXRfdmFsdWVf
+Y2Fuc2xlZXAoKSB2YXJpYW50Cmluc3RlYWQgYmVjYXVzZSB0aGUgR1BJTyByZXNldCBjb3VsZCBi
+ZSBwcm92aWRlZCBieSBhbiBJMkMgR1BJTwpleHBhbmRlciwgZm9yIGV4YW1wbGUuCgpBbHNvLCB3
+aGVuIHNsZWVwaW5nIGZvciBtb3JlIHRoYW4gMTBtcywgbXNsZWVwIGlzIGEgYmV0dGVyIGZpdCBh
+cyBwZXIKRG9jdW1lbnRhdGlvbi90aW1lcnMvdGltZXJzLWhvd3RvLnR4dC4KCj4gKyAgICAgICBp
+ZiAocmFkLT5yZXNldCkgewo+ICsgICAgICAgICAgICAgICBncGlvZF9zZXRfdmFsdWUocmFkLT5y
+ZXNldCwgMCk7Cj4gKyAgICAgICAgICAgICAgIHVzbGVlcF9yYW5nZSgxNTAwMCwgMTcwMDApOwo+
+ICsgICAgICAgICAgICAgICBncGlvZF9zZXRfdmFsdWUocmFkLT5yZXNldCwgMSk7Cj4gKyAgICAg
+ICB9CgpBbm90aGVyIHJlc2V0PwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWw=
