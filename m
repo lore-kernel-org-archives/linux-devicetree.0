@@ -1,147 +1,105 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v10 08/13] drivers: memory: add DMC driver for
- Exynos5422
-Date: Fri, 14 Jun 2019 15:40:53 +0200
-Message-ID: <6f86228d-8409-a835-20ba-ad20464379dd@partner.samsung.com>
-References: <CGME20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9@eucas1p1.samsung.com>
-        <20190614095309.24100-1-l.luba@partner.samsung.com>
-        <20190614095309.24100-9-l.luba@partner.samsung.com>
-        <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
+Date: Fri, 14 Jun 2019 16:43:15 +0300
+Message-ID: <e811d674-b79f-4da8-c632-c7a90844b6c5@ti.com>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
+ <20190506123456.6777-10-peter.ujfalusi@ti.com> <20190613181626.GA7039@bogus>
+ <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
+ <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com>
+In-Reply-To: <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
+To: Rob Herring <robh@kernel.org>
+Cc: Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Dan Williams <dan.j.williams@intel.com>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
 
-On 6/14/19 2:58 PM, Krzysztof Kozlowski wrote:
-> On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+On 14/06/2019 16.20, Rob Herring wrote:
+> On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 >>
->> This patch adds driver for Exynos5422 Dynamic Memory Controller.
->> The driver provides support for dynamic frequency and voltage scaling for
->> DMC and DRAM. It supports changing timings of DRAM running with different
->> frequency. There is also an algorithm to calculate timigns based on
->> memory description provided in DT.
->> The patch also contains needed MAINTAINERS file update.
+>> Rob,
 >>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   MAINTAINERS                             |    8 +
->>   drivers/memory/samsung/Kconfig          |   17 +
->>   drivers/memory/samsung/Makefile         |    1 +
->>   drivers/memory/samsung/exynos5422-dmc.c | 1262 +++++++++++++++++++++++
->>   4 files changed, 1288 insertions(+)
->>   create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
+>> On 13/06/2019 21.16, Rob Herring wrote:
+>>>> +Remote PSI-L endpoint
+>>>> +
+>>>> +Required properties:
+>>>> +--------------------
+>>>> +- ti,psil-base:             PSI-L thread ID base of the endpoint
+>>>> +
+>>>> +Within the PSI-L endpoint node thread configuration subnodes must present with:
+>>>> +ti,psil-configX naming convention, where X is the thread ID offset.
+>>>
+>>> Don't use vendor prefixes on node names.
 >>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 57f496cff999..6ffccfd95351 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -3470,6 +3470,14 @@ S:       Maintained
->>   F:     drivers/devfreq/exynos-bus.c
->>   F:     Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+>> OK.
 >>
->> +DMC FREQUENCY DRIVER FOR SAMSUNG EXYNOS5422
-> 
-> Eh, more comments from my side.
-> "For the hard of thinking, this list is meant to remain in alphabetical order."
-OK
-> 
->> +M:     Lukasz Luba <l.luba@partner.samsung.com>
->> +L:     linux-pm@vger.kernel.org
->> +L:     linux-samsung-soc@vger.kernel.org
->> +S:     Maintained
->> +F:     drivers/memory/samsung/exynos5422-dmc.c
->> +F:     Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
->> +
->>   BUSLOGIC SCSI DRIVER
->>   M:     Khalid Aziz <khalid@gonehiking.org>
->>   L:     linux-scsi@vger.kernel.org
->> diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
->> index 79ce7ea58903..c93baa029654 100644
->> --- a/drivers/memory/samsung/Kconfig
->> +++ b/drivers/memory/samsung/Kconfig
->> @@ -5,6 +5,23 @@ config SAMSUNG_MC
->>            Support for the Memory Controller (MC) devices found on
->>            Samsung Exynos SoCs.
+>>>> +
+>>>> +Configuration node Required properties:
+>>>> +--------------------
+>>>> +- linux,udma-mode:  Channel mode, can be:
+>>>> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
+>>>> +                    - UDMA_TR_MODE: for Third-Party mode
+>>>
+>>> This is hardly a common linux thing. What determines the value here.
 >>
->> +config ARM_EXYNOS5422_DMC
+>> Unfortunately it is.
 > 
-> Why you added prefix of ARM to CONFIG think none of other Exynos
-> Kconfig options follow such convention (except devfreq).
-In the previous versions the driver was in drivers/devfreq/,
-that's why they have this prefix.
-> 
->> +       tristate "ARM EXYNOS5422 Dynamic Memory Controller driver"
->> +       depends on ARCH_EXYNOS
->> +       select DDR
-> 
-> In general select should be used only for non-visible symbols and DDR
-> is visible. Use depends.
-OK
-> 
->> +       select PM_DEVFREQ
-> 
-> This definitely cannot be select. You do not select entire subsystem
-> because some similar driver was chosen.
-So I will use depends int this case
-> 
->> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
->> +       select DEVFREQ_GOV_USERSPACE
-> 
-> I think only simple_ondemand is needed. Is userspace governor
-> necessary for working? Or actually maybe both could be skipped?
-> 
-Actually we can skip both governors from here.
+> No, it's a feature of your h/w and in no way is something linux
+> defined which is the point of 'linux' prefix.
 
->> +       select PM_DEVFREQ_EVENT
-> 
-> Again, depends.
-OK
+The channel can be either Packet or TR mode. The HW is really flexible
+on this (and on other things as well).
+It just happens that Linux need to use specific channels in a specific mode.
 
-There are these 4 options which the driver depends on:
-         depends on ARCH_EXYNOS
-         depends on DDR
-         depends on PM_DEVFREQ
-         depends on PM_DEVFREQ_EVENT
+Would it help if we assume that all channels are used in Packet mode,
+but we have linux,tr-mode bool to indicate that the given channel in
+Linux need to be used in TR mode.
 
-Should I merged them into one, two lines? like below:
-a)
-depends on (ARCH_EXYNOS && DDR && PM_DEVFREQ && PM_DEVFREQ_EVENT)
-b) grouped into two sets
-depends on (ARCH_EXYNOS && DDR)
-depends on (PM_DEVFREQ && PM_DEVFREQ_EVENT)
-c) grouped by pm_devfreq only
-depends on ARCH_EXYNOS
-depends on DDR
-depends on (PM_DEVFREQ && PM_DEVFREQ_EVENT)
+>> Each channel can be configured to Packet or TR mode. For some
+>> peripherals it is true that they only support packet mode, these are the
+>> newer PSI-L native peripherals.
+>> For these channels a udma-mode property would be correct.
+>>
+>> But we have legacy peripherals as well and they are serviced by PDMA
+>> (which is a native peripheral designed to talk to the given legacy IP).
+>> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
+>> most cases clear what to use, but for example for audio (McASP) channels
+>> Linux is using TR channel because we need cyclic DMA while for example
+>> RTOS is using Packet mode as it fits their needs better.
+>>
+>> Here I need to prefix the udma-mode with linux as the mode is used by
+>> Linux, but other OS might opt to use different channel mode.
+> 
+> So you'd need <os>,udma-mode? That doesn't work... If the setting is
+> per OS, then it belongs in the OS because the same dtb should work
+> across OS's.
 
-> 
->> +       select PM_OPP
-This option can be used here IIUC
->> +       help
->> +         This adds driver for Exynos5422 DMC (Dynamic Memory Controller).
->> +         The driver provides support for Dynamic Voltage and Frequency Scaling in
->> +         DMC and DRAM. It also supports changing timings of DRAM running with
->> +         different frequency. The timings are calculated based on DT memory
->> +         information.
->> +
->> +
->>   if SAMSUNG_MC
-> 
-> Why this is outside of SAMSUNG_MC?
-Good question, I will move it below this 'if' statement.
+So I should have a table for the thread IDs in the DMA driver and mark
+channels as TR or Packet in there for Linux use?
+Or just an array which would mark the non packet PSI-L thread IDs?
 
-Regards,
-Lukasz
+I still prefer to have this coming via DT as a Linux parameter as other
+OS is free to ignore the linux,udma-mode, but as I said there are
+certain channels which must be used in Linux in certain mode while
+others in different mode.
+
+>> The reason why this needs to be in the DT is that when the channel is
+>> requested we need to configure the mode and it can not be swapped
+>> runtime easily between Packet and TR mode.
 > 
-> Best regards,
-> Krzysztof
-> 
-> 
+> So when the client makes the channel request, why doesn't it specify the mode?
+
+This is UDMAP internal information on what type of Descriptors the
+channel will expect and how it is going to dispatch the work.
+
+Packet and TR mode at the end does the same thing, but in a completely
+different way.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
