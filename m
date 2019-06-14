@@ -1,29 +1,66 @@
-Return-Path: <SRS0=U1Pn=UQ=verge.net.au=horms@kernel.org>
-Date: Mon, 17 Jun 2019 11:33:39 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Enable USB3.0
-Message-ID: <20190617093339.qrezhd6jnm7jqxbt@verge.net.au>
-References: <1560523869-56668-1-git-send-email-biju.das@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560523869-56668-1-git-send-email-biju.das@bp.renesas.com>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=NpOQ=UN=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH] arm64: dts: renesas: hihope-common: Enable USB3.0
+Date: Fri, 14 Jun 2019 15:51:09 +0100
+Message-Id: <1560523869-56668-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jun 14, 2019 at 03:51:09PM +0100, Biju Das wrote:
-> This patch enables USB3.0 host/peripheral device node for the HiHope
-> RZ/G2M board.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> ---
-> This patch depend on [1]
-> [1]. https://patchwork.kernel.org/patch/10995323/
+This patch enables USB3.0 host/peripheral device node for the HiHope
+RZ/G2M board.
 
-Thanks,
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+This patch depend on [1]
+[1]. https://patchwork.kernel.org/patch/10995323/
+---
+ arch/arm64/boot/dts/renesas/hihope-common.dtsi | 29 ++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
-
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+diff --git a/arch/arm64/boot/dts/renesas/hihope-common.dtsi b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+index 18763ca..6a45c49 100644
+--- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
++++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+@@ -150,6 +150,11 @@
+ 			bias-pull-up;
+ 		};
+ 	};
++
++	usb30_pins: usb30 {
++		groups = "usb30";
++		function = "usb30";
++	};
+ };
+ 
+ &rwdt {
+@@ -213,3 +218,27 @@
+ 
+ 	status = "okay";
+ };
++
++&usb3_peri0 {
++	phys = <&usb3_phy0>;
++	phy-names = "usb";
++
++	companion = <&xhci0>;
++
++	status = "okay";
++};
++
++&usb3_phy0 {
++	status = "okay";
++};
++
++&usb3s0_clk {
++	clock-frequency = <100000000>;
++};
++
++&xhci0 {
++	pinctrl-0 = <&usb30_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
+-- 
+2.7.4
