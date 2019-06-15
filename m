@@ -1,78 +1,86 @@
-From: Jonas Karlman <jonas@kwiboo.se>
-Subject: Re: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii
- performance.
-Date: Sat, 15 Jun 2019 13:32:11 +0000
-Message-ID: <VI1PR03MB420672DCCFF8BE2161F67A88ACE90@VI1PR03MB4206.eurprd03.prod.outlook.com>
-References: <20190607123731.8737-1-pgwipeout@gmail.com>
- <1559912295.22520.0@gmail.com>
- <CAMdYzYorvWr1YhmFKaMQUCditjop5AZp4d1tO79XsVr7m7HrMw@mail.gmail.com>
- <1560547631.1367.4@gmail.com>
- <71dc10a5-1024-d849-336e-476d183e5f46@gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 07/21] iommu/mediatek: Add bclk can be supported
+ optionally
+Date: Sat, 15 Jun 2019 21:18:14 +0200
+Message-ID: <13f42053-cdc3-bef9-54f0-633880c41043@gmail.com>
+References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+ <1560169080-27134-8-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <71dc10a5-1024-d849-336e-476d183e5f46@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1560169080-27134-8-git-send-email-yong.wu@mediatek.com>
 Content-Language: en-US
-Content-ID: <AC1B4905A1B48D4C8A4666AF55652EB0@eurprd03.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Geis <pgwipeout@gmail.com>, "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Cc: Jose Abreu <jose.abreu@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-06-15 14:12, Peter Geis wrote:
->
-> On 6/14/2019 5:27 PM, Leonidas P. Papadakos wrote:
->>
->>> The big change was actually snps,aal.
->>> As per the TRM, DMA channels not address aligned have severe
->>> limitations, if they work at all.
->>>
->>> Setting the DMA ops as address aligned fixed my 30mbps TX issue when
->>> combined with your snps,txpbl = <0x4>.
->> Honestly, I don't notice any difference either way with aal. So what 
->> happens without it? If You only use the 0x4 txpbl and having removed 
->> thresh dma mode, (2 things then) do you get bad tx?
->>
->>
-> I'm unsure why, but I think there might be small variations in the 
-> different boards (Firefly, Libre).
-> On my board (Libre) with just 0x4 txpbl and thresh dma removed I get a 
-> whopping 30mbps.
->
-> Adding aal brought it up to 900 mbps.
->
-> I also had stability issues on rx, where it would bounce between 200 and 
-> 400 mbps, which adding 0x4 rxpbl helped.
-> I still haven't been able to get rx above 400mpbs though.
->
-> It's definitely the MTU issue, since setting the max mtu to 1496 fixes 
-> most problems.
->
-> I have to wonder if the pl330 in the rk3328 is bugged, since all of the 
-> hardware that misbehaves (usb3, mmc, rgmii) require the dma engine.
->
-> If this works as a valid replacement for thresh dma mode, then I can 
-> submit it for merging.
-> I would like a few more people to test it first.
->
-> Anyone else with a rk3328-roc-cc board that can test this patch?
->
 
-I will try to run some tests using this patch on my different rk3328 devices tomorrow.
-One thing I have noticed is that when vdd_logic is less then 1.05v the network connection gets super slow.
 
-Earlier I tried to use devfreq and an opp table for gpu, but that caused vdd_logic to use lower voltage.
-I have since then run gpu driver without devfreq/opp table and vdd_logic is using default 1.1v.
-My board seems much more stable using default 1.1v for vdd_logic.
+On 10/06/2019 14:17, Yong Wu wrote:
+> In some SoCs, M4U doesn't have its "bclk", it will use the EMI
+> clock instead which has always been enabled when entering kernel.
+> 
+> Currently mt2712 and mt8173 have this bclk while mt8183 doesn't.
+> 
+> This also is a preparing patch for mt8183.
+> 
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
 
-Regards,
-Jonas
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>  drivers/iommu/mtk_iommu.c | 10 +++++++---
+>  drivers/iommu/mtk_iommu.h |  3 +++
+>  2 files changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index aff5004..264dda4 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -611,9 +611,11 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+>  	if (data->irq < 0)
+>  		return data->irq;
+>  
+> -	data->bclk = devm_clk_get(dev, "bclk");
+> -	if (IS_ERR(data->bclk))
+> -		return PTR_ERR(data->bclk);
+> +	if (data->plat_data->has_bclk) {
+> +		data->bclk = devm_clk_get(dev, "bclk");
+> +		if (IS_ERR(data->bclk))
+> +			return PTR_ERR(data->bclk);
+> +	}
+>  
+>  	larb_nr = of_count_phandle_with_args(dev->of_node,
+>  					     "mediatek,larbs", NULL);
+> @@ -741,11 +743,13 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+>  static const struct mtk_iommu_plat_data mt2712_data = {
+>  	.m4u_plat     = M4U_MT2712,
+>  	.has_4gb_mode = true,
+> +	.has_bclk     = true,
+>  };
+>  
+>  static const struct mtk_iommu_plat_data mt8173_data = {
+>  	.m4u_plat     = M4U_MT8173,
+>  	.has_4gb_mode = true,
+> +	.has_bclk     = true,
+>  };
+>  
+>  static const struct of_device_id mtk_iommu_of_ids[] = {
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index d7a001a..63e235e 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -43,6 +43,9 @@ enum mtk_iommu_plat {
+>  struct mtk_iommu_plat_data {
+>  	enum mtk_iommu_plat m4u_plat;
+>  	bool                has_4gb_mode;
+> +
+> +	/* HW will use the EMI clock if there isn't the "bclk". */
+> +	bool                has_bclk;
+>  };
+>  
+>  struct mtk_iommu_domain;
+> 
