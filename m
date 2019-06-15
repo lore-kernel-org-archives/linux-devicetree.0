@@ -1,135 +1,78 @@
-From: "dbasehore ." <dbasehore@chromium.org>
-Subject: Re: [PATCH 1/5] drm/panel: Add helper for reading DT rotation
-Date: Fri, 14 Jun 2019 17:44:24 -0700
-Message-ID: <CAGAzgsqv8qYM-+_4bPLHtyiaox2jFLMMka8n1Wnk-q5LVPKqDg@mail.gmail.com>
-References: <20190611040350.90064-1-dbasehore@chromium.org>
- <20190611040350.90064-2-dbasehore@chromium.org> <20190612211807.GA13155@ravnborg.org>
- <CAGAzgsqgbr5rWpyWB1H_66=kxBRb7kw4wE7h34TJfE7eJ1mSQQ@mail.gmail.com>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCHv5 19/20] PCI: mobiveil: Add 8-bit and 16-bit register
+ accessors
+Date: Sat, 15 Jun 2019 01:13:48 +0000
+Message-ID: <AM0PR04MB673802CE0891BC898B61EBA384E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-20-Zhiqiang.Hou@nxp.com>
+ <20190612135400.GB15747@redmoon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGAzgsqgbr5rWpyWB1H_66=kxBRb7kw4wE7h34TJfE7eJ1mSQQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Intel Graphics <intel-gfx@lists.freedesktop.org>, moderated list:ARM/FREESCALE IMX
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190612135400.GB15747@redmoon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 5:43 PM dbasehore . <dbasehore@chromium.org> wrote:
->
-> On Wed, Jun 12, 2019 at 2:18 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> >
-> > Hi Derek.
-> >
-> > On Mon, Jun 10, 2019 at 09:03:46PM -0700, Derek Basehore wrote:
-> > > This adds a helper function for reading the rotation (panel
-> > > orientation) from the device tree.
-> > >
-> > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > > ---
-> > >  drivers/gpu/drm/drm_panel.c | 41 +++++++++++++++++++++++++++++++++++++
-> > >  include/drm/drm_panel.h     |  7 +++++++
-> > >  2 files changed, 48 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-> > > index dbd5b873e8f2..3b689ce4a51a 100644
-> > > --- a/drivers/gpu/drm/drm_panel.c
-> > > +++ b/drivers/gpu/drm/drm_panel.c
-> > > @@ -172,6 +172,47 @@ struct drm_panel *of_drm_find_panel(const struct device_node *np)
-> > >       return ERR_PTR(-EPROBE_DEFER);
-> > >  }
-> > >  EXPORT_SYMBOL(of_drm_find_panel);
-> > > +
-> > > +/**
-> > > + * of_drm_get_panel_orientation - look up the rotation of the panel using a
-> > > + * device tree node
-> > > + * @np: device tree node of the panel
-> > > + * @orientation: orientation enum to be filled in
-> > The comment says "enum" but the type used is an int.
-> > Why not use enum drm_panel_orientation?
-> >
->
-> The binding is just an int value, but I can change it to the enum.
-
-Oops, I see what happened here. The way I wrote it should actually use the enum
-
->
-> > > + *
-> > > + * Looks up the rotation of a panel in the device tree. The rotation in the
-> > > + * device tree is counter clockwise.
-> > > + *
-> > > + * Return: 0 when a valid rotation value (0, 90, 180, or 270) is read or the
-> > > + * rotation property doesn't exist. -EERROR otherwise.
-> > > + */
-> > Initially I read -EEROOR as a specific error code.
-> > But I gues the semantic is to say that a negative error code is returned
-> > if something was wrong.
-> > As we do not use the "-EERROR" syntax anywhere else in drm, please
-> > reword like we do in other places.
-> >
-> >
-> > Also - it is worth to mention that the rotation returned is
-> > DRM_MODE_PANEL_ORIENTATION_UNKNOWN if the property is not specified.
-> > I wonder if this is correct, as no property could also been
-> > interpretated as DRM_MODE_PANEL_ORIENTATION_NORMAL.
-> > And in most cases the roation property is optional, so one could
-> > assume that no property equals 0 degree.
-> >
-> >
-> >         Sam
-> >
-> > > +int of_drm_get_panel_orientation(const struct device_node *np, int *orientation)
-> > > +{
-> > > +     int rotation, ret;
-> > > +
-> > > +     ret = of_property_read_u32(np, "rotation", &rotation);
-> > > +     if (ret == -EINVAL) {
-> > > +             /* Don't return an error if there's no rotation property. */
-> > > +             *orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
-> > > +             return 0;
-> > > +     }
-> > > +
-> > > +     if (ret < 0)
-> > > +             return ret;
-> > > +
-> > > +     if (rotation == 0)
-> > > +             *orientation = DRM_MODE_PANEL_ORIENTATION_NORMAL;
-> > > +     else if (rotation == 90)
-> > > +             *orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP;
-> > > +     else if (rotation == 180)
-> > > +             *orientation = DRM_MODE_PANEL_ORIENTATION_BOTTOM_UP;
-> > > +     else if (rotation == 270)
-> > > +             *orientation = DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
-> > > +     else
-> > > +             return -EINVAL;
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +EXPORT_SYMBOL(of_drm_get_panel_orientation);
-> > >  #endif
-> > >
-> > >  MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
-> > > diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> > > index 8c738c0e6e9f..13631b2efbaa 100644
-> > > --- a/include/drm/drm_panel.h
-> > > +++ b/include/drm/drm_panel.h
-> > > @@ -197,11 +197,18 @@ int drm_panel_detach(struct drm_panel *panel);
-> > >
-> > >  #if defined(CONFIG_OF) && defined(CONFIG_DRM_PANEL)
-> > >  struct drm_panel *of_drm_find_panel(const struct device_node *np);
-> > > +int of_drm_get_panel_orientation(const struct device_node *np,
-> > > +                              int *orientation);
-> > >  #else
-> > >  static inline struct drm_panel *of_drm_find_panel(const struct device_node *np)
-> > >  {
-> > >       return ERR_PTR(-ENODEV);
-> > >  }
-> > > +int of_drm_get_panel_orientation(const struct device_node *np,
-> > > +                              int *orientation)
-> > > +{
-> > > +     return -ENODEV;
-> > > +}
-> > >  #endif
-> > >
-> > >  #endif
-> > > --
-> > > 2.22.0.rc2.383.gf4fbbf30c2-goog
+SGkgTG9yZW56bywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMb3Jl
+bnpvIFBpZXJhbGlzaSBbbWFpbHRvOmxvcmVuem8ucGllcmFsaXNpQGFybS5jb21dDQo+IFNlbnQ6
+IDIwMTnE6jbUwjEyyNUgMjE6NTQNCj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNv
+bT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2Vy
+bmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGwuc3VicmFobWFueWFAbW9iaXZlaWwu
+Y28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29t
+PjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5jb207DQo+IE1pbmdr
+YWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAu
+Y29tPjsNCj4gWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0h2NSAxOS8yMF0gUENJOiBtb2JpdmVpbDogQWRkIDgtYml0IGFuZCAxNi1iaXQgcmVn
+aXN0ZXINCj4gYWNjZXNzb3JzDQo+IA0KPiBPbiBGcmksIEFwciAxMiwgMjAxOSBhdCAwODozNzow
+NUFNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFp
+YW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gVGhlcmUgYXJlIHNvbWUgOC1iaXQgYW5kIDE2LWJp
+dCByZWdpc3RlcnMgaW4gUENJZSBjb25maWd1cmF0aW9uIHNwYWNlLA0KPiA+IHNvIGFkZCBhY2Nl
+c3NvcnMgZm9yIHRoZW0uDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpo
+aXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBNaW5naHVhbiBMaWFuIDxNaW5n
+aHVhbi5MaWFuQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFN1YnJhaG1hbnlhIExpbmdhcHBh
+IDxsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluPg0KPiA+IC0tLQ0KPiA+IFY1Og0KPiA+ICAt
+IENvcnJlY3RlZCBhbmQgcmV0b3VjaGVkIHRoZSBzdWJqZWN0IGFuZCBjaGFuZ2Vsb2cuDQo+ID4g
+IC0gTm8gZnVuY3Rpb25hbGl0eSBjaGFuZ2UuDQo+ID4NCj4gPiAgZHJpdmVycy9wY2kvY29udHJv
+bGxlci9wY2llLW1vYml2ZWlsLmMgfCAyMCArKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250
+cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+IGluZGV4IDQxMWU5Nzc5ZGExMi4uNDU2YWRmZWUz
+OTNjIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVp
+bC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4g
+PiBAQCAtMjY4LDExICsyNjgsMzEgQEAgc3RhdGljIHUzMiBjc3JfcmVhZGwoc3RydWN0IG1vYml2
+ZWlsX3BjaWUgKnBjaWUsDQo+IHUzMiBvZmYpDQo+ID4gIAlyZXR1cm4gY3NyX3JlYWQocGNpZSwg
+b2ZmLCAweDQpOw0KPiA+ICB9DQo+ID4NCj4gPiArc3RhdGljIHUzMiBjc3JfcmVhZHcoc3RydWN0
+IG1vYml2ZWlsX3BjaWUgKnBjaWUsIHUzMiBvZmYpIHsNCj4gPiArCXJldHVybiBjc3JfcmVhZChw
+Y2llLCBvZmYsIDB4Mik7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyB1MzIgY3NyX3JlYWRi
+KHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llLCB1MzIgb2ZmKSB7DQo+ID4gKwlyZXR1cm4gY3Ny
+X3JlYWQocGNpZSwgb2ZmLCAweDEpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgdm9pZCBj
+c3Jfd3JpdGVsKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llLCB1MzIgdmFsLCB1MzIgb2ZmKQ0K
+PiA+IHsNCj4gPiAgCWNzcl93cml0ZShwY2llLCB2YWwsIG9mZiwgMHg0KTsNCj4gPiAgfQ0KPiA+
+DQo+ID4gK3N0YXRpYyB2b2lkIGNzcl93cml0ZXcoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUs
+IHUzMiB2YWwsIHUzMiBvZmYpDQo+ID4gK3sNCj4gPiArCWNzcl93cml0ZShwY2llLCB2YWwsIG9m
+ZiwgMHgyKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgY3NyX3dyaXRlYihzdHJ1
+Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSwgdTMyIHZhbCwgdTMyIG9mZikNCj4gPiArew0KPiA+ICsJ
+Y3NyX3dyaXRlKHBjaWUsIHZhbCwgb2ZmLCAweDEpOw0KPiA+ICt9DQo+ID4gKw0KPiANCj4gVGhl
+eSBhcmUgbm90IHVzZWQgc28geW91IHNob3VsZCBkcm9wIHRoaXMgcGF0Y2guDQoNCk5YUCBMYXll
+cnNjYXBlIFBDSWUgR2VuNCBjb250cm9sbGVyIGRyaXZlciB3aWxsIHVzZSB0aGVtLCBzbyBkb24n
+dCBkcm9wIGl0Lg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IA0KPiBMb3JlbnpvDQo+IA0KPiA+
+ICBzdGF0aWMgYm9vbCBtb2JpdmVpbF9wY2llX2xpbmtfdXAoc3RydWN0IG1vYml2ZWlsX3BjaWUg
+KnBjaWUpICB7DQo+ID4gIAlyZXR1cm4gKGNzcl9yZWFkbChwY2llLCBMVFNTTV9TVEFUVVMpICYN
+Cj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
