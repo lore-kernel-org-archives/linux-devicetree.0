@@ -1,71 +1,78 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [alsa-devel] [RFC PATCH 6/6] soundwire: qcom: add support for
- SoundWire controller
-Date: Sat, 15 Jun 2019 14:24:25 +0100
-Message-ID: <d3ccd866-7bc5-9635-4bb4-6b0765f89835@linaro.org>
-References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
- <20190607085643.932-7-srinivas.kandagatla@linaro.org>
- <249f9647-94d0-41d7-3b95-64c36d90f8e8@linux.intel.com>
- <40ea774c-8aa8-295d-e91e-71423b03c88d@linaro.org>
- <7269521a-ac89-3856-c18c-ffaaf64c0806@linux.intel.com>
- <462620fc-ac91-6a36-46c7-7af0080f06cb@linaro.org>
- <0e836692-2297-4cb7-d681-76692db78a56@linux.intel.com>
+From: Jonas Karlman <jonas@kwiboo.se>
+Subject: Re: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii
+ performance.
+Date: Sat, 15 Jun 2019 13:32:11 +0000
+Message-ID: <VI1PR03MB420672DCCFF8BE2161F67A88ACE90@VI1PR03MB4206.eurprd03.prod.outlook.com>
+References: <20190607123731.8737-1-pgwipeout@gmail.com>
+ <1559912295.22520.0@gmail.com>
+ <CAMdYzYorvWr1YhmFKaMQUCditjop5AZp4d1tO79XsVr7m7HrMw@mail.gmail.com>
+ <1560547631.1367.4@gmail.com>
+ <71dc10a5-1024-d849-336e-476d183e5f46@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0e836692-2297-4cb7-d681-76692db78a56@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <71dc10a5-1024-d849-336e-476d183e5f46@gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, broonie@kernel.org, vkoul@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org
+Content-ID: <AC1B4905A1B48D4C8A4666AF55652EB0@eurprd03.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Geis <pgwipeout@gmail.com>, "Leonidas P. Papadakos" <papadakospan@gmail.com>
+Cc: Jose Abreu <jose.abreu@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/06/2019 13:21, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 6/11/19 5:29 AM, Srinivas Kandagatla wrote:
+On 2019-06-15 14:12, Peter Geis wrote:
+>
+> On 6/14/2019 5:27 PM, Leonidas P. Papadakos wrote:
 >>
->>
->> On 10/06/2019 15:12, Pierre-Louis Bossart wrote:
->>>>>> +
->>>>>> +    if (dev_addr == SDW_BROADCAST_DEV_NUM) {
->>>>>> +        ctrl->fifo_status = 0;
->>>>>> +        ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
->>>>>> +                          msecs_to_jiffies(TIMEOUT_MS));
->>>>>
->>>>> This is odd. The SoundWire spec does not handle writes to a single 
->>>>> device or broadcast writes differently. I don't see a clear reason 
->>>>> why you would only timeout for a broadcast write.
->>>>>
->>>>
->>>> There is danger of blocking here without timeout.
+>>> The big change was actually snps,aal.
+>>> As per the TRM, DMA channels not address aligned have severe
+>>> limitations, if they work at all.
 >>>
->>> Right, and it's fine to add a timeout. The question is why add a 
->>> timeout *only* for a broadcast operation? It should be added for 
->>> every transaction IMO, unless you have a reason not to do so.
->>>
+>>> Setting the DMA ops as address aligned fixed my 30mbps TX issue when
+>>> combined with your snps,txpbl = <0x4>.
+>> Honestly, I don't notice any difference either way with aal. So what 
+>> happens without it? If You only use the 0x4 txpbl and having removed 
+>> thresh dma mode, (2 things then) do you get bad tx?
 >>
->> I did try this before, the issue is when we read/write registers from 
->> interrupt handler, these can be deadlocked as we will be interrupt 
->> handler waiting for another completion interrupt, which will never 
->> happen unless we return from the first interrupt.
-> 
-> I don't quite get the issue. With the Intel hardware we only deal with 
-> Master registers (some of which mirror the bus state) in the handler and 
-> will only modify Slave registers in the thread. All changes to Slave 
-> registers will be subject to a timeout as well as a check for no 
-> response or NAK. Not sure what is specific about your solution that 
-> requires a different handling of commands depending on which device 
-> number is used. It could very well be that you've uncovered a flaw in 
-> the bus design but I still don't see how it would be Qualcomm-specific?
+>>
+> I'm unsure why, but I think there might be small variations in the 
+> different boards (Firefly, Libre).
+> On my board (Libre) with just 0x4 txpbl and thresh dma removed I get a 
+> whopping 30mbps.
+>
+> Adding aal brought it up to 900 mbps.
+>
+> I also had stability issues on rx, where it would bounce between 200 and 
+> 400 mbps, which adding 0x4 rxpbl helped.
+> I still haven't been able to get rx above 400mpbs though.
+>
+> It's definitely the MTU issue, since setting the max mtu to 1496 fixes 
+> most problems.
+>
+> I have to wonder if the pl330 in the rk3328 is bugged, since all of the 
+> hardware that misbehaves (usb3, mmc, rgmii) require the dma engine.
+>
+> If this works as a valid replacement for thresh dma mode, then I can 
+> submit it for merging.
+> I would like a few more people to test it first.
+>
+> Anyone else with a rk3328-roc-cc board that can test this patch?
+>
 
-Sorry It took bit more time for digging up the issue which I faced 
-previously to answer this query. This is now fixed and v2 patchset has 
-same handling for all the slave registers read/writes with no special 
-casing.
+I will try to run some tests using this patch on my different rk3328 devices tomorrow.
+One thing I have noticed is that when vdd_logic is less then 1.05v the network connection gets super slow.
 
-Thanks,
-srini
+Earlier I tried to use devfreq and an opp table for gpu, but that caused vdd_logic to use lower voltage.
+I have since then run gpu driver without devfreq/opp table and vdd_logic is using default 1.1v.
+My board seems much more stable using default 1.1v for vdd_logic.
+
+Regards,
+Jonas
