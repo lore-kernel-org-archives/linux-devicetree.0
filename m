@@ -1,15 +1,17 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: arm: Convert MediaTek board/soc bindings
- to json-schema
-Date: Sat, 15 Jun 2019 12:17:57 +0200
-Message-ID: <8e4fcd7c-c698-7fe0-fce6-7f153112d16e@gmail.com>
-References: <20190517154202.24594-1-robh@kernel.org>
- <20190613224921.GA9199@bogus>
+From: Peter Geis <pgwipeout@gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii
+ performance.
+Date: Sat, 15 Jun 2019 08:12:36 -0400
+Message-ID: <71dc10a5-1024-d849-336e-476d183e5f46@gmail.com>
+References: <20190607123731.8737-1-pgwipeout@gmail.com>
+ <1559912295.22520.0@gmail.com>
+ <CAMdYzYorvWr1YhmFKaMQUCditjop5AZp4d1tO79XsVr7m7HrMw@mail.gmail.com>
+ <1560547631.1367.4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190613224921.GA9199@bogus>
+In-Reply-To: <1560547631.1367.4@gmail.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,40 +22,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: "Leonidas P. Papadakos" <papadakospan@gmail.com>
+Cc: Jose Abreu <jose.abreu@synopsys.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 14/06/2019 00:49, Rob Herring wrote:
-> On Fri, May 17, 2019 at 10:42:02AM -0500, Rob Herring wrote:
->> Convert MediaTek SoC bindings to DT schema format using json-schema.
->>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Matthias Brugger <matthias.bgg@gmail.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-mediatek@lists.infradead.org
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> ---
->> v3:
->>  - Rebase to Linus' master
->>
->>  .../devicetree/bindings/arm/mediatek.txt      | 89 ------------------
->>  .../devicetree/bindings/arm/mediatek.yaml     | 91 +++++++++++++++++++
->>  2 files changed, 91 insertions(+), 89 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/arm/mediatek.txt
->>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek.yaml
+On 6/14/2019 5:27 PM, Leonidas P. Papadakos wrote:
 > 
-> Ping. Three versions of this and no comments... Is Mediatek a dead 
-> platform?
+> 
+>> The big change was actually snps,aal.
+>> As per the TRM, DMA channels not address aligned have severe
+>> limitations, if they work at all.
+>>
+>> Setting the DMA ops as address aligned fixed my 30mbps TX issue when
+>> combined with your snps,txpbl = <0x4>.
+> 
+> Honestly, I don't notice any difference either way with aal. So what 
+> happens without it? If You only use the 0x4 txpbl and having removed 
+> thresh dma mode, (2 things then) do you get bad tx?
+> 
 > 
 
-No just a too busy maintainer. Somehow I remembered that you mentioned you won't
-rebase it, so I put it on my long list of todos.
+I'm unsure why, but I think there might be small variations in the 
+different boards (Firefly, Libre).
+On my board (Libre) with just 0x4 txpbl and thresh dma removed I get a 
+whopping 30mbps.
 
-Pushed now to v5.2-next/dts64
+Adding aal brought it up to 900 mbps.
 
-Thanks a lot!
-Matthias
+I also had stability issues on rx, where it would bounce between 200 and 
+400 mbps, which adding 0x4 rxpbl helped.
+I still haven't been able to get rx above 400mpbs though.
+
+It's definitely the MTU issue, since setting the max mtu to 1496 fixes 
+most problems.
+
+I have to wonder if the pl330 in the rk3328 is bugged, since all of the 
+hardware that misbehaves (usb3, mmc, rgmii) require the dma engine.
+
+If this works as a valid replacement for thresh dma mode, then I can 
+submit it for merging.
+I would like a few more people to test it first.
+
+Anyone else with a rk3328-roc-cc board that can test this patch?
