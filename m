@@ -1,68 +1,89 @@
-From: Peter Geis <pgwipeout@gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii
- performance.
-Date: Sat, 15 Jun 2019 08:12:36 -0400
-Message-ID: <71dc10a5-1024-d849-336e-476d183e5f46@gmail.com>
-References: <20190607123731.8737-1-pgwipeout@gmail.com>
- <1559912295.22520.0@gmail.com>
- <CAMdYzYorvWr1YhmFKaMQUCditjop5AZp4d1tO79XsVr7m7HrMw@mail.gmail.com>
- <1560547631.1367.4@gmail.com>
+From: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: set TX PBL for rk3328-roc-cc gmac
+Date: Sat, 15 Jun 2019 08:27:47 -0400
+Message-ID: <4210ab8d-291c-8c44-3c39-6a1849a73874@gmail.com>
+References: <20190417210059.26262-1-papadakospan@gmail.com>
+ <1555938803.1241.1@gmail.com>
+ <8ded737d-1fd5-3609-ca2e-cfeba63b2d95@gmail.com> <1619091.6MGD9gV0do@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1560547631.1367.4@gmail.com>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1619091.6MGD9gV0do@phil>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Cc: Jose Abreu <jose.abreu@synopsys.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 6/14/2019 5:27 PM, Leonidas P. Papadakos wrote:
+On 6/14/2019 5:26 AM, Heiko Stuebner wrote:
+> Hi,
 > 
-> 
->> The big change was actually snps,aal.
->> As per the TRM, DMA channels not address aligned have severe
->> limitations, if they work at all.
+> Am Donnerstag, 23. Mai 2019, 02:00:27 CEST schrieb Peter Geis:
 >>
->> Setting the DMA ops as address aligned fixed my 30mbps TX issue when
->> combined with your snps,txpbl = <0x4>.
+>> On 4/22/2019 9:13 AM, Leonidas P. Papadakos wrote:
+>>>
+>>> Indeed, at least with that first patch users won't have a crappy
+>>> experience by default (ssh lags and the like)
+>>>
+>>>
+>>
+>> I apologize for taking so long at this, but I wanted to make sure I had
+>> it right.
+>>
+>> So far I've found a few things that seem to help, and would like y'all
+>> to test them when you get the chance.
+>>
+>> Adding snps,aal (configures DMA for address alignment) appears to make a
+>> massive improvement to stability, although the the snps,txpbl = <0x4> is
+>> still necessary for this to work.
+>>
+>> Second, I added snps,rxpbl = <0x4> as well, which seems to help with my
+>> RX issues a bit.
+>> The biggest improvement with these two settings is more stable transmit
+>> and receive.
+>> Currently I'm getting about 800mbps on tx and 400 mbps on rx.
+>>
+>> Please test when you get the chance and provide feedback.
 > 
-> Honestly, I don't notice any difference either way with aal. So what 
-> happens without it? If You only use the 0x4 txpbl and having removed 
-> thresh dma mode, (2 things then) do you get bad tx?
+> I have to confess I lost track of the multitude of patches touching
+> the gmac on rk3328 and their long mail threads in terms of which
+> to pick up and which are considered superseeded.
+> 
+> So I'd really appreciate if you could resend the patches that matter
+> and provide relevant Tested-by, Reviewed-by, etc tags from involved
+> people that actually were able to test patches
+> 
+> Thanks
+> Heiko
 > 
 > 
 
-I'm unsure why, but I think there might be small variations in the 
-different boards (Firefly, Libre).
-On my board (Libre) with just 0x4 txpbl and thresh dma removed I get a 
-whopping 30mbps.
+Good Morning Heiko,
 
-Adding aal brought it up to 900 mbps.
+Here's a quick catch-up for you:
+Currently we use thresh dma mode to allow rgmii to work, but this has 
+performance limitations.
+Leonidas submitted the txpbl 0x4 patch, which works well for his board 
+but my board has very poor performance with.
+I submitted a new patch that combined txpbl 0x4 with aal dma mode, which 
+fixes my issue and seems to work well for Leonidas.
 
-I also had stability issues on rx, where it would bounce between 200 and 
-400 mbps, which adding 0x4 rxpbl helped.
-I still haven't been able to get rx above 400mpbs though.
+That patch is under [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc 
+rgmii performance.
+I'd like more people to test it prior to submitting it to replace thresh 
+dma mode.
 
-It's definitely the MTU issue, since setting the max mtu to 1496 fixes 
-most problems.
+If we get a few more tests without regression, I'll resubmit it with 
+Tested-by tags for inclusion.
 
-I have to wonder if the pl330 in the rk3328 is bugged, since all of the 
-hardware that misbehaves (usb3, mmc, rgmii) require the dma engine.
-
-If this works as a valid replacement for thresh dma mode, then I can 
-submit it for merging.
-I would like a few more people to test it first.
-
-Anyone else with a rk3328-roc-cc board that can test this patch?
+Thanks,
+Peter
