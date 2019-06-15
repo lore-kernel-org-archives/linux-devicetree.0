@@ -1,67 +1,172 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv5 17/20] PCI: mobiveil: Complete initialization of host
- even if no PCIe link
-Date: Sat, 15 Jun 2019 02:34:44 +0000
-Message-ID: <AM0PR04MB6738A753FB8A0AE340ADB2C684E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-18-Zhiqiang.Hou@nxp.com>
- <20190612143440.GC15747@redmoon>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH next v2] of/fdt: Fix defined but not used compiler warning
+Date: Sat, 15 Jun 2019 11:03:43 +0800
+Message-ID: <20190615030343.96524-1-wangkefeng.wang@huawei.com>
+References: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612143440.GC15747@redmoon>
-Content-Language: en-US
+In-Reply-To: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, Stephen Boyd <swboyd@chromium.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMb3Jl
-bnpvIFBpZXJhbGlzaSBbbWFpbHRvOmxvcmVuem8ucGllcmFsaXNpQGFybS5jb21dDQo+IFNlbnQ6
-IDIwMTnE6jbUwjEyyNUgMjI6MzUNCj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNv
-bT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2Vy
-bmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGwuc3VicmFobWFueWFAbW9iaXZlaWwu
-Y28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29t
-PjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5jb207DQo+IE1pbmdr
-YWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAu
-Y29tPjsNCj4gWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0h2NSAxNy8yMF0gUENJOiBtb2JpdmVpbDogQ29tcGxldGUgaW5pdGlhbGl6YXRpb24g
-b2YgaG9zdA0KPiBldmVuIGlmIG5vIFBDSWUgbGluaw0KPiANCj4gT24gRnJpLCBBcHIgMTIsIDIw
-MTkgYXQgMDg6MzY6NTRBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6DQo+ID4gRnJvbTogSG91IFpo
-aXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0KPiA+IFNvbWV0aW1lcyB0aGVyZSBp
-cyBub3QgYSBQQ0llIEVuZHBvaW50IHN0YWxsZWQgaW4gdGhlIHNsb3QsIHNvIGRvIG5vdA0KPiA+
-IGV4aXQgd2hlbiB0aGUgUENJZSBsaW5rIGlzIG5vdCB1cC4gQW5kIGRlZ3JhZGUgdGhlIHByaW50
-IGxldmVsIG9mIGxpbmsNCj4gPiB1cCBpbmZvLg0KPiANCj4gU28gd2hhdCdzIHRoZSBwb2ludCBv
-ZiBwcm9iaW5nIGlmIHRoZSBsaW5rIGRvZXMgbm90IGluaXRpYWxpemUgPw0KDQpBIHNpbXBsZSBj
-YXNlIGlzIHBsdWcgaW4gYSBQQ0llIGRldmljZSBhZnRlciB0aGUgTGludXggYm9vdCB1cCwgdGhl
-biByZXNjYW4gdGhlIGRldmljZS4NCklmIGV4aXQgd2hlbiBQQ0llIGxpbmsgaXMgbm90IHVwLCB0
-aGUgUENJZSBjb250cm9sbGVyIGlzIG5vdCBpbml0aWFsaXplZCBjb21wbGV0ZWx5LCB0aGUNCnJl
-c2NhbiBjYW5ub3Qgd29yay4NCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg0KPiBMb3JlbnpvDQo+IA0K
-PiA+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+
-ID4gUmV2aWV3ZWQtYnk6IE1pbmdodWFuIExpYW4gPE1pbmdodWFuLkxpYW5AbnhwLmNvbT4NCj4g
-PiBSZXZpZXdlZC1ieTogU3VicmFobWFueWEgTGluZ2FwcGEgPGwuc3VicmFobWFueWFAbW9iaXZl
-aWwuY28uaW4+DQo+ID4gLS0tDQo+ID4gVjU6DQo+ID4gIC0gQ29ycmVjdGVkIGFuZCByZXRvdWNo
-ZWQgdGhlIHN1YmplY3QgYW5kIGNoYW5nZWxvZy4NCj4gPg0KPiA+ICBkcml2ZXJzL3BjaS9jb250
-cm9sbGVyL3BjaWUtbW9iaXZlaWwuYyB8IDYgKystLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAy
-IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiBiL2RyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gaW5kZXggMWVlM2VhMjU3MGMwLi44ZGM4N2M3
-YTYwMGUgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2
-ZWlsLmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0K
-PiA+IEBAIC01NjAsNyArNTYwLDcgQEAgc3RhdGljIGludCBtb2JpdmVpbF9icmluZ3VwX2xpbmso
-c3RydWN0DQo+IG1vYml2ZWlsX3BjaWUgKnBjaWUpDQo+ID4gIAkJdXNsZWVwX3JhbmdlKExJTktf
-V0FJVF9NSU4sIExJTktfV0FJVF9NQVgpOw0KPiA+ICAJfQ0KPiA+DQo+ID4gLQlkZXZfZXJyKCZw
-Y2llLT5wZGV2LT5kZXYsICJsaW5rIG5ldmVyIGNhbWUgdXBcbiIpOw0KPiA+ICsJZGV2X2luZm8o
-JnBjaWUtPnBkZXYtPmRldiwgImxpbmsgbmV2ZXIgY2FtZSB1cFxuIik7DQo+ID4NCj4gPiAgCXJl
-dHVybiAtRVRJTUVET1VUOw0KPiA+ICB9DQo+ID4gQEAgLTkyNiwxMCArOTI2LDggQEAgc3RhdGlj
-IGludCBtb2JpdmVpbF9wY2llX3Byb2JlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
-DQo+ID4gIAlicmlkZ2UtPnN3aXp6bGVfaXJxID0gcGNpX2NvbW1vbl9zd2l6emxlOw0KPiA+DQo+
-ID4gIAlyZXQgPSBtb2JpdmVpbF9icmluZ3VwX2xpbmsocGNpZSk7DQo+ID4gLQlpZiAocmV0KSB7
-DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICAJCWRldl9pbmZvKGRldiwgImxpbmsgYnJpbmctdXAgZmFp
-bGVkXG4iKTsNCj4gPiAtCQlnb3RvIGVycm9yOw0KPiA+IC0JfQ0KPiA+DQo+ID4gIAkvKiBzZXR1
-cCB0aGUga2VybmVsIHJlc291cmNlcyBmb3IgdGhlIG5ld2x5IGFkZGVkIFBDSWUgcm9vdCBidXMg
-Ki8NCj4gPiAgCXJldCA9IHBjaV9zY2FuX3Jvb3RfYnVzX2JyaWRnZShicmlkZ2UpOw0KPiA+IC0t
-DQo+ID4gMi4xNy4xDQo+ID4NCg==
+When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler
+warning,
+
+drivers/of/fdt.c:129:19: warning: ‘of_fdt_match’ defined but not used [-Wunused-function]
+ static int __init of_fdt_match(const void *blob, unsigned long node,
+
+Since the only caller of of_fdt_match() is of_flat_dt_match(),
+let's move the body of of_fdt_match() into of_flat_dt_match()
+and eliminate of_fdt_match().
+
+Meanwhile, move of_fdt_is_compatible() under CONFIG_OF_EARLY_FLATTREE,
+as all callers are over there.
+
+Cc: Stephen Boyd <swboyd@chromium.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+v2:
+-Move the body of of_fdt_match() into of_flat_dt_match(), suggested by Frank.
+
+ drivers/of/fdt.c | 99 ++++++++++++++++++++++--------------------------
+ 1 file changed, 45 insertions(+), 54 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 3d36b5afd9bd..cd17dc62a719 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -78,38 +78,6 @@ void __init of_fdt_limit_memory(int limit)
+ 	}
+ }
+ 
+-/**
+- * of_fdt_is_compatible - Return true if given node from the given blob has
+- * compat in its compatible list
+- * @blob: A device tree blob
+- * @node: node to test
+- * @compat: compatible string to compare with compatible list.
+- *
+- * On match, returns a non-zero value with smaller values returned for more
+- * specific compatible values.
+- */
+-static int of_fdt_is_compatible(const void *blob,
+-		      unsigned long node, const char *compat)
+-{
+-	const char *cp;
+-	int cplen;
+-	unsigned long l, score = 0;
+-
+-	cp = fdt_getprop(blob, node, "compatible", &cplen);
+-	if (cp == NULL)
+-		return 0;
+-	while (cplen > 0) {
+-		score++;
+-		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
+-			return score;
+-		l = strlen(cp) + 1;
+-		cp += l;
+-		cplen -= l;
+-	}
+-
+-	return 0;
+-}
+-
+ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+ {
+ 	const char *status = fdt_getprop(blob, node, "status", NULL);
+@@ -123,27 +91,6 @@ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+ 	return false;
+ }
+ 
+-/**
+- * of_fdt_match - Return true if node matches a list of compatible values
+- */
+-static int __init of_fdt_match(const void *blob, unsigned long node,
+-			       const char *const *compat)
+-{
+-	unsigned int tmp, score = 0;
+-
+-	if (!compat)
+-		return 0;
+-
+-	while (*compat) {
+-		tmp = of_fdt_is_compatible(blob, node, *compat);
+-		if (tmp && (score == 0 || (tmp < score)))
+-			score = tmp;
+-		compat++;
+-	}
+-
+-	return score;
+-}
+-
+ static void *unflatten_dt_alloc(void **mem, unsigned long size,
+ 				       unsigned long align)
+ {
+@@ -764,6 +711,38 @@ const void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+ 	return fdt_getprop(initial_boot_params, node, name, size);
+ }
+ 
++/**
++ * of_fdt_is_compatible - Return true if given node from the given blob has
++ * compat in its compatible list
++ * @blob: A device tree blob
++ * @node: node to test
++ * @compat: compatible string to compare with compatible list.
++ *
++ * On match, returns a non-zero value with smaller values returned for more
++ * specific compatible values.
++ */
++static int of_fdt_is_compatible(const void *blob,
++		      unsigned long node, const char *compat)
++{
++	const char *cp;
++	int cplen;
++	unsigned long l, score = 0;
++
++	cp = fdt_getprop(blob, node, "compatible", &cplen);
++	if (cp == NULL)
++		return 0;
++	while (cplen > 0) {
++		score++;
++		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
++			return score;
++		l = strlen(cp) + 1;
++		cp += l;
++		cplen -= l;
++	}
++
++	return 0;
++}
++
+ /**
+  * of_flat_dt_is_compatible - Return true if given node has compat in compatible list
+  * @node: node to test
+@@ -779,7 +758,19 @@ int __init of_flat_dt_is_compatible(unsigned long node, const char *compat)
+  */
+ static int __init of_flat_dt_match(unsigned long node, const char *const *compat)
+ {
+-	return of_fdt_match(initial_boot_params, node, compat);
++	unsigned int tmp, score = 0;
++
++	if (!compat)
++		return 0;
++
++	while (*compat) {
++		tmp = of_fdt_is_compatible(initial_boot_params, node, *compat);
++		if (tmp && (score == 0 || (tmp < score)))
++			score = tmp;
++		compat++;
++	}
++
++	return score;
+ }
+ 
+ /**
+-- 
+2.20.1
