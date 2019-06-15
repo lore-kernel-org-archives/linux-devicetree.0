@@ -1,86 +1,33 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v7 07/21] iommu/mediatek: Add bclk can be supported
- optionally
-Date: Sat, 15 Jun 2019 21:18:14 +0200
-Message-ID: <13f42053-cdc3-bef9-54f0-633880c41043@gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
- <1560169080-27134-8-git-send-email-yong.wu@mediatek.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [v2, 0/6] Reuse ptp_qoriq driver for dpaa2-ptp
+Date: Sat, 15 Jun 2019 13:43:21 -0700 (PDT)
+Message-ID: <20190615.134321.740066323733871726.davem@davemloft.net>
+References: <20190614104055.43998-1-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560169080-27134-8-git-send-email-yong.wu@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <20190614104055.43998-1-yangbo.lu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
+To: yangbo.lu@nxp.com
+Cc: netdev@vger.kernel.org, richardcochran@gmail.com, robh+dt@kernel.org, shawnguo@kernel.org, andrew@lunn.ch, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Yangbo Lu <yangbo.lu@nxp.com>
+Date: Fri, 14 Jun 2019 18:40:49 +0800
 
-
-On 10/06/2019 14:17, Yong Wu wrote:
-> In some SoCs, M4U doesn't have its "bclk", it will use the EMI
-> clock instead which has always been enabled when entering kernel.
+> Although dpaa2-ptp.c driver is a fsl_mc_driver which
+> is using MC APIs for register accessing, it's same IP
+> block with eTSEC/DPAA/ENETC 1588 timer.
+> This patch-set is to convert to reuse ptp_qoriq driver by
+> using register ioremap and dropping related MC APIs.
+> However the interrupts could only be handled by MC which
+> fires MSIs to ARM cores. So the interrupt enabling and
+> handling still rely on MC APIs. MC APIs for interrupt
+> and PPS event support are also added by this patch-set.
 > 
-> Currently mt2712 and mt8173 have this bclk while mt8183 doesn't.
-> 
-> This also is a preparing patch for mt8183.
-> 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
 > ---
->  drivers/iommu/mtk_iommu.c | 10 +++++++---
->  drivers/iommu/mtk_iommu.h |  3 +++
->  2 files changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index aff5004..264dda4 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -611,9 +611,11 @@ static int mtk_iommu_probe(struct platform_device *pdev)
->  	if (data->irq < 0)
->  		return data->irq;
->  
-> -	data->bclk = devm_clk_get(dev, "bclk");
-> -	if (IS_ERR(data->bclk))
-> -		return PTR_ERR(data->bclk);
-> +	if (data->plat_data->has_bclk) {
-> +		data->bclk = devm_clk_get(dev, "bclk");
-> +		if (IS_ERR(data->bclk))
-> +			return PTR_ERR(data->bclk);
-> +	}
->  
->  	larb_nr = of_count_phandle_with_args(dev->of_node,
->  					     "mediatek,larbs", NULL);
-> @@ -741,11 +743,13 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
->  static const struct mtk_iommu_plat_data mt2712_data = {
->  	.m4u_plat     = M4U_MT2712,
->  	.has_4gb_mode = true,
-> +	.has_bclk     = true,
->  };
->  
->  static const struct mtk_iommu_plat_data mt8173_data = {
->  	.m4u_plat     = M4U_MT8173,
->  	.has_4gb_mode = true,
-> +	.has_bclk     = true,
->  };
->  
->  static const struct of_device_id mtk_iommu_of_ids[] = {
-> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> index d7a001a..63e235e 100644
-> --- a/drivers/iommu/mtk_iommu.h
-> +++ b/drivers/iommu/mtk_iommu.h
-> @@ -43,6 +43,9 @@ enum mtk_iommu_plat {
->  struct mtk_iommu_plat_data {
->  	enum mtk_iommu_plat m4u_plat;
->  	bool                has_4gb_mode;
-> +
-> +	/* HW will use the EMI clock if there isn't the "bclk". */
-> +	bool                has_bclk;
->  };
->  
->  struct mtk_iommu_domain;
-> 
+> Changes for v2:
+> 	- Allowed to compile with COMPILE_TEST.
+
+Series applied, thanks.
