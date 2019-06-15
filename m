@@ -1,96 +1,44 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv5 18/20] PCI: mobiveil: Disable IB and OB windows set by
- bootloader
-Date: Sat, 15 Jun 2019 05:03:33 +0000
-Message-ID: <AM0PR04MB67383C84D946045874B0F14A84E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-19-Zhiqiang.Hou@nxp.com>
- <20190612162347.GF15747@redmoon>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2] soc: qcom: apr: Don't use reg for domain id
+Date: Sat, 15 Jun 2019 00:07:29 -0700
+Message-ID: <20190615070729.GB31088@tuxbook-pro>
+References: <20190523150153.13136-1-bjorn.andersson@linaro.org>
+ <20190614165724.GA3083@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190612162347.GF15747@redmoon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190614165724.GA3083@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMb3Jl
-bnpvIFBpZXJhbGlzaSBbbWFpbHRvOmxvcmVuem8ucGllcmFsaXNpQGFybS5jb21dDQo+IFNlbnQ6
-IDIwMTnE6jbUwjEzyNUgMDoyNA0KPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29t
-PjsgYmhlbGdhYXNAZ29vZ2xlLmNvbQ0KPiBDYzogbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gcm9iaCtkdEBrZXJu
-ZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5p
-bjsNCj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+Ow0K
-PiBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsgTWluZ2thaSBI
-dQ0KPiA8bWluZ2thaS5odUBueHAuY29tPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5j
-b20+OyBYaWFvd2VpIEJhbw0KPiA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6
-IFtQQVRDSHY1IDE4LzIwXSBQQ0k6IG1vYml2ZWlsOiBEaXNhYmxlIElCIGFuZCBPQiB3aW5kb3dz
-IHNldA0KPiBieSBib290bG9hZGVyDQo+IA0KPiBPbiBGcmksIEFwciAxMiwgMjAxOSBhdCAwODoz
-NzowMEFNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpo
-aXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gRGlzYWJsZSBhbGwgaW5ib3VuZCBhbmQgb3V0
-Ym91bmQgd2luZG93cyBiZWZvcmUgc2V0IHVwIHRoZSB3aW5kb3dzIGluDQo+ID4ga2VybmVsLCBp
-biBjYXNlIHRyYW5zYWN0aW9ucyBtYXRjaCB0aGUgd2luZG93IHNldCBieSBib290bG9hZGVyLg0K
-PiANCj4gVGhlcmUgbXVzdCBiZSBubyBQQ0kgdHJhbnNhY3Rpb25zIG9uZ29pbmcgYXQgYm9vdGxv
-YWRlcjwtPk9TIGhhbmRvdmVyLg0KPg0KDQpZZXMsIGV4YWN0Lg0KIA0KPiBUaGUgYm9vdGxvYWRl
-ciBuZWVkcyBmaXhpbmcgYW5kIHRoaXMgcGF0Y2ggc2hvdWxkIGJlIGRyb3BwZWQsIHRoZSBob3N0
-IGJyaWRnZQ0KPiBkcml2ZXIgYXNzdW1lcyB0aGUgaG9zdCBicmlkZ2Ugc3RhdGUgaXMgZGlzYWJs
-ZWQsDQoNClRoZSBob3N0IGJyaWRnZSBkcml2ZXIgc2hvdWxkIG5vdCBhc3N1bWVzIHRoZSBob3N0
-IHN0YXRlIGlzIGRpc2FibGVkLCBhY3R1YWxseQ0KdS1ib290IGVuYWJsZS9pbml0aWFsaXplIHRo
-ZSBob3N0IGFuZCB3aXRob3V0IGRpc2FibGluZyBpdCB3aGVuIHRyYW5zZmVyIHRoZSANCmNvbnRy
-b2wgdG8gTGludXguDQoNCj4gaXQgd2lsbCBwcm9ncmFtIHRoZSBicmlkZ2UNCj4gYXBlcnR1cmVz
-IGZyb20gc2NyYXRjaCB3aXRoIG5vIG9uZ29pbmcgdHJhbnNhY3Rpb25zLCBhbnl0aGluZyBkZXZp
-YXRpbmcgZnJvbQ0KPiB0aGlzIGJlaGF2aW91ciBpcyBhIGJvb3Rsb2FkZXIgYnVnIGFuZCBhIHJl
-Y2lwZSBmb3IgZGlzYXN0ZXIuDQoNClRoZSBwb2ludCBvZiB0aGlzIHBhdGNoIGlzIG5vdCB0byBm
-aXggdGhlIG9uZ29pbmcgdHJhbnNhY3Rpb24gaXNzdWUsIGl0IGlzIHRvIGF2b2lkDQphIHBvdGVu
-dGlhbCBpc3N1ZSB3aGljaCBpcyBjYXVzZWQgYnkgdGhlIG91dGJvdW5kIHdpbmRvdyBlbmFibGVk
-IGJ5IGJvb3Rsb2FkZXINCm92ZXJsYXBwaW5nIHdpdGggTGludXggZW5hYmxlZC4NCg0KVGhhbmtz
-LA0KWmhpcWlhbmcNCiANCj4gTG9yZW56bw0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhp
-cWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBNaW5naHVhbiBM
-aWFuIDxNaW5naHVhbi5MaWFuQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFN1YnJhaG1hbnlh
-IExpbmdhcHBhIDxsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluPg0KPiA+IC0tLQ0KPiA+IFY1
-Og0KPiA+ICAtIE5vIGZ1bmN0aW9uYWxpdHkgY2hhbmdlLg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKysr
-Kw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gYi9kcml2
-ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+IGluZGV4IDhkYzg3YzdhNjAw
-ZS4uNDExZTk3NzlkYTEyIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-cGNpZS1tb2JpdmVpbC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1v
-Yml2ZWlsLmMNCj4gPiBAQCAtNTY1LDYgKzU2NSwyNCBAQCBzdGF0aWMgaW50IG1vYml2ZWlsX2Jy
-aW5ndXBfbGluayhzdHJ1Y3QNCj4gbW9iaXZlaWxfcGNpZSAqcGNpZSkNCj4gPiAgCXJldHVybiAt
-RVRJTUVET1VUOw0KPiA+ICB9DQo+ID4NCj4gPiArc3RhdGljIHZvaWQgbW9iaXZlaWxfcGNpZV9k
-aXNhYmxlX2liX3dpbihzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSwNCj4gPiAraW50IGlkeCkg
-ew0KPiA+ICsJdTMyIHZhbDsNCj4gPiArDQo+ID4gKwl2YWwgPSBjc3JfcmVhZGwocGNpZSwgUEFC
-X1BFWF9BTUFQX0NUUkwoaWR4KSk7DQo+ID4gKwl2YWwgJj0gfigxIDw8IEFNQVBfQ1RSTF9FTl9T
-SElGVCk7DQo+ID4gKwljc3Jfd3JpdGVsKHBjaWUsIHZhbCwgUEFCX1BFWF9BTUFQX0NUUkwoaWR4
-KSk7IH0NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIG1vYml2ZWlsX3BjaWVfZGlzYWJsZV9vYl93
-aW4oc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsDQo+ID4gK2ludCBpZHgpIHsNCj4gPiArCXUz
-MiB2YWw7DQo+ID4gKw0KPiA+ICsJdmFsID0gY3NyX3JlYWRsKHBjaWUsIFBBQl9BWElfQU1BUF9D
-VFJMKGlkeCkpOw0KPiA+ICsJdmFsICY9IH4oMSA8PCBXSU5fRU5BQkxFX1NISUZUKTsNCj4gPiAr
-CWNzcl93cml0ZWwocGNpZSwgdmFsLCBQQUJfQVhJX0FNQVBfQ1RSTChpZHgpKTsgfQ0KPiA+ICsN
-Cj4gPiAgc3RhdGljIHZvaWQgbW9iaXZlaWxfcGNpZV9lbmFibGVfbXNpKHN0cnVjdCBtb2JpdmVp
-bF9wY2llICpwY2llKSAgew0KPiA+ICAJcGh5c19hZGRyX3QgbXNnX2FkZHIgPSBwY2llLT5wY2ll
-X3JlZ19iYXNlOyBAQCAtNTg1LDYgKzYwMywxMyBAQA0KPiA+IHN0YXRpYyBpbnQgbW9iaXZlaWxf
-aG9zdF9pbml0KHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llKSAgew0KPiA+ICAJdTMyIHZhbHVl
-LCBwYWJfY3RybCwgdHlwZTsNCj4gPiAgCXN0cnVjdCByZXNvdXJjZV9lbnRyeSAqd2luOw0KPiA+
-ICsJaW50IGk7DQo+ID4gKw0KPiA+ICsJLyogRGlzYWJsZSBhbGwgaW5ib3VuZC9vdXRib3VuZCB3
-aW5kb3dzICovDQo+ID4gKwlmb3IgKGkgPSAwOyBpIDwgcGNpZS0+YXBpb193aW5zOyBpKyspDQo+
-ID4gKwkJbW9iaXZlaWxfcGNpZV9kaXNhYmxlX29iX3dpbihwY2llLCBpKTsNCj4gPiArCWZvciAo
-aSA9IDA7IGkgPCBwY2llLT5wcGlvX3dpbnM7IGkrKykNCj4gPiArCQltb2JpdmVpbF9wY2llX2Rp
-c2FibGVfaWJfd2luKHBjaWUsIGkpOw0KPiA+DQo+ID4gIAkvKiBzZXR1cCBidXMgbnVtYmVycyAq
-Lw0KPiA+ICAJdmFsdWUgPSBjc3JfcmVhZGwocGNpZSwgUENJX1BSSU1BUllfQlVTKTsNCj4gPiAt
-LQ0KPiA+IDIuMTcuMQ0KPiA+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Fri 14 Jun 09:57 PDT 2019, Rob Herring wrote:
+
+> On Thu, 23 May 2019 08:01:53 -0700, Bjorn Andersson wrote:
+> > The reg property represents the address and size on the bus that a
+> > device lives, but for APR the parent is a rpmsg bus, which does not have
+> > numerical addresses. Simply defining #address/#size-cells to 1 and 0,
+> > respectively, to silence the compiler is not an appropriate solution.
+> > 
+> > Replace the use of "reg" with an APR specific property.
+> > 
+> > Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> > 
+> > Changes since v1:
+> > - Fixed example to match change
+> > 
+> >  Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 6 +++---
+> >  drivers/soc/qcom/apr.c                                  | 2 +-
+> >  2 files changed, 4 insertions(+), 4 deletions(-)
+> > 
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Thanks Rob, patch applied.
+
+Regards,
+Bjorn
