@@ -1,89 +1,71 @@
-From: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: set TX PBL for rk3328-roc-cc gmac
-Date: Sat, 15 Jun 2019 08:27:47 -0400
-Message-ID: <4210ab8d-291c-8c44-3c39-6a1849a73874@gmail.com>
-References: <20190417210059.26262-1-papadakospan@gmail.com>
- <1555938803.1241.1@gmail.com>
- <8ded737d-1fd5-3609-ca2e-cfeba63b2d95@gmail.com> <1619091.6MGD9gV0do@phil>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [alsa-devel] [RFC PATCH 6/6] soundwire: qcom: add support for
+ SoundWire controller
+Date: Sat, 15 Jun 2019 14:24:25 +0100
+Message-ID: <d3ccd866-7bc5-9635-4bb4-6b0765f89835@linaro.org>
+References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
+ <20190607085643.932-7-srinivas.kandagatla@linaro.org>
+ <249f9647-94d0-41d7-3b95-64c36d90f8e8@linux.intel.com>
+ <40ea774c-8aa8-295d-e91e-71423b03c88d@linaro.org>
+ <7269521a-ac89-3856-c18c-ffaaf64c0806@linux.intel.com>
+ <462620fc-ac91-6a36-46c7-7af0080f06cb@linaro.org>
+ <0e836692-2297-4cb7-d681-76692db78a56@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1619091.6MGD9gV0do@phil>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0e836692-2297-4cb7-d681-76692db78a56@linux.intel.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, broonie@kernel.org, vkoul@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/14/2019 5:26 AM, Heiko Stuebner wrote:
-> Hi,
+
+
+On 11/06/2019 13:21, Pierre-Louis Bossart wrote:
 > 
-> Am Donnerstag, 23. Mai 2019, 02:00:27 CEST schrieb Peter Geis:
+> 
+> On 6/11/19 5:29 AM, Srinivas Kandagatla wrote:
 >>
->> On 4/22/2019 9:13 AM, Leonidas P. Papadakos wrote:
+>>
+>> On 10/06/2019 15:12, Pierre-Louis Bossart wrote:
+>>>>>> +
+>>>>>> +    if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+>>>>>> +        ctrl->fifo_status = 0;
+>>>>>> +        ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
+>>>>>> +                          msecs_to_jiffies(TIMEOUT_MS));
+>>>>>
+>>>>> This is odd. The SoundWire spec does not handle writes to a single 
+>>>>> device or broadcast writes differently. I don't see a clear reason 
+>>>>> why you would only timeout for a broadcast write.
+>>>>>
+>>>>
+>>>> There is danger of blocking here without timeout.
 >>>
->>> Indeed, at least with that first patch users won't have a crappy
->>> experience by default (ssh lags and the like)
+>>> Right, and it's fine to add a timeout. The question is why add a 
+>>> timeout *only* for a broadcast operation? It should be added for 
+>>> every transaction IMO, unless you have a reason not to do so.
 >>>
->>>
 >>
->> I apologize for taking so long at this, but I wanted to make sure I had
->> it right.
->>
->> So far I've found a few things that seem to help, and would like y'all
->> to test them when you get the chance.
->>
->> Adding snps,aal (configures DMA for address alignment) appears to make a
->> massive improvement to stability, although the the snps,txpbl = <0x4> is
->> still necessary for this to work.
->>
->> Second, I added snps,rxpbl = <0x4> as well, which seems to help with my
->> RX issues a bit.
->> The biggest improvement with these two settings is more stable transmit
->> and receive.
->> Currently I'm getting about 800mbps on tx and 400 mbps on rx.
->>
->> Please test when you get the chance and provide feedback.
+>> I did try this before, the issue is when we read/write registers from 
+>> interrupt handler, these can be deadlocked as we will be interrupt 
+>> handler waiting for another completion interrupt, which will never 
+>> happen unless we return from the first interrupt.
 > 
-> I have to confess I lost track of the multitude of patches touching
-> the gmac on rk3328 and their long mail threads in terms of which
-> to pick up and which are considered superseeded.
-> 
-> So I'd really appreciate if you could resend the patches that matter
-> and provide relevant Tested-by, Reviewed-by, etc tags from involved
-> people that actually were able to test patches
-> 
-> Thanks
-> Heiko
-> 
-> 
+> I don't quite get the issue. With the Intel hardware we only deal with 
+> Master registers (some of which mirror the bus state) in the handler and 
+> will only modify Slave registers in the thread. All changes to Slave 
+> registers will be subject to a timeout as well as a check for no 
+> response or NAK. Not sure what is specific about your solution that 
+> requires a different handling of commands depending on which device 
+> number is used. It could very well be that you've uncovered a flaw in 
+> the bus design but I still don't see how it would be Qualcomm-specific?
 
-Good Morning Heiko,
-
-Here's a quick catch-up for you:
-Currently we use thresh dma mode to allow rgmii to work, but this has 
-performance limitations.
-Leonidas submitted the txpbl 0x4 patch, which works well for his board 
-but my board has very poor performance with.
-I submitted a new patch that combined txpbl 0x4 with aal dma mode, which 
-fixes my issue and seems to work well for Leonidas.
-
-That patch is under [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc 
-rgmii performance.
-I'd like more people to test it prior to submitting it to replace thresh 
-dma mode.
-
-If we get a few more tests without regression, I'll resubmit it with 
-Tested-by tags for inclusion.
+Sorry It took bit more time for digging up the issue which I faced 
+previously to answer this query. This is now fixed and v2 patchset has 
+same handling for all the slave registers read/writes with no special 
+casing.
 
 Thanks,
-Peter
+srini
