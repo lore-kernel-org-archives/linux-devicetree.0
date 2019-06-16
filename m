@@ -1,48 +1,132 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: riscv: sifive: add YAML documentation
- for the SiFive FU540
-Date: Sun, 16 Jun 2019 11:39:32 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1906161137350.26914@viisi.sifive.com>
-References: <20190602080500.31700-1-paul.walmsley@sifive.com> <20190602080500.31700-3-paul.walmsley@sifive.com> <CAL_Jsq+Lx+SBZ7_+0tCYJs+oA2zR9c+q2XdmFbEtpWxoLXVibg@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] ARM: dts: qcom: msm8974-hammerhead: add touchscreen
+ support
+Date: Sun, 16 Jun 2019 11:40:51 -0700
+Message-ID: <20190616184051.GC31088@tuxbook-pro>
+References: <20190603010455.17060-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+Lx+SBZ7_+0tCYJs+oA2zR9c+q2XdmFbEtpWxoLXVibg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190603010455.17060-1-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linus.walleij@linaro.org, frank.rowand@sony.com, miquel.raynal@bootlin.com, absahu@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jonathan Marek <jonathan@marek.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Jun 2019, Rob Herring wrote:
+On Sun 02 Jun 18:04 PDT 2019, Brian Masney wrote:
 
-> On Sun, Jun 2, 2019 at 2:05 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> >
-> > Add YAML DT binding documentation for the SiFive FU540 SoC. 
-
-...
-
-> > ---
-> >  .../devicetree/bindings/riscv/sifive.yaml     | 25 +++++++++++++++++++
-> >  MAINTAINERS                                   |  9 +++++++
-> >  2 files changed, 34 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/riscv/sifive.yaml
+> From: Jonathan Marek <jonathan@marek.ca>
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Thanks.
-
-> > diff --git a/Documentation/devicetree/bindings/riscv/sifive.yaml b/Documentation/devicetree/bindings/riscv/sifive.yaml
-> > new file mode 100644
-> > index 000000000000..ce7ca191789e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/riscv/sifive.yaml
-> > @@ -0,0 +1,25 @@
-> > +# SPDX-License-Identifier: GPL-2.0
+> Add support for the Synaptics RMI4 touchscreen that is found on the
+> Nexus 5.
 > 
-> Note that the preference for new bindings (or old ones you have
-> ownership of) is to dual license GPL-2.0 and BSD-2-Clause.
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-Changed to "(GPL-2.0 OR MIT)" - hope that's OK.
+Applied for 5.3
 
+PS. Please use a --cover-letter when sending multiple patches.
 
-- Paul
+Thanks,
+Bjorn
+
+> ---
+> This is to be applied on top of the display patch series:
+> https://lore.kernel.org/lkml/20190531094619.31704-1-masneyb@onstation.org/
+> 
+>  .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 64 +++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> index c92ea01e3918..06c33bd71620 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> @@ -280,6 +280,16 @@
+>  			};
+>  		};
+>  
+> +		i2c2_pins: i2c2 {
+> +			mux {
+> +				pins = "gpio6", "gpio7";
+> +				function = "blsp_i2c2";
+> +
+> +				drive-strength = <2>;
+> +				bias-disable;
+> +			};
+> +		};
+> +
+>  		i2c3_pins: i2c3 {
+>  			mux {
+>  				pins = "gpio10", "gpio11";
+> @@ -326,6 +336,25 @@
+>  				bias-disable;
+>  			};
+>  		};
+> +
+> +		touch_pin: touch {
+> +			int {
+> +				pins = "gpio5";
+> +				function = "gpio";
+> +
+> +				drive-strength = <2>;
+> +				bias-disable;
+> +				input-enable;
+> +			};
+> +
+> +			reset {
+> +				pins = "gpio8";
+> +				function = "gpio";
+> +
+> +				drive-strength = <2>;
+> +				bias-pull-up;
+> +			};
+> +		};
+>  	};
+>  
+>  	sdhci@f9824900 {
+> @@ -468,6 +497,41 @@
+>  		};
+>  	};
+>  
+> +	i2c@f9924000 {
+> +		status = "ok";
+> +
+> +		clock-frequency = <355000>;
+> +		qcom,src-freq = <50000000>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&i2c2_pins>;
+> +
+> +		synaptics@70 {
+> +			compatible = "syna,rmi4-i2c";
+> +			reg = <0x70>;
+> +
+> +			interrupts-extended = <&msmgpio 5 IRQ_TYPE_EDGE_FALLING>;
+> +			vdd-supply = <&pm8941_l22>;
+> +			vio-supply = <&pm8941_lvs3>;
+> +
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&touch_pin>;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			rmi4-f01@1 {
+> +				reg = <0x1>;
+> +				syna,nosleep-mode = <1>;
+> +			};
+> +
+> +			rmi4-f12@12 {
+> +				reg = <0x12>;
+> +				syna,sensor-type = <1>;
+> +			};
+> +		};
+> +	};
+> +
+>  	i2c@f9925000 {
+>  		status = "ok";
+>  		pinctrl-names = "default";
+> -- 
+> 2.20.1
+> 
