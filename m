@@ -1,328 +1,44 @@
-From: Justin Swartz <justin.swartz@risingedge.co.za>
-Subject: [PATCH] ARM: dts: add device tree for Mecer Xtreme Mini S6
-Date: Sun, 16 Jun 2019 20:47:45 +0000
-Message-ID: <20190616204746.21001-1-justin.swartz@risingedge.co.za>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Justin Swartz <justin.swartz@risingedge.co.za>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: arm: fsl: Add support for ZII i.MX7 RMU2
+ board
+Date: Sun, 16 Jun 2019 20:21:48 -0300
+Message-ID: <CAOMZO5DNAEGWqG6VTn0KAJ5J5kKy=YurQJZ0FCTDunUADJZ3Pg@mail.gmail.com>
+References: <20190614080317.16850-1-andrew.smirnov@gmail.com>
+ <20190614080317.16850-2-andrew.smirnov@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190614080317.16850-2-andrew.smirnov@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, Liang Pan <Liang.Pan@zii.aero>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Healy <cphealy@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Bob Langer <Bob.Langer@zii.aero>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-The Mecer Xtreme Mini S6 features a Rockchip RK3229 SoC,
-1GB DDR3 RAM, 8GB eMMC, MicroSD port, 10/100Mbps Ethernet,
-Realtek 8723BS WLAN module, 2 x USB 2.0 ports, HDMI output,
-and S/PDIF output.
+Hi Andrey,
 
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
----
- arch/arm/boot/dts/Makefile        |   1 +
- arch/arm/boot/dts/rk3229-xms6.dts | 286 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 287 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3229-xms6.dts
+On Fri, Jun 14, 2019 at 5:03 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index dab2914fa293..6fbd7c304f62 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -902,6 +902,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3188-radxarock.dtb \
- 	rk3228-evb.dtb \
- 	rk3229-evb.dtb \
-+	rk3229-xms6.dtb \
- 	rk3288-evb-act8846.dtb \
- 	rk3288-evb-rk808.dtb \
- 	rk3288-fennec.dtb \
-diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
-new file mode 100644
-index 000000000000..9b666fa66292
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3229-xms6.dts
-@@ -0,0 +1,286 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include "rk3229.dtsi"
-+
-+/ {
-+	model = "Rockchip RK3229 (Mecer Xtreme Mini S6)";
-+	compatible = "rockchip,rk3229-xms6", "rockchip,rk3229";
-+
-+	memory@60000000 {
-+		device_type = "memory";
-+		reg = <0x60000000 0x40000000>;
-+	};
-+
-+	dc_12v: dc-12v-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "dc_12v";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
-+	ext_gmac: ext_gmac {
-+		compatible = "fixed-clock";
-+		clock-frequency = <125000000>;
-+		clock-output-names = "ext_gmac";
-+		#clock-cells = <0>;
-+	};
-+
-+	vcc_host: vcc-host-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio3 RK_PC4 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&host_vbus_drv>;
-+		regulator-name = "vcc_host";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
-+	vcc_phy: vcc-phy-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		regulator-name = "vcc_phy";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vccio_1v8>;
-+	};
-+
-+	vcc_sys: vcc-sys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&dc_12v>;
-+	};
-+
-+	vccio_1v8: vccio-1v8-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vccio_1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
-+	vccio_3v3: vccio-3v3-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vccio_3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
-+	vdd_arm: vdd-arm-regulator {
-+		compatible = "pwm-regulator";
-+		pwms = <&pwm1 0 25000 1>;
-+		pwm-supply = <&vcc_sys>;
-+		regulator-name = "vdd_arm";
-+		regulator-min-microvolt = <950000>;
-+		regulator-max-microvolt = <1400000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vdd_log: vdd-log-regulator {
-+		compatible = "pwm-regulator";
-+		pwms = <&pwm2 0 25000 1>;
-+		pwm-supply = <&vcc_sys>;
-+		regulator-name = "vdd_log";
-+		regulator-min-microvolt = <1000000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	power-led {
-+		compatible = "gpio-leds";
-+
-+		blue {
-+			gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
-+};
-+
-+&cpu0 {
-+	clock-frequency = <1464000000>;
-+	cpu-supply = <&vdd_arm>;
-+};
-+
-+&cpu1 {
-+	clock-frequency = <1464000000>;
-+	cpu-supply = <&vdd_arm>;
-+};
-+
-+&cpu2 {
-+	clock-frequency = <1464000000>;
-+	cpu-supply = <&vdd_arm>;
-+};
-+
-+&cpu3 {
-+	clock-frequency = <1464000000>;
-+	cpu-supply = <&vdd_arm>;
-+};
-+
-+&vop {
-+	status = "okay";
-+};
-+
-+&vop_mmu {
-+	status = "okay";
-+};
-+
-+&iep_mmu {
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_phy {
-+	status = "okay";
-+};
-+
-+&emmc {
-+	cap-mmc-highspeed;
-+	disable-wp;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&sdmmc {
-+	cap-mmc-highspeed;
-+	disable-wp;
-+	status = "okay";
-+};
-+
-+&gmac {
-+	assigned-clocks = <&cru SCLK_MAC_SRC>;
-+	assigned-clock-rates = <50000000>;
-+	clock_in_out = "output";
-+	phy-supply = <&vcc_phy>;
-+	phy-mode = "rmii";
-+	phy-handle = <&phy>;
-+	status = "okay";
-+
-+	mdio {
-+		compatible = "snps,dwmac-mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		phy: phy@0 {
-+			compatible = "ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+			clocks = <&cru SCLK_MAC_PHY>;
-+			resets = <&cru SRST_MACPHY>;
-+			phy-is-integrated;
-+		};
-+	};
-+};
-+
-+&gpu {
-+	mali-supply = <&vdd_log>;
-+	status = "okay";
-+};
-+
-+&io_domains {
-+	status = "okay";
-+
-+	vccio1-supply = <&vccio_3v3>;
-+	vccio2-supply = <&vccio_1v8>;
-+	vccio4-supply = <&vccio_3v3>;
-+};
-+
-+&pinctrl {
-+	usb {
-+		host_vbus_drv: host-vbus-drv {
-+			rockchip,pins = <3 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
-+&pwm1 {
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	status = "okay";
-+};
-+
-+&tsadc {
-+	rockchip,hw-tshut-mode = <0>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-0 = <&uart21_xfer>;
-+	status = "okay";
-+};
-+
-+&u2phy0 {
-+	status = "okay";
-+
-+	u2phy0_otg: otg-port {
-+		phy-supply = <&vcc_host>;
-+		status = "okay";
-+	};
-+
-+	u2phy0_host: host-port {
-+		phy-supply = <&vcc_host>;
-+		status = "okay";
-+	};
-+};
-+
-+&u2phy1 {
-+	status = "okay";
-+
-+	u2phy1_otg: otg-port {
-+		phy-supply = <&vcc_host>;
-+		status = "okay";
-+	};
-+
-+	u2phy1_host: host-port {
-+		phy-supply = <&vcc_host>;
-+		status = "okay";
-+	};
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host0_ohci {
-+	status = "okay";
-+};
-+
-+&usb_host1_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host1_ohci {
-+	status = "okay";
-+};
-+
-+&usb_host2_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host2_ohci {
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	status = "okay";
-+};
--- 
-2.11.0
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index 407138ebc0d0..8fb4dc1d55e7 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -158,6 +158,7 @@ properties:
+>                - fsl,imx7d-sdb             # i.MX7 SabreSD Board
+>                - tq,imx7d-mba7             # i.MX7D TQ MBa7 with TQMa7D SoM
+>                - zii,imx7d-rpu2            # ZII RPU2 Board
+> +              - zii,imx7d-rmu2            # ZII RMU2 Board
+
+Nit: Please keep the entries in alphabetical order.
+
+Other than that:
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
