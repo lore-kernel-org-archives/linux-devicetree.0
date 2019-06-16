@@ -1,52 +1,49 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: stm32: add analog switches
- supply control
-Date: Sun, 16 Jun 2019 16:12:45 +0100
-Message-ID: <20190616161245.38168d94@archlinux>
-References: <1560324276-681-1-git-send-email-fabrice.gasnier@st.com>
-        <1560324276-681-2-git-send-email-fabrice.gasnier@st.com>
+From: Frank Lee <tiny.windzz@gmail.com>
+Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
+Date: Sun, 16 Jun 2019 23:27:44 +0800
+Message-ID: <CAEExFWthch7MOafwyma0qkx3szii6TG_kB26K+KeY=82xwu=Aw@mail.gmail.com>
+References: <20190525181329.18657-1-tiny.windzz@gmail.com>
+ <20190525181329.18657-2-tiny.windzz@gmail.com>
+ <CA+E=qVdh1E8Y7dZO0JSS4DJE2bo=98MuSKRt7nmeFg-td7Ua9Q@mail.gmail.com>
+ <CAEExFWtjNridLsMXOnBe2mJOPhUOYJ6G3wGF3gx=0oQoQROOGg@mail.gmail.com>
+ <CA+E=qVeOSw=_z4OiQ4++z8g-KN29UYVXGicNd3PtHobg4xaG+w@mail.gmail.com>
+ <CAEExFWs58UNcVcQNnwK3dk5cpmfQRnjdRWAmYs5M1t_ONr1Bpw@mail.gmail.com>
+ <CA+E=qVf-_2DWbf55bCnjbkZH9N4a1_K16OxN9=o=NrZAV7GXPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560324276-681-2-git-send-email-fabrice.gasnier@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: robh+dt@kernel.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CA+E=qVf-_2DWbf55bCnjbkZH9N4a1_K16OxN9=o=NrZAV7GXPA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, rui.zhang@intel.com, paulmck@linux.ibm.com, "David S. Miller" <davem@davemloft.net>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Jun 2019 09:24:34 +0200
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+On Sat, Jun 15, 2019 at 7:08 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> On Wed, Jun 12, 2019 at 9:50 AM Frank Lee <tiny.windzz@gmail.com> wrote:
+> >
+> > > If you have a git tree I'll be happy to contribute A64 support. IIRC
+> > > it was quite similar to H3.
+> >
+> > I built a ths branch and I will do some work later.
+> >
+> > https://github.com/TinyWindzz/linux/tree/ths
+>
+> Looks like you forgot to add your patches to this branch.
 
-> On stm32h7 and stm32mp1, the ADC inputs are multiplexed with analog
-> switches which have reduced performances when their supply is below 2.7V
-> (vdda by default).
-> 
-> Add documentation for optional vdda-supply & vdd-supply that can be used
-> to supply analog circuitry (controlled by syscfg bits).
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
->  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-> index 8346bcb..3af48b9 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-> @@ -46,6 +46,12 @@ Required properties:
->  Optional properties:
->  - A pinctrl state named "default" for each ADC channel may be defined to set
->    inX ADC pins in mode of operation for analog input on external pin.
-> +- vdda-supply: Phandle to the vdda input voltage. It can be used to supply ADC
-> +  analog inputs switches on stm32h7 and stm32mp1.
+Frankly, I started the new version this weekend. There is still a
+small part of the
+hand that has not been completed, and I will push patches to my branch
+these two days.
 
-input switches
-
-> +- vdd-supply: Phandle to the vdd input voltage. It can be used to supply ADC
-> +  analog inputs switches on stm32mp1.
-> +- st,syscfg: Phandle to system configuration controller. It can be used to
-> +  control the analog circuitry on stm32h7 and stm32mp1.
->  
->  Contents of a stm32 adc child node:
->  -----------------------------------
+MBR,
+Yangtao
