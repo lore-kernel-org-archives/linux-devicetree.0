@@ -1,111 +1,180 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones
- conflict in rk3399.dtsi
-Date: Sun, 16 Jun 2019 11:31:27 +0200
-Message-ID: <20190616093127.GC3826@kozik-lap>
-References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
- <5188064.YWmxIpmbGp@phil>
- <55b9018e-672e-522b-d0a0-c5655be0f353@linaro.org>
- <e5a4f850-27e0-cad3-04bd-6c004fca2b81@arm.com>
- <9bf85c22-f1ba-3dbc-0b67-17e124484fa1@linaro.org>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v6 5/6] drm: sun4i: Add support for enabling
+ DDC I2C bus to sun8i_dw_hdmi glue
+Date: Sun, 16 Jun 2019 13:05:13 +0200
+Message-ID: <1823986.m04BvQ5ALy@jernej-laptop>
+References: <20190527162237.18495-1-megous@megous.com>
+ <20190527162237.18495-6-megous@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9bf85c22-f1ba-3dbc-0b67-17e124484fa1@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, edubezval@gmail.com, manivannan.sadhasivam@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Emil Renner Berthing <kernel@esmil.dk>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190527162237.18495-6-megous@megous.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-sunxi@googlegroups.com, megous@megous.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Jose Abreu <joabreu@synopsys.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:30:13PM +0200, Daniel Lezcano wrote:
-> On 14/06/2019 16:02, Robin Murphy wrote:
-> > On 14/06/2019 14:03, Daniel Lezcano wrote:
-> >> On 14/06/2019 11:35, Heiko Stuebner wrote:
-> >>> Hi Daniel,
-> >>>
-> >>> Am Dienstag, 4. Juni 2019, 18:57:57 CEST schrieb Daniel Lezcano:
-> >>>> Currently the common thermal zones definitions for the rk3399 assumes
-> >>>> multiple thermal zones are supported by the governors. This is not the
-> >>>> case and each thermal zone has its own governor instance acting
-> >>>> individually without collaboration with other governors.
-> >>>>
-> >>>> As the cooling device for the CPU and the GPU thermal zones is the
-> >>>> same, each governors take different decisions for the same cooling
-> >>>> device leading to conflicting instructions and an erratic behavior.
-> >>>>
-> >>>> As the cooling-maps is about to become an optional property, let's
-> >>>> remove the cpu cooling device map from the GPU thermal zone.
-> >>>>
-> >>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> >>>> ---
-> >>>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 ---------
-> >>>>   1 file changed, 9 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >>>> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >>>> index 196ac9b78076..e1357e0f60f7 100644
-> >>>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >>>> @@ -821,15 +821,6 @@
-> >>>>                       type = "critical";
-> >>>>                   };
-> >>>>               };
-> >>>> -
-> >>>> -            cooling-maps {
-> >>>> -                map0 {
-> >>>> -                    trip = <&gpu_alert0>;
-> >>>> -                    cooling-device =
-> >>>> -                        <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> >>>> -                        <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> >>>> -                };
-> >>>> -            };
-> >>>>           };
-> >>>>       };
-> >>>
-> >>> my knowledge of the thermal framework is not that big, but what about
-> >>> the
-> >>> rk3399-devices which further detail the cooling-maps like
-> >>> rk3399-gru-kevin
-> >>> and the rk3399-nanopc-t4 with its fan-handling in the cooling-maps?
-> >>
-> >> The rk3399-gru-kevin is correct.
-> >>
-> >> The rk3399-nanopc-t4 is not correct because the cpu and the gpu are
-> >> sharing the same cooling device (the fan). There are different
-> >> configurations:
-> >>
-> >> 1. The cpu cooling device for the CPU and the fan for the GPU
-> >>
-> >> 2. Different trip points on the CPU thermal zone, eg. one to for the CPU
-> >> cooling device and another one for the fan.
-> >>
-> >> There are some variant for the above. If this board is not on battery,
-> >> you may want to give priority to the throughput, so activate the fan
-> >> first and then cool down the CPU. Or if you are on battery, you may want
-> >> to invert the trip points.
-> >>
-> >> In any case, it is not possible to share the same cooling device for
-> >> different thermal zones.
-> > 
-> > OK, thanks for the clarification. I'll get my board set up again to
-> > figure out the best fix for rk3399-nanopc-t4 (FWIW most users are
-> > probably just using passive cooling or a plain DC fan anyway). You might
-> > want to raise this issue with the maintainers of
-> > arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi, since the
-> > everything-shared-by-everything approach in there was what I used as a
-> > reference.
-> 
-> Cc'ed: Kukjin Kim and Krzysztof Kozlowski
-> 
-> Easy :)
->
+Hi Ondrej!
 
-Assuming that all trip-points are the same between thermal zones, I
-understand that solution could be to have one thermal zone with thermal
-multiple sensors (some time ago bindings did not support it) and all
-cooling devices? Then only one governor would be assigned?
+Dne ponedeljek, 27. maj 2019 ob 18:22:36 CEST je megous via linux-sunxi 
+napisal(a):
+> From: Ondrej Jirman <megous@megous.com>
+> 
+> Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
+> for the DDC bus to be usable.
+> 
+> Add support for hdmi-connector node's optional ddc-en-gpios property to
+> support this use case.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 55 +++++++++++++++++++++++++--
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  3 ++
+>  2 files changed, 55 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c index 39d8509d96a0..59b81ba02d96
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> @@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct
+> drm_device *drm, return crtcs;
+>  }
+> 
+> +static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
+> +					     struct 
+platform_device **pdev_out)
+> +{
+> +	struct platform_device *pdev;
+> +	struct device_node *remote;
+> +
+> +	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
+> +	if (!remote)
+> +		return -ENODEV;
+> +
+> +	if (!of_device_is_compatible(remote, "hdmi-connector")) {
+> +		of_node_put(remote);
+> +		return -ENODEV;
+> +	}
+> +
+> +	pdev = of_find_device_by_node(remote);
+> +	of_node_put(remote);
+> +	if (!pdev)
+> +		return -ENODEV;
+> +
+> +	*pdev_out = pdev;
+> +	return 0;
+> +}
+> +
+>  static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+>  			      void *data)
+>  {
+> @@ -151,16 +175,29 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
+> struct device *master, return PTR_ERR(hdmi->regulator);
+>  	}
+> 
+> +	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev);
+> +	if (!ret) {
+> +		hdmi->ddc_en = gpiod_get_optional(&hdmi->connector_pdev-
+>dev,
+> +						  "ddc-en", 
+GPIOD_OUT_HIGH);
+> +		if (IS_ERR(hdmi->ddc_en)) {
+> +			platform_device_put(hdmi->connector_pdev);
+> +			dev_err(dev, "Couldn't get ddc-en gpio\n");
+> +			return PTR_ERR(hdmi->ddc_en);
+> +		}
+> +	}
+> +
+>  	ret = regulator_enable(hdmi->regulator);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to enable regulator\n");
+> -		return ret;
+> +		goto err_unref_ddc_en;
+>  	}
+> 
+> +	gpiod_set_value(hdmi->ddc_en, 1);
+
+Why don't you do that inside if clause where hdmi->ddc_en is assigned? It's 
+not useful otherwise anyway.
+
+Besides, you would then only need to adjust one goto label in error path.
+
+> +
+>  	ret = reset_control_deassert(hdmi->rst_ctrl);
+>  	if (ret) {
+>  		dev_err(dev, "Could not deassert ctrl reset 
+control\n");
+> -		goto err_disable_regulator;
+> +		goto err_disable_ddc_en;
+>  	}
+> 
+>  	ret = clk_prepare_enable(hdmi->clk_tmds);
+> @@ -213,8 +250,14 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
+> struct device *master, clk_disable_unprepare(hdmi->clk_tmds);
+>  err_assert_ctrl_reset:
+>  	reset_control_assert(hdmi->rst_ctrl);
+> -err_disable_regulator:
+> +err_disable_ddc_en:
+> +	gpiod_set_value(hdmi->ddc_en, 0);
+>  	regulator_disable(hdmi->regulator);
+> +err_unref_ddc_en:
+> +	if (hdmi->ddc_en)
+> +		gpiod_put(hdmi->ddc_en);
+> +
+> +	platform_device_put(hdmi->connector_pdev);
+> 
+>  	return ret;
+>  }
+> @@ -228,7 +271,13 @@ static void sun8i_dw_hdmi_unbind(struct device *dev,
+> struct device *master, sun8i_hdmi_phy_remove(hdmi);
+>  	clk_disable_unprepare(hdmi->clk_tmds);
+>  	reset_control_assert(hdmi->rst_ctrl);
+> +	gpiod_set_value(hdmi->ddc_en, 0);
+>  	regulator_disable(hdmi->regulator);
+> +
+> +	if (hdmi->ddc_en)
+> +		gpiod_put(hdmi->ddc_en);
+> +
+> +	platform_device_put(hdmi->connector_pdev);
+>  }
+> 
+>  static const struct component_ops sun8i_dw_hdmi_ops = {
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index 720c5aa8adc1..dad66b8301c2
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> @@ -9,6 +9,7 @@
+>  #include <drm/bridge/dw_hdmi.h>
+>  #include <drm/drm_encoder.h>
+>  #include <linux/clk.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/regmap.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/reset.h>
+> @@ -190,6 +191,8 @@ struct sun8i_dw_hdmi {
+>  	struct regulator		*regulator;
+>  	const struct sun8i_dw_hdmi_quirks *quirks;
+>  	struct reset_control		*rst_ctrl;
+> +	struct platform_device		*connector_pdev;
+
+It seems that connector_pdev is needed only during intialization. Why do you 
+store it?
 
 Best regards,
-Krzysztof
+Jernej
+
+> +	struct gpio_desc		*ddc_en;
+>  };
+> 
+>  static inline struct sun8i_dw_hdmi *
