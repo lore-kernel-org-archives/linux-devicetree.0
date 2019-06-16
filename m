@@ -1,57 +1,48 @@
 From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v3 5/5] riscv: dts: add initial board data for the SiFive
- HiFive Unleashed
-Date: Sun, 16 Jun 2019 11:36:16 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1906161135160.26914@viisi.sifive.com>
-References: <20190602080500.31700-1-paul.walmsley@sifive.com>
- <20190602080500.31700-6-paul.walmsley@sifive.com>
- <20190609091819.2d1a97c90c0b44aa9120d373@gmail.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: riscv: sifive: add YAML documentation
+ for the SiFive FU540
+Date: Sun, 16 Jun 2019 11:39:32 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1906161137350.26914@viisi.sifive.com>
+References: <20190602080500.31700-1-paul.walmsley@sifive.com> <20190602080500.31700-3-paul.walmsley@sifive.com> <CAL_Jsq+Lx+SBZ7_+0tCYJs+oA2zR9c+q2XdmFbEtpWxoLXVibg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190609091819.2d1a97c90c0b44aa9120d373@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Antony Pavlov <antonynpavlov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+Lx+SBZ7_+0tCYJs+oA2zR9c+q2XdmFbEtpWxoLXVibg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 9 Jun 2019, Antony Pavlov wrote:
+On Mon, 10 Jun 2019, Rob Herring wrote:
 
-> On Sun,  2 Jun 2019 01:05:00 -0700
-> Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> 
-> Hi!
-> 
-> > Add initial board data for the SiFive HiFive Unleashed A00.
+> On Sun, Jun 2, 2019 at 2:05 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> >
+> > Add YAML DT binding documentation for the SiFive FU540 SoC. 
 
 ...
 
-> > new file mode 100644
-> > index 000000000000..1de4ea1577d5
-> > --- /dev/null
-> > +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> > @@ -0,0 +1,67 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> > +/* Copyright (c) 2018-2019 SiFive, Inc */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "fu540-c000.dtsi"
+> > ---
+> >  .../devicetree/bindings/riscv/sifive.yaml     | 25 +++++++++++++++++++
+> >  MAINTAINERS                                   |  9 +++++++
+> >  2 files changed, 34 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/riscv/sifive.yaml
 > 
-> You already have "/dts-v1/;" in the fu540-c000.dtsi file.
-> 
-> You can omit it in the hifive-unleashed-a00.dts file.
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thanks for the comment.  Dropped the line, per your suggestion.
+Thanks.
+
+> > diff --git a/Documentation/devicetree/bindings/riscv/sifive.yaml b/Documentation/devicetree/bindings/riscv/sifive.yaml
+> > new file mode 100644
+> > index 000000000000..ce7ca191789e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/riscv/sifive.yaml
+> > @@ -0,0 +1,25 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> 
+> Note that the preference for new bindings (or old ones you have
+> ownership of) is to dual license GPL-2.0 and BSD-2-Clause.
+
+Changed to "(GPL-2.0 OR MIT)" - hope that's OK.
 
 
 - Paul
