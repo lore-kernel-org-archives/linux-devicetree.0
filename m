@@ -1,124 +1,216 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/6] firmware: qcom: scm: add support to
- restore secure config
-Date: Sun, 16 Jun 2019 10:53:32 -0700
-Message-ID: <20190616175332.GQ22737@tuxbook-pro>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 4/6] firmware: qcom: scm: add OCMEM lock/unlock interface
+Date: Sun, 16 Jun 2019 10:54:57 -0700
+Message-ID: <20190616175457.GR22737@tuxbook-pro>
 References: <20190616132930.6942-1-masneyb@onstation.org>
- <20190616132930.6942-4-masneyb@onstation.org>
+ <20190616132930.6942-5-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190616132930.6942-4-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
+In-Reply-To: <20190616132930.6942-5-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuIDE2IEp1biAwNjoyOSBQRFQgMjAxOSwgQnJpYW4gTWFzbmV5IHdyb3RlOgoKPiBGcm9t
-OiBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+Cj4gCj4gQWRkIHN1cHBvcnQgdG8gcmVz
-dG9yZSB0aGUgc2VjdXJlIGNvbmZpZ3VyYXRpb24gdGhhdCBpcyBuZWVkZWQgYnkgdGhlCj4gT24g
-Q2hpcCBNRU1vcnkgKE9DTUVNKSB0aGF0IGlzIHByZXNlbnQgb24gc29tZSBTbmFwZHJhZ29uIGRl
-dmljZXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29t
-Pgo+IFttYXNuZXliQG9uc3RhdGlvbi5vcmc6IHBvcnRlZCB0byBsYXRlc3Qga2VybmVsOyBtaW5v
-ciByZWZvcm1hdHRpbmcuXQo+IFNpZ25lZC1vZmYtYnk6IEJyaWFuIE1hc25leSA8bWFzbmV5YkBv
-bnN0YXRpb24ub3JnPgoKVGhpcyB3ZW50IHVwc3RyZWFtIGZvciA2NC1iaXQgd2l0aCBjb25maWcg
-YWJicmV2aWF0ZWQgY2ZnLCBzbyBwbGVhc2UKaW1wbGVtZW50IF9fcWNvbV9zY21fcmVzdG9yZV9z
-ZWNfY2ZnKCkgZm9yIDMyLWJpdCBhbmQgYWRkIHRoZSBkZWZpbmVzCmluc3RlYWQuCgpSZWdhcmRz
-LApCam9ybgoKPiAtLS0KPiBSb2IncyBsYXN0IHZlcnNpb24gb2YgdGhpcyBwYXRjaDoKPiBodHRw
-czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzczNDA3MDEvCj4gCj4gIGRyaXZlcnMvZmly
-bXdhcmUvcWNvbV9zY20tMzIuYyB8IDIxICsrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJz
-L2Zpcm13YXJlL3Fjb21fc2NtLTY0LmMgfCAgNiArKysrKysKPiAgZHJpdmVycy9maXJtd2FyZS9x
-Y29tX3NjbS5jICAgIHwgMjMgKysrKysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9maXJt
-d2FyZS9xY29tX3NjbS5oICAgIHwgIDYgKysrKysrCj4gIGluY2x1ZGUvbGludXgvcWNvbV9zY20u
-aCAgICAgICB8IDEzICsrKysrKysrKysrKysKPiAgNSBmaWxlcyBjaGFuZ2VkLCA2OSBpbnNlcnRp
-b25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20tMzIuYyBi
-L2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20tMzIuYwo+IGluZGV4IDIxNTA2MWM1ODFlMS4uMDg5
-YjQ3MTI0OTMzIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20tMzIuYwo+
-ICsrKyBiL2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20tMzIuYwo+IEBAIC00NDIsNiArNDQyLDI3
-IEBAIGludCBfX3Fjb21fc2NtX2hkY3BfcmVxKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IHFj
-b21fc2NtX2hkY3BfcmVxICpyZXEsCj4gIAkJcmVxLCByZXFfY250ICogc2l6ZW9mKCpyZXEpLCBy
-ZXNwLCBzaXplb2YoKnJlc3ApKTsKPiAgfQo+ICAKPiAraW50IF9fcWNvbV9zY21fcmVzdG9yZV9z
-ZWNfY29uZmlnKHN0cnVjdCBkZXZpY2UgKmRldiwgdTMyIHNlY19pZCwKPiArCQkJCSAgdTMyIGN0
-eF9iYW5rX251bSkKPiArewo+ICsJc3RydWN0IG1zbV9zY21fc2VjX2NmZyB7Cj4gKwkJX19sZTMy
-IGlkOwo+ICsJCV9fbGUzMiBjdHhfYmFua19udW07Cj4gKwl9IGNmZzsKPiArCWludCByZXQsIHNj
-bV9yZXQgPSAwOwo+ICsKPiArCWNmZy5pZCA9IGNwdV90b19sZTMyKHNlY19pZCk7Cj4gKwljZmcu
-Y3R4X2JhbmtfbnVtID0gY3B1X3RvX2xlMzIoc2VjX2lkKTsKPiArCj4gKwlyZXQgPSBxY29tX3Nj
-bV9jYWxsKGRldiwgUUNPTV9TQ01fTVBfU1ZDLCBRQ09NX1NDTV9NUF9SRVNUT1JFX1NFQ19DRkcs
-Cj4gKwkJCSAgICAmY2ZnLCBzaXplb2YoY2ZnKSwgJnNjbV9yZXQsIHNpemVvZihzY21fcmV0KSk7
-Cj4gKwo+ICsJaWYgKHJldCB8fCBzY21fcmV0KQo+ICsJCXJldHVybiByZXQgPyByZXQgOiAtRUlO
-VkFMOwo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICB2b2lkIF9fcWNvbV9zY21faW5pdCh2
-b2lkKQo+ICB7Cj4gIH0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS02
-NC5jIGIvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS02NC5jCj4gaW5kZXggOTFkNWFkN2NmNThi
-Li5iNmI3OGRhN2Y5YzkgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS02
-NC5jCj4gKysrIGIvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS02NC5jCj4gQEAgLTI0MSw2ICsy
-NDEsMTIgQEAgaW50IF9fcWNvbV9zY21faGRjcF9yZXEoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1
-Y3QgcWNvbV9zY21faGRjcF9yZXEgKnJlcSwKPiAgCXJldHVybiByZXQ7Cj4gIH0KPiAgCj4gK2lu
-dCBfX3Fjb21fc2NtX3Jlc3RvcmVfc2VjX2NvbmZpZyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHUzMiBz
-ZWNfaWQsCj4gKwkJCQkgIHUzMiBjdHhfYmFua19udW0pCj4gK3sKPiArCXJldHVybiAtRU5PVFNV
-UFA7Cj4gK30KPiArCj4gIHZvaWQgX19xY29tX3NjbV9pbml0KHZvaWQpCj4gIHsKPiAgCXU2NCBj
-bWQ7Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20uYyBiL2RyaXZlcnMv
-ZmlybXdhcmUvcWNvbV9zY20uYwo+IGluZGV4IDJkZGMxMThkYmExYi4uNTQ5NWVmOTk0YzVkIDEw
-MDY0NAo+IC0tLSBhL2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20uYwo+ICsrKyBiL2RyaXZlcnMv
-ZmlybXdhcmUvcWNvbV9zY20uYwo+IEBAIC0xNzAsNiArMTcwLDI5IEBAIGludCBxY29tX3NjbV9o
-ZGNwX3JlcShzdHJ1Y3QgcWNvbV9zY21faGRjcF9yZXEgKnJlcSwgdTMyIHJlcV9jbnQsIHUzMiAq
-cmVzcCkKPiAgfQo+ICBFWFBPUlRfU1lNQk9MKHFjb21fc2NtX2hkY3BfcmVxKTsKPiAgCj4gKy8q
-Kgo+ICsgKiBxY29tX3NjbV9yZXN0b3JlX3NlY19jb25maWdfYXZhaWxhYmxlKCkgLSBDaGVjayBp
-ZiBzZWN1cmUgZW52aXJvbm1lbnQKPiArICogc3VwcG9ydHMgcmVzdG9yZSBzZWN1cml0eSBjb25m
-aWcgaW50ZXJmYWNlLgo+ICsgKgo+ICsgKiBSZXR1cm4gdHJ1ZSBpZiByZXN0b3JlLWNmZyBpbnRl
-cmZhY2UgaXMgc3VwcG9ydGVkLCBmYWxzZSBpZiBub3QuCj4gKyAqLwo+ICtib29sIHFjb21fc2Nt
-X3Jlc3RvcmVfc2VjX2NvbmZpZ19hdmFpbGFibGUodm9pZCkKPiArewo+ICsJcmV0dXJuIF9fcWNv
-bV9zY21faXNfY2FsbF9hdmFpbGFibGUoX19zY20tPmRldiwgUUNPTV9TQ01fTVBfU1ZDLAo+ICsJ
-CQkJCSAgICBRQ09NX1NDTV9NUF9SRVNUT1JFX1NFQ19DRkcpOwo+ICt9Cj4gK0VYUE9SVF9TWU1C
-T0wocWNvbV9zY21fcmVzdG9yZV9zZWNfY29uZmlnX2F2YWlsYWJsZSk7Cj4gKwo+ICsvKioKPiAr
-ICogcWNvbV9zY21fcmVzdG9yZV9zZWNfY29uZmlnKCkgLSBjYWxsIHJlc3RvcmUtY2ZnIGludGVy
-ZmFjZQo+ICsgKi8KPiAraW50IHFjb21fc2NtX3Jlc3RvcmVfc2VjX2NvbmZpZyhzdHJ1Y3QgZGV2
-aWNlICpkZXYsCj4gKwkJCQllbnVtIHFjb21fc2NtX3NlY19kZXZfaWQgc2VjX2lkKQo+ICt7Cj4g
-KwlyZXR1cm4gX19xY29tX3NjbV9yZXN0b3JlX3NlY19jb25maWcoZGV2LCBzZWNfaWQsIDApOwo+
-ICt9Cj4gK0VYUE9SVF9TWU1CT0wocWNvbV9zY21fcmVzdG9yZV9zZWNfY29uZmlnKTsKPiArCj4g
-IC8qKgo+ICAgKiBxY29tX3NjbV9wYXNfc3VwcG9ydGVkKCkgLSBDaGVjayBpZiB0aGUgcGVyaXBo
-ZXJhbCBhdXRoZW50aWNhdGlvbiBzZXJ2aWNlIGlzCj4gICAqCQkJICAgICAgYXZhaWxhYmxlIGZv
-ciB0aGUgZ2l2ZW4gcGVyaXBoZXJpYWwKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9maXJtd2FyZS9x
-Y29tX3NjbS5oIGIvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS5oCj4gaW5kZXggOTk1MDZiZDg3
-M2MwLi5iY2NjN2QxMGM1YzIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9maXJtd2FyZS9xY29tX3Nj
-bS5oCj4gKysrIGIvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS5oCj4gQEAgLTQyLDYgKzQyLDEy
-IEBAIGV4dGVybiBpbnQgX19xY29tX3NjbV9oZGNwX3JlcShzdHJ1Y3QgZGV2aWNlICpkZXYsCj4g
-IAo+ICBleHRlcm4gdm9pZCBfX3Fjb21fc2NtX2luaXQodm9pZCk7Cj4gIAo+ICsjZGVmaW5lIFFD
-T01fU0NNX01QX1NWQwkJCTB4Ywo+ICsjZGVmaW5lIFFDT01fU0NNX01QX1JFU1RPUkVfU0VDX0NG
-RwkweDIKPiArCj4gK2V4dGVybiBpbnQgX19xY29tX3NjbV9yZXN0b3JlX3NlY19jb25maWcoc3Ry
-dWN0IGRldmljZSAqZGV2LCB1MzIgc2VjX2lkLAo+ICsJCQkJCSB1MzIgY3R4X2JhbmtfbnVtKTsK
-PiArCj4gICNkZWZpbmUgUUNPTV9TQ01fU1ZDX1BJTAkJMHgyCj4gICNkZWZpbmUgUUNPTV9TQ01f
-UEFTX0lOSVRfSU1BR0VfQ01ECTB4MQo+ICAjZGVmaW5lIFFDT01fU0NNX1BBU19NRU1fU0VUVVBf
-Q01ECTB4Mgo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3Fjb21fc2NtLmggYi9pbmNsdWRl
-L2xpbnV4L3Fjb21fc2NtLmgKPiBpbmRleCAzZjEyY2M3N2ZiNTguLmI1YzBhZmFjYTk1NSAxMDA2
-NDQKPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3Fjb21fc2NtLmgKPiArKysgYi9pbmNsdWRlL2xpbnV4
-L3Fjb21fc2NtLmgKPiBAQCAtMjQsNiArMjQsMTYgQEAgc3RydWN0IHFjb21fc2NtX3ZtcGVybSB7
-Cj4gIAlpbnQgcGVybTsKPiAgfTsKPiAgCj4gK2VudW0gcWNvbV9zY21fc2VjX2Rldl9pZCB7Cj4g
-KwlRQ09NX1NDTV9NRFNTX0RFVl9JRAk9IDEsCj4gKwlRQ09NX1NDTV9PQ01FTV9ERVZfSUQJPSA1
-LAo+ICsJUUNPTV9TQ01fUENJRTBfREVWX0lECT0gMTEsCj4gKwlRQ09NX1NDTV9QQ0lFMV9ERVZf
-SUQJPSAxMiwKPiArCVFDT01fU0NNX0dGWF9ERVZfSUQJPSAxOCwKPiArCVFDT01fU0NNX1VGU19E
-RVZfSUQJPSAxOSwKPiArCVFDT01fU0NNX0lDRV9ERVZfSUQJPSAyMCwKPiArfTsKPiArCj4gICNk
-ZWZpbmUgUUNPTV9TQ01fVk1JRF9ITE9TICAgICAgIDB4Mwo+ICAjZGVmaW5lIFFDT01fU0NNX1ZN
-SURfTVNTX01TQSAgICAweEYKPiAgI2RlZmluZSBRQ09NX1NDTV9WTUlEX1dMQU4gICAgICAgMHgx
-OAo+IEBAIC00MSw2ICs1MSw5IEBAIGV4dGVybiBib29sIHFjb21fc2NtX2lzX2F2YWlsYWJsZSh2
-b2lkKTsKPiAgZXh0ZXJuIGJvb2wgcWNvbV9zY21faGRjcF9hdmFpbGFibGUodm9pZCk7Cj4gIGV4
-dGVybiBpbnQgcWNvbV9zY21faGRjcF9yZXEoc3RydWN0IHFjb21fc2NtX2hkY3BfcmVxICpyZXEs
-IHUzMiByZXFfY250LAo+ICAJCQkgICAgIHUzMiAqcmVzcCk7Cj4gK2V4dGVybiBib29sIHFjb21f
-c2NtX3Jlc3RvcmVfc2VjX2NvbmZpZ19hdmFpbGFibGUodm9pZCk7Cj4gK2V4dGVybiBpbnQgcWNv
-bV9zY21fcmVzdG9yZV9zZWNfY29uZmlnKHN0cnVjdCBkZXZpY2UgKmRldiwKPiArCQkJCSAgICAg
-ICBlbnVtIHFjb21fc2NtX3NlY19kZXZfaWQgc2VjX2lkKTsKPiAgZXh0ZXJuIGJvb2wgcWNvbV9z
-Y21fcGFzX3N1cHBvcnRlZCh1MzIgcGVyaXBoZXJhbCk7Cj4gIGV4dGVybiBpbnQgcWNvbV9zY21f
-cGFzX2luaXRfaW1hZ2UodTMyIHBlcmlwaGVyYWwsIGNvbnN0IHZvaWQgKm1ldGFkYXRhLAo+ICAJ
-CQkJICAgc2l6ZV90IHNpemUpOwo+IC0tIAo+IDIuMjAuMQo+IApfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVk
-cmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
+On Sun 16 Jun 06:29 PDT 2019, Brian Masney wrote:
+
+> From: Rob Clark <robdclark@gmail.com>
+> 
+> Add support for the OCMEM lock/unlock interface that is needed by the
+> On Chip MEMory (OCMEM) that is present on some Snapdragon devices.
+> 
+> Signed-off-by: Rob Clark <robdclark@gmail.com>
+> [masneyb@onstation.org: ported to latest kernel; minor reformatting.]
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> ---
+> Rob's last version of this patch:
+> https://patchwork.kernel.org/patch/7340711/
+> 
+>  drivers/firmware/qcom_scm-32.c | 35 +++++++++++++++++++++++++++++
+>  drivers/firmware/qcom_scm-64.c | 12 ++++++++++
+>  drivers/firmware/qcom_scm.c    | 40 ++++++++++++++++++++++++++++++++++
+>  drivers/firmware/qcom_scm.h    |  9 ++++++++
+>  include/linux/qcom_scm.h       | 15 +++++++++++++
+>  5 files changed, 111 insertions(+)
+> 
+> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+> index 089b47124933..0100c82b9c00 100644
+> --- a/drivers/firmware/qcom_scm-32.c
+> +++ b/drivers/firmware/qcom_scm-32.c
+> @@ -463,6 +463,41 @@ int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
+>  	return 0;
+>  }
+>  
+> +int __qcom_scm_ocmem_lock(struct device *dev, u32 id, u32 offset, u32 size,
+> +			  u32 mode)
+> +{
+> +	struct ocmem_tz_lock {
+> +		__le32 id;
+> +		__le32 offset;
+> +		__le32 size;
+> +		__le32 mode;
+> +	} request;
+> +
+> +	request.id = cpu_to_le32(id);
+> +	request.offset = cpu_to_le32(offset);
+> +	request.size = cpu_to_le32(size);
+> +	request.mode = cpu_to_le32(mode);
+> +
+> +	return qcom_scm_call(dev, QCOM_SCM_OCMEM_SVC, QCOM_SCM_OCMEM_LOCK_CMD,
+> +			     &request, sizeof(request), NULL, 0);
+> +}
+> +
+> +int __qcom_scm_ocmem_unlock(struct device *dev, u32 id, u32 offset, u32 size)
+> +{
+> +	struct ocmem_tz_unlock {
+> +		__le32 id;
+> +		__le32 offset;
+> +		__le32 size;
+> +	} request;
+> +
+> +	request.id = cpu_to_le32(id);
+> +	request.offset = cpu_to_le32(offset);
+> +	request.size = cpu_to_le32(size);
+> +
+> +	return qcom_scm_call(dev, QCOM_SCM_OCMEM_SVC, QCOM_SCM_OCMEM_UNLOCK_CMD,
+> +			     &request, sizeof(request), NULL, 0);
+> +}
+> +
+>  void __qcom_scm_init(void)
+>  {
+>  }
+> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+> index b6b78da7f9c9..2674d6d3cdde 100644
+> --- a/drivers/firmware/qcom_scm-64.c
+> +++ b/drivers/firmware/qcom_scm-64.c
+> @@ -247,6 +247,18 @@ int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
+>  	return -ENOTSUPP;
+>  }
+>  
+> +int __qcom_scm_ocmem_lock(struct device *dev, uint32_t id, uint32_t offset,
+> +			  uint32_t size, uint32_t mode)
+> +{
+> +	return -ENOTSUPP;
+> +}
+> +
+> +int __qcom_scm_ocmem_unlock(struct device *dev, uint32_t id, uint32_t offset,
+> +			    uint32_t size)
+> +{
+> +	return -ENOTSUPP;
+> +}
+> +
+>  void __qcom_scm_init(void)
+>  {
+>  	u64 cmd;
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index 5495ef994c5d..85afb54defd4 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -193,6 +193,46 @@ int qcom_scm_restore_sec_config(struct device *dev,
+>  }
+>  EXPORT_SYMBOL(qcom_scm_restore_sec_config);
+>  
+> +/**
+> + * qcom_scm_ocmem_lock_available() - is OCMEM lock/unlock interface available
+> + */
+> +bool qcom_scm_ocmem_lock_available(void)
+> +{
+> +	return __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_OCMEM_SVC,
+> +					    QCOM_SCM_OCMEM_LOCK_CMD);
+> +}
+> +EXPORT_SYMBOL(qcom_scm_ocmem_lock_available);
+> +
+> +/**
+> + * qcom_scm_ocmem_lock() - call OCMEM lock interface to assign an OCMEM
+> + * region to the specified initiator
+> + *
+> + * @id:     tz initiator id
+> + * @offset: OCMEM offset
+> + * @size:   OCMEM size
+> + * @mode:   access mode (WIDE/NARROW)
+> + */
+> +int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset, u32 size,
+> +			u32 mode)
+> +{
+> +	return __qcom_scm_ocmem_lock(__scm->dev, id, offset, size, mode);
+> +}
+> +EXPORT_SYMBOL(qcom_scm_ocmem_lock);
+> +
+> +/**
+> + * qcom_scm_ocmem_unlock() - call OCMEM unlock interface to release an OCMEM
+> + * region from the specified initiator
+> + *
+> + * @id:     tz initiator id
+> + * @offset: OCMEM offset
+> + * @size:   OCMEM size
+> + */
+> +int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset, u32 size)
+> +{
+> +	return __qcom_scm_ocmem_unlock(__scm->dev, id, offset, size);
+> +}
+> +EXPORT_SYMBOL(qcom_scm_ocmem_unlock);
+> +
+>  /**
+>   * qcom_scm_pas_supported() - Check if the peripheral authentication service is
+>   *			      available for the given peripherial
+> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+> index bccc7d10c5c2..387e3c4e33c5 100644
+> --- a/drivers/firmware/qcom_scm.h
+> +++ b/drivers/firmware/qcom_scm.h
+> @@ -48,6 +48,15 @@ extern void __qcom_scm_init(void);
+>  extern int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
+>  					 u32 ctx_bank_num);
+>  
+> +#define QCOM_SCM_OCMEM_SVC			0xf
+> +#define QCOM_SCM_OCMEM_LOCK_CMD		0x1
+> +#define QCOM_SCM_OCMEM_UNLOCK_CMD		0x2
+> +
+> +extern int __qcom_scm_ocmem_lock(struct device *dev, u32 id, u32 offset,
+> +				 u32 size, u32 mode);
+> +extern int __qcom_scm_ocmem_unlock(struct device *dev, u32 id, u32 offset,
+> +				   u32 size);
+> +
+>  #define QCOM_SCM_SVC_PIL		0x2
+>  #define QCOM_SCM_PAS_INIT_IMAGE_CMD	0x1
+>  #define QCOM_SCM_PAS_MEM_SETUP_CMD	0x2
+> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
+> index b5c0afaca955..977c01aa524a 100644
+> --- a/include/linux/qcom_scm.h
+> +++ b/include/linux/qcom_scm.h
+> @@ -34,6 +34,16 @@ enum qcom_scm_sec_dev_id {
+>  	QCOM_SCM_ICE_DEV_ID	= 20,
+>  };
+>  
+> +enum qcom_scm_ocmem_client {
+> +	QCOM_SCM_OCMEM_UNUSED_ID = 0x0,
+> +	QCOM_SCM_OCMEM_GRAPHICS_ID,
+> +	QCOM_SCM_OCMEM_VIDEO_ID,
+> +	QCOM_SCM_OCMEM_LP_AUDIO_ID,
+> +	QCOM_SCM_OCMEM_SENSORS_ID,
+> +	QCOM_SCM_OCMEM_OTHER_OS_ID,
+> +	QCOM_SCM_OCMEM_DEBUG_ID,
+> +};
+> +
+>  #define QCOM_SCM_VMID_HLOS       0x3
+>  #define QCOM_SCM_VMID_MSS_MSA    0xF
+>  #define QCOM_SCM_VMID_WLAN       0x18
+> @@ -54,6 +64,11 @@ extern int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
+>  extern bool qcom_scm_restore_sec_config_available(void);
+>  extern int qcom_scm_restore_sec_config(struct device *dev,
+>  				       enum qcom_scm_sec_dev_id sec_id);
+> +extern bool qcom_scm_ocmem_lock_available(void);
+> +extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
+> +			       u32 size, u32 mode);
+> +extern int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset,
+> +				 u32 size);
+>  extern bool qcom_scm_pas_supported(u32 peripheral);
+>  extern int qcom_scm_pas_init_image(u32 peripheral, const void *metadata,
+>  				   size_t size);
+> -- 
+> 2.20.1
+> 
