@@ -1,132 +1,99 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] ARM: dts: qcom: msm8974-hammerhead: add touchscreen
- support
-Date: Sun, 16 Jun 2019 11:40:51 -0700
-Message-ID: <20190616184051.GC31088@tuxbook-pro>
-References: <20190603010455.17060-1-masneyb@onstation.org>
+Subject: Re: [PATCH v3 2/3] reset: qcom-pon: Add support for gen2 pon
+Date: Sun, 16 Jun 2019 11:56:37 -0700
+Message-ID: <20190616185637.GE31088@tuxbook-pro>
+References: <20190614231451.45998-1-john.stultz@linaro.org>
+ <20190614231451.45998-2-john.stultz@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190603010455.17060-1-masneyb@onstation.org>
+In-Reply-To: <20190614231451.45998-2-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linus.walleij@linaro.org, frank.rowand@sony.com, miquel.raynal@bootlin.com, absahu@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jonathan Marek <jonathan@marek.ca>
+To: Sebastian Reichel <sre@kernel.org>, John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Amit Pundir <amit.pundir@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun 02 Jun 18:04 PDT 2019, Brian Masney wrote:
+On Fri 14 Jun 16:14 PDT 2019, John Stultz wrote:
 
-> From: Jonathan Marek <jonathan@marek.ca>
+> Add support for gen2 pon register so "reboot bootloader" can
+> work on pixel3 and db845.
 > 
-> Add support for the Synaptics RMI4 touchscreen that is found on the
-> Nexus 5.
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: David Brown <david.brown@linaro.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Amit Pundir <amit.pundir@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 > 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-Applied for 5.3
+Sebastian, please take the first two patches through your tree and we'll
+pick the dts patch through arm-soc.
 
-PS. Please use a --cover-letter when sending multiple patches.
-
-Thanks,
+Regards,
 Bjorn
 
+> v2:
+> * Split out dts changes into separate path
+> * Minor cleanups and remove unused variables
 > ---
-> This is to be applied on top of the display patch series:
-> https://lore.kernel.org/lkml/20190531094619.31704-1-masneyb@onstation.org/
+>  drivers/power/reset/qcom-pon.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
 > 
->  .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> index c92ea01e3918..06c33bd71620 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> @@ -280,6 +280,16 @@
->  			};
->  		};
+> diff --git a/drivers/power/reset/qcom-pon.c b/drivers/power/reset/qcom-pon.c
+> index 3fa1642d4c543..22a743a0bf28c 100644
+> --- a/drivers/power/reset/qcom-pon.c
+> +++ b/drivers/power/reset/qcom-pon.c
+> @@ -14,11 +14,15 @@
 >  
-> +		i2c2_pins: i2c2 {
-> +			mux {
-> +				pins = "gpio6", "gpio7";
-> +				function = "blsp_i2c2";
-> +
-> +				drive-strength = <2>;
-> +				bias-disable;
-> +			};
-> +		};
-> +
->  		i2c3_pins: i2c3 {
->  			mux {
->  				pins = "gpio10", "gpio11";
-> @@ -326,6 +336,25 @@
->  				bias-disable;
->  			};
->  		};
-> +
-> +		touch_pin: touch {
-> +			int {
-> +				pins = "gpio5";
-> +				function = "gpio";
-> +
-> +				drive-strength = <2>;
-> +				bias-disable;
-> +				input-enable;
-> +			};
-> +
-> +			reset {
-> +				pins = "gpio8";
-> +				function = "gpio";
-> +
-> +				drive-strength = <2>;
-> +				bias-pull-up;
-> +			};
-> +		};
->  	};
+>  #define PON_SOFT_RB_SPARE		0x8f
 >  
->  	sdhci@f9824900 {
-> @@ -468,6 +497,41 @@
->  		};
->  	};
+> +#define GEN1_REASON_SHIFT		2
+> +#define GEN2_REASON_SHIFT		1
+> +
+>  struct pm8916_pon {
+>  	struct device *dev;
+>  	struct regmap *regmap;
+>  	u32 baseaddr;
+>  	struct reboot_mode_driver reboot_mode;
+> +	long reason_shift;
+>  };
 >  
-> +	i2c@f9924000 {
-> +		status = "ok";
-> +
-> +		clock-frequency = <355000>;
-> +		qcom,src-freq = <50000000>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&i2c2_pins>;
-> +
-> +		synaptics@70 {
-> +			compatible = "syna,rmi4-i2c";
-> +			reg = <0x70>;
-> +
-> +			interrupts-extended = <&msmgpio 5 IRQ_TYPE_EDGE_FALLING>;
-> +			vdd-supply = <&pm8941_l22>;
-> +			vio-supply = <&pm8941_lvs3>;
-> +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&touch_pin>;
-> +
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			rmi4-f01@1 {
-> +				reg = <0x1>;
-> +				syna,nosleep-mode = <1>;
-> +			};
-> +
-> +			rmi4-f12@12 {
-> +				reg = <0x12>;
-> +				syna,sensor-type = <1>;
-> +			};
-> +		};
-> +	};
-> +
->  	i2c@f9925000 {
->  		status = "ok";
->  		pinctrl-names = "default";
+>  static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
+> @@ -30,7 +34,7 @@ static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
+>  
+>  	ret = regmap_update_bits(pon->regmap,
+>  				 pon->baseaddr + PON_SOFT_RB_SPARE,
+> -				 0xfc, magic << 2);
+> +				 0xfc, magic << pon->reason_shift);
+>  	if (ret < 0)
+>  		dev_err(pon->dev, "update reboot mode bits failed\n");
+>  
+> @@ -60,6 +64,7 @@ static int pm8916_pon_probe(struct platform_device *pdev)
+>  		return error;
+>  
+>  	pon->reboot_mode.dev = &pdev->dev;
+> +	pon->reason_shift = (long)of_device_get_match_data(&pdev->dev);
+>  	pon->reboot_mode.write = pm8916_reboot_mode_write;
+>  	error = devm_reboot_mode_register(&pdev->dev, &pon->reboot_mode);
+>  	if (error) {
+> @@ -73,8 +78,9 @@ static int pm8916_pon_probe(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id pm8916_pon_id_table[] = {
+> -	{ .compatible = "qcom,pm8916-pon" },
+> -	{ .compatible = "qcom,pms405-pon" },
+> +	{ .compatible = "qcom,pm8916-pon", .data = (void *)GEN1_REASON_SHIFT },
+> +	{ .compatible = "qcom,pms405-pon", .data = (void *)GEN1_REASON_SHIFT },
+> +	{ .compatible = "qcom,pm8998-pon", .data = (void *)GEN2_REASON_SHIFT },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, pm8916_pon_id_table);
 > -- 
-> 2.20.1
+> 2.17.1
 > 
