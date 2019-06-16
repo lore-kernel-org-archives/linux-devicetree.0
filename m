@@ -1,15 +1,13 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: fsl: Add support for ZII i.MX7 RMU2
- board
-Date: Sun, 16 Jun 2019 20:21:48 -0300
-Message-ID: <CAOMZO5DNAEGWqG6VTn0KAJ5J5kKy=YurQJZ0FCTDunUADJZ3Pg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: Add ZII support for ZII i.MX7 RMU2 board
+Date: Sun, 16 Jun 2019 20:30:56 -0300
+Message-ID: <CAOMZO5Dpu_HLNWfCzx=hJTwbEJoGnY2KsXQM2JTqv34anfzGag@mail.gmail.com>
 References: <20190614080317.16850-1-andrew.smirnov@gmail.com>
- <20190614080317.16850-2-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190614080317.16850-2-andrew.smirnov@gmail.com>
+In-Reply-To: <20190614080317.16850-1-andrew.smirnov@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -27,18 +25,15 @@ Hi Andrey,
 
 On Fri, Jun 14, 2019 at 5:03 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 407138ebc0d0..8fb4dc1d55e7 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -158,6 +158,7 @@ properties:
->                - fsl,imx7d-sdb             # i.MX7 SabreSD Board
->                - tq,imx7d-mba7             # i.MX7D TQ MBa7 with TQMa7D SoM
->                - zii,imx7d-rpu2            # ZII RPU2 Board
-> +              - zii,imx7d-rmu2            # ZII RMU2 Board
+> +       mdio {
+> +               fec1_phy: phy@0 {
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_enet1_phy_reset>,
+> +                                   <&pinctrl_enet1_phy_interrupt>;
+> +                       reg = <0>;
+> +                       interrupt-parent = <&gpio1>;
+> +                       interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+> +                       reset-gpio = <&gpio5 11 GPIO_ACTIVE_LOW>;
 
-Nit: Please keep the entries in alphabetical order.
-
-Other than that:
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+According to Documentation/devicetree/bindings/net/mdio.txt this
+should be reset-gpios instead.
