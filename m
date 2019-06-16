@@ -1,69 +1,111 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 2/2] arm: dts: add ARM Mali GPU node for Odroid XU3
-Date: Sun, 16 Jun 2019 10:59:28 +0200
-Message-ID: <20190616085928.GB3826@kozik-lap>
-References: <20190614203144.3850-2-joseph.kogut@gmail.com>
- <20190614235719.8134-1-joseph.kogut@gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones
+ conflict in rk3399.dtsi
+Date: Sun, 16 Jun 2019 11:31:27 +0200
+Message-ID: <20190616093127.GC3826@kozik-lap>
+References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
+ <5188064.YWmxIpmbGp@phil>
+ <55b9018e-672e-522b-d0a0-c5655be0f353@linaro.org>
+ <e5a4f850-27e0-cad3-04bd-6c004fca2b81@arm.com>
+ <9bf85c22-f1ba-3dbc-0b67-17e124484fa1@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190614235719.8134-1-joseph.kogut@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Joseph Kogut <joseph.kogut@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <9bf85c22-f1ba-3dbc-0b67-17e124484fa1@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, edubezval@gmail.com, manivannan.sadhasivam@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Emil Renner Berthing <kernel@esmil.dk>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMTQsIDIwMTkgYXQgMDQ6NTc6MTlQTSAtMDcwMCwgSm9zZXBoIEtvZ3V0IHdy
-b3RlOgo+IEFkZCBkZXZpY2UgdHJlZSBub2RlIGZvciBtYWxpIGdwdSBvbiBPZHJvaWQgWFUzIFNv
-Q3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogSm9zZXBoIEtvZ3V0IDxqb3NlcGgua29ndXRAZ21haWwu
-Y29tPgo+IC0tLQo+IAo+IENoYW5nZXMgdjEgLT4gdjI6Cj4gLSBVc2UgaW50ZXJydXB0IG5hbWUg
-b3JkZXJpbmcgZnJvbSBiaW5kaW5nIGRvYwo+IC0gU3BlY2lmeSBhIHNpbmdsZSBjbG9jayBmb3Ig
-R1BVIG5vZGUKPiAtIEFkZCBncHUgb3BwIHRhYmxlCj4gLSBGaXggd2FybmluZ3MgZnJvbSBJUlFf
-VFlQRV9OT05FCj4gCj4gIC4uLi9ib290L2R0cy9leHlub3M1NDIyLW9kcm9pZHh1My1jb21tb24u
-ZHRzaSB8IDI2ICsrKysrKysrKysrKysrKysrKysKClRoaXMgc2hvdWxkIGdvIHRvIGV4eW5vczU0
-MjItb2Ryb2lkLWNvcmUuZHRzaSBpbnN0ZWFkLCBiZWNhdXNlIGl0IGlzCmNvbW1vbiB0byBlbnRp
-cmUgT2Ryb2lkIEV4eW5vczU0MjIgZmFtaWx5IChub3Qgb25seSBYVTMgZmFtaWx5KS4KCj4gIDEg
-ZmlsZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2V4eW5vczU0MjItb2Ryb2lkeHUzLWNvbW1vbi5kdHNpIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvZXh5bm9zNTQyMi1vZHJvaWR4dTMtY29tbW9uLmR0c2kKPiBpbmRleCA5M2E0OGYyZGRh
-NDkuLmI4YTQyNDZlM2IzNyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1
-NDIyLW9kcm9pZHh1My1jb21tb24uZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5v
-czU0MjItb2Ryb2lkeHUzLWNvbW1vbi5kdHNpCj4gQEAgLTQ4LDYgKzQ4LDMyIEBACj4gIAkJY29v
-bGluZy1sZXZlbHMgPSA8MCAxMzAgMTcwIDIzMD47Cj4gIAl9Owo+IAo+ICsJZ3B1OiBncHVAMTE4
-MDAwMDAgewo+ICsJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3MtbWFsaSIsICJhcm0sbWFs
-aS10NjI4IjsKClRoaXMgaXMgY29tbW9uIHRvIGFsbCBFeHlub3M1NDJ4IGNoaXBzIHNvIGl0IHNo
-b3VsZCBnbyB0bwpleHlub3M1NDIwLmR0c2kuIEhlcmUgeW91IHdvdWxkIG5lZWQgdG8gb25seSBl
-bmFibGUgaXQgYW5kIHByb3ZpZGUKcmVndWxhdG9yLgoKUHJvYmFibHkgdGhpcyBzaG91bGQgYmUg
-YWxzbyBhc3NvY2lhdGVkIHdpdGggdG11X2dwdSBhcyBhIGNvb2xpbmcgZGV2aWNlCihpZiBNYWxp
-IHJlZ2lzdGVycyBhIGNvb2xpbmcgZGV2aWNlLi4uKS4gT3RoZXJ3aXNlIHRoZSB0bXVfZ3B1IGlz
-IG5vdApyZWFsbHkgdXNlZCBmb3IgaXQuCgo+ICsJCXJlZyA9IDwweDExODAwMDAwIDB4NTAwMD47
-Cj4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIxOSBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKPiAr
-CQkJICAgICA8R0lDX1NQSSA3NCAgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4gKwkJCSAgICAgPEdJ
-Q19TUEkgMTE3IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJCWludGVycnVwdC1uYW1lcyA9ICJq
-b2IiLCAibW11IiwgImdwdSI7Cj4gKwkJY2xvY2tzID0gPCZjbG9jayBDTEtfRzNEPjsKPiArCQlt
-YWxpLXN1cHBseSA9IDwmYnVjazRfcmVnPjsKClBsZWFzZSBjaGVjayBpZiBhbHdheXMtb24gcHJv
-cGVydHkgY291bGQgYmUgcmVtb3ZlZCBmcm9tIGJ1Y2s0LiBBbHNvLAp3aGF0IGFib3V0IExETzI3
-PyBJdCBzaG91bGQgYmUgdXNlZCBhcyB3ZWxsIChtYXliZSB0aHJvdWdoCnZlbmRvci1zcGVjaWZp
-YyBwcm9wZXJ0aWVzIHdoaWNoIHdvdWxkIGp1c3RpZnkgdGhlIG5lZWQgb2YgbmV3IHZlbmRvcgpj
-b21wYXRpYmxlKS4KCgpCZXN0IHJlZ2FyZHMsCktyenlzenRvZgoKPiArCQlvcGVyYXRpbmctcG9p
-bnRzLXYyID0gPCZncHVfb3BwX3RhYmxlPjsKPiArCX07Cj4gKwo+ICsJZ3B1X29wcF90YWJsZTog
-Z3B1LW9wcC10YWJsZSB7Cj4gKwkJY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyIjsK
-PiArCj4gKwkJb3BwLTE3NzAwMDAwMCB7Cj4gKwkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8MTE3MDAw
-MDAwPjsKPiArCQkJb3BwLW1pY3Jvdm9sdCA9IDw4MTI1MDA+Owo+ICsJCX07Cj4gKwo+ICsJCW9w
-cC02MDAwMDAwMDAgewo+ICsJCQlvcHAtaHogPSAvYml0cy8gNjQgPDYwMDAwMDAwMD47Cj4gKwkJ
-CW9wcC1taWNyb3ZvbHQgPSA8MTE1MDAwMD47Cj4gKwkJfTsKPiArCX07Cj4gKwo+ICAJdGhlcm1h
-bC16b25lcyB7Cj4gIAkJY3B1MF90aGVybWFsOiBjcHUwLXRoZXJtYWwgewo+ICAJCQl0aGVybWFs
-LXNlbnNvcnMgPSA8JnRtdV9jcHUwIDA+Owo+IC0tCj4gMi4yMi4wCj4gCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Fri, Jun 14, 2019 at 04:30:13PM +0200, Daniel Lezcano wrote:
+> On 14/06/2019 16:02, Robin Murphy wrote:
+> > On 14/06/2019 14:03, Daniel Lezcano wrote:
+> >> On 14/06/2019 11:35, Heiko Stuebner wrote:
+> >>> Hi Daniel,
+> >>>
+> >>> Am Dienstag, 4. Juni 2019, 18:57:57 CEST schrieb Daniel Lezcano:
+> >>>> Currently the common thermal zones definitions for the rk3399 assumes
+> >>>> multiple thermal zones are supported by the governors. This is not the
+> >>>> case and each thermal zone has its own governor instance acting
+> >>>> individually without collaboration with other governors.
+> >>>>
+> >>>> As the cooling device for the CPU and the GPU thermal zones is the
+> >>>> same, each governors take different decisions for the same cooling
+> >>>> device leading to conflicting instructions and an erratic behavior.
+> >>>>
+> >>>> As the cooling-maps is about to become an optional property, let's
+> >>>> remove the cpu cooling device map from the GPU thermal zone.
+> >>>>
+> >>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >>>> ---
+> >>>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 ---------
+> >>>>   1 file changed, 9 deletions(-)
+> >>>>
+> >>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> >>>> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> >>>> index 196ac9b78076..e1357e0f60f7 100644
+> >>>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> >>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> >>>> @@ -821,15 +821,6 @@
+> >>>>                       type = "critical";
+> >>>>                   };
+> >>>>               };
+> >>>> -
+> >>>> -            cooling-maps {
+> >>>> -                map0 {
+> >>>> -                    trip = <&gpu_alert0>;
+> >>>> -                    cooling-device =
+> >>>> -                        <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> >>>> -                        <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> >>>> -                };
+> >>>> -            };
+> >>>>           };
+> >>>>       };
+> >>>
+> >>> my knowledge of the thermal framework is not that big, but what about
+> >>> the
+> >>> rk3399-devices which further detail the cooling-maps like
+> >>> rk3399-gru-kevin
+> >>> and the rk3399-nanopc-t4 with its fan-handling in the cooling-maps?
+> >>
+> >> The rk3399-gru-kevin is correct.
+> >>
+> >> The rk3399-nanopc-t4 is not correct because the cpu and the gpu are
+> >> sharing the same cooling device (the fan). There are different
+> >> configurations:
+> >>
+> >> 1. The cpu cooling device for the CPU and the fan for the GPU
+> >>
+> >> 2. Different trip points on the CPU thermal zone, eg. one to for the CPU
+> >> cooling device and another one for the fan.
+> >>
+> >> There are some variant for the above. If this board is not on battery,
+> >> you may want to give priority to the throughput, so activate the fan
+> >> first and then cool down the CPU. Or if you are on battery, you may want
+> >> to invert the trip points.
+> >>
+> >> In any case, it is not possible to share the same cooling device for
+> >> different thermal zones.
+> > 
+> > OK, thanks for the clarification. I'll get my board set up again to
+> > figure out the best fix for rk3399-nanopc-t4 (FWIW most users are
+> > probably just using passive cooling or a plain DC fan anyway). You might
+> > want to raise this issue with the maintainers of
+> > arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi, since the
+> > everything-shared-by-everything approach in there was what I used as a
+> > reference.
+> 
+> Cc'ed: Kukjin Kim and Krzysztof Kozlowski
+> 
+> Easy :)
+>
+
+Assuming that all trip-points are the same between thermal zones, I
+understand that solution could be to have one thermal zone with thermal
+multiple sensors (some time ago bindings did not support it) and all
+cooling devices? Then only one governor would be assigned?
+
+Best regards,
+Krzysztof
