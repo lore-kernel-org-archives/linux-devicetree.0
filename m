@@ -1,216 +1,202 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 4/6] firmware: qcom: scm: add OCMEM lock/unlock interface
-Date: Sun, 16 Jun 2019 10:54:57 -0700
-Message-ID: <20190616175457.GR22737@tuxbook-pro>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/6] drm/msm/gpu: add ocmem init/cleanup
+ functions
+Date: Sun, 16 Jun 2019 11:06:33 -0700
+Message-ID: <20190616180633.GS22737@tuxbook-pro>
 References: <20190616132930.6942-1-masneyb@onstation.org>
- <20190616132930.6942-5-masneyb@onstation.org>
+ <20190616132930.6942-7-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20190616132930.6942-5-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+In-Reply-To: <20190616132930.6942-7-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun 16 Jun 06:29 PDT 2019, Brian Masney wrote:
-
-> From: Rob Clark <robdclark@gmail.com>
-> 
-> Add support for the OCMEM lock/unlock interface that is needed by the
-> On Chip MEMory (OCMEM) that is present on some Snapdragon devices.
-> 
-> Signed-off-by: Rob Clark <robdclark@gmail.com>
-> [masneyb@onstation.org: ported to latest kernel; minor reformatting.]
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> ---
-> Rob's last version of this patch:
-> https://patchwork.kernel.org/patch/7340711/
-> 
->  drivers/firmware/qcom_scm-32.c | 35 +++++++++++++++++++++++++++++
->  drivers/firmware/qcom_scm-64.c | 12 ++++++++++
->  drivers/firmware/qcom_scm.c    | 40 ++++++++++++++++++++++++++++++++++
->  drivers/firmware/qcom_scm.h    |  9 ++++++++
->  include/linux/qcom_scm.h       | 15 +++++++++++++
->  5 files changed, 111 insertions(+)
-> 
-> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-> index 089b47124933..0100c82b9c00 100644
-> --- a/drivers/firmware/qcom_scm-32.c
-> +++ b/drivers/firmware/qcom_scm-32.c
-> @@ -463,6 +463,41 @@ int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
->  	return 0;
->  }
->  
-> +int __qcom_scm_ocmem_lock(struct device *dev, u32 id, u32 offset, u32 size,
-> +			  u32 mode)
-> +{
-> +	struct ocmem_tz_lock {
-> +		__le32 id;
-> +		__le32 offset;
-> +		__le32 size;
-> +		__le32 mode;
-> +	} request;
-> +
-> +	request.id = cpu_to_le32(id);
-> +	request.offset = cpu_to_le32(offset);
-> +	request.size = cpu_to_le32(size);
-> +	request.mode = cpu_to_le32(mode);
-> +
-> +	return qcom_scm_call(dev, QCOM_SCM_OCMEM_SVC, QCOM_SCM_OCMEM_LOCK_CMD,
-> +			     &request, sizeof(request), NULL, 0);
-> +}
-> +
-> +int __qcom_scm_ocmem_unlock(struct device *dev, u32 id, u32 offset, u32 size)
-> +{
-> +	struct ocmem_tz_unlock {
-> +		__le32 id;
-> +		__le32 offset;
-> +		__le32 size;
-> +	} request;
-> +
-> +	request.id = cpu_to_le32(id);
-> +	request.offset = cpu_to_le32(offset);
-> +	request.size = cpu_to_le32(size);
-> +
-> +	return qcom_scm_call(dev, QCOM_SCM_OCMEM_SVC, QCOM_SCM_OCMEM_UNLOCK_CMD,
-> +			     &request, sizeof(request), NULL, 0);
-> +}
-> +
->  void __qcom_scm_init(void)
->  {
->  }
-> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-> index b6b78da7f9c9..2674d6d3cdde 100644
-> --- a/drivers/firmware/qcom_scm-64.c
-> +++ b/drivers/firmware/qcom_scm-64.c
-> @@ -247,6 +247,18 @@ int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
->  	return -ENOTSUPP;
->  }
->  
-> +int __qcom_scm_ocmem_lock(struct device *dev, uint32_t id, uint32_t offset,
-> +			  uint32_t size, uint32_t mode)
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
-> +int __qcom_scm_ocmem_unlock(struct device *dev, uint32_t id, uint32_t offset,
-> +			    uint32_t size)
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
->  void __qcom_scm_init(void)
->  {
->  	u64 cmd;
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 5495ef994c5d..85afb54defd4 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -193,6 +193,46 @@ int qcom_scm_restore_sec_config(struct device *dev,
->  }
->  EXPORT_SYMBOL(qcom_scm_restore_sec_config);
->  
-> +/**
-> + * qcom_scm_ocmem_lock_available() - is OCMEM lock/unlock interface available
-> + */
-> +bool qcom_scm_ocmem_lock_available(void)
-> +{
-> +	return __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_OCMEM_SVC,
-> +					    QCOM_SCM_OCMEM_LOCK_CMD);
-> +}
-> +EXPORT_SYMBOL(qcom_scm_ocmem_lock_available);
-> +
-> +/**
-> + * qcom_scm_ocmem_lock() - call OCMEM lock interface to assign an OCMEM
-> + * region to the specified initiator
-> + *
-> + * @id:     tz initiator id
-> + * @offset: OCMEM offset
-> + * @size:   OCMEM size
-> + * @mode:   access mode (WIDE/NARROW)
-> + */
-> +int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset, u32 size,
-> +			u32 mode)
-> +{
-> +	return __qcom_scm_ocmem_lock(__scm->dev, id, offset, size, mode);
-> +}
-> +EXPORT_SYMBOL(qcom_scm_ocmem_lock);
-> +
-> +/**
-> + * qcom_scm_ocmem_unlock() - call OCMEM unlock interface to release an OCMEM
-> + * region from the specified initiator
-> + *
-> + * @id:     tz initiator id
-> + * @offset: OCMEM offset
-> + * @size:   OCMEM size
-> + */
-> +int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset, u32 size)
-> +{
-> +	return __qcom_scm_ocmem_unlock(__scm->dev, id, offset, size);
-> +}
-> +EXPORT_SYMBOL(qcom_scm_ocmem_unlock);
-> +
->  /**
->   * qcom_scm_pas_supported() - Check if the peripheral authentication service is
->   *			      available for the given peripherial
-> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
-> index bccc7d10c5c2..387e3c4e33c5 100644
-> --- a/drivers/firmware/qcom_scm.h
-> +++ b/drivers/firmware/qcom_scm.h
-> @@ -48,6 +48,15 @@ extern void __qcom_scm_init(void);
->  extern int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
->  					 u32 ctx_bank_num);
->  
-> +#define QCOM_SCM_OCMEM_SVC			0xf
-> +#define QCOM_SCM_OCMEM_LOCK_CMD		0x1
-> +#define QCOM_SCM_OCMEM_UNLOCK_CMD		0x2
-> +
-> +extern int __qcom_scm_ocmem_lock(struct device *dev, u32 id, u32 offset,
-> +				 u32 size, u32 mode);
-> +extern int __qcom_scm_ocmem_unlock(struct device *dev, u32 id, u32 offset,
-> +				   u32 size);
-> +
->  #define QCOM_SCM_SVC_PIL		0x2
->  #define QCOM_SCM_PAS_INIT_IMAGE_CMD	0x1
->  #define QCOM_SCM_PAS_MEM_SETUP_CMD	0x2
-> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
-> index b5c0afaca955..977c01aa524a 100644
-> --- a/include/linux/qcom_scm.h
-> +++ b/include/linux/qcom_scm.h
-> @@ -34,6 +34,16 @@ enum qcom_scm_sec_dev_id {
->  	QCOM_SCM_ICE_DEV_ID	= 20,
->  };
->  
-> +enum qcom_scm_ocmem_client {
-> +	QCOM_SCM_OCMEM_UNUSED_ID = 0x0,
-> +	QCOM_SCM_OCMEM_GRAPHICS_ID,
-> +	QCOM_SCM_OCMEM_VIDEO_ID,
-> +	QCOM_SCM_OCMEM_LP_AUDIO_ID,
-> +	QCOM_SCM_OCMEM_SENSORS_ID,
-> +	QCOM_SCM_OCMEM_OTHER_OS_ID,
-> +	QCOM_SCM_OCMEM_DEBUG_ID,
-> +};
-> +
->  #define QCOM_SCM_VMID_HLOS       0x3
->  #define QCOM_SCM_VMID_MSS_MSA    0xF
->  #define QCOM_SCM_VMID_WLAN       0x18
-> @@ -54,6 +64,11 @@ extern int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
->  extern bool qcom_scm_restore_sec_config_available(void);
->  extern int qcom_scm_restore_sec_config(struct device *dev,
->  				       enum qcom_scm_sec_dev_id sec_id);
-> +extern bool qcom_scm_ocmem_lock_available(void);
-> +extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
-> +			       u32 size, u32 mode);
-> +extern int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset,
-> +				 u32 size);
->  extern bool qcom_scm_pas_supported(u32 peripheral);
->  extern int qcom_scm_pas_init_image(u32 peripheral, const void *metadata,
->  				   size_t size);
-> -- 
-> 2.20.1
-> 
+T24gU3VuIDE2IEp1biAwNjoyOSBQRFQgMjAxOSwgQnJpYW4gTWFzbmV5IHdyb3RlOgoKPiBUaGUg
+ZmlsZXMgYTN4eF9ncHUuYyBhbmQgYTR4eF9ncHUuYyBoYXZlIGlmZGVmcyBmb3IgdGhlIE9DTUVN
+IHN1cHBvcnQKPiB0aGF0IHdhcyBtaXNzaW5nIHVwc3RyZWFtLiBBZGQgdHdvIG5ldyBmdW5jdGlv
+bnMgKGFkcmVub19ncHVfb2NtZW1faW5pdAo+IGFuZCBhZHJlbm9fZ3B1X29jbWVtX2NsZWFudXAp
+IHRoYXQgcmVtb3ZlcyBzb21lIGR1cGxpY2F0ZWQgY29kZS4gV2UgYWxzbwo+IG5lZWQgdG8gY2hh
+bmdlIHRoZSBpZmRlZiBjaGVjayBmb3IgQ09ORklHX01TTV9PQ01FTSB0byBDT05GSUdfUUNPTV9P
+Q01FTQo+IG5vdyB0aGF0IE9DTUVNIHN1cHBvcnQgaXMgdXBzdHJlYW0uCj4gCj4gU2lnbmVkLW9m
+Zi1ieTogQnJpYW4gTWFzbmV5IDxtYXNuZXliQG9uc3RhdGlvbi5vcmc+Cj4gLS0tCj4gIGRyaXZl
+cnMvZ3B1L2RybS9tc20vYWRyZW5vL2EzeHhfZ3B1LmMgICB8IDMzICsrKysrKystLS0tLS0tLS0t
+LS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2EzeHhfZ3B1LmggICB8ICAzICstCj4g
+IGRyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2E0eHhfZ3B1LmMgICB8IDMwICsrKysrKy0tLS0t
+LS0tLS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hNHh4X2dwdS5oICAgfCAgMyAr
+LQo+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJlbm9fZ3B1LmMgfCA0MSArKysrKysr
+KysrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19n
+cHUuaCB8IDEwICsrKysrKwo+ICA2IGZpbGVzIGNoYW5nZWQsIDc0IGluc2VydGlvbnMoKyksIDQ2
+IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVu
+by9hM3h4X2dwdS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYTN4eF9ncHUuYwo+IGlu
+ZGV4IGMzYjRiYzZlNDE1NS4uNzI3MjBiYjJhY2ExIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1
+L2RybS9tc20vYWRyZW5vL2EzeHhfZ3B1LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Fk
+cmVuby9hM3h4X2dwdS5jCj4gQEAgLTE3LDEwICsxNyw2IEBACj4gICAqIHRoaXMgcHJvZ3JhbS4g
+IElmIG5vdCwgc2VlIDxodHRwOi8vd3d3LmdudS5vcmcvbGljZW5zZXMvPi4KPiAgICovCj4gIAo+
+IC0jaWZkZWYgQ09ORklHX01TTV9PQ01FTQo+IC0jICBpbmNsdWRlIDxtYWNoL29jbWVtLmg+Cj4g
+LSNlbmRpZgo+IC0KPiAgI2luY2x1ZGUgImEzeHhfZ3B1LmgiCj4gIAo+ICAjZGVmaW5lIEEzWFhf
+SU5UMF9NQVNLIFwKPiBAQCAtMjA2LDkgKzIwMiw5IEBAIHN0YXRpYyBpbnQgYTN4eF9od19pbml0
+KHN0cnVjdCBtc21fZ3B1ICpncHUpCj4gIAkJZ3B1X3dyaXRlKGdwdSwgUkVHX0EzWFhfUkJCTV9H
+UFIwX0NUTCwgMHgwMDAwMDAwMCk7Cj4gIAo+ICAJLyogU2V0IHRoZSBPQ01FTSBiYXNlIGFkZHJl
+c3MgZm9yIEEzMzAsIGV0YyAqLwo+IC0JaWYgKGEzeHhfZ3B1LT5vY21lbV9oZGwpIHsKPiArCWlm
+IChhM3h4X2dwdS0+b2NtZW0uaGRsKSB7Cj4gIAkJZ3B1X3dyaXRlKGdwdSwgUkVHX0EzWFhfUkJf
+R01FTV9CQVNFX0FERFIsCj4gLQkJCSh1bnNpZ25lZCBpbnQpKGEzeHhfZ3B1LT5vY21lbV9iYXNl
+ID4+IDE0KSk7Cj4gKwkJCSh1bnNpZ25lZCBpbnQpKGEzeHhfZ3B1LT5vY21lbS5iYXNlID4+IDE0
+KSk7CgpUaGlzIGJsaW5kbHkgcmVxdWlyZXMgdGhhdCB0aGUgb2NtZW0gYWxsb2NhdG9yIHdpbGwg
+cmV0dXJuIGVudHJpZXMKYWxsb2NhdGVkIHRvIDE2a0IuIFBsZWFzZSBlbnN1cmUgdGhhdCBhIGZ1
+dHVyZSBpbXBsZW1lbnRhdGlvbiBvZiB0aGUKYWN0dWFsIG9jbWVtIGFsbG9jYXRvciBtYWludGFp
+bnMgdGhpcyAoY29tbWVudHM/IGNoZWNrcz8pLiAKCj4gIAl9Cj4gIAo+ICAJLyogVHVybiBvbiBw
+ZXJmb3JtYW5jZSBjb3VudGVyczogKi8KPiBAQCAtMzI5LDEwICszMjUsNyBAQCBzdGF0aWMgdm9p
+ZCBhM3h4X2Rlc3Ryb3koc3RydWN0IG1zbV9ncHUgKmdwdSkKPiAgCj4gIAlhZHJlbm9fZ3B1X2Ns
+ZWFudXAoYWRyZW5vX2dwdSk7Cj4gIAo+IC0jaWZkZWYgQ09ORklHX01TTV9PQ01FTQo+IC0JaWYg
+KGEzeHhfZ3B1LT5vY21lbV9iYXNlKQo+IC0JCW9jbWVtX2ZyZWUoT0NNRU1fR1JBUEhJQ1MsIGEz
+eHhfZ3B1LT5vY21lbV9oZGwpOwo+IC0jZW5kaWYKPiArCWFkcmVub19ncHVfb2NtZW1fY2xlYW51
+cCgmYTN4eF9ncHUtPm9jbWVtKTsKPiAgCj4gIAlrZnJlZShhM3h4X2dwdSk7Cj4gIH0KPiBAQCAt
+NTA3LDE3ICs1MDAsMTAgQEAgc3RydWN0IG1zbV9ncHUgKmEzeHhfZ3B1X2luaXQoc3RydWN0IGRy
+bV9kZXZpY2UgKmRldikKPiAgCj4gIAkvKiBpZiBuZWVkZWQsIGFsbG9jYXRlIGdtZW06ICovCj4g
+IAlpZiAoYWRyZW5vX2lzX2EzMzAoYWRyZW5vX2dwdSkpIHsKPiAtI2lmZGVmIENPTkZJR19NU01f
+T0NNRU0KPiAtCQkvKiBUT0RPIHRoaXMgaXMgZGlmZmVyZW50L21pc3NpbmcgdXBzdHJlYW06ICov
+Cj4gLQkJc3RydWN0IG9jbWVtX2J1ZiAqb2NtZW1faGRsID0KPiAtCQkJCW9jbWVtX2FsbG9jYXRl
+KE9DTUVNX0dSQVBISUNTLCBhZHJlbm9fZ3B1LT5nbWVtKTsKPiAtCj4gLQkJYTN4eF9ncHUtPm9j
+bWVtX2hkbCA9IG9jbWVtX2hkbDsKPiAtCQlhM3h4X2dwdS0+b2NtZW1fYmFzZSA9IG9jbWVtX2hk
+bC0+YWRkcjsKPiAtCQlhZHJlbm9fZ3B1LT5nbWVtID0gb2NtZW1faGRsLT5sZW47Cj4gLQkJREJH
+KCJ1c2luZyAlZEsgb2YgT0NNRU0gYXQgMHglMDh4IiwgYWRyZW5vX2dwdS0+Z21lbSAvIDEwMjQs
+Cj4gLQkJCQlhM3h4X2dwdS0+b2NtZW1fYmFzZSk7Cj4gLSNlbmRpZgo+ICsJCXJldCA9IGFkcmVu
+b19ncHVfb2NtZW1faW5pdCgmYWRyZW5vX2dwdS0+YmFzZS5wZGV2LT5kZXYsCj4gKwkJCQkJICAg
+IGFkcmVub19ncHUsICZhM3h4X2dwdS0+b2NtZW0pOwo+ICsJCWlmIChyZXQpCj4gKwkJCWdvdG8g
+ZmFpbDsKPiAgCX0KPiAgCj4gIAlpZiAoIWdwdS0+YXNwYWNlKSB7Cj4gQEAgLTUzMCwxMSArNTE2
+LDE0IEBAIHN0cnVjdCBtc21fZ3B1ICphM3h4X2dwdV9pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpk
+ZXYpCj4gIAkJICovCj4gIAkJRFJNX0RFVl9FUlJPUihkZXYtPmRldiwgIk5vIG1lbW9yeSBwcm90
+ZWN0aW9uIHdpdGhvdXQgSU9NTVVcbiIpOwo+ICAJCXJldCA9IC1FTlhJTzsKPiAtCQlnb3RvIGZh
+aWw7Cj4gKwkJZ290byBmYWlsX2NsZWFudXBfb2NtZW07Cj4gIAl9Cj4gIAo+ICAJcmV0dXJuIGdw
+dTsKPiAgCj4gK2ZhaWxfY2xlYW51cF9vY21lbToKPiArCWFkcmVub19ncHVfb2NtZW1fY2xlYW51
+cCgmYTN4eF9ncHUtPm9jbWVtKTsKPiArCj4gIGZhaWw6Cj4gIAlpZiAoYTN4eF9ncHUpCj4gIAkJ
+YTN4eF9kZXN0cm95KCZhM3h4X2dwdS0+YmFzZS5iYXNlKTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL21zbS9hZHJlbm8vYTN4eF9ncHUuaCBiL2RyaXZlcnMvZ3B1L2RybS9tc20vYWRy
+ZW5vL2EzeHhfZ3B1LmgKPiBpbmRleCBhYjYwZGM5ZTM0NGUuLjcyN2MzNGYzOGY5ZSAxMDA2NDQK
+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hM3h4X2dwdS5oCj4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYTN4eF9ncHUuaAo+IEBAIC0zMCw4ICszMCw3IEBAIHN0
+cnVjdCBhM3h4X2dwdSB7Cj4gIAlzdHJ1Y3QgYWRyZW5vX2dwdSBiYXNlOwo+ICAKPiAgCS8qIGlm
+IE9DTUVNIGlzIHVzZWQgZm9yIEdNRU06ICovCj4gLQl1aW50MzJfdCBvY21lbV9iYXNlOwo+IC0J
+dm9pZCAqb2NtZW1faGRsOwo+ICsJc3RydWN0IGFkcmVub19vY21lbSBvY21lbTsKPiAgfTsKPiAg
+I2RlZmluZSB0b19hM3h4X2dwdSh4KSBjb250YWluZXJfb2YoeCwgc3RydWN0IGEzeHhfZ3B1LCBi
+YXNlKQo+ICAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYTR4eF9n
+cHUuYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2E0eHhfZ3B1LmMKPiBpbmRleCBhYjJi
+NzUyNTY2ZDguLmI4ZjgyNTEwNzc5NiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNt
+L2FkcmVuby9hNHh4X2dwdS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYTR4
+eF9ncHUuYwo+IEBAIC0yLDkgKzIsNiBAQAo+ICAvKiBDb3B5cmlnaHQgKGMpIDIwMTQgVGhlIExp
+bnV4IEZvdW5kYXRpb24uIEFsbCByaWdodHMgcmVzZXJ2ZWQuCj4gICAqLwo+ICAjaW5jbHVkZSAi
+YTR4eF9ncHUuaCIKPiAtI2lmZGVmIENPTkZJR19NU01fT0NNRU0KPiAtIyAgaW5jbHVkZSA8c29j
+L3Fjb20vb2NtZW0uaD4KPiAtI2VuZGlmCj4gIAo+ICAjZGVmaW5lIEE0WFhfSU5UMF9NQVNLIFwK
+PiAgCShBNFhYX0lOVDBfUkJCTV9BSEJfRVJST1IgfCAgICAgICAgXAo+IEBAIC0xODgsNyArMTg1
+LDcgQEAgc3RhdGljIGludCBhNHh4X2h3X2luaXQoc3RydWN0IG1zbV9ncHUgKmdwdSkKPiAgCQkJ
+KDEgPDwgMzApIHwgMHhGRkZGKTsKPiAgCj4gIAlncHVfd3JpdGUoZ3B1LCBSRUdfQTRYWF9SQl9H
+TUVNX0JBU0VfQUREUiwKPiAtCQkJKHVuc2lnbmVkIGludCkoYTR4eF9ncHUtPm9jbWVtX2Jhc2Ug
+Pj4gMTQpKTsKPiArCQkJKHVuc2lnbmVkIGludCkoYTR4eF9ncHUtPm9jbWVtLmJhc2UgPj4gMTQp
+KTsKPiAgCj4gIAkvKiBUdXJuIG9uIHBlcmZvcm1hbmNlIGNvdW50ZXJzOiAqLwo+ICAJZ3B1X3dy
+aXRlKGdwdSwgUkVHX0E0WFhfUkJCTV9QRVJGQ1RSX0NUTCwgMHgwMSk7Cj4gQEAgLTMxOCwxMCAr
+MzE1LDcgQEAgc3RhdGljIHZvaWQgYTR4eF9kZXN0cm95KHN0cnVjdCBtc21fZ3B1ICpncHUpCj4g
+IAo+ICAJYWRyZW5vX2dwdV9jbGVhbnVwKGFkcmVub19ncHUpOwo+ICAKPiAtI2lmZGVmIENPTkZJ
+R19NU01fT0NNRU0KPiAtCWlmIChhNHh4X2dwdS0+b2NtZW1fYmFzZSkKPiAtCQlvY21lbV9mcmVl
+KE9DTUVNX0dSQVBISUNTLCBhNHh4X2dwdS0+b2NtZW1faGRsKTsKPiAtI2VuZGlmCj4gKwlhZHJl
+bm9fZ3B1X29jbWVtX2NsZWFudXAoJmE0eHhfZ3B1LT5vY21lbSk7Cj4gIAo+ICAJa2ZyZWUoYTR4
+eF9ncHUpOwo+ICB9Cj4gQEAgLTU3OCwxNyArNTcyLDEwIEBAIHN0cnVjdCBtc21fZ3B1ICphNHh4
+X2dwdV9pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpCj4gIAo+ICAJLyogaWYgbmVlZGVkLCBh
+bGxvY2F0ZSBnbWVtOiAqLwo+ICAJaWYgKGFkcmVub19pc19hNHh4KGFkcmVub19ncHUpKSB7Cj4g
+LSNpZmRlZiBDT05GSUdfTVNNX09DTUVNCj4gLQkJLyogVE9ETyB0aGlzIGlzIGRpZmZlcmVudC9t
+aXNzaW5nIHVwc3RyZWFtOiAqLwo+IC0JCXN0cnVjdCBvY21lbV9idWYgKm9jbWVtX2hkbCA9Cj4g
+LQkJCQlvY21lbV9hbGxvY2F0ZShPQ01FTV9HUkFQSElDUywgYWRyZW5vX2dwdS0+Z21lbSk7Cj4g
+LQo+IC0JCWE0eHhfZ3B1LT5vY21lbV9oZGwgPSBvY21lbV9oZGw7Cj4gLQkJYTR4eF9ncHUtPm9j
+bWVtX2Jhc2UgPSBvY21lbV9oZGwtPmFkZHI7Cj4gLQkJYWRyZW5vX2dwdS0+Z21lbSA9IG9jbWVt
+X2hkbC0+bGVuOwo+IC0JCURCRygidXNpbmcgJWRLIG9mIE9DTUVNIGF0IDB4JTA4eCIsIGFkcmVu
+b19ncHUtPmdtZW0gLyAxMDI0LAo+IC0JCQkJYTR4eF9ncHUtPm9jbWVtX2Jhc2UpOwo+IC0jZW5k
+aWYKPiArCQlyZXQgPSBhZHJlbm9fZ3B1X29jbWVtX2luaXQoZGV2LT5kZXYsIGFkcmVub19ncHUs
+Cj4gKwkJCQkJICAgICZhNHh4X2dwdS0+b2NtZW0pOwo+ICsJCWlmIChyZXQpCj4gKwkJCWdvdG8g
+ZmFpbDsKPiAgCX0KPiAgCj4gIAlpZiAoIWdwdS0+YXNwYWNlKSB7Cj4gQEAgLTYwMSwxMSArNTg4
+LDE0IEBAIHN0cnVjdCBtc21fZ3B1ICphNHh4X2dwdV9pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpk
+ZXYpCj4gIAkJICovCj4gIAkJRFJNX0RFVl9FUlJPUihkZXYtPmRldiwgIk5vIG1lbW9yeSBwcm90
+ZWN0aW9uIHdpdGhvdXQgSU9NTVVcbiIpOwo+ICAJCXJldCA9IC1FTlhJTzsKPiAtCQlnb3RvIGZh
+aWw7Cj4gKwkJZ290byBmYWlsX2NsZWFudXBfb2NtZW07Cj4gIAl9Cj4gIAo+ICAJcmV0dXJuIGdw
+dTsKPiAgCj4gK2ZhaWxfY2xlYW51cF9vY21lbToKPiArCWFkcmVub19ncHVfb2NtZW1fY2xlYW51
+cCgmYTR4eF9ncHUtPm9jbWVtKTsKPiArCj4gIGZhaWw6Cj4gIAlpZiAoYTR4eF9ncHUpCj4gIAkJ
+YTR4eF9kZXN0cm95KCZhNHh4X2dwdS0+YmFzZS5iYXNlKTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL21zbS9hZHJlbm8vYTR4eF9ncHUuaCBiL2RyaXZlcnMvZ3B1L2RybS9tc20vYWRy
+ZW5vL2E0eHhfZ3B1LmgKPiBpbmRleCBkNTA2MzExZWUyNDAuLmEwMTQ0OGNiYTJlYSAxMDA2NDQK
+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hNHh4X2dwdS5oCj4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYTR4eF9ncHUuaAo+IEBAIC0xNiw4ICsxNiw3IEBAIHN0
+cnVjdCBhNHh4X2dwdSB7Cj4gIAlzdHJ1Y3QgYWRyZW5vX2dwdSBiYXNlOwo+ICAKPiAgCS8qIGlm
+IE9DTUVNIGlzIHVzZWQgZm9yIEdNRU06ICovCj4gLQl1aW50MzJfdCBvY21lbV9iYXNlOwo+IC0J
+dm9pZCAqb2NtZW1faGRsOwo+ICsJc3RydWN0IGFkcmVub19vY21lbSBvY21lbTsKPiAgfTsKPiAg
+I2RlZmluZSB0b19hNHh4X2dwdSh4KSBjb250YWluZXJfb2YoeCwgc3RydWN0IGE0eHhfZ3B1LCBi
+YXNlKQo+ICAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5v
+X2dwdS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2dwdS5jCj4gaW5kZXgg
+NmY3ZjQxMTRhZmNmLi5lMGE5NDA5YzhhMzIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L21zbS9hZHJlbm8vYWRyZW5vX2dwdS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJl
+bm8vYWRyZW5vX2dwdS5jCj4gQEAgLTI5LDYgKzI5LDEwIEBACj4gICNpbmNsdWRlICJtc21fZ2Vt
+LmgiCj4gICNpbmNsdWRlICJtc21fbW11LmgiCj4gIAo+ICsjaWZkZWYgQ09ORklHX1FDT01fT0NN
+RU0KPiArIyAgaW5jbHVkZSA8c29jL3Fjb20vb2NtZW0uaD4KPiArI2VuZGlmCgpUaGlzIGZpbGUg
+ZXhpc3RzIChhZnRlciB0aGUgcHJldmlvdXMgcGF0Y2gpLCBzbyBubyBuZWVkIHRvIG1ha2UgaXRz
+CmluY2x1c2lvbiBjb25kaXRpb25hbC4KCj4gKwo+ICBzdGF0aWMgYm9vbCB6YXBfYXZhaWxhYmxl
+ID0gdHJ1ZTsKPiAgCj4gIHN0YXRpYyBpbnQgemFwX3NoYWRlcl9sb2FkX21kdChzdHJ1Y3QgbXNt
+X2dwdSAqZ3B1LCBjb25zdCBjaGFyICpmd25hbWUsCj4gQEAgLTg5Nyw2ICs5MDEsNDMgQEAgc3Rh
+dGljIGludCBhZHJlbm9fZ2V0X3B3cmxldmVscyhzdHJ1Y3QgZGV2aWNlICpkZXYsCj4gIAlyZXR1
+cm4gMDsKPiAgfQo+ICAKPiAraW50IGFkcmVub19ncHVfb2NtZW1faW5pdChzdHJ1Y3QgZGV2aWNl
+ICpkZXYsIHN0cnVjdCBhZHJlbm9fZ3B1ICphZHJlbm9fZ3B1LAo+ICsJCQkgIHN0cnVjdCBhZHJl
+bm9fb2NtZW0gKmFkcmVub19vY21lbSkKPiArewo+ICsjaWZkZWYgQ09ORklHX1FDT01fT0NNRU0K
+Ck5vIG5lZWQgdG8gbWFrZSB0aGlzIGNvbmRpdGlvbmFsLgoKPiArCXN0cnVjdCBvY21lbV9idWYg
+Km9jbWVtX2hkbDsKPiArCXN0cnVjdCBvY21lbSAqb2NtZW07Cj4gKwo+ICsJb2NtZW0gPSBvZl9n
+ZXRfb2NtZW0oZGV2KTsKPiArCWlmICghb2NtZW0pIHsKPiArCQkvKiBUaGlzIGlzIGFuIG9wdGlv
+bmFsIHByb3BlcnR5IHNvIHJldHVybiBzdWNjZXNzLiAqLwo+ICsJCXJldHVybiAwOwo+ICsJfQo+
+ICsKPiArCW9jbWVtX2hkbCA9IG9jbWVtX2FsbG9jYXRlKG9jbWVtLCBPQ01FTV9HUkFQSElDUywg
+YWRyZW5vX2dwdS0+Z21lbSk7Cj4gKwlpZiAoSVNfRVJSKG9jbWVtX2hkbCkpCj4gKwkJcmV0dXJu
+IFBUUl9FUlIob2NtZW1faGRsKTsKPiArCj4gKwlhZHJlbm9fb2NtZW0tPm9jbWVtID0gb2NtZW07
+Cj4gKwlhZHJlbm9fb2NtZW0tPmJhc2UgPSBvY21lbV9oZGwtPmFkZHI7Cj4gKwlhZHJlbm9fb2Nt
+ZW0tPmhkbCA9IG9jbWVtX2hkbDsKPiArCWFkcmVub19ncHUtPmdtZW0gPSBvY21lbV9oZGwtPmxl
+bjsKPiArCURCRygidXNpbmcgJWRLIG9mIE9DTUVNIGF0IDB4JTA4eCIsIGFkcmVub19ncHUtPmdt
+ZW0gLyAxMDI0LAo+ICsJICAgIGFkcmVub19vY21lbS0+YmFzZSk7Cj4gKyNlbmRpZgo+ICsKPiAr
+CXJldHVybiAwOwo+ICt9Cj4gKwo+ICt2b2lkIGFkcmVub19ncHVfb2NtZW1fY2xlYW51cChzdHJ1
+Y3QgYWRyZW5vX29jbWVtICphZHJlbm9fb2NtZW0pCj4gK3sKPiArI2lmZGVmIENPTkZJR19RQ09N
+X09DTUVNCj4gKwlpZiAoYWRyZW5vX29jbWVtLT5iYXNlKQoKSXQgd291bGQgYmUgbmljZSB0byBo
+YXZlIG9jbWVtX2ZyZWUoKSBhY2NlcHQgTlVMTCwgc2ltaWxhciB0byBrZnJlZSgpIGV0CmFsLgoK
+PiArCQlvY21lbV9mcmVlKGFkcmVub19vY21lbS0+b2NtZW0sIE9DTUVNX0dSQVBISUNTLAo+ICsJ
+CQkgICBhZHJlbm9fb2NtZW0tPmhkbCk7Cj4gKyNlbmRpZgo+ICt9Cj4gKwo+ICBpbnQgYWRyZW5v
+X2dwdV9pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkcm0sIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
+KnBkZXYsCj4gIAkJc3RydWN0IGFkcmVub19ncHUgKmFkcmVub19ncHUsCj4gIAkJY29uc3Qgc3Ry
+dWN0IGFkcmVub19ncHVfZnVuY3MgKmZ1bmNzLCBpbnQgbnJfcmluZ3MpCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19ncHUuaCBiL2RyaXZlcnMvZ3B1L2Ry
+bS9tc20vYWRyZW5vL2FkcmVub19ncHUuaAo+IGluZGV4IDA5MjU2MDZlYzliNS4uMWNkMTE1NzAz
+MjNiIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19ncHUu
+aAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19ncHUuaAo+IEBAIC0x
+MzYsNiArMTM2LDEyIEBAIHN0cnVjdCBhZHJlbm9fZ3B1IHsKPiAgfTsKPiAgI2RlZmluZSB0b19h
+ZHJlbm9fZ3B1KHgpIGNvbnRhaW5lcl9vZih4LCBzdHJ1Y3QgYWRyZW5vX2dwdSwgYmFzZSkKPiAg
+Cj4gK3N0cnVjdCBhZHJlbm9fb2NtZW0gewo+ICsJc3RydWN0IG9jbWVtICpvY21lbTsKPiArCXVp
+bnQzMl90IGJhc2U7CgpCeSBvY21lbSBiZWluZyBwaHlzaWNhbGx5IGZpeGVkIHRoaXMgaXMgc3Vm
+ZmljaWVudCwgYnV0IHVuc2lnbmVkIGxvbmcgaXMKYSBuaWNlciB0eXBlIGZvciBjYXJyeWluZyBt
+ZW1vcnkgYWRkcmVzc2VzLgoKUmVnYXJkcywKQmpvcm4KCj4gKwl2b2lkICpoZGw7Cj4gK307Cj4g
+Kwo+ICAvKiBwbGF0Zm9ybSBjb25maWcgZGF0YSAoaWUuIGZyb20gRFQsIG9yIHBkYXRhKSAqLwo+
+ICBzdHJ1Y3QgYWRyZW5vX3BsYXRmb3JtX2NvbmZpZyB7Cj4gIAlzdHJ1Y3QgYWRyZW5vX3JldiBy
+ZXY7Cj4gQEAgLTI0MSw2ICsyNDcsMTAgQEAgdm9pZCBhZHJlbm9fZHVtcChzdHJ1Y3QgbXNtX2dw
+dSAqZ3B1KTsKPiAgdm9pZCBhZHJlbm9fd2FpdF9yaW5nKHN0cnVjdCBtc21fcmluZ2J1ZmZlciAq
+cmluZywgdWludDMyX3QgbmR3b3Jkcyk7Cj4gIHN0cnVjdCBtc21fcmluZ2J1ZmZlciAqYWRyZW5v
+X2FjdGl2ZV9yaW5nKHN0cnVjdCBtc21fZ3B1ICpncHUpOwo+ICAKPiAraW50IGFkcmVub19ncHVf
+b2NtZW1faW5pdChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBhZHJlbm9fZ3B1ICphZHJlbm9f
+Z3B1LAo+ICsJCQkgIHN0cnVjdCBhZHJlbm9fb2NtZW0gKm9jbWVtKTsKPiArdm9pZCBhZHJlbm9f
+Z3B1X29jbWVtX2NsZWFudXAoc3RydWN0IGFkcmVub19vY21lbSAqb2NtZW0pOwo+ICsKPiAgaW50
+IGFkcmVub19ncHVfaW5pdChzdHJ1Y3QgZHJtX2RldmljZSAqZHJtLCBzdHJ1Y3QgcGxhdGZvcm1f
+ZGV2aWNlICpwZGV2LAo+ICAJCXN0cnVjdCBhZHJlbm9fZ3B1ICpncHUsIGNvbnN0IHN0cnVjdCBh
+ZHJlbm9fZ3B1X2Z1bmNzICpmdW5jcywKPiAgCQlpbnQgbnJfcmluZ3MpOwo+IC0tIAo+IDIuMjAu
+MQo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVl
+ZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
