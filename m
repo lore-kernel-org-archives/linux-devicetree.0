@@ -1,180 +1,227 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v6 5/6] drm: sun4i: Add support for enabling
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH v6 5/6] drm: sun4i: Add support for enabling
  DDC I2C bus to sun8i_dw_hdmi glue
-Date: Sun, 16 Jun 2019 13:05:13 +0200
-Message-ID: <1823986.m04BvQ5ALy@jernej-laptop>
+Date: Sun, 16 Jun 2019 14:48:10 +0200
+Message-ID: <20190616124810.qvlij6zkcl3leu3d@core.my.home>
 References: <20190527162237.18495-1-megous@megous.com>
  <20190527162237.18495-6-megous@megous.com>
+ <1823986.m04BvQ5ALy@jernej-laptop>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190527162237.18495-6-megous@megous.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-sunxi@googlegroups.com, megous@megous.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Jose Abreu <joabreu@synopsys.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBDHVTDUAKGQECUCOR2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1823986.m04BvQ5ALy@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ondrej!
+Hi Jernej,
 
-Dne ponedeljek, 27. maj 2019 ob 18:22:36 CEST je megous via linux-sunxi 
-napisal(a):
-> From: Ondrej Jirman <megous@megous.com>
-> 
-> Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
-> for the DDC bus to be usable.
-> 
-> Add support for hdmi-connector node's optional ddc-en-gpios property to
-> support this use case.
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 55 +++++++++++++++++++++++++--
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  3 ++
->  2 files changed, 55 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c index 39d8509d96a0..59b81ba02d96
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> @@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct
-> drm_device *drm, return crtcs;
->  }
-> 
-> +static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
-> +					     struct 
-platform_device **pdev_out)
-> +{
-> +	struct platform_device *pdev;
-> +	struct device_node *remote;
-> +
-> +	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
-> +	if (!remote)
-> +		return -ENODEV;
-> +
-> +	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-> +		of_node_put(remote);
-> +		return -ENODEV;
-> +	}
-> +
-> +	pdev = of_find_device_by_node(remote);
-> +	of_node_put(remote);
-> +	if (!pdev)
-> +		return -ENODEV;
-> +
-> +	*pdev_out = pdev;
-> +	return 0;
-> +}
-> +
->  static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
->  			      void *data)
->  {
-> @@ -151,16 +175,29 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
-> struct device *master, return PTR_ERR(hdmi->regulator);
->  	}
-> 
-> +	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev);
-> +	if (!ret) {
-> +		hdmi->ddc_en = gpiod_get_optional(&hdmi->connector_pdev-
->dev,
-> +						  "ddc-en", 
-GPIOD_OUT_HIGH);
-> +		if (IS_ERR(hdmi->ddc_en)) {
-> +			platform_device_put(hdmi->connector_pdev);
-> +			dev_err(dev, "Couldn't get ddc-en gpio\n");
-> +			return PTR_ERR(hdmi->ddc_en);
-> +		}
-> +	}
-> +
->  	ret = regulator_enable(hdmi->regulator);
->  	if (ret) {
->  		dev_err(dev, "Failed to enable regulator\n");
-> -		return ret;
-> +		goto err_unref_ddc_en;
->  	}
-> 
-> +	gpiod_set_value(hdmi->ddc_en, 1);
+On Sun, Jun 16, 2019 at 01:05:13PM +0200, Jernej =C5=A0krabec wrote:
+> Hi Ondrej!
+>=20
+> Dne ponedeljek, 27. maj 2019 ob 18:22:36 CEST je megous via linux-sunxi=
+=20
+> napisal(a):
+> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> >=20
+> > Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
+> > for the DDC bus to be usable.
+> >=20
+> > Add support for hdmi-connector node's optional ddc-en-gpios property to
+> > support this use case.
+> >=20
+> > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 55 +++++++++++++++++++++++++--
+> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  3 ++
+> >  2 files changed, 55 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> > b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c index 39d8509d96a0..59b81ba02d9=
+6
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> > @@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct
+> > drm_device *drm, return crtcs;
+> >  }
+> >=20
+> > +static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
+> > +					     struct=20
+> platform_device **pdev_out)
+> > +{
+> > +	struct platform_device *pdev;
+> > +	struct device_node *remote;
+> > +
+> > +	remote =3D of_graph_get_remote_node(dev->of_node, 1, -1);
+> > +	if (!remote)
+> > +		return -ENODEV;
+> > +
+> > +	if (!of_device_is_compatible(remote, "hdmi-connector")) {
+> > +		of_node_put(remote);
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	pdev =3D of_find_device_by_node(remote);
+> > +	of_node_put(remote);
+> > +	if (!pdev)
+> > +		return -ENODEV;
+> > +
+> > +	*pdev_out =3D pdev;
+> > +	return 0;
+> > +}
+> > +
+> >  static int sun8i_dw_hdmi_bind(struct device *dev, struct device *maste=
+r,
+> >  			      void *data)
+> >  {
+> > @@ -151,16 +175,29 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
+> > struct device *master, return PTR_ERR(hdmi->regulator);
+> >  	}
+> >=20
+> > +	ret =3D sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev)=
+;
+> > +	if (!ret) {
+> > +		hdmi->ddc_en =3D gpiod_get_optional(&hdmi->connector_pdev-
+> >dev,
+> > +						  "ddc-en",=20
+> GPIOD_OUT_HIGH);
+> > +		if (IS_ERR(hdmi->ddc_en)) {
+> > +			platform_device_put(hdmi->connector_pdev);
+> > +			dev_err(dev, "Couldn't get ddc-en gpio\n");
+> > +			return PTR_ERR(hdmi->ddc_en);
+> > +		}
+> > +	}
+> > +
+> >  	ret =3D regulator_enable(hdmi->regulator);
+> >  	if (ret) {
+> >  		dev_err(dev, "Failed to enable regulator\n");
+> > -		return ret;
+> > +		goto err_unref_ddc_en;
+> >  	}
+> >=20
+> > +	gpiod_set_value(hdmi->ddc_en, 1);
+>=20
+> Why don't you do that inside if clause where hdmi->ddc_en is assigned? It=
+'s=20
+> not useful otherwise anyway.
+>=20
+> Besides, you would then only need to adjust one goto label in error path.
 
-Why don't you do that inside if clause where hdmi->ddc_en is assigned? It's 
-not useful otherwise anyway.
+The idea is to enable DDC after enabling the regulator. I don't think it ma=
+tters
+for the particular HW that's on Orange Pi 3, and similar Xunlong boards, bu=
+t
+this is a fairly generic binding and it makes more sense to power the bus, =
+and
+then enable whatever aditional circuitry might be there for the IO.
 
-Besides, you would then only need to adjust one goto label in error path.
+I can move sun8i_dw_hdmi_find_connector_pdev lower, but I would then need t=
+o
+disable the regulator in the error path, and I like to keep this order:
 
-> +
->  	ret = reset_control_deassert(hdmi->rst_ctrl);
->  	if (ret) {
->  		dev_err(dev, "Could not deassert ctrl reset 
-control\n");
-> -		goto err_disable_regulator;
-> +		goto err_disable_ddc_en;
->  	}
-> 
->  	ret = clk_prepare_enable(hdmi->clk_tmds);
-> @@ -213,8 +250,14 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
-> struct device *master, clk_disable_unprepare(hdmi->clk_tmds);
->  err_assert_ctrl_reset:
->  	reset_control_assert(hdmi->rst_ctrl);
-> -err_disable_regulator:
-> +err_disable_ddc_en:
-> +	gpiod_set_value(hdmi->ddc_en, 0);
->  	regulator_disable(hdmi->regulator);
-> +err_unref_ddc_en:
-> +	if (hdmi->ddc_en)
-> +		gpiod_put(hdmi->ddc_en);
-> +
-> +	platform_device_put(hdmi->connector_pdev);
-> 
->  	return ret;
->  }
-> @@ -228,7 +271,13 @@ static void sun8i_dw_hdmi_unbind(struct device *dev,
-> struct device *master, sun8i_hdmi_phy_remove(hdmi);
->  	clk_disable_unprepare(hdmi->clk_tmds);
->  	reset_control_assert(hdmi->rst_ctrl);
-> +	gpiod_set_value(hdmi->ddc_en, 0);
->  	regulator_disable(hdmi->regulator);
-> +
-> +	if (hdmi->ddc_en)
-> +		gpiod_put(hdmi->ddc_en);
-> +
-> +	platform_device_put(hdmi->connector_pdev);
->  }
-> 
->  static const struct component_ops sun8i_dw_hdmi_ops = {
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index 720c5aa8adc1..dad66b8301c2
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> @@ -9,6 +9,7 @@
->  #include <drm/bridge/dw_hdmi.h>
->  #include <drm/drm_encoder.h>
->  #include <linux/clk.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/reset.h>
-> @@ -190,6 +191,8 @@ struct sun8i_dw_hdmi {
->  	struct regulator		*regulator;
->  	const struct sun8i_dw_hdmi_quirks *quirks;
->  	struct reset_control		*rst_ctrl;
-> +	struct platform_device		*connector_pdev;
+- parsing DT
+- enabling actual HW stuff
 
-It seems that connector_pdev is needed only during intialization. Why do you 
-store it?
+Because parsing is likely to fail with DEFERED_PROBE, because GPIO or whate=
+ver
+else is not yet ready, and this approach avoids enabling/disabling the HW
+needlessly.
 
-Best regards,
-Jernej
+> > +
+> >  	ret =3D reset_control_deassert(hdmi->rst_ctrl);
+> >  	if (ret) {
+> >  		dev_err(dev, "Could not deassert ctrl reset=20
+> control\n");
+> > -		goto err_disable_regulator;
+> > +		goto err_disable_ddc_en;
+> >  	}
+> >=20
+> >  	ret =3D clk_prepare_enable(hdmi->clk_tmds);
+> > @@ -213,8 +250,14 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
+> > struct device *master, clk_disable_unprepare(hdmi->clk_tmds);
+> >  err_assert_ctrl_reset:
+> >  	reset_control_assert(hdmi->rst_ctrl);
+> > -err_disable_regulator:
+> > +err_disable_ddc_en:
+> > +	gpiod_set_value(hdmi->ddc_en, 0);
+> >  	regulator_disable(hdmi->regulator);
+> > +err_unref_ddc_en:
+> > +	if (hdmi->ddc_en)
+> > +		gpiod_put(hdmi->ddc_en);
+> > +
+> > +	platform_device_put(hdmi->connector_pdev);
+> >=20
+> >  	return ret;
+> >  }
+> > @@ -228,7 +271,13 @@ static void sun8i_dw_hdmi_unbind(struct device *de=
+v,
+> > struct device *master, sun8i_hdmi_phy_remove(hdmi);
+> >  	clk_disable_unprepare(hdmi->clk_tmds);
+> >  	reset_control_assert(hdmi->rst_ctrl);
+> > +	gpiod_set_value(hdmi->ddc_en, 0);
+> >  	regulator_disable(hdmi->regulator);
+> > +
+> > +	if (hdmi->ddc_en)
+> > +		gpiod_put(hdmi->ddc_en);
+> > +
+> > +	platform_device_put(hdmi->connector_pdev);
+> >  }
+> >=20
+> >  static const struct component_ops sun8i_dw_hdmi_ops =3D {
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index 720c5aa8adc1..dad66b8301c=
+2
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > @@ -9,6 +9,7 @@
+> >  #include <drm/bridge/dw_hdmi.h>
+> >  #include <drm/drm_encoder.h>
+> >  #include <linux/clk.h>
+> > +#include <linux/gpio/consumer.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/regulator/consumer.h>
+> >  #include <linux/reset.h>
+> > @@ -190,6 +191,8 @@ struct sun8i_dw_hdmi {
+> >  	struct regulator		*regulator;
+> >  	const struct sun8i_dw_hdmi_quirks *quirks;
+> >  	struct reset_control		*rst_ctrl;
+> > +	struct platform_device		*connector_pdev;
+>=20
+> It seems that connector_pdev is needed only during intialization. Why do =
+you=20
+> store it?
 
-> +	struct gpio_desc		*ddc_en;
->  };
-> 
->  static inline struct sun8i_dw_hdmi *
+For some reason I thought that I need to keep it to keep the GPIO available=
+,
+but that's not true. I'll drop it.
+
+thank you,
+	Ondrej
+
+> Best regards,
+> Jernej
+>=20
+> > +	struct gpio_desc		*ddc_en;
+> >  };
+> >=20
+> >  static inline struct sun8i_dw_hdmi *
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190616124810.qvlij6zkcl3leu3d%40core.my.home.
+For more options, visit https://groups.google.com/d/optout.
