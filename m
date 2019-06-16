@@ -1,45 +1,97 @@
-From: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Subject: [PATCH 2/6] dt-bindings: display: msm: gmu: add
- optional ocmem property
-Date: Sun, 16 Jun 2019 09:29:26 -0400
-Message-ID: <20190616132930.6942-3-masneyb@onstation.org>
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH 1/6] dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
+Date: Sun, 16 Jun 2019 09:29:25 -0400
+Message-ID: <20190616132930.6942-2-masneyb@onstation.org>
 References: <20190616132930.6942-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20190616132930.6942-1-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190616132930.6942-1-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org
+Cc: bjorn.andersson@linaro.org, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-U29tZSBBM3h4IGFuZCBBNHh4IEFkcmVubyBHUFVzIGRvIG5vdCBoYXZlIEdNRU0gaW5zaWRlIHRo
-ZSBHUFUgY29yZSBhbmQKbXVzdCB1c2UgdGhlIE9uIENoaXAgTUVNb3J5IChPQ01FTSkgaW4gb3Jk
-ZXIgdG8gYmUgZnVuY3Rpb25hbC4gQWRkIHRoZQpvcHRpb25hbCBvY21lbSBwcm9wZXJ0eSB0byB0
-aGUgQWRyZW5vIEdyYXBoaWNzIE1hbmFnZW1lbnQgVW5pdCBiaW5kaW5ncy4KClNpZ25lZC1vZmYt
-Ynk6IEJyaWFuIE1hc25leSA8bWFzbmV5YkBvbnN0YXRpb24ub3JnPgotLS0KIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9nbXUudHh0IHwgNCArKysrCiAxIGZp
-bGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dAppbmRleCA5MGFmNWIwYTU2YTku
-LmM3NDZiOTVlOTVkNCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQKQEAgLTMxLDYgKzMxLDEwIEBAIFJlcXVpcmVkIHBy
-b3BlcnRpZXM6CiAtIGlvbW11czogcGhhbmRsZSB0byB0aGUgYWRyZW5vIGlvbW11CiAtIG9wZXJh
-dGluZy1wb2ludHMtdjI6IHBoYW5kbGUgdG8gdGhlIE9QUCBvcGVyYXRpbmcgcG9pbnRzCiAKK09w
-dGlvbmFsIHByb3BlcnRpZXM6CistIG9jbWVtOiBwaGFuZGxlIHRvIHRoZSBPbiBDaGlwIE1lbW9y
-eSAoT0NNRU0pIHRoYXQncyBwcmVzZW50IG9uIHNvbWUgU25hcGRyYWdvbgorICAgICAgICAgU29D
-cy4gU2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvcWNvbS9xY29tLG9j
-bWVtLnlhbWwuCisKIEV4YW1wbGU6CiAKIC8gewotLSAKMi4yMC4xCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZy
-ZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
+Add device tree bindings for the On Chip Memory (OCMEM) that is present
+on some Qualcomm Snapdragon SoCs.
+
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ .../bindings/soc/qcom/qcom,ocmem.yaml         | 66 +++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
+new file mode 100644
+index 000000000000..5e3ae6311a16
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
+@@ -0,0 +1,66 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/qcom/qcom,ocmem.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: On Chip Memory (OCMEM) that is present on some Qualcomm Snapdragon SoCs.
++
++maintainers:
++  - Brian Masney <masneyb@onstation.org>
++
++description: |
++  The On Chip Memory (OCMEM) allocator allows various clients to allocate memory
++  from OCMEM based on performance, latency and power requirements. This is
++  typically used by the GPU, camera/video, and audio components on some
++  Snapdragon SoCs.
++
++properties:
++  compatible:
++    const: qcom,ocmem-msm8974
++
++  reg:
++    items:
++      - description: Control registers
++      - description: OCMEM address range
++
++  reg-names:
++    items:
++      - const: ocmem_ctrl_physical
++      - const: ocmem_physical
++
++  clocks:
++    items:
++      - description: Core clock
++      - description: Interface clock
++
++  clock-names:
++    items:
++      - const: core
++      - const: iface
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++
++examples:
++  - |
++      #include <dt-bindings/clock/qcom,rpmcc.h>
++      #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
++
++      ocmem: ocmem@fdd00000 {
++        compatible = "qcom,ocmem-msm8974";
++
++        reg = <0xfdd00000 0x2000>,
++               <0xfec00000 0x180000>;
++        reg-names = "ocmem_ctrl_physical",
++                    "ocmem_physical";
++
++        clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
++                  <&mmcc OCMEMCX_OCMEMNOC_CLK>;
++        clock-names = "core",
++                      "iface";
++      };
+-- 
+2.20.1
