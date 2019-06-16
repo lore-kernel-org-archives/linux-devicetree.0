@@ -1,97 +1,113 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 1/6] dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
-Date: Sun, 16 Jun 2019 09:29:25 -0400
-Message-ID: <20190616132930.6942-2-masneyb@onstation.org>
+From: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Subject: [PATCH 3/6] firmware: qcom: scm: add support to restore
+ secure config
+Date: Sun, 16 Jun 2019 09:29:27 -0400
+Message-ID: <20190616132930.6942-4-masneyb@onstation.org>
 References: <20190616132930.6942-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190616132930.6942-1-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org
-Cc: bjorn.andersson@linaro.org, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20190616132930.6942-1-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings for the On Chip Memory (OCMEM) that is present
-on some Qualcomm Snapdragon SoCs.
-
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
- .../bindings/soc/qcom/qcom,ocmem.yaml         | 66 +++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
-new file mode 100644
-index 000000000000..5e3ae6311a16
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/qcom/qcom,ocmem.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: On Chip Memory (OCMEM) that is present on some Qualcomm Snapdragon SoCs.
-+
-+maintainers:
-+  - Brian Masney <masneyb@onstation.org>
-+
-+description: |
-+  The On Chip Memory (OCMEM) allocator allows various clients to allocate memory
-+  from OCMEM based on performance, latency and power requirements. This is
-+  typically used by the GPU, camera/video, and audio components on some
-+  Snapdragon SoCs.
-+
-+properties:
-+  compatible:
-+    const: qcom,ocmem-msm8974
-+
-+  reg:
-+    items:
-+      - description: Control registers
-+      - description: OCMEM address range
-+
-+  reg-names:
-+    items:
-+      - const: ocmem_ctrl_physical
-+      - const: ocmem_physical
-+
-+  clocks:
-+    items:
-+      - description: Core clock
-+      - description: Interface clock
-+
-+  clock-names:
-+    items:
-+      - const: core
-+      - const: iface
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+      #include <dt-bindings/clock/qcom,rpmcc.h>
-+      #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
-+
-+      ocmem: ocmem@fdd00000 {
-+        compatible = "qcom,ocmem-msm8974";
-+
-+        reg = <0xfdd00000 0x2000>,
-+               <0xfec00000 0x180000>;
-+        reg-names = "ocmem_ctrl_physical",
-+                    "ocmem_physical";
-+
-+        clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
-+                  <&mmcc OCMEMCX_OCMEMNOC_CLK>;
-+        clock-names = "core",
-+                      "iface";
-+      };
--- 
-2.20.1
+RnJvbTogUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPgoKQWRkIHN1cHBvcnQgdG8gcmVz
+dG9yZSB0aGUgc2VjdXJlIGNvbmZpZ3VyYXRpb24gdGhhdCBpcyBuZWVkZWQgYnkgdGhlCk9uIENo
+aXAgTUVNb3J5IChPQ01FTSkgdGhhdCBpcyBwcmVzZW50IG9uIHNvbWUgU25hcGRyYWdvbiBkZXZp
+Y2VzLgoKU2lnbmVkLW9mZi1ieTogUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPgpbbWFz
+bmV5YkBvbnN0YXRpb24ub3JnOiBwb3J0ZWQgdG8gbGF0ZXN0IGtlcm5lbDsgbWlub3IgcmVmb3Jt
+YXR0aW5nLl0KU2lnbmVkLW9mZi1ieTogQnJpYW4gTWFzbmV5IDxtYXNuZXliQG9uc3RhdGlvbi5v
+cmc+Ci0tLQpSb2IncyBsYXN0IHZlcnNpb24gb2YgdGhpcyBwYXRjaDoKaHR0cHM6Ly9wYXRjaHdv
+cmsua2VybmVsLm9yZy9wYXRjaC83MzQwNzAxLwoKIGRyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20t
+MzIuYyB8IDIxICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9maXJtd2FyZS9xY29tX3Nj
+bS02NC5jIHwgIDYgKysrKysrCiBkcml2ZXJzL2Zpcm13YXJlL3Fjb21fc2NtLmMgICAgfCAyMyAr
+KysrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS5oICAgIHwg
+IDYgKysrKysrCiBpbmNsdWRlL2xpbnV4L3Fjb21fc2NtLmggICAgICAgfCAxMyArKysrKysrKysr
+KysrCiA1IGZpbGVzIGNoYW5nZWQsIDY5IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2Zpcm13YXJlL3Fjb21fc2NtLTMyLmMgYi9kcml2ZXJzL2Zpcm13YXJlL3Fjb21fc2NtLTMy
+LmMKaW5kZXggMjE1MDYxYzU4MWUxLi4wODliNDcxMjQ5MzMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
+ZmlybXdhcmUvcWNvbV9zY20tMzIuYworKysgYi9kcml2ZXJzL2Zpcm13YXJlL3Fjb21fc2NtLTMy
+LmMKQEAgLTQ0Miw2ICs0NDIsMjcgQEAgaW50IF9fcWNvbV9zY21faGRjcF9yZXEoc3RydWN0IGRl
+dmljZSAqZGV2LCBzdHJ1Y3QgcWNvbV9zY21faGRjcF9yZXEgKnJlcSwKIAkJcmVxLCByZXFfY250
+ICogc2l6ZW9mKCpyZXEpLCByZXNwLCBzaXplb2YoKnJlc3ApKTsKIH0KIAoraW50IF9fcWNvbV9z
+Y21fcmVzdG9yZV9zZWNfY29uZmlnKHN0cnVjdCBkZXZpY2UgKmRldiwgdTMyIHNlY19pZCwKKwkJ
+CQkgIHUzMiBjdHhfYmFua19udW0pCit7CisJc3RydWN0IG1zbV9zY21fc2VjX2NmZyB7CisJCV9f
+bGUzMiBpZDsKKwkJX19sZTMyIGN0eF9iYW5rX251bTsKKwl9IGNmZzsKKwlpbnQgcmV0LCBzY21f
+cmV0ID0gMDsKKworCWNmZy5pZCA9IGNwdV90b19sZTMyKHNlY19pZCk7CisJY2ZnLmN0eF9iYW5r
+X251bSA9IGNwdV90b19sZTMyKHNlY19pZCk7CisKKwlyZXQgPSBxY29tX3NjbV9jYWxsKGRldiwg
+UUNPTV9TQ01fTVBfU1ZDLCBRQ09NX1NDTV9NUF9SRVNUT1JFX1NFQ19DRkcsCisJCQkgICAgJmNm
+Zywgc2l6ZW9mKGNmZyksICZzY21fcmV0LCBzaXplb2Yoc2NtX3JldCkpOworCisJaWYgKHJldCB8
+fCBzY21fcmV0KQorCQlyZXR1cm4gcmV0ID8gcmV0IDogLUVJTlZBTDsKKworCXJldHVybiAwOwor
+fQorCiB2b2lkIF9fcWNvbV9zY21faW5pdCh2b2lkKQogewogfQpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9maXJtd2FyZS9xY29tX3NjbS02NC5jIGIvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS02NC5j
+CmluZGV4IDkxZDVhZDdjZjU4Yi4uYjZiNzhkYTdmOWM5IDEwMDY0NAotLS0gYS9kcml2ZXJzL2Zp
+cm13YXJlL3Fjb21fc2NtLTY0LmMKKysrIGIvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS02NC5j
+CkBAIC0yNDEsNiArMjQxLDEyIEBAIGludCBfX3Fjb21fc2NtX2hkY3BfcmVxKHN0cnVjdCBkZXZp
+Y2UgKmRldiwgc3RydWN0IHFjb21fc2NtX2hkY3BfcmVxICpyZXEsCiAJcmV0dXJuIHJldDsKIH0K
+IAoraW50IF9fcWNvbV9zY21fcmVzdG9yZV9zZWNfY29uZmlnKHN0cnVjdCBkZXZpY2UgKmRldiwg
+dTMyIHNlY19pZCwKKwkJCQkgIHUzMiBjdHhfYmFua19udW0pCit7CisJcmV0dXJuIC1FTk9UU1VQ
+UDsKK30KKwogdm9pZCBfX3Fjb21fc2NtX2luaXQodm9pZCkKIHsKIAl1NjQgY21kOwpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS5jIGIvZHJpdmVycy9maXJtd2FyZS9xY29t
+X3NjbS5jCmluZGV4IDJkZGMxMThkYmExYi4uNTQ5NWVmOTk0YzVkIDEwMDY0NAotLS0gYS9kcml2
+ZXJzL2Zpcm13YXJlL3Fjb21fc2NtLmMKKysrIGIvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS5j
+CkBAIC0xNzAsNiArMTcwLDI5IEBAIGludCBxY29tX3NjbV9oZGNwX3JlcShzdHJ1Y3QgcWNvbV9z
+Y21faGRjcF9yZXEgKnJlcSwgdTMyIHJlcV9jbnQsIHUzMiAqcmVzcCkKIH0KIEVYUE9SVF9TWU1C
+T0wocWNvbV9zY21faGRjcF9yZXEpOwogCisvKioKKyAqIHFjb21fc2NtX3Jlc3RvcmVfc2VjX2Nv
+bmZpZ19hdmFpbGFibGUoKSAtIENoZWNrIGlmIHNlY3VyZSBlbnZpcm9ubWVudAorICogc3VwcG9y
+dHMgcmVzdG9yZSBzZWN1cml0eSBjb25maWcgaW50ZXJmYWNlLgorICoKKyAqIFJldHVybiB0cnVl
+IGlmIHJlc3RvcmUtY2ZnIGludGVyZmFjZSBpcyBzdXBwb3J0ZWQsIGZhbHNlIGlmIG5vdC4KKyAq
+LworYm9vbCBxY29tX3NjbV9yZXN0b3JlX3NlY19jb25maWdfYXZhaWxhYmxlKHZvaWQpCit7CisJ
+cmV0dXJuIF9fcWNvbV9zY21faXNfY2FsbF9hdmFpbGFibGUoX19zY20tPmRldiwgUUNPTV9TQ01f
+TVBfU1ZDLAorCQkJCQkgICAgUUNPTV9TQ01fTVBfUkVTVE9SRV9TRUNfQ0ZHKTsKK30KK0VYUE9S
+VF9TWU1CT0wocWNvbV9zY21fcmVzdG9yZV9zZWNfY29uZmlnX2F2YWlsYWJsZSk7CisKKy8qKgor
+ICogcWNvbV9zY21fcmVzdG9yZV9zZWNfY29uZmlnKCkgLSBjYWxsIHJlc3RvcmUtY2ZnIGludGVy
+ZmFjZQorICovCitpbnQgcWNvbV9zY21fcmVzdG9yZV9zZWNfY29uZmlnKHN0cnVjdCBkZXZpY2Ug
+KmRldiwKKwkJCQllbnVtIHFjb21fc2NtX3NlY19kZXZfaWQgc2VjX2lkKQoreworCXJldHVybiBf
+X3Fjb21fc2NtX3Jlc3RvcmVfc2VjX2NvbmZpZyhkZXYsIHNlY19pZCwgMCk7Cit9CitFWFBPUlRf
+U1lNQk9MKHFjb21fc2NtX3Jlc3RvcmVfc2VjX2NvbmZpZyk7CisKIC8qKgogICogcWNvbV9zY21f
+cGFzX3N1cHBvcnRlZCgpIC0gQ2hlY2sgaWYgdGhlIHBlcmlwaGVyYWwgYXV0aGVudGljYXRpb24g
+c2VydmljZSBpcwogICoJCQkgICAgICBhdmFpbGFibGUgZm9yIHRoZSBnaXZlbiBwZXJpcGhlcmlh
+bApkaWZmIC0tZ2l0IGEvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS5oIGIvZHJpdmVycy9maXJt
+d2FyZS9xY29tX3NjbS5oCmluZGV4IDk5NTA2YmQ4NzNjMC4uYmNjYzdkMTBjNWMyIDEwMDY0NAot
+LS0gYS9kcml2ZXJzL2Zpcm13YXJlL3Fjb21fc2NtLmgKKysrIGIvZHJpdmVycy9maXJtd2FyZS9x
+Y29tX3NjbS5oCkBAIC00Miw2ICs0MiwxMiBAQCBleHRlcm4gaW50IF9fcWNvbV9zY21faGRjcF9y
+ZXEoc3RydWN0IGRldmljZSAqZGV2LAogCiBleHRlcm4gdm9pZCBfX3Fjb21fc2NtX2luaXQodm9p
+ZCk7CiAKKyNkZWZpbmUgUUNPTV9TQ01fTVBfU1ZDCQkJMHhjCisjZGVmaW5lIFFDT01fU0NNX01Q
+X1JFU1RPUkVfU0VDX0NGRwkweDIKKworZXh0ZXJuIGludCBfX3Fjb21fc2NtX3Jlc3RvcmVfc2Vj
+X2NvbmZpZyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHUzMiBzZWNfaWQsCisJCQkJCSB1MzIgY3R4X2Jh
+bmtfbnVtKTsKKwogI2RlZmluZSBRQ09NX1NDTV9TVkNfUElMCQkweDIKICNkZWZpbmUgUUNPTV9T
+Q01fUEFTX0lOSVRfSU1BR0VfQ01ECTB4MQogI2RlZmluZSBRQ09NX1NDTV9QQVNfTUVNX1NFVFVQ
+X0NNRAkweDIKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvcWNvbV9zY20uaCBiL2luY2x1ZGUv
+bGludXgvcWNvbV9zY20uaAppbmRleCAzZjEyY2M3N2ZiNTguLmI1YzBhZmFjYTk1NSAxMDA2NDQK
+LS0tIGEvaW5jbHVkZS9saW51eC9xY29tX3NjbS5oCisrKyBiL2luY2x1ZGUvbGludXgvcWNvbV9z
+Y20uaApAQCAtMjQsNiArMjQsMTYgQEAgc3RydWN0IHFjb21fc2NtX3ZtcGVybSB7CiAJaW50IHBl
+cm07CiB9OwogCitlbnVtIHFjb21fc2NtX3NlY19kZXZfaWQgeworCVFDT01fU0NNX01EU1NfREVW
+X0lECT0gMSwKKwlRQ09NX1NDTV9PQ01FTV9ERVZfSUQJPSA1LAorCVFDT01fU0NNX1BDSUUwX0RF
+Vl9JRAk9IDExLAorCVFDT01fU0NNX1BDSUUxX0RFVl9JRAk9IDEyLAorCVFDT01fU0NNX0dGWF9E
+RVZfSUQJPSAxOCwKKwlRQ09NX1NDTV9VRlNfREVWX0lECT0gMTksCisJUUNPTV9TQ01fSUNFX0RF
+Vl9JRAk9IDIwLAorfTsKKwogI2RlZmluZSBRQ09NX1NDTV9WTUlEX0hMT1MgICAgICAgMHgzCiAj
+ZGVmaW5lIFFDT01fU0NNX1ZNSURfTVNTX01TQSAgICAweEYKICNkZWZpbmUgUUNPTV9TQ01fVk1J
+RF9XTEFOICAgICAgIDB4MTgKQEAgLTQxLDYgKzUxLDkgQEAgZXh0ZXJuIGJvb2wgcWNvbV9zY21f
+aXNfYXZhaWxhYmxlKHZvaWQpOwogZXh0ZXJuIGJvb2wgcWNvbV9zY21faGRjcF9hdmFpbGFibGUo
+dm9pZCk7CiBleHRlcm4gaW50IHFjb21fc2NtX2hkY3BfcmVxKHN0cnVjdCBxY29tX3NjbV9oZGNw
+X3JlcSAqcmVxLCB1MzIgcmVxX2NudCwKIAkJCSAgICAgdTMyICpyZXNwKTsKK2V4dGVybiBib29s
+IHFjb21fc2NtX3Jlc3RvcmVfc2VjX2NvbmZpZ19hdmFpbGFibGUodm9pZCk7CitleHRlcm4gaW50
+IHFjb21fc2NtX3Jlc3RvcmVfc2VjX2NvbmZpZyhzdHJ1Y3QgZGV2aWNlICpkZXYsCisJCQkJICAg
+ICAgIGVudW0gcWNvbV9zY21fc2VjX2Rldl9pZCBzZWNfaWQpOwogZXh0ZXJuIGJvb2wgcWNvbV9z
+Y21fcGFzX3N1cHBvcnRlZCh1MzIgcGVyaXBoZXJhbCk7CiBleHRlcm4gaW50IHFjb21fc2NtX3Bh
+c19pbml0X2ltYWdlKHUzMiBwZXJpcGhlcmFsLCBjb25zdCB2b2lkICptZXRhZGF0YSwKIAkJCQkg
+ICBzaXplX3Qgc2l6ZSk7Ci0tIAoyLjIwLjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2ZyZWVkcmVubw==
