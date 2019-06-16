@@ -1,222 +1,124 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones
- conflict in rk3399.dtsi
-Date: Sun, 16 Jun 2019 19:47:38 +0200
-Message-ID: <55da0654-ce67-b843-5ca4-37f63577b102@linaro.org>
-References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
- <5188064.YWmxIpmbGp@phil> <55b9018e-672e-522b-d0a0-c5655be0f353@linaro.org>
- <e5a4f850-27e0-cad3-04bd-6c004fca2b81@arm.com>
- <9bf85c22-f1ba-3dbc-0b67-17e124484fa1@linaro.org>
- <20190616093127.GC3826@kozik-lap>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/6] firmware: qcom: scm: add support to
+ restore secure config
+Date: Sun, 16 Jun 2019 10:53:32 -0700
+Message-ID: <20190616175332.GQ22737@tuxbook-pro>
+References: <20190616132930.6942-1-masneyb@onstation.org>
+ <20190616132930.6942-4-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190616093127.GC3826@kozik-lap>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, edubezval@gmail.com, manivannan.sadhasivam@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Emil Renner Berthing <kernel@esmil.dk>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190616132930.6942-4-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 16/06/2019 11:31, Krzysztof Kozlowski wrote:
-> On Fri, Jun 14, 2019 at 04:30:13PM +0200, Daniel Lezcano wrote:
->> On 14/06/2019 16:02, Robin Murphy wrote:
->>> On 14/06/2019 14:03, Daniel Lezcano wrote:
->>>> On 14/06/2019 11:35, Heiko Stuebner wrote:
->>>>> Hi Daniel,
->>>>>
->>>>> Am Dienstag, 4. Juni 2019, 18:57:57 CEST schrieb Daniel Lezcano:
->>>>>> Currently the common thermal zones definitions for the rk3399 assumes
->>>>>> multiple thermal zones are supported by the governors. This is not the
->>>>>> case and each thermal zone has its own governor instance acting
->>>>>> individually without collaboration with other governors.
->>>>>>
->>>>>> As the cooling device for the CPU and the GPU thermal zones is the
->>>>>> same, each governors take different decisions for the same cooling
->>>>>> device leading to conflicting instructions and an erratic behavior.
->>>>>>
->>>>>> As the cooling-maps is about to become an optional property, let's
->>>>>> remove the cpu cooling device map from the GPU thermal zone.
->>>>>>
->>>>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>>>>> ---
->>>>>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 ---------
->>>>>>   1 file changed, 9 deletions(-)
->>>>>>
->>>>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>>>>> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>>>>> index 196ac9b78076..e1357e0f60f7 100644
->>>>>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>>>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>>>>> @@ -821,15 +821,6 @@
->>>>>>                       type = "critical";
->>>>>>                   };
->>>>>>               };
->>>>>> -
->>>>>> -            cooling-maps {
->>>>>> -                map0 {
->>>>>> -                    trip = <&gpu_alert0>;
->>>>>> -                    cooling-device =
->>>>>> -                        <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->>>>>> -                        <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->>>>>> -                };
->>>>>> -            };
->>>>>>           };
->>>>>>       };
->>>>>
->>>>> my knowledge of the thermal framework is not that big, but what about
->>>>> the
->>>>> rk3399-devices which further detail the cooling-maps like
->>>>> rk3399-gru-kevin
->>>>> and the rk3399-nanopc-t4 with its fan-handling in the cooling-maps?
->>>>
->>>> The rk3399-gru-kevin is correct.
->>>>
->>>> The rk3399-nanopc-t4 is not correct because the cpu and the gpu are
->>>> sharing the same cooling device (the fan). There are different
->>>> configurations:
->>>>
->>>> 1. The cpu cooling device for the CPU and the fan for the GPU
->>>>
->>>> 2. Different trip points on the CPU thermal zone, eg. one to for the CPU
->>>> cooling device and another one for the fan.
->>>>
->>>> There are some variant for the above. If this board is not on battery,
->>>> you may want to give priority to the throughput, so activate the fan
->>>> first and then cool down the CPU. Or if you are on battery, you may want
->>>> to invert the trip points.
->>>>
->>>> In any case, it is not possible to share the same cooling device for
->>>> different thermal zones.
->>>
->>> OK, thanks for the clarification. I'll get my board set up again to
->>> figure out the best fix for rk3399-nanopc-t4 (FWIW most users are
->>> probably just using passive cooling or a plain DC fan anyway). You might
->>> want to raise this issue with the maintainers of
->>> arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi, since the
->>> everything-shared-by-everything approach in there was what I used as a
->>> reference.
->>
->> Cc'ed: Kukjin Kim and Krzysztof Kozlowski
->>
->> Easy :)
->>
-> 
-> Assuming that all trip-points are the same between thermal zones, I
-> understand that solution could be to have one thermal zone with thermal
-> multiple sensors (some time ago bindings did not support it) and all
-> cooling devices? Then only one governor would be assigned?
-
-The multiple sensors, multiple thermal zones and governors dealing with
-different group of them is not implemented [yet]. Basically, you can
-consider there is a 1:1 relationship between each of them.
-
- one thermal zone = one sensor = one cooling device
-
-Given the configuration and the hardware, it would make sense to create
-one thermal zone per cluster.
-
-There is one clock line per cluster. It is possible to create two CPU
-cooling devices, one for each cluster.
-
-IMO, the fan definition is correct except it should be assigned to one
-thermal zone only.
-
-One configuration could be:
-
-thermal-zones {
-	little-thermal-zone: little-thermal-zone {
-		thermal-sensors = <&tmu_cpu0 0>;
-                polling-delay-passive = <250>;
-                polling-delay = <0>;
-
-		trips {
-			ltz_alert0: ltz-alert-0 {
-				temperature = <50000>;
-				hysteresis = <5000>;
-                        	type = "active";
-			};
-
-			ltz_alert1: cpu-alert-1 {
-				temperature = <60000>;
-				hysteresis = <5000>;
-				type = "active";
-			};
-
-			ltz_alert2: ltz-alert-2 {
-				temperature = <70000>;
-				hysteresis = <5000>;
-				type = "active";
-			};
-
-			ltz_alert3: ltz-alert-3 {
-				temperature = <75000>;
-				hysteresis = <10000>;
-				type = "passive";
-			};
-
-			ltz_crit0: ltz-crit-0 {
-				temperature = <120000>;
-				hysteresis = <0>;
-				type = "critical";
-			};
-		};
-
-		cooling-maps {
-			map0 {
-				trip = <&ltz_alert0>;
-				cooling-device = <&fan0 0 1>;
-			};
-
-			map1 {
-				trip = <&ltz_alert1>;
-				cooling-device = <&fan0 1 2>;
-			};
-
-			map2 {
-				trip = <&ltz_alert2>;
-				cooling-device = <&fan0 2 3>;
-			};
-
-			map3 {
-				trip = <&ltz_alert3>;
-				cooling-device = <&cpu0
-						THERMAL_NO_LIMIT
-						THERMAL_NO_LIMIT>,
-
-						 <&cpu1
-						THERMAL_NO_LIMIT
-						THERMAL_NO_LIMIT>,
-
-						 <&cpu2
-						THERMAL_NO_LIMIT
-						THERMAL_NO_LIMIT>,
-
-						 <&cpu3
-						THERMAL_NO_LIMIT
-						THERMAL_NO_LIMIT>,
-			};
-		};
-	};
-
-	big-thermal-zone: big-thermal-zone {
-
-		/* The same as little, except the sensor and the cpu
-		  cooling &cpu4, &cpu5, &cpu6, &cpu7 */
-
-	};
-};
-
-
-That said, the idle injection cooling device is for the moment being
-developed and that would be a good opportunity to test a real per cpu
-cooling device as the exynos5422 has a per core sensor.
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+T24gU3VuIDE2IEp1biAwNjoyOSBQRFQgMjAxOSwgQnJpYW4gTWFzbmV5IHdyb3RlOgoKPiBGcm9t
+OiBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+Cj4gCj4gQWRkIHN1cHBvcnQgdG8gcmVz
+dG9yZSB0aGUgc2VjdXJlIGNvbmZpZ3VyYXRpb24gdGhhdCBpcyBuZWVkZWQgYnkgdGhlCj4gT24g
+Q2hpcCBNRU1vcnkgKE9DTUVNKSB0aGF0IGlzIHByZXNlbnQgb24gc29tZSBTbmFwZHJhZ29uIGRl
+dmljZXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29t
+Pgo+IFttYXNuZXliQG9uc3RhdGlvbi5vcmc6IHBvcnRlZCB0byBsYXRlc3Qga2VybmVsOyBtaW5v
+ciByZWZvcm1hdHRpbmcuXQo+IFNpZ25lZC1vZmYtYnk6IEJyaWFuIE1hc25leSA8bWFzbmV5YkBv
+bnN0YXRpb24ub3JnPgoKVGhpcyB3ZW50IHVwc3RyZWFtIGZvciA2NC1iaXQgd2l0aCBjb25maWcg
+YWJicmV2aWF0ZWQgY2ZnLCBzbyBwbGVhc2UKaW1wbGVtZW50IF9fcWNvbV9zY21fcmVzdG9yZV9z
+ZWNfY2ZnKCkgZm9yIDMyLWJpdCBhbmQgYWRkIHRoZSBkZWZpbmVzCmluc3RlYWQuCgpSZWdhcmRz
+LApCam9ybgoKPiAtLS0KPiBSb2IncyBsYXN0IHZlcnNpb24gb2YgdGhpcyBwYXRjaDoKPiBodHRw
+czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzczNDA3MDEvCj4gCj4gIGRyaXZlcnMvZmly
+bXdhcmUvcWNvbV9zY20tMzIuYyB8IDIxICsrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJz
+L2Zpcm13YXJlL3Fjb21fc2NtLTY0LmMgfCAgNiArKysrKysKPiAgZHJpdmVycy9maXJtd2FyZS9x
+Y29tX3NjbS5jICAgIHwgMjMgKysrKysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9maXJt
+d2FyZS9xY29tX3NjbS5oICAgIHwgIDYgKysrKysrCj4gIGluY2x1ZGUvbGludXgvcWNvbV9zY20u
+aCAgICAgICB8IDEzICsrKysrKysrKysrKysKPiAgNSBmaWxlcyBjaGFuZ2VkLCA2OSBpbnNlcnRp
+b25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20tMzIuYyBi
+L2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20tMzIuYwo+IGluZGV4IDIxNTA2MWM1ODFlMS4uMDg5
+YjQ3MTI0OTMzIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20tMzIuYwo+
+ICsrKyBiL2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20tMzIuYwo+IEBAIC00NDIsNiArNDQyLDI3
+IEBAIGludCBfX3Fjb21fc2NtX2hkY3BfcmVxKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IHFj
+b21fc2NtX2hkY3BfcmVxICpyZXEsCj4gIAkJcmVxLCByZXFfY250ICogc2l6ZW9mKCpyZXEpLCBy
+ZXNwLCBzaXplb2YoKnJlc3ApKTsKPiAgfQo+ICAKPiAraW50IF9fcWNvbV9zY21fcmVzdG9yZV9z
+ZWNfY29uZmlnKHN0cnVjdCBkZXZpY2UgKmRldiwgdTMyIHNlY19pZCwKPiArCQkJCSAgdTMyIGN0
+eF9iYW5rX251bSkKPiArewo+ICsJc3RydWN0IG1zbV9zY21fc2VjX2NmZyB7Cj4gKwkJX19sZTMy
+IGlkOwo+ICsJCV9fbGUzMiBjdHhfYmFua19udW07Cj4gKwl9IGNmZzsKPiArCWludCByZXQsIHNj
+bV9yZXQgPSAwOwo+ICsKPiArCWNmZy5pZCA9IGNwdV90b19sZTMyKHNlY19pZCk7Cj4gKwljZmcu
+Y3R4X2JhbmtfbnVtID0gY3B1X3RvX2xlMzIoc2VjX2lkKTsKPiArCj4gKwlyZXQgPSBxY29tX3Nj
+bV9jYWxsKGRldiwgUUNPTV9TQ01fTVBfU1ZDLCBRQ09NX1NDTV9NUF9SRVNUT1JFX1NFQ19DRkcs
+Cj4gKwkJCSAgICAmY2ZnLCBzaXplb2YoY2ZnKSwgJnNjbV9yZXQsIHNpemVvZihzY21fcmV0KSk7
+Cj4gKwo+ICsJaWYgKHJldCB8fCBzY21fcmV0KQo+ICsJCXJldHVybiByZXQgPyByZXQgOiAtRUlO
+VkFMOwo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICB2b2lkIF9fcWNvbV9zY21faW5pdCh2
+b2lkKQo+ICB7Cj4gIH0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS02
+NC5jIGIvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS02NC5jCj4gaW5kZXggOTFkNWFkN2NmNThi
+Li5iNmI3OGRhN2Y5YzkgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS02
+NC5jCj4gKysrIGIvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS02NC5jCj4gQEAgLTI0MSw2ICsy
+NDEsMTIgQEAgaW50IF9fcWNvbV9zY21faGRjcF9yZXEoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1
+Y3QgcWNvbV9zY21faGRjcF9yZXEgKnJlcSwKPiAgCXJldHVybiByZXQ7Cj4gIH0KPiAgCj4gK2lu
+dCBfX3Fjb21fc2NtX3Jlc3RvcmVfc2VjX2NvbmZpZyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHUzMiBz
+ZWNfaWQsCj4gKwkJCQkgIHUzMiBjdHhfYmFua19udW0pCj4gK3sKPiArCXJldHVybiAtRU5PVFNV
+UFA7Cj4gK30KPiArCj4gIHZvaWQgX19xY29tX3NjbV9pbml0KHZvaWQpCj4gIHsKPiAgCXU2NCBj
+bWQ7Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20uYyBiL2RyaXZlcnMv
+ZmlybXdhcmUvcWNvbV9zY20uYwo+IGluZGV4IDJkZGMxMThkYmExYi4uNTQ5NWVmOTk0YzVkIDEw
+MDY0NAo+IC0tLSBhL2RyaXZlcnMvZmlybXdhcmUvcWNvbV9zY20uYwo+ICsrKyBiL2RyaXZlcnMv
+ZmlybXdhcmUvcWNvbV9zY20uYwo+IEBAIC0xNzAsNiArMTcwLDI5IEBAIGludCBxY29tX3NjbV9o
+ZGNwX3JlcShzdHJ1Y3QgcWNvbV9zY21faGRjcF9yZXEgKnJlcSwgdTMyIHJlcV9jbnQsIHUzMiAq
+cmVzcCkKPiAgfQo+ICBFWFBPUlRfU1lNQk9MKHFjb21fc2NtX2hkY3BfcmVxKTsKPiAgCj4gKy8q
+Kgo+ICsgKiBxY29tX3NjbV9yZXN0b3JlX3NlY19jb25maWdfYXZhaWxhYmxlKCkgLSBDaGVjayBp
+ZiBzZWN1cmUgZW52aXJvbm1lbnQKPiArICogc3VwcG9ydHMgcmVzdG9yZSBzZWN1cml0eSBjb25m
+aWcgaW50ZXJmYWNlLgo+ICsgKgo+ICsgKiBSZXR1cm4gdHJ1ZSBpZiByZXN0b3JlLWNmZyBpbnRl
+cmZhY2UgaXMgc3VwcG9ydGVkLCBmYWxzZSBpZiBub3QuCj4gKyAqLwo+ICtib29sIHFjb21fc2Nt
+X3Jlc3RvcmVfc2VjX2NvbmZpZ19hdmFpbGFibGUodm9pZCkKPiArewo+ICsJcmV0dXJuIF9fcWNv
+bV9zY21faXNfY2FsbF9hdmFpbGFibGUoX19zY20tPmRldiwgUUNPTV9TQ01fTVBfU1ZDLAo+ICsJ
+CQkJCSAgICBRQ09NX1NDTV9NUF9SRVNUT1JFX1NFQ19DRkcpOwo+ICt9Cj4gK0VYUE9SVF9TWU1C
+T0wocWNvbV9zY21fcmVzdG9yZV9zZWNfY29uZmlnX2F2YWlsYWJsZSk7Cj4gKwo+ICsvKioKPiAr
+ICogcWNvbV9zY21fcmVzdG9yZV9zZWNfY29uZmlnKCkgLSBjYWxsIHJlc3RvcmUtY2ZnIGludGVy
+ZmFjZQo+ICsgKi8KPiAraW50IHFjb21fc2NtX3Jlc3RvcmVfc2VjX2NvbmZpZyhzdHJ1Y3QgZGV2
+aWNlICpkZXYsCj4gKwkJCQllbnVtIHFjb21fc2NtX3NlY19kZXZfaWQgc2VjX2lkKQo+ICt7Cj4g
+KwlyZXR1cm4gX19xY29tX3NjbV9yZXN0b3JlX3NlY19jb25maWcoZGV2LCBzZWNfaWQsIDApOwo+
+ICt9Cj4gK0VYUE9SVF9TWU1CT0wocWNvbV9zY21fcmVzdG9yZV9zZWNfY29uZmlnKTsKPiArCj4g
+IC8qKgo+ICAgKiBxY29tX3NjbV9wYXNfc3VwcG9ydGVkKCkgLSBDaGVjayBpZiB0aGUgcGVyaXBo
+ZXJhbCBhdXRoZW50aWNhdGlvbiBzZXJ2aWNlIGlzCj4gICAqCQkJICAgICAgYXZhaWxhYmxlIGZv
+ciB0aGUgZ2l2ZW4gcGVyaXBoZXJpYWwKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9maXJtd2FyZS9x
+Y29tX3NjbS5oIGIvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS5oCj4gaW5kZXggOTk1MDZiZDg3
+M2MwLi5iY2NjN2QxMGM1YzIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9maXJtd2FyZS9xY29tX3Nj
+bS5oCj4gKysrIGIvZHJpdmVycy9maXJtd2FyZS9xY29tX3NjbS5oCj4gQEAgLTQyLDYgKzQyLDEy
+IEBAIGV4dGVybiBpbnQgX19xY29tX3NjbV9oZGNwX3JlcShzdHJ1Y3QgZGV2aWNlICpkZXYsCj4g
+IAo+ICBleHRlcm4gdm9pZCBfX3Fjb21fc2NtX2luaXQodm9pZCk7Cj4gIAo+ICsjZGVmaW5lIFFD
+T01fU0NNX01QX1NWQwkJCTB4Ywo+ICsjZGVmaW5lIFFDT01fU0NNX01QX1JFU1RPUkVfU0VDX0NG
+RwkweDIKPiArCj4gK2V4dGVybiBpbnQgX19xY29tX3NjbV9yZXN0b3JlX3NlY19jb25maWcoc3Ry
+dWN0IGRldmljZSAqZGV2LCB1MzIgc2VjX2lkLAo+ICsJCQkJCSB1MzIgY3R4X2JhbmtfbnVtKTsK
+PiArCj4gICNkZWZpbmUgUUNPTV9TQ01fU1ZDX1BJTAkJMHgyCj4gICNkZWZpbmUgUUNPTV9TQ01f
+UEFTX0lOSVRfSU1BR0VfQ01ECTB4MQo+ICAjZGVmaW5lIFFDT01fU0NNX1BBU19NRU1fU0VUVVBf
+Q01ECTB4Mgo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3Fjb21fc2NtLmggYi9pbmNsdWRl
+L2xpbnV4L3Fjb21fc2NtLmgKPiBpbmRleCAzZjEyY2M3N2ZiNTguLmI1YzBhZmFjYTk1NSAxMDA2
+NDQKPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3Fjb21fc2NtLmgKPiArKysgYi9pbmNsdWRlL2xpbnV4
+L3Fjb21fc2NtLmgKPiBAQCAtMjQsNiArMjQsMTYgQEAgc3RydWN0IHFjb21fc2NtX3ZtcGVybSB7
+Cj4gIAlpbnQgcGVybTsKPiAgfTsKPiAgCj4gK2VudW0gcWNvbV9zY21fc2VjX2Rldl9pZCB7Cj4g
+KwlRQ09NX1NDTV9NRFNTX0RFVl9JRAk9IDEsCj4gKwlRQ09NX1NDTV9PQ01FTV9ERVZfSUQJPSA1
+LAo+ICsJUUNPTV9TQ01fUENJRTBfREVWX0lECT0gMTEsCj4gKwlRQ09NX1NDTV9QQ0lFMV9ERVZf
+SUQJPSAxMiwKPiArCVFDT01fU0NNX0dGWF9ERVZfSUQJPSAxOCwKPiArCVFDT01fU0NNX1VGU19E
+RVZfSUQJPSAxOSwKPiArCVFDT01fU0NNX0lDRV9ERVZfSUQJPSAyMCwKPiArfTsKPiArCj4gICNk
+ZWZpbmUgUUNPTV9TQ01fVk1JRF9ITE9TICAgICAgIDB4Mwo+ICAjZGVmaW5lIFFDT01fU0NNX1ZN
+SURfTVNTX01TQSAgICAweEYKPiAgI2RlZmluZSBRQ09NX1NDTV9WTUlEX1dMQU4gICAgICAgMHgx
+OAo+IEBAIC00MSw2ICs1MSw5IEBAIGV4dGVybiBib29sIHFjb21fc2NtX2lzX2F2YWlsYWJsZSh2
+b2lkKTsKPiAgZXh0ZXJuIGJvb2wgcWNvbV9zY21faGRjcF9hdmFpbGFibGUodm9pZCk7Cj4gIGV4
+dGVybiBpbnQgcWNvbV9zY21faGRjcF9yZXEoc3RydWN0IHFjb21fc2NtX2hkY3BfcmVxICpyZXEs
+IHUzMiByZXFfY250LAo+ICAJCQkgICAgIHUzMiAqcmVzcCk7Cj4gK2V4dGVybiBib29sIHFjb21f
+c2NtX3Jlc3RvcmVfc2VjX2NvbmZpZ19hdmFpbGFibGUodm9pZCk7Cj4gK2V4dGVybiBpbnQgcWNv
+bV9zY21fcmVzdG9yZV9zZWNfY29uZmlnKHN0cnVjdCBkZXZpY2UgKmRldiwKPiArCQkJCSAgICAg
+ICBlbnVtIHFjb21fc2NtX3NlY19kZXZfaWQgc2VjX2lkKTsKPiAgZXh0ZXJuIGJvb2wgcWNvbV9z
+Y21fcGFzX3N1cHBvcnRlZCh1MzIgcGVyaXBoZXJhbCk7Cj4gIGV4dGVybiBpbnQgcWNvbV9zY21f
+cGFzX2luaXRfaW1hZ2UodTMyIHBlcmlwaGVyYWwsIGNvbnN0IHZvaWQgKm1ldGFkYXRhLAo+ICAJ
+CQkJICAgc2l6ZV90IHNpemUpOwo+IC0tIAo+IDIuMjAuMQo+IApfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVk
+cmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
