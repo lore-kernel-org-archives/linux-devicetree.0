@@ -1,31 +1,37 @@
-From: Andreas Schwab <schwab@suse.de>
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-Date: Mon, 17 Jun 2019 12:01:42 +0200
-Message-ID: <mvmpnnc5y49.fsf@suse.de>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
-        <mvmtvco62k9.fsf@suse.de>
-        <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 2/4] dt-bindings: clock: mvebu: Add compatible string for 98dx1135 core clock
+Date: Mon, 17 Jun 2019 22:04:30 +1200
+Message-ID: <20190617100432.13037-3-chris.packham@alliedtelesis.co.nz>
+References: <20190617100432.13037-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com> (Paul
-        Walmsley's message of "Mon, 17 Jun 2019 02:58:20 -0700 (PDT)")
+In-Reply-To: <20190617100432.13037-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Yash Shah <yash.shah@sifive.com>, davem@davemloft.net, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, sachin.ghadi@sifive.com
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On Jun 17 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+Add compatible string for the core clock on the 98dx1135 switch with
+integrated CPU.
 
-> Looks to me that it shouldn't have an impact unless the DT string is 
-> present, and even then, the impact might simply be that the MACB driver 
-> may not work?
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ Documentation/devicetree/bindings/clock/mvebu-core-clock.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-If the macb driver doesn't work you have an unusable system, of course.
-
-Andreas.
-
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt=
+ b/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
+index 796c260c183d..76f0952cfc64 100644
+--- a/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
++++ b/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
+@@ -59,6 +59,7 @@ Required properties:
+ 	"marvell,dove-core-clock" - for Dove SoC core clocks
+ 	"marvell,kirkwood-core-clock" - for Kirkwood SoC (except mv88f6180)
+ 	"marvell,mv88f6180-core-clock" - for Kirkwood MV88f6180 SoC
++	"marvell,mv98dx1135-core-clock" - for 98dx1135 SoC core clocks
+ 	"marvell,mv88f5181-core-clock" - for Orion MV88F5181 SoC
+ 	"marvell,mv88f5182-core-clock" - for Orion MV88F5182 SoC
+ 	"marvell,mv88f5281-core-clock" - for Orion MV88F5281 SoC
+--=20
+2.21.0
