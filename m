@@ -1,73 +1,128 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/6] dt-bindings: can: rcar_canfd: document r8a774a1
- support
-Date: Mon, 17 Jun 2019 11:30:25 +0200
-Message-ID: <20190617093023.nhvrvujg52gcglko@verge.net.au>
-References: <1560513214-28031-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1560513214-28031-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv5 18/20] PCI: mobiveil: Disable IB and OB windows set by
+ bootloader
+Date: Mon, 17 Jun 2019 10:30:40 +0100
+Message-ID: <20190617093040.GC18020@e121166-lin.cambridge.arm.com>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-19-Zhiqiang.Hou@nxp.com>
+ <20190612162347.GF15747@redmoon>
+ <AM0PR04MB67383C84D946045874B0F14A84E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1560513214-28031-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "David S. Miller" <davem@davemloft.net>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <AM0PR04MB67383C84D946045874B0F14A84E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:53:29PM +0100, Fabrizio Castro wrote:
-> Document the support for rcar_canfd on R8A774A1 SoC devices.
+On Sat, Jun 15, 2019 at 05:03:33AM +0000, Z.q. Hou wrote:
+> Hi Lorenzo,
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> ---
-> Hello Simon,
+> > -----Original Message-----
+> > From: Lorenzo Pieralisi [mailto:lorenzo.pieralisi@arm.com]
+> > Sent: 2019年6月13日 0:24
+> > To: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com
+> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > robh+dt@kernel.org; mark.rutland@arm.com; l.subrahmanya@mobiveil.co.in;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>;
+> > catalin.marinas@arm.com; will.deacon@arm.com; Mingkai Hu
+> > <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Xiaowei Bao
+> > <xiaowei.bao@nxp.com>
+> > Subject: Re: [PATCHv5 18/20] PCI: mobiveil: Disable IB and OB windows set
+> > by bootloader
+> > 
+> > On Fri, Apr 12, 2019 at 08:37:00AM +0000, Z.q. Hou wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > Disable all inbound and outbound windows before set up the windows in
+> > > kernel, in case transactions match the window set by bootloader.
+> > 
+> > There must be no PCI transactions ongoing at bootloader<->OS handover.
+> >
 > 
-> I think it would make more sense if this patch went through you as it
-> sits on series:
-> https://lkml.org/lkml/2019/5/9/941
-> 
-> Do you think that's doable?
-
-That seems reasonable to me.
-
-Dave are you happy with me taking this, and 2/6, through
-the renesas tree?
-
-> 
-> Thanks,
-> Fab
-> 
->  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> index 32f051f..00afaff 100644
-> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> @@ -4,6 +4,7 @@ Renesas R-Car CAN FD controller Device Tree Bindings
->  Required properties:
->  - compatible: Must contain one or more of the following:
->    - "renesas,rcar-gen3-canfd" for R-Car Gen3 and RZ/G2 compatible controllers.
-> +  - "renesas,r8a774a1-canfd" for R8A774A1 (RZ/G2M) compatible controller.
->    - "renesas,r8a774c0-canfd" for R8A774C0 (RZ/G2E) compatible controller.
->    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
->    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
-> @@ -32,10 +33,10 @@ enable/disable the respective channel.
->  Required properties for "renesas,r8a774c0-canfd", "renesas,r8a7795-canfd",
->  "renesas,r8a7796-canfd", "renesas,r8a77965-canfd", and "renesas,r8a77990-canfd"
->  compatible:
-> -In R8A774C0, R8A7795, R8A7796, R8A77965, and R8A77990 SoCs, canfd clock is a
-> -div6 clock and can be used by both CAN and CAN FD controller at the same time.
-> -It needs to be scaled to maximum frequency if any of these controllers use it.
-> -This is done using the below properties:
-> +In R8A774A1, R8A774C0, R8A7795, R8A7796, R8A77965, and R8A77990 SoCs, canfd
-> +clock is a div6 clock and can be used by both CAN and CAN FD controller at the
-> +same time. It needs to be scaled to maximum frequency if any of these
-> +controllers use it. This is done using the below properties:
+> Yes, exact.
 >  
->  - assigned-clocks: phandle of canfd clock.
->  - assigned-clock-rates: maximum frequency of this clock.
-> -- 
-> 2.7.4
+> > The bootloader needs fixing and this patch should be dropped, the host bridge
+> > driver assumes the host bridge state is disabled,
 > 
+> The host bridge driver should not assumes the host state is disabled,
+> actually u-boot enable/initialize the host and without disabling it
+> when transfer the control to Linux.
+
+Fix the bootloader and drop this patch, I explain to you why.
+
+> > it will program the bridge
+> > apertures from scratch with no ongoing transactions, anything deviating from
+> > this behaviour is a bootloader bug and a recipe for disaster.
+> 
+> The point of this patch is not to fix the ongoing transaction issue,
+> it is to avoid a potential issue which is caused by the outbound
+> window enabled by bootloader overlapping with Linux enabled.
+
+See above.
+
+Lorenzo
+
+> Thanks,
+> Zhiqiang
+>  
+> > Lorenzo
+> > 
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> > > ---
+> > > V5:
+> > >  - No functionality change.
+> > >
+> > >  drivers/pci/controller/pcie-mobiveil.c | 25 +++++++++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
+> > > b/drivers/pci/controller/pcie-mobiveil.c
+> > > index 8dc87c7a600e..411e9779da12 100644
+> > > --- a/drivers/pci/controller/pcie-mobiveil.c
+> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
+> > > @@ -565,6 +565,24 @@ static int mobiveil_bringup_link(struct
+> > mobiveil_pcie *pcie)
+> > >  	return -ETIMEDOUT;
+> > >  }
+> > >
+> > > +static void mobiveil_pcie_disable_ib_win(struct mobiveil_pcie *pcie,
+> > > +int idx) {
+> > > +	u32 val;
+> > > +
+> > > +	val = csr_readl(pcie, PAB_PEX_AMAP_CTRL(idx));
+> > > +	val &= ~(1 << AMAP_CTRL_EN_SHIFT);
+> > > +	csr_writel(pcie, val, PAB_PEX_AMAP_CTRL(idx)); }
+> > > +
+> > > +static void mobiveil_pcie_disable_ob_win(struct mobiveil_pcie *pcie,
+> > > +int idx) {
+> > > +	u32 val;
+> > > +
+> > > +	val = csr_readl(pcie, PAB_AXI_AMAP_CTRL(idx));
+> > > +	val &= ~(1 << WIN_ENABLE_SHIFT);
+> > > +	csr_writel(pcie, val, PAB_AXI_AMAP_CTRL(idx)); }
+> > > +
+> > >  static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)  {
+> > >  	phys_addr_t msg_addr = pcie->pcie_reg_base; @@ -585,6 +603,13 @@
+> > > static int mobiveil_host_init(struct mobiveil_pcie *pcie)  {
+> > >  	u32 value, pab_ctrl, type;
+> > >  	struct resource_entry *win;
+> > > +	int i;
+> > > +
+> > > +	/* Disable all inbound/outbound windows */
+> > > +	for (i = 0; i < pcie->apio_wins; i++)
+> > > +		mobiveil_pcie_disable_ob_win(pcie, i);
+> > > +	for (i = 0; i < pcie->ppio_wins; i++)
+> > > +		mobiveil_pcie_disable_ib_win(pcie, i);
+> > >
+> > >  	/* setup bus numbers */
+> > >  	value = csr_readl(pcie, PCI_PRIMARY_BUS);
+> > > --
+> > > 2.17.1
+> > >
