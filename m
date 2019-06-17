@@ -1,77 +1,56 @@
 From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [RFC RESEND PATCH v2 3/4] arm64: dts: ti: am6-main: Add gpio
- nodes
-Date: Mon, 17 Jun 2019 17:27:13 +0300
-Message-ID: <39705d27-155d-373e-1c83-25757665821e@ti.com>
+Subject: Re: [RFC RESEND PATCH v2 1/4] dt-bindings: gpio: davinci: Add k3
+ am654 compatible
+Date: Mon, 17 Jun 2019 17:27:51 +0300
+Message-ID: <1b2bf190-4474-fd65-8a6b-58d2539c1b10@ti.com>
 References: <20190606095620.6211-1-j-keerthy@ti.com>
- <20190606095620.6211-4-j-keerthy@ti.com>
+ <20190606095620.6211-2-j-keerthy@ti.com>
+ <CACRpkdY-yK3+uZvq1Xk7qJ2Nd7mgRkQ9C22AYO4AiZP5Cs719w@mail.gmail.com>
+ <bcaf05c2-e4a2-8fe6-50f8-9df603d65a21@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190606095620.6211-4-j-keerthy@ti.com>
+In-Reply-To: <bcaf05c2-e4a2-8fe6-50f8-9df603d65a21@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>, nm@ti.com, robh+dt@kernel.org
-Cc: lokeshvutla@ti.com, bgolaszewski@baylibre.com, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: keerthy <j-keerthy@ti.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: ext Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2019 12:56, Keerthy wrote:
-> Add gpio0/1 nodes under main domain. They have 96 and 90 gpios
-> respectively and all are capable of generating banked interrupts.
+On 08/06/2019 06:51, keerthy wrote:
 > 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->   arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 32 ++++++++++++++++++++++++
->   1 file changed, 32 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> index 22154f401930..182efe70402b 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> @@ -350,4 +350,36 @@
->   			ti,sci-rm-range-global-event = <0x1>;
->   		};
->   	};
-> +
-> +	main_gpio0:  main_gpio0@600000 {
-> +		compatible = "ti,am654-gpio", "ti,keystone-gpio";
-> +		reg = <0x0 0x600000 0x0 0x100>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		interrupt-parent = <&intr_main_gpio>;
-> +		interrupts = <57 256>, <57 257>, <57 258>, <57 259>, <57 260>,
-> +				<57 261>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		ti,ngpio = <96>;
-> +		ti,davinci-gpio-unbanked = <0>;
-> +		clocks = <&k3_clks 57 0>;
-> +		clock-names = "gpio";
-> +	};
-> +
-> +	main_gpio1:  main_gpio1@601000 {
-> +		compatible = "ti,am654-gpio", "ti,keystone-gpio";
-> +		reg = <0x0 0x601000 0x0 0x100>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		interrupt-parent = <&intr_main_gpio>;
-> +		interrupts = <58 256>, <58 257>, <58 258>, <58 259>, <58 260>,
-> +				<58 261>;
-> +		interrupt-controller;
-> +			#interrupt-cells = <2>;
+> On 6/8/2019 4:09 AM, Linus Walleij wrote:
+>> On Thu, Jun 6, 2019 at 11:55 AM Keerthy <j-keerthy@ti.com> wrote:
+>>
+>>> The patch adds k3 am654 compatible, specific properties and
+>>> an example.
+>>>
+>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>>
+>> Patch applied with the three others, so now all
+>> GPIO changes are in tree.
+>>
+>> Please funnel all the DTS changes through ARM SoC.
+> 
+> Thank you Linus!
+> 
+> Tero,
+> 
+> Could you pull the dts changes on top of intr dts patches.
 
-The above line has an extra tab. Fixed locally and pushed to am654-next.
+Queued patches #2...#4 towards 5.3, thanks.
 
 -Tero
 
-> +		ti,ngpio = <90>;
-> +		ti,davinci-gpio-unbanked = <0>;
-> +		clocks = <&k3_clks 58 0>;
-> +		clock-names = "gpio";
-> +	};
->   };
 > 
+> Regards,
+> Keerthy
+>>
+>> Yours,
+>> Linus Walleij
+>>
 
 --
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
