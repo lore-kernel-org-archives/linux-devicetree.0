@@ -1,76 +1,178 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am65: Add MSMC RAM ranges in
- interconnect node
-Date: Mon, 17 Jun 2019 22:42:22 +0300
-Message-ID: <ac862030-6843-2906-3823-8e93da1b22da@ti.com>
-References: <20190529211344.18014-1-s-anna@ti.com>
- <20190530104903.ldcmkunjnk7a5y3c@akan>
- <3c53679c-4246-43e1-e6d6-2e1c7db201d7@ti.com>
- <b1f7aa31-4f3b-b9d9-6951-092f3a87d078@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5 3/5] mtd: Add support for HyperBus memory devices
+Date: Mon, 17 Jun 2019 22:45:45 +0300
+Message-ID: <9dbd8132-ce8f-9ce7-ddf5-d9826e2a1be1@cogentembedded.com>
+References: <20190609103227.24875-1-vigneshr@ti.com>
+ <20190609103227.24875-4-vigneshr@ti.com>
+ <58e9608d-35ff-0436-6075-b2e4ed4b8594@cogentembedded.com>
+ <f47d4d57-afb2-3b39-fae9-3ed740a2b8a6@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b1f7aa31-4f3b-b9d9-6951-092f3a87d078@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f47d4d57-afb2-3b39-fae9-3ed740a2b8a6@ti.com>
+Content-Language: en-MW
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh Raghavendra <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTcvMDYvMjAxOSAxODo1MywgU3VtYW4gQW5uYSB3cm90ZToKPiBPbiA2LzE3LzE5IDk6NTQg
-QU0sIFRlcm8gS3Jpc3RvIHdyb3RlOgo+PiBPbiAzMC8wNS8yMDE5IDEzOjQ5LCBOaXNoYW50aCBN
-ZW5vbiB3cm90ZToKPj4+IE9uIDE2OjEzLTIwMTkwNTI5LCBTdW1hbiBBbm5hIHdyb3RlOgo+Pj4+
-IEZyb206IFJvZ2VyIFF1YWRyb3MgPHJvZ2VycUB0aS5jb20+Cj4+Pj4KPj4+PiBBZGQgdGhlIE1T
-Q00gUkFNIGFkZHJlc3Mgc3BhY2UgdG8gdGhlIHJhbmdlcyBwcm9wZXJ0eSBvZiB0aGUgY2Jhc3Nf
-bWFpbgo+Pj4+IGludGVyY29ubmVjdCBub2RlIHNvIHRoYXQgdGhlIGFkZHJlc3NlcyBjYW4gYmUg
-dHJhbnNsYXRlZCBwcm9wZXJseS4KPj4+Pgo+Pj4+IFRoaXMgZml4ZXMgdGhlIHByb2JlIGZhaWx1
-cmUgaW4gdGhlIHNyYW0gZHJpdmVyIGZvciB0aGUgTVNNQyBSQU0gbm9kZS4KPj4+Pgo+Pj4+IFNp
-Z25lZC1vZmYtYnk6IFJvZ2VyIFF1YWRyb3MgPHJvZ2VycUB0aS5jb20+Cj4+Pj4gU2lnbmVkLW9m
-Zi1ieTogU3VtYW4gQW5uYSA8cy1hbm5hQHRpLmNvbT4KPj4+PiAtLS0KPj4+Pgo+Pj4+IFRoZSBm
-b2xsb3dpbmcgZXJyb3IgbWVzc2FnZSBpcyBzZWVuIHdpdGhvdXQgdGhpczoKPj4+PiBbwqDCoMKg
-IDAuNDgwMjYxXSBzcmFtIGludGVyY29ubmVjdEAxMDAwMDA6c3JhbUA3MDAwMDAwMDogZm91bmQg
-bm8KPj4+PiBtZW1vcnkgcmVzb3VyY2UKPj4+PiBbwqDCoMKgIDAuNDg3NDk3XSBzcmFtOiBwcm9i
-ZSBvZiBpbnRlcmNvbm5lY3RAMTAwMDAwOnNyYW1ANzAwMDAwMDAKPj4+PiBmYWlsZWQgd2l0aCBl
-cnJvciAtMjIKPj4+Pgo+Pj4+IHJlZ2FyZHMKPj4+PiBTdW1hbgo+Pj4+Cj4+Pj4gIMKgIGFyY2gv
-YXJtNjQvYm9vdC9kdHMvdGkvazMtYW02NS5kdHNpIHwgMSArCj4+Pj4gIMKgIDEgZmlsZSBjaGFu
-Z2VkLCAxIGluc2VydGlvbigrKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvdGkvazMtYW02NS5kdHNpCj4+Pj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3RpL2szLWFt
-NjUuZHRzaQo+Pj4+IGluZGV4IDUwZjRiZTIwNDdhOS4uNjhiM2Y5NTRmMWQxIDEwMDY0NAo+Pj4+
-IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMtYW02NS5kdHNpCj4+Pj4gKysrIGIvYXJj
-aC9hcm02NC9ib290L2R0cy90aS9rMy1hbTY1LmR0c2kKPj4+PiBAQCAtNjgsNiArNjgsNyBAQAo+
-Pj4+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDwweDAwIDB4MDA5MDAwMDAgMHgwMCAw
-eDAwOTAwMDAwIDB4MDAgMHgwMDAxMjAwMD4sIC8qCj4+Pj4gc2VyZGVzICovCj4+Pj4gIMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPDB4MDAgMHgwMTAwMDAwMCAweDAwIDB4MDEwMDAwMDAg
-MHgwMCAweDBhZjAyNDAwPiwgLyoKPj4+PiBNb3N0IHBlcmlwaGVyYWxzICovCj4+Pj4gIMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPDB4MDAgMHgzMDgwMDAwMCAweDAwIDB4MzA4MDAwMDAg
-MHgwMCAweDBiYzAwMDAwPiwgLyoKPj4+PiBNQUlOIE5BVlNTICovCj4+Pj4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCA8MHgwMCAweDcwMDAwMDAwIDB4MDAgMHg3MDAwMDAwMCAweDAwIDB4MDAy
-MDAwMDA+LCAvKgo+Pj4+IE1TTUMgU1JBTSAqLwo+Pj4+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIC8qIE1DVVNTIFJhbmdlICovCj4+Pj4gIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgPDB4MDAgMHgyODM4MDAwMCAweDAwIDB4MjgzODAwMDAgMHgwMCAweDAzODgwMDAwPiwKPj4+
-PiAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8MHgwMCAweDQwMjAwMDAwIDB4MDAgMHg0
-MDIwMDAwMCAweDAwIDB4MDA5MDAxMDA+LAo+Pj4+IC0tIAo+Pj4+IDIuMjEuMAo+Pj4+Cj4+Pgo+
-Pj4gQXJyZ2guLiBOaWNlIGNhdGNoLiBUaGFua3MuIFdlIHNob3VsZCBjb25zaWRlciBwdWxsaW5n
-IHRoaXMgaW4gYXMgcGFydAo+Pj4gb2YgZWFybHkgcmMgZml4ZXMgcGxlYXNlLgo+Pj4KPj4+IEFj
-a2VkLWJ5OiBOaXNoYW50aCBNZW5vbiA8bm1AdGkuY29tPgo+Pgo+PiBIbW0sIHdoYXQgaXMgdGhl
-IGZhaWx1cmUgdGhpcyBjYXVzZXMsIGV4Y2VwdCB0aGUgcHJvYmUgbWVzc2FnZT8gU1JBTQo+PiBk
-cml2ZXIgb2J2aW91c2x5IHdvbid0IHdvcmsgYnV0IGlzIGl0IHVzZWQgZm9yIGFueXRoaW5nIGF0
-IHRoZSBtb21lbnQKPj4gYW55d2F5cz8KPj4KPj4gSSB3b3VsZCByYXRoZXIgcXVldWUgdGhpcyB0
-b3dhcmRzIDUuMy4KPiAKPiBPSywgSSBhbSBmaW5lIGVpdGhlciB3YXkuCj4gCj4gcmVnYXJkcwo+
-IFN1bWFuCj4gCgpPayB0aGFua3MsIHF1ZXVlZCB0b3dhcmRzIDUuMy4KClRoYXQgYmFzaWNhbGx5
-IHNhdmVzIG1lIG9uZSBwdWxsLXJlcXVlc3QuIDopCgotVGVybwotLQpUZXhhcyBJbnN0cnVtZW50
-cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4gWS10dW5udXMv
-QnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
-ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
-ZWwK
+Hello!
+
+On 06/11/2019 02:57 PM, Vignesh Raghavendra wrote:
+
+>>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+>>> Bus interface between a host system master and one or more slave
+>>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
+>>> or ASIC devices with random access NOR flash memory (called HyperFlash)
+>>> or self refresh DRAM (called HyperRAM).
+>>>
+>>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+>>> signal and either Single-ended clock(3.0V parts) or Differential clock
+>>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+>>> At bus level, it follows a separate protocol described in HyperBus
+>>> specification[1].
+>>>
+>>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+>>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+>>> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
+>>> HyperBus operates at >166MHz frequencies.
+>>> HyperRAM provides direct random read/write access to flash memory
+>>> array.
+>>>
+>>> But, HyperBus memory controllers seem to abstract implementation details
+>>> and expose a simple MMIO interface to access connected flash.
+>>>
+>>> Add support for registering HyperFlash devices with MTD framework. MTD
+>>> maps framework along with CFI chip support framework are used to support
+>>> communicating with flash.
+>>>
+>>> Framework is modelled along the lines of spi-nor framework. HyperBus
+>>> memory controller (HBMC) drivers calls hyperbus_register_device() to
+>>> register a single HyperFlash device. HyperFlash core parses MMIO access
+>>> information from DT, sets up the map_info struct, probes CFI flash and
+>>> registers it with MTD framework.
+>>>
+>>> Some HBMC masters need calibration/training sequence[3] to be carried
+>>> out, in order for DLL inside the controller to lock, by reading a known
+>>> string/pattern. This is done by repeatedly reading CFI Query
+>>> Identification String. Calibration needs to be done before trying to detect
+>>> flash as part of CFI flash probe.
+>>>
+>>> HyperRAM is not supported at the moment.
+>>>
+>>> HyperBus specification can be found at[1]
+>>> HyperFlash datasheet can be found at[2]
+>>>
+>>> [1] https://www.cypress.com/file/213356/download
+>>> [2] https://www.cypress.com/file/213346/download
+>>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>>>     Table 12-5741. HyperFlash Access Sequence
+>>>
+>>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> [...]
+>>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+>>> new file mode 100644
+>>> index 000000000000..df1f75e10b1a
+>>> --- /dev/null
+>>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+>>> @@ -0,0 +1,191 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +//
+>>> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>>> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
+>>> +
+>>> +#include <linux/err.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/mtd/hyperbus.h>
+>>> +#include <linux/mtd/map.h>
+>>> +#include <linux/mtd/mtd.h>
+>>> +#include <linux/mtd/cfi.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/of_address.h>
+>>> +#include <linux/types.h>
+>>> +
+>>> +#define HYPERBUS_CALIB_COUNT 25
+>>
+>>    Mhm, I think I've already protested about this being #define'd here...
+> 
+> I thought you had agreed that default optional calibration routine can
+> be part of core code and thus this #define.
+> 
+> Anyways, what is your preference here? Drop the constant and use a local
+> variable in hyperbus_calibrate()?
+> Or are you suggesting to move hyperbus_calibrate() TI's specific driver?
+
+   I'm just not comfortable with the common HF code using quite an arbitrary
+constant...
+
+>> [...]
+>>> diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
+>>> new file mode 100644
+>>> index 000000000000..ee2eefd822c9
+>>> --- /dev/null
+>>> +++ b/include/linux/mtd/hyperbus.h
+>>> @@ -0,0 +1,91 @@
+[...]
+>>> + * @mtd: pointer to MTD struct
+>>> + * @ctlr: pointer to HyperBus controller struct
+>>> + * @memtype: type of memory device: HyperFlash or HyperRAM
+>>> + * @registered: flag to indicate whether device is registered with MTD core
+>>> + */
+>>> +
+>>> +struct hyperbus_device {
+>>> +	struct map_info map;
+>>> +	struct device_node *np;
+>>> +	struct mtd_info *mtd;
+>>> +	struct hyperbus_ctlr *ctlr;
+>>> +	enum hyperbus_memtype memtype;
+>>> +	bool registered;
+>>> +};
+>>> +
+>>> +/**
+>>> + * struct hyperbus_ops - struct representing custom HyperBus operations
+>>> + * @read16: read 16 bit of data, usually from register/ID-CFI space
+>>> + * @write16: write 16 bit of data, usually to register/ID-CFI space
+>>
+>>    Usually? How to differ the register/memory transfers if both are possible?
+
+> CFI + map framework does not provide a way to differentiate b/w reg
+> access vs memory access. read16()/write16() is used to either access
+> registers or for sending various cmds like lock/unlock etc or for
+> programming a single word.
+> For regular read/writes copy_from() and copy_to() are used.
+
+   In my case only copy_from() would exist -- no proper acceleration for
+writes...
+
+> Looking at HyperBus protocol, controllers would not need to
+> differentiate b/w registers vs memory transfers for HyperFlash devices.
+> So, I think I can drop read16/write16 and redirect these calls to
+> copy_from()/copy_to()
+
+   Doubt it, frankly speaking.
+
+> I mainly added these functions keeping HyperRAM in mind. Idea was
+> drivers would look at hyperbus_device->memtype and set to register
+> access mode for HyperRAM in case of write16()/read16(). Looks like the
+> interface is not intuitive enough
+> So, will drop these and add it back when adding HyperRAM support.
+> 
+> Does that work for your HW as well?
+
+   Don't think so...
+
+   However, my HyperFlash driver could make use of the following #define's in
+the HyperBus header:
+
+#define HF_CMD_CA47		BIT(7)	/* Read */
+#define HF_CMD_CA46		BIT(6)	/* Register space */
+#define HF_CMD_CA45		BIT(5)	/* Linear burst */
+
+#define HF_CMD_READ_REG		(HF_CMD_CA47 | HF_CMD_CA46)
+#define HF_CMD_READ_MEM		HF_CMD_CA47
+#define HF_CMD_WRITE_REG	HF_CMD_CA46
+#define HF_CMD_WRITE_MEM	0
+
+MBR, Sergei
