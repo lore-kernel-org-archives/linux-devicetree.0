@@ -1,80 +1,54 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v3, 19/27] drm/mediatek: add function to background
- color input select for ovl/ovl_2l direct link
-Date: Mon, 17 Jun 2019 10:01:29 +0800
-Message-ID: <1560736889.25168.0.camel@mtksdaap41>
+Subject: Re: [PATCH v3, 26/27] drm/mediatek: add clock property check before
+ get it
+Date: Mon, 17 Jun 2019 11:06:02 +0800
+Message-ID: <1560740762.25168.3.camel@mtksdaap41>
 References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
- <1559734986-7379-20-git-send-email-yongqiang.niu@mediatek.com>
+ <1559734986-7379-27-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1559734986-7379-20-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1559734986-7379-27-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch add function to background color input select for ovl/ovl_2l direct link
-> for ovl/ovl_2l direct link usecase, we need set background color
-> input select for these hardware.
-> this is preparation patch for ovl/ovl_2l usecase
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> index 158c1e5..aa1e183 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> @@ -92,6 +92,9 @@ struct mtk_ddp_comp_funcs {
->  			     struct mtk_plane_state *state);
->  	void (*gamma_set)(struct mtk_ddp_comp *comp,
->  			  struct drm_crtc_state *state);
-> +	void (*bgclr_in_on)(struct mtk_ddp_comp *comp,
-> +			    enum mtk_ddp_comp_id prev);
-
-prev is useless, so remove it.
-
-Regards,
-CK
-
-> +	void (*bgclr_in_off)(struct mtk_ddp_comp *comp);
->  };
->  
->  struct mtk_ddp_comp {
-> @@ -173,6 +176,19 @@ static inline void mtk_ddp_gamma_set(struct mtk_ddp_comp *comp,
->  		comp->funcs->gamma_set(comp, state);
->  }
->  
-> +static inline void mtk_ddp_comp_bgclr_in_on(struct mtk_ddp_comp *comp,
-> +					    enum mtk_ddp_comp_id prev)
-> +{
-> +	if (comp->funcs && comp->funcs->bgclr_in_on)
-> +		comp->funcs->bgclr_in_on(comp, prev);
-> +}
-> +
-> +static inline void mtk_ddp_comp_bgclr_in_off(struct mtk_ddp_comp *comp)
-> +{
-> +	if (comp->funcs && comp->funcs->bgclr_in_off)
-> +		comp->funcs->bgclr_in_off(comp);
-> +}
-> +
->  int mtk_ddp_comp_get_id(struct device_node *node,
->  			enum mtk_ddp_comp_type comp_type);
->  int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
+SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wNi0wNSBhdCAxOTo0MyArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgY2xvY2sgcHJvcGVydHkg
+Y2hlY2sgYmVmb3JlIGdldCBpdAoKSW4gdGhlIGJpbmRpbmcgZG9jdW1lbnQgWzFdLCBjbG9jayBp
+cyByZXF1aXJlZCBwcm9wZXJ0eS4gSW4gdGhpcyBwYXRjaCwKeW91IGNoYW5nZSBpdCB0byBvcHRp
+b25hbCBwcm9wZXJ0eS4gSSB0aGluayB5b3Ugc2hvdWxkIGNoYW5nZSB0aGUKYmluZGluZyBkb2N1
+bWVudCBhbmQgZGVzY3JpYmUgX1dIWV8gZG8geW91IGRvIHRoaXMuCgpbMV0KaHR0cHM6Ly93d3cu
+a2VybmVsLm9yZy9kb2MvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+bWVkaWF0ZWsvbWVkaWF0ZWslMkNkaXNwLnR4dAoKUmVnYXJkcywKQ0sKCj4gCj4gU2lnbmVkLW9m
+Zi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gLS0tCj4g
+IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jIHwgMTAgKysrKysrLS0tLQo+
+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+IAo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyBiL2RyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gaW5kZXggOTk4NmM2MS4uMjgyNzRk
+MiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+
+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gQEAgLTY4OSwx
+MCArNjg5LDEyIEBAIHN0YXRpYyBpbnQgbXRrX2RkcF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlICpwZGV2KQo+ICAJZm9yIChpID0gMDsgaSA8IDEwOyBpKyspCj4gIAkJZGRwLT5tdXRleFtp
+XS5pZCA9IGk7Cj4gIAo+IC0JZGRwLT5jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCBOVUxMKTsKPiAt
+CWlmIChJU19FUlIoZGRwLT5jbGspKSB7Cj4gLQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0
+IGNsb2NrXG4iKTsKPiAtCQlyZXR1cm4gUFRSX0VSUihkZHAtPmNsayk7Cj4gKwlpZiAob2ZfZmlu
+ZF9wcm9wZXJ0eShkZXYtPm9mX25vZGUsICJjbG9ja3MiLCAmaSkpIHsKPiArCQlkZHAtPmNsayA9
+IGRldm1fY2xrX2dldChkZXYsIE5VTEwpOwo+ICsJCWlmIChJU19FUlIoZGRwLT5jbGspKSB7Cj4g
+KwkJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBjbG9ja1xuIik7Cj4gKwkJCXJldHVybiBQ
+VFJfRVJSKGRkcC0+Y2xrKTsKPiArCQl9Cj4gIAl9Cj4gIAo+ICAJcmVncyA9IHBsYXRmb3JtX2dl
+dF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7CgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
