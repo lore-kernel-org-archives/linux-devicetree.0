@@ -1,52 +1,64 @@
-From: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Subject: Re: [PATCH 6/6] drm/msm/gpu: add ocmem init/cleanup
- functions
-Date: Sun, 16 Jun 2019 20:18:51 -0400
-Message-ID: <20190617001851.GA19038@onstation.org>
-References: <20190616132930.6942-1-masneyb@onstation.org>
- <20190616132930.6942-7-masneyb@onstation.org>
- <20190616180633.GS22737@tuxbook-pro>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH v4 6/8] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
+Date: Mon, 17 Jun 2019 01:13:52 +0000
+Message-ID: <VI1PR04MB5327B9EF844F9C7505D337298BEB0@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <20190614093544.11730-1-peter.chen@nxp.com>
+ <20190614093544.11730-7-peter.chen@nxp.com>
+ <0dbf01f9-7c5c-ce0b-4feb-378c9147f15a@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190616180633.GS22737@tuxbook-pro>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0dbf01f9-7c5c-ce0b-4feb-378c9147f15a@cogentembedded.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "balbi@kernel.org" <balbi@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "chunfeng.yun@mediatek.com" <chunfeng.yun@mediatek.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmpvcm4sCgpPbiBTdW4sIEp1biAxNiwgMjAxOSBhdCAxMTowNjozM0FNIC0wNzAwLCBCam9y
-biBBbmRlcnNzb24gd3JvdGU6Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9h
-ZHJlbm8vYWRyZW5vX2dwdS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2dw
-dS5jCj4gPiBpbmRleCA2ZjdmNDExNGFmY2YuLmUwYTk0MDljOGEzMiAxMDA2NDQKPiA+IC0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19ncHUuYwo+ID4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2dwdS5jCj4gPiBAQCAtMjksNiArMjksMTAgQEAK
-PiA+ICAjaW5jbHVkZSAibXNtX2dlbS5oIgo+ID4gICNpbmNsdWRlICJtc21fbW11LmgiCj4gPiAg
-Cj4gPiArI2lmZGVmIENPTkZJR19RQ09NX09DTUVNCj4gPiArIyAgaW5jbHVkZSA8c29jL3Fjb20v
-b2NtZW0uaD4KPiA+ICsjZW5kaWYKPiAKPiBUaGlzIGZpbGUgZXhpc3RzIChhZnRlciB0aGUgcHJl
-dmlvdXMgcGF0Y2gpLCBzbyBubyBuZWVkIHRvIG1ha2UgaXRzCj4gaW5jbHVzaW9uIGNvbmRpdGlv
-bmFsLgo+IAo+ID4gKwo+ID4gIHN0YXRpYyBib29sIHphcF9hdmFpbGFibGUgPSB0cnVlOwo+ID4g
-IAo+ID4gIHN0YXRpYyBpbnQgemFwX3NoYWRlcl9sb2FkX21kdChzdHJ1Y3QgbXNtX2dwdSAqZ3B1
-LCBjb25zdCBjaGFyICpmd25hbWUsCj4gPiBAQCAtODk3LDYgKzkwMSw0MyBAQCBzdGF0aWMgaW50
-IGFkcmVub19nZXRfcHdybGV2ZWxzKHN0cnVjdCBkZXZpY2UgKmRldiwKPiA+ICAJcmV0dXJuIDA7
-Cj4gPiAgfQo+ID4gIAo+ID4gK2ludCBhZHJlbm9fZ3B1X29jbWVtX2luaXQoc3RydWN0IGRldmlj
-ZSAqZGV2LCBzdHJ1Y3QgYWRyZW5vX2dwdSAqYWRyZW5vX2dwdSwKPiA+ICsJCQkgIHN0cnVjdCBh
-ZHJlbm9fb2NtZW0gKmFkcmVub19vY21lbSkKPiA+ICt7Cj4gPiArI2lmZGVmIENPTkZJR19RQ09N
-X09DTUVNCj4gCj4gTm8gbmVlZCB0byBtYWtlIHRoaXMgY29uZGl0aW9uYWwuCgpJIGhhdmUgdGhl
-c2UgI2lmZGVmcyBmb3IgdGhlIGE1eHggYW5kIGE2eHggR1BVcyB0aGF0IGRvbid0IGhhdmUgb2Nt
-ZW0KaW4gdGhlIFNvQy4gV2l0aG91dCB0aGUgI2lmZGVmcywgdGhvc2Ugc3lzdGVtcyB3b3VsZCBu
-ZWVkIHRvIGhhdmUgdGhlCm9jbWVtIGRyaXZlciBpbiB0aGVpciBrZXJuZWwuCgpUaGFua3MgZm9y
-IHRoZSBxdWljayByZXZpZXcgb24gdGhlIHBhdGNoIHNldCEKCkJyaWFuCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QK
-RnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubw==
+ 
+> >
+> > Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> > ---
+> >   arch/arm/boot/dts/imx7ulp.dtsi | 28 ++++++++++++++++++++++++++++
+> >   1 file changed, 28 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/imx7ulp.dtsi
+> > b/arch/arm/boot/dts/imx7ulp.dtsi index fca6e50f37c8..5115e47715c3
+> > 100644
+> > --- a/arch/arm/boot/dts/imx7ulp.dtsi
+> > +++ b/arch/arm/boot/dts/imx7ulp.dtsi
+> > @@ -30,6 +30,7 @@
+> >   		serial1 = &lpuart5;
+> >   		serial2 = &lpuart6;
+> >   		serial3 = &lpuart7;
+> > +		usbphy0 = &usbphy1;
+> 
+>     Is that really needed?
+> 
+
+Yes, since the driver code uses aligned id, and the controller number is from 0 at the code.
+I commented it here: [1]
+
+> [...]
+> > @@ -133,6 +134,33 @@
+> [...]
+> > +		usbphy1: usbphy@0x40350000 {
+> 
+>     Name it "usb-phy@40350000" please.
+> 
+
+Would you please list binding doc for your suggestion?
+
+Thanks,
+Peter
+
+[1] https://patchwork.kernel.org/patch/10920599/
