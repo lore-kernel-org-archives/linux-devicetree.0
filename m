@@ -1,43 +1,46 @@
-Return-Path: <SRS0=Sfu6=UF=verge.net.au=horms@kernel.org>
-Date: Thu, 6 Jun 2019 11:00:52 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a774a1: Add operating points
-Message-ID: <20190606090052.zz64s5xtuolh5v3w@verge.net.au>
-References: <1559318333-27306-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V5 27/27] PCI: tegra: Change link retry log level to debug
+Date: Mon, 17 Jun 2019 23:09:52 +0530
+Message-ID: <20190617173952.29363-28-mmaddireddy@nvidia.com>
+In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559318333-27306-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, May 31, 2019 at 04:58:53PM +0100, Fabrizio Castro wrote:
-> The RZ/G2M (a.k.a. r8a774a1) comes with two clusters of
-> processors, similarly to the r8a7796.
-> The first cluster is made of A57s, the second cluster is
-> made of A53s.
-> 
-> The operating points for the cluster with the A57s are:
-> 
->  Frequency | Voltage
-> -----------|---------
->  500 MHz   | 0.82V
->  1.0 GHz   | 0.82V
->  1.5 GHz   | 0.82V
-> 
-> The operating points for the cluster with the A53s are:
-> 
->  Frequency | Voltage
-> -----------|---------
->  800 MHz   | 0.82V
->  1.0 GHz   | 0.82V
->  1.2 GHz   | 0.82V
-> 
-> This patch adds the definitions for the operating points
-> to the SoC specific DT.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Driver checks for link up three times before giving up, each retry attempt
+is printed as an error. Letting users know that PCIe link is down and in the
+process of being brought up again is for debug, not an error condition.
 
-Thanks, applied for inclusion in v5.3.
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+V5: No change
+
+V4: No change
+
+V3: Changed dev_err to dev_dbg
+
+V2: Updated commit log
+
+ drivers/pci/controller/pci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 2e55d64a0428..629397bb5daa 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2338,7 +2338,7 @@ static bool tegra_pcie_port_check_link(struct tegra_pcie_port *port)
+ 		} while (--timeout);
+ 
+ 		if (!timeout) {
+-			dev_err(dev, "link %u down, retrying\n", port->index);
++			dev_dbg(dev, "link %u down, retrying\n", port->index);
+ 			goto retry;
+ 		}
+ 
+-- 
+2.17.1
