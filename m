@@ -1,70 +1,64 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: Add missing newline at end of file
-Date: Mon, 17 Jun 2019 16:33:22 +0200
-Message-ID: <20190617143322.4332-1-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: openbmc@lists.ozlabs.org, openipmi-developer@lists.sourceforge.net, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 0/4] Add MCU SRAM nodes for TI K3 SoCs
+Date: Mon, 17 Jun 2019 17:49:34 +0300
+Message-ID: <e0c07124-3191-13c7-432f-4099c842059b@ti.com>
+References: <20190605163434.23173-1-s-anna@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190605163434.23173-1-s-anna@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-"git diff" says:
+On 05/06/2019 19:34, Suman Anna wrote:
+> Hi Tero,
+> 
+> The following series adds the DT nodes for the MCU SRAM present within
+> the MCU domain for both AM65x and J721E SoCs. The first 2 patches enable
+> the MCU SRAM node to be probed properly on AM65x SoCs, and the third
+> patch the equivalent for J721E SoCs. The third patch depends on the
+> base J721E support patch series from Nishanth [1].
+> 
+> The last patch is not related to MCU SRAM, but adds the ranges for the
+> R5F cluster that is also present in the MCU domain in preparation for
+> the R5F nodes.
+> 
+> regards
+> Suman
+> 
+> [1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=121189
 
-    \ No newline at end of file
+Queuing patches 1,2 and 4 towards 5.3 thanks.
 
-after modifying the files.
+Patch #3 is waiting until I can sort out j7 dependencies, which should 
+happen later this week.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt      | 2 +-
- .../devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt     | 2 +-
- Documentation/devicetree/bindings/regulator/pv88060.txt         | 2 +-
- Documentation/devicetree/bindings/sound/cs42l73.txt             | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+-Tero
 
-diff --git a/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt b/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt
-index 3538a214fff156d4..352f5e9c759bc3f5 100644
---- a/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt
-+++ b/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt
-@@ -36,4 +36,4 @@ Example:
-             kcs_chan = <2>;
-             status = "disabled";
-         };
--    };
-\ No newline at end of file
-+    };
-diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
-index 83f4bbac94bb19db..a1264cc8660dcd59 100644
---- a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
-@@ -213,4 +213,4 @@ pinctrl: pinctrl@f0800000 {
- 		groups = "clkreq";
- 		function = "clkreq";
- 	};
--};
-\ No newline at end of file
-+};
-diff --git a/Documentation/devicetree/bindings/regulator/pv88060.txt b/Documentation/devicetree/bindings/regulator/pv88060.txt
-index 10a6dadc008eb38d..6a7c8a92fdb0bf1c 100644
---- a/Documentation/devicetree/bindings/regulator/pv88060.txt
-+++ b/Documentation/devicetree/bindings/regulator/pv88060.txt
-@@ -121,4 +121,4 @@ Example
- 				regulator-max-microvolt = <5000000>;
- 			};
- 		};
--	};
-\ No newline at end of file
-+	};
-diff --git a/Documentation/devicetree/bindings/sound/cs42l73.txt b/Documentation/devicetree/bindings/sound/cs42l73.txt
-index 80ae910dbf6c3880..47b868b5ab011470 100644
---- a/Documentation/devicetree/bindings/sound/cs42l73.txt
-+++ b/Documentation/devicetree/bindings/sound/cs42l73.txt
-@@ -19,4 +19,4 @@ codec: cs42l73@4a {
- 	reg = <0x4a>;
- 	reset_gpio = <&gpio 10 0>;
- 	chgfreq = <0x05>;
--};
-\ No newline at end of file
-+};
--- 
-2.17.1
+> 
+> Suman Anna (4):
+>    arm64: dts: ti: k3-am65: Add MCU SRAM ranges in interconnect nodes
+>    arm64: dts: ti: k3-am65-mcu: Add the MCU RAM node
+>    arm64: dts: ti: k3-j721e: Add the MCU SRAM node
+>    arm64: dts: ti: k3-am65: Add R5F ranges in interconnect nodes
+> 
+>   arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi         | 8 ++++++++
+>   arch/arm64/boot/dts/ti/k3-am65.dtsi             | 6 ++++++
+>   arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 8 ++++++++
+>   3 files changed, 22 insertions(+)
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
