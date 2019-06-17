@@ -1,70 +1,62 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/6] dt-bindings: arm: ti: Add bindings for J721E SoC
-Date: Mon, 17 Jun 2019 10:46:14 -0500
-Message-ID: <20190617154614.wlbh6dtj54brkt67@kahuna>
-References: <20190522161921.20750-1-nm@ti.com>
- <20190522161921.20750-2-nm@ti.com>
- <20190614164526.GA14925@bogus>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/4] Add MFD/Regulator support for ATC260x PMICs
+Date: Mon, 17 Jun 2019 21:20:07 +0530
+Message-ID: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190614164526.GA14925@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>
+To: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org
+Cc: afaerber@suse.de, linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, devicetree@vger.kernel.org, linus.walleij@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10:45-20190614, Rob Herring wrote:
-> On Wed, May 22, 2019 at 11:19:16AM -0500, Nishanth Menon wrote:
-> > The J721E SoC belongs to the K3 Multicore SoC architecture platform,
-> > providing advanced system integration to enable lower system costs
-> > of automotive applications such as infotainment, cluster, premium
-> > Audio, Gateway, industrial and a range of broad market applications.
-> > This SoC is designed around reducing the system cost by eliminating
-> > the need of an external system MCU and is targeted towards ASIL-B/C
-> > certification/requirements in addition to allowing complex software
-> > and system use-cases.
-> > 
-> > Some highlights of this SoC are:
-> > * Dual Cortex-A72s in a single cluster, three clusters of lockstep
-> >   capable dual Cortex-R5F MCUs, Deep-learning Matrix Multiply Accelerator(MMA),
-> >   C7x floating point Vector DSP, Two C66x floating point DSPs.
-> > * 3D GPU PowerVR Rogue 8XE GE8430
-> > * Vision Processing Accelerator (VPAC) with image signal processor and Depth
-> >   and Motion Processing Accelerator (DMPAC)
-> > * Two Gigabit Industrial Communication Subsystems (ICSSG), each with dual
-> >   PRUs and dual RTUs
-> > * Two CSI2.0 4L RX plus one CSI2.0 4L TX, one eDP/DP, One DSI Tx, and
-> >   up to two DPI interfaces.
-> > * Integrated Ethernet switch supporting up to a total of 8 external ports in
-> >   addition to legacy Ethernet switch of up to 2 ports.
-> > * System MMU (SMMU) Version 3.0 and advanced virtualisation
-> >   capabilities.
-> > * Upto 4 PCIe-GEN3 controllers, 2 USB3.0 Dual-role device subsystems,
-> >   16 MCANs, 12 McASP, eMMC and SD, UFS, OSPI/HyperBus memory controller, QSPI,
-> >   I3C and I2C, eCAP/eQEP, eHRPWM, MLB among other peripherals.
-> > * Two hardware accelerator block containing AES/DES/SHA/MD5 called SA2UL
-> >   management.
-> > * Configurable L3 Cache and IO-coherent architecture with high data throughput
-> >   capable distributed DMA architecture under NAVSS
-> > * Centralized System Controller for Security, Power, and Resource
-> >   Management (DMSC)
-> > 
-> > See J721E Technical Reference Manual (SPRUIL1, May 2019)
-> > for further details: http://www.ti.com/lit/pdf/spruil1
-> > 
-> > Signed-off-by: Nishanth Menon <nm@ti.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/ti/k3.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
-> 
-> Okay for now, but please convert K3 and other TI SoCs to schema soon.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Hello,
 
+This patchset adds MFD core and Regulator support for Actions Semi ATC260x
+PMICs. ATC260x series PMICs integrates Audio Codec, Power management,
+Clock generation, and GPIO controller blocks. There are 3 variants of this
+PMIC series exist today:
 
-Thanks Rob. Will do the change to rst soon (hopefully post in the 5.3 window).
+ATC2603A
+ATC2603C
+ATC2609A
+
+This patchset adds only ATC2609A PMIC support with regulator functionality.
+Regulator driver supports 4 DC-DC converters and 10 LDO regulators.
+
+This series has been tested on 96Boards Bubblegum96 board integrating
+ATC2609A. Since the board support depends on the SIRQ driver (being reviewed),
+I haven't added any dts changes for now!
+
+Thanks,
+Mani
+
+Manivannan Sadhasivam (4):
+  dt-bindings: mfd: Add Actions Semi ATC260x PMIC binding
+  mfd: Add initial MFD driver for ATC260x PMICs
+  regulator: Add regulator driver for ATC260x PMICs
+  MAINTAINERS: Add entry for ATC260x PMIC
+
+ .../devicetree/bindings/mfd/atc260x.txt       | 162 ++++++++
+ MAINTAINERS                                   |   9 +
+ drivers/mfd/Kconfig                           |  22 +
+ drivers/mfd/Makefile                          |   7 +
+ drivers/mfd/atc2609a-helpers.c                |  91 ++++
+ drivers/mfd/atc260x-core.c                    |  85 ++++
+ drivers/mfd/atc260x-i2c.c                     |  98 +++++
+ drivers/mfd/atc260x.h                         |  22 +
+ drivers/regulator/Kconfig                     |   8 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/atc260x-regulator.c         | 389 ++++++++++++++++++
+ include/linux/mfd/atc260x/atc2609a_regs.h     | 228 ++++++++++
+ include/linux/mfd/atc260x/core.h              |  64 +++
+ 13 files changed, 1186 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atc260x.txt
+ create mode 100644 drivers/mfd/atc2609a-helpers.c
+ create mode 100644 drivers/mfd/atc260x-core.c
+ create mode 100644 drivers/mfd/atc260x-i2c.c
+ create mode 100644 drivers/mfd/atc260x.h
+ create mode 100644 drivers/regulator/atc260x-regulator.c
+ create mode 100644 include/linux/mfd/atc260x/atc2609a_regs.h
+ create mode 100644 include/linux/mfd/atc260x/core.h
+
 -- 
-Regards,
-Nishanth Menon
+2.17.1
