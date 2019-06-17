@@ -1,140 +1,212 @@
-Return-Path: <SRS0=bzHF=UJ=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V4 4/8] dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
-Date: Mon, 10 Jun 2019 15:49:05 +0530
-Message-ID: <1560161949-26031-5-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
-References: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=7yb5=UQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:10872 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfFQRk3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Jun 2019 13:40:29 -0400
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V5 08/27] PCI: tegra: Program UPHY electrical settings for Tegra210
+Date: Mon, 17 Jun 2019 23:09:33 +0530
+Message-ID: <20190617173952.29363-9-mmaddireddy@nvidia.com>
+In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Sender: devicetree-owner@vger.kernel.org
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device-tree binding documentation for the XUSB device mode controller
-present on Tegra210 SoC. This controller supports the USB 3.0
-specification.
+UPHY electrical programming guidelines are documented in Tegra210 TRM.
+Program these electrical settings for proper eye diagram in Gen1 and Gen2
+link speeds.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Reviewed-by: JC Kuo <jckuo@nvidia.com>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  | 108 +++++++++++++++++++++
- 1 file changed, 108 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
+V5: No change
 
-diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
-new file mode 100644
-index 0000000..cde4e11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
-@@ -0,0 +1,108 @@
-+Device tree binding for NVIDIA Tegra XUSB device mode controller (XUDC)
-+=======================================================================
+V4: No change
+
+V3: No change
+
+V2: Addressed coding style comments
+
+ drivers/pci/controller/pci-tegra.c | 107 +++++++++++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 39a8cbf6da24..c38a370ed853 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -177,6 +177,32 @@
+ 
+ #define AFI_PEXBIAS_CTRL_0		0x168
+ 
++#define RP_ECTL_2_R1	0x00000e84
++#define  RP_ECTL_2_R1_RX_CTLE_1C_MASK		0xffff
 +
-+The Tegra XUDC controller supports both USB 2.0 HighSpeed/FullSpeed and
-+USB 3.0 SuperSpeed protocols.
++#define RP_ECTL_4_R1	0x00000e8c
++#define  RP_ECTL_4_R1_RX_CDR_CTRL_1C_MASK	(0xffff << 16)
++#define  RP_ECTL_4_R1_RX_CDR_CTRL_1C_SHIFT	16
 +
-+Required properties:
-+--------------------
-+- compatible: For Tegra210, must contain "nvidia,tegra210-xudc".
-+- reg: Must contain the base and length of the XUSB device registers, XUSB device
-+  PCI Config registers and XUSB device controller registers.
-+- reg-names: Must include all the register names needed for the driver
-+- interrupts: Must contain the XUSB device interrupt.
-+- clocks: Must contain an entry for all clocks used.
-+  See ../clock/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+   - dev: Clock to enable core XUSB dev clock.
-+   - ss: Clock to enable XUSB super speed clock.
-+   - ss_src: Clock to enable XUSB super speed dev clock.
-+   - hs_src: Clock to enable XUSB high speed dev clock.
-+   - fs_src: Clock to enable XUSB full speed dev clock.
-+- nvidia,xusb-padctl: phandle to the XUSB pad controller that is used to
-+  configure the USB pads used by the XUDC controller.
-+- power-domains: A list of PM domain specifiers that reference each power-domain
-+  used by the XUSB device mode controller. This list must comprise of a specifier
-+  for the XUSBA and XUSBB power-domains. See ../power/power_domain.txt and
-+  ../arm/tegra/nvidia,tegra20-pmc.txt for details.
-+- power-domain-names: A list of names that represent each of the specifiers in
-+  the 'power-domains' property. Must include 'ss' and 'dev'.
-+- phys: Must contain an entry for each entry in phy-names.
-+  See ../phy/phy-bindings.txt for details.
-+- phy-names: Should include an entry for each PHY used by the controller.
-+  Names must be "usb2", and "usb3" if support SuperSpeed device mode.
-+  - "usb3" phy, SuperSpeed (SSTX+/SSTX-/SSRX+/SSRX-) data lines.
-+  - "usb2" phy, USB 2.0 (D+/D-) data lines.
++#define RP_ECTL_5_R1	0x00000e90
++#define  RP_ECTL_5_R1_RX_EQ_CTRL_L_1C_MASK	0xffffffff
 +
-+For Tegra210:
-+- avddio-usb-supply: PCIe/USB3 analog logic power supply. Must supply 1.05 V.
-+- hvdd-usb-supply: USB controller power supply. Must supply 3.3 V.
++#define RP_ECTL_6_R1	0x00000e94
++#define  RP_ECTL_6_R1_RX_EQ_CTRL_H_1C_MASK	0xffffffff
 +
++#define RP_ECTL_2_R2	0x00000ea4
++#define  RP_ECTL_2_R2_RX_CTLE_1C_MASK	0xffff
 +
-+Optional properties:
-+--------------------
-+- usb-role-switch: boolean property to indicate use of USB Role Switch driver.
++#define RP_ECTL_4_R2	0x00000eac
++#define  RP_ECTL_4_R2_RX_CDR_CTRL_1C_MASK	(0xffff << 16)
++#define  RP_ECTL_4_R2_RX_CDR_CTRL_1C_SHIFT	16
 +
-+Sub-nodes:
-+----------
-+- The port would be added as subnode if use "usb-role-switch" property.
-+  see graph.txt.
++#define RP_ECTL_5_R2	0x00000eb0
++#define  RP_ECTL_5_R2_RX_EQ_CTRL_L_1C_MASK	0xffffffff
 +
-+Example:
-+--------
-+	pmc: pmc@7000e400 {
-+		compatible = "nvidia,tegra210-pmc";
-+		reg = <0x0 0x7000e400 0x0 0x400>;
-+		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
-+		clock-names = "pclk", "clk32k_in";
++#define RP_ECTL_6_R2	0x00000eb4
++#define  RP_ECTL_6_R2_RX_EQ_CTRL_H_1C_MASK	0xffffffff
 +
-+		powergates {
-+			pd_xusbss: xusba {
-+				clocks = <&tegra_car TEGRA210_CLK_XUSB_SS>;
-+				resets = <&tegra_car 156>;
-+				#power-domain-cells = <0>;
-+			};
+ #define RP_VEND_XP	0x00000f00
+ #define  RP_VEND_XP_DL_UP	(1 << 30)
+ 
+@@ -266,6 +292,19 @@ struct tegra_pcie_soc {
+ 	bool has_gen2;
+ 	bool force_pca_enable;
+ 	bool program_uphy;
++	struct {
++		struct {
++			u32 rp_ectl_2_r1;
++			u32 rp_ectl_4_r1;
++			u32 rp_ectl_5_r1;
++			u32 rp_ectl_6_r1;
++			u32 rp_ectl_2_r2;
++			u32 rp_ectl_4_r2;
++			u32 rp_ectl_5_r2;
++			u32 rp_ectl_6_r2;
++		} regs;
++		bool enable;
++	} ectl;
+ };
+ 
+ static inline struct tegra_msi *to_tegra_msi(struct msi_controller *chip)
+@@ -492,6 +531,54 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+ 	writel(value, port->base + RP_VEND_CTL1);
+ }
+ 
++static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
++{
++	const struct tegra_pcie_soc *soc = port->pcie->soc;
++	u32 value;
 +
-+			pd_xusbdev: xusbb {
-+				clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>;
-+				resets = <&tegra_car 95>;
-+				#power-domain-cells = <0>;
-+			};
-+		};
-+	};
++	value = readl(port->base + RP_ECTL_2_R1);
++	value &= ~RP_ECTL_2_R1_RX_CTLE_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_2_r1;
++	writel(value, port->base + RP_ECTL_2_R1);
 +
-+	xudc@700d0000 {
-+		compatible = "nvidia,tegra210-xudc";
-+		reg = <0x0 0x700d0000 0x0 0x8000>,
-+		      <0x0 0x700d8000 0x0 0x1000>,
-+		      <0x0 0x700d9000 0x0 0x1000>;
-+		reg-names = "base", "fpci", "ipfs";
++	value = readl(port->base + RP_ECTL_4_R1);
++	value &= ~RP_ECTL_4_R1_RX_CDR_CTRL_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_4_r1 <<
++				RP_ECTL_4_R1_RX_CDR_CTRL_1C_SHIFT;
++	writel(value, port->base + RP_ECTL_4_R1);
 +
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++	value = readl(port->base + RP_ECTL_5_R1);
++	value &= ~RP_ECTL_5_R1_RX_EQ_CTRL_L_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_5_r1;
++	writel(value, port->base + RP_ECTL_5_R1);
 +
-+		clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_SS>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_HS_SRC>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_FS_SRC>;
-+		clock-names = "dev", "ss", "ss_src", "hs_src", "fs_src";
++	value = readl(port->base + RP_ECTL_6_R1);
++	value &= ~RP_ECTL_6_R1_RX_EQ_CTRL_H_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_6_r1;
++	writel(value, port->base + RP_ECTL_6_R1);
 +
-+		power-domains = <&pd_xusbdev>, <&pd_xusbss>;
-+		power-domain-names = "dev", "ss";
++	value = readl(port->base + RP_ECTL_2_R2);
++	value &= ~RP_ECTL_2_R2_RX_CTLE_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_2_r2;
++	writel(value, port->base + RP_ECTL_2_R2);
 +
-+		nvidia,xusb-padctl = <&padctl>;
++	value = readl(port->base + RP_ECTL_4_R2);
++	value &= ~RP_ECTL_4_R2_RX_CDR_CTRL_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_4_r2 <<
++				RP_ECTL_4_R2_RX_CDR_CTRL_1C_SHIFT;
++	writel(value, port->base + RP_ECTL_4_R2);
 +
-+		phys = <&{/padctl@7009f000/pads/usb2/lanes/usb2-0}>;
-+		phy-names = "usb2;
++	value = readl(port->base + RP_ECTL_5_R2);
++	value &= ~RP_ECTL_5_R2_RX_EQ_CTRL_L_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_5_r2;
++	writel(value, port->base + RP_ECTL_5_R2);
 +
-+		avddio-usb-supply = <&vdd_pex_1v05>;
-+		hvdd-usb-supply = <&vdd_3v3_sys>;
++	value = readl(port->base + RP_ECTL_6_R2);
++	value &= ~RP_ECTL_6_R2_RX_EQ_CTRL_H_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_6_r2;
++	writel(value, port->base + RP_ECTL_6_R2);
++}
 +
-+		usb-role-switch;
-+		port {
-+			usb_role_switch: endpoint@0 {
-+				remote-endpoint = <&bconn_ep>;
-+			};
-+		};
+ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+ {
+ 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
+@@ -518,6 +605,9 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+ 	}
+ 
+ 	tegra_pcie_enable_rp_features(port);
 +
-+	};
++	if (soc->ectl.enable)
++		tegra_pcie_program_ectl_settings(port);
+ }
+ 
+ static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
+@@ -2223,6 +2313,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.has_gen2 = false,
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
++	.ectl.enable = false,
+ };
+ 
+ static const struct tegra_pcie_port_soc tegra30_pcie_ports[] = {
+@@ -2246,6 +2337,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+ 	.has_gen2 = false,
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
++	.ectl.enable = false,
+ };
+ 
+ static const struct tegra_pcie_soc tegra124_pcie = {
+@@ -2262,6 +2354,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+ 	.has_gen2 = true,
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
++	.ectl.enable = false,
+ };
+ 
+ static const struct tegra_pcie_soc tegra210_pcie = {
+@@ -2278,6 +2371,19 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+ 	.has_gen2 = true,
+ 	.force_pca_enable = true,
+ 	.program_uphy = true,
++	.ectl = {
++		.regs = {
++			.rp_ectl_2_r1 = 0x0000000f,
++			.rp_ectl_4_r1 = 0x00000067,
++			.rp_ectl_5_r1 = 0x55010000,
++			.rp_ectl_6_r1 = 0x00000001,
++			.rp_ectl_2_r2 = 0x0000008f,
++			.rp_ectl_4_r2 = 0x000000c7,
++			.rp_ectl_5_r2 = 0x55010000,
++			.rp_ectl_6_r2 = 0x00000001,
++		},
++		.enable = true,
++	},
+ };
+ 
+ static const struct tegra_pcie_port_soc tegra186_pcie_ports[] = {
+@@ -2301,6 +2407,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+ 	.has_gen2 = true,
+ 	.force_pca_enable = false,
+ 	.program_uphy = false,
++	.ectl.enable = false,
+ };
+ 
+ static const struct of_device_id tegra_pcie_of_match[] = {
 -- 
-2.7.4
+2.17.1
