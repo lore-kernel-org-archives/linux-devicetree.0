@@ -1,148 +1,230 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 14/21] iommu/mediatek: Add mmu1 support
-Date: Mon, 17 Jun 2019 17:58:28 +0200
-Message-ID: <dbed27ec-381e-8feb-736b-508d9d6e40cf@gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
-	<1560169080-27134-15-git-send-email-yong.wu@mediatek.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 2/2] macb: Add support for SiFive FU540-C000
+Date: Mon, 17 Jun 2019 17:58:34 +0200
+Message-ID: <20190617155834.GK25211@lunn.ch>
+References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
+ <1560745167-9866-3-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1560169080-27134-15-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1560745167-9866-3-git-send-email-yash.shah@sifive.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: davem@davemloft.net, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com, ynezz@true.cz, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/06/2019 14:17, Yong Wu wrote:
-> Normally the M4U HW connect EMI with smi. the diagram is like below:
->               EMI
->                |
->               M4U
->                |
->             smi-common
->                |
->        -----------------
->        |    |    |     |    ...
->     larb0 larb1  larb2 larb3
+On Mon, Jun 17, 2019 at 09:49:27AM +0530, Yash Shah wrote:
+> The management IP block is tightly coupled with the Cadence MACB IP
+> block on the FU540, and manages many of the boundary signals from the
+> MACB IP. This patch only controls the tx_clk input signal to the MACB
+> IP. Future patches may add support for monitoring or controlling other
+> IP boundary signals.
 > 
-> Actually there are 2 mmu cells in the M4U HW, like this diagram:
-> 
->               EMI
->            ---------
->             |     |
->            mmu0  mmu1     <- M4U
->             |     |
->            ---------
->                |
->             smi-common
->                |
->        -----------------
->        |    |    |     |    ...
->     larb0 larb1  larb2 larb3
-> 
-> This patch add support for mmu1. In order to get better performance,
-> we could adjust some larbs go to mmu1 while the others still go to
-> mmu0. This is controlled by a SMI COMMON register SMI_BUS_SEL(0x220).
-> 
-> mt2712, mt8173 and mt8183 M4U HW all have 2 mmu cells. the default
-> value of that register is 0 which means all the larbs go to mmu0
-> defaultly.
-> 
-> This is a preparing patch for adjusting SMI_BUS_SEL for mt8183.
-> 
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
-Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > ---
->  drivers/iommu/mtk_iommu.c | 46 +++++++++++++++++++++++++++++-----------------
->  1 file changed, 29 insertions(+), 17 deletions(-)
+>  drivers/net/ethernet/cadence/Kconfig     |   6 ++
+>  drivers/net/ethernet/cadence/macb_main.c | 129 +++++++++++++++++++++++++++++++
+>  2 files changed, 135 insertions(+)
 > 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 3a14301..ec4ce74 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -72,26 +72,32 @@
->  #define F_INT_CLR_BIT				BIT(12)
+> diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
+> index b998401..d478fae 100644
+> --- a/drivers/net/ethernet/cadence/Kconfig
+> +++ b/drivers/net/ethernet/cadence/Kconfig
+> @@ -48,4 +48,10 @@ config MACB_PCI
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called macb_pci.
 >  
->  #define REG_MMU_INT_MAIN_CONTROL		0x124
-> -#define F_INT_TRANSLATION_FAULT			BIT(0)
-> -#define F_INT_MAIN_MULTI_HIT_FAULT		BIT(1)
-> -#define F_INT_INVALID_PA_FAULT			BIT(2)
-> -#define F_INT_ENTRY_REPLACEMENT_FAULT		BIT(3)
-> -#define F_INT_TLB_MISS_FAULT			BIT(4)
-> -#define F_INT_MISS_TRANSACTION_FIFO_FAULT	BIT(5)
-> -#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT	BIT(6)
-> +						/* mmu0 | mmu1 */
-> +#define F_INT_TRANSLATION_FAULT			(BIT(0) | BIT(7))
-> +#define F_INT_MAIN_MULTI_HIT_FAULT		(BIT(1) | BIT(8))
-> +#define F_INT_INVALID_PA_FAULT			(BIT(2) | BIT(9))
-> +#define F_INT_ENTRY_REPLACEMENT_FAULT		(BIT(3) | BIT(10))
-> +#define F_INT_TLB_MISS_FAULT			(BIT(4) | BIT(11))
-> +#define F_INT_MISS_TRANSACTION_FIFO_FAULT	(BIT(5) | BIT(12))
-> +#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT	(BIT(6) | BIT(13))
+> +config MACB_SIFIVE_FU540
+> +	bool "Cadence MACB/GEM support for SiFive FU540 SoC"
+> +	depends on MACB && GPIO_SIFIVE
+> +	help
+> +	  Enable the Cadence MACB/GEM support for SiFive FU540 SoC.
+> +
+>  endif # NET_VENDOR_CADENCE
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> index c049410..275b5e8 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -10,6 +10,7 @@
 >  
->  #define REG_MMU_CPE_DONE			0x12C
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  #include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+>  #include <linux/crc32.h>
+>  #include <linux/module.h>
+>  #include <linux/moduleparam.h>
+> @@ -40,6 +41,15 @@
+>  #include <linux/pm_runtime.h>
+>  #include "macb.h"
 >  
->  #define REG_MMU_FAULT_ST1			0x134
-> +#define F_REG_MMU0_FAULT_MASK			GENMASK(6, 0)
-> +#define F_REG_MMU1_FAULT_MASK			GENMASK(13, 7)
+> +/* This structure is only used for MACB on SiFive FU540 devices */
+> +struct sifive_fu540_macb_mgmt {
+> +	void __iomem *reg;
+> +	unsigned long rate;
+> +	struct clk_hw hw;
+> +};
+> +
+> +static struct sifive_fu540_macb_mgmt *mgmt;
+> +
+>  #define MACB_RX_BUFFER_SIZE	128
+>  #define RX_BUFFER_MULTIPLE	64  /* bytes */
 >  
-> -#define REG_MMU_FAULT_VA			0x13c
-> +#define REG_MMU0_FAULT_VA			0x13c
->  #define F_MMU_FAULT_VA_WRITE_BIT		BIT(1)
->  #define F_MMU_FAULT_VA_LAYER_BIT		BIT(0)
+> @@ -3903,6 +3913,116 @@ static int at91ether_init(struct platform_device *pdev)
+>  	return 0;
+>  }
 >  
-> -#define REG_MMU_INVLD_PA			0x140
-> -#define REG_MMU_INT_ID				0x150
-> -#define F_MMU0_INT_ID_LARB_ID(a)		(((a) >> 7) & 0x7)
-> -#define F_MMU0_INT_ID_PORT_ID(a)		(((a) >> 2) & 0x1f)
-> +#define REG_MMU0_INVLD_PA			0x140
-> +#define REG_MMU1_FAULT_VA			0x144
-> +#define REG_MMU1_INVLD_PA			0x148
-> +#define REG_MMU0_INT_ID				0x150
-> +#define REG_MMU1_INT_ID				0x154
-> +#define F_MMU_INT_ID_LARB_ID(a)			(((a) >> 7) & 0x7)
-> +#define F_MMU_INT_ID_PORT_ID(a)			(((a) >> 2) & 0x1f)
+> +static unsigned long fu540_macb_tx_recalc_rate(struct clk_hw *hw,
+> +					       unsigned long parent_rate)
+> +{
+> +	return mgmt->rate;
+> +}
+> +
+> +static long fu540_macb_tx_round_rate(struct clk_hw *hw, unsigned long rate,
+> +				     unsigned long *parent_rate)
+> +{
+> +	if (WARN_ON(rate < 2500000))
+> +		return 2500000;
+> +	else if (rate == 2500000)
+> +		return 2500000;
+> +	else if (WARN_ON(rate < 13750000))
+> +		return 2500000;
+> +	else if (WARN_ON(rate < 25000000))
+> +		return 25000000;
+> +	else if (rate == 25000000)
+> +		return 25000000;
+> +	else if (WARN_ON(rate < 75000000))
+> +		return 25000000;
+> +	else if (WARN_ON(rate < 125000000))
+> +		return 125000000;
+> +	else if (rate == 125000000)
+> +		return 125000000;
+> +
+> +	WARN_ON(rate > 125000000);
+> +
+> +	return 125000000;
+> +}
+> +
+> +static int fu540_macb_tx_set_rate(struct clk_hw *hw, unsigned long rate,
+> +				  unsigned long parent_rate)
+> +{
+> +	rate = fu540_macb_tx_round_rate(hw, rate, &parent_rate);
+> +	if (rate != 125000000)
+> +		iowrite32(1, mgmt->reg);
+> +	else
+> +		iowrite32(0, mgmt->reg);
+> +	mgmt->rate = rate;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct clk_ops fu540_c000_ops = {
+> +	.recalc_rate = fu540_macb_tx_recalc_rate,
+> +	.round_rate = fu540_macb_tx_round_rate,
+> +	.set_rate = fu540_macb_tx_set_rate,
+> +};
+> +
+> +static int fu540_c000_clk_init(struct platform_device *pdev, struct clk **pclk,
+> +			       struct clk **hclk, struct clk **tx_clk,
+> +			       struct clk **rx_clk, struct clk **tsu_clk)
+> +{
+> +	struct clk_init_data init;
+> +	int err = 0;
+> +
+> +	err = macb_clk_init(pdev, pclk, hclk, tx_clk, rx_clk, tsu_clk);
+> +	if (err)
+> +		return err;
+> +
+> +	mgmt = devm_kzalloc(&pdev->dev, sizeof(*mgmt), GFP_KERNEL);
+> +	if (!mgmt)
+> +		return -ENOMEM;
+> +
+> +	init.name = "sifive-gemgxl-mgmt";
+> +	init.ops = &fu540_c000_ops;
+> +	init.flags = 0;
+> +	init.num_parents = 0;
+> +
+> +	mgmt->rate = 0;
+> +	mgmt->hw.init = &init;
+> +
+> +	*tx_clk = clk_register(NULL, &mgmt->hw);
+> +	if (IS_ERR(*tx_clk))
+> +		return PTR_ERR(*tx_clk);
+> +
+> +	err = clk_prepare_enable(*tx_clk);
+> +	if (err)
+> +		dev_err(&pdev->dev, "failed to enable tx_clk (%u)\n", err);
+> +	else
+> +		dev_info(&pdev->dev, "Registered clk switch '%s'\n", init.name);
+> +
+> +	return 0;
+> +}
+> +
+> +static int fu540_c000_init(struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	if (!res)
+> +		return -ENODEV;
+> +
+> +	mgmt->reg = ioremap(res->start, resource_size(res));
+> +	if (!mgmt->reg)
+> +		return -ENOMEM;
+> +
+> +	return macb_init(pdev);
+> +}
+> +
+> +static const struct macb_config fu540_c000_config = {
+> +	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_JUMBO |
+> +		MACB_CAPS_GEM_HAS_PTP,
+> +	.dma_burst_length = 16,
+> +	.clk_init = fu540_c000_clk_init,
+> +	.init = fu540_c000_init,
+> +	.jumbo_max_len = 10240,
+> +};
+> +
+>  static const struct macb_config at91sam9260_config = {
+>  	.caps = MACB_CAPS_USRIO_HAS_CLKEN | MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII,
+>  	.clk_init = macb_clk_init,
+> @@ -3992,6 +4112,9 @@ static int at91ether_init(struct platform_device *pdev)
+>  	{ .compatible = "cdns,emac", .data = &emac_config },
+>  	{ .compatible = "cdns,zynqmp-gem", .data = &zynqmp_config},
+>  	{ .compatible = "cdns,zynq-gem", .data = &zynq_config },
+> +#ifdef CONFIG_MACB_SIFIVE_FU540
+> +	{ .compatible = "sifive,fu540-macb", .data = &fu540_c000_config },
+> +#endif
+
+This #ifdef should not be needed.
+
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, macb_dt_ids);
+> @@ -4199,6 +4322,9 @@ static int macb_probe(struct platform_device *pdev)
 >  
->  #define MTK_PROTECT_PA_ALIGN			128
->  
-> @@ -210,13 +216,19 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
->  
->  	/* Read error info from registers */
->  	int_state = readl_relaxed(data->base + REG_MMU_FAULT_ST1);
-> -	fault_iova = readl_relaxed(data->base + REG_MMU_FAULT_VA);
-> +	if (int_state & F_REG_MMU0_FAULT_MASK) {
-> +		regval = readl_relaxed(data->base + REG_MMU0_INT_ID);
-> +		fault_iova = readl_relaxed(data->base + REG_MMU0_FAULT_VA);
-> +		fault_pa = readl_relaxed(data->base + REG_MMU0_INVLD_PA);
-> +	} else {
-> +		regval = readl_relaxed(data->base + REG_MMU1_INT_ID);
-> +		fault_iova = readl_relaxed(data->base + REG_MMU1_FAULT_VA);
-> +		fault_pa = readl_relaxed(data->base + REG_MMU1_INVLD_PA);
-> +	}
->  	layer = fault_iova & F_MMU_FAULT_VA_LAYER_BIT;
->  	write = fault_iova & F_MMU_FAULT_VA_WRITE_BIT;
-> -	fault_pa = readl_relaxed(data->base + REG_MMU_INVLD_PA);
-> -	regval = readl_relaxed(data->base + REG_MMU_INT_ID);
-> -	fault_larb = F_MMU0_INT_ID_LARB_ID(regval);
-> -	fault_port = F_MMU0_INT_ID_PORT_ID(regval);
-> +	fault_larb = F_MMU_INT_ID_LARB_ID(regval);
-> +	fault_port = F_MMU_INT_ID_PORT_ID(regval);
->  
->  	fault_larb = data->plat_data->larbid_remap[fault_larb];
->  
-> 
+>  err_disable_clocks:
+>  	clk_disable_unprepare(tx_clk);
+> +#ifdef CONFIG_MACB_SIFIVE_FU540
+> +	clk_unregister(tx_clk);
+> +#endif
+
+So long as tx_clk is NULL, you can call clk_unregister(). So please
+remove the #ifdef.
+
+
+>  	clk_disable_unprepare(hclk);
+>  	clk_disable_unprepare(pclk);
+>  	clk_disable_unprepare(rx_clk);
+> @@ -4233,6 +4359,9 @@ static int macb_remove(struct platform_device *pdev)
+>  		pm_runtime_dont_use_autosuspend(&pdev->dev);
+>  		if (!pm_runtime_suspended(&pdev->dev)) {
+>  			clk_disable_unprepare(bp->tx_clk);
+> +#ifdef CONFIG_MACB_SIFIVE_FU540
+> +			clk_unregister(bp->tx_clk);
+> +#endif
+
+Same here.
+
+In general try to avoid #ifdef in C code.
+
+   Andrew
