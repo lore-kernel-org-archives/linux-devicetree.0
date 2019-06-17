@@ -1,178 +1,82 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v5 3/5] mtd: Add support for HyperBus memory devices
-Date: Mon, 17 Jun 2019 22:45:45 +0300
-Message-ID: <9dbd8132-ce8f-9ce7-ddf5-d9826e2a1be1@cogentembedded.com>
-References: <20190609103227.24875-1-vigneshr@ti.com>
- <20190609103227.24875-4-vigneshr@ti.com>
- <58e9608d-35ff-0436-6075-b2e4ed4b8594@cogentembedded.com>
- <f47d4d57-afb2-3b39-fae9-3ed740a2b8a6@ti.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Date: Mon, 17 Jun 2019 13:03:14 -0700
+Message-ID: <20190617200314.GT137143@google.com>
+References: <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
+ <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+ <20190610205233.GB137143@google.com>
+ <20190611104913.egsbwcedshjdy3m5@holly.lan>
+ <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
+ <20190611223019.GH137143@google.com>
+ <20190612110325.xdn3q2aod52oalge@holly.lan>
+ <20190612192642.GK137143@google.com>
+ <20190617130150.GA21113@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f47d4d57-afb2-3b39-fae9-3ed740a2b8a6@ti.com>
-Content-Language: en-MW
+Content-Disposition: inline
+In-Reply-To: <20190617130150.GA21113@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh Raghavendra <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Brian Norris <briannorris@google.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Hi Pavel,
 
-On 06/11/2019 02:57 PM, Vignesh Raghavendra wrote:
-
->>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
->>> Bus interface between a host system master and one or more slave
->>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
->>> or ASIC devices with random access NOR flash memory (called HyperFlash)
->>> or self refresh DRAM (called HyperRAM).
->>>
->>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
->>> signal and either Single-ended clock(3.0V parts) or Differential clock
->>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
->>> At bus level, it follows a separate protocol described in HyperBus
->>> specification[1].
->>>
->>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
->>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
->>> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
->>> HyperBus operates at >166MHz frequencies.
->>> HyperRAM provides direct random read/write access to flash memory
->>> array.
->>>
->>> But, HyperBus memory controllers seem to abstract implementation details
->>> and expose a simple MMIO interface to access connected flash.
->>>
->>> Add support for registering HyperFlash devices with MTD framework. MTD
->>> maps framework along with CFI chip support framework are used to support
->>> communicating with flash.
->>>
->>> Framework is modelled along the lines of spi-nor framework. HyperBus
->>> memory controller (HBMC) drivers calls hyperbus_register_device() to
->>> register a single HyperFlash device. HyperFlash core parses MMIO access
->>> information from DT, sets up the map_info struct, probes CFI flash and
->>> registers it with MTD framework.
->>>
->>> Some HBMC masters need calibration/training sequence[3] to be carried
->>> out, in order for DLL inside the controller to lock, by reading a known
->>> string/pattern. This is done by repeatedly reading CFI Query
->>> Identification String. Calibration needs to be done before trying to detect
->>> flash as part of CFI flash probe.
->>>
->>> HyperRAM is not supported at the moment.
->>>
->>> HyperBus specification can be found at[1]
->>> HyperFlash datasheet can be found at[2]
->>>
->>> [1] https://www.cypress.com/file/213356/download
->>> [2] https://www.cypress.com/file/213346/download
->>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->>>     Table 12-5741. HyperFlash Access Sequence
->>>
->>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->> [...]
->>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
->>> new file mode 100644
->>> index 000000000000..df1f75e10b1a
->>> --- /dev/null
->>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
->>> @@ -0,0 +1,191 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +//
->>> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->>> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
->>> +
->>> +#include <linux/err.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/module.h>
->>> +#include <linux/mtd/hyperbus.h>
->>> +#include <linux/mtd/map.h>
->>> +#include <linux/mtd/mtd.h>
->>> +#include <linux/mtd/cfi.h>
->>> +#include <linux/of.h>
->>> +#include <linux/of_address.h>
->>> +#include <linux/types.h>
->>> +
->>> +#define HYPERBUS_CALIB_COUNT 25
->>
->>    Mhm, I think I've already protested about this being #define'd here...
+On Mon, Jun 17, 2019 at 03:01:51PM +0200, Pavel Machek wrote:
+> Hi!
 > 
-> I thought you had agreed that default optional calibration routine can
-> be part of core code and thus this #define.
+> > > Certainly "linear" (this device will work more or less correctly if the
+> > > userspace applies perceptual curves). Not sure about logarithmic since
+> > > what is actually useful is something that is "perceptually linear"
+> > > (logarithmic is merely a way to approximate that).
+> > > 
+> > > I do wonder about a compatible string like most-detailed to
+> > > least-detailed description. This for a PWM with the auto-generated
+> > > tables we'd see something like:
+> > > 
+> > > cie-1991,perceptual,non-linear
+> > > 
+> > > For something that is non-linear but we are not sure what its tables are
+> > > we can offer just "non-linear".
+> > 
+> > Thanks for the feedback!
+> > 
+> > It seems clear that we want a string for the added flexibility. I can
+> > work on a patch with the compatible string like description you
+> > suggested and we can discuss in the review if we want to go with that
+> > or prefer something else.
 > 
-> Anyways, what is your preference here? Drop the constant and use a local
-> variable in hyperbus_calibrate()?
-> Or are you suggesting to move hyperbus_calibrate() TI's specific driver?
+> Compatible-like string seems overly complicated.
 
-   I'm just not comfortable with the common HF code using quite an arbitrary
-constant...
+I see the merit in the sense that it allows to provide more precision
+for if userspace wants/needs it, without requiring userspace to know all
+possible (future) options. If userspace wants to keep things simple it
+can just check for check for "s == 'non-linear'" and
+"s.ends_with(',non-linear')"
 
->> [...]
->>> diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
->>> new file mode 100644
->>> index 000000000000..ee2eefd822c9
->>> --- /dev/null
->>> +++ b/include/linux/mtd/hyperbus.h
->>> @@ -0,0 +1,91 @@
-[...]
->>> + * @mtd: pointer to MTD struct
->>> + * @ctlr: pointer to HyperBus controller struct
->>> + * @memtype: type of memory device: HyperFlash or HyperRAM
->>> + * @registered: flag to indicate whether device is registered with MTD core
->>> + */
->>> +
->>> +struct hyperbus_device {
->>> +	struct map_info map;
->>> +	struct device_node *np;
->>> +	struct mtd_info *mtd;
->>> +	struct hyperbus_ctlr *ctlr;
->>> +	enum hyperbus_memtype memtype;
->>> +	bool registered;
->>> +};
->>> +
->>> +/**
->>> + * struct hyperbus_ops - struct representing custom HyperBus operations
->>> + * @read16: read 16 bit of data, usually from register/ID-CFI space
->>> + * @write16: write 16 bit of data, usually to register/ID-CFI space
->>
->>    Usually? How to differ the register/memory transfers if both are possible?
+In any case, I posted a first version of the patch:
 
-> CFI + map framework does not provide a way to differentiate b/w reg
-> access vs memory access. read16()/write16() is used to either access
-> registers or for sending various cmds like lock/unlock etc or for
-> programming a single word.
-> For regular read/writes copy_from() and copy_to() are used.
+https://lore.kernel.org/patchwork/patch/1088760/
 
-   In my case only copy_from() would exist -- no proper acceleration for
-writes...
+Maybe best to center the discussion there?
 
-> Looking at HyperBus protocol, controllers would not need to
-> differentiate b/w registers vs memory transfers for HyperFlash devices.
-> So, I think I can drop read16/write16 and redirect these calls to
-> copy_from()/copy_to()
-
-   Doubt it, frankly speaking.
-
-> I mainly added these functions keeping HyperRAM in mind. Idea was
-> drivers would look at hyperbus_device->memtype and set to register
-> access mode for HyperRAM in case of write16()/read16(). Looks like the
-> interface is not intuitive enough
-> So, will drop these and add it back when adding HyperRAM support.
+> > > Instead one valid value for the sysfs should be "unknown" and this be
+> > > the default for drivers we have not analysed (this also makes it easy to
+> > > introduce change here).
+> > 
+> > An "unknown" value sounds good, it allows userspace to just do what it
+> > did/would hace done before this attribute existed.
 > 
-> Does that work for your HW as well?
+> What about simply not presenting the attribute when we don't have the
+> information?
 
-   Don't think so...
+I'm open to either, I mentioned it earlier and Daniel seemed to prefer
+the 'unknown' value so I went with it in the first version (it's also
+slightly less code).
 
-   However, my HyperFlash driver could make use of the following #define's in
-the HyperBus header:
+Cheers
 
-#define HF_CMD_CA47		BIT(7)	/* Read */
-#define HF_CMD_CA46		BIT(6)	/* Register space */
-#define HF_CMD_CA45		BIT(5)	/* Linear burst */
-
-#define HF_CMD_READ_REG		(HF_CMD_CA47 | HF_CMD_CA46)
-#define HF_CMD_READ_MEM		HF_CMD_CA47
-#define HF_CMD_WRITE_REG	HF_CMD_CA46
-#define HF_CMD_WRITE_MEM	0
-
-MBR, Sergei
+Matthias
