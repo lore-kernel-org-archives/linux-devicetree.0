@@ -1,8 +1,8 @@
 Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 24/27] PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
-Date: Mon, 17 Jun 2019 23:09:49 +0530
-Message-ID: <20190617173952.29363-25-mmaddireddy@nvidia.com>
+Subject: [PATCH V5 25/27] PCI: Add DT binding for "reset-gpios" property
+Date: Mon, 17 Jun 2019 23:09:50 +0530
+Message-ID: <20190617173952.29363-26-mmaddireddy@nvidia.com>
 In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,77 +11,34 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-In Tegra210 AFI design has clamp value for the BIAS pad as 0, which keeps
-the bias pad in non power down mode. This is leading to power consumption
-of 2 mW in BIAS pad, even if the PCIe partition is powergated. To avoid
-unnecessary power consumption, put PEX CLK & BIAS pads in deep power down
-mode when PCIe partition is power gated.
+Add DT binding for "reset-gpios" property which supports GPIO based PERST#
+signal.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
 V5: No change
 
 V4: No change
 
-V3: No change
+V3: Moved to common pci binding doc
 
-V2: Using standard pinctrl functions to apply default and idle states
+V2: Using standard "reset-gpio" property
 
- drivers/pci/controller/pci-tegra.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pci/pci.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 34c5cabd8e80..d3b9e6440dd6 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -30,6 +30,7 @@
- #include <linux/of_platform.h>
- #include <linux/pci.h>
- #include <linux/phy/phy.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- #include <linux/sizes.h>
-@@ -2838,6 +2839,7 @@ static int __maybe_unused tegra_pcie_pm_suspend(struct device *dev)
- 	if (IS_ENABLED(CONFIG_PCI_MSI))
- 		tegra_pcie_disable_msi(pcie);
- 
-+	pinctrl_pm_select_idle_state(dev);
- 	tegra_pcie_power_off(pcie);
- 
- 	return 0;
-@@ -2853,6 +2855,13 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
- 		dev_err(dev, "tegra pcie power on fail: %d\n", err);
- 		return err;
- 	}
-+
-+	err = pinctrl_pm_select_default_state(dev);
-+	if (err < 0) {
-+		dev_err(dev, "failed to disable PCIe IO DPD: %d\n", err);
-+		goto poweroff;
-+	}
-+
- 	tegra_pcie_enable_controller(pcie);
- 	tegra_pcie_setup_translations(pcie);
- 
-@@ -2862,7 +2871,7 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
- 	err = clk_prepare_enable(pcie->pex_clk);
- 	if (err) {
- 		dev_err(dev, "failed to enable PEX clock: %d\n", err);
--		goto poweroff;
-+		goto pex_dpd_enable;
- 	}
- 
- 	reset_control_deassert(pcie->pex_rst);
-@@ -2883,6 +2892,8 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
- disable_pex_clk:
- 	reset_control_assert(pcie->pex_rst);
- 	clk_disable_unprepare(pcie->pex_clk);
-+pex_dpd_enable:
-+	pinctrl_pm_select_idle_state(dev);
- poweroff:
- 	tegra_pcie_power_off(pcie);
- 
+diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+index c77981c5dd18..79124898aa5b 100644
+--- a/Documentation/devicetree/bindings/pci/pci.txt
++++ b/Documentation/devicetree/bindings/pci/pci.txt
+@@ -24,3 +24,6 @@ driver implementation may support the following properties:
+    unsupported link speed, for instance, trying to do training for
+    unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+    for gen2, and '1' for gen1. Any other values are invalid.
++- reset-gpios:
++   If present this property specifies PERST# GPIO. Host drivers can parse the
++   GPIO and apply fundamental reset to endpoints.
 -- 
 2.17.1
