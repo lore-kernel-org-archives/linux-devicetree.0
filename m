@@ -1,79 +1,57 @@
-Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
+Return-Path: <SRS0=7yb5=UQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:12003 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfFQRlO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Jun 2019 13:41:14 -0400
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 17/27] PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
-Date: Tue, 18 Jun 2019 23:31:56 +0530
-Message-ID: <20190618180206.4908-18-mmaddireddy@nvidia.com>
-In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
-References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+Subject: [PATCH V5 22/27] dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
+Date: Mon, 17 Jun 2019 23:09:47 +0530
+Message-ID: <20190617173952.29363-23-mmaddireddy@nvidia.com>
+In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
 To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Disable controllers which failed to link up and configure CLKREQ# signals
-of these controllers as GPIO. This is required to avoid CLKREQ# signal of
-inactive controllers interfering with PLLE power down sequence.
-
-PCIE_CLKREQ_GPIO bits are defined only in Tegra186, however programming
-these bits in other SoCs doesn't cause any side effects. Program these
-bits for all Tegra SoCs to avoid conditional check.
+Document PCIe DPD pinctrl optional property to put PEX clk & BIAS pads
+in low power mode.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
-V6: No change
-
 V5: No change
 
 V4: No change
 
 V3: No change
 
-V2: Corrected the comment in driver
+V2: Using standard pinctrl names, default and idle
 
- drivers/pci/controller/pci-tegra.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt       | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index abb94595c76b..3d9028cecc18 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -160,6 +160,8 @@
- #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_211	(0x1 << 20)
- #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_411	(0x2 << 20)
- #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_111	(0x2 << 20)
-+#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(x)		(1 << ((x) + 29))
-+#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL		(0x7 << 29)
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+index 145a4f04194f..7939bca47861 100644
+--- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+@@ -65,6 +65,14 @@ Required properties:
+   - afi
+   - pcie_x
  
- #define AFI_FUSE			0x104
- #define  AFI_FUSE_PCIE_T0_GEN2_DIS	(1 << 2)
-@@ -741,6 +743,12 @@ static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
- 
- 	value &= ~AFI_PEX_CTRL_REFCLK_EN;
- 	afi_writel(port->pcie, value, ctrl);
++Optional properties:
++- pinctrl-names: A list of pinctrl state names. Must contain the following
++  entries:
++  - "default": active state, puts PCIe I/O out of deep power down state
++  - "idle": puts PCIe I/O into deep power down state
++- pinctrl-0: phandle for the default/active state of pin configurations.
++- pinctrl-1: phandle for the idle state of pin configurations.
 +
-+	/* disable PCIe port and set CLKREQ# as GPIO to allow PLLE power down */
-+	value = afi_readl(port->pcie, AFI_PCIE_CONFIG);
-+	value |= AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
-+	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
-+	afi_writel(port->pcie, value, AFI_PCIE_CONFIG);
- }
- 
- static void tegra_pcie_port_free(struct tegra_pcie_port *port)
-@@ -1153,9 +1161,12 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- 	value = afi_readl(pcie, AFI_PCIE_CONFIG);
- 	value &= ~AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_MASK;
- 	value |= AFI_PCIE_CONFIG_PCIE_DISABLE_ALL | pcie->xbar_config;
-+	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL;
- 
--	list_for_each_entry(port, &pcie->ports, list)
-+	list_for_each_entry(port, &pcie->ports, list) {
- 		value &= ~AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
-+		value &= ~AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
-+	}
- 
- 	afi_writel(pcie, value, AFI_PCIE_CONFIG);
- 
+ Required properties on Tegra124 and later (deprecated):
+ - phys: Must contain an entry for each entry in phy-names.
+ - phy-names: Must include the following entries:
 -- 
 2.17.1
