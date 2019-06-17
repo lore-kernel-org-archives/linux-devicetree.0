@@ -1,127 +1,144 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 3/3] mmc: sdhci-of-arasan: Add support for ZynqMP Platform
- Tap Delays Setup
-Date: Mon, 17 Jun 2019 13:27:43 +0200
-Message-ID: <5feac3fb-bef3-b7d1-57d6-81e115e1f555@xilinx.com>
-References: <1560247011-26369-1-git-send-email-manish.narani@xilinx.com>
- <1560247011-26369-4-git-send-email-manish.narani@xilinx.com>
- <CAPDyKFrJwpwUUX_q2kcR9QY_fv9Lgos+ixPmU6JMeJVqJAiFpg@mail.gmail.com>
+From: Johannes Berg <johannes@sipsolutions.net>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Mon, 17 Jun 2019 13:28:39 +0200
+Message-ID: <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+ <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+ <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ (sfid-20190611_135708_651569_0097B773)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrJwpwUUX_q2kcR9QY_fv9Lgos+ixPmU6JMeJVqJAiFpg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Manish Narani <manish.narani@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Adrian Hunter <adrian.hunter@intel.com>, rajan.vaja@xilinx.com, jolly.shah@xilinx.com, nava.manne@xilinx.com, Olof Johansson <olof@lixom.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ (sfid-20190611_135708_651569_0097B773)
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: DTML <devicetree@vger.kernel.org>, syadagir@codeaurora.org, Eric Caruso <ejcaruso@google.com>, Dan Williams <dcbw@redhat.com>, linux-arm-msm@vger.kernel.org, abhishek.esse@gmail.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, evgreen@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Alex Elder <elder@linaro.org>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, Networking <netdev@vger.kernel.org>, linux-soc@vger.kernel.org, David Miller <davem@davemloft.net>, cpratapa@codeaurora.org, Ben Chan <benchan@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 17. 06. 19 13:15, Ulf Hansson wrote:
-> On Tue, 11 Jun 2019 at 11:57, Manish Narani <manish.narani@xilinx.com> wrote:
->>
->> Apart from taps set by auto tuning, ZynqMP platform has feature to set
->> the tap values manually. Add support to read tap delay values from
->> DT and set the same in HW via ZynqMP SoC framework. Reading Tap
->> Delays from DT is optional, if the property is not available in DT the
->> driver will use the pre-defined Tap Delay Values.
->>
->> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
->> ---
->>  drivers/mmc/host/sdhci-of-arasan.c | 173 ++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 172 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
->> index b12abf9..7af6cec 100644
->> --- a/drivers/mmc/host/sdhci-of-arasan.c
->> +++ b/drivers/mmc/host/sdhci-of-arasan.c
->> @@ -22,6 +22,7 @@
->>  #include <linux/phy/phy.h>
->>  #include <linux/regmap.h>
->>  #include <linux/of.h>
->> +#include <linux/firmware/xlnx-zynqmp.h>
->>
->>  #include "cqhci.h"
->>  #include "sdhci-pltfm.h"
->> @@ -32,6 +33,10 @@
->>
->>  #define PHY_CLK_TOO_SLOW_HZ            400000
->>
->> +/* Default settings for ZynqMP Tap Delays */
->> +#define ZYNQMP_ITAP_DELAYS {0, 0x15, 0x15, 0, 0x15, 0, 0, 0x3D, 0x12, 0, 0}
->> +#define ZYNQMP_OTAP_DELAYS {0, 0x5, 0x6, 0, 0x5, 0x3, 0x3, 0x4, 0x6, 0x3, 0}
->> +
->>  /*
->>   * On some SoCs the syscon area has a feature where the upper 16-bits of
->>   * each 32-bit register act as a write mask for the lower 16-bits.  This allows
->> @@ -81,6 +86,7 @@ struct sdhci_arasan_soc_ctl_map {
->>   * @sdcardclk:         Pointer to normal 'struct clock' for sdcardclk_hw.
->>   * @soc_ctl_base:      Pointer to regmap for syscon for soc_ctl registers.
->>   * @soc_ctl_map:       Map to get offsets into soc_ctl registers.
->> + * @of_data:           Platform specific runtime data storage pointer
->>   */
->>  struct sdhci_arasan_data {
->>         struct sdhci_host *host;
->> @@ -101,6 +107,15 @@ struct sdhci_arasan_data {
->>  /* Controller immediately reports SDHCI_CLOCK_INT_STABLE after enabling the
->>   * internal clock even when the clock isn't stable */
->>  #define SDHCI_ARASAN_QUIRK_CLOCK_UNSTABLE BIT(1)
->> +
->> +       void *of_data;
->> +};
->> +
->> +struct sdhci_arasan_zynqmp_data {
->> +       void (*set_tap_delay)(struct sdhci_host *host);
->> +       const struct zynqmp_eemi_ops *eemi_ops;
->> +       u8 tapdly[MMC_TIMING_MMC_HS400 + 1][2]; /* [0] for input delay, */
->> +                                               /* [1] for output delay */
->>  };
+On Tue, 2019-06-11 at 13:56 +0200, Arnd Bergmann wrote:
+> On Tue, Jun 11, 2019 at 10:12 AM Johannes Berg
+> <johannes@sipsolutions.net> wrote:
 > 
-> Please use two different structs, one for the clock provider data and
-> one for the mmc variant/platform data. This makes the code more
-> readable.
-
-Origin version before sending that out was using two fields.
-+	u32 itapdly[MMC_TIMING_MMC_HS400 + 1];
-+	u32 otapdly[MMC_TIMING_MMC_HS400 + 1];
-
-I did asked for putting it together to two dimensional array for
-improving readability of this code. The reason was that you need to take
-care about input/output together.
-One thing I was also suggesting was to use instead of 2 just enum values
-to specify IN=0/OUT/MAX to improve readability of this.
-Do you think that using enum should be enough?
-
-
-> In regards to the mmc data part, I suggest to drop the
-> ->set_tap_delay() callback, but rather use a boolean flag to indicate
-> whether clock phases needs to be changed for the variant. Potentially
-> that could even be skipped and instead call clk_set_phase()
-> unconditionally, as the clock core deals fine with clock providers
-> that doesn't support the ->set_phase() callback.
-
-In connection to another version of this driver for latest Xilinx chip
-it would be better to keep set_tap_delay callback in the driver. The
-reason is that new chip/ip is capable to setup tap delays directly
-without asking firmware to do it. That's why for versal IP there is a
-need to call different setup_tap_delay function.
-
+> > > As I've made clear before, my work on this has been focused on the IPA transport,
+> > > and some of this higher-level LTE architecture is new to me.  But it
+> > > seems pretty clear that an abstracted WWAN subsystem is a good plan,
+> > > because these devices represent a superset of what a "normal" netdev
+> > > implements.
+> > 
+> > I'm not sure I'd actually call it a superset. By themselves, these
+> > netdevs are actually completely useless to the network stack, AFAICT.
+> > Therefore, the overlap with netdevs you can really use with the network
+> > stack is pretty small?
 > 
-> [...]
-> 
-> Otherwise this looks good to me!
-> 
-> When it comes to patch1, I need an ack from Michal to pick it up.
+> I think Alex meant the concept of having a type of netdev with a generic
+> user space interface for wwan and similar to a wlan device, as I understood
+> you had suggested as well, as opposed to a stacked device as in
+> rmnet or those drivers it seems to be modeled after (vlan, ip tunnel, ...)/.
 
-I am waiting till Rob ack dt binding and then I wanted to talk to you if
-you want to take it with 1/3 or if you want me to take all of them via
-my tree.
-In previous releases I was taking them via my tree because there were
-several subsystem changing firmware interface. In this cycle there are
-just small changes to firmware interface that's why taking it via your
-tree shouldn't be a problem too.
+I guess. It is indeed currently modelled after the stacked devices, but
+those regular netdevs are inherently useful by themselves, you don't
+*have* to tunnel or use VLANs after all.
 
-Thanks,
-Michal
+With rmnet, the underlying netdev *isn't* useful by itself, because
+you're always forced to have the stacked rmnet device on top.
+
+
+> > > HOWEVER I disagree with your suggestion that the IPA code should
+> > > not be committed until after that is all sorted out.  In part it's
+> > > for selfish reasons, but I think there are legitimate reasons to
+> > > commit IPA now *knowing* that it will need to be adapted to fit
+> > > into the generic model that gets defined and developed.  Here
+> > > are some reasons why.
+> > 
+> > I can't really argue with those, though I would point out that the
+> > converse also holds - if we commit to this now, then we will have to
+> > actually keep the API offered by IPA/rmnet today, so we cannot actually
+> > remove the netdev again, even if we do migrate it to offer support for a
+> > WWAN framework in the future.
+> 
+> Right. The interface to support rmnet might be simple enough to keep
+> next to what becomes the generic interface, but it will always continue
+> to be an annoyance.
+
+Not easily, because fundamentally it requires an underlying netdev to
+have an ifindex, so it wouldn't just be another API to keep around
+(which I'd classify as an annoyance) but also a whole separate netdev
+that's exposed by this IPA driver, for basically this purpose only.
+
+> > I dunno if it really has to be months. I think we can cobble something
+> > together relatively quickly that addresses the needs of IPA more
+> > specifically, and then extend later?
+> > 
+> > But OTOH it may make sense to take a more paced approach and think
+> > about the details more carefully than we have over in the other thread so far.
+> 
+> I would hope that as soon as we can agree on a general approach, it
+> would also be possible to merge a minimal implementation into the kernel
+> along with IPA. Alex already mentioned that IPA in its current state does
+> not actually support more than one data channel, so the necessary
+> setup for it becomes even simpler.
+
+Interesting, I'm not even sure how the driver can stop multiple channels
+in the rmnet model?
+
+> At the moment, the rmnet configuration in include/uapi/linux/if_link.h
+> is almost trivial, with the three pieces of information needed being
+> an IFLA_LINK to point to the real device (not needed if there is only
+> one device per channel, instead of two), the IFLA_RMNET_MUX_ID
+> setting the ID of the muxing channel (not needed if there is only
+> one channel ?), a way to specify software bridging between channels
+> (not useful if there is only one channel) 
+
+I think the MUX ID is something we *would* want, and we'd probably want
+a channel type as well, so as to not paint ourselves into a corner where
+the default ends up being whatever IPA supports right now.
+
+The software bridging is very questionable to start with, I'd advocate
+not supporting that at all but adding tracepoints or similar if needed
+for debugging instead.
+
+
+> and a few flags that I assume
+> must match the remote end:
+> 
+> #define RMNET_FLAGS_INGRESS_DEAGGREGATION         (1U << 0)
+> #define RMNET_FLAGS_INGRESS_MAP_COMMANDS          (1U << 1)
+> #define RMNET_FLAGS_INGRESS_MAP_CKSUMV4           (1U << 2)
+> #define RMNET_FLAGS_EGRESS_MAP_CKSUMV4            (1U << 3)
+
+I don't really know about these.
+
+> > If true though, then I think this would be the killer argument *in
+> > favour* of *not* merging this - because that would mean we *don't* have
+> > to actually keep the rmnet API around for all foreseeable future.
+> 
+> I would agree with that. From the code I can see no other driver
+> including the rmnet protocol header (see the discussion about moving
+> the header to include/linux in order to merge ipa), and I don't see
+> any other driver referencing ETH_P_MAP either. My understanding
+> is that any driver used by rmnet would require both, but they are
+> all out-of-tree at the moment.
+
+I guess that would mean we have more work to do here, but it also means
+we don't have to support these interfaces forever.
+
+I'm not *entirely* convinced though. rmnet in itself doesn't really seem
+to require anything from the underlying netdev, so if there's a driver
+that just blindly passes things through to the hardware expecting the
+right configuration, we wouldn't really see it this way?
+
+OTOH, such a driver would probably blow up completely if somebody tried
+to use it without rmnet on top, and so it would at least have to check
+for ETH_P_MAP?
+
+johannes
