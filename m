@@ -1,38 +1,35 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH v5 18/18] MAINTAINERS: add proc sysctl KUnit test to PROC
- SYSCTL section
-Date: Mon, 17 Jun 2019 01:26:13 -0700
-Message-ID: <20190617082613.109131-19-brendanhiggins@google.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH repost] dt-bindings: timer: renesas, cmt: Document
+ r8a779{5|65|90} CMT support
+Date: Mon, 17 Jun 2019 10:41:15 +0200
+Message-ID: <20190617084115.5wbys67m5ueyu2hp@verge.net.au>
+References: <20190509122949.23256-1-horms+renesas@verge.net.au>
+ <20190613101219.vx4ht6dixxu7fioi@verge.net.au>
+ <7171405c-4647-173f-2883-c7a281e998ea@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617082613.109131-1-brendanhiggins@google.com>
+Content-Disposition: inline
+In-Reply-To: <7171405c-4647-173f-2883-c7a281e998ea@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cao Van Dong <cv-dong@jinso.co.jp>
 List-Id: devicetree@vger.kernel.org
 
-Add entry for the new proc sysctl KUnit test to the PROC SYSCTL section.
+On Thu, Jun 13, 2019 at 01:09:08PM +0200, Daniel Lezcano wrote:
+> On 13/06/2019 12:12, Simon Horman wrote:
+> > On Thu, May 09, 2019 at 02:29:49PM +0200, Simon Horman wrote:
+> >> From: Cao Van Dong <cv-dong@jinso.co.jp>
+> >>
+> >> Document SoC specific bindings for R-Car H3/M3-N/E3 SoCs.
+> > 
+> > Hi Daniel and Thomas,
+> > 
+> > would you object to me taking this patch through the renesas tree.
+> > It has been outstanding for some time now.
+> 
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Thanks,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f3fb3fc30853e..05cd8ffd33c8f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12718,6 +12718,7 @@ S:	Maintained
- F:	fs/proc/proc_sysctl.c
- F:	include/linux/sysctl.h
- F:	kernel/sysctl.c
-+F:	kernel/sysctl-test.c
- F:	tools/testing/selftests/sysctl/
- 
- PS3 NETWORK SUPPORT
--- 
-2.22.0.410.gd8fdbe21b5-goog
+applied to the renesas tree for inclusion in v5.3.
