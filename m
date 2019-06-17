@@ -1,71 +1,131 @@
-Return-Path: <SRS0=DLCI=UR=gmail.com=thierry.reding@kernel.org>
-Date: Tue, 18 Jun 2019 12:51:07 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V5 26/27] PCI: tegra: Add support for GPIO based PERST#
-Message-ID: <20190618105107.GB28892@ulmo>
+Return-Path: <SRS0=7yb5=UQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:12025 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfFQRl1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Jun 2019 13:41:27 -0400
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V5 26/27] PCI: tegra: Add support for GPIO based PERST#
+Date: Mon, 17 Jun 2019 23:09:51 +0530
+Message-ID: <20190617173952.29363-27-mmaddireddy@nvidia.com>
+In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
- <20190617173952.29363-27-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5/uDoXvLw7AC5HRs"
-Content-Disposition: inline
-In-Reply-To: <20190617173952.29363-27-mmaddireddy@nvidia.com>
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
+Tegra PCIe has fixed per port SFIO line to signal PERST#, which can be
+controlled by AFI port register. However, if a platform routes a different
+GPIO to the PCIe slot, then port register cannot control it. Add support
+for GPIO based PERST# signal for such platforms. GPIO number comes from per
+port PCIe device tree node. PCIe driver probe doesn't fail if per port
+"reset-gpios" property is not populated, make sure that DT property is not
+missed for such platforms.
 
---5/uDoXvLw7AC5HRs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+---
+V5:
+* Updated reset gpio toggle logic to reflect active low usage
+* Replaced kasprintf() with devm_kasprintf()
+* Updated commit message with more information.
 
-On Mon, Jun 17, 2019 at 11:09:51PM +0530, Manikanta Maddireddy wrote:
-> Tegra PCIe has fixed per port SFIO line to signal PERST#, which can be
-> controlled by AFI port register. However, if a platform routes a different
-> GPIO to the PCIe slot, then port register cannot control it. Add support
-> for GPIO based PERST# signal for such platforms. GPIO number comes from p=
-er
-> port PCIe device tree node. PCIe driver probe doesn't fail if per port
-> "reset-gpios" property is not populated, make sure that DT property is not
-> missed for such platforms.
->=20
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> ---
-> V5:
-> * Updated reset gpio toggle logic to reflect active low usage
-> * Replaced kasprintf() with devm_kasprintf()
-> * Updated commit message with more information.
->=20
-> V4: Using devm_gpiod_get_from_of_node() to get reset-gpios
->=20
-> V3: Using helper function to get reset-gpios
->=20
-> V2: Using standard "reset-gpio" property
->=20
->  drivers/pci/controller/pci-tegra.c | 45 ++++++++++++++++++++++++++----
->  1 file changed, 39 insertions(+), 6 deletions(-)
+V4: Using devm_gpiod_get_from_of_node() to get reset-gpios
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+V3: Using helper function to get reset-gpios
 
---5/uDoXvLw7AC5HRs
-Content-Type: application/pgp-signature; name="signature.asc"
+V2: Using standard "reset-gpio" property
 
------BEGIN PGP SIGNATURE-----
+ drivers/pci/controller/pci-tegra.c | 45 ++++++++++++++++++++++++++----
+ 1 file changed, 39 insertions(+), 6 deletions(-)
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0IwhsACgkQ3SOs138+
-s6GcGw/+Pi6zDjLmsQQqPGMkvQfxr5DbOJxPtZ0K4fWTvoUmoCrw2KAigmmfKupP
-vxeKJWlwhTsfe80GMyNaGrCld5QXDb3UuZ1RRd9i24FOymTALu9I3MdFyYBXAuqv
-4+xQFl2N/q4/aoBiSgYe2tGAoXYQc0gHDqqKKmCeZfx3/srE0H27fvzH8XUNC1ku
-1ZjhYQcNW7y1w1CpRBVjVpxBDweQJ50suyk4kIMMgxXpmYzbB7qWh1lghDaSIMqg
-UFKWmjr88p3otYMBDMxxu0U+gYniYApM7+pH4KfV2uf+H8rksF9P9a64IyRsYOL0
-9VAM608wGdxvpoZo0PXFbrzz/ABnEBjFd9qX55493zxF0yEwwSWtl4ARFdSggjn+
-gBlh6TqFxYvdWU30R4fT1QjHRXTCZEZNeznyXJReRfO/4XKK4VAvJpmlKJTcN5QI
-eAmJwnBae9mjZM9VxRGWt171dlkk0FGNcO6xgci51/C8B9LyYzgwtHbB8DBFijCL
-hhSc/0WbzPxy+l8T/blPDxeinGxLh8VIY/kzwClySuqOqWt4OJEhlrOdEB9X3KKe
-27CT9HK/2PgTyeNOpkSStZl3vr6jgcYhYzDR4lG+NtZGA1oTfmaB2R4HEITA+zzC
-tjFIsRf93HLWj5YZNH+NnawThLejWhF3/4Rw5UYBZP+VXYkju+I=
-=l/xN
------END PGP SIGNATURE-----
-
---5/uDoXvLw7AC5HRs--
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index d3b9e6440dd6..2e55d64a0428 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -17,6 +17,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/export.h>
++#include <linux/gpio.h>
+ #include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/irq.h>
+@@ -400,6 +401,8 @@ struct tegra_pcie_port {
+ 	unsigned int lanes;
+ 
+ 	struct phy **phys;
++
++	struct gpio_desc *reset_gpio;
+ };
+ 
+ struct tegra_pcie_bus {
+@@ -545,15 +548,23 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
+ 	unsigned long value;
+ 
+ 	/* pulse reset signal */
+-	value = afi_readl(port->pcie, ctrl);
+-	value &= ~AFI_PEX_CTRL_RST;
+-	afi_writel(port->pcie, value, ctrl);
++	if (port->reset_gpio) {
++		gpiod_set_value(port->reset_gpio, 1);
++	} else {
++		value = afi_readl(port->pcie, ctrl);
++		value &= ~AFI_PEX_CTRL_RST;
++		afi_writel(port->pcie, value, ctrl);
++	}
+ 
+ 	usleep_range(1000, 2000);
+ 
+-	value = afi_readl(port->pcie, ctrl);
+-	value |= AFI_PEX_CTRL_RST;
+-	afi_writel(port->pcie, value, ctrl);
++	if (port->reset_gpio) {
++		gpiod_set_value(port->reset_gpio, 0);
++	} else {
++		value = afi_readl(port->pcie, ctrl);
++		value |= AFI_PEX_CTRL_RST;
++		afi_writel(port->pcie, value, ctrl);
++	}
+ }
+ 
+ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+@@ -2200,6 +2211,7 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		struct tegra_pcie_port *rp;
+ 		unsigned int index;
+ 		u32 value;
++		char *label;
+ 
+ 		err = of_pci_get_devfn(port);
+ 		if (err < 0) {
+@@ -2258,6 +2270,27 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		if (IS_ERR(rp->base))
+ 			return PTR_ERR(rp->base);
+ 
++		label = devm_kasprintf(dev, GFP_KERNEL, "pex-reset-%u", index);
++		if (!label) {
++			dev_err(dev, "failed to create reset GPIO label\n");
++			return -ENOMEM;
++		}
++
++		/*
++		 * Returns null if reset-gpios property is not populated and
++		 * fall back to using AFI per port register to toggle PERST#
++		 * SFIO line.
++		 */
++		rp->reset_gpio = devm_gpiod_get_from_of_node(dev, port,
++							     "reset-gpios", 0,
++							     GPIOD_OUT_LOW,
++							     label);
++		if (IS_ERR(rp->reset_gpio)) {
++			err = PTR_ERR(rp->reset_gpio);
++			dev_err(dev, "failed to get reset GPIO: %d\n", err);
++			return err;
++		}
++
+ 		list_add_tail(&rp->list, &pcie->ports);
+ 	}
+ 
+-- 
+2.17.1
