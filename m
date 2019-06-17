@@ -1,81 +1,173 @@
-From: Alistair Francis <Alistair.Francis@wdc.com>
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-Date: Mon, 17 Jun 2019 18:42:11 +0000
-Message-ID: <d2836a90b92f3522a398d57ab8555d08956a0d1f.camel@wdc.com>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
-         <mvmtvco62k9.fsf@suse.de>
-         <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
-         <mvmpnnc5y49.fsf@suse.de>
-         <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com>
-         <mvmh88o5xi5.fsf@suse.de>
-         <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com>
-         <F48A4F7F-0B0D-4191-91AD-DC51686D1E78@sifive.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of/fdt: hide of_ftd_match() if unused
+Date: Mon, 17 Jun 2019 11:56:09 -0700
+Message-ID: <5dfc29c0-0b42-16d9-b850-2cba8938d908@gmail.com>
+References: <20190617123840.911593-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <F48A4F7F-0B0D-4191-91AD-DC51686D1E78@sifive.com>
+In-Reply-To: <20190617123840.911593-1-arnd@arndb.de>
 Content-Language: en-US
-Content-ID: <FDADB0944AF2D049A719E1E1B9A030E4@namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "troy.benjegerdes@sifive.com" <troy.benjegerdes@sifive.com>
-Cc: "jamez@wit.com" <jamez@wit.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "davem@davemloft.net" <davem@davemloft.net>, "schwab@suse.de" <schwab@suse.de>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "sachin.ghadi@sifive.com" <sachin.ghadi@sifive.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "ynezz@true.cz" <ynezz@true.cz>, "palmer@sifive.com" <palmer@sifive.com>, "yash.shah@sifive.com" <yash.shah@sifive.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Rob Herring <robh@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA2LTE3IGF0IDA5OjE0IC0wNTAwLCBUcm95IEJlbmplZ2VyZGVzIHdyb3Rl
-Og0KPiA+IE9uIEp1biAxNywgMjAxOSwgYXQgNjozNCBBTSwgUGF1bCBXYWxtc2xleSA8DQo+ID4g
-cGF1bC53YWxtc2xleUBzaWZpdmUuY29tPiB3cm90ZToNCj4gPiANCj4gPiBPbiBNb24sIDE3IEp1
-biAyMDE5LCBBbmRyZWFzIFNjaHdhYiB3cm90ZToNCj4gPiANCj4gPiA+IE9uIEp1biAxNyAyMDE5
-LCBQYXVsIFdhbG1zbGV5IDxwYXVsLndhbG1zbGV5QHNpZml2ZS5jb20+IHdyb3RlOg0KPiA+ID4g
-DQo+ID4gPiA+IE9uIE1vbiwgMTcgSnVuIDIwMTksIEFuZHJlYXMgU2Nod2FiIHdyb3RlOg0KPiA+
-ID4gPiANCj4gPiA+ID4gPiBPbiBKdW4gMTcgMjAxOSwgUGF1bCBXYWxtc2xleSA8cGF1bC53YWxt
-c2xleUBzaWZpdmUuY29tPg0KPiA+ID4gPiA+IHdyb3RlOg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+
-ID4gTG9va3MgdG8gbWUgdGhhdCBpdCBzaG91bGRuJ3QgaGF2ZSBhbiBpbXBhY3QgdW5sZXNzIHRo
-ZSBEVA0KPiA+ID4gPiA+ID4gc3RyaW5nIGlzIA0KPiA+ID4gPiA+ID4gcHJlc2VudCwgYW5kIGV2
-ZW4gdGhlbiwgdGhlIGltcGFjdCBtaWdodCBzaW1wbHkgYmUgdGhhdCB0aGUNCj4gPiA+ID4gPiA+
-IE1BQ0IgZHJpdmVyIA0KPiA+ID4gPiA+ID4gbWF5IG5vdCB3b3JrPw0KPiA+ID4gPiA+IA0KPiA+
-ID4gPiA+IElmIHRoZSBtYWNiIGRyaXZlciBkb2Vzbid0IHdvcmsgeW91IGhhdmUgYW4gdW51c2Fi
-bGUgc3lzdGVtLA0KPiA+ID4gPiA+IG9mIGNvdXJzZS4NCj4gPiA+ID4gDQo+ID4gPiA+IFdoeT8N
-Cj4gPiA+IA0KPiA+ID4gQmVjYXVzZSBhIHN5c3RlbSBpcyB1c2VsZXNzIHdpdGhvdXQgbmV0d29y
-ay4NCj4gPiANCj4gPiBGcm9tIGFuIHVwc3RyZWFtIExpbnV4IHBvaW50IG9mIHZpZXcsIFlhc2gn
-cyBwYXRjaGVzIHNob3VsZCBiZSBhbiANCj4gPiBpbXByb3ZlbWVudCBvdmVyIHRoZSBjdXJyZW50
-IG1haW5saW5lIGtlcm5lbCBzaXR1YXRpb24sIHNpbmNlDQo+ID4gdGhlcmUncyANCj4gPiBjdXJy
-ZW50bHkgbm8gdXBzdHJlYW0gc3VwcG9ydCBmb3IgdGhlIChTaUZpdmUtc3BlY2lmaWMpIFRYIGNs
-b2NrDQo+ID4gc3dpdGNoIA0KPiA+IHJlZ2lzdGVyLiAgV2l0aCB0aGUgcmlnaHQgRFQgZGF0YSwg
-YW5kIGEgYm9vdGxvYWRlciB0aGF0IGhhbmRsZXMNCj4gPiB0aGUgUEhZIA0KPiA+IHJlc2V0LCBJ
-IHRoaW5rIG5ldHdvcmtpbmcgc2hvdWxkIHdvcmsgYWZ0ZXIgaGlzIHBhdGNoZXMgYXJlDQo+ID4g
-dXBzdHJlYW0gLS0gDQo+ID4gYWx0aG91Z2ggSSBteXNlbGYgaGF2ZW4ndCB0cmllZCB0aGlzIHll
-dC4NCj4gPiANCj4gDQo+IEhhdmUgd2UgZG9jdW1lbnRlZCB0aGlzIHR4IGNsb2NrIHN3aXRjaCBy
-ZWdpc3RlciBpbiBzb21ldGhpbmcgd2l0aCBhDQo+IGRpcmVjdCBVUkwgbGluayAocmF0aGVyIHRo
-YW4gYSBQREYpPw0KPiANCj4gSeKAmWQgbGlrZSB0byB1cGRhdGUgZnJlZWRvbS11LXNkayAob3Ig
-eW9jdG8pIHRvIGNyZWF0ZSBib290YWJsZSBpbWFnZXMNCj4gd2l0aCBhIHdvcmtpbmcgVS1ib290
-ICh1cHN0cmVhbSBvciBub3QsIEkgZG9u4oCZdCBjYXJlLCBhcyBsb25nIGFzIGl0DQo+IHdvcmtz
-KSwNCj4gYW5kIHdoYXQgSSBoYXZlIHJpZ2h0IG5vdyBpcyB0aGUgb2xkIGxlZ2FjeSBIaUZpdmUg
-VS1ib290WzFdIGFuZCBhDQo+IDQuMTkNCj4ga2VybmVsIHdpdGggYSBidW5jaCBvZiBleHRyYSBw
-YXRjaGVzLg0KDQpZb2N0by9PcGVuRW1iZWRkZWQgZG9lcyB0aGlzIHRvZGF5LiBURlRQIGJvb3Qg
-d29ya3Mgd2l0aCB0aGUgMjAxOS4wNCBVLQ0KQm9vdCAoKyBzb21lIHBhdGNoZXMgb250b3AgZm9y
-IFNNUCBzdXBwb3J0KS4gV2UgdXNlIHRoZSBsYXRlc3QgNS4xDQpzdGFibGUga2VybmVsIHBsdXMg
-NSBvciBzbyBwYXRjaGVzIHRvIGJvb3Qgb24gdGhlIFVubGVhc2VkLiBOZXR3b3JraW5nLA0KZGlz
-cGxheSBhbmQgYXVkaW8gYXJlIGFsbCB3b3JraW5nIHdpdGggdGhlIE1pY3Jvc2VtaSBleHBhbnNp
-b24gYm9hcmQgYXMNCndlbGwuIExldCBtZSBrbm93IGlmIHRoZXJlIGlzIHNvbWV0aGluZyBlbHNl
-IG1pc3NpbmcgYW5kIEknbGwgYWRkIGl0DQppbi4gVGhlcmUgYXJlIHByb2JhYmx5IGRvY3VtZW50
-YXRpb24gZml4ZXMgdGhhdCBhcmUgbmVlZGVkIGFzIHdlbGwuDQoNCkkgd2FzIHRoaW5raW5nIG9m
-IHNraXBwaW5nIHRoZSA1LjIgcmVsZWFzZSB0aG91Z2ggYXMgSSB0aG91Z2h0IHRoZSBEVA0Kc3R1
-ZmYgd2Fzbid0IGdvaW5nIHRvIG1ha2UgaXQgWzFdLiBJIHdpbGwgcHJvYmFibHkgcmUtZXZhbHVh
-dGUgdGhhdA0KZGVjaXNpb24gdGhvdWdoIHdoZW4gNS4yIGNvbWVzIG91dCBhcyBpdCBsb29rcyBs
-aWtlIGl0J3MgYWxsIGdvaW5nIHRvDQp3b3JrIDopDQoNCldpdGggVS1ib290IDIwMTcuMDkgYW5k
-IExpbnV4IDUuMi81LjMgd2Ugc2hvdWxkIGZpbmFsbHkgYmUgdXBzdHJlYW0NCm9ubHkhDQoNCj4g
-DQo+IFRoZSBsZWdhY3kgTS1tb2RlIFUtYm9vdCBoYW5kbGVzIHRoZSBwaHkgcmVzZXQgYWxyZWFk
-eSwgYW5kIEnigJl2ZSBiZWVuDQo+IGFibGUgdG8gbG9hZCB1cHN0cmVhbSBTLW1vZGUgdWJvb3Qg
-YXMgYSBwYXlsb2FkIHZpYSBURlRQLCBhbmQgdGhlbiANCj4gbG9hZCBhbmQgYm9vdCBhIDQuMTkg
-a2VybmVsLiANCj4gDQo+IEl0IHdvdWxkIGJlIG5pY2UgdG8gZ2V0IHRoaXMgYWxsIHdvcmtpbmcg
-d2l0aCA1LngsIGhvd2V2ZXIgdGhlcmUgYXJlDQo+IHN0aWxsDQo+IHNldmVyYWwgbWlzc2luZyBw
-aWVjZXMgdG8gcmVhbGx5IGhhdmUgaXQgd29yayB3ZWxsLg0KDQpMZXQgbWUga25vdyB3aGF0IGlz
-IHN0aWxsIG1pc3NpbmcvZG9lc24ndCB3b3JrIGFuZCBJIGNhbiBhZGQgaXQuIEF0IHRoZQ0KbW9t
-ZW50IHRoZSBvbmx5IGtub3duIGlzc3VlIEkga25vdyBvZiBpcyBhIG1pc3NpbmcgU0QgY2FyZCBk
-cml2ZXIgaW4gVS0NCkJvb3QuDQoNCjE6IGh0dHBzOi8vZ2l0aHViLmNvbS9yaXNjdi9tZXRhLXJp
-c2N2L2lzc3Vlcy8xNDMNCg0KQWxpc3RhaXINCg0KPiANCj4gDQo+IFsxXSBodHRwczovL2dpdGh1
-Yi5jb20vc2lmaXZlL0hpRml2ZV9VLUJvb3QNCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18NCj4gbGludXgtcmlzY3YgbWFpbGluZyBsaXN0DQo+IGxpbnV4
-LXJpc2N2QGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1yaXNjdg0K
+Hi Arnd,
+
+Thanks for catching this.
+
+The bad news is that you are second in line, Kefeng Wang sent a patch to
+do the same last week.
+
+Thanks!
+
+-Frank
+
+
+On 6/17/19 5:38 AM, Arnd Bergmann wrote:
+> The only caller of this function is built conditionally:
+> 
+> drivers/of/fdt.c:129:19: error: 'of_fdt_match' defined but not used [-Werror=unused-function]
+> 
+> Move the definition into the same #ifdef block.
+> 
+> Fixes: 9b4d2b635bd0 ("of/fdt: Remove dead code and mark functions with __init")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/of/fdt.c | 106 +++++++++++++++++++++++------------------------
+>  1 file changed, 53 insertions(+), 53 deletions(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 3d36b5afd9bd..424981786c79 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -78,38 +78,6 @@ void __init of_fdt_limit_memory(int limit)
+>  	}
+>  }
+>  
+> -/**
+> - * of_fdt_is_compatible - Return true if given node from the given blob has
+> - * compat in its compatible list
+> - * @blob: A device tree blob
+> - * @node: node to test
+> - * @compat: compatible string to compare with compatible list.
+> - *
+> - * On match, returns a non-zero value with smaller values returned for more
+> - * specific compatible values.
+> - */
+> -static int of_fdt_is_compatible(const void *blob,
+> -		      unsigned long node, const char *compat)
+> -{
+> -	const char *cp;
+> -	int cplen;
+> -	unsigned long l, score = 0;
+> -
+> -	cp = fdt_getprop(blob, node, "compatible", &cplen);
+> -	if (cp == NULL)
+> -		return 0;
+> -	while (cplen > 0) {
+> -		score++;
+> -		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
+> -			return score;
+> -		l = strlen(cp) + 1;
+> -		cp += l;
+> -		cplen -= l;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+>  {
+>  	const char *status = fdt_getprop(blob, node, "status", NULL);
+> @@ -123,27 +91,6 @@ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+>  	return false;
+>  }
+>  
+> -/**
+> - * of_fdt_match - Return true if node matches a list of compatible values
+> - */
+> -static int __init of_fdt_match(const void *blob, unsigned long node,
+> -			       const char *const *compat)
+> -{
+> -	unsigned int tmp, score = 0;
+> -
+> -	if (!compat)
+> -		return 0;
+> -
+> -	while (*compat) {
+> -		tmp = of_fdt_is_compatible(blob, node, *compat);
+> -		if (tmp && (score == 0 || (tmp < score)))
+> -			score = tmp;
+> -		compat++;
+> -	}
+> -
+> -	return score;
+> -}
+> -
+>  static void *unflatten_dt_alloc(void **mem, unsigned long size,
+>  				       unsigned long align)
+>  {
+> @@ -522,6 +469,59 @@ void *initial_boot_params __ro_after_init;
+>  
+>  static u32 of_fdt_crc32;
+>  
+> +/**
+> + * of_fdt_is_compatible - Return true if given node from the given blob has
+> + * compat in its compatible list
+> + * @blob: A device tree blob
+> + * @node: node to test
+> + * @compat: compatible string to compare with compatible list.
+> + *
+> + * On match, returns a non-zero value with smaller values returned for more
+> + * specific compatible values.
+> + */
+> +static int of_fdt_is_compatible(const void *blob,
+> +		      unsigned long node, const char *compat)
+> +{
+> +	const char *cp;
+> +	int cplen;
+> +	unsigned long l, score = 0;
+> +
+> +	cp = fdt_getprop(blob, node, "compatible", &cplen);
+> +	if (cp == NULL)
+> +		return 0;
+> +	while (cplen > 0) {
+> +		score++;
+> +		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
+> +			return score;
+> +		l = strlen(cp) + 1;
+> +		cp += l;
+> +		cplen -= l;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * of_fdt_match - Return true if node matches a list of compatible values
+> + */
+> +static int __init of_fdt_match(const void *blob, unsigned long node,
+> +			       const char *const *compat)
+> +{
+> +	unsigned int tmp, score = 0;
+> +
+> +	if (!compat)
+> +		return 0;
+> +
+> +	while (*compat) {
+> +		tmp = of_fdt_is_compatible(blob, node, *compat);
+> +		if (tmp && (score == 0 || (tmp < score)))
+> +			score = tmp;
+> +		compat++;
+> +	}
+> +
+> +	return score;
+> +}
+> +
+>  /**
+>   * res_mem_reserve_reg() - reserve all memory described in 'reg' property
+>   */
+> 
