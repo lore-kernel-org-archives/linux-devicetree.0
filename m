@@ -1,52 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/4] regulator: Add regulator driver for ATC260x PMICs
-Date: Mon, 17 Jun 2019 17:30:15 +0100
-Message-ID: <20190617163015.GD5316@sirena.org.uk>
-References: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
- <20190617155011.15376-4-manivannan.sadhasivam@linaro.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 18/21] iommu/mediatek: Fix VLD_PA_RNG register backup
+ when suspend
+Date: Mon, 17 Jun 2019 18:30:27 +0200
+Message-ID: <d8fd11c7-899d-27a3-7467-de351307c6a1@gmail.com>
+References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+ <1560169080-27134-19-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ROA1rv1+fHr2QGor"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190617155011.15376-4-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1560169080-27134-19-git-send-email-yong.wu@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: lee.jones@linaro.org, lgirdwood@gmail.com, robh+dt@kernel.org, afaerber@suse.de, linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, devicetree@vger.kernel.org, linus.walleij@linaro.org
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ROA1rv1+fHr2QGor
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Jun 17, 2019 at 09:20:10PM +0530, Manivannan Sadhasivam wrote:
+On 10/06/2019 14:17, Yong Wu wrote:
+> The register VLD_PA_RNG(0x118) was forgot to backup while adding 4GB
+> mode support for mt2712. this patch add it.
+> 
+> Fixes: 30e2fccf9512 ("iommu/mediatek: Enlarge the validate PA range
+> for 4GB mode")
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
 
-> +++ b/drivers/regulator/atc260x-regulator.c
-> @@ -0,0 +1,389 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Regulator driver for ATC260x PMICs
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-Please make the entire comment a C++ one so this looks more intentional.
-
-> + * Copyright (C) 2019 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-You definitely didn't assign copyright to your employer?
-
---ROA1rv1+fHr2QGor
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HwBYACgkQJNaLcl1U
-h9AlQgf/cOduPIgVfw037hso/F8J/DY12ynhZ3O7IPyWtiaUIazr9Y3zB2dch0EH
-mMdmUFiGT9ijRDAj2tlkLGAKfsD+/4pfGnxaTLL/unOM7uvWHLcT4j1L0eo2FGEa
-nARIZZng3pZnEp/Yo3E/DzMJGNKxQ+NCYEnkClzI4Je9Kg/SB0vKijbMEMkstH9v
-RfEclPCayi30RQ/cbRv7YUbDBc7GMD2JRVBn4Xv+hVLszHqTbJa/RZ/cJADQS3uZ
-KmWHEHurfwYJIX314fbjiBCcHNWfZQ0kiFZsHNJGYmxwKHZiPg9DyQSh5Zk9s41l
-mKfXniiw5dpGYEgsDok3f/gEh10XgA==
-=bXNF
------END PGP SIGNATURE-----
-
---ROA1rv1+fHr2QGor--
+> ---
+>  drivers/iommu/mtk_iommu.c | 2 ++
+>  drivers/iommu/mtk_iommu.h | 1 +
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 6053b8b..86158d8 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -719,6 +719,7 @@ static int __maybe_unused mtk_iommu_suspend(struct device *dev)
+>  	reg->int_control0 = readl_relaxed(base + REG_MMU_INT_CONTROL0);
+>  	reg->int_main_control = readl_relaxed(base + REG_MMU_INT_MAIN_CONTROL);
+>  	reg->ivrp_paddr = readl_relaxed(base + REG_MMU_IVRP_PADDR);
+> +	reg->vld_pa_rng = readl_relaxed(base + REG_MMU_VLD_PA_RNG);
+>  	clk_disable_unprepare(data->bclk);
+>  	return 0;
+>  }
+> @@ -743,6 +744,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+>  	writel_relaxed(reg->int_control0, base + REG_MMU_INT_CONTROL0);
+>  	writel_relaxed(reg->int_main_control, base + REG_MMU_INT_MAIN_CONTROL);
+>  	writel_relaxed(reg->ivrp_paddr, base + REG_MMU_IVRP_PADDR);
+> +	writel_relaxed(reg->vld_pa_rng, base + REG_MMU_VLD_PA_RNG);
+>  	if (m4u_dom)
+>  		writel(m4u_dom->cfg.arm_v7s_cfg.ttbr[0] & MMU_PT_ADDR_MASK,
+>  		       base + REG_MMU_PT_BASE_ADDR);
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index c0b5c65..753266b 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -32,6 +32,7 @@ struct mtk_iommu_suspend_reg {
+>  	u32				int_control0;
+>  	u32				int_main_control;
+>  	u32				ivrp_paddr;
+> +	u32				vld_pa_rng;
+>  };
+>  
+>  enum mtk_iommu_plat {
+> 
