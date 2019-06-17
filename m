@@ -1,34 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: fsl: Add support for ZII i.MX7 RMU2 board
-Date: Mon, 17 Jun 2019 08:32:02 -0600
-Message-ID: <CAL_JsqKqh-iuTk-P7NH2BfEnmnwdB8yMumCd-KeoszCbBNjy7Q@mail.gmail.com>
-References: <20190614080317.16850-1-andrew.smirnov@gmail.com> <20190614080317.16850-2-andrew.smirnov@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: Add missing newline at end of file
+Date: Mon, 17 Jun 2019 16:33:22 +0200
+Message-ID: <20190617143322.4332-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614080317.16850-2-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Bob Langer <Bob.Langer@zii.aero>, Liang Pan <Liang.Pan@zii.aero>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: openbmc@lists.ozlabs.org, openipmi-developer@lists.sourceforge.net, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 2:03 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
->
-> Add support for ZII i.MX7 RMU2 board.
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Bob Langer <Bob.Langer@zii.aero>
-> Cc: Liang Pan <Liang.Pan@zii.aero>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+"git diff" says:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+    \ No newline at end of file
+
+after modifying the files.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt      | 2 +-
+ .../devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt     | 2 +-
+ Documentation/devicetree/bindings/regulator/pv88060.txt         | 2 +-
+ Documentation/devicetree/bindings/sound/cs42l73.txt             | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt b/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt
+index 3538a214fff156d4..352f5e9c759bc3f5 100644
+--- a/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt
++++ b/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt
+@@ -36,4 +36,4 @@ Example:
+             kcs_chan = <2>;
+             status = "disabled";
+         };
+-    };
+\ No newline at end of file
++    };
+diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
+index 83f4bbac94bb19db..a1264cc8660dcd59 100644
+--- a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
+@@ -213,4 +213,4 @@ pinctrl: pinctrl@f0800000 {
+ 		groups = "clkreq";
+ 		function = "clkreq";
+ 	};
+-};
+\ No newline at end of file
++};
+diff --git a/Documentation/devicetree/bindings/regulator/pv88060.txt b/Documentation/devicetree/bindings/regulator/pv88060.txt
+index 10a6dadc008eb38d..6a7c8a92fdb0bf1c 100644
+--- a/Documentation/devicetree/bindings/regulator/pv88060.txt
++++ b/Documentation/devicetree/bindings/regulator/pv88060.txt
+@@ -121,4 +121,4 @@ Example
+ 				regulator-max-microvolt = <5000000>;
+ 			};
+ 		};
+-	};
+\ No newline at end of file
++	};
+diff --git a/Documentation/devicetree/bindings/sound/cs42l73.txt b/Documentation/devicetree/bindings/sound/cs42l73.txt
+index 80ae910dbf6c3880..47b868b5ab011470 100644
+--- a/Documentation/devicetree/bindings/sound/cs42l73.txt
++++ b/Documentation/devicetree/bindings/sound/cs42l73.txt
+@@ -19,4 +19,4 @@ codec: cs42l73@4a {
+ 	reg = <0x4a>;
+ 	reset_gpio = <&gpio 10 0>;
+ 	chgfreq = <0x05>;
+-};
+\ No newline at end of file
++};
+-- 
+2.17.1
