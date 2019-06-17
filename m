@@ -1,85 +1,58 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v4 4/7] regulator: qcom_spmi: Add support for PM8005
-Date: Mon, 17 Jun 2019 09:17:21 -0600
-Message-ID: <CAOCk7NrwYezbVyLKOZdxgGRVemKtBmHKP+fSO0a2p3bCPNdW3w@mail.gmail.com>
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
- <20190613212553.10541-1-jeffrey.l.hugo@gmail.com> <20190613212553.10541-2-jeffrey.l.hugo@gmail.com>
- <20190617150502.GU5316@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/8] regulator: core: Introduce API for regulators
+ coupling customization
+Date: Mon, 17 Jun 2019 16:23:40 +0100
+Message-ID: <20190617152340.GX5316@sirena.org.uk>
+References: <20190603235904.19097-1-digetx@gmail.com>
+ <20190603235904.19097-2-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Swav0nNPrA3tWuBp"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617150502.GU5316@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <20190603235904.19097-2-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 9:05 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Thu, Jun 13, 2019 at 02:25:53PM -0700, Jeffrey Hugo wrote:
->
-> > +static int spmi_regulator_ftsmps426_set_voltage(struct regulator_dev *rdev,
-> > +                                           unsigned selector)
-> > +{
-> > +     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> > +     u8 buf[2];
-> > +     int mV;
-> > +
-> > +     mV = spmi_regulator_common_list_voltage(rdev, selector) / 1000;
-> > +
-> > +     buf[0] = mV & 0xff;
-> > +     buf[1] = mV >> 8;
-> > +     return spmi_vreg_write(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
-> > +}
->
-> This could just be a set_voltage_sel(), no need for it to be a
-> set_voltage() operation....
 
-This is a set_voltage_sel() in spmi_ftsmps426_ops.  Is the issue because this
-function is "spmi_regulator_ftsmps426_set_voltage" and not
-"spmi_regulator_ftsmps426_set_voltage_sel"?
+--Swav0nNPrA3tWuBp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
-> > +static int spmi_regulator_ftsmps426_get_voltage(struct regulator_dev *rdev)
-> > +{
-> > +     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> > +     u8 buf[2];
-> > +
-> > +     spmi_vreg_read(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
-> > +
-> > +     return (((unsigned int)buf[1] << 8) | (unsigned int)buf[0]) * 1000;
-> > +}
->
-> ...or if the conversion is this trivial why do the list_voltage() lookup
-> above?
+On Tue, Jun 04, 2019 at 02:58:57AM +0300, Dmitry Osipenko wrote:
+> Right now regulator core supports only one type of regulators coupling,
+> the "voltage max-spread" which keeps voltages of coupled regulators in a
+> given range from each other. A more sophisticated coupling may be required
+> in practice, one example is the NVIDIA Tegra SoC's which besides the
+> max-spreading have other restrictions that must be adhered. Introduce API
+> that allow platforms to provide their own customized coupling algorithms.
 
-We already have code in the driver to convert a selector to the
-voltage.  Why duplicate
-that inline in spmi_regulator_ftsmps426_set_voltage?
+So, I don't completely hate this and I'm not sure there's any good
+solutions here...
 
->
-> > +spmi_regulator_ftsmps426_set_mode(struct regulator_dev *rdev, unsigned int mode)
-> > +{
-> > +     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> > +     u8 mask = SPMI_FTSMPS426_MODE_MASK;
-> > +     u8 val;
-> > +
-> > +     switch (mode) {
-> > +     case REGULATOR_MODE_NORMAL:
-> > +             val = SPMI_FTSMPS426_MODE_HPM_MASK;
-> > +             break;
-> > +     case REGULATOR_MODE_FAST:
-> > +             val = SPMI_FTSMPS426_MODE_AUTO_MASK;
-> > +             break;
-> > +     default:
-> > +             val = SPMI_FTSMPS426_MODE_LPM_MASK;
-> > +             break;
-> > +     }
->
-> This should validate, it shouldn't just translate invalid values into
-> valid ones.
+> + * @balance_voltage: Callback invoked when voltage of a coupled regulator is
+> + *                   changing. The callee should perform voltage balancing
+> + *                   and change voltage of the coupled regulators.
 
-Validate what?  The other defines are REGULATOR_MODE_IDLE
-and REGULATOR_MODE_STANDBY which correspond to the LPM
-mode.  Or are you suggesting that regulator framework is going to pass
-REGULATOR_MODE_INVALID to this operation?
+Some documentation on what the context for calling this is (locking and
+so on) and how it should do the adjustments it wants to do would be
+good.
+
+--Swav0nNPrA3tWuBp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HsHsACgkQJNaLcl1U
+h9AZ/wf+Pme+NJZgnNHaUP/TA5RgftsxYHZ1bXA8oSKUiZBT9rTdOHx9ZD+S+W0A
+gw+3s/TA8Ih05PlGrB9IHVsJErrUKUUemfGB9vK2HLYP5B6FRTAXexN/4jJ3xEZ2
+gBbhAAEbzvE9QtOcJEx2bjtHXAVtfsteRJ0vrvm2Ws+Hyvav7vjyAoJ8J8Q7acww
+g7fo7iYuiUy7GV3g9GeE/R6y8iKE1/+B3QHKk1q3HY6l1a+Dfpf4/tk8lwR8QSN5
+MxwjIb9benyzSlJvaf/sibjUJbXmKaGB145bY2TV6xTz7LOB8CwxwV6nyP//joGB
+MdEI1WNmiyjzfwYe31h3sRxWhPviVg==
+=S4Pq
+-----END PGP SIGNATURE-----
+
+--Swav0nNPrA3tWuBp--
