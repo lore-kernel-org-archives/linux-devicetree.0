@@ -1,113 +1,93 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv5 18/20] PCI: mobiveil: Disable IB and OB windows set by
- bootloader
-Date: Mon, 17 Jun 2019 10:42:36 +0000
-Message-ID: <AM6PR04MB67424DE4A1964ED222D21E9584EB0@AM6PR04MB6742.eurprd04.prod.outlook.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-19-Zhiqiang.Hou@nxp.com>
- <20190612162347.GF15747@redmoon>
- <AM0PR04MB67383C84D946045874B0F14A84E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
- <20190617093040.GC18020@e121166-lin.cambridge.arm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 3/3] mmc: sdhci-of-arasan: Add support for ZynqMP Platform
+ Tap Delays Setup
+Date: Mon, 17 Jun 2019 13:15:03 +0200
+Message-ID: <CAPDyKFrJwpwUUX_q2kcR9QY_fv9Lgos+ixPmU6JMeJVqJAiFpg@mail.gmail.com>
+References: <1560247011-26369-1-git-send-email-manish.narani@xilinx.com> <1560247011-26369-4-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617093040.GC18020@e121166-lin.cambridge.arm.com>
-Content-Language: en-US
+In-Reply-To: <1560247011-26369-4-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Adrian Hunter <adrian.hunter@intel.com>, rajan.vaja@xilinx.com, jolly.shah@xilinx.com, nava.manne@xilinx.com, Olof Johansson <olof@lixom.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExv
-cmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5
-5bm0NuaciDE35pelIDE3OjMxDQo+IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+
-DQo+IENjOiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0K
-PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyByb2JoK2R0QGtlcm5l
-bC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNv
-LmluOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT47
-IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3aWxsLmRlYWNvbkBhcm0uY29tOw0KPiBNaW5na2Fp
-IEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNv
-bT47DQo+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTog
-W1BBVENIdjUgMTgvMjBdIFBDSTogbW9iaXZlaWw6IERpc2FibGUgSUIgYW5kIE9CIHdpbmRvd3Mg
-c2V0DQo+IGJ5IGJvb3Rsb2FkZXINCj4gDQo+IE9uIFNhdCwgSnVuIDE1LCAyMDE5IGF0IDA1OjAz
-OjMzQU0gKzAwMDAsIFoucS4gSG91IHdyb3RlOg0KPiA+IEhpIExvcmVuem8sDQo+ID4NCj4gPiA+
-IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBMb3JlbnpvIFBpZXJhbGlz
-aSBbbWFpbHRvOmxvcmVuem8ucGllcmFsaXNpQGFybS5jb21dDQo+ID4gPiBTZW50OiAyMDE55bm0
-NuaciDEz5pelIDA6MjQNCj4gPiA+IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+
-OyBiaGVsZ2Fhc0Bnb29nbGUuY29tDQo+ID4gPiBDYzogbGludXgtcGNpQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBy
-b2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+ID4gcm9iaCtsLnN1
-YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluOw0KPiA+ID4gc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVv
-IExpIDxsZW95YW5nLmxpQG54cC5jb20+Ow0KPiA+ID4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207
-IHdpbGwuZGVhY29uQGFybS5jb207IE1pbmdrYWkgSHUNCj4gPiA+IDxtaW5na2FpLmh1QG54cC5j
-b20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkNCj4gQmFvDQo+
-ID4gPiA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NSAx
-OC8yMF0gUENJOiBtb2JpdmVpbDogRGlzYWJsZSBJQiBhbmQgT0INCj4gPiA+IHdpbmRvd3Mgc2V0
-IGJ5IGJvb3Rsb2FkZXINCj4gPiA+DQo+ID4gPiBPbiBGcmksIEFwciAxMiwgMjAxOSBhdCAwODoz
-NzowMEFNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiA+ID4gRnJvbTogSG91IFpoaXFpYW5n
-IDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiA+ID4NCj4gPiA+ID4gRGlzYWJsZSBhbGwgaW5i
-b3VuZCBhbmQgb3V0Ym91bmQgd2luZG93cyBiZWZvcmUgc2V0IHVwIHRoZSB3aW5kb3dzDQo+ID4g
-PiA+IGluIGtlcm5lbCwgaW4gY2FzZSB0cmFuc2FjdGlvbnMgbWF0Y2ggdGhlIHdpbmRvdyBzZXQg
-YnkgYm9vdGxvYWRlci4NCj4gPiA+DQo+ID4gPiBUaGVyZSBtdXN0IGJlIG5vIFBDSSB0cmFuc2Fj
-dGlvbnMgb25nb2luZyBhdCBib290bG9hZGVyPC0+T1MgaGFuZG92ZXIuDQo+ID4gPg0KPiA+DQo+
-ID4gWWVzLCBleGFjdC4NCj4gPg0KPiA+ID4gVGhlIGJvb3Rsb2FkZXIgbmVlZHMgZml4aW5nIGFu
-ZCB0aGlzIHBhdGNoIHNob3VsZCBiZSBkcm9wcGVkLCB0aGUNCj4gPiA+IGhvc3QgYnJpZGdlIGRy
-aXZlciBhc3N1bWVzIHRoZSBob3N0IGJyaWRnZSBzdGF0ZSBpcyBkaXNhYmxlZCwNCj4gPg0KPiA+
-IFRoZSBob3N0IGJyaWRnZSBkcml2ZXIgc2hvdWxkIG5vdCBhc3N1bWVzIHRoZSBob3N0IHN0YXRl
-IGlzIGRpc2FibGVkLA0KPiA+IGFjdHVhbGx5IHUtYm9vdCBlbmFibGUvaW5pdGlhbGl6ZSB0aGUg
-aG9zdCBhbmQgd2l0aG91dCBkaXNhYmxpbmcgaXQNCj4gPiB3aGVuIHRyYW5zZmVyIHRoZSBjb250
-cm9sIHRvIExpbnV4Lg0KPiANCj4gRml4IHRoZSBib290bG9hZGVyIGFuZCBkcm9wIHRoaXMgcGF0
-Y2gsIEkgZXhwbGFpbiB0byB5b3Ugd2h5Lg0KDQpUaGlzIHBhdGNoIGlzIGp1c3QgdG8gYXZvaWQg
-dWJvb3QgZHJpdmVyIHdpbmRvd3Mgc2V0dXAgYW5kIExpbnV4IGRyaXZlciB3aW5kb3dzDQpzZXR1
-cCBvdmVybGFwIGlzc3VlLCBwbGVhc2UgZHJvcCBpdCBpZiB5b3UgZG9uJ3QgdGhpbmsgaXQncyBu
-ZWVkZWQg8J+Yii4NCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg0KPiANCj4gPiA+IGl0IHdpbGwgcHJv
-Z3JhbSB0aGUgYnJpZGdlDQo+ID4gPiBhcGVydHVyZXMgZnJvbSBzY3JhdGNoIHdpdGggbm8gb25n
-b2luZyB0cmFuc2FjdGlvbnMsIGFueXRoaW5nDQo+ID4gPiBkZXZpYXRpbmcgZnJvbSB0aGlzIGJl
-aGF2aW91ciBpcyBhIGJvb3Rsb2FkZXIgYnVnIGFuZCBhIHJlY2lwZSBmb3IgZGlzYXN0ZXIuDQo+
-ID4NCj4gPiBUaGUgcG9pbnQgb2YgdGhpcyBwYXRjaCBpcyBub3QgdG8gZml4IHRoZSBvbmdvaW5n
-IHRyYW5zYWN0aW9uIGlzc3VlLA0KPiA+IGl0IGlzIHRvIGF2b2lkIGEgcG90ZW50aWFsIGlzc3Vl
-IHdoaWNoIGlzIGNhdXNlZCBieSB0aGUgb3V0Ym91bmQNCj4gPiB3aW5kb3cgZW5hYmxlZCBieSBi
-b290bG9hZGVyIG92ZXJsYXBwaW5nIHdpdGggTGludXggZW5hYmxlZC4NCj4gDQo+IFNlZSBhYm92
-ZS4NCj4gDQo+IExvcmVuem8NCj4gDQo+ID4gVGhhbmtzLA0KPiA+IFpoaXFpYW5nDQo+ID4NCj4g
-PiA+IExvcmVuem8NCj4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8
-WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4gPiA+IFJldmlld2VkLWJ5OiBNaW5naHVhbiBMaWFu
-IDxNaW5naHVhbi5MaWFuQG54cC5jb20+DQo+ID4gPiA+IFJldmlld2VkLWJ5OiBTdWJyYWhtYW55
-YSBMaW5nYXBwYSA8bC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5pbj4NCj4gPiA+ID4gLS0tDQo+
-ID4gPiA+IFY1Og0KPiA+ID4gPiAgLSBObyBmdW5jdGlvbmFsaXR5IGNoYW5nZS4NCj4gPiA+ID4N
-Cj4gPiA+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jIHwgMjUNCj4g
-PiA+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDI1IGluc2VydGlvbnMoKykNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gPiA+IGIvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiA+ID4gaW5kZXggOGRjODdjN2E2MDBlLi40MTFl
-OTc3OWRhMTIgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNp
-ZS1tb2JpdmVpbC5jDQo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1t
-b2JpdmVpbC5jDQo+ID4gPiA+IEBAIC01NjUsNiArNTY1LDI0IEBAIHN0YXRpYyBpbnQgbW9iaXZl
-aWxfYnJpbmd1cF9saW5rKHN0cnVjdA0KPiA+ID4gbW9iaXZlaWxfcGNpZSAqcGNpZSkNCj4gPiA+
-ID4gIAlyZXR1cm4gLUVUSU1FRE9VVDsNCj4gPiA+ID4gIH0NCj4gPiA+ID4NCj4gPiA+ID4gK3N0
-YXRpYyB2b2lkIG1vYml2ZWlsX3BjaWVfZGlzYWJsZV9pYl93aW4oc3RydWN0IG1vYml2ZWlsX3Bj
-aWUNCj4gPiA+ID4gKypwY2llLCBpbnQgaWR4KSB7DQo+ID4gPiA+ICsJdTMyIHZhbDsNCj4gPiA+
-ID4gKw0KPiA+ID4gPiArCXZhbCA9IGNzcl9yZWFkbChwY2llLCBQQUJfUEVYX0FNQVBfQ1RSTChp
-ZHgpKTsNCj4gPiA+ID4gKwl2YWwgJj0gfigxIDw8IEFNQVBfQ1RSTF9FTl9TSElGVCk7DQo+ID4g
-PiA+ICsJY3NyX3dyaXRlbChwY2llLCB2YWwsIFBBQl9QRVhfQU1BUF9DVFJMKGlkeCkpOyB9DQo+
-ID4gPiA+ICsNCj4gPiA+ID4gK3N0YXRpYyB2b2lkIG1vYml2ZWlsX3BjaWVfZGlzYWJsZV9vYl93
-aW4oc3RydWN0IG1vYml2ZWlsX3BjaWUNCj4gPiA+ID4gKypwY2llLCBpbnQgaWR4KSB7DQo+ID4g
-PiA+ICsJdTMyIHZhbDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCXZhbCA9IGNzcl9yZWFkbChwY2ll
-LCBQQUJfQVhJX0FNQVBfQ1RSTChpZHgpKTsNCj4gPiA+ID4gKwl2YWwgJj0gfigxIDw8IFdJTl9F
-TkFCTEVfU0hJRlQpOw0KPiA+ID4gPiArCWNzcl93cml0ZWwocGNpZSwgdmFsLCBQQUJfQVhJX0FN
-QVBfQ1RSTChpZHgpKTsgfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICBzdGF0aWMgdm9pZCBtb2JpdmVp
-bF9wY2llX2VuYWJsZV9tc2koc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUpICB7DQo+ID4gPiA+
-ICAJcGh5c19hZGRyX3QgbXNnX2FkZHIgPSBwY2llLT5wY2llX3JlZ19iYXNlOyBAQCAtNTg1LDYg
-KzYwMywxMw0KPiBAQA0KPiA+ID4gPiBzdGF0aWMgaW50IG1vYml2ZWlsX2hvc3RfaW5pdChzdHJ1
-Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSkgIHsNCj4gPiA+ID4gIAl1MzIgdmFsdWUsIHBhYl9jdHJs
-LCB0eXBlOw0KPiA+ID4gPiAgCXN0cnVjdCByZXNvdXJjZV9lbnRyeSAqd2luOw0KPiA+ID4gPiAr
-CWludCBpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJLyogRGlzYWJsZSBhbGwgaW5ib3VuZC9vdXRi
-b3VuZCB3aW5kb3dzICovDQo+ID4gPiA+ICsJZm9yIChpID0gMDsgaSA8IHBjaWUtPmFwaW9fd2lu
-czsgaSsrKQ0KPiA+ID4gPiArCQltb2JpdmVpbF9wY2llX2Rpc2FibGVfb2Jfd2luKHBjaWUsIGkp
-Ow0KPiA+ID4gPiArCWZvciAoaSA9IDA7IGkgPCBwY2llLT5wcGlvX3dpbnM7IGkrKykNCj4gPiA+
-ID4gKwkJbW9iaXZlaWxfcGNpZV9kaXNhYmxlX2liX3dpbihwY2llLCBpKTsNCj4gPiA+ID4NCj4g
-PiA+ID4gIAkvKiBzZXR1cCBidXMgbnVtYmVycyAqLw0KPiA+ID4gPiAgCXZhbHVlID0gY3NyX3Jl
-YWRsKHBjaWUsIFBDSV9QUklNQVJZX0JVUyk7DQo+ID4gPiA+IC0tDQo+ID4gPiA+IDIuMTcuMQ0K
-PiA+ID4gPg0K
+On Tue, 11 Jun 2019 at 11:57, Manish Narani <manish.narani@xilinx.com> wrote:
+>
+> Apart from taps set by auto tuning, ZynqMP platform has feature to set
+> the tap values manually. Add support to read tap delay values from
+> DT and set the same in HW via ZynqMP SoC framework. Reading Tap
+> Delays from DT is optional, if the property is not available in DT the
+> driver will use the pre-defined Tap Delay Values.
+>
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  drivers/mmc/host/sdhci-of-arasan.c | 173 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 172 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index b12abf9..7af6cec 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/phy/phy.h>
+>  #include <linux/regmap.h>
+>  #include <linux/of.h>
+> +#include <linux/firmware/xlnx-zynqmp.h>
+>
+>  #include "cqhci.h"
+>  #include "sdhci-pltfm.h"
+> @@ -32,6 +33,10 @@
+>
+>  #define PHY_CLK_TOO_SLOW_HZ            400000
+>
+> +/* Default settings for ZynqMP Tap Delays */
+> +#define ZYNQMP_ITAP_DELAYS {0, 0x15, 0x15, 0, 0x15, 0, 0, 0x3D, 0x12, 0, 0}
+> +#define ZYNQMP_OTAP_DELAYS {0, 0x5, 0x6, 0, 0x5, 0x3, 0x3, 0x4, 0x6, 0x3, 0}
+> +
+>  /*
+>   * On some SoCs the syscon area has a feature where the upper 16-bits of
+>   * each 32-bit register act as a write mask for the lower 16-bits.  This allows
+> @@ -81,6 +86,7 @@ struct sdhci_arasan_soc_ctl_map {
+>   * @sdcardclk:         Pointer to normal 'struct clock' for sdcardclk_hw.
+>   * @soc_ctl_base:      Pointer to regmap for syscon for soc_ctl registers.
+>   * @soc_ctl_map:       Map to get offsets into soc_ctl registers.
+> + * @of_data:           Platform specific runtime data storage pointer
+>   */
+>  struct sdhci_arasan_data {
+>         struct sdhci_host *host;
+> @@ -101,6 +107,15 @@ struct sdhci_arasan_data {
+>  /* Controller immediately reports SDHCI_CLOCK_INT_STABLE after enabling the
+>   * internal clock even when the clock isn't stable */
+>  #define SDHCI_ARASAN_QUIRK_CLOCK_UNSTABLE BIT(1)
+> +
+> +       void *of_data;
+> +};
+> +
+> +struct sdhci_arasan_zynqmp_data {
+> +       void (*set_tap_delay)(struct sdhci_host *host);
+> +       const struct zynqmp_eemi_ops *eemi_ops;
+> +       u8 tapdly[MMC_TIMING_MMC_HS400 + 1][2]; /* [0] for input delay, */
+> +                                               /* [1] for output delay */
+>  };
+
+Please use two different structs, one for the clock provider data and
+one for the mmc variant/platform data. This makes the code more
+readable.
+
+In regards to the mmc data part, I suggest to drop the
+->set_tap_delay() callback, but rather use a boolean flag to indicate
+whether clock phases needs to be changed for the variant. Potentially
+that could even be skipped and instead call clk_set_phase()
+unconditionally, as the clock core deals fine with clock providers
+that doesn't support the ->set_phase() callback.
+
+[...]
+
+Otherwise this looks good to me!
+
+When it comes to patch1, I need an ack from Michal to pick it up.
+
+Kind regards
+Uffe
