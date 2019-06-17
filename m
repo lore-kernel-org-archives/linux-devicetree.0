@@ -1,74 +1,85 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register
- clock gates in probe
-Date: Mon, 17 Jun 2019 21:01:33 +0800
-Message-ID: <CAGb2v66RU=m0iA9VoBiYbake+mDoiiGcd5gGGXvNCBjhY2n+Dw@mail.gmail.com>
-References: <20190614164324.9427-1-jagan@amarulasolutions.com>
- <20190614164324.9427-6-jagan@amarulasolutions.com> <20190617114503.pclqsf6bo3ih47nt@flea>
-Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Date: Mon, 17 Jun 2019 15:01:51 +0200
+Message-ID: <20190617130150.GA21113@amd>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
+ <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+ <20190610205233.GB137143@google.com>
+ <20190611104913.egsbwcedshjdy3m5@holly.lan>
+ <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
+ <20190611223019.GH137143@google.com>
+ <20190612110325.xdn3q2aod52oalge@holly.lan>
+ <20190612192642.GK137143@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBPM6T3UAKGQE5CB77JI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190617114503.pclqsf6bo3ih47nt@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190612192642.GK137143@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Brian Norris <briannorris@google.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 7:45 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On Fri, Jun 14, 2019 at 10:13:20PM +0530, Jagan Teki wrote:
-> > TCON TOP have clock gates for TV0, TV1, dsi and right
-> > now these are register during bind call.
-> >
-> > Of which, dsi clock gate would required during DPHY probe
-> > but same can miss to get since tcon top is not bound at
-> > that time.
-> >
-> > To solve, this circular dependency move the clock gate
-> > registration from bind to probe so-that DPHY can get the
-> > dsi gate clock on time.
->
-> It's not really clear to me what the circular dependency is?
->
-> if you have a chain that is:
->
-> tcon-top +-> DSI
->          +-> D-PHY
->
-> There's no loop, right?
 
-Looking at how the DTSI patch structures things (without going into
-whether it is correct or accurate):
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The D-PHY is not part of the component graph. However it requests
-the DSI gate clock from the TCON-TOP.
+Hi!
 
-The TCON-TOP driver, in its current form, only registers the clocks
-it provides at component bind time. Thus the D-PHY can't successfully
-probe until the TCON-TOP has been bound.
+> > Certainly "linear" (this device will work more or less correctly if the
+> > userspace applies perceptual curves). Not sure about logarithmic since
+> > what is actually useful is something that is "perceptually linear"
+> > (logarithmic is merely a way to approximate that).
+> >=20
+> > I do wonder about a compatible string like most-detailed to
+> > least-detailed description. This for a PWM with the auto-generated
+> > tables we'd see something like:
+> >=20
+> > cie-1991,perceptual,non-linear
+> >=20
+> > For something that is non-linear but we are not sure what its tables are
+> > we can offer just "non-linear".
+>=20
+> Thanks for the feedback!
+>=20
+> It seems clear that we want a string for the added flexibility. I can
+> work on a patch with the compatible string like description you
+> suggested and we can discuss in the review if we want to go with that
+> or prefer something else.
 
-The DSI interface requires the D-PHY to bind. It will return -EPROBE_DEFER
-if it cannot request it. This in turn goes into the error path of
-component_bind_all, which unbinds all previous components.
+Compatible-like string seems overly complicated.
 
-So it's actually
+> > Instead one valid value for the sysfs should be "unknown" and this be
+> > the default for drivers we have not analysed (this also makes it easy to
+> > introduce change here).
+>=20
+> An "unknown" value sounds good, it allows userspace to just do what it
+> did/would hace done before this attribute existed.
 
-    D-PHY -> TCON-TOP -> DSI
-      ^                   |
-      |--------------------
+What about simply not presenting the attribute when we don't have the
+information?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-I've not checked, but I suspect there's no possibility of having other
-drivers probe (to deal with deferred probing) within component_bind_all.
-Otherwise we shouldn't run into this weird circular dependency issue.
+--sdtB3X0nJg68CQEu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-So the question for Jagan is that is this indeed the case? Does this
-patch solve it, or at least work around it.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-ChenYu
+iEYEARECAAYFAl0Hjz4ACgkQMOfwapXb+vJICwCgw2oDqZxKwg0bd8+7Xh6ZsIX9
+/MsAn2woctEoRe0BmsGCFOw5p1KQMS68
+=vCQf
+-----END PGP SIGNATURE-----
+
+--sdtB3X0nJg68CQEu--
