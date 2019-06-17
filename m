@@ -1,173 +1,120 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of/fdt: hide of_ftd_match() if unused
-Date: Mon, 17 Jun 2019 11:56:09 -0700
-Message-ID: <5dfc29c0-0b42-16d9-b850-2cba8938d908@gmail.com>
-References: <20190617123840.911593-1-arnd@arndb.de>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: [PATCH v7 0/7] Unify CPU topology across ARM & RISC-V
+Date: Mon, 17 Jun 2019 11:59:13 -0700
+Message-ID: <20190617185920.29581-1-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617123840.911593-1-arnd@arndb.de>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Rob Herring <robh@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Atish Patra <atish.patra@wdc.com>, Jeremy Linton <jeremy.linton@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.o>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+The cpu-map DT entry in ARM can describe the CPU topology in much better
+way compared to other existing approaches. RISC-V can easily adopt this
+binding to represent its own CPU topology. Thus, both cpu-map DT
+binding and topology parsing code can be moved to a common location so
+that RISC-V or any other architecture can leverage that.
 
-Thanks for catching this.
+The relevant discussion regarding unifying cpu topology can be found in
+[1].
 
-The bad news is that you are second in line, Kefeng Wang sent a patch to
-do the same last week.
+arch_topology seems to be a perfect place to move the common code. I
+have not introduced any significant functional changes in the moved code.
+The only downside in this approach is that the capacity code will be
+executed for RISC-V as well. But, it will exit immediately after not
+able to find the appropriate DT node. If the overhead is considered too
+much, we can always compile out capacity related functions under a
+different config for the architectures that do not support them.
 
-Thanks!
+There was an opportunity to unify topology data structure for ARM32 done
+by patch 3/4. But, I refrained from making any other changes as I am not
+very well versed with original intention for some functions that
+are present in arch_topology.c. I hope this patch series can be served
+as a baseline for such changes in the future.
 
--Frank
+The patches have been tested for RISC-V and compile tested for ARM64,
+ARM32 & x86.
 
+>From Jeremy,
 
-On 6/17/19 5:38 AM, Arnd Bergmann wrote:
-> The only caller of this function is built conditionally:
-> 
-> drivers/of/fdt.c:129:19: error: 'of_fdt_match' defined but not used [-Werror=unused-function]
-> 
-> Move the definition into the same #ifdef block.
-> 
-> Fixes: 9b4d2b635bd0 ("of/fdt: Remove dead code and mark functions with __init")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/of/fdt.c | 106 +++++++++++++++++++++++------------------------
->  1 file changed, 53 insertions(+), 53 deletions(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 3d36b5afd9bd..424981786c79 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -78,38 +78,6 @@ void __init of_fdt_limit_memory(int limit)
->  	}
->  }
->  
-> -/**
-> - * of_fdt_is_compatible - Return true if given node from the given blob has
-> - * compat in its compatible list
-> - * @blob: A device tree blob
-> - * @node: node to test
-> - * @compat: compatible string to compare with compatible list.
-> - *
-> - * On match, returns a non-zero value with smaller values returned for more
-> - * specific compatible values.
-> - */
-> -static int of_fdt_is_compatible(const void *blob,
-> -		      unsigned long node, const char *compat)
-> -{
-> -	const char *cp;
-> -	int cplen;
-> -	unsigned long l, score = 0;
-> -
-> -	cp = fdt_getprop(blob, node, "compatible", &cplen);
-> -	if (cp == NULL)
-> -		return 0;
-> -	while (cplen > 0) {
-> -		score++;
-> -		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
-> -			return score;
-> -		l = strlen(cp) + 1;
-> -		cp += l;
-> -		cplen -= l;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  static bool of_fdt_device_is_available(const void *blob, unsigned long node)
->  {
->  	const char *status = fdt_getprop(blob, node, "status", NULL);
-> @@ -123,27 +91,6 @@ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
->  	return false;
->  }
->  
-> -/**
-> - * of_fdt_match - Return true if node matches a list of compatible values
-> - */
-> -static int __init of_fdt_match(const void *blob, unsigned long node,
-> -			       const char *const *compat)
-> -{
-> -	unsigned int tmp, score = 0;
-> -
-> -	if (!compat)
-> -		return 0;
-> -
-> -	while (*compat) {
-> -		tmp = of_fdt_is_compatible(blob, node, *compat);
-> -		if (tmp && (score == 0 || (tmp < score)))
-> -			score = tmp;
-> -		compat++;
-> -	}
-> -
-> -	return score;
-> -}
-> -
->  static void *unflatten_dt_alloc(void **mem, unsigned long size,
->  				       unsigned long align)
->  {
-> @@ -522,6 +469,59 @@ void *initial_boot_params __ro_after_init;
->  
->  static u32 of_fdt_crc32;
->  
-> +/**
-> + * of_fdt_is_compatible - Return true if given node from the given blob has
-> + * compat in its compatible list
-> + * @blob: A device tree blob
-> + * @node: node to test
-> + * @compat: compatible string to compare with compatible list.
-> + *
-> + * On match, returns a non-zero value with smaller values returned for more
-> + * specific compatible values.
-> + */
-> +static int of_fdt_is_compatible(const void *blob,
-> +		      unsigned long node, const char *compat)
-> +{
-> +	const char *cp;
-> +	int cplen;
-> +	unsigned long l, score = 0;
-> +
-> +	cp = fdt_getprop(blob, node, "compatible", &cplen);
-> +	if (cp == NULL)
-> +		return 0;
-> +	while (cplen > 0) {
-> +		score++;
-> +		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
-> +			return score;
-> +		l = strlen(cp) + 1;
-> +		cp += l;
-> +		cplen -= l;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * of_fdt_match - Return true if node matches a list of compatible values
-> + */
-> +static int __init of_fdt_match(const void *blob, unsigned long node,
-> +			       const char *const *compat)
-> +{
-> +	unsigned int tmp, score = 0;
-> +
-> +	if (!compat)
-> +		return 0;
-> +
-> +	while (*compat) {
-> +		tmp = of_fdt_is_compatible(blob, node, *compat);
-> +		if (tmp && (score == 0 || (tmp < score)))
-> +			score = tmp;
-> +		compat++;
-> +	}
-> +
-> +	return score;
-> +}
-> +
->  /**
->   * res_mem_reserve_reg() - reserve all memory described in 'reg' property
->   */
-> 
+"I applied these to 5.2rc2, along with my PPTT/MT change and verified the 
+system & scheduler topology/etc on DAWN and ThunderX2 using ACPI on arm64.
+They appear to be working correctly.
+
+so for the series,
+Tested-by: Jeremy Linton <jeremy.linton@arm.com>"
+
+The socket change[2] is also now part of this series.
+
+[1] https://lkml.org/lkml/2018/11/6/19
+[2] https://lkml.org/lkml/2018/11/7/918
+
+QEMU changes for RISC-V topology are available at
+
+https://github.com/atishp04/qemu/tree/riscv_topology_dt
+
+HiFive Unleashed DT with topology node is available here.
+https://github.com/atishp04/opensbi/tree/HiFive_unleashed_topology
+
+It can be verified with OpenSBI with following additional compile time
+option.
+
+FW_PAYLOAD_FDT="unleashed_topology.dtb"
+
+Changes from v6->v7
+1. Added socket to HiFive Unleashed topology example.
+2. Added Acked-by & Reviewed-by.
+
+Changes from v5->v6
+1. Added two more patches from Sudeep about maintainership of arch_topology.c
+   and Kconfig update.
+2. Added Tested-by & Reviewed-by
+3. Fixed a nit (reordering of variables)
+
+Changes from v4-v5
+1. Removed the arch_topology.h header inclusion from topology.c and arch_topology.c
+file. Added it in linux/topology.h.
+2. core_id is set to -1 upon reset. Otherwise, ARM topology store function does not
+work.
+
+Changes from v3->v4
+1. Get rid of ARM32 specific information in topology structure.
+2. Remove redundant functions from ARM32 and use common code instead. 
+
+Changes from v2->v3
+1. Cover letter update with experiment DT for topology changes.
+2. Added the patch for [2].
+
+Changes from v1->v2
+1. ARM32 can now use the common code as well.
+
+Atish Patra (4):
+dt-binding: cpu-topology: Move cpu-map to a common binding.
+cpu-topology: Move cpu topology code to common code.
+arm: Use common cpu_topology structure and functions.
+RISC-V: Parse cpu topology during boot.
+
+Sudeep Holla (3):
+Documentation: DT: arm: add support for sockets defining package
+boundaries
+base: arch_topology: update Kconfig help description
+MAINTAINERS: Add an entry for generic architecture topology
+
+.../topology.txt => cpu/cpu-topology.txt}     | 136 ++++++--
+MAINTAINERS                                   |   7 +
+arch/arm/include/asm/topology.h               |  20 --
+arch/arm/kernel/topology.c                    |  60 +---
+arch/arm64/include/asm/topology.h             |  23 --
+arch/arm64/kernel/topology.c                  | 303 +-----------------
+arch/riscv/Kconfig                            |   1 +
+arch/riscv/kernel/smpboot.c                   |   3 +
+drivers/base/Kconfig                          |   2 +-
+drivers/base/arch_topology.c                  | 298 +++++++++++++++++
+include/linux/arch_topology.h                 |  26 ++
+include/linux/topology.h                      |   1 +
+12 files changed, 454 insertions(+), 426 deletions(-)
+rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (66%)
+
+--
+2.21.0
