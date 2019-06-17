@@ -1,48 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 0/7] PM8005 and PMS405 regulator support
-Date: Mon, 17 Jun 2019 15:58:53 +0100
-Message-ID: <20190617145853.GT5316@sirena.org.uk>
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 3/3] mmc: sdhci-of-arasan: Add support for ZynqMP Platform
+ Tap Delays Setup
+Date: Mon, 17 Jun 2019 16:58:47 +0200
+Message-ID: <CAPDyKFp6O8rPZDZS4iKJam2+tXeen_ZMOXKw=WVzJNpBXcSc9g@mail.gmail.com>
+References: <1560247011-26369-1-git-send-email-manish.narani@xilinx.com>
+ <1560247011-26369-4-git-send-email-manish.narani@xilinx.com>
+ <CAPDyKFrJwpwUUX_q2kcR9QY_fv9Lgos+ixPmU6JMeJVqJAiFpg@mail.gmail.com>
+ <5feac3fb-bef3-b7d1-57d6-81e115e1f555@xilinx.com> <CAPDyKFp_ZvSjFp2FGonzGsnc9xPyZ7qOCaRnX1SimBxLpfz9-Q@mail.gmail.com>
+ <948514a0-e310-75fd-e8a8-6ef8bb14e41f@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NZ00oluAJr3A0NMv"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <948514a0-e310-75fd-e8a8-6ef8bb14e41f@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Manish Narani <manish.narani@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, rajan.vaja@xilinx.com, jolly.shah@xilinx.com, nava.manne@xilinx.com, Olof Johansson <olof@lixom.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+[...]
 
---NZ00oluAJr3A0NMv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> >>
+> >>
+> >>> In regards to the mmc data part, I suggest to drop the
+> >>> ->set_tap_delay() callback, but rather use a boolean flag to indicate
+> >>> whether clock phases needs to be changed for the variant. Potentially
+> >>> that could even be skipped and instead call clk_set_phase()
+> >>> unconditionally, as the clock core deals fine with clock providers
+> >>> that doesn't support the ->set_phase() callback.
+> >>
+> >> In connection to another version of this driver for latest Xilinx chip
+> >> it would be better to keep set_tap_delay callback in the driver. The
+> >> reason is that new chip/ip is capable to setup tap delays directly
+> >> without asking firmware to do it. That's why for versal IP there is a
+> >> need to call different setup_tap_delay function.
+> >
+> > The ->set_tap_delay() callback is for ZyncMp pointing to
+> > sdhci_arasan_zynqmp_set_tap_delay(). This function calls the
+> > clk_set_phase() API.
+> >
+> > What does ->set_tap_delay() do for the latest version?
+>
+> There is different set of default tap delays which should be programmed
+> and it is done just via writing to registers which are the part of
+> controller address space.
 
-On Thu, Jun 13, 2019 at 02:24:36PM -0700, Jeffrey Hugo wrote:
-> The MSM8998 MTP reference platform supplies VDD_GFX from s1 of the
-> pm8005 PMIC.  VDD_GFX is needed to turn on the GPU.  As we are looking
-> to bring up the GPU, add the support for pm8005 and wire up s1 in a
-> basic manner so that we have this dependency out of the way and can
-> focus on enabling the GPU driver.
+Okay, I see.
 
-There's something really weird with the threading in how you posted
-these, a few of the patches are in reply to the prior patch so indented
-a level down.
+Not sure what makes most sense to do here, but it sounds to me like
+another ->set_phase() callback should be implemented for the clock
+provider. In other words, calling clk_set_phase() should continue to
+works just fine for this case as well. If it turns out to be
+inconvenient, we can always add the ->set_tap_delay() at a later point
+when it makes more sense.
 
---NZ00oluAJr3A0NMv
-Content-Type: application/pgp-signature; name="signature.asc"
+[...]
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HqqwACgkQJNaLcl1U
-h9D8RQf+OxNLRt9KY0qAKM/axbtNoK16v0PmHjNYLhYl5yBMi63SehdoXh1DkZY5
-pBVOnlHPnB3usazND0knM12bH9x/qWXJZeA4PPGCDwUz2SOJRxIYr7wsKNmNjV/u
-nZwsZ0dCbIFjRTZ8YCrc2FTsjCUVylqDeHzFJJ/I9nstD8POAs043rd5FIuNlGGS
-sb2Qhu94o6C8u7YUjWciJ3zjXtQM5rfcuxVpMpxX8dg55PPvk6cTeSnQwto+lpeU
-HypcRzk7F36tl5ElZPhf/WkPycNHdx8h+0oy85CVQ4/bqNb8rNDUFymfDE5qGI4o
-6qoIyaY8tuzHoiLnJNXFhtl6YzjKbw==
-=dHUK
------END PGP SIGNATURE-----
-
---NZ00oluAJr3A0NMv--
+Kind regards
+Uffe
