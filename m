@@ -1,156 +1,37 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v7 12/21] memory: mtk-smi: Add gals support
-Date: Mon, 17 Jun 2019 17:43:49 +0200
-Message-ID: <c01770c8-d110-f454-528b-0fce96c0d2c1@gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
- <1560169080-27134-13-git-send-email-yong.wu@mediatek.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v2 11/11] interconnect: Add devfreq support
+Date: Mon, 17 Jun 2019 18:43:53 +0300
+Message-ID: <5dc6c820-ead8-d0dc-44de-4d13f86df042@linaro.org>
+References: <20190614041733.120807-1-saravanak@google.com>
+ <20190614041733.120807-12-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560169080-27134-13-git-send-email-yong.wu@mediatek.com>
+In-Reply-To: <20190614041733.120807-12-saravanak@google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
+To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Saravana,
 
+On 6/14/19 07:17, Saravana Kannan wrote:
+> Add a icc_create_devfreq() and icc_remove_devfreq() to create and remove
+> devfreq devices for interconnect paths. A driver can create/remove devfreq
+> devices for the interconnects needed for its device by calling these APIs.
+> This would allow various devfreq governors to work with interconnect paths
+> and the device driver itself doesn't have to actively manage the bandwidth
+> votes for the interconnects.
 
-On 10/06/2019 14:17, Yong Wu wrote:
-> In some SoCs like mt8183, SMI add GALS(Global Async Local Sync) module
-> which can help synchronize for the modules in different clock frequency.
-> It can be seen as a "asynchronous fifo". This is a example diagram:
-> 
->             M4U
->              |
->          ----------
->          |        |
->      gals0-rx   gals1-rx
->          |        |
->          |        |
->      gals0-tx   gals1-tx
->          |        |
->         ------------
->          SMI Common
->         ------------
->              |
->   +-----+--------+-----+- ...
->   |     |        |     |
->   |  gals-rx  gals-rx  |
->   |     |        |     |
->   |     |        |     |
->   |  gals-tx  gals-tx  |
->   |     |        |     |
-> larb1 larb2   larb3  larb4
-> 
-> GALS only help transfer the command/data while it doesn't have the
-> configuring register, thus it has the special "smi" clock and doesn't
-> have the "apb" clock. From the diagram above, we add "gals0" and
-> "gals1" clocks for smi-common and add a "gals" clock for smi-larb.
-> 
-> This patch adds gals clock supporting in the SMI. Note that some larbs
-> may still don't have the "gals" clock like larb1 and larb4 above.
-> 
-> This is also a preparing patch for mt8183 which has GALS.
-> 
-> CC: Matthias Brugger <matthias.bgg@gmail.com>
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
+Thanks for the patches, but creating devfreq devices for each interconnect path
+seems odd to me - at least for consumers that already use a governor. So for DDR
+scaling for example, are you suggesting that we add a devfreq device from the
+cpufreq driver in order to scale the interconnect between CPU<->DDR? Also if the
+GPU is already using devfreq, should we add a devfreq per each interconnect
+path? What would be the benefit in this case - using different governors for
+bandwidth scaling maybe?
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
->  drivers/memory/mtk-smi.c | 36 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> index 8a2f968..91634d7 100644
-> --- a/drivers/memory/mtk-smi.c
-> +++ b/drivers/memory/mtk-smi.c
-> @@ -56,6 +56,7 @@ enum mtk_smi_gen {
->  
->  struct mtk_smi_common_plat {
->  	enum mtk_smi_gen gen;
-> +	bool             has_gals;
->  };
->  
->  struct mtk_smi_larb_gen {
-> @@ -63,11 +64,13 @@ struct mtk_smi_larb_gen {
->  	int port_in_larb[MTK_LARB_NR_MAX + 1];
->  	void (*config_port)(struct device *);
->  	unsigned int larb_direct_to_common_mask;
-> +	bool             has_gals;
->  };
->  
->  struct mtk_smi {
->  	struct device			*dev;
->  	struct clk			*clk_apb, *clk_smi;
-> +	struct clk			*clk_gals0, *clk_gals1;
->  	struct clk			*clk_async; /*only needed by mt2701*/
->  	void __iomem			*smi_ao_base;
->  
-> @@ -99,8 +102,20 @@ static int mtk_smi_enable(const struct mtk_smi *smi)
->  	if (ret)
->  		goto err_disable_apb;
->  
-> +	ret = clk_prepare_enable(smi->clk_gals0);
-> +	if (ret)
-> +		goto err_disable_smi;
-> +
-> +	ret = clk_prepare_enable(smi->clk_gals1);
-> +	if (ret)
-> +		goto err_disable_gals0;
-> +
->  	return 0;
->  
-> +err_disable_gals0:
-> +	clk_disable_unprepare(smi->clk_gals0);
-> +err_disable_smi:
-> +	clk_disable_unprepare(smi->clk_smi);
->  err_disable_apb:
->  	clk_disable_unprepare(smi->clk_apb);
->  err_put_pm:
-> @@ -110,6 +125,8 @@ static int mtk_smi_enable(const struct mtk_smi *smi)
->  
->  static void mtk_smi_disable(const struct mtk_smi *smi)
->  {
-> +	clk_disable_unprepare(smi->clk_gals1);
-> +	clk_disable_unprepare(smi->clk_gals0);
->  	clk_disable_unprepare(smi->clk_smi);
->  	clk_disable_unprepare(smi->clk_apb);
->  	pm_runtime_put_sync(smi->dev);
-> @@ -310,6 +327,15 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
->  	larb->smi.clk_smi = devm_clk_get(dev, "smi");
->  	if (IS_ERR(larb->smi.clk_smi))
->  		return PTR_ERR(larb->smi.clk_smi);
-> +
-> +	if (larb->larb_gen->has_gals) {
-> +		/* The larbs may still haven't gals even if the SoC support.*/
-> +		larb->smi.clk_gals0 = devm_clk_get(dev, "gals");
-> +		if (PTR_ERR(larb->smi.clk_gals0) == -ENOENT)
-> +			larb->smi.clk_gals0 = NULL;
-> +		else if (IS_ERR(larb->smi.clk_gals0))
-> +			return PTR_ERR(larb->smi.clk_gals0);
-> +	}
->  	larb->smi.dev = dev;
->  
->  	if (larb->larb_gen->need_larbid) {
-> @@ -402,6 +428,16 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
->  	if (IS_ERR(common->clk_smi))
->  		return PTR_ERR(common->clk_smi);
->  
-> +	if (common->plat->has_gals) {
-> +		common->clk_gals0 = devm_clk_get(dev, "gals0");
-> +		if (IS_ERR(common->clk_gals0))
-> +			return PTR_ERR(common->clk_gals0);
-> +
-> +		common->clk_gals1 = devm_clk_get(dev, "gals1");
-> +		if (IS_ERR(common->clk_gals1))
-> +			return PTR_ERR(common->clk_gals1);
-> +	}
-> +
->  	/*
->  	 * for mtk smi gen 1, we need to get the ao(always on) base to config
->  	 * m4u port, and we need to enable the aync clock for transform the smi
-> 
+Thanks,
+Georgi
