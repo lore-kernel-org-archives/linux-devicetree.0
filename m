@@ -1,64 +1,110 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 1/1] ARM: dts: stm32: replace rgmii mode with rgmii-id on
- stm32mp15 boards
-Date: Mon, 17 Jun 2019 14:34:49 +0200
-Message-ID: <c53808dd-f1d2-2865-7d45-fa2ca875b95a@st.com>
-References: <20190617085018.20352-1-christophe.roullier@st.com>
- <20190617085018.20352-2-christophe.roullier@st.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND
+ controller
+Date: Mon, 17 Jun 2019 14:35:10 +0200
+Message-ID: <20190617143510.4ded5728@xps13>
+References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
+        <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
+        <20190512151820.4f2dd9da@xps13>
+        <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
+        <20190520142333.390091d5@xps13>
+        <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
+        <20190527144250.71908bd9@xps13>
+        <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617085018.20352-2-christophe.roullier@st.com>
-Content-Language: en-US
+In-Reply-To: <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christophe Roullier <christophe.roullier@st.com>, robh@kernel.org, davem@davemloft.net, joabreu@synopsys.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, peppe.cavallaro@st.com
-Cc: linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, andrew@lunn.ch
+To: masonccyang@mxic.com.tw
+Cc: bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe
+Hi Mason,
 
-On 6/17/19 10:50 AM, Christophe Roullier wrote:
-> On disco and eval board, Tx and Rx delay are applied (pull-up of 4.7k
-> put on VDD) so which correspond to RGMII-ID mode with internal RX and TX
-> delays provided by the PHY, the MAC should not add the RX or TX delays
-> in this case
+masonccyang@mxic.com.tw wrote on Wed, 29 May 2019 11:12:08 +0800:
+
+> Hi Miquel,
 > 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
-> ---
->   arch/arm/boot/dts/stm32mp157a-dk1.dts | 2 +-
->   arch/arm/boot/dts/stm32mp157c-ev1.dts | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
+> > > > > > > +static void mxic_nand_select_chip(struct nand_chip *chip, int   
+>  
+> > > chipnr)   
+> > > > > > 
+> > > > > > _select_target() is preferred now   
+> > > > > 
+> > > > > Do you mean I implement mxic_nand_select_target() to control #CS ?
+> > > > > 
+> > > > > If so, I need to call mxic_nand_select_target( ) to control #CS ON
+> > > > > and then #CS OFF in _exec_op() due to nand_select_target()<in   
+> > > nand_base,c>   
+> > > > > is still calling chip->legacy.select_chip ?   
+> > > > 
+> > > > You must forget about the ->select_chip() callback. Now it should be
+> > > > handled directly from the controller driver. Please have a look at   
+> the
+> > > > commit pointed against the marvell_nand.c driver.   
+> > > 
+> > > I have no Marvell NFC datasheet and have one question.
+> > > 
+> > > In marvell_nand.c, there is no xxx_deselect_target() or 
+> > > something like that doing #CS OFF.
+> > > marvell_nfc_select_target() seems always to make one of chip or die
+> > > #CS keep low.
+> > > 
+> > > Is it right ?  
+> > 
+> > Yes, AFAIR there is no "de-assert" mechanism in this controller.
+> >   
+> > > 
+> > > How to make all #CS keep high for NAND to enter 
+> > > low-power standby mode if driver don't use "legacy.select_chip()" ?  
+> > 
+> > See commit 02b4a52604a4 ("mtd: rawnand: Make ->select_chip() optional
+> > when ->exec_op() is implemented") which states:
+> > 
+> >         "When [->select_chip() is] not implemented, the core is assuming
+> >    the CS line is automatically asserted/deasserted by the driver  
+> >    ->exec_op() implementation."  
+> > 
+> > Of course, the above is right only when the controller driver supports
+> > the ->exec_op() interface.   
 > 
-> diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-> index 098dbfb06b61..2c105740dfad 100644
-> --- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-> @@ -51,7 +51,7 @@
->   	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
->   	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
->   	pinctrl-names = "default", "sleep";
-> -	phy-mode = "rgmii";
-> +	phy-mode = "rgmii-id";
->   	max-speed = <1000>;
->   	phy-handle = <&phy0>;
->   
-> diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> index b6aca40b9b90..ab1393caf799 100644
-> --- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> @@ -79,7 +79,7 @@
->   	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
->   	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
->   	pinctrl-names = "default", "sleep";
-> -	phy-mode = "rgmii";
-> +	phy-mode = "rgmii-id";
->   	max-speed = <1000>;
->   	phy-handle = <&phy0>;
->   
+> Currently, it seems that we will get the incorrect data and error
+> operation due to CS in error toggling if CS line is controlled in 
+> ->exec_op().  
+
+Most of the chips today are CS-don't-care, which chip are you using?
+
+Is this behavior publicly documented?
+
+Is this LPM mode always activated?
+
+> i.e,. 
+> 
+> 1) In nand_onfi_detect() to call nand_exec_op() twice by 
+> nand_read_param_page_op() and annd_read_data_op()
+> 
+> 2) In nand_write_page_xxx to call nand_exec_op() many times by
+> nand_prog_page_begin_op(), nand_write_data_op() and 
+> nand_prog_page_end_op().
+> 
+> 
+> Should we consider to add a CS line controller in struct nand_controller
+> i.e,.
+> 
+> struct nand_controller {
+>          struct mutex lock;
+>          const struct nand_controller_ops *ops;
+> +          void (*select_chip)(struct nand_chip *chip, int cs);
+> };
+> 
+> to replace legacy.select_chip() ?
 > 
 
-Applied on stm32-next.
+No, if really needed, we could add a "macro op done" flag in the nand
+operation structure.
 
-Thanks.
-Alex
+
+Thanks,
+Miquèl
