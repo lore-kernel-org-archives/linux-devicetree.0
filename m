@@ -1,12 +1,12 @@
 Return-Path: <SRS0=7yb5=UQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:17066 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFQRka (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Jun 2019 13:40:30 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:10910 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfFQRko (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Jun 2019 13:40:44 -0400
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 09/27] PCI: tegra: Enable opportunistic UpdateFC and ACK
-Date: Mon, 17 Jun 2019 23:09:34 +0530
-Message-ID: <20190617173952.29363-10-mmaddireddy@nvidia.com>
+Subject: [PATCH V5 13/27] PCI: tegra: Increase the deskew retry time
+Date: Mon, 17 Jun 2019 23:09:38 +0530
+Message-ID: <20190617173952.29363-14-mmaddireddy@nvidia.com>
 In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -16,10 +16,9 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable opportunistic UpdateFC and ACK to allow data link layer send
-pending ACKs and UpdateFC packets when link is idle instead of waiting
-for timers to expire. This improves the PCIe performance due to better
-utilization of PCIe bandwidth.
+Sometimes link speed change from Gen2 to Gen1 fails due to instability
+in deskew logic on lane-0 in Tegra210. Increase the deskew retry time
+to resolve this issue.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
@@ -30,38 +29,107 @@ V4: No change
 
 V3: No change
 
-V2: No change
+V2: Took care of typos in commit log and coding style comments.
 
- drivers/pci/controller/pci-tegra.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pci-tegra.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index c38a370ed853..51691252ca10 100644
+index add649d91e7c..6f06327ca0aa 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -204,7 +204,9 @@
- #define  RP_ECTL_6_R2_RX_EQ_CTRL_H_1C_MASK	0xffffffff
+@@ -209,6 +209,10 @@
+ #define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
+ #define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
  
- #define RP_VEND_XP	0x00000f00
--#define  RP_VEND_XP_DL_UP	(1 << 30)
-+#define  RP_VEND_XP_DL_UP			(1 << 30)
-+#define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
-+#define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
- 
++#define RP_VEND_CTL0	0x00000f44
++#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK	(0xf << 12)
++#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH	(0x9 << 12)
++
  #define RP_VEND_CTL1	0x00000f48
  #define  RP_VEND_CTL1_ERPT	(1 << 13)
-@@ -529,6 +531,12 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- 	value = readl(port->base + RP_VEND_CTL1);
- 	value |= RP_VEND_CTL1_ERPT;
- 	writel(value, port->base + RP_VEND_CTL1);
-+
-+	/* Optimal settings to enhance bandwidth */
-+	value = readl(port->base + RP_VEND_XP);
-+	value |= RP_VEND_XP_OPPORTUNISTIC_ACK;
-+	value |= RP_VEND_XP_OPPORTUNISTIC_UPDATEFC;
-+	writel(value, port->base + RP_VEND_XP);
+ 
+@@ -305,6 +309,7 @@ struct tegra_pcie_soc {
+ 	bool force_pca_enable;
+ 	bool program_uphy;
+ 	bool update_clamp_threshold;
++	bool program_deskew_time;
+ 	struct {
+ 		struct {
+ 			u32 rp_ectl_2_r1;
+@@ -620,6 +625,24 @@ static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
+ 	writel(value, port->base + RP_ECTL_6_R2);
  }
  
- static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
++static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
++{
++	const struct tegra_pcie_soc *soc = port->pcie->soc;
++	u32 value;
++
++	/*
++	 * Sometimes link speed change from Gen2 to Gen1 fails due to
++	 * instability in deskew logic on lane-0. Increase the deskew
++	 * retry time to resolve this issue.
++	 */
++	if (soc->program_deskew_time) {
++		value = readl(port->base + RP_VEND_CTL0);
++		value &= ~RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK;
++		value |= RP_VEND_CTL0_DSK_RST_PULSE_WIDTH;
++		writel(value, port->base + RP_VEND_CTL0);
++	}
++}
++
+ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+ {
+ 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
+@@ -649,6 +672,8 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+ 
+ 	if (soc->ectl.enable)
+ 		tegra_pcie_program_ectl_settings(port);
++
++	tegra_pcie_apply_sw_fixup(port);
+ }
+ 
+ static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
+@@ -2356,6 +2381,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = false,
++	.program_deskew_time = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2381,6 +2407,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = false,
++	.program_deskew_time = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2399,6 +2426,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = true,
++	.program_deskew_time = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2417,6 +2445,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+ 	.force_pca_enable = true,
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = true,
++	.program_deskew_time = true,
+ 	.ectl = {
+ 		.regs = {
+ 			.rp_ectl_2_r1 = 0x0000000f,
+@@ -2454,6 +2483,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+ 	.force_pca_enable = false,
+ 	.program_uphy = false,
+ 	.update_clamp_threshold = false,
++	.program_deskew_time = false,
+ 	.ectl.enable = false,
+ };
+ 
 -- 
 2.17.1
