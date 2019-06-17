@@ -1,147 +1,58 @@
-From: Johannes Berg <johannes@sipsolutions.net>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Mon, 17 Jun 2019 13:42:36 +0200
-Message-ID: <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
-         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
-         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
-         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
-         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
-         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
-         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
-         <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
-         <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
-         (sfid-20190612_170637_190349_3B0027EE)
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock
+ gates in probe
+Date: Mon, 17 Jun 2019 13:45:03 +0200
+Message-ID: <20190617114503.pclqsf6bo3ih47nt@flea>
+References: <20190614164324.9427-1-jagan@amarulasolutions.com>
+ <20190614164324.9427-6-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com> (sfid-20190612_170637_190349_3B0027EE)
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Dan Williams <dcbw@redhat.com>
-Cc: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xp6yljizo7kvgkxb"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBS72TXUAKGQEFQNHRKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190614164324.9427-6-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-06-12 at 17:06 +0200, Arnd Bergmann wrote:
-> On Wed, Jun 12, 2019 at 4:28 PM Dan Williams <dcbw@redhat.com> wrote:
-> > On Wed, 2019-06-12 at 10:31 +0200, Arnd Bergmann wrote:
-> > > On Tue, Jun 11, 2019 at 7:23 PM Dan Williams <dcbw@redhat.com> wrote:
-> > 
-> > I was trying to make the point that rmnet doesn't need to care about
-> > how the QMAP packets get to the device itself; it can be pretty generic
-> > so that it can be used by IPA/qmi_wwan/rmnet_smd/etc.
-> 
-> rmnet at the moment is completely generic in that regard already,
-> however it is implemented as a tunnel driver talking to another
-> device rather than an abstraction layer below that driver.
 
-It doesn't really actually *do* much other than muck with the headers a
-small amount, but even that isn't really much.
+--xp6yljizo7kvgkxb
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-You can probably implement that far more efficiently on some devices
-where you have a semi-decent DMA engine that at least supports S/G.
+On Fri, Jun 14, 2019 at 10:13:20PM +0530, Jagan Teki wrote:
+> TCON TOP have clock gates for TV0, TV1, dsi and right
+> now these are register during bind call.
+>
+> Of which, dsi clock gate would required during DPHY probe
+> but same can miss to get since tcon top is not bound at
+> that time.
+>
+> To solve, this circular dependency move the clock gate
+> registration from bind to probe so-that DPHY can get the
+> dsi gate clock on time.
 
-> > > I understand that the rmnet model was intended to provide a cleaner
-> > > abstraction, but it's not how we normally structure subsystems in
-> > > Linux, and moving to a model more like how wireless_dev works
-> > > would improve both readability and performance, as you describe
-> > > it, it would be more like (ignoring for now the need for multiple
-> > > connections):
-> > > 
-> > >    ipa_dev
-> > >         rmnet_dev
-> > >                wwan_dev
-> > >                       net_device
-> > 
-> > Perhaps I'm assuming too much from this diagram but this shows a 1:1
-> > between wwan_dev and "lower" devices.
+It's not really clear to me what the circular dependency is?
 
-I guess the fuller picture would be something like
+if you have a chain that is:
 
-ipa_dev
-	rmnet_dev
-		wwan_dev
-			net_device*
+tcon-top +-> DSI
+         +-> D-PHY
 
-(i.e. with multiple net_devices)
+There's no loop, right?
 
-> > What Johannes is proposing (IIRC) is something a bit looser where a
-> > wwan_dev does not necessarily provide netdev itself, but is instead the
-> > central point that various channels (control, data, gps, sim card, etc)
-> > register with. That way the wwan_dev can provide an overall view of the
-> > WWAN device to userspace, and userspace can talk to the wwan_dev to ask
-> > the lower drivers (ipa, rmnet, etc) to create new channels (netdev,
-> > tty, otherwise) when the control channel has told the modem firmware to
-> > expect one.
+Maxime
 
-Yeah, that's more what I had in mind after all our discussions (will
-continue this below).
-
-> Right, as I noted above, I simplified it a bit. We probably want to
-> have multiple net_device instances for an ipa_dev, so there has
-> to be a 1:n relationship instead of 1:1 at one of the intermediate
-> levels, but it's not obvious which level that should be.
-> 
-> In theory we could even have a single net_device instance correspond
-> to the ipa_dev, but then have multiple IP addresses bound to it,
-> so each IP address corresponds to a channel/queue/napi_struct,
-> but the user visible object remains a single device.
-
-I don't think this latter (multiple IP addresses) works well - you want
-a hardware specific header ("ETH_P_MAP") to carry the channel ID,
-without looking up the IP address and all that.
-
-
-But anyway, as I alluded to above, I had something like this in mind:
-
-driver_dev
-  struct device *dev (USB, PCI, ...)
-  net_device NA
-  net_device NB
-  tty TA
- ...
-
-(I'm cutting out the rmnet layer here for now)
-
-while having a separate that just links all the pieces together:
-
-wwan_device W
-  ---> dev
-  ---> NA
-  ---> NB
-  ---> TA
-
-So the driver is still responsible for creating the netdevs (or can of
-course delegate that to an "rmnet" library), but then all it also does
-is register the netdevs with the WWAN core like
-
-	wwan_add_netdev(dev, NA)
-
-and the WWAN core would allocate the wwan_device W for this.
-
-That way, the drivers can concentrate on providing all the necessary
-bits, and - crucially - even *different* drivers can end up linking to
-the same wwan_device. For example, if you have a modem that has a multi-
-function USB device, then an ethernet driver might create the netdev and
-a tty driver might create the control channel, but if they both agree on
-using the right "struct device" instance, you can still get the correct
-wwan_device out of it all.
-
-And, in fact, some should then be
-
-	wwan_maybe_add_netdev(dev, N)
-
-because the ethernet driver may not know if it attached to a modem or
-not, but if the control channel also attaches it's a modem for sure,
-with that ethernet channel attached to it.
-
-Additionally, I'm thinking API such as
-
-	wwan_add(dev, &ops, opsdata)
-
-that doesn't automatically attach any channels, but provides "ops" to
-the core to create appropriate channels. I think this latter would be
-something for IPA/rmnet to use, perhaps for rmnet to offer the right ops
-structure.
-
-johannes
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--xp6yljizo7kvgkxb--
