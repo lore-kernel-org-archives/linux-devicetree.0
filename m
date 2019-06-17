@@ -1,14 +1,12 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 0/4] Add MCU SRAM nodes for TI K3 SoCs
-Date: Mon, 17 Jun 2019 17:49:34 +0300
-Message-ID: <e0c07124-3191-13c7-432f-4099c842059b@ti.com>
-References: <20190605163434.23173-1-s-anna@ti.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH] arm64: dts: marvell: add missing #interrupt-cells property
+Date: Mon, 17 Jun 2019 15:49:55 +0100
+Message-ID: <E1hcsxH-0007Vv-0l@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190605163434.23173-1-s-anna@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,47 +16,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/06/2019 19:34, Suman Anna wrote:
-> Hi Tero,
-> 
-> The following series adds the DT nodes for the MCU SRAM present within
-> the MCU domain for both AM65x and J721E SoCs. The first 2 patches enable
-> the MCU SRAM node to be probed properly on AM65x SoCs, and the third
-> patch the equivalent for J721E SoCs. The third patch depends on the
-> base J721E support patch series from Nishanth [1].
-> 
-> The last patch is not related to MCU SRAM, but adds the ranges for the
-> R5F cluster that is also present in the MCU domain in preparation for
-> the R5F nodes.
-> 
-> regards
-> Suman
-> 
-> [1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=121189
+The GPIO interrupt controllers are missing their required
+#interrupt-cells property, which prevents GPIO interrupts being
+specified in DT.
 
-Queuing patches 1,2 and 4 towards 5.3 thanks.
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Patch #3 is waiting until I can sort out j7 dependencies, which should 
-happen later this week.
-
--Tero
-
-> 
-> Suman Anna (4):
->    arm64: dts: ti: k3-am65: Add MCU SRAM ranges in interconnect nodes
->    arm64: dts: ti: k3-am65-mcu: Add the MCU RAM node
->    arm64: dts: ti: k3-j721e: Add the MCU SRAM node
->    arm64: dts: ti: k3-am65: Add R5F ranges in interconnect nodes
-> 
->   arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi         | 8 ++++++++
->   arch/arm64/boot/dts/ti/k3-am65.dtsi             | 6 ++++++
->   arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 8 ++++++++
->   3 files changed, 22 insertions(+)
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+index 4d6e4a097f72..f71afb1de18f 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+@@ -238,6 +238,7 @@
+ 					<85 IRQ_TYPE_LEVEL_HIGH>,
+ 					<84 IRQ_TYPE_LEVEL_HIGH>,
+ 					<83 IRQ_TYPE_LEVEL_HIGH>;
++				#interrupt-cells = <2>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -253,6 +254,7 @@
+ 					<81 IRQ_TYPE_LEVEL_HIGH>,
+ 					<80 IRQ_TYPE_LEVEL_HIGH>,
+ 					<79 IRQ_TYPE_LEVEL_HIGH>;
++				#interrupt-cells = <2>;
+ 				status = "disabled";
+ 			};
+ 		};
+-- 
+2.7.4
