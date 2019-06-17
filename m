@@ -1,64 +1,107 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH v4 6/8] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
-Date: Mon, 17 Jun 2019 01:13:52 +0000
-Message-ID: <VI1PR04MB5327B9EF844F9C7505D337298BEB0@VI1PR04MB5327.eurprd04.prod.outlook.com>
-References: <20190614093544.11730-1-peter.chen@nxp.com>
- <20190614093544.11730-7-peter.chen@nxp.com>
- <0dbf01f9-7c5c-ce0b-4feb-378c9147f15a@cogentembedded.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v8 11/12] soc: mediatek: cmdq: add
+ cmdq_dev_get_client_reg function
+Date: Mon, 17 Jun 2019 09:14:44 +0800
+Message-ID: <1560734084.11128.2.camel@mtksdaap41>
+References: <20190612085349.21243-1-bibby.hsieh@mediatek.com>
+         <20190612085349.21243-12-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <0dbf01f9-7c5c-ce0b-4feb-378c9147f15a@cogentembedded.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "balbi@kernel.org" <balbi@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "chunfeng.yun@mediatek.com" <chunfeng.yun@mediatek.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190612085349.21243-12-bibby.hsieh@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
- 
-> >
-> > Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> > ---
-> >   arch/arm/boot/dts/imx7ulp.dtsi | 28 ++++++++++++++++++++++++++++
-> >   1 file changed, 28 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/imx7ulp.dtsi
-> > b/arch/arm/boot/dts/imx7ulp.dtsi index fca6e50f37c8..5115e47715c3
-> > 100644
-> > --- a/arch/arm/boot/dts/imx7ulp.dtsi
-> > +++ b/arch/arm/boot/dts/imx7ulp.dtsi
-> > @@ -30,6 +30,7 @@
-> >   		serial1 = &lpuart5;
-> >   		serial2 = &lpuart6;
-> >   		serial3 = &lpuart7;
-> > +		usbphy0 = &usbphy1;
+Hi, Bibby:
+
+On Wed, 2019-06-12 at 16:53 +0800, Bibby Hsieh wrote:
+> GCE cannot know the register base address, this function
+> can help cmdq client to get the cmdq_client_reg structure.
 > 
->     Is that really needed?
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 24 ++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 20 ++++++++++++++++++++
+>  2 files changed, 44 insertions(+)
 > 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 70ad4d806fac..fac4d33fd520 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -27,6 +27,30 @@ struct cmdq_instruction {
+>  	u8 op;
+>  };
+>  
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +			    struct cmdq_client_reg *client_reg, int idx)
+> +{
+> +	struct of_phandle_args spec;
+> +
+> +	if (!client_reg)
+> +		return -EINVAL;
+> +
+> +	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
+> +				       "#subsys-cells", idx, &spec)) {
+> +		dev_err(dev, "can't parse gce-client-reg property (%d)", idx);
+> +
+> +		return -EINVAL;
 
-Yes, since the driver code uses aligned id, and the controller number is from 0 at the code.
-I commented it here: [1]
+of_parse_phandle_with_args() may return -ENOENT, why do you change it to
+-EINVAL?
 
-> [...]
-> > @@ -133,6 +134,33 @@
-> [...]
-> > +		usbphy1: usbphy@0x40350000 {
-> 
->     Name it "usb-phy@40350000" please.
-> 
+Regards,
+CK
 
-Would you please list binding doc for your suggestion?
-
-Thanks,
-Peter
-
-[1] https://patchwork.kernel.org/patch/10920599/
+> +	}
+> +
+> +	client_reg->subsys = spec.args[0];
+> +	client_reg->offset = spec.args[1];
+> +	client_reg->size = spec.args[2];
+> +	of_node_put(spec.np);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index a345870a6d10..2e2a2274c231 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -15,6 +15,12 @@
+>  
+>  struct cmdq_pkt;
+>  
+> +struct cmdq_client_reg {
+> +	u8 subsys;
+> +	u16 offset;
+> +	u16 size;
+> +};
+> +
+>  struct cmdq_client {
+>  	spinlock_t lock;
+>  	u32 pkt_cnt;
+> @@ -142,4 +148,18 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+>   */
+>  int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+>  
+> +/**
+> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device node of CMDQ client
+> + * @dev:	device of CMDQ mailbox clienti
+> + * @client_reg: CMDQ client reg pointer
+> + * @idx:	the index of desired reg
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + *
+> + * Help CMDQ client pasing the cmdq client reg
+> + * from the device node of CMDQ client.
+> + */
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +			    struct cmdq_client_reg *client_reg, int idx);
+> +
+>  #endif	/* __MTK_CMDQ_H__ */
