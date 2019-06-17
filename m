@@ -1,37 +1,61 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v2 11/11] interconnect: Add devfreq support
-Date: Mon, 17 Jun 2019 18:43:53 +0300
-Message-ID: <5dc6c820-ead8-d0dc-44de-4d13f86df042@linaro.org>
-References: <20190614041733.120807-1-saravanak@google.com>
- <20190614041733.120807-12-saravanak@google.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 6/8] regulator: core: Don't attach generic coupler to
+ Tegra SoC regulators
+Date: Mon, 17 Jun 2019 16:44:55 +0100
+Message-ID: <20190617154455.GA5316@sirena.org.uk>
+References: <20190603235904.19097-1-digetx@gmail.com>
+ <20190603235904.19097-7-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="27E2kr7c9faIxYHh"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614041733.120807-12-saravanak@google.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190603235904.19097-7-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Saravana,
 
-On 6/14/19 07:17, Saravana Kannan wrote:
-> Add a icc_create_devfreq() and icc_remove_devfreq() to create and remove
-> devfreq devices for interconnect paths. A driver can create/remove devfreq
-> devices for the interconnects needed for its device by calling these APIs.
-> This would allow various devfreq governors to work with interconnect paths
-> and the device driver itself doesn't have to actively manage the bandwidth
-> votes for the interconnects.
+--27E2kr7c9faIxYHh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for the patches, but creating devfreq devices for each interconnect path
-seems odd to me - at least for consumers that already use a governor. So for DDR
-scaling for example, are you suggesting that we add a devfreq device from the
-cpufreq driver in order to scale the interconnect between CPU<->DDR? Also if the
-GPU is already using devfreq, should we add a devfreq per each interconnect
-path? What would be the benefit in this case - using different governors for
-bandwidth scaling maybe?
+On Tue, Jun 04, 2019 at 02:59:02AM +0300, Dmitry Osipenko wrote:
 
-Thanks,
-Georgi
+>  static int generic_coupler_attach(struct regulator_coupler *coupler,
+>  				  struct regulator_dev *rdev)
+>  {
+> +	/*
+> +	 * Generic coupler isn't suitable for NVIVIA Tegra SoC's, at least
+> +	 * for now. Hence filter out the unwanted regulators as they shall be
+> +	 * managed by a platform-specific coupler.
+> +	 */
+> +	if (of_property_read_bool(rdev->dev.of_node, "tegra-core-regulator") ||
+> +	    of_property_read_bool(rdev->dev.of_node, "tegra-rtc-regulator") ||
+> +	    of_property_read_bool(rdev->dev.of_node, "tegra-cpu-regulator"))
+> +		return -EPERM;
+> +
+
+I'm having a hard time loving this as it requires explicit DT changes
+for implementation.  I'm thinking that since the couplers are going to
+need to be built in it'd be better to make sure that any custom ones get
+registered first and then only bind the generic coupler to anything they
+reject.
+
+--27E2kr7c9faIxYHh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HtXYACgkQJNaLcl1U
+h9Cs2gf/S5a8DWJTtoEHbG3ws7VHQpSeAm4iqr2UgbzOBEkdCHLdjK0r2Iu3LU2l
+KpNbc46t5ZXSQjLIuQ3apaG1mBvinvL5AAX93z4uxez5NAnREGp6NbbP2Ph0bfBe
+BMNr3a8K1FBZdaqi2lUjFJS1ZWaUB2Npz32XrgD4Cmhlw+y1Rrl7NPT9HztYaCa5
+Jc7shPryXFXmczy12EARskXg2bcLlQ/Ne92dHRXKZEn2hMwW/1ehTNHadMHHBLjT
+bikjaqGSNIvd9LlxcbzpBvukrgCaaT8ENLHPCVmeB3gag3n55alTU5ZnUIhpAXyp
+eaXOfvK5Zmo08r+D59q1tU61z1s0JA==
+=ZHI+
+-----END PGP SIGNATURE-----
+
+--27E2kr7c9faIxYHh--
