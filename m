@@ -1,84 +1,73 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv5 19/20] PCI: mobiveil: Add 8-bit and 16-bit register
- accessors
-Date: Mon, 17 Jun 2019 10:29:01 +0100
-Message-ID: <20190617092901.GB18020@e121166-lin.cambridge.arm.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-20-Zhiqiang.Hou@nxp.com>
- <20190612135400.GB15747@redmoon>
- <AM0PR04MB673802CE0891BC898B61EBA384E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/6] dt-bindings: can: rcar_canfd: document r8a774a1
+ support
+Date: Mon, 17 Jun 2019 11:30:25 +0200
+Message-ID: <20190617093023.nhvrvujg52gcglko@verge.net.au>
+References: <1560513214-28031-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1560513214-28031-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB673802CE0891BC898B61EBA384E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1560513214-28031-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "David S. Miller" <davem@davemloft.net>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBKdW4gMTUsIDIwMTkgYXQgMDE6MTM6NDhBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6
-Cj4gSGkgTG9yZW56bywKPiAKPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPiBGcm9t
-OiBMb3JlbnpvIFBpZXJhbGlzaSBbbWFpbHRvOmxvcmVuem8ucGllcmFsaXNpQGFybS5jb21dCj4g
-PiBTZW50OiAyMDE55bm0NuaciDEy5pelIDIxOjU0Cj4gPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5n
-LmhvdUBueHAuY29tPgo+ID4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsKPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOwo+ID4gYmhlbGdhYXNAZ29vZ2xlLmNv
-bTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsKPiA+IGwuc3VicmFo
-bWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaQo+ID4gPGxl
-b3lhbmcubGlAbnhwLmNvbT47IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3aWxsLmRlYWNvbkBh
-cm0uY29tOwo+ID4gTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgTS5oLiBMaWFuIDxt
-aW5naHVhbi5saWFuQG54cC5jb20+Owo+ID4gWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5j
-b20+Cj4gPiBTdWJqZWN0OiBSZTogW1BBVENIdjUgMTkvMjBdIFBDSTogbW9iaXZlaWw6IEFkZCA4
-LWJpdCBhbmQgMTYtYml0IHJlZ2lzdGVyCj4gPiBhY2Nlc3NvcnMKPiA+IAo+ID4gT24gRnJpLCBB
-cHIgMTIsIDIwMTkgYXQgMDg6Mzc6MDVBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6Cj4gPiA+IEZy
-b206IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+Cj4gPiA+Cj4gPiA+IFRoZXJl
-IGFyZSBzb21lIDgtYml0IGFuZCAxNi1iaXQgcmVnaXN0ZXJzIGluIFBDSWUgY29uZmlndXJhdGlv
-biBzcGFjZSwKPiA+ID4gc28gYWRkIGFjY2Vzc29ycyBmb3IgdGhlbS4KPiA+ID4KPiA+ID4gU2ln
-bmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4KPiA+ID4gUmV2
-aWV3ZWQtYnk6IE1pbmdodWFuIExpYW4gPE1pbmdodWFuLkxpYW5AbnhwLmNvbT4KPiA+ID4gUmV2
-aWV3ZWQtYnk6IFN1YnJhaG1hbnlhIExpbmdhcHBhIDxsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNv
-LmluPgo+ID4gPiAtLS0KPiA+ID4gVjU6Cj4gPiA+ICAtIENvcnJlY3RlZCBhbmQgcmV0b3VjaGVk
-IHRoZSBzdWJqZWN0IGFuZCBjaGFuZ2Vsb2cuCj4gPiA+ICAtIE5vIGZ1bmN0aW9uYWxpdHkgY2hh
-bmdlLgo+ID4gPgo+ID4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMg
-fCAyMCArKysrKysrKysrKysrKysrKysrKwo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDIwIGluc2Vy
-dGlvbnMoKykKPiA+ID4KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-cGNpZS1tb2JpdmVpbC5jCj4gPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2
-ZWlsLmMKPiA+ID4gaW5kZXggNDExZTk3NzlkYTEyLi40NTZhZGZlZTM5M2MgMTAwNjQ0Cj4gPiA+
-IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jCj4gPiA+ICsrKyBi
-L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jCj4gPiA+IEBAIC0yNjgsMTEg
-KzI2OCwzMSBAQCBzdGF0aWMgdTMyIGNzcl9yZWFkbChzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNp
-ZSwKPiA+IHUzMiBvZmYpCj4gPiA+ICAJcmV0dXJuIGNzcl9yZWFkKHBjaWUsIG9mZiwgMHg0KTsK
-PiA+ID4gIH0KPiA+ID4KPiA+ID4gK3N0YXRpYyB1MzIgY3NyX3JlYWR3KHN0cnVjdCBtb2JpdmVp
-bF9wY2llICpwY2llLCB1MzIgb2ZmKSB7Cj4gPiA+ICsJcmV0dXJuIGNzcl9yZWFkKHBjaWUsIG9m
-ZiwgMHgyKTsKPiA+ID4gK30KPiA+ID4gKwo+ID4gPiArc3RhdGljIHUzMiBjc3JfcmVhZGIoc3Ry
-dWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsIHUzMiBvZmYpIHsKPiA+ID4gKwlyZXR1cm4gY3NyX3Jl
-YWQocGNpZSwgb2ZmLCAweDEpOwo+ID4gPiArfQo+ID4gPiArCj4gPiA+ICBzdGF0aWMgdm9pZCBj
-c3Jfd3JpdGVsKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llLCB1MzIgdmFsLCB1MzIgb2ZmKQo+
-ID4gPiB7Cj4gPiA+ICAJY3NyX3dyaXRlKHBjaWUsIHZhbCwgb2ZmLCAweDQpOwo+ID4gPiAgfQo+
-ID4gPgo+ID4gPiArc3RhdGljIHZvaWQgY3NyX3dyaXRldyhzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAq
-cGNpZSwgdTMyIHZhbCwgdTMyIG9mZikKPiA+ID4gK3sKPiA+ID4gKwljc3Jfd3JpdGUocGNpZSwg
-dmFsLCBvZmYsIDB4Mik7Cj4gPiA+ICt9Cj4gPiA+ICsKPiA+ID4gK3N0YXRpYyB2b2lkIGNzcl93
-cml0ZWIoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsIHUzMiB2YWwsIHUzMiBvZmYpCj4gPiA+
-ICt7Cj4gPiA+ICsJY3NyX3dyaXRlKHBjaWUsIHZhbCwgb2ZmLCAweDEpOwo+ID4gPiArfQo+ID4g
-PiArCj4gPiAKPiA+IFRoZXkgYXJlIG5vdCB1c2VkIHNvIHlvdSBzaG91bGQgZHJvcCB0aGlzIHBh
-dGNoLgo+IAo+IE5YUCBMYXllcnNjYXBlIFBDSWUgR2VuNCBjb250cm9sbGVyIGRyaXZlciB3aWxs
-IHVzZSB0aGVtLCBzbyBkb24ndAo+IGRyb3AgaXQuCgpZb3UgYWRkIGZ1bmN0aW9ucyB3aGVuIHRo
-ZXkgYXJlIG5lZWRlZCwgc28gZHJvcCB0aGlzIHBhdGNoIGFuZApzcXVhc2ggaXQgdG8gdGhlIHBh
-dGNoIHRoYXQgdXNlIHRoZXNlIGZ1bmN0aW9ucy4KCkxvcmVuem8KCj4gVGhhbmtzLAo+IFpoaXFp
-YW5nCj4gCj4gPiAKPiA+IExvcmVuem8KPiA+IAo+ID4gPiAgc3RhdGljIGJvb2wgbW9iaXZlaWxf
-cGNpZV9saW5rX3VwKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llKSAgewo+ID4gPiAgCXJldHVy
-biAoY3NyX3JlYWRsKHBjaWUsIExUU1NNX1NUQVRVUykgJgo+ID4gPiAtLQo+ID4gPiAyLjE3LjEK
-PiA+ID4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+On Fri, Jun 14, 2019 at 12:53:29PM +0100, Fabrizio Castro wrote:
+> Document the support for rcar_canfd on R8A774A1 SoC devices.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> ---
+> Hello Simon,
+> 
+> I think it would make more sense if this patch went through you as it
+> sits on series:
+> https://lkml.org/lkml/2019/5/9/941
+> 
+> Do you think that's doable?
+
+That seems reasonable to me.
+
+Dave are you happy with me taking this, and 2/6, through
+the renesas tree?
+
+> 
+> Thanks,
+> Fab
+> 
+>  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> index 32f051f..00afaff 100644
+> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> @@ -4,6 +4,7 @@ Renesas R-Car CAN FD controller Device Tree Bindings
+>  Required properties:
+>  - compatible: Must contain one or more of the following:
+>    - "renesas,rcar-gen3-canfd" for R-Car Gen3 and RZ/G2 compatible controllers.
+> +  - "renesas,r8a774a1-canfd" for R8A774A1 (RZ/G2M) compatible controller.
+>    - "renesas,r8a774c0-canfd" for R8A774C0 (RZ/G2E) compatible controller.
+>    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
+>    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
+> @@ -32,10 +33,10 @@ enable/disable the respective channel.
+>  Required properties for "renesas,r8a774c0-canfd", "renesas,r8a7795-canfd",
+>  "renesas,r8a7796-canfd", "renesas,r8a77965-canfd", and "renesas,r8a77990-canfd"
+>  compatible:
+> -In R8A774C0, R8A7795, R8A7796, R8A77965, and R8A77990 SoCs, canfd clock is a
+> -div6 clock and can be used by both CAN and CAN FD controller at the same time.
+> -It needs to be scaled to maximum frequency if any of these controllers use it.
+> -This is done using the below properties:
+> +In R8A774A1, R8A774C0, R8A7795, R8A7796, R8A77965, and R8A77990 SoCs, canfd
+> +clock is a div6 clock and can be used by both CAN and CAN FD controller at the
+> +same time. It needs to be scaled to maximum frequency if any of these
+> +controllers use it. This is done using the below properties:
+>  
+>  - assigned-clocks: phandle of canfd clock.
+>  - assigned-clock-rates: maximum frequency of this clock.
+> -- 
+> 2.7.4
+> 
