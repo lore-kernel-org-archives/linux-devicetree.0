@@ -1,76 +1,72 @@
-Return-Path: <SRS0=7yb5=UQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10894 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFQRke (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Jun 2019 13:40:34 -0400
+Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 10/27] PCI: tegra: Disable AFI dynamic clock gating
-Date: Mon, 17 Jun 2019 23:09:35 +0530
-Message-ID: <20190617173952.29363-11-mmaddireddy@nvidia.com>
-In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
-References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+Subject: [PATCH V5 00/27] Enable Tegra PCIe root port features
+Date: Mon, 17 Jun 2019 23:09:25 +0530
+Message-ID: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
 To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Outstanding write counter in AFI is used to generate idle signal to
-dynamically gate the AFI clock. When there are 32 outstanding writes
-from AFI to memory, the outstanding write counter overflows and
-indicates that there are "0" outstanding write transactions.
+This series of patches adds,
+- Tegra root port features like Gen2, AER, etc
+- Power and perf optimizations
+- Fixes like "power up sequence", "dev_err prints", etc
 
-When memory controller is under heavy load, write completions to AFI
-gets delayed and AFI write counter overflows. This causes AFI clock gating
-even when there are outstanding transactions towards memory controller
-resulting in system hang.
+This series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
+based Jetson-TX1, T124 based Jetson-TK1, Tegra20 and Tegra30 platforms.
 
-Disable dynamic clock gating of AFI clock to avoid system hang.
+Changes from v4 to v5:
+ - Patch [V4, 4/28]: Added blank line before block style comment
+ - Patch [V4, 22/28]: "Access endpoint config only if PCIe link is up"
+patch is dropped
+ - Patch [V4, 27/28]:
+* Updated reset gpio toggle logic to reflect active low usage
+* Replaced kasprintf() with devm_kasprintf()
+* Updated commit message with more information.
 
-CLKEN_OVERRIDE bit is not defined in Tegra20 and Tegra30, however
-programming this bit doesn't cause any side effects. Program this
-bit for all Tegra SoCs to avoid conditional check.
+Changes from v3 to v4:
+ - Patch [V3,27/29] is dropped
+ - Patch [V3,28/29]: devm_gpiod_get_from_of_node() is directly used in
+   pci-tegra driver instead of of_get_pci* wrapper function defined in
+   Patch [V3,27/29].
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V5: No change
+Manikanta Maddireddy (27):
+  soc/tegra: pmc: Export tegra_powergate_power_on()
+  PCI: tegra: Handle failure cases in tegra_pcie_power_on()
+  PCI: tegra: Rearrange Tegra PCIe driver functions
+  PCI: tegra: Mask AFI_INTR in runtime suspend
+  PCI: tegra: Fix PCIe host power up sequence
+  PCI: tegra: Add PCIe Gen2 link speed support
+  PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
+  PCI: tegra: Program UPHY electrical settings for Tegra210
+  PCI: tegra: Enable opportunistic UpdateFC and ACK
+  PCI: tegra: Disable AFI dynamic clock gating
+  PCI: tegra: Process pending DLL transactions before entering L1 or L2
+  PCI: tegra: Enable PCIe xclk clock clamping
+  PCI: tegra: Increase the deskew retry time
+  PCI: tegra: Add SW fixup for RAW violations
+  PCI: tegra: Update flow control timer frequency in Tegra210
+  PCI: tegra: Set target speed as Gen1 before starting LTSSM
+  PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
+  PCI: tegra: Program AFI_CACHE* registers only for Tegra20
+  PCI: tegra: Change PRSNT_SENSE IRQ log to debug
+  PCI: tegra: Use legacy IRQ for port service drivers
+  PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
+  dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
+  arm64: tegra: Add PEX DPD states as pinctrl properties
+  PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
+  PCI: Add DT binding for "reset-gpios" property
+  PCI: tegra: Add support for GPIO based PERST#
+  PCI: tegra: Change link retry log level to debug
 
-V4: No change
+ .../bindings/pci/nvidia,tegra20-pcie.txt      |   8 +
+ Documentation/devicetree/bindings/pci/pci.txt |   3 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
+ drivers/pci/controller/pci-tegra.c            | 582 +++++++++++++++---
+ drivers/soc/tegra/pmc.c                       |   1 +
+ 5 files changed, 533 insertions(+), 80 deletions(-)
 
-V3: No change
-
-V2: No change
-
- drivers/pci/controller/pci-tegra.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 51691252ca10..ca02866fbbb4 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -95,7 +95,8 @@
- #define AFI_MSI_EN_VEC7		0xa8
- 
- #define AFI_CONFIGURATION		0xac
--#define  AFI_CONFIGURATION_EN_FPCI	(1 << 0)
-+#define  AFI_CONFIGURATION_EN_FPCI		(1 << 0)
-+#define  AFI_CONFIGURATION_CLKEN_OVERRIDE	(1 << 31)
- 
- #define AFI_FPCI_ERROR_MASKS	0xb0
- 
-@@ -1065,9 +1066,10 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- 		afi_writel(pcie, value, AFI_FUSE);
- 	}
- 
--	/* finally enable PCIe */
-+	/* Disable AFI dynamic clock gating and enable PCIe */
- 	value = afi_readl(pcie, AFI_CONFIGURATION);
- 	value |= AFI_CONFIGURATION_EN_FPCI;
-+	value |= AFI_CONFIGURATION_CLKEN_OVERRIDE;
- 	afi_writel(pcie, value, AFI_CONFIGURATION);
- 
- 	value = AFI_INTR_EN_INI_SLVERR | AFI_INTR_EN_INI_DECERR |
 -- 
 2.17.1
