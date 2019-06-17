@@ -1,262 +1,195 @@
-Return-Path: <SRS0=ypAS=UL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36747 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437600AbfFLJj2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Jun 2019 05:39:28 -0400
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v5 10/10] media: hantro: add initial i.MX8MM support (untested)
-Date: Wed, 12 Jun 2019 11:39:15 +0200
-Message-Id: <20190612093915.18973-11-p.zabel@pengutronix.de>
-In-Reply-To: <20190612093915.18973-1-p.zabel@pengutronix.de>
-References: <20190612093915.18973-1-p.zabel@pengutronix.de>
+Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V5 05/27] PCI: tegra: Fix PCIe host power up sequence
+Date: Mon, 17 Jun 2019 23:09:30 +0530
+Message-ID: <20190617173952.29363-6-mmaddireddy@nvidia.com>
+In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This should enable MPEG-2 decoding on the Hantro G1 and JPEG encoding on
-the Hantro H1 on i.MX8MM.
+PCIe host power up sequence involves programming AFI(AXI to FPCI bridge)
+registers first and then PCIe registers. Otherwise AFI register settings
+may not latch to PCIe IP.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+PCIe root port starts LTSSM as soon as PCIe xrst is deasserted.
+So deassert PCIe xrst after programming PCIe registers.
+
+Modify PCIe power up sequence as follows,
+ - Power ungate PCIe partition
+ - Enable AFI clock
+ - Deassert AFI reset
+ - Program AFI registers
+ - Enable PCIe clock
+ - Deassert PCIe reset
+ - Program PCIe PHY
+ - Program PCIe pad control registers
+ - Program PCIe root port registers
+ - Deassert PCIe xrst to start LTSSM
+
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/staging/media/hantro/hantro_drv.c   |   1 +
- drivers/staging/media/hantro/hantro_hw.h    |   1 +
- drivers/staging/media/hantro/imx8m_vpu_hw.c | 139 ++++++++++++++++++++
- 3 files changed, 141 insertions(+)
+V5: No change
 
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index 8049fd9ce07a..af26672b4538 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -421,6 +421,7 @@ static const struct of_device_id of_hantro_match[] = {
- #endif
- #ifdef CONFIG_VIDEO_HANTRO_IMX8M
- 	{ .compatible = "nxp,imx8mq-vpu", .data = &imx8mq_vpu_variant, },
-+	{ .compatible = "nxp,imx8mm-vpu", .data = &imx8mm_vpu_variant, },
- #endif
- 	{ /* sentinel */ }
- };
-diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
-index fd6ad017a1cf..1c69669dba54 100644
---- a/drivers/staging/media/hantro/hantro_hw.h
-+++ b/drivers/staging/media/hantro/hantro_hw.h
-@@ -82,6 +82,7 @@ extern const struct hantro_variant rk3399_vpu_variant;
- extern const struct hantro_variant rk3328_vpu_variant;
- extern const struct hantro_variant rk3288_vpu_variant;
- extern const struct hantro_variant imx8mq_vpu_variant;
-+extern const struct hantro_variant imx8mm_vpu_variant;
+V4: No change
+
+V3: No change
+
+V2: Error cleanup changes are moved to new patch and only sequence
+correction is done in this patch.
+
+ drivers/pci/controller/pci-tegra.c | 52 +++++++++++++++++-------------
+ 1 file changed, 30 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 0453bfb2726e..5e9fcef5f8eb 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -949,9 +949,6 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+ 		afi_writel(pcie, value, AFI_FUSE);
+ 	}
  
- void hantro_watchdog(struct work_struct *work);
- void hantro_run(struct hantro_ctx *ctx);
-diff --git a/drivers/staging/media/hantro/imx8m_vpu_hw.c b/drivers/staging/media/hantro/imx8m_vpu_hw.c
-index 7377e8c7c6eb..397a140341dc 100644
---- a/drivers/staging/media/hantro/imx8m_vpu_hw.c
-+++ b/drivers/staging/media/hantro/imx8m_vpu_hw.c
-@@ -11,18 +11,22 @@
- #include "hantro.h"
- #include "hantro_jpeg.h"
- #include "hantro_g1_regs.h"
-+#include "hantro_h1_regs.h"
+-	/* take the PCIe interface module out of reset */
+-	reset_control_deassert(pcie->pcie_xrst);
+-
+ 	/* finally enable PCIe */
+ 	value = afi_readl(pcie, AFI_CONFIGURATION);
+ 	value |= AFI_CONFIGURATION_EN_FPCI;
+@@ -981,13 +978,11 @@ static void tegra_pcie_power_off(struct tegra_pcie *pcie)
+ 	int err;
  
- #define CTRL_SOFT_RESET		0x00
- #define RESET_G1		BIT(1)
- #define RESET_G2		BIT(0)
-+#define RESET_H1		BIT(2)
+ 	reset_control_assert(pcie->afi_rst);
+-	reset_control_assert(pcie->pex_rst);
  
- #define CTRL_CLOCK_ENABLE	0x04
- #define CLOCK_G1		BIT(1)
- #define CLOCK_G2		BIT(0)
-+#define CLOCK_H1		BIT(2)
+ 	clk_disable_unprepare(pcie->pll_e);
+ 	if (soc->has_cml_clk)
+ 		clk_disable_unprepare(pcie->cml_clk);
+ 	clk_disable_unprepare(pcie->afi_clk);
+-	clk_disable_unprepare(pcie->pex_clk);
  
- #define CTRL_G1_DEC_FUSE	0x08
- #define CTRL_G1_PP_FUSE		0x0c
- #define CTRL_G2_DEC_FUSE	0x10
-+#define CTRL_H1_ENC_FUSE	0x14
+ 	if (!dev->pm_domain)
+ 		tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
+@@ -1015,25 +1010,19 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
+ 	if (err < 0)
+ 		dev_err(dev, "failed to enable regulators: %d\n", err);
  
- static void imx8m_soft_reset(struct hantro_dev *vpu, u32 reset_bits)
- {
-@@ -73,6 +77,30 @@ static int imx8mq_runtime_resume(struct hantro_dev *vpu)
- 	return 0;
- }
+-	if (dev->pm_domain) {
+-		err = clk_prepare_enable(pcie->pex_clk);
++	if (!dev->pm_domain) {
++		err = tegra_powergate_power_on(TEGRA_POWERGATE_PCIE);
+ 		if (err) {
+-			dev_err(dev, "failed to enable PEX clock: %d\n", err);
++			dev_err(dev, "failed to power ungate: %d\n", err);
+ 			goto regulator_disable;
+ 		}
+-		reset_control_deassert(pcie->pex_rst);
+-	} else {
+-		err = tegra_powergate_sequence_power_up(TEGRA_POWERGATE_PCIE,
+-							pcie->pex_clk,
+-							pcie->pex_rst);
++		err = tegra_powergate_remove_clamping(TEGRA_POWERGATE_PCIE);
+ 		if (err) {
+-			dev_err(dev, "powerup sequence failed: %d\n", err);
+-			goto regulator_disable;
++			dev_err(dev, "failed to remove clamp: %d\n", err);
++			goto powergate;
+ 		}
+ 	}
  
-+static int imx8mm_runtime_resume(struct hantro_dev *vpu)
-+{
-+	int ret;
+-	reset_control_deassert(pcie->afi_rst);
+-
+ 	err = clk_prepare_enable(pcie->afi_clk);
+ 	if (err < 0) {
+ 		dev_err(dev, "failed to enable AFI clock: %d\n", err);
+@@ -1054,6 +1043,8 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
+ 		goto disable_cml_clk;
+ 	}
+ 
++	reset_control_deassert(pcie->afi_rst);
 +
-+	ret = clk_bulk_prepare_enable(vpu->variant->num_clocks, vpu->clocks);
-+	if (ret) {
-+		dev_err(vpu->dev, "Failed to enable clocks\n");
-+		return ret;
+ 	return 0;
+ 
+ disable_cml_clk:
+@@ -1062,9 +1053,6 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
+ disable_afi_clk:
+ 	clk_disable_unprepare(pcie->afi_clk);
+ powergate:
+-	reset_control_assert(pcie->afi_rst);
+-	reset_control_assert(pcie->pex_rst);
+-	clk_disable_unprepare(pcie->pex_clk);
+ 	if (!dev->pm_domain)
+ 		tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
+ regulator_disable:
+@@ -2111,7 +2099,12 @@ static void tegra_pcie_enable_ports(struct tegra_pcie *pcie)
+ 			 port->index, port->lanes);
+ 
+ 		tegra_pcie_port_enable(port);
++	}
+ 
++	/* Start LTSSM from Tegra side */
++	reset_control_deassert(pcie->pcie_xrst);
++
++	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
+ 		if (tegra_pcie_port_check_link(port))
+ 			continue;
+ 
+@@ -2126,6 +2119,8 @@ static void tegra_pcie_disable_ports(struct tegra_pcie *pcie)
+ {
+ 	struct tegra_pcie_port *port, *tmp;
+ 
++	reset_control_assert(pcie->pcie_xrst);
++
+ 	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
+ 		tegra_pcie_port_disable(port);
+ }
+@@ -2488,10 +2483,12 @@ static int __maybe_unused tegra_pcie_pm_suspend(struct device *dev)
+ 			dev_err(dev, "failed to power off PHY(s): %d\n", err);
+ 	}
+ 
++	reset_control_assert(pcie->pex_rst);
++	clk_disable_unprepare(pcie->pex_clk);
++
+ 	if (IS_ENABLED(CONFIG_PCI_MSI))
+ 		tegra_pcie_disable_msi(pcie);
+ 
+-	reset_control_assert(pcie->pcie_xrst);
+ 	tegra_pcie_power_off(pcie);
+ 
+ 	return 0;
+@@ -2513,11 +2510,19 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
+ 	if (IS_ENABLED(CONFIG_PCI_MSI))
+ 		tegra_pcie_enable_msi(pcie);
+ 
++	err = clk_prepare_enable(pcie->pex_clk);
++	if (err) {
++		dev_err(dev, "failed to enable PEX clock: %d\n", err);
++		goto poweroff;
 +	}
 +
-+	imx8m_soft_reset(vpu, RESET_G1 | RESET_G2 | RESET_H1);
-+	imx8m_clk_enable(vpu, CLOCK_G1 | CLOCK_G2 | RESET_H1);
++	reset_control_deassert(pcie->pex_rst);
 +
-+	/* Set values of the fuse registers */
-+	writel(0xffffffff, vpu->ctrl_base + CTRL_G1_DEC_FUSE);
-+	writel(0xffffffff, vpu->ctrl_base + CTRL_G1_PP_FUSE);
-+	writel(0xffffffff, vpu->ctrl_base + CTRL_G2_DEC_FUSE);
-+	writel(0xffffffff, vpu->ctrl_base + CTRL_H1_ENC_FUSE);
-+
-+	clk_bulk_disable_unprepare(vpu->variant->num_clocks, vpu->clocks);
-+
-+	return 0;
-+}
-+
- /*
-  * Supported formats.
-  */
-@@ -97,6 +125,43 @@ static const struct hantro_fmt imx8m_vpu_dec_fmts[] = {
- 	},
- };
+ 	if (pcie->soc->program_uphy) {
+ 		err = tegra_pcie_phy_power_on(pcie);
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to power on PHY(s): %d\n", err);
+-			goto poweroff;
++			goto disable_pex_clk;
+ 		}
+ 	}
  
-+static const struct hantro_fmt imx8mm_vpu_enc_fmts[] = {
-+	{
-+		.fourcc = V4L2_PIX_FMT_YUV420M,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = RK3288_VPU_ENC_FMT_YUV420P,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV12M,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = RK3288_VPU_ENC_FMT_YUV420SP,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_YUYV,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = RK3288_VPU_ENC_FMT_YUYV422,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_UYVY,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = RK3288_VPU_ENC_FMT_UYVY422,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_JPEG,
-+		.codec_mode = HANTRO_MODE_JPEG_ENC,
-+		.max_depth = 2,
-+		.header_size = JPEG_HEADER_SIZE,
-+		.frmsize = {
-+			.min_width = 96,
-+			.max_width = 8192,
-+			.step_width = JPEG_MB_DIM,
-+			.min_height = 32,
-+			.max_height = 8192,
-+			.step_height = JPEG_MB_DIM,
-+		},
-+	},
-+};
-+
- static irqreturn_t imx8m_vpu_g1_irq(int irq, void *dev_id)
- {
- 	struct hantro_dev *vpu = dev_id;
-@@ -115,6 +180,25 @@ static irqreturn_t imx8m_vpu_g1_irq(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
+@@ -2526,6 +2531,9 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
  
-+static irqreturn_t imx8mm_vpu_h1_irq(int irq, void *dev_id)
-+{
-+	struct hantro_dev *vpu = dev_id;
-+	enum vb2_buffer_state state;
-+	u32 status, bytesused;
-+
-+	status = vepu_read(vpu, H1_REG_INTERRUPT);
-+	bytesused = vepu_read(vpu, H1_REG_STR_BUF_LIMIT) / 8;
-+	state = (status & H1_REG_INTERRUPT_FRAME_RDY) ?
-+		 VB2_BUF_STATE_DONE : VB2_BUF_STATE_ERROR;
-+
-+	vepu_write(vpu, 0, H1_REG_INTERRUPT);
-+	vepu_write(vpu, 0, H1_REG_AXI_CTRL);
-+
-+	hantro_irq_done(vpu, bytesused, state);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int imx8mq_vpu_hw_init(struct hantro_dev *vpu)
- {
- 	vpu->dec_base = vpu->reg_bases[0];
-@@ -123,6 +207,15 @@ static int imx8mq_vpu_hw_init(struct hantro_dev *vpu)
  	return 0;
- }
  
-+static int imx8mm_vpu_hw_init(struct hantro_dev *vpu)
-+{
-+	vpu->dec_base = vpu->reg_bases[0];
-+	vpu->enc_base = vpu->reg_bases[2];
-+	vpu->ctrl_base = vpu->reg_bases[vpu->variant->num_regs - 1];
-+
-+	return 0;
-+}
-+
- static void imx8m_vpu_g1_reset(struct hantro_ctx *ctx)
- {
- 	struct hantro_dev *vpu = ctx->dev;
-@@ -130,6 +223,13 @@ static void imx8m_vpu_g1_reset(struct hantro_ctx *ctx)
- 	imx8m_soft_reset(vpu, RESET_G1);
- }
++disable_pex_clk:
++	reset_control_assert(pcie->pex_rst);
++	clk_disable_unprepare(pcie->pex_clk);
+ poweroff:
+ 	tegra_pcie_power_off(pcie);
  
-+static void imx8mm_vpu_h1_reset(struct hantro_ctx *ctx)
-+{
-+	struct hantro_dev *vpu = ctx->dev;
-+
-+	imx8m_soft_reset(vpu, RESET_H1);
-+}
-+
- /*
-  * Supported codec ops.
-  */
-@@ -143,6 +243,21 @@ static const struct hantro_codec_ops imx8mq_vpu_codec_ops[] = {
- 	},
- };
- 
-+static const struct hantro_codec_ops imx8mm_vpu_codec_ops[] = {
-+	[HANTRO_MODE_MPEG2_DEC] = {
-+		.run = hantro_g1_mpeg2_dec_run,
-+		.reset = imx8m_vpu_g1_reset,
-+		.init = hantro_mpeg2_dec_init,
-+		.exit = hantro_mpeg2_dec_exit,
-+	},
-+	[HANTRO_MODE_JPEG_ENC] = {
-+		.run = hantro_h1_jpeg_enc_run,
-+		.reset = imx8mm_vpu_h1_reset,
-+		.init = hantro_jpeg_enc_init,
-+		.exit = hantro_jpeg_enc_exit,
-+	},
-+};
-+
- /*
-  * VPU variants.
-  */
-@@ -169,3 +284,27 @@ const struct hantro_variant imx8mq_vpu_variant = {
- 	.reg_names = imx8mq_reg_names,
- 	.num_regs = ARRAY_SIZE(imx8mq_reg_names)
- };
-+
-+static const struct hantro_irq imx8mm_irqs[] = {
-+	{ "g1", imx8m_vpu_g1_irq },
-+	{ "g2", NULL /* TODO: imx8m_vpu_g2_irq */ },
-+	{ "h1", imx8mm_vpu_h1_irq },
-+};
-+
-+static const char * const imx8mm_clk_names[] = { "g1", "g2", "h1", "bus" };
-+static const char * const imx8mm_reg_names[] = { "g1", "g2", "h1", "ctrl" };
-+
-+const struct hantro_variant imx8mm_vpu_variant = {
-+	.dec_fmts = imx8m_vpu_dec_fmts,
-+	.num_dec_fmts = ARRAY_SIZE(imx8m_vpu_dec_fmts),
-+	.codec = HANTRO_MPEG2_DECODER,
-+	.codec_ops = imx8mm_vpu_codec_ops,
-+	.init = imx8mm_vpu_hw_init,
-+	.runtime_resume = imx8mm_runtime_resume,
-+	.irqs = imx8mm_irqs,
-+	.num_irqs = ARRAY_SIZE(imx8mm_irqs),
-+	.clk_names = imx8mm_clk_names,
-+	.num_clocks = ARRAY_SIZE(imx8mm_clk_names),
-+	.reg_names = imx8mm_reg_names,
-+	.num_regs = ARRAY_SIZE(imx8mm_reg_names)
-+};
 -- 
-2.20.1
+2.17.1
