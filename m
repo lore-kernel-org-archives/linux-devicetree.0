@@ -1,69 +1,81 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v16 1/3] arm64: dts: fsl: librem5: Add a device tree for
- the Librem5 devkit
-Date: Mon, 17 Jun 2019 16:01:14 +0200
-Message-ID: <20190617140114.GA26140@amd>
-References: <20190617135215.550-1-angus@akkea.ca>
- <20190617135215.550-2-angus@akkea.ca>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+From: Troy Benjegerdes <troy.benjegerdes@sifive.com>
+Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
+Date: Mon, 17 Jun 2019 09:14:25 -0500
+Message-ID: <F48A4F7F-0B0D-4191-91AD-DC51686D1E78@sifive.com>
+References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
+ <mvmtvco62k9.fsf@suse.de>
+ <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
+ <mvmpnnc5y49.fsf@suse.de>
+ <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com>
+ <mvmh88o5xi5.fsf@suse.de>
+ <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190617135215.550-2-angus@akkea.ca>
+In-Reply-To: <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Andreas Schwab <schwab@suse.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, netdev@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, nicolas.ferre@microchip.com, Sachin Ghadi <sachin.ghadi@sifive.com>, Yash Shah <yash.shah@sifive.com>, robh+dt@kernel.org, ynezz@true.cz, linux-riscv@lists.infradead.org, davem@davemloft.net, Jim Jacobsen <jamez@wit.com>
 List-Id: devicetree@vger.kernel.org
 
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon 2019-06-17 07:52:13, Angus Ainslie (Purism) wrote:
-> This is for the development kit board for the Librem 5. The current level
-> of support yields a working console and is able to boot userspace from
-> the network or eMMC.
+> On Jun 17, 2019, at 6:34 AM, Paul Walmsley <paul.walmsley@sifive.com> =
+wrote:
 >=20
-> Additional subsystems that are active :
+> On Mon, 17 Jun 2019, Andreas Schwab wrote:
 >=20
-> - Both USB ports
-> - SD card socket
-> - WiFi usdhc
-> - WWAN modem
-> - GNSS
-> - GPIO keys
-> - LEDs
-> - gyro
-> - magnetometer
-> - touchscreen
-> - pwm
-> - backlight
-> - haptic motor
+>> On Jun 17 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>>=20
+>>> On Mon, 17 Jun 2019, Andreas Schwab wrote:
+>>>=20
+>>>> On Jun 17 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>>>>=20
+>>>>> Looks to me that it shouldn't have an impact unless the DT string =
+is=20
+>>>>> present, and even then, the impact might simply be that the MACB =
+driver=20
+>>>>> may not work?
+>>>>=20
+>>>> If the macb driver doesn't work you have an unusable system, of =
+course.
+>>>=20
+>>> Why?
+>>=20
+>> Because a system is useless without network.
 >=20
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> =46rom an upstream Linux point of view, Yash's patches should be an=20
+> improvement over the current mainline kernel situation, since there's=20=
 
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
-
-
+> currently no upstream support for the (SiFive-specific) TX clock =
+switch=20
+> register.  With the right DT data, and a bootloader that handles the =
+PHY=20
+> reset, I think networking should work after his patches are upstream =
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+> although I myself haven't tried this yet.
+>=20
 
---azLHFNyN32YCQGCU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Have we documented this tx clock switch register in something with a
+direct URL link (rather than a PDF)?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+I=E2=80=99d like to update freedom-u-sdk (or yocto) to create bootable =
+images
+with a working U-boot (upstream or not, I don=E2=80=99t care, as long as =
+it works),
+and what I have right now is the old legacy HiFive U-boot[1] and a 4.19
+kernel with a bunch of extra patches.
 
-iEYEARECAAYFAl0HnSoACgkQMOfwapXb+vJOGgCgi4UVHEckeZdZZeAkOxWfWI5z
-EcgAn2c/wl0vMJH3MIZWhH8So2axxskQ
-=DbDK
------END PGP SIGNATURE-----
+The legacy M-mode U-boot handles the phy reset already, and I=E2=80=99ve =
+been
+able to load upstream S-mode uboot as a payload via TFTP, and then=20
+load and boot a 4.19 kernel.=20
 
---azLHFNyN32YCQGCU--
+It would be nice to get this all working with 5.x, however there are =
+still
+several missing pieces to really have it work well.
+
+
+[1] https://github.com/sifive/HiFive_U-Boot=
