@@ -1,45 +1,39 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] dt-bindings: watchdog: Rename bindings documentation file
-Date: Mon, 17 Jun 2019 10:17:29 -0700
-Message-ID: <20190617171729.GA13807@roeck-us.net>
-References: <20190617090953.8770-1-horms+renesas@verge.net.au>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 3/4] regulator: Add regulator driver for ATC260x PMICs
+Date: Mon, 17 Jun 2019 22:54:13 +0530
+Message-ID: <20190617172413.GB16152@Mani-XPS-13-9360>
+References: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
+ <20190617155011.15376-4-manivannan.sadhasivam@linaro.org>
+ <20190617163015.GD5316@sirena.org.uk>
+ <20190617163413.GA16152@Mani-XPS-13-9360>
+ <20190617170356.GG5316@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190617090953.8770-1-horms+renesas@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190617170356.GG5316@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: lee.jones@linaro.org, lgirdwood@gmail.com, robh+dt@kernel.org, afaerber@suse.de, linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, devicetree@vger.kernel.org, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 11:09:53AM +0200, Simon Horman wrote:
-> For consistency with the naming of (most) other documentation files for DT
-> bindings for Renesas IP blocks rename the Renesas WDT documentation file
-> from renesas-wdt.txt to renesas,wdt.txt.
+On Mon, Jun 17, 2019 at 06:03:56PM +0100, Mark Brown wrote:
+> On Mon, Jun 17, 2019 at 10:04:13PM +0530, Manivannan Sadhasivam wrote:
 > 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> > > > + * Copyright (C) 2019 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> > > You definitely didn't assign copyright to your employer?
+> 
+> > Yeah, that was intentional. This work is not part of Linaro working hours and
+> > falls into my spare time works where I'm trying to complete the upstream support
+> > for Actions Semi Owl series SoCs and target boards which I'm co-maintaining
+> > (sort of)...
+> 
+> OK...  seems very weird to use your work address for developing on
+> products closely associated with your employer in non-work time.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Agree. I was trying to setup my kernel.org mail address with git for
+unofficial works like this but haven't done with it yet :/
 
-> ---
->  .../devicetree/bindings/watchdog/{renesas-wdt.txt => renesas,wdt.txt}     | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/watchdog/{renesas-wdt.txt => renesas,wdt.txt} (100%)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> rename to Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
-> -- 
-> 2.11.0
-> 
+Regards,
+Mani
