@@ -1,40 +1,69 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v2 06/28] drivers: Add generic helper to match by of_node
-Date: Mon, 17 Jun 2019 10:59:03 +0100
-Message-ID: <d050ae69-52ee-b32d-2bc0-708b408f3bd4@arm.com>
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
- <1560534863-15115-7-git-send-email-suzuki.poulose@arm.com>
- <20190614203144.GB7991@kunai>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 09/21] iommu/mediatek: Refine protect memory definition
+Date: Mon, 17 Jun 2019 11:59:22 +0200
+Message-ID: <d5bf7ef9-d6dd-2e09-5ad8-e72a26dd3880@gmail.com>
+References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+ <1560169080-27134-10-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614203144.GB7991@kunai>
+In-Reply-To: <1560169080-27134-10-git-send-email-yong.wu@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de
-Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, atull@kernel.org, andrew@lunn.ch, daniel@ffwll.ch, airlied@linux.ie, davem@davemloft.net, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, f.fainelli@gmail.com, frowand.list@gmail.com, hkallweit1@gmail.com, jslaby@suse.com, jonathanh@nvidia.com, lee.jones@linaro.org, lgirdwood@gmail.com, linux-fpga@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, maarten.lankhorst@linux.intel.com, broonie@kernel.org, mathieu.poirier@linaro.org, maxime.ripard@bootlin.com, mdf@kernel.org, peda@axentia.se, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, thierry.reding@gmail.com, thor.thayer@linux.intel.com, ulf.hansson@linaro.org, joe@perches.com
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
-On 14/06/2019 21:31, Wolfram Sang wrote:
->> +
->> +int device_match_of_node(struct device *dev, const void *np)
->> +{
->> +	return dev->of_node == np;
->> +}
->> +EXPORT_SYMBOL_GPL(device_match_of_node);
+
+On 10/06/2019 14:17, Yong Wu wrote:
+> The protect memory setting is a little different in the different SoCs.
+> In the register REG_MMU_CTRL_REG(0x110), the TF_PROT(translation fault
+> protect) shift bit is normally 4 while it shift 5 bits only in the
+> mt8173. This patch delete the complex MACRO and use a common if-else
+> instead.
 > 
-> Is it an option to 'static inline' this simple function in the header,
-> saving the EXPORT?
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>  drivers/iommu/mtk_iommu.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
 > 
-
-No. This is supposed to be passed on as a call back function pointer
-for the APIs. Having it as a static inline, would simply replicate
-the same function through the driver subsystems, which is one of the
-issues that series is trying to solve. Also, by having them exported,
-we can convert the new specialized device lookup functions,
-*_find_device_by_<property> to be static inlines.
-
-Suzuki
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index ad838b9..d38dfa2 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -52,12 +52,9 @@
+>  #define REG_MMU_DCM_DIS				0x050
+>  
+>  #define REG_MMU_CTRL_REG			0x110
+> +#define F_MMU_TF_PROT_TO_PROGRAM_ADDR		(2 << 4)
+>  #define F_MMU_PREFETCH_RT_REPLACE_MOD		BIT(4)
+> -#define F_MMU_TF_PROTECT_SEL_SHIFT(data) \
+> -	((data)->plat_data->m4u_plat == M4U_MT2712 ? 4 : 5)
+> -/* It's named by F_MMU_TF_PROT_SEL in mt2712. */
+> -#define F_MMU_TF_PROTECT_SEL(prot, data) \
+> -	(((prot) & 0x3) << F_MMU_TF_PROTECT_SEL_SHIFT(data))
+> +#define F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173	(2 << 5)
+>  
+>  #define REG_MMU_IVRP_PADDR			0x114
+>  
+> @@ -519,9 +516,11 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>  		return ret;
+>  	}
+>  
+> -	regval = F_MMU_TF_PROTECT_SEL(2, data);
+>  	if (data->plat_data->m4u_plat == M4U_MT8173)
+> -		regval |= F_MMU_PREFETCH_RT_REPLACE_MOD;
+> +		regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
+> +			 F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173;
+> +	else
+> +		regval = F_MMU_TF_PROT_TO_PROGRAM_ADDR;
+>  	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
+>  
+>  	regval = F_L2_MULIT_HIT_EN |
+> 
