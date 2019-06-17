@@ -1,71 +1,29 @@
-Return-Path: <SRS0=lN0X=UD=renesas.com=prvs=50588f7500=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 2/2] ARM: dts: rza2mevb: Add input switch
-Date: Tue, 4 Jun 2019 15:09:14 -0500
-Message-ID: <20190604200914.64896-3-chris.brandt@renesas.com>
-In-Reply-To: <20190604200914.64896-1-chris.brandt@renesas.com>
-References: <20190604200914.64896-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=U1Pn=UQ=verge.net.au=horms@kernel.org>
+Date: Mon, 17 Jun 2019 10:05:22 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/6] arm64: dts: renesas: r8a774a1: Fix USB 2.0 clocks
+Message-ID: <20190617080521.hzlllq5cuprvf2dt@verge.net.au>
+References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1560258401-9517-2-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560258401-9517-2-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for input switch SW3 on the Renesas RZ/A2M EVB
-development board.
+On Tue, Jun 11, 2019 at 02:06:36PM +0100, Fabrizio Castro wrote:
+> Similarly to what done for the r8a7796 with commit 737e05bf034e
+> ("arm64: dts: renesas: revise properties for R-Car Gen3 SoCs'
+> usb 2.0"), this patch lists the clock for the USB High-Speed Module
+> (HS-USB) with the USB2.0 Host (EHCI/OHCI) IP DT node, and it lists
+> the clock for the USB2.0 Host IP with the HS-USB module DT node.
+> 
+> Fixes: 4c2c2fb99876 ("arm64: dts: renesas: r8a774a1: Add USB2.0 phy and host(EHCI/OHCI) device nodes")
+> Fixes: ed898d4fc19d ("arm64: dts: renesas: r8a774a1: Add USB-DMAC and HSUSB device nodes")
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Note that this uses the IRQ interrupt, as the RZ/A2 GPIO controller
-does not include interrupt support
+Thanks Fabrizio,
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- arch/arm/boot/dts/r7s9210-rza2mevb.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-index 4baf4a965090..6049145c120c 100644
---- a/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-+++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-@@ -9,6 +9,7 @@
- /dts-v1/;
- #include "r7s9210.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/r7s9210-pinctrl.h>
- 
- / {
-@@ -26,6 +27,21 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	keyboard {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&keyboard_pins>;
-+
-+		key-3 {
-+			interrupt-parent = <&irqc>;
-+			interrupts = <0 IRQ_TYPE_EDGE_BOTH>;
-+			linux,code = <KEY_3>;
-+			label = "SW3";
-+			wakeup-source;
-+		};
-+	};
-+
- 	lbsc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -121,6 +137,10 @@
- 			 <RZA2_PINMUX(PORTL, 1, 5)>; /* IRQ5 */
- 	};
- 
-+	keyboard_pins: keyboard {
-+		pinmux = <RZA2_PINMUX(PORTJ, 1, 6)>;	/* IRQ0 */
-+	};
-+
- 	/* Serial Console */
- 	scif4_pins: serial4 {
- 		pinmux = <RZA2_PINMUX(PORT9, 0, 4)>,	/* TxD4 */
--- 
-2.16.1
+I have applied this for inclusion in v5.3.
