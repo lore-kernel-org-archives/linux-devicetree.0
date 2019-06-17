@@ -1,36 +1,40 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-Date: Mon, 17 Jun 2019 02:58:20 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com> <mvmtvco62k9.fsf@suse.de>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v2 06/28] drivers: Add generic helper to match by of_node
+Date: Mon, 17 Jun 2019 10:59:03 +0100
+Message-ID: <d050ae69-52ee-b32d-2bc0-708b408f3bd4@arm.com>
+References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+ <1560534863-15115-7-git-send-email-suzuki.poulose@arm.com>
+ <20190614203144.GB7991@kunai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <mvmtvco62k9.fsf@suse.de>
-Sender: netdev-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: Andreas Schwab <schwab@suse.de>, davem@davemloft.net, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, sachin.ghadi@sifive.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190614203144.GB7991@kunai>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de
+Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, atull@kernel.org, andrew@lunn.ch, daniel@ffwll.ch, airlied@linux.ie, davem@davemloft.net, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, f.fainelli@gmail.com, frowand.list@gmail.com, hkallweit1@gmail.com, jslaby@suse.com, jonathanh@nvidia.com, lee.jones@linaro.org, lgirdwood@gmail.com, linux-fpga@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, maarten.lankhorst@linux.intel.com, broonie@kernel.org, mathieu.poirier@linaro.org, maxime.ripard@bootlin.com, mdf@kernel.org, peda@axentia.se, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, thierry.reding@gmail.com, thor.thayer@linux.intel.com, ulf.hansson@linaro.org, joe@perches.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Yash,
+Hi
 
-On Mon, 17 Jun 2019, Andreas Schwab wrote:
-
-> On Jun 17 2019, Yash Shah <yash.shah@sifive.com> wrote:
+On 14/06/2019 21:31, Wolfram Sang wrote:
+>> +
+>> +int device_match_of_node(struct device *dev, const void *np)
+>> +{
+>> +	return dev->of_node == np;
+>> +}
+>> +EXPORT_SYMBOL_GPL(device_match_of_node);
 > 
-> > - Add "MACB_SIFIVE_FU540" in Kconfig to support SiFive FU540 in macb
-> >   driver. This is needed because on FU540, the macb driver depends on
-> >   SiFive GPIO driver.
+> Is it an option to 'static inline' this simple function in the header,
+> saving the EXPORT?
 > 
-> This of course requires that the GPIO driver is upstreamed first.
 
-What's the impact of enabling CONFIG_MACB_SIFIVE_FU540 when the GPIO 
-driver isn't present?  (After modifying the Kconfig "depends" line 
-appropriately.)
+No. This is supposed to be passed on as a call back function pointer
+for the APIs. Having it as a static inline, would simply replicate
+the same function through the driver subsystems, which is one of the
+issues that series is trying to solve. Also, by having them exported,
+we can convert the new specialized device lookup functions,
+*_find_device_by_<property> to be static inlines.
 
-Looks to me that it shouldn't have an impact unless the DT string is 
-present, and even then, the impact might simply be that the MACB driver 
-may not work?
-
-
-- Paul
+Suzuki
