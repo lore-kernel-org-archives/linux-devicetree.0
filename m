@@ -1,57 +1,41 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH] Revert "ARM: dts: rockchip: set PWM delay backlight
- settings for Minnie"
-Date: Mon, 17 Jun 2019 09:16:25 -0700
-Message-ID: <20190617161625.GR137143@google.com>
-References: <20190614224533.169881-1-mka@chromium.org>
- <20190616154143.GA28583@atrey.karlin.mff.cuni.cz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] libfdt: reduce the number of headers included from libfdt_env.h
+Date: Tue, 18 Jun 2019 01:21:23 +0900
+Message-ID: <20190617162123.24920-1-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190616154143.GA28583@atrey.karlin.mff.cuni.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Douglas Anderson <dianders@chromium.org>
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+Currently, libfdt_env.h includes <linux/kernel.h> just for INT_MAX.
 
-On Sun, Jun 16, 2019 at 05:41:43PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
-> > 
-> > According to the commit message the AUO B101EAN01 panel on minnie
-> > requires a PWM delay of 200 ms, however this is not what the
-> > datasheet says. The datasheet mentions a *max* delay of 200 ms
-> > for T2 ("delay from LCDVDD to black video generation") and T3
-> > ("delay from LCDVDD to HPD high"), which aren't related to the
-> > PWM. The backlight power sequence does not specify min/max
-> > constraints for T15 (time from PWM on to BL enable) or T16
-> > (time from BL disable to PWM off).
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> > Enric, if you think I misinterpreted the datasheet please holler!
-> 
-> Was this tested?
+<linux/kernel.h> pulls in a lots of broat.
 
-I performed limited manually testing.
+Thanks to commit 54d50897d544 ("linux/kernel.h: split *_MAX and *_MIN
+macros into <linux/limits.h>"), <linux/kernel.h> can be replaced with
+<linux/limits.h>.
 
-minnie ships with the Chrome OS 3.14 downstream, which doesn't include
-this delay, to my knowledge there are no open display related bugs for
-minnie. One could argue that a the configuration without the delay was
-widely field tested
+This saves including dozens of headers.
 
-> Does patch being reverted actually break anything?
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-To my knowledge it doesn't really break anything, however there is a
-short user perceptible delay between switching on the LCD and
-switching on the backlight. It's not the end of the world, but if it's
-not actually needed better avoid it.
+ include/linux/libfdt_env.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> If so, cc stable?
-
-I guess this is an edge case, were you could go either way. I'm fine
-with respinning and cc-ing stable.
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index edb0f0c30904..2231eb855e8f 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -2,7 +2,7 @@
+ #ifndef LIBFDT_ENV_H
+ #define LIBFDT_ENV_H
+ 
+-#include <linux/kernel.h>	/* For INT_MAX */
++#include <linux/limits.h>	/* For INT_MAX */
+ #include <linux/string.h>
+ 
+ #include <asm/byteorder.h>
+-- 
+2.17.1
