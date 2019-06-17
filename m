@@ -1,97 +1,84 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v7 08/21] iommu/mediatek: Add larb-id remapped support
-Date: Mon, 17 Jun 2019 11:25:07 +0200
-Message-ID: <3dec887b-06b5-1aeb-8bd8-924999addd53@gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
- <1560169080-27134-9-git-send-email-yong.wu@mediatek.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv5 19/20] PCI: mobiveil: Add 8-bit and 16-bit register
+ accessors
+Date: Mon, 17 Jun 2019 10:29:01 +0100
+Message-ID: <20190617092901.GB18020@e121166-lin.cambridge.arm.com>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-20-Zhiqiang.Hou@nxp.com>
+ <20190612135400.GB15747@redmoon>
+ <AM0PR04MB673802CE0891BC898B61EBA384E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560169080-27134-9-git-send-email-yong.wu@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB673802CE0891BC898B61EBA384E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/06/2019 14:17, Yong Wu wrote:
-> The larb-id may be remapped in the smi-common, this means the
-> larb-id reported in the mtk_iommu_isr isn't the real larb-id,
-> 
-> Take mt8183 as a example:
->                        M4U
->                         |
-> ---------------------------------------------
-> |               SMI common                  |
-> -0-----7-----5-----6-----1-----2------3-----4- <- Id remapped
->  |     |     |     |     |     |      |     |
-> larb0 larb1 IPU0  IPU1 larb4 larb5  larb6  CCU
-> disp  vdec  img   cam   venc  img    cam
-> As above, larb0 connects with the id 0 in smi-common.
->           larb1 connects with the id 7 in smi-common.
->           ...
-> If the larb-id reported in the isr is 7, actually it's larb1(vdec).
-> In order to output the right larb-id in the isr, we add a larb-id
-> remapping relationship in this patch.
-> 
-> If there is no this larb-id remapping in some SoCs, use the linear
-> mapping array instead.
-> 
-> This also is a preparing patch for mt8183.
-> 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
->  drivers/iommu/mtk_iommu.c | 4 ++++
->  drivers/iommu/mtk_iommu.h | 2 ++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 264dda4..ad838b9 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -220,6 +220,8 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
->  	fault_larb = F_MMU0_INT_ID_LARB_ID(regval);
->  	fault_port = F_MMU0_INT_ID_PORT_ID(regval);
->  
-> +	fault_larb = data->plat_data->larbid_remap[fault_larb];
-> +
->  	if (report_iommu_fault(&dom->domain, data->dev, fault_iova,
->  			       write ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ)) {
->  		dev_err_ratelimited(
-> @@ -744,12 +746,14 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
->  	.m4u_plat     = M4U_MT2712,
->  	.has_4gb_mode = true,
->  	.has_bclk     = true,
-> +	.larbid_remap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
->  };
->  
->  static const struct mtk_iommu_plat_data mt8173_data = {
->  	.m4u_plat     = M4U_MT8173,
->  	.has_4gb_mode = true,
->  	.has_bclk     = true,
-> +	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
->  };
->  
->  static const struct of_device_id mtk_iommu_of_ids[] = {
-> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> index 63e235e..61fd5d6 100644
-> --- a/drivers/iommu/mtk_iommu.h
-> +++ b/drivers/iommu/mtk_iommu.h
-> @@ -46,6 +46,8 @@ struct mtk_iommu_plat_data {
->  
->  	/* HW will use the EMI clock if there isn't the "bclk". */
->  	bool                has_bclk;
-> +
-> +	unsigned char       larbid_remap[MTK_LARB_NR_MAX];
->  };
->  
->  struct mtk_iommu_domain;
-> 
+T24gU2F0LCBKdW4gMTUsIDIwMTkgYXQgMDE6MTM6NDhBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6
+Cj4gSGkgTG9yZW56bywKPiAKPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPiBGcm9t
+OiBMb3JlbnpvIFBpZXJhbGlzaSBbbWFpbHRvOmxvcmVuem8ucGllcmFsaXNpQGFybS5jb21dCj4g
+PiBTZW50OiAyMDE55bm0NuaciDEy5pelIDIxOjU0Cj4gPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5n
+LmhvdUBueHAuY29tPgo+ID4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsKPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOwo+ID4gYmhlbGdhYXNAZ29vZ2xlLmNv
+bTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsKPiA+IGwuc3VicmFo
+bWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaQo+ID4gPGxl
+b3lhbmcubGlAbnhwLmNvbT47IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3aWxsLmRlYWNvbkBh
+cm0uY29tOwo+ID4gTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgTS5oLiBMaWFuIDxt
+aW5naHVhbi5saWFuQG54cC5jb20+Owo+ID4gWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5j
+b20+Cj4gPiBTdWJqZWN0OiBSZTogW1BBVENIdjUgMTkvMjBdIFBDSTogbW9iaXZlaWw6IEFkZCA4
+LWJpdCBhbmQgMTYtYml0IHJlZ2lzdGVyCj4gPiBhY2Nlc3NvcnMKPiA+IAo+ID4gT24gRnJpLCBB
+cHIgMTIsIDIwMTkgYXQgMDg6Mzc6MDVBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6Cj4gPiA+IEZy
+b206IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+Cj4gPiA+Cj4gPiA+IFRoZXJl
+IGFyZSBzb21lIDgtYml0IGFuZCAxNi1iaXQgcmVnaXN0ZXJzIGluIFBDSWUgY29uZmlndXJhdGlv
+biBzcGFjZSwKPiA+ID4gc28gYWRkIGFjY2Vzc29ycyBmb3IgdGhlbS4KPiA+ID4KPiA+ID4gU2ln
+bmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4KPiA+ID4gUmV2
+aWV3ZWQtYnk6IE1pbmdodWFuIExpYW4gPE1pbmdodWFuLkxpYW5AbnhwLmNvbT4KPiA+ID4gUmV2
+aWV3ZWQtYnk6IFN1YnJhaG1hbnlhIExpbmdhcHBhIDxsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNv
+LmluPgo+ID4gPiAtLS0KPiA+ID4gVjU6Cj4gPiA+ICAtIENvcnJlY3RlZCBhbmQgcmV0b3VjaGVk
+IHRoZSBzdWJqZWN0IGFuZCBjaGFuZ2Vsb2cuCj4gPiA+ICAtIE5vIGZ1bmN0aW9uYWxpdHkgY2hh
+bmdlLgo+ID4gPgo+ID4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMg
+fCAyMCArKysrKysrKysrKysrKysrKysrKwo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDIwIGluc2Vy
+dGlvbnMoKykKPiA+ID4KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
+cGNpZS1tb2JpdmVpbC5jCj4gPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2
+ZWlsLmMKPiA+ID4gaW5kZXggNDExZTk3NzlkYTEyLi40NTZhZGZlZTM5M2MgMTAwNjQ0Cj4gPiA+
+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jCj4gPiA+ICsrKyBi
+L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jCj4gPiA+IEBAIC0yNjgsMTEg
+KzI2OCwzMSBAQCBzdGF0aWMgdTMyIGNzcl9yZWFkbChzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNp
+ZSwKPiA+IHUzMiBvZmYpCj4gPiA+ICAJcmV0dXJuIGNzcl9yZWFkKHBjaWUsIG9mZiwgMHg0KTsK
+PiA+ID4gIH0KPiA+ID4KPiA+ID4gK3N0YXRpYyB1MzIgY3NyX3JlYWR3KHN0cnVjdCBtb2JpdmVp
+bF9wY2llICpwY2llLCB1MzIgb2ZmKSB7Cj4gPiA+ICsJcmV0dXJuIGNzcl9yZWFkKHBjaWUsIG9m
+ZiwgMHgyKTsKPiA+ID4gK30KPiA+ID4gKwo+ID4gPiArc3RhdGljIHUzMiBjc3JfcmVhZGIoc3Ry
+dWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsIHUzMiBvZmYpIHsKPiA+ID4gKwlyZXR1cm4gY3NyX3Jl
+YWQocGNpZSwgb2ZmLCAweDEpOwo+ID4gPiArfQo+ID4gPiArCj4gPiA+ICBzdGF0aWMgdm9pZCBj
+c3Jfd3JpdGVsKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llLCB1MzIgdmFsLCB1MzIgb2ZmKQo+
+ID4gPiB7Cj4gPiA+ICAJY3NyX3dyaXRlKHBjaWUsIHZhbCwgb2ZmLCAweDQpOwo+ID4gPiAgfQo+
+ID4gPgo+ID4gPiArc3RhdGljIHZvaWQgY3NyX3dyaXRldyhzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAq
+cGNpZSwgdTMyIHZhbCwgdTMyIG9mZikKPiA+ID4gK3sKPiA+ID4gKwljc3Jfd3JpdGUocGNpZSwg
+dmFsLCBvZmYsIDB4Mik7Cj4gPiA+ICt9Cj4gPiA+ICsKPiA+ID4gK3N0YXRpYyB2b2lkIGNzcl93
+cml0ZWIoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsIHUzMiB2YWwsIHUzMiBvZmYpCj4gPiA+
+ICt7Cj4gPiA+ICsJY3NyX3dyaXRlKHBjaWUsIHZhbCwgb2ZmLCAweDEpOwo+ID4gPiArfQo+ID4g
+PiArCj4gPiAKPiA+IFRoZXkgYXJlIG5vdCB1c2VkIHNvIHlvdSBzaG91bGQgZHJvcCB0aGlzIHBh
+dGNoLgo+IAo+IE5YUCBMYXllcnNjYXBlIFBDSWUgR2VuNCBjb250cm9sbGVyIGRyaXZlciB3aWxs
+IHVzZSB0aGVtLCBzbyBkb24ndAo+IGRyb3AgaXQuCgpZb3UgYWRkIGZ1bmN0aW9ucyB3aGVuIHRo
+ZXkgYXJlIG5lZWRlZCwgc28gZHJvcCB0aGlzIHBhdGNoIGFuZApzcXVhc2ggaXQgdG8gdGhlIHBh
+dGNoIHRoYXQgdXNlIHRoZXNlIGZ1bmN0aW9ucy4KCkxvcmVuem8KCj4gVGhhbmtzLAo+IFpoaXFp
+YW5nCj4gCj4gPiAKPiA+IExvcmVuem8KPiA+IAo+ID4gPiAgc3RhdGljIGJvb2wgbW9iaXZlaWxf
+cGNpZV9saW5rX3VwKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llKSAgewo+ID4gPiAgCXJldHVy
+biAoY3NyX3JlYWRsKHBjaWUsIExUU1NNX1NUQVRVUykgJgo+ID4gPiAtLQo+ID4gPiAyLjE3LjEK
+PiA+ID4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
