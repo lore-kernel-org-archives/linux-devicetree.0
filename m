@@ -1,54 +1,67 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-Date: Mon, 17 Jun 2019 15:52:16 +0530
-Message-ID: <CAJ2_jOH-CacU9+Lce80PQzG1ytxvSZmjfSMwL9=kbXpWxyU96Q@mail.gmail.com>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
- <mvmtvco62k9.fsf@suse.de>
- <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 11/21] iommu/mediatek: Move vld_pa_rng into plat_data
+Date: Mon, 17 Jun 2019 12:27:46 +0200
+Message-ID: <6f2d77af-a965-add5-2a3f-fd55f574d912@gmail.com>
+References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+ <1560169080-27134-12-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>, Palmer Dabbelt <palmer@sifive.com>, =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Sachin Ghadi <sachin.ghadi@sifive.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org, David Miller <davem@davemloft.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1560169080-27134-12-git-send-email-yong.wu@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 3:28 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> Hi Yash,
->
-> On Mon, 17 Jun 2019, Andreas Schwab wrote:
->
-> > On Jun 17 2019, Yash Shah <yash.shah@sifive.com> wrote:
-> >
-> > > - Add "MACB_SIFIVE_FU540" in Kconfig to support SiFive FU540 in macb
-> > >   driver. This is needed because on FU540, the macb driver depends on
-> > >   SiFive GPIO driver.
-> >
-> > This of course requires that the GPIO driver is upstreamed first.
->
-> What's the impact of enabling CONFIG_MACB_SIFIVE_FU540 when the GPIO
-> driver isn't present?  (After modifying the Kconfig "depends" line
-> appropriately.)
->
-> Looks to me that it shouldn't have an impact unless the DT string is
-> present, and even then, the impact might simply be that the MACB driver
-> may not work?
 
-Yes, there won't be an impact other than MACB driver not working.
-In any case, without GPIO driver, PHY won't get reset and the network
-interface won't come up.
 
->
->
-> - Paul
+On 10/06/2019 14:17, Yong Wu wrote:
+> Both mt8173 and mt8183 don't have this vld_pa_rng(valid physical address
+> range) register while mt2712 have. Move it into the plat_data.
+> 
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>  drivers/iommu/mtk_iommu.c | 3 ++-
+>  drivers/iommu/mtk_iommu.h | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 8ac7034..a535dcd 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -547,7 +547,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>  			 upper_32_bits(data->protect_base);
+>  	writel_relaxed(regval, data->base + REG_MMU_IVRP_PADDR);
+>  
+> -	if (data->enable_4GB && data->plat_data->m4u_plat != M4U_MT8173) {
+> +	if (data->enable_4GB && data->plat_data->has_vld_pa_rng) {
+>  		/*
+>  		 * If 4GB mode is enabled, the validate PA range is from
+>  		 * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
+> @@ -744,6 +744,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+>  	.m4u_plat     = M4U_MT2712,
+>  	.has_4gb_mode = true,
+>  	.has_bclk     = true,
+> +	.has_vld_pa_rng   = true,
+>  	.larbid_remap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+>  };
+>  
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index 55d73c1..e5c9dde 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -47,6 +47,7 @@ struct mtk_iommu_plat_data {
+>  	/* HW will use the EMI clock if there isn't the "bclk". */
+>  	bool                has_bclk;
+>  	bool                reset_axi;
+> +	bool                has_vld_pa_rng;
+>  	unsigned char       larbid_remap[MTK_LARB_NR_MAX];
+>  };
+>  
+> 
