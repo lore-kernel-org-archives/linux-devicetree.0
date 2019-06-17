@@ -1,100 +1,86 @@
-Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
+Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 02/27] PCI: tegra: Handle failure cases in tegra_pcie_power_on()
-Date: Tue, 18 Jun 2019 23:31:41 +0530
-Message-ID: <20190618180206.4908-3-mmaddireddy@nvidia.com>
-In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
-References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+Subject: [PATCH V5 21/27] PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
+Date: Mon, 17 Jun 2019 23:09:46 +0530
+Message-ID: <20190617173952.29363-22-mmaddireddy@nvidia.com>
+In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Unroll the PCIe power on sequence if any one of the steps fail in
-tegra_pcie_power_on().
+Tegra186 and Tegra30 have three PCIe root ports. AFI_PEX2_CTRL register
+is defined for third root port. Offset of this register in Tegra186 is
+different from Tegra30, so add offset as part of soc data structure.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
-V6: No change
-
 V5: No change
 
 V4: No change
 
 V3: No change
 
-V2: New patch to handle error cleanup in tegra_pcie_power_on().
+V2: No change
 
- drivers/pci/controller/pci-tegra.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+ drivers/pci/controller/pci-tegra.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index f4f53d092e00..8235d937951b 100644
+index 9429c0c6a1f3..34c5cabd8e80 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -1052,7 +1052,7 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 		err = clk_prepare_enable(pcie->pex_clk);
- 		if (err) {
- 			dev_err(dev, "failed to enable PEX clock: %d\n", err);
--			return err;
-+			goto regulator_disable;
- 		}
- 		reset_control_deassert(pcie->pex_rst);
- 	} else {
-@@ -1061,7 +1061,7 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 							pcie->pex_rst);
- 		if (err) {
- 			dev_err(dev, "powerup sequence failed: %d\n", err);
--			return err;
-+			goto regulator_disable;
- 		}
+@@ -169,7 +169,6 @@
+ 
+ #define AFI_PEX0_CTRL			0x110
+ #define AFI_PEX1_CTRL			0x118
+-#define AFI_PEX2_CTRL			0x128
+ #define  AFI_PEX_CTRL_RST		(1 << 0)
+ #define  AFI_PEX_CTRL_CLKREQ_EN		(1 << 1)
+ #define  AFI_PEX_CTRL_REFCLK_EN		(1 << 3)
+@@ -308,6 +307,7 @@ struct tegra_pcie_soc {
+ 	unsigned int num_ports;
+ 	const struct tegra_pcie_port_soc *ports;
+ 	unsigned int msi_base_shift;
++	unsigned long afi_pex2_ctrl;
+ 	u32 pads_pll_ctl;
+ 	u32 tx_ref_sel;
+ 	u32 pads_refclk_cfg0;
+@@ -518,6 +518,7 @@ static struct pci_ops tegra_pcie_ops = {
+ 
+ static unsigned long tegra_pcie_port_get_pex_ctrl(struct tegra_pcie_port *port)
+ {
++	const struct tegra_pcie_soc *soc = port->pcie->soc;
+ 	unsigned long ret = 0;
+ 
+ 	switch (port->index) {
+@@ -530,7 +531,7 @@ static unsigned long tegra_pcie_port_get_pex_ctrl(struct tegra_pcie_port *port)
+ 		break;
+ 
+ 	case 2:
+-		ret = AFI_PEX2_CTRL;
++		ret = soc->afi_pex2_ctrl;
+ 		break;
  	}
  
-@@ -1070,24 +1070,40 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 	err = clk_prepare_enable(pcie->afi_clk);
- 	if (err < 0) {
- 		dev_err(dev, "failed to enable AFI clock: %d\n", err);
--		return err;
-+		goto powergate;
- 	}
- 
- 	if (soc->has_cml_clk) {
- 		err = clk_prepare_enable(pcie->cml_clk);
- 		if (err < 0) {
- 			dev_err(dev, "failed to enable CML clock: %d\n", err);
--			return err;
-+			goto disable_afi_clk;
- 		}
- 	}
- 
- 	err = clk_prepare_enable(pcie->pll_e);
- 	if (err < 0) {
- 		dev_err(dev, "failed to enable PLLE clock: %d\n", err);
--		return err;
-+		goto disable_cml_clk;
- 	}
- 
- 	return 0;
-+
-+disable_cml_clk:
-+	if (soc->has_cml_clk)
-+		clk_disable_unprepare(pcie->cml_clk);
-+disable_afi_clk:
-+	clk_disable_unprepare(pcie->afi_clk);
-+powergate:
-+	reset_control_assert(pcie->afi_rst);
-+	reset_control_assert(pcie->pex_rst);
-+	clk_disable_unprepare(pcie->pex_clk);
-+	if (!dev->pm_domain)
-+		tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
-+regulator_disable:
-+	regulator_bulk_disable(pcie->num_supplies, pcie->supplies);
-+
-+	return err;
- }
- 
- static int tegra_pcie_clocks_get(struct tegra_pcie *pcie)
+@@ -2431,6 +2432,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.num_ports = 2,
+ 	.ports = tegra20_pcie_ports,
+ 	.msi_base_shift = 0,
++	.afi_pex2_ctrl = 0x128,
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
+ 	.pads_refclk_cfg0 = 0xfa5cfa5c,
+@@ -2548,6 +2550,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+ 	.num_ports = 3,
+ 	.ports = tegra186_pcie_ports,
+ 	.msi_base_shift = 8,
++	.afi_pex2_ctrl = 0x19c,
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+ 	.pads_refclk_cfg0 = 0x80b880b8,
 -- 
 2.17.1
