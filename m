@@ -1,45 +1,45 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 3/4] regulator: Add regulator driver for ATC260x PMICs
-Date: Mon, 17 Jun 2019 18:38:53 +0200
-Message-ID: <a38d26d1-213c-31ef-9cc7-1d4bdda4ceab@suse.de>
-References: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
- <20190617155011.15376-4-manivannan.sadhasivam@linaro.org>
- <20190617163015.GD5316@sirena.org.uk>
- <20190617163413.GA16152@Mani-XPS-13-9360>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH 1/8] tpm: block messages while suspended
+Date: Mon, 17 Jun 2019 19:38:36 +0300
+Message-ID: <20190617163810.GA9427@linux.intel.com>
+References: <20190613180931.65445-1-swboyd@chromium.org>
+ <20190613180931.65445-2-swboyd@chromium.org>
+ <20190614152700.GE11241@linux.intel.com>
+ <5d03e3ba.1c69fb81.9c2c8.aa89@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617163413.GA16152@Mani-XPS-13-9360>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <5d03e3ba.1c69fb81.9c2c8.aa89@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mark Brown <broonie@kernel.org>
-Cc: lee.jones@linaro.org, lgirdwood@gmail.com, robh+dt@kernel.org, linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, devicetree@vger.kernel.org, linus.walleij@linaro.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>, Guenter Roeck <groeck@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Jun 14, 2019 at 11:13:13AM -0700, Stephen Boyd wrote:
+> Quoting Jarkko Sakkinen (2019-06-14 08:27:00)
+> > On Thu, Jun 13, 2019 at 11:09:24AM -0700, Stephen Boyd wrote:
+> > > diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> > > index 1b5436b213a2..48df005228d0 100644
+> > > --- a/include/linux/tpm.h
+> > > +++ b/include/linux/tpm.h
+> > > @@ -132,6 +132,8 @@ struct tpm_chip {
+> > >       int dev_num;            /* /dev/tpm# */
+> > >       unsigned long is_open;  /* only one allowed */
+> > >  
+> > > +     unsigned long is_suspended;
+> > > +
+> > >       char hwrng_name[64];
+> > >       struct hwrng hwrng;
+> > 
+> > I think it would better idea to have a bitmask of some sort that
+> > would have bits for 'open' and 'suspended'.
+> > 
+> 
+> Sure. I can combine is_open and is_suspended into some sort of 'unsigned
+> long flags' member and then have #define TPM_IS_OPEN 0 and #define
+> TPM_IS_SUSPENDED 1 defines?
 
-Am 17.06.19 um 18:34 schrieb Manivannan Sadhasivam:
-> On Mon, Jun 17, 2019 at 05:30:15PM +0100, Mark Brown wrote:
->> On Mon, Jun 17, 2019 at 09:20:10PM +0530, Manivannan Sadhasivam wrote:
->>
->>> +++ b/drivers/regulator/atc260x-regulator.c
->>> @@ -0,0 +1,389 @@
->>> +// SPDX-License-Identifier: GPL-2.0+
->>> +/*
->>> + * Regulator driver for ATC260x PMICs
->>
->> Please make the entire comment a C++ one so this looks more intentional.
+Sounds sustainable.
 
-No, this is intentional and the official style requested by GregKH.
-
-He suggested I patch the SPDX documentation to make this clearer, but I
-did not find time for this yet (and am not the one making this rule).
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+/Jarkko
