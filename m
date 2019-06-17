@@ -1,54 +1,111 @@
-Return-Path: <SRS0=bzHF=UJ=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V4 5/8] arm64: tegra: Add xudc node for Tegra210
-Date: Mon, 10 Jun 2019 15:49:06 +0530
-Message-ID: <1560161949-26031-6-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
-References: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=7yb5=UQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:17135 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfFQRlA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Jun 2019 13:41:00 -0400
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V5 18/27] PCI: tegra: Program AFI_CACHE* registers only for Tegra20
+Date: Mon, 17 Jun 2019 23:09:43 +0530
+Message-ID: <20190617173952.29363-19-mmaddireddy@nvidia.com>
+In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Sender: devicetree-owner@vger.kernel.org
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Tegra210 has one XUSB device mode controller, which can be operated
-HS and SS modes. Add DT support for XUSB device mode controller.
+Cacheable upstream transactions are supported in Tegra20 and Tegra186 only.
+AFI_CACHE* registers are available in Tegra20 to support cacheable upstream
+transactions. In Tegra186, AFI_AXCACHE register is defined instead of
+AFI_CACHE* to be in line with its MSS design. Therefore, program AFI_CACHE*
+registers only for Tegra20.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Reviewed-by: JC Kuo <jckuo@nvidia.com>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+V5: No change
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index a550c0a..9d1bea4 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -1184,6 +1184,25 @@
- 		status = "disabled";
- 	};
+V4: No change
+
+V3: Initialized has_cache_bars variable for each soc data structure.
+
+V2: Used soc variable for comparision instead of compatible string.
+
+ drivers/pci/controller/pci-tegra.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 3d9028cecc18..a746d963ca36 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -323,6 +323,7 @@ struct tegra_pcie_soc {
+ 	bool program_deskew_time;
+ 	bool raw_violation_fixup;
+ 	bool update_fc_timer;
++	bool has_cache_bars;
+ 	struct {
+ 		struct {
+ 			u32 rp_ectl_2_r1;
+@@ -932,11 +933,13 @@ static void tegra_pcie_setup_translations(struct tegra_pcie *pcie)
+ 	afi_writel(pcie, 0, AFI_AXI_BAR5_SZ);
+ 	afi_writel(pcie, 0, AFI_FPCI_BAR5);
  
-+	xudc@700d0000 {
-+		compatible = "nvidia,tegra210-xudc";
-+		reg = <0x0 0x700d0000 0x0 0x8000>,
-+		      <0x0 0x700d8000 0x0 0x1000>,
-+		      <0x0 0x700d9000 0x0 0x1000>;
-+		reg-names = "base", "fpci", "ipfs";
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_SS>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_HS_SRC>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_FS_SRC>;
-+		clock-names = "dev", "ss", "ss_src", "hs_src", "fs_src";
-+		power-domains = <&pd_xusbdev>, <&pd_xusbss>;
-+		power-domain-names = "dev", "ss";
-+		nvidia,xusb-padctl = <&padctl>;
-+		status = "disabled";
-+	};
-+
- 	mipi: mipi@700e3000 {
- 		compatible = "nvidia,tegra210-mipi";
- 		reg = <0x0 0x700e3000 0x0 0x100>;
+-	/* map all upstream transactions as uncached */
+-	afi_writel(pcie, 0, AFI_CACHE_BAR0_ST);
+-	afi_writel(pcie, 0, AFI_CACHE_BAR0_SZ);
+-	afi_writel(pcie, 0, AFI_CACHE_BAR1_ST);
+-	afi_writel(pcie, 0, AFI_CACHE_BAR1_SZ);
++	if (pcie->soc->has_cache_bars) {
++		/* map all upstream transactions as uncached */
++		afi_writel(pcie, 0, AFI_CACHE_BAR0_ST);
++		afi_writel(pcie, 0, AFI_CACHE_BAR0_SZ);
++		afi_writel(pcie, 0, AFI_CACHE_BAR1_ST);
++		afi_writel(pcie, 0, AFI_CACHE_BAR1_SZ);
++	}
+ 
+ 	/* MSI translations are setup only when needed */
+ 	afi_writel(pcie, 0, AFI_MSI_FPCI_BAR_ST);
+@@ -2441,6 +2444,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
+ 	.update_fc_timer = false,
++	.has_cache_bars = true,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2469,6 +2473,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
+ 	.update_fc_timer = false,
++	.has_cache_bars = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2492,6 +2497,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = true,
+ 	.update_fc_timer = false,
++	.has_cache_bars = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2515,6 +2521,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+ 	.program_deskew_time = true,
+ 	.raw_violation_fixup = false,
+ 	.update_fc_timer = true,
++	.has_cache_bars = false,
+ 	.ectl = {
+ 		.regs = {
+ 			.rp_ectl_2_r1 = 0x0000000f,
+@@ -2555,6 +2562,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
+ 	.update_fc_timer = false,
++	.has_cache_bars = false,
+ 	.ectl.enable = false,
+ };
+ 
 -- 
-2.7.4
+2.17.1
