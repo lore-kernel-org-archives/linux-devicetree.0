@@ -1,39 +1,45 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH next v2] of/fdt: Fix defined but not used compiler warning
-Date: Mon, 17 Jun 2019 08:10:08 -0700
-Message-ID: <5d07ad51.1c69fb81.25c8.f3a0@mx.google.com>
-References: <20190612010011.90185-1-wangkefeng.wang@huawei.com> <20190615030343.96524-1-wangkefeng.wang@huawei.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 0/7] PM8005 and PMS405 regulator support
+Date: Mon, 17 Jun 2019 16:12:34 +0100
+Message-ID: <20190617151234.GV5316@sirena.org.uk>
+References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
+ <20190617145853.GT5316@sirena.org.uk>
+ <CAOCk7NrSBjbyJ3YJoF22i9ysxVTw38SvsaSi9JwVrj7W8er24A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="m5R8f+g8StfRwQ/I"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190615030343.96524-1-wangkefeng.wang@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <CAOCk7NrSBjbyJ3YJoF22i9ysxVTw38SvsaSi9JwVrj7W8er24A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, lgirdwood@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Kefeng Wang (2019-06-14 20:03:43)
-> When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler
-> warning,
->=20
-> drivers/of/fdt.c:129:19: warning: =E2=80=98of_fdt_match=E2=80=99 defined =
-but not used [-Wunused-function]
->  static int __init of_fdt_match(const void *blob, unsigned long node,
->=20
-> Since the only caller of of_fdt_match() is of_flat_dt_match(),
-> let's move the body of of_fdt_match() into of_flat_dt_match()
-> and eliminate of_fdt_match().
->=20
-> Meanwhile, move of_fdt_is_compatible() under CONFIG_OF_EARLY_FLATTREE,
-> as all callers are over there.
->=20
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+--m5R8f+g8StfRwQ/I
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Arnd sent something similar now too.
+On Mon, Jun 17, 2019 at 09:04:23AM -0600, Jeffrey Hugo wrote:
+
+> Are you ok to proceed in the review, or do you want a repost?
+
+You should already have some review comments.
+
+--m5R8f+g8StfRwQ/I
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HreEACgkQJNaLcl1U
+h9CHTwgAgY/kBE0OcbbnXxZ4z6u8NtNVTaMA2j9N2m8jgf5gQhWnF0k9oQ43mj3E
+Tm//b3mQr4h8hGwft0OQFGXFSfAtCzVyxgTn7FevnxhUZ73b38ZXm5ME6vElJnod
+LdZlycPDtZO8HViyuWC01+2NFg93TPBWdoxblbohqMlkozXhmEoHkh9tO8ZA7Rfo
+wEeHDJ0uNphiKu3e5gIiV9vyva4aoNTKSsJYXZ8FfUglIzzG3mXtuQF6VROA6BHT
+tLNIgxJD+r6jnqhZjyKjuD35zk2TfqtyQzcuKAq+wfle74xypBCIvOyTsBFF6Pw1
+offiQ5cHCTOdT/bjFetjABUmqwAmpg==
+=Rw6d
+-----END PGP SIGNATURE-----
+
+--m5R8f+g8StfRwQ/I--
