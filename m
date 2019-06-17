@@ -1,192 +1,44 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v7 21/21] iommu/mediatek: Switch to SPDX license
- identifier
-Date: Mon, 17 Jun 2019 18:33:45 +0200
-Message-ID: <9bf9e47f-b709-b2ce-b795-ff5e345a67d5@gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
- <1560169080-27134-22-git-send-email-yong.wu@mediatek.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 3/4] regulator: Add regulator driver for ATC260x PMICs
+Date: Mon, 17 Jun 2019 22:04:13 +0530
+Message-ID: <20190617163413.GA16152@Mani-XPS-13-9360>
+References: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
+ <20190617155011.15376-4-manivannan.sadhasivam@linaro.org>
+ <20190617163015.GD5316@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560169080-27134-22-git-send-email-yong.wu@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190617163015.GD5316@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: lee.jones@linaro.org, lgirdwood@gmail.com, robh+dt@kernel.org, afaerber@suse.de, linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, devicetree@vger.kernel.org, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
-
-On 10/06/2019 14:18, Yong Wu wrote:
-> Switch to SPDX license identifier for MediaTek iommu/smi and their
-> header files.
+On Mon, Jun 17, 2019 at 05:30:15PM +0100, Mark Brown wrote:
+> On Mon, Jun 17, 2019 at 09:20:10PM +0530, Manivannan Sadhasivam wrote:
 > 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
->  drivers/iommu/mtk_iommu.c                     | 10 +---------
->  drivers/iommu/mtk_iommu.h                     | 10 +---------
->  drivers/iommu/mtk_iommu_v1.c                  | 10 +---------
->  drivers/memory/mtk-smi.c                      | 10 +---------
->  include/dt-bindings/memory/mt2701-larb-port.h | 10 +---------
->  include/dt-bindings/memory/mt8173-larb-port.h | 10 +---------
->  include/soc/mediatek/smi.h                    | 10 +---------
->  7 files changed, 7 insertions(+), 63 deletions(-)
+> > +++ b/drivers/regulator/atc260x-regulator.c
+> > @@ -0,0 +1,389 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Regulator driver for ATC260x PMICs
 > 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 34f2e40..6fe3369 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -1,15 +1,7 @@
-> +// SPDX-License-Identifier: GPL-2.0
->  /*
->   * Copyright (c) 2015-2016 MediaTek Inc.
->   * Author: Yong Wu <yong.wu@mediatek.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
-> - *
-> - * This program is distributed in the hope that it will be useful,
-> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - * GNU General Public License for more details.
->   */
->  #include <linux/memblock.h>
->  #include <linux/bug.h>
-> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> index e8114b2..b24cfd3 100644
-> --- a/drivers/iommu/mtk_iommu.h
-> +++ b/drivers/iommu/mtk_iommu.h
-> @@ -1,15 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2015-2016 MediaTek Inc.
->   * Author: Honghui Zhang <honghui.zhang@mediatek.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
-> - *
-> - * This program is distributed in the hope that it will be useful,
-> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - * GNU General Public License for more details.
->   */
->  
->  #ifndef _MTK_IOMMU_H_
-> diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
-> index 73308ad..0b0908c 100644
-> --- a/drivers/iommu/mtk_iommu_v1.c
-> +++ b/drivers/iommu/mtk_iommu_v1.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0
->  /*
->   * IOMMU API for MTK architected m4u v1 implementations
->   *
-> @@ -5,15 +6,6 @@
->   * Author: Honghui Zhang <honghui.zhang@mediatek.com>
->   *
->   * Based on driver/iommu/mtk_iommu.c
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
-> - *
-> - * This program is distributed in the hope that it will be useful,
-> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - * GNU General Public License for more details.
->   */
->  #include <linux/memblock.h>
->  #include <linux/bug.h>
-> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> index 10e6493..9688341 100644
-> --- a/drivers/memory/mtk-smi.c
-> +++ b/drivers/memory/mtk-smi.c
-> @@ -1,15 +1,7 @@
-> +// SPDX-License-Identifier: GPL-2.0
->  /*
->   * Copyright (c) 2015-2016 MediaTek Inc.
->   * Author: Yong Wu <yong.wu@mediatek.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
-> - *
-> - * This program is distributed in the hope that it will be useful,
-> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - * GNU General Public License for more details.
->   */
->  #include <linux/clk.h>
->  #include <linux/component.h>
-> diff --git a/include/dt-bindings/memory/mt2701-larb-port.h b/include/dt-bindings/memory/mt2701-larb-port.h
-> index 6764d74..c511f0f 100644
-> --- a/include/dt-bindings/memory/mt2701-larb-port.h
-> +++ b/include/dt-bindings/memory/mt2701-larb-port.h
-> @@ -1,15 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2015 MediaTek Inc.
->   * Author: Honghui Zhang <honghui.zhang@mediatek.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
-> - *
-> - * This program is distributed in the hope that it will be useful,
-> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - * GNU General Public License for more details.
->   */
->  
->  #ifndef _MT2701_LARB_PORT_H_
-> diff --git a/include/dt-bindings/memory/mt8173-larb-port.h b/include/dt-bindings/memory/mt8173-larb-port.h
-> index 111b4b0..a62bfeb 100644
-> --- a/include/dt-bindings/memory/mt8173-larb-port.h
-> +++ b/include/dt-bindings/memory/mt8173-larb-port.h
-> @@ -1,15 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2015-2016 MediaTek Inc.
->   * Author: Yong Wu <yong.wu@mediatek.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
-> - *
-> - * This program is distributed in the hope that it will be useful,
-> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - * GNU General Public License for more details.
->   */
->  #ifndef __DTS_IOMMU_PORT_MT8173_H
->  #define __DTS_IOMMU_PORT_MT8173_H
-> diff --git a/include/soc/mediatek/smi.h b/include/soc/mediatek/smi.h
-> index a65324d..7a8d870 100644
-> --- a/include/soc/mediatek/smi.h
-> +++ b/include/soc/mediatek/smi.h
-> @@ -1,15 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2015-2016 MediaTek Inc.
->   * Author: Yong Wu <yong.wu@mediatek.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
-> - *
-> - * This program is distributed in the hope that it will be useful,
-> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - * GNU General Public License for more details.
->   */
->  #ifndef MTK_IOMMU_SMI_H
->  #define MTK_IOMMU_SMI_H
+> Please make the entire comment a C++ one so this looks more intentional.
 > 
+
+Okay.
+
+> > + * Copyright (C) 2019 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> You definitely didn't assign copyright to your employer?
+
+Yeah, that was intentional. This work is not part of Linaro working hours and
+falls into my spare time works where I'm trying to complete the upstream support
+for Actions Semi Owl series SoCs and target boards which I'm co-maintaining
+(sort of)...
+
+Thanks,
+Mani
