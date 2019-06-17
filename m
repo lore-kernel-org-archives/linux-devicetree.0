@@ -1,34 +1,33 @@
-Return-Path: <SRS0=RbSA=UR=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <156076216767.4736.16337667537984218274.sendpatchset@octo> <156076219472.4736.14727682068388338615.sendpatchset@octo>
-In-Reply-To: <156076219472.4736.14727682068388338615.sendpatchset@octo>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 18 Jun 2019 14:58:58 +0200
-Message-ID: <CAMuHMdU08k3u=9sTqG-hADabdastZdAw4atZxV3d_LcXMYrUxg@mail.gmail.com>
-Subject: Re: [PATCH 3/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1
- to r8a7792
-Content-Type: text/plain; charset="UTF-8"
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Return-Path: <SRS0=zr72=UQ=gmail.com=magnus.damm@kernel.org>
+From: Magnus Damm <magnus.damm@gmail.com>
+Date: Mon, 17 Jun 2019 18:03:14 +0900
+Message-Id: <156076219472.4736.14727682068388338615.sendpatchset@octo>
+In-Reply-To: <156076216767.4736.16337667537984218274.sendpatchset@octo>
+References: <156076216767.4736.16337667537984218274.sendpatchset@octo>
+Subject: [PATCH 3/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a7792
+To: devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, robh+dt@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jun 17, 2019 at 11:02 AM Magnus Damm <magnus.damm@gmail.com> wrote:
-> From: Magnus Damm <damm+renesas@opensource.se>
->
-> This patch adds DT binding documentation for the CMT devices on
-> the R-Car Gen2 V2H (r8a7792) SoC.
->
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+From: Magnus Damm <damm+renesas@opensource.se>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This patch adds DT binding documentation for the CMT devices on
+the R-Car Gen2 V2H (r8a7792) SoC.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+---
 
-                        Geert
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |    2 ++
+ 1 file changed, 2 insertions(+)
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--- 0004/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-06-17 13:35:10.526874153 +0900
+@@ -35,6 +35,8 @@ Required Properties:
+     - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
+     - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
+     - "renesas,r8a7791-cmt1" for the 48-bit CMT1 device included in r8a7791.
++    - "renesas,r8a7792-cmt0" for the 32-bit CMT0 device included in r8a7792.
++    - "renesas,r8a7792-cmt1" for the 48-bit CMT1 device included in r8a7792.
+     - "renesas,r8a7793-cmt0" for the 32-bit CMT0 device included in r8a7793.
+     - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
+     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
