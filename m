@@ -1,92 +1,74 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv5 19/20] PCI: mobiveil: Add 8-bit and 16-bit register
- accessors
-Date: Mon, 17 Jun 2019 10:16:28 +0000
-Message-ID: <AM6PR04MB6742900B101D8DA6359FA7D384EB0@AM6PR04MB6742.eurprd04.prod.outlook.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-20-Zhiqiang.Hou@nxp.com>
- <20190612135400.GB15747@redmoon>
- <AM0PR04MB673802CE0891BC898B61EBA384E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
- <20190617092901.GB18020@e121166-lin.cambridge.arm.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 10/21] iommu/mediatek: Move reset_axi into plat_data
+Date: Mon, 17 Jun 2019 12:19:37 +0200
+Message-ID: <314567ce-1569-8d78-08f3-3b8b7692e599@gmail.com>
+References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+ <1560169080-27134-11-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617092901.GB18020@e121166-lin.cambridge.arm.com>
+In-Reply-To: <1560169080-27134-11-git-send-email-yong.wu@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMb3Jl
-bnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT4NCj4gU2VudDogMjAxOeW5
-tDbmnIgxN+aXpSAxNzoyOQ0KPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0K
-PiBDYzogbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsNCj4gYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwu
-b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5p
-bjsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpDQo+IDxsZW95YW5nLmxpQG54cC5jb20+OyBj
-YXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gTWluZ2thaSBI
-dSA8bWluZ2thaS5odUBueHAuY29tPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+
-Ow0KPiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
-QVRDSHY1IDE5LzIwXSBQQ0k6IG1vYml2ZWlsOiBBZGQgOC1iaXQgYW5kIDE2LWJpdCByZWdpc3Rl
-cg0KPiBhY2Nlc3NvcnMNCj4gDQo+IE9uIFNhdCwgSnVuIDE1LCAyMDE5IGF0IDAxOjEzOjQ4QU0g
-KzAwMDAsIFoucS4gSG91IHdyb3RlOg0KPiA+IEhpIExvcmVuem8sDQo+ID4NCj4gPiA+IC0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBMb3JlbnpvIFBpZXJhbGlzaSBbbWFp
-bHRvOmxvcmVuem8ucGllcmFsaXNpQGFybS5jb21dDQo+ID4gPiBTZW50OiAyMDE55bm0NuaciDEy
-5pelIDIxOjU0DQo+ID4gPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiA+
-ID4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZzsNCj4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtk
-dEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gPiA+IGwuc3VicmFobWFueWFA
-bW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaQ0KPiA+ID4gPGxlb3lh
-bmcubGlAbnhwLmNvbT47IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0KPiB3aWxsLmRlYWNvbkBh
-cm0uY29tOw0KPiA+ID4gTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgTS5oLiBMaWFu
-DQo+IDxtaW5naHVhbi5saWFuQG54cC5jb20+Ow0KPiA+ID4gWGlhb3dlaSBCYW8gPHhpYW93ZWku
-YmFvQG54cC5jb20+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIdjUgMTkvMjBdIFBDSTogbW9i
-aXZlaWw6IEFkZCA4LWJpdCBhbmQgMTYtYml0DQo+ID4gPiByZWdpc3RlciBhY2Nlc3NvcnMNCj4g
-PiA+DQo+ID4gPiBPbiBGcmksIEFwciAxMiwgMjAxOSBhdCAwODozNzowNUFNICswMDAwLCBaLnEu
-IEhvdSB3cm90ZToNCj4gPiA+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhw
-LmNvbT4NCj4gPiA+ID4NCj4gPiA+ID4gVGhlcmUgYXJlIHNvbWUgOC1iaXQgYW5kIDE2LWJpdCBy
-ZWdpc3RlcnMgaW4gUENJZSBjb25maWd1cmF0aW9uDQo+ID4gPiA+IHNwYWNlLCBzbyBhZGQgYWNj
-ZXNzb3JzIGZvciB0aGVtLg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhp
-cWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+ID4gPiBSZXZpZXdlZC1ieTogTWluZ2h1
-YW4gTGlhbiA8TWluZ2h1YW4uTGlhbkBueHAuY29tPg0KPiA+ID4gPiBSZXZpZXdlZC1ieTogU3Vi
-cmFobWFueWEgTGluZ2FwcGEgPGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW4+DQo+ID4gPiA+
-IC0tLQ0KPiA+ID4gPiBWNToNCj4gPiA+ID4gIC0gQ29ycmVjdGVkIGFuZCByZXRvdWNoZWQgdGhl
-IHN1YmplY3QgYW5kIGNoYW5nZWxvZy4NCj4gPiA+ID4gIC0gTm8gZnVuY3Rpb25hbGl0eSBjaGFu
-Z2UuDQo+ID4gPiA+DQo+ID4gPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZl
-aWwuYyB8IDIwICsrKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwg
-MjAgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPg0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiA+ID4gYi9kcml2ZXJzL3BjaS9jb250
-cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+ID4gPiBpbmRleCA0MTFlOTc3OWRhMTIuLjQ1NmFk
-ZmVlMzkzYyAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ll
-LW1vYml2ZWlsLmMNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1v
-Yml2ZWlsLmMNCj4gPiA+ID4gQEAgLTI2OCwxMSArMjY4LDMxIEBAIHN0YXRpYyB1MzIgY3NyX3Jl
-YWRsKHN0cnVjdCBtb2JpdmVpbF9wY2llDQo+ID4gPiA+ICpwY2llLA0KPiA+ID4gdTMyIG9mZikN
-Cj4gPiA+ID4gIAlyZXR1cm4gY3NyX3JlYWQocGNpZSwgb2ZmLCAweDQpOyAgfQ0KPiA+ID4gPg0K
-PiA+ID4gPiArc3RhdGljIHUzMiBjc3JfcmVhZHcoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUs
-IHUzMiBvZmYpIHsNCj4gPiA+ID4gKwlyZXR1cm4gY3NyX3JlYWQocGNpZSwgb2ZmLCAweDIpOyB9
-DQo+ID4gPiA+ICsNCj4gPiA+ID4gK3N0YXRpYyB1MzIgY3NyX3JlYWRiKHN0cnVjdCBtb2JpdmVp
-bF9wY2llICpwY2llLCB1MzIgb2ZmKSB7DQo+ID4gPiA+ICsJcmV0dXJuIGNzcl9yZWFkKHBjaWUs
-IG9mZiwgMHgxKTsgfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICBzdGF0aWMgdm9pZCBjc3Jfd3JpdGVs
-KHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llLCB1MzIgdmFsLCB1MzINCj4gPiA+ID4gb2ZmKSB7
-DQo+ID4gPiA+ICAJY3NyX3dyaXRlKHBjaWUsIHZhbCwgb2ZmLCAweDQpOw0KPiA+ID4gPiAgfQ0K
-PiA+ID4gPg0KPiA+ID4gPiArc3RhdGljIHZvaWQgY3NyX3dyaXRldyhzdHJ1Y3QgbW9iaXZlaWxf
-cGNpZSAqcGNpZSwgdTMyIHZhbCwgdTMyDQo+ID4gPiA+ICtvZmYpIHsNCj4gPiA+ID4gKwljc3Jf
-d3JpdGUocGNpZSwgdmFsLCBvZmYsIDB4Mik7DQo+ID4gPiA+ICt9DQo+ID4gPiA+ICsNCj4gPiA+
-ID4gK3N0YXRpYyB2b2lkIGNzcl93cml0ZWIoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsIHUz
-MiB2YWwsIHUzMg0KPiA+ID4gPiArb2ZmKSB7DQo+ID4gPiA+ICsJY3NyX3dyaXRlKHBjaWUsIHZh
-bCwgb2ZmLCAweDEpOw0KPiA+ID4gPiArfQ0KPiA+ID4gPiArDQo+ID4gPg0KPiA+ID4gVGhleSBh
-cmUgbm90IHVzZWQgc28geW91IHNob3VsZCBkcm9wIHRoaXMgcGF0Y2guDQo+ID4NCj4gPiBOWFAg
-TGF5ZXJzY2FwZSBQQ0llIEdlbjQgY29udHJvbGxlciBkcml2ZXIgd2lsbCB1c2UgdGhlbSwgc28g
-ZG9uJ3QNCj4gPiBkcm9wIGl0Lg0KPiANCj4gWW91IGFkZCBmdW5jdGlvbnMgd2hlbiB0aGV5IGFy
-ZSBuZWVkZWQsIHNvIGRyb3AgdGhpcyBwYXRjaCBhbmQgc3F1YXNoIGl0IHRvDQo+IHRoZSBwYXRj
-aCB0aGF0IHVzZSB0aGVzZSBmdW5jdGlvbnMuDQo+DQoNClllcywgYWdyZWUsIHBsZWFzZSBkcm9w
-IGl0IGZyb20gdGhpcyBwYXRjaCBzZXQuDQogDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IExvcmVu
-em8NCj4gDQo+ID4gVGhhbmtzLA0KPiA+IFpoaXFpYW5nDQo+ID4NCj4gPiA+DQo+ID4gPiBMb3Jl
-bnpvDQo+ID4gPg0KPiA+ID4gPiAgc3RhdGljIGJvb2wgbW9iaXZlaWxfcGNpZV9saW5rX3VwKHN0
-cnVjdCBtb2JpdmVpbF9wY2llICpwY2llKSAgew0KPiA+ID4gPiAgCXJldHVybiAoY3NyX3JlYWRs
-KHBjaWUsIExUU1NNX1NUQVRVUykgJg0KPiA+ID4gPiAtLQ0KPiA+ID4gPiAyLjE3LjENCj4gPiA+
-ID4NCg==
+
+
+On 10/06/2019 14:17, Yong Wu wrote:
+> In mt8173 and mt8183, 0x48 is REG_MMU_STANDARD_AXI_MODE while it is
+> REG_MMU_CTRL in the other SoCs, and the bits meaning is completely
+> different with the REG_MMU_STANDARD_AXI_MODE.
+> 
+> This patch moves this property to plat_data, it's also a preparing
+> patch for mt8183.
+> 
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>  drivers/iommu/mtk_iommu.c | 4 ++--
+>  drivers/iommu/mtk_iommu.h | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index d38dfa2..8ac7034 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -557,8 +557,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>  	}
+>  	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
+>  
+> -	/* It's MISC control register whose default value is ok except mt8173.*/
+> -	if (data->plat_data->m4u_plat == M4U_MT8173)
+> +	if (data->plat_data->reset_axi)
+>  		writel_relaxed(0, data->base + REG_MMU_STANDARD_AXI_MODE);
+>  
+>  	if (devm_request_irq(data->dev, data->irq, mtk_iommu_isr, 0,
+> @@ -752,6 +751,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+>  	.m4u_plat     = M4U_MT8173,
+>  	.has_4gb_mode = true,
+>  	.has_bclk     = true,
+> +	.reset_axi    = true,
+>  	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
+>  };
+>  
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index 61fd5d6..55d73c1 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -46,7 +46,7 @@ struct mtk_iommu_plat_data {
+>  
+>  	/* HW will use the EMI clock if there isn't the "bclk". */
+>  	bool                has_bclk;
+> -
+> +	bool                reset_axi;
+>  	unsigned char       larbid_remap[MTK_LARB_NR_MAX];
+>  };
+>  
+> 
