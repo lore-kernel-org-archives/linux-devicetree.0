@@ -1,148 +1,58 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v5 4/5] dt-bindings: mtd: Add bindings for TI's AM654
- HyperBus memory controller
-Date: Mon, 17 Jun 2019 10:00:45 +0530
-Message-ID: <7c7828b9-bcfd-6156-3ddb-cbdde5956675@ti.com>
-References: <20190609103227.24875-1-vigneshr@ti.com>
- <20190609103227.24875-5-vigneshr@ti.com>
- <a808ffca-02a8-14b0-3422-c0905ab212a6@cogentembedded.com>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
+Date: Mon, 17 Jun 2019 10:13:05 +0530
+Message-ID: <CAJ2_jOH2X6+CcNCruxX0aeCzPnjcGuv-X1Q4eESsY6PyW1LViA@mail.gmail.com>
+References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <a808ffca-02a8-14b0-3422-c0905ab212a6@cogentembedded.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, linux-kernel@vger.kernel.org, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Paul Walmsley <paul.walmsley@sifive.com>, =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>, Sachin Ghadi <sachin.ghadi@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Jun 17, 2019 at 9:49 AM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> On FU540, the management IP block is tightly coupled with the Cadence
+> MACB IP block. It manages many of the boundary signals from the MACB IP
+> This patchset controls the tx_clk input signal to the MACB IP. It
+> switches between the local TX clock (125MHz) and PHY TX clocks. This
+> is necessary to toggle between 1Gb and 100/10Mb speeds.
+>
+> Future patches may add support for monitoring or controlling other IP
+> boundary signals.
+>
+> This patchset is mostly based on work done by
+> Wesley Terpstra <wesley@sifive.com>
+>
+> This patchset is based on Linux v5.2-rc1 and tested on HiFive Unleashed
+> board with additional board related patches needed for testing can be
+> found at dev/yashs/ethernet branch of:
 
-On 10/06/19 9:55 PM, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 06/09/2019 01:32 PM, Vignesh Raghavendra wrote:
-> 
->> Add binding documentation for TI's HyperBus memory controller present on
->> AM654 SoC.
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->> ---
->> v5:
->> Update binding example to show MMIO mux
->> Fix reg property for flash slave.
->>
->>  .../devicetree/bindings/mtd/ti,am654-hbmc.txt | 51 +++++++++++++++++++
->>  MAINTAINERS                                   |  1 +
->>  2 files changed, 52 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
->> new file mode 100644
->> index 000000000000..c2a2c2b42a92
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
->> @@ -0,0 +1,51 @@
->> +Bindings for HyperBus Memory Controller (HBMC) on TI's K3 family of SoCs
->> +
->> +Required properties:
->> +- compatible : "ti,am654-hbmc" for AM654 SoC
->> +- reg : Two entries:
->> +	First entry pointed to the register space of HBMC controller
->> +	Second entry pointing to the memory map region dedicated for
->> +	MMIO access to attached flash devices
->> +- ranges : Address translation from offset within CS to allocated MMIO
->> +	   space in SoC
->> +
->> +Optional properties:
->> +- mux-controls : phandle to the multiplexer that controls selection of
->> +		 HBMC vs OSPI inside Flash SubSystem. Default is OSPI,
->> +		 if property is absent.
->> +		 See Documentation/devicetree/bindings/mux/reg-mux.txt
->> +		 for mmio-mux binding details
->> +
->> +Example:
->> +
->> +	fss: fss@47000000 {
-> 
->    What's FSS?
+Correction in branch name: dev/yashs/ethernet_v2
 
-Flash SubSystem (FSS). Will highlight that in mux control definition above
-
->    Regardless of the answer, the node names should be generic, like "memory-controller@".
-> 
->> +		compatible = "syscon", "simple-mfd";
-> 
->    If it's "sycon", the nme should probably be "system-controller".
-
-FSS is like a subchip that has all Flash controllers like Octal SPI
-controllers and HyperBus controller within it. Some of their controls
-are in the below address range. So I think its more closer to
-"system-controller"
-
-> 
->> +		reg = <0x0 0x47000000 0x0 0x100>;
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
->> +
->> +		hbmc_mux: hbmc-mux {
-> 
->    So, just "multiplexor"?
-
-Ok
-
-> 
->> +			compatible = "mmio-mux";
->> +			#mux-control-cells = <1>;
->> +			mux-reg-masks = <0x4 0x2>; /* 0: reg 0x4, bit 1 */
->> +		};
->> +
->> +		hbmc: hbmc@47034000 {
-> 
->    Should be named "memory-controller@47034000", according to the DT spec.
-
-IMO, since HyperBus is a bus protocol and has a specification, I think
-its should have a separate generic name like SPI etc.
-
-I will change this to "hyperbus@47034000" to common name of spec.
-
-> 
->> +			compatible = "ti,am654-hbmc";
->> +			reg = <0x0 0x47034000 0x0 0x100>,
->> +				<0x5 0x00000000 0x1 0x0000000>;
->> +			power-domains = <&k3_pds 55>;
->> +			#address-cells = <2>;
->> +			#size-cells = <1>;
->> +			ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
->> +				 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
->> +			mux-controls = <&hbmc_mux 0>;
->> +
->> +			/* Slave flash node */
->> +			flash@0,0 {
->> +				compatible = "cypress,hyperflash", "cfi-flash";
->> +				reg = <0x0 0x0 0x4000000>;
->> +			};
->> +		};
->> +	};
-> [...]
-> 
-> MBR, Sergei
-> 
-
--- 
-Regards
-Vignesh
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> https://github.com/yashshah7/riscv-linux.git
+>
+> Change History:
+> V2:
+> - Change compatible string from "cdns,fu540-macb" to "sifive,fu540-macb"
+> - Add "MACB_SIFIVE_FU540" in Kconfig to support SiFive FU540 in macb
+>   driver. This is needed because on FU540, the macb driver depends on
+>   SiFive GPIO driver.
+> - Avoid writing the result of a comparison to a register.
+> - Fix the issue of probe fail on reloading the module reported by:
+>   Andreas Schwab <schwab@suse.de>
+>
+> Yash Shah (2):
+>   macb: bindings doc: add sifive fu540-c000 binding
+>   macb: Add support for SiFive FU540-C000
+>
+>  Documentation/devicetree/bindings/net/macb.txt |   3 +
+>  drivers/net/ethernet/cadence/Kconfig           |   6 ++
+>  drivers/net/ethernet/cadence/macb_main.c       | 129 +++++++++++++++++++++++++
+>  3 files changed, 138 insertions(+)
+>
+> --
+> 1.9.1
+>
