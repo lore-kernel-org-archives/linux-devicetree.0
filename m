@@ -1,69 +1,88 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v7 18/21] iommu/mediatek: Fix VLD_PA_RNG register backup
- when suspend
-Date: Mon, 17 Jun 2019 18:30:27 +0200
-Message-ID: <d8fd11c7-899d-27a3-7467-de351307c6a1@gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
- <1560169080-27134-19-git-send-email-yong.wu@mediatek.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH] Revert "ARM: dts: rockchip: set PWM delay backlight
+ settings for Minnie"
+Date: Mon, 17 Jun 2019 09:30:30 -0700
+Message-ID: <20190617163030.GS137143@google.com>
+References: <20190614224533.169881-1-mka@chromium.org>
+ <20190616154143.GA28583@atrey.karlin.mff.cuni.cz>
+ <c88619de-45f4-9ba7-cfdc-0cedb764f6f4@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560169080-27134-19-git-send-email-yong.wu@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <c88619de-45f4-9ba7-cfdc-0cedb764f6f4@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Enric,
 
-
-On 10/06/2019 14:17, Yong Wu wrote:
-> The register VLD_PA_RNG(0x118) was forgot to backup while adding 4GB
-> mode support for mt2712. this patch add it.
+On Mon, Jun 17, 2019 at 12:08:25PM +0200, Enric Balletbo i Serra wrote:
+> Hi,
 > 
-> Fixes: 30e2fccf9512 ("iommu/mediatek: Enlarge the validate PA range
-> for 4GB mode")
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
->  drivers/iommu/mtk_iommu.c | 2 ++
->  drivers/iommu/mtk_iommu.h | 1 +
->  2 files changed, 3 insertions(+)
+> On 16/6/19 17:41, Pavel Machek wrote:
+> > Hi!
+> > 
+> >> This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
+> >>
+> >> According to the commit message the AUO B101EAN01 panel on minnie
+> >> requires a PWM delay of 200 ms, however this is not what the
+> >> datasheet says. The datasheet mentions a *max* delay of 200 ms
+> >> for T2 ("delay from LCDVDD to black video generation") and T3
+> >> ("delay from LCDVDD to HPD high"), which aren't related to the
+> >> PWM. The backlight power sequence does not specify min/max
+> >> constraints for T15 (time from PWM on to BL enable) or T16
+> >> (time from BL disable to PWM off).
+> >>
 > 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 6053b8b..86158d8 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -719,6 +719,7 @@ static int __maybe_unused mtk_iommu_suspend(struct device *dev)
->  	reg->int_control0 = readl_relaxed(base + REG_MMU_INT_CONTROL0);
->  	reg->int_main_control = readl_relaxed(base + REG_MMU_INT_MAIN_CONTROL);
->  	reg->ivrp_paddr = readl_relaxed(base + REG_MMU_IVRP_PADDR);
-> +	reg->vld_pa_rng = readl_relaxed(base + REG_MMU_VLD_PA_RNG);
->  	clk_disable_unprepare(data->bclk);
->  	return 0;
->  }
-> @@ -743,6 +744,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
->  	writel_relaxed(reg->int_control0, base + REG_MMU_INT_CONTROL0);
->  	writel_relaxed(reg->int_main_control, base + REG_MMU_INT_MAIN_CONTROL);
->  	writel_relaxed(reg->ivrp_paddr, base + REG_MMU_IVRP_PADDR);
-> +	writel_relaxed(reg->vld_pa_rng, base + REG_MMU_VLD_PA_RNG);
->  	if (m4u_dom)
->  		writel(m4u_dom->cfg.arm_v7s_cfg.ttbr[0] & MMU_PT_ADDR_MASK,
->  		       base + REG_MMU_PT_BASE_ADDR);
-> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> index c0b5c65..753266b 100644
-> --- a/drivers/iommu/mtk_iommu.h
-> +++ b/drivers/iommu/mtk_iommu.h
-> @@ -32,6 +32,7 @@ struct mtk_iommu_suspend_reg {
->  	u32				int_control0;
->  	u32				int_main_control;
->  	u32				ivrp_paddr;
-> +	u32				vld_pa_rng;
->  };
->  
->  enum mtk_iommu_plat {
+> Hmm, clearly we are not looking at the same datasheet, because in the one I have
+> I don't see any reference to T15/T16 or LCDVDD. And, I assume I am probably
+> wrong because you might have better access to the specific panel specs for minnie.
 > 
+> I looked at my archive and the datasheet I have is similar to this [1]. In page
+> 21, Section 6.5 Power ON/OFF Sequence, there are two delays T3 and T4, it is
+> *min* time between the pwm signal and the bl_en and it is 200 ms. That's the
+> delay the patch was adding.
+> 
+> [1] http://www.yslcd.com.tw/docs/product/B101EAN01.1.pdf
+> 
+> >> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> >> ---
+> >> Enric, if you think I misinterpreted the datasheet please holler!
+> > 
+> > Was this tested? Was previous patch tested?
+> > 
+> 
+> IIRC, It was tested measuring the backlight power on timing (although I am not
+> sure if I tested this on minnie or another board with better access to the pins)
+> 
+> > Does patch being reverted actually break anything? If so, cc stable?
+> > 
+> > 								Pavel
+> > 								
+> > 
+> 
+> Probably will not break anything, I don't remember the reverted patch as a fix
+> of any specific issue. IIRC it was more a fear to be out of specs but I'll not
+> be surprised if the datasheet lies and this delay is not needed at all.
+
+Indeed, we are looking at different datasheets. It turns out that
+'B101EAN01' is an underspecification, minnie uses the 'B101EAN01.8'
+(eDP interface), your datasheet describes the 'B101EAN01.1' (LVDS
+interface).
+
+> Matthias, are you reverting this to solve any problem?
+
+With the patch there is a user perceptible delay between switching on
+the LCD and the backlight. Not necessarily a big problem, but better
+avoid it if the delay is not needed.
+
+> Could you share your datasheet?
+
+http://www.yslcd.com.tw/docs/product/B101EAN01.8.pdf (the server seems
+to be down currently).
+
+Thanks
+
+Matthias
