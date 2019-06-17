@@ -1,18 +1,18 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: qcom_spmi: enable linear range info" to the regulator tree
+Subject: Applied "regulator: qcom_spmi: Refactor get_mode/set_mode" to the regulator tree
 Date: Mon, 17 Jun 2019 16:24:45 +0100 (BST)
-Message-ID: <20190617152445.B71F1440049@finisterre.sirena.org.uk>
-References: <20190613212531.10452-1-jeffrey.l.hugo@gmail.com>
+Message-ID: <20190617152445.34116440046@finisterre.sirena.org.uk>
+References: <20190613212531.10452-2-jeffrey.l.hugo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190613212531.10452-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20190613212531.10452-2-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: agross@kernel.org, bjorn.andersson@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, lgirdwood@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, robh+dt@kernel.org
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: agross@kernel.org, bjorn.andersson@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: qcom_spmi: enable linear range info
+   regulator: qcom_spmi: Refactor get_mode/set_mode
 
 has been applied to the regulator tree at
 
@@ -37,42 +37,70 @@ to this mail.
 Thanks,
 Mark
 
->From 86f4ff7a0c0cd8e391ffa4dd0edb82ae0eedcc9e Mon Sep 17 00:00:00 2001
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Date: Thu, 13 Jun 2019 14:25:30 -0700
-Subject: [PATCH] regulator: qcom_spmi: enable linear range info
+>From ba576a6232dc06605f4edfaeea9b526ba7724f84 Mon Sep 17 00:00:00 2001
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date: Thu, 13 Jun 2019 14:25:31 -0700
+Subject: [PATCH] regulator: qcom_spmi: Refactor get_mode/set_mode
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+spmi_regulator_common_get_mode and spmi_regulator_common_set_mode use
+multi-level ifs which mirror a switch statement.  Refactor to use a switch
+statement to make the code flow more clear.
+
 Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/qcom_spmi-regulator.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/regulator/qcom_spmi-regulator.c | 26 +++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-index 53a61fb65642..42c429d50743 100644
+index 42c429d50743..1b3383a24c9d 100644
 --- a/drivers/regulator/qcom_spmi-regulator.c
 +++ b/drivers/regulator/qcom_spmi-regulator.c
-@@ -1744,6 +1744,7 @@ MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
- static int qcom_spmi_regulator_probe(struct platform_device *pdev)
- {
- 	const struct spmi_regulator_data *reg;
-+	const struct spmi_voltage_range *range;
- 	const struct of_device_id *match;
- 	struct regulator_config config = { };
- 	struct regulator_dev *rdev;
-@@ -1833,6 +1834,12 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
- 			}
- 		}
+@@ -911,13 +911,16 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
  
-+		if (vreg->set_points->count == 1) {
-+			/* since there is only one range */
-+			range = vreg->set_points->range;
-+			vreg->desc.uV_step = range->step_uV;
-+		}
-+
- 		config.dev = dev;
- 		config.driver_data = vreg;
- 		config.regmap = regmap;
+ 	spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
+ 
+-	if (reg & SPMI_COMMON_MODE_HPM_MASK)
+-		return REGULATOR_MODE_NORMAL;
++	reg &= SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
+ 
+-	if (reg & SPMI_COMMON_MODE_AUTO_MASK)
++	switch (reg) {
++	case SPMI_COMMON_MODE_HPM_MASK:
++		return REGULATOR_MODE_NORMAL;
++	case SPMI_COMMON_MODE_AUTO_MASK:
+ 		return REGULATOR_MODE_FAST;
+-
+-	return REGULATOR_MODE_IDLE;
++	default:
++		return REGULATOR_MODE_IDLE;
++	}
+ }
+ 
+ static int
+@@ -925,12 +928,19 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ {
+ 	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+ 	u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
+-	u8 val = 0;
++	u8 val;
+ 
+-	if (mode == REGULATOR_MODE_NORMAL)
++	switch (mode) {
++	case REGULATOR_MODE_NORMAL:
+ 		val = SPMI_COMMON_MODE_HPM_MASK;
+-	else if (mode == REGULATOR_MODE_FAST)
++		break;
++	case REGULATOR_MODE_FAST:
+ 		val = SPMI_COMMON_MODE_AUTO_MASK;
++		break;
++	default:
++		val = 0;
++		break;
++	}
+ 
+ 	return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
+ }
 -- 
 2.20.1
