@@ -1,63 +1,48 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/6] drm/msm/gpu: add ocmem init/cleanup
- functions
-Date: Sun, 16 Jun 2019 20:43:51 -0700
-Message-ID: <20190617034351.GA750@tuxbook-pro>
-References: <20190616132930.6942-1-masneyb@onstation.org>
- <20190616132930.6942-7-masneyb@onstation.org>
- <20190616180633.GS22737@tuxbook-pro>
- <20190617001851.GA19038@onstation.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190617001851.GA19038-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
+From: Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
+Date: Mon, 17 Jun 2019 09:49:25 +0530
+Message-ID: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: davem@davemloft.net, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com, ynezz@true.cz, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuIDE2IEp1biAxNzoxOCBQRFQgMjAxOSwgQnJpYW4gTWFzbmV5IHdyb3RlOgoKPiBIaSBC
-am9ybiwKPiAKPiBPbiBTdW4sIEp1biAxNiwgMjAxOSBhdCAxMTowNjozM0FNIC0wNzAwLCBCam9y
-biBBbmRlcnNzb24gd3JvdGU6Cj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNt
-L2FkcmVuby9hZHJlbm9fZ3B1LmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJlbm9f
-Z3B1LmMKPiA+ID4gaW5kZXggNmY3ZjQxMTRhZmNmLi5lMGE5NDA5YzhhMzIgMTAwNjQ0Cj4gPiA+
-IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19ncHUuYwo+ID4gPiArKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJlbm9fZ3B1LmMKPiA+ID4gQEAgLTI5LDYg
-KzI5LDEwIEBACj4gPiA+ICAjaW5jbHVkZSAibXNtX2dlbS5oIgo+ID4gPiAgI2luY2x1ZGUgIm1z
-bV9tbXUuaCIKPiA+ID4gIAo+ID4gPiArI2lmZGVmIENPTkZJR19RQ09NX09DTUVNCj4gPiA+ICsj
-ICBpbmNsdWRlIDxzb2MvcWNvbS9vY21lbS5oPgo+ID4gPiArI2VuZGlmCj4gPiAKPiA+IFRoaXMg
-ZmlsZSBleGlzdHMgKGFmdGVyIHRoZSBwcmV2aW91cyBwYXRjaCksIHNvIG5vIG5lZWQgdG8gbWFr
-ZSBpdHMKPiA+IGluY2x1c2lvbiBjb25kaXRpb25hbC4KPiA+IAo+ID4gPiArCj4gPiA+ICBzdGF0
-aWMgYm9vbCB6YXBfYXZhaWxhYmxlID0gdHJ1ZTsKPiA+ID4gIAo+ID4gPiAgc3RhdGljIGludCB6
-YXBfc2hhZGVyX2xvYWRfbWR0KHN0cnVjdCBtc21fZ3B1ICpncHUsIGNvbnN0IGNoYXIgKmZ3bmFt
-ZSwKPiA+ID4gQEAgLTg5Nyw2ICs5MDEsNDMgQEAgc3RhdGljIGludCBhZHJlbm9fZ2V0X3B3cmxl
-dmVscyhzdHJ1Y3QgZGV2aWNlICpkZXYsCj4gPiA+ICAJcmV0dXJuIDA7Cj4gPiA+ICB9Cj4gPiA+
-ICAKPiA+ID4gK2ludCBhZHJlbm9fZ3B1X29jbWVtX2luaXQoc3RydWN0IGRldmljZSAqZGV2LCBz
-dHJ1Y3QgYWRyZW5vX2dwdSAqYWRyZW5vX2dwdSwKPiA+ID4gKwkJCSAgc3RydWN0IGFkcmVub19v
-Y21lbSAqYWRyZW5vX29jbWVtKQo+ID4gPiArewo+ID4gPiArI2lmZGVmIENPTkZJR19RQ09NX09D
-TUVNCj4gPiAKPiA+IE5vIG5lZWQgdG8gbWFrZSB0aGlzIGNvbmRpdGlvbmFsLgo+IAo+IEkgaGF2
-ZSB0aGVzZSAjaWZkZWZzIGZvciB0aGUgYTV4eCBhbmQgYTZ4eCBHUFVzIHRoYXQgZG9uJ3QgaGF2
-ZSBvY21lbQo+IGluIHRoZSBTb0MuIFdpdGhvdXQgdGhlICNpZmRlZnMsIHRob3NlIHN5c3RlbXMg
-d291bGQgbmVlZCB0byBoYXZlIHRoZQo+IG9jbWVtIGRyaXZlciBpbiB0aGVpciBrZXJuZWwuCj4g
-CgpJbiBvcmRlciB0byBwcm92aWRlIHRoZSBtZWFucyBmb3IgY29tcGlsaW5nIGEga2VybmVsIGZv
-ciBhWzU2XXh4IHdpdGhvdXQKaGF2aW5nIHRvIGNvbXBpbGUgb2NtZW0geW91IHNob3VsZCBtb3Zl
-IHRoZXNlICNpZmRlZiB0byB0aGUgb2NtZW0KaGVhZGVyIGZpbGUgYW5kIHByb3ZpZGUgc3RhdGlj
-IGlubGluZSBkdW1taWVzIGZvciB0aGUgY2FzZSB3aGVuIGl0J3MKbm90LgoKKGFuZCB1c2UgI2lm
-IElTX0VOQUJMRUQoQ09ORklHX0ZPTykpCgpEb24ndCBmb3JnZXQgdG8gYWRkCglkZXBlbmRzIG9u
-IFFDT01fT0NNRU0gfHwgUUNPTV9PQ01FTT1uCgp0byB0aGUgRFJNX01TTSBjb25maWcgb3B0aW9u
-LCB0byBhbGxvdyB0aGUgZHJpdmVyIHBhaXIgdG8gYmUgc2VsZWN0ZWQgaW4KYWxsIHBvc3NpYmxl
-IHdheXMuCgo+IFRoYW5rcyBmb3IgdGhlIHF1aWNrIHJldmlldyBvbiB0aGUgcGF0Y2ggc2V0IQo+
-IAoKUmVnYXJkcywKQmpvcm4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJl
-ZWRyZW5v
+On FU540, the management IP block is tightly coupled with the Cadence
+MACB IP block. It manages many of the boundary signals from the MACB IP
+This patchset controls the tx_clk input signal to the MACB IP. It
+switches between the local TX clock (125MHz) and PHY TX clocks. This
+is necessary to toggle between 1Gb and 100/10Mb speeds.
+
+Future patches may add support for monitoring or controlling other IP
+boundary signals.
+
+This patchset is mostly based on work done by
+Wesley Terpstra <wesley@sifive.com>
+
+This patchset is based on Linux v5.2-rc1 and tested on HiFive Unleashed
+board with additional board related patches needed for testing can be
+found at dev/yashs/ethernet branch of:
+https://github.com/yashshah7/riscv-linux.git
+
+Change History:
+V2:
+- Change compatible string from "cdns,fu540-macb" to "sifive,fu540-macb"
+- Add "MACB_SIFIVE_FU540" in Kconfig to support SiFive FU540 in macb
+  driver. This is needed because on FU540, the macb driver depends on
+  SiFive GPIO driver.
+- Avoid writing the result of a comparison to a register.
+- Fix the issue of probe fail on reloading the module reported by:
+  Andreas Schwab <schwab@suse.de>
+
+Yash Shah (2):
+  macb: bindings doc: add sifive fu540-c000 binding
+  macb: Add support for SiFive FU540-C000
+
+ Documentation/devicetree/bindings/net/macb.txt |   3 +
+ drivers/net/ethernet/cadence/Kconfig           |   6 ++
+ drivers/net/ethernet/cadence/macb_main.c       | 129 +++++++++++++++++++++++++
+ 3 files changed, 138 insertions(+)
+
+-- 
+1.9.1
