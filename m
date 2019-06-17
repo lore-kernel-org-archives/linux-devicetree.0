@@ -1,90 +1,80 @@
-From: Wen He <wen.he_1@nxp.com>
-Subject: RE: [EXT] Re: [v1 1/4] dt-bindings: display: Add DT bindings for
- LS1028A HDP-TX PHY.
-Date: Mon, 17 Jun 2019 01:45:04 +0000
-Message-ID: <DB7PR04MB5195E49670279C9A28C28A5EE2EB0@DB7PR04MB5195.eurprd04.prod.outlook.com>
-References: <20190508103703.40885-1-wen.he_1@nxp.com>
- <20190613200813.GA895@bogus>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v3, 19/27] drm/mediatek: add function to background
+ color input select for ovl/ovl_2l direct link
+Date: Mon, 17 Jun 2019 10:01:29 +0800
+Message-ID: <1560736889.25168.0.camel@mtksdaap41>
+References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1559734986-7379-20-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190613200813.GA895@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1559734986-7379-20-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: yongqiang.niu@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOcTqNtTCMTTI1SA0OjA4DQo+IFRvOiBXZW4gSGUg
-PHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhw
-LmNvbT4NCj4gU3ViamVjdDogW0VYVF0gUmU6IFt2MSAxLzRdIGR0LWJpbmRpbmdzOiBkaXNwbGF5
-OiBBZGQgRFQgYmluZGluZ3MgZm9yIExTMTAyOEENCj4gSERQLVRYIFBIWS4NCj4gDQo+IENhdXRp
-b246IEVYVCBFbWFpbA0KPiANCj4gT24gV2VkLCBNYXkgMDgsIDIwMTkgYXQgMTA6MzU6MjVBTSAr
-MDAwMCwgV2VuIEhlIHdyb3RlOg0KPiA+IEFkZCBEVCBiaW5kaW5ncyBkb2N1bWVudG1hdGlvbiBm
-b3IgdGhlIEhEUC1UWCBQSFkgY29udHJvbGxlci4gVGhlDQo+ID4gZGVzY3JpYmVzIHdoaWNoIGNv
-dWxkIGJlIGZvdW5kIG9uIE5YUCBMYXllcnNjYXBlIGxzMTAyOGEgcGxhdGZvcm0uDQo+IA0KPiBE
-cm9wIHRoZSBoYXJkIHN0b3AgKC4pIGZyb20gdGhlIHN1YmplY3QuDQo+IA0KPiA+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxoZHAudHh0ICAgfCA1NiArKysrKysrKysr
-KysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1NiBpbnNlcnRpb25zKCspDQo+ID4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2ZzbCxoZHAudHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGhkcC50eHQNCj4gPiBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxoZHAudHh0DQo+ID4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjM2YjU2ODdhMTI2MQ0KPiA+IC0t
-LSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9mc2wsaGRwLnR4dA0KPiA+IEBAIC0wLDAgKzEsNTYgQEANCj4gPiArTlhQIExheWVy
-c2NwYWUgbHMxMDI4YSBIRFAtVFggUEhZIENvbnRyb2xsZXINCj4gPiArPT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gPiArDQo+ID4gK1RoZSBmb2xsb3dpbmcg
-YmluZGluZ3MgZGVzY3JpYmUgdGhlIENhZGVuY2UgSERQIFRYIFBIWSBvbiBsczEwMjhhDQo+ID4g
-K3RoYXQgb2ZmZXIgbXVsdGktcHJvdG9jb2wgc3VwcG9ydCBvZiBzdGFuZGFycyBzdWNoIGFzIGVE
-UCBhbmQNCj4gPiArRGlzcGxheXBvcnQsIHN1cHBvcnRzIGZvciAyNS02MDBNSHogcGl4ZWwgY2xv
-Y2sgYW5kIHVwIHRvIDRrMmsgYXQgNjBNSHoNCj4gcmVzb2x1dGlvbi4NCj4gPiArVGhlIEhEUCB0
-cmFuc21pdHRlciBpcyBhIENhZGVuY2UgSERQIFRYIGNvbnRyb2xsZXIgSVAgd2l0aCBhDQo+ID4g
-K2NvbXBhbmlvbiBQSFkgSVAuDQo+IA0KPiBJJ20gY29uZnVzZWQuIFRoaXMgYmluZGluZyBjb3Zl
-cnMgYm90aCBibG9ja3Mgb3IgaXMganVzdCBvbmUgb2YgdGhlbT8NCj4gDQoNCkhpIFJvYiwNCg0K
-VGhpcyBiaW5kaW5nIGNvdmVycyBib3RoIGJsb2NrcyhIRFAgVFggUEhZIGFuZCBIRFAgVFggQ29u
-dHJvbGxlciksIA0KQmVjYXVzZSB0aGV5IGFyZSBiZWxvbmcgdG8gdGhlIG9uZSBJUC4NCg0KPiA+
-ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArICAtIGNvbXBhdGlibGU6ICAgU2hv
-dWxkIGJlICJmc2wsbHMxMDI4YS1kcCIgZm9yIGxzMTAyOGEuDQo+ID4gKyAgLSByZWc6ICAgICAg
-ICAgIFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgYmxvY2sgb2YgcmVnaXN0
-ZXJzDQo+IHVzZWQNCj4gPiArICBieSB0aGUgcHJvY2Vzc29yLg0KPiA+ICsgIC0gaW50ZXJydXB0
-czogICBIRFAgaG90cGx1ZyBpbi9vdXQgZGV0ZWN0IGludGVycnVwdCBudW1iZXINCj4gPiArICAt
-IGNsb2NrczogICAgICAgQSBsaXN0IG9mIHBoYW5kbGUgKyBjbG9jay1zcGVjaWZpZXIgcGFpcnMs
-IG9uZSBmb3IgZWFjaA0KPiBlbnRyeQ0KPiA+ICsgIGluICdjbG9jay1uYW1lcycNCj4gPiArICAt
-IGNsb2NrLW5hbWVzOiAgQSBsaXN0IG9mIGNsb2NrIG5hbWVzLiBJdCBzaG91bGQgY29udGFpbjoN
-Cj4gPiArICAgICAgLSAiY2xrX2lwZyI6IGludGVyLUludGVncmF0ZWQgY2lyY3VpdCBjbG9jaw0K
-PiA+ICsgICAgICAtICJjbGtfY29yZSI6IGZvciB0aGUgTWFpbiBEaXNwbGF5IFRYIGNvbnRyb2xs
-ZXIgY2xvY2sNCj4gPiArICAgICAgLSAiY2xrX3B4bCI6IGZvciB0aGUgcGl4ZWwgY2xvY2sgZmVl
-ZGluZyB0aGUgb3V0cHV0IFBMTCBvZiB0aGUgcHJvY2Vzc29yDQo+ID4gKyAgICAgIC0gImNsa19w
-eGxfbXV4IjogZm9yIHRoZSBoaWdoIFBlcmZQTEwgYnlwYXNzIGNsb2NrDQo+ID4gKyAgICAgIC0g
-ImNsa19weGxfbGluayI6IGZvciB0aGUgbGluayByYXRlIHBpeGVsIGNsb2NrDQo+ID4gKyAgICAg
-IC0gImNsa19hcGIiOiBmb3IgdGhlIEFQQiBpbnRlcmZhY2UgY2xvY2sNCj4gPiArICAgICAgLSAi
-Y2xrX3ZpZiI6IGZvciB0aGUgVmlkZW8gcGl4ZWwgY2xvY2sNCj4gDQo+IFRoZSAnY2xrXycgcGFy
-dCBpcyByZWR1bmRhbnQuDQo+IA0KDQpZb3UgbWVhbiBzaG91bGQgSSByZW1vdmUgdGhlc2UgJ2Ns
-a18nIHBhcnQ/DQoNClRoYW5rcyBmb3IgdGhlIHJldmlldy4NCg0KQmVzdCBSZWdhcmRzLA0KV2Vu
-DQoNCj4gPiArDQo+ID4gK1JlcXVpcmVkIHN1Yi1ub2RlczoNCj4gPiArICAtIHBvcnQ6IFRoZSBI
-RFAgY29ubmVjdGlvbiB0byBhbiBlbmNvZGVyIG91dHB1dCBwb3J0LiBUaGUgY29ubmVjdGlvbg0K
-PiA+ICsgICAgaXMgbW9kZWxsZWQgdXNpbmcgdGhlIE9GIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmll
-ZCBpbg0KPiA+ICsgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4
-dA0KPiA+ICsNCj4gPiArDQo+ID4gK0V4YW1wbGU6DQo+ID4gKw0KPiA+ICsvIHsNCj4gPiArICAg
-ICAgICAuLi4NCj4gPiArDQo+ID4gKyAgICAgaGRwOiBkaXNwbGF5QGYyMDAwMDAgew0KPiA+ICsg
-ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS1kcCI7DQo+ID4gKyAgICAg
-ICAgICAgICByZWcgPSA8MHgwIDB4ZjFmMDAwMCAweDAgMHhmZmZmPiwNCj4gPiArICAgICAgICAg
-ICAgICAgICA8MHgwIDB4ZjIwMDAwMCAweDAgMHhmZmZmZj47DQo+ID4gKyAgICAgICAgICAgICAg
-ICBpbnRlcnJ1cHRzID0gPDAgMjIxIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsgICAgICAg
-ICAgICAgY2xvY2tzID0gPCZzeXNjbGs+LCA8JmhkcGNsaz4sIDwmZHBjbGs+LA0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgPCZkcGNsaz4sIDwmZHBjbGs+LCA8JnBjbGs+LCA8JmRwY2xr
-PjsNCj4gPiArICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImNsa19pcGciLCAiY2xrX2NvcmUi
-LCAiY2xrX3B4bCIsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJjbGtfcHhs
-X211eCIsICJjbGtfcHhsX2xpbmsiLCAiY2xrX2FwYiIsDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICJjbGtfdmlmIjsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICBwb3J0IHsN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgZHAxX291dHB1dDogZW5kcG9pbnQgew0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZHAwX2lucHV0
-PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICAgICAgIH07DQo+
-ID4gKyAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICAgLi4uDQo+ID4gK307DQo+ID4gLS0N
-Cj4gPiAyLjE3LjENCj4gPg0K
+Hi, Yongqiang:
+
+On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add function to background color input select for ovl/ovl_2l direct link
+> for ovl/ovl_2l direct link usecase, we need set background color
+> input select for these hardware.
+> this is preparation patch for ovl/ovl_2l usecase
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> index 158c1e5..aa1e183 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -92,6 +92,9 @@ struct mtk_ddp_comp_funcs {
+>  			     struct mtk_plane_state *state);
+>  	void (*gamma_set)(struct mtk_ddp_comp *comp,
+>  			  struct drm_crtc_state *state);
+> +	void (*bgclr_in_on)(struct mtk_ddp_comp *comp,
+> +			    enum mtk_ddp_comp_id prev);
+
+prev is useless, so remove it.
+
+Regards,
+CK
+
+> +	void (*bgclr_in_off)(struct mtk_ddp_comp *comp);
+>  };
+>  
+>  struct mtk_ddp_comp {
+> @@ -173,6 +176,19 @@ static inline void mtk_ddp_gamma_set(struct mtk_ddp_comp *comp,
+>  		comp->funcs->gamma_set(comp, state);
+>  }
+>  
+> +static inline void mtk_ddp_comp_bgclr_in_on(struct mtk_ddp_comp *comp,
+> +					    enum mtk_ddp_comp_id prev)
+> +{
+> +	if (comp->funcs && comp->funcs->bgclr_in_on)
+> +		comp->funcs->bgclr_in_on(comp, prev);
+> +}
+> +
+> +static inline void mtk_ddp_comp_bgclr_in_off(struct mtk_ddp_comp *comp)
+> +{
+> +	if (comp->funcs && comp->funcs->bgclr_in_off)
+> +		comp->funcs->bgclr_in_off(comp);
+> +}
+> +
+>  int mtk_ddp_comp_get_id(struct device_node *node,
+>  			enum mtk_ddp_comp_type comp_type);
+>  int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
