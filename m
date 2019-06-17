@@ -1,230 +1,95 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 2/2] macb: Add support for SiFive FU540-C000
-Date: Mon, 17 Jun 2019 17:58:34 +0200
-Message-ID: <20190617155834.GK25211@lunn.ch>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
- <1560745167-9866-3-git-send-email-yash.shah@sifive.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 4/7] regulator: qcom_spmi: Add support for PM8005
+Date: Mon, 17 Jun 2019 17:03:58 +0100
+Message-ID: <20190617160358.GC5316@sirena.org.uk>
+References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
+ <20190613212553.10541-1-jeffrey.l.hugo@gmail.com>
+ <20190613212553.10541-2-jeffrey.l.hugo@gmail.com>
+ <20190617150502.GU5316@sirena.org.uk>
+ <CAOCk7NrwYezbVyLKOZdxgGRVemKtBmHKP+fSO0a2p3bCPNdW3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="l8YfOjwMha7d9KWK"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1560745167-9866-3-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <CAOCk7NrwYezbVyLKOZdxgGRVemKtBmHKP+fSO0a2p3bCPNdW3w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: davem@davemloft.net, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com, ynezz@true.cz, sachin.ghadi@sifive.com
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: lgirdwood@gmail.com, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 09:49:27AM +0530, Yash Shah wrote:
-> The management IP block is tightly coupled with the Cadence MACB IP
-> block on the FU540, and manages many of the boundary signals from the
-> MACB IP. This patch only controls the tx_clk input signal to the MACB
-> IP. Future patches may add support for monitoring or controlling other
-> IP boundary signals.
-> 
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  drivers/net/ethernet/cadence/Kconfig     |   6 ++
->  drivers/net/ethernet/cadence/macb_main.c | 129 +++++++++++++++++++++++++++++++
->  2 files changed, 135 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
-> index b998401..d478fae 100644
-> --- a/drivers/net/ethernet/cadence/Kconfig
-> +++ b/drivers/net/ethernet/cadence/Kconfig
-> @@ -48,4 +48,10 @@ config MACB_PCI
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called macb_pci.
->  
-> +config MACB_SIFIVE_FU540
-> +	bool "Cadence MACB/GEM support for SiFive FU540 SoC"
-> +	depends on MACB && GPIO_SIFIVE
-> +	help
-> +	  Enable the Cadence MACB/GEM support for SiFive FU540 SoC.
-> +
->  endif # NET_VENDOR_CADENCE
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index c049410..275b5e8 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -10,6 +10,7 @@
->  
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  #include <linux/clk.h>
-> +#include <linux/clk-provider.h>
->  #include <linux/crc32.h>
->  #include <linux/module.h>
->  #include <linux/moduleparam.h>
-> @@ -40,6 +41,15 @@
->  #include <linux/pm_runtime.h>
->  #include "macb.h"
->  
-> +/* This structure is only used for MACB on SiFive FU540 devices */
-> +struct sifive_fu540_macb_mgmt {
-> +	void __iomem *reg;
-> +	unsigned long rate;
-> +	struct clk_hw hw;
-> +};
-> +
-> +static struct sifive_fu540_macb_mgmt *mgmt;
-> +
->  #define MACB_RX_BUFFER_SIZE	128
->  #define RX_BUFFER_MULTIPLE	64  /* bytes */
->  
-> @@ -3903,6 +3913,116 @@ static int at91ether_init(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static unsigned long fu540_macb_tx_recalc_rate(struct clk_hw *hw,
-> +					       unsigned long parent_rate)
-> +{
-> +	return mgmt->rate;
-> +}
-> +
-> +static long fu540_macb_tx_round_rate(struct clk_hw *hw, unsigned long rate,
-> +				     unsigned long *parent_rate)
-> +{
-> +	if (WARN_ON(rate < 2500000))
-> +		return 2500000;
-> +	else if (rate == 2500000)
-> +		return 2500000;
-> +	else if (WARN_ON(rate < 13750000))
-> +		return 2500000;
-> +	else if (WARN_ON(rate < 25000000))
-> +		return 25000000;
-> +	else if (rate == 25000000)
-> +		return 25000000;
-> +	else if (WARN_ON(rate < 75000000))
-> +		return 25000000;
-> +	else if (WARN_ON(rate < 125000000))
-> +		return 125000000;
-> +	else if (rate == 125000000)
-> +		return 125000000;
-> +
-> +	WARN_ON(rate > 125000000);
-> +
-> +	return 125000000;
-> +}
-> +
-> +static int fu540_macb_tx_set_rate(struct clk_hw *hw, unsigned long rate,
-> +				  unsigned long parent_rate)
-> +{
-> +	rate = fu540_macb_tx_round_rate(hw, rate, &parent_rate);
-> +	if (rate != 125000000)
-> +		iowrite32(1, mgmt->reg);
-> +	else
-> +		iowrite32(0, mgmt->reg);
-> +	mgmt->rate = rate;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct clk_ops fu540_c000_ops = {
-> +	.recalc_rate = fu540_macb_tx_recalc_rate,
-> +	.round_rate = fu540_macb_tx_round_rate,
-> +	.set_rate = fu540_macb_tx_set_rate,
-> +};
-> +
-> +static int fu540_c000_clk_init(struct platform_device *pdev, struct clk **pclk,
-> +			       struct clk **hclk, struct clk **tx_clk,
-> +			       struct clk **rx_clk, struct clk **tsu_clk)
-> +{
-> +	struct clk_init_data init;
-> +	int err = 0;
-> +
-> +	err = macb_clk_init(pdev, pclk, hclk, tx_clk, rx_clk, tsu_clk);
-> +	if (err)
-> +		return err;
-> +
-> +	mgmt = devm_kzalloc(&pdev->dev, sizeof(*mgmt), GFP_KERNEL);
-> +	if (!mgmt)
-> +		return -ENOMEM;
-> +
-> +	init.name = "sifive-gemgxl-mgmt";
-> +	init.ops = &fu540_c000_ops;
-> +	init.flags = 0;
-> +	init.num_parents = 0;
-> +
-> +	mgmt->rate = 0;
-> +	mgmt->hw.init = &init;
-> +
-> +	*tx_clk = clk_register(NULL, &mgmt->hw);
-> +	if (IS_ERR(*tx_clk))
-> +		return PTR_ERR(*tx_clk);
-> +
-> +	err = clk_prepare_enable(*tx_clk);
-> +	if (err)
-> +		dev_err(&pdev->dev, "failed to enable tx_clk (%u)\n", err);
-> +	else
-> +		dev_info(&pdev->dev, "Registered clk switch '%s'\n", init.name);
-> +
-> +	return 0;
-> +}
-> +
-> +static int fu540_c000_init(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (!res)
-> +		return -ENODEV;
-> +
-> +	mgmt->reg = ioremap(res->start, resource_size(res));
-> +	if (!mgmt->reg)
-> +		return -ENOMEM;
-> +
-> +	return macb_init(pdev);
-> +}
-> +
-> +static const struct macb_config fu540_c000_config = {
-> +	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_JUMBO |
-> +		MACB_CAPS_GEM_HAS_PTP,
-> +	.dma_burst_length = 16,
-> +	.clk_init = fu540_c000_clk_init,
-> +	.init = fu540_c000_init,
-> +	.jumbo_max_len = 10240,
-> +};
-> +
->  static const struct macb_config at91sam9260_config = {
->  	.caps = MACB_CAPS_USRIO_HAS_CLKEN | MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII,
->  	.clk_init = macb_clk_init,
-> @@ -3992,6 +4112,9 @@ static int at91ether_init(struct platform_device *pdev)
->  	{ .compatible = "cdns,emac", .data = &emac_config },
->  	{ .compatible = "cdns,zynqmp-gem", .data = &zynqmp_config},
->  	{ .compatible = "cdns,zynq-gem", .data = &zynq_config },
-> +#ifdef CONFIG_MACB_SIFIVE_FU540
-> +	{ .compatible = "sifive,fu540-macb", .data = &fu540_c000_config },
-> +#endif
 
-This #ifdef should not be needed.
+--l8YfOjwMha7d9KWK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, macb_dt_ids);
-> @@ -4199,6 +4322,9 @@ static int macb_probe(struct platform_device *pdev)
->  
->  err_disable_clocks:
->  	clk_disable_unprepare(tx_clk);
-> +#ifdef CONFIG_MACB_SIFIVE_FU540
-> +	clk_unregister(tx_clk);
-> +#endif
+On Mon, Jun 17, 2019 at 09:17:21AM -0600, Jeffrey Hugo wrote:
+> On Mon, Jun 17, 2019 at 9:05 AM Mark Brown <broonie@kernel.org> wrote:
 
-So long as tx_clk is NULL, you can call clk_unregister(). So please
-remove the #ifdef.
+> > > +static int spmi_regulator_ftsmps426_set_voltage(struct regulator_dev *rdev,
+> > > +                                           unsigned selector)
+> > > +{
 
+> > > +     mV = spmi_regulator_common_list_voltage(rdev, selector) / 1000;
 
->  	clk_disable_unprepare(hclk);
->  	clk_disable_unprepare(pclk);
->  	clk_disable_unprepare(rx_clk);
-> @@ -4233,6 +4359,9 @@ static int macb_remove(struct platform_device *pdev)
->  		pm_runtime_dont_use_autosuspend(&pdev->dev);
->  		if (!pm_runtime_suspended(&pdev->dev)) {
->  			clk_disable_unprepare(bp->tx_clk);
-> +#ifdef CONFIG_MACB_SIFIVE_FU540
-> +			clk_unregister(bp->tx_clk);
-> +#endif
+> > This could just be a set_voltage_sel(), no need for it to be a
+> > set_voltage() operation....
 
-Same here.
+> This is a set_voltage_sel() in spmi_ftsmps426_ops.  Is the issue because this
+> function is "spmi_regulator_ftsmps426_set_voltage" and not
+> "spmi_regulator_ftsmps426_set_voltage_sel"?
 
-In general try to avoid #ifdef in C code.
+Well, that's certainly confusing naming and there's some confusion in
+the code about what a selector is - it's supposed to be a raw register
+value so if you're having to convert it into a voltage something is
+going wrong.  Just implement a set_voltage() operation?
 
-   Andrew
+> We already have code in the driver to convert a selector to the
+> voltage.  Why duplicate
+> that inline in spmi_regulator_ftsmps426_set_voltage?
+
+Either work with selectors or work with voltages, don't mix and match
+the two.
+
+> > > +     switch (mode) {
+> > > +     case REGULATOR_MODE_NORMAL:
+> > > +             val = SPMI_FTSMPS426_MODE_HPM_MASK;
+> > > +             break;
+> > > +     case REGULATOR_MODE_FAST:
+> > > +             val = SPMI_FTSMPS426_MODE_AUTO_MASK;
+> > > +             break;
+> > > +     default:
+> > > +             val = SPMI_FTSMPS426_MODE_LPM_MASK;
+> > > +             break;
+> > > +     }
+
+> > This should validate, it shouldn't just translate invalid values into
+> > valid ones.
+
+> Validate what?  The other defines are REGULATOR_MODE_IDLE
+> and REGULATOR_MODE_STANDBY which correspond to the LPM
+> mode.  Or are you suggesting that regulator framework is going to pass
+> REGULATOR_MODE_INVALID to this operation?
+
+You should be validating that the argument passed in is one that the
+driver understands, your assumption will break if we add any new modes
+and in any case there should be a 1:1 mapping between hardware and API
+modes so you shouldn't be translating two different API modes into the
+same hardware mode.
+
+--l8YfOjwMha7d9KWK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0Hue0ACgkQJNaLcl1U
+h9BokQf/fWdp7er8/W74adT1KeOqQi4nPS93SO7dWKuu7q1YNud8ppBRNgmG3djL
+xaZh1dTIqVx2GICGfhZA3uEYPTsgPfNiM0ENiApp8OqfxX8VE5J6Ww01ikPQq08J
+Hgwb5piOsDD1uQWUr07Y7R3eoZeKmFCWBRAxUSdNSFBdbQy/v1Of2Yl98/ghbP7Z
+c8Au/mllEECB2Ew4rFXJXse1R19p0feZxxw2DQUPPB+AQ46TstNc487vUoSKNxJp
+8D2BxD5Ph+8wT9lHUimBTNyNhBtRo8wiO0yXOe7xWR8w3rJxMUGe1jNJqFO4olqf
+KFAvYXEW+12HBtSq7ZaqNi5iCB/XJg==
+=GX4O
+-----END PGP SIGNATURE-----
+
+--l8YfOjwMha7d9KWK--
