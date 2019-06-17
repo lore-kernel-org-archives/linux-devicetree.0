@@ -1,89 +1,76 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v4 4/7] regulator: qcom_spmi: Add support for PM8005
-Date: Mon, 17 Jun 2019 13:41:24 -0600
-Message-ID: <CAOCk7NpwMzhbbvwp-vy3TvbadTHqxqVau6yfds+pSOPG=2Qb7g@mail.gmail.com>
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
- <20190613212553.10541-1-jeffrey.l.hugo@gmail.com> <20190613212553.10541-2-jeffrey.l.hugo@gmail.com>
- <20190617150502.GU5316@sirena.org.uk> <CAOCk7NrwYezbVyLKOZdxgGRVemKtBmHKP+fSO0a2p3bCPNdW3w@mail.gmail.com>
- <20190617160358.GC5316@sirena.org.uk> <CAOCk7Nrnd7yJQ=0pO64iT+RfmsKfJW0x0RhrmSLkO_brFqZ2+Q@mail.gmail.com>
- <20190617183757.GH5316@sirena.org.uk> <CAOCk7NpbZwAreGpVCvF2yFBDJKbAxBZ23oncfF_SyEwoiC2+PQ@mail.gmail.com>
- <20190617192413.GI5316@sirena.org.uk>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH] arm64: dts: ti: k3-am65: Add MSMC RAM ranges in
+ interconnect node
+Date: Mon, 17 Jun 2019 22:42:22 +0300
+Message-ID: <ac862030-6843-2906-3823-8e93da1b22da@ti.com>
+References: <20190529211344.18014-1-s-anna@ti.com>
+ <20190530104903.ldcmkunjnk7a5y3c@akan>
+ <3c53679c-4246-43e1-e6d6-2e1c7db201d7@ti.com>
+ <b1f7aa31-4f3b-b9d9-6951-092f3a87d078@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617192413.GI5316@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b1f7aa31-4f3b-b9d9-6951-092f3a87d078@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 1:24 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Mon, Jun 17, 2019 at 01:06:42PM -0600, Jeffrey Hugo wrote:
-> > On Mon, Jun 17, 2019 at 12:37 PM Mark Brown <broonie@kernel.org> wrote:
->
-> > > Something really weird is going on with the word wrapping in your mail,
-> > > it looks like you're writing lines longer than 80 characters (120?) and
-> > > they're getting a newline added in the middle of the line to wrap them
-> > > without reflowing the paragraph.
->
-> > Doh.  Hopefully this one is better.
->
-> Yes, thanks!  Though now it's off-list :/
-
-Doh.  Added everyone back.
-
->
-> > > Well, it doesn't *have* to be the raw register value, more accurately
-> > > it's some token which is useful for passing to and from the hardware;
-> > > The documentation such as it
-> > > is is in the documentation of the list_voltage() operation (which is
-> > > what defines the selector values for a given driver).
->
-> > Ok, so this one bit -
-> > Selectors range from zero to one less than regulator_desc.n_voltages.
-> > Voltages may be reported in any order.
->
-> Yes.
->
-> > So, I understand that.  Its an indexing of the supported voltages.
-> > From my perspective, that has nothing to do with hardware.  Its just a
-> > remapping of the values to a different set.  Voltages X, Y, and Z map
-> > to 0, 1, and 2.  Its a token so that the driver and the framework can
-> > use a common value.
->
-> > I really think we are on the same page here, its just I was getting
-> > confused by how you were describing it in your replies.
->
-> Yes, I was just coming from the perspective that for almost all hardware
-> the selectors are chosen to be the values that are in the bitfield that
-> the hardware uses to specify the voltage since that's the most common
-> thing and tends to make things simpler for people, it's also the primary
-> place where the concept came from.
->
-> > > Your idea of very basic implementations is how the overwhelming majority
-> > > of hardware is implemented.  Regulators with register maps will tend to
-> > > just have a bitfield where you set the voltage with each valid value in
-> > > that bitfield mapped to a single voltage, the exceptions tend to use
-> > > direct voltage values instead (and not support enumeration at all).
->
-> > > Looking at the driver I think it's got what the helpers are terming
-> > > pickable linear ranges (naming is hard) and could use those helpers.
->
-> > I'm pretty sure Stephen Boyd and Bjorn just investigated that a few
-> > weeks ago, and came to the conclusion that it can't because of things
-> > like the hardware really wants to stay in the same range if at all
-> > possible, which is not behavior the pickable linear ranges seems to
-> > support.
->
-> Sounds like it just needs a custom map_voltage() function?  Though
-> thinking about it it's possibly worth just making the standard map try
-> to keep things in the same range as that will if nothing else reduce the
-> number of I/O operations.  Probably also reduce glitches if there's
-> overlapping ranges.
-
-I didn't think so when I was paying attention to their discussion.
-However maybe I missed something.  I think I'll take another look.
-Might make for a nice cleanup, but if its just in the driver, or if it
-involves updating the framework, it seems to be outside scope for this
-series of changes.
+T24gMTcvMDYvMjAxOSAxODo1MywgU3VtYW4gQW5uYSB3cm90ZToKPiBPbiA2LzE3LzE5IDk6NTQg
+QU0sIFRlcm8gS3Jpc3RvIHdyb3RlOgo+PiBPbiAzMC8wNS8yMDE5IDEzOjQ5LCBOaXNoYW50aCBN
+ZW5vbiB3cm90ZToKPj4+IE9uIDE2OjEzLTIwMTkwNTI5LCBTdW1hbiBBbm5hIHdyb3RlOgo+Pj4+
+IEZyb206IFJvZ2VyIFF1YWRyb3MgPHJvZ2VycUB0aS5jb20+Cj4+Pj4KPj4+PiBBZGQgdGhlIE1T
+Q00gUkFNIGFkZHJlc3Mgc3BhY2UgdG8gdGhlIHJhbmdlcyBwcm9wZXJ0eSBvZiB0aGUgY2Jhc3Nf
+bWFpbgo+Pj4+IGludGVyY29ubmVjdCBub2RlIHNvIHRoYXQgdGhlIGFkZHJlc3NlcyBjYW4gYmUg
+dHJhbnNsYXRlZCBwcm9wZXJseS4KPj4+Pgo+Pj4+IFRoaXMgZml4ZXMgdGhlIHByb2JlIGZhaWx1
+cmUgaW4gdGhlIHNyYW0gZHJpdmVyIGZvciB0aGUgTVNNQyBSQU0gbm9kZS4KPj4+Pgo+Pj4+IFNp
+Z25lZC1vZmYtYnk6IFJvZ2VyIFF1YWRyb3MgPHJvZ2VycUB0aS5jb20+Cj4+Pj4gU2lnbmVkLW9m
+Zi1ieTogU3VtYW4gQW5uYSA8cy1hbm5hQHRpLmNvbT4KPj4+PiAtLS0KPj4+Pgo+Pj4+IFRoZSBm
+b2xsb3dpbmcgZXJyb3IgbWVzc2FnZSBpcyBzZWVuIHdpdGhvdXQgdGhpczoKPj4+PiBbwqDCoMKg
+IDAuNDgwMjYxXSBzcmFtIGludGVyY29ubmVjdEAxMDAwMDA6c3JhbUA3MDAwMDAwMDogZm91bmQg
+bm8KPj4+PiBtZW1vcnkgcmVzb3VyY2UKPj4+PiBbwqDCoMKgIDAuNDg3NDk3XSBzcmFtOiBwcm9i
+ZSBvZiBpbnRlcmNvbm5lY3RAMTAwMDAwOnNyYW1ANzAwMDAwMDAKPj4+PiBmYWlsZWQgd2l0aCBl
+cnJvciAtMjIKPj4+Pgo+Pj4+IHJlZ2FyZHMKPj4+PiBTdW1hbgo+Pj4+Cj4+Pj4gIMKgIGFyY2gv
+YXJtNjQvYm9vdC9kdHMvdGkvazMtYW02NS5kdHNpIHwgMSArCj4+Pj4gIMKgIDEgZmlsZSBjaGFu
+Z2VkLCAxIGluc2VydGlvbigrKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvdGkvazMtYW02NS5kdHNpCj4+Pj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3RpL2szLWFt
+NjUuZHRzaQo+Pj4+IGluZGV4IDUwZjRiZTIwNDdhOS4uNjhiM2Y5NTRmMWQxIDEwMDY0NAo+Pj4+
+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMtYW02NS5kdHNpCj4+Pj4gKysrIGIvYXJj
+aC9hcm02NC9ib290L2R0cy90aS9rMy1hbTY1LmR0c2kKPj4+PiBAQCAtNjgsNiArNjgsNyBAQAo+
+Pj4+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDwweDAwIDB4MDA5MDAwMDAgMHgwMCAw
+eDAwOTAwMDAwIDB4MDAgMHgwMDAxMjAwMD4sIC8qCj4+Pj4gc2VyZGVzICovCj4+Pj4gIMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPDB4MDAgMHgwMTAwMDAwMCAweDAwIDB4MDEwMDAwMDAg
+MHgwMCAweDBhZjAyNDAwPiwgLyoKPj4+PiBNb3N0IHBlcmlwaGVyYWxzICovCj4+Pj4gIMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPDB4MDAgMHgzMDgwMDAwMCAweDAwIDB4MzA4MDAwMDAg
+MHgwMCAweDBiYzAwMDAwPiwgLyoKPj4+PiBNQUlOIE5BVlNTICovCj4+Pj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCA8MHgwMCAweDcwMDAwMDAwIDB4MDAgMHg3MDAwMDAwMCAweDAwIDB4MDAy
+MDAwMDA+LCAvKgo+Pj4+IE1TTUMgU1JBTSAqLwo+Pj4+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIC8qIE1DVVNTIFJhbmdlICovCj4+Pj4gIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgPDB4MDAgMHgyODM4MDAwMCAweDAwIDB4MjgzODAwMDAgMHgwMCAweDAzODgwMDAwPiwKPj4+
+PiAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8MHgwMCAweDQwMjAwMDAwIDB4MDAgMHg0
+MDIwMDAwMCAweDAwIDB4MDA5MDAxMDA+LAo+Pj4+IC0tIAo+Pj4+IDIuMjEuMAo+Pj4+Cj4+Pgo+
+Pj4gQXJyZ2guLiBOaWNlIGNhdGNoLiBUaGFua3MuIFdlIHNob3VsZCBjb25zaWRlciBwdWxsaW5n
+IHRoaXMgaW4gYXMgcGFydAo+Pj4gb2YgZWFybHkgcmMgZml4ZXMgcGxlYXNlLgo+Pj4KPj4+IEFj
+a2VkLWJ5OiBOaXNoYW50aCBNZW5vbiA8bm1AdGkuY29tPgo+Pgo+PiBIbW0sIHdoYXQgaXMgdGhl
+IGZhaWx1cmUgdGhpcyBjYXVzZXMsIGV4Y2VwdCB0aGUgcHJvYmUgbWVzc2FnZT8gU1JBTQo+PiBk
+cml2ZXIgb2J2aW91c2x5IHdvbid0IHdvcmsgYnV0IGlzIGl0IHVzZWQgZm9yIGFueXRoaW5nIGF0
+IHRoZSBtb21lbnQKPj4gYW55d2F5cz8KPj4KPj4gSSB3b3VsZCByYXRoZXIgcXVldWUgdGhpcyB0
+b3dhcmRzIDUuMy4KPiAKPiBPSywgSSBhbSBmaW5lIGVpdGhlciB3YXkuCj4gCj4gcmVnYXJkcwo+
+IFN1bWFuCj4gCgpPayB0aGFua3MsIHF1ZXVlZCB0b3dhcmRzIDUuMy4KClRoYXQgYmFzaWNhbGx5
+IHNhdmVzIG1lIG9uZSBwdWxsLXJlcXVlc3QuIDopCgotVGVybwotLQpUZXhhcyBJbnN0cnVtZW50
+cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4gWS10dW5udXMv
+QnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
