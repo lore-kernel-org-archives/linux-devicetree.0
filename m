@@ -1,76 +1,118 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock
- gates in probe
-Date: Mon, 17 Jun 2019 15:59:50 +0530
-Message-ID: <CAMty3ZDRYBPKrGQxAZoB+trFiDLJ5BxDfNUOnPzgd+UWcpwCoQ@mail.gmail.com>
-References: <20190614164324.9427-1-jagan@amarulasolutions.com>
- <20190614164324.9427-6-jagan@amarulasolutions.com> <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ@mail.gmail.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
+ MSI_FLAG_MULTI_PCI_MSI
+Date: Mon, 17 Jun 2019 10:34:35 +0000
+Message-ID: <AM6PR04MB67425792524FBA1C773F137984EB0@AM6PR04MB6742.eurprd04.prod.outlook.com>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
+ <20190611165935.GA22836@redmoon>
+ <AM0PR04MB67383023B81AEB33DAF9C35584EC0@AM0PR04MB6738.eurprd04.prod.outlook.com>
+ <20190612130813.GA15747@redmoon>
+ <AM0PR04MB6738B93C7F1B5BE433753CF584E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
+ <20190617093337.GD18020@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBK6XTXUAKGQEUO3LV7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190617093337.GD18020@e121166-lin.cambridge.arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 11:01 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
-> On Sat, Jun 15, 2019 at 12:44 AM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> >
-> > TCON TOP have clock gates for TV0, TV1, dsi and right
-> > now these are register during bind call.
-> >
-> > Of which, dsi clock gate would required during DPHY probe
-> > but same can miss to get since tcon top is not bound at
-> > that time.
-> >
-> > To solve, this circular dependency move the clock gate
-> > registration from bind to probe so-that DPHY can get the
-> > dsi gate clock on time.
-> >
-> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > ---
-> >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
-> >  1 file changed, 49 insertions(+), 45 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > index 465e9b0cdfee..a8978b3fe851 100644
-> > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > @@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
-> >  static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
-> >                                void *data)
-> >  {
-> > -       struct platform_device *pdev = to_platform_device(dev);
-> > +       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
-> > +       int ret;
-> > +
-> > +       ret = reset_control_deassert(tcon_top->rst);
-> > +       if (ret) {
-> > +               dev_err(dev, "Could not deassert ctrl reset control\n");
-> > +               return ret;
-> > +       }
-> > +
-> > +       ret = clk_prepare_enable(tcon_top->bus);
-> > +       if (ret) {
-> > +               dev_err(dev, "Could not enable bus clock\n");
-> > +               goto err_assert_reset;
-> > +       }
->
-> You have to de-assert the reset control and enable the clock before the
-> clocks it provides are registered. Otherwise a consumer may come in and
-> ask for the provided clock to be enabled, but since the TCON TOP's own
-> reset and clock are still disabled, you can't actually access the registers
-> that controls the provided clock.
-
-These rst and bus are common reset and bus clocks not tcon top clocks
-that are trying to register here. ie reason I have not moved it in
-top.
+SGkgTG9yZW56bywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMb3Jl
+bnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT4NCj4gU2VudDogMjAxOeW5
+tDbmnIgxN+aXpSAxNzozNA0KPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0K
+PiBDYzogbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZzsNCj4gYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwu
+b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5p
+bjsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpDQo+IDxsZW95YW5nLmxpQG54cC5jb20+OyBj
+YXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gTWluZ2thaSBI
+dSA8bWluZ2thaS5odUBueHAuY29tPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+
+Ow0KPiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSHY1IDA0LzIwXSBQQ0k6IG1vYml2ZWlsOiBSZW1vdmUgdGhlIGZsYWcNCj4gTVNJX0ZMQUdf
+TVVMVElfUENJX01TSQ0KPiANCj4gT24gU2F0LCBKdW4gMTUsIDIwMTkgYXQgMDE6MzA6MzlBTSAr
+MDAwMCwgWi5xLiBIb3Ugd3JvdGU6DQo+ID4gSGkgTG9yZW56bywNCj4gPg0KPiA+ID4gLS0tLS1P
+cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IExvcmVuem8gUGllcmFsaXNpIFttYWls
+dG86bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbV0NCj4gPiA+IFNlbnQ6IDIwMTnlubQ25pyIMTLm
+l6UgMjE6MDgNCj4gPiA+IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+ID4g
+PiBDYzogbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnOw0KPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0
+QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+ID4gbC5zdWJyYWhtYW55YUBt
+b2JpdmVpbC5jby5pbjsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpDQo+ID4gPiA8bGVveWFu
+Zy5saUBueHAuY29tPjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207DQo+IHdpbGwuZGVhY29uQGFy
+bS5jb207DQo+ID4gPiBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBNLmguIExpYW4N
+Cj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47DQo+ID4gPiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
+YW9AbnhwLmNvbT4NCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NSAwNC8yMF0gUENJOiBtb2Jp
+dmVpbDogUmVtb3ZlIHRoZSBmbGFnDQo+ID4gPiBNU0lfRkxBR19NVUxUSV9QQ0lfTVNJDQo+ID4g
+Pg0KPiA+ID4gT24gV2VkLCBKdW4gMTIsIDIwMTkgYXQgMTE6MzQ6NTFBTSArMDAwMCwgWi5xLiBI
+b3Ugd3JvdGU6DQo+ID4gPiA+IEhpIExvcmVuem8sDQo+ID4gPiA+DQo+ID4gPiA+IFRoYW5rcyBh
+IGxvdCBmb3IgeW91ciBjb21tZW50cyENCj4gPiA+ID4NCj4gPiA+ID4gPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiA+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3Jlbnpv
+LnBpZXJhbGlzaUBhcm0uY29tPg0KPiA+ID4gPiA+IFNlbnQ6IDIwMTnlubQ25pyIMTLml6UgMTow
+MA0KPiA+ID4gPiA+IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+ID4gPiA+
+ID4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiA+ID4gbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gPiA+IGJoZWxnYWFz
+QGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+
+ID4gPiA+ID4gbC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5pbjsgc2hhd25ndW9Aa2VybmVsLm9y
+ZzsgTGVvIExpDQo+ID4gPiA+ID4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGNhdGFsaW4ubWFyaW5h
+c0Bhcm0uY29tOw0KPiA+ID4gd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gPiA+ID4gPiBNaW5na2Fp
+IEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBNLmguIExpYW4NCj4gPiA+IDxtaW5naHVhbi5saWFu
+QG54cC5jb20+Ow0KPiA+ID4gPiA+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0K
+PiA+ID4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NSAwNC8yMF0gUENJOiBtb2JpdmVpbDogUmVt
+b3ZlIHRoZSBmbGFnDQo+ID4gPiA+ID4gTVNJX0ZMQUdfTVVMVElfUENJX01TSQ0KPiA+ID4gPiA+
+DQo+ID4gPiA+ID4gT24gRnJpLCBBcHIgMTIsIDIwMTkgYXQgMDg6MzU6MzZBTSArMDAwMCwgWi5x
+LiBIb3Ugd3JvdGU6DQo+ID4gPiA+ID4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhv
+dUBueHAuY29tPg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFRoZSBjdXJyZW50IGNvZGUgZG9l
+cyBub3Qgc3VwcG9ydCBtdWx0aXBsZSBNU0lzLCBzbyByZW1vdmUgdGhlDQo+ID4gPiA+ID4gPiBj
+b3JyZXNwb25kaW5nIGZsYWcgZnJvbSB0aGUgbXNpX2RvbWFpbl9pbmZvIHN0cnVjdHVyZS4NCj4g
+PiA+ID4gPg0KPiA+ID4gPiA+IFBsZWFzZSBleHBsYWluIG1lIHdoYXQncyB0aGUgcHJvYmxlbSBi
+ZWZvcmUgcmVtb3ZpbmcgbXVsdGkgTVNJDQo+IHN1cHBvcnQuDQo+ID4gPiA+DQo+ID4gPiA+IE5Y
+UCBMWDIgUENJZSB1c2UgdGhlIEdJQy1JVFMgaW5zdGVhZCBvZiBNb2JpdmVpbCBJUCBpbnRlcm5h
+bCBNU0kNCj4gPiA+ID4gY29udHJvbGxlciwgc28sIEkgZGlkbid0IGVuY291bnRlciBwcm9ibGVt
+Lg0KPiA+ID4NCj4gPiA+IFdlbGwsIHlvdSBzZW50IGEgcGF0Y2ggdG8gZml4IGFuIGlzc3VlLCBl
+eHBsYWluIG1lIHRoZSBpc3N1ZSB5b3UgYXJlDQo+ID4gPiBmaXhpbmcgdGhlbiwgYWthIHdoYXQg
+aGF2ZSB5b3Ugc2VudCB0aGlzIHBhdGNoIGZvciA/DQo+ID4NCj4gPiBJIGRpZCBub3QgZmFjZSBp
+c3N1ZSwgYXMgSSBoYXZlIGV4cGxhaW5lZCBOWFAgZG9lcyBub3QgdXNlIHRoZQ0KPiA+IE1vYml2
+ZWlsIElQJ3MgTVNJIGNvbnRyb2xsZXIuICBCdXQgb2J2aW91c2x5IHRoZSBNU0kgYWxsb2NhdGUg
+ZnVuY3Rpb24NCj4gPiBkb2VzIG5vdCBzdXBwb3J0IG11bHRpcGxlIE1TSSwgc28gSSBzdWJtaXR0
+ZWQgdGhpcyBwYXRjaC4NCj4gDQo+IFRoZXJlIGlzIG5vdGhpbmcgb2J2aW91cy4gV3JpdGUgd2hh
+dCB5b3UgYXJlIGZpeGluZyBpbiB0aGUgY29tbWl0IGxvZyBhbmQgSSB3aWxsDQo+IGFwcGx5IHRo
+ZSBwYXRjaCwgSSB3b24ndCB3cml0ZSB0aGUgY29tbWl0IGxvZyBmb3IgeW91LiBBbnlvbmUgc2hv
+dWxkIGJlIGFibGUNCj4gdG8gdW5kZXJzdGFuZCB3aHkgYSBwYXRjaCB3YXMgbmVlZGVkIGJ5IHJl
+YWRpbmcgdGhlIGNvbW1pdCBsb2csIGl0IGlzIGFzDQo+IGltcG9ydGFudCBhcyB3cml0aW5nIHRo
+ZSBjb2RlIGl0c2VsZi4NCg0KV2l0aCB0aGUgZmxhZyBNU0lfRkxBR19NVUxUSV9QQ0lfTVNJLCB3
+aGVuIHRoZSBFbmRwb2ludCBhbGxvY2F0ZXMgbXVsdGlwbGUNCk1TSSwgaXQgd2lsbCB0cmlnZ2Vy
+IHRoZSAiV0FSTl9PTihucl9pcnFzICE9IDEpOyIgaW4gbW9iaXZlaWxfaXJxX21zaV9kb21haW5f
+YWxsb2MoKSwNCnRoaXMgaXMgdGhlIGlzc3VlIHRoaXMgcGF0Y2ggd2FudCB0byBmaXguIA0KDQpU
+aGFua3MsDQpaaGlxaWFuZw0KDQo+IA0KPiBUaGFua3MsDQo+IExvcmVuem8NCj4gDQo+ID4gVGhh
+bmtzLA0KPiA+IFpoaXFpYW5nDQo+ID4NCj4gPiA+DQo+ID4gPiBMb3JlbnpvDQo+ID4gPg0KPiA+
+ID4gPiBTdWJidSwgZGlkIHlvdSB0ZXN0IHdpdGggRW5kcG9pbnQgc3VwcG9ydGluZyBtdWx0aSBN
+U0k/DQo+ID4gPiA+DQo+ID4gPiA+IFRoYW5rcywNCj4gPiA+ID4gWmhpcWlhbmcNCj4gPiA+ID4N
+Cj4gPiA+ID4gPg0KPiA+ID4gPiA+IFRoYW5rcywNCj4gPiA+ID4gPiBMb3JlbnpvDQo+ID4gPiA+
+ID4NCj4gPiA+ID4gPiA+IEZpeGVzOiAxZTkxM2U1ODMzNWYgKCJQQ0k6IG1vYml2ZWlsOiBBZGQg
+TVNJIHN1cHBvcnQiKQ0KPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxa
+aGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiA+ID4gPiA+IFJldmlld2VkLWJ5OiBNaW5naHVhbiBM
+aWFuIDxNaW5naHVhbi5MaWFuQG54cC5jb20+DQo+ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiA+
+IFY1Og0KPiA+ID4gPiA+ID4gIC0gQ29ycmVjdGVkIHRoZSBzdWJqZWN0Lg0KPiA+ID4gPiA+ID4N
+Cj4gPiA+ID4gPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYyB8IDIg
+Ky0NCj4gPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRp
+b24oLSkNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kv
+Y29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiA+ID4gPiA+IGIvZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiA+ID4gPiA+IGluZGV4IDU2MzIxMGU3MzFkMy4u
+YTBkZDMzN2M2MjE0IDEwMDY0NA0KPiA+ID4gPiA+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJv
+bGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiA+ID4gPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRy
+b2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gPiA+ID4gPiBAQCAtNzAzLDcgKzcwMyw3IEBAIHN0
+YXRpYyBzdHJ1Y3QgaXJxX2NoaXANCj4gPiA+ID4gPiA+IG1vYml2ZWlsX21zaV9pcnFfY2hpcCA9
+IHsNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAgc3RhdGljIHN0cnVjdCBtc2lfZG9tYWluX2lu
+Zm8gbW9iaXZlaWxfbXNpX2RvbWFpbl9pbmZvID0gew0KPiA+ID4gPiA+ID4gIAkuZmxhZ3MJPSAo
+TVNJX0ZMQUdfVVNFX0RFRl9ET01fT1BTIHwNCj4gPiA+ID4gPiBNU0lfRkxBR19VU0VfREVGX0NI
+SVBfT1BTIHwNCj4gPiA+ID4gPiA+IC0JCSAgIE1TSV9GTEFHX01VTFRJX1BDSV9NU0kgfCBNU0lf
+RkxBR19QQ0lfTVNJWCksDQo+ID4gPiA+ID4gPiArCQkgICBNU0lfRkxBR19QQ0lfTVNJWCksDQo+
+ID4gPiA+ID4gPiAgCS5jaGlwCT0gJm1vYml2ZWlsX21zaV9pcnFfY2hpcCwNCj4gPiA+ID4gPiA+
+ICB9Ow0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IC0tDQo+ID4gPiA+ID4gPiAyLjE3LjENCj4g
+PiA+ID4gPiA+DQo=
