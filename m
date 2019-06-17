@@ -1,88 +1,192 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH] Revert "ARM: dts: rockchip: set PWM delay backlight
- settings for Minnie"
-Date: Mon, 17 Jun 2019 09:30:30 -0700
-Message-ID: <20190617163030.GS137143@google.com>
-References: <20190614224533.169881-1-mka@chromium.org>
- <20190616154143.GA28583@atrey.karlin.mff.cuni.cz>
- <c88619de-45f4-9ba7-cfdc-0cedb764f6f4@collabora.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 21/21] iommu/mediatek: Switch to SPDX license
+ identifier
+Date: Mon, 17 Jun 2019 18:33:45 +0200
+Message-ID: <9bf9e47f-b709-b2ce-b795-ff5e345a67d5@gmail.com>
+References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+ <1560169080-27134-22-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c88619de-45f4-9ba7-cfdc-0cedb764f6f4@collabora.com>
+In-Reply-To: <1560169080-27134-22-git-send-email-yong.wu@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric,
 
-On Mon, Jun 17, 2019 at 12:08:25PM +0200, Enric Balletbo i Serra wrote:
-> Hi,
-> 
-> On 16/6/19 17:41, Pavel Machek wrote:
-> > Hi!
-> > 
-> >> This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
-> >>
-> >> According to the commit message the AUO B101EAN01 panel on minnie
-> >> requires a PWM delay of 200 ms, however this is not what the
-> >> datasheet says. The datasheet mentions a *max* delay of 200 ms
-> >> for T2 ("delay from LCDVDD to black video generation") and T3
-> >> ("delay from LCDVDD to HPD high"), which aren't related to the
-> >> PWM. The backlight power sequence does not specify min/max
-> >> constraints for T15 (time from PWM on to BL enable) or T16
-> >> (time from BL disable to PWM off).
-> >>
-> 
-> Hmm, clearly we are not looking at the same datasheet, because in the one I have
-> I don't see any reference to T15/T16 or LCDVDD. And, I assume I am probably
-> wrong because you might have better access to the specific panel specs for minnie.
-> 
-> I looked at my archive and the datasheet I have is similar to this [1]. In page
-> 21, Section 6.5 Power ON/OFF Sequence, there are two delays T3 and T4, it is
-> *min* time between the pwm signal and the bl_en and it is 200 ms. That's the
-> delay the patch was adding.
-> 
-> [1] http://www.yslcd.com.tw/docs/product/B101EAN01.1.pdf
-> 
-> >> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> >> ---
-> >> Enric, if you think I misinterpreted the datasheet please holler!
-> > 
-> > Was this tested? Was previous patch tested?
-> > 
-> 
-> IIRC, It was tested measuring the backlight power on timing (although I am not
-> sure if I tested this on minnie or another board with better access to the pins)
-> 
-> > Does patch being reverted actually break anything? If so, cc stable?
-> > 
-> > 								Pavel
-> > 								
-> > 
-> 
-> Probably will not break anything, I don't remember the reverted patch as a fix
-> of any specific issue. IIRC it was more a fear to be out of specs but I'll not
-> be surprised if the datasheet lies and this delay is not needed at all.
 
-Indeed, we are looking at different datasheets. It turns out that
-'B101EAN01' is an underspecification, minnie uses the 'B101EAN01.8'
-(eDP interface), your datasheet describes the 'B101EAN01.1' (LVDS
-interface).
+On 10/06/2019 14:18, Yong Wu wrote:
+> Switch to SPDX license identifier for MediaTek iommu/smi and their
+> header files.
+> 
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
 
-> Matthias, are you reverting this to solve any problem?
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-With the patch there is a user perceptible delay between switching on
-the LCD and the backlight. Not necessarily a big problem, but better
-avoid it if the delay is not needed.
-
-> Could you share your datasheet?
-
-http://www.yslcd.com.tw/docs/product/B101EAN01.8.pdf (the server seems
-to be down currently).
-
-Thanks
-
-Matthias
+> ---
+>  drivers/iommu/mtk_iommu.c                     | 10 +---------
+>  drivers/iommu/mtk_iommu.h                     | 10 +---------
+>  drivers/iommu/mtk_iommu_v1.c                  | 10 +---------
+>  drivers/memory/mtk-smi.c                      | 10 +---------
+>  include/dt-bindings/memory/mt2701-larb-port.h | 10 +---------
+>  include/dt-bindings/memory/mt8173-larb-port.h | 10 +---------
+>  include/soc/mediatek/smi.h                    | 10 +---------
+>  7 files changed, 7 insertions(+), 63 deletions(-)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 34f2e40..6fe3369 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -1,15 +1,7 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * Copyright (c) 2015-2016 MediaTek Inc.
+>   * Author: Yong Wu <yong.wu@mediatek.com>
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+>   */
+>  #include <linux/memblock.h>
+>  #include <linux/bug.h>
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index e8114b2..b24cfd3 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -1,15 +1,7 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2015-2016 MediaTek Inc.
+>   * Author: Honghui Zhang <honghui.zhang@mediatek.com>
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+>   */
+>  
+>  #ifndef _MTK_IOMMU_H_
+> diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
+> index 73308ad..0b0908c 100644
+> --- a/drivers/iommu/mtk_iommu_v1.c
+> +++ b/drivers/iommu/mtk_iommu_v1.c
+> @@ -1,3 +1,4 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * IOMMU API for MTK architected m4u v1 implementations
+>   *
+> @@ -5,15 +6,6 @@
+>   * Author: Honghui Zhang <honghui.zhang@mediatek.com>
+>   *
+>   * Based on driver/iommu/mtk_iommu.c
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+>   */
+>  #include <linux/memblock.h>
+>  #include <linux/bug.h>
+> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+> index 10e6493..9688341 100644
+> --- a/drivers/memory/mtk-smi.c
+> +++ b/drivers/memory/mtk-smi.c
+> @@ -1,15 +1,7 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * Copyright (c) 2015-2016 MediaTek Inc.
+>   * Author: Yong Wu <yong.wu@mediatek.com>
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+>   */
+>  #include <linux/clk.h>
+>  #include <linux/component.h>
+> diff --git a/include/dt-bindings/memory/mt2701-larb-port.h b/include/dt-bindings/memory/mt2701-larb-port.h
+> index 6764d74..c511f0f 100644
+> --- a/include/dt-bindings/memory/mt2701-larb-port.h
+> +++ b/include/dt-bindings/memory/mt2701-larb-port.h
+> @@ -1,15 +1,7 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2015 MediaTek Inc.
+>   * Author: Honghui Zhang <honghui.zhang@mediatek.com>
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+>   */
+>  
+>  #ifndef _MT2701_LARB_PORT_H_
+> diff --git a/include/dt-bindings/memory/mt8173-larb-port.h b/include/dt-bindings/memory/mt8173-larb-port.h
+> index 111b4b0..a62bfeb 100644
+> --- a/include/dt-bindings/memory/mt8173-larb-port.h
+> +++ b/include/dt-bindings/memory/mt8173-larb-port.h
+> @@ -1,15 +1,7 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2015-2016 MediaTek Inc.
+>   * Author: Yong Wu <yong.wu@mediatek.com>
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+>   */
+>  #ifndef __DTS_IOMMU_PORT_MT8173_H
+>  #define __DTS_IOMMU_PORT_MT8173_H
+> diff --git a/include/soc/mediatek/smi.h b/include/soc/mediatek/smi.h
+> index a65324d..7a8d870 100644
+> --- a/include/soc/mediatek/smi.h
+> +++ b/include/soc/mediatek/smi.h
+> @@ -1,15 +1,7 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2015-2016 MediaTek Inc.
+>   * Author: Yong Wu <yong.wu@mediatek.com>
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+>   */
+>  #ifndef MTK_IOMMU_SMI_H
+>  #define MTK_IOMMU_SMI_H
+> 
