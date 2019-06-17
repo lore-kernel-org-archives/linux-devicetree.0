@@ -1,142 +1,93 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
-Date: Mon, 17 Jun 2019 15:52:52 +0300
-Message-ID: <87o92wgyqj.fsf@linux.intel.com>
-References: <20171115060459.45375-1-ran.wang_1@nxp.com> <87ineb9b5v.fsf@linux.intel.com> <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com> <87shdfet90.fsf@linux.intel.com> <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com> <87k1eaanjw.fsf@linux.intel.com> <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com> <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+From: "Hawa, Hanna" <hhhawa@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Date: Mon, 17 Jun 2019 16:00:45 +0300
+Message-ID: <bbb9b41d-8ffa-d4c5-c199-2400695cce8d@amazon.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <3129ed19-0259-d227-0cff-e9f165ce5964@arm.com>
+ <4514bfa2-68b2-2074-b817-2f5037650c4e@amazon.com>
+ <fdc3b458-96eb-1734-c294-2463f37f2244@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+In-Reply-To: <fdc3b458-96eb-1734-c294-2463f37f2244@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Wang <ran.wang_1@nxp.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>
+To: James Morse <james.morse@arm.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, linux-edac@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
+>>>> +static void al_a57_edac_l2merrsr(void *arg)
+>>>> +{
+>>>
+>>>> +    edac_device_handle_ce(edac_dev, 0, 0, "L2 Error");
+>>>
+>>> How do we know this is corrected?
+> 
+>>> If looks like L2CTLR_EL1[20] might force fatal 1/0 to map to uncorrected/corrected. Is
+>>> this what you are depending on here?
+> 
+>> No - not on this. Reporting all the errors as corrected seems to be bad.
+>>
+>> Can i be depends on fatal field?
+> 
+> That is described as "set to 1 on the first memory error that caused a Data Abort". I
+> assume this is one of the parity-error external-aborts.
+> 
+> If the repeat counter shows, say, 2, and fatal is set, you only know that at least one of
+> these errors caused an abort. But it could have been all three. The repeat counter only
+> matches against the RAMID and friends, otherwise the error is counted in 'other'.
+> 
+> I don't think there is a right thing to do here, (other than increase the scrubbing
+> frequency). As you can only feed one error into edac at a time then:
+> 
+>> if (fatal)
+>>      edac_device_handle_ue(edac_dev, 0, 0, "L2 Error");
+>> else
+>>      edac_device_handle_ce(edac_dev, 0, 0, "L2 Error");
+> 
+> seems reasonable. You're reporting the most severe, and 'other/repeat' counter values just
+> go missing.
+I had print the values of 'other/repeat' to be noticed.
 
-Hi,
+> 
+> 
+>> How can L2CTLR_EL1[20] force fatal?
+> 
+> I don't think it can, on a second reading, it looks to be even more complicated than I
+> thought! That bit is described as disabling forwarding of uncorrected data, but it looks
+> like the uncorrected data never actually reaches the other end. (I'm unsure what 'flush'
+> means in this context.)
+> I was looking for reasons you could 'know' that any reported error was corrected. This was
+> just a bad suggestion!
+Is there interrupt for un-correctable error?
+Does 'asynchronous errors' in L2 used to report UE?
 
-Ran Wang <ran.wang_1@nxp.com> writes:
-> Hi Felipe,
->
-> On Thursday, May 30, 2019 17:09, Ran Wang wrote:
->>=20
->> <snip>
->> > >> >> >  /* Global Debug Queue/FIFO Space Available Register */
->> > >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
->> > >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
->> > >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
->> > >> >> >   * 	3	- Reserved
->> > >> >> >   * @imod_interval: set the interrupt moderation interval in 2=
-50ns
->> > >> >> >   *                 increments or 0 to disable.
->> > >> >> > + * @dma_coherent: set if enable dma-coherent.
->> > >> >>
->> > >> >> you're not enabling dma coherency, you're enabling cache snoopin=
-g.
->> > >> >> And this property should describe that. Also, keep in mind that
->> > >> >> different devices may want different cache types for each of
->> > >> >> those fields, so your property would have to be a lot more
->> > >> >> complex. Something
->> > like:
->> > >> >>
->> > >> >> 	snps,cache-type =3D <foobar "cacheable">, <baz "cacheable">, ...
->> > >> >>
->> > >> >> Then driver would have to parse this properly to setup GSBUSCFG0.
->> > >
->> > > According to the DesignWare Cores SuperSpeed USB 3.0 Controller
->> > > Databook (v2.60a), it has described Type Bit Assignments for all
->> > > supported
->> > master bus type:
->> > > AHB, AXI3, AXI4 and Native. I found the bit definition are different
->> > > among
->> > them.
->> > > So, for the example you gave above, feel a little bit confused.
->> > > Did you mean:
->> > >     snps,cache-type =3D <DATA_RD  "write allocate">, <DESC_RD
->> > > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read allocate">
->> >
->> > yeah, something like that.
->>=20
->> I think DATA_RD  should be a macro, right? So, where I can put its defin=
-e?
->> Create a dwc3.h in include/dt-bindings/usb/ ?
->
-> Could you please give me some advice here? I'd like to prepare next versi=
-on patch after
-> getting this settled.
->
->> Another question about this remain open is: DWC3 data book's Table 6-5 C=
-ache
->> Type Bit Assignments show that bits definition will differ per MBUS_TYPE=
-s as
->> below:
->> ----------------------------------------------------------------
->>  MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
->>  ----------------------------------------------------------------
->>  AHB      |Cacheable     |Bufferable   |Privilegge |Data
->>  AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
->>  AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
->>  AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
->>  Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
->>  ----------------------------------------------------------------
->>  Note: The AHB, AXI3, AXI4, and PCIe busses use different names for cert=
-ain
->>  signals, which have the same meaning:
->>    Bufferable =3D Posted
->>    Cacheable =3D Modifiable =3D Snoop (negation of No Snoop)
->>=20
->> For Layerscape SoCs, MBUS_TYPE is AXI3. So I am not sure how to use
->> snps,cache-type =3D <DATA_RD  "write allocate">, to cover all MBUS_TYPE?
->> (you can notice that AHB and AXI3's cacheable are on different bit) Or I=
- just need
->> to handle AXI3 case?
->
-> Also on this open. Thank you in advance.
+In case no interrupt, can we use die-notifier subsystem to check if any 
+error had occur while system shutdown?
 
-You could pass two strings and let the driver process them. Something
-like:
+>>>> +        cluster = topology_physical_package_id(cpu);
+>>>
+>>> Hmm, I'm not sure cluster==package is guaranteed to be true forever.
+>>>
+>>> If you describe the L2MERRSR_EL1 cpu mapping in your DT you could use that. Otherwise
+>>> pulling out the DT using something like the arch code's parse_cluster().
+> 
+>> I rely on that it's alpine SoC specific driver.
+> 
+> ... and that the topology code hasn't changed to really know what a package is:
+> https://lore.kernel.org/lkml/20190529211340.17087-2-atish.patra@wdc.com/T/#u
+> 
+> As what you really want to know is 'same L2?', and you're holding the cpu_read_lock(),
+> would struct cacheinfo's shared_cpu_map be a better fit?
+> 
+> This would be done by something like a cpu-mask of cache:shared_cpu_map's for the L2's
+> you've visited. It removes the dependency on package==L2, and insulates you from the
+> cpu-numbering not being exactly as you expect.
+I'll add dt property that point to L2-cache node (phandle), then it'll 
+be easy to create cpu-mask with all cores that point to same l2 cache.
 
-	snps,cache_type =3D <"data_wr" "write allocate">, <"desc_rd" "cacheable">.=
-..
-
-And so on. The only thing missing is for the mbus_type to be known by
-the driver. Is that something we can figure out on any of the HWPARAMS
-registers or does it have to be told explicitly?
-
-Another option would be to pass a string followed by one hex digit for
-the bits:
-
-	snps,cache_type =3D <"data_wr" 0x8>, <"desc_rd" 0x2>...;
-
-Then we don't need to describe mbus_type since the bits are what matters.
-
-Rob, any comments?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0HjSQACgkQzL64meEa
-mQbg7g/+Lx8yM+keMyEm6/45HFbt8dj+svzOYxh0bbIrId4/UkgiphoH7tOEvT/m
-daGDtnccJ8ec6pGl1gHMweog+R7WEkFjf43hBoJjjGWqExeeNDaP6cKD60v2fU2v
-fpDbfEs4Y5HKxxaBu65MmRwBbtAg+O0ZXEC2RY5jan9GE/HbuqD5xorbRCtIdo1r
-a5f5CgMUgIglqJiQ+r9dH2M3BjlCBl+2h9YHs0IuLN9+wtRmE9V82s+b1egjot/N
-fsp9eB/YCCpuvsw38pis00SyN2KiYB1TSBYKFplZon9j1dPrUomP7dg6CUlp+UGf
-T3jlokigmXQKNK7vrBjm76fdtTAKLEuXLnVGMxFM+sn/vh95bVamyS6MNYTY/XdA
-q/0KA4Z3tpPXIF0jDV4H92sKt2qXfDjj0vt8oSpWMB4yLOpkKQtvOcpRqd3AYsbD
-+xvIOipBs6dtdp6wpvmK7BbobggCUxAObAYiJI4FoaqZbWWWnzd2piXWH5bAGkIp
-u14xAKyE7Nz20RuARpD+TchfbeAZUnrTF+PJ6LcRNshiGoPWBrRT2oCYjqN9XcE7
-K8sd6hxcXXwA4vPmo3faq4s1oiq/ACZWJPeGwCyF4yB+Y7b/I2aEicVSbOV49aiC
-j6yHlveZA9Z/GX8hVlxmkKLdhR5Uki6HP8wG5Bn2dlBK6tA2Kvk=
-=7tqt
------END PGP SIGNATURE-----
---=-=-=--
+Thanks,
+Hanna
