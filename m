@@ -1,61 +1,77 @@
-Return-Path: <SRS0=Zn+R=UK=googlemail.com=yegorslists@kernel.org>
-From: yegorslists@googlemail.com
-Subject: [PATCH] ARM: dts: am335x-baltos: Fix PHY mode for ethernet
-Date: Tue, 11 Jun 2019 11:30:45 +0200
-Message-Id: <20190611093045.4810-1-yegorslists@googlemail.com>
-To: linux-omap@vger.kernel.org
-Cc: tony@atomide.com, robh+dt@kernel.org, devicetree@vger.kernel.org, Yegor Yefremov <yegorslists@googlemail.com>
+Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V5 17/27] PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
+Date: Mon, 17 Jun 2019 23:09:42 +0530
+Message-ID: <20190617173952.29363-18-mmaddireddy@nvidia.com>
+In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Yegor Yefremov <yegorslists@googlemail.com>
+Disable controllers which failed to link up and configure CLKREQ# signals
+of these controllers as GPIO. This is required to avoid CLKREQ# signal of
+inactive controllers interfering with PLLE power down sequence.
 
-The PHY must add both tx and rx delay and not only on the tx clock.
+PCIE_CLKREQ_GPIO bits are defined only in Tegra186, however programming
+these bits in other SoCs doesn't cause any side effects. Program these
+bits for all Tegra SoCs to avoid conditional check.
 
-Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- arch/arm/boot/dts/am335x-baltos-ir2110.dts | 2 +-
- arch/arm/boot/dts/am335x-baltos-ir3220.dts | 2 +-
- arch/arm/boot/dts/am335x-baltos-ir5221.dts | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+V5: No change
 
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir2110.dts b/arch/arm/boot/dts/am335x-baltos-ir2110.dts
-index 2f650a736b44..f127af2afd00 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir2110.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir2110.dts
-@@ -68,7 +68,7 @@
- };
+V4: No change
+
+V3: No change
+
+V2: Corrected the comment in driver
+
+ drivers/pci/controller/pci-tegra.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index abb94595c76b..3d9028cecc18 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -160,6 +160,8 @@
+ #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_211	(0x1 << 20)
+ #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_411	(0x2 << 20)
+ #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_111	(0x2 << 20)
++#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(x)		(1 << ((x) + 29))
++#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL		(0x7 << 29)
  
- &cpsw_emac1 {
--	phy-mode = "rgmii-txid";
-+	phy-mode = "rgmii-id";
- 	dual_emac_res_vlan = <2>;
- 	phy-handle = <&phy1>;
- };
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir3220.dts b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-index 1ba66d5e21e8..058d9eb96cff 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-@@ -110,7 +110,7 @@
- };
+ #define AFI_FUSE			0x104
+ #define  AFI_FUSE_PCIE_T0_GEN2_DIS	(1 << 2)
+@@ -741,6 +743,12 @@ static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
  
- &cpsw_emac1 {
--	phy-mode = "rgmii-txid";
-+	phy-mode = "rgmii-id";
- 	dual_emac_res_vlan = <2>;
- 	phy-handle = <&phy1>;
- };
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir5221.dts b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-index eed65fc0e8e6..7b99c8ed3c3a 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-@@ -128,7 +128,7 @@
- };
+ 	value &= ~AFI_PEX_CTRL_REFCLK_EN;
+ 	afi_writel(port->pcie, value, ctrl);
++
++	/* disable PCIe port and set CLKREQ# as GPIO to allow PLLE power down */
++	value = afi_readl(port->pcie, AFI_PCIE_CONFIG);
++	value |= AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
++	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
++	afi_writel(port->pcie, value, AFI_PCIE_CONFIG);
+ }
  
- &cpsw_emac1 {
--	phy-mode = "rgmii-txid";
-+	phy-mode = "rgmii-id";
- 	dual_emac_res_vlan = <2>;
- 	phy-handle = <&phy1>;
- };
+ static void tegra_pcie_port_free(struct tegra_pcie_port *port)
+@@ -1153,9 +1161,12 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+ 	value = afi_readl(pcie, AFI_PCIE_CONFIG);
+ 	value &= ~AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_MASK;
+ 	value |= AFI_PCIE_CONFIG_PCIE_DISABLE_ALL | pcie->xbar_config;
++	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL;
+ 
+-	list_for_each_entry(port, &pcie->ports, list)
++	list_for_each_entry(port, &pcie->ports, list) {
+ 		value &= ~AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
++		value &= ~AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
++	}
+ 
+ 	afi_writel(pcie, value, AFI_PCIE_CONFIG);
+ 
 -- 
-2.17.0
+2.17.1
