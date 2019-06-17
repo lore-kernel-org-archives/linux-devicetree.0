@@ -1,91 +1,79 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register
- clock gates in probe
-Date: Mon, 17 Jun 2019 16:54:20 +0200
-Message-ID: <20190617145420.e7yfrmmhdhift5id@flea>
-References: <20190614164324.9427-1-jagan@amarulasolutions.com>
- <20190614164324.9427-6-jagan@amarulasolutions.com>
- <20190617114503.pclqsf6bo3ih47nt@flea>
- <CAGb2v66RU=m0iA9VoBiYbake+mDoiiGcd5gGGXvNCBjhY2n+Dw@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH] arm64: dts: ti: k3-am65: Add MSMC RAM ranges in
+ interconnect node
+Date: Mon, 17 Jun 2019 17:54:00 +0300
+Message-ID: <3c53679c-4246-43e1-e6d6-2e1c7db201d7@ti.com>
+References: <20190529211344.18014-1-s-anna@ti.com>
+ <20190530104903.ldcmkunjnk7a5y3c@akan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jzvxnzdlcqa2ksrf"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBI6TT3UAKGQESW7EP2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66RU=m0iA9VoBiYbake+mDoiiGcd5gGGXvNCBjhY2n+Dw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190530104903.ldcmkunjnk7a5y3c@akan>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>, Suman Anna <s-anna@ti.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On 30/05/2019 13:49, Nishanth Menon wrote:
+> On 16:13-20190529, Suman Anna wrote:
+>> From: Roger Quadros <rogerq@ti.com>
+>>
+>> Add the MSCM RAM address space to the ranges property of the cbass_main
+>> interconnect node so that the addresses can be translated properly.
+>>
+>> This fixes the probe failure in the sram driver for the MSMC RAM node.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>>
+>> The following error message is seen without this:
+>> [    0.480261] sram interconnect@100000:sram@70000000: found no memory resource
+>> [    0.487497] sram: probe of interconnect@100000:sram@70000000 failed with error -22
+>>
+>> regards
+>> Suman
+>>
+>>   arch/arm64/boot/dts/ti/k3-am65.dtsi | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+>> index 50f4be2047a9..68b3f954f1d1 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+>> @@ -68,6 +68,7 @@
+>>   			 <0x00 0x00900000 0x00 0x00900000 0x00 0x00012000>, /* serdes */
+>>   			 <0x00 0x01000000 0x00 0x01000000 0x00 0x0af02400>, /* Most peripherals */
+>>   			 <0x00 0x30800000 0x00 0x30800000 0x00 0x0bc00000>, /* MAIN NAVSS */
+>> +			 <0x00 0x70000000 0x00 0x70000000 0x00 0x00200000>, /* MSMC SRAM */
+>>   			 /* MCUSS Range */
+>>   			 <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>,
+>>   			 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>,
+>> -- 
+>> 2.21.0
+>>
+> 
+> Arrgh.. Nice catch. Thanks. We should consider pulling this in as part
+> of early rc fixes please.
+> 
+> Acked-by: Nishanth Menon <nm@ti.com>
 
---jzvxnzdlcqa2ksrf
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Hmm, what is the failure this causes, except the probe message? SRAM 
+driver obviously won't work but is it used for anything at the moment 
+anyways?
 
-On Mon, Jun 17, 2019 at 09:01:33PM +0800, Chen-Yu Tsai wrote:
-> On Mon, Jun 17, 2019 at 7:45 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Fri, Jun 14, 2019 at 10:13:20PM +0530, Jagan Teki wrote:
-> > > TCON TOP have clock gates for TV0, TV1, dsi and right
-> > > now these are register during bind call.
-> > >
-> > > Of which, dsi clock gate would required during DPHY probe
-> > > but same can miss to get since tcon top is not bound at
-> > > that time.
-> > >
-> > > To solve, this circular dependency move the clock gate
-> > > registration from bind to probe so-that DPHY can get the
-> > > dsi gate clock on time.
-> >
-> > It's not really clear to me what the circular dependency is?
-> >
-> > if you have a chain that is:
-> >
-> > tcon-top +-> DSI
-> >          +-> D-PHY
-> >
-> > There's no loop, right?
->
-> Looking at how the DTSI patch structures things (without going into
-> whether it is correct or accurate):
->
-> The D-PHY is not part of the component graph. However it requests
-> the DSI gate clock from the TCON-TOP.
->
-> The TCON-TOP driver, in its current form, only registers the clocks
-> it provides at component bind time. Thus the D-PHY can't successfully
-> probe until the TCON-TOP has been bound.
->
-> The DSI interface requires the D-PHY to bind. It will return -EPROBE_DEFER
-> if it cannot request it. This in turn goes into the error path of
-> component_bind_all, which unbinds all previous components.
->
-> So it's actually
->
->     D-PHY -> TCON-TOP -> DSI
->       ^                   |
->       |--------------------
->
-> I've not checked, but I suspect there's no possibility of having other
-> drivers probe (to deal with deferred probing) within component_bind_all.
-> Otherwise we shouldn't run into this weird circular dependency issue.
->
+I would rather queue this towards 5.3.
 
-Ah, yes, that makes sense. It should be cleraer in the commit log then.
-
-Thanks!
-Maxime
-
+-Tero
 --
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---jzvxnzdlcqa2ksrf--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
