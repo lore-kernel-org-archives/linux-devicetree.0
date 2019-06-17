@@ -1,33 +1,39 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v4 00/10] memory: tegra: Introduce Tegra30 EMC driver
-Date: Mon, 17 Jun 2019 18:08:12 +0300
-Message-ID: <10dd12ce-b85d-7c33-8b10-7c7e66a109ad@gmail.com>
-References: <20190616233551.6838-1-digetx@gmail.com>
- <20190617082143.GM29894@pdeschrijver-desktop.Nvidia.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH next v2] of/fdt: Fix defined but not used compiler warning
+Date: Mon, 17 Jun 2019 08:10:08 -0700
+Message-ID: <5d07ad51.1c69fb81.25c8.f3a0@mx.google.com>
+References: <20190612010011.90185-1-wangkefeng.wang@huawei.com> <20190615030343.96524-1-wangkefeng.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617082143.GM29894@pdeschrijver-desktop.Nvidia.com>
-Content-Language: en-US
+In-Reply-To: <20190615030343.96524-1-wangkefeng.wang@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-17.06.2019 11:21, Peter De Schrijver пишет:
-> On Mon, Jun 17, 2019 at 02:35:41AM +0300, Dmitry Osipenko wrote:
->> Hello,
->>
->> This series introduces driver for the External Memory Controller (EMC)
->> found on Tegra30 chips, it controls the external DRAM on the board. The
->> purpose of this driver is to program memory timing for external memory on
->> the EMC clock rate change. The driver was tested using the ACTMON devfreq
->> driver that performs memory frequency scaling based on memory-usage load.
-> 
-> Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
-> 
+Quoting Kefeng Wang (2019-06-14 20:03:43)
+> When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler
+> warning,
+>=20
+> drivers/of/fdt.c:129:19: warning: =E2=80=98of_fdt_match=E2=80=99 defined =
+but not used [-Wunused-function]
+>  static int __init of_fdt_match(const void *blob, unsigned long node,
+>=20
+> Since the only caller of of_fdt_match() is of_flat_dt_match(),
+> let's move the body of of_fdt_match() into of_flat_dt_match()
+> and eliminate of_fdt_match().
+>=20
+> Meanwhile, move of_fdt_is_compatible() under CONFIG_OF_EARLY_FLATTREE,
+> as all callers are over there.
+>=20
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
 
-Thank you very much! I'll address comments from Thierry in v5 and probably add one
-more very minor change. I'll add yours ACK to v5 if there won't be any radical
-changes. Thanks again for helping with the review!
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+
+Arnd sent something similar now too.
