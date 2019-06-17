@@ -1,52 +1,67 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: [PATCH v7 7/7] MAINTAINERS: Add an entry for generic architecture topology
-Date: Mon, 17 Jun 2019 11:59:20 -0700
-Message-ID: <20190617185920.29581-8-atish.patra@wdc.com>
-References: <20190617185920.29581-1-atish.patra@wdc.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/2] arm: dts: add ARM Mali GPU node for Odroid XU3
+Date: Mon, 17 Jun 2019 13:16:31 -0600
+Message-ID: <CAL_JsqKasi4m7xU2AF1YQk-Tp0Z6=qh51LgTpb=xiZ9g6A3HvA@mail.gmail.com>
+References: <20190614203144.3850-2-joseph.kogut@gmail.com>
+ <20190614235719.8134-1-joseph.kogut@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617185920.29581-1-atish.patra@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Juri Lelli <juri.lelli@redhat.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Atish Patra <atish.patra@wdc.com>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>Paul Walmsley <pa>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190614235719.8134-1-joseph.kogut@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Joseph Kogut <joseph.kogut@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
-
-arm and arm64 shared lot of CPU topology related code. This was
-consolidated under driver/base/arch_topology.c by Juri. Now RISC-V
-is also started sharing the same code pulling more code from arm64
-into arch_topology.c
-
-Since I was involved in the review from the beginning, I would like
-to assume maintenance for the same.
-
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 57f496cff999..c6f7d7152f01 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6595,6 +6595,13 @@ W:	https://linuxtv.org
- S:	Maintained
- F:	drivers/media/radio/radio-gemtek*
- 
-+GENERIC ARCHITECTURE TOPOLOGY
-+M:	Sudeep Holla <sudeep.holla@arm.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	drivers/base/arch_topology.c
-+F:	include/linux/arch_topology.h
-+
- GENERIC GPIO I2C DRIVER
- M:	Wolfram Sang <wsa+renesas@sang-engineering.com>
- S:	Supported
--- 
-2.21.0
+T24gRnJpLCBKdW4gMTQsIDIwMTkgYXQgNTo1NyBQTSBKb3NlcGggS29ndXQgPGpvc2VwaC5rb2d1
+dEBnbWFpbC5jb20+IHdyb3RlOgo+Cj4gQWRkIGRldmljZSB0cmVlIG5vZGUgZm9yIG1hbGkgZ3B1
+IG9uIE9kcm9pZCBYVTMgU29Dcy4KPgo+IFNpZ25lZC1vZmYtYnk6IEpvc2VwaCBLb2d1dCA8am9z
+ZXBoLmtvZ3V0QGdtYWlsLmNvbT4KPiAtLS0KPgo+IENoYW5nZXMgdjEgLT4gdjI6Cj4gLSBVc2Ug
+aW50ZXJydXB0IG5hbWUgb3JkZXJpbmcgZnJvbSBiaW5kaW5nIGRvYwo+IC0gU3BlY2lmeSBhIHNp
+bmdsZSBjbG9jayBmb3IgR1BVIG5vZGUKPiAtIEFkZCBncHUgb3BwIHRhYmxlCj4gLSBGaXggd2Fy
+bmluZ3MgZnJvbSBJUlFfVFlQRV9OT05FCj4KPiAgLi4uL2Jvb3QvZHRzL2V4eW5vczU0MjItb2Ry
+b2lkeHUzLWNvbW1vbi5kdHNpIHwgMjYgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hh
+bmdlZCwgMjYgaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L2V4eW5vczU0MjItb2Ryb2lkeHUzLWNvbW1vbi5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5
+bm9zNTQyMi1vZHJvaWR4dTMtY29tbW9uLmR0c2kKPiBpbmRleCA5M2E0OGYyZGRhNDkuLmI4YTQy
+NDZlM2IzNyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIyLW9kcm9p
+ZHh1My1jb21tb24uZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjItb2Ry
+b2lkeHUzLWNvbW1vbi5kdHNpCj4gQEAgLTQ4LDYgKzQ4LDMyIEBACj4gICAgICAgICAgICAgICAg
+IGNvb2xpbmctbGV2ZWxzID0gPDAgMTMwIDE3MCAyMzA+Owo+ICAgICAgICAgfTsKPgo+ICsgICAg
+ICAgZ3B1OiBncHVAMTE4MDAwMDAgewo+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInNh
+bXN1bmcsZXh5bm9zLW1hbGkiLCAiYXJtLG1hbGktdDYyOCI7Cj4gKyAgICAgICAgICAgICAgIHJl
+ZyA9IDwweDExODAwMDAwIDB4NTAwMD47Cj4gKyAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8
+R0lDX1NQSSAyMTkgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICA8R0lDX1NQSSA3NCAgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICA8R0lDX1NQSSAxMTcgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gKyAg
+ICAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyA9ICJqb2IiLCAibW11IiwgImdwdSI7Cj4gKyAg
+ICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2sgQ0xLX0czRD47Cj4gKyAgICAgICAgICAgICAg
+IG1hbGktc3VwcGx5ID0gPCZidWNrNF9yZWc+Owo+ICsgICAgICAgICAgICAgICBvcGVyYXRpbmct
+cG9pbnRzLXYyID0gPCZncHVfb3BwX3RhYmxlPjsKPiArICAgICAgIH07Cj4gKwo+ICsgICAgICAg
+Z3B1X29wcF90YWJsZTogZ3B1LW9wcC10YWJsZSB7CgpOb3QgcmVhbGx5IGEgbmV3IHByb2JsZW0g
+aW4gdGhpcyBmaWxlLCBidXQgeW91IGFyZSBtaXhpbmcgbm9kZXMgd2l0aAphbmQgd2l0aG91dCBh
+biBhZGRyZXNzIGFuZCByZWFsbHkgdGhlIGdwdSBub2RlIHNob3VsZCBiZSB1bmRlciBhCnNpbXBs
+ZS1idXMgbm9kZS4KCklmIHRoZSBPUFAgaXMgb25seSBmb3IgdGhlIEdQVSwgSSdkIG1ha2UgaXQg
+YSBjaGlsZCBvZiB0aGUgZ3B1IG5vZGUgaW5zdGVhZC4KCj4gKyAgICAgICAgICAgICAgIGNvbXBh
+dGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12MiI7Cj4gKwo+ICsgICAgICAgICAgICAgICBvcHAt
+MTc3MDAwMDAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBvcHAtaHogPSAvYml0cy8gNjQg
+PDExNzAwMDAwMD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgb3BwLW1pY3Jvdm9sdCA9IDw4
+MTI1MDA+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsKPiArICAgICAgICAgICAgICAgb3BwLTYw
+MDAwMDAwMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDw2
+MDAwMDAwMDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIG9wcC1taWNyb3ZvbHQgPSA8MTE1
+MDAwMD47Cj4gKyAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICB9Owo+ICsKPiAgICAgICAgIHRo
+ZXJtYWwtem9uZXMgewo+ICAgICAgICAgICAgICAgICBjcHUwX3RoZXJtYWw6IGNwdTAtdGhlcm1h
+bCB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgdGhlcm1hbC1zZW5zb3JzID0gPCZ0bXVfY3B1
+MCAwPjsKPiAtLQo+IDIuMjIuMAo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbA==
