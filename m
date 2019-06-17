@@ -1,69 +1,148 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am65: Add MSMC RAM ranges in
- interconnect node
-Date: Mon, 17 Jun 2019 10:53:51 -0500
-Message-ID: <b1f7aa31-4f3b-b9d9-6951-092f3a87d078@ti.com>
-References: <20190529211344.18014-1-s-anna@ti.com>
- <20190530104903.ldcmkunjnk7a5y3c@akan>
- <3c53679c-4246-43e1-e6d6-2e1c7db201d7@ti.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 14/21] iommu/mediatek: Add mmu1 support
+Date: Mon, 17 Jun 2019 17:58:28 +0200
+Message-ID: <dbed27ec-381e-8feb-736b-508d9d6e40cf@gmail.com>
+References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+	<1560169080-27134-15-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3c53679c-4246-43e1-e6d6-2e1c7db201d7@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1560169080-27134-15-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gNi8xNy8xOSA5OjU0IEFNLCBUZXJvIEtyaXN0byB3cm90ZToKPiBPbiAzMC8wNS8yMDE5IDEz
-OjQ5LCBOaXNoYW50aCBNZW5vbiB3cm90ZToKPj4gT24gMTY6MTMtMjAxOTA1MjksIFN1bWFuIEFu
-bmEgd3JvdGU6Cj4+PiBGcm9tOiBSb2dlciBRdWFkcm9zIDxyb2dlcnFAdGkuY29tPgo+Pj4KPj4+
-IEFkZCB0aGUgTVNDTSBSQU0gYWRkcmVzcyBzcGFjZSB0byB0aGUgcmFuZ2VzIHByb3BlcnR5IG9m
-IHRoZSBjYmFzc19tYWluCj4+PiBpbnRlcmNvbm5lY3Qgbm9kZSBzbyB0aGF0IHRoZSBhZGRyZXNz
-ZXMgY2FuIGJlIHRyYW5zbGF0ZWQgcHJvcGVybHkuCj4+Pgo+Pj4gVGhpcyBmaXhlcyB0aGUgcHJv
-YmUgZmFpbHVyZSBpbiB0aGUgc3JhbSBkcml2ZXIgZm9yIHRoZSBNU01DIFJBTSBub2RlLgo+Pj4K
-Pj4+IFNpZ25lZC1vZmYtYnk6IFJvZ2VyIFF1YWRyb3MgPHJvZ2VycUB0aS5jb20+Cj4+PiBTaWdu
-ZWQtb2ZmLWJ5OiBTdW1hbiBBbm5hIDxzLWFubmFAdGkuY29tPgo+Pj4gLS0tCj4+Pgo+Pj4gVGhl
-IGZvbGxvd2luZyBlcnJvciBtZXNzYWdlIGlzIHNlZW4gd2l0aG91dCB0aGlzOgo+Pj4gW8KgwqDC
-oCAwLjQ4MDI2MV0gc3JhbSBpbnRlcmNvbm5lY3RAMTAwMDAwOnNyYW1ANzAwMDAwMDA6IGZvdW5k
-IG5vCj4+PiBtZW1vcnkgcmVzb3VyY2UKPj4+IFvCoMKgwqAgMC40ODc0OTddIHNyYW06IHByb2Jl
-IG9mIGludGVyY29ubmVjdEAxMDAwMDA6c3JhbUA3MDAwMDAwMAo+Pj4gZmFpbGVkIHdpdGggZXJy
-b3IgLTIyCj4+Pgo+Pj4gcmVnYXJkcwo+Pj4gU3VtYW4KPj4+Cj4+PiDCoCBhcmNoL2FybTY0L2Jv
-b3QvZHRzL3RpL2szLWFtNjUuZHRzaSB8IDEgKwo+Pj4gwqAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMt
-YW02NS5kdHNpCj4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMtYW02NS5kdHNpCj4+PiBp
-bmRleCA1MGY0YmUyMDQ3YTkuLjY4YjNmOTU0ZjFkMSAxMDA2NDQKPj4+IC0tLSBhL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvdGkvazMtYW02NS5kdHNpCj4+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
-L3RpL2szLWFtNjUuZHRzaQo+Pj4gQEAgLTY4LDYgKzY4LDcgQEAKPj4+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgPDB4MDAgMHgwMDkwMDAwMCAweDAwIDB4MDA5MDAwMDAgMHgwMCAweDAw
-MDEyMDAwPiwgLyoKPj4+IHNlcmRlcyAqLwo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCA8MHgwMCAweDAxMDAwMDAwIDB4MDAgMHgwMTAwMDAwMCAweDAwIDB4MGFmMDI0MDA+LCAvKgo+
-Pj4gTW9zdCBwZXJpcGhlcmFscyAqLwo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8
-MHgwMCAweDMwODAwMDAwIDB4MDAgMHgzMDgwMDAwMCAweDAwIDB4MGJjMDAwMDA+LCAvKgo+Pj4g
-TUFJTiBOQVZTUyAqLwo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8MHgwMCAweDcwMDAw
-MDAwIDB4MDAgMHg3MDAwMDAwMCAweDAwIDB4MDAyMDAwMDA+LCAvKgo+Pj4gTVNNQyBTUkFNICov
-Cj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8qIE1DVVNTIFJhbmdlICovCj4+PiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDwweDAwIDB4MjgzODAwMDAgMHgwMCAweDI4Mzgw
-MDAwIDB4MDAgMHgwMzg4MDAwMD4sCj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDww
-eDAwIDB4NDAyMDAwMDAgMHgwMCAweDQwMjAwMDAwIDB4MDAgMHgwMDkwMDEwMD4sCj4+PiAtLcKg
-Cj4+PiAyLjIxLjAKPj4+Cj4+Cj4+IEFycmdoLi4gTmljZSBjYXRjaC4gVGhhbmtzLiBXZSBzaG91
-bGQgY29uc2lkZXIgcHVsbGluZyB0aGlzIGluIGFzIHBhcnQKPj4gb2YgZWFybHkgcmMgZml4ZXMg
-cGxlYXNlLgo+Pgo+PiBBY2tlZC1ieTogTmlzaGFudGggTWVub24gPG5tQHRpLmNvbT4KPiAKPiBI
-bW0sIHdoYXQgaXMgdGhlIGZhaWx1cmUgdGhpcyBjYXVzZXMsIGV4Y2VwdCB0aGUgcHJvYmUgbWVz
-c2FnZT8gU1JBTQo+IGRyaXZlciBvYnZpb3VzbHkgd29uJ3Qgd29yayBidXQgaXMgaXQgdXNlZCBm
-b3IgYW55dGhpbmcgYXQgdGhlIG1vbWVudAo+IGFueXdheXM/Cj4gCj4gSSB3b3VsZCByYXRoZXIg
-cXVldWUgdGhpcyB0b3dhcmRzIDUuMy4KCk9LLCBJIGFtIGZpbmUgZWl0aGVyIHdheS4KCnJlZ2Fy
-ZHMKU3VtYW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWFybS1rZXJuZWwK
+
+
+On 10/06/2019 14:17, Yong Wu wrote:
+> Normally the M4U HW connect EMI with smi. the diagram is like below:
+>               EMI
+>                |
+>               M4U
+>                |
+>             smi-common
+>                |
+>        -----------------
+>        |    |    |     |    ...
+>     larb0 larb1  larb2 larb3
+> 
+> Actually there are 2 mmu cells in the M4U HW, like this diagram:
+> 
+>               EMI
+>            ---------
+>             |     |
+>            mmu0  mmu1     <- M4U
+>             |     |
+>            ---------
+>                |
+>             smi-common
+>                |
+>        -----------------
+>        |    |    |     |    ...
+>     larb0 larb1  larb2 larb3
+> 
+> This patch add support for mmu1. In order to get better performance,
+> we could adjust some larbs go to mmu1 while the others still go to
+> mmu0. This is controlled by a SMI COMMON register SMI_BUS_SEL(0x220).
+> 
+> mt2712, mt8173 and mt8183 M4U HW all have 2 mmu cells. the default
+> value of that register is 0 which means all the larbs go to mmu0
+> defaultly.
+> 
+> This is a preparing patch for adjusting SMI_BUS_SEL for mt8183.
+> 
+> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+> ---
+>  drivers/iommu/mtk_iommu.c | 46 +++++++++++++++++++++++++++++-----------------
+>  1 file changed, 29 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 3a14301..ec4ce74 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -72,26 +72,32 @@
+>  #define F_INT_CLR_BIT				BIT(12)
+>  
+>  #define REG_MMU_INT_MAIN_CONTROL		0x124
+> -#define F_INT_TRANSLATION_FAULT			BIT(0)
+> -#define F_INT_MAIN_MULTI_HIT_FAULT		BIT(1)
+> -#define F_INT_INVALID_PA_FAULT			BIT(2)
+> -#define F_INT_ENTRY_REPLACEMENT_FAULT		BIT(3)
+> -#define F_INT_TLB_MISS_FAULT			BIT(4)
+> -#define F_INT_MISS_TRANSACTION_FIFO_FAULT	BIT(5)
+> -#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT	BIT(6)
+> +						/* mmu0 | mmu1 */
+> +#define F_INT_TRANSLATION_FAULT			(BIT(0) | BIT(7))
+> +#define F_INT_MAIN_MULTI_HIT_FAULT		(BIT(1) | BIT(8))
+> +#define F_INT_INVALID_PA_FAULT			(BIT(2) | BIT(9))
+> +#define F_INT_ENTRY_REPLACEMENT_FAULT		(BIT(3) | BIT(10))
+> +#define F_INT_TLB_MISS_FAULT			(BIT(4) | BIT(11))
+> +#define F_INT_MISS_TRANSACTION_FIFO_FAULT	(BIT(5) | BIT(12))
+> +#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT	(BIT(6) | BIT(13))
+>  
+>  #define REG_MMU_CPE_DONE			0x12C
+>  
+>  #define REG_MMU_FAULT_ST1			0x134
+> +#define F_REG_MMU0_FAULT_MASK			GENMASK(6, 0)
+> +#define F_REG_MMU1_FAULT_MASK			GENMASK(13, 7)
+>  
+> -#define REG_MMU_FAULT_VA			0x13c
+> +#define REG_MMU0_FAULT_VA			0x13c
+>  #define F_MMU_FAULT_VA_WRITE_BIT		BIT(1)
+>  #define F_MMU_FAULT_VA_LAYER_BIT		BIT(0)
+>  
+> -#define REG_MMU_INVLD_PA			0x140
+> -#define REG_MMU_INT_ID				0x150
+> -#define F_MMU0_INT_ID_LARB_ID(a)		(((a) >> 7) & 0x7)
+> -#define F_MMU0_INT_ID_PORT_ID(a)		(((a) >> 2) & 0x1f)
+> +#define REG_MMU0_INVLD_PA			0x140
+> +#define REG_MMU1_FAULT_VA			0x144
+> +#define REG_MMU1_INVLD_PA			0x148
+> +#define REG_MMU0_INT_ID				0x150
+> +#define REG_MMU1_INT_ID				0x154
+> +#define F_MMU_INT_ID_LARB_ID(a)			(((a) >> 7) & 0x7)
+> +#define F_MMU_INT_ID_PORT_ID(a)			(((a) >> 2) & 0x1f)
+>  
+>  #define MTK_PROTECT_PA_ALIGN			128
+>  
+> @@ -210,13 +216,19 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
+>  
+>  	/* Read error info from registers */
+>  	int_state = readl_relaxed(data->base + REG_MMU_FAULT_ST1);
+> -	fault_iova = readl_relaxed(data->base + REG_MMU_FAULT_VA);
+> +	if (int_state & F_REG_MMU0_FAULT_MASK) {
+> +		regval = readl_relaxed(data->base + REG_MMU0_INT_ID);
+> +		fault_iova = readl_relaxed(data->base + REG_MMU0_FAULT_VA);
+> +		fault_pa = readl_relaxed(data->base + REG_MMU0_INVLD_PA);
+> +	} else {
+> +		regval = readl_relaxed(data->base + REG_MMU1_INT_ID);
+> +		fault_iova = readl_relaxed(data->base + REG_MMU1_FAULT_VA);
+> +		fault_pa = readl_relaxed(data->base + REG_MMU1_INVLD_PA);
+> +	}
+>  	layer = fault_iova & F_MMU_FAULT_VA_LAYER_BIT;
+>  	write = fault_iova & F_MMU_FAULT_VA_WRITE_BIT;
+> -	fault_pa = readl_relaxed(data->base + REG_MMU_INVLD_PA);
+> -	regval = readl_relaxed(data->base + REG_MMU_INT_ID);
+> -	fault_larb = F_MMU0_INT_ID_LARB_ID(regval);
+> -	fault_port = F_MMU0_INT_ID_PORT_ID(regval);
+> +	fault_larb = F_MMU_INT_ID_LARB_ID(regval);
+> +	fault_port = F_MMU_INT_ID_PORT_ID(regval);
+>  
+>  	fault_larb = data->plat_data->larbid_remap[fault_larb];
+>  
+> 
