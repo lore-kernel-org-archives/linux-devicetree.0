@@ -1,76 +1,65 @@
-Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
+Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 00/27] Enable Tegra PCIe root port features
-Date: Tue, 18 Jun 2019 23:31:39 +0530
-Message-ID: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+Subject: [PATCH V5 16/27] PCI: tegra: Set target speed as Gen1 before starting LTSSM
+Date: Mon, 17 Jun 2019 23:09:41 +0530
+Message-ID: <20190617173952.29363-17-mmaddireddy@nvidia.com>
+In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This series of patches adds,
-- Tegra root port features like Gen2, AER, etc
-- Power and perf optimizations
-- Fixes like "power up sequence", "dev_err prints", etc
+PCIe link up fails with few legacy endpoints if root port advertises both
+Gen-1 and Gen-2 speeds in Tegra. This is because link number negotiation
+fails if both Gen1 & Gen2 are advertised. Tegra doesn't retry link up by
+advertising only Gen1. Hence, the strategy followed here is to initially
+advertise only Gen-1 and after link is up, retrain link to Gen-2 speed.
 
-This series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
-based Jetson-TX1, T124 based Jetson-TK1, Tegra20 and Tegra30 platforms.
+Tegra doesn't support HW autonomous speed change. Link comes up in Gen1
+even if Gen2 is advertised, so there is no downside of this change.
 
-Changes from V5 to V6:
-  - Patch [V4, 20/27]: Replaced pcie_pme_disable_msi() with no_msi quirk
+This behavior is observed with following two PCIe devices on Tegra,
+ - Fusion HDTV 5 Express card
+ - IOGear SIL - PCIE - SATA card
 
-Changes from V4 to V5:
- - Patch [V4, 4/28]: Added blank line before block style comment
- - Patch [V4, 22/28]: "Access endpoint config only if PCIe link is up"
-patch is dropped
- - Patch [V4, 27/28]:
-* Updated reset gpio toggle logic to reflect active low usage
-* Replaced kasprintf() with devm_kasprintf()
-* Updated commit message with more information.
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+V5: No change
 
-Changes from V3 to V4:
- - Patch [V3,27/29] is dropped
- - Patch [V3,28/29]: devm_gpiod_get_from_of_node() is directly used in
-   pci-tegra driver instead of of_get_pci* wrapper function defined in
-   Patch [V3,27/29].
+V4: No change
 
-Manikanta Maddireddy (27):
-  soc/tegra: pmc: Export tegra_powergate_power_on()
-  PCI: tegra: Handle failure cases in tegra_pcie_power_on()
-  PCI: tegra: Rearrange Tegra PCIe driver functions
-  PCI: tegra: Mask AFI_INTR in runtime suspend
-  PCI: tegra: Fix PCIe host power up sequence
-  PCI: tegra: Add PCIe Gen2 link speed support
-  PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
-  PCI: tegra: Program UPHY electrical settings for Tegra210
-  PCI: tegra: Enable opportunistic UpdateFC and ACK
-  PCI: tegra: Disable AFI dynamic clock gating
-  PCI: tegra: Process pending DLL transactions before entering L1 or L2
-  PCI: tegra: Enable PCIe xclk clock clamping
-  PCI: tegra: Increase the deskew retry time
-  PCI: tegra: Add SW fixup for RAW violations
-  PCI: tegra: Update flow control timer frequency in Tegra210
-  PCI: tegra: Set target speed as Gen1 before starting LTSSM
-  PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
-  PCI: tegra: Program AFI_CACHE* registers only for Tegra20
-  PCI: tegra: Change PRSNT_SENSE IRQ log to debug
-  PCI: tegra: Disable MSI for Tegra PCIe root port
-  PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
-  dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
-  arm64: tegra: Add PEX DPD states as pinctrl properties
-  PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
-  PCI: Add DT binding for "reset-gpios" property
-  PCI: tegra: Add support for GPIO based PERST#
-  PCI: tegra: Change link retry log level to debug
+V3: No change
 
- .../bindings/pci/nvidia,tegra20-pcie.txt      |   8 +
- Documentation/devicetree/bindings/pci/pci.txt |   3 +
- arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
- drivers/pci/controller/pci-tegra.c            | 578 +++++++++++++++---
- drivers/pci/quirks.c                          |  39 ++
- drivers/soc/tegra/pmc.c                       |   1 +
- 6 files changed, 568 insertions(+), 80 deletions(-)
+V2: Updated commit log to reflect why this issue is observed on Tegra with
+these particular cards
 
+ drivers/pci/controller/pci-tegra.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 6ed406c46409..abb94595c76b 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -676,6 +676,17 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
+ 		value |= soc->update_fc_threshold;
+ 		writel(value, port->base + RP_VEND_XP);
+ 	}
++
++	/*
++	 * PCIe link doesn't come up with few legacy PCIe endpoints if
++	 * root port advertises both Gen-1 and Gen-2 speeds in Tegra.
++	 * Hence, the strategy followed here is to initially advertise
++	 * only Gen-1 and after link is up, retrain link to Gen-2 speed
++	 */
++	value = readl(port->base + RP_LINK_CONTROL_STATUS_2);
++	value &= ~PCI_EXP_LNKSTA_CLS;
++	value |= PCI_EXP_LNKSTA_CLS_2_5GB;
++	writel(value, port->base + RP_LINK_CONTROL_STATUS_2);
+ }
+ 
+ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
 -- 
 2.17.1
