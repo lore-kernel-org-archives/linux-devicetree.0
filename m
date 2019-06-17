@@ -1,248 +1,52 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 16/21] memory: mtk-smi: Add bus_sel for mt8183
-Date: Mon, 17 Jun 2019 18:28:21 +0200
-Message-ID: <99b3096f-ece2-f130-e86f-0e84c8315ff4@gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
-	<1560169080-27134-17-git-send-email-yong.wu@mediatek.com>
-	<CANdKZ0emRPcTcL7Yq5nLH5z2_9fBuuczKehA8oEi0b+je15RPg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/4] regulator: Add regulator driver for ATC260x PMICs
+Date: Mon, 17 Jun 2019 17:30:15 +0100
+Message-ID: <20190617163015.GD5316@sirena.org.uk>
+References: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
+ <20190617155011.15376-4-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CANdKZ0emRPcTcL7Yq5nLH5z2_9fBuuczKehA8oEi0b+je15RPg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Pi-Hsun Shih <pihsun-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ROA1rv1+fHr2QGor"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190617155011.15376-4-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lee.jones@linaro.org, lgirdwood@gmail.com, robh+dt@kernel.org, afaerber@suse.de, linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, devicetree@vger.kernel.org, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
 
+--ROA1rv1+fHr2QGor
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 13/06/2019 10:20, Pi-Hsun Shih wrote:
-> (Sorry for the possibly double-posting, my last mail got rejected by
-> some mailing lists.)
-> 
-> Hi,
-> When I tested this patch series (Based on linux 5.2.0-rc2, and with
-> various other patch series about MT8183) with lockdep enabled, and I'm
-> seeing the following lockdep warning on boot.
-> 
-> By bisecting the commits, the first commit that introduce this warning
-> is this patch. The warning also doesn't appear if
+On Mon, Jun 17, 2019 at 09:20:10PM +0530, Manivannan Sadhasivam wrote:
 
-Are you sure about this?
->From the lockdep call graph it looks more like patch
-[PATCH v7 15/21] memory: mtk-smi: Invoke pm runtime_callback to enable clocks
-has something to do with it.
+> +++ b/drivers/regulator/atc260x-regulator.c
+> @@ -0,0 +1,389 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Regulator driver for ATC260x PMICs
 
-But not an expert either, sorry.
+Please make the entire comment a C++ one so this looks more intentional.
 
-Regards,
-Matthias
+> + * Copyright (C) 2019 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> https://lore.kernel.org/patchwork/patch/1086582/ and
-> https://lore.kernel.org/patchwork/patch/1086583/ are not applied.
-> 
-> Do anyone have idea on why this is happening, or any suggestion on
-> which part I should be digging into to figure this out? Thanks.
-> 
-> [    4.664194] ======================================================
-> [    4.670368] WARNING: possible circular locking dependency detected
-> [    4.676545] 5.2.0-rc2-next-20190528-44527-g6c94b6475c04 #20 Tainted: G S
-> [    4.684539] ------------------------------------------------------
-> [    4.690714] kworker/4:1/51 is trying to acquire lock:
-> [    4.695760] (____ptrval____) (regulator_list_mutex){+.+.},
-> at:regulator_lock_dependent+0xdc/0x6c4
-> [    4.704732]
-> [    4.704732] but task is already holding lock:
-> [    4.710556] (____ptrval____) (&genpd->mlock/1){+.+.},
-> at:genpd_lock_nested_mtx+0x24/0x30
-> [    4.718740]
-> [    4.718740] which lock already depends on the new lock.
-> [    4.718740]
-> [    4.726908]
-> [    4.726908] the existing dependency chain (in reverse order) is:
-> [    4.734382]
-> [    4.734382] -> #4 (&genpd->mlock/1){+.+.}:
-> [    4.739963]        __mutex_lock_common+0x1a0/0x1fe8
-> [    4.744836]        mutex_lock_nested+0x40/0x50
-> [    4.749275]        genpd_lock_nested_mtx+0x24/0x30
-> [    4.754063]        genpd_add_subdomain+0x150/0x524
-> [    4.758850]        pm_genpd_add_subdomain+0x3c/0x5c
-> [    4.763723]        scpsys_probe+0x520/0xe78
-> [    4.767902]        platform_drv_probe+0xf4/0x134
-> [    4.772517]        really_probe+0x214/0x4dc
-> [    4.776696]        driver_probe_device+0xcc/0x1d4
-> [    4.781396]        __device_attach_driver+0x10c/0x180
-> [    4.786442]        bus_for_each_drv+0x124/0x184
-> [    4.790968]        __device_attach+0x1c0/0x2d8
-> [    4.795407]        device_initial_probe+0x20/0x2c
-> [    4.800106]        bus_probe_device+0x80/0x16c
-> [    4.804546]        deferred_probe_work_func+0x120/0x168
-> [    4.809767]        process_one_work+0x858/0x1208
-> [    4.814379]        worker_thread+0x9ec/0xcb8
-> [    4.818644]        kthread+0x2b8/0x2d0
-> [    4.822391]        ret_from_fork+0x10/0x18
-> [    4.826480]
-> [    4.826480] -> #3 (&genpd->mlock){+.+.}:
-> [    4.831880]        __mutex_lock_common+0x1a0/0x1fe8
-> [    4.836752]        mutex_lock_nested+0x40/0x50
-> [    4.841190]        genpd_lock_mtx+0x20/0x2c
-> [    4.845369]        genpd_runtime_resume+0x140/0x434
-> [    4.850241]        __rpm_callback+0xb0/0x1e4
-> [    4.854506]        rpm_callback+0x54/0x1a8
-> [    4.858597]        rpm_resume+0xc6c/0x10c4
-> [    4.862689]        __pm_runtime_resume+0xb4/0x124
-> [    4.867387]        device_link_add+0x598/0x8d0
-> [    4.871829]        mtk_smi_larb_probe+0x2b0/0x340
-> [    4.876528]        platform_drv_probe+0xf4/0x134
-> [    4.881141]        really_probe+0x214/0x4dc
-> [    4.885320]        driver_probe_device+0xcc/0x1d4
-> [    4.890020]        __device_attach_driver+0x10c/0x180
-> [    4.895066]        bus_for_each_drv+0x124/0x184
-> [    4.899591]        __device_attach+0x1c0/0x2d8
-> [    4.904031]        device_initial_probe+0x20/0x2c
-> [    4.908730]        bus_probe_device+0x80/0x16c
-> [    4.913169]        deferred_probe_work_func+0x120/0x168
-> [    4.918387]        process_one_work+0x858/0x1208
-> [    4.923000]        worker_thread+0x9ec/0xcb8
-> [    4.927264]        kthread+0x2b8/0x2d0
-> [    4.931009]        ret_from_fork+0x10/0x18
-> [    4.935098]
-> [    4.935098] -> #2 (dpm_list_mtx){+.+.}:
-> [    4.940412]        __mutex_lock_common+0x1a0/0x1fe8
-> [    4.945284]        mutex_lock_nested+0x40/0x50
-> [    4.949722]        device_pm_lock+0x1c/0x24
-> [    4.953900]        device_link_add+0x98/0x8d0
-> [    4.958252]        _regulator_get+0x3f0/0x504
-> [    4.962606]        _devm_regulator_get+0x58/0xb8
-> [    4.967218]        devm_regulator_get+0x28/0x34
-> [    4.971746]        pwm_backlight_probe+0x61c/0x1b90
-> [    4.976617]        platform_drv_probe+0xf4/0x134
-> [    4.981230]        really_probe+0x214/0x4dc
-> [    4.985409]        driver_probe_device+0xcc/0x1d4
-> [    4.990108]        device_driver_attach+0xe4/0x104
-> [    4.994894]        __driver_attach+0x134/0x14c
-> [    4.999333]        bus_for_each_dev+0x120/0x180
-> [    5.003859]        driver_attach+0x48/0x54
-> [    5.007950]        bus_add_driver+0x2ac/0x44c
-> [    5.012303]        driver_register+0x160/0x288
-> [    5.016742]        __platform_driver_register+0xcc/0xdc
-> [    5.021964]        pwm_backlight_driver_init+0x1c/0x24
-> [    5.027097]        do_one_initcall+0x38c/0x994
-> [    5.031536]        do_initcall_level+0x3a4/0x4b8
-> [    5.036148]        do_basic_setup+0x84/0xa0
-> [    5.036153]        kernel_init_freeable+0x23c/0x324
-> [    5.036158]        kernel_init+0x14/0x110
-> [    5.036164]        ret_from_fork+0x10/0x18
-> [    5.036166]
-> [    5.036166] -> #1 (device_links_lock){+.+.}:
-> [    5.065905]        __mutex_lock_common+0x1a0/0x1fe8
-> [    5.070777]        mutex_lock_nested+0x40/0x50
-> [    5.075215]        device_link_remove+0x40/0xe0
-> [    5.079740]        _regulator_put+0x104/0x2d8
-> [    5.084093]        regulator_put+0x30/0x44
-> [    5.088184]        devm_regulator_release+0x38/0x44
-> [    5.093056]        release_nodes+0x604/0x670
-> [    5.097320]        devres_release_all+0x70/0x8c
-> [    5.101846]        really_probe+0x270/0x4dc
-> [    5.106024]        driver_probe_device+0xcc/0x1d4
-> [    5.110724]        device_driver_attach+0xe4/0x104
-> [    5.115510]        __driver_attach+0x134/0x14c
-> [    5.119949]        bus_for_each_dev+0x120/0x180
-> [    5.124474]        driver_attach+0x48/0x54
-> [    5.128566]        bus_add_driver+0x2ac/0x44c
-> [    5.132919]        driver_register+0x160/0x288
-> [    5.137357]        __platform_driver_register+0xcc/0xdc
-> [    5.142576]        pwm_backlight_driver_init+0x1c/0x24
-> [    5.147708]        do_one_initcall+0x38c/0x994
-> [    5.152146]        do_initcall_level+0x3a4/0x4b8
-> [    5.156758]        do_basic_setup+0x84/0xa0
-> [    5.160936]        kernel_init_freeable+0x23c/0x324
-> [    5.165807]        kernel_init+0x14/0x110
-> [    5.169813]        ret_from_fork+0x10/0x18
-> [    5.173901]
-> [    5.173901] -> #0 (regulator_list_mutex){+.+.}:
-> [    5.179910]        lock_acquire+0x350/0x4d4
-> [    5.184088]        __mutex_lock_common+0x1a0/0x1fe8
-> [    5.184095]        mutex_lock_nested+0x40/0x50
-> [    5.197475]        regulator_lock_dependent+0xdc/0x6c4
-> [    5.197482]        regulator_disable+0xa0/0x138
-> [    5.197487]        scpsys_power_off+0x38c/0x4bc
-> [    5.197495]        genpd_power_off+0x3d8/0x6a0
-> [    5.209399]        genpd_power_off+0x530/0x6a0
-> [    5.209406]        genpd_power_off_work_fn+0x74/0xc0
-> [    5.209411]        process_one_work+0x858/0x1208
-> [    5.209419]        worker_thread+0x9ec/0xcb8
-> [    5.219067]        kthread+0x2b8/0x2d0
-> [    5.219073]        ret_from_fork+0x10/0x18
-> [    5.219077]
-> [    5.219077] other info that might help us debug this:
-> [    5.219077]
-> [    5.219080] Chain exists of:
-> [    5.219080]   regulator_list_mutex --> &genpd->mlock --> &genpd->mlock/1
-> [    5.219080]
-> [    5.228039]  Possible unsafe locking scenario:
-> [    5.228039]
-> [    5.228042]        CPU0                    CPU1
-> [    5.228046]        ----                    ----
-> [    5.228048]   lock(&genpd->mlock/1);
-> [    5.228058]                                lock(&genpd->mlock);
-> [    5.311647]                                lock(&genpd->mlock/1);
-> [    5.317736]   lock(regulator_list_mutex);
-> [    5.321742]
-> [    5.321742]  *** DEADLOCK ***
-> [    5.321742]
-> [    5.327655] 4 locks held by kworker/4:1/51:
-> [    5.331831]  #0: (____ptrval____) ((wq_completion)pm){+.+.},
-> at:process_one_work+0x57c/0x1208
-> [    5.340444]  #1: (____ptrval____)
-> ((work_completion)(&genpd->power_off_work)){+.+.},
-> at:process_one_work+0x5b8/0x1208
-> [    5.351139]  #2: (____ptrval____) (&genpd->mlock){+.+.},
-> at:genpd_lock_mtx+0x20/0x2c
-> [    5.358970]  #3: (____ptrval____) (&genpd->mlock/1){+.+.},
-> at:genpd_lock_nested_mtx+0x24/0x30
-> [    5.367584]
-> [    5.367584] stack backtrace:
-> [    5.371939] CPU: 4 PID: 51 Comm: kworker/4:1 Tainted: G S
->      5.2.0-rc2-next-20190528-44527-g6c94b6475c04 #20
-> [    5.382809] Workqueue: pm genpd_power_off_work_fn
-> [    5.382816] Call trace:
-> [    5.382822]  dump_backtrace+0x0/0x2c0
-> [    5.382830]  show_stack+0x20/0x2c
-> [    5.409174]  dump_stack+0x10c/0x17c
-> [    5.412659]  print_circular_bug+0x42c/0x4d0
-> [    5.416838]  __lock_acquire+0x4c88/0x5484
-> [    5.420843]  lock_acquire+0x350/0x4d4
-> [    5.424500]  __mutex_lock_common+0x1a0/0x1fe8
-> [    5.428851]  mutex_lock_nested+0x40/0x50
-> [    5.432770]  regulator_lock_dependent+0xdc/0x6c4
-> [    5.437383]  regulator_disable+0xa0/0x138
-> [    5.441389]  scpsys_power_off+0x38c/0x4bc
-> [    5.445393]  genpd_power_off+0x3d8/0x6a0
-> [    5.449310]  genpd_power_off+0x530/0x6a0
-> [    5.453229]  genpd_power_off_work_fn+0x74/0xc0
-> [    5.457667]  process_one_work+0x858/0x1208
-> [    5.461758]  worker_thread+0x9ec/0xcb8
-> [    5.465503]  kthread+0x2b8/0x2d0
-> [    5.468727]  ret_from_fork+0x10/0x18
-> 
-> On Mon, Jun 10, 2019 at 8:21 PM Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> ...
->> +       } else {
->> +               res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +               common->base = devm_ioremap_resource(dev, res);
->> +               if (IS_ERR(common->base))
->> +                       return PTR_ERR(common->base);
->>         }
->>         pm_runtime_enable(dev);
->>         platform_set_drvdata(pdev, common);
+You definitely didn't assign copyright to your employer?
+
+--ROA1rv1+fHr2QGor
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HwBYACgkQJNaLcl1U
+h9AlQgf/cOduPIgVfw037hso/F8J/DY12ynhZ3O7IPyWtiaUIazr9Y3zB2dch0EH
+mMdmUFiGT9ijRDAj2tlkLGAKfsD+/4pfGnxaTLL/unOM7uvWHLcT4j1L0eo2FGEa
+nARIZZng3pZnEp/Yo3E/DzMJGNKxQ+NCYEnkClzI4Je9Kg/SB0vKijbMEMkstH9v
+RfEclPCayi30RQ/cbRv7YUbDBc7GMD2JRVBn4Xv+hVLszHqTbJa/RZ/cJADQS3uZ
+KmWHEHurfwYJIX314fbjiBCcHNWfZQ0kiFZsHNJGYmxwKHZiPg9DyQSh5Zk9s41l
+mKfXniiw5dpGYEgsDok3f/gEh10XgA==
+=bXNF
+-----END PGP SIGNATURE-----
+
+--ROA1rv1+fHr2QGor--
