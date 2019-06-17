@@ -1,78 +1,71 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v2 00/28] drivers: Consolidate device lookup helpers
-Date: Mon, 17 Jun 2019 11:07:29 +0100
-Message-ID: <c6813d08-b70b-f153-a651-94d1bcaa5522@arm.com>
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
- <3aa6d42db4b64c625b8461ee7d442f3f1830e8c3.camel@perches.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH] Revert "ARM: dts: rockchip: set PWM delay backlight
+ settings for Minnie"
+Date: Mon, 17 Jun 2019 12:08:25 +0200
+Message-ID: <c88619de-45f4-9ba7-cfdc-0cedb764f6f4@collabora.com>
+References: <20190614224533.169881-1-mka@chromium.org>
+ <20190616154143.GA28583@atrey.karlin.mff.cuni.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3aa6d42db4b64c625b8461ee7d442f3f1830e8c3.camel@perches.com>
-Content-Language: en-US
+In-Reply-To: <20190616154143.GA28583@atrey.karlin.mff.cuni.cz>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: joe@perches.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org
+To: Pavel Machek <pavel@ucw.cz>, Matthias Kaehlcke <mka@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Greg, Rafael
+Hi,
 
-Hi Joe,
-
-On 14/06/2019 19:24, Joe Perches wrote:
-> (dropping the very long cc list just cc'ing LKML and devicetree)
+On 16/6/19 17:41, Pavel Machek wrote:
+> Hi!
 > 
-> On Fri, 2019-06-14 at 18:53 +0100, Suzuki K Poulose wrote:
->> We have device iterators to find a particular device matching a criteria
->> for a given bus/class/driver. i.e, {bus,class,driver}_find_device() APIs.
->> The matching criteria is a function pointer for the APIs. Often the lookup
->> is based on a generic property of a device (e.g, name, fwnode, of node pointer
->> or device type) rather than a driver specific information. However, each driver
->> writes up its own "match" function, spilling the similar match functions all
->> over the driver subsystems.
+>> This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
 >>
->> Additionally the prototype for the "match" functions accepted by the above APIs
->> have a minute difference which prevents us otherwise sharing the match functions.
->> i.e,
->> 	int (*match)(struct device *dev, void *data) for {bus/driver}_find_device()
->> 	  vs
->> 	int (*match)(struct device *dev, const void *) for class_find_device()
+>> According to the commit message the AUO B101EAN01 panel on minnie
+>> requires a PWM delay of 200 ms, however this is not what the
+>> datasheet says. The datasheet mentions a *max* delay of 200 ms
+>> for T2 ("delay from LCDVDD to black video generation") and T3
+>> ("delay from LCDVDD to HPD high"), which aren't related to the
+>> PWM. The backlight power sequence does not specify min/max
+>> constraints for T15 (time from PWM on to BL enable) or T16
+>> (time from BL disable to PWM off).
 >>
+
+Hmm, clearly we are not looking at the same datasheet, because in the one I have
+I don't see any reference to T15/T16 or LCDVDD. And, I assume I am probably
+wrong because you might have better access to the specific panel specs for minnie.
+
+I looked at my archive and the datasheet I have is similar to this [1]. In page
+21, Section 6.5 Power ON/OFF Sequence, there are two delays T3 and T4, it is
+*min* time between the pwm signal and the bl_en and it is 200 ms. That's the
+delay the patch was adding.
+
+[1] http://www.yslcd.com.tw/docs/product/B101EAN01.1.pdf
+
+>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+>> ---
+>> Enric, if you think I misinterpreted the datasheet please holler!
 > 
-> As you are doing treewide conversions, perhaps using
-> 
-> 	bool (*match)(...)
-> 
-> is a more sensible api.
-
-I agree that it is more suitable api. However, that would need much more
-conversions for the existing "class_find_device()" , which are not touched by
-the series and would make this series even more bigger. With that said, I
-am fine with implementing the suggestion if Greg/Rafael thinks that is fine.
-
->> Changes since v1:
->>   - Drop start parameter for *_find_device_by_devt().
->>   - Fix build warnings for s390
->>   - Add *_find_device_by_acpi_dev() wrappers.
->>   - Group wrappers and the consumers into single patch, reducing
->>     the total patches to 28 from 57. (Rafael).
->>   - Better description for acpi cleanup patch.
->>   - Added tags from v1.
-> 
-> Below this is a _very_ long list of cc:'s.
-
-Unfortunately, yes.
-
-> If the list is generated using scripts/get_maintainer.pl
-> perhaps it is more sensible to add --nogit --nogit-fallback
-
-Yes, and trimmed manually a bit to remove the "commit-signers".
-I have tried to keep only the maintainers/reviewers/supporters.
-Thanks for the option, I will give that a try.
-
-> to its arguments to cc actual maintainers and avoid people
-> that have submitted cleanup style patches to various files.
+> Was this tested? Was previous patch tested?
 > 
 
-Cheers
-Suzuki
+IIRC, It was tested measuring the backlight power on timing (although I am not
+sure if I tested this on minnie or another board with better access to the pins)
+
+> Does patch being reverted actually break anything? If so, cc stable?
+> 
+> 								Pavel
+> 								
+> 
+
+Probably will not break anything, I don't remember the reverted patch as a fix
+of any specific issue. IIRC it was more a fear to be out of specs but I'll not
+be surprised if the datasheet lies and this delay is not needed at all.
+
+Matthias, are you reverting this to solve any problem? Could you share your
+datasheet?
+
+Thanks,
+~Enric
