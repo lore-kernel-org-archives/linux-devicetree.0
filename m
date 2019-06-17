@@ -1,27 +1,56 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-Date: Mon, 17 Jun 2019 03:05:06 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com> <mvmtvco62k9.fsf@suse.de> <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com> <mvmpnnc5y49.fsf@suse.de>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2 06/28] drivers: Add generic helper to match by of_node
+Date: Mon, 17 Jun 2019 12:06:11 +0200
+Message-ID: <20190617100611.GB3502@kunai>
+References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+ <1560534863-15115-7-git-send-email-suzuki.poulose@arm.com>
+ <20190614203144.GB7991@kunai>
+ <d050ae69-52ee-b32d-2bc0-708b408f3bd4@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <mvmpnnc5y49.fsf@suse.de>
+Content-Disposition: inline
+In-Reply-To: <d050ae69-52ee-b32d-2bc0-708b408f3bd4@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Schwab <schwab@suse.de>
-Cc: Yash Shah <yash.shah@sifive.com>, davem@davemloft.net, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, sachin.ghadi@sifive.com
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, atull@kernel.org, andrew@lunn.ch, daniel@ffwll.ch, airlied@linux.ie, davem@davemloft.net, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, f.fainelli@gmail.com, frowand.list@gmail.com, hkallweit1@gmail.com, jslaby@suse.com, jonathanh@nvidia.com, lee.jones@linaro.org, lgirdwood@gmail.com, linux-fpga@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, maarten.lankhorst@linux.intel.com, broonie@kernel.org, mathieu.poirier@linaro.org, maxime.ripard@bootlin.com, mdf@kernel.org, peda@axentia.se, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, thierry.reding@gmail.com, thor.thayer@linux.intel.com, ulf.hansson@linaro.org, joe@perches.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Jun 2019, Andreas Schwab wrote:
 
-> On Jun 17 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> 
-> > Looks to me that it shouldn't have an impact unless the DT string is 
-> > present, and even then, the impact might simply be that the MACB driver 
-> > may not work?
-> 
-> If the macb driver doesn't work you have an unusable system, of course.
+--7ZAtKRhVyVSsbBD2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Why?
 
-- Paul
+> > Is it an option to 'static inline' this simple function in the header,
+> > saving the EXPORT?
+> >=20
+>=20
+> No.
+
+OK, thanks for the explanation!
+
+
+--7ZAtKRhVyVSsbBD2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0HZhMACgkQFA3kzBSg
+Kbbl3A/+LFTwA3gh8PCif9bJi4Ywry/gCg7cCVuGAw1ZhH5h29SAhoONggyXvO8N
+XvGR09Q0NYX1CpAogNTRqTtpOKSudrSozBdFRxKlNCuACTghf1AdboPKq+pM2Zos
++Q75BJMykwO00W+5ghmbztldccufXFjjwXzDwdBq5zNjtVf3yne4h1wWAubXItsQ
+LMaf+2X6WrAPfIPVvBbtV33cG/1f8l7GemdTJj02Z+5+u1NH4L1e00WP+rxqj0Q7
+nYMFIFYfjfqHBkhAltu6bx/gqqORuDfQ6DQ/vl/qyXVHY6WcYIzUde/NpnVSjAX/
+e6d3JrHaEHw7qBEH+39w54dQr4fRii9mUOF9keTO7OSfQnAAva1QQyERtAhPj7EA
+I2X/qEU6ncbQJK91mxlelKLbD+WuJUcqahDM0tQ07nQ2lz6zwVpBQzn3VNZiXxh1
+KAJFCCaWJRGp0P1JZMwnVbmMSeFoPWJx5fXweNoQXdgz/4yy2VpTh7AdvWFCOl9+
+u5N+YWIn6gygP5kUJuDevsLDTzyodTVxi3zvYaaFM+2eIF2nT8a0AI2HPzmR3G1R
+xlNjF3xnwWLlW/0g11vgj9PPAnKgNazMZflNXIbPSRZjHZzh6+C/GYnxlDXf5N3V
+tFjRbBS861rgNrq+zJv9HqLqlF7opQ3x7jAh8LwHdpF/Z95yDW0=
+=hDM+
+-----END PGP SIGNATURE-----
+
+--7ZAtKRhVyVSsbBD2--
