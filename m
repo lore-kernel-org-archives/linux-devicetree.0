@@ -1,170 +1,69 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v7 13/21] iommu/mediatek: Add mt8183 IOMMU support
-Date: Mon, 17 Jun 2019 17:51:51 +0200
-Message-ID: <fa54a1a3-d39a-1235-7cee-3fb10593e5ef@gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
- <1560169080-27134-14-git-send-email-yong.wu@mediatek.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH] arm64: dts: ti: k3-am65: Add MSMC RAM ranges in
+ interconnect node
+Date: Mon, 17 Jun 2019 10:53:51 -0500
+Message-ID: <b1f7aa31-4f3b-b9d9-6951-092f3a87d078@ti.com>
+References: <20190529211344.18014-1-s-anna@ti.com>
+ <20190530104903.ldcmkunjnk7a5y3c@akan>
+ <3c53679c-4246-43e1-e6d6-2e1c7db201d7@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560169080-27134-14-git-send-email-yong.wu@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3c53679c-4246-43e1-e6d6-2e1c7db201d7@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/06/2019 14:17, Yong Wu wrote:
-> The M4U IP blocks in mt8183 is MediaTek's generation2 M4U which use
-> the ARM Short-descriptor like mt8173, and most of the HW registers
-> are the same.
-> 
-> Here list main differences between mt8183 and mt8173/mt2712:
-> 1) mt8183 has only one M4U HW like mt8173 while mt2712 has two.
-> 2) mt8183 don't have the "bclk" clock, it use the EMI clock instead.
-> 3) mt8183 can support the dram over 4GB, but it doesn't call this "4GB
-> mode".
-> 4) mt8183 pgtable base register(0x0) extend bit[1:0] which represent
-> the bit[33:32] in the physical address of the pgtable base, But the
-> standard ttbr0[1] means the S bit which is enabled defaultly, Hence,
-> we add a mask.
-> 5) mt8183 HW has a GALS modules, SMI should enable "has_gals" support.
-> 6) mt8183 need reset_axi like mt8173.
-> 7) the larb-id in smi-common is remapped. M4U should add its larbid_remap.
-> 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
->  drivers/iommu/mtk_iommu.c | 15 ++++++++++++---
->  drivers/iommu/mtk_iommu.h |  1 +
->  drivers/memory/mtk-smi.c  | 20 ++++++++++++++++++++
->  3 files changed, 33 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index a535dcd..3a14301 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -36,6 +36,7 @@
->  #include "mtk_iommu.h"
->  
->  #define REG_MMU_PT_BASE_ADDR			0x000
-> +#define MMU_PT_ADDR_MASK			GENMASK(31, 7)
->  
->  #define REG_MMU_INVALIDATE			0x020
->  #define F_ALL_INVLD				0x2
-> @@ -341,7 +342,7 @@ static int mtk_iommu_attach_device(struct iommu_domain *domain,
->  	/* Update the pgtable base address register of the M4U HW */
->  	if (!data->m4u_dom) {
->  		data->m4u_dom = dom;
-> -		writel(dom->cfg.arm_v7s_cfg.ttbr[0],
-> +		writel(dom->cfg.arm_v7s_cfg.ttbr[0] & MMU_PT_ADDR_MASK,
->  		       data->base + REG_MMU_PT_BASE_ADDR);
->  	}
->  
-> @@ -715,6 +716,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
->  {
->  	struct mtk_iommu_data *data = dev_get_drvdata(dev);
->  	struct mtk_iommu_suspend_reg *reg = &data->reg;
-> +	struct mtk_iommu_domain *m4u_dom = data->m4u_dom;
->  	void __iomem *base = data->base;
->  	int ret;
->  
-> @@ -730,8 +732,8 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
->  	writel_relaxed(reg->int_control0, base + REG_MMU_INT_CONTROL0);
->  	writel_relaxed(reg->int_main_control, base + REG_MMU_INT_MAIN_CONTROL);
->  	writel_relaxed(reg->ivrp_paddr, base + REG_MMU_IVRP_PADDR);
-> -	if (data->m4u_dom)
-> -		writel(data->m4u_dom->cfg.arm_v7s_cfg.ttbr[0],
-> +	if (m4u_dom)
-> +		writel(m4u_dom->cfg.arm_v7s_cfg.ttbr[0] & MMU_PT_ADDR_MASK,
->  		       base + REG_MMU_PT_BASE_ADDR);
->  	return 0;
->  }
-> @@ -756,9 +758,16 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
->  	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
->  };
->  
-> +static const struct mtk_iommu_plat_data mt8183_data = {
-> +	.m4u_plat     = M4U_MT8183,
-> +	.reset_axi    = true,
-> +	.larbid_remap = {0, 4, 5, 6, 7, 2, 3, 1},
-> +};
-> +
->  static const struct of_device_id mtk_iommu_of_ids[] = {
->  	{ .compatible = "mediatek,mt2712-m4u", .data = &mt2712_data},
->  	{ .compatible = "mediatek,mt8173-m4u", .data = &mt8173_data},
-> +	{ .compatible = "mediatek,mt8183-m4u", .data = &mt8183_data},
->  	{}
->  };
->  
-> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> index e5c9dde..c0b5c65 100644
-> --- a/drivers/iommu/mtk_iommu.h
-> +++ b/drivers/iommu/mtk_iommu.h
-> @@ -38,6 +38,7 @@ enum mtk_iommu_plat {
->  	M4U_MT2701,
->  	M4U_MT2712,
->  	M4U_MT8173,
-> +	M4U_MT8183,
->  };
->  
->  struct mtk_iommu_plat_data {
-> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> index 91634d7..a430721 100644
-> --- a/drivers/memory/mtk-smi.c
-> +++ b/drivers/memory/mtk-smi.c
-> @@ -285,6 +285,13 @@ static void mtk_smi_larb_config_port_gen1(struct device *dev)
->  	.larb_direct_to_common_mask = BIT(8) | BIT(9),      /* bdpsys */
->  };
->  
-> +static const struct mtk_smi_larb_gen mtk_smi_larb_mt8183 = {
-> +	.has_gals                   = true,
-> +	.config_port                = mtk_smi_larb_config_port_gen2_general,
-> +	.larb_direct_to_common_mask = BIT(2) | BIT(3) | BIT(7),
-> +				      /* IPU0 | IPU1 | CCU */
-> +};
-> +
->  static const struct of_device_id mtk_smi_larb_of_ids[] = {
->  	{
->  		.compatible = "mediatek,mt8173-smi-larb",
-> @@ -298,6 +305,10 @@ static void mtk_smi_larb_config_port_gen1(struct device *dev)
->  		.compatible = "mediatek,mt2712-smi-larb",
->  		.data = &mtk_smi_larb_mt2712
->  	},
-> +	{
-> +		.compatible = "mediatek,mt8183-smi-larb",
-> +		.data = &mtk_smi_larb_mt8183
-> +	},
->  	{}
->  };
->  
-> @@ -391,6 +402,11 @@ static int mtk_smi_larb_remove(struct platform_device *pdev)
->  	.gen = MTK_SMI_GEN2,
->  };
->  
-> +static const struct mtk_smi_common_plat mtk_smi_common_mt8183 = {
-> +	.gen      = MTK_SMI_GEN2,
-> +	.has_gals = true,
-> +};
-> +
->  static const struct of_device_id mtk_smi_common_of_ids[] = {
->  	{
->  		.compatible = "mediatek,mt8173-smi-common",
-> @@ -404,6 +420,10 @@ static int mtk_smi_larb_remove(struct platform_device *pdev)
->  		.compatible = "mediatek,mt2712-smi-common",
->  		.data = &mtk_smi_common_gen2,
->  	},
-> +	{
-> +		.compatible = "mediatek,mt8183-smi-common",
-> +		.data = &mtk_smi_common_mt8183,
-> +	},
->  	{}
->  };
->  
-> 
+T24gNi8xNy8xOSA5OjU0IEFNLCBUZXJvIEtyaXN0byB3cm90ZToKPiBPbiAzMC8wNS8yMDE5IDEz
+OjQ5LCBOaXNoYW50aCBNZW5vbiB3cm90ZToKPj4gT24gMTY6MTMtMjAxOTA1MjksIFN1bWFuIEFu
+bmEgd3JvdGU6Cj4+PiBGcm9tOiBSb2dlciBRdWFkcm9zIDxyb2dlcnFAdGkuY29tPgo+Pj4KPj4+
+IEFkZCB0aGUgTVNDTSBSQU0gYWRkcmVzcyBzcGFjZSB0byB0aGUgcmFuZ2VzIHByb3BlcnR5IG9m
+IHRoZSBjYmFzc19tYWluCj4+PiBpbnRlcmNvbm5lY3Qgbm9kZSBzbyB0aGF0IHRoZSBhZGRyZXNz
+ZXMgY2FuIGJlIHRyYW5zbGF0ZWQgcHJvcGVybHkuCj4+Pgo+Pj4gVGhpcyBmaXhlcyB0aGUgcHJv
+YmUgZmFpbHVyZSBpbiB0aGUgc3JhbSBkcml2ZXIgZm9yIHRoZSBNU01DIFJBTSBub2RlLgo+Pj4K
+Pj4+IFNpZ25lZC1vZmYtYnk6IFJvZ2VyIFF1YWRyb3MgPHJvZ2VycUB0aS5jb20+Cj4+PiBTaWdu
+ZWQtb2ZmLWJ5OiBTdW1hbiBBbm5hIDxzLWFubmFAdGkuY29tPgo+Pj4gLS0tCj4+Pgo+Pj4gVGhl
+IGZvbGxvd2luZyBlcnJvciBtZXNzYWdlIGlzIHNlZW4gd2l0aG91dCB0aGlzOgo+Pj4gW8KgwqDC
+oCAwLjQ4MDI2MV0gc3JhbSBpbnRlcmNvbm5lY3RAMTAwMDAwOnNyYW1ANzAwMDAwMDA6IGZvdW5k
+IG5vCj4+PiBtZW1vcnkgcmVzb3VyY2UKPj4+IFvCoMKgwqAgMC40ODc0OTddIHNyYW06IHByb2Jl
+IG9mIGludGVyY29ubmVjdEAxMDAwMDA6c3JhbUA3MDAwMDAwMAo+Pj4gZmFpbGVkIHdpdGggZXJy
+b3IgLTIyCj4+Pgo+Pj4gcmVnYXJkcwo+Pj4gU3VtYW4KPj4+Cj4+PiDCoCBhcmNoL2FybTY0L2Jv
+b3QvZHRzL3RpL2szLWFtNjUuZHRzaSB8IDEgKwo+Pj4gwqAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
+ZXJ0aW9uKCspCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMt
+YW02NS5kdHNpCj4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMtYW02NS5kdHNpCj4+PiBp
+bmRleCA1MGY0YmUyMDQ3YTkuLjY4YjNmOTU0ZjFkMSAxMDA2NDQKPj4+IC0tLSBhL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvdGkvazMtYW02NS5kdHNpCj4+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
+L3RpL2szLWFtNjUuZHRzaQo+Pj4gQEAgLTY4LDYgKzY4LDcgQEAKPj4+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgPDB4MDAgMHgwMDkwMDAwMCAweDAwIDB4MDA5MDAwMDAgMHgwMCAweDAw
+MDEyMDAwPiwgLyoKPj4+IHNlcmRlcyAqLwo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCA8MHgwMCAweDAxMDAwMDAwIDB4MDAgMHgwMTAwMDAwMCAweDAwIDB4MGFmMDI0MDA+LCAvKgo+
+Pj4gTW9zdCBwZXJpcGhlcmFscyAqLwo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8
+MHgwMCAweDMwODAwMDAwIDB4MDAgMHgzMDgwMDAwMCAweDAwIDB4MGJjMDAwMDA+LCAvKgo+Pj4g
+TUFJTiBOQVZTUyAqLwo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8MHgwMCAweDcwMDAw
+MDAwIDB4MDAgMHg3MDAwMDAwMCAweDAwIDB4MDAyMDAwMDA+LCAvKgo+Pj4gTVNNQyBTUkFNICov
+Cj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8qIE1DVVNTIFJhbmdlICovCj4+PiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDwweDAwIDB4MjgzODAwMDAgMHgwMCAweDI4Mzgw
+MDAwIDB4MDAgMHgwMzg4MDAwMD4sCj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDww
+eDAwIDB4NDAyMDAwMDAgMHgwMCAweDQwMjAwMDAwIDB4MDAgMHgwMDkwMDEwMD4sCj4+PiAtLcKg
+Cj4+PiAyLjIxLjAKPj4+Cj4+Cj4+IEFycmdoLi4gTmljZSBjYXRjaC4gVGhhbmtzLiBXZSBzaG91
+bGQgY29uc2lkZXIgcHVsbGluZyB0aGlzIGluIGFzIHBhcnQKPj4gb2YgZWFybHkgcmMgZml4ZXMg
+cGxlYXNlLgo+Pgo+PiBBY2tlZC1ieTogTmlzaGFudGggTWVub24gPG5tQHRpLmNvbT4KPiAKPiBI
+bW0sIHdoYXQgaXMgdGhlIGZhaWx1cmUgdGhpcyBjYXVzZXMsIGV4Y2VwdCB0aGUgcHJvYmUgbWVz
+c2FnZT8gU1JBTQo+IGRyaXZlciBvYnZpb3VzbHkgd29uJ3Qgd29yayBidXQgaXMgaXQgdXNlZCBm
+b3IgYW55dGhpbmcgYXQgdGhlIG1vbWVudAo+IGFueXdheXM/Cj4gCj4gSSB3b3VsZCByYXRoZXIg
+cXVldWUgdGhpcyB0b3dhcmRzIDUuMy4KCk9LLCBJIGFtIGZpbmUgZWl0aGVyIHdheS4KCnJlZ2Fy
+ZHMKU3VtYW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwK
