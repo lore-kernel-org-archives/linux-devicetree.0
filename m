@@ -1,33 +1,26 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: msm8996: Correct apr-domain property
-Date: Mon, 17 Jun 2019 22:25:47 -0700
-Message-ID: <20190618052547.32376-1-bjorn.andersson@linaro.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: imx8mm: Enable SNVS power key according to
+ board design
+Date: Tue, 18 Jun 2019 15:09:35 +0800
+Message-ID: <20190618070612.GE29881@dragon>
+References: <20190613020104.24612-1-Anson.Huang@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190613020104.24612-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>
-Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Anson.Huang@nxp.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, ping.bai@nxp.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-The domain specifier was changed from using "reg" to "qcom,apr-domain",
-update the dts accordingly.
+On Thu, Jun 13, 2019 at 10:01:04AM +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> The SNVS power key depends on board design, by default it should
+> be disabled in SoC DT and ONLY be enabled on board DT if it is
+> wired up.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index c934e00434c7..1a139cfb240d 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1831,7 +1831,7 @@
- 				power-domains = <&gcc HLOS1_VOTE_LPASS_ADSP_GDSC>;
- 				compatible = "qcom,apr-v2";
- 				qcom,smd-channels = "apr_audio_svc";
--				reg = <APR_DOMAIN_ADSP>;
-+				qcom,apr-domain = <APR_DOMAIN_ADSP>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
--- 
-2.18.0
+Applied, thanks.
