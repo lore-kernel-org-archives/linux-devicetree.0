@@ -1,55 +1,64 @@
-From: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Subject: Re: [PATCH 5/6] soc: qcom: add OCMEM driver
-Date: Mon, 17 Jun 2019 22:02:00 -0400
-Message-ID: <20190618020200.GB22330@onstation.org>
-References: <20190616132930.6942-1-masneyb@onstation.org>
- <20190616132930.6942-6-masneyb@onstation.org>
- <20190616174106.GO22737@tuxbook-pro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190616174106.GO22737@tuxbook-pro>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
+From: Anson.Huang@nxp.com
+Subject: [PATCH V15 1/5] dt-bindings: fsl: scu: add thermal binding
+Date: Tue, 18 Jun 2019 10:18:16 +0800
+Message-ID: <20190618021820.14885-1-Anson.Huang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, aisheng.dong@nxp.com, ulf.hansson@linaro.org, peng.fan@nxp.com, mchehab+samsung@kernel.org, linux@roeck-us.net, daniel.baluta@nxp.com, maxime.ripard@bootlin.com, horms+renesas@verge.net.au, olof@lixom.net, jagan@amarulasolutions.com, bjorn.andersson@linaro.org, leonard.crestez@nxp.com, dinguyen@kernel.org, enric.balletbo@collabora.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iIENsYXJrLAoKT24gU3VuLCBKdW4gMTYsIDIwMTkgYXQgMTA6NDE6MDZBTSAtMDcwMCwg
-Qmpvcm4gQW5kZXJzc29uIHdyb3RlOgo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL3Fjb20v
-b2NtZW0ueG1sLmggYi9kcml2ZXJzL3NvYy9xY29tL29jbWVtLnhtbC5oCj4gCj4gSSB3b3VsZCBw
-cmVmZXIgdGhhdCB0aGVzZSBsaXZlZCBhdCB0aGUgdG9wIG9mIHRoZSBjIGZpbGUsIHJhdGhlciB0
-aGFuCj4gYmVpbmcgZ2VuZXJhdGVkLgoKSSB0aGluayBpdCB3b3VsZCBiZSBuaWNlIHRvIG1ha2Ug
-dGhpcyBjaGFuZ2UgYXMgd2VsbC4KClJvYiBDOiBZb3VyIG9yaWdpbmFsIGZpbGUgb2NtZW0ueG1s
-Lmggd2FzIGxpY2Vuc2VkIHVuZGVyIHRoZSBNSVQKbGljZW5zZS4gSSBqdXN0IHdhbnRlZCBjb25m
-aXJtYXRpb24gZnJvbSB5b3UgdGhhdCBpdCdzIE9LIHRvIHB1dAp0aGUgY29udGVudHMgb2YgdGhh
-dCBmaWxlIGludG8gb2NtZW0uYyB3aGljaCBoYXMgdGhlIEdQTCAyLjAgb25seQpTUERYIGxpY2Vu
-c2UgdGFnLiBUaGlzIHdpbGwgcmVsaWNlbnNlIHRoZSB3b3JrLiBJIGltYWdpbmUgaXQncyBub3QK
-YW4gaXNzdWUgYnV0IEkganVzdCB3YW50ZWQgdG8gZ2V0IGNvbmZpcm1hdGlvbiBzbyB0aGVyZSBp
-cyBubwphbWJpZ3VpdHkgcmVnYXJkaW5nIHRoZSBsaWNlbnNpbmcgaW4gdGhlIGZ1dHVyZS4KCkJy
-aWFuCgoKPiAKPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwMDAwMDAu
-LmI0YmZiODVkMWUzMwo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIvZHJpdmVycy9zb2MvcWNv
-bS9vY21lbS54bWwuaAo+ID4gQEAgLTAsMCArMSw4NiBAQAo+ID4gKy8qIFNQRFgtTGljZW5zZS1J
-ZGVudGlmaWVyOiBNSVQgKi8KPiA+ICsKPiA+ICsjaWZuZGVmIE9DTUVNX1hNTAo+ID4gKyNkZWZp
-bmUgT0NNRU1fWE1MCj4gPiArCj4gPiArLyogQXV0b2dlbmVyYXRlZCBmaWxlLCBETyBOT1QgRURJ
-VCBtYW51YWxseSEKPiA+ICsKPiA+ICtUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSB0aGUgcnVs
-ZXMtbmctbmcgaGVhZGVyZ2VuIHRvb2wgaW4gdGhpcyBnaXQgcmVwb3NpdG9yeToKPiA+ICtodHRw
-Oi8vZ2l0aHViLmNvbS9mcmVlZHJlbm8vZW52eXRvb2xzLwo+ID4gK2dpdCBjbG9uZSBodHRwczov
-L2dpdGh1Yi5jb20vZnJlZWRyZW5vL2Vudnl0b29scy5naXQKPiA+ICsKPiA+ICtUaGUgcnVsZXMt
-bmctbmcgc291cmNlIGZpbGVzIHRoaXMgaGVhZGVyIHdhcyBnZW5lcmF0ZWQgZnJvbSBhcmU6Cj4g
-PiArLSAvaG9tZS9yb2JjbGFyay9zcmMvZnJlZWRyZW5vL2Vudnl0b29scy9ybm5kYi9hZHJlbm8v
-b2NtZW0ueG1sICAgICAgICAgKCAgIDE3NzMgYnl0ZXMsIGZyb20gMjAxNS0wOS0yNCAxNzozMDow
-MCkKPiA+ICsKPiA+ICtDb3B5cmlnaHQgKEMpIDIwMTMtMjAxNSBieSB0aGUgZm9sbG93aW5nIGF1
-dGhvcnM6Cj4gPiArLSBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+IChyb2JjbGFyaykK
-PiA+ICsqLwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpG
-cmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
+From: Anson Huang <Anson.Huang@nxp.com>
+
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and thermal sensors etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to get temperature from thermal sensors, this patch adds
+binding doc for i.MX system controller thermal driver.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+No change.
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index a575e42..fc3844e 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -155,6 +155,17 @@ Required properties:
+ Optional properties:
+ - timeout-sec: contains the watchdog timeout in seconds.
+ 
++Thermal bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++Required properties:
++- compatible:			Should be :
++				  "fsl,imx8qxp-sc-thermal"
++				followed by "fsl,imx-sc-thermal";
++
++- #thermal-sensor-cells:	See Documentation/devicetree/bindings/thermal/thermal.txt
++				for a description.
++
+ Example (imx8qxp):
+ -------------
+ aliases {
+@@ -222,6 +233,11 @@ firmware {
+ 			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+ 			timeout-sec = <60>;
+ 		};
++
++		tsens: thermal-sensor {
++			compatible = "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
++			#thermal-sensor-cells = <1>;
++		};
+ 	};
+ };
+ 
+-- 
+2.7.4
