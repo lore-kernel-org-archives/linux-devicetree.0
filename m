@@ -1,171 +1,55 @@
-From: masonccyang@mxic.com.tw
-Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
-Date: Tue, 18 Jun 2019 09:24:14 +0800
-Message-ID: <OF1C1397B4.241DC339-ON4825841D.000482A2-4825841D.0007B67E@mxic.com.tw>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190512151820.4f2dd9da@xps13> <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
-        <20190520142333.390091d5@xps13> <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
-        <20190527144250.71908bd9@xps13> <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw> <20190617143510.4ded5728@xps13>
+From: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Subject: Re: [PATCH 5/6] soc: qcom: add OCMEM driver
+Date: Mon, 17 Jun 2019 22:02:00 -0400
+Message-ID: <20190618020200.GB22330@onstation.org>
+References: <20190616132930.6942-1-masneyb@onstation.org>
+ <20190616132930.6942-6-masneyb@onstation.org>
+ <20190616174106.GO22737@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617143510.4ded5728@xps13>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190616174106.GO22737@tuxbook-pro>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Miquel,
-
-> 
-> > > > > > > > +static void mxic_nand_select_chip(struct nand_chip *chip, 
-int 
-> > 
-> > > > chipnr) 
-> > > > > > > 
-> > > > > > > _select_target() is preferred now 
-> > > > > > 
-> > > > > > Do you mean I implement mxic_nand_select_target() to control 
-#CS ?
-> > > > > > 
-> > > > > > If so, I need to call mxic_nand_select_target( ) to control 
-#CS ON
-> > > > > > and then #CS OFF in _exec_op() due to nand_select_target()<in  
-
-> > > > nand_base,c> 
-> > > > > > is still calling chip->legacy.select_chip ? 
-> > > > > 
-> > > > > You must forget about the ->select_chip() callback. Now it 
-should be
-> > > > > handled directly from the controller driver. Please have a look 
-at 
-> > the
-> > > > > commit pointed against the marvell_nand.c driver. 
-> > > > 
-> > > > I have no Marvell NFC datasheet and have one question.
-> > > > 
-> > > > In marvell_nand.c, there is no xxx_deselect_target() or 
-> > > > something like that doing #CS OFF.
-> > > > marvell_nfc_select_target() seems always to make one of chip or 
-die
-> > > > #CS keep low.
-> > > > 
-> > > > Is it right ? 
-> > > 
-> > > Yes, AFAIR there is no "de-assert" mechanism in this controller.
-> > > 
-> > > > 
-> > > > How to make all #CS keep high for NAND to enter 
-> > > > low-power standby mode if driver don't use "legacy.select_chip()" 
-? 
-> > > 
-> > > See commit 02b4a52604a4 ("mtd: rawnand: Make ->select_chip() 
-optional
-> > > when ->exec_op() is implemented") which states:
-> > > 
-> > >         "When [->select_chip() is] not implemented, the core is 
-assuming
-> > >    the CS line is automatically asserted/deasserted by the driver 
-> > >    ->exec_op() implementation." 
-> > > 
-> > > Of course, the above is right only when the controller driver 
-supports
-> > > the ->exec_op() interface. 
-> > 
-> > Currently, it seems that we will get the incorrect data and error
-> > operation due to CS in error toggling if CS line is controlled in 
-> > ->exec_op(). 
-> 
-> Most of the chips today are CS-don't-care, which chip are you using?
-
-I think CS-don't-care means read-write operation for NAND device to reside
-on the same memory bus as other Flash or SRAM devices. Other devices on 
-the 
-memory bus can then be accessed while the NAND Flash is busy with internal 
-
-operations. This capability is very important for designs that require 
-multiple
-NAND Flash devices on the same bus.
-
-> 
-> Is this behavior publicly documented?
-> 
-
-CS# pin goes High enter standby mode to reduce power consumption,
-i.e,. standby mode w/ CS# keep High, standby current: 10 uA (Typ for 3.3V 
-NAND)
-        otherwise, current is more than 1 mA.
-i.e,. page read current, 25 mA (Typ for 3.3V NAND)
- 
-
-> Is this LPM mode always activated?
-> 
-> > i.e,. 
-> > 
-> > 1) In nand_onfi_detect() to call nand_exec_op() twice by 
-> > nand_read_param_page_op() and annd_read_data_op()
-> > 
-> > 2) In nand_write_page_xxx to call nand_exec_op() many times by
-> > nand_prog_page_begin_op(), nand_write_data_op() and 
-> > nand_prog_page_end_op().
-> > 
-> > 
-> > Should we consider to add a CS line controller in struct 
-nand_controller
-> > i.e,.
-> > 
-> > struct nand_controller {
-> >          struct mutex lock;
-> >          const struct nand_controller_ops *ops;
-> > +          void (*select_chip)(struct nand_chip *chip, int cs);
-> > };
-> > 
-> > to replace legacy.select_chip() ?
-> > 
-> 
-> No, if really needed, we could add a "macro op done" flag in the nand
-> operation structure.
-> 
-
-Is this "macron op done" flag good for multiple NAND devices on
-the same bus ?
-
-Any other way to control CS# pin? if user application is really
-care of power consumption, i.e,. loT.
-
-> 
-> Thanks,
-> Miquèl
-
-thanks & best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+SGkgUm9iIENsYXJrLAoKT24gU3VuLCBKdW4gMTYsIDIwMTkgYXQgMTA6NDE6MDZBTSAtMDcwMCwg
+Qmpvcm4gQW5kZXJzc29uIHdyb3RlOgo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL3Fjb20v
+b2NtZW0ueG1sLmggYi9kcml2ZXJzL3NvYy9xY29tL29jbWVtLnhtbC5oCj4gCj4gSSB3b3VsZCBw
+cmVmZXIgdGhhdCB0aGVzZSBsaXZlZCBhdCB0aGUgdG9wIG9mIHRoZSBjIGZpbGUsIHJhdGhlciB0
+aGFuCj4gYmVpbmcgZ2VuZXJhdGVkLgoKSSB0aGluayBpdCB3b3VsZCBiZSBuaWNlIHRvIG1ha2Ug
+dGhpcyBjaGFuZ2UgYXMgd2VsbC4KClJvYiBDOiBZb3VyIG9yaWdpbmFsIGZpbGUgb2NtZW0ueG1s
+Lmggd2FzIGxpY2Vuc2VkIHVuZGVyIHRoZSBNSVQKbGljZW5zZS4gSSBqdXN0IHdhbnRlZCBjb25m
+aXJtYXRpb24gZnJvbSB5b3UgdGhhdCBpdCdzIE9LIHRvIHB1dAp0aGUgY29udGVudHMgb2YgdGhh
+dCBmaWxlIGludG8gb2NtZW0uYyB3aGljaCBoYXMgdGhlIEdQTCAyLjAgb25seQpTUERYIGxpY2Vu
+c2UgdGFnLiBUaGlzIHdpbGwgcmVsaWNlbnNlIHRoZSB3b3JrLiBJIGltYWdpbmUgaXQncyBub3QK
+YW4gaXNzdWUgYnV0IEkganVzdCB3YW50ZWQgdG8gZ2V0IGNvbmZpcm1hdGlvbiBzbyB0aGVyZSBp
+cyBubwphbWJpZ3VpdHkgcmVnYXJkaW5nIHRoZSBsaWNlbnNpbmcgaW4gdGhlIGZ1dHVyZS4KCkJy
+aWFuCgoKPiAKPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwMDAwMDAu
+LmI0YmZiODVkMWUzMwo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIvZHJpdmVycy9zb2MvcWNv
+bS9vY21lbS54bWwuaAo+ID4gQEAgLTAsMCArMSw4NiBAQAo+ID4gKy8qIFNQRFgtTGljZW5zZS1J
+ZGVudGlmaWVyOiBNSVQgKi8KPiA+ICsKPiA+ICsjaWZuZGVmIE9DTUVNX1hNTAo+ID4gKyNkZWZp
+bmUgT0NNRU1fWE1MCj4gPiArCj4gPiArLyogQXV0b2dlbmVyYXRlZCBmaWxlLCBETyBOT1QgRURJ
+VCBtYW51YWxseSEKPiA+ICsKPiA+ICtUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSB0aGUgcnVs
+ZXMtbmctbmcgaGVhZGVyZ2VuIHRvb2wgaW4gdGhpcyBnaXQgcmVwb3NpdG9yeToKPiA+ICtodHRw
+Oi8vZ2l0aHViLmNvbS9mcmVlZHJlbm8vZW52eXRvb2xzLwo+ID4gK2dpdCBjbG9uZSBodHRwczov
+L2dpdGh1Yi5jb20vZnJlZWRyZW5vL2Vudnl0b29scy5naXQKPiA+ICsKPiA+ICtUaGUgcnVsZXMt
+bmctbmcgc291cmNlIGZpbGVzIHRoaXMgaGVhZGVyIHdhcyBnZW5lcmF0ZWQgZnJvbSBhcmU6Cj4g
+PiArLSAvaG9tZS9yb2JjbGFyay9zcmMvZnJlZWRyZW5vL2Vudnl0b29scy9ybm5kYi9hZHJlbm8v
+b2NtZW0ueG1sICAgICAgICAgKCAgIDE3NzMgYnl0ZXMsIGZyb20gMjAxNS0wOS0yNCAxNzozMDow
+MCkKPiA+ICsKPiA+ICtDb3B5cmlnaHQgKEMpIDIwMTMtMjAxNSBieSB0aGUgZm9sbG93aW5nIGF1
+dGhvcnM6Cj4gPiArLSBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+IChyb2JjbGFyaykK
+PiA+ICsqLwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpG
+cmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
