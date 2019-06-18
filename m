@@ -1,120 +1,45 @@
-From: Tomasz Figa <tfiga@google.com>
-Subject: Re: [PATCH v7 14/21] iommu/mediatek: Add mmu1 support
-Date: Tue, 18 Jun 2019 23:05:39 +0900
-Message-ID: <CAAFQd5B8MiMA_OCUJ5HRmC5SA2772HF-rBGK0aZcKoWscOzOog@mail.gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
- <1560169080-27134-15-git-send-email-yong.wu@mediatek.com>
- <CAAFQd5A5GUn1Zq1xF2_2V0MReNPd5bra2F=nquvodSAZUua5AQ@mail.gmail.com>
- <1560859743.8082.23.camel@mhfsdcap03>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH next v2] of/fdt: Fix defined but not used compiler warning
+Date: Tue, 18 Jun 2019 08:09:48 -0600
+Message-ID: <20190618140948.GA18305@bogus>
+References: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
+ <20190615030343.96524-1-wangkefeng.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1560859743.8082.23.camel@mhfsdcap03>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, srv_heupstream <srv_heupstream@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Evan Green <evgreen@chromium.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
- Joerg Roedel <joro@8bytes.org>, " <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= <yingjoe.chen@mediatek.com>, anan.sun@mediatek.com, Robin Murphy <robin.murphy@arm.com>, Matthias Kaehlcke <mka@chromium.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
- Joerg Roedel <joro@8bytes.org>, " <linux-arm-kernel@li>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190615030343.96524-1-wangkefeng.wang@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>, Stephen Boyd <swboyd@chromium.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 9:09 PM Yong Wu <yong.wu@mediatek.com> wrote:
->
-> On Tue, 2019-06-18 at 15:19 +0900, Tomasz Figa wrote:
-> > On Mon, Jun 10, 2019 at 9:21 PM Yong Wu <yong.wu@mediatek.com> wrote:
-> > >
-> > > Normally the M4U HW connect EMI with smi. the diagram is like below:
-> > >               EMI
-> > >                |
-> > >               M4U
-> > >                |
-> > >             smi-common
-> > >                |
-> > >        -----------------
-> > >        |    |    |     |    ...
-> > >     larb0 larb1  larb2 larb3
-> > >
-> > > Actually there are 2 mmu cells in the M4U HW, like this diagram:
-> > >
-> > >               EMI
-> > >            ---------
-> > >             |     |
-> > >            mmu0  mmu1     <- M4U
-> > >             |     |
-> > >            ---------
-> > >                |
-> > >             smi-common
-> > >                |
-> > >        -----------------
-> > >        |    |    |     |    ...
-> > >     larb0 larb1  larb2 larb3
-> > >
-> > > This patch add support for mmu1. In order to get better performance,
-> > > we could adjust some larbs go to mmu1 while the others still go to
-> > > mmu0. This is controlled by a SMI COMMON register SMI_BUS_SEL(0x220).
-> > >
-> > > mt2712, mt8173 and mt8183 M4U HW all have 2 mmu cells. the default
-> > > value of that register is 0 which means all the larbs go to mmu0
-> > > defaultly.
-> > >
-> > > This is a preparing patch for adjusting SMI_BUS_SEL for mt8183.
-> > >
-> > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > > Reviewed-by: Evan Green <evgreen@chromium.org>
-> > > ---
-> > >  drivers/iommu/mtk_iommu.c | 46 +++++++++++++++++++++++++++++-----------------
-> > >  1 file changed, 29 insertions(+), 17 deletions(-)
-> > >
-> > > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> > > index 3a14301..ec4ce74 100644
-> > > --- a/drivers/iommu/mtk_iommu.c
-> > > +++ b/drivers/iommu/mtk_iommu.c
-> > > @@ -72,26 +72,32 @@
-> > >  #define F_INT_CLR_BIT                          BIT(12)
-> > >
-> > >  #define REG_MMU_INT_MAIN_CONTROL               0x124
-> > > -#define F_INT_TRANSLATION_FAULT                        BIT(0)
-> > > -#define F_INT_MAIN_MULTI_HIT_FAULT             BIT(1)
-> > > -#define F_INT_INVALID_PA_FAULT                 BIT(2)
-> > > -#define F_INT_ENTRY_REPLACEMENT_FAULT          BIT(3)
-> > > -#define F_INT_TLB_MISS_FAULT                   BIT(4)
-> > > -#define F_INT_MISS_TRANSACTION_FIFO_FAULT      BIT(5)
-> > > -#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   BIT(6)
-> > > +                                               /* mmu0 | mmu1 */
-> > > +#define F_INT_TRANSLATION_FAULT                        (BIT(0) | BIT(7))
-> > > +#define F_INT_MAIN_MULTI_HIT_FAULT             (BIT(1) | BIT(8))
-> > > +#define F_INT_INVALID_PA_FAULT                 (BIT(2) | BIT(9))
-> > > +#define F_INT_ENTRY_REPLACEMENT_FAULT          (BIT(3) | BIT(10))
-> > > +#define F_INT_TLB_MISS_FAULT                   (BIT(4) | BIT(11))
-> > > +#define F_INT_MISS_TRANSACTION_FIFO_FAULT      (BIT(5) | BIT(12))
-> > > +#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   (BIT(6) | BIT(13))
-> >
-> > If there are two IOMMUs, shouldn't we have two driver instances handle
-> > them, instead of making the driver combine them two internally?
->
-> Actually it means only one IOMMU(M4U) HW here. Each a M4U HW has two
-> small iommu cells which have independent MTLB. As the diagram above, M4U
-> contain mmu0 and mmu1.
->
-> MT8173 and MT8183 have only one M4U HW while MT2712 have 2 M4U HWs(two
-> driver instances).
->
-> >
-> > And, what is even more important from security point of view actually,
-> > have two separate page tables (aka IOMMU groups) for them?
->
-> Each a IOMMU(M4U) have its own pagetable, thus, mt8183 have only one
-> pagetable while mt2712 have two.
+On Sat, 15 Jun 2019 11:03:43 +0800, Kefeng Wang wrote:
+> When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler
+> warning,
+> 
+> drivers/of/fdt.c:129:19: warning: ‘of_fdt_match’ defined but not used [-Wunused-function]
+>  static int __init of_fdt_match(const void *blob, unsigned long node,
+> 
+> Since the only caller of of_fdt_match() is of_flat_dt_match(),
+> let's move the body of of_fdt_match() into of_flat_dt_match()
+> and eliminate of_fdt_match().
+> 
+> Meanwhile, move of_fdt_is_compatible() under CONFIG_OF_EARLY_FLATTREE,
+> as all callers are over there.
+> 
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+> v2:
+> -Move the body of of_fdt_match() into of_flat_dt_match(), suggested by Frank.
+> 
+>  drivers/of/fdt.c | 99 ++++++++++++++++++++++--------------------------
+>  1 file changed, 45 insertions(+), 54 deletions(-)
+> 
 
-I see, thanks for clarifying.
+Applied, thanks.
 
-Best regards,
-Tomasz
+Rob
