@@ -1,99 +1,613 @@
-From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Tue, 18 Jun 2019 15:15:42 -0600
-Message-ID: <6c70950d0c78bc02a3d016918ec3929e@codeaurora.org>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
- <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org>
- <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
- <CAK8P3a1FeUQR3pgoQxHoRK05JGORyR+TFATVQiijLWtFKTv6OQ@mail.gmail.com>
- <613cdfde488eb23d7207c7ba6258662702d04840.camel@sipsolutions.net>
- <CAK8P3a2onXpxiE4y9PzRwuPM2dh=h_BKz7Eb0=LLPgBbZoK1bQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v3] arm64: dts: qcom: Add Dragonboard 845c
+Date: Tue, 18 Jun 2019 14:19:45 -0700
+Message-ID: <20190618211945.27431-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2onXpxiE4y9PzRwuPM2dh=h_BKz7Eb0=LLPgBbZoK1bQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Johannes Berg <johannes@sipsolutions.net>, Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, Dan Williams <dcbw@redhat.com>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
+To: Andy Gross <agross@kernel.org>
+Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-06-18 14:55, Arnd Bergmann wrote:
-> On Tue, Jun 18, 2019 at 10:36 PM Johannes Berg
-> <johannes@sipsolutions.net> wrote:
->> 
->> On Tue, 2019-06-18 at 21:59 +0200, Arnd Bergmann wrote:
->> >
->> > From my understanding, the ioctl interface would create the lower
->> > netdev after talking to the firmware, and then user space would use
->> > the rmnet interface to create a matching upper-level device for that.
->> > This is an artifact of the strong separation of ipa and rmnet in the
->> > code.
->> 
->> Huh. But if rmnet has muxing, and IPA supports that, why would you 
->> ever
->> need multiple lower netdevs?
-> 
-> From my reading of the code, there is always exactly a 1:1 relationship
-> between an rmnet netdev an an ipa netdev. rmnet does the encapsulation/
-> decapsulation of the qmap data and forwards it to the ipa netdev,
-> which then just passes data through between a hardware queue and
-> its netdevice.
-> 
+This adds an initial dts for the Dragonboard 845. Supported
+functionality includes Debug UART, UFS, USB-C (peripheral), USB-A
+(host), microSD-card and Bluetooth.
 
-There is a n:1 relationship between rmnet and IPA.
-rmnet does the de-muxing to multiple netdevs based on the mux id
-in the MAP header for RX packets and vice versa.
+Initializing the SMMU is clearing the mapping used for the splash screen
+framebuffer, which causes the board to reboot. This can be worked around
+using:
 
-> [side note: on top of that, rmnet also does "aggregation", which may
->  be a confusing term that only means transferring multiple frames
->  at once]
-> 
->> > ipa definitely has multiple hardware queues, and the Alex'
->> > driver does implement  the data path on those, just not the
->> > configuration to enable them.
->> 
->> OK, but perhaps you don't actually have enough to use one for each
->> session?
-> 
-> I'm lacking the terminology here, but what I understood was that
-> the netdev and queue again map to a session.
-> 
->> > Guessing once more, I suspect the the XON/XOFF flow control
->> > was a workaround for the fact that rmnet and ipa have separate
->> > queues. The hardware channel on IPA may fill up, but user space
->> > talks to rmnet and still add more frames to it because it doesn't
->> > know IPA is busy.
->> >
->> > Another possible explanation would be that this is actually
->> > forwarding state from the base station to tell the driver to
->> > stop sending data over the air.
->> 
->> Yeah, but if you actually have a hardware queue per upper netdev then
->> you don't really need this - you just stop the netdev queue when the
->> hardware queue is full, and you have flow control automatically.
->> 
->> So I really don't see any reason to have these messages going back and
->> forth unless you plan to have multiple sessions muxed on a single
->> hardware queue.
-> 
+  fastboot oem select-display-panel none
 
-Hardware may flow control specific PDNs (rmnet interfaces) based on QoS 
--
-not necessarily only in case of hardware queue full.
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Tested-by: Vinod Koul <vkoul@kernel.org>
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-> Sure, I definitely understand what you mean, and I agree that would
-> be the right way to do it. All I said is that this is not how it was 
-> done
-> in rmnet (this was again my main concern about the rmnet design
-> after I learned it was required for ipa) ;-)
-> 
->      Arnd
+Changes since v2:
+- Added copyright
+- Sorted gpio_keys and leds nodes
 
+ arch/arm64/boot/dts/qcom/Makefile          |   1 +
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 557 +++++++++++++++++++++
+ 2 files changed, 558 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 21d548f02d39..b3fe72ff2955 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+new file mode 100644
+index 000000000000..71bd717a4251
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -0,0 +1,557 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019, Linaro Ltd.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++#include "sdm845.dtsi"
++#include "pm8998.dtsi"
++#include "pmi8998.dtsi"
++
++/ {
++	model = "Thundercomm Dragonboard 845c";
++	compatible = "thundercomm,db845c", "qcom,sdm845";
++
++	aliases {
++		serial0 = &uart9;
++		hsuart0 = &uart6;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	dc12v: dc12v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "DC12V";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		regulator-always-on;
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		autorepeat;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&vol_up_pin_a>;
++
++		vol-up {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		user4 {
++			label = "green:user4";
++			gpios = <&pm8998_gpio 13 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "panic-indicator";
++			default-state = "off";
++		};
++
++		wlan {
++			label = "yellow:wlan";
++			gpios = <&pm8998_gpio 9 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "phy0tx";
++			default-state = "off";
++		};
++
++		bt {
++			label = "blue:bt";
++			gpios = <&pm8998_gpio 5 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "bluetooth-power";
++			default-state = "off";
++		};
++	};
++
++	lt9611_1v8: lt9611-vdd18-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "LT9611_1V8";
++
++		vin-supply = <&vdc_5v>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++
++		gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	lt9611_3v3: lt9611-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "LT9611_3V3";
++
++		vin-supply = <&vdc_3v3>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		// TODO: make it possible to drive same GPIO from two clients
++		// gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
++		// enable-active-high;
++	};
++
++	pcie0_1p05v: pcie-0-1p05v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "PCIE0_1.05V";
++
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <1050000>;
++		regulator-max-microvolt = <1050000>;
++
++		// TODO: make it possible to drive same GPIO from two clients
++		// gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
++		// enable-active-high;
++	};
++
++	pcie0_3p3v_dual: vldo-3v3-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VLDO_3V3";
++
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pcie0_pwren_state>;
++	};
++
++	v5p0_hdmiout: v5p0-hdmiout-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "V5P0_HDMIOUT";
++
++		vin-supply = <&vdc_5v>;
++		regulator-min-microvolt = <500000>;
++		regulator-max-microvolt = <500000>;
++
++		// TODO: make it possible to drive same GPIO from two clients
++		// gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
++		// enable-active-high;
++	};
++
++	vbat: vbat-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VBAT";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <4200000>;
++		regulator-max-microvolt = <4200000>;
++		regulator-always-on;
++	};
++
++	vbat_som: vbat-som-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VBAT_SOM";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <4200000>;
++		regulator-max-microvolt = <4200000>;
++		regulator-always-on;
++	};
++
++	vdc_3v3: vdc-3v3-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VDC_3V3";
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	vdc_5v: vdc-5v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VDC_5V";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <500000>;
++		regulator-max-microvolt = <500000>;
++		regulator-always-on;
++	};
++
++	vreg_s4a_1p8: vreg-s4a-1p8 {
++		compatible = "regulator-fixed";
++		regulator-name = "vreg_s4a_1p8";
++
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++
++		vin-supply = <&vbat_som>;
++	};
++};
++
++&adsp_pas {
++	status = "okay";
++
++	firmware-name = "qcom/db845c/adsp.mdt";
++};
++
++&apps_rsc {
++	pm8998-rpmh-regulators {
++		compatible = "qcom,pm8998-rpmh-regulators";
++		qcom,pmic-id = "a";
++		vdd-s1-supply = <&vph_pwr>;
++		vdd-s2-supply = <&vph_pwr>;
++		vdd-s3-supply = <&vph_pwr>;
++		vdd-s4-supply = <&vph_pwr>;
++		vdd-s5-supply = <&vph_pwr>;
++		vdd-s6-supply = <&vph_pwr>;
++		vdd-s7-supply = <&vph_pwr>;
++		vdd-s8-supply = <&vph_pwr>;
++		vdd-s9-supply = <&vph_pwr>;
++		vdd-s10-supply = <&vph_pwr>;
++		vdd-s11-supply = <&vph_pwr>;
++		vdd-s12-supply = <&vph_pwr>;
++		vdd-s13-supply = <&vph_pwr>;
++		vdd-l1-l27-supply = <&vreg_s7a_1p025>;
++		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
++		vdd-l3-l11-supply = <&vreg_s7a_1p025>;
++		vdd-l4-l5-supply = <&vreg_s7a_1p025>;
++		vdd-l6-supply = <&vph_pwr>;
++		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
++		vdd-l9-supply = <&vreg_bob>;
++		vdd-l10-l23-l25-supply = <&vreg_bob>;
++		vdd-l13-l19-l21-supply = <&vreg_bob>;
++		vdd-l16-l28-supply = <&vreg_bob>;
++		vdd-l18-l22-supply = <&vreg_bob>;
++		vdd-l20-l24-supply = <&vreg_bob>;
++		vdd-l26-supply = <&vreg_s3a_1p35>;
++		vin-lvs-1-2-supply = <&vreg_s4a_1p8>;
++
++		vreg_s3a_1p35: smps3 {
++			regulator-min-microvolt = <1352000>;
++			regulator-max-microvolt = <1352000>;
++		};
++
++		vreg_s5a_2p04: smps5 {
++			regulator-min-microvolt = <1904000>;
++			regulator-max-microvolt = <2040000>;
++		};
++
++		vreg_s7a_1p025: smps7 {
++			regulator-min-microvolt = <900000>;
++			regulator-max-microvolt = <1028000>;
++		};
++
++		vreg_l1a_0p875: ldo1 {
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <880000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l5a_0p8: ldo5 {
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l12a_1p8: ldo12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l7a_1p8: ldo7 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l13a_2p95: ldo13 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l17a_1p3: ldo17 {
++			regulator-min-microvolt = <1304000>;
++			regulator-max-microvolt = <1304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l20a_2p95: ldo20 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2968000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l21a_2p95: ldo21 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2968000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l24a_3p075: ldo24 {
++			regulator-min-microvolt = <3088000>;
++			regulator-max-microvolt = <3088000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l25a_3p3: ldo25 {
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3312000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l26a_1p2: ldo26 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++
++	pmi8998-rpmh-regulators {
++		compatible = "qcom,pmi8998-rpmh-regulators";
++		qcom,pmic-id = "b";
++
++		vdd-bob-supply = <&vph_pwr>;
++
++		vreg_bob: bob {
++			regulator-min-microvolt = <3312000>;
++			regulator-max-microvolt = <3600000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
++			regulator-allow-bypass;
++		};
++	};
++};
++
++&cdsp_pas {
++	status = "okay";
++	firmware-name = "qcom/db845c/cdsp.mdt";
++};
++
++&gcc {
++	protected-clocks = <GCC_QSPI_CORE_CLK>,
++			   <GCC_QSPI_CORE_CLK_SRC>,
++			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
++};
++
++&pm8998_gpio {
++	vol_up_pin_a: vol-up-active {
++		pins = "gpio6";
++		function = "normal";
++		input-enable;
++		bias-pull-up;
++		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
++	};
++};
++
++&pm8998_pon {
++	resin {
++		compatible = "qcom,pm8941-resin";
++		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
++		debounce = <15625>;
++		bias-pull-up;
++		linux,code = <KEY_VOLUMEDOWN>;
++	};
++};
++
++&qupv3_id_0 {
++	status = "okay";
++};
++
++&qupv3_id_1 {
++	status = "okay";
++};
++
++&sdhc_2 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdc2_default_state &sdc2_card_det_n>;
++
++	vmmc-supply = <&vreg_l21a_2p95>;
++	vqmmc-supply = <&vreg_l13a_2p95>;
++
++	bus-width = <4>;
++	cd-gpios = <&tlmm 126 GPIO_ACTIVE_LOW>;
++};
++
++&tlmm {
++	pcie0_pwren_state: pcie0-pwren {
++		pins = "gpio90";
++		function = "gpio";
++
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	sdc2_default_state: sdc2-default {
++		clk {
++			pins = "sdc2_clk";
++			bias-disable;
++
++			/*
++			 * It seems that mmc_test reports errors if drive
++			 * strength is not 16 on clk, cmd, and data pins.
++			 */
++			drive-strength = <16>;
++		};
++
++		cmd {
++			pins = "sdc2_cmd";
++			bias-pull-up;
++			drive-strength = <10>;
++		};
++
++		data {
++			pins = "sdc2_data";
++			bias-pull-up;
++			drive-strength = <10>;
++		};
++	};
++
++	sdc2_card_det_n: sd-card-det-n {
++		pins = "gpio126";
++		function = "gpio";
++		bias-pull-up;
++	};
++};
++
++&uart6 {
++	status = "okay";
++
++	bluetooth {
++		compatible = "qcom,wcn3990-bt";
++
++		vddio-supply = <&vreg_s4a_1p8>;
++		vddxo-supply = <&vreg_l7a_1p8>;
++		vddrf-supply = <&vreg_l17a_1p3>;
++		vddch0-supply = <&vreg_l25a_3p3>;
++		max-speed = <3200000>;
++	};
++};
++
++&uart9 {
++	status = "okay";
++};
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "peripheral";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l12a_1p8>;
++	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
++	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
++	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
++};
++
++&usb_1_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l26a_1p2>;
++	vdda-pll-supply = <&vreg_l1a_0p875>;
++};
++
++&usb_2 {
++	status = "okay";
++};
++
++&usb_2_dwc3 {
++	dr_mode = "host";
++};
++
++&usb_2_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l12a_1p8>;
++	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_22_8_MA>;
++};
++
++&usb_2_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l26a_1p2>;
++	vdda-pll-supply = <&vreg_l1a_0p875>;
++};
++
++&ufs_mem_hc {
++	status = "okay";
++
++	vcc-supply = <&vreg_l20a_2p95>;
++	vcc-max-microamp = <800000>;
++};
++
++&ufs_mem_phy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l26a_1p2>;
++};
++
++&wifi {
++	status = "okay";
++
++	vdd-0.8-cx-mx-supply = <&vreg_l5a_0p8>;
++	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
++	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
++	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
++};
++
++/* PINCTRL - additions to nodes defined in sdm845.dtsi */
++
++&qup_uart6_default {
++	pinmux {
++		pins = "gpio45", "gpio46", "gpio47", "gpio48";
++		function = "qup6";
++	};
++
++	cts {
++		pins = "gpio45";
++		bias-disable;
++	};
++
++	rts-tx {
++		pins = "gpio46", "gpio47";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	rx {
++		pins = "gpio48";
++		bias-pull-up;
++	};
++};
++
++&qup_uart9_default {
++	pinconf-tx {
++		pins = "gpio4";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	pinconf-rx {
++		pins = "gpio5";
++		drive-strength = <2>;
++		bias-pull-up;
++	};
++};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.18.0
