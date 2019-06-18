@@ -1,84 +1,185 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register
- clock gates in probe
-Date: Tue, 18 Jun 2019 13:16:50 +0530
-Message-ID: <CAMty3ZBDjNa+Sso4hmKxXOg_LT8giNYQAuJCgjZW8AeVQhAtyQ@mail.gmail.com>
-References: <20190614164324.9427-1-jagan@amarulasolutions.com>
- <20190614164324.9427-6-jagan@amarulasolutions.com>
- <20190617114503.pclqsf6bo3ih47nt@flea>
- <CAGb2v66RU=m0iA9VoBiYbake+mDoiiGcd5gGGXvNCBjhY2n+Dw@mail.gmail.com>
- <CAMty3ZA0J+2fSRwX+tS-waJDLMyTOf6UY_1pHjXe0qOk5QuzrQ@mail.gmail.com>
- <CAGb2v64htYr+iRUnLx0hKkqCtYa0GbzZJEvb-ViyJFAYzU1sig@mail.gmail.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V3 07/17] clk: tegra: save and restore CPU and System clocks context
+Date: Tue, 18 Jun 2019 00:46:21 -0700
+Message-ID: <1560843991-24123-8-git-send-email-skomatineni@nvidia.com>
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGb2v64htYr+iRUnLx0hKkqCtYa0GbzZJEvb-ViyJFAYzU1sig@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula <linux-amarula@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMTgsIDIwMTkgYXQgMTI6NTMgUE0gQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUu
-b3JnPiB3cm90ZToKPgo+IE9uIFR1ZSwgSnVuIDE4LCAyMDE5IGF0IDM6MTIgUE0gSmFnYW4gVGVr
-aSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+IHdyb3RlOgo+ID4KPiA+IE9uIE1vbiwgSnVu
-IDE3LCAyMDE5IGF0IDY6MzEgUE0gQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPiB3cm90ZToK
-PiA+ID4KPiA+ID4gT24gTW9uLCBKdW4gMTcsIDIwMTkgYXQgNzo0NSBQTSBNYXhpbWUgUmlwYXJk
-IDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IE9uIEZy
-aSwgSnVuIDE0LCAyMDE5IGF0IDEwOjEzOjIwUE0gKzA1MzAsIEphZ2FuIFRla2kgd3JvdGU6Cj4g
-PiA+ID4gPiBUQ09OIFRPUCBoYXZlIGNsb2NrIGdhdGVzIGZvciBUVjAsIFRWMSwgZHNpIGFuZCBy
-aWdodAo+ID4gPiA+ID4gbm93IHRoZXNlIGFyZSByZWdpc3RlciBkdXJpbmcgYmluZCBjYWxsLgo+
-ID4gPiA+ID4KPiA+ID4gPiA+IE9mIHdoaWNoLCBkc2kgY2xvY2sgZ2F0ZSB3b3VsZCByZXF1aXJl
-ZCBkdXJpbmcgRFBIWSBwcm9iZQo+ID4gPiA+ID4gYnV0IHNhbWUgY2FuIG1pc3MgdG8gZ2V0IHNp
-bmNlIHRjb24gdG9wIGlzIG5vdCBib3VuZCBhdAo+ID4gPiA+ID4gdGhhdCB0aW1lLgo+ID4gPiA+
-ID4KPiA+ID4gPiA+IFRvIHNvbHZlLCB0aGlzIGNpcmN1bGFyIGRlcGVuZGVuY3kgbW92ZSB0aGUg
-Y2xvY2sgZ2F0ZQo+ID4gPiA+ID4gcmVnaXN0cmF0aW9uIGZyb20gYmluZCB0byBwcm9iZSBzby10
-aGF0IERQSFkgY2FuIGdldCB0aGUKPiA+ID4gPiA+IGRzaSBnYXRlIGNsb2NrIG9uIHRpbWUuCj4g
-PiA+ID4KPiA+ID4gPiBJdCdzIG5vdCByZWFsbHkgY2xlYXIgdG8gbWUgd2hhdCB0aGUgY2lyY3Vs
-YXIgZGVwZW5kZW5jeSBpcz8KPiA+ID4gPgo+ID4gPiA+IGlmIHlvdSBoYXZlIGEgY2hhaW4gdGhh
-dCBpczoKPiA+ID4gPgo+ID4gPiA+IHRjb24tdG9wICstPiBEU0kKPiA+ID4gPiAgICAgICAgICAr
-LT4gRC1QSFkKPiA+ID4gPgo+ID4gPiA+IFRoZXJlJ3Mgbm8gbG9vcCwgcmlnaHQ/Cj4gPiA+Cj4g
-PiA+IExvb2tpbmcgYXQgaG93IHRoZSBEVFNJIHBhdGNoIHN0cnVjdHVyZXMgdGhpbmdzICh3aXRo
-b3V0IGdvaW5nIGludG8KPiA+ID4gd2hldGhlciBpdCBpcyBjb3JyZWN0IG9yIGFjY3VyYXRlKToK
-PiA+ID4KPiA+ID4gVGhlIEQtUEhZIGlzIG5vdCBwYXJ0IG9mIHRoZSBjb21wb25lbnQgZ3JhcGgu
-IEhvd2V2ZXIgaXQgcmVxdWVzdHMKPiA+ID4gdGhlIERTSSBnYXRlIGNsb2NrIGZyb20gdGhlIFRD
-T04tVE9QLgo+ID4gPgo+ID4gPiBUaGUgVENPTi1UT1AgZHJpdmVyLCBpbiBpdHMgY3VycmVudCBm
-b3JtLCBvbmx5IHJlZ2lzdGVycyB0aGUgY2xvY2tzCj4gPiA+IGl0IHByb3ZpZGVzIGF0IGNvbXBv
-bmVudCBiaW5kIHRpbWUuIFRodXMgdGhlIEQtUEhZIGNhbid0IHN1Y2Nlc3NmdWxseQo+ID4gPiBw
-cm9iZSB1bnRpbCB0aGUgVENPTi1UT1AgaGFzIGJlZW4gYm91bmQuCj4gPiA+Cj4gPiA+IFRoZSBE
-U0kgaW50ZXJmYWNlIHJlcXVpcmVzIHRoZSBELVBIWSB0byBiaW5kLiBJdCB3aWxsIHJldHVybiAt
-RVBST0JFX0RFRkVSCj4gPiA+IGlmIGl0IGNhbm5vdCByZXF1ZXN0IGl0LiBUaGlzIGluIHR1cm4g
-Z29lcyBpbnRvIHRoZSBlcnJvciBwYXRoIG9mCj4gPiA+IGNvbXBvbmVudF9iaW5kX2FsbCwgd2hp
-Y2ggdW5iaW5kcyBhbGwgcHJldmlvdXMgY29tcG9uZW50cy4KPiA+ID4KPiA+ID4gU28gaXQncyBh
-Y3R1YWxseQo+ID4gPgo+ID4gPiAgICAgRC1QSFkgLT4gVENPTi1UT1AgLT4gRFNJCj4gPiA+ICAg
-ICAgIF4gICAgICAgICAgICAgICAgICAgfAo+ID4gPiAgICAgICB8LS0tLS0tLS0tLS0tLS0tLS0t
-LS0KPiA+ID4KPiA+ID4gSSd2ZSBub3QgY2hlY2tlZCwgYnV0IEkgc3VzcGVjdCB0aGVyZSdzIG5v
-IHBvc3NpYmlsaXR5IG9mIGhhdmluZyBvdGhlcgo+ID4gPiBkcml2ZXJzIHByb2JlICh0byBkZWFs
-IHdpdGggZGVmZXJyZWQgcHJvYmluZykgd2l0aGluIGNvbXBvbmVudF9iaW5kX2FsbC4KPiA+ID4g
-T3RoZXJ3aXNlIHdlIHNob3VsZG4ndCBydW4gaW50byB0aGlzIHdlaXJkIGNpcmN1bGFyIGRlcGVu
-ZGVuY3kgaXNzdWUuCj4gPiA+Cj4gPiA+IFNvIHRoZSBxdWVzdGlvbiBmb3IgSmFnYW4gaXMgdGhh
-dCBpcyB0aGlzIGluZGVlZCB0aGUgY2FzZT8gRG9lcyB0aGlzCj4gPiA+IHBhdGNoIHNvbHZlIGl0
-LCBvciBhdCBsZWFzdCB3b3JrIGFyb3VuZCBpdC4KPiA+Cj4gPiBZZXMsIHRoaXMgaXMgd2hhdCBJ
-IHdhcyBtZW50aW9uZWQgaW4gaW5pdGlhbCB2ZXJzaW9uLCBzaW5jZSB0aGUgImRzaSIKPiA+IGdh
-dGUgaW4gdGNvbiB0b3AgaXMgcmVnaXN0ZXJpbmcgZHVyaW5nIGJpbmQsIHRoZSBkcGh5IG9mIGRz
-aQo+ID4gY29udHJvbGxlciB3b24ndCBnZXQgdGhlIGFzc29jaWF0ZWQgY2xvY2sgZm9yICJtb2Qi
-IHNvIGl0IGlzIGtlZXAgb24KPiA+IHJldHVybmluZyAtRVBST0JFX0RFRkVSLiBCeSBtb3Zpbmcg
-dGhlIGNsb2NrIGdhdGUgcmVnaXN0cmF0aW9uIHRvCj4gPiBwcm9iZSwgZXZlcnl0aGluZyBib3Vu
-ZCBhcyBleHBlY3RlZC4KPgo+IEkgYmVsaWV2ZSB5b3UgZmFpbGVkIHRvIG1lbnRpb24gdGhlIERT
-SSBibG9jaywgd2hpY2ggaXMgdGhlIHBhcnQgdGhhdAo+IGNvbXBsZXRlcyB0aGUgY2lyY3VsYXIg
-ZGVwZW5kZW5jeS4gRG9uJ3QgZXhwZWN0IG90aGVycyB0byBoYXZlIGZ1bGwKPiBhd2FyZW5lc3Mg
-b2YgdGhlIGNvbnRleHQuIFlvdSBoYXZlIHRvIHByb3ZpZGUgaXQgaW4geW91ciBjb21taXQgbG9n
-LgoKSSBoYXZlIG1lbnRpb25lZCBEUEhZIGFuZCB5ZXMgaXQgaXMgcG9zc2libGUgdG8gZ2l2ZSBt
-b3JlIGluZm9ybWF0aW9uCndpbGwgdXBkYXRlIGluIG5leHQgdmVyc2lvbiwgbm8gcHJvYmxlbS4g
-dGhhbmtzIGZvciBtZW50aW9uaW5nIHRoYXQuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbA==
+During system suspend state, core power goes off and looses all the
+CAR controller register settings.
+
+This patch creates APIs for saving and restoring the context of Tegra
+CPUG, CPULP and SCLK.
+
+CPU and System clock context includes
+- CPUG, CPULP, and SCLK burst policy settings for clock sourcea of all
+  their normal states.
+- SCLK divisor and System clock rate for restoring SCLK, AHB and APB
+  rates on resume.
+- OSC_DIV settings which are used as reference clock input to some PLLs.
+- SPARE_REG and CLK_MASK settings.
+
+These APIs are used in Tegra210 clock driver during suspend and resume
+operation.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/clk/tegra/clk-tegra-super-gen4.c |  4 --
+ drivers/clk/tegra/clk.c                  | 80 ++++++++++++++++++++++++++++++++
+ drivers/clk/tegra/clk.h                  | 14 ++++++
+ 3 files changed, 94 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c b/drivers/clk/tegra/clk-tegra-super-gen4.c
+index cdfe7c9697e1..ed69ec4d883e 100644
+--- a/drivers/clk/tegra/clk-tegra-super-gen4.c
++++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
+@@ -19,10 +19,6 @@
+ #define PLLX_MISC2 0x514
+ #define PLLX_MISC3 0x518
+ 
+-#define CCLKG_BURST_POLICY 0x368
+-#define CCLKLP_BURST_POLICY 0x370
+-#define SCLK_BURST_POLICY 0x028
+-#define SYSTEM_CLK_RATE 0x030
+ #define SCLK_DIVIDER 0x2c
+ 
+ static DEFINE_SPINLOCK(sysrate_lock);
+diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+index 573e3c967ae1..26690663157a 100644
+--- a/drivers/clk/tegra/clk.c
++++ b/drivers/clk/tegra/clk.c
+@@ -70,6 +70,12 @@ static struct clk **clks;
+ static int clk_num;
+ static struct clk_onecell_data clk_data;
+ 
++static u32 cclkg_burst_policy_ctx[2];
++static u32 cclklp_burst_policy_ctx[2];
++static u32 sclk_burst_policy_ctx[2];
++static u32 sys_clk_divisor_ctx, system_rate_ctx;
++static u32 spare_ctx, misc_clk_enb_ctx, clk_arm_ctx;
++
+ /* Handlers for SoC-specific reset lines */
+ static int (*special_reset_assert)(unsigned long);
+ static int (*special_reset_deassert)(unsigned long);
+@@ -199,6 +205,80 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
+ 	}
+ }
+ 
++void tegra_cclkg_burst_policy_save_context(void)
++{
++	int i;
++
++	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
++		cclkg_burst_policy_ctx[i] = readl_relaxed(clk_base +
++							  CCLKG_BURST_POLICY +
++							  (i * 4));
++}
++
++void tegra_cclkg_burst_policy_restore_context(void)
++{
++	int i;
++
++	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
++		writel_relaxed(cclkg_burst_policy_ctx[i],
++			       clk_base + CCLKG_BURST_POLICY + (i * 4));
++
++	fence_udelay(2, clk_base);
++}
++
++void tegra_sclk_cclklp_burst_policy_save_context(void)
++{
++	int i;
++
++	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
++		cclklp_burst_policy_ctx[i] = readl_relaxed(clk_base +
++							  CCLKLP_BURST_POLICY +
++							  (i * 4));
++
++		sclk_burst_policy_ctx[i] = readl_relaxed(clk_base +
++							  SCLK_BURST_POLICY +
++							  (i * 4));
++	}
++
++	sys_clk_divisor_ctx = readl_relaxed(clk_base + SYS_CLK_DIV);
++	system_rate_ctx = readl_relaxed(clk_base + SYSTEM_CLK_RATE);
++	spare_ctx = readl_relaxed(clk_base + SPARE_REG0);
++	misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
++	clk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
++}
++
++void tegra_sclk_cpulp_burst_policy_restore_context(void)
++{
++	int i;
++	u32 val;
++
++	/*
++	 * resume SCLK and CPULP clocks
++	 * for SCLk, set safe dividers values first and then restore source
++	 * and dividers
++	 */
++
++	writel_relaxed(0x1, clk_base + SYSTEM_CLK_RATE);
++	val = readl_relaxed(clk_base + SYS_CLK_DIV);
++	if (val < sys_clk_divisor_ctx)
++		writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
++
++	fence_udelay(2, clk_base);
++
++	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
++		writel_relaxed(cclklp_burst_policy_ctx[i],
++			       clk_base + CCLKLP_BURST_POLICY + (i * 4));
++		writel_relaxed(sclk_burst_policy_ctx[i],
++			       clk_base + SCLK_BURST_POLICY + (i * 4));
++	}
++
++	writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
++	writel_relaxed(system_rate_ctx, clk_base + SYSTEM_CLK_RATE);
++	writel_relaxed(spare_ctx, clk_base + SPARE_REG0);
++	writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
++	writel_relaxed(clk_arm_ctx, clk_base + CLK_MASK_ARM);
++}
++
+ struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
+ {
+ 	clk_base = regs;
+diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+index 581deb4f3ac0..c8f8a23096e2 100644
+--- a/drivers/clk/tegra/clk.h
++++ b/drivers/clk/tegra/clk.h
+@@ -10,6 +10,16 @@
+ #include <linux/clkdev.h>
+ #include <linux/delay.h>
+ 
++#define SCLK_BURST_POLICY	0x28
++#define SYSTEM_CLK_RATE		0x30
++#define CLK_MASK_ARM		0x44
++#define MISC_CLK_ENB		0x48
++#define CCLKG_BURST_POLICY	0x368
++#define CCLKLP_BURST_POLICY	0x370
++#define SYS_CLK_DIV		0x400
++#define SPARE_REG0 		0x55c
++#define BURST_POLICY_REG_SIZE	2
++
+ /**
+  * struct tegra_clk_sync_source - external clock source from codec
+  *
+@@ -839,6 +849,10 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
+ int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+ 		 u8 frac_width, u8 flags);
+ void tegra_clk_sync_state_pll(struct clk_hw *hw);
++void tegra_cclkg_burst_policy_save_context(void);
++void tegra_cclkg_burst_policy_restore_context(void);
++void tegra_sclk_cclklp_burst_policy_save_context(void);
++void tegra_sclk_cpulp_burst_policy_restore_context(void);
+ 
+ /* Combined read fence with delay */
+ #define fence_udelay(delay, reg)	\
+-- 
+2.7.4
