@@ -1,62 +1,78 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 1/4] staging: media: tegra-vde: Remove BIT() macro
- from UAPI header
-Date: Tue, 18 Jun 2019 11:23:13 -0700
-Message-ID: <26cd63896d6930385b4f770e305f0782a455a688.camel@perches.com>
-References: <20190618161458.20499-1-digetx@gmail.com>
-         <20190618161458.20499-5-digetx@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "dt-bindings: qcom_spmi: Document PM8005 regulators" to the regulator tree
+Date: Tue, 18 Jun 2019 19:33:21 +0100 (BST)
+Message-ID: <20190618183321.4C87F440046@finisterre.sirena.org.uk>
+References: <20190617183716.13501-1-jeffrey.l.hugo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190618161458.20499-5-digetx@gmail.com>
+In-Reply-To: <20190617183716.13501-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Johannes Berg <johannes@sipsolutions.net>, Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <jakub.kicinski@netronome.com>, Jesper Dangaard Brouer <hawk@kernel.org>
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: agross@kernel.org, bjorn.andersson@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-06-18 at 19:14 +0300, Dmitry Osipenko wrote:
-> The BIT macro isn't available in userspace. Checkpatch complains about
-> shifts being used instead of the macro and people are starting to send
-> patches without realizing that it's a UAPI header file. Hence let's
-> replace the BIT macro with a hex values to make everyone happy.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/staging/media/tegra-vde/uapi.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/media/tegra-vde/uapi.h b/drivers/staging/media/tegra-vde/uapi.h
-> index a0dad1ed94ef..dd3e4a8c9f7e 100644
-> --- a/drivers/staging/media/tegra-vde/uapi.h
-> +++ b/drivers/staging/media/tegra-vde/uapi.h
-> @@ -6,8 +6,8 @@
->  #include <linux/types.h>
->  #include <asm/ioctl.h>
->  
-> -#define FLAG_B_FRAME		BIT(0)
-> -#define FLAG_REFERENCE		BIT(1)
-> +#define FLAG_B_FRAME		0x1
-> +#define FLAG_REFERENCE		0x2
->  
->  struct tegra_vde_h264_frame {
->  	__s32 y_fd;
+The patch
 
-The BIT macro is already used quite a bit in uapi headers.
-I imagine all those need fixup...
+   dt-bindings: qcom_spmi: Document PM8005 regulators
 
-$ git grep -P '\bBIT\s*\(' include/uapi
-include/uapi/linux/bpf.h:#define BPF_FIB_LOOKUP_DIRECT  BIT(0)
-include/uapi/linux/bpf.h:#define BPF_FIB_LOOKUP_OUTPUT  BIT(1)
-include/uapi/linux/coresight-stm.h:#define STM_FLAG_TIMESTAMPED   BIT(3)
-include/uapi/linux/coresight-stm.h:#define STM_FLAG_GUARANTEED    BIT(7)
-include/uapi/linux/nl80211.h: * bitmask of BIT(NL80211_BAND_*) as described in %enum
-include/uapi/linux/pkt_sched.h:#define TC_ETF_DEADLINE_MODE_ON  BIT(0)
-include/uapi/linux/pkt_sched.h:#define TC_ETF_OFFLOAD_ON        BIT(1)
-include/uapi/linux/psci.h:#define PSCI_1_0_OS_INITIATED                 BIT(0)
-include/uapi/linux/serio.h:#define SERIO_TIMEOUT        BIT(0)
-include/uapi/linux/serio.h:#define SERIO_PARITY BIT(1)
-include/uapi/linux/serio.h:#define SERIO_FRAME  BIT(2)
-include/uapi/linux/serio.h:#define SERIO_OOB_DATA       BIT(3)
-include/uapi/linux/tc_act/tc_ctinfo.h:  CTINFO_MODE_DSCP        = BIT(0),
-include/uapi/linux/tc_act/tc_ctinfo.h:  CTINFO_MODE_CPMARK      = BIT(1)
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 4fe0676b04edc5032ffdc3fed00b670e1cfef049 Mon Sep 17 00:00:00 2001
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date: Mon, 17 Jun 2019 11:37:16 -0700
+Subject: [PATCH] dt-bindings: qcom_spmi: Document PM8005 regulators
+
+Document the dt bindings for the PM8005 regulators which are usually used
+for VDD of standalone blocks on a SoC like the GPU.
+
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/regulator/qcom,spmi-regulator.txt     | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
+index 406f2e570c50..ba94bc2d407a 100644
+--- a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
+@@ -4,6 +4,7 @@ Qualcomm SPMI Regulators
+ 	Usage: required
+ 	Value type: <string>
+ 	Definition: must be one of:
++			"qcom,pm8005-regulators"
+ 			"qcom,pm8841-regulators"
+ 			"qcom,pm8916-regulators"
+ 			"qcom,pm8941-regulators"
+@@ -120,6 +121,9 @@ The regulator node houses sub-nodes for each regulator within the device. Each
+ sub-node is identified using the node's name, with valid values listed for each
+ of the PMICs below.
+ 
++pm8005:
++	s1, s2, s3, s4
++
+ pm8841:
+ 	s1, s2, s3, s4, s5, s6, s7, s8
+ 
+-- 
+2.20.1
