@@ -1,82 +1,94 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 3/8] iommu/arm-smmu-v3: Support platform SSID
-Date: Tue, 18 Jun 2019 19:08:51 +0100
-Message-ID: <20190618180851.GK4270@fuggles.cambridge.arm.com>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-4-jean-philippe.brucker@arm.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 2/9] dt: bindings: Add multicolor class dt bindings
+ documention
+Date: Tue, 18 Jun 2019 20:19:57 +0200
+Message-ID: <afc7f11f-7f8d-7680-aef3-58c26e8b34fa@gmail.com>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-3-dmurphy@ti.com> <20190614170011.GA3277@bogus>
+ <c234361e-f5f7-f8d7-18c6-9cc8ef74ac99@ti.com>
+ <CAL_JsqK7u1xXNmwtHjUd7Z5ewHd9_d51quH4zMXxEd63egd28w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190610184714.6786-4-jean-philippe.brucker@arm.com>
+In-Reply-To: <CAL_JsqK7u1xXNmwtHjUd7Z5ewHd9_d51quH4zMXxEd63egd28w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, robin.murphy@arm.com, jacob.jun.pan@linux.intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, eric.auger@redhat.com
+To: Rob Herring <robh@kernel.org>, Dan Murphy <dmurphy@ti.com>
+Cc: Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 07:47:09PM +0100, Jean-Philippe Brucker wrote:
-> For platform devices that support SubstreamID (SSID), firmware provides
-> the number of supported SSID bits. Restrict it to what the SMMU supports
-> and cache it into master->ssid_bits.
+On 6/18/19 5:36 PM, Rob Herring wrote:
+> On Fri, Jun 14, 2019 at 11:18 AM Dan Murphy <dmurphy@ti.com> wrote:
+>>
+>> Rob
+>>
+>> Thanks for the review
+>>
+>> On 6/14/19 12:00 PM, Rob Herring wrote:
+>>> On Thu, May 23, 2019 at 02:08:13PM -0500, Dan Murphy wrote:
+>>>> Add DT bindings for the LEDs multicolor class framework.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>> ---
+>>>>    .../bindings/leds/leds-class-multicolor.txt   | 97 +++++++++++++++++++
+>>>>    1 file changed, 97 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+>>>> new file mode 100644
+>>>> index 000000000000..e2a2ce3279cb
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+>>>> @@ -0,0 +1,97 @@
+>>>> +* Multicolor LED properties
+>>>> +
+>>>> +Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
+>>>> +can be grouped together and also provide a modeling mechanism so that the
+>>>> +cluster LEDs can vary in hue and intensity to produce a wide range of colors.
+>>>> +
+>>>> +The nodes and properties defined in this document are unique to the multicolor
+>>>> +LED class.  Common LED nodes and properties are inherited from the common.txt
+>>>> +within this documentation directory.
+>>>> +
+>>>> +Required LED Child properties:
+>>>> +    - color : For multicolor LED support this property should be defined as
+>>>> +              LED_COLOR_ID_MULTI and further definition can be found in
+>>>> +              include/linux/leds/common.h.
+>>>> +
+>>>> +led-controller@30 {
+>>>> +    #address-cells = <1>;
+>>>> +    #size-cells = <0>;
+>>>> +    compatible = "ti,lp5024";
+>>>> +    reg = <0x29>;
+>>>> +
+>>>> +    multi-led@4 {
+>>> Typically we sort by address order.
+>>
+>> These are not addresses these end up being the "module" number that the
+>> LEDs below are associated to.
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> ---
->  drivers/iommu/arm-smmu-v3.c | 11 +++++++++++
->  drivers/iommu/of_iommu.c    |  6 +++++-
->  include/linux/iommu.h       |  1 +
->  3 files changed, 17 insertions(+), 1 deletion(-)
+> 'reg' (and the unit-address) is an address in the sense that is how
+> you identify a device or sub-device. It doesn't matter what type of
+> 'address' it is, DT practice is to sort node in unit-address numerical
+> order.
 > 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 4d5a694f02c2..3254f473e681 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -604,6 +604,7 @@ struct arm_smmu_master {
->  	struct list_head		domain_head;
->  	u32				*sids;
->  	unsigned int			num_sids;
-> +	unsigned int			ssid_bits;
->  	bool				ats_enabled		:1;
->  };
->  
-> @@ -2097,6 +2098,16 @@ static int arm_smmu_add_device(struct device *dev)
->  		}
->  	}
->  
-> +	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
-> +
-> +	/*
-> +	 * If the SMMU doesn't support 2-stage CD, limit the linear
-> +	 * tables to a reasonable number of contexts, let's say
-> +	 * 64kB / sizeof(ctx_desc) = 1024 = 2^10
-> +	 */
-> +	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB))
-> +		master->ssid_bits = min(master->ssid_bits, 10U);
+> 'module' is a h/w thing, right? A bank or instance within the device?
+> If not, using 'reg' here is not appropriate.
 
-Please introduce a #define for the 10, so that it is computed in the way
-you describe in the comment (a bit like we do for things like queue sizes).
+In this case reg represents LEDn_BRIGHTNESS register which controls
+a group of three LEDs. The thing is that those registers' addresses
+start from 0x07, i.e. the formula for calculating the RGB LED module
+address is: LEDn_BRIGHTNESS = 0x07 + n.
 
-> +
->  	group = iommu_group_get_for_dev(dev);
->  	if (!IS_ERR(group)) {
->  		iommu_group_put(group);
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index f04a6df65eb8..04f4f6b95d82 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -206,8 +206,12 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
->  			if (err)
->  				break;
->  		}
-> -	}
->  
-> +		fwspec = dev_iommu_fwspec_get(dev);
-> +		if (!err && fwspec)
-> +			of_property_read_u32(master_np, "pasid-num-bits",
-> +					     &fwspec->num_pasid_bits);
-> +	}
+ From the above it seems that we should have multi-led@7 and reg = 0x07
+for LED0_BRIGHTNESS register governing the brightness of RGB LED
+module 0, right?
 
-Hmm. Do you know if there's anything in ACPI for this?
+And regarding sorting by address order I think that Rob was asking for
+placing whole multi-led@4 sub-node after multi-led@2 (here sticking to
+the numeration from the patch).
 
-Otherwise, patch looks fine. Thanks.
-
-Will
+-- 
+Best regards,
+Jacek Anaszewski
