@@ -1,114 +1,416 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH V12 2/4] drivers/perf: imx_ddr: Add ddr performance
- counter support
-Date: Tue, 18 Jun 2019 18:58:23 +0100
-Message-ID: <20190618175823.GJ4270@fuggles.cambridge.arm.com>
-References: <1556736193-29411-1-git-send-email-Frank.Li@nxp.com>
- <1556736193-29411-2-git-send-email-Frank.Li@nxp.com>
- <20190613112320.GA18966@fuggles.cambridge.arm.com>
- <CAHrpEqRZ0YL9SFk6o7iebJ+diJVMTtyba_9GtujL7H7e4G8qQA@mail.gmail.com>
- <20190613174436.GG18966@fuggles.cambridge.arm.com>
- <CAHrpEqS9GEC9Shf-6xLL0_+WJNuwYOdKe=5jtUogLajfcWYMew@mail.gmail.com>
- <20190614102302.GD10659@fuggles.cambridge.arm.com>
- <CAHrpEqR+3LETyDosyRq=SBDC=g3tkm72vg-f=550H+TTVLbmcQ@mail.gmail.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH V3 11/17] clk: tegra210: support for Tegra210 clocks
+ suspend and resume
+Date: Tue, 18 Jun 2019 10:58:40 -0700
+Message-ID: <491e0b18-11e7-837c-4591-06ed30950e1d@nvidia.com>
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+ <1560843991-24123-12-git-send-email-skomatineni@nvidia.com>
+ <20190618121607.GN28892@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAHrpEqR+3LETyDosyRq=SBDC=g3tkm72vg-f=550H+TTVLbmcQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhi Li <lznuaa@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190618121607.GN28892@ulmo>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 12:24:19PM -0500, Zhi Li wrote:
-> On Fri, Jun 14, 2019 at 5:23 AM Will Deacon <will.deacon@arm.com> wrote:
-> >
-> > On Thu, Jun 13, 2019 at 02:13:20PM -0500, Zhi Li wrote:
-> > > On Thu, Jun 13, 2019 at 12:44 PM Will Deacon <will.deacon@arm.com> wrote:
-> > > >
-> > > > On Thu, Jun 13, 2019 at 12:04:37PM -0500, Zhi Li wrote:
-> > > > > On Thu, Jun 13, 2019 at 6:23 AM Will Deacon <will.deacon@arm.com> wrote:
-> > > > > >
-> > > > > > On Wed, May 01, 2019 at 06:43:29PM +0000, Frank Li wrote:
-> > > > > > > Add ddr performance monitor support for iMX8QXP
-> > > > > > >
-> > > > > > > There are 4 counters for ddr perfomance events.
-> > > > > > > counter 0 is dedicated for cycles.
-> > > > > > > you choose any up to 3 no cycles events.
-> > > > > > >
-> > > > > > > for example:
-> > > > > > >
-> > > > > > > perf stat -a -e imx8_ddr0/read-cycles/,imx8_ddr0/write-cycles/,imx8_ddr0/precharge/ ls
-> > > > > > > perf stat -a -e imx8_ddr0/cycles/,imx8_ddr0/read-access/,imx8_ddr0/write-access/ ls
-> > > > > >
-> > > > > > I've pushed patches 1, 2 and 4 out with some minor tweaks to:
-> > > > > >
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-next/perf
-> > > > > >
-> > > > > > I'll leave the actual .dts change to go via the soc tree, since last time
-> > > > > > I took one of those it just resulted in conflicts.
-> > > > > >
-> > > > > > Frank, Andrey: Please could you try to run the perf fuzzer on this before
-> > > > > > it lands in mainline? It has a good track record of finding nasty PMU driver
-> > > > > > bugs, but it obviously requires access to hardware which implements the PMU:
-> > > > > >
-> > > > > > http://web.eece.maine.edu/~vweaver/projects/perf_events/fuzzer/
-> > > > >
-> > > > > Okay, how long should be run generally?
-> > > > > I need make sure it can pass without my patches at our platform.
-> > > >
-> > > > As you long as you can really, but if it survives a few hours that's usually
-> > > > a good sign. Overnight is even better.
-> > >
-> > > Base on commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a
-> > > Author: Linus Torvalds <torvalds@linux-foundation.org>
-> > > Date:   Sun Jun 2 13:55:33 2019 -0700
-> > >
-> > >     Linux 5.2-rc3
-> > >
-> > > RCU report problem:
-> > >
-> > > [ 6048.741784] rcu: INFO: rcu_preempt self-detected stall on CPU
-> > > [ 6048.747550] rcu:     1-....: (5249 ticks this GP)
-> > > idle=c5a/1/0x4000000000000004 softirq=503121/503121 fqs=2425
-> > > [ 6048.757384]  (t=5253 jiffies g=1416105 q=117)
-> > > [ 6048.761745] Task dump for CPU 1:
-> > > [ 6048.764977] perf_fuzzer     R  running task        0 32520    426 0x00000202
-> > > [ 6048.772030] Call trace:
-> > > [ 6048.774493]  dump_backtrace+0x0/0x130
-> > > [ 6048.778159]  show_stack+0x14/0x20
-> > > [ 6048.781477]  sched_show_task+0x108/0x138
-> > > [ 6048.785401]  dump_cpu_task+0x40/0x4c
-> > > [ 6048.788983]  rcu_dump_cpu_stacks+0x94/0xd0
-> > > [ 6048.793082]  rcu_sched_clock_irq+0x5e0/0x918
-> > > [ 6048.797357]  update_process_times+0x2c/0x70
-> > > [ 6048.801545]  tick_sched_handle.isra.6+0x3c/0x50
-> > > [ 6048.806076]  tick_sched_timer+0x48/0x98
-> > > [ 6048.809918]  __hrtimer_run_queues+0x118/0x1a8
-> > > [ 6048.814277]  hrtimer_interrupt+0xe4/0x238
-> > > [ 6048.818296]  arch_timer_handler_phys+0x2c/0x38
-> > > [ 6048.822743]  handle_percpu_devid_irq+0x80/0x140
-> > > [ 6048.827277]  generic_handle_irq+0x24/0x38
-> >
-> > This is the timer interrupt which prompts the RCU splat. Do you have
-> > information about where the CPU was when the interrupt occurred?
-> >
-> > In the meantime, it's still worth leaving the fuzzer running to see what
-> > else it finds.
-> 
-> Overnight test done, only above rcu problem happen at both with and
-> without ddr perf patches.
 
-Great, thanks for giving it a go.
+On 6/18/19 5:16 AM, Thierry Reding wrote:
+> On Tue, Jun 18, 2019 at 12:46:25AM -0700, Sowjanya Komatineni wrote:
+>> This patch adds system suspend and resume support for Tegra210
+>> clocks.
+>>
+>> All the CAR controller settings are lost on suspend when core power
+>> goes off.
+>>
+>> This patch has implementation for saving and restoring all the PLLs
+>> and clocks context during system suspend and resume to have the
+>> system back to operating state.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/clk/tegra/clk-tegra210.c | 218 +++++++++++++++++++++++++++++++++++++--
+>>   1 file changed, 211 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+>> index e1ba62d2b1a0..c34d92e871f4 100644
+>> --- a/drivers/clk/tegra/clk-tegra210.c
+>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>> @@ -9,10 +9,12 @@
+>>   #include <linux/clkdev.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/export.h>
+>>   #include <linux/mutex.h>
+>>   #include <linux/clk/tegra.h>
+>> +#include <linux/syscore_ops.h>
+>>   #include <dt-bindings/clock/tegra210-car.h>
+>>   #include <dt-bindings/reset/tegra210-car.h>
+>>   #include <linux/iopoll.h>
+>> @@ -20,6 +22,7 @@
+>>   #include <soc/tegra/pmc.h>
+>>   
+>>   #include "clk.h"
+>> +#include "clk-dfll.h"
+>>   #include "clk-id.h"
+>>   
+>>   /*
+>> @@ -36,6 +39,8 @@
+>>   #define CLK_SOURCE_LA 0x1f8
+>>   #define CLK_SOURCE_SDMMC2 0x154
+>>   #define CLK_SOURCE_SDMMC4 0x164
+>> +#define CLK_OUT_ENB_Y 0x298
+>> +#define CLK_ENB_PLLP_OUT_CPU BIT(31)
+>>   
+>>   #define PLLC_BASE 0x80
+>>   #define PLLC_OUT 0x84
+>> @@ -225,6 +230,7 @@
+>>   
+>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>> +#define CPU_SOFTRST_CTRL 0x380
+>>   
+>>   #define LVL2_CLK_GATE_OVRA 0xf8
+>>   #define LVL2_CLK_GATE_OVRC 0x3a0
+>> @@ -2820,6 +2826,7 @@ static int tegra210_enable_pllu(void)
+>>   	struct tegra_clk_pll_freq_table *fentry;
+>>   	struct tegra_clk_pll pllu;
+>>   	u32 reg;
+>> +	int ret;
+>>   
+>>   	for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
+>>   		if (fentry->input_rate == pll_ref_freq)
+>> @@ -2836,7 +2843,7 @@ static int tegra210_enable_pllu(void)
+>>   	reg = readl_relaxed(clk_base + pllu.params->ext_misc_reg[0]);
+>>   	reg &= ~BIT(pllu.params->iddq_bit_idx);
+>>   	writel_relaxed(reg, clk_base + pllu.params->ext_misc_reg[0]);
+>> -	udelay(5);
+>> +	fence_udelay(5, clk_base);
+>>   
+>>   	reg = readl_relaxed(clk_base + PLLU_BASE);
+>>   	reg &= ~GENMASK(20, 0);
+>> @@ -2844,13 +2851,13 @@ static int tegra210_enable_pllu(void)
+>>   	reg |= fentry->n << 8;
+>>   	reg |= fentry->p << 16;
+>>   	writel(reg, clk_base + PLLU_BASE);
+>> -	udelay(1);
+>> +	fence_udelay(1, clk_base);
+> These udelay() -> fence_udelay() seem like they should be a separate
+> patch.
+>
+>>   	reg |= PLL_ENABLE;
+>>   	writel(reg, clk_base + PLLU_BASE);
+>> +	fence_udelay(1, clk_base);
+>>   
+>> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+>> -					  reg & PLL_BASE_LOCK, 2, 1000);
+>> -	if (!(reg & PLL_BASE_LOCK)) {
+>> +	ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+>> +	if (ret) {
+>>   		pr_err("Timed out waiting for PLL_U to lock\n");
+>>   		return -ETIMEDOUT;
+>>   	}
+>> @@ -2890,12 +2897,12 @@ static int tegra210_init_pllu(void)
+>>   		reg = readl_relaxed(clk_base + XUSB_PLL_CFG0);
+>>   		reg &= ~XUSB_PLL_CFG0_PLLU_LOCK_DLY_MASK;
+>>   		writel_relaxed(reg, clk_base + XUSB_PLL_CFG0);
+>> -		udelay(1);
+>> +		fence_udelay(1, clk_base);
+>>   
+>>   		reg = readl_relaxed(clk_base + PLLU_HW_PWRDN_CFG0);
+>>   		reg |= PLLU_HW_PWRDN_CFG0_SEQ_ENABLE;
+>>   		writel_relaxed(reg, clk_base + PLLU_HW_PWRDN_CFG0);
+>> -		udelay(1);
+>> +		fence_udelay(1, clk_base);
+>>   
+>>   		reg = readl_relaxed(clk_base + PLLU_BASE);
+>>   		reg &= ~PLLU_BASE_CLKENABLE_USB;
+>> @@ -3282,6 +3289,188 @@ static void tegra210_disable_cpu_clock(u32 cpu)
+>>   }
+>>   
+>>   #ifdef CONFIG_PM_SLEEP
+>> +static u32 cpu_softrst_ctx[3];
+>> +static struct platform_device *dfll_pdev;
+>> +static u32 *periph_clk_src_ctx;
+>> +struct periph_source_bank {
+> Blank line between the above two.
+>
+>> +	u32 start;
+>> +	u32 end;
+>> +};
+>> +
+>> +static struct periph_source_bank periph_srcs[] = {
+>> +	[0] = {
+>> +		.start = 0x100,
+>> +		.end = 0x198,
+>> +	},
+>> +	[1] = {
+>> +		.start = 0x1a0,
+>> +		.end = 0x1f8,
+>> +	},
+>> +	[2] = {
+>> +		.start = 0x3b4,
+>> +		.end = 0x42c,
+>> +	},
+>> +	[3] = {
+>> +		.start = 0x49c,
+>> +		.end = 0x4b4,
+>> +	},
+>> +	[4] = {
+>> +		.start = 0x560,
+>> +		.end = 0x564,
+>> +	},
+>> +	[5] = {
+>> +		.start = 0x600,
+>> +		.end = 0x678,
+>> +	},
+>> +	[6] = {
+>> +		.start = 0x694,
+>> +		.end = 0x6a0,
+>> +	},
+>> +	[7] = {
+>> +		.start = 0x6b8,
+>> +		.end = 0x718,
+>> +	},
+>> +};
+>> +
+>> +/* This array lists the valid clocks for each periph clk bank */
+>> +static u32 periph_clks_on[] = {
+>> +	0xdcd7dff9,
+>> +	0x87d1f3e7,
+>> +	0xf3fed3fa,
+>> +	0xffc18cfb,
+>> +	0x793fb7ff,
+>> +	0x3fe66fff,
+>> +	0xfc1fc7ff,
+>> +};
+> Hm... this is a bunch of magic. Perhaps replace this by a list of the
+> clock IDs? That's perhaps a little more verbose, but if we ever need to
+> tweak the list of IDs in that periph_clks_on array, that'll be quite the
+> challenge.
+>
+> Also, is this list a "guess" or are these all guaranteed to be always
+> on? What if some of these ended up getting disabled as part of suspend
+> already (by their users). If we force them on, won't their references
+> become unbalanced if the driver later enables them again on resume?
 
-Will
+Yes, will replace with list of peripheral clock names..
+
+This list is not a guess. Each entry of this list maps to CLK_ENB set 
+register.
+
+Total 7 registers are available and each bit of these registers is for 
+enable/disable clock to corresponding peripheral.
+
+Some of the bits are off as those peripheral clocks don't need to be 
+enabled as we are not changing source or not using them like MIPIBIF, 
+PLLG_REF..
+
+This list of peripheral clocks are enabled during resume before changing 
+clock sources and after clock source update, they are restored back to 
+the state they were before suspend. So their references don't become 
+unbalanced.
+
+>> +
+>> +static struct platform_device *dfll_pdev;
+> I think you already predeclared this one above.
+>
+>> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
+>> +#define car_writel(_val, _base, _off) \
+>> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
+>> +
+>> +static u32 * __init tegra210_init_suspend_ctx(void)
+>> +{
+>> +	int i, size = 0;
+> Can both be unsigned int.
+>
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
+>> +		size += periph_srcs[i].end - periph_srcs[i].start + 4;
+>> +
+>> +	periph_clk_src_ctx = kmalloc(size, GFP_KERNEL);
+>> +
+>> +	return periph_clk_src_ctx;
+> It's somewhat wasteful to return a global variable since you can access
+> it anyway. Perhaps it'd be more useful to make the function return a
+> boolean?
+>
+>> +}
+>> +
+>> +static int tegra210_clk_suspend(void)
+>> +{
+>> +	int i;
+> unsigned int.
+>
+>> +	unsigned long off;
+>> +	struct device_node *node;
+>> +	u32 *clk_rst_ctx = periph_clk_src_ctx;
+>> +	u32 val;
+>> +
+>> +	tegra_cclkg_burst_policy_save_context();
+>> +
+>> +	if (!dfll_pdev) {
+>> +		node = of_find_compatible_node(NULL, NULL,
+>> +					       "nvidia,tegra210-dfll");
+>> +		if (node)
+>> +			dfll_pdev = of_find_device_by_node(node);
+>> +		of_node_put(node);
+>> +		if (!dfll_pdev)
+>> +			pr_err("dfll node not found. no suspend for dfll\n");
+>> +	}
+> Wouldn't it make sense to run this only once, perhaps as part of
+> tegra210_init_suspend_ctx()?
+>
+>> +
+>> +	if (dfll_pdev)
+>> +		tegra_dfll_suspend(dfll_pdev);
+>> +
+>> +	/* Enable PLLP_OUT_CPU after dfll suspend */
+>> +	val = car_readl(CLK_OUT_ENB_Y, 0);
+>> +	val |= CLK_ENB_PLLP_OUT_CPU;
+>> +	car_writel(val, CLK_OUT_ENB_Y, 0);
+>> +
+>> +	tegra_clk_periph_suspend(clk_base);
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
+>> +		for (off = periph_srcs[i].start; off <= periph_srcs[i].end;
+>> +		     off += 4)
+>> +			*clk_rst_ctx++ = car_readl(off, 0);
+>> +
+>> +	tegra_sclk_cclklp_burst_policy_save_context();
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+>> +		cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
+>> +
+>> +	clk_save_context();
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void tegra210_clk_resume(void)
+>> +{
+>> +	int i;
+>> +	unsigned long off;
+>> +	u32 val;
+>> +	u32 *clk_rst_ctx = periph_clk_src_ctx;
+>> +	struct clk_hw *parent;
+>> +	struct clk *clk;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+>> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
+>> +
+>> +	tegra_clk_osc_resume(clk_base);
+>> +
+>> +	/*
+>> +	 * restore all the plls before configuring clocks and resetting
+>> +	 * the devices.
+>> +	 */
+>> +	tegra210_init_pllu();
+>> +	tegra_sclk_cpulp_burst_policy_restore_context();
+>> +	clk_restore_context();
+>> +
+>> +	/* enable all clocks before configuring clock sources */
+>> +	tegra_clk_periph_force_on(periph_clks_on, ARRAY_SIZE(periph_clks_on),
+>> +				  clk_base);
+>> +	/* wait for all writes to happen to have all the clocks enabled */
+>> +	wmb();
+>> +	fence_udelay(2, clk_base);
+>> +
+>> +	/* restore all the devices clock sources */
+>> +	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
+>> +		for (off = periph_srcs[i].start; off <= periph_srcs[i].end;
+>> +		     off += 4)
+>> +			car_writel(*clk_rst_ctx++, off, 0);
+>> +
+>> +	/* propagate and restore resets, restore clock state */
+>> +	fence_udelay(5, clk_base);
+>> +	tegra_clk_periph_resume(clk_base);
+>> +
+>> +	/*
+>> +	 * restore CPUG clocks:
+>> +	 * - enable DFLL in open loop mode
+>> +	 * - switch CPUG to DFLL clock source
+>> +	 * - close DFLL loop
+>> +	 * - sync PLLX state
+>> +	 */
+>> +	if (dfll_pdev)
+>> +		tegra_dfll_resume(dfll_pdev, false);
+>> +
+>> +	tegra_cclkg_burst_policy_restore_context();
+>> +	fence_udelay(2, clk_base);
+>> +
+>> +	if (dfll_pdev)
+>> +		tegra_dfll_resume(dfll_pdev, true);
+>> +
+>> +	parent = clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
+>> +	clk = clks[TEGRA210_CLK_PLL_X];
+>> +	if (parent != __clk_get_hw(clk))
+>> +		tegra_clk_sync_state_pll(__clk_get_hw(clk));
+>> +
+>> +	/* Disable PLL_OUT_CPU after DFLL resume */
+>> +	val = car_readl(CLK_OUT_ENB_Y, 0);
+>> +	val &= ~CLK_ENB_PLLP_OUT_CPU;
+>> +	car_writel(val, CLK_OUT_ENB_Y, 0);
+>> +}
+> I'm surprised by the amount of work that we need to do here. I had hoped
+> that the clock framework's save/restore infrastructure would be enough.
+> I suppose you do call clk_restore_context() somewhere in there, so maybe
+> this really is as good as it gets.
+>
+> Thierry
+
+Reason is there are dependencies b/w the clocks and DFLL resume and 
+clocks resume order needed is not same as clock tree list.
+
+during resume as per clock tree, CPU clock configs to use DFLL will 
+happen first as its first in the clock tree but DFLL resume should be 
+done prior to switching CPU to use from DFLL output.
+
+To resume DFLL, peripheral clocks should be restored.
+
+Considering these dependencies, performing peripheral and DFLL/CPU 
+resume in Tegra210 clock driver rather than in corresponding peripheral 
+clk_ops using save and restore context callback.
+
+>> +
+>>   static void tegra210_cpu_clock_suspend(void)
+>>   {
+>>   	/* switch coresite to clk_m, save off original source */
+>> @@ -3295,8 +3484,20 @@ static void tegra210_cpu_clock_resume(void)
+>>   	writel(tegra210_cpu_clk_sctx.clk_csite_src,
+>>   				clk_base + CLK_SOURCE_CSITE);
+>>   }
+>> +#else
+>> +#define tegra210_clk_suspend	NULL
+>> +#define tegra210_clk_resume	NULL
+>> +static inline u32 *tegra210_init_suspend_ctx(void)
+>> +{
+>> +	return NULL;
+>> +}
+>>   #endif
+>>   
+>> +static struct syscore_ops tegra_clk_syscore_ops = {
+>> +	.suspend = tegra210_clk_suspend,
+>> +	.resume = tegra210_clk_resume,
+>> +};
+>> +
+>>   static struct tegra_cpu_car_ops tegra210_cpu_car_ops = {
+>>   	.wait_for_reset	= tegra210_wait_cpu_in_reset,
+>>   	.disable_clock	= tegra210_disable_cpu_clock,
+>> @@ -3580,5 +3781,8 @@ static void __init tegra210_clock_init(struct device_node *np)
+>>   	tegra210_mbist_clk_init();
+>>   
+>>   	tegra_cpu_car_ops = &tegra210_cpu_car_ops;
+>> +
+>> +	if (tegra210_init_suspend_ctx())
+>> +		register_syscore_ops(&tegra_clk_syscore_ops);
+>>   }
+>>   CLK_OF_DECLARE(tegra210, "nvidia,tegra210-car", tegra210_clock_init);
+>> -- 
+>> 2.7.4
+>>
