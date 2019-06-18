@@ -1,73 +1,63 @@
-Return-Path: <SRS0=mLec=UR=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH] arm64: dts: renesas: hihope-common: Add LEDs support
-Date: Tue, 18 Jun 2019 15:56:17 +0000
-Message-ID: 
- <TY1PR01MB17707C3C979FB60611FB34A7C0EA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1560518075-2254-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdU8oag+1oNa_jS=v99W05=8SRLhdoZdCusmeVf1VZbarQ@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdU8oag+1oNa_jS=v99W05=8SRLhdoZdCusmeVf1VZbarQ@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=RbSA=UR=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Chris Paterson" <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>
+References: <1560518075-2254-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1560518075-2254-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 18 Jun 2019 17:10:19 +0200
+Message-ID: <CAMuHMdU8oag+1oNa_jS=v99W05=8SRLhdoZdCusmeVf1VZbarQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Add LEDs support
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPiBGcm9tOiBs
-aW51eC1yZW5lc2FzLXNvYy1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LXJlbmVzYXMtc29j
-LW93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVoYWxmIE9mIEdlZXJ0IFV5dHRlcmhvZXZlbg0K
-PiBTZW50OiAxOCBKdW5lIDIwMTkgMTY6MTANCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYXJtNjQ6
-IGR0czogcmVuZXNhczogaGlob3BlLWNvbW1vbjogQWRkIExFRHMgc3VwcG9ydA0KPiANCj4gSGkg
-RmFicml6aW8sDQo+IA0KPiBPbiBGcmksIEp1biAxNCwgMjAxOSBhdCAzOjE3IFBNIEZhYnJpemlv
-IENhc3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBU
-aGlzIHBhdGNoIGFkZHMgTEVEcyBzdXBwb3J0IHRvIHRoZSBIaUhvcGUgUlovRzJbTU5dIE1haW4g
-Qm9hcmQNCj4gPiBjb21tb24gZGV2aWNlIHRyZWUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBG
-YWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gDQo+IFRo
-YW5rcyBmb3IgeW91ciBwYXRjaCENCj4gDQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9y
-ZW5lc2FzL2hpaG9wZS1jb21tb24uZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-cmVuZXNhcy9oaWhvcGUtY29tbW9uLmR0c2kNCj4gPiBAQCAtMTcsNiArMTcsMzAgQEANCj4gPiAg
-ICAgICAgICAgICAgICAgc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBuOCI7DQo+ID4gICAg
-ICAgICB9Ow0KPiA+DQo+ID4gKyAgICAgICBsZWRzIHsNCj4gPiArICAgICAgICAgICAgICAgY29t
-cGF0aWJsZSA9ICJncGlvLWxlZHMiOw0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgbGVkMCB7
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZ3Bpb3MgPSA8JmdwaW82IDExIEdQSU9fQUNU
-SVZFX0hJR0g+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGxhYmVsID0gIkxFRDAiOw0K
-PiANCj4gVGhlcmUncyBubyBuZWVkIGZvciBhIGxhYmVsIHByb3BlcnR5LCBpZiBpdCBtYXRjaGVz
-IHRoZSBub2RlIG5hbWUNCj4gKGFwcGxpZXMgdG8gYWxsIGZvdXIgTEVEcykuDQoNCkkgY291bGQg
-aGF2ZSB1c2VkIHRoZSBhY3R1YWwgbmFtZXMgb24gdGhlIHNjaGVtYXRpYywgYnV0IHRoZW4gSSBy
-ZWFsaXNlZCB0aGF0DQp3b3VsZCBub3QgaGF2ZSBiZWVuIHRvbyBoZWxwZnVsIGR1ZSB0byB0aGUg
-Y29ycmVzcG9uZGluZyBzd2l0Y2ggbmFtZXM6DQpMRUQwIC0gR1A2XzExIC0gU1cyMjAyIC0gTEVE
-MjIwMQ0KTEVEMSAtIEdQNl8xMiAtIFNXMjIwMSAtIExFRDIyMDINCkxFRDIgLSBHUDZfMTMgLSBT
-VzIyMDMgLSBMRUQyMjAzDQpMRUQzIC0gR1AwXzAwIC0gTi9BIC0gTEVEMjQwMg0KVGhlIGZpcnN0
-IDMgTEVEcyBhcmUgZm91bmQgbmV4dCB0byB0aGUgbWljcm8gVVNCIGNvbm5lY3RvciBmb3IgdGhl
-IGRlYnVnIGNvbnNvbGUsDQp0aGUgZm9ydGggTEVEIGlzIGZvdW5kIG5leHQgdG8gdGhlIFdpRmkg
-YW5kIEJUIExFRHMuDQoNCkkgdGhvdWdodCB0aGF0IHVzaW5nICJMRURuIiBhcyBsYWJlbHMgd291
-bGQgcHV0IGEgcmVtYXJrIG9uIHRoZQ0KImRlc2lyZWQgb3JkZXJpbmciIG9mIHRoZSBMRURzIChl
-dmVuIHRob3VnaCB0aGVyZSBpcyBubyBhY3R1YWwNCnJlcXVpcmVtZW50IGZvciB0aGF0KSwgYnV0
-IGFzIHlvdSBwb2ludGVkIG91dCBpdCdzIHByb2JhYmx5IGEgYml0DQpjb25mdXNpbmc/IERvIHlv
-dSB0aGluayBJIHNob3VsZCB0YWtlIHRoZSBsYWJlbCBvdXQ/DQoNCj4gDQo+IE5vdGUgdGhhdCB0
-aGlzIEdQSU8gaXMgc2hhcmVkIHdpdGggYSBzd2l0Y2gsIGxpa2Ugb24gU2FsdmF0b3ItWChTKSBh
-bmQNCj4gVUxDQi4gIEFzIGN1cnJlbnRseSBMaW51eCBjYW5ub3QgaGFuZGxlIGJvdGgsIGRlc2Ny
-aWJpbmcgdGhlIExFRA0KPiBwcmVjbHVkZXMgYWRkaW5nIHRoZSBzd2l0Y2ggbGF0ZXIuDQo+IChh
-cHBsaWVzIHRvIHRoZSBmaXJzdCAzIExFRHMpLg0KDQpUaGFuayB5b3UgZm9yIHBvaW50aW5nIHRo
-aXMgb3V0LiBUaGF0J3MgZGVzaXJlZCBiZWhhdmlvdXIgaW4gdGhpcyBjYXNlLg0KDQo+IA0KPiA+
-ICsgICAgICAgICAgICAgICBsZWQzIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBncGlv
-cyA9IDwmZ3BpbzAgIDAgR1BJT19BQ1RJVkVfSElHSD47DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgbGFiZWwgPSAiTEVEMyI7DQo+ID4gKyAgICAgICAgICAgICAgIH07DQo+IA0KPiBJIGNh
-bm5vdCBmaW5kIExFRDMuIEFjY29yZGluZyB0byB0aGUgc2NoZW1hdGljcyBHUDBfMCA9PSBDUzBu
-IGlzIHVzZWQNCj4gYXMgdGhlIGNoaXBzZWxlY3QgZm9yIHRoZSBMVkRTIHN3aXRjaD8NCg0KTXkg
-dW5kZXJzdGFuZGluZyBpcyB0aGF0IENTMG4gaXMgb24gR1AxXzIwLCBjb3VsZCB5b3UgcGxlYXNl
-IGRvdWJsZQ0KY2hlY2s/DQoocGluIG5hbWU6IEFKNCkgR1AwXzAwID09IEQwID09IEV4RDAgb24g
-dGhlIHNjaGVtYXRpYyBJIGhhdmUsIEkgdGhvdWdodA0KeW91IG1heSBoYXZlIGJlZW4gbG9va2lu
-ZyBhdCBhbiBvbGRlciB2ZXJzaW9uIG9mIHRoZSBzY2hlbWF0aWMsIGJ1dCBhZnRlcg0KZ29pbmcg
-dGhyb3VnaCB0aGUgaGlzdG9yeSBpdCBzZWVtcyBsaWtlIHRoYXQgbGluZSBoYXMgYWx3YXlzIGJl
-ZW4gdGhlcmUuDQoNClRoYW5rcywNCkZhYg0KDQo+IA0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4g
-DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0
-ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxp
-bnV4LW02OGsub3JnDQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5p
-Y2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtp
-bmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxp
-a2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2
-YWxkcw0K
+Hi Fabrizio,
+
+On Fri, Jun 14, 2019 at 3:17 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> This patch adds LEDs support to the HiHope RZ/G2[MN] Main Board
+> common device tree.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+> @@ -17,6 +17,30 @@
+>                 stdout-path = "serial0:115200n8";
+>         };
+>
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               led0 {
+> +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
+> +                       label = "LED0";
+
+There's no need for a label property, if it matches the node name
+(applies to all four LEDs).
+
+Note that this GPIO is shared with a switch, like on Salvator-X(S) and
+ULCB.  As currently Linux cannot handle both, describing the LED
+precludes adding the switch later.
+(applies to the first 3 LEDs).
+
+> +               led3 {
+> +                       gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
+> +                       label = "LED3";
+> +               };
+
+I cannot find LED3. According to the schematics GP0_0 == CS0n is used
+as the chipselect for the LVDS switch?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
