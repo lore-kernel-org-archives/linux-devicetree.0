@@ -1,11 +1,11 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: arm: Convert RDA Micro board/soc bindings to
- json-schema
-Date: Tue, 18 Jun 2019 15:22:28 -0600
-Message-ID: <20190618212229.32302-4-robh@kernel.org>
+Subject: [PATCH] dt-bindings: arm: Convert Conexant Digicolor board/soc
+ bindings to json-schema
+Date: Tue, 18 Jun 2019 15:22:29 -0600
+Message-ID: <20190618212229.32302-5-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -17,56 +17,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org
-Cc: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Baruch Siach <baruch@tkos.co.il>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Q29udmVydCBSREEgTWljcm8gU29DIGJpbmRpbmdzIHRvIERUIHNjaGVtYSBmb3JtYXQgdXNpbmcg
-anNvbi1zY2hlbWEuCgpDYzogIkFuZHJlYXMgRsOkcmJlciIgPGFmYWVyYmVyQHN1c2UuZGU+CkNj
-OiBNYW5pdmFubmFuIFNhZGhhc2l2YW0gPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8ub3Jn
-PgpTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0KQW5kcmVh
-cywgVXBkYXRlIHRoZSBsaWNlbnNlIG9uIHRoaXMgb25lIHRvbyB0byBkdWFsIGxpY2Vuc2VkIGlm
-IHlvdSAKd2FudC4KCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JkYS50
-eHQgfCAxNyAtLS0tLS0tLS0tLS0tLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcmRh
-LnlhbWwgICAgICAgICAgfCAyMCArKysrKysrKysrKysrKysrKysrCiBNQUlOVEFJTkVSUyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogMyBmaWxlcyBjaGFuZ2VkLCAy
-MSBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlvbnMoLSkKIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JkYS50eHQKIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JkYS55YW1sCgpkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9yZGEudHh0IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9yZGEudHh0CmRlbGV0ZWQgZmls
-ZSBtb2RlIDEwMDY0NAppbmRleCA0M2M4MDc2MmM0MjguLjAwMDAwMDAwMDAwMAotLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JkYS50eHQKKysrIC9kZXYvbnVsbApA
-QCAtMSwxNyArMCwwIEBACi1SREEgTWljcm8gcGxhdGZvcm1zIGRldmljZSB0cmVlIGJpbmRpbmdz
-Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi0KLVJEQTg4MTBQTCBT
-b0MKLT09PT09PT09PT09PT0KLQotUmVxdWlyZWQgcm9vdCBub2RlIHByb3BlcnRpZXM6Ci0KLSAt
-IGNvbXBhdGlibGUgOiAgbXVzdCBjb250YWluICJyZGEsODgxMHBsIgotCi0KLUJvYXJkczoKLQot
-Um9vdCBub2RlIHByb3BlcnR5IGNvbXBhdGlibGUgbXVzdCBjb250YWluLCBkZXBlbmRpbmcgb24g
-Ym9hcmQ6Ci0KLSAtIE9yYW5nZSBQaSAyRy1Jb1Q6ICJ4dW5sb25nLG9yYW5nZXBpLTJnLWlvdCIK
-LSAtIE9yYW5nZSBQaSBpOTY6ICJ4dW5sb25nLG9yYW5nZXBpLWk5NiIKZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcmRhLnlhbWwgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JkYS55YW1sCm5ldyBmaWxlIG1vZGUgMTAwNjQ0
-CmluZGV4IDAwMDAwMDAwMDAwMC4uNTFjZWMyYjYzYjA0Ci0tLSAvZGV2L251bGwKKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9yZGEueWFtbApAQCAtMCwwICsxLDIw
-IEBACisjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCislWUFNTCAxLjIKKy0tLQor
-JGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9hcm0vcmRhLnlhbWwjCiskc2NoZW1h
-OiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKKwordGl0bGU6
-IFJEQSBNaWNybyBwbGF0Zm9ybXMgZGV2aWNlIHRyZWUgYmluZGluZ3MKKworbWFpbnRhaW5lcnM6
-CisgIC0gTWFuaXZhbm5hbiBTYWRoYXNpdmFtIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJv
-Lm9yZz4KKworcHJvcGVydGllczoKKyAgY29tcGF0aWJsZToKKyAgICBpdGVtczoKKyAgICAgIC0g
-ZW51bToKKyAgICAgICAgICAtIHh1bmxvbmcsb3JhbmdlcGktMmctaW90ICAgICAjIE9yYW5nZSBQ
-aSAyRy1Jb1QKKyAgICAgICAgICAtIHh1bmxvbmcsb3JhbmdlcGktaTk2ICAgICAgICAjIE9yYW5n
-ZSBQaSBpOTYKKyAgICAgIC0gY29uc3Q6IHJkYSw4ODEwcGwKKworLi4uCmRpZmYgLS1naXQgYS9N
-QUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCmluZGV4IDJjNmY0ZDE1ODA1ZS4uNTZlZTI3NjA4OGVi
-IDEwMDY0NAotLS0gYS9NQUlOVEFJTkVSUworKysgYi9NQUlOVEFJTkVSUwpAQCAtMjExMSw3ICsy
-MTExLDcgQEAgRjoJYXJjaC9hcm0vYm9vdC9kdHMvcmRhODgxMHBsLSoKIEY6CWRyaXZlcnMvY2xv
-Y2tzb3VyY2UvdGltZXItcmRhLmMKIEY6CWRyaXZlcnMvaXJxY2hpcC9pcnEtcmRhLWludGMuYwog
-RjoJZHJpdmVycy90dHkvc2VyaWFsL3JkYS11YXJ0LmMKLUY6CURvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9hcm0vcmRhLnR4dAorRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2FybS9yZGEueWFtbAogRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2ludGVycnVwdC1jb250cm9sbGVyL3JkYSw4ODEwcGwtaW50Yy50eHQKIEY6CURvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zZXJpYWwvcmRhLDg4MTBwbC11YXJ0LnR4dAogRjoJRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL3JkYSw4ODEwcGwtdGltZXIudHh0
-Ci0tIAoyLjIwLjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+Convert Conexant Digicolor SoC bindings to DT schema format using json-schema.
+
+Cc: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/arm/digicolor.txt        |  6 ------
+ .../devicetree/bindings/arm/digicolor.yaml       | 16 ++++++++++++++++
+ 2 files changed, 16 insertions(+), 6 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/digicolor.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/digicolor.yaml
+
+diff --git a/Documentation/devicetree/bindings/arm/digicolor.txt b/Documentation/devicetree/bindings/arm/digicolor.txt
+deleted file mode 100644
+index 658553f40b23..000000000000
+--- a/Documentation/devicetree/bindings/arm/digicolor.txt
++++ /dev/null
+@@ -1,6 +0,0 @@
+-Conexant Digicolor Platforms Device Tree Bindings
+-
+-Each device tree must specify which Conexant Digicolor SoC it uses.
+-Must be the following compatible string:
+-
+-  cnxt,cx92755
+diff --git a/Documentation/devicetree/bindings/arm/digicolor.yaml b/Documentation/devicetree/bindings/arm/digicolor.yaml
+new file mode 100644
+index 000000000000..d9c80b827e9b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/digicolor.yaml
+@@ -0,0 +1,16 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/digicolor.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Conexant Digicolor Platforms Device Tree Bindings
++
++maintainers:
++  - Baruch Siach <baruch@tkos.co.il>
++
++properties:
++  compatible:
++    const: cnxt,cx92755
++
++...
+-- 
+2.20.1
