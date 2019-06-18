@@ -1,8 +1,8 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: arm: Convert MOXA ART board/soc bindings to
+Subject: [PATCH] dt-bindings: arm: Convert Axxia board/soc bindings to
  json-schema
-Date: Tue, 18 Jun 2019 15:22:26 -0600
-Message-ID: <20190618212229.32302-2-robh@kernel.org>
+Date: Tue, 18 Jun 2019 15:22:25 -0600
+Message-ID: <20190618212229.32302-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -17,61 +17,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Jonas Jensen <jonas.jensen@gmail.com>
+Cc: Anders Berg <anders.berg@lsi.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Convert MOXA ART SoC bindings to DT schema format using json-schema.
+Convert Axxia SoC bindings to DT schema format using json-schema.
 
-Cc: Jonas Jensen <jonas.jensen@gmail.com>
+Cc: Anders Berg <anders.berg@lsi.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/moxart.txt        | 12 ------------
- .../devicetree/bindings/arm/moxart.yaml       | 19 +++++++++++++++++++
+ .../devicetree/bindings/arm/axxia.txt         | 12 ------------
+ .../devicetree/bindings/arm/axxia.yaml        | 19 +++++++++++++++++++
  2 files changed, 19 insertions(+), 12 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/moxart.txt
- create mode 100644 Documentation/devicetree/bindings/arm/moxart.yaml
+ delete mode 100644 Documentation/devicetree/bindings/arm/axxia.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/axxia.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/moxart.txt b/Documentation/devicetree/bindings/arm/moxart.txt
+diff --git a/Documentation/devicetree/bindings/arm/axxia.txt b/Documentation/devicetree/bindings/arm/axxia.txt
 deleted file mode 100644
-index 11087edb0658..000000000000
---- a/Documentation/devicetree/bindings/arm/moxart.txt
+index 7b4ef9c07696..000000000000
+--- a/Documentation/devicetree/bindings/arm/axxia.txt
 +++ /dev/null
 @@ -1,12 +0,0 @@
--MOXA ART device tree bindings
+-Axxia AXM55xx device tree bindings
 -
--Boards with the MOXA ART SoC shall have the following properties:
+-Boards using the AXM55xx SoC need to have the following properties:
 -
 -Required root node property:
 -
--compatible = "moxa,moxart";
+-  - compatible = "lsi,axm5516"
 -
 -Boards:
 -
--- UC-7112-LX: embedded computer
--  compatible = "moxa,moxart-uc-7112-lx", "moxa,moxart"
-diff --git a/Documentation/devicetree/bindings/arm/moxart.yaml b/Documentation/devicetree/bindings/arm/moxart.yaml
+-  LSI AXM5516 Validation board (Amarillo)
+-	compatible = "lsi,axm5516-amarillo", "lsi,axm5516"
+diff --git a/Documentation/devicetree/bindings/arm/axxia.yaml b/Documentation/devicetree/bindings/arm/axxia.yaml
 new file mode 100644
-index 000000000000..c068df59fad2
+index 000000000000..98780a569f22
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/moxart.yaml
++++ b/Documentation/devicetree/bindings/arm/axxia.yaml
 @@ -0,0 +1,19 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/arm/moxart.yaml#
++$id: http://devicetree.org/schemas/arm/axxia.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: MOXA ART device tree bindings
++title: Axxia AXM55xx device tree bindings
 +
 +maintainers:
-+  - Jonas Jensen <jonas.jensen@gmail.com>
++  - Anders Berg <anders.berg@lsi.com>
 +
 +properties:
 +  compatible:
-+    description: UC-7112-LX embedded computer
++    description: LSI AXM5516 Validation board (Amarillo)
 +    items:
-+      - const: moxa,moxart-uc-7112-lx
-+      - const: moxa,moxart
++      - const: lsi,axm5516-amarillo
++      - const: lsi,axm5516
 +
 +...
 -- 
