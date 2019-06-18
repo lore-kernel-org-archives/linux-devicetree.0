@@ -1,8 +1,8 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: arm: Convert Axxia board/soc bindings to
+Subject: [PATCH] dt-bindings: arm: Convert NXP LPC32xx board/soc bindings to
  json-schema
-Date: Tue, 18 Jun 2019 15:22:25 -0600
-Message-ID: <20190618212229.32302-1-robh@kernel.org>
+Date: Tue, 18 Jun 2019 15:22:27 -0600
+Message-ID: <20190618212229.32302-3-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -17,61 +17,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org
-Cc: Anders Berg <anders.berg@lsi.com>, linux-arm-kernel@lists.infradead.org
+Cc: Roland Stigge <stigge@antcom.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Convert Axxia SoC bindings to DT schema format using json-schema.
+Convert NXP LPC32xx SoC bindings to DT schema format using json-schema.
 
-Cc: Anders Berg <anders.berg@lsi.com>
+Cc: Roland Stigge <stigge@antcom.de>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/axxia.txt         | 12 ------------
- .../devicetree/bindings/arm/axxia.yaml        | 19 +++++++++++++++++++
- 2 files changed, 19 insertions(+), 12 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/axxia.txt
- create mode 100644 Documentation/devicetree/bindings/arm/axxia.yaml
+ .../devicetree/bindings/arm/nxp/lpc32xx.txt   |  8 ------
+ .../devicetree/bindings/arm/nxp/lpc32xx.yaml  | 25 +++++++++++++++++++
+ 2 files changed, 25 insertions(+), 8 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/nxp/lpc32xx.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/axxia.txt b/Documentation/devicetree/bindings/arm/axxia.txt
+diff --git a/Documentation/devicetree/bindings/arm/nxp/lpc32xx.txt b/Documentation/devicetree/bindings/arm/nxp/lpc32xx.txt
 deleted file mode 100644
-index 7b4ef9c07696..000000000000
---- a/Documentation/devicetree/bindings/arm/axxia.txt
+index 56ec8ddc4a3b..000000000000
+--- a/Documentation/devicetree/bindings/arm/nxp/lpc32xx.txt
 +++ /dev/null
-@@ -1,12 +0,0 @@
--Axxia AXM55xx device tree bindings
+@@ -1,8 +0,0 @@
+-NXP LPC32xx Platforms Device Tree Bindings
+-------------------------------------------
 -
--Boards using the AXM55xx SoC need to have the following properties:
+-Boards with the NXP LPC32xx SoC shall have the following properties:
 -
 -Required root node property:
 -
--  - compatible = "lsi,axm5516"
--
--Boards:
--
--  LSI AXM5516 Validation board (Amarillo)
--	compatible = "lsi,axm5516-amarillo", "lsi,axm5516"
-diff --git a/Documentation/devicetree/bindings/arm/axxia.yaml b/Documentation/devicetree/bindings/arm/axxia.yaml
+-compatible: must be "nxp,lpc3220", "nxp,lpc3230", "nxp,lpc3240" or "nxp,lpc3250"
+diff --git a/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml b/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
 new file mode 100644
-index 000000000000..98780a569f22
+index 000000000000..07f39d3eee7e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/axxia.yaml
-@@ -0,0 +1,19 @@
++++ b/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
+@@ -0,0 +1,25 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/arm/axxia.yaml#
++$id: http://devicetree.org/schemas/arm/nxp/lpc32xx.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Axxia AXM55xx device tree bindings
++title: NXP LPC32xx Platforms Device Tree Bindings
 +
 +maintainers:
-+  - Anders Berg <anders.berg@lsi.com>
++  - Roland Stigge <stigge@antcom.de>
 +
 +properties:
 +  compatible:
-+    description: LSI AXM5516 Validation board (Amarillo)
-+    items:
-+      - const: lsi,axm5516-amarillo
-+      - const: lsi,axm5516
++    oneOf:
++      - enum:
++          - nxp,lpc3220
++          - nxp,lpc3230
++          - nxp,lpc3240
++      - items:
++        - enum:
++            - ea,ea3250
++            - phytec,phy3250
++        - const: nxp,lpc3250
 +
 +...
 -- 
