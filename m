@@ -1,8 +1,8 @@
 Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 25/27] PCI: Add DT binding for "reset-gpios" property
-Date: Tue, 18 Jun 2019 23:32:04 +0530
-Message-ID: <20190618180206.4908-26-mmaddireddy@nvidia.com>
+Subject: [PATCH V6 19/27] PCI: tegra: Change PRSNT_SENSE IRQ log to debug
+Date: Tue, 18 Jun 2019 23:31:58 +0530
+Message-ID: <20190618180206.4908-20-mmaddireddy@nvidia.com>
 In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
 References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,11 +11,12 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add DT binding for "reset-gpios" property which supports GPIO based PERST#
-signal.
+PRSNT_MAP bit field is programmed to update the slot present status.
+PRSNT_SENSE IRQ is triggered when this bit field is programmed, which is
+not an error. Add a new if condition to trap PRSNT_SENSE code and print it
+with debug log level.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
 V6: No change
@@ -24,23 +25,26 @@ V5: No change
 
 V4: No change
 
-V3: Moved to common pci binding doc
+V3: Correct typos in commit log
 
-V2: Using standard "reset-gpio" property
+V2: If-else to switch-case conversion patch is dropped, this patch is
+rebased to stay with if-else statements
 
- Documentation/devicetree/bindings/pci/pci.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/controller/pci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-index c77981c5dd18..79124898aa5b 100644
---- a/Documentation/devicetree/bindings/pci/pci.txt
-+++ b/Documentation/devicetree/bindings/pci/pci.txt
-@@ -24,3 +24,6 @@ driver implementation may support the following properties:
-    unsupported link speed, for instance, trying to do training for
-    unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
-    for gen2, and '1' for gen1. Any other values are invalid.
-+- reset-gpios:
-+   If present this property specifies PERST# GPIO. Host drivers can parse the
-+   GPIO and apply fundamental reset to endpoints.
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index a746d963ca36..73d5a8841405 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -864,7 +864,7 @@ static irqreturn_t tegra_pcie_isr(int irq, void *arg)
+ 	 * do not pollute kernel log with master abort reports since they
+ 	 * happen a lot during enumeration
+ 	 */
+-	if (code == AFI_INTR_MASTER_ABORT)
++	if (code == AFI_INTR_MASTER_ABORT || code == AFI_INTR_PE_PRSNT_SENSE)
+ 		dev_dbg(dev, "%s, signature: %08x\n", err_msg[code], signature);
+ 	else
+ 		dev_err(dev, "%s, signature: %08x\n", err_msg[code], signature);
 -- 
 2.17.1
