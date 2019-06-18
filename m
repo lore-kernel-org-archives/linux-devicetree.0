@@ -1,61 +1,215 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH] dt-bindings: watchdog: Rename bindings documentation file
-Date: Tue, 18 Jun 2019 09:30:50 +0200
-Message-ID: <20190618073050.GA28646@bigcity.dyn.berto.se>
-References: <20190617090953.8770-1-horms+renesas@verge.net.au>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v5 3/5] mtd: Add support for HyperBus memory devices
+Date: Tue, 18 Jun 2019 13:08:21 +0530
+Message-ID: <b1df7b11-15d3-e707-c1d4-ab69741e52f4@ti.com>
+References: <20190609103227.24875-1-vigneshr@ti.com>
+ <20190609103227.24875-4-vigneshr@ti.com>
+ <58e9608d-35ff-0436-6075-b2e4ed4b8594@cogentembedded.com>
+ <f47d4d57-afb2-3b39-fae9-3ed740a2b8a6@ti.com>
+ <9dbd8132-ce8f-9ce7-ddf5-d9826e2a1be1@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190617090953.8770-1-horms+renesas@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9dbd8132-ce8f-9ce7-ddf5-d9826e2a1be1@cogentembedded.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-Thanks for your work.
-
-On 2019-06-17 11:09:53 +0200, Simon Horman wrote:
-> For consistency with the naming of (most) other documentation files for DT
-> bindings for Renesas IP blocks rename the Renesas WDT documentation file
-> from renesas-wdt.txt to renesas,wdt.txt.
-> =
-
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-
-Reviewed-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
-
-> ---
->  .../devicetree/bindings/watchdog/{renesas-wdt.txt =3D> renesas,wdt.txt} =
-    | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/watchdog/{renesas-wdt.txt =3D> =
-renesas,wdt.txt} (100%)
-> =
-
-> diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b=
-/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> rename to Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
-> -- =
-
-> 2.11.0
-> =
 
 
--- =
+On 18/06/19 1:15 AM, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 06/11/2019 02:57 PM, Vignesh Raghavendra wrote:
+> 
+>>>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+>>>> Bus interface between a host system master and one or more slave
+>>>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
+>>>> or ASIC devices with random access NOR flash memory (called HyperFlash)
+>>>> or self refresh DRAM (called HyperRAM).
+>>>>
+>>>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+>>>> signal and either Single-ended clock(3.0V parts) or Differential clock
+>>>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+>>>> At bus level, it follows a separate protocol described in HyperBus
+>>>> specification[1].
+>>>>
+>>>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+>>>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+>>>> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
+>>>> HyperBus operates at >166MHz frequencies.
+>>>> HyperRAM provides direct random read/write access to flash memory
+>>>> array.
+>>>>
+>>>> But, HyperBus memory controllers seem to abstract implementation details
+>>>> and expose a simple MMIO interface to access connected flash.
+>>>>
+>>>> Add support for registering HyperFlash devices with MTD framework. MTD
+>>>> maps framework along with CFI chip support framework are used to support
+>>>> communicating with flash.
+>>>>
+>>>> Framework is modelled along the lines of spi-nor framework. HyperBus
+>>>> memory controller (HBMC) drivers calls hyperbus_register_device() to
+>>>> register a single HyperFlash device. HyperFlash core parses MMIO access
+>>>> information from DT, sets up the map_info struct, probes CFI flash and
+>>>> registers it with MTD framework.
+>>>>
+>>>> Some HBMC masters need calibration/training sequence[3] to be carried
+>>>> out, in order for DLL inside the controller to lock, by reading a known
+>>>> string/pattern. This is done by repeatedly reading CFI Query
+>>>> Identification String. Calibration needs to be done before trying to detect
+>>>> flash as part of CFI flash probe.
+>>>>
+>>>> HyperRAM is not supported at the moment.
+>>>>
+>>>> HyperBus specification can be found at[1]
+>>>> HyperFlash datasheet can be found at[2]
+>>>>
+>>>> [1] https://www.cypress.com/file/213356/download
+>>>> [2] https://www.cypress.com/file/213346/download
+>>>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>>>>     Table 12-5741. HyperFlash Access Sequence
+>>>>
+>>>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>>> [...]
+>>>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+>>>> new file mode 100644
+>>>> index 000000000000..df1f75e10b1a
+>>>> --- /dev/null
+>>>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+>>>> @@ -0,0 +1,191 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +//
+>>>> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>>>> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
+>>>> +
+>>>> +#include <linux/err.h>
+>>>> +#include <linux/kernel.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/mtd/hyperbus.h>
+>>>> +#include <linux/mtd/map.h>
+>>>> +#include <linux/mtd/mtd.h>
+>>>> +#include <linux/mtd/cfi.h>
+>>>> +#include <linux/of.h>
+>>>> +#include <linux/of_address.h>
+>>>> +#include <linux/types.h>
+>>>> +
+>>>> +#define HYPERBUS_CALIB_COUNT 25
+>>>
+>>>    Mhm, I think I've already protested about this being #define'd here...
+>>
+>> I thought you had agreed that default optional calibration routine can
+>> be part of core code and thus this #define.
+>>
+>> Anyways, what is your preference here? Drop the constant and use a local
+>> variable in hyperbus_calibrate()?
+>> Or are you suggesting to move hyperbus_calibrate() TI's specific driver?
+> 
+>    I'm just not comfortable with the common HF code using quite an arbitrary
+> constant...
+> 
 
-Regards,
-Niklas S=F6derlund
+Ok, I will move the code over to TI driver. We can always bring it back
+to core code if more drivers need it.
+
+>>> [...]
+>>>> diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
+>>>> new file mode 100644
+>>>> index 000000000000..ee2eefd822c9
+>>>> --- /dev/null
+>>>> +++ b/include/linux/mtd/hyperbus.h
+>>>> @@ -0,0 +1,91 @@
+> [...]
+>>>> + * @mtd: pointer to MTD struct
+>>>> + * @ctlr: pointer to HyperBus controller struct
+>>>> + * @memtype: type of memory device: HyperFlash or HyperRAM
+>>>> + * @registered: flag to indicate whether device is registered with MTD core
+>>>> + */
+>>>> +
+>>>> +struct hyperbus_device {
+>>>> +	struct map_info map;
+>>>> +	struct device_node *np;
+>>>> +	struct mtd_info *mtd;
+>>>> +	struct hyperbus_ctlr *ctlr;
+>>>> +	enum hyperbus_memtype memtype;
+>>>> +	bool registered;
+>>>> +};
+>>>> +
+>>>> +/**
+>>>> + * struct hyperbus_ops - struct representing custom HyperBus operations
+>>>> + * @read16: read 16 bit of data, usually from register/ID-CFI space
+>>>> + * @write16: write 16 bit of data, usually to register/ID-CFI space
+>>>
+>>>    Usually? How to differ the register/memory transfers if both are possible?
+> 
+>> CFI + map framework does not provide a way to differentiate b/w reg
+>> access vs memory access. read16()/write16() is used to either access
+>> registers or for sending various cmds like lock/unlock etc or for
+>> programming a single word.
+>> For regular read/writes copy_from() and copy_to() are used.
+> 
+>    In my case only copy_from() would exist -- no proper acceleration for
+> writes...
+> 
+
+Actually copy_to() is not used by cfi_cmdset_0002.c, its always
+write16() that used to program flash.
+This is something I want to extend support to, so as to use DMA for
+writes as well because I see that writes seem extremely slow at least on
+my platform.
+
+>> Looking at HyperBus protocol, controllers would not need to
+>> differentiate b/w registers vs memory transfers for HyperFlash devices.
+>> So, I think I can drop read16/write16 and redirect these calls to
+>> copy_from()/copy_to()
+> 
+>    Doubt it, frankly speaking.
+
+Sorry for confusion, as I said above, we do need to keep write16().
+Also, copy_to maps to memcpy_toio in case of simple_map which may not
+use 16 bit IO accessors. So write16() cannot be mapped to copy_to()
+
+So we need at least write16(), copy_from() and mostly copy_to() (for
+accelerating writes). So, lets keep this simple and have all map ops
+including read16() as is.
+
+
+> 
+>> I mainly added these functions keeping HyperRAM in mind. Idea was
+>> drivers would look at hyperbus_device->memtype and set to register
+>> access mode for HyperRAM in case of write16()/read16(). Looks like the
+>> interface is not intuitive enough
+>> So, will drop these and add it back when adding HyperRAM support.
+>>
+>> Does that work for your HW as well?
+> 
+>    Don't think so...
+> 
+>    However, my HyperFlash driver could make use of the following #define's in
+> the HyperBus header:
+> 
+> #define HF_CMD_CA47		BIT(7)	/* Read */
+> #define HF_CMD_CA46		BIT(6)	/* Register space */
+> #define HF_CMD_CA45		BIT(5)	/* Linear burst */
+> 
+> #define HF_CMD_READ_REG		(HF_CMD_CA47 | HF_CMD_CA46)
+
+This will come into play for HyperRAM, not a care about for HyperFlash
+
+> #define HF_CMD_READ_MEM		HF_CMD_CA47
+
+For HyperFlash, this would be the only bit that needs to be set for read
+along with HF_CMD_CA45 for linear burst.
+
+> #define HF_CMD_WRITE_REG	HF_CMD_CA46
+> #define HF_CMD_WRITE_MEM	0
+> 
+> MBR, Sergei
+> 
+
+-- 
+Regards
+Vignesh
