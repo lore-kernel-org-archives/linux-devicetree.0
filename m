@@ -1,27 +1,74 @@
-Return-Path: <SRS0=iTDe=UQ=vergenet.net=horms@kernel.org>
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH 2/2] dt-bindings: usb: renesas_gen3: Rename bindings documentation file
-Date: Mon, 17 Jun 2019 11:06:03 +0200
-Message-Id: <20190617090603.8449-3-horms+renesas@verge.net.au>
-In-Reply-To: <20190617090603.8449-1-horms+renesas@verge.net.au>
-References: <20190617090603.8449-1-horms+renesas@verge.net.au>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Simon Horman <horms+renesas@verge.net.au>
+Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V6 07/27] PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
+Date: Tue, 18 Jun 2019 23:31:46 +0530
+Message-ID: <20190618180206.4908-8-mmaddireddy@nvidia.com>
+In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-For consistency with the naming of (most) other documentation files for DT
-bindings for Renesas IP blocks rename the Renesas USB3.0 peripheral
-documentation file from renesas-gen3.txt to renesas,gen3.txt.
+Default root port setting hides AER capability. This patch enables the
+advertisement of AER capability by root port.
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- .../devicetree/bindings/usb/{renesas_usb3.txt => renesas,usb3.txt}        | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/usb/{renesas_usb3.txt => renesas,usb3.txt} (100%)
+V6: No change
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas,usb3.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/usb/renesas_usb3.txt
-rename to Documentation/devicetree/bindings/usb/renesas,usb3.txt
+V5: No change
+
+V4: No change
+
+V3: No change
+
+V2: No change
+
+ drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 5d19067f7193..39a8cbf6da24 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -180,6 +180,9 @@
+ #define RP_VEND_XP	0x00000f00
+ #define  RP_VEND_XP_DL_UP	(1 << 30)
+ 
++#define RP_VEND_CTL1	0x00000f48
++#define  RP_VEND_CTL1_ERPT	(1 << 13)
++
+ #define RP_VEND_CTL2 0x00000fa8
+ #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
+ 
+@@ -479,6 +482,16 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
+ 	afi_writel(port->pcie, value, ctrl);
+ }
+ 
++static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
++{
++	u32 value;
++
++	/* Enable AER capability */
++	value = readl(port->base + RP_VEND_CTL1);
++	value |= RP_VEND_CTL1_ERPT;
++	writel(value, port->base + RP_VEND_CTL1);
++}
++
+ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+ {
+ 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
+@@ -503,6 +516,8 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+ 		value |= RP_VEND_CTL2_PCA_ENABLE;
+ 		writel(value, port->base + RP_VEND_CTL2);
+ 	}
++
++	tegra_pcie_enable_rp_features(port);
+ }
+ 
+ static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
 -- 
-2.11.0
+2.17.1
