@@ -1,135 +1,128 @@
-From: Joseph Kogut <joseph.kogut@gmail.com>
-Subject: Re: [PATCH v2 2/2] arm: dts: add ARM Mali GPU node for Odroid XU3
-Date: Tue, 18 Jun 2019 10:41:44 -0700
-Message-ID: <CAMWSM7ibdtSGJfNwsYXGXMEkWJTG9Gd-PCd6nPS0bLPd5v+4rA@mail.gmail.com>
-References: <20190614203144.3850-2-joseph.kogut@gmail.com>
- <20190614235719.8134-1-joseph.kogut@gmail.com>
- <20190616085928.GB3826@kozik-lap>
- <CAMWSM7j8dtsS4d-hOc3Sk6OJHs+SiGC9tEaZBEmO0VKmtJguKw@mail.gmail.com>
- <20190617163634.GA16941@kozik-lap>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
+ wait-for-safe logic
+Date: Tue, 18 Jun 2019 18:52:18 +0100
+Message-ID: <20190618175218.GH4270@fuggles.cambridge.arm.com>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-4-vivek.gautam@codeaurora.org>
+ <20190614040520.GK22737@tuxbook-pro>
+ <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190617163634.GA16941@kozik-lap>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, kgene@kernel.org, Daniel Vetter <daniel@ffwll.ch>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robin.murphy@arm.com, agross@kernel.org, robh+dt@kernel.org, joro@8bytes.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, david.brown@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 9:36 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Mon, Jun 17, 2019 at 09:15:23AM -0700, Joseph Kogut wrote:
-> > Hi Krzysztof,
-> >
-> > Thanks for the review.
-> >
-> > On Sun, Jun 16, 2019 at 1:59 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > On Fri, Jun 14, 2019 at 04:57:19PM -0700, Joseph Kogut wrote:
-> > > > Add device tree node for mali gpu on Odroid XU3 SoCs.
-> > > >
-> > > > Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
-> > > > ---
-> > > >
-> > > > Changes v1 -> v2:
-> > > > - Use interrupt name ordering from binding doc
-> > > > - Specify a single clock for GPU node
-> > > > - Add gpu opp table
-> > > > - Fix warnings from IRQ_TYPE_NONE
-> > > >
-> > > >  .../boot/dts/exynos5422-odroidxu3-common.dtsi | 26 +++++++++++++++++++
-> > >
-> > > This should go to exynos5422-odroid-core.dtsi instead, because it is
-> > > common to entire Odroid Exynos5422 family (not only XU3 family).
-> > >
-> > > >  1 file changed, 26 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> > > > index 93a48f2dda49..b8a4246e3b37 100644
-> > > > --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> > > > +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> > > > @@ -48,6 +48,32 @@
-> > > >               cooling-levels = <0 130 170 230>;
-> > > >       };
-> > > >
-> > > > +     gpu: gpu@11800000 {
-> > > > +             compatible = "samsung,exynos-mali", "arm,mali-t628";
-> > >
-> > > This is common to all Exynos542x chips so it should go to
-> > > exynos5420.dtsi. Here you would need to only enable it and provide
-> > > regulator.
-> > >
-> >
-> > To clarify, which pieces are specific to the Odroid Exynos 5422
-> > family, and which are common to the entire Exynos 542x family? I'm
-> > thinking the gpu node is common to the 542x family, including the
-> > interrupts and clock, and the regulator and opp table are specific to
-> > the Odroid 5422?
->
-> Opp table depends - it might common to Exynos542x (as all use the same
-> Mali) or specific to boards (because there is Odroid XU3 Lite with
-> Exynos5422 working on lower frequencies).
->
-> So far the CPU and all bus OPP tables were put in exynos5420.dtsi so I
-> guess this can go there as well.
->
-> For the rest of properties you were correct.
->
-> >
-> > > Probably this should be also associated with tmu_gpu as a cooling device
-> > > (if Mali registers a cooling device...). Otherwise the tmu_gpu is not
-> > > really used for it.
-> > >
-> >
-> > We have two operating performance points for the GPU, but I'm not sure
-> > at what temperature we should trip the lower opp. Looking at the trip
-> > temperatures for the CPU, we have four alerts, and one critical trip.
-> > The highest alert is 85 C, would it be reasonable to trigger the lower
-> > GPU opp at this temperature? Should it trigger sooner?
->
-> The highest trip point is 120 C and it is critical. In general I would
-> follow the CPU trip points (so fan should start working at 50 degrees).
-> Unless you have some other data about recommended trip points. Useful is
-> vendor kernel (from Samsung, from Hard Kernel).
->
-> >
-> > > > +             reg = <0x11800000 0x5000>;
-> > > > +             interrupts = <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>,
-> > > > +                          <GIC_SPI 74  IRQ_TYPE_LEVEL_HIGH>,
-> > > > +                          <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-> > > > +             interrupt-names = "job", "mmu", "gpu";
-> > > > +             clocks = <&clock CLK_G3D>;
-> > > > +             mali-supply = <&buck4_reg>;
-> > >
-> > > Please check if always-on property could be removed from buck4.
-> >
-> > I've checked, and this property can be removed safely.
-> >
-> > > Also, what about LDO27? It should be used as well (maybe through
-> > > vendor-specific properties which would justify the need of new vendor
-> > > compatible).
-> > >
-> >
-> > I'm unsure how LDO27 is used, can you elaborate?
->
-> It is supplying the VDD_G3DS (with a note "SRAM power"). I do not have
-> any more data on it. However I did not check in vendor kernel for it.
->
+Hi Vivek,
 
-After checking (a fork of) the vendor sources [1], it seems to me that
-this regulator is used for memory voltage related to Samsung's
-Adaptive Supply Voltage, for which there is a pending patchset [2].
+On Fri, Jun 14, 2019 at 02:48:07PM +0530, Vivek Gautam wrote:
+> On 6/14/2019 9:35 AM, Bjorn Andersson wrote:
+> > On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
+> > 
+> > > Qcom's implementation of arm,mmu-500 adds a WAIT-FOR-SAFE logic
+> > > to address under-performance issues in real-time clients, such as
+> > > Display, and Camera.
+> > > On receiving an invalidation requests, the SMMU forwards SAFE request
+> > > to these clients and waits for SAFE ack signal from real-time clients.
+> > > The SAFE signal from such clients is used to qualify the start of
+> > > invalidation.
+> > > This logic is controlled by chicken bits, one for each - MDP (display),
+> > > IFE0, and IFE1 (camera), that can be accessed only from secure software
+> > > on sdm845.
+> > > 
+> > > This configuration, however, degrades the performance of non-real time
+> > > clients, such as USB, and UFS etc. This happens because, with wait-for-safe
+> > > logic enabled the hardware tries to throttle non-real time clients while
+> > > waiting for SAFE ack signals from real-time clients.
+> > > 
+> > > On MTP sdm845 devices, with wait-for-safe logic enabled at the boot time
+> > > by the bootloaders we see degraded performance of USB and UFS when kernel
+> > > enables the smmu stage-1 translations for these clients.
+> > > Turn off this wait-for-safe logic from the kernel gets us back the perf
+> > > of USB and UFS devices until we re-visit this when we start seeing perf
+> > > issues on display/camera on upstream supported SDM845 platforms.
 
-This seems to me to be out of the scope of this patchset, could you confirm?
+Re-visit what exactly, and how?
 
-[1] https://github.com/kumajaya/android_kernel_samsung_universal5422/blob/ad41104d43e6470f8d4880d65b259dc7b903cc0d/arch/arm/mach-exynos/asv-exynos5422.c#L1052
-[2] https://lwn.net/Articles/784958/
+> > > Now, different bootloaders with their access control policies allow this
+> > > register access differently through secure monitor calls -
+> > > 1) With one we can issue io-read/write secure monitor call (qcom-scm)
+> > >     to update the register, while,
+> > > 2) With other, such as one on MTP sdm845 we should use the specific
+> > >     qcom-scm command to send request to do the complete register
+> > >     configuration.
+> > > Adding a separate device tree flag for arm-smmu to identify which
+> > > firmware configuration of the two mentioned above we use.
+> > > Not adding code change to allow type-(1) bootloaders to toggle the
+> > > safe using io-read/write qcom-scm call.
+> > > 
+> > > This change is inspired by the downstream change from Patrick Daly
+> > > to address performance issues with display and camera by handling
+> > > this wait-for-safe within separte io-pagetable ops to do TLB
+> > > maintenance. So a big thanks to him for the change.
+> > > 
+> > > Without this change the UFS reads are pretty slow:
+> > > $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=10 conv=sync
+> > > 10+0 records in
+> > > 10+0 records out
+> > > 10485760 bytes (10.0MB) copied, 22.394903 seconds, 457.2KB/s
+> > > real    0m 22.39s
+> > > user    0m 0.00s
+> > > sys     0m 0.01s
+> > > 
+> > > With this change they are back to rock!
+> > > $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=300 conv=sync
+> > > 300+0 records in
+> > > 300+0 records out
+> > > 314572800 bytes (300.0MB) copied, 1.030541 seconds, 291.1MB/s
+> > > real    0m 1.03s
+> > > user    0m 0.00s
+> > > sys     0m 0.54s
+> > > 
+> > > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > > ---
+> > >   drivers/iommu/arm-smmu.c | 16 ++++++++++++++++
+> > >   1 file changed, 16 insertions(+)
+> > > 
+> > > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > > index 0ad086da399c..3c3ad43eda97 100644
+> > > --- a/drivers/iommu/arm-smmu.c
+> > > +++ b/drivers/iommu/arm-smmu.c
+> > > @@ -39,6 +39,7 @@
+> > >   #include <linux/pci.h>
+> > >   #include <linux/platform_device.h>
+> > >   #include <linux/pm_runtime.h>
+> > > +#include <linux/qcom_scm.h>
+> > >   #include <linux/slab.h>
+> > >   #include <linux/spinlock.h>
+> > > @@ -177,6 +178,7 @@ struct arm_smmu_device {
+> > >   	u32				features;
+> > >   #define ARM_SMMU_OPT_SECURE_CFG_ACCESS (1 << 0)
+> > > +#define ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA (1 << 1)
+> > >   	u32				options;
+> > >   	enum arm_smmu_arch_version	version;
+> > >   	enum arm_smmu_implementation	model;
+> > > @@ -262,6 +264,7 @@ static bool using_legacy_binding, using_generic_binding;
+> > >   static struct arm_smmu_option_prop arm_smmu_options[] = {
+> > >   	{ ARM_SMMU_OPT_SECURE_CFG_ACCESS, "calxeda,smmu-secure-config-access" },
+> > > +	{ ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA, "qcom,smmu-500-fw-impl-safe-errata" },
+> > This should be added to the DT binding as well.
+> 
+> Ah right. I missed that. Will add this and respin unless Robin and Will have
+> concerns with this change.
+
+My only concern really is whether it's safe for us to turn this off. It's
+clear that somebody went to a lot of effort to add this extra goodness to
+the IP, but your benchmarks suggest they never actually tried it out after
+they finished building it.
+
+Is there some downside I'm not seeing from disabling this stuff?
+
+We probably also need some co-ordination with Andy if we're going to
+merge this, since he maintains the firmware calling code.
+
+Will
