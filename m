@@ -1,7 +1,7 @@
 From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 08/10] crypto: sa2ul: Add hmac(sha256) HMAC algorithm support
-Date: Tue, 18 Jun 2019 17:38:41 +0530
-Message-ID: <20190618120843.18777-9-j-keerthy@ti.com>
+Subject: [PATCH 03/10] crypto: sa2ul: Add AES ECB Mode support
+Date: Tue, 18 Jun 2019 17:38:36 +0530
+Message-ID: <20190618120843.18777-4-j-keerthy@ti.com>
 References: <20190618120843.18777-1-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,90 +12,116 @@ To: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-HMAC hash-based message authentication code) is a specific type of
-message authentication code (MAC) involving a cryptographic hash
-function and a secret cryptographic key. It may be used to
-simultaneously verify both the data integrity and the authentication
-of a message, as with any MAC. Add hmac(sha256) HMAC algorithm support
-and the message digest size is 32 bytes.
+Add support for AES algorithm in ECB Mode. Data encryption modes
+are supported via MCE engine (programmable mode control engine).
+ECB (Electronic code book) is a mode of operation for a block cipher,
+with the characteristic that each possible block of plaintext has a
+defined corresponding ciphertext value and vice versa. In other words,
+the same plaintext value will always result in the same ciphertext value.
 
 Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- drivers/crypto/sa2ul.c | 52 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ drivers/crypto/sa2ul.c | 76 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
 diff --git a/drivers/crypto/sa2ul.c b/drivers/crypto/sa2ul.c
-index e3a1321f0666..74211cd21c62 100644
+index 64bdf6b2b879..a17c1f66c5c1 100644
 --- a/drivers/crypto/sa2ul.c
 +++ b/drivers/crypto/sa2ul.c
-@@ -1673,11 +1673,38 @@ static int sa_sham_sha1_setkey(struct crypto_ahash *tfm, const u8 *key,
- 	return sa_sham_setkey(tfm, key, keylen, ad);
+@@ -178,6 +178,38 @@ static u8 mci_cbc_dec_array[3][MODE_CONTROL_BYTES] = {
+ 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
+ };
+ 
++/*
++ * Mode Control Instructions for various Key lengths 128, 192, 256
++ * For ECB (Electronic Code Book) mode for encryption
++ */
++static u8 mci_ecb_enc_array[3][27] = {
++	{	0x21, 0x00, 0x00, 0x80, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++	{	0x21, 0x00, 0x00, 0x84, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++	{	0x21, 0x00, 0x00, 0x88, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++};
++
++/*
++ * Mode Control Instructions for various Key lengths 128, 192, 256
++ * For ECB (Electronic Code Book) mode for decryption
++ */
++static u8 mci_ecb_dec_array[3][27] = {
++	{	0x31, 0x00, 0x00, 0x80, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++	{	0x31, 0x00, 0x00, 0x84, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++	{	0x31, 0x00, 0x00, 0x88, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++};
++
+ /*
+  * Perform 16 byte or 128 bit swizzling
+  * The SA2UL Expects the security context to
+@@ -746,6 +778,26 @@ static int sa_aes_cbc_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
+ 	return sa_aes_setkey(tfm, key, keylen, ad);
  }
  
-+static int sa_sham_sha256_setkey(struct crypto_ahash *tfm, const u8 *key,
-+				 unsigned int keylen)
++static int sa_aes_ecb_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
++			     unsigned int keylen)
 +{
 +	struct algo_data *ad = kzalloc(sizeof(*ad), GFP_KERNEL);
++	/* Convert the key size (16/24/32) to the key size index (0/1/2) */
++	int key_idx = (keylen >> 3) - 2;
 +
-+	ad->enc_eng.eng_id = SA_ENG_ID_NONE;
++	ad->enc_eng.eng_id = SA_ENG_ID_EM1;
 +	ad->enc_eng.sc_size = SA_CTX_ENC_TYPE1_SZ;
-+	ad->auth_eng.eng_id = SA_ENG_ID_AM1;
-+	ad->auth_eng.sc_size = SA_CTX_AUTH_TYPE2_SZ;
-+	ad->mci_enc = NULL;
-+	ad->mci_dec = NULL;
-+	ad->inv_key = false;
-+	ad->keyed_mac = true;
-+	ad->ealg_id = SA_EALG_ID_NONE;
-+	ad->aalg_id = SA_AALG_ID_HMAC_SHA2_256;
-+	ad->hash_size = SHA256_DIGEST_SIZE;
-+	ad->auth_ctrl = 0x4;
-+	ad->prep_iopad = sa_hmac_sha256_get_pad;
++	ad->auth_eng.eng_id = SA_ENG_ID_NONE;
++	ad->auth_eng.sc_size = 0;
++	ad->mci_enc = mci_ecb_enc_array[key_idx];
++	ad->mci_dec = mci_ecb_dec_array[key_idx];
++	ad->inv_key = true;
++	ad->ealg_id = SA_EALG_ID_AES_ECB;
++	ad->aalg_id = SA_AALG_ID_NONE;
 +
-+	return sa_sham_setkey(tfm, key, keylen, ad);
++	return sa_aes_setkey(tfm, key, keylen, ad);
 +}
 +
- static int sa_sham_cra_sha1_init(struct crypto_tfm *tfm)
+ static void sa_aes_dma_in_callback(void *data)
  {
- 	return sa_sham_cra_init_alg(tfm, "sha1");
- }
- 
-+static int sa_sham_cra_sha256_init(struct crypto_tfm *tfm)
-+{
-+	return sa_sham_cra_init_alg(tfm, "sha256");
-+}
-+
- static void sa_sham_cra_exit(struct crypto_tfm *tfm)
- {
- 	struct crypto_alg *alg = tfm->__crt_alg;
-@@ -1839,6 +1866,31 @@ static struct ahash_alg algs_sha[] = {
- 		.cra_exit		= sa_sham_cra_exit,
- 	}
- },
-+{
-+	.init		= sa_sham_init,
-+	.update		= sa_sham_update,
-+	.final		= sa_sham_final,
-+	.finup		= sa_sham_finup,
-+	.digest		= sa_sham_digest,
-+	.setkey		= sa_sham_sha256_setkey,
-+	.halg.digestsize	= SHA256_DIGEST_SIZE,
-+	.halg.statesize		= 128,
-+	.halg.base	= {
-+		.cra_name		= "hmac(sha256)",
-+		.cra_driver_name	= "sa-hmac-sha256",
-+		.cra_priority		= 400,
-+		.cra_flags		= CRYPTO_ALG_TYPE_AHASH |
-+						CRYPTO_ALG_ASYNC |
-+						CRYPTO_ALG_KERN_DRIVER_ONLY |
-+						CRYPTO_ALG_NEED_FALLBACK,
-+		.cra_blocksize		= SHA256_BLOCK_SIZE,
-+		.cra_ctxsize		= sizeof(struct sa_tfm_ctx),
-+		.cra_alignmask		= SA_ALIGN_MASK,
-+		.cra_module		= THIS_MODULE,
-+		.cra_init		= sa_sham_cra_sha256_init,
-+		.cra_exit		= sa_sham_cra_exit,
-+	}
-+},
+ 	struct sa_rx_data *rxd = (struct sa_rx_data *)data;
+@@ -940,6 +992,30 @@ static struct sa_alg_tmpl sa_algs[] = {
+ 					}
+ 			}
+ 	},
++	{	.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
++		.alg.crypto = {
++			.cra_name = "ecb(aes)",
++			.cra_driver_name = "ecb-aes-sa2ul",
++			.cra_priority = 30000,
++			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
++					CRYPTO_ALG_KERN_DRIVER_ONLY |
++				CRYPTO_ALG_ASYNC | CRYPTO_ALG_NEED_FALLBACK,
++			.cra_blocksize = AES_BLOCK_SIZE,
++			.cra_ctxsize = sizeof(struct sa_tfm_ctx),
++			.cra_alignmask = 0,
++			.cra_type = &crypto_ablkcipher_type,
++			.cra_module = THIS_MODULE,
++			.cra_init = sa_aes_cra_init,
++			.cra_exit = sa_aes_cra_exit,
++			.cra_u.ablkcipher = {
++				.min_keysize    = AES_MIN_KEY_SIZE,
++				.max_keysize    = AES_MAX_KEY_SIZE,
++				.setkey		= sa_aes_ecb_setkey,
++				.encrypt	= sa_aes_cbc_encrypt,
++				.decrypt	= sa_aes_cbc_decrypt,
++			}
++		}
++	},
  };
  
  /* Register the algorithms in crypto framework */
