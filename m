@@ -1,109 +1,114 @@
 From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v3 1/4] firmware: qcom_scm-64: Add atomic version of
- qcom_scm_call
-Date: Tue, 18 Jun 2019 18:55:36 +0100
-Message-ID: <20190618175536.GI4270@fuggles.cambridge.arm.com>
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
- <20190612071554.13573-2-vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH V12 2/4] drivers/perf: imx_ddr: Add ddr performance
+ counter support
+Date: Tue, 18 Jun 2019 18:58:23 +0100
+Message-ID: <20190618175823.GJ4270@fuggles.cambridge.arm.com>
+References: <1556736193-29411-1-git-send-email-Frank.Li@nxp.com>
+ <1556736193-29411-2-git-send-email-Frank.Li@nxp.com>
+ <20190613112320.GA18966@fuggles.cambridge.arm.com>
+ <CAHrpEqRZ0YL9SFk6o7iebJ+diJVMTtyba_9GtujL7H7e4G8qQA@mail.gmail.com>
+ <20190613174436.GG18966@fuggles.cambridge.arm.com>
+ <CAHrpEqS9GEC9Shf-6xLL0_+WJNuwYOdKe=5jtUogLajfcWYMew@mail.gmail.com>
+ <20190614102302.GD10659@fuggles.cambridge.arm.com>
+ <CAHrpEqR+3LETyDosyRq=SBDC=g3tkm72vg-f=550H+TTVLbmcQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190612071554.13573-2-vivek.gautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: agross@kernel.org, robh+dt@kernel.org, robin.murphy@arm.com, joro@8bytes.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, david.brown@linaro.org
+In-Reply-To: <CAHrpEqR+3LETyDosyRq=SBDC=g3tkm72vg-f=550H+TTVLbmcQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhi Li <lznuaa@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 12:45:51PM +0530, Vivek Gautam wrote:
-> There are scnenarios where drivers are required to make a
-> scm call in atomic context, such as in one of the qcom's
-> arm-smmu-500 errata [1].
+On Tue, Jun 18, 2019 at 12:24:19PM -0500, Zhi Li wrote:
+> On Fri, Jun 14, 2019 at 5:23 AM Will Deacon <will.deacon@arm.com> wrote:
+> >
+> > On Thu, Jun 13, 2019 at 02:13:20PM -0500, Zhi Li wrote:
+> > > On Thu, Jun 13, 2019 at 12:44 PM Will Deacon <will.deacon@arm.com> wrote:
+> > > >
+> > > > On Thu, Jun 13, 2019 at 12:04:37PM -0500, Zhi Li wrote:
+> > > > > On Thu, Jun 13, 2019 at 6:23 AM Will Deacon <will.deacon@arm.com> wrote:
+> > > > > >
+> > > > > > On Wed, May 01, 2019 at 06:43:29PM +0000, Frank Li wrote:
+> > > > > > > Add ddr performance monitor support for iMX8QXP
+> > > > > > >
+> > > > > > > There are 4 counters for ddr perfomance events.
+> > > > > > > counter 0 is dedicated for cycles.
+> > > > > > > you choose any up to 3 no cycles events.
+> > > > > > >
+> > > > > > > for example:
+> > > > > > >
+> > > > > > > perf stat -a -e imx8_ddr0/read-cycles/,imx8_ddr0/write-cycles/,imx8_ddr0/precharge/ ls
+> > > > > > > perf stat -a -e imx8_ddr0/cycles/,imx8_ddr0/read-access/,imx8_ddr0/write-access/ ls
+> > > > > >
+> > > > > > I've pushed patches 1, 2 and 4 out with some minor tweaks to:
+> > > > > >
+> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-next/perf
+> > > > > >
+> > > > > > I'll leave the actual .dts change to go via the soc tree, since last time
+> > > > > > I took one of those it just resulted in conflicts.
+> > > > > >
+> > > > > > Frank, Andrey: Please could you try to run the perf fuzzer on this before
+> > > > > > it lands in mainline? It has a good track record of finding nasty PMU driver
+> > > > > > bugs, but it obviously requires access to hardware which implements the PMU:
+> > > > > >
+> > > > > > http://web.eece.maine.edu/~vweaver/projects/perf_events/fuzzer/
+> > > > >
+> > > > > Okay, how long should be run generally?
+> > > > > I need make sure it can pass without my patches at our platform.
+> > > >
+> > > > As you long as you can really, but if it survives a few hours that's usually
+> > > > a good sign. Overnight is even better.
+> > >
+> > > Base on commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a
+> > > Author: Linus Torvalds <torvalds@linux-foundation.org>
+> > > Date:   Sun Jun 2 13:55:33 2019 -0700
+> > >
+> > >     Linux 5.2-rc3
+> > >
+> > > RCU report problem:
+> > >
+> > > [ 6048.741784] rcu: INFO: rcu_preempt self-detected stall on CPU
+> > > [ 6048.747550] rcu:     1-....: (5249 ticks this GP)
+> > > idle=c5a/1/0x4000000000000004 softirq=503121/503121 fqs=2425
+> > > [ 6048.757384]  (t=5253 jiffies g=1416105 q=117)
+> > > [ 6048.761745] Task dump for CPU 1:
+> > > [ 6048.764977] perf_fuzzer     R  running task        0 32520    426 0x00000202
+> > > [ 6048.772030] Call trace:
+> > > [ 6048.774493]  dump_backtrace+0x0/0x130
+> > > [ 6048.778159]  show_stack+0x14/0x20
+> > > [ 6048.781477]  sched_show_task+0x108/0x138
+> > > [ 6048.785401]  dump_cpu_task+0x40/0x4c
+> > > [ 6048.788983]  rcu_dump_cpu_stacks+0x94/0xd0
+> > > [ 6048.793082]  rcu_sched_clock_irq+0x5e0/0x918
+> > > [ 6048.797357]  update_process_times+0x2c/0x70
+> > > [ 6048.801545]  tick_sched_handle.isra.6+0x3c/0x50
+> > > [ 6048.806076]  tick_sched_timer+0x48/0x98
+> > > [ 6048.809918]  __hrtimer_run_queues+0x118/0x1a8
+> > > [ 6048.814277]  hrtimer_interrupt+0xe4/0x238
+> > > [ 6048.818296]  arch_timer_handler_phys+0x2c/0x38
+> > > [ 6048.822743]  handle_percpu_devid_irq+0x80/0x140
+> > > [ 6048.827277]  generic_handle_irq+0x24/0x38
+> >
+> > This is the timer interrupt which prompts the RCU splat. Do you have
+> > information about where the CPU was when the interrupt occurred?
+> >
+> > In the meantime, it's still worth leaving the fuzzer running to see what
+> > else it finds.
 > 
-> [1] ("https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/
->       drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/
->       msm-4.9&id=da765c6c75266b38191b38ef086274943f353ea7")
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/firmware/qcom_scm-64.c | 136 ++++++++++++++++++++++++++++-------------
->  1 file changed, 92 insertions(+), 44 deletions(-)
-> 
-> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-> index 91d5ad7cf58b..b6dca32c5ac4 100644
-> --- a/drivers/firmware/qcom_scm-64.c
-> +++ b/drivers/firmware/qcom_scm-64.c
-> @@ -62,32 +62,71 @@ static DEFINE_MUTEX(qcom_scm_lock);
->  #define FIRST_EXT_ARG_IDX 3
->  #define N_REGISTER_ARGS (MAX_QCOM_SCM_ARGS - N_EXT_QCOM_SCM_ARGS + 1)
->  
-> -/**
-> - * qcom_scm_call() - Invoke a syscall in the secure world
-> - * @dev:	device
-> - * @svc_id:	service identifier
-> - * @cmd_id:	command identifier
-> - * @desc:	Descriptor structure containing arguments and return values
-> - *
-> - * Sends a command to the SCM and waits for the command to finish processing.
-> - * This should *only* be called in pre-emptible context.
-> -*/
-> -static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
-> -			 const struct qcom_scm_desc *desc,
-> -			 struct arm_smccc_res *res)
-> +static void __qcom_scm_call_do(const struct qcom_scm_desc *desc,
-> +			       struct arm_smccc_res *res, u32 fn_id,
-> +			       u64 x5, u32 type)
-> +{
-> +	u64 cmd;
-> +	struct arm_smccc_quirk quirk = {.id = ARM_SMCCC_QUIRK_QCOM_A6};
-> +
-> +	cmd = ARM_SMCCC_CALL_VAL(type, qcom_smccc_convention,
-> +				 ARM_SMCCC_OWNER_SIP, fn_id);
-> +
-> +	quirk.state.a6 = 0;
-> +
-> +	do {
-> +		arm_smccc_smc_quirk(cmd, desc->arginfo, desc->args[0],
-> +				    desc->args[1], desc->args[2], x5,
-> +				    quirk.state.a6, 0, res, &quirk);
-> +
-> +		if (res->a0 == QCOM_SCM_INTERRUPTED)
-> +			cmd = res->a0;
-> +
-> +	} while (res->a0 == QCOM_SCM_INTERRUPTED);
-> +}
-> +
-> +static void qcom_scm_call_do(const struct qcom_scm_desc *desc,
-> +			     struct arm_smccc_res *res, u32 fn_id,
-> +			     u64 x5, bool atomic)
-> +{
+> Overnight test done, only above rcu problem happen at both with and
+> without ddr perf patches.
 
-Maybe pass in the call type (ARM_SMCCC_FAST_CALL vs ARM_SMCCC_STD_CALL)
-instead of "bool atomic"? Would certainly make the callsites easier to
-understand.
-
-> +	int retry_count = 0;
-> +
-> +	if (!atomic) {
-> +		do {
-> +			mutex_lock(&qcom_scm_lock);
-> +
-> +			__qcom_scm_call_do(desc, res, fn_id, x5,
-> +					   ARM_SMCCC_STD_CALL);
-> +
-> +			mutex_unlock(&qcom_scm_lock);
-> +
-> +			if (res->a0 == QCOM_SCM_V2_EBUSY) {
-> +				if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
-> +					break;
-> +				msleep(QCOM_SCM_EBUSY_WAIT_MS);
-> +			}
-> +		}  while (res->a0 == QCOM_SCM_V2_EBUSY);
-> +	} else {
-> +		__qcom_scm_call_do(desc, res, fn_id, x5, ARM_SMCCC_FAST_CALL);
-> +	}
-
-Is it safe to make concurrent FAST calls?
+Great, thanks for giving it a go.
 
 Will
