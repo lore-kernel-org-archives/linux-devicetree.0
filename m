@@ -1,85 +1,74 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
-Date: Tue, 18 Jun 2019 12:30:39 +0300
-Message-ID: <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
- <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
+From: Anup Patel <anup@brainfault.org>
+Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
+Date: Tue, 18 Jun 2019 15:02:45 +0530
+Message-ID: <CAAhSdy3zODw=JFaN=2F4K5-umihJDivLO8J8LBdkFkuZgzu41Q@mail.gmail.com>
+References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
+ <mvmtvco62k9.fsf@suse.de> <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
+ <mvmpnnc5y49.fsf@suse.de> <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com>
+ <mvmh88o5xi5.fsf@suse.de> <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com>
+ <F48A4F7F-0B0D-4191-91AD-DC51686D1E78@sifive.com> <d2836a90b92f3522a398d57ab8555d08956a0d1f.camel@wdc.com>
+ <alpine.DEB.2.21.9999.1906172019040.15057@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
-Content-Language: en-US
+In-Reply-To: <alpine.DEB.2.21.9999.1906172019040.15057@viisi.sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, Stephen Warren <swarren@wwwdotorg.org>
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>, "palmer@sifive.com" <palmer@sifive.com>
+Cc: Alistair Francis <Alistair.Francis@wdc.com>, "troy.benjegerdes@sifive.com" <troy.benjegerdes@sifive.com>, "jamez@wit.com" <jamez@wit.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "davem@davemloft.net" <davem@davemloft.net>, "schwab@suse.de" <schwab@suse.de>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "sachin.ghadi@sifive.com" <sachin.ghadi@sifive.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "ynezz@true.cz" <ynezz@true.cz>, "yash.shah@sifive.com" <yash.shah@sifive.com>, "robh+dt@kernel.org" <rob>
 List-Id: devicetree@vger.kernel.org
 
-18.06.2019 12:22, Dmitry Osipenko пишет:
-> 18.06.2019 10:46, Sowjanya Komatineni пишет:
->> This patch adds suspend and resume support for Tegra pinctrl driver
->> and registers them to syscore so the pinmux settings are restored
->> before the devices resume.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/pinctrl/tegra/pinctrl-tegra.c    | 62 ++++++++++++++++++++++++++++++++
->>  drivers/pinctrl/tegra/pinctrl-tegra.h    |  5 +++
->>  drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
->>  drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
->>  drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
->>  drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
->>  drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
->>  7 files changed, 84 insertions(+)
->>
->> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
->> index 34596b246578..ceced30d8bd1 100644
->> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->> @@ -20,11 +20,16 @@
->>  #include <linux/pinctrl/pinmux.h>
->>  #include <linux/pinctrl/pinconf.h>
->>  #include <linux/slab.h>
->> +#include <linux/syscore_ops.h>
->>  
->>  #include "../core.h"
->>  #include "../pinctrl-utils.h"
->>  #include "pinctrl-tegra.h"
->>  
->> +#define EMMC2_PAD_CFGPADCTRL_0			0x1c8
->> +#define EMMC4_PAD_CFGPADCTRL_0			0x1e0
->> +#define EMMC_DPD_PARKING			(0x1fff << 14)
->> +
->>  static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
->>  {
->>  	return readl(pmx->regs[bank] + reg);
->> @@ -619,6 +624,48 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>  			pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
->>  		}
->>  	}
->> +
->> +	if (pmx->soc->has_park_padcfg) {
->> +		val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
->> +		val &= ~EMMC_DPD_PARKING;
->> +		pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
->> +
->> +		val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
->> +		val &= ~EMMC_DPD_PARKING;
->> +		pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
->> +	}
->> +}
-> 
-> Is there any reason why parked_bit can't be changed to parked_bitmask like I was
-> asking in a comment to v2?
-> 
-> I suppose that it's more preferable to keep pinctrl-tegra.c platform-agnostic for
-> consistency when possible, hence adding platform specifics here should be discouraged.
-> And then the parked_bitmask will also result in a proper hardware description in the code.
-> 
+On Tue, Jun 18, 2019 at 8:56 AM Paul Walmsley <paul.walmsley@sifive.com> wr=
+ote:
+>
+> On Mon, 17 Jun 2019, Alistair Francis wrote:
+>
+> > > The legacy M-mode U-boot handles the phy reset already, and I=E2=80=
+=99ve been
+> > > able to load upstream S-mode uboot as a payload via TFTP, and then
+> > > load and boot a 4.19 kernel.
+> > >
+> > > It would be nice to get this all working with 5.x, however there are
+> > > still
+> > > several missing pieces to really have it work well.
+> >
+> > Let me know what is still missing/doesn't work and I can add it. At the
+> > moment the only known issue I know of is a missing SD card driver in U-
+> > Boot.
+>
+> The DT data has changed between the non-upstream data that people
+> developed against previously, vs. the DT data that just went upstream
+> here:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/?id=3D72296bde4f4207566872ee355950a59cbc29f852
+>
+> and
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/?id=3Dc35f1b87fc595807ff15d2834d241f9771497205
+>
+> So Upstream U-Boot is going to need several patches to get things working
+> again.  Clock identifiers and Ethernet are two known areas.
 
-I'm now also vaguely recalling that Stephen Warren had some kind of a "code generator"
-for the pinctrl drivers. So I guess all those tables were auto-generated initially.
+Done.
 
-Stephen, maybe you could adjust the generator to take into account the bitmask (of
-course if that's a part of the generated code) and then re-gen it all for Sowjanya?
+I just send-out few patches to fix U-Boot SiFive Clock driver.
+
+The U-Boot SiFive Clock driver fix series can be found in
+riscv_unleashed_clk_sync_v1 branch of:
+https://github.com/avpatel/u-boot.git
+
+Users will also require OpenSBI DTB fix which can be found
+in sifive_unleashed_dtb_fix_v1 branch of:
+https://github.com/avpatel/opensbi.git
+
+With above fixes, we can now use same DTB for both U-Boot
+and Linux kernel (5.2-rc1). Although, users are free to pass a
+different DTB to Linux kernel via TFTP.
+
+I have tested SiFive serial and Cadance MACB ethernet on
+both U-Boot and Linux (5.2-rc1)
+
+Regards,
+Anup
