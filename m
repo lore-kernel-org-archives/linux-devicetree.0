@@ -1,22 +1,39 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v16 0/3] Add support for the Purism Librem5 devkit
-Date: Tue, 18 Jun 2019 21:20:10 +0800
-Message-ID: <20190618132009.GF1959@dragon>
-References: <20190617135215.550-1-angus@akkea.ca>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: [PATCH v2 0/2] Add DSI panel driver for Raydium RM67191
+Date: Tue, 18 Jun 2019 16:30:44 +0300
+Message-ID: <1560864646-1468-1-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190617135215.550-1-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pavel@ucw.cz
+To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com, Robert Chiras <robert.chiras@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 07:52:12AM -0600, Angus Ainslie (Purism) wrote:
-> Angus Ainslie (Purism) (3):
->   arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
->   dt-bindings: Add an entry for Purism SPC
->   dt-bindings: arm: fsl: Add the imx8mq boards
+This patch-set contains the DRM panel driver and dt-bindings documentation
+for the DSI driven panel: Raydium RM67191.
 
-Applied all, thanks.
+Changes since v1:
+- Fixed 'reset-gpio' to 'reset-gpios' property naming
+- Changed the state of the reset gpio to active low and fixed how it is
+  handled in driver
+- Fixed copyright statement
+- Reordered includes
+- Added defines for panel specific color formats
+- Removed unnecessary tests in enable and unprepare
+- Removed the unnecessary backlight write in enable
+
+Robert Chiras (2):
+  dt-bindings: display: panel: Add support for Raydium RM67191 panel
+  drm/panel: Add support for Raydium RM67191 panel driver
+
+ .../bindings/display/panel/raydium,rm67191.txt     |  43 ++
+ drivers/gpu/drm/panel/Kconfig                      |   9 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-raydium-rm67191.c      | 709 +++++++++++++++++++++
+ 4 files changed, 762 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-raydium-rm67191.c
+
+-- 
+2.7.4
