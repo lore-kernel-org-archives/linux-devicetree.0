@@ -1,189 +1,149 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V3 08/17] clk: tegra: add support for peripheral clock
- suspend and resume
-Date: Tue, 18 Jun 2019 13:50:55 +0200
-Message-ID: <20190618115055.GK28892@ulmo>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-9-git-send-email-skomatineni@nvidia.com>
+From: Vishal Sagar <vsagar@xilinx.com>
+Subject: RE: [PATCH 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx Subsystem
+ driver
+Date: Tue, 18 Jun 2019 11:51:31 +0000
+Message-ID: <CH2PR02MB60883EDB9B3B2AED8A2555CBA7EA0@CH2PR02MB6088.namprd02.prod.outlook.com>
+References: <1559656556-79174-1-git-send-email-vishal.sagar@xilinx.com>
+ <1559656556-79174-3-git-send-email-vishal.sagar@xilinx.com>
+ <023cf8a6-6fbc-6425-8bca-798045d39e02@xs4all.nl>
+ <CH2PR02MB608838E59840F73F00534198A7EE0@CH2PR02MB6088.namprd02.prod.outlook.com>
+ <740f44cb-24af-72c4-f227-5323efcee8ac@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6TC23+W66xmFESAX"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1560843991-24123-9-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <740f44cb-24af-72c4-f227-5323efcee8ac@xs4all.nl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>, Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-
---6TC23+W66xmFESAX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 18, 2019 at 12:46:22AM -0700, Sowjanya Komatineni wrote:
-> This patch creates APIs to save and restore the state of all
-> peripheral clocks reset and enables.
->=20
-> These APIs are invoked by Tegra210 clock driver during suspend and
-> resume to save the peripheral clocks state before suspend and to
-> restore them on resume.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk.c | 70 +++++++++++++++++++++++++++++++++++++++++++=
-+++++-
->  drivers/clk/tegra/clk.h |  3 +++
->  2 files changed, 72 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-> index 26690663157a..bd3b46c5f941 100644
-> --- a/drivers/clk/tegra/clk.c
-> +++ b/drivers/clk/tegra/clk.c
-> @@ -70,6 +70,7 @@ static struct clk **clks;
->  static int clk_num;
->  static struct clk_onecell_data clk_data;
-> =20
-> +static u32 *periph_ctx;
->  static u32 cclkg_burst_policy_ctx[2];
->  static u32 cclklp_burst_policy_ctx[2];
->  static u32 sclk_burst_policy_ctx[2];
-> @@ -279,6 +280,63 @@ void tegra_sclk_cpulp_burst_policy_restore_context(v=
-oid)
->  	writel_relaxed(clk_arm_ctx, clk_base + CLK_MASK_ARM);
->  }
-> =20
-> +void tegra_clk_periph_suspend(void __iomem *clk_base)
-> +{
-> +	int i, idx;
-
-Can be unsigned int. Same for below.
-
-> +
-> +	idx =3D 0;
-> +	for (i =3D 0; i < periph_banks; i++, idx++)
-> +		periph_ctx[idx] =3D
-> +			readl_relaxed(clk_base + periph_regs[i].rst_reg);
-> +
-> +	for (i =3D 0; i < periph_banks; i++, idx++)
-> +		periph_ctx[idx] =3D
-> +			readl_relaxed(clk_base + periph_regs[i].enb_reg);
-> +}
-> +
-> +void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *cl=
-k_base)
-
-count can also be unsigned int.
-
-> +{
-> +	int i;
-> +
-> +	WARN_ON(count !=3D periph_banks);
-> +
-> +	for (i =3D 0; i < count; i++)
-> +		writel_relaxed(clks_on[i], clk_base + periph_regs[i].enb_reg);
-> +}
-> +
-> +void tegra_clk_periph_resume(void __iomem *clk_base)
-> +{
-> +	int i, idx;
-> +
-> +	idx =3D 0;
-> +	for (i =3D 0; i < periph_banks; i++, idx++)
-> +		writel_relaxed(periph_ctx[idx],
-> +			       clk_base + periph_regs[i].rst_reg);
-> +
-> +	/* ensure all resets have propagated */
-> +	fence_udelay(2, clk_base);
-> +	tegra_read_chipid();
-> +
-> +	for (i =3D 0; i < periph_banks; i++, idx++)
-> +		writel_relaxed(periph_ctx[idx],
-> +			       clk_base + periph_regs[i].enb_reg);
-> +
-> +	/* ensure all enables have propagated */
-> +	fence_udelay(2, clk_base);
-> +	tegra_read_chipid();
-> +}
-> +
-> +static int tegra_clk_suspend_ctx_init(int banks)
-> +{
-> +	int err =3D 0;
-> +
-> +	periph_ctx =3D kcalloc(2 * banks, sizeof(*periph_ctx), GFP_KERNEL);
-> +	if (!periph_ctx)
-> +		err =3D -ENOMEM;
-> +
-> +	return err;
-> +}
-> +
->  struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int ban=
-ks)
->  {
->  	clk_base =3D regs;
-> @@ -295,11 +353,21 @@ struct clk ** __init tegra_clk_init(void __iomem *r=
-egs, int num, int banks)
->  	periph_banks =3D banks;
-> =20
->  	clks =3D kcalloc(num, sizeof(struct clk *), GFP_KERNEL);
-> -	if (!clks)
-> +	if (!clks) {
->  		kfree(periph_clk_enb_refcnt);
-> +		return NULL;
-> +	}
-> =20
->  	clk_num =3D num;
-> =20
-> +	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
-> +		if (tegra_clk_suspend_ctx_init(banks)) {
-> +			kfree(periph_clk_enb_refcnt);
-> +			kfree(clks);
-> +			return NULL;
-> +		}
-> +	}
-> +
->  	return clks;
->  }
-> =20
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index c8f8a23096e2..a354cacae5a6 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -853,6 +853,9 @@ void tegra_cclkg_burst_policy_save_context(void);
->  void tegra_cclkg_burst_policy_restore_context(void);
->  void tegra_sclk_cclklp_burst_policy_save_context(void);
->  void tegra_sclk_cpulp_burst_policy_restore_context(void);
-> +void tegra_clk_periph_suspend(void __iomem *clk_base);
-> +void tegra_clk_periph_resume(void __iomem *clk_base);
-> +void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *cl=
-k_base);
-> =20
->  /* Combined read fence with delay */
->  #define fence_udelay(delay, reg)	\
-
-Other than the nitpicks, looks good:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---6TC23+W66xmFESAX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0I0B8ACgkQ3SOs138+
-s6GfZhAAmD6cbOIgUCROHyAhWdbEC6b72a8qyJYEbvoQ8eGoa52c+EGCZVgUFZqL
-30PtlxxLfWKdDJesDhVRtHCdpKcMn5Zhm4vEpP1Oj/7oVCySPkHMgCPi9PBlBMdC
-Bk75n0Y6j1sNblSrXrQESF2nvK6YjPRRT42YKCr7/ES1iZqL8IbN9adme2OSmTOD
-4q1SEfCP7J2r4XpEq8YwJ4Hoq74MOwnsBDYytahE1iFrxW9pazT89a/7RmIcCdL9
-FY+y4+xUL80/K1rYB3LQLZZXNjSw/xAptYtCxMIZKggyPapBv7NgazfmO1ofi8cF
-Rl3KcKL5ryWhPxXtx3RgPjbVlNfjoOiJSdnj62936v73MSf/p9v+FXKvU2SJSIGw
-OuYoo1HhKgV/VYUGIEE3annwC/vhqkoC445rcc/yrrkBAXTo2lM4y2DiGa1QTHeI
-tQ+EnYCCBQ+uypKEPiU0PFlolUycP8xK5KnNAXXpu4AKXsYsw/9B20AhpYix26KN
-e/f9/nOxgOlubtExDmSCDVQsasiEKm8Fw5Ow3clSn77CvlEhCkRZ6g/OU9Il4Eh0
-0PUxLqs/hjUqYOgKWFpQ1WZy5A+rMww+wLrmfXa/3Fw+AqJAMJswTESep+hEFJd/
-54GDr/Rey0HQ5c4QV2sUbl2G40RVel/bkNt5COK0cUIgyl6pqiM=
-=04ad
------END PGP SIGNATURE-----
-
---6TC23+W66xmFESAX--
+SGkgSGFucywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBIYW5zIFZl
+cmt1aWwgW21haWx0bzpodmVya3VpbEB4czRhbGwubmxdDQo+IFNlbnQ6IFNhdHVyZGF5LCBKdW5l
+IDE1LCAyMDE5IDE6MjUgUE0NCj4gVG86IFZpc2hhbCBTYWdhciA8dnNhZ2FyQHhpbGlueC5jb20+
+DQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1tZWRpYUB2Z2VyLmtl
+cm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBEaW5lc2ggS3VtYXINCj4gPGRpbmVzaGtAeGlsaW54LmNv
+bT47IFNhbmRpcCBLb3RoYXJpIDxzYW5kaXBrQHhpbGlueC5jb20+OyBWaXNoYWwgU2FnYXINCj4g
+PHZpc2hhbC5zYWdhckB4aWxpbnguY29tPjsgSHl1biBLd29uIDxoeXVua0B4aWxpbnguY29tPjsg
+TGF1cmVudCBQaW5jaGFydA0KPiA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPjsg
+TWF1cm8gQ2FydmFsaG8gQ2hlaGFiDQo+IDxtY2hlaGFiQGtlcm5lbC5vcmc+OyBNaWNoYWwgU2lt
+ZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IFJvYiBIZXJyaW5nDQo+IDxyb2JoK2R0QGtlcm5lbC5v
+cmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgU2FrYXJpIEFpbHVzDQo+
+IDxzYWthcmkuYWlsdXNAbGludXguaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIv
+Ml0gbWVkaWE6IHY0bDogeGlsaW54OiBBZGQgWGlsaW54IFVIRC1TREkgUnggU3Vic3lzdGVtDQo+
+IGRyaXZlcg0KPiANCj4gT24gNi8xNC8xOSAxOjQ0IFBNLCBWaXNoYWwgU2FnYXIgd3JvdGU6DQo+
+ID4gSGkgSGFucywNCj4gPg0KPiA+IFRoYW5rcyBmb3IgcmV2aWV3aW5nIHRoaXMgcGF0Y2guDQo+
+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogSGFucyBWZXJr
+dWlsIFttYWlsdG86aHZlcmt1aWxAeHM0YWxsLm5sXQ0KPiA+PiBTZW50OiBXZWRuZXNkYXksIEp1
+bmUgMDUsIDIwMTkgNjoyOCBQTQ0KPiA+PiBUbzogVmlzaGFsIFNhZ2FyIDx2aXNoYWwuc2FnYXJA
+eGlsaW54LmNvbT47IEh5dW4gS3dvbg0KPiA8aHl1bmtAeGlsaW54LmNvbT47DQo+ID4+IExhdXJl
+bnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT47IE1hdXJvIENh
+cnZhbGhvDQo+ID4+IENoZWhhYiA8bWNoZWhhYkBrZXJuZWwub3JnPjsgTWljaGFsIFNpbWVrIDxt
+aWNoYWxzQHhpbGlueC5jb20+OyBSb2INCj4gPj4gSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3Jn
+PjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCj4gPj4gQ2M6IGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZzsgbGludXgt
+YXJtLQ0KPiA+PiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmc7IERpbmVzaCBLdW1hcg0KPiA+PiA8ZGluZXNoa0B4aWxpbnguY29tPjsgU2FuZGlw
+IEtvdGhhcmkgPHNhbmRpcGtAeGlsaW54LmNvbT4NCj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSCAy
+LzJdIG1lZGlhOiB2NGw6IHhpbGlueDogQWRkIFhpbGlueCBVSEQtU0RJIFJ4IFN1YnN5c3RlbQ0K
+PiA+PiBkcml2ZXINCj4gPj4NCj4gPj4gRVhURVJOQUwgRU1BSUwNCj4gPj4NCj4gPj4gT24gNi80
+LzE5IDM6NTUgUE0sIFZpc2hhbCBTYWdhciB3cm90ZToNCj4gPj4+IFRoZSBYaWxpbnggVUhELVNE
+SSBSeCBzdWJzeXN0ZW0gc29mdCBJUCBpcyB1c2VkIHRvIGNhcHR1cmUgbmF0aXZlIFNESQ0KPiA+
+Pj4gc3RyZWFtcyBmcm9tIFNESSBzb3VyY2VzIGxpa2UgU0RJIGJyb2FkY2FzdCBlcXVpcG1lbnQg
+bGlrZSBjYW1lcmFzIGFuZA0KPiA+Pj4gbWl4ZXJzLiBUaGlzIGJsb2NrIG91dHB1dHMgZWl0aGVy
+IG5hdGl2ZSBTREksIG5hdGl2ZSB2aWRlbyBvcg0KPiA+Pj4gQVhJNC1TdHJlYW0gY29tcGxpYW50
+IGRhdGEgc3RyZWFtIGZvciBmdXJ0aGVyIHByb2Nlc3NpbmcuIFBsZWFzZSByZWZlcg0KPiA+Pj4g
+dG8gUEcyOTAgZm9yIGRldGFpbHMuDQo+ID4+Pg0KPiA+Pj4gVGhlIGRyaXZlciBpcyB1c2VkIHRv
+IGNvbmZpZ3VyZSB0aGUgSVAgdG8gYWRkIGZyYW1lciwgc2VhcmNoIGZvcg0KPiA+Pj4gc3BlY2lm
+aWMgbW9kZXMsIGdldCB0aGUgZGV0ZWN0ZWQgbW9kZSwgc3RyZWFtIHBhcmFtZXRlcnMsIGVycm9y
+cywgZXRjLg0KPiA+Pj4gSXQgYWxzbyBnZW5lcmF0ZXMgZXZlbnRzIGZvciB2aWRlbyBsb2NrL3Vu
+bG9jaywgYnJpZGdlIG92ZXIvdW5kZXIgZmxvdy4NCj4gPj4+DQo+ID4+PiBUaGUgZHJpdmVyIHN1
+cHBvcnRzIG9ubHkgMTAgYnBjIFlVViA0MjIgbWVkaWEgYnVzIGZvcm1hdC4gSXQgYWxzbw0KPiA+
+Pj4gZGVjb2RlcyB0aGUgc3RyZWFtIHBhcmFtZXRlcnMgYmFzZWQgb24gdGhlIFNUMzUyIHBhY2tl
+dCBlbWJlZGRlZCBpbg0KPiB0aGUNCj4gPj4+IHN0cmVhbS4gSW4gY2FzZSB0aGUgU1QzNTIgcGFj
+a2V0IGlzbid0IHByZXNlbnQgaW4gdGhlIHN0cmVhbSwgdGhlIGNvcmUncw0KPiA+Pj4gZGV0ZWN0
+ZWQgcHJvcGVydGllcyBhcmUgdXNlZCB0byBzZXQgc3RyZWFtIHByb3BlcnRpZXMuDQo+ID4+Pg0K
+PiA+Pj4gVGhlIGRyaXZlciBjdXJyZW50bHkgc3VwcG9ydHMgb25seSB0aGUgQVhJNC1TdHJlYW0g
+Y29uZmlndXJhdGlvbi4NCj4gPj4+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBWaXNoYWwgU2FnYXIg
+PHZpc2hhbC5zYWdhckB4aWxpbnguY29tPg0KPiA+Pj4gLS0tDQo+ID4+PiAgZHJpdmVycy9tZWRp
+YS9wbGF0Zm9ybS94aWxpbngvS2NvbmZpZyAgICAgICAgICB8ICAgMTEgKw0KPiA+Pj4gIGRyaXZl
+cnMvbWVkaWEvcGxhdGZvcm0veGlsaW54L01ha2VmaWxlICAgICAgICAgfCAgICAxICsNCj4gPj4+
+ICBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3hpbGlueC94aWxpbngtc2Rpcnhzcy5jIHwgMTg0Ng0K
+PiA+PiArKysrKysrKysrKysrKysrKysrKysrKysNCj4gPj4+ICBpbmNsdWRlL3VhcGkvbGludXgv
+eGlsaW54LXNkaXJ4c3MuaCAgICAgICAgICAgIHwgICA2MyArDQo+ID4+PiAgaW5jbHVkZS91YXBp
+L2xpbnV4L3hpbGlueC12NGwyLWNvbnRyb2xzLmggICAgICB8ICAgMzAgKw0KPiA+Pj4gIGluY2x1
+ZGUvdWFwaS9saW51eC94aWxpbngtdjRsMi1ldmVudHMuaCAgICAgICAgfCAgICA5ICsNCj4gDQo+
+IDxzbmlwPg0KPiANCj4gPj4gSSBhbSBjb25jZXJuZWQgYWJvdXQgdGhpcyBkcml2ZXI6IEkgc2Vl
+IHRoYXQgbm9uZSBvZiB0aGUgKl9kdl90aW1pbmdzDQo+IGNhbGxiYWNrcw0KPiA+PiBhcmUgaW1w
+bGVtZW50ZWQuIEkgd291bGQgZXhwZWN0IHRvIHNlZSB0aGF0IGZvciBhIHZpZGVvIHJlY2VpdmVy
+LiBUaGVyZSBpcw0KPiBhbHNvDQo+ID4+IG5vIGdfaW5wdXRfc3RhdHVzIGltcGxlbWVudGVkLg0K
+PiA+Pg0KPiA+PiBUYWtlIGEgbG9vayBhdCBhbm90aGVyIFNESSBkcml2ZXI6IGRyaXZlcnMvbWVk
+aWEvc3BpL2dzMTY2Mi5jDQo+ID4+DQo+ID4NCj4gPiBJIGhhZCBhIGxvb2sgYXQgdGhlIGdzMTY2
+MiBkcml2ZXIgZm9yIHRoZSBkdl90aW1pbmdzIGNhbGxiYWNrcy4gVGhlIGdzMTY2Mg0KPiBkcml2
+ZXINCj4gPiByZXF1aXJlcyB0aGUgdGltaW5ncyBiZWNhdXNlIGl0IGlzIGEgU0RJIFRyYW5zbWl0
+dGVyLg0KPiA+DQo+ID4gSGVyZSB0aGUgdGltaW5ncyBhcmUgbm90IHJlcXVpcmVkIGFzIHRoZSBJ
+UCBibG9jayBnZW5lcmF0ZXMgYSBBWEk0IFN0cmVhbS4NCj4gPiBJIHRoaW5rIGl0IG1heSBiZSBy
+ZXF1aXJlZCBvbmx5IGluIGNhc2Ugb2YgbmF0aXZlIC8gcGFyYWxsZWwgdmlkZW8gYmVpbmcNCj4g
+b3V0cHV0dGVkDQo+ID4gYXMgdGhlIG91dHB1dCBzdHJlYW0gbmVlZHMgdGltaW5nIGluZm9ybWF0
+aW9uIHRvIGJlIGRlY29kZWQuDQo+ID4NCj4gPiBQbGVhc2UgZmVlbCBmcmVlIHRvIGNvcnJlY3Qg
+bXkgdW5kZXJzdGFuZGluZyBpZiB3cm9uZy4NCj4gPg0KPiA+IEluIHRoZSBjdXJyZW50IGRyaXZl
+ciwgdGhlIGlucHV0IHN0cmVhbSBwcm9wZXJ0aWVzIGxpa2Ugd2lkdGgsIGhlaWdodCwgZnJhbWUN
+Cj4gcmF0ZSwNCj4gPiBwcm9ncmVzc2l2ZS9pbnRlcmxhY2VkICBhcmUgZGV0ZXJtaW5lZCBmcm9t
+IHRoZSBTVDM1MiBwYWNrZXQgcGF5bG9hZCBvcg0KPiBmcm9tIHRoZQ0KPiA+IHByb3BlcnRpZXMg
+ZGV0ZWN0ZWQgYnkgdGhlIGNvcmUuDQo+ID4NCj4gPiBTZWUgdGhlIHhzZGlyeF9nZXRfc3RyZWFt
+X3Byb3BlcnRpZXMoKSBmb3IgZGV0YWlscy4NCj4gDQo+IFlvdSdyZSB3cm9uZy4gSW4geHNkaXJ4
+X2dldF9zdHJlYW1fcHJvcGVydGllcygpIHlvdSBzZXQgdGhlIGZvcm1hdA0KPiBpbmZvcm1hdGlv
+bi4NCj4gQnV0IHlvdSBjYW4ndCBqdXN0IGNoYW5nZSB0aGF0OiBpZiB0aGUgdmlkZW8gcmVzb2x1
+dGlvbiBjaGFuZ2VzLCB0aGVuIHRoYXQgbWVhbnMNCj4gdGhhdCB1c2Vyc3BhY2UgbmVlZHMgdG8g
+YmUgaW5mb3JtZWQgdGhhdCBpdCBoYXMgY2hhbmdlZCBhdCB0aGUgc291cmNlLCBpdCBoYXMgdG8N
+Cj4gZmluZCBhbmQgc2V0IHRoZSBuZXcgdGltaW5ncywgdXBkYXRlIHRoZSBmb3JtYXRzLCBwb3Nz
+aWJseSByZWFsbG9jYXRlIG1lbW9yeQ0KPiBmb3INCj4gdGhlIGJ1ZmZlcnMsIHVwZGF0ZSBvdGhl
+ciBwYXJ0cyBvZiB0aGUgdmlkZW8gcGlwZWxpbmUgd2l0aCB0aGUgbmV3IHJlc29sdXRpb24NCj4g
+ZXRjLg0KPiANCj4gVGhlIG9uZSB0aGluZyB5b3UgY2Fubm90IGRvIGlzIGp1c3QgcGFzcyBvbiB0
+aGUgbmV3IHJlc29sdXRpb24gYW5kIGhvcGUgdGhhdA0KPiB0aGUNCj4gdmlkZW8gcGlwZWxpbmUg
+Y2FuIGhhbmRsZSBpdCBhbGwuDQo+IA0KPiBUaGUgcmlnaHQgc2VxdWVuY2Ugb2YgZXZlbnRzIGlz
+Og0KPiANCj4gMSkgV2hlbiBhIGNoYW5nZSBpcyBkZXRlY3RlZCBhdCB0aGUgc291cmNlIHRoZSBk
+cml2ZXIgc2VuZHMgdGhlDQo+IFNPVVJDRV9DSEFOR0UNCj4gZXZlbnQgYW5kIGVpdGhlciBzdG9w
+cyB0cmFuc21pdHRpbmcgdG8gdGhlIHZpZGVvIHBpcGVsaW5lIG9yIGtlZXBzIHNlbmRpbmcgdGhl
+DQo+IG9sZCByZXNvbHV0aW9uIChzb21lIGRldmljZXMgaGF2ZSBhIGZyZWV3aGVlbGluZyBtb2Rl
+IHdoZXJlIHRoZXkgY2FuIGRvDQo+IHRoYXQpLg0KPiANCj4gMikgVXNlcnNwYWNlIHNlZXMgdGhl
+IGV2ZW50LCBjYWxscyBRVUVSWV9EVl9USU1JTkdTIHRvIGZpbmQgYSBuZXcgdGltaW5ncyAoaWYN
+Cj4gYW55KSwgdXN1YWxseSBzdG9wcyBzdHJlYW1pbmcsIGFuZCBjYWxscyBTX0RWX1RJTUlOR1Mg
+dG8gc2V0IHRoZSBkZXRlY3RlZA0KPiB0aW1pbmdzOg0KPiBhdCB0aGF0IHBvaW50IHRoZSBkcml2
+ZXIgY2FuIGNvbmZpZ3VyZSB0aGUgb3V0cHV0IHRvd2FyZHMgdGhlIHZpZGVvIHBpcGVsaW5lDQo+
+IHdpdGgNCj4gdGhlIG5ldyB0aW1pbmdzLiBVc2Vyc3BhY2UgcmVhbGxvY2F0ZXMgYnVmZmVycyBh
+bmQgcmVzdW1lcyBzdHJlYW1pbmcgd2l0aCB0aGUNCj4gbmV3DQo+IHJlc29sdXRpb24uDQo+IA0K
+DQpUaGFua3MgZm9yIHRoZSBleHBsYW5hdGlvbiENCg0KSSB3aWxsIHJlbW92ZSB0aGUgZXh0cmFu
+ZW91cyB2aWRlbyB1bmxvY2sgZXZlbnQgYW5kIHN0b3AgdGhlIHN0cmVhbWluZyB3aGVuIHZpZGVv
+IGxvY2sgLyB1bmxvY2sgaW50ZXJydXB0IG9jY3Vycy4NCkkgd2lsbCBhbHNvIGltcGxlbWVudCB0
+aGUgZ19pbnB1dF9zdGF0dXMoKSB0byByZXR1cm4gVjRMMl9JTl9TVF9OT19TWU5DIHwgVjRMMl9J
+Tl9TVF9OT19TSUdOQUwgaW4gY2FzZSB2aWRlbyBpcyB1bmxvY2tlZC4NCg0KTXkgYXNzdW1wdGlv
+biBpcyB0aGF0IG9uIFNPVVJDRV9DSEFOR0UgZXZlbnQsIGFwcGxpY2F0aW9uIGNhbiBzdG9wIHRo
+ZSBwaXBlbGluZSBhbmQgdGhlbiANCmNhbGwgdGhlIEdfRk9STUFUIGFuZCBHX0ZSQU1FX0lOVEVS
+VkFMIHRvIGdldCBuZXcgZnJhbWUgc2l6ZSwgdHlwZSAocHJvZ3Jlc3NpdmUgLyBpbnRlcmxhY2Vk
+KSBhbmQgZnJhbWUgcmF0ZS4NCklzIHRoaXMgYXNzdW1wdGlvbiBjb3JyZWN0PyANCg0KSXMgaXQg
+bWFuZGF0b3J5IHRvIGltcGxlbWVudCBRVUVSWV9EVl9USU1JTkdTIHdpdGggU09VUkNFX0NIQU5H
+RSBldmVudD8NCg0KSSBhbHNvIGRvbid0IHNlZSBhbnkgVjRMMiBmcmFtZXdvcmsgc3VwcG9ydGVk
+IGV2ZW50cyBmb3Igb3ZlcmZsb3cgYW5kIHVuZGVyZmxvdy4NCklzIGl0IG9rIHRvIGtlZXAgdGhl
+c2Ugb3Igc2hvdWxkIHRoZXkgYmUgcmVtb3ZlZCB0b28/IA0KDQpSZWdhcmRzDQoNClZpc2hhbCBT
+YWdhcg0KDQo+IE5vdGUgdGhhdCBHX0RWX1RJTUlOR1MgcmV0dXJucyB0aGUgbGFzdCBjb25maWd1
+cmVkIHRpbWluZ3MsIG5vdCB0aGUgZGV0ZWN0ZWQNCj4gdGltaW5nczogb25seSBRVUVSWV9EVl9U
+SU1JTkdTIGRvZXMgdGhhdC4NCj4gDQo+IEluIG90aGVyIHdvcmRzOiB1c2Vyc3BhY2UgaGFzIHRv
+IHJldGFpbiBjb250cm9sIG9mIHRoZSBmdWxsIHBpcGVsaW5lLg0KPiANCj4gUmVnYXJkcywNCj4g
+DQo+IAlIYW5zDQo+IA0KPiA+DQo+ID4+IFNvbWUgb2YgdGhlIGNvbnRyb2xzIHlvdSBhZGQgaW4g
+dGhpcyBkcml2ZXIgY2FuIGxpa2VseSBiZSBkcm9wcGVkLiBFc3BlY2lhbGx5DQo+ID4+IHRob3Nl
+IGNvbnRyb2xzIHRoYXQgYXJlIG5vdCBzcGVjaWZpYyB0byB0aGUgWGlsaW54IGltcGxlbWVudGF0
+aW9uIGJ1dCBhcmUNCj4gPj4gZ2VuZXJpYyBmb3IgYW55IFNESSByZWNlaXZlciwgc2hvdWxkIGJl
+IGxvb2tlZCBhdCBjbG9zZWx5OiB0aG9zZSBhcmUNCj4gPj4gY2FuZGlkYXRlcyBmb3IgYmVjb21p
+bmcgc3RhbmRhcmQgY29udHJvbHMuDQo+ID4NCj4gPiBJIGRvbid0IGtub3cgaG93IG90aGVyIFNE
+SSBSZWNlaXZlciBkZXZpY2VzIGZ1bmN0aW9uLg0KPiA+IFNvIEkgYW0gYXNzdW1pbmcgYWxsIHRo
+ZXNlIGNvbnRyb2xzIGFyZSBYaWxpbnggc3BlY2lmaWMgaW1wbGVtZW50YXRpb25zLg0KPiA+DQo+
+ID4+DQo+ID4+IEJ1dCB0aGUgZG9jdW1lbnRhdGlvbiBhYm92ZSBpcyBzaW1wbHkgaW5zdWZmaWNp
+ZW50IGZvciBtZSB0byB0ZWxsIHdoYXQgaXMNCj4gPj4gU0RJIHNwZWNpZmljIGFuZCB3aGF0IGlz
+IGltcGxlbWVudGF0aW9uIHNwZWNpZmljLg0KPiA+Pg0KPiA+DQo+ID4gSSB3aWxsIGFkZCBtb3Jl
+IGRvY3VtZW50YXRpb24gZm9yIHRoZXNlIGNvbnRyb2xzLg0KPiA+DQo+ID4+IEFsc28sIEknbSBu
+byBTREkgZXhwZXJ0LCBjZXJ0YWlubHkgbm90IGZvciB0aGUgVUhELVNESS4NCj4gPj4NCj4gPj4g
+UmVnYXJkcywNCj4gPj4NCj4gPj4gICAgICAgICBIYW5zDQo+ID4NCj4gPiBSZWdhcmRzDQo+ID4g
+VmlzaGFsIFNhZ2FyDQo+ID4NCg0K
