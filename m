@@ -1,46 +1,51 @@
-Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
+Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 27/27] PCI: tegra: Change link retry log level to debug
-Date: Mon, 17 Jun 2019 23:09:52 +0530
-Message-ID: <20190617173952.29363-28-mmaddireddy@nvidia.com>
-In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
-References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+Subject: [PATCH V6 01/27] soc/tegra: pmc: Export tegra_powergate_power_on()
+Date: Tue, 18 Jun 2019 23:31:40 +0530
+Message-ID: <20190618180206.4908-2-mmaddireddy@nvidia.com>
+In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Driver checks for link up three times before giving up, each retry attempt
-is printed as an error. Letting users know that PCIe link is down and in the
-process of being brought up again is for debug, not an error condition.
+tegra_powergate_sequence_power_up() powers up partition and also enables
+clock & reset. However, if a controller like PCIe have multiple clocks
+& resets and they need to be enabled in a sequence, driver must use
+standalone function tegra_powergate_power_on() to power up partition.
+
+Export tegra_powergate_power_on() to allow Tegra controller drivers to
+unpower gate partition independent to clock & reset.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
+V6: No change
+
 V5: No change
 
 V4: No change
 
-V3: Changed dev_err to dev_dbg
+V3: No change
 
-V2: Updated commit log
+V2: No change
 
- drivers/pci/controller/pci-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/tegra/pmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 2e55d64a0428..629397bb5daa 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2338,7 +2338,7 @@ static bool tegra_pcie_port_check_link(struct tegra_pcie_port *port)
- 		} while (--timeout);
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 0c5f79528e5f..cb3de81348bd 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -701,6 +701,7 @@ int tegra_powergate_power_on(unsigned int id)
  
- 		if (!timeout) {
--			dev_err(dev, "link %u down, retrying\n", port->index);
-+			dev_dbg(dev, "link %u down, retrying\n", port->index);
- 			goto retry;
- 		}
+ 	return tegra_powergate_set(pmc, id, true);
+ }
++EXPORT_SYMBOL(tegra_powergate_power_on);
  
+ /**
+  * tegra_powergate_power_off() - power off partition
 -- 
 2.17.1
