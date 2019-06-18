@@ -1,47 +1,73 @@
-Return-Path: <SRS0=7p7P=U3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from anchovy1.45ru.net.au ([203.30.46.145]:34258 "EHLO
-        anchovy1.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbfF1DZz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Jun 2019 23:25:55 -0400
-From: Phil Reid <preid@electromag.com.au>
-Subject: [PATCH v2 1/2] dt-bindings: clock: cdce925: Add regulator documentation
-Date: Fri, 28 Jun 2019 11:19:09 +0800
-Message-Id: <1561691950-42154-2-git-send-email-preid@electromag.com.au>
-In-Reply-To: <1561691950-42154-1-git-send-email-preid@electromag.com.au>
-References: <1561691950-42154-1-git-send-email-preid@electromag.com.au>
-Sender: devicetree-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V6 10/27] PCI: tegra: Disable AFI dynamic clock gating
+Date: Tue, 18 Jun 2019 23:31:49 +0530
+Message-ID: <20190618180206.4908-11-mmaddireddy@nvidia.com>
+In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The cdce925 has two separate supply pins. Document the bindings
-for them.
+Outstanding write counter in AFI is used to generate idle signal to
+dynamically gate the AFI clock. When there are 32 outstanding writes
+from AFI to memory, the outstanding write counter overflows and
+indicates that there are "0" outstanding write transactions.
 
-Signed-off-by: Phil Reid <preid@electromag.com.au>
+When memory controller is under heavy load, write completions to AFI
+gets delayed and AFI write counter overflows. This causes AFI clock gating
+even when there are outstanding transactions towards memory controller
+resulting in system hang.
+
+Disable dynamic clock gating of AFI clock to avoid system hang.
+
+CLKEN_OVERRIDE bit is not defined in Tegra20 and Tegra30, however
+programming this bit doesn't cause any side effects. Program this
+bit for all Tegra SoCs to avoid conditional check.
+
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- Documentation/devicetree/bindings/clock/ti,cdce925.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+V6: No change
 
-diff --git a/Documentation/devicetree/bindings/clock/ti,cdce925.txt b/Documentation/devicetree/bindings/clock/ti,cdce925.txt
-index 0d01f2d..26544c8 100644
---- a/Documentation/devicetree/bindings/clock/ti,cdce925.txt
-+++ b/Documentation/devicetree/bindings/clock/ti,cdce925.txt
-@@ -24,6 +24,8 @@ Required properties:
- Optional properties:
-  - xtal-load-pf: Crystal load-capacitor value to fine-tune performance on a
-                  board, or to compensate for external influences.
-+- vdd-supply: A regulator node for Vdd
-+- vddout-supply: A regulator node for Vddout
+V5: No change
+
+V4: No change
+
+V3: No change
+
+V2: No change
+
+ drivers/pci/controller/pci-tegra.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 51691252ca10..ca02866fbbb4 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -95,7 +95,8 @@
+ #define AFI_MSI_EN_VEC7		0xa8
  
- For all PLL1, PLL2, ... an optional child node can be used to specify spread
- spectrum clocking parameters for a board.
-@@ -41,6 +43,8 @@ Example:
- 		clocks = <&xtal_27Mhz>;
- 		#clock-cells = <1>;
- 		xtal-load-pf = <5>;
-+		vdd-supply = <&1v8-reg>;
-+		vddout-supply = <&3v3-reg>;
- 		/* PLL options to get SSC 1% centered */
- 		PLL2 {
- 			spread-spectrum = <4>;
+ #define AFI_CONFIGURATION		0xac
+-#define  AFI_CONFIGURATION_EN_FPCI	(1 << 0)
++#define  AFI_CONFIGURATION_EN_FPCI		(1 << 0)
++#define  AFI_CONFIGURATION_CLKEN_OVERRIDE	(1 << 31)
+ 
+ #define AFI_FPCI_ERROR_MASKS	0xb0
+ 
+@@ -1065,9 +1066,10 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+ 		afi_writel(pcie, value, AFI_FUSE);
+ 	}
+ 
+-	/* finally enable PCIe */
++	/* Disable AFI dynamic clock gating and enable PCIe */
+ 	value = afi_readl(pcie, AFI_CONFIGURATION);
+ 	value |= AFI_CONFIGURATION_EN_FPCI;
++	value |= AFI_CONFIGURATION_CLKEN_OVERRIDE;
+ 	afi_writel(pcie, value, AFI_CONFIGURATION);
+ 
+ 	value = AFI_INTR_EN_INI_SLVERR | AFI_INTR_EN_INI_DECERR |
 -- 
-1.8.3.1
+2.17.1
