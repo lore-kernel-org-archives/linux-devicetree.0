@@ -1,7 +1,7 @@
 From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 05/10] crypto: sha256_generic: Export the Transform function
-Date: Tue, 18 Jun 2019 17:38:38 +0530
-Message-ID: <20190618120843.18777-6-j-keerthy@ti.com>
+Subject: [PATCH 09/10] sa2ul: Add 3DES ECB & CBC Mode support
+Date: Tue, 18 Jun 2019 17:38:42 +0530
+Message-ID: <20190618120843.18777-10-j-keerthy@ti.com>
 References: <20190618120843.18777-1-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,48 +12,154 @@ To: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-The transform function can be used as is by other crypto
-drivers that need to transform the 256 bit key using cpu.
-Hence export it.
+Triple DES (3DES), officially the Triple Data Encryption Algorithm
+(TDEA or Triple DEA), is a symmetric-key block cipher, which applies
+the DES cipher algorithm three times to each data block
+
+Add 3DES ECB(Electronic code book) & CBC(Cipher Block Chaining)
+Mode support.
 
 Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- crypto/sha256_generic.c | 3 ++-
- include/crypto/sha.h    | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/crypto/sa2ul.c | 112 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
-diff --git a/crypto/sha256_generic.c b/crypto/sha256_generic.c
-index b7502a96a0d4..583a3c3b93e0 100644
---- a/crypto/sha256_generic.c
-+++ b/crypto/sha256_generic.c
-@@ -63,7 +63,7 @@ static inline void BLEND_OP(int I, u32 *W)
- 	W[I] = s1(W[I-2]) + W[I-7] + s0(W[I-15]) + W[I-16];
+diff --git a/drivers/crypto/sa2ul.c b/drivers/crypto/sa2ul.c
+index 74211cd21c62..8d535fc9867f 100644
+--- a/drivers/crypto/sa2ul.c
++++ b/drivers/crypto/sa2ul.c
+@@ -210,6 +210,35 @@ static u8 mci_ecb_dec_array[3][27] = {
+ 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
+ };
+ 
++/*
++ * Mode Control Instructions for DES algorithm
++ * For CBC (Cipher Block Chaining) mode and ECB mode
++ * encryption and for decryption respectively
++ */
++static u8 mci_cbc_3des_enc_array[MODE_CONTROL_BYTES] = {
++	0x20, 0x00, 0x00, 0x18, 0x88, 0x52, 0xaa, 0x4b, 0x7e, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00,
++};
++
++static u8 mci_cbc_3des_dec_array[MODE_CONTROL_BYTES] = {
++	0x30, 0x00, 0x00, 0x85, 0x0a, 0xca, 0x98, 0xf4, 0x40, 0xc0, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00,
++};
++
++static u8 mci_ecb_3des_enc_array[MODE_CONTROL_BYTES] = {
++	0x20, 0x00, 0x00, 0x85, 0x0a, 0x04, 0xb7, 0x90, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00,
++};
++
++static u8 mci_ecb_3des_dec_array[MODE_CONTROL_BYTES] = {
++	0x30, 0x00, 0x00, 0x85, 0x0a, 0x04, 0xb7, 0x90, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00,
++};
++
+ /*
+  * Perform 16 byte or 128 bit swizzling
+  * The SA2UL Expects the security context to
+@@ -877,6 +906,39 @@ static int sa_aes_ecb_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
+ 	return sa_aes_setkey(tfm, key, keylen, ad);
  }
  
--static void sha256_transform(u32 *state, const u8 *input)
-+void sha256_transform(u32 *state, const u8 *input)
++static int sa_3des_cbc_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
++			      unsigned int keylen)
++{
++	struct algo_data *ad = kzalloc(sizeof(*ad), GFP_KERNEL);
++
++	ad->enc_eng.eng_id = SA_ENG_ID_EM1;
++	ad->enc_eng.sc_size = SA_CTX_ENC_TYPE1_SZ;
++	ad->auth_eng.eng_id = SA_ENG_ID_NONE;
++	ad->auth_eng.sc_size = 0;
++	ad->mci_enc = mci_cbc_3des_enc_array;
++	ad->mci_dec = mci_cbc_3des_dec_array;
++	ad->ealg_id = SA_EALG_ID_3DES_CBC;
++	ad->aalg_id = SA_AALG_ID_NONE;
++
++	return sa_aes_setkey(tfm, key, keylen, ad);
++}
++
++static int sa_3des_ecb_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
++			      unsigned int keylen)
++{
++	struct algo_data *ad = kzalloc(sizeof(*ad), GFP_KERNEL);
++
++	ad->enc_eng.eng_id = SA_ENG_ID_EM1;
++	ad->enc_eng.sc_size = SA_CTX_ENC_TYPE1_SZ;
++	ad->auth_eng.eng_id = SA_ENG_ID_NONE;
++	ad->auth_eng.sc_size = 0;
++	ad->mci_enc = mci_ecb_3des_enc_array;
++	ad->mci_dec = mci_ecb_3des_dec_array;
++	ad->aalg_id = SA_AALG_ID_NONE;
++
++	return sa_aes_setkey(tfm, key, keylen, ad);
++}
++
+ static void sa_aes_dma_in_callback(void *data)
  {
- 	u32 a, b, c, d, e, f, g, h, t1, t2;
- 	u32 W[64];
-@@ -225,6 +225,7 @@ static void sha256_transform(u32 *state, const u8 *input)
- 	a = b = c = d = e = f = g = h = t1 = t2 = 0;
- 	memzero_explicit(W, 64 * sizeof(u32));
- }
-+EXPORT_SYMBOL(sha256_transform);
- 
- static void sha256_generic_block_fn(struct sha256_state *sst, u8 const *src,
- 				    int blocks)
-diff --git a/include/crypto/sha.h b/include/crypto/sha.h
-index 8a46202b1857..6e04f412b0c2 100644
---- a/include/crypto/sha.h
-+++ b/include/crypto/sha.h
-@@ -95,6 +95,7 @@ struct sha512_state {
- 
- struct shash_desc;
- 
-+extern void sha256_transform(u32 *state, const u8 *input);
- extern int crypto_sha1_update(struct shash_desc *desc, const u8 *data,
- 			      unsigned int len);
- 
+ 	struct sa_rx_data *rxd = (struct sa_rx_data *)data;
+@@ -1787,6 +1849,56 @@ static struct sa_alg_tmpl sa_algs[] = {
+ 			}
+ 		}
+ 	},
++	{	.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
++		.alg.crypto = {
++			.cra_name = "cbc(des3_ede)",
++			.cra_driver_name = "cbc-des3-sa2ul",
++			.cra_priority = 30000,
++			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
++					CRYPTO_ALG_KERN_DRIVER_ONLY |
++				CRYPTO_ALG_ASYNC | CRYPTO_ALG_NEED_FALLBACK,
++			.cra_blocksize = DES_BLOCK_SIZE,
++			.cra_ctxsize = sizeof(struct sa_tfm_ctx),
++			.cra_alignmask = 0,
++			.cra_type = &crypto_ablkcipher_type,
++			.cra_module = THIS_MODULE,
++			.cra_init = sa_aes_cra_init,
++			.cra_exit = sa_aes_cra_exit,
++			.cra_u.ablkcipher = {
++				.min_keysize    = 3 * DES_KEY_SIZE,
++				.max_keysize    = 3 * DES_KEY_SIZE,
++				.ivsize		= DES_BLOCK_SIZE,
++				.setkey		= sa_3des_cbc_setkey,
++				.encrypt	= sa_aes_cbc_encrypt,
++				.decrypt	= sa_aes_cbc_decrypt,
++			}
++		}
++	},
++	{	.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
++		.alg.crypto = {
++			.cra_name = "ecb(des3_ede)",
++			.cra_driver_name = "ecb-des3-sa2ul",
++			.cra_priority = 30000,
++			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
++					CRYPTO_ALG_KERN_DRIVER_ONLY |
++				CRYPTO_ALG_ASYNC | CRYPTO_ALG_NEED_FALLBACK,
++			.cra_blocksize = DES_BLOCK_SIZE,
++			.cra_ctxsize = sizeof(struct sa_tfm_ctx),
++			.cra_alignmask = 0,
++			.cra_type = &crypto_ablkcipher_type,
++			.cra_module = THIS_MODULE,
++			.cra_init = sa_aes_cra_init,
++			.cra_exit = sa_aes_cra_exit,
++			.cra_u.ablkcipher = {
++				.min_keysize    = 3 * DES_KEY_SIZE,
++				.max_keysize    = 3 * DES_KEY_SIZE,
++				.ivsize		= DES_BLOCK_SIZE,
++				.setkey		= sa_3des_ecb_setkey,
++				.encrypt	= sa_aes_cbc_encrypt,
++				.decrypt	= sa_aes_cbc_decrypt,
++			}
++		}
++	},
+ 	/* AEAD algorithms */
+ 	{.type	= CRYPTO_ALG_TYPE_AEAD,
+ 		.alg.aead = {
 -- 
 2.17.1
