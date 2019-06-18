@@ -1,62 +1,64 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V3 01/17] irqchip: tegra: do not disable COP IRQ during
- suspend
-Date: Tue, 18 Jun 2019 12:58:57 +0200
-Message-ID: <20190618105857.GD28892@ulmo>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-2-git-send-email-skomatineni@nvidia.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/4] regulator: Add labibb driver
+Date: Tue, 18 Jun 2019 11:59:35 +0100
+Message-ID: <20190618105935.GM5316@sirena.org.uk>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+ <1560337252-27193-4-git-send-email-nishakumari@codeaurora.org>
+ <20190613172518.GN5316@sirena.org.uk>
+ <577d6e90-0bed-ff2e-32dc-e64c3118458f@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="RhUH2Ysw6aD5utA4"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sbU44GGDGzBBUYp9"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1560843991-24123-2-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <577d6e90-0bed-ff2e-32dc-e64c3118458f@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
+To: Nisha Kumari <nishakumari@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, david.brown@linaro.org, linux-kernel@vger.kernel.org, kgunda@codeaurora.org, rnayak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
 
---RhUH2Ysw6aD5utA4
+--sbU44GGDGzBBUYp9
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 18, 2019 at 12:46:15AM -0700, Sowjanya Komatineni wrote:
-> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
-> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
->=20
-> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
-> for Tegra210.
->=20
-> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
-> interrupt controller suspend operation.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/irqchip/irq-tegra.c | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
+On Tue, Jun 18, 2019 at 11:51:18AM +0530, Nisha Kumari wrote:
+> On 6/13/2019 10:55 PM, Mark Brown wrote:
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+> > > +	labibb->lab_vreg.vreg_enabled = 1;
+> > What function does this serve?  It never seems to be read.
+> Its used in next patch for handling interrupts
 
---RhUH2Ysw6aD5utA4
+It'd be better to move this code into the patch where it's used then.
+
+> > > +		if (val & IBB_STATUS1_VREG_OK_BIT) {
+> > > +			labibb->ibb_vreg.vreg_enabled = 1;
+> > > +			return 0;
+> > > +		}
+> > > +	}
+
+> > This is doing more than the other regulator was but it's not clear why -
+> > is it just that the delays are different for the two regulators?
+
+> LAB regulator comes up in first try, so we did not added much delay in that
+> like IBB. Planning to make equal no of retries for both in next patch so
+> that code can be reused.
+
+Is there actually a need for polling at all?
+
+--sbU44GGDGzBBUYp9
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Iw/EACgkQ3SOs138+
-s6GLLRAAvKzInFHRhecpwNZPDwkUnBKfQIyiErHNkSUfLXJP6QSIaQa+BCBJuoNf
-BTxROMwnCIJebjytKZIoLlNjND82Hk/5NDNhjivrBhsXVdmL4vCnlwFNSCQNEqbi
-Hp2iVP/LtvGNaeG2Wrp3UD8bA7w4Qb94jXItmE2iwLfCaJV+7myCiySGJea3CTqQ
-p7PCgu0joBLlfFG9nYE/JA+VAZPSi+IV7mCvyWquvVV7nfca1Cjfje1FcJDn08YI
-eTMxfqj+hSUrmYadTXgqERUoZOPHjaQ/TGTyTsyWKsFvR/zTB9PNZpzo7o7wOnik
-0ph9gZo4LKY88tSzdK9AM+r3F5sMQCXM8WAETePUrrADLLRUEQvnTKeG3tJvaIRB
-Zk1WbiJIXH7K54epAeuLnu4zHFj5XFaDs4orPkXhF36d1BouB01KZ9KytMnnrRUv
-tIVMGNDFuYV77jKUdAVUl0qBoZmFaYDW+WfGfassadJEpgJDNR4SgkhJZrq2O0VF
-3J2mc8k0frM0EPbtldLOpAMGJbAbchHFKd51mRxVNBLYFzA9N8N+d6oC15ZIpBKN
-iiM35hN9xskQpJdZJYsNBISdEW8+9AcODhhY8FrD6B8IvV4wPaTvmdAj+NhI17As
-M1P9Sm4OTVElx0ApVdGLDdDir6s/I5CiErAqXEQejQKlmMbAxnI=
-=NwCH
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0IxBYACgkQJNaLcl1U
+h9DGQQf9Fn7TqN/dXa0DWnKZiNKqKqQOQ0wKS8WelZLNW4v6/5KFIyrz+82a3s8p
+r7RFFxI24fxs2p8pztsKCXeh1izQCVTOW/FbP5rML9FGkMVoNeGw7YseKvmiIPpn
+vF9XsDTNRe9RIQ4UOMqwMNvauR5eHR9aPtLDtZ0tspewoj2fNtszc40LqZJsA+Kq
+pzf6Mk4JZr6ZcteH3fnBoGDsW9mNEYmc3Iq1ypR4nuxcLwOUpilFssOzYAziTt2D
+we0Cz/kP/ANEk7/f6YJLfDMKiKJMhddbI37MvIktRpMuLw7chcQJcS9buuvIHAiE
+wQNNKWGz/eyWI+Ke81ZfjeXzLO8Raw==
+=im0z
 -----END PGP SIGNATURE-----
 
---RhUH2Ysw6aD5utA4--
+--sbU44GGDGzBBUYp9--
