@@ -1,13 +1,13 @@
-From: Marko Kohtala <marko.kohtala@okoko.fi>
-Subject: [PATCH 3/6] video: ssd1307fb: Start page range at page_offset
-Date: Tue, 18 Jun 2019 10:41:08 +0300
-Message-ID: <20190618074111.9309-4-marko.kohtala@okoko.fi>
-References: <20190618074111.9309-1-marko.kohtala@okoko.fi>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 1/3] dt-bindings: display: renesas: Add r8a774a1 support
+Date: Tue, 18 Jun 2019 16:18:37 +0100
+Message-ID: <1560871119-16570-2-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1560871119-16570-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190618074111.9309-1-marko.kohtala@okoko.fi>
+In-Reply-To: <1560871119-16570-1-git-send-email-fabrizio.castro@bp.renesas.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -17,26 +17,33 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Marko Kohtala <marko.kohtala@okoko.fi>, Rob Herring <robh+dt@kernel.org>
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHBhZ2Vfb2Zmc2V0IHdhcyBvbmx5IGFwcGxpZWQgdG8gdGhlIGVuZCBvZiB0aGUgcGFnZSBy
-YW5nZS4gVGhpcyBjYXVzZWQKdGhlIGRpc3BsYXkgdXBkYXRlcyB0byBjYXVzZSBhIHNjcm9sbGlu
-ZyBlZmZlY3Qgb24gdGhlIGRpc3BsYXkgYmVjYXVzZSB0aGUKYW1vdW50IG9mIGRhdGEgd3JpdHRl
-biB0byB0aGUgZGlzcGxheSBkaWQgbm90IG1hdGNoIHRoZSByYW5nZSBkaXNwbGF5CmV4cGVjdGVk
-LgoKRml4ZXM6IDMwMWJjMDY3NWI2NyAoInZpZGVvOiBzc2QxMzA3ZmI6IE1ha2UgdXNlIG9mIGhv
-cml6b250YWwgYWRkcmVzc2luZyBtb2RlIikKU2lnbmVkLW9mZi1ieTogTWFya28gS29odGFsYSA8
-bWFya28ua29odGFsYUBva29rby5maT4KLS0tCiBkcml2ZXJzL3ZpZGVvL2ZiZGV2L3NzZDEzMDdm
-Yi5jIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0p
-CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9mYmRldi9zc2QxMzA3ZmIuYyBiL2RyaXZlcnMv
-dmlkZW8vZmJkZXYvc3NkMTMwN2ZiLmMKaW5kZXggOWFiMDBlMGRhZGM3Li44NmYyYjc5ZjNlZDUg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdmlkZW8vZmJkZXYvc3NkMTMwN2ZiLmMKKysrIGIvZHJpdmVy
-cy92aWRlby9mYmRldi9zc2QxMzA3ZmIuYwpAQCAtNDMzLDcgKzQzMyw3IEBAIHN0YXRpYyBpbnQg
-c3NkMTMwN2ZiX2luaXQoc3RydWN0IHNzZDEzMDdmYl9wYXIgKnBhcikKIAlpZiAocmV0IDwgMCkK
-IAkJcmV0dXJuIHJldDsKIAotCXJldCA9IHNzZDEzMDdmYl93cml0ZV9jbWQocGFyLT5jbGllbnQs
-IDB4MCk7CisJcmV0ID0gc3NkMTMwN2ZiX3dyaXRlX2NtZChwYXItPmNsaWVudCwgcGFyLT5wYWdl
-X29mZnNldCk7CiAJaWYgKHJldCA8IDApCiAJCXJldHVybiByZXQ7CiAKLS0gCjIuMTcuMQoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+RG9jdW1lbnQgUlovRzJNIChSOEE3NzRBMSkgU29DIGJpbmRpbmdzLgoKU2lnbmVkLW9mZi1ieTog
+RmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+CgotLS0KIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGR3
+LWhkbWkudHh0IHwgNCArKystCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRl
+bGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsZHctaGRtaS50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxkdy1oZG1pLnR4dAppbmRleCBh
+NDFkMjgwLi5kYjY4MDQxIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxkdy1oZG1pLnR4dAorKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxkdy1oZG1pLnR4
+dApAQCAtMTIsMTAgKzEyLDEyIEBAIGZvbGxvd2luZyBkZXZpY2Utc3BlY2lmaWMgcHJvcGVydGll
+cy4KIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAKIC0gY29tcGF0aWJsZSA6IFNoYWxsIGNvbnRhaW4g
+b25lIG9yIG1vcmUgb2YKKyAgLSAicmVuZXNhcyxyOGE3NzRhMS1oZG1pIiBmb3IgUjhBNzc0QTEg
+KFJaL0cyTSkgY29tcGF0aWJsZSBIRE1JIFRYCiAgIC0gInJlbmVzYXMscjhhNzc5NS1oZG1pIiBm
+b3IgUjhBNzc5NSAoUi1DYXIgSDMpIGNvbXBhdGlibGUgSERNSSBUWAogICAtICJyZW5lc2FzLHI4
+YTc3OTYtaGRtaSIgZm9yIFI4QTc3OTYgKFItQ2FyIE0zLVcpIGNvbXBhdGlibGUgSERNSSBUWAog
+ICAtICJyZW5lc2FzLHI4YTc3OTY1LWhkbWkiIGZvciBSOEE3Nzk2NSAoUi1DYXIgTTMtTikgY29t
+cGF0aWJsZSBIRE1JIFRYCi0gIC0gInJlbmVzYXMscmNhci1nZW4zLWhkbWkiIGZvciB0aGUgZ2Vu
+ZXJpYyBSLUNhciBHZW4zIGNvbXBhdGlibGUgSERNSSBUWAorICAtICJyZW5lc2FzLHJjYXItZ2Vu
+My1oZG1pIiBmb3IgdGhlIGdlbmVyaWMgUi1DYXIgR2VuMyBhbmQgUlovRzIgY29tcGF0aWJsZQor
+CQkJICAgICBIRE1JIFRYCiAKICAgICBXaGVuIGNvbXBhdGlibGUgd2l0aCBnZW5lcmljIHZlcnNp
+b25zLCBub2RlcyBtdXN0IGxpc3QgdGhlIFNvQy1zcGVjaWZpYwogICAgIHZlcnNpb24gY29ycmVz
+cG9uZGluZyB0byB0aGUgcGxhdGZvcm0gZmlyc3QsIGZvbGxvd2VkIGJ5IHRoZQotLSAKMi43LjQK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
