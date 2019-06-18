@@ -1,76 +1,120 @@
-From: Alex Elder <elder@linaro.org>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Tue, 18 Jun 2019 09:00:57 -0500
-Message-ID: <31c2c94c-c6d3-595b-c138-faa54d0bfc00@linaro.org>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <583907409fad854bd3c18be688ec2724ad7a60e9.camel@sipsolutions.net>
+From: Tomasz Figa <tfiga@google.com>
+Subject: Re: [PATCH v7 14/21] iommu/mediatek: Add mmu1 support
+Date: Tue, 18 Jun 2019 23:05:39 +0900
+Message-ID: <CAAFQd5B8MiMA_OCUJ5HRmC5SA2772HF-rBGK0aZcKoWscOzOog@mail.gmail.com>
+References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+ <1560169080-27134-15-git-send-email-yong.wu@mediatek.com>
+ <CAAFQd5A5GUn1Zq1xF2_2V0MReNPd5bra2F=nquvodSAZUua5AQ@mail.gmail.com>
+ <1560859743.8082.23.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <583907409fad854bd3c18be688ec2724ad7a60e9.camel@sipsolutions.net>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Johannes Berg <johannes@sipsolutions.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, Dan Williams <dcbw@redhat.com>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, syadagir@codeaurora.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1560859743.8082.23.camel@mhfsdcap03>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Yong Wu <yong.wu@mediatek.com>
+Cc: youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, srv_heupstream <srv_heupstream@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Evan Green <evgreen@chromium.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
+ Joerg Roedel <joro@8bytes.org>, " <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= <yingjoe.chen@mediatek.com>, anan.sun@mediatek.com, Robin Murphy <robin.murphy@arm.com>, Matthias Kaehlcke <mka@chromium.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
+ Joerg Roedel <joro@8bytes.org>, " <linux-arm-kernel@li>
 List-Id: devicetree@vger.kernel.org
 
-On 6/17/19 7:14 AM, Johannes Berg wrote:
-> On Tue, 2019-06-11 at 13:56 +0200, Arnd Bergmann wrote:
-> 
-> [...]
-> 
-> Looking at the flags again,
+On Tue, Jun 18, 2019 at 9:09 PM Yong Wu <yong.wu@mediatek.com> wrote:
+>
+> On Tue, 2019-06-18 at 15:19 +0900, Tomasz Figa wrote:
+> > On Mon, Jun 10, 2019 at 9:21 PM Yong Wu <yong.wu@mediatek.com> wrote:
+> > >
+> > > Normally the M4U HW connect EMI with smi. the diagram is like below:
+> > >               EMI
+> > >                |
+> > >               M4U
+> > >                |
+> > >             smi-common
+> > >                |
+> > >        -----------------
+> > >        |    |    |     |    ...
+> > >     larb0 larb1  larb2 larb3
+> > >
+> > > Actually there are 2 mmu cells in the M4U HW, like this diagram:
+> > >
+> > >               EMI
+> > >            ---------
+> > >             |     |
+> > >            mmu0  mmu1     <- M4U
+> > >             |     |
+> > >            ---------
+> > >                |
+> > >             smi-common
+> > >                |
+> > >        -----------------
+> > >        |    |    |     |    ...
+> > >     larb0 larb1  larb2 larb3
+> > >
+> > > This patch add support for mmu1. In order to get better performance,
+> > > we could adjust some larbs go to mmu1 while the others still go to
+> > > mmu0. This is controlled by a SMI COMMON register SMI_BUS_SEL(0x220).
+> > >
+> > > mt2712, mt8173 and mt8183 M4U HW all have 2 mmu cells. the default
+> > > value of that register is 0 which means all the larbs go to mmu0
+> > > defaultly.
+> > >
+> > > This is a preparing patch for adjusting SMI_BUS_SEL for mt8183.
+> > >
+> > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > > Reviewed-by: Evan Green <evgreen@chromium.org>
+> > > ---
+> > >  drivers/iommu/mtk_iommu.c | 46 +++++++++++++++++++++++++++++-----------------
+> > >  1 file changed, 29 insertions(+), 17 deletions(-)
+> > >
+> > > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> > > index 3a14301..ec4ce74 100644
+> > > --- a/drivers/iommu/mtk_iommu.c
+> > > +++ b/drivers/iommu/mtk_iommu.c
+> > > @@ -72,26 +72,32 @@
+> > >  #define F_INT_CLR_BIT                          BIT(12)
+> > >
+> > >  #define REG_MMU_INT_MAIN_CONTROL               0x124
+> > > -#define F_INT_TRANSLATION_FAULT                        BIT(0)
+> > > -#define F_INT_MAIN_MULTI_HIT_FAULT             BIT(1)
+> > > -#define F_INT_INVALID_PA_FAULT                 BIT(2)
+> > > -#define F_INT_ENTRY_REPLACEMENT_FAULT          BIT(3)
+> > > -#define F_INT_TLB_MISS_FAULT                   BIT(4)
+> > > -#define F_INT_MISS_TRANSACTION_FIFO_FAULT      BIT(5)
+> > > -#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   BIT(6)
+> > > +                                               /* mmu0 | mmu1 */
+> > > +#define F_INT_TRANSLATION_FAULT                        (BIT(0) | BIT(7))
+> > > +#define F_INT_MAIN_MULTI_HIT_FAULT             (BIT(1) | BIT(8))
+> > > +#define F_INT_INVALID_PA_FAULT                 (BIT(2) | BIT(9))
+> > > +#define F_INT_ENTRY_REPLACEMENT_FAULT          (BIT(3) | BIT(10))
+> > > +#define F_INT_TLB_MISS_FAULT                   (BIT(4) | BIT(11))
+> > > +#define F_INT_MISS_TRANSACTION_FIFO_FAULT      (BIT(5) | BIT(12))
+> > > +#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   (BIT(6) | BIT(13))
+> >
+> > If there are two IOMMUs, shouldn't we have two driver instances handle
+> > them, instead of making the driver combine them two internally?
+>
+> Actually it means only one IOMMU(M4U) HW here. Each a M4U HW has two
+> small iommu cells which have independent MTLB. As the diagram above, M4U
+> contain mmu0 and mmu1.
+>
+> MT8173 and MT8183 have only one M4U HW while MT2712 have 2 M4U HWs(two
+> driver instances).
+>
+> >
+> > And, what is even more important from security point of view actually,
+> > have two separate page tables (aka IOMMU groups) for them?
+>
+> Each a IOMMU(M4U) have its own pagetable, thus, mt8183 have only one
+> pagetable while mt2712 have two.
 
-I sort of talked about this in my message a little earlier, but I
-now see I was partially mistaken.  I thought these flags were
-used in messages but they're real device ("port") configuration
-flags.
+I see, thanks for clarifying.
 
->> #define RMNET_FLAGS_INGRESS_DEAGGREGATION         (1U << 0)
-> 
-> This one I'm not sure I understand - seems weird to have such a
-> fundamental thing as a *configuration* on the channel.
-
-Let me use the term "connection" to refer to the single pathway
-that carries data between the AP and modem.  And "channel" to
-refer to one of several multiplexed data streams carried over
-that connection.  (If there's better terminology, please say
-so; I just want to be clear in what I'm talking about.)
-
-Deaggregation is a connection property, not a channel property.
-And it looks like that's exactly how it's used in the rmnet
-driver.  The hardware is capable of aggregating QMAP packets
-arriving on a connection into a single buffer, so this provides
-a way of requesting it do that.
-
->> #define RMNET_FLAGS_INGRESS_MAP_COMMANDS          (1U << 1)
-> 
-> Similar here? If you have flow control you probably want to use it?
-
-I agree with that, though perhaps there are cases where it
-is pointless, or can't be supported, so one might want to
-simply *not* implement/advertise the feature.  I don't know.
-
->> #define RMNET_FLAGS_INGRESS_MAP_CKSUMV4           (1U << 2)
-> 
-> This again looks like a hardware specific feature (ipv4 checksum)? Not
-> sure why this is set by userspace.
-> 
->> #define RMNET_FLAGS_EGRESS_MAP_CKSUMV4            (1U << 3)
-> 
-> This could be set with ethtool instead, I suppose.
-
-As I said in my earlier message, I think I concur about this.
-I think the IPA driver could easily hide the checksum offload
-capability, and if it can truly be controlled as needed
-using existing methods there's no need to encumber the
-WWAN framework with it.
-
-					-Alex
-
-
-> johannes
-> 
+Best regards,
+Tomasz
