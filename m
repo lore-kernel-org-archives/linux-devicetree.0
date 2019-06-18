@@ -1,90 +1,223 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] Revert "ARM: dts: rockchip: set PWM delay backlight
- settings for Minnie"
-Date: Tue, 18 Jun 2019 14:02:21 +0200
-Message-ID: <20190618120221.GA20524@amd>
-References: <20190614224533.169881-1-mka@chromium.org>
- <20190616154143.GA28583@atrey.karlin.mff.cuni.cz>
- <20190617161625.GR137143@google.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx Subsystem
+ driver
+Date: Tue, 18 Jun 2019 14:08:03 +0200
+Message-ID: <3403eea5-e00e-b813-2db1-1ac6ad71b9ff@xs4all.nl>
+References: <1559656556-79174-1-git-send-email-vishal.sagar@xilinx.com>
+ <1559656556-79174-3-git-send-email-vishal.sagar@xilinx.com>
+ <023cf8a6-6fbc-6425-8bca-798045d39e02@xs4all.nl>
+ <CH2PR02MB608838E59840F73F00534198A7EE0@CH2PR02MB6088.namprd02.prod.outlook.com>
+ <740f44cb-24af-72c4-f227-5323efcee8ac@xs4all.nl>
+ <CH2PR02MB60883EDB9B3B2AED8A2555CBA7EA0@CH2PR02MB6088.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190617161625.GR137143@google.com>
+In-Reply-To: <CH2PR02MB60883EDB9B3B2AED8A2555CBA7EA0@CH2PR02MB6088.namprd02.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Douglas Anderson <dianders@chromium.org>
+To: Vishal Sagar <vsagar@xilinx.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>, Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
+On 6/18/19 1:51 PM, Vishal Sagar wrote:
+> Hi Hans,
+> 
+>> -----Original Message-----
+>> From: Hans Verkuil [mailto:hverkuil@xs4all.nl]
+>> Sent: Saturday, June 15, 2019 1:25 PM
+>> To: Vishal Sagar <vsagar@xilinx.com>
+>> Cc: linux-kernel@vger.kernel.org; linux-media@vger.kernel.org; linux-arm-
+>> kernel@lists.infradead.org; devicetree@vger.kernel.org; Dinesh Kumar
+>> <dineshk@xilinx.com>; Sandip Kothari <sandipk@xilinx.com>; Vishal Sagar
+>> <vishal.sagar@xilinx.com>; Hyun Kwon <hyunk@xilinx.com>; Laurent Pinchart
+>> <laurent.pinchart@ideasonboard.com>; Mauro Carvalho Chehab
+>> <mchehab@kernel.org>; Michal Simek <michals@xilinx.com>; Rob Herring
+>> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Sakari Ailus
+>> <sakari.ailus@linux.intel.com>
+>> Subject: Re: [PATCH 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx Subsystem
+>> driver
+>>
+>> On 6/14/19 1:44 PM, Vishal Sagar wrote:
+>>> Hi Hans,
+>>>
+>>> Thanks for reviewing this patch.
+>>>
+>>>> -----Original Message-----
+>>>> From: Hans Verkuil [mailto:hverkuil@xs4all.nl]
+>>>> Sent: Wednesday, June 05, 2019 6:28 PM
+>>>> To: Vishal Sagar <vishal.sagar@xilinx.com>; Hyun Kwon
+>> <hyunk@xilinx.com>;
+>>>> Laurent Pinchart <laurent.pinchart@ideasonboard.com>; Mauro Carvalho
+>>>> Chehab <mchehab@kernel.org>; Michal Simek <michals@xilinx.com>; Rob
+>>>> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
+>>>> Cc: linux-kernel@vger.kernel.org; linux-media@vger.kernel.org; linux-arm-
+>>>> kernel@lists.infradead.org; devicetree@vger.kernel.org; Dinesh Kumar
+>>>> <dineshk@xilinx.com>; Sandip Kothari <sandipk@xilinx.com>
+>>>> Subject: Re: [PATCH 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx Subsystem
+>>>> driver
+>>>>
+>>>> EXTERNAL EMAIL
+>>>>
+>>>> On 6/4/19 3:55 PM, Vishal Sagar wrote:
+>>>>> The Xilinx UHD-SDI Rx subsystem soft IP is used to capture native SDI
+>>>>> streams from SDI sources like SDI broadcast equipment like cameras and
+>>>>> mixers. This block outputs either native SDI, native video or
+>>>>> AXI4-Stream compliant data stream for further processing. Please refer
+>>>>> to PG290 for details.
+>>>>>
+>>>>> The driver is used to configure the IP to add framer, search for
+>>>>> specific modes, get the detected mode, stream parameters, errors, etc.
+>>>>> It also generates events for video lock/unlock, bridge over/under flow.
+>>>>>
+>>>>> The driver supports only 10 bpc YUV 422 media bus format. It also
+>>>>> decodes the stream parameters based on the ST352 packet embedded in
+>> the
+>>>>> stream. In case the ST352 packet isn't present in the stream, the core's
+>>>>> detected properties are used to set stream properties.
+>>>>>
+>>>>> The driver currently supports only the AXI4-Stream configuration.
+>>>>>
+>>>>> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+>>>>> ---
+>>>>>  drivers/media/platform/xilinx/Kconfig          |   11 +
+>>>>>  drivers/media/platform/xilinx/Makefile         |    1 +
+>>>>>  drivers/media/platform/xilinx/xilinx-sdirxss.c | 1846
+>>>> ++++++++++++++++++++++++
+>>>>>  include/uapi/linux/xilinx-sdirxss.h            |   63 +
+>>>>>  include/uapi/linux/xilinx-v4l2-controls.h      |   30 +
+>>>>>  include/uapi/linux/xilinx-v4l2-events.h        |    9 +
+>>
+>> <snip>
+>>
+>>>> I am concerned about this driver: I see that none of the *_dv_timings
+>> callbacks
+>>>> are implemented. I would expect to see that for a video receiver. There is
+>> also
+>>>> no g_input_status implemented.
+>>>>
+>>>> Take a look at another SDI driver: drivers/media/spi/gs1662.c
+>>>>
+>>>
+>>> I had a look at the gs1662 driver for the dv_timings callbacks. The gs1662
+>> driver
+>>> requires the timings because it is a SDI Transmitter.
+>>>
+>>> Here the timings are not required as the IP block generates a AXI4 Stream.
+>>> I think it may be required only in case of native / parallel video being
+>> outputted
+>>> as the output stream needs timing information to be decoded.
+>>>
+>>> Please feel free to correct my understanding if wrong.
+>>>
+>>> In the current driver, the input stream properties like width, height, frame
+>> rate,
+>>> progressive/interlaced  are determined from the ST352 packet payload or
+>> from the
+>>> properties detected by the core.
+>>>
+>>> See the xsdirx_get_stream_properties() for details.
+>>
+>> You're wrong. In xsdirx_get_stream_properties() you set the format
+>> information.
+>> But you can't just change that: if the video resolution changes, then that means
+>> that userspace needs to be informed that it has changed at the source, it has to
+>> find and set the new timings, update the formats, possibly reallocate memory
+>> for
+>> the buffers, update other parts of the video pipeline with the new resolution
+>> etc.
+>>
+>> The one thing you cannot do is just pass on the new resolution and hope that
+>> the
+>> video pipeline can handle it all.
+>>
+>> The right sequence of events is:
+>>
+>> 1) When a change is detected at the source the driver sends the
+>> SOURCE_CHANGE
+>> event and either stops transmitting to the video pipeline or keeps sending the
+>> old resolution (some devices have a freewheeling mode where they can do
+>> that).
+>>
+>> 2) Userspace sees the event, calls QUERY_DV_TIMINGS to find a new timings (if
+>> any), usually stops streaming, and calls S_DV_TIMINGS to set the detected
+>> timings:
+>> at that point the driver can configure the output towards the video pipeline
+>> with
+>> the new timings. Userspace reallocates buffers and resumes streaming with the
+>> new
+>> resolution.
+>>
+> 
+> Thanks for the explanation!
+> 
+> I will remove the extraneous video unlock event and stop the streaming when video lock / unlock interrupt occurs.
+> I will also implement the g_input_status() to return V4L2_IN_ST_NO_SYNC | V4L2_IN_ST_NO_SIGNAL in case video is unlocked.
+> 
+> My assumption is that on SOURCE_CHANGE event, application can stop the pipeline and then 
+> call the G_FORMAT and G_FRAME_INTERVAL to get new frame size, type (progressive / interlaced) and frame rate.
+> Is this assumption correct? 
 
---3MwIy2ne0vdjdPXF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No :-)
 
-On Mon 2019-06-17 09:16:25, Matthias Kaehlcke wrote:
-> Hi Pavel,
->=20
-> On Sun, Jun 16, 2019 at 05:41:43PM +0200, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
-> > >=20
-> > > According to the commit message the AUO B101EAN01 panel on minnie
-> > > requires a PWM delay of 200 ms, however this is not what the
-> > > datasheet says. The datasheet mentions a *max* delay of 200 ms
-> > > for T2 ("delay from LCDVDD to black video generation") and T3
-> > > ("delay from LCDVDD to HPD high"), which aren't related to the
-> > > PWM. The backlight power sequence does not specify min/max
-> > > constraints for T15 (time from PWM on to BL enable) or T16
-> > > (time from BL disable to PWM off).
-> > >=20
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > ---
-> > > Enric, if you think I misinterpreted the datasheet please holler!
-> >=20
-> > Was this tested?
->=20
-> I performed limited manually testing.
->=20
-> minnie ships with the Chrome OS 3.14 downstream, which doesn't include
-> this delay, to my knowledge there are no open display related bugs for
-> minnie. One could argue that a the configuration without the delay was
-> widely field tested
->=20
-> > Does patch being reverted actually break anything?
->=20
-> To my knowledge it doesn't really break anything, however there is a
-> short user perceptible delay between switching on the LCD and
-> switching on the backlight. It's not the end of the world, but if it's
-> not actually needed better avoid it.
->=20
-> > If so, cc stable?
->=20
-> I guess this is an edge case, were you could go either way. I'm fine
-> with respinning and cc-ing stable.
+After SOURCE_CHANGE is received an application calls QUERY_DV_TIMINGS. If that
+returns valid timings, then the application calls S_DV_TIMINGS with the
+detected timings. The driver will now update the format, frame interval, etc.
+according to the new timings. And the application can use that to reconfigure
+the video pipeline.
 
-Ok, if it is just a small delay, stable probably does not need to be
-involved.
+> 
+> Is it mandatory to implement QUERY_DV_TIMINGS with SOURCE_CHANGE event?
 
-Thanks,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Yes.
 
---3MwIy2ne0vdjdPXF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> 
+> I also don't see any V4L2 framework supported events for overflow and underflow.
+> Is it ok to keep these or should they be removed too? 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+under/overflow of what? Internal fifos? You can keep the custom events for that.
 
-iEYEARECAAYFAl0I0s0ACgkQMOfwapXb+vIDhwCgoXg7BeLdOOaZditUE387gqIo
-RsQAn0zNp/RpUuk4d69n9e90MTNfL8OK
-=uTEM
------END PGP SIGNATURE-----
+Regards,
 
---3MwIy2ne0vdjdPXF--
+	Hans
+
+> 
+> Regards
+> 
+> Vishal Sagar
+> 
+>> Note that G_DV_TIMINGS returns the last configured timings, not the detected
+>> timings: only QUERY_DV_TIMINGS does that.
+>>
+>> In other words: userspace has to retain control of the full pipeline.
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>>
+>>>> Some of the controls you add in this driver can likely be dropped. Especially
+>>>> those controls that are not specific to the Xilinx implementation but are
+>>>> generic for any SDI receiver, should be looked at closely: those are
+>>>> candidates for becoming standard controls.
+>>>
+>>> I don't know how other SDI Receiver devices function.
+>>> So I am assuming all these controls are Xilinx specific implementations.
+>>>
+>>>>
+>>>> But the documentation above is simply insufficient for me to tell what is
+>>>> SDI specific and what is implementation specific.
+>>>>
+>>>
+>>> I will add more documentation for these controls.
+>>>
+>>>> Also, I'm no SDI expert, certainly not for the UHD-SDI.
+>>>>
+>>>> Regards,
+>>>>
+>>>>         Hans
+>>>
+>>> Regards
+>>> Vishal Sagar
+>>>
+> 
