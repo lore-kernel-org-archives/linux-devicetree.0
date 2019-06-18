@@ -1,46 +1,34 @@
-Return-Path: <SRS0=YfZA=US=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH] arm64: dts: renesas: hihope-common: Remove "label" from LEDs
-Date: Wed, 19 Jun 2019 15:11:24 +0100
-Message-Id: <1560953484-12777-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
+Return-Path: <SRS0=RbSA=UR=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <156076216767.4736.16337667537984218274.sendpatchset@octo> <156076219472.4736.14727682068388338615.sendpatchset@octo>
+In-Reply-To: <156076219472.4736.14727682068388338615.sendpatchset@octo>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 18 Jun 2019 14:58:58 +0200
+Message-ID: <CAMuHMdU08k3u=9sTqG-hADabdastZdAw4atZxV3d_LcXMYrUxg@mail.gmail.com>
+Subject: Re: [PATCH 3/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1
+ to r8a7792
+Content-Type: text/plain; charset="UTF-8"
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Remove "label" properties from the LEDs device tree nodes, since
-we don't have nice labels on the PCB.
+On Mon, Jun 17, 2019 at 11:02 AM Magnus Damm <magnus.damm@gmail.com> wrote:
+> From: Magnus Damm <damm+renesas@opensource.se>
+>
+> This patch adds DT binding documentation for the CMT devices on
+> the R-Car Gen2 V2H (r8a7792) SoC.
+>
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/hihope-common.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm64/boot/dts/renesas/hihope-common.dtsi b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-index 625c3aa..cee8bb1 100644
---- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-@@ -22,22 +22,18 @@
- 
- 		led0 {
- 			gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
--			label = "LED0";
- 		};
- 
- 		led1 {
- 			gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
--			label = "LED1";
- 		};
- 
- 		led2 {
- 			gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
--			label = "LED2";
- 		};
- 
- 		led3 {
- 			gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
--			label = "LED3";
- 		};
- 	};
- 
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
