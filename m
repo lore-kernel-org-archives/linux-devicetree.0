@@ -1,39 +1,53 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: [PATCH 2/3] riscv: select SiFive platform drivers with SOC_SIFIVE
-Date: Wed, 19 Jun 2019 00:04:19 -0700 (PDT)
-Message-ID: <mhng-e248d181-8676-4355-9825-d06049606d85@palmer-si-x1e>
-References: <1560799790-20287-3-git-send-email-lollivier@baylibre.com>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560799790-20287-3-git-send-email-lollivier@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, lollivier@baylibre.com, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, khilman@baylibre.com
+From: Marko Kohtala <marko.kohtala@okoko.fi>
+Subject: [PATCH 2/6] video: ssd1307fb: Remove unneeded semicolons
+Date: Tue, 18 Jun 2019 10:41:07 +0300
+Message-ID: <20190618074111.9309-3-marko.kohtala@okoko.fi>
+References: <20190618074111.9309-1-marko.kohtala@okoko.fi>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190618074111.9309-1-marko.kohtala@okoko.fi>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Marko Kohtala <marko.kohtala@okoko.fi>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Jun 2019 12:29:49 PDT (-0700), lollivier@baylibre.com wrote:
-> On selection of SOC_SIFIVE select the corresponding platform drivers.
->
-> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
-> ---
->  arch/riscv/Kconfig.socs | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> index 60dae1b5f276..536c0ef4aee8 100644
-> --- a/arch/riscv/Kconfig.socs
-> +++ b/arch/riscv/Kconfig.socs
-> @@ -2,6 +2,11 @@ menu "SoC selection"
->
->  config SOC_SIFIVE
->         bool "SiFive SoCs"
-> +       select SERIAL_SIFIVE
-> +       select SERIAL_SIFIVE_CONSOLE
-> +       select CLK_SIFIVE
-> +       select CLK_SIFIVE_FU540_PRCI
-> +       select SIFIVE_PLIC
->         help
->           This enables support for SiFive SoC platform hardware.
-
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+Y29jY2ljaGVjayByZXBvcnRlZCB1bm5lZWRlZCBzZW1pY29sb25zLiBSZW1vdmUgdGhlbS4KClNp
+Z25lZC1vZmYtYnk6IE1hcmtvIEtvaHRhbGEgPG1hcmtvLmtvaHRhbGFAb2tva28uZmk+Ci0tLQog
+ZHJpdmVycy92aWRlby9mYmRldi9zc2QxMzA3ZmIuYyB8IDggKysrKy0tLS0KIDEgZmlsZSBjaGFu
+Z2VkLCA0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy92aWRlby9mYmRldi9zc2QxMzA3ZmIuYyBiL2RyaXZlcnMvdmlkZW8vZmJkZXYvc3NkMTMwN2Zi
+LmMKaW5kZXggNmMyOTgwMzMxZmZkLi45YWIwMGUwZGFkYzcgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
+dmlkZW8vZmJkZXYvc3NkMTMwN2ZiLmMKKysrIGIvZHJpdmVycy92aWRlby9mYmRldi9zc2QxMzA3
+ZmIuYwpAQCAtMzEzLDcgKzMxMyw3IEBAIHN0YXRpYyBpbnQgc3NkMTMwN2ZiX2luaXQoc3RydWN0
+IHNzZDEzMDdmYl9wYXIgKnBhcikKIAogCQlkZXZfZGJnKCZwYXItPmNsaWVudC0+ZGV2LCAiVXNp
+bmcgUFdNJWQgd2l0aCBhICVkbnMgcGVyaW9kLlxuIiwKIAkJCXBhci0+cHdtLT5wd20sIHBhci0+
+cHdtX3BlcmlvZCk7Ci0JfTsKKwl9CiAKIAkvKiBTZXQgaW5pdGlhbCBjb250cmFzdCAqLwogCXJl
+dCA9IHNzZDEzMDdmYl93cml0ZV9jbWQocGFyLT5jbGllbnQsIFNTRDEzMDdGQl9DT05UUkFTVCk7
+CkBAIC0zMjksNyArMzI5LDcgQEAgc3RhdGljIGludCBzc2QxMzA3ZmJfaW5pdChzdHJ1Y3Qgc3Nk
+MTMwN2ZiX3BhciAqcGFyKQogCQlyZXQgPSBzc2QxMzA3ZmJfd3JpdGVfY21kKHBhci0+Y2xpZW50
+LCBTU0QxMzA3RkJfU0VHX1JFTUFQX09OKTsKIAkJaWYgKHJldCA8IDApCiAJCQlyZXR1cm4gcmV0
+OwotCX07CisJfQogCiAJLyogU2V0IENPTSBkaXJlY3Rpb24gKi8KIAljb21faW52ZGlyID0gMHhj
+MCB8IChwYXItPmNvbV9pbnZkaXIgJiAweDEpIDw8IDM7CkBAIC03MTYsNyArNzE2LDcgQEAgc3Rh
+dGljIGludCBzc2QxMzA3ZmJfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwKIAlpZiAo
+cGFyLT5kZXZpY2VfaW5mby0+bmVlZF9wd20pIHsKIAkJcHdtX2Rpc2FibGUocGFyLT5wd20pOwog
+CQlwd21fcHV0KHBhci0+cHdtKTsKLQl9OworCX0KIHJlZ3VsYXRvcl9lbmFibGVfZXJyb3I6CiAJ
+aWYgKHBhci0+dmJhdF9yZWcpCiAJCXJlZ3VsYXRvcl9kaXNhYmxlKHBhci0+dmJhdF9yZWcpOwpA
+QCAtNzQwLDcgKzc0MCw3IEBAIHN0YXRpYyBpbnQgc3NkMTMwN2ZiX3JlbW92ZShzdHJ1Y3QgaTJj
+X2NsaWVudCAqY2xpZW50KQogCWlmIChwYXItPmRldmljZV9pbmZvLT5uZWVkX3B3bSkgewogCQlw
+d21fZGlzYWJsZShwYXItPnB3bSk7CiAJCXB3bV9wdXQocGFyLT5wd20pOwotCX07CisJfQogCWZi
+X2RlZmVycmVkX2lvX2NsZWFudXAoaW5mbyk7CiAJX19mcmVlX3BhZ2VzKF9fdmEoaW5mby0+Zml4
+LnNtZW1fc3RhcnQpLCBnZXRfb3JkZXIoaW5mby0+Zml4LnNtZW1fbGVuKSk7CiAJZnJhbWVidWZm
+ZXJfcmVsZWFzZShpbmZvKTsKLS0gCjIuMTcuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVs
