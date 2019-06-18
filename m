@@ -1,48 +1,85 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v6 2/5] dt-bindings: mtd: Add binding documentation for HyperFlash
-Date: Tue, 18 Jun 2019 14:58:58 +0530
-Message-ID: <20190618092901.31764-3-vigneshr@ti.com>
-References: <20190618092901.31764-1-vigneshr@ti.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
+Date: Tue, 18 Jun 2019 12:30:39 +0300
+Message-ID: <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+ <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
+ <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190618092901.31764-1-vigneshr@ti.com>
+In-Reply-To: <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh Raghavendra <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, Stephen Warren <swarren@wwwdotorg.org>
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for HyperFlash devices.
+18.06.2019 12:22, Dmitry Osipenko пишет:
+> 18.06.2019 10:46, Sowjanya Komatineni пишет:
+>> This patch adds suspend and resume support for Tegra pinctrl driver
+>> and registers them to syscore so the pinmux settings are restored
+>> before the devices resume.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>  drivers/pinctrl/tegra/pinctrl-tegra.c    | 62 ++++++++++++++++++++++++++++++++
+>>  drivers/pinctrl/tegra/pinctrl-tegra.h    |  5 +++
+>>  drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
+>>  drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
+>>  drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
+>>  drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
+>>  drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
+>>  7 files changed, 84 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> index 34596b246578..ceced30d8bd1 100644
+>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> @@ -20,11 +20,16 @@
+>>  #include <linux/pinctrl/pinmux.h>
+>>  #include <linux/pinctrl/pinconf.h>
+>>  #include <linux/slab.h>
+>> +#include <linux/syscore_ops.h>
+>>  
+>>  #include "../core.h"
+>>  #include "../pinctrl-utils.h"
+>>  #include "pinctrl-tegra.h"
+>>  
+>> +#define EMMC2_PAD_CFGPADCTRL_0			0x1c8
+>> +#define EMMC4_PAD_CFGPADCTRL_0			0x1e0
+>> +#define EMMC_DPD_PARKING			(0x1fff << 14)
+>> +
+>>  static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+>>  {
+>>  	return readl(pmx->regs[bank] + reg);
+>> @@ -619,6 +624,48 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>  			pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
+>>  		}
+>>  	}
+>> +
+>> +	if (pmx->soc->has_park_padcfg) {
+>> +		val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
+>> +		val &= ~EMMC_DPD_PARKING;
+>> +		pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
+>> +
+>> +		val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
+>> +		val &= ~EMMC_DPD_PARKING;
+>> +		pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
+>> +	}
+>> +}
+> 
+> Is there any reason why parked_bit can't be changed to parked_bitmask like I was
+> asking in a comment to v2?
+> 
+> I suppose that it's more preferable to keep pinctrl-tegra.c platform-agnostic for
+> consistency when possible, hence adding platform specifics here should be discouraged.
+> And then the parked_bitmask will also result in a proper hardware description in the code.
+> 
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+I'm now also vaguely recalling that Stephen Warren had some kind of a "code generator"
+for the pinctrl drivers. So I guess all those tables were auto-generated initially.
 
-v6: No change
-
- .../devicetree/bindings/mtd/cypress,hyperflash.txt  | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt b/Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
-new file mode 100644
-index 000000000000..ad42f4db32f1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
-@@ -0,0 +1,13 @@
-+Bindings for HyperFlash NOR flash chips compliant with Cypress HyperBus
-+specification and supports Cypress CFI specification 1.5 command set.
-+
-+Required properties:
-+- compatible : "cypress,hyperflash", "cfi-flash" for HyperFlash NOR chips
-+- reg : Address of flash's memory map
-+
-+Example:
-+
-+	flash@0 {
-+		compatible = "cypress,hyperflash", "cfi-flash";
-+		reg = <0x0 0x4000000>;
-+	};
--- 
-2.21.0
+Stephen, maybe you could adjust the generator to take into account the bitmask (of
+course if that's a part of the generated code) and then re-gen it all for Sowjanya?
