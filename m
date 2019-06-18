@@ -1,60 +1,64 @@
-Return-Path: <SRS0=x9uM=UL=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 1/4] arm64: dts: renesas: r8a774a1: Add CPU topology on r8a774a1 SoC
-Date: Wed, 12 Jun 2019 15:20:52 +0100
-Message-Id: <1560349255-26336-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1560349255-26336-1-git-send-email-biju.das@bp.renesas.com>
-References: <1560349255-26336-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V6 11/27] PCI: tegra: Process pending DLL transactions before entering L1 or L2
+Date: Tue, 18 Jun 2019 23:31:50 +0530
+Message-ID: <20190618180206.4908-12-mmaddireddy@nvidia.com>
+In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the "cpu-map" into r8a774a1 composed of multi-cluster. This
-definition is used to parse the cpu topology.
+PM message are truncated while entering L1 or L2, which is resulting in
+receiver errors. Set the required bit to finish processing DLLP before
+link enter L1 or L2.
 
-Based on work by Gaku Inami <gaku.inami.xw@bp.renesas.com> for r8a7796 SoC.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+V6: No change
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index 4b1332f..e6ea5a1 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -102,6 +102,32 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+V5: No change
+
+V4: No change
+
+V3: No change
+
+V2: No change
+
+ drivers/pci/controller/pci-tegra.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index ca02866fbbb4..7cd2a8948919 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -212,6 +212,9 @@
+ #define RP_VEND_CTL1	0x00000f48
+ #define  RP_VEND_CTL1_ERPT	(1 << 13)
  
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&a57_0>;
-+				};
-+				core1 {
-+					cpu = <&a57_1>;
-+				};
-+			};
++#define RP_VEND_XP_BIST	0x00000f4c
++#define  RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE	(1 << 28)
 +
-+			cluster1 {
-+				core0 {
-+					cpu = <&a53_0>;
-+				};
-+				core1 {
-+					cpu = <&a53_1>;
-+				};
-+				core2 {
-+					cpu = <&a53_2>;
-+				};
-+				core3 {
-+					cpu = <&a53_3>;
-+				};
-+			};
-+		};
+ #define RP_VEND_CTL2 0x00000fa8
+ #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
+ 
+@@ -538,6 +541,14 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+ 	value |= RP_VEND_XP_OPPORTUNISTIC_ACK;
+ 	value |= RP_VEND_XP_OPPORTUNISTIC_UPDATEFC;
+ 	writel(value, port->base + RP_VEND_XP);
 +
- 		a57_0: cpu@0 {
- 			compatible = "arm,cortex-a57";
- 			reg = <0x0>;
++	/*
++	 * LTSSM will wait for DLLP to finish before entering L1 or L2,
++	 * to avoid truncation of PM messages which results in receiver errors
++	 */
++	value = readl(port->base + RP_VEND_XP_BIST);
++	value |= RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE;
++	writel(value, port->base + RP_VEND_XP_BIST);
+ }
+ 
+ static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
 -- 
-2.7.4
+2.17.1
