@@ -1,55 +1,89 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: gpu: add Exynos Mali vendor specifics
-Date: Tue, 18 Jun 2019 09:23:25 +0200
-Message-ID: <CAJKOXPd6OqHohswSzj7UEWJi1E7H53M_gvv4fkYC5kE5ZfN_Aw@mail.gmail.com>
-References: <20190614203144.3850-1-joseph.kogut@gmail.com>
- <20190616081557.GA3826@kozik-lap>
- <CAL_Jsq+bq2PXA5LSjCmsy=hJq=+S4XK2JrvHct+xM+1HT+=-SQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register
+ clock gates in probe
+Date: Tue, 18 Jun 2019 15:23:41 +0800
+Message-ID: <CAGb2v64htYr+iRUnLx0hKkqCtYa0GbzZJEvb-ViyJFAYzU1sig@mail.gmail.com>
+References: <20190614164324.9427-1-jagan@amarulasolutions.com>
+ <20190614164324.9427-6-jagan@amarulasolutions.com> <20190617114503.pclqsf6bo3ih47nt@flea>
+ <CAGb2v66RU=m0iA9VoBiYbake+mDoiiGcd5gGGXvNCBjhY2n+Dw@mail.gmail.com> <CAMty3ZA0J+2fSRwX+tS-waJDLMyTOf6UY_1pHjXe0qOk5QuzrQ@mail.gmail.com>
+Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_Jsq+bq2PXA5LSjCmsy=hJq=+S4XK2JrvHct+xM+1HT+=-SQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Joseph Kogut <joseph.kogut@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBC5DULUAKGQEV36Z66Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZA0J+2fSRwX+tS-waJDLMyTOf6UY_1pHjXe0qOk5QuzrQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAxOCBKdW4gMjAxOSBhdCAwMDowNiwgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVs
-Lm9yZz4gd3JvdGU6Cj4KPiBPbiBTdW4sIEp1biAxNiwgMjAxOSBhdCAyOjE2IEFNIEtyenlzenRv
-ZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPgo+ID4gT24gRnJpLCBKdW4g
-MTQsIDIwMTkgYXQgMDE6MzE6NDNQTSAtMDcwMCwgSm9zZXBoIEtvZ3V0IHdyb3RlOgo+ID4gPiBE
-b2N1bWVudCB2ZW5kb3Igc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcgZm9yIE1hbGkgZ3B1cyBv
-biBFeHlub3MgU29Dcy4KPiA+ID4KPiA+ID4gU2lnbmVkLW9mZi1ieTogSm9zZXBoIEtvZ3V0IDxq
-b3NlcGgua29ndXRAZ21haWwuY29tPgo+ID4gPiAtLS0KPiA+ID4gIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC50eHQgfCAxICsKPiA+ID4gIDEg
-ZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+ID4gPgo+ID4gPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC50
-eHQKPiA+ID4gaW5kZXggMWIxYTc0MTI5MTQxLi5hOTcwNGM3MzZkMDcgMTAwNjQ0Cj4gPiA+IC0t
-LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2Fy
-ZC50eHQKPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9h
-cm0sbWFsaS1taWRnYXJkLnR4dAo+ID4gPiBAQCAtMTgsNiArMTgsNyBAQCBSZXF1aXJlZCBwcm9w
-ZXJ0aWVzOgo+ID4gPiAgICAgICsgImFtbG9naWMsbWVzb24tZ3htLW1hbGkiCj4gPiA+ICAgICAg
-KyAicm9ja2NoaXAscmszMjg4LW1hbGkiCj4gPiA+ICAgICAgKyAicm9ja2NoaXAscmszMzk5LW1h
-bGkiCj4gPiA+ICsgICAgKyAic2Ftc3VuZyxleHlub3MtbWFsaSIKPiA+Cj4gPiBBcmUgdGhlcmUg
-YW55IGRyaXZlciBkaWZmZXJlbmNlcyBmb3IgRXh5bm9zPyBJZiBub3QgdGhlbiB3aHkgYWRkaW5n
-Cj4gPiBhbm90aGVyIGNvbXBhdGlibGU/Cj4KPiBXcm9uZyBxdWVzdGlvbi4gQXJlIHRoZXJlIGFu
-eSBoYXJkd2FyZSBkaWZmZXJlbmNlcz8gKFRyaWNrIHF1ZXN0aW9uCj4gYmVjYXVzZSBkaWZmZXJl
-bmNlIGNvbXBhcmVkIHRvIHdoYXQ/KQo+Cj4gUmVhbGx5LCB0aGlzIHNob3VsZG4ndCBiZSAnZXh5
-bm9zJywgYnV0IHBlciBTb0MuIEJ1dCBJJ2xsIGxlYXZlIGl0IHRvCj4gdGhlIFNhbXN1bmcgZm9s
-a3MgdG8gZGVjaWRlIGhvdyBzcGVjaWZpYyBpdCBzaG91bGQgYmUuCgpJZiB2ZW5kb3IgY29tcGF0
-aWJsZSBpcyBleHBlY3RlZCwgdGhlbiBsZXQncyBnbyB3aXRoIHBlci1zb2MKKEV4eW5vczU0MjAp
-IGJlY2F1c2Ugb3RoZXIgU29DcyB1c2UgZGlmZmVyZW50IE1pZGdhcmQgY2hpcHNldHMgc28gdGhl
-eQptaWdodCBjb21lIHdpdGggb3duIGRpZmZlcmVuY2VzLgoKQmVzdCByZWdhcmRzLApLcnp5c3p0
-b2YKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On Tue, Jun 18, 2019 at 3:12 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> On Mon, Jun 17, 2019 at 6:31 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> >
+> > On Mon, Jun 17, 2019 at 7:45 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > >
+> > > On Fri, Jun 14, 2019 at 10:13:20PM +0530, Jagan Teki wrote:
+> > > > TCON TOP have clock gates for TV0, TV1, dsi and right
+> > > > now these are register during bind call.
+> > > >
+> > > > Of which, dsi clock gate would required during DPHY probe
+> > > > but same can miss to get since tcon top is not bound at
+> > > > that time.
+> > > >
+> > > > To solve, this circular dependency move the clock gate
+> > > > registration from bind to probe so-that DPHY can get the
+> > > > dsi gate clock on time.
+> > >
+> > > It's not really clear to me what the circular dependency is?
+> > >
+> > > if you have a chain that is:
+> > >
+> > > tcon-top +-> DSI
+> > >          +-> D-PHY
+> > >
+> > > There's no loop, right?
+> >
+> > Looking at how the DTSI patch structures things (without going into
+> > whether it is correct or accurate):
+> >
+> > The D-PHY is not part of the component graph. However it requests
+> > the DSI gate clock from the TCON-TOP.
+> >
+> > The TCON-TOP driver, in its current form, only registers the clocks
+> > it provides at component bind time. Thus the D-PHY can't successfully
+> > probe until the TCON-TOP has been bound.
+> >
+> > The DSI interface requires the D-PHY to bind. It will return -EPROBE_DEFER
+> > if it cannot request it. This in turn goes into the error path of
+> > component_bind_all, which unbinds all previous components.
+> >
+> > So it's actually
+> >
+> >     D-PHY -> TCON-TOP -> DSI
+> >       ^                   |
+> >       |--------------------
+> >
+> > I've not checked, but I suspect there's no possibility of having other
+> > drivers probe (to deal with deferred probing) within component_bind_all.
+> > Otherwise we shouldn't run into this weird circular dependency issue.
+> >
+> > So the question for Jagan is that is this indeed the case? Does this
+> > patch solve it, or at least work around it.
+>
+> Yes, this is what I was mentioned in initial version, since the "dsi"
+> gate in tcon top is registering during bind, the dphy of dsi
+> controller won't get the associated clock for "mod" so it is keep on
+> returning -EPROBE_DEFER. By moving the clock gate registration to
+> probe, everything bound as expected.
+
+I believe you failed to mention the DSI block, which is the part that
+completes the circular dependency. Don't expect others to have full
+awareness of the context. You have to provide it in your commit log.
+
+ChenYu
