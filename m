@@ -1,15 +1,16 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] dt-bindings: arm: Move Emtrion i.MX6 board bindings to
- schema
-Date: Tue, 18 Jun 2019 21:28:33 +0800
-Message-ID: <20190618132830.GH1959@dragon>
-References: <20190617204423.2880-1-robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: arm: fsl: Add back missing i.MX7ULP binding
+Date: Tue, 18 Jun 2019 21:31:41 +0800
+Message-ID: <20190618133139.GI1959@dragon>
+References: <20190617224028.26974-1-robh@kernel.org>
+ <CAOMZO5DdAKH5N0vDq0tdnjarzWFkJrLg_OfuFoJj=qm7mw+Jzg@mail.gmail.com>
+ <CAL_Jsq+nXVB3Pr961N1GAm5Pr-zAkvFPPxQvF18JO2r5N-Qx+g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190617204423.2880-1-robh@kernel.org>
+In-Reply-To: <CAL_Jsq+nXVB3Pr961N1GAm5Pr-zAkvFPPxQvF18JO2r5N-Qx+g@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,16 +21,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Jan Tuerk <jan.tuerk@emtrion.com>, linux-arm-kernel@lists.infradead.org
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 02:44:23PM -0600, Rob Herring wrote:
-> The Emtrion board bindings landed when the i.MX board/SoC bindings were
-> being converted to DT schema. Add them to the schema and remove the
-> separate file.
+On Tue, Jun 18, 2019 at 07:11:00AM -0600, Rob Herring wrote:
+> On Mon, Jun 17, 2019 at 8:27 PM Fabio Estevam <festevam@gmail.com> wrote:
+> >
+> > On Mon, Jun 17, 2019 at 7:42 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > > +      - description: i.MX7ULP based Boards
+> > > +        items:
+> > > +          - enum:
+> > > +              - tq,imx7ulp-evk            # i.MX7ULP Evaluation Kit
+> >
+> > This should be fsl,imx7ulp-evk instead.
 > 
-> Cc: Jan Tuerk <jan.tuerk@emtrion.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Ugg. That was me typing in the wrong window...
 
-Applied, thanks.
+Applied with it fixed.
