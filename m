@@ -1,55 +1,71 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/4] regulator: Add regulator driver for ATC260x PMICs
-Date: Tue, 18 Jun 2019 11:44:05 +0100
-Message-ID: <20190618104405.GJ5316@sirena.org.uk>
-References: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
- <20190617155011.15376-4-manivannan.sadhasivam@linaro.org>
- <20190617163015.GD5316@sirena.org.uk>
- <20190617163413.GA16152@Mani-XPS-13-9360>
- <20190617170356.GG5316@sirena.org.uk>
- <20190618081324.GK16364@dell>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: interrupt-controller: Amazon's
+ Annapurna Labs FIC
+Date: Tue, 18 Jun 2019 11:46:29 +0100
+Message-ID: <8181b95c-2ddb-0c54-4f2a-8938260fcc5b@arm.com>
+References: <1560155683-29584-1-git-send-email-talel@amazon.com>
+ <1560155683-29584-2-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NV8Q+b3U03j8aVmL"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190618081324.GK16364@dell>
+In-Reply-To: <1560155683-29584-2-git-send-email-talel@amazon.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, lgirdwood@gmail.com, robh+dt@kernel.org, afaerber@suse.de, linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, devicetree@vger.kernel.org, linus.walleij@linaro.org
+To: Talel Shenhar <talel@amazon.com>, nicolas.ferre@microchip.com, jason@lakedaemon.net, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh+dt@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
+On 10/06/2019 09:34, Talel Shenhar wrote:
+> Document Amazon's Annapurna Labs Fabric Interrupt Controller SoC binding.
+> 
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> ---
+>  .../interrupt-controller/amazon,al-fic.txt         | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> new file mode 100644
+> index 0000000..4e82fd5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> @@ -0,0 +1,29 @@
+> +Amazon's Annapurna Labs Fabric Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible: should be "amazon,al-fic"
+> +- reg: physical base address and size of the registers
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #interrupt-cells: must be 2.
+> +  First cell defines the index of the interrupt within the controller.
+> +  Second cell is used to specify the trigger type and must be one of the
+> +  following:
+> +    - bits[3:0] trigger type and level flags
+> +	1 = low-to-high edge triggered
+> +	4 = active high level-sensitive
+> +- interrupt-parent: specifies the parent interrupt controller.
+> +- interrupts: describes which input line in the interrupt parent, this
+> +  fic's output is connected to. This field property depends on the parent's
+> +  binding
+> +
+> +Example:
+> +
+> +amazon_fic: interrupt-controller@0xfd8a8500 {
+> +	compatible = "amazon,al-fic";
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +	reg = <0x0 0xfd8a8500 0x0 0x1000>;
+> +	interrupt-parent = <&gic>;
+> +	interrupts = <GIC_SPI 0x0 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> 
 
---NV8Q+b3U03j8aVmL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Rob, are you OK with this DT binding?
 
-On Tue, Jun 18, 2019 at 09:13:24AM +0100, Lee Jones wrote:
-> On Mon, 17 Jun 2019, Mark Brown wrote:
+Thanks,
 
-> > OK...  seems very weird to use your work address for developing on
-> > products closely associated with your employer in non-work time.
-
-> I use my Linaro address for everything.  So long as the work is of the
-> required standard, I cannot see anyone having reservations.
-
-It's not a problem to use it - I was querying the copyright statement
-due to the Linaro address and work in conjunction with the non-Linaro
-copyright to make sure it wasn't a mistake.
-
---NV8Q+b3U03j8aVmL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0IwHEACgkQJNaLcl1U
-h9BkZAf+Om81gkS+ElDadCSyURXSDk+RIxCGvstK5OCPfn7F0BEtzv6WNmxMotvi
-gAzvgAeSKYiSVXiRE2PV1N1VUKftvLcn5FqmhU+pgUJ//VHsuXm5Adl4WAP0o7Pl
-AlXgWiXIeMpINnOcrsNs1Bhm17S59rgI9glWbtsdrVeHcZJJgh3HtlDZocqDJ7M9
-0XBmfGbMfM3BVMVF8O2VBoV2VIHi4F2uS/X7cYdV/6KZ39jF34Oii0Cf9X+rZ5Zn
-Dnu2+dXuqP/0wV2oF2aJtB78XIItH/ZfiZ7V0n5JyFy9swmllw9+YyfJoePFl2ru
-oNsKsfGatclsw/ygzrPd+AJa2l51Hw==
-=ORPp
------END PGP SIGNATURE-----
-
---NV8Q+b3U03j8aVmL--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
