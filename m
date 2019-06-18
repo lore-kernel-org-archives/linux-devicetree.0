@@ -1,31 +1,62 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] dt-bindings: arm: fsl: Add back missing i.MX7ULP binding
-Date: Mon, 17 Jun 2019 23:27:24 -0300
-Message-ID: <CAOMZO5DdAKH5N0vDq0tdnjarzWFkJrLg_OfuFoJj=qm7mw+Jzg@mail.gmail.com>
-References: <20190617224028.26974-1-robh@kernel.org>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH 5/6] soc: qcom: add OCMEM driver
+Date: Mon, 17 Jun 2019 19:29:47 -0700
+Message-ID: <CAF6AEGsoPNL52h5gEHP8UtmD9_MhX89E=aWiPZXS7zepykEMFA@mail.gmail.com>
+References: <20190616132930.6942-1-masneyb@onstation.org>
+ <20190616132930.6942-6-masneyb@onstation.org>
+ <20190616174106.GO22737@tuxbook-pro> <20190618020200.GB22330@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190617224028.26974-1-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190618020200.GB22330@onstation.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, freedreno <freedreno@lists.freedesktop.org>, Jonathan <jonathan@marek.ca>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, agross@kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Sean Paul <sean@poorly.run>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 7:42 PM Rob Herring <robh@kernel.org> wrote:
-
-> +      - description: i.MX7ULP based Boards
-> +        items:
-> +          - enum:
-> +              - tq,imx7ulp-evk            # i.MX7ULP Evaluation Kit
-
-This should be fsl,imx7ulp-evk instead.
+T24gTW9uLCBKdW4gMTcsIDIwMTkgYXQgNzowMiBQTSBCcmlhbiBNYXNuZXkgPG1hc25leWJAb25z
+dGF0aW9uLm9yZz4gd3JvdGU6Cj4KPiBIaSBSb2IgQ2xhcmssCj4KPiBPbiBTdW4sIEp1biAxNiwg
+MjAxOSBhdCAxMDo0MTowNkFNIC0wNzAwLCBCam9ybiBBbmRlcnNzb24gd3JvdGU6Cj4gPiA+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9xY29tL29jbWVtLnhtbC5oIGIvZHJpdmVycy9zb2MvcWNv
+bS9vY21lbS54bWwuaAo+ID4KPiA+IEkgd291bGQgcHJlZmVyIHRoYXQgdGhlc2UgbGl2ZWQgYXQg
+dGhlIHRvcCBvZiB0aGUgYyBmaWxlLCByYXRoZXIgdGhhbgo+ID4gYmVpbmcgZ2VuZXJhdGVkLgo+
+Cj4gSSB0aGluayBpdCB3b3VsZCBiZSBuaWNlIHRvIG1ha2UgdGhpcyBjaGFuZ2UgYXMgd2VsbC4K
+Pgo+IFJvYiBDOiBZb3VyIG9yaWdpbmFsIGZpbGUgb2NtZW0ueG1sLmggd2FzIGxpY2Vuc2VkIHVu
+ZGVyIHRoZSBNSVQKPiBsaWNlbnNlLiBJIGp1c3Qgd2FudGVkIGNvbmZpcm1hdGlvbiBmcm9tIHlv
+dSB0aGF0IGl0J3MgT0sgdG8gcHV0Cj4gdGhlIGNvbnRlbnRzIG9mIHRoYXQgZmlsZSBpbnRvIG9j
+bWVtLmMgd2hpY2ggaGFzIHRoZSBHUEwgMi4wIG9ubHkKPiBTUERYIGxpY2Vuc2UgdGFnLiBUaGlz
+IHdpbGwgcmVsaWNlbnNlIHRoZSB3b3JrLiBJIGltYWdpbmUgaXQncyBub3QKPiBhbiBpc3N1ZSBi
+dXQgSSBqdXN0IHdhbnRlZCB0byBnZXQgY29uZmlybWF0aW9uIHNvIHRoZXJlIGlzIG5vCj4gYW1i
+aWd1aXR5IHJlZ2FyZGluZyB0aGUgbGljZW5zaW5nIGluIHRoZSBmdXR1cmUuCgpmaW5lIGJ5IG1l
+Li4gSSBkZWZhdWx0ZWQgdG8gZ2VuZXJhdGVkIGhlYWRlcnMgc2luY2UgdGhhdCBpcyBleHRyZW1l
+bHkKdXNlZnVsIGZvciBncHUgc2lkZSBvZiB0aGluZ3MgKGFuZCB1c2Vyc3BhY2Ugc3R1ZmYgZGVm
+YXVsdHMgdG8gTUlUKSwKYnV0IHByb2JhYmx5IG92ZXJraWxsIGZvciBvY21lbSB3aGljaCBqdXN0
+IGhhcyBhIGhhbmRmdWwgb2YgcmVnaXN0ZXJzCihhbmQgbm8gbmVlZCBmb3IgZGVjb2RpbmcgdXNl
+cnNwYWNlIGJsb2IgY21kc3RyZWFtIGR1bXBzKQoKQlIsCi1SCgoKPgo+IEJyaWFuCj4KPgo+ID4K
+PiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5iNGJm
+Yjg1ZDFlMzMKPiA+ID4gLS0tIC9kZXYvbnVsbAo+ID4gPiArKysgYi9kcml2ZXJzL3NvYy9xY29t
+L29jbWVtLnhtbC5oCj4gPiA+IEBAIC0wLDAgKzEsODYgQEAKPiA+ID4gKy8qIFNQRFgtTGljZW5z
+ZS1JZGVudGlmaWVyOiBNSVQgKi8KPiA+ID4gKwo+ID4gPiArI2lmbmRlZiBPQ01FTV9YTUwKPiA+
+ID4gKyNkZWZpbmUgT0NNRU1fWE1MCj4gPiA+ICsKPiA+ID4gKy8qIEF1dG9nZW5lcmF0ZWQgZmls
+ZSwgRE8gTk9UIEVESVQgbWFudWFsbHkhCj4gPiA+ICsKPiA+ID4gK1RoaXMgZmlsZSB3YXMgZ2Vu
+ZXJhdGVkIGJ5IHRoZSBydWxlcy1uZy1uZyBoZWFkZXJnZW4gdG9vbCBpbiB0aGlzIGdpdCByZXBv
+c2l0b3J5Ogo+ID4gPiAraHR0cDovL2dpdGh1Yi5jb20vZnJlZWRyZW5vL2Vudnl0b29scy8KPiA+
+ID4gK2dpdCBjbG9uZSBodHRwczovL2dpdGh1Yi5jb20vZnJlZWRyZW5vL2Vudnl0b29scy5naXQK
+PiA+ID4gKwo+ID4gPiArVGhlIHJ1bGVzLW5nLW5nIHNvdXJjZSBmaWxlcyB0aGlzIGhlYWRlciB3
+YXMgZ2VuZXJhdGVkIGZyb20gYXJlOgo+ID4gPiArLSAvaG9tZS9yb2JjbGFyay9zcmMvZnJlZWRy
+ZW5vL2Vudnl0b29scy9ybm5kYi9hZHJlbm8vb2NtZW0ueG1sICAgICAgICAgKCAgIDE3NzMgYnl0
+ZXMsIGZyb20gMjAxNS0wOS0yNCAxNzozMDowMCkKPiA+ID4gKwo+ID4gPiArQ29weXJpZ2h0IChD
+KSAyMDEzLTIwMTUgYnkgdGhlIGZvbGxvd2luZyBhdXRob3JzOgo+ID4gPiArLSBSb2IgQ2xhcmsg
+PHJvYmRjbGFya0BnbWFpbC5jb20+IChyb2JjbGFyaykKPiA+ID4gKyovCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
