@@ -1,26 +1,116 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx8mm: Enable SNVS power key according to
- board design
-Date: Tue, 18 Jun 2019 15:09:35 +0800
-Message-ID: <20190618070612.GE29881@dragon>
-References: <20190613020104.24612-1-Anson.Huang@nxp.com>
+From: Nisha Kumari <nishakumari@codeaurora.org>
+Subject: Re: [PATCH 1/4] dt-bindings: regulator: Add labibb regulator
+Date: Tue, 18 Jun 2019 11:22:45 +0530
+Message-ID: <ed756c36-2b0d-b48e-b4fd-32e2d60aa38a@codeaurora.org>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+ <1560337252-27193-2-git-send-email-nishakumari@codeaurora.org>
+ <20190613162808.GG22737@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190613020104.24612-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190613162808.GG22737@tuxbook-pro>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, ping.bai@nxp.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: broonie@kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, david.brown@linaro.org, linux-kernel@vger.kernel.org, kgunda@codeaurora.org, rnayak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:01:04AM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> The SNVS power key depends on board design, by default it should
-> be disabled in SoC DT and ONLY be enabled on board DT if it is
-> wired up.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Applied, thanks.
+On 6/13/2019 9:58 PM, Bjorn Andersson wrote:
+> On Wed 12 Jun 04:00 PDT 2019, Nisha Kumari wrote:
+>
+>> Adding the devicetree binding for labibb regulator.
+>>
+>> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+>> ---
+>>   .../bindings/regulator/qcom-labibb-regulator.txt   | 57 ++++++++++++++++++++++
+>>   1 file changed, 57 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
+>> new file mode 100644
+>> index 0000000..79aad6f4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
+>> @@ -0,0 +1,57 @@
+>> +Qualcomm's LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost) Regulator
+>> +
+>> +LAB can be used as a positive boost power supply and IBB can be used as a negative
+>> +boost power supply for display panels.
+>> +
+>> +Main node required properties:
+>> +
+>> +- compatible:			Must be:
+>> +				"qcom,lab-ibb-regulator"
+> In order to handle variations in future LABIBB implementations, make
+> this "qcom,pmi8998-lab-ibb";
+Sure, i will do that.
+>
+>> +- #address-cells:		Must be 1
+>> +- #size-cells:			Must be 0
+>> +
+>> +LAB subnode required properties:
+>> +
+>> +- reg:				Specifies the SPMI address and size for this peripheral.
+>> +- regulator-name:		A string used to describe the regulator.
+>> +- interrupts:			Specify the interrupts as per the interrupt
+>> +				encoding.
+>> +- interrupt-names:		Interrupt names to match up 1-to-1 with
+>> +				the interrupts specified in 'interrupts'
+>> +				property.
+>> +
+>> +IBB subnode required properties:
+>> +
+>> +- reg:				Specifies the SPMI address and size for this peripheral.
+>> +- regulator-name:		A string used to describe the regulator.
+>> +- interrupts:			Specify the interrupts as per the interrupt
+>> +				encoding.
+>> +- interrupt-names:		Interrupt names to match up 1-to-1 with
+>> +				the interrupts specified in 'interrupts'
+>> +				property.
+>> +
+>> +Example:
+>> +	pmi8998_lsid1: pmic@3 {
+>> +		qcom-labibb-regulator {
+> We typically want to use generic names here, but as the spmi regulator
+> binding suggest the use of "regulators" without a unit address that
+> wouldn't work.
+>
+> But you can shorten this to either "labibb" or at least
+> "labibb-regulator".
+Sure, i will do that.
+>> +			compatible = "qcom,lab-ibb-regulator";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +
+>> +			lab_regulator: qcom,lab@de00 {
+> Don't use "qcom," in the node names.
+ok
+>
+>> +				reg = <0xde00>;
+> Please follow the spmi-regulator and hide these in the driver.
+ok
+>> +				regulator-name = "lab_reg";
+> We know it's a regulator, so no need for _reg, which means that if you
+> drop "qcom," from the node name and use the node name as the default
+> regulator name you don't need this.
+Sure, i will do that.
+>
+>> +
+>> +				interrupts = <0x3 0xde 0x0 IRQ_TYPE_EDGE_RISING>;
+>> +				interrupt-names = "lab-sc-err";
+>> +			};
+>> +
+>> +			ibb_regulator: qcom,ibb@dc00 {
+>> +				reg = <0xdc00>;
+>> +				regulator-name = "ibb_reg";
+>> +
+>> +				interrupts = <0x3 0xdc 0x2 IRQ_TYPE_EDGE_RISING>;
+>> +				interrupt-names = "ibb-sc-err";
+>> +			};
+>> +
+>> +		};
+>> +	};
+> Regards,
+> Bjorn
