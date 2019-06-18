@@ -1,133 +1,98 @@
-From: Johannes Berg <johannes@sipsolutions.net>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Tue, 18 Jun 2019 20:48:33 +0200
-Message-ID: <967604dd8d466a99b865649174f8b9cd34b2560e.camel@sipsolutions.net>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
-         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
-         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
-         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
-         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
-         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
-         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
-         <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
-         <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
-         <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
-         <e6ba8a9063e63506c0b88a70418d74ca4efe85cd.camel@sipsolutions.net>
-         <850eed1d-0fec-c396-6e91-b5f1f8440ded@linaro.org>
-         (sfid-20190618_172042_951332_21BBC6A6)
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/9] dt: bindings: Add multicolor class dt bindings documention
+Date: Tue, 18 Jun 2019 12:57:14 -0600
+Message-ID: <CAL_JsqKRLZmZ5uCKWh_tpaYu7eSdYatsymzy+L-D=sesd81w+Q@mail.gmail.com>
+References: <20190523190820.29375-1-dmurphy@ti.com> <20190523190820.29375-3-dmurphy@ti.com>
+ <20190614170011.GA3277@bogus> <c234361e-f5f7-f8d7-18c6-9cc8ef74ac99@ti.com>
+ <CAL_JsqK7u1xXNmwtHjUd7Z5ewHd9_d51quH4zMXxEd63egd28w@mail.gmail.com> <afc7f11f-7f8d-7680-aef3-58c26e8b34fa@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <850eed1d-0fec-c396-6e91-b5f1f8440ded@linaro.org> (sfid-20190618_172042_951332_21BBC6A6)
-Sender: netdev-owner@vger.kernel.org
-To: Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <dcbw@redhat.com>
-Cc: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <afc7f11f-7f8d-7680-aef3-58c26e8b34fa@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Just to add to Dan's response, I think he's captured our discussions and
-thoughts well.
+On Tue, Jun 18, 2019 at 12:20 PM Jacek Anaszewski
+<jacek.anaszewski@gmail.com> wrote:
+>
+> On 6/18/19 5:36 PM, Rob Herring wrote:
+> > On Fri, Jun 14, 2019 at 11:18 AM Dan Murphy <dmurphy@ti.com> wrote:
+> >>
+> >> Rob
+> >>
+> >> Thanks for the review
+> >>
+> >> On 6/14/19 12:00 PM, Rob Herring wrote:
+> >>> On Thu, May 23, 2019 at 02:08:13PM -0500, Dan Murphy wrote:
+> >>>> Add DT bindings for the LEDs multicolor class framework.
+> >>>>
+> >>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> >>>> ---
+> >>>>    .../bindings/leds/leds-class-multicolor.txt   | 97 +++++++++++++++++++
+> >>>>    1 file changed, 97 insertions(+)
+> >>>>    create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+> >>>> new file mode 100644
+> >>>> index 000000000000..e2a2ce3279cb
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+> >>>> @@ -0,0 +1,97 @@
+> >>>> +* Multicolor LED properties
+> >>>> +
+> >>>> +Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
+> >>>> +can be grouped together and also provide a modeling mechanism so that the
+> >>>> +cluster LEDs can vary in hue and intensity to produce a wide range of colors.
+> >>>> +
+> >>>> +The nodes and properties defined in this document are unique to the multicolor
+> >>>> +LED class.  Common LED nodes and properties are inherited from the common.txt
+> >>>> +within this documentation directory.
+> >>>> +
+> >>>> +Required LED Child properties:
+> >>>> +    - color : For multicolor LED support this property should be defined as
+> >>>> +              LED_COLOR_ID_MULTI and further definition can be found in
+> >>>> +              include/linux/leds/common.h.
+> >>>> +
+> >>>> +led-controller@30 {
+> >>>> +    #address-cells = <1>;
+> >>>> +    #size-cells = <0>;
+> >>>> +    compatible = "ti,lp5024";
+> >>>> +    reg = <0x29>;
+> >>>> +
+> >>>> +    multi-led@4 {
+> >>> Typically we sort by address order.
+> >>
+> >> These are not addresses these end up being the "module" number that the
+> >> LEDs below are associated to.
+> >
+> > 'reg' (and the unit-address) is an address in the sense that is how
+> > you identify a device or sub-device. It doesn't matter what type of
+> > 'address' it is, DT practice is to sort node in unit-address numerical
+> > order.
+> >
+> > 'module' is a h/w thing, right? A bank or instance within the device?
+> > If not, using 'reg' here is not appropriate.
+>
+> In this case reg represents LEDn_BRIGHTNESS register which controls
+> a group of three LEDs. The thing is that those registers' addresses
+> start from 0x07, i.e. the formula for calculating the RGB LED module
+> address is: LEDn_BRIGHTNESS = 0x07 + n.
+>
+>  From the above it seems that we should have multi-led@7 and reg = 0x07
+> for LED0_BRIGHTNESS register governing the brightness of RGB LED
+> module 0, right?
 
-> First, a few terms (correct or improve as you like):
+Use whatever makes the most sense from a h/w perspective. If 'module
+N' is something that I'd read about in the datasheet, then I'd stick
+with 'N'.
 
-Thanks for defining, we don't do that nearly often enough.
+>
+> And regarding sorting by address order I think that Rob was asking for
+> placing whole multi-led@4 sub-node after multi-led@2 (here sticking to
+> the numeration from the patch).
 
-> - WWAN device is a hardware device (like IPA) that presents a
->   connection between AP and modem, and presents an interface
->   that allows the use of that connection to be managed.
+Right.
 
-Yes. But I was actually thinking of a "wwan_dev" to be a separate
-structure, not *directly* owned by a single driver and used to represent
-the hardware like a (hypothetical) "struct ipa_dev".
-
-> - WWAN netdevice represents a Linux network interface, with its
->   operations and queues, etc., but implements a standardized
->   set of WWAN-specific operations.  It represents a logical
-> ' channel whose data is multiplexed over the WWAN device.
-
-I'm not sure I'd asy it has much WWAN-specific operations? But yeah, I
-guess it might.
-
-> - WWAN channel is a user space abstraction that corresponds
->   with a WWAN netdevice (but I'm not clear on all the ways
->   they differ or interact).
-
-As Dan said, this could be a different abstraction than a netdevice,
-like a TTY, etc.
-
-> - The WWAN core is kernel code that presents abstractions
->   for WWAN devices and netdevices, so they can be managed
->   in a generic way.  It is for configuration and communication
->   and is not at all involved in the data path.
-> 
-> You're saying that the WWAN driver space calls wwan_add()
-> to register itself as a new WWAN device.
-
-Assuming it knows that it is in fact a WWAN device, like IPA.
-
-> You're also saying that a WWAN device "attaches" a WWAN
-> netdevice, which is basically notifying the WWAN core
-> that the new netdev/channel is available for use.
-> - I trust that a "tentative" attachement is necessary.  But
->   I'm not sure what makes it transition into becoming a
->   "real" one, or how that event gets communicated.
-
-I think Dan explained this one well. This wasn't actually on my radar
-until he pointed it out.
-
-Really this only exists with USB devices that appear as multiple
-functions (ethernet, tty, ...) but still represent a single WWAN device,
-with each function not necessarily being aware of that since it's just a
-function driver.
-
-Hopefully at least one of the function drivers will be able to figure it
-out, and then we can combine all of the functions into the WWAN device
-abstraction.
-
-[snip - Dan's explanations are great]
-
-Dan also said:
-
-> > I read "attach" here as simply associating an existing netdev with the
-> > "parent" WWAN device. A purely Linux operation that is only book-
-> > keeping and may not have any interaction with the modem. 
-
-Now I'm replying out of thread, but yes, that's what I had in mind. What
-I meant by attaching (in this case) is just that you actually mark that
-it is (or might be, if tentatively attached) part of a WWAN device.
-
-> - Are there any attributes that are only optionally supported,
->   and if so, how are the supported ones communicated?
-
-As Dan said, good point. I hadn't really considered that for now. I sort
-of know that we need it, but for the sake of simplicity decided to elide
-it for now. I'm just not sure what really are needed, and netlink
-attributes make adding them (and discovering the valid ones) pretty easy
-in the future, when a need arises.
-
-> - Which WWAN channel attributes must be set *before* the
->   channel is activated, and can't be changed?  Are there any
->   that can be changed dynamically?
-
-It's a good question. I threw a "u32 pdn" in there, but I'm not actually
-sure that's what you *really* need?
-
-Maybe the modem and userspace just agree on some arbitrary "session
-identifier"? Dan mentions "MUX ID" or "MBIM Session ID", maybe there
-really is no good general term for this and we should just call it a
-"session identifier" and agree that it depends on the control protocol
-(MBIM vs. QMI vs. ...)?
-
-> And while the whole point of this is to make things generic,
-> it might be nice to have a way to implement a new feature
-> before it can be "standardized".
-
-Not sure I understand this?
-
-FWIW, I actually came to this because we want to upstream a driver for
-an Intel modem, but ... can't really make up our mind on whether or not
-to use VLAN tags, something like rmnet (but we obviously cannot use
-rmnet, so that'd be another vendor specific interface like rmnet), or
-sysfs, or any of the other methods we have today ... :-)
-
-johannes
+Rob
