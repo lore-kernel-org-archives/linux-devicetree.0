@@ -1,134 +1,157 @@
-Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 06/27] PCI: tegra: Add PCIe Gen2 link speed support
-Date: Mon, 17 Jun 2019 23:09:31 +0530
-Message-ID: <20190617173952.29363-7-mmaddireddy@nvidia.com>
-In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
-References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=KEbZ=UR=nvidia.com=nkristam@kernel.org>
+Subject: Re: [Patch V3 4/8] dt-bindings: usb: Add NVIDIA Tegra XUSB device
+ mode controller binding
+References: <1557988772-15406-1-git-send-email-nkristam@nvidia.com>
+ <1557988772-15406-5-git-send-email-nkristam@nvidia.com>
+ <20190613213209.GA27327@bogus>
+From: Nagarjuna Kristam <nkristam@nvidia.com>
+Message-ID: <7b4e52cc-8e25-ac0a-99e4-6e9705741b74@nvidia.com>
+Date: Tue, 18 Jun 2019 11:48:36 +0530
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+In-Reply-To: <20190613213209.GA27327@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Tegra124, Tegra132, Tegra210 and Tegra186 support Gen2 link speed. After
-PCIe link is up in Gen1, set target link speed as Gen2 and retrain link.
-Link switches to Gen2 speed if Gen2 capable end point is connected, else
-link stays in Gen1.
 
-Per PCIe 4.0r0.9 sec 7.6.3.7 implementation note, driver need to wait for
-PCIe LTSSM to come back from recovery before retraining the link.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V5: No change
+On 14-06-2019 03:02, Rob Herring wrote:
+> On Thu, May 16, 2019 at 12:09:28PM +0530, Nagarjuna Kristam wrote:
+>> Add device-tree binding documentation for the XUSB device mode controller
+>> present on Tegra210 SoC. This controller supports the USB 3.0
+>> specification.
+>>
+>> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+>> ---
+>>  .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  | 101 +++++++++++++++++++++
+>>  1 file changed, 101 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
+>> new file mode 100644
+>> index 0000000..d78b436
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
+>> @@ -0,0 +1,101 @@
+>> +Device tree binding for NVIDIA Tegra XUSB device mode controller (XUDC)
+>> +=======================================================================
+>> +
+>> +The Tegra XUDC controller supports both USB 2.0 HighSpeed/FullSpeed and
+>> +USB 3.0 SuperSpeed protocols.
+>> +
+>> +Required properties:
+>> +--------------------
+>> +- compatible: For Tegra210, must contain "nvidia,tegra210-xudc".
+>> +- reg: Must contain the base and length of the XUSB device registers, XUSB device
+>> +  PCI Config registers and XUSB device controller registers.
+>> +- interrupts: Must contain the XUSB device interrupt.
+>> +- clocks: Must contain an entry for all clocks used.
+>> +  See ../clock/clock-bindings.txt for details.
+>> +- clock-names: Must include the following entries:
+>> +   - dev: Clock to enable core XUSB dev clock.
+>> +   - ss: Clock to enable XUSB super speed clock.
+>> +   - ss_src: Clock to enable XUSB super speed dev clock.
+>> +   - hs_src: Clock to enable XUSB high Speed dev clock.
+>> +   - fs_src: Clock to enable XUSB full Speed dev clock.
+>> +- nvidia,xusb-padctl: phandle to the XUSB pad controller that is used to
+>> +  configure the USB pads used by the XUDC controller.
+>> +- power-domains: A list of PM domain specifiers that reference each power-domain
+>> +  used by the XUSB device mode controller. This list must comprise of a specifier
+>> +  for the XUSBA and XUSBB power-domains. See ../power/power_domain.txt and
+>> +  ../arm/tegra/nvidia,tegra20-pmc.txt for details.
+>> +- power-domain-names: A list of names that represent each of the specifiers in
+>> +  the 'power-domains' property. Must include 'ss' and 'dev'.
+>> +
+>> +For Tegra210:
+>> +- avddio-usb-supply: PCIe/USB3 analog logic power supply. Must supply 1.05 V.
+> 
+> Wouldn't an analog supply belong in the phy node?
+> 
 
-V4: No change
+This is USB controller power supply and hence added it part of controller driver node.
+Will correct documentation accordingly.
 
-V3: Added blank line after each while loop.
+>> +- hvdd-usb-supply: USB controller power supply. Must supply 3.3 V.
+>> +
+>> +- phys: Must contain an entry for each entry in phy-names.
+>> +  See ../phy/phy-bindings.txt for details.
+>> +- phy-names: Should include an entry for each PHY used by the controller.
+>> +  Names must be "usb2", and "usb3" if support SuperSpeed device mode.
+>> +  - "usb3" phy, SuperSpeed (SSTX+/SSTX-/SSRX+/SSRX-) data lines.
+>> +  - "usb2" phy, USB 2.0 (D+/D-) data lines.
+>> +
+>> +- extcon: Must contains an extcon entry which detects USB VBUS pin.
+>> +  See ../extcon/extcon-usb-gpio.txt for details.
+> 
+> Use the usb-connector binding for new bindings.
+> 
 
-V2: Changed "for loop" to "while", to make it compact and handled coding
-style comments.
+already taken care in V4 series of this patch.
 
- drivers/pci/controller/pci-tegra.c | 64 ++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 5e9fcef5f8eb..5d19067f7193 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -191,6 +191,8 @@
- #define  RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE	0x20000000
- #define  RP_LINK_CONTROL_STATUS_LINKSTAT_MASK	0x3fff0000
- 
-+#define RP_LINK_CONTROL_STATUS_2		0x000000b0
-+
- #define PADS_CTL_SEL		0x0000009c
- 
- #define PADS_CTL		0x000000a0
-@@ -226,6 +228,7 @@
- #define PADS_REFCLK_CFG_DRVI_SHIFT		12 /* 15:12 */
- 
- #define PME_ACK_TIMEOUT 10000
-+#define LINK_RETRAIN_TIMEOUT 100000 /* in usec */
- 
- struct tegra_msi {
- 	struct msi_controller chip;
-@@ -2089,6 +2092,64 @@ static bool tegra_pcie_port_check_link(struct tegra_pcie_port *port)
- 	return false;
- }
- 
-+static void tegra_pcie_change_link_speed(struct tegra_pcie *pcie)
-+{
-+	struct device *dev = pcie->dev;
-+	struct tegra_pcie_port *port, *tmp;
-+	ktime_t deadline;
-+	u32 value;
-+
-+	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-+		/*
-+		 * "Supported Link Speeds Vector" in "Link Capabilities 2"
-+		 * is not supported by Tegra. tegra_pcie_change_link_speed()
-+		 * is called only for Tegra chips which support Gen2.
-+		 * So there no harm if supported link speed is not verified.
-+		 */
-+		value = readl(port->base + RP_LINK_CONTROL_STATUS_2);
-+		value &= ~PCI_EXP_LNKSTA_CLS;
-+		value |= PCI_EXP_LNKSTA_CLS_5_0GB;
-+		writel(value, port->base + RP_LINK_CONTROL_STATUS_2);
-+
-+		/*
-+		 * Poll until link comes back from recovery to avoid race
-+		 * condition.
-+		 */
-+		deadline = ktime_add_us(ktime_get(), LINK_RETRAIN_TIMEOUT);
-+
-+		while (ktime_before(ktime_get(), deadline)) {
-+			value = readl(port->base + RP_LINK_CONTROL_STATUS);
-+			if ((value & PCI_EXP_LNKSTA_LT) == 0)
-+				break;
-+
-+			usleep_range(2000, 3000);
-+		}
-+
-+		if (value & PCI_EXP_LNKSTA_LT)
-+			dev_warn(dev, "PCIe port %u link is in recovery\n",
-+				 port->index);
-+
-+		/* Retrain the link */
-+		value = readl(port->base + RP_LINK_CONTROL_STATUS);
-+		value |= PCI_EXP_LNKCTL_RL;
-+		writel(value, port->base + RP_LINK_CONTROL_STATUS);
-+
-+		deadline = ktime_add_us(ktime_get(), LINK_RETRAIN_TIMEOUT);
-+
-+		while (ktime_before(ktime_get(), deadline)) {
-+			value = readl(port->base + RP_LINK_CONTROL_STATUS);
-+			if ((value & PCI_EXP_LNKSTA_LT) == 0)
-+				break;
-+
-+			usleep_range(2000, 3000);
-+		}
-+
-+		if (value & PCI_EXP_LNKSTA_LT)
-+			dev_err(dev, "failed to retrain link of port %u\n",
-+				port->index);
-+	}
-+}
-+
- static void tegra_pcie_enable_ports(struct tegra_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
-@@ -2113,6 +2174,9 @@ static void tegra_pcie_enable_ports(struct tegra_pcie *pcie)
- 		tegra_pcie_port_disable(port);
- 		tegra_pcie_port_free(port);
- 	}
-+
-+	if (pcie->soc->has_gen2)
-+		tegra_pcie_change_link_speed(pcie);
- }
- 
- static void tegra_pcie_disable_ports(struct tegra_pcie *pcie)
--- 
-2.17.1
+Thanks,
+Nagarjuna
+>> +
+>> +Example:
+>> +--------
+>> +	pmc: pmc@7000e400 {
+>> +		compatible = "nvidia,tegra210-pmc";
+>> +		reg = <0x0 0x7000e400 0x0 0x400>;
+>> +		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+>> +		clock-names = "pclk", "clk32k_in";
+>> +
+>> +		powergates {
+>> +			pd_xusbss: xusba {
+>> +				clocks = <&tegra_car TEGRA210_CLK_XUSB_SS>;
+>> +				resets = <&tegra_car TEGRA210_CLK_XUSB_SS>;
+>> +				#power-domain-cells = <0>;
+>> +			};
+>> +
+>> +			pd_xusbdev: xusbb {
+>> +				clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>;
+>> +				resets = <&tegra_car 95>;
+>> +				#power-domain-cells = <0>;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	xudc@700d0000 {
+>> +		compatible = "nvidia,tegra210-xudc";
+>> +		reg = <0x0 0x700d0000 0x0 0x8000>,
+>> +			<0x0 0x700d8000 0x0 0x1000>,
+>> +			<0x0 0x700d9000 0x0 0x1000>;
+>> +
+>> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+>> +
+>> +		clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
+>> +			<&tegra_car TEGRA210_CLK_XUSB_SS>,
+>> +			<&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
+>> +			<&tegra_car TEGRA210_CLK_XUSB_HS_SRC>,
+>> +			<&tegra_car TEGRA210_CLK_XUSB_FS_SRC>;
+>> +		clock-names = "dev", "ss", "ss_src",
+>> +			      "hs_src", "fs_src";
+>> +
+>> +		power-domains = <&pd_xusbdev>, <&pd_xusbss>;
+>> +		power-domain-names = "dev", "ss";
+>> +
+>> +		nvidia,xusb-padctl = <&padctl>;
+>> +
+>> +		phys = <&{/padctl@7009f000/pads/usb2/lanes/usb2-0}>;
+>> +		phy-names = "usb2;
+>> +
+>> +		avddio-usb-supply = <&vdd_pex_1v05>;
+>> +		hvdd-usb-supply = <&vdd_3v3_sys>;
+>> +
+>> +		extcon = <&extcon_usb>;
+>> +	};
+>> +
+>> +	extcon_usb: extcon_vbus {
+>> +		compatible = "linux,extcon-usb-gpio";
+>> +		vbus-gpio = <&gpio TEGRA_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
+>> +	};
+>> +
+>> -- 
+>> 2.7.4
+>>
