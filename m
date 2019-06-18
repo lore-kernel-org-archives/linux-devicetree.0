@@ -1,7 +1,7 @@
 From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v6 3/5] mtd: Add support for HyperBus memory devices
-Date: Tue, 18 Jun 2019 14:58:59 +0530
-Message-ID: <20190618092901.31764-4-vigneshr@ti.com>
+Subject: [PATCH v6 1/5] mtd: cfi_cmdset_0002: Add support for polling status register
+Date: Tue, 18 Jun 2019 14:58:57 +0530
+Message-ID: <20190618092901.31764-2-vigneshr@ti.com>
 References: <20190618092901.31764-1-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,382 +13,212 @@ To: Vignesh Raghavendra <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>
 Cc: linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
-Bus interface between a host system master and one or more slave
-interfaces. HyperBus is used to connect microprocessor, microcontroller,
-or ASIC devices with random access NOR flash memory (called HyperFlash)
-or self refresh DRAM (called HyperRAM).
+HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
+Set (0x0002) for flash operations, therefore
+drivers/mtd/chips/cfi_cmdset_0002.c can be used as is. But these devices
+do not support DQ polling method of determining chip ready/good status.
+These flashes provide Status Register whose bits can be polled to know
+status of flash operation.
 
-Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
-signal and either Single-ended clock(3.0V parts) or Differential clock
-(1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
-At bus level, it follows a separate protocol described in HyperBus
-specification[1].
+Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
+Extended Query version 1.5. Bit 0 of "Software Features supported" field
+of CFI Primary Vendor-Specific Extended Query table indicates
+presence/absence of status register and Bit 1 indicates whether or not
+DQ polling is supported. Using these bits, its possible to determine
+whether flash supports DQ polling or need to use Status Register.
 
-HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
-to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
-its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
-HyperBus operates at >166MHz frequencies.
-HyperRAM provides direct random read/write access to flash memory
-array.
+Add support for polling Status Register to know device ready/status of
+erase/write operations when DQ polling is not supported.
+Print error messages on erase/program failure by looking at related
+Status Register bits.
 
-But, HyperBus memory controllers seem to abstract implementation details
-and expose a simple MMIO interface to access connected flash.
-
-Add support for registering HyperFlash devices with MTD framework. MTD
-maps framework along with CFI chip support framework are used to support
-communicating with flash.
-
-Framework is modelled along the lines of spi-nor framework. HyperBus
-memory controller (HBMC) drivers calls hyperbus_register_device() to
-register a single HyperFlash device. HyperFlash core parses MMIO access
-information from DT, sets up the map_info struct, probes CFI flash and
-registers it with MTD framework.
-
-HyperRAM is not supported at the moment.
-
-HyperBus specification can be found at[1]
-HyperFlash datasheet can be found at[2]
-
-[1] https://www.cypress.com/file/213356/download
-[2] https://www.cypress.com/file/213346/download
-[3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
-    Table 12-5741. HyperFlash Access Sequence
+[1] https://www.cypress.com/file/213346/download
 
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 ---
-v6:
-Clarify read16()/write16() APIs
-Move calibration code out into TI specific driver
 
- MAINTAINERS                          |   7 ++
- drivers/mtd/Kconfig                  |   2 +
- drivers/mtd/Makefile                 |   1 +
- drivers/mtd/hyperbus/Kconfig         |  11 ++
- drivers/mtd/hyperbus/Makefile        |   3 +
- drivers/mtd/hyperbus/hyperbus-core.c | 154 +++++++++++++++++++++++++++
- include/linux/mtd/hyperbus.h         |  86 +++++++++++++++
- 7 files changed, 264 insertions(+)
- create mode 100644 drivers/mtd/hyperbus/Kconfig
- create mode 100644 drivers/mtd/hyperbus/Makefile
- create mode 100644 drivers/mtd/hyperbus/hyperbus-core.c
- create mode 100644 include/linux/mtd/hyperbus.h
+v6: no change
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ff7c2b7e67b9..58c6ad3dae66 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7353,6 +7353,13 @@ F:	include/asm-generic/mshyperv.h
- F:	tools/hv/
- F:	Documentation/ABI/stable/sysfs-bus-vmbus
+ drivers/mtd/chips/cfi_cmdset_0002.c | 90 +++++++++++++++++++++++++++++
+ include/linux/mtd/cfi.h             |  5 ++
+ 2 files changed, 95 insertions(+)
+
+diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
+index c8fa5906bdf9..0f571f162e3b 100644
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -49,6 +49,16 @@
+ #define SST49LF008A		0x005a
+ #define AT49BV6416		0x00d6
  
-+HYPERBUS SUPPORT
-+M:	Vignesh Raghavendra <vigneshr@ti.com>
-+S:	Supported
-+F:	drivers/mtd/hyperbus/
-+F:	include/linux/mtd/hyperbus.h
-+F:	Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
++/*
++ * Status Register bit description. Used by flash devices that don't
++ * support DQ polling (e.g. HyperFlash)
++ */
++#define CFI_SR_DRB		BIT(7)
++#define CFI_SR_ESB		BIT(5)
++#define CFI_SR_PSB		BIT(4)
++#define CFI_SR_WBASB		BIT(3)
++#define CFI_SR_SLSB		BIT(1)
 +
- HYPERVISOR VIRTUAL CONSOLE DRIVER
- L:	linuxppc-dev@lists.ozlabs.org
- S:	Odd Fixes
-diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
-index fb31a7f649a3..80a6e2dcd085 100644
---- a/drivers/mtd/Kconfig
-+++ b/drivers/mtd/Kconfig
-@@ -274,4 +274,6 @@ source "drivers/mtd/spi-nor/Kconfig"
+ static int cfi_amdstd_read (struct mtd_info *, loff_t, size_t, size_t *, u_char *);
+ static int cfi_amdstd_write_words(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
+ static int cfi_amdstd_write_buffers(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
+@@ -97,6 +107,48 @@ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
+ 	.module		= THIS_MODULE
+ };
  
- source "drivers/mtd/ubi/Kconfig"
++/*
++ * Use status register to poll for Erase/write completion when DQ is not
++ * supported. This is indicated by Bit[1:0] of SoftwareFeatures field in
++ * CFI Primary Vendor-Specific Extended Query table 1.5
++ */
++static int cfi_use_status_reg(struct cfi_private *cfi)
++{
++	struct cfi_pri_amdstd *extp = cfi->cmdset_priv;
++
++	return extp->MinorVersion >= '5' &&
++		(extp->SoftwareFeatures & 0x3) == 0x1;
++}
++
++static void cfi_check_err_status(struct map_info *map, unsigned long adr)
++{
++	struct cfi_private *cfi = map->fldrv_priv;
++	map_word status;
++
++	if (!cfi_use_status_reg(cfi))
++		return;
++
++	cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
++			 cfi->device_type, NULL);
++	status = map_read(map, adr);
++
++	if (map_word_bitsset(map, status, CMD(0x3a))) {
++		unsigned long chipstatus = MERGESTATUS(status);
++
++		if (chipstatus & CFI_SR_ESB)
++			pr_err("%s erase operation failed, status %lx\n",
++			       map->name, chipstatus);
++		if (chipstatus & CFI_SR_PSB)
++			pr_err("%s program operation failed, status %lx\n",
++			       map->name, chipstatus);
++		if (chipstatus & CFI_SR_WBASB)
++			pr_err("%s buffer program command aborted, status %lx\n",
++			       map->name, chipstatus);
++		if (chipstatus & CFI_SR_SLSB)
++			pr_err("%s sector write protected, status %lx\n",
++			       map->name, chipstatus);
++	}
++}
  
-+source "drivers/mtd/hyperbus/Kconfig"
-+
- endif # MTD
-diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
-index 806287e80e84..62d649a959e2 100644
---- a/drivers/mtd/Makefile
-+++ b/drivers/mtd/Makefile
-@@ -34,3 +34,4 @@ obj-y		+= chips/ lpddr/ maps/ devices/ nand/ tests/
+ /* #define DEBUG_CFI_FEATURES */
  
- obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor/
- obj-$(CONFIG_MTD_UBI)		+= ubi/
-+obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus/
-diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
-new file mode 100644
-index 000000000000..98147e28caa0
---- /dev/null
-+++ b/drivers/mtd/hyperbus/Kconfig
-@@ -0,0 +1,11 @@
-+menuconfig MTD_HYPERBUS
-+	tristate "HyperBus support"
-+	select MTD_CFI
-+	select MTD_MAP_BANK_WIDTH_2
-+	select MTD_CFI_AMDSTD
-+	select MTD_COMPLEX_MAPPINGS
-+	help
-+	  This is the framework for the HyperBus which can be used by
-+	  the HyperBus Controller driver to communicate with
-+	  HyperFlash. See Cypress HyperBus specification for more
-+	  details
-diff --git a/drivers/mtd/hyperbus/Makefile b/drivers/mtd/hyperbus/Makefile
-new file mode 100644
-index 000000000000..ca61dedd730d
---- /dev/null
-+++ b/drivers/mtd/hyperbus/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
+@@ -744,8 +796,22 @@ static struct mtd_info *cfi_amdstd_setup(struct mtd_info *mtd)
+  */
+ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
+ {
++	struct cfi_private *cfi = map->fldrv_priv;
+ 	map_word d, t;
+ 
++	if (cfi_use_status_reg(cfi)) {
++		map_word ready = CMD(CFI_SR_DRB);
++		/*
++		 * For chips that support status register, check device
++		 * ready bit
++		 */
++		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
++				 cfi->device_type, NULL);
++		d = map_read(map, addr);
 +
-+obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus-core.o
-diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
-new file mode 100644
-index 000000000000..63a9e64895bc
---- /dev/null
-+++ b/drivers/mtd/hyperbus/hyperbus-core.c
-@@ -0,0 +1,154 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+// Author: Vignesh Raghavendra <vigneshr@ti.com>
-+
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mtd/hyperbus.h>
-+#include <linux/mtd/map.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/types.h>
-+
-+static struct hyperbus_device *map_to_hbdev(struct map_info *map)
-+{
-+	return container_of(map, struct hyperbus_device, map);
-+}
-+
-+static map_word hyperbus_read16(struct map_info *map, unsigned long addr)
-+{
-+	struct hyperbus_device *hbdev = map_to_hbdev(map);
-+	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
-+	map_word read_data;
-+
-+	read_data.x[0] = ctlr->ops->read16(hbdev, addr);
-+
-+	return read_data;
-+}
-+
-+static void hyperbus_write16(struct map_info *map, map_word d,
-+			     unsigned long addr)
-+{
-+	struct hyperbus_device *hbdev = map_to_hbdev(map);
-+	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
-+
-+	ctlr->ops->write16(hbdev, addr, d.x[0]);
-+}
-+
-+static void hyperbus_copy_from(struct map_info *map, void *to,
-+			       unsigned long from, ssize_t len)
-+{
-+	struct hyperbus_device *hbdev = map_to_hbdev(map);
-+	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
-+
-+	ctlr->ops->copy_from(hbdev, to, from, len);
-+}
-+
-+static void hyperbus_copy_to(struct map_info *map, unsigned long to,
-+			     const void *from, ssize_t len)
-+{
-+	struct hyperbus_device *hbdev = map_to_hbdev(map);
-+	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
-+
-+	ctlr->ops->copy_to(hbdev, to, from, len);
-+}
-+
-+int hyperbus_register_device(struct hyperbus_device *hbdev)
-+{
-+	const struct hyperbus_ops *ops;
-+	struct hyperbus_ctlr *ctlr;
-+	struct device_node *np;
-+	struct map_info *map;
-+	struct resource res;
-+	struct device *dev;
-+	int ret;
-+
-+	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
-+		pr_err("hyperbus: please fill all the necessary fields!\n");
-+		return -EINVAL;
++		return map_word_andequal(map, d, ready, ready);
 +	}
 +
-+	np = hbdev->np;
-+	ctlr = hbdev->ctlr;
-+	if (!of_device_is_compatible(np, "cypress,hyperflash"))
-+		return -ENODEV;
+ 	d = map_read(map, addr);
+ 	t = map_read(map, addr);
+ 
+@@ -769,8 +835,27 @@ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
+  */
+ static int __xipram chip_good(struct map_info *map, unsigned long addr, map_word expected)
+ {
++	struct cfi_private *cfi = map->fldrv_priv;
+ 	map_word oldd, curd;
+ 
++	if (cfi_use_status_reg(cfi)) {
++		map_word ready = CMD(CFI_SR_DRB);
++		map_word err = CMD(CFI_SR_PSB | CFI_SR_ESB);
++		/*
++		 * For chips that support status register, check device
++		 * ready bit and Erase/Program status bit to know if
++		 * operation succeeded.
++		 */
++		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
++				 cfi->device_type, NULL);
++		curd = map_read(map, addr);
 +
-+	hbdev->memtype = HYPERFLASH;
++		if (map_word_andequal(map, curd, ready, ready))
++			return !map_word_bitsset(map, curd, err);
 +
-+	ret = of_address_to_resource(np, 0, &res);
-+	if (ret)
-+		return ret;
-+
-+	dev = ctlr->dev;
-+	map = &hbdev->map;
-+	map->size = resource_size(&res);
-+	map->virt = devm_ioremap_resource(dev, &res);
-+	if (IS_ERR(map->virt))
-+		return PTR_ERR(map->virt);
-+
-+	map->name = dev_name(dev);
-+	map->bankwidth = 2;
-+	map->device_node = np;
-+
-+	simple_map_init(map);
-+	ops = ctlr->ops;
-+	if (ops) {
-+		if (ops->read16)
-+			map->read = hyperbus_read16;
-+		if (ops->write16)
-+			map->write = hyperbus_write16;
-+		if (ops->copy_to)
-+			map->copy_to = hyperbus_copy_to;
-+		if (ops->copy_from)
-+			map->copy_from = hyperbus_copy_from;
-+
-+		if (ops->calibrate && !ctlr->calibrated) {
-+			ret = ops->calibrate(hbdev);
-+			if (!ret) {
-+				dev_err(dev, "Calibration failed\n");
-+				return -ENODEV;
-+			}
-+			ctlr->calibrated = true;
-+		}
++		return 0;
 +	}
 +
-+	hbdev->mtd = do_map_probe("cfi_probe", map);
-+	if (!hbdev->mtd) {
-+		dev_err(dev, "probing of hyperbus device failed\n");
-+		return -ENODEV;
-+	}
-+
-+	hbdev->mtd->dev.parent = dev;
-+	mtd_set_of_node(hbdev->mtd, np);
-+
-+	ret = mtd_device_register(hbdev->mtd, NULL, 0);
-+	if (ret) {
-+		dev_err(dev, "failed to register mtd device\n");
-+		map_destroy(hbdev->mtd);
-+		return ret;
-+	}
-+	hbdev->registered = true;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(hyperbus_register_device);
-+
-+int hyperbus_unregister_device(struct hyperbus_device *hbdev)
-+{
-+	int ret = 0;
-+
-+	if (hbdev && hbdev->mtd && hbdev->registered) {
-+		ret = mtd_device_unregister(hbdev->mtd);
-+		map_destroy(hbdev->mtd);
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(hyperbus_unregister_device);
-+
-+MODULE_DESCRIPTION("HyperBus Framework");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Vignesh Raghavendra <vigneshr@ti.com>");
-diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
-new file mode 100644
-index 000000000000..ead969aad35b
---- /dev/null
-+++ b/include/linux/mtd/hyperbus.h
-@@ -0,0 +1,86 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ */
-+
-+#ifndef __LINUX_MTD_HYPERBUS_H__
-+#define __LINUX_MTD_HYPERBUS_H__
-+
-+#include <linux/mtd/map.h>
-+
-+enum hyperbus_memtype {
-+	HYPERFLASH,
-+	HYPERRAM,
-+};
-+
-+/**
-+ * struct hyperbus_device - struct representing HyperBus slave device
-+ * @map: map_info struct for accessing MMIO HyperBus flash memory
-+ * @np: pointer to HyperBus slave device node
-+ * @mtd: pointer to MTD struct
-+ * @ctlr: pointer to HyperBus controller struct
-+ * @memtype: type of memory device: HyperFlash or HyperRAM
-+ * @registered: flag to indicate whether device is registered with MTD core
-+ */
-+
-+struct hyperbus_device {
-+	struct map_info map;
-+	struct device_node *np;
-+	struct mtd_info *mtd;
-+	struct hyperbus_ctlr *ctlr;
-+	enum hyperbus_memtype memtype;
-+	bool registered;
-+};
-+
-+/**
-+ * struct hyperbus_ops - struct representing custom HyperBus operations
-+ * @read16: read 16 bit of data to flash in a single burst. Used to read
-+ *          from non default address space, such as ID/CFI space
-+ * @write16: write 16 bit of data to flash in a single burst. Used to
-+ *           send cmd to flash or write single 16 bit word at a time
-+ * @copy_from: copy data from flash memory
-+ * @copy_to: copy data to flash memory
-+ * @calibrate: calibrate HyperBus controller
-+ */
-+
-+struct hyperbus_ops {
-+	u16 (*read16)(struct hyperbus_device *hbdev, unsigned long addr);
-+	void (*write16)(struct hyperbus_device *hbdev,
-+			unsigned long addr, u16 val);
-+	void (*copy_from)(struct hyperbus_device *hbdev, void *to,
-+			  unsigned long from, ssize_t len);
-+	void (*copy_to)(struct hyperbus_device *dev, unsigned long to,
-+			const void *from, ssize_t len);
-+	int (*calibrate)(struct hyperbus_device *dev);
-+};
-+
-+/**
-+ * struct hyperbus_ctlr - struct representing HyperBus controller
-+ * @dev: pointer to HyperBus controller device
-+ * @calibrated: flag to indicate ctlr calibration sequence is complete
-+ * @ops: HyperBus controller ops
-+ */
-+struct hyperbus_ctlr {
-+	struct device *dev;
-+	bool calibrated;
-+
-+	const struct hyperbus_ops *ops;
-+};
-+
-+/**
-+ * hyperbus_register_device - probe and register a HyperBus slave memory device
-+ * @hbdev: hyperbus_device struct with dev, np and ctlr field populated
-+ *
-+ * Return: 0 for success, others for failure.
-+ */
-+int hyperbus_register_device(struct hyperbus_device *hbdev);
-+
-+/**
-+ * hyperbus_unregister_device - deregister HyperBus slave memory device
-+ * @hbdev: hyperbus_device to be unregistered
-+ *
-+ * Return: 0 for success, others for failure.
-+ */
-+int hyperbus_unregister_device(struct hyperbus_device *hbdev);
-+
-+#endif /* __LINUX_MTD_HYPERBUS_H__ */
+ 	oldd = map_read(map, addr);
+ 	curd = map_read(map, addr);
+ 
+@@ -1644,6 +1729,7 @@ static int __xipram do_write_oneword(struct map_info *map, struct flchip *chip,
+ 	/* Did we succeed? */
+ 	if (!chip_good(map, adr, datum)) {
+ 		/* reset on all failures. */
++		cfi_check_err_status(map, adr);
+ 		map_write(map, CMD(0xF0), chip->start);
+ 		/* FIXME - should have reset delay before continuing */
+ 
+@@ -1901,6 +1987,7 @@ static int __xipram do_write_buffer(struct map_info *map, struct flchip *chip,
+ 	 * See e.g.
+ 	 * http://www.spansion.com/Support/Application%20Notes/MirrorBit_Write_Buffer_Prog_Page_Buffer_Read_AN.pdf
+ 	 */
++	cfi_check_err_status(map, adr);
+ 	cfi_send_gen_cmd(0xAA, cfi->addr_unlock1, chip->start, map, cfi,
+ 			 cfi->device_type, NULL);
+ 	cfi_send_gen_cmd(0x55, cfi->addr_unlock2, chip->start, map, cfi,
+@@ -2107,6 +2194,7 @@ static int do_panic_write_oneword(struct map_info *map, struct flchip *chip,
+ 
+ 	if (!chip_good(map, adr, datum)) {
+ 		/* reset on all failures. */
++		cfi_check_err_status(map, adr);
+ 		map_write(map, CMD(0xF0), chip->start);
+ 		/* FIXME - should have reset delay before continuing */
+ 
+@@ -2316,6 +2404,7 @@ static int __xipram do_erase_chip(struct map_info *map, struct flchip *chip)
+ 	/* Did we succeed? */
+ 	if (ret) {
+ 		/* reset on all failures. */
++		cfi_check_err_status(map, adr);
+ 		map_write(map, CMD(0xF0), chip->start);
+ 		/* FIXME - should have reset delay before continuing */
+ 
+@@ -2412,6 +2501,7 @@ static int __xipram do_erase_oneblock(struct map_info *map, struct flchip *chip,
+ 	/* Did we succeed? */
+ 	if (ret) {
+ 		/* reset on all failures. */
++		cfi_check_err_status(map, adr);
+ 		map_write(map, CMD(0xF0), chip->start);
+ 		/* FIXME - should have reset delay before continuing */
+ 
+diff --git a/include/linux/mtd/cfi.h b/include/linux/mtd/cfi.h
+index 208c87cf2e3e..b50416169049 100644
+--- a/include/linux/mtd/cfi.h
++++ b/include/linux/mtd/cfi.h
+@@ -219,6 +219,11 @@ struct cfi_pri_amdstd {
+ 	uint8_t  VppMin;
+ 	uint8_t  VppMax;
+ 	uint8_t  TopBottom;
++	/* Below field are added from version 1.5 */
++	uint8_t  ProgramSuspend;
++	uint8_t  UnlockBypass;
++	uint8_t  SecureSiliconSector;
++	uint8_t  SoftwareFeatures;
+ } __packed;
+ 
+ /* Vendor-Specific PRI for Atmel chips (command set 0x0002) */
 -- 
 2.21.0
