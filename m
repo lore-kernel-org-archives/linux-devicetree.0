@@ -1,81 +1,54 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V12 3/4] arm64: dts: imx8qxp: added ddr performance
- monitor nodes
-Date: Tue, 18 Jun 2019 14:37:02 +0800
-Message-ID: <20190618063626.GB29468@dragon>
-References: <1556736193-29411-1-git-send-email-Frank.Li@nxp.com>
- <1556736193-29411-3-git-send-email-Frank.Li@nxp.com>
+From: Nisha Kumari <nishakumari@codeaurora.org>
+Subject: Re: [PATCH 4/4] regulator: adding interrupt handling in labibb
+ regulator
+Date: Tue, 18 Jun 2019 11:53:57 +0530
+Message-ID: <8294996d-84ee-dff2-7369-00c17348a09c@codeaurora.org>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+ <1560337252-27193-5-git-send-email-nishakumari@codeaurora.org>
+ <20190613172738.GO5316@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1556736193-29411-3-git-send-email-Frank.Li@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Li <frank.li@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190613172738.GO5316@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, david.brown@linaro.org, linux-kernel@vger.kernel.org, kgunda@codeaurora.org, rnayak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 01, 2019 at 06:43:32PM +0000, Frank Li wrote:
-> Add ddr performance monitor
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-Please resend without using 'Content-Transfer-Encoding: base64'.
+On 6/13/2019 10:57 PM, Mark Brown wrote:
+> On Wed, Jun 12, 2019 at 04:30:52PM +0530, Nisha Kumari wrote:
+>
+>> +static void labibb_sc_err_recovery_work(void *_labibb)
+>> +{
+>> +	int ret;
+>> +	struct qcom_labibb *labibb = (struct qcom_labibb *)_labibb;
+>> +
+>> +	labibb->ibb_vreg.vreg_enabled = 0;
+>> +	labibb->lab_vreg.vreg_enabled = 0;
+>> +
+>> +	ret = qcom_ibb_regulator_enable(labibb->lab_vreg.rdev);
+> The driver should *never* enable the regulator itself, it should only do
+> this if the core told it to.
+Ok, I will change it
+>
+>> +	/*
+>> +	 * The SC(short circuit) fault would trigger PBS(Portable Batch
+>> +	 * System) to disable regulators for protection. This would
+>> +	 * cause the SC_DETECT status being cleared so that it's not
+>> +	 * able to get the SC fault status.
+>> +	 * Check if LAB/IBB regulators are enabled in the driver but
+>> +	 * disabled in hardware, this means a SC fault had happened
+>> +	 * and SCP handling is completed by PBS.
+>> +	 */
+> Let the core worry about this, the driver should just report the problem
+> to the core like all other devices do (and this driver doesn't...).
 
-Shawn
+Ok
 
-> ---
-> 
-> Notes:
->     No change from v9 to v12
-> 
->     Change from v8 to v9
->     * put ddr-pmu under ddr_subsystem bus
-> 
->     Change from v3 to v8
->     * none
-> 
->     Change from v2 to v3
->     * ddr_pmu0 -> ddr-pmu
-> 
->  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> index 0683ee2..a33e08c 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> @@ -378,6 +378,20 @@
->  		};
->  	};
->  
-> +	ddr_subsyss: bus@5c000000 {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x5c000000 0x0 0x5c000000 0x1000000>;
-> +
-> +		ddr-pmu@5c020000 {
-> +			compatible = "fsl,imx8-ddr-pmu";
-> +			reg = <0x5c020000 0x10000>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +	};
-> +
->  	lsio_subsys: bus@5d000000 {
->  		compatible = "simple-bus";
->  		#address-cells = <1>;
-> -- 
-> 2.5.2
-> 
+
+Thanks,
+
+Nisha
