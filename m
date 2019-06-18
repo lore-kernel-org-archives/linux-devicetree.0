@@ -1,103 +1,127 @@
-From: Tomasz Figa via iommu <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Subject: Re: [PATCH v7 14/21] iommu/mediatek: Add mmu1 support
-Date: Tue, 18 Jun 2019 15:19:07 +0900
-Message-ID: <CAAFQd5A5GUn1Zq1xF2_2V0MReNPd5bra2F=nquvodSAZUua5AQ@mail.gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
-	<1560169080-27134-15-git-send-email-yong.wu@mediatek.com>
-Reply-To: Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Jingoo Han <jingoohan1@gmail.com>
+Subject: Re: [PATCH V10 03/15] PCI: dwc: Perform dbi regs write lock towards
+ the end
+Date: Tue, 18 Jun 2019 06:34:12 +0000
+Message-ID: <PSXP216MB066293334CA5E29E14C41B9FAAEA0@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
+References: <20190612095339.20118-1-vidyas@nvidia.com>
+ <20190612095339.20118-4-vidyas@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1560169080-27134-15-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190612095339.20118-4-vidyas@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vidya Sagar <vidyas@nvidia.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "kishon@ti.com" <kishon@ti.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>, "kthota@nvidia.com" <kthota@nvidia.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mperttunen@nvidia.com" <mperttunen@nvidia.com>, Han Jingoo <jingoohan1@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "digetx@gmail.com" <digetx@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sagar.tv@gmail.com" <sagar.tv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 9:21 PM Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+On 6/12/19, 6:54 PM, Vidya Sagar wrote:
 >
-> Normally the M4U HW connect EMI with smi. the diagram is like below:
->               EMI
->                |
->               M4U
->                |
->             smi-common
->                |
->        -----------------
->        |    |    |     |    ...
->     larb0 larb1  larb2 larb3
+> Remove multiple write enable and disable sequences of dbi registers as
+> Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
+> DBI write-lock enable bit thereby not allowing any further writes to BAR-0
+> register in config space to take place. Hence enabling write permission at
+> the start of function and disabling the same only towards the end.
 >
-> Actually there are 2 mmu cells in the M4U HW, like this diagram:
->
->               EMI
->            ---------
->             |     |
->            mmu0  mmu1     <- M4U
->             |     |
->            ---------
->                |
->             smi-common
->                |
->        -----------------
->        |    |    |     |    ...
->     larb0 larb1  larb2 larb3
->
-> This patch add support for mmu1. In order to get better performance,
-> we could adjust some larbs go to mmu1 while the others still go to
-> mmu0. This is controlled by a SMI COMMON register SMI_BUS_SEL(0x220).
->
-> mt2712, mt8173 and mt8183 M4U HW all have 2 mmu cells. the default
-> value of that register is 0 which means all the larbs go to mmu0
-> defaultly.
->
-> This is a preparing patch for adjusting SMI_BUS_SEL for mt8183.
->
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  drivers/iommu/mtk_iommu.c | 46 +++++++++++++++++++++++++++++-----------------
->  1 file changed, 29 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 3a14301..ec4ce74 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -72,26 +72,32 @@
->  #define F_INT_CLR_BIT                          BIT(12)
->
->  #define REG_MMU_INT_MAIN_CONTROL               0x124
-> -#define F_INT_TRANSLATION_FAULT                        BIT(0)
-> -#define F_INT_MAIN_MULTI_HIT_FAULT             BIT(1)
-> -#define F_INT_INVALID_PA_FAULT                 BIT(2)
-> -#define F_INT_ENTRY_REPLACEMENT_FAULT          BIT(3)
-> -#define F_INT_TLB_MISS_FAULT                   BIT(4)
-> -#define F_INT_MISS_TRANSACTION_FIFO_FAULT      BIT(5)
-> -#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   BIT(6)
-> +                                               /* mmu0 | mmu1 */
-> +#define F_INT_TRANSLATION_FAULT                        (BIT(0) | BIT(7))
-> +#define F_INT_MAIN_MULTI_HIT_FAULT             (BIT(1) | BIT(8))
-> +#define F_INT_INVALID_PA_FAULT                 (BIT(2) | BIT(9))
-> +#define F_INT_ENTRY_REPLACEMENT_FAULT          (BIT(3) | BIT(10))
-> +#define F_INT_TLB_MISS_FAULT                   (BIT(4) | BIT(11))
-> +#define F_INT_MISS_TRANSACTION_FIFO_FAULT      (BIT(5) | BIT(12))
-> +#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   (BIT(6) | BIT(13))
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
 
-If there are two IOMMUs, shouldn't we have two driver instances handle
-them, instead of making the driver combine them two internally?
+Acked-by: Jingoo Han  <jingoohan1@gmail.com>
 
-And, what is even more important from security point of view actually,
-have two separate page tables (aka IOMMU groups) for them?
+Sorry for being late. I read the previous threads. I don't think that this patch
+has any harmful effects. This patch looks good to me.
+Thank you.
 
 Best regards,
-Tomasz
+Jingoo Han
+
+> ---
+> Changes since [v9]:
+> * None
+>
+> Changes since [v8]:
+> * None
+>
+> Changes since [v7]:
+> * None
+>
+> Changes since [v6]:
+> * None
+>
+> Changes since [v5]:
+> * Moved write enable to the beginning of the API and write disable to the end
+>
+> Changes since [v4]:
+> * None
+>
+> Changes since [v3]:
+> * None
+>
+> Changes since [v2]:
+> * None
+>
+> Changes since [v1]:
+> * None
+>
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index f93252d0da5b..d3156446ff27 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  	u32 val, ctrl, num_ctrls;
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  
+> +	/*
+> +	 * Enable DBI read-only registers for writing/updating configuration.
+> +	 * Write permission gets disabled towards the end of this function.
+> +	 */
+> +	dw_pcie_dbi_ro_wr_en(pci);
+> +
+>  	dw_pcie_setup(pci);
+>  
+>  	if (!pp->ops->msi_host_init) {
+> @@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
+>  
+>  	/* Setup interrupt pins */
+> -	dw_pcie_dbi_ro_wr_en(pci);
+>  	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
+>  	val &= 0xffff00ff;
+>  	val |= 0x00000100;
+>  	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
+> -	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+>  	/* Setup bus numbers */
+>  	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
+> @@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  
+>  	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+>  
+> -	/* Enable write permission for the DBI read-only register */
+> -	dw_pcie_dbi_ro_wr_en(pci);
+>  	/* Program correct class for RC */
+>  	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+> -	/* Better disable write permission right after the update */
+> -	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+>  	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
+>  	val |= PORT_LOGIC_SPEED_CHANGE;
+>  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+> +
+> +	dw_pcie_dbi_ro_wr_dis(pci);
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
+> -- 
+> 2.17.1
