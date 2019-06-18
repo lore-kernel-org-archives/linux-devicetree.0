@@ -1,215 +1,166 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v5 3/5] mtd: Add support for HyperBus memory devices
-Date: Tue, 18 Jun 2019 13:08:21 +0530
-Message-ID: <b1df7b11-15d3-e707-c1d4-ab69741e52f4@ti.com>
-References: <20190609103227.24875-1-vigneshr@ti.com>
- <20190609103227.24875-4-vigneshr@ti.com>
- <58e9608d-35ff-0436-6075-b2e4ed4b8594@cogentembedded.com>
- <f47d4d57-afb2-3b39-fae9-3ed740a2b8a6@ti.com>
- <9dbd8132-ce8f-9ce7-ddf5-d9826e2a1be1@cogentembedded.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [linux-sunxi] [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock
+ gates in probe
+Date: Tue, 18 Jun 2019 13:15:05 +0530
+Message-ID: <CAMty3ZBUrGEi+e62sFe7GkXinK3q076sGLwpEVz67qeoV+1ZeA@mail.gmail.com>
+References: <20190614164324.9427-1-jagan@amarulasolutions.com>
+ <20190614164324.9427-6-jagan@amarulasolutions.com> <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ@mail.gmail.com>
+ <CAMty3ZDRYBPKrGQxAZoB+trFiDLJ5BxDfNUOnPzgd+UWcpwCoQ@mail.gmail.com> <CAGb2v67uNhie9mb2-m04FGEi4Z7q7TYChOogGj2HgmSmEo4Arg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9dbd8132-ce8f-9ce7-ddf5-d9826e2a1be1@cogentembedded.com>
-Content-Language: en-US
+In-Reply-To: <CAGb2v67uNhie9mb2-m04FGEi4Z7q7TYChOogGj2HgmSmEo4Arg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Michael Trimarchi <michael@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula <linux-amarula@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 18, 2019 at 12:49 PM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Mon, Jun 17, 2019 at 6:30 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> >
+> > On Sun, Jun 16, 2019 at 11:01 AM Chen-Yu Tsai <wens@csie.org> wrote:
+> > >
+> > > On Sat, Jun 15, 2019 at 12:44 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > >
+> > > > TCON TOP have clock gates for TV0, TV1, dsi and right
+> > > > now these are register during bind call.
+> > > >
+> > > > Of which, dsi clock gate would required during DPHY probe
+> > > > but same can miss to get since tcon top is not bound at
+> > > > that time.
+> > > >
+> > > > To solve, this circular dependency move the clock gate
+> > > > registration from bind to probe so-that DPHY can get the
+> > > > dsi gate clock on time.
+> > > >
+> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > ---
+> > > >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
+> > > >  1 file changed, 49 insertions(+), 45 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > index 465e9b0cdfee..a8978b3fe851 100644
+> > > > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > @@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
+> > > >  static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+> > > >                                void *data)
+> > > >  {
+> > > > -       struct platform_device *pdev = to_platform_device(dev);
+> > > > +       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
+> > > > +       int ret;
+> > > > +
+> > > > +       ret = reset_control_deassert(tcon_top->rst);
+> > > > +       if (ret) {
+> > > > +               dev_err(dev, "Could not deassert ctrl reset control\n");
+> > > > +               return ret;
+> > > > +       }
+> > > > +
+> > > > +       ret = clk_prepare_enable(tcon_top->bus);
+> > > > +       if (ret) {
+> > > > +               dev_err(dev, "Could not enable bus clock\n");
+> > > > +               goto err_assert_reset;
+> > > > +       }
+> > >
+> > > You have to de-assert the reset control and enable the clock before the
+> > > clocks it provides are registered. Otherwise a consumer may come in and
+> > > ask for the provided clock to be enabled, but since the TCON TOP's own
+> > > reset and clock are still disabled, you can't actually access the registers
+> > > that controls the provided clock.
+> >
+> > These rst and bus are common reset and bus clocks not tcon top clocks
+> > that are trying to register here. ie reason I have not moved it in
+> > top.
+>
+> And you're sure that toggling bits in the TCON TOP block doesn't require
+> the reset to be de-asserted and the bus clock enabled?
+>
+> Somehow I doubt that.
+>
+> Once the driver register the clocks it provides, they absolutely must work.
+> They can't only work after the bind phase when the reset gets de-asserted
+> and the bus clock enabled. Or you should provide proper error reporting
+> in the clock ops. I doubt you want to go that way either.
 
+Why would they won't work after bind phase? unlike tcon top gates,
+these reset, and bus are common like  what we have in other DE block
+so enable them in bind won't be an issue as per as I understand. let
+me know if you want me to check in other directions.
 
-On 18/06/19 1:15 AM, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 06/11/2019 02:57 PM, Vignesh Raghavendra wrote:
-> 
->>>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
->>>> Bus interface between a host system master and one or more slave
->>>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
->>>> or ASIC devices with random access NOR flash memory (called HyperFlash)
->>>> or self refresh DRAM (called HyperRAM).
->>>>
->>>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
->>>> signal and either Single-ended clock(3.0V parts) or Differential clock
->>>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
->>>> At bus level, it follows a separate protocol described in HyperBus
->>>> specification[1].
->>>>
->>>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
->>>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
->>>> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
->>>> HyperBus operates at >166MHz frequencies.
->>>> HyperRAM provides direct random read/write access to flash memory
->>>> array.
->>>>
->>>> But, HyperBus memory controllers seem to abstract implementation details
->>>> and expose a simple MMIO interface to access connected flash.
->>>>
->>>> Add support for registering HyperFlash devices with MTD framework. MTD
->>>> maps framework along with CFI chip support framework are used to support
->>>> communicating with flash.
->>>>
->>>> Framework is modelled along the lines of spi-nor framework. HyperBus
->>>> memory controller (HBMC) drivers calls hyperbus_register_device() to
->>>> register a single HyperFlash device. HyperFlash core parses MMIO access
->>>> information from DT, sets up the map_info struct, probes CFI flash and
->>>> registers it with MTD framework.
->>>>
->>>> Some HBMC masters need calibration/training sequence[3] to be carried
->>>> out, in order for DLL inside the controller to lock, by reading a known
->>>> string/pattern. This is done by repeatedly reading CFI Query
->>>> Identification String. Calibration needs to be done before trying to detect
->>>> flash as part of CFI flash probe.
->>>>
->>>> HyperRAM is not supported at the moment.
->>>>
->>>> HyperBus specification can be found at[1]
->>>> HyperFlash datasheet can be found at[2]
->>>>
->>>> [1] https://www.cypress.com/file/213356/download
->>>> [2] https://www.cypress.com/file/213346/download
->>>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->>>>     Table 12-5741. HyperFlash Access Sequence
->>>>
->>>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->>> [...]
->>>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
->>>> new file mode 100644
->>>> index 000000000000..df1f75e10b1a
->>>> --- /dev/null
->>>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
->>>> @@ -0,0 +1,191 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +//
->>>> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->>>> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
->>>> +
->>>> +#include <linux/err.h>
->>>> +#include <linux/kernel.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/mtd/hyperbus.h>
->>>> +#include <linux/mtd/map.h>
->>>> +#include <linux/mtd/mtd.h>
->>>> +#include <linux/mtd/cfi.h>
->>>> +#include <linux/of.h>
->>>> +#include <linux/of_address.h>
->>>> +#include <linux/types.h>
->>>> +
->>>> +#define HYPERBUS_CALIB_COUNT 25
->>>
->>>    Mhm, I think I've already protested about this being #define'd here...
->>
->> I thought you had agreed that default optional calibration routine can
->> be part of core code and thus this #define.
->>
->> Anyways, what is your preference here? Drop the constant and use a local
->> variable in hyperbus_calibrate()?
->> Or are you suggesting to move hyperbus_calibrate() TI's specific driver?
-> 
->    I'm just not comfortable with the common HF code using quite an arbitrary
-> constant...
-> 
-
-Ok, I will move the code over to TI driver. We can always bring it back
-to core code if more drivers need it.
-
->>> [...]
->>>> diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
->>>> new file mode 100644
->>>> index 000000000000..ee2eefd822c9
->>>> --- /dev/null
->>>> +++ b/include/linux/mtd/hyperbus.h
->>>> @@ -0,0 +1,91 @@
-> [...]
->>>> + * @mtd: pointer to MTD struct
->>>> + * @ctlr: pointer to HyperBus controller struct
->>>> + * @memtype: type of memory device: HyperFlash or HyperRAM
->>>> + * @registered: flag to indicate whether device is registered with MTD core
->>>> + */
->>>> +
->>>> +struct hyperbus_device {
->>>> +	struct map_info map;
->>>> +	struct device_node *np;
->>>> +	struct mtd_info *mtd;
->>>> +	struct hyperbus_ctlr *ctlr;
->>>> +	enum hyperbus_memtype memtype;
->>>> +	bool registered;
->>>> +};
->>>> +
->>>> +/**
->>>> + * struct hyperbus_ops - struct representing custom HyperBus operations
->>>> + * @read16: read 16 bit of data, usually from register/ID-CFI space
->>>> + * @write16: write 16 bit of data, usually to register/ID-CFI space
->>>
->>>    Usually? How to differ the register/memory transfers if both are possible?
-> 
->> CFI + map framework does not provide a way to differentiate b/w reg
->> access vs memory access. read16()/write16() is used to either access
->> registers or for sending various cmds like lock/unlock etc or for
->> programming a single word.
->> For regular read/writes copy_from() and copy_to() are used.
-> 
->    In my case only copy_from() would exist -- no proper acceleration for
-> writes...
-> 
-
-Actually copy_to() is not used by cfi_cmdset_0002.c, its always
-write16() that used to program flash.
-This is something I want to extend support to, so as to use DMA for
-writes as well because I see that writes seem extremely slow at least on
-my platform.
-
->> Looking at HyperBus protocol, controllers would not need to
->> differentiate b/w registers vs memory transfers for HyperFlash devices.
->> So, I think I can drop read16/write16 and redirect these calls to
->> copy_from()/copy_to()
-> 
->    Doubt it, frankly speaking.
-
-Sorry for confusion, as I said above, we do need to keep write16().
-Also, copy_to maps to memcpy_toio in case of simple_map which may not
-use 16 bit IO accessors. So write16() cannot be mapped to copy_to()
-
-So we need at least write16(), copy_from() and mostly copy_to() (for
-accelerating writes). So, lets keep this simple and have all map ops
-including read16() as is.
-
-
-> 
->> I mainly added these functions keeping HyperRAM in mind. Idea was
->> drivers would look at hyperbus_device->memtype and set to register
->> access mode for HyperRAM in case of write16()/read16(). Looks like the
->> interface is not intuitive enough
->> So, will drop these and add it back when adding HyperRAM support.
->>
->> Does that work for your HW as well?
-> 
->    Don't think so...
-> 
->    However, my HyperFlash driver could make use of the following #define's in
-> the HyperBus header:
-> 
-> #define HF_CMD_CA47		BIT(7)	/* Read */
-> #define HF_CMD_CA46		BIT(6)	/* Register space */
-> #define HF_CMD_CA45		BIT(5)	/* Linear burst */
-> 
-> #define HF_CMD_READ_REG		(HF_CMD_CA47 | HF_CMD_CA46)
-
-This will come into play for HyperRAM, not a care about for HyperFlash
-
-> #define HF_CMD_READ_MEM		HF_CMD_CA47
-
-For HyperFlash, this would be the only bit that needs to be set for read
-along with HF_CMD_CA45 for linear burst.
-
-> #define HF_CMD_WRITE_REG	HF_CMD_CA46
-> #define HF_CMD_WRITE_MEM	0
-> 
-> MBR, Sergei
-> 
-
--- 
-Regards
-Vignesh
+Log:
+[    1.381410] sun6i-mipi-dsi 1ca0000.dsi: Attached panel s070wv20-ct16-icn62
+[    1.398405] sun4i-drm display-engine: bound 1100000.mixer (ops 0xc074ce64)
+[    1.407134] sun4i-drm display-engine: bound 1200000.mixer (ops 0xc074ce64)
+[    1.414043] sun4i-drm display-engine: bound 1c70000.tcon-top (ops 0xc0750e80)
+[    1.421407] sun4i_dclk_recalc_rate: val = 1, rate = 297000000
+[    1.427358] sun4i-drm display-engine: No panel or bridge found...
+RGB output disabled
+[    1.435217] sun4i-drm display-engine: bound 1c71000.lcd-controller
+(ops 0xc0749594)
+[    1.442891] 0.0 drm_connector_init
+[    1.446294] 0. -1066106880-1-0 (null)
+[    1.449965] 0.1 drm_connector_init
+[    1.453368] 0.2 drm_connector_init
+[    1.456768] 1. drm_connector_init
+[    1.460094] 2. drm_connector_init
+[    1.463413] drm_connector_init: connector name = DSI-1
+[    1.468560] sun4i-drm display-engine: bound 1ca0000.dsi (ops 0xc074c0e4)
+[    1.475272] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    1.481892] [drm] No driver support for vblank timestamp query.
+[    1.488240] [drm] Initialized sun4i-drm 1.0.0 20150629 for
+display-engine on minor 0
+[    1.497996] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
+[    1.498106] ideal = 1800000, rounded = 180000000
+[    1.498111] sun4i_dclk_round_rate: div = 6 rate = 29700000
+[    1.498116] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
+[    1.498154] ideal = 1800000, rounded = 180000000
+[    1.498158] sun4i_dclk_round_rate: div = 6 rate = 29700000
+[    1.498217] sun4i_dclk_recalc_rate: val = 1, rate = 178200000
+[    1.498251] rate = 178200000
+[    1.498253] parent_rate = 297000000
+[    1.498256] reg = 0x80c00000
+[    1.498259] _nkm.n = 3, nkm->n.offset = 0x1, nkm->n.shift = 8
+[    1.498262] _nkm.k = 2, nkm->k.offset = 0x1, nkm->k.shift = 4
+[    1.498265] _nkm.m = 10, nkm->m.offset = 0x1, nkm->m.shift = 0
+[    1.499594] sun4i_dclk_set_rate div 6
+[    1.499603] sun4i_dclk_recalc_rate: val = 6, rate = 29700000
+[    1.499680] sun6i_dsi_get_video_start_delay: delay = 513
+[    1.499687] sun6i_dsi_setup_inst_loop: delay = 49
+[    1.499706] hsa = 134, hbp = 114, hfp = 114, hblk = 2630, vblk = 0
+[    1.509103] mmc0: host does not support reading read-only switch,
+assuming write-enable
+[    1.512693] mmc0: new high speed SDHC card at address 4001
+[    1.513723] mmcblk0: mmc0:4001 R04GS 3.71 GiB
+[    1.515577]  mmcblk0: p1 p2
+[    1.658838] mmc2: new DDR MMC card at address 0001
+[    1.659934] mmcblk2: mmc2:0001 8WPD3R 7.28 GiB
+[    1.660657] mmcblk2boot0: mmc2:0001 8WPD3R partition 1 4.00 MiB
+[    1.661387] mmcblk2boot1: mmc2:0001 8WPD3R partition 2 4.00 MiB
+[    1.819586] TYPE#0x23, BYTE0#0x7a00, BYTE1#0xc10000
+[    1.849570] TYPE#0x23, BYTE0#0x2000, BYTE1#0x200000
+[    1.879569] TYPE#0x23, BYTE0#0x2100, BYTE1#0xe00000
+[    1.909580] TYPE#0x23, BYTE0#0x2200, BYTE1#0x130000
+[    1.939569] TYPE#0x23, BYTE0#0x2300, BYTE1#0x280000
+[    1.969569] TYPE#0x23, BYTE0#0x2400, BYTE1#0x300000
+[    1.999569] TYPE#0x23, BYTE0#0x2500, BYTE1#0x280000
+[    2.029569] TYPE#0x23, BYTE0#0x2600, BYTE1#0x0
+[    2.059569] TYPE#0x23, BYTE0#0x2700, BYTE1#0xd0000
+[    2.089598] TYPE#0x23, BYTE0#0x2800, BYTE1#0x30000
+[    2.119579] TYPE#0x23, BYTE0#0x2900, BYTE1#0x1d0000
+[    2.149569] TYPE#0x23, BYTE0#0x3400, BYTE1#0x800000
+[    2.179569] TYPE#0x23, BYTE0#0x3600, BYTE1#0x280000
+[    2.209569] TYPE#0x23, BYTE0#0xb500, BYTE1#0xa00000
+[    2.239569] TYPE#0x23, BYTE0#0x5c00, BYTE1#0xff0000
+[    2.269569] TYPE#0x23, BYTE0#0x2a00, BYTE1#0x10000
+[    2.299569] TYPE#0x23, BYTE0#0x5600, BYTE1#0x920000
+[    2.329578] TYPE#0x23, BYTE0#0x6b00, BYTE1#0x710000
+[    2.359569] TYPE#0x23, BYTE0#0x6900, BYTE1#0x2b0000
+[    2.389569] TYPE#0x23, BYTE0#0x1000, BYTE1#0x400000
+[    2.419569] TYPE#0x23, BYTE0#0x1100, BYTE1#0x980000
+[    2.449569] TYPE#0x23, BYTE0#0xb600, BYTE1#0x200000
+[    2.479569] TYPE#0x23, BYTE0#0x5100, BYTE1#0x200000
+[    2.509569] TYPE#0x23, BYTE0#0x900, BYTE1#0x100000
+[    2.679570] TYPE#0x5, BYTE0#0x2900, BYTE1#0x940000
+[    2.767213] Console: switching to colour frame buffer device 100x30
+[    3.144604] sun4i-drm display-engine: fb0: sun4i-drmdrmfb frame buffer device
