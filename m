@@ -1,64 +1,67 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 3/4] arm64: dts: ti: k3-j721e: Add the MCU SRAM node
-Date: Tue, 18 Jun 2019 17:43:44 +0300
-Message-ID: <cfcfe8c9-a6dd-648d-8ce2-b0115b558892@ti.com>
-References: <20190605163434.23173-1-s-anna@ti.com>
- <20190605163434.23173-4-s-anna@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 2/2] arm: dts: add ARM Mali GPU node for Odroid XU3
+Date: Tue, 18 Jun 2019 16:45:57 +0200
+Message-ID: <CAJKOXPd0E1Zg_TOOM3s4haQJnq6hrHaLOPjDkeVz0Gjzp-qROw@mail.gmail.com>
+References: <20190614203144.3850-2-joseph.kogut@gmail.com>
+ <20190614235719.8134-1-joseph.kogut@gmail.com>
+ <CAJKOXPc-Xztou+xyibb8YZtfz20q3kzr_gTBoE=R3q_CSk9kzQ@mail.gmail.com>
+ <CAL_Jsq+8s3iNUy5ZCtWW5k-0sa51CR0xdv3Gh_sR=jsVtLmTdQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190605163434.23173-4-s-anna@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_Jsq+8s3iNUy5ZCtWW5k-0sa51CR0xdv3Gh_sR=jsVtLmTdQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Joseph Kogut <joseph.kogut@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/06/2019 19:34, Suman Anna wrote:
-> Add the on-chip SRAM present within the MCU domain as a mmio-sram node.
-> The K3 J721E SoCs have 1 MB of such memory. Any specific memory range
-> within this RAM needed by a driver/software module ought to be reserved
-> using an appropriate child node.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-
-Queuing for 5.3, thanks.
-
--Tero
-
-> ---
->   arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> index b72e033fa159..397ef715e145 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> @@ -44,6 +44,14 @@
->   		pinctrl-single,function-mask = <0xffffffff>;
->   	};
->   
-> +	mcu_ram: sram@41c00000 {
-> +		compatible = "mmio-sram";
-> +		reg = <0x00 0x41c00000 0x00 0x100000>;
-> +		ranges = <0x0 0x00 0x41c00000 0x100000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +	};
-> +
->   	wkup_uart0: serial@42300000 {
->   		compatible = "ti,j721e-uart", "ti,am654-uart";
->   		reg = <0x00 0x42300000 0x00 0x100>;
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+T24gVHVlLCAxOCBKdW4gMjAxOSBhdCAxNjoxOCwgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVs
+Lm9yZz4gd3JvdGU6Cj4KPiBPbiBUdWUsIEp1biAxOCwgMjAxOSBhdCAzOjI3IEFNIEtyenlzenRv
+ZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPgo+ID4gT24gU2F0LCAxNSBK
+dW4gMjAxOSBhdCAwMTo1NywgSm9zZXBoIEtvZ3V0IDxqb3NlcGgua29ndXRAZ21haWwuY29tPiB3
+cm90ZToKPiA+ID4KPiA+ID4gQWRkIGRldmljZSB0cmVlIG5vZGUgZm9yIG1hbGkgZ3B1IG9uIE9k
+cm9pZCBYVTMgU29Dcy4KPiA+ID4KPiA+ID4gU2lnbmVkLW9mZi1ieTogSm9zZXBoIEtvZ3V0IDxq
+b3NlcGgua29ndXRAZ21haWwuY29tPgo+ID4gPiAtLS0KPiA+ID4KPiA+ID4gQ2hhbmdlcyB2MSAt
+PiB2MjoKPiA+ID4gLSBVc2UgaW50ZXJydXB0IG5hbWUgb3JkZXJpbmcgZnJvbSBiaW5kaW5nIGRv
+Ywo+ID4gPiAtIFNwZWNpZnkgYSBzaW5nbGUgY2xvY2sgZm9yIEdQVSBub2RlCj4gPiA+IC0gQWRk
+IGdwdSBvcHAgdGFibGUKPiA+ID4gLSBGaXggd2FybmluZ3MgZnJvbSBJUlFfVFlQRV9OT05FCj4g
+PiA+Cj4gPiA+ICAuLi4vYm9vdC9kdHMvZXh5bm9zNTQyMi1vZHJvaWR4dTMtY29tbW9uLmR0c2kg
+fCAyNiArKysrKysrKysrKysrKysrKysrCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0
+aW9ucygrKQo+ID4gPgo+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9z
+NTQyMi1vZHJvaWR4dTMtY29tbW9uLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIy
+LW9kcm9pZHh1My1jb21tb24uZHRzaQo+ID4gPiBpbmRleCA5M2E0OGYyZGRhNDkuLmI4YTQyNDZl
+M2IzNyAxMDA2NDQKPiA+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMi1vZHJv
+aWR4dTMtY29tbW9uLmR0c2kKPiA+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQy
+Mi1vZHJvaWR4dTMtY29tbW9uLmR0c2kKPiA+ID4gQEAgLTQ4LDYgKzQ4LDMyIEBACj4gPiA+ICAg
+ICAgICAgICAgICAgICBjb29saW5nLWxldmVscyA9IDwwIDEzMCAxNzAgMjMwPjsKPiA+ID4gICAg
+ICAgICB9Owo+ID4gPgo+ID4gPiArICAgICAgIGdwdTogZ3B1QDExODAwMDAwIHsKPiA+ID4gKyAg
+ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3MtbWFsaSIsICJhcm0sbWFs
+aS10NjI4IjsKPiA+ID4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweDExODAwMDAwIDB4NTAwMD47
+Cj4gPiA+ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjE5IElSUV9UWVBF
+X0xFVkVMX0hJR0g+LAo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJ
+IDc0ICBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICA8R0lDX1NQSSAxMTcgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPiA+ICsgICAgICAgICAg
+ICAgICBpbnRlcnJ1cHQtbmFtZXMgPSAiam9iIiwgIm1tdSIsICJncHUiOwo+ID4gPiArICAgICAg
+ICAgICAgICAgY2xvY2tzID0gPCZjbG9jayBDTEtfRzNEPjsKPiA+ID4gKyAgICAgICAgICAgICAg
+IG1hbGktc3VwcGx5ID0gPCZidWNrNF9yZWc+Owo+ID4gPiArICAgICAgICAgICAgICAgb3BlcmF0
+aW5nLXBvaW50cy12MiA9IDwmZ3B1X29wcF90YWJsZT47Cj4gPiA+ICsgICAgICAgfTsKPiA+ID4g
+Kwo+ID4gPiArICAgICAgIGdwdV9vcHBfdGFibGU6IGdwdS1vcHAtdGFibGUgewo+ID4KPiA+IE9u
+ZSBtb3JlIHRoaW5nIC0gdXNlICJvcHBfdGFibGUiIGFzIG5vZGUgbmFtZSAoZ2VuZXJpYyBjbGFz
+cyBvZiBub2RlLAo+ID4gbWF0Y2hlcyBzdHlsZSB3aXRoIG90aGVyIHRhYmxlcykuCj4KPiAnb3Bw
+LXRhYmxlJyBhcyBjb252ZW50aW9uIGlzIHVzaW5nICctJyByYXRoZXIgdGhhbiAnXycuCgpPSywg
+c28gcmF0aGVyIGNvbnNpc3RlbmN5IGJlY2F1c2UgbW9zdCBvZiBvcHAtdGFibGVzIGhhdmUgJ18n
+LAppbmNsdWRpbmcgZXhpc3RpbmcgRFRTZXMgYW5kIGV4YW1wbGVzIGluCkRvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC50eHQgYW5kCkRvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9vcHAvb3BwLnR4dC4KCkJlc3QgcmVnYXJkcywKS3J6
+eXN6dG9mCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
