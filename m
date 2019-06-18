@@ -1,42 +1,90 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH v13 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF controller bindings
-Date: Tue, 18 Jun 2019 14:01:40 +0200
-Message-ID: <2671d488-82a1-8720-d9a1-03554d955a38@gmail.com>
-References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw>
- <1558423174-10748-4-git-send-email-masonccyang@mxic.com.tw>
- <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
- <20190603130428.GX4797@dell>
- <02addf64-9f6e-ccc1-2f94-8983456e3ebc@cogentembedded.com>
- <OFDA7648A0.F1733EA5-ON48258411.002946DF-48258411.002A2F0D@mxic.com.tw>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] Revert "ARM: dts: rockchip: set PWM delay backlight
+ settings for Minnie"
+Date: Tue, 18 Jun 2019 14:02:21 +0200
+Message-ID: <20190618120221.GA20524@amd>
+References: <20190614224533.169881-1-mka@chromium.org>
+ <20190616154143.GA28583@atrey.karlin.mff.cuni.cz>
+ <20190617161625.GR137143@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OFDA7648A0.F1733EA5-ON48258411.002946DF-48258411.002A2F0D@mxic.com.tw>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190617161625.GR137143@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: masonccyang@mxic.com.tw, Lee Jones <lee.jones@linaro.org>
-Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, mark.rutland@arm.com, miquel.raynal@bootlin.com, robh+dt@kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6/6/19 9:40 AM, masonccyang@mxic.com.tw wrote:
-[...]
 
-> RPC-IF works either in SPI or HyperFlash is decided by external hardware 
-> pins 
-> configuration and it can NOT switch it's operation mode in the run time. 
-> This is not like my understanding of MFD.
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Which external hardware pins decide the RPC configuration ?
+On Mon 2019-06-17 09:16:25, Matthias Kaehlcke wrote:
+> Hi Pavel,
+>=20
+> On Sun, Jun 16, 2019 at 05:41:43PM +0200, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > > This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
+> > >=20
+> > > According to the commit message the AUO B101EAN01 panel on minnie
+> > > requires a PWM delay of 200 ms, however this is not what the
+> > > datasheet says. The datasheet mentions a *max* delay of 200 ms
+> > > for T2 ("delay from LCDVDD to black video generation") and T3
+> > > ("delay from LCDVDD to HPD high"), which aren't related to the
+> > > PWM. The backlight power sequence does not specify min/max
+> > > constraints for T15 (time from PWM on to BL enable) or T16
+> > > (time from BL disable to PWM off).
+> > >=20
+> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > ---
+> > > Enric, if you think I misinterpreted the datasheet please holler!
+> >=20
+> > Was this tested?
+>=20
+> I performed limited manually testing.
+>=20
+> minnie ships with the Chrome OS 3.14 downstream, which doesn't include
+> this delay, to my knowledge there are no open display related bugs for
+> minnie. One could argue that a the configuration without the delay was
+> widely field tested
+>=20
+> > Does patch being reverted actually break anything?
+>=20
+> To my knowledge it doesn't really break anything, however there is a
+> short user perceptible delay between switching on the LCD and
+> switching on the backlight. It's not the end of the world, but if it's
+> not actually needed better avoid it.
+>=20
+> > If so, cc stable?
+>=20
+> I guess this is an edge case, were you could go either way. I'm fine
+> with respinning and cc-ing stable.
 
-It seems to me like PHYCNT register, PHYMEM bitfield, selects what
-device is connected, and then a couple of other bits control the
-communication, but I see nothing which would be tied to any external
-configuration pins.
+Ok, if it is just a small delay, stable probably does not need to be
+involved.
 
-[...]
+Thanks,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
--- 
-Best regards,
-Marek Vasut
+--3MwIy2ne0vdjdPXF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0I0s0ACgkQMOfwapXb+vIDhwCgoXg7BeLdOOaZditUE387gqIo
+RsQAn0zNp/RpUuk4d69n9e90MTNfL8OK
+=uTEM
+-----END PGP SIGNATURE-----
+
+--3MwIy2ne0vdjdPXF--
