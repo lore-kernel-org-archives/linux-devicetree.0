@@ -1,416 +1,194 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V3 11/17] clk: tegra210: support for Tegra210 clocks
- suspend and resume
-Date: Tue, 18 Jun 2019 10:58:40 -0700
-Message-ID: <491e0b18-11e7-837c-4591-06ed30950e1d@nvidia.com>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-12-git-send-email-skomatineni@nvidia.com>
- <20190618121607.GN28892@ulmo>
+From: Dan Williams <dcbw@redhat.com>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Tue, 18 Jun 2019 13:06:13 -0500
+Message-ID: <84153d9e7c903084b492ceccc0dd98cbb32c12ac.camel@redhat.com>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+         <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+         <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+         <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+         <e6ba8a9063e63506c0b88a70418d74ca4efe85cd.camel@sipsolutions.net>
+         <850eed1d-0fec-c396-6e91-b5f1f8440ded@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190618121607.GN28892@ulmo>
-Content-Language: en-US
+In-Reply-To: <850eed1d-0fec-c396-6e91-b5f1f8440ded@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
+To: Alex Elder <elder@linaro.org>, Johannes Berg <johannes@sipsolutions.net>, Arnd Bergmann <arnd@arndb.de>
+Cc: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2019-06-18 at 10:20 -0500, Alex Elder wrote:
+> On 6/17/19 7:25 AM, Johannes Berg wrote:
+> > On Mon, 2019-06-17 at 13:42 +0200, Johannes Berg wrote:
+> > 
+> > > But anyway, as I alluded to above, I had something like this in
+> > > mind:
+> > 
+> > I forgot to state this here, but this was *heavily* influenced by
+> > discussions with Dan - many thanks to him.
+> 
+> Thanks for getting even more concrete with this.  Code is the
+> most concise way of describing things, once the general ideas
+> seem to be coming together.
+> 
+> I'm not going to comment on the specific code bits, but I have
+> some more general questions and comments on the design.  Some
+> of these are simply due to my lack of knowledge of how WWAN/modem
+> interactions normally work.
+> 
+> First, a few terms (correct or improve as you like):
+> - WWAN device is a hardware device (like IPA) that presents a
+>   connection between AP and modem, and presents an interface
+>   that allows the use of that connection to be managed.
+> - WWAN netdevice represents a Linux network interface, with its
+>   operations and queues, etc., but implements a standardized
+>   set of WWAN-specific operations.  It represents a logical
+> ' channel whose data is multiplexed over the WWAN device.
+> - WWAN channel is a user space abstraction that corresponds
+>   with a WWAN netdevice (but I'm not clear on all the ways
+>   they differ or interact).
 
-On 6/18/19 5:16 AM, Thierry Reding wrote:
-> On Tue, Jun 18, 2019 at 12:46:25AM -0700, Sowjanya Komatineni wrote:
->> This patch adds system suspend and resume support for Tegra210
->> clocks.
->>
->> All the CAR controller settings are lost on suspend when core power
->> goes off.
->>
->> This patch has implementation for saving and restoring all the PLLs
->> and clocks context during system suspend and resume to have the
->> system back to operating state.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/clk/tegra/clk-tegra210.c | 218 +++++++++++++++++++++++++++++++++++++--
->>   1 file changed, 211 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
->> index e1ba62d2b1a0..c34d92e871f4 100644
->> --- a/drivers/clk/tegra/clk-tegra210.c
->> +++ b/drivers/clk/tegra/clk-tegra210.c
->> @@ -9,10 +9,12 @@
->>   #include <linux/clkdev.h>
->>   #include <linux/of.h>
->>   #include <linux/of_address.h>
->> +#include <linux/of_platform.h>
->>   #include <linux/delay.h>
->>   #include <linux/export.h>
->>   #include <linux/mutex.h>
->>   #include <linux/clk/tegra.h>
->> +#include <linux/syscore_ops.h>
->>   #include <dt-bindings/clock/tegra210-car.h>
->>   #include <dt-bindings/reset/tegra210-car.h>
->>   #include <linux/iopoll.h>
->> @@ -20,6 +22,7 @@
->>   #include <soc/tegra/pmc.h>
->>   
->>   #include "clk.h"
->> +#include "clk-dfll.h"
->>   #include "clk-id.h"
->>   
->>   /*
->> @@ -36,6 +39,8 @@
->>   #define CLK_SOURCE_LA 0x1f8
->>   #define CLK_SOURCE_SDMMC2 0x154
->>   #define CLK_SOURCE_SDMMC4 0x164
->> +#define CLK_OUT_ENB_Y 0x298
->> +#define CLK_ENB_PLLP_OUT_CPU BIT(31)
->>   
->>   #define PLLC_BASE 0x80
->>   #define PLLC_OUT 0x84
->> @@ -225,6 +230,7 @@
->>   
->>   #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
->>   #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
->> +#define CPU_SOFTRST_CTRL 0x380
->>   
->>   #define LVL2_CLK_GATE_OVRA 0xf8
->>   #define LVL2_CLK_GATE_OVRC 0x3a0
->> @@ -2820,6 +2826,7 @@ static int tegra210_enable_pllu(void)
->>   	struct tegra_clk_pll_freq_table *fentry;
->>   	struct tegra_clk_pll pllu;
->>   	u32 reg;
->> +	int ret;
->>   
->>   	for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
->>   		if (fentry->input_rate == pll_ref_freq)
->> @@ -2836,7 +2843,7 @@ static int tegra210_enable_pllu(void)
->>   	reg = readl_relaxed(clk_base + pllu.params->ext_misc_reg[0]);
->>   	reg &= ~BIT(pllu.params->iddq_bit_idx);
->>   	writel_relaxed(reg, clk_base + pllu.params->ext_misc_reg[0]);
->> -	udelay(5);
->> +	fence_udelay(5, clk_base);
->>   
->>   	reg = readl_relaxed(clk_base + PLLU_BASE);
->>   	reg &= ~GENMASK(20, 0);
->> @@ -2844,13 +2851,13 @@ static int tegra210_enable_pllu(void)
->>   	reg |= fentry->n << 8;
->>   	reg |= fentry->p << 16;
->>   	writel(reg, clk_base + PLLU_BASE);
->> -	udelay(1);
->> +	fence_udelay(1, clk_base);
-> These udelay() -> fence_udelay() seem like they should be a separate
-> patch.
->
->>   	reg |= PLL_ENABLE;
->>   	writel(reg, clk_base + PLLU_BASE);
->> +	fence_udelay(1, clk_base);
->>   
->> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
->> -					  reg & PLL_BASE_LOCK, 2, 1000);
->> -	if (!(reg & PLL_BASE_LOCK)) {
->> +	ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
->> +	if (ret) {
->>   		pr_err("Timed out waiting for PLL_U to lock\n");
->>   		return -ETIMEDOUT;
->>   	}
->> @@ -2890,12 +2897,12 @@ static int tegra210_init_pllu(void)
->>   		reg = readl_relaxed(clk_base + XUSB_PLL_CFG0);
->>   		reg &= ~XUSB_PLL_CFG0_PLLU_LOCK_DLY_MASK;
->>   		writel_relaxed(reg, clk_base + XUSB_PLL_CFG0);
->> -		udelay(1);
->> +		fence_udelay(1, clk_base);
->>   
->>   		reg = readl_relaxed(clk_base + PLLU_HW_PWRDN_CFG0);
->>   		reg |= PLLU_HW_PWRDN_CFG0_SEQ_ENABLE;
->>   		writel_relaxed(reg, clk_base + PLLU_HW_PWRDN_CFG0);
->> -		udelay(1);
->> +		fence_udelay(1, clk_base);
->>   
->>   		reg = readl_relaxed(clk_base + PLLU_BASE);
->>   		reg &= ~PLLU_BASE_CLKENABLE_USB;
->> @@ -3282,6 +3289,188 @@ static void tegra210_disable_cpu_clock(u32 cpu)
->>   }
->>   
->>   #ifdef CONFIG_PM_SLEEP
->> +static u32 cpu_softrst_ctx[3];
->> +static struct platform_device *dfll_pdev;
->> +static u32 *periph_clk_src_ctx;
->> +struct periph_source_bank {
-> Blank line between the above two.
->
->> +	u32 start;
->> +	u32 end;
->> +};
->> +
->> +static struct periph_source_bank periph_srcs[] = {
->> +	[0] = {
->> +		.start = 0x100,
->> +		.end = 0x198,
->> +	},
->> +	[1] = {
->> +		.start = 0x1a0,
->> +		.end = 0x1f8,
->> +	},
->> +	[2] = {
->> +		.start = 0x3b4,
->> +		.end = 0x42c,
->> +	},
->> +	[3] = {
->> +		.start = 0x49c,
->> +		.end = 0x4b4,
->> +	},
->> +	[4] = {
->> +		.start = 0x560,
->> +		.end = 0x564,
->> +	},
->> +	[5] = {
->> +		.start = 0x600,
->> +		.end = 0x678,
->> +	},
->> +	[6] = {
->> +		.start = 0x694,
->> +		.end = 0x6a0,
->> +	},
->> +	[7] = {
->> +		.start = 0x6b8,
->> +		.end = 0x718,
->> +	},
->> +};
->> +
->> +/* This array lists the valid clocks for each periph clk bank */
->> +static u32 periph_clks_on[] = {
->> +	0xdcd7dff9,
->> +	0x87d1f3e7,
->> +	0xf3fed3fa,
->> +	0xffc18cfb,
->> +	0x793fb7ff,
->> +	0x3fe66fff,
->> +	0xfc1fc7ff,
->> +};
-> Hm... this is a bunch of magic. Perhaps replace this by a list of the
-> clock IDs? That's perhaps a little more verbose, but if we ever need to
-> tweak the list of IDs in that periph_clks_on array, that'll be quite the
-> challenge.
->
-> Also, is this list a "guess" or are these all guaranteed to be always
-> on? What if some of these ended up getting disabled as part of suspend
-> already (by their users). If we force them on, won't their references
-> become unbalanced if the driver later enables them again on resume?
+When Johannes and I have talked about "WWAN channel" we mean a control
+or data or other channel. That could be QMI, AT, MBIM control, GPS,
+PCSC, QMAP, MBIM data, PPP TTY, DM/DIAG, CDC-ETHER, CDC-NCM, Sierra
+HIP, etc. Or even voice-call audio :)
 
-Yes, will replace with list of peripheral clock names..
+A netdev is a Linux abstraction of a WWAN *data* channel, be that QMI
+or CDC-ETHER or whatever.
 
-This list is not a guess. Each entry of this list maps to CLK_ENB set 
-register.
+> - The WWAN core is kernel code that presents abstractions
+>   for WWAN devices and netdevices, so they can be managed
+>   in a generic way.  It is for configuration and communication
+>   and is not at all involved in the data path.
+> 
+> You're saying that the WWAN driver space calls wwan_add()
+> to register itself as a new WWAN device.
+> 
+> You're also saying that a WWAN device "attaches" a WWAN
+> netdevice, which is basically notifying the WWAN core
+> that the new netdev/channel is available for use.
+> - I trust that a "tentative" attachement is necessary.  But
+>   I'm not sure what makes it transition into becoming a
+>   "real" one, or how that event gets communicated.
 
-Total 7 registers are available and each bit of these registers is for 
-enable/disable clock to corresponding peripheral.
+Linux usually tries to keep drivers generic and focused; each driver is
+written for a specific function. For example, a USB device usually
+provides multiple USB interfaces which will be bound to different Linux
+drivers like a TTY, cdc-ether, QMI (via qmi_wwan), cdc-acm, etc.
 
-Some of the bits are off as those peripheral clocks don't need to be 
-enabled as we are not changing source or not using them like MIPIBIF, 
-PLLG_REF..
+These drivers are often generic and we may not have enough information
+in one driver to know that the parent of this interface is a WWAN
+device. But another driver might. Since probing is asynchronous we may
+have cdc-acm bind to a device and provide a TTY before cdc-ether (which
+does know it's a WWAN) binds and provides the netdevice.
 
-This list of peripheral clocks are enabled during resume before changing 
-clock sources and after clock source update, they are restored back to 
-the state they were before suspend. So their references don't become 
-unbalanced.
+> Some questions:
+> - What causes a new channel to be created?  Is it initiated
+>   by the WWAN device driver?  Does the modem request that
+>   it get created?  User space?  Both?
 
->> +
->> +static struct platform_device *dfll_pdev;
-> I think you already predeclared this one above.
->
->> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
->> +#define car_writel(_val, _base, _off) \
->> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
->> +
->> +static u32 * __init tegra210_init_suspend_ctx(void)
->> +{
->> +	int i, size = 0;
-> Can both be unsigned int.
->
->> +
->> +	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
->> +		size += periph_srcs[i].end - periph_srcs[i].start + 4;
->> +
->> +	periph_clk_src_ctx = kmalloc(size, GFP_KERNEL);
->> +
->> +	return periph_clk_src_ctx;
-> It's somewhat wasteful to return a global variable since you can access
-> it anyway. Perhaps it'd be more useful to make the function return a
-> boolean?
->
->> +}
->> +
->> +static int tegra210_clk_suspend(void)
->> +{
->> +	int i;
-> unsigned int.
->
->> +	unsigned long off;
->> +	struct device_node *node;
->> +	u32 *clk_rst_ctx = periph_clk_src_ctx;
->> +	u32 val;
->> +
->> +	tegra_cclkg_burst_policy_save_context();
->> +
->> +	if (!dfll_pdev) {
->> +		node = of_find_compatible_node(NULL, NULL,
->> +					       "nvidia,tegra210-dfll");
->> +		if (node)
->> +			dfll_pdev = of_find_device_by_node(node);
->> +		of_node_put(node);
->> +		if (!dfll_pdev)
->> +			pr_err("dfll node not found. no suspend for dfll\n");
->> +	}
-> Wouldn't it make sense to run this only once, perhaps as part of
-> tegra210_init_suspend_ctx()?
->
->> +
->> +	if (dfll_pdev)
->> +		tegra_dfll_suspend(dfll_pdev);
->> +
->> +	/* Enable PLLP_OUT_CPU after dfll suspend */
->> +	val = car_readl(CLK_OUT_ENB_Y, 0);
->> +	val |= CLK_ENB_PLLP_OUT_CPU;
->> +	car_writel(val, CLK_OUT_ENB_Y, 0);
->> +
->> +	tegra_clk_periph_suspend(clk_base);
->> +
->> +	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
->> +		for (off = periph_srcs[i].start; off <= periph_srcs[i].end;
->> +		     off += 4)
->> +			*clk_rst_ctx++ = car_readl(off, 0);
->> +
->> +	tegra_sclk_cclklp_burst_policy_save_context();
->> +
->> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->> +		cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
->> +
->> +	clk_save_context();
->> +
->> +	return 0;
->> +}
->> +
->> +static void tegra210_clk_resume(void)
->> +{
->> +	int i;
->> +	unsigned long off;
->> +	u32 val;
->> +	u32 *clk_rst_ctx = periph_clk_src_ctx;
->> +	struct clk_hw *parent;
->> +	struct clk *clk;
->> +
->> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
->> +
->> +	tegra_clk_osc_resume(clk_base);
->> +
->> +	/*
->> +	 * restore all the plls before configuring clocks and resetting
->> +	 * the devices.
->> +	 */
->> +	tegra210_init_pllu();
->> +	tegra_sclk_cpulp_burst_policy_restore_context();
->> +	clk_restore_context();
->> +
->> +	/* enable all clocks before configuring clock sources */
->> +	tegra_clk_periph_force_on(periph_clks_on, ARRAY_SIZE(periph_clks_on),
->> +				  clk_base);
->> +	/* wait for all writes to happen to have all the clocks enabled */
->> +	wmb();
->> +	fence_udelay(2, clk_base);
->> +
->> +	/* restore all the devices clock sources */
->> +	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
->> +		for (off = periph_srcs[i].start; off <= periph_srcs[i].end;
->> +		     off += 4)
->> +			car_writel(*clk_rst_ctx++, off, 0);
->> +
->> +	/* propagate and restore resets, restore clock state */
->> +	fence_udelay(5, clk_base);
->> +	tegra_clk_periph_resume(clk_base);
->> +
->> +	/*
->> +	 * restore CPUG clocks:
->> +	 * - enable DFLL in open loop mode
->> +	 * - switch CPUG to DFLL clock source
->> +	 * - close DFLL loop
->> +	 * - sync PLLX state
->> +	 */
->> +	if (dfll_pdev)
->> +		tegra_dfll_resume(dfll_pdev, false);
->> +
->> +	tegra_cclkg_burst_policy_restore_context();
->> +	fence_udelay(2, clk_base);
->> +
->> +	if (dfll_pdev)
->> +		tegra_dfll_resume(dfll_pdev, true);
->> +
->> +	parent = clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
->> +	clk = clks[TEGRA210_CLK_PLL_X];
->> +	if (parent != __clk_get_hw(clk))
->> +		tegra_clk_sync_state_pll(__clk_get_hw(clk));
->> +
->> +	/* Disable PLL_OUT_CPU after DFLL resume */
->> +	val = car_readl(CLK_OUT_ENB_Y, 0);
->> +	val &= ~CLK_ENB_PLLP_OUT_CPU;
->> +	car_writel(val, CLK_OUT_ENB_Y, 0);
->> +}
-> I'm surprised by the amount of work that we need to do here. I had hoped
-> that the clock framework's save/restore infrastructure would be enough.
-> I suppose you do call clk_restore_context() somewhere in there, so maybe
-> this really is as good as it gets.
->
-> Thierry
+Either created at driver bind time in the kernel (usually control
+channels) or initiated by userspace when the WWAN management process
+has coordinated with the firmware for another channel. Honestly
+userspace should probably always create the netdevices (since they are
+always useless until userspace coordinates with the firmware about
+them) but that's not how things are yet.
 
-Reason is there are dependencies b/w the clocks and DFLL resume and 
-clocks resume order needed is not same as clock tree list.
+[ A concrete example...
 
-during resume as per clock tree, CPU clock configs to use DFLL will 
-happen first as its first in the clock tree but DFLL resume should be 
-done prior to switching CPU to use from DFLL output.
+Assume a QMI device has an existing packet data connection which is
+abstracted by a netdevice on the Linux side. Now the WWAN management
+daemon wants to create a second packet data connection with a different
+APN (maybe an MMS connection, maybe a VOIP one, maybe an IPv6). It
+sends a WDS Start Network request to the modem firmware and receives a
+new QMI Packet Data Handle.
 
-To resume DFLL, peripheral clocks should be restored.
+The management daemon must somehow get a netdevice associated with this
+new Packet Data Handle. It would ask the WWAN kernel device to create a
+new data channel with the PDH, and would get back the ifindex of that
+netdevice which it would configure with the IP that it gets from the
+firmware via the WDS Get Current Settings QMI request.
 
-Considering these dependencies, performing peripheral and DFLL/CPU 
-resume in Tegra210 clock driver rather than in corresponding peripheral 
-clk_ops using save and restore context callback.
+The WWAN device would forward the request down to IPA (or rmnet) which
+would then create the netdevice using the PDH as the QMAP MUX ID for
+that netdevice's traffic.]
 
->> +
->>   static void tegra210_cpu_clock_suspend(void)
->>   {
->>   	/* switch coresite to clk_m, save off original source */
->> @@ -3295,8 +3484,20 @@ static void tegra210_cpu_clock_resume(void)
->>   	writel(tegra210_cpu_clk_sctx.clk_csite_src,
->>   				clk_base + CLK_SOURCE_CSITE);
->>   }
->> +#else
->> +#define tegra210_clk_suspend	NULL
->> +#define tegra210_clk_resume	NULL
->> +static inline u32 *tegra210_init_suspend_ctx(void)
->> +{
->> +	return NULL;
->> +}
->>   #endif
->>   
->> +static struct syscore_ops tegra_clk_syscore_ops = {
->> +	.suspend = tegra210_clk_suspend,
->> +	.resume = tegra210_clk_resume,
->> +};
->> +
->>   static struct tegra_cpu_car_ops tegra210_cpu_car_ops = {
->>   	.wait_for_reset	= tegra210_wait_cpu_in_reset,
->>   	.disable_clock	= tegra210_disable_cpu_clock,
->> @@ -3580,5 +3781,8 @@ static void __init tegra210_clock_init(struct device_node *np)
->>   	tegra210_mbist_clk_init();
->>   
->>   	tegra_cpu_car_ops = &tegra210_cpu_car_ops;
->> +
->> +	if (tegra210_init_suspend_ctx())
->> +		register_syscore_ops(&tegra_clk_syscore_ops);
->>   }
->>   CLK_OF_DECLARE(tegra210, "nvidia,tegra210-car", tegra210_clock_init);
->> -- 
->> 2.7.4
->>
+
+> - What causes a created channel to be removed?
+
+Driver removal, userspace WWAN daemon terminating the packet data
+connection which the channel represents, the modem terminating the
+packet data connection (eg network initiated disconnect), etc.
+
+> - You distinguish between attaching a netdevice and (what
+>   I'll call) activating it.  What causes activation?
+
+Can you describe what you mean by "activating"? Do you mean
+successfully TX/RX packets via the netdev and the outside world?
+
+I read "attach" here as simply associating an existing netdev with the
+"parent" WWAN device. A purely Linux operation that is only book-
+keeping and may not have any interaction with the modem. 
+
+> - How are the attributes of a WWAN device or channel set,
+>   or communicated?
+
+Via netlink attributes when userspace asks the WWAN device to create a
+new channel. In the control methods I've seen, only userspace really
+knows the channel identifier that it and the modem have agreed on (eg
+what the MUX ID in the QMAP header would be, or the MBIM Session ID).
+
+> - Are there any attributes that are only optionally supported,
+>   and if so, how are the supported ones communicated?
+
+Yeah, capabilities would be important here and I don't think Johannes
+accounted for that yet.
+
+> - Which WWAN channel attributes must be set *before* the
+>   channel is activated, and can't be changed?  Are there any
+>   that can be changed dynamically?
+
+I would assume userspace must pass the agreed identifier (QMUX ID, MBIM
+session ID, etc) when creating the channel and that wouldn't change. I
+think a world where you can dynamically change the MUX ID/SessionID/etc
+is a more complicated one.
+
+Things like QoS could change but I don't recall if modems allow that;
+eg does a +CGEQOS (or equivalent QMI WDS LTE QoS Parameters request)
+take effect while the bearer is active, or is it only respected on
+bearer creation?
+
+> And while the whole point of this is to make things generic,
+> it might be nice to have a way to implement a new feature
+> before it can be "standardized".
+
+That would be nice, but I'd rather have the conversation about if/how
+to standardize things before they make it into the kernel and have
+their API set in stone... which is how we ended up with 5 ways of doing
+the same thing already.
+
+Dan
+
+> Thanks.
+> 
+> 					-Alex
+> 
+> PS  I don't want to exclude anybody but we could probably start
+>     a different mail chain on this topic...
+> 
+> > > driver_dev
+> > >   struct device *dev (USB, PCI, ...)
+> > >   net_device NA
+> > >   net_device NB
+> > >   tty TA
+> > >  ...
+> > > 
+> 
+> . . .
