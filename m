@@ -1,42 +1,44 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 1/4] staging: media: tegra-vde: Remove BIT() macro
- from UAPI header
-Date: Tue, 18 Jun 2019 11:44:47 -0700
-Message-ID: <1d206e92d9882865c11016d315f8edcd4344cbb8.camel@perches.com>
-References: <20190618161458.20499-1-digetx@gmail.com>
- <20190618161458.20499-5-digetx@gmail.com>
- <26cd63896d6930385b4f770e305f0782a455a688.camel@perches.com>
- <e5b8756590260b4d6a26cf9f02deb9d157cfca83.camel@sipsolutions.net>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v2] Revert "ARM: dts: rockchip: set PWM delay backlight settings for Minnie"
+Date: Tue, 18 Jun 2019 11:45:31 -0700
+Message-ID: <20190618184531.1137-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <e5b8756590260b4d6a26cf9f02deb9d157cfca83.camel@sipsolutions.net>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Johannes Berg <johannes@sipsolutions.net>, Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Song Liu <songliubraving@fb.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jiri Pirko <jiri@resnulli.us>, Alexandre Torgue <alexandre.torgue@st.com>, Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <jakub.kicinski@netronome.com>, John Fastabend <john.fastabend@gmail.com>, Alexei Starovoitov <ast@kernel.org>, linux-kernel@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Cong Wang <xiyou.wangcong@gmail.com>, linux-tegra@vger.kernel.org, Yonghong Song <yhs@fb.com>, Mark Rutland <mark.rutland@arm.com>, Martin KaFai Lau <kafai@fb.com>, Jesper Dangaard Brouer <hawk@kernel.org>, linux-media@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Pavel Machek <pavel@ucw.cz>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-06-18 at 20:37 +0200, Johannes Berg wrote:
-> On Tue, 2019-06-18 at 11:23 -0700, Joe Perches wrote:
-> > include/uapi/linux/nl80211.h: * bitmask of BIT(NL80211_BAND_*) as described in %enum
-> > 
-> > 
-> That's a comment :P
+This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
 
-That's true and that's nice.
+The commit assumes that the minnie panel is a AUO B101EAN01.1 (LVDS
+interface), however it is a AUO B101EAN01.8 (eDP interface). The eDP
+panel doesn't need the 200 ms delay.
 
-It was a casual grep and the comment should
-probably be improved anyway.
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+Changes in v2:
+- updated commit message with details about the source of the
+  confusion
+- added Enric's "Reviewed-by" tag
+---
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-<insert appropriate emoji here>
-
-cheers, Joe
+diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+index 468a1818545d..28cbe07f96ec 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+@@ -86,8 +86,6 @@
+ 			240 241 242 243 244 245 246 247
+ 			248 249 250 251 252 253 254 255>;
+ 	power-supply = <&backlight_regulator>;
+-	post-pwm-on-delay-ms = <200>;
+-	pwm-off-delay-ms = <200>;
+ };
+ 
+ &emmc {
+-- 
+2.22.0.410.gd8fdbe21b5-goog
