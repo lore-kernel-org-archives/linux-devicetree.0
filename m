@@ -1,98 +1,138 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/9] dt: bindings: Add multicolor class dt bindings documention
-Date: Tue, 18 Jun 2019 12:57:14 -0600
-Message-ID: <CAL_JsqKRLZmZ5uCKWh_tpaYu7eSdYatsymzy+L-D=sesd81w+Q@mail.gmail.com>
-References: <20190523190820.29375-1-dmurphy@ti.com> <20190523190820.29375-3-dmurphy@ti.com>
- <20190614170011.GA3277@bogus> <c234361e-f5f7-f8d7-18c6-9cc8ef74ac99@ti.com>
- <CAL_JsqK7u1xXNmwtHjUd7Z5ewHd9_d51quH4zMXxEd63egd28w@mail.gmail.com> <afc7f11f-7f8d-7680-aef3-58c26e8b34fa@gmail.com>
+From: Johannes Berg <johannes@sipsolutions.net>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Tue, 18 Jun 2019 21:03:31 +0200
+Message-ID: <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+         <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+         <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+         <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+         <d533b708-c97a-710d-1138-3ae79107f209@linaro.org>
+         (sfid-20190618_154530_836620_A8CD82A2)
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <afc7f11f-7f8d-7680-aef3-58c26e8b34fa@gmail.com>
+In-Reply-To: <d533b708-c97a-710d-1138-3ae79107f209@linaro.org> (sfid-20190618_154530_836620_A8CD82A2)
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <dcbw@redhat.com>
+Cc: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 12:20 PM Jacek Anaszewski
-<jacek.anaszewski@gmail.com> wrote:
->
-> On 6/18/19 5:36 PM, Rob Herring wrote:
-> > On Fri, Jun 14, 2019 at 11:18 AM Dan Murphy <dmurphy@ti.com> wrote:
-> >>
-> >> Rob
-> >>
-> >> Thanks for the review
-> >>
-> >> On 6/14/19 12:00 PM, Rob Herring wrote:
-> >>> On Thu, May 23, 2019 at 02:08:13PM -0500, Dan Murphy wrote:
-> >>>> Add DT bindings for the LEDs multicolor class framework.
-> >>>>
-> >>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> >>>> ---
-> >>>>    .../bindings/leds/leds-class-multicolor.txt   | 97 +++++++++++++++++++
-> >>>>    1 file changed, 97 insertions(+)
-> >>>>    create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-> >>>> new file mode 100644
-> >>>> index 000000000000..e2a2ce3279cb
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-> >>>> @@ -0,0 +1,97 @@
-> >>>> +* Multicolor LED properties
-> >>>> +
-> >>>> +Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
-> >>>> +can be grouped together and also provide a modeling mechanism so that the
-> >>>> +cluster LEDs can vary in hue and intensity to produce a wide range of colors.
-> >>>> +
-> >>>> +The nodes and properties defined in this document are unique to the multicolor
-> >>>> +LED class.  Common LED nodes and properties are inherited from the common.txt
-> >>>> +within this documentation directory.
-> >>>> +
-> >>>> +Required LED Child properties:
-> >>>> +    - color : For multicolor LED support this property should be defined as
-> >>>> +              LED_COLOR_ID_MULTI and further definition can be found in
-> >>>> +              include/linux/leds/common.h.
-> >>>> +
-> >>>> +led-controller@30 {
-> >>>> +    #address-cells = <1>;
-> >>>> +    #size-cells = <0>;
-> >>>> +    compatible = "ti,lp5024";
-> >>>> +    reg = <0x29>;
-> >>>> +
-> >>>> +    multi-led@4 {
-> >>> Typically we sort by address order.
-> >>
-> >> These are not addresses these end up being the "module" number that the
-> >> LEDs below are associated to.
-> >
-> > 'reg' (and the unit-address) is an address in the sense that is how
-> > you identify a device or sub-device. It doesn't matter what type of
-> > 'address' it is, DT practice is to sort node in unit-address numerical
-> > order.
-> >
-> > 'module' is a h/w thing, right? A bank or instance within the device?
-> > If not, using 'reg' here is not appropriate.
->
-> In this case reg represents LEDn_BRIGHTNESS register which controls
-> a group of three LEDs. The thing is that those registers' addresses
-> start from 0x07, i.e. the formula for calculating the RGB LED module
-> address is: LEDn_BRIGHTNESS = 0x07 + n.
->
->  From the above it seems that we should have multi-led@7 and reg = 0x07
-> for LED0_BRIGHTNESS register governing the brightness of RGB LED
-> module 0, right?
+On Tue, 2019-06-18 at 08:45 -0500, Alex Elder wrote:
 
-Use whatever makes the most sense from a h/w perspective. If 'module
-N' is something that I'd read about in the datasheet, then I'd stick
-with 'N'.
+> If it had a well-defined way of creating new channels to be
+> multiplexed over the connection to the modem, the IPA driver
+> (rather than the rmnet driver) could present network interfaces
+> for each and perform the multiplexing.  
 
->
-> And regarding sorting by address order I think that Rob was asking for
-> placing whole multi-led@4 sub-node after multi-led@2 (here sticking to
-> the numeration from the patch).
+Right. That's what I was thinking of.
+
+I actually expect this to fare much better going forward with 5G around
+the corner, since you'll want to eventually take advantage of multi-
+queue TX or RSS for RX, queue size control and what not, as speeds
+increase.
+
+Because of these things I think the whole "layered netdev" approach is
+actually *wrong* rather than just inconvenient.
+
+In particular, in the Intel driver, you're going to have multiple
+hardware queues, one for each ongoing session. This means that
+multiplexing it over a layered netdev like rmnet or something like VLAN
+(which some driver does too) actually prevents us from doing this
+properly - it means we need to implement ndo_select_queue() and multiple
+queues on the underlying netdev etc., and then we no longer have the
+ability to use actual multi-queue. It becomes messy very very quickly.
+
+> As I think Arnd
+> suggested, this could at least partially be done with library
+> code (to be shared with other "back-end" interfaces) rather
+> than using a layered driver.  This applies to aggregation,
+> channel flow control, and checksum offload as well.
 
 Right.
 
-Rob
+> But I'm only familiar with IPA; I don't know whether the above
+> statements make any sense for other "back-end" drivers.
+
+I think they do, in different ways. Intel probably wouldn't have a
+library - there isn't actually much of a MUX header because there are
+different hardware queues for the different sessions.
+
+> This is great.  The start of a more concrete discussion of the
+> pieces that are missing...
+
+:-)
+
+I think I said before - it should be pretty easy to mold some code
+around the API I proposed there and have something reasonably functional
+soon.
+
+> That would be nice.  I believe you're saying that (in my case)
+> the IPA driver creates and owns the netdevices.
+
+Yes.
+
+> But I think the IPA driver would register with the WWAN core as
+> a "provider," and then the WWAN core would subsequently request
+> that it instantiate netdevices to represent channels on demand
+> (rather than registering them).
+
+Yeah, I guess you could call it that way.
+
+Really there are two possible ways (and they intersect to some extent).
+
+One is the whole multi-function device, where a single WWAN device is
+composed of channels offered by actually different drivers, e.g. for a
+typical USB device you might have something like cdc_ether and the
+usb_wwan TTY driver. In this way, we need to "compose" the WWAN device
+similarly, e.g. by using the underlying USB device "struct device"
+pointer to tie it together.
+
+The other is something like IPA or the Intel modem driver, where the
+device is actually a single (e.g. PCIe) device and just has a single
+driver, but that single driver offers different channels.
+
+Now, it's not clear to me where IPA actually falls, because so far we've
+been talking about the IPA driver only as providing *netdevs*, not any
+control channels, so I'm not actually sure where the control channel is.
+
+For the Intel device, however, the control channel is definitely
+provided by exactly the same driver as the data channels (netdevs).
+
+"provider" is a good word, and in fact the Intel driver would also be a
+provider for a GNSS channel (TBD how to represent, a tty?), one or
+multiple debug/tracing channels, data channels (netdevs), AT command
+channels (mbim, ...?) (again tbd how to represent, ttys?), etc.
+
+What I showed in the header files I posted so far was the provider only
+having "data channel" ops (create/remove a netdev) but for each channel
+type we either want a new method there, or we just change the method to
+be something like
+
+	int (*create_channel)(..., enum wwan_chan_type chan_type, ...);
+
+and simply require that the channel is attached to the wwan device with
+the representation-specific call (wwan_attach_netdev, wwan_attach_tty,
+...).
+
+This is a bit less comfortable because then it's difficult to know what
+was actually created upon the request, so it's probably better to have
+different methods for the different types of representations (like I had
+- add_netdev, add_tty, ...).
+
+Note also that I said "representation-specific", while passing a
+"channel type", so for this we'd actually need a convention on what
+channel type has what kind of representation, which again gets awkward.
+Better to make it explicit.
+
+(And even then, we might be able to let userspace have some control,
+e.g. the driver might be able to create a debug channel as both a TTY or
+something else)
+
+johannes
