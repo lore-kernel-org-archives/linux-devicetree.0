@@ -1,54 +1,61 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND
- controller
-Date: Tue, 18 Jun 2019 09:29:01 +0200
-Message-ID: <20190618092901.3bdd9f61@collabora.com>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
-        <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190512151820.4f2dd9da@xps13>
-        <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
-        <20190520142333.390091d5@xps13>
-        <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
-        <20190527144250.71908bd9@xps13>
-        <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw>
-        <20190617143510.4ded5728@xps13>
-        <OF1C1397B4.241DC339-ON4825841D.000482A2-4825841D.0007B67E@mxic.com.tw>
-        <20190618081436.5d488320@collabora.com>
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH] dt-bindings: watchdog: Rename bindings documentation file
+Date: Tue, 18 Jun 2019 09:30:50 +0200
+Message-ID: <20190618073050.GA28646@bigcity.dyn.berto.se>
+References: <20190617090953.8770-1-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190618081436.5d488320@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: masonccyang@mxic.com.tw
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190617090953.8770-1-horms+renesas@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Jun 2019 08:14:36 +0200
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
+Hi Simon,
 
-> > > > > > 
-> > > > > > How to make all #CS keep high for NAND to enter 
-> > > > > > low-power standby mode if driver don't use "legacy.select_chip()"     
-> > ?   
-> > > > > 
-> > > > > See commit 02b4a52604a4 ("mtd: rawnand: Make ->select_chip()     
-> > optional  
-> > > > > when ->exec_op() is implemented") which states:
-> > > > > 
-> > > > >         "When [->select_chip() is] not implemented, the core is     
-> > assuming  
-> > > > >    the CS line is automatically asserted/deasserted by the driver     
-> > > > >    ->exec_op() implementation."     
-> > > > > 
-> > > > > Of course, the above is right only when the controller driver     
-> > supports  
-> > > > > the ->exec_op() interface.     
-> > > > 
-> > > > Currently, it seems that we will get the incorrect data and error
-> > > > operation due to CS in error toggling if CS line is controlled in     
-> > > > ->exec_op().     
+Thanks for your work.
 
-Oh, and please provide the modifications you added on top of this patch.
-Right now we're speculating on what you've done which is definitely not
-an efficient way to debug this sort of issues.
+On 2019-06-17 11:09:53 +0200, Simon Horman wrote:
+> For consistency with the naming of (most) other documentation files for DT
+> bindings for Renesas IP blocks rename the Renesas WDT documentation file
+> from renesas-wdt.txt to renesas,wdt.txt.
+> =
+
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+
+Reviewed-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
+
+> ---
+>  .../devicetree/bindings/watchdog/{renesas-wdt.txt =3D> renesas,wdt.txt} =
+    | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/watchdog/{renesas-wdt.txt =3D> =
+renesas,wdt.txt} (100%)
+> =
+
+> diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b=
+/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> rename to Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
+> -- =
+
+> 2.11.0
+> =
+
+
+-- =
+
+Regards,
+Niklas S=F6derlund
