@@ -1,100 +1,65 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH V3 12/17] soc/tegra: pmc: allow support for more tegra
- wake
-Date: Tue, 18 Jun 2019 10:26:26 +0100
-Message-ID: <bbbaaad7-d20d-c648-af73-ec0960a33896@arm.com>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-13-git-send-email-skomatineni@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 2/2] arm: dts: add ARM Mali GPU node for Odroid XU3
+Date: Tue, 18 Jun 2019 11:26:58 +0200
+Message-ID: <CAJKOXPc-Xztou+xyibb8YZtfz20q3kzr_gTBoE=R3q_CSk9kzQ@mail.gmail.com>
+References: <20190614203144.3850-2-joseph.kogut@gmail.com>
+ <20190614235719.8134-1-joseph.kogut@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560843991-24123-13-git-send-email-skomatineni@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190614235719.8134-1-joseph.kogut@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Joseph Kogut <joseph.kogut@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, airlied@linux.ie, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/06/2019 08:46, Sowjanya Komatineni wrote:
-> This patch allows to create separate irq_set_wake and irq_set_type
-> implementations for different tegra designs PMC that has different
-> wake models which require difference wake registers and different
-> programming sequence.
-> 
-> AOWAKE model support is available for Tegra186 and Tegra194 only
-> and it resides within PMC and supports tiered wake architecture.
-> 
-> Tegra210 and prior tegra designs uses PMC directly to receive wake
-> events and coordinate the wake sequence.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index edd4fe06810f..e87f29a35fcf 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -226,6 +226,8 @@ struct tegra_pmc_soc {
->  	void (*setup_irq_polarity)(struct tegra_pmc *pmc,
->  				   struct device_node *np,
->  				   bool invert);
-> +	int (*irq_set_wake)(struct irq_data *data, unsigned int on);
-> +	int (*irq_set_type)(struct irq_data *data, unsigned int type);
->  
->  	const char * const *reset_sources;
->  	unsigned int num_reset_sources;
-> @@ -1919,7 +1921,7 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
->  	.alloc = tegra_pmc_irq_alloc,
->  };
->  
-> -static int tegra_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
-> +static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->  {
->  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->  	unsigned int offset, bit;
-> @@ -1951,7 +1953,7 @@ static int tegra_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->  	return 0;
->  }
->  
-> -static int tegra_pmc_irq_set_type(struct irq_data *data, unsigned int type)
-> +static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
->  {
->  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->  	u32 value;
-> @@ -2005,8 +2007,10 @@ static int tegra_pmc_irq_init(struct tegra_pmc *pmc)
->  	pmc->irq.irq_unmask = irq_chip_unmask_parent;
->  	pmc->irq.irq_eoi = irq_chip_eoi_parent;
->  	pmc->irq.irq_set_affinity = irq_chip_set_affinity_parent;
-> -	pmc->irq.irq_set_type = tegra_pmc_irq_set_type;
-> -	pmc->irq.irq_set_wake = tegra_pmc_irq_set_wake;
-> +	if (pmc->soc->irq_set_type)
-> +		pmc->irq.irq_set_type = pmc->soc->irq_set_type;
-> +	if (pmc->soc->irq_set_wake)
-> +		pmc->irq.irq_set_wake = pmc->soc->irq_set_wake;
-
-Two cases: either the value is non NULL, and we assign it, or it is
-NULL, and we leave it to what it was, presumably NULL. I guess you can
-drop the both ifs.
-
->  
->  	pmc->domain = irq_domain_add_hierarchy(parent, 0, 96, pmc->dev->of_node,
->  					       &tegra_pmc_irq_domain_ops, pmc);
-> @@ -2679,6 +2683,8 @@ static const struct tegra_pmc_soc tegra186_pmc_soc = {
->  	.regs = &tegra186_pmc_regs,
->  	.init = NULL,
->  	.setup_irq_polarity = tegra186_pmc_setup_irq_polarity,
-> +	.irq_set_wake = tegra186_pmc_irq_set_wake,
-> +	.irq_set_type = tegra186_pmc_irq_set_type,
->  	.reset_sources = tegra186_reset_sources,
->  	.num_reset_sources = ARRAY_SIZE(tegra186_reset_sources),
->  	.reset_levels = tegra186_reset_levels,
-> 
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+T24gU2F0LCAxNSBKdW4gMjAxOSBhdCAwMTo1NywgSm9zZXBoIEtvZ3V0IDxqb3NlcGgua29ndXRA
+Z21haWwuY29tPiB3cm90ZToKPgo+IEFkZCBkZXZpY2UgdHJlZSBub2RlIGZvciBtYWxpIGdwdSBv
+biBPZHJvaWQgWFUzIFNvQ3MuCj4KPiBTaWduZWQtb2ZmLWJ5OiBKb3NlcGggS29ndXQgPGpvc2Vw
+aC5rb2d1dEBnbWFpbC5jb20+Cj4gLS0tCj4KPiBDaGFuZ2VzIHYxIC0+IHYyOgo+IC0gVXNlIGlu
+dGVycnVwdCBuYW1lIG9yZGVyaW5nIGZyb20gYmluZGluZyBkb2MKPiAtIFNwZWNpZnkgYSBzaW5n
+bGUgY2xvY2sgZm9yIEdQVSBub2RlCj4gLSBBZGQgZ3B1IG9wcCB0YWJsZQo+IC0gRml4IHdhcm5p
+bmdzIGZyb20gSVJRX1RZUEVfTk9ORQo+Cj4gIC4uLi9ib290L2R0cy9leHlub3M1NDIyLW9kcm9p
+ZHh1My1jb21tb24uZHRzaSB8IDI2ICsrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5n
+ZWQsIDI2IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9l
+eHlub3M1NDIyLW9kcm9pZHh1My1jb21tb24uZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5v
+czU0MjItb2Ryb2lkeHUzLWNvbW1vbi5kdHNpCj4gaW5kZXggOTNhNDhmMmRkYTQ5Li5iOGE0MjQ2
+ZTNiMzcgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMi1vZHJvaWR4
+dTMtY29tbW9uLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIyLW9kcm9p
+ZHh1My1jb21tb24uZHRzaQo+IEBAIC00OCw2ICs0OCwzMiBAQAo+ICAgICAgICAgICAgICAgICBj
+b29saW5nLWxldmVscyA9IDwwIDEzMCAxNzAgMjMwPjsKPiAgICAgICAgIH07Cj4KPiArICAgICAg
+IGdwdTogZ3B1QDExODAwMDAwIHsKPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzYW1z
+dW5nLGV4eW5vcy1tYWxpIiwgImFybSxtYWxpLXQ2MjgiOwo+ICsgICAgICAgICAgICAgICByZWcg
+PSA8MHgxMTgwMDAwMCAweDUwMDA+Owo+ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJ
+Q19TUEkgMjE5IElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgPEdJQ19TUEkgNzQgIElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgPEdJQ19TUEkgMTE3IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsgICAg
+ICAgICAgICAgICBpbnRlcnJ1cHQtbmFtZXMgPSAiam9iIiwgIm1tdSIsICJncHUiOwo+ICsgICAg
+ICAgICAgICAgICBjbG9ja3MgPSA8JmNsb2NrIENMS19HM0Q+Owo+ICsgICAgICAgICAgICAgICBt
+YWxpLXN1cHBseSA9IDwmYnVjazRfcmVnPjsKPiArICAgICAgICAgICAgICAgb3BlcmF0aW5nLXBv
+aW50cy12MiA9IDwmZ3B1X29wcF90YWJsZT47Cj4gKyAgICAgICB9Owo+ICsKPiArICAgICAgIGdw
+dV9vcHBfdGFibGU6IGdwdS1vcHAtdGFibGUgewoKT25lIG1vcmUgdGhpbmcgLSB1c2UgIm9wcF90
+YWJsZSIgYXMgbm9kZSBuYW1lIChnZW5lcmljIGNsYXNzIG9mIG5vZGUsCm1hdGNoZXMgc3R5bGUg
+d2l0aCBvdGhlciB0YWJsZXMpLgoKQmVzdCByZWdhcmRzLApLcnp5c3p0b2YKCj4gKyAgICAgICAg
+ICAgICAgIGNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12MiI7Cj4gKwo+ICsgICAgICAg
+ICAgICAgICBvcHAtMTc3MDAwMDAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBvcHAtaHog
+PSAvYml0cy8gNjQgPDExNzAwMDAwMD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgb3BwLW1p
+Y3Jvdm9sdCA9IDw4MTI1MDA+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsKPiArICAgICAgICAg
+ICAgICAgb3BwLTYwMDAwMDAwMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgb3BwLWh6ID0g
+L2JpdHMvIDY0IDw2MDAwMDAwMDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIG9wcC1taWNy
+b3ZvbHQgPSA8MTE1MDAwMD47Cj4gKyAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICB9Owo+ICsK
+PiAgICAgICAgIHRoZXJtYWwtem9uZXMgewo+ICAgICAgICAgICAgICAgICBjcHUwX3RoZXJtYWw6
+IGNwdTAtdGhlcm1hbCB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgdGhlcm1hbC1zZW5zb3Jz
+ID0gPCZ0bXVfY3B1MCAwPjsKPiAtLQo+IDIuMjIuMAo+Cl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
