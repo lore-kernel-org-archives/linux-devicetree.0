@@ -1,84 +1,54 @@
-Return-Path: <SRS0=/mFr=UT=gmail.com=jeffrey.l.hugo@kernel.org>
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v7 0/5] Basic DT support for Lenovo Miix 630
-Date: Thu, 20 Jun 2019 07:28:01 -0700
-Message-Id: <20190620142801.11827-1-jeffrey.l.hugo@gmail.com>
-Cc: benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com, jikos@kernel.org, hdegoede@redhat.com, bjorn.andersson@linaro.org, agross@kernel.org, lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V6 22/27] dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
+Date: Tue, 18 Jun 2019 23:32:01 +0530
+Message-ID: <20190618180206.4908-23-mmaddireddy@nvidia.com>
+In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The Lenovo Miix 630 is one of three ARM based (specifically Qualcomm
-MSM8998) laptops that comes with Windows, and seems to have a dedicated
-following of folks intrested to get Linux up and running on it.
+Document PCIe DPD pinctrl optional property to put PEX clk & BIAS pads
+in low power mode.
 
-This series adds support for the basic functionality this is validated
-towork using devicetree.  Although the laptops do feed ACPI to Windows,
-the existing MSM8998 support in mainline is DT based, so DT provides a
-quick path to functionality while ACPI support is investigated.
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+V6: No change
 
-The three devices are very similar, but do have differences in the set
-of peripherals supported, so the idea is that the vast majority of the
-support for all three can live in a common include, which should reduce
-overall duplication.  Adding support for the other two devices is tacked
-onto the end of the series.
+V5: No change
 
-The bleeding edge work for these laptops and work in progress can be
-found at https://github.com/aarch64-laptops/prebuilt
+V4: No change
 
-v7:
--Removed HID matching on compatible strings as it was determined to be
-not needed
+V3: No change
 
-v6:
--Export the elan_i2c DT and ACPI ids so that hid-quirks can use them
--Use the elan_i2c ids within hid-quirks to reduce duplication
--Add DTs for the Asus and HP devices since the DT seems finalized, and
-folks have been asking
+V2: Using standard pinctrl names, default and idle
 
-v5:
--Split out elan_i2c changes into their own patch
--Use a static list of strings to match
--Fixed typo of "whitelist"
--Dropped incorrect thermal zones
--Dropped tags from Bjorn and Lee since the functional should be
-identical, but the code is structured different
+ .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt       | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-v4:
--Changed the hid-quirks ELAN handling around per Benjamin Tissoires
--Dropped new DT binding
-
-v3:
--Changed "clam" to "clamshell"
--Defined a dt binding for the combo Elan keyboard + touchpad device
--Adjusted the HID quirk to be correct for dt boot
--Removed extranious comment in board dts
--Fixed board level compatible
-
-v2:
--Changed "cls" to "clam" since feedback indicated "cls" is too opaque,
-but
-"clamshell" is a mouthfull.  "clam" seems to be a happy medium.
-
-Jeffrey Hugo (5):
-  Input: elan_i2c: Export the device id whitelist
-  HID: quirks: Refactor ELAN 400 and 401 handling
-  arm64: dts: qcom: Add Lenovo Miix 630
-  arm64: dts: qcom: Add HP Envy x2
-  arm64: dts: qcom: Add Asus NovaGo TP370QL
-
- arch/arm64/boot/dts/qcom/Makefile             |   3 +
- .../dts/qcom/msm8998-asus-novago-tp370ql.dts  |  47 ++++
- .../boot/dts/qcom/msm8998-clamshell.dtsi      | 240 ++++++++++++++++++
- .../boot/dts/qcom/msm8998-hp-envy-x2.dts      |  30 +++
- .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 +++
- drivers/hid/hid-quirks.c                      |  22 +-
- drivers/input/mouse/elan_i2c_core.c           |  54 +---
- include/linux/input/elan-i2c-ids.h            |  68 +++++
- 8 files changed, 430 insertions(+), 64 deletions(-)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
- create mode 100644 include/linux/input/elan-i2c-ids.h
-
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+index 145a4f04194f..7939bca47861 100644
+--- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+@@ -65,6 +65,14 @@ Required properties:
+   - afi
+   - pcie_x
+ 
++Optional properties:
++- pinctrl-names: A list of pinctrl state names. Must contain the following
++  entries:
++  - "default": active state, puts PCIe I/O out of deep power down state
++  - "idle": puts PCIe I/O into deep power down state
++- pinctrl-0: phandle for the default/active state of pin configurations.
++- pinctrl-1: phandle for the idle state of pin configurations.
++
+ Required properties on Tegra124 and later (deprecated):
+ - phys: Must contain an entry for each entry in phy-names.
+ - phy-names: Must include the following entries:
 -- 
 2.17.1
