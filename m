@@ -1,61 +1,42 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V3 10/17] clk: tegra: add suspend resume support for DFLL
-Date: Tue, 18 Jun 2019 13:59:13 +0200
-Message-ID: <20190618115913.GM28892@ulmo>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-11-git-send-email-skomatineni@nvidia.com>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH v13 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF controller bindings
+Date: Tue, 18 Jun 2019 14:01:40 +0200
+Message-ID: <2671d488-82a1-8720-d9a1-03554d955a38@gmail.com>
+References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw>
+ <1558423174-10748-4-git-send-email-masonccyang@mxic.com.tw>
+ <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
+ <20190603130428.GX4797@dell>
+ <02addf64-9f6e-ccc1-2f94-8983456e3ebc@cogentembedded.com>
+ <OFDA7648A0.F1733EA5-ON48258411.002946DF-48258411.002A2F0D@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="VB1oQhYtJt8uuzk+"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1560843991-24123-11-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <OFDA7648A0.F1733EA5-ON48258411.002946DF-48258411.002A2F0D@mxic.com.tw>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
+To: masonccyang@mxic.com.tw, Lee Jones <lee.jones@linaro.org>
+Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, mark.rutland@arm.com, miquel.raynal@bootlin.com, robh+dt@kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
+On 6/6/19 9:40 AM, masonccyang@mxic.com.tw wrote:
+[...]
 
---VB1oQhYtJt8uuzk+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> RPC-IF works either in SPI or HyperFlash is decided by external hardware 
+> pins 
+> configuration and it can NOT switch it's operation mode in the run time. 
+> This is not like my understanding of MFD.
 
-On Tue, Jun 18, 2019 at 12:46:24AM -0700, Sowjanya Komatineni wrote:
-> This patch creates APIs for supporting Tegra210 clock driver to
-> perform DFLL suspend and resume operation.
->=20
-> During suspend, DFLL mode is saved and on resume Tegra210 clock driver
-> invokes DFLL resume API to re-initialize DFLL to enable target device
-> clock in open loop mode or closed loop mode.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-dfll.c | 78 ++++++++++++++++++++++++++++++++++++++=
-++++++
->  drivers/clk/tegra/clk-dfll.h |  2 ++
->  2 files changed, 80 insertions(+)
+Which external hardware pins decide the RPC configuration ?
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+It seems to me like PHYCNT register, PHYMEM bitfield, selects what
+device is connected, and then a couple of other bits control the
+communication, but I see nothing which would be tied to any external
+configuration pins.
 
---VB1oQhYtJt8uuzk+
-Content-Type: application/pgp-signature; name="signature.asc"
+[...]
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0I0hEACgkQ3SOs138+
-s6EKmA/7BKKxe4K40G19IsWN0t2GnZNUe6alysAl7lWVuw4DHcAHG1DTpZGqAPJU
-5eP6/jwJZYVC7cR1bDT4S/tnErF4ZJZSPGDPwtEPTpiX27hEGWnJl/PiFrAEf1m2
-0XhBlK7P5j/n957G3pRJrvfz1RkSxT5J/0wZwkJIPaU43v6Sw1pxB/NiwHRW+eIT
-PUaw2bNytrTJWoVmyyxDXHc9R8KCbtkJNtIAXxSE52Clde/uaSyDhBfqbbzBs4kV
-YGZEqkh3uAG/Q9/ZGDd5XAFR3ZToNJqAac+QYVhV26Xo9UwV9Rsy7eLxYsLO3KvW
-szw+frexcDuuV7Ecx75VeFhf7oaam33TvQPUcrWAO9NWfMiNzAzbtGVS41PjQM06
-f+3y+4OnSSdc6z6RlfKqFzuzfs9b3qeOlsR0CRLDiD6/wgJ725UeFsbga3vqCD+3
-AH0euxJCJCRkLjOuEXO/p/So/TA46OstJmJm6QZYgGwwVFWYjlUT756TVY7xrlqg
-NAn4PxiJvaY+JkR+bWKH7+6KfpOzo6mbvQax43QsX0CmoKUHvCwKyY5/4jkZ25lI
-QBQkmmXCMrgPlACpPjtcKfTlJ5ExDJQqW13r4wg9MIiSKGoXMuvUbuz+WPDDFxVq
-ZdcJixDmfeYsrLm9eCwV5IaFy9V35f2M4Y7qfqL7KyDFTCE1WTg=
-=BZR8
------END PGP SIGNATURE-----
-
---VB1oQhYtJt8uuzk+--
+-- 
+Best regards,
+Marek Vasut
