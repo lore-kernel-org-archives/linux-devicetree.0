@@ -1,128 +1,51 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: Add support for 96Boards Meerkat96 board
-Date: Tue, 18 Jun 2019 15:55:36 +0800
-Message-ID: <20190618075534.GI29881@dragon>
-References: <20190613132705.5150-1-manivannan.sadhasivam@linaro.org>
- <20190613132705.5150-3-manivannan.sadhasivam@linaro.org>
- <20190614114433.GA24166@Mani-XPS-13-9360>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v3 0/2] Add macb support for SiFive FU540-C000
+Date: Tue, 18 Jun 2019 13:26:06 +0530
+Message-ID: <1560844568-4746-1-git-send-email-yash.shah@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190614114433.GA24166@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: s.hauer@pengutronix.de, robh+dt@kernel.org, festevam@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pbrobinson@gmail.com, yossi@novtech.com
+To: davem@davemloft.net, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com, ynezz@true.cz, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 05:14:33PM +0530, Manivannan Sadhasivam wrote:
-> Hi Shawn,
-> 
-> On Thu, Jun 13, 2019 at 06:57:05PM +0530, Manivannan Sadhasivam wrote:
-> > Add devicetree support for 96Boards Meerkat96 board from Novtech. This
-> > board is one of the Consumer Edition boards of the 96Boards family based
-> > on i.MX7D SoC. Following are the currently supported features of the
-> > board:
-> > 
-> > * uSD
-> > * WiFi/BT
-> > * USB
-> > 
-> > More information about this board can be found in 96Boards product page:
-> > https://www.96boards.org/product/imx7-96/
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/Makefile            |   1 +
-> >  arch/arm/boot/dts/imx7d-meerkat96.dts | 389 ++++++++++++++++++++++++++
-> >  2 files changed, 390 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/imx7d-meerkat96.dts
-> > 
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index f4f5aeaf3298..3018a763dbd1 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -579,6 +579,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
-> >  	imx7d-cl-som-imx7.dtb \
-> >  	imx7d-colibri-emmc-eval-v3.dtb \
-> >  	imx7d-colibri-eval-v3.dtb \
-> > +	imx7d-meerkat96.dtb \
-> >  	imx7d-nitrogen7.dtb \
-> >  	imx7d-pico-hobbit.dtb \
-> >  	imx7d-pico-pi.dtb \
-> > diff --git a/arch/arm/boot/dts/imx7d-meerkat96.dts b/arch/arm/boot/dts/imx7d-meerkat96.dts
-> > new file mode 100644
-> > index 000000000000..a86dc4878e44
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx7d-meerkat96.dts
-> > @@ -0,0 +1,389 @@
-> > +// SPDX-License-Identifier: GPL-2.0+ OR MIT
-> > +/*
-> > + * Copyright (C) 2019 Linaro Ltd.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "imx7d.dtsi"
-> > +
-> > +/ {
-> > +	model = "96Boards Meerkat96 Board";
-> > +	compatible = "novtech,imx7d-meerkat96", "fsl,imx7d";
-> > +
-> > +	chosen {
-> > +		stdout-path = &uart6;
-> > +	};
-> > +
-> > +	memory@80000000 {
-> > +		device_type = "memory";
-> > +		reg = <0x80000000 0x20000000>; /* 512MB */
-> > +	};
-> > +
-> > +	reg_wlreg_on: regulator-wlreg-on {
-> > +		compatible = "regulator-fixed";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_wlreg_on>;
-> > +		regulator-name = "wlreg_on";
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +		startup-delay-us = <100>;
-> > +		gpio = <&gpio6 15 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +		regulator-always-on;
-> > +	};
-> > +
-> > +	reg_3p3v: regulator-3p3v {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "3P3V";
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +		regulator-always-on;
-> > +	};
-> > +
-> > +	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "usb_otg1_vbus";
-> > +		regulator-min-microvolt = <5000000>;
-> > +		regulator-max-microvolt = <5000000>;
-> > +	};
-> > +
-> > +	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "usb_otg2_vbus";
-> > +		regulator-min-microvolt = <5000000>;
-> > +		regulator-max-microvolt = <5000000>;
-> > +		gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +	};
-> > +
-> > +	sw1a_reg: sw1a {
-> > +		compatible = "regulator-fixed";
-> 
-> Actually I was wrong here. This is not a fixed regulator node as the voltage
-> level varies. Since there is no PMIC support exist now, can I remove this node?
-> Or I should make it as fixed 0.7v?
+On FU540, the management IP block is tightly coupled with the Cadence
+MACB IP block. It manages many of the boundary signals from the MACB IP
+This patchset controls the tx_clk input signal to the MACB IP. It
+switches between the local TX clock (125MHz) and PHY TX clocks. This
+is necessary to toggle between 1Gb and 100/10Mb speeds.
 
-I dropped it (&cpu0 as well) and applied both patches.  You can add it
-later when you have the right information about it.
+Future patches may add support for monitoring or controlling other IP
+boundary signals.
 
-Shawn
+This patchset is mostly based on work done by
+Wesley Terpstra <wesley@sifive.com>
+
+This patchset is based on Linux v5.2-rc1 and tested on HiFive Unleashed
+board with additional board related patches needed for testing can be
+found at dev/yashs/ethernet_v3 branch of:
+https://github.com/yashshah7/riscv-linux.git
+
+Change History:
+V3:
+- Revert "MACB_SIFIVE_FU540" config changes in Kconfig and driver code.
+  The driver does not depend on SiFive GPIO driver.
+
+V2:
+- Change compatible string from "cdns,fu540-macb" to "sifive,fu540-macb"
+- Add "MACB_SIFIVE_FU540" in Kconfig to support SiFive FU540 in macb
+  driver. This is needed because on FU540, the macb driver depends on
+  SiFive GPIO driver.
+- Avoid writing the result of a comparison to a register.
+- Fix the issue of probe fail on reloading the module reported by:
+  Andreas Schwab <schwab@suse.de>
+
+Yash Shah (2):
+  macb: bindings doc: add sifive fu540-c000 binding
+  macb: Add support for SiFive FU540-C000
+
+ Documentation/devicetree/bindings/net/macb.txt |   3 +
+ drivers/net/ethernet/cadence/macb_main.c       | 123 +++++++++++++++++++++++++
+ 2 files changed, 126 insertions(+)
+
+-- 
+1.9.1
