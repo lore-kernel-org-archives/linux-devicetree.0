@@ -1,50 +1,56 @@
-From: Alistair Francis <Alistair.Francis@wdc.com>
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-Date: Tue, 18 Jun 2019 23:11:54 +0000
-Message-ID: <e054e1c22cc52c41cea36b005de5a5ade0f8a23e.camel@wdc.com>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
-          <mvmtvco62k9.fsf@suse.de>
-          <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
-          <mvmpnnc5y49.fsf@suse.de>
-          <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com>
-          <mvmh88o5xi5.fsf@suse.de>
-          <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com>
-          <F48A4F7F-0B0D-4191-91AD-DC51686D1E78@sifive.com>
-         <d2836a90b92f3522a398d57ab8555d08956a0d1f.camel@wdc.com>
-         <alpine.DEB.2.21.9999.1906172019040.15057@viisi.sifive.com>
+From: Atish Patra <Atish.Patra@wdc.com>
+Subject: Re: [PATCH v3 0/2] Add macb support for SiFive FU540-C000
+Date: Tue, 18 Jun 2019 23:27:56 +0000
+Message-ID: <ecded54c9b7bb7c85f029920db225cf19e1ee325.camel@wdc.com>
+References: <1560844568-4746-1-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1906172019040.15057@viisi.sifive.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1560844568-4746-1-git-send-email-yash.shah@sifive.com>
 Content-Language: en-US
-Content-ID: <B51FAF1422A4224AB60D396DA226F398@namprd04.prod.outlook.com>
-Sender: netdev-owner@vger.kernel.org
-To: "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "palmer@sifive.com" <palmer@sifive.com>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "yash.shah@sifive.com" <yash.shah@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "sachin.ghadi@sifive.com" <sachin.ghadi@sifive.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ynezz@true.cz" <ynezz@true.cz>, "jamez@wit.com" <jamez@wit.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "schwab@suse.de" <schwab@suse.de>, "troy.benjegerdes@sifive.com" <troy.benjegerdes@sifive.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.>
+Content-ID: <AFC52306D091CA4592F396976E2BC5AD@namprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "yash.shah@sifive.com" <yash.shah@sifive.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc: "sachin.ghadi@sifive.com" <sachin.ghadi@sifive.com>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "ynezz@true.cz" <ynezz@true.cz>, "palmer@sifive.com" <palmer@sifive.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA2LTE3IGF0IDIwOjI2IC0wNzAwLCBQYXVsIFdhbG1zbGV5IHdyb3RlOg0K
-PiBPbiBNb24sIDE3IEp1biAyMDE5LCBBbGlzdGFpciBGcmFuY2lzIHdyb3RlOg0KPiANCj4gPiA+
-IFRoZSBsZWdhY3kgTS1tb2RlIFUtYm9vdCBoYW5kbGVzIHRoZSBwaHkgcmVzZXQgYWxyZWFkeSwg
-YW5kIEnigJl2ZQ0KPiA+ID4gYmVlbg0KPiA+ID4gYWJsZSB0byBsb2FkIHVwc3RyZWFtIFMtbW9k
-ZSB1Ym9vdCBhcyBhIHBheWxvYWQgdmlhIFRGVFAsIGFuZA0KPiA+ID4gdGhlbiANCj4gPiA+IGxv
-YWQgYW5kIGJvb3QgYSA0LjE5IGtlcm5lbC4gDQo+ID4gPiANCj4gPiA+IEl0IHdvdWxkIGJlIG5p
-Y2UgdG8gZ2V0IHRoaXMgYWxsIHdvcmtpbmcgd2l0aCA1LngsIGhvd2V2ZXIgdGhlcmUNCj4gPiA+
-IGFyZQ0KPiA+ID4gc3RpbGwNCj4gPiA+IHNldmVyYWwgbWlzc2luZyBwaWVjZXMgdG8gcmVhbGx5
-IGhhdmUgaXQgd29yayB3ZWxsLg0KPiA+IA0KPiA+IExldCBtZSBrbm93IHdoYXQgaXMgc3RpbGwg
-bWlzc2luZy9kb2Vzbid0IHdvcmsgYW5kIEkgY2FuIGFkZCBpdC4gQXQNCj4gPiB0aGUNCj4gPiBt
-b21lbnQgdGhlIG9ubHkga25vd24gaXNzdWUgSSBrbm93IG9mIGlzIGEgbWlzc2luZyBTRCBjYXJk
-IGRyaXZlcg0KPiA+IGluIFUtDQo+ID4gQm9vdC4NCj4gDQo+IFRoZSBEVCBkYXRhIGhhcyBjaGFu
-Z2VkIGJldHdlZW4gdGhlIG5vbi11cHN0cmVhbSBkYXRhIHRoYXQgcGVvcGxlIA0KPiBkZXZlbG9w
-ZWQgYWdhaW5zdCBwcmV2aW91c2x5LCB2cy4gdGhlIERUIGRhdGEgdGhhdCBqdXN0IHdlbnQNCj4g
-dXBzdHJlYW0gDQo+IGhlcmU6DQo+IA0KPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20v
-bGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0Lz9pZD03MjI5NmJkZTRm
-NDIwNzU2Njg3MmVlMzU1OTUwYTU5Y2JjMjlmODUyDQo+IA0KPiBhbmQNCj4gDQo+IGh0dHBzOi8v
-Z2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4Lmdp
-dC9jb21taXQvP2lkPWMzNWYxYjg3ZmM1OTU4MDdmZjE1ZDI4MzRkMjQxZjk3NzE0OTcyMDUNCj4g
-DQo+IFNvIFVwc3RyZWFtIFUtQm9vdCBpcyBnb2luZyB0byBuZWVkIHNldmVyYWwgcGF0Y2hlcyB0
-byBnZXQgdGhpbmdzDQo+IHdvcmtpbmcgDQo+IGFnYWluLiAgQ2xvY2sgaWRlbnRpZmllcnMgYW5k
-IEV0aGVybmV0IGFyZSB0d28ga25vd24gYXJlYXMuDQoNClllcCwgQW51cCBoYXMgc2VudCBwYXRj
-aGVzIHRvIFUtQm9vdCBhbmQgT3BlblNCSS4NCg0KQWxpc3RhaXINCg0KPiANCj4gDQo+IC0gUGF1
-bA0K
+T24gVHVlLCAyMDE5LTA2LTE4IGF0IDEzOjI2ICswNTMwLCBZYXNoIFNoYWggd3JvdGU6DQo+IE9u
+IEZVNTQwLCB0aGUgbWFuYWdlbWVudCBJUCBibG9jayBpcyB0aWdodGx5IGNvdXBsZWQgd2l0aCB0
+aGUgQ2FkZW5jZQ0KPiBNQUNCIElQIGJsb2NrLiBJdCBtYW5hZ2VzIG1hbnkgb2YgdGhlIGJvdW5k
+YXJ5IHNpZ25hbHMgZnJvbSB0aGUgTUFDQg0KPiBJUA0KPiBUaGlzIHBhdGNoc2V0IGNvbnRyb2xz
+IHRoZSB0eF9jbGsgaW5wdXQgc2lnbmFsIHRvIHRoZSBNQUNCIElQLiBJdA0KPiBzd2l0Y2hlcyBi
+ZXR3ZWVuIHRoZSBsb2NhbCBUWCBjbG9jayAoMTI1TUh6KSBhbmQgUEhZIFRYIGNsb2Nrcy4gVGhp
+cw0KPiBpcyBuZWNlc3NhcnkgdG8gdG9nZ2xlIGJldHdlZW4gMUdiIGFuZCAxMDAvMTBNYiBzcGVl
+ZHMuDQo+IA0KPiBGdXR1cmUgcGF0Y2hlcyBtYXkgYWRkIHN1cHBvcnQgZm9yIG1vbml0b3Jpbmcg
+b3IgY29udHJvbGxpbmcgb3RoZXIgSVANCj4gYm91bmRhcnkgc2lnbmFscy4NCj4gDQo+IFRoaXMg
+cGF0Y2hzZXQgaXMgbW9zdGx5IGJhc2VkIG9uIHdvcmsgZG9uZSBieQ0KPiBXZXNsZXkgVGVycHN0
+cmEgPHdlc2xleUBzaWZpdmUuY29tPg0KPiANCj4gVGhpcyBwYXRjaHNldCBpcyBiYXNlZCBvbiBM
+aW51eCB2NS4yLXJjMSBhbmQgdGVzdGVkIG9uIEhpRml2ZQ0KPiBVbmxlYXNoZWQNCj4gYm9hcmQg
+d2l0aCBhZGRpdGlvbmFsIGJvYXJkIHJlbGF0ZWQgcGF0Y2hlcyBuZWVkZWQgZm9yIHRlc3Rpbmcg
+Y2FuIGJlDQo+IGZvdW5kIGF0IGRldi95YXNocy9ldGhlcm5ldF92MyBicmFuY2ggb2Y6DQo+IGh0
+dHBzOi8vZ2l0aHViLmNvbS95YXNoc2hhaDcvcmlzY3YtbGludXguZ2l0DQo+IA0KPiBDaGFuZ2Ug
+SGlzdG9yeToNCj4gVjM6DQo+IC0gUmV2ZXJ0ICJNQUNCX1NJRklWRV9GVTU0MCIgY29uZmlnIGNo
+YW5nZXMgaW4gS2NvbmZpZyBhbmQgZHJpdmVyDQo+IGNvZGUuDQo+ICAgVGhlIGRyaXZlciBkb2Vz
+IG5vdCBkZXBlbmQgb24gU2lGaXZlIEdQSU8gZHJpdmVyLg0KPiANCj4gVjI6DQo+IC0gQ2hhbmdl
+IGNvbXBhdGlibGUgc3RyaW5nIGZyb20gImNkbnMsZnU1NDAtbWFjYiIgdG8gInNpZml2ZSxmdTU0
+MC0NCj4gbWFjYiINCj4gLSBBZGQgIk1BQ0JfU0lGSVZFX0ZVNTQwIiBpbiBLY29uZmlnIHRvIHN1
+cHBvcnQgU2lGaXZlIEZVNTQwIGluIG1hY2INCj4gICBkcml2ZXIuIFRoaXMgaXMgbmVlZGVkIGJl
+Y2F1c2Ugb24gRlU1NDAsIHRoZSBtYWNiIGRyaXZlciBkZXBlbmRzIG9uDQo+ICAgU2lGaXZlIEdQ
+SU8gZHJpdmVyLg0KPiAtIEF2b2lkIHdyaXRpbmcgdGhlIHJlc3VsdCBvZiBhIGNvbXBhcmlzb24g
+dG8gYSByZWdpc3Rlci4NCj4gLSBGaXggdGhlIGlzc3VlIG9mIHByb2JlIGZhaWwgb24gcmVsb2Fk
+aW5nIHRoZSBtb2R1bGUgcmVwb3J0ZWQgYnk6DQo+ICAgQW5kcmVhcyBTY2h3YWIgPHNjaHdhYkBz
+dXNlLmRlPg0KPiANCj4gWWFzaCBTaGFoICgyKToNCj4gICBtYWNiOiBiaW5kaW5ncyBkb2M6IGFk
+ZCBzaWZpdmUgZnU1NDAtYzAwMCBiaW5kaW5nDQo+ICAgbWFjYjogQWRkIHN1cHBvcnQgZm9yIFNp
+Rml2ZSBGVTU0MC1DMDAwDQo+IA0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L25ldC9tYWNiLnR4dCB8ICAgMyArDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21h
+Y2JfbWFpbi5jICAgICAgIHwgMTIzDQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysNCj4gIDIg
+ZmlsZXMgY2hhbmdlZCwgMTI2IGluc2VydGlvbnMoKykNCj4gDQoNCkNhbiB5b3UgYWxzbyBwb3N0
+IHRoZSBldGhlcm5ldCBkdCBlbnRyeVsxXSBhbG9uZyB3aXRoIHRoaXMgcGF0Y2ggPw0KSSB0aGlu
+ayBpdCB3b3VsZCBiZSBnb29kIHRvIGFsbCB0aGUgZHQgcmVsYXRlZCBzdHVmZiByZXZpZXdlZCB0
+b2dldGhlci4NCg0KWzFdIA0KaHR0cHM6Ly9naXRodWIuY29tL3lhc2hzaGFoNy9yaXNjdi1saW51
+eC9jb21taXQvNmQzYWY2NGJjNWVmZWQzOTE1ZDY1OGRjM2JmZTgyZGMxZGJmYWZiMw0KDQpJIGFt
+IGFibGUgdG8gZ2V0IG5ldHdvcmtpbmcgdXAgaW4gbGF0ZXN0IGtlcm5lbCArIHlvdXIgcGF0Y2hl
+cyBpbg0KT3BlblNCSSArIFUtQm9vdCh3aXRoIHVwZGF0ZWQgY29tcGF0aWJsZSBzdHJpbmcpICsg
+TGludXggYm9vdGZsb3cuDQoNClRlc3RlZC1ieTogQXRpc2ggUGF0cmEgPGF0aXNoLnBhdHJhQHdk
+Yy5jb20+DQoNClJlZ2FyZHMsDQpBdGlzaA0K
