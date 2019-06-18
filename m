@@ -1,94 +1,39 @@
-Return-Path: <SRS0=zr72=UQ=gmail.com=magnus.damm@kernel.org>
-From: Magnus Damm <magnus.damm@gmail.com>
-Date: Mon, 17 Jun 2019 18:04:01 +0900
-Message-Id: <156076224112.4736.5038116002723317642.sendpatchset@octo>
-In-Reply-To: <156076216767.4736.16337667537984218274.sendpatchset@octo>
-References: <156076216767.4736.16337667537984218274.sendpatchset@octo>
-Subject: [PATCH 8/8] dt-bindings: timer: renesas, cmt: Update R-Car Gen3 CMT1 usage
-To: devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, robh+dt@kernel.org
+Return-Path: <SRS0=iDeF=UR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38631 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfFRNCq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Jun 2019 09:02:46 -0400
+MIME-Version: 1.0
+References: <156076216767.4736.16337667537984218274.sendpatchset@octo> <156076223184.4736.11067127180512614106.sendpatchset@octo>
+In-Reply-To: <156076223184.4736.11067127180512614106.sendpatchset@octo>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 18 Jun 2019 15:02:32 +0200
+Message-ID: <CAMuHMdWMLWqQS9n9W1q7x4A8x_88cDrSQfoK1t0deTQx3HG=Fw@mail.gmail.com>
+Subject: Re: [PATCH 7/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1
+ to r8a77995
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Magnus Damm <damm+renesas@opensource.se>
+On Mon, Jun 17, 2019 at 11:02 AM Magnus Damm <magnus.damm@gmail.com> wrote:
+> From: Magnus Damm <damm+renesas@opensource.se>
+>
+> This patch adds DT binding documentation for the CMT devices on
+> the R-Car Gen3 D3 (r8a77995) SoC.
+>
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 
-The R-Car Gen3 SoCs so far come with a total for 4 on-chip CMT devices:
- - CMT0
- - CMT1
- - CMT2
- - CMT3
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-CMT0 includes two rather basic 32-bit timer channels. The rest of the on-chip
-CMT devices support 48-bit counters and have 8 channels each.
+Gr{oetje,eeting}s,
 
-Based on the data sheet information "CMT2/3 are exactly same as CMT1"
-it seems that CMT2 and CMT3 now use the CMT1 compat string in the DTSI.
+                        Geert
 
-Clarify this in the DT binding documentation by describing R-Car Gen3 and
-RZ/G2 CMT1 as "48-bit CMT devices".
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
----
-
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |   26 +++++++--------
- 1 file changed, 13 insertions(+), 13 deletions(-)
-
---- 0014/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-06-17 14:07:46.502422801 +0900
-@@ -28,9 +28,9 @@ Required Properties:
-     - "renesas,r8a77470-cmt0" for the 32-bit CMT0 device included in r8a77470.
-     - "renesas,r8a77470-cmt1" for the 48-bit CMT1 device included in r8a77470.
-     - "renesas,r8a774a1-cmt0" for the 32-bit CMT0 device included in r8a774a1.
--    - "renesas,r8a774a1-cmt1" for the 48-bit CMT1 device included in r8a774a1.
-+    - "renesas,r8a774a1-cmt1" for the 48-bit CMT devices included in r8a774a1.
-     - "renesas,r8a774c0-cmt0" for the 32-bit CMT0 device included in r8a774c0.
--    - "renesas,r8a774c0-cmt1" for the 48-bit CMT1 device included in r8a774c0.
-+    - "renesas,r8a774c0-cmt1" for the 48-bit CMT devices included in r8a774c0.
-     - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
-     - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
-     - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
-@@ -42,34 +42,34 @@ Required Properties:
-     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
-     - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
-     - "renesas,r8a7795-cmt0" for the 32-bit CMT0 device included in r8a7795.
--    - "renesas,r8a7795-cmt1" for the 48-bit CMT1 device included in r8a7795.
-+    - "renesas,r8a7795-cmt1" for the 48-bit CMT devices included in r8a7795.
-     - "renesas,r8a7796-cmt0" for the 32-bit CMT0 device included in r8a7796.
--    - "renesas,r8a7796-cmt1" for the 48-bit CMT1 device included in r8a7796.
-+    - "renesas,r8a7796-cmt1" for the 48-bit CMT devices included in r8a7796.
-     - "renesas,r8a77965-cmt0" for the 32-bit CMT0 device included in r8a77965.
--    - "renesas,r8a77965-cmt1" for the 48-bit CMT1 device included in r8a77965.
-+    - "renesas,r8a77965-cmt1" for the 48-bit CMT devices included in r8a77965.
-     - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
--    - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
-+    - "renesas,r8a77970-cmt1" for the 48-bit CMT devices included in r8a77970.
-     - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
--    - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
-+    - "renesas,r8a77980-cmt1" for the 48-bit CMT devices included in r8a77980.
-     - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
--    - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
-+    - "renesas,r8a77990-cmt1" for the 48-bit CMT devices included in r8a77990.
-     - "renesas,r8a77995-cmt0" for the 32-bit CMT0 device included in r8a77995.
--    - "renesas,r8a77995-cmt1" for the 48-bit CMT1 device included in r8a77995.
-+    - "renesas,r8a77995-cmt1" for the 48-bit CMT devices included in r8a77995.
-     - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
-     - "renesas,sh73a0-cmt1" for the 48-bit CMT1 device included in sh73a0.
-     - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
-     - "renesas,sh73a0-cmt3" for the 32-bit CMT3 device included in sh73a0.
-     - "renesas,sh73a0-cmt4" for the 32-bit CMT4 device included in sh73a0.
- 
--    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
-+    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 device included in R-Car Gen2
- 		and RZ/G1.
--    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car Gen2
-+    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 device included in R-Car Gen2
- 		and RZ/G1.
- 		These are fallbacks for r8a73a4, R-Car Gen2 and RZ/G1 entries
- 		listed above.
--    - "renesas,rcar-gen3-cmt0" for 32-bit CMT0 devices included in R-Car Gen3
-+    - "renesas,rcar-gen3-cmt0" for 32-bit CMT0 device included in R-Car Gen3
- 		and RZ/G2.
--    - "renesas,rcar-gen3-cmt1" for 48-bit CMT1 devices included in R-Car Gen3
-+    - "renesas,rcar-gen3-cmt1" for 48-bit CMT devices included in R-Car Gen3
- 		and RZ/G2.
- 		These are fallbacks for R-Car Gen3 and RZ/G2 entries listed
- 		above.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
