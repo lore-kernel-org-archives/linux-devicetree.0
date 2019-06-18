@@ -1,14 +1,15 @@
 From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 0/2] arm64: dts: ti: k3-j721e: Add interrupt controller
- nodes
-Date: Tue, 18 Jun 2019 17:42:30 +0300
-Message-ID: <d1f99db5-0d51-25f5-89b5-e7beb2089261@ti.com>
-References: <20190614145001.9598-1-lokeshvutla@ti.com>
+Subject: Re: [PATCH] arm64: dts: ti: k3-j721e-main: Add Main NavSS Interrupt
+ controller node
+Date: Tue, 18 Jun 2019 17:43:18 +0300
+Message-ID: <148be27b-b4ca-dacc-0218-fef489931224@ti.com>
+References: <20190531004848.32061-1-s-anna@ti.com>
+ <5e8fa7b4-6c44-85dc-0a33-bcf930b6d795@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190614145001.9598-1-lokeshvutla@ti.com>
+In-Reply-To: <5e8fa7b4-6c44-85dc-0a33-bcf930b6d795@ti.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -19,28 +20,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Lokesh Vutla <lokeshvutla@ti.com>, Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/06/2019 17:49, Lokesh Vutla wrote:
-> This series adds dt nodes for interrupt controllers available in
-> J721E SoC.
+On 14/06/2019 17:47, Lokesh Vutla wrote:
 > 
-> Depends on the main nav intr node posted by Suman:
-> https://patchwork.kernel.org/patch/10969399/
 > 
-> Lokesh Vutla (2):
->    arm64: dts: ti: k3-j721e: Add interrupt controllers in main domain
->    arm64: dts: ti: k3-j721e: Add interrupt controllers in wakeup domain
+> On 31/05/19 6:18 AM, Suman Anna wrote:
+>> Add the Interrupt controller node for the Interrupt Router present within
+>> the Main NavSS module. This Interrupt Router can route 192 interrupts to
+>> the GIC_SPI in 3 sets of 64 interrupts each. Note that the last set is
+>> reserved for the host ID A72_3 for hypervisor usecases, so the node is
+>> added only with 2 sets for the Linux kernel context (host id A72_2). This
+>> is specified through the ti,sci-rm-range-girq property.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
 > 
->   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 23 +++++++++++++++++++
->   .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      | 11 +++++++++
->   2 files changed, 34 insertions(+)
-> 
+> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
 
-Queuing both patches towards 5.3, thanks.
+Queuing for 5.3, thanks.
 
 -Tero
+
+> 
+> Thanks and regards,
+> Lokesh
+> 
+>> ---
+>> Hi Tero,
+>>
+>> This patch depends on the J721E series [1] from Nishanth. Patch tested
+>> using additional patches exercising Mailbox IP.
+>>
+>> regards
+>> Suman
+>>
+>> [1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=121189
+>>
+>>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 18 ++++++++++++++++++
+>>   1 file changed, 18 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> index d42912044a5d..36c51ff9a898 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> @@ -50,6 +50,24 @@
+>>   		#iommu-cells = <1>;
+>>   	};
+>>   
+>> +	cbass_main_navss: interconnect0 {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		main_navss_intr: interrupt-controller1 {
+>> +			compatible = "ti,sci-intr";
+>> +			ti,intr-trigger-type = <4>;
+>> +			interrupt-controller;
+>> +			interrupt-parent = <&gic500>;
+>> +			#interrupt-cells = <2>;
+>> +			ti,sci = <&dmsc>;
+>> +			ti,sci-dst-id = <14>;
+>> +			ti,sci-rm-range-girq = <0>, <2>;
+>> +		};
+>> +	};
+>> +
+>>   	secure_proxy_main: mailbox@32c00000 {
+>>   		compatible = "ti,am654-secure-proxy";
+>>   		#mbox-cells = <1>;
+>>
+
 --
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
