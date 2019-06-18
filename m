@@ -1,291 +1,210 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4 22/28] PCI: tegra: Access endpoint config only if PCIe
- link is up
-Date: Tue, 18 Jun 2019 12:49:18 +0200
-Message-ID: <20190618104918.GA28892@ulmo>
-References: <20190516055307.25737-23-mmaddireddy@nvidia.com>
- <20190604131436.GS16519@ulmo>
- <09bcc121-eaca-3866-d0ef-7806503e883f@nvidia.com>
- <ca34eb24-8696-576f-26bc-8d6141f81a41@nvidia.com>
- <20190613143946.GA30445@e121166-lin.cambridge.arm.com>
- <20190613154250.GA32713@ulmo>
- <a523a19c-fdfa-01f7-6f6d-2ca367a10a50@nvidia.com>
- <20190617114745.GL508@ulmo>
- <20190617193024.GC13533@google.com>
- <a7e0472d-f4a7-ed63-836a-b5e8b1360645@nvidia.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock
+ gates in probe
+Date: Tue, 18 Jun 2019 18:54:33 +0800
+Message-ID: <CAGb2v66onOEDPvXWLsLj7efxbReY0_z1HcQWkG78XUytLvMQ+g@mail.gmail.com>
+References: <20190614164324.9427-1-jagan@amarulasolutions.com>
+ <20190614164324.9427-6-jagan@amarulasolutions.com> <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ@mail.gmail.com>
+ <CAMty3ZDRYBPKrGQxAZoB+trFiDLJ5BxDfNUOnPzgd+UWcpwCoQ@mail.gmail.com>
+ <CAGb2v67uNhie9mb2-m04FGEi4Z7q7TYChOogGj2HgmSmEo4Arg@mail.gmail.com>
+ <CAMty3ZBUrGEi+e62sFe7GkXinK3q076sGLwpEVz67qeoV+1ZeA@mail.gmail.com>
+ <CAGb2v65YRVSv2mFfE2e=vqDOSu4Nie_oLQ-qpaDsTWKJwf-aeA@mail.gmail.com> <CAMty3ZA+hV_X0-=b83M3rDUhX=+g5RNC6EU-DzAS_pbvwc54FA@mail.gmail.com>
+Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <a7e0472d-f4a7-ed63-836a-b5e8b1360645-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB6UFUPUAKGQEQA6GVMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZA+hV_X0-=b83M3rDUhX=+g5RNC6EU-DzAS_pbvwc54FA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---k+w/mQv8wyuph6w0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 18, 2019 at 11:06:44AM +0530, Manikanta Maddireddy wrote:
->=20
-> On 18-Jun-19 1:00 AM, Bjorn Helgaas wrote:
-> > [+cc Rafael, linux-pm, in case they have insights on how rfkill works]
+On Tue, Jun 18, 2019 at 6:34 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> On Tue, Jun 18, 2019 at 1:23 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
 > >
-> > On Mon, Jun 17, 2019 at 01:47:45PM +0200, Thierry Reding wrote:
-> >> On Mon, Jun 17, 2019 at 03:31:38PM +0530, Manikanta Maddireddy wrote:
-> >>> On 13-Jun-19 9:12 PM, Thierry Reding wrote:
-> >>>> On Thu, Jun 13, 2019 at 03:39:46PM +0100, Lorenzo Pieralisi wrote:
-> >>>>> On Mon, Jun 10, 2019 at 10:08:16AM +0530, Manikanta Maddireddy wrot=
-e:
-> >>>>>> On 04-Jun-19 7:40 PM, Manikanta Maddireddy wrote:
-> >>>>>>> On 04-Jun-19 6:44 PM, Thierry Reding wrote:
-> >>>>>>>> On Thu, May 16, 2019 at 11:23:01AM +0530, Manikanta Maddireddy w=
-rote:
-> >>>>>>>>> Few endpoints like Wi-Fi supports power on/off and to leverage =
-that
-> >>>>>>>>> root port must support hot-plug and hot-unplug. Tegra PCIe does=
-n't
-> >>>>>>>>> support hot-plug and hot-unplug, however it supports endpoint p=
-ower
-> >>>>>>>>> on/off feature as follows,
-> >>>>>>>>>  - Power off sequence:
-> >>>>>>>>>    - Transition of PCIe link to L2
-> >>>>>>>>>    - Power off endpoint
-> >>>>>>>>>    - Leave root port in power up state with the link in L2
-> >>>>>>>>>  - Power on sequence:
-> >>>>>>>>>    - Power on endpoint
-> >>>>>>>>>    - Apply hot reset to get PCIe link up
-> >>>>>>>>>
-> >>>>>>>>> PCIe client driver stops accessing PCIe endpoint config and
-> >>>>>>>>> BAR registers after endpoint is powered off. However,
-> >>>>>>>>> software applications like x11 server or lspci can access
-> >>>>>>>>> endpoint config registers in which case host controller
-> >>>>>>>>> raises "response decoding" errors. To avoid this scenario,
-> >>>>>>>>> add PCIe link up check in config read and write callback
-> >>>>>>>>> functions before accessing endpoint config registers.
-> >>>>>>>>> Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>>>>>>>> ---
-> >>>>>>>>> V4: No change
-> >>>>>>>>>
-> >>>>>>>>> V3: Update the commit log with explanation for the need of this=
- patch
-> >>>>>>>>>
-> >>>>>>>>> V2: Change tegra_pcie_link_status() to tegra_pcie_link_up()
-> >>>>>>>>>
-> >>>>>>>>>  drivers/pci/controller/pci-tegra.c | 38 ++++++++++++++++++++++=
-++++++++
-> >>>>>>>>>  1 file changed, 38 insertions(+)
-> >>>>>>>> This still doesn't look right to me conceptually. If
-> >>>>>>>> somebody wants to access the PCI devices after the kernel
-> >>>>>>>> has powered them off, why can't we just power the devices
-> >>>>>>>> back on so that we allow userspace to properly access the
-> >>>>>>>> devices?
-> >>>>>>> 1. WiFi devices provides power-off feature for power saving
-> >>>>>>> in mobiles.  When WiFi is turned off we shouldn't power on
-> >>>>>>> the HW back without user turning it back on.
-> >>>>>>> 2. When ever user process tries to access config space, it'll
-> >>>>>>> end up in these functions. We cannot have is_powered_on check
-> >>>>>>> in config read/write callbacks.
-> >>>>>>> 3. WiFi power on/off is device specific feature, we shouldn't
-> >>>>>>> handle it in PCI subsystem or host controller driver.
-> >>>>>>>> Or if that's not what we want, shouldn't we add something to
-> >>>>>>>> the core PCI infrastructure to let us deal with this? It
-> >>>>>>>> seems like this is some general problem that would apply to
-> >>>>>>>> every PCI device and host bridge driver. Having each driver
-> >>>>>>>> implement this logic separately doesn't seem like a good
-> >>>>>>>> idea to me.
-> >>>>>>> This should be handled by hotplug feature, whenever endpoint
-> >>>>>>> is powered-off/ removed from the slot, hot unplug event
-> >>>>>>> should take care of it. Unfortunately Tegra PCIe doesn't
-> >>>>>>> support hotplug feature.
-> >>>>>> I thought about your comment in
-> >>>>>> https://patchwork.ozlabs.org/patch/1084204/ again.  What if I
-> >>>>>> add link up check in tegra_pcie_isr() and make "response
-> >>>>>> decoding error" as debug print? EP Config access will happen
-> >>>>>> when link is down, but "Response decoding error" print comes
-> >>>>>> only if debug log is enabled.  This way we can avoid race
-> >>>>>> issue in config accessors and we get prints when debug logs
-> >>>>>> are enabled.
-> >>>> The problem that Manikanta is trying to solve here occurs in
-> >>>> this situation (Manikanta, correct me if I've got this wrong):
-> >>>> on some setups, a WiFi module connected over PCI will toggle a
-> >>>> power GPIO as part of runtime suspend. This effectively causes
-> >>>> the module to disappear from the PCI bus (i.e. it can no longer
-> >>>> be accessed until the power GPIO is toggled again).
-> >>> GPIO is toggled as part of WiFi on/off, can be triggered from
-> >>> network manager UI.
-> >>>> This is fine from a kernel point of view because the kernel keeps tr=
-ack
-> >>>> of what devices are suspended. However, userspace will occasionally =
-try
-> >>>> to read the configuration space access of all devices, and since it
-> >>>> doesn't have any knowledge about the suspend state of these devices,=
- it
-> >>>> doesn't know which ones to leave alone. I think this happens when the
-> >>>> X.Org server is running.
-> >>> This is fine from a kernel point of view because PCI client driver
-> >>> doesn't initiate any PCIe transaction until network interface
-> >>> is up during WiFi on.
-> >>>
-> >>>> One thing that Manikanta and I had discussed was that perhaps
-> >>>> the device should be hot-unplugged when it goes into this
-> >>>> low-power state. However, we don't support hotplug on Tegra210
-> >>>> where this is needed, so we'd need some sort of software-induced
-> >>>> hot-unplug. However, this low power state is entered when the
-> >>>> WiFi interface is taken down (i.e. ip link set dev <interface>
-> >>>> down). If we were to remove the PCI device in that case, it
-> >>>> means that the interface goes away completely, which is
-> >>>> completely unexpected from a user's perspective. After all,
-> >>>> taking a link down and up may be something that scripts are
-> >>>> doing all the time. They'd fall over if after taking the
-> >>>> interface down, the interface completely disappears.
-> >>>> It's also not entirely clear to me how we get the device back
-> >>>> onto the bus again after it is in low power. If we hot-unplug
-> >>>> the device, then the driver will be unbound. Presumably the
-> >>>> driver is what's controlling the power GPIO, so there won't be
-> >>>> any entity that can be used to bring the chip back to life.
-> >>>> Unless we deal with that power GPIO elsewhere (rfkill switch
-> >>>> perhaps?).
-> >>> Correct, rfkill switch should handle the GPIO.
-> >>> Sequence will be,
-> >>>  - WiFi ON
-> >>>    - rfkill switch enables the WiFi GPIO
-> >>>    - Tegra PCIe receives hot plug event
-> >>>    - Tegra PCIe hot plug driver rescans PCI bus and enumerates the de=
-vice
-> >>>    - PCI client driver is probed, which will create network interface
-> >>>  - WiFi OFF
-> >>>    - rfkill switch disables the WiFi GPIO
-> >>>    - Tegra PCIe receives hot unplug event
-> >>>    - Tegra PCIe hot plug driver removes PCI devices under the bus
-> >>>    - PCI client driver remove is executed, which will remove
-> >>>      network interface
-> >>> We don't need current patch in this case because PCI device is not
-> >>> present in the PCI hierarchy, so there cannot be EP config access
-> >>> with link down.  However Tegra doesn't support hot plug and unplug
-> >>> events. I am not sure if we have any software based hot plug event
-> >>> trigger.
-> >>> I will drop current patch and pursue if above sequence can be
-> >>> implemented for Tegra.
-> >> I just recalled that we have these messages in the kernel log:
-> >>
-> >> 	# dmesg | grep tegra-pcie
-> >> 	[    1.055761] tegra-pcie 1003000.pcie: 4x1, 1x1 configuration
-> >> 	[    2.745764] tegra-pcie 1003000.pcie: 4x1, 1x1 configuration
-> >> 	[    2.753073] tegra-pcie 1003000.pcie: probing port 0, using 4 lanes
-> >> 	[    2.761334] tegra-pcie 1003000.pcie: Slot present pin change, sign=
-ature: 00000008
-> >> 	[    3.177607] tegra-pcie 1003000.pcie: link 0 down, retrying
-> >> 	[    3.585605] tegra-pcie 1003000.pcie: link 0 down, retrying
-> >> 	[    3.993606] tegra-pcie 1003000.pcie: link 0 down, retrying
-> >> 	[    4.001214] tegra-pcie 1003000.pcie: link 0 down, ignoring
-> >> 	[    4.006733] tegra-pcie 1003000.pcie: probing port 1, using 1 lanes
-> >> 	[    4.015042] tegra-pcie 1003000.pcie: Slot present pin change, sign=
-ature: 00000000
-> >> 	[    4.031177] tegra-pcie 1003000.pcie: PCI host bridge to bus 0000:00
-> >>
-> >> These "slot present pin change" message do look a lot like hotplug
-> >> related messages. Could we perhaps use those to our advantage for this
-> >> case? Do you see these when you run on the platform where WiFi is
-> >> enabled/disabled using rfkill?
-> >>
-> >> Given that rfkill is completely decoupled from PCI, I don't see how we
-> >> would trigger any software-based hotplug mechanism. Perhaps one thing
-> >> that we could do is the equivalent of this:
-> >>
-> >> 	# echo 1 > /sys/bus/pci/rescan
-> >>
-> >> from some script that's perhaps tied to the rfkill somehow. I'm not su=
-re
-> >> if that's possible, or generic enough.
-> > How does rfkill work?  It sounds like it completely removes power from
-> > the wifi device, putting it in D3cold.  Is there any software
-> > notification other than the "Slot present pin change" (which looks
-> > like a Tegra-specific thing)?
+> > On Tue, Jun 18, 2019 at 3:45 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> > >
+> > > On Tue, Jun 18, 2019 at 12:49 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> > > >
+> > > > On Mon, Jun 17, 2019 at 6:30 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> > > > >
+> > > > > On Sun, Jun 16, 2019 at 11:01 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> > > > > >
+> > > > > > On Sat, Jun 15, 2019 at 12:44 AM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> > > > > > >
+> > > > > > > TCON TOP have clock gates for TV0, TV1, dsi and right
+> > > > > > > now these are register during bind call.
+> > > > > > >
+> > > > > > > Of which, dsi clock gate would required during DPHY probe
+> > > > > > > but same can miss to get since tcon top is not bound at
+> > > > > > > that time.
+> > > > > > >
+> > > > > > > To solve, this circular dependency move the clock gate
+> > > > > > > registration from bind to probe so-that DPHY can get the
+> > > > > > > dsi gate clock on time.
+> > > > > > >
+> > > > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > > > > > ---
+> > > > > > >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
+> > > > > > >  1 file changed, 49 insertions(+), 45 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > > > index 465e9b0cdfee..a8978b3fe851 100644
+> > > > > > > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > > > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > > > @@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
+> > > > > > >  static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+> > > > > > >                                void *data)
+> > > > > > >  {
+> > > > > > > -       struct platform_device *pdev = to_platform_device(dev);
+> > > > > > > +       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
+> > > > > > > +       int ret;
+> > > > > > > +
+> > > > > > > +       ret = reset_control_deassert(tcon_top->rst);
+> > > > > > > +       if (ret) {
+> > > > > > > +               dev_err(dev, "Could not deassert ctrl reset control\n");
+> > > > > > > +               return ret;
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > > +       ret = clk_prepare_enable(tcon_top->bus);
+> > > > > > > +       if (ret) {
+> > > > > > > +               dev_err(dev, "Could not enable bus clock\n");
+> > > > > > > +               goto err_assert_reset;
+> > > > > > > +       }
+> > > > > >
+> > > > > > You have to de-assert the reset control and enable the clock before the
+> > > > > > clocks it provides are registered. Otherwise a consumer may come in and
+> > > > > > ask for the provided clock to be enabled, but since the TCON TOP's own
+> > > > > > reset and clock are still disabled, you can't actually access the registers
+> > > > > > that controls the provided clock.
+> > > > >
+> > > > > These rst and bus are common reset and bus clocks not tcon top clocks
+> > > > > that are trying to register here. ie reason I have not moved it in
+> > > > > top.
+> > > >
+> > > > And you're sure that toggling bits in the TCON TOP block doesn't require
+> > > > the reset to be de-asserted and the bus clock enabled?
+> > > >
+> > > > Somehow I doubt that.
+> > > >
+> > > > Once the driver register the clocks it provides, they absolutely must work.
+> > > > They can't only work after the bind phase when the reset gets de-asserted
+> > > > and the bus clock enabled. Or you should provide proper error reporting
+> > > > in the clock ops. I doubt you want to go that way either.
+> > >
+> > > Why would they won't work after bind phase? unlike tcon top gates,
+> > > these reset, and bus are common like  what we have in other DE block
+> > > so enable them in bind won't be an issue as per as I understand. let
+> > > me know if you want me to check in other directions.
 > >
-> > If the device is in D3cold, it won't respond to any PCI transactions,
-> > and there's no standard PCI mechanism to wake it up.  Probably the
-> > cleanest way to handle this is to make it a hot-unplug.
+> > You misunderstood. When you moved the clock registering parts to the probe
+> > phase, but didn't move the clock enable and reset de-assert parts to go with,
+> > the clock ops will not work as expected between probe and bind time.
+>
+> If I understand correctly, I have moved tcon clock gates, not the bus
+> clock or the reset. Both have independent enablement phase, the bus
+> clock is enable in tcon top bind and the clock gate ("dsi") enable in
+> init call of phy_ops. is both bus clock and clock gates are same and
+> related that is what you are saying?
+
+I am saying that you may need the tcon top bus gates and resets properly
+configured to be able to read/write the tcon top address range. That includes
+enabling/disabling the clocks that the tcon top driver registers.
+
+In other words, the TCON TOP's bus gate and reset control have everything to do
+with what you can do within the TCON TOP block or address range.
+
 > >
-> > If this were an ACPI system, the rfkill might be visible as some sort
-> > of ACPI power management event, and there might be a corresponding way
-> > for software to bring the device back to D0 temporarily.  That would
-> > make lspci and X config reads work.  But I don't think this system has
-> > ACPI.
->=20
-> "Slot present pin change" interrupt is triggered based on the programming
-> of PRSNT_MAP bit field in PCIE2_RP_PRIV_MISC controller register and
-> they are not triggered when EP is hot plugged/unplugged. Tegra PCIe
-> controller doesn't have capability to detect EP hot plug and unplug.
-> Consider that WiFi off equivalent to SW aware EP hot unplug event.
->=20
-> The rfkill subsystem provides a generic interface for disabling any radio
-> transmitter in the system. WiFi M.2 form factor cards provide W_DISABLE
-> GPIO to control the radio transmitter and I have seen some cards provide
-> control to turn off complete chip through this GPIO. Here we are talking
-> about second case where device is put in D3cold state. This GPIO can be
-> registered to rfkill subsystem and rfkill commands (like "rfkill unblock
-> wifi") can be used to turn on radio transmitter during WiFi on.
+> > Simple way to verify it: Just use devmem to disable the TCON TOP bus gate
+> > and/or assert its reset control. Then try to toggle any of the bits in the
+> > TCON TOP block and see if it works, or if the bits stick.
+>
+> Yes I have verified "dsi" gate enablement before via devmem. Below is
+> the bus, reset disablement and re-enablement and result is similar for
+> the reset, bus clock in bind and even in probe.
+>
+> 00. get the existing value
+>
+> # devmem 0x1c70020
+> 0x00010000
+> # devmem 0x1c20064
+> 0x44021000
+> # devmem 0x1c202c4
+> 0x44021000
+>
+> 01: disable bus, and assert reset
+>
+> # devmem 0x1c20064 32 0x4021000
+> # devmem 0x1c202c4 32 0x4021000
+> # devmem 0x1c20064
+> 0x04021000
+> # devmem 0x1c202c4
+> 0x04021000
+> # devmem 0x1c70020
+> 0x00000000
 
-Perhaps what we need here is some sort of mechanism to make rfkill and
-the PCI host controller interoperate? I could imagine for example that
-the PCI host controller would get a new "rfkill" property in device
-tree that points at the rfkill device via phandle.
+See here. The value became 0 when it was still 0x10000 in the previous phase.
+Any guesses to why this happened, assuming you didn't touch it?
 
-The driver could then get a reference to it using something like:
+Now if you keep the bus gate disabled and the reset control asserted, and
+try to write some non-zero value to 0x1c70020, and read it back, does the
+value stick?
 
-	rfkill =3D rfkill_get(dev);
-	if (IS_ERR(rfkill)) {
-		...
-	}
+If you don't have the bus gate enabled and the reset control de-asserted,
+any operations you do to the TCON TOP is essentially not happening. Including
+bit operations that the clocks you registered are required to do.
 
-and register for notification:
+Get what I'm saying?
 
-	err =3D rfkill_subscribe(rfkill, callback);
-	if (err < 0) {
-		...
-	}
+You need to have the bus gate enabled and the reset control de-asserted
+BEFORE you register the clocks you are providing, or something is going
+to go very wrong.
 
-rfkill_unsubscribe() and rfkill_put() would then be used upon driver
-unload to detach from the rfkill.
+Worst case scenario: the reset control was left de-asserted by the bootloader
+but the bus gate was disabled. When you register the clocks, the CCF tries
+to read back the current status of the clocks, and the I/O stalls because
+the bus gate wasn't enabled. System stalls.
 
-I noticed that there's an rfkill-gpio driver (net/rfkill/rfkill-gpio.c)
-that already does pretty much everything that we need, except that it
-doesn't support DT yet, but I suspect that that's pretty easy to add.
+Do I need to draw a time flow chart for you?
 
-Johannes, any thoughts on this. In a nutshell what we're trying to solve
-here is devices that get removed from/added to PCI based on an rfkill-
-type of device. The difference to other implementations is that we have
-no way of detecting when the device has gone away (PCI hotplug does not
-work). So we'd need some software-triggered mechanism to let the PCI
-host controller know when the device is presumably going away or being
-added back, so that the PCI bus can be rescanned and the PCI device
-removed or added at that point).
+Also see the very simple example:
 
-Thierry
+    https://elixir.bootlin.com/linux/latest/source/drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c#L113
 
---k+w/mQv8wyuph6w0
-Content-Type: application/pgp-signature; name="signature.asc"
+where the bus gate is enabled before registering the clocks. This hardware
+block doesn't have a reset control for it, but the same principle applies.
 
------BEGIN PGP SIGNATURE-----
+> 02: enable bus, and dessert reset
+>
+> # devmem 0x1c20064 32 0x44021000
+> # devmem 0x1c202c4 32 0x44021000
+> # devmem 0x1c20064
+> 0x44021000
+> # devmem 0x1c202c4
+> 0x44021000
+> # devmem 0x1c70020
+> 0x00000000
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0IwasACgkQ3SOs138+
-s6Fj7g/9G1lRG58MJ4zqkZ7tkSvqarrt5PbzS2K77o2stFw98TVVcV3dBRpXrmEX
-yCFrjgYCB7pnS6QKFAN6ndfJ22fw2akOkoEq0EkBNjoYDzbDRM4NObfULPJC0Kdt
-hiPy23Sj+RtgsSzAR9nXhZoP2zw0DRKCWJ2F5w5N9WDtDnWgqx8WJkmPDc7wKGP0
-hLXw6R1b9T//DkFMTwzOZQUqQLh+TAm/UShLnLTWreOZ7XI14WoKWDLIir9TaRf+
-YnMXLi+hq1PoIjtD4fABcZPzpUu2xqXgGW44/YJjXmMZN/zbrqbhCeUQ6CDpAdpg
-4wQS20iznWMy6YL3RJrSHOJjJMmUp25z2skwXMIzf6hyWfn57I0oht5fNZaQA5Rm
-+N3Y/BB/fJiRfVWzjfjO1XZywi9c6E8JESGz3Kgm5i+DeS17XmSFOh0r7GnnxM5n
-kqrQQPTy22DHHKkdv5mx/bRRiXIjGMA8fFNWVf6cO6p6b1lwJigt3ZuPqtBJQ/Qn
-KCHrxRPnlsve6Bi5Y3s3mV8UscEz4wck2vGbSQYrsnTJuep2n4tOh7C0UnnNIrG7
-Tn02jbRalxlr25xCOW7NtjgWrfsMhYZb3NFmKTGWjmo92qQN1VGX0TXBr3if8XnW
-SblTI1h1iRUIVAQo+1yRDiJNIijbYesMCFI1qnwPlmksXNbNitY=
-=wxfs
------END PGP SIGNATURE-----
+And it's still zero here, meaning the reset control does have an effect
+on the TCON TOP registers.
 
---k+w/mQv8wyuph6w0--
+> 03: enable gate
+>
+> # devmem 0x1c70020 32 0x00010000
+> # devmem 0x1c70020
+> 0x00010000
+
+This is irrelevant and not what I wanted you to try.
+
+> >
+> > Whether another driver actually does so is not the question. It is just bad
+> > implementation.
+>
+> Not sure, I understand this.
