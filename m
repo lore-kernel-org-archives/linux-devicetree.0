@@ -1,52 +1,26 @@
-From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH 0/3] RK3288 Gamma LUT
-Date: Tue, 18 Jun 2019 18:34:03 -0300
-Message-ID: <20190618213406.7667-1-ezequiel@collabora.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8996: Correct apr-domain property
+Date: Tue, 18 Jun 2019 22:41:31 +0100
+Message-ID: <b0036d9f-eec1-7531-545f-67b651ded729@linaro.org>
+References: <20190618052547.32376-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190618052547.32376-1-bjorn.andersson@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>
+Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-TGV0J3Mgc3VwcG9ydCBHYW1tYSBMVVQgY29uZmlndXJhdGlvbiBvbiBSSzMyODggU29Dcy4KCklu
-IG9yZGVyIHRvIGRvIHNvLCB0aGlzIHNlcmllcyBhZGRzIGEgbmV3IGFuZCBvcHRpb25hbAphZGRy
-ZXNzIHJlc291cmNlLgogICAgCkEgc2VwYXJhdGUgYWRkcmVzcyByZXNvdXJjZSBpcyByZXF1aXJl
-ZCBiZWNhdXNlIG9uIHRoaXMgUkszMjg4LAp0aGUgTFVUIGFkZHJlc3MgaXMgYWZ0ZXIgdGhlIE1N
-VSBhZGRyZXNzLCB3aGljaCBpcyByZXF1ZXN0ZWQKYnkgdGhlIGlvbW11IGRyaXZlci4gVGhpcyBw
-cmV2ZW50cyB0aGUgRFJNIGRyaXZlcgpmcm9tIHJlcXVlc3RpbmcgYW4gZW50aXJlIHJlZ2lzdGVy
-IHNwYWNlLgoKVGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24gd29ya3MgZm9yIFJHQiAxMC1iaXQg
-dGFibGVzLCBhcyB0aGF0CmlzIHdoYXQgc2VlbXMgdG8gd29yayBvbiBSSzMyODguCgpUaGlzIGhh
-cyBiZWVuIHRlc3RlZCBvbiBSb2NrMiBTcXVhcmUgYm9hcmQsIHVzaW5nCmEgaGFja2VkICdtb2Rl
-dGVzdCcgdG9vbCwgd2l0aCBsZWdhY3kgYW5kIGF0b21pYyBBUElzLiAKClRoYW5rcywKRXplCgpD
-aGFuZ2VzIGZyb20gUkZDOgoqIFJlcXVlc3QgKGFuIG9wdGlvbmFsKSBhZGRyZXNzIHJlc291cmNl
-IGZvciB0aGUgTFVULgoqIEFkZCBkZXZpY2V0cmVlIGNoYW5nZXMuCiogRHJvcCBzdXBwb3J0IGZv
-ciBSSzMzOTksIHdoaWNoIGRvZXNuJ3Qgc2VlbSB0byB3b3JrCiAgb3V0IG9mIHRoZSBib3ggYW5k
-IG5lZWRzIG1vcmUgcmVzZWFyY2guCiogU3VwcG9ydCBwYXNzLXRocnUgc2V0dGluZyB3aGVuIEdB
-TU1BX0xVVCBpcyBOVUxMLgoqIEFkZCBhIGNoZWNrIGZvciB0aGUgZ2FtbWEgc2l6ZSwgYXMgc3Vn
-Z2VzdGVkIGJ5IElsaWEuCiogTW92ZSBnYW1tYSBzZXR0aW5nIHRvIGF0b21pY19jb21taXRfdGFp
-bCwgYXMgcG9pbnRlZAogIG91dCBieSBKYWNvcG8vTGF1cmVudCwgaXMgdGhlIGNvcnJlY3Qgd2F5
-LgoKRXplcXVpZWwgR2FyY2lhICgzKToKICBkdC1iaW5kaW5nczogZGlzcGxheTogcm9ja2NoaXA6
-IGRvY3VtZW50IFZPUCBnYW1tYSBMVVQgYWRkcmVzcwogIGRybS9yb2NrY2hpcDogQWRkIG9wdGlv
-bmFsIHN1cHBvcnQgZm9yIENSVEMgZ2FtbWEgTFVUCiAgQVJNOiBkdHM6IHJvY2tjaGlwOiBBZGQg
-UkszMjg4IFZPUCBnYW1tYSBMVVQgYWRkcmVzcwoKIC4uLi9kaXNwbGF5L3JvY2tjaGlwL3JvY2tj
-aGlwLXZvcC50eHQgICAgICAgICB8ICAxMCArLQogYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0
-c2kgICAgICAgICAgICAgICAgIHwgICA2ICstCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9j
-a2NoaXBfZHJtX2ZiLmMgICAgfCAgIDMgKwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tj
-aGlwX2RybV92b3AuYyAgIHwgMTA2ICsrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJt
-L3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuaCAgIHwgICA3ICsrCiBkcml2ZXJzL2dwdS9kcm0v
-cm9ja2NoaXAvcm9ja2NoaXBfdm9wX3JlZy5jICAgfCAgIDIgKwogNiBmaWxlcyBjaGFuZ2VkLCAx
-MzEgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCi0tIAoyLjIwLjEKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+
+
+On 18/06/2019 06:25, Bjorn Andersson wrote:
+> The domain specifier was changed from using "reg" to "qcom,apr-domain",
+> update the dts accordingly.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+LGTM
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
