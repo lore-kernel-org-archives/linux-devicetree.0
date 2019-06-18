@@ -1,60 +1,52 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/3] dt-bindings: display: renesas: Add r8a774a1 support
-Date: Tue, 18 Jun 2019 19:43:38 +0300
-Message-ID: <20190618164338.GG21105@pendragon.ideasonboard.com>
-References: <1560871119-16570-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1560871119-16570-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v2 6/8] regulator: core: Don't attach generic coupler to
+ Tegra SoC regulators
+Date: Tue, 18 Jun 2019 19:47:32 +0300
+Message-ID: <a4ccd5af-ce71-bc24-cdb9-d480380d15d4@gmail.com>
+References: <20190603235904.19097-1-digetx@gmail.com>
+ <20190603235904.19097-7-digetx@gmail.com>
+ <20190617154455.GA5316@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1560871119-16570-2-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190617154455.GA5316@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFicml6aW8sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFR1ZSwgSnVuIDE4LCAy
-MDE5IGF0IDA0OjE4OjM3UE0gKzAxMDAsIEZhYnJpemlvIENhc3RybyB3cm90ZToKPiBEb2N1bWVu
-dCBSWi9HMk0gKFI4QTc3NEExKSBTb0MgYmluZGluZ3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogRmFi
-cml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+CgpSZXZpZXdlZC1i
-eTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgoK
-SSBkb24ndCBoYXZlIHBlbmRpbmcgY2hhbmdlcyBmb3IgdGhpcyBmaWxlIGZvciB0aGlzIGtlcm5l
-bCByZWxlYXNlLiBBcwp5b3VyIHNlcmllcyBjb250YWlucyBEVCBjaGFuZ2VzLCBJJ20gZmluZSBp
-ZiB0aGlzIHBhdGNoIGdldHMgbWVyZ2VkCnRocm91Z2ggdGhlIEFSTSBTb0MgdHJlZSBhbG9uZyB3
-aXRoIHRoZSByZXN0LiBPdGhlcndpc2UgcGxlYXNlIGxldCBtZQprbm93IGlmIEkgc2hvdWxkIGhh
-bmRsZSBpdCBteXNlbGYuCgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxkdy1oZG1pLnR4dCB8IDQgKysrLQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2Fz
-LGR3LWhkbWkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-YnJpZGdlL3JlbmVzYXMsZHctaGRtaS50eHQKPiBpbmRleCBhNDFkMjgwLi5kYjY4MDQxIDEwMDY0
-NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRn
-ZS9yZW5lc2FzLGR3LWhkbWkudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsZHctaGRtaS50eHQKPiBAQCAtMTIsMTAgKzEy
-LDEyIEBAIGZvbGxvd2luZyBkZXZpY2Utc3BlY2lmaWMgcHJvcGVydGllcy4KPiAgUmVxdWlyZWQg
-cHJvcGVydGllczoKPiAgCj4gIC0gY29tcGF0aWJsZSA6IFNoYWxsIGNvbnRhaW4gb25lIG9yIG1v
-cmUgb2YKPiArICAtICJyZW5lc2FzLHI4YTc3NGExLWhkbWkiIGZvciBSOEE3NzRBMSAoUlovRzJN
-KSBjb21wYXRpYmxlIEhETUkgVFgKPiAgICAtICJyZW5lc2FzLHI4YTc3OTUtaGRtaSIgZm9yIFI4
-QTc3OTUgKFItQ2FyIEgzKSBjb21wYXRpYmxlIEhETUkgVFgKPiAgICAtICJyZW5lc2FzLHI4YTc3
-OTYtaGRtaSIgZm9yIFI4QTc3OTYgKFItQ2FyIE0zLVcpIGNvbXBhdGlibGUgSERNSSBUWAo+ICAg
-IC0gInJlbmVzYXMscjhhNzc5NjUtaGRtaSIgZm9yIFI4QTc3OTY1IChSLUNhciBNMy1OKSBjb21w
-YXRpYmxlIEhETUkgVFgKPiAtICAtICJyZW5lc2FzLHJjYXItZ2VuMy1oZG1pIiBmb3IgdGhlIGdl
-bmVyaWMgUi1DYXIgR2VuMyBjb21wYXRpYmxlIEhETUkgVFgKPiArICAtICJyZW5lc2FzLHJjYXIt
-Z2VuMy1oZG1pIiBmb3IgdGhlIGdlbmVyaWMgUi1DYXIgR2VuMyBhbmQgUlovRzIgY29tcGF0aWJs
-ZQo+ICsJCQkgICAgIEhETUkgVFgKPiAgCj4gICAgICBXaGVuIGNvbXBhdGlibGUgd2l0aCBnZW5l
-cmljIHZlcnNpb25zLCBub2RlcyBtdXN0IGxpc3QgdGhlIFNvQy1zcGVjaWZpYwo+ICAgICAgdmVy
-c2lvbiBjb3JyZXNwb25kaW5nIHRvIHRoZSBwbGF0Zm9ybSBmaXJzdCwgZm9sbG93ZWQgYnkgdGhl
-CgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVs
+17.06.2019 18:44, Mark Brown пишет:
+> On Tue, Jun 04, 2019 at 02:59:02AM +0300, Dmitry Osipenko wrote:
+> 
+>>  static int generic_coupler_attach(struct regulator_coupler *coupler,
+>>  				  struct regulator_dev *rdev)
+>>  {
+>> +	/*
+>> +	 * Generic coupler isn't suitable for NVIVIA Tegra SoC's, at least
+>> +	 * for now. Hence filter out the unwanted regulators as they shall be
+>> +	 * managed by a platform-specific coupler.
+>> +	 */
+>> +	if (of_property_read_bool(rdev->dev.of_node, "tegra-core-regulator") ||
+>> +	    of_property_read_bool(rdev->dev.of_node, "tegra-rtc-regulator") ||
+>> +	    of_property_read_bool(rdev->dev.of_node, "tegra-cpu-regulator"))
+>> +		return -EPERM;
+>> +
+> 
+> I'm having a hard time loving this as it requires explicit DT changes
+> for implementation.  I'm thinking that since the couplers are going to
+> need to be built in it'd be better to make sure that any custom ones get
+> registered first and then only bind the generic coupler to anything they
+> reject.
+> 
+
+Actually, the current implementation at first tries all the custom couplers and then
+falls back to the generic.
+
+What's currently missing is that any error code of the attach_regulator() callback is
+treated as "go try next coupler", but we probably need a special error code for the
+"skip me" case to differentiate from a error that should abort the coupler's lookup
+process.
+
+I'll re-work this in v3.
