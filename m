@@ -1,160 +1,99 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 16/21] memory: mtk-smi: Add bus_sel for mt8183
-Date: Tue, 18 Jun 2019 23:07:30 +0200
-Message-ID: <f3e200af-499e-a4af-9e2f-5e22ea5d8ee3@gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
-	<1560169080-27134-17-git-send-email-yong.wu@mediatek.com>
-	<0205e43a-8677-c194-d118-6c199c03306c@gmail.com>
-	<1560859855.8082.24.camel@mhfsdcap03>
+From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Tue, 18 Jun 2019 15:15:42 -0600
+Message-ID: <6c70950d0c78bc02a3d016918ec3929e@codeaurora.org>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+ <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+ <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
+ <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org>
+ <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
+ <CAK8P3a1FeUQR3pgoQxHoRK05JGORyR+TFATVQiijLWtFKTv6OQ@mail.gmail.com>
+ <613cdfde488eb23d7207c7ba6258662702d04840.camel@sipsolutions.net>
+ <CAK8P3a2onXpxiE4y9PzRwuPM2dh=h_BKz7Eb0=LLPgBbZoK1bQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1560859855.8082.24.camel@mhfsdcap03>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a2onXpxiE4y9PzRwuPM2dh=h_BKz7Eb0=LLPgBbZoK1bQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Johannes Berg <johannes@sipsolutions.net>, Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, Dan Williams <dcbw@redhat.com>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 18/06/2019 14:10, Yong Wu wrote:
-> On Mon, 2019-06-17 at 18:23 +0200, Matthias Brugger wrote:
->>
->> On 10/06/2019 14:17, Yong Wu wrote:
->>> There are 2 mmu cells in a M4U HW. we could adjust some larbs entering
->>> mmu0 or mmu1 to balance the bandwidth via the smi-common register
->>> SMI_BUS_SEL(0x220)(Each larb occupy 2 bits).
->>>
->>> In mt8183, For better performance, we switch larb1/2/5/7 to enter
->>> mmu1 while the others still keep enter mmu0.
->>>
->>> In mt8173 and mt2712, we don't get the performance issue,
->>> Keep its default value(0x0), that means all the larbs enter mmu0.
->>>
->>> Note: smi gen1(mt2701/mt7623) don't have this bus_sel.
->>>
->>> And, the base of smi-common is completely different with smi_ao_base
->>> of gen1, thus I add new variable for that.
->>>
->>> CC: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>> Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>> ---
->>>  drivers/memory/mtk-smi.c | 22 ++++++++++++++++++++--
->>>  1 file changed, 20 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
->>> index 9790801..08cf40d 100644
->>> --- a/drivers/memory/mtk-smi.c
->>> +++ b/drivers/memory/mtk-smi.c
->>> @@ -49,6 +49,12 @@
->>>  #define SMI_LARB_NONSEC_CON(id)	(0x380 + ((id) * 4))
->>>  #define F_MMU_EN		BIT(0)
->>>  
->>> +/* SMI COMMON */
->>> +#define SMI_BUS_SEL			0x220
->>> +#define SMI_BUS_LARB_SHIFT(larbid)	((larbid) << 1)
->>> +/* All are MMU0 defaultly. Only specialize mmu1 here. */
->>> +#define F_MMU1_LARB(larbid)		(0x1 << SMI_BUS_LARB_SHIFT(larbid))
->>> +
->>>  enum mtk_smi_gen {
->>>  	MTK_SMI_GEN1,
->>>  	MTK_SMI_GEN2
->>> @@ -57,6 +63,7 @@ enum mtk_smi_gen {
->>>  struct mtk_smi_common_plat {
->>>  	enum mtk_smi_gen gen;
->>>  	bool             has_gals;
->>> +	u32              bus_sel; /* Balance some larbs to enter mmu0 or mmu1 */
->>>  };
->>>  
->>>  struct mtk_smi_larb_gen {
->>> @@ -72,8 +79,8 @@ struct mtk_smi {
->>>  	struct clk			*clk_apb, *clk_smi;
->>>  	struct clk			*clk_gals0, *clk_gals1;
->>>  	struct clk			*clk_async; /*only needed by mt2701*/
->>> -	void __iomem			*smi_ao_base;
->>> -
->>> +	void __iomem			*smi_ao_base; /* only for gen1 */
->>> +	void __iomem			*base;	      /* only for gen2 */
->>
->> union {} maybe?
+On 2019-06-18 14:55, Arnd Bergmann wrote:
+> On Tue, Jun 18, 2019 at 10:36 PM Johannes Berg
+> <johannes@sipsolutions.net> wrote:
+>> 
+>> On Tue, 2019-06-18 at 21:59 +0200, Arnd Bergmann wrote:
+>> >
+>> > From my understanding, the ioctl interface would create the lower
+>> > netdev after talking to the firmware, and then user space would use
+>> > the rmnet interface to create a matching upper-level device for that.
+>> > This is an artifact of the strong separation of ipa and rmnet in the
+>> > code.
+>> 
+>> Huh. But if rmnet has muxing, and IPA supports that, why would you 
+>> ever
+>> need multiple lower netdevs?
 > 
-> Yes. Thanks.
-> 
-> I will add it.
-> 
->>
->>>  	const struct mtk_smi_common_plat *plat;
->>>  };
->>>  
->>> @@ -410,6 +417,8 @@ static int __maybe_unused mtk_smi_larb_suspend(struct device *dev)
->>>  static const struct mtk_smi_common_plat mtk_smi_common_mt8183 = {
->>>  	.gen      = MTK_SMI_GEN2,
->>>  	.has_gals = true,
->>> +	.bus_sel  = F_MMU1_LARB(1) | F_MMU1_LARB(2) | F_MMU1_LARB(5) |
->>> +		    F_MMU1_LARB(7),
->>>  };
->>>  
->>>  static const struct of_device_id mtk_smi_common_of_ids[] = {
->>> @@ -482,6 +491,11 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
->>>  		ret = clk_prepare_enable(common->clk_async);
->>>  		if (ret)
->>>  			return ret;
->>> +	} else {
->>> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +		common->base = devm_ioremap_resource(dev, res);
->>> +		if (IS_ERR(common->base))
->>> +			return PTR_ERR(common->base);
->>
->> We must be backwards compatible with DT which does not have the base defined.
-> 
-> The smi-common node in the previous mt2712 and mt8173 also have the
-> "reg" property even though they didn't use this base, Thus, It looks ok
-> for all the cases.
+> From my reading of the code, there is always exactly a 1:1 relationship
+> between an rmnet netdev an an ipa netdev. rmnet does the encapsulation/
+> decapsulation of the qmap data and forwards it to the ipa netdev,
+> which then just passes data through between a hardware queue and
+> its netdevice.
 > 
 
-Correct, it is defined as a required property in the binding description so we
-are good.
-Sorry for the noise.
+There is a n:1 relationship between rmnet and IPA.
+rmnet does the de-muxing to multiple netdevs based on the mux id
+in the MAP header for RX packets and vice versa.
 
-With the union added you can add:
-Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> [side note: on top of that, rmnet also does "aggregation", which may
+>  be a confusing term that only means transferring multiple frames
+>  at once]
+> 
+>> > ipa definitely has multiple hardware queues, and the Alex'
+>> > driver does implement  the data path on those, just not the
+>> > configuration to enable them.
+>> 
+>> OK, but perhaps you don't actually have enough to use one for each
+>> session?
+> 
+> I'm lacking the terminology here, but what I understood was that
+> the netdev and queue again map to a session.
+> 
+>> > Guessing once more, I suspect the the XON/XOFF flow control
+>> > was a workaround for the fact that rmnet and ipa have separate
+>> > queues. The hardware channel on IPA may fill up, but user space
+>> > talks to rmnet and still add more frames to it because it doesn't
+>> > know IPA is busy.
+>> >
+>> > Another possible explanation would be that this is actually
+>> > forwarding state from the base station to tell the driver to
+>> > stop sending data over the air.
+>> 
+>> Yeah, but if you actually have a hardware queue per upper netdev then
+>> you don't really need this - you just stop the netdev queue when the
+>> hardware queue is full, and you have flow control automatically.
+>> 
+>> So I really don't see any reason to have these messages going back and
+>> forth unless you plan to have multiple sessions muxed on a single
+>> hardware queue.
+> 
 
->>
->> Regards,
->> Matthias
->>
->>>  	}
->>>  	pm_runtime_enable(dev);
->>>  	platform_set_drvdata(pdev, common);
->>> @@ -497,6 +511,7 @@ static int mtk_smi_common_remove(struct platform_device *pdev)
->>>  static int __maybe_unused mtk_smi_common_resume(struct device *dev)
->>>  {
->>>  	struct mtk_smi *common = dev_get_drvdata(dev);
->>> +	u32 bus_sel = common->plat->bus_sel;
->>>  	int ret;
->>>  
->>>  	ret = mtk_smi_clk_enable(common);
->>> @@ -504,6 +519,9 @@ static int __maybe_unused mtk_smi_common_resume(struct device *dev)
->>>  		dev_err(common->dev, "Failed to enable clock(%d).\n", ret);
->>>  		return ret;
->>>  	}
->>> +
->>> +	if (common->plat->gen == MTK_SMI_GEN2 && bus_sel)
->>> +		writel(bus_sel, common->base + SMI_BUS_SEL);
->>>  	return 0;
->>>  }
->>>  
->>>
+Hardware may flow control specific PDNs (rmnet interfaces) based on QoS 
+-
+not necessarily only in case of hardware queue full.
+
+> Sure, I definitely understand what you mean, and I agree that would
+> be the right way to do it. All I said is that this is not how it was 
+> done
+> in rmnet (this was again my main concern about the rmnet design
+> after I learned it was required for ipa) ;-)
 > 
-> 
+>      Arnd
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
