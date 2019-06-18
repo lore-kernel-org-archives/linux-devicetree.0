@@ -1,95 +1,59 @@
-Return-Path: <SRS0=619Q=UD=google.com=bhelgaas@kernel.org>
+Return-Path: <SRS0=im6u=UR=gmail.com=magnus.damm@kernel.org>
 MIME-Version: 1.0
-References: <20190521130357.20803-1-miquel.raynal@bootlin.com>
- <20190521130357.20803-3-miquel.raynal@bootlin.com> <CAErSpo5i3y4CxZXV7E4tUR66uXaUa3B_-YT2+zfzZUGMmge7Ow@mail.gmail.com>
- <20190527154610.6d4d5eff@xps13>
-In-Reply-To: <20190527154610.6d4d5eff@xps13>
-From: Bjorn Helgaas <bhelgaas@google.com>
-Date: Tue, 4 Jun 2019 15:52:31 -0500
-Message-ID: <CAErSpo7fimH5QhHTLsF2ASyPqstkw7Zibe3CYB=KXTYBOh-4GQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] clk: mvebu: armada-37xx-periph: change
- suspend/resume time
+References: <156076216767.4736.16337667537984218274.sendpatchset@octo> <20190618103118.xsgc5fp5d76itdwc@verge.net.au>
+In-Reply-To: <20190618103118.xsgc5fp5d76itdwc@verge.net.au>
+From: Magnus Damm <magnus.damm@gmail.com>
+Date: Tue, 18 Jun 2019 21:25:30 +0900
+Message-ID: <CANqRtoSVk9hfMFa1EJKO5pa2x5MYfnkYFs4PF-hg8o79ioUS8Q@mail.gmail.com>
+Subject: Re: [PATCH 0/8] dt-bindings: timer: renesas, cmt: Various updates
 Content-Type: text/plain; charset="UTF-8"
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Linux PM list <linux-pm@vger.kernel.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, May 27, 2019 at 8:46 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On Tue, Jun 18, 2019 at 7:31 PM Simon Horman <horms@verge.net.au> wrote:
 >
-> Hi Bjorn,
->
-> Thanks for the feedback.
->
-> Bjorn Helgaas <bhelgaas@google.com> wrote on Tue, 21 May 2019 17:43:05
-> -0500:
->
-> > From: Miquel Raynal <miquel.raynal@bootlin.com>
-> > Date: Tue, May 21, 2019 at 8:04 AM
-> > To: Michael Turquette, Stephen Boyd, Rob Herring, Mark Rutland
-> > Cc: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>, Thomas
-> > Petazzoni, Antoine Tenart, Gregory Clement, Maxime Chevallier, Nadav
-> > Haklai, Bjorn Helgaas, Rafael J . Wysocki, <linux-pm@vger.kernel.org>,
-> > Miquel Raynal
+> On Mon, Jun 17, 2019 at 06:02:47PM +0900, Magnus Damm wrote:
+> > dt-bindings: timer: renesas, cmt: Various updates
 > >
-> > > Armada 3700 PCIe IP relies on the PCIe clock managed by this
-> > > driver. For reasons related to the PCI core's organization when
-> > > suspending/resuming, PCI host controller drivers must reconfigure
-> > > their register at suspend_noirq()/resume_noirq() which happens after
-> > > suspend()/suspend_late() and before resume_early()/resume().
+> > [PATCH 1/8] dt-bindings: timer: renesas, cmt: Add CMT0234 to sh73a0 and r8a7740
+> > [PATCH 2/8] dt-bindings: timer: renesas, cmt: Update CMT1 on sh73a0 and r8a7740
+> > [PATCH 3/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a7792
+> > [PATCH 4/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a7795
+> > [PATCH 5/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a77965
+> > [PATCH 6/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a77990
+> > [PATCH 7/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a77995
+> > [PATCH 8/8] dt-bindings: timer: renesas, cmt: Update R-Car Gen3 CMT1 usage
 > >
-> > "For reasons related to the PCI core's organization" manages to
-> > suggest that this change wouldn't be needed if only the PCI core did
-> > something differently, without actually being specific about what it
-> > would need to do differently.
+> > This series collect the following rather trivial DT binding changes:
+> > - Add 32-bit CMT0234 and convert CMT1 DT binding on sh73a0 and r8a7740.
+> > - Add documentation for the CMT on the R-Car Gen2 V2H (r8a7792) SoC.
+> > - Add missing R-Car Gen3 DT bindings for H3, M3-N, E3 an D3.
+> > - Update the R-Car Gen3 description to reflect current usage.
 > >
-> > Is there something the PCI core could do better to make this easier?
-> > Or is it just something like "the PCI core needs to access registers
-> > after suspend_late()"?  You mention the host controller, but of course
-> > that's not itself a PCI device, so the PCI core doesn't have much to
-> > do with it directly.
->
-> Actually, if I understand correctly the below commit [1] and the core
-> [2] & [3], PCI device fixups can happen at any time, including at the
-> _noirq phase where, obviously, the PCI controller must be already
-> setup.
->
-> I don't think changing this behavior is a viable solution and I would
-> not see it as a "PCI core could do better" alternative.
->
-> ---8<---
->
-> [1]
-> commit ab14d45ea58eae67c739e4ba01871cae7b6c4586
-> Author: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Date:   Tue Mar 17 15:55:45 2015 +0100
->
->     PCI: mvebu: Add suspend/resume support
->
->     Add suspend/resume support for the mvebu PCIe host driver.  Without
->     this commit, the system will panic at resume time when PCIe devices
->     are connected.
->
->     Note that we have to use the ->suspend_noirq() and ->resume_noirq()
->     hooks, because at resume time, the PCI fixups are done at
->     ->resume_noirq() time, so the PCIe controller has to be ready at
->     this point.
->
->     Signed-off-by: Thomas Petazzoni
->     <thomas.petazzoni@free-electrons.com> Signed-off-by: Bjorn Helgaas
->     <bhelgaas@google.com> Acked-by: Jason Cooper <jason@lakedaemon.net>
->
-> [2] https://elixir.bootlin.com/linux/v5.2-rc1/source/drivers/pci/pci-driver.c#L1181
-> [3] https://elixir.bootlin.com/linux/v5.2-rc1/source/drivers/pci/pci-driver.c#L522
->
-> --->8---
->
+> > Please see each individual patch for more information.
 > >
-> > s/register/registers/ ?
+> > Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 >
-> Indeed. I would like to sort out the above technical point before
-> sending a v3 with this typo corrected.
+> Hi Magnus,
+>
+> I think this series should include the Clocksource maintainers as
+> recipients:
+>
+> Daniel Lezcano <daniel.lezcano@linaro.org>
+> Thomas Gleixner <tglx@linutronix.de>
+>
+> And LKML for good measure.
 
-I don't have anything more to contribute here; just wanted to make
-sure this wasn't working around a fixable problem in PCI.
+Will do after a bit more waiting time for potential feedback from
+folks with access to Renesas documents. In particular I expected some
+opinions about the difference between how the DT compat strings are
+handled for CMT1/CMT2/CMT3 on R-Car Gen3 (as described in patch 8)
+compared to sh73a0/r8a7740 (as described in patch 1).
 
-Bjorn
+I also need to rebase on top of that CMT DT biniding document patch
+that covers most of the R-Car Gen3 SoCs.
+
+Cheers,
+
+/ magnus
