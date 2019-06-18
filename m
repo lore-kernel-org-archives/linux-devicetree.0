@@ -1,55 +1,135 @@
-From: Troy Benjegerdes <troy.benjegerdes@sifive.com>
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-Date: Tue, 18 Jun 2019 11:49:51 -0500
-Message-ID: <946B2B53-7A16-4B8D-8CB9-34EFFB9E84D6@sifive.com>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
- <mvmtvco62k9.fsf@suse.de>
- <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
- <mvmpnnc5y49.fsf@suse.de>
- <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com>
- <mvmh88o5xi5.fsf@suse.de>
- <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com>
- <F48A4F7F-0B0D-4191-91AD-DC51686D1E78@sifive.com>
- <d2836a90b92f3522a398d57ab8555d08956a0d1f.camel@wdc.com>
- <alpine.DEB.2.21.9999.1906172019040.15057@viisi.sifive.com>
- <CAAhSdy3zODw=JFaN=2F4K5-umihJDivLO8J8LBdkFkuZgzu41Q@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Content-Type: text/plain;
-        charset=utf-8
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
+Date: Tue, 18 Jun 2019 09:50:43 -0700
+Message-ID: <e53bf16a-681e-da31-1e9c-4ed2a24ed3a6@nvidia.com>
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+ <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
+ <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
+ <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
+ <fd415362-7479-6f98-c8db-1b7758fd3f1d@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAhSdy3zODw=JFaN=2F4K5-umihJDivLO8J8LBdkFkuZgzu41Q@mail.gmail.com>
+In-Reply-To: <fd415362-7479-6f98-c8db-1b7758fd3f1d@wwwdotorg.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup@brainfault.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, "palmer@sifive.com" <palmer@sifive.com>, Alistair Francis <Alistair.Francis@wdc.com>, "jamez@wit.com" <jamez@wit.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "davem@davemloft.net" <davem@davemloft.net>, "schwab@suse.de" <schwab@suse.de>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "sachin.ghadi@sifive.com" <sachin.ghadi@sifive.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "ynezz@true.cz" <ynezz@true.cz>, "yash.shah@sifive.com" <yash.shah@sifive.com>
+To: Stephen Warren <swarren@wwwdotorg.org>, Dmitry Osipenko <digetx@gmail.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+On 6/18/19 8:41 AM, Stephen Warren wrote:
+> On 6/18/19 3:30 AM, Dmitry Osipenko wrote:
+>> 18.06.2019 12:22, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 18.06.2019 10:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> This patch adds suspend and resume support for Tegra pinctrl driver
+>>>> and registers them to syscore so the pinmux settings are restored
+>>>> before the devices resume.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.c=C2=A0=C2=A0=C2=A0 | 62=20
+>>>> ++++++++++++++++++++++++++++++++
+>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.h=C2=A0=C2=A0=C2=A0 |=C2=A0=
+ 5 +++
+>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra114.c |=C2=A0 1 +
+>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra124.c |=C2=A0 1 +
+>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra20.c=C2=A0 |=C2=A0 1 +
+>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
+>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra30.c=C2=A0 |=C2=A0 1 +
+>>>> =C2=A0 7 files changed, 84 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c=20
+>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>> index 34596b246578..ceced30d8bd1 100644
+>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>> @@ -20,11 +20,16 @@
+>>>> =C2=A0 #include <linux/pinctrl/pinmux.h>
+>>>> =C2=A0 #include <linux/pinctrl/pinconf.h>
+>>>> =C2=A0 #include <linux/slab.h>
+>>>> +#include <linux/syscore_ops.h>
+>>>> =C2=A0 =C2=A0 #include "../core.h"
+>>>> =C2=A0 #include "../pinctrl-utils.h"
+>>>> =C2=A0 #include "pinctrl-tegra.h"
+>>>> =C2=A0 +#define EMMC2_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1c8
+>>>> +#define EMMC4_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1e0
+>>>> +#define EMMC_DPD_PARKING=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 (0x1fff << 14)
+>>>> +
+>>>> =C2=A0 static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u3=
+2=20
+>>>> reg)
+>>>> =C2=A0 {
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return readl(pmx->regs[bank] + reg);
+>>>> @@ -619,6 +624,48 @@ static void=20
+>>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 if (pmx->soc->has_park_padcfg) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0, =
+EMMC2_PAD_CFGPADCTRL_0);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKING=
+;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, EM=
+MC2_PAD_CFGPADCTRL_0);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0, =
+EMMC4_PAD_CFGPADCTRL_0);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKING=
+;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, EM=
+MC4_PAD_CFGPADCTRL_0);
+>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>> +}
+>>>
+>>> Is there any reason why parked_bit can't be changed to=20
+>>> parked_bitmask like I was
+>>> asking in a comment to v2?
+>>>
+>>> I suppose that it's more preferable to keep pinctrl-tegra.c=20
+>>> platform-agnostic for
+>>> consistency when possible, hence adding platform specifics here=20
+>>> should be discouraged.
+>>> And then the parked_bitmask will also result in a proper hardware=20
+>>> description in the code.
+>>>
+>>
+>> I'm now also vaguely recalling that Stephen Warren had some kind of a=20
+>> "code generator"
+>> for the pinctrl drivers. So I guess all those tables were=20
+>> auto-generated initially.
+>>
+>> Stephen, maybe you could adjust the generator to take into account=20
+>> the bitmask (of
+>> course if that's a part of the generated code) and then re-gen it all=20
+>> for Sowjanya?
+>
+> https://github.com/NVIDIA/tegra-pinmux-scripts holds the scripts that=20
+> generate tegra-pinctrlNNN.c. See soc-to-kernel-pinctrl-driver.py.=20
+> IIRC, tegra-pinctrl.c (the core file) isn't auto-generated. Sowjanya=20
+> is welcome to send a patch to that repo if the code needs to be updated.
 
-> On Jun 18, 2019, at 4:32 AM, Anup Patel <anup@brainfault.org> wrote:
->=20
->> =
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/=
-?id=3D72296bde4f4207566872ee355950a59cbc29f852
 
-I added your patches, along with two of mine, and rebased them
-to the latest U-boot master, and put them on the =E2=80=98to-upstream=E2=80=
-=99 branch
-at https://github.com/sifive/u-boot/tree/to-upstream
+Hi Dmitry,
 
-I am most interested in review of the patch that adds the DTS files
-from Linux to U-boot, along with a =E2=80=98-u-boot.dtsi=E2=80=99 file =
-which includes
-several extra things, most notably an ethernet entry [1] which does
-not match the new proposed changes for the MacB driver that Yash
-is working on.
+Just want to be clear on my understanding of your request.
 
-How close are we to consensus on the new =E2=80=9Csifive,fu540-macb=E2=80=9D=
+"change parked_bit to parked_bitmask" are you requested to change=20
+parked_bit of PINGROUP and DRV_PINGROUP to use bitmask value rather than=20
+bit position inorder to have parked bit configuration for EMMC PADs as=20
+well to happen by masking rather than checking for existence of parked_bit?
 
-device tree entry format? Is this something that is stable enough to
-start basing some work in M-mode U-boot on yet, or do we expect
-more changes?
+Trying to understand the reason/benefit for changing parked_bit to=20
+parked_bitmask.
 
-[1] =
-https://github.com/sifive/u-boot/commit/35e4168e36139722f30143a0ca0aa8637d=
-d3ee04#diff-27d2d375ddac52f1bca71594075e1be4R93=
+
+thanks
+
+Sowjanya
