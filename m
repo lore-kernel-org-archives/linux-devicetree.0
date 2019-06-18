@@ -1,114 +1,145 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH V12 2/4] drivers/perf: imx_ddr: Add ddr performance
- counter support
-Date: Tue, 18 Jun 2019 12:24:19 -0500
-Message-ID: <CAHrpEqR+3LETyDosyRq=SBDC=g3tkm72vg-f=550H+TTVLbmcQ@mail.gmail.com>
-References: <1556736193-29411-1-git-send-email-Frank.Li@nxp.com>
- <1556736193-29411-2-git-send-email-Frank.Li@nxp.com>
- <20190613112320.GA18966@fuggles.cambridge.arm.com>
- <CAHrpEqRZ0YL9SFk6o7iebJ+diJVMTtyba_9GtujL7H7e4G8qQA@mail.gmail.com>
- <20190613174436.GG18966@fuggles.cambridge.arm.com>
- <CAHrpEqS9GEC9Shf-6xLL0_+WJNuwYOdKe=5jtUogLajfcWYMew@mail.gmail.com>
- <20190614102302.GD10659@fuggles.cambridge.arm.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
+Date: Tue, 18 Jun 2019 10:34:59 -0700
+Message-ID: <cff9b6a2-dc33-d03b-9945-799b158deb07@nvidia.com>
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+ <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
+ <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
+ <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
+ <fd415362-7479-6f98-c8db-1b7758fd3f1d@wwwdotorg.org>
+ <e53bf16a-681e-da31-1e9c-4ed2a24ed3a6@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190614102302.GD10659@fuggles.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e53bf16a-681e-da31-1e9c-4ed2a24ed3a6@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Dmitry Osipenko <digetx@gmail.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 5:23 AM Will Deacon <will.deacon@arm.com> wrote:
->
-> On Thu, Jun 13, 2019 at 02:13:20PM -0500, Zhi Li wrote:
-> > On Thu, Jun 13, 2019 at 12:44 PM Will Deacon <will.deacon@arm.com> wrote:
-> > >
-> > > On Thu, Jun 13, 2019 at 12:04:37PM -0500, Zhi Li wrote:
-> > > > On Thu, Jun 13, 2019 at 6:23 AM Will Deacon <will.deacon@arm.com> wrote:
-> > > > >
-> > > > > On Wed, May 01, 2019 at 06:43:29PM +0000, Frank Li wrote:
-> > > > > > Add ddr performance monitor support for iMX8QXP
-> > > > > >
-> > > > > > There are 4 counters for ddr perfomance events.
-> > > > > > counter 0 is dedicated for cycles.
-> > > > > > you choose any up to 3 no cycles events.
-> > > > > >
-> > > > > > for example:
-> > > > > >
-> > > > > > perf stat -a -e imx8_ddr0/read-cycles/,imx8_ddr0/write-cycles/,imx8_ddr0/precharge/ ls
-> > > > > > perf stat -a -e imx8_ddr0/cycles/,imx8_ddr0/read-access/,imx8_ddr0/write-access/ ls
-> > > > >
-> > > > > I've pushed patches 1, 2 and 4 out with some minor tweaks to:
-> > > > >
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-next/perf
-> > > > >
-> > > > > I'll leave the actual .dts change to go via the soc tree, since last time
-> > > > > I took one of those it just resulted in conflicts.
-> > > > >
-> > > > > Frank, Andrey: Please could you try to run the perf fuzzer on this before
-> > > > > it lands in mainline? It has a good track record of finding nasty PMU driver
-> > > > > bugs, but it obviously requires access to hardware which implements the PMU:
-> > > > >
-> > > > > http://web.eece.maine.edu/~vweaver/projects/perf_events/fuzzer/
-> > > >
-> > > > Okay, how long should be run generally?
-> > > > I need make sure it can pass without my patches at our platform.
-> > >
-> > > As you long as you can really, but if it survives a few hours that's usually
-> > > a good sign. Overnight is even better.
-> >
-> > Base on commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a
-> > Author: Linus Torvalds <torvalds@linux-foundation.org>
-> > Date:   Sun Jun 2 13:55:33 2019 -0700
-> >
-> >     Linux 5.2-rc3
-> >
-> > RCU report problem:
-> >
-> > [ 6048.741784] rcu: INFO: rcu_preempt self-detected stall on CPU
-> > [ 6048.747550] rcu:     1-....: (5249 ticks this GP)
-> > idle=c5a/1/0x4000000000000004 softirq=503121/503121 fqs=2425
-> > [ 6048.757384]  (t=5253 jiffies g=1416105 q=117)
-> > [ 6048.761745] Task dump for CPU 1:
-> > [ 6048.764977] perf_fuzzer     R  running task        0 32520    426 0x00000202
-> > [ 6048.772030] Call trace:
-> > [ 6048.774493]  dump_backtrace+0x0/0x130
-> > [ 6048.778159]  show_stack+0x14/0x20
-> > [ 6048.781477]  sched_show_task+0x108/0x138
-> > [ 6048.785401]  dump_cpu_task+0x40/0x4c
-> > [ 6048.788983]  rcu_dump_cpu_stacks+0x94/0xd0
-> > [ 6048.793082]  rcu_sched_clock_irq+0x5e0/0x918
-> > [ 6048.797357]  update_process_times+0x2c/0x70
-> > [ 6048.801545]  tick_sched_handle.isra.6+0x3c/0x50
-> > [ 6048.806076]  tick_sched_timer+0x48/0x98
-> > [ 6048.809918]  __hrtimer_run_queues+0x118/0x1a8
-> > [ 6048.814277]  hrtimer_interrupt+0xe4/0x238
-> > [ 6048.818296]  arch_timer_handler_phys+0x2c/0x38
-> > [ 6048.822743]  handle_percpu_devid_irq+0x80/0x140
-> > [ 6048.827277]  generic_handle_irq+0x24/0x38
->
-> This is the timer interrupt which prompts the RCU splat. Do you have
-> information about where the CPU was when the interrupt occurred?
->
-> In the meantime, it's still worth leaving the fuzzer running to see what
-> else it finds.
 
-Overnight test done, only above rcu problem happen at both with and
-without ddr perf patches.
-
-best regards
-Frank Li
-
-
+On 6/18/19 9:50 AM, Sowjanya Komatineni wrote:
 >
-> Will
+> On 6/18/19 8:41 AM, Stephen Warren wrote:
+>> On 6/18/19 3:30 AM, Dmitry Osipenko wrote:
+>>> 18.06.2019 12:22, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> 18.06.2019 10:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> This patch adds suspend and resume support for Tegra pinctrl driver
+>>>>> and registers them to syscore so the pinmux settings are restored
+>>>>> before the devices resume.
+>>>>>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.c=C2=A0=C2=A0=C2=A0 | 62=20
+>>>>> ++++++++++++++++++++++++++++++++
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.h=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 5 +++
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra114.c |=C2=A0 1 +
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra124.c |=C2=A0 1 +
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra20.c=C2=A0 |=C2=A0 1 +
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra30.c=C2=A0 |=C2=A0 1 +
+>>>>> =C2=A0 7 files changed, 84 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c=20
+>>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>> index 34596b246578..ceced30d8bd1 100644
+>>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>> @@ -20,11 +20,16 @@
+>>>>> =C2=A0 #include <linux/pinctrl/pinmux.h>
+>>>>> =C2=A0 #include <linux/pinctrl/pinconf.h>
+>>>>> =C2=A0 #include <linux/slab.h>
+>>>>> +#include <linux/syscore_ops.h>
+>>>>> =C2=A0 =C2=A0 #include "../core.h"
+>>>>> =C2=A0 #include "../pinctrl-utils.h"
+>>>>> =C2=A0 #include "pinctrl-tegra.h"
+>>>>> =C2=A0 +#define EMMC2_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1c8
+>>>>> +#define EMMC4_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1e0
+>>>>> +#define EMMC_DPD_PARKING=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 (0x1fff << 14)
+>>>>> +
+>>>>> =C2=A0 static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u=
+32=20
+>>>>> reg)
+>>>>> =C2=A0 {
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return readl(pmx->regs[bank] + reg);
+>>>>> @@ -619,6 +624,48 @@ static void=20
+>>>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>> +
+>>>>> +=C2=A0=C2=A0=C2=A0 if (pmx->soc->has_park_padcfg) {
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0,=
+ EMMC2_PAD_CFGPADCTRL_0);
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKIN=
+G;
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, E=
+MMC2_PAD_CFGPADCTRL_0);
+>>>>> +
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0,=
+ EMMC4_PAD_CFGPADCTRL_0);
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKIN=
+G;
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, E=
+MMC4_PAD_CFGPADCTRL_0);
+>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>> +}
+>>>>
+>>>> Is there any reason why parked_bit can't be changed to=20
+>>>> parked_bitmask like I was
+>>>> asking in a comment to v2?
+>>>>
+>>>> I suppose that it's more preferable to keep pinctrl-tegra.c=20
+>>>> platform-agnostic for
+>>>> consistency when possible, hence adding platform specifics here=20
+>>>> should be discouraged.
+>>>> And then the parked_bitmask will also result in a proper hardware=20
+>>>> description in the code.
+>>>>
+>>>
+>>> I'm now also vaguely recalling that Stephen Warren had some kind of=20
+>>> a "code generator"
+>>> for the pinctrl drivers. So I guess all those tables were=20
+>>> auto-generated initially.
+>>>
+>>> Stephen, maybe you could adjust the generator to take into account=20
+>>> the bitmask (of
+>>> course if that's a part of the generated code) and then re-gen it=20
+>>> all for Sowjanya?
+>>
+>> https://github.com/NVIDIA/tegra-pinmux-scripts holds the scripts that=20
+>> generate tegra-pinctrlNNN.c. See soc-to-kernel-pinctrl-driver.py.=20
+>> IIRC, tegra-pinctrl.c (the core file) isn't auto-generated. Sowjanya=20
+>> is welcome to send a patch to that repo if the code needs to be updated.
+>
+>
+> Hi Dmitry,
+>
+> Just want to be clear on my understanding of your request.
+>
+> "change parked_bit to parked_bitmask" are you requested to change=20
+> parked_bit of PINGROUP and DRV_PINGROUP to use bitmask value rather=20
+> than bit position inorder to have parked bit configuration for EMMC=20
+> PADs as well to happen by masking rather than checking for existence=20
+> of parked_bit?
+>
+> Trying to understand the reason/benefit for changing parked_bit to=20
+> parked_bitmask.
+Also, Park bits in CFGPAD registers are not common for all CFGPAD=20
+registers. Park bits are available only for EMMC and also those bits are=20
+used for something else on other CFGPAD registers so bitmask can't be=20
+common and this also need an update to DRV_PINGROUP macro args just only=20
+to handle EMMC parked_bitmask. So not sure of the benefit in using=20
+bitmask rather than parked_bit
+>
+> thanks
+>
+> Sowjanya
+>
