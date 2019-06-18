@@ -1,59 +1,82 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/2] arm: dts: add ARM Mali GPU node for Odroid XU3
-Date: Tue, 18 Jun 2019 08:18:32 -0600
-Message-ID: <CAL_Jsq+8s3iNUy5ZCtWW5k-0sa51CR0xdv3Gh_sR=jsVtLmTdQ@mail.gmail.com>
-References: <20190614203144.3850-2-joseph.kogut@gmail.com>
- <20190614235719.8134-1-joseph.kogut@gmail.com>
- <CAJKOXPc-Xztou+xyibb8YZtfz20q3kzr_gTBoE=R3q_CSk9kzQ@mail.gmail.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
+Date: Tue, 18 Jun 2019 15:22:20 +0100
+Message-ID: <13e19d8c-8918-a3bb-f398-2ac41c71d307@arm.com>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+	<20190610184714.6786-2-jean-philippe.brucker@arm.com>
+	<20190611103625.00001399@huawei.com>
+	<62d1f310-0cba-4d55-0f16-68bba3c64927@arm.com>
+	<20190611111333.425ce809@jacob-builder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAJKOXPc-Xztou+xyibb8YZtfz20q3kzr_gTBoE=R3q_CSk9kzQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Joseph Kogut <joseph.kogut@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20190611111333.425ce809@jacob-builder>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMTgsIDIwMTkgYXQgMzoyNyBBTSBLcnp5c3p0b2YgS296bG93c2tpIDxrcnpr
-QGtlcm5lbC5vcmc+IHdyb3RlOgo+Cj4gT24gU2F0LCAxNSBKdW4gMjAxOSBhdCAwMTo1NywgSm9z
-ZXBoIEtvZ3V0IDxqb3NlcGgua29ndXRAZ21haWwuY29tPiB3cm90ZToKPiA+Cj4gPiBBZGQgZGV2
-aWNlIHRyZWUgbm9kZSBmb3IgbWFsaSBncHUgb24gT2Ryb2lkIFhVMyBTb0NzLgo+ID4KPiA+IFNp
-Z25lZC1vZmYtYnk6IEpvc2VwaCBLb2d1dCA8am9zZXBoLmtvZ3V0QGdtYWlsLmNvbT4KPiA+IC0t
-LQo+ID4KPiA+IENoYW5nZXMgdjEgLT4gdjI6Cj4gPiAtIFVzZSBpbnRlcnJ1cHQgbmFtZSBvcmRl
-cmluZyBmcm9tIGJpbmRpbmcgZG9jCj4gPiAtIFNwZWNpZnkgYSBzaW5nbGUgY2xvY2sgZm9yIEdQ
-VSBub2RlCj4gPiAtIEFkZCBncHUgb3BwIHRhYmxlCj4gPiAtIEZpeCB3YXJuaW5ncyBmcm9tIElS
-UV9UWVBFX05PTkUKPiA+Cj4gPiAgLi4uL2Jvb3QvZHRzL2V4eW5vczU0MjItb2Ryb2lkeHUzLWNv
-bW1vbi5kdHNpIHwgMjYgKysrKysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAy
-NiBpbnNlcnRpb25zKCspCj4gPgo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4
-eW5vczU0MjItb2Ryb2lkeHUzLWNvbW1vbi5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9z
-NTQyMi1vZHJvaWR4dTMtY29tbW9uLmR0c2kKPiA+IGluZGV4IDkzYTQ4ZjJkZGE0OS4uYjhhNDI0
-NmUzYjM3IDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMi1vZHJv
-aWR4dTMtY29tbW9uLmR0c2kKPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjIt
-b2Ryb2lkeHUzLWNvbW1vbi5kdHNpCj4gPiBAQCAtNDgsNiArNDgsMzIgQEAKPiA+ICAgICAgICAg
-ICAgICAgICBjb29saW5nLWxldmVscyA9IDwwIDEzMCAxNzAgMjMwPjsKPiA+ICAgICAgICAgfTsK
-PiA+Cj4gPiArICAgICAgIGdwdTogZ3B1QDExODAwMDAwIHsKPiA+ICsgICAgICAgICAgICAgICBj
-b21wYXRpYmxlID0gInNhbXN1bmcsZXh5bm9zLW1hbGkiLCAiYXJtLG1hbGktdDYyOCI7Cj4gPiAr
-ICAgICAgICAgICAgICAgcmVnID0gPDB4MTE4MDAwMDAgMHg1MDAwPjsKPiA+ICsgICAgICAgICAg
-ICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjE5IElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lDX1NQSSA3NCAgSVJRX1RZUEVfTEVWRUxf
-SElHSD4sCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDExNyBJUlFf
-VFlQRV9MRVZFTF9ISUdIPjsKPiA+ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHQtbmFtZXMgPSAi
-am9iIiwgIm1tdSIsICJncHUiOwo+ID4gKyAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2sg
-Q0xLX0czRD47Cj4gPiArICAgICAgICAgICAgICAgbWFsaS1zdXBwbHkgPSA8JmJ1Y2s0X3JlZz47
-Cj4gPiArICAgICAgICAgICAgICAgb3BlcmF0aW5nLXBvaW50cy12MiA9IDwmZ3B1X29wcF90YWJs
-ZT47Cj4gPiArICAgICAgIH07Cj4gPiArCj4gPiArICAgICAgIGdwdV9vcHBfdGFibGU6IGdwdS1v
-cHAtdGFibGUgewo+Cj4gT25lIG1vcmUgdGhpbmcgLSB1c2UgIm9wcF90YWJsZSIgYXMgbm9kZSBu
-YW1lIChnZW5lcmljIGNsYXNzIG9mIG5vZGUsCj4gbWF0Y2hlcyBzdHlsZSB3aXRoIG90aGVyIHRh
-YmxlcykuCgonb3BwLXRhYmxlJyBhcyBjb252ZW50aW9uIGlzIHVzaW5nICctJyByYXRoZXIgdGhh
-biAnXycuCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On 11/06/2019 19:13, Jacob Pan wrote:
+>>>> +/**
+>>>> + * ioasid_find - Find IOASID data
+>>>> + * @set: the IOASID set
+>>>> + * @ioasid: the IOASID to find
+>>>> + * @getter: function to call on the found object
+>>>> + *
+>>>> + * The optional getter function allows to take a reference to the
+>>>> found object
+>>>> + * under the rcu lock. The function can also check if the object
+>>>> is still valid:
+>>>> + * if @getter returns false, then the object is invalid and NULL
+>>>> is returned.
+>>>> + *
+>>>> + * If the IOASID has been allocated for this set, return the
+>>>> private pointer
+>>>> + * passed to ioasid_alloc. Private data can be NULL if not set.
+>>>> Return an error
+>>>> + * if the IOASID is not found or does not belong to the set.  
+>>>
+>>> Perhaps should make it clear that @set can be null.  
+>>
+>> Indeed. But I'm not sure allowing @set to be NULL is such a good idea,
+>> because the data type associated to an ioasid depends on its set. For
+>> example SVA will put an mm_struct in there, and auxiliary domains use
+>> some structure private to the IOMMU domain.
+>>
+> I am not sure we need to count on @set to decipher data type. Whoever
+> does the allocation and owns the IOASID should knows its own data type.
+> My thought was that @set is only used to group IDs, permission check
+> etc.
+> 
+>> Jacob, could me make @set mandatory, or do you see a use for a global
+>> search? If @set is NULL, then callers can check if the return pointer
+>> is NULL, but will run into trouble if they try to dereference it.
+>>
+> A global search use case can be for PRQ. IOMMU driver gets a IOASID
+> (first interrupt then retrieve from a queue), it has no idea which
+> @set it belongs to. But the data types are the same for all IOASIDs
+> used by the IOMMU.
+
+They aren't when we use a generic SVA handler. Following a call to
+iommu_sva_bind_device(), iommu-sva.c allocates an IOASID and store an
+mm_struct. If auxiliary domains are also enabled for the device,
+following a call to iommu_aux_attach_device() the IOMMU driver allocates
+an IOASID and stores some private object.
+
+Now for example the IOMMU driver receives a PPR and calls ioasid_find()
+with @set = NULL. ioasid_find() may return either an mm_struct or a
+private object, and the driver cannot know which it is so the returned
+value is unusable.
+
+Thanks,
+Jean
