@@ -1,58 +1,94 @@
-From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 1/1] ARM: dts: imx6ul: fix PWM[1-4] interrupts
-Date: Tue, 18 Jun 2019 17:58:34 +0200
-Message-ID: <20190618155834.15545-1-sebastien.szymanski@armadeus.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 19/21] iommu/mediatek: Rename enable_4GB to dram_is_4gb
+Date: Tue, 18 Jun 2019 18:06:47 +0200
+Message-ID: <9bf13c22-0c73-2950-2204-23d577976b03@gmail.com>
+References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+ <1560169080-27134-20-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1560169080-27134-20-git-send-email-yong.wu@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-QWNjb3JkaW5nIHRvIHRoZSBpLk1YNlVML0wgUk0sIHRhYmxlIDMuMSAiQVJNIENvcnRleCBBNyBk
-b21haW4gaW50ZXJydXB0CnN1bW1hcnkiLCB0aGUgaW50ZXJydXB0cyBmb3IgdGhlIFBXTVsxLTRd
-IGdvIGZyb20gODMgdG8gODYuCgpGaXhlczogYjk5MDFmZTg0ZjAyICgiQVJNOiBkdHM6IGlteDZ1
-bDogYWRkIHB3bVsxLTRdIG5vZGVzIikKU2lnbmVkLW9mZi1ieTogU8OpYmFzdGllbiBTenltYW5z
-a2kgPHNlYmFzdGllbi5zenltYW5za2lAYXJtYWRldXMuY29tPgotLS0KIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDZ1bC5kdHNpIHwgOCArKysrLS0tLQogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9u
-cygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2
-dWwuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5kdHNpCmluZGV4IGJiZjAxMGM3MzMz
-Ni4uYTdmNmQxZDU4ZTIwIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRz
-aQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQpAQCAtMzU4LDcgKzM1OCw3IEBA
-CiAJCQlwd20xOiBwd21AMjA4MDAwMCB7CiAJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnVsLXB3
-bSIsICJmc2wsaW14MjctcHdtIjsKIAkJCQlyZWcgPSA8MHgwMjA4MDAwMCAweDQwMDA+OwotCQkJ
-CWludGVycnVwdHMgPSA8R0lDX1NQSSAxMTUgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCQkJaW50
-ZXJydXB0cyA9IDxHSUNfU1BJIDgzIElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQkJCWNsb2NrcyA9
-IDwmY2xrcyBJTVg2VUxfQ0xLX1BXTTE+LAogCQkJCQkgPCZjbGtzIElNWDZVTF9DTEtfUFdNMT47
-CiAJCQkJY2xvY2stbmFtZXMgPSAiaXBnIiwgInBlciI7CkBAIC0zNjksNyArMzY5LDcgQEAKIAkJ
-CXB3bTI6IHB3bUAyMDg0MDAwIHsKIAkJCQljb21wYXRpYmxlID0gImZzbCxpbXg2dWwtcHdtIiwg
-ImZzbCxpbXgyNy1wd20iOwogCQkJCXJlZyA9IDwweDAyMDg0MDAwIDB4NDAwMD47Ci0JCQkJaW50
-ZXJydXB0cyA9IDxHSUNfU1BJIDExNiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCQlpbnRlcnJ1
-cHRzID0gPEdJQ19TUEkgODQgSVJRX1RZUEVfTEVWRUxfSElHSD47CiAJCQkJY2xvY2tzID0gPCZj
-bGtzIElNWDZVTF9DTEtfUFdNMj4sCiAJCQkJCSA8JmNsa3MgSU1YNlVMX0NMS19QV00yPjsKIAkJ
-CQljbG9jay1uYW1lcyA9ICJpcGciLCAicGVyIjsKQEAgLTM4MCw3ICszODAsNyBAQAogCQkJcHdt
-MzogcHdtQDIwODgwMDAgewogCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDZ1bC1wd20iLCAiZnNs
-LGlteDI3LXB3bSI7CiAJCQkJcmVnID0gPDB4MDIwODgwMDAgMHg0MDAwPjsKLQkJCQlpbnRlcnJ1
-cHRzID0gPEdJQ19TUEkgMTE3IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQkJCWludGVycnVwdHMg
-PSA8R0lDX1NQSSA4NSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKIAkJCQljbG9ja3MgPSA8JmNsa3Mg
-SU1YNlVMX0NMS19QV00zPiwKIAkJCQkJIDwmY2xrcyBJTVg2VUxfQ0xLX1BXTTM+OwogCQkJCWNs
-b2NrLW5hbWVzID0gImlwZyIsICJwZXIiOwpAQCAtMzkxLDcgKzM5MSw3IEBACiAJCQlwd200OiBw
-d21AMjA4YzAwMCB7CiAJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnVsLXB3bSIsICJmc2wsaW14
-MjctcHdtIjsKIAkJCQlyZWcgPSA8MHgwMjA4YzAwMCAweDQwMDA+OwotCQkJCWludGVycnVwdHMg
-PSA8R0lDX1NQSSAxMTggSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCQkJaW50ZXJydXB0cyA9IDxH
-SUNfU1BJIDg2IElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQkJCWNsb2NrcyA9IDwmY2xrcyBJTVg2
-VUxfQ0xLX1BXTTQ+LAogCQkJCQkgPCZjbGtzIElNWDZVTF9DTEtfUFdNND47CiAJCQkJY2xvY2st
-bmFtZXMgPSAiaXBnIiwgInBlciI7Ci0tIAoyLjIxLjAKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+
+On 10/06/2019 14:17, Yong Wu wrote:
+> This patch only rename the variable name from enable_4GB to
+> dram_is_4gb for readable.
+
+>From my understanding this is true when available RAM > 4GB so I think the name
+should be something like dram_bigger_4gb otherwise it may create confusion again.
+
+Also from my point of view this patch should be done before
+"[PATCH 06/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB Mode"
+
+Regards,
+Matthias
+
+> 
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+> ---
+>  drivers/iommu/mtk_iommu.c | 10 +++++-----
+>  drivers/iommu/mtk_iommu.h |  2 +-
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 86158d8..67cab2d 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -382,7 +382,7 @@ static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
+>  	int ret;
+>  
+>  	/* The "4GB mode" M4U physically can not use the lower remap of Dram. */
+> -	if (data->plat_data->has_4gb_mode && data->enable_4GB)
+> +	if (data->plat_data->has_4gb_mode && data->dram_is_4gb)
+>  		paddr |= BIT_ULL(32);
+>  
+>  	spin_lock_irqsave(&dom->pgtlock, flags);
+> @@ -554,13 +554,13 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>  	writel_relaxed(regval, data->base + REG_MMU_INT_MAIN_CONTROL);
+>  
+>  	if (data->plat_data->m4u_plat == M4U_MT8173)
+> -		regval = (data->protect_base >> 1) | (data->enable_4GB << 31);
+> +		regval = (data->protect_base >> 1) | (data->dram_is_4gb << 31);
+>  	else
+>  		regval = lower_32_bits(data->protect_base) |
+>  			 upper_32_bits(data->protect_base);
+>  	writel_relaxed(regval, data->base + REG_MMU_IVRP_PADDR);
+>  
+> -	if (data->enable_4GB && data->plat_data->has_vld_pa_rng) {
+> +	if (data->dram_is_4gb && data->plat_data->has_vld_pa_rng) {
+>  		/*
+>  		 * If 4GB mode is enabled, the validate PA range is from
+>  		 * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
+> @@ -611,8 +611,8 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	data->protect_base = ALIGN(virt_to_phys(protect), MTK_PROTECT_PA_ALIGN);
+>  
+> -	/* Whether the current dram is over 4GB */
+> -	data->enable_4GB = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
+> +	/* Whether the current dram is 4GB. */
+> +	data->dram_is_4gb = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	data->base = devm_ioremap_resource(dev, res);
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index 753266b..e8114b2 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -65,7 +65,7 @@ struct mtk_iommu_data {
+>  	struct mtk_iommu_domain		*m4u_dom;
+>  	struct iommu_group		*m4u_group;
+>  	struct mtk_smi_iommu		smi_imu;      /* SMI larb iommu info */
+> -	bool                            enable_4GB;
+> +	bool                            dram_is_4gb;
+>  	bool				tlb_flush_active;
+>  
+>  	struct iommu_device		iommu;
+> 
