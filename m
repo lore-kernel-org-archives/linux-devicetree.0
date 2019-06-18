@@ -1,36 +1,118 @@
-Return-Path: <dinguyen@kernel.org>
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCHv2 1/2] dt-bindings: pl330: document the optional resets property
-Date: Tue, 11 Jun 2019 10:34:32 -0500
-Message-Id: <20190611153433.22129-1-dinguyen@kernel.org>
+Return-Path: <SRS0=iDeF=UR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:8362 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729337AbfFRSDG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Jun 2019 14:03:06 -0400
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V6 15/27] PCI: tegra: Update flow control timer frequency in Tegra210
+Date: Tue, 18 Jun 2019 23:31:54 +0530
+Message-ID: <20190618180206.4908-16-mmaddireddy@nvidia.com>
+In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: dmaengine@vger.kernel.org
-Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, vkoul@kernel.org, geert@linux-m68k.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the optional resets property the pl330 dma node.
+Recommended UpdateFC threshold in Tegra210 is 0x60 for best performance
+of x1 link. Setting this to 0x60 provides the best balance between number
+of UpdateFC packets and read data sent over the link.
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v2: no change
----
- Documentation/devicetree/bindings/dma/arm-pl330.txt | 3 +++
- 1 file changed, 3 insertions(+)
+UpdateFC timer frequency is equal to twice the value of register content
+in nsec, i.e (2 * 0x60) = 192 nsec.
 
-diff --git a/Documentation/devicetree/bindings/dma/arm-pl330.txt b/Documentation/devicetree/bindings/dma/arm-pl330.txt
-index db7e2260f9c5..2c7fd1941abb 100644
---- a/Documentation/devicetree/bindings/dma/arm-pl330.txt
-+++ b/Documentation/devicetree/bindings/dma/arm-pl330.txt
-@@ -16,6 +16,9 @@ Optional properties:
-   - dma-channels: contains the total number of DMA channels supported by the DMAC
-   - dma-requests: contains the total number of DMA requests supported by the DMAC
-   - arm,pl330-broken-no-flushp: quirk for avoiding to execute DMAFLUSHP
-+  - resets: contains an entry for each entry in reset-names.
-+	    See ../reset/reset.txt for details.
-+  - reset-names: must contain at least "dma", and optional is "dma-ocp".
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+V6: No change
+
+V5: No change
+
+V4: No change
+
+V3: No change
+
+V2: Changed update_fc_val to update_fc_threshold
+
+ drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 70bfbb7930c8..6ed406c46409 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -320,6 +320,7 @@ struct tegra_pcie_soc {
+ 	bool update_clamp_threshold;
+ 	bool program_deskew_time;
+ 	bool raw_violation_fixup;
++	bool update_fc_timer;
+ 	struct {
+ 		struct {
+ 			u32 rp_ectl_2_r1;
+@@ -668,6 +669,13 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
+ 		value |= soc->update_fc_threshold;
+ 		writel(value, port->base + RP_VEND_XP);
+ 	}
++
++	if (soc->update_fc_timer) {
++		value = readl(port->base + RP_VEND_XP);
++		value &= ~RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK;
++		value |= soc->update_fc_threshold;
++		writel(value, port->base + RP_VEND_XP);
++	}
+ }
  
- Example:
+ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+@@ -2410,6 +2418,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.update_clamp_threshold = false,
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2437,6 +2446,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+ 	.update_clamp_threshold = false,
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2459,6 +2469,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+ 	.update_clamp_threshold = true,
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = true,
++	.update_fc_timer = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2469,6 +2480,8 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+ 	.pads_refclk_cfg0 = 0x90b890b8,
++	/* FC threshold is bit[25:18] */
++	.update_fc_threshold = 0x01800000,
+ 	.has_pex_clkreq_en = true,
+ 	.has_pex_bias_ctrl = true,
+ 	.has_intr_prsnt_sense = true,
+@@ -2479,6 +2492,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+ 	.update_clamp_threshold = true,
+ 	.program_deskew_time = true,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = true,
+ 	.ectl = {
+ 		.regs = {
+ 			.rp_ectl_2_r1 = 0x0000000f,
+@@ -2518,6 +2532,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+ 	.update_clamp_threshold = false,
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = false,
+ 	.ectl.enable = false,
+ };
  
 -- 
-2.20.0
+2.17.1
