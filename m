@@ -1,58 +1,22 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: msm8996: Enable SMMUs
-Date: Mon, 17 Jun 2019 22:23:46 -0700
-Message-ID: <20190618052346.32239-1-bjorn.andersson@linaro.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: ls1028a: add crypto node
+Date: Tue, 18 Jun 2019 14:54:47 +0800
+Message-ID: <20190618065446.GC29881@dragon>
+References: <20190610152331.10057-1-horia.geanta@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190610152331.10057-1-horia.geanta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>
-Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurentiu Tudor <laurentiu.tudor@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable SMMUs on 8996 now that the WRZ workaround in the arm-smmu driver
-has landed.
+On Mon, Jun 10, 2019 at 06:23:31PM +0300, Horia Geantă wrote:
+> LS1028A has a SEC v5.0 compatible security engine.
+> 
+> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 1e3143c4fe8f..2ecd9d775d61 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1177,7 +1177,6 @@
- 			clock-names = "iface",
- 				      "bus";
- 			#iommu-cells = <1>;
--			status = "disabled";
- 		};
- 
- 		camss: camss@a00000 {
-@@ -1330,8 +1329,6 @@
- 			clock-names = "iface", "bus";
- 
- 			power-domains = <&mmcc GPU_GDSC>;
--
--			status = "disabled";
- 		};
- 
- 		mdp_smmu: arm,smmu@d00000 {
-@@ -1348,8 +1345,6 @@
- 			clock-names = "iface", "bus";
- 
- 			power-domains = <&mmcc MDSS_GDSC>;
--
--			status = "disabled";
- 		};
- 
- 		lpass_q6_smmu: arm,smmu-lpass_q6@1600000 {
-@@ -1376,7 +1371,6 @@
- 			clocks = <&gcc GCC_HLOS1_VOTE_LPASS_CORE_SMMU_CLK>,
- 				 <&gcc GCC_HLOS1_VOTE_LPASS_ADSP_SMMU_CLK>;
- 			clock-names = "iface", "bus";
--			status = "disabled";
- 		};
- 
- 		agnoc@0 {
--- 
-2.18.0
+Applied, thanks.
