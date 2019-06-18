@@ -1,470 +1,78 @@
-From: Tao Ren <taoren@fb.com>
-Subject: [PATCH] ARM: dts: aspeed: Add Facebook Minipack BMC
-Date: Mon, 17 Jun 2019 21:24:21 -0700
-Message-ID: <20190618042421.1227372-1-taoren@fb.com>
+From: Manish Narani <MNARANI@xilinx.com>
+Subject: RE: [PATCH 3/3] mmc: sdhci-of-arasan: Add support for ZynqMP Platform
+ Tap Delays Setup
+Date: Tue, 18 Jun 2019 04:59:16 +0000
+Message-ID: <MN2PR02MB60296837F9D1B3088667BE59C1EA0@MN2PR02MB6029.namprd02.prod.outlook.com>
+References: <1560247011-26369-1-git-send-email-manish.narani@xilinx.com>
+ <1560247011-26369-4-git-send-email-manish.narani@xilinx.com>
+ <CAPDyKFrJwpwUUX_q2kcR9QY_fv9Lgos+ixPmU6JMeJVqJAiFpg@mail.gmail.com>
+ <5feac3fb-bef3-b7d1-57d6-81e115e1f555@xilinx.com>
+ <CAPDyKFp_ZvSjFp2FGonzGsnc9xPyZ7qOCaRnX1SimBxLpfz9-Q@mail.gmail.com>
+ <948514a0-e310-75fd-e8a8-6ef8bb14e41f@xilinx.com>
+ <CAPDyKFp6O8rPZDZS4iKJam2+tXeen_ZMOXKw=WVzJNpBXcSc9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFp6O8rPZDZS4iKJam2+tXeen_ZMOXKw=WVzJNpBXcSc9g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc: Tao Ren <taoren@fb.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Michal Simek <michals@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, Nava kishore Manne <navam@xilinx.com>, Olof Johansson <olof@lixom.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add initial version of device tree for Facebook Minipack ast2500 BMC.
-
-Signed-off-by: Tao Ren <taoren@fb.com>
----
- arch/arm/boot/dts/Makefile                    |   1 +
- .../boot/dts/aspeed-bmc-facebook-minipack.dts | 429 ++++++++++++++++++
- 2 files changed, 430 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 323fb7f13438..4c94e4c8de1e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1267,6 +1267,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-arm-centriq2400-rep.dtb \
- 	aspeed-bmc-arm-stardragon4800-rep2.dtb \
- 	aspeed-bmc-facebook-cmm.dtb \
-+	aspeed-bmc-facebook-minipack.dtb \
- 	aspeed-bmc-facebook-tiogapass.dtb \
- 	aspeed-bmc-facebook-yamp.dtb \
- 	aspeed-bmc-intel-s2600wf.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-new file mode 100644
-index 000000000000..c05478296446
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-@@ -0,0 +1,429 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (c) 2018 Facebook Inc.
-+/dts-v1/;
-+
-+#include "aspeed-g5.dtsi"
-+
-+/ {
-+	model = "Facebook Minipack 100 BMC";
-+	compatible = "facebook,minipack-bmc", "aspeed,ast2500";
-+
-+	aliases {
-+		/*
-+		 * Override the default serial aliases to avoid breaking
-+		 * the legacy applications.
-+		 */
-+		serial0 = &uart5;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+		serial4 = &uart4;
-+
-+		/*
-+		 * i2c switch 2-0070, pca9548, 8 child channels assigned
-+		 * with bus number 16-23.
-+		 */
-+		i2c16 = &imux16;
-+		i2c17 = &imux17;
-+		i2c18 = &imux18;
-+		i2c19 = &imux19;
-+		i2c20 = &imux20;
-+		i2c21 = &imux21;
-+		i2c22 = &imux22;
-+		i2c23 = &imux23;
-+
-+		/*
-+		 * i2c switch 8-0070, pca9548, 8 child channels assigned
-+		 * with bus number 24-31.
-+		 */
-+		i2c24 = &imux24;
-+		i2c25 = &imux25;
-+		i2c26 = &imux26;
-+		i2c27 = &imux27;
-+		i2c28 = &imux28;
-+		i2c29 = &imux29;
-+		i2c30 = &imux30;
-+		i2c31 = &imux31;
-+
-+		/*
-+		 * i2c switch 9-0070, pca9548, 8 child channels assigned
-+		 * with bus number 32-39.
-+		 */
-+		i2c32 = &imux32;
-+		i2c33 = &imux33;
-+		i2c34 = &imux34;
-+		i2c35 = &imux35;
-+		i2c36 = &imux36;
-+		i2c37 = &imux37;
-+		i2c38 = &imux38;
-+		i2c39 = &imux39;
-+
-+		/*
-+		 * i2c switch 11-0070, pca9548, 8 child channels assigned
-+		 * with bus number 40-47.
-+		 */
-+		i2c40 = &imux40;
-+		i2c41 = &imux41;
-+		i2c42 = &imux42;
-+		i2c43 = &imux43;
-+		i2c44 = &imux44;
-+		i2c45 = &imux45;
-+		i2c46 = &imux46;
-+		i2c47 = &imux47;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart1;
-+		bootargs = "debug console=ttyS1,9600n8 root=/dev/ram rw";
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+};
-+
-+&wdt1 {
-+	status = "okay";
-+	aspeed,reset-type = "system";
-+};
-+
-+&wdt2 {
-+	status = "okay";
-+	aspeed,reset-type = "system";
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "bmc";
-+#include "facebook-bmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&uart1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+		     &pinctrl_rxd1_default
-+		     &pinctrl_ncts1_default
-+		     &pinctrl_ndsr1_default
-+		     &pinctrl_ndtr1_default
-+		     &pinctrl_nrts1_default>;
-+};
-+
-+&uart2 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd2_default
-+		     &pinctrl_rxd2_default>;
-+};
-+
-+&uart3 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd3_default
-+		     &pinctrl_rxd3_default>;
-+};
-+
-+&uart4 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd4_default
-+		     &pinctrl_rxd4_default>;
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&mac1 {
-+	status = "okay";
-+	no-hw-checksum;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	bus-frequency = <400000>;
-+	multi-master;
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+
-+	i2c-switch@70 {
-+		compatible = "nxp,pca9548";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x70>;
-+
-+		imux16: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		imux17: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		imux18: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		imux19: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+
-+		imux20: i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <4>;
-+		};
-+
-+		imux21: i2c@5 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <5>;
-+		};
-+
-+		imux22: i2c@6 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <6>;
-+		};
-+
-+		imux23: i2c@7 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <7>;
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+	multi-master;
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+
-+	i2c-switch@70 {
-+		compatible = "nxp,pca9548";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x70>;
-+
-+		imux24: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		imux25: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		imux26: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		imux27: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+
-+		imux28: i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <4>;
-+		};
-+
-+		imux29: i2c@5 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <5>;
-+		};
-+
-+		imux30: i2c@6 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <6>;
-+		};
-+
-+		imux31: i2c@7 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <7>;
-+		};
-+	};
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+
-+	i2c-switch@70 {
-+		compatible = "nxp,pca9548";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x70>;
-+
-+		imux32: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		imux33: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		imux34: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		imux35: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+
-+		imux36: i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <4>;
-+		};
-+
-+		imux37: i2c@5 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <5>;
-+		};
-+
-+		imux38: i2c@6 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <6>;
-+		};
-+
-+		imux39: i2c@7 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <7>;
-+		};
-+	};
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+
-+	i2c-switch@70 {
-+		compatible = "nxp,pca9548";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x70>;
-+
-+		imux40: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		imux41: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		imux42: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		imux43: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+
-+		imux44: i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <4>;
-+		};
-+
-+		imux45: i2c@5 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <5>;
-+		};
-+
-+		imux46: i2c@6 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <6>;
-+		};
-+
-+		imux47: i2c@7 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <7>;
-+		};
-+	};
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+};
-+
-+&i2c13 {
-+	status = "okay";
-+};
-+
-+&vhub {
-+	status = "okay";
-+};
--- 
-2.17.1
+SGkgVWZmZSwNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3LiBQbGVhc2UgZmluZCBteSBjb21tZW50
+cyBiZWxvdy4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBVbGYgSGFu
+c3NvbiA8dWxmLmhhbnNzb25AbGluYXJvLm9yZz4NCj4gU2VudDogTW9uZGF5LCBKdW5lIDE3LCAy
+MDE5IDg6MjkgUE0NCj4gVG86IE1pY2hhbCBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPg0KPiBD
+YzogTWFuaXNoIE5hcmFuaSA8TU5BUkFOSUB4aWxpbnguY29tPjsgUm9iIEhlcnJpbmcNCj4gPHJv
+YmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBB
+ZHJpYW4NCj4gSHVudGVyIDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT47IFJhamFuIFZhamEgPFJB
+SkFOVkB4aWxpbnguY29tPjsgSm9sbHkNCj4gU2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+OyBOYXZh
+IGtpc2hvcmUgTWFubmUgPG5hdmFtQHhpbGlueC5jb20+OyBPbG9mDQo+IEpvaGFuc3NvbiA8b2xv
+ZkBsaXhvbS5uZXQ+OyBsaW51eC1tbWNAdmdlci5rZXJuZWwub3JnOyBEVE1MDQo+IDxkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LQ0K
+PiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgTGludXggQVJNIDxsaW51eC1hcm0ta2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMy8zXSBtbWM6IHNkaGNp
+LW9mLWFyYXNhbjogQWRkIHN1cHBvcnQgZm9yIFp5bnFNUA0KPiBQbGF0Zm9ybSBUYXAgRGVsYXlz
+IFNldHVwDQo+IA0KPiBbLi4uXQ0KPiANCj4gPiA+Pg0KPiA+ID4+DQo+ID4gPj4+IEluIHJlZ2Fy
+ZHMgdG8gdGhlIG1tYyBkYXRhIHBhcnQsIEkgc3VnZ2VzdCB0byBkcm9wIHRoZQ0KPiA+ID4+PiAt
+PnNldF90YXBfZGVsYXkoKSBjYWxsYmFjaywgYnV0IHJhdGhlciB1c2UgYSBib29sZWFuIGZsYWcg
+dG8gaW5kaWNhdGUNCj4gPiA+Pj4gd2hldGhlciBjbG9jayBwaGFzZXMgbmVlZHMgdG8gYmUgY2hh
+bmdlZCBmb3IgdGhlIHZhcmlhbnQuIFBvdGVudGlhbGx5DQo+ID4gPj4+IHRoYXQgY291bGQgZXZl
+biBiZSBza2lwcGVkIGFuZCBpbnN0ZWFkIGNhbGwgY2xrX3NldF9waGFzZSgpDQo+ID4gPj4+IHVu
+Y29uZGl0aW9uYWxseSwgYXMgdGhlIGNsb2NrIGNvcmUgZGVhbHMgZmluZSB3aXRoIGNsb2NrIHBy
+b3ZpZGVycw0KPiA+ID4+PiB0aGF0IGRvZXNuJ3Qgc3VwcG9ydCB0aGUgLT5zZXRfcGhhc2UoKSBj
+YWxsYmFjay4NCg0KSW4gdGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24sIEkgYW0gdGFraW5nIGNh
+cmUgb2YgYm90aCB0aGUgaW5wdXQgYW5kDQpvdXRwdXQgY2xvY2sgZGVsYXlzIHdpdGggdGhlIHNp
+bmdsZSBjbG9jayAod2hpY2ggaXMgb3V0cHV0IGNsb2NrKSByZWdpc3RyYXRpb24NCmFuZCBkaWZm
+ZXJlbnRpYXRpbmcgdGhlc2UgdGFwIGRlbGF5cyBiYXNlZCBvbiB0aGVpciB2YWx1ZXMNCig8MjU2
+IHRoZW4gaW5wdXQgZGVsYXkgYW5kICA+PSAyNTYgdGhlbiBvdXRwdXQgZGVsYXkpLCBiZWNhdXNl
+IHRoYXQgaXMNCnp5bnFtcCBzcGVjaWZpYy4gSWYgd2Ugd2FudCB0byBtYWtlIHRoaXMgZ2VuZXJp
+Yywgd2UgbWF5IG5lZWQgdG8NCnJlZ2lzdGVyICdhbm90aGVyJyBjbG9jayB3aGljaCB3aWxsIGJl
+IHRoZXJlIGFzIGFuIGlucHV0IChzYW1wbGluZykgY2xvY2sNCmFuZCB0aGVuIHdlIGNhbiBtYWtl
+IHRoaXMgJ2Nsa19zZXRfcGhhc2UoKScgYmUgY2FsbGVkIHVuY29uZGl0aW9uYWxseQ0KZWFjaCBm
+b3IgYm90aCB0aGUgY2xvY2tzIGFuZCBsZXQgdGhlIHBsYXRmb3JtcyBoYW5kbGUgdGhlaXIgY2xv
+Y2sgcGFydC4NCldoYXQncyB5b3VyIHRha2Ugb24gdGhpcz8NCg0KVGhhbmtzLA0KTWFuaXNoDQo+
+ID4gPj4NCj4gPiA+PiBJbiBjb25uZWN0aW9uIHRvIGFub3RoZXIgdmVyc2lvbiBvZiB0aGlzIGRy
+aXZlciBmb3IgbGF0ZXN0IFhpbGlueCBjaGlwDQo+ID4gPj4gaXQgd291bGQgYmUgYmV0dGVyIHRv
+IGtlZXAgc2V0X3RhcF9kZWxheSBjYWxsYmFjayBpbiB0aGUgZHJpdmVyLiBUaGUNCj4gPiA+PiBy
+ZWFzb24gaXMgdGhhdCBuZXcgY2hpcC9pcCBpcyBjYXBhYmxlIHRvIHNldHVwIHRhcCBkZWxheXMg
+ZGlyZWN0bHkNCj4gPiA+PiB3aXRob3V0IGFza2luZyBmaXJtd2FyZSB0byBkbyBpdC4gVGhhdCdz
+IHdoeSBmb3IgdmVyc2FsIElQIHRoZXJlIGlzIGENCj4gPiA+PiBuZWVkIHRvIGNhbGwgZGlmZmVy
+ZW50IHNldHVwX3RhcF9kZWxheSBmdW5jdGlvbi4NCj4gPiA+DQo+ID4gPiBUaGUgLT5zZXRfdGFw
+X2RlbGF5KCkgY2FsbGJhY2sgaXMgZm9yIFp5bmNNcCBwb2ludGluZyB0bw0KPiA+ID4gc2RoY2lf
+YXJhc2FuX3p5bnFtcF9zZXRfdGFwX2RlbGF5KCkuIFRoaXMgZnVuY3Rpb24gY2FsbHMgdGhlDQo+
+ID4gPiBjbGtfc2V0X3BoYXNlKCkgQVBJLg0KPiA+ID4NCj4gPiA+IFdoYXQgZG9lcyAtPnNldF90
+YXBfZGVsYXkoKSBkbyBmb3IgdGhlIGxhdGVzdCB2ZXJzaW9uPw0KPiA+DQo+ID4gVGhlcmUgaXMg
+ZGlmZmVyZW50IHNldCBvZiBkZWZhdWx0IHRhcCBkZWxheXMgd2hpY2ggc2hvdWxkIGJlIHByb2dy
+YW1tZWQNCj4gPiBhbmQgaXQgaXMgZG9uZSBqdXN0IHZpYSB3cml0aW5nIHRvIHJlZ2lzdGVycyB3
+aGljaCBhcmUgdGhlIHBhcnQgb2YNCj4gPiBjb250cm9sbGVyIGFkZHJlc3Mgc3BhY2UuDQo+IA0K
+PiBPa2F5LCBJIHNlZS4NCj4gDQo+IE5vdCBzdXJlIHdoYXQgbWFrZXMgbW9zdCBzZW5zZSB0byBk
+byBoZXJlLCBidXQgaXQgc291bmRzIHRvIG1lIGxpa2UNCj4gYW5vdGhlciAtPnNldF9waGFzZSgp
+IGNhbGxiYWNrIHNob3VsZCBiZSBpbXBsZW1lbnRlZCBmb3IgdGhlIGNsb2NrDQo+IHByb3ZpZGVy
+LiBJbiBvdGhlciB3b3JkcywgY2FsbGluZyBjbGtfc2V0X3BoYXNlKCkgc2hvdWxkIGNvbnRpbnVl
+IHRvDQo+IHdvcmtzIGp1c3QgZmluZSBmb3IgdGhpcyBjYXNlIGFzIHdlbGwuIElmIGl0IHR1cm5z
+IG91dCB0byBiZQ0KPiBpbmNvbnZlbmllbnQsIHdlIGNhbiBhbHdheXMgYWRkIHRoZSAtPnNldF90
+YXBfZGVsYXkoKSBhdCBhIGxhdGVyIHBvaW50DQo+IHdoZW4gaXQgbWFrZXMgbW9yZSBzZW5zZS4N
+Cg0KDQo+IA0KPiBbLi4uXQ0KPiANCj4gS2luZCByZWdhcmRzDQo+IFVmZmUNCg==
