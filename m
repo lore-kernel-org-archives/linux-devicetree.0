@@ -1,67 +1,60 @@
-Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 16/27] PCI: tegra: Set target speed as Gen1 before starting LTSSM
-Date: Tue, 18 Jun 2019 23:31:55 +0530
-Message-ID: <20190618180206.4908-17-mmaddireddy@nvidia.com>
-In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
-References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=LXPj=UR=verge.net.au=horms@kernel.org>
+Date: Tue, 18 Jun 2019 12:42:51 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/4] Enhance Thermal support
+Message-ID: <20190618104251.qidstmiwlvodh52j@verge.net.au>
+References: <1560349255-26336-1-git-send-email-biju.das@bp.renesas.com>
+ <20190617082703.kf3pw5u7ndnrixut@verge.net.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617082703.kf3pw5u7ndnrixut@verge.net.au>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
 List-ID: <devicetree@vger.kernel.org>
 
-PCIe link up fails with few legacy endpoints if root port advertises both
-Gen-1 and Gen-2 speeds in Tegra. This is because link number negotiation
-fails if both Gen1 & Gen2 are advertised. Tegra doesn't retry link up by
-advertising only Gen1. Hence, the strategy followed here is to initially
-advertise only Gen-1 and after link is up, retrain link to Gen-2 speed.
+On Mon, Jun 17, 2019 at 10:27:03AM +0200, Simon Horman wrote:
+> + Niklas
+> 
+> On Wed, Jun 12, 2019 at 03:20:51PM +0100, Biju Das wrote:
+> > This series aims to enhance thermal support by adding cpu-map,
+> > capacity-dmips-mhz,thermal zone to support IPA and also adding 
+> > dynamic power coefficients.
+> > 
+> > For CPU capacity-dmips-mhz calculation
+> > -------------------------------------
+> > dhrystone cross complied using the command [1].
+> > [1] $CC -O3 -DTIME -fno-inline -fno-builtin-printf -Wno-implicit -march=armv8-a dhry_1.c dhry_2.c -o exe-dry
+> > 
+> > dhrystone is executed(with a loop value of 80000000) and took the average value for 5 iterations
+> > of CA57 and CA53.
+> > 
+> > IPA testing
+> > ----------
+> > 
+> > 1)Enable THERMAL_WRITABLE_TRIPS and THERMAL_STATISTICS in kernel
+> > 
+> > 2) Check the current  temperature(36.5 C) and check the cooling stats on device0 and device 1
+> > 
+> > Execute the below applications on an ssh session
+> > 
+> > 3) while true; do touch pic-`date +%s`.jpg;done &  will give almost 0.5 C jump on each instance
+> > 
+> > 4) Executing dhrystone will give 3-4 C jump(runs through the benchmark: 800000000)
+> > 
+> > 5) Now the current temperature is around 46.0 C and there is no change in cooling stats on device0 and device 1
+> > 
+> > 6) Now change the passive trip temperature to 42 C, At this time CPUFreq started kicking in trying to limit the temperature, which you can see through the cooling stats on device0 and device1. You can see the system trying to maintain the temperature around 42 C.
+> > 
+> > 7)  Without changing the load, Now change  the passive trip temperature to 100 C, the temperature rises back to 46 C again.
+> 
+> ...
+> 
+> Thanks,
+> 
+> This looks fine to me but I will wait to see if there are other reviews
+> before applying.
 
-Tegra doesn't support HW autonomous speed change. Link comes up in Gen1
-even if Gen2 is advertised, so there is no downside of this change.
+Thanks again,
 
-This behavior is observed with following two PCIe devices on Tegra,
- - Fusion HDTV 5 Express card
- - IOGear SIL - PCIE - SATA card
-
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V6: No change
-
-V5: No change
-
-V4: No change
-
-V3: No change
-
-V2: Updated commit log to reflect why this issue is observed on Tegra with
-these particular cards
-
- drivers/pci/controller/pci-tegra.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 6ed406c46409..abb94595c76b 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -676,6 +676,17 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
- 		value |= soc->update_fc_threshold;
- 		writel(value, port->base + RP_VEND_XP);
- 	}
-+
-+	/*
-+	 * PCIe link doesn't come up with few legacy PCIe endpoints if
-+	 * root port advertises both Gen-1 and Gen-2 speeds in Tegra.
-+	 * Hence, the strategy followed here is to initially advertise
-+	 * only Gen-1 and after link is up, retrain link to Gen-2 speed
-+	 */
-+	value = readl(port->base + RP_LINK_CONTROL_STATUS_2);
-+	value &= ~PCI_EXP_LNKSTA_CLS;
-+	value |= PCI_EXP_LNKSTA_CLS_2_5GB;
-+	writel(value, port->base + RP_LINK_CONTROL_STATUS_2);
- }
- 
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
--- 
-2.17.1
+I have applied this series for inclusion in v5.3.
