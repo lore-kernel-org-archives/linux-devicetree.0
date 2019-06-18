@@ -1,91 +1,34 @@
-Return-Path: <SRS0=ypAS=UL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52785 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437597AbfFLJj1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Jun 2019 05:39:27 -0400
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v5 08/10] media: dt-bindings: Document i.MX8MQ and i.MX8MM VPU bindings
-Date: Wed, 12 Jun 2019 11:39:13 +0200
-Message-Id: <20190612093915.18973-9-p.zabel@pengutronix.de>
-In-Reply-To: <20190612093915.18973-1-p.zabel@pengutronix.de>
-References: <20190612093915.18973-1-p.zabel@pengutronix.de>
+Return-Path: <SRS0=RbSA=UR=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
+References: <156076216767.4736.16337667537984218274.sendpatchset@octo> <156076220389.4736.5742093495634461883.sendpatchset@octo>
+In-Reply-To: <156076220389.4736.5742093495634461883.sendpatchset@octo>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 18 Jun 2019 15:00:44 +0200
+Message-ID: <CAMuHMdXkG8HSuzrSKe8k_dTFMBiGth-CsqyLxFiafq9zEA4ccQ@mail.gmail.com>
+Subject: Re: [PATCH 4/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1
+ to r8a7795
+Content-Type: text/plain; charset="UTF-8"
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add devicetree binding documentation for the Hantro G1/G2 VPU on i.MX8MQ
-and for the Hantro G1/G2/H1 VPU on i.MX8MM.
+On Mon, Jun 17, 2019 at 11:02 AM Magnus Damm <magnus.damm@gmail.com> wrote:
+> From: Magnus Damm <damm+renesas@opensource.se>
+>
+> This patch adds DT binding documentation for the CMT devices on
+> the R-Car Gen3 H3 (r8a7795) SoC.
+>
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- .../devicetree/bindings/media/imx8m-vpu.txt   | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/imx8m-vpu.txt
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/media/imx8m-vpu.txt b/Documentation/devicetree/bindings/media/imx8m-vpu.txt
-new file mode 100644
-index 000000000000..659bd28dd002
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/imx8m-vpu.txt
-@@ -0,0 +1,56 @@
-+device-tree bindings for Hantro G1/G2/H1 VPU codecs implemented on i.MX8M SoCs
-+
-+Required properties:
-+- compatible: value should be one of the following
-+		"nxp,imx8mq-vpu",
-+		"nxp,imx8mm-vpu";
-+- regs: VPU core and control block register ranges
-+- reg-names: should be
-+		"g1", "g2", "ctrl" on i.MX8MQ,
-+		"g1", "g2", "h1", "ctrl" on i.MX8MM.
-+- interrupts: encoding and decoding interrupt specifiers
-+- interrupt-names: should be
-+		"g1", "g2" on i.MX8MQ,
-+		"g1", "g2", "h1" on i.MX8MM.
-+- clocks: phandle to VPU core clocks and bus clock
-+- clock-names: should be
-+		"g1", "g2", "bus" on i.MX8MQ,
-+		"g1", "g2", "h1", "bus" on i.MX8MM.
-+- power-domains: phandle to power domain node
-+
-+Examples:
-+
-+	vpu: vpu@38300000 {
-+		compatible = "nxp,imx8mq-vpu";
-+		reg = <0x38300000 0x10000>,
-+		      <0x38310000 0x10000>,
-+		      <0x38320000 0x10000>;
-+		reg-names = "g1", "g2", "ctrl";
-+		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "g1", "g2";
-+		clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
-+			 <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
-+			 <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
-+		clock-names = "g1", "g2", "bus";
-+		power-domains = <&pgc_vpu>;
-+	};
-+
-+	vpu: vpu@38300000 {
-+		compatible = "nxp,imx8mm-vpu";
-+		reg = <0x38300000 0x10000>,
-+		      <0x38310000 0x10000>,
-+		      <0x38320000 0x10000>;
-+		      <0x38330000 0x10000>;
-+		reg-names = "g1", "g2", "h1", "ctrl";
-+		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "g1", "g2", "h1";
-+		clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
-+			 <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
-+			 <&clk IMX8MQ_CLK_VPU_H1_ROOT>,
-+			 <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
-+		clock-names = "g1", "g2", "h1", "bus";
-+		power-domains = <&pgc_vpu>;
-+	};
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
