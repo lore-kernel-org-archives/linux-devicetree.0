@@ -1,94 +1,62 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 2/9] dt: bindings: Add multicolor class dt bindings
- documention
-Date: Tue, 18 Jun 2019 20:19:57 +0200
-Message-ID: <afc7f11f-7f8d-7680-aef3-58c26e8b34fa@gmail.com>
-References: <20190523190820.29375-1-dmurphy@ti.com>
- <20190523190820.29375-3-dmurphy@ti.com> <20190614170011.GA3277@bogus>
- <c234361e-f5f7-f8d7-18c6-9cc8ef74ac99@ti.com>
- <CAL_JsqK7u1xXNmwtHjUd7Z5ewHd9_d51quH4zMXxEd63egd28w@mail.gmail.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 1/4] staging: media: tegra-vde: Remove BIT() macro
+ from UAPI header
+Date: Tue, 18 Jun 2019 11:23:13 -0700
+Message-ID: <26cd63896d6930385b4f770e305f0782a455a688.camel@perches.com>
+References: <20190618161458.20499-1-digetx@gmail.com>
+         <20190618161458.20499-5-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK7u1xXNmwtHjUd7Z5ewHd9_d51quH4zMXxEd63egd28w@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190618161458.20499-5-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Dan Murphy <dmurphy@ti.com>
-Cc: Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Johannes Berg <johannes@sipsolutions.net>, Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <jakub.kicinski@netronome.com>, Jesper Dangaard Brouer <hawk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6/18/19 5:36 PM, Rob Herring wrote:
-> On Fri, Jun 14, 2019 at 11:18 AM Dan Murphy <dmurphy@ti.com> wrote:
->>
->> Rob
->>
->> Thanks for the review
->>
->> On 6/14/19 12:00 PM, Rob Herring wrote:
->>> On Thu, May 23, 2019 at 02:08:13PM -0500, Dan Murphy wrote:
->>>> Add DT bindings for the LEDs multicolor class framework.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>>>    .../bindings/leds/leds-class-multicolor.txt   | 97 +++++++++++++++++++
->>>>    1 file changed, 97 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>>> new file mode 100644
->>>> index 000000000000..e2a2ce3279cb
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>>> @@ -0,0 +1,97 @@
->>>> +* Multicolor LED properties
->>>> +
->>>> +Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
->>>> +can be grouped together and also provide a modeling mechanism so that the
->>>> +cluster LEDs can vary in hue and intensity to produce a wide range of colors.
->>>> +
->>>> +The nodes and properties defined in this document are unique to the multicolor
->>>> +LED class.  Common LED nodes and properties are inherited from the common.txt
->>>> +within this documentation directory.
->>>> +
->>>> +Required LED Child properties:
->>>> +    - color : For multicolor LED support this property should be defined as
->>>> +              LED_COLOR_ID_MULTI and further definition can be found in
->>>> +              include/linux/leds/common.h.
->>>> +
->>>> +led-controller@30 {
->>>> +    #address-cells = <1>;
->>>> +    #size-cells = <0>;
->>>> +    compatible = "ti,lp5024";
->>>> +    reg = <0x29>;
->>>> +
->>>> +    multi-led@4 {
->>> Typically we sort by address order.
->>
->> These are not addresses these end up being the "module" number that the
->> LEDs below are associated to.
+On Tue, 2019-06-18 at 19:14 +0300, Dmitry Osipenko wrote:
+> The BIT macro isn't available in userspace. Checkpatch complains about
+> shifts being used instead of the macro and people are starting to send
+> patches without realizing that it's a UAPI header file. Hence let's
+> replace the BIT macro with a hex values to make everyone happy.
 > 
-> 'reg' (and the unit-address) is an address in the sense that is how
-> you identify a device or sub-device. It doesn't matter what type of
-> 'address' it is, DT practice is to sort node in unit-address numerical
-> order.
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/staging/media/tegra-vde/uapi.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> 'module' is a h/w thing, right? A bank or instance within the device?
-> If not, using 'reg' here is not appropriate.
+> diff --git a/drivers/staging/media/tegra-vde/uapi.h b/drivers/staging/media/tegra-vde/uapi.h
+> index a0dad1ed94ef..dd3e4a8c9f7e 100644
+> --- a/drivers/staging/media/tegra-vde/uapi.h
+> +++ b/drivers/staging/media/tegra-vde/uapi.h
+> @@ -6,8 +6,8 @@
+>  #include <linux/types.h>
+>  #include <asm/ioctl.h>
+>  
+> -#define FLAG_B_FRAME		BIT(0)
+> -#define FLAG_REFERENCE		BIT(1)
+> +#define FLAG_B_FRAME		0x1
+> +#define FLAG_REFERENCE		0x2
+>  
+>  struct tegra_vde_h264_frame {
+>  	__s32 y_fd;
 
-In this case reg represents LEDn_BRIGHTNESS register which controls
-a group of three LEDs. The thing is that those registers' addresses
-start from 0x07, i.e. the formula for calculating the RGB LED module
-address is: LEDn_BRIGHTNESS = 0x07 + n.
+The BIT macro is already used quite a bit in uapi headers.
+I imagine all those need fixup...
 
- From the above it seems that we should have multi-led@7 and reg = 0x07
-for LED0_BRIGHTNESS register governing the brightness of RGB LED
-module 0, right?
-
-And regarding sorting by address order I think that Rob was asking for
-placing whole multi-led@4 sub-node after multi-led@2 (here sticking to
-the numeration from the patch).
-
--- 
-Best regards,
-Jacek Anaszewski
+$ git grep -P '\bBIT\s*\(' include/uapi
+include/uapi/linux/bpf.h:#define BPF_FIB_LOOKUP_DIRECT  BIT(0)
+include/uapi/linux/bpf.h:#define BPF_FIB_LOOKUP_OUTPUT  BIT(1)
+include/uapi/linux/coresight-stm.h:#define STM_FLAG_TIMESTAMPED   BIT(3)
+include/uapi/linux/coresight-stm.h:#define STM_FLAG_GUARANTEED    BIT(7)
+include/uapi/linux/nl80211.h: * bitmask of BIT(NL80211_BAND_*) as described in %enum
+include/uapi/linux/pkt_sched.h:#define TC_ETF_DEADLINE_MODE_ON  BIT(0)
+include/uapi/linux/pkt_sched.h:#define TC_ETF_OFFLOAD_ON        BIT(1)
+include/uapi/linux/psci.h:#define PSCI_1_0_OS_INITIATED                 BIT(0)
+include/uapi/linux/serio.h:#define SERIO_TIMEOUT        BIT(0)
+include/uapi/linux/serio.h:#define SERIO_PARITY BIT(1)
+include/uapi/linux/serio.h:#define SERIO_FRAME  BIT(2)
+include/uapi/linux/serio.h:#define SERIO_OOB_DATA       BIT(3)
+include/uapi/linux/tc_act/tc_ctinfo.h:  CTINFO_MODE_DSCP        = BIT(0),
+include/uapi/linux/tc_act/tc_ctinfo.h:  CTINFO_MODE_CPMARK      = BIT(1)
