@@ -1,72 +1,77 @@
-From: Johannes Berg <johannes@sipsolutions.net>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Tue, 18 Jun 2019 21:22:14 +0200
-Message-ID: <b90977f94df020986c6bb490e7fd0262603726b0.camel@sipsolutions.net>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <583907409fad854bd3c18be688ec2724ad7a60e9.camel@sipsolutions.net>
- <31c2c94c-c6d3-595b-c138-faa54d0bfc00@linaro.org>
- (sfid-20190618_160100_881541_6AD64A3C)
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 7/8] net: ethernet: ixp4xx: Add DT bindings
+Date: Tue, 18 Jun 2019 21:44:21 +0200
+Message-ID: <CACRpkdbkwTtS2ofpxkZLERW-b+4=d7m9qiPXGT+iMemn9zZE1A@mail.gmail.com>
+References: <20190524162229.9185-1-linus.walleij@linaro.org> <CAL_Jsq+bZsJ+SBiJa2hzXU9RkTNBhDk_Uv_Fk6V6DqRGh-xPRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <31c2c94c-c6d3-595b-c138-faa54d0bfc00@linaro.org>
- (sfid-20190618_160100_881541_6AD64A3C)
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: DTML <devicetree@vger.kernel.org>, syadagir@codeaurora.org, Eric Caruso <ejcaruso@google.com>, Dan Williams <dcbw@redhat.com>, linux-arm-msm@vger.kernel.org, abhishek.esse@gmail.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, evgreen@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Networking <netdev@vger.kernel.org>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, linux-soc@vger.kernel.org, David Miller <davem@davemloft.net>, cpratapa@codeaurora.org, Ben Chan <benchan@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+bZsJ+SBiJa2hzXU9RkTNBhDk_Uv_Fk6V6DqRGh-xPRg@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: netdev <netdev@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>, Krzysztof Halasa <khalasa@piap.pl>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-06-18 at 09:00 -0500, Alex Elder wrote:
+On Fri, May 24, 2019 at 9:41 PM Rob Herring <robh@kernel.org> wrote:
 
-> Deaggregation is a connection property, not a channel property.
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: Ethernet MMIO address range
+> > +
+> > +  queue-rx:
+> > +    $ref: '/schemas/types.yaml#/definitions/phandle-array'
+> > +    maxItems: 1
+>
+> This doesn't actually do what you think it is doing. A $ref plus
+> additional constraints need to be under an 'allOf' list.
+>
+> > +    description: phandle to the RX queue on the NPE
+>
+> But this is a phandle plus 1 cell, right?
+>
+> - allOf:
+>     - $ref: '/schemas/types.yaml#/definitions/phandle-array'
+>     - items:
+>         - items:
+>             - description: phandle to the RX queue on the NPE
+>             - description: whatever the cell contains
+>               enum: [ 1, 2, 3, 4 ] # any constraints you can put on the cell
+>
+> This implicitly says you have 1 of a phandle + 1 cell.
+>
+> I need to add this to example-schema.yaml...
 
-That'd make sense, yes.
+I just can't get this right :(
 
-> And it looks like that's exactly how it's used in the rmnet
-> driver.  
+I have this:
 
-Yeah, I think you're right. I got confused by the whole use of "port"
-there, but it seems like "port" actually refers to the underlying
-netdev.
+  queue-rx:
+    - allOf:
+      - $ref: '/schemas/types.yaml#/definitions/phandle-array'
+      - items:
+        - items:
+          - description: phandle to the RX queue on the NPE
+          - description: index of the NPE engine RX queue to use
+            enum: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
 
-Which is really strange too, btw, because you configure the "port" to
-agg/non-agg when you add a new channel to it ... So it seems like it's
-part of the channel configuration, when it's not!
+I get this from dt_binding_check:
 
-Anyway, I think for now we could probably live with not having this
-configurable for the IPA driver, and if it *does* need to be
-configurable, it seems like it should be a driver configuration, not a
-channel configuration - so something like a debugfs hook if you really
-just need to play with it for performance testing, or a module
-parameter, or something else?
+  CHKDT   Documentation/devicetree/bindings/net/intel,ixp4xx-ethernet.yaml
+Documentation/devicetree/bindings/net/intel,ixp4xx-ethernet.yaml:
+properties:queue-rx: [{'allOf': [{'$ref':
+'/schemas/types.yaml#/definitions/phandle-array'}, {'items':
+[{'items': [{'description': 'phandle to the RX queue on the NPE'},
+{'description': 'index of the NPE engine RX queue to use', 'enum': [0,
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}]}]}]}] is not of type 'object',
+'boolean'
+make[3]: *** [../Documentation/devicetree/bindings/Makefile:12:
+Documentation/devicetree/bindings/net/intel,ixp4xx-ethernet.example.dts]
+Error 1
 
-Or even, in the WWAN framework, a knob that we provide there for the
-WWAN device, rather than for the (newly created) channel.
+Hm .... I just can't figure out what this recursive parsing thingie means...
+I tried to update the pip3 repo but no cigar.
 
-> The hardware is capable of aggregating QMAP packets
-> arriving on a connection into a single buffer, so this provides
-> a way of requesting it do that.
-> 
-> > > #define RMNET_FLAGS_INGRESS_MAP_COMMANDS          (1U << 1)
-> > 
-> > Similar here? If you have flow control you probably want to use it?
-> 
-> I agree with that, though perhaps there are cases where it
-> is pointless, or can't be supported, so one might want to
-> simply *not* implement/advertise the feature.  I don't know.
+Any hints?
 
-Sure, but then that's likely something the driver would need to know,
-not necessarily userspace?
-
-johannes
+Yours,
+Linus Walleij
