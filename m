@@ -1,145 +1,135 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
-Date: Tue, 18 Jun 2019 10:34:59 -0700
-Message-ID: <cff9b6a2-dc33-d03b-9945-799b158deb07@nvidia.com>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
- <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
- <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
- <fd415362-7479-6f98-c8db-1b7758fd3f1d@wwwdotorg.org>
- <e53bf16a-681e-da31-1e9c-4ed2a24ed3a6@nvidia.com>
+From: Joseph Kogut <joseph.kogut@gmail.com>
+Subject: Re: [PATCH v2 2/2] arm: dts: add ARM Mali GPU node for Odroid XU3
+Date: Tue, 18 Jun 2019 10:41:44 -0700
+Message-ID: <CAMWSM7ibdtSGJfNwsYXGXMEkWJTG9Gd-PCd6nPS0bLPd5v+4rA@mail.gmail.com>
+References: <20190614203144.3850-2-joseph.kogut@gmail.com>
+ <20190614235719.8134-1-joseph.kogut@gmail.com>
+ <20190616085928.GB3826@kozik-lap>
+ <CAMWSM7j8dtsS4d-hOc3Sk6OJHs+SiGC9tEaZBEmO0VKmtJguKw@mail.gmail.com>
+ <20190617163634.GA16941@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e53bf16a-681e-da31-1e9c-4ed2a24ed3a6@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Dmitry Osipenko <digetx@gmail.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190617163634.GA16941@kozik-lap>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, kgene@kernel.org, Daniel Vetter <daniel@ffwll.ch>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 9:36 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Mon, Jun 17, 2019 at 09:15:23AM -0700, Joseph Kogut wrote:
+> > Hi Krzysztof,
+> >
+> > Thanks for the review.
+> >
+> > On Sun, Jun 16, 2019 at 1:59 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > >
+> > > On Fri, Jun 14, 2019 at 04:57:19PM -0700, Joseph Kogut wrote:
+> > > > Add device tree node for mali gpu on Odroid XU3 SoCs.
+> > > >
+> > > > Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+> > > > ---
+> > > >
+> > > > Changes v1 -> v2:
+> > > > - Use interrupt name ordering from binding doc
+> > > > - Specify a single clock for GPU node
+> > > > - Add gpu opp table
+> > > > - Fix warnings from IRQ_TYPE_NONE
+> > > >
+> > > >  .../boot/dts/exynos5422-odroidxu3-common.dtsi | 26 +++++++++++++++++++
+> > >
+> > > This should go to exynos5422-odroid-core.dtsi instead, because it is
+> > > common to entire Odroid Exynos5422 family (not only XU3 family).
+> > >
+> > > >  1 file changed, 26 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> > > > index 93a48f2dda49..b8a4246e3b37 100644
+> > > > --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> > > > +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> > > > @@ -48,6 +48,32 @@
+> > > >               cooling-levels = <0 130 170 230>;
+> > > >       };
+> > > >
+> > > > +     gpu: gpu@11800000 {
+> > > > +             compatible = "samsung,exynos-mali", "arm,mali-t628";
+> > >
+> > > This is common to all Exynos542x chips so it should go to
+> > > exynos5420.dtsi. Here you would need to only enable it and provide
+> > > regulator.
+> > >
+> >
+> > To clarify, which pieces are specific to the Odroid Exynos 5422
+> > family, and which are common to the entire Exynos 542x family? I'm
+> > thinking the gpu node is common to the 542x family, including the
+> > interrupts and clock, and the regulator and opp table are specific to
+> > the Odroid 5422?
+>
+> Opp table depends - it might common to Exynos542x (as all use the same
+> Mali) or specific to boards (because there is Odroid XU3 Lite with
+> Exynos5422 working on lower frequencies).
+>
+> So far the CPU and all bus OPP tables were put in exynos5420.dtsi so I
+> guess this can go there as well.
+>
+> For the rest of properties you were correct.
+>
+> >
+> > > Probably this should be also associated with tmu_gpu as a cooling device
+> > > (if Mali registers a cooling device...). Otherwise the tmu_gpu is not
+> > > really used for it.
+> > >
+> >
+> > We have two operating performance points for the GPU, but I'm not sure
+> > at what temperature we should trip the lower opp. Looking at the trip
+> > temperatures for the CPU, we have four alerts, and one critical trip.
+> > The highest alert is 85 C, would it be reasonable to trigger the lower
+> > GPU opp at this temperature? Should it trigger sooner?
+>
+> The highest trip point is 120 C and it is critical. In general I would
+> follow the CPU trip points (so fan should start working at 50 degrees).
+> Unless you have some other data about recommended trip points. Useful is
+> vendor kernel (from Samsung, from Hard Kernel).
+>
+> >
+> > > > +             reg = <0x11800000 0x5000>;
+> > > > +             interrupts = <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>,
+> > > > +                          <GIC_SPI 74  IRQ_TYPE_LEVEL_HIGH>,
+> > > > +                          <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+> > > > +             interrupt-names = "job", "mmu", "gpu";
+> > > > +             clocks = <&clock CLK_G3D>;
+> > > > +             mali-supply = <&buck4_reg>;
+> > >
+> > > Please check if always-on property could be removed from buck4.
+> >
+> > I've checked, and this property can be removed safely.
+> >
+> > > Also, what about LDO27? It should be used as well (maybe through
+> > > vendor-specific properties which would justify the need of new vendor
+> > > compatible).
+> > >
+> >
+> > I'm unsure how LDO27 is used, can you elaborate?
+>
+> It is supplying the VDD_G3DS (with a note "SRAM power"). I do not have
+> any more data on it. However I did not check in vendor kernel for it.
+>
 
-On 6/18/19 9:50 AM, Sowjanya Komatineni wrote:
->
-> On 6/18/19 8:41 AM, Stephen Warren wrote:
->> On 6/18/19 3:30 AM, Dmitry Osipenko wrote:
->>> 18.06.2019 12:22, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> 18.06.2019 10:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> This patch adds suspend and resume support for Tegra pinctrl driver
->>>>> and registers them to syscore so the pinmux settings are restored
->>>>> before the devices resume.
->>>>>
->>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>> ---
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.c=C2=A0=C2=A0=C2=A0 | 62=20
->>>>> ++++++++++++++++++++++++++++++++
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.h=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 5 +++
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra114.c |=C2=A0 1 +
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra124.c |=C2=A0 1 +
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra20.c=C2=A0 |=C2=A0 1 +
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra30.c=C2=A0 |=C2=A0 1 +
->>>>> =C2=A0 7 files changed, 84 insertions(+)
->>>>>
->>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c=20
->>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>> index 34596b246578..ceced30d8bd1 100644
->>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>> @@ -20,11 +20,16 @@
->>>>> =C2=A0 #include <linux/pinctrl/pinmux.h>
->>>>> =C2=A0 #include <linux/pinctrl/pinconf.h>
->>>>> =C2=A0 #include <linux/slab.h>
->>>>> +#include <linux/syscore_ops.h>
->>>>> =C2=A0 =C2=A0 #include "../core.h"
->>>>> =C2=A0 #include "../pinctrl-utils.h"
->>>>> =C2=A0 #include "pinctrl-tegra.h"
->>>>> =C2=A0 +#define EMMC2_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1c8
->>>>> +#define EMMC4_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1e0
->>>>> +#define EMMC_DPD_PARKING=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 (0x1fff << 14)
->>>>> +
->>>>> =C2=A0 static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u=
-32=20
->>>>> reg)
->>>>> =C2=A0 {
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return readl(pmx->regs[bank] + reg);
->>>>> @@ -619,6 +624,48 @@ static void=20
->>>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 if (pmx->soc->has_park_padcfg) {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0,=
- EMMC2_PAD_CFGPADCTRL_0);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKIN=
-G;
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, E=
-MMC2_PAD_CFGPADCTRL_0);
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0,=
- EMMC4_PAD_CFGPADCTRL_0);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKIN=
-G;
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, E=
-MMC4_PAD_CFGPADCTRL_0);
->>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>> +}
->>>>
->>>> Is there any reason why parked_bit can't be changed to=20
->>>> parked_bitmask like I was
->>>> asking in a comment to v2?
->>>>
->>>> I suppose that it's more preferable to keep pinctrl-tegra.c=20
->>>> platform-agnostic for
->>>> consistency when possible, hence adding platform specifics here=20
->>>> should be discouraged.
->>>> And then the parked_bitmask will also result in a proper hardware=20
->>>> description in the code.
->>>>
->>>
->>> I'm now also vaguely recalling that Stephen Warren had some kind of=20
->>> a "code generator"
->>> for the pinctrl drivers. So I guess all those tables were=20
->>> auto-generated initially.
->>>
->>> Stephen, maybe you could adjust the generator to take into account=20
->>> the bitmask (of
->>> course if that's a part of the generated code) and then re-gen it=20
->>> all for Sowjanya?
->>
->> https://github.com/NVIDIA/tegra-pinmux-scripts holds the scripts that=20
->> generate tegra-pinctrlNNN.c. See soc-to-kernel-pinctrl-driver.py.=20
->> IIRC, tegra-pinctrl.c (the core file) isn't auto-generated. Sowjanya=20
->> is welcome to send a patch to that repo if the code needs to be updated.
->
->
-> Hi Dmitry,
->
-> Just want to be clear on my understanding of your request.
->
-> "change parked_bit to parked_bitmask" are you requested to change=20
-> parked_bit of PINGROUP and DRV_PINGROUP to use bitmask value rather=20
-> than bit position inorder to have parked bit configuration for EMMC=20
-> PADs as well to happen by masking rather than checking for existence=20
-> of parked_bit?
->
-> Trying to understand the reason/benefit for changing parked_bit to=20
-> parked_bitmask.
-Also, Park bits in CFGPAD registers are not common for all CFGPAD=20
-registers. Park bits are available only for EMMC and also those bits are=20
-used for something else on other CFGPAD registers so bitmask can't be=20
-common and this also need an update to DRV_PINGROUP macro args just only=20
-to handle EMMC parked_bitmask. So not sure of the benefit in using=20
-bitmask rather than parked_bit
->
-> thanks
->
-> Sowjanya
->
+After checking (a fork of) the vendor sources [1], it seems to me that
+this regulator is used for memory voltage related to Samsung's
+Adaptive Supply Voltage, for which there is a pending patchset [2].
+
+This seems to me to be out of the scope of this patchset, could you confirm?
+
+[1] https://github.com/kumajaya/android_kernel_samsung_universal5422/blob/ad41104d43e6470f8d4880d65b259dc7b903cc0d/arch/arm/mach-exynos/asv-exynos5422.c#L1052
+[2] https://lwn.net/Articles/784958/
