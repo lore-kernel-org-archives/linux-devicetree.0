@@ -1,92 +1,58 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
-Date: Tue, 18 Jun 2019 09:41:03 -0600
-Message-ID: <fd415362-7479-6f98-c8db-1b7758fd3f1d@wwwdotorg.org>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
- <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
- <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
+From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: [PATCH 1/1] ARM: dts: imx6ul: fix PWM[1-4] interrupts
+Date: Tue, 18 Jun 2019 17:58:34 +0200
+Message-ID: <20190618155834.15545-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 6/18/19 3:30 AM, Dmitry Osipenko wrote:
-> 18.06.2019 12:22, Dmitry Osipenko пишет:
->> 18.06.2019 10:46, Sowjanya Komatineni пишет:
->>> This patch adds suspend and resume support for Tegra pinctrl driver
->>> and registers them to syscore so the pinmux settings are restored
->>> before the devices resume.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/pinctrl/tegra/pinctrl-tegra.c    | 62 ++++++++++++++++++++++++++++++++
->>>   drivers/pinctrl/tegra/pinctrl-tegra.h    |  5 +++
->>>   drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
->>>   drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
->>>   drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
->>>   drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
->>>   drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
->>>   7 files changed, 84 insertions(+)
->>>
->>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> index 34596b246578..ceced30d8bd1 100644
->>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> @@ -20,11 +20,16 @@
->>>   #include <linux/pinctrl/pinmux.h>
->>>   #include <linux/pinctrl/pinconf.h>
->>>   #include <linux/slab.h>
->>> +#include <linux/syscore_ops.h>
->>>   
->>>   #include "../core.h"
->>>   #include "../pinctrl-utils.h"
->>>   #include "pinctrl-tegra.h"
->>>   
->>> +#define EMMC2_PAD_CFGPADCTRL_0			0x1c8
->>> +#define EMMC4_PAD_CFGPADCTRL_0			0x1e0
->>> +#define EMMC_DPD_PARKING			(0x1fff << 14)
->>> +
->>>   static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
->>>   {
->>>   	return readl(pmx->regs[bank] + reg);
->>> @@ -619,6 +624,48 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>>   			pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
->>>   		}
->>>   	}
->>> +
->>> +	if (pmx->soc->has_park_padcfg) {
->>> +		val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
->>> +		val &= ~EMMC_DPD_PARKING;
->>> +		pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
->>> +
->>> +		val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
->>> +		val &= ~EMMC_DPD_PARKING;
->>> +		pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
->>> +	}
->>> +}
->>
->> Is there any reason why parked_bit can't be changed to parked_bitmask like I was
->> asking in a comment to v2?
->>
->> I suppose that it's more preferable to keep pinctrl-tegra.c platform-agnostic for
->> consistency when possible, hence adding platform specifics here should be discouraged.
->> And then the parked_bitmask will also result in a proper hardware description in the code.
->>
-> 
-> I'm now also vaguely recalling that Stephen Warren had some kind of a "code generator"
-> for the pinctrl drivers. So I guess all those tables were auto-generated initially.
-> 
-> Stephen, maybe you could adjust the generator to take into account the bitmask (of
-> course if that's a part of the generated code) and then re-gen it all for Sowjanya?
-
-https://github.com/NVIDIA/tegra-pinmux-scripts holds the scripts that 
-generate tegra-pinctrlNNN.c. See  	soc-to-kernel-pinctrl-driver.py. 
-IIRC, tegra-pinctrl.c (the core file) isn't auto-generated. Sowjanya is 
-welcome to send a patch to that repo if the code needs to be updated.
+QWNjb3JkaW5nIHRvIHRoZSBpLk1YNlVML0wgUk0sIHRhYmxlIDMuMSAiQVJNIENvcnRleCBBNyBk
+b21haW4gaW50ZXJydXB0CnN1bW1hcnkiLCB0aGUgaW50ZXJydXB0cyBmb3IgdGhlIFBXTVsxLTRd
+IGdvIGZyb20gODMgdG8gODYuCgpGaXhlczogYjk5MDFmZTg0ZjAyICgiQVJNOiBkdHM6IGlteDZ1
+bDogYWRkIHB3bVsxLTRdIG5vZGVzIikKU2lnbmVkLW9mZi1ieTogU8OpYmFzdGllbiBTenltYW5z
+a2kgPHNlYmFzdGllbi5zenltYW5za2lAYXJtYWRldXMuY29tPgotLS0KIGFyY2gvYXJtL2Jvb3Qv
+ZHRzL2lteDZ1bC5kdHNpIHwgOCArKysrLS0tLQogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9u
+cygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2
+dWwuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5kdHNpCmluZGV4IGJiZjAxMGM3MzMz
+Ni4uYTdmNmQxZDU4ZTIwIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRz
+aQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQpAQCAtMzU4LDcgKzM1OCw3IEBA
+CiAJCQlwd20xOiBwd21AMjA4MDAwMCB7CiAJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnVsLXB3
+bSIsICJmc2wsaW14MjctcHdtIjsKIAkJCQlyZWcgPSA8MHgwMjA4MDAwMCAweDQwMDA+OwotCQkJ
+CWludGVycnVwdHMgPSA8R0lDX1NQSSAxMTUgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCQkJaW50
+ZXJydXB0cyA9IDxHSUNfU1BJIDgzIElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQkJCWNsb2NrcyA9
+IDwmY2xrcyBJTVg2VUxfQ0xLX1BXTTE+LAogCQkJCQkgPCZjbGtzIElNWDZVTF9DTEtfUFdNMT47
+CiAJCQkJY2xvY2stbmFtZXMgPSAiaXBnIiwgInBlciI7CkBAIC0zNjksNyArMzY5LDcgQEAKIAkJ
+CXB3bTI6IHB3bUAyMDg0MDAwIHsKIAkJCQljb21wYXRpYmxlID0gImZzbCxpbXg2dWwtcHdtIiwg
+ImZzbCxpbXgyNy1wd20iOwogCQkJCXJlZyA9IDwweDAyMDg0MDAwIDB4NDAwMD47Ci0JCQkJaW50
+ZXJydXB0cyA9IDxHSUNfU1BJIDExNiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCQlpbnRlcnJ1
+cHRzID0gPEdJQ19TUEkgODQgSVJRX1RZUEVfTEVWRUxfSElHSD47CiAJCQkJY2xvY2tzID0gPCZj
+bGtzIElNWDZVTF9DTEtfUFdNMj4sCiAJCQkJCSA8JmNsa3MgSU1YNlVMX0NMS19QV00yPjsKIAkJ
+CQljbG9jay1uYW1lcyA9ICJpcGciLCAicGVyIjsKQEAgLTM4MCw3ICszODAsNyBAQAogCQkJcHdt
+MzogcHdtQDIwODgwMDAgewogCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDZ1bC1wd20iLCAiZnNs
+LGlteDI3LXB3bSI7CiAJCQkJcmVnID0gPDB4MDIwODgwMDAgMHg0MDAwPjsKLQkJCQlpbnRlcnJ1
+cHRzID0gPEdJQ19TUEkgMTE3IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQkJCWludGVycnVwdHMg
+PSA8R0lDX1NQSSA4NSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKIAkJCQljbG9ja3MgPSA8JmNsa3Mg
+SU1YNlVMX0NMS19QV00zPiwKIAkJCQkJIDwmY2xrcyBJTVg2VUxfQ0xLX1BXTTM+OwogCQkJCWNs
+b2NrLW5hbWVzID0gImlwZyIsICJwZXIiOwpAQCAtMzkxLDcgKzM5MSw3IEBACiAJCQlwd200OiBw
+d21AMjA4YzAwMCB7CiAJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnVsLXB3bSIsICJmc2wsaW14
+MjctcHdtIjsKIAkJCQlyZWcgPSA8MHgwMjA4YzAwMCAweDQwMDA+OwotCQkJCWludGVycnVwdHMg
+PSA8R0lDX1NQSSAxMTggSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCQkJaW50ZXJydXB0cyA9IDxH
+SUNfU1BJIDg2IElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQkJCWNsb2NrcyA9IDwmY2xrcyBJTVg2
+VUxfQ0xLX1BXTTQ+LAogCQkJCQkgPCZjbGtzIElNWDZVTF9DTEtfUFdNND47CiAJCQkJY2xvY2st
+bmFtZXMgPSAiaXBnIiwgInBlciI7Ci0tIAoyLjIxLjAKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
