@@ -1,72 +1,47 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: [PATCH V12 3/4] arm64: dts: imx8qxp: added ddr performance monitor
- nodes
-Date: Wed, 19 Jun 2019 13:46:00 -0500
-Message-ID: <CAHrpEqT_34eNK-EzRgs-ocDD6pfLzD=FU8n83HgSQVsimJRxPw@mail.gmail.com>
+From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Wed, 19 Jun 2019 12:47:41 -0600
+Message-ID: <2926e45fd7ff62fd7c4af9b338bf0caa@codeaurora.org>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+ <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+ <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
+ <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org>
+ <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
+ <CAK8P3a1FeUQR3pgoQxHoRK05JGORyR+TFATVQiijLWtFKTv6OQ@mail.gmail.com>
+ <613cdfde488eb23d7207c7ba6258662702d04840.camel@sipsolutions.net>
+ <CAK8P3a2onXpxiE4y9PzRwuPM2dh=h_BKz7Eb0=LLPgBbZoK1bQ@mail.gmail.com>
+ <6c70950d0c78bc02a3d016918ec3929e@codeaurora.org>
+ <CAK8P3a3e+U85yHTeE4dHa4okLVHgBd8Kke9=FytzvMwz+wB0sQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a3e+U85yHTeE4dHa4okLVHgBd8Kke9=FytzvMwz+wB0sQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Johannes Berg <johannes@sipsolutions.net>, Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, Dan Williams <dcbw@redhat.com>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add ddr performance monitor
+>> There is a n:1 relationship between rmnet and IPA.
+>> rmnet does the de-muxing to multiple netdevs based on the mux id
+>> in the MAP header for RX packets and vice versa.
+> 
+> Oh, so you mean that even though IPA supports multiple channels
+> and multiple netdev instances for a physical device, all the
+> rmnet devices end up being thrown into a single channel in IPA?
+> 
+> What are the other channels for in IPA? I understand that there
+> is one channel for commands that is separate, while the others
+> are for network devices, but that seems to make no sense if
+> we only use a single channel for rmnet data.
+> 
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
+AFAIK, the other channels are for use cases like tethering.
+There is only a single channel which is used for RX
+data which is then de-muxed using rmnet.
 
-Resent without base64 encode
-
-Notes:
-    No change from v9 to v12
-
-    Change from v8 to v9
-    * put ddr-pmu under ddr_subsystem bus
-
-    Change from v3 to v8
-    * none
-
-    Change from v2 to v3
-    * ddr_pmu0 -> ddr-pmu
-
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index 0683ee2..a33e08c 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -378,6 +378,20 @@
-                };
-        };
-
-+       ddr_subsyss: bus@5c000000 {
-+               compatible = "simple-bus";
-+               #address-cells = <1>;
-+               #size-cells = <1>;
-+               ranges = <0x5c000000 0x0 0x5c000000 0x1000000>;
-+
-+               ddr-pmu@5c020000 {
-+                       compatible = "fsl,imx8-ddr-pmu";
-+                       reg = <0x5c020000 0x10000>;
-+                       interrupt-parent = <&gic>;
-+                       interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-+               };
-+       };
-+
-        lsio_subsys: bus@5d000000 {
-                compatible = "simple-bus";
-                #address-cells = <1>;
---
-2.5.2
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
