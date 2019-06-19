@@ -1,201 +1,383 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH v4 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-Date: Wed, 19 Jun 2019 09:36:27 +0000
-Message-ID: <VE1PR04MB66556830530B0B3488FE5DA6F1E50@VE1PR04MB6655.eurprd04.prod.outlook.com>
-References: <20190520095238.29210-1-ran.wang_1@nxp.com>
- <3448272.3g8bHhgBA9@kreacher>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v3 01/16] dt-bindings: net: Add YAML schemas for the generic Ethernet options
+Date: Wed, 19 Jun 2019 11:47:10 +0200
+Message-ID: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3448272.3g8bHhgBA9@kreacher>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
+The Ethernet controllers have a good number of generic options that can be
+needed in a device tree. Add a YAML schemas for those.
 
-On Wednesday, June 19, 2019 06:45, Rafael J. Wysocki wrote:
->=20
-> On Monday, May 20, 2019 11:52:36 AM CEST Ran Wang wrote:
-> > Some user might want to go through all registered wakeup sources and
-> > doing things accordingly. For example, SoC PM driver might need to do
-> > HW programming to prevent powering down specific IP which wakeup
-> > source depending on. And is user's responsibility to identify if this
-> > wakeup source he is interested in.
->=20
-> I guess the idea here is that you need to walk wakeup devices and you not=
-iced
-> that there was a wakeup source object for each of them and those wakeup
-> source objects were on a list, so you could walk wakeup devices by walkin=
-g the
-> list of wakeup source objects.
->=20
-> That is fair enough, but the changelog above doesn't even talk about that=
-.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-How about this:
-"Providing a API for helping walk through all registered wakeup devices on =
-the list.
-It will be useful for SoC PMU driver to know which device will work as a wa=
-keup
-source then do specific HW programming for them."
+---
 
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> > ---
-> > Change in v4:
-> > 	- None.
-> >
-> > Change in v3:
-> > 	- Adjust indentation of *attached_dev;.
-> >
-> > Change in v2:
-> > 	- None.
-> >
-> >  drivers/base/power/wakeup.c |   18 ++++++++++++++++++
-> >  include/linux/pm_wakeup.h   |    3 +++
-> >  2 files changed, 21 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> > index 5b2b6a0..6904485 100644
-> > --- a/drivers/base/power/wakeup.c
-> > +++ b/drivers/base/power/wakeup.c
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/suspend.h>
-> >  #include <linux/seq_file.h>
-> >  #include <linux/debugfs.h>
-> > +#include <linux/of_device.h>
-> >  #include <linux/pm_wakeirq.h>
-> >  #include <trace/events/power.h>
-> >
-> > @@ -226,6 +227,22 @@ void wakeup_source_unregister(struct
-> wakeup_source *ws)
-> >  	}
-> >  }
-> >  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
-> > +/**
-> > + * wakeup_source_get_next - Get next wakeup source from the list
-> > + * @ws: Previous wakeup source object, null means caller want first on=
-e.
-> > + */
-> > +struct wakeup_source *wakeup_source_get_next(struct wakeup_source
-> > +*ws) {
-> > +	struct list_head *ws_head =3D &wakeup_sources;
-> > +
-> > +	if (ws)
-> > +		return list_next_or_null_rcu(ws_head, &ws->entry,
-> > +				struct wakeup_source, entry);
-> > +	else
-> > +		return list_entry_rcu(ws_head->next,
-> > +				struct wakeup_source, entry);
-> > +}
-> > +EXPORT_SYMBOL_GPL(wakeup_source_get_next);
->=20
-> This needs to be arranged along the lines of
-> wakeup_sources_stats_seq_start/next/stop()
-> because of the SRCU protection of the list.
+Changes from v2:
+  - Add back the deprecated properties using the deprecated keyword
 
-Got it, how about this:
- 230 /**                                                                   =
-          =20
- 231  * wakeup_source_get_next - Get next wakeup source from the list      =
-          =20
- 232  * @ws: Previous wakeup source object, null means caller want first on=
-e.        =20
- 233  */                                                                   =
-          =20
- 234 struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws)=
-          =20
- 235 {                                                                     =
-          =20
- 236         struct list_head *ws_head =3D &wakeup_sources;                =
-            =20
- 237         struct wakeup_source *next_ws =3D NULL;                       =
-            =20
- 238         int idx;                                                      =
-          =20
- 239                                                                       =
-          =20
- 240         idx =3D srcu_read_lock(&wakeup_srcu);                         =
-            =20
- 241         if (ws)                                                       =
-                                                        =20
- 242                 next_ws =3D list_next_or_null_rcu(ws_head, &ws->entry,=
-            =20
- 243                                 struct wakeup_source, entry);         =
-          =20
- 244         else                                                          =
-          =20
- 245                 next_ws =3D list_entry_rcu(ws_head->next,             =
-            =20
- 246                                 struct wakeup_source, entry);         =
-          =20
- 247         srcu_read_unlock(&wakeup_srcu, idx);                          =
-          =20
- 248                                                                       =
-          =20
- 249         return next_ws;                                               =
-          =20
- 250 }                                                                     =
-          =20
- 251 EXPORT_SYMBOL_GPL(wakeup_source_get_next);  =20
+Changes from v1:
+  - Use an enum for phy-connection-types
+  - Validate the items for the fixed-link array
+  - Set the number of valid items for link-gpios to 1
+  - Removed deprecated properties (phy-mode, phy, phy-device)
+---
+ Documentation/devicetree/bindings/net/ethernet-controller.yaml | 204 +++++++-
+ Documentation/devicetree/bindings/net/ethernet.txt             |  69 +--
+ Documentation/devicetree/bindings/net/fixed-link.txt           |  55 +--
+ 3 files changed, 206 insertions(+), 122 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/ethernet-controller.yaml
 
-> >
-> >  /**
-> >   * device_wakeup_attach - Attach a wakeup source object to a device ob=
-ject.
-> > @@ -242,6 +259,7 @@ static int device_wakeup_attach(struct device *dev,
-> struct wakeup_source *ws)
-> >  		return -EEXIST;
-> >  	}
-> >  	dev->power.wakeup =3D ws;
-> > +	ws->attached_dev =3D dev;
-> >  	if (dev->power.wakeirq)
-> >  		device_wakeup_attach_irq(dev, dev->power.wakeirq);
-> >  	spin_unlock_irq(&dev->power.lock);
-> > diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-> > index 0ff134d..913b2fb 100644
-> > --- a/include/linux/pm_wakeup.h
-> > +++ b/include/linux/pm_wakeup.h
-> > @@ -50,6 +50,7 @@
-> >   * @wakeup_count: Number of times the wakeup source might abort suspen=
-d.
-> >   * @active: Status of the wakeup source.
-> >   * @has_timeout: The wakeup source has been activated with a timeout.
-> > + * @attached_dev: The device it attached to
-> >   */
-> >  struct wakeup_source {
-> >  	const char 		*name;
-> > @@ -70,6 +71,7 @@ struct wakeup_source {
-> >  	unsigned long		wakeup_count;
-> >  	bool			active:1;
-> >  	bool			autosleep_enabled:1;
-> > +	struct device		*attached_dev;
->=20
-> Please (a) call it just dev and (b) move it up (before wakeirq, say)
+diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+new file mode 100644
+index 000000000000..501ea658b319
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+@@ -0,0 +1,204 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Ethernet Controller Generic Binding
++
++maintainers:
++  - David S. Miller <davem@davemloft.net>
++
++properties:
++  $nodename:
++    pattern: "^ethernet(@.*)?$"
++
++  local-mac-address:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint8-array
++      - minItems: 6
++        maxItems: 6
++    description:
++      Specifies the MAC address that was assigned to the network device.
++
++  mac-address:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint8-array
++      - minItems: 6
++        maxItems: 6
++    description:
++      Specifies the MAC address that was last used by the boot
++      program; should be used in cases where the MAC address assigned
++      to the device by the boot program is different from the
++      local-mac-address property.
++
++  max-frame-size:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      Maximum transfer unit (IEEE defined MTU), rather than the
++      maximum frame size (there\'s contradiction in the Devicetree
++      Specification).
++
++  max-speed:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      Specifies maximum speed in Mbit/s supported by the device.
++
++  nvmem-cells:
++    maxItems: 1
++    description:
++      Reference to an nvmem node for the MAC address
++
++  nvmem-cells-names:
++    const: mac-address
++
++  phy-connection-type:
++    description:
++      Operation mode of the PHY interface
++    enum:
++      # There is not a standard bus between the MAC and the PHY,
++      # something proprietary is being used to embed the PHY in the
++      # MAC.
++      - internal
++      - mii
++      - gmii
++      - sgmii
++      - qsgmii
++      - tbi
++      - rev-mii
++      - rmii
++
++      # RX and TX delays are added by the MAC when required
++      - rgmii
++
++      # RGMII with internal RX and TX delays provided by the PHY,
++      # the MAC should not add the RX or TX delays in this case
++      - rgmii-id
++
++      # RGMII with internal RX delay provided by the PHY, the MAC
++      # should not add an RX delay in this case
++      - rgmii-rxid
++
++      # RGMII with internal TX delay provided by the PHY, the MAC
++      # should not add an TX delay in this case
++      - rgmii-txid
++      - rtbi
++      - smii
++      - xgmii
++      - trgmii
++      - 1000base-x
++      - 2500base-x
++      - rxaui
++      - xaui
++
++      # 10GBASE-KR, XFI, SFI
++      - 10gbase-kr
++      - usxgmii
++
++  phy-mode:
++    $ref: "#/properties/phy-connection-type"
++    deprecated: true
++
++  phy-handle:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description:
++      Specifies a reference to a node representing a PHY device.
++
++  phy:
++    $ref: "#/properties/phy-handle"
++    deprecated: true
++
++  phy-device:
++    $ref: "#/properties/phy-handle"
++    deprecated: true
++
++  rx-fifo-depth:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      The size of the controller\'s receive fifo in bytes. This is used
++      for components that can have configurable receive fifo sizes,
++      and is useful for determining certain configuration settings
++      such as flow control thresholds.
++
++  tx-fifo-depth:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      The size of the controller\'s transmit fifo in bytes. This
++      is used for components that can have configurable fifo sizes.
++
++  managed:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/string
++      - default: auto
++        enum:
++          - auto
++          - in-band-status
++    description:
++      Specifies the PHY management type. If auto is set and fixed-link
++      is not specified, it uses MDIO for management.
++
++  fixed-link:
++    allOf:
++      - if:
++          type: array
++        then:
++          minItems: 1
++          maxItems: 1
++          items:
++            items:
++              - minimum: 0
++                maximum: 31
++                description:
++                  Emulated PHY ID, choose any but unique to the all
++                  specified fixed-links
++
++              - enum: [0, 1]
++                description:
++                  Duplex configuration. 0 for half duplex or 1 for
++                  full duplex
++
++              - enum: [10, 100, 1000]
++                description:
++                  Link speed in Mbits/sec.
++
++              - enum: [0, 1]
++                description:
++                  Pause configuration. 0 for no pause, 1 for pause
++
++              - enum: [0, 1]
++                description:
++                  Asymmetric pause configuration. 0 for no asymmetric
++                  pause, 1 for asymmetric pause
++
++
++      - if:
++          type: object
++        then:
++          properties:
++            speed:
++              allOf:
++                - $ref: /schemas/types.yaml#definitions/uint32
++                - enum: [10, 100, 1000]
++              description:
++                Link speed.
++
++            full-duplex:
++              $ref: /schemas/types.yaml#definitions/flag
++              description:
++                Indicates that full-duplex is used. When absent, half
++                duplex is assumed.
++
++            asym-pause:
++              $ref: /schemas/types.yaml#definitions/flag
++              description:
++                Indicates that asym_pause should be enabled.
++
++            link-gpios:
++              maxItems: 1
++              description:
++                GPIO to determine if the link is up
++
++          required:
++            - speed
++
++...
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index 5475682bf06e..5df413d01be2 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -1,68 +1 @@
+-The following properties are common to the Ethernet controllers:
+-
+-NOTE: All 'phy*' properties documented below are Ethernet specific. For the
+-generic PHY 'phys' property, see
+-Documentation/devicetree/bindings/phy/phy-bindings.txt.
+-
+-- mac-address: array of 6 bytes, specifies the MAC address that was last used by
+-  the boot program; should be used in cases where the MAC address assigned to
+-  the device by the boot program is different from the "local-mac-address"
+-  property;
+-- local-mac-address: array of 6 bytes, specifies the MAC address that was
+-  assigned to the network device;
+-- nvmem-cells: phandle, reference to an nvmem node for the MAC address
+-- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used
+-- max-speed: number, specifies maximum speed in Mbit/s supported by the device;
+-- max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
+-  the maximum frame size (there's contradiction in the Devicetree
+-  Specification).
+-- phy-mode: string, operation mode of the PHY interface. This is now a de-facto
+-  standard property; supported values are:
+-  * "internal" (Internal means there is not a standard bus between the MAC and
+-     the PHY, something proprietary is being used to embed the PHY in the MAC.)
+-  * "mii"
+-  * "gmii"
+-  * "sgmii"
+-  * "qsgmii"
+-  * "tbi"
+-  * "rev-mii"
+-  * "rmii"
+-  * "rgmii" (RX and TX delays are added by the MAC when required)
+-  * "rgmii-id" (RGMII with internal RX and TX delays provided by the PHY, the
+-     MAC should not add the RX or TX delays in this case)
+-  * "rgmii-rxid" (RGMII with internal RX delay provided by the PHY, the MAC
+-     should not add an RX delay in this case)
+-  * "rgmii-txid" (RGMII with internal TX delay provided by the PHY, the MAC
+-     should not add an TX delay in this case)
+-  * "rtbi"
+-  * "smii"
+-  * "xgmii"
+-  * "trgmii"
+-  * "1000base-x",
+-  * "2500base-x",
+-  * "rxaui"
+-  * "xaui"
+-  * "10gbase-kr" (10GBASE-KR, XFI, SFI)
+-  * "usxgmii"
+-- phy-connection-type: the same as "phy-mode" property but described in the
+-  Devicetree Specification;
+-- phy-handle: phandle, specifies a reference to a node representing a PHY
+-  device; this property is described in the Devicetree Specification and so
+-  preferred;
+-- phy: the same as "phy-handle" property, not recommended for new bindings.
+-- phy-device: the same as "phy-handle" property, not recommended for new
+-  bindings.
+-- rx-fifo-depth: the size of the controller's receive fifo in bytes. This
+-  is used for components that can have configurable receive fifo sizes,
+-  and is useful for determining certain configuration settings such as
+-  flow control thresholds.
+-- tx-fifo-depth: the size of the controller's transmit fifo in bytes. This
+-  is used for components that can have configurable fifo sizes.
+-- managed: string, specifies the PHY management type. Supported values are:
+-  "auto", "in-band-status". "auto" is the default, it usess MDIO for
+-  management if fixed-link is not specified.
+-
+-Child nodes of the Ethernet controller are typically the individual PHY devices
+-connected via the MDIO bus (sometimes the MDIO bus controller is separate).
+-They are described in the phy.txt file in this same directory.
+-For non-MDIO PHY management see fixed-link.txt.
++This file has moved to ethernet-controller.yaml.
+diff --git a/Documentation/devicetree/bindings/net/fixed-link.txt b/Documentation/devicetree/bindings/net/fixed-link.txt
+index ec5d889fe3d8..5df413d01be2 100644
+--- a/Documentation/devicetree/bindings/net/fixed-link.txt
++++ b/Documentation/devicetree/bindings/net/fixed-link.txt
+@@ -1,54 +1 @@
+-Fixed link Device Tree binding
+-------------------------------
+-
+-Some Ethernet MACs have a "fixed link", and are not connected to a
+-normal MDIO-managed PHY device. For those situations, a Device Tree
+-binding allows to describe a "fixed link".
+-
+-Such a fixed link situation is described by creating a 'fixed-link'
+-sub-node of the Ethernet MAC device node, with the following
+-properties:
+-
+-* 'speed' (integer, mandatory), to indicate the link speed. Accepted
+-  values are 10, 100 and 1000
+-* 'full-duplex' (boolean, optional), to indicate that full duplex is
+-  used. When absent, half duplex is assumed.
+-* 'pause' (boolean, optional), to indicate that pause should be
+-  enabled.
+-* 'asym-pause' (boolean, optional), to indicate that asym_pause should
+-  be enabled.
+-* 'link-gpios' ('gpio-list', optional), to indicate if a gpio can be read
+-  to determine if the link is up.
+-
+-Old, deprecated 'fixed-link' binding:
+-
+-* A 'fixed-link' property in the Ethernet MAC node, with 5 cells, of the
+-  form <a b c d e> with the following accepted values:
+-  - a: emulated PHY ID, choose any but but unique to the all specified
+-    fixed-links, from 0 to 31
+-  - b: duplex configuration: 0 for half duplex, 1 for full duplex
+-  - c: link speed in Mbits/sec, accepted values are: 10, 100 and 1000
+-  - d: pause configuration: 0 for no pause, 1 for pause
+-  - e: asymmetric pause configuration: 0 for no asymmetric pause, 1 for
+-    asymmetric pause
+-
+-Examples:
+-
+-ethernet@0 {
+-	...
+-	fixed-link {
+-	      speed = <1000>;
+-	      full-duplex;
+-	};
+-	...
+-};
+-
+-ethernet@1 {
+-	...
+-	fixed-link {
+-	      speed = <1000>;
+-	      pause;
+-	      link-gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+-	};
+-	...
+-};
++This file has moved to ethernet-controller.yaml.
 
-Got it, will update in next version.
-
-Thanks & Regards,
-Ran
->=20
-> >  };
-> >
-> >  #ifdef CONFIG_PM_SLEEP
-> > @@ -101,6 +103,7 @@ static inline void device_set_wakeup_path(struct
-> > device *dev)  extern void wakeup_source_remove(struct wakeup_source
-> > *ws);  extern struct wakeup_source *wakeup_source_register(const char
-> > *name);  extern void wakeup_source_unregister(struct wakeup_source
-> > *ws);
-> > +extern struct wakeup_source *wakeup_source_get_next(struct
-> > +wakeup_source *ws);
-> >  extern int device_wakeup_enable(struct device *dev);  extern int
-> > device_wakeup_disable(struct device *dev);  extern void
-> > device_set_wakeup_capable(struct device *dev, bool capable);
-> >
->=20
->=20
->=20
+base-commit: f08776cae7f5ab26f0f239b9ec58aa60fdbb9a1a
+-- 
+git-series 0.9.1
