@@ -1,77 +1,137 @@
-Return-Path: <SRS0=YfZA=US=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 3/3] arm64: dts: renesas: hihope-common: Add HDMI support
-Date: Wed, 19 Jun 2019 12:48:17 +0000
-Message-ID: 
- <TY1PR01MB1770B099456BD96D352DF526C0E50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=iYly=US=ideasonboard.com=laurent.pinchart@kernel.org>
+Date: Wed, 19 Jun 2019 15:41:31 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 3/3] arm64: dts: renesas: hihope-common: Add HDMI support
+Message-ID: <20190619124131.GB21753@pendragon.ideasonboard.com>
 References: <1560871119-16570-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <1560871119-16570-4-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190619124131.GB21753@pendragon.ideasonboard.com>
-In-Reply-To: <20190619124131.GB21753@pendragon.ideasonboard.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1560871119-16570-4-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgTGF1cmVudCwNCg0KPiBGcm9tOiBsaW51eC1yZW5lc2FzLXNvYy1vd25lckB2Z2VyLmtlcm5l
-bC5vcmcgPGxpbnV4LXJlbmVzYXMtc29jLW93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVoYWxm
-IE9mIExhdXJlbnQgUGluY2hhcnQNCj4gU2VudDogMTkgSnVuZSAyMDE5IDEzOjQyDQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggMy8zXSBhcm02NDogZHRzOiByZW5lc2FzOiBoaWhvcGUtY29tbW9uOiBB
-ZGQgSERNSSBzdXBwb3J0DQo+IA0KPiBIaSBGYWJyaXppbywNCj4gDQo+IFRoYW5rIHlvdSBmb3Ig
-dGhlIHBhdGNoLg0KPiANCj4gT24gVHVlLCBKdW4gMTgsIDIwMTkgYXQgMDQ6MTg6MzlQTSArMDEw
-MCwgRmFicml6aW8gQ2FzdHJvIHdyb3RlOg0KPiA+IEFkZCBIRE1JIHN1cHBvcnQgdG8gdGhlIEhp
-SG9wZSBSWi9HMltNTl0gbW90aGVyIGJvYXJkIGNvbW1vbg0KPiA+IGR0c2kuDQo+ID4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2Fz
-LmNvbT4NCj4gPg0KPiA+IC0tLQ0KPiA+IFBsZWFzZSBub3RlIHRoYXQgdGhpcyBwYXRjaCB3YXMg
-dGVzdGVkIHdpdGggYSA0SyBtb25pdG9yIGFuZCBjbWE9OTZNDQo+ID4NCj4gPiAgYXJjaC9hcm02
-NC9ib290L2R0cy9yZW5lc2FzL2hpaG9wZS1jb21tb24uZHRzaSB8IDYyICsrKysrKysrKysrKysr
-KysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2MiBpbnNlcnRpb25zKCspDQo+ID4N
-Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL2hpaG9wZS1jb21t
-b24uZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9oaWhvcGUtY29tbW9uLmR0c2kN
-Cj4gPiBpbmRleCA2MjVjM2FhLi5lNzU2OGUxIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvcmVuZXNhcy9oaWhvcGUtY29tbW9uLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL3JlbmVzYXMvaGlob3BlLWNvbW1vbi5kdHNpDQo+ID4gQEAgLTE3LDYgKzE3LDE4
-IEBADQo+ID4gIAkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBuOCI7DQo+ID4gIAl9Ow0K
-PiA+DQo+ID4gKwloZG1pMC1vdXQgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiaGRtaS1jb25uZWN0
-b3IiOw0KPiA+ICsJCWxhYmVsID0gIkhETUkwIE9VVCI7DQo+IA0KPiBJcyB0aGUgbGFiZWwgcGh5
-c2ljYWxseSBwcmVzZW50IG9uIHRoZSBkZXZpY2UgKHByaW50ZWQgb24gdGhlIGJvYXJkIG9yDQo+
-IHRoZSBjYXNlKSA/DQoNCkkgYW0gYWZyYWlkIGl0J3Mgbm90LiBTaGFsbCBJIHNlbmQgYSB2Mj8g
-T3IgcGVyaGFwcyBTaW1vbiBjb3VsZCB0YWtlIGl0IG91dCB3aGlsZSBhcHBseWluZz8NCg0KPiAN
-Cj4gQXBhcnQgZnJvbSB0aGF0LCB3aXRob3V0IGFjY2VzcyB0byB0aGUgc2NoZW1hdGljcyBJIGNh
-bid0IHJlYWxseSB0ZWxsIGlmDQo+IHRoZSBEVCBpcyBjb3JyZWN0LCBidXQgbm90aGluZyBzdHJp
-a2VzIG1lIGFzIHJlYWxseSB3cm9uZywgc28NCg0KSSBkaWRuJ3Qga25vdyB5b3UgaGFkIG5vIGFj
-Y2VzcyB0byB0aGUgc2NoZW1hdGljcywgb24gdGhlaXIgd2F5Li4uDQoNClRoYW5rcywNCkZhYg0K
-DQo+IA0KPiBBY2tlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVh
-c29uYm9hcmQuY29tPg0KPiANCj4gPiArCQl0eXBlID0gImEiOw0KPiA+ICsNCj4gPiArCQlwb3J0
-IHsNCj4gPiArCQkJaGRtaTBfY29uOiBlbmRwb2ludCB7DQo+ID4gKwkJCQlyZW1vdGUtZW5kcG9p
-bnQgPSA8JnJjYXJfZHdfaGRtaTBfb3V0PjsNCj4gPiArCQkJfTsNCj4gPiArCQl9Ow0KPiA+ICsJ
-fTsNCj4gPiArDQo+ID4gIAlsZWRzIHsNCj4gPiAgCQljb21wYXRpYmxlID0gImdwaW8tbGVkcyI7
-DQo+ID4NCj4gPiBAQCAtODIsNiArOTQsMzAgQEANCj4gPiAgCQlzdGF0ZXMgPSA8MzMwMDAwMCAx
-DQo+ID4gIAkJCSAgMTgwMDAwMCAwPjsNCj4gPiAgCX07DQo+ID4gKw0KPiA+ICsJeDMwMl9jbGs6
-IHgzMDItY2xvY2sgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0KPiA+ICsJ
-CSNjbG9jay1jZWxscyA9IDwwPjsNCj4gPiArCQljbG9jay1mcmVxdWVuY3kgPSA8MzMwMDAwMDA+
-Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwl4MzA0X2NsazogeDMwNC1jbG9jayB7DQo+ID4gKwkJ
-Y29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gKwkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0K
-PiA+ICsJCWNsb2NrLWZyZXF1ZW5jeSA9IDwyNTAwMDAwMD47DQo+ID4gKwl9Ow0KPiA+ICt9Ow0K
-PiA+ICsNCj4gPiArJmR1IHsNCj4gPiArCWNsb2NrcyA9IDwmY3BnIENQR19NT0QgNzI0PiwNCj4g
-PiArCQkgPCZjcGcgQ1BHX01PRCA3MjM+LA0KPiA+ICsJCSA8JmNwZyBDUEdfTU9EIDcyMj4sDQo+
-ID4gKwkJIDwmdmVyc2FjbG9jazUgMT4sDQo+ID4gKwkJIDwmeDMwMl9jbGs+LA0KPiA+ICsJCSA8
-JnZlcnNhY2xvY2s1IDI+Ow0KPiA+ICsJY2xvY2stbmFtZXMgPSAiZHUuMCIsICJkdS4xIiwgImR1
-LjIiLA0KPiA+ICsJCSAgICAgICJkY2xraW4uMCIsICJkY2xraW4uMSIsICJkY2xraW4uMiI7DQo+
-ID4gKwlzdGF0dXMgPSAib2theSI7DQo+ID4gIH07DQo+ID4NCj4gPiAgJmVoY2kwIHsNCj4gPiBA
-QCAtMTA5LDExICsxNDUsMzcgQEANCj4gPiAgCX07DQo+ID4gIH07DQo+ID4NCj4gPiArJmhkbWkw
-IHsNCj4gPiArCXN0YXR1cyA9ICJva2F5IjsNCj4gPiArDQo+ID4gKwlwb3J0cyB7DQo+ID4gKwkJ
-cG9ydEAxIHsNCj4gPiArCQkJcmVnID0gPDE+Ow0KPiA+ICsJCQlyY2FyX2R3X2hkbWkwX291dDog
-ZW5kcG9pbnQgew0KPiA+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pMF9jb24+Ow0KPiA+
-ICsJCQl9Ow0KPiA+ICsJCX07DQo+ID4gKwl9Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgJmhzdXNi
-IHsNCj4gPiAgCWRyX21vZGUgPSAib3RnIjsNCj4gPiAgCXN0YXR1cyA9ICJva2F5IjsNCj4gPiAg
-fTsNCj4gPg0KPiA+ICsmaTJjNCB7DQo+ID4gKwljbG9jay1mcmVxdWVuY3kgPSA8NDAwMDAwPjsN
-Cj4gPiArCXN0YXR1cyA9ICJva2F5IjsNCj4gPiArDQo+ID4gKwl2ZXJzYWNsb2NrNTogY2xvY2st
-Z2VuZXJhdG9yQDZhIHsNCj4gPiArCQljb21wYXRpYmxlID0gImlkdCw1cDQ5djU5MjMiOw0KPiA+
-ICsJCXJlZyA9IDwweDZhPjsNCj4gPiArCQkjY2xvY2stY2VsbHMgPSA8MT47DQo+ID4gKwkJY2xv
-Y2tzID0gPCZ4MzA0X2Nsaz47DQo+ID4gKwkJY2xvY2stbmFtZXMgPSAieGluIjsNCj4gPiArCX07
-DQo+ID4gK307DQo+ID4gKw0KPiA+ICAmb2hjaTAgew0KPiA+ICAJc3RhdHVzID0gIm9rYXkiOw0K
-PiA+ICB9Ow0KPiANCj4gLS0NCj4gUmVnYXJkcywNCj4gDQo+IExhdXJlbnQgUGluY2hhcnQNCg==
+Hi Fabrizio,
+
+Thank you for the patch.
+
+On Tue, Jun 18, 2019 at 04:18:39PM +0100, Fabrizio Castro wrote:
+> Add HDMI support to the HiHope RZ/G2[MN] mother board common
+> dtsi.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+>
+> ---
+> Please note that this patch was tested with a 4K monitor and cma=96M
+> 
+>  arch/arm64/boot/dts/renesas/hihope-common.dtsi | 62 ++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/hihope-common.dtsi b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+> index 625c3aa..e7568e1 100644
+> --- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+> @@ -17,6 +17,18 @@
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>  
+> +	hdmi0-out {
+> +		compatible = "hdmi-connector";
+> +		label = "HDMI0 OUT";
+
+Is the label physically present on the device (printed on the board or
+the case) ?
+
+Apart from that, without access to the schematics I can't really tell if
+the DT is correct, but nothing strikes me as really wrong, so
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +		type = "a";
+> +
+> +		port {
+> +			hdmi0_con: endpoint {
+> +				remote-endpoint = <&rcar_dw_hdmi0_out>;
+> +			};
+> +		};
+> +	};
+> +
+>  	leds {
+>  		compatible = "gpio-leds";
+>  
+> @@ -82,6 +94,30 @@
+>  		states = <3300000 1
+>  			  1800000 0>;
+>  	};
+> +
+> +	x302_clk: x302-clock {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <33000000>;
+> +	};
+> +
+> +	x304_clk: x304-clock {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <25000000>;
+> +	};
+> +};
+> +
+> +&du {
+> +	clocks = <&cpg CPG_MOD 724>,
+> +		 <&cpg CPG_MOD 723>,
+> +		 <&cpg CPG_MOD 722>,
+> +		 <&versaclock5 1>,
+> +		 <&x302_clk>,
+> +		 <&versaclock5 2>;
+> +	clock-names = "du.0", "du.1", "du.2",
+> +		      "dclkin.0", "dclkin.1", "dclkin.2";
+> +	status = "okay";
+>  };
+>  
+>  &ehci0 {
+> @@ -109,11 +145,37 @@
+>  	};
+>  };
+>  
+> +&hdmi0 {
+> +	status = "okay";
+> +
+> +	ports {
+> +		port@1 {
+> +			reg = <1>;
+> +			rcar_dw_hdmi0_out: endpoint {
+> +				remote-endpoint = <&hdmi0_con>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>  &hsusb {
+>  	dr_mode = "otg";
+>  	status = "okay";
+>  };
+>  
+> +&i2c4 {
+> +	clock-frequency = <400000>;
+> +	status = "okay";
+> +
+> +	versaclock5: clock-generator@6a {
+> +		compatible = "idt,5p49v5923";
+> +		reg = <0x6a>;
+> +		#clock-cells = <1>;
+> +		clocks = <&x304_clk>;
+> +		clock-names = "xin";
+> +	};
+> +};
+> +
+>  &ohci0 {
+>  	status = "okay";
+>  };
+
+-- 
+Regards,
+
+Laurent Pinchart
