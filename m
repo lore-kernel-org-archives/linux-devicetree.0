@@ -1,14 +1,12 @@
 From: Ashish Kumar <Ashish.Kumar@nxp.com>
-Subject: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi: Add ls2080a
- compatibility string to bindings
-Date: Wed, 19 Jun 2019 16:41:53 +0530
-Message-ID: <1560942714-13330-2-git-send-email-Ashish.Kumar@nxp.com>
-References: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
+Subject: [PATCH] drivers: mtd: spi-nor: Add flash property for mt25qu512a and
+ mt35xu02g
+Date: Wed, 19 Jun 2019 16:41:52 +0530
+Message-ID: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,41 +17,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org
-Cc: bbrezillon@kernel.org, Kuldeep Singh <kuldeep.singh@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>, broonie@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Kuldeep Singh <kuldeep.singh@nxp.com>, broonie@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, bbrezillon@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There are 2 version of QSPI-IP, according to which controller registers sets
-can be big endian or little endian.There are some other minor changes like
-RX fifo depth etc.
-
-The big endian version uses driver compatible "fsl,ls1021a-qspi" and
-little endian version uses driver compatible "fsl,ls2080a-qspi"
+From: Kuldeep Singh <kuldeep.singh@nxp.com>
 
 Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
-Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
 ---
-v3:
-Rebase to top
-v2: 
-Convert to patch series and rebasing done on top of tree
+ drivers/mtd/spi-nor/spi-nor.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-index e8f1d62..6d7c9ec 100644
---- a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-@@ -3,9 +3,8 @@
- Required properties:
-   - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
- 		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
--		 "fsl,ls1021a-qspi"
-+		 "fsl,ls1021a-qspi", "fsl,ls2080a-qspi"
- 		 or
--		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
- 		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
-   - reg : the first contains the register location and length,
-           the second contains the memory mapping address and length
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index 73172d7..34e33a7 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -1880,6 +1880,7 @@ static const struct flash_info spi_nor_ids[] = {
+ 	{ "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
+ 	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+ 	{ "n25q00a",     INFO(0x20bb21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
++	{ "mt25qu512a", INFO6(0x20bb20, 0x104400, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_4B_OPCODES) },
+ 	{ "mt25qu02g",   INFO(0x20bb22, 0, 64 * 1024, 4096, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+ 
+ 	/* Micron */
+@@ -1888,6 +1889,7 @@ static const struct flash_info spi_nor_ids[] = {
+ 			SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
+ 			SPI_NOR_4B_OPCODES)
+ 	},
++	{ "mt35xu02g",   INFO(0x2c5b1c, 0, 128 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ | SPI_NOR_4B_OPCODES) },
+ 
+ 	/* PMC */
+ 	{ "pm25lv512",   INFO(0,        0, 32 * 1024,    2, SECT_4K_PMC) },
 -- 
 2.7.4
