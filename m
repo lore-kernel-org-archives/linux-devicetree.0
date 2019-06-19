@@ -1,49 +1,100 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404-evb: fix vdd_apc supply
-Date: Wed, 19 Jun 2019 11:22:26 -0700
-Message-ID: <20190619182226.GK4814@minitux>
-References: <20190619181653.29407-1-jorge.ramirez-ortiz@linaro.org>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] ARM: dts: rockchip: Configure BT_DEV_WAKE in on rk3288-veyron
+Date: Wed, 19 Jun 2019 11:34:25 -0700
+Message-ID: <20190619183425.149470-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190619181653.29407-1-jorge.ramirez-ortiz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jeffrey.l.hugo@gmail.com, niklas.cassel@linaro.org
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, mka@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 19 Jun 11:16 PDT 2019, Jorge Ramirez-Ortiz wrote:
+This is the other half of the hacky solution from commit f497ab6b4bb8
+("ARM: dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on
+veyron").  Specifically the LPM driver that the Broadcom Bluetooth
+expects to have (but is missing in mainline) has two halves of the
+equation: BT_HOST_WAKE and BT_DEV_WAKE.  The BT_HOST_WAKE (which was
+handled in the previous commit) is the one that lets the Bluetooth
+wake the system up.  The BT_DEV_WAKE (this patch) tells the Bluetooth
+that it's OK to go into a low power mode.  That means we were burning
+a bit of extra power in S3 without this patch.  Measurements are a bit
+noisy, but it appears to be a few mA worth of difference.
 
-> The invalid definition in the supply causes the Qualcomm's EVB-1000
-> and EVB-4000 not to boot.
-> 
-> Fix the boot issue by correctly defining the supply: vdd_s3 (namely
-> "vdd_apc") is actually connected to vph_pwr.
-> 
+NOTE: Though these pins don't do much on systems with Marvell
+Bluetooth, downstream kernels set it on all veyron boards so we'll do
+the same.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-> Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Tested-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> index b6092a742675..11c0a7137823 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> @@ -65,7 +65,7 @@
->  };
->  
->  &pms405_spmi_regulators {
-> -	vdd_s3-supply = <&pms405_s3>;
-> +	vdd_s3-supply = <&vph_pwr>;
->  
->  	pms405_s3: s3 {
->  		regulator-always-on;
-> -- 
-> 2.21.0
-> 
+ .../boot/dts/rk3288-veyron-chromebook.dtsi    |  2 ++
+ arch/arm/boot/dts/rk3288-veyron.dtsi          | 20 +++++++++++++++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+index 5727017f34b2..1cadb522fd0d 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+@@ -237,6 +237,7 @@
+ 
+ 		/* Wake only */
+ 		&suspend_l_wake
++		&bt_dev_wake_awake
+ 	>;
+ 	pinctrl-1 = <
+ 		/* Common for sleep and wake, but no owners */
+@@ -246,6 +247,7 @@
+ 
+ 		/* Sleep only */
+ 		&suspend_l_sleep
++		&bt_dev_wake_sleep
+ 	>;
+ 
+ 	backlight {
+diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+index e2635ad574e7..53d2f2452868 100644
+--- a/arch/arm/boot/dts/rk3288-veyron.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+@@ -485,12 +485,18 @@
+ 		&ddr0_retention
+ 		&ddrio_pwroff
+ 		&global_pwroff
++
++		/* Wake only */
++		&bt_dev_wake_awake
+ 	>;
+ 	pinctrl-1 = <
+ 		/* Common for sleep and wake, but no owners */
+ 		&ddr0_retention
+ 		&ddrio_pwroff
+ 		&global_pwroff
++
++		/* Sleep only */
++		&bt_dev_wake_sleep
+ 	>;
+ 
+ 	pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
+@@ -596,6 +602,20 @@
+ 		sdio0_clk: sdio0-clk {
+ 			rockchip,pins = <4 RK_PD1 1 &pcfg_pull_none_drv_8ma>;
+ 		};
++
++		/*
++		 * These pins are only present on very new veyron boards; on
++		 * older boards bt_dev_wake is simply always high.  Note that
++		 * gpio4_D2 is a NC on old veyron boards, so it doesn't hurt
++		 * to map this pin everywhere
++		 */
++		bt_dev_wake_sleep: bt-dev-wake-sleep {
++			rockchip,pins = <4 RK_PD2 RK_FUNC_GPIO &pcfg_output_low>;
++		};
++
++		bt_dev_wake_awake: bt-dev-wake-awake {
++			rockchip,pins = <4 RK_PD2 RK_FUNC_GPIO &pcfg_output_high>;
++		};
+ 	};
+ 
+ 	tpm {
+-- 
+2.22.0.410.gd8fdbe21b5-goog
