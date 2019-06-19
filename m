@@ -1,40 +1,36 @@
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: qcs404-evb: fix vdd_apc supply
-Date: Wed, 19 Jun 2019 20:16:53 +0200
-Message-ID: <20190619181653.29407-1-jorge.ramirez-ortiz@linaro.org>
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: Re: [Freedreno] [PATCH 6/6] drm/msm/gpu: add ocmem init/cleanup
+ functions
+Date: Wed, 19 Jun 2019 12:21:50 -0600
+Message-ID: <20190619182149.GD17590@jcrouse1-lnx.qualcomm.com>
+References: <20190616132930.6942-1-masneyb@onstation.org>
+ <20190616132930.6942-7-masneyb@onstation.org>
+ <20190619181526.GC17590@jcrouse1-lnx.qualcomm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190619181526.GC17590@jcrouse1-lnx.qualcomm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jorge.ramirez-ortiz@linaro.org, agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jeffrey.l.hugo@gmail.com, niklas.cassel@linaro.org
+To: Brian Masney <masneyb@onstation.org>, agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, jonathan@marek.ca, airlied@linux.ie, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, daniel@ffwll.ch, freedreno@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-The invalid definition in the supply causes the Qualcomm's EVB-1000
-and EVB-4000 not to boot.
+On Wed, Jun 19, 2019 at 12:15:26PM -0600, Jordan Crouse wrote:
+> On Sun, Jun 16, 2019 at 09:29:30AM -0400, Brian Masney wrote:
+> > The files a3xx_gpu.c and a4xx_gpu.c have ifdefs for the OCMEM support
+> > that was missing upstream. Add two new functions (adreno_gpu_ocmem_init
+> > and adreno_gpu_ocmem_cleanup) that removes some duplicated code. We also
+> > need to change the ifdef check for CONFIG_MSM_OCMEM to CONFIG_QCOM_OCMEM
+> > now that OCMEM support is upstream.
 
-Fix the boot issue by correctly defining the supply: vdd_s3 (namely
-"vdd_apc") is actually connected to vph_pwr.
+Sorry for reviewing v1 when there was a v2 in flight. That will teach me to not
+keep up on my email. I think you caught most of this, but a few things I still
+saw.
 
-Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-Tested-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+<snip>
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index b6092a742675..11c0a7137823 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -65,7 +65,7 @@
- };
- 
- &pms405_spmi_regulators {
--	vdd_s3-supply = <&pms405_s3>;
-+	vdd_s3-supply = <&vph_pwr>;
- 
- 	pms405_s3: s3 {
- 		regulator-always-on;
+Jordan
+
 -- 
-2.21.0
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
