@@ -1,68 +1,65 @@
 From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v5 2/2] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
-Date: Wed, 19 Jun 2019 14:26:22 +0200
-Message-ID: <20190619122622.GB29084@ravnborg.org>
-References: <20190603152331.23160-1-paul@crapouillou.net>
- <20190603152331.23160-2-paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: Add King Display
+ KD035G6-54NT panel documentation
+Date: Wed, 19 Jun 2019 14:28:50 +0200
+Message-ID: <20190619122850.GC29084@ravnborg.org>
+References: <20190603152555.23527-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20190603152331.23160-2-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20190603152555.23527-1-paul@crapouillou.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Paul Cercueil <paul@crapouillou.net>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, od@zcrc.me, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul.
-
-On Mon, Jun 03, 2019 at 05:23:31PM +0200, Paul Cercueil wrote:
-> Add a KMS driver for the Ingenic JZ47xx family of SoCs.
-> This driver is meant to replace the aging jz4740-fb driver.
-> 
-> This driver does not make use of the simple pipe helper, for the reason
-> that it will soon be updated to support more advanced features like
-> multiple planes, IPU integration for colorspace conversion and up/down
-> scaling, support for DSI displays, and TV-out and HDMI outputs.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
-> 
-> Notes:
->     v2: - Remove custom handling of panel. The panel is now discovered using
->     	  the standard API.
->     	- Lots of small tweaks suggested by upstream
->     
->     v3: - Use devm_drm_dev_init()
->     	- Update compatible strings to -lcd instead of -drm
->     	- Add destroy() callbacks to plane and crtc
->     	- The ingenic,lcd-mode is now read from the bridge's DT node
->     
->     v4: Remove ingenic,lcd-mode property completely. The various modes are now
->     	deduced from the connector type, the pixel format or the bus flags.
->     
->     v5: - Fix framebuffer size incorrectly calculated for 24bpp framebuffers
->     	- Use 32bpp framebuffer instead of 16bpp, as it'll work with both
->     	  16-bit and 24-bit panel
->     	- Get rid of drm_format_plane_cpp() which has been dropped upstream
->     	- Avoid using drm_format_info->depth, which is deprecated.
-In the drm world we include the revision notes in the changelog.
-So I did this when I applied it to drm-misc-next.
-
-Fixed a few trivial checkpatch warnings about indent too.
-There was a few too-long-lines warnings that I ignored. Fixing them
-would have hurt readability.
-
-I assume you will maintain this driver onwards from now.
-Please request drm-misc commit rights (see
-https://www.freedesktop.org/wiki/AccountRequests/)
-You will need a legacy SSH account.
-
-And you should familiarize yourself with the maintainer-tools:
-https://drm.pages.freedesktop.org/maintainer-tools/index.html
-
-For my use I use "dim update-branches; dim apply; dim push
-So only a small subset i needed for simple use.
-
-	Sam
+T24gTW9uLCBKdW4gMDMsIDIwMTkgYXQgMDU6MjU6NTRQTSArMDIwMCwgUGF1bCBDZXJjdWVpbCB3
+cm90ZToKPiBUaGUgS0QwMzVHNi01NE5UIGlzIGEgMy41IiAzMjB4MjQwIDI0LWJpdCBURlQgTENE
+IHBhbmVsLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxs
+b3UubmV0PgpSZXZpZXdlZC1ieTogU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcub3JnPgoKUm9i
+IC0gcGluZyBmb3IgcmV2aWV3LgoKCVNhbQoKPiAtLS0KPiAKPiBOb3RlczoKPiAgICAgdjI6IC0g
+QWRkIGFuIGFkZHJlc3MgdG8gdGhlIHBhbmVsIG5vZGUKPiAgICAgCS0gQWRkIGluZm9ybWF0aW9u
+IGFib3V0IFNQSSBwcm9wZXJ0aWVzCj4gICAgIAktIEFkZCBpbmZvcm1hdGlvbiBhYm91dCB0aGUg
+J3BvcnQnIHN1Yi1ub2RlCj4gCj4gIC4uLi9wYW5lbC9raW5nZGlzcGxheSxrZDAzNWc2LTU0bnQu
+dHh0ICAgICAgICB8IDQyICsrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDQy
+IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2tpbmdkaXNwbGF5LGtkMDM1ZzYtNTRudC50eHQK
+PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwva2luZ2Rpc3BsYXksa2QwMzVnNi01NG50LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2tpbmdkaXNwbGF5LGtkMDM1ZzYtNTRudC50
+eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uZmE5NTk2MDgy
+ZTQ0Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3BhbmVsL2tpbmdkaXNwbGF5LGtkMDM1ZzYtNTRudC50eHQKPiBAQCAtMCww
+ICsxLDQyIEBACj4gK0tpbmcgRGlzcGxheSBLRDAzNUc2LTU0TlQgMy41IiAoMzIweDI0MCBwaXhl
+bHMpIDI0LWJpdCBURlQgTENEIHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICst
+IGNvbXBhdGlibGU6IHNob3VsZCBiZSAia2luZ2Rpc3BsYXksa2QwMzVnNi01NG50Igo+ICstIHBv
+d2VyLXN1cHBseTogU2VlIHBhbmVsLWNvbW1vbi50eHQKPiArLSByZXNldC1ncGlvczogU2VlIHBh
+bmVsLWNvbW1vbi50eHQKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gYmFja2xpZ2h0
+OiBzZWUgcGFuZWwtY29tbW9uLnR4dAo+ICsKPiArVGhlIGdlbmVyaWMgYmluZGluZ3MgZm9yIHRo
+ZSBTUEkgc2xhdmVzIGRvY3VtZW50ZWQgaW4gWzFdIGFsc28gYXBwbHkuCj4gKwo+ICtUaGUgZGV2
+aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdpdGggb25lIGNoaWxk
+Cj4gKydlbmRwb2ludCcgbm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5ncyBkZWZpbmVkIGlu
+IFsyXS4gVGhpcwo+ICtub2RlIHNob3VsZCBkZXNjcmliZSBwYW5lbCdzIHZpZGVvIGJ1cy4KPiAr
+Cj4gK1sxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktYnVzLnR4
+dAo+ICtbMl06IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQKPiAr
+Cj4gK0V4YW1wbGU6Cj4gKwo+ICsmc3BpIHsKPiArCXBhbmVsQDAgewo+ICsJCWNvbXBhdGlibGUg
+PSAia2luZ2Rpc3BsYXksa2QwMzVnNi01NG50IjsKPiArCQlyZWcgPSA8MD47Cj4gKwo+ICsJCXNw
+aS1tYXgtZnJlcXVlbmN5ID0gPDMxMjUwMDA+Owo+ICsJCXNwaS0zd2lyZTsKPiArCQlzcGktY3Mt
+aGlnaDsKPiArCj4gKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwZSAyIEdQSU9fQUNUSVZFX0xPVz47Cj4g
+Kwo+ICsJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKPiArCQlwb3dlci1zdXBwbHkgPSA8Jmxk
+bzY+Owo+ICsKPiArCQlwb3J0IHsKPiArCQkJcGFuZWxfaW5wdXQ6IGVuZHBvaW50IHsKPiArCQkJ
+CXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfb3V0cHV0PjsKPiArCQkJfTsKPiArCQl9Owo+ICsJ
+fTsKPiArfTsKPiAtLSAKPiAyLjIxLjAuNTkzLmc1MTFlYzM0NWUxOApfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
