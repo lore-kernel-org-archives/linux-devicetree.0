@@ -1,12 +1,15 @@
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH] ARM: dts: imx6qdl-sr-som: fix AR8035 phy interface mode
-Date: Wed, 19 Jun 2019 23:35:58 +0100
-Message-ID: <E1hdjBO-0007Yt-9M@rmk-PC.armlinux.org.uk>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
+Date: Thu, 20 Jun 2019 09:02:23 +1000
+Message-ID: <4c8b9ca5e84db7db67ad552d8fdbaa17d11b6432.camel@kernel.crashing.org>
+References: <20190619205009.4176588-1-taoren@fb.com>
+ <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
+ <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
+In-Reply-To: <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,32 +19,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+To: Tao Ren <taoren@fb.com>, Brendan Higgins <brendanhiggins@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "ryan_chen@aspeedtech.com" <ryan_chen@aspeedtech.com>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-A change to the AT803x driver fixed the handling of the phy interface
-mode, but this breaks all platforms that use "rgmii" as the mode in
-their DT.  Fix the Solidrun platforms.
+On Wed, 2019-06-19 at 22:32 +0000, Tao Ren wrote:
+> Thank you for the quick response, Brendan.
+> 
+> Aspeed I2C bus frequency is defined by 3 parameters
+> (base_clk_divisor, clk_high_width, clk_low_width), and I choose
+> base_clk_divisor because it controls all the Aspeed I2C timings (such
+> as setup time and hold time). Once base_clk_divisor is decided
+> (either by the current logic in i2c-aspeed driver or manually set in
+> device tree), clk_high_width and clk_low_width will be calculated by
+> i2c-aspeed driver to meet the specified I2C bus speed.
+> 
+> For example, by setting I2C bus frequency to 100KHz on AST2500
+> platform, (base_clock_divisor, clk_high_width, clk_low_width) is set
+> to (3, 15, 14) by our driver. But some slave devices (on CMM i2c-8
+> and Minipack i2c-0) NACK byte transactions with the default timing
+> setting: the issue can be resolved by setting base_clk_divisor to 4,
+> and (clk_high_width, clk_low_width) will be set to (7, 7) by our i2c-
+> aspeed driver to achieve similar I2C bus speed.
+> 
+> Not sure if my answer helps to address your concerns, but kindly let
+> me know if you have further questions/suggestions.
 
-Fixes: 6d4cd041f0af ("net: phy: at803x: disable delay only for RGMII mode")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- arch/arm/boot/dts/imx6qdl-sr-som.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Did you look at the resulting output on a scope ? I'm curious what
+might be wrong.... 
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sr-som.dtsi b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
-index 4ccb7afc4b35..6d7f6b9035bc 100644
---- a/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
-@@ -53,7 +53,7 @@
- &fec {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_microsom_enet_ar8035>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-reset-duration = <2>;
- 	phy-reset-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
- 	status = "okay";
--- 
-2.7.4
+CCing Ryan from Aspeed, he might have some idea.
+
+Could it be that with some specific dividers you have more jitter ?
+Still, i2c devices tend to be rather robust vs crappy clocks unless you
+are massively out of bounds, which makes me wonder whether something
+else might be wrong in your setup.
+
+Cheers,
+Ben.
