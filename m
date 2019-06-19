@@ -1,51 +1,85 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 08/16] dt-bindings: net: stmmac: Convert the binding to
- a schemas
-Date: Wed, 19 Jun 2019 08:12:09 -0600
-Message-ID: <CAL_Jsq+D_=3V26Yj-EH4nJ0Hsx7-+73Q8iGD+s40iRz-EpS=kQ@mail.gmail.com>
-References: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
- <60569c4326437aeb1c13b3da4d00bcf6202e9e6b.1560937626.git-series.maxime.ripard@bootlin.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH v6 0/6] Add CPU clock support for Armada 7K/8K
+Date: Wed, 19 Jun 2019 16:15:33 +0200
+Message-ID: <20190619141539.16884-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <60569c4326437aeb1c13b3da4d00bcf6202e9e6b.1560937626.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Andrew Lunn <andrew@lunn.ch>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, netdev <netdev@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Heiner Kallweit <hkallweit1@gmail.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 3:48 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Switch the STMMAC / Synopsys DesignWare MAC controller binding to a YAML
-> schema to enable the DT validation.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> ---
->
-> Changes from v2:
->   - Switch to phy-connection-type instead of phy-mode
->   - Fix the snps,*pbl properties type
->
-> Changes from v1:
->   - Restrict snps,tso to only a couple of compatibles
->   - Use an enum for the compatibles
->   - Add a custom select statement with the compatibles of all the generic
->     compatibles, including the deprecated ones. Remove the deprecated ones
->     from the valid compatible values to issue a warning when used.
-> ---
->  Documentation/devicetree/bindings/net/snps,dwmac.yaml | 389 +++++++++++-
->  Documentation/devicetree/bindings/net/stmmac.txt      | 179 +-----
->  2 files changed, 390 insertions(+), 178 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/snps,dwmac.yaml
+Hello,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is the sixth version of a series allowing to manage the cpu clock
+for Armada 7K/8K.
+
+For these SoCs, the CPUs share the same clock by cluster, so actually
+the clock management is done at cluster level.
+
+As for the other Armada 7K/8K clocks it is possible to have multiple
+AP so here again we need to have unique name: the purpose of the second
+patch is to share a common code which will be used in 3 drivers.
+
+The last 2 patch enable the driver at dt and platform level and will
+be applied through the mvebu subsystem.
+
+Changelog v5->v6:
+
+   - Restraint the reg property for the child node to not overlap the
+     other node.
+   - Give a specific compatible to ap_syscon1.
+
+Changelog v4->v5:
+
+ - As requested by the device tree maintainer make the reg property
+   mandatory
+
+ - Updated the device tree files accordingly with the new binding
+
+Changelog v3->v4:
+ - Rebased on v5.1-rc1
+ - Mention in the binding that a reg property can be used to make the
+   device tree maintainer happy in the hope that there will be finally
+   a review on this patch blocking the whole series.
+
+Changelog v2->v3:
+ - Add back the first patch documenting the binding
+
+Changelog v1->v2:
+ - Header cleanup
+ - Use unsigned int instead of it for cluster member of the ap_cpu_clk struct
+ - Use clk_hw instead of clk
+ - Use regmap_read_poll_timeout
+ - Use for_each_of_cpu_node
+ - Remove unnecessary WARN_ON()
+ - Remove headers from armada_ap_cp_helper.h
+ - Few other minor cleanup
+
+Gregory CLEMENT (6):
+  dt-bindings: ap806: add the cluster clock node in the syscon file
+  clk: mvebu: add helper file for Armada AP and CP clocks
+  clk: mvebu: add CPU clock driver for Armada 7K/8K
+  clk: mvebu: ap806: Fix clock name for the cluster
+  arm64: marvell: enable the  Armada 7K/8K CPU clk driver
+  arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
+
+ .../arm/marvell/ap806-system-controller.txt   |  25 ++
+ arch/arm64/Kconfig.platforms                  |   1 +
+ .../boot/dts/marvell/armada-ap806-quad.dtsi   |   4 +
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi |   7 +
+ drivers/clk/mvebu/Kconfig                     |   8 +
+ drivers/clk/mvebu/Makefile                    |   2 +
+ drivers/clk/mvebu/ap-cpu-clk.c                | 259 ++++++++++++++++++
+ drivers/clk/mvebu/ap806-system-controller.c   |  24 +-
+ drivers/clk/mvebu/armada_ap_cp_helper.c       |  30 ++
+ drivers/clk/mvebu/armada_ap_cp_helper.h       |  11 +
+ drivers/clk/mvebu/cp110-system-controller.c   |  32 +--
+ 11 files changed, 361 insertions(+), 42 deletions(-)
+ create mode 100644 drivers/clk/mvebu/ap-cpu-clk.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.h
+
+-- 
+2.20.1
