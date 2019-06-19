@@ -1,131 +1,80 @@
 From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
-Date: Wed, 19 Jun 2019 09:39:57 -0600
-Message-ID: <e480240e-993b-5f09-f29c-7b5c57a67260@codeaurora.org>
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
- <20190612212721.32195-1-jeffrey.l.hugo@gmail.com>
- <20190612214636.GA40779@dtor-ws>
- <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
- <CAO-hwJJUivfzFj-Downqt8nY3iTwF8-oq_iBqs1Dxyx92HdYPw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] MSM8998 Multimedia Clock Controller
+Date: Wed, 19 Jun 2019 09:45:44 -0600
+Message-ID: <f151d380-4ac5-cb1a-4244-9e4e8e2134d8@codeaurora.org>
+References: <1560366600-5826-1-git-send-email-jhugo@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAO-hwJJUivfzFj-Downqt8nY3iTwF8-oq_iBqs1Dxyx92HdYPw@mail.gmail.com>
+In-Reply-To: <1560366600-5826-1-git-send-email-jhugo@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Jiri Kosina <jikos@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+To: sboyd@kernel.org
+Cc: agross@kernel.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/13/2019 2:55 AM, Benjamin Tissoires wrote:
-> On Thu, Jun 13, 2019 at 12:20 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
->>
->> On 6/12/2019 3:46 PM, Dmitry Torokhov wrote:
->>> On Wed, Jun 12, 2019 at 02:27:21PM -0700, Jeffrey Hugo wrote:
->>>> There needs to be coordination between hid-quirks and the elan_i2c driver
->>>> about which devices are handled by what drivers.  Currently, both use
->>>> whitelists, which results in valid devices being unhandled by default,
->>>> when they should not be rejected by hid-quirks.  This is quickly becoming
->>>> an issue.
->>>>
->>>> Since elan_i2c has a maintained whitelist of what devices it will handle,
->>>> which is now in a header file that hid-quirks can access, use that to
->>>> implement a blacklist in hid-quirks so that only the devices that need to
->>>> be handled by elan_i2c get rejected by hid-quirks, and everything else is
->>>> handled by default.
->>>>
->>>> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->>>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->>>> ---
->>>>    drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
->>>>    1 file changed, 16 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
->>>> index e5ca6fe2ca57..bd81bb090222 100644
->>>> --- a/drivers/hid/hid-quirks.c
->>>> +++ b/drivers/hid/hid-quirks.c
->>>> @@ -16,6 +16,7 @@
->>>>    #include <linux/export.h>
->>>>    #include <linux/slab.h>
->>>>    #include <linux/mutex.h>
->>>> +#include <linux/input/elan-i2c-ids.h>
->>>>
->>>>    #include "hid-ids.h"
->>>>
->>>> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
->>>>
->>>>    bool hid_ignore(struct hid_device *hdev)
->>>>    {
->>>> +    int i;
->>>> +
->>>>       if (hdev->quirks & HID_QUIRK_NO_IGNORE)
->>>>               return false;
->>>>       if (hdev->quirks & HID_QUIRK_IGNORE)
->>>> @@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
->>>>               break;
->>>>       case USB_VENDOR_ID_ELAN:
->>>>               /*
->>>> -             * Many Elan devices have a product id of 0x0401 and are handled
->>>> -             * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
->>>> -             * is not (and cannot be) handled by that driver ->
->>>> -             * Ignore all 0x0401 devs except for the ELAN0800 dev.
->>>> +             * Blacklist of everything that gets handled by the elan_i2c
->>>> +             * input driver.  This avoids disabling valid touchpads and
->>>> +             * other ELAN devices.
->>>>                */
->>>> -            if (hdev->product == 0x0401 &&
->>>> -                strncmp(hdev->name, "ELAN0800", 8) != 0)
->>>> -                    return true;
->>>> -            /* Same with product id 0x0400 */
->>>> -            if (hdev->product == 0x0400 &&
->>>> -                strncmp(hdev->name, "QTEC0001", 8) != 0)
->>>> -                    return true;
->>>> +            if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
->>>> +                    for (i = 0; strlen(elan_acpi_id[i].id); ++i)
->>>> +                            if (!strncmp(hdev->name, elan_acpi_id[i].id,
->>>> +                                         strlen(elan_acpi_id[i].id)))
->>>> +                                    return true;
->>>> +                    for (i = 0; strlen(elan_of_match[i].name); ++i)
->>>> +                            if (!strncmp(hdev->name, elan_of_match[i].name,
->>>> +                                         strlen(elan_of_match[i].name)))
->>>> +                                    return true;
->>>
->>> Do we really need to blacklist the OF case here? I thought that in ACPI
->>> case we have clashes as HID gets matched by elan_i2c and CID is matched
->>> by i2c-hid, but I do not believe we'll run into the same situation on OF
->>> systems.
->>
->> I think its the safer approach.
->>
->> On an OF system, such as patch 3 in the series, the "hid-over-i2c" will
->> end up running through this (kind of the whole reason why this series
->> exists).  The vendor and product ids will still match, so we'll end up
->> going through the lists to see if the hdev->name (the compatible string)
->> will match the blacklist.  "hid-over-i2c" won't match the blacklist, but
->> if there is a more specific compatible, it might.
->>
->> In that case, not matching OF would work, however how it could break
->> today is if both "hid-over-i2c" and "elan,ekth3000" were listed for the
->> same device, and elan_i2c was not compiled.  In that case, if we skip
->> the OF part of the black list, hid-quirks will not reject the device,
->> and you'll probably have some odd behavior instead of the obvious "the
->> device doesn't work because the correct driver isn't present" behavior.
->>
->> While that scenario might be far fetched since having both
->> "hid-over-i2c" and "elan,ekth3000" probably violates the OF bindings,
->> its still safer to include the OF case in the blacklist against future
->> scenarios.
->>
->>
+On 6/12/2019 1:10 PM, Jeffrey Hugo wrote:
+> The multimedia clock controller (mmcc) is the main clock controller for
+> the multimedia subsystem and is required to enable things like display and
+> camera.
 > 
-> Dmitry, if you are happy with Jeffrey's answer, feel free to take this
-> through your tree and add:
-> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> v5:
+> -handle the case where gcc uses rpmcc for xo, but the link is not specified in dt
+> -have gcc select rpmcc
 > 
-> I don't expect any major conflicts given on where the code is located.
+> v4:
+> -fix makefile to use correct config item
+> -pick up tags
+> -fix ordering of clocks and clock-names in dt
+> -drop MODULE_ALIAS
+> -wait for xo in mmcc since that was found to be useful in some debug configs
+> 
+> v3:
+> -Rebase onto linux-next to get the final version of the clk parent rewrite
+> series
+> -Moved the bindings header to the bindings patch per Rob
+> -Made xo manditory for GCC to work around the lack of clk orphan probe defer
+> to avoid the uart console glitch
+> 
+> v2:
+> -Rebased on the "Rewrite clk parent handling" series and updated to the clk init
+> mechanisms introduced there.
+> -Marked XO clk as CLK_IGNORE_UNUSED to avoid the concern about the XO going away
+> "incorrectly" during late init
+> -Corrected the name of the XO clock to "xo"
+> -Dropped the fake XO clock in GCC to prevent a namespace conflict
+> -Fully enumerated the external clocks (DSI PLLs, etc) in the DT binding
+> -Cleaned up the weird newlines in the added DT node
+> -Added DT header file to msm8998 DT for future clients
+> 
+> Jeffrey Hugo (6):
+>    dt-bindings: clock: Document external clocks for MSM8998 gcc
+>    arm64: dts: msm8998: Add xo clock to gcc node
+>    clk: qcom: smd: Add XO clock for MSM8998
+>    dt-bindings: clock: Add support for the MSM8998 mmcc
+>    clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
+>    arm64: dts: qcom: msm8998: Add mmcc node
+> 
+>   .../devicetree/bindings/clock/qcom,gcc.txt    |   10 +
+>   .../devicetree/bindings/clock/qcom,mmcc.txt   |   21 +
+>   arch/arm64/boot/dts/qcom/msm8998.dtsi         |   16 +
+>   drivers/clk/qcom/Kconfig                      |    9 +
+>   drivers/clk/qcom/Makefile                     |    1 +
+>   drivers/clk/qcom/clk-smd-rpm.c                |   24 +-
+>   drivers/clk/qcom/gcc-msm8998.c                |   29 +-
+>   drivers/clk/qcom/mmcc-msm8998.c               | 2915 +++++++++++++++++
+>   include/dt-bindings/clock/qcom,mmcc-msm8998.h |  210 ++
+>   9 files changed, 3214 insertions(+), 21 deletions(-)
+>   create mode 100644 drivers/clk/qcom/mmcc-msm8998.c
+>   create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
+> 
 
-Ping?
+Stephen, is there any chance for this series to make 5.3?
 
-Dmitry, are you happy with things?  I would really like to see this 
-queued for 5.3, and it seems like the window to do so is rapidly closing.
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
