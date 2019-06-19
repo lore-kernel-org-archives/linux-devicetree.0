@@ -1,65 +1,106 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: Add King Display
- KD035G6-54NT panel documentation
-Date: Wed, 19 Jun 2019 14:28:50 +0200
-Message-ID: <20190619122850.GC29084@ravnborg.org>
-References: <20190603152555.23527-1-paul@crapouillou.net>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 2/5] iio: adc: stm32-adc: add missing vdda-supply
+Date: Wed, 19 Jun 2019 14:29:55 +0200
+Message-ID: <1560947398-11592-3-git-send-email-fabrice.gasnier@st.com>
+References: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190603152555.23527-1-paul@crapouillou.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, od@zcrc.me, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, robh+dt@kernel.org, alexandre.torgue@st.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdW4gMDMsIDIwMTkgYXQgMDU6MjU6NTRQTSArMDIwMCwgUGF1bCBDZXJjdWVpbCB3
-cm90ZToKPiBUaGUgS0QwMzVHNi01NE5UIGlzIGEgMy41IiAzMjB4MjQwIDI0LWJpdCBURlQgTENE
-IHBhbmVsLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxs
-b3UubmV0PgpSZXZpZXdlZC1ieTogU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcub3JnPgoKUm9i
-IC0gcGluZyBmb3IgcmV2aWV3LgoKCVNhbQoKPiAtLS0KPiAKPiBOb3RlczoKPiAgICAgdjI6IC0g
-QWRkIGFuIGFkZHJlc3MgdG8gdGhlIHBhbmVsIG5vZGUKPiAgICAgCS0gQWRkIGluZm9ybWF0aW9u
-IGFib3V0IFNQSSBwcm9wZXJ0aWVzCj4gICAgIAktIEFkZCBpbmZvcm1hdGlvbiBhYm91dCB0aGUg
-J3BvcnQnIHN1Yi1ub2RlCj4gCj4gIC4uLi9wYW5lbC9raW5nZGlzcGxheSxrZDAzNWc2LTU0bnQu
-dHh0ICAgICAgICB8IDQyICsrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDQy
-IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2tpbmdkaXNwbGF5LGtkMDM1ZzYtNTRudC50eHQK
-PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcGFuZWwva2luZ2Rpc3BsYXksa2QwMzVnNi01NG50LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2tpbmdkaXNwbGF5LGtkMDM1ZzYtNTRudC50
-eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uZmE5NTk2MDgy
-ZTQ0Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3BhbmVsL2tpbmdkaXNwbGF5LGtkMDM1ZzYtNTRudC50eHQKPiBAQCAtMCww
-ICsxLDQyIEBACj4gK0tpbmcgRGlzcGxheSBLRDAzNUc2LTU0TlQgMy41IiAoMzIweDI0MCBwaXhl
-bHMpIDI0LWJpdCBURlQgTENEIHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICst
-IGNvbXBhdGlibGU6IHNob3VsZCBiZSAia2luZ2Rpc3BsYXksa2QwMzVnNi01NG50Igo+ICstIHBv
-d2VyLXN1cHBseTogU2VlIHBhbmVsLWNvbW1vbi50eHQKPiArLSByZXNldC1ncGlvczogU2VlIHBh
-bmVsLWNvbW1vbi50eHQKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gYmFja2xpZ2h0
-OiBzZWUgcGFuZWwtY29tbW9uLnR4dAo+ICsKPiArVGhlIGdlbmVyaWMgYmluZGluZ3MgZm9yIHRo
-ZSBTUEkgc2xhdmVzIGRvY3VtZW50ZWQgaW4gWzFdIGFsc28gYXBwbHkuCj4gKwo+ICtUaGUgZGV2
-aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdpdGggb25lIGNoaWxk
-Cj4gKydlbmRwb2ludCcgbm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5ncyBkZWZpbmVkIGlu
-IFsyXS4gVGhpcwo+ICtub2RlIHNob3VsZCBkZXNjcmliZSBwYW5lbCdzIHZpZGVvIGJ1cy4KPiAr
-Cj4gK1sxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktYnVzLnR4
-dAo+ICtbMl06IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQKPiAr
-Cj4gK0V4YW1wbGU6Cj4gKwo+ICsmc3BpIHsKPiArCXBhbmVsQDAgewo+ICsJCWNvbXBhdGlibGUg
-PSAia2luZ2Rpc3BsYXksa2QwMzVnNi01NG50IjsKPiArCQlyZWcgPSA8MD47Cj4gKwo+ICsJCXNw
-aS1tYXgtZnJlcXVlbmN5ID0gPDMxMjUwMDA+Owo+ICsJCXNwaS0zd2lyZTsKPiArCQlzcGktY3Mt
-aGlnaDsKPiArCj4gKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwZSAyIEdQSU9fQUNUSVZFX0xPVz47Cj4g
-Kwo+ICsJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKPiArCQlwb3dlci1zdXBwbHkgPSA8Jmxk
-bzY+Owo+ICsKPiArCQlwb3J0IHsKPiArCQkJcGFuZWxfaW5wdXQ6IGVuZHBvaW50IHsKPiArCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfb3V0cHV0PjsKPiArCQkJfTsKPiArCQl9Owo+ICsJ
-fTsKPiArfTsKPiAtLSAKPiAyLjIxLjAuNTkzLmc1MTFlYzM0NWUxOApfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Add missing vdda-supply, analog power supply, to STM32 ADC. When vdda is
+an independent supply, it needs to be properly turned on or off to supply
+the ADC.
+
+Fixes: 1add69880240 ("iio: adc: Add support for STM32 ADC core").
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ drivers/iio/adc/stm32-adc-core.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+index 2327ec1..1f7ce51 100644
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -87,6 +87,7 @@ struct stm32_adc_priv_cfg {
+  * @domain:		irq domain reference
+  * @aclk:		clock reference for the analog circuitry
+  * @bclk:		bus clock common for all ADCs, depends on part used
++ * @vdda:		vdda analog supply reference
+  * @vref:		regulator reference
+  * @cfg:		compatible configuration data
+  * @common:		common data for all ADC instances
+@@ -97,6 +98,7 @@ struct stm32_adc_priv {
+ 	struct irq_domain		*domain;
+ 	struct clk			*aclk;
+ 	struct clk			*bclk;
++	struct regulator		*vdda;
+ 	struct regulator		*vref;
+ 	const struct stm32_adc_priv_cfg	*cfg;
+ 	struct stm32_adc_common		common;
+@@ -394,10 +396,16 @@ static int stm32_adc_core_hw_start(struct device *dev)
+ 	struct stm32_adc_priv *priv = to_stm32_adc_priv(common);
+ 	int ret;
+ 
++	ret = regulator_enable(priv->vdda);
++	if (ret < 0) {
++		dev_err(dev, "vdda enable failed %d\n", ret);
++		return ret;
++	}
++
+ 	ret = regulator_enable(priv->vref);
+ 	if (ret < 0) {
+ 		dev_err(dev, "vref enable failed\n");
+-		return ret;
++		goto err_vdda_disable;
+ 	}
+ 
+ 	if (priv->bclk) {
+@@ -425,6 +433,8 @@ static int stm32_adc_core_hw_start(struct device *dev)
+ 		clk_disable_unprepare(priv->bclk);
+ err_regulator_disable:
+ 	regulator_disable(priv->vref);
++err_vdda_disable:
++	regulator_disable(priv->vdda);
+ 
+ 	return ret;
+ }
+@@ -441,6 +451,7 @@ static void stm32_adc_core_hw_stop(struct device *dev)
+ 	if (priv->bclk)
+ 		clk_disable_unprepare(priv->bclk);
+ 	regulator_disable(priv->vref);
++	regulator_disable(priv->vdda);
+ }
+ 
+ static int stm32_adc_probe(struct platform_device *pdev)
+@@ -468,6 +479,14 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->common.base);
+ 	priv->common.phys_base = res->start;
+ 
++	priv->vdda = devm_regulator_get(&pdev->dev, "vdda");
++	if (IS_ERR(priv->vdda)) {
++		ret = PTR_ERR(priv->vdda);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "vdda get failed, %d\n", ret);
++		return ret;
++	}
++
+ 	priv->vref = devm_regulator_get(&pdev->dev, "vref");
+ 	if (IS_ERR(priv->vref)) {
+ 		ret = PTR_ERR(priv->vref);
+-- 
+2.7.4
