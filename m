@@ -1,105 +1,71 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v2 5/6] soc: qcom: add OCMEM driver
-Date: Wed, 19 Jun 2019 06:27:28 -0400
-Message-ID: <20190619102728.GA894@onstation.org>
-References: <20190619023209.10036-1-masneyb@onstation.org>
- <20190619023209.10036-6-masneyb@onstation.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 3/4] arm64: tegra: Add ID EEPROM for Jetson TX1 module
+Date: Wed, 19 Jun 2019 11:36:45 +0100
+Message-ID: <ad6680d4-e9d7-f8f9-e7db-bb9e2845d9cd@nvidia.com>
+References: <20190613165331.8689-1-thierry.reding@gmail.com>
+ <20190613165331.8689-3-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190619023209.10036-6-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org
-Cc: airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190613165331.8689-3-thierry.reding@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 10:32:08PM -0400, Brian Masney wrote:
-> +++ b/include/soc/qcom/ocmem.h
-> @@ -0,0 +1,62 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * The On Chip Memory (OCMEM) allocator allows various clients to allocate
-> + * memory from OCMEM based on performance, latency and power requirements.
-> + * This is typically used by the GPU, camera/video, and audio components on
-> + * some Snapdragon SoCs.
-> + *
-> + * Copyright (C) 2019 Brian Masney <masneyb@onstation.org>
-> + * Copyright (C) 2015 Red Hat. Author: Rob Clark <robdclark@gmail.com>
-> + */
-> +
-> +#ifndef __OCMEM_H__
-> +#define __OCMEM_H__
-> +
-> +enum ocmem_client {
-> +	/* GMEM clients */
-> +	OCMEM_GRAPHICS = 0x0,
-> +	/*
-> +	 * TODO add more once ocmem_allocate() is clever enough to
-> +	 * deal with multiple clients.
-> +	 */
-> +	OCMEM_CLIENT_MAX,
-> +};
-> +
-> +struct ocmem;
-> +
-> +struct ocmem_buf {
-> +	unsigned long offset;
-> +	unsigned long addr;
-> +	unsigned long len;
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_QCOM_OCMEM)
-> +
-> +struct ocmem *of_get_ocmem(struct device *dev);
-> +struct ocmem_buf *ocmem_allocate(struct ocmem *ocmem, enum ocmem_client client,
-> +				 unsigned long size);
-> +void ocmem_free(struct ocmem *ocmem, enum ocmem_client client,
-> +		struct ocmem_buf *buf);
-> +
-> +#else /* IS_ENABLED(CONFIG_QCOM_OCMEM) */
-> +
-> +static inline struct ocmem *of_get_ocmem(struct device *dev)
-> +{
-> +	return NULL;
 
-This, along with ocmem_allocate() below, need to return ERR_PTR(-ENOSYS).
-adreno_gpu_ocmem_init() needs to check for this error code:
-
-        ocmem = of_get_ocmem(dev);
-        if (IS_ERR(ocmem)) {
-                if (PTR_ERR(ocmem) == -ENXIO || PTR_ERR(ocmem) == -ENOSYS) {
-                        /*
-                         * Return success since either the ocmem property was
-                         * not specified in device tree, or ocmem support is
-                         * not compiled into the kernel.
-                         */
-                        return 0;
-                }
-
-                return PTR_ERR(ocmem);
-        }
-
-Brian
-
-
-
-> +}
+On 13/06/2019 17:53, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> There is an ID EEPROM in the Jetson TX1 module that stores various bits
+> of information to indentify the module. Add the device tree node so that
+> operating systems can access this EEPROM.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+> index 4dcd0d36189a..e8654061ce03 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+> @@ -264,6 +264,19 @@
+>  		};
+>  	};
+>  
+> +	i2c@7000c500 {
+> +		/* module ID EEPROM */
+> +		eeprom@50 {
+> +			compatible = "atmel,24c02";
+> +			reg = <0x50>;
 > +
-> +static inline struct ocmem_buf *ocmem_allocate(struct ocmem *ocmem,
-> +					       enum ocmem_client client,
-> +					       unsigned long size)
-> +{
-> +	return NULL;
-> +}
+> +			address-bits = <8>;
+> +			page-size = <8>;
+> +			size = <256>;
+> +			read-only;
+> +		};
+> +	};
 > +
-> +static inline void ocmem_free(struct ocmem *ocmem, enum ocmem_client client,
-> +			      struct ocmem_buf *buf)
-> +{
-> +}
-> +
-> +#endif /* IS_ENABLED(CONFIG_QCOM_OCMEM) */
-> +
-> +#endif /* __OCMEM_H__ */
-> -- 
-> 2.20.1
+>  	pmc@7000e400 {
+>  		nvidia,invert-interrupt;
+>  	};
+> 
+
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
+
+-- 
+nvpublic
