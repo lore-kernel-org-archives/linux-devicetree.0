@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 10/16] dt-bindings: net: sun8i-emac: Convert the binding to a schemas
-Date: Wed, 19 Jun 2019 11:47:19 +0200
-Message-ID: <a9c556114ab21793d100f31361da01a579bae84e.1560937626.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v3 14/16] ARM: dts: sunxi: Switch from phy-mode to phy-connection-type
+Date: Wed, 19 Jun 2019 11:47:23 +0200
+Message-ID: <50f869f466acb110c5924d7e8a67087fd97106fd.1560937626.git-series.maxime.ripard@bootlin.com>
 References: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,601 +12,516 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Switch our Allwinner H3 EMAC controller binding to a YAML schema to enable
-the DT validation. Since that controller is based on a Synopsys IP, let's
-add the validation to that schemas with a bunch of conditionals.
+The phy-mode device tree property has been deprecated in favor of
+phy-connection-type, let's replace it.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
 ---
 
 Changes from v2:
-  - Switch to phy-connection-type instead of phy-mode
-  - Change the delay enum to using multipleOf
-
-Changes from v1:
-  - Add specific binding document
+  - new patch
 ---
- Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml | 321 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- Documentation/devicetree/bindings/net/dwmac-sun8i.txt                | 201 +---------------------------------------------
- Documentation/devicetree/bindings/net/snps,dwmac.yaml                |  15 +++-
- 3 files changed, 336 insertions(+), 201 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
- delete mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+ arch/arm/boot/dts/sun6i-a31-colombus.dts          | 2 +-
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts       | 2 +-
+ arch/arm/boot/dts/sun6i-a31-i7.dts                | 2 +-
+ arch/arm/boot/dts/sun6i-a31-m9.dts                | 2 +-
+ arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts  | 2 +-
+ arch/arm/boot/dts/sun6i-a31s-cs908.dts            | 2 +-
+ arch/arm/boot/dts/sun6i-a31s-sina31s.dts          | 2 +-
+ arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts  | 2 +-
+ arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts  | 2 +-
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts          | 2 +-
+ arch/arm/boot/dts/sun7i-a20-bananapro.dts         | 2 +-
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts       | 2 +-
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts        | 2 +-
+ arch/arm/boot/dts/sun7i-a20-hummingbird.dts       | 2 +-
+ arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts         | 2 +-
+ arch/arm/boot/dts/sun7i-a20-icnova-swac.dts       | 2 +-
+ arch/arm/boot/dts/sun7i-a20-itead-ibox.dts        | 2 +-
+ arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts         | 4 ++--
+ arch/arm/boot/dts/sun7i-a20-m3.dts                | 2 +-
+ arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts    | 2 +-
+ arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts | 2 +-
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts    | 2 +-
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts   | 2 +-
+ arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts   | 2 +-
+ arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts     | 2 +-
+ arch/arm/boot/dts/sun7i-a20-orangepi.dts          | 2 +-
+ arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts     | 2 +-
+ arch/arm/boot/dts/sun7i-a20-pcduino3.dts          | 2 +-
+ arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts  | 2 +-
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts      | 2 +-
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts  | 2 +-
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 2 +-
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 2 +-
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts       | 2 +-
+ arch/arm/boot/dts/sun9i-a80-optimus.dts           | 2 +-
+ 35 files changed, 36 insertions(+), 36 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-new file mode 100644
-index 000000000000..6f68c7f5fc34
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-@@ -0,0 +1,321 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/allwinner,sun8i-a83t-gmac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A83t EMAC Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: allwinner,sun8i-a83t-emac
-+      - const: allwinner,sun8i-h3-emac
-+      - const: allwinner,sun8i-r40-emac
-+      - const: allwinner,sun8i-v3s-emac
-+      - const: allwinner,sun50i-a64-emac
-+      - items:
-+        - const: allwinner,sun50i-h6-emac
-+        - const: allwinner,sun50i-a64-emac
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-names:
-+    const: macirq
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: stmmaceth
-+
-+  syscon:
-+    $ref: /schemas/types.yaml#definitions/phandle
-+    description:
-+      Phandle to the device containing the EMAC or GMAC clock
-+      register
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - phy-connection-type
-+  - phy-handle
-+  - syscon
-+
-+allOf:
-+  - $ref: "snps,dwmac.yaml#"
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - allwinner,sun8i-a83t-emac
-+              - allwinner,sun8i-h3-emac
-+              - allwinner,sun8i-v3s-emac
-+              - allwinner,sun50i-a64-emac
-+
-+    then:
-+      properties:
-+        allwinner,tx-delay-ps:
-+          default: 0
-+          minimum: 0
-+          maximum: 700
-+          multipleOf: 100
-+          description:
-+            External RGMII PHY TX clock delay chain value in ps.
-+
-+        allwinner,rx-delay-ps:
-+          default: 0
-+          minimum: 0
-+          maximum: 3100
-+          multipleOf: 100
-+          description:
-+            External RGMII PHY TX clock delay chain value in ps.
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - allwinner,sun8i-r40-emac
-+
-+    then:
-+      properties:
-+        allwinner,rx-delay-ps:
-+          default: 0
-+          minimum: 0
-+          maximum: 700
-+          multipleOf: 100
-+          description:
-+            External RGMII PHY TX clock delay chain value in ps.
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - allwinner,sun8i-h3-emac
-+              - allwinner,sun8i-v3s-emac
-+
-+    then:
-+      properties:
-+        allwinner,leds-active-low:
-+          $ref: /schemas/types.yaml#definitions/flag
-+          description:
-+            EPHY LEDs are active low.
-+
-+        mdio-mux:
-+          type: object
-+
-+          properties:
-+            compatible:
-+              const: allwinner,sun8i-h3-mdio-mux
-+
-+            mdio-parent-bus:
-+              $ref: /schemas/types.yaml#definitions/phandle
-+              description:
-+                Phandle to EMAC MDIO.
-+
-+            mdio@1:
-+              type: object
-+              description: Internal MDIO Bus
-+
-+              properties:
-+                "#address-cells":
-+                  const: 1
-+
-+                "#size-cells":
-+                  const: 0
-+
-+                compatible:
-+                  const: allwinner,sun8i-h3-mdio-internal
-+
-+                reg:
-+                  const: 1
-+
-+              patternProperties:
-+                "^ethernet-phy@[0-9a-f]$":
-+                  type: object
-+                  description:
-+                    Integrated PHY node
-+
-+                  properties:
-+                    clocks:
-+                      maxItems: 1
-+
-+                    resets:
-+                      maxItems: 1
-+
-+                  required:
-+                    - clocks
-+                    - resets
-+
-+
-+            mdio@2:
-+              type: object
-+              description: External MDIO Bus (H3 only)
-+
-+              properties:
-+                "#address-cells":
-+                  const: 1
-+
-+                "#size-cells":
-+                  const: 0
-+
-+                reg:
-+                  const: 2
-+
-+          required:
-+            - compatible
-+            - mdio-parent-bus
-+            - mdio@1
-+
-+examples:
-+  - |
-+    ethernet@1c0b000 {
-+        compatible = "allwinner,sun8i-h3-emac";
-+        syscon = <&syscon>;
-+        reg = <0x01c0b000 0x104>;
-+        interrupts = <0 82 1>;
-+        interrupt-names = "macirq";
-+        resets = <&ccu 12>;
-+        reset-names = "stmmaceth";
-+        clocks = <&ccu 27>;
-+        clock-names = "stmmaceth";
-+
-+        phy-handle = <&int_mii_phy>;
-+        phy-connection-type = "mii";
-+        allwinner,leds-active-low;
-+
-+        mdio1: mdio {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            compatible = "snps,dwmac-mdio";
-+        };
-+
-+        mdio-mux {
-+            compatible = "allwinner,sun8i-h3-mdio-mux";
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            mdio-parent-bus = <&mdio1>;
-+
-+            int_mii_phy: mdio@1 {
-+                compatible = "allwinner,sun8i-h3-mdio-internal";
-+                reg = <1>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                ethernet-phy@1 {
-+                    reg = <1>;
-+                    clocks = <&ccu 67>;
-+                    resets = <&ccu 39>;
-+                    phy-is-integrated;
-+                };
-+            };
-+
-+            mdio@2 {
-+                reg = <2>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+            };
-+        };
-+    };
-+
-+  - |
-+    ethernet@1c0b000 {
-+        compatible = "allwinner,sun8i-h3-emac";
-+        syscon = <&syscon>;
-+        reg = <0x01c0b000 0x104>;
-+        interrupts = <0 82 1>;
-+        interrupt-names = "macirq";
-+        resets = <&ccu 12>;
-+        reset-names = "stmmaceth";
-+        clocks = <&ccu 27>;
-+        clock-names = "stmmaceth";
-+
-+        phy-handle = <&ext_rgmii_phy>;
-+        phy-connection-type = "rgmii";
-+        allwinner,leds-active-low;
-+
-+        mdio2: mdio {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            compatible = "snps,dwmac-mdio";
-+        };
-+
-+        mdio-mux {
-+            compatible = "allwinner,sun8i-h3-mdio-mux";
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            mdio-parent-bus = <&mdio2>;
-+
-+            mdio@1 {
-+                compatible = "allwinner,sun8i-h3-mdio-internal";
-+                reg = <1>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                ethernet-phy@1 {
-+                    reg = <1>;
-+                    clocks = <&ccu 67>;
-+                    resets = <&ccu 39>;
-+                };
-+            };
-+
-+            mdio@2 {
-+                reg = <2>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                ext_rgmii_phy: ethernet-phy@1 {
-+                    reg = <1>;
-+                };
-+            };
-+        };
-+    };
-+
-+  - |
-+    ethernet@1c0b000 {
-+        compatible = "allwinner,sun8i-a83t-emac";
-+        syscon = <&syscon>;
-+        reg = <0x01c0b000 0x104>;
-+        interrupts = <0 82 1>;
-+        interrupt-names = "macirq";
-+        resets = <&ccu 13>;
-+        reset-names = "stmmaceth";
-+        clocks = <&ccu 27>;
-+        clock-names = "stmmaceth";
-+        phy-handle = <&ext_rgmii_phy1>;
-+        phy-connection-type = "rgmii";
-+
-+        mdio {
-+            compatible = "snps,dwmac-mdio";
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            ext_rgmii_phy1: ethernet-phy@1 {
-+                reg = <1>;
-+            };
-+        };
-+    };
-+
-+# FIXME: We should set it, but it would report all the generic
-+# properties as additional properties.
-+# additionalProperties: false
-+
-+...
-diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-deleted file mode 100644
-index 54c66d0611cb..000000000000
---- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-+++ /dev/null
-@@ -1,201 +0,0 @@
--* Allwinner sun8i GMAC ethernet controller
--
--This device is a platform glue layer for stmmac.
--Please see stmmac.txt for the other unchanged properties.
--
--Required properties:
--- compatible: must be one of the following string:
--		"allwinner,sun8i-a83t-emac"
--		"allwinner,sun8i-h3-emac"
--		"allwinner,sun8i-r40-gmac"
--		"allwinner,sun8i-v3s-emac"
--		"allwinner,sun50i-a64-emac"
--		"allwinner,sun50i-h6-emac", "allwinner-sun50i-a64-emac"
--- reg: address and length of the register for the device.
--- interrupts: interrupt for the device
--- interrupt-names: must be "macirq"
--- clocks: A phandle to the reference clock for this device
--- clock-names: must be "stmmaceth"
--- resets: A phandle to the reset control for this device
--- reset-names: must be "stmmaceth"
--- phy-mode: See ethernet.txt
--- phy-handle: See ethernet.txt
--- syscon: A phandle to the device containing the EMAC or GMAC clock register
--
--Optional properties:
--- allwinner,tx-delay-ps: TX clock delay chain value in ps.
--			 Range is 0-700. Default is 0.
--			 Unavailable for allwinner,sun8i-r40-gmac
--- allwinner,rx-delay-ps: RX clock delay chain value in ps.
--			 Range is 0-3100. Default is 0.
--			 Range is 0-700 for allwinner,sun8i-r40-gmac
--Both delay properties need to be a multiple of 100. They control the
--clock delay for external RGMII PHY. They do not apply to the internal
--PHY or external non-RGMII PHYs.
--
--Optional properties for the following compatibles:
--  - "allwinner,sun8i-h3-emac",
--  - "allwinner,sun8i-v3s-emac":
--- allwinner,leds-active-low: EPHY LEDs are active low
--
--Required child node of emac:
--- mdio bus node: should be named mdio with compatible "snps,dwmac-mdio"
--
--Required properties of the mdio node:
--- #address-cells: shall be 1
--- #size-cells: shall be 0
--
--The device node referenced by "phy" or "phy-handle" must be a child node
--of the mdio node. See phy.txt for the generic PHY bindings.
--
--The following compatibles require that the emac node have a mdio-mux child
--node called "mdio-mux":
--  - "allwinner,sun8i-h3-emac"
--  - "allwinner,sun8i-v3s-emac":
--Required properties for the mdio-mux node:
--  - compatible = "allwinner,sun8i-h3-mdio-mux"
--  - mdio-parent-bus: a phandle to EMAC mdio
--  - one child mdio for the integrated mdio with the compatible
--    "allwinner,sun8i-h3-mdio-internal"
--  - one child mdio for the external mdio if present (V3s have none)
--Required properties for the mdio-mux children node:
--  - reg: 1 for internal MDIO bus, 2 for external MDIO bus
--
--The following compatibles require a PHY node representing the integrated
--PHY, under the integrated MDIO bus node if an mdio-mux node is used:
--  - "allwinner,sun8i-h3-emac",
--  - "allwinner,sun8i-v3s-emac":
--
--Additional information regarding generic multiplexer properties can be found
--at Documentation/devicetree/bindings/net/mdio-mux.txt
--
--Required properties of the integrated phy node:
--- clocks: a phandle to the reference clock for the EPHY
--- resets: a phandle to the reset control for the EPHY
--- Must be a child of the integrated mdio
--
--Example with integrated PHY:
--emac: ethernet@1c0b000 {
--	compatible = "allwinner,sun8i-h3-emac";
--	syscon = <&syscon>;
--	reg = <0x01c0b000 0x104>;
--	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
--	interrupt-names = "macirq";
--	resets = <&ccu RST_BUS_EMAC>;
--	reset-names = "stmmaceth";
--	clocks = <&ccu CLK_BUS_EMAC>;
--	clock-names = "stmmaceth";
--
--	phy-handle = <&int_mii_phy>;
+diff --git a/arch/arm/boot/dts/sun6i-a31-colombus.dts b/arch/arm/boot/dts/sun6i-a31-colombus.dts
+index 50092b0bd0fe..403b734fbfab 100644
+--- a/arch/arm/boot/dts/sun6i-a31-colombus.dts
++++ b/arch/arm/boot/dts/sun6i-a31-colombus.dts
+@@ -77,7 +77,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+index 7c611ddbaf2f..50ab6fe08fd8 100644
+--- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
++++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+@@ -154,7 +154,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun6i-a31-i7.dts b/arch/arm/boot/dts/sun6i-a31-i7.dts
+index ebb0b4710afb..75451e40d086 100644
+--- a/arch/arm/boot/dts/sun6i-a31-i7.dts
++++ b/arch/arm/boot/dts/sun6i-a31-i7.dts
+@@ -118,7 +118,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
 -	phy-mode = "mii";
--	allwinner,leds-active-low;
--
--	mdio: mdio {
--		#address-cells = <1>;
--		#size-cells = <0>;
--		compatible = "snps,dwmac-mdio";
--	};
--
--	mdio-mux {
--		compatible = "mdio-mux", "allwinner,sun8i-h3-mdio-mux";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		mdio-parent-bus = <&mdio>;
--
--		int_mdio: mdio@1 {
--			compatible = "allwinner,sun8i-h3-mdio-internal";
--			reg = <1>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			int_mii_phy: ethernet-phy@1 {
--				reg = <1>;
--				clocks = <&ccu CLK_BUS_EPHY>;
--				resets = <&ccu RST_BUS_EPHY>;
--				phy-is-integrated;
--			};
--		};
--		ext_mdio: mdio@2 {
--			reg = <2>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--		};
--	};
--};
--
--Example with external PHY:
--emac: ethernet@1c0b000 {
--	compatible = "allwinner,sun8i-h3-emac";
--	syscon = <&syscon>;
--	reg = <0x01c0b000 0x104>;
--	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
--	interrupt-names = "macirq";
--	resets = <&ccu RST_BUS_EMAC>;
--	reset-names = "stmmaceth";
--	clocks = <&ccu CLK_BUS_EMAC>;
--	clock-names = "stmmaceth";
--
--	phy-handle = <&ext_rgmii_phy>;
++	phy-connection-type = "mii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun6i-a31-m9.dts b/arch/arm/boot/dts/sun6i-a31-m9.dts
+index 4910c6ccf2f7..ffa6b4bfcebe 100644
+--- a/arch/arm/boot/dts/sun6i-a31-m9.dts
++++ b/arch/arm/boot/dts/sun6i-a31-m9.dts
+@@ -85,7 +85,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	phy-supply = <&reg_dldo1>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+index 703e1c19b407..d1a898ee3fec 100644
+--- a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
++++ b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+@@ -85,7 +85,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	phy-supply = <&reg_dldo1>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun6i-a31s-cs908.dts b/arch/arm/boot/dts/sun6i-a31s-cs908.dts
+index 6e9ec3f1695e..3c641def1e18 100644
+--- a/arch/arm/boot/dts/sun6i-a31s-cs908.dts
++++ b/arch/arm/boot/dts/sun6i-a31s-cs908.dts
+@@ -68,7 +68,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	status = "okay";
+ 	phy1: ethernet-phy@1 {
+ 		reg = <1>;
+diff --git a/arch/arm/boot/dts/sun6i-a31s-sina31s.dts b/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
+index c92779bc8f85..d2cecf2259eb 100644
+--- a/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
++++ b/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
+@@ -116,7 +116,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	phy-supply = <&reg_dldo1>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
+index e993b2d8ddd0..46842f5af1d2 100644
+--- a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
++++ b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
+@@ -93,7 +93,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
 -	phy-mode = "rgmii";
--	allwinner,leds-active-low;
--
--	mdio: mdio {
--		#address-cells = <1>;
--		#size-cells = <0>;
--		compatible = "snps,dwmac-mdio";
--	};
--
--	mdio-mux {
--		compatible = "allwinner,sun8i-h3-mdio-mux";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		mdio-parent-bus = <&mdio>;
--
--		int_mdio: mdio@1 {
--			compatible = "allwinner,sun8i-h3-mdio-internal";
--			reg = <1>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			int_mii_phy: ethernet-phy@1 {
--				reg = <1>;
--				clocks = <&ccu CLK_BUS_EPHY>;
--				resets = <&ccu RST_BUS_EPHY>;
--			};
--		};
--		ext_mdio: mdio@2 {
--			reg = <2>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			ext_rgmii_phy: ethernet-phy@1 {
--				reg = <1>;
--			};
--		}:
--	};
--};
--
--Example with SoC without integrated PHY
--
--emac: ethernet@1c0b000 {
--	compatible = "allwinner,sun8i-a83t-emac";
--	syscon = <&syscon>;
--	reg = <0x01c0b000 0x104>;
--	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
--	interrupt-names = "macirq";
--	resets = <&ccu RST_BUS_EMAC>;
--	reset-names = "stmmaceth";
--	clocks = <&ccu CLK_BUS_EMAC>;
--	clock-names = "stmmaceth";
--
--	phy-handle = <&ext_rgmii_phy>;
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_dldo1>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+index c601ecf5ab35..b1aa80c5dd79 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+@@ -130,7 +130,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
 -	phy-mode = "rgmii";
--
--	mdio: mdio {
--		compatible = "snps,dwmac-mdio";
--		#address-cells = <1>;
--		#size-cells = <0>;
--		ext_rgmii_phy: ethernet-phy@1 {
--			reg = <1>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index fed623a81dcd..956308806c33 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -45,6 +45,11 @@ properties:
-     contains:
-       enum:
-         - allwinner,sun7i-a20-gmac
-+        - allwinner,sun8i-a83t-emac
-+        - allwinner,sun8i-h3-emac
-+        - allwinner,sun8i-r40-emac
-+        - allwinner,sun8i-v3s-emac
-+        - allwinner,sun50i-a64-emac
-         - snps,dwmac
-         - snps,dwmac-3.50a
-         - snps,dwmac-3.610
-@@ -267,6 +272,11 @@ allOf:
-           contains:
-             enum:
-               - allwinner,sun7i-a20-gmac
-+              - allwinner,sun8i-a83t-emac
-+              - allwinner,sun8i-h3-emac
-+              - allwinner,sun8i-r40-emac
-+              - allwinner,sun8i-v3s-emac
-+              - allwinner,sun50i-a64-emac
-               - snps,dwxgmac
-               - snps,dwxgmac-2.10
-               - st,spear600-gmac
-@@ -308,6 +318,11 @@ allOf:
-           contains:
-             enum:
-               - allwinner,sun7i-a20-gmac
-+              - allwinner,sun8i-a83t-emac
-+              - allwinner,sun8i-h3-emac
-+              - allwinner,sun8i-r40-emac
-+              - allwinner,sun8i-v3s-emac
-+              - allwinner,sun50i-a64-emac
-               - snps,dwmac-4.00
-               - snps,dwmac-4.10a
-               - snps,dwxgmac
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_gmac_3v3>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index c5730b30a15d..dc22c22d935c 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -132,7 +132,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_gmac_3v3>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapro.dts b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
+index 86f4ebb77703..923dd76ce25d 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapro.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
+@@ -110,7 +110,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_gmac_3v3>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+index e322f0f06003..c5e3b6d2c66c 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+@@ -116,7 +116,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+index a8f7f63fdde1..f23395092b5b 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+@@ -151,7 +151,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20-hummingbird.dts b/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
+index 322717cb0b9a..3fbf5dc1623f 100644
+--- a/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
++++ b/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
+@@ -101,7 +101,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_gmac_vdd>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts b/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
+index 8a610dacb983..89ba9dc696ca 100644
+--- a/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
++++ b/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
+@@ -116,7 +116,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	phy-supply = <&reg_gmac_3v3>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts b/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts
+index a20e91c8dbe5..04b97c5d5730 100644
+--- a/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts
++++ b/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts
+@@ -77,7 +77,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+index c27567c0b027..ff3ab8dbedeb 100644
+--- a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
++++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+@@ -98,7 +98,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+index 3e170cfac86a..3814921a13a0 100644
+--- a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
++++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+@@ -120,7 +120,7 @@
+ &gmac {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_gmac_3v3>;
+ 	status = "okay";
+ 	/delete-property/#address-cells;
+@@ -173,7 +173,7 @@
+ 					reg = <8>;
+ 					label = "cpu";
+ 					ethernet = <&gmac>;
+-					phy-mode = "rgmii-txid";
++					phy-connection-type = "rgmii-txid";
+ 					fixed-link {
+ 						speed = <1000>;
+ 						full-duplex;
+diff --git a/arch/arm/boot/dts/sun7i-a20-m3.dts b/arch/arm/boot/dts/sun7i-a20-m3.dts
+index bde0ef783e71..52b56281b46c 100644
+--- a/arch/arm/boot/dts/sun7i-a20-m3.dts
++++ b/arch/arm/boot/dts/sun7i-a20-m3.dts
+@@ -83,7 +83,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+index f419b9ee9d1e..09e4a7635c04 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+@@ -112,7 +112,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts
+index d3d03b7ffb1a..928bad7b98c6 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts
+@@ -106,7 +106,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy3>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_vcc3v3>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
+index 70a883276d34..0a0f125ee2da 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
+@@ -107,7 +107,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+index 0fe657e062a7..ebf32437ab5f 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+@@ -112,7 +112,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+index 559736961b54..b9e903d61d8e 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+@@ -119,7 +119,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>, <&gmac_txerr>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
+index a94ff50bcf73..f2d395e62785 100644
+--- a/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
++++ b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
+@@ -121,7 +121,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_gmac_3v3>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi.dts b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
+index 956579a10b5f..617695ceeee3 100644
+--- a/arch/arm/boot/dts/sun7i-a20-orangepi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-orangepi.dts
+@@ -97,7 +97,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_gmac_3v3>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
+index 993fb97d19df..ce59db45c6ea 100644
+--- a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
++++ b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
+@@ -115,7 +115,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
+index 02e321523d0e..c7c1573b6612 100644
+--- a/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
++++ b/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
+@@ -123,7 +123,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_mii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "mii";
++	phy-connection-type = "mii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+index 9dfe7e2a08cc..9f89faec0e07 100644
+--- a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
++++ b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+@@ -82,7 +82,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+index 9d34eabba121..823e6d42a8f1 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+@@ -131,7 +131,7 @@
+ 	pinctrl-0 = <&emac_rgmii_pins>;
+ 	phy-supply = <&reg_sw>;
+ 	phy-handle = <&rgmii_phy>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	allwinner,rx-delay-ps = <700>;
+ 	allwinner,tx-delay-ps = <700>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index ea299d3d84d0..d98fe7074148 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -168,7 +168,7 @@
+ 	pinctrl-0 = <&emac_rgmii_pins>;
+ 	phy-supply = <&reg_dldo4>;
+ 	phy-handle = <&rgmii_phy>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+index 42d62d1ba1dc..6245927065b2 100644
+--- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
++++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+@@ -129,7 +129,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_dc1sw>;
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+index 15c22b06fc4b..f4b54cb3a231 100644
+--- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
++++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+@@ -120,7 +120,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_dc1sw>;
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+index 650890b049e2..dfd6ba7e8faa 100644
+--- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
++++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+@@ -129,7 +129,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_cldo1>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+index 03ad25534f20..c80532fe6c03 100644
+--- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
++++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+@@ -124,7 +124,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gmac_rgmii_pins>;
+ 	phy-handle = <&phy1>;
+-	phy-mode = "rgmii";
++	phy-connection-type = "rgmii";
+ 	phy-supply = <&reg_cldo1>;
+ 	status = "okay";
+ 
 -- 
 git-series 0.9.1
