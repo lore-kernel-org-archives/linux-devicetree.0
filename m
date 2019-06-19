@@ -1,75 +1,142 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v6 6/6] arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
-Date: Wed, 19 Jun 2019 16:15:39 +0200
-Message-ID: <20190619141539.16884-7-gregory.clement@bootlin.com>
-References: <20190619141539.16884-1-gregory.clement@bootlin.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 03/16] dt-bindings: net: Add a YAML schemas for the
+ generic MDIO options
+Date: Wed, 19 Jun 2019 08:17:52 -0600
+Message-ID: <CAL_JsqKeGrXEECmP8Gec5DdLTikyx0xS+kaopRXNQ7RUEJbx4g@mail.gmail.com>
+References: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
+ <89b834af795fa6ad5ba1f04a5a61c54204bf4f96.1560937626.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190619141539.16884-1-gregory.clement@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <89b834af795fa6ad5ba1f04a5a61c54204bf4f96.1560937626.git-series.maxime.ripard@bootlin.com>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add cpu clock node on AP
+On Wed, Jun 19, 2019 at 3:47 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> The MDIO buses have a number of available device tree properties that can
+> be used in their device tree node. Add a YAML schemas for those.
+>
+> Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> ---
+>
+> Changes from v2:
+>   - New patch
+> ---
+>  Documentation/devicetree/bindings/net/mdio.txt  | 38 +-------------
+>  Documentation/devicetree/bindings/net/mdio.yaml | 51 ++++++++++++++++++-
+>  2 files changed, 52 insertions(+), 37 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/mdio.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/net/mdio.txt b/Documentation/devicetree/bindings/net/mdio.txt
+> index e3e1603f256c..cf8a0105488e 100644
+> --- a/Documentation/devicetree/bindings/net/mdio.txt
+> +++ b/Documentation/devicetree/bindings/net/mdio.txt
+> @@ -1,37 +1 @@
+> -Common MDIO bus properties.
+> -
+> -These are generic properties that can apply to any MDIO bus.
+> -
+> -Optional properties:
+> -- reset-gpios: One GPIO that control the RESET lines of all PHYs on that MDIO
+> -  bus.
+> -- reset-delay-us: RESET pulse width in microseconds.
+> -
+> -A list of child nodes, one per device on the bus is expected. These
+> -should follow the generic phy.txt, or a device specific binding document.
+> -
+> -The 'reset-delay-us' indicates the RESET signal pulse width in microseconds and
+> -applies to all PHY devices. It must therefore be appropriately determined based
+> -on all PHY requirements (maximum value of all per-PHY RESET pulse widths).
+> -
+> -Example :
+> -This example shows these optional properties, plus other properties
+> -required for the TI Davinci MDIO driver.
+> -
+> -       davinci_mdio: ethernet@5c030000 {
+> -               compatible = "ti,davinci_mdio";
+> -               reg = <0x5c030000 0x1000>;
+> -               #address-cells = <1>;
+> -               #size-cells = <0>;
+> -
+> -               reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
+> -               reset-delay-us = <2>;
+> -
+> -               ethphy0: ethernet-phy@1 {
+> -                       reg = <1>;
+> -               };
+> -
+> -               ethphy1: ethernet-phy@3 {
+> -                       reg = <3>;
+> -               };
+> -       };
+> +This file has moved to mdio.yaml.
+> diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
+> new file mode 100644
+> index 000000000000..8f4f9d0a2882
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/mdio.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/mdio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MDIO Bus Generic Binding
+> +
+> +maintainers:
+> +  - Andrew Lunn <andrew@lunn.ch>
+> +  - Florian Fainelli <f.fainelli@gmail.com>
+> +  - Heiner Kallweit <hkallweit1@gmail.com>
+> +
+> +description:
+> +  These are generic properties that can apply to any MDIO bus. Any
+> +  MDIO bus must have a list of child nodes, one per device on the
+> +  bus. These should follow the generic ethernet-phy.yaml document, or
+> +  a device specific binding document.
+> +
+> +properties:
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description:
+> +      The phandle and specifier for the GPIO that controls the RESET
+> +      lines of all PHYs on that MDIO bus.
+> +
+> +  reset-delay-us:
+> +    description:
+> +      RESET pulse width in microseconds. It applies to all PHY devices
+> +      and must therefore be appropriately determined based on all PHY
+> +      requirements (maximum value of all per-PHY RESET pulse widths).
+> +
+> +examples:
+> +  - |
+> +    davinci_mdio: ethernet@5c030000 {
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi | 4 ++++
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi      | 7 +++++++
- 2 files changed, 11 insertions(+)
+Shouldn't this be mdio@... ?
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
-index 2baafe12ebd4..472211159979 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
-@@ -20,24 +20,28 @@
- 			compatible = "arm,cortex-a72";
- 			reg = <0x000>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 0>;
- 		};
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a72";
- 			reg = <0x001>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 0>;
- 		};
- 		cpu2: cpu@100 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a72";
- 			reg = <0x100>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 1>;
- 		};
- 		cpu3: cpu@101 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a72";
- 			reg = <0x101>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 1>;
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 91dad7e4ee59..ed039aa8188f 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -280,6 +280,13 @@
- 				#address-cells = <1>;
- 				#size-cells = <1>;
- 
-+				cpu_clk: clock-cpu@0 {
-+					compatible = "marvell,ap806-cpu-clock";
-+					clocks = <&ap_clk 0>, <&ap_clk 1>;
-+					#clock-cells = <1>;
-+					reg = <0x278 0xa30>;
-+				};
-+
- 				ap_thermal: thermal-sensor@80 {
- 					compatible = "marvell,armada-ap806-thermal";
- 					reg = <0x80 0x10>;
--- 
-2.20.1
+> +        compatible = "ti,davinci_mdio";
+> +        reg = <0x5c030000 0x1000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        reset-gpios = <&gpio2 5 1>;
+> +        reset-delay-us = <2>;
+> +
+> +        ethphy0: ethernet-phy@1 {
+
+Would be good to have some unit-address checks. Could be a follow-up though.
+
+> +            reg = <1>;
+> +        };
+> +
+> +        ethphy1: ethernet-phy@3 {
+> +            reg = <3>;
+> +        };
+> +    };
+> --
+> git-series 0.9.1
