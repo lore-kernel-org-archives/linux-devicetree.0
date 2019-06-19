@@ -1,12 +1,12 @@
 Return-Path: <SRS0=RfLZ=US=huawei.com=xuwei5@kernel.org>
-Subject: Re: [PATCH v2 01/11] ARM: dts: hip04: Update coresight DT bindings
+Subject: Re: [PATCH v2 07/11] arm64: dts: hi6220: Update coresight DT bindings
 References: <20190508021902.10358-1-leo.yan@linaro.org>
- <20190508021902.10358-2-leo.yan@linaro.org>
+ <20190508021902.10358-8-leo.yan@linaro.org>
 From: Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <ee33f0b2-e016-7c2f-feca-6b9e2bfe1e43@hisilicon.com>
-Date: Wed, 19 Jun 2019 17:12:31 +0100
+Message-ID: <bab80295-7c83-3a3f-cb76-aa64fb93a5e7@hisilicon.com>
+Date: Wed, 19 Jun 2019 17:11:59 +0100
 MIME-Version: 1.0
-In-Reply-To: <20190508021902.10358-2-leo.yan@linaro.org>
+In-Reply-To: <20190508021902.10358-8-leo.yan@linaro.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
