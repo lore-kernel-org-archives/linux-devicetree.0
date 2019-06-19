@@ -1,81 +1,92 @@
-Return-Path: <SRS0=LpfV=US=verge.net.au=horms@kernel.org>
-Date: Wed, 19 Jun 2019 14:18:08 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Add LEDs support
-Message-ID: <20190619121808.hnqoeihjch6silcd@verge.net.au>
+Return-Path: <SRS0=YfZA=US=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH] arm64: dts: renesas: hihope-common: Add LEDs support
+Date: Wed, 19 Jun 2019 08:16:43 +0000
+Message-ID: 
+ <TY1PR01MB1770F9972F006B57917A0731C0E50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 References: <1560518075-2254-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <CAMuHMdU8oag+1oNa_jS=v99W05=8SRLhdoZdCusmeVf1VZbarQ@mail.gmail.com>
  <TY1PR01MB17707C3C979FB60611FB34A7C0EA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
  <CAMuHMdVb+sc0vdvbsAE0fkEY6wFS7KsbtqLmtB03ghVeuiHe1w@mail.gmail.com>
- <TY1PR01MB1770F9972F006B57917A0731C0E50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+In-Reply-To: 
+ <CAMuHMdVb+sc0vdvbsAE0fkEY6wFS7KsbtqLmtB03ghVeuiHe1w@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB1770F9972F006B57917A0731C0E50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Jun 19, 2019 at 08:16:43AM +0000, Fabrizio Castro wrote:
-> Hello Geert,
-> 
-> Thank you for your feedback
-> 
-> > From: linux-renesas-soc-owner@vger.kernel.org <linux-renesas-soc-owner@vger.kernel.org> On Behalf Of Geert Uytterhoeven
-> > Sent: 19 June 2019 08:34
-> > Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Add LEDs support
-> > 
-> > Hi Fabrizio,
-> > 
-> > On Tue, Jun 18, 2019 at 5:56 PM Fabrizio Castro
-> > <fabrizio.castro@bp.renesas.com> wrote:
-> > > > From: linux-renesas-soc-owner@vger.kernel.org <linux-renesas-soc-owner@vger.kernel.org> On Behalf Of Geert Uytterhoeven
-> > > > Sent: 18 June 2019 16:10
-> > > > Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Add LEDs support
-> > > >
-> > > > On Fri, Jun 14, 2019 at 3:17 PM Fabrizio Castro
-> > > > <fabrizio.castro@bp.renesas.com> wrote:
-> > > > > This patch adds LEDs support to the HiHope RZ/G2[MN] Main Board
-> > > > > common device tree.
-> > > > >
-> > > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > >
-> > > > Thanks for your patch!
-> > > >
-> > > > > --- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-> > > > > @@ -17,6 +17,30 @@
-> > > > >                 stdout-path = "serial0:115200n8";
-> > > > >         };
-> > > > >
-> > > > > +       leds {
-> > > > > +               compatible = "gpio-leds";
-> > > > > +
-> > > > > +               led0 {
-> > > > > +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
-> > > > > +                       label = "LED0";
-> > > >
-> > > > There's no need for a label property, if it matches the node name
-> > > > (applies to all four LEDs).
-> > >
-> > > I could have used the actual names on the schematic, but then I realised that
-> > > would not have been too helpful due to the corresponding switch names:
-> > > LED0 - GP6_11 - SW2202 - LED2201
-> > > LED1 - GP6_12 - SW2201 - LED2202
-> > > LED2 - GP6_13 - SW2203 - LED2203
-> > > LED3 - GP0_00 - N/A - LED2402
-> > > The first 3 LEDs are found next to the micro USB connector for the debug console,
-> > > the forth LED is found next to the WiFi and BT LEDs.
-> > >
-> > > I thought that using "LEDn" as labels would put a remark on the
-> > > "desired ordering" of the LEDs (even though there is no actual
-> > > requirement for that), but as you pointed out it's probably a bit
-> > > confusing? Do you think I should take the label out?
-> > 
-> > If the LEDs don't have nice labels on the PCB, I would drop the label
-> > properties.
-> 
-> Will do. Simon, do you want me to send an incremental patch for this (this patch
-> is on devel branch already) or would you rather I sent a v2?
-
-Please send an incremental patch, thanks.
+SGVsbG8gR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjaw0KDQo+IEZyb206IGxp
+bnV4LXJlbmVzYXMtc29jLW93bmVyQHZnZXIua2VybmVsLm9yZyA8bGludXgtcmVuZXNhcy1zb2Mt
+b3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgR2VlcnQgVXl0dGVyaG9ldmVuDQo+
+IFNlbnQ6IDE5IEp1bmUgMjAxOSAwODozNA0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBhcm02NDog
+ZHRzOiByZW5lc2FzOiBoaWhvcGUtY29tbW9uOiBBZGQgTEVEcyBzdXBwb3J0DQo+IA0KPiBIaSBG
+YWJyaXppbywNCj4gDQo+IE9uIFR1ZSwgSnVuIDE4LCAyMDE5IGF0IDU6NTYgUE0gRmFicml6aW8g
+Q2FzdHJvDQo+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+ID4g
+RnJvbTogbGludXgtcmVuZXNhcy1zb2Mtb3duZXJAdmdlci5rZXJuZWwub3JnIDxsaW51eC1yZW5l
+c2FzLXNvYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFsZiBPZiBHZWVydCBVeXR0ZXJo
+b2V2ZW4NCj4gPiA+IFNlbnQ6IDE4IEp1bmUgMjAxOSAxNjoxMA0KPiA+ID4gU3ViamVjdDogUmU6
+IFtQQVRDSF0gYXJtNjQ6IGR0czogcmVuZXNhczogaGlob3BlLWNvbW1vbjogQWRkIExFRHMgc3Vw
+cG9ydA0KPiA+ID4NCj4gPiA+IE9uIEZyaSwgSnVuIDE0LCAyMDE5IGF0IDM6MTcgUE0gRmFicml6
+aW8gQ2FzdHJvDQo+ID4gPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToN
+Cj4gPiA+ID4gVGhpcyBwYXRjaCBhZGRzIExFRHMgc3VwcG9ydCB0byB0aGUgSGlIb3BlIFJaL0cy
+W01OXSBNYWluIEJvYXJkDQo+ID4gPiA+IGNvbW1vbiBkZXZpY2UgdHJlZS4NCj4gPiA+ID4NCj4g
+PiA+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAu
+cmVuZXNhcy5jb20+DQo+ID4gPg0KPiA+ID4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQ0KPiA+ID4N
+Cj4gPiA+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL2hpaG9wZS1jb21tb24u
+ZHRzaQ0KPiA+ID4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvaGlob3BlLWNv
+bW1vbi5kdHNpDQo+ID4gPiA+IEBAIC0xNyw2ICsxNywzMCBAQA0KPiA+ID4gPiAgICAgICAgICAg
+ICAgICAgc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBuOCI7DQo+ID4gPiA+ICAgICAgICAg
+fTsNCj4gPiA+ID4NCj4gPiA+ID4gKyAgICAgICBsZWRzIHsNCj4gPiA+ID4gKyAgICAgICAgICAg
+ICAgIGNvbXBhdGlibGUgPSAiZ3Bpby1sZWRzIjsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAg
+ICAgICAgICAgbGVkMCB7DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGdwaW9zID0g
+PCZncGlvNiAxMSBHUElPX0FDVElWRV9ISUdIPjsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgbGFiZWwgPSAiTEVEMCI7DQo+ID4gPg0KPiA+ID4gVGhlcmUncyBubyBuZWVkIGZvciBh
+IGxhYmVsIHByb3BlcnR5LCBpZiBpdCBtYXRjaGVzIHRoZSBub2RlIG5hbWUNCj4gPiA+IChhcHBs
+aWVzIHRvIGFsbCBmb3VyIExFRHMpLg0KPiA+DQo+ID4gSSBjb3VsZCBoYXZlIHVzZWQgdGhlIGFj
+dHVhbCBuYW1lcyBvbiB0aGUgc2NoZW1hdGljLCBidXQgdGhlbiBJIHJlYWxpc2VkIHRoYXQNCj4g
+PiB3b3VsZCBub3QgaGF2ZSBiZWVuIHRvbyBoZWxwZnVsIGR1ZSB0byB0aGUgY29ycmVzcG9uZGlu
+ZyBzd2l0Y2ggbmFtZXM6DQo+ID4gTEVEMCAtIEdQNl8xMSAtIFNXMjIwMiAtIExFRDIyMDENCj4g
+PiBMRUQxIC0gR1A2XzEyIC0gU1cyMjAxIC0gTEVEMjIwMg0KPiA+IExFRDIgLSBHUDZfMTMgLSBT
+VzIyMDMgLSBMRUQyMjAzDQo+ID4gTEVEMyAtIEdQMF8wMCAtIE4vQSAtIExFRDI0MDINCj4gPiBU
+aGUgZmlyc3QgMyBMRURzIGFyZSBmb3VuZCBuZXh0IHRvIHRoZSBtaWNybyBVU0IgY29ubmVjdG9y
+IGZvciB0aGUgZGVidWcgY29uc29sZSwNCj4gPiB0aGUgZm9ydGggTEVEIGlzIGZvdW5kIG5leHQg
+dG8gdGhlIFdpRmkgYW5kIEJUIExFRHMuDQo+ID4NCj4gPiBJIHRob3VnaHQgdGhhdCB1c2luZyAi
+TEVEbiIgYXMgbGFiZWxzIHdvdWxkIHB1dCBhIHJlbWFyayBvbiB0aGUNCj4gPiAiZGVzaXJlZCBv
+cmRlcmluZyIgb2YgdGhlIExFRHMgKGV2ZW4gdGhvdWdoIHRoZXJlIGlzIG5vIGFjdHVhbA0KPiA+
+IHJlcXVpcmVtZW50IGZvciB0aGF0KSwgYnV0IGFzIHlvdSBwb2ludGVkIG91dCBpdCdzIHByb2Jh
+Ymx5IGEgYml0DQo+ID4gY29uZnVzaW5nPyBEbyB5b3UgdGhpbmsgSSBzaG91bGQgdGFrZSB0aGUg
+bGFiZWwgb3V0Pw0KPiANCj4gSWYgdGhlIExFRHMgZG9uJ3QgaGF2ZSBuaWNlIGxhYmVscyBvbiB0
+aGUgUENCLCBJIHdvdWxkIGRyb3AgdGhlIGxhYmVsDQo+IHByb3BlcnRpZXMuDQoNCldpbGwgZG8u
+IFNpbW9uLCBkbyB5b3Ugd2FudCBtZSB0byBzZW5kIGFuIGluY3JlbWVudGFsIHBhdGNoIGZvciB0
+aGlzICh0aGlzIHBhdGNoDQppcyBvbiBkZXZlbCBicmFuY2ggYWxyZWFkeSkgb3Igd291bGQgeW91
+IHJhdGhlciBJIHNlbnQgYSB2Mj8NCg0KVGhhbmtzLA0KRmFiDQoNCj4gDQo+ID4gPiBOb3RlIHRo
+YXQgdGhpcyBHUElPIGlzIHNoYXJlZCB3aXRoIGEgc3dpdGNoLCBsaWtlIG9uIFNhbHZhdG9yLVgo
+UykgYW5kDQo+ID4gPiBVTENCLiAgQXMgY3VycmVudGx5IExpbnV4IGNhbm5vdCBoYW5kbGUgYm90
+aCwgZGVzY3JpYmluZyB0aGUgTEVEDQo+ID4gPiBwcmVjbHVkZXMgYWRkaW5nIHRoZSBzd2l0Y2gg
+bGF0ZXIuDQo+ID4gPiAoYXBwbGllcyB0byB0aGUgZmlyc3QgMyBMRURzKS4NCj4gPg0KPiA+IFRo
+YW5rIHlvdSBmb3IgcG9pbnRpbmcgdGhpcyBvdXQuIFRoYXQncyBkZXNpcmVkIGJlaGF2aW91ciBp
+biB0aGlzIGNhc2UuDQo+IA0KPiBPSy4NCj4gDQo+ID4gPiA+ICsgICAgICAgICAgICAgICBsZWQz
+IHsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZ3Bpb3MgPSA8JmdwaW8wICAwIEdQ
+SU9fQUNUSVZFX0hJR0g+Ow0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBsYWJlbCA9
+ICJMRUQzIjsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIH07DQo+ID4gPg0KPiA+ID4gSSBjYW5u
+b3QgZmluZCBMRUQzLiBBY2NvcmRpbmcgdG8gdGhlIHNjaGVtYXRpY3MgR1AwXzAgPT0gQ1MwbiBp
+cyB1c2VkDQo+ID4gPiBhcyB0aGUgY2hpcHNlbGVjdCBmb3IgdGhlIExWRFMgc3dpdGNoPw0KPiA+
+DQo+ID4gTXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IENTMG4gaXMgb24gR1AxXzIwLCBjb3VsZCB5
+b3UgcGxlYXNlIGRvdWJsZQ0KPiA+IGNoZWNrPw0KPiA+IChwaW4gbmFtZTogQUo0KSBHUDBfMDAg
+PT0gRDAgPT0gRXhEMCBvbiB0aGUgc2NoZW1hdGljIEkgaGF2ZSwgSSB0aG91Z2h0DQo+ID4geW91
+IG1heSBoYXZlIGJlZW4gbG9va2luZyBhdCBhbiBvbGRlciB2ZXJzaW9uIG9mIHRoZSBzY2hlbWF0
+aWMsIGJ1dCBhZnRlcg0KPiA+IGdvaW5nIHRocm91Z2ggdGhlIGhpc3RvcnkgaXQgc2VlbXMgbGlr
+ZSB0aGF0IGxpbmUgaGFzIGFsd2F5cyBiZWVuIHRoZXJlLg0KPiANCj4gU29ycnksIG15IG1pc3Rh
+a2UuICBBcyB0aGVyZSBpcyBubyBHUDBfMCBpbiB0aGUgc2NoZW1hdGljLCBJIGxvb2tlZCB1cA0K
+PiB0aGUgcGluIG51bWJlciBpbiB0aGUgZG9jcywgYnV0IGVuZGVkIHVwIHVzaW5nIHRoZSBSLUNh
+ciBNMy1XIFNpUCBwaW4NCj4gbnVtYmVyLCBpbnN0ZWFkIG9mIHRoZSBSWi9HMk0gRkNCR0EgU29D
+IHBpbiBudW1iZXIgOi0oDQo+IA0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAg
+ICAgICAgICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0g
+VGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3Jn
+DQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwg
+SSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5h
+bGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
