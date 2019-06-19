@@ -1,55 +1,65 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3] arm64: dts: qcom: Add Dragonboard 845c
-Date: Tue, 18 Jun 2019 17:07:01 -0700
-Message-ID: <20190619000701.GI4814@minitux>
-References: <20190618211945.27431-1-bjorn.andersson@linaro.org>
- <CAOCk7Nq7X=3LdzQF83J1QDRnrQtWmjRcySyLZ-3M321HtHxHfg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: [PATCH v2] arm64: dts: qcom: msm8996: Rename smmu nodes
+Date: Tue, 18 Jun 2019 17:16:02 -0700
+Message-ID: <20190619001602.4890-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOCk7Nq7X=3LdzQF83J1QDRnrQtWmjRcySyLZ-3M321HtHxHfg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+To: Andy Gross <agross@kernel.org>
+Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 18 Jun 14:27 PDT 2019, Jeffrey Hugo wrote:
+Node names shouldn't include a vendor prefix and should whenever
+possible use a generic identifier. Resolve this by renaming the smmu
+nodes "iommu".
 
-> On Tue, Jun 18, 2019 at 3:21 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-[..]
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> > new file mode 100644
-> > index 000000000000..71bd717a4251
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> > @@ -0,0 +1,557 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2019, Linaro Ltd.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-> > +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-> > +#include "sdm845.dtsi"
-> > +#include "pm8998.dtsi"
-> > +#include "pmi8998.dtsi"
-> > +
-> > +/ {
-> > +       model = "Thundercomm Dragonboard 845c";
-> > +       compatible = "thundercomm,db845c", "qcom,sdm845";
-> 
-> Is "thundercomm" a legal vendor prefix?
-> 
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-Following the other board vendors, yes. But you're right in that it
-should be added to vendor-prefixes.yaml as well.
+Changes since v1:
+- Updated commit message to talk about vendor prefix rather than qcom,
 
-Given the review feedback on v2 I've merged this revision for v5.3.
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Regards,
-Bjorn
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 2ecd9d775d61..c934e00434c7 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -1163,7 +1163,7 @@
+ 			};
+ 		};
+ 
+-		vfe_smmu: arm,smmu@da0000 {
++		vfe_smmu: iommu@da0000 {
+ 			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+ 			reg = <0xda0000 0x10000>;
+ 
+@@ -1314,7 +1314,7 @@
+ 			};
+ 		};
+ 
+-		adreno_smmu: arm,smmu@b40000 {
++		adreno_smmu: iommu@b40000 {
+ 			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+ 			reg = <0xb40000 0x10000>;
+ 
+@@ -1331,7 +1331,7 @@
+ 			power-domains = <&mmcc GPU_GDSC>;
+ 		};
+ 
+-		mdp_smmu: arm,smmu@d00000 {
++		mdp_smmu: iommu@d00000 {
+ 			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+ 			reg = <0xd00000 0x10000>;
+ 
+@@ -1347,7 +1347,7 @@
+ 			power-domains = <&mmcc MDSS_GDSC>;
+ 		};
+ 
+-		lpass_q6_smmu: arm,smmu-lpass_q6@1600000 {
++		lpass_q6_smmu: iommu@1600000 {
+ 			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+ 			reg = <0x1600000 0x20000>;
+ 			#iommu-cells = <1>;
+-- 
+2.18.0
